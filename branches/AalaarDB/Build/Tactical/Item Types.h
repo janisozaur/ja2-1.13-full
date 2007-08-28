@@ -73,6 +73,7 @@ typedef enum
 
 //forward declaration
 class OBJECTTYPE;
+class SOLDIERTYPE;
 
 //TODO if LBENODE::inv is made variable sized, replace all ITEMS_IN_LBE with inv.size()
 //also TODO find and replace all 12 with ITEMS_IN_LBE
@@ -322,8 +323,12 @@ public:
 
 	int		AddObjectsToStack(int howMany, int objectStatus = 100);
 	int		AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany = -1);
-	int		RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject = NULL);
+	int		RemoveObjectsFromStack(int howMany = 1, OBJECTTYPE* destObject = NULL);
 	void	DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany = -1);
+
+	BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachment, BOOLEAN playSound = TRUE);
+	BOOLEAN RemoveAttachment( OBJECTTYPE* pAttachment, OBJECTTYPE * pNewObj = NULL);
+
 
 	//see comments in .cpp
 	static	void DeleteMe(OBJECTTYPE** ppObject);
@@ -350,32 +355,6 @@ public:
 };
 
 extern OBJECTTYPE gTempObject;
-/*
-typedef struct
-{
-	UINT8		ubCursor;
-	INT8		bSoundType;
-	UINT8		ubGraphicNum;
-	INT8		bMaxLoad;
-
-	UINT8		ubPerPocket;
-	UINT8		ubCanDamage;
-	UINT8		ubWaterDamage;
-	UINT8		ubCanRepair;
-
-	UINT8		ubSeeMeter;
-	UINT8		ubRange;
-	UINT8		ubMetal;
-	UINT8		ubSinkable;
-
-	UINT16	ubPrice;
-	UINT8		ubMission;
-	UINT8		ubCoolness;
-} INVTYPE;
-
-*/
-
-
 
 // SUBTYPES
 #define IC_NONE						0x00000001

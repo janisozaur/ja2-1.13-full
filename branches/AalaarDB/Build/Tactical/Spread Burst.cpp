@@ -6,7 +6,7 @@
 	#include "wcheck.h"
 	#include "stdlib.h"
 	#include "debug.h"
-	#include "soldier control.h"
+	//#include "soldier control.h"
 	#include "weapons.h"
 	#include "cursor control.h"
 	#include "cursors.h"
@@ -18,6 +18,11 @@
 	#include "spread burst.h"
 	#include "points.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 
 BURST_LOCATIONS			gsBurstLocations[ MAX_BURST_LOCATIONS ];

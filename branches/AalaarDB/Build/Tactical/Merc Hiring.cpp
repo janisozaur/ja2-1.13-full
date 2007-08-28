@@ -13,7 +13,7 @@
 	#include "worldman.h"
 	#include "renderworld.h"
 	#include "Assignments.h"
-	#include "Soldier Control.h"
+
 	#include "Animation Control.h"
 	#include "Animation Data.h"
 	#include "Isometric Utils.h"
@@ -59,6 +59,11 @@
 	#include "Quests.h"
 	#include "GameSettings.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 #define	MIN_FLIGHT_PREP_TIME	6
 

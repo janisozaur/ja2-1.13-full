@@ -11,7 +11,7 @@
 #include "debug.h"
 #include "MemMan.h"
 #include "Overhead Types.h"
-#include "Soldier Control.h"
+//#include "Soldier Control.h"
 #include "Animation Cache.h"
 #include "Animation Data.h"
 #include "Animation Control.h"
@@ -96,6 +96,11 @@
 #include "civ quotes.h"
 #endif
 
+
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 
 //turnspeed

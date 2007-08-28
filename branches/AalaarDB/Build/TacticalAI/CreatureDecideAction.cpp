@@ -2,7 +2,7 @@
 	#include "AI All.h"
 #else
 	#include "types.h"
-	#include "soldier control.h"
+	//#include "soldier control.h"
 	#include "ai.h"
 	#include "AIInternals.h"
 	#include "opplist.h"
@@ -11,6 +11,11 @@
 	#include "soldier add.h"
 	#include "DecideAction.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 extern INT8 STRAIGHT; //lal
 

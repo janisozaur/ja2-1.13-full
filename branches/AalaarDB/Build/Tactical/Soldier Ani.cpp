@@ -8,7 +8,7 @@
 #include "debug.h"
 #include "MemMan.h"
 #include "Overhead Types.h"
-#include "Soldier Control.h"
+//#include "Soldier Control.h"
 #include "Animation Cache.h"
 #include "Animation Data.h"
 #include "Animation Control.h"
@@ -62,6 +62,11 @@
 #include "interface dialogue.h"
 #include "Strategic Status.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 #define		NO_JUMP											0
 #define		MAX_ANIFRAMES_PER_FLASH			2

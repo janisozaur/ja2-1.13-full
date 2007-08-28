@@ -7,7 +7,7 @@
 	#include "Render Dirty.h"
 	#include "Font Control.h"
 	#include "Assignments.h"
-	#include "Soldier Control.h"
+
 	#include "Overhead.h"
 	#include "Squads.h"
 	#include "Sound Control.h"
@@ -54,6 +54,11 @@
 	#include "Queen Command.h"
 	#include "Render Fun.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 // inventory pool position on screen
 #define MAP_INVEN_POOL_X				300

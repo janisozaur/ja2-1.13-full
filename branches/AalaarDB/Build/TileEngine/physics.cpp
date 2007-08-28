@@ -11,7 +11,7 @@
 #include "worldman.h"
 #include "event pump.h"
 #include "Sound Control.h"
-#include "soldier control.h"
+//#include "soldier control.h"
 #include "interface.h"
 #include "interface items.h"
 #include "weapons.h"
@@ -36,6 +36,11 @@
 
 #include "Campaign.h"
 #include "SkillCheck.h"
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 #define NO_TEST_OBJECT												0
 #define TEST_OBJECT_NO_COLLISIONS							1

@@ -7,7 +7,7 @@
 	#include "wcheck.h"
 	#include "stdlib.h"
 	#include "debug.h"
-	#include "soldier control.h"
+	//#include "soldier control.h"
 	#include "weapons.h"
 	#include "handle items.h"
 	#include "worlddef.h"	
@@ -22,7 +22,7 @@
 	#include "renderworld.h"
 	#include "tile animation.h"
 	#include "merc entering.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 	#include "strategic.h"
 	#include "strategicmap.h"
 	#include "Handle UI.h"
@@ -39,6 +39,11 @@
 	#include "Dialogue Control.h"
 	#include "Music Control.h"
 #endif
+
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 #define		MAX_MERC_IN_HELI		20
 #define		MAX_HELI_SCRIPT			30

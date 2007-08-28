@@ -12,13 +12,12 @@
 #include "los.h"
 #include "animation control.h"
 #include "Random.h"
-#include "soldier control.h"
+//#include "soldier control.h"
 #include "Event Pump.h"
 #include "overhead.h"
 #include "weapons.h"
 
 #include "opplist.h"
-#include "soldier control.h"
 #include "bullets.h"
 
 #include "phys math.h"
@@ -42,6 +41,11 @@
 #include "Quests.h"
 #include "items.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 #define		STEPS_FOR_BULLET_MOVE_TRAILS					10
 #define		STEPS_FOR_BULLET_MOVE_SMALL_TRAILS		5

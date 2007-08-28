@@ -31,7 +31,6 @@
 	#include "PreBattle Interface.h"
 #endif
 
-//#include "Console.h"
 #include "Lua Interpreter.h"
 
 // rain

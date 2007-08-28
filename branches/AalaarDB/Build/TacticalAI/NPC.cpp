@@ -8,7 +8,7 @@
 	#include "overhead.h"
 	#include "ai.h"
 	#include "Soldier Profile.h"
-	#include "Soldier Control.h"
+
 	#include "NPC.h"
 	#include "Isometric Utils.h"
 	#include "Quests.h"
@@ -48,6 +48,11 @@
 	#include "Tactical Save.h"
 	#include "Campaign Types.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 #define NUM_CIVQUOTE_SECTORS 20
 #define MINERS_CIV_QUOTE_INDEX  16

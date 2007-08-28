@@ -6,7 +6,7 @@
 	#include <memory.h>
 
 	#include "types.h"
-	#include "Soldier Control.h"
+
 	#include "Keys.h"
 	#include "debug.h"
 	#include "Smoothing Utils.h"
@@ -33,7 +33,7 @@
 	#include "random.h"
 	#include "worlddef.h"
 	#include "campaign.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 	#include "Interface.h"
 	#include "Game Clock.h"
 	#include "handle doors.h"

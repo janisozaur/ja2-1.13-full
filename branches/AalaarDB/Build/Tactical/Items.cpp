@@ -5,7 +5,7 @@
 	#include "Action Items.h"
 	#include "weapons.h"
 	#include "Interface Cursors.h"
-	#include "Soldier Control.h"
+
 	#include "overhead.h"
 	#include "Handle UI.h"
 	#include "Animation Control.h"
@@ -51,6 +51,11 @@
 	#include "lighting.h"
 	#include "utilities.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 #define ANY_MAGSIZE 255
 
@@ -2408,24 +2413,41 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 		27, 28, 29, 30,
 		31, 32, 33, 34
 	};
-	int			cnt, cnt1, cnt2;
-	int			nCnt1, nCnt2;
+	int			cnt, originalSizeX, originalSizeY;
+	int			newSizeX, newSizeY;
 	// Determine default ItemSize based on item and attachments
 	cisIndex = pObject->usItem;
 	iSize = Item[cisIndex].ItemSize;
 	if(iSize>34)
 		iSize = 34;
 
-//TODO INIT CNT1, init newsize and ncnt2!!!!!!
+	//store the original size for later calculations
+	for(originalSizeX=0; originalSizeX<6; originalSizeX++)
+	{
+		for(originalSizeY=0; originalSizeY<4; originalSizeY++)
+		{
+			if(iSize == cisPocketSize[originalSizeX][originalSizeY])
+			{
+				psFound = TRUE;
+				break;
+			}
+		}
+		if(psFound)
+			break;
+	}
 
-	//for each object in the stack
+	//for each object in the stack, hopefully there is only 1
 	for (int numStacked = 0; numStacked = pObject->ubNumberOfObjects; ++numStacked) {
 
+#if 0
+		//I don't think there will ever be any attachments, ChrisL delete this if so
 		//for each attachment to this object
 		for (attachmentList::iterator iter = (*pObject)[numStacked]->attachments.begin();
 			iter != (*pObject)[numStacked]->attachments.end(); ++iter) {
-			iSize += CalculateItemSize(&(*iter));;
+				//plus? minus?
+			iSize -= CalculateItemSize(&(*iter));;
 		}
+#endif
 
 		// Check if we're looking at a LBENODE or not
 		if(pObject->IsLBE())
@@ -2446,11 +2468,11 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 			if(newSize > 0)
 			{
 				psFound = FALSE;
-				for(nCnt1=0; nCnt1<6; nCnt1++)
+				for(newSizeX=0; newSizeX<6; newSizeX++)
 				{
-					for(nCnt2=0; nCnt2<4; nCnt2++)
+					for(newSizeY=0; newSizeY<4; newSizeY++)
 					{
-						if(newSize == cisPocketSize[nCnt1][nCnt2])
+						if(newSize == cisPocketSize[newSizeX][newSizeY])
 						{
 							psFound = TRUE;
 							break;
@@ -2459,18 +2481,18 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 					if(psFound)
 						break;
 				}
-				if((cnt1-2)>=nCnt1)	// Stored item is much smaller then an empty LBE item.  Don't change size
+				if((originalSizeX-2)>=newSizeX)	// Stored item is much smaller then an empty LBE item.  Don't change size
 					iSize = iSize;
-				else if((cnt1-1)==nCnt1)	// Stored item is large enough to increase LBE item size.
+				else if((originalSizeX-1)==newSizeX)	// Stored item is large enough to increase LBE item size.
 				{
-					if(nCnt2 > cnt2)
-						cnt2 = nCnt2;
-					iSize = cisPocketSize[cnt1][cnt2];
+					if(newSizeY > originalSizeY)
+						originalSizeY = newSizeY;
+					iSize = cisPocketSize[originalSizeX][originalSizeY];
 				}
 				else	// Stored item is very large compared to the LBE item.
 				{
-					cnt2 = 3;
-					iSize = cisPocketSize[cnt1][cnt2];
+					originalSizeY = 3;
+					iSize = cisPocketSize[originalSizeX][originalSizeY];
 				}
 			}
 		}
@@ -2891,6 +2913,8 @@ void SwapWithinObj( OBJECTTYPE * pObj, UINT8 ubIndex1, UINT8 ubIndex2 )
 void DamageObj( OBJECTTYPE * pObj, INT8 bAmount )
 {
 	PERFORMANCE_MARKER
+	//usually called from AttachObject, where the attachment is known to be a single item,
+	//and the attachment is only being attached to the top of the stack
 	if (bAmount >= (*pObj)[0]->data.objectStatus)
 	{
 		(*pObj)[0]->data.objectStatus = 1;
@@ -3021,7 +3045,6 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	BOOLEAN			fEmptyGun;
 	INT8			bReloadType;
 	UINT16			usNewAmmoItem;
-	OBJECTTYPE		OldAmmo;
 
 	bAPs = 0;
 
@@ -3038,7 +3061,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ReloadGun: Loading launcher - new ammo type = %d, weight = %d", pAmmo->usItem,pAmmo->ubWeight  ) );
 		(*pGun)[0]->data.gun.usGunAmmoItem = pAmmo->usItem;
-		if ( AttachObject( pSoldier, pGun, pAmmo ) == FALSE )
+		if ( pGun->AttachObject( pSoldier, pAmmo ) == FALSE )
 		{
 			(*pGun)[0]->data.gun.usGunAmmoItem = NONE;
 			// abort
@@ -3059,9 +3082,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		else
 		{
 			// record old ammo
-			OldAmmo.usItem = (*pGun)[0]->data.gun.usGunAmmoItem;
-			OldAmmo.ubNumberOfObjects = 1;
-			OldAmmo[0]->data.ubShotsLeft = (*pGun)[0]->data.gun.ubGunShotsLeft;
+			CreateAmmo((*pGun)[0]->data.gun.usGunAmmoItem, &gTempObject, (*pGun)[0]->data.gun.ubGunShotsLeft);
 	
 			if (fSameMagazineSize)
 			{
@@ -3162,7 +3183,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 				if (fReloadingWithStack)
 				{
 					// add to end of stack
-					pAmmo->AddObjectsToStack( OldAmmo, 1 );
+					pAmmo->AddObjectsToStack( gTempObject, 1 );
 				}
 				else
 				{
@@ -3174,10 +3195,10 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 					//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && !EnoughPoints( pSoldier, (INT8) (bAPs + AP_PICKUP_ITEM), 0, FALSE ) )
 					//{
 						// try autoplace
-						if ( !AutoPlaceObject( pSoldier, &OldAmmo, FALSE ) )
+						if ( !AutoPlaceObject( pSoldier, &gTempObject, FALSE ) )
 						{
 							// put it on the ground
-							AddItemToPool( pSoldier->sGridNo, &OldAmmo, 1, pSoldier->pathing.bLevel, 0 , -1 );
+							AddItemToPool( pSoldier->sGridNo, &gTempObject, 1, pSoldier->pathing.bLevel, 0 , -1 );
 						}
 						// delete the object now in the cursor
 						pAmmo->RemoveObjectsFromStack(1);
@@ -3192,7 +3213,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 				}
 				break;
 			case RELOAD_AUTOPLACE_OLD:
-				if ( !AutoPlaceObject( pSoldier, &OldAmmo, TRUE ) )
+				if ( !AutoPlaceObject( pSoldier, &gTempObject, TRUE ) )
 				{
 					// error msg!
 					return( FALSE );
@@ -3266,7 +3287,7 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 
 	if ( (*pWeapon)[0]->data.gun.ubGunShotsLeft > 0 )
 	{
-		CreateItem((*pWeapon)[0]->data.gun.ubGunAmmoType, (*pWeapon)[0]->data.gun.ubGunShotsLeft, pAmmo);
+		CreateAmmo((*pWeapon)[0]->data.gun.ubGunAmmoType, pAmmo, (*pWeapon)[0]->data.gun.ubGunShotsLeft);
 
 		(*pWeapon)[0]->data.gun.ubGunShotsLeft		= 0;
 		(*pWeapon)[0]->data.gun.ubGunAmmoType	  = 0;
@@ -3607,7 +3628,7 @@ void PerformAttachmentComboMerge( OBJECTTYPE * pObj, INT8 bAttachmentComboMerge 
 		uiStatusTotal += (*pAttachment)[0]->data.objectStatus;
 		bNumStatusContributors++;
 
-		RemoveAttachment(pObj, pAttachment);
+		pObj->RemoveAttachment(pAttachment);
 	}
 
 	uiStatusTotal += (*pObj)[0]->data.objectStatus;
@@ -3617,13 +3638,19 @@ void PerformAttachmentComboMerge( OBJECTTYPE * pObj, INT8 bAttachmentComboMerge 
 	(*pObj)[0]->data.objectStatus = (INT8) (uiStatusTotal / bNumStatusContributors );
 }
 
-BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYPE * pAttachment, BOOLEAN playSound )
+BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachment, BOOLEAN playSound )
 {
 	PERFORMANCE_MARKER
-	if ( pTargetObj->ubNumberOfObjects > 1 )
+	if ( this->ubNumberOfObjects > 1 )
 	{
 		return( FALSE );
 	}
+	if (pAttachment->ubNumberOfObjects == 0) {
+		return FALSE;
+	}
+
+	static OBJECTTYPE attachmentObject;
+
 	UINT16		usResult, usResult2;
 	INT8		bLoop;
 	UINT8		ubType, ubLimit, ubAPCost;
@@ -3631,61 +3658,43 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 	INT8		bAttachInfoIndex = -1, bAttachComboMerge;
 	BOOLEAN		fValidLaunchable = FALSE;
 
-	fValidLaunchable = ValidLaunchable( pAttachment->usItem, pTargetObj->usItem );
+	bool canOnlyAttach1 = false;
 
-	if ( fValidLaunchable || ValidItemAttachment( pTargetObj, pAttachment->usItem, TRUE ) )
+	//if this is an attachment or ammo for a launchable item
+	fValidLaunchable = ValidLaunchable( pAttachment->usItem, this->usItem );
+	if ( fValidLaunchable || ValidItemAttachment( this, pAttachment->usItem, TRUE ) )
 	{
+		//if there is already an attachment of the same type, we want to try swapping / replacing it
 		OBJECTTYPE* pAttachmentPosition = 0;
 
 		// find an attachment position... 
 		// second half of this 'if' is for attaching GL grenades to a gun w/attached GL
-		if ( fValidLaunchable || (Item[pAttachment->usItem].glgrenade && FindAttachmentByClass(pTargetObj, IC_LAUNCHER) != 0 ) )
+		if ( fValidLaunchable || (Item[pAttachment->usItem].glgrenade && FindAttachmentByClass(this, IC_LAUNCHER) != 0 ) )
 		{
 			// try replacing if possible
-			pAttachmentPosition = FindAttachmentByClass( pTargetObj, Item[ pAttachment->usItem ].usItemClass );
+			pAttachmentPosition = FindAttachmentByClass( this, Item[ pAttachment->usItem ].usItemClass );
 			if ( pAttachmentPosition )
 			{
+				canOnlyAttach1 = true;
 				// we can only do a swap if there is only 1 grenade being attached
-				if ( pAttachment->ubNumberOfObjects > 1 )
-				{
-					return( FALSE );
-				}
 			}
 		}
 		else
 		{
 			// try replacing if possible
-			pAttachmentPosition = FindAttachment( pTargetObj, pAttachment->usItem );
+			pAttachmentPosition = FindAttachment( this, pAttachment->usItem );
 		}
 
-		//lalien: added to make a GL/RL work when reloaded manually
-		// the AP costs for reloading GL/RL will be taken from weapons.xml ( wrong place!!! the AP's are deducted in DeleteItemDescriptionBox() )
 		if (pAttachmentPosition) {
-			if ( Item[ pTargetObj->usItem ].usItemClass == IC_LAUNCHER || Item[pTargetObj->usItem].cannon )
-			{
-				//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
-				//{
-				//	INT8 bAPs = GetAPsToReloadGunWithAmmo( pTargetObj, pAttachment );
-				//	
-				//	if ( !EnoughPoints( pSoldier, bAPs, 0,TRUE ) )
-				//	{
-				//		return( FALSE );
-				//	}
-				//	else
-				//	{
-				//		DeductPoints( pSoldier, bAPs, 0 );
-				//		IsAGLorRL = TRUE;
-				//	}
-				//}
-				if ( fValidLaunchable )
-				{
-					(*pTargetObj)[0]->data.gun.usGunAmmoItem = pAttachment->usItem;
-				}
+			if (canOnlyAttach1 == true) {
+				//we have requested to swap the attachment on the cursor with the current attachment
+				//the problem is, the attachment object is a stack, and can only attach 1, so exit!
 			}
 		}
 
 		if ( pSoldier )
 		{
+			//did the soldier damage it?
 			bAttachInfoIndex = GetAttachmentInfoIndex( pAttachment->usItem );
 			// in-game (not behind the scenes) attachment
 			if ( bAttachInfoIndex != -1 && AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheck != NO_CHECK )
@@ -3694,7 +3703,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				if (iCheckResult < 0)		
 				{
 					// the attach failure damages both items
-					DamageObj( pTargetObj, (INT8) -iCheckResult );
+					DamageObj( this, (INT8) -iCheckResult );
 					DamageObj( pAttachment, (INT8) -iCheckResult );
 
 					// there should be a quote here!
@@ -3707,95 +3716,95 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				}
 			}
 
-			if ( ValidItemAttachment( pTargetObj, pAttachment->usItem, TRUE ) && playSound ) // not launchable
+			if ( ValidItemAttachment( this, pAttachment->usItem, TRUE ) && playSound ) // not launchable
 			{
 				// attachment sounds
-				if ( Item[ pTargetObj->usItem ].usItemClass & IC_WEAPON )
+				if ( Item[ this->usItem ].usItemClass & IC_WEAPON )
 				{
 					PlayJA2Sample( ATTACH_TO_GUN, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
 				}
-				else if ( Item[ pTargetObj->usItem ].usItemClass & IC_ARMOUR )
+				else if ( Item[ this->usItem ].usItemClass & IC_ARMOUR )
 				{
 					PlayJA2Sample( ATTACH_CERAMIC_PLATES, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
 				}
-				else if ( Item[ pTargetObj->usItem ].usItemClass & IC_BOMB )
+				else if ( Item[ this->usItem ].usItemClass & IC_BOMB )
 				{
 					PlayJA2Sample( ATTACH_DETONATOR, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
 				}
 			}
-			if (pAttachmentPosition) {
-				*pAttachmentPosition = *pAttachment;
+		}
+
+		//ADB moved after skill check!
+		//lalien: added to make a GL/RL work when reloaded manually
+		// the AP costs for reloading GL/RL will be taken from weapons.xml ( wrong place!!! the AP's are deducted in DeleteItemDescriptionBox() )
+		if (pAttachmentPosition) {
+			//we know we are replacing this attachment
+			if ( Item[ this->usItem ].usItemClass == IC_LAUNCHER || Item[this->usItem].cannon )
+			{
+				if ( fValidLaunchable )
+				{
+					(*this)[0]->data.gun.usGunAmmoItem = pAttachment->usItem;
+					//we have reloaded a launchable, so the ammo is gone from the original object
+				}
+			}
+		}
+
+		//unfortunately must come before possible attachment swap
+		if (Item[pAttachment->usItem].grenadelauncher )
+		{
+			// transfer any attachments from the grenade launcher to the gun
+			(*this)[0]->attachments.splice((*this)[0]->attachments.begin(), (*pAttachment)[0]->attachments,
+				(*pAttachment)[0]->attachments.begin(), (*pAttachment)[0]->attachments.end());
+		}
+
+		if (pAttachmentPosition) {
+			//we are swapping the attachments, and we know we do NOT need to worry about attachment stack size
+			//backup the original attachment
+			attachmentObject = *pAttachmentPosition;
+
+			//place the new one
+			*pAttachmentPosition = *pAttachment;
+
+			//whatever pAttachment pointed to is now the original attachment
+			*pAttachment = attachmentObject;
+		}
+		else {
+			//it's a new attachment
+			if (canOnlyAttach1 == true) {
+				//we only placed one of the stack, pAttachment could have any number of objects
+				if (pAttachment->RemoveObjectsFromStack(1, &attachmentObject) == 0) {
+					(*this)[0]->attachments.push_back(attachmentObject);
+				}
 			}
 			else {
-				(*pTargetObj)[0]->attachments.push_back(*pAttachment);
+				//pAttachment could have any number of objects
+				(*this)[0]->attachments.push_back(*pAttachment);
 			}
-
-//now this is as simple as replacing the old if applicable or adding an attachment!!!
-#if 0
-			if (pAttachmentPosition) {
-			{
-				CreateItem( pTargetObj->usAttachItem[bAttachPos], pTargetObj->bAttachStatus[bAttachPos], &gTempObject );
-			}
-
-			pTargetObj->usAttachItem[bAttachPos] = pAttachment->usItem;
-			pTargetObj->bAttachStatus[bAttachPos] = (*pAttachment)[0]->data.objectStatus;
-
-			if (Item[pAttachment->usItem].grenadelauncher )
-			{
-				// transfer any attachment (max 1) from the grenade launcher to the gun
-				if (pAttachment->usAttachItem[0] != NOTHING)
-				{
-					bSecondAttachPos = FindAttachment( pTargetObj, NOTHING );
-					if (bSecondAttachPos == ITEM_NOT_FOUND)
-					{
-						// not enough room for all attachments - cancel!!
-						pTargetObj->usAttachItem[bAttachPos] = NOTHING;
-						pTargetObj->bAttachStatus[bAttachPos] = 0;
-						return( FALSE );
-					}
-					else
-					{
-						pTargetObj->usAttachItem[bSecondAttachPos] = pAttachment->usAttachItem[0];
-						pTargetObj->bAttachStatus[bSecondAttachPos] = pAttachment->bAttachStatus[0];
-						pAttachment->usAttachItem[0] = NOTHING;
-						pAttachment->bAttachStatus[0] = 0;						
-					}
-				}
-			}
-
-			if ( gTempObject.usItem != NOTHING )
-			{
-				// overwrite/swap!
-				*pAttachment = gTempObject;
-			}
-			else
-			{
-				RemoveObjs( pAttachment, 1 );
-			}
-#endif
-
-			// Check for attachment merge combos here
-			bAttachComboMerge = GetAttachmentComboMerge( pTargetObj );
-			if ( bAttachComboMerge != -1 )
-			{
-				PerformAttachmentComboMerge( pTargetObj, bAttachComboMerge );
-				if ( bAttachInfoIndex != -1 && AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod < 20 )
-				{
-					StatChange( pSoldier, MECHANAMT, (INT8) ( 20 - AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod ), FALSE );
-					StatChange( pSoldier, WISDOMAMT, (INT8) ( 20 - AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod ), FALSE );
-				}
-			}
-
-			pTargetObj->ubWeight = CalculateObjectWeight( pTargetObj );
-
-			if ( pSoldier != NULL )
-				ApplyEquipmentBonuses(pSoldier);
-
-			return( TRUE );
 		}
+
+
+		// Check for attachment merge combos here
+		bAttachComboMerge = GetAttachmentComboMerge( this );
+		if ( bAttachComboMerge != -1 )
+		{
+			PerformAttachmentComboMerge( this, bAttachComboMerge );
+			if ( bAttachInfoIndex != -1 && AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod < 20 )
+			{
+				StatChange( pSoldier, MECHANAMT, (INT8) ( 20 - AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod ), FALSE );
+				StatChange( pSoldier, WISDOMAMT, (INT8) ( 20 - AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod ), FALSE );
+			}
+		}
+
+		this->ubWeight = CalculateObjectWeight( this );
+		pAttachment->ubWeight = CalculateObjectWeight(pAttachment);
+
+		if ( pSoldier != NULL )
+			ApplyEquipmentBonuses(pSoldier);
+
+		return( TRUE );
 	}
 	// check for merges
-	else if (EvaluateValidMerge( pAttachment->usItem, pTargetObj->usItem, &usResult, &usResult2, &ubType, &ubAPCost ))	
+	else if (EvaluateValidMerge( pAttachment->usItem, this->usItem, &usResult, &usResult2, &ubType, &ubAPCost ))	
 	{
 		if ( ubType != COMBINE_POINTS )
 		{
@@ -3829,7 +3838,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 						{
 							// could have a chance of detonation
 							// for now, damage both objects
-							DamageObj( pTargetObj, (INT8) -iCheckResult );
+							DamageObj( this, (INT8) -iCheckResult );
 							DamageObj( pAttachment, (INT8) -iCheckResult );
 							pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 							return( FALSE );
@@ -3842,19 +3851,19 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 					//Madd: note that use_item cannot produce two different items!!! so it doesn't use usResult2
 
 					//Madd: unload guns after merge if ammo caliber or mag size don't match
-					if ( Item[pTargetObj->usItem].usItemClass == IC_GUN && (*pTargetObj)[0]->data.gun.usGunAmmoItem != NONE && (*pTargetObj)[0]->data.gun.ubGunShotsLeft > 0 )
+					if ( Item[this->usItem].usItemClass == IC_GUN && (*this)[0]->data.gun.usGunAmmoItem != NONE && (*this)[0]->data.gun.ubGunShotsLeft > 0 )
 					{
-						if ( Item[usResult].usItemClass != IC_GUN || Weapon[Item[usResult].ubClassIndex].ubCalibre != Weapon[Item[pTargetObj->usItem].ubClassIndex].ubCalibre || (*pTargetObj)[0]->data.gun.ubGunShotsLeft > Weapon[Item[usResult].ubClassIndex].ubMagSize )
+						if ( Item[usResult].usItemClass != IC_GUN || Weapon[Item[usResult].ubClassIndex].ubCalibre != Weapon[Item[this->usItem].ubClassIndex].ubCalibre || (*this)[0]->data.gun.ubGunShotsLeft > Weapon[Item[usResult].ubClassIndex].ubMagSize )
 						{ // item types/calibers/magazines don't match, spit out old ammo
-							EjectAmmoAndPlace(pSoldier, pTargetObj);
+							EjectAmmoAndPlace(pSoldier, this);
 						}
 					}
 
-					RemoveProhibitedAttachments(pSoldier, pTargetObj, usResult);
+					RemoveProhibitedAttachments(pSoldier, this, usResult);
 
-					pTargetObj->usItem = usResult;
+					this->usItem = usResult;
 					//AutoPlaceObject( pAttachment );
-					pTargetObj->ubWeight = CalculateObjectWeight( pTargetObj );
+					this->ubWeight = CalculateObjectWeight( this );
 					if (pSoldier->bTeam == gbPlayerNum)
 					{
 						pSoldier->DoMercBattleSound( BATTLE_SOUND_COOL1 );
@@ -3866,9 +3875,9 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 					return FALSE;
 			case COMBINE_POINTS:
 				// transfer points...
-				if ( Item[ pTargetObj->usItem ].usItemClass == IC_AMMO )
+				if ( Item[ this->usItem ].usItemClass == IC_AMMO )
 				{
-					ubLimit = Magazine[ Item[ pTargetObj->usItem ].ubClassIndex ].ubMagSize;
+					ubLimit = Magazine[ Item[ this->usItem ].ubClassIndex ].ubMagSize;
 				}
 				else
 				{
@@ -3878,10 +3887,10 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				// count down through # of attaching items and add to status of item in position 0
 				for (bLoop = pAttachment->ubNumberOfObjects - 1; bLoop >= 0; bLoop--)
 				{
-					if ((*pTargetObj)[0]->data.objectStatus + (*pAttachment)[bLoop]->data.objectStatus <= ubLimit)
+					if ((*this)[0]->data.objectStatus + (*pAttachment)[bLoop]->data.objectStatus <= ubLimit)
 					{
 						// consume this one totally and continue
-						(*pTargetObj)[0]->data.objectStatus += (*pAttachment)[bLoop]->data.objectStatus;
+						(*this)[0]->data.objectStatus += (*pAttachment)[bLoop]->data.objectStatus;
 						RemoveObjFrom( pAttachment, bLoop );
 						// reset loop limit
 						bLoop = pAttachment->ubNumberOfObjects; // add 1 to counteract the -1 from the loop
@@ -3889,15 +3898,15 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 					else
 					{
 						// add part of this one and then we're done
-						(*pAttachment)[bLoop]->data.objectStatus -= (ubLimit - (*pTargetObj)[0]->data.objectStatus);
-						(*pTargetObj)[0]->data.objectStatus = ubLimit;
+						(*pAttachment)[bLoop]->data.objectStatus -= (ubLimit - (*this)[0]->data.objectStatus);
+						(*this)[0]->data.objectStatus = ubLimit;
 						break;
 					}
 				}
 				break;
 			case DESTRUCTION:
 				// the merge destroyed both items!
-				pTargetObj->RemoveObjectsFromStack(1);
+				this->RemoveObjectsFromStack(1);
 				pAttachment->RemoveObjectsFromStack(1);
 				if ( pSoldier )
 				{
@@ -3910,7 +3919,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 					iCheckResult = SkillCheck( pSoldier, ATTACHING_SPECIAL_ELECTRONIC_ITEM_CHECK, -30 );
 					if ( iCheckResult < 0 )
 					{
-						DamageObj( pTargetObj, (INT8) -iCheckResult );
+						DamageObj( this, (INT8) -iCheckResult );
 						DamageObj( pAttachment, (INT8) -iCheckResult );
 						pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 						return( FALSE );
@@ -3929,7 +3938,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 						{
 							// could have a chance of detonation
 							// for now, damage both objects
-							DamageObj( pTargetObj, (INT8) -iCheckResult );
+							DamageObj( this, (INT8) -iCheckResult );
 							DamageObj( pAttachment, (INT8) -iCheckResult );
 							pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 							return( FALSE );
@@ -3944,23 +3953,23 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				//Madd: usResult2 only works for standard merges->item1 + item2 = item3 + item4
 
 				//Madd: unload guns after merge if ammo caliber or mag size don't match
-				if ( Item[pTargetObj->usItem].usItemClass == IC_GUN && (*pTargetObj)[0]->data.gun.usGunAmmoItem != NONE && (*pTargetObj)[0]->data.gun.ubGunShotsLeft > 0 )
+				if ( Item[this->usItem].usItemClass == IC_GUN && (*this)[0]->data.gun.usGunAmmoItem != NONE && (*this)[0]->data.gun.ubGunShotsLeft > 0 )
 				{
-					if ( Item[usResult].usItemClass != IC_GUN || Weapon[Item[usResult].ubClassIndex].ubCalibre != Weapon[Item[pTargetObj->usItem].ubClassIndex].ubCalibre || (*pTargetObj)[0]->data.gun.ubGunShotsLeft > Weapon[Item[usResult].ubClassIndex].ubMagSize )
+					if ( Item[usResult].usItemClass != IC_GUN || Weapon[Item[usResult].ubClassIndex].ubCalibre != Weapon[Item[this->usItem].ubClassIndex].ubCalibre || (*this)[0]->data.gun.ubGunShotsLeft > Weapon[Item[usResult].ubClassIndex].ubMagSize )
 					{ // item types/calibers/magazines don't match, spit out old ammo
-						EjectAmmoAndPlace(pSoldier, pTargetObj);
+						EjectAmmoAndPlace(pSoldier, this);
 					}
 				}
 
-				RemoveProhibitedAttachments(pSoldier, pTargetObj, usResult);
+				RemoveProhibitedAttachments(pSoldier, this, usResult);
 
-				pTargetObj->usItem = usResult;
+				this->usItem = usResult;
 				if ( ubType != TREAT_ARMOUR )
 				{
-					(*pTargetObj)[0]->data.objectStatus = ((*pTargetObj)[0]->data.objectStatus + (*pAttachment)[0]->data.objectStatus) / 2;
+					(*this)[0]->data.objectStatus = ((*this)[0]->data.objectStatus + (*pAttachment)[0]->data.objectStatus) / 2;
 				}
 
-				pTargetObj->ubWeight = CalculateObjectWeight( pTargetObj );
+				this->ubWeight = CalculateObjectWeight( this );
 
 				if ( usResult2 != NOTHING )
 				{
@@ -3980,7 +3989,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 					pAttachment->usItem = usResult2;
 					if ( ubType != TREAT_ARMOUR )
 					{
-						(*pAttachment)[0]->data.objectStatus = ((*pAttachment)[0]->data.objectStatus + (*pTargetObj)[0]->data.objectStatus) / 2;
+						(*pAttachment)[0]->data.objectStatus = ((*pAttachment)[0]->data.objectStatus + (*this)[0]->data.objectStatus) / 2;
 					}
 					pAttachment->ubWeight = CalculateObjectWeight( pAttachment );
 				}
@@ -4015,7 +4024,7 @@ void RemoveProhibitedAttachments(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, UINT16
 					}
 				}
 			}
-			RemoveAttachment(pObj, &(*iter));
+			pObj->RemoveAttachment(&(*iter));
 		}
 	}
 	return;
@@ -4023,8 +4032,7 @@ void RemoveProhibitedAttachments(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, UINT16
 
 void EjectAmmoAndPlace(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj)
 {
-	CreateItem((*pObj)[0]->data.gun.usGunAmmoItem, 100, &gTempObject);
-	gTempObject[0]->data.ubShotsLeft = (*pObj)[0]->data.gun.ubGunShotsLeft;
+	CreateAmmo((*pObj)[0]->data.gun.usGunAmmoItem, &gTempObject, (*pObj)[0]->data.gun.ubGunShotsLeft);
 	(*pObj)[0]->data.gun.ubGunShotsLeft = 0;
 	(*pObj)[0]->data.gun.usGunAmmoItem = NONE;
 	if ( pSoldier )
@@ -4044,15 +4052,12 @@ held in the cursor that each active pocket can hold.*/
 extern BOOLEAN CompatibleAmmoForGun( OBJECTTYPE *pTryObject, OBJECTTYPE *pTestObject );
 BOOLEAN CanItemFitInVehicle( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement )
 {
-	UINT8					ubSlotLimit, lbePocket=1;
-	INT8					bNewPos=ITEM_NOT_FOUND;
-	UINT32					pRestrict=0;
-
 	if((UsingInventorySystem() == false) || !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 		return(FALSE);
 	if(!vehicleInv[bPos])
 		return(FALSE);
 
+	UINT8					ubSlotLimit;
 	ubSlotLimit = ItemSlotLimit( pObj, bPos, pSoldier );
 
 	if ( ubSlotLimit == 0 )
@@ -4081,14 +4086,12 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 	switch( bPos )
 	{
 		case SECONDHANDPOS:
-//			if (Item[pSoldier->inv[HANDPOS].usItem][0]->data.fFlags & ITEM_TWO_HANDED)
 			if (Item[pSoldier->inv[HANDPOS].usItem].twohanded )
 			{
 				return( FALSE );
 			}
 			break;
 		case HANDPOS:
-//			if (Item[ pObj->usItem ][0]->data.fFlags & ITEM_TWO_HANDED)
 			if (Item[ pObj->usItem ].twohanded )
 			{
 				if (pSoldier->inv[HANDPOS].usItem != NOTHING && pSoldier->inv[SECONDHANDPOS].usItem != NOTHING)
@@ -5698,28 +5701,28 @@ BOOLEAN CreateGun( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 
 	pObj->initialize();
 	pObj->usItem = usItem;
-	(*pObj)[0]->data.gun.bGunStatus = bStatus;
-	(*pObj)[0]->data.ubImprintID = NO_PROFILE;
-	pObj->ubWeight = CalculateObjectWeight( pObj );
+	StackedObjectData* pStackedObject = (*pObj)[0];
+	pStackedObject->data.gun.bGunStatus = bStatus;
+	pStackedObject->data.ubImprintID = NO_PROFILE;
 
 	if (Weapon[ usItem ].ubWeaponClass == MONSTERCLASS)
 	{
-		(*pObj)[0]->data.gun.ubGunShotsLeft = GetMagSize(pObj);
-		(*pObj)[0]->data.gun.ubGunAmmoType = AMMO_MONSTER;
+		pStackedObject->data.gun.ubGunShotsLeft = GetMagSize(pObj);
+		pStackedObject->data.gun.ubGunAmmoType = AMMO_MONSTER;
 	}
 	else if ( EXPLOSIVE_GUN( usItem ) )
 	{
 		if ( Item[usItem].singleshotrocketlauncher ) 
 		{
-			(*pObj)[0]->data.gun.ubGunShotsLeft = 1;
+			pStackedObject->data.gun.ubGunShotsLeft = 1;
 		}
 		else
 		{
 			// cannon
-			(*pObj)[0]->data.gun.ubGunShotsLeft = 0;
+			pStackedObject->data.gun.ubGunShotsLeft = 0;
 		}
-		(*pObj)[0]->data.gun.bGunAmmoStatus = 100;
-		(*pObj)[0]->data.gun.ubGunAmmoType = 0;
+		pStackedObject->data.gun.bGunAmmoStatus = 100;
+		pStackedObject->data.gun.ubGunAmmoType = 0;
 	}
 	else
 	{
@@ -5732,20 +5735,21 @@ BOOLEAN CreateGun( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 		}
 		else
 		{
-			(*pObj)[0]->data.gun.usGunAmmoItem = usAmmo;
-			(*pObj)[0]->data.gun.ubGunAmmoType = Magazine[ Item[ usAmmo ].ubClassIndex].ubAmmoType;
-			(*pObj)[0]->data.gun.bGunAmmoStatus = 100;
-			(*pObj)[0]->data.gun.ubGunShotsLeft = Magazine[ Item[ usAmmo ].ubClassIndex ].ubMagSize;
-			(*pObj)[0]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER; // Madd: new guns should have cartridge in chamber
+			pStackedObject->data.gun.usGunAmmoItem = usAmmo;
+			pStackedObject->data.gun.ubGunAmmoType = Magazine[ Item[ usAmmo ].ubClassIndex].ubAmmoType;
+			pStackedObject->data.gun.bGunAmmoStatus = 100;
+			pStackedObject->data.gun.ubGunShotsLeft = Magazine[ Item[ usAmmo ].ubClassIndex ].ubMagSize;
+			pStackedObject->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER; // Madd: new guns should have cartridge in chamber
 		}
 	}
 
+	pObj->ubWeight = CalculateObjectWeight( pObj );
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateGun: Done"));
 	// succesful
 	return( TRUE );
 }
 
-BOOLEAN CreateMagazine( UINT16 usItem, OBJECTTYPE * pObj )
+BOOLEAN CreateAmmo( UINT16 usItem, OBJECTTYPE * pObj, INT16 ubShotsLeft )
 {
 	PERFORMANCE_MARKER
 	if (pObj == NULL)
@@ -5755,9 +5759,14 @@ BOOLEAN CreateMagazine( UINT16 usItem, OBJECTTYPE * pObj )
 	pObj->initialize();
 	pObj->usItem = usItem;
 	pObj->ubNumberOfObjects = 1;
-	(*pObj)[0]->data.ubShotsLeft = Magazine[ Item[usItem].ubClassIndex ].ubMagSize;
+	if (ubShotsLeft < 0) {
+		(*pObj)[0]->data.ubShotsLeft = Magazine[ Item[usItem].ubClassIndex ].ubMagSize;
+	}
+	else {
+		(*pObj)[0]->data.ubShotsLeft = ubShotsLeft;
+	}
 	pObj->ubWeight = CalculateObjectWeight( pObj );
-	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateMagazine: done"));
+	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateAmmo: done"));
 
 	return( TRUE );
 }
@@ -5771,8 +5780,6 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 	if (usItem >= MAXITEMS)
 	{
 		DebugBreak();
-		pObj->initialize();//ADB should this really be done? I moved this here to preserve
-		//the original intent of the code while avoiding CreateGun initialize x2
 		return( FALSE );
 	}
 	if (Item[ usItem ].usItemClass == IC_GUN)
@@ -5781,7 +5788,7 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 	}
 	else if (Item[ usItem ].usItemClass == IC_AMMO)
 	{
-		fRet = CreateMagazine( usItem, pObj );		
+		fRet = CreateAmmo( usItem, pObj );		
 	}
 	else
 	{
@@ -5812,7 +5819,7 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 		if (Item [ usItem ].defaultattachment > 0 )
 		{
 			CreateItem(Item [ usItem ].defaultattachment,100,&gTempObject);
-			AttachObject(NULL,pObj,&gTempObject);
+			pObj->AttachObject(NULL,&gTempObject);
 		}
 	}
 
@@ -5949,17 +5956,14 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 	return( TRUE );
 }
 
-BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, OBJECTTYPE* pAttachment, OBJECTTYPE * pNewObj )
+BOOLEAN OBJECTTYPE::RemoveAttachment( OBJECTTYPE* pAttachment, OBJECTTYPE * pNewObj )
 {
 	PERFORMANCE_MARKER
-	CHECKF( pObj );
-	
 	if ( pAttachment == 0 )
 	{
 		return( FALSE );
 	}
 
-//	if ( Item[ pObj->usAttachItem[bAttachPos] ][0]->data.fFlags & ITEM_INSEPARABLE )
 	if ( Item[ pAttachment->usItem ].inseparable  )
 	{
 		return( FALSE );
@@ -5968,25 +5972,25 @@ BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, OBJECTTYPE* pAttachment, OBJECTTYPE
 	// if pNewObj is passed in NULL, then we just delete the attachment
 	if (pNewObj != NULL)
 	{
-		pNewObj = pAttachment;
+		*pNewObj = *pAttachment;
 	}
 
-	(*pObj)[0]->attachments.remove(*pAttachment);
+	(*this)[0]->attachments.remove(*pAttachment);
 
 	if (pNewObj && Item[pNewObj->usItem].grenadelauncher )//UNDER_GLAUNCHER)
 	{
 		// look for any grenade; if it exists, we must make it an 
 		// attachment of the grenade launcher
-		OBJECTTYPE* pGrenade = FindAttachmentByClass( pObj, IC_GRENADE );
+		OBJECTTYPE* pGrenade = FindAttachmentByClass( this, IC_GRENADE );
 		if (pGrenade)
 		{
 			(*pNewObj)[0]->attachments.push_back(*pGrenade);
 			pNewObj->ubWeight = CalculateObjectWeight( pNewObj );
-			RemoveAttachment(pObj, pGrenade);
+			this->RemoveAttachment(pGrenade);
 		}
 	}
 
-	pObj->ubWeight = CalculateObjectWeight( pObj );
+	this->ubWeight = CalculateObjectWeight( this );
 	return( TRUE );
 }
 
@@ -6012,6 +6016,7 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 	BOOLEAN			fReturnVal = FALSE;
 
 	usItem	= pObject->usItem;
+	Assert(pObject->ubNumberOfObjects == 1);
 	bStatus = (*pObject)[0]->data.objectStatus;
 	pSoldier = FindSoldierByProfileID( ubProfile, FALSE );
 
@@ -6069,7 +6074,7 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 					for (attachmentList::iterator iter = (*pObject)[0]->attachments.begin(); iter != (*pObject)[0]->attachments.end(); ++iter) {
 						// drop it in Madlab's tile
 						AddItemToPool( pSoldier->sGridNo, &(*iter), 1, 0, 0, 0 );
-						RemoveAttachment( pObject, &(*iter));
+						pObject->RemoveAttachment(&(*iter));
 					}
 				}
 
@@ -6842,7 +6847,10 @@ void ActivateXRayDevice( SOLDIERTYPE * pSoldier )
 		if ( (*pBatteries)[0]->data.objectStatus <= 0 )
 		{
 			// destroy batteries
-			RemoveAttachment(&(pSoldier->inv[HANDPOS]), pBatteries);
+			pBatteries->RemoveObjectsFromStack(1);
+			if (pBatteries->ubNumberOfObjects == 0) {
+				pSoldier->inv[HANDPOS].RemoveAttachment(pBatteries);
+			}
 		}
 	}
 	// first, scan through all mercs and turn off xrayed flag for anyone

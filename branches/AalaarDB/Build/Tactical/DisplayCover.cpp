@@ -9,7 +9,7 @@
 #include "builddefines.h"
 #include "Types.h"
 #include "Isometric Utils.h"
-#include "Soldier Control.h"
+//#include "Soldier Control.h"
 #include "Overhead.h"
 #include "displaycover.h"
 #include "Font Control.h"
@@ -31,6 +31,11 @@
 #include "strategicmap.h"
 #include "Render Fun.h"
 #endif
+
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 //*******	Local Defines **************************************************
 

@@ -2,7 +2,7 @@
 	#include "Tactical All.h"
 #else
 	#include "sgp.h"
-	#include "soldier control.h"
+	//#include "soldier control.h"
 	#include "soldier profile.h"
 	#include "drugs and alcohol.h"
 	#include "items.h"
@@ -14,6 +14,11 @@
 #include "Text.h"
 #include "Interface.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 UINT8 ubDrugTravelRate[]			= { 4,	2 };
 UINT8 ubDrugWearoffRate[]			= { 2,	2 };

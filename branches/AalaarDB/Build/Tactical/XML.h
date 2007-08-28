@@ -5,6 +5,11 @@
 #include "EnemyItemDrops.h"
 #include "Loading Screen.h"
 
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
+
 enum
 {
 	ELEMENT_NONE = 0,

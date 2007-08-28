@@ -34,7 +34,6 @@
 	#include "weapons.h"
 	#include "Random.h"
 	#include "GameSettings.h"
-	//#include "GameVersion.h"
 #endif
 
 #define IMP_FILENAME_SUFFIX ".dat"

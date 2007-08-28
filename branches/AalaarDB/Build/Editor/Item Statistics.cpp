@@ -20,7 +20,6 @@
 	#include "Item Statistics.h"
 	#include "Text Input.h"
 	#include "Action Items.h"
-	#include "Item types.h"
 	#include "video.h"
 	#include "Simple Render Utils.h"
 	#include "Weapons.h"
@@ -1325,7 +1324,7 @@ void ToggleAttachment( GUI_BUTTON *btn, INT32 reason )
 					gfAttachment[ i ] = TRUE;
 					btn->uiFlags |= BUTTON_CLICKED_ON;
 					CreateItem( usAttachment, (*gpItem)[0]->data.gun.bGunStatus, &gTempObject );
-					AttachObject( NULL, gpItem, &gTempObject );
+					gpItem->AttachObject( NULL, &gTempObject );
 				}
 				else
 				{ //Button is out, so remove the attachment
@@ -1333,7 +1332,7 @@ void ToggleAttachment( GUI_BUTTON *btn, INT32 reason )
 					btn->uiFlags &= ~BUTTON_CLICKED_ON;
 					OBJECTTYPE* pAttachment = FindAttachment( gpItem, usAttachment );
 					if( pAttachment )
-						RemoveAttachment( gpItem, pAttachment );
+						gpItem->RemoveAttachment( pAttachment );
 				}
 			}
 		}
@@ -1351,14 +1350,14 @@ void ToggleCeramicPlates( GUI_BUTTON *btn, INT32 reason )
 		{
 			btn->uiFlags |= BUTTON_CLICKED_ON;
 			CreateItem( CERAMIC_PLATES, (*gpItem)[0]->data.objectStatus, &gTempObject );
-			AttachObject( NULL, gpItem, &gTempObject );
+			gpItem->AttachObject( NULL, &gTempObject );
 		}
 		else
 		{
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
 			OBJECTTYPE* pAttachment = FindAttachment( gpItem, CERAMIC_PLATES );
 			if( pAttachment )
-				RemoveAttachment( gpItem, pAttachment );
+				gpItem->RemoveAttachment( pAttachment );
 		}
 	}
 }
@@ -1373,7 +1372,7 @@ void ToggleDetonator( GUI_BUTTON *btn, INT32 reason )
 			gfDetonator = TRUE;
 			btn->uiFlags |= BUTTON_CLICKED_ON;
 			CreateItem( DETONATOR, (*gpItem)[0]->data.objectStatus, &gTempObject );
-			AttachObject( NULL, gpItem, &gTempObject );
+			gpItem->AttachObject( NULL, &gTempObject );
 		}
 		else
 		{ //Button is out, so remove the attachment
@@ -1381,7 +1380,7 @@ void ToggleDetonator( GUI_BUTTON *btn, INT32 reason )
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
 			OBJECTTYPE* pAttachment = FindAttachment( gpItem, DETONATOR );
 			if( pAttachment )
-				RemoveAttachment( gpItem, pAttachment );
+				gpItem->RemoveAttachment( pAttachment );
 		}
 	}
 }

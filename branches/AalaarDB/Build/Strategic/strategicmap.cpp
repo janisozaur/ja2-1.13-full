@@ -17,7 +17,7 @@
 	#include <time.h> 
 	#include "jascreens.h"
 	#include "worlddef.h"
-	#include "Soldier Control.h"
+
 	#include "overhead.h"
 	#include "interface panels.h"
 	#include "isometric utils.h"
@@ -84,7 +84,7 @@
 	#include "dialogue control.h"
 	#include "Town Militia.h"
 	#include "sysutil.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 	#include "points.h"
 	#include "render dirty.h"
 	#include "Debug Control.h"
@@ -107,6 +107,11 @@
 #endif
 
 #include "SaveLoadGame.h"
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 //Used by PickGridNoToWalkIn
 #define MAX_ATTEMPTS	200

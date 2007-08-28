@@ -16,7 +16,7 @@
 #include "math.h"
 #include "jascreens.h"
 #include "pathai.h"
-#include "Soldier Control.h"
+//#include "Soldier Control.h"
 #include "Animation Control.h"
 #include "Animation Data.h"
 #include "Event Pump.h"
@@ -117,6 +117,11 @@
 #endif
 
 #include	"Quest Debug System.h"
+
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 
 extern UIKEYBOARD_HOOK					gUIKeyboardHook;
@@ -2579,8 +2584,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				if ( !(gTacticalStatus.fEnemyInSector) )
 				{
 					HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-					OBJECTTYPE newObj; //Create object
-
 					for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ ) //for all items in sector
 					{
 						if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped						
@@ -2590,13 +2593,12 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 								//Remove magazine 
 								if ( (gWorldItems[ uiLoop ].object[0]->data.gun.usGunAmmoItem != NONE) && (gWorldItems[ uiLoop ].object[0]->data.gun.ubGunShotsLeft > 0) )
 								{
-									CreateItem(gWorldItems[ uiLoop ].object[0]->data.gun.usGunAmmoItem, 100, &newObj);
-									newObj[0]->data.ubShotsLeft = gWorldItems[ uiLoop ].object[0]->data.gun.ubGunShotsLeft;
+									CreateAmmo(gWorldItems[ uiLoop ].object[0]->data.gun.usGunAmmoItem, &gTempObject, gWorldItems[ uiLoop ].object[0]->data.gun.ubGunShotsLeft);
 									gWorldItems[ uiLoop ].object[0]->data.gun.ubGunShotsLeft = 0;
 									gWorldItems[ uiLoop ].object[0]->data.gun.usGunAmmoItem = NONE;
 
 									// put it on the ground
-									AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &newObj, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
+									AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
 								}
 							}
 
@@ -2609,7 +2611,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 									{												
 										// put it on the ground
 										AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &(*iter), 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
-										if (RemoveAttachment( &(gWorldItems[ uiLoop ].object), &(*iter)))
+										if (gWorldItems[ uiLoop ].object.RemoveAttachment(&(*iter)))
 										{
 											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
 										}

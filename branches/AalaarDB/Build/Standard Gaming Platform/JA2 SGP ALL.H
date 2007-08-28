@@ -88,7 +88,6 @@
 #include <windowsx.h>
 #include "vobject_private.h"
 #include "shading.h"
-//#include "mss.h"
 #include "imgfmt.h"
 #include "timer.h"
 #include "renderworld.h"

@@ -1786,7 +1786,7 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for milkor: resulting status: %d, remove? = %d",(*pAttachment)[0]->data.objectStatus,((*pAttachment)[0]->data.objectStatus <= (INT8) ( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ))));
 					if ( (*pAttachment)[0]->data.objectStatus <= (INT8) ceil((double)( 100 / GetMagSize(pObj) ) ))
 					{
-						RemoveAttachment( pObj, pAttachment);
+						pObj->RemoveAttachment( pAttachment);
 					}
 				}
 				else if ( (pSoldier->bWeaponMode == WM_ATTACHED_GL || pSoldier->bWeaponMode == WM_ATTACHED_GL_BURST || pSoldier->bWeaponMode == WM_ATTACHED_GL_AUTO ) && Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize > 1 )
@@ -1796,13 +1796,13 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for OICW GL: resulting status: %d, remove? = %d",(*pAttachment)[0]->data.objectStatus,((*pAttachment)[0]->data.objectStatus <= (INT8) ( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ))));
 					if ( (*pAttachment)[0]->data.objectStatus <= (INT8) ceil((double)( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ) ))
 					{
-						RemoveAttachment( pObj, pAttachment);
+						pObj->RemoveAttachment( pAttachment);
 					}
 				}
 				else
 				{
 					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for GL: removing attachment"));
-					RemoveAttachment( pObj, pAttachment);
+					pObj->RemoveAttachment( pAttachment);
 				}
 			}
 		}

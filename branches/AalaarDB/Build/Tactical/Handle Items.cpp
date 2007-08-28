@@ -47,7 +47,7 @@
 	#include "ShopKeeper Interface.h"
 	#include "Arms Dealer Init.h"
 	#include "soldier add.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 	#include "squads.h"
 	#include "rotting corpses.h"
 	#include "soldier ani.h"

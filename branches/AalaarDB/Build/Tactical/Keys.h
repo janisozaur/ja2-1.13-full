@@ -4,6 +4,11 @@
 #include "types.h"
 #include "FileMan.h"
 
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
+
 typedef struct
 {
 	UINT16		usItem;						// index in item table for key

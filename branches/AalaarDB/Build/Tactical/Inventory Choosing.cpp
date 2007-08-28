@@ -919,21 +919,21 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ChooseWeaponForSoldierCreateStruct: Create Scope %d",usScopeIndex));
 		CreateItem( usScopeIndex, 100, &gTempObject );
 		gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
-		AttachObject( NULL, &(pp->Inv[ HANDPOS ]), &gTempObject );		
+		pp->Inv[ HANDPOS ].AttachObject( NULL, &gTempObject );		
 	}
 	if( usAttachIndex > 0 && ValidItemAttachment(&(pp->Inv[ HANDPOS ]),usAttachIndex,TRUE,FALSE))
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ChooseWeaponForSoldierCreateStruct: Create Attachment %d",usAttachIndex));
 		CreateItem( usAttachIndex, 100, &gTempObject );
 		gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
-		AttachObject( NULL, &(pp->Inv[ HANDPOS ]), &gTempObject );		
+		pp->Inv[ HANDPOS ].AttachObject( NULL, &gTempObject );		
 	}
 	if( usAttachIndex2 > 0 && ValidItemAttachment(&(pp->Inv[ HANDPOS ]),usAttachIndex2,TRUE,FALSE))
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ChooseWeaponForSoldierCreateStruct: Create 2nd Attachment %d",usAttachIndex2));
 		CreateItem( usAttachIndex2, 100, &gTempObject );
 		gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
-		AttachObject( NULL, &(pp->Inv[ HANDPOS ]), &gTempObject );		
+		pp->Inv[ HANDPOS ].AttachObject( NULL, &gTempObject );		
 	}
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ChooseWeaponForSoldierCreateStruct: Set bullets"));
@@ -1314,7 +1314,7 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 				{
 					CreateItem( usAttachment, (INT8)(70+Random(31)), &gTempObject );
 					gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
-					AttachObject( NULL, &(pp->Inv[ HELMETPOS ]), &gTempObject );		
+					pp->Inv[ HELMETPOS ].AttachObject( NULL, &gTempObject );		
 				}
 			}
 
@@ -1387,7 +1387,7 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 				{
 					CreateItem( usAttachment, (INT8)(70+Random(31)), &gTempObject );
 					gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
-					AttachObject( NULL, &(pp->Inv[ VESTPOS ]), &gTempObject );		
+					pp->Inv[ VESTPOS ].AttachObject( NULL, &gTempObject );		
 				}
 			}
 
@@ -1481,7 +1481,7 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 				{
 					CreateItem( usAttachment, (INT8)(70+Random(31)), &gTempObject );
 					gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
-					AttachObject( NULL, &(pp->Inv[ LEGPOS ]), &gTempObject );		
+					pp->Inv[ LEGPOS ].AttachObject( NULL, &gTempObject );		
 				}
 			}
 
@@ -2923,7 +2923,7 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 				gTempObject[0]->data.fFlags = (*pObj)[0]->data.fFlags;
 
 				for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
-					AttachObject(0, &gTempObject, &(*iter));
+					gTempObject.AttachObject(0, &(*iter));
 				}
 
 				//for any old attachments that don't fit on the new gun, place or drop them

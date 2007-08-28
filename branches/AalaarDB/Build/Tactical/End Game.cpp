@@ -3,7 +3,7 @@
 	#include "PreBattle Interface.h"
 	#include "Intro.h"
 #else
-	#include "Soldier Control.h"
+
 	#include "Overhead.h"
 	#include "Boxing.h"
 	#include "Render Fun.h"
@@ -43,6 +43,11 @@
 	#include "Tactical Save.h"
 	#include "screenids.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 INT16 sStatueGridNos[] = { 13829, 13830, 13669, 13670 };
 

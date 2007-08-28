@@ -28,7 +28,7 @@
 	#include	"Game Clock.h"
 	#include	"environment.h"
 	#include	"dialogue control.h"
-	#include	"Soldier Control.h"
+	//#include	"Soldier Control.h"
 	#include	"overhead.h"
 	#include	"AimMembers.h"
 	#include	"MessageBoxScreen.h"
@@ -43,6 +43,11 @@
 #endif
 
 //#ifdef JA2BETAVERSION
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 
 //*******************************

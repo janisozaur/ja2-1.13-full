@@ -9,7 +9,7 @@
 	#include "debug.h"
 	#include "Animation Data.h"
 	#include "Animation Control.h"
-	#include "Soldier Control.h"
+
 	#include "jascreens.h"
 	#include "tiledef.h"
 	#include "Sys Globals.h"
@@ -19,6 +19,11 @@
 	#include "worldman.h"
 	#include "Fileman.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 #define EMPTY_SLOT		-1
 #define TO_INIT				0

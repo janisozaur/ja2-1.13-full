@@ -3,7 +3,7 @@
 #else
 	#include "types.h"
 	#include "wcheck.h"
-	#include "Soldier Control.h"
+
 	#include "Soldier Functions.h"
 	#include "ai.h"
 	#include "AIInternals.h"
@@ -16,6 +16,11 @@
 	#include "worldman.h"
 	#include "Assignments.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 extern BOOLEAN gfAutoBandageFailed;
 

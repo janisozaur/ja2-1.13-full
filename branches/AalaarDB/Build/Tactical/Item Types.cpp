@@ -70,7 +70,23 @@ int OBJECTTYPE::GetLBEIndex(int subObject)
 int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 {
 	PERFORMANCE_MARKER
-	int numToAdd = max (ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects, howMany);
+	//Keys, triggers, and other specials can never stack, should LBEs?
+	if (Item[usItem].usItemClass == IC_KEY
+		|| Item[usItem].usItemClass == IC_BOMB
+		|| Item[usItem].usItemClass == IC_LBEGEAR
+		|| Item[usItem].usItemClass == IC_MONEY) {
+		//exit and do not continue
+		return 0;
+	}
+	if ((*this)[0]->data.bTrap > 0) {
+		return 0;
+	}
+
+	//if howMany is -1 the stack will become full
+	int numToAdd = ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects;
+	if (howMany >= 0) {
+		numToAdd = min(numToAdd, howMany);
+	}
 	if (numToAdd) {
 		CreateItem(usItem, objectStatus, &gTempObject);
 		for (int x = ubNumberOfObjects; x < ubNumberOfObjects + numToAdd; ++x) {
@@ -88,23 +104,70 @@ int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 {
 	PERFORMANCE_MARKER
+	if (ubNumberOfObjects == 0) {
+		//we are adding to an empty object, it can happen
+		Assert(sourceObject.ubNumberOfObjects > 0);
+		usItem = sourceObject.usItem;
+	}
 	Assert(sourceObject.usItem == usItem);
+
 	//can't add too much, can't take too many
-	int numToAdd = max (ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects, sourceObject.ubNumberOfObjects);
-	if (howMany > 0) {
-		numToAdd = max(numToAdd, howMany);
+	//if howMany is -1 the stack will become full if sourceObject has enough
+	int numToAdd = min (ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects, sourceObject.ubNumberOfObjects);
+	if (howMany >= 0) {
+		numToAdd = min(numToAdd, howMany);
 	}
 
-	StackedObjects::iterator stopIter = sourceObject.objectStack.begin();
-	for (int x = 0; x < numToAdd; ++x) {
-		++stopIter;
-	}
-	objectStack.splice(objectStack.begin(), sourceObject.objectStack, sourceObject.objectStack.begin(), stopIter);
+	//stacking control, restrict certain things here
+	if (numToAdd > 0) {
+		//Keys, triggers, and other specials can never stack, should LBEs?
+		if (Item[usItem].usItemClass == IC_KEY
+			|| Item[usItem].usItemClass == IC_BOMB
+			|| Item[usItem].usItemClass == IC_LBEGEAR) {
+			//exit and do not continue
+			return 0;
+		}
 
-	sourceObject.ubNumberOfObjects -= numToAdd;
-	ubNumberOfObjects += numToAdd;
-	sourceObject.ubWeight = CalculateObjectWeight(&sourceObject);
-	ubWeight = CalculateObjectWeight(this);
+		
+		if (Item[usItem].usItemClass == IC_MONEY) {
+			//money doesn't stack, it merges
+			//TODO merge and return
+			return 0;
+		}
+
+		if (ubNumberOfObjects > 0) {
+			//for convenience sake, do not allow mixed flags to stack!
+			//continue on because you might find something else with the same flags
+			if (sourceObject[0]->data.fFlags != (*this)[0]->data.fFlags) {
+				numToAdd = 0;
+			}
+
+			if (sourceObject[0]->data.ubImprintID != (*this)[0]->data.ubImprintID) {
+				numToAdd = 0;
+			}
+
+			//nor allow trapped items to stack
+			if (sourceObject[0]->data.bTrap > 0
+				|| (*this)[0]->data.bTrap > 0) {
+				return 0;
+			}
+		}
+		//TODO, other specials
+	}
+
+	if (numToAdd > 0) {
+		StackedObjects::iterator stopIter = sourceObject.objectStack.begin();
+		for (int x = 0; x < numToAdd; ++x) {
+			++stopIter;
+		}
+		objectStack.splice(objectStack.begin(), sourceObject.objectStack, sourceObject.objectStack.begin(), stopIter);
+
+		sourceObject.ubNumberOfObjects -= numToAdd;
+		ubNumberOfObjects += numToAdd;
+		sourceObject.ubWeight = CalculateObjectWeight(&sourceObject);
+		ubWeight = CalculateObjectWeight(this);
+	}
+	
 
 	//returns how many were NOT added
 	if (howMany > 0) {
@@ -119,16 +182,18 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 void OBJECTTYPE::DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany)
 {
 	int numToDupe;
-	if (howMany == -1) {
-		numToDupe = sourceObject.ubNumberOfObjects;
+	if (howMany >= 0) {
+		numToDupe = min(howMany, sourceObject.ubNumberOfObjects);
 	}
 	else {
-		numToDupe = min(howMany, sourceObject.ubNumberOfObjects);
+		numToDupe = sourceObject.ubNumberOfObjects;
 	}
 
 	initialize();
+	StackedObjects::iterator iter = sourceObject.objectStack.begin();
 	for (int x = 0; x < numToDupe; ++x) {
-		objectStack.push_back(sourceObject.objectStack.front());		
+		objectStack.push_back(*iter);
+		++iter;
 	}
 	ubNumberOfObjects = numToDupe;
 	ubWeight = CalculateObjectWeight(this);
@@ -138,27 +203,26 @@ void OBJECTTYPE::DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany)
 int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject)
 {
 	PERFORMANCE_MARKER
-	if (ubNumberOfObjects == 1) {
-		return howMany;
+	if (howMany == -1) {
+		howMany = ubNumberOfObjects;
 	}
 
-	int numToRemove = min(ubNumberOfObjects - 1, howMany);
+	int numToRemove = min(ubNumberOfObjects, howMany);
 	if (destObject) {
-		StackedObjects::iterator stopIter = objectStack.begin();
-		for (int x = 0; x < numToRemove; ++x) {
-			++stopIter;
+		//destObject should be empty especially if numToRemove is 0
+		destObject->initialize();
+		if (numToRemove > 0) {
+			//this handles the removal too
+			destObject->AddObjectsToStack(*this, numToRemove);
 		}
-		destObject->objectStack.splice(destObject->objectStack.begin(), objectStack, objectStack.begin(), stopIter);
-		destObject->ubNumberOfObjects += numToRemove;
-		destObject->ubWeight = CalculateObjectWeight(destObject);
 	}
-	else {
+	else if (numToRemove > 0) {
 		for (int x = 0; x < numToRemove; ++x) {
 			objectStack.pop_front();
 		}
+		ubNumberOfObjects -= numToRemove;
+		ubWeight = CalculateObjectWeight(this);
 	}
-	ubNumberOfObjects -= numToRemove;
-	ubWeight = CalculateObjectWeight(this);
 
 	//returns how many were NOT removed
 	return howMany - numToRemove;
@@ -257,6 +321,7 @@ OBJECTTYPE::OBJECTTYPE()
 }
 void OBJECTTYPE::initialize()
 {
+	//should this be init to size 0?
 	PERFORMANCE_MARKER
 	memset(this, 0, SIZEOF_OBJECTTYPE_POD);
 	ubNumberOfObjects = 1;
@@ -323,12 +388,12 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
 		this->ubWeight = src.ubWeight;
-
+		this->objectStack.resize(this->ubNumberOfObjects);
 
 		//and now the big change, the union
 		//copy the old data, making sure not to write over, since the old size is actually 9 bytes
 		if (ubNumberOfObjects == 1) {
-			memcpy(&((*this)[0]->data), &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,sizeof(ObjectData)));
+			memcpy(&((*this)[0]->data.gun), &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,sizeof(ObjectData)));
 
 			(*this)[0]->data.fFlags = src.fFlags;
 			(*this)[0]->data.bTrap = src.bTrap;		// 1-10 exp_lvl to detect
@@ -353,8 +418,6 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 			Version101::OLD_OBJECTTYPE_101_UNION ugYucky;
 			memcpy(&ugYucky, &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,sizeof(ObjectData)));
 
-			//even if the ubNumberOfObjects is 0 we still need to have the data!!!
-			objectStack.resize(max(ubNumberOfObjects,1));
 			for (int x = 0; x < max(ubNumberOfObjects,1); ++x) {
 				(*this)[x]->data.objectStatus = ugYucky.bStatus[x];
 				(*this)[x]->data.fFlags = src.fFlags;

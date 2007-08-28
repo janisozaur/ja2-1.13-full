@@ -2,14 +2,14 @@
 	#include "Tactical All.h"
 #else
 	#include "types.h"
-	#include "soldier control.h"
+	//#include "soldier control.h"
 	#include "overhead.h"
 	#include "animation control.h"
 	#include "points.h"
 	#include "opplist.h"
 	#include "timer.h"
 	#include "event pump.h"
-	#include "Sound Control.h"
+//	#include "Sound Control.h"
 	#include "interface.h"
 	#include "Isometric Utils.h"
 	#include "Font Control.H"
@@ -55,6 +55,11 @@
 #endif
 
 #include "Rain.h"
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 // Shop Keeper Interface
 #define SKI_X_OFFSET						(((SCREEN_WIDTH - 536) / 2))

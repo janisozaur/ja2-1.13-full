@@ -23,7 +23,7 @@
 	#include "lighting.h"
 	#include "structure.h"
 	#include "vobject.h"
-	#include "Soldier Control.h"
+
 	#include "isometric utils.h"
 	#include "Interactive Tiles.h" 
 	#include "utilities.h"
@@ -66,6 +66,11 @@
 	#include "LightEffects.h"
 	#include "meanwhile.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 #define	SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
 #define	FORCE_SET_MOVEMENTCOST( a, b, c, d )	( gubWorldMovementCosts[ a ][ b ][ c ] = d )

@@ -701,13 +701,14 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 		}
 
 		OLD_DEALER_SPECIAL_ITEM_101 oldSpecial;
+		DEALER_SPECIAL_ITEM newSpecial;
 		//loop through all the dealers inventories
 		for( ubArmsDealer=0; ubArmsDealer<uiDealersSaved; ubArmsDealer++ )
 		{
 			//loop through this dealer's individual items
 			for(usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
 			{
-				if ( Item[usItemIndex].usItemClass	== 0 )
+				if ( Item[usItemIndex].usItemClass == 0 )
 					break;
 				//if there are any elements allocated for this item, load them
 				for ( int x = 0; x < (*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex].ubElementsAlloced; ++x) {
@@ -715,9 +716,10 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 					{
 						return( FALSE );
 					}
-					gArmsDealersInventory[ubArmsDealer].resize(gArmsDealersInventory[ubArmsDealer].size() + 1);
-					DEALER_SPECIAL_ITEM* pSpecial = &(gArmsDealersInventory[ubArmsDealer].back());
-					pSpecial->ConvertFrom101((*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex], oldSpecial, usItemIndex);
+					newSpecial.ConvertFrom101((*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex], oldSpecial, usItemIndex);
+					if (newSpecial.OKToSaveOrLoad() == true) {
+						gArmsDealersInventory[ubArmsDealer].push_back(newSpecial);
+					}
 				}
 			}
 		}

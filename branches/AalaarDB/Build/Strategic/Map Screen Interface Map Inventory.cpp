@@ -19,7 +19,6 @@
 	#include "Font Control.h"
 	#include "strategicmap.h"
 	#include "Tactical Save.h"
-	#include "Soldier Control.h"
 	#include "Overhead.h"
 	#include "english.h"
 	#include "Multi Language Graphic Utils.h"
@@ -37,6 +36,11 @@
 #include "ShopKeeper Interface.h"
 #include "ArmsDealerInvInit.h"
 #include <algorithm>
+
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 
 extern BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM* pData );

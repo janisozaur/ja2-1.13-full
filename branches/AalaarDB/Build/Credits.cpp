@@ -2,12 +2,10 @@
 	#include "JA2 All.h"
 	#include "Credits.h"
 	#include "Encrypted File.h"
-	//#include "Utils All.h" 
 	#include "Language Defines.h" 
 #else
 	#include "Types.h"
 	#include "Credits.h"
-	//#include "Utils All.h" 
 	#include "Language Defines.h" 
 	#include "vsurface.h"
 	#include "mousesystem.h"

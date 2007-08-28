@@ -42,7 +42,6 @@
 	#include "Soldier Init List.h"
 	#include "strategicmap.h"
 	#include "Soldier Add.h"
-	#include "Soldier Control.h"
 	#include "Soldier Profile Type.h"
 	#include "Soldier Profile.h"
 	#include "Text Input.h"
@@ -58,6 +57,10 @@
 	#include "environment.h"
 	#include "Simple Render Utils.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 INT8 gbDefaultLightType = PRIMETIME_LIGHT;
 

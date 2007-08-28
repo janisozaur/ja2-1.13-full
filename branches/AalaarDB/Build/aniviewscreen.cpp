@@ -23,7 +23,6 @@
 	#include "sysutil.h"
 	#include "Font Control.h"  
 	#include "Radar Screen.h"
-	#include "Soldier Control.h"
 	#include "Animation Control.h"
 	#include "Animation Data.h"
 	#include "Event Pump.h"
@@ -38,6 +37,10 @@
 	#include "Fileman.h"
 	#include "messageboxscreen.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 
 void BuildListFile( );

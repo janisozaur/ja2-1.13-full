@@ -10,7 +10,7 @@
 	#include "debug.h"
 	#include "MemMan.h"
 	#include "Overhead Types.h"
-	#include "Soldier Control.h"
+
 	#include "Animation Cache.h"
 	#include "Animation Data.h"
 	#include "Animation Control.h"
@@ -26,7 +26,7 @@
 	#include "video.h"
 	#include "points.h"
 	#include "Win util.h"
-	#include "Sound Control.h" 
+//	#include "Sound Control.h" 
 	#include "lighting.h"
 	#include "weapons.h"
 	#include "vobject_blitters.h"
@@ -62,6 +62,11 @@
 
 extern INT8		gbNumMercsUntilWaitingOver;
 extern UINT8	gubWaitingForAllMercsToExitCode;
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 
 #define NEXT_TILE_CHECK_DELAY		700

@@ -44,7 +44,6 @@
 	#include "Soldier Init List.h"
 	#include "strategicmap.h"
 	#include "Soldier Add.h"
-	#include "Soldier Control.h"
 	#include "Soldier Profile Type.h"
 	#include "Soldier Profile.h"
 	#include "Text Input.h"
@@ -64,6 +63,9 @@
 	#include "Timer Control.h"
 	#include "message.h"
 #endif
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 extern void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT16 *psY, BOOLEAN fRadio );
 

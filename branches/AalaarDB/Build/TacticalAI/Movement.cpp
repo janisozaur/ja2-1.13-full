@@ -13,10 +13,15 @@
 	#include "mapscreen.h"
 	#include "strategic.h"
 	#include "Strategic Pathing.h"
-	#include "Soldier Control.h"
+
 	#include "Soldier macros.h"
 	#include "Render Fun.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 // from strategic
 extern INT16 DirXIncrementer[8];

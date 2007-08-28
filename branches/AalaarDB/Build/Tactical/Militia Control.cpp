@@ -2,7 +2,7 @@
 	#include "Tactical All.h"
 	#include "PreBattle Interface.h"
 #else
-	#include "Soldier Control.h"
+
 	#include "Militia Control.h"
 	#include "Town Militia.h"
 	#include "Soldier Init List.h"
@@ -34,6 +34,11 @@
 #endif
 
 #include "MilitiaSquads.h"
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 BOOLEAN gfStrategicMilitiaChangesMade = FALSE;
 

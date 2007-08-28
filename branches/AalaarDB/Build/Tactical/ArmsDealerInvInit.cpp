@@ -3,7 +3,7 @@
 #else
 	#include "Types.h"
 	#include "ArmsDealerInvInit.h"
-	#include "Item Types.h"
+	//#include "Item Types.h"
 	#include "Arms Dealer Init.h"
 	#include "DEbug.h"
 	#include "weapons.h"
@@ -15,6 +15,11 @@
 	#include "Random.h"
 	#include "Shopkeeper Interface.h"
 #endif
+
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 
 extern INT8	gbSelectedArmsDealerID;

@@ -28,7 +28,7 @@
 	#include "render dirty.h"
 	#include "utilities.h"
 	#include "interface cursors.h"
-	#include "Sound Control.h"
+//	#include "Sound Control.h"
 	#include "lighting.h"
 	#include "Interface Panels.h"
 	#include "pathai.h"

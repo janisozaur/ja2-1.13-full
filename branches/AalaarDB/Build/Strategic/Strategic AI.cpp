@@ -14,7 +14,7 @@
 	#include "Random.h"
 	#include "Strategic Pathing.h"
 	#include "message.h"
-	#include "Sound Control.h"
+//	#include "Sound Control.h"
 	#include "strategicmap.h"
 	#include "Game Clock.h"
 	#include "strategic.h"

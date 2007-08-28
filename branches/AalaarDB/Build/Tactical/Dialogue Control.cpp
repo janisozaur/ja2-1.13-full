@@ -3,13 +3,13 @@
 	#include "PreBattle Interface.h"
 #else
 	#include "sgp.h"
-	#include "soldier control.h"
+	//#include "soldier control.h"
 	#include "Encrypted File.h"
 	#include "faces.h"
 	#include "wcheck.h"
 	#include "gap.h"
 	#include "overhead.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 	#include "dialogue control.h"
 	#include "Message.h"
 	#include "render dirty.h"
@@ -56,6 +56,11 @@
 	#include "los.h"
 	#include "qarray.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 #define		DIALOGUESIZE					480
 #define	QUOTE_MESSAGE_SIZE		520

@@ -1,8 +1,12 @@
 #ifndef _SAVE_LOAD_GAME_H_
 #define _SAVE_LOAD_GAME_H_
 
-#include "Soldier Control.h"
 #include "GameSettings.h"
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 #define		BYTESINMEGABYTE						1048576 //1024*1024
 #define		REQUIRED_FREE_SPACE				(20 * BYTESINMEGABYTE)

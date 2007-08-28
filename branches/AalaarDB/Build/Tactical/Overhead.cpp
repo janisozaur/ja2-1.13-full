@@ -13,7 +13,7 @@
 #include "worldman.h"
 #include "renderworld.h"
 #include "Assignments.h"
-#include "Soldier Control.h"
+//#include "Soldier Control.h"
 #include "Animation Control.h"
 #include "Animation Data.h"
 #include "Isometric Utils.h"
@@ -111,6 +111,11 @@
 #include "PreBattle Interface.h"
 #include "Militia Control.h"
 #endif
+
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 extern void HandleBestSightingPositionInRealtime();
 

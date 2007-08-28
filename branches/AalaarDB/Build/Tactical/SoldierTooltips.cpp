@@ -3,7 +3,7 @@
 #else
 #include "Types.h"
 #include "Windows.h"
-#include "Soldier Control.h"
+//#include "Soldier Control.h"
 #include "Input.h"
 #include "english.h"
 #include "Isometric Utils.h"
@@ -21,6 +21,11 @@
 #include "vsurface.h"
 #include "line.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 struct MOUSETT 
 {	

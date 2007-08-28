@@ -3,7 +3,6 @@
 
 #include <string.h>
 #include <stdio.h>
-//#include "container.h"
 #include "Soldier Control.h"
 #include "overhead types.h"
 #include "soldier find.h"

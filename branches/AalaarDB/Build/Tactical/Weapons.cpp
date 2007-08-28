@@ -4,7 +4,7 @@
 	#include "sgp.h"
 	#include "overhead types.h"
 	#include "Sound Control.h"
-	#include "Soldier Control.h"
+
 	#include "overhead.h"
 	#include "Event Pump.h"
 	#include "weapons.h"
@@ -47,6 +47,11 @@
 	#include "lighting.h"
 	#include "Auto Resolve.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 //rain
 //#define WEAPON_RELIABILITY_REDUCTION_PER_RAIN_INTENSITY 0
@@ -4320,7 +4325,7 @@ INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 u
 					if ( (*iter)[0]->data.objectStatus < USABLE )
 					{
 						// destroy plates!
-						RemoveAttachment(pArmour, &(*iter));
+						pArmour->RemoveAttachment(&(*iter));
 						DirtyMercPanelInterface( pTarget, DIRTYLEVEL2 );
 //#ifdef ENGLISH
 						if ( pTarget->bTeam == gbPlayerNum )

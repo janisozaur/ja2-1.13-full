@@ -11,7 +11,7 @@
 	#include "Game Clock.h"
 	#include "overhead.h"
 	#include "soldier profile.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 	#include "soundman.h"
 	#include "soldier add.h"
 	#include "interface panels.h"

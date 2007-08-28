@@ -6,7 +6,7 @@
 	#include "builddefines.h"
 	#include <stdio.h>
 	#include "sgp.h"
-	#include "soldier control.h"
+	//#include "soldier control.h"
 	#include "Encrypted File.h"
 	#include "faces.h"
 	#include "wcheck.h"
@@ -26,7 +26,7 @@
 	#include "items.h"
 	#include "text.h"
 	#include "overhead.h"
-	#include "soldier control.h"
+	//#include "soldier control.h"
 	#include "assignments.h"
 	#include "strategic.h"
 	#include "strategicmap.h"
@@ -79,6 +79,11 @@
 	#include "Map Screen Helicopter.h"
 	#include "Cheats.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 INT16	sBasementEnterGridNos[ ] = { 13362, 13363, 13364, 13365, 13525, 13524 };
 INT16	sBasementExitGridNos[ ] = { 8047, 8207, 8208, 8048, 7888, 7728, 7727, 7567 };
@@ -2404,8 +2409,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
 					if (pSoldier)
 					{
-						CreateItem( MONEY, 1, &gTempObject );
-						gTempObject[0]->data.money.uiMoneyAmount = 10000;
+						CreateMoney(10000, &gTempObject );
 						AddItemToPoolAndGetIndex( sGridNo, &gTempObject, -1, pSoldier->pathing.bLevel, 0, 0, &iWorldItem );
 						
 						// shouldn't have any current action but make sure everything

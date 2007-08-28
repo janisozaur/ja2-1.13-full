@@ -25,7 +25,6 @@
 	#include "Interactive Tiles.h"
 	#include "overhead types.h"
 	#include "Overhead.h"
-	#include "Soldier Control.h"
 	#include "Handle UI.h"
 	#include "Event Pump.h"
 	#include "world items.h" 
@@ -75,6 +74,9 @@
 	#include "GameSettings.h"
 #endif
 
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 extern CHAR8 *szMusicList[NUM_MUSIC];
 

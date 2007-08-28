@@ -8,7 +8,7 @@
 	#include "wcheck.h"
 	#include "stdlib.h"
 	#include "debug.h"
-	#include "soldier control.h"
+	//#include "soldier control.h"
 	#include "weapons.h"
 	#include "handle items.h"
 	#include "worlddef.h"	
@@ -29,6 +29,11 @@
 #endif
 
 #include "SaveLoadGame.h"
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 
 INT8 FromWorldFlagsToSmokeType( UINT16 ubWorldFlags );

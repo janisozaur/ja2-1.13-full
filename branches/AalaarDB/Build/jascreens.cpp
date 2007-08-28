@@ -41,7 +41,6 @@
 	#include "lighting.h"
 	#include "interface panels.h"
 	#include "Music Control.h"
-	#include "Sound Control.h"
 	#include "mainmenuscreen.h"
 	#include "Game Init.h"
 	#include "init.h"

@@ -4,7 +4,7 @@
 	#include "items.h"
 	#include "weapons.h"
 	#include "Interface Cursors.h"
-	#include "Soldier Control.h"
+
 	#include "overhead.h"
 	#include "Handle UI.h"
 	#include "Animation Control.h"
@@ -30,6 +30,11 @@
 	#include "Interactive Tiles.h"
 	#include "PATHAI.H"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 // FUNCTIONS FOR ITEM CURSOR HANDLING
 UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, INT16 sMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags );

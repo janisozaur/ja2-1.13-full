@@ -5,7 +5,6 @@
 #include "types.h"
 #include "timer.h"
 #include "debug.h"
-//#include "profiler.h"
 
 #if defined( JA2 ) || defined( UTIL )
 #include "video.h"

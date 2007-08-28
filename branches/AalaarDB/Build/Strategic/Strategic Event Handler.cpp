@@ -4,7 +4,6 @@
 	#include "Strategic Event Handler.h"
 	#include "MemMan.h"
 	#include "message.h"
-	#include "Item Types.h"
 	#include "Items.h"
 	#include "Handle Items.h"
 	#include "LaptopSave.h"
@@ -33,6 +32,11 @@
 	#include "history.h"
 #endif
 #include "BobbyRMailOrder.h"
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 #define		MEDUNA_ITEM_DROP_OFF_GRIDNO			10959
 #define		MEDUNA_ITEM_DROP_OFF_SECTOR_X		3
@@ -1058,11 +1062,22 @@ void CheckForMissingHospitalSupplies( void )
 			{
 				pObj = &( gWorldItems[ pItemPool->iItemIndex ].object );
 
+#ifdef obsoleteCode
 				if ( (*pObj)[0]->data.objectStatus > 60 )
 				{
 					if ( Item[pObj->usItem].firstaidkit || Item[pObj->usItem].medicalkit || pObj->usItem == REGEN_BOOSTER || pObj->usItem == ADRENALINE_BOOSTER )
 					{
 						ubMedicalObjects++;
+					}
+				}
+#endif//obsoleteCode
+				if ( Item[pObj->usItem].firstaidkit || Item[pObj->usItem].medicalkit || pObj->usItem == REGEN_BOOSTER || pObj->usItem == ADRENALINE_BOOSTER )
+				{
+					for (StackedObjects::iterator iter = pObj->objectStack.begin(); iter != pObj->objectStack.end(); ++iter) {
+						if ( iter->data.objectStatus > 60 )
+						{
+							ubMedicalObjects++;
+						}
 					}
 				}
 

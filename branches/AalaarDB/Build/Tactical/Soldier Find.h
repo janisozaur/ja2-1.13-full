@@ -2,6 +2,11 @@
 #define __SOLDIER_FIND_H
 
 
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
+
 #define			FIND_SOLDIER_FULL				0x000000002
 #define			FIND_SOLDIER_GRIDNO			0x000000004
 #define			FIND_SOLDIER_SAMELEVEL	0x000000008

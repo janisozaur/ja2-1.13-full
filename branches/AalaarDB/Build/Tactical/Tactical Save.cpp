@@ -5,7 +5,6 @@
 	#include "Types.h"
 	#include "MemMan.h"
 	#include "message.h"
-	#include "Item Types.h"
 	#include "Items.h"
 	#include "Handle Items.h"
 	#include "StrategicMap.h"
@@ -26,7 +25,6 @@
 	#include "Game Clock.h"
 	#include "Animation Control.h"
 	#include "Map Information.h"
-	//#include "pathai.h"
 	#include "SaveLoadMap.h"
 	#include "debug.h"
 	#include "Random.h"
@@ -49,6 +47,11 @@
 	#include "Queen Command.h"
 	#include "Map Screen Interface Map Inventory.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 BOOLEAN gfWasInMeanwhile = FALSE;
 

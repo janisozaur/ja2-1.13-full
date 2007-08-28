@@ -20,7 +20,7 @@
 	#include "overhead.h"
 	#include "gap.h"
 	#include "Soldier Profile.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 	#include "teamturns.h"
 	#include "soldier macros.h"
 	#include "dialogue control.h"

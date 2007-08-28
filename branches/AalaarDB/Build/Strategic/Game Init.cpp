@@ -8,7 +8,6 @@
 	#include "jascreens.h"
 	#include "laptop.h"
 	#include "worlddef.h"
-	#include "Soldier Control.h"
 	#include "overhead.h"
 	#include "fade screen.h"
 	#include "gamescreen.h" 
@@ -40,7 +39,7 @@
 	#include "Creature Spreading.h"
 	#include "Quests.h"
 	#include "Strategic AI.h"
-	#include "sound control.h"
+//	#include "Sound Control.h"
 	#include "Laptopsave.h"
 	#include "AimMembers.h"
 	#include "dialogue control.h"
@@ -62,6 +61,10 @@
 	#include "cheats.h"
 	#include "Interface Panels.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 // Temp function
 void QuickSetupOfMercProfileItems( UINT32 uiCount, UINT8 ubProfileIndex );

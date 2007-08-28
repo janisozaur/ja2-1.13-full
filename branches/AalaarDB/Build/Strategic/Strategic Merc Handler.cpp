@@ -2,7 +2,7 @@
 	#include "Strategic All.h"
 #else
 	#include "Types.h"
-	#include "Soldier Control.h"
+
 	#include "Strategic Merc Handler.h"
 	#include "History.h"
 	#include "Game clock.h"
@@ -41,6 +41,11 @@
 	#include "GameSettings.h"
 	#include "Quests.h"
 #endif
+
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 
 #define		NUM_DAYS_TILL_UNPAID_RPC_QUITS				3

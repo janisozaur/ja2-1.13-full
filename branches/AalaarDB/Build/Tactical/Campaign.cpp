@@ -10,7 +10,7 @@
 	#include "debug.h"
 	#include "MemMan.h"
 	#include "Overhead Types.h"
-	#include "Soldier Control.h"
+
 	#include "random.h"
 	#include "campaign.h"
 	#include "dialogue control.h"
@@ -38,6 +38,11 @@
 #endif
 
 #include "email.h"
+
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 
 extern	UINT8	gbPlayerNum;

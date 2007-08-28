@@ -31,7 +31,7 @@
 	#include "english.h"
 	#include "overhead.h"
 	#include "opplist.h"
-	#include "Sound Control.h"
+	//#include "Sound Control.h"
 	#include "Font Control.h"
 	#include "lighting.h"
 	#include "pathai.h"

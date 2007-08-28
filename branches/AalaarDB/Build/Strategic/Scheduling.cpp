@@ -5,7 +5,7 @@
 	#include "Fileman.h"
 	#include "types.h"
 	#include "Scheduling.h"
-	#include "Soldier Control.h"
+
 	#include "message.h"
 	#include "overhead.h"
 	#include "Game Clock.h"
@@ -30,6 +30,11 @@
 	#include "Quests.h"
 	#include "FindLocations.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 #ifdef JA2EDITOR
 extern CHAR16 gszScheduleActions[ NUM_SCHEDULE_ACTIONS ][20];

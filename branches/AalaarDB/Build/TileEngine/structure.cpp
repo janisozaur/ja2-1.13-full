@@ -33,7 +33,7 @@
 	#endif
 
 	#include "explosion control.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 
 	#include "Buildings.h"
 

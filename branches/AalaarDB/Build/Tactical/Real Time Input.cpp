@@ -9,7 +9,7 @@
 #include "math.h"
 #include "jascreens.h"
 #include "pathai.h"
-#include "Soldier Control.h"
+//#include "Soldier Control.h"
 #include "Animation Control.h"
 #include "Animation Data.h"
 #include "Event Pump.h"
@@ -65,6 +65,11 @@
 #include "render dirty.h"
 #include "Militia Control.h"
 #endif
+
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 
 extern UIKEYBOARD_HOOK					gUIKeyboardHook;

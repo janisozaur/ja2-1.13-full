@@ -27,10 +27,9 @@
 	#include "Font Control.h"
 	#include "render dirty.h"
 	#include "utilities.h"
-	#include "Sound Control.h"
 	#include "Interface Panels.h"
 	#include "Animation Control.h"
-	#include "Soldier Control.h"
+
 	#include "pathai.h"
 	#include "weapons.h"
 	#include "lighting.h"
@@ -74,6 +73,11 @@
 	#include "los.h"
 	#include "Map Screen Interface Map.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 #define		ITEMDESC_FONT							BLOCKFONT2
 #define		ITEMDESC_FONTSHADOW1			MILITARY_SHADOW
@@ -3315,7 +3319,9 @@ void ItemDescAmmoCallback(GUI_BUTTON *btn,INT32 reason)
 void DoAttachment( void )
 {
 	PERFORMANCE_MARKER
-	if ( AttachObject( gpItemDescSoldier, gpItemDescObject, gpItemPointer ) )
+	//ADB make sure this works ok with multiples
+	DebugBreak();
+	if ( gpItemDescObject->AttachObject( gpItemDescSoldier, gpItemPointer ) )
 	{
 		if (gpItemPointer->usItem == NOTHING)
 		{
@@ -3418,7 +3424,7 @@ void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			{
 				// Get attachment if there is one
 				// The follwing function will handle if no attachment is here
-				if ( RemoveAttachment( gpItemDescObject, pAttachment, &gItemPointer ) )
+				if ( gpItemDescObject->RemoveAttachment( pAttachment, &gItemPointer ) )
 				{
 					gpItemPointer = &gItemPointer;
 					gpItemPointerSoldier = gpItemDescSoldier;
@@ -4799,10 +4805,12 @@ void DeleteItemDescriptionBox( )
 			if (newSize != originalSize) {
 				attachmentList::iterator originalIter;
 				attachmentList::iterator newIter;
+				//an attachment was changed, find the change
 				for (originalIter = gOriginalAttachments.begin(), newIter = (*gpItemDescObject)[0]->attachments.begin();
 					originalIter != gOriginalAttachments.end() && newIter != (*gpItemDescObject)[0]->attachments.end();
 					++originalIter, ++newIter) {
 					if (*originalIter == *newIter) {
+						continue;
 					}
 					else {
 						break;
@@ -8070,11 +8078,10 @@ void RemoveMoney()
 			//Remove the money from the money in the pocket
 			(*gpItemDescObject)[0]->data.money.uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
 
-				//Create an item to get the money that is being removed
-			CreateItem( MONEY, 0, &InvSlot.ItemObject );
+			//Create an item to get the money that is being removed
+			CreateMoney(gRemoveMoney.uiMoneyRemoving, &InvSlot.ItemObject );
 
 			//Set the amount thast is being removed
-			InvSlot.ItemObject[0]->data.money.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
 			InvSlot.ubIdOfMercWhoOwnsTheItem = gpItemDescSoldier->ubProfile;
 
 			//if we are removing money from the players account

@@ -29,7 +29,7 @@
 	#include "Sound Control.h"
 	#include "Interface Panels.h"
 	#include "Animation Control.h"
-	#include "Soldier Control.h"
+
 	#include "pathai.h"
 	#include "weapons.h"
 	#include "lighting.h"
@@ -73,6 +73,11 @@
 	#include "wordwrap.h"
 	#include "Boxing.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 /* 
  *
@@ -3489,7 +3494,9 @@ void MergeMessageBoxCallBack( UINT8 ubExitValue )
 	PERFORMANCE_MARKER
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
-		AttachObject( gpItemPointerSoldier, &( gpSMCurrentMerc->inv[ gubHandPos ] ), gpItemPointer );
+		//ADB see what happens here
+		DebugBreak();
+		gpSMCurrentMerc->inv[ gubHandPos ].AttachObject( gpItemPointerSoldier, gpItemPointer );
 
 		// re-evaluate repairs
 		gfReEvaluateEveryonesNothingToDo = TRUE;

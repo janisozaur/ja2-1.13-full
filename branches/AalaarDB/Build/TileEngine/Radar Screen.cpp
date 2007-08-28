@@ -13,7 +13,7 @@
 	#include "Isometric Utils.h"
 	#include "Interface.h"
 	#include "overhead.h"
-	#include "Soldier Control.h"
+
 	#include "lighting.h"
 	#include "wcheck.h"
 	#include "sysutil.h"
@@ -34,6 +34,11 @@
 	#include "Animation Data.h"
 	#include "GameSettings.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 extern INT32 iCurrentMapSectorZ;
 

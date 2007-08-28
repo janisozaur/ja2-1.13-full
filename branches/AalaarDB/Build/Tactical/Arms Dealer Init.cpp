@@ -248,6 +248,18 @@ BOOLEAN SaveArmsDealerInventoryToSaveGameFile( HWFILE hFile )
 	return( TRUE );
 }
 
+bool DEALER_SPECIAL_ITEM::OKToSaveOrLoad()
+{
+	if (object.ubNumberOfObjects > 0) {
+		return true;
+	}
+	if (ubQtyOnOrder > 0) {
+		return true;
+	}
+	//item doesn't exist, it was loaded empty during the conversion
+	return false;
+}
+
 
 void DEALER_SPECIAL_ITEM::ConvertFrom101(OLD_DEALER_ITEM_HEADER_101& header, OLD_DEALER_SPECIAL_ITEM_101& special, int usItemIndex)
 {
@@ -265,7 +277,7 @@ void DEALER_SPECIAL_ITEM::ConvertFrom101(OLD_DEALER_ITEM_HEADER_101& header, OLD
 	for (int x = 0; x < OLD_MAX_ATTACHMENTS_101; ++x) {
 		if (special.oldInfo.usAttachment[x] && special.oldInfo.bAttachmentStatus[x] ) {
 			CreateItem(special.oldInfo.usAttachment[x], special.oldInfo.bAttachmentStatus[x], &gTempObject);
-			AttachObject(0, &(this->object), &gTempObject, FALSE);
+			this->object.AttachObject(0, &gTempObject, FALSE);
 		}
 	}
 };

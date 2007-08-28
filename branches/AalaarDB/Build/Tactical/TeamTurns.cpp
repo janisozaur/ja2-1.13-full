@@ -2,7 +2,6 @@
 	#include "Tactical All.h"
 #else
 	#include "types.h"
-	#include "soldier control.h"
 	#include "overhead.h"
 	#include "animation control.h"
 	#include "points.h"
@@ -50,6 +49,11 @@
 #endif
 
 #include "Reinforcement.h"
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 
 extern INT8 STRAIGHT;

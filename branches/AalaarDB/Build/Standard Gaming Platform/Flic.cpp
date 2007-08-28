@@ -31,7 +31,6 @@
 //
 //**************************************************************************
 
-//#include "stdafx.h"
 #include <conio.h>
 #include "flic.h"
 #include "windows.h"

@@ -3,8 +3,6 @@
 #else
 	#include "sgp.h"
 	#include "overhead types.h"
-	#include "Sound Control.h"
-	#include "Soldier Control.h"
 	#include "overhead.h"
 	#include "Event Pump.h"
 	#include "weapons.h"

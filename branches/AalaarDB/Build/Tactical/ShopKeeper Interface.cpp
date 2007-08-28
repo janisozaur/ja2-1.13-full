@@ -6721,58 +6721,50 @@ void SplitComplexObjectIntoSubObjects( OBJECTTYPE *pComplexObject )
 	for (int x = 0; x < pComplexObject->ubNumberOfObjects; ++x) {
 		//we need not worry about attachments!!!!
 
-		// make the main item into the very first subobject
 		if (pComplexObject->RemoveObjectsFromStack(1, &gTempObject) == 0) {
 			subObjects.push_back(gTempObject);
-		}
-		else {
-			subObjects.push_back(*pComplexObject);
-		}
-
-		StackedObjectData* pData = subObjects.back()[0];
-		// strip off any loaded ammo/payload
-		if ( Item [ pComplexObject->usItem ].usItemClass == IC_GUN )
-		{
-			// Exception: don't do this with rocket launchers, their "shots left" are fake and this screws 'em up!
-			if ( !Item[pComplexObject->usItem].singleshotrocketlauncher ) // Madd rpg - still do this
+			StackedObjectData* pData = subObjects.back()[0];
+			// strip off any loaded ammo/payload
+			if ( Item [ pComplexObject->usItem ].usItemClass == IC_GUN )
 			{
-				pData->data.gun.ubGunShotsLeft = 0;
-				pData->data.gun.usGunAmmoItem = NONE;
+				// Exception: don't do this with rocket launchers, their "shots left" are fake and this screws 'em up!
+				if ( !Item[pComplexObject->usItem].singleshotrocketlauncher ) // Madd rpg - still do this
+				{
+					pData->data.gun.ubGunShotsLeft = 0;
+					pData->data.gun.usGunAmmoItem = NONE;
+				}
 			}
 
-		}
-
-		// if it's a gun
-		if ( Item [ pComplexObject->usItem ].usItemClass == IC_GUN )
-		{
-			// and it has ammo/payload
-			if ( pData->data.gun.usGunAmmoItem != NONE )
+			// if it's a gun
+			if ( Item [ pComplexObject->usItem ].usItemClass == IC_GUN )
 			{
-				// if it's bullets
-				if ( Item[ pData->data.gun.usGunAmmoItem ].usItemClass == IC_AMMO )
+				// and it has ammo/payload
+				if ( pData->data.gun.usGunAmmoItem != NONE )
 				{
-					// and there are some left
-					if ( pData->data.gun.ubGunShotsLeft > 0 )
+					// if it's bullets
+					if ( Item[ pData->data.gun.usGunAmmoItem ].usItemClass == IC_AMMO )
 					{
-						// make the bullets into another subobject
-						CreateItem( pData->data.gun.usGunAmmoItem, 100, &gTempObject );
-						// set how many are left
-						gTempObject[0]->data.objectStatus = pData->data.gun.ubGunShotsLeft;
+						// and there are some left
+						if ( pData->data.gun.ubGunShotsLeft > 0 )
+						{
+							// make the bullets into another subobject
+							CreateAmmo( pData->data.gun.usGunAmmoItem, &gTempObject, pData->data.gun.ubGunShotsLeft );
+							subObjects.push_back(gTempObject);
+						}
+						// ignore this if it's out of bullets
+					}
+					else	// non-ammo payload
+					{
+						// make the payload into another subobject
+						CreateItem( pData->data.gun.usGunAmmoItem, pData->data.gun.bGunAmmoStatus, &gTempObject );
+
+						// if the gun was jammed, fix up the payload's status
+						if ( gTempObject[0]->data.objectStatus < 0 )
+						{
+							gTempObject[0]->data.objectStatus *= -1;
+						}
 						subObjects.push_back(gTempObject);
 					}
-					// ignore this if it's out of bullets
-				}
-				else	// non-ammo payload
-				{
-					// make the payload into another subobject
-					CreateItem( pData->data.gun.usGunAmmoItem, pData->data.gun.bGunAmmoStatus, &gTempObject );
-
-					// if the gun was jammed, fix up the payload's status
-					if ( gTempObject[0]->data.objectStatus < 0 )
-					{
-						gTempObject[0]->data.objectStatus *= -1;
-					}
-					subObjects.push_back(gTempObject);
 				}
 			}
 		}

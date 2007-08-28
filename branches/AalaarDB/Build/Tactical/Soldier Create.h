@@ -5,11 +5,16 @@
 #include "Timer Control.h"
 #include "vobject.h"
 #include "Overhead Types.h"
-#include "Item Types.h"
+//#include "Item Types.h"
 #include "soldier control.h"
 
 #include <vector>
 #include <iterator>
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 using namespace std;
 

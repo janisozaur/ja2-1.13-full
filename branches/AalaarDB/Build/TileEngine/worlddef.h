@@ -3,7 +3,7 @@
 
 #include "vobject.h"
 #include "tiledef.h"
-#include "Soldier Control.h"
+//#include "Soldier Control.h"
 #include "structure.h"
 #include "Handle Items.h"
 
@@ -16,6 +16,11 @@
 #define WORLD_MAX					25600
 #define CELL_X_SIZE					10
 #define CELL_Y_SIZE					10
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 //Don't mess with this value, unless you want to force update all maps in the game!
 // Lesh: fix the sad situation with the different major map versions

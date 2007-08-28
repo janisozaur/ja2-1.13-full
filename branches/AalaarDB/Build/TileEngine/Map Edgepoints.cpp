@@ -3,7 +3,7 @@
 #else
 	#include <memory.h>
 	#include "Map Edgepoints.h"
-	#include "Soldier Control.h"
+
 	#include "pathai.h"
 	#include "ai.h"
 	#include "Map Information.h"
@@ -19,6 +19,11 @@
 	#include "worldman.h"
 	#include "FindLocations.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 //dynamic arrays that contain the valid gridno's for each edge
 INT16 *gps1stNorthEdgepointArray					= NULL;

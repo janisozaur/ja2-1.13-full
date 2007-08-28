@@ -272,6 +272,7 @@ public:
 	void ConvertFrom101(OLD_DEALER_ITEM_HEADER_101& header, OLD_DEALER_SPECIAL_ITEM_101& special, int usItemIndex);
 	BOOLEAN Save(HWFILE hFile);
 	BOOLEAN Load(HWFILE hFile);
+	bool	OKToSaveOrLoad();
 	void	initialize();
 
 	bool	IsUnderRepair() {return bItemCondition < 0;};

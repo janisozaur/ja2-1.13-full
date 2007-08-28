@@ -7,7 +7,7 @@
 	#include "wcheck.h"
 	#include "stdlib.h"
 	#include "debug.h"
-	#include "soldier control.h"
+	//#include "soldier control.h"
 	#include "weapons.h"
 	#include "handle items.h"
 	#include "worlddef.h"	
@@ -26,7 +26,7 @@
 	#include "opplist.h"
 	#include "structure.h"
 	#include "message.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 	#include "pathai.h"
 	#include "Random.h"
 	#include "dialogue control.h"
@@ -44,6 +44,11 @@
 	#include "qarray.h"
 	#include "Interface.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 #define CORPSE_WARNING_MAX 5
 #define CORPSE_WARNING_DIST 5

@@ -54,7 +54,6 @@
 	#include "Game init.h"
 	#include "Game Clock.h"
 	#include "vobject_blitters.h"
-	#include "Soldier Control.h"
 	#include "Soldier Profile.h"
 	#include "Overhead.h"
 	#include "environment.h"
@@ -86,6 +85,9 @@
 #endif
 
 
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 
 // icons text id's

@@ -18,7 +18,7 @@
 	#include "debug.h"
 	#include "MemMan.h"
 	#include "Overhead Types.h"
-	#include "Soldier Control.h"
+
 	#include "Animation Cache.h"
 	#include "Animation Data.h"
 	#include "Animation Control.h"
@@ -44,6 +44,11 @@
 #endif
 
 #include "PathAIDebug.h"
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 #ifdef USE_ASTAR_PATHS
 #include "BinaryHeap.hpp"
@@ -1104,7 +1109,12 @@ int AStarPathfinder::CalcAP(int const terrainCost)
 
 		//case TRAVELCOST_DOOR:		movementAPCost = AP_MOVEMENT_FLAT; break;
 
-		case TRAVELCOST_FENCE:		movementAPCost = AP_JUMPFENCE; break;
+		case TRAVELCOST_FENCE		: 
+			if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
+				movementAPCost = AP_JUMPFENCEBPACK;
+			else
+				movementAPCost = AP_JUMPFENCE;
+			break;
 
 		case TRAVELCOST_OBSTACLE: 
 		default:					return -1;	// Cost too much to be considered!
@@ -1129,17 +1139,29 @@ int AStarPathfinder::CalcAP(int const terrainCost)
 		case RUNNING:	
 		case ADULTMONSTER_WALKING:	
 			// save on casting
-			movementAPCost = movementAPCost * 100 / ( (UINT8) (RUNDIVISOR * 100));
+			if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+				movementAPCost = movementAPCost * 10 / ( (UINT8) (RUNDIVISORBPACK * 10));
+			else
+				movementAPCost = movementAPCost * 10 / ( (UINT8) (RUNDIVISOR * 10));
 			//movementAPCost = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );	break;
 			break;
 		case WALKING:
 		case ROBOT_WALK:
-			movementAPCost = (movementAPCost + WALKCOST);
+			if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+				movementAPCost = (movementAPCost + WALKCOSTBPACK);
+			else
+				movementAPCost = (movementAPCost + WALKCOST);
 			break;
 		case SWATTING:
-			movementAPCost = (movementAPCost + SWATCOST);
+			if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+				movementAPCost = (movementAPCost + SWATCOSTBPACK);
+			else
+				movementAPCost = (movementAPCost + SWATCOST);
 			break;
 		case CRAWLING:
+			if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+				movementAPCost = (movementAPCost + CRAWLCOSTBPACK);
+			else
 			movementAPCost = (movementAPCost + CRAWLCOST);
 			break;
 	}

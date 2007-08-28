@@ -10,7 +10,7 @@
 	#include "soldier profile.h"
 	#include "animation control.h"
 	#include "animation data.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 	#include "overhead types.h"
 	#include "faces.h"
 	#include "isometric utils.h"
@@ -2782,7 +2782,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 						{
 							if ( pSoldier->inv[ cnt2 ].usItem != NOTHING && ValidAttachment( gTempObject.usItem, pSoldier->inv[ cnt2 ].usItem ) )
 							{
-								AttachObject( NULL, &(pSoldier->inv[ cnt2 ]), &gTempObject );
+								pSoldier->inv[ cnt2 ].AttachObject( NULL, &gTempObject );
 								break;
 							}
 						}
@@ -2894,15 +2894,15 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 						uiMoneyLimitInSlot /= 2;
 					}
 
-					CreateItem( MONEY, 100, &( pSoldier->inv[ bSlot ] ) );
 					if ( uiMoneyLeft > uiMoneyLimitInSlot )
 					{
+						CreateMoney(uiMoneyLimitInSlot, &( pSoldier->inv[ bSlot ] ) );
 						// fill pocket with money
-						pSoldier->inv[ bSlot ][0]->data.money.uiMoneyAmount = uiMoneyLimitInSlot;			
 						uiMoneyLeft -= uiMoneyLimitInSlot;			
 					}
 					else
 					{
+						CreateMoney(uiMoneyLeft, &( pSoldier->inv[ bSlot ] ) );
 						pSoldier->inv[ bSlot ][0]->data.money.uiMoneyAmount = uiMoneyLeft;
 						// done!
 						break;

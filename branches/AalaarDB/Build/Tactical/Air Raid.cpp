@@ -13,7 +13,7 @@
 	#include "jascreens.h"
 	#include "random.h"
 	#include "overhead types.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 	#include "timer control.h"
 	#include "dialogue control.h"
 	#include "overhead.h"

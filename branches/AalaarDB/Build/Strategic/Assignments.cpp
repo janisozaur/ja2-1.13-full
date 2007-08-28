@@ -3,8 +3,6 @@
 	#include "GameSettings.h"
 #else
 	#include "Assignments.h"
-	#include "Soldier Control.h"
-	#include "Item Types.h"
 	#include "Strategic.h"
 	#include "Items.h"
 	#include "Overhead.h"
@@ -63,6 +61,10 @@
 	#include "Map Screen Interface Map Inventory.h"
 	#include "interface dialogue.h"
 #endif
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 #include "MilitiaSquads.h"
 

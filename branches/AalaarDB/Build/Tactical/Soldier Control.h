@@ -12,17 +12,8 @@
 #include "Overhead Types.h"
 #include "Item Types.h"
 #include "worlddef.h"
-
 #include <vector>
 #include <iterator>
-
-using namespace std;
-
-//ADB makes the code clearer, used like "thisSoldier->foo();"
-#define thisSoldier this
-
-//forward declarations for versioning, it's so long I want it at the end
-class OLDSOLDIERTYPE_101;
 
 #define PTR_CIVILIAN	(pSoldier->bTeam == CIV_TEAM)
 #define PTR_CROUCHED	(gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_CROUCH)
@@ -431,6 +422,14 @@ enum
 
 
 struct LEVELNODE;
+using namespace std;
+
+//ADB makes the code clearer, used like "thisSoldier->foo();"
+#define thisSoldier this
+
+//forward declarations for versioning, it's so long I want it at the end
+class OLDSOLDIERTYPE_101;
+
 
 //atm only used for saving and loading
 //many changes needed if inventory is going to use a vector of these

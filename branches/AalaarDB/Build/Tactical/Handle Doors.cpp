@@ -18,7 +18,7 @@
 	#include "tile animation.h"
 	#include "Interactive Tiles.h"
 	#include "handle doors.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 	#include "interface.h" 
 	#include "keys.h"
 	#include "message.h"

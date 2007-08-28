@@ -5,7 +5,7 @@
 	#include "lighting.h"
 	#include "environment.h"
 	#include "renderworld.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 	#include "overhead.h"
 	#include "Game Clock.h"
 	#include "quests.h"

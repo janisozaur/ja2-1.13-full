@@ -10,7 +10,7 @@
 	#include "Campaign Types.h"
 	#include "Game Event Hook.h"
 	#include "Game Clock.h"
-	#include "Soldier Control.h"
+
 	#include "Queen Command.h"
 	#include "overhead.h"
 	#include "strategicmap.h"
@@ -50,6 +50,11 @@
 #endif
 
 #include "MilitiaSquads.h"
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 extern UINT32		guiLastTacticalRealTime;
 
