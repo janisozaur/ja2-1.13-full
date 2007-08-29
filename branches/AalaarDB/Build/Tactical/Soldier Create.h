@@ -16,8 +16,6 @@ class OBJECTTYPE;
 class SOLDIERTYPE;
 
 
-using namespace std;
-
 #define		SOLDIER_CREATE_AUTO_TEAM			-1
 
 //Kris: 

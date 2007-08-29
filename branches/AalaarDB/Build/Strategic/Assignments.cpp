@@ -3076,7 +3076,7 @@ void DoActualRepair( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 * pbStatus, UIN
 	}
 
 	// repairs on electronic items take twice as long if the guy doesn't have the skill
-//	if ( ( Item[ usItem ][0]->data.fFlags & ITEM_ELECTRONIC ) && ( !( HAS_SKILL_TRAIT( pSoldier, ELECTRONICS ) ) ) )
+//	if ( ( Item[ usItem ].fFlags & ITEM_ELECTRONIC ) && ( !( HAS_SKILL_TRAIT( pSoldier, ELECTRONICS ) ) ) )
 	if ( ( Item[ usItem ].electronic ) && ( !( HAS_SKILL_TRAIT( pSoldier, ELECTRONICS ) ) ) )
 	{
 		sRepairCostAdj *= 2;
@@ -3335,7 +3335,7 @@ BOOLEAN IsItemRepairable( UINT16 usItem, INT8 bStatus )
 {
 	PERFORMANCE_MARKER
 	// check to see if item can/needs to be repaired
-//	if ( ( bStatus < 100) && ( Item[ usItem ][0]->data.fFlags & ITEM_REPAIRABLE ) )
+//	if ( ( bStatus < 100) && ( Item[ usItem ].fFlags & ITEM_REPAIRABLE ) )
 	if ( ( bStatus < 100) && ( Item[ usItem ].repairable	) )
 	{
 		// yep

@@ -273,7 +273,6 @@ public:
 	INT8		bTrap;			// 1-10 exp_lvl to detect
 	UINT8		fUsed;			// flags for whether the item is used or not
 	UINT8		ubImprintID;	// ID of merc that item is imprinted on
-	INT8		fFlags;
 };
 
 
@@ -343,11 +342,13 @@ public:
 	UINT8		ubNumberOfObjects;
 	UINT8		ubMission;		//EDIT THIS OUT WHEN THERE ARE NO ASSERTS!
 	UINT16		ubWeight;		//used to be UINT8
+	INT8		fFlags;
 
 #define SIZEOF_OBJECTTYPE_POD	sizeof(usItem) + \
 								sizeof(ubNumberOfObjects) + \
 								sizeof(ubMission) + \
-								sizeof(ubWeight)
+								sizeof(ubWeight) + \
+								sizeof(fFlags)
 
 
 

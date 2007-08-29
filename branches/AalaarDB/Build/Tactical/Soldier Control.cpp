@@ -1063,13 +1063,10 @@ UINT32 SOLDIERTYPE::GetChecksum( )
 	uiChecksum *= (this->stats.bExpLevel + 1);
 	uiChecksum += (this->ubProfile + 1);
 
-	for ( uiLoop = 0; uiLoop < NUM_ORIGINAL_INV_SLOTS; uiLoop++ )
+	for ( uiLoop = 0; uiLoop < this->inv.size(); uiLoop++ )
 	{
-		if (uiLoop < (unsigned int) this->inv.size())
-		{
-			uiChecksum += this->inv[ uiLoop ].usItem;
-			uiChecksum += this->inv[ uiLoop ].ubNumberOfObjects;
-		}
+		uiChecksum += this->inv[ uiLoop ].usItem;
+		uiChecksum += this->inv[ uiLoop ].ubNumberOfObjects;
 	}
 
 	return( uiChecksum );
@@ -1189,45 +1186,45 @@ void OLDSOLDIERTYPE_101::CopyOldInventoryToNew()
 	inv[SMALLPOCK7POS] = DO_NOT_USE_Inv[OldInventory::SMALLPOCK7POS];
 	inv[SMALLPOCK8POS] = DO_NOT_USE_Inv[OldInventory::SMALLPOCK8POS];
 
-	inv.bNewItemCount[OldInventory::HELMETPOS] = DO_NOT_USE_bNewItemCount[HELMETPOS];
-	inv.bNewItemCount[OldInventory::VESTPOS] = DO_NOT_USE_bNewItemCount[VESTPOS];
-	inv.bNewItemCount[OldInventory::LEGPOS] = DO_NOT_USE_bNewItemCount[LEGPOS];
-	inv.bNewItemCount[OldInventory::HEAD1POS] = DO_NOT_USE_bNewItemCount[HEAD1POS];
-	inv.bNewItemCount[OldInventory::HEAD2POS] = DO_NOT_USE_bNewItemCount[HEAD2POS];
-	inv.bNewItemCount[OldInventory::HANDPOS] = DO_NOT_USE_bNewItemCount[HANDPOS];
-	inv.bNewItemCount[OldInventory::SECONDHANDPOS] = DO_NOT_USE_bNewItemCount[SECONDHANDPOS];
-	inv.bNewItemCount[OldInventory::BIGPOCK1POS] = DO_NOT_USE_bNewItemCount[BIGPOCK1POS];
-	inv.bNewItemCount[OldInventory::BIGPOCK2POS] = DO_NOT_USE_bNewItemCount[BIGPOCK2POS];
-	inv.bNewItemCount[OldInventory::BIGPOCK3POS] = DO_NOT_USE_bNewItemCount[BIGPOCK3POS];
-	inv.bNewItemCount[OldInventory::BIGPOCK4POS] = DO_NOT_USE_bNewItemCount[BIGPOCK4POS];
-	inv.bNewItemCount[OldInventory::SMALLPOCK1POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK1POS];
-	inv.bNewItemCount[OldInventory::SMALLPOCK2POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK2POS];
-	inv.bNewItemCount[OldInventory::SMALLPOCK3POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK3POS];
-	inv.bNewItemCount[OldInventory::SMALLPOCK4POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK4POS];
-	inv.bNewItemCount[OldInventory::SMALLPOCK5POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK5POS];
-	inv.bNewItemCount[OldInventory::SMALLPOCK6POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK6POS];
-	inv.bNewItemCount[OldInventory::SMALLPOCK7POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK7POS];
-	inv.bNewItemCount[OldInventory::SMALLPOCK8POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK8POS];
+	bNewItemCount[HELMETPOS] = DO_NOT_USE_bNewItemCount[OldInventory::HELMETPOS];
+	bNewItemCount[VESTPOS] = DO_NOT_USE_bNewItemCount[OldInventory::VESTPOS];
+	bNewItemCount[LEGPOS] = DO_NOT_USE_bNewItemCount[OldInventory::LEGPOS];
+	bNewItemCount[HEAD1POS] = DO_NOT_USE_bNewItemCount[OldInventory::HEAD1POS];
+	bNewItemCount[HEAD2POS] = DO_NOT_USE_bNewItemCount[OldInventory::HEAD2POS];
+	bNewItemCount[HANDPOS] = DO_NOT_USE_bNewItemCount[OldInventory::HANDPOS];
+	bNewItemCount[SECONDHANDPOS] = DO_NOT_USE_bNewItemCount[OldInventory::SECONDHANDPOS];
+	bNewItemCount[BIGPOCK1POS] = DO_NOT_USE_bNewItemCount[OldInventory::BIGPOCK1POS];
+	bNewItemCount[BIGPOCK2POS] = DO_NOT_USE_bNewItemCount[OldInventory::BIGPOCK2POS];
+	bNewItemCount[BIGPOCK3POS] = DO_NOT_USE_bNewItemCount[OldInventory::BIGPOCK3POS];
+	bNewItemCount[BIGPOCK4POS] = DO_NOT_USE_bNewItemCount[OldInventory::BIGPOCK4POS];
+	bNewItemCount[SMALLPOCK1POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK1POS];
+	bNewItemCount[SMALLPOCK2POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK2POS];
+	bNewItemCount[SMALLPOCK3POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK3POS];
+	bNewItemCount[SMALLPOCK4POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK4POS];
+	bNewItemCount[SMALLPOCK5POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK5POS];
+	bNewItemCount[SMALLPOCK6POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK6POS];
+	bNewItemCount[SMALLPOCK7POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK7POS];
+	bNewItemCount[SMALLPOCK8POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK8POS];
 
-	inv.bNewItemCycleCount[OldInventory::HELMETPOS] = DO_NOT_USE_bNewItemCycleCount[HELMETPOS];
-	inv.bNewItemCycleCount[OldInventory::VESTPOS] = DO_NOT_USE_bNewItemCycleCount[VESTPOS];
-	inv.bNewItemCycleCount[OldInventory::LEGPOS] = DO_NOT_USE_bNewItemCycleCount[LEGPOS];
-	inv.bNewItemCycleCount[OldInventory::HEAD1POS] = DO_NOT_USE_bNewItemCycleCount[HEAD1POS];
-	inv.bNewItemCycleCount[OldInventory::HEAD2POS] = DO_NOT_USE_bNewItemCycleCount[HEAD2POS];
-	inv.bNewItemCycleCount[OldInventory::HANDPOS] = DO_NOT_USE_bNewItemCycleCount[HANDPOS];
-	inv.bNewItemCycleCount[OldInventory::SECONDHANDPOS] = DO_NOT_USE_bNewItemCycleCount[SECONDHANDPOS];
-	inv.bNewItemCycleCount[OldInventory::BIGPOCK1POS] = DO_NOT_USE_bNewItemCycleCount[BIGPOCK1POS];
-	inv.bNewItemCycleCount[OldInventory::BIGPOCK2POS] = DO_NOT_USE_bNewItemCycleCount[BIGPOCK2POS];
-	inv.bNewItemCycleCount[OldInventory::BIGPOCK3POS] = DO_NOT_USE_bNewItemCycleCount[BIGPOCK3POS];
-	inv.bNewItemCycleCount[OldInventory::BIGPOCK4POS] = DO_NOT_USE_bNewItemCycleCount[BIGPOCK4POS];
-	inv.bNewItemCycleCount[OldInventory::SMALLPOCK1POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK1POS];
-	inv.bNewItemCycleCount[OldInventory::SMALLPOCK2POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK2POS];
-	inv.bNewItemCycleCount[OldInventory::SMALLPOCK3POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK3POS];
-	inv.bNewItemCycleCount[OldInventory::SMALLPOCK4POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK4POS];
-	inv.bNewItemCycleCount[OldInventory::SMALLPOCK5POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK5POS];
-	inv.bNewItemCycleCount[OldInventory::SMALLPOCK6POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK6POS];
-	inv.bNewItemCycleCount[OldInventory::SMALLPOCK7POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK7POS];
-	inv.bNewItemCycleCount[OldInventory::SMALLPOCK8POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK8POS];
+	bNewItemCycleCount[HELMETPOS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::HELMETPOS];
+	bNewItemCycleCount[VESTPOS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::VESTPOS];
+	bNewItemCycleCount[LEGPOS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::LEGPOS];
+	bNewItemCycleCount[HEAD1POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::HEAD1POS];
+	bNewItemCycleCount[HEAD2POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::HEAD2POS];
+	bNewItemCycleCount[HANDPOS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::HANDPOS];
+	bNewItemCycleCount[SECONDHANDPOS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SECONDHANDPOS];
+	bNewItemCycleCount[BIGPOCK1POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::BIGPOCK1POS];
+	bNewItemCycleCount[BIGPOCK2POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::BIGPOCK2POS];
+	bNewItemCycleCount[BIGPOCK3POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::BIGPOCK3POS];
+	bNewItemCycleCount[BIGPOCK4POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::BIGPOCK4POS];
+	bNewItemCycleCount[SMALLPOCK1POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK1POS];
+	bNewItemCycleCount[SMALLPOCK2POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK2POS];
+	bNewItemCycleCount[SMALLPOCK3POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK3POS];
+	bNewItemCycleCount[SMALLPOCK4POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK4POS];
+	bNewItemCycleCount[SMALLPOCK5POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK5POS];
+	bNewItemCycleCount[SMALLPOCK6POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK6POS];
+	bNewItemCycleCount[SMALLPOCK7POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK7POS];
+	bNewItemCycleCount[SMALLPOCK8POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK8POS];
 }
 
 UINT32 MERCPROFILESTRUCT::GetChecksum( )
@@ -1352,45 +1349,45 @@ void MERCPROFILESTRUCT::CopyOldInventoryToNew()
 	inv[SMALLPOCK7POS] = DO_NOT_USE_inv[OldInventory::SMALLPOCK7POS];
 	inv[SMALLPOCK8POS] = DO_NOT_USE_inv[OldInventory::SMALLPOCK8POS];
 
-	bInvStatus[OldInventory::HELMETPOS] = DO_NOT_USE_bInvStatus[HELMETPOS];
-	bInvStatus[OldInventory::VESTPOS] = DO_NOT_USE_bInvStatus[VESTPOS];
-	bInvStatus[OldInventory::LEGPOS] = DO_NOT_USE_bInvStatus[LEGPOS];
-	bInvStatus[OldInventory::HEAD1POS] = DO_NOT_USE_bInvStatus[HEAD1POS];
-	bInvStatus[OldInventory::HEAD2POS] = DO_NOT_USE_bInvStatus[HEAD2POS];
-	bInvStatus[OldInventory::HANDPOS] = DO_NOT_USE_bInvStatus[HANDPOS];
-	bInvStatus[OldInventory::SECONDHANDPOS] = DO_NOT_USE_bInvStatus[SECONDHANDPOS];
-	bInvStatus[OldInventory::BIGPOCK1POS] = DO_NOT_USE_bInvStatus[BIGPOCK1POS];
-	bInvStatus[OldInventory::BIGPOCK2POS] = DO_NOT_USE_bInvStatus[BIGPOCK2POS];
-	bInvStatus[OldInventory::BIGPOCK3POS] = DO_NOT_USE_bInvStatus[BIGPOCK3POS];
-	bInvStatus[OldInventory::BIGPOCK4POS] = DO_NOT_USE_bInvStatus[BIGPOCK4POS];
-	bInvStatus[OldInventory::SMALLPOCK1POS] = DO_NOT_USE_bInvStatus[SMALLPOCK1POS];
-	bInvStatus[OldInventory::SMALLPOCK2POS] = DO_NOT_USE_bInvStatus[SMALLPOCK2POS];
-	bInvStatus[OldInventory::SMALLPOCK3POS] = DO_NOT_USE_bInvStatus[SMALLPOCK3POS];
-	bInvStatus[OldInventory::SMALLPOCK4POS] = DO_NOT_USE_bInvStatus[SMALLPOCK4POS];
-	bInvStatus[OldInventory::SMALLPOCK5POS] = DO_NOT_USE_bInvStatus[SMALLPOCK5POS];
-	bInvStatus[OldInventory::SMALLPOCK6POS] = DO_NOT_USE_bInvStatus[SMALLPOCK6POS];
-	bInvStatus[OldInventory::SMALLPOCK7POS] = DO_NOT_USE_bInvStatus[SMALLPOCK7POS];
-	bInvStatus[OldInventory::SMALLPOCK8POS] = DO_NOT_USE_bInvStatus[SMALLPOCK8POS];
+	bInvStatus[HELMETPOS] = DO_NOT_USE_bInvStatus[OldInventory::HELMETPOS];
+	bInvStatus[VESTPOS] = DO_NOT_USE_bInvStatus[OldInventory::VESTPOS];
+	bInvStatus[LEGPOS] = DO_NOT_USE_bInvStatus[OldInventory::LEGPOS];
+	bInvStatus[HEAD1POS] = DO_NOT_USE_bInvStatus[OldInventory::HEAD1POS];
+	bInvStatus[HEAD2POS] = DO_NOT_USE_bInvStatus[OldInventory::HEAD2POS];
+	bInvStatus[HANDPOS] = DO_NOT_USE_bInvStatus[OldInventory::HANDPOS];
+	bInvStatus[SECONDHANDPOS] = DO_NOT_USE_bInvStatus[OldInventory::SECONDHANDPOS];
+	bInvStatus[BIGPOCK1POS] = DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK1POS];
+	bInvStatus[BIGPOCK2POS] = DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK2POS];
+	bInvStatus[BIGPOCK3POS] = DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK3POS];
+	bInvStatus[BIGPOCK4POS] = DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK4POS];
+	bInvStatus[SMALLPOCK1POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK1POS];
+	bInvStatus[SMALLPOCK2POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK2POS];
+	bInvStatus[SMALLPOCK3POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK3POS];
+	bInvStatus[SMALLPOCK4POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK4POS];
+	bInvStatus[SMALLPOCK5POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK5POS];
+	bInvStatus[SMALLPOCK6POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK6POS];
+	bInvStatus[SMALLPOCK7POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK7POS];
+	bInvStatus[SMALLPOCK8POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK8POS];
 
-	bInvNumber[OldInventory::HELMETPOS] = DO_NOT_USE_bInvNumber[HELMETPOS];
-	bInvNumber[OldInventory::VESTPOS] = DO_NOT_USE_bInvNumber[VESTPOS];
-	bInvNumber[OldInventory::LEGPOS] = DO_NOT_USE_bInvNumber[LEGPOS];
-	bInvNumber[OldInventory::HEAD1POS] = DO_NOT_USE_bInvNumber[HEAD1POS];
-	bInvNumber[OldInventory::HEAD2POS] = DO_NOT_USE_bInvNumber[HEAD2POS];
-	bInvNumber[OldInventory::HANDPOS] = DO_NOT_USE_bInvNumber[HANDPOS];
-	bInvNumber[OldInventory::SECONDHANDPOS] = DO_NOT_USE_bInvNumber[SECONDHANDPOS];
-	bInvNumber[OldInventory::BIGPOCK1POS] = DO_NOT_USE_bInvNumber[BIGPOCK1POS];
-	bInvNumber[OldInventory::BIGPOCK2POS] = DO_NOT_USE_bInvNumber[BIGPOCK2POS];
-	bInvNumber[OldInventory::BIGPOCK3POS] = DO_NOT_USE_bInvNumber[BIGPOCK3POS];
-	bInvNumber[OldInventory::BIGPOCK4POS] = DO_NOT_USE_bInvNumber[BIGPOCK4POS];
-	bInvNumber[OldInventory::SMALLPOCK1POS] = DO_NOT_USE_bInvNumber[SMALLPOCK1POS];
-	bInvNumber[OldInventory::SMALLPOCK2POS] = DO_NOT_USE_bInvNumber[SMALLPOCK2POS];
-	bInvNumber[OldInventory::SMALLPOCK3POS] = DO_NOT_USE_bInvNumber[SMALLPOCK3POS];
-	bInvNumber[OldInventory::SMALLPOCK4POS] = DO_NOT_USE_bInvNumber[SMALLPOCK4POS];
-	bInvNumber[OldInventory::SMALLPOCK5POS] = DO_NOT_USE_bInvNumber[SMALLPOCK5POS];
-	bInvNumber[OldInventory::SMALLPOCK6POS] = DO_NOT_USE_bInvNumber[SMALLPOCK6POS];
-	bInvNumber[OldInventory::SMALLPOCK7POS] = DO_NOT_USE_bInvNumber[SMALLPOCK7POS];
-	bInvNumber[OldInventory::SMALLPOCK8POS] = DO_NOT_USE_bInvNumber[SMALLPOCK8POS];
+	bInvNumber[HELMETPOS] = DO_NOT_USE_bInvNumber[OldInventory::HELMETPOS];
+	bInvNumber[VESTPOS] = DO_NOT_USE_bInvNumber[OldInventory::VESTPOS];
+	bInvNumber[LEGPOS] = DO_NOT_USE_bInvNumber[OldInventory::LEGPOS];
+	bInvNumber[HEAD1POS] = DO_NOT_USE_bInvNumber[OldInventory::HEAD1POS];
+	bInvNumber[HEAD2POS] = DO_NOT_USE_bInvNumber[OldInventory::HEAD2POS];
+	bInvNumber[HANDPOS] = DO_NOT_USE_bInvNumber[OldInventory::HANDPOS];
+	bInvNumber[SECONDHANDPOS] = DO_NOT_USE_bInvNumber[OldInventory::SECONDHANDPOS];
+	bInvNumber[BIGPOCK1POS] = DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK1POS];
+	bInvNumber[BIGPOCK2POS] = DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK2POS];
+	bInvNumber[BIGPOCK3POS] = DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK3POS];
+	bInvNumber[BIGPOCK4POS] = DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK4POS];
+	bInvNumber[SMALLPOCK1POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK1POS];
+	bInvNumber[SMALLPOCK2POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK2POS];
+	bInvNumber[SMALLPOCK3POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK3POS];
+	bInvNumber[SMALLPOCK4POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK4POS];
+	bInvNumber[SMALLPOCK5POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK5POS];
+	bInvNumber[SMALLPOCK6POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK6POS];
+	bInvNumber[SMALLPOCK7POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK7POS];
+	bInvNumber[SMALLPOCK8POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK8POS];
 }
 void MERCPROFILESTRUCT::CopyNewInventoryToOld()
 {
@@ -2747,7 +2744,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 					// 1) We have a rifle in hand...
 					usItem = thisSoldier->inv[ HANDPOS ].usItem;
 
-					//					if ( usItem != NOTHING && (Item[ usItem ][0]->data.fFlags & ITEM_TWO_HANDED) && usItem != ROCKET_LAUNCHER && usItem != RPG7 )
+					//					if ( usItem != NOTHING && (Item[ usItem ].fFlags & ITEM_TWO_HANDED) && usItem != ROCKET_LAUNCHER && usItem != RPG7 )
 					if ( usItem != NOTHING && (Item[ usItem ].twohanded ) && !Item[usItem].rocketlauncher )
 					{
 						// Switch on height!
@@ -2771,7 +2768,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 					// 1) We have a rifle in hand...
 					usItem = thisSoldier->inv[ HANDPOS ].usItem;
 
-					//					if ( usItem != NOTHING && (Item[ usItem ][0]->data.fFlags & ITEM_TWO_HANDED) && usItem != ROCKET_LAUNCHER && usItem != RPG7 )
+					//					if ( usItem != NOTHING && (Item[ usItem ].fFlags & ITEM_TWO_HANDED) && usItem != ROCKET_LAUNCHER && usItem != RPG7 )
 					if ( usItem != NOTHING && (Item[ usItem ].twohanded ) && !Item[usItem].rocketlauncher )
 					{
 						// Switch on height!
@@ -2869,7 +2866,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 				{
 					if ( Item[ usItem ].usItemClass == IC_GUN && !Item[usItem].rocketlauncher )
 					{
-						//						if ( (Item[ usItem ][0]->data.fFlags & ITEM_TWO_HANDED) )
+						//						if ( (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
 						if ( (Item[ usItem ].twohanded ) )
 						{
 							usNewState = BIGMERC_CROUCH_TRANS_INTO;
@@ -2889,7 +2886,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 				{
 					if ( Item[ usItem ].usItemClass == IC_GUN && !Item[usItem].rocketlauncher )
 					{
-						//						if ( (Item[ usItem ][0]->data.fFlags & ITEM_TWO_HANDED) )
+						//						if ( (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
 						if ( (Item[ usItem ].twohanded ) )
 						{
 							usNewState = BIGMERC_CROUCH_TRANS_OUTOF;
@@ -4415,7 +4412,7 @@ UINT16 SelectFireAnimation( SOLDIERTYPE *pSoldier, UINT8 ubHeight )
 			}
 
 			// ATE: Made distence away long for psitols such that they never use this....
-			//if ( !(Item[ usItem ][0]->data.fFlags & ITEM_TWO_HANDED) )
+			//if ( !(Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
 			//{
 			//	fDoLowShot = FALSE;
 			//}
@@ -8425,7 +8422,7 @@ UINT8 SOLDIERTYPE::SoldierTakeDamage( INT8 bHeight, INT16 sLifeDeduct, INT16 sBr
 		sChanceToDrop = ( __max( 0, ( sTestTwo - sTestOne ) ) );
 
 		// ATE: Increase odds of NOT dropping an UNDROPPABLE OBJECT
-		if ( ( thisSoldier->inv[ HANDPOS ][0]->data.fFlags & OBJECT_UNDROPPABLE ) )
+		if ( ( thisSoldier->inv[ HANDPOS ].fFlags & OBJECT_UNDROPPABLE ) )
 		{
 			sChanceToDrop -= 30;
 		}
@@ -8439,7 +8436,7 @@ UINT8 SOLDIERTYPE::SoldierTakeDamage( INT8 bHeight, INT16 sLifeDeduct, INT16 sBr
 			// OK, drop item in main hand...
 			if ( thisSoldier->inv[ HANDPOS ].usItem != NOTHING )
 			{
-				if ( !( thisSoldier->inv[ HANDPOS ][0]->data.fFlags & OBJECT_UNDROPPABLE ) )
+				if ( !( thisSoldier->inv[ HANDPOS ].fFlags & OBJECT_UNDROPPABLE ) )
 				{
 					// ATE: if our guy, make visible....
 					if ( thisSoldier->bTeam == gbPlayerNum )
@@ -11116,7 +11113,7 @@ void SOLDIERTYPE::ReLoadSoldierAnimationDueToHandItemChange( UINT16 usOldItem, U
 	{
 		if ( Item[ usOldItem ].usItemClass == IC_GUN )
 		{
-			//			if ( (Item[ usOldItem ][0]->data.fFlags & ITEM_TWO_HANDED) && usOldItem != ROCKET_LAUNCHER )
+			//			if ( (Item[ usOldItem ].fFlags & ITEM_TWO_HANDED) && usOldItem != ROCKET_LAUNCHER )
 			if ( (Item[ usOldItem ].twohanded ) && !Item[usOldItem].rocketlauncher )
 			{
 				fOldRifle = TRUE;
@@ -11128,7 +11125,7 @@ void SOLDIERTYPE::ReLoadSoldierAnimationDueToHandItemChange( UINT16 usOldItem, U
 	{
 		if ( Item[ usNewItem ].usItemClass == IC_GUN )
 		{
-			//			if ( (Item[ usNewItem ][0]->data.fFlags & ITEM_TWO_HANDED) && usNewItem != ROCKET_LAUNCHER )
+			//			if ( (Item[ usNewItem ].fFlags & ITEM_TWO_HANDED) && usNewItem != ROCKET_LAUNCHER )
 			if ( (Item[ usNewItem ].twohanded ) && !Item[usNewItem].rocketlauncher )
 			{
 				fNewRifle = TRUE;
@@ -11629,7 +11626,7 @@ BOOLEAN SOLDIERTYPE::SoldierCarriesTwoHandedWeapon( void )
 
 	usItem = thisSoldier->inv[ HANDPOS ].usItem;
 
-	//	if ( usItem != NOTHING && (Item[ usItem ][0]->data.fFlags & ITEM_TWO_HANDED) )
+	//	if ( usItem != NOTHING && (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
 	if ( usItem != NOTHING && (Item[ usItem ].twohanded ) )
 	{
 		return( TRUE );

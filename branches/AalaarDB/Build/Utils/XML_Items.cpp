@@ -1382,22 +1382,22 @@ BOOLEAN WriteItemStats()
 			FilePrintf(hFile,"\t\t<bRepairEase>%d</bRepairEase>\r\n",									Item[cnt].bRepairEase);
 
 #ifdef obsoleteCode
-			//FilePrintf(hFile,"\t\t<damageable>%d</damageable>\r\n",						Item[cnt][0]->data.fFlags & ITEM_DAMAGEABLE ? TRUE : FALSE);
-			//FilePrintf(hFile,"\t\t<repairable>%d</repairable>\r\n",						Item[cnt][0]->data.fFlags & ITEM_REPAIRABLE ? TRUE : FALSE );
-			//FilePrintf(hFile,"\t\t<waterdamages>%d</waterdamages>\r\n",						Item[cnt][0]->data.fFlags & ITEM_WATER_DAMAGES ? TRUE : FALSE );
-			//FilePrintf(hFile,"\t\t<metal>%d</metal>\r\n",						Item[cnt][0]->data.fFlags & ITEM_METAL ? TRUE : FALSE );
-			//FilePrintf(hFile,"\t\t<sinks>%d</sinks>\r\n",						Item[cnt][0]->data.fFlags & ITEM_SINKS ? TRUE : FALSE );
-			//FilePrintf(hFile,"\t\t<showstatus>%d</showstatus>\r\n",						Item[cnt][0]->data.fFlags & ITEM_SHOW_STATUS ? TRUE : FALSE );
-			//FilePrintf(hFile,"\t\t<hiddenaddon>%d</hiddenaddon>\r\n",						Item[cnt][0]->data.fFlags & ITEM_HIDDEN_ADDON ? TRUE : FALSE );
-			//FilePrintf(hFile,"\t\t<twohanded>%d</twohanded>\r\n",						Item[cnt][0]->data.fFlags & ITEM_TWO_HANDED ? TRUE : FALSE );
-			//FilePrintf(hFile,"\t\t<notbuyable>%d</notbuyable>\r\n",						Item[cnt][0]->data.fFlags & ITEM_NOT_BUYABLE ? TRUE : FALSE );
-			//FilePrintf(hFile,"\t\t<attachment>%d</attachment>\r\n",						Item[cnt][0]->data.fFlags & ITEM_ATTACHMENT ? TRUE : FALSE );
-			//FilePrintf(hFile,"\t\t<biggunlist>%d</biggunlist>\r\n",						Item[cnt][0]->data.fFlags & ITEM_BIGGUNLIST ? TRUE : FALSE );
-			//FilePrintf(hFile,"\t\t<notineditor>%d</notineditor>\r\n",						Item[cnt][0]->data.fFlags & ITEM_NOT_EDITOR ? TRUE : FALSE );
-			//FilePrintf(hFile,"\t\t<defaultundroppable>%d</defaultundroppable>\r\n",						Item[cnt][0]->data.fFlags & ITEM_DEFAULT_UNDROPPABLE ? TRUE : FALSE );
-			//FilePrintf(hFile,"\t\t<unaerodynamic>%d</unaerodynamic>\r\n",						Item[cnt][0]->data.fFlags & ITEM_UNAERODYNAMIC ? TRUE : FALSE );
-			//FilePrintf(hFile,"\t\t<electronic>%d</electronic>\r\n",						Item[cnt][0]->data.fFlags & ITEM_ELECTRONIC ? TRUE : FALSE );
-			//FilePrintf(hFile,"\t\t<inseparable>%d</inseparable>\r\n",						Item[cnt][0]->data.fFlags & ITEM_INSEPARABLE ? TRUE : FALSE );
+			//FilePrintf(hFile,"\t\t<damageable>%d</damageable>\r\n",						Item[cnt].fFlags & ITEM_DAMAGEABLE ? TRUE : FALSE);
+			//FilePrintf(hFile,"\t\t<repairable>%d</repairable>\r\n",						Item[cnt].fFlags & ITEM_REPAIRABLE ? TRUE : FALSE );
+			//FilePrintf(hFile,"\t\t<waterdamages>%d</waterdamages>\r\n",						Item[cnt].fFlags & ITEM_WATER_DAMAGES ? TRUE : FALSE );
+			//FilePrintf(hFile,"\t\t<metal>%d</metal>\r\n",						Item[cnt].fFlags & ITEM_METAL ? TRUE : FALSE );
+			//FilePrintf(hFile,"\t\t<sinks>%d</sinks>\r\n",						Item[cnt].fFlags & ITEM_SINKS ? TRUE : FALSE );
+			//FilePrintf(hFile,"\t\t<showstatus>%d</showstatus>\r\n",						Item[cnt].fFlags & ITEM_SHOW_STATUS ? TRUE : FALSE );
+			//FilePrintf(hFile,"\t\t<hiddenaddon>%d</hiddenaddon>\r\n",						Item[cnt].fFlags & ITEM_HIDDEN_ADDON ? TRUE : FALSE );
+			//FilePrintf(hFile,"\t\t<twohanded>%d</twohanded>\r\n",						Item[cnt].fFlags & ITEM_TWO_HANDED ? TRUE : FALSE );
+			//FilePrintf(hFile,"\t\t<notbuyable>%d</notbuyable>\r\n",						Item[cnt].fFlags & ITEM_NOT_BUYABLE ? TRUE : FALSE );
+			//FilePrintf(hFile,"\t\t<attachment>%d</attachment>\r\n",						Item[cnt].fFlags & ITEM_ATTACHMENT ? TRUE : FALSE );
+			//FilePrintf(hFile,"\t\t<biggunlist>%d</biggunlist>\r\n",						Item[cnt].fFlags & ITEM_BIGGUNLIST ? TRUE : FALSE );
+			//FilePrintf(hFile,"\t\t<notineditor>%d</notineditor>\r\n",						Item[cnt].fFlags & ITEM_NOT_EDITOR ? TRUE : FALSE );
+			//FilePrintf(hFile,"\t\t<defaultundroppable>%d</defaultundroppable>\r\n",						Item[cnt].fFlags & ITEM_DEFAULT_UNDROPPABLE ? TRUE : FALSE );
+			//FilePrintf(hFile,"\t\t<unaerodynamic>%d</unaerodynamic>\r\n",						Item[cnt].fFlags & ITEM_UNAERODYNAMIC ? TRUE : FALSE );
+			//FilePrintf(hFile,"\t\t<electronic>%d</electronic>\r\n",						Item[cnt].fFlags & ITEM_ELECTRONIC ? TRUE : FALSE );
+			//FilePrintf(hFile,"\t\t<inseparable>%d</inseparable>\r\n",						Item[cnt].fFlags & ITEM_INSEPARABLE ? TRUE : FALSE );
 #endif //obsoleteCode
 
 			FilePrintf(hFile,"\t\t<Damageable>%d</Damageable>\r\n",						Item[cnt].damageable );

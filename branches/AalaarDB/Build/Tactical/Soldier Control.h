@@ -422,7 +422,6 @@ enum
 
 
 struct LEVELNODE;
-using namespace std;
 
 //ADB makes the code clearer, used like "thisSoldier->foo();"
 #define thisSoldier this

@@ -128,20 +128,19 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 			return 0;
 		}
 
-		
 		if (Item[usItem].usItemClass == IC_MONEY) {
 			//money doesn't stack, it merges
 			//TODO merge and return
 			return 0;
 		}
 
-		if (ubNumberOfObjects > 0) {
-			//for convenience sake, do not allow mixed flags to stack!
-			//continue on because you might find something else with the same flags
-			if (sourceObject[0]->data.fFlags != (*this)[0]->data.fFlags) {
-				numToAdd = 0;
-			}
+		//for convenience sake, do not allow mixed flags to stack!
+		//continue on because you might find something else with the same flags
+		if (sourceObject.fFlags != this->fFlags) {
+			numToAdd = 0;
+		}
 
+		if (ubNumberOfObjects > 0) {
 			if (sourceObject[0]->data.ubImprintID != (*this)[0]->data.ubImprintID) {
 				numToAdd = 0;
 			}
@@ -388,14 +387,23 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
 		this->ubWeight = src.ubWeight;
-		this->objectStack.resize(this->ubNumberOfObjects);
+		this->fFlags = src.fFlags;
+
+		//in some cases we need to reference the objectStatus or something, even though the item is totally empty
+		//therefore, keep ubNumberOfObjects at 0 but resize objectStack to at least 1
+		this->objectStack.resize(max(ubNumberOfObjects, 1));
+		if (ubNumberOfObjects == 0) {
+			if (this->usItem != NONE) {
+				DebugBreak();
+			}
+			this->usItem = NONE;
+		}
 
 		//and now the big change, the union
 		//copy the old data, making sure not to write over, since the old size is actually 9 bytes
 		if (ubNumberOfObjects == 1) {
 			memcpy(&((*this)[0]->data.gun), &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,sizeof(ObjectData)));
 
-			(*this)[0]->data.fFlags = src.fFlags;
 			(*this)[0]->data.bTrap = src.bTrap;		// 1-10 exp_lvl to detect
 			(*this)[0]->data.ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
 			(*this)[0]->data.fUsed = src.fUsed;				// flags for whether the item is used or not
@@ -418,9 +426,8 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 			Version101::OLD_OBJECTTYPE_101_UNION ugYucky;
 			memcpy(&ugYucky, &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,sizeof(ObjectData)));
 
-			for (int x = 0; x < max(ubNumberOfObjects,1); ++x) {
+			for (int x = 0; x < max(ubNumberOfObjects, 1); ++x) {
 				(*this)[x]->data.objectStatus = ugYucky.bStatus[x];
-				(*this)[x]->data.fFlags = src.fFlags;
 				(*this)[x]->data.bTrap = src.bTrap;		// 1-10 exp_lvl to detect
 				(*this)[x]->data.ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
 				(*this)[x]->data.fUsed = src.fUsed;				// flags for whether the item is used or not

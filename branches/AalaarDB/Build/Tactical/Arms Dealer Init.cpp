@@ -1137,7 +1137,7 @@ BOOLEAN CanDealerRepairItem( UINT8 ubArmsDealer, UINT16 usItemIndex )
 	PERFORMANCE_MARKER
 //	UINT32 uiFlags;
 
-//	uiFlags = Item[ usItemIndex ][0]->data.fFlags;
+//	uiFlags = Item[ usItemIndex ].fFlags;
 
 	// can't repair anything that's not repairable!
 //	if ( !( uiFlags & ITEM_REPAIRABLE ) )
@@ -1271,7 +1271,7 @@ UINT8 DetermineDealerItemCondition( UINT8 ubArmsDealer, UINT16 usItemIndex )
 	UINT8 ubCondition = 100;
 
 	// if it's a damagable item, and not a liquid (those are always sold full)
-//	if ( ( Item[ usItemIndex ][0]->data.fFlags & ITEM_DAMAGEABLE ) && !ItemContainsLiquid( usItemIndex ) )
+//	if ( ( Item[ usItemIndex ].fFlags & ITEM_DAMAGEABLE ) && !ItemContainsLiquid( usItemIndex ) )
 	if ( ( Item[ usItemIndex ].damageable ) && !ItemContainsLiquid( usItemIndex ) )
 	{
 		// if he ONLY has used items, or 50% of the time if he carries both used & new items
@@ -1944,7 +1944,7 @@ UINT32 CalculateSimpleItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, IN
 	// repairs on electronic items take twice as long if the guy doesn't have the skill
 	// for dealers, this means anyone but Fredo the Electronics guy takes twice as long (but doesn't charge double)
 	// (Mind you, current he's the ONLY one who CAN repair Electronics at all!	Oh well.)
-//	if( ( Item[ usItemIndex ][0]->data.fFlags & ITEM_ELECTRONIC ) && ( ubArmsDealer != ARMS_DEALER_FREDO ) )
+//	if( ( Item[ usItemIndex ].fFlags & ITEM_ELECTRONIC ) && ( ubArmsDealer != ARMS_DEALER_FREDO ) )
 	if( ( Item[ usItemIndex ].electronic	) && ( ubArmsDealer != ARMS_DEALER_FREDO ) )
 	{
 		uiTimeToRepair *= 2;

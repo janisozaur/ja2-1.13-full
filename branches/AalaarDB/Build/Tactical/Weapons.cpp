@@ -3600,7 +3600,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTime,
 	//Madd: inherent weapon accuracy bonus
 	iChance += Weapon[usInHand].bAccuracy;
 
-//	if ( !(Item[ usInHand ][0]->data.fFlags & ITEM_TWO_HANDED) )
+//	if ( !(Item[ usInHand ].fFlags & ITEM_TWO_HANDED) )
 	if ( !(Item[ usInHand ].twohanded ) )
 	{
 		if (pSoldier->inv[SECONDHANDPOS].usItem == NOTHING)
@@ -5353,7 +5353,7 @@ INT32 CalcMaxTossRange( SOLDIERTYPE * pSoldier, UINT16 usItem, BOOLEAN fArmed )
 	}
 	else
 	{
-//		if ( Item[ usItem ][0]->data.fFlags & ITEM_UNAERODYNAMIC )
+//		if ( Item[ usItem ].fFlags & ITEM_UNAERODYNAMIC )
 		if ( Item[ usItem ].unaerodynamic )
 		{
 			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"calcmaxtossrange: not aerodynamic");

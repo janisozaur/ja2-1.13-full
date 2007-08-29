@@ -1261,7 +1261,7 @@ int AStarPathfinder::CalcG(int* pPrevCost)
 
 			INT16 iDoorGridNo = CurrentNodeIndex;
 			bool fDoorIsObstacleIfClosed = FALSE;
-			bool fDoorIsOpen;
+			bool fDoorIsOpen = false;
 			switch( nextCost ) {
 				case TRAVELCOST_DOOR_CLOSED_HERE:
 					fDoorIsObstacleIfClosed = TRUE;

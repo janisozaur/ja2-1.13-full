@@ -358,7 +358,7 @@ int EvalLua (const wchar_t* buff) {
 			lua_pop(L, 1);	/* pop error message from the stack */
 			return FALSE;
 		}
-		cout << lua_tostring(L, -1) << endl;
+		std::cout << lua_tostring(L, -1) << std::endl;
 		lua_pop(L, 1);	/* pop error message from the stack */
 		return TRUE;
 	}

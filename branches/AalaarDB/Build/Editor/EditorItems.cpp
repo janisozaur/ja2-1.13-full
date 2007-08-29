@@ -157,7 +157,7 @@ void EntryInitEditorItemsInfo()
 			if ( Item[i].usItemClass	== 0 )
 				break;
 			item = &Item[i];
-			//if( Item[i][0]->data.fFlags & ITEM_NOT_EDITOR )
+			//if( Item[i].fFlags & ITEM_NOT_EDITOR )
 			//	continue;
 			if( i == SWITCH || i == ACTION_ITEM )
 			{
@@ -399,7 +399,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			if ( Item[usCounter].usItemClass	== 0 )
 				break;
 			item = &Item[usCounter];
-			//if( Item[usCounter][0]->data.fFlags & ITEM_NOT_EDITOR )
+			//if( Item[usCounter].fFlags & ITEM_NOT_EDITOR )
 			{
 			//	usCounter++;
 			//	continue;
@@ -904,7 +904,7 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 				gTempObject[0]->data.misc.bDelay = 0;
 			}
 			ChangeActionItem( &gTempObject, gbActionItemIndex );
-			gTempObject[0]->data.fFlags |= OBJECT_ARMED_BOMB;
+			gTempObject.fFlags |= OBJECT_ARMED_BOMB;
 			if( gbActionItemIndex == ACTIONITEM_SMPIT )
 				Add3X3Pit( sGridNo );
 			else if( gbActionItemIndex == ACTIONITEM_LGPIT )

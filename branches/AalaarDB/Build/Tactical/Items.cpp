@@ -1258,7 +1258,7 @@ BOOLEAN ItemIsLegal( UINT16 usItemIndex )
 BOOLEAN ExtendedGunListGun( UINT16 usGun )
 {
 	PERFORMANCE_MARKER
-//	return( (Item[ usGun ][0]->data.fFlags & ITEM_BIGGUNLIST) != 0 );
+//	return( (Item[ usGun ].fFlags & ITEM_BIGGUNLIST) != 0 );
 	return( (Item[ usGun ].biggunlist ) != 0 );
 } 
 
@@ -1680,7 +1680,7 @@ INT8 FindAIUsableObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass )
 
 	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
-		if ( (Item[pSoldier->inv[bLoop].usItem].usItemClass & usItemClass) && !(pSoldier->inv[bLoop][0]->data.fFlags & OBJECT_AI_UNUSABLE) && (pSoldier->inv[bLoop][0]->data.objectStatus >= USABLE ) )
+		if ( (Item[pSoldier->inv[bLoop].usItem].usItemClass & usItemClass) && !(pSoldier->inv[bLoop].fFlags & OBJECT_AI_UNUSABLE) && (pSoldier->inv[bLoop][0]->data.objectStatus >= USABLE ) )
 		{
 			if ( usItemClass == IC_GUN && EXPLOSIVE_GUN( pSoldier->inv[bLoop].usItem ) )
 			{
@@ -1702,7 +1702,7 @@ INT8 FindAIUsableObjClassWithin( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, IN
 
 	for (bLoop = bLower; bLoop <= bUpper; bLoop++)
 	{
-		if ( (Item[pSoldier->inv[bLoop].usItem].usItemClass & usItemClass) && !(pSoldier->inv[bLoop][0]->data.fFlags & OBJECT_AI_UNUSABLE) && (pSoldier->inv[bLoop][0]->data.objectStatus >= USABLE ) )
+		if ( (Item[pSoldier->inv[bLoop].usItem].usItemClass & usItemClass) && !(pSoldier->inv[bLoop].fFlags & OBJECT_AI_UNUSABLE) && (pSoldier->inv[bLoop][0]->data.objectStatus >= USABLE ) )
 		{
 			if ( usItemClass == IC_GUN && EXPLOSIVE_GUN( pSoldier->inv[bLoop].usItem ) )
 			{
@@ -1728,7 +1728,7 @@ INT8 FindEmptySlotWithin( SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper )
 			continue;
 		if (pSoldier->inv[bLoop].usItem == 0)
 		{
-//			if (bLoop == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem][0]->data.fFlags & ITEM_TWO_HANDED)
+//			if (bLoop == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED)
 			if (bLoop == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem].twohanded )
 			{
 				continue;
@@ -2253,7 +2253,7 @@ BOOLEAN CompatibleFaceItem( UINT16 usItem1, UINT16 usItem2 )
 BOOLEAN TwoHandedItem( UINT16 usItem )
 {
 	PERFORMANCE_MARKER
-//	if (Item[usItem][0]->data.fFlags & ITEM_TWO_HANDED)
+//	if (Item[usItem].fFlags & ITEM_TWO_HANDED)
 	if (Item[usItem].twohanded )
 	{
 		return( TRUE );
@@ -4665,7 +4665,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		if (pObj->ubNumberOfObjects == 0)
 		{
 			// dropped everything
-//			if (bPos == HANDPOS && Item[pInSlot->usItem][0]->data.fFlags & ITEM_TWO_HANDED)
+//			if (bPos == HANDPOS && Item[pInSlot->usItem].fFlags & ITEM_TWO_HANDED)
 			if (bPos == HANDPOS && Item[pInSlot->usItem].twohanded )
 			{
 				// We just performed a successful drop of a two-handed object into the
@@ -4773,7 +4773,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 				break;
 			}
 
-//			if ( (Item[pObj->usItem][0]->data.fFlags & ITEM_TWO_HANDED) && (bPos == HANDPOS) )
+//			if ( (Item[pObj->usItem].fFlags & ITEM_TWO_HANDED) && (bPos == HANDPOS) )
 			if ( (Item[pObj->usItem].twohanded ) && (bPos == HANDPOS) )
 			{
 				if (pSoldier->inv[SECONDHANDPOS].usItem != 0)
@@ -4854,7 +4854,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 		case IC_LAUNCHER:
 		case IC_BOMB:
 		case IC_GRENADE:
-//			if (!((*pItem)[0]->data.fFlags & ITEM_TWO_HANDED))
+//			if (!((*pItem).fFlags & ITEM_TWO_HANDED))
 			if (!(pItem->twohanded))
 			{
 				if (pSoldier->inv[HANDPOS].usItem == NONE)
@@ -4867,7 +4867,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 						return( TRUE );
 					}
 				}
-//				else if ( !(Item[pSoldier->inv[HANDPOS].usItem][0]->data.fFlags & ITEM_TWO_HANDED) && pSoldier->inv[SECONDHANDPOS].usItem == NONE)
+//				else if ( !(Item[pSoldier->inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED) && pSoldier->inv[SECONDHANDPOS].usItem == NONE)
 				else if ( !(Item[pSoldier->inv[HANDPOS].usItem].twohanded ) && pSoldier->inv[SECONDHANDPOS].usItem == NONE)
 				{
 					// put the one-handed weapon in the guy's 2nd hand...
@@ -5811,10 +5811,10 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 	}
 	if (fRet)
 	{
-//		if (Item[ usItem ][0]->data.fFlags & ITEM_DEFAULT_UNDROPPABLE)
+//		if (Item[ usItem ].fFlags & ITEM_DEFAULT_UNDROPPABLE)
 		if (Item[ usItem ].defaultundroppable )
 		{
-			(*pObj)[0]->data.fFlags |= OBJECT_UNDROPPABLE;
+			(*pObj).fFlags |= OBJECT_UNDROPPABLE;
 		}
 		if (Item [ usItem ].defaultattachment > 0 )
 		{
@@ -5951,7 +5951,7 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 		return( FALSE );
 	}
 
-	(*pObj)[0]->data.fFlags |= OBJECT_ARMED_BOMB;
+	(*pObj).fFlags |= OBJECT_ARMED_BOMB;
 	(*pObj)[0]->data.misc.usBombItem = pObj->usItem;
 	return( TRUE );
 }
@@ -6205,7 +6205,7 @@ INT8 CheckItemForDamage( UINT16 usItem, INT32 iMaxDamage )
 		iMaxDamage -= (iMaxDamage * Armour[Item[usItem].ubClassIndex].ubProtection) / 100;
 	}
 	// metal items are tough and will be damaged less
-//	if (Item[usItem][0]->data.fFlags & ITEM_METAL)
+//	if (Item[usItem].fFlags & ITEM_METAL)
 	if (Item[usItem].metal )
 	{
 		iMaxDamage /= 2;
@@ -6254,7 +6254,7 @@ BOOLEAN DamageItem( OBJECTTYPE * pObject, INT32 iDamage, BOOLEAN fOnGround )
 	INT8		bLoop;
 	INT8		bDamage;
 
-//	if ( (Item[pObject->usItem][0]->data.fFlags & ITEM_DAMAGEABLE || Item[ pObject->usItem ].usItemClass == IC_AMMO) && pObject->ubNumberOfObjects > 0)
+//	if ( (Item[pObject->usItem].fFlags & ITEM_DAMAGEABLE || Item[ pObject->usItem ].usItemClass == IC_AMMO) && pObject->ubNumberOfObjects > 0)
 	if ( (Item[pObject->usItem].damageable  || Item[ pObject->usItem ].usItemClass == IC_AMMO) && pObject->ubNumberOfObjects > 0)
 	{
 
@@ -6524,7 +6524,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 		for ( bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++ )
 		{
 			// if there's an item here that can get water damaged...
-//			if (pSoldier->inv[ bLoop ].usItem && Item[pSoldier->inv[ bLoop ].usItem][0]->data.fFlags & ITEM_WATER_DAMAGES)
+//			if (pSoldier->inv[ bLoop ].usItem && Item[pSoldier->inv[ bLoop ].usItem].fFlags & ITEM_WATER_DAMAGES)
 			if (pSoldier->inv[ bLoop ].usItem && Item[pSoldier->inv[ bLoop ].usItem].waterdamages )
 			{
 				// roll the 'ol 100-sided dice

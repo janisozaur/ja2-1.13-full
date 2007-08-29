@@ -2762,12 +2762,12 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 				if ( Random( 100 ) < 75 )
 				{
 					// mark it undroppable...
-					pSoldier->inv[ i ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
+					pSoldier->inv[ i ].fFlags |= OBJECT_UNDROPPABLE;
 				}
 			}
 
 			//if the item can be dropped
-			if( !( pSoldier->inv[ i ][0]->data.fFlags & OBJECT_UNDROPPABLE ) || pSoldier->bTeam == gbPlayerNum )
+			if( !( pSoldier->inv[ i ].fFlags & OBJECT_UNDROPPABLE ) || pSoldier->bTeam == gbPlayerNum )
 			{
 
         uiNumberOfItems++;
@@ -2799,7 +2799,7 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 			if( pSoldier->inv[ i ].usItem != 0 )
 			{
 				//if the item can be dropped
-				if( !(pSoldier->inv[ i ][0]->data.fFlags & OBJECT_UNDROPPABLE) || pSoldier->bTeam == gbPlayerNum )
+				if( !(pSoldier->inv[ i ].fFlags & OBJECT_UNDROPPABLE) || pSoldier->bTeam == gbPlayerNum )
 				{
 					ReduceAmmoDroppedByNonPlayerSoldiers( pSoldier, i );
 

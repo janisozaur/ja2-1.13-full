@@ -3499,7 +3499,7 @@ UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimSta
 		{
 			if ( ( Item[ usItem ].usItemClass == IC_GUN || Item[ usItem ].usItemClass == IC_LAUNCHER ) && !Item[usItem].rocketlauncher)
 			{
-				//				if ( (Item[ usItem ][0]->data.fFlags & ITEM_TWO_HANDED) )
+				//				if ( (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
 				if ( (Item[ usItem ].twohanded ) )
 				{
 					ubWaterHandIndex = 0;
@@ -3544,7 +3544,7 @@ UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimSta
 			// CHECK FOR HANDGUN
 			if ( ( Item[ usItem ].usItemClass == IC_GUN || Item[ usItem ].usItemClass == IC_LAUNCHER ) && !Item[usItem].rocketlauncher )
 			{
-				//				if ( !(Item[ usItem ][0]->data.fFlags & ITEM_TWO_HANDED) )
+				//				if ( !(Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
 				if ( !(Item[ usItem ].twohanded ) )
 				{
 					usAltAnimSurface = gubAnimSurfaceItemSubIndex[pSoldier->ubBodyType][usAnimState];

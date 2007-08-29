@@ -3860,7 +3860,7 @@ INT8 BlackAlert_EvaluateCanAttack(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 						// the current weapon appears is useless right now!
 						// (since we got a return code of noammo, we know the hand usItem
 						// is our gun)
-						pSoldier->inv[HANDPOS][0]->data.fFlags |= OBJECT_AI_UNUSABLE;
+						pSoldier->inv[HANDPOS].fFlags |= OBJECT_AI_UNUSABLE;
 						// move the gun into another pocket...
 						if (!AutoPlaceObject( pSoldier, &(pSoldier->inv[HANDPOS]), FALSE ) )
 						{

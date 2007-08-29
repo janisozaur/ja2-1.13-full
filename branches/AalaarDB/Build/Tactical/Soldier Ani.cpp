@@ -1571,7 +1571,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							{
 								if ( Item[ usItem ].usItemClass == IC_GUN )
 								{
-									//										if ( (Item[ usItem ][0]->data.fFlags & ITEM_TWO_HANDED) )
+									//										if ( (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
 									if ( (Item[ usItem ].twohanded ) )
 									{
 										// Set to rifle

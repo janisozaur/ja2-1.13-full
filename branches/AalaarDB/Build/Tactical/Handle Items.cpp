@@ -1779,7 +1779,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 							if( pSoldier->bTeam == OUR_TEAM )
 							{
 							// check to see if object was owned by another
-							if( gTempObject[0]->data.fFlags & OBJECT_OWNED_BY_CIVILIAN )
+							if( gTempObject.fFlags & OBJECT_OWNED_BY_CIVILIAN )
 							{
 							// owned by a civilian
 							if( HandleLoyaltyAdjustmentForRobbery( pSoldier ) == TRUE )
@@ -1788,7 +1788,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 							}
 
 							// reset who owns object
-							gTempObject[0]->data.fFlags &= ~( OBJECT_OWNED_BY_CIVILIAN );
+							gTempObject.fFlags &= ~( OBJECT_OWNED_BY_CIVILIAN );
 							}
 							}
 							*/
@@ -1856,7 +1856,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 					if( pSoldier->bTeam == OUR_TEAM )
 					{
 					// check to see if object was owned by another
-					if( gTempObject[0]->data.fFlags & OBJECT_OWNED_BY_CIVILIAN )
+					if( gTempObject.fFlags & OBJECT_OWNED_BY_CIVILIAN )
 					{
 					// owned by a civilian
 					if( HandleLoyaltyAdjustmentForRobbery( pSoldier ) == TRUE )
@@ -1865,7 +1865,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 					}
 
 					// reset who owns object
-					gTempObject[0]->data.fFlags &= ~( OBJECT_OWNED_BY_CIVILIAN );
+					gTempObject.fFlags &= ~( OBJECT_OWNED_BY_CIVILIAN );
 					}
 					}
 					*/
@@ -2156,7 +2156,7 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 
 	if ( bTerrainID == DEEP_WATER || bTerrainID == LOW_WATER || bTerrainID == MED_WATER )
 	{
-		//		if ( Item[ pObject->usItem ][0]->data.fFlags & ITEM_SINKS )
+		//		if ( Item[ pObject->usItem ].fFlags & ITEM_SINKS )
 		if ( Item[ pObject->usItem ].sinks	)
 		{
 			return( NULL );
@@ -4381,7 +4381,7 @@ BOOLEAN HandItemWorks( SOLDIERTYPE *pSoldier, INT8 bSlot )
 	// if the item can be damaged, than we must check that it's in good enough
 	// shape to be usable, and doesn't break during use.
 	// Exception: land mines.	You can bury them broken, they just won't blow!
-	//	if ( (Item[ pObj->usItem ][0]->data.fFlags & ITEM_DAMAGEABLE) && (pObj->usItem != MINE) && (Item[ pObj->usItem ].usItemClass != IC_MEDKIT) && pObj->usItem != GAS_CAN )
+	//	if ( (Item[ pObj->usItem ].fFlags & ITEM_DAMAGEABLE) && (pObj->usItem != MINE) && (Item[ pObj->usItem ].usItemClass != IC_MEDKIT) && pObj->usItem != GAS_CAN )
 	if ( (Item[ pObj->usItem ].damageable ) && (!Item[pObj->usItem].mine ) && (Item[ pObj->usItem ].usItemClass != IC_MEDKIT) && !Item[pObj->usItem].gascan )
 	{
 		// if it's still usable, check whether it breaks
@@ -4486,7 +4486,7 @@ BOOLEAN ContinuePastBoobyTrap( SOLDIERTYPE * pSoldier, INT16 sGridNo, INT8 bLeve
 		if (pSoldier->bTeam == gbPlayerNum)
 		{
 			// does the player know about this item?
-			fBoobyTrapKnowledge = (((*pObj)[0]->data.fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) > 0);
+			fBoobyTrapKnowledge = (((*pObj).fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) > 0);
 
 			// blue flag stuff?
 
@@ -4497,7 +4497,7 @@ BOOLEAN ContinuePastBoobyTrap( SOLDIERTYPE * pSoldier, INT16 sGridNo, INT8 bLeve
 				if (bTrapDetectLevel >= bTrapDifficulty)
 				{
 					// spotted the trap!
-					(*pObj)[0]->data.fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
+					(*pObj).fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
 					fBoobyTrapKnowledge = TRUE;
 
 					// Make him warn us:
@@ -4662,7 +4662,7 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 			else
 			{
 				gTempObject[0]->data.bTrap = 0;
-				gTempObject[0]->data.fFlags &= ~( OBJECT_KNOWN_TO_BE_TRAPPED );
+				gTempObject.fFlags &= ~( OBJECT_KNOWN_TO_BE_TRAPPED );
 			}
 
 			// place it in the guy's inventory/cursor
@@ -4675,7 +4675,7 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 			{
 				// make sure the item in the world is untrapped
 				gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].object[0]->data.bTrap = 0;
-				gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].object[0]->data.fFlags &= ~( OBJECT_KNOWN_TO_BE_TRAPPED );
+				gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].object.fFlags &= ~( OBJECT_KNOWN_TO_BE_TRAPPED );
 
 				// ATE; If we failed to add to inventory, put failed one in our cursor...
 				gfDontChargeAPsToPickup = TRUE;
@@ -4762,7 +4762,7 @@ void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue )
 			else
 			{
 				gTempObject[0]->data.bTrap = 0;
-				gTempObject[0]->data.fFlags &= ~( OBJECT_KNOWN_TO_BE_TRAPPED );
+				gTempObject.fFlags &= ~( OBJECT_KNOWN_TO_BE_TRAPPED );
 			}
 
 			MAPEndItemPointer( );
@@ -4912,7 +4912,7 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 			if (gWorldBombs[uiWorldBombIndex].fExists && gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].sGridNo == sNextGridNo)
 			{
 				pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
-				if ( (*pObj)[0]->data.misc.bDetonatorType == BOMB_PRESSURE && !((*pObj)[0]->data.fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) && (!((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB)) )
+				if ( (*pObj)[0]->data.misc.bDetonatorType == BOMB_PRESSURE && !((*pObj).fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) && (!((*pObj).fFlags & OBJECT_DISABLED_BOMB)) )
 				{
 					if ( fMining && (*pObj)[0]->data.bTrap <= 10 )
 					{
@@ -4930,7 +4930,7 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 							StatChange( pSoldier, WISDOMAMT, (UINT16) ((*pObj)[0]->data.bTrap), FALSE );
 
 							// set item as known
-							(*pObj)[0]->data.fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
+							(*pObj).fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
 						}
 
 						*psProblemGridNo = sNextGridNo;
@@ -4967,7 +4967,7 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 
 		}
 		}
-		else if (Item[ pObj->usItem ][0]->data.fFlags & ITEM_METAL)
+		else if (Item[ pObj->usItem ].fFlags & ITEM_METAL)
 		{
 		// add blue flag
 		AddBlueFlag( sNextGridNo, pSoldier->pathing.bLevel );
@@ -5251,7 +5251,7 @@ BOOLEAN ContinuePastBoobyTrapInMapScreen( OBJECTTYPE *pObject, SOLDIERTYPE *pSol
 		if (pSoldier->bTeam == gbPlayerNum)
 		{
 			// does the player know about this item?
-			fBoobyTrapKnowledge = (((*pObject)[0]->data.fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) > 0);
+			fBoobyTrapKnowledge = (((*pObject).fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) > 0);
 
 			// blue flag stuff?
 
@@ -5262,7 +5262,7 @@ BOOLEAN ContinuePastBoobyTrapInMapScreen( OBJECTTYPE *pObject, SOLDIERTYPE *pSol
 				if (bTrapDetectLevel >= bTrapDifficulty)
 				{
 					// spotted the trap!
-					(*pObject)[0]->data.fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
+					(*pObject).fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
 					fBoobyTrapKnowledge = TRUE;
 
 					// Make him warn us:

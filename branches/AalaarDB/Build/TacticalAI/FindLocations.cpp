@@ -1975,7 +1975,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 				{
 					return( AI_ACTION_NONE );
 				}
-				if (pSoldier->inv[HANDPOS][0]->data.fFlags & OBJECT_UNDROPPABLE)
+				if (pSoldier->inv[HANDPOS].fFlags & OBJECT_UNDROPPABLE)
 				{
 					// destroy this item!
 					DebugAI( String( "%d decides he must drop %S first so destroys it", pSoldier->ubID, ItemNames[ pSoldier->inv[HANDPOS].usItem ] ) );

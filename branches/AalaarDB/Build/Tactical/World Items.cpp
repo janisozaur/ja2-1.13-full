@@ -317,7 +317,7 @@ void FindPanicBombsAndTriggers( void )
 
 					gTacticalStatus.sPanicTriggerGridNo[ bPanicIndex ] = sGridNo;
 					gTacticalStatus.ubPanicTolerance[ bPanicIndex ] = (*pObj)[0]->data.misc.ubTolerance;
-					if ((*pObj)[0]->data.fFlags & OBJECT_ALARM_TRIGGER)
+					if ((*pObj).fFlags & OBJECT_ALARM_TRIGGER)
 					{
 						gTacticalStatus.bPanicTriggerIsAlarm[ bPanicIndex ] = TRUE;
 					}

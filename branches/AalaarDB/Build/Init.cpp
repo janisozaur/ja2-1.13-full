@@ -70,6 +70,8 @@ extern BOOLEAN GetCDromDriveLetter( STR8	pString );
 
 #ifdef JA2EDITOR
 #define BUILD_AS_EDITOR_ONLY
+#else
+#undef BUILD_AS_EDITOR_ONLY
 #endif
 
 #ifdef JA2BETAVERSION

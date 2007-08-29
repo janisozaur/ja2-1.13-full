@@ -452,7 +452,7 @@ void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex )
 			// else fall through and act as nothing
 		case IC_NONE:
 			gbEditingMode = EDITING_NOTHING;
-			if( !((*gpItem)[0]->data.fFlags & OBJECT_UNDROPPABLE) )
+			if( !((*gpItem).fFlags & OBJECT_UNDROPPABLE) )
 				gbEditingMode = EDITING_DROPPABLE;
 			break;
 		default:
@@ -1232,9 +1232,9 @@ void AlarmTriggerCheckboxCallback( GUI_BUTTON *btn, INT32 reason )
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if( btn->uiFlags & BUTTON_CLICKED_ON )
-			(*gpItem)[0]->data.fFlags |= OBJECT_ALARM_TRIGGER;
+			(*gpItem).fFlags |= OBJECT_ALARM_TRIGGER;
 		else
-			(*gpItem)[0]->data.fFlags &= ~OBJECT_ALARM_TRIGGER;
+			(*gpItem).fFlags &= ~OBJECT_ALARM_TRIGGER;
 	}
 }
 
@@ -1255,7 +1255,7 @@ void SetupTriggersGUI()
 			giAlarmTriggerButton = 
 				CreateCheckBoxButton(	iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 405, "EDITOR//smCheckBox.sti", MSYS_PRIORITY_NORMAL, AlarmTriggerCheckboxCallback );
 			SetButtonFastHelpText( giAlarmTriggerButton, L"If the panic trigger is an alarm trigger,\nenemies won't attempt to use it if they\nare already aware of your presence.");
-			if( (*gpItem)[0]->data.fFlags & OBJECT_ALARM_TRIGGER )
+			if( (*gpItem).fFlags & OBJECT_ALARM_TRIGGER )
 				ButtonList[ giAlarmTriggerButton ]->uiFlags |= BUTTON_CLICKED_ON;
 		}
 	}

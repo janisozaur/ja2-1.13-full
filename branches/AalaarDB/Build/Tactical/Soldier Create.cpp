@@ -2085,7 +2085,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	{
 		spp->Inv[ i ].initialize();
 		spp->Inv[ i ].usItem = NOTHING;
-		spp->Inv[ i ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
+		spp->Inv[ i ].fFlags |= OBJECT_UNDROPPABLE;
 	}
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateStaticDetailedPlacementGivenBasicPlacementInfo done"));
@@ -2165,7 +2165,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 	for( i = 0; i < spp->Inv.size(); i++ )
 	{
 		//copy over static items and empty slots that are droppable (signifies a forced empty slot)
-		if( spp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
+		if( spp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
 		{
 			pp->Inv[ i ] = spp->Inv[ i ];
 			//return;
@@ -2869,7 +2869,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 					{
 						if (pProfile->ubInvUndroppable & gubItemDroppableFlag[cnt])
 						{
-							pSoldier->inv[cnt][0]->data.fFlags |= OBJECT_UNDROPPABLE;
+							pSoldier->inv[cnt].fFlags |= OBJECT_UNDROPPABLE;
 						}
 					}
 				}

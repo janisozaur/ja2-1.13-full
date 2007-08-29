@@ -3271,7 +3271,7 @@ FLOAT ItemConditionModifier(UINT16 usItemIndex, INT16 bStatus)
 
 		// an item at 100% is worth full price...
 
-//		if ( Item[ usItemIndex ][0]->data.fFlags & ITEM_REPAIRABLE )
+//		if ( Item[ usItemIndex ].fFlags & ITEM_REPAIRABLE )
 		if ( Item[ usItemIndex ].repairable  )
 		{
 			// a REPAIRABLE item at 0% is still worth 50% of its full price, not 0%
@@ -4747,7 +4747,7 @@ BOOLEAN IsGunOrAmmoOfSameTypeSelected( OBJECTTYPE	*pItemObject )
 
 
 	//if the highlighted object is an attachment
-//	if( Item[ pItemObject->usItem ][0]->data.fFlags & ITEM_ATTACHMENT )
+//	if( Item[ pItemObject->usItem ].fFlags & ITEM_ATTACHMENT )
 	if( Item[ pItemObject->usItem ].attachment  )
 	{
 		if( ValidAttachment( pItemObject->usItem, gpHighLightedItemObject->usItem ) )
@@ -6053,7 +6053,7 @@ void EvaluateItemAddedToPlayersOfferArea( INT8 bSlotID, BOOLEAN fFirstOne )
 		if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 		{
 			// only otherwise repairable items count as actual rejections
-//			if ( Item[ PlayersOfferArea[ bSlotID ].sItemIndex ][0]->data.fFlags & ITEM_REPAIRABLE )
+//			if ( Item[ PlayersOfferArea[ bSlotID ].sItemIndex ].fFlags & ITEM_REPAIRABLE )
 			if ( Item[ PlayersOfferArea[ bSlotID ].sItemIndex ].repairable  )
 			{
 				uiEvalResult = EVAL_RESULT_DONT_HANDLE;

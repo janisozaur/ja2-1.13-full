@@ -1250,6 +1250,11 @@ BOOLEAN SOLDIERTYPE::Load(HWFILE hFile)
 		{
 			return(FALSE);
 		}
+		// check checksum
+		if ( this->GetChecksum() != this->uiMercChecksum )
+		{
+			return( FALSE );
+		}
 	}
 	else
 	{
@@ -1284,11 +1289,7 @@ BOOLEAN SOLDIERTYPE::Load(HWFILE hFile)
 			*this = OldSavedSoldierInfo999;
 		}
 		*/
-	}
-	// check checksum
-	if ( this->GetChecksum() != this->uiMercChecksum )
-	{
-		return( FALSE );
+		//assume checksum is ok
 	}
 	return TRUE;
 }

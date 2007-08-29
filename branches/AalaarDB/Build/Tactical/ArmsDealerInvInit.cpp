@@ -903,7 +903,7 @@ UINT8 GetCurrentSuitabilityForItem( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEA
 	}
 
 	// items normally not sold at shops are unsuitable
-//	if ( Item[ usItemIndex ][0]->data.fFlags & ITEM_NOT_BUYABLE )
+//	if ( Item[ usItemIndex ].fFlags & ITEM_NOT_BUYABLE )
 	if ( Item[ usItemIndex ].notbuyable  )
 	{
 		return(ITEM_SUITABILITY_NONE);
@@ -1433,7 +1433,7 @@ UINT8 GetDealerItemCategoryNumber( UINT16 usItemIndex )
 BOOLEAN CanDealerItemBeSoldUsed( UINT16 usItemIndex )
 {
 	PERFORMANCE_MARKER
-//	if ( !( Item[ usItemIndex ][0]->data.fFlags & ITEM_DAMAGEABLE ) )
+//	if ( !( Item[ usItemIndex ].fFlags & ITEM_DAMAGEABLE ) )
 	if ( !( Item[ usItemIndex ].damageable  ) )
 		return(FALSE);
 

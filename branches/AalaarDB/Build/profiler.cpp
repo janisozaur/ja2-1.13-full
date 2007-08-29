@@ -1,4 +1,5 @@
 #include "profiler.h"
+#include <sstream>
 
 PerfManager* PerfManager::_instance(NULL);
 
@@ -130,20 +131,43 @@ void PerfManager::log(std::ostream &os)
 	{
 		logCopy.insert(*i);
 	}
-	//Stream the sorted log to the supplied ostream
+
+	int cyclesWidth = 0;
+	//I want the formatting to be nice!
 	for(std::set<PerfDatum, PerfSort2>::iterator i = logCopy.begin(); 
 		i != logCopy.end(); 
 		i++)
+	{
+		if(i->_lineNumber) {
+			std::stringstream cyclesString;
+			cyclesString << i->_cycles;
+			std::string tempString;
+			cyclesString >> tempString;
+			cyclesWidth = tempString.size();
+			break;
+		}
+	}
+
+	//Stream the sorted log to the supplied ostream
+	for(std::set<PerfDatum, PerfSort2>::iterator i = logCopy.begin(); 
+		i != logCopy.end(); 
+		++i)
 	{
 		if(i->_lineNumber)
 		{	//Truncate path from file name if the compiler included it.
 			const char* j = i->_fileName + strlen(i->_fileName);
 			while('\\' != *j && '/' != *j && j >= i->_fileName){j--;}
 			if('\\' == *j || '/' == *j){j++;}
-			os << "[";
-			os.width(12);
-			os << i->_cycles << "]";
-			os << " cycles (";
+			std::stringstream cyclesString;
+			std::string tempString;
+			cyclesString << i->_cycles;
+			cyclesString >> tempString;
+			os.width(cyclesWidth);
+			os << tempString.c_str() << ", ";
+			cyclesString << (i->_cycles / i->_calls);
+			cyclesString >> tempString;
+			os.width(cyclesWidth);
+			os << tempString.c_str() << "] cycles (";
 			double percent = double(i->_cycles) / double(_totalTime) * 100;
 			os.precision(getPercision(percent));
 			os.width(4);

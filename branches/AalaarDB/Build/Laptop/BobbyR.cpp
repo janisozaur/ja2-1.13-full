@@ -589,7 +589,7 @@ BOOLEAN InitBobbyRayNewInventory()
 	for( i = 0; i < MAXITEMS; i++ )
 	{
 		//if Bobby Ray sells this, it can be sold, and it's allowed into this game (some depend on e.g. gun-nut option)
-//		if( ( StoreInventory[ i ][ BOBBY_RAY_NEW ] != 0) && !( Item[ i ][0]->data.fFlags & ITEM_NOT_BUYABLE ) && ItemIsLegal( i ) )
+//		if( ( StoreInventory[ i ][ BOBBY_RAY_NEW ] != 0) && !( Item[ i ].fFlags & ITEM_NOT_BUYABLE ) && ItemIsLegal( i ) )
 		LaptopSaveInfo.BobbyRayInventory[ usBobbyrIndex ].usItemIndex = i;
 		usBobbyrIndex++;
 	}
@@ -623,7 +623,7 @@ BOOLEAN InitBobbyRayUsedInventory()
 	for( i = 0; i < MAXITEMS; i++ )
 	{
 		//if Bobby Ray sells this, it can be sold, and it's allowed into this game (some depend on e.g. gun-nut option)
-//		if( ( StoreInventory[ i ][ BOBBY_RAY_USED ] != 0) && !( Item[ i ][0]->data.fFlags & ITEM_NOT_BUYABLE ) && ItemIsLegal( i ) )
+//		if( ( StoreInventory[ i ][ BOBBY_RAY_USED ] != 0) && !( Item[ i ].fFlags & ITEM_NOT_BUYABLE ) && ItemIsLegal( i ) )
 		// in case his store inventory list is wrong, make sure this category of item can be sold used
 		if ( CanDealerItemBeSoldUsed( i ) )
 		{

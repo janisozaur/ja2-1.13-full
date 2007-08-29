@@ -11424,6 +11424,7 @@ void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons( void )
 		}
 		else
 		{
+			//BUG TODO passed in bad value, caused crash when right clicking on name in list in strat map overview
 			EnableButton( giCharInfoButton[ 0 ] );
 			EnableButton( giCharInfoButton[ 1 ] );
 		}
