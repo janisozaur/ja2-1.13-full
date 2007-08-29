@@ -177,7 +177,6 @@ void CreateMapInventoryPoolSlots( void );
 void DestroyMapInventoryPoolSlots( void );
 void CreateMapInventoryButtons( void );
 void DestroyMapInventoryButtons( void );
-void ReSizeStashListByThisAmount( INT32 iNumberOfItems );
 void DestroyStash( void );
 void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ );
 BOOLEAN GetObjFromInventoryStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItemPtr );
@@ -195,7 +194,7 @@ void CreateMapInventoryPoolDoneButton( void );
 void DestroyInventoryPoolDoneButton( void );
 void MapInventoryPoolDoneBtn( GUI_BUTTON *btn, INT32 reason );
 void DisplayCurrentSector( void );
-void CheckAndUnDateSlotAllocation( void );
+void ResizeInventoryList( void );
 void ClearUpTempUnSeenList( void );
 void SaveSeenAndUnseenItems( void );
 void DrawTextOnMapInventoryBackground( void );
@@ -285,7 +284,7 @@ void BlitInventoryPoolGraphic( void )
 	BltVideoObject( guiSAVEBUFFER , hHandle, 0,INVEN_POOL_X, INVEN_POOL_Y , VO_BLT_SRCTRANSPARENCY,NULL );
 	
 	// resize list
-	CheckAndUnDateSlotAllocation( );
+	ResizeInventoryList( );
 
 
 	// now the items
@@ -342,13 +341,16 @@ BOOLEAN RenderItemInPoolSlot( INT32 iCurrentSlot, INT32 iFirstSlotOnPage )
 	CHAR16 sString[ 64 ];
 	INT16 sWidth = 0, sHeight = 0;
 	INT16 sOutLine = 0;
-  BOOLEAN fOutLine = FALSE;
+	BOOLEAN fOutLine = FALSE;
 
 	// check if anything there
-	if( pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].object.ubNumberOfObjects == 0 ) 
+	
+#ifdef DONT_DISPLAY_NADA
+	if( pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].object.exists() == false ) 
 	{
 		return ( FALSE );
 	}
+#endif
 
 	GetVideoObject( &hHandle, GetInterfaceGraphicForItem( &(Item[ pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].object.usItem ] ) ) );
 
@@ -471,29 +473,29 @@ void UpdateHelpTextForInvnentoryStashSlots( void )
 	// run through list of items in slots and update help text for mouse regions
 	for( iCounter = 0; iCounter < MAP_INVENTORY_POOL_SLOT_COUNT; iCounter++ )
 	{
-			if( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].object.ubNumberOfObjects > 0 ) 
+		if( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].object.exists() == true ) 
+		{
+			GetHelpTextForItem( pStr , &( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].object ), NULL );
+			SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ] ), pStr );
+			
+			/*
+			// set text for current item
+			if( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].object.usItem == MONEY )
 			{
-				GetHelpTextForItem( pStr , &( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].object ), NULL );
-				SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ] ), pStr );
-				
-				/*
-				// set text for current item
-				if( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].object.usItem == MONEY )
-				{
-					swprintf( pStr, L"$%ld", pInventoryPoolList[ iCounter + iFirstSlotOnPage ].object[0]->data.money.uiMoneyAmount );
-					SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ]), pStr );
-				}
-				else
-				{
-					SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ]), ItemNames[ pInventoryPoolList[ iCounter + iFirstSlotOnPage ].object.usItem ] );
-				}
-				*/
+				swprintf( pStr, L"$%ld", pInventoryPoolList[ iCounter + iFirstSlotOnPage ].object[0]->data.money.uiMoneyAmount );
+				SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ]), pStr );
 			}
 			else
 			{
-				//OK, for each item, set dirty text if applicable!
-				SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ]), L"" );
+				SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ]), ItemNames[ pInventoryPoolList[ iCounter + iFirstSlotOnPage ].object.usItem ] );
 			}
+			*/
+		}
+		else
+		{
+			//OK, for each item, set dirty text if applicable!
+			SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ]), L"" );
+		}
 	}
 
 	return;
@@ -635,7 +637,7 @@ void SaveSeenAndUnseenItems( void )
 		// copy
 		for( iCounter = 0; iCounter < pInventoryPoolList.size(); iCounter++ )
 		{
-			if( pInventoryPoolList[ iCounter ].object.ubNumberOfObjects > 0 )
+			if( pInventoryPoolList[ iCounter ].object.exists() == true )
 			{
 				// copy object stuff
 				pSeenItemsList[ iItemCount ] = pInventoryPoolList[ iCounter ];
@@ -837,7 +839,7 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 		if ( gpItemPointer == NULL )
 		{
 			// Return if empty
-			if ( pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].object.usItem == NOTHING )
+			if ( pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].object.exists() == false )
 				return;
 		}
 
@@ -846,7 +848,7 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 		// is this item reachable
 		if( !(  pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].usFlags & WORLD_ITEM_REACHABLE ) )
 		{
-			if ( pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].object.usItem != NOTHING )
+			if ( pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].object.exists() == true )
 			{
 				// not reachable
 				DoMapMessageBox( MSG_BOX_BASIC_STYLE, gzLateLocalizedString[38], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
@@ -894,7 +896,7 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 
 			
 			// Return if empty
-			if ( pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].object.usItem == NOTHING )
+			if ( pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].object.exists() == false )
 				return;
 
 			// if in battle inform player they will have to do this in tactical
@@ -1054,7 +1056,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 	iSize = GetSizeOfStashInSector( sMapX, sMapY, sMapZ, TRUE );
 
 	// round off .. we want at least 1 free page of space...
-	iSize = ( iSize - ( iSize % MAP_INVENTORY_POOL_SLOT_COUNT ) ) + MAP_INVENTORY_POOL_SLOT_COUNT;
+	iSize = ((iSize / MAP_INVENTORY_POOL_SLOT_COUNT) + 1) * MAP_INVENTORY_POOL_SLOT_COUNT;
 
 	// allocate space for list
 	pInventoryPoolList.clear();
@@ -1102,9 +1104,6 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 			// now copy over
 			for( iCounter = 0; ( UINT32 )iCounter < guiNumWorldItems; iCounter++ )
 			{
-//				if( ( gWorldItems[ iCounter ].bVisible  != 1 ) && 
-//						( gWorldItems[ iCounter ].object.ubNumberOfObjects > 0 ) && 
-//							gWorldItems[ iCounter ].fExists )
 				if( IsMapScreenWorldItemInvisibleInMapInventory( &gWorldItems[ iCounter ] ) )
 				{
 					// one more item
@@ -1180,11 +1179,6 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 			// now copy over
 			for( iCounter = 0; ( UINT32 )iCounter < uiTotalNumberOfItems; iCounter++ )
 			{
-/*
-				if( ( pTotalSectorList[ iCounter].bVisible  != 1 ) && 
-						( pTotalSectorList[ iCounter].object.ubNumberOfObjects > 0 ) && 
-							pTotalSectorList[ iCounter].fExists ) 
-*/
 				if( IsMapScreenWorldItemInvisibleInMapInventory( &pTotalSectorList[ iCounter] ) )
 				{
 					// one more item
@@ -1273,19 +1267,6 @@ void ReBuildWorldItemStashForLoadedSector( INT32 iNumberSeenItems, INT32 iNumber
 	return;
 }
 
-void ReSizeStashListByThisAmount( INT32 iNumberOfItems )
-{
-	PERFORMANCE_MARKER
-	// no items added, leave
-	if( iNumberOfItems == 0 )
-	{
-		return;
-	}
-
-	pInventoryPoolList.resize(pInventoryPoolList.size() + iNumberOfItems);
-	return;
-}
-
 void DestroyStash( void )
 {
 	PERFORMANCE_MARKER
@@ -1293,8 +1274,6 @@ void DestroyStash( void )
 	pInventoryPoolList.clear();
 
 }
-
-
 
 INT32 GetSizeOfStashInSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLEAN fCountStacksAsOne )
 {
@@ -1490,6 +1469,7 @@ BOOLEAN GetObjFromInventoryStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pI
 	if (pInventorySlot->ubNumberOfObjects == 1)
 	{
 		*pItemPtr = *pInventorySlot;
+		DeleteObj( pInventorySlot );	
 	}
 	else
 	{
@@ -1507,7 +1487,7 @@ BOOLEAN RemoveObjectFromStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItem
 
 	CHECKF( pInventorySlot );
 
-	if (pInventorySlot->ubNumberOfObjects == 0)
+	if (pInventorySlot->exists() == false)
 	{
 		return( FALSE );
 	}
@@ -1528,7 +1508,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 
 	ubSlotLimit = Item[pItemPtr->usItem].ubPerPocket;
 
-	if (pInventorySlot->ubNumberOfObjects == 0)
+	if (pInventorySlot->exists() == false)
 	{
 		// placement in an empty slot
 		ubNumberToDrop = pItemPtr->ubNumberOfObjects;
@@ -1554,7 +1534,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 		pInventorySlot->ubNumberOfObjects = ubNumberToDrop;
 
 		// remove a like number of objects from pObj
-		RemoveObjs( pItemPtr, ubNumberToDrop );
+		pItemPtr->RemoveObjectsFromStack( ubNumberToDrop );
 	}
 	else
 	{
@@ -1634,7 +1614,7 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 	pInventorySlot->ubNumberOfObjects = ubNumberToDrop;
 
 	// remove a like number of objects from pObj
-	RemoveObjs( pItemPtr, ubNumberToDrop );
+	pItemPtr->RemoveObjectsFromStack( ubNumberToDrop );
 	
 	return( TRUE );
 }
@@ -1742,7 +1722,7 @@ INT32 GetTotalNumberOfItemsInSectorStash( void )
 	// run through list of items and find out how many are there
 	for( UINT32 iCounter = 0; iCounter < pInventoryPoolList.size(); iCounter++ )
 	{
-		if( pInventoryPoolList[ iCounter].object.ubNumberOfObjects > 0 )
+		if( pInventoryPoolList[ iCounter].object.exists() == true )
 		{
 			iCount += pInventoryPoolList[ iCounter].object.ubNumberOfObjects;
 		}
@@ -1760,7 +1740,7 @@ INT32 GetTotalNumberOfItems( void )
 	// run through list of items and find out how many are there
 	for(UINT32 iCounter = 0; iCounter < pInventoryPoolList.size(); iCounter++ )
 	{
-		if( pInventoryPoolList[ iCounter].object.ubNumberOfObjects > 0 )
+		if( pInventoryPoolList[ iCounter].object.exists() == true )
 		{
 			iCount++;
 		}
@@ -1855,20 +1835,14 @@ void DisplayCurrentSector( void )
 }
 
 
-void CheckAndUnDateSlotAllocation( void )
+void ResizeInventoryList( void )
 {
 	PERFORMANCE_MARKER
-	// will check number of available slots, if less than half a page, allocate a new page
-	INT32 iNumberOfTakenSlots = 0;
-
-	// get number of taken slots
-	iNumberOfTakenSlots = GetTotalNumberOfItems( );
-
-	if( ( pInventoryPoolList.size() - iNumberOfTakenSlots ) < 2 )
-	{
-		// not enough space
-		// need to make more space
-		ReSizeStashListByThisAmount( MAP_INVENTORY_POOL_SLOT_COUNT );
+	if (pInventoryPoolList.empty() == true) {
+		pInventoryPoolList.resize(MAP_INVENTORY_POOL_SLOT_COUNT);
+	}
+	if (pInventoryPoolList.size() % MAP_INVENTORY_POOL_SLOT_COUNT) {
+		pInventoryPoolList.resize(pInventoryPoolList.size() + MAP_INVENTORY_POOL_SLOT_COUNT - pInventoryPoolList.size() % MAP_INVENTORY_POOL_SLOT_COUNT);
 	}
 
 	iLastInventoryPoolPage = ( ( pInventoryPoolList.size()  - 1 ) / MAP_INVENTORY_POOL_SLOT_COUNT );
@@ -2221,13 +2195,13 @@ void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArr
 #if 0
 	//first, compress the inventory by stacking like items that are reachable, while moving empty items towards the back
 	for (std::vector<WORLDITEM>::iterator iter = pInventory.begin(); iter != pInventory.end(); ++iter) {
-		if (iter->object.ubNumberOfObjects > 0
+		if (iter->object.exists() == true
 			&& iter->object.ubNumberOfObjects < ItemSlotLimit( iter->object.usItem, BIGPOCK1POS )) {
 			//if it is active and reachable etc
 			std::vector<WORLDITEM>::iterator second = iter;
 			for (++second; second != pInventory.end(); ++second) {
 				if (second->object.usItem == iter->object.usItem
-					&& second->object.ubNumberOfObjects > 0) {
+					&& second->object.exists() == true) {
 					iter->object.AddObjectsToStack(second->object, second->object.ubNumberOfObjects);
 					if (iter->object.ubNumberOfObjects >= ItemSlotLimit( iter->object.usItem, BIGPOCK1POS )) {
 						break;
@@ -2235,10 +2209,10 @@ void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArr
 				}
 			}
 		}
-		else if (iter->object.ubNumberOfObjects == 0) {
+		else if (iter->object.exists() == false) {
 			std::vector<WORLDITEM>::iterator second = iter;
 			for (++second; second != pInventory.end(); ++second) {
-				if (second->object.ubNumberOfObjects > 0) {
+				if (second->object.exists() == true) {
 					//swap and break;
 				}
 			}
@@ -2246,19 +2220,18 @@ void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArr
 	}
 #endif
 
-	//then compress it by removing the empty objects
-	for (;;) {
-		if (pInventory.empty() == false && pInventory.back().object.ubNumberOfObjects == 0) {
-			Assert(pInventory.back().fExists == false);
-			pInventory.pop_back();
-		}
-		else {
-			break;
+	//ADB I'm not sure qsort will work with OO data, so replace it with stl sort, which is faster anyways
+	std::sort(pInventory.begin(), pInventory.end());
+
+	//then compress it by removing the empty objects, we know they are at the back
+	//we want the size to equal x * MAP_INVENTORY_POOL_SLOT_COUNT
+	for (unsigned int x = 1; x <= pInventory.size() / MAP_INVENTORY_POOL_SLOT_COUNT && pInventory.size() > x * MAP_INVENTORY_POOL_SLOT_COUNT; ++x) {
+		if (pInventory[x * MAP_INVENTORY_POOL_SLOT_COUNT].fExists == false
+			&& pInventory[x * MAP_INVENTORY_POOL_SLOT_COUNT].object.exists() == false) {
+			//we have found a page where the first item on the page does not exist, resize to this
+			pInventory.resize(x * MAP_INVENTORY_POOL_SLOT_COUNT);
 		}
 	}
-
-	//ADB I'm not sure qsort will work with OO data, so replace it with stl sort
-	std::sort(pInventory.begin(), pInventory.end());
 }
 
 

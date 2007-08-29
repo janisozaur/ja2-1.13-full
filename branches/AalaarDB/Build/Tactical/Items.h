@@ -18,18 +18,15 @@ extern UINT8 SlotToPocket[7];
 
 extern BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier );
 
-extern INT8 FindObj( SOLDIERTYPE * pSoldier, UINT16 usItem );
 INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT8 ubMagSize, INT8 bExcludeSlot );
 
 INT8 FindBestWeaponIfCurrentIsOutOfRange(SOLDIERTYPE * pSoldier, INT8 bCurrentWeaponIndex, UINT16 bWantedRange);
 
 OBJECTTYPE* FindAttachment( OBJECTTYPE * pObj, UINT16 usItem );
 extern INT8 FindObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
-extern INT8 FindObjClassAfterSlot( SOLDIERTYPE * pSoldier, INT8 bStart, UINT32 usItemClass );
 extern INT8 FindAIUsableObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
 extern INT8 FindAIUsableObjClassWithin( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, INT8 bLower, INT8 bUpper );
 extern INT8 FindEmptySlotWithin( SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper );
-extern INT8 FindExactObj( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj );
 extern INT8 FindObjInObjRange( SOLDIERTYPE * pSoldier, UINT16 usItem1, UINT16 usItem2 );
 extern INT8 FindLaunchable( SOLDIERTYPE * pSoldier, UINT16 usWeapon );
 extern INT8 FindGLGrenade( SOLDIERTYPE * pSoldier );
@@ -125,8 +122,7 @@ BOOLEAN ItemHasAttachments( OBJECTTYPE *pItem );
 //Determine if this item can receive this attachment.	This is different, in that it may
 //be possible to have this attachment on this item, but may already have an attachment on
 //it which doesn't work simultaneously with the new attachment (like a silencer and duckbill).
-BOOLEAN ValidItemAttachment( OBJECTTYPE * pObj, UINT16 usAttachment, BOOLEAN fAttemptingAttachment );
-BOOLEAN ValidItemAttachment( OBJECTTYPE * pObj, UINT16 usAttachment, BOOLEAN fAttemptingAttachment, BOOLEAN fDisplayMessage );
+BOOLEAN ValidItemAttachment( OBJECTTYPE * pObj, UINT16 usAttachment, BOOLEAN fAttemptingAttachment, BOOLEAN fDisplayMessage = TRUE);
 
 // Determines if it is possible to merge an item with any item whose class 
 // is the same as the indicated item
@@ -140,7 +136,7 @@ BOOLEAN TwoHandedItem( UINT16 usItem );
 
 //Existing functions without header def's, added them here, just incase I'll need to call
 //them from the editor.
-BOOLEAN ValidAttachment( UINT16 usAttachment, UINT16 usItem );
+BOOLEAN ValidAttachment( UINT16 usAttachment, UINT16 usItem, UINT8* ubAPCost = NULL);
 UINT8 AttachmentAPCost( UINT16 usAttachment, UINT16 usItem );
 
 BOOLEAN ValidLaunchable( UINT16 usLaunchable, UINT16 usItem );
@@ -160,11 +156,9 @@ void SwapOutHandItem( SOLDIERTYPE * pSoldier );
 void SwapHandItems( SOLDIERTYPE * pSoldier );
 
 OBJECTTYPE* FindAttachmentByClass( OBJECTTYPE * pObj, UINT32 uiItemClass );
-void RemoveObjs( OBJECTTYPE * pObj, UINT8 ubNumberToRemove );
-
 void WaterDamage( SOLDIERTYPE *pSoldier );
 
-INT8 FindObjWithin( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower, INT8 bUpper );
+INT8 FindObj( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower = 0, INT8 bUpper = (NUM_INV_SLOTS-1) );
 
 BOOLEAN ApplyCammo( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs );
 

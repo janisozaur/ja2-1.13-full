@@ -208,10 +208,6 @@ class SPECIAL_ITEM_INFO
 {
 public:
 	SPECIAL_ITEM_INFO() {initialize();};
-	//SPECIAL_ITEM_INFO& operator=(OLD_SPECIAL_ITEM_INFO_101& src);
-	//BOOLEAN operator==(SPECIAL_ITEM_INFO& compare);
-	//BOOLEAN Save(HWFILE hFile);
-	//BOOLEAN Load(HWFILE hFile);
 	void	initialize();
 
 	INT8		bItemCondition;				// if 0, no item is stored
@@ -219,8 +215,8 @@ public:
 																// -1 to -100 means the item is in for repairs, flip sign for the actual status
 
 	UINT8		ubImprintID;					// imprint ID for imprinted items (during repair!)
-	UINT16		usAttachment[MAX_ATTACHMENTS];		// item index of any attachments on the item
-	INT8		bAttachmentStatus[MAX_ATTACHMENTS];	// status of any attachments on the item
+	UINT16		usAttachment[OLD_MAX_ATTACHMENTS_101];		// item index of any attachments on the item
+	INT8		bAttachmentStatus[OLD_MAX_ATTACHMENTS_101];	// status of any attachments on the item
 };
 
 
@@ -355,16 +351,12 @@ void		GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, 
 void		GiveItemToArmsDealerforRepair( UINT8 ubArmsDealer, OBJECTTYPE* pObject, UINT8 ubOwnerProfileId );
 UINT32	WhenWillRepairmanBeAllDoneRepairing( UINT8 ubArmsDealer );
 
-UINT32 CalculateSpecialItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo );
 UINT32 CalculateObjectItemRepairTime( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject );
 UINT32 CalculateSimpleItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 bItemCondition );
 
-UINT32 CalculateSpecialItemRepairCost( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo );
 UINT32 CalculateObjectItemRepairCost( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject );
 UINT32 CalculateSimpleItemRepairCost( UINT8 ubArmsDealer, UINT16	usItemIndex, INT8 bItemCondition );
 
-
-void SetSpecialItemInfoToDefaults( SPECIAL_ITEM_INFO *pSpclItemInfo );
 
 UINT16	CalcValueOfItemToDealer( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerSelling );
 

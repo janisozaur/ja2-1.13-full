@@ -2661,7 +2661,7 @@ void SMInvMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		return;
 	}
 
-	if ( gpSMCurrentMerc->inv[ uiHandPos ].usItem == NOTHING )
+	if ( gpSMCurrentMerc->inv[ uiHandPos ].exists() == false )
 		return;
 
 	if (iReason == MSYS_CALLBACK_REASON_MOVE)
@@ -3020,7 +3020,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		{
 
 			// Return if empty
-			if ( gpSMCurrentMerc->inv[ uiHandPos ].usItem == NOTHING )
+			if ( gpSMCurrentMerc->inv[ uiHandPos ].exists() == false )
 				return;
 
 			if ( gpSMCurrentMerc->ubID != gusSelectedSoldier )
@@ -3206,7 +3206,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 							RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 						}
 						// Are we swaping LBE items?
-						if(gpSMCurrentMerc->inv[uiHandPos].usItem != NONE)	// Item already exists in this pocket
+						if(gpSMCurrentMerc->inv[uiHandPos].exists() == true)	// Item already exists in this pocket
 							MoveItemToLBEItem( gpSMCurrentMerc, uiHandPos, gpItemPointer );
 						MoveItemFromLBEItem( gpSMCurrentMerc, uiHandPos, gpItemPointer );
 					}
@@ -3306,7 +3306,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		fRightDown = FALSE;
 
 		// Return if empty
-		if ( gpSMCurrentMerc->inv[ uiHandPos ].usItem == NOTHING )
+		if ( gpSMCurrentMerc->inv[ uiHandPos ].exists() == false )
 			return;
 
 		// CJC: OK, get source, dest guy if different, don't allow panels to be brought up
@@ -3501,7 +3501,7 @@ void MergeMessageBoxCallBack( UINT8 ubExitValue )
 		// re-evaluate repairs
 		gfReEvaluateEveryonesNothingToDo = TRUE;
 
-		if (gpItemPointer->usItem == NOTHING)
+		if (gpItemPointer->exists() == false)
 		{
 			// merge item consumed
 			EndItemPointer();
@@ -3745,13 +3745,13 @@ void BtnDropPackCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		/* Is DropPackFlag currently false and is there something in the backpack pocket?  If so, we haven't
 		dropped a pack yet and apparently want to*/
-		if(gpSMCurrentMerc->inv[BPACKPOCKPOS].usItem != NONE && !gpSMCurrentMerc->flags.DropPackFlag)
+		if(gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == true && !gpSMCurrentMerc->flags.DropPackFlag)
 		{
 			ChangeDropPackStatus(gpSMCurrentMerc, TRUE);
 		}
 		/* Is DropPackFlag currently true, is nothing in the backpack pocket and have we dropped a pack?  If so, we
 		must want to retreive a backpack we previously dropped.*/
-		else if(gpSMCurrentMerc->inv[BPACKPOCKPOS].usItem == NONE && gpSMCurrentMerc->flags.DropPackFlag && gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
+		else if(gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == false && gpSMCurrentMerc->flags.DropPackFlag && gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
 		{
 			ChangeDropPackStatus(gpSMCurrentMerc, FALSE);
 		}
@@ -3775,7 +3775,7 @@ void BtnZipperCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		//Are we in combat, do we have a backpack on and is the pack closed? Open it
-		if((gTacticalStatus.uiFlags & INCOMBAT) && gpSMCurrentMerc->inv[BPACKPOCKPOS].usItem != NONE && !gpSMCurrentMerc->flags.ZipperFlag)
+		if((gTacticalStatus.uiFlags & INCOMBAT) && gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == true && !gpSMCurrentMerc->flags.ZipperFlag)
 		{
 			ChangeZipperStatus(gpSMCurrentMerc, TRUE);
 		}
@@ -3812,13 +3812,13 @@ void BtnMapDropPackCallback( GUI_BUTTON *btn, INT32 reason )
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		/* Is DropPackFlag currently false and is there something in the backpack pocket?  If so, we haven't
 		dropped a pack yet and apparently want to*/
-		if(gpSMCurrentMerc->inv[BPACKPOCKPOS].usItem != NONE && !gpSMCurrentMerc->flags.DropPackFlag)
+		if(gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == true && !gpSMCurrentMerc->flags.DropPackFlag)
 		{
 			// Drop the pack into sector inventory
 		}
 		/* Is DropPackFlag currently true, is nothing in the backpack pocket and have we dropped a pack?  If so, we
 		must want to retreive a backpack we previously dropped.*/
-		else if(gpSMCurrentMerc->inv[BPACKPOCKPOS].usItem == NONE && gpSMCurrentMerc->flags.DropPackFlag && gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
+		else if(gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == false && gpSMCurrentMerc->flags.DropPackFlag && gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
 		{
 			// Pickup pack from sector inventory
 		}
@@ -6352,7 +6352,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			else
 			{
 				// Return if empty
-				//if ( gpSMCurrentMerc->inv[ uiHandPos ].usItem == NOTHING )
+				//if ( gpSMCurrentMerc->inv[ uiHandPos ].exists() == false )
 				//	return;
 
 
@@ -6909,14 +6909,14 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 	{
 		if(LBESlots[i] == ITEM_NOT_FOUND)	// Pocket not valid for this class of LBE
 			continue;
-		if(pSoldier->inv[LBESlots[i]].usItem == NOTHING)	// No item in this pocket
+		if(pSoldier->inv[LBESlots[i]].exists() == false)	// No item in this pocket
 			continue;
 		// Found an item in a default pocket so get it's ItemSize
 		//dSize=Item[pSoldier->inv[LBESlots[i]].usItem].ItemSize;
 		dSize = CalculateItemSize(&pSoldier->inv[LBESlots[i]]);
 		for(int j=0; j<ITEMS_IN_LBE; j++)	// Search through LBE and see if item fits anywhere
 		{
-			if(LBEArray[lbeIndex].inv[j].usItem != NOTHING)	// Item already stored in LBENODE pocket
+			if(LBEArray[lbeIndex].inv[j].exists() == true)	// Item already stored in LBENODE pocket
 				continue;
 			// No item in this LBENODE pocket, is pocket active?
 			if(LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbePocketIndex[j] == NONE)	// Pocket is inactive
@@ -6943,11 +6943,11 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 	{
 		if(LBESlots[x] == ITEM_NOT_FOUND)
 			continue;
-		if(pSoldier->inv[LBESlots[x]].usItem == NOTHING)
+		if(pSoldier->inv[LBESlots[x]].exists() == false)
 			continue;
 		for(int i=BODYPOSFINAL; i<NUM_INV_SLOTS; i++)
 		{
-			if(pSoldier->inv[i].usItem != NOTHING)	// Item already in that location
+			if(pSoldier->inv[i].exists() == true)	// Item already in that location
 				continue;
 			for(int j=0; j<ITEMS_IN_LBE; j++)
 			{
@@ -6973,7 +6973,7 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 	{
 		if(LBESlots[i] == ITEM_NOT_FOUND)	// Pocket not valid for this class of LBE
 			continue;
-		if(pSoldier->inv[LBESlots[i]].usItem == NOTHING)	// No item in pocket
+		if(pSoldier->inv[LBESlots[i]].exists() == false)	// No item in pocket
 			continue;
 		//AddItemToWorld(pSoldier->sGridNo,&pSoldier->inv[LBESlots[i]],pSoldier->bExpLevel,0,0,TRUE);
 		//RemoveObjectFromSlot( pSoldier, LBESlots[i], &(pSoldier->inv[LBESlots[i]]) );
@@ -7062,7 +7062,7 @@ BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *
 			break;
 		// Is there an item in this pocket?
 		LBEArray[lbeIndex].inv[i] = pSoldier->inv[LBESlots[i]];
-		if(pSoldier->inv[LBESlots[i]].usItem != NOTHING)
+		if(pSoldier->inv[LBESlots[i]].exists() == true)
 		{
 			RemoveObjectFromSlot( pSoldier, LBESlots[i], &(pSoldier->inv[LBESlots[i]]) );
 			newLBEitem = TRUE;
@@ -7154,7 +7154,7 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 			return(FALSE);
 	}
 
-	if(pSoldier->inv[uiHandPos].usItem == NOTHING)
+	if(pSoldier->inv[uiHandPos].exists() == false)
 		MoveItemsToActivePockets(pSoldier, LBESlots, uiHandPos, pObj);
 	if(pObj->IsLBE())
 		lbeIndex = pObj->GetLBEIndex();
@@ -7167,7 +7167,7 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 		if(LBESlots[i] == ITEM_NOT_FOUND)
 			break;
 		// Is there an item in this LBE pocket?
-		if(LBEArray[lbeIndex].inv[i].usItem != NOTHING)
+		if(LBEArray[lbeIndex].inv[i].exists() == true)
 		{
 			pSoldier->inv[LBESlots[i]] = LBEArray[lbeIndex].inv[i];
 			newLBEitem = TRUE;

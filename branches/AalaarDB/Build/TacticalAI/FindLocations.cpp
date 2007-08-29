@@ -1894,7 +1894,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 								switch( Armour[pItem->ubClassIndex].ubArmourClass )
 								{
 									case ARMOURCLASS_HELMET:
-										if (pSoldier->inv[HELMETPOS].usItem == NOTHING)
+										if (pSoldier->inv[HELMETPOS].exists() == false)
 										{
 											iTempValue = 200 + EffectiveArmour( pObj );
 										}
@@ -1908,7 +1908,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 										}
 										break;
 									case ARMOURCLASS_VEST:
-										if (pSoldier->inv[VESTPOS].usItem == NOTHING)
+										if (pSoldier->inv[VESTPOS].exists() == false)
 										{
 											iTempValue = 200 + EffectiveArmour( pObj );
 										}
@@ -1922,7 +1922,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 										}
 										break;
 									case ARMOURCLASS_LEGGINGS:
-										if (pSoldier->inv[LEGPOS].usItem == NOTHING)
+										if (pSoldier->inv[LEGPOS].exists() == false)
 										{
 											iTempValue = 200 + EffectiveArmour( pObj );
 										}

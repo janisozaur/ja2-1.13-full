@@ -48,7 +48,7 @@ POCKETTYPE::~POCKETTYPE(){
 //Go ahead and add a new variable to OBJECTTYPE if you want, but then add it to all the functions.
 bool OBJECTTYPE::IsLBE()
 {
-	if (ubNumberOfObjects > 0) {
+	if (exists() == true) {
 		//stacks cannot have mixed types, so who cares if there are more than 1
 		return ((*this)[0]->data.misc.bDetonatorType == -1);
 	}
@@ -56,15 +56,22 @@ bool OBJECTTYPE::IsLBE()
 }
 
 //here we DO care about which subObject in the stack it is
+//although currently LBEs cannot be stacked, it could change
 LBENODE* OBJECTTYPE::GetLBEPointer(int subObject)
 {
 	return &(LBEArray[GetLBEIndex(subObject)]);
 }
 
 //here we DO care about which subObject in the stack it is
+//although currently LBEs cannot be stacked, it could change
 int OBJECTTYPE::GetLBEIndex(int subObject)
 {
 	return (*this)[subObject]->data.misc.usBombItem;
+}
+
+bool OBJECTTYPE::exists()
+{
+	return (ubNumberOfObjects > 0 && usItem != NOTHING);
 }
 
 int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
@@ -104,10 +111,11 @@ int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 {
 	PERFORMANCE_MARKER
-	if (ubNumberOfObjects == 0) {
+	if (exists() == false) {
 		//we are adding to an empty object, it can happen
-		Assert(sourceObject.ubNumberOfObjects > 0);
+		Assert(sourceObject.exists() == true);
 		usItem = sourceObject.usItem;
+		this->fFlags = sourceObject.fFlags;
 	}
 	Assert(sourceObject.usItem == usItem);
 
@@ -140,7 +148,7 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 			numToAdd = 0;
 		}
 
-		if (ubNumberOfObjects > 0) {
+		if (exists() == true) {
 			if (sourceObject[0]->data.ubImprintID != (*this)[0]->data.ubImprintID) {
 				numToAdd = 0;
 			}
@@ -159,12 +167,23 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 		for (int x = 0; x < numToAdd; ++x) {
 			++stopIter;
 		}
+		//remember that sometimes objectStack is 1 while ubNumberOfObjects is 0
+		if (ubNumberOfObjects == 0) {
+			objectStack.clear();
+		}
 		objectStack.splice(objectStack.begin(), sourceObject.objectStack, sourceObject.objectStack.begin(), stopIter);
 
-		sourceObject.ubNumberOfObjects -= numToAdd;
 		ubNumberOfObjects += numToAdd;
-		sourceObject.ubWeight = CalculateObjectWeight(&sourceObject);
 		ubWeight = CalculateObjectWeight(this);
+
+		if (sourceObject.objectStack.empty() == true) {
+			//init it so it is not empty, even though it no longer exists
+			sourceObject.initialize();
+		}
+		else {
+			sourceObject.ubNumberOfObjects -= numToAdd;
+			sourceObject.ubWeight = CalculateObjectWeight(&sourceObject);
+		}
 	}
 	
 
@@ -219,8 +238,14 @@ int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject)
 		for (int x = 0; x < numToRemove; ++x) {
 			objectStack.pop_front();
 		}
-		ubNumberOfObjects -= numToRemove;
-		ubWeight = CalculateObjectWeight(this);
+		if (objectStack.empty() == true) {
+			//init it so it is not empty, even though it no longer exists
+			initialize();
+		}
+		else {
+			ubNumberOfObjects -= numToRemove;
+			ubWeight = CalculateObjectWeight(this);
+		}
 	}
 
 	//returns how many were NOT removed
@@ -320,10 +345,12 @@ OBJECTTYPE::OBJECTTYPE()
 }
 void OBJECTTYPE::initialize()
 {
-	//should this be init to size 0?
 	PERFORMANCE_MARKER
+	//ubNumberOfObjects should be 0 so any loop checking it will not work
+	//however objectStack should always have at least one, because there are so
+	//many uses of (*pObj)[0]->data.objectStatus and such
 	memset(this, 0, SIZEOF_OBJECTTYPE_POD);
-	ubNumberOfObjects = 1;
+	//ubNumberOfObjects = 1;
 	objectStack.clear();
 	objectStack.resize(1);
 }
@@ -359,6 +386,7 @@ OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
 		this->ubWeight = src.ubWeight;
 		this->objectStack = src.objectStack;
+		this->fFlags = src.fFlags;
 	}
 }
 
@@ -371,6 +399,7 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
 		this->ubWeight = src.ubWeight;
 		this->objectStack = src.objectStack;
+		this->fFlags = src.fFlags;
 	}
 	return *this;
 }

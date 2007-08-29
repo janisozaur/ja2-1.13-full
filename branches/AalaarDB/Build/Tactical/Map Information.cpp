@@ -578,7 +578,7 @@ void AutoCalculateItemNoOverwriteStatus()
 			for( UINT32 i = 0; i < curr->pDetailedPlacement->Inv.size(); i++ )
 			{
 				pItem = &curr->pDetailedPlacement->Inv[ i ];
-				if( pItem->usItem != NONE )
+				if( pItem->exists() == true )
 				{	//case 1 (see above)
 					(*pItem).fFlags |= OBJECT_NO_OVERWRITE;
 				}

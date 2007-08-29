@@ -4424,42 +4424,42 @@ BOOLEAN SoldierCanAffordNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance 
 	{
 	case ANIM_STAND - ANIM_CROUCH:
 		if((UsingInventorySystem() == true))
-			if(pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING && !pSoldier->flags.ZipperFlag)
+			if(pSoldier->inv[BPACKPOCKPOS].exists() == true && !pSoldier->flags.ZipperFlag)
 				bAP = bBP = 1;
 		bAP += AP_CROUCH;
 		bBP += BP_CROUCH;
 		break;
 	case ANIM_CROUCH - ANIM_STAND:
 		if((UsingInventorySystem() == true))
-			if(pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING && !pSoldier->flags.ZipperFlag)
+			if(pSoldier->inv[BPACKPOCKPOS].exists() == true && !pSoldier->flags.ZipperFlag)
 				bAP = bBP = 2;
 		bAP += AP_CROUCH;
 		bBP += BP_CROUCH;
 		break;
 	case ANIM_STAND - ANIM_PRONE:
 		if((UsingInventorySystem() == true))
-			if(pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING && !pSoldier->flags.ZipperFlag)
+			if(pSoldier->inv[BPACKPOCKPOS].exists() == true && !pSoldier->flags.ZipperFlag)
 				bAP = bBP = 2;
 		bAP += AP_CROUCH + AP_PRONE;
 		bBP += BP_CROUCH + BP_PRONE;
 		break;
 	case ANIM_PRONE - ANIM_STAND:
 		if((UsingInventorySystem() == true))
-			if(pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING && !pSoldier->flags.ZipperFlag)
+			if(pSoldier->inv[BPACKPOCKPOS].exists() == true && !pSoldier->flags.ZipperFlag)
 				bAP = bBP = 4;
 		bAP += AP_CROUCH + AP_PRONE;
 		bBP += BP_CROUCH + BP_PRONE;
 		break;
 	case ANIM_CROUCH - ANIM_PRONE:
 		if((UsingInventorySystem() == true))
-			if(pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING && !pSoldier->flags.ZipperFlag)
+			if(pSoldier->inv[BPACKPOCKPOS].exists() == true && !pSoldier->flags.ZipperFlag)
 				bAP = bBP = 1;
 		bAP += AP_PRONE;
 		bBP += BP_PRONE;
 		break;
 	case ANIM_PRONE - ANIM_CROUCH:
 		if((UsingInventorySystem() == true))
-			if(pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING && !pSoldier->flags.ZipperFlag)
+			if(pSoldier->inv[BPACKPOCKPOS].exists() == true && !pSoldier->flags.ZipperFlag)
 				bAP = bBP = 2;
 		bAP += AP_PRONE;
 		bBP += BP_PRONE;

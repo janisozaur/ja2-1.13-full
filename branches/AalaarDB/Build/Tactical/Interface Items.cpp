@@ -1258,7 +1258,7 @@ BOOLEAN CheckActivationStatus(SOLDIERTYPE *pSoldier, INT16 cSlot, INT16 bSlot, I
 	
 	if(sPocket==cSlot)
 	{
-		if(pSoldier->inv[bSlot].usItem != NOTHING)
+		if(pSoldier->inv[bSlot].exists() == true)
 		{
 			if(bLevel == NOTHING)
 			{
@@ -1268,7 +1268,7 @@ BOOLEAN CheckActivationStatus(SOLDIERTYPE *pSoldier, INT16 cSlot, INT16 bSlot, I
 	}
 	if(sPocket==bSlot)
 	{
-		if(pSoldier->inv[cSlot].usItem != NOTHING)
+		if(pSoldier->inv[cSlot].exists() == true)
 		{
 			if(cLevel == NOTHING)
 			{
@@ -1320,7 +1320,7 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 				case VEST_PACK:
 				case COMBAT_PACK:
 				case BACKPACK:
-					lbePocket = (pSoldier->inv[icLBE[sPocket]].usItem == NOTHING) ? LoadBearingEquipment[icClass[sPocket]].lbePocketIndex[icPocket[sPocket]] : LoadBearingEquipment[Item[pSoldier->inv[icLBE[sPocket]].usItem].ubClassIndex].lbePocketIndex[icPocket[sPocket]];
+					lbePocket = (pSoldier->inv[icLBE[sPocket]].exists() == false) ? LoadBearingEquipment[icClass[sPocket]].lbePocketIndex[icPocket[sPocket]] : LoadBearingEquipment[Item[pSoldier->inv[icLBE[sPocket]].usItem].ubClassIndex].lbePocketIndex[icPocket[sPocket]];
 					iClass = Item[pSoldier->inv[sPocket].usItem].usItemClass;
 					if(icLBE[sPocket] == BPACKPOCKPOS && !(pSoldier->flags.ZipperFlag) && (gTacticalStatus.uiFlags & INCOMBAT))
 						lbePocket = 0;
@@ -1328,13 +1328,13 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 					{
 						fHatchItOut = TRUE;
 					}
-					else if ( pObject->usItem == NOTHING )	// Nothing in sPocket.  Display silouhette.
+					else if ( pObject->exists() == false )	// Nothing in sPocket.  Display silouhette.
 					{
 						INVRenderSilhouette( guiSAVEBUFFER, lbePocket, 0, sX, sY, gSMInvData[ sPocket ].sWidth, gSMInvData[ sPocket ].sHeight);
 					}
 					break;
 				case LBE_POCKET:
-					if ( pObject->usItem == NOTHING )
+					if ( pObject->exists() == false )
 					{
 						if ( sPocket == VESTPOCKPOS )
 							lbePocket = 0;
@@ -1351,13 +1351,13 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 					}
 					// Removed backpack/gunsling restrictions
 					if ( CheckActivationStatus(pSoldier, CPACKPOCKPOS, BPACKPOCKPOS, sPocket)/* ||
-						(sPocket == BPACKPOCKPOS && pSoldier->inv[GUNSLINGPOCKPOS].usItem != NOTHING)*/)
+						(sPocket == BPACKPOCKPOS && pSoldier->inv[GUNSLINGPOCKPOS].exists() == true)*/)
 					{
 						fHatchItOut = TRUE;
 					}
 					break;
 				case OTHER_POCKET:
-					if ( pObject->usItem == NOTHING )
+					if ( pObject->exists() == false )
 					{
 						if ( sPocket == GUNSLINGPOCKPOS ) // Gun Sling
 							lbePocket = 1;
@@ -1366,13 +1366,13 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 						INVRenderSilhouette( guiSAVEBUFFER, lbePocket, 0, sX, sY, gSMInvData[ sPocket ].sWidth, gSMInvData[ sPocket ].sHeight);
 					}
 					// Removed backpack/gunsling restrictions
-					//if(sPocket == GUNSLINGPOCKPOS && pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING)
+					//if(sPocket == GUNSLINGPOCKPOS && pSoldier->inv[BPACKPOCKPOS].exists() == true)
 					//{
 					//	fHatchItOut = TRUE;
 					//}
 					break;
 				default:
-					if ( pObject->usItem == NOTHING )
+					if ( pObject->exists() == false )
 					{
 						// Display appropriate silouhette
 					}
@@ -1473,7 +1473,7 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 		if(!gfSMDisableForItems && !CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)sPocket, FALSE))
 			fHatchItOut = TRUE;
 	}
-	else if(pObject->usItem != NOTHING)
+	else if(pObject->exists() == true)
 	{
 		if(!gfSMDisableForItems && !CanItemFitInPosition(pSoldier, pObject, (INT8)sPocket, FALSE))
 			fHatchItOut = TRUE;
@@ -1514,7 +1514,7 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 	}
 
 	// if there's an item in there
-	if ( pObject->usItem != NOTHING )
+	if ( pObject->exists() == true )
 	{
 		// Add item status bar
 		sBarX = sX - gSMInvData[ sPocket ].sBarDx;
@@ -2204,7 +2204,7 @@ void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel )
 
 			pObject = &(pSoldier->inv[ cnt ]);
 		
-			if ( pObject->usItem == NOTHING )
+			if ( pObject->exists() == false )
 			{
 				gbNewItem[ cnt ] = 0;
 				continue;
@@ -2392,7 +2392,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 
 	static CHAR16					pStr[ 100 ], pStr2[ 100 ];
 
-	if ( pObject->usItem == NOTHING )
+	if ( pObject->exists() == false )
 	{
 		return;
 	}
@@ -3313,7 +3313,7 @@ void DoAttachment( void )
 	DebugBreak();
 	if ( gpItemDescObject->AttachObject( gpItemDescSoldier, gpItemPointer ) )
 	{
-		if (gpItemPointer->usItem == NOTHING)
+		if (gpItemPointer->exists() == false)
 		{
 			// attachment attached, merge item consumed, etc
 
@@ -3342,7 +3342,7 @@ void DoAttachment( void )
 			}
 		}
 
-		if ( gpItemDescObject->usItem == NOTHING )
+		if ( gpItemDescObject->exists() == false )
 		{
 			// close desc panel panel
 			DeleteItemDescriptionBox();
@@ -4731,7 +4731,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 		fHatchItOut = FALSE;
 		if (lbePocket == 0)	// Deactivate Pocket
 			fHatchItOut = TRUE;
-		else if ( pObject == NULL || pObject->usItem == NOTHING )	// Nothing in sPocket.  Display silouhette.
+		else if ( pObject == NULL || pObject->exists() == false )	// Nothing in sPocket.  Display silouhette.
 			INVRenderSilhouette( guiSAVEBUFFER, lbePocket, 0, sX, sY, gSMInvData[ pocketKey[cnt] ].sWidth, gSMInvData[ pocketKey[cnt] ].sHeight);
 		if(pObject != NULL)
 			INVRenderItem( guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[ pocketKey[cnt] ].sWidth, gSMInvData[ pocketKey[cnt] ].sHeight, 2, NULL, 0, 0, 0 );
@@ -4740,7 +4740,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 		if ( fHatchItOut )
 			DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, (UINT16)(gSMInvData[ pocketKey[cnt] ].sWidth-1), (UINT16)(gSMInvData[ pocketKey[cnt] ].sHeight-1) );
 		// if there's an item in there
-		if ( pObject != NULL && pObject->usItem != NOTHING )
+		if ( pObject != NULL && pObject->exists() == true )
 		{
 			// Add item status bar
 			sBarX = sX - gSMInvData[ pocketKey[cnt] ].sBarDx;
@@ -4908,7 +4908,7 @@ void DeleteItemDescriptionBox( )
 		if( gRemoveMoney.uiMoneyRemaining == 0 && !gfAddingMoneyToMercFromPlayersAccount )
 		{
 			//get rid of the money in the slot
-			gpItemDescObject->initialize();
+			DeleteObj(gpItemDescObject);
 			gpItemDescObject = NULL;
 		}
 	}
@@ -5574,7 +5574,7 @@ BOOLEAN HandleItemPointerClick( INT16 sMapPos )
 							OBJECTTYPE::CopyToOrCreateAt( &gpItemPointerSoldier->pTempObject, &gTempObject);
 						  
 							// Remove from soldier's inv...
-							RemoveObjs( &( gpItemPointerSoldier->inv[ gbItemPointerSrcSlot ] ), 1 );
+							gpItemPointerSoldier->inv[ gbItemPointerSrcSlot ].RemoveObjectsFromStack(1);
 							
 							gpItemPointerSoldier->aiData.sPendingActionData2  = sAdjustedGridNo;
 							gpItemPointerSoldier->aiData.uiPendingActionData1 = gbItemPointerSrcSlot;
@@ -6729,7 +6729,7 @@ void ItemPopupRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					BeginSkiItemPointer( PLAYERS_INVENTORY, -1, ( BOOLEAN )!gfKeyState[ CTRL ] );
 
 					// if we've just removed the last one there
-					if ( gpItemPopupObject->ubNumberOfObjects == 0 )
+					if ( gpItemPopupObject->exists() == false )
 					{
 						// we must immediately get out of item stack popup, because the item has been deleted (memset to 0), and
 						// errors like a right bringing up an item description for item 0 could happen then.  ARM.
@@ -7722,7 +7722,7 @@ void ItemPickupOK( GUI_BUTTON *btn, INT32 reason )
 			usLastItem=gpOpponent->inv[HANDPOS].usItem;
 			SoldierStealItemFromSoldier( gItemPickupMenu.pSoldier,gpOpponent,gItemPickupMenu.pItemPool, ITEM_PICKUP_SELECTION, gItemPickupMenu.sGridNo, gItemPickupMenu.bZLevel, gItemPickupMenu.pfSelectedArray );
 			DeletePool(gItemPickupMenu.pItemPool);
-			if ((gpOpponent->inv[HANDPOS].usItem == NOTHING ) && (usLastItem!=NOTHING))
+			if ((gpOpponent->inv[HANDPOS].exists() == false ) && (usLastItem!=NOTHING))
 				gpOpponent->ReLoadSoldierAnimationDueToHandItemChange( usLastItem, NOTHING );
 
 //			PreventFromTheFreezingBug(gItemPickupMenu.pSoldier);
@@ -8162,7 +8162,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 		}
 	}
 
-	if ( usItem != NOTHING )
+	if ( pObject->exists() == true )
 	{
 		// Retrieve the status of the items
 		// Find the minimum status value - not just the first one
@@ -8526,7 +8526,7 @@ void CancelItemPointer( )
 
       // ATE: This could potnetially swap!
       // Make sure # of items is 0, if not, auto place somewhere else...
-      if ( gpItemPointer->ubNumberOfObjects > 0 )
+      if ( gpItemPointer->exists() == true )
       {
 				if ( !AutoPlaceObject( gpItemPointerSoldier, gpItemPointer, FALSE ) )
         {

@@ -3146,7 +3146,7 @@ void SetEnemyDroppableStatus( UINT32 uiSlot, BOOLEAN fDroppable )
 	}
 	if( gbCurrSelect != -1 && uiSlot == (UINT32)gbMercSlotTypes[ gbCurrSelect ] )
 	{
-		if( gpMercSlotItem[ gbCurrSelect ]->usItem == NOTHING )
+		if( gpMercSlotItem[ gbCurrSelect ]->exists() == false )
 			SpecifyItemToEdit( gpMercSlotItem[ gbCurrSelect ], -1 );
 	}
 }

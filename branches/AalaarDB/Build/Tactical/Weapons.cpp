@@ -1915,7 +1915,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	if ( Item[ usItemNum ].usItemClass == IC_THROWING_KNIFE )
 	{
 		// Here, remove the knife...	or (for now) rocket launcher	
-		RemoveObjs( &(pSoldier->inv[ HANDPOS ] ), 1 );
+		pSoldier->inv[ HANDPOS ].RemoveObjectsFromStack(1);
 		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 	}
 	else if ( Item[usItemNum].rocketlauncher ) 
@@ -2314,7 +2314,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 					}
 				}
 				// We had not much luck, so we can only steal 1 item.
-				else if ( pTargetSoldier->inv[HANDPOS].usItem != NOTHING )
+				else if ( pTargetSoldier->inv[HANDPOS].exists() == true )
 				{
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[ STR_STOLE_SOMETHING ], pSoldier->name, ShortItemNames[ pTargetSoldier->inv[HANDPOS].usItem ] );
 					usOldItem = pTargetSoldier->inv[HANDPOS].usItem;
@@ -2358,7 +2358,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 			if (fFailure)
 			{
 				// Only report if it was not the Nada item!
-				if (pTargetSoldier->inv[HANDPOS].usItem != NOTHING)
+				if (pTargetSoldier->inv[HANDPOS].exists() == true)
 				{
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, 
 						Message[ STR_FAILED_TO_STEAL_SOMETHING ], 
@@ -2623,7 +2623,7 @@ BOOLEAN UseThrown( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 
 	HandleSoldierThrowItem( pSoldier, pSoldier->sTargetGridNo );
 	DeductPoints( pSoldier, sAPCost, 0 );
-	RemoveObjs( &(pSoldier->inv[ HANDPOS ] ), 1 );
+	pSoldier->inv[ HANDPOS ].RemoveObjectsFromStack(1);
 	
 	/*
 	// Madd: Next 2 lines added: Deduct points!
@@ -3603,7 +3603,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTime,
 //	if ( !(Item[ usInHand ].fFlags & ITEM_TWO_HANDED) )
 	if ( !(Item[ usInHand ].twohanded ) )
 	{
-		if (pSoldier->inv[SECONDHANDPOS].usItem == NOTHING)
+		if (pSoldier->inv[SECONDHANDPOS].exists() == false)
 		{
 			// firing with gun in right hand, and second hand empty (ie: no grenade, med kit or anything there)			
 			// Madd: easier to fire pistol/smg w/one hand free, essentially this will make pistols a little bit more accurate, and hopefully still useful later in the game
@@ -3691,9 +3691,6 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTime,
 	// give some leeway to allow people to spot for each other...
 	//so make the range to calculate the bullet at 255+
 	ubTargetID = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
-	if (ubTargetID >= 148) {
-		DebugBreak();
-	}
 	// best to use team knowledge as well, in case of spotting for someone else
 	// 0verhaul:  Why not use the distance visible as the max for line of sight testing?
 	//ADB because A) the bullet can travel farther than I can see and B) I might have a spotter
@@ -4315,7 +4312,7 @@ INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 u
 		}
 
 		pArmour = &(pTarget->inv[ iSlot ]);
-		if (pArmour->usItem != NOTHING)
+		if (pArmour->exists() == true)
 		{
 			for (attachmentList::iterator iter = (*pArmour)[0]->attachments.begin(); iter != (*pArmour)[0]->attachments.end(); ++iter) {
 				if (Item[iter->usItem].usItemClass == IC_ARMOUR && (*iter)[0]->data.objectStatus > 0 )
@@ -5235,7 +5232,7 @@ void ReloadWeapon( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 	PERFORMANCE_MARKER
 	// NB this is a cheat function, don't award experience
 
-	if ( pSoldier->inv[ ubHandPos ].usItem != NOTHING )
+	if ( pSoldier->inv[ ubHandPos ].exists() == true )
 	{
 		pSoldier->inv[ ubHandPos ][0]->data.gun.ubGunShotsLeft = GetMagSize(&pSoldier->inv[ ubHandPos ]);
 		// Dirty Bars
@@ -5253,7 +5250,7 @@ BOOLEAN IsGunWeaponModeCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , UINT8 b
 	switch(bWpnMode)
 	{
 		case WM_NORMAL:
-		return (pSoldier->inv[ ubHandPos ].usItem != NOTHING && Item[ pSoldier->inv[ ubHandPos ].usItem ].usItemClass & IC_WEAPON && !Weapon[ pSoldier->inv[ ubHandPos ].usItem ].NoSemiAuto );  // Check for being a weapon....
+		return (pSoldier->inv[ ubHandPos ].exists() == true && Item[ pSoldier->inv[ ubHandPos ].usItem ].usItemClass & IC_WEAPON && !Weapon[ pSoldier->inv[ ubHandPos ].usItem ].NoSemiAuto );  // Check for being a weapon....
 
 		case WM_BURST:
 		return IsGunBurstCapable(pSoldier, ubHandPos, FALSE);
@@ -5283,7 +5280,7 @@ BOOLEAN IsGunAutofireCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 	PERFORMANCE_MARKER
 	BOOLEAN fCapable = FALSE;
 
-	if ( pSoldier->inv[ ubHandPos ].usItem != NOTHING )
+	if ( pSoldier->inv[ ubHandPos ].exists() == true )
 	{
 		// ATE: Check for being a weapon....
 		if ( Item[ pSoldier->inv[ ubHandPos ].usItem ].usItemClass & IC_WEAPON )
@@ -5303,7 +5300,7 @@ BOOLEAN IsGunBurstCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , BOOLEAN fNot
 	PERFORMANCE_MARKER
 	BOOLEAN fCapable = FALSE;
 
-	if ( pSoldier->inv[ ubHandPos ].usItem != NOTHING )
+	if ( pSoldier->inv[ ubHandPos ].exists() == true )
 	{
 		// ATE: Check for being a weapon....
 		if ( Item[ pSoldier->inv[ ubHandPos ].usItem ].usItemClass & IC_WEAPON )

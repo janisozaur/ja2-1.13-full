@@ -557,7 +557,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 	{ //clear items, but only if they have write status.
 		if( !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
 		{
-			pp->Inv[ i ].initialize();
+			DeleteObj(&pp->Inv[ i ]);
 			pp->Inv[ i ].fFlags |= OBJECT_UNDROPPABLE;
 		}
 		else
@@ -688,7 +688,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 		//will choose ammunition that works with the gun.
 		for( i = 0; i < pp->Inv.size(); i++ )
 		{
-			if( Item[ pp->Inv[ i ].usItem ].usItemClass == IC_GUN )
+			if( Item[ pp->Inv[ i ].usItem ].usItemClass == IC_GUN && pp->Inv[ i ].exists() == true)
 			{
 				usGunIndex = pp->Inv[ i ].usItem;
 				ubChanceStandardAmmo = 100 - (bWeaponClass * -9);		// weapon class is negative!
@@ -870,44 +870,42 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 	}
 	//Now, we have chosen all of the correct items.  Now, we will assign them into the slots.
 	//Because we are dealing with enemies, automatically give them full ammo in their weapon.
-	if( !(pp->Inv[ HANDPOS ].fFlags & OBJECT_NO_OVERWRITE) )
+	switch( pp->ubSoldierClass )
 	{
-		switch( pp->ubSoldierClass )
-		{
-			case SOLDIER_CLASS_ADMINISTRATOR:
-			case SOLDIER_CLASS_ARMY:
-			case SOLDIER_CLASS_GREEN_MILITIA:
-			case SOLDIER_CLASS_REG_MILITIA:
-				//Admins/Troops: 60-75% + 1% every 4% progress
-				bStatus = (INT8)(60 + Random( 16 ));
-				bStatus += (INT8)(HighestPlayerProgressPercentage() / 4);
-				bStatus = (INT8)min( 100, bStatus );
-				break;
-			case SOLDIER_CLASS_ELITE:
-			case SOLDIER_CLASS_ELITE_MILITIA:
-				//85-90% +  1% every 10% progress
-				bStatus = (INT8)(85 + Random( 6 ));
-				bStatus += (INT8)(HighestPlayerProgressPercentage() / 10);
-				bStatus = (INT8)min( 100, bStatus );
-				break;
-			default:
-				bStatus = (INT8)(50 + Random( 51 ) );
-				break;
-		}
-		// don't allow it to be lower than marksmanship, we don't want it to affect their chances of hitting
-		bStatus = (INT8)max( pp->bMarksmanship, bStatus );
-
-
-		CreateItem( usGunIndex, bStatus, &(pp->Inv[ HANDPOS ]) );
-		pp->Inv[ HANDPOS ].fFlags |= OBJECT_UNDROPPABLE;
-
-		// Rocket Rifles must come pre-imprinted, in case carrier gets killed without getting a shot off
-		if ( Item[usGunIndex].fingerprintid )
-		{
-			pp->Inv[ HANDPOS ][0]->data.ubImprintID = (NO_PROFILE + 1);
-		}
+		case SOLDIER_CLASS_ADMINISTRATOR:
+		case SOLDIER_CLASS_ARMY:
+		case SOLDIER_CLASS_GREEN_MILITIA:
+		case SOLDIER_CLASS_REG_MILITIA:
+			//Admins/Troops: 60-75% + 1% every 4% progress
+			bStatus = (INT8)(60 + Random( 16 ));
+			bStatus += (INT8)(HighestPlayerProgressPercentage() / 4);
+			bStatus = (INT8)min( 100, bStatus );
+			break;
+		case SOLDIER_CLASS_ELITE:
+		case SOLDIER_CLASS_ELITE_MILITIA:
+			//85-90% +  1% every 10% progress
+			bStatus = (INT8)(85 + Random( 6 ));
+			bStatus += (INT8)(HighestPlayerProgressPercentage() / 10);
+			bStatus = (INT8)min( 100, bStatus );
+			break;
+		default:
+			bStatus = (INT8)(50 + Random( 51 ) );
+			break;
 	}
-	else
+	// don't allow it to be lower than marksmanship, we don't want it to affect their chances of hitting
+	bStatus = (INT8)max( pp->bMarksmanship, bStatus );
+
+
+	CreateItem( usGunIndex, bStatus, &(pp->Inv[ HANDPOS ]) );
+	pp->Inv[ HANDPOS ].fFlags |= OBJECT_UNDROPPABLE;
+
+	// Rocket Rifles must come pre-imprinted, in case carrier gets killed without getting a shot off
+	if ( Item[usGunIndex].fingerprintid )
+	{
+		pp->Inv[ HANDPOS ][0]->data.ubImprintID = (NO_PROFILE + 1);
+	}
+
+	if( (pp->Inv[ HANDPOS ].fFlags & OBJECT_NO_OVERWRITE) )
 	{ //slot locked, so don't add any attachments to it!
 		usAttachIndex = 0;
 	}

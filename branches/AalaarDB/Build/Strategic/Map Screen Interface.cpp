@@ -1560,7 +1560,7 @@ void HandleLeavingOfEquipmentInCurrentSector( UINT32 uiMercId )
 	{
 		// slot found,		
 		// check if actual item
-		if(	Menptr[ uiMercId ].inv[ iCounter ].ubNumberOfObjects > 0 )
+		if(	Menptr[ uiMercId ].inv[ iCounter ].exists() == true )
 		{
 	 if( Menptr[ uiMercId ].sSectorX != gWorldSectorX || Menptr[ uiMercId ].sSectorY != gWorldSectorY || Menptr[ uiMercId ].bSectorZ != gbWorldSectorZ )
 	 {
@@ -1835,7 +1835,7 @@ INT32 SetUpDropItemListForMerc( UINT32 uiMercId )
 	{
 		// slot found,
 		// check if actual item
-		if(	Menptr[ uiMercId ].inv[ iCounter ].ubNumberOfObjects > 0 )
+		if(	Menptr[ uiMercId ].inv[ iCounter ].exists() == true )
 		{
 			// make a linked list of the items left behind, with the ptr to its head in this free slot
 			AddItemToLeaveIndex( &( Menptr[ uiMercId ].inv[ iCounter ] ), iSlotIndex );

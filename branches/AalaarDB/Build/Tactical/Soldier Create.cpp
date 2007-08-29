@@ -711,14 +711,14 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 					{ //Don't check for compatibility...	automatically assume there are no head positions filled.
 						fSecondFaceItem = TRUE;
 						Soldier.inv[ HEAD1POS ] = Soldier.inv[ i ];
-						Soldier.inv[ i ].initialize();
+						DeleteObj(&Soldier.inv[ i ]);
 					}
 					else
 					{ //if there is a second item, compare it to the first one we already added.
 						if( CompatibleFaceItem( Soldier.inv[ HEAD1POS ].usItem, Soldier.inv[ i ].usItem ) )
 						{
 							Soldier.inv[ HEAD2POS ] = Soldier.inv[ i ];
-							Soldier.inv[ i ].initialize();
+							DeleteObj(&Soldier.inv[ i ]);
 							break;
 						}
 					}
@@ -2083,8 +2083,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	//Starts with nothing
 	for( i = 0; i < spp->Inv.size(); i++ )
 	{
-		spp->Inv[ i ].initialize();
-		spp->Inv[ i ].usItem = NOTHING;
+		DeleteObj(&spp->Inv[ i ]);
 		spp->Inv[ i ].fFlags |= OBJECT_UNDROPPABLE;
 	}
 
@@ -2780,7 +2779,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 						// try to find the appropriate item to attach to!
 						for ( cnt2 = 0; cnt2 < pSoldier->inv.size(); cnt2++ )
 						{
-							if ( pSoldier->inv[ cnt2 ].usItem != NOTHING && ValidAttachment( gTempObject.usItem, pSoldier->inv[ cnt2 ].usItem ) )
+							if ( pSoldier->inv[ cnt2 ].exists() == true && ValidAttachment( gTempObject.usItem, pSoldier->inv[ cnt2 ].usItem ) )
 							{
 								pSoldier->inv[ cnt2 ].AttachObject( NULL, &gTempObject );
 								break;
@@ -2829,7 +2828,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 								}
 								else
 								{
-									pSoldier->inv[cnt].initialize();
+									DeleteObj(&pSoldier->inv[cnt]);
 								}
 								break;
 							case SKIPPER:
@@ -2839,7 +2838,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 								}
 								else
 								{
-									pSoldier->inv[cnt].initialize();
+									DeleteObj(&pSoldier->inv[cnt]);
 								}
 								break;
 							case DOREEN:
@@ -2849,11 +2848,11 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 								}
 								else
 								{
-									pSoldier->inv[cnt].initialize();
+									DeleteObj(&pSoldier->inv[cnt]);
 								}
 								break;
 							default:
-								pSoldier->inv[cnt].initialize();
+								DeleteObj(&pSoldier->inv[cnt]);
 								break;
 						}
 					}
@@ -2875,7 +2874,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 				}
 				else
 				{
-					pSoldier->inv[cnt].initialize();
+					DeleteObj(&pSoldier->inv[cnt]);
 				}
 			}
 			if (pProfile->uiMoney > 0)

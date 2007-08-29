@@ -765,7 +765,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 			bSlot = FindLockBomb( pSoldier );
 			if (bSlot != NO_SLOT)
 			{
-				RemoveObjs( &(pSoldier->inv[ bSlot ]), 1 );
+				pSoldier->inv[ bSlot ].RemoveObjectsFromStack(1);
 				DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 			}
 		}
@@ -786,7 +786,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		bSlot = FindLockBomb( pSoldier );
 		if (bSlot != NO_SLOT)
 		{
-			RemoveObjs( &(pSoldier->inv[ bSlot ]), 1 );
+			pSoldier->inv[ bSlot ].RemoveObjectsFromStack(1);
 			DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 		}
 

@@ -1107,7 +1107,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 
 	DirtyMercPanelInterface( pNewSoldier, DIRTYLEVEL2 );
 
-	if ( pNewSoldier->inv[ HANDPOS ].usItem == NOTHING )
+	if ( pNewSoldier->inv[ HANDPOS ].exists() == false )
 	{
 		// empty handed - swap in first available weapon
 		INT8		bSlot;
@@ -1118,7 +1118,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 //			if ( Item[ pNewSoldier->inv[ bSlot ].usItem ].fFlags & ITEM_TWO_HANDED )
 			if ( Item[ pNewSoldier->inv[ bSlot ].usItem ].twohanded )
 			{
-				if ( bSlot != SECONDHANDPOS && pNewSoldier->inv[ SECONDHANDPOS ].usItem != NOTHING )
+				if ( bSlot != SECONDHANDPOS && pNewSoldier->inv[ SECONDHANDPOS ].exists() == true )
 				{
 					// need to move second hand item out first
 					AutoPlaceObject( pNewSoldier, &(pNewSoldier->inv[ SECONDHANDPOS ]), FALSE );

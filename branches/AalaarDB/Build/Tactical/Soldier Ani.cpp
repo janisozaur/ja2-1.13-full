@@ -1524,7 +1524,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				// CODE: HANDLE END ITEM PICKUP
 				//LOOK INTO HAND, RAISE RIFLE IF WE HAVE ONE....
 				/*
-				if ( pSoldier->inv[ HANDPOS ].usItem != NOTHING )
+				if ( pSoldier->inv[ HANDPOS ].exists() == true )
 				{	
 				// CHECK IF GUN
 				if ( Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_GUN )
@@ -1567,7 +1567,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							// Default to nothing in hand ( nothing in quotes, we do have something but not just visible )
 							ubRandomHandIndex = RANDOM_ANIM_NOTHINGINHAND;
 
-							if ( usItem != NOTHING )
+							if ( pSoldier->inv[ HANDPOS ].exists() == true )
 							{
 								if ( Item[ usItem ].usItemClass == IC_GUN )
 								{
@@ -2252,7 +2252,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					usItem = pSoldier->inv[ HANDPOS ].usItem;
 
-					if ( usItem != NOTHING )
+					if ( pSoldier->inv[ HANDPOS ].exists() == true )
 					{
 						usSoundID = Weapon[ usItem ].sLocknLoadSound;
 
@@ -2564,7 +2564,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						ReloadGun( pRobot, &(pRobot->inv[ HANDPOS ] ), pSoldier->pTempObject );
 
 						// OK, check what was returned and place in inventory if it's non-zero
-						if ( pSoldier->pTempObject->usItem != NOTHING )
+						if ( pSoldier->pTempObject->exists() == true )
 						{
 							// Add to inv..
 							AutoPlaceObject( pSoldier, pSoldier->pTempObject, TRUE );

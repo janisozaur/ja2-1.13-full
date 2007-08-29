@@ -1122,8 +1122,9 @@ ATM:
 				( CountNumberOfItemsInThePlayersOfferArea( ) < SKI_NUM_ARMS_DEALERS_INV_SLOTS ) )
 		{
 			// if we're supposed to store the original pocket #, but that pocket still holds more of these
-			if ( ( bSlotNum != -1 ) && ( gpSMCurrentMerc->inv[ bSlotNum ].ubNumberOfObjects > 0 ) )
+			if ( ( bSlotNum != -1 ) && ( gpSMCurrentMerc->inv[ bSlotNum ].exists() == true ) )
 			{
+				//TODO yes we can
 				// then we can't store the pocket #, because our system can't return stacked objects
 				bSlotNum = -1;
 			}
@@ -1944,7 +1945,7 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 			return;
 
 		//if there are any items still there
-		if( gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.ubNumberOfObjects > 0 )
+		if( gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.exists() == true )
 		{
 			//If the item type has not already been placed
 			if( !( gpTempDealersInventory[ ubSelectedInvSlot ].uiFlags & ARMS_INV_ITEM_SELECTED ) )
@@ -1971,7 +1972,7 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 						//if the shift key is being pressed, remove them all
 						if( gfKeyState[ SHIFT ] )
 						{
-							gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.initialize();
+							DeleteObj(&gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject);
 						}
 						else
 						{
@@ -2028,7 +2029,7 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 			DeleteItemDescriptionBox( );
 		}
 
-
+//ADB TODO
 #if 0
 		//if the item has been seleceted
 		if( gpTempDealersInventory[ ubSelectedInvSlot ].uiFlags & ARMS_INV_ITEM_SELECTED )
@@ -2569,7 +2570,7 @@ void DisplayArmsDealerCurrentInventoryPage( )
 				else // non-repairman
 				{
 					// check if none left
-					if ( gpTempDealersInventory[ usCnt ].ItemObject.ubNumberOfObjects == 0 )
+					if ( gpTempDealersInventory[ usCnt ].ItemObject.exists() == false )
 					{
 						fDisplayHatchOnItem = TRUE;
 					}
@@ -2724,7 +2725,7 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 	{
 		if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer != ARMS_DEALER_REPAIRS )
 		{
-			if( fHatchedOut && pItemObject->ubNumberOfObjects == 0 )
+			if( fHatchedOut && pItemObject->exists() == false )
 			{
 				uiItemCost = 0;
 			}
@@ -2948,6 +2949,7 @@ bool RepairmanItemQsortCompare(INVENTORY_IN_SLOT& pInvSlot1, INVENTORY_IN_SLOT& 
 	{
 		return true;
 	}
+	//ADB TODO
 	if (pInvSlot1.uiRepairDoneTime < pInvSlot2.uiRepairDoneTime) {
 		DebugBreak();
 	}
@@ -3675,14 +3677,14 @@ INVENTORY_IN_SLOT	*GetPtrToOfferSlotWhereThisItemIs( UINT8 ubProfileID, INT8 bIn
 	{
 		if( ( PlayersOfferArea[ ubCnt ].bSlotIdInOtherLocation == bInvPocket ) &&
 				( PlayersOfferArea[ ubCnt ].ubIdOfMercWhoOwnsTheItem == ubProfileID ) &&
-				( PlayersOfferArea[ ubCnt ].ItemObject.ubNumberOfObjects != 0 ) )
+				( PlayersOfferArea[ ubCnt ].ItemObject.exists() == true ) )
 		{
 			return( &( PlayersOfferArea[ ubCnt ] ) );
 		}
 
 		if( ( ArmsDealerOfferArea[ ubCnt ].bSlotIdInOtherLocation == bInvPocket ) &&
 				( ArmsDealerOfferArea[ ubCnt ].ubIdOfMercWhoOwnsTheItem == ubProfileID ) &&
-				( ArmsDealerOfferArea[ ubCnt ].ItemObject.ubNumberOfObjects != 0 ) )
+				( ArmsDealerOfferArea[ ubCnt ].ItemObject.exists() == true ) )
 		{
 			return( &( ArmsDealerOfferArea[ ubCnt ] ) );
 		}
@@ -4034,8 +4036,6 @@ BOOLEAN RemoveItemFromDealersInventory( INVENTORY_IN_SLOT* pInvSlot, UINT8 ubSlo
 	PERFORMANCE_MARKER
 	INT16		sInvSlot;
 	INT16		sItemID; 
-	SPECIAL_ITEM_INFO SpclItemInfo;
-
 	sInvSlot = ubSlot;
 //	sInvSlot = ( gSelectArmsDealerInfo.ubCurrentPage - 1 ) * SKI_NUM_ARMS_DEALERS_INV_SLOTS + ubSlot;
 
@@ -4199,7 +4199,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			Assert( ( bSlotNum >= -1 ) && ( bSlotNum < (INT8)gpSMCurrentMerc->inv.size() ) );
 
 			// if we're supposed to store the original pocket #, but that pocket still holds more of these
-			if ( ( bSlotNum != -1 ) && ( gpSMCurrentMerc->inv[ bSlotNum ].ubNumberOfObjects > 0 ) )
+			if ( ( bSlotNum != -1 ) && ( gpSMCurrentMerc->inv[ bSlotNum ].exists() == true ) )
 			{
 				// then we can't store the pocket #, because our system can't return stacked objects
 				bSlotNum = -1;
@@ -6714,7 +6714,7 @@ void SplitComplexObjectIntoSubObjects( OBJECTTYPE *pComplexObject )
 {
 	PERFORMANCE_MARKER
 	Assert( pComplexObject );
-	Assert( pComplexObject->ubNumberOfObjects > 0 );
+	Assert( pComplexObject->exists() == true );
 	Assert( pComplexObject->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT );
 
 	subObjects.clear();

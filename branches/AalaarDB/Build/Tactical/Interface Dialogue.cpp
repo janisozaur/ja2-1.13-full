@@ -1967,7 +1967,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					return;
 				}
 
-				if (pSoldier->inv[HANDPOS].usItem != NOTHING)
+				if (pSoldier->inv[HANDPOS].exists() == true)
 				{
 					UINT16	usGun;
 					INT8		bNewSlot, bOldSlot;
@@ -1999,7 +1999,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_READY_GUN:
 				// Get pointer for player
 				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
-				if (pSoldier && pSoldier->inv[HANDPOS].usItem != NOTHING)
+				if (pSoldier && pSoldier->inv[HANDPOS].exists() == true)
 				{
 					sGridNo = pSoldier->sGridNo + DirectionInc( pSoldier->bDirection );
 					pSoldier->SoldierReadyWeapon( (INT16) (sGridNo % WORLD_COLS), (INT16) (sGridNo / WORLD_COLS), FALSE );

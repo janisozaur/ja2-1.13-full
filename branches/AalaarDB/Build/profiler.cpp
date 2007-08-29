@@ -132,7 +132,7 @@ void PerfManager::log(std::ostream &os)
 		logCopy.insert(*i);
 	}
 
-	int cyclesWidth = 0;
+	int cyclesWidth = 1;
 	//I want the formatting to be nice!
 	for(std::set<PerfDatum, PerfSort2>::iterator i = logCopy.begin(); 
 		i != logCopy.end(); 

@@ -7521,7 +7521,7 @@ void MAPInvMoveCallback( MOUSE_REGION *pRegion, INT32 iReason )
 
 	//gbCheckForMouseOverItemPos = -1;
 
-	if ( pSoldier->inv[ uiHandPos ].usItem == NOTHING )
+	if ( pSoldier->inv[ uiHandPos ].exists() == false )
 		return;
 
 	if (iReason == MSYS_CALLBACK_REASON_MOVE)
@@ -7595,7 +7595,7 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 		if ( gpItemPointer == NULL )
 		{
 			// Return if empty
-			if ( pSoldier->inv[ uiHandPos ].usItem == NOTHING )
+			if ( pSoldier->inv[ uiHandPos ].exists() == false )
 			{
 				return;
 			}
@@ -7738,7 +7738,7 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 							pSoldier->flags.DropPackFlag = FALSE;
 					}
 					// Are we swaping LBE items?
-					if(pSoldier->inv[uiHandPos].usItem != NONE)	// Item already exists in this pocket
+					if(pSoldier->inv[uiHandPos].exists() == true)	// Item already exists in this pocket
 						MoveItemToLBEItem( pSoldier, uiHandPos, gpItemPointer );
 					MoveItemFromLBEItem( pSoldier, uiHandPos, gpItemPointer );
 				}
@@ -7807,7 +7807,7 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 		fRightDown = FALSE;
 
 		// Return if empty
-		if (pSoldier->inv[ uiHandPos ].usItem == NOTHING )
+		if (pSoldier->inv[ uiHandPos ].exists() == false )
 		{
 			return;
 		}

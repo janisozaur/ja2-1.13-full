@@ -46,10 +46,10 @@ extern UINT8 GetDealerItemCategoryNumber( UINT16 usItemIndex );
 bool WORLDITEM::operator<(WORLDITEM& compare)
 {
 	PERFORMANCE_MARKER
-	if ( this->fExists == false ) {
+	if ( this->fExists == false || this->object.exists() == false) {
 		return false;
 	}
-	if ( compare.fExists == false ) {
+	if ( compare.fExists == false || compare.object.exists() == false) {
 		return true;
 	}
 

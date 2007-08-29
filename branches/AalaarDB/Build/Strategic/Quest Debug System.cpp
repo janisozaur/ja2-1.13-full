@@ -3732,20 +3732,17 @@ void RefreshAllNPCInventory()
 				//refresh the mercs inventory
 				for ( usItemCnt = 0; usItemCnt< Menptr[ usCnt ].inv.size(); usItemCnt++ )
 				{
-					//null out the items in the npc inventory
-					Menptr[ usCnt ].inv[ usItemCnt ].initialize();
-
 					if ( gMercProfiles[ Menptr[ usCnt ].ubProfile ].inv[ usItemCnt ] != NOTHING )
 					{
 						//get the item
 						usItem = gMercProfiles[ Menptr[ usCnt ].ubProfile ].inv[ usItemCnt ];
 
 						//Create the object
-						gTempObject.initialize();
-						CreateItem( usItem, 100, &gTempObject );
-	
-						//copy the item into the soldiers inventory
-						Menptr[ usCnt ].inv[ usItemCnt ] = gTempObject;
+						CreateItem( usItem, 100, &Menptr[ usCnt ].inv[ usItemCnt ] );
+					}
+					else {
+						//null out the items in the npc inventory
+						DeleteObj(&Menptr[ usCnt ].inv[ usItemCnt ]);
 					}
 				}
 			}

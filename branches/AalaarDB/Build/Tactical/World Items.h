@@ -56,15 +56,8 @@ public:
 
 	char					endOfPod;
 	OBJECTTYPE				object;
-}; // WORLDITEM;
-//#define SIZEOF_WORLDITEM_POD (offsetof(WORLDITEM, endOfPod))
-#define SIZEOF_WORLDITEM_POD	sizeof(fExists) + \
-								sizeof(sGridNo) + \
-								sizeof(ubLevel) + \
-								sizeof(usFlags) + \
-								sizeof(bRenderZHeightAboveLevel) + \
-								sizeof(bVisible) + \
-								sizeof(ubNonExistChance)
+};
+#define SIZEOF_WORLDITEM_POD (offsetof(WORLDITEM, endOfPod))
 
 extern WORLDITEM		*gWorldItems;
 extern UINT32				guiNumWorldItems;

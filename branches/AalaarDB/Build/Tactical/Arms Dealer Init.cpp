@@ -99,8 +99,6 @@ void		ArmsDealerGetsFreshStock( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ub
 BOOLEAN ItemContainsLiquid( UINT16 usItemIndex );
 UINT8		DetermineDealerItemCondition( UINT8 ubArmsDealer, UINT16 usItemIndex );
 
-BOOLEAN IsItemInfoSpecial( SPECIAL_ITEM_INFO *pSpclItemInfo, UINT16 usItemIndex );
-
 BOOLEAN DoesItemAppearInDealerInventoryList( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer );
 
 void GuaranteeMinimumAlcohol( UINT8 ubArmsDealer );
@@ -250,7 +248,7 @@ BOOLEAN SaveArmsDealerInventoryToSaveGameFile( HWFILE hFile )
 
 bool DEALER_SPECIAL_ITEM::OKToSaveOrLoad()
 {
-	if (object.ubNumberOfObjects > 0) {
+	if (object.exists() == true) {
 		return true;
 	}
 	if (ubQtyOnOrder > 0) {
@@ -1603,32 +1601,6 @@ void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 
 	}
 }
 
-
-// WDS bug fix (07/24/2007) - Items with default attachments have to be handled specially
-
-BOOLEAN SpecialItemInfoIsIdentical (SPECIAL_ITEM_INFO& baseItem, SPECIAL_ITEM_INFO& actualItem, UINT16 usItemIndex)
-{
-	BOOLEAN firstAttachmentIsDefault = 
-		((actualItem.usAttachment[ 0 ] == Item [ usItemIndex ].defaultattachment) &&
-		(actualItem.bAttachmentStatus[0] == 100));
-	for (int idx=0; idx < MAX_ATTACHMENTS; ++idx) {
-		if ((idx != 0) || (!firstAttachmentIsDefault)) {
-			if (baseItem.usAttachment[idx] != actualItem.usAttachment[idx])
-				return FALSE;
-			if (baseItem.bAttachmentStatus[idx] != actualItem.bAttachmentStatus[idx])
-				return FALSE;
-		}
-	}
-	if (baseItem.bItemCondition != actualItem.bItemCondition)
-		return FALSE;
-	if (baseItem.ubImprintID != actualItem.ubImprintID)
-		return FALSE;
-
-	return TRUE;
-}
-
-
-
 // removes ubHowMany items of usItemIndex with the matching Info from dealer ubArmsDealer
 void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany )
 {
@@ -1649,7 +1621,7 @@ void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, 
 					}
 				}
 				else {
-					RemoveObjs(&(iter->object), ubHowMany);
+					iter->object.RemoveObjectsFromStack(ubHowMany);
 					return;
 				}
 			}
@@ -1961,31 +1933,6 @@ UINT32 CalculateSimpleItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, IN
 
 
 
-UINT32 CalculateSpecialItemRepairCost( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo )
-{
-	PERFORMANCE_MARKER
-	UINT32 uiRepairCost;
-	UINT8 ubCnt;
-
-	uiRepairCost = CalculateSimpleItemRepairCost( ubArmsDealer, usItemIndex, pSpclItemInfo->bItemCondition );
-
-	// add cost of repairing any attachments on it
-	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		if ( pSpclItemInfo->usAttachment[ ubCnt ] != NONE )
-		{
-			// if damaged and repairable
-			if ( ( pSpclItemInfo->bAttachmentStatus[ ubCnt ] < 100 ) && CanDealerRepairItem( ubArmsDealer, pSpclItemInfo->usAttachment[ ubCnt ] ) )
-			{
-				uiRepairCost += CalculateSimpleItemRepairCost( ubArmsDealer, pSpclItemInfo->usAttachment[ ubCnt ], pSpclItemInfo->bAttachmentStatus[ ubCnt ] );
-			}
-		}
-	}
-
-	return( uiRepairCost );
-}
-
-
 UINT32 CalculateObjectItemRepairCost( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject )
 {
 	PERFORMANCE_MARKER
@@ -2056,72 +2003,6 @@ UINT32 CalculateSimpleItemRepairCost( UINT8 ubArmsDealer, UINT16 usItemIndex, IN
 
 	return( uiRepairCost );
 }
-
-
-
-void SetSpecialItemInfoToDefaults( SPECIAL_ITEM_INFO *pSpclItemInfo )
-{
-	PERFORMANCE_MARKER
-	UINT8 ubCnt;
-
-	pSpclItemInfo->initialize();
-
-	pSpclItemInfo->bItemCondition = 100;
-	pSpclItemInfo->ubImprintID = NO_PROFILE;
-
-	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		pSpclItemInfo->usAttachment[ ubCnt ] = NONE;
-		pSpclItemInfo->bAttachmentStatus[ ubCnt ] = 0;
-	}
-}
-
-
-BOOLEAN IsItemInfoSpecial( SPECIAL_ITEM_INFO *pSpclItemInfo, UINT16 usItemIndex )
-{
-	PERFORMANCE_MARKER
-	UINT8 ubCnt;
-
-
-	// being damaged / in repairs makes an item special
-	if ( pSpclItemInfo->bItemCondition != 100 )
-	{
-		return(TRUE);
-	}
-
-	// being imprinted makes an item special
-	if (pSpclItemInfo->ubImprintID != NO_PROFILE)
-	{
-		return(TRUE);
-	}
-
-	// having an attachment makes an item special
-	// ...unless it is a default attachment (WDS fix 07/24/2007)
-	if ( (pSpclItemInfo->usAttachment[ 0 ] != NONE) )
-	{
-		//ADB: takes the if ubCnt != 0 out of the loop below, and only calcs firstAttachmentIsDefault sometimes,
-		//cuz ya know, performance is sooo critical here (not)
-		BOOLEAN firstAttachmentIsDefault = 
-			((pSpclItemInfo->usAttachment[ 0 ] == Item [ usItemIndex ].defaultattachment) &&
-			(pSpclItemInfo->bAttachmentStatus[0] == 100));
-		if ( firstAttachmentIsDefault == false)
-		{
-			return(TRUE);
-		}
-	}
-
-	for ( ubCnt = 1; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		if ( (pSpclItemInfo->usAttachment[ ubCnt ] != NONE) )
-		{
-			return(TRUE);
-		}
-	}
-
-	// otherwise, it's just a "perfect" item, nothing special about it
-	return(FALSE);
-}
-
 
 
 BOOLEAN DoesItemAppearInDealerInventoryList( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer )

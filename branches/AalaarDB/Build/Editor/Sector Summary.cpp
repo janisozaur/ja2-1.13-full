@@ -3055,7 +3055,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 			for( j = 0; j < 9; j++ )
 			{
 				pItem = &priority.Inv[ gbMercSlotTypes[ j ] ];
-				if( pItem->usItem != NOTHING && !( (*pItem).fFlags & OBJECT_UNDROPPABLE ) )
+				if( pItem->exists() == true && !( (*pItem).fFlags & OBJECT_UNDROPPABLE ) )
 				{
 					usNumItems++;
 				}
@@ -3116,7 +3116,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 			for( j = 0; j < 9; j++ )
 			{
 				pItem = &priority.Inv[ gbMercSlotTypes[ j ] ];
-				if( pItem->usItem != NOTHING && !( (*pItem).fFlags & OBJECT_UNDROPPABLE ) )
+				if( pItem->exists() == true && !( (*pItem).fFlags & OBJECT_UNDROPPABLE ) )
 				{
 					if( basic.fPriorityExistance )
 					{

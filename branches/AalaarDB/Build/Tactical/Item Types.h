@@ -5,6 +5,70 @@
 #include <vector>
 #include <list>
 
+/* CHRISL: Added listings for each of the new inventory pockets.  Also split the enum so we could include
+endpoint markers for each type (big, med, sml) of pocket. */
+enum INVENTORY{
+	HELMETPOS = 0,
+	VESTPOS,
+	LEGPOS,
+	HEAD1POS,
+	HEAD2POS,
+	HANDPOS,
+	SECONDHANDPOS,
+	VESTPOCKPOS,
+	LTHIGHPOCKPOS,
+	RTHIGHPOCKPOS,
+	CPACKPOCKPOS,
+	BPACKPOCKPOS,
+	GUNSLINGPOCKPOS,
+	KNIFEPOCKPOS,
+	BODYPOSFINAL,
+	BIGPOCK1POS = BODYPOSFINAL,
+	BIGPOCK2POS,
+	BIGPOCK3POS,
+	BIGPOCK4POS,
+	BIGPOCK5POS,
+	BIGPOCK6POS,
+	BIGPOCK7POS,
+	BIGPOCKFINAL,
+	MEDPOCK1POS = BIGPOCKFINAL,
+	MEDPOCK2POS,
+	MEDPOCK3POS,
+	MEDPOCK4POS,
+	MEDPOCKFINAL,
+	SMALLPOCK1POS = MEDPOCKFINAL,
+	SMALLPOCK2POS,
+	SMALLPOCK3POS,
+	SMALLPOCK4POS,
+	SMALLPOCK5POS,
+	SMALLPOCK6POS,
+	SMALLPOCK7POS,
+	SMALLPOCK8POS,
+	SMALLPOCK9POS,
+	SMALLPOCK10POS,
+	SMALLPOCK11POS,
+	SMALLPOCK12POS,
+	SMALLPOCK13POS,
+	SMALLPOCK14POS,
+	SMALLPOCK15POS,
+	SMALLPOCK16POS,
+	SMALLPOCK17POS,
+	SMALLPOCK18POS,
+	SMALLPOCK19POS,
+	SMALLPOCK20POS,
+	SMALLPOCK21POS,
+	SMALLPOCK22POS,
+	SMALLPOCK23POS,
+	SMALLPOCK24POS,
+	SMALLPOCK25POS,
+	SMALLPOCK26POS,
+	SMALLPOCK27POS,
+	SMALLPOCK28POS,
+	SMALLPOCK29POS,
+	SMALLPOCK30POS,
+	NUM_INV_SLOTS
+};
+
 #define INVALIDCURS 0
 #define QUESTCURS 1
 #define PUNCHCURS 2
@@ -94,10 +158,11 @@ public:
 	UINT8				ubID;
 	BOOLEAN				ZipperFlag;
 	UINT32				uiNodeChecksum;
+	char				endOfPOD;
 	//OBJECTTYPE			inv[ITEMS_IN_LBE];  //compiler complains about too big an array since OBJECTTYPE's size is unknown at this time
 	std::vector<OBJECTTYPE> inv;
 };
-#define SIZEOF_LBENODE_POD 0
+#define SIZEOF_LBENODE_POD (offsetof(LBENODE, endOfPOD))
 
 extern	std::vector<LBENODE>	LBEArray;
 
@@ -316,6 +381,7 @@ public:
 
 	bool	operator==(OBJECTTYPE& compare);
 	bool	operator==(const OBJECTTYPE& compare)const;
+	bool	exists();
 	bool	IsLBE();
 	LBENODE*	GetLBEPointer(int subObject = 0);
 	int		GetLBEIndex(int subObject = 0);
@@ -344,11 +410,14 @@ public:
 	UINT16		ubWeight;		//used to be UINT8
 	INT8		fFlags;
 
-#define SIZEOF_OBJECTTYPE_POD	sizeof(usItem) + \
+	char		endOfPOD;
+
+#define SIZEOF_OBJECTTYPE_POD	(offsetof(OBJECTTYPE, endOfPOD))
+#define SIZEOF_OBJECTTYPEaoeu_POD	sizeof(usItem) + \
 								sizeof(ubNumberOfObjects) + \
 								sizeof(ubMission) + \
 								sizeof(ubWeight) + \
-								sizeof(fFlags)
+								sizeof(fFlags) + 1
 
 
 

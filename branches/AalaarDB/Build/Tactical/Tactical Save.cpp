@@ -578,7 +578,6 @@ BOOLEAN UpdateWorldItemsTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	PERFORMANCE_MARKER
 	UINT32	uiTotalNumberOfItems=0;
 	WORLDITEM* pTotalSectorList = NULL;
-
 	BOOLEAN fReturn = GetNumberOfWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, &( uiTotalNumberOfItems ), FALSE );
 	if (fReturn == false)
 	{
@@ -947,7 +946,6 @@ BOOLEAN SaveCurrentSectorsInformationToTempItemFile( )
 
 
 	//Save the Items to the the file
-	OBJECTTYPE		OldAmmo;
 	if( !SaveWorldItemsToTempItemFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, guiNumWorldItems, gWorldItems ) )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("SaveCurrentSectorsInformationToTempItemFile:  failed in SaveWorldItemsToTempItemFile()" ) );

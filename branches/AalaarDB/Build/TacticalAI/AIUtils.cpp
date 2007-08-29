@@ -1830,11 +1830,11 @@ BOOLEAN WearGasMaskIfAvailable( SOLDIERTYPE * pSoldier )
 	{
 		return( FALSE );
 	}
-	if ( pSoldier->inv[ HEAD1POS ].usItem == NOTHING)
+	if ( pSoldier->inv[ HEAD1POS ].exists() == false)
 	{
 		bNewSlot = HEAD1POS;
 	}
-	else if ( pSoldier->inv[ HEAD2POS ].usItem == NOTHING )
+	else if ( pSoldier->inv[ HEAD2POS ].exists() == false )
 	{
 		bNewSlot = HEAD2POS;
 	}
@@ -2406,7 +2406,7 @@ BOOLEAN FindBetterSpotForItem( SOLDIERTYPE * pSoldier, INT8 bSlot )
 	{
 		return( FALSE );
 	}
-	if (pSoldier->inv[bSlot].usItem == NOTHING)
+	if (pSoldier->inv[bSlot].exists() == false)
 	{
 		// well that's just fine then!
 		return( TRUE );

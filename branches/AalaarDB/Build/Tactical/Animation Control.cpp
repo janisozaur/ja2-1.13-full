@@ -3495,7 +3495,7 @@ UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimSta
 		usItem = pSoldier->inv[ HANDPOS ].usItem;
 
 		// Default it to the 1 ( ie: no rifle )
-		if ( usItem != NOTHING )
+		if ( pSoldier->inv[ HANDPOS ].exists() == true )
 		{
 			if ( ( Item[ usItem ].usItemClass == IC_GUN || Item[ usItem ].usItemClass == IC_LAUNCHER ) && !Item[usItem].rocketlauncher)
 			{

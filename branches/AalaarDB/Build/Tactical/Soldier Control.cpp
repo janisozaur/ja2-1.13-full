@@ -2744,8 +2744,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 					// 1) We have a rifle in hand...
 					usItem = thisSoldier->inv[ HANDPOS ].usItem;
 
-					//					if ( usItem != NOTHING && (Item[ usItem ].fFlags & ITEM_TWO_HANDED) && usItem != ROCKET_LAUNCHER && usItem != RPG7 )
-					if ( usItem != NOTHING && (Item[ usItem ].twohanded ) && !Item[usItem].rocketlauncher )
+					if ( thisSoldier->inv[ HANDPOS ].exists() == true && (Item[ usItem ].twohanded ) && !Item[usItem].rocketlauncher )
 					{
 						// Switch on height!
 						switch( gAnimControl[ thisSoldier->usAnimState ].ubEndHeight )
@@ -2768,8 +2767,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 					// 1) We have a rifle in hand...
 					usItem = thisSoldier->inv[ HANDPOS ].usItem;
 
-					//					if ( usItem != NOTHING && (Item[ usItem ].fFlags & ITEM_TWO_HANDED) && usItem != ROCKET_LAUNCHER && usItem != RPG7 )
-					if ( usItem != NOTHING && (Item[ usItem ].twohanded ) && !Item[usItem].rocketlauncher )
+					if ( thisSoldier->inv[ HANDPOS ].exists() == true && (Item[ usItem ].twohanded ) && !Item[usItem].rocketlauncher )
 					{
 						// Switch on height!
 						switch( gAnimControl[ thisSoldier->usAnimState ].ubEndHeight )
@@ -2862,7 +2860,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 				// Do we have a rifle?
 				usItem = thisSoldier->inv[ HANDPOS ].usItem;
 
-				if ( usItem != NOTHING )
+				if ( thisSoldier->inv[ HANDPOS ].exists() == true )
 				{
 					if ( Item[ usItem ].usItemClass == IC_GUN && !Item[usItem].rocketlauncher )
 					{
@@ -2882,7 +2880,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 				// Do we have a rifle?
 				usItem = thisSoldier->inv[ HANDPOS ].usItem;
 
-				if ( usItem != NOTHING )
+				if ( thisSoldier->inv[ HANDPOS ].exists() == true )
 				{
 					if ( Item[ usItem ].usItemClass == IC_GUN && !Item[usItem].rocketlauncher )
 					{
@@ -3212,7 +3210,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 			if ( thisSoldier->usAnimState != RUNNING )
 			{
 				// CHRISL
-				if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
+				if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true)
 				{
 					sAPCost = AP_START_RUN_COST + 2;
 					sBPCost += 2;
@@ -3242,7 +3240,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 			if ( !thisSoldier->flags.fDontChargeAPsForStanceChange )
 			{
 				// CHRISL
-				if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !thisSoldier->flags.ZipperFlag)
+				if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true && !thisSoldier->flags.ZipperFlag)
 				{
 					if(usNewState == KNEEL_UP)
 					{
@@ -3280,7 +3278,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 				if ( thisSoldier->sGridNo == thisSoldier->pathing.sFinalDestination || thisSoldier->pathing.usPathIndex == 0 )
 				{
 					// CHRISL
-					if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !thisSoldier->flags.ZipperFlag)
+					if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true && !thisSoldier->flags.ZipperFlag)
 					{
 						if(usNewState == PRONE_UP)
 						{
@@ -3366,7 +3364,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 		case HOPFENCE:
 
 			// CHRISL
-			if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
+			if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true)
 				DeductPoints( thisSoldier, AP_JUMPFENCEBPACK, BP_JUMPFENCEBPACK );
 			else
 				DeductPoints( thisSoldier, AP_JUMPFENCE, BP_JUMPFENCE );
@@ -4643,7 +4641,7 @@ UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady )
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("PickSoldierReadyAnimation"));
 
 	// Invalid animation if nothing in our hands
-	if ( pSoldier->inv[ HANDPOS ].usItem == NOTHING )
+	if ( pSoldier->inv[ HANDPOS ].exists() == false )
 	{
 		return( INVALID_ANIMATION );
 	}
@@ -7843,7 +7841,7 @@ void SOLDIERTYPE::BeginSoldierClimbUpRoof( void )
 	PERFORMANCE_MARKER
 
 	//CHRISL: Disable climbing up to a roof while wearing a backpack
-	if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+	if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true)
 		return;
 	INT8							bNewDirection;
 	UINT8							ubWhoIsThere;
@@ -8434,7 +8432,7 @@ UINT8 SOLDIERTYPE::SoldierTakeDamage( INT8 bHeight, INT16 sLifeDeduct, INT16 sBr
 		if ( Random( 100 ) < (UINT16) sChanceToDrop )
 		{
 			// OK, drop item in main hand...
-			if ( thisSoldier->inv[ HANDPOS ].usItem != NOTHING )
+			if ( thisSoldier->inv[ HANDPOS ].exists() == true )
 			{
 				if ( !( thisSoldier->inv[ HANDPOS ].fFlags & OBJECT_UNDROPPABLE ) )
 				{
@@ -11626,8 +11624,7 @@ BOOLEAN SOLDIERTYPE::SoldierCarriesTwoHandedWeapon( void )
 
 	usItem = thisSoldier->inv[ HANDPOS ].usItem;
 
-	//	if ( usItem != NOTHING && (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
-	if ( usItem != NOTHING && (Item[ usItem ].twohanded ) )
+	if ( thisSoldier->inv[ HANDPOS ].exists() == true && (Item[ usItem ].twohanded ) )
 	{
 		return( TRUE );
 	}

@@ -931,7 +931,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 	{
 		pObj = &( pSoldier->inv[ cnt ] );
 
-		if ( pObj->usItem != NOTHING )
+		if ( pObj->exists() == true )
 		{
 			// Check if it's supposed to be dropped
 			if ( !( (*pObj).fFlags & OBJECT_UNDROPPABLE ) || pSoldier->bTeam == gbPlayerNum )

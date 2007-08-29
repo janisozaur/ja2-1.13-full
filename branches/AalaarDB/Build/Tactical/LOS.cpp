@@ -2145,12 +2145,12 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 				// lucky bastard was facing away!
 			}
 			//			else if ( ( (pTarget->inv[HEAD1POS].usItem == NIGHTGOGGLES) || (pTarget->inv[HEAD1POS].usItem == SUNGOGGLES) || (pTarget->inv[HEAD1POS].usItem == GASMASK) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD1POS][0]->data.objectStatus) ) )
-			else if ( ( (pTarget->inv[HEAD1POS].usItem != NONE) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD1POS][0]->data.objectStatus) ) )
+			else if ( ( (pTarget->inv[HEAD1POS].exists() == true) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD1POS][0]->data.objectStatus) ) )
 			{
 				// lucky bastard was wearing protective stuff
 				bHeadSlot = HEAD1POS;
 			}
-			else if ( ( (pTarget->inv[HEAD2POS].usItem != NONE) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD2POS][0]->data.objectStatus) ) )
+			else if ( ( (pTarget->inv[HEAD2POS].exists() == true) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD2POS][0]->data.objectStatus) ) )
 			{
 				// lucky bastard was wearing protective stuff
 				bHeadSlot = HEAD2POS;
@@ -2246,7 +2246,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 	{
 		// bullet to the head may damage any head item
 		bHeadSlot = HEAD1POS + (INT8) Random( 2 );
-		if ( pTarget->inv[ bHeadSlot ].usItem != NOTHING )
+		if ( pTarget->inv[ bHeadSlot ].exists() == true )
 		{
 			pTarget->inv[ bHeadSlot ][0]->data.objectStatus -= (INT8) ( Random( iImpact / 2 ) );
 			if ( pTarget->inv[ bHeadSlot ][0]->data.objectStatus < 0 )

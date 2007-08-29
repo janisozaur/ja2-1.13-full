@@ -25,7 +25,7 @@
 
 #define SGP_DEBUG
 
-#define PROFILER_ENABLED
+//#define PROFILER_ENABLED
 
 //#define DEBUG_ATTACKBUSY
 

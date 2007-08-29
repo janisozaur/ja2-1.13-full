@@ -912,8 +912,8 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 									INT8									bEmptySlot;
 
 									pSoldier = FindSoldierByProfileID( DARREN, FALSE );
-									bMoney = FindObjWithin( pSoldier, MONEY, BIGPOCK1POS, SMALLPOCK8POS );
-									bEmptySlot = FindObjWithin( pSoldier, NOTHING, BIGPOCK1POS, SMALLPOCK8POS );
+									bMoney = FindObj( pSoldier, MONEY, BIGPOCK1POS, SMALLPOCK8POS );
+									bEmptySlot = FindObj( pSoldier, NOTHING, BIGPOCK1POS, SMALLPOCK8POS );
 								}
 								*/
 
@@ -1945,13 +1945,12 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 						// Is this one of us?
 						if ( pSoldier->bTeam == gbPlayerNum )
 						{
-							INT8 bSlot;
-
-							bSlot = FindExactObj( pSoldier, pObj );
-							if (bSlot != NO_SLOT)
-							{
-								RemoveObjs( &(pSoldier->inv[bSlot]), pObj->ubNumberOfObjects );
-								DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
+							for (int x = 0; x < NUM_INV_SLOTS; ++x) {
+								if (&(pSoldier->inv[x]) == pObj) {
+									DeleteObj(&pSoldier->inv[x]);
+									DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
+									break;
+								}
 							}
 						}
 						else

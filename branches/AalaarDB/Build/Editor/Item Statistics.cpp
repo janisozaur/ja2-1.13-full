@@ -443,7 +443,7 @@ void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex )
 			SetupKeysGUI();
 			break;
 		case IC_PUNCH:
-			if ( gpItem->usItem != NOTHING)
+			if ( gpItem->exists() == true)
 			{
 				gbEditingMode = EDITING_EQUIPMENT;
 				SetupEquipGUI();

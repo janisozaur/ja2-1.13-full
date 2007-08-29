@@ -4171,7 +4171,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 			// Erase!
 			if ( bInvPos != NO_SLOT )
 			{
-				RemoveObjs( &(pSoldier->inv[ bInvPos ]), gTempObject.ubNumberOfObjects );
+				pSoldier->inv[ bInvPos ].RemoveObjectsFromStack( gTempObject.ubNumberOfObjects );
 				DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 			}
 
@@ -5466,7 +5466,7 @@ UINT8 StealItems(SOLDIERTYPE* pSoldier,SOLDIERTYPE* pOpponent, UINT8* ubIndexRet
 		fStealItem = FALSE;
 
 		pObject=&pOpponent->inv[i];
-		if (pObject->usItem!=0)
+		if (pObject->exists() == true)
 		{
 			// Is the enemy collapsed
 			if ( pOpponent->stats.bLife < OKLIFE || pOpponent->bCollapsed )

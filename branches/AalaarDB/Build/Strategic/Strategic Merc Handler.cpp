@@ -716,7 +716,7 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 		usItem = pSoldier->inv[ cnt ].usItem;
 
 		// Look for best gun/armour
-		if ( usItem != NOTHING )
+		if ( pSoldier->inv[cnt].exists() == true )
 		{
 			// Check if it's a gun
 			if ( Item[ usItem ].usItemClass & IC_GUN )

@@ -1708,7 +1708,7 @@ INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *
 	if( pSoldier == NULL || pOpponent == NULL || ubItemPos > pSoldier->inv.size() || sGridno > NUMBEROFTILES )
 		return 0;
 
-	if( pSoldier->inv[ubItemPos].usItem == NOTHING )
+	if( pSoldier->inv[ubItemPos].exists() == false )
 		return 0;
 
 
