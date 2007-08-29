@@ -1877,13 +1877,13 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT32 sTargetGridNo )
 		{
 			CreateItem( Item[usItemNum].discardedlauncheritem , pSoldier->inv[ HANDPOS ].ItemData.Generic.bStatus[ 0 ],&(pSoldier->inv[ HANDPOS ] ) );
 			DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
-			IgniteExplosion( pSoldier->ubID, (INT16)CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, C1, pSoldier->bLevel );
+			IgniteExplosion( pSoldier->ubID, CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, C1, pSoldier->bLevel );
 		}
 		else
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("StructureHit: RPG7 item: %d, Ammo: %d",pSoldier->inv[HANDPOS].usItem , pSoldier->inv[HANDPOS].usGunAmmoItem ) );
 			
-			IgniteExplosion( pSoldier->ubID, (INT16)CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.usGunAmmoItem, pSoldier->bLevel );
+			IgniteExplosion( pSoldier->ubID, CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.usGunAmmoItem, pSoldier->bLevel );
 			pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.usGunAmmoItem = NONE;
 		}
       // Reduce again for attack end 'cause it has been incremented for a normal attack
@@ -2685,7 +2685,7 @@ BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier, INT32 sTargetGridNo )
 
     // So we still should have ABC > 0
     // Begin explosion due to failure...
-		IgniteExplosion( pSoldier->ubID, (INT16)CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, Launchable.usItem, pSoldier->bLevel );
+		IgniteExplosion( pSoldier->ubID, CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, Launchable.usItem, pSoldier->bLevel );
 
     // Reduce again for attack end 'cause it has been incremented for a normal attack
     // Nope, not anymore.
@@ -2949,26 +2949,26 @@ void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 s
 		{
 			if ( Item[usWeaponIndex].singleshotrocketlauncher )
 			{
-				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), C1, pTargetSoldier->bLevel );
+				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos ), C1, pTargetSoldier->bLevel );
 			}
 			// changed rpg type to work only with two flags matching
 			else if ( !Item[usWeaponIndex].singleshotrocketlauncher && Item[usWeaponIndex].rocketlauncher)
 			{
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("WeaponHit: RPG7 item: %d, Ammo: %d",pSoldier->inv[HANDPOS].usItem , pSoldier->inv[HANDPOS].usGunAmmoItem ) );
 				
-				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.usGunAmmoItem, pTargetSoldier->bLevel );
+				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos ), pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.usGunAmmoItem, pTargetSoldier->bLevel );
 				pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.usGunAmmoItem = NONE;
 			}
 		    else if ( AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].explosionSize > 1)
 			{
 				// re-routed the Highexplosive value to define exposion type
-				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].highExplosive , pTargetSoldier->bLevel );
+				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos ), AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].highExplosive , pTargetSoldier->bLevel );
 				// pSoldier->inv[pSoldier->ubAttackingHand ].usGunAmmoItem = NONE;
 			}
 		}
 		else // tank cannon
 		{
-			IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), TANK_SHELL, pTargetSoldier->bLevel );
+			IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos ), TANK_SHELL, pTargetSoldier->bLevel );
 		}
 
 		// 0verhaul:  No longer necessary
@@ -3071,19 +3071,19 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 			// FreeUpAttacker( ubAttackerID );
 			if ( Item[usWeaponIndex].singleshotrocketlauncher )
 			{
-				IgniteExplosion( ubAttackerID, (INT16)CenterX( sGridNo ), (INT16)CenterY( sGridNo ), 0, sGridNo, C1, (INT8)( sZPos >= WALL_HEIGHT ) );
+				IgniteExplosion( ubAttackerID, CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, C1, (INT8)( sZPos >= WALL_HEIGHT ) );
 			}
 			// changed too to use 2 flag to determine
 			else if ( !Item[usWeaponIndex].singleshotrocketlauncher && Item[usWeaponIndex].rocketlauncher)
 			{
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("StructureHit: RPG7 item: %d, Ammo: %d",pAttacker->inv[HANDPOS].usItem , pAttacker->inv[HANDPOS].usGunAmmoItem ) );
-				IgniteExplosion( ubAttackerID, (INT16)CenterX( sGridNo ), (INT16)CenterY( sGridNo ), 0, sGridNo, pAttacker->inv[pAttacker->ubAttackingHand ].ItemData.Gun.usGunAmmoItem , (INT8)( sZPos >= WALL_HEIGHT ) );
+				IgniteExplosion( ubAttackerID, CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, pAttacker->inv[pAttacker->ubAttackingHand ].ItemData.Gun.usGunAmmoItem , (INT8)( sZPos >= WALL_HEIGHT ) );
 				pAttacker->inv[pAttacker->ubAttackingHand ].ItemData.Gun.usGunAmmoItem = NONE;
 			}
 			else if ( AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].explosionSize > 1)
 			{
 				// re-routed the Highexplosive value to define exposion type
-				IgniteExplosion( ubAttackerID, (INT16)CenterX( sGridNo ), (INT16)CenterY( sGridNo ), 0, sGridNo, AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].highExplosive , (INT8)( sZPos >= WALL_HEIGHT ) );
+				IgniteExplosion( ubAttackerID, CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].highExplosive , (INT8)( sZPos >= WALL_HEIGHT ) );
 				// pSoldier->inv[pSoldier->ubAttackingHand ].usGunAmmoItem = NONE;
 			}
 
@@ -3099,7 +3099,7 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 			//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - end of TANK fire") );
 			//FreeUpAttacker( ubAttackerID );
 
-			IgniteExplosion( ubAttackerID, (INT16)CenterX( sGridNo ), (INT16)CenterY( sGridNo ), 0, sGridNo, TANK_SHELL, (INT8)( sZPos >= WALL_HEIGHT ) );
+			IgniteExplosion( ubAttackerID, CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, TANK_SHELL, (INT8)( sZPos >= WALL_HEIGHT ) );
 			//FreeUpAttacker( (UINT8) ubAttackerID );
 
 			// Moved here to keep ABC >0 as long as possible

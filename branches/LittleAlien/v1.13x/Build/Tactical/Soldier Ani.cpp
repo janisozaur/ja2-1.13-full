@@ -257,7 +257,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				{
 					INT16		sXPos, sYPos;
 
-					//usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( pSoldier->bDirection ) );
+					//usNewGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)DirectionInc( pSoldier->bDirection ) );
 					ConvertMapPosToWorldTileCenter( pSoldier->sTempNewGridNo, &sXPos, &sYPos );
 					EVENT_SetSoldierPosition( pSoldier, (FLOAT)sXPos, (FLOAT)sYPos );
 				}
@@ -479,7 +479,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 437:
 
 				// CHANGE DIRECTION AND GET-UP
-				//sGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)(-1 * DirectionInc( pSoldier->bDirection ) ) );
+				//sGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)(-1 * DirectionInc( pSoldier->bDirection ) ) );
 				//ConvertMapPosToWorldTileCenter( pSoldier->sGridNo, &sXPos, &sYPos );
 				//SetSoldierPosition( pSoldier, (FLOAT)sXPos, (FLOAT)sYPos );
 
@@ -689,7 +689,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, pSoldier->bDirection, FALLFORWARD_HITDEATH_STOP ) )
 					{
 						// SECOND GRIDNO
-						// sNewGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+						// sNewGridNo = NewGridNo( sNewGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
 
 						// if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, pSoldier->bDirection, FALLFORWARD_HITDEATH_STOP ) )
 						{

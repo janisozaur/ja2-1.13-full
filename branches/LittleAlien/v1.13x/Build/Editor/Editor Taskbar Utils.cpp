@@ -324,6 +324,7 @@ void DoTaskbar(void)
 			break;
 		case TASK_OPTIONS:
 			UnclickEditorButton( TAB_OPTIONS );
+			KillTextInputMode();
 			break;
 	}
 
@@ -394,6 +395,7 @@ void DoTaskbar(void)
 		case TASK_OPTIONS:
 			ClickEditorButton( TAB_OPTIONS );
 			TerrainTileDrawMode = TERRAIN_TILES_NODRAW;
+			SetupTextInputForOptions();
 			break;
 	}
 }
@@ -892,6 +894,7 @@ void RenderEditorInfo( )
 			else
 				mprintf( iScreenWidthOffset + 260, 2 * iScreenHeightOffset + 445, L"File:  %S, Current Tileset:  %s", 
 					gubFilename, gTilesets[ giCurrentTilesetID ].zName );
+			UpdateOptions();
 			break;
 		case TASK_TERRAIN:
 

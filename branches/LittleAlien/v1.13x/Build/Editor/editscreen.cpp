@@ -2291,8 +2291,10 @@ void CreateNewMap()
 	
 	//NewWorld( );
 	//NewWorld( OLD_WORLD_ROWS, OLD_WORLD_COLS);
+	
+	ExtractAndUpdateOptions();
 
-	NewWorld( 320, 320);
+	NewWorld( iNewMapWorldRows, iNewMapWorldCols );
 	
 	if( gfPendingBasement )
 	{

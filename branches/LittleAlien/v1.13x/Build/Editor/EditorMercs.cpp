@@ -1304,7 +1304,7 @@ void DisplayWayPoints(void)
 	for ( bPoint = 1; bPoint <= pSoldier->bPatrolCnt; bPoint++ )
 	{
 		// Get the next point
-		sGridNo = (INT16)pSoldier->usPatrolGrid[bPoint];
+		sGridNo = pSoldier->usPatrolGrid[bPoint];
 
 		// Can we see it?
 		if ( !GridNoOnVisibleWorldTile( sGridNo ) )
@@ -3458,7 +3458,7 @@ void FindScheduleGridNo( UINT8 ubScheduleData )
 			AssertMsg( 0, "FindScheduleGridNo passed incorrect dataID." );
 			return;
 	}
-	if( iMapIndex != 0xffff )
+	if( iMapIndex != 0xffffffff )
 	{
 		CenterScreenAtMapIndex( iMapIndex );
 	}

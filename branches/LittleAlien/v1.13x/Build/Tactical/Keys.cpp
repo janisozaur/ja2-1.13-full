@@ -641,7 +641,7 @@ void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	{
 		case EXPLOSION:
 			// cause damage as a regular hand grenade
-			IgniteExplosion( NOBODY, CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 25, pSoldier->sGridNo, HAND_GRENADE, 0 );
+			IgniteExplosion( NOBODY, CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), 25, pSoldier->sGridNo, HAND_GRENADE, 0 );
 			break;
  
  		case SIREN:

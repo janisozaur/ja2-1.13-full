@@ -3537,7 +3537,7 @@ void AllMercsHaveWalkedOffSector( )
 				
 				// Convert into a gridno again.....
 				GetFromAbsoluteScreenXYWorldXY( &sWorldX, &sWorldY, sScreenX, sScreenY );
-				sNewGridNo = (INT16)GETWORLDINDEXFROMWORLDCOORDS( sWorldY, sWorldX );
+				sNewGridNo = GETWORLDINDEXFROMWORLDCOORDS( sWorldY, sWorldX );
 				
 				// Save this gridNo....
 				pSoldier->sPendingActionData2				= sNewGridNo;
@@ -3681,7 +3681,7 @@ void SetupTacticalTraversalInformation()
 			
 			// Convert into a gridno again.....
 			GetFromAbsoluteScreenXYWorldXY( (INT32 *)&sWorldX, (INT32 *)&sWorldY, sScreenX, sScreenY );
-			sNewGridNo = (INT16)GETWORLDINDEXFROMWORLDCOORDS( sWorldY, sWorldX );
+			sNewGridNo = GETWORLDINDEXFROMWORLDCOORDS( sWorldY, sWorldX );
 			
 			// Save this gridNo....
 			pSoldier->sPendingActionData2				= sNewGridNo;

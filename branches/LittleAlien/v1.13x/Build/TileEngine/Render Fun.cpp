@@ -55,7 +55,7 @@ void SetTileRangeRoomNum( SGPRect *pSelectRegion, UINT8 ubRoomNum )
 	{
 		for ( cnt2 = pSelectRegion->iLeft; cnt2 <= pSelectRegion->iRight; cnt2++ )
 		{
-			gubWorldRoomInfo[  (INT16)MAPROWCOLTOPOS( cnt1, cnt2 ) ] = ubRoomNum;
+			gubWorldRoomInfo[ MAPROWCOLTOPOS( cnt1, cnt2 ) ] = ubRoomNum;
 		}
 	}
 

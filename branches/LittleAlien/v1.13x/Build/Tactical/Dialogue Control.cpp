@@ -887,7 +887,7 @@ void HandleDialogue( )
 			gTacticalStatus.fLockItemLocators = FALSE;
 
 			// Slide to location!
-			SlideToLocation( 0,  (UINT16)QItem->uiSpecialEventData );
+			SlideToLocation( 0,  QItem->uiSpecialEventData );
 
 			gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
 			gubCurrentTalkingID   = QItem->ubCharacterNum;

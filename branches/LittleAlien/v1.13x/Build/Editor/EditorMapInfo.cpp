@@ -65,6 +65,42 @@ SGPPaletteEntry	gEditorLightColor;
 
 BOOLEAN gfEditorForceShadeTableRebuild = FALSE;
 
+INT32 iNewMapWorldRows = 160;
+INT32 iNewMapWorldCols = 160;
+
+void SetupTextInputForOptions()
+{
+	CHAR16 str[10];
+	
+	InitTextInputModeWithScheme( DEFAULT_SCHEME );
+
+	AddUserInputField( NULL );  //just so we can use short cut keys while not typing.
+	
+	swprintf( str, L"%d", 160 );
+	AddTextInputField( iScreenWidthOffset, 2 * iScreenHeightOffset + 394, 35, 18, MSYS_PRIORITY_NORMAL, str, 5, INPUTTYPE_NUMERICSTRICT );
+	swprintf( str, L"%d", 160 );
+	AddTextInputField( iScreenWidthOffset, 2 * iScreenHeightOffset + 414, 35, 18, MSYS_PRIORITY_NORMAL, str, 5, INPUTTYPE_NUMERICSTRICT );	
+}
+
+void UpdateOptions()
+{
+	SetFont( FONT10ARIAL );
+	SetFontShadow( FONT_NEARBLACK );
+
+	SetFontForeground( FONT_YELLOW );
+	mprintf( iScreenWidthOffset + 38, 2 * iScreenHeightOffset + 399, L"Rows");
+	SetFontForeground( FONT_YELLOW );
+	mprintf( iScreenWidthOffset + 38, 2 * iScreenHeightOffset + 419, L"Cols");
+
+	SetFontForeground( FONT_RED );
+}
+
+void ExtractAndUpdateOptions()
+{
+	iNewMapWorldRows = max( min( GetNumericStrictValueFromField( 1 ), 46000 ), 20 );
+	iNewMapWorldCols = max( min( GetNumericStrictValueFromField( 2 ), 46000 ), 20 );
+}
+
 void SetupTextInputForMapInfo()
 {
 	CHAR16 str[10];
@@ -238,7 +274,7 @@ void ExtractAndUpdateMapInfo()
 		gExitGrid.ubGotoSectorY = (UINT8)max( min( gExitGrid.ubGotoSectorY, 16 ), 1 );
 	}
 	gExitGrid.ubGotoSectorZ    = (UINT8)max( min( GetNumericStrictValueFromField( 8 ), 3 ), 0 );
-	gExitGrid.usGridNo					 = (UINT16)max( min( GetNumericStrictValueFromField( 9 ), 25600 ), 0 );
+	gExitGrid.usGridNo					 = max( min( GetNumericStrictValueFromField( 9 ), 25600 ), 0 );
 
 	UpdateMapInfoFields();
 }

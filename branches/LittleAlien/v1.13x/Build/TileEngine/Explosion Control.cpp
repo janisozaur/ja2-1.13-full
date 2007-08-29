@@ -2059,7 +2059,7 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 			STRUCTURE * pStructure;
 
 			// Check for roof here....
-			pStructure = FindStructure( (INT16)uiNewSpot, STRUCTURE_ROOF );
+			pStructure = FindStructure( uiNewSpot, STRUCTURE_ROOF );
 
 			if ( pStructure == NULL )
 			{
@@ -2134,7 +2134,7 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 
 				if ( pBlockingStructure != NULL )
 				{
-					WindowHit( (INT16)uiNewSpot, pBlockingStructure->usStructureID, fBlowWindowSouth, TRUE );
+					WindowHit( uiNewSpot, pBlockingStructure->usStructureID, fBlowWindowSouth, TRUE );
 				}
 			}
 
@@ -2295,7 +2295,7 @@ void SpreadEffect( INT32 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 		while( cnt <= uiTempRange) // end of range loop
 		{
 			// move one tile in direction
-			uiNewSpot = NewGridNo( (INT16)uiTempSpot, DirectionInc( ubDir ) );
+			uiNewSpot = NewGridNo( uiTempSpot, DirectionInc( ubDir ) );
 
 			// see if this was a different spot & if we should be able to reach
 			// this spot
@@ -2343,7 +2343,7 @@ void SpreadEffect( INT32 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 					while( branchCnt <= ubBranchRange) // end of range loop
 					{
 						ubKeepGoing   = TRUE;
-						uiNewSpot = NewGridNo( (INT16)uiBranchSpot, DirectionInc(ubBranchDir));
+						uiNewSpot = NewGridNo( uiBranchSpot, DirectionInc(ubBranchDir));
 
 						if (uiNewSpot != uiBranchSpot)
 						{

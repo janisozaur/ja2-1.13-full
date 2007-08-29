@@ -816,9 +816,9 @@ void PasteHigherTexture( INT32 iMapIndex, UINT32 fNewType )
 //
 BOOLEAN PasteHigherTextureFromRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
+	INT32  sTop, sBottom;
+	INT32  sLeft, sRight;
+	INT32  cnt1, cnt2;
 	INT32				iNewIndex;
 	INT32				iXPos,iYPos;
 	
@@ -831,17 +831,17 @@ BOOLEAN PasteHigherTextureFromRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 u
 	iXPos = (iMapIndex % WORLD_COLS);
 	iYPos = (iMapIndex - iXPos) / WORLD_COLS;
 
-	if ( (iXPos + (INT32)sLeft) < 0 )
-		sLeft = (INT16)(-iXPos);
+	if ( (iXPos + sLeft) < 0 )
+		sLeft = (-iXPos);
 
-	if ( (iXPos + (INT32)sRight) >= WORLD_COLS )
-		sRight = (INT16)(WORLD_COLS - iXPos - 1);
+	if ( (iXPos + sRight) >= WORLD_COLS )
+		sRight = (WORLD_COLS - iXPos - 1);
 
-	if ( (iYPos + (INT32)sTop) >= WORLD_ROWS )
-		sTop = (INT16)(WORLD_ROWS - iYPos - 1);
+	if ( (iYPos + sTop) >= WORLD_ROWS )
+		sTop = (WORLD_ROWS - iYPos - 1);
 
-	if ( (iYPos + (INT32)sBottom) < 0 )
-		sBottom = (INT16)(-iYPos);
+	if ( (iYPos + sBottom) < 0 )
+		sBottom = (-iYPos);
 
 	if ( iMapIndex >= 0x80000000 )
 		return (FALSE);
@@ -912,14 +912,14 @@ BOOLEAN PasteExistingTexture( INT32 iMapIndex, UINT16 usIndex )
 //
 BOOLEAN PasteExistingTextureFromRadius( INT32 iMapIndex, UINT16 usIndex, UINT8 ubRadius )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT32				iNewIndex;
-	INT32				leftmost;
+	INT32 sTop, sBottom;
+	INT32 sLeft, sRight;
+	INT32 cnt1, cnt2;
+	INT32 iNewIndex;
+	INT32 leftmost;
 	
 	// Determine start end end indicies and num rows
-	sTop		= ubRadius;
+	sTop	= ubRadius;
 	sBottom = -ubRadius;
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
@@ -958,9 +958,9 @@ BOOLEAN PasteExistingTextureFromRadius( INT32 iMapIndex, UINT16 usIndex, UINT8 u
 BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace )
 {
 	UINT16				usTempIndex;
-	INT16					sTop, sBottom;
-	INT16					sLeft, sRight;
-	INT16					cnt1, cnt2;
+	INT32					sTop, sBottom;
+	INT32					sLeft, sRight;
+	INT32					cnt1, cnt2;
 	INT32				  iNewIndex;
 	BOOLEAN				fDoPaste = FALSE;
 	INT32					leftmost;
@@ -971,7 +971,7 @@ BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ub
 	UINT16				NewTile; //,Dummy;
 
 	// Determine start end end indicies and num rows
-	sTop		= ubRadius;
+	sTop	= ubRadius;
 	sBottom = -ubRadius;
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
@@ -1091,14 +1091,14 @@ void PasteTextureEx( INT32 sGridNo, UINT16 usType )
 
 void PasteTextureFromRadiusEx( INT32 sGridNo, UINT16 usType, UINT8 ubRadius )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT32				iNewIndex;
-	INT32				leftmost;
+	INT32 sTop, sBottom;
+	INT32 sLeft, sRight;
+	INT32 cnt1, cnt2;
+	INT32 iNewIndex;
+	INT32 leftmost;
 	
 	// Determine start end end indicies and num rows
-	sTop		= ubRadius;
+	sTop	= ubRadius;
 	sBottom = -ubRadius;
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;

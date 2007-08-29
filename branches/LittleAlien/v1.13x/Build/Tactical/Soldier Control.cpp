@@ -4825,7 +4825,7 @@ void SoldierGotHitExplosion( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 
 			case 8:
 				// 4 of 10 - fall backward (if possible) either forward
 				// Check behind us!
-				sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( gOppositeDirection[ bDirection ] ) );
+				sNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( gOppositeDirection[ bDirection ] ) );
 				if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, gOppositeDirection[ bDirection ], FLYBACK_HIT ) )
 				{
 					EVENT_SetSoldierDirection( pSoldier, (INT8)bDirection );
@@ -5062,7 +5062,7 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, INT32 sDestGridN
 				// If we have reach the max, go back one sFinalDest....
 				if ( pSoldier->usPathDataSize == MAX_PATH_LIST_SIZE )
 				{
-					//pSoldier->sFinalDestination = NewGridNo( (UINT16)pSoldier->sFinalDestination, DirectionInc( gOppositeDirection[ ubPathingMaxDirection ] ) );
+					//pSoldier->sFinalDestination = NewGridNo( pSoldier->sFinalDestination, DirectionInc( gOppositeDirection[ ubPathingMaxDirection ] ) );
 				}
 				else
 				{
@@ -7034,7 +7034,7 @@ void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier )
 		if ( EnoughPoints( pSoldier, GetAPsToClimbRoof( pSoldier, FALSE ), 0, TRUE ) )
 		{
 			//Kaiden: Helps if we look where we are going before we try to climb on top of someone
-			ubWhoIsThere = WhoIsThere2( NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc(bNewDirection ) ), 1 );
+			ubWhoIsThere = WhoIsThere2( NewGridNo( pSoldier->sGridNo, (UINT16)DirectionInc(bNewDirection ) ), 1 );
 			if ( ubWhoIsThere != NOBODY && ubWhoIsThere != pSoldier->ubID )
 			{
 				return;
@@ -8300,7 +8300,7 @@ void BeginSoldierClimbDownRoof( SOLDIERTYPE *pSoldier )
 		if ( EnoughPoints( pSoldier, GetAPsToClimbRoof( pSoldier, TRUE ), 0, TRUE ) )
 		{
 			//Kaiden: Helps if we look where we are going before we try to climb on top of someone
-			ubWhoIsThere = WhoIsThere2( NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc(bNewDirection ) ), 0 );
+			ubWhoIsThere = WhoIsThere2( NewGridNo( pSoldier->sGridNo, (UINT16)DirectionInc(bNewDirection ) ), 0 );
 			if ( ubWhoIsThere != NOBODY && ubWhoIsThere != pSoldier->ubID )
 			{
 				return;
@@ -8352,7 +8352,7 @@ SetUIBusy( pSoldier->ubID );
 
 
 
-pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc(bNewDirection ) );
+pSoldier->sTempNewGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)DirectionInc(bNewDirection ) );
 
 bNewDirection = gTwoCDirection[ bNewDirection ];
 
@@ -11202,7 +11202,7 @@ void PickPickupAnimation( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT32 sGridNo
 				{
 					//#if 0
 					// Get direction to face....
-					if ( ( pStructure = FindStructure( (INT16)sGridNo, ( STRUCTURE_HASITEMONTOP | STRUCTURE_OPENABLE ) ) ) != NULL )
+					if ( ( pStructure = FindStructure( sGridNo, ( STRUCTURE_HASITEMONTOP | STRUCTURE_OPENABLE ) ) ) != NULL )
 					{
 						fDoNormalPickup = FALSE;
 
@@ -11522,7 +11522,7 @@ void ChangeToFallbackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection )
 
 	// Get dest gridno, convert to center coords
 	usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( gOppositeDirection[ bDirection ] ) );
-	//usNewGridNo = NewGridNo( (UINT16)usNewGridNo, (UINT16)(-1 * DirectionInc( bDirection ) ) );
+	//usNewGridNo = NewGridNo( usNewGridNo, (UINT16)(-1 * DirectionInc( bDirection ) ) );
 
 	// Remove any previous actions
 	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;

@@ -812,7 +812,7 @@ void DoDive(  )
 				}
 
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,"DoDive: Fire bullets");
-				if ( GridNoOnVisibleWorldTile( (INT16)( GETWORLDINDEXFROMWORLDCOORDS( sStrafeY, sStrafeX ) ) ) )
+				if ( GridNoOnVisibleWorldTile( GETWORLDINDEXFROMWORLDCOORDS( sStrafeY, sStrafeX ) ) )
 				{
 					//if ( gsNotLocatedYet && !( gTacticalStatus.uiFlags & INCOMBAT ) )
 				//	{
@@ -853,7 +853,7 @@ void DoDive(  )
 				// Find delta Movement for Y pos
 				sStrafeY = (INT16)( sY + dDeltaYPos );
 
-				if ( GridNoOnVisibleWorldTile( (INT16)( GETWORLDINDEXFROMWORLDCOORDS( sStrafeY, sStrafeX ) ) ) )
+				if ( GridNoOnVisibleWorldTile( GETWORLDINDEXFROMWORLDCOORDS( sStrafeY, sStrafeX ) ) )
 				{
 					//if ( ( gTacticalStatus.uiFlags & INCOMBAT ) )
 					{
@@ -977,7 +977,7 @@ void DoBombing(  )
 					dDeltaYPos = BOMB_DIST * (FLOAT)cos( dAngle );
 					sStrafeY = (INT16)( gsDiveY + dDeltaYPos );
 
-					if ( GridNoOnVisibleWorldTile( (INT16)( GETWORLDINDEXFROMWORLDCOORDS( sStrafeY, sStrafeX ) ) ) )
+					if ( GridNoOnVisibleWorldTile( GETWORLDINDEXFROMWORLDCOORDS( sStrafeY, sStrafeX ) ) )
 					{
 						//if ( gsNotLocatedYet && !( gTacticalStatus.uiFlags & INCOMBAT ) )
 						//{
@@ -996,7 +996,7 @@ void DoBombing(  )
 						}
 
 						// Pick random gridno....
-						sBombGridNo = PickRandomLocationAtMinSpacesAway( (INT16)( GETWORLDINDEXFROMWORLDCOORDS( sStrafeY, sStrafeX ) ) , 40, 40 );
+						sBombGridNo = PickRandomLocationAtMinSpacesAway( GETWORLDINDEXFROMWORLDCOORDS( sStrafeY, sStrafeX ), 40, 40 );
 
 						if ( ( gTacticalStatus.uiFlags & INCOMBAT ) )
 						{

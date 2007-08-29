@@ -4252,12 +4252,6 @@ extern INT32 gsLastCoverGridNo;
 extern INT32 gsLastSoldierGridNo;
 extern INT32 gsLastVisibleToSoldierGridNo;
 
-
-extern TRAILCELLTYPE * trailCost;
-extern UINT8 * trailCostUsed;
-
-
-
 void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 {
 	INT32 i, j;
