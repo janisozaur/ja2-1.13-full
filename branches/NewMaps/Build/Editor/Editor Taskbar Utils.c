@@ -676,6 +676,14 @@ void RenderMapEntryPointsAndLights()
 	{
 		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE )
 		{
+			// Check for light out of bounds.  This actually happens in Drassen.
+			if (LightSprites[ i ].iY < 0 || LightSprites[ i ].iY > WORLD_ROWS ||
+				LightSprites[ i ].iX < 0 || LightSprites[ i ].iX > WORLD_COLS)
+			{
+				LightSprites[ i ].uiFlags &= (~LIGHT_SPR_ACTIVE);
+				continue;
+			}
+
 			sGridNo = LightSprites[ i ].iY * WORLD_COLS + LightSprites[ i ].iX;
 			GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
 			if( sScreenY >= -50 && sScreenY < 300 && sScreenX >= -40  && sScreenX < 640 )
@@ -862,15 +870,15 @@ void RenderEditorInfo( )
 {
 	wchar_t					FPSText[ 50 ];
 	static INT32		iSpewWarning = 0;
-	INT32						iMapIndex;
+	INT32				iMapIndexD;
 
 	SetFont( FONT12POINT1 );
 	SetFontForeground( FONT_BLACK );
 	SetFontBackground( FONT_BLACK );
 
 	//Display the mapindex position
-	if( GetMouseMapPos( &iMapIndex ) )
-		swprintf( FPSText, L"   (%d)   ", iMapIndex );
+	if( GetMouseMapPos( &iMapIndexD ) )
+		swprintf( FPSText, L"   (%d)   ", iMapIndexD );
 	else
 		swprintf( FPSText, L"          " );
 	mprintfEditor( (UINT16)(50-StringPixLength( FPSText, FONT12POINT1 )/2), 463, FPSText );

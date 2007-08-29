@@ -80,8 +80,8 @@ ITEM_POOL *gpItemPool = NULL;
 void BuildItemPoolList()
 {
 	ITEM_POOL *temp;
-	IPListNode *tail;
-	UINT16 i;
+	IPListNode *tail = NULL;
+	INT32 i;
 	KillItemPoolList();
 	for( i = 0; i < WORLD_MAX; i++ )
 	{

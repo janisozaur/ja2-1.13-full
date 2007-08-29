@@ -199,7 +199,7 @@ BOOLEAN fSelectionWindow = FALSE;
 BOOLEAN gfRealGunNut = TRUE;
 
 INT16 sGridX, sGridY;
-UINT32 iMapIndex;
+INT32 iMapIndex;
 BOOLEAN fNewMap = FALSE;
 
 INT32 iPrevDrawMode = DRAW_MODE_NOTHING;
@@ -564,7 +564,7 @@ BOOLEAN EditModeShutdown( void )
 //
 void SetBackgroundTexture( )
 {
-	int						cnt;
+	INT32				cnt;
 	UINT16				usIndex, Dummy;
 
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
@@ -2289,7 +2289,8 @@ void CreateNewMap()
 	LightReset();
 
 //	NewWorld( );
-	NewWorld( OLD_WORLD_ROWS, OLD_WORLD_COLS);
+	//NewWorld( OLD_WORLD_ROWS, OLD_WORLD_COLS);
+	NewWorld( 320, 320);
 	if( gfPendingBasement )
 	{
 		INT32 i;
@@ -2810,9 +2811,9 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 	SOLDIERTYPE *pSoldier;
 	BOOLEAN fSoldierLight;
 	BOOLEAN fRemovedLight;
-	INT32 iMapIndex;
-	UINT32 uiLastLightType;
-	UINT8	*pLastLightName;
+	INT32 iMapIndex = 0;
+	UINT32 uiLastLightType = 0;
+	UINT8	*pLastLightName = NULL;
 
 	fRemovedLight = FALSE;
 

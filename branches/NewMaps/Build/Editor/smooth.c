@@ -414,7 +414,7 @@ void SmoothExitGrid(INT32 GridNo, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 
 void SmoothTerrainWorld( UINT32 uiCheckType )
 {
-	 int						cnt;
+	 INT32					cnt;
 	 UINT16					usIndex;
 	 UINT16					NewTile;
 	 // Smooth out entire world surrounding tiles
@@ -436,7 +436,7 @@ void SmoothTerrainWorld( UINT32 uiCheckType )
 
 void SmoothAllTerrainWorld( void )
 {
-	int						cnt;
+	INT32				cnt;
 	UINT16				usIndex;
 	UINT16				NewTile;
 	UINT32				uiCheckType;
@@ -459,7 +459,7 @@ void SmoothAllTerrainWorld( void )
 	}
 }
 
-void SmoothTerrainRadius( UINT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, BOOLEAN fForceSmooth )
+void SmoothTerrainRadius( INT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, BOOLEAN fForceSmooth )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -501,7 +501,7 @@ void SmoothTerrainRadius( UINT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, 
 	}
 }
 
-void SmoothAllTerrainTypeRadius( UINT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForceSmooth )
+void SmoothAllTerrainTypeRadius( INT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForceSmooth )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;

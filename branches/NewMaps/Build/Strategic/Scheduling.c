@@ -367,6 +367,7 @@ void LoadSchedules( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		{
 			int i;
 			_OLD_SCHEDULENODE oldtemp;
+			memset( &oldtemp, 0, sizeof( _OLD_SCHEDULENODE ) );
 			LOADDATA( &oldtemp, *hBuffer, sizeof( _OLD_SCHEDULENODE ) );
 			for(i=0; i<MAX_SCHEDULE_ACTIONS; i++)
 			{
@@ -397,7 +398,7 @@ void LoadSchedules( INT8 **hBuffer, FLOAT dMajorMapVersion )
 			pSchedule = gpScheduleList;
 		}
 		pSchedule->ubScheduleID = gubScheduleID;
-		pSchedule->ubSoldierID = NO_SOLDIER;
+		pSchedule->ubSoldierID = NOBODY;
 		pSchedule->next = NULL;
 		gubScheduleID++;
 		ubNum--;
@@ -457,7 +458,7 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 		// should be unnecessary here, then we can toast reconnect schedule
 		/*
 		pSchedule->ubScheduleID = gubScheduleID;
-		pSchedule->ubSoldierID = NO_SOLDIER;
+		pSchedule->ubSoldierID = NOBODY;
 		*/
 
 		pSchedule->next = NULL;

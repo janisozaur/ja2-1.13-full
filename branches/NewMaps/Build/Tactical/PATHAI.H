@@ -28,6 +28,7 @@ UINT8 InternalDoorTravelCost( SOLDIERTYPE * pSoldier, INT32 iGridNo, UINT8 ubMov
 
 INT16 RecalculatePathCost( SOLDIERTYPE *pSoldier, UINT16 usMovementMode );
 
+#define TRAILCELLTYPE UINT16 //Lalien: moved form pathai.cpp
 // Exporting these global variables
 extern UINT32 guiPathingData[256];
 extern UINT8 gubNPCAPBudget;

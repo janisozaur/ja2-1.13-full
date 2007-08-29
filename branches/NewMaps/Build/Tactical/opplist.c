@@ -1822,7 +1822,7 @@ void ManSeesMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, INT32 sOppGridNo,
  BOOLEAN fNotAddedToList = TRUE;
  INT8 bOldOppList = pSoldier->bOppList[pOpponent->ubID];
 
- if (pSoldier->ubID >= NOBODY)
+ if (pSoldier->ubID >= TOTAL_SOLDIERS)
   {
 	 /*
 #ifdef BETAVERSION
@@ -1832,7 +1832,7 @@ void ManSeesMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, INT32 sOppGridNo,
    return;
   }
 
- if (pOpponent->ubID >= NOBODY)
+ if (pOpponent->ubID >= TOTAL_SOLDIERS)
   {
 	 /*
 #ifdef BETAVERSION
@@ -4857,7 +4857,7 @@ void OurNoise( UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 	// see if anyone actually hears this noise, sees ubNoiseMaker, etc.
 	ProcessNoise(ubNoiseMaker, sGridNo, bLevel, ubTerrType,	ubVolume,	ubNoiseType);
 
-	if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && (ubNoiseMaker < NOBODY) && !gfDelayResolvingBestSightingDueToDoor )
+	if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && (ubNoiseMaker < TOTAL_SOLDIERS) && !gfDelayResolvingBestSightingDueToDoor )
 	{
 		pSoldier = MercPtrs[ubNoiseMaker];
 
@@ -4898,7 +4898,7 @@ void TheirNoise(UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrType
 	ProcessNoise(ubNoiseMaker,sGridNo,bLevel,ubTerrType,ubVolume,ubNoiseType);
 
 	// if noiseMaker is SOMEBODY
-	if (ubNoiseMaker < NOBODY)
+	if (ubNoiseMaker < TOTAL_SOLDIERS)
 	{
 		/*
 		pSoldier = MercPtrs[ubNoiseMaker];
@@ -4942,7 +4942,7 @@ void ProcessNoise(UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrTy
 	INT8 bCheckTerrain = FALSE;
 	UINT8 ubSourceTerrType, ubSource;
 	INT8 bTellPlayer = FALSE, bHeard, bSeen;
-	UINT8 ubHeardLoudestBy, ubNoiseDir, ubLoudestNoiseDir;
+	UINT8 ubHeardLoudestBy = NOBODY, ubNoiseDir = 0xff, ubLoudestNoiseDir = 0xff;
 
 
 #ifdef RECORDOPPLIST
@@ -4961,7 +4961,7 @@ void ProcessNoise(UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrTy
 	// dead noiseMaker is only used here to decide WHICH soldiers HearNoise().
 
 	// if noise is made by a person, AND it's not noise from an explosion
-	if ((ubNoiseMaker < NOBODY) && (ubNoiseType != NOISE_EXPLOSION))
+	if ((ubNoiseMaker < TOTAL_SOLDIERS) && (ubNoiseType != NOISE_EXPLOSION))
 	{
 		// inactive/not in sector/dead soldiers, shouldn't be making noise!
 		if (!Menptr[ubNoiseMaker].bActive || !Menptr[ubNoiseMaker].bInSector ||
@@ -5039,7 +5039,7 @@ void ProcessNoise(UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrTy
 		}
 
 		// if a the noise maker is a person, not just NOBODY
-		if (ubNoiseMaker < NOBODY)
+		if (ubNoiseMaker < TOTAL_SOLDIERS)
 		{
 			// if this team is the same TEAM as the noise maker's
 			// (for now, assume we will report noises by unknown source on same SIDE)
@@ -5106,7 +5106,7 @@ void ProcessNoise(UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrTy
 			}
 
 			// if noise was made by a person
-			if (ubNoiseMaker < NOBODY)
+			if (ubNoiseMaker < TOTAL_SOLDIERS)
 			{
 				// if noisemaker has been *PUBLICLY* SEEN OR HEARD during THIS TURN
 				if ((gbPublicOpplist[bTeam][ubNoiseMaker] == SEEN_CURRENTLY) || // seen now
@@ -5160,7 +5160,7 @@ void ProcessNoise(UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrTy
 			}
 
 			// if a the noise maker is a person, not just NOBODY
-			if (ubNoiseMaker < NOBODY)
+			if (ubNoiseMaker < TOTAL_SOLDIERS)
 			{
 				// if this listener can see this noise maker
 				if (pSoldier->bOppList[ubNoiseMaker] == SEEN_CURRENTLY)
@@ -5309,7 +5309,7 @@ void ProcessNoise(UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrTy
 		// if the listening team is human-controlled AND
 		// the noise's source is another soldier
 		// (computer-controlled teams don't radio or automatically report NOISE)
-		if (gTacticalStatus.Team[bTeam].bHuman && (ubSource < NOBODY))
+		if (gTacticalStatus.Team[bTeam].bHuman && (ubSource < TOTAL_SOLDIERS))
 		{
 			// if ubNoiseMaker was seen by at least one member of this team
 			if (bSeen)
@@ -5600,7 +5600,7 @@ void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bL
 	}
 
 	// if noise is made by a person
-	if (ubNoiseMaker < NOBODY)
+	if (ubNoiseMaker < TOTAL_SOLDIERS)
 	{
 		bOldOpplist = pSoldier->bOppList[ubNoiseMaker];
 

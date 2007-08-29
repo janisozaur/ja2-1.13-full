@@ -1854,7 +1854,7 @@ void CalculateLaunchItemBasicParams( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, I
 		if ( ubLevel == 1 && !fThroughIntermediateGridNo )
 		{
 			// Is there a guy here...?
-			if ( WhoIsThere2( sGridNo, ubLevel ) != NO_SOLDIER )
+			if ( WhoIsThere2( sGridNo, ubLevel ) != NOBODY )
 			{
 				dMagForce		=	(float)( dMagForce * 0.85 );
 
@@ -2507,7 +2507,7 @@ BOOLEAN	LoadPhysicsTableFromSavedGameFile( HWFILE hFile )
 INT32 RandomGridFromRadius( INT32 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius )
 {
 	INT16		sX, sY;
-	INT32 sGridNo;
+	INT32		sGridNo = NOWHERE;
 	INT32					leftmost;
 	BOOLEAN	fFound = FALSE;
 	UINT32		cnt = 0;

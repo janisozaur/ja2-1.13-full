@@ -31,7 +31,7 @@
 #endif
 
 BOOLEAN PasteHigherTextureFromRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius );
-BOOLEAN PasteExistingTexture( UINT32 iMapIndex, UINT16 usIndex );
+BOOLEAN PasteExistingTexture( INT32 iMapIndex, UINT16 usIndex );
 BOOLEAN PasteExistingTextureFromRadius( INT32 iMapIndex, UINT16 usIndex, UINT8 ubRadius );
 BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace );
 
@@ -56,7 +56,7 @@ UINT32			gDoCliffs = NO_CLIFFS;
 //
 //	Performs ersing operation when the DEL key is hit in the editor
 //
-void QuickEraseMapTile( UINT32 iMapIndex )
+void QuickEraseMapTile( INT32 iMapIndex )
 {
 	if ( iMapIndex >= 0x80000000 )
 		return;
@@ -71,7 +71,7 @@ void QuickEraseMapTile( UINT32 iMapIndex )
 //
 //	Common delete function for both QuickEraseMapTile and EraseMapTile
 //
-void DeleteStuffFromMapTile( UINT32 iMapIndex )
+void DeleteStuffFromMapTile( INT32 iMapIndex )
 {
 	//UINT16		usUseIndex;
 	//UINT16		usType;
@@ -99,7 +99,7 @@ void DeleteStuffFromMapTile( UINT32 iMapIndex )
 //
 //	Generic tile erasing function. Erases things from the world depending on the current drawing mode
 //
-void EraseMapTile( UINT32 iMapIndex )
+void EraseMapTile( INT32 iMapIndex )
 {
 	INT32			iEraseMode;
 	UINT32		uiCheckType;
@@ -221,7 +221,7 @@ void EraseMapTile( UINT32 iMapIndex )
 //	Place some "debris" on the map at the current mouse coordinates. This function is called repeatedly if
 //	the current brush size is larger than 1 tile.
 //
-void PasteDebris( UINT32 iMapIndex )
+void PasteDebris( INT32 iMapIndex )
 {
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
@@ -255,35 +255,35 @@ void PasteDebris( UINT32 iMapIndex )
 }
 
 
-void PasteSingleWall( UINT32 iMapIndex )
+void PasteSingleWall( INT32 iMapIndex )
 {
 	pSelList = SelSingleWall;
 	pNumSelList = &iNumWallsSelected;
 	PasteSingleWallCommon( iMapIndex );
 }
 
-void PasteSingleDoor( UINT32 iMapIndex )
+void PasteSingleDoor( INT32 iMapIndex )
 {
 	pSelList = SelSingleDoor;
 	pNumSelList = &iNumDoorsSelected;
 	PasteSingleWallCommon( iMapIndex );
 }
 
-void PasteSingleWindow( UINT32 iMapIndex )
+void PasteSingleWindow( INT32 iMapIndex )
 {
 	pSelList = SelSingleWindow;
 	pNumSelList = &iNumWindowsSelected;
 	PasteSingleWallCommon( iMapIndex );
 }
 
-void PasteSingleRoof( UINT32 iMapIndex )
+void PasteSingleRoof( INT32 iMapIndex )
 {
 	pSelList = SelSingleRoof;
 	pNumSelList = &iNumRoofsSelected;
 	PasteSingleWallCommon( iMapIndex );
 }
 
-void PasteRoomNumber( UINT32 iMapIndex, UINT8 ubRoomNumber )
+void PasteRoomNumber( INT32 iMapIndex, UINT8 ubRoomNumber )
 {
 	if( gubWorldRoomInfo[ iMapIndex ] != ubRoomNumber )
 	{
@@ -292,7 +292,7 @@ void PasteRoomNumber( UINT32 iMapIndex, UINT8 ubRoomNumber )
 	}
 }
 
-void PasteSingleBrokenWall( UINT32 iMapIndex )
+void PasteSingleBrokenWall( INT32 iMapIndex )
 {
 	UINT16 usIndex, usObjIndex, usTileIndex, usWallOrientation;
 
@@ -311,28 +311,28 @@ void PasteSingleBrokenWall( UINT32 iMapIndex )
 	PasteSingleWallCommon( iMapIndex );
 }
 
-void PasteSingleDecoration( UINT32 iMapIndex )
+void PasteSingleDecoration( INT32 iMapIndex )
 {
 	pSelList = SelSingleDecor;
 	pNumSelList = &iNumDecorSelected;
 	PasteSingleWallCommon( iMapIndex );
 }
 
-void PasteSingleDecal( UINT32 iMapIndex )
+void PasteSingleDecal( INT32 iMapIndex )
 {
 	pSelList = SelSingleDecal;
 	pNumSelList = &iNumDecalsSelected;
 	PasteSingleWallCommon( iMapIndex );
 }
 
-void PasteSingleFloor( UINT32 iMapIndex )
+void PasteSingleFloor( INT32 iMapIndex )
 {
 	pSelList = SelSingleFloor;
 	pNumSelList = &iNumFloorsSelected;
 	PasteSingleWallCommon( iMapIndex );
 }
 
-void PasteSingleToilet( UINT32 iMapIndex )
+void PasteSingleToilet( INT32 iMapIndex )
 {
 	pSelList = SelSingleToilet;
 	pNumSelList = &iNumToiletsSelected;
@@ -345,7 +345,7 @@ void PasteSingleToilet( UINT32 iMapIndex )
 //	Common paste routine for PasteSingleWall, PasteSingleDoor, PasteSingleDecoration, and
 //	PasteSingleDecor (above). 
 //
-void PasteSingleWallCommon( UINT32 iMapIndex )
+void PasteSingleWallCommon( INT32 iMapIndex )
 {
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
@@ -498,7 +498,7 @@ UINT16 GetRandomTypeByRange( UINT16 usRangeStart, UINT16 usRangeEnd )
 //	
 //	Puts a structure (trees, trucks, etc.) into the world
 //
-void PasteStructure( UINT32 iMapIndex )
+void PasteStructure( INT32 iMapIndex )
 {
 	pSelList = SelOStructs;
 	pNumSelList = &iNumOStructsSelected;
@@ -511,7 +511,7 @@ void PasteStructure( UINT32 iMapIndex )
 //	
 //	Puts a structure (trees, trucks, etc.) into the world
 //
-void PasteStructure1( UINT32 iMapIndex )
+void PasteStructure1( INT32 iMapIndex )
 {
 	pSelList = SelOStructs1;
 	pNumSelList = &iNumOStructs1Selected;
@@ -524,7 +524,7 @@ void PasteStructure1( UINT32 iMapIndex )
 //	
 //	Puts a structure (trees, trucks, etc.) into the world
 //
-void PasteStructure2( UINT32 iMapIndex )
+void PasteStructure2( INT32 iMapIndex )
 {
 	pSelList = SelOStructs2;
 	pNumSelList = &iNumOStructs2Selected;
@@ -539,7 +539,7 @@ void PasteStructure2( UINT32 iMapIndex )
 //	This is the main (common) structure pasting function. The above three wrappers are only required because they
 //	each use different selection lists. Other than that, they are COMPLETELY identical.
 //
-void PasteStructureCommon( UINT32 iMapIndex )
+void PasteStructureCommon( INT32 iMapIndex )
 {
 	BOOLEAN				fDoPaste = FALSE;
 	UINT32				fHeadType;
@@ -600,7 +600,7 @@ void PasteStructureCommon( UINT32 iMapIndex )
 //
 //	Places a river bank or cliff into the world
 //
-void PasteBanks( UINT32 iMapIndex, UINT16 usStructIndex , BOOLEAN fReplace)
+void PasteBanks( INT32 iMapIndex, UINT16 usStructIndex , BOOLEAN fReplace)
 {
 	BOOLEAN				fDoPaste = FALSE;
 	UINT16				usUseIndex;
@@ -658,7 +658,7 @@ void PasteBanks( UINT32 iMapIndex, UINT16 usStructIndex , BOOLEAN fReplace)
 	}
 }
 
-void PasteRoads( UINT32 iMapIndex )
+void PasteRoads( INT32 iMapIndex )
 {
 	UINT16				usUseIndex;
 		
@@ -676,7 +676,7 @@ void PasteRoads( UINT32 iMapIndex )
 //	Puts a ground texture in the world. Ground textures are then "smoothed" in order to blend the edges with one
 //	another. The current drawing brush also affects this function.
 //
-void PasteTexture( UINT32 iMapIndex )
+void PasteTexture( INT32 iMapIndex )
 {
 	ChooseWeightedTerrainTile(); //Kris
 	PasteTextureCommon( iMapIndex );
@@ -689,7 +689,7 @@ void PasteTexture( UINT32 iMapIndex )
 //	one tile, then the above function will call this one and indicate that they should all be placed into the undo
 //	stack as the same undo command.
 //
-void PasteTextureCommon( UINT32 iMapIndex )
+void PasteTextureCommon( INT32 iMapIndex )
 {
 	 UINT8					ubLastHighLevel;
 	 UINT16					usTileIndex;
@@ -751,7 +751,7 @@ void PasteTextureCommon( UINT32 iMapIndex )
 //	Some ground textures should be placed "above" others. That is, grass needs to be placed "above" sand etc.
 //	This function performs the appropriate actions.
 //
-void PasteHigherTexture( UINT32 iMapIndex, UINT32 fNewType )
+void PasteHigherTexture( INT32 iMapIndex, UINT32 fNewType )
 {
 	 UINT16					NewTile;
 	 UINT8					ubLastHighLevel;
@@ -863,7 +863,7 @@ BOOLEAN PasteHigherTextureFromRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 u
 //---------------------------------------------------------------------------------------------------------------
 //	PasteExistingTexture
 //
-BOOLEAN PasteExistingTexture( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN PasteExistingTexture( INT32 iMapIndex, UINT16 usIndex )
 {
 	UINT32					uiNewType;
 	UINT16					usNewIndex;

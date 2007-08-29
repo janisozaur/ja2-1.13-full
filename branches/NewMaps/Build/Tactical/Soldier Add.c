@@ -50,17 +50,17 @@ INT32 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAni
 //destination was sittable (though it was possible that that location would be trapped.
 INT32 FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT32 sGridNo;
+	INT32		sTop, sBottom;
+	INT32		sLeft, sRight;
+	INT32		cnt1, cnt2;
+	INT32		sGridNo = NOWHERE;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT32		sLowestGridNo=-1;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
+	INT32		sLowestGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
 	SOLDIERTYPE soldier;
-	UINT8 ubSaveNPCAPBudget;
-	UINT8 ubSaveNPCDistLimit;
+	UINT8		ubSaveNPCAPBudget;
+	UINT8		ubSaveNPCDistLimit;
 
 	//Save AI pathing vars.  changing the distlimit restricts how 
 	//far away the pathing will consider.
@@ -152,17 +152,17 @@ INT32 FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 u
 
 INT32 FindGridNoFromSweetSpotThroughPeople( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT32 sGridNo;
+	INT32		sTop, sBottom;
+	INT32		sLeft, sRight;
+	INT32		cnt1, cnt2;
+	INT32		sGridNo = NOWHERE;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT32		sLowestGridNo=-1;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
+	INT32		sLowestGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
 	SOLDIERTYPE soldier;
-	UINT8 ubSaveNPCAPBudget;
-	UINT8 ubSaveNPCDistLimit;
+	UINT8		ubSaveNPCAPBudget;
+	UINT8		ubSaveNPCDistLimit;
 
 	//Save AI pathing vars.  changing the distlimit restricts how 
 	//far away the pathing will consider.
@@ -252,18 +252,18 @@ INT32 FindGridNoFromSweetSpotThroughPeople( SOLDIERTYPE *pSoldier, INT32 sSweetG
 //destination was sittable (though it was possible that that location would be trapped.
 INT32 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2, cnt3;
-	INT32 sGridNo;
+	INT32		sTop, sBottom;
+	INT32		sLeft, sRight;
+	INT32		cnt1, cnt2, cnt3;
+	INT32		sGridNo = NOWHERE;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT32		sLowestGridNo=-1;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
+	INT32		sLowestGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
 	SOLDIERTYPE soldier;
-	UINT8 ubSaveNPCAPBudget;
-	UINT8 ubSaveNPCDistLimit;
-	UINT8	ubBestDirection=0;
+	UINT8		ubSaveNPCAPBudget;
+	UINT8		ubSaveNPCDistLimit;
+	UINT8		ubBestDirection=0;
 
 	//Save AI pathing vars.  changing the distlimit restricts how 
 	//far away the pathing will consider.
@@ -415,18 +415,18 @@ INT32 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAni
 
 INT32 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc, INT8 bGivenDirection )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2, cnt3;
-	INT32 sGridNo;
+	INT32		sTop, sBottom;
+	INT32		sLeft, sRight;
+	INT32		cnt1, cnt2, cnt3;
+	INT32		sGridNo = NOWHERE;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT32		sLowestGridNo=-1;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
+	INT32		sLowestGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
 	SOLDIERTYPE soldier;
-	UINT8 ubSaveNPCAPBudget;
-	UINT8 ubSaveNPCDistLimit;
-	UINT8	ubBestDirection=0;
+	UINT8		ubSaveNPCAPBudget;
+	UINT8		ubSaveNPCDistLimit;
+	UINT8		ubBestDirection=0;
 
 	//Save AI pathing vars.  changing the distlimit restricts how 
 	//far away the pathing will consider.
@@ -590,18 +590,18 @@ INT32 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( SOLDIERTYPE
 
 INT32 FindGridNoFromSweetSpotWithStructDataFromSoldier( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc, SOLDIERTYPE *pSrcSoldier )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2, cnt3;
-	INT32 sGridNo;
+	INT16		sTop, sBottom;
+	INT16		sLeft, sRight;
+	INT16		cnt1, cnt2, cnt3;
+	INT32		sGridNo = NOWHERE;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT32		sLowestGridNo=-1;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
-	UINT8 ubSaveNPCAPBudget;
-	UINT8 ubSaveNPCDistLimit;
-	UINT8	ubBestDirection=0;
-	INT32 sSweetGridNo;
+	INT32		sLowestGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
+	UINT8		ubSaveNPCAPBudget;
+	UINT8		ubSaveNPCDistLimit;
+	UINT8		ubBestDirection=0;
+	INT32		sSweetGridNo = NOWHERE;
 	SOLDIERTYPE soldier;
 	
 	sSweetGridNo = pSrcSoldier->sGridNo;
@@ -746,14 +746,14 @@ INT32 FindGridNoFromSweetSpotWithStructDataFromSoldier( SOLDIERTYPE *pSoldier, U
 
 INT32 FindGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT32 sGridNo;
+	INT16		sTop, sBottom;
+	INT16		sLeft, sRight;
+	INT16		cnt1, cnt2;
+	INT32		sGridNo = NOWHERE;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT32		sLowestGridNo=-1;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
+	INT32		sLowestGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
 
 
 	sTop		= ubRadius;
@@ -814,14 +814,14 @@ INT32 FindGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, INT32 sS
 
 INT32 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection, INT8 ubQuardentDir )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT32 sGridNo;
+	INT16		sTop, sBottom;
+	INT16		sLeft, sRight;
+	INT16		cnt1, cnt2;
+	INT32		sGridNo = NOWHERE;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT32		sLowestGridNo=-1;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
+	INT32		sLowestGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
 
 
 	sTop		= ubRadius;
@@ -889,8 +889,8 @@ INT32 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( SOLDIERTYPE *pSoldier
 BOOLEAN CanSoldierReachGridNoInGivenTileLimit( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT16 sMaxTiles, INT8 bLevel )
 {
 	INT32 iNumTiles;
-	INT32 sActionGridNo;
-	UINT8	ubDirection;
+	INT32 sActionGridNo = NOWHERE;
+	UINT8 ubDirection;
 
 	if ( pSoldier->bLevel != bLevel )
 	{
@@ -925,18 +925,18 @@ BOOLEAN CanSoldierReachGridNoInGivenTileLimit( SOLDIERTYPE *pSoldier, INT32 sGri
 INT32 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
 	INT16		sX, sY;
-	INT32 sGridNo;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
+	INT32		sGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
 	UINT32		cnt = 0;
 	SOLDIERTYPE soldier;
-	UINT8 ubSaveNPCAPBudget;
-	UINT8 ubSaveNPCDistLimit;
-	UINT8	ubBestDirection=0;
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	UINT8	 ubRoomNum;
+	UINT8		ubSaveNPCAPBudget;
+	UINT8		ubSaveNPCDistLimit;
+	UINT8		ubBestDirection=0;
+	INT32		sTop, sBottom;
+	INT32		sLeft, sRight;
+	INT32		cnt1, cnt2;
+	UINT8		ubRoomNum;
 
 	//Save AI pathing vars.  changing the distlimit restricts how 
 	//far away the pathing will consider.
@@ -1028,11 +1028,11 @@ INT32 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, 
 
 INT32 FindRandomGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
-	INT16		sX, sY;
-	INT32 sGridNo;
-	INT32					leftmost;
+	INT16	sX, sY;
+	INT32	sGridNo = NOWHERE;
+	INT32	leftmost;
 	BOOLEAN	fFound = FALSE;
-	UINT32		cnt = 0;
+	UINT32	cnt = 0;
 
 	do
 	{
@@ -1077,10 +1077,10 @@ INT32 FindRandomGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, IN
 
 BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode )
 {
-	UINT8					ubDirection, ubCalculatedDirection;
+	UINT8			ubDirection, ubCalculatedDirection;
 	SOLDIERTYPE		*pSoldier;
-	INT32 sGridNo;
-	INT32					sExitGridNo;
+	INT32			sGridNo = NOWHERE;
+	INT32			sExitGridNo = NOWHERE;
 
 	pSoldier = MercPtrs[ ubID ];
 	
@@ -1227,7 +1227,7 @@ void InternalSoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN
 {
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
-	INT32 sGoodGridNo;
+	INT32	sGoodGridNo = NOWHERE;
 	UINT16	usAnim = SLEEPING;
 
 	if ( !pSoldier->bInSector )
@@ -1273,8 +1273,8 @@ void InternalSoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN
 void SoldierInSectorIncompaciated( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
-	UINT8	ubNewDirection;
-	INT32 sGoodGridNo;
+	UINT8 ubNewDirection;
+	INT32 sGoodGridNo = NOWHERE;
 
 	if ( !pSoldier->bInSector )
 	{
@@ -1309,8 +1309,8 @@ void SoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
-	UINT8	ubNewDirection;
-	INT32 sGoodGridNo;
+	UINT8 ubNewDirection;
+	INT32 sGoodGridNo = NOWHERE;
 
 	if ( !pSoldier->bInSector )
 	{
@@ -1344,8 +1344,8 @@ void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
-	UINT8	ubNewDirection;
-	INT32 sGoodGridNo;
+	UINT8 ubNewDirection;
+	INT32 sGoodGridNo = NOWHERE;
 
 	if ( !pSoldier->bInSector )
 	{
@@ -1379,8 +1379,8 @@ void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
-	UINT8	ubNewDirection;
-	INT32 sGoodGridNo;
+	UINT8 ubNewDirection;
+	INT32 sGoodGridNo = NOWHERE;
 
 	if ( !pSoldier->bInSector )
 	{
@@ -1414,8 +1414,8 @@ extern void EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( SOL
 
 void AddSoldierToSectorGridNo( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode )
 {
-	INT16 sWorldX, sWorldY;
-	INT32 sNewGridNo;
+	INT16	sWorldX, sWorldY;
+	INT32	sNewGridNo = NOWHERE;
 	UINT8	ubNewDirection;
 	UINT8	ubInsertionCode;
 	BOOLEAN fUpdateFinalPosition = TRUE;

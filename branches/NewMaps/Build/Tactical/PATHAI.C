@@ -96,7 +96,7 @@ extern BOOLEAN gfGeneratingMapEdgepoints;
 
 #define VEHICLE
 
-#define TRAILCELLTYPE UINT16
+//#define TRAILCELLTYPE UINT16 //Lalien: moved to pathai.h
 
 // OLD PATHAI STUFF
 /////////////////////////////////////////////////
@@ -155,8 +155,8 @@ static INT32	iSkipListLevelLimit[8] = {0, 4, 16, 64, 256, 1024, 4192, 16384 };
 //#define MAXCOST (255)
 //#define TOTALCOST( pCurrPtr ) (pCurrPtr->usCostSoFar + pCurrPtr->usCostToGo)
 #define TOTALCOST( ptr ) (ptr->usTotalCost)
-#define XLOC(a) (a%MAPWIDTH)
-#define YLOC(a) (a/MAPWIDTH)
+#define XLOC(a) (a%WORLD_COLS)
+#define YLOC(a) (a/WORLD_COLS)
 //#define LEGDISTANCE(a,b) ( abs( XLOC(b)-XLOC(a) ) + abs( YLOC(b)-YLOC(a) ) )
 #define LEGDISTANCE( x1, y1, x2, y2 ) ( abs( x2 - x1 ) + abs( y2 - y1 ) )
 //#define FARTHER(ndx,NDX) ( LEGDISTANCE( ndx->sLocation,sDestination) > LEGDISTANCE(NDX->sLocation,sDestination) )
@@ -419,18 +419,30 @@ static INT32 guiEndPlotGridNo;
 //	-MAPWIDTH-1       //NW
 //};
 
-/*static */INT32 dirDelta[8]=
-{
-		-OLD_WORLD_COLS,        //N
-		1-OLD_WORLD_COLS,       //NE
-		1,                //E
-		1+OLD_WORLD_COLS,       //SE
-		OLD_WORLD_COLS,         //S
-		OLD_WORLD_COLS-1,       //SW
-		-1,               //W
-		-OLD_WORLD_COLS-1       //NW
-};
+///*static */INT32 dirDelta[8]=
+//{
+//		-OLD_WORLD_COLS,        //N
+//		1-OLD_WORLD_COLS,       //NE
+//		1,                //E
+//		1+OLD_WORLD_COLS,       //SE
+//		OLD_WORLD_COLS,         //S
+//		OLD_WORLD_COLS-1,       //SW
+//		-1,               //W
+//		-OLD_WORLD_COLS-1       //NW
+//};
 
+
+INT32 dirDelta[8]=
+{
+		-WORLD_COLS,        //N
+		1-WORLD_COLS,       //NE
+		1,                //E
+		1+WORLD_COLS,       //SE
+		WORLD_COLS,         //S
+		WORLD_COLS-1,       //SW
+		-1,               //W
+		-WORLD_COLS-1       //NW
+};
 
 #define LOOPING_CLOCKWISE 0
 #define LOOPING_COUNTERCLOCKWISE 1
@@ -457,8 +469,8 @@ INT8 RandomSkipListLevel( void )
 BOOLEAN InitPathAI( void )
 {
 	pathQ = MemAlloc( ABSMAX_PATHQ * sizeof( path_t ) );
-	trailCost = MemAlloc( MAPLENGTH * sizeof( TRAILCELLTYPE ) );
-	trailCostUsed = MemAlloc( MAPLENGTH );
+	trailCost = MemAlloc( WORLD_MAX * sizeof( TRAILCELLTYPE ) );
+	trailCostUsed = MemAlloc( WORLD_MAX );
 	trailTree = MemAlloc( ABSMAX_TRAIL_TREE * sizeof( trail_t ) );
 	if (!pathQ || !trailCost || !trailCostUsed || !trailTree)
 	{
@@ -466,7 +478,7 @@ BOOLEAN InitPathAI( void )
 	}
 	pQueueHead = &(pathQ[QHEADNDX]);
 	pClosedHead = &(pathQ[QPOOLNDX]);
-	memset( trailCostUsed, 0, MAPLENGTH );
+	memset( trailCostUsed, 0, WORLD_MAX );
 	return( TRUE );
 }
 
@@ -584,7 +596,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 
 	fVehicle = FALSE;
 	iOriginationX = iOriginationY = 0;
-	iOrigination = (INT32) s->sGridNo;
+	iOrigination = s->sGridNo;
 
 	//if (iOrigination < 0 || iOrigination >= WORLD_MAX)
 	if ( TileIsOutOfBounds( iOrigination ) )
@@ -661,7 +673,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 	if (gubGlobalPathCount == 255)
 	{
 		// reset arrays!
-		memset( trailCostUsed, 0, MAPLENGTH );
+		memset( trailCostUsed, 0, WORLD_MAX );
 		gubGlobalPathCount = 1;
 	}
 	else
@@ -802,12 +814,12 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 	//set up common info
 	if (fCopyPathCosts)
 	{
-		iOriginationY = (iOrigination / MAPWIDTH);
-		iOriginationX = (iOrigination % MAPWIDTH);
+		iOriginationY = (iOrigination / WORLD_COLS);
+		iOriginationX = (iOrigination % WORLD_COLS);
 	}
 	
-	iDestY = (iDestination / MAPWIDTH);
-	iDestX = (iDestination % MAPWIDTH);
+	iDestY = (iDestination / WORLD_COLS);
+	iDestX = (iDestination % WORLD_COLS);
 	
 	// if origin and dest is water, then user wants to stay in water!
 	// so, check and set waterToWater flag accordingly
@@ -833,8 +845,8 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 	pClosedHead->pNext[1] = pClosedHead;
 
 	//setup first path record
-	iLocY = iOrigination / MAPWIDTH;
-	iLocX = iOrigination % MAPWIDTH;
+	iLocY = iOrigination / WORLD_COLS;
+	iLocX = iOrigination % WORLD_COLS;
 
 	SETLOC( pathQ[1], iOrigination );
 	pathQ[1].sPathNdx						= 0;
@@ -989,7 +1001,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 				{
 					if ( iCnt != iLastDir )
 					{
-						if ( !OkayToAddStructureToWorld( (INT16) curLoc, ubLevel, &(pStructureFileRef->pDBStructureRef[ iStructIndex ]), usOKToAddStructID ) )
+						if ( !OkayToAddStructureToWorld( curLoc, ubLevel, &(pStructureFileRef->pDBStructureRef[ iStructIndex ]), usOKToAddStructID ) )
 						{
 							// we have to abort this loop and possibly reset the loop conditions to
 							// search in the other direction (if we haven't already done the other dir)
@@ -1028,7 +1040,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 				else if ( pStructureFileRef )
 				{
 					// check to make sure it's okay for us to turn to the new direction in our current tile 
-					if (!OkayToAddStructureToWorld( (INT16) curLoc, ubLevel, &(pStructureFileRef->pDBStructureRef[ iStructIndex ]), usOKToAddStructID ) )
+					if (!OkayToAddStructureToWorld( curLoc, ubLevel, &(pStructureFileRef->pDBStructureRef[ iStructIndex ]), usOKToAddStructID ) )
 					{
 						goto NEXTDIR;
 					}
@@ -1059,14 +1071,14 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 			{
 				if ( gfNPCCircularDistLimit )
 				{
-					if (PythSpacesAway( (INT16) iOrigination, (INT16) newLoc) > gubNPCDistLimit)
+					if (PythSpacesAway( iOrigination, newLoc) > gubNPCDistLimit)
 					{
 						goto NEXTDIR;
 					}
 				}
 				else
 				{
-					if (SpacesAway( (INT16) iOrigination, (INT16) newLoc) > gubNPCDistLimit)
+					if (SpacesAway( iOrigination, newLoc) > gubNPCDistLimit)
 					{
 						goto NEXTDIR;
 					}				
@@ -1349,7 +1361,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 				 // ATE: ONLY cancel if they are moving.....
 				ubMerc = WhoIsThere2( newLoc, s->bLevel);
 
-				if ( ubMerc < NOBODY && ubMerc != s->ubID )
+				if ( ubMerc < TOTAL_SOLDIERS && ubMerc != s->ubID )
 				{	
 					// Check for movement....
 					//if ( fTurnBased || ( (Menptr[ ubMerc ].sFinalDestination == Menptr[ ubMerc ].sGridNo) || (Menptr[ ubMerc ].fDelayedMovement) ) )
@@ -1754,8 +1766,8 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 					return(0);
 				}
 
-				iLocY = newLoc / MAPWIDTH;
-				iLocX = newLoc % MAPWIDTH;
+				iLocY = newLoc / WORLD_COLS;
+				iLocX = newLoc % WORLD_COLS;
 				SETLOC( *pNewPtr, newLoc );
 				pNewPtr->usCostSoFar		= (UINT16) newTotCost;
 				pNewPtr->usCostToGo			= (UINT16) REMAININGCOST(pNewPtr);

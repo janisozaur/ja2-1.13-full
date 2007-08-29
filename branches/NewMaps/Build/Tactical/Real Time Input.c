@@ -356,7 +356,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 									fDoubleClickIntercepted = TRUE;
 
 									// First check if we clicked on a guy, if so, make selected if it's ours
-									if( gusSelectedSoldier != NO_SOLDIER )
+									if( gusSelectedSoldier != NOBODY )
 									{
 										// Set movement mode
 										// OK, only change this if we are stationary!
@@ -502,7 +502,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 
 														case CONFIRM_MOVE_MODE:
 
-															if ( gusSelectedSoldier != NO_SOLDIER )
+															if ( gusSelectedSoldier != NOBODY )
 															{
 																if ( MercPtrs[ gusSelectedSoldier ]->usAnimState != RUNNING )
 																{
@@ -528,7 +528,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 															// Check if we are stationary
 															//if ( AimCubeUIClick( ) )
 															//{
-															//	if ( gusSelectedSoldier != NO_SOLDIER )
+															//	if ( gusSelectedSoldier != NOBODY )
 															//	{
 															//		if ( !( gAnimControl[ MercPtrs[ gusSelectedSoldier ]->usAnimState ].uiFlags & ANIM_STATIONARY ) )
 															//		{				
@@ -1240,7 +1240,7 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 {
 	INT32 usMapPos;
 	static INT32			usOldMapPos = 0;
-	static UINT32			uiMoveTargetSoldierId = NO_SOLDIER;
+	static UINT32			uiMoveTargetSoldierId = NOBODY;
 	SOLDIERTYPE								 *pSoldier;
 	static BOOLEAN		fOnValidGuy = FALSE;
 
@@ -1369,7 +1369,7 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 					gfUIAllMoveOn = FALSE;
 				}
 
-				uiMoveTargetSoldierId = NO_SOLDIER;
+				uiMoveTargetSoldierId = NOBODY;
 
 				// Check for being on terrain
 				if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )

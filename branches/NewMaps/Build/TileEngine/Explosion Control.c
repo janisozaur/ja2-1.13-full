@@ -1123,10 +1123,10 @@ void ExplosiveDamageGridNo( INT32 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 	INT16									sDesiredLevel;
 	DB_STRUCTURE_TILE			**ppTile;
 	UINT8									ubLoop, ubLoop2;
-	INT32 sNewGridNo, sNewGridNo2, sBaseGridNo;
+	INT32    sNewGridNo, sNewGridNo2, sBaseGridNo = NOWHERE;
 	BOOLEAN								fToBreak = FALSE;
 	BOOLEAN								fMultiStructure = FALSE;
-	UINT8									ubNumberOfTiles;
+	UINT8    ubNumberOfTiles = 0xff;
 	BOOLEAN								fMultiStructSpecialFlag = FALSE;
 	BOOLEAN								fExplodeDamageReturn = FALSE;
 

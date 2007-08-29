@@ -524,24 +524,24 @@ void GenerateMapEdgepoints()
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stNorthEdgepointArraySize++ ] = sGridNo;
-			sGridNo -= 160;
+			sGridNo -= WORLD_COLS;
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stNorthEdgepointArraySize++ ] = sGridNo;
 		}
 		//2nd row
 		gus1stNorthEdgepointMiddleIndex = gus1stNorthEdgepointArraySize;
-		sGridNo = gsTLGridNo + 161;
+		sGridNo = gsTLGridNo + WORLD_COLS+1;
 		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 			 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 			sVGridNo[ gus1stNorthEdgepointArraySize++ ] = sGridNo;
-		while( sGridNo > gsTRGridNo + 161 )
+		while( sGridNo > gsTRGridNo + WORLD_COLS+1 )
 		{
 			sGridNo++;
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stNorthEdgepointArraySize++ ] = sGridNo;
-			sGridNo -= 160;
+			sGridNo -= WORLD_COLS;
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stNorthEdgepointArraySize++ ] = sGridNo;
@@ -564,7 +564,7 @@ void GenerateMapEdgepoints()
 			sVGridNo[ gus1stEastEdgepointArraySize++ ] = sGridNo;
 		while( sGridNo < gsBRGridNo )
 		{
-			sGridNo += 160;
+			sGridNo += WORLD_COLS;
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stEastEdgepointArraySize++ ] = sGridNo;
@@ -575,13 +575,13 @@ void GenerateMapEdgepoints()
 		}
 		//2nd row
 		gus1stEastEdgepointMiddleIndex = gus1stEastEdgepointArraySize;
-		sGridNo = gsTRGridNo + 159;
+		sGridNo = gsTRGridNo + WORLD_COLS-1;
 		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 			 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 			sVGridNo[ gus1stEastEdgepointArraySize++ ] = sGridNo;
-		while( sGridNo < gsBRGridNo + 159 )
+		while( sGridNo < gsBRGridNo + WORLD_COLS-1 )
 		{
-			sGridNo += 160;
+			sGridNo += WORLD_COLS;
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stEastEdgepointArraySize++ ] = sGridNo;
@@ -611,24 +611,24 @@ void GenerateMapEdgepoints()
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stSouthEdgepointArraySize++ ] = sGridNo;
-			sGridNo -= 160;
+			sGridNo -= WORLD_COLS;
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stSouthEdgepointArraySize++ ] = sGridNo;
 		}
 		//2nd row
 		gus1stSouthEdgepointMiddleIndex = gus1stSouthEdgepointArraySize;
-		sGridNo = gsBLGridNo - 161;
+		sGridNo = gsBLGridNo - WORLD_COLS+1;
 		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 			 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 			sVGridNo[ gus1stSouthEdgepointArraySize++ ] = sGridNo;
-		while( sGridNo > gsBRGridNo - 161 )
+		while( sGridNo > gsBRGridNo - WORLD_COLS+1 )
 		{
 			sGridNo++;
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stSouthEdgepointArraySize++ ] = sGridNo;
-			sGridNo -= 160;
+			sGridNo -= WORLD_COLS;
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stSouthEdgepointArraySize++ ] = sGridNo;
@@ -654,24 +654,24 @@ void GenerateMapEdgepoints()
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stWestEdgepointArraySize++ ] = sGridNo;
-			sGridNo += 160;
+			sGridNo += WORLD_COLS;
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stWestEdgepointArraySize++ ] = sGridNo;
 		}
 		//2nd row
 		gus1stWestEdgepointMiddleIndex = gus1stWestEdgepointArraySize;
-		sGridNo = gsTLGridNo - 159;
+		sGridNo = gsTLGridNo - WORLD_COLS-1;
 		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 			 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 			sVGridNo[ gus1stWestEdgepointArraySize++ ] = sGridNo;
-		while( sGridNo < gsBLGridNo - 159 )
+		while( sGridNo < gsBLGridNo - WORLD_COLS-1 )
 		{
 			sGridNo++;
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stWestEdgepointArraySize++ ] = sGridNo;
-			sGridNo += 160;
+			sGridNo += WORLD_COLS;
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stWestEdgepointArraySize++ ] = sGridNo;
@@ -701,24 +701,24 @@ void GenerateMapEdgepoints()
 				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 					 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndNorthEdgepointArraySize++ ] = sGridNo;
-				sGridNo -= 160;
+				sGridNo -= WORLD_COLS;
 				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 					 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndNorthEdgepointArraySize++ ] = sGridNo;
 			}
 			//2nd row
 			gus2ndNorthEdgepointMiddleIndex = gus2ndNorthEdgepointArraySize;
-			sGridNo = gsTLGridNo + 161;
+			sGridNo = gsTLGridNo + WORLD_COLS+1;
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus2ndNorthEdgepointArraySize++ ] = sGridNo;
-			while( sGridNo > gsTRGridNo + 161 )
+			while( sGridNo > gsTRGridNo + WORLD_COLS+1 )
 			{
 				sGridNo++;
 				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 					 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndNorthEdgepointArraySize++ ] = sGridNo;
-				sGridNo -= 160;
+				sGridNo -= WORLD_COLS;
 				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 					 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndNorthEdgepointArraySize++ ] = sGridNo;
@@ -741,7 +741,7 @@ void GenerateMapEdgepoints()
 				sVGridNo[ gus2ndEastEdgepointArraySize++ ] = sGridNo;
 			while( sGridNo < gsBRGridNo )
 			{
-				sGridNo += 160;
+				sGridNo += WORLD_COLS;
 				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 					 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndEastEdgepointArraySize++ ] = sGridNo;
@@ -752,13 +752,13 @@ void GenerateMapEdgepoints()
 			}
 			//2nd row
 			gus2ndEastEdgepointMiddleIndex = gus2ndEastEdgepointArraySize;
-			sGridNo = gsTRGridNo + 159;
+			sGridNo = gsTRGridNo + WORLD_COLS-1;
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus2ndEastEdgepointArraySize++ ] = sGridNo;
-			while( sGridNo < gsBRGridNo + 159 )
+			while( sGridNo < gsBRGridNo + WORLD_COLS-1 )
 			{
-				sGridNo += 160;
+				sGridNo += WORLD_COLS;
 				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 					 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndEastEdgepointArraySize++ ] = sGridNo;
@@ -788,24 +788,24 @@ void GenerateMapEdgepoints()
 				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 					 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndSouthEdgepointArraySize++ ] = sGridNo;
-				sGridNo -= 160;
+				sGridNo -= WORLD_COLS;
 				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 					 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndSouthEdgepointArraySize++ ] = sGridNo;
 			}
 			//2nd row
 			gus2ndSouthEdgepointMiddleIndex = gus2ndSouthEdgepointArraySize;
-			sGridNo = gsBLGridNo - 161;
+			sGridNo = gsBLGridNo - WORLD_COLS+1;
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus2ndSouthEdgepointArraySize++ ] = sGridNo;
-			while( sGridNo > gsBRGridNo - 161 )
+			while( sGridNo > gsBRGridNo - WORLD_COLS+1 )
 			{
 				sGridNo++;
 				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 					 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndSouthEdgepointArraySize++ ] = sGridNo;
-				sGridNo -= 160;
+				sGridNo -= WORLD_COLS;
 				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 					 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndSouthEdgepointArraySize++ ] = sGridNo;
@@ -831,24 +831,24 @@ void GenerateMapEdgepoints()
 				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 					 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndWestEdgepointArraySize++ ] = sGridNo;
-				sGridNo += 160;
+				sGridNo += WORLD_COLS;
 				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 					 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndWestEdgepointArraySize++ ] = sGridNo;
 			}
 			//2nd row
 			gus2ndWestEdgepointMiddleIndex = gus2ndWestEdgepointArraySize;
-			sGridNo = gsTLGridNo - 159;
+			sGridNo = gsTLGridNo - WORLD_COLS-1;
 			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 				 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus2ndWestEdgepointArraySize++ ] = sGridNo;
-			while( sGridNo < gsBLGridNo - 159 )
+			while( sGridNo < gsBLGridNo - WORLD_COLS-1 )
 			{
 				sGridNo++;
 				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 					 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndWestEdgepointArraySize++ ] = sGridNo;
-				sGridNo += 160;
+				sGridNo += WORLD_COLS;
 				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
 					 (!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndWestEdgepointArraySize++ ] = sGridNo;

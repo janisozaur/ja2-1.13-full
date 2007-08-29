@@ -50,7 +50,7 @@ void RemoveIndexLevelNodeFlags( LEVELNODE *pStartNode, UINT32 uiFlags, UINT16 us
 void SetWorldFlagsFromNewNode( INT32 sGridNo, UINT16 usIndex );
 void RemoveWorldFlagsFromNewNode( INT32 sGridNo, UINT16 usIndex );
 
-BOOLEAN RemoveLandEx( UINT32 iMapIndex, UINT16 usIndex );
+BOOLEAN RemoveLandEx( INT32 iMapIndex, UINT16 usIndex );
 
 UINT32 guiLevelNodes = 0;
 
@@ -230,7 +230,7 @@ void RemoveIndexLevelNodeFlags( LEVELNODE *pStartNode, UINT32 uiFlags, UINT16 us
 // First for object layer
 // #################################################################
 
-LEVELNODE *AddObjectToTail( UINT32 iMapIndex, UINT16 usIndex )
+LEVELNODE *AddObjectToTail( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE			*pObject				 = NULL;
 	LEVELNODE			*pNextObject		 = NULL;
@@ -275,7 +275,7 @@ LEVELNODE *AddObjectToTail( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN AddObjectToHead( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN AddObjectToHead( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE							 *pObject					= NULL;
 	LEVELNODE							 *pNextObject		  = NULL;
@@ -303,7 +303,7 @@ BOOLEAN AddObjectToHead( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN RemoveObject( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN RemoveObject( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pObject		 = NULL;
 	LEVELNODE	*pOldObject = NULL;
@@ -352,7 +352,7 @@ BOOLEAN RemoveObject( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN TypeRangeExistsInObjectLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusObjectIndex )
+BOOLEAN TypeRangeExistsInObjectLayer( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusObjectIndex )
 {
 	LEVELNODE	*pObject		 = NULL;
 	LEVELNODE	*pOldObject		 = NULL;
@@ -389,7 +389,7 @@ BOOLEAN TypeRangeExistsInObjectLayer( UINT32 iMapIndex, UINT32 fStartType, UINT3
 }
 
 
-BOOLEAN TypeExistsInObjectLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusObjectIndex )
+BOOLEAN TypeExistsInObjectLayer( INT32 iMapIndex, UINT32 fType, UINT16 *pusObjectIndex )
 {
 	LEVELNODE			*pObject		 = NULL;
 
@@ -399,7 +399,7 @@ BOOLEAN TypeExistsInObjectLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusObje
 }
 
 
-void SetAllObjectShadeLevels( UINT32 iMapIndex, UINT8 ubShadeLevel )
+void SetAllObjectShadeLevels( INT32 iMapIndex, UINT8 ubShadeLevel )
 {
 	LEVELNODE	*pObject		 = NULL;
 
@@ -410,7 +410,7 @@ void SetAllObjectShadeLevels( UINT32 iMapIndex, UINT8 ubShadeLevel )
 }
 
 
-void AdjustAllObjectShadeLevels( UINT32 iMapIndex, INT8 bShadeDiff )
+void AdjustAllObjectShadeLevels( INT32 iMapIndex, INT8 bShadeDiff )
 {
 	LEVELNODE	*pObject		 = NULL;
 
@@ -423,7 +423,7 @@ void AdjustAllObjectShadeLevels( UINT32 iMapIndex, INT8 bShadeDiff )
 
 
 
-BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
+BOOLEAN RemoveAllObjectsOfTypeRange( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
 {
 	LEVELNODE	*pObject		 = NULL;
 	LEVELNODE	*pOldObject		 = NULL;
@@ -462,7 +462,7 @@ BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 // Land Peice Layer
 // #######################################################
 
-LEVELNODE *AddLandToTail( UINT32 iMapIndex, UINT16 usIndex )
+LEVELNODE *AddLandToTail( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pLand		 = NULL;
 	LEVELNODE	*pNextLand		 = NULL;
@@ -507,7 +507,7 @@ LEVELNODE *AddLandToTail( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN AddLandToHead( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN AddLandToHead( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pLand		 = NULL;
 	LEVELNODE	*pNextLand		 = NULL;
@@ -550,7 +550,7 @@ BOOLEAN AddLandToHead( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN RemoveLand( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN RemoveLand( INT32 iMapIndex, UINT16 usIndex )
 {
 
 	RemoveLandEx( iMapIndex, usIndex );
@@ -562,7 +562,7 @@ BOOLEAN RemoveLand( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN RemoveLandEx( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN RemoveLandEx( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pLand		 = NULL;
 
@@ -613,7 +613,7 @@ BOOLEAN RemoveLandEx( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN AdjustForFullTile( UINT32 iMapIndex )
+BOOLEAN AdjustForFullTile( INT32 iMapIndex )
 {
 	LEVELNODE	*pLand		 = NULL;
 	LEVELNODE	*pOldLand	 = NULL;
@@ -667,7 +667,7 @@ BOOLEAN AdjustForFullTile( UINT32 iMapIndex )
 }
 
 
-BOOLEAN ReplaceLandIndex( UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex )
+BOOLEAN ReplaceLandIndex( INT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex )
 {
 	LEVELNODE	*pLand				= NULL;
 
@@ -700,7 +700,7 @@ BOOLEAN ReplaceLandIndex( UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex
 }
 
 
-BOOLEAN TypeExistsInLandLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusLandIndex )
+BOOLEAN TypeExistsInLandLayer( INT32 iMapIndex, UINT32 fType, UINT16 *pusLandIndex )
 {
 	LEVELNODE	*pLand		 = NULL;
 
@@ -711,7 +711,7 @@ BOOLEAN TypeExistsInLandLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusLandIn
 }
 
 
-BOOLEAN TypeRangeExistsInLandLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusLandIndex )
+BOOLEAN TypeRangeExistsInLandLayer( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusLandIndex )
 {
 	LEVELNODE	*pLand		 = NULL;
 	LEVELNODE	*pOldLand		 = NULL;
@@ -749,7 +749,7 @@ BOOLEAN TypeRangeExistsInLandLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 
 }
 
 
-BOOLEAN TypeRangeExistsInLandHead( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusLandIndex )
+BOOLEAN TypeRangeExistsInLandHead( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusLandIndex )
 {
 	LEVELNODE	*pLand		 = NULL;
 	LEVELNODE	*pOldLand		 = NULL;
@@ -781,7 +781,7 @@ BOOLEAN TypeRangeExistsInLandHead( UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 
 }
 
-BOOLEAN TypeRangeExistsInStructLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusStructIndex )
+BOOLEAN TypeRangeExistsInStructLayer( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusStructIndex )
 {
 	LEVELNODE	*pStruct		 = NULL;
 	LEVELNODE	*pOldStruct	 = NULL;
@@ -816,7 +816,7 @@ BOOLEAN TypeRangeExistsInStructLayer( UINT32 iMapIndex, UINT32 fStartType, UINT3
 }
 
 
-BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
+BOOLEAN RemoveAllLandsOfTypeRange( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
 {
 	LEVELNODE	*pLand		 = NULL;
 	LEVELNODE	*pOldLand		 = NULL;
@@ -853,7 +853,7 @@ BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 
 
 
-void SetAllLandShadeLevels( UINT32 iMapIndex, UINT8 ubShadeLevel )
+void SetAllLandShadeLevels( INT32 iMapIndex, UINT8 ubShadeLevel )
 {
 	LEVELNODE	*pLand		 = NULL;
 
@@ -864,7 +864,7 @@ void SetAllLandShadeLevels( UINT32 iMapIndex, UINT8 ubShadeLevel )
 }
 
 
-void AdjustAllLandShadeLevels( UINT32 iMapIndex, INT8 bShadeDiff )
+void AdjustAllLandShadeLevels( INT32 iMapIndex, INT8 bShadeDiff )
 {
 	LEVELNODE	*pLand		 = NULL;
 
@@ -876,7 +876,7 @@ void AdjustAllLandShadeLevels( UINT32 iMapIndex, INT8 bShadeDiff )
 }
 
 
-BOOLEAN DeleteAllLandLayers( UINT32 iMapIndex )
+BOOLEAN DeleteAllLandLayers( INT32 iMapIndex )
 {
 	LEVELNODE	*pLand		 = NULL;
 	LEVELNODE	*pOldLand		 = NULL;
@@ -904,7 +904,7 @@ BOOLEAN DeleteAllLandLayers( UINT32 iMapIndex )
 	return( TRUE );
 }
 
-BOOLEAN InsertLandIndexAtLevel( UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel )
+BOOLEAN InsertLandIndexAtLevel( INT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel )
 {
 	LEVELNODE			*pLand		 = NULL;
 	LEVELNODE			*pNextLand		 = NULL;
@@ -967,7 +967,7 @@ BOOLEAN InsertLandIndexAtLevel( UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel 
 
 }
 
-BOOLEAN RemoveHigherLandLevels( UINT32 iMapIndex, UINT32 fSrcType, UINT32 **puiHigherTypes, UINT8 *pubNumHigherTypes )
+BOOLEAN RemoveHigherLandLevels( INT32 iMapIndex, UINT32 fSrcType, UINT32 **puiHigherTypes, UINT8 *pubNumHigherTypes )
 {
 	LEVELNODE	*pLand		 = NULL;
 	LEVELNODE	*pOldLand		 = NULL;
@@ -1025,7 +1025,7 @@ BOOLEAN RemoveHigherLandLevels( UINT32 iMapIndex, UINT32 fSrcType, UINT32 **puiH
 }
 
 
-BOOLEAN SetLowerLandLevels( UINT32 iMapIndex, UINT32 fSrcType, UINT16 usIndex  )
+BOOLEAN SetLowerLandLevels( INT32 iMapIndex, UINT32 fSrcType, UINT16 usIndex  )
 {
 	LEVELNODE	*pLand		 = NULL;
 	LEVELNODE	*pOldLand		 = NULL;
@@ -1073,17 +1073,17 @@ BOOLEAN SetLowerLandLevels( UINT32 iMapIndex, UINT32 fSrcType, UINT16 usIndex  )
 // Struct layer
 // #################################################################
 
-LEVELNODE *AddStructToTail( UINT32 iMapIndex, UINT16 usIndex )
+LEVELNODE *AddStructToTail( INT32 iMapIndex, UINT16 usIndex )
 {
 	return(AddStructToTailCommon( iMapIndex, usIndex, TRUE ));
 }
 
-LEVELNODE *ForceStructToTail( UINT32 iMapIndex, UINT16 usIndex )
+LEVELNODE *ForceStructToTail( INT32 iMapIndex, UINT16 usIndex )
 {
 	return(AddStructToTailCommon( iMapIndex, usIndex, FALSE ));
 }
 
-LEVELNODE *AddStructToTailCommon( UINT32 iMapIndex, UINT16 usIndex, BOOLEAN fAddStructDBInfo )
+LEVELNODE *AddStructToTailCommon( INT32 iMapIndex, UINT16 usIndex, BOOLEAN fAddStructDBInfo )
 {
 	LEVELNODE	*pStruct		 = NULL;
 	LEVELNODE	*pTailStruct = NULL;
@@ -1198,7 +1198,7 @@ LEVELNODE *AddStructToTailCommon( UINT32 iMapIndex, UINT16 usIndex, BOOLEAN fAdd
 
 
 
-BOOLEAN AddStructToHead( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN AddStructToHead( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE							 *pStruct		 = NULL;
 	LEVELNODE							 *pNextStruct		 = NULL;
@@ -1266,7 +1266,7 @@ BOOLEAN AddStructToHead( UINT32 iMapIndex, UINT16 usIndex )
 
 }
 
-BOOLEAN InsertStructIndex( UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel )
+BOOLEAN InsertStructIndex( INT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel )
 {
 	LEVELNODE		*pStruct		 = NULL;
 	LEVELNODE		*pNextStruct		 = NULL;
@@ -1333,17 +1333,17 @@ BOOLEAN InsertStructIndex( UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel )
 
 }
 
-BOOLEAN RemoveStructFromTail( UINT32 iMapIndex )
+BOOLEAN RemoveStructFromTail( INT32 iMapIndex )
 {
 	return(RemoveStructFromTailCommon( iMapIndex, TRUE ));
 }
 
-BOOLEAN ForceRemoveStructFromTail( UINT32 iMapIndex )
+BOOLEAN ForceRemoveStructFromTail( INT32 iMapIndex )
 {
 	return(RemoveStructFromTailCommon( iMapIndex, FALSE ));
 }
 
-BOOLEAN RemoveStructFromTailCommon( UINT32 iMapIndex, BOOLEAN fRemoveStructDBInfo )
+BOOLEAN RemoveStructFromTailCommon( INT32 iMapIndex, BOOLEAN fRemoveStructDBInfo )
 {
 	LEVELNODE	*pStruct		  = NULL;
 	LEVELNODE	*pPrevStruct	= NULL;
@@ -1410,7 +1410,7 @@ BOOLEAN RemoveStructFromTailCommon( UINT32 iMapIndex, BOOLEAN fRemoveStructDBInf
 
 
 
-BOOLEAN RemoveStruct( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN RemoveStruct( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pStruct		 = NULL;
 	LEVELNODE	*pOldStruct  = NULL;
@@ -1479,7 +1479,7 @@ BOOLEAN RemoveStruct( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN RemoveStructFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode )
+BOOLEAN RemoveStructFromLevelNode( INT32 iMapIndex, LEVELNODE *pNode )
 {
 	LEVELNODE	*pStruct		 = NULL;
 	LEVELNODE	*pOldStruct  = NULL;
@@ -1540,7 +1540,7 @@ BOOLEAN RemoveStructFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode )
 }
 
 
-BOOLEAN RemoveAllStructsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
+BOOLEAN RemoveAllStructsOfTypeRange( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
 {
 	LEVELNODE	*pStruct		 = NULL;
 	LEVELNODE	*pOldStruct		 = NULL;
@@ -1588,7 +1588,7 @@ BOOLEAN RemoveAllStructsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 
 //Kris:  This was a serious problem.  When saving the map and then reloading it, the structure
 //  information was invalid if you changed the types, etc.  This is the bulletproof way.
-BOOLEAN ReplaceStructIndex( UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex )
+BOOLEAN ReplaceStructIndex( INT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex )
 {
 	RemoveStruct( iMapIndex, usOldIndex );
 	AddWallToStructLayer( iMapIndex, usNewIndex, FALSE );
@@ -1716,7 +1716,7 @@ BOOLEAN AddWallToStructLayer( INT32 iMapIndex, UINT16 usIndex, BOOLEAN fReplace 
 
 }
 
-BOOLEAN TypeExistsInStructLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusStructIndex )
+BOOLEAN TypeExistsInStructLayer( INT32 iMapIndex, UINT32 fType, UINT16 *pusStructIndex )
 {
 	LEVELNODE			*pStruct		 = NULL;
 
@@ -1726,7 +1726,7 @@ BOOLEAN TypeExistsInStructLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusStru
 }
 
 
-void SetAllStructShadeLevels( UINT32 iMapIndex, UINT8 ubShadeLevel )
+void SetAllStructShadeLevels( INT32 iMapIndex, UINT8 ubShadeLevel )
 {
 	LEVELNODE	*pStruct		 = NULL;
 
@@ -1737,7 +1737,7 @@ void SetAllStructShadeLevels( UINT32 iMapIndex, UINT8 ubShadeLevel )
 }
 
 
-void AdjustAllStructShadeLevels( UINT32 iMapIndex, INT8 bShadeDiff )
+void AdjustAllStructShadeLevels( INT32 iMapIndex, INT8 bShadeDiff )
 {
 	LEVELNODE	*pStruct		 = NULL;
 
@@ -1748,7 +1748,7 @@ void AdjustAllStructShadeLevels( UINT32 iMapIndex, INT8 bShadeDiff )
 }
 
 
-void SetStructIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  )
+void SetStructIndexFlagsFromTypeRange( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  )
 {
 	LEVELNODE	*pStruct		 = NULL;
 	LEVELNODE	*pOldStruct		 = NULL;
@@ -1781,7 +1781,7 @@ void SetStructIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT
 
 }
 
-BOOLEAN HideStructOfGivenType( UINT32 iMapIndex, UINT32 fType, BOOLEAN fHide )
+BOOLEAN HideStructOfGivenType( INT32 iMapIndex, UINT32 fType, BOOLEAN fHide )
 {
 	if ( fHide )
 	{
@@ -1800,7 +1800,7 @@ BOOLEAN HideStructOfGivenType( UINT32 iMapIndex, UINT32 fType, BOOLEAN fHide )
 
 
 
-void RemoveStructIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  )
+void RemoveStructIndexFlagsFromTypeRange( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  )
 {
 	LEVELNODE	*pStruct		 = NULL;
 	LEVELNODE	*pOldStruct		 = NULL;
@@ -1837,7 +1837,7 @@ void RemoveStructIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, U
 // Shadow layer
 // #################################################################
 
-BOOLEAN AddShadowToTail( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN AddShadowToTail( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pShadow		 = NULL;
 	LEVELNODE	*pNextShadow		 = NULL;
@@ -1882,7 +1882,7 @@ BOOLEAN AddShadowToTail( UINT32 iMapIndex, UINT16 usIndex )
 //		because it actually renders the shadows darker than the others.  This is an
 //	  undesirable effect with walls and buildings so I added this function to make
 //		sure there isn't already a shadow before placing it.
-void AddExclusiveShadow( UINT32 iMapIndex, UINT16 usIndex )
+void AddExclusiveShadow( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pShadow;
 
@@ -1896,7 +1896,7 @@ void AddExclusiveShadow( UINT32 iMapIndex, UINT16 usIndex )
 	AddShadowToHead( iMapIndex, usIndex );
 }
 
-BOOLEAN AddShadowToHead( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN AddShadowToHead( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pShadow;
 	LEVELNODE	*pNextShadow = NULL;
@@ -1916,7 +1916,7 @@ BOOLEAN AddShadowToHead( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN RemoveShadow( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN RemoveShadow( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pShadow		 = NULL;
 	LEVELNODE	*pOldShadow  = NULL;
@@ -1960,7 +1960,7 @@ BOOLEAN RemoveShadow( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN RemoveShadowFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode )
+BOOLEAN RemoveShadowFromLevelNode( INT32 iMapIndex, LEVELNODE *pNode )
 {
 	LEVELNODE	*pShadow		 = NULL;
 	LEVELNODE	*pOldShadow  = NULL;
@@ -2004,7 +2004,7 @@ BOOLEAN RemoveShadowFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode )
 }
 
 
-BOOLEAN RemoveStructShadowPartner( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN RemoveStructShadowPartner( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pShadow		 = NULL;
 	LEVELNODE	*pOldShadow  = NULL;
@@ -2048,7 +2048,7 @@ BOOLEAN RemoveStructShadowPartner( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN RemoveAllShadowsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
+BOOLEAN RemoveAllShadowsOfTypeRange( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
 {
 	LEVELNODE	*pShadow		 = NULL;
 	LEVELNODE	*pOldShadow		 = NULL;
@@ -2084,7 +2084,7 @@ BOOLEAN RemoveAllShadowsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 	return fRetVal;
 }
 
-BOOLEAN RemoveAllShadows( UINT32 iMapIndex )
+BOOLEAN RemoveAllShadows( INT32 iMapIndex )
 {
 	LEVELNODE	*pShadow		 = NULL;
 	LEVELNODE	*pOldShadow		 = NULL;
@@ -2113,7 +2113,7 @@ BOOLEAN RemoveAllShadows( UINT32 iMapIndex )
 	return fRetVal;
 }
 
-BOOLEAN TypeExistsInShadowLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusShadowIndex )
+BOOLEAN TypeExistsInShadowLayer( INT32 iMapIndex, UINT32 fType, UINT16 *pusShadowIndex )
 {
 	LEVELNODE			*pShadow		 = NULL;
 
@@ -2396,7 +2396,7 @@ BOOLEAN RemoveMerc( INT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fPlaceHolder
 // Roof layer
 // #################################################################
 
-LEVELNODE *AddRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
+LEVELNODE *AddRoofToTail( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE			*pRoof				 = NULL;
 	LEVELNODE			*pNextRoof		 = NULL;
@@ -2469,7 +2469,7 @@ LEVELNODE *AddRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN AddRoofToHead( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN AddRoofToHead( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE							 *pRoof					= NULL;
 	LEVELNODE							 *pNextRoof		  = NULL;
@@ -2504,7 +2504,7 @@ BOOLEAN AddRoofToHead( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN RemoveRoof( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN RemoveRoof( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pRoof		 = NULL;
 	LEVELNODE	*pOldRoof	 = NULL;
@@ -2548,7 +2548,7 @@ BOOLEAN RemoveRoof( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN TypeExistsInRoofLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusRoofIndex )
+BOOLEAN TypeExistsInRoofLayer( INT32 iMapIndex, UINT32 fType, UINT16 *pusRoofIndex )
 {
 	LEVELNODE			*pRoof		 = NULL;
 
@@ -2558,7 +2558,7 @@ BOOLEAN TypeExistsInRoofLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusRoofIn
 }
 
 
-BOOLEAN TypeRangeExistsInRoofLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusRoofIndex )
+BOOLEAN TypeRangeExistsInRoofLayer( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusRoofIndex )
 {
 	LEVELNODE	*pRoof		 = NULL;
 	LEVELNODE	*pOldRoof	 = NULL;
@@ -2620,7 +2620,7 @@ BOOLEAN IndexExistsInRoofLayer( INT32 sGridNo, UINT16 usIndex )
 
 
 
-void SetAllRoofShadeLevels( UINT32 iMapIndex, UINT8 ubShadeLevel )
+void SetAllRoofShadeLevels( INT32 iMapIndex, UINT8 ubShadeLevel )
 {
 	LEVELNODE	*pRoof		 = NULL;
 
@@ -2631,7 +2631,7 @@ void SetAllRoofShadeLevels( UINT32 iMapIndex, UINT8 ubShadeLevel )
 }
 
 
-void AdjustAllRoofShadeLevels( UINT32 iMapIndex, INT8 bShadeDiff )
+void AdjustAllRoofShadeLevels( INT32 iMapIndex, INT8 bShadeDiff )
 {
 	LEVELNODE	*pRoof		 = NULL;
 
@@ -2644,7 +2644,7 @@ void AdjustAllRoofShadeLevels( UINT32 iMapIndex, INT8 bShadeDiff )
 
 
 
-BOOLEAN RemoveAllRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
+BOOLEAN RemoveAllRoofsOfTypeRange( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
 {
 	LEVELNODE	*pRoof		 = NULL;
 	LEVELNODE	*pOldRoof		 = NULL;
@@ -2684,7 +2684,7 @@ BOOLEAN RemoveAllRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 
 }
 
-void RemoveRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  )
+void RemoveRoofIndexFlagsFromTypeRange( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  )
 {
 	LEVELNODE	*pRoof		 = NULL;
 	LEVELNODE	*pOldRoof		 = NULL;
@@ -2717,7 +2717,7 @@ void RemoveRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UIN
 
 }
 
-void SetRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  )
+void SetRoofIndexFlagsFromTypeRange( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  )
 {
 	LEVELNODE	*pRoof		 = NULL;
 	LEVELNODE	*pOldRoof		 = NULL;
@@ -2754,7 +2754,7 @@ void SetRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 // OnRoof layer
 // #################################################################
 
-LEVELNODE *AddOnRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
+LEVELNODE *AddOnRoofToTail( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE			*pOnRoof				 = NULL;
 	LEVELNODE			*pNextOnRoof		 = NULL;
@@ -2827,7 +2827,7 @@ LEVELNODE *AddOnRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN AddOnRoofToHead( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN AddOnRoofToHead( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE							 *pOnRoof					= NULL;
 	LEVELNODE							 *pNextOnRoof		  = NULL;
@@ -2861,7 +2861,7 @@ BOOLEAN AddOnRoofToHead( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN RemoveOnRoof( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN RemoveOnRoof( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pOnRoof		 = NULL;
 	LEVELNODE	*pOldOnRoof	 = NULL;
@@ -2905,7 +2905,7 @@ BOOLEAN RemoveOnRoof( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN RemoveOnRoofFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode )
+BOOLEAN RemoveOnRoofFromLevelNode( INT32 iMapIndex, LEVELNODE *pNode )
 {
 	LEVELNODE	*pOnRoof		 = NULL;
 	LEVELNODE	*pOldOnRoof	 = NULL;
@@ -2949,7 +2949,7 @@ BOOLEAN RemoveOnRoofFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode )
 }
 
 
-BOOLEAN TypeExistsInOnRoofLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusOnRoofIndex )
+BOOLEAN TypeExistsInOnRoofLayer( INT32 iMapIndex, UINT32 fType, UINT16 *pusOnRoofIndex )
 {
 	LEVELNODE			*pOnRoof		 = NULL;
 
@@ -2959,7 +2959,7 @@ BOOLEAN TypeExistsInOnRoofLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusOnRo
 }
 
 
-void SetAllOnRoofShadeLevels( UINT32 iMapIndex, UINT8 ubShadeLevel )
+void SetAllOnRoofShadeLevels( INT32 iMapIndex, UINT8 ubShadeLevel )
 {
 	LEVELNODE	*pOnRoof		 = NULL;
 
@@ -2970,7 +2970,7 @@ void SetAllOnRoofShadeLevels( UINT32 iMapIndex, UINT8 ubShadeLevel )
 }
 
 
-void AdjustAllOnRoofShadeLevels( UINT32 iMapIndex, INT8 bShadeDiff )
+void AdjustAllOnRoofShadeLevels( INT32 iMapIndex, INT8 bShadeDiff )
 {
 	LEVELNODE	*pOnRoof		 = NULL;
 
@@ -2983,7 +2983,7 @@ void AdjustAllOnRoofShadeLevels( UINT32 iMapIndex, INT8 bShadeDiff )
 
 
 
-BOOLEAN RemoveAllOnRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
+BOOLEAN RemoveAllOnRoofsOfTypeRange( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
 {
 	LEVELNODE	*pOnRoof		 = NULL;
 	LEVELNODE	*pOldOnRoof		 = NULL;
@@ -3023,7 +3023,7 @@ BOOLEAN RemoveAllOnRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 // Topmost layer
 // #################################################################
 
-LEVELNODE  *AddTopmostToTail( UINT32 iMapIndex, UINT16 usIndex )
+LEVELNODE  *AddTopmostToTail( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pTopmost		 = NULL;
 	LEVELNODE	*pNextTopmost		 = NULL;
@@ -3065,7 +3065,7 @@ LEVELNODE  *AddTopmostToTail( UINT32 iMapIndex, UINT16 usIndex )
 
 }
 
-BOOLEAN AddUIElem( UINT32 iMapIndex, UINT16 usIndex, INT8	sRelativeX, INT8 sRelativeY, LEVELNODE **ppNewNode )
+BOOLEAN AddUIElem( INT32 iMapIndex, UINT16 usIndex, INT8	sRelativeX, INT8 sRelativeY, LEVELNODE **ppNewNode )
 {
 	LEVELNODE							 *pTopmost		 = NULL;
 
@@ -3088,13 +3088,13 @@ BOOLEAN AddUIElem( UINT32 iMapIndex, UINT16 usIndex, INT8	sRelativeX, INT8 sRela
 }
 
 
-void RemoveUIElem( UINT32 iMapIndex, UINT16 usIndex )
+void RemoveUIElem( INT32 iMapIndex, UINT16 usIndex )
 {
 	RemoveTopmost( iMapIndex, usIndex );
 }
 
 
-BOOLEAN AddTopmostToHead( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN AddTopmostToHead( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE							 *pTopmost		 = NULL;
 	LEVELNODE							 *pNextTopmost		 = NULL;
@@ -3115,7 +3115,7 @@ BOOLEAN AddTopmostToHead( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN RemoveTopmost( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN RemoveTopmost( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pTopmost		 = NULL;
 	LEVELNODE *pOldTopmost		 = NULL;
@@ -3159,7 +3159,7 @@ BOOLEAN RemoveTopmost( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN RemoveTopmostFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode )
+BOOLEAN RemoveTopmostFromLevelNode( INT32 iMapIndex, LEVELNODE *pNode )
 {
 	LEVELNODE	*pTopmost		 = NULL;
 	LEVELNODE *pOldTopmost		 = NULL;
@@ -3206,7 +3206,7 @@ BOOLEAN RemoveTopmostFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode )
 }
 
 
-BOOLEAN RemoveAllTopmostsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
+BOOLEAN RemoveAllTopmostsOfTypeRange( INT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
 {
 	LEVELNODE	*pTopmost		 = NULL;
 	LEVELNODE	*pOldTopmost		 = NULL;
@@ -3240,7 +3240,7 @@ BOOLEAN RemoveAllTopmostsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT3
   return fRetVal;
 }
 
-BOOLEAN TypeExistsInTopmostLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusTopmostIndex )
+BOOLEAN TypeExistsInTopmostLayer( INT32 iMapIndex, UINT32 fType, UINT16 *pusTopmostIndex )
 {
 	LEVELNODE			*pTopmost		 = NULL;
 
@@ -3250,7 +3250,7 @@ BOOLEAN TypeExistsInTopmostLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusTop
 }
 
 
-void SetTopmostFlags( UINT32 iMapIndex, UINT32 uiFlags, UINT16 usIndex )
+void SetTopmostFlags( INT32 iMapIndex, UINT32 uiFlags, UINT16 usIndex )
 {
 	LEVELNODE			*pTopmost		 = NULL;
 
@@ -3259,7 +3259,7 @@ void SetTopmostFlags( UINT32 iMapIndex, UINT32 uiFlags, UINT16 usIndex )
 	SetIndexLevelNodeFlags( pTopmost, uiFlags, usIndex );
 }
 
-void RemoveTopmostFlags( UINT32 iMapIndex, UINT32 uiFlags, UINT16 usIndex )
+void RemoveTopmostFlags( INT32 iMapIndex, UINT32 uiFlags, UINT16 usIndex )
 {
 	LEVELNODE			*pTopmost		 = NULL;
 
@@ -3269,7 +3269,7 @@ void RemoveTopmostFlags( UINT32 iMapIndex, UINT32 uiFlags, UINT16 usIndex )
 }
 
 
-BOOLEAN SetMapElementShadeLevel( UINT32 uiMapIndex, UINT8 ubShadeLevel )
+BOOLEAN SetMapElementShadeLevel( INT32 uiMapIndex, UINT8 ubShadeLevel )
 {
 	SetAllLandShadeLevels( uiMapIndex, ubShadeLevel );
 	SetAllObjectShadeLevels( uiMapIndex, ubShadeLevel );
@@ -3470,7 +3470,7 @@ BOOLEAN WaterTooDeepForAttacks( INT32 sGridNo )
 	return( DeepWater( sGridNo ) );
 }
 
-void SetStructAframeFlags( UINT32 iMapIndex, UINT32 uiFlags  )
+void SetStructAframeFlags( INT32 iMapIndex, UINT32 uiFlags  )
 {
 	LEVELNODE	*pStruct		 = NULL;
 	LEVELNODE	*pOldStruct		 = NULL;
@@ -3502,7 +3502,7 @@ void SetStructAframeFlags( UINT32 iMapIndex, UINT32 uiFlags  )
 
 }
 
-void RemoveStructAframeFlags( UINT32 iMapIndex, UINT32 uiFlags  )
+void RemoveStructAframeFlags( INT32 iMapIndex, UINT32 uiFlags  )
 {
 	LEVELNODE	*pStruct		 = NULL;
 	LEVELNODE	*pOldStruct		 = NULL;

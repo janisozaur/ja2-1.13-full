@@ -36,7 +36,7 @@ BUILDING * CreateNewBuilding( UINT8 * pubBuilding )
 
 BUILDING * GenerateBuilding( INT32 sDesiredSpot )
 {
-	UINT32	uiLoop;
+	INT32	uiLoop;
 	INT32		sTempGridNo, sNextTempGridNo, sVeryTemporaryGridNo;
 	INT32		sStartGridNo, sCurrGridNo, sPrevGridNo = NOWHERE, sRightGridNo;
 	INT8		bDirection, bTempDirection;
@@ -335,7 +335,8 @@ BUILDING * FindBuilding( INT32 sGridNo )
 	UINT8					ubBuildingID;
 	//UINT8					ubRoomNo;
 
-	if (sGridNo <= 0 || sGridNo > WORLD_MAX)
+	//if (sGridNo <= 0 || sGridNo > WORLD_MAX)
+	if ( TileIsOutOfBounds( sGridNo ) )
 	{
 		return( NULL );
 	}

@@ -17,9 +17,9 @@
 //#define	NO_MAP_POS			NOWHERE
 #define	MAX_MAP_POS			(GRIDSIZE)  //MAX_MAP_POS will be used only to track the changes made for the big map project, should be replaced with GRIDSIZE later
 
-#define MAPWIDTH			(WORLD_COLS)
-#define MAPHEIGHT			(WORLD_ROWS)
-#define MAPLENGTH			(MAPHEIGHT*MAPWIDTH)
+//#define MAPWIDTH			(WORLD_COLS)	//Lalien: replaced with WORLD_COLS
+//#define MAPHEIGHT			(WORLD_ROWS)	//Lalien: replaced with WORLD_ROWS
+//#define MAPLENGTH			(MAPHEIGHT*MAPWIDTH) //Lalien: replaced with WORLD_MAX
 
 
 #define	ADJUST_Y_FOR_HEIGHT( pos, y )				( y -= gpWorldLevelData[ pos ].sHeight )					

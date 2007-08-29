@@ -245,9 +245,15 @@ INT16 gsTerrainTypeSpeedModifiers[] =
 BOOLEAN gfCalcTranslucency = FALSE;
 
 
-INT16		gsFullTileDirections[ MAX_FULLTILE_DIRECTIONS ] =
+//INT16 gsFullTileDirections[ MAX_FULLTILE_DIRECTIONS ] =
+//{
+//	-1, -OLD_WORLD_COLS - 1, -OLD_WORLD_COLS
+//};
+
+
+INT16 gsFullTileDirections[ MAX_FULLTILE_DIRECTIONS ] =
 {
-	-1, -OLD_WORLD_COLS - 1, -OLD_WORLD_COLS
+	-1, -WORLD_COLS - 1, -WORLD_COLS
 };
 
 
@@ -1075,7 +1081,7 @@ BOOLEAN ReCreateSelectedSoldierLight(  )
 {
 	SOLDIERTYPE *pSoldier;
 
-	if ( gusSelectedSoldier == NO_SOLDIER )
+	if ( gusSelectedSoldier == NOBODY )
 	{
 		return( FALSE );
 	}
@@ -7689,10 +7695,10 @@ BOOLEAN CheckForFullStruct( INT32 sGridNo, UINT16 *pusIndex  )
 
 BOOLEAN FullStructAlone( INT32 sGridNo, UINT8 ubRadius )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT16	 iNewIndex;
+	INT32  sTop, sBottom;
+	INT32  sLeft, sRight;
+	INT32  cnt1, cnt2;
+	INT32	 iNewIndex;
 	INT32	 leftmost;
 
 

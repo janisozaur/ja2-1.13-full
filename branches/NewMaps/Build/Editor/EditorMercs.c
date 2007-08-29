@@ -655,7 +655,7 @@ void ResetAllMercPositions()
 	gsSelectedMercID = -1;
 }
 
-void AddMercWaypoint( UINT32 iMapIndex )
+void AddMercWaypoint( INT32 iMapIndex )
 {
 	INT32 iNum;
 	// index 0 isn't used
@@ -2019,6 +2019,9 @@ void ChangeBodyType( INT8 bOffset )  //+1 or -1 only
 			pbArray = bCivArray;
 			iMax = MAX_CIVTYPES;
 			break;
+		default:
+			AssertMsg( 0, "Unknown team");
+			return;
 	}
 	//find the matching bodytype index within the array.
 	for( x = 0; x < iMax; x++ )
@@ -2116,7 +2119,7 @@ void SetMercEditability( BOOLEAN fEditable )
 //points together.  If one of the points is isolated, then the map will be rejected.  It
 //isn't necessary to specify all four points.  You wouldn't want to specify a north point if
 //there isn't going to be any traversing to adjacent maps from that side.
-void SpecifyEntryPoint( UINT32 iMapIndex )
+void SpecifyEntryPoint( INT32 iMapIndex )
 {
 	INT32 *psEntryGridNo;
 	BOOLEAN fErasing = FALSE;
@@ -3422,7 +3425,7 @@ void UpdateScheduleAction( UINT8 ubNewAction )
 // 0:1A, 1:1B, 2:2A, 3:2B, ...
 void FindScheduleGridNo( UINT8 ubScheduleData )
 {
-	INT32 iMapIndex;
+	INT32 iMapIndex = 0xffffffff;
 	switch( ubScheduleData )
 	{
 		case 0: //1a
@@ -3451,8 +3454,9 @@ void FindScheduleGridNo( UINT8 ubScheduleData )
 			break;
 		default:
 			AssertMsg( 0, "FindScheduleGridNo passed incorrect dataID." );
+			return;
 	}
-	if( iMapIndex != 0xffff )
+	if( iMapIndex != 0xffffffff )
 	{
 		CenterScreenAtMapIndex( iMapIndex );
 	}
@@ -3549,11 +3553,11 @@ void UpdateScheduleInfo()
 			MSYS_SetBtnUserData( iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ], 0, pSchedule->ubAction[i] );
 			SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ], gszScheduleActions[ pSchedule->ubAction[i] ] );
 			swprintf( str, L"" );
-			if( pSchedule->usData1[i] != 0xffff )
+			if( pSchedule->usData1[i] != 0xffffffff )
 				swprintf( str, L"%d", pSchedule->usData1[i] );
 			SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1A + i ], str );
 			swprintf( str, L"" );
-			if( pSchedule->usData2[i] != 0xffff )
+			if( pSchedule->usData2[i] != 0xffffffff )
 				swprintf( str, L"%d", pSchedule->usData2[i] );
 			SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1B + i ], str );
 			if( gubCurrMercMode == MERC_SCHEDULEMODE )

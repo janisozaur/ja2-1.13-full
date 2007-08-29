@@ -930,7 +930,7 @@ BOOLEAN SetLandIndexWithRadius( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewTyp
 }
 
 
-BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
+BOOLEAN GetTypeLandLevel( INT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
 {
 	UINT8					level = 0;
 	LEVELNODE			*pLand;
@@ -962,7 +962,7 @@ BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
 }
 
 
-UINT8		GetLandLevelDepth( UINT32 iMapIndex )
+UINT8		GetLandLevelDepth( INT32 iMapIndex )
 {
 	UINT8					level = 0;
 	LEVELNODE		*pLand;
@@ -1028,7 +1028,7 @@ BOOLEAN	GetTileIndexFromTypeSubIndex( UINT32 uiCheckType, UINT16 usSubIndex, UIN
 
 
 
-BOOLEAN MoveLandIndexToTop( UINT32 iMapIndex, UINT16 usIndex )
+BOOLEAN MoveLandIndexToTop( INT32 iMapIndex, UINT16 usIndex )
 {
 
 	// Remove, then add again
@@ -1093,7 +1093,7 @@ BOOLEAN LandTypeHeigher( UINT32 uiDestType, UINT32 uiSrcType  )
 }
 
 
-BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
+BOOLEAN AnyHeigherLand( INT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
 {
 	LEVELNODE		*pLand		 = NULL;
   UINT8					ubSrcLogHeight=0;
@@ -1141,7 +1141,7 @@ BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel 
 
 }
 
-BOOLEAN AnyLowerLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
+BOOLEAN AnyLowerLand( INT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
 {
 	LEVELNODE		*pLand		 = NULL;
   UINT8					ubSrcLogHeight;

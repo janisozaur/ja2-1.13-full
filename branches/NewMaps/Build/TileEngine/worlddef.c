@@ -155,7 +155,7 @@ INT16		gsRecompileAreaBottom = 0;
 	extern UINT32 uiNumImagesReloaded;
 #endif
 
-BOOLEAN DoorAtGridNo( UINT32 iMapIndex )
+BOOLEAN DoorAtGridNo( INT32 iMapIndex )
 {
 	STRUCTURE *pStruct;
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructureHead;
@@ -168,7 +168,7 @@ BOOLEAN DoorAtGridNo( UINT32 iMapIndex )
 	return FALSE;
 }
 
-BOOLEAN OpenableAtGridNo( UINT32 iMapIndex )
+BOOLEAN OpenableAtGridNo( INT32 iMapIndex )
 {
 	STRUCTURE *pStruct;
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructureHead;
@@ -181,7 +181,7 @@ BOOLEAN OpenableAtGridNo( UINT32 iMapIndex )
 	return FALSE;
 }
 
-BOOLEAN FloorAtGridNo( UINT32 iMapIndex )
+BOOLEAN FloorAtGridNo( INT32 iMapIndex )
 {
 	LEVELNODE	*pLand;
 	UINT32 uiTileType;
@@ -202,7 +202,7 @@ BOOLEAN FloorAtGridNo( UINT32 iMapIndex )
 	return FALSE;
 }
 
-BOOLEAN GridNoIndoors( UINT32 iMapIndex )
+BOOLEAN GridNoIndoors( INT32 iMapIndex )
 {
 	if( gfBasement || gfCaves )
 		return TRUE;
@@ -1613,7 +1613,7 @@ void CompileWorldMovementCosts( )
 {
 	INT32 usGridNo;
 
-	int i, j;
+	INT32 i, j;
 
 //	memset( gubWorldMovementCosts, 0, sizeof( gubWorldMovementCosts ) );
 
@@ -1662,7 +1662,7 @@ BOOLEAN SaveWorld( UINT8	*puiFilename )
 	UINT8			ubCombine;
 //	UINT8			bCounts[ WORLD_MAX ][8];
 	UINT8**			bCounts = NULL;
-	int i;
+	INT32			i;
 
 	bCounts = (UINT8**)MemAlloc(WORLD_MAX*sizeof(UINT8*));
 	for(i = 0; i<WORLD_MAX; i++)
@@ -2684,7 +2684,9 @@ BOOLEAN LoadWorld( UINT8	*puiFilename )
 	INT8						*pBufferHead;
 	BOOLEAN					fGenerateEdgePoints = FALSE;
 	UINT8						ubMinorMapVersion;
-	int i;
+	INT32					i;
+
+
 #ifdef JA2TESTVERSION
 	uiLoadWorldStartTime = GetJA2Clock();
 #endif
@@ -3201,11 +3203,11 @@ BOOLEAN LoadWorld( UINT8	*puiFilename )
 	gfForceLoad				 = FALSE;
 
 	// CHECK IF OUR SELECTED GUY IS GONE!
-	if ( gusSelectedSoldier != NO_SOLDIER )
+	if ( gusSelectedSoldier != NOBODY )
 	{
 		if ( MercPtrs[ gusSelectedSoldier ]->bActive == FALSE )
 		{
-			gusSelectedSoldier = NO_SOLDIER;
+			gusSelectedSoldier = NOBODY;
 		}
 	}
 
@@ -3265,7 +3267,7 @@ BOOLEAN NewWorld( INT32 nMapRows,  INT32 nMapCols )
 	UINT16				NewIndex;
 	INT32					cnt;
 
-	gusSelectedSoldier = gusOldSelectedSoldier = NO_SOLDIER;
+	gusSelectedSoldier = gusOldSelectedSoldier = NOBODY;
 
 	AdjustSoldierCreationStartValues( );
 
@@ -3750,7 +3752,7 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 	UINT8					ubWallOrientation;
 	INT8					bHiddenVal;
 	INT8					bNumWallsSameGridNo;
-  UINT16        usWireFrameIndex;
+	INT32			usWireFrameIndex;
 
 	// Create world randomly from tiles
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
@@ -3771,7 +3773,7 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 			bNumWallsSameGridNo = 0;
 
 			// Check our gridno, if we have a roof over us that has not beenr evealed, no need for a wiereframe
-			if ( IsRoofVisibleForWireframe( (UINT16)cnt ) && !( gpWorldLevelData[ cnt ].uiFlags & MAPELEMENT_REVEALED ) )
+			if ( IsRoofVisibleForWireframe( cnt ) && !( gpWorldLevelData[ cnt ].uiFlags & MAPELEMENT_REVEALED ) )
 			{
 				continue;
 			}
@@ -3865,7 +3867,7 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 					  // Based on orientation
 					  ubWallOrientation = pStructure->ubWallOrientation;
 
-            usWireFrameIndex = GetWireframeGraphicNumToUseForWall( (UINT16)cnt, pStructure );
+            usWireFrameIndex = GetWireframeGraphicNumToUseForWall( cnt, pStructure );
 
 					  switch( ubWallOrientation )
 					  {
@@ -4236,27 +4238,40 @@ extern INT32 gsLastVisibleToSoldierGridNo;
 
 void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 {
-	int i, j;
+	INT32 i, j;
+
+	INT32 o_WORLD_MAX = WORLD_MAX;
+
+	WORLD_ROWS = nWorldRows;
+	WORLD_COLS = nWorldCols;
+
 
 	if(gubGridNoMarkers)
 		MemFree(gubGridNoMarkers);
-	gubGridNoMarkers = (UINT8*)MemAlloc(nWorldRows*nWorldCols);
+	gubGridNoMarkers = (UINT8*)MemAlloc(WORLD_MAX);
+	memset( gubGridNoMarkers, 0, sizeof( gubGridNoMarkers ) );
 
 	if(gsCoverValue)
 		MemFree(gsCoverValue);
-	gsCoverValue = (INT16*)MemAlloc(nWorldRows*nWorldCols*sizeof(INT16));
+	gsCoverValue = (INT16*)MemAlloc(WORLD_MAX*sizeof(INT16));
+	memset( gsCoverValue, 0x7F, sizeof( INT16 ) * WORLD_MAX );
 
 	if(gubBuildingInfo)
 		MemFree(gubBuildingInfo);
-	gubBuildingInfo = (UINT8*)MemAlloc(nWorldRows*nWorldCols);
+	gubBuildingInfo = (UINT8*)MemAlloc(WORLD_MAX);
+	
+	// init building structures and variables
+	memset( gubBuildingInfo, 0, WORLD_MAX * sizeof( UINT8 ) );
+	//memset( &gBuildings, 0, MAX_BUILDINGS * sizeof( BUILDING ) );
 	
 	if(gubWorldRoomInfo)
 		MemFree(gubWorldRoomInfo);
-	gubWorldRoomInfo = (UINT8*)MemAlloc(nWorldRows*nWorldCols);
+	gubWorldRoomInfo = (UINT8*)MemAlloc(WORLD_MAX);
+	memset( gubWorldRoomInfo, 0, sizeof( gubWorldRoomInfo ) );
 
 	if(gubWorldMovementCosts)
 	{
-		for(i=0; i<WORLD_MAX; i++)
+		for(i=0; i<o_WORLD_MAX; i++)
 		{
 			for(j=0; j<MAXDIR; j++)
 				MemFree(gubWorldMovementCosts[i][j]);
@@ -4269,17 +4284,48 @@ void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 	{
 		gubWorldMovementCosts[i] = (UINT8**)MemAlloc(MAXDIR*sizeof(UINT8*));
 		for(j=0; j<MAXDIR; j++)
+		{
 			gubWorldMovementCosts[i][j] = (UINT8*)MemAlloc(2*sizeof(UINT8));
+		}
 	}
+
+
+	if ( gpWorldLevelData != NULL )
+	{
+		MemFree( gpWorldLevelData );
+	}
+
+	// Initialize world data
+	gpWorldLevelData = (MAP_ELEMENT *)MemAlloc( WORLD_MAX * sizeof( MAP_ELEMENT ) );
+	//CHECKF( gpWorldLevelData );
+
+	// Zero world
+	memset( gpWorldLevelData, 0, WORLD_MAX * sizeof( MAP_ELEMENT ) );
+
+	
+	//if(trailCost)
+	//{
+	//	MemFree( trailCost );
+	//}
+	//trailCost = (UINT16 *) MemAlloc( WORLD_MAX * sizeof( UINT32 ) );
+	//memset( trailCost, 0, WORLD_MAX * sizeof( UINT32 ) );
+
+	//if(trailCostUsed)
+	//{
+	//	MemFree( trailCostUsed );
+	//}
+	//trailCostUsed = (UINT8 *) MemAlloc( WORLD_MAX );
+	//memset( trailCostUsed, 0, WORLD_MAX );
+
+	ShutDownPathAI( );
+	InitPathAI();
 
 #ifdef _DEBUG
 	if(gubFOVDebugInfoInfo)
 			MemFree(gubFOVDebugInfoInfo);
-	gubFOVDebugInfoInfo = (UINT8*)MemAlloc(nWorldRows*nWorldCols);
+	gubFOVDebugInfoInfo = (UINT8*)MemAlloc(WORLD_MAX);
 #endif
 
-	WORLD_ROWS = nWorldRows;
-	WORLD_COLS = nWorldCols;
 
 	dirDelta[0]= -WORLD_COLS;
 	dirDelta[1]= 1-WORLD_COLS;

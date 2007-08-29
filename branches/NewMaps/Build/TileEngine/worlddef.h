@@ -302,12 +302,12 @@ LEVELNODE *GetAnimProfileFlags( INT32 sGridNo, UINT16 *usFlags, SOLDIERTYPE **pp
 
 void ReloadTileset( UINT8 ubID );
 
-BOOLEAN FloorAtGridNo( UINT32 iMapIndex );
-BOOLEAN DoorAtGridNo( UINT32 iMapIndex );
-BOOLEAN GridNoIndoors( UINT32 iMapIndex );
+BOOLEAN FloorAtGridNo( INT32 iMapIndex );
+BOOLEAN DoorAtGridNo( INT32 iMapIndex );
+BOOLEAN GridNoIndoors( INT32 iMapIndex );
 
 
-BOOLEAN OpenableAtGridNo( UINT32 iMapIndex );
+BOOLEAN OpenableAtGridNo( INT32 iMapIndex );
 
 void RecompileLocalMovementCostsInAreaWithFlags( void );
 void AddTileToRecompileArea( INT32 sGridNo );
