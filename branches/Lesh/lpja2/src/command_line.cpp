@@ -4,6 +4,13 @@
 // command line parameters structure
 COMMAND_LINE_PARAMS		gCmdLineParams;
 
+//**********************************************************
+//	ProcessCommandLine - parses the command line
+//
+//	[in]	argc - number of arguments
+//	[in]	argv - string list of arguments
+//
+//**********************************************************
 void	ProcessCommandLine( INT32 argc, CHAR8 *argv[] )
 {
 	INT32	cnt = 1;
@@ -48,6 +55,10 @@ void	ProcessCommandLine( INT32 argc, CHAR8 *argv[] )
 	}
 }
 
+//**********************************************************
+//	PrintCommandLineHelp - prints help for command line
+//	arguments
+//**********************************************************
 void	PrintCommandLineHelp( void )
 {
 	printf("Jagged Alliance 2 v1.13 linux port\n");
