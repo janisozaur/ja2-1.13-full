@@ -1,8 +1,6 @@
 #ifndef __VIDEO_
 #define __VIDEO_
 
-//#include <process.h> 
-
 #include "local.h"
 #include "debug.h"
 #include "types.h"

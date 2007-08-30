@@ -401,6 +401,8 @@ void GetRuntimeSettings( )
 	SCREEN_HEIGHT = GetPrivateProfileInt( "SGP", "HEIGHT", iResY, INIFile );
 #endif
 
+	gfFullScreen = rtIni.ReadInteger("Ja2 Settings", "FULLSCREEN", 0);
+
 	rtIni.Close();
 
 	iScreenWidthOffset = (SCREEN_WIDTH - 640) / 2;
@@ -418,8 +420,4 @@ void ShutdownWithErrorBox(CHAR8 *pcMessage)
 
 void TestIO( void )
 {
-	printf("Some data amounts:\n");
-	printf("sizeof(CHAR16)=%d\n", sizeof(CHAR16));
-	printf("sizeof(UINT16)=%d\n", sizeof(UINT16));
-	printf("sizeof(STRING512)=%d\n", sizeof(STRING512));
 }
