@@ -351,7 +351,7 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 #ifdef DEBUGDECISIONS
  STR16 tempstr;
 #endif
-	INT16 sPatrolPoint;
+	INT32 sPatrolPoint;
 	INT8  bOldOrders, bPatrolIndex;
 	INT8	bCnt;
 
@@ -441,9 +441,9 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 INT32 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT32 sDesGrid, INT8 bReserveAPs, INT8 bAction, INT8 fFlags )
 {
 #ifdef DEBUGDECISIONS
- STR16 tempstr;
+	STR16 tempstr;
 #endif
-	INT16 sLoop,sAPCost;
+	INT32 sLoop,sAPCost;
 	INT32 sTempDest,sGoToGrid;
 	INT32 sOrigin;
 	UINT16 usMaxDist;
@@ -1182,9 +1182,9 @@ UINT16 RunAway( SOLDIERTYPE * pSoldier )
 				break;
 		}
 		iRunGridNo = iRunX + iRunY * WORLD_COLS;
-		if (LegalNPCDestination( pSoldier, (UINT16) iRunGridNo, ENSURE_PATH, TRUE,0))
+		if (LegalNPCDestination( pSoldier, iRunGridNo, ENSURE_PATH, TRUE,0))
 		{
-			return( (UINT16) iRunGridNo );
+			return( iRunGridNo );
 		}
 		// otherwise we'll try again another time
 	}

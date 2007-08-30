@@ -4840,7 +4840,7 @@ void ShotMiss( UINT8 ubAttackerID, INT32 iBullet )
 
 			if ( pAttacker->bTeam == gbPlayerNum )
 			{
-				LocateGridNo( (INT16)pBullet->sGridNo );
+				LocateGridNo( pBullet->sGridNo );
 			}
 		}
 

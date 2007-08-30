@@ -2288,7 +2288,13 @@ void CreateNewMap()
 		LoadMapTileset( 0 );
 
 	LightReset();
-	
+
+	HideEntryPoints();
+	gMapInformation.sNorthGridNo = -1;
+	gMapInformation.sSouthGridNo = -1;
+	gMapInformation.sWestGridNo = -1;
+	gMapInformation.sEastGridNo = -1;
+
 	//NewWorld( );
 	//NewWorld( OLD_WORLD_ROWS, OLD_WORLD_COLS);
 	
@@ -2322,17 +2328,13 @@ void CreateNewMap()
 	}
 	else
 		SetEditorSmoothingMode( SMOOTHING_NORMAL );
+	
 	fNewMap = FALSE;
 	RemoveAllFromUndoList( );
 	UseEditorAlternateList();
 	KillSoldierInitList();
 	UseEditorOriginalList();
 	KillSoldierInitList();
-	HideEntryPoints();
-	gMapInformation.sNorthGridNo = -1;
-	gMapInformation.sSouthGridNo = -1;
-	gMapInformation.sWestGridNo = -1;
-	gMapInformation.sEastGridNo = -1;
 }
 
 

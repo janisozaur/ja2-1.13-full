@@ -981,7 +981,7 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 	UINT8	ubDir, ubMovementCost;
 	BOOLEAN fReachable = FALSE;
 	INT32 sGridNo = NOWHERE, sGridNo2 = NOWHERE;
-	INT16	sNewLoc;
+	INT32	sNewLoc;
 
 	SOLDIERTYPE * pSoldier;
 	BOOLEAN	fSecondary = FALSE;

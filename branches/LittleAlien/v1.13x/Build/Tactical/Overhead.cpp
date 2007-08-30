@@ -1331,12 +1331,12 @@ BOOLEAN ExecuteOverhead( )
 												{
 													// If the two gridnos are not the same, check to see if we can
 													// now go into it
-													if ( sGridNo != (INT16)pSoldier->uiPendingActionData4 )
+													if ( sGridNo != pSoldier->uiPendingActionData4 )
 													{
-														if ( NewOKDestination( pSoldier, (INT16)pSoldier->uiPendingActionData4, TRUE, pSoldier->bLevel ) )
+														if ( NewOKDestination( pSoldier, pSoldier->uiPendingActionData4, TRUE, pSoldier->bLevel ) )
 														{
 															// GOTO NEW TILE!
-															SoldierPickupItem( pSoldier, pSoldier->uiPendingActionData1, (INT16)pSoldier->uiPendingActionData4, pSoldier->bPendingActionData3 );
+															SoldierPickupItem( pSoldier, pSoldier->uiPendingActionData1, pSoldier->uiPendingActionData4, pSoldier->bPendingActionData3 );
 															continue;
 														}
 													}
@@ -1345,14 +1345,14 @@ BOOLEAN ExecuteOverhead( )
 												// OK MORON, DOUBLE CHECK THAT THE ITEM EXISTS HERE...
 												if ( pSoldier->uiPendingActionData1 != ITEM_PICKUP_ACTION_ALL )
 												{
-													//if ( ItemExistsAtLocation( (INT16)( pSoldier->uiPendingActionData4 ), pSoldier->uiPendingActionData1, pSoldier->bLevel ) )
+													//if ( ItemExistsAtLocation( pSoldier->uiPendingActionData4, pSoldier->uiPendingActionData1, pSoldier->bLevel ) )
 													{
-														PickPickupAnimation( pSoldier, pSoldier->uiPendingActionData1, (INT16)( pSoldier->uiPendingActionData4 ), pSoldier->bPendingActionData3 );
+														PickPickupAnimation( pSoldier, pSoldier->uiPendingActionData1, pSoldier->uiPendingActionData4, pSoldier->bPendingActionData3 );
 													}
 												}
 												else
 												{
-													PickPickupAnimation( pSoldier, pSoldier->uiPendingActionData1, (INT16)( pSoldier->uiPendingActionData4 ), pSoldier->bPendingActionData3 );
+													PickPickupAnimation( pSoldier, pSoldier->uiPendingActionData1, pSoldier->uiPendingActionData4, pSoldier->bPendingActionData3 );
 												}
 											}
 											else
@@ -5043,8 +5043,8 @@ INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pub
 		{
 			if ( sDistance < sClosest )
 			{
-				sClosest			= sDistance;
-				sCloseGridNo  = (INT16)sSpot;
+				sClosest	= sDistance;
+				sCloseGridNo = sSpot;
 			}
 		}
 	}
@@ -5140,7 +5140,7 @@ INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pub
 INT32 FindAdjacentPunchTarget( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier, INT32 * psAdjustedTargetGridNo, UINT8 * pubDirection )
 {
 	INT16	cnt;
-	 INT32	sSpot;	
+	INT32	sSpot;	
 	UINT8	ubGuyThere;
 
 	for ( cnt = 0; cnt < NUM_WORLD_DIRECTIONS; cnt++ )

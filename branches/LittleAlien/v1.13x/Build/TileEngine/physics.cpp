@@ -1821,7 +1821,7 @@ FLOAT CalculateLaunchItemAngle( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubHe
 
 void CalculateLaunchItemBasicParams( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, INT32 sGridNo, UINT8 ubLevel, INT16 sEndZ,  FLOAT *pdMagForce, FLOAT *pdDegrees, INT32 *psFinalGridNo, BOOLEAN fArmed )
 {
-	INT32		sInterGridNo;
+	INT32		sInterGridNo = NOWHERE;
 	INT16		sStartZ;
 	FLOAT		dMagForce, dMaxForce, dMinForce;
 	FLOAT		dDegrees, dNewDegrees;

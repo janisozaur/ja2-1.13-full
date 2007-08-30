@@ -443,7 +443,7 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 	INT32 iChance, iSneaky;
 	BOOLEAN fClimb;
 	BOOLEAN fReachable;
-//	INT16 sClosestFriend;
+//	INT32 sClosestFriend;
 
 	if ( pSoldier->bMobility == CREATURE_CRAWLER && pSoldier->bActionPoints < pSoldier->bInitialActionPoints)
 	{
@@ -598,9 +598,9 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 {
  // monster AI - hostile mammals somewhere around!
- INT16 iChance, sClosestOpponent /*,sClosestOpponent,sClosestFriend*/;
- INT16 sClosestDisturbance;
- INT16 sDistVisible;
+ INT32 iChance, sClosestOpponent /*,sClosestOpponent,sClosestFriend*/;
+ INT32 sClosestDisturbance;
+ INT32 sDistVisible;
  UINT8 ubCanMove,ubOpponentDir;
  //INT8 bInWater;
  INT8 bInGas;

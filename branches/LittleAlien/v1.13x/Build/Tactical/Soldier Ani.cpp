@@ -1742,7 +1742,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				//if ( pSoldier->ubPendingAction == MERC_PICKUPITEM )
 				//{
 				// DROP ITEM
-				HandleSoldierPickupItem( pSoldier, pSoldier->uiPendingActionData1, (INT16)(pSoldier->uiPendingActionData4 ), pSoldier->bPendingActionData3 );
+				HandleSoldierPickupItem( pSoldier, pSoldier->uiPendingActionData1, pSoldier->uiPendingActionData4, pSoldier->bPendingActionData3 );
 				// EVENT HAS BEEN HANDLED
 				pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
 

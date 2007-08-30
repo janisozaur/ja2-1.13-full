@@ -4369,4 +4369,5 @@ void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 	gsLastCoverGridNo=NOWHERE;
 	gsLastSoldierGridNo=NOWHERE;
 	gsLastVisibleToSoldierGridNo=NOWHERE;
+	gusCurMousePos=NOWHERE;
 }

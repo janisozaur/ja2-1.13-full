@@ -407,7 +407,7 @@ void NewDest(SOLDIERTYPE *pSoldier, INT32 usGridNo)
 				default:
 /*					if ( PreRandom( 5 - SoldierDifficultyLevel( pSoldier ) ) == 0 )	
 					{
-						INT16 sClosestNoise = (INT16) MostImportantNoiseHeard( pSoldier, NULL, NULL, NULL );
+						INT32 sClosestNoise = MostImportantNoiseHeard( pSoldier, NULL, NULL, NULL );
 						if ( sClosestNoise != NOWHERE && PythSpacesAway( pSoldier->sGridNo, sClosestNoise ) < MaxDistanceVisible() + 10 )
 						{
 							pSoldier->usUIMovementMode = SWATTING;

@@ -532,7 +532,7 @@ INT8 DecideActionSchedule( SOLDIERTYPE * pSoldier )
 INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE *pSoldier)
 {
 	UINT8 ubRoom;
-	INT16	sDesiredMercLoc;
+	INT32	sDesiredMercLoc;
 	UINT8 ubDesiredMercDir;
 #ifdef DEBUGDECISIONS
 	STR16 tempstr;
@@ -1229,7 +1229,7 @@ INT8 DecideActionGreen(SOLDIERTYPE *pSoldier)
 						INT32 iNoiseValue;
 						BOOLEAN fClimb;
 						BOOLEAN fReachable;
-						INT16 sNoiseGridNo = MostImportantNoiseHeard(pSoldier,&iNoiseValue, &fClimb, &fReachable);
+						INT32 sNoiseGridNo = MostImportantNoiseHeard(pSoldier,&iNoiseValue, &fClimb, &fReachable);
 						UINT8 ubNoiseDir;
 
 						if (sNoiseGridNo == NOWHERE || 
@@ -1285,10 +1285,10 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 {
 	INT32 iDummy;
 	UINT8 ubNoiseDir;
- INT32 sNoiseGridNo;
+	INT32 sNoiseGridNo;
 	INT32 iNoiseValue;
 	INT32 iChance, iSneaky;
-	INT16 sClosestFriend;
+	INT32 sClosestFriend;
 	BOOLEAN fCivilian = (PTR_CIVILIAN && (pSoldier->ubCivilianGroup == NON_CIV_GROUP || pSoldier->bNeutral || (pSoldier->ubBodyType >= FATCIV && pSoldier->ubBodyType <= CRIPPLECIV) ) );
 	BOOLEAN fClimb;
 	BOOLEAN fReachable;
@@ -1468,7 +1468,7 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 	}
 
 	//continue flanking
-	INT16 tempGridNo;
+	INT32 tempGridNo;
 	if ( sNoiseGridNo == NOWHERE )
 		tempGridNo = pSoldier->lastFlankSpot;
 	else
@@ -1900,8 +1900,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 {
 	INT8 bActionReturned;
 	INT32 iDummy;
-	INT16 iChance,sClosestOpponent,sClosestFriend;
- INT32 sClosestDisturbance, sDistVisible, sCheckGridNo;
+	INT32 iChance,sClosestOpponent,sClosestFriend;
+	INT32 sClosestDisturbance, sDistVisible, sCheckGridNo;
 	UINT8 ubCanMove,ubOpponentDir;
 	INT8 bInWater, bInDeepWater, bInGas;
 	INT8 bSeekPts = 0, bHelpPts = 0, bHidePts = 0, bWatchPts = 0;
@@ -2556,7 +2556,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"decideactionred: check to continue flanking");
 		// continue flanking
-		INT16 tempGridNo;
+		INT32 tempGridNo;
 		if ( sClosestDisturbance == NOWHERE )
 			tempGridNo = pSoldier->lastFlankSpot;
 		else

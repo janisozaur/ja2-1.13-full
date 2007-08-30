@@ -3870,7 +3870,7 @@ void MoveBullet( INT32 iBullet )
 		// check a particular tile
 		// retrieve values from world for this particular tile
 		iGridNo = pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS;
-		if (!GridNoOnVisibleWorldTile( (INT16) iGridNo ) || (pBullet->iCurrCubesZ > PROFILE_Z_SIZE * 2 && FIXEDPT_TO_INT32( pBullet->qIncrZ ) > 0 ) )
+		if (!GridNoOnVisibleWorldTile( iGridNo ) || (pBullet->iCurrCubesZ > PROFILE_Z_SIZE * 2 && FIXEDPT_TO_INT32( pBullet->qIncrZ ) > 0 ) )
 		{
 			// bullet outside of world!
 			// NB remove bullet only flags a bullet for deletion; we still have access to the 
@@ -4432,14 +4432,14 @@ void MoveBullet( INT32 iBullet )
 											{
 												if ( pBullet->qIncrX > 0)
 												{
-													BulletHitWindow( pBullet, (INT16) (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS), pStructure->usStructureID, TRUE );
+													BulletHitWindow( pBullet, (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS), pStructure->usStructureID, TRUE );
 													LocateBullet( pBullet->iBullet );
 													// have to remove this window from future hit considerations so the deleted structure data can't be referenced!
 													gpLocalStructure[ iStructureLoop ] = NULL;
 												}
 												else
 												{
-													BulletHitWindow( pBullet, (INT16) (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS), pStructure->usStructureID, FALSE );
+													BulletHitWindow( pBullet, (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS), pStructure->usStructureID, FALSE );
 													LocateBullet( pBullet->iBullet );
 													gpLocalStructure[ iStructureLoop ] = NULL;
 												}
@@ -4448,13 +4448,13 @@ void MoveBullet( INT32 iBullet )
 											{
 												if (pBullet->qIncrY > 0)
 												{
-													BulletHitWindow( pBullet, (INT16) (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS), pStructure->usStructureID, TRUE );
+													BulletHitWindow( pBullet, (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS), pStructure->usStructureID, TRUE );
 													LocateBullet( pBullet->iBullet );
 													gpLocalStructure[ iStructureLoop ] = NULL;
 												}
 												else
 												{
-													BulletHitWindow( pBullet, (INT16) (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS), pStructure->usStructureID, FALSE );
+													BulletHitWindow( pBullet, (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS), pStructure->usStructureID, FALSE );
 													LocateBullet( pBullet->iBullet );
 													gpLocalStructure[ iStructureLoop ] = NULL;
 												}
@@ -4585,7 +4585,7 @@ void MoveBullet( INT32 iBullet )
 			}
 		} while( (pBullet->iCurrTileX == iOldTileX) && (pBullet->iCurrTileY == iOldTileY));
 
-		if ( !GridNoOnVisibleWorldTile( (INT16) (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS) ) || (pBullet->iCurrCubesZ > PROFILE_Z_SIZE * 2 && FIXEDPT_TO_INT32( pBullet->qIncrZ ) > 0 ) )
+		if ( !GridNoOnVisibleWorldTile( (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS) ) || (pBullet->iCurrCubesZ > PROFILE_Z_SIZE * 2 && FIXEDPT_TO_INT32( pBullet->qIncrZ ) > 0 ) )
 		{
 			// bullet outside of world!
 			RemoveBullet( pBullet->iBullet );
@@ -4660,7 +4660,7 @@ INT32	CheckForCollision( FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDel
 	sZ = (INT16)dZ;
 
 	// Check if gridno is in bounds....
-	if ( !GridNoOnVisibleWorldTile( (INT16) (sX + sY * WORLD_COLS) ) )
+	if ( !GridNoOnVisibleWorldTile( sX + sY * WORLD_COLS ) )
 	{
 		//	return( COLLISION_NONE );
 	}

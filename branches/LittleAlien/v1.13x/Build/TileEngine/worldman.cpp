@@ -3438,10 +3438,11 @@ BOOLEAN Water( INT32 sGridNo )
 {
 	MAP_ELEMENT *			pMapElement;
 
-  if ( sGridNo == NOWHERE )
-  {
-    return( FALSE );
-  }
+	//if ( sGridNo == NOWHERE )
+	if( TileIsOutOfBounds( sGridNo ) )
+	{
+		return( FALSE );
+	}
 
 	pMapElement = &(gpWorldLevelData[sGridNo]);
 	if ( pMapElement->ubTerrainID == LOW_WATER || pMapElement->ubTerrainID == MED_WATER || pMapElement->ubTerrainID == DEEP_WATER )
@@ -3459,7 +3460,13 @@ BOOLEAN DeepWater( INT32 sGridNo )
 {
 	MAP_ELEMENT *			pMapElement;
 
+	if( TileIsOutOfBounds( sGridNo ) )
+	{
+		return( FALSE );
+	}
+
 	pMapElement = &(gpWorldLevelData[sGridNo]);
+
 	if (pMapElement->ubTerrainID == DEEP_WATER)
 	{
 		// check for a bridge!  otherwise...

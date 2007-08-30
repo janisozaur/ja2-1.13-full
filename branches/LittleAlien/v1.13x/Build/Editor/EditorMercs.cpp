@@ -2133,8 +2133,8 @@ void SpecifyEntryPoint( INT32 iMapIndex )
 	switch( iDrawMode )
 	{
 		case DRAW_MODE_NORTHPOINT:		psEntryGridNo = &gMapInformation.sNorthGridNo;		break;
-		case DRAW_MODE_WESTPOINT:			psEntryGridNo = &gMapInformation.sWestGridNo;			break;
-		case DRAW_MODE_EASTPOINT:			psEntryGridNo = &gMapInformation.sEastGridNo;			break;
+		case DRAW_MODE_WESTPOINT:		psEntryGridNo = &gMapInformation.sWestGridNo;		break;
+		case DRAW_MODE_EASTPOINT:		psEntryGridNo = &gMapInformation.sEastGridNo;		break;
 		case DRAW_MODE_SOUTHPOINT:		psEntryGridNo = &gMapInformation.sSouthGridNo;		break;
 		case DRAW_MODE_CENTERPOINT:		psEntryGridNo = &gMapInformation.sCenterGridNo;		break;
 		case DRAW_MODE_ISOLATEDPOINT:	psEntryGridNo = &gMapInformation.sIsolatedGridNo;	break;

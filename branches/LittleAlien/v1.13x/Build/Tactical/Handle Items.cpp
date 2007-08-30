@@ -1674,7 +1674,7 @@ void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT32 sGridNo, 
 	else
 	{
 		// DO ANIMATION OF PICKUP NOW!
-		PickPickupAnimation( pSoldier, pSoldier->uiPendingActionData1, (INT16)( pSoldier->uiPendingActionData4 ), pSoldier->bPendingActionData3 );
+		PickPickupAnimation( pSoldier, pSoldier->uiPendingActionData1, pSoldier->uiPendingActionData4, pSoldier->bPendingActionData3 );
 	}
 
 }
@@ -5224,13 +5224,13 @@ void RefreshItemPools( WORLDITEM * pItemList, INT32 iNumberOfItems )
 
 INT32 FindNearestAvailableGridNoForItem( INT32 sSweetGridNo, INT8 ubRadius )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2, cnt3;
+	INT32 sTop, sBottom;
+	INT32 sLeft, sRight;
+	INT32 cnt1, cnt2, cnt3;
 	INT32 sGridNo;
-	INT32		uiRange, uiLowestRange = 999999;
+	INT32 uiRange, uiLowestRange = 999999;
 	INT32 sLowestGridNo=0;
-	INT32					leftmost;
+	INT32 leftmost;
 	BOOLEAN	fFound = FALSE;
 	SOLDIERTYPE soldier;
 	UINT8 ubSaveNPCAPBudget;
@@ -5254,7 +5254,7 @@ INT32 FindNearestAvailableGridNoForItem( INT32 sSweetGridNo, INT8 ubRadius )
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
-	sTop		= ubRadius;
+	sTop	= ubRadius;
 	sBottom = -ubRadius;
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;

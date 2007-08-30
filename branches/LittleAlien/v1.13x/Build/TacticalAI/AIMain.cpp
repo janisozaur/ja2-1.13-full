@@ -2323,7 +2323,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			SaveGame(ERROR_SAVE);
 #endif
 			// temporarily black list this gridno to stop enemy from going there
-			pSoldier->sBlackList = (INT16) pSoldier->usActionData;
+			pSoldier->sBlackList = pSoldier->usActionData;
 
 			DebugAI( String( "Setting blacklist for %d to %d", pSoldier->ubID, pSoldier->sBlackList ) );
 

@@ -88,9 +88,10 @@ BOOLEAN ValidateEntryPointGridNo( INT32 *sGridNo )
 	INT16 sXMapPos, sYMapPos;
 	INT16 sWorldX, sWorldY;
 	INT32 iNewMapX, iNewMapY;
-	INT16 sTopLimit, sBottomLimit;
+	INT32 sTopLimit, sBottomLimit;
 
-	if( *sGridNo < 0 )
+	//if( *sGridNo < 0 )
+	if ( TileIsOutOfBounds( *sGridNo ) )
 		return FALSE; //entry point is non-existant
 
 	ConvertGridNoToXY( *sGridNo, &sXMapPos, &sYMapPos );
@@ -114,7 +115,7 @@ BOOLEAN ValidateEntryPointGridNo( INT32 *sGridNo )
 		return FALSE; //already valid
 	}
 
-	*sGridNo = (INT16)MAPROWCOLTOPOS( iNewMapY/10, iNewMapX/10 );
+	*sGridNo = MAPROWCOLTOPOS( iNewMapY/10, iNewMapX/10 );
 
 	return TRUE; //modified
 }
