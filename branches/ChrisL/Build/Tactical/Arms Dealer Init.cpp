@@ -967,6 +967,10 @@ UINT32 GetArmsDealerItemTypeFromItemNumber( UINT16 usItem )
 	//	case IC_APPLIABLE:
 			break;
 
+	// CHRISL: Itendify new class for inventory system
+		case IC_LBEGEAR:
+			return( 0 );
+			break;
 		default:
 			AssertMsg( FALSE, String( "GetArmsDealerItemTypeFromItemNumber(), invalid class %d for item %d.  DF 0.", Item[ usItem ].usItemClass, usItem ) );
 			break;
@@ -1561,7 +1565,7 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 			for ( ubCnt = 0; ubCnt < pObject->ubNumberOfObjects; ubCnt++ )
 			{
 				AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->usItem, pObject->ItemData.Ammo.ubShotsLeft[ ubCnt ] );
-			}
+ 			}
 			break;
 
 		default:

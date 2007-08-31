@@ -32,7 +32,8 @@ BOOLEAN LoadMapScreenInterfaceBottom( void );
 void DeleteMapScreenInterfaceBottom( void );
 void DestroyButtonsForMapScreenInterfaceBottom( void );
 BOOLEAN CreateButtonsForMapScreenInterfaceBottom( void );
-void RenderMapScreenInterfaceBottom( void );
+// Headrock: Added argument to this function:
+void RenderMapScreenInterfaceBottom( BOOLEAN fForceMapscreenBottomRerender );
 
 // delete map bottom graphics
 void DeleteMapBottomGraphics( void );

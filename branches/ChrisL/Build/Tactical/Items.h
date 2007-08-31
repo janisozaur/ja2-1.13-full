@@ -46,8 +46,10 @@ extern BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OB
 extern BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYPE * pAttachment );
 extern BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, INT8 bAttachPos, OBJECTTYPE * pNewObj );
 
-extern UINT8	CalculateObjectWeight( OBJECTTYPE *pObject );
+extern UINT16	CalculateObjectWeight( OBJECTTYPE *pObject );
 extern UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier );
+// CHRISL:
+extern UINT16 CalculateItemSize( OBJECTTYPE *pObject );
 
 extern UINT16 TotalPoints( OBJECTTYPE * pObj );
 extern UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier );
@@ -62,7 +64,9 @@ UINT16 RandomMagazine( OBJECTTYPE * pGun, UINT8 ubPercentStandard );
 extern BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo );
 extern BOOLEAN UnloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun); 
 
-UINT8 ItemSlotLimit( UINT16 usItem, INT8 bSlot );
+UINT8 ItemSlotLimit( UINT16 usItem, INT16 bSlot );
+// CHRISL: Add new inventory version of ItemSlotLimit function
+extern UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier );
 
 // Function to put an item in a soldier profile
 // It's very primitive, just finds an empty place!
@@ -308,4 +312,5 @@ INT16 GetSnowCamoBonus( OBJECTTYPE * pObj );
 
 
 #endif
+
 

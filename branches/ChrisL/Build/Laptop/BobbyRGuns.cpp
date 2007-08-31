@@ -147,7 +147,7 @@ BobbyRayPurchaseStruct BobbyRayPurchases[ MAX_PURCHASE_AMOUNT ];
 #define		NUMBER_GUNS_FILTER_BUTTONS			9
 #define		NUMBER_AMMO_FILTER_BUTTONS			8
 #define		NUMBER_ARMOUR_FILTER_BUTTONS		4
-#define		NUMBER_MISC_FILTER_BUTTONS			9
+#define		NUMBER_MISC_FILTER_BUTTONS			10
 #define		NUMBER_USED_FILTER_BUTTONS			3
 
 #define		BOBBYR_GUNS_FILTER_BUTTON_GAP			BOBBYR_CATALOGUE_BUTTON_GAP - 1
@@ -213,6 +213,7 @@ INT8			ubFilterMiscButtonValues[] = {
 							BOBBYR_FILTER_MISC_MEDKIT,
 							BOBBYR_FILTER_MISC_KIT,
 							BOBBYR_FILTER_MISC_FACE,
+							BOBBYR_FILTER_MISC_LBEGEAR,
 							BOBBYR_FILTER_MISC_MISC};
 
 
@@ -295,6 +296,8 @@ UINT16 DisplayDamage(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight);
 UINT16 DisplayRange(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight);
 UINT16 DisplayMagazine(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight);
 void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);
+// CHRISL: New display function for LBE Gear
+UINT16 DisplayLBEInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight);
 UINT16 DisplayWeight(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight);
 UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight);
 void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, INT16 *pItemNumbers );
@@ -652,9 +655,10 @@ BOOLEAN InitBobbyRUsedFilterBar()
 BOOLEAN InitBobbyRMiscFilterBar()
 {
 	UINT8	i;
-	UINT16	usPosX;
+	UINT16	usPosX = 0, usPosY = 0;
 	UINT8	bCurMode;
-	UINT16	usYOffset = 0;
+	UINT16	usYOffset = 25, sItemWidth = 8;
+	UINT16	usXOffset = BOBBYR_MISC_FILTER_BUTTON_GAP;
 
 	bCurMode = 0;
 	usPosX = FILTER_BUTTONS_MISC_START_X;
@@ -664,26 +668,28 @@ BOOLEAN InitBobbyRMiscFilterBar()
 	// Loop through the filter buttons
 	for(i=0; i<NUMBER_MISC_FILTER_BUTTONS; i++)
 	{
+		//CHRISL: Don't display the LBEGEAR button if we're using the old inventory system
+		if(!gGameOptions.ubInventorySystem && ubFilterMiscButtonValues[bCurMode] == BOBBYR_FILTER_MISC_LBEGEAR)
+			continue;
 		// Next row
-		if (i > 7)
-		{
-			usPosX = FILTER_BUTTONS_MISC_START_X;
-			usYOffset = 25;
-		}
+//		if (i >= sItemWidth)
+//			usYOffset = 25;
 
 		// Filter buttons
+		usPosX = FILTER_BUTTONS_MISC_START_X + ( (i % sItemWidth) * usXOffset);
+		usPosY = FILTER_BUTTONS_Y + ( (i / sItemWidth) * usYOffset);
 		guiBobbyRFilterMisc[i] = CreateIconAndTextButton( guiBobbyRFilterImage, BobbyRFilter[BOBBYR_FILTER_MISC_BLADE+i], BOBBYR_GUNS_BUTTON_FONT, 
 													BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR, 
 													BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR, 
 													TEXT_CJUSTIFIED, 
-													usPosX, FILTER_BUTTONS_Y + usYOffset, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													usPosX, usPosY, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnBobbyRFilterMiscCallback);
 
 		SetButtonCursor(guiBobbyRFilterMisc[i], CURSOR_LAPTOP_SCREEN);
 
 		MSYS_SetBtnUserData( guiBobbyRFilterMisc[i], 0, ubFilterMiscButtonValues[bCurMode]);
 
-		usPosX += BOBBYR_MISC_FILTER_BUTTON_GAP;
+		//usPosX += BOBBYR_MISC_FILTER_BUTTON_GAP;
 		bCurMode++;
 	}
 	
@@ -1223,6 +1229,9 @@ void BtnBobbyRFilterMiscCallback(GUI_BUTTON *btn,INT32 reason)
 			case BOBBYR_FILTER_MISC_FACE:
 				guiCurrentMiscFilterMode = IC_FACE;
 				break;
+			case BOBBYR_FILTER_MISC_LBEGEAR:
+				guiCurrentMiscFilterMode = IC_LBEGEAR;
+				break;
 			case BOBBYR_FILTER_MISC_MISC:
 				guiCurrentMiscFilterMode = IC_MISC;
 				break;
@@ -1551,6 +1560,7 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass, INT32 iFilter)
 			case IC_MEDKIT:
 			case IC_KIT:
 			case IC_FACE:
+			case IC_LBEGEAR:
 				// USED
 				if (uiItemClass == BOBBYR_USED_ITEMS)
 				{
@@ -1561,6 +1571,7 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass, INT32 iFilter)
 							Item[usItemIndex].usItemClass == IC_MISC ||
 							Item[usItemIndex].usItemClass == IC_MEDKIT ||
 							Item[usItemIndex].usItemClass == IC_KIT ||
+							Item[usItemIndex].usItemClass == IC_LBEGEAR ||
 							Item[usItemIndex].usItemClass == IC_FACE)
 						{
 							bAddItem = TRUE;
@@ -1778,6 +1789,12 @@ BOOLEAN DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16
 	UINT16 usFontHeight;
 	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
+	//CHRISL: Display extra information for LBE Items when using new inventory system
+	if(gGameOptions.ubInventorySystem && Item[usIndex].usItemClass == IC_LBEGEAR)
+	{
+		usHeight = DisplayLBEInfo(usTextPosY, usIndex, usFontHeight);
+	}
+
 	//Display Items Name
 //	DisplayItemNameAndInfo(usTextPosY, usIndex, fUsed);
 
@@ -1942,6 +1959,55 @@ UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	return(usPosY);
 }
 
+// CHRISL: New display function for LBE Gear
+UINT16 DisplayLBEInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
+{
+	CHAR16				sTemp[20];
+	CHAR16				pName[80];
+	int					lnCnt=0, count, size;
+	UINT16				lbeIndex;
+	UINT8				pIndex=0;
+	vector<int>			pocketNum;
+
+	size = LBEPocketType.size();
+	pocketNum.reserve(size);
+	lbeIndex = Item[usIndex].ubClassIndex;
+	// Determine number of each pocket definition
+	for(count = 0; count<size; count++)
+	{
+		pocketNum.push_back(0);
+	}
+	// Populate "Number" for each type of pocket this LBE item has
+	for(count = 0; count<12; count++)
+	{
+		pIndex = LoadBearingEquipment[lbeIndex].lbePocketIndex[count];
+		pocketNum[pIndex]++;
+	}
+	// Go through and display the pocket type and number
+	for(count = 1; count<size; count++)
+	{
+		if(pocketNum[count]>0)
+		{
+			if(lnCnt>4)
+			{
+				swprintf(sTemp, L"More..." );
+				DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_TEXT_X, (UINT16)usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
+				usPosY += usFontHeight + 2;
+				break;
+			}
+			else
+			{
+				mbstowcs(pName,LBEPocketType[count].pName,80);
+				pName[14] = '\0';
+				swprintf(sTemp, L"%s(x%d)", pName, pocketNum[count] );
+				DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_TEXT_X, (UINT16)usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
+				usPosY += usFontHeight + 2;
+				lnCnt++;
+			}
+		}
+	}
+	return(usPosY);
+}
 
 UINT16 DisplayWeight(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 {
@@ -2926,7 +2992,9 @@ void UpdateMiscFilterButtons()
 	EnableButton(guiBobbyRFilterMisc[5]);
 	EnableButton(guiBobbyRFilterMisc[6]);
 	EnableButton(guiBobbyRFilterMisc[7]);
-	EnableButton(guiBobbyRFilterMisc[8]);
+	if(guiBobbyRFilterMisc[8])
+		EnableButton(guiBobbyRFilterMisc[8]);
+	EnableButton(guiBobbyRFilterMisc[9]);
 
 	switch (guiCurrentMiscFilterMode)
 	{
@@ -2954,8 +3022,11 @@ void UpdateMiscFilterButtons()
 		case IC_FACE:
 			DisableButton(guiBobbyRFilterMisc[7]);
 			break;
-		case IC_MISC:
+		case IC_LBEGEAR:
 			DisableButton(guiBobbyRFilterMisc[8]);
+			break;
+		case IC_MISC:
+			DisableButton(guiBobbyRFilterMisc[9]);
 			break;
 	}
 
@@ -3096,6 +3167,7 @@ void CalcFirstIndexForPage( STORE_INVENTORY *pInv, UINT32	uiItemClass )
 							Item[usItemIndex].usItemClass == IC_MISC ||
 							Item[usItemIndex].usItemClass == IC_MEDKIT ||
 							Item[usItemIndex].usItemClass == IC_KIT ||
+							Item[usItemIndex].usItemClass == IC_LBEGEAR ||
 							Item[usItemIndex].usItemClass == IC_FACE)
 						{
 							bCntItem = TRUE;

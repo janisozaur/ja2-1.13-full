@@ -25,7 +25,7 @@ extern	CHAR16		zTrackingNumber[16];
 //
 
 const extern	UINT32	guiSavedGameVersion;
-
+const extern	UINT32	SAVE_GAMES_HAVE_NEW_INVENTORY_VECTORS;
 #ifdef __cplusplus
 }
 #endif

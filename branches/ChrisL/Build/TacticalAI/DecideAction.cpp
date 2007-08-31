@@ -4035,7 +4035,8 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 		if ( ( ubBestAttackAction == AI_ACTION_NONE ) && fTryPunching )
 		{
 			// nothing (else) to attack with so let's try hand-to-hand
-			bWeaponIn = FindObjWithin( pSoldier, NOTHING, HANDPOS, SMALLPOCK8POS );
+		 // CHRISL: Change final parameter to use dynamic setting
+		 bWeaponIn = FindObjWithin( pSoldier, NOTHING, HANDPOS, (NUM_INV_SLOTS-1) );
 
 			if (bWeaponIn != NO_SLOT)
 			{

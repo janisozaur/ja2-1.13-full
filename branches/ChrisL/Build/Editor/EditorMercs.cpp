@@ -2973,7 +2973,9 @@ void UpdateMercItemSlots()
 	{
 		if( gpSelected->pDetailedPlacement->ubProfile != NO_PROFILE )
 		{
-			memcpy( &gpSelected->pDetailedPlacement->Inv, &gpSelected->pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
+			//CHRISL: Use Inventory constructor?
+			gpSelected->pDetailedPlacement->Inv.operator =(gpSelected->pSoldier->inv);
+			//memcpy( gpSelected->pDetailedPlacement->Inv, gpSelected->pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
 		}
 		for( x = 0; x < 9; x++ )
 		{
@@ -3668,8 +3670,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 		if( gTempBasicPlacement.fDetailedPlacement )
 		{
                         // WDS - Clean up inventory handling
-			// WANNE: Removed the following line, didn't compile
-			//gTempDetailedPlacement = *gSaveBufferDetailedPlacement;
+			gTempDetailedPlacement = gSaveBufferDetailedPlacement;
 		}
 		else
 		{
@@ -3750,5 +3751,6 @@ void PasteMercPlacement( INT32 iMapIndex )
 
 
  
+
 
 

@@ -515,7 +515,8 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		{
 			INT32 i;
 			BOOLEAN fSecondFaceItem = FALSE;
-			for( i = BIGPOCK1POS; i <= BIGPOCK4POS; i++ )
+			// CHRISL:
+			for( i = BIGPOCK1POS; i < BIGPOCKFINAL; i++ )
 			{
 				if( Item[ Soldier.inv[ i ].usItem ].usItemClass & IC_FACE )
 				{
@@ -2577,6 +2578,9 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 	}
 }
 
+// CHRISL: External function call to resort profile inventory
+extern void DistributeInitialGear(MERCPROFILESTRUCT *pProfile);
+
 void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruct )
 {
 	UINT32								cnt, cnt2;
@@ -2594,6 +2598,9 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 		{
 			// do some special coding to put stuff in the profile in better-looking
 			// spots
+			// CHRISL: Resort profile items to use LBE pockets properly
+			if(gGameOptions.ubInventorySystem)
+				DistributeInitialGear(pProfile);
 			// WDS - Clean up inventory handling
 //			memset( pSoldier->inv, 0, NUM_INV_SLOTS * sizeof( OBJECTTYPE ) );
 			for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
@@ -2616,12 +2623,20 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 						if (cnt2 == NUM_INV_SLOTS)
 						{
 							// oh well, couldn't find anything to attach to!
-							AutoPlaceObject( pSoldier, &Obj, FALSE );
+							//CHRISL: Place items by slots chosen in profile if using new inventory system
+							if(!gGameOptions.ubInventorySystem)
+								AutoPlaceObject( pSoldier, &Obj, FALSE );
+							else
+								PlaceObject( pSoldier, cnt, &Obj );
 						}
 					}
 					else
 					{
-						AutoPlaceObject( pSoldier, &Obj, FALSE );
+						//CHRISL: Place items by slots chosen in profile if using new inventory system
+						if(!gGameOptions.ubInventorySystem)
+							AutoPlaceObject( pSoldier, &Obj, FALSE );
+						else
+							PlaceObject( pSoldier, cnt, &Obj );
 					}
 
 				}
@@ -2700,13 +2715,15 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 			if (pProfile->uiMoney > 0)
 			{
 				uiMoneyLeft = pProfile->uiMoney;
-				bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, SMALLPOCK8POS );
+				// CHRISL:
+				bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (NUM_INV_SLOTS-1) );
 
 				// add in increments of 
 				while ( bSlot != NO_SLOT )
 				{
 					uiMoneyLimitInSlot = MAX_MONEY_PER_SLOT;
-					if ( bSlot >= SMALLPOCK1POS )
+					// CHRISL:
+					if ( bSlot >= BIGPOCKFINAL )
 					{
 						uiMoneyLimitInSlot /= 2;
 					}
@@ -2725,7 +2742,8 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 						break;
 					}
 
-					bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, SMALLPOCK8POS );
+					// CHRISL:
+					bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (NUM_INV_SLOTS-1) );
 				}			
 			}
 		}

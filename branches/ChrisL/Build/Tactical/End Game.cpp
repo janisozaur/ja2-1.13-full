@@ -183,13 +183,13 @@ void HandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLev
 		{
 			if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
 			{
-				if ( QuoteExp_WitnessDeidrannaDeath[ pTeamSoldier->ubProfile ] )
-				{
-					if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
+					if ( QuoteExp_WitnessDeidrannaDeath[ pTeamSoldier->ubProfile ] )
 					{
-						TacticalCharacterDialogue( pTeamSoldier, QUOTE_KILLING_DEIDRANNA );	
+					if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
+						{
+							TacticalCharacterDialogue( pTeamSoldier, QUOTE_KILLING_DEIDRANNA );	
+						}
 					}
-				}
 			}
 		}
 	}
@@ -472,13 +472,13 @@ void HandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLe
 		{
 			if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
 			{
-				if ( QuoteExp_WitnessQueenBugDeath[ pTeamSoldier->ubProfile ] )
-				{
-					if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
+					if ( QuoteExp_WitnessQueenBugDeath[ pTeamSoldier->ubProfile ] )
 					{
-						TacticalCharacterDialogue( pTeamSoldier, QUOTE_KILLING_QUEEN );	
+					if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
+						{
+							TacticalCharacterDialogue( pTeamSoldier, QUOTE_KILLING_QUEEN );	
+						}
 					}
-				}
 			}
 		}
 	}

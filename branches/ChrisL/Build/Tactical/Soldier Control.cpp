@@ -360,7 +360,7 @@ bNewItemCycleCount(inv.size())
 	// The following are based on the "old" SOLDIERTYPE struct
 	// Remove these later
 	Assert(SIZEOF_SOLDIERTYPE_POD == 2344);
-	Assert(offsetof( SOLDIERTYPE, bFiller ) == 2305);
+	Assert(offsetof( SOLDIERTYPE, bFiller ) == 2310); /* CHRISL: */
 }
 
 // Copy Constructor
@@ -395,6 +395,7 @@ SOLDIERTYPE::~SOLDIERTYPE() {
 //  Note that the constructor does this automatically.
 void SOLDIERTYPE::initialize() {
 	memset( this, 0, SIZEOF_SOLDIERTYPE_POD);
+	DropPackKey=-1;	/* CHRISL */
 	inv.initialize();
 	for (int idx=0; idx < (int)inv.size(); ++idx) {
 		bNewItemCount[idx] = 0;
@@ -434,45 +435,46 @@ void SOLDIERTYPE::CopyOldInventoryToNew() {
 	inv[SMALLPOCK7POS] = DO_NOT_USE_Inv[OldInventory::SMALLPOCK7POS];
 	inv[SMALLPOCK8POS] = DO_NOT_USE_Inv[OldInventory::SMALLPOCK8POS];
 
-	bNewItemCount[OldInventory::HELMETPOS] = DO_NOT_USE_bNewItemCount[HELMETPOS];
-	bNewItemCount[OldInventory::VESTPOS] = DO_NOT_USE_bNewItemCount[VESTPOS];
-	bNewItemCount[OldInventory::LEGPOS] = DO_NOT_USE_bNewItemCount[LEGPOS];
-	bNewItemCount[OldInventory::HEAD1POS] = DO_NOT_USE_bNewItemCount[HEAD1POS];
-	bNewItemCount[OldInventory::HEAD2POS] = DO_NOT_USE_bNewItemCount[HEAD2POS];
-	bNewItemCount[OldInventory::HANDPOS] = DO_NOT_USE_bNewItemCount[HANDPOS];
-	bNewItemCount[OldInventory::SECONDHANDPOS] = DO_NOT_USE_bNewItemCount[SECONDHANDPOS];
-	bNewItemCount[OldInventory::BIGPOCK1POS] = DO_NOT_USE_bNewItemCount[BIGPOCK1POS];
-	bNewItemCount[OldInventory::BIGPOCK2POS] = DO_NOT_USE_bNewItemCount[BIGPOCK2POS];
-	bNewItemCount[OldInventory::BIGPOCK3POS] = DO_NOT_USE_bNewItemCount[BIGPOCK3POS];
-	bNewItemCount[OldInventory::BIGPOCK4POS] = DO_NOT_USE_bNewItemCount[BIGPOCK4POS];
-	bNewItemCount[OldInventory::SMALLPOCK1POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK1POS];
-	bNewItemCount[OldInventory::SMALLPOCK2POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK2POS];
-	bNewItemCount[OldInventory::SMALLPOCK3POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK3POS];
-	bNewItemCount[OldInventory::SMALLPOCK4POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK4POS];
-	bNewItemCount[OldInventory::SMALLPOCK5POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK5POS];
-	bNewItemCount[OldInventory::SMALLPOCK6POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK6POS];
-	bNewItemCount[OldInventory::SMALLPOCK7POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK7POS];
-	bNewItemCount[OldInventory::SMALLPOCK8POS] = DO_NOT_USE_bNewItemCount[SMALLPOCK8POS];
+	// CHRISL:
+	bNewItemCount[HELMETPOS] = DO_NOT_USE_bNewItemCount[OldInventory::HELMETPOS];
+	bNewItemCount[VESTPOS] = DO_NOT_USE_bNewItemCount[OldInventory::VESTPOS];
+	bNewItemCount[LEGPOS] = DO_NOT_USE_bNewItemCount[OldInventory::LEGPOS];
+	bNewItemCount[HEAD1POS] = DO_NOT_USE_bNewItemCount[OldInventory::HEAD1POS];
+	bNewItemCount[HEAD2POS] = DO_NOT_USE_bNewItemCount[OldInventory::HEAD2POS];
+	bNewItemCount[HANDPOS] = DO_NOT_USE_bNewItemCount[OldInventory::HANDPOS];
+	bNewItemCount[SECONDHANDPOS] = DO_NOT_USE_bNewItemCount[OldInventory::SECONDHANDPOS];
+	bNewItemCount[BIGPOCK1POS] = DO_NOT_USE_bNewItemCount[OldInventory::BIGPOCK1POS];
+	bNewItemCount[BIGPOCK2POS] = DO_NOT_USE_bNewItemCount[OldInventory::BIGPOCK2POS];
+	bNewItemCount[BIGPOCK3POS] = DO_NOT_USE_bNewItemCount[OldInventory::BIGPOCK3POS];
+	bNewItemCount[BIGPOCK4POS] = DO_NOT_USE_bNewItemCount[OldInventory::BIGPOCK4POS];
+	bNewItemCount[SMALLPOCK1POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK1POS];
+	bNewItemCount[SMALLPOCK2POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK2POS];
+	bNewItemCount[SMALLPOCK3POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK3POS];
+	bNewItemCount[SMALLPOCK4POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK4POS];
+	bNewItemCount[SMALLPOCK5POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK5POS];
+	bNewItemCount[SMALLPOCK6POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK6POS];
+	bNewItemCount[SMALLPOCK7POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK7POS];
+	bNewItemCount[SMALLPOCK8POS] = DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK8POS];
 
-	bNewItemCycleCount[OldInventory::HELMETPOS] = DO_NOT_USE_bNewItemCycleCount[HELMETPOS];
-	bNewItemCycleCount[OldInventory::VESTPOS] = DO_NOT_USE_bNewItemCycleCount[VESTPOS];
-	bNewItemCycleCount[OldInventory::LEGPOS] = DO_NOT_USE_bNewItemCycleCount[LEGPOS];
-	bNewItemCycleCount[OldInventory::HEAD1POS] = DO_NOT_USE_bNewItemCycleCount[HEAD1POS];
-	bNewItemCycleCount[OldInventory::HEAD2POS] = DO_NOT_USE_bNewItemCycleCount[HEAD2POS];
-	bNewItemCycleCount[OldInventory::HANDPOS] = DO_NOT_USE_bNewItemCycleCount[HANDPOS];
-	bNewItemCycleCount[OldInventory::SECONDHANDPOS] = DO_NOT_USE_bNewItemCycleCount[SECONDHANDPOS];
-	bNewItemCycleCount[OldInventory::BIGPOCK1POS] = DO_NOT_USE_bNewItemCycleCount[BIGPOCK1POS];
-	bNewItemCycleCount[OldInventory::BIGPOCK2POS] = DO_NOT_USE_bNewItemCycleCount[BIGPOCK2POS];
-	bNewItemCycleCount[OldInventory::BIGPOCK3POS] = DO_NOT_USE_bNewItemCycleCount[BIGPOCK3POS];
-	bNewItemCycleCount[OldInventory::BIGPOCK4POS] = DO_NOT_USE_bNewItemCycleCount[BIGPOCK4POS];
-	bNewItemCycleCount[OldInventory::SMALLPOCK1POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK1POS];
-	bNewItemCycleCount[OldInventory::SMALLPOCK2POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK2POS];
-	bNewItemCycleCount[OldInventory::SMALLPOCK3POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK3POS];
-	bNewItemCycleCount[OldInventory::SMALLPOCK4POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK4POS];
-	bNewItemCycleCount[OldInventory::SMALLPOCK5POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK5POS];
-	bNewItemCycleCount[OldInventory::SMALLPOCK6POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK6POS];
-	bNewItemCycleCount[OldInventory::SMALLPOCK7POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK7POS];
-	bNewItemCycleCount[OldInventory::SMALLPOCK8POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK8POS];
+	bNewItemCycleCount[HELMETPOS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::HELMETPOS];
+	bNewItemCycleCount[VESTPOS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::VESTPOS];
+	bNewItemCycleCount[LEGPOS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::LEGPOS];
+	bNewItemCycleCount[HEAD1POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::HEAD1POS];
+	bNewItemCycleCount[HEAD2POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::HEAD2POS];
+	bNewItemCycleCount[HANDPOS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::HANDPOS];
+	bNewItemCycleCount[SECONDHANDPOS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SECONDHANDPOS];
+	bNewItemCycleCount[BIGPOCK1POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::BIGPOCK1POS];
+	bNewItemCycleCount[BIGPOCK2POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::BIGPOCK2POS];
+	bNewItemCycleCount[BIGPOCK3POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::BIGPOCK3POS];
+	bNewItemCycleCount[BIGPOCK4POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::BIGPOCK4POS];
+	bNewItemCycleCount[SMALLPOCK1POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK1POS];
+	bNewItemCycleCount[SMALLPOCK2POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK2POS];
+	bNewItemCycleCount[SMALLPOCK3POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK3POS];
+	bNewItemCycleCount[SMALLPOCK4POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK4POS];
+	bNewItemCycleCount[SMALLPOCK5POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK5POS];
+	bNewItemCycleCount[SMALLPOCK6POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK6POS];
+	bNewItemCycleCount[SMALLPOCK7POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK7POS];
+	bNewItemCycleCount[SMALLPOCK8POS] = DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK8POS];
 }
 void SOLDIERTYPE::CopyNewInventoryToOld() {
 	// Do not use a loop in case the new inventory slots are arranged differently than the old
@@ -650,45 +652,46 @@ void MERCPROFILESTRUCT::CopyOldInventoryToNew() {
 	inv[SMALLPOCK7POS] = DO_NOT_USE_inv[OldInventory::SMALLPOCK7POS];
 	inv[SMALLPOCK8POS] = DO_NOT_USE_inv[OldInventory::SMALLPOCK8POS];
 
-	bInvStatus[OldInventory::HELMETPOS] = DO_NOT_USE_bInvStatus[HELMETPOS];
-	bInvStatus[OldInventory::VESTPOS] = DO_NOT_USE_bInvStatus[VESTPOS];
-	bInvStatus[OldInventory::LEGPOS] = DO_NOT_USE_bInvStatus[LEGPOS];
-	bInvStatus[OldInventory::HEAD1POS] = DO_NOT_USE_bInvStatus[HEAD1POS];
-	bInvStatus[OldInventory::HEAD2POS] = DO_NOT_USE_bInvStatus[HEAD2POS];
-	bInvStatus[OldInventory::HANDPOS] = DO_NOT_USE_bInvStatus[HANDPOS];
-	bInvStatus[OldInventory::SECONDHANDPOS] = DO_NOT_USE_bInvStatus[SECONDHANDPOS];
-	bInvStatus[OldInventory::BIGPOCK1POS] = DO_NOT_USE_bInvStatus[BIGPOCK1POS];
-	bInvStatus[OldInventory::BIGPOCK2POS] = DO_NOT_USE_bInvStatus[BIGPOCK2POS];
-	bInvStatus[OldInventory::BIGPOCK3POS] = DO_NOT_USE_bInvStatus[BIGPOCK3POS];
-	bInvStatus[OldInventory::BIGPOCK4POS] = DO_NOT_USE_bInvStatus[BIGPOCK4POS];
-	bInvStatus[OldInventory::SMALLPOCK1POS] = DO_NOT_USE_bInvStatus[SMALLPOCK1POS];
-	bInvStatus[OldInventory::SMALLPOCK2POS] = DO_NOT_USE_bInvStatus[SMALLPOCK2POS];
-	bInvStatus[OldInventory::SMALLPOCK3POS] = DO_NOT_USE_bInvStatus[SMALLPOCK3POS];
-	bInvStatus[OldInventory::SMALLPOCK4POS] = DO_NOT_USE_bInvStatus[SMALLPOCK4POS];
-	bInvStatus[OldInventory::SMALLPOCK5POS] = DO_NOT_USE_bInvStatus[SMALLPOCK5POS];
-	bInvStatus[OldInventory::SMALLPOCK6POS] = DO_NOT_USE_bInvStatus[SMALLPOCK6POS];
-	bInvStatus[OldInventory::SMALLPOCK7POS] = DO_NOT_USE_bInvStatus[SMALLPOCK7POS];
-	bInvStatus[OldInventory::SMALLPOCK8POS] = DO_NOT_USE_bInvStatus[SMALLPOCK8POS];
+	// CHRISL:
+	bInvStatus[HELMETPOS] = DO_NOT_USE_bInvStatus[OldInventory::HELMETPOS];
+	bInvStatus[VESTPOS] = DO_NOT_USE_bInvStatus[OldInventory::VESTPOS];
+	bInvStatus[LEGPOS] = DO_NOT_USE_bInvStatus[OldInventory::LEGPOS];
+	bInvStatus[HEAD1POS] = DO_NOT_USE_bInvStatus[OldInventory::HEAD1POS];
+	bInvStatus[HEAD2POS] = DO_NOT_USE_bInvStatus[OldInventory::HEAD2POS];
+	bInvStatus[HANDPOS] = DO_NOT_USE_bInvStatus[OldInventory::HANDPOS];
+	bInvStatus[SECONDHANDPOS] = DO_NOT_USE_bInvStatus[OldInventory::SECONDHANDPOS];
+	bInvStatus[BIGPOCK1POS] = DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK1POS];
+	bInvStatus[BIGPOCK2POS] = DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK2POS];
+	bInvStatus[BIGPOCK3POS] = DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK3POS];
+	bInvStatus[BIGPOCK4POS] = DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK4POS];
+	bInvStatus[SMALLPOCK1POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK1POS];
+	bInvStatus[SMALLPOCK2POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK2POS];
+	bInvStatus[SMALLPOCK3POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK3POS];
+	bInvStatus[SMALLPOCK4POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK4POS];
+	bInvStatus[SMALLPOCK5POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK5POS];
+	bInvStatus[SMALLPOCK6POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK6POS];
+	bInvStatus[SMALLPOCK7POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK7POS];
+	bInvStatus[SMALLPOCK8POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK8POS];
 
-	bInvNumber[OldInventory::HELMETPOS] = DO_NOT_USE_bInvNumber[HELMETPOS];
-	bInvNumber[OldInventory::VESTPOS] = DO_NOT_USE_bInvNumber[VESTPOS];
-	bInvNumber[OldInventory::LEGPOS] = DO_NOT_USE_bInvNumber[LEGPOS];
-	bInvNumber[OldInventory::HEAD1POS] = DO_NOT_USE_bInvNumber[HEAD1POS];
-	bInvNumber[OldInventory::HEAD2POS] = DO_NOT_USE_bInvNumber[HEAD2POS];
-	bInvNumber[OldInventory::HANDPOS] = DO_NOT_USE_bInvNumber[HANDPOS];
-	bInvNumber[OldInventory::SECONDHANDPOS] = DO_NOT_USE_bInvNumber[SECONDHANDPOS];
-	bInvNumber[OldInventory::BIGPOCK1POS] = DO_NOT_USE_bInvNumber[BIGPOCK1POS];
-	bInvNumber[OldInventory::BIGPOCK2POS] = DO_NOT_USE_bInvNumber[BIGPOCK2POS];
-	bInvNumber[OldInventory::BIGPOCK3POS] = DO_NOT_USE_bInvNumber[BIGPOCK3POS];
-	bInvNumber[OldInventory::BIGPOCK4POS] = DO_NOT_USE_bInvNumber[BIGPOCK4POS];
-	bInvNumber[OldInventory::SMALLPOCK1POS] = DO_NOT_USE_bInvNumber[SMALLPOCK1POS];
-	bInvNumber[OldInventory::SMALLPOCK2POS] = DO_NOT_USE_bInvNumber[SMALLPOCK2POS];
-	bInvNumber[OldInventory::SMALLPOCK3POS] = DO_NOT_USE_bInvNumber[SMALLPOCK3POS];
-	bInvNumber[OldInventory::SMALLPOCK4POS] = DO_NOT_USE_bInvNumber[SMALLPOCK4POS];
-	bInvNumber[OldInventory::SMALLPOCK5POS] = DO_NOT_USE_bInvNumber[SMALLPOCK5POS];
-	bInvNumber[OldInventory::SMALLPOCK6POS] = DO_NOT_USE_bInvNumber[SMALLPOCK6POS];
-	bInvNumber[OldInventory::SMALLPOCK7POS] = DO_NOT_USE_bInvNumber[SMALLPOCK7POS];
-	bInvNumber[OldInventory::SMALLPOCK8POS] = DO_NOT_USE_bInvNumber[SMALLPOCK8POS];
+	bInvNumber[HELMETPOS] = DO_NOT_USE_bInvNumber[OldInventory::HELMETPOS];
+	bInvNumber[VESTPOS] = DO_NOT_USE_bInvNumber[OldInventory::VESTPOS];
+	bInvNumber[LEGPOS] = DO_NOT_USE_bInvNumber[OldInventory::LEGPOS];
+	bInvNumber[HEAD1POS] = DO_NOT_USE_bInvNumber[OldInventory::HEAD1POS];
+	bInvNumber[HEAD2POS] = DO_NOT_USE_bInvNumber[OldInventory::HEAD2POS];
+	bInvNumber[HANDPOS] = DO_NOT_USE_bInvNumber[OldInventory::HANDPOS];
+	bInvNumber[SECONDHANDPOS] = DO_NOT_USE_bInvNumber[OldInventory::SECONDHANDPOS];
+	bInvNumber[BIGPOCK1POS] = DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK1POS];
+	bInvNumber[BIGPOCK2POS] = DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK2POS];
+	bInvNumber[BIGPOCK3POS] = DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK3POS];
+	bInvNumber[BIGPOCK4POS] = DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK4POS];
+	bInvNumber[SMALLPOCK1POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK1POS];
+	bInvNumber[SMALLPOCK2POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK2POS];
+	bInvNumber[SMALLPOCK3POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK3POS];
+	bInvNumber[SMALLPOCK4POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK4POS];
+	bInvNumber[SMALLPOCK5POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK5POS];
+	bInvNumber[SMALLPOCK6POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK6POS];
+	bInvNumber[SMALLPOCK7POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK7POS];
+	bInvNumber[SMALLPOCK8POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK8POS];
 }
 void MERCPROFILESTRUCT::CopyNewInventoryToOld() {
 	// Do not use a loop in case the new inventory slots are arranged differently than the old
@@ -753,6 +756,112 @@ void MERCPROFILESTRUCT::CopyNewInventoryToOld() {
 	DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK8POS] = bInvNumber[SMALLPOCK8POS];
 }
 
+// CHRISL:
+MERCPROFILEGEAR::MERCPROFILEGEAR() {
+	invCnt = 19;
+	lbeCnt = 5;
+	inv.reserve(invCnt);
+	iStatus.reserve(invCnt);
+	iDrop.reserve(invCnt);
+	iNumber.reserve(invCnt);
+	lbe.reserve(lbeCnt);
+	lStatus.reserve(lbeCnt);
+	for (int idx=0; idx < invCnt; ++idx) {
+		inv.push_back(0);
+		iStatus.push_back(0);
+		iDrop.push_back(0);
+		iNumber.push_back(0);
+	}
+	for (int idx=0; idx < lbeCnt; ++idx) {
+		lbe.push_back(0);
+		lStatus.push_back(0);
+	}
+	initialize();
+
+	Assert(inv.size() == invCnt);
+	Assert(iStatus.size() == invCnt);
+	Assert(iDrop.size() == invCnt);
+	Assert(iNumber.size() == invCnt);
+	Assert(lbe.size() == lbeCnt);
+	Assert(lStatus.size() == lbeCnt);
+}
+
+// Copy Constructor
+MERCPROFILEGEAR::MERCPROFILEGEAR(const MERCPROFILEGEAR& src) {
+	memcpy(this, &src, SIZEOF_MERCPROFILEGEAR_POD);
+	inv = src.inv;
+	iStatus = src.iStatus;
+	iDrop = src.iDrop;
+	iNumber = src.iNumber;
+	lbe = src.lbe;
+	lStatus = src.lStatus;
+
+	Assert(inv.size() == invCnt);
+	Assert(iStatus.size() == invCnt);
+	Assert(iDrop.size() == invCnt);
+	Assert(iNumber.size() == invCnt);
+	Assert(lbe.size() == lbeCnt);
+	Assert(lStatus.size() == lbeCnt);
+}
+
+// Assignment operator
+MERCPROFILEGEAR& MERCPROFILEGEAR::operator=(const MERCPROFILEGEAR& src) {
+    if (this != &src) {
+		memcpy(this, &src, SIZEOF_MERCPROFILEGEAR_POD);
+		inv = src.inv;
+		iStatus = src.iStatus;
+		iDrop = src.iDrop;
+		iNumber = src.iNumber;
+		lbe = src.lbe;
+		lStatus = src.lStatus;
+		invCnt = src.invCnt;
+		lbeCnt = src.lbeCnt;
+    }
+	Assert(inv.size() == invCnt);
+	Assert(iStatus.size() == invCnt);
+	Assert(iDrop.size() == invCnt);
+	Assert(iNumber.size() == invCnt);
+	Assert(lbe.size() == lbeCnt);
+	Assert(lStatus.size() == lbeCnt);
+	return *this;
+}
+
+// Destructor
+MERCPROFILEGEAR::~MERCPROFILEGEAR() {
+}
+
+// Initialize the soldier.  
+//  Use this instead of the old method of calling memset!
+//  Note that the constructor does this automatically.
+void MERCPROFILEGEAR::initialize() {
+	memset( this, 0, SIZEOF_MERCPROFILEGEAR_POD);
+	clearInventory();
+	Assert(inv.size() == invCnt);
+	Assert(iStatus.size() == invCnt);
+	Assert(iDrop.size() == invCnt);
+	Assert(iNumber.size() == invCnt);
+	Assert(lbe.size() == lbeCnt);
+	Assert(lStatus.size() == lbeCnt);
+}
+
+void MERCPROFILEGEAR::clearInventory() {
+	for (int idx=0; idx < (int)inv.size(); ++idx) {
+		inv[idx] = 0;
+		iStatus[idx] = 0;
+		iDrop[idx] = 0;
+		iNumber[idx] = 0;
+	}
+	for (int idx=0; idx < (int)lbe.size(); ++idx) {
+		lbe[idx] = 0;
+		lStatus[idx] = 0;
+	}
+	Assert(inv.size() == invCnt);
+	Assert(iStatus.size() == invCnt);
+	Assert(iDrop.size() == invCnt);
+	Assert(iNumber.size() == invCnt);
+	Assert(lbe.size() == lbeCnt);
+	Assert(lStatus.size() == lbeCnt);
+}
 
 BOOLEAN IsValidSecondHandShot( SOLDIERTYPE *pSoldier );
 
@@ -2489,7 +2598,14 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 			// Only if our previous is not running
 			if ( pSoldier->usAnimState != RUNNING )
 			{
-				sAPCost = AP_START_RUN_COST;
+				// CHRISL: Make changes so that we charge extra APs while wearing a backpack while using new inventory system
+				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
+				{
+					sAPCost = AP_START_RUN_COST + 2;
+					sBPCost += 2;
+				}
+				else
+					sAPCost = AP_START_RUN_COST;
 				DeductPoints( pSoldier, sAPCost, sBPCost );
 			}
 			// Set pending action count to 0
@@ -2512,7 +2628,31 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 
 			if ( !pSoldier->fDontChargeAPsForStanceChange )
 			{
-				DeductPoints( pSoldier, AP_CROUCH, BP_CROUCH );
+				// CHRISL: Make changes so that we charge extra APs while wearing a backpack while using new inventory system
+				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !pSoldier->ZipperFlag)
+				{
+					if(usNewState == KNEEL_UP)
+					{
+						sAPCost=AP_CROUCH+2;
+						sBPCost=BP_CROUCH+2;
+					}
+					else if(usNewState == KNEEL_DOWN)
+					{
+						sAPCost=AP_CROUCH+1;
+						sBPCost=BP_CROUCH+1;
+					}
+					else
+					{
+						sAPCost=AP_CROUCH;
+						sBPCost=BP_CROUCH;
+					}
+				}
+				else
+				{
+					sAPCost=AP_CROUCH;
+					sBPCost=BP_CROUCH;
+				}
+				DeductPoints( pSoldier, sAPCost, sBPCost );
 			}
 			pSoldier->fDontChargeAPsForStanceChange = FALSE;
 			break;
@@ -2526,7 +2666,26 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 				// ATE: Don't do this if we are still 'moving'....
 				if ( pSoldier->sGridNo == pSoldier->sFinalDestination || pSoldier->usPathIndex == 0 )
 				{
-					DeductPoints( pSoldier, AP_PRONE, BP_PRONE );
+					// CHRISL: Make changes so that we charge extra APs while wearing a backpack while using new inventory system
+					if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !pSoldier->ZipperFlag)
+					{
+						if(usNewState == PRONE_UP)
+						{
+						sAPCost=AP_PRONE+2;
+						sBPCost=BP_PRONE+2;
+						}
+						else
+						{
+						sAPCost=AP_PRONE+1;
+						sBPCost=BP_PRONE+1;
+						}
+					}
+					else
+					{
+					sAPCost=AP_PRONE;
+					sBPCost=BP_PRONE;
+					}
+					DeductPoints( pSoldier, sAPCost, sBPCost );
 				}
 			}
 			pSoldier->fDontChargeAPsForStanceChange = FALSE;
@@ -2593,7 +2752,11 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 
 		case HOPFENCE:
 
-			DeductPoints( pSoldier, AP_JUMPFENCE, BP_JUMPFENCE );
+			// CHRISL: Make changes so that we charge extra APs while wearing a backpack while using new inventory system
+			if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
+				DeductPoints( pSoldier, AP_JUMPFENCEBPACK, BP_JUMPFENCEBPACK );
+			else
+				DeductPoints( pSoldier, AP_JUMPFENCE, BP_JUMPFENCE );
 			break;
 
 			// Deduct aps for falling down....
@@ -7024,6 +7187,9 @@ void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier )
 	UINT8							ubWhoIsThere;
 
 
+	//CHRISL: Disable climbing up to a roof while wearing a backpack
+	if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+		return;
 	if ( FindHeigherLevel( pSoldier, pSoldier->sGridNo, pSoldier->bDirection, &bNewDirection ) && ( pSoldier->bLevel == 0 ) )
 	{
 		if ( EnoughPoints( pSoldier, GetAPsToClimbRoof( pSoldier, FALSE ), 0, TRUE ) )

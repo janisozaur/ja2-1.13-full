@@ -119,7 +119,12 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 		break;
 
 		// cost for jumping a fence REPLACES all other AP costs!
-	case TRAVELCOST_FENCE		: return( AP_JUMPFENCE );
+	// CHRISL: 
+	case TRAVELCOST_FENCE		: 
+		 if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
+			 return( AP_JUMPFENCEBPACK );
+		 else
+			  return( AP_JUMPFENCE );
 
 	case TRAVELCOST_NONE			: return( 0 );
 
@@ -286,30 +291,52 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 	{
 		switch(usMovementMode)
 		{
-		case RUNNING:	
-		case ADULTMONSTER_WALKING:	
-		case BLOODCAT_RUN:
-			sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );	break;
+			case RUNNING:	
+			case ADULTMONSTER_WALKING:	
+			case BLOODCAT_RUN:
+				// CHRISL: Adjusted system to use different move costs while wearing a backpack
+				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+					sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISORBPACK) );
+				else
+					sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );
+				break;
 
-		case CROW_FLY:
-		case SIDE_STEP:
-		case WALK_BACKWARDS:
-		case ROBOT_WALK:
-		case BLOODCAT_WALK_BACKWARDS:
-		case MONSTER_WALK_BACKWARDS:
-		case LARVAE_WALK:
-		case WALKING :	sPoints = (sTileCost + WALKCOST);		break;
+			case CROW_FLY:
+			case SIDE_STEP:
+			case WALK_BACKWARDS:
+			case ROBOT_WALK:
+			case BLOODCAT_WALK_BACKWARDS:
+			case MONSTER_WALK_BACKWARDS:
+      case LARVAE_WALK:
+			case WALKING :
+				// CHRISL: Adjusted system to use different move costs while wearing a backpack
+				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+					sPoints = (sTileCost + WALKCOSTBPACK);
+				else
+					sPoints = (sTileCost + WALKCOST);
+				break;
 
-		case START_SWAT:
-		case SWAT_BACKWARDS:
-		case SWATTING:	sPoints = (sTileCost + SWATCOST);		break;
-		case CRAWLING:	sPoints = (sTileCost + CRAWLCOST);		break;
+			case START_SWAT:
+			case SWAT_BACKWARDS:
+				// CHRISL: Adjusted system to use different move costs while wearing a backpack
+			case SWATTING:
+				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+					sPoints = (sTileCost + SWATCOSTBPACK);
+				else
+					sPoints = (sTileCost + SWATCOST);
+				break;
+			case CRAWLING:
+				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+					sPoints = (sTileCost + CRAWLCOSTBPACK);
+				else
+					sPoints = (sTileCost + CRAWLCOST);
+				break;
 
-		default:
+			default:
 
-			// Invalid movement mode
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Invalid movement mode %d used in ActionPointCost", usMovementMode  ) );
-			sPoints = 1;
+				// Invalid movement mode
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Invalid movement mode %d used in ActionPointCost", usMovementMode  ) );
+				sPoints = 1;
 		}
 	}
 
@@ -349,30 +376,52 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 	{
 		switch(usMovementMode)
 		{
-		case RUNNING:	
-		case ADULTMONSTER_WALKING:	
-		case BLOODCAT_RUN:
-			sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );	break;
+			case RUNNING:	
+			case ADULTMONSTER_WALKING:	
+			case BLOODCAT_RUN:
+				// CHRISL: Adjusted system to use different move costs while wearing a backpack
+				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+					sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISORBPACK) );
+				else
+					sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );
+				break;
 
-		case CROW_FLY:
-		case SIDE_STEP:
-		case ROBOT_WALK:
-		case WALK_BACKWARDS:
-		case BLOODCAT_WALK_BACKWARDS:
-		case MONSTER_WALK_BACKWARDS:
-		case LARVAE_WALK:
-		case WALKING :	sPoints = (sTileCost + WALKCOST);		break;
+			case CROW_FLY:
+			case SIDE_STEP:
+			case ROBOT_WALK:
+			case WALK_BACKWARDS:
+			case BLOODCAT_WALK_BACKWARDS:
+			case MONSTER_WALK_BACKWARDS:
+			case LARVAE_WALK:
+			// CHRISL: Adjusted system to use different move costs while wearing a backpack
+			case WALKING :
+				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+					sPoints = (sTileCost + WALKCOSTBPACK);
+				else
+					sPoints = (sTileCost + WALKCOST);
+				break;
 
-		case START_SWAT:
-		case SWAT_BACKWARDS:
-		case SWATTING:	sPoints = (sTileCost + SWATCOST);		break;
-		case CRAWLING:	sPoints = (sTileCost + CRAWLCOST);		break;
+			case START_SWAT:
+			case SWAT_BACKWARDS:
+			// CHRISL: Adjusted system to use different move costs while wearing a backpack
+			case SWATTING:
+				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+					sPoints = (sTileCost + SWATCOSTBPACK);
+				else
+					sPoints = (sTileCost + SWATCOST);
+				break;
+			case CRAWLING:
+				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+					sPoints = (sTileCost + CRAWLCOSTBPACK);
+				else
+					sPoints = (sTileCost + CRAWLCOST);
+				break;
 
-		default:
+			default:
 
-			// Invalid movement mode
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Invalid movement mode %d used in ActionPointCost", usMovementMode  ) );
-			sPoints = 1;
+				// Invalid movement mode
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Invalid movement mode %d used in ActionPointCost", usMovementMode  ) );
+				sPoints = 1;
 		}
 	}
 
@@ -888,7 +937,7 @@ INT16 GetBreathPerAP( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 	// Lalien: only for soldiers that are in loaded sector, 
 	if ( gfWorldLoaded &&  pSoldier->bInSector)
 	{
-		if( sBreathPerAP < 0 && ( pSoldier->bLevel  || !FindStructure( pSoldier->sGridNo, STRUCTURE_ROOF )  )  && pSoldier->bBreath > 1)
+		if( sBreathPerAP < 0 && ( pSoldier->bLevel  ||!FindStructure( pSoldier->sGridNo, STRUCTURE_ROOF )  )  && pSoldier->bBreath > 1)
 		{
 			sBreathPerAP -= (INT16)( sBreathPerAP * gbCurrentRainIntensity * gGameExternalOptions.ubBreathGainReductionPerRainIntensity  / 100 );	
 		}

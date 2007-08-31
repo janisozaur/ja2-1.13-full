@@ -141,6 +141,12 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 			Object.ItemData.Generic.bStatus[0]				= 100;
 			// Give it 
 			fReturn = AutoPlaceObject( MercPtrs[iNewIndex], &Object, FALSE );
+			// CHRISL: This condition should resolve the issue of the letter not being issued to the first merc
+			if(!fReturn && gGameOptions.ubInventorySystem)
+			{
+				memcpy( &(MercPtrs[iNewIndex]->inv[NUM_INV_SLOTS-1]), &Object, sizeof( OBJECTTYPE ) );
+				fReturn=TRUE;
+			}
 			Assert( fReturn );
 		}
 

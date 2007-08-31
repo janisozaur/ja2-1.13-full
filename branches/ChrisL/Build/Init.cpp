@@ -265,6 +265,30 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	if(!ReadInArmourStats(fileName))
 		return FALSE;
 
+	// CHRISL:
+	strcpy(fileName, directoryName);
+	strcat(fileName, LOADBEARINGEQUIPMENTFILENAME);
+	if(!ReadInlbeStats(fileName))
+		return FALSE;
+//	if(!WritelbeEquipmentStats())
+//		return FALSE;
+
+	// CHRISL:
+	strcpy(fileName, directoryName);
+	strcat(fileName, LBEPOCKETFILENAME);
+	if(!ReadInLBEPocketStats(fileName))
+		return FALSE;
+//	if(!WriteLBEPocketEquipmentStats())
+//		return FALSE;
+
+	// CHRISL:
+	strcpy(fileName, directoryName);
+	strcat(fileName, MERCSTARTINGGEARFILENAME);
+	if(!ReadInMercStartingGearStats(fileName))
+		return FALSE;
+//	if(!WriteMercStartingGearStats())
+//		return FALSE;
+
 	strcpy(fileName, directoryName);
 	strcat(fileName, WEAPONSFILENAME);
 	if(!ReadInWeaponStats(fileName))

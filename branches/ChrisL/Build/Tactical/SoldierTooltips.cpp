@@ -266,7 +266,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		// weapon in off hand info code block end
 
 		// large objects in big inventory slots info code block start
-		for ( UINT8 BigSlot = BIGPOCK1POS; BigSlot <= BIGPOCK4POS; BigSlot++ )
+		for ( UINT8 BigSlot = BIGPOCK1POS; BigSlot < BIGPOCKFINAL; BigSlot++ )
 		{
 			if ( pSoldier->inv[ BigSlot ].usItem == 0 )
 				continue; // slot is empty, move on to the next slot
@@ -290,6 +290,19 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 					if ( !gGameExternalOptions.fEnableSoldierTooltipBigSlot4 )
 						continue;
 					break;
+// CHRISL: Added new large pockets introduced by new inventory system
+				case BIGPOCK5POS:
+					if ( !gGameExternalOptions.fEnableSoldierTooltipBigSlot5 )
+						continue;
+					break;
+				case BIGPOCK6POS:
+					if ( !gGameExternalOptions.fEnableSoldierTooltipBigSlot6 )
+						continue;
+					break;
+				case BIGPOCK7POS:
+					if ( !gGameExternalOptions.fEnableSoldierTooltipBigSlot7 )
+						continue;
+				    break;
 			}
 
 			if ( Item[ pSoldier->inv[ BigSlot ].usItem ].rocketlauncher )

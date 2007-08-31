@@ -1232,7 +1232,7 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 		sDistVisible += sDistVisible * GetTotalVisionRangeBonus(pSoldier, bLightLevel) / 100;
 	}
 
-	
+
 	// give one step better vision for people with nightops
 	if (HAS_SKILL_TRAIT( pSoldier, NIGHTOPS ))
 	{
@@ -4591,6 +4591,62 @@ void DebugSoldierPage4( )
 		ubLine++;
 
 		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"VESTPOCKPOS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[VESTPOCKPOS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[VESTPOCKPOS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[VESTPOCKPOS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"LTHIGHPOCKPOS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[LTHIGHPOCKPOS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[LTHIGHPOCKPOS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[LTHIGHPOCKPOS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"RTHIGHPOCKPOS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[RTHIGHPOCKPOS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[RTHIGHPOCKPOS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[RTHIGHPOCKPOS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"CPACKPOCKPOS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[CPACKPOCKPOS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[CPACKPOCKPOS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[CPACKPOCKPOS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"BPACKPOCKPOS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[BPACKPOCKPOS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[BPACKPOCKPOS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[BPACKPOCKPOS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"GUNSLINGPOCKPOS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[GUNSLINGPOCKPOS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[GUNSLINGPOCKPOS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[GUNSLINGPOCKPOS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"KNIFEPOCKPOS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[KNIFEPOCKPOS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[KNIFEPOCKPOS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[KNIFEPOCKPOS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
 		gprintf( 0, LINE_HEIGHT * ubLine, L"BIGPOCK1POS:");
 		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
 		if( pSoldier->inv[BIGPOCK1POS].usItem )
@@ -4620,6 +4676,63 @@ void DebugSoldierPage4( )
 		if( pSoldier->inv[BIGPOCK4POS].usItem )
 			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[BIGPOCK4POS].usItem] );
 		WriteQuantityAndAttachments( &pSoldier->inv[BIGPOCK4POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		// CHRISL: Added entries for all the new inventory pockets.
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"BIGPOCK5POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[BIGPOCK5POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[BIGPOCK5POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[BIGPOCK5POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"BIGPOCK6POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[BIGPOCK6POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[BIGPOCK6POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[BIGPOCK6POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"BIGPOCK7POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[BIGPOCK7POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[BIGPOCK7POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[BIGPOCK7POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"MEDPOCK1POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[MEDPOCK1POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[MEDPOCK1POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[MEDPOCK1POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"MEDPOCK2POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[MEDPOCK2POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[MEDPOCK2POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[MEDPOCK2POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"MEDPOCK3POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[MEDPOCK3POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[MEDPOCK3POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[MEDPOCK3POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"MEDPOCK4POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[MEDPOCK4POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[MEDPOCK4POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[MEDPOCK4POS], LINE_HEIGHT*ubLine );
 		ubLine++;
 
 		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
@@ -4678,12 +4791,189 @@ void DebugSoldierPage4( )
 		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK7POS], LINE_HEIGHT*ubLine );
 		ubLine++;
 
+		// CHRISL: Added entries for all the new inventory pockets
 		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
 		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK8POS:");
 		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
 		if( pSoldier->inv[SMALLPOCK8POS].usItem )
 			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK8POS].usItem] );
 		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK8POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK9POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK9POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK9POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK9POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK10POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK10POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK10POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK10POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK11POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK11POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK11POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK11POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK12POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK12POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK12POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK12POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK13POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK13POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK13POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK13POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK14POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK14POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK14POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK14POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK15POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK15POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK15POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK15POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK16POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK16POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK16POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK16POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK17POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK17POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK17POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK17POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK18POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK18POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK18POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK18POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK19POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK19POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK19POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK19POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK20POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK20POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK20POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK20POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK21POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK21POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK21POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK21POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK22POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK22POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK22POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK22POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK23POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK23POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK23POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK23POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK24POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK24POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK24POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK24POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK25POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK25POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK25POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK25POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK26POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK26POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK26POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK26POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK27POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK27POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK27POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK27POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK28POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK28POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK28POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK28POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK29POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK29POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK29POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK29POS], LINE_HEIGHT*ubLine );
+		ubLine++;
+
+		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+		gprintf( 0, LINE_HEIGHT * ubLine, L"SMALLPOCK30POS:");
+		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+		if( pSoldier->inv[SMALLPOCK30POS].usItem )
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SMALLPOCK30POS].usItem] );
+		WriteQuantityAndAttachments( &pSoldier->inv[SMALLPOCK30POS], LINE_HEIGHT*ubLine );
 		ubLine++;
 	}
 	else
@@ -5695,7 +5985,7 @@ void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo, INT8 b
 			fMuzzleFlash = TRUE;
 		}
 	}
-
+	
     int sDistVisible = pSoldier->GetMaxDistanceVisible(sGridNo, bLevel, CALC_FROM_WANTED_DIR );
 
 	if ( fMuzzleFlash )
@@ -5703,7 +5993,7 @@ void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo, INT8 b
 		// turn flash on again
 		MercPtrs[ ubNoiseMaker ]->fMuzzleFlash = TRUE;
 	}
-
+		
 	if (PythSpacesAway(pSoldier->sGridNo,sGridNo) <= sDistVisible )
 	{
 		// just use the XXadjustedXX center of the gridno

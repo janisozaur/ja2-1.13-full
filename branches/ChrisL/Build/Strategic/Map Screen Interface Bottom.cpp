@@ -51,16 +51,22 @@
 	#include "SaveLoadScreen.h"
 #endif
 
+/* CHRISL: Adjusted settings to allow new Map_Screen_Bottom_800x600.sti to work.  This is needed if we
+want to have the new inventory panel not overlap the message text area. */
 #define MAP_BOTTOM_X							0
 #define MAP_BOTTOM_Y							(SCREEN_HEIGHT - 121)	//359
 
-#define MESSAGE_SCROLL_AREA_START_X				330
-#define MESSAGE_SCROLL_AREA_END_X				344
+//#define MESSAGE_SCROLL_AREA_START_X				(SCREEN_WIDTH - 534)	//330
+//#define MESSAGE_SCROLL_AREA_END_X				(SCREEN_WIDTH - 522)	//344
 #define MESSAGE_SCROLL_AREA_WIDTH				( MESSAGE_SCROLL_AREA_END_X - MESSAGE_SCROLL_AREA_START_X + 1 )
 
 #define MESSAGE_SCROLL_AREA_START_Y				(SCREEN_HEIGHT - 90)	//390
 #define MESSAGE_SCROLL_AREA_END_Y				(SCREEN_HEIGHT - 32)		//448
 #define MESSAGE_SCROLL_AREA_HEIGHT				( MESSAGE_SCROLL_AREA_END_Y - MESSAGE_SCROLL_AREA_START_Y + 1 )
+
+// CHRISL: Use these if we want scroll bar based on left edge of screen
+#define MESSAGE_SCROLL_AREA_START_X				330
+#define MESSAGE_SCROLL_AREA_END_X				344
 
 #define SLIDER_HEIGHT							11
 #define SLIDER_WIDTH							11
@@ -273,7 +279,10 @@ void DeleteMapScreenInterfaceBottom( void )
 }
 
 
-void RenderMapScreenInterfaceBottom( void )
+// Headrock: this function used to accept no arguments. It now accepts a Boolean so it can be forced to run
+// the whole process when we call it from other files. See also .h file!!!
+extern void BltCharInvPanel();
+void RenderMapScreenInterfaceBottom( BOOLEAN fForceMapscreenFullRender )
 {
 	// will render the map screen bottom interface
 	HVOBJECT hHandle;
@@ -282,7 +291,8 @@ void RenderMapScreenInterfaceBottom( void )
 	fDisplayOverheadMap = FALSE;
 
 	// render whole panel
-	if( fMapScreenBottomDirty == TRUE )
+	// HEADROCK Changed this line to accept outside influence through the new boolean:
+	if ( fForceMapscreenFullRender == TRUE || fMapScreenBottomDirty == TRUE )
 	{
 		// get and blt panel
 	  GetVideoObject(&hHandle, guiMAPBOTTOMPANEL ); 
@@ -307,7 +317,7 @@ void RenderMapScreenInterfaceBottom( void )
 		MarkButtonsDirty( );
 
 		// invalidate region
-		RestoreExternBackgroundRect( MAP_BOTTOM_X, MAP_BOTTOM_Y, SCREEN_WIDTH, SCREEN_HEIGHT - MAP_BOTTOM_Y );
+		RestoreExternBackgroundRect( MAP_BOTTOM_X, MAP_BOTTOM_Y, SCREEN_WIDTH - MAP_BOTTOM_X, SCREEN_HEIGHT - MAP_BOTTOM_Y );
 
 		// re render radar map
 		RenderRadarScreen( );
@@ -315,6 +325,9 @@ void RenderMapScreenInterfaceBottom( void )
 		// reset dirty flag
 		fMapScreenBottomDirty = FALSE;
 		fMapBottomDirtied = TRUE;
+
+		// Headrock: Moved this next line from the above marker ^
+		fMapScreenBottomDirty = FALSE;
 	}
 
 	DisplayCompressMode( );
@@ -328,8 +341,11 @@ void RenderMapScreenInterfaceBottom( void )
 	// display slider on the scroll bar
 	DisplayScrollBarSlider( );
 
+	// CHRISL: Don't display messagelist if inventory panel is open
+	// CHRISL: Only run this condition if we're drawing the message list on the left
 	// display messages that can be scrolled through
-	DisplayStringsInMapScreenMessageList( );
+	if(!fShowInventoryFlag)
+		DisplayStringsInMapScreenMessageList( );
 	
 	// handle auto scroll
 	//CheckForAndHandleAutoMessageScroll( );
@@ -337,6 +353,10 @@ void RenderMapScreenInterfaceBottom( void )
 	EnableDisableMessageScrollButtonsAndRegions( );
 
 	EnableDisableBottomButtonsAndRegions( );
+
+	//CHRISL: Force a render of the inventory panel if it's already open
+	//if(fShowInventoryFlag)
+	//	BltCharInvPanel();
 
 	fMapBottomDirtied = FALSE;
 	return;
@@ -394,12 +414,20 @@ BOOLEAN CreateButtonsForMapScreenInterfaceBottom( void )
 
 
  // scroll buttons
+// CHRISL: Changed coordinates to dynamically place scroll buttons from the right edge of screen.
   guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_UP ]=  LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" ,11,4,-1,6,-1 );
+//  guiMapMessageScrollButtons[ MAP_SCROLL_MESSAGE_UP ] = QuickCreateButton( guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_UP ], (SCREEN_WIDTH - 533), (SCREEN_HEIGHT - 109), 
+//										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
+//										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnMessageUpMapScreenCallback);
+ 
+	guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_DOWN ]=  LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" ,12,5,-1,7,-1 );
+//  guiMapMessageScrollButtons[ MAP_SCROLL_MESSAGE_DOWN ] = QuickCreateButton( guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_DOWN ], (SCREEN_WIDTH - 533), (SCREEN_HEIGHT - 28), 
+//										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
+//										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnMessageDownMapScreenCallback);
+// CHRISL: Use these if we want buttons based on left edge of screen
   guiMapMessageScrollButtons[ MAP_SCROLL_MESSAGE_UP ] = QuickCreateButton( guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_UP ], 331, (SCREEN_HEIGHT - 109),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnMessageUpMapScreenCallback);
- 
-	guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_DOWN ]=  LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" ,12,5,-1,7,-1 );
   guiMapMessageScrollButtons[ MAP_SCROLL_MESSAGE_DOWN ] = QuickCreateButton( guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_DOWN ], 331, (SCREEN_HEIGHT - 28),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnMessageDownMapScreenCallback);
@@ -1389,8 +1417,10 @@ void DisplayCurrentBalanceTitleForMapBottom( void )
 	swprintf( sString, L"%s", pMapScreenBottomText[ 0 ] );
 
 	// center it
+	// CHRISL: Replaced X coordinate with dynamic coordinate set from right edge of screen
+	//VarFindFontCenterCoordinates( (SCREEN_WIDTH - 637), (SCREEN_HEIGHT - 107),  78, 10,  COMPFONT, &sFontX, &sFontY, sString );
+	// CHRISL: Use this if we want to display from the left edge
 	VarFindFontCenterCoordinates( 359, (SCREEN_HEIGHT - 107),  78, 10,  COMPFONT, &sFontX, &sFontY, sString );
-	//VarFindFontCenterCoordinates( 359, 387 - 14,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
 	
 	// print it
 	mprintf( sFontX, sFontY, L"%s", sString );
@@ -1398,7 +1428,9 @@ void DisplayCurrentBalanceTitleForMapBottom( void )
 	swprintf( sString, L"%s", zMarksMapScreenText[ 2 ] );
 
 	// center it
-	//VarFindFontCenterCoordinates( 359, 433 - 14,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
+	// CHRISL: Replaced X coordinate with dynamic coordinate set from right edge of screen
+	//VarFindFontCenterCoordinates( (SCREEN_WIDTH - 637), (SCREEN_HEIGHT - 61),  78, 10,  COMPFONT, &sFontX, &sFontY, sString );
+	// CHRISL: Use this if we want to display from the left edge
 	VarFindFontCenterCoordinates( 359, (SCREEN_HEIGHT - 61),  78, 10,  COMPFONT, &sFontX, &sFontY, sString );
 
 	// print it
@@ -1431,8 +1463,11 @@ void DisplayCurrentBalanceForMapBottom( void )
 	InsertDollarSignInToString( sString );
 
 	// center it
+	// CHRISL: Replaced X coordinate with dynamic coordinate set from right edge of screen
+	//VarFindFontCenterCoordinates( (SCREEN_WIDTH - 637), (SCREEN_HEIGHT - 91),  78, 10,  COMPFONT, &sFontX, &sFontY, sString );
+	// CHRISL: Use this if we want to display from the left edge
 	VarFindFontCenterCoordinates( 359, (SCREEN_HEIGHT - 91),  78, 10,  COMPFONT, &sFontX, &sFontY, sString );
-	
+
 	// print it
 	mprintf( sFontX, sFontY, L"%s", sString );
 
@@ -1542,8 +1577,11 @@ void DisplayProjectedDailyMineIncome( void )
 	InsertDollarSignInToString( sString );
 
 	// center it
+	// CHRISL: Replaced X coordinate with dynamic coordinate set from right edge of screen
+	//VarFindFontCenterCoordinates( (SCREEN_WIDTH - 637), (SCREEN_HEIGHT - 45),  78, 10,  COMPFONT, &sFontX, &sFontY, sString );
+	// CHRISL: Use this if we want to display from the left edge
 	VarFindFontCenterCoordinates( 359, (SCREEN_HEIGHT - 45),  78, 10,  COMPFONT, &sFontX, &sFontY, sString );
-	
+
 	// print it
 	mprintf( sFontX, sFontY, L"%s", sString );
 	

@@ -23,6 +23,7 @@
 	#include "Dialogue Control.h"
 	#include <stdio.h>
 	#include "Game Clock.h"
+	#include "GameSettings.h"
 #endif
 
 typedef struct 
@@ -360,7 +361,7 @@ void ScrollString( )
 	INT32 iMaxAge = 0;
 	BOOLEAN fDitchLastMessage = FALSE;
 
-	INT32 iMsgYStart = SCREEN_HEIGHT - 150;
+	INT32 iMsgYStart = (!gGameOptions.ubInventorySystem) ? SCREEN_HEIGHT - 150 : SCREEN_HEIGHT - 210;
 
 	// UPDATE TIMER
 	suiTimer=GetJA2Clock();
@@ -1089,6 +1090,9 @@ void DisplayStringsInMapScreenMessageList( void )
 
 	//SetFontDestBuffer( FRAME_BUFFER, 17, 360 + 6, 407, 360 + 101, FALSE );
 
+	// CHRISL: Change both X paramters so they dynamically generate from right edge of screen
+	//SetFontDestBuffer( FRAME_BUFFER, (SCREEN_WIDTH - 509), (SCREEN_HEIGHT - 114), (SCREEN_WIDTH - 233), (SCREEN_HEIGHT - 114) + 101, FALSE );
+	// CHRISL: Use this setup if we want message box on the left side
 	SetFontDestBuffer( FRAME_BUFFER, 17, (SCREEN_HEIGHT - 114), 407, (SCREEN_HEIGHT - 114) + 101, FALSE );
 
 	SetFont( MAP_SCREEN_MESSAGE_FONT );		// no longer supports variable fonts
@@ -1120,6 +1124,9 @@ void DisplayStringsInMapScreenMessageList( void )
 		SetFontForeground( ( UINT8 )( gMapScreenMessageList[ ubCurrentStringIndex ]->usColor ) );
 
 		// print this line
+		// CHRISL: Change X parameter to dynamically generate from right edge of screen
+		//mprintf_coded( (SCREEN_WIDTH - 506), sY, gMapScreenMessageList[ ubCurrentStringIndex ]->pString16 );
+		// CHRISL: Use this line if we want to display from the left edge
 		mprintf_coded( 20, sY, gMapScreenMessageList[ ubCurrentStringIndex ]->pString16 );
 
 		sY += usSpacing;
@@ -1881,6 +1888,7 @@ void DisplayLastMessage( void )
 }
 
 */
+
 
 
 

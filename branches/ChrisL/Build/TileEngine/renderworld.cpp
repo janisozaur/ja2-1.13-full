@@ -3969,6 +3969,8 @@ BOOLEAN ApplyScrolling( INT16 sTempRenderCenterX, INT16 sTempRenderCenterY, BOOL
 	INT16 sRadarBRX, sRadarBRY;
 	INT16 sRadarCX, sRadarCY;
 	INT16 sHeight, sWidth, sX, sY;
+	// CHRISL:
+	INT16			gsRadarX;
 	INT16			gsRadarY;
 	BOOLEAN			fAllowScrollingHorizontal = FALSE;
 	BOOLEAN			fAllowScrollingVertical = FALSE;
@@ -4024,21 +4026,24 @@ BOOLEAN ApplyScrolling( INT16 sTempRenderCenterX, INT16 sTempRenderCenterY, BOOL
 
 	if( guiCurrentScreen == MAP_SCREEN )
 	{
+		gsRadarX = RADAR_WINDOW_STRAT_X;
 		gsRadarY = RADAR_WINDOW_STRAT_Y;
 	}
 	else if ( gsCurInterfacePanel == SM_PANEL )
 	{
-		gsRadarY = RADAR_WINDOW_TM_Y;
+		gsRadarX = RADAR_WINDOW_SM_X;
+		gsRadarY = RADAR_WINDOW_SM_Y;
 	}
 	else
 	{
+		gsRadarX = RADAR_WINDOW_TM_X;
 		gsRadarY = RADAR_WINDOW_TM_Y;
 	}
 
 
 	sWidth		= ( RADAR_WINDOW_WIDTH );
 	sHeight		= ( RADAR_WINDOW_HEIGHT );
-	sX				= RADAR_WINDOW_X;
+	sX				= gsRadarX;
 	sY				= gsRadarY;
 
 

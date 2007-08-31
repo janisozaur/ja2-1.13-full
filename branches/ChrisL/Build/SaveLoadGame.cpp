@@ -419,6 +419,10 @@ BOOLEAN		LoadSavedMercProfiles( HWFILE hwFile );
 BOOLEAN		SaveSoldierStructure( HWFILE hFile );
 BOOLEAN		LoadSoldierStructure( HWFILE hFile );
 
+// CHRISL: New functions to save and load LBENODE data
+BOOLEAN SaveLBENODEToSaveGameFile( HWFILE hFile );
+BOOLEAN LoadLBENODEToSaveGameFile( HWFILE hFile );
+
 //BOOLEAN		SavePtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile );
 //BOOLEAN		LoadPtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile );
 
@@ -774,6 +778,9 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	}
 
 	SaveGameHeader.uiRandom = Random( RAND_MAX );
+
+	// CHRISL: We need to know what inventory system we're using early on
+	SaveGameHeader.ubInventorySystem = gGameOptions.ubInventorySystem;
 
 	//
 	// Save the Save Game header file
@@ -1343,6 +1350,15 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	SaveGameFilePosition( FileGetPos( hFile ), "New way of saving Bobby R mailorders" );
 	#endif
 
+	//CHRISL: Save LBENODE information
+	if( !SaveLBENODEToSaveGameFile( hFile ) )
+	{
+		goto FAILED_TO_SAVE;
+	}
+	#ifdef JA2BETAVERSION
+	SaveGameFilePosition( FileGetPos( hFile ), "LBENODE Data" );
+	#endif
+
 	
 	//sss
 
@@ -1556,6 +1572,25 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	#endif
 
 	guiJA2EncryptionSet = CalcJA2EncryptionSet( &SaveGameHeader );
+
+	// CHRISL: We need to know what inventory system we're using early on
+	if(SaveGameHeader.uiSavedGameVersion < SAVE_GAMES_HAVE_NEW_INVENTORY_VECTORS)
+		SaveGameHeader.ubInventorySystem = 0;
+	gGameOptions.ubInventorySystem = SaveGameHeader.ubInventorySystem;
+	if(gGameOptions.ubInventorySystem)
+	{
+		InitInventoryNew();
+		InitNewInventorySystem();
+		InitializeSMPanelCoordsNew();
+		InitializeInvPanelCoordsNew();
+	}
+	else
+	{
+		InitInventoryOld();
+		InitOldInventorySystem();
+		InitializeSMPanelCoordsOld();
+		InitializeInvPanelCoordsOld();
+	}
 
 	guiBrokenSaveGameVersion = SaveGameHeader.uiSavedGameVersion;
 
@@ -2632,6 +2667,20 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	}
 
 
+	//CHRISL: Load LBENODE information
+	if( SaveGameHeader.uiSavedGameVersion >= 102 )
+	{
+		if ( !LoadLBENODEToSaveGameFile( hFile ) )
+		{
+			FileClose( hFile );
+			guiSaveGameVersion=0;
+			return( FALSE );
+		}
+		#ifdef JA2BETAVERSION
+			LoadGameFilePosition( FileGetPos( hFile ), "LBENODE Data" );
+		#endif
+	}
+
 	///lll
 
 
@@ -2951,6 +3000,12 @@ BOOLEAN SaveMercProfiles( HWFILE hFile )
 		{
 			return(FALSE);
 		}
+
+		// WDS Inventory cleanup, phase 2
+		// Write all the vectors from the soldier into the file
+		if (!SaveVector (hFile, gMercProfiles[ cnt ].inv)) { return FALSE; }
+		if (!SaveVector (hFile, gMercProfiles[ cnt ].bInvStatus)) { return FALSE; }
+		if (!SaveVector (hFile, gMercProfiles[ cnt ].bInvNumber)) { return FALSE; }
 	}
 
 	return( TRUE );
@@ -2980,7 +3035,16 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 		{
 			return(FALSE);
 		}
-		gMercProfiles[ cnt ].CopyOldInventoryToNew();
+
+		gMercProfiles[cnt].CopyOldInventoryToNew();
+
+		// WDS Inventory cleanup, phase 2
+		if (guiSaveGameVersion >= SAVE_GAMES_HAVE_NEW_INVENTORY_VECTORS) {
+			if (!LoadVector (hFile, gMercProfiles[ cnt ].inv)) { return FALSE; }
+			if (!LoadVector (hFile, gMercProfiles[ cnt ].bInvStatus)) { return FALSE; }
+			if (!LoadVector (hFile, gMercProfiles[ cnt ].bInvNumber)) { return FALSE; }
+		}
+
 		if ( gMercProfiles[ cnt ].uiProfileChecksum != ProfileChecksum( &(gMercProfiles[ cnt ]) ) )
 		{
 			return( FALSE );
@@ -2990,7 +3054,85 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 	return( TRUE );
 }
 
+// CHRISL: New function to save/load LBENODE data
+BOOLEAN LoadLBENODEToSaveGameFile( HWFILE hFile )
+{
+	UINT16	cnt;
+	UINT32	uiNumBytesRead=0;
+	UINT32	uiSaveSize = sizeof( LBENODE ); //SIZEOF_SOLDIERTYPE;
 
+	if ( guiSaveGameVersion < 87 )
+	{
+		JA2EncryptedFileRead( hFile, &LBEptrNum, sizeof(UINT16), &uiNumBytesRead );
+	}
+	else
+	{
+		NewJA2EncryptedFileRead( hFile, &LBEptrNum, sizeof(UINT16), &uiNumBytesRead );
+	}
+	if( uiNumBytesRead != sizeof(UINT16) )
+	{
+		//return(FALSE);
+		LBEptrNum = 0;
+	}
+
+	for(cnt=0; cnt<LBEptrNum; cnt++)
+	{
+		if ( guiSaveGameVersion < 87 )
+		{
+			LBEptr.push_back(LBENODE());
+			JA2EncryptedFileRead( hFile, &LBEptr[cnt], uiSaveSize, &uiNumBytesRead );
+		}
+		else
+		{
+			LBEptr.push_back(LBENODE());
+			NewJA2EncryptedFileRead( hFile, &LBEptr[cnt], uiSaveSize, &uiNumBytesRead );
+		}
+		if( uiNumBytesRead != uiSaveSize )
+		{
+			return(FALSE);
+		}
+	}
+
+	return( TRUE );
+}
+BOOLEAN SaveLBENODEToSaveGameFile( HWFILE hFile )
+{
+	UINT16	cnt;
+	UINT32	uiNumBytesWritten=0;
+	UINT32	uiSaveSize = sizeof( LBENODE ); //SIZEOF_SOLDIERTYPE;
+
+	if ( guiSavedGameVersion < 87 )
+	{
+		JA2EncryptedFileWrite( hFile, &LBEptrNum, sizeof(UINT16), &uiNumBytesWritten );
+	}
+	else
+	{
+		NewJA2EncryptedFileWrite( hFile, &LBEptrNum, sizeof(UINT16), &uiNumBytesWritten );
+	}
+	if( uiNumBytesWritten != sizeof(UINT16) )
+	{
+		return(FALSE);
+	}
+
+	for(cnt=0; cnt<LBEptr.size(); cnt++)
+	{
+		LBEptr[ cnt ].uiNodeChecksum = LBENODEChecksum( &(LBEptr[ cnt ]) );
+		if ( guiSavedGameVersion < 87 )
+		{
+			JA2EncryptedFileWrite( hFile, &LBEptr[cnt], uiSaveSize, &uiNumBytesWritten );
+		}
+		else
+		{
+			NewJA2EncryptedFileWrite( hFile, &LBEptr[cnt], uiSaveSize, &uiNumBytesWritten );
+		}
+		if( uiNumBytesWritten != uiSaveSize )
+		{
+			return(FALSE);
+		}
+	}
+
+	return( TRUE );
+}
 
 
 
@@ -3109,6 +3251,12 @@ BOOLEAN SaveSoldierStructure( HWFILE hFile )
 					return(FALSE);
 				}
 			}
+
+			// WDS Inventory cleanup, phase 2
+			// Write all the vectors from the soldier into the file
+			if (!SaveVector (hFile, Menptr[cnt].inv.inv)) { return FALSE; }
+			if (!SaveVector (hFile, Menptr[cnt].bNewItemCount)) { return FALSE; }
+			if (!SaveVector (hFile, Menptr[cnt].bNewItemCycleCount)) { return FALSE; }
 		}
 	}
 
@@ -3181,11 +3329,12 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 			{
 				return(FALSE);
 			}
+			// CHRISL: We don't want to generate the checksum until after vector inventory is loaded
 			// check checksum
-			if ( MercChecksum( &SavedSoldierInfo ) != SavedSoldierInfo.uiMercChecksum )
-			{
-				return( FALSE );
-			}
+//			if ( MercChecksum( &SavedSoldierInfo ) != SavedSoldierInfo.uiMercChecksum )
+//			{
+//				return( FALSE );
+//			}
 
 			//Make sure all the pointer references are NULL'ed out.  
 			SavedSoldierInfo.pTempObject	 = NULL;
@@ -3295,6 +3444,18 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 				Menptr[ cnt ].ubNextToPreviousAttackerID = NOBODY;
 			}
 
+			// WDS Inventory cleanup, phase 2
+			if (guiSaveGameVersion >= SAVE_GAMES_HAVE_NEW_INVENTORY_VECTORS) {
+				if (!LoadVector (hFile, Menptr[cnt].inv.inv)) { return FALSE; }
+				if (!LoadVector (hFile, Menptr[cnt].bNewItemCount)) { return FALSE; }
+				if (!LoadVector (hFile, Menptr[cnt].bNewItemCycleCount)) { return FALSE; }
+			}
+
+			// check checksum
+			if ( MercChecksum( &Menptr[cnt] ) != SavedSoldierInfo.uiMercChecksum )
+			{
+				return( FALSE );
+			}
 		}
 	}
 

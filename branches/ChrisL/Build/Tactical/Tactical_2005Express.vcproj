@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
@@ -46,7 +46,7 @@
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
+				WarningLevel="3"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4100"
 			/>
@@ -829,7 +829,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\XML_LBEPocket.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\XML_LoadBearingEquipment.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\XML_Magazine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\XML_MercStartingGear.cpp"
 				>
 			</File>
 			<File

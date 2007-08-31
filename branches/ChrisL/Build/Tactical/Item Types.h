@@ -2,6 +2,9 @@
 #define ITEM_TYPES_H
 
 #include "types.h"
+#include <vector>
+
+using namespace std;
 
 #define INVALIDCURS 0
 #define QUESTCURS 1
@@ -150,7 +153,7 @@ typedef struct
 	UINT8		ubMission;
 	INT8		bTrap;        // 1-10 exp_lvl to detect
 	UINT8		ubImprintID;	// ID of merc that item is imprinted on
-	UINT8		ubWeight;
+	UINT16		ubWeight;	// CHRISL:
 	UINT8		fUsed;				// flags for whether the item is used or not
 } OBJECTTYPE;
 
@@ -204,6 +207,7 @@ typedef struct
 #define IC_FACE           0x00008000
 
 #define IC_KEY						0x00010000
+#define IC_LBEGEAR					0x00020000	// Added for LBE items as part of the new inventory system
 
 #define IC_MISC						0x10000000
 #define IC_MONEY					0x20000000
@@ -213,7 +217,7 @@ typedef struct
 #define IC_EXPLOSV				( IC_GRENADE | IC_BOMB )
 
 #define IC_BOBBY_GUN			( IC_GUN | IC_LAUNCHER )
-#define IC_BOBBY_MISC			( IC_GRENADE | IC_BOMB | IC_MISC | IC_MEDKIT | IC_KIT | IC_BLADE | IC_THROWING_KNIFE | IC_PUNCH | IC_FACE )
+#define IC_BOBBY_MISC			( IC_GRENADE | IC_BOMB | IC_MISC | IC_MEDKIT | IC_KIT | IC_BLADE | IC_THROWING_KNIFE | IC_PUNCH | IC_FACE | IC_LBEGEAR )
 
 
 // replaces candamage
@@ -270,6 +274,7 @@ typedef struct
 	UINT16			ubGraphicNum;
 	UINT8			ubWeight; //2 units per kilogram; roughly 1 unit per pound
 	UINT8			ubPerPocket;
+	UINT8			ItemSize;
 	UINT16		usPrice;
 	UINT8			ubCoolness;
 	INT8			bReliability;
@@ -341,6 +346,7 @@ typedef struct
 	INT16	dayvisionrangebonus;
 	INT16	cavevisionrangebonus;
 	INT16	brightlightvisionrangebonus;
+	INT16	itemsizebonus;
 	BOOLEAN leatherjacket;
 	BOOLEAN batteries;
 	BOOLEAN needsbatteries;
@@ -393,6 +399,50 @@ typedef struct
 
 	UINT16 defaultattachment;
 } INVTYPE;
+
+// CHRISL: Added new structures to handle LBE gear and the two new XML files that will be needed to deal
+// with the IC pockets and the new inventory system.
+class LBETYPE{
+public:
+	LBETYPE();
+	LBETYPE(const LBETYPE&);
+	LBETYPE& operator=(const LBETYPE&);
+	~LBETYPE();
+	UINT16			lbeIndex;
+	UINT32			lbeClass;
+	UINT8			lbeCombo;
+	char			POD;
+	vector<UINT8>	lbePocketIndex;
+};
+#define SIZEOF_LBETYPE offsetof( LBETYPE, POD )
+extern vector<LBETYPE> LoadBearingEquipment;
+
+class POCKETTYPE{
+public:
+	POCKETTYPE();
+	POCKETTYPE(const POCKETTYPE&);
+	POCKETTYPE& operator=(const POCKETTYPE&);
+	~POCKETTYPE();
+	UINT16			pIndex;
+	CHAR8			pName[80];
+	UINT8			pSilhouette;
+	UINT16			pType;
+	UINT32			pRestriction;
+	char			POD;
+	vector<UINT8>	ItemCapacityPerSize;
+};
+#define SIZEOF_POCKETTYPE offsetof( POCKETTYPE, POD )
+extern vector<POCKETTYPE> LBEPocketType;
+
+enum	// Designation of lbeClass
+{
+	THIGH_PACK=1,
+	VEST_PACK,
+	COMBAT_PACK,
+	BACKPACK,
+	LBE_POCKET,
+	OTHER_POCKET
+};
 
 #define FIRST_WEAPON 1
 #define FIRST_AMMO 71

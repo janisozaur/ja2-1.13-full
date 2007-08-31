@@ -79,6 +79,11 @@
 #define		GIO_IRON_MAN_SETTING_Y					iScreenHeightOffset + 355
 #define		GIO_IRON_MAN_SETTING_WIDTH				GIO_DIF_SETTINGS_WIDTH
 
+// CHRISL:
+#define		GIO_INV_SETTING_X						iScreenWidthOffset + 340
+#define		GIO_INV_SETTING_Y						GIO_IRON_MAN_SETTING_Y
+#define		GIO_INV_SETTING_WIDTH					GIO_DIF_SETTINGS_WIDTH
+
 //Difficulty settings
 enum
 {
@@ -118,6 +123,15 @@ enum
 	GIO_BR_AWESOME,
 
 	NUM_BR_OPTIONS,
+};
+
+// CHRISL: New inventory options
+enum
+{
+	GIO_INV_OLD,
+	GIO_INV_NEW,
+
+	NUM_INV_OPTIONS,
 };
 
 // JA2Gold: no more timed turns setting
@@ -219,6 +233,9 @@ void BtnGameSaveTogglesCallback(GUI_BUTTON *btn,INT32 reason);
 UINT32	guiBROptionToggles[ NUM_BR_OPTIONS ];
 void BtnBROptionTogglesCallback(GUI_BUTTON *btn,INT32 reason);
 
+// CHRISL: checkbox to toggle INV selection
+UINT32	guiINVOptionToggles[ NUM_INV_OPTIONS ];
+void BtnINVOptionTogglesCallback(GUI_BUTTON *btn,INT32 reason);
 
 ////////////////////////////////////////////
 //
@@ -455,6 +472,27 @@ BOOLEAN		EnterGIOScreen()
 			break;
 	}
 
+	// CHRISL: New inventory options
+	usPosY = GIO_INV_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
+	for( cnt=0; cnt<NUM_INV_OPTIONS; cnt++)
+	{
+		guiINVOptionToggles[ cnt ] = CreateCheckBoxButton(	GIO_INV_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 
+																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10, 
+																		BtnINVOptionTogglesCallback );
+		MSYS_SetBtnUserData( guiINVOptionToggles[ cnt ], 0, cnt );
+
+		usPosY += GIO_GAP_BN_SETTINGS-5;
+	}
+	switch( gGameOptions.ubInventorySystem )
+	{
+		case INVENTORY_OLD:
+			ButtonList[ guiINVOptionToggles[ GIO_INV_OLD ] ]->uiFlags |= BUTTON_CLICKED_ON;
+			break;
+		case INVENTORY_NEW:
+			ButtonList[ guiINVOptionToggles[ GIO_INV_NEW ] ]->uiFlags |= BUTTON_CLICKED_ON;
+			break;
+	}
+
 	// JA2Gold: iron man buttons
 	usPosY = GIO_IRON_MAN_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
 	for( cnt=0; cnt<NUM_SAVE_OPTIONS; cnt++)
@@ -569,6 +607,10 @@ BOOLEAN		ExitGIOScreen()
 // Madd
 	for( cnt=0; cnt<NUM_BR_OPTIONS; cnt++)
 		RemoveButton( guiBROptionToggles[ cnt ] );
+
+// CHRISL
+	for( cnt=0; cnt<NUM_INV_OPTIONS; cnt++)
+		RemoveButton( guiINVOptionToggles[ cnt ] );
 
 	// JA2Gold: remove iron man buttons
 	for( cnt=0; cnt<NUM_SAVE_OPTIONS; cnt++)
@@ -727,6 +769,15 @@ BOOLEAN		RenderGIOScreen()
 
 	DisplayWrappedString( (UINT16)(GIO_BR_SETTING_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_BR_AWESOME_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
+// CHRISL
+	DisplayWrappedString( GIO_INV_SETTING_X, (UINT16)(GIO_INV_SETTING_Y-GIO_GAP_BN_SETTINGS), GIO_DIF_SETTINGS_WIDTH + 20, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_INV_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
+	usPosY = GIO_INV_SETTING_Y+2;
+
+	DisplayWrappedString( (UINT16)(GIO_INV_SETTING_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_INV_OLD_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
+	usPosY += GIO_GAP_BN_SETTINGS-5;
+
+	DisplayWrappedString( (UINT16)(GIO_INV_SETTING_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_INV_NEW_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
+
 // JA2Gold: Display the iron man Settings Title Text
 
 	DisplayWrappedString( GIO_IRON_MAN_SETTING_X, (UINT16)(GIO_IRON_MAN_SETTING_Y-GIO_GAP_BN_SETTINGS), GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_GAME_SAVE_STYLE_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
@@ -850,6 +901,45 @@ void BtnBROptionTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 			for( cnt=0; cnt<NUM_BR_OPTIONS; cnt++)
 			{
 				if( ButtonList[ guiBROptionToggles[ cnt ] ]->uiFlags & BUTTON_CLICKED_ON )
+				{
+					fAnyChecked = TRUE;
+				}
+			}
+			//if none are checked, re check this one
+			if( !fAnyChecked )
+				btn->uiFlags |= BUTTON_CLICKED_ON;
+		}
+	}
+}
+
+// CHRISL:
+void BtnINVOptionTogglesCallback(GUI_BUTTON *btn,INT32 reason)
+{
+	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	{
+		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
+
+		if( btn->uiFlags & BUTTON_CLICKED_ON )
+		{
+			UINT8	cnt;
+
+			for( cnt=0; cnt<NUM_INV_OPTIONS; cnt++)
+			{
+				ButtonList[ guiINVOptionToggles[ cnt ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
+			}
+
+			//enable the current button
+			btn->uiFlags |= BUTTON_CLICKED_ON;
+		}
+		else
+		{
+			UINT8	cnt;
+			BOOLEAN fAnyChecked=FALSE;
+
+			//if none of the other boxes are checked, do not uncheck this box
+			for( cnt=0; cnt<NUM_INV_OPTIONS; cnt++)
+			{
+				if( ButtonList[ guiINVOptionToggles[ cnt ] ]->uiFlags & BUTTON_CLICKED_ON )
 				{
 					fAnyChecked = TRUE;
 				}
@@ -1093,6 +1183,21 @@ UINT8	GetCurrentBROptionButtonSetting()
 	return( 0 );
 }
 
+// CHRISL:
+UINT8	GetCurrentINVOptionButtonSetting()
+{
+	UINT8	cnt;
+
+	for( cnt=0; cnt<NUM_INV_OPTIONS; cnt++)
+	{
+		if( ButtonList[ guiINVOptionToggles[ cnt ] ]->uiFlags & BUTTON_CLICKED_ON )
+		{
+			return( cnt );
+		}
+	}
+	return( 0 );
+}
+
 UINT8	GetCurrentGameStyleButtonSetting()
 {
 	UINT8	cnt;
@@ -1215,6 +1320,15 @@ void RestoreGIOButtonBackGrounds()
 		RestoreExternBackgroundRect( GIO_BR_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 ); 
 		usPosY += GIO_GAP_BN_SETTINGS-5;
 	}
+
+// CHRISL
+
+	usPosY = GIO_INV_SETTING_Y-GIO_OFFSET_TO_TOGGLE_BOX_Y;
+	for( cnt=0; cnt<NUM_INV_OPTIONS; cnt++)
+	{
+		RestoreExternBackgroundRect( GIO_INV_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 ); 
+		usPosY += GIO_GAP_BN_SETTINGS-5;
+	}
 }
 
 
@@ -1246,6 +1360,16 @@ void DoneFadeOutForExitGameInitOptionScreen( void )
 			break;
 	}
 
+	// CHRISL:
+	switch ( GetCurrentINVOptionButtonSetting() )
+	{
+		case GIO_INV_OLD:
+			gGameOptions.ubInventorySystem = INVENTORY_OLD;
+			break;
+		case GIO_INV_NEW:
+			gGameOptions.ubInventorySystem = INVENTORY_NEW;
+			break;
+	}
 	//	gubGIOExitScreen = INIT_SCREEN;
 	gubGIOExitScreen = INTRO_SCREEN;
 
