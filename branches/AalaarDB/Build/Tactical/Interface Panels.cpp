@@ -1147,7 +1147,7 @@ void ReevaluateItemHatches( SOLDIERTYPE *pSoldier, BOOLEAN fAllValid )
 void RenderBackpackButtons(int bpAction)
 {
 	// Only run function if we're using new inventory system
-	if((UsingInventorySystem() == false))
+	if((UsingNewInventorySystem() == false))
 		return;
 	// Only run this if we're not on the strategic screen
 	if(guiCurrentItemDescriptionScreen == MAP_SCREEN)
@@ -2291,7 +2291,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 		if ( InItemDescriptionBox( ) )
 		{
 			// CHRISL: Changed 3rd parameter so we can display graphic based on inventory system used
-			BltVideoObjectFromIndex( guiSAVEBUFFER, guiSMPanel, UsingInventorySystem(), INTERFACE_START_X, INV_INTERFACE_START_Y, VO_BLT_SRCTRANSPARENCY, NULL );
+			BltVideoObjectFromIndex( guiSAVEBUFFER, guiSMPanel, UsingNewInventorySystem(), INTERFACE_START_X, INV_INTERFACE_START_Y, VO_BLT_SRCTRANSPARENCY, NULL );
 			RenderSoldierFace( gpSMCurrentMerc, SM_SELMERC_FACE_X, SM_SELMERC_FACE_Y, TRUE );
 
 
@@ -2315,7 +2315,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 		else
 		{
 			// CHRISL: Changed 3rd parameter so we can display graphic based on inventory system used
-			BltVideoObjectFromIndex( guiSAVEBUFFER, guiSMPanel, UsingInventorySystem(), INTERFACE_START_X, INV_INTERFACE_START_Y, VO_BLT_SRCTRANSPARENCY, NULL );
+			BltVideoObjectFromIndex( guiSAVEBUFFER, guiSMPanel, UsingNewInventorySystem(), INTERFACE_START_X, INV_INTERFACE_START_Y, VO_BLT_SRCTRANSPARENCY, NULL );
 
 			RenderInvBodyPanel( gpSMCurrentMerc, SM_BODYINV_X, SM_BODYINV_Y );		
 
@@ -2605,8 +2605,8 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 		SGPRect ClipRect;
 
 		// CHRISL: Change hatching area based on inventory system
-		ClipRect.iLeft = ((UsingInventorySystem() == true)) ? 0 : 87;
-		ClipRect.iRight = ((UsingInventorySystem() == true)) ? SCREEN_WIDTH : 536;
+		ClipRect.iLeft = ((UsingNewInventorySystem() == true)) ? 0 : 87;
+		ClipRect.iRight = ((UsingNewInventorySystem() == true)) ? SCREEN_WIDTH : 536;
 		//ClipRect.iLeft	 = 87;
 		//ClipRect.iRight  = 536;
 		ClipRect.iTop		= INV_INTERFACE_START_Y;
@@ -3008,7 +3008,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	//}
 	//else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP && fLeftDown )
 	// CHRISL: Are we in combat, wearing a backpack with the zipper closed?  Don't allow access to backpack items
-	if((UsingInventorySystem() == true))
+	if((UsingNewInventorySystem() == true))
 		if(icLBE[uiHandPos] == BPACKPOCKPOS && (!(gpSMCurrentMerc->flags.ZipperFlag) || (gpSMCurrentMerc->flags.ZipperFlag && gAnimControl[gpSMCurrentMerc->usAnimState].ubEndHeight == ANIM_STAND)) && (gTacticalStatus.uiFlags & INCOMBAT) && (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN ))
 			iReason = MSYS_CALLBACK_REASON_NONE;
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -3044,7 +3044,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			all items in the relevant IC Group pockets out of the soldiers inventory and put them into the LBE items
 			inventory. But first, find out if we already have a LBE item inventory for this item and this merc.  If we 
 			do, remove the items from it and place them into the sector the LBE inventory is located in.*/
-			if((UsingInventorySystem() == true))
+			if((UsingNewInventorySystem() == true))
 			{
 				if(uiHandPos == VESTPOCKPOS || uiHandPos == LTHIGHPOCKPOS || uiHandPos == RTHIGHPOCKPOS || uiHandPos == CPACKPOCKPOS || uiHandPos == BPACKPOCKPOS)
 				{
@@ -3190,7 +3190,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				LBENODE.  Then we need to know if the LBE Item in the cursor is an LBENODE
 				or just a normal OBJECTTYPE.  If it's an LBENODE, we need to move it's items into
 				the appropriate pockets for the soldier and then delete the LBENODE.*/
-				if((UsingInventorySystem() == true))
+				if((UsingNewInventorySystem() == true))
 				{
 					if((uiHandPos == VESTPOCKPOS || uiHandPos == LTHIGHPOCKPOS || uiHandPos == RTHIGHPOCKPOS || uiHandPos == CPACKPOCKPOS || uiHandPos == BPACKPOCKPOS) && CanItemFitInPosition(gpSMCurrentMerc, gpItemPointer, uiHandPos, FALSE))
 					{
@@ -3323,7 +3323,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		// Some global stuff here - for esc, etc
 		// Check for # of slots in item
 		// CHRISL: Use new ItemSlotLimit function if we're using the new inventory system
-		UINT8 isLimit = ((UsingInventorySystem() == false)) ? ItemSlotLimit( gpSMCurrentMerc->inv[ uiHandPos ].usItem, (UINT16)uiHandPos ) : ItemSlotLimit( &gpSMCurrentMerc->inv[ uiHandPos ], (UINT16)uiHandPos, gpSMCurrentMerc );
+		UINT8 isLimit = ItemSlotLimit( &gpSMCurrentMerc->inv[ uiHandPos ], uiHandPos, gpSMCurrentMerc );
 		if( ( gpSMCurrentMerc->inv[ uiHandPos ].ubNumberOfObjects > 1 && isLimit > 0 ) && ( guiCurrentScreen != MAP_SCREEN ) )
 		{
 			if ( !InItemStackPopup( )	)
@@ -6631,7 +6631,7 @@ void DisableSMPpanelButtonsWhenInShopKeeperInterface( BOOLEAN fDontDrawButtons )
 
 		ButtonList[ giSMStealthButton ]->uiFlags &= ~BUTTON_DIRTY;
 		// CHRISL: Backpack buttons for new inventory system
-		if((UsingInventorySystem() == true))
+		if((UsingNewInventorySystem() == true))
 		{
 			ButtonList[ giSMZipperButton ]->uiFlags &= ~BUTTON_DIRTY;
 			ButtonList[ giSMDropPackButton ]->uiFlags &= ~BUTTON_DIRTY;
@@ -6656,7 +6656,7 @@ void DisableSMPpanelButtonsWhenInShopKeeperInterface( BOOLEAN fDontDrawButtons )
 
 		ButtonList[ giSMStealthButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
 		// CHRISL: Backpack buttons for new inventory system
-		if((UsingInventorySystem() == true))
+		if((UsingNewInventorySystem() == true))
 		{
 			ButtonList[ giSMZipperButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
 			ButtonList[ giSMDropPackButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;

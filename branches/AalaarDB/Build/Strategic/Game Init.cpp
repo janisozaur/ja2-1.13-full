@@ -386,7 +386,7 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame: set initial inventory coords");
 	if( gubScreenCount == 0 )
 	{
-		if((UsingInventorySystem() == true))
+		if((UsingNewInventorySystem() == true))
 		{
 			InitNewInventorySystem();
 			InitializeSMPanelCoordsNew();

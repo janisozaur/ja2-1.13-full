@@ -2854,7 +2854,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	if(SaveGameHeader.uiSavedGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE)
 		SaveGameHeader.ubInventorySystem = 0;
 	gGameOptions.ubInventorySystem = SaveGameHeader.ubInventorySystem;
-	if((UsingInventorySystem() == true))
+	if((UsingNewInventorySystem() == true))
 	{
 		InitInventoryNew();
 		InitNewInventorySystem();

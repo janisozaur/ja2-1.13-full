@@ -1550,7 +1550,7 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 	// placement in an empty slot
 	ubNumberToDrop = pItemPtr->ubNumberOfObjects;
 
-	ubSlotLimit = ItemSlotLimit( pItemPtr->usItem, BIGPOCK1POS );
+	ubSlotLimit = ItemSlotLimit( pItemPtr, BIGPOCK1POS );
 
 	if (ubNumberToDrop > ubSlotLimit && ubSlotLimit != 0)
 	{

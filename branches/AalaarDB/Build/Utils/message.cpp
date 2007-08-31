@@ -377,7 +377,7 @@ void ScrollString( )
 	INT32 iMaxAge = 0;
 	BOOLEAN fDitchLastMessage = FALSE;
 
-	INT32 iMsgYStart = ((UsingInventorySystem() == false)) ? SCREEN_HEIGHT - 150 : SCREEN_HEIGHT - 210;
+	INT32 iMsgYStart = ((UsingNewInventorySystem() == false)) ? SCREEN_HEIGHT - 150 : SCREEN_HEIGHT - 210;
 
 
 	// UPDATE TIMER

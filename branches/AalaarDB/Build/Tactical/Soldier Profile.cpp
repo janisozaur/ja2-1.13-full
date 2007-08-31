@@ -312,7 +312,7 @@ BOOLEAN LoadMercProfiles(void)
 			}
 		}
 		// Last, go through and assign LBE items.  Only needed for new inventory system
-		if((UsingInventorySystem() == true))
+		if((UsingNewInventorySystem() == true))
 		{
 			for(uiLoop2=0; uiLoop2<5; uiLoop2++)
 			{

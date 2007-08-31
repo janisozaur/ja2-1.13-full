@@ -2763,7 +2763,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 		if (pCreateStruct->fPlayerMerc)
 		{
 			// CHRISL: Resort profile items to use LBE pockets properly
-			if((UsingInventorySystem() == true))
+			if((UsingNewInventorySystem() == true))
 				DistributeInitialGear(pProfile);
 
 			// do some special coding to put stuff in the profile in better-looking
@@ -2788,7 +2788,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 						{
 							// oh well, couldn't find anything to attach to!
 							//CHRISL: Place items by slots chosen in profile if using new inventory system
-							if((UsingInventorySystem() == false))
+							if((UsingNewInventorySystem() == false))
 								AutoPlaceObject( pSoldier, &gTempObject, FALSE );
 							else
 								PlaceObject( pSoldier, cnt, &gTempObject );
@@ -2797,7 +2797,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 					else
 					{
 						//CHRISL: Place items by slots chosen in profile if using new inventory system
-						if((UsingInventorySystem() == false))
+						if((UsingNewInventorySystem() == false))
 							AutoPlaceObject( pSoldier, &gTempObject, FALSE );
 						else
 							PlaceObject( pSoldier, cnt, &gTempObject );

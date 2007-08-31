@@ -3344,7 +3344,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped
 						{
 							//find out how many items can be put in a big slot
-							INT8 ubSlotLimit = ItemSlotLimit( gWorldItems[ uiLoop ].object.usItem, BIGPOCK1POS );
+							UINT8 ubSlotLimit = ItemSlotLimit( &gWorldItems[ uiLoop ].object, BIGPOCK1POS );
 
 							//if we still have some space
 							INT32 i = 0;

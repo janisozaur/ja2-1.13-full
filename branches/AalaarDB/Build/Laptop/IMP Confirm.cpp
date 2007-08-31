@@ -733,7 +733,7 @@ void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 	PERFORMANCE_MARKER
 	INT32 iSlot = -1;
 
-	if((UsingInventorySystem() == false))
+	if((UsingNewInventorySystem() == false))
 		iSlot = FirstFreeBigEnoughPocket(pProfile, usItem, ubHowMany);
 	else
 	{
@@ -904,7 +904,7 @@ INT32 SpecificFreePocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHow
 					return HANDPOS;
 				if ( pProfile->inv[SECONDHANDPOS] == NONE && !(Item[pProfile->inv[HANDPOS]].twohanded))
 					return SECONDHANDPOS;
-				if((UsingInventorySystem() == true))
+				if((UsingNewInventorySystem() == true))
 					if ( pProfile->inv[GUNSLINGPOCKPOS] == NONE && pProfile->inv[BPACKPOCKPOS] == NONE && LBEPocketType[1].ItemCapacityPerSize[Item[usItem].ItemSize]!=0)
 						return GUNSLINGPOCKPOS;
 				for(int i=BODYPOSFINAL; i<NUM_INV_SLOTS; i++)

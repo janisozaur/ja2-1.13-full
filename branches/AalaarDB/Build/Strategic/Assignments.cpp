@@ -3029,7 +3029,7 @@ OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPa
 	pPassList = &( gRepairPassSlotList[ ubPassType ] );
 
 	// CHRISL:
-	for ( bLoop = 0; bLoop < pPassList->ubChoices[UsingInventorySystem()]; bLoop++ )
+	for ( bLoop = 0; bLoop < pPassList->ubChoices[UsingNewInventorySystem()]; bLoop++ )
 	{
 		bSlotToCheck = pPassList->bSlot[ bLoop ];
 		Assert( bSlotToCheck != -1 );

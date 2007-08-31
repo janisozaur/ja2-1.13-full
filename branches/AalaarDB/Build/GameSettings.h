@@ -142,7 +142,7 @@ typedef struct
 
 } GAME_OPTIONS;
 
-bool UsingInventorySystem();
+bool UsingNewInventorySystem();
 
 // Snap: Options read from an INI file in the default of custom Data directory
 typedef struct

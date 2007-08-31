@@ -1907,7 +1907,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 		// Do we have APs?
 		// CHRISL: Added penalty for jumping a fence while wearing a backpack
 		// Do we have APs?
-		if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
+		if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
 		{
 			sAPCost = AP_JUMPFENCEBPACK;
 			sBPCost = BP_JUMPFENCEBPACK;

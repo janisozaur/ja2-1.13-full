@@ -118,7 +118,7 @@ int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 	}
 
 	//if howMany is -1 the stack will become full
-	int numToAdd = ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects;
+	int numToAdd = ItemSlotLimit( this, BIGPOCK1POS ) - ubNumberOfObjects;
 	if (howMany >= 0) {
 		numToAdd = min(numToAdd, howMany);
 	}
@@ -148,9 +148,7 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 	Assert(sourceObject.usItem == usItem);
 
 	//can't add too much, can't take too many
-	//must make sure it is at least 0, there is a bug with ItemSlotLimit returning 0, then numToAdd being negative
-	int freeObjectsInStack = max(0, (ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects));
-	freeObjectsInStack = 1;
+	int freeObjectsInStack = max(0, (ItemSlotLimit( this, BIGPOCK1POS ) - ubNumberOfObjects));
 	int numToAdd = min (freeObjectsInStack, sourceObject.ubNumberOfObjects);
 	//if howMany is -1 the stack will become full if sourceObject has enough
 	if (howMany >= 0) {

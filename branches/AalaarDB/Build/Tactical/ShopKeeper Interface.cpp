@@ -2812,7 +2812,7 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 	}
 
 	// CHRISL: if item is LBENODE
-	if( (UsingInventorySystem() == true) && pItemObject->IsLBE())
+	if( (UsingNewInventorySystem() == true) && pItemObject->IsLBE())
 	{
 		//Display the '*' in the bottom right corner of the square
 		swprintf( zTemp, L"*" );

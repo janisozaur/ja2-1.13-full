@@ -67,7 +67,7 @@ void		CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue );
 //Change this number when we want any who gets the new build to reset the options
 #define				GAME_SETTING_CURRENT_VERSION		522
 
-bool UsingInventorySystem()
+bool UsingNewInventorySystem()
 {
 	return (gGameOptions.ubInventorySystem == INVENTORY_NEW);
 }

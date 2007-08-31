@@ -3210,7 +3210,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 			if ( thisSoldier->usAnimState != RUNNING )
 			{
 				// CHRISL
-				if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true)
+				if((UsingNewInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true)
 				{
 					sAPCost = AP_START_RUN_COST + 2;
 					sBPCost += 2;
@@ -3240,7 +3240,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 			if ( !thisSoldier->flags.fDontChargeAPsForStanceChange )
 			{
 				// CHRISL
-				if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true && !thisSoldier->flags.ZipperFlag)
+				if((UsingNewInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true && !thisSoldier->flags.ZipperFlag)
 				{
 					if(usNewState == KNEEL_UP)
 					{
@@ -3278,7 +3278,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 				if ( thisSoldier->sGridNo == thisSoldier->pathing.sFinalDestination || thisSoldier->pathing.usPathIndex == 0 )
 				{
 					// CHRISL
-					if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true && !thisSoldier->flags.ZipperFlag)
+					if((UsingNewInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true && !thisSoldier->flags.ZipperFlag)
 					{
 						if(usNewState == PRONE_UP)
 						{
@@ -3364,7 +3364,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 		case HOPFENCE:
 
 			// CHRISL
-			if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true)
+			if((UsingNewInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true)
 				DeductPoints( thisSoldier, AP_JUMPFENCEBPACK, BP_JUMPFENCEBPACK );
 			else
 				DeductPoints( thisSoldier, AP_JUMPFENCE, BP_JUMPFENCE );
@@ -7841,7 +7841,7 @@ void SOLDIERTYPE::BeginSoldierClimbUpRoof( void )
 	PERFORMANCE_MARKER
 
 	//CHRISL: Disable climbing up to a roof while wearing a backpack
-	if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true)
+	if((UsingNewInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true)
 		return;
 	INT8							bNewDirection;
 	UINT8							ubWhoIsThere;

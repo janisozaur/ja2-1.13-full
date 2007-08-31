@@ -123,7 +123,7 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 		// cost for jumping a fence REPLACES all other AP costs!
 	// CHRISL: 
 	case TRAVELCOST_FENCE		: 
-		 if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
+		 if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
 			 return( AP_JUMPFENCEBPACK );
 		 else
 			  return( AP_JUMPFENCE );
@@ -301,7 +301,7 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 			case ADULTMONSTER_WALKING:	
 			case BLOODCAT_RUN:
 				// CHRISL
-				if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
+				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
 					sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISORBPACK) );
 				else
 					sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );
@@ -316,7 +316,7 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
       case LARVAE_WALK:
 			case WALKING :
 				// CHRISL
-				if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
+				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
 					sPoints = (sTileCost + WALKCOSTBPACK);
 				else
 					sPoints = (sTileCost + WALKCOST);
@@ -326,13 +326,13 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 			case SWAT_BACKWARDS:
 			// CHRISL
 			case SWATTING:
-				if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
+				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
 					sPoints = (sTileCost + SWATCOSTBPACK);
 				else
 					sPoints = (sTileCost + SWATCOST);
 				break;
 			case CRAWLING:
-				if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
+				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
 					sPoints = (sTileCost + CRAWLCOSTBPACK);
 				else
 					sPoints = (sTileCost + CRAWLCOST);
@@ -388,7 +388,7 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 			case ADULTMONSTER_WALKING:	
 			case BLOODCAT_RUN:
 				// CHRISL
-				if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
+				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
 					sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISORBPACK) );
 				else
 					sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );
@@ -403,7 +403,7 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 			case LARVAE_WALK:
 			// CHRISL
 			case WALKING :
-				if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
+				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
 					sPoints = (sTileCost + WALKCOSTBPACK);
 				else
 					sPoints = (sTileCost + WALKCOST);
@@ -413,13 +413,13 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 			case SWAT_BACKWARDS:
 			// CHRISL
 			case SWATTING:
-				if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
+				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
 					sPoints = (sTileCost + SWATCOSTBPACK);
 				else
 					sPoints = (sTileCost + SWATCOST);
 				break;
 			case CRAWLING:
-				if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
+				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
 					sPoints = (sTileCost + CRAWLCOSTBPACK);
 				else
 					sPoints = (sTileCost + CRAWLCOST);

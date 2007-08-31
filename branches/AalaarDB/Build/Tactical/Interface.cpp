@@ -279,7 +279,7 @@ BOOLEAN InitializeTacticalInterface(	)
 	VOBJECT_DESC	VObjectDesc;
 
 	// CHRISL: Setup default interface coords based on inventory system in use
-	if((UsingInventorySystem() == true))
+	if((UsingNewInventorySystem() == true))
 	{
 		InitNewInventorySystem();
 		InitializeSMPanelCoordsNew();
