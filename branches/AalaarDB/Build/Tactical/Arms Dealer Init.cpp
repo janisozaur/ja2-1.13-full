@@ -132,7 +132,7 @@ void SPECIAL_ITEM_INFO::initialize()
 
 void DEALER_SPECIAL_ITEM::initialize()
 {
-	memset(this, 0, sizeof(DEALER_SPECIAL_ITEM) - sizeof(OBJECTTYPE));
+	memset(this, 0, SIZEOF_DEALER_SPECIAL_ITEM_POD);
 	object.initialize();
 	PERFORMANCE_MARKER
 }

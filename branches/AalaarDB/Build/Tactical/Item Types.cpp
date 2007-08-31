@@ -74,6 +74,34 @@ bool OBJECTTYPE::exists()
 	return (ubNumberOfObjects > 0 && usItem != NOTHING);
 }
 
+void OBJECTTYPE::SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, StackedObjects::iterator beginIter)
+{
+	if (numToSplice == 0) {
+		return;
+	}
+	//remember that sometimes objectStack is 1 while ubNumberOfObjects is 0
+	if (ubNumberOfObjects == 0) {
+		objectStack.clear();
+	}
+	StackedObjects::iterator stopIter = beginIter;
+	for (unsigned int x = 0; x < numToSplice; ++x) {
+		++stopIter;
+	}
+	objectStack.splice(objectStack.begin(), sourceObject.objectStack, beginIter, stopIter);
+
+	ubNumberOfObjects += numToSplice;
+	ubWeight = CalculateObjectWeight(this);
+
+	if (sourceObject.objectStack.empty() == true) {
+		//init it so it is not empty, even though it no longer exists
+		sourceObject.initialize();
+	}
+	else {
+		sourceObject.ubNumberOfObjects -= numToSplice;
+		sourceObject.ubWeight = CalculateObjectWeight(&sourceObject);
+	}
+}
+
 int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 {
 	PERFORMANCE_MARKER
@@ -120,8 +148,10 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 	Assert(sourceObject.usItem == usItem);
 
 	//can't add too much, can't take too many
+	//must make sure it is at least 0, there is a bug with ItemSlotLimit returning 0, then numToAdd being negative
+	int freeObjectsInStack = max(0, (ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects));
+	int numToAdd = min (freeObjectsInStack, sourceObject.ubNumberOfObjects);
 	//if howMany is -1 the stack will become full if sourceObject has enough
-	int numToAdd = min (ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects, sourceObject.ubNumberOfObjects);
 	if (howMany >= 0) {
 		numToAdd = min(numToAdd, howMany);
 	}
@@ -162,29 +192,7 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 		//TODO, other specials
 	}
 
-	if (numToAdd > 0) {
-		StackedObjects::iterator stopIter = sourceObject.objectStack.begin();
-		for (int x = 0; x < numToAdd; ++x) {
-			++stopIter;
-		}
-		//remember that sometimes objectStack is 1 while ubNumberOfObjects is 0
-		if (ubNumberOfObjects == 0) {
-			objectStack.clear();
-		}
-		objectStack.splice(objectStack.begin(), sourceObject.objectStack, sourceObject.objectStack.begin(), stopIter);
-
-		ubNumberOfObjects += numToAdd;
-		ubWeight = CalculateObjectWeight(this);
-
-		if (sourceObject.objectStack.empty() == true) {
-			//init it so it is not empty, even though it no longer exists
-			sourceObject.initialize();
-		}
-		else {
-			sourceObject.ubNumberOfObjects -= numToAdd;
-			sourceObject.ubWeight = CalculateObjectWeight(&sourceObject);
-		}
-	}
+	SpliceData(sourceObject, numToAdd, sourceObject.objectStack.begin());
 	
 
 	//returns how many were NOT added
@@ -252,6 +260,48 @@ int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject)
 	return howMany - numToRemove;
 }
 
+bool OBJECTTYPE::RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject)
+{
+	PERFORMANCE_MARKER
+	if (destObject && ubNumberOfObjects == 1) {
+		*destObject = *this;
+		this->initialize();
+		return true;
+	}
+
+	if (destObject) {
+		//destObject should be empty especially if it fails!!
+		destObject->initialize();
+	}
+
+	if (index >= ubNumberOfObjects || exists() == false) {
+		return false;
+	}
+
+	StackedObjects::iterator spliceIter = objectStack.begin();
+	for (unsigned int x = 0; x < index; ++x) {
+		++spliceIter;
+	}
+
+	if (destObject) {
+		destObject->usItem = usItem;
+		destObject->fFlags = fFlags;
+		destObject->SpliceData((*this), 1, spliceIter);
+	}
+	else {
+		objectStack.erase(spliceIter);
+		if (objectStack.empty()) {
+			this->initialize();
+		}
+		else {
+			ubNumberOfObjects -= 1;
+			ubWeight = CalculateObjectWeight(this);
+		}
+	}
+
+	return true;
+}
+
 StackedObjectData* OBJECTTYPE::operator [](const unsigned int index)
 {
 	PERFORMANCE_MARKER
@@ -304,14 +354,13 @@ OBJECTTYPE* StackedObjectData::GetAttachmentAtIndex(UINT8 index)
 {
 	PERFORMANCE_MARKER
 	attachmentList::iterator iter = attachments.begin();
-	for (int x = 0; x <= index && iter != attachments.end(); ++x) {
+	for (int x = 0; x < index && iter != attachments.end(); ++x) {
 		++iter;
 	}
 
 	if (iter != attachments.end()) {
 		return &(*iter);
 	}
-	Assert(false);
 	return 0;
 }
 

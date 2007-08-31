@@ -1358,6 +1358,7 @@ UINT8 ItemSlotLimit( UINT16 usItem, INT8 bSlot )
 	}
 	else
 	{
+		//ADB TODO fix this!!! it is returning wrong amounts
 		ubSlotLimit = Item[usItem].ubPerPocket;
 		if (bSlot >= BIGPOCKFINAL && ubSlotLimit > 1)
 		{
@@ -2514,68 +2515,90 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 {
 	PERFORMANCE_MARKER
 	INT32 cnt;
-	UINT16 usWeight;
+	UINT16 weight = 0;
 	INVTYPE * pItem;
 
-	if (pObject->exists() == false) {
+	if (pObject->exists() == false || pObject->ubNumberOfObjects == 0) {
 		return 0;
 	}
 	pItem = &(Item[ pObject->usItem ]);
+	//ADB it is much easier and faster to calculate ammo in a lump rather than accumulate a stack's weight
+	if ( pItem->usItemClass == IC_AMMO)//Pulmu: added weight allowance for ammo not being full
+	{
+		if ( gGameExternalOptions.fAmmoDynamicWeight == TRUE ) {
+			int ammoLeft = 0;
+			for( cnt = 0; cnt < pObject->ubNumberOfObjects; cnt++ )
+			{
+				ammoLeft += (*pObject)[cnt]->data.ubShotsLeft;
+			}
+			weight = CalculateAmmoWeight(pObject->usItem, ammoLeft);
+		}
+		else {
+			// Start with base weight
+			weight = pItem->ubWeight;
+			//multiply by the number of objects, can be 0
+			weight *= pObject->ubNumberOfObjects;
+		}
+	}
+	else {
+		for (int x = 0; x < pObject->ubNumberOfObjects; ++x) {
+			weight += pObject->GetWeightOfObjectInStack(x);
+		}
+	}
+
+	return( weight );
+}
+
+UINT16 OBJECTTYPE::GetWeightOfObjectInStack(unsigned int index) {
+	//Item does not exist
+	if( index >= ubNumberOfObjects )
+	{
+		return 0;
+	}
+
+	INVTYPE * pItem = &(Item[ usItem ]);
 
 	// Start with base weight
-	usWeight = pItem->ubWeight;
-	//multiply by the number of objects, can be 0
-	usWeight *= pObject->ubNumberOfObjects;
-
+	UINT16 weight = pItem->ubWeight;
 	if ( pItem->usItemClass != IC_AMMO )
 	{
-		for( cnt = 0; cnt < pObject->ubNumberOfObjects; cnt++ )
+		// Are we looking at an LBENODE item?  New inventory only.
+		if(pItem->usItemClass == IC_LBEGEAR && IsLBE() && (UsingInventorySystem() == true))
 		{
-			// Are we looking at an LBENODE item?  New inventory only.
-			if(pItem->usItemClass == IC_LBEGEAR && pObject->IsLBE() && (UsingInventorySystem() == true))
+			for ( int subObjects = 0; subObjects < ITEMS_IN_LBE; subObjects++)
 			{
-				for ( int subObjects = 0; subObjects < 12; subObjects++)
+				if (GetLBEPointer(index)->inv[subObjects].exists() == true)
 				{
-					if (pObject->GetLBEPointer(cnt)->inv[subObjects].exists() == true)
-					{
-						usWeight += CalculateObjectWeight(&(pObject->GetLBEPointer(cnt)->inv[subObjects]));
-					}
+					weight += CalculateObjectWeight(&(GetLBEPointer(index)->inv[subObjects]));
 				}
-				//do not search for attachments to an LBE
-				continue;
 			}
+			//do not search for attachments to an LBE
+			return weight;
+		}
 
+		// account for any attachments
+		for (attachmentList::iterator iter = (*this)[index]->attachments.begin(); iter != (*this)[index]->attachments.end(); ++iter) {
+			weight += CalculateObjectWeight(&(*iter));
+		}
 
-			// account for any attachments
-			for (attachmentList::iterator iter = (*pObject)[cnt]->attachments.begin(); iter != (*pObject)[cnt]->attachments.end(); ++iter) {
-				usWeight += CalculateObjectWeight(&(*iter));
-			}
-
-			// add in weight of ammo
-			if (Item[ pObject->usItem ].usItemClass == IC_GUN && (*pObject)[cnt]->data.gun.ubGunShotsLeft > 0)
+		// add in weight of ammo
+		if (Item[ usItem ].usItemClass == IC_GUN && (*this)[index]->data.gun.ubGunShotsLeft > 0)
+		{
+			if( gGameExternalOptions.fAmmoDynamicWeight == TRUE )
 			{
-				if( gGameExternalOptions.fAmmoDynamicWeight == TRUE )
-				{
-					usWeight += CalculateAmmoWeight((*pObject)[cnt]->data.gun.usGunAmmoItem, (*pObject)[cnt]->data.gun.ubGunShotsLeft);
-				}
-				else
-				{
-					usWeight += Item[ (*pObject)[cnt]->data.gun.usGunAmmoItem ].ubWeight;
-				}
+				weight += CalculateAmmoWeight((*this)[index]->data.gun.usGunAmmoItem, (*this)[index]->data.gun.ubGunShotsLeft);
+			}
+			else
+			{
+				weight += Item[ (*this)[index]->data.gun.usGunAmmoItem ].ubWeight;
 			}
 		}
 	}
 	else if ( pItem->usItemClass == IC_AMMO && gGameExternalOptions.fAmmoDynamicWeight == TRUE )//Pulmu: added weight allowance for ammo not being full
 	{
-		int ammoLeft = 0;
-		for( cnt = 0; cnt < pObject->ubNumberOfObjects; cnt++ )
-		{
-			ammoLeft += (*pObject)[cnt]->data.ubShotsLeft;
-		}
-		usWeight = CalculateAmmoWeight(pObject->usItem, ammoLeft);
+		weight = CalculateAmmoWeight(usItem, (*this)[index]->data.ubShotsLeft);
 	}
-
-	return( usWeight );
+	return weight;
 }
 
 UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier )
@@ -2659,30 +2682,6 @@ void RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex )
 		pObj->objectStack.erase(iter);
 		// make the number of objects recorded match the array
 		pObj->ubNumberOfObjects--;
-		pObj->ubWeight = CalculateObjectWeight( pObj );
-	}
-}
-
-void GetObjFrom( OBJECTTYPE * pObj, UINT8 ubGetIndex, OBJECTTYPE * pDest )
-{
-	PERFORMANCE_MARKER
-	if (!pDest || ubGetIndex >= pObj->ubNumberOfObjects)
-	{
-		return;
-	}
-	if (pObj->ubNumberOfObjects == 1)
-	{
-		*pDest = *pObj;
-		DeleteObj( pObj );	
-	}
-	else
-	{
-		//ADB TODO clean up code or change all calls getobjfrom to something that is already written
-		pDest->usItem = pObj->usItem;
-		(*pDest)[0]->data.objectStatus = (*pObj)[ubGetIndex]->data.objectStatus;
-		pDest->ubNumberOfObjects = 1;
-		pDest->ubWeight = CalculateObjectWeight( pDest );
-		RemoveObjFrom( pObj, ubGetIndex );
 		pObj->ubWeight = CalculateObjectWeight( pObj );
 	}
 }
@@ -2798,7 +2797,7 @@ void DistributeStatus(OBJECTTYPE* pSourceObject, OBJECTTYPE* pTargetObject, INT8
 	}
 }
 
-
+//TODO move into OBJECTTYPE and clean up?
 BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex )
 {
 	PERFORMANCE_MARKER
@@ -2990,9 +2989,9 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 					// (suppose his inventory is full!)
 
 					//ADB copying the old ammo to the cursor at any time will screw it up if the cursor ammo is a stack!
-
-					//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && !EnoughPoints( pSoldier, (INT8) (bAPs + AP_PICKUP_ITEM), 0, FALSE ) )
-					//{
+					if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && !EnoughPoints( pSoldier, (INT8) (bAPs + AP_PICKUP_ITEM), 0, FALSE )
+						|| pAmmo->ubNumberOfObjects > 1)
+					{
 						// try autoplace
 						if ( !AutoPlaceObject( pSoldier, &gTempObject, FALSE ) )
 						{
@@ -3001,14 +3000,12 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 						}
 						// delete the object now in the cursor
 						pAmmo->RemoveObjectsFromStack(1);
-						/*
 					}
 					else
 					{
 						// copy the old ammo to the cursor
-						*pAmmo = OldAmmo;
+						*pAmmo = gTempObject;
 					}
-					*/
 				}
 				break;
 			case RELOAD_AUTOPLACE_OLD:
@@ -3086,7 +3083,7 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 
 	if ( (*pWeapon)[0]->data.gun.ubGunShotsLeft > 0 )
 	{
-		CreateAmmo((*pWeapon)[0]->data.gun.ubGunAmmoType, pAmmo, (*pWeapon)[0]->data.gun.ubGunShotsLeft);
+		CreateAmmo((*pWeapon)[0]->data.gun.usGunAmmoItem, pAmmo, (*pWeapon)[0]->data.gun.ubGunShotsLeft);
 
 		(*pWeapon)[0]->data.gun.ubGunShotsLeft		= 0;
 		(*pWeapon)[0]->data.gun.ubGunAmmoType	  = 0;
@@ -4377,6 +4374,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
     }
     // Lesh: end
 
+	//TODO this returns 0 for toolbox in large inv when not using new inv, fix it
 	// CHRISL:
 	ubSlotLimit = ((UsingInventorySystem() == false)) ? ItemSlotLimit( pObj->usItem, bPos ) : ItemSlotLimit( pObj, bPos, pSoldier );
 

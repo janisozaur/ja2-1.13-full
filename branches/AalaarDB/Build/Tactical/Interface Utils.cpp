@@ -374,7 +374,12 @@ void DrawItemUIBarEx( OBJECTTYPE *pObject, UINT8 ubStatus, INT16 sXPos, INT16 sY
 	}
 	else
 	{
-		sValue = (*pObject)[ ubStatus ]->data.objectStatus;
+		if (ubStatus < pObject->ubNumberOfObjects) {
+			sValue = (*pObject)[ ubStatus ]->data.objectStatus;
+		}
+		else {
+			sValue = 0;
+		}
 	}
 
 	// Adjust for ammo, other thingys..

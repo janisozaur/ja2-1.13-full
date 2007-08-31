@@ -1756,7 +1756,7 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 				{
 					(*pObj)[0]->data.gun.ubGunShotsLeft--;
 					//Pulmu: Update weight after firing gun to account for bullets fired
-					if( gGameExternalOptions.fAmmoDynamicWeight == TRUE && (*pObj)[0]->data.gun.ubGunShotsLeft > 0)
+					if( gGameExternalOptions.fAmmoDynamicWeight == TRUE)
 					{
 						pSoldier->inv[HANDPOS].ubWeight = CalculateObjectWeight( &(pSoldier->inv[HANDPOS]));
 					}

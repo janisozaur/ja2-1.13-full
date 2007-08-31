@@ -3503,7 +3503,14 @@ void RenderItemDescriptionBox( )
 	INT16									sProsConsIndent;
 	INT8							showBox=0;
 
-  if( ( guiCurrentItemDescriptionScreen == MAP_SCREEN ) &&(gfInItemDescBox ) )
+	int status = 0;
+	int shotsLeft = 0;
+	if (gpItemDescObject && gubItemDescStatusIndex < gpItemDescObject->ubNumberOfObjects) {
+		status = (*gpItemDescObject)[ gubItemDescStatusIndex ]->data.objectStatus;
+		shotsLeft = (*gpItemDescObject)[ gubItemDescStatusIndex ]->data.ubShotsLeft;
+	}
+
+	if( ( guiCurrentItemDescriptionScreen == MAP_SCREEN ) &&(gfInItemDescBox ) )
 	{
     	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
 		GetVideoObject( &hVObject, guiItemGraphic );
@@ -3707,37 +3714,18 @@ void RenderItemDescriptionBox( )
 		// Get length of string
 		uiRightLength=35;
 
-
-		//Pulmu: Changed weight calculation of single item in stack
-		if( Item[gpItemDescObject->usItem].usItemClass == IC_AMMO && gpItemDescObject->ubNumberOfObjects > 1 && gubItemDescStatusIndex < gpItemDescObject->ubNumberOfObjects)
-		{
-			//Get weight of one item in stack.
-			CreateItem(gpItemDescObject->usItem, 100, &gTempObject);
-			gTempObject[0]->data.ubShotsLeft = (*gpItemDescObject)[0]->data.ubShotsLeft;
-			fWeight = (float)(CalculateObjectWeight( &gTempObject )) / 10;
-		}
-		//Item does not exist
-		else if( gubItemDescStatusIndex >= gpItemDescObject->ubNumberOfObjects )
-		{
-			fWeight = (float)0.0;
-		}
-		else
-		{
-			fWeight = (float)(CalculateObjectWeight( gpItemDescObject )) / 10;
-		}
+		// Calculate total weight of item and attachments
+		fWeight = gpItemDescObject->GetWeightOfObjectInStack(gubItemDescStatusIndex) / 10.0f;
 
 		if ( !gGameSettings.fOptions[ TOPTION_USE_METRIC_SYSTEM ] ) // metric units not enabled
 		{
 			fWeight = fWeight * 2.2f;
 		}
 
-		// Add weight of attachments here !
-
 		if ( fWeight < 0.1 && gubItemDescStatusIndex < gpItemDescObject->ubNumberOfObjects )
 		{
-			fWeight = (float)0.1;
+			fWeight = 0.1f;
 		}
-		//Pulmu end
 
 		// Render, stat  name
 		if ( Item[ gpItemDescObject->usItem ].usItemClass & IC_WEAPON )
@@ -3776,7 +3764,7 @@ void RenderItemDescriptionBox( )
 			SetFontForeground( 5 );
 			//Status
 			// This is gross, but to get the % to work out right...
-			swprintf( pStr, L"%2d%%", (*gpItemDescObject)[ gubItemDescStatusIndex ]->data.objectStatus );
+			swprintf( pStr, L"%2d%%", status);
 			FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 1 ].sX + gsInvDescX + gMapWeaponStats[ 1 ].sValDx + 6), (INT16)(gMapWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 			wcscat( pStr, L"%%" );
 			mprintf( usX, usY, pStr );
@@ -3981,7 +3969,7 @@ void RenderItemDescriptionBox( )
 			if ( Item[ gpItemDescObject->usItem ].usItemClass & IC_AMMO )
 			{
 				// Ammo
-					swprintf( pStr, L"%d/%d", (*gpItemDescObject)[gubItemDescStatusIndex]->data.ubShotsLeft, Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize ); //Pulmu: Correct # of rounds for stacked ammo.
+					swprintf( pStr, L"%d/%d", shotsLeft, Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize ); //Pulmu: Correct # of rounds for stacked ammo.
 					uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
 		//			sStrX =  gMapWeaponStats[ 0 ].sX + gsInvDescX + gMapWeaponStats[ 0 ].sValDx + ( uiRightLength - uiStringLength );
 					FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 2 ].sX + gsInvDescX + gMapWeaponStats[ 2 ].sValDx+6), (INT16)(gMapWeaponStats[ 2 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &sStrX, &usY);
@@ -3990,7 +3978,7 @@ void RenderItemDescriptionBox( )
 			else
 			{
 				//Status
-				swprintf( pStr, L"%2d%%", (*gpItemDescObject)[ gubItemDescStatusIndex ]->data.objectStatus );
+				swprintf( pStr, L"%2d%%", status);
 				uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
 	//			sStrX =  gMapWeaponStats[ 1 ].sX + gsInvDescX + gMapWeaponStats[ 1 ].sValDx + ( uiRightLength - uiStringLength );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 1 ].sX + gsInvDescX + gMapWeaponStats[ 1 ].sValDx + 6), (INT16)(gMapWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &sStrX, &usY);
@@ -4236,36 +4224,18 @@ void RenderItemDescriptionBox( )
 		uiRightLength=35;
 
 		// Calculate total weight of item and attachments
-		//Pulmu: Changed weight calculation of single item in stack.
-		if( Item[gpItemDescObject->usItem].usItemClass == IC_AMMO && gpItemDescObject->ubNumberOfObjects > 1 && gubItemDescStatusIndex < gpItemDescObject->ubNumberOfObjects)
-		{
-			//Get weight of one ammo clip in stack.
-			CreateItem(gpItemDescObject->usItem, 100, &gTempObject);
-			gTempObject[0]->data.ubShotsLeft = (*gpItemDescObject)[0]->data.ubShotsLeft;
-			fWeight = (float)(CalculateObjectWeight( &gTempObject )) / 10;
-		}
-		//Item does not exist
-		else if( gubItemDescStatusIndex >= gpItemDescObject->ubNumberOfObjects )
-		{
-			fWeight = (float)0.0;
-		}
-		else
-		{
-			fWeight = (float)(CalculateObjectWeight( gpItemDescObject )) / 10;
-		}
-		
+		fWeight = gpItemDescObject->GetWeightOfObjectInStack(gubItemDescStatusIndex) / 10.0f;
 
-		if ( !gGameSettings.fOptions[ TOPTION_USE_METRIC_SYSTEM ] )
+		if ( !gGameSettings.fOptions[ TOPTION_USE_METRIC_SYSTEM ] ) // metric units not enabled
 		{
 			fWeight = fWeight * 2.2f;
 		}
 
 		if ( fWeight < 0.1 && gubItemDescStatusIndex < gpItemDescObject->ubNumberOfObjects )
 		{
-			fWeight = (float)0.1;
+			fWeight = 0.1f;
 		}
-		//Pulmu end
-    
+   
 		// Render, stat  name
 		if ( Item[ gpItemDescObject->usItem ].usItemClass & IC_WEAPON )
 		{
@@ -4515,14 +4485,14 @@ void RenderItemDescriptionBox( )
 			{
 				// Ammo - print amount
 				//Status
-				swprintf( pStr, L"%d/%d", (*gpItemDescObject)[gubItemDescStatusIndex]->data.ubShotsLeft, Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize );		  //Pulmu: Correct # of rounds for stacked ammo
+				swprintf( pStr, L"%d/%d", shotsLeft, Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize );		  //Pulmu: Correct # of rounds for stacked ammo
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 2 ].sX + gsInvDescX + gWeaponStats[ 2 ].sValDx), (INT16)(gWeaponStats[ 2 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
 			else
 			{
 				//Status
-				swprintf( pStr, L"%2d%%", (*gpItemDescObject)[ gubItemDescStatusIndex ]->data.objectStatus );
+				swprintf( pStr, L"%2d%%", status );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 1 ].sX + gsInvDescX + gWeaponStats[ 1 ].sValDx), (INT16)(gWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				wcscat( pStr, L"%%" );
 				mprintf( usX, usY, pStr );
@@ -4962,7 +4932,7 @@ void BeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 	}
 	else
 	{
-		GetObjFrom( &(pSoldier->inv[ubHandPos]), 0, &gTempObject );
+		pSoldier->inv[ubHandPos].RemoveObjectAtIndex( 0, &gTempObject );
 		fOk = (gTempObject.ubNumberOfObjects == 1);
 	}
 	if (fOk)
@@ -6709,7 +6679,7 @@ void ItemPopupRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			{
 				// Here, grab an item and put in cursor to swap
 				//RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex )
-				GetObjFrom( gpItemPopupObject, (UINT8)uiItemPos, &gItemPointer );
+				gpItemPopupObject->RemoveObjectAtIndex( uiItemPos, &gItemPointer );
 
     		if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
         {

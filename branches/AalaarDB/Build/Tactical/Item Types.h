@@ -5,6 +5,37 @@
 #include <vector>
 #include <list>
 
+//if the number of slots are ever changed, the loading / saving checksum should use this value to make conversion easier
+#define NUM_ORIGINAL_INV_SLOTS 19
+
+// NOTE NOTE NOTE!	Leave this alone until it is no longer needed.	It must match the
+// original definition so old files can be read.
+namespace OldInventory {
+	enum {
+		HELMETPOS = 0,
+		VESTPOS,
+		LEGPOS,
+		HEAD1POS,
+		HEAD2POS,
+		HANDPOS,
+		SECONDHANDPOS,
+		BIGPOCK1POS,
+		BIGPOCK2POS,
+		BIGPOCK3POS,
+		BIGPOCK4POS,
+		SMALLPOCK1POS,
+		SMALLPOCK2POS,
+		SMALLPOCK3POS,
+		SMALLPOCK4POS,
+		SMALLPOCK5POS,
+		SMALLPOCK6POS,
+		SMALLPOCK7POS,
+		SMALLPOCK8POS, // = 18, so 19 pockets needed
+
+		NUM_INV_SLOTS = NUM_ORIGINAL_INV_SLOTS
+	};
+};
+
 /* CHRISL: Added listings for each of the new inventory pockets.  Also split the enum so we could include
 endpoint markers for each type (big, med, sml) of pocket. */
 enum INVENTORY{
@@ -386,10 +417,15 @@ public:
 	LBENODE*	GetLBEPointer(int subObject = 0);
 	int		GetLBEIndex(int subObject = 0);
 
+	UINT16	GetWeightOfObjectInStack(unsigned int index = 0);
 	int		AddObjectsToStack(int howMany, int objectStatus = 100);
 	int		AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany = -1);
 	int		RemoveObjectsFromStack(int howMany = 1, OBJECTTYPE* destObject = NULL);
+	bool	RemoveObjectAtIndex(unsigned int index = 0, OBJECTTYPE* destObject = NULL);
 	void	DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany = -1);
+private://this is only a helper for the above functions
+	void	SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, StackedObjects::iterator beginIter);
+public:
 
 	BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachment, BOOLEAN playSound = TRUE);
 	BOOLEAN RemoveAttachment( OBJECTTYPE* pAttachment, OBJECTTYPE * pNewObj = NULL);
