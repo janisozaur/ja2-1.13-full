@@ -1890,11 +1890,9 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 				WorldItem.usFlags = 0;
 				WorldItem.bVisible = FALSE;
 				WorldItem.bRenderZHeightAboveLevel = 0;
-
-				WorldItem.object = pSoldier->inv[i];
+				pSoldier->inv[ i ].MoveThisObjectTo(WorldItem.object);
 
 				AddWorldItemsToUnLoadedSector( 13, 9, 0, sAlmaCaptureItemsGridNo[ gStrategicStatus.ubNumCapturedForRescue ], 1, &WorldItem, FALSE );
-				DeleteObj( &( pSoldier->inv[ i ] ) );
 			}
 		}
 
@@ -1924,11 +1922,9 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 				WorldItem.usFlags = 0;
 				WorldItem.bVisible = FALSE;
 				WorldItem.bRenderZHeightAboveLevel = 0;
-
-				WorldItem.object = pSoldier->inv[i];
+				pSoldier->inv[ i ].MoveThisObjectTo(WorldItem.object);
 
 				AddWorldItemsToUnLoadedSector( 7, 14, 0, sInterrogationItemGridNo[ gStrategicStatus.ubNumCapturedForRescue ], 1, &WorldItem, FALSE );
-				DeleteObj( &( pSoldier->inv[ i ] ) );
 			}
 		}
 

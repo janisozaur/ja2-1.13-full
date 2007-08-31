@@ -1124,7 +1124,7 @@ ATM:
 			// if we're supposed to store the original pocket #, but that pocket still holds more of these
 			if ( ( bSlotNum != -1 ) && ( gpSMCurrentMerc->inv[ bSlotNum ].exists() == true ) )
 			{
-				//TODO yes we can
+				//ADB TODO yes we can
 				// then we can't store the pocket #, because our system can't return stacked objects
 				bSlotNum = -1;
 			}
@@ -6940,10 +6940,8 @@ void IfMercOwnedRemoveItemFromMercInv2( UINT8 ubOwnerProfileId, INT8 bOwnerSlotI
 		Assert( sSoldierID != -1 );
 		Assert( CanMercInteractWithSelectedShopkeeper( MercPtrs[ sSoldierID ] ) );
 
-		OBJECTTYPE ObjectToRemove;
 		//remove the object from that merc's original inventory slot
-		BOOLEAN fSuccess = RemoveObjectFromSlot( &Menptr[ sSoldierID ], bOwnerSlotId, &ObjectToRemove );
-		Assert(fSuccess);
+		DeleteObj(&(Menptr[ sSoldierID ].inv[bOwnerSlotId]));
 	}
 }
 

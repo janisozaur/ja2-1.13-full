@@ -4079,7 +4079,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 
 					if ( bInvPos != NO_SLOT )
 					{
-						RemoveObjFrom( &pSoldier->inv[ bInvPos ], gTempObject.ubNumberOfObjects );
+						pSoldier->inv[ bInvPos ].RemoveObjectAtIndex( gTempObject.ubNumberOfObjects );
 					}
 
 					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );

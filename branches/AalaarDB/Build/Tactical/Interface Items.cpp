@@ -4925,15 +4925,15 @@ void BeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 {
 	PERFORMANCE_MARKER
 	BOOLEAN			fOk;
+	fOk = pSoldier->inv[ubHandPos].exists();
 	if (_KeyDown( SHIFT ))
 	{
 		// Remove all from soldier's slot
-		fOk = RemoveObjectFromSlot( pSoldier, ubHandPos, &gTempObject );
+		pSoldier->inv[ubHandPos].MoveThisObjectTo(gItemPointer);
 	}
 	else
 	{
-		pSoldier->inv[ubHandPos].RemoveObjectAtIndex( 0, &gTempObject );
-		fOk = (gTempObject.ubNumberOfObjects == 1);
+		pSoldier->inv[ubHandPos].RemoveObjectsFromStack(1, &gTempObject );
 	}
 	if (fOk)
 	{

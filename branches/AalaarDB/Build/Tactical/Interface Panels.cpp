@@ -3444,7 +3444,7 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 		{
 			gpSMCurrentMerc->DropPackKey = worldKey;
 			NotifySoldiersToLookforItems( );
-			RemoveObjectFromSlot( pSoldier, BPACKPOCKPOS, &(pSoldier->inv[BPACKPOCKPOS]) );
+			DeleteObj(&pSoldier->inv[BPACKPOCKPOS]);
 			gpSMCurrentMerc->flags.DropPackFlag = newStatus;
 			gfUIStanceDifferent = TRUE;
 		}
@@ -6931,8 +6931,7 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 				LBEArray[lbeIndex].lbeIndex = Item[pObj->usItem].ubClassIndex;
 			if(LBEArray[lbeIndex].lbeClass != LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass)
 				LBEArray[lbeIndex].lbeClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
-			LBEArray[lbeIndex].inv[j] = pSoldier->inv[LBESlots[i]];
-			RemoveObjectFromSlot( pSoldier, LBESlots[i], &(pSoldier->inv[LBESlots[i]]) );
+			pSoldier->inv[LBESlots[i]].MoveThisObjectTo(LBEArray[lbeIndex].inv[j]);
 			(*pObj)[0]->data.misc.bDetonatorType = -1;
 			(*pObj)[0]->data.misc.usBombItem = lbeIndex;
 			break;
@@ -6962,8 +6961,7 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 				continue;
 			if(CanItemFitInPosition(pSoldier, &(pSoldier->inv[LBESlots[x]]), i, FALSE))
 			{
-				pSoldier->inv[i]=pSoldier->inv[LBESlots[x]];
-				RemoveObjectFromSlot( pSoldier, LBESlots[x], &(pSoldier->inv[LBESlots[x]]) );
+				pSoldier->inv[LBESlots[x]].MoveThisObjectTo(pSoldier->inv[i]);
 				break;
 			}
 		}
@@ -6975,15 +6973,9 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 			continue;
 		if(pSoldier->inv[LBESlots[i]].exists() == false)	// No item in pocket
 			continue;
-		//AddItemToWorld(pSoldier->sGridNo,&pSoldier->inv[LBESlots[i]],pSoldier->bExpLevel,0,0,TRUE);
-		//RemoveObjectFromSlot( pSoldier, LBESlots[i], &(pSoldier->inv[LBESlots[i]]) );
-
 		AddItemToPool( pSoldier->sGridNo, &pSoldier->inv[LBESlots[i]], 1, pSoldier->stats.bExpLevel, 0 , -1 );
 		NotifySoldiersToLookforItems( );
-
-		//MemFree( &pSoldier->inv[LBESlots[i]] );
-		//pSoldier->inv[LBESlots[i]] = NULL;
-		RemoveObjectFromSlot( pSoldier, LBESlots[i], &(pSoldier->inv[LBESlots[i]]) );
+		DeleteObj(&pSoldier->inv[LBESlots[i]]);
 	}
 
 	return(TRUE);
@@ -7061,10 +7053,9 @@ BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *
 		if(LBESlots[i] == ITEM_NOT_FOUND)
 			break;
 		// Is there an item in this pocket?
-		LBEArray[lbeIndex].inv[i] = pSoldier->inv[LBESlots[i]];
 		if(pSoldier->inv[LBESlots[i]].exists() == true)
 		{
-			RemoveObjectFromSlot( pSoldier, LBESlots[i], &(pSoldier->inv[LBESlots[i]]) );
+			pSoldier->inv[LBESlots[i]].MoveThisObjectTo(LBEArray[lbeIndex].inv[i]);
 			newLBEitem = TRUE;
 		}
 	}

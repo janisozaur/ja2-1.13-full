@@ -711,15 +711,13 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 					if( !fSecondFaceItem )
 					{ //Don't check for compatibility...	automatically assume there are no head positions filled.
 						fSecondFaceItem = TRUE;
-						Soldier.inv[ HEAD1POS ] = Soldier.inv[ i ];
-						DeleteObj(&Soldier.inv[ i ]);
+						Soldier.inv[ i ].MoveThisObjectTo(Soldier.inv[ HEAD1POS ]);
 					}
 					else
 					{ //if there is a second item, compare it to the first one we already added.
 						if( CompatibleFaceItem( Soldier.inv[ HEAD1POS ].usItem, Soldier.inv[ i ].usItem ) )
 						{
-							Soldier.inv[ HEAD2POS ] = Soldier.inv[ i ];
-							DeleteObj(&Soldier.inv[ i ]);
+						Soldier.inv[ i ].MoveThisObjectTo(Soldier.inv[ HEAD2POS ]);
 							break;
 						}
 					}

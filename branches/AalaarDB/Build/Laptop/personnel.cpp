@@ -6538,7 +6538,7 @@ BOOLEAN TransferFundsFromMercToBank( SOLDIERTYPE *pSoldier, INT32 iCurrentBalanc
 				pSoldier->inv[ iCurrentPocket ][0]->data.money.uiMoneyAmount = 0;
 
 				//Remove the item out off the merc
-				RemoveObjectFromSlot( pSoldier, (INT8)iCurrentPocket, &gTempObject );
+				DeleteObj(&pSoldier->inv[iCurrentPocket]);
 			}
 		}	
 	}

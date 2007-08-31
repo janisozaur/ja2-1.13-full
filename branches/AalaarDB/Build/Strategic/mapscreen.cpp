@@ -7861,15 +7861,15 @@ void MAPBeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 		return;
 	}
 
+	fOk = pSoldier->inv[ubHandPos].exists();
 	if (_KeyDown( SHIFT ))
 	{
 		// Remove all from soldier's slot
-		fOk = RemoveObjectFromSlot( pSoldier, ubHandPos, &gItemPointer );
+		pSoldier->inv[ubHandPos].MoveThisObjectTo(gItemPointer);
 	}
 	else
 	{
-		pSoldier->inv[ubHandPos].RemoveObjectAtIndex(0, &gItemPointer);
-		fOk = (gItemPointer.ubNumberOfObjects == 1);
+		pSoldier->inv[ubHandPos].RemoveObjectsFromStack(1, &gItemPointer);
 	}
 
 	if ( fOk )
@@ -11399,7 +11399,6 @@ void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons( void )
 		}
 		else
 		{
-			//BUG TODO passed in bad value, caused crash when right clicking on name in list in strat map overview
 			EnableButton( giCharInfoButton[ 0 ] );
 			EnableButton( giCharInfoButton[ 1 ] );
 		}

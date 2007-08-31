@@ -150,6 +150,7 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 	//can't add too much, can't take too many
 	//must make sure it is at least 0, there is a bug with ItemSlotLimit returning 0, then numToAdd being negative
 	int freeObjectsInStack = max(0, (ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects));
+	freeObjectsInStack = 1;
 	int numToAdd = min (freeObjectsInStack, sourceObject.ubNumberOfObjects);
 	//if howMany is -1 the stack will become full if sourceObject has enough
 	if (howMany >= 0) {
@@ -168,7 +169,7 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 
 		if (Item[usItem].usItemClass == IC_MONEY) {
 			//money doesn't stack, it merges
-			//TODO merge and return
+			//ADB TODO merge and return
 			return 0;
 		}
 
@@ -189,7 +190,7 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 				return 0;
 			}
 		}
-		//TODO, other specials
+		//ADB TODO, other specials
 	}
 
 	SpliceData(sourceObject, numToAdd, sourceObject.objectStack.begin());
@@ -226,6 +227,11 @@ void OBJECTTYPE::DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany)
 	return;
 }
 
+int OBJECTTYPE::MoveThisObjectTo(OBJECTTYPE& destObject)
+{
+	return (RemoveObjectsFromStack(-1, &destObject));
+}
+
 int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject)
 {
 	PERFORMANCE_MARKER
@@ -239,7 +245,7 @@ int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject)
 		destObject->initialize();
 		if (numToRemove > 0) {
 			//this handles the removal too
-			destObject->AddObjectsToStack(*this, numToRemove);
+			return destObject->AddObjectsToStack(*this, numToRemove);
 		}
 	}
 	else if (numToRemove > 0) {

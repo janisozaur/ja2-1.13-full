@@ -170,7 +170,7 @@ typedef enum
 class OBJECTTYPE;
 class SOLDIERTYPE;
 
-//TODO if LBENODE::inv is made variable sized, replace all ITEMS_IN_LBE with inv.size()
+//ADB TODO if LBENODE::inv is made variable sized, replace all ITEMS_IN_LBE with inv.size()
 //also TODO find and replace all 12 with ITEMS_IN_LBE
 #define ITEMS_IN_LBE 12
 
@@ -178,7 +178,7 @@ class SOLDIERTYPE;
 class LBENODE
 {
 public:
-	//TODO make this a variable sized vector???
+	//ADB TODO make this a variable sized vector???
 	LBENODE() { initialize();};
 	void	initialize() {inv.clear(); inv.resize(ITEMS_IN_LBE);};
 	BOOLEAN	Load( HWFILE hFile );
@@ -421,8 +421,9 @@ public:
 	int		AddObjectsToStack(int howMany, int objectStatus = 100);
 	int		AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany = -1);
 	int		RemoveObjectsFromStack(int howMany = 1, OBJECTTYPE* destObject = NULL);
-	bool	RemoveObjectAtIndex(unsigned int index = 0, OBJECTTYPE* destObject = NULL);
+	bool	RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject = NULL);
 	void	DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany = -1);
+	int		MoveThisObjectTo(OBJECTTYPE& destObject);
 private://this is only a helper for the above functions
 	void	SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, StackedObjects::iterator beginIter);
 public:

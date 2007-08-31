@@ -2514,20 +2514,19 @@ new inventory system. */
 UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 {
 	PERFORMANCE_MARKER
-	INT32 cnt;
-	UINT16 weight = 0;
-	INVTYPE * pItem;
-
 	if (pObject->exists() == false || pObject->ubNumberOfObjects == 0) {
 		return 0;
 	}
+
+	UINT16 weight = 0;
+	INVTYPE * pItem;
 	pItem = &(Item[ pObject->usItem ]);
 	//ADB it is much easier and faster to calculate ammo in a lump rather than accumulate a stack's weight
 	if ( pItem->usItemClass == IC_AMMO)//Pulmu: added weight allowance for ammo not being full
 	{
 		if ( gGameExternalOptions.fAmmoDynamicWeight == TRUE ) {
 			int ammoLeft = 0;
-			for( cnt = 0; cnt < pObject->ubNumberOfObjects; cnt++ )
+			for( int cnt = 0; cnt < pObject->ubNumberOfObjects; cnt++ )
 			{
 				ammoLeft += (*pObject)[cnt]->data.ubShotsLeft;
 			}
@@ -2659,55 +2658,6 @@ void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 )
 */
 }
 
-void RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex )
-{
-	PERFORMANCE_MARKER
-	// remove 1 object from an OBJECTTYPE, starting at index bRemoveIndex
-	if (pObj->ubNumberOfObjects < ubRemoveIndex)
-	{
-		// invalid index!
-		return;
-	}
-	else if (pObj->ubNumberOfObjects == 1)
-	{
-		// delete!
-		pObj->RemoveObjectsFromStack(1);
-	} 
-	else
-	{
-		StackedObjects::iterator iter = pObj->objectStack.begin();
-		for (int x = 0; x < ubRemoveIndex; ++x) {
-			++iter;
-		}
-		pObj->objectStack.erase(iter);
-		// make the number of objects recorded match the array
-		pObj->ubNumberOfObjects--;
-		pObj->ubWeight = CalculateObjectWeight( pObj );
-	}
-}
-
-void SwapWithinObj( OBJECTTYPE * pObj, UINT8 ubIndex1, UINT8 ubIndex2 )
-{
-	PERFORMANCE_MARKER
-	if (pObj->ubNumberOfObjects >= ubIndex1 || pObj->ubNumberOfObjects >= ubIndex2)
-	{
-		return;
-	}
-
-	if (ubIndex1 == ubIndex2) {
-		return;
-	}
-
-	StackedObjects::iterator left = pObj->objectStack.begin(), right = pObj->objectStack.begin();
-	for (int x = 0; x < ubIndex1; ++x) {
-		++left;
-	}
-	for (int x = 0; x < ubIndex2; ++x) {
-		++right;
-	}
-	std::swap(left, right);
-}
-
 void DamageObj( OBJECTTYPE * pObj, INT8 bAmount )
 {
 	PERFORMANCE_MARKER
@@ -2797,7 +2747,7 @@ void DistributeStatus(OBJECTTYPE* pSourceObject, OBJECTTYPE* pTargetObject, INT8
 	}
 }
 
-//TODO move into OBJECTTYPE and clean up?
+//ADB TODO move into OBJECTTYPE and clean up?
 BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex )
 {
 	PERFORMANCE_MARKER
@@ -3636,20 +3586,21 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 				}
 
 				// count down through # of attaching items and add to status of item in position 0
-				for (bLoop = pAttachment->ubNumberOfObjects - 1; bLoop >= 0; bLoop--)
+				for (bLoop = 0; bLoop < pAttachment->ubNumberOfObjects; ++bLoop)
 				{
-					if ((*this)[0]->data.objectStatus + (*pAttachment)[bLoop]->data.objectStatus <= ubLimit)
+					if ((*this)[0]->data.objectStatus + (*pAttachment)[0]->data.objectStatus <= ubLimit)
 					{
 						// consume this one totally and continue
-						(*this)[0]->data.objectStatus += (*pAttachment)[bLoop]->data.objectStatus;
-						RemoveObjFrom( pAttachment, bLoop );
-						// reset loop limit
-						bLoop = pAttachment->ubNumberOfObjects; // add 1 to counteract the -1 from the loop
+						(*this)[0]->data.objectStatus += (*pAttachment)[0]->data.objectStatus;
+						pAttachment->RemoveObjectsFromStack(1);
 					}
 					else
 					{
 						// add part of this one and then we're done
-						(*pAttachment)[bLoop]->data.objectStatus -= (ubLimit - (*this)[0]->data.objectStatus);
+						(*pAttachment)[0]->data.objectStatus -= (ubLimit - (*this)[0]->data.objectStatus);
+						if ((*pAttachment)[0]->data.objectStatus == 0) {
+							pAttachment->RemoveObjectsFromStack(1);
+						}
 						(*this)[0]->data.objectStatus = ubLimit;
 						break;
 					}
@@ -3867,8 +3818,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 					if ( fDoingPlacement )
 					{
 						// otherwise move it.
-						pSoldier->inv[bNewPos] = pSoldier->inv[SECONDHANDPOS];
-						DeleteObj( &(pSoldier->inv[SECONDHANDPOS]) );
+						pSoldier->inv[SECONDHANDPOS].MoveThisObjectTo(pSoldier->inv[bNewPos]);
 					}
 				}
 			}
@@ -4048,241 +3998,6 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 
 	return( TRUE );
 }
-/*
-BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement )
-{
-	UINT8					ubSlotLimit, lbePocket=1;
-	INT8					bNewPos=ITEM_NOT_FOUND;
-	UINT32					pRestrict=0;
-
-	// CHRISL: Only check valid pockets
-	if((UsingInventorySystem() == false) && !oldInv[bPos])
-		return(FALSE);
-	if((pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
-		return(CanItemFitInVehicle(pSoldier, pObj, bPos, fDoingPlacement));
-
-	ubSlotLimit = ((UsingInventorySystem() == false)) ? ItemSlotLimit( pObj->usItem, bPos ) : ItemSlotLimit( pObj, bPos, pSoldier );
-
-	switch( bPos )
-	{
-		case SECONDHANDPOS:
-//			if (Item[pSoldier->inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED)
-			if (Item[pSoldier->inv[HANDPOS].usItem].twohanded )
-			{
-				return( FALSE );
-			}
-			break;
-		case HANDPOS:
-//			if (Item[ pObj->usItem ].fFlags & ITEM_TWO_HANDED)
-			if (Item[ pObj->usItem ].twohanded )
-			{
-				if (pSoldier->inv[HANDPOS].exists() == true && pSoldier->inv[SECONDHANDPOS].exists() == true)
-				{
-					// two items in hands; try moving the second one so we can swap 
-					// CHRISL: Adjust parameters to include the new inventory system
-					if (Item[pSoldier->inv[SECONDHANDPOS].usItem].ubPerPocket == 0)
-					{
-						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (BIGPOCKFINAL-1) );
-					}
-					else
-					{
-						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (NUM_INV_SLOTS-1) );
-					}
-					if (bNewPos == NO_SLOT)
-					{
-						// nowhere to put second item
-						return( FALSE );
-					}
-
-					if ( fDoingPlacement )
-					{
-						// otherwise move it.
-						pSoldier->inv[bNewPos] = pSoldier->inv[SECONDHANDPOS];
-						DeleteObj( &(pSoldier->inv[SECONDHANDPOS]) );
-					}
-				}
-			}
-			break;
-		case VESTPOS:
-		case HELMETPOS:
-		case LEGPOS:
-			if (Item[pObj->usItem].usItemClass != IC_ARMOUR)
-			{
-				return( FALSE );
-			}
-			switch (bPos)
-			{
-				case VESTPOS:
-					if (Armour[Item[pObj->usItem].ubClassIndex].ubArmourClass != ARMOURCLASS_VEST)
-					{
-						return( FALSE );
-					}		
-					break;
-				case HELMETPOS:
-					if (Armour[Item[pObj->usItem].ubClassIndex].ubArmourClass != ARMOURCLASS_HELMET)
-					{
-						return( FALSE );
-					}		
-					break;
-				case LEGPOS:
-					if (Armour[Item[pObj->usItem].ubClassIndex].ubArmourClass != ARMOURCLASS_LEGGINGS)
-					{
-						return( FALSE );
-					}		
-					break;
-				default:
-					break;
-			}
-			break;
-		case HEAD1POS:
-		case HEAD2POS:
-			if (Item[pObj->usItem].usItemClass != IC_FACE)
-			{
-				return( FALSE );
-			}
-			break;
-		case VESTPOCKPOS:
-			if (Item[pObj->usItem].usItemClass != IC_LBEGEAR || LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass != VEST_PACK)
-			{
-				return( FALSE );
-			}
-			break;
-		case LTHIGHPOCKPOS:
-			if (Item[pObj->usItem].usItemClass != IC_LBEGEAR || LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass != THIGH_PACK)
-			{
-				return( FALSE );
-			}
-			break;
-		case RTHIGHPOCKPOS:
-			if (Item[pObj->usItem].usItemClass != IC_LBEGEAR || LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass != THIGH_PACK)
-			{
-				return( FALSE );
-			}
-			break;
-		case CPACKPOCKPOS:
-			if (Item[pObj->usItem].usItemClass != IC_LBEGEAR || LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass != COMBAT_PACK)
-			{
-				return( FALSE );
-			}
-			if(pSoldier->inv[BPACKPOCKPOS].exists() == true)
-			{
-				if(LoadBearingEquipment[Item[pSoldier->inv[BPACKPOCKPOS].usItem].ubClassIndex].lbeCombo != LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeCombo ||
-				LoadBearingEquipment[Item[pSoldier->inv[BPACKPOCKPOS].usItem].ubClassIndex].lbeCombo == 0)
-				{
-					return( FALSE );
-				}
-			}
-			break;
-		case BPACKPOCKPOS:
-			if (Item[pObj->usItem].usItemClass != IC_LBEGEAR || LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass != BACKPACK)
-			{
-				return( FALSE );
-			}
-			// Removed backpack/gunsling restrictions
-			//if(pSoldier->inv[GUNSLINGPOCKPOS].exists() == true)
-			//	return( FALSE );
-			if(pSoldier->inv[CPACKPOCKPOS].exists() == true)
-			{
-				if(LoadBearingEquipment[Item[pSoldier->inv[CPACKPOCKPOS].usItem].ubClassIndex].lbeCombo != LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeCombo ||
-				LoadBearingEquipment[Item[pSoldier->inv[CPACKPOCKPOS].usItem].ubClassIndex].lbeCombo == 0)
-				{
-					return( FALSE );
-				}
-			}
-			break;
-		case GUNSLINGPOCKPOS:	// Gun Sling
-			//if (Item[pObj->usItem].usItemClass != IC_GUN && Item[pObj->usItem].usItemClass != IC_BLADE && Item[pObj->usItem].usItemClass != IC_LAUNCHER)
-			if(Item[pObj->usItem].usItemClass == IC_AMMO || Item[pObj->usItem].usItemClass == IC_GRENADE)
-				return(CompatibleAmmoForGun(pObj, &pSoldier->inv[GUNSLINGPOCKPOS]));
-			// Removed backpack/gunsling restrictions
-			//if(pSoldier->inv[BPACKPOCKPOS].exists() == true)
-			//	return(CompatibleAmmoForGun(pObj, &pSoldier->inv[GUNSLINGPOCKPOS]));
-			break;
-		case KNIFEPOCKPOS:	// Knife sheath
-			if (Item[pObj->usItem].usItemClass != IC_BLADE && Item[pObj->usItem].usItemClass != IC_THROWING_KNIFE )
-				return(CompatibleAmmoForGun(pObj, &pSoldier->inv[KNIFEPOCKPOS]));
-			break;
-		// IC Pockets
-		case BIGPOCK1POS:
-		case BIGPOCK2POS:
-		case BIGPOCK3POS:
-		case BIGPOCK4POS:
-		case BIGPOCK5POS:
-		case BIGPOCK6POS:
-		case BIGPOCK7POS:
-		case MEDPOCK1POS:
-		case MEDPOCK2POS:
-		case MEDPOCK3POS:
-		case MEDPOCK4POS:
-		case SMALLPOCK2POS:
-		case SMALLPOCK3POS:
-		case SMALLPOCK4POS:
-		case SMALLPOCK5POS:
-		case SMALLPOCK6POS:
-		case SMALLPOCK7POS:
-		case SMALLPOCK8POS:
-		case SMALLPOCK9POS:
-		case SMALLPOCK10POS:
-		case SMALLPOCK11POS:
-		case SMALLPOCK12POS:
-		case SMALLPOCK13POS:
-		case SMALLPOCK14POS:
-		case SMALLPOCK15POS:
-		case SMALLPOCK16POS:
-		case SMALLPOCK17POS:
-		case SMALLPOCK18POS:
-		case SMALLPOCK19POS:
-		case SMALLPOCK20POS:
-		case SMALLPOCK21POS:
-		case SMALLPOCK22POS:
-		case SMALLPOCK23POS:
-		case SMALLPOCK24POS:
-		case SMALLPOCK25POS:
-		case SMALLPOCK26POS:
-		case SMALLPOCK27POS:
-		case SMALLPOCK28POS:
-		case SMALLPOCK29POS:
-		case SMALLPOCK30POS:
-			if((UsingInventorySystem() == true))
-			{
-				if(icLBE[bPos] == BPACKPOCKPOS && (!(pSoldier->flags.ZipperFlag) || (pSoldier->flags.ZipperFlag && gAnimControl[pSoldier->usAnimState].ubEndHeight == ANIM_STAND)) && (gTacticalStatus.uiFlags & INCOMBAT))
-					return( FALSE );
-				lbePocket = (pSoldier->inv[icLBE[bPos]].exists() == false) ? LoadBearingEquipment[icClass[bPos]].lbePocketIndex[icPocket[bPos]] : LoadBearingEquipment[Item[pSoldier->inv[icLBE[bPos]].usItem].ubClassIndex].lbePocketIndex[icPocket[bPos]];
-				pRestrict = LBEPocketType[lbePocket].pRestriction;
-				if(pRestrict != 0)
-					if(pRestrict != Item[pObj->usItem].usItemClass)
-						lbePocket = 0;
-			}
-			break;
-		default:
-			break;
-	}
-
-	if((UsingInventorySystem() == false))
-	{
-		if (ubSlotLimit == 0 && bPos >= SMALLPOCK1POS )
-		{
-			// doesn't fit!
-			return( FALSE );
-		}
-	}
-	else
-	{
-		// CHRISL: lbePocket==0 means pocket disabled.  ubSlotLimit==0 means pocket can't hold item
-		if ( lbePocket == 0 || ubSlotLimit == 0 )
-			return ( CompatibleAmmoForGun(pObj, &pSoldier->inv[bPos]) );
-
-		// CHRISL: Adjust parameters to include the new inventory system
-		if (ubSlotLimit == 0 && bPos >= BIGPOCKFINAL )
-			return( CompatibleAmmoForGun(pObj, &pSoldier->inv[bPos]) );
-	}
-
-	return( TRUE );
-}
-
-
-END TODO
-*/
 BOOLEAN DropObjIfThereIsRoom( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
@@ -4374,7 +4089,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
     }
     // Lesh: end
 
-	//TODO this returns 0 for toolbox in large inv when not using new inv, fix it
+	//ADB TODO this returns 0 for toolbox in large inv when not using new inv, fix it
 	// CHRISL:
 	ubSlotLimit = ((UsingInventorySystem() == false)) ? ItemSlotLimit( pObj->usItem, bPos ) : ItemSlotLimit( pObj, bPos, pSoldier );
 
@@ -4410,8 +4125,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 				if (pSoldier->inv[SECONDHANDPOS].exists() == true)
 				{
 					// swap what WAS in the second hand into the cursor
-					*pObj = pSoldier->inv[SECONDHANDPOS];
-					DeleteObj(&pSoldier->inv[SECONDHANDPOS]);
+					pSoldier->inv[SECONDHANDPOS].MoveThisObjectTo(*pObj);
 				}
 			}
 		 }
@@ -4875,22 +4589,6 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 {
 	PERFORMANCE_MARKER
 	return( InternalAutoPlaceObject( pSoldier, pObj, fNewItem, NO_SLOT ) );
-}
-
-BOOLEAN RemoveObjectFromSlot( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
-{
-	PERFORMANCE_MARKER
-	CHECKF( pObj );
-	if (pSoldier->inv[bPos].exists() == false)
-	{
-		return( FALSE );
-	}
-	else
-	{
-		*pObj = pSoldier->inv[bPos];
-		DeleteObj( &(pSoldier->inv[bPos]) );
-		return( TRUE );
-	}
 }
 
 BOOLEAN RemoveKeyFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE * pObj )
@@ -6052,7 +5750,7 @@ BOOLEAN DamageItem( OBJECTTYPE * pObject, INT32 iDamage, BOOLEAN fOnGround )
 					if ( pObject->ubNumberOfObjects > 1 )
 					{
 						removed = true;
-						RemoveObjFrom( pObject, bLoop );
+						pObject->RemoveObjectAtIndex( bLoop );
 						// since an item was just removed, the items above the current were all shifted down one;
 						// to process them properly, we have to back up 1 in the counter
 						--bLoop;

@@ -179,8 +179,6 @@ void CreateMapInventoryButtons( void );
 void DestroyMapInventoryButtons( void );
 void DestroyStash( void );
 void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ );
-BOOLEAN GetObjFromInventoryStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItemPtr );
-BOOLEAN RemoveObjectFromStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItemPtr );
 void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot );
 BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItemPtr );
 void RenderItemsForCurrentPageOfInventoryPool( void );
@@ -1383,12 +1381,11 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 	if (_KeyDown( SHIFT ))
 	{
 		// Remove all from soldier's slot
-		fOk = RemoveObjectFromStashSlot( pInventorySlot, &gItemPointer );
+		fOk = (0 == pInventorySlot->MoveThisObjectTo(gItemPointer));
 	}
 	else
 	{
-		GetObjFromInventoryStashSlot( pInventorySlot, &gItemPointer );
-		fOk = (gItemPointer.ubNumberOfObjects == 1);
+		fOk = (0 == pInventorySlot->MoveThisObjectTo(gItemPointer));
 	}
 
 	if (fOk)
@@ -1458,44 +1455,6 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 				fTeamPanelDirty = TRUE;
 			}
 		}
-	}
-}
-
-// get this item out of the stash slot
-BOOLEAN GetObjFromInventoryStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItemPtr )
-{
-	PERFORMANCE_MARKER
-	// if there are only one item in slot, just copy
-	if (pInventorySlot->ubNumberOfObjects == 1)
-	{
-		*pItemPtr = *pInventorySlot;
-		DeleteObj( pInventorySlot );	
-	}
-	else
-	{
-		// take one item
-		pInventorySlot->RemoveObjectsFromStack(1, pItemPtr);
-	}
-
-	return ( TRUE );
-}
-
-
-BOOLEAN RemoveObjectFromStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItemPtr )
-{
-	PERFORMANCE_MARKER
-
-	CHECKF( pInventorySlot );
-
-	if (pInventorySlot->exists() == false)
-	{
-		return( FALSE );
-	}
-	else
-	{
-		*pItemPtr = *pInventorySlot;
-		DeleteObj( pInventorySlot );
-		return( TRUE );
 	}
 }
 
@@ -2283,10 +2242,13 @@ BOOLEAN CanPlayerUseSectorInventory( SOLDIERTYPE *pSelectedSoldier )
 void DeleteAllItemsInInventoryPool()
 {
 	PERFORMANCE_MARKER
+	/*
 	for( UINT32 iNumber = 0 ; iNumber <  pInventoryPoolList.size() ; ++iNumber)
 	{
 		DeleteObj( &pInventoryPoolList [ iNumber ].object );
 	}
+	*/
+	pInventoryPoolList.clear();
 
 	fMapPanelDirty = TRUE;
 

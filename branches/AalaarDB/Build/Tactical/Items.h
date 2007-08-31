@@ -36,8 +36,6 @@ extern INT8 FindUsableObj( SOLDIERTYPE * pSoldier, UINT16 usItem );
 extern void DeleteObj(OBJECTTYPE * pObj );
 extern void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 );
 
-extern void SwapWithinObj( OBJECTTYPE * pObj, UINT8 ubIndex1, UINT8 ubIndex2 );
-extern void RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex );
 //Returns true if swapped, false if added to end of stack
 extern BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex );
 
@@ -84,7 +82,6 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj );
 
 // Send fNewItem to true to set off new item glow in inv panel
 BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNewItem );
-BOOLEAN RemoveObjectFromSlot( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj );
 
 void RemoveInvObject( SOLDIERTYPE *pSoldier, UINT16 usItem );
 void RemoveProhibitedAttachments(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, UINT16 usItem);
