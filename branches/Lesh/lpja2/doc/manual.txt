@@ -1,0 +1,180 @@
+Jagged Alliance 2 v1.13 Linux port usage mini-manual
+----------------------------------------------------
+
+1. Overview
+	1.1. Directory structure
+	1.2. VFS feature
+
+2. Configuration
+	2.1. Ja2.ini file
+	2.2. resources.cfg file
+	2.3. Command line
+
+
+===========
+1. Overview
+===========
+
+This is Linux port of the modded version 1.13 of famous game from Sir Tech
+Jagged Alliance 2. This mod is called ja2 1.13 for short.
+
+Currently Linux port corresponds to revision 872 of main (Windows) branch.
+
+------------------------
+1.1. Directory structure
+------------------------
+
+The game directory has structure, listed below:
+
+$HOME/ja2-1.13/
+	Data/			- ja2 data, need to run original v1.12 game with new v1.13 features only. It is always must be used.
+	Data-1.13/		- ja2 1.13 data, used by our mod.
+	SavedGames/	- directory for savegames.
+	YourMod/		- any number of your directories with your data. See section 1.2 for details.
+	...
+	Ja2.ini			- game config-file. See section 2.1 for more details.
+	resources.cfg	- game resources config-file. See section 2.2 for more details.
+
+----------------
+1.2. VFS feature
+----------------
+
+This three letters has a great power for any modder. Simply speaking it
+allows to patch (add and replace) game data resources unlimited number
+of times. BTW, VFS is a virtual file system. It is called so, because
+this feature consolidate odd game data (slf-files and directories with
+game data) into single solid file system.
+
+Let's me show you an example of application.
+Consider, you have some additions to original 1.13 mod:
+	- new interface,
+	- new map pack,
+	- new weapon mod.
+
+How will you install all this in Windows version of 1.13? Right!
+You'll simply copy it into Data-1.13/ directory. And then you can
+get a nightmare, trying to keep these mod files untouched:
+	- they can be overwritten by other mods;
+	- unwanted modify by svn client is possible during update process;
+	- repository maintainer can add new file to svn, that is already
+	  used by some of your mods, and svn will refuse to update, when
+	  detect already existing file name;
+	- when your mod replaces some existing files, svn client is able to
+	  delete them, when they are deleted from repository by maintainer;
+	- it may be hard to uninstall mod, because you already forgot
+	  file names of modded files;
+	- etc...
+
+All this leads to unwanted re-installs of game, lost time due to unexpectedly
+modified file, etc.
+
+What will you do in case of VFS? You'll store every mod data in separate
+directory and edit one text file to include (or to not include) this
+directory to VFS. Look at example:
+
+$HOME/ja2-1.13/
+	Data/			- ja2 data
+	Data-1.13/		- ja2 1.13 data
+	SavedGames/	- directory for savegames
+	InterfaceMod/	- new interface mod
+	NewMapSet/		- new map pack
+	WeaponMod/		- new weapon mod
+	Ja2.ini			- game config-file
+	resources.cfg	- game resources config-file
+
+Assume, you want to use interface mod and new maps, but do not want to use
+weapon mod. You simply need to edit file resources.cfg, as described in
+section 2.2. Your goal will be to include directories InterfaceMod/ and
+NewMapSet/ to VFS along with already included Data/ and Data-1.13/. You will
+do this once, until you decide to add another or remove some mod. Handy, eh?
+
+Note, that cascade resource replacement is possible, i.e. Mod1/ can replace
+Data-1.13/, Data/ and slf-files resources, Mod2/ can replace Mod1/, Data-1.13/,
+Data/ and slf-files resources. Here is order of inclusion is relevant. This
+example is true, when Mod2/ is included after Mod1/.
+
+
+================
+2. Configuration
+================
+
+This section will overview the configuration capabilities of ja2 1.13.
+
+-----------------
+2.1. Ja2.ini file
+-----------------
+
+Ja2.ini holds global settings for Jagged Alliance 2 v1.13. This ini-file has
+the only section: "[Ja2 Settings]".
+
+Note, that ini-parameters CD and CUSTOM_DATA_LOCATION isn't in use anymore.
+Ignore them.
+
+The first important parameter is SCREEN_RESOLUTION. It controls screen resolution
+in game. It can hold 3 valid values.
+
+SCREEN_RESOLUTION = 0	; the game will start in 640x480
+SCREEN_RESOLUTION = 1	; the game will start in 800x600
+SCREEN_RESOLUTION = 2	; the game will start in 1024x768
+
+If this parameter isn't specified, then the game will start 800x600 by default.
+
+The next sensible parameter is FULLSCREEN. It controls game screen mode:
+windowed or fullscreen. It can hold 2 valid values.
+
+FULLSCREEN = 0	; the game will start in windowed mode
+FULLSCREEN = 1	; the game will start fullscreen
+
+If this parameter isn't specified, then the game will start in windowed mode
+by default. Note, that command line switches can override screen mode -
+command line has higher priority.
+
+-----------------------
+2.2. resources.cfg file
+-----------------------
+
+This config-file controls the loading of the game resources process. The file
+itself divided into two sections: "[StandardSources]" and "[AdditionalSources]".
+
+The first section describes where vanilla game data is stored and it's file names
+and directories. There is parameter "StdBaseDir", that specifies directory, where
+game slf-files are stored. The next parameter "StdSources" lists file names of
+game slf-files. All file names must be in one line and each file name must be in
+inverted commas, e.g. "Ambient.slf", "Anims.slf", ...
+
+The second section describes where all other game data is stored. This is the
+most interesting place for modder. There is one parameter "AddSources", that
+control loading of additional game sources. This parameter lists file names and
+directory names on the same manner, as it was in parameter "StdSources" above.
+It is advised to use slash at the end of directory name to distinguish them quickly.
+User can use both full and relative path of the game source. In case of relative
+path the game will try to find specified game source inside game home directory,
+i.e. $HOME/ja2-1.13/. Another thing to note is the order of source names in list.
+For example, if it is specified
+
+AddSources = "Data/", "Data-1.13/", "MyMod/"
+
+then resources from Data/ will be loaded at first. Then the game will load
+Data-1.13/. And after that MyMod/ will be loaded.
+
+And the last reminder: Linux file system is case-sensitive. Don't forget, that
+you are editing file and directory names. In case of problems, check the
+stderr output for line
+
+"ReadGameResources config: Detected non-existing game source <name>"
+
+and fix the problem names.
+
+-----------------
+2.3. Command line
+-----------------
+
+Available command line switches:
+        --help          help info
+        --fullscreen    run game at fullscreen
+        --windowed      run game in window
+        --nosound       run game without sound
+
+Command line switches "--fullscreen" and "--windowed" override ini-parameter
+FULLSCREEN.
+
