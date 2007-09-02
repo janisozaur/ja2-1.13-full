@@ -2071,7 +2071,7 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 {
 	PERFORMANCE_MARKER
 	INT8 i;
-	if( !Item[ pObject->usItem ].ubPerPocket )
+	if( ItemSlotLimit(pObject, BIGPOCK1POS) == 0 )
 	{ //ubPerPocket == 0 will only fit in large pockets.
 		pObject->ubNumberOfObjects = 1;
 		// CHRISL: Change static inventory pocket definition to dynamic
@@ -2087,7 +2087,7 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 	}
 	else
 	{
-		pObject->ubNumberOfObjects = (UINT8)min( Item[ pObject->usItem ].ubPerPocket, pObject->ubNumberOfObjects );
+		pObject->ubNumberOfObjects = (UINT8)min( ItemSlotLimit(pObject, BIGPOCK1POS), pObject->ubNumberOfObjects );
 		//try to get it into a small pocket first
 		// CHRISL: Change static inventory pocket definition to dynamic
 		for( i = BIGPOCKFINAL; i < NUM_INV_SLOTS; i++ )

@@ -381,21 +381,17 @@ Inventory::~Inventory() {
 OBJECTTYPE& Inventory::operator [] (unsigned int idx)
 {
 	PERFORMANCE_MARKER
+	if (inv.size() > NUM_INV_SLOTS
+		|| idx >= NUM_INV_SLOTS) {
+		//had it 4840 once, it probably grew because idx was too big.
+		DebugBreak();
+	}
 	if (idx >= inv.size()) {
 		inv.resize(idx+1);
 		bNewItemCount.resize(idx+1);
 		bNewItemCycleCount.resize(idx+1);
 		//int breakpoint = 0;
 	}
-	/*
-	// This IF is just from setting breakpoints when trying to figure out inventory item problems.  Remove it later
-	if ((idx < 0) ||
-		(idx >= inv.size())) {
-		int i = inv.size();  // Set BP here if following asserts throw
-	}
-	*/
-	Assert(idx >= 0);
-	Assert(idx < inv.size());
 	return inv[idx];
 };
 
@@ -1255,6 +1251,10 @@ UINT32 MERCPROFILESTRUCT::GetChecksum( )
 	return( uiChecksum );
 }
 
+OLD_MERCPROFILESTRUCT_101::OLD_MERCPROFILESTRUCT_101()
+{
+	memset(this, 0, SIZEOF_OLD_MERCPROFILESTRUCT_101_POD);
+}
 
 MERCPROFILESTRUCT::MERCPROFILESTRUCT()
 {
@@ -1278,6 +1278,211 @@ MERCPROFILESTRUCT::MERCPROFILESTRUCT(const MERCPROFILESTRUCT& src)
 	inv = src.inv;
 	bInvStatus = src.bInvStatus;
 	bInvNumber = src.bInvNumber;
+}
+
+// Conversion Constructor
+MERCPROFILESTRUCT& MERCPROFILESTRUCT::operator=(const OLD_MERCPROFILESTRUCT_101& src)
+{
+	//Why do we need this if the inv is an array of ints?  Because some data will be lost otherwise!
+	PERFORMANCE_MARKER
+    if ((void*)this != (void*)&src) {
+		CopyOldInventoryToNew(src);
+
+		//arrays
+		memcpy( &(this->zName), &(src.zName), sizeof(CHAR16) * NAME_LENGTH );
+		memcpy( &(this->zNickname), &(src.zNickname), sizeof(CHAR16) * NICKNAME_LENGTH );
+		memcpy( &(this->PANTS), &(src.PANTS), sizeof(PaletteRepID) );	// 30 
+		memcpy( &(this->VEST), &(src.VEST), sizeof(PaletteRepID) );	// 30
+		memcpy( &(this->SKIN), &(src.SKIN), sizeof(PaletteRepID) );	// 30
+		memcpy( &(this->HAIR), &(src.HAIR), sizeof(PaletteRepID) );	// 30
+
+		memcpy( &(this->bBuddy), &(src.bBuddy), 5 * sizeof (INT8));
+		memcpy( &(this->bHated), &(src.bHated), 5 * sizeof (INT8));
+		memcpy( &(this->ubRoomRangeStart), &(src.ubRoomRangeStart), 2 * sizeof (UINT8));
+		memcpy( &(this->bMercTownReputation), &(src.bMercTownReputation),  20  * sizeof (INT8));
+		memcpy( &(this->usApproachFactor), &(src.usApproachFactor), 4 * sizeof (UINT16));
+
+		memcpy( &(this->ubApproachVal), &(src.ubApproachVal), 4 * sizeof (UINT8));
+		memcpy( &(this->ubApproachMod), &(src.ubApproachMod), 3 * 4 * sizeof (UINT8));
+		memcpy( &(this->bMercOpinion), &(src.bMercOpinion), 75 * sizeof (INT8));
+
+		memcpy( &(this->usStatChangeChances), &(src.usStatChangeChances),  12  * sizeof (UINT16));// used strictly for balancing, never shown!
+		memcpy( &(this->usStatChangeSuccesses), &(src.usStatChangeSuccesses),  12  * sizeof (UINT16));// used strictly for balancing, never shown!
+		memcpy( &(this->ubRoomRangeEnd), &(src.ubRoomRangeEnd), 2 * sizeof (UINT8));
+		memcpy( &(this->bHatedTime), &(src.bHatedTime), 5 * sizeof (INT8));
+		memcpy( &(this->bHatedCount), &(src.bHatedCount), 5 * sizeof (INT8));
+
+		this->bLearnToLike = src.bLearnToLike;
+		this->uiAttnSound = src.uiAttnSound;
+		this->uiCurseSound = src.uiCurseSound;
+		this->uiDieSound = src.uiDieSound;
+		this->uiGoodSound = src.uiGoodSound;
+		this->uiGruntSound = src.uiGruntSound;
+		this->uiGrunt2Sound = src.uiGrunt2Sound;
+		this->uiOkSound = src.uiOkSound;
+		this->ubFaceIndex = src.ubFaceIndex;
+		this->bSex = src.bSex;
+		this->bArmourAttractiveness = src.bArmourAttractiveness;
+		this->ubMiscFlags2 = src.ubMiscFlags2;
+		this->bEvolution = src.bEvolution;
+		this->ubMiscFlags = src.ubMiscFlags;
+		this->bSexist = src.bSexist;
+		this->bLearnToHate = src.bLearnToHate;
+
+		// skills
+		this->bStealRate = src.bStealRate;
+		this->bVocalVolume = src.bVocalVolume;
+		this->ubQuoteRecord = src.ubQuoteRecord;
+		this->bDeathRate = src.bDeathRate;
+		this->bScientific = src.bScientific;
+
+		this->sExpLevelGain = src.sExpLevelGain;
+		this->sLifeGain = src.sLifeGain;
+		this->sAgilityGain = src.sAgilityGain;
+		this->sDexterityGain = src.sDexterityGain;
+		this->sWisdomGain = src.sWisdomGain;
+		this->sMarksmanshipGain = src.sMarksmanshipGain;
+		this->sMedicalGain = src.sMedicalGain;
+		this->sMechanicGain = src.sMechanicGain;
+		this->sExplosivesGain = src.sExplosivesGain;
+
+		this->ubBodyType = src.ubBodyType;
+		this->bMedical = src.bMedical;
+
+		this->usEyesX = src.usEyesX;
+		this->usEyesY = src.usEyesY;
+		this->usMouthX = src.usMouthX;
+		this->usMouthY = src.usMouthY;
+		this->uiEyeDelay = src.uiEyeDelay;
+		this->uiMouthDelay = src.uiMouthDelay;
+		this->uiBlinkFrequency = src.uiBlinkFrequency;
+		this->uiExpressionFrequency = src.uiExpressionFrequency;
+		this->sSectorX = src.sSectorX;
+		this->sSectorY = src.sSectorY;
+
+		this->uiDayBecomesAvailable = src.uiDayBecomesAvailable;//day the merc will be available.used with the bMercStatus
+
+		this->bStrength = src.bStrength;
+
+		this->bLifeMax = src.bLifeMax;
+		this->bExpLevelDelta = src.bExpLevelDelta;
+		this->bLifeDelta = src.bLifeDelta;
+		this->bAgilityDelta = src.bAgilityDelta;
+		this->bDexterityDelta = src.bDexterityDelta;
+		this->bWisdomDelta = src.bWisdomDelta;
+		this->bMarksmanshipDelta = src.bMarksmanshipDelta;
+		this->bMedicalDelta = src.bMedicalDelta;
+		this->bMechanicDelta = src.bMechanicDelta;
+		this->bExplosivesDelta = src.bExplosivesDelta;
+		this->bStrengthDelta = src.bStrengthDelta;
+		this->bLeadershipDelta = src.bLeadershipDelta;
+		this->usKills = src.usKills;
+		this->usAssists = src.usAssists;
+		this->usShotsFired = src.usShotsFired;
+		this->usShotsHit = src.usShotsHit;
+		this->usBattlesFought = src.usBattlesFought;
+		this->usTimesWounded = src.usTimesWounded;
+		this->usTotalDaysServed = src.usTotalDaysServed;
+
+		this->sLeadershipGain = src.sLeadershipGain;
+		this->sStrengthGain = src.sStrengthGain;
+
+
+
+		// BODY TYPE SUBSITUTIONS
+		this->uiBodyTypeSubFlags = src.uiBodyTypeSubFlags;
+
+		this->sSalary = src.sSalary;
+		this->bLife = src.bLife;
+		this->bDexterity = src.bDexterity;// dexterity (hand coord) value
+		this->bPersonalityTrait = src.bPersonalityTrait;
+		this->bSkillTrait = src.bSkillTrait;
+
+		this->bReputationTolerance = src.bReputationTolerance;
+		this->bExplosive = src.bExplosive;
+		this->bSkillTrait2 = src.bSkillTrait2;
+		this->bLeadership = src.bLeadership;
+
+		this->bExpLevel = src.bExpLevel;// general experience level
+
+		this->bMarksmanship = src.bMarksmanship;
+		this->bMinService = src.bMinService;
+		this->bWisdom = src.bWisdom;
+		this->bResigned = src.bResigned;
+		this->bActive = src.bActive;
+
+		this->bMainGunAttractiveness = src.bMainGunAttractiveness;
+		this->bAgility = src.bAgility;// agility (speed) value
+
+		this->fUseProfileInsertionInfo = src.fUseProfileInsertionInfo;// Set to various flags, ( contained in TacticalSave.h )
+		this->sGridNo = src.sGridNo;// The Gridno the NPC was in before leaving the sector
+		this->ubQuoteActionID = src.ubQuoteActionID;
+		this->bMechanical = src.bMechanical;
+
+		this->ubInvUndroppable = src.ubInvUndroppable;
+
+		this->ubStrategicInsertionCode = src.ubStrategicInsertionCode;
+
+
+		this->ubLastQuoteSaid = src.ubLastQuoteSaid;
+
+		this->bRace = src.bRace;
+		this->bNationality = src.bNationality;
+		this->bAppearance = src.bAppearance;
+		this->bAppearanceCareLevel = src.bAppearanceCareLevel;
+		this->bRefinement = src.bRefinement;
+		this->bRefinementCareLevel = src.bRefinementCareLevel;
+		this->bHatedNationality = src.bHatedNationality;
+		this->bHatedNationalityCareLevel = src.bHatedNationalityCareLevel;
+		this->bRacist = src.bRacist;
+		this->uiWeeklySalary = src.uiWeeklySalary;
+		this->uiBiWeeklySalary = src.uiBiWeeklySalary;
+		this->bMedicalDeposit = src.bMedicalDeposit;
+		this->bAttitude = src.bAttitude;
+		this->bBaseMorale = src.bBaseMorale;
+		this->sMedicalDepositAmount = src.sMedicalDepositAmount;
+
+		this->bTown = src.bTown;
+		this->bTownAttachment = src.bTownAttachment;
+		this->usOptionalGearCost = src.usOptionalGearCost;
+		this->bApproached = src.bApproached;
+		this->bMercStatus = src.bMercStatus;//The status of the merc.If negative, see flags at the top of this file.Positive:The number of days the merc is away for.0:Not hired but ready to be.
+		this->bLearnToLikeTime = src.bLearnToLikeTime;
+		this->bLearnToHateTime = src.bLearnToHateTime;
+		this->bLearnToLikeCount = src.bLearnToLikeCount;
+		this->bLearnToHateCount = src.bLearnToHateCount;
+		this->ubLastDateSpokenTo = src.ubLastDateSpokenTo;
+		this->bLastQuoteSaidWasSpecial = src.bLastQuoteSaidWasSpecial;
+		this->bSectorZ = src.bSectorZ;
+		this->usStrategicInsertionData = src.usStrategicInsertionData;
+		this->bFriendlyOrDirectDefaultResponseUsedRecently = src.bFriendlyOrDirectDefaultResponseUsedRecently;
+		this->bRecruitDefaultResponseUsedRecently = src.bRecruitDefaultResponseUsedRecently;
+		this->bThreatenDefaultResponseUsedRecently = src.bThreatenDefaultResponseUsedRecently;
+		this->bNPCData = src.bNPCData;// NPC specific
+		this->iBalance = src.iBalance;
+		this->sTrueSalary = src.sTrueSalary; // for use when the person is working for us for free but has a positive salary value
+		this->ubCivilianGroup = src.ubCivilianGroup;
+		this->ubNeedForSleep = src.ubNeedForSleep;
+		this->uiMoney = src.uiMoney;
+		this->bNPCData2 = src.bNPCData2;// NPC specific
+
+		this->ubMiscFlags3 = src.ubMiscFlags3;
+
+		this->ubDaysOfMoraleHangover = src.ubDaysOfMoraleHangover;// used only when merc leaves team while having poor morale
+		this->ubNumTimesDrugUseInLifetime = src.ubNumTimesDrugUseInLifetime;// The # times a drug has been used in the player's lifetime...
+
+		// Flags used for the precedent to repeating oneself in Contract negotiations.Used for quote 80 -~107.Gets reset every day
+		this->uiPrecedentQuoteSaid = src.uiPrecedentQuoteSaid;
+		this->uiProfileChecksum = src.uiProfileChecksum;
+		this->sPreCombatGridNo = src.sPreCombatGridNo;
+		this->ubTimeTillNextHatedComplaint = src.ubTimeTillNextHatedComplaint;
+		this->ubSuspiciousDeath = src.ubSuspiciousDeath;
+
+		this->iMercMercContractLength = src.iMercMercContractLength;//Used for MERC mercs, specifies how many days the merc has gone since last page
+
+		this->uiTotalCostToDate = src.uiTotalCostToDate;// The total amount of money that has been paid to the merc for their salary
+	}
+	return *this;
 }
 
 // Assignment operator
@@ -1319,141 +1524,70 @@ void MERCPROFILESTRUCT::clearInventory()
 	}
 }
 
-// Ugly temporary solution
-//
-// These two functions map the "old" style inventory (fixed array of ) to the new (a flexibly sized vector).
-// If you change names or eliminate some positions or such you need to change these.
-// Eventually the need for these functions will disappear.
-
-void MERCPROFILESTRUCT::CopyOldInventoryToNew()
+void MERCPROFILESTRUCT::CopyOldInventoryToNew(const OLD_MERCPROFILESTRUCT_101& src)
 {
 	PERFORMANCE_MARKER
 	// Do not use a loop in case the new inventory slots are arranged differently than the old
-	inv[HELMETPOS] = DO_NOT_USE_inv[OldInventory::HELMETPOS];
-	inv[VESTPOS] = DO_NOT_USE_inv[OldInventory::VESTPOS];
-	inv[LEGPOS] = DO_NOT_USE_inv[OldInventory::LEGPOS];
-	inv[HEAD1POS] = DO_NOT_USE_inv[OldInventory::HEAD1POS];
-	inv[HEAD2POS] = DO_NOT_USE_inv[OldInventory::HEAD2POS];
-	inv[HANDPOS] = DO_NOT_USE_inv[OldInventory::HANDPOS];
-	inv[SECONDHANDPOS] = DO_NOT_USE_inv[OldInventory::SECONDHANDPOS];
-	inv[BIGPOCK1POS] = DO_NOT_USE_inv[OldInventory::BIGPOCK1POS];
-	inv[BIGPOCK2POS] = DO_NOT_USE_inv[OldInventory::BIGPOCK2POS];
-	inv[BIGPOCK3POS] = DO_NOT_USE_inv[OldInventory::BIGPOCK3POS];
-	inv[BIGPOCK4POS] = DO_NOT_USE_inv[OldInventory::BIGPOCK4POS];
-	inv[SMALLPOCK1POS] = DO_NOT_USE_inv[OldInventory::SMALLPOCK1POS];
-	inv[SMALLPOCK2POS] = DO_NOT_USE_inv[OldInventory::SMALLPOCK2POS];
-	inv[SMALLPOCK3POS] = DO_NOT_USE_inv[OldInventory::SMALLPOCK3POS];
-	inv[SMALLPOCK4POS] = DO_NOT_USE_inv[OldInventory::SMALLPOCK4POS];
-	inv[SMALLPOCK5POS] = DO_NOT_USE_inv[OldInventory::SMALLPOCK5POS];
-	inv[SMALLPOCK6POS] = DO_NOT_USE_inv[OldInventory::SMALLPOCK6POS];
-	inv[SMALLPOCK7POS] = DO_NOT_USE_inv[OldInventory::SMALLPOCK7POS];
-	inv[SMALLPOCK8POS] = DO_NOT_USE_inv[OldInventory::SMALLPOCK8POS];
+	inv[HELMETPOS] = src.DO_NOT_USE_inv[OldInventory::HELMETPOS];
+	inv[VESTPOS] = src.DO_NOT_USE_inv[OldInventory::VESTPOS];
+	inv[LEGPOS] = src.DO_NOT_USE_inv[OldInventory::LEGPOS];
+	inv[HEAD1POS] = src.DO_NOT_USE_inv[OldInventory::HEAD1POS];
+	inv[HEAD2POS] = src.DO_NOT_USE_inv[OldInventory::HEAD2POS];
+	inv[HANDPOS] = src.DO_NOT_USE_inv[OldInventory::HANDPOS];
+	inv[SECONDHANDPOS] = src.DO_NOT_USE_inv[OldInventory::SECONDHANDPOS];
+	inv[BIGPOCK1POS] = src.DO_NOT_USE_inv[OldInventory::BIGPOCK1POS];
+	inv[BIGPOCK2POS] = src.DO_NOT_USE_inv[OldInventory::BIGPOCK2POS];
+	inv[BIGPOCK3POS] = src.DO_NOT_USE_inv[OldInventory::BIGPOCK3POS];
+	inv[BIGPOCK4POS] = src.DO_NOT_USE_inv[OldInventory::BIGPOCK4POS];
+	inv[SMALLPOCK1POS] = src.DO_NOT_USE_inv[OldInventory::SMALLPOCK1POS];
+	inv[SMALLPOCK2POS] = src.DO_NOT_USE_inv[OldInventory::SMALLPOCK2POS];
+	inv[SMALLPOCK3POS] = src.DO_NOT_USE_inv[OldInventory::SMALLPOCK3POS];
+	inv[SMALLPOCK4POS] = src.DO_NOT_USE_inv[OldInventory::SMALLPOCK4POS];
+	inv[SMALLPOCK5POS] = src.DO_NOT_USE_inv[OldInventory::SMALLPOCK5POS];
+	inv[SMALLPOCK6POS] = src.DO_NOT_USE_inv[OldInventory::SMALLPOCK6POS];
+	inv[SMALLPOCK7POS] = src.DO_NOT_USE_inv[OldInventory::SMALLPOCK7POS];
+	inv[SMALLPOCK8POS] = src.DO_NOT_USE_inv[OldInventory::SMALLPOCK8POS];
 
-	bInvStatus[HELMETPOS] = DO_NOT_USE_bInvStatus[OldInventory::HELMETPOS];
-	bInvStatus[VESTPOS] = DO_NOT_USE_bInvStatus[OldInventory::VESTPOS];
-	bInvStatus[LEGPOS] = DO_NOT_USE_bInvStatus[OldInventory::LEGPOS];
-	bInvStatus[HEAD1POS] = DO_NOT_USE_bInvStatus[OldInventory::HEAD1POS];
-	bInvStatus[HEAD2POS] = DO_NOT_USE_bInvStatus[OldInventory::HEAD2POS];
-	bInvStatus[HANDPOS] = DO_NOT_USE_bInvStatus[OldInventory::HANDPOS];
-	bInvStatus[SECONDHANDPOS] = DO_NOT_USE_bInvStatus[OldInventory::SECONDHANDPOS];
-	bInvStatus[BIGPOCK1POS] = DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK1POS];
-	bInvStatus[BIGPOCK2POS] = DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK2POS];
-	bInvStatus[BIGPOCK3POS] = DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK3POS];
-	bInvStatus[BIGPOCK4POS] = DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK4POS];
-	bInvStatus[SMALLPOCK1POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK1POS];
-	bInvStatus[SMALLPOCK2POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK2POS];
-	bInvStatus[SMALLPOCK3POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK3POS];
-	bInvStatus[SMALLPOCK4POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK4POS];
-	bInvStatus[SMALLPOCK5POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK5POS];
-	bInvStatus[SMALLPOCK6POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK6POS];
-	bInvStatus[SMALLPOCK7POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK7POS];
-	bInvStatus[SMALLPOCK8POS] = DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK8POS];
+	bInvStatus[HELMETPOS] = src.DO_NOT_USE_bInvStatus[OldInventory::HELMETPOS];
+	bInvStatus[VESTPOS] = src.DO_NOT_USE_bInvStatus[OldInventory::VESTPOS];
+	bInvStatus[LEGPOS] = src.DO_NOT_USE_bInvStatus[OldInventory::LEGPOS];
+	bInvStatus[HEAD1POS] = src.DO_NOT_USE_bInvStatus[OldInventory::HEAD1POS];
+	bInvStatus[HEAD2POS] = src.DO_NOT_USE_bInvStatus[OldInventory::HEAD2POS];
+	bInvStatus[HANDPOS] = src.DO_NOT_USE_bInvStatus[OldInventory::HANDPOS];
+	bInvStatus[SECONDHANDPOS] = src.DO_NOT_USE_bInvStatus[OldInventory::SECONDHANDPOS];
+	bInvStatus[BIGPOCK1POS] = src.DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK1POS];
+	bInvStatus[BIGPOCK2POS] = src.DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK2POS];
+	bInvStatus[BIGPOCK3POS] = src.DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK3POS];
+	bInvStatus[BIGPOCK4POS] = src.DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK4POS];
+	bInvStatus[SMALLPOCK1POS] = src.DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK1POS];
+	bInvStatus[SMALLPOCK2POS] = src.DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK2POS];
+	bInvStatus[SMALLPOCK3POS] = src.DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK3POS];
+	bInvStatus[SMALLPOCK4POS] = src.DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK4POS];
+	bInvStatus[SMALLPOCK5POS] = src.DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK5POS];
+	bInvStatus[SMALLPOCK6POS] = src.DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK6POS];
+	bInvStatus[SMALLPOCK7POS] = src.DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK7POS];
+	bInvStatus[SMALLPOCK8POS] = src.DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK8POS];
 
-	bInvNumber[HELMETPOS] = DO_NOT_USE_bInvNumber[OldInventory::HELMETPOS];
-	bInvNumber[VESTPOS] = DO_NOT_USE_bInvNumber[OldInventory::VESTPOS];
-	bInvNumber[LEGPOS] = DO_NOT_USE_bInvNumber[OldInventory::LEGPOS];
-	bInvNumber[HEAD1POS] = DO_NOT_USE_bInvNumber[OldInventory::HEAD1POS];
-	bInvNumber[HEAD2POS] = DO_NOT_USE_bInvNumber[OldInventory::HEAD2POS];
-	bInvNumber[HANDPOS] = DO_NOT_USE_bInvNumber[OldInventory::HANDPOS];
-	bInvNumber[SECONDHANDPOS] = DO_NOT_USE_bInvNumber[OldInventory::SECONDHANDPOS];
-	bInvNumber[BIGPOCK1POS] = DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK1POS];
-	bInvNumber[BIGPOCK2POS] = DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK2POS];
-	bInvNumber[BIGPOCK3POS] = DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK3POS];
-	bInvNumber[BIGPOCK4POS] = DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK4POS];
-	bInvNumber[SMALLPOCK1POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK1POS];
-	bInvNumber[SMALLPOCK2POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK2POS];
-	bInvNumber[SMALLPOCK3POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK3POS];
-	bInvNumber[SMALLPOCK4POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK4POS];
-	bInvNumber[SMALLPOCK5POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK5POS];
-	bInvNumber[SMALLPOCK6POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK6POS];
-	bInvNumber[SMALLPOCK7POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK7POS];
-	bInvNumber[SMALLPOCK8POS] = DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK8POS];
+	bInvNumber[HELMETPOS] = src.DO_NOT_USE_bInvNumber[OldInventory::HELMETPOS];
+	bInvNumber[VESTPOS] = src.DO_NOT_USE_bInvNumber[OldInventory::VESTPOS];
+	bInvNumber[LEGPOS] = src.DO_NOT_USE_bInvNumber[OldInventory::LEGPOS];
+	bInvNumber[HEAD1POS] = src.DO_NOT_USE_bInvNumber[OldInventory::HEAD1POS];
+	bInvNumber[HEAD2POS] = src.DO_NOT_USE_bInvNumber[OldInventory::HEAD2POS];
+	bInvNumber[HANDPOS] = src.DO_NOT_USE_bInvNumber[OldInventory::HANDPOS];
+	bInvNumber[SECONDHANDPOS] = src.DO_NOT_USE_bInvNumber[OldInventory::SECONDHANDPOS];
+	bInvNumber[BIGPOCK1POS] = src.DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK1POS];
+	bInvNumber[BIGPOCK2POS] = src.DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK2POS];
+	bInvNumber[BIGPOCK3POS] = src.DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK3POS];
+	bInvNumber[BIGPOCK4POS] = src.DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK4POS];
+	bInvNumber[SMALLPOCK1POS] = src.DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK1POS];
+	bInvNumber[SMALLPOCK2POS] = src.DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK2POS];
+	bInvNumber[SMALLPOCK3POS] = src.DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK3POS];
+	bInvNumber[SMALLPOCK4POS] = src.DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK4POS];
+	bInvNumber[SMALLPOCK5POS] = src.DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK5POS];
+	bInvNumber[SMALLPOCK6POS] = src.DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK6POS];
+	bInvNumber[SMALLPOCK7POS] = src.DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK7POS];
+	bInvNumber[SMALLPOCK8POS] = src.DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK8POS];
 }
-void MERCPROFILESTRUCT::CopyNewInventoryToOld()
-{
-	PERFORMANCE_MARKER
-	// Do not use a loop in case the new inventory slots are arranged differently than the old
-	DO_NOT_USE_inv[OldInventory::HELMETPOS] = inv[HELMETPOS];
-	DO_NOT_USE_inv[OldInventory::VESTPOS] = inv[VESTPOS];
-	DO_NOT_USE_inv[OldInventory::LEGPOS] = inv[LEGPOS];
-	DO_NOT_USE_inv[OldInventory::HEAD1POS] = inv[HEAD1POS];
-	DO_NOT_USE_inv[OldInventory::HEAD2POS] = inv[HEAD2POS];
-	DO_NOT_USE_inv[OldInventory::HANDPOS] = inv[HANDPOS];
-	DO_NOT_USE_inv[OldInventory::SECONDHANDPOS] = inv[SECONDHANDPOS];
-	DO_NOT_USE_inv[OldInventory::BIGPOCK1POS] = inv[BIGPOCK1POS];
-	DO_NOT_USE_inv[OldInventory::BIGPOCK2POS] = inv[BIGPOCK2POS];
-	DO_NOT_USE_inv[OldInventory::BIGPOCK3POS] = inv[BIGPOCK3POS];
-	DO_NOT_USE_inv[OldInventory::BIGPOCK4POS] = inv[BIGPOCK4POS];
-	DO_NOT_USE_inv[OldInventory::SMALLPOCK1POS] = inv[SMALLPOCK1POS];
-	DO_NOT_USE_inv[OldInventory::SMALLPOCK2POS] = inv[SMALLPOCK2POS];
-	DO_NOT_USE_inv[OldInventory::SMALLPOCK3POS] = inv[SMALLPOCK3POS];
-	DO_NOT_USE_inv[OldInventory::SMALLPOCK4POS] = inv[SMALLPOCK4POS];
-	DO_NOT_USE_inv[OldInventory::SMALLPOCK5POS] = inv[SMALLPOCK5POS];
-	DO_NOT_USE_inv[OldInventory::SMALLPOCK6POS] = inv[SMALLPOCK6POS];
-	DO_NOT_USE_inv[OldInventory::SMALLPOCK7POS] = inv[SMALLPOCK7POS];
-	DO_NOT_USE_inv[OldInventory::SMALLPOCK8POS] = inv[SMALLPOCK8POS];
-
-	DO_NOT_USE_bInvStatus[OldInventory::HELMETPOS] = bInvStatus[HELMETPOS];
-	DO_NOT_USE_bInvStatus[OldInventory::VESTPOS] = bInvStatus[VESTPOS];
-	DO_NOT_USE_bInvStatus[OldInventory::LEGPOS] = bInvStatus[LEGPOS];
-	DO_NOT_USE_bInvStatus[OldInventory::HEAD1POS] = bInvStatus[HEAD1POS];
-	DO_NOT_USE_bInvStatus[OldInventory::HEAD2POS] = bInvStatus[HEAD2POS];
-	DO_NOT_USE_bInvStatus[OldInventory::HANDPOS] = bInvStatus[HANDPOS];
-	DO_NOT_USE_bInvStatus[OldInventory::SECONDHANDPOS] = bInvStatus[SECONDHANDPOS];
-	DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK1POS] = bInvStatus[BIGPOCK1POS];
-	DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK2POS] = bInvStatus[BIGPOCK2POS];
-	DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK3POS] = bInvStatus[BIGPOCK3POS];
-	DO_NOT_USE_bInvStatus[OldInventory::BIGPOCK4POS] = bInvStatus[BIGPOCK4POS];
-	DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK1POS] = bInvStatus[SMALLPOCK1POS];
-	DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK2POS] = bInvStatus[SMALLPOCK2POS];
-	DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK3POS] = bInvStatus[SMALLPOCK3POS];
-	DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK4POS] = bInvStatus[SMALLPOCK4POS];
-	DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK5POS] = bInvStatus[SMALLPOCK5POS];
-	DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK6POS] = bInvStatus[SMALLPOCK6POS];
-	DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK7POS] = bInvStatus[SMALLPOCK7POS];
-	DO_NOT_USE_bInvStatus[OldInventory::SMALLPOCK8POS] = bInvStatus[SMALLPOCK8POS];
-
-	DO_NOT_USE_bInvNumber[OldInventory::HELMETPOS] = bInvNumber[HELMETPOS];
-	DO_NOT_USE_bInvNumber[OldInventory::VESTPOS] = bInvNumber[VESTPOS];
-	DO_NOT_USE_bInvNumber[OldInventory::LEGPOS] = bInvNumber[LEGPOS];
-	DO_NOT_USE_bInvNumber[OldInventory::HEAD1POS] = bInvNumber[HEAD1POS];
-	DO_NOT_USE_bInvNumber[OldInventory::HEAD2POS] = bInvNumber[HEAD2POS];
-	DO_NOT_USE_bInvNumber[OldInventory::HANDPOS] = bInvNumber[HANDPOS];
-	DO_NOT_USE_bInvNumber[OldInventory::SECONDHANDPOS] = bInvNumber[SECONDHANDPOS];
-	DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK1POS] = bInvNumber[BIGPOCK1POS];
-	DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK2POS] = bInvNumber[BIGPOCK2POS];
-	DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK3POS] = bInvNumber[BIGPOCK3POS];
-	DO_NOT_USE_bInvNumber[OldInventory::BIGPOCK4POS] = bInvNumber[BIGPOCK4POS];
-	DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK1POS] = bInvNumber[SMALLPOCK1POS];
-	DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK2POS] = bInvNumber[SMALLPOCK2POS];
-	DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK3POS] = bInvNumber[SMALLPOCK3POS];
-	DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK4POS] = bInvNumber[SMALLPOCK4POS];
-	DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK5POS] = bInvNumber[SMALLPOCK5POS];
-	DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK6POS] = bInvNumber[SMALLPOCK6POS];
-	DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK7POS] = bInvNumber[SMALLPOCK7POS];
-	DO_NOT_USE_bInvNumber[OldInventory::SMALLPOCK8POS] = bInvNumber[SMALLPOCK8POS];
-}
-
 
 BOOLEAN IsValidSecondHandShot( SOLDIERTYPE *pSoldier );
 

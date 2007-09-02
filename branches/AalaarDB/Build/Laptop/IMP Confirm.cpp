@@ -1007,6 +1007,7 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 		if ( pProfile->inv[SECONDHANDPOS] == NONE )
 			return SECONDHANDPOS;
 	}
+	//ADB TODO
 	// if it fits into a small pocket
 	if (Item[usItem].ubPerPocket != 0)
 	{
@@ -1047,6 +1048,7 @@ INT32 AnyFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv)
 		usItem = tInv->inv;
 		for(uiPos = BODYPOSFINAL; uiPos < NUM_INV_SLOTS; uiPos ++)
 		{
+			//ADB TODO
 			iSize = Item[usItem].ubPerPocket;
 			lbeCap = iSize * 2;
 			if(uiPos >= MEDPOCKFINAL && iSize > 0)
@@ -1199,7 +1201,7 @@ BOOLEAN LoadImpCharacter( STR nickName )
 		LaptopSaveInfo.iIMPIndex = iProfileId;
 
 		// read in the profile
-		if ( !gMercProfiles[ iProfileId ].Load(hFile) )
+		if ( !gMercProfiles[ iProfileId ].Load(hFile, false) )
 		{
 			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 			return FALSE;

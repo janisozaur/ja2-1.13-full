@@ -830,12 +830,11 @@ void ExtractAndUpdateAmmoGUI()
 	//Update the number of clips
 	i = GetNumericStrictValueFromField( 1 );
 	if( i == -1 )
-		i = 1 + Random( Item[ gpItem->usItem ].ubPerPocket );
+		i = 1 + Random( ItemSlotLimit(gpItem, BIGPOCK1POS) );
 	else
-		i = max( 1, min( i, Item[ gpItem->usItem ].ubPerPocket ) );
-	gpItem->ubNumberOfObjects = (UINT8)i;
+		i = max( 1, min( i, ItemSlotLimit(gpItem, BIGPOCK1POS) ) );
 	SetInputFieldStringWithNumericStrictValue( 1, i );
-	CreateItems( gpItem->usItem, 100, gpItem->ubNumberOfObjects, gpItem );
+	CreateItems( gpItem->usItem, 100, i, gpItem );
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 2 );
 	i = ( i == -1 ) ? 0 : min( i, 20 );
@@ -970,7 +969,7 @@ void SetupExplosivesGUI()
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf( str, L"%d", gpItem->ubNumberOfObjects );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	if( Item[ gpItem->usItem ].ubPerPocket == 1 )
+	if( ItemSlotLimit(gpItem, BIGPOCK1POS)== 1 )
 	{
 		DisableTextField( 2 );
 	}
@@ -1021,16 +1020,15 @@ void ExtractAndUpdateExplosivesGUI()
 	(*gpItem)[0]->data.objectStatus = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	//Update the quantity
-	if( Item[ gpItem->usItem ].ubPerPocket > 1 )
+	if( ItemSlotLimit(gpItem, BIGPOCK1POS) > 1 )
 	{
 		i = GetNumericStrictValueFromField( 2 );
 		if( i == -1 )
-			i = 1 + Random( Item[ gpItem->usItem ].ubPerPocket );
+			i = 1 + Random( ItemSlotLimit(gpItem, BIGPOCK1POS) );
 		else
-			i = max( 1, min( i, Item[ gpItem->usItem ].ubPerPocket ) );
-		gpItem->ubNumberOfObjects = (UINT8)i;
+			i = max( 1, min( i, ItemSlotLimit(gpItem, BIGPOCK1POS) ) );
 		SetInputFieldStringWithNumericStrictValue( 2, i );
-		CreateItems( gpItem->usItem, (*gpItem)[0]->data.objectStatus, gpItem->ubNumberOfObjects, gpItem );
+		CreateItems( gpItem->usItem, (*gpItem)[0]->data.objectStatus, i, gpItem );
 	}
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 3 );

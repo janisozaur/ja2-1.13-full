@@ -633,7 +633,7 @@ void GenerateProsString( STR16 zItemPros, OBJECTTYPE * pObject, UINT32 uiPixLimi
 		}
 	}
 
-	if (Item[usItem].ubPerPocket >= 1) // fits in a small pocket
+	if (ItemSlotLimit(pObject, BIGPOCK1POS) >= 1) // fits in a small pocket
 	{
 		zTemp = Message[STR_SMALL];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
@@ -3309,8 +3309,11 @@ void ItemDescAmmoCallback(GUI_BUTTON *btn,INT32 reason)
 void DoAttachment( void )
 {
 	PERFORMANCE_MARKER
-	//ADB make sure this works ok with multiples
-	DebugBreak();
+	//ADB TODO works ok placing and removing a stack, does NOT display it ok.
+	//ADB TODO also in the process of testing this I found if you move around attachments,
+	//the tooltip does not change.  eg if there are 2, and you remove the first one, the second one
+	//moves over to the first's spot, but rollover tooltip says it is the first item!
+	//DebugBreak();
 	if ( gpItemDescObject->AttachObject( gpItemDescSoldier, gpItemPointer ) )
 	{
 		if (gpItemPointer->exists() == false)
@@ -4929,11 +4932,11 @@ void BeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 	if (_KeyDown( SHIFT ))
 	{
 		// Remove all from soldier's slot
-		pSoldier->inv[ubHandPos].MoveThisObjectTo(gItemPointer);
+		pSoldier->inv[ubHandPos].MoveThisObjectTo(gTempObject);
 	}
 	else
 	{
-		pSoldier->inv[ubHandPos].RemoveObjectsFromStack(1, &gTempObject );
+		pSoldier->inv[ubHandPos].MoveThisObjectTo(gTempObject, 1);
 	}
 	if (fOk)
 	{
@@ -8106,15 +8109,6 @@ void RemoveMoney()
 }
 
 
-BOOLEAN AttemptToApplyCamo( SOLDIERTYPE *pSoldier, UINT16 usItemIndex )
-{
-	PERFORMANCE_MARKER
-	return( FALSE );
-}
-
-
-
-
 void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
@@ -8460,27 +8454,6 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 
 
 
-
-
-UINT8 GetPrefferedItemSlotGraphicNum( UINT16 usItem )
-{
-	PERFORMANCE_MARKER
-	// Check for small item...
-	if ( Item[usItem].ubPerPocket >= 1 )
-	{
-		// Small
-		return( 2 );
-	}
-
-	// Now it could be large or armour, check class...
-	if ( Item[ usItem ].usItemClass == IC_ARMOUR )
-	{
-		return( 1 );
-	}
-
-	// OK, it's a big one...
-	return( 0 );
-}
 
 
 void CancelItemPointer( )

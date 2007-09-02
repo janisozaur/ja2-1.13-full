@@ -895,7 +895,7 @@ void HandleDialogue( )
 			// Do battle snounds......
 			if ( pSoldier )
 			{
-				pSoldier->InternalSoldierReadyWeapon(	(UINT8)QItem->uiSpecialEventData, 0 );
+				pSoldier->InternalDoMercBattleSound(	(UINT8)QItem->uiSpecialEventData, 0 );
 			}
 		}
 

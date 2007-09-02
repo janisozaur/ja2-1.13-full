@@ -2412,7 +2412,7 @@ BOOLEAN FindBetterSpotForItem( SOLDIERTYPE * pSoldier, INT8 bSlot )
 		return( TRUE );
 	}
 
-	if (Item[pSoldier->inv[bSlot].usItem].ubPerPocket == 0)
+	if (ItemSlotLimit(&(pSoldier->inv[bSlot]), BIGPOCK1POS) == 0)
 	{
 		// then we're looking for a big pocket
 		// CHRISL: Adjust final parameter to use dynamic inventory endpoint

@@ -7270,12 +7270,11 @@ void CreateDestroyMapInvButton()
 	// disable allmouse regions in this space
 	fTeamPanelDirty=TRUE;
 
-	//ADB TODO both are new?  Fix this if incorrect
-  // CHRISL: Setup default coords
-  if((UsingNewInventorySystem() == true))
-	  InitializeInvPanelCoordsNew();
-  else
-	  InitializeInvPanelCoordsNew();
+	// CHRISL: Setup default coords
+	if((UsingNewInventorySystem() == true))
+		InitializeInvPanelCoordsNew();
+	else
+		InitializeInvPanelCoordsOld();
 
 	InitInvSlotInterface( gMapScreenInvPocketXY, &gSCamoXY, MAPInvMoveCallback, MAPInvClickCallback, MAPInvMoveCamoCallback, MAPInvClickCamoCallback, FALSE );
 	MSYS_EnableRegion(&gMPanelRegion);
@@ -7869,7 +7868,7 @@ void MAPBeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 	}
 	else
 	{
-		pSoldier->inv[ubHandPos].RemoveObjectsFromStack(1, &gItemPointer);
+		pSoldier->inv[ubHandPos].MoveThisObjectTo(gItemPointer, 1);
 	}
 
 	if ( fOk )

@@ -362,6 +362,9 @@ void SimulateArmsDealerCustomer()
 					if (HowManyItemsAreSold( ubArmsDealer, iter->object.usItem, 1, TRUE) > 0)
 					{
 						iter = gArmsDealersInventory[ ubArmsDealer ].erase(iter);
+						if (iter == gArmsDealersInventory[ ubArmsDealer ].end()) {
+							break;
+						}
 					}
 				}
 			}
@@ -410,6 +413,9 @@ void DailyCheckOnItemQuantities()
 					int quantity = iter->ubQtyOnOrder;
 					iter = gArmsDealersInventory[ ubArmsDealer ].erase(iter);
 					ArmsDealerGetsFreshStock( ubArmsDealer, usItem, quantity);
+					if (iter == gArmsDealersInventory[ ubArmsDealer ].end()) {
+						break;
+					}
 				}
 			}
 		}
@@ -588,7 +594,7 @@ void LimitArmsDealersInventory( UINT8 ubArmsDealer, UINT32 uiDealerItemType, UIN
 	}
 
 	//if there is more of the given type than we want
-	UINT32 uiItemsToRemove = usAvailableItems.size() - ubMaxNumberOfItemType;
+	INT32 uiItemsToRemove = usAvailableItems.size() - ubMaxNumberOfItemType;
 
 	while (uiItemsToRemove > 0)
 	{
@@ -1498,6 +1504,9 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 				// add this particular attachment (they can't be imprinted, or themselves have attachments!)
 				AddObjectToArmsDealerInventory( ubArmsDealer, &(*iter) );
 				iter = pData->attachments.erase(iter);
+				if (iter == pData->attachments.end()) {
+					break;
+				}
 			}
 		}
 	}
@@ -1615,8 +1624,8 @@ void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, 
 			if (iter->IsBeingOrdered() == false) {
 				if (ubHowMany >= iter->object.ubNumberOfObjects) {
 					ubHowMany -= iter->object.ubNumberOfObjects;
-					gArmsDealersInventory[ ubArmsDealer ].erase(iter);
-					if (ubHowMany > 0) {
+					iter = gArmsDealersInventory[ ubArmsDealer ].erase(iter);
+					if (ubHowMany > 0 || iter == gArmsDealersInventory[ ubArmsDealer ].end()) {
 						return;
 					}
 				}

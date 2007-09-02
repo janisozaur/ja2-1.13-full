@@ -386,7 +386,7 @@ typedef struct
 
 
 
-UINT32 guiCurrentSaveGameVersion = 0;
+UINT32 guiCurrentSaveGameVersion = SAVE_GAME_VERSION;
 
 /////////////////////////////////////////////////////
 //
@@ -1076,13 +1076,13 @@ BOOLEAN SOLDIERCREATE_STRUCT::Load(HWFILE hFile)
 	return TRUE;
 }
 
-BOOLEAN MERCPROFILESTRUCT::Load(HWFILE hFile)
+BOOLEAN MERCPROFILESTRUCT::Load(HWFILE hFile, bool forceLoadOldVersion)
 {
 	PERFORMANCE_MARKER
 	UINT32 uiNumBytesRead;
 	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
 	functionPtr pLoadingFunction;
-	if ( guiCurrentSaveGameVersion < 87 )
+	if ( guiCurrentSaveGameVersion < 87 || forceLoadOldVersion == true)
 	{
 		pLoadingFunction = &JA2EncryptedFileRead;
 	}
@@ -1093,34 +1093,57 @@ BOOLEAN MERCPROFILESTRUCT::Load(HWFILE hFile)
 
 	this->initialize();
 
-	//actually for now the code below is the same for both old and new
-
 	//if we are at the most current version, then fine
-	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION && forceLoadOldVersion == false)
 	{
 		if ( !(*pLoadingFunction)( hFile, this, SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
-		this->CopyOldInventoryToNew();
+		int size;
+		if ( !(*pLoadingFunction)( hFile, &size, sizeof(int), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		int item;
+		int status;
+		int number;
+		for (int x = 0; x < size; ++x) {
+			if ( !(*pLoadingFunction)( hFile, &item, sizeof(int), &uiNumBytesRead ) )
+			{
+				return(FALSE);
+			}
+			if ( !(*pLoadingFunction)( hFile, &status, sizeof(int), &uiNumBytesRead ) )
+			{
+				return(FALSE);
+			}
+			if ( !(*pLoadingFunction)( hFile, &number, sizeof(int), &uiNumBytesRead ) )
+			{
+				return(FALSE);
+			}
+			inv.push_back(item);
+			bInvStatus.push_back(status);
+			bInvNumber.push_back(number);
+		}
+		if ( this->uiProfileChecksum != this->GetChecksum() )
+		{
+			return( FALSE );
+		}
 	}
 	else
 	{
 		//we are loading an older version (only load once, so use "else if")
 		//first load the data based on what version was stored
-		if ( guiCurrentSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		if ( guiCurrentSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE || forceLoadOldVersion == true)
 		{
-			if ( !(*pLoadingFunction)( hFile, this, SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesRead ) )
+			OLD_MERCPROFILESTRUCT_101 old;
+			if ( !(*pLoadingFunction)( hFile, &old, SIZEOF_OLD_MERCPROFILESTRUCT_101_POD, &uiNumBytesRead ) )
 			{
 				return(FALSE);
 			}
-			this->CopyOldInventoryToNew();
+			*this = old;
 		}
-	}
-
-	if ( this->uiProfileChecksum != this->GetChecksum() )
-	{
-		return( FALSE );
+		//skip checksum
 	}
 	return TRUE;
 }
@@ -1132,11 +1155,32 @@ BOOLEAN MERCPROFILESTRUCT::Save(HWFILE hFile)
 	//it does not have any data types that need their own saving function
 	//if that ever changes this will make updating saves easier
 	UINT32 uiNumBytesWritten;
-	this->CopyNewInventoryToOld();
 	this->uiProfileChecksum = this->GetChecksum();
 	if ( !NewJA2EncryptedFileWrite( hFile, this, SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesWritten ) )
 	{
 		return(FALSE);
+	}
+	int size = inv.size();
+	if ( !NewJA2EncryptedFileWrite( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	for (int x = 0; x < size; ++x) {
+		int item = inv[x];
+		int status = bInvStatus[x];
+		int number = bInvNumber[x];
+		if ( !NewJA2EncryptedFileWrite( hFile, &item, sizeof(int), &uiNumBytesWritten ) )
+		{
+			return(FALSE);
+		}
+		if ( !NewJA2EncryptedFileWrite( hFile, &status, sizeof(int), &uiNumBytesWritten ) )
+		{
+			return(FALSE);
+		}
+		if ( !NewJA2EncryptedFileWrite( hFile, &number, sizeof(int), &uiNumBytesWritten ) )
+		{
+			return(FALSE);
+		}
 	}
 	return TRUE;
 }
@@ -1442,7 +1486,17 @@ BOOLEAN StackedObjectData::Save( HWFILE hFile, bool fSavingMap )
 		pSavingFunction = &FileWrite;
 	}
 
-	int size = attachments.size();
+	int size = 0;
+	for (attachmentList::iterator iter = attachments.begin(); iter != attachments.end(); ++iter) {
+		if (iter->exists() == true) {
+			++size;
+		}
+		else {
+			//attachments should always exist, if they didn't they should have been removed from the list
+			DebugBreak();
+		}
+	}
+
 	if ( !(*pSavingFunction)( hFile, &(this->data), sizeof(ObjectData), &uiNumBytesWritten ) )
 	{
 		return(FALSE);
@@ -1452,8 +1506,10 @@ BOOLEAN StackedObjectData::Save( HWFILE hFile, bool fSavingMap )
 		return(FALSE);
 	}
 	for (attachmentList::iterator iter = attachments.begin(); iter != attachments.end(); ++iter) {
-		if (! iter->Save(hFile, fSavingMap)) {
-			return FALSE;
+		if (iter->exists() == true) {
+			if (! iter->Save(hFile, fSavingMap)) {
+				return FALSE;
+			}
 		}
 	}
 	return TRUE;
@@ -4323,7 +4379,7 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 	//Loop through all the profiles to Load
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
-		if ( !gMercProfiles[cnt].Load(hFile) )
+		if ( !gMercProfiles[cnt].Load(hFile, false) )
 		{
 			return(FALSE);
 		}

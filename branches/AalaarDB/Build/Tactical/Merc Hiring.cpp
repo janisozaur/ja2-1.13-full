@@ -138,9 +138,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 		{
 			// OK, give this item to our merc!
 			// make an objecttype
-			gTempObject.usItem						= LETTER;
-			gTempObject.ubNumberOfObjects = 1;
-			gTempObject[0]->data.objectStatus				= 100;
+			CreateItem(LETTER, 100, &gTempObject);
 			// Give it 
 			fReturn = AutoPlaceObject( MercPtrs[iNewIndex], &gTempObject, FALSE );
 			// CHRISL: This condition should resolve the issue of the letter not being issued to the first merc

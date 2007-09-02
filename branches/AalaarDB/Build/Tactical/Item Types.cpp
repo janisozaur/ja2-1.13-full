@@ -4,7 +4,9 @@
 #include "Items.h"
 
 OBJECTTYPE gTempObject;
+OBJECTTYPE gStackTempObject;
 std::vector<LBENODE>	LBEArray;
+
 LBETYPE::LBETYPE(){
 	memset(this, 0, SIZEOF_LBETYPE);
 	lbePocketIndex.resize(ITEMS_IN_LBE);
@@ -48,6 +50,7 @@ POCKETTYPE::~POCKETTYPE(){
 //Go ahead and add a new variable to OBJECTTYPE if you want, but then add it to all the functions.
 bool OBJECTTYPE::IsLBE()
 {
+	PERFORMANCE_MARKER
 	if (exists() == true) {
 		//stacks cannot have mixed types, so who cares if there are more than 1
 		return ((*this)[0]->data.misc.bDetonatorType == -1);
@@ -59,6 +62,7 @@ bool OBJECTTYPE::IsLBE()
 //although currently LBEs cannot be stacked, it could change
 LBENODE* OBJECTTYPE::GetLBEPointer(int subObject)
 {
+	PERFORMANCE_MARKER
 	return &(LBEArray[GetLBEIndex(subObject)]);
 }
 
@@ -66,16 +70,19 @@ LBENODE* OBJECTTYPE::GetLBEPointer(int subObject)
 //although currently LBEs cannot be stacked, it could change
 int OBJECTTYPE::GetLBEIndex(int subObject)
 {
+	PERFORMANCE_MARKER
 	return (*this)[subObject]->data.misc.usBombItem;
 }
 
 bool OBJECTTYPE::exists()
 {
+	PERFORMANCE_MARKER
 	return (ubNumberOfObjects > 0 && usItem != NOTHING);
 }
 
 void OBJECTTYPE::SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, StackedObjects::iterator beginIter)
 {
+	PERFORMANCE_MARKER
 	if (numToSplice == 0) {
 		return;
 	}
@@ -118,14 +125,14 @@ int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 	}
 
 	//if howMany is -1 the stack will become full
-	int numToAdd = ItemSlotLimit( this, BIGPOCK1POS ) - ubNumberOfObjects;
+	int numToAdd = 1;//ItemSlotLimit( this, BIGPOCK1POS ) - ubNumberOfObjects;
 	if (howMany >= 0) {
 		numToAdd = min(numToAdd, howMany);
 	}
 	if (numToAdd) {
-		CreateItem(usItem, objectStatus, &gTempObject);
+		CreateItem(usItem, objectStatus, &gStackTempObject);
 		for (int x = ubNumberOfObjects; x < ubNumberOfObjects + numToAdd; ++x) {
-			objectStack.push_front(gTempObject.objectStack.front());
+			objectStack.push_front(gStackTempObject.objectStack.front());
 		}
 
 		ubNumberOfObjects += numToAdd;
@@ -148,8 +155,8 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 	Assert(sourceObject.usItem == usItem);
 
 	//can't add too much, can't take too many
-	int freeObjectsInStack = max(0, (ItemSlotLimit( this, BIGPOCK1POS ) - ubNumberOfObjects));
-	int numToAdd = min (freeObjectsInStack, sourceObject.ubNumberOfObjects);
+	//int freeObjectsInStack = max(0, (ItemSlotLimit( this, BIGPOCK1POS ) - ubNumberOfObjects));
+	int numToAdd = sourceObject.ubNumberOfObjects;//min (freeObjectsInStack, sourceObject.ubNumberOfObjects);
 	//if howMany is -1 the stack will become full if sourceObject has enough
 	if (howMany >= 0) {
 		numToAdd = min(numToAdd, howMany);
@@ -161,8 +168,14 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 		if (Item[usItem].usItemClass == IC_KEY
 			|| Item[usItem].usItemClass == IC_BOMB
 			|| Item[usItem].usItemClass == IC_LBEGEAR) {
-			//exit and do not continue
-			return 0;
+			//we could have been asked to put the item into an empty object, in which case we allow 1
+			if (ubNumberOfObjects == 0) {
+				numToAdd = 1;
+			}
+			else {
+				//exit and do not continue
+				return 0;
+			}
 		}
 
 		if (Item[usItem].usItemClass == IC_MONEY) {
@@ -206,6 +219,7 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 
 void OBJECTTYPE::DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany)
 {
+	PERFORMANCE_MARKER
 	int numToDupe;
 	if (howMany >= 0) {
 		numToDupe = min(howMany, sourceObject.ubNumberOfObjects);
@@ -225,9 +239,9 @@ void OBJECTTYPE::DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany)
 	return;
 }
 
-int OBJECTTYPE::MoveThisObjectTo(OBJECTTYPE& destObject)
+int OBJECTTYPE::MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove)
 {
-	return (RemoveObjectsFromStack(-1, &destObject));
+	return (RemoveObjectsFromStack(numToMove, &destObject));
 }
 
 int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject)
@@ -267,8 +281,14 @@ int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject)
 bool OBJECTTYPE::RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject)
 {
 	PERFORMANCE_MARKER
-	if (destObject && ubNumberOfObjects == 1) {
-		*destObject = *this;
+	if (index >= ubNumberOfObjects || exists() == false) {
+		return false;
+	}
+
+	if (ubNumberOfObjects == 1) {
+		if (destObject) {
+			*destObject = *this;
+		}
 		this->initialize();
 		return true;
 	}
@@ -276,10 +296,6 @@ bool OBJECTTYPE::RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject)
 	if (destObject) {
 		//destObject should be empty especially if it fails!!
 		destObject->initialize();
-	}
-
-	if (index >= ubNumberOfObjects || exists() == false) {
-		return false;
 	}
 
 	StackedObjects::iterator spliceIter = objectStack.begin();
@@ -440,6 +456,8 @@ OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 		this->ubWeight = src.ubWeight;
 		this->objectStack = src.objectStack;
 		this->fFlags = src.fFlags;
+
+		this->ubMission = src.ubMission;
 	}
 }
 
@@ -453,6 +471,8 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 		this->ubWeight = src.ubWeight;
 		this->objectStack = src.objectStack;
 		this->fFlags = src.fFlags;
+
+		this->ubMission = src.ubMission;
 	}
 	return *this;
 }
@@ -470,6 +490,8 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
 		this->ubWeight = src.ubWeight;
 		this->fFlags = src.fFlags;
+
+		this->ubMission = src.ubMission;
 
 		//in some cases we need to reference the objectStatus or something, even though the item is totally empty
 		//therefore, keep ubNumberOfObjects at 0 but resize objectStack to at least 1

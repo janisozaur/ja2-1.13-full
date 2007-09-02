@@ -243,8 +243,6 @@ BOOLEAN LoadMercProfiles(void)
 
 	UINT32 uiLoop, uiLoop2;//, uiLoop3;
 	UINT16 usItem;//, usNewGun, usAmmo, usNewAmmo;
-	UINT32	uiNumBytesRead;
-
 	switch ( gGameOptions.ubDifficultyLevel)
 	{
 		case DIF_LEVEL_EASY:
@@ -284,13 +282,12 @@ BOOLEAN LoadMercProfiles(void)
 
 	for(uiLoop=0; uiLoop< NUM_PROFILES; uiLoop++)
 	{
-		if( JA2EncryptedFileRead( fptr, &gMercProfiles[uiLoop], SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesRead )	!= 1)
+		if( !gMercProfiles[uiLoop].Load(fptr, true))
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s",uiLoop, pFileName) );
 			FileClose( fptr );
 			return(FALSE);
 		}
-		gMercProfiles[ uiLoop ].CopyOldInventoryToNew();
 
 		// CHRISL: Overwrite inventory data pulled from prof.dat with data stored in gMercProfileGear
 		// Start by resetting all profile inventory values to 0

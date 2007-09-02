@@ -1347,27 +1347,6 @@ BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier )
 	return( FALSE );
 }
 
-// CHRISL:
-UINT8 ItemSlotLimit( UINT16 usItem, INT8 bSlot )
-{
-	UINT8 ubSlotLimit;
-
-	if ( bSlot < BODYPOSFINAL )
-	{
-		return( 1 );
-	}
-	else
-	{
-		//ADB TODO fix this!!! it is returning wrong amounts
-		ubSlotLimit = Item[usItem].ubPerPocket;
-		if (bSlot >= BIGPOCKFINAL && ubSlotLimit > 1)
-		{
-			ubSlotLimit /= 2;
-		}
-		return( ubSlotLimit );
-	}
-}
-
 // CHRISL: New definition for this function so that we can look at soldiers LBE pockets.
 UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 {
@@ -2383,6 +2362,7 @@ BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem )
 // CHRISL: New function to dynamically modify ItemSize based on attachments
 UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 {
+	PERFORMANCE_MARKER
 	UINT16		iSize, newSize, testSize;
 	UINT32		cisIndex;
 	BOOLEAN		psFound = FALSE;
@@ -2484,6 +2464,7 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 
 UINT16 CalculateAmmoWeight( UINT16 usGunAmmoItem, UINT8 ubShotsLeft )
 {
+	PERFORMANCE_MARKER
 	if( 0 == usGunAmmoItem ) /* Sergeant_Kolja: 2007-06-11, Fix for Creature Spit. This has no Ammo, so the old code calculated accidentally -1.6 resulting in 0xFFFF */
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "'no ammo weight' FIX for Creatures\r\n" );
@@ -2554,7 +2535,9 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 	return( weight );
 }
 
-UINT16 OBJECTTYPE::GetWeightOfObjectInStack(unsigned int index) {
+UINT16 OBJECTTYPE::GetWeightOfObjectInStack(unsigned int index)
+{
+	PERFORMANCE_MARKER
 	//Item does not exist
 	if( index >= ubNumberOfObjects )
 	{
@@ -3479,13 +3462,14 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 			//it's a new attachment
 			if (canOnlyAttach1 == true) {
 				//we only placed one of the stack, pAttachment could have any number of objects
-				if (pAttachment->RemoveObjectsFromStack(1, &attachmentObject) == 0) {
+				if (pAttachment->MoveThisObjectTo(attachmentObject, 1) == 0) {
 					(*this)[0]->attachments.push_back(attachmentObject);
 				}
 			}
 			else {
-				//pAttachment could have any number of objects
+				//pAttachment could have any number of objects, they have all been moved over
 				(*this)[0]->attachments.push_back(*pAttachment);
+				DeleteObj(pAttachment);
 			}
 		}
 
@@ -3733,6 +3717,7 @@ void RemoveProhibitedAttachments(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, UINT16
 				}
 			}
 			pObj->RemoveAttachment(&(*iter));
+			iter = (*pObj)[0]->attachments.begin();
 		}
 	}
 	return;
@@ -3806,7 +3791,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 				{
 					// two items in hands; try moving the second one so we can swap 
 					// CHRISL: Adjust parameters to include the new inventory system
-					if (Item[pSoldier->inv[SECONDHANDPOS].usItem].ubPerPocket == 0)
+					if (ItemSlotLimit(&(pSoldier->inv[SECONDHANDPOS]), BIGPOCK1POS) == 0)
 					{
 						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (BIGPOCKFINAL-1) );
 					}
@@ -4110,7 +4095,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 
 		// could be wrong type of object for slot... need to check...
 		// but assuming it isn't
-		pObj->RemoveObjectsFromStack(ubNumberToDrop, pInSlot);
+		pObj->MoveThisObjectTo(*pInSlot, ubNumberToDrop);
 /*
 		//if we are in the shopkeeper interface
 		if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
@@ -4283,7 +4268,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 	//Pulmu bugfix		
 	pObj->ubWeight = CalculateObjectWeight( pObj);
 	pItem = &(Item[pObj->usItem]);
-	ubPerSlot = pItem->ubPerPocket;
+	ubPerSlot = ItemSlotLimit(pObj, BIGPOCK1POS);
 
 	// Overrides to the standard system: put guns in hand, armour on body (if slot empty)
 	switch (pItem->usItemClass)
@@ -4686,13 +4671,13 @@ UINT8 AddKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE *
 	}
 
 	// check if we are going to far
-	if ( ( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber + pObj->ubNumberOfObjects ) > Item[ pObj->usItem ].ubPerPocket )
+	if ( ( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber + pObj->ubNumberOfObjects ) > ItemSlotLimit(pObj, BIGPOCK1POS) )
 	{
 		// only take what we can
-		ubNumberNotAdded = pObj->ubNumberOfObjects - ( Item[ pObj->usItem ].ubPerPocket - pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber );
+		ubNumberNotAdded = pObj->ubNumberOfObjects - ( ItemSlotLimit(pObj, BIGPOCK1POS) - pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber );
 		
 		// set to max
-		pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber = Item[ pObj->usItem ].ubPerPocket; 
+		pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber = ItemSlotLimit(pObj, BIGPOCK1POS); 
 		
 		if( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber == 0 )
 		{
@@ -5261,8 +5246,10 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 		}
 		if (Item [ usItem ].defaultattachment > 0 )
 		{
-			CreateItem(Item [ usItem ].defaultattachment,100,&gTempObject);
-			pObj->AttachObject(NULL,&gTempObject);
+			//cannot use gTempObject
+			static OBJECTTYPE defaultAttachment;
+			CreateItem(Item [ usItem ].defaultattachment,100,&defaultAttachment);
+			pObj->AttachObject(NULL,&defaultAttachment);
 		}
 	}
 
@@ -5515,10 +5502,13 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 				if ( pSoldier->ubProfile == MADLAB )
 				{
 					// remove attachments and drop them
-					for (attachmentList::iterator iter = (*pObject)[0]->attachments.begin(); iter != (*pObject)[0]->attachments.end(); ++iter) {
+					for (attachmentList::iterator iter = (*pObject)[0]->attachments.begin(); iter != (*pObject)[0]->attachments.end();) {
 						// drop it in Madlab's tile
 						AddItemToPool( pSoldier->sGridNo, &(*iter), 1, 0, 0, 0 );
 						pObject->RemoveAttachment(&(*iter));
+						if ((*pObject)[0]->attachments.empty() == true) {
+							break;
+						}
 					}
 				}
 
@@ -5767,8 +5757,11 @@ BOOLEAN DamageItem( OBJECTTYPE * pObject, INT32 iDamage, BOOLEAN fOnGround )
 				for (attachmentList::iterator iter = (*pObject)[bLoop]->attachments.begin(); iter != (*pObject)[bLoop]->attachments.end();) {
 					DamageItem(&(*iter), iDamage, fOnGround);
 					//could have removed the object at iter
-					if (iter != (*pObject)[bLoop]->attachments.end()) {
+					if (iter->exists() == true) {
 						++iter;
+					}
+					else {
+						iter = (*pObject)[bLoop]->attachments.erase(iter);
 					}
 				}
 			}

@@ -2606,7 +2606,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							if ( gGameExternalOptions.gfShiftFRemoveAttachments == TRUE )
 							{
 								for (attachmentList::iterator iter = gWorldItems[ uiLoop ].object[0]->attachments.begin();
-									iter != gWorldItems[ uiLoop ].object[0]->attachments.end();) {
+									iter != gWorldItems[ uiLoop ].object[0]->attachments.end(); ++iter) {
 									if ( !Item[ iter->usItem ].inseparable )
 									{												
 										// put it on the ground
@@ -2616,10 +2616,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
 										}
 										//restart, I don't feel like manipulating iters
-										iter = gWorldItems[ uiLoop ].object[0]->attachments.begin();
-									}
-									else {
-										++iter;
+										iter = gWorldItems[ uiLoop ].object[0]->attachments.erase(iter);
+										if (iter == gWorldItems[ uiLoop ].object[0]->attachments.end()) {
+											break;
+										}
 									}
 								}
 							}
@@ -3357,7 +3357,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 									INT8 ubObjCount = ubSlotLimit - gWorldItems[ uiLoop ].object.ubNumberOfObjects;										
 									INT8 bPointsToMove = __min( ubObjCount, gWorldItems[ uiLoop + i ].object.ubNumberOfObjects );
 
-									(gWorldItems[ uiLoop ].object).AddObjectsToStack( (gWorldItems[ uiLoop + i ].object), bPointsToMove);
+									gWorldItems[ uiLoop ].object.AddObjectsToStack( (gWorldItems[ uiLoop + i ].object), bPointsToMove);
 
 								}
 								else

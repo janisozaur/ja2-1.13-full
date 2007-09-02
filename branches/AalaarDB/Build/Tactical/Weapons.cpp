@@ -2289,7 +2289,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 					if ( sNumStolenItems == 1)
 					{
 						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[ STR_STOLE_SOMETHING ], pSoldier->name, ShortItemNames[ pTargetSoldier->inv[ubIndexRet].usItem ] );
-						if (pTargetSoldier->inv[ubIndexRet].RemoveObjectsFromStack(1, &gTempObject) == 0) {
+						if (pTargetSoldier->inv[ubIndexRet].MoveThisObjectTo(gTempObject, 1) == 0) {
 
 							// Try to place the item in the merc inventory
 							if (!AutoPlaceObject( pSoldier, &gTempObject, TRUE ))
@@ -2324,7 +2324,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 					}
 
 					// Item dropped somewhere... roll based on the same chance to determine where!
-					if (pTargetSoldier->inv[HANDPOS].RemoveObjectsFromStack(1, &gTempObject) == 0) {
+					if (pTargetSoldier->inv[HANDPOS].MoveThisObjectTo(gTempObject, 1) == 0) {
 						iDiceRoll = (INT32) PreRandom( 100 );
 						if (iDiceRoll < iHitChance)
 						{
@@ -4351,7 +4351,7 @@ INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 u
 						}
 					}
 
-					DeleteObj( pArmour );
+					DeleteObj( pArmour );//takes care of attachments, no need to remove() or erase()
 					DirtyMercPanelInterface( pTarget, DIRTYLEVEL2 );
 				}
 			}
@@ -5746,7 +5746,7 @@ UINT8 GetDamage ( OBJECTTYPE *pObj )
 	else
 	{
 		UINT8 ubDamage = Weapon[ pObj->usItem ].ubImpact;
-		if (Item[ pObj->usItem ].ubPerPocket == 0)
+		if (ItemSlotLimit(pObj, BIGPOCK1POS) == 0)
 		{
 			ubDamage += GetDamageBonus(pObj);
 		}

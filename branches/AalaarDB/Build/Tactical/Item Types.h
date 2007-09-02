@@ -423,7 +423,7 @@ public:
 	int		RemoveObjectsFromStack(int howMany = 1, OBJECTTYPE* destObject = NULL);
 	bool	RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject = NULL);
 	void	DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany = -1);
-	int		MoveThisObjectTo(OBJECTTYPE& destObject);
+	int		MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove = -1);
 private://this is only a helper for the above functions
 	void	SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, StackedObjects::iterator beginIter);
 public:

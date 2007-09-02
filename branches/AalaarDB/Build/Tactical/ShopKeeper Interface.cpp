@@ -2779,8 +2779,6 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 
 
 	//if the there is more then 1 or if the item is stackable and some of it has been bought and only 1 remains
-//	if( pItemObject->ubNumberOfObjects > 1 || Item[ usItemIndex ].usItemClass == IC_AMMO )
-//	if( pItemObject->ubNumberOfObjects > 1 || Item[ usItemIndex ].ubPerPocket > 1 )
 	if( ( pItemObject->ubNumberOfObjects > 1 ) ||
 			( ( pItemObject->ubNumberOfObjects == 1 ) && DealerItemIsSafeToStack( usItemIndex ) &&
 				( ubItemArea == ARMS_DEALER_INVENTORY ) && ( gpTempDealersInventory[ ubSlotNum ].uiFlags & ARMS_INV_ITEM_SELECTED ) ) )
@@ -6721,7 +6719,7 @@ void SplitComplexObjectIntoSubObjects( OBJECTTYPE *pComplexObject )
 	for (int x = 0; x < pComplexObject->ubNumberOfObjects; ++x) {
 		//we need not worry about attachments!!!!
 
-		if (pComplexObject->RemoveObjectsFromStack(1, &gTempObject) == 0) {
+		if (pComplexObject->MoveThisObjectTo(gTempObject, 1) == 0) {
 			subObjects.push_back(gTempObject);
 			StackedObjectData* pData = subObjects.back()[0];
 			// strip off any loaded ammo/payload

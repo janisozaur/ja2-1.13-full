@@ -182,10 +182,6 @@ BOOLEAN LoadTileGraphicForItem( INVTYPE *pItem, UINT32 *puiVo );
 
 void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier );
 
-BOOLEAN AttemptToApplyCamo( SOLDIERTYPE *pSoldier, UINT16 usItemIndex );
-
-UINT8 GetPrefferedItemSlotGraphicNum( UINT16 usItem );
-
 void CancelItemPointer( );
 
 BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile );

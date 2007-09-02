@@ -1465,7 +1465,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 
 	// if there is something there, swap it, if they are of the same type and stackable then add to the count
 
-	ubSlotLimit = Item[pItemPtr->usItem].ubPerPocket;
+	ubSlotLimit = ItemSlotLimit(pItemPtr, BIGPOCK1POS);
 
 	if (pInventorySlot->exists() == false)
 	{

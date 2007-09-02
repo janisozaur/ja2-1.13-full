@@ -108,7 +108,7 @@ void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier)
 		gTempObject.DuplicateObjectsInStack(pSoldier->inv[bPayloadPocket], 1);
 		pSoldier->inv[HANDPOS].AttachObject ( pSoldier,&gTempObject,FALSE);
 	}
-	else if (pSoldier->inv[bPayloadPocket].RemoveObjectsFromStack(1, &gTempObject) == 0) {
+	else if (pSoldier->inv[bPayloadPocket].MoveThisObjectTo(gTempObject, 1) == 0) {
 		pSoldier->inv[HANDPOS].AttachObject ( pSoldier,&gTempObject,FALSE);
 	}
 }

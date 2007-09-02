@@ -1429,7 +1429,7 @@ void HandleSoldierDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 				// we now know there is something nasty here			
 				gpWorldLevelData[ sGridNo ].uiFlags |= MAPELEMENT_PLAYER_MINE_PRESENT;
 
-				if (pSoldier->inv[ HANDPOS ].RemoveObjectsFromStack(1, &gTempObject) == 0) {
+				if (pSoldier->inv[ HANDPOS ].MoveThisObjectTo(gTempObject, 1) == 0) {
 					AddItemToPool( sGridNo, &gTempObject, BURIED, pSoldier->pathing.bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
 				}
 			}
@@ -1443,7 +1443,7 @@ void HandleSoldierDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 				{
 					// OOPS! ... BOOM!
 					IgniteExplosion( NOBODY, pSoldier->sX, pSoldier->sY, (INT16) (gpWorldLevelData[pSoldier->sGridNo].sHeight), pSoldier->sGridNo, pSoldier->inv[ HANDPOS ].usItem, pSoldier->pathing.bLevel );
-					pSoldier->inv[ HANDPOS ].RemoveObjectsFromStack(1, &gTempObject);
+					pSoldier->inv[ HANDPOS ].MoveThisObjectTo(gTempObject, 1);
 				}
 			}
 		}
@@ -2648,44 +2648,6 @@ INT8 GetLargestZLevelOfItemPool( ITEM_POOL *pItemPool )
 
 	return( 0 );
 }
-
-
-
-BOOLEAN DoesItemPoolContainAllItemsOfHigherZLevel( ITEM_POOL *pItemPool )
-{
-	PERFORMANCE_MARKER
-	// LOOP THROUGH LIST TO FIND NODE WE WANT
-	while( pItemPool != NULL )
-	{
-		if ( pItemPool->bRenderZHeightAboveLevel == 0 )
-		{
-			return( FALSE );
-		}
-
-		pItemPool = pItemPool->pNext;
-	}
-
-	return( TRUE );
-}
-
-
-BOOLEAN DoesItemPoolContainAllItemsOfZeroZLevel( ITEM_POOL *pItemPool )
-{
-	PERFORMANCE_MARKER
-	// LOOP THROUGH LIST TO FIND NODE WE WANT
-	while( pItemPool != NULL )
-	{
-		if ( pItemPool->bRenderZHeightAboveLevel != 0 )
-		{
-			return( FALSE );
-		}
-
-		pItemPool = pItemPool->pNext;
-	}
-
-	return( TRUE );
-}
-
 
 void RemoveItemPool( INT16 sGridNo, UINT8 ubLevel )
 {
@@ -4359,7 +4321,7 @@ void BombMessageBoxCallBack( UINT8 ubExitValue )
 				// HACK IMMINENT!
 				// value of 1 is stored in maps for SIDE of bomb owner... when we want to use IDs!
 				// so we add 2 to all owner IDs passed through here and subtract 2 later
-				if (gpTempSoldier->inv[HANDPOS].RemoveObjectsFromStack(1, &gTempObject) == 0) {
+				if (gpTempSoldier->inv[HANDPOS].MoveThisObjectTo(gTempObject, 1) == 0) {
 					gTempObject[0]->data.misc.ubBombOwner = gpTempSoldier->ubID + 2;
 					AddItemToPool( gsTempGridno, &gTempObject, 1, gpTempSoldier->pathing.bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
 				}
