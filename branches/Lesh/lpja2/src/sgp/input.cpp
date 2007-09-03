@@ -58,10 +58,12 @@ BOOLEAN		gfRecordedLeftButtonUp;
 
 UINT32		guiLeftButtonRepeatTimer;
 UINT32		guiRightButtonRepeatTimer;
+UINT32		guiMiddleButtonRepeatTimer;
 
 BOOLEAN		gfTrackMousePos;			// TRUE = queue mouse movement events, FALSE = don't
 BOOLEAN		gfLeftButtonState;			// TRUE = Pressed, FALSE = Not Pressed
 BOOLEAN		gfRightButtonState;			// TRUE = Pressed, FALSE = Not Pressed
+BOOLEAN		gfMiddleButtonState;		// TRUE = Pressed, FALSE = Not Pressed
 UINT16		gusMouseXPos;				// X position of the mouse on screen
 UINT16		gusMouseYPos;				// y position of the mouse on screen
 
@@ -71,9 +73,6 @@ InputAtom gEventQueue[256];
 UINT16    gusQueueCount;
 UINT16    gusHeadIndex;
 UINT16    gusTailIndex;
-
-// ATE: Added to signal if we have had input this frame - cleared by the SGP main loop
-BOOLEAN		gfSGPInputReceived = FALSE;
 
 // If the following pointer is non NULL then input characters are redirected to
 // the related string
@@ -108,13 +107,11 @@ void KeyboardHandler(SDL_Event *event)
 		case SDL_PRESSED:
 			// Key was up
 			KeyDown(&event->key.keysym);
-			gfSGPInputReceived =  TRUE;
 			break;
 
 		case SDL_RELEASED:
 			// The key has been released
 			KeyUp(&event->key.keysym);
-			//gfSGPInputReceived =  TRUE;
 			break;
 		default:
 			break;
@@ -171,9 +168,6 @@ void MouseMove(SDL_MouseMotionEvent *MouseMovement)
 		{
 			QueueEvent(MOUSE_POS, 0, uiParam);
 		}
-		
-		//Set that we have input
-		gfSGPInputReceived =  TRUE;
 	}
 }
 
@@ -210,7 +204,18 @@ void MouseButton(SDL_MouseButtonEvent *MouseButton)
 		break;
 
 	case SDL_BUTTON_MIDDLE:
-		// not implemented yet
+		if (MouseButton->state == SDL_PRESSED)
+		{
+			// middle mouse button down
+			gfMiddleButtonState = TRUE;
+			QueueEvent(MIDDLE_BUTTON_DOWN, 0, uiParam);
+		}
+		else
+		{
+			// middle mouse button up
+			gfMiddleButtonState = FALSE;
+			QueueEvent(MIDDLE_BUTTON_UP, 0, uiParam);
+		}
 		break;
 
 	case SDL_BUTTON_RIGHT:
@@ -228,12 +233,25 @@ void MouseButton(SDL_MouseButtonEvent *MouseButton)
 		}
 		break;
 
+	case SDL_BUTTON_WHEELUP:
+		if (MouseButton->state == SDL_RELEASED)
+		{
+			// mouse wheel has finished rotation
+			QueueEvent(MOUSE_WHEEL_UP, 0, uiParam);
+		}
+		break;
+
+	case SDL_BUTTON_WHEELDOWN:
+		if (MouseButton->state == SDL_RELEASED)
+		{
+			// mouse wheel has finished rotation
+			QueueEvent(MOUSE_WHEEL_DOWN, 0, uiParam);
+		}
+		break;
+
 	default:
 		break;
 	}
-
-	//Set that we have input
-    gfSGPInputReceived =  TRUE;
 }
 
 // *************************************************************
@@ -263,16 +281,18 @@ BOOLEAN InitializeInputManager(void)
 	// Initialize variables pertaining to DOUBLE CLIK stuff
 	gfTrackDblClick			= TRUE;
 	guiDoubleClkDelay		= DBL_CLK_TIME;
-	guiSingleClickTimer		= 0;
+	guiSingleClickTimer	= 0;
 	gfRecordedLeftButtonUp	= FALSE;
 
 	// Initialize variables pertaining to the button states
-	gfLeftButtonState  = FALSE;
-	gfRightButtonState = FALSE;
+	gfLeftButtonState   = FALSE;
+	gfRightButtonState  = FALSE;
+	gfMiddleButtonState = FALSE;
 
 	// Initialize variables pertaining to the repeat mechanism
-	guiLeftButtonRepeatTimer  = 0;
-	guiRightButtonRepeatTimer = 0;
+	guiLeftButtonRepeatTimer   = 0;
+	guiRightButtonRepeatTimer  = 0;
+	guiMiddleButtonRepeatTimer = 0;
 
 	// Set the mouse to the center of the screen
 	gusMouseXPos = SCREEN_WIDTH / 2;
@@ -329,6 +349,11 @@ void QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam)
     guiRightButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIMEOUT;
   }
 
+  if (ubInputEvent == MIDDLE_BUTTON_DOWN)
+  {
+    guiMiddleButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIMEOUT;
+  }
+
   if (ubInputEvent == LEFT_BUTTON_UP)
   {
     guiLeftButtonRepeatTimer = 0;
@@ -337,6 +362,11 @@ void QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam)
   if (ubInputEvent == RIGHT_BUTTON_UP)
   {
     guiRightButtonRepeatTimer = 0;
+  }
+
+  if (ubInputEvent == MIDDLE_BUTTON_UP)
+  {
+    guiMiddleButtonRepeatTimer = 0;
   }
 
   if ( (ubInputEvent == LEFT_BUTTON_UP) )
@@ -1243,10 +1273,6 @@ BOOLEAN InputEventInside(InputAtom *Event, UINT32 uiX1, UINT32 uiY1, UINT32 uiX2
 void DequeueAllKeyBoardEvents()
 {
 	InputAtom	InputEvent;
-//	MSG			KeyMessage;
-
-	//dequeue all the events waiting in the windows queue
-	//while( PeekMessage( &KeyMessage, ghWindow, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE ) );
 
 	//Deque all the events waiting in the SGP queue
 	while (DequeueEvent(&InputEvent) == TRUE)
@@ -1259,55 +1285,67 @@ void DequeueAllKeyBoardEvents()
 
 void HandleSingleClicksAndButtonRepeats( void )
 {
-  UINT32 uiTimer;
+	UINT32 uiTimer;
 
 
-  uiTimer = GetTickCount();
+	uiTimer = GetTickCount();
 
-  // Is there a LEFT mouse button repeat
-  if (gfLeftButtonState)
-  {
-    if ((guiLeftButtonRepeatTimer > 0)&&(guiLeftButtonRepeatTimer <= uiTimer))
-    {
-      UINT32 uiTmpLParam;
-      SGPPos  MousePos;
+	// Is there a LEFT mouse button repeat
+	if (gfLeftButtonState)
+	{
+    	if ((guiLeftButtonRepeatTimer > 0)&&(guiLeftButtonRepeatTimer <= uiTimer))
+    	{
+      		UINT32 uiTmpLParam;
+      		SGPPos  MousePos;
 
-      GetMousePos(&MousePos);
-      uiTmpLParam = ((MousePos.y << 16) & 0xffff0000) | (MousePos.x & 0x0000ffff);
-      QueueEvent(LEFT_BUTTON_REPEAT, 0, uiTmpLParam);
-      guiLeftButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
-    }
-  }
-  else
-  {
-    guiLeftButtonRepeatTimer = 0;
-  }
+      		GetMousePos(&MousePos);
+      		uiTmpLParam = ((MousePos.y << 16) & 0xffff0000) | (MousePos.x & 0x0000ffff);
+      		QueueEvent(LEFT_BUTTON_REPEAT, 0, uiTmpLParam);
+      		guiLeftButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
+    	}
+  	}
+  	else
+  	{
+    	guiLeftButtonRepeatTimer = 0;
+  	}
 
 
 	// Is there a RIGHT mouse button repeat
 	if (gfRightButtonState)
-  {
-    if ((guiRightButtonRepeatTimer > 0)&&(guiRightButtonRepeatTimer <= uiTimer))
-    {
-      UINT32 uiTmpLParam;
-      SGPPos  MousePos;
+  	{
+    	if ((guiRightButtonRepeatTimer > 0)&&(guiRightButtonRepeatTimer <= uiTimer))
+    	{
+      		UINT32 uiTmpLParam;
+      		SGPPos  MousePos;
 
-      GetMousePos(&MousePos);
-      uiTmpLParam = ((MousePos.y << 16) & 0xffff0000) | (MousePos.x & 0x0000ffff);
-      QueueEvent(RIGHT_BUTTON_REPEAT, 0, uiTmpLParam);
-      guiRightButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
-    }
-  }
-  else
-  {
-    guiRightButtonRepeatTimer = 0;
-  }
+      		GetMousePos(&MousePos);
+      		uiTmpLParam = ((MousePos.y << 16) & 0xffff0000) | (MousePos.x & 0x0000ffff);
+      		QueueEvent(RIGHT_BUTTON_REPEAT, 0, uiTmpLParam);
+      		guiRightButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
+    	}
+  	}
+  	else
+  	{
+    	guiRightButtonRepeatTimer = 0;
+  	}
+
+
+	// Is there a MIDDLE mouse button repeat
+	if (gfMiddleButtonState)
+  	{
+    	if ((guiMiddleButtonRepeatTimer > 0)&&(guiMiddleButtonRepeatTimer <= uiTimer))
+    	{
+      		UINT32 uiTmpLParam;
+      		SGPPos  MousePos;
+
+      		GetMousePos(&MousePos);
+      		uiTmpLParam = ((MousePos.y << 16) & 0xffff0000) | (MousePos.x & 0x0000ffff);
+      		QueueEvent(MIDDLE_BUTTON_REPEAT, 0, uiTmpLParam);
+      		guiMiddleButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
+    	}
+  	}
+  	else
+  	{
+    	guiMiddleButtonRepeatTimer = 0;
+  	}
 }
-
-
-//INT16 GetMouseWheelDeltaValue( UINT32 wParam )
-//{
-//	INT16 sDelta = HIWORD( wParam );
-//
-//	return( sDelta / WHEEL_DELTA );
-//}

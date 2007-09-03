@@ -19,7 +19,18 @@
 #define RIGHT_BUTTON_UP				0x0100
 #define RIGHT_BUTTON_REPEAT			0x0200
 #define MOUSE_POS					0x0400
-#define MOUSE_WHEEL					0x0800
+#define MOUSE_WHEEL_UP				0x0800
+#define MOUSE_WHEEL_DOWN			0x1000
+#define MIDDLE_BUTTON_DOWN			0x2000
+#define MIDDLE_BUTTON_UP			0x4000
+#define MIDDLE_BUTTON_REPEAT		0x8000
+#define ALL_INPUT					0xFFFF
+#define KEYBOARD_INPUTS				(KEY_DOWN | KEY_UP | KEY_REPEAT)
+#define LEFT_BUTTON_INPUTS			(LEFT_BUTTON_DOWN | LEFT_BUTTON_UP | LEFT_BUTTON_REPEAT)
+#define RIGHT_BUTTON_INPUTS			(RIGHT_BUTTON_DOWN | RIGHT_BUTTON_UP | RIGHT_BUTTON_REPEAT)
+#define MIDDLE_BUTTON_INPUTS		(MIDDLE_BUTTON_DOWN | MIDDLE_BUTTON_UP | MIDDLE_BUTTON_REPEAT)
+#define MOUSE_WHEEL_INPUTS			(MOUSE_WHEEL_UP | MOUSE_WHEEL_DOWN)
+#define MOUSE_BUTTONS_INPUT			(LEFT_BUTTON_INPUTS | RIGHT_BUTTON_INPUTS | MIDDLE_BUTTON_INPUTS)
 
 #define SHIFT_DOWN					0x01
 #define CTRL_DOWN					0x02
@@ -101,8 +112,6 @@ extern void         RestoreCursorClipRect( void );
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos );
 BOOLEAN InputEventInside(InputAtom *Event, UINT32 uiX1, UINT32 uiY1, UINT32 uiX2, UINT32 uiY2);
 
-INT16 GetMouseWheelDeltaValue( UINT32 wParam );
-
 extern void DequeueAllKeyBoardEvents();
 
 
@@ -112,13 +121,13 @@ extern UINT16    gusMouseXPos;       // X position of the mouse on screen
 extern UINT16    gusMouseYPos;       // y position of the mouse on screen
 extern BOOLEAN   gfLeftButtonState;  // TRUE = Pressed, FALSE = Not Pressed
 extern BOOLEAN   gfRightButtonState; // TRUE = Pressed, FALSE = Not Pressed
-
-extern BOOLEAN	 gfSGPInputReceived;
+extern BOOLEAN   gfMiddleButtonState;// TRUE = Pressed, FALSE = Not Pressed
 
 
 #define _KeyDown(a)			gfKeyState[(a)]
 #define _LeftButtonDown		gfLeftButtonState
 #define _RightButtonDown	gfRightButtonState
+#define _MiddleButtonDown	gfMiddleButtonState
 #define _MouseXPos			gusMouseXPos
 #define _MouseYPos			gusMouseYPos
 
