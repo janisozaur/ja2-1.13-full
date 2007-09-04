@@ -412,8 +412,9 @@ BOOLEAN RenderItemInPoolSlot( INT32 iCurrentSlot, INT32 iFirstSlotOnPage )
 				( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].bSectorZ == iCurrentMapSectorZ )
 			) )
 	{
-		//Shade the item
-		DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, MAP_INVEN_SLOT_WIDTH, MAP_INVEN_SLOT_IMAGE_HEIGHT );
+		//Shade the item // Lesh: really shade instead of pixelation
+		//DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, MAP_INVEN_SLOT_WIDTH, MAP_INVEN_SLOT_IMAGE_HEIGHT );
+		ShadowVideoSurfaceRect( guiSAVEBUFFER, sX, sY, sX + MAP_INVEN_SLOT_WIDTH, sY + MAP_INVEN_SLOT_IMAGE_HEIGHT );
 	}
 
 

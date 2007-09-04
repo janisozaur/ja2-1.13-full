@@ -6441,10 +6441,14 @@ void StartSKIDescriptionBox( void )
 	
 	// WANNE 2: Do not shade the background
 	if( gfSMDisableForItems )
-		DrawHatchOnInventory( FRAME_BUFFER, SCREEN_X_OFFSET, SCREEN_Y_OFFSET, SKI_INTERFACE_WIDTH, SKI_INTERFACE_HEIGHT );
+		//DrawHatchOnInventory( FRAME_BUFFER, SCREEN_X_OFFSET, SCREEN_Y_OFFSET, SKI_INTERFACE_WIDTH, SKI_INTERFACE_HEIGHT );
+		ShadowVideoSurfaceRect( FRAME_BUFFER, SCREEN_X_OFFSET, SCREEN_Y_OFFSET,
+			SCREEN_X_OFFSET + SKI_INTERFACE_WIDTH, SCREEN_Y_OFFSET + SKI_INTERFACE_HEIGHT );
 	else
 	{
-		DrawHatchOnInventory( FRAME_BUFFER, SCREEN_X_OFFSET, SCREEN_Y_OFFSET, SKI_INTERFACE_WIDTH, SKI_INTERFACE_HEIGHT );
+		//DrawHatchOnInventory( FRAME_BUFFER, SCREEN_X_OFFSET, SCREEN_Y_OFFSET, SKI_INTERFACE_WIDTH, SKI_INTERFACE_HEIGHT );
+		ShadowVideoSurfaceRect( FRAME_BUFFER, SCREEN_X_OFFSET, SCREEN_Y_OFFSET,
+			SCREEN_X_OFFSET + SKI_INTERFACE_WIDTH, SCREEN_Y_OFFSET + SKI_INTERFACE_HEIGHT );
 	}
 
 	InvalidateRegion( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
@@ -7881,6 +7885,7 @@ void HatchOutInvSlot( UINT16 usPosX, UINT16 usPosY )
 	usSlotHeight = SKI_INV_SLOT_HEIGHT;
 
 	//Hatch it out
-	DrawHatchOnInventory( guiRENDERBUFFER, usSlotX, usSlotY, usSlotWidth, usSlotHeight );
+	//DrawHatchOnInventory( guiRENDERBUFFER, usSlotX, usSlotY, usSlotWidth, usSlotHeight );
+	ShadowVideoSurfaceRect( guiRENDERBUFFER, usSlotX, usSlotY, usSlotX + usSlotWidth, usSlotY + usSlotHeight );
 	InvalidateRegion( usSlotX, usSlotY, usSlotX + usSlotWidth, usSlotY + usSlotHeight );
 }

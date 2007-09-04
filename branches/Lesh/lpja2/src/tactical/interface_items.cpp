@@ -1219,7 +1219,8 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 	if ( fHatchItOut )
 	{
 		UINT32 uiWhichBuffer = ( guiCurrentItemDescriptionScreen == MAP_SCREEN ) ? guiSAVEBUFFER : guiRENDERBUFFER;
-		DrawHatchOnInventory( uiWhichBuffer, sX, sY, (UINT16)(gSMInvData[ sPocket ].sWidth-1), (UINT16)(gSMInvData[ sPocket ].sHeight-1) );
+		//DrawHatchOnInventory( uiWhichBuffer, sX, sY, (UINT16)(gSMInvData[ sPocket ].sWidth-1), (UINT16)(gSMInvData[ sPocket ].sHeight-1) );
+		ShadowVideoSurfaceRect( uiWhichBuffer, sX, sY, sX + (UINT16)(gSMInvData[ sPocket ].sWidth-1), sY + (UINT16)(gSMInvData[ sPocket ].sHeight-1) );
 	}
 
 	// if there's an item in there
@@ -3156,7 +3157,12 @@ void RenderItemDescriptionBox( )
 
 			if (fHatchOutAttachments )
 			{
-				DrawHatchOnInventory( guiSAVEBUFFER, (INT16) (gsInvDescX + gMapItemDescAttachmentsXY[ cnt ].sX), (INT16) (gsInvDescY + gMapItemDescAttachmentsXY[ cnt ].sY - 2), (INT16)(gMapItemDescAttachmentsXY[ cnt ].sWidth + gMapItemDescAttachmentsXY[ cnt ].sBarDx), (INT16) (gMapItemDescAttachmentsXY[ cnt ].sHeight + 2) );
+				//DrawHatchOnInventory( guiSAVEBUFFER, (INT16) (gsInvDescX + gMapItemDescAttachmentsXY[ cnt ].sX), (INT16) (gsInvDescY + gMapItemDescAttachmentsXY[ cnt ].sY - 2), (INT16)(gMapItemDescAttachmentsXY[ cnt ].sWidth + gMapItemDescAttachmentsXY[ cnt ].sBarDx), (INT16) (gMapItemDescAttachmentsXY[ cnt ].sHeight + 2) );
+				ShadowVideoSurfaceRect( guiSAVEBUFFER,
+					(INT16) (gsInvDescX + gMapItemDescAttachmentsXY[ cnt ].sX),
+					(INT16) (gsInvDescY + gMapItemDescAttachmentsXY[ cnt ].sY - 2),
+					(INT16) (gsInvDescX + gMapItemDescAttachmentsXY[ cnt ].sX + gMapItemDescAttachmentsXY[ cnt ].sWidth + gMapItemDescAttachmentsXY[ cnt ].sBarDx),
+					(INT16) (gsInvDescY + gMapItemDescAttachmentsXY[ cnt ].sY + gMapItemDescAttachmentsXY[ cnt ].sHeight) );
 			}
 
 		}
@@ -3658,7 +3664,12 @@ void RenderItemDescriptionBox( )
 			if (fHatchOutAttachments)
 			{
 				//UINT32 uiWhichBuffer = ( guiCurrentItemDescriptionScreen == MAP_SCREEN ) ? guiSAVEBUFFER : guiRENDERBUFFER;
-				DrawHatchOnInventory( guiSAVEBUFFER, (INT16) (gsInvDescX + gItemDescAttachmentsXY[ cnt ].sX), (INT16) (gsInvDescY + gItemDescAttachmentsXY[ cnt ].sY - 2), (INT16)(gItemDescAttachmentsXY[ cnt ].sWidth + gItemDescAttachmentsXY[ cnt ].sBarDx), (INT16) (gItemDescAttachmentsXY[ cnt ].sHeight + 2) );
+				//DrawHatchOnInventory( guiSAVEBUFFER, (INT16) (gsInvDescX + gItemDescAttachmentsXY[ cnt ].sX), (INT16) (gsInvDescY + gItemDescAttachmentsXY[ cnt ].sY - 2), (INT16)(gItemDescAttachmentsXY[ cnt ].sWidth + gItemDescAttachmentsXY[ cnt ].sBarDx), (INT16) (gItemDescAttachmentsXY[ cnt ].sHeight + 2) );
+				ShadowVideoSurfaceRect( guiSAVEBUFFER,
+					(INT16) (gsInvDescX + gItemDescAttachmentsXY[ cnt ].sX),
+					(INT16) (gsInvDescY + gItemDescAttachmentsXY[ cnt ].sY - 2),
+					(INT16) (gsInvDescX + gItemDescAttachmentsXY[ cnt ].sX + gItemDescAttachmentsXY[ cnt ].sWidth + gItemDescAttachmentsXY[ cnt ].sBarDx),
+					(INT16) (gsInvDescY + gItemDescAttachmentsXY[ cnt ].sY + gItemDescAttachmentsXY[ cnt ].sHeight) );
 			}
 		}
 
