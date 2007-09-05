@@ -60,6 +60,7 @@ extern BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE 
 
 // CHRISL: Add new inventory version of ItemSlotLimit function
 UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier = NULL);
+bool FitsInBigPocketOnly(UINT16 usItem);
 
 // Function to put an item in a soldier profile
 // It's very primitive, just finds an empty place!

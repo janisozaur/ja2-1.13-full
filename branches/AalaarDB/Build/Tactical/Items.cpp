@@ -1347,6 +1347,11 @@ BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier )
 	return( FALSE );
 }
 
+bool FitsInBigPocketOnly(UINT16 usItem)
+{
+	return Item[usItem].ubPerPocket == 0;
+}
+
 // CHRISL: New definition for this function so that we can look at soldiers LBE pockets.
 UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 {
@@ -1355,55 +1360,89 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 	UINT16	usItem, iSize;
 	UINT32	iClass, pRestrict;
 
+	//doesn't matter what inventory method we are using
 	usItem = pObject->usItem;
 	if (usItem == MONEY) {
 		//need to have money "stackable" to trick it into merging
 		return 2;
 	}
 
-	if(pSoldier != NULL && (UsingNewInventorySystem() == true) && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
-	{
-		ubSlotLimit = Item[usItem].ubPerPocket;
-		if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT )
-			ubSlotLimit = MAX_OBJECTS_PER_SLOT;
-		return( ubSlotLimit );
-	}
-	else if ( bSlot < BODYPOSFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS )
-	{
-		return( 1 );
-	}
-	else
-	{
-		// IC Group Slots
-		if(bSlot == GUNSLINGPOCKPOS)
-			pIndex = 1;
-		else if(bSlot == KNIFEPOCKPOS)
-			pIndex = 2;
-		else {
-			if (pSoldier == NULL || pSoldier->inv[icLBE[bSlot]].exists() == false) {
-				pIndex = LoadBearingEquipment[icClass[bSlot]].lbePocketIndex[icPocket[bSlot]];
-			}
-			else {
-				pIndex = LoadBearingEquipment[Item[pSoldier->inv[icLBE[bSlot]].usItem].ubClassIndex].lbePocketIndex[icPocket[bSlot]];
-			}
+	//doesn't matter what inventory method we are using
+	ubSlotLimit = Item[usItem].ubPerPocket;
+	if(FitsInBigPocketOnly(pObject->usItem) == true) {
+		if ( bSlot < BODYPOSFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS )
+		{
+			return( 1 );
 		}
-		
-		//ubSlotLimit = LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize];
-		iSize = CalculateItemSize(pObject);
-		ubSlotLimit = LBEPocketType[pIndex].ItemCapacityPerSize[iSize];
-		pRestrict = LBEPocketType[pIndex].pRestriction;
-		iClass = Item[usItem].usItemClass;
-		// CHRISL: Include maximum capacity limits to keep game from crashing
-		if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT )
-			ubSlotLimit = MAX_OBJECTS_PER_SLOT;
-		//if ( Item[usItem].ItemSize < 10 && ubSlotLimit > 1)	// Item is a gun
-		if ( iSize < 10 && ubSlotLimit > 1)
-			ubSlotLimit = 1;
-		if(pRestrict != 0)
-			if(pRestrict != iClass)
-				ubSlotLimit = 0;
-		
+		//else if bigpocket
+			return 1;
+		//else if small pocket
+			return 0;
+	}
+
+	if (UsingNewInventorySystem() == false) {
+		if (bSlot >= BIGPOCKFINAL && ubSlotLimit > 1)
+		{
+			ubSlotLimit /= 2;
+		}
 		return( ubSlotLimit );
+	}
+	else {
+		if (pSoldier != NULL && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
+		{
+			if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT ) {
+				ubSlotLimit = MAX_OBJECTS_PER_SLOT;
+			}
+			return( ubSlotLimit );
+		}
+		else if ( bSlot < BODYPOSFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS )
+		{
+			return( 1 );
+		}
+		else
+		{
+			// IC Group Slots
+			if(bSlot == GUNSLINGPOCKPOS)
+				pIndex = 1;
+			else if(bSlot == KNIFEPOCKPOS)
+				pIndex = 2;
+			else {
+				if (pSoldier == NULL || pSoldier->inv[icLBE[bSlot]].exists() == false) {
+					pIndex = LoadBearingEquipment[icClass[bSlot]].lbePocketIndex[icPocket[bSlot]];
+				}
+				else {
+					pIndex = LoadBearingEquipment[Item[pSoldier->inv[icLBE[bSlot]].usItem].ubClassIndex].lbePocketIndex[icPocket[bSlot]];
+				}
+			}
+			
+			//ubSlotLimit = LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize];
+			iSize = CalculateItemSize(pObject);
+			ubSlotLimit = LBEPocketType[pIndex].ItemCapacityPerSize[iSize];
+			pRestrict = LBEPocketType[pIndex].pRestriction;
+			iClass = Item[usItem].usItemClass;
+			// CHRISL: Include maximum capacity limits to keep game from crashing
+			if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT )
+				ubSlotLimit = MAX_OBJECTS_PER_SLOT;
+			//if ( Item[usItem].ItemSize < 10 && ubSlotLimit > 1)	// Item is a gun
+			if ( iSize < 10 && ubSlotLimit > 1)
+				ubSlotLimit = 1;
+			if(pRestrict != 0) {
+				if(pRestrict != iClass) {
+					ubSlotLimit = 0;
+					//item only fits in big pockets
+					if ( bSlot < BODYPOSFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS )
+					{
+						return( 1 );
+					}
+					//else if bigpocket
+						return 1;
+					//else if small pocket
+						return 0;
+				}
+			}
+		
+			return( ubSlotLimit );
+		}
 	}
 }
 
@@ -3796,7 +3835,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 				{
 					// two items in hands; try moving the second one so we can swap 
 					// CHRISL: Adjust parameters to include the new inventory system
-					if (ItemSlotLimit(&(pSoldier->inv[SECONDHANDPOS]), BIGPOCK1POS) == 0)
+					if (FitsInBigPocketOnly(pSoldier->inv[SECONDHANDPOS].usItem) == true)
 					{
 						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (BIGPOCKFINAL-1) );
 					}

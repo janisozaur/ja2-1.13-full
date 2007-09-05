@@ -516,7 +516,7 @@ BOOLEAN SaveLBENODEToSaveGameFile( HWFILE hFile )
 	UINT32 uiNumBytesWritten;
 
 	int size = LBEArray.size();
-	if ( !NewJA2EncryptedFileWrite( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
@@ -535,7 +535,7 @@ BOOLEAN LoadLBENODEFromSaveGameFile( HWFILE hFile )
 	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
 	{
 		int size;
-		if ( !NewJA2EncryptedFileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
+		if ( !FileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
@@ -563,12 +563,12 @@ BOOLEAN LBENODE::Load( HWFILE hFile )
 	//if we are at the most current version, then fine
 	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
 	{
-		if ( !NewJA2EncryptedFileRead( hFile, this, SIZEOF_LBENODE_POD, &uiNumBytesRead ) )
+		if ( !FileRead( hFile, this, SIZEOF_LBENODE_POD, &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
 		int size;
-		if ( !NewJA2EncryptedFileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
+		if ( !FileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
@@ -594,11 +594,11 @@ BOOLEAN LBENODE::Save( HWFILE hFile )
 	UINT32 uiNumBytesWritten;
 	int size = inv.size();
 
-	if ( !NewJA2EncryptedFileWrite( hFile, this, SIZEOF_LBENODE_POD, &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, this, SIZEOF_LBENODE_POD, &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
-	if ( !NewJA2EncryptedFileWrite( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
@@ -1080,28 +1080,17 @@ BOOLEAN MERCPROFILESTRUCT::Load(HWFILE hFile, bool forceLoadOldVersion)
 {
 	PERFORMANCE_MARKER
 	UINT32 uiNumBytesRead;
-	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
-	functionPtr pLoadingFunction;
-	if ( guiCurrentSaveGameVersion < 87 || forceLoadOldVersion == true)
-	{
-		pLoadingFunction = &JA2EncryptedFileRead;
-	}
-	else
-	{
-		pLoadingFunction = &NewJA2EncryptedFileRead;
-	}
-
 	this->initialize();
 
 	//if we are at the most current version, then fine
 	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION && forceLoadOldVersion == false)
 	{
-		if ( !(*pLoadingFunction)( hFile, this, SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesRead ) )
+		if ( !FileRead( hFile, this, SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
 		int size;
-		if ( !(*pLoadingFunction)( hFile, &size, sizeof(int), &uiNumBytesRead ) )
+		if ( !FileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
@@ -1109,15 +1098,15 @@ BOOLEAN MERCPROFILESTRUCT::Load(HWFILE hFile, bool forceLoadOldVersion)
 		int status;
 		int number;
 		for (int x = 0; x < size; ++x) {
-			if ( !(*pLoadingFunction)( hFile, &item, sizeof(int), &uiNumBytesRead ) )
+			if ( !FileRead( hFile, &item, sizeof(int), &uiNumBytesRead ) )
 			{
 				return(FALSE);
 			}
-			if ( !(*pLoadingFunction)( hFile, &status, sizeof(int), &uiNumBytesRead ) )
+			if ( !FileRead( hFile, &status, sizeof(int), &uiNumBytesRead ) )
 			{
 				return(FALSE);
 			}
-			if ( !(*pLoadingFunction)( hFile, &number, sizeof(int), &uiNumBytesRead ) )
+			if ( !FileRead( hFile, &number, sizeof(int), &uiNumBytesRead ) )
 			{
 				return(FALSE);
 			}
@@ -1137,6 +1126,17 @@ BOOLEAN MERCPROFILESTRUCT::Load(HWFILE hFile, bool forceLoadOldVersion)
 		if ( guiCurrentSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE || forceLoadOldVersion == true)
 		{
 			OLD_MERCPROFILESTRUCT_101 old;
+			typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
+			functionPtr pLoadingFunction;
+			if ( guiCurrentSaveGameVersion < 87 || forceLoadOldVersion == true)
+			{
+				pLoadingFunction = &JA2EncryptedFileRead;
+			}
+			else
+			{
+				pLoadingFunction = &NewJA2EncryptedFileRead;
+			}
+
 			if ( !(*pLoadingFunction)( hFile, &old, SIZEOF_OLD_MERCPROFILESTRUCT_101_POD, &uiNumBytesRead ) )
 			{
 				return(FALSE);
@@ -1161,7 +1161,7 @@ BOOLEAN MERCPROFILESTRUCT::Save(HWFILE hFile)
 		return(FALSE);
 	}
 	int size = inv.size();
-	if ( !NewJA2EncryptedFileWrite( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
@@ -1169,15 +1169,15 @@ BOOLEAN MERCPROFILESTRUCT::Save(HWFILE hFile)
 		int item = inv[x];
 		int status = bInvStatus[x];
 		int number = bInvNumber[x];
-		if ( !NewJA2EncryptedFileWrite( hFile, &item, sizeof(int), &uiNumBytesWritten ) )
+		if ( !FileWrite( hFile, &item, sizeof(int), &uiNumBytesWritten ) )
 		{
 			return(FALSE);
 		}
-		if ( !NewJA2EncryptedFileWrite( hFile, &status, sizeof(int), &uiNumBytesWritten ) )
+		if ( !FileWrite( hFile, &status, sizeof(int), &uiNumBytesWritten ) )
 		{
 			return(FALSE);
 		}
-		if ( !NewJA2EncryptedFileWrite( hFile, &number, sizeof(int), &uiNumBytesWritten ) )
+		if ( !FileWrite( hFile, &number, sizeof(int), &uiNumBytesWritten ) )
 		{
 			return(FALSE);
 		}
@@ -1202,31 +1202,31 @@ BOOLEAN SOLDIERTYPE::Save(HWFILE hFile)
 		return(FALSE);
 	}
 
-	if ( !NewJA2EncryptedFileWrite( hFile, &this->aiData, sizeof(STRUCT_AIData), &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, &this->aiData, sizeof(STRUCT_AIData), &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
-	if ( !NewJA2EncryptedFileWrite( hFile, &this->flags, sizeof(STRUCT_Flags), &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, &this->flags, sizeof(STRUCT_Flags), &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
-	if ( !NewJA2EncryptedFileWrite( hFile, &this->timeChanges, sizeof(STRUCT_TimeChanges), &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, &this->timeChanges, sizeof(STRUCT_TimeChanges), &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
-	if ( !NewJA2EncryptedFileWrite( hFile, &this->timeCounters, sizeof(STRUCT_TimeCounters), &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, &this->timeCounters, sizeof(STRUCT_TimeCounters), &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
-	if ( !NewJA2EncryptedFileWrite( hFile, &this->drugs, sizeof(STRUCT_Drugs), &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, &this->drugs, sizeof(STRUCT_Drugs), &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
-	if ( !NewJA2EncryptedFileWrite( hFile, &this->stats, sizeof(STRUCT_Statistics), &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, &this->stats, sizeof(STRUCT_Statistics), &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
-	if ( !NewJA2EncryptedFileWrite( hFile, &this->pathing, sizeof(STRUCT_Pathing), &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, &this->pathing, sizeof(STRUCT_Pathing), &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
@@ -1237,24 +1237,13 @@ BOOLEAN SOLDIERTYPE::Load(HWFILE hFile)
 {
 	PERFORMANCE_MARKER
 	UINT32 uiNumBytesRead;
-	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
-	functionPtr pLoadingFunction;
-	if ( guiCurrentSaveGameVersion < 87 )
-	{
-		pLoadingFunction = &JA2EncryptedFileRead;
-	}
-	else
-	{
-		pLoadingFunction = &NewJA2EncryptedFileRead;
-	}
-
 
 	//if we are at the most current version, then fine
 	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
 	{
 		//the soldier type info has changed at version 102
 		//first, load the POD
-		if ( !(*pLoadingFunction)( hFile, this, SIZEOF_SOLDIERTYPE_POD, &uiNumBytesRead ) )
+		if ( !FileRead( hFile, this, SIZEOF_SOLDIERTYPE_POD, &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
@@ -1266,31 +1255,31 @@ BOOLEAN SOLDIERTYPE::Load(HWFILE hFile)
 		}
 
 		//load some structs, atm just POD but could change
-		if ( !(*pLoadingFunction)( hFile, &this->aiData, sizeof(STRUCT_AIData), &uiNumBytesRead ) )
+		if ( !FileRead( hFile, &this->aiData, sizeof(STRUCT_AIData), &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
-		if ( !(*pLoadingFunction)( hFile, &this->flags, sizeof(STRUCT_Flags), &uiNumBytesRead ) )
+		if ( !FileRead( hFile, &this->flags, sizeof(STRUCT_Flags), &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
-		if ( !(*pLoadingFunction)( hFile, &this->timeChanges, sizeof(STRUCT_TimeChanges), &uiNumBytesRead ) )
+		if ( !FileRead( hFile, &this->timeChanges, sizeof(STRUCT_TimeChanges), &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
-		if ( !(*pLoadingFunction)( hFile, &this->timeCounters, sizeof(STRUCT_TimeCounters), &uiNumBytesRead ) )
+		if ( !FileRead( hFile, &this->timeCounters, sizeof(STRUCT_TimeCounters), &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
-		if ( !(*pLoadingFunction)( hFile, &this->drugs, sizeof(STRUCT_Drugs), &uiNumBytesRead ) )
+		if ( !FileRead( hFile, &this->drugs, sizeof(STRUCT_Drugs), &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
-		if ( !(*pLoadingFunction)( hFile, &this->stats, sizeof(STRUCT_Statistics), &uiNumBytesRead ) )
+		if ( !FileRead( hFile, &this->stats, sizeof(STRUCT_Statistics), &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
-		if ( !(*pLoadingFunction)( hFile, &this->pathing, sizeof(STRUCT_Pathing), &uiNumBytesRead ) )
+		if ( !FileRead( hFile, &this->pathing, sizeof(STRUCT_Pathing), &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
@@ -1305,6 +1294,17 @@ BOOLEAN SOLDIERTYPE::Load(HWFILE hFile)
 		OLDSOLDIERTYPE_101 OldSavedSoldierInfo101;
 		//we are loading an older version (only load once, so use "else if")
 		//first load the data based on what version was stored
+		typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
+		functionPtr pLoadingFunction;
+		if ( guiCurrentSaveGameVersion < 87 )
+		{
+			pLoadingFunction = &JA2EncryptedFileRead;
+		}
+		else
+		{
+			pLoadingFunction = &NewJA2EncryptedFileRead;
+		}
+
 		if ( guiCurrentSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
 		{
 			OldSavedSoldierInfo101.initialize();
@@ -1450,12 +1450,12 @@ BOOLEAN StackedObjectData::Load( HWFILE hFile )
 	//if we are at the most current version, then fine
 	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
 	{
-		if ( !NewJA2EncryptedFileRead( hFile, &(this->data), sizeof(ObjectData), &uiNumBytesRead ) )
+		if ( !FileRead( hFile, &(this->data), sizeof(ObjectData), &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
 		int size;
-		if ( !NewJA2EncryptedFileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
+		if ( !FileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
@@ -1477,15 +1477,6 @@ BOOLEAN StackedObjectData::Save( HWFILE hFile, bool fSavingMap )
 	//if we are saving this to a map file it will be loaded with FileRead
 	PERFORMANCE_MARKER
 	UINT32 uiNumBytesWritten;
-	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten );
-	functionPtr pSavingFunction;
-	if ( fSavingMap == false ) {
-		pSavingFunction = &NewJA2EncryptedFileWrite;
-	}
-	else {
-		pSavingFunction = &FileWrite;
-	}
-
 	int size = 0;
 	for (attachmentList::iterator iter = attachments.begin(); iter != attachments.end(); ++iter) {
 		if (iter->exists() == true) {
@@ -1497,11 +1488,11 @@ BOOLEAN StackedObjectData::Save( HWFILE hFile, bool fSavingMap )
 		}
 	}
 
-	if ( !(*pSavingFunction)( hFile, &(this->data), sizeof(ObjectData), &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, &(this->data), sizeof(ObjectData), &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
-	if ( !(*pSavingFunction)( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
@@ -1518,25 +1509,17 @@ BOOLEAN StackedObjectData::Save( HWFILE hFile, bool fSavingMap )
 BOOLEAN OBJECTTYPE::Load( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
-	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
-	functionPtr pLoadingFunction;
-	if ( guiCurrentSaveGameVersion < 87 ) {
-		pLoadingFunction = &JA2EncryptedFileRead;
-	}
-	else {
-		pLoadingFunction = &NewJA2EncryptedFileRead;
-	}
 
 	UINT32	uiNumBytesRead;
 	//if we are at the most current version, then fine
 	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
 	{
-		if ( !(*pLoadingFunction)( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesRead ) )
+		if ( !FileRead( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
 		int size;
-		if ( !(*pLoadingFunction)( hFile, &size, sizeof(int), &uiNumBytesRead ) )
+		if ( !FileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
 		{
 			return(FALSE);
 		}
@@ -1555,7 +1538,7 @@ BOOLEAN OBJECTTYPE::Load( HWFILE hFile )
 		//first load the data based on what version was stored
 		if ( guiCurrentSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
 		{
-			if ( !(*pLoadingFunction)( hFile, &OldSavedObject101, sizeof(OLD_OBJECTTYPE_101), &uiNumBytesRead ) )
+			if ( !FileRead( hFile, &OldSavedObject101, sizeof(OLD_OBJECTTYPE_101), &uiNumBytesRead ) )
 			{
 				return(FALSE);
 			}
@@ -1612,20 +1595,11 @@ BOOLEAN OBJECTTYPE::Save( HWFILE hFile, bool fSavingMap )
 	PERFORMANCE_MARKER
 	UINT32 uiNumBytesWritten;
 	int size = objectStack.size();
-	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten );
-	functionPtr pSavingFunction;
-	if ( fSavingMap == false ) {
-		pSavingFunction = &NewJA2EncryptedFileWrite;
-	}
-	else {
-		pSavingFunction = &FileWrite;
-	}
-
-	if ( !(*pSavingFunction)( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
-	if ( !(*pSavingFunction)( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
@@ -1728,22 +1702,12 @@ BOOLEAN InventoryItem::Load( HWFILE hFile )
 		return FALSE;
 	}
 
-	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
-	functionPtr pLoadingFunction;
-	if ( guiCurrentSaveGameVersion < 87 )
-	{
-		pLoadingFunction = &JA2EncryptedFileRead;
-	}
-	else
-	{
-		pLoadingFunction = &NewJA2EncryptedFileRead;
-	}
 	UINT32 uiNumBytesRead;
-	if ( !(*pLoadingFunction)( hFile, &bNewItemCount, sizeof(int), &uiNumBytesRead ) )
+	if ( !FileRead( hFile, &bNewItemCount, sizeof(int), &uiNumBytesRead ) )
 	{
 		return(FALSE);
 	}
-	if ( !(*pLoadingFunction)( hFile, &bNewItemCycleCount, sizeof(int), &uiNumBytesRead ) )
+	if ( !FileRead( hFile, &bNewItemCycleCount, sizeof(int), &uiNumBytesRead ) )
 	{
 		return(FALSE);
 	}
@@ -1775,25 +1739,13 @@ BOOLEAN InventoryItem::Save( HWFILE hFile, bool fSavingMap )
 	}
 
 	UINT32 uiNumBytesWritten;
-	if (fSavingMap == false) {
-		if ( !NewJA2EncryptedFileWrite( hFile, &(this->bNewItemCount), sizeof(int), &uiNumBytesWritten ) )
-		{
-			return(FALSE);
-		}
-		if ( !NewJA2EncryptedFileWrite( hFile, &(this->bNewItemCycleCount), sizeof(int), &uiNumBytesWritten ) )
-		{
-			return(FALSE);
-		}
+	if ( !FileWrite( hFile, &(this->bNewItemCount), sizeof(int), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
 	}
-	else {
-		if ( !FileWrite( hFile, &(this->bNewItemCount), sizeof(int), &uiNumBytesWritten ) )
-		{
-			return(FALSE);
-		}
-		if ( !FileWrite( hFile, &(this->bNewItemCycleCount), sizeof(int), &uiNumBytesWritten ) )
-		{
-			return(FALSE);
-		}
+	if ( !FileWrite( hFile, &(this->bNewItemCycleCount), sizeof(int), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
 	}
 	return TRUE;
 }
@@ -4500,18 +4452,6 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 	UINT8		ubActive = 1;
 	UINT32	uiPercentage;
 	SOLDIERTYPE SavedSoldierInfo;
-
-	//if we are loading from a previous save, use the right loading function
-	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
-	functionPtr pLoadingFunction;
-	if ( guiCurrentSaveGameVersion < 87 )
-	{
-		pLoadingFunction = &JA2EncryptedFileRead;
-	}
-	else
-	{
-		pLoadingFunction = &NewJA2EncryptedFileRead;
-	}
 
 	//Loop through all the soldier and delete them all
 	for( cnt=0; cnt< TOTAL_SOLDIERS; cnt++)

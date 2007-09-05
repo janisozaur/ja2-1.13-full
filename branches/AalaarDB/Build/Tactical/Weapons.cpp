@@ -5746,7 +5746,7 @@ UINT8 GetDamage ( OBJECTTYPE *pObj )
 	else
 	{
 		UINT8 ubDamage = Weapon[ pObj->usItem ].ubImpact;
-		if (ItemSlotLimit(pObj, BIGPOCK1POS) == 0)
+		if (FitsInBigPocketOnly(pObj->usItem) == true)
 		{
 			ubDamage += GetDamageBonus(pObj);
 		}

@@ -131,7 +131,7 @@ int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 	}
 
 	//if howMany is -1 the stack will become full
-	int numToAdd = 1;//ItemSlotLimit( this, BIGPOCK1POS ) - ubNumberOfObjects;
+	int numToAdd = ItemSlotLimit( this, BIGPOCK1POS ) - ubNumberOfObjects;
 	if (howMany >= 0) {
 		numToAdd = min(numToAdd, howMany);
 	}
