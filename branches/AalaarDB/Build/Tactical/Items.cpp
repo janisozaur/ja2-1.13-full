@@ -1203,6 +1203,8 @@ std::vector<LBETYPE> LoadBearingEquipment;
 //};
 
 std::vector<POCKETTYPE> LBEPocketType;
+//TODO make the indices of this a define, because I do not know what is a large pocket (I guess 3)
+
 //POCKETTYPE LBEPocketType[MAXITEMS+1]; //= 
 //{
 //	{	/* Blank Entry */			0,	0,	0,	{0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0} },
@@ -1363,86 +1365,94 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 	//doesn't matter what inventory method we are using
 	usItem = pObject->usItem;
 	if (usItem == MONEY) {
-		//need to have money "stackable" to trick it into merging
+		//need to have money "stackable" in all slots to trick it into merging
 		return 2;
 	}
 
 	//doesn't matter what inventory method we are using
-	ubSlotLimit = Item[usItem].ubPerPocket;
 	if(FitsInBigPocketOnly(pObject->usItem) == true) {
-		if ( bSlot < BODYPOSFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS )
+		if ( bSlot == STACK_SIZE_LIMIT
+			|| (bSlot < BIGPOCKFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS) )
 		{
 			return( 1 );
 		}
-		//else if bigpocket
-			return 1;
-		//else if small pocket
-			return 0;
+		//else medium or small pocket
+		return 0;
 	}
 
+	ubSlotLimit = Item[usItem].ubPerPocket;
 	if (UsingNewInventorySystem() == false) {
-		if (bSlot >= BIGPOCKFINAL && ubSlotLimit > 1)
+		if (bSlot >= BIGPOCKFINAL && bSlot != STACK_SIZE_LIMIT && ubSlotLimit > 1)
 		{
 			ubSlotLimit /= 2;
 		}
 		return( ubSlotLimit );
 	}
-	else {
-		if (pSoldier != NULL && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
-		{
-			if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT ) {
-				ubSlotLimit = MAX_OBJECTS_PER_SLOT;
+
+	//UsingNewInventorySystem == true
+	if (pSoldier != NULL && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
+	{
+		if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT ) {
+			ubSlotLimit = MAX_OBJECTS_PER_SLOT;
+		}
+		return( ubSlotLimit );
+	}
+	else if (bSlot < BODYPOSFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS)
+	{
+		return( 1 );
+	}
+	else
+	{
+		// IC Group Slots
+		if (bSlot == GUNSLINGPOCKPOS) {
+			//TODO make this a define
+			pIndex = 1;
+		}
+		else if (bSlot == KNIFEPOCKPOS) {
+			//TODO make this a define
+			pIndex = 2;
+		}
+		else if (bSlot == STACK_SIZE_LIMIT) {
+			//calculate the size pretending we are putting it into a big slot in an LBE
+			//or some other big pocket, possibly gun sling???
+			//ChrisL is this right for a big slot???
+			//ADB TODO make this a define
+			pIndex = 3;
+		}
+		else {
+			//find the class of the LBE, then find what size the pocket of the slot in the LBE is
+			if (pSoldier == NULL || pSoldier->inv[icLBE[bSlot]].exists() == false) {
+				Assert(icClass[bSlot] != -1 && icPocket[bSlot] != -1);
+				pIndex = LoadBearingEquipment[icClass[bSlot]].lbePocketIndex[icPocket[bSlot]];
 			}
-			return( ubSlotLimit );
-		}
-		else if ( bSlot < BODYPOSFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS )
-		{
-			return( 1 );
-		}
-		else
-		{
-			// IC Group Slots
-			if(bSlot == GUNSLINGPOCKPOS)
-				pIndex = 1;
-			else if(bSlot == KNIFEPOCKPOS)
-				pIndex = 2;
 			else {
-				if (pSoldier == NULL || pSoldier->inv[icLBE[bSlot]].exists() == false) {
-					pIndex = LoadBearingEquipment[icClass[bSlot]].lbePocketIndex[icPocket[bSlot]];
-				}
-				else {
-					pIndex = LoadBearingEquipment[Item[pSoldier->inv[icLBE[bSlot]].usItem].ubClassIndex].lbePocketIndex[icPocket[bSlot]];
-				}
+				pIndex = LoadBearingEquipment[Item[pSoldier->inv[icLBE[bSlot]].usItem].ubClassIndex].lbePocketIndex[icPocket[bSlot]];
 			}
-			
-			//ubSlotLimit = LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize];
-			iSize = CalculateItemSize(pObject);
-			ubSlotLimit = LBEPocketType[pIndex].ItemCapacityPerSize[iSize];
-			pRestrict = LBEPocketType[pIndex].pRestriction;
-			iClass = Item[usItem].usItemClass;
-			// CHRISL: Include maximum capacity limits to keep game from crashing
-			if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT )
-				ubSlotLimit = MAX_OBJECTS_PER_SLOT;
-			//if ( Item[usItem].ItemSize < 10 && ubSlotLimit > 1)	// Item is a gun
-			if ( iSize < 10 && ubSlotLimit > 1)
-				ubSlotLimit = 1;
-			if(pRestrict != 0) {
-				if(pRestrict != iClass) {
-					ubSlotLimit = 0;
-					//item only fits in big pockets
-					if ( bSlot < BODYPOSFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS )
-					{
-						return( 1 );
-					}
-					//else if bigpocket
-						return 1;
-					//else if small pocket
-						return 0;
-				}
-			}
-		
-			return( ubSlotLimit );
 		}
+		
+		iSize = CalculateItemSize(pObject);
+		ubSlotLimit = LBEPocketType[pIndex].ItemCapacityPerSize[iSize];
+		pRestrict = LBEPocketType[pIndex].pRestriction;
+		iClass = Item[usItem].usItemClass;
+		// CHRISL: Include maximum capacity limits to keep game from crashing
+		if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT )
+			ubSlotLimit = MAX_OBJECTS_PER_SLOT;
+		//if ( Item[usItem].ItemSize < 10 && ubSlotLimit > 1)	// Item is a gun
+		if ( iSize < 10 && ubSlotLimit > 1)
+			ubSlotLimit = 1;
+		if(pRestrict != 0) {
+			if(pRestrict != iClass) {
+				//if item only fits in big pockets
+				if ( bSlot < BIGPOCKFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS )
+				{
+					return( 1 );
+				}
+				//else medium or small pocket
+				return 0;
+			}
+		}
+	
+		return( ubSlotLimit );
 	}
 }
 
@@ -4299,12 +4309,12 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 // CHRISL: Function needed for LBENODE
 extern BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
 
-BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNewItem, INT8 bExcludeSlot )
+BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNewItem, INT8 bExcludeSlot )
 {
 	PERFORMANCE_MARKER
 	INT8			bSlot;
 	INVTYPE	* pItem;
-	UINT8			ubPerSlot, packCombo, backCombo;
+	UINT8			packCombo, backCombo;
 
 	// statuses of extra objects would be 0 if the # exceeds the maximum
 	Assert( pObj->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT);
@@ -4312,14 +4322,13 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 	//Pulmu bugfix		
 	pObj->ubWeight = CalculateObjectWeight( pObj);
 	pItem = &(Item[pObj->usItem]);
-	ubPerSlot = ItemSlotLimit(pObj, BIGPOCK1POS);
 
 	// Overrides to the standard system: put guns in hand, armour on body (if slot empty)
 	switch (pItem->usItemClass)
 	{
 		case IC_GUN:
 			// CHRISL: 
-			if((UsingNewInventorySystem() == true) && (pItem->twohanded) && pSoldier->inv[GUNSLINGPOCKPOS].exists() == true)	// Long Gun use Gun Sling
+			if((UsingNewInventorySystem() == true) && (pItem->twohanded) && pSoldier->inv[GUNSLINGPOCKPOS].exists() == false)	// Long Gun use Gun Sling
 			{
 				PlaceObject( pSoldier, GUNSLINGPOCKPOS, pObj );
 				SetNewItem( pSoldier, GUNSLINGPOCKPOS, fNewItem );
@@ -4328,7 +4337,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 			}
 		case IC_BLADE:
 			// CHRISL:
-			if((UsingNewInventorySystem() == true) && pSoldier->inv[KNIFEPOCKPOS].exists() == true)	// Knife
+			if((UsingNewInventorySystem() == true) && pSoldier->inv[KNIFEPOCKPOS].exists() == false)	// Knife
 			{
 				PlaceObject( pSoldier, KNIFEPOCKPOS, pObj );
 				SetNewItem( pSoldier, KNIFEPOCKPOS, fNewItem );
@@ -4341,7 +4350,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 //			if (!((*pItem).fFlags & ITEM_TWO_HANDED))
 			if (!(pItem->twohanded))
 			{
-				if (pSoldier->inv[HANDPOS].exists() == true)
+				if (pSoldier->inv[HANDPOS].exists() == false)
 				{
 					// put the one-handed weapon in the guy's hand...
 					PlaceObject( pSoldier, HANDPOS, pObj );
@@ -4352,7 +4361,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 					}
 				}
 //				else if ( !(Item[pSoldier->inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED) && pSoldier->inv[SECONDHANDPOS].exists() == true)
-				else if ( !(Item[pSoldier->inv[HANDPOS].usItem].twohanded ) && pSoldier->inv[SECONDHANDPOS].exists() == true)
+				else if ( !(Item[pSoldier->inv[HANDPOS].usItem].twohanded ) && pSoldier->inv[SECONDHANDPOS].exists() == false)
 				{
 					// put the one-handed weapon in the guy's 2nd hand...
 					PlaceObject( pSoldier, SECONDHANDPOS, pObj );
@@ -4371,7 +4380,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 			switch (Armour[Item[pObj->usItem].ubClassIndex].ubArmourClass)
 			{
 				case ARMOURCLASS_VEST:
-					if (pSoldier->inv[VESTPOS].exists() == true)
+					if (pSoldier->inv[VESTPOS].exists() == false)
 					{
 						// put on the armour!
 						PlaceObject( pSoldier, VESTPOS, pObj );
@@ -4393,7 +4402,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 						pSoldier->inv[LEGPOS].usItem = NONE;
 						*/
 					}
-					if (pSoldier->inv[LEGPOS].exists() == true)
+					if (pSoldier->inv[LEGPOS].exists() == false)
 					{
 						// put on the armour!
 						PlaceObject( pSoldier, LEGPOS, pObj );
@@ -4405,7 +4414,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 					}
 					break;
 				case ARMOURCLASS_HELMET:
-					if (pSoldier->inv[HELMETPOS].exists() == true)
+					if (pSoldier->inv[HELMETPOS].exists() == false)
 					{
 						// put on the armour!
 						PlaceObject( pSoldier, HELMETPOS, pObj );
@@ -4507,7 +4516,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 			break;
 	}
 
-	if (ubPerSlot == 0)
+	if (FitsInBigPocketOnly(pObj->usItem) == true)
 	{
 		// Large object; look for an empty hand/large pocket and dump it in there
 		// FindObjWithin with 0 will search for empty slots!
@@ -4545,7 +4554,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 	{
 		// Small items; don't allow stack/dumping for keys right now as that
 		// would require a bunch of functions for finding the same object by two values...
-		if ( ubPerSlot > 1 || Item[ pObj->usItem ].usItemClass == IC_KEY || Item[ pObj->usItem ].usItemClass == IC_MONEY )
+		if ( ItemSlotLimit(pObj, STACK_SIZE_LIMIT) > 1 || Item[ pObj->usItem ].usItemClass == IC_KEY || Item[ pObj->usItem ].usItemClass == IC_MONEY )
 		{
 			// First, look for slots with the same object, and dump into them.
 			bSlot = HANDPOS;
@@ -4617,12 +4626,6 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 		}
 	}
 	return( FALSE );
-}
-
-BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNewItem )
-{
-	PERFORMANCE_MARKER
-	return( InternalAutoPlaceObject( pSoldier, pObj, fNewItem, NO_SLOT ) );
 }
 
 BOOLEAN RemoveKeyFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE * pObj )
@@ -4715,13 +4718,13 @@ UINT8 AddKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE *
 	}
 
 	// check if we are going to far
-	if ( ( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber + pObj->ubNumberOfObjects ) > ItemSlotLimit(pObj, BIGPOCK1POS) )
+	if ( ( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber + pObj->ubNumberOfObjects ) > ItemSlotLimit(pObj, STACK_SIZE_LIMIT) )
 	{
 		// only take what we can
-		ubNumberNotAdded = pObj->ubNumberOfObjects - ( ItemSlotLimit(pObj, BIGPOCK1POS) - pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber );
+		ubNumberNotAdded = pObj->ubNumberOfObjects - ( ItemSlotLimit(pObj, STACK_SIZE_LIMIT) - pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber );
 		
 		// set to max
-		pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber = ItemSlotLimit(pObj, BIGPOCK1POS); 
+		pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber = ItemSlotLimit(pObj, STACK_SIZE_LIMIT); 
 		
 		if( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber == 0 )
 		{
@@ -5955,7 +5958,7 @@ void SwapHandItems( SOLDIERTYPE * pSoldier )
 		if (TwoHandedItem( pSoldier->inv[SECONDHANDPOS].usItem ) )
 		{
 			// must move the item in the main hand elsewhere in the inventory
-			fOk = InternalAutoPlaceObject( pSoldier, &(pSoldier->inv[HANDPOS]), FALSE, HANDPOS );
+			fOk = AutoPlaceObject( pSoldier, &(pSoldier->inv[HANDPOS]), FALSE, HANDPOS );
 			if (!fOk)
 			{
 				return;

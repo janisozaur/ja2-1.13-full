@@ -73,7 +73,7 @@ ARMS_DEALER_INFO	ArmsDealerInfo[ NUM_ARMS_DEALERS ] =
 
 // THESE GET SAVED/RESTORED/RESET
 ARMS_DEALER_STATUS	gArmsDealerStatus[ NUM_ARMS_DEALERS ];
-DealerItemList	gArmsDealersInventory[ NUM_ARMS_DEALERS ];
+std::vector<DealerItemList>	gArmsDealersInventory;
 
 
 
@@ -142,6 +142,7 @@ void InitAllArmsDealers()
 	PERFORMANCE_MARKER
 	UINT8		ubArmsDealer;
 
+	ShutDownArmsDealers();
 	//Initialize the initial status & inventory for each of the arms dealers
 	for( ubArmsDealer = 0; ubArmsDealer < NUM_ARMS_DEALERS; ubArmsDealer++ )
 	{
@@ -161,7 +162,7 @@ void InitializeOneArmsDealer( UINT8 ubArmsDealer )
 
 
 	memset( &( gArmsDealerStatus[ ubArmsDealer ] ), 0, sizeof( ARMS_DEALER_STATUS ) );
-	gArmsDealersInventory[ubArmsDealer].clear();
+	gArmsDealersInventory.resize(gArmsDealersInventory.size() + 1);
 
 	//Reset the arms dealers cash on hand to the default initial value
 	gArmsDealerStatus[ ubArmsDealer ].uiArmsDealersCash = ArmsDealerInfo[ ubArmsDealer ].iInitialCash;
@@ -197,12 +198,7 @@ void InitializeOneArmsDealer( UINT8 ubArmsDealer )
 void ShutDownArmsDealers()
 {
 	PERFORMANCE_MARKER
-	UINT8		ubArmsDealer;
-	// loop through all the dealers
-	for( ubArmsDealer=0; ubArmsDealer<NUM_ARMS_DEALERS; ubArmsDealer++ )
-	{
-		gArmsDealersInventory[ ubArmsDealer ].clear();
-	}
+	gArmsDealersInventory.clear();
 }
 
 
@@ -1647,10 +1643,11 @@ void RemoveRandomItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemI
 	//ADB, ya, a whole 1 line of extra code!
 	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
 	//Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
+	std::vector<DealerItemList::iterator> foundObjects;
 	while ( ubHowMany > 0)
 	{
 		int numItems = 0;
-		std::vector<DealerItemList::iterator> foundObjects;
+		foundObjects.clear();
 		for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
 			iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
 			if (iter->object.usItem == usItemIndex

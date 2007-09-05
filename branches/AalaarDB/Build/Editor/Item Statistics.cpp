@@ -830,9 +830,9 @@ void ExtractAndUpdateAmmoGUI()
 	//Update the number of clips
 	i = GetNumericStrictValueFromField( 1 );
 	if( i == -1 )
-		i = 1 + Random( ItemSlotLimit(gpItem, BIGPOCK1POS) );
+		i = 1 + Random( ItemSlotLimit(gpItem, STACK_SIZE_LIMIT) );
 	else
-		i = max( 1, min( i, ItemSlotLimit(gpItem, BIGPOCK1POS) ) );
+		i = max( 1, min( i, ItemSlotLimit(gpItem, STACK_SIZE_LIMIT) ) );
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	CreateItems( gpItem->usItem, 100, i, gpItem );
 	//Update the trap level
@@ -969,7 +969,7 @@ void SetupExplosivesGUI()
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf( str, L"%d", gpItem->ubNumberOfObjects );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	if( ItemSlotLimit(gpItem, BIGPOCK1POS)== 1 )
+	if( ItemSlotLimit(gpItem, STACK_SIZE_LIMIT)== 1 )
 	{
 		DisableTextField( 2 );
 	}
@@ -1020,13 +1020,13 @@ void ExtractAndUpdateExplosivesGUI()
 	(*gpItem)[0]->data.objectStatus = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	//Update the quantity
-	if( ItemSlotLimit(gpItem, BIGPOCK1POS) > 1 )
+	if( ItemSlotLimit(gpItem, STACK_SIZE_LIMIT) > 1 )
 	{
 		i = GetNumericStrictValueFromField( 2 );
 		if( i == -1 )
-			i = 1 + Random( ItemSlotLimit(gpItem, BIGPOCK1POS) );
+			i = 1 + Random( ItemSlotLimit(gpItem, STACK_SIZE_LIMIT) );
 		else
-			i = max( 1, min( i, ItemSlotLimit(gpItem, BIGPOCK1POS) ) );
+			i = max( 1, min( i, ItemSlotLimit(gpItem, STACK_SIZE_LIMIT) ) );
 		SetInputFieldStringWithNumericStrictValue( 2, i );
 		CreateItems( gpItem->usItem, (*gpItem)[0]->data.objectStatus, i, gpItem );
 	}

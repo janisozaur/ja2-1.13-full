@@ -290,7 +290,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 			while ( ubItemsDelivered )
 			{
 				// treat 0s as 1s :-)
-				ubTempNumItems = __min( ubItemsDelivered, __max( 1, ItemSlotLimit(&gTempObject, BIGPOCK1POS) ) );
+				ubTempNumItems = __min( ubItemsDelivered, ItemSlotLimit(&gTempObject, STACK_SIZE_LIMIT) );
 				CreateItems( usItem, gpNewBobbyrShipments[ ubOrderID ].BobbyRayPurchase[i].bItemQuality, ubTempNumItems, &gTempObject );
 
 				// stack as many as possible
@@ -1179,7 +1179,7 @@ void DropOffItemsInMeduna( UINT8 ubOrderNum )
 		while ( ubItemsDelivered )
 		{
 			// treat 0s as 1s :-)
-			ubTempNumItems = __min( ubItemsDelivered, __max( 1, ItemSlotLimit(&gTempObject, BIGPOCK1POS) ) );
+			ubTempNumItems = __min( ubItemsDelivered, ItemSlotLimit(&gTempObject, STACK_SIZE_LIMIT) );
 			CreateItems( usItem, gpNewBobbyrShipments[ ubOrderNum ].BobbyRayPurchase[i].bItemQuality, ubTempNumItems, &gTempObject );
 
 			// stack as many as possible

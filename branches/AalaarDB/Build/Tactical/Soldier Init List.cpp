@@ -177,7 +177,7 @@ void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
 		}
 		else
 		{
-			//bug
+			//bug if gets here and we aren't exiting the game, maybe a bug even if we are exiting (but who cares)
 			DebugBreak();
 		}
 	}

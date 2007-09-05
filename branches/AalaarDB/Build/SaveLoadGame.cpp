@@ -628,6 +628,7 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 		{
 			return( FALSE );
 		}
+		gArmsDealersInventory.resize(dealers);
 
 		if (!FileRead( hFile, gArmsDealerStatus, sizeof( gArmsDealerStatus ), &uiNumBytesRead ))
 		{
@@ -671,16 +672,17 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 		bool fIncludesManny = guiCurrentSaveGameVersion >= 55;
 		UINT32	uiDealersSaved;
 		if (fIncludesElgin && fIncludesManny ){
-			uiDealersSaved = NUM_ARMS_DEALERS;
+			uiDealersSaved = NUM_ORIGINAL_ARMS_DEALERS;
 		}
 		else if ( !fIncludesElgin ) {
 			// read 2 fewer element without Elgin or Manny in there...
-			uiDealersSaved = NUM_ARMS_DEALERS - 2;
+			uiDealersSaved = NUM_ORIGINAL_ARMS_DEALERS - 2;
 		}
 		else {
 			// read one fewer element without Elgin in there...
-			uiDealersSaved = NUM_ARMS_DEALERS - 1;
+			uiDealersSaved = NUM_ORIGINAL_ARMS_DEALERS - 1;
 		}
+		gArmsDealersInventory.resize(uiDealersSaved);
 
 		if (!FileRead( hFile, gOldArmsDealerStatus, uiDealersSaved * sizeof( OLD_ARMS_DEALER_STATUS_101 ), &uiNumBytesRead ))
 		{
@@ -1156,7 +1158,7 @@ BOOLEAN MERCPROFILESTRUCT::Save(HWFILE hFile)
 	//if that ever changes this will make updating saves easier
 	UINT32 uiNumBytesWritten;
 	this->uiProfileChecksum = this->GetChecksum();
-	if ( !NewJA2EncryptedFileWrite( hFile, this, SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, this, SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
@@ -1191,7 +1193,7 @@ BOOLEAN SOLDIERTYPE::Save(HWFILE hFile)
 	UINT32 uiNumBytesWritten;
 	// calculate checksum for soldier
 	this->uiMercChecksum = this->GetChecksum();
-	if ( !NewJA2EncryptedFileWrite( hFile, this, SIZEOF_SOLDIERTYPE_POD, &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, this, SIZEOF_SOLDIERTYPE_POD, &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}

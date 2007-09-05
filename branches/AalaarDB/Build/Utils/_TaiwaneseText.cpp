@@ -3430,6 +3430,15 @@ STR16	gzGIOScreenText[] =
 	L"Unlimited Time",
 	L"Timed Turns",
 	L"Disabled for Demo",
+
+	L"Bobby Ray's Selection",
+	L"Normal",
+	L"Great",
+	L"Excellent",
+	L"Awesome",
+	L"Inventory System",
+	L"Old",
+	L"New",
 };
 
 STR16 pDeliveryLocationStrings[] =

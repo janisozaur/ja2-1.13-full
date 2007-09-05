@@ -3407,6 +3407,9 @@ STR16 gzGIOScreenText[] =
 	L"Groﬂ",
 	L"Ausgezeichnet",
 	L"Fantastisch",
+	L"Inventory System",
+	L"Old",
+	L"New",
 };
 
 STR16 pDeliveryLocationStrings[] =

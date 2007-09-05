@@ -8,6 +8,11 @@
 //if the number of slots are ever changed, the loading / saving checksum should use this value to make conversion easier
 #define NUM_ORIGINAL_INV_SLOTS 19
 
+
+// I don't care if this isn't intuitive!	The hand positions go right
+// before the big pockets so we can loop through them that way. --CJC
+#define NO_SLOT -1
+
 // NOTE NOTE NOTE!	Leave this alone until it is no longer needed.	It must match the
 // original definition so old files can be read.
 namespace OldInventory {
@@ -99,6 +104,8 @@ enum INVENTORY{
 	SMALLPOCK30POS,
 	NUM_INV_SLOTS
 };
+
+#define STACK_SIZE_LIMIT NUM_INV_SLOTS
 
 #define INVALIDCURS 0
 #define QUESTCURS 1

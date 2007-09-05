@@ -1286,7 +1286,7 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 
 	// Snap: Refactored the formula to reduce the number of integer divisions
 	Top = 8 * bAPs;
-	if (ItemSlotLimit(pObj, BIGPOCK1POS) <= 1)
+	if (ItemSlotLimit(pObj, STACK_SIZE_LIMIT) <= 1)
 	{
 		Top *= ( 100 - GetPercentAPReduction(pObj) );
 	}

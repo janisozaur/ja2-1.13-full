@@ -39,6 +39,7 @@ enum
 	NUM_ARMS_DEALERS,
 };
 
+#define NUM_ORIGINAL_ARMS_DEALERS 19
 
 //the enums for the different kinds of arms dealers
 enum
@@ -296,8 +297,9 @@ public:
 };
 #define SIZEOF_DEALER_SPECIAL_ITEM_POD offsetof(DEALER_SPECIAL_ITEM, endOfPod)
 
+
 typedef std::list<DEALER_SPECIAL_ITEM> DealerItemList;
-extern DealerItemList	gArmsDealersInventory[ NUM_ARMS_DEALERS ];
+extern std::vector<DealerItemList>	gArmsDealersInventory;
 
 extern ARMS_DEALER_INFO			ArmsDealerInfo[ NUM_ARMS_DEALERS ];
 extern ARMS_DEALER_STATUS		gArmsDealerStatus[ NUM_ARMS_DEALERS ];

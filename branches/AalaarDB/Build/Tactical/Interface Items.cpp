@@ -633,7 +633,7 @@ void GenerateProsString( STR16 zItemPros, OBJECTTYPE * pObject, UINT32 uiPixLimi
 		}
 	}
 
-	if (ItemSlotLimit(pObject, BIGPOCK1POS) >= 1) // fits in a small pocket
+	if (FitsInBigPocketOnly(pObject->usItem) == false) // fits in a small pocket
 	{
 		zTemp = Message[STR_SMALL];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
@@ -1462,9 +1462,11 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 	// CHRISL: Display pocket capacity if we're holding something in the cursor
 	if (!gfSMDisableForItems && (UsingNewInventorySystem() == true) && gpItemPointer != NULL)
 	{
-		RenderPocketItemCapacity( ItemSlotLimit(gpItemPointer, sPocket, pSoldier), sPocket, pSoldier);
-		if(ItemSlotLimit(gpItemPointer, sPocket, pSoldier)==0 || !CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)sPocket, FALSE))
+		int itemSlotLimit = ItemSlotLimit(gpItemPointer, sPocket, pSoldier);
+		RenderPocketItemCapacity( itemSlotLimit, sPocket, pSoldier);
+		if(itemSlotLimit == 0 || !CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)sPocket, FALSE)) {
 			fHatchItOut = TRUE;
+		}
 	}
 
 	// CHRISL: Change whether we hatch a pocket to be dependant on the current item
@@ -5960,11 +5962,12 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 
 	if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 	{
-    if ( ubLimit > 6 )
-    {
-      ubLimit = 6;
-    }
-  }
+		//ADB probably shouldn't be hard coded, but it doesn't match MAX_OBJECTS_IN_SLOT so I won't change it to that.
+		if ( ubLimit > 6 )
+		{
+		  ubLimit = 6;
+		}
+	}
 
 	// Load graphics
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;

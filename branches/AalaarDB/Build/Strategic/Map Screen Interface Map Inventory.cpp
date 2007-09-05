@@ -1461,11 +1461,11 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItemPtr )
 {
 	PERFORMANCE_MARKER
-	UINT8 ubNumberToDrop, ubSlotLimit, ubLoop;
+	UINT8 ubNumberToDrop, ubSlotLimit;
 
 	// if there is something there, swap it, if they are of the same type and stackable then add to the count
 
-	ubSlotLimit = ItemSlotLimit(pItemPtr, BIGPOCK1POS);
+	ubSlotLimit = ItemSlotLimit(pItemPtr, STACK_SIZE_LIMIT);
 
 	if (pInventorySlot->exists() == false)
 	{
@@ -1480,20 +1480,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 
 		// could be wrong type of object for slot... need to check...
 		// but assuming it isn't
-		*pInventorySlot = *pItemPtr;
-
-		if (ubNumberToDrop != pItemPtr->ubNumberOfObjects)
-		{
-			// in the InSlot copy, zero out all the objects we didn't drop
-			for (ubLoop = ubNumberToDrop; ubLoop < pItemPtr->ubNumberOfObjects; ubLoop++)
-			{
-				(*pInventorySlot)[ubLoop]->data.objectStatus = 0;
-			}
-		}
-		pInventorySlot->ubNumberOfObjects = ubNumberToDrop;
-
-		// remove a like number of objects from pObj
-		pItemPtr->RemoveObjectsFromStack( ubNumberToDrop );
+		pItemPtr->MoveThisObjectTo(*pInventorySlot, ubNumberToDrop);
 	}
 	else
 	{
@@ -1504,16 +1491,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 
 		if (pItemPtr->usItem == pInventorySlot->usItem)
 		{
-			if (pItemPtr->usItem == MONEY)
-			{
-				// always allow money to be combined!
-				// average out the status values using a weighted average...
-				(*pInventorySlot)[0]->data.objectStatus = (INT8) ( ( (UINT32)(*pInventorySlot)[0]->data.money.bMoneyStatus * (*pInventorySlot)[0]->data.money.uiMoneyAmount + (UINT32)(*pItemPtr)[0]->data.money.bMoneyStatus * (*pItemPtr)[0]->data.money.uiMoneyAmount )/ ((*pInventorySlot)[0]->data.money.uiMoneyAmount + (*pItemPtr)[0]->data.money.uiMoneyAmount) );
-				(*pInventorySlot)[0]->data.money.uiMoneyAmount += (*pItemPtr)[0]->data.money.uiMoneyAmount;
-
-				DeleteObj( pItemPtr );
-			}
-			else if (ubSlotLimit < 2)
+			if (ubSlotLimit < 2)
 			{
 				// swapping
 				SwapObjs( pItemPtr, pInventorySlot );
@@ -1525,7 +1503,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 				{
 					ubNumberToDrop = ubSlotLimit - pInventorySlot->ubNumberOfObjects;
 				}
-				pInventorySlot->AddObjectsToStack(*pItemPtr, ubNumberToDrop);
+				pItemPtr->MoveThisObjectTo(*pInventorySlot, ubNumberToDrop);
 			}
 		}
 		else
@@ -1540,7 +1518,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 {
 	PERFORMANCE_MARKER
-	UINT8 ubNumberToDrop, ubSlotLimit, ubLoop;
+	UINT8 ubNumberToDrop, ubSlotLimit;
 	OBJECTTYPE *pInventorySlot;
 
 
@@ -1550,7 +1528,7 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 	// placement in an empty slot
 	ubNumberToDrop = pItemPtr->ubNumberOfObjects;
 
-	ubSlotLimit = ItemSlotLimit( pItemPtr, BIGPOCK1POS );
+	ubSlotLimit = ItemSlotLimit( pItemPtr, STACK_SIZE_LIMIT );
 
 	if (ubNumberToDrop > ubSlotLimit && ubSlotLimit != 0)
 	{
@@ -1560,20 +1538,7 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 
 	// could be wrong type of object for slot... need to check...
 	// but assuming it isn't
-	*pInventorySlot = *pItemPtr;
-
-	if (ubNumberToDrop != pItemPtr->ubNumberOfObjects)
-	{
-		// in the InSlot copy, zero out all the objects we didn't drop
-		for (ubLoop = ubNumberToDrop; ubLoop < pItemPtr->ubNumberOfObjects; ubLoop++)
-		{
-			(*pInventorySlot)[ubLoop]->data.objectStatus = 0;
-		}
-	}
-	pInventorySlot->ubNumberOfObjects = ubNumberToDrop;
-
-	// remove a like number of objects from pObj
-	pItemPtr->RemoveObjectsFromStack( ubNumberToDrop );
+	pItemPtr->MoveThisObjectTo(*pInventorySlot, ubNumberToDrop );
 	
 	return( TRUE );
 }
@@ -2155,14 +2120,14 @@ void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArr
 	//first, compress the inventory by stacking like items that are reachable, while moving empty items towards the back
 	for (std::vector<WORLDITEM>::iterator iter = pInventory.begin(); iter != pInventory.end(); ++iter) {
 		if (iter->object.exists() == true
-			&& iter->object.ubNumberOfObjects < ItemSlotLimit( iter->object.usItem, BIGPOCK1POS )) {
+			&& iter->object.ubNumberOfObjects < ItemSlotLimit( iter->object.usItem, STACK_SIZE_LIMIT )) {
 			//if it is active and reachable etc
 			std::vector<WORLDITEM>::iterator second = iter;
 			for (++second; second != pInventory.end(); ++second) {
 				if (second->object.usItem == iter->object.usItem
 					&& second->object.exists() == true) {
 					iter->object.AddObjectsToStack(second->object, second->object.ubNumberOfObjects);
-					if (iter->object.ubNumberOfObjects >= ItemSlotLimit( iter->object.usItem, BIGPOCK1POS )) {
+					if (iter->object.ubNumberOfObjects >= ItemSlotLimit( iter->object.usItem, STACK_SIZE_LIMIT )) {
 						break;
 					}
 				}

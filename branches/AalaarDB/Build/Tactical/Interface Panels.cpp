@@ -6985,7 +6985,10 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj )
 {
 	BOOLEAN newLBEitem = FALSE;
-	INT8	LBESlots[ITEMS_IN_LBE]={-1};
+	INT8	LBESlots[ITEMS_IN_LBE];
+	for (int x = 0; x < ITEMS_IN_LBE; ++x) {
+		LBESlots[x] = -1;
+	}
 	INT16	lbeIndex=ITEM_NOT_FOUND;
 
 	// Determine which LBE item we're removing so we can associate the correct pockets with it.
@@ -7084,7 +7087,10 @@ BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *
 BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj )
 {
 	BOOLEAN newLBEitem = FALSE;
-	INT8	LBESlots[ITEMS_IN_LBE]={-1};
+	INT8	LBESlots[ITEMS_IN_LBE];
+	for (int x = 0; x < ITEMS_IN_LBE; ++x) {
+		LBESlots[x] = -1;
+	}
 	INT16	lbeIndex=ITEM_NOT_FOUND;
 
 	// Determine which LBE item we're adding so we can associate the correct pockets with it.

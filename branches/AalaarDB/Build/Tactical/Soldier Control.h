@@ -240,10 +240,6 @@ enum
 	MERC_TYPE__VEHICLE,
 };
 
-// I don't care if this isn't intuitive!	The hand positions go right
-// before the big pockets so we can loop through them that way. --CJC
-#define NO_SLOT -1
-
 // vehicle/human path structure
 struct path
 {
