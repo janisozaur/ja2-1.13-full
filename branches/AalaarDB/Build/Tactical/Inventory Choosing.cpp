@@ -2574,7 +2574,7 @@ else
 
 				// We are allowed to change the object and it is not the first (nothing) object
 				//if(! (pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE ) && pp->Inv[ i ].usItem != 0)
-				if( pp->Inv[ i ].usItem != 0)
+				if( pp->Inv[ i ].exists() == true)
 				{
 					// Weapon
 					if( uiItemClass == IC_GUN)

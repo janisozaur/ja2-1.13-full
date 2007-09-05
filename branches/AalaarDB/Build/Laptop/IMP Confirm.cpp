@@ -440,7 +440,7 @@ void DistributeInitialGear(MERCPROFILESTRUCT *pProfile)
 	INVNODE			tInv[NUM_INV_SLOTS];
 	int				i, j, number;
 	UINT8			count = 0, length;
-	std::vector<int>		iOrder;
+	int				iOrder[NUM_INV_SLOTS];
 	INT32			iSlot;
 	BOOLEAN			iSet = FALSE;
 
@@ -470,8 +470,9 @@ void DistributeInitialGear(MERCPROFILESTRUCT *pProfile)
 		{
 			if(tInv[i].iSize == j)
 			{
-				int *filler = new int;
-				iOrder.push_back(*filler);
+				//ADB this is a mem leak!!!
+				//int *filler = new int;
+				//iOrder.push_back(*filler);
 				iOrder[count] = i;
 				count++;
 			}

@@ -1356,6 +1356,11 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 	UINT32	iClass, pRestrict;
 
 	usItem = pObject->usItem;
+	if (usItem == MONEY) {
+		//need to have money "stackable" to trick it into merging
+		return 2;
+	}
+
 	if(pSoldier != NULL && (UsingNewInventorySystem() == true) && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 	{
 		ubSlotLimit = Item[usItem].ubPerPocket;
@@ -2399,7 +2404,7 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 	}
 
 	//for each object in the stack, hopefully there is only 1
-	for (int numStacked = 0; numStacked == pObject->ubNumberOfObjects; ++numStacked) {
+	for (int numStacked = 0; numStacked < pObject->ubNumberOfObjects; ++numStacked) {
 
 #if 0
 		//I don't think there will ever be any attachments, ChrisL delete this if so

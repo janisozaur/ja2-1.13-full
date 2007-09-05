@@ -5769,7 +5769,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 							if ( bSelectedInfoChar != -1 )
 							{
 								SOLDIERTYPE *pSoldier = MercPtrs[ gCharactersList[ bSelectedInfoChar ].usSolID ];
-								if ( pSoldier->inv[ HANDPOS ].usItem != 0 )
+								if ( pSoldier->inv[ HANDPOS ].exists() == true )
 								{
 									pSoldier->inv[ HANDPOS ][0]->data.objectStatus = 2;
 								}
@@ -5780,7 +5780,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 							if ( bSelectedInfoChar != -1 )
 							{
 								SOLDIERTYPE *pSoldier = MercPtrs[ gCharactersList[ bSelectedInfoChar ].usSolID ];
-								if ( pSoldier->inv[ HANDPOS ].usItem != 0 )
+								if ( pSoldier->inv[ HANDPOS ].exists() == true )
 								{
 									pSoldier->inv[ HANDPOS ].usItem = GUN_BARREL_EXTENDER;
 								}
@@ -7645,7 +7645,7 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 			if ( _KeyDown(CTRL) )
 			{
 				CleanUpStack( &( pSoldier->inv[ uiHandPos ] ), gpItemPointer );
-				if ( gpItemPointer->ubNumberOfObjects == 0 )
+				if ( gpItemPointer->exists() == false )
 				{
 					MAPEndItemPointer( );
 				}
@@ -7730,7 +7730,7 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 				fMapPanelDirty = TRUE;
 
 				// Check if cursor is empty now
-				if ( gpItemPointer->ubNumberOfObjects == 0 )
+				if ( gpItemPointer->exists() == false )
 				{
 					MAPEndItemPointer( );
 				}

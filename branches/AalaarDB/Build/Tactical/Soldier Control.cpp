@@ -381,16 +381,11 @@ Inventory::~Inventory() {
 OBJECTTYPE& Inventory::operator [] (unsigned int idx)
 {
 	PERFORMANCE_MARKER
-	if (inv.size() > NUM_INV_SLOTS
-		|| idx >= NUM_INV_SLOTS) {
-		//had it 4840 once, it probably grew because idx was too big.
-		DebugBreak();
-	}
 	if (idx >= inv.size()) {
 		inv.resize(idx+1);
 		bNewItemCount.resize(idx+1);
 		bNewItemCycleCount.resize(idx+1);
-		//int breakpoint = 0;
+		DebugBreak();
 	}
 	return inv[idx];
 };
@@ -1517,11 +1512,13 @@ void MERCPROFILESTRUCT::initialize()
 //  Note that the constructor does this automatically.
 void MERCPROFILESTRUCT::clearInventory()
 {
-	for (int idx=0; idx < (int)inv.size(); ++idx) {
-		inv[idx] = 0;
-		bInvStatus[idx] = 0;
-		bInvNumber[idx] = 0;
-	}
+	inv.clear();
+	bInvStatus.clear();
+	bInvNumber.clear();
+
+	inv.resize(NUM_INV_SLOTS);
+	bInvStatus.resize(NUM_INV_SLOTS);
+	bInvNumber.resize(NUM_INV_SLOTS);
 }
 
 void MERCPROFILESTRUCT::CopyOldInventoryToNew(const OLD_MERCPROFILESTRUCT_101& src)

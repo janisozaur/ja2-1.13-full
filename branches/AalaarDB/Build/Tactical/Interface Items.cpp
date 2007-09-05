@@ -5718,7 +5718,7 @@ BOOLEAN HandleItemPointerClick( INT16 sMapPos )
 						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], ShortItemNames[ usItem ], pSoldier->name );		
 
 						// Check if it's the same now!
-						if ( gpItemPointer->ubNumberOfObjects == 0 )
+						if ( gpItemPointer->exists() == false )
 						{
 							EndItemPointer( );
 						}

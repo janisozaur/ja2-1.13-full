@@ -448,15 +448,7 @@ public:
 	INT8		fFlags;
 
 	char		endOfPOD;
-
 #define SIZEOF_OBJECTTYPE_POD	(offsetof(OBJECTTYPE, endOfPOD))
-#define SIZEOF_OBJECTTYPEaoeu_POD	sizeof(usItem) + \
-								sizeof(ubNumberOfObjects) + \
-								sizeof(ubMission) + \
-								sizeof(ubWeight) + \
-								sizeof(fFlags) + 1
-
-
 
 	StackedObjects		objectStack;
 };

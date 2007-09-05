@@ -274,7 +274,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		// large objects in big inventory slots info code block start
 		for ( UINT8 BigSlot = BIGPOCK1POS; BigSlot <= BIGPOCK4POS; BigSlot++ )
 		{
-			if ( pSoldier->inv[ BigSlot ].usItem == 0 )
+			if ( pSoldier->inv[ BigSlot ].exists() == false )
 				continue; // slot is empty, move on to the next slot
 
 			switch( BigSlot )

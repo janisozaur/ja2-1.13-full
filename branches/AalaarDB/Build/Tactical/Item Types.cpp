@@ -77,6 +77,9 @@ int OBJECTTYPE::GetLBEIndex(int subObject)
 bool OBJECTTYPE::exists()
 {
 	PERFORMANCE_MARKER
+	if (objectStack.size() > 20) {
+		DebugBreak();
+	}
 	return (ubNumberOfObjects > 0 && usItem != NOTHING);
 }
 
@@ -95,6 +98,9 @@ void OBJECTTYPE::SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, 
 		++stopIter;
 	}
 	objectStack.splice(objectStack.begin(), sourceObject.objectStack, beginIter, stopIter);
+	if (objectStack.size() > 20) {
+		DebugBreak();
+	}
 
 	ubNumberOfObjects += numToSplice;
 	ubWeight = CalculateObjectWeight(this);
@@ -180,7 +186,13 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 
 		if (Item[usItem].usItemClass == IC_MONEY) {
 			//money doesn't stack, it merges
-			//ADB TODO merge and return
+			// average out the status values using a weighted average...
+			int thisStatus = (*this)[0]->data.money.bMoneyStatus * (*this)[0]->data.money.uiMoneyAmount;
+			int sourceStatus = sourceObject[0]->data.money.bMoneyStatus * sourceObject[0]->data.money.uiMoneyAmount;
+			int average = (*this)[0]->data.money.uiMoneyAmount + sourceObject[0]->data.money.uiMoneyAmount;
+			(*this)[0]->data.objectStatus = ( (thisStatus + sourceStatus) / average);
+
+			(*this)[0]->data.money.uiMoneyAmount += sourceObject[0]->data.money.uiMoneyAmount;
 			return 0;
 		}
 
@@ -325,6 +337,9 @@ bool OBJECTTYPE::RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject)
 StackedObjectData* OBJECTTYPE::operator [](const unsigned int index)
 {
 	PERFORMANCE_MARKER
+	if (objectStack.size() > 20) {
+		DebugBreak();
+	}
 	Assert(index < objectStack.size());
 	StackedObjects::iterator iter = objectStack.begin();
 	for (unsigned int x = 0; x < index; ++x) {
@@ -420,6 +435,8 @@ void OBJECTTYPE::initialize()
 	//many uses of (*pObj)[0]->data.objectStatus and such
 	memset(this, 0, SIZEOF_OBJECTTYPE_POD);
 	//ubNumberOfObjects = 1;
+
+	//this is an easy way to init it and get rid of attachments
 	objectStack.clear();
 	objectStack.resize(1);
 }

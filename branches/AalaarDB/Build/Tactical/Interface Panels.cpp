@@ -2769,7 +2769,7 @@ void SMInvClickCamoCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						fInterfacePanelDirty = DIRTYLEVEL2;
 
 						// Check if it's the same now!
-						if ( gpItemPointer->ubNumberOfObjects == 0 )
+						if ( gpItemPointer->exists() == false )
 						{
 							gbCompatibleApplyItem = FALSE;
 							EndItemPointer( );
@@ -2787,7 +2787,7 @@ void SMInvClickCamoCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						fInterfacePanelDirty = DIRTYLEVEL2;
 
 						// Check if it's the same now!
-						if ( gpItemPointer->ubNumberOfObjects == 0 )
+						if ( gpItemPointer->exists() == false )
 						{
 							gbCompatibleApplyItem = FALSE;
 							EndItemPointer( );
@@ -2802,7 +2802,7 @@ void SMInvClickCamoCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						fInterfacePanelDirty = DIRTYLEVEL2;
 
 						// Check if it's the same now!
-						if ( gpItemPointer->ubNumberOfObjects == 0 )
+						if ( gpItemPointer->exists() == false )
 						{
 							gbCompatibleApplyItem = FALSE;
 							EndItemPointer( );
@@ -2818,7 +2818,7 @@ void SMInvClickCamoCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						fInterfacePanelDirty = DIRTYLEVEL2;
 
 						// Check if it's the same now!
-						if ( gpItemPointer->ubNumberOfObjects == 0 )
+						if ( gpItemPointer->exists() == false )
 						{
 							gbCompatibleApplyItem = FALSE;
 							EndItemPointer( );
@@ -2905,7 +2905,7 @@ BOOLEAN UIHandleItemPlacement( UINT8 ubHandPos, UINT16 usOldItemIndex, UINT16 us
 	if ( _KeyDown(CTRL) )
 	{
 		CleanUpStack( &( gpSMCurrentMerc->inv[ ubHandPos ] ), gpItemPointer );
-		if ( gpItemPointer->ubNumberOfObjects == 0 )
+		if ( gpItemPointer->exists() == false )
 		{
 			EndItemPointer( );
 		}
@@ -2934,7 +2934,7 @@ BOOLEAN UIHandleItemPlacement( UINT8 ubHandPos, UINT16 usOldItemIndex, UINT16 us
 		fInterfacePanelDirty = DIRTYLEVEL2;
 
 		// Check if cursor is empty now
-		if ( gpItemPointer->ubNumberOfObjects == 0 )
+		if ( gpItemPointer->exists() == false )
 		{
 			EndItemPointer( );
 		}
@@ -3282,7 +3282,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					fInterfacePanelDirty = DIRTYLEVEL2;
 
 					// Check if it's the same now!
-					if ( gpItemPointer->ubNumberOfObjects == 0 )
+					if ( gpItemPointer->exists() == false )
 					{
 						EndItemPointer( );
 					}
@@ -6492,7 +6492,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						gpItemPointer->ubNumberOfObjects -= ( UINT8 )iNumberOfKeysTaken;
 
 						// Check if it's the same now!
-						if ( gpItemPointer->ubNumberOfObjects == 0 )
+						if ( gpItemPointer->exists() == false )
 						{
 							if ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
 							{

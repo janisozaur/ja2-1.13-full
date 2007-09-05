@@ -32,8 +32,4 @@ CHAR8		czVersionNumber[16]	= { "Build 07.08.14" };		//YY.MM.DD
 CHAR16		zTrackingNumber[16]	= { L"Z" };
 	
 
-//
-//		Keeps track of the saved game version.	Increment the saved game version whenever 
-//	you will invalidate the saved game file
-
-#define			SAVE_GAME_VERSION					102	//100 // 99
+// SAVE_GAME_VERSION is defined in header, change it there

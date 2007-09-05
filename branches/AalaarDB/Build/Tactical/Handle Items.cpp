@@ -5416,7 +5416,7 @@ UINT8 StealItems(SOLDIERTYPE* pSoldier,SOLDIERTYPE* pOpponent, UINT8* ubIndexRet
 {
 	PERFORMANCE_MARKER
 	UINT8		ubCount=0;
-	ITEM_POOL	*pItemPool,*pTempItemPool,*pTempLastItemPool;
+	ITEM_POOL	*pItemPool,*pTempItemPool,*pTempLastItemPool = 0;
 	OBJECTTYPE	*pObject;	
 	UINT8		i;
 	BOOLEAN		fStealItem = FALSE;

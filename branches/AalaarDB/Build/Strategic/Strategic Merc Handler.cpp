@@ -713,11 +713,11 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 
 	for ( UINT32 cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 	{
-		usItem = pSoldier->inv[ cnt ].usItem;
-
 		// Look for best gun/armour
 		if ( pSoldier->inv[cnt].exists() == true )
 		{
+			usItem = pSoldier->inv[ cnt ].usItem;
+
 			// Check if it's a gun
 			if ( Item[ usItem ].usItemClass & IC_GUN )
 			{

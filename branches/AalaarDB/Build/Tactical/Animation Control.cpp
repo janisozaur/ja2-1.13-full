@@ -3490,13 +3490,12 @@ UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimSta
 	// CHECK FOR WATER
 	if ( pSoldier->MercInWater( ) )
 	{
-
-		// ADJUST BASED ON ITEM IN HAND....
-		usItem = pSoldier->inv[ HANDPOS ].usItem;
-
 		// Default it to the 1 ( ie: no rifle )
 		if ( pSoldier->inv[ HANDPOS ].exists() == true )
 		{
+			// ADJUST BASED ON ITEM IN HAND....
+			usItem = pSoldier->inv[ HANDPOS ].usItem;
+
 			if ( ( Item[ usItem ].usItemClass == IC_GUN || Item[ usItem ].usItemClass == IC_LAUNCHER ) && !Item[usItem].rocketlauncher)
 			{
 				//				if ( (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )

@@ -2520,7 +2520,7 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 			continue;
 		}
 
-		if( pSoldier->inv[ ubCounter ].ubNumberOfObjects )
+		if( pSoldier->inv[ ubCounter ].exists() == true )
 		{
 			if( uiCurrentInventoryIndex > ubUpToCount )
 			{
@@ -2778,7 +2778,7 @@ INT32 GetNumberOfInventoryItemsOnCurrentMerc( void )
 
 	for( ubCounter = 0; ubCounter < pSoldier->inv.size(); ubCounter++ )
 	{
-		if( ( pSoldier->inv[ ubCounter ].ubNumberOfObjects ) && ( pSoldier->inv[ ubCounter ].usItem) )
+		if( ( pSoldier->inv[ ubCounter ].exists() == true) )
 		{
 			ubCount++;
 		}

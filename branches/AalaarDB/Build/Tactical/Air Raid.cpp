@@ -297,7 +297,7 @@ BOOLEAN BeginAirRaid( )
 		gpRaidSoldier->ubID	= MAX_NUM_SOLDIERS - 1;
 		gpRaidSoldier->ubAttackerID = NOBODY;
 		gpRaidSoldier->usAttackingWeapon = HK21E;
-		gpRaidSoldier->inv[HANDPOS].usItem = HK21E;
+		CreateItem(HK21E, 100, &gpRaidSoldier->inv[HANDPOS]);
 
 		// Determine how many dives this one will be....
 		gbMaxDives				= (INT8)( gAirRaidDef.bIntensity + Random( gAirRaidDef.bIntensity - 1 ) );
