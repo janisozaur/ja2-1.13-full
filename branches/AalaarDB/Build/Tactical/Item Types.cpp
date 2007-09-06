@@ -7,13 +7,265 @@ OBJECTTYPE gTempObject;
 OBJECTTYPE gStackTempObject;
 std::vector<LBENODE>	LBEArray;
 
+void CreateLBE (OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets)
+{
+	int index = GetFreeLBEPackIndex();
+	LBEArray[index].ubID = ubID;
+	LBEArray[index].lbeIndex = Item[pObj->usItem].ubClassIndex;
+	LBEArray[index].lbeClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
+	LBEArray[index].inv.clear();
+	LBEArray[index].inv.resize(numSubPockets);
+	(*pObj)[0]->data.misc.bDetonatorType = -1;
+	(*pObj)[0]->data.misc.usBombItem = index;
+}
+
+bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
+{
+	LBENODE* pLBE = pObj->GetLBEPointer();
+	for (unsigned int x = 0; x < pLBE->inv.size(); ++x) {
+		if (pLBE->inv[x].exists() == true) {
+			return true;
+		}
+	}
+	pLBE->initialize();
+	(*pObj)[0]->data.misc.usBombItem = 0;
+	(*pObj)[0]->data.misc.bDetonatorType = 0;
+	return true;
+}
+
+void MoveItemsInSlotsToLBE( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, LBENODE* pLBE, OBJECTTYPE* pObj)
+{
+	for(unsigned int i=0; i<LBESlots.size(); i++)	// Go through default pockets one by one
+	{
+		if(pSoldier->inv[LBESlots[i]].exists() == false)	// No item in this pocket
+			continue;
+
+		// Found an item in a default pocket so get it's ItemSize
+		UINT16 dSize = CalculateItemSize(&pSoldier->inv[LBESlots[i]]);
+		for(unsigned int j=0; j<pLBE->inv.size(); j++)	// Search through LBE and see if item fits anywhere
+		{
+			if(pLBE->inv[j].exists() == true)	// Item already stored in LBENODE pocket
+				continue;
+			// No item in this LBENODE pocket, is pocket active?
+			if(LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbePocketIndex[j] == NONE)	// Pocket is inactive
+				continue;
+			// Pocket is active, can default item fit in this pocket?
+			if(LBEPocketType[LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbePocketIndex[j]].ItemCapacityPerSize[dSize] == NONE)	// Pocket can't hold this item size
+				continue;
+			// Default item will fit in this pocket.  Setup the LBENODE if necessary
+			pSoldier->inv[LBESlots[i]].MoveThisObjectTo(pLBE->inv[j]);
+			if (pSoldier->inv[LBESlots[i]].exists() == false) {
+				break;
+			}
+			else {
+				//move didn't work, maybe it was a stack?
+				dSize = CalculateItemSize(&pSoldier->inv[LBESlots[i]]);
+			}
+		}
+	}
+	return;
+}
+
+extern BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement );
+
+// CHRISL: New function to move items from default pockets to usable pockets
+BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, UINT32 uiHandPos, OBJECTTYPE *pObj )
+{
+	BOOLEAN	flag=FALSE;
+
+	if(pObj->IsLBE() == false) {
+		CreateLBE(pObj, pSoldier->ubID, LBESlots.size());
+	}
+
+	LBENODE* pLBE = &(LBEArray[pObj->GetLBEIndex()]);
+	MoveItemsInSlotsToLBE(pSoldier, LBESlots, pLBE, pObj);
+	DestroyLBEIfEmpty(pObj);
+
+	// We've put everything into the LBENODE that we could, now search other pockets for openings
+	for(unsigned int x=0; x<LBESlots.size(); x++)
+	{
+		if(pSoldier->inv[LBESlots[x]].exists() == false)
+			continue;
+		for(int i=BODYPOSFINAL; i<NUM_INV_SLOTS; i++)
+		{
+			if(pSoldier->inv[i].exists() == true)	// Item already in that location
+				continue;
+			for(unsigned int j=0; j<LBESlots.size(); j++)
+			{
+				flag = FALSE;
+				if(i==LBESlots[j])
+				{
+					flag=true;
+					break;
+				}
+			}
+			if(flag)
+				continue;
+			if(CanItemFitInPosition(pSoldier, &(pSoldier->inv[LBESlots[x]]), i, FALSE))
+			{
+				pSoldier->inv[LBESlots[x]].MoveThisObjectTo(pSoldier->inv[i]);
+				break;
+			}
+		}
+	}
+
+
+	// now drop everything that wouldn't fit anywhere else
+	for(unsigned int i=0; i<LBESlots.size() ;i++)
+	{
+		if(pSoldier->inv[LBESlots[i]].exists() == false)	// No item in pocket
+			continue;
+		AddItemToPool( pSoldier->sGridNo, &pSoldier->inv[LBESlots[i]], 1, pSoldier->stats.bExpLevel, 0 , -1 );
+		NotifySoldiersToLookforItems( );
+		DeleteObj(&pSoldier->inv[LBESlots[i]]);
+	}
+
+	return(TRUE);
+}
+
+void GetLBESlots(UINT32 LBEType, std::vector<INT8>& LBESlots)
+{
+	switch (LBEType)
+	{
+		case VESTPOCKPOS:
+			LBESlots.push_back(SMALLPOCK1POS);
+			LBESlots.push_back(SMALLPOCK2POS);
+			LBESlots.push_back(SMALLPOCK3POS);
+			LBESlots.push_back(SMALLPOCK4POS);
+			LBESlots.push_back(SMALLPOCK5POS);
+			LBESlots.push_back(SMALLPOCK6POS);
+			LBESlots.push_back(SMALLPOCK7POS);
+			LBESlots.push_back(SMALLPOCK8POS);
+			LBESlots.push_back(SMALLPOCK9POS);
+			LBESlots.push_back(SMALLPOCK10POS);
+			LBESlots.push_back(MEDPOCK1POS);
+			LBESlots.push_back(MEDPOCK2POS);
+			break;
+		case LTHIGHPOCKPOS:
+			LBESlots.push_back(SMALLPOCK11POS);
+			LBESlots.push_back(SMALLPOCK12POS);
+			LBESlots.push_back(SMALLPOCK13POS);
+			LBESlots.push_back(SMALLPOCK14POS);
+			LBESlots.push_back(MEDPOCK3POS);
+			break;
+		case RTHIGHPOCKPOS:
+			LBESlots.push_back(SMALLPOCK15POS);
+			LBESlots.push_back(SMALLPOCK16POS);
+			LBESlots.push_back(SMALLPOCK17POS);
+			LBESlots.push_back(SMALLPOCK18POS);
+			LBESlots.push_back(MEDPOCK4POS);
+			break;
+		case CPACKPOCKPOS:
+			LBESlots.push_back(SMALLPOCK19POS);
+			LBESlots.push_back(SMALLPOCK20POS);
+			LBESlots.push_back(SMALLPOCK21POS);
+			LBESlots.push_back(SMALLPOCK22POS);
+			LBESlots.push_back(BIGPOCK1POS);
+			LBESlots.push_back(BIGPOCK2POS);
+			LBESlots.push_back(BIGPOCK3POS);
+			break;
+		case BPACKPOCKPOS:
+			LBESlots.push_back(SMALLPOCK23POS);
+			LBESlots.push_back(SMALLPOCK24POS);
+			LBESlots.push_back(SMALLPOCK25POS);
+			LBESlots.push_back(SMALLPOCK26POS);
+			LBESlots.push_back(SMALLPOCK27POS);
+			LBESlots.push_back(SMALLPOCK28POS);
+			LBESlots.push_back(SMALLPOCK29POS);
+			LBESlots.push_back(SMALLPOCK30POS);
+			LBESlots.push_back(BIGPOCK4POS);
+			LBESlots.push_back(BIGPOCK5POS);
+			LBESlots.push_back(BIGPOCK6POS);
+			LBESlots.push_back(BIGPOCK7POS);
+			break;
+		default:
+			DebugBreak();
+	}
+	return;
+}
+
+
+// CHRISL: New function to handle moving soldier items to lbe items
+BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj )
+{
+	std::vector<INT8> LBESlots;
+	// Determine which LBE item we're removing so we can associate the correct pockets with it.
+	GetLBESlots(uiHandPos, LBESlots);
+
+	CreateLBE(&(pSoldier->inv[uiHandPos]), pSoldier->ubID, LBESlots.size());
+	LBENODE* pLBE = pSoldier->inv[uiHandPos].GetLBEPointer();
+	for(unsigned int i=0; i<LBESlots.size(); i++)
+	{
+		// Is there an item in this pocket?
+		if(pSoldier->inv[LBESlots[i]].exists() == true)
+		{
+			pSoldier->inv[LBESlots[i]].MoveThisObjectTo(pLBE->inv[i]);
+		}
+	}
+
+	if (DestroyLBEIfEmpty(&pSoldier->inv[uiHandPos]) == true) {
+		return(FALSE);
+	}
+
+	return (TRUE);
+}
+
+// CHRISL: New function to handle moving lbe items to soldier items
+BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj )
+{
+	std::vector<INT8> LBESlots;
+
+	// Determine which LBE item we're adding so we can associate the correct pockets with it.
+	GetLBESlots(uiHandPos, LBESlots);
+
+	if(pSoldier->inv[uiHandPos].exists() == false)
+		MoveItemsToActivePockets(pSoldier, LBESlots, uiHandPos, pObj);
+	if(pObj->IsLBE() == false) {
+		return (FALSE);
+	}
+
+	LBENODE* pLBE = pObj->GetLBEPointer();
+	for(unsigned int i=0; i<LBESlots.size(); i++)
+	{
+		// Is there an item in this LBE pocket?
+		if(pLBE->inv[i].exists() == true)
+		{
+			pLBE->inv[i].MoveThisObjectTo(pSoldier->inv[LBESlots[i]]);
+		}
+	}
+	if (DestroyLBEIfEmpty(pObj) == false) {
+		//we should have copied all the items from the LBE to the soldier
+		//which means the LBE should be empty and destroyed
+		DebugBreak();
+	}
+
+	return (TRUE);
+}
+
+// CHRISL: Find an unused LBE Pack index
+INT16 GetFreeLBEPackIndex( void )
+{
+	UINT16 uiCount;
+	for(uiCount=0; uiCount < LBEArray.size(); uiCount++)
+	{
+		if ( LBEArray[ uiCount ].lbeIndex == 0)
+			return( (INT16)uiCount );
+	}
+
+	//ADB this is a mem leak!!!!!!!
+	//LBENODE *filler = new LBENODE;
+	//LBEArray.push_back(*filler);
+	LBEArray.push_back(LBENODE());
+	return(uiCount);
+}
+
 LBETYPE::LBETYPE(){
 	memset(this, 0, SIZEOF_LBETYPE);
-	lbePocketIndex.resize(ITEMS_IN_LBE);
+	lbePocketIndex.clear();
+	lbePocketIndex.resize(MAX_ITEMS_IN_LBE);
 }
 LBETYPE::LBETYPE(const LBETYPE& src) {
 	memcpy(this, &src, SIZEOF_LBETYPE);
-	lbePocketIndex.resize(ITEMS_IN_LBE);
 	lbePocketIndex = src.lbePocketIndex;
 }
 LBETYPE& LBETYPE::operator=(const LBETYPE& src){
@@ -60,18 +312,18 @@ bool OBJECTTYPE::IsLBE()
 
 //here we DO care about which subObject in the stack it is
 //although currently LBEs cannot be stacked, it could change
-LBENODE* OBJECTTYPE::GetLBEPointer(int subObject)
+LBENODE* OBJECTTYPE::GetLBEPointer(int stackSlot)
 {
 	PERFORMANCE_MARKER
-	return &(LBEArray[GetLBEIndex(subObject)]);
+	return &(LBEArray[GetLBEIndex(stackSlot)]);
 }
 
 //here we DO care about which subObject in the stack it is
 //although currently LBEs cannot be stacked, it could change
-int OBJECTTYPE::GetLBEIndex(int subObject)
+int OBJECTTYPE::GetLBEIndex(int stackSlot)
 {
 	PERFORMANCE_MARKER
-	return (*this)[subObject]->data.misc.usBombItem;
+	return (*this)[stackSlot]->data.misc.usBombItem;
 }
 
 bool OBJECTTYPE::exists()

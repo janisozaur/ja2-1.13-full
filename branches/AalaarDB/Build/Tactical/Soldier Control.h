@@ -1396,7 +1396,6 @@ public:
 
 	// Ugly temporary solution
 	void CopyOldInventoryToNew();
-	void CopyNewInventoryToOld();
 
 public:
 	// ID

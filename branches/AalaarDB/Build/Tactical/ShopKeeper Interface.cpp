@@ -271,8 +271,6 @@ SKIRGBCOLOR SkiGlowColorsA[]={
 #define		DELAY_FOR_SHOPKEEPER_IDLE_QUOTE 20000
 #define		CHANCE_FOR_SHOPKEEPER_IDLE_QUOTE 40
 
-#define		MAX_SUBOBJECTS_PER_OBJECT					max( MAX_OBJECTS_PER_SLOT, ( 2 + MAX_ATTACHMENTS ) )	// (2nd part is main item, ammo/payload, and 4 attachments)
-
 #define		REALLY_BADLY_DAMAGED_THRESHOLD		30
 
 #define		REPAIR_DELAY_IN_HOURS							6
@@ -338,7 +336,6 @@ INVENTORY_IN_SLOT	ArmsDealerOfferArea[ SKI_NUM_TRADING_INV_SLOTS ];
 INVENTORY_IN_SLOT	PlayersOfferArea[ SKI_NUM_TRADING_INV_SLOTS ];
 
 std::vector<OBJECTTYPE> subObjects;
-//OBJECTTYPE	gSubObject[ MAX_SUBOBJECTS_PER_OBJECT ];
 
 BOOLEAN		gfHavePurchasedItemsFromTony = FALSE;
 

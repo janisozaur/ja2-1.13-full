@@ -2137,7 +2137,7 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 	BOOLEAN			fObjectInOpenable = FALSE;
 	INT8		bTerrainID;
 
-	Assert( pObject->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT);
+	//Assert( pObject->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT);
 
 	// ATE: Check if the gridno is OK
 	if ( (*psGridNo) == NOWHERE )

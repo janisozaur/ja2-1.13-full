@@ -345,27 +345,63 @@ enum
 };
 
 
-
+//TODO
 STR16		PocketText[] = {
-	L"Helmet",
-	L"Vest",
-	L"Leg",
-	L"Head1",
-	L"Head2",
-	L"Hand",
-	L"Second Hand",
-	L"Bigpock1",
-	L"Bigpock2",
-	L"Bigpock3",
-	L"Bigpock4",
-	L"Smallpock1",
-	L"Smallpock2",
-	L"Smallpock3",
-	L"Smallpock4",
-	L"Smallpock5",
-	L"Smallpock6",
-	L"Smallpock7",
-	L"Smallpock8",
+	L"HELMETPOS",
+	L"VESTPOS",
+	L"LEGPOS",
+	L"HEAD1POS",
+	L"HEAD2POS",
+	L"HANDPOS",
+	L"SECONDHANDPOS",
+	L"VESTPOCKPOS",
+	L"LTHIGHPOCKPOS",
+	L"RTHIGHPOCKPOS",
+	L"CPACKPOCKPOS",
+	L"BPACKPOCKPOS",
+	L"GUNSLINGPOCKPOS",
+	L"KNIFEPOCKPOS",
+	L"BIGPOCK1POS (BODYPOSFINAL)",
+	L"BIGPOCK2POS",
+	L"BIGPOCK3POS",
+	L"BIGPOCK4POS",
+	L"BIGPOCK5POS",
+	L"BIGPOCK6POS",
+	L"BIGPOCK7POS",
+	L"MEDPOCK1POS (BIGPOCKFINAL)",
+	L"MEDPOCK2POS",
+	L"MEDPOCK3POS",
+	L"MEDPOCK4POS",
+	L"SMALLPOCK1POS (MEDPOCKFINAL)",
+	L"SMALLPOCK2POS",
+	L"SMALLPOCK3POS",
+	L"SMALLPOCK4POS",
+	L"SMALLPOCK5POS",
+	L"SMALLPOCK6POS",
+	L"SMALLPOCK7POS",
+	L"SMALLPOCK8POS",
+	L"SMALLPOCK9POS",
+	L"SMALLPOCK10POS",
+	L"SMALLPOCK11POS",
+	L"SMALLPOCK12POS",
+	L"SMALLPOCK13POS",
+	L"SMALLPOCK14POS",
+	L"SMALLPOCK15POS",
+	L"SMALLPOCK16POS",
+	L"SMALLPOCK17POS",
+	L"SMALLPOCK18POS",
+	L"SMALLPOCK19POS",
+	L"SMALLPOCK20POS",
+	L"SMALLPOCK21POS",
+	L"SMALLPOCK22POS",
+	L"SMALLPOCK23POS",
+	L"SMALLPOCK24POS",
+	L"SMALLPOCK25POS",
+	L"SMALLPOCK26POS",
+	L"SMALLPOCK27POS",
+	L"SMALLPOCK28POS",
+	L"SMALLPOCK29POS",
+	L"SMALLPOCK30POS",
 };
 
 
@@ -3200,6 +3236,9 @@ void CreateDestroyDisplayNPCInventoryPopup( UINT8 ubAction )
 				usPosY = QUEST_DBS_NPC_INV_POPUP_Y + 40;
 				for( i=0; i<pSoldier->inv.size(); i++)
 				{
+					if (pSoldier->inv[i].exists() == false) {
+						continue;
+					}
 //					if ( !LoadItemInfo( pSoldier->inv[ i ].usItem, zItemName, zItemDesc ) )
 //						Assert(0);
 						wcscpy( zItemName, ShortItemNames[ pSoldier->inv[ i ].usItem ] );

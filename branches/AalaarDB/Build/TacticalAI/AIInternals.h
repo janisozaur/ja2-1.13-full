@@ -177,7 +177,6 @@ INT32 EstimateStabDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent,	UINT8 ub
 INT32 EstimateThrowDamage(SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *pOpponent, INT16 sGridno);
 INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDestLevel, BOOLEAN fAddCostAfterClimbingUp, BOOLEAN * pfClimbingNecessary, INT16 * psClimbGridNo );
 
-BOOLEAN FindBetterSpotForItem( SOLDIERTYPE * pSoldier, INT8 bSlot );
 INT16 FindClosestClimbPointAvailableToAI( SOLDIERTYPE * pSoldier, INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN fClimbUp );
 INT16 GetInterveningClimbingLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDestLevel, BOOLEAN * pfClimbingNecessary );
 UINT8 GetTraversalQuoteActionID( INT8 bDirection );

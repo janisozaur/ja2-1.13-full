@@ -79,7 +79,6 @@ public:
 	// Note!	These two functions should ONLY be used either just before saving to a
 	// file (NewToOld) or after loading a file (OldToNew).
 	void CopyOldInventoryToNew();
-	void CopyNewInventoryToOld();
 
 public:
 	//Bulletproofing so static detailed placements aren't used to tactically create soldiers.

@@ -257,11 +257,10 @@ void HourlyLarryUpdate( void )
 						AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, pSoldier->ubProfile, GetWorldTotalMin() , -( usCashAmount ) );
 						// give Larry some booze and set slot etc values appropriately
 						// CHRISL: Change final parameter to allow dynamic control of inventory slots
-						bBoozeSlot = FindEmptySlotWithin( pSoldier, HANDPOS, (NUM_INV_SLOTS-1) );
+						bBoozeSlot = FindEmptySlotWithin( pSoldier, HANDPOS, NUM_INV_SLOTS );
 						if ( bBoozeSlot != NO_SLOT )
 						{
 							// give Larry booze here
-							DeleteObj(&pSoldier->inv[bBoozeSlot]);
 							CreateItem( ALCOHOL, 100, &(pSoldier->inv[bBoozeSlot]) );
 						}
 						bSlot = bBoozeSlot;
@@ -290,11 +289,10 @@ void HourlyLarryUpdate( void )
 					AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, pSoldier->ubProfile, GetWorldTotalMin() , -( usCashAmount ) );
 					// give Larry some booze and set slot etc values appropriately
 					// CHRISL: Change final parameter to allow dynamic control of inventory slots
-					bBoozeSlot = FindEmptySlotWithin( pSoldier, HANDPOS, (NUM_INV_SLOTS-1) );
+					bBoozeSlot = FindEmptySlotWithin( pSoldier, HANDPOS, NUM_INV_SLOTS );
 					if ( bBoozeSlot != NO_SLOT )
 					{
 						// give Larry booze here
-						DeleteObj(&pSoldier->inv[bBoozeSlot]);
 						CreateItem( ALCOHOL, 100, &(pSoldier->inv[bBoozeSlot]) );
 					}
 					bSlot = bBoozeSlot;

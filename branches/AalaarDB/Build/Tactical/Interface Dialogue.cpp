@@ -1917,7 +1917,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					INT8 bInvPos;
 
 					// Look for item....
-					bInvPos = FindObj( pSoldier, 227 );
+					bInvPos = FindObj( pSoldier, LETTER );
 
 					AssertMsg( bInvPos != NO_SLOT, "Interface Dialogue.C:	Gift item does not exist in NPC." );
 

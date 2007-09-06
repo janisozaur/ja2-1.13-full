@@ -1096,6 +1096,9 @@ BOOLEAN MERCPROFILESTRUCT::Load(HWFILE hFile, bool forceLoadOldVersion)
 		{
 			return(FALSE);
 		}
+		inv.resize(size);
+		bInvStatus.resize(size);
+		bInvNumber.resize(size);
 		int item;
 		int status;
 		int number;
@@ -1112,9 +1115,9 @@ BOOLEAN MERCPROFILESTRUCT::Load(HWFILE hFile, bool forceLoadOldVersion)
 			{
 				return(FALSE);
 			}
-			inv.push_back(item);
-			bInvStatus.push_back(status);
-			bInvNumber.push_back(number);
+			inv[x] = item;
+			bInvStatus[x] = status;
+			bInvNumber[x] = number;
 		}
 		if ( this->uiProfileChecksum != this->GetChecksum() )
 		{

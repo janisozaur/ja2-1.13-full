@@ -147,7 +147,7 @@ BobbyRayPurchaseStruct BobbyRayPurchases[ MAX_PURCHASE_AMOUNT ];
 #define		NUMBER_GUNS_FILTER_BUTTONS			9
 #define		NUMBER_AMMO_FILTER_BUTTONS			8
 #define		NUMBER_ARMOUR_FILTER_BUTTONS		4
-#define		NUMBER_MISC_FILTER_BUTTONS			9
+#define		NUMBER_MISC_FILTER_BUTTONS			10
 #define		NUMBER_USED_FILTER_BUTTONS			3
 
 #define		BOBBYR_GUNS_FILTER_BUTTON_GAP			BOBBYR_CATALOGUE_BUTTON_GAP - 1
@@ -670,9 +670,10 @@ BOOLEAN InitBobbyRMiscFilterBar()
 {
 	PERFORMANCE_MARKER
 	UINT8	i;
-	UINT16	usPosX;
+	UINT16	usPosX = 0, usPosY = 0;
 	UINT8	bCurMode;
-	UINT16	usYOffset = 0;
+	UINT16	usYOffset = 25, sItemWidth = 8;
+	UINT16	usXOffset = BOBBYR_MISC_FILTER_BUTTON_GAP;
 
 	bCurMode = 0;
 	usPosX = FILTER_BUTTONS_MISC_START_X;
@@ -686,26 +687,20 @@ BOOLEAN InitBobbyRMiscFilterBar()
 		if((UsingNewInventorySystem() == false) && ubFilterMiscButtonValues[bCurMode] == BOBBYR_FILTER_MISC_LBEGEAR)
 			continue;
 
-		// Next row
-		if (i > 7)
-		{
-			usPosX = FILTER_BUTTONS_MISC_START_X;
-			usYOffset = 25;
-		}
+		usPosX = FILTER_BUTTONS_MISC_START_X + ( (i % sItemWidth) * usXOffset);
+		usPosY = FILTER_BUTTONS_Y + ( (i / sItemWidth) * usYOffset);
 
 		// Filter buttons
 		guiBobbyRFilterMisc[i] = CreateIconAndTextButton( guiBobbyRFilterImage, BobbyRFilter[BOBBYR_FILTER_MISC_BLADE+i], BOBBYR_GUNS_BUTTON_FONT, 
 													BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR, 
 													BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR, 
 													TEXT_CJUSTIFIED, 
-													usPosX, FILTER_BUTTONS_Y + usYOffset, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													usPosX, usPosY, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnBobbyRFilterMiscCallback);
 
 		SetButtonCursor(guiBobbyRFilterMisc[i], CURSOR_LAPTOP_SCREEN);
 
 		MSYS_SetBtnUserData( guiBobbyRFilterMisc[i], 0, ubFilterMiscButtonValues[bCurMode]);
-
-		usPosX += BOBBYR_MISC_FILTER_BUTTON_GAP;
 		bCurMode++;
 	}
 	
@@ -3046,7 +3041,9 @@ void UpdateMiscFilterButtons()
 	EnableButton(guiBobbyRFilterMisc[5]);
 	EnableButton(guiBobbyRFilterMisc[6]);
 	EnableButton(guiBobbyRFilterMisc[7]);
-	EnableButton(guiBobbyRFilterMisc[8]);
+	if(guiBobbyRFilterMisc[8])
+		EnableButton(guiBobbyRFilterMisc[8]);
+	EnableButton(guiBobbyRFilterMisc[9]);
 
 	switch (guiCurrentMiscFilterMode)
 	{
@@ -3078,7 +3075,7 @@ void UpdateMiscFilterButtons()
 			DisableButton(guiBobbyRFilterMisc[8]);
 			break;
 		case IC_MISC:
-			DisableButton(guiBobbyRFilterMisc[8]);
+			DisableButton(guiBobbyRFilterMisc[9]);
 			break;
 	}
 

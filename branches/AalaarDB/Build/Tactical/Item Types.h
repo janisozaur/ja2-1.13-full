@@ -177,9 +177,7 @@ typedef enum
 class OBJECTTYPE;
 class SOLDIERTYPE;
 
-//ADB TODO if LBENODE::inv is made variable sized, replace all ITEMS_IN_LBE with inv.size()
-//also TODO find and replace all 12 with ITEMS_IN_LBE
-#define ITEMS_IN_LBE 12
+#define MAX_ITEMS_IN_LBE 12
 
 //CHRISL:
 class LBENODE
@@ -187,7 +185,7 @@ class LBENODE
 public:
 	//ADB TODO make this a variable sized vector???
 	LBENODE() { initialize();};
-	void	initialize() {inv.clear(); inv.resize(ITEMS_IN_LBE);};
+	void	initialize() {inv.clear();};
 	BOOLEAN	Load( HWFILE hFile );
 	BOOLEAN	Save( HWFILE hFile );
 
@@ -197,10 +195,21 @@ public:
 	BOOLEAN				ZipperFlag;
 	UINT32				uiNodeChecksum;
 	char				endOfPOD;
-	//OBJECTTYPE			inv[ITEMS_IN_LBE];  //compiler complains about too big an array since OBJECTTYPE's size is unknown at this time
+	//compiler complains about too big an array since OBJECTTYPE's size is unknown at this time, because of forward declaration
+	//OBJECTTYPE			inv[ITEMS_IN_LBE];
 	std::vector<OBJECTTYPE> inv;
 };
 #define SIZEOF_LBENODE_POD (offsetof(LBENODE, endOfPOD))
+void	CreateLBE(OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets);
+bool	DestroyLBEIfEmpty(OBJECTTYPE* pObj);
+void	GetLBESlots(UINT32 LBEType, std::vector<INT8>& LBESlots);
+void	MoveItemsInSlotsToLBE( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, LBENODE* pLBE, OBJECTTYPE* pObj);
+
+// CHRISL:
+BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, UINT32 uiHandPos, OBJECTTYPE *pObj );
+BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
+BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
+INT16 GetFreeLBEPackIndex( void );
 
 extern	std::vector<LBENODE>	LBEArray;
 
@@ -421,8 +430,9 @@ public:
 	bool	operator==(const OBJECTTYPE& compare)const;
 	bool	exists();
 	bool	IsLBE();
-	LBENODE*	GetLBEPointer(int subObject = 0);
-	int		GetLBEIndex(int subObject = 0);
+	LBENODE*	GetLBEPointer(int stackSlot = 0);
+	int		GetLBEIndex(int stackSlot = 0);
+
 
 	UINT16	GetWeightOfObjectInStack(unsigned int index = 0);
 	int		AddObjectsToStack(int howMany, int objectStatus = 100);

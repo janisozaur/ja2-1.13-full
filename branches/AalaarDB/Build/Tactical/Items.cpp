@@ -1382,9 +1382,11 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 
 	ubSlotLimit = Item[usItem].ubPerPocket;
 	if (UsingNewInventorySystem() == false) {
-		if (bSlot >= BIGPOCKFINAL && bSlot != STACK_SIZE_LIMIT && ubSlotLimit > 1)
-		{
-			ubSlotLimit /= 2;
+		if (bSlot != STACK_SIZE_LIMIT) {//if it is stack size limit we want it to be a big slot
+			if (bSlot >= BIGPOCKFINAL && ubSlotLimit > 1)
+			{
+				ubSlotLimit /= 2;
+			}
 		}
 		return( ubSlotLimit );
 	}
@@ -1718,7 +1720,7 @@ INT8 FindEmptySlotWithin( SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper )
 	PERFORMANCE_MARKER
 	INT8	bLoop;
 
-	for (bLoop = bLower; bLoop <= bUpper; bLoop++)
+	for (bLoop = bLower; bLoop < bUpper; bLoop++)
 	{
 		// CHRISL: Only look at valid pockets
 		if((UsingNewInventorySystem() == false) && !oldInv[bLoop])
@@ -2466,50 +2468,52 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 #endif
 
 		// Check if we're looking at a LBENODE or not
-		if(pObject->IsLBE())
+		if(pObject->IsLBE() == false)
 		{
-			if(pObject->GetLBEIndex(numStacked) != NULL)
+			continue;
+		}
+		LBENODE* pLBE = pObject->GetLBEPointer(numStacked);
+		if(pLBE)
+		{
+			newSize = 0;
+			for(unsigned int x = 0; x < pLBE->inv.size(); ++x)
 			{
-				newSize = 0;
-				for(cnt=0; cnt<ITEMS_IN_LBE; cnt++)
+				if(pLBE->inv[x].exists() == true)
 				{
-					if(pObject->GetLBEPointer(numStacked)->inv[cnt].exists() == true)
-					{
-						testSize = CalculateItemSize(&(pObject->GetLBEPointer(numStacked)->inv[cnt]));
-						newSize = (testSize > newSize) ? testSize : newSize;
-					}
+					testSize = CalculateItemSize(&(pLBE->inv[x]));
+					newSize = (testSize > newSize) ? testSize : newSize;
 				}
 			}
-			// Resize based on contents
-			if(newSize > 0)
+		}
+		// Resize based on contents
+		if(newSize > 0)
+		{
+			psFound = FALSE;
+			for(newSizeX=0; newSizeX<6; newSizeX++)
 			{
-				psFound = FALSE;
-				for(newSizeX=0; newSizeX<6; newSizeX++)
+				for(newSizeY=0; newSizeY<4; newSizeY++)
 				{
-					for(newSizeY=0; newSizeY<4; newSizeY++)
+					if(newSize == cisPocketSize[newSizeX][newSizeY])
 					{
-						if(newSize == cisPocketSize[newSizeX][newSizeY])
-						{
-							psFound = TRUE;
-							break;
-						}
-					}
-					if(psFound)
+						psFound = TRUE;
 						break;
+					}
 				}
-				if((originalSizeX-2)>=newSizeX)	// Stored item is much smaller then an empty LBE item.  Don't change size
-					iSize = iSize;
-				else if((originalSizeX-1)==newSizeX)	// Stored item is large enough to increase LBE item size.
-				{
-					if(newSizeY > originalSizeY)
-						originalSizeY = newSizeY;
-					iSize = cisPocketSize[originalSizeX][originalSizeY];
-				}
-				else	// Stored item is very large compared to the LBE item.
-				{
-					originalSizeY = 3;
-					iSize = cisPocketSize[originalSizeX][originalSizeY];
-				}
+				if(psFound)
+					break;
+			}
+			if((originalSizeX-2)>=newSizeX)	// Stored item is much smaller then an empty LBE item.  Don't change size
+				iSize = iSize;
+			else if((originalSizeX-1)==newSizeX)	// Stored item is large enough to increase LBE item size.
+			{
+				if(newSizeY > originalSizeY)
+					originalSizeY = newSizeY;
+				iSize = cisPocketSize[originalSizeX][originalSizeY];
+			}
+			else	// Stored item is very large compared to the LBE item.
+			{
+				originalSizeY = 3;
+				iSize = cisPocketSize[originalSizeX][originalSizeY];
 			}
 		}
 	}
@@ -2607,11 +2611,12 @@ UINT16 OBJECTTYPE::GetWeightOfObjectInStack(unsigned int index)
 		// Are we looking at an LBENODE item?  New inventory only.
 		if(pItem->usItemClass == IC_LBEGEAR && IsLBE() && (UsingNewInventorySystem() == true))
 		{
-			for ( int subObjects = 0; subObjects < ITEMS_IN_LBE; subObjects++)
+			LBENODE* pLBE = GetLBEPointer(index);
+			for ( unsigned int subObjects = 0; subObjects < pLBE->inv.size(); subObjects++)
 			{
-				if (GetLBEPointer(index)->inv[subObjects].exists() == true)
+				if (pLBE->inv[subObjects].exists() == true)
 				{
-					weight += CalculateObjectWeight(&(GetLBEPointer(index)->inv[subObjects]));
+					weight += CalculateObjectWeight(&(pLBE->inv[subObjects]));
 				}
 			}
 			//do not search for attachments to an LBE
@@ -3847,11 +3852,11 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 					// CHRISL: Adjust parameters to include the new inventory system
 					if (FitsInBigPocketOnly(pSoldier->inv[SECONDHANDPOS].usItem) == true)
 					{
-						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (BIGPOCKFINAL-1) );
+						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, BIGPOCKFINAL );
 					}
 					else
 					{
-						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (NUM_INV_SLOTS-1) );
+						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, NUM_INV_SLOTS );
 					}
 
 					if (bNewPos == NO_SLOT)
@@ -3905,6 +3910,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 			{
 				return( FALSE );
 			}
+			break;
 		case VESTPOCKPOS:
 			if (Item[pObj->usItem].usItemClass != IC_LBEGEAR || LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass != VEST_PACK)
 			{
@@ -4060,6 +4066,12 @@ BOOLEAN DropObjIfThereIsRoom( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pO
 	}
 }
 
+void TryToStackThisItem(SOLDIERTYPE* pSoldier, UINT8 index)
+{
+	PERFORMANCE_MARKER
+	Assert(UsingNewInventorySystem() == false);
+	
+}
 
 BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 {
@@ -4306,18 +4318,192 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	return( TRUE );
 }
 
+bool TryToStackInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, int bSlot)
+{
+	// CHRISL: Use new ItemSlotLimit function if we're using the new inventory system
+	if (pSoldier->inv[bSlot].usItem == pObj->usItem && pSoldier->inv[bSlot].exists() == true)
+	{
+		if (pSoldier->inv[bSlot].ubNumberOfObjects < ItemSlotLimit( pObj, bSlot, pSoldier ) )
+		{
+			// NEW: If in SKI, don't auto-PLACE anything into a stackable slot that's currently hatched out!  Such slots
+			// will disappear in their entirety if sold/moved, causing anything added through here to vanish also!
+			if( !( ( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE ) && ShouldSoldierDisplayHatchOnItem( pSoldier->ubProfile, bSlot ) ) )
+			{
+				pSoldier->inv[bSlot].AddObjectsToStack(*pObj);
+				if (pObj->exists() == false) {
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+bool TryToPlaceInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int& bSlot, int endSlot)
+{
+	bSlot = FindEmptySlotWithin( pSoldier, bSlot, endSlot );
+	if (bSlot == ITEM_NOT_FOUND) {
+		return false;
+	}
+
+	if (bSlot == SECONDHANDPOS) {
+		if (pSoldier->inv[HANDPOS].exists() == true) {
+			return false;
+		}
+	}
+
+	PlaceObject( pSoldier, bSlot, pObj );
+	SetNewItem( pSoldier, bSlot, fNewItem );
+	if (pObj->exists() == false) {
+		return( true );
+	}
+	return false;
+}
+
+bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem)
+{
+	//first, try to STACK the item
+	if (FitsInBigPocketOnly(pObj->usItem) == false) {
+		//try to STACK in small pockets
+		for(int bSlot = BIGPOCKFINAL; bSlot < NUM_INV_SLOTS; bSlot++) {
+			if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
+				return true;
+			}
+		}
+	}
+
+	//try to STACK in big pockets
+	for(int bSlot = BIGPOCK1POS; bSlot < BIGPOCKFINAL; bSlot++) {
+		if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
+			return true;
+		}
+	}
+
+	//try to STACK in any slot
+	for(int bSlot = HELMETPOS; bSlot < BODYPOSFINAL; bSlot++) {
+		if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
+			return true;
+		}
+	}
+
+
+
+	//now try to PLACE
+	if (FitsInBigPocketOnly(pObj->usItem) == false) {
+		//try to PLACE in small pockets
+		for(int bSlot = BIGPOCKFINAL; bSlot < NUM_INV_SLOTS; bSlot++) {
+			if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, NUM_INV_SLOTS) == true) {
+				return true;
+			}
+		}
+	}
+
+	//try to PLACE in big pockets
+	for(int bSlot = BIGPOCK1POS; bSlot < BIGPOCKFINAL; bSlot++) {
+		if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, BIGPOCKFINAL) == true) {
+			return true;
+		}
+	}
+
+	//try to PLACE in any slot
+	for(int bSlot = HELMETPOS; bSlot < BODYPOSFINAL; bSlot++) {
+		if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, BODYPOSFINAL) == true) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool PlaceInAnyPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem)
+{
+	//first, try to STACK the item
+	if (FitsInBigPocketOnly(pObj->usItem) == false) {
+		//try to STACK in small pockets
+		for(int bSlot = BIGPOCKFINAL; bSlot < NUM_INV_SLOTS; bSlot++) {
+			if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
+				return true;
+			}
+		}
+	}
+
+	//try to STACK in big pockets
+	for(int bSlot = BIGPOCK1POS; bSlot < BIGPOCKFINAL; bSlot++) {
+		if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
+			return true;
+		}
+	}
+
+
+
+	if (FitsInBigPocketOnly(pObj->usItem) == false) {
+		//try to PLACE in small pockets
+		for(int bSlot = BIGPOCKFINAL; bSlot < NUM_INV_SLOTS; bSlot++) {
+			if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, NUM_INV_SLOTS) == true) {
+				return true;
+			}
+		}
+	}
+	//try to PLACE in big pockets
+	for(int bSlot = BIGPOCK1POS; bSlot < BIGPOCKFINAL; bSlot++) {
+		if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, BIGPOCKFINAL) == true) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool PlaceInAnyBigPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem)
+{
+	//first, try to STACK the item
+	for(int bSlot = BIGPOCK1POS; bSlot < BIGPOCKFINAL; bSlot++) {
+		if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
+			return true;
+		}
+	}
+
+	//now try to PLACE
+	for(int bSlot = BIGPOCK1POS; bSlot < BIGPOCKFINAL; bSlot++) {
+		if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, BIGPOCKFINAL) == true) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool PlaceInAnySmallOrMediumPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem)
+{
+	if (FitsInBigPocketOnly(pObj->usItem) == true) {
+		return false;
+	}
+
+	//first, try to STACK the item
+	for(int bSlot = BIGPOCKFINAL; bSlot < NUM_INV_SLOTS; bSlot++) {
+		if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
+			return true;
+		}
+	}
+
+	//try to PLACE in small pockets
+	for(int bSlot = BIGPOCKFINAL; bSlot < NUM_INV_SLOTS; bSlot++) {
+		if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, NUM_INV_SLOTS) == true) {
+			return true;
+		}
+	}
+	return false;
+}
+
+
 // CHRISL: Function needed for LBENODE
 extern BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
 
 BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNewItem, INT8 bExcludeSlot )
 {
 	PERFORMANCE_MARKER
-	INT8			bSlot;
 	INVTYPE	* pItem;
 	UINT8			packCombo, backCombo;
 
 	// statuses of extra objects would be 0 if the # exceeds the maximum
-	Assert( pObj->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT);
+	//Assert( pObj->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT);
 
 	//Pulmu bugfix		
 	pObj->ubWeight = CalculateObjectWeight( pObj);
@@ -4516,114 +4702,8 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 			break;
 	}
 
-	if (FitsInBigPocketOnly(pObj->usItem) == true)
-	{
-		// Large object; look for an empty hand/large pocket and dump it in there
-		// FindObjWithin with 0 will search for empty slots!
-		// Madd
-		//bSlot = HANDPOS;
-		//while (1) 
-		// CHRISL
-		for( bSlot = HANDPOS; bSlot < BIGPOCKFINAL; bSlot++)
-		{	
-			bSlot = FindEmptySlotWithin( pSoldier, bSlot, BIGPOCK4POS );
-			if (bSlot == ITEM_NOT_FOUND)
-			{
-				return( FALSE );
-			}
-			if (bSlot == SECONDHANDPOS)
-			{
-				if (pSoldier->inv[HANDPOS].exists() == true)
-				{
-//					bSlot++;
-					continue;
-				}
-			}
-			// this might fail if we're trying to place in HANDPOS,
-			// and SECONDHANDPOS is full
-			PlaceObject( pSoldier, bSlot, pObj );
-			SetNewItem( pSoldier, bSlot, fNewItem );
-			if (pObj->exists() == false)
-			{
-				return( TRUE );
-			}
-//			bSlot++;
-		} 
-	}
-	else
-	{
-		// Small items; don't allow stack/dumping for keys right now as that
-		// would require a bunch of functions for finding the same object by two values...
-		if ( ItemSlotLimit(pObj, STACK_SIZE_LIMIT) > 1 || Item[ pObj->usItem ].usItemClass == IC_KEY || Item[ pObj->usItem ].usItemClass == IC_MONEY )
-		{
-			// First, look for slots with the same object, and dump into them.
-			bSlot = HANDPOS;
-			while (1) 
-			{
-				// CHRISL
-				bSlot = FindObj( pSoldier, pObj->usItem, bSlot, (NUM_INV_SLOTS-1) );
-				if (bSlot == ITEM_NOT_FOUND)
-				{
-					break;
-				}
-				if ( bSlot != bExcludeSlot )
-				{
-					// CHRISL: Use new ItemSlotLimit function if we're using the new inventory system
-					UINT8 isLimit = ItemSlotLimit( pObj, bSlot, pSoldier );
-					if ( ( (Item[ pObj->usItem ].usItemClass == IC_MONEY) && pSoldier->inv[ bSlot ][0]->data.money.uiMoneyAmount < MoneySlotLimit( bSlot ) ) || (Item[ pObj->usItem ].usItemClass != IC_MONEY && pSoldier->inv[bSlot].ubNumberOfObjects < isLimit ) )
-					{
-						// NEW: If in SKI, don't auto-place anything into a stackable slot that's currently hatched out!  Such slots
-						// will disappear in their entirety if sold/moved, causing anything added through here to vanish also!
-						if( !( ( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE ) && ShouldSoldierDisplayHatchOnItem( pSoldier->ubProfile, bSlot ) ) )
-						{
-							PlaceObject( pSoldier, bSlot, pObj );
-							SetNewItem( pSoldier, bSlot, fNewItem );
-							if (pObj->exists() == false)
-							{
-								return( TRUE );
-							}
-						}
-					}
-				}
-				bSlot++;
-			}
-		}
-		// Search for empty slots to dump into, starting with small pockets
-		bSlot = BIGPOCKFINAL;	/* CHRISL */
-		while( 1 )
-		{
-			// CHRISL
-			bSlot = FindEmptySlotWithin( pSoldier, bSlot, (NUM_INV_SLOTS-1) );
-			if (bSlot == ITEM_NOT_FOUND)
-			{
-				break;
-			}
-			PlaceObject( pSoldier, bSlot, pObj );
-			SetNewItem( pSoldier, bSlot, fNewItem );
-			if (pObj->exists() == false)
-			{
-				return( TRUE );
-			}
-			bSlot++;
-		}
-		// now check hands/large pockets
-		bSlot = HANDPOS;
-		while (1)		
-		{
-			// CHRISL
-			bSlot = FindEmptySlotWithin( pSoldier, bSlot, (BIGPOCKFINAL-1) );
-			if (bSlot == ITEM_NOT_FOUND)
-			{
-				break;
-			}
-			PlaceObject( pSoldier, bSlot, pObj );
-			SetNewItem( pSoldier, bSlot, fNewItem );
-			if (pObj->exists() == false)
-			{
-				return( TRUE );
-			}
-			bSlot++;
-		}
+	if (PlaceInAnySlot(pSoldier, pObj, fNewItem) == true) {
+		return TRUE;
 	}
 	return( FALSE );
 }
@@ -4641,8 +4721,6 @@ BOOLEAN RemoveKeyFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECT
 	}
 	else
 	{
-		//*pObj = pSoldier->inv[bPos];
-		
 		// create an object
 		ubItem = pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID;
 
@@ -5570,7 +5648,6 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, UINT16 usItem )
 {
 	PERFORMANCE_MARKER
-	INT8 bLoop;
 	SOLDIERTYPE *pSoldier;
 	BOOLEAN	fReturnVal = FALSE;
 
@@ -5578,14 +5655,14 @@ BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, UINT16 usItem )
 	{
 		return( TRUE );
 	}
-
-	for (bLoop = 0; bLoop < 19; bLoop++)
+	MERCPROFILESTRUCT* pProfile = &gMercProfiles[ ubProfile ];
+	for (unsigned int bLoop = 0; bLoop < pProfile->inv.size(); bLoop++)
 	{
-		if ( gMercProfiles[ ubProfile ].inv[ bLoop ] == usItem )
+		if ( pProfile->inv[ bLoop ] == usItem )
 		{
-			gMercProfiles[ ubProfile ].inv[ bLoop ] = NOTHING;
-			gMercProfiles[ ubProfile ].bInvStatus[ bLoop ] = 0;
-			gMercProfiles[ ubProfile ].bInvNumber[ bLoop ] = 0;				
+			pProfile->inv[ bLoop ] = NOTHING;
+			pProfile->bInvStatus[ bLoop ] = 0;
+			pProfile->bInvNumber[ bLoop ] = 0;				
 
 			fReturnVal = TRUE;
 			break;
@@ -5631,13 +5708,13 @@ void SetMoneyInSoldierProfile( UINT8 ubProfile, UINT32 uiMoney )
 INT8 FindObjectInSoldierProfile( UINT8 ubProfile, UINT16 usItem )
 {
 	PERFORMANCE_MARKER
-	INT8	bLoop;
 
-	for (bLoop = 0; bLoop < 19; bLoop++)
+	MERCPROFILESTRUCT* pProfile = &gMercProfiles[ ubProfile ];
+	for (unsigned int bLoop = 0; bLoop < pProfile->inv.size(); bLoop++)
 	{
-		if ( gMercProfiles[ ubProfile ].bInvNumber[ bLoop ] > 0 )
+		if ( pProfile->bInvNumber[ bLoop ] > 0 )
 		{
-			if ( gMercProfiles[ ubProfile ].inv[ bLoop ] == usItem )
+			if ( pProfile->inv[ bLoop ] == usItem )
 			{
 				return( bLoop );
 			}

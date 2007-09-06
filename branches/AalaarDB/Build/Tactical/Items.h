@@ -83,6 +83,15 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj );
 // Send fNewItem to true to set off new item glow in inv panel
 BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNewItem, INT8 bExcludeSlot = NO_SLOT );
 
+//ADB
+bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem);
+bool PlaceInAnyPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem);
+bool PlaceInAnySmallOrMediumPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem);
+bool PlaceInAnyBigPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem);
+bool TryToStackInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, int bSlot);
+bool TryToPlaceInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int& startSlot, int endSlot);
+
+
 void RemoveInvObject( SOLDIERTYPE *pSoldier, UINT16 usItem );
 void RemoveProhibitedAttachments(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, UINT16 usItem);
 void EjectAmmoAndPlace(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj);

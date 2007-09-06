@@ -2395,48 +2395,6 @@ void Undo_Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 b
 	return;
 }
 
-
-
-BOOLEAN FindBetterSpotForItem( SOLDIERTYPE * pSoldier, INT8 bSlot )
-{
-	PERFORMANCE_MARKER
-	// looks for a place in the slots to put an item in a hand or armour
-	// position, and moves it there.
-	if (bSlot >= BIGPOCK1POS)
-	{
-		return( FALSE );
-	}
-	if (pSoldier->inv[bSlot].exists() == false)
-	{
-		// well that's just fine then!
-		return( TRUE );
-	}
-
-	if (FitsInBigPocketOnly(pSoldier->inv[bSlot].usItem) == true)
-	{
-		// then we're looking for a big pocket
-		// CHRISL: Adjust final parameter to use dynamic inventory endpoint
-		bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (BIGPOCKFINAL-1) );
-	}
-	else
-	{
-		// try a small pocket first
-		// CHRISL: Adjust final parameter to use dynamic inventory endpoint
-		bSlot = FindEmptySlotWithin( pSoldier, SMALLPOCK1POS, (NUM_INV_SLOTS-1) );
-		if (bSlot == NO_SLOT)
-		{
-			// CHRISL: Adjust final parameter to use dynamic inventory endpoint
-			bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (BIGPOCKFINAL-1) );
-		}
-	}
-	if (bSlot == NO_SLOT)
-	{
-		return( FALSE );
-	}
-	AssureItemIsInHandPos(pSoldier, bSlot, FOREVER);
-	return( TRUE );
-}
-
 UINT8 GetTraversalQuoteActionID( INT8 bDirection )
 {
 	PERFORMANCE_MARKER

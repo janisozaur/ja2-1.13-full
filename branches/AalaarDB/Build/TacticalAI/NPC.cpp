@@ -88,7 +88,9 @@ INT16	gsCivQuoteSector[NUM_CIVQUOTE_SECTORS][2] =
 #define QUEST_DONE_NUM					200
 #define NO_QUOTE								255
 #define IRRELEVANT							255
-#define NO_MOVE									65535
+//#define NO_MOVE									65535
+//these are now signed shorts, so 65535 is not possible!!
+#define NO_MOVE									-1
 
 NPCQuoteInfo *	gpNPCQuoteInfoArray[NUM_PROFILES] = { NULL };
 NPCQuoteInfo *	gpBackupNPCQuoteInfoArray[NUM_PROFILES] = { NULL };

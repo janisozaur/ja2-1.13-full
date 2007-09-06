@@ -1969,7 +1969,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 		DebugAI( String( "%d decides to pick up %S", pSoldier->ubID, ItemNames[ gWorldItems[ iBestItemIndex ].object.usItem ] ) );
 		if (Item[gWorldItems[ iBestItemIndex ].object.usItem].usItemClass == IC_GUN)
 		{
-			if (FindBetterSpotForItem( pSoldier, HANDPOS ) == FALSE)
+			if (pSoldier->inv[HANDPOS].exists() == true && PlaceInAnyPocket(pSoldier, &pSoldier->inv[HANDPOS], false) == false)
 			{
 				if (pSoldier->bActionPoints < AP_PICKUP_ITEM + AP_PICKUP_ITEM)
 				{

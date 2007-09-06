@@ -556,7 +556,6 @@ UINT32 InitializeJA2(void)
 	//but we don't want to recreate it every single time CTGT is called, so init the GLOCK here
 	CreateItem(GLOCK_17, 100, &GLOCK_17_ForUseWithLOS);
 
-
 #ifdef JA2BETAVERSION
 	#ifdef JA2EDITOR
 

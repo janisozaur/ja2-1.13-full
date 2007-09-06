@@ -2000,7 +2000,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 
 		// See if they have room ( and make sure it's not in hand pos?
 		// CHRISL:
-		bSlot = FindEmptySlotWithin( pTarget, BIGPOCK1POS, (NUM_INV_SLOTS-1) );
+		bSlot = FindEmptySlotWithin( pTarget, BIGPOCK1POS, NUM_INV_SLOTS );
 		if (bSlot == NO_SLOT)
 		{
 			// Add item
