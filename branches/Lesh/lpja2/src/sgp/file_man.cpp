@@ -386,7 +386,7 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 
 	if ( !hFile )
 		return(0);
-
+	
 	return(hFile);
 }
 
@@ -516,7 +516,6 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 			{
 				fprintf(stderr, "Error reading file %d: errno=%d\n",
 					hRealFile, errno);
-
 				return FALSE;
 			}
 
@@ -852,7 +851,14 @@ UINT32 FileGetSize( HWFILE hFile )
 	{
 		//if the library is open
 		if( IsLibraryOpened( sLibraryID ) )
-			uiFileSize = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileLength;
+		{
+			if( (uiFileNum >= (UINT32)gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray ) )
+				uiFileSize = 0xFFFFFFFF;
+			else if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFileID != 0 )
+				uiFileSize = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileLength;
+			else
+				uiFileSize = 0xFFFFFFFF;
+		}
 	}
 
 
@@ -1323,11 +1329,8 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 	//if its a real file, read the data from the file
 	if( sLibraryID == REAL_FILE_LIBRARY_ID )
 	{
-		//Get the handle to the real file
-		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
-
-		UINT32 uiFileSize = FileGetSize( hRealFile );
-		UINT32 uiFilePtr  = FileGetPos( hRealFile );
+		UINT32 uiFileSize = FileGetSize( hFile );
+		UINT32 uiFilePtr  = FileGetPos( hFile );
 
 		return ( uiFilePtr >= uiFileSize );
 	}

@@ -39,4 +39,4 @@ Or you can rename slf-files, so they match to this names in StdSources.
 
 
 NB: I cannot guarantee, that most recent revision of game directory will work with this exe.
-Personally, I am using rev.734 of game data.
+Personally, I am using rev.791 of game data.
