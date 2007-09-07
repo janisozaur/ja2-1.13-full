@@ -704,7 +704,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 			INT32 i;
 			BOOLEAN fSecondFaceItem = FALSE;
 			// CHRISL:
-			for( i = BIGPOCK1POS; i < BIGPOCKFINAL; i++ )
+			for( i = BIGPOCKSTART; i < BIGPOCKFINAL; i++ )
 			{
 				if( Item[ Soldier.inv[ i ].usItem ].usItemClass & IC_FACE )
 				{
@@ -2867,7 +2867,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 		}
 
 		// try to find the appropriate item to attach to!
-		for ( cnt2 = 0; cnt2 < NUM_INV_SLOTS; cnt2++ )
+		for ( cnt2 = INV_START_POS; cnt2 < NUM_INV_SLOTS; cnt2++ )
 		{
 			if ( pSoldier->inv[ cnt2 ].exists() == true && ValidAttachment( gTempObject.usItem, pSoldier->inv[ cnt2 ].usItem ) )
 			{

@@ -86,7 +86,7 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBES
 	{
 		if(pSoldier->inv[LBESlots[x]].exists() == false)
 			continue;
-		for(int i=BODYPOSFINAL; i<NUM_INV_SLOTS; i++)
+		for(int i=BIGPOCKSTART; i<NUM_INV_SLOTS; i++)
 		{
 			if(pSoldier->inv[i].exists() == true)	// Item already in that location
 				continue;
@@ -492,14 +492,21 @@ void OBJECTTYPE::DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany)
 		numToDupe = sourceObject.ubNumberOfObjects;
 	}
 
-	initialize();
-	StackedObjects::iterator iter = sourceObject.objectStack.begin();
-	for (int x = 0; x < numToDupe; ++x) {
-		objectStack.push_back(*iter);
-		++iter;
+	if (numToDupe) {
+		objectStack.clear();
+		this->usItem = sourceObject.usItem;
+		this->fFlags = sourceObject.fFlags;
+		StackedObjects::iterator iter = sourceObject.objectStack.begin();
+		for (int x = 0; x < numToDupe; ++x) {
+			objectStack.push_back(*iter);
+			++iter;
+		}
+		ubNumberOfObjects = numToDupe;
+		ubWeight = CalculateObjectWeight(this);
 	}
-	ubNumberOfObjects = numToDupe;
-	ubWeight = CalculateObjectWeight(this);
+	else {
+		initialize();
+	}
 	return;
 }
 

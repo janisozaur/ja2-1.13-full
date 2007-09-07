@@ -294,7 +294,7 @@ BOOLEAN LoadMercProfiles(void)
 		gMercProfiles[uiLoop].clearInventory();
 		gMercProfiles[uiLoop].ubInvUndroppable = 0;
 		// Next, go through and assign everything but lbe gear
-		for(uiLoop2=0; uiLoop2<OldInventory::NUM_INV_SLOTS; uiLoop2++)
+		for(uiLoop2=INV_START_POS; uiLoop2<OldInventory::NUM_INV_SLOTS; uiLoop2++)
 		{
 			gMercProfiles[uiLoop].inv[uiLoop2] = gMercProfileGear[uiLoop].inv[uiLoop2];
 			gMercProfiles[uiLoop].bInvStatus[uiLoop2] = gMercProfileGear[uiLoop].iStatus[uiLoop2];

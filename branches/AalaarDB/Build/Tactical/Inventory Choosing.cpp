@@ -1688,7 +1688,7 @@ void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 	//Look for any face item in the big pocket positions (the only place they can be added in the editor)
 	//If any are found, then don't assign any
 	// CHRISL: Change static inventory pocket definition to dynamic
-	for( i = BIGPOCK1POS; i < BIGPOCKFINAL; i++ )
+	for( i = BIGPOCKSTART; i < BIGPOCKFINAL; i++ )
 	{
 		if( Item[ pp->Inv[ i ].usItem ].usItemClass == IC_FACE ) 
 		{
@@ -2071,41 +2071,38 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 {
 	PERFORMANCE_MARKER
 	INT8 i;
-	if( FitsInBigPocketOnly(pObject->usItem) == true )
-	{ //ubPerPocket == 0 will only fit in large pockets.
-		pObject->ubNumberOfObjects = 1;
+
+	if( FitsInSmallPocket(pObject) == true ) {
 		// CHRISL: Change static inventory pocket definition to dynamic
-		for( i = BIGPOCK1POS; i < BIGPOCKFINAL; i++ )
-		{
-			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
-			{
-				pp->Inv[ i ] = *pObject;
-				return TRUE;
-			}
-		}
-		return FALSE;
-	}
-	else
-	{
-		pObject->ubNumberOfObjects = (UINT8)min( ItemSlotLimit(pObject, BIGPOCK1POS), pObject->ubNumberOfObjects );
 		//try to get it into a small pocket first
-		// CHRISL: Change static inventory pocket definition to dynamic
-		for( i = BIGPOCKFINAL; i < NUM_INV_SLOTS; i++ )
+		for( i = SMALLPOCKSTART; i < SMALLPOCKFINAL; i++ )
 		{
-			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
+			if( pp->Inv[ i ].exists() == false && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
 			{
 				pp->Inv[ i ] = *pObject;
 				return TRUE;
 			}
 		}
-		// CHRISL: Change static inventory pocket definition to dynamic
-		for( i = BIGPOCK1POS; i < BIGPOCKFINAL; i++ )
-		{ //no space free in small pockets, so put it into a large pocket.
-			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
+	}
+
+	if( FitsInMediumPocket(pObject) == true ) {
+		for( i = MEDPOCKSTART; i < MEDPOCKFINAL; i++ )
+		{
+			if( pp->Inv[ i ].exists() == false && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
 			{
 				pp->Inv[ i ] = *pObject;
 				return TRUE;
 			}
+		}
+	}
+
+	// CHRISL: Change static inventory pocket definition to dynamic
+	for( i = BIGPOCKSTART; i < BIGPOCKFINAL; i++ )
+	{ //no space free in small pockets, so put it into a large pocket.
+		if( pp->Inv[ i ].exists() == false && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
+		{
+			pp->Inv[ i ] = *pObject;
+			return TRUE;
 		}
 	}
 	return FALSE;

@@ -2116,36 +2116,58 @@ void CheckGridNoOfItemsInMapScreenMapInventory()
 void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArray )
 {
 	PERFORMANCE_MARKER
-#if 0
 	//first, compress the inventory by stacking like items that are reachable, while moving empty items towards the back
 	for (std::vector<WORLDITEM>::iterator iter = pInventory.begin(); iter != pInventory.end(); ++iter) {
-		if (iter->object.exists() == true
-			&& iter->object.ubNumberOfObjects < ItemSlotLimit( iter->object.usItem, STACK_SIZE_LIMIT )) {
-			//if it is active and reachable etc
-			std::vector<WORLDITEM>::iterator second = iter;
-			for (++second; second != pInventory.end(); ++second) {
-				if (second->object.usItem == iter->object.usItem
-					&& second->object.exists() == true) {
-					iter->object.AddObjectsToStack(second->object, second->object.ubNumberOfObjects);
-					if (iter->object.ubNumberOfObjects >= ItemSlotLimit( iter->object.usItem, STACK_SIZE_LIMIT )) {
-						break;
+		//if object exists, we want to try to stack it
+		if (iter->fExists && iter->object.exists() == true) {
+
+			//TODO if it is active and reachable etc
+#if 0
+			if (iter->object.ubNumberOfObjects < ItemSlotLimit( iter->object.usItem, STACK_SIZE_LIMIT )) {
+				std::vector<WORLDITEM>::iterator second = iter;
+				for (++second; second != pInventory.end(); ++second) {
+					if (second->object.usItem == iter->object.usItem
+						&& second->object.exists() == true) {
+						iter->object.AddObjectsToStack(second->object, second->object.ubNumberOfObjects);
+						if (iter->object.ubNumberOfObjects >= ItemSlotLimit( iter->object.usItem, STACK_SIZE_LIMIT )) {
+							break;
+						}
 					}
 				}
 			}
+#endif
 		}
-		else if (iter->object.exists() == false) {
+		else {
+			//object does not exist, so compress the list
 			std::vector<WORLDITEM>::iterator second = iter;
 			for (++second; second != pInventory.end(); ++second) {
-				if (second->object.exists() == true) {
-					//swap and break;
+				if (second->fExists && second->object.exists() == true) {
+					*iter = *second;
+					second->initialize();
+					break;
 				}
+			}
+			if (second == pInventory.end()) {
+				//we reached the end of the list without finding any active item, so we can break out of this loop too!
+				break;
 			}
 		}
 	}
-#endif
+
+	//once compressed, we need only sort the existing items
+	//all empty items should be at the back!!!
+	std::vector<WORLDITEM>::iterator endSort = pInventory.begin();
+	for (unsigned int x = 1; x < pInventory.size(); ++x) {
+		if (pInventory[x].fExists && pInventory[x].object.exists() == true) {
+			++endSort;
+		}
+		else {
+			break;
+		}
+	}
 
 	//ADB I'm not sure qsort will work with OO data, so replace it with stl sort, which is faster anyways
-	std::sort(pInventory.begin(), pInventory.end());
+	std::sort(pInventory.begin(), endSort);
 
 	//then compress it by removing the empty objects, we know they are at the back
 	//we want the size to equal x * MAP_INVENTORY_POOL_SLOT_COUNT

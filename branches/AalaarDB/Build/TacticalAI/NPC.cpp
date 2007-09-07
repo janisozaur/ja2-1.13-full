@@ -905,19 +905,6 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 							}
 							else
 							{
-								// accept - record 17
-								/*
-								{
-
-									SOLDIERTYPE *					pSoldier;
-									INT8									bMoney;
-									INT8									bEmptySlot;
-
-									pSoldier = FindSoldierByProfileID( DARREN, FALSE );
-									bMoney = FindObj( pSoldier, MONEY, BIGPOCK1POS, SMALLPOCK8POS );
-									bEmptySlot = FindObj( pSoldier, NOTHING, BIGPOCK1POS, SMALLPOCK8POS );
-								}
-								*/
 
 								// record amount of bet
 								gMercProfiles[ DARREN ].iBalance = (*pObj)[0]->data.money.uiMoneyAmount;
@@ -1947,7 +1934,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 						// Is this one of us?
 						if ( pSoldier->bTeam == gbPlayerNum )
 						{
-							for (int x = 0; x < NUM_INV_SLOTS; ++x) {
+							for (int x = INV_START_POS; x < NUM_INV_SLOTS; ++x) {
 								if (&(pSoldier->inv[x]) == pObj) {
 									DeleteObj(&pSoldier->inv[x]);
 									DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );

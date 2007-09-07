@@ -1254,14 +1254,6 @@ OLD_MERCPROFILESTRUCT_101::OLD_MERCPROFILESTRUCT_101()
 MERCPROFILESTRUCT::MERCPROFILESTRUCT()
 {
 	PERFORMANCE_MARKER
-	inv.reserve(NUM_INV_SLOTS);
-	bInvStatus.reserve(NUM_INV_SLOTS);
-	bInvNumber.reserve(NUM_INV_SLOTS);
-	for (int idx=0; idx < NUM_INV_SLOTS; ++idx) {
-		inv.push_back(0);
-		bInvStatus.push_back(0);
-		bInvNumber.push_back(0);
-	}
 	initialize();
 }
 

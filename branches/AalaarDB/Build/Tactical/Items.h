@@ -40,9 +40,9 @@ extern void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 );
 extern BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex );
 
 UINT16	CalculateObjectWeight( OBJECTTYPE *pObject );
-extern UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier );
+UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier );
 // CHRISL:
-extern UINT16 CalculateItemSize( OBJECTTYPE *pObject );
+UINT16 CalculateItemSize( OBJECTTYPE *pObject );
 
 
 extern UINT16 TotalPoints( OBJECTTYPE * pObj );
@@ -60,7 +60,6 @@ extern BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE 
 
 // CHRISL: Add new inventory version of ItemSlotLimit function
 UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier = NULL);
-bool FitsInBigPocketOnly(UINT16 usItem);
 
 // Function to put an item in a soldier profile
 // It's very primitive, just finds an empty place!
@@ -84,10 +83,13 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj );
 BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNewItem, INT8 bExcludeSlot = NO_SLOT );
 
 //ADB
+bool FitsInSmallPocket(OBJECTTYPE* pObj);
+bool FitsInMediumPocket(OBJECTTYPE* pObj);
+
 bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem);
 bool PlaceInAnyPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem);
-bool PlaceInAnySmallOrMediumPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem);
-bool PlaceInAnyBigPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem);
+bool PlaceInAnySmallPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem);
+bool PlaceInAnyBigOrMediumPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem);
 bool TryToStackInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, int bSlot);
 bool TryToPlaceInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int& startSlot, int endSlot);
 
@@ -163,7 +165,7 @@ void SwapHandItems( SOLDIERTYPE * pSoldier );
 OBJECTTYPE* FindAttachmentByClass( OBJECTTYPE * pObj, UINT32 uiItemClass );
 void WaterDamage( SOLDIERTYPE *pSoldier );
 
-INT8 FindObj( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower = 0, INT8 bUpper = (NUM_INV_SLOTS-1) );
+INT8 FindObj( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower = 0, INT8 bUpper = NUM_INV_SLOTS );
 
 BOOLEAN ApplyCammo( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs );
 

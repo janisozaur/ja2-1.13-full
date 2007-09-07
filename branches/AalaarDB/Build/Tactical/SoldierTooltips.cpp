@@ -271,6 +271,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		}
 		// weapon in off hand info code block end
 
+		//ADB TODO
 		// large objects in big inventory slots info code block start
 		for ( UINT8 BigSlot = BIGPOCK1POS; BigSlot <= BIGPOCK4POS; BigSlot++ )
 		{

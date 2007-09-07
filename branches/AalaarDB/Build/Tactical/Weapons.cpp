@@ -5746,7 +5746,7 @@ UINT8 GetDamage ( OBJECTTYPE *pObj )
 	else
 	{
 		UINT8 ubDamage = Weapon[ pObj->usItem ].ubImpact;
-		if (FitsInBigPocketOnly(pObj->usItem) == true)
+		if (FitsInSmallPocket(pObj) == true)
 		{
 			ubDamage += GetDamageBonus(pObj);
 		}

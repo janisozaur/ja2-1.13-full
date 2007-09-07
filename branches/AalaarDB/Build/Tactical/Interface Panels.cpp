@@ -1125,7 +1125,7 @@ void ReevaluateItemHatches( SOLDIERTYPE *pSoldier, BOOLEAN fAllValid )
 	else
 	{
 		// mark all inventory positions as valid
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		for ( cnt = INV_START_POS; cnt < NUM_INV_SLOTS; cnt++ )
 		{
 			gbInvalidPlacementSlot[ cnt ] = FALSE;
 		}

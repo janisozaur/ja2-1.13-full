@@ -445,7 +445,7 @@ void DistributeInitialGear(MERCPROFILESTRUCT *pProfile)
 	BOOLEAN			iSet = FALSE;
 
 	// First move profile information to temporary storage
-	for(i=0; i<NUM_INV_SLOTS; i++)
+	for(i=INV_START_POS; i<NUM_INV_SLOTS; i++)
 	{
 		if(pProfile->inv[i] != NOTHING)
 		{
@@ -739,7 +739,7 @@ void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 	else
 	{
 		// CHRISL: Alter the placement of initial equipment to come last.  At this stage, just add items, one pocket at a time
-		for(int i=0; i<NUM_INV_SLOTS; i++)
+		for(int i=INV_START_POS; i<NUM_INV_SLOTS; i++)
 		{
 			if(pProfile->inv[i] == NOTHING)
 			{
@@ -770,7 +770,7 @@ void RedistributeStartingItems(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 	lbeClass = LoadBearingEquipment[lbeIndex].lbeClass;
 
 	// Move non-worn items into temporary storage
-	for(int i=0; i<NUM_INV_SLOTS; i++)
+	for(int i=INV_START_POS; i<NUM_INV_SLOTS; i++)
 	{
 		if(i>=BODYPOSFINAL)
 		{
@@ -804,12 +804,12 @@ void RedistributeStartingItems(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 	}
 
 	// Redistribute stored items with the assumption of the new LBE item
-	for(int i=0; i<NUM_INV_SLOTS; i++)
+	for(int i=INV_START_POS; i<NUM_INV_SLOTS; i++)
 	{
 		if(inv[i] != NONE)
 		{
 			iSize = Item[inv[i]].ItemSize;
-			for(int j=0; j<NUM_INV_SLOTS; j++)
+			for(int j=INV_START_POS; j<NUM_INV_SLOTS; j++)
 			{
 				if(icLBE[j] == sPocket && pProfile->inv[j] == NONE && LBEPocketType[LoadBearingEquipment[lbeIndex].lbePocketIndex[icPocket[j]]].ItemCapacityPerSize[iSize] != NONE)
 				{
@@ -884,7 +884,7 @@ INT32 SpecificFreePocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHow
 					return KNIFEPOCKPOS;
 				break;
 			case IC_BOMB:
-				for(int i=BODYPOSFINAL; i<NUM_INV_SLOTS; i++)
+				for(int i=BIGPOCKSTART; i<NUM_INV_SLOTS; i++)
 				{
 					if(LoadBearingEquipment[Item[pProfile->inv[icLBE[i]]].ubClassIndex].lbePocketIndex[icPocket[i]]==7)	// TNT Pocket
 						if(pProfile->inv[i] == NONE)
@@ -892,7 +892,7 @@ INT32 SpecificFreePocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHow
 				}
 				break;
 			case IC_GRENADE:
-				for(int i=BODYPOSFINAL; i<NUM_INV_SLOTS; i++)
+				for(int i=BIGPOCKSTART; i<NUM_INV_SLOTS; i++)
 				{
 					if(pProfile->inv[i]==NONE && Item[usItem].ItemSize==16 && LoadBearingEquipment[Item[pProfile->inv[icLBE[i]]].ubClassIndex].lbePocketIndex[icPocket[i]]==12)	// Rifle Grenade
 						return i;
@@ -908,7 +908,7 @@ INT32 SpecificFreePocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHow
 				if((UsingNewInventorySystem() == true))
 					if ( pProfile->inv[GUNSLINGPOCKPOS] == NONE && pProfile->inv[BPACKPOCKPOS] == NONE && LBEPocketType[1].ItemCapacityPerSize[Item[usItem].ItemSize]!=0)
 						return GUNSLINGPOCKPOS;
-				for(int i=BODYPOSFINAL; i<NUM_INV_SLOTS; i++)
+				for(int i=BIGPOCKSTART; i<NUM_INV_SLOTS; i++)
 				{
 					lbePocket = LoadBearingEquipment[Item[pProfile->inv[icLBE[i]]].ubClassIndex].lbePocketIndex[icPocket[i]];
 					if(pProfile->inv[i]==NONE && (lbePocket==6 || lbePocket==10) && LBEPocketType[lbePocket].ItemCapacityPerSize[Item[usItem].ItemSize]!=0)
@@ -950,15 +950,15 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv)
 	for(int i=0; i<3; i++)
 	{
 		if(i==0){
-			startPos = MEDPOCKFINAL;
-			endPos = NUM_INV_SLOTS;
+			startPos = SMALLPOCKSTART;
+			endPos = SMALLPOCKFINAL;
 		}
 		else if (i==1){
-			startPos = BIGPOCKFINAL;
+			startPos = MEDPOCKSTART;
 			endPos = MEDPOCKFINAL;
 		}
 		else{
-			startPos = BODYPOSFINAL;
+			startPos = BIGPOCKSTART;
 			endPos = BIGPOCKFINAL;
 		}
 		for(uiPos = startPos; uiPos<endPos; uiPos++)
@@ -1047,7 +1047,7 @@ INT32 AnyFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv)
 	else
 	{
 		usItem = tInv->inv;
-		for(uiPos = BODYPOSFINAL; uiPos < NUM_INV_SLOTS; uiPos ++)
+		for(uiPos = BIGPOCKSTART; uiPos < NUM_INV_SLOTS; uiPos ++)
 		{
 			//ADB TODO
 			iSize = Item[usItem].ubPerPocket;

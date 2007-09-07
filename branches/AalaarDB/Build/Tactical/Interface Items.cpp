@@ -633,7 +633,7 @@ void GenerateProsString( STR16 zItemPros, OBJECTTYPE * pObject, UINT32 uiPixLimi
 		}
 	}
 
-	if (FitsInBigPocketOnly(pObject->usItem) == false) // fits in a small pocket
+	if (FitsInSmallPocket(pObject) == true) // fits in a small pocket
 	{
 		zTemp = Message[STR_SMALL];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
@@ -947,7 +947,7 @@ void InitInventoryVehicle(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCa
 {
 	int cnt;
 
-	for(cnt=0; cnt<NUM_INV_SLOTS; cnt++)
+	for(cnt=INV_START_POS; cnt<NUM_INV_SLOTS; cnt++)
 	{
 		MSYS_RemoveRegion( &gSMInvRegion[ cnt ]);
 		if(vehicleInv[cnt])
@@ -964,7 +964,7 @@ void InitInventoryVehicle(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCa
 // CHRISL: Function to recreate inventory mouse regions
 void ResetMapInvRegions(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, BOOLEAN fSetHighestPrioity)
 {
-	for(int cnt=0; cnt<NUM_INV_SLOTS; cnt++)
+	for(int cnt=INV_START_POS; cnt<NUM_INV_SLOTS; cnt++)
 	{
 		MSYS_RemoveRegion( &gSMInvRegion[ cnt ]);
 		MSYS_DefineRegion( &gSMInvRegion[ cnt ], gSMInvData[ cnt ].sX, gSMInvData[ cnt ].sY, (INT16)(gSMInvData[ cnt ].sX + gSMInvData[ cnt ].sWidth), (INT16)(gSMInvData[ cnt ].sY + gSMInvData[ cnt ].sHeight), ( INT8 )( fSetHighestPrioity ? MSYS_PRIORITY_HIGHEST : MSYS_PRIORITY_HIGH ),
@@ -1057,7 +1057,7 @@ VObjectDesc.ImageFile);
 	MSYS_AddRegion( &gSMInvCamoRegion );
 
 	// Add regions for inventory slots
-	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+	for ( cnt = INV_START_POS; cnt < NUM_INV_SLOTS; cnt++ )
 	{
 		// set inventory pocket coordinates from the table passed in
 		gSMInvData[ cnt ].sX = pRegionDesc[ cnt ].sX;
@@ -1120,7 +1120,7 @@ void DisableInvRegions( BOOLEAN fDisable )
 	PERFORMANCE_MARKER
 	INT32 cnt;
 
-	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+	for ( cnt = INV_START_POS; cnt < NUM_INV_SLOTS; cnt++ )
 	{
 		if ( fDisable )
 		{
@@ -1175,7 +1175,7 @@ void ShutdownInvSlotInterface( )
 
 	// Remove regions
 	// Add regions for inventory slots
-	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+	for ( cnt = INV_START_POS; cnt < NUM_INV_SLOTS; cnt++ )
 	{
 		// Remove region
 		MSYS_RemoveRegion( &gSMInvRegion[ cnt ] );
@@ -2047,7 +2047,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTest
 
 	if ( !fFound )
 	{
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		for ( cnt = INV_START_POS; cnt < NUM_INV_SLOTS; cnt++ )
 		{
 			if ( gbCompatibleAmmo[ cnt ] )
 			{
@@ -2078,7 +2078,7 @@ void ResetCompatibleItemArray( )
 	PERFORMANCE_MARKER
 	INT32 cnt = 0;
 
-	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+	for ( cnt = INV_START_POS; cnt < NUM_INV_SLOTS; cnt++ )
 	{
 		if ( gbCompatibleAmmo[ cnt ] )
 		{
@@ -2115,7 +2115,7 @@ BOOLEAN HandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, INT8 bInvPos, BOOLEAN fOn
 			{
 				gpHighLightedItemObject = NULL;
 
-				for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+				for ( cnt = INV_START_POS; cnt < NUM_INV_SLOTS; cnt++ )
 				{
 					if ( gbCompatibleAmmo[ cnt ] )
 					{

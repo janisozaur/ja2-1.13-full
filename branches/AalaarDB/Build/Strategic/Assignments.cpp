@@ -5602,9 +5602,8 @@ BOOLEAN MakeSureMedKitIsInHand( SOLDIERTYPE *pSoldier )
 	{
 		if ( Item[pSoldier->inv[ bPocket ].usItem].firstaidkit )
 		{
-//			if( ( Item[ pSoldier -> inv[ HANDPOS ].usItem ].fFlags & IF_TWOHANDED_GUN ) && ( bPocket >= SMALLPOCK1POS ) )
 			// CHRISL: This needs to start with the first "non-big" pocket.
-			if( ( Item[ pSoldier -> inv[ HANDPOS ].usItem ].twohanded  ) && ( bPocket >= MEDPOCK1POS ) )
+			if( ( Item[ pSoldier -> inv[ HANDPOS ].usItem ].twohanded  ) && ( bPocket >= MEDPOCKSTART ) )
 			{
 				// first move from hand to second hand
 				SwapObjs( &pSoldier->inv[ HANDPOS ], &pSoldier->inv[ SECONDHANDPOS ] );

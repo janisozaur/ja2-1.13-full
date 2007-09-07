@@ -1349,9 +1349,22 @@ BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier )
 	return( FALSE );
 }
 
-bool FitsInBigPocketOnly(UINT16 usItem)
+bool FitsInSmallPocket(OBJECTTYPE* pObj)
 {
-	return Item[usItem].ubPerPocket == 0;
+	return Item[pObj->usItem].ubPerPocket != 0;
+}
+
+bool FitsInMediumPocket(OBJECTTYPE* pObj)
+{
+	if (UsingNewInventorySystem() == false) {
+		return false;
+	}
+	if (FitsInSmallPocket(pObj) == true) {
+		return true;
+	}
+
+	//ADB TODO what index to use for medium pockets???
+	return (0 != LBEPocketType[MEDIUM_POCKET_TYPE].ItemCapacityPerSize[CalculateItemSize(pObj)]);
 }
 
 // CHRISL: New definition for this function so that we can look at soldiers LBE pockets.
@@ -1360,7 +1373,6 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 	UINT8	ubSlotLimit;
 	UINT8	pIndex;
 	UINT16	usItem, iSize;
-	UINT32	iClass, pRestrict;
 
 	//doesn't matter what inventory method we are using
 	usItem = pObject->usItem;
@@ -1369,18 +1381,28 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 		return 2;
 	}
 
-	//doesn't matter what inventory method we are using
-	if(FitsInBigPocketOnly(pObject->usItem) == true) {
+	//doesn't matter what inventory method we are using, mostly
+	if(FitsInSmallPocket(pObject) == false) {
 		if ( bSlot == STACK_SIZE_LIMIT
 			|| (bSlot < BIGPOCKFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS) )
 		{
 			return( 1 );
 		}
-		//else medium or small pocket
-		return 0;
+		else if (UsingNewInventorySystem() == true && bSlot >= BIGPOCKFINAL && bSlot < MEDPOCKFINAL) {
+			//under the new method, some large objects like SMGs fit in medium pockets
+			//therefore, do nothing and let the code below handle it!
+		}
+		else {
+			//else medium or small pocket
+			return 0;
+		}
 	}
 
 	ubSlotLimit = Item[usItem].ubPerPocket;
+	if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT ) {
+		ubSlotLimit = MAX_OBJECTS_PER_SLOT;
+	}
+
 	if (UsingNewInventorySystem() == false) {
 		if (bSlot != STACK_SIZE_LIMIT) {//if it is stack size limit we want it to be a big slot
 			if (bSlot >= BIGPOCKFINAL && ubSlotLimit > 1)
@@ -1394,9 +1416,6 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 	//UsingNewInventorySystem == true
 	if (pSoldier != NULL && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 	{
-		if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT ) {
-			ubSlotLimit = MAX_OBJECTS_PER_SLOT;
-		}
 		return( ubSlotLimit );
 	}
 	else if (bSlot < BODYPOSFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS)
@@ -1407,51 +1426,41 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 	{
 		// IC Group Slots
 		if (bSlot == GUNSLINGPOCKPOS) {
-			//TODO make this a define
-			pIndex = 1;
+			pIndex = GUNSLING_POCKET_TYPE;
 		}
 		else if (bSlot == KNIFEPOCKPOS) {
-			//TODO make this a define
-			pIndex = 2;
+			pIndex = KNIFE_POCKET_TYPE;
 		}
 		else if (bSlot == STACK_SIZE_LIMIT) {
 			//calculate the size pretending we are putting it into a big slot in an LBE
-			//or some other big pocket, possibly gun sling???
-			//ChrisL is this right for a big slot???
-			//ADB TODO make this a define
-			pIndex = 3;
+			//or some other big pocket
+			pIndex = BIG_POCKET_TYPE;
 		}
 		else {
+			Assert(icLBE[bSlot] != -1 && icClass[bSlot] != -1 && icPocket[bSlot] != -1);
 			//find the class of the LBE, then find what size the pocket of the slot in the LBE is
 			if (pSoldier == NULL || pSoldier->inv[icLBE[bSlot]].exists() == false) {
-				Assert(icClass[bSlot] != -1 && icPocket[bSlot] != -1);
 				pIndex = LoadBearingEquipment[icClass[bSlot]].lbePocketIndex[icPocket[bSlot]];
 			}
 			else {
 				pIndex = LoadBearingEquipment[Item[pSoldier->inv[icLBE[bSlot]].usItem].ubClassIndex].lbePocketIndex[icPocket[bSlot]];
 			}
 		}
-		
+
 		iSize = CalculateItemSize(pObject);
 		ubSlotLimit = LBEPocketType[pIndex].ItemCapacityPerSize[iSize];
-		pRestrict = LBEPocketType[pIndex].pRestriction;
-		iClass = Item[usItem].usItemClass;
-		// CHRISL: Include maximum capacity limits to keep game from crashing
-		if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT )
-			ubSlotLimit = MAX_OBJECTS_PER_SLOT;
-		//if ( Item[usItem].ItemSize < 10 && ubSlotLimit > 1)	// Item is a gun
+
 		if ( iSize < 10 && ubSlotLimit > 1)
 			ubSlotLimit = 1;
-		if(pRestrict != 0) {
-			if(pRestrict != iClass) {
-				//if item only fits in big pockets
-				if ( bSlot < BIGPOCKFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS )
-				{
-					return( 1 );
-				}
-				//else medium or small pocket
-				return 0;
+
+		if(LBEPocketType[pIndex].pRestriction != 0 && LBEPocketType[pIndex].pRestriction != Item[usItem].usItemClass) {
+			//if item only fits in big pockets
+			if ( bSlot < BIGPOCKFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS )
+			{
+				return( 1 );
 			}
+			//else medium or small pocket
+			return 0;
 		}
 	
 		return( ubSlotLimit );
@@ -1610,7 +1619,7 @@ INT8 FindObj( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower, INT8 bUpper )
 	PERFORMANCE_MARKER
 	INT8	bLoop;
 
-	for (bLoop = bLower; bLoop <= bUpper; bLoop++)
+	for (bLoop = bLower; bLoop < bUpper; bLoop++)
 	{
 		if (pSoldier->inv[bLoop].usItem == usItem && pSoldier->inv[bLoop].exists() == true)			
 		{
@@ -2413,16 +2422,9 @@ BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem )
 	return( EvaluateValidMerge( usMerge, usItem, &usIgnoreResult, &usIgnoreResult2, &ubIgnoreType, &ubIgnoreAPCost ) );
 }
 
-//ADB TODO: Chris, check these out and see if they are ok with you
-
-// CHRISL: New function to dynamically modify ItemSize based on attachments
-UINT16 CalculateItemSize( OBJECTTYPE *pObject )
+int GetPocketSizeByDimensions(int sizeX, int sizeY)
 {
-	PERFORMANCE_MARKER
-	UINT16		iSize, newSize, testSize;
-	UINT32		cisIndex;
-	BOOLEAN		psFound = FALSE;
-	UINT8		cisPocketSize[6][4] =
+	static const UINT8 cisPocketSize[6][4] =
 	{
 		11, 12, 13, 14,
 		15, 16, 17, 18,
@@ -2431,7 +2433,43 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 		27, 28, 29, 30,
 		31, 32, 33, 34
 	};
-	int			cnt, originalSizeX, originalSizeY;
+	return cisPocketSize[sizeX][sizeY];
+}
+
+void GetPocketDimensionsBySize(int pocketSize, int& sizeX, int& sizeY)
+{
+	static const UINT8 cisPocketSize[6][4] =
+	{
+		11, 12, 13, 14,
+		15, 16, 17, 18,
+		19, 20, 21, 22,
+		23, 24, 25, 26,
+		27, 28, 29, 30,
+		31, 32, 33, 34
+	};
+
+	for(sizeX=0; sizeX<6; sizeX++)
+	{
+		for(sizeY=0; sizeY<4; sizeY++)
+		{
+			if(pocketSize == cisPocketSize[sizeX][sizeY])
+			{
+				return;
+			}
+		}
+	}
+}
+
+
+//ADB TODO: Chris, check these out and see if they are ok with you
+
+// CHRISL: New function to dynamically modify ItemSize based on attachments, stack size, etc
+UINT16 CalculateItemSize( OBJECTTYPE *pObject )
+{
+	PERFORMANCE_MARKER
+	UINT16		iSize, newSize, testSize;
+	UINT32		cisIndex;
+	int			originalSizeX, originalSizeY;
 	int			newSizeX, newSizeY;
 	// Determine default ItemSize based on item and attachments
 	cisIndex = pObject->usItem;
@@ -2440,38 +2478,22 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 		iSize = 34;
 
 	//store the original size for later calculations
-	for(originalSizeX=0; originalSizeX<6; originalSizeX++)
-	{
-		for(originalSizeY=0; originalSizeY<4; originalSizeY++)
-		{
-			if(iSize == cisPocketSize[originalSizeX][originalSizeY])
-			{
-				psFound = TRUE;
-				break;
-			}
-		}
-		if(psFound)
-			break;
-	}
+	GetPocketDimensionsBySize(iSize, originalSizeX, originalSizeY);
 
 	//for each object in the stack, hopefully there is only 1
 	for (int numStacked = 0; numStacked < pObject->ubNumberOfObjects; ++numStacked) {
-
-#if 0
-		//I don't think there will ever be any attachments, ChrisL delete this if so
-		//for each attachment to this object
-		for (attachmentList::iterator iter = (*pObject)[numStacked]->attachments.begin();
-			iter != (*pObject)[numStacked]->attachments.end(); ++iter) {
-				//plus? minus?
-			iSize -= CalculateItemSize(&(*iter));;
-		}
-#endif
-
 		// Check if we're looking at a LBENODE or not
 		if(pObject->IsLBE() == false)
 		{
 			continue;
 		}
+
+		//for each attachment to this object
+		for (attachmentList::iterator iter = (*pObject)[numStacked]->attachments.begin();
+			iter != (*pObject)[numStacked]->attachments.end(); ++iter) {
+			iSize += CalculateItemSize(&(*iter));;
+		}
+
 		LBENODE* pLBE = pObject->GetLBEPointer(numStacked);
 		if(pLBE)
 		{
@@ -2484,36 +2506,27 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 					newSize = (testSize > newSize) ? testSize : newSize;
 				}
 			}
-		}
-		// Resize based on contents
-		if(newSize > 0)
-		{
-			psFound = FALSE;
-			for(newSizeX=0; newSizeX<6; newSizeX++)
+
+			//ADB TODO i'm sure this will fail starting around here because of stacks.
+			// Resize based on contents
+			if(newSize > 0)
 			{
-				for(newSizeY=0; newSizeY<4; newSizeY++)
-				{
-					if(newSize == cisPocketSize[newSizeX][newSizeY])
-					{
-						psFound = TRUE;
-						break;
-					}
+				GetPocketDimensionsBySize(newSize, newSizeX, newSizeY);
+				if((originalSizeX-2)>=newSizeX) {	// Stored item is much smaller then an empty LBE item.  Don't change size
+					iSize = iSize;
 				}
-				if(psFound)
-					break;
-			}
-			if((originalSizeX-2)>=newSizeX)	// Stored item is much smaller then an empty LBE item.  Don't change size
-				iSize = iSize;
-			else if((originalSizeX-1)==newSizeX)	// Stored item is large enough to increase LBE item size.
-			{
-				if(newSizeY > originalSizeY)
-					originalSizeY = newSizeY;
-				iSize = cisPocketSize[originalSizeX][originalSizeY];
-			}
-			else	// Stored item is very large compared to the LBE item.
-			{
-				originalSizeY = 3;
-				iSize = cisPocketSize[originalSizeX][originalSizeY];
+				else if((originalSizeX-1)==newSizeX)	// Stored item is large enough to increase LBE item size.
+				{
+					if(newSizeY > originalSizeY) {
+						originalSizeY = newSizeY;
+					}
+					iSize = GetPocketSizeByDimensions(originalSizeX, originalSizeY);
+				}
+				else	// Stored item is very large compared to the LBE item.
+				{
+					originalSizeY = 3;
+					iSize = GetPocketSizeByDimensions(originalSizeX, originalSizeY);
+				}
 			}
 		}
 	}
@@ -3850,13 +3863,13 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 				{
 					// two items in hands; try moving the second one so we can swap 
 					// CHRISL: Adjust parameters to include the new inventory system
-					if (FitsInBigPocketOnly(pSoldier->inv[SECONDHANDPOS].usItem) == true)
+					if (FitsInSmallPocket(&pSoldier->inv[SECONDHANDPOS]) == false)
 					{
-						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, BIGPOCKFINAL );
+						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCKSTART, MEDPOCKFINAL );
 					}
 					else
 					{
-						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, NUM_INV_SLOTS );
+						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCKSTART, NUM_INV_SLOTS );
 					}
 
 					if (bNewPos == NO_SLOT)
@@ -3867,7 +3880,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 
 					if ( fDoingPlacement )
 					{
-						// otherwise move it.
+						// otherwise move it, it can fail if it is a medium pocket but in that case no harm is done
 						pSoldier->inv[SECONDHANDPOS].MoveThisObjectTo(pSoldier->inv[bNewPos]);
 					}
 				}
@@ -4030,7 +4043,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 
 	if((UsingNewInventorySystem() == false))
 	{
-		if (ubSlotLimit == 0 && bPos >= SMALLPOCK1POS )
+		if (ubSlotLimit == 0 && bPos >= SMALLPOCKSTART )
 		{
 			// doesn't fit!
 			return( FALSE );
@@ -4363,24 +4376,25 @@ bool TryToPlaceInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, in
 bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem)
 {
 	//first, try to STACK the item
-	if (FitsInBigPocketOnly(pObj->usItem) == false) {
+	if (FitsInSmallPocket(pObj) == true) {
 		//try to STACK in small pockets
-		for(int bSlot = BIGPOCKFINAL; bSlot < NUM_INV_SLOTS; bSlot++) {
+		for(int bSlot = SMALLPOCKSTART; bSlot < SMALLPOCKFINAL; bSlot++) {
 			if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
 				return true;
 			}
 		}
 	}
 
-	//try to STACK in big pockets
-	for(int bSlot = BIGPOCK1POS; bSlot < BIGPOCKFINAL; bSlot++) {
+	//try to STACK in big pockets, and possibly medium pockets
+	int bigPocketEnd = (FitsInMediumPocket(pObj) == true) ? MEDPOCKFINAL : BIGPOCKFINAL;
+	for(int bSlot = BIGPOCKSTART; bSlot < bigPocketEnd; bSlot++) {
 		if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
 			return true;
 		}
 	}
 
 	//try to STACK in any slot
-	for(int bSlot = HELMETPOS; bSlot < BODYPOSFINAL; bSlot++) {
+	for(int bSlot = BODYPOSSTART; bSlot < BODYPOSFINAL; bSlot++) {
 		if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
 			return true;
 		}
@@ -4389,24 +4403,24 @@ bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem)
 
 
 	//now try to PLACE
-	if (FitsInBigPocketOnly(pObj->usItem) == false) {
+	if (FitsInSmallPocket(pObj) == true) {
 		//try to PLACE in small pockets
-		for(int bSlot = BIGPOCKFINAL; bSlot < NUM_INV_SLOTS; bSlot++) {
+		for(int bSlot = SMALLPOCKSTART; bSlot < SMALLPOCKFINAL; bSlot++) {
 			if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, NUM_INV_SLOTS) == true) {
 				return true;
 			}
 		}
 	}
 
-	//try to PLACE in big pockets
-	for(int bSlot = BIGPOCK1POS; bSlot < BIGPOCKFINAL; bSlot++) {
-		if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, BIGPOCKFINAL) == true) {
+	//try to PLACE in big pockets, and possibly medium pockets
+	for(int bSlot = BIGPOCKSTART; bSlot < bigPocketEnd; bSlot++) {
+		if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, bigPocketEnd) == true) {
 			return true;
 		}
 	}
 
 	//try to PLACE in any slot
-	for(int bSlot = HELMETPOS; bSlot < BODYPOSFINAL; bSlot++) {
+	for(int bSlot = BODYPOSSTART; bSlot < BODYPOSFINAL; bSlot++) {
 		if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, BODYPOSFINAL) == true) {
 			return true;
 		}
@@ -4417,74 +4431,78 @@ bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem)
 bool PlaceInAnyPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem)
 {
 	//first, try to STACK the item
-	if (FitsInBigPocketOnly(pObj->usItem) == false) {
+	if (FitsInSmallPocket(pObj) == true) {
 		//try to STACK in small pockets
-		for(int bSlot = BIGPOCKFINAL; bSlot < NUM_INV_SLOTS; bSlot++) {
+		for(int bSlot = SMALLPOCKSTART; bSlot < SMALLPOCKFINAL; bSlot++) {
 			if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
 				return true;
 			}
 		}
 	}
 
-	//try to STACK in big pockets
-	for(int bSlot = BIGPOCK1POS; bSlot < BIGPOCKFINAL; bSlot++) {
+	//try to STACK in big pockets, and possibly medium pockets
+	int bigPocketEnd = (FitsInMediumPocket(pObj) == true) ? MEDPOCKFINAL : BIGPOCKFINAL;
+	for(int bSlot = BIGPOCKSTART; bSlot < bigPocketEnd; bSlot++) {
 		if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
 			return true;
 		}
 	}
 
 
-
-	if (FitsInBigPocketOnly(pObj->usItem) == false) {
+	if (FitsInSmallPocket(pObj) == true) {
 		//try to PLACE in small pockets
-		for(int bSlot = BIGPOCKFINAL; bSlot < NUM_INV_SLOTS; bSlot++) {
+		for(int bSlot = SMALLPOCKSTART; bSlot < SMALLPOCKFINAL; bSlot++) {
 			if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, NUM_INV_SLOTS) == true) {
 				return true;
 			}
 		}
 	}
-	//try to PLACE in big pockets
-	for(int bSlot = BIGPOCK1POS; bSlot < BIGPOCKFINAL; bSlot++) {
-		if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, BIGPOCKFINAL) == true) {
+	//try to PLACE in big pockets, and possibly medium pockets
+	for(int bSlot = BIGPOCKSTART; bSlot < bigPocketEnd; bSlot++) {
+		if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, bigPocketEnd) == true) {
 			return true;
 		}
 	}
 	return false;
 }
 
-bool PlaceInAnyBigPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem)
+bool PlaceInAnyBigOrMediumPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem)
 {
+	//a special note, although some items do not fit in small pockets, and under the old system are restricted to big pockets,
+	//under the new system they are intended to fit in medium pockets, if the item size and the pocket agree
+	//An example would be a SMG fitting in a gun holster, which is medium.
+	int bigPocketEnd = (FitsInMediumPocket(pObj) == true) ? MEDPOCKFINAL : BIGPOCKFINAL;
 	//first, try to STACK the item
-	for(int bSlot = BIGPOCK1POS; bSlot < BIGPOCKFINAL; bSlot++) {
+	for(int bSlot = BIGPOCKSTART; bSlot < bigPocketEnd; bSlot++) {
 		if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
 			return true;
 		}
 	}
 
 	//now try to PLACE
-	for(int bSlot = BIGPOCK1POS; bSlot < BIGPOCKFINAL; bSlot++) {
-		if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, BIGPOCKFINAL) == true) {
+	for(int bSlot = BIGPOCKSTART; bSlot < bigPocketEnd; bSlot++) {
+		if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, bigPocketEnd) == true) {
 			return true;
 		}
 	}
 	return false;
 }
 
-bool PlaceInAnySmallOrMediumPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem)
+bool PlaceInAnySmallPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem)
 {
-	if (FitsInBigPocketOnly(pObj->usItem) == true) {
+	if (FitsInSmallPocket(pObj) == false) {
 		return false;
 	}
 
 	//first, try to STACK the item
-	for(int bSlot = BIGPOCKFINAL; bSlot < NUM_INV_SLOTS; bSlot++) {
+	for(int bSlot = SMALLPOCKSTART; bSlot < SMALLPOCKFINAL; bSlot++) {
 		if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
 			return true;
 		}
 	}
 
 	//try to PLACE in small pockets
-	for(int bSlot = BIGPOCKFINAL; bSlot < NUM_INV_SLOTS; bSlot++) {
+	for(int bSlot = SMALLPOCKSTART; bSlot < SMALLPOCKFINAL; bSlot++) {
 		if (TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, NUM_INV_SLOTS) == true) {
 			return true;
 		}
@@ -4508,6 +4526,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 	//Pulmu bugfix		
 	pObj->ubWeight = CalculateObjectWeight( pObj);
 	pItem = &(Item[pObj->usItem]);
+	int lbeClass;
 
 	// Overrides to the standard system: put guns in hand, armour on body (if slot empty)
 	switch (pItem->usItemClass)
@@ -4533,7 +4552,6 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 		case IC_LAUNCHER:
 		case IC_BOMB:
 		case IC_GRENADE:
-//			if (!((*pItem).fFlags & ITEM_TWO_HANDED))
 			if (!(pItem->twohanded))
 			{
 				if (pSoldier->inv[HANDPOS].exists() == false)
@@ -4546,7 +4564,6 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 						return( TRUE );
 					}
 				}
-//				else if ( !(Item[pSoldier->inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED) && pSoldier->inv[SECONDHANDPOS].exists() == true)
 				else if ( !(Item[pSoldier->inv[HANDPOS].usItem].twohanded ) && pSoldier->inv[SECONDHANDPOS].exists() == false)
 				{
 					// put the one-handed weapon in the guy's 2nd hand...
@@ -4638,62 +4655,64 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 			break;
 		// CHRISL:
 		case IC_LBEGEAR:
-			if((UsingNewInventorySystem() == true))
+			if(UsingNewInventorySystem() == false) {
+				break;
+			}
+			lbeClass = LoadBearingEquipment[pItem->ubClassIndex].lbeClass;
+			if(lbeClass == THIGH_PACK)	// Thigh pack
 			{
-				if(pSoldier->inv[LTHIGHPOCKPOS].exists() == false && LoadBearingEquipment[pItem->ubClassIndex].lbeClass == THIGH_PACK)	// Thigh pack
-				{
+				if (pSoldier->inv[LTHIGHPOCKPOS].exists() == false) {
 					MoveItemFromLBEItem( pSoldier, LTHIGHPOCKPOS, pObj);
 					PlaceObject( pSoldier, LTHIGHPOCKPOS, pObj );
 					SetNewItem( pSoldier, LTHIGHPOCKPOS, fNewItem );
 					if(pObj->exists() == false)
 						return( TRUE );
 				}
-				else if(pSoldier->inv[RTHIGHPOCKPOS].exists() == false && LoadBearingEquipment[pItem->ubClassIndex].lbeClass == THIGH_PACK)	// Thigh pack
-				{
+				if (pSoldier->inv[RTHIGHPOCKPOS].exists() == false) {
 					MoveItemFromLBEItem( pSoldier, RTHIGHPOCKPOS, pObj);
 					PlaceObject( pSoldier, RTHIGHPOCKPOS, pObj );
 					SetNewItem( pSoldier, RTHIGHPOCKPOS, fNewItem );
 					if(pObj->exists() == false)
 						return( TRUE );
 				}
-				else if(pSoldier->inv[VESTPOCKPOS].exists() == false && LoadBearingEquipment[pItem->ubClassIndex].lbeClass == VEST_PACK)	// Vest pack
+			}
+			else if(pSoldier->inv[VESTPOCKPOS].exists() == false && lbeClass == VEST_PACK)	// Vest pack
+			{
+				MoveItemFromLBEItem( pSoldier, VESTPOCKPOS, pObj);
+				PlaceObject( pSoldier, VESTPOCKPOS, pObj );
+				SetNewItem( pSoldier, VESTPOCKPOS, fNewItem );
+				if(pObj->exists() == false)
+					return( TRUE );
+			}
+			else if(pSoldier->inv[CPACKPOCKPOS].exists() == false && lbeClass == COMBAT_PACK)	// Combat pack
+			{
+				packCombo = LoadBearingEquipment[pItem->ubClassIndex].lbeCombo;
+				backCombo = LoadBearingEquipment[Item[pSoldier->inv[BPACKPOCKPOS].usItem].ubClassIndex].lbeCombo;
+				if((pSoldier->inv[BPACKPOCKPOS].exists() == true && packCombo != 0 && backCombo == packCombo) || pSoldier->inv[BPACKPOCKPOS].exists() == false)
 				{
-					MoveItemFromLBEItem( pSoldier, VESTPOCKPOS, pObj);
-					PlaceObject( pSoldier, VESTPOCKPOS, pObj );
-					SetNewItem( pSoldier, VESTPOCKPOS, fNewItem );
+					MoveItemFromLBEItem( pSoldier, CPACKPOCKPOS, pObj);
+					PlaceObject( pSoldier, CPACKPOCKPOS, pObj );
+					SetNewItem( pSoldier, CPACKPOCKPOS, fNewItem );
 					if(pObj->exists() == false)
 						return( TRUE );
 				}
-				else if(pSoldier->inv[CPACKPOCKPOS].exists() == false && LoadBearingEquipment[pItem->ubClassIndex].lbeClass == COMBAT_PACK)	// Combat pack
+			}
+			else if(pSoldier->inv[BPACKPOCKPOS].exists() == false && lbeClass == BACKPACK)	// Backpack
+			{
+				if(pSoldier->inv[GUNSLINGPOCKPOS].exists() == false)
 				{
-					packCombo = LoadBearingEquipment[pItem->ubClassIndex].lbeCombo;
-					backCombo = LoadBearingEquipment[Item[pSoldier->inv[BPACKPOCKPOS].usItem].ubClassIndex].lbeCombo;
-					if((pSoldier->inv[BPACKPOCKPOS].exists() == true && packCombo != 0 && backCombo == packCombo) || pSoldier->inv[BPACKPOCKPOS].exists() == false)
+					packCombo = LoadBearingEquipment[Item[pSoldier->inv[CPACKPOCKPOS].usItem].ubClassIndex].lbeCombo;
+					backCombo = LoadBearingEquipment[pItem->ubClassIndex].lbeCombo;
+					if((pSoldier->inv[CPACKPOCKPOS].exists() == true && backCombo != 0 && backCombo == packCombo) || pSoldier->inv[CPACKPOCKPOS].exists() == false)
 					{
-						MoveItemFromLBEItem( pSoldier, CPACKPOCKPOS, pObj);
-						PlaceObject( pSoldier, CPACKPOCKPOS, pObj );
-						SetNewItem( pSoldier, CPACKPOCKPOS, fNewItem );
+						MoveItemFromLBEItem( pSoldier, BPACKPOCKPOS, pObj);
+						PlaceObject( pSoldier, BPACKPOCKPOS, pObj );
+						SetNewItem( pSoldier, BPACKPOCKPOS, fNewItem );
+						pSoldier->flags.DropPackFlag = FALSE;
+						pSoldier->flags.ZipperFlag = FALSE;
+						RenderBackpackButtons(0);
 						if(pObj->exists() == false)
 							return( TRUE );
-					}
-				}
-				else if(pSoldier->inv[BPACKPOCKPOS].exists() == false && LoadBearingEquipment[pItem->ubClassIndex].lbeClass == BACKPACK)	// Backpack
-				{
-					if(pSoldier->inv[GUNSLINGPOCKPOS].exists() == false)
-					{
-						packCombo = LoadBearingEquipment[Item[pSoldier->inv[CPACKPOCKPOS].usItem].ubClassIndex].lbeCombo;
-						backCombo = LoadBearingEquipment[pItem->ubClassIndex].lbeCombo;
-						if((pSoldier->inv[CPACKPOCKPOS].exists() == true && backCombo != 0 && backCombo == packCombo) || pSoldier->inv[CPACKPOCKPOS].exists() == false)
-						{
-							MoveItemFromLBEItem( pSoldier, BPACKPOCKPOS, pObj);
-							PlaceObject( pSoldier, BPACKPOCKPOS, pObj );
-							SetNewItem( pSoldier, BPACKPOCKPOS, fNewItem );
-							pSoldier->flags.DropPackFlag = FALSE;
-							pSoldier->flags.ZipperFlag = FALSE;
-							RenderBackpackButtons(0);
-							if(pObj->exists() == false)
-								return( TRUE );
-						}
 					}
 				}
 			}
@@ -4702,7 +4721,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 			break;
 	}
 
-	if (PlaceInAnySlot(pSoldier, pObj, fNewItem) == true) {
+	if (PlaceInAnySlot(pSoldier, pObj, (fNewItem == TRUE)) == true) {
 		return TRUE;
 	}
 	return( FALSE );
@@ -5584,7 +5603,7 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 	}
 
 	// CHRISL:
-	for (bLoop = BIGPOCK1POS; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = BIGPOCKSTART; bLoop < NUM_INV_SLOTS; bLoop++)
 	{
 		if ( gMercProfiles[ ubProfile ].bInvNumber[ bLoop ] == 0 && (pSoldier == NULL || pSoldier->inv[ bLoop ].exists() == false ) )
 		{
@@ -6979,7 +6998,7 @@ INT16 GetVisionRangeBonus( SOLDIERTYPE * pSoldier )
 	//ADB and AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
 	bool usingGunScope = WeaponReady(pSoldier);
 	// CHRISL:
-	for (int i = HELMETPOS; i < BODYPOSFINAL; i++)
+	for (int i = BODYPOSSTART; i < BODYPOSFINAL; i++)
 	{
 		// Okay, it's time for some optimization here too
 		pObj = &( pSoldier->inv[i]);
@@ -7041,7 +7060,7 @@ INT16 GetNightVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 	//ADB and AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
 	bool usingGunScope = WeaponReady(pSoldier);
 	// CHRISL:
-	for (int i = HELMETPOS; i < BODYPOSFINAL; i++)
+	for (int i = BODYPOSSTART; i < BODYPOSFINAL; i++)
 	{
 		// More optimization
 		pObj = &( pSoldier->inv[i]);
@@ -7091,7 +7110,7 @@ INT16 GetCaveVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 	//ADB and AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
 	bool usingGunScope = WeaponReady(pSoldier);
 	// CHRISL:
-	for (int i = 0; i < BODYPOSFINAL; i++)
+	for (int i = BODYPOSSTART; i < BODYPOSFINAL; i++)
 	{
 		// More optimization
 		pObj = &( pSoldier->inv[i]);
@@ -7144,7 +7163,7 @@ INT16 GetDayVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 	//ADB and AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
 	bool usingGunScope = WeaponReady(pSoldier);
 	// CHRISL:
-	for (int i = 0; i < BODYPOSFINAL; i++)
+	for (int i = BODYPOSSTART; i < BODYPOSFINAL; i++)
 	{
 		// More optimization
 		pObj = &( pSoldier->inv[i]);
@@ -7197,7 +7216,7 @@ INT16 GetBrightLightVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel 
 	//ADB and AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
 	bool usingGunScope = WeaponReady(pSoldier);
 	// CHRISL:
-	for (int i = 0; i < BODYPOSFINAL; i++)
+	for (int i = BODYPOSSTART; i < BODYPOSFINAL; i++)
 	{
 		// More optimization
 		pObj = &( pSoldier->inv[i]);
@@ -7275,7 +7294,7 @@ UINT8 GetPercentTunnelVision( SOLDIERTYPE * pSoldier )
 	INVTYPE *pItem;
 
 	// CHRISL:
-	for (int i = HELMETPOS; i < BODYPOSFINAL; i++)
+	for (int i = BODYPOSSTART; i < BODYPOSFINAL; i++)
 	{
 		// Okay, it's time for some optimization here
 		if (pSoldier->inv[i].exists() == true) {
@@ -7324,7 +7343,7 @@ BOOLEAN HasThermalOptics( SOLDIERTYPE * pSoldier )
 	PERFORMANCE_MARKER
 
 	bool usingGunScope = WeaponReady(pSoldier);
-	for (int i = 0; i < BIGPOCK1POS; i++)
+	for (int i = BODYPOSSTART; i < BODYPOSFINAL; i++)
 	{
 		if (pSoldier->inv[i].exists() == true) {
 			if ( (i == HANDPOS || i == SECONDHANDPOS) && 
@@ -7360,7 +7379,7 @@ BOOLEAN HasThermalOptics( SOLDIERTYPE * pSoldier )
 INT8 FindHearingAid( SOLDIERTYPE * pSoldier )
 {
 	PERFORMANCE_MARKER
-	for (INT8 i = 0; i < BIGPOCK1POS; i++)
+	for (INT8 i = BODYPOSSTART; i < BODYPOSFINAL; i++)
 	{
 		if (pSoldier->inv[i].exists() == true) {
 			if ( (i == HANDPOS || i == SECONDHANDPOS) && 
@@ -7383,7 +7402,7 @@ INT16 GetHearingRangeBonus( SOLDIERTYPE * pSoldier )
 	PERFORMANCE_MARKER
 	INT16 bonus = 0;
 
-	for (int i = 0; i < BIGPOCK1POS; i++)
+	for (int i = BODYPOSSTART; i < BODYPOSFINAL; i++)
 	{
 		if (pSoldier->inv[i].exists() == true) {
 			if ( (i == HANDPOS || i == SECONDHANDPOS) && 
@@ -7803,7 +7822,7 @@ INT8 FindWalkman( SOLDIERTYPE * pSoldier )
 	PERFORMANCE_MARKER
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < BIGPOCK1POS; bLoop++)
+	for (bLoop = BODYPOSSTART; bLoop < BODYPOSFINAL; bLoop++)
 	{
 		if (pSoldier->inv[bLoop].exists() == true) {
 			if (Item[pSoldier->inv[bLoop].usItem].walkman  )
@@ -7835,7 +7854,7 @@ INT8 FindRemoteControl( SOLDIERTYPE * pSoldier )
 	PERFORMANCE_MARKER
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < BIGPOCK1POS; bLoop++)
+	for (bLoop = BODYPOSSTART; bLoop < BODYPOSFINAL; bLoop++)
 	{
 		if (pSoldier->inv[bLoop].exists() == true) {
 			if (Item[pSoldier->inv[bLoop].usItem].robotremotecontrol    )
