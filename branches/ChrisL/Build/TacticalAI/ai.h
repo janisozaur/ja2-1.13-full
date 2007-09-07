@@ -6,6 +6,7 @@
 #include "Soldier Control.h"
 
 #define TESTAICONTROL
+#define TESTAI
 
 extern INT8	gubAIPathCosts[19][19];
 #define AI_PATHCOST_RADIUS 9
@@ -25,8 +26,8 @@ enum CreatureCalls
 	NUM_CREATURE_CALLS
 } ;
 
-#define DONTFORCE       0
-#define FORCE           1
+#define DONTFORCE		0
+#define FORCE			1
 
 // ANY NEW ACTIONS ADDED - UPDATE OVERHEAD.C ARRAY WITH ACTION'S STRING VALUE
 #define FIRST_MOVEMENT_ACTION AI_ACTION_RANDOM_PATROL
@@ -81,7 +82,7 @@ typedef enum
 	AI_ACTION_WAIT,								// RT: don't do anything for a certain length of time
 	AI_ACTION_PENDING_ACTION,			// RT: wait for pending action (pickup, door open, etc) to finish
 	AI_ACTION_DROP_ITEM,					// duh
-	AI_ACTION_COWER,							// for civilians:  cower in fear and stay there!
+	AI_ACTION_COWER,							// for civilians:	cower in fear and stay there!
 
 	AI_ACTION_STOP_COWERING,			// stop cowering
 	AI_ACTION_OPEN_OR_CLOSE_DOOR,	// schedule-provoked; open or close door
@@ -96,6 +97,7 @@ typedef enum
 	AI_ACTION_TRAVERSE_DOWN,			// move down a level
 	AI_ACTION_OFFER_SURRENDER,		// offer surrender to the player
 	AI_ACTION_RAISE_GUN,
+	AI_ACTION_NOT_AN_ACTION,//error code, like returning -1
 } ActionType;
 
 
@@ -131,12 +133,12 @@ enum QuoteActionType
 #define IS_NEW_SITUATION 2
 
 
-#define DIFF_ENEMY_EQUIP_MOD            0
-#define DIFF_ENEMY_TO_HIT_MOD           1
-#define DIFF_ENEMY_INTERRUPT_MOD        2
-#define DIFF_RADIO_RED_ALERT            3
-#define DIFF_MAX_COVER_RANGE            4
-#define MAX_DIFF_PARMS									5      // how many different difficulty variables?
+#define DIFF_ENEMY_EQUIP_MOD			0
+#define DIFF_ENEMY_TO_HIT_MOD			1
+#define DIFF_ENEMY_INTERRUPT_MOD		2
+#define DIFF_RADIO_RED_ALERT			3
+#define DIFF_MAX_COVER_RANGE			4
+#define MAX_DIFF_PARMS									5		// how many different difficulty variables?
 
 extern INT8 gbDiff[MAX_DIFF_PARMS][5];
 
@@ -144,7 +146,6 @@ void ActionDone(SOLDIERTYPE *pSoldier);
 INT16 ActionInProgress(SOLDIERTYPE *pSoldier);
 
 INT8 CalcMorale(SOLDIERTYPE *pSoldier);
-INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale, INT32 iNewScale);
 void CallAvailableEnemiesTo(INT16 sGridno);
 void CallAvailableKingpinMenTo( INT16 sGridNo );
 void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam );
@@ -159,27 +160,17 @@ INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance );
 BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck );
 
 void DebugAI( STR szOutput );
-INT8	DecideAction(SOLDIERTYPE *pSoldier);
-INT8 DecideActionBlack(SOLDIERTYPE *pSoldier);
-INT8 DecideActionEscort(SOLDIERTYPE *pSoldier);
-INT8 DecideActionGreen(SOLDIERTYPE *pSoldier);
-INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK);
-INT8 DecideActionYellow(SOLDIERTYPE *pSoldier);
-
+void DebugAI( std::string& szOutput );
 INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier );
 
 void EndAIDeadlock(void);
 void EndAIGuysTurn( SOLDIERTYPE *pSoldier );
 
-INT8  ExecuteAction(SOLDIERTYPE *pSoldier);
+INT8	ExecuteAction(SOLDIERTYPE *pSoldier);
 
 INT16 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT16 sGridno);
-INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *pPercentBetter);
-INT16 FindClosestDoor( SOLDIERTYPE * pSoldier );
-INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection );
-INT16 FindNearestEdgePoint( INT16 sGridNo );
 
-//Kris:  Added these as I need specific searches on certain sides.
+//Kris:	Added these as I need specific searches on certain sides.
 enum
 {
 	NORTH_EDGEPOINT_SEARCH,
@@ -187,11 +178,7 @@ enum
 	SOUTH_EDGEPOINT_SEARCH,
 	WEST_EDGEPOINT_SEARCH,
 };
-INT16 FindNearestEdgepointOnSpecifiedEdge( INT16 sGridNo, INT8 bEdgeCode );
-
-INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier);
 BOOLEAN FindRoofClimbingPoints( SOLDIERTYPE * pSoldier, INT16 sDesiredSpot );
-INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier);
 INT16 FindSweetCoverSpot(SOLDIERTYPE *pSoldier);
 
 void FreeUpNPCFromAttacking(UINT8 ubID);
@@ -215,7 +202,7 @@ BOOLEAN InitAI( void );
 void MakeClosestEnemyChosenOne();
 void ManChecksOnFriends(SOLDIERTYPE *pSoldier);
 
-void NewDest(SOLDIERTYPE *pSoldier, UINT16 sGridno);
+void NewDest(SOLDIERTYPE *pSoldier, INT16 sGridno);
 INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier);
 
 INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove);
@@ -240,8 +227,12 @@ BOOLEAN ValidCreatureTurn( SOLDIERTYPE * pCreature, INT8 bNewDirection );
 BOOLEAN WearGasMaskIfAvailable( SOLDIERTYPE * pSoldier );
 INT16 WhatIKnowThatPublicDont(SOLDIERTYPE *pSoldier, UINT8 ubInSightOnly);
 
-INT16 FindClosestClimbPoint (SOLDIERTYPE *pSoldier, BOOLEAN fClimbUp );
-INT16 FindFlankingSpot(SOLDIERTYPE *pSoldier, INT16 sPos, INT8 bAction );
-BOOLEAN CanClimbFromHere (SOLDIERTYPE * pSoldier, BOOLEAN fUp );
+
+#ifdef DEBUGDECISIONS
+void AIPopMessage ( STR16 str );
+void AIPopMessage ( const STR8	str );
+void AINumMessage(const STR8	str, INT32 num);
+void AINameMessage(SOLDIERTYPE * pSoldier,const STR8	str,INT32 num);
+#endif
 
 #endif

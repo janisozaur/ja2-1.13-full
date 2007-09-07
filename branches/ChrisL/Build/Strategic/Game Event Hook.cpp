@@ -8,7 +8,7 @@
 	#include "environment.h"
 	#include "Ambient Control.h"
 	#include "Quests.h"
-	#include "Sound Control.h"
+//	#include "Sound Control.h"
 	#include "AimMembers.h"
 	#include "Strategic Event Handler.h"
 	#include "BobbyR.h"
@@ -68,6 +68,7 @@ void CrippledVersionEndGameCheck();
 
 BOOLEAN DelayEventIfBattleInProgress( STRATEGICEVENT *pEvent )
 {
+	PERFORMANCE_MARKER
 	STRATEGICEVENT *pNewEvent;
 	if( gTacticalStatus.fEnemyInSector )
 	{
@@ -81,8 +82,9 @@ BOOLEAN DelayEventIfBattleInProgress( STRATEGICEVENT *pEvent )
 
 BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 {
+	PERFORMANCE_MARKER
 
-  BOOLEAN bMercDayOne = FALSE;
+	BOOLEAN bMercDayOne = FALSE;
 	// Kaiden: Opening the INI File
 	CIniReader iniReader("..\\Ja2_Options.ini");
 
@@ -135,7 +137,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		if( gfMercsNeverQuit )
 		{
 			if( pEvent->ubCallbackID == EVENT_MERC_ABOUT_TO_LEAVE_COMMENT ||
-				  pEvent->ubCallbackID == EVENT_MERC_CONTRACT_OVER )
+				pEvent->ubCallbackID == EVENT_MERC_CONTRACT_OVER )
 			{
 				gfPreventDeletionOfAnyEvent = fOrigPreventFlag;
 				return FALSE;
@@ -151,7 +153,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			// Change light to value
 			gubEnvLightValue = (UINT8)pEvent->uiParam;
 			if( !gfBasement && !gfCaves )
-				gfDoLighting		 = TRUE;
+				gfDoLighting		= TRUE;
 			break;
 		case EVENT_CHECKFORQUESTS:
 			CheckForQuests( GetWorldDay() );
@@ -180,7 +182,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		case EVENT_BOBBYRAY_PURCHASE:
 			BobbyRayPurchaseEventCallback( (UINT8) pEvent->uiParam);
 			break;
-		//Gets called once a day ( at BOBBYRAY_UPDATE_TIME).  To simulate the items being bought and sold at bobby rays 
+		//Gets called once a day ( at BOBBYRAY_UPDATE_TIME).	To simulate the items being bought and sold at bobby rays 
 		case EVENT_DAILY_UPDATE_BOBBY_RAY_INVENTORY:
 			DailyUpdateOfBobbyRaysNewInventory();
 			DailyUpdateOfBobbyRaysUsedInventory();
@@ -195,7 +197,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		case EVENT_DAILY_UPDATE_OF_MERC_SITE:
 			DailyUpdateOfMercSite( (UINT16)GetWorldDay() );
 			break;
-    case EVENT_DAY3_ADD_EMAIL_FROM_SPECK:
+	case EVENT_DAY3_ADD_EMAIL_FROM_SPECK:
 			if(!bMercDayOne)
 			{
 				AddEmail(MERC_INTRO, MERC_INTRO_LENGTH, SPECK_FROM_MERC, GetWorldTotalMin( ), -1 );
@@ -205,7 +207,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			AddEmail(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin( ), -1 );
 			break;
 		//If a merc gets hired and they dont show up immediately, the merc gets added to the queue and shows up
-		// uiTimeTillMercArrives  minutes later
+		// uiTimeTillMercArrives	minutes later
 		case EVENT_DELAYED_HIRING_OF_MERC:
 			MercArrivesCallback(	(UINT8) pEvent->uiParam );
 			break;
@@ -311,8 +313,8 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			break;
 		case EVENT_RAINSTORM:
 
-      // ATE: Disabled
-      //rain
+		// ATE: Disabled
+		//rain
 			if( pEvent->ubEventType == ENDRANGED_EVENT )
 			{
 				EnvEndRainStorm( );
@@ -445,6 +447,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 #ifdef CRIPPLED_VERSION
 void CrippledVersionEndGameCheck()
 {
+	PERFORMANCE_MARKER
 	CHAR16	zString[512];
 
 	//Dont want this to appear before we arrive
@@ -453,11 +456,11 @@ void CrippledVersionEndGameCheck()
 
 	if( guiDay >= 8 )
 	{
-		swprintf( zString, L"Game Over.  We hope you have enjoyed playing the limited version of Jagged Alliance 2." );
+		swprintf( zString, L"Game Over.	We hope you have enjoyed playing the limited version of Jagged Alliance 2." );
 	}
 	else
 	{
-		swprintf( zString, L"You have %d game days left in this limited version of Jagged Alliance 2.",  ( 8 - guiDay ) );
+		swprintf( zString, L"You have %d game days left in this limited version of Jagged Alliance 2.",	( 8 - guiDay ) );
 	}
 
 	DoScreenIndependantMessageBox( zString, MSG_BOX_FLAG_OK, CrippledVersionEndGameCheckCallBack );	
@@ -465,6 +468,7 @@ void CrippledVersionEndGameCheck()
 
 void CrippledVersionEndGameCheckCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	//if we should restart the game
 	if( guiDay >= 8 )
 	{

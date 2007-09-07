@@ -30,10 +30,11 @@ extern BOOLEAN bShowSmallImage;
 
 void CreateLoadingScreenProgressBar()
 {
+	PERFORMANCE_MARKER
 	gusLeftmostShaded = 162;
 	gfUseLoadScreenProgressBar = TRUE;
 
-	// Special case -> show small image centered
+	// Special case->show small image centered
 	if (bShowSmallImage == TRUE)
 	{
 		if (iResolution > 0)
@@ -60,6 +61,7 @@ void CreateLoadingScreenProgressBar()
 
 void RemoveLoadingScreenProgressBar()
 {
+	PERFORMANCE_MARKER
 	gfUseLoadScreenProgressBar = FALSE;
 	RemoveProgressBar( 0 );
 	SetFontShadow(DEFAULT_SHADOW);
@@ -69,6 +71,7 @@ void RemoveLoadingScreenProgressBar()
 //A panel is automatically created if you specify a title using SetProgressBarTitle
 BOOLEAN CreateProgressBar( UINT8 ubProgressBarID, UINT16 usLeft, UINT16 usTop, UINT16 usRight, UINT16 usBottom )
 {
+	PERFORMANCE_MARKER
 	PROGRESSBAR *pNew;
 	//Allocate new progress bar
 	pNew = (PROGRESSBAR*)MemAlloc( sizeof( PROGRESSBAR ) );
@@ -104,11 +107,12 @@ BOOLEAN CreateProgressBar( UINT8 ubProgressBarID, UINT16 usLeft, UINT16 usTop, U
 	return TRUE;
 }
 
-//You may also define a panel to go in behind the progress bar.  You can now assign a title to go with
+//You may also define a panel to go in behind the progress bar.	You can now assign a title to go with
 //the panel.
 void DefineProgressBarPanel( UINT32 ubID, UINT8 r, UINT8 g, UINT8 b,
-														 UINT16 usLeft, UINT16 usTop, UINT16 usRight, UINT16 usBottom )
+														UINT16 usLeft, UINT16 usTop, UINT16 usRight, UINT16 usBottom )
 {
+	PERFORMANCE_MARKER
 	PROGRESSBAR *pCurr;
 	Assert( ubID < MAX_PROGRESSBARS );
 	pCurr = pBar[ ubID ];
@@ -123,8 +127,8 @@ void DefineProgressBarPanel( UINT32 ubID, UINT8 r, UINT8 g, UINT8 b,
 	pCurr->usColor = Get16BPPColor( FROMRGB( r, g, b ) );
 	//Calculate the slightly lighter and darker versions of the same rgb color
 	pCurr->usLtColor = Get16BPPColor( FROMRGB( (UINT8)min( 255, (UINT16)(r*1.33)), 
-																						 (UINT8)min( 255, (UINT16)(g*1.33)),
-																						 (UINT8)min( 255, (UINT16)(b*1.33)) ));
+																						(UINT8)min( 255, (UINT16)(g*1.33)),
+																						(UINT8)min( 255, (UINT16)(b*1.33)) ));
 	pCurr->usDkColor = Get16BPPColor( FROMRGB( (UINT8)(r*0.75), (UINT8)(g*0.75), (UINT8)(b*0.75) ) );
 }
 
@@ -132,6 +136,7 @@ void DefineProgressBarPanel( UINT32 ubID, UINT8 r, UINT8 g, UINT8 b,
 //panel and vertically centered from the top of the panel, to the top of the progress bar.
 void SetProgressBarTitle( UINT32 ubID, STR16 pString, UINT32 usFont, UINT8 ubForeColor, UINT8 ubShadowColor )
 {
+	PERFORMANCE_MARKER
 	PROGRESSBAR *pCurr;
 	Assert( ubID < MAX_PROGRESSBARS );
 	pCurr = pBar[ ubID ];
@@ -156,6 +161,7 @@ void SetProgressBarTitle( UINT32 ubID, STR16 pString, UINT32 usFont, UINT8 ubFor
 //default to FONT12POINT1 in a black color.
 void SetProgressBarMsgAttributes( UINT32 ubID, UINT32 usFont, UINT8 ubForeColor, UINT8 ubShadowColor )
 {
+	PERFORMANCE_MARKER
 	PROGRESSBAR *pCurr;
 	Assert( ubID < MAX_PROGRESSBARS );
 	pCurr = pBar[ ubID ];
@@ -170,6 +176,7 @@ void SetProgressBarMsgAttributes( UINT32 ubID, UINT32 usFont, UINT8 ubForeColor,
 //When finished, the progress bar needs to be removed.
 void RemoveProgressBar( UINT8 ubID )
 {
+	PERFORMANCE_MARKER
 	Assert( ubID < MAX_PROGRESSBARS );
 	if( pBar[ubID] )
 	{
@@ -181,15 +188,16 @@ void RemoveProgressBar( UINT8 ubID )
 	}
 }
 
-//An important setup function.  The best explanation is through example.  The example being the loading
-//of a file -- there are many stages of the map loading.  In JA2, the first step is to load the tileset.
+//An important setup function.	The best explanation is through example.	The example being the loading
+//of a file -- there are many stages of the map loading.	In JA2, the first step is to load the tileset.
 //Because it is a large chunk of the total loading of the map, we may gauge that it takes up 30% of the
-//total load.  Because it is also at the beginning, we would pass in the arguments ( 0, 30, "text" ).
+//total load.	Because it is also at the beginning, we would pass in the arguments ( 0, 30, "text" ).
 //As the process animates using UpdateProgressBar( 0 to 100 ), the total progress bar will only reach 30%
-//at the 100% mark within UpdateProgressBar.  At that time, you would go onto the next step, resetting the
+//at the 100% mark within UpdateProgressBar.	At that time, you would go onto the next step, resetting the
 //relative start and end percentage from 30 to whatever, until your done.
 void SetRelativeStartAndEndPercentage( UINT8 ubID, UINT32 uiRelStartPerc, UINT32 uiRelEndPerc, STR16 str)
 {
+	PERFORMANCE_MARKER
 	PROGRESSBAR *pCurr;
 	UINT16 usStartX, usStartY;
 
@@ -217,8 +225,8 @@ void SetRelativeStartAndEndPercentage( UINT8 ubID, UINT32 uiRelStartPerc, UINT32
 		if( pCurr->swzTitle )
 		{
 			usStartX = pCurr->usPanelLeft +																					// left position
-								 (pCurr->usPanelRight - pCurr->usPanelLeft)/2 -								// + half width
-								 StringPixLength( pCurr->swzTitle, pCurr->usTitleFont ) / 2;	// - half string width
+								(pCurr->usPanelRight - pCurr->usPanelLeft)/2 -								// + half width
+								StringPixLength( pCurr->swzTitle, pCurr->usTitleFont ) / 2;	// - half string width
 			usStartY = pCurr->usPanelTop + 3;
 			SetFont( pCurr->usTitleFont );
 			SetFontForeground( pCurr->ubTitleFontForeColor );
@@ -249,11 +257,12 @@ void SetRelativeStartAndEndPercentage( UINT8 ubID, UINT32 uiRelStartPerc, UINT32
 	}
 }
 
-//This part renders the progress bar at the percentage level that you specify.  If you have set relative
+//This part renders the progress bar at the percentage level that you specify.	If you have set relative
 //percentage values in the above function, then the uiPercentage will be reflected based off of the relative
-//percentages.  
+//percentages.	
 void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 {
+	PERFORMANCE_MARKER
 	static UINT32 uiLastTime = 0;
 	UINT32 uiCurTime = GetJA2Clock();
 	double rActual;
@@ -303,7 +312,7 @@ void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 			//Interior of progress bar in black
 			ColorFillVideoSurfaceArea( FRAME_BUFFER,	
 				pCurr->usBarLeft+2, pCurr->usBarTop+2, pCurr->usBarRight-2, pCurr->usBarBottom-2, 
-				Get16BPPColor(FROMRGB(  0,   0,   0)) );
+				Get16BPPColor(FROMRGB(	0,	0,	0)) );
 			ColorFillVideoSurfaceArea(FRAME_BUFFER,	pCurr->usBarLeft+2, pCurr->usBarTop+2, end, pCurr->usBarBottom-2, Get16BPPColor(FROMRGB(72 , 155, 24)));
 		}
 		InvalidateRegion( pCurr->usBarLeft, pCurr->usBarTop, pCurr->usBarRight, pCurr->usBarBottom );
@@ -322,6 +331,7 @@ void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 
 void SetProgressBarColor( UINT8 ubID, UINT8 ubColorFillRed, UINT8 ubColorFillGreen, UINT8 ubColorFillBlue )
 {
+	PERFORMANCE_MARKER
 	PROGRESSBAR *pCurr=NULL;
 
 	Assert( ubID < MAX_PROGRESSBARS );
@@ -338,6 +348,7 @@ void SetProgressBarColor( UINT8 ubID, UINT8 ubColorFillRed, UINT8 ubColorFillGre
 
 void SetProgressBarTextDisplayFlag( UINT8 ubID, BOOLEAN fDisplayText, BOOLEAN fUseSaveBuffer, BOOLEAN fSaveScreenToFrameBuffer )
 {
+	PERFORMANCE_MARKER
 	PROGRESSBAR *pCurr=NULL;
 
 

@@ -31,6 +31,7 @@ void UpdateRegenCounters( void );
 
 void HandleMinuteUpdate()
 {
+	PERFORMANCE_MARKER
 }
 
 // This function gets called every hour, on the hour.
@@ -39,6 +40,7 @@ void HandleMinuteUpdate()
 
 void HandleHourlyUpdate()
 {
+	PERFORMANCE_MARKER
 	//if the game hasnt even started yet ( we havent arrived in the sector ) dont process this
 	if ( DidGameJustStart() )
 		return;
@@ -82,6 +84,7 @@ void HandleHourlyUpdate()
 
 void UpdateRegenCounters( void )
 {
+	PERFORMANCE_MARKER
 	UINT8	ubID;
 		
 	for ( ubID = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; ubID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubID++ )
@@ -95,16 +98,18 @@ void UpdateRegenCounters( void )
 
 void HandleQuarterHourUpdate()
 {
+	PERFORMANCE_MARKER
 	//if the game hasnt even started yet ( we havent arrived in the sector ) dont process this
 	if ( DidGameJustStart() )
 		return;
 
-  DecayTacticalMoraleModifiers( );
+	DecayTacticalMoraleModifiers( );
 }
 
 
 void HourlyQuestUpdate( void )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiHour = GetWorldHour();
 
 	// brothel 
@@ -168,9 +173,9 @@ UINT16	LarryItems[ NUM_LARRY_ITEMS ][ 3 ] =
 {
 	// item, temptation, points to use
 	{ ADRENALINE_BOOSTER,		5, 100 },
-	{	ALCOHOL,							BAR_TEMPTATION, 25  },
-	{ MEDICKIT,							4, 10  },
-	{	WINE,									3, 50  },
+	{	ALCOHOL,							BAR_TEMPTATION, 25	},
+	{ MEDICKIT,							4, 10	},
+	{	WINE,									3, 50	},
 	{ REGEN_BOOSTER,				3, 100 },
 	{	BEER,									2, 100 },
 };
@@ -179,6 +184,7 @@ UINT16	LarryItems[ NUM_LARRY_ITEMS ][ 3 ] =
 
 void HourlyLarryUpdate( void )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *			pSoldier;
 	INT8							bSlot = NO_SLOT, bBoozeSlot;
 	INT8							bLarryItemLoop;
@@ -197,7 +203,7 @@ void HourlyLarryUpdate( void )
 		{
 			return;
 		}
-		if ( pSoldier->fBetweenSectors )
+		if ( pSoldier->flags.fBetweenSectors )
 		{
 			return;
 		}
@@ -251,7 +257,7 @@ void HourlyLarryUpdate( void )
 						AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, pSoldier->ubProfile, GetWorldTotalMin() , -( usCashAmount ) );
 						// give Larry some booze and set slot etc values appropriately
 						// CHRISL: Change final parameter to allow dynamic control of inventory slots
-						bBoozeSlot = FindEmptySlotWithin( pSoldier, HANDPOS, (NUM_INV_SLOTS-1) );
+						bBoozeSlot = FindEmptySlotWithin( pSoldier, HANDPOS, NUM_INV_SLOTS );
 						if ( bBoozeSlot != NO_SLOT )
 						{
 							// give Larry booze here
@@ -283,7 +289,7 @@ void HourlyLarryUpdate( void )
 					AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, pSoldier->ubProfile, GetWorldTotalMin() , -( usCashAmount ) );
 					// give Larry some booze and set slot etc values appropriately
 					// CHRISL: Change final parameter to allow dynamic control of inventory slots
-					bBoozeSlot = FindEmptySlotWithin( pSoldier, HANDPOS, (NUM_INV_SLOTS-1) );
+					bBoozeSlot = FindEmptySlotWithin( pSoldier, HANDPOS, NUM_INV_SLOTS );
 					if ( bBoozeSlot != NO_SLOT )
 					{
 						// give Larry booze here
@@ -315,17 +321,18 @@ void HourlyLarryUpdate( void )
 
 void HourlyCheckIfSlayAloneSoHeCanLeave()
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	pSoldier = FindSoldierByProfileID( SLAY, TRUE );
 	if( !pSoldier )
 	{
 		return;
 	}
-	if( pSoldier->fBetweenSectors )
+	if( pSoldier->flags.fBetweenSectors )
 	{
 		return;
 	}
-	if( !pSoldier->bActive || !pSoldier->bLife )
+	if( !pSoldier->bActive || !pSoldier->stats.bLife )
 	{
 		return;
 	}

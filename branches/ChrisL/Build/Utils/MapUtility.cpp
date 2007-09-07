@@ -54,14 +54,16 @@ typedef struct
 
 UINT32	MapUtilScreenInit( )
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
 UINT32	MapUtilScreenHandle( )
 {
+	PERFORMANCE_MARKER
 	static INT16		fNewMap = TRUE;
 	static INT16		sFileNum = 0;
-  InputAtom  InputEvent;
+	InputAtom	InputEvent;
 	GETFILESTRUCT FileInfo;
 	static FDLG_LIST *FListNode;
 	static INT16 sFiles = 0, sCurFile = 0;
@@ -102,7 +104,7 @@ UINT32	MapUtilScreenHandle( )
 	if ( fNewMap )
 	{
 		fNewMap = FALSE;
-      
+		
 		// Create render buffer
 		GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
 		vs_desc.fCreateFlags = VSURFACE_CREATE_DEFAULT | VSURFACE_SYSTEM_MEM_USAGE;
@@ -132,7 +134,7 @@ UINT32	MapUtilScreenHandle( )
 
 		//Allocate 24 bit Surface
 		p24BitValues = (RGBValues *) MemAlloc( MINIMAP_X_SIZE * MINIMAP_Y_SIZE * sizeof( RGBValues ) );
-		p24BitDest	 = (UINT8*)p24BitValues;
+		p24BitDest	= (UINT8*)p24BitValues;
 
 
 		//Allocate 8-bit surface
@@ -153,7 +155,7 @@ UINT32	MapUtilScreenHandle( )
 	//OK, we are here, now loop through files
 	if ( sCurFile == sFiles || FListNode== NULL )
 	{
-    gfProgramIsRunning = FALSE;
+	gfProgramIsRunning = FALSE;
 		return( MAPUTILITY_SCREEN );
 	}
 
@@ -173,7 +175,7 @@ UINT32	MapUtilScreenHandle( )
 	RenderOverheadMap( 0, (WORLD_COLS / 2), iOffsetHorizontal, 
 		iOffsetVertical, 640 + iOffsetHorizontal, 320 + iOffsetVertical, FALSE );
 
-  TrashOverheadMap( );
+	TrashOverheadMap( );
 
 	// OK, NOW PROCESS OVERHEAD MAP ( SHOUIDL BE ON THE FRAMEBUFFER )
 	gdXStep	= (float)640/(float)88;
@@ -185,7 +187,7 @@ UINT32	MapUtilScreenHandle( )
 	{
 		CalculateRestrictedMapCoords( NORTH, &sX1, &sY1, &sX2, &sTop, iOffsetHorizontal + 640, iOffsetVertical + 320 );
 		CalculateRestrictedMapCoords( SOUTH, &sX1, &sBottom, &sX2, &sY2, iOffsetHorizontal + 640, iOffsetVertical + 320 );
-		CalculateRestrictedMapCoords( WEST,	 &sX1, &sY1, &sLeft, &sY2, iOffsetHorizontal + 640, iOffsetVertical + 320 );
+		CalculateRestrictedMapCoords( WEST,	&sX1, &sY1, &sLeft, &sY2, iOffsetHorizontal + 640, iOffsetVertical + 320 );
 		CalculateRestrictedMapCoords( EAST, &sRight, &sY1, &sX2, &sY2, iOffsetHorizontal + 640, iOffsetVertical + 320 );
 
 		gdXStep	= (float)( sRight - sLeft )/(float)88;
@@ -327,12 +329,12 @@ UINT32	MapUtilScreenHandle( )
 
 	InvalidateScreen( );
 
-  while (DequeueEvent(&InputEvent) == TRUE)
-  {
-      if ((InputEvent.usEvent == KEY_DOWN)&&(InputEvent.usParam == ESC))
-      { // Exit the program
-        gfProgramIsRunning = FALSE;
-      }
+	while (DequeueEvent(&InputEvent) == TRUE)
+	{
+		if ((InputEvent.usEvent == KEY_DOWN)&&(InputEvent.usParam == ESC))
+		{ // Exit the program
+		gfProgramIsRunning = FALSE;
+		}
 	}
 
 	// Set next
@@ -345,6 +347,7 @@ UINT32	MapUtilScreenHandle( )
 
 UINT32 MapUtilScreenShutdown( )
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
@@ -355,17 +358,20 @@ UINT32 MapUtilScreenShutdown( )
 
 UINT32	MapUtilScreenInit( )
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
 UINT32	MapUtilScreenHandle( )
 {
+	PERFORMANCE_MARKER
 	//If this screen ever gets set, then this is a bad thing -- endless loop
 	return( ERROR_SCREEN );
 }
 
 UINT32 MapUtilScreenShutdown( )
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 }
 

@@ -7,8 +7,8 @@
 // Modification history :
 //
 //		11sep96:HJH	- Creation
-//    29may97:ARM - Fix & improve MemDebugCounter handling, logging of
-//                    MemAlloc/MemFree, and reporting of any errors
+//	29may97:ARM - Fix & improve MemDebugCounter handling, logging of
+//					MemAlloc/MemFree, and reporting of any errors
 //
 //**************************************************************************
 
@@ -92,8 +92,8 @@ STR16 gzJA2ScreenNames[] =
 		UINT32 uiSize;
 	}MEMORY_NODE;
 
-	MEMORY_NODE  *gpMemoryHead = NULL;
-	MEMORY_NODE  *gpMemoryTail = NULL;
+	MEMORY_NODE	*gpMemoryHead = NULL;
+	MEMORY_NODE	*gpMemoryTail = NULL;
 	UINT32				guiMemoryNodes = 0;
 	UINT32				guiTotalMemoryNodes = 0;
 #endif
@@ -101,8 +101,8 @@ STR16 gzJA2ScreenNames[] =
 static BOOLEAN gfMemDebug = TRUE;
 // debug variable for total memory currently allocated
 UINT32	guiMemTotal = 0;
-UINT32  guiMemAlloced = 0;
-UINT32  guiMemFreed = 0;
+UINT32	guiMemAlloced = 0;
+UINT32	guiMemFreed = 0;
 UINT32	MemDebugCounter = 0;
 BOOLEAN fMemManagerInit = FALSE;
 
@@ -130,12 +130,13 @@ void			DebugPrint( void );
 // Return Value :
 // Modification history :
 //
-//		12sep96:HJH		-> modified for use by Wizardry
+//		12sep96:HJH		->modified for use by Wizardry
 //
 //**************************************************************************
 
 BOOLEAN InitializeMemoryManager( void )
 {
+	PERFORMANCE_MARKER
 	// Register the memory manager with the debugger
 	RegisterDebugTopic(TOPIC_MEMORY_MANAGER, "Memory Manager");
 	MemDebugCounter = 0;
@@ -164,12 +165,13 @@ BOOLEAN InitializeMemoryManager( void )
 // Return Value :
 // Modification history :
 //
-//		12sep96:HJH		-> modified for use by Wizardry
+//		12sep96:HJH		->modified for use by Wizardry
 //
 //**************************************************************************
 
 void MemDebug( BOOLEAN f )
 {
+	PERFORMANCE_MARKER
 	gfMemDebug = f;
 }
 
@@ -183,12 +185,13 @@ void MemDebug( BOOLEAN f )
 // Return Value :
 // Modification history :
 //
-//		12sep96:HJH		-> modified for use by Wizardry
+//		12sep96:HJH		->modified for use by Wizardry
 //
 //**************************************************************************
 
 void ShutdownMemoryManager( void )
 {
+	PERFORMANCE_MARKER
 	if ( MemDebugCounter != 0 )
 	{
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String(" "));
@@ -196,7 +199,7 @@ void ShutdownMemoryManager( void )
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("***** WARNING - WARNING - WARNING *****"));
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("***** WARNING - WARNING - WARNING *****"));
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String(" "));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("  >>>>> MEMORY LEAK DETECTED!!! <<<<<  "));
+		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("	>>>>> MEMORY LEAK DETECTED!!! <<<<<	"));
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d memory blocks still allocated", MemDebugCounter ));
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total STILL allocated", guiMemTotal ));
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total was allocated", guiMemAlloced));
@@ -217,7 +220,7 @@ void ShutdownMemoryManager( void )
 				{
 					fprintf( fp, "\n\n" );
 					fprintf( fp, ">>>>> MEMORY LEAK DETECTED!!! <<<<<\n" );
-					fprintf( fp, "  %d bytes memory total was allocated\n", guiMemAlloced );
+					fprintf( fp, "	%d bytes memory total was allocated\n", guiMemAlloced );
 					fprintf( fp, "- %d bytes memory total was freed\n", guiMemFreed );
 					fprintf( fp, "_______________________________________________\n" );
 					fprintf( fp, "%d bytes memory total STILL allocated\n", guiMemTotal );
@@ -242,6 +245,7 @@ void ShutdownMemoryManager( void )
 
 PTR MemAllocReal( UINT32 uiSize, const STR8 pcFile, INT32 iLine )
 {
+	PERFORMANCE_MARKER
 	PTR	ptr;
 
 	if( !uiSize )
@@ -250,23 +254,23 @@ PTR MemAllocReal( UINT32 uiSize, const STR8 pcFile, INT32 iLine )
 	}
 
 	if ( !fMemManagerInit )
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAlloc: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile) );
+	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAlloc: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile) );
 
 
 	ptr = _malloc_dbg( uiSize, _NORMAL_BLOCK, pcFile, iLine );
-  if (ptr != NULL)
-  {
-		guiMemTotal   += uiSize;
+	if (ptr != NULL)
+	{
+		guiMemTotal	+= uiSize;
 		guiMemAlloced += uiSize;
 		MemDebugCounter++;
-  }
-  else
+	}
+	else
 	{
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAlloc failed: %d bytes (line %d file %s)", uiSize, iLine, pcFile) );
+	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAlloc failed: %d bytes (line %d file %s)", uiSize, iLine, pcFile) );
 	}
 
 #ifdef DEBUG_MEM_LEAKS
-  DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemAlloc %p: %d bytes (line %d file %s)", ptr, uiSize, iLine, pcFile) );
+	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemAlloc %p: %d bytes (line %d file %s)", ptr, uiSize, iLine, pcFile) );
 #endif
 
 	return( ptr );
@@ -275,56 +279,58 @@ PTR MemAllocReal( UINT32 uiSize, const STR8 pcFile, INT32 iLine )
 
 void MemFreeReal( PTR ptr, const STR8 pcFile, INT32 iLine )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiSize;
 
 	if ( !fMemManagerInit )
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFree: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile) );
+	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFree: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile) );
 
-  if (ptr != NULL)
-  {
+	if (ptr != NULL)
+	{
 		uiSize = _msize(ptr);
 		guiMemTotal -= uiSize;
 		guiMemFreed += uiSize;
 		_free_dbg( ptr, _NORMAL_BLOCK );
 
 #ifdef DEBUG_MEM_LEAKS
-	  DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemFree  %p: %d bytes (line %d file %s)", ptr, uiSize, iLine, pcFile) );
+	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemFree	%p: %d bytes (line %d file %s)", ptr, uiSize, iLine, pcFile) );
 #endif
-  }
-  else
-  {
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFree ERROR: NULL ptr received (line %d file %s)", iLine, pcFile) );
-  }
+	}
+	else
+	{
+	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFree ERROR: NULL ptr received (line %d file %s)", iLine, pcFile) );
+	}
 
-  // count even a NULL ptr as a MemFree, not because it's really a memory leak, but because it is still an error of some
-  // sort (nobody should ever be freeing NULL pointers), and this will help in tracking it down if the above DbgMessage
-  // is not noticed.
-  MemDebugCounter--;
+	// count even a NULL ptr as a MemFree, not because it's really a memory leak, but because it is still an error of some
+	// sort (nobody should ever be freeing NULL pointers), and this will help in tracking it down if the above DbgMessage
+	// is not noticed.
+	MemDebugCounter--;
 }
 
 
 PTR MemReallocReal( PTR ptr, UINT32 uiSize, const STR8 pcFile, INT32 iLine )
 {
+	PERFORMANCE_MARKER
 	PTR	ptrNew;
 	UINT32 uiOldSize = 0;
 
 
 	if ( !fMemManagerInit )
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemRealloc: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile) );
+	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemRealloc: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile) );
 
-  if(ptr != NULL)
+	if(ptr != NULL)
 	{
 		uiOldSize = _msize(ptr);
 		guiMemTotal -= uiOldSize;
 		guiMemFreed += uiOldSize;
-	  MemDebugCounter--;
+	MemDebugCounter--;
 	}
 
 	// Note that the ptr changes to ptrNew...
 	ptrNew = _realloc_dbg( ptr, uiSize, _NORMAL_BLOCK, pcFile, iLine );
-  if (ptrNew == NULL)
-  {
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemReAlloc failed: ptr %d, %d -> %d bytes (line %d file %s)", ptr, uiOldSize, uiSize, iLine, pcFile) );
+	if (ptrNew == NULL)
+	{
+		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemReAlloc failed: ptr %d, %d->%d bytes (line %d file %s)", ptr, uiOldSize, uiSize, iLine, pcFile) );
 		if ( uiSize != 0 )
 		{
 			// ptr is left untouched, so undo the math above
@@ -332,17 +338,17 @@ PTR MemReallocReal( PTR ptr, UINT32 uiSize, const STR8 pcFile, INT32 iLine )
 			guiMemFreed -= uiOldSize;
 			MemDebugCounter++;
 		}
-  }
-  else
-  {
+	}
+	else
+	{
 #ifdef DEBUG_MEM_LEAKS
-  	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemRealloc %p: Resizing %d bytes to %d bytes (line %d file %s) - New ptr %p", ptr, uiOldSize, uiSize, iLine, pcFile, ptrNew ) );
+		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemRealloc %p: Resizing %d bytes to %d bytes (line %d file %s) - New ptr %p", ptr, uiOldSize, uiSize, iLine, pcFile, ptrNew ) );
 #endif
 
-		guiMemTotal   += uiSize;
+		guiMemTotal	+= uiSize;
 		guiMemAlloced += uiSize;
 		MemDebugCounter++;
-  }
+	}
 
 	return( ptrNew );
 }
@@ -352,29 +358,30 @@ PTR MemReallocReal( PTR ptr, UINT32 uiSize, const STR8 pcFile, INT32 iLine )
 
 PTR MemAllocLocked( UINT32 uiSize )
 {
+	PERFORMANCE_MARKER
 	PTR	ptr;
 
 	if ( !fMemManagerInit )
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAllocLocked: Warning -- Memory manager not initialized!!! ") );
+	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAllocLocked: Warning -- Memory manager not initialized!!! ") );
 
 	
 	ptr = VirtualAlloc( NULL, uiSize, MEM_COMMIT, PAGE_READWRITE );
 
 	if ( ptr )
 	{
-    VirtualLock( ptr, uiSize );
+	VirtualLock( ptr, uiSize );
 
-		guiMemTotal   += uiSize;
+		guiMemTotal	+= uiSize;
 		guiMemAlloced += uiSize;
 		MemDebugCounter++;
-  }
-  else
+	}
+	else
 	{
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAllocLocked failed: %d bytes", uiSize) );
+	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAllocLocked failed: %d bytes", uiSize) );
 	}
 
 #ifdef DEBUG_MEM_LEAKS
-  DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemAllocLocked %p: %d bytes", ptr, uiSize) );
+	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemAllocLocked %p: %d bytes", ptr, uiSize) );
 #endif
 
 	return( ptr );
@@ -383,30 +390,31 @@ PTR MemAllocLocked( UINT32 uiSize )
 
 void MemFreeLocked( PTR ptr, UINT32 uiSize )
 {
+	PERFORMANCE_MARKER
 	if ( !fMemManagerInit )
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFreeLocked: Warning -- Memory manager not initialized!!! ") );
+	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFreeLocked: Warning -- Memory manager not initialized!!! ") );
 
 
-  if (ptr != NULL)
-  {
-	  VirtualUnlock( ptr, uiSize );
-	  VirtualFree( ptr, uiSize, MEM_RELEASE );
+	if (ptr != NULL)
+	{
+	VirtualUnlock( ptr, uiSize );
+	VirtualFree( ptr, uiSize, MEM_RELEASE );
 
 		guiMemTotal -= uiSize;
 		guiMemFreed += uiSize;
-  }
-  else
-  {
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFreeLocked ERROR: NULL ptr received, size %d", uiSize) );
-  }
+	}
+	else
+	{
+	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFreeLocked ERROR: NULL ptr received, size %d", uiSize) );
+	}
 
-  // count even a NULL ptr as a MemFree, not because it's really a memory leak, but because it is still an error of some
-  // sort (nobody should ever be freeing NULL pointers), and this will help in tracking it down if the above DbgMessage
-  // is not noticed.
-  MemDebugCounter--;
+	// count even a NULL ptr as a MemFree, not because it's really a memory leak, but because it is still an error of some
+	// sort (nobody should ever be freeing NULL pointers), and this will help in tracking it down if the above DbgMessage
+	// is not noticed.
+	MemDebugCounter--;
 
 #ifdef DEBUG_MEM_LEAKS
-  DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemFreeLocked  %p", ptr) );
+	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemFreeLocked	%p", ptr) );
 #endif
 }
 
@@ -421,12 +429,13 @@ void MemFreeLocked( PTR ptr, UINT32 uiSize )
 // Return Value :
 // Modification history :
 //
-//		??sep96:HJH		-> modified for use by Wizardry
+//		??sep96:HJH		->modified for use by Wizardry
 //
 //**************************************************************************
 
 UINT32 MemGetFree( void )
 {
+	PERFORMANCE_MARKER
 	MEMORYSTATUS ms;
 
 	ms.dwLength = sizeof(MEMORYSTATUS);
@@ -446,12 +455,13 @@ UINT32 MemGetFree( void )
 // Return Value :
 // Modification history :
 //
-//		May98:HJH		-> Carter
+//		May98:HJH		->Carter
 //
 //**************************************************************************
 
 UINT32 MemGetTotalSystem( void )
 {
+	PERFORMANCE_MARKER
 	MEMORYSTATUS ms;
 
 	ms.dwLength = sizeof(MEMORYSTATUS);
@@ -471,12 +481,13 @@ UINT32 MemGetTotalSystem( void )
 // Return Value :
 // Modification history :
 //
-//		23sep96:HJH		-> modified for use by Wizardry
+//		23sep96:HJH		->modified for use by Wizardry
 //
 //**************************************************************************
 
 BOOLEAN MemCheckPool( void )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fRet = TRUE;
 
 #ifdef _DEBUG
@@ -493,6 +504,7 @@ BOOLEAN MemCheckPool( void )
 
 PTR MemAllocXDebug( UINT32 size, const STR8 szCodeString, INT32 iLineNum, void *pSpecial )
 {
+	PERFORMANCE_MARKER
 	PTR	ptr;
 	UINT16 usLength;
 	UINT8 str[70];
@@ -503,7 +515,7 @@ PTR MemAllocXDebug( UINT32 size, const STR8 szCodeString, INT32 iLineNum, void *
 		return NULL;
 	}
 
-	if( !pSpecial  )
+	if( !pSpecial	)
 	{
 		ptr = malloc( size );
 	}
@@ -512,8 +524,8 @@ PTR MemAllocXDebug( UINT32 size, const STR8 szCodeString, INT32 iLineNum, void *
 		ptr = pSpecial;
 	}
 
-  if( ptr )
-  {
+	if( ptr )
+	{
 		// Set into video object list
 		if( gpMemoryHead )
 		{ //Add node after tail
@@ -554,10 +566,11 @@ PTR MemAllocXDebug( UINT32 size, const STR8 szCodeString, INT32 iLineNum, void *
 
 void MemFreeXDebug( PTR ptr, const STR8 szCodeString, INT32 iLineNum, void *pSpecial )
 {
+	PERFORMANCE_MARKER
 	MEMORY_NODE *curr;
 
-  if( ptr )
-  {
+	if( ptr )
+	{
 		curr = gpMemoryHead;
 		while( curr )
 		{
@@ -586,7 +599,7 @@ void MemFreeXDebug( PTR ptr, const STR8 szCodeString, INT32 iLineNum, void *pSpe
 				{ //Make the next node point to the prev
 					curr->prev->next = curr->next;
 				}
-				//The node is now detached.  Now deallocate it.
+				//The node is now detached.	Now deallocate it.
 				free( curr );
 				curr = NULL;
 				guiMemoryNodes--;
@@ -594,11 +607,12 @@ void MemFreeXDebug( PTR ptr, const STR8 szCodeString, INT32 iLineNum, void *pSpe
 			}
 			curr = curr->next;
 		}
-  }
+	}
 }
 
 PTR	MemReallocXDebug( PTR ptr, UINT32 size, const STR8 szCodeString, INT32 iLineNum, void *pSpecial )
 {
+	PERFORMANCE_MARKER
 	MEMORY_NODE *curr;
 	PTR	ptrNew;
 	UINT16 usLength;
@@ -659,6 +673,7 @@ typedef struct DUMPFILENAME
 
 void DumpMemoryInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
 {
+	PERFORMANCE_MARKER
 	MEMORY_NODE *curr;
 	FILE *fp;
 	DUMPFILENAME *pCode;
@@ -679,7 +694,7 @@ void DumpMemoryInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
 
 	if( !guiMemoryNodes )
 	{
-		fprintf( fp, "NO MEMORY LEAKS DETECTED!  CONGRATULATIONS!\n" );
+		fprintf( fp, "NO MEMORY LEAKS DETECTED!	CONGRATULATIONS!\n" );
 		fclose( fp );
 		return;
 	}
@@ -747,6 +762,7 @@ void DumpMemoryInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
 
 BOOLEAN _AddAndRecordMemAlloc( UINT32 size, UINT32 uiLineNum, UINT8 *pSourceFile )
 {
+	PERFORMANCE_MARKER
 	return 0;
 }
 

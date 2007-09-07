@@ -77,6 +77,7 @@ extern void Ensure_RepairedGarrisonGroup( GARRISON_GROUP **ppGarrison, INT32 *pG
 
 void ValidateEnemiesHaveWeapons()
 {
+	PERFORMANCE_MARKER
 	#ifdef JA2BETAVERSION
 		SGPRect CenteringRect= {0, 0, 639, 479 };
 		INT32 i, iErrorDialog;
@@ -109,6 +110,7 @@ void ValidateEnemiesHaveWeapons()
 //Counts enemies and crepitus, but not bloodcats.
 UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubNumHostiles = 0;
 
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
@@ -150,6 +152,7 @@ UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 
 UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubNumEnemies = 0;
 
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
@@ -191,6 +194,7 @@ UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 
 UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	GROUP *pGroup;
 	UINT8 ubNumTroops;
@@ -215,6 +219,7 @@ UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 
 UINT8 NumStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
 	Assert( sSectorY >= 1 && sSectorY <= 16 );
@@ -239,6 +244,7 @@ UINT8 NumStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 
 UINT8 NumMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
+	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	SECTORINFO *pSector;
 	UINT8 ubNumTroops;
@@ -267,6 +273,7 @@ UINT8 NumMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 
 void GetNumberOfMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
 {
+	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	SECTORINFO *pSector;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
@@ -298,6 +305,7 @@ void GetNumberOfMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pu
 
 void GetNumberOfMobileEnemiesInSectorWithoutRoadBlock( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
 {
+	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
 	Assert( sSectorY >= 1 && sSectorY <= 16 );
@@ -320,6 +328,7 @@ void GetNumberOfMobileEnemiesInSectorWithoutRoadBlock( INT16 sSectorX, INT16 sSe
 
 void GetNumberOfStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
 	Assert( sSectorY >= 1 && sSectorY <= 16 );
@@ -333,6 +342,7 @@ void GetNumberOfStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8
 
 void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
 	
 	GetNumberOfStationaryEnemiesInSector( sSectorX, sSectorY, pubNumAdmins, pubNumTroops, pubNumElites );
@@ -346,8 +356,9 @@ void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAd
 
 void EndTacticalBattleForEnemy()
 {
+	PERFORMANCE_MARKER
 	GROUP *pGroup;
-	INT32 i, iNumMilitia = 0, iNumEnemies = 0;
+	INT32 i;
 
 	//Clear enemies in battle for all stationary groups in the sector.
 	if( gbWorldSectorZ > 0 )
@@ -393,12 +404,12 @@ void EndTacticalBattleForEnemy()
 	//severe loyalty blow.
 	for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bInSector && MercPtrs[ i ]->bLife >= OKLIFE )
+		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bInSector && MercPtrs[ i ]->stats.bLife >= OKLIFE )
 		{ //found one live militia, so look for any enemies/creatures.
 			// NOTE: this is relying on ENEMY_TEAM being immediately followed by CREATURE_TEAM
 			for( i = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; i++ )
 			{
-				if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bInSector && MercPtrs[ i ]->bLife >= OKLIFE )
+				if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bInSector && MercPtrs[ i ]->stats.bLife >= OKLIFE )
 				{ //confirmed at least one enemy here, so do the loyalty penalty.
 					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_ABANDON_MILITIA, gWorldSectorX, gWorldSectorY, 0 );
 					break;
@@ -411,6 +422,7 @@ void EndTacticalBattleForEnemy()
 
 UINT8 NumFreeEnemySlots()
 {
+	PERFORMANCE_MARKER
 	UINT8 ubNumFreeSlots = 0;
 	INT32 i;
 	SOLDIERTYPE *pSoldier;
@@ -429,6 +441,7 @@ UINT8 NumFreeEnemySlots()
 //in global focus (gWorldSectorX/Y)
 BOOLEAN PrepareEnemyForSectorBattle()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	GROUP *pGroup;
 	SOLDIERTYPE *pSoldier;
@@ -731,6 +744,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 
 BOOLEAN PrepareEnemyForUndergroundBattle()
 {
+	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO *pUnderground;
 	UINT8 ubTotalAdmins, ubTotalTroops, ubTotalElites;
 	pUnderground = gpUndergroundSectorInfoHead;
@@ -764,6 +778,7 @@ BOOLEAN PrepareEnemyForUndergroundBattle()
 //The queen AI layer must process the event by subtracting forces, etc.
 void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	INT32 iNumEnemiesInSector;
 	SECTORINFO *pSector;
 //	CHAR16 str[128];
@@ -809,7 +824,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 			break;
 	}
 
-	if( pSoldier->bNeutral || pSoldier->bTeam != ENEMY_TEAM && pSoldier->bTeam != CREATURE_TEAM )
+	if( pSoldier->aiData.bNeutral || pSoldier->bTeam != ENEMY_TEAM && pSoldier->bTeam != CREATURE_TEAM )
 		return;
 	//we are recording an enemy death
 	if( pSoldier->ubGroupID )
@@ -1176,6 +1191,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 //identical, though it is highly likely that they will all be successfully added on the first call.
 void AddPossiblePendingEnemiesToBattle()
 {
+	PERFORMANCE_MARKER
 	UINT8 ubSlots, ubNumAvailable;
 	UINT8 ubNumElites, ubNumTroops, ubNumAdmins;
 	UINT8 ubNumGroupsInSector;
@@ -1308,7 +1324,6 @@ void AddPossiblePendingEnemiesToBattle()
 		if( !pGroup->fPlayer && !pGroup->fVehicle && pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ )
 			ubNumGroupsInSector++;
 	}
-
 	pGroupInSectorList = (GROUP**) MemAlloc( ubNumGroupsInSector * sizeof( GROUP*));
 	for (ubNumGroupsInSector = 0, pGroup = gpGroupList; pGroup; pGroup = pGroup->next)
 	{
@@ -1404,6 +1419,7 @@ void AddPossiblePendingEnemiesToBattle()
 
 void NotifyPlayersOfNewEnemies()
 {
+	PERFORMANCE_MARKER
 	INT32 iSoldiers, iChosenSoldier, i;
 	SOLDIERTYPE *pSoldier;
 	BOOLEAN fIgnoreBreath = FALSE;
@@ -1412,7 +1428,7 @@ void NotifyPlayersOfNewEnemies()
 	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 	{ //find a merc that is aware.
 		pSoldier = MercPtrs[ i ];
-		if( pSoldier->bInSector && pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bBreath >= OKBREATH )
+		if( pSoldier->bInSector && pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && pSoldier->bBreath >= OKBREATH )
 		{
 			iSoldiers++;
 		}
@@ -1424,7 +1440,7 @@ void NotifyPlayersOfNewEnemies()
 		for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 		{ //find a merc that is aware.
 			pSoldier = MercPtrs[ i ];
-			if( pSoldier->bInSector && pSoldier->bActive && pSoldier->bLife >= OKLIFE )
+			if( pSoldier->bInSector && pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE )
 			{
 				iSoldiers++;
 			}
@@ -1436,7 +1452,7 @@ void NotifyPlayersOfNewEnemies()
 		for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 		{ //find a merc that is aware.
 			pSoldier = MercPtrs[ i ];
-			if( pSoldier->bInSector && pSoldier->bActive && pSoldier->bLife >= OKLIFE &&
+			if( pSoldier->bInSector && pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE &&
 				( ( pSoldier->bBreath >= OKBREATH ) || fIgnoreBreath ) )
 			{
 				if( !iChosenSoldier )
@@ -1460,6 +1476,7 @@ void NotifyPlayersOfNewEnemies()
 
 void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites, BOOLEAN fMagicallyAppeared )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	MAPEDGEPOINTINFO MapEdgepointInfo;
 	UINT8 ubCurrSlot;
@@ -1589,6 +1606,7 @@ void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT8 ub
 
 BOOLEAN SaveUnderGroundSectorInfoToSaveGame( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten;
 	UINT32	uiNumOfRecords=0;
 	UNDERGROUND_SECTORINFO *TempNode = gpUndergroundSectorInfoHead;
@@ -1627,6 +1645,7 @@ BOOLEAN SaveUnderGroundSectorInfoToSaveGame( HWFILE hFile )
 
 BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 	UINT32	uiNumOfRecords=0;
 	UINT32	cnt=0;
@@ -1693,6 +1712,7 @@ BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile )
 
 UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ )
 {
+	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO *pUnderground;
 	pUnderground = gpUndergroundSectorInfoHead;
 
@@ -1718,6 +1738,7 @@ UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 b
 
 void BeginCaptureSquence( )
 {
+	PERFORMANCE_MARKER
 	if( !( gStrategicStatus.uiFlags & STRATEGIC_PLAYER_CAPTURED_FOR_RESCUE ) || !( gStrategicStatus.uiFlags & STRATEGIC_PLAYER_CAPTURED_FOR_ESCAPE ) )
 	{
 		gStrategicStatus.ubNumCapturedForRescue = 0;
@@ -1726,6 +1747,7 @@ void BeginCaptureSquence( )
 
 void EndCaptureSequence( )
 {
+	PERFORMANCE_MARKER
 
 	// Set flag...
 	if( !( gStrategicStatus.uiFlags & STRATEGIC_PLAYER_CAPTURED_FOR_RESCUE ) || !(gStrategicStatus.uiFlags & STRATEGIC_PLAYER_CAPTURED_FOR_ESCAPE) )
@@ -1773,8 +1795,8 @@ void EndCaptureSequence( )
 
 void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 {
-	INT32					i;
-	WORLDITEM			WorldItem;
+	PERFORMANCE_MARKER
+	UINT32					i;
   BOOLEAN       fMadeCorpse;
   INT32         iNumEnemiesInSector;
 
@@ -1802,12 +1824,12 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
   // If this is an EPC , just kill them...
   if ( AM_AN_EPC( pSoldier ) )
   {
-	  pSoldier->bLife = 0;
+	  pSoldier->stats.bLife = 0;
     HandleSoldierDeath( pSoldier, &fMadeCorpse );
     return;
   }
 
-  if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+  if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
   {
     return;
   }
@@ -1839,10 +1861,12 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 	// ATE: Make them neutral!
 	if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTNOTSTARTED )
 	{
-		pSoldier->bNeutral = TRUE;
+		pSoldier->aiData.bNeutral = TRUE;
 	}
 	
 	RemoveCharacterFromSquads( pSoldier );
+
+	WORLDITEM			WorldItem;
 
 	// Is this the first one..?
 	if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTNOTSTARTED )
@@ -1853,10 +1877,10 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 		pSoldier->bSectorZ = 0;
 
 		// put him on the floor!!
-		pSoldier->bLevel = 0;
+		pSoldier->pathing.bLevel = 0;
 
 		// OK, drop all items!
-		for ( i = 0; i < NUM_INV_SLOTS; i++ )
+		for ( i = 0; i < pSoldier->inv.size(); i++ )
 		{ 
 			if( pSoldier->inv[ i ].usItem != 0 )
 			{
@@ -1866,11 +1890,9 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 				WorldItem.usFlags = 0;
 				WorldItem.bVisible = FALSE;
 				WorldItem.bRenderZHeightAboveLevel = 0;
-
-				memcpy( &(WorldItem.o), &pSoldier->inv[i], sizeof( OBJECTTYPE ) );
+				pSoldier->inv[ i ].MoveThisObjectTo(WorldItem.object);
 
 				AddWorldItemsToUnLoadedSector( 13, 9, 0, sAlmaCaptureItemsGridNo[ gStrategicStatus.ubNumCapturedForRescue ], 1, &WorldItem, FALSE );
-				DeleteObj( &( pSoldier->inv[ i ] ) );
 			}
 		}
 
@@ -1887,10 +1909,10 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 		pSoldier->bSectorZ = 0;
 
 		// put him on the floor!!
-		pSoldier->bLevel = 0;
+		pSoldier->pathing.bLevel = 0;
 
 		// OK, drop all items!
-		for ( i = 0; i < NUM_INV_SLOTS; i++ )
+		for ( i = 0; i < pSoldier->inv.size(); i++ )
 		{ 
 			if( pSoldier->inv[ i ].usItem != 0 )
 			{
@@ -1900,11 +1922,9 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 				WorldItem.usFlags = 0;
 				WorldItem.bVisible = FALSE;
 				WorldItem.bRenderZHeightAboveLevel = 0;
-
-				memcpy( &(WorldItem.o), &pSoldier->inv[i], sizeof( OBJECTTYPE ) );
+				pSoldier->inv[ i ].MoveThisObjectTo(WorldItem.object);
 
 				AddWorldItemsToUnLoadedSector( 7, 14, 0, sInterrogationItemGridNo[ gStrategicStatus.ubNumCapturedForRescue ], 1, &WorldItem, FALSE );
-				DeleteObj( &( pSoldier->inv[ i ] ) );
 			}
 		}
 
@@ -1918,32 +1938,33 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 	pSoldier->bBleeding = 0;
 
 	// wake him up
-	if ( pSoldier->fMercAsleep )
+	if ( pSoldier->flags.fMercAsleep )
 	{
 		PutMercInAwakeState( pSoldier );
-		pSoldier->fForcedToStayAwake = FALSE;
+		pSoldier->flags.fForcedToStayAwake = FALSE;
 	}
 
 	//Set his life to 50% + or - 10 HP.
-	pSoldier->bLife = pSoldier->bLifeMax / 2;
-	if ( pSoldier->bLife <= 35 )
+	pSoldier->stats.bLife = pSoldier->stats.bLifeMax / 2;
+	if ( pSoldier->stats.bLife <= 35 )
 	{
-		pSoldier->bLife = 35;
+		pSoldier->stats.bLife = 35;
 	}
-	else if ( pSoldier->bLife >= 45 )
+	else if ( pSoldier->stats.bLife >= 45 )
 	{
-		pSoldier->bLife += (INT8)(10 - Random( 21 ) );
+		pSoldier->stats.bLife += (INT8)(10 - Random( 21 ) );
 	}
 
 	// make him quite exhausted when found
 	pSoldier->bBreath = pSoldier->bBreathMax = 50;
 	pSoldier->sBreathRed = 0;
-	pSoldier->fMercCollapsedFlag = FALSE;
+	pSoldier->flags.fMercCollapsedFlag = FALSE;
 }
 
 
 void HandleEnemyStatusInCurrentMapBeforeLoadingNewMap()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	BOOLEAN fMadeCorpse;
 	INT8 bKilledEnemies = 0, bKilledCreatures = 0, bKilledRebels = 0, bKilledCivilians = 0;
@@ -1951,9 +1972,9 @@ void HandleEnemyStatusInCurrentMapBeforeLoadingNewMap()
 	//If any of the soldiers are dying, kill them now.
 	for( i = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; i <= gTacticalStatus.Team[ ENEMY_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife < OKLIFE && MercPtrs[ i ]->bLife )
+		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->stats.bLife < OKLIFE && MercPtrs[ i ]->stats.bLife )
 		{
-			MercPtrs[ i ]->bLife = 0;
+			MercPtrs[ i ]->stats.bLife = 0;
 			HandleSoldierDeath( MercPtrs[ i ], &fMadeCorpse );
 			bKilledEnemies++;
 		}
@@ -1961,9 +1982,9 @@ void HandleEnemyStatusInCurrentMapBeforeLoadingNewMap()
 	//Do the same for the creatures.
 	for( i = gTacticalStatus.Team[ CREATURE_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife < OKLIFE && MercPtrs[ i ]->bLife )
+		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->stats.bLife < OKLIFE && MercPtrs[ i ]->stats.bLife )
 		{
-			MercPtrs[ i ]->bLife = 0;
+			MercPtrs[ i ]->stats.bLife = 0;
 			HandleSoldierDeath( MercPtrs[ i ], &fMadeCorpse );
 			bKilledCreatures++;
 		}
@@ -1971,9 +1992,9 @@ void HandleEnemyStatusInCurrentMapBeforeLoadingNewMap()
 	//Militia
 	for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife < OKLIFE && MercPtrs[ i ]->bLife )
+		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->stats.bLife < OKLIFE && MercPtrs[ i ]->stats.bLife )
 		{
-			MercPtrs[ i ]->bLife = 0;
+			MercPtrs[ i ]->stats.bLife = 0;
 			HandleSoldierDeath( MercPtrs[ i ], &fMadeCorpse );
 			bKilledRebels++;
 		}
@@ -1981,9 +2002,9 @@ void HandleEnemyStatusInCurrentMapBeforeLoadingNewMap()
 	//Civilians
 	for( i = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife < OKLIFE && MercPtrs[ i ]->bLife )
+		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->stats.bLife < OKLIFE && MercPtrs[ i ]->stats.bLife )
 		{
-			MercPtrs[ i ]->bLife = 0;
+			MercPtrs[ i ]->stats.bLife = 0;
 			HandleSoldierDeath( MercPtrs[ i ], &fMadeCorpse );
 			bKilledCivilians++;
 		}
@@ -2024,6 +2045,7 @@ void HandleEnemyStatusInCurrentMapBeforeLoadingNewMap()
 
 BOOLEAN PlayerSectorDefended( UINT8 ubSectorID )
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	pSector = &SectorInfo[ ubSectorID ];
 	if( pSector->ubNumberOfCivsAtLevel[ GREEN_MILITIA ] +
@@ -2042,6 +2064,7 @@ BOOLEAN PlayerSectorDefended( UINT8 ubSectorID )
 //Assumes gTacticalStatus.fEnemyInSector
 BOOLEAN OnlyHostileCivsInSector()
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	INT32 i;
 	BOOLEAN fHostileCivs = FALSE;
@@ -2050,9 +2073,9 @@ BOOLEAN OnlyHostileCivsInSector()
 	for( i = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; i++ )
 	{
 		pSoldier = MercPtrs[ i ];
-		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife )
+		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife )
 		{
-			if( !pSoldier->bNeutral )
+			if( !pSoldier->aiData.bNeutral )
 			{
 				fHostileCivs = TRUE;
 				break;
@@ -2067,9 +2090,9 @@ BOOLEAN OnlyHostileCivsInSector()
 	for( i = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; i <= gTacticalStatus.Team[ ENEMY_TEAM ].bLastID; i++ )
 	{
 		pSoldier = MercPtrs[ i ];
-		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife )
+		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife )
 		{
-			if( !pSoldier->bNeutral )
+			if( !pSoldier->aiData.bNeutral )
 			{
 				return FALSE;
 			}
@@ -2078,9 +2101,9 @@ BOOLEAN OnlyHostileCivsInSector()
 	for( i = gTacticalStatus.Team[ CREATURE_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; i++ )
 	{
 		pSoldier = MercPtrs[ i ];
-		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife )
+		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife )
 		{
-			if( !pSoldier->bNeutral )
+			if( !pSoldier->aiData.bNeutral )
 			{
 				return FALSE;
 			}
@@ -2089,9 +2112,9 @@ BOOLEAN OnlyHostileCivsInSector()
 	for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
 	{
 		pSoldier = MercPtrs[ i ];
-		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife )
+		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife )
 		{
-			if( !pSoldier->bNeutral )
+			if( !pSoldier->aiData.bNeutral )
 			{
 				return FALSE;
 			}

@@ -2,7 +2,7 @@
 	#include "Tactical All.h"
 	#include "PreBattle Interface.h"
 #else
-	#include "Soldier Control.h"
+
 	#include "Militia Control.h"
 	#include "Town Militia.h"
 	#include "Soldier Init List.h"
@@ -30,9 +30,15 @@
 	#include "Campaign.h"
 	#include "ai.h"
 	#include "Isometric Utils.h"
+	#include "FindLocations.h"
 #endif
 
 #include "MilitiaSquads.h"
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 BOOLEAN gfStrategicMilitiaChangesMade = FALSE;
 
@@ -120,11 +126,9 @@ extern BOOLEAN SoldierCanAffordNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesired
 
 void ResetMilitia()
 {
-	BOOLEAN fBattleInProgress = FALSE;
 	UINT8 ubNumGreen = 0;
 	UINT8 ubNumReg = 0;
 	UINT8 ubNumVet = 0;
-	UINT32 cnt;
 
 //	if ( gWorldSectorX !=0 && gWorldSectorY != 0 && NumEnemiesInSector( gWorldSectorX, gWorldSectorY ) )
 //		fBattleInProgress = TRUE;
@@ -132,7 +136,7 @@ void ResetMilitia()
 	// 0verhaul:  Instead of relying on the "changes made" flag, which isn't even saved in a saved game and therefore not
 	// reliable, we'll just do this the hard way, by taking inventory.
 //	gfStrategicMilitiaChangesMade = FALSE;
-//	for (cnt = gTacticalStatus.Team[MILITIA_TEAM].bFirstID; cnt <= gTacticalStatus.Team[MILITIA_TEAM].bLastID; cnt++)
+//	for (UINT32 cnt = gTacticalStatus.Team[MILITIA_TEAM].bFirstID; cnt <= gTacticalStatus.Team[MILITIA_TEAM].bLastID; cnt++)
 //	{
 //		if (!MercPtrs[cnt]->bActive)
 //		{
@@ -297,7 +301,7 @@ void HandleMilitiaPromotions( void )
 
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
 	{
-		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bLife > 0 )
+		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->stats.bLife > 0 )
 		{
 			if ( pTeamSoldier->ubMilitiaKills > 0 )
 			{	
@@ -401,8 +405,6 @@ void MilitiaControlMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 void DetermineWhichMilitiaControlMenusCanBeShown( void )
 {
 	BOOLEAN fCharacterNoLongerValid = FALSE;
-	SOLDIERTYPE *pSoldier = NULL;
-
 	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
 		if( fShowMapScreenMovementList == TRUE )
@@ -576,7 +578,6 @@ void CreateDestroyMouseRegionsForMilitiaControlMenu( void )
 	INT32 iFontHeight = 0;
 	INT32 iBoxXPosition = 0;
 	INT32 iBoxYPosition = 0;
-	SOLDIERTYPE *pSoldier = NULL;
 	SGPPoint pPosition;
 	INT32 iBoxWidth = 0;
 	SGPRect pDimensions;
@@ -1016,7 +1017,7 @@ void HandleShadingOfLinesForMilitiaControlMenu( void )
 	if ( GetSoldier( &pSoldier, gusSelectedSoldier )  )
 	{
 		// Check LOS!
-		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, pTMilitiaSoldier->sGridNo,  pTMilitiaSoldier->bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
+		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, pTMilitiaSoldier->sGridNo,  pTMilitiaSoldier->pathing.bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
 		{
 			UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ATTACK );
 			UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_HOLD );
@@ -1210,12 +1211,12 @@ BOOLEAN CheckIfRadioIsEquipped( void )
 
 //// stand up!
 //pSoldier->bAction = AI_ACTION_CHANGE_STANCE;
-//pSoldier->usActionData = ANIM_STAND;
+//pSoldier->aiData.usActionData = ANIM_STAND;
 //
 //
 
 //pSoldier->bAction = pSoldier->bNextAction;
-//pSoldier->usActionData = pSoldier->usNextActionData;
+//pSoldier->aiData.usActionData = pSoldier->usNextActionData;
 //pSoldier->bTargetLevel = pSoldier->bNextTargetLevel;
 //pSoldier->bNextAction = AI_ACTION_NONE;
 //pSoldier->usNextActionData = 0;
@@ -1267,18 +1268,18 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 			{
 				case( MILCON_MENU_ATTACK ):					
 					{					
-						if ( (pTMilitiaSoldier->bActive) && (pTMilitiaSoldier->bInSector) && (pTMilitiaSoldier->bLife >= OKLIFE) )
+						if ( (pTMilitiaSoldier->bActive) && (pTMilitiaSoldier->bInSector) && (pTMilitiaSoldier->stats.bLife >= OKLIFE) )
 						{
 							// Attack !!!
 
-							pTMilitiaSoldier->bOrders = SEEKENEMY;
-							pTMilitiaSoldier->bAttitude = AGGRESSIVE;
+							pTMilitiaSoldier->aiData.bOrders = SEEKENEMY;
+							pTMilitiaSoldier->aiData.bAttitude = AGGRESSIVE;
 							pTMilitiaSoldier->usUIMovementMode = RUNNING;
 
 							if ( GetSoldier( &pSoldier, gusSelectedSoldier )  )
 							{
 								//ubVolume = CalcScreamVolume( pSoldier, 10 );
-								MakeNoise( pSoldier->ubID, pSoldier->sGridNo, pSoldier->bLevel, pSoldier->bOverTerrainType, ubVolume, NOISE_SCREAM);
+								MakeNoise( pSoldier->ubID, pSoldier->sGridNo, pSoldier->pathing.bLevel, pSoldier->bOverTerrainType, ubVolume, NOISE_SCREAM);
 							}
 						}
 
@@ -1300,11 +1301,11 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 				
 				case( MILCON_MENU_HOLD ):						
 					{
-						if ( (pTMilitiaSoldier->bActive) && (pTMilitiaSoldier->bInSector) && (pTMilitiaSoldier->bLife >= OKLIFE) )
+						if ( (pTMilitiaSoldier->bActive) && (pTMilitiaSoldier->bInSector) && (pTMilitiaSoldier->stats.bLife >= OKLIFE) )
 						{
 							//Hold Position !!!
 							//ScreenMsg( FONT_WHITE, MSG_INTERFACE, L"Hold Position" );
-							pTMilitiaSoldier->bOrders = STATIONARY;
+							pTMilitiaSoldier->aiData.bOrders = STATIONARY;
 							//pTMilitiaSoldier->bAttitude = DEFENSIVE;
 						}
 
@@ -1326,27 +1327,27 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 				
 				case( MILCON_MENU_RETREAT ):
 					{
-						if ( (pTMilitiaSoldier->bActive) && (pTMilitiaSoldier->bInSector) && (pTMilitiaSoldier->bLife >= OKLIFE) )
+						if ( (pTMilitiaSoldier->bActive) && (pTMilitiaSoldier->bInSector) && (pTMilitiaSoldier->stats.bLife >= OKLIFE) )
 						{
 							INT16 sActionGridNo;
 
-							pTMilitiaSoldier->bOrders = FARPATROL;
-							pTMilitiaSoldier->bAttitude = DEFENSIVE;
+							pTMilitiaSoldier->aiData.bOrders = FARPATROL;
+							pTMilitiaSoldier->aiData.bAttitude = DEFENSIVE;
 							pTMilitiaSoldier->usUIMovementMode = RUNNING;
 
 							// set up next action to run away
 							sActionGridNo =  FindSpotMaxDistFromOpponents( pTMilitiaSoldier );
 
-							pTMilitiaSoldier->usNextActionData = sActionGridNo;
+							pTMilitiaSoldier->aiData.usNextActionData = sActionGridNo;
 
-							if ( pTMilitiaSoldier->usNextActionData != NOWHERE )
+							if ( pTMilitiaSoldier->aiData.usNextActionData != NOWHERE )
 							{
-								pTMilitiaSoldier->bNextAction = AI_ACTION_RUN_AWAY;
-								pTMilitiaSoldier->usActionData = ANIM_STAND;
+								pTMilitiaSoldier->aiData.bNextAction = AI_ACTION_RUN_AWAY;
+								pTMilitiaSoldier->aiData.usActionData = ANIM_STAND;
 
 								// SEND PENDING ACTION
-								pTMilitiaSoldier->sPendingActionData2  = sActionGridNo;
-								pTMilitiaSoldier->ubPendingActionAnimCount = 0;
+								pTMilitiaSoldier->aiData.sPendingActionData2  = sActionGridNo;
+								pTMilitiaSoldier->aiData.ubPendingActionAnimCount = 0;
 							}
 
 							if ( pTMilitiaSoldier->sGridNo != sActionGridNo )
@@ -1373,7 +1374,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 				case( MILCON_MENU_COMETOME ):
 					{	
-						if ( (pTMilitiaSoldier->bActive) && (pTMilitiaSoldier->bInSector) && (pTMilitiaSoldier->bLife >= OKLIFE) )
+						if ( (pTMilitiaSoldier->bActive) && (pTMilitiaSoldier->bInSector) && (pTMilitiaSoldier->stats.bLife >= OKLIFE) )
 						{
 							INT16 sActionGridNo, sGridNo, sAdjustedGridNo;
 							UINT8	ubDirection;
@@ -1389,9 +1390,9 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 								{
 									// SEND PENDING ACTION
 									//pTMilitiaSoldier->ubPendingAction = MERC_STEAL;
-									pTMilitiaSoldier->sPendingActionData2  = pSoldier->sGridNo;
+									pTMilitiaSoldier->aiData.sPendingActionData2  = pSoldier->sGridNo;
 									//pTMilitiaSoldier->bPendingActionData3  = ubDirection;
-									pTMilitiaSoldier->ubPendingActionAnimCount = 0;
+									pTMilitiaSoldier->aiData.ubPendingActionAnimCount = 0;
 									pTMilitiaSoldier->usUIMovementMode = RUNNING;
 
 									// CHECK IF WE ARE AT THIS GRIDNO NOW
@@ -1422,7 +1423,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 				case( MILCON_MENU_GETDOWN ):
 					{
-						if ( (pTMilitiaSoldier->bActive) && (pTMilitiaSoldier->bInSector) && (pTMilitiaSoldier->bLife >= OKLIFE) )
+						if ( (pTMilitiaSoldier->bActive) && (pTMilitiaSoldier->bInSector) && (pTMilitiaSoldier->stats.bLife >= OKLIFE) )
 						{
 							//if ( SoldierCanAffordNewStance( pTeamSoldier, ANIM_PRONE ) )
 							{
@@ -1450,18 +1451,18 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 					case( MILCON_MENU_TAKE_COVER ):
 					{	
-						if ( (pTMilitiaSoldier->bActive) && (pTMilitiaSoldier->bInSector) && (pTMilitiaSoldier->bLife >= OKLIFE) )
+						if ( (pTMilitiaSoldier->bActive) && (pTMilitiaSoldier->bInSector) && (pTMilitiaSoldier->stats.bLife >= OKLIFE) )
 						{
 							INT16 sActionGridNo;
 							INT32 iDummy;						
 
-							sActionGridNo =  FindBestNearbyCover(pTMilitiaSoldier,pTMilitiaSoldier->bAIMorale,&iDummy);
+							sActionGridNo =  FindBestNearbyCover(pTMilitiaSoldier,pTMilitiaSoldier->aiData.bAIMorale,&iDummy);
 
 							if ( sActionGridNo != NOWHERE )
 							{
 								// SEND PENDING ACTION
-								pTMilitiaSoldier->sPendingActionData2  = sActionGridNo;
-								pTMilitiaSoldier->ubPendingActionAnimCount = 0;
+								pTMilitiaSoldier->aiData.sPendingActionData2  = sActionGridNo;
+								pTMilitiaSoldier->aiData.ubPendingActionAnimCount = 0;
 								pTMilitiaSoldier->usUIMovementMode = RUNNING;
 
 								// CHECK IF WE ARE AT THIS GRIDNO NOW
@@ -1498,10 +1499,10 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 						for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
 						{
-							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->bLife >= OKLIFE) )
+							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->stats.bLife >= OKLIFE) )
 							{
-								pTeamSoldier->bOrders = SEEKENEMY;
-								pTeamSoldier->bAttitude = AGGRESSIVE;
+								pTeamSoldier->aiData.bOrders = SEEKENEMY;
+								pTeamSoldier->aiData.bAttitude = AGGRESSIVE;
 								pTeamSoldier->usUIMovementMode = RUNNING;
 							}
 						}
@@ -1531,10 +1532,10 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 						for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
 						{
-							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->bLife >= OKLIFE) )
+							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->stats.bLife >= OKLIFE) )
 							{
-								pTeamSoldier->bOrders = STATIONARY;
-								pTeamSoldier->bAttitude = DEFENSIVE;
+								pTeamSoldier->aiData.bOrders = STATIONARY;
+								pTeamSoldier->aiData.bAttitude = DEFENSIVE;
 							}
 						}
 
@@ -1564,10 +1565,10 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 						for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
 						{
-							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->bLife >= OKLIFE) )
+							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->stats.bLife >= OKLIFE) )
 							{
-								pTeamSoldier->bOrders = FARPATROL;
-								pTeamSoldier->bAttitude = DEFENSIVE;
+								pTeamSoldier->aiData.bOrders = FARPATROL;
+								pTeamSoldier->aiData.bAttitude = DEFENSIVE;
 								pTeamSoldier->usUIMovementMode = RUNNING;
 
 								//// set up next action to run away
@@ -1582,16 +1583,16 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 								// set up next action to run away
 								sActionGridNo =  FindSpotMaxDistFromOpponents( pTeamSoldier );
 
-								pTeamSoldier->usNextActionData = sActionGridNo;
+								pTeamSoldier->aiData.usNextActionData = sActionGridNo;
 
-								if ( pTeamSoldier->usNextActionData != NOWHERE )
+								if ( pTeamSoldier->aiData.usNextActionData != NOWHERE )
 								{
-									pTeamSoldier->bNextAction = AI_ACTION_RUN_AWAY;
-									pTeamSoldier->usActionData = ANIM_STAND;									
+									pTeamSoldier->aiData.bNextAction = AI_ACTION_RUN_AWAY;
+									pTeamSoldier->aiData.usActionData = ANIM_STAND;									
 
 									// SEND PENDING ACTION
-									pTeamSoldier->sPendingActionData2  = sActionGridNo;
-									pTeamSoldier->ubPendingActionAnimCount = 0;
+									pTeamSoldier->aiData.sPendingActionData2  = sActionGridNo;
+									pTeamSoldier->aiData.ubPendingActionAnimCount = 0;
 								}
 
 								if ( pTeamSoldier->sGridNo != sActionGridNo )
@@ -1627,7 +1628,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 						for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
 						{
-							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->bLife >= OKLIFE) )
+							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->stats.bLife >= OKLIFE) )
 							{
 								if ( GetSoldier( &pSoldier, gusSelectedSoldier )  )
 								{
@@ -1639,9 +1640,9 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 									if ( sActionGridNo != -1 )
 									{
 										// SEND PENDING ACTION
-										pTeamSoldier->sPendingActionData2  = pSoldier->sGridNo;
+										pTeamSoldier->aiData.sPendingActionData2  = pSoldier->sGridNo;
 										//pTeamSoldier->bPendingActionData3  = ubDirection;
-										pTeamSoldier->ubPendingActionAnimCount = 0;
+										pTeamSoldier->aiData.ubPendingActionAnimCount = 0;
 										pTeamSoldier->usUIMovementMode = RUNNING;
 
 										// CHECK IF WE ARE AT THIS GRIDNO NOW
@@ -1682,7 +1683,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 						for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
 						{
-							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->bLife >= OKLIFE) )
+							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->stats.bLife >= OKLIFE) )
 							{
 
 								// See if we can get there
@@ -1690,9 +1691,9 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 								if ( sActionGridNo != -1 )
 								{
 									// SEND PENDING ACTION
-									pTeamSoldier->sPendingActionData2  = sActionGridNo;
+									pTeamSoldier->aiData.sPendingActionData2  = sActionGridNo;
 									//pTeamSoldier->bPendingActionData3  = ubDirection;
-									pTeamSoldier->ubPendingActionAnimCount = 0;
+									pTeamSoldier->aiData.ubPendingActionAnimCount = 0;
 									pTeamSoldier->usUIMovementMode = RUNNING;
 
 									// CHECK IF WE ARE AT THIS GRIDNO NOW
@@ -1733,7 +1734,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 						for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
 						{
-							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->bLife >= OKLIFE) )
+							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->stats.bLife >= OKLIFE) )
 							{
 								//if ( SoldierCanAffordNewStance( pTeamSoldier, ANIM_PRONE ) )
 								{
@@ -1771,7 +1772,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 						//for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
 						//{
-						//	if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bLife > 0 )
+						//	if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->stats.bLife > 0 )
 						//	{
 						//		pTeamSoldier->usActionData = FindBestNearbyCover(pTeamSoldier,pTeamSoldier->bAIMorale,&iDummy);
 						//								
@@ -1795,17 +1796,17 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 						for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
 						{
-							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->bLife >= OKLIFE) )
+							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->stats.bLife >= OKLIFE) )
 							{
 								// See if we can get there
-								sActionGridNo =  FindBestNearbyCover(pTeamSoldier,pTeamSoldier->bAIMorale,&iDummy);
+								sActionGridNo =  FindBestNearbyCover(pTeamSoldier,pTeamSoldier->aiData.bAIMorale,&iDummy);
 								
 								if ( sActionGridNo != NOWHERE )
 								{
 									// SEND PENDING ACTION
-									pTeamSoldier->sPendingActionData2  = sActionGridNo;
+									pTeamSoldier->aiData.sPendingActionData2  = sActionGridNo;
 									//pTeamSoldier->bPendingActionData3  = ubDirection;
-									pTeamSoldier->ubPendingActionAnimCount = 0;
+									pTeamSoldier->aiData.ubPendingActionAnimCount = 0;
 									pTeamSoldier->usUIMovementMode = RUNNING;
 
 									// CHECK IF WE ARE AT THIS GRIDNO NOW
@@ -1845,7 +1846,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 					//	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
 					//	{
-					//		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bLife > 0 )
+					//		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->stats.bLife > 0 )
 					//		{
 
 					//			//CREATURE_IMMOBILE = 2
@@ -2251,7 +2252,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 //
 //				for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
 //				{
-//					if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bLife > 0 )
+//					if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->stats.bLife > 0 )
 //					{
 //
 //						if ( GetSoldier( &pSoldier, gusSelectedSoldier )  )
@@ -2267,7 +2268,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 //								//pTMilitiaSoldier->ubPendingAction = MERC_STEAL;
 //								pTeamSoldier->sPendingActionData2  = pSoldier->sGridNo;
 //								pTeamSoldier->bPendingActionData3  = ubDirection;
-//								pTeamSoldier->ubPendingActionAnimCount = 0;
+//								pTeamSoldier->aiData.ubPendingActionAnimCount = 0;
 //
 //								// CHECK IF WE ARE AT THIS GRIDNO NOW
 //								if ( pTeamSoldier->sGridNo != sActionGridNo )

@@ -26,7 +26,7 @@ UINT8 bPersonalityEndState = 0;
 #define PERSONALITY_CONFIRM_FINISH_DELAY 2500
 
 
-// flag set when player hits  YES/NO button
+// flag set when player hits	YES/NO button
 BOOLEAN fConfirmHasBeenSelectedFlag = FALSE;
 BOOLEAN fConfirmIsYesFlag = FALSE;
 BOOLEAN fOkToReturnIMPMainPageFromPersonalityFlag = FALSE;
@@ -60,6 +60,7 @@ void BtnIMPPersonalityFinishOkCallback(GUI_BUTTON *btn,INT32 reason);
 
 void EnterIMPPersonalityFinish( void )
 {
+	PERFORMANCE_MARKER
 
 	// reset states
 	fCreateFinishOkButton = FALSE;
@@ -74,11 +75,12 @@ void EnterIMPPersonalityFinish( void )
 
 void RenderIMPPersonalityFinish( void )
 {
-   // the background
+	PERFORMANCE_MARKER
+	// the background
 	RenderProfileBackGround( );
 
 		// indent for text
-  RenderBeginIndent( 110, 93 );
+	RenderBeginIndent( 110, 93 );
 
 	// check confirm flag to decide if we have to display appropriate response to button action
 	if( fConfirmHasBeenSelectedFlag )
@@ -86,13 +88,13 @@ void RenderIMPPersonalityFinish( void )
 		// confirm was yes, display yes string
 		if(fConfirmIsYesFlag == TRUE)
 		{
-      // display yes string
+		// display yes string
 			PrintImpText( );
 		}
 		else
 		{
 			// display no string
-      PrintImpText( );
+		PrintImpText( );
 		}
 	}
 	return;
@@ -100,12 +102,13 @@ void RenderIMPPersonalityFinish( void )
 
 void ExitIMPPersonalityFinish( void )
 {
-  
+	PERFORMANCE_MARKER
+	
 	// exit at IMP Ok button
 	if( fExitIMPPerFinAtOk )
 	{
 		// destroy the finish ok buttons
-	  DestroyPersonalityFinishOkButton( );
+	DestroyPersonalityFinishOkButton( );
 	}
 
 
@@ -126,20 +129,22 @@ void ExitIMPPersonalityFinish( void )
 
 void HandleIMPPersonalityFinish( void )
 {
-  
+	PERFORMANCE_MARKER
+	
 	// check if confirm and delay
 	CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed( );
 
 
-  return;
+	return;
 }
 
 
 void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed( void )
 {
+	PERFORMANCE_MARKER
 	// this function will check to see if player has in fact confirmed selection and delay to
 	// read text has occurred
-  
+	
 
 
 	// if not confirm selected, return
@@ -179,36 +184,37 @@ void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed( void )
 
 void CreateIMPPersonalityFinishButtons( void )
 {
-  // this function will create the buttons needed for the IMP personality Finish Page
+	PERFORMANCE_MARKER
+	// this function will create the buttons needed for the IMP personality Finish Page
 
 	// ths Yes button
-  giIMPPersonalityFinishButtonImage[0]=  LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
-/*	giIMPPersonalityFinishButton[0] = QuickCreateButton( giIMPPersonalityFinishButtonImage[0], LAPTOP_SCREEN_UL_X +  ( 90 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ),
+	giIMPPersonalityFinishButtonImage[0]=	LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
+/*	giIMPPersonalityFinishButton[0] = QuickCreateButton( giIMPPersonalityFinishButtonImage[0], LAPTOP_SCREEN_UL_X +	( 90 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityFinishYesCallback);
 */
 	giIMPPersonalityFinishButton[0] = CreateIconAndTextButton( giIMPPersonalityFinishButtonImage[0], pImpButtonText[ 9 ], FONT12ARIAL, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 LAPTOP_SCREEN_UL_X +  ( 90 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityFinishYesCallback);
+														FONT_WHITE, DEFAULT_SHADOW, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														LAPTOP_SCREEN_UL_X +	( 90 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityFinishYesCallback);
 
-  // the no Button
-	giIMPPersonalityFinishButtonImage[ 1 ]=  LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
-/*	giIMPPersonalityFinishButton[ 1 ] = QuickCreateButton( giIMPPersonalityFinishButtonImage[1], LAPTOP_SCREEN_UL_X +  ( 276 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ),
+	// the no Button
+	giIMPPersonalityFinishButtonImage[ 1 ]=	LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
+/*	giIMPPersonalityFinishButton[ 1 ] = QuickCreateButton( giIMPPersonalityFinishButtonImage[1], LAPTOP_SCREEN_UL_X +	( 276 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityFinishNoCallback);
-  */
+	*/
 	giIMPPersonalityFinishButton[ 1 ] = CreateIconAndTextButton( giIMPPersonalityFinishButtonImage[ 1 ], pImpButtonText[ 10 ], FONT12ARIAL, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 LAPTOP_SCREEN_UL_X +  ( 276 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityFinishNoCallback);
+														FONT_WHITE, DEFAULT_SHADOW, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														LAPTOP_SCREEN_UL_X +	( 276 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityFinishNoCallback);
 
-	 SetButtonCursor(giIMPPersonalityFinishButton[0], CURSOR_WWW);
-	 SetButtonCursor(giIMPPersonalityFinishButton[1], CURSOR_WWW);
+	SetButtonCursor(giIMPPersonalityFinishButton[0], CURSOR_WWW);
+	SetButtonCursor(giIMPPersonalityFinishButton[1], CURSOR_WWW);
 
 
 	return;
@@ -217,15 +223,16 @@ void CreateIMPPersonalityFinishButtons( void )
 
 void DestroyIMPersonalityFinishButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this function will destroy the buttons needed for the IMP personality Finish page
-  
+	
 	// the yes button
-  RemoveButton(giIMPPersonalityFinishButton[ 0 ] );
-  UnloadButtonImage(giIMPPersonalityFinishButtonImage[ 0 ] );
+	RemoveButton(giIMPPersonalityFinishButton[ 0 ] );
+	UnloadButtonImage(giIMPPersonalityFinishButtonImage[ 0 ] );
 
-  // the no button
+	// the no button
 	RemoveButton(giIMPPersonalityFinishButton[ 1 ] );
-  UnloadButtonImage(giIMPPersonalityFinishButtonImage[ 1 ] );
+	UnloadButtonImage(giIMPPersonalityFinishButtonImage[ 1 ] );
 
 	return;
 }
@@ -233,6 +240,7 @@ void DestroyIMPersonalityFinishButtons( void )
 
 void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -241,35 +249,35 @@ void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn,INT32 reason)
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		// confirm flag set, get out of HERE!
-	   if( fConfirmHasBeenSelectedFlag )
-		 {
-			 // now set this button off
-       btn->uiFlags&=~(BUTTON_CLICKED_ON);
+	if( fConfirmHasBeenSelectedFlag )
+		{
+			// now set this button off
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
-			 return;
-		 }
+			return;
+		}
 
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-     
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
+	 
 	}
 	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-      
-		  // now set this button off
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		
+		// now set this button off
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
 			// set fact yes was selected
-		  fConfirmIsYesFlag = TRUE;
+		fConfirmIsYesFlag = TRUE;
 
 			// set fact that confirmation has been done
 			fConfirmHasBeenSelectedFlag = TRUE;
-      
+		
 			// now make skill, personality and attitude
 			CreatePlayersPersonalitySkillsAndAttitude( );
 			fButtonPendingFlag = TRUE;
-      bPersonalityEndState = 1;
+		bPersonalityEndState = 1;
 		}
 	}
 }
@@ -278,6 +286,7 @@ void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -285,34 +294,34 @@ void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn,INT32 reason)
 
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-     // confirm flag set, get out of HERE!
-	   if( fConfirmHasBeenSelectedFlag )
-		 {
-			 // now set this button off
-       btn->uiFlags&=~(BUTTON_CLICKED_ON);
+	 // confirm flag set, get out of HERE!
+	if( fConfirmHasBeenSelectedFlag )
+		{
+			// now set this button off
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
-			 return;
-		 }
+			return;
+		}
 
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-     
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
+	 
 	}
 	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-      
+		
 			// now set this button on
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
 			// set fact yes was selected
-		  fConfirmIsYesFlag = FALSE;
+		fConfirmIsYesFlag = FALSE;
 
 			// set fact that confirmation has been done
 			fConfirmHasBeenSelectedFlag = TRUE;
 			CreatePlayersPersonalitySkillsAndAttitude( );
 			
-      bPersonalityEndState = 2;
+		bPersonalityEndState = 2;
 			fButtonPendingFlag = TRUE;
 		}
 	}
@@ -322,15 +331,16 @@ void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn,INT32 reason)
 
 void CreatePersonalityFinishOkButton( void )
 {
+	PERFORMANCE_MARKER
 
 	// create personality button finish button
-	giIMPPersonalityFinishButtonImage[0]=  LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
-  giIMPPersonalityFinishButton[0] = CreateIconAndTextButton( giIMPPersonalityFinishButtonImage[0], pImpButtonText[ 24 ], FONT12ARIAL, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 LAPTOP_SCREEN_UL_X +  ( 186 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityFinishOkCallback);
+	giIMPPersonalityFinishButtonImage[0]=	LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
+	giIMPPersonalityFinishButton[0] = CreateIconAndTextButton( giIMPPersonalityFinishButtonImage[0], pImpButtonText[ 24 ], FONT12ARIAL, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														LAPTOP_SCREEN_UL_X +	( 186 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityFinishOkCallback);
 
 	SetButtonCursor(giIMPPersonalityFinishButton[0], CURSOR_WWW);
 
@@ -341,15 +351,17 @@ void CreatePersonalityFinishOkButton( void )
 
 void DestroyPersonalityFinishOkButton( void )
 {
+	PERFORMANCE_MARKER
 		// the ok button
-  RemoveButton(giIMPPersonalityFinishButton[ 0 ] );
-  UnloadButtonImage(giIMPPersonalityFinishButtonImage[ 0 ] );
+	RemoveButton(giIMPPersonalityFinishButton[ 0 ] );
+	UnloadButtonImage(giIMPPersonalityFinishButtonImage[ 0 ] );
 }
 
 
 
 void BtnIMPPersonalityFinishOkCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -357,16 +369,16 @@ void BtnIMPPersonalityFinishOkCallback(GUI_BUTTON *btn,INT32 reason)
 
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-     
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-     
+	 
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
+	 
 	}
 	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
 			// now set this button on
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
 		// Testing UB stuff
 		//	if( iCurrentProfileMode < 2 )

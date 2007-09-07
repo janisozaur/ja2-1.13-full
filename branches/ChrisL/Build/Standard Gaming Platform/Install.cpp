@@ -27,6 +27,7 @@
 	#include <assert.h>
 	#include "Install.h"
 	#include "RegInst.h"
+	#include "profiler.h"
 #endif
 
 //**************************************************************************
@@ -49,8 +50,9 @@
 
 BOOLEAN	InstallApplication( STR strAppname, STR strPath )
 {
+	PERFORMANCE_MARKER
 	HKEY	hKey;
-	BOOL  fRet = TRUE;
+	BOOL	fRet = TRUE;
 
 	hKey = GetAppRegistryKey();
 	RegCloseKey( hKey );

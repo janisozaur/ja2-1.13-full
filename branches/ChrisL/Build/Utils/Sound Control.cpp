@@ -13,7 +13,7 @@
 	#include "math.h"
 #endif
 
-#define	SOUND_FAR_VOLUME_MOD    25
+#define	SOUND_FAR_VOLUME_MOD	25
 
 /*
 UINT32 LOWVOLUME								START_LOWVOLUME;
@@ -263,7 +263,7 @@ char szSoundEffects[MAX_SAMPLES][255];// =
 //	"SOUNDS\\ARMPIT.WAV",
 //	"SOUNDS\\CRACKING BACK.WAV",
 //
-//	"SOUNDS\\WEAPONS\\Auto Resolve Composite 02 (8-22).wav",//  The FF sound in autoresolve interface
+//	"SOUNDS\\WEAPONS\\Auto Resolve Composite 02 (8-22).wav",//	The FF sound in autoresolve interface
 //
 //	"SOUNDS\\Email Alert 01.wav",
 //	"SOUNDS\\Entering Text 02.wav",
@@ -315,10 +315,10 @@ char szSoundEffects[MAX_SAMPLES][255];// =
 //	"SOUNDS\\remote activate.WAV",
 //	"SOUNDS\\wirecutters.WAV",
 //	"SOUNDS\\drink from canteen.WAV",
-//    "SOUNDS\\bloodcat attack.wav",
-//    "SOUNDS\\bloodcat loud roar.wav",
-//    "SOUNDS\\robot greeting.wav",
-//    "SOUNDS\\robot death.wav",
+//	"SOUNDS\\bloodcat attack.wav",
+//	"SOUNDS\\bloodcat loud roar.wav",
+//	"SOUNDS\\robot greeting.wav",
+//	"SOUNDS\\robot death.wav",
 //	"SOUNDS\\gas grenade explode.WAV",
 //	"SOUNDS\\air escaping.WAV",
 //	"SOUNDS\\drawer open.WAV",
@@ -328,47 +328,47 @@ char szSoundEffects[MAX_SAMPLES][255];// =
 //	"SOUNDS\\wooden box open.WAV",
 //	"SOUNDS\\wooden box close.WAV",
 //	"SOUNDS\\robot stop moving.WAV",
-//    "SOUNDS\\water movement 01.wav",
-//    "SOUNDS\\water movement 02.wav",
-//    "SOUNDS\\water movement 03.wav",
-//    "SOUNDS\\water movement 04.wav",
-//    "SOUNDS\\PRONE TO CROUCH.WAV",
-//    "SOUNDS\\CROUCH TO PRONE.WAV",
-//    "SOUNDS\\CROUCH TO STAND.WAV",
-//    "SOUNDS\\STAND TO CROUCH.WAV",
-//    "SOUNDS\\picking something up.WAV",
-//    "SOUNDS\\cow falling.wav",
-//    "SOUNDS\\bloodcat_growl_01.wav",
-//    "SOUNDS\\bloodcat_growl_02.wav",
-//    "SOUNDS\\bloodcat_growl_03.wav",
-//    "SOUNDS\\bloodcat_growl_04.wav",
-//    "SOUNDS\\spit ricochet.wav",
+//	"SOUNDS\\water movement 01.wav",
+//	"SOUNDS\\water movement 02.wav",
+//	"SOUNDS\\water movement 03.wav",
+//	"SOUNDS\\water movement 04.wav",
+//	"SOUNDS\\PRONE TO CROUCH.WAV",
+//	"SOUNDS\\CROUCH TO PRONE.WAV",
+//	"SOUNDS\\CROUCH TO STAND.WAV",
+//	"SOUNDS\\STAND TO CROUCH.WAV",
+//	"SOUNDS\\picking something up.WAV",
+//	"SOUNDS\\cow falling.wav",
+//	"SOUNDS\\bloodcat_growl_01.wav",
+//	"SOUNDS\\bloodcat_growl_02.wav",
+//	"SOUNDS\\bloodcat_growl_03.wav",
+//	"SOUNDS\\bloodcat_growl_04.wav",
+//	"SOUNDS\\spit ricochet.wav",
 //	"SOUNDS\\ADULT crippled.WAV",
-//    "SOUNDS\\death disintegration.wav",
-//    "SOUNDS\\Queen Ambience.wav",
-//    "SOUNDS\\Alien Impact.wav",
-//    "SOUNDS\\crow pecking flesh 01.wav",
-//    "SOUNDS\\crow fly.wav",
-//    "SOUNDS\\slap 02.wav",
-//    "SOUNDS\\setting up mortar.wav",
-//    "SOUNDS\\mortar whistle.wav",
-//    "SOUNDS\\load mortar.wav",
-//    "SOUNDS\\tank turret a.wav",
-//    "SOUNDS\\tank turret b.wav",
-//    "SOUNDS\\cow falling b.wav",
-//    "SOUNDS\\stab into flesh.wav",
-//    "SOUNDS\\explosion 10.wav",
-//    "SOUNDS\\explosion 12.wav",
+//	"SOUNDS\\death disintegration.wav",
+//	"SOUNDS\\Queen Ambience.wav",
+//	"SOUNDS\\Alien Impact.wav",
+//	"SOUNDS\\crow pecking flesh 01.wav",
+//	"SOUNDS\\crow fly.wav",
+//	"SOUNDS\\slap 02.wav",
+//	"SOUNDS\\setting up mortar.wav",
+//	"SOUNDS\\mortar whistle.wav",
+//	"SOUNDS\\load mortar.wav",
+//	"SOUNDS\\tank turret a.wav",
+//	"SOUNDS\\tank turret b.wav",
+//	"SOUNDS\\cow falling b.wav",
+//	"SOUNDS\\stab into flesh.wav",
+//	"SOUNDS\\explosion 10.wav",
+//	"SOUNDS\\explosion 12.wav",
 //	"SOUNDS\\drink from canteen male.WAV",
 //	"SOUNDS\\x ray activated.WAV",
-//    "SOUNDS\\catch object.wav",
-//    "SOUNDS\\fence open.wav",
+//	"SOUNDS\\catch object.wav",
+//	"SOUNDS\\fence open.wav",
 
 ////MADD MARKER
 ////New Guns
 //	"SOUNDS\\WEAPONS\\50CAL.WAV",
 //	"SOUNDS\\WEAPONS\\VALSILENT.WAV"
-////    "SOUNDS\\BreakLight.wav",
+////	"SOUNDS\\BreakLight.wav",
 //};
 
 char szAmbientEffects[NUM_AMBIENTS][255] =
@@ -408,12 +408,13 @@ UINT8 AmbientVols[NUM_AMBIENTS]={
 
 
 SOUNDPARMS gDelayedSoundParms;
-UINT32	   guiDelayedSoundNum;
+UINT32	guiDelayedSoundNum;
 void DelayedSoundTimerCallback( void );
 
 
 BOOLEAN InitJA2Sound( )
 {
+	PERFORMANCE_MARKER
 //UINT32 uiCount;
 
 	//for(uiCount=0; uiCount < NUM_SAMPLES; uiCount++)
@@ -426,6 +427,7 @@ BOOLEAN InitJA2Sound( )
 
 BOOLEAN ShutdownJA2Sound( )
 {
+	PERFORMANCE_MARKER
 //UINT32 uiCount;
 
 	SoundStopAll();
@@ -441,6 +443,7 @@ BOOLEAN ShutdownJA2Sound( )
 
 UINT32 PlayJA2Sample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
 {
+	PERFORMANCE_MARKER
 	//SoundLog((CHAR8 *)String(" Play sound %s on volume %d", szSoundEffects[usNum], ubVolume));
 
 	SOUNDPARMS spParms;
@@ -471,7 +474,8 @@ UINT32 PlayJA2Sample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoo
 
 UINT32 PlayJA2StreamingSample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
 {
-  SOUNDPARMS spParms;
+	PERFORMANCE_MARKER
+	SOUNDPARMS spParms;
 
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
 
@@ -488,6 +492,7 @@ UINT32 PlayJA2StreamingSample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UIN
 
 UINT32 PlayJA2SampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
 {
+	PERFORMANCE_MARKER
 	//SoundLog((CHAR8 *)String(" Play sound %s on volume %d", szFileName, ubVolume));
 	// does the same thing as PlayJA2Sound, but one only has to pass the filename, not the index of the sound array
 
@@ -517,10 +522,11 @@ UINT32 PlayJA2SampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, U
 
 UINT32 PlayJA2StreamingSampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, SOUND_STOP_CALLBACK EndsCallback )
 {
+	PERFORMANCE_MARKER
 
 	// does the same thing as PlayJA2Sound, but one only has to pass the filename, not the index of the sound array
 
-  SOUNDPARMS spParms;
+	SOUNDPARMS spParms;
 
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
 
@@ -529,7 +535,7 @@ UINT32 PlayJA2StreamingSampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ub
 	spParms.uiLoop = ubLoops;
 	spParms.uiPan = uiPan;
 	spParms.uiPriority=GROUP_PLAYER;
-    spParms.EOSCallback=EndsCallback;
+	spParms.EOSCallback=EndsCallback;
 
 	return( SoundPlayStreamedFile(szFileName, &spParms) );
 }
@@ -537,6 +543,7 @@ UINT32 PlayJA2StreamingSampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ub
 
 UINT32 PlayJA2Ambient( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops)
 {
+	PERFORMANCE_MARKER
 	SOUNDPARMS spParms;
 
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
@@ -550,6 +557,7 @@ UINT32 PlayJA2Ambient( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops)
 
 UINT32 PlayJA2AmbientRandom( UINT32 usNum, UINT32 uiTimeMin, UINT32 uiTimeMax)
 {
+	PERFORMANCE_MARKER
 	RANDOMPARMS rpParms;
 
 	memset(&rpParms, 0xff, sizeof(RANDOMPARMS));
@@ -567,15 +575,16 @@ UINT32 PlayJA2AmbientRandom( UINT32 usNum, UINT32 uiTimeMin, UINT32 uiTimeMax)
 
 UINT32 PlaySoldierJA2Sample( UINT16 usID, UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, BOOLEAN fCheck )
 {
+	PERFORMANCE_MARKER
 
 	if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
-  {
-	  // CHECK IF GUY IS ON SCREEN BEFORE PLAYING!
-	  if ( ( MercPtrs[ usID ]->bVisible != -1 ) || !fCheck )
-	  {
-		  return( PlayJA2Sample( usNum, usRate, CalculateSoundEffectsVolume( ubVolume ), ubLoops, uiPan ) );
-	  }
-  }
+	{
+	// CHECK IF GUY IS ON SCREEN BEFORE PLAYING!
+	if ( ( MercPtrs[ usID ]->bVisible != -1 ) || !fCheck )
+	{
+		return( PlayJA2Sample( usNum, usRate, CalculateSoundEffectsVolume( ubVolume ), ubLoops, uiPan ) );
+	}
+	}
 
 	return( 0 );
 }
@@ -587,36 +596,42 @@ UINT32 PlaySoldierJA2Sample( UINT16 usID, UINT32 usNum, UINT32 usRate, UINT32 ub
 
 void SetSpeechVolume( UINT32 uiNewVolume )
 {
-    guiSpeechVolume = __min( uiNewVolume, 127);
+	PERFORMANCE_MARKER
+	guiSpeechVolume = __min( uiNewVolume, 127);
 }
 
 
 
 UINT32 GetSpeechVolume( )
 {
+	PERFORMANCE_MARKER
 	return( guiSpeechVolume );
 }
 
 
 void SetSoundEffectsVolume( UINT32 uiNewVolume )
 {
-    guiSoundEffectsVolume = __min( uiNewVolume, 127);
+	PERFORMANCE_MARKER
+	guiSoundEffectsVolume = __min( uiNewVolume, 127);
 }
 
 
 UINT32 GetSoundEffectsVolume( )
 {
+	PERFORMANCE_MARKER
 	return( guiSoundEffectsVolume );
 }
 
 
 UINT32 CalculateSpeechVolume( UINT32 uiVolume )
 {
+	PERFORMANCE_MARKER
 	return( (UINT32) ( ( uiVolume / (FLOAT) HIGHVOLUME ) * guiSpeechVolume +.5 ) );
 }
 
 UINT32 CalculateSoundEffectsVolume( UINT32 uiVolume )
 {
+	PERFORMANCE_MARKER
 	return( (UINT32) ( ( uiVolume / (FLOAT) HIGHVOLUME ) * guiSoundEffectsVolume +.5 ) );
 }
 
@@ -632,26 +647,26 @@ int x,dif,absDif;
  dif = ScreenMiddleX - x;
 
  if ( (absDif=abs(dif)) > 32)
-  {
-   // OK, NOT the middle.
+	{
+	// OK, NOT the middle.
 
-   // Is it outside the screen?
-   if (absDif > HalfWindowWidth)
-    {
-     // yes, outside...
-     if (dif > 0)
-       return(25);
-     else
-       return(102);
-    }
-   else // inside screen
-    if (dif > 0)
-      return(LEFTSIDE);
-    else
-      return(RIGHTSIDE);
-  }
+	// Is it outside the screen?
+	if (absDif > HalfWindowWidth)
+	{
+	 // yes, outside...
+	 if (dif > 0)
+		return(25);
+	 else
+		return(102);
+	}
+	else // inside screen
+	if (dif > 0)
+		return(LEFTSIDE);
+	else
+		return(RIGHTSIDE);
+	}
  else // hardly any difference, so sound should be played from middle
-    return(MIDDLE);
+	return(MIDDLE);
 
 }
 #endif
@@ -659,15 +674,16 @@ int x,dif,absDif;
 // == Lesh slightly changed this function ============
 INT32 SoundDir( INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
 	INT16 sMiddleX;
 	INT16 sDif, sAbsDif;
 
-  if ( sGridNo == NOWHERE )
-  {
-    return( MIDDLEPAN );
-  }
+	if ( sGridNo == NOWHERE )
+	{
+	return( MIDDLEPAN );
+	}
 
 	// OK, get screen position of gridno.....
 	ConvertGridNoToXY( sGridNo, &sWorldX, &sWorldY );
@@ -681,21 +697,21 @@ INT32 SoundDir( INT16 sGridNo )
 	sDif = sMiddleX - sScreenX;
 
 	if ( ( sAbsDif = abs( sDif ) ) > 64 )
-    {
+	{
 		// OK, NOT the middle.
 		// Is it outside the screen?
 		if ( sAbsDif > ( ( gsBottomRightWorldX - gsTopLeftWorldX ) / 2 ) )
-        {
+		{
 			// yes, outside...
 			if ( sDif > 0 )
 			{
 				return( FARLEFT );
 				//return( 1 );
 			}
-            else
-            return( FARRIGHT );
-            //return( 126 );
-        }
+			else
+			return( FARRIGHT );
+			//return( 126 );
+		}
 		else // inside screen
 		{
 			if ( sDif > 0)
@@ -703,24 +719,25 @@ INT32 SoundDir( INT16 sGridNo )
 			else
 				return( RIGHTSIDE );
 		}
-    }
+	}
 	else // hardly any difference, so sound should be played from middle
-    return(MIDDLE);
+	return(MIDDLE);
 }
 
 
 INT32 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
 	INT16	sMiddleX, sMiddleY;
 	INT16	sDifX, sAbsDifX;
 	INT16	sDifY, sAbsDifY;
 
-    if ( sGridNo == NOWHERE )
-    {
-        return( bInitialVolume );
-    }
+	if ( sGridNo == NOWHERE )
+	{
+		return( bInitialVolume );
+	}
 
 	// OK, get screen position of gridno.....
 	ConvertGridNoToXY( sGridNo, &sWorldX, &sWorldY );
@@ -738,22 +755,23 @@ INT32 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 	sAbsDifX = abs( sDifX );
 	sAbsDifY = abs( sDifY );
 
-	if ( sAbsDifX  > 64 || sAbsDifY > 64 )
-    {
+	if ( sAbsDifX	> 64 || sAbsDifY > 64 )
+	{
 		// OK, NOT the middle.
 		// Is it outside the screen?
 		if ( sAbsDifX > ( ( gsBottomRightWorldX - gsTopLeftWorldX ) / 2 ) || 
-				 sAbsDifY > ( ( gsBottomRightWorldY - gsTopLeftWorldY ) / 2 ) )
-        {
+				sAbsDifY > ( ( gsBottomRightWorldY - gsTopLeftWorldY ) / 2 ) )
+		{
 			return( __max( LOWVOLUME, ( bInitialVolume - SOUND_FAR_VOLUME_MOD ) ) );
-        }
-    }
+		}
+	}
 	return( bInitialVolume );
 }
 
 
 void PlayDelayedJA2Sample( UINT32 uiDelay, UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
 {
+	PERFORMANCE_MARKER
 
 	memset(&gDelayedSoundParms, 0xff, sizeof(SOUNDPARMS));
 
@@ -774,6 +792,7 @@ void PlayDelayedJA2Sample( UINT32 uiDelay, UINT32 usNum, UINT32 usRate, UINT32 u
 
 void DelayedSoundTimerCallback( void )
 {
+	PERFORMANCE_MARKER
 	SoundPlay( szSoundEffects[ guiDelayedSoundNum ], &gDelayedSoundParms );
 }
 
@@ -791,13 +810,13 @@ void DelayedSoundTimerCallback( void )
 
 typedef struct
 {
-  UINT32        uiFlags;
-  INT16         sGridNo;
-  INT32         iSoundSampleID;
-  INT32         iSoundToPlay;
-  UINT32        uiData;
-  BOOLEAN       fAllocated;
-  BOOLEAN       fInActive;
+	UINT32		uiFlags;
+	INT16		 sGridNo;
+	INT32		 iSoundSampleID;
+	INT32		 iSoundToPlay;
+	UINT32		uiData;
+	BOOLEAN		fAllocated;
+	BOOLEAN		fInActive;
 
 } POSITIONSND;
 
@@ -805,7 +824,7 @@ typedef struct
 // GLOBAL FOR SMOKE LISTING
 POSITIONSND				gPositionSndData[ NUM_POSITION_SOUND_EFFECT_SLOTS ];
 UINT32						guiNumPositionSnds = 0;
-BOOLEAN           gfPositionSoundsActive = FALSE;
+BOOLEAN			gfPositionSoundsActive = FALSE;
 
 
 INT32 GetFreePositionSnd( void );
@@ -815,6 +834,7 @@ void RecountPositionSnds( void );
 
 INT32 GetFreePositionSnd( void )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumPositionSnds; uiCount++)
@@ -831,6 +851,7 @@ INT32 GetFreePositionSnd( void )
 
 void RecountPositionSnds( void )
 {
+	PERFORMANCE_MARKER
 	INT32 uiCount;
 
 	for(uiCount=guiNumPositionSnds-1; (uiCount >=0) ; uiCount--)
@@ -846,6 +867,7 @@ void RecountPositionSnds( void )
 
 INT32 NewPositionSnd( INT16 sGridNo, UINT32 uiFlags, UINT32 uiData, UINT32 iSoundToPlay )
 {
+	PERFORMANCE_MARKER
 	POSITIONSND *pPositionSnd;
 	INT32				iPositionSndIndex;
 
@@ -857,128 +879,133 @@ INT32 NewPositionSnd( INT16 sGridNo, UINT32 uiFlags, UINT32 uiData, UINT32 iSoun
 	pPositionSnd = &gPositionSndData[ iPositionSndIndex ];
 
 
-  // Default to inactive
+	// Default to inactive
 
-  if ( gfPositionSoundsActive )
-  {
-    pPositionSnd->fInActive   = FALSE;
-  }
-  else
-  {
-    pPositionSnd->fInActive   = TRUE;
-  }
-  
-  pPositionSnd->sGridNo     = sGridNo;
-  pPositionSnd->uiData      = uiData;
-  pPositionSnd->uiFlags     = uiFlags;
-  pPositionSnd->fAllocated  = TRUE;
-  pPositionSnd->iSoundToPlay = iSoundToPlay;
+	if ( gfPositionSoundsActive )
+	{
+	pPositionSnd->fInActive	= FALSE;
+	}
+	else
+	{
+	pPositionSnd->fInActive	= TRUE;
+	}
+	
+	pPositionSnd->sGridNo	 = sGridNo;
+	pPositionSnd->uiData		= uiData;
+	pPositionSnd->uiFlags	 = uiFlags;
+	pPositionSnd->fAllocated	= TRUE;
+	pPositionSnd->iSoundToPlay = iSoundToPlay;
 
-  pPositionSnd->iSoundSampleID = NO_SAMPLE;
+	pPositionSnd->iSoundSampleID = NO_SAMPLE;
 
-  return( iPositionSndIndex );
+	return( iPositionSndIndex );
 }
 
 void DeletePositionSnd( INT32 iPositionSndIndex )
 {
+	PERFORMANCE_MARKER
 	POSITIONSND *pPositionSnd;
 
-  pPositionSnd = &gPositionSndData[ iPositionSndIndex ];
+	pPositionSnd = &gPositionSndData[ iPositionSndIndex ];
 
-  if ( pPositionSnd->fAllocated )
-  {
-     // Turn inactive first...
-     pPositionSnd->fInActive = TRUE;
+	if ( pPositionSnd->fAllocated )
+	{
+	 // Turn inactive first...
+	 pPositionSnd->fInActive = TRUE;
 
-     // End sound...
-     if ( pPositionSnd->iSoundSampleID != NO_SAMPLE )
-     {
-        SoundStop( pPositionSnd->iSoundSampleID );
-     }    
+	 // End sound...
+	 if ( pPositionSnd->iSoundSampleID != NO_SAMPLE )
+	 {
+		SoundStop( pPositionSnd->iSoundSampleID );
+	 }	
 
-     pPositionSnd->fAllocated = FALSE;
+	 pPositionSnd->fAllocated = FALSE;
 
-     RecountPositionSnds( );
-  }
+	 RecountPositionSnds( );
+	}
 }
 
 void SetPositionSndGridNo( INT32 iPositionSndIndex, INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	POSITIONSND *pPositionSnd;
 
-  pPositionSnd = &gPositionSndData[ iPositionSndIndex ];
+	pPositionSnd = &gPositionSndData[ iPositionSndIndex ];
 
-  if ( pPositionSnd->fAllocated )
-  {
-    pPositionSnd->sGridNo = sGridNo;
+	if ( pPositionSnd->fAllocated )
+	{
+	pPositionSnd->sGridNo = sGridNo;
 
-    SetPositionSndsVolumeAndPanning( );
-  }
+	SetPositionSndsVolumeAndPanning( );
+	}
 }
 
 void SetPositionSndsActive( )
 {
-  UINT32 cnt;
+	PERFORMANCE_MARKER
+	UINT32 cnt;
 	POSITIONSND *pPositionSnd;
 
-  gfPositionSoundsActive = TRUE;
+	gfPositionSoundsActive = TRUE;
 
-  for ( cnt = 0; cnt < guiNumPositionSnds; cnt++ )
-  {
-  	pPositionSnd = &gPositionSndData[ cnt ];
+	for ( cnt = 0; cnt < guiNumPositionSnds; cnt++ )
+	{
+		pPositionSnd = &gPositionSndData[ cnt ];
 
-    if ( pPositionSnd->fAllocated )
-    {
-      if ( pPositionSnd->fInActive )
-      {
-        pPositionSnd->fInActive = FALSE;
+	if ( pPositionSnd->fAllocated )
+	{
+		if ( pPositionSnd->fInActive )
+		{
+		pPositionSnd->fInActive = FALSE;
 
-        // Begin sound effect
-        // Volume 0
-        pPositionSnd->iSoundSampleID = PlayJA2Sample( pPositionSnd->iSoundToPlay, RATE_11025, 0, 0, MIDDLEPAN );
-      }
-    }
-  }
+		// Begin sound effect
+		// Volume 0
+		pPositionSnd->iSoundSampleID = PlayJA2Sample( pPositionSnd->iSoundToPlay, RATE_11025, 0, 0, MIDDLEPAN );
+		}
+	}
+	}
 }
 
 
 void SetPositionSndsInActive( )
 {
-  UINT32 cnt;
+	PERFORMANCE_MARKER
+	UINT32 cnt;
 	POSITIONSND *pPositionSnd;
 
-  gfPositionSoundsActive = FALSE;
+	gfPositionSoundsActive = FALSE;
 
-  for ( cnt = 0; cnt < guiNumPositionSnds; cnt++ )
-  {
-  	pPositionSnd = &gPositionSndData[ cnt ];
+	for ( cnt = 0; cnt < guiNumPositionSnds; cnt++ )
+	{
+		pPositionSnd = &gPositionSndData[ cnt ];
 
-    if ( pPositionSnd->fAllocated )
-    {
-      pPositionSnd->fInActive = TRUE;
+	if ( pPositionSnd->fAllocated )
+	{
+		pPositionSnd->fInActive = TRUE;
 
-      // End sound...
-      if ( pPositionSnd->iSoundSampleID != NO_SAMPLE )
-      {
-         SoundStop( pPositionSnd->iSoundSampleID );
-         pPositionSnd->iSoundSampleID = NO_SAMPLE;
-      }
-    }
-  }
+		// End sound...
+		if ( pPositionSnd->iSoundSampleID != NO_SAMPLE )
+		{
+		 SoundStop( pPositionSnd->iSoundSampleID );
+		 pPositionSnd->iSoundSampleID = NO_SAMPLE;
+		}
+	}
+	}
 }
 
 // == Lesh slightly changed this function ============
 INT32 PositionSoundDir( INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
 	INT16	sMiddleX;
 	INT16	sDif, sAbsDif;
 
-  if ( sGridNo == NOWHERE )
-  {
-    return( MIDDLEPAN );
-  }
+	if ( sGridNo == NOWHERE )
+	{
+	return( MIDDLEPAN );
+	}
 
 	// OK, get screen position of gridno.....
 	ConvertGridNoToXY( sGridNo, &sWorldX, &sWorldY );
@@ -992,23 +1019,23 @@ INT32 PositionSoundDir( INT16 sGridNo )
 	sDif = sMiddleX - sScreenX;
 
 	if ( ( sAbsDif = abs( sDif ) ) > 64 )
-  {
+	{
 		// OK, NOT the middle.
-		 
+		
 		// Is it outside the screen?
 		if ( sAbsDif > ( ( gsBottomRightWorldX - gsTopLeftWorldX ) / 2 ) )
-    {
+	{
 			// yes, outside...
 			if ( sDif > 0 )
 			{
 				return( FARLEFT );
 				//return( 1 );
 			}
-     else
-       return( FARRIGHT );
-       //return( 126 );
+	 else
+		return( FARRIGHT );
+		//return( 126 );
 
-    }
+	}
 		else // inside screen
 		{
 			if ( sDif > 0)
@@ -1016,26 +1043,27 @@ INT32 PositionSoundDir( INT16 sGridNo )
 			else
 				return( RIGHTSIDE );
 		}
-  }
+	}
 	else // hardly any difference, so sound should be played from middle
-    return(MIDDLE);
+	return(MIDDLE);
 }
 
 
 INT32 PositionSoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
 	INT16	sMiddleX, sMiddleY;
 	INT16	sDifX, sAbsDifX;
 	INT16	sDifY, sAbsDifY;
-  INT16 sMaxDistX, sMaxDistY;
-  double sMaxSoundDist, sSoundDist;
+	INT16 sMaxDistX, sMaxDistY;
+	double sMaxSoundDist, sSoundDist;
 
-  if ( sGridNo == NOWHERE )
-  {
-    return( bInitialVolume );
-  }
+	if ( sGridNo == NOWHERE )
+	{
+	return( bInitialVolume );
+	}
 
 	// OK, get screen position of gridno.....
 	ConvertGridNoToXY( sGridNo, &sWorldX, &sWorldY );
@@ -1053,59 +1081,60 @@ INT32 PositionSoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 	sAbsDifX = abs( sDifX );
 	sAbsDifY = abs( sDifY );
 
-  sMaxDistX = (INT16)( ( gsBottomRightWorldX - gsTopLeftWorldX ) * 1.5 );
-  sMaxDistY = (INT16)( ( gsBottomRightWorldY - gsTopLeftWorldY ) * 1.5 );
+	sMaxDistX = (INT16)( ( gsBottomRightWorldX - gsTopLeftWorldX ) * 1.5 );
+	sMaxDistY = (INT16)( ( gsBottomRightWorldY - gsTopLeftWorldY ) * 1.5 );
 
-  sMaxSoundDist = sqrt( (double) ( sMaxDistX * sMaxDistX ) + ( sMaxDistY * sMaxDistY ) );
-  sSoundDist    = sqrt( (double)( sAbsDifX * sAbsDifX ) + ( sAbsDifY * sAbsDifY ) );
+	sMaxSoundDist = sqrt( (double) ( sMaxDistX * sMaxDistX ) + ( sMaxDistY * sMaxDistY ) );
+	sSoundDist	= sqrt( (double)( sAbsDifX * sAbsDifX ) + ( sAbsDifY * sAbsDifY ) );
 
-  if ( sSoundDist == 0 )
-  {
-    return( bInitialVolume );
-  }
+	if ( sSoundDist == 0 )
+	{
+	return( bInitialVolume );
+	}
 
-  if ( sSoundDist > sMaxSoundDist )
-  {
-    sSoundDist = sMaxSoundDist;
-  }
+	if ( sSoundDist > sMaxSoundDist )
+	{
+	sSoundDist = sMaxSoundDist;
+	}
 
-  // Scale
-  return( (INT8)( bInitialVolume * ( ( sMaxSoundDist - sSoundDist ) / sMaxSoundDist ) ) );
+	// Scale
+	return( (INT8)( bInitialVolume * ( ( sMaxSoundDist - sSoundDist ) / sMaxSoundDist ) ) );
 }
 
 
 void SetPositionSndsVolumeAndPanning( )
 {
-  UINT32 cnt;
+	PERFORMANCE_MARKER
+	UINT32 cnt;
 	POSITIONSND *pPositionSnd;
-  INT8        bVolume, bPan;
-  SOLDIERTYPE *pSoldier;
+	INT8		bVolume, bPan;
+	SOLDIERTYPE *pSoldier;
 
-  for ( cnt = 0; cnt < guiNumPositionSnds; cnt++ )
-  {
-  	pPositionSnd = &gPositionSndData[ cnt ];
+	for ( cnt = 0; cnt < guiNumPositionSnds; cnt++ )
+	{
+		pPositionSnd = &gPositionSndData[ cnt ];
 
-    if ( pPositionSnd->fAllocated )
-    {
-      if ( !pPositionSnd->fInActive )
-      {
-         if ( pPositionSnd->iSoundSampleID != NO_SAMPLE )
-         {
-            bVolume = PositionSoundVolume( 15, pPositionSnd->sGridNo );
+	if ( pPositionSnd->fAllocated )
+	{
+		if ( !pPositionSnd->fInActive )
+		{
+		 if ( pPositionSnd->iSoundSampleID != NO_SAMPLE )
+		 {
+			bVolume = PositionSoundVolume( 15, pPositionSnd->sGridNo );
 
-            if ( pPositionSnd->uiFlags & POSITION_SOUND_FROM_SOLDIER )
-            {
-               pSoldier = (SOLDIERTYPE*)pPositionSnd->uiData;
+			if ( pPositionSnd->uiFlags & POSITION_SOUND_FROM_SOLDIER )
+			{
+				pSoldier = (SOLDIERTYPE*)pPositionSnd->uiData;
 
-               if ( pSoldier->bVisible == -1 )
-               {
-                  // Limit volume,,,
-                  if ( bVolume > 10 )
-                  {
-                    bVolume = 10;
-                  }
-               }
-            }
+				if ( pSoldier->bVisible == -1 )
+				{
+					// Limit volume,,,
+					if ( bVolume > 10 )
+					{
+					bVolume = 10;
+					}
+				}
+			}
 
 			//if the sound is from a stationay object
 			if( pPositionSnd->uiFlags & POSITION_SOUND_STATIONATY_OBJECT )
@@ -1117,14 +1146,14 @@ void SetPositionSndsVolumeAndPanning( )
 				}
 			}
 
-            SoundSetVolume( pPositionSnd->iSoundSampleID, bVolume );
+			SoundSetVolume( pPositionSnd->iSoundSampleID, bVolume );
 
-            bPan = PositionSoundDir( pPositionSnd->sGridNo );
+			bPan = PositionSoundDir( pPositionSnd->sGridNo );
 
-            SoundSetPan( pPositionSnd->iSoundSampleID, bPan );
-         }
-      }
-    }
-  }
+			SoundSetPan( pPositionSnd->iSoundSampleID, bPan );
+		 }
+		}
+	}
+	}
 }
 

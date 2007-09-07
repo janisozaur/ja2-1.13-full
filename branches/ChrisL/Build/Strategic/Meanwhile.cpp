@@ -113,7 +113,7 @@ UINT32								guiOldScreen;
 NPC_SAVE_INFO					gNPCSaveData[ MAX_MEANWHILE_PROFILES ];
 UINT32								guiNumNPCSaves = 0;
 BOOLEAN								gfReloadingScreenFromMeanwhile = FALSE;
-INT16									gsOldCurInterfacePanel = 0;		 
+INT16									gsOldCurInterfacePanel = 0;		
 BOOLEAN								gfWorldWasLoaded = FALSE;
 UINT8									ubCurrentMeanWhileId = 0;
 
@@ -145,7 +145,7 @@ UINT32 uiMeanWhileFlags = 0;
 #define INTERROGATION_FLAG										0x00008000								
 #define BALIME_LIBERATED_FLAG									0x00010000
 
-extern void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce );
+extern void InternalLocateGridNo( INT16 sGridNo, BOOLEAN fForce );
 
 
 void ProcessImplicationsOfMeanwhile( void );
@@ -153,6 +153,7 @@ void ProcessImplicationsOfMeanwhile( void );
 // set flag for this event
 void SetMeanWhileFlag( UINT8 ubMeanwhileID )
 {
+	PERFORMANCE_MARKER
 	switch( ubMeanwhileID )
 	{
 		case END_OF_PLAYERS_FIRST_BATTLE:
@@ -212,6 +213,7 @@ void SetMeanWhileFlag( UINT8 ubMeanwhileID )
 // is this flag set?
 BOOLEAN GetMeanWhileFlag( UINT8 ubMeanwhileID )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiTrue = FALSE;
 	switch( ubMeanwhileID )
 	{
@@ -281,6 +283,7 @@ BOOLEAN GetMeanWhileFlag( UINT8 ubMeanwhileID )
 
 INT32 GetFreeNPCSave( void )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumNPCSaves; uiCount++)
@@ -297,6 +300,7 @@ INT32 GetFreeNPCSave( void )
 
 void RecountNPCSaves( void )
 {
+	PERFORMANCE_MARKER
 	INT32 uiCount;
 
 	for(uiCount=guiNumNPCSaves-1; (uiCount >=0) ; uiCount--)
@@ -313,6 +317,7 @@ void RecountNPCSaves( void )
 
 void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime )
 {
+	PERFORMANCE_MARKER
 	// event scheduled to happen before, ignore
 	if( GetMeanWhileFlag( pMeanwhileDef->ubMeanwhileID )== TRUE )
 	{
@@ -328,14 +333,14 @@ void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime 
 	// Copy definiaiotn structure into position in global array....
 	memcpy( &(gMeanwhileDef[pMeanwhileDef->ubMeanwhileID]), pMeanwhileDef, sizeof( MEANWHILE_DEFINITION ) );
 
-  // A meanwhile.. poor elliot!
-  // increment his slapped count...
+	// A meanwhile.. poor elliot!
+	// increment his slapped count...
 
-  // We need to do it here 'cause they may skip it...
-  if ( gMercProfiles[ ELLIOT ].bNPCData != 17 )
-  {
-    gMercProfiles[ ELLIOT ].bNPCData++;
-  }
+	// We need to do it here 'cause they may skip it...
+	if ( gMercProfiles[ ELLIOT ].bNPCData != 17 )
+	{
+	gMercProfiles[ ELLIOT ].bNPCData++;
+	}
 
 	AddStrategicEvent( EVENT_MEANWHILE, uiTime, pMeanwhileDef->ubMeanwhileID );
 }
@@ -343,6 +348,7 @@ void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime 
 
 BOOLEAN BeginMeanwhile( UINT8 ubMeanwhileID )
 {
+	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	// copy meanwhile data from array to structure for current
@@ -365,6 +371,7 @@ BOOLEAN BeginMeanwhile( UINT8 ubMeanwhileID )
 
 void BringupMeanwhileBox( )
 {
+	PERFORMANCE_MARKER
 	CHAR16 zStr[256];
 
 #ifdef JA2TESTVERSION
@@ -390,6 +397,7 @@ void BringupMeanwhileBox( )
 
 void CheckForMeanwhileOKStart( )
 {
+	PERFORMANCE_MARKER
 	if ( gfMeanwhileTryingToStart )
 	{
 		// Are we in prebattle interface?
@@ -403,25 +411,25 @@ void CheckForMeanwhileOKStart( )
 			return;
 		}
 
-	  if ( !DialogueQueueIsEmptyOrSomebodyTalkingNow( ) )
-	  {
-      return;
-    }
+	if ( !DialogueQueueIsEmptyOrSomebodyTalkingNow( ) )
+	{
+		return;
+	}
 
 		gfMeanwhileTryingToStart = FALSE;
 
 		guiOldScreen = guiCurrentScreen;
 
-    if ( guiCurrentScreen == GAME_SCREEN )
-    {
-  		LeaveTacticalScreen( GAME_SCREEN );    
-    }
+	if ( guiCurrentScreen == GAME_SCREEN )
+	{
+			LeaveTacticalScreen( GAME_SCREEN );	
+	}
 
 
 
-    // We need to make sure we have no item - at least in tactical
-    // In mapscreen, time is paused when manipulating items...
-    CancelItemPointer( );
+	// We need to make sure we have no item - at least in tactical
+	// In mapscreen, time is paused when manipulating items...
+	CancelItemPointer( );
 
 		BringupMeanwhileBox( );
 	}
@@ -429,8 +437,8 @@ void CheckForMeanwhileOKStart( )
 
 void StartMeanwhile( )
 {
+	PERFORMANCE_MARKER
 	INT32 iIndex;
-	INT8	bNumDone = 0;
 
 	// OK, save old position...
 	if ( gfWorldLoaded )
@@ -464,7 +472,7 @@ void StartMeanwhile( )
 		case	ALMA_LIBERATED:
 		case	GRUMM_LIBERATED:
 		case	CHITZENA_LIBERATED:
-		case  BALIME_LIBERATED:
+		case	BALIME_LIBERATED:
 		case	NW_SAM:
 		case	NE_SAM:
 		case	CENTRAL_SAM:
@@ -480,10 +488,10 @@ void StartMeanwhile( )
 				if ( iIndex != -1 )
 				{
 					gNPCSaveData[ iIndex ].ubProfile = QUEEN;
-					gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ QUEEN ].sSectorX;
-					gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ QUEEN ].sSectorY;
-					gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ QUEEN ].bSectorZ;
-					gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ QUEEN ].sGridNo;
+					gNPCSaveData[ iIndex ].sX				= gMercProfiles[ QUEEN ].sSectorX;
+					gNPCSaveData[ iIndex ].sY				= gMercProfiles[ QUEEN ].sSectorY;
+					gNPCSaveData[ iIndex ].sZ				= gMercProfiles[ QUEEN ].bSectorZ;
+					gNPCSaveData[ iIndex ].sGridNo	= gMercProfiles[ QUEEN ].sGridNo;
 
 					// Force reload of NPC files...
 					ReloadQuoteFile( QUEEN );
@@ -496,10 +504,10 @@ void StartMeanwhile( )
 				if ( iIndex != -1 )
 				{
 					gNPCSaveData[ iIndex ].ubProfile = ELLIOT;
-					gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ ELLIOT ].sSectorX;
-					gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ ELLIOT ].sSectorY;
-					gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ ELLIOT ].bSectorZ;
-					gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ ELLIOT ].sGridNo;
+					gNPCSaveData[ iIndex ].sX				= gMercProfiles[ ELLIOT ].sSectorX;
+					gNPCSaveData[ iIndex ].sY				= gMercProfiles[ ELLIOT ].sSectorY;
+					gNPCSaveData[ iIndex ].sZ				= gMercProfiles[ ELLIOT ].bSectorZ;
+					gNPCSaveData[ iIndex ].sGridNo	= gMercProfiles[ ELLIOT ].sGridNo;
 
 					// Force reload of NPC files...
 					ReloadQuoteFile( ELLIOT );
@@ -514,10 +522,10 @@ void StartMeanwhile( )
 					if ( iIndex != -1 )
 					{
 						gNPCSaveData[ iIndex ].ubProfile = JOE;
-						gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ JOE ].sSectorX;
-						gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ JOE ].sSectorY;
-						gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ JOE ].bSectorZ;
-						gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ JOE ].sGridNo;
+						gNPCSaveData[ iIndex ].sX				= gMercProfiles[ JOE ].sSectorX;
+						gNPCSaveData[ iIndex ].sY				= gMercProfiles[ JOE ].sSectorY;
+						gNPCSaveData[ iIndex ].sZ				= gMercProfiles[ JOE ].bSectorZ;
+						gNPCSaveData[ iIndex ].sGridNo	= gMercProfiles[ JOE ].sGridNo;
 
 						// Force reload of NPC files...
 						ReloadQuoteFile( JOE );
@@ -536,10 +544,10 @@ void StartMeanwhile( )
 				if ( iIndex != -1 )
 				{
 					gNPCSaveData[ iIndex ].ubProfile = QUEEN;
-					gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ QUEEN ].sSectorX;
-					gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ QUEEN ].sSectorY;
-					gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ QUEEN ].bSectorZ;
-					gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ QUEEN ].sGridNo;
+					gNPCSaveData[ iIndex ].sX				= gMercProfiles[ QUEEN ].sSectorX;
+					gNPCSaveData[ iIndex ].sY				= gMercProfiles[ QUEEN ].sSectorY;
+					gNPCSaveData[ iIndex ].sZ				= gMercProfiles[ QUEEN ].bSectorZ;
+					gNPCSaveData[ iIndex ].sGridNo	= gMercProfiles[ QUEEN ].sGridNo;
 
 					// Force reload of NPC files...
 					ReloadQuoteFile( QUEEN );
@@ -552,10 +560,10 @@ void StartMeanwhile( )
 				if ( iIndex != -1 )
 				{
 					gNPCSaveData[ iIndex ].ubProfile = ELLIOT;
-					gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ ELLIOT ].sSectorX;
-					gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ ELLIOT ].sSectorY;
-					gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ ELLIOT ].bSectorZ;
-					gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ ELLIOT ].sGridNo;
+					gNPCSaveData[ iIndex ].sX				= gMercProfiles[ ELLIOT ].sSectorX;
+					gNPCSaveData[ iIndex ].sY				= gMercProfiles[ ELLIOT ].sSectorY;
+					gNPCSaveData[ iIndex ].sZ				= gMercProfiles[ ELLIOT ].bSectorZ;
+					gNPCSaveData[ iIndex ].sGridNo	= gMercProfiles[ ELLIOT ].sGridNo;
 
 					// Force reload of NPC files...
 					ReloadQuoteFile( ELLIOT );
@@ -568,10 +576,10 @@ void StartMeanwhile( )
 				if ( iIndex != -1 )
 				{
 					gNPCSaveData[ iIndex ].ubProfile = JOE;
-					gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ JOE ].sSectorX;
-					gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ JOE ].sSectorY;
-					gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ JOE ].bSectorZ;
-					gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ JOE ].sGridNo;
+					gNPCSaveData[ iIndex ].sX				= gMercProfiles[ JOE ].sSectorX;
+					gNPCSaveData[ iIndex ].sY				= gMercProfiles[ JOE ].sSectorY;
+					gNPCSaveData[ iIndex ].sZ				= gMercProfiles[ JOE ].bSectorZ;
+					gNPCSaveData[ iIndex ].sGridNo	= gMercProfiles[ JOE ].sGridNo;
 
 					// Force reload of NPC files...
 					ReloadQuoteFile( JOE );
@@ -596,6 +604,7 @@ void StartMeanwhile( )
 
 void DoneFadeOutMeanwhile( )
 {
+	PERFORMANCE_MARKER
 	// OK, insertion data found, enter sector!
 	
 	SetCurrentWorldSector( gCurrentMeanwhileDef.sSectorX, gCurrentMeanwhileDef.sSectorY, 0 );
@@ -611,6 +620,7 @@ void DoneFadeOutMeanwhile( )
 
 void DoneFadeInMeanwhile( )
 {
+	PERFORMANCE_MARKER
 	// ATE: double check that we are in meanwhile
 	// this is if we cancel right away.....
 	if ( gfInMeanwhile )
@@ -631,6 +641,7 @@ void DoneFadeInMeanwhile( )
 
 void BeginMeanwhileCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	if ( bExitValue == MSG_BOX_RETURN_OK || bExitValue == MSG_BOX_RETURN_YES )
 	{
 		gTacticalStatus.uiFlags |= ENGAGED_IN_CONV;
@@ -651,10 +662,11 @@ void BeginMeanwhileCallBack( UINT8 bExitValue )
 
 BOOLEAN AreInMeanwhile( )
 {
+	PERFORMANCE_MARKER
 	STRATEGICEVENT *curr;
 
-	//KM:  April 6, 1999
-	//Tactical traversal needs to take precedence over meanwhile events.  When tactically traversing, we
+	//KM:	April 6, 1999
+	//Tactical traversal needs to take precedence over meanwhile events.	When tactically traversing, we
 	//expect to make it to the other side without interruption.
 	if( gfTacticalTraversal )
 	{
@@ -665,7 +677,7 @@ BOOLEAN AreInMeanwhile( )
 	{
 		return TRUE;
 	}
-	//Check to make sure a meanwhile scene isn't in the event list occurring at the exact same time as this call.  Meanwhile
+	//Check to make sure a meanwhile scene isn't in the event list occurring at the exact same time as this call.	Meanwhile
 	//scenes have precedence over a new battle if they occur in the same second.
 	curr = gpEventList;
 	while( curr )
@@ -689,6 +701,7 @@ BOOLEAN AreInMeanwhile( )
 
 void ProcessImplicationsOfMeanwhile( void )
 {
+	PERFORMANCE_MARKER
 	switch( gCurrentMeanwhileDef.ubMeanwhileID )
 	{
 		case END_OF_PLAYERS_FIRST_BATTLE:
@@ -789,6 +802,7 @@ void ProcessImplicationsOfMeanwhile( void )
 
 void EndMeanwhile( )
 {
+	PERFORMANCE_MARKER
 	UINT32		cnt;
 	UINT8		ubProfile;
 
@@ -804,8 +818,8 @@ void EndMeanwhile( )
 	UnLockPauseState();
 	UnPauseGame();
 
-  // ATE: Make sure!
-  TurnOffSectorLocator();
+	// ATE: Make sure!
+	TurnOffSectorLocator();
 
 	if ( gCurrentMeanwhileDef.ubMeanwhileID != INTERROGATION )
 	{
@@ -823,23 +837,23 @@ void EndMeanwhile( )
 		// Set music mode to enemy present!
 		SetMusicMode( MUSIC_TACTICAL_ENEMYPRESENT );
 
-    // ATE: Restore people to saved positions...
-	  // OK, restore NPC save info...
-	  for ( cnt = 0; cnt < guiNumNPCSaves; cnt++ )
-	  {
-		  ubProfile = gNPCSaveData[ cnt ].ubProfile;
+	// ATE: Restore people to saved positions...
+	// OK, restore NPC save info...
+	for ( cnt = 0; cnt < guiNumNPCSaves; cnt++ )
+	{
+		ubProfile = gNPCSaveData[ cnt ].ubProfile;
 
-		  if ( ubProfile != NO_PROFILE )
-		  {
-			  gMercProfiles[ ubProfile ].sSectorX = gNPCSaveData[ cnt ].sX;
-			  gMercProfiles[ ubProfile ].sSectorY = gNPCSaveData[ cnt ].sY;
-			  gMercProfiles[ ubProfile ].bSectorZ = (INT8)gNPCSaveData[ cnt ].sZ;
-			  gMercProfiles[ ubProfile ].sGridNo  = (INT8)gNPCSaveData[ cnt ].sGridNo;
+		if ( ubProfile != NO_PROFILE )
+		{
+			gMercProfiles[ ubProfile ].sSectorX = gNPCSaveData[ cnt ].sX;
+			gMercProfiles[ ubProfile ].sSectorY = gNPCSaveData[ cnt ].sY;
+			gMercProfiles[ ubProfile ].bSectorZ = (INT8)gNPCSaveData[ cnt ].sZ;
+			gMercProfiles[ ubProfile ].sGridNo	= (INT8)gNPCSaveData[ cnt ].sGridNo;
 
-			  // Ensure NPC files loaded...
-			  ReloadQuoteFile( ubProfile );
-		  }
-	  }
+			// Ensure NPC files loaded...
+			ReloadQuoteFile( ubProfile );
+		}
+	}
 
 	}
 
@@ -847,6 +861,7 @@ void EndMeanwhile( )
 
 void DoneFadeOutMeanwhileOnceDone( )
 {
+	PERFORMANCE_MARKER
 	UINT32		cnt;
 	UINT8		ubProfile;
 
@@ -858,7 +873,7 @@ void DoneFadeOutMeanwhileOnceDone( )
 	{
 		SetCurrentWorldSector( gsOldSectorX, gsOldSectorY, (INT8)gsOldSectorZ );
 
-  	ExamineCurrentSquadLights( );
+		ExamineCurrentSquadLights( );
 	}	
 	else
 	{
@@ -883,7 +898,7 @@ void DoneFadeOutMeanwhileOnceDone( )
 			gMercProfiles[ ubProfile ].sSectorX = gNPCSaveData[ cnt ].sX;
 			gMercProfiles[ ubProfile ].sSectorY = gNPCSaveData[ cnt ].sY;
 			gMercProfiles[ ubProfile ].bSectorZ = (INT8)gNPCSaveData[ cnt ].sZ;
-			gMercProfiles[ ubProfile ].sGridNo  = (INT8)gNPCSaveData[ cnt ].sGridNo;
+			gMercProfiles[ ubProfile ].sGridNo	= (INT8)gNPCSaveData[ cnt ].sGridNo;
 
 			// Ensure NPC files loaded...
 			ReloadQuoteFile( ubProfile );
@@ -912,11 +927,13 @@ void DoneFadeOutMeanwhileOnceDone( )
 
 void DoneFadeInMeanwhileOnceDone( )
 {
+	PERFORMANCE_MARKER
 	
 }
 
 void LocateMeanWhileGrid( void )
 {
+	PERFORMANCE_MARKER
 	INT16 sGridNo = 0;
 
 	// go to the approp. gridno
@@ -929,6 +946,7 @@ void LocateMeanWhileGrid( void )
 
 void LocateToMeanwhileCharacter( )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
 	if ( gfInMeanwhile )
@@ -945,17 +963,20 @@ void LocateToMeanwhileCharacter( )
 
 BOOLEAN AreReloadingFromMeanwhile( )
 {
+	PERFORMANCE_MARKER
 	return( gfReloadingScreenFromMeanwhile );
 }
 
 UINT8 GetMeanwhileID( )
 {
+	PERFORMANCE_MARKER
 	return( gCurrentMeanwhileDef.ubMeanwhileID );
 }
 
 
 void HandleCreatureRelease( void )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
 	
@@ -975,6 +996,7 @@ void HandleCreatureRelease( void )
 
 void HandleMeanWhileEventPostingForTownLiberation( UINT8 bTownId )
 {
+	PERFORMANCE_MARKER
 	// post event for meanwhile whithin the next 6 hours if it still will be daylight, otherwise the next morning
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
@@ -1027,7 +1049,8 @@ void HandleMeanWhileEventPostingForTownLiberation( UINT8 bTownId )
 }	
 
 void HandleMeanWhileEventPostingForTownLoss( UINT8 bTownId )
-{	
+{
+	PERFORMANCE_MARKER	
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
 
@@ -1052,6 +1075,7 @@ void HandleMeanWhileEventPostingForTownLoss( UINT8 bTownId )
 
 void HandleMeanWhileEventPostingForSAMLiberation( INT8 bSamId )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
 	UINT8 ubId = 0;
@@ -1108,10 +1132,9 @@ void HandleMeanWhileEventPostingForSAMLiberation( INT8 bSamId )
 
 void HandleFlowersMeanwhileScene( INT8 bTimeCode )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
-	UINT8 ubId = 0;
-
 	// make sure scene hasn't been used before
 	if ( GetMeanWhileFlag( FLOWERS ) )
 	{
@@ -1143,10 +1166,9 @@ void HandleFlowersMeanwhileScene( INT8 bTimeCode )
 
 void HandleOutskirtsOfMedunaMeanwhileScene( void )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
-	UINT8 ubId = 0;
-
 	// make sure scene hasn't been used before
 	if ( GetMeanWhileFlag( OUTSKIRTS_MEDUNA ) )
 	{
@@ -1168,10 +1190,9 @@ void HandleOutskirtsOfMedunaMeanwhileScene( void )
 
 void HandleKillChopperMeanwhileScene( void )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
-	UINT8 ubId = 0;
-
 	// make sure scene hasn't been used before
 	if ( GetMeanWhileFlag( KILL_CHOPPER ) )
 	{
@@ -1193,10 +1214,9 @@ void HandleKillChopperMeanwhileScene( void )
 
 void HandleScientistAWOLMeanwhileScene( void )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
-	UINT8 ubId = 0;
-
 	// make sure scene hasn't been used before
 	if ( GetMeanWhileFlag( AWOL_SCIENTIST ) )
 	{
@@ -1218,10 +1238,9 @@ void HandleScientistAWOLMeanwhileScene( void )
 
 void HandleInterrogationMeanwhileScene( void )
 {
-		UINT32 uiTime = 0;
+	PERFORMANCE_MARKER
+	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
-	UINT8 ubId = 0;
-
 	// make sure scene hasn't been used before
 	if ( GetMeanWhileFlag( INTERROGATION ) )
 	{
@@ -1243,6 +1262,7 @@ void HandleInterrogationMeanwhileScene( void )
 
 void HandleFirstBattleVictory( void )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
 	UINT8 ubId = 0;
@@ -1271,6 +1291,7 @@ void HandleFirstBattleVictory( void )
 
 void HandleDelayedFirstBattleVictory( void )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
 	UINT8 ubId = 0;
@@ -1287,7 +1308,7 @@ void HandleDelayedFirstBattleVictory( void )
 
 	/*
 	//It is theoretically impossible to liberate a town within 60 minutes of the first battle (which is supposed to
-	//occur outside of a town in this scenario).  The delay is attributed to the info taking longer to reach the queen.
+	//occur outside of a town in this scenario).	The delay is attributed to the info taking longer to reach the queen.
 	uiTime = GetWorldTotalMin() + 60;
 	*/
 	uiTime = GetWorldTotalMin() + 5;
@@ -1304,6 +1325,7 @@ void HandleDelayedFirstBattleVictory( void )
 
 void HandleFirstBattleEndingWhileInTown( INT16 sSectorX, INT16 sSectorY, INT16 bSectorZ, BOOLEAN fFromAutoResolve )
 {
+	PERFORMANCE_MARKER
 	INT8 bTownId = 0;
 	INT16 sSector = 0;
 
@@ -1313,7 +1335,7 @@ void HandleFirstBattleEndingWhileInTown( INT16 sSectorX, INT16 sSectorY, INT16 b
 	}
 
 	// if this is in fact a town and it is the first battle, then set gfFirstBattleMeanwhileScenePending true
-	// if  is true then this is the end of the second battle, post the first meanwhile OR, on call to trash world, that
+	// if	is true then this is the end of the second battle, post the first meanwhile OR, on call to trash world, that
 	// means player is leaving sector
 
 	// grab sector value
@@ -1344,6 +1366,7 @@ void HandleFirstBattleEndingWhileInTown( INT16 sSectorX, INT16 sSectorY, INT16 b
 
 void HandleFirstMeanWhileSetUpWithTrashWorld( void )
 {
+	PERFORMANCE_MARKER
 
 	// exiting sector after first battle fought
 	if( gfFirstBattleMeanwhileScenePending )

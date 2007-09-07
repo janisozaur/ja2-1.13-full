@@ -97,9 +97,10 @@ void RestoreButtonBackGrounds();
 
 UINT32	MainMenuScreenInit( )
 {
+	PERFORMANCE_MARKER
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Version Label: %S", zVersionLabel ));
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Version #:     %s", czVersionNumber ));
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Tracking #:    %S", zTrackingNumber ));
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Version #:	 %s", czVersionNumber ));
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Tracking #:	%S", zTrackingNumber ));
 
 	return( TRUE );
 }
@@ -108,6 +109,7 @@ UINT32	MainMenuScreenInit( )
 
 UINT32	MainMenuScreenHandle( )
 {
+	PERFORMANCE_MARKER
 	UINT32 cnt;
 	UINT32 uiTime;
 
@@ -115,7 +117,7 @@ UINT32	MainMenuScreenHandle( )
 	{
 		SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 		SetMusicMode( MUSIC_NONE );
-		return MAINMENU_SCREEN;  //The splash screen hasn't been up long enough yet.
+		return MAINMENU_SCREEN;	//The splash screen hasn't been up long enough yet.
 	}
 	if( guiSplashFrameFade )
 	{ //Fade the splash screen.
@@ -197,8 +199,9 @@ UINT32	MainMenuScreenHandle( )
 }
 
 
-UINT32	MainMenuScreenShutdown(  )
+UINT32	MainMenuScreenShutdown(	)
 {
+	PERFORMANCE_MARKER
 	return( FALSE );
 }
 
@@ -207,6 +210,7 @@ UINT32	MainMenuScreenShutdown(  )
 
 void HandleMainMenuScreen()
 {
+	PERFORMANCE_MARKER
 	if ( gbHandledMainMenu != 0 )
 	{
 		// Exit according to handled value!
@@ -255,7 +259,8 @@ void HandleMainMenuScreen()
 
 BOOLEAN InitMainMenu( )
 {
-  VOBJECT_DESC    VObjectDesc;
+	PERFORMANCE_MARKER
+	VOBJECT_DESC	VObjectDesc;
 
 //	gfDoHelpScreen = 0;
 
@@ -326,8 +331,9 @@ BOOLEAN InitMainMenu( )
 
 void ExitMainMenu( )
 {
-//	UINT32										 uiDestPitchBYTES;
-//	UINT8											 *pDestBuf;
+	PERFORMANCE_MARKER
+//	UINT32										uiDestPitchBYTES;
+//	UINT8											*pDestBuf;
 
 //	if( !gfDoHelpScreen )
 	{
@@ -353,6 +359,7 @@ void ExitMainMenu( )
 
 void MenuButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	INT8	bID;
 
 	bID = (UINT8)btn->UserData[0];
@@ -387,6 +394,7 @@ void MenuButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void MenuButtonMoveCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
 	{
 //		btn->uiFlags &= (~BUTTON_CLICKED_ON );
@@ -405,12 +413,13 @@ void MenuButtonMoveCallback(GUI_BUTTON *btn,INT32 reason)
 
 void HandleMainMenuInput()
 {
-	InputAtom  InputEvent;
+	PERFORMANCE_MARKER
+	InputAtom	InputEvent;
 
 	// Check for esc 
 	while (DequeueEvent(&InputEvent) == TRUE)
-  {
-    if( InputEvent.usEvent == KEY_UP )
+	{
+	if( InputEvent.usEvent == KEY_UP )
 		{
 			switch( InputEvent.usParam )
 			{
@@ -457,6 +466,7 @@ void HandleMainMenuInput()
 
 void HandleHelpScreenInput()
 {
+	PERFORMANCE_MARKER
 	InputAtom									InputEvent;
 
 	// Check for key
@@ -474,8 +484,9 @@ void HandleHelpScreenInput()
 
 void ClearMainMenu()
 {
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
+	PERFORMANCE_MARKER
+	UINT32										uiDestPitchBYTES;
+	UINT8											*pDestBuf;
 
 	// CLEAR THE FRAME BUFFER
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
@@ -487,6 +498,7 @@ void ClearMainMenu()
 
 void SelectMainMenuBackGroundRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -512,6 +524,7 @@ void SelectMainMenuBackGroundRegionCallBack(MOUSE_REGION * pRegion, INT32 iReaso
 
 void SetMainMenuExitScreen( UINT32 uiNewScreen )
 {
+	PERFORMANCE_MARKER
 	guiMainMenuExitScreen = uiNewScreen;
 
 	//REmove the background region
@@ -523,6 +536,7 @@ void SetMainMenuExitScreen( UINT32 uiNewScreen )
 
 void CreateDestroyBackGroundMouseMask( BOOLEAN fCreate )
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN fRegionCreated = FALSE;
 
 	if( fCreate )
@@ -532,7 +546,7 @@ void CreateDestroyBackGroundMouseMask( BOOLEAN fCreate )
 
 		// Make a mouse region
 		MSYS_DefineRegion( &(gBackRegion), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST,
-							 CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectMainMenuBackGroundRegionCallBack ); 
+							CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectMainMenuBackGroundRegionCallBack ); 
 		// Add region
 		MSYS_AddRegion(&(gBackRegion) );
 
@@ -551,11 +565,11 @@ void CreateDestroyBackGroundMouseMask( BOOLEAN fCreate )
 
 BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate )
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN fButtonsCreated = FALSE;
 	INT32 cnt;
 	SGPFILENAME filename;
 	INT16 sSlot;
-	INT32	iStartLoc=0;
 #ifndef _DEBUG
 	CHAR16	zText[512];
 #endif
@@ -609,7 +623,7 @@ BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate )
 			ButtonList[ iMenuButtons[ cnt ] ]->UserData[0] = cnt;
 
 			#ifndef _DEBUG
-				//load up some info from the 'mainmenu.edt' file.  This makes sure the file is present.  The file is
+				//load up some info from the 'mainmenu.edt' file.	This makes sure the file is present.	The file is
 				// 'marked' with a code that identifies the testers
 				INT32 iStartLoc = MAINMENU_RECORD_SIZE * cnt;
 				if( !LoadEncryptedDataFromFile(MAINMENU_TEXT_FILE, zText, iStartLoc, MAINMENU_RECORD_SIZE ) )
@@ -620,7 +634,7 @@ BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate )
 					if( pSoldier->bActive != TRUE )
 					{
 						//something is very wrong
-						pSoldier->bActive = pSoldier->bLife;
+						pSoldier->bActive = pSoldier->stats.bLife;
 					}
 				}
 			#endif
@@ -650,16 +664,17 @@ BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate )
 
 void RenderMainMenu()
 {
-  HVOBJECT hPixHandle;
+	PERFORMANCE_MARKER
+	HVOBJECT hPixHandle;
 
 	//Get and display the background image
 	GetVideoObject(&hPixHandle, guiMainMenuBackGroundImage );
-  BltVideoObject( guiSAVEBUFFER, hPixHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY,NULL);
-  BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject( guiSAVEBUFFER, hPixHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY,NULL);
 
 	GetVideoObject(&hPixHandle, guiJa2LogoImage );
-  BltVideoObject( FRAME_BUFFER, hPixHandle, 0, iScreenWidthOffset + 188, iScreenHeightOffset + 10, VO_BLT_SRCTRANSPARENCY,NULL);
-  BltVideoObject( guiSAVEBUFFER, hPixHandle, 0, iScreenWidthOffset + 188, iScreenHeightOffset + 10, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject( FRAME_BUFFER, hPixHandle, 0, iScreenWidthOffset + 188, iScreenHeightOffset + 10, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject( guiSAVEBUFFER, hPixHandle, 0, iScreenWidthOffset + 188, iScreenHeightOffset + 10, VO_BLT_SRCTRANSPARENCY,NULL);
 
 
 #ifdef TESTFOREIGNFONTS
@@ -692,6 +707,7 @@ void RenderMainMenu()
 
 void RestoreButtonBackGrounds()
 {
+	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 //	RestoreExternBackgroundRect( (UINT16)(320 - gusMainMenuButtonWidths[TITLE]/2), MAINMENU_TITLE_Y, gusMainMenuButtonWidths[TITLE], 23 );

@@ -51,7 +51,7 @@ void EnsureSelectionType();
 
 //Used for offseting cursor to show that it is on the roof rather than on the ground.
 //This can be conveniently executed by moving the cursor up and right 3 gridnos for a
-//total of -483  -(160*3)-(1*3)
+//total of -483	-(160*3)-(1*3)
 #define ROOF_OFFSET		(-483)
 BOOLEAN gfUsingOffset;
 
@@ -59,6 +59,7 @@ BOOLEAN gfUsingOffset;
 //randomly choose TRUE or FALSE to reflect the *odds*.
 BOOLEAN PerformDensityTest()
 {
+	PERFORMANCE_MARKER
 	if( Random(100) < gusSelectionDensity )
 		return TRUE;
 	return FALSE;
@@ -66,6 +67,7 @@ BOOLEAN PerformDensityTest()
 
 void IncreaseSelectionDensity()
 {
+	PERFORMANCE_MARKER
 	if( gusSelectionDensity == 100 )
 		gusSelectionDensity = 2;
 	else if( gusSelectionDensity == 2 )
@@ -78,6 +80,7 @@ void IncreaseSelectionDensity()
 
 void DecreaseSelectionDensity()
 {
+	PERFORMANCE_MARKER
 	if( gusSelectionDensity == 10 )
 		gusSelectionDensity = 5;
 	else if( gusSelectionDensity == 5 )
@@ -90,6 +93,7 @@ void DecreaseSelectionDensity()
 
 void RemoveCursors()
 {
+	PERFORMANCE_MARKER
 	INT32 x, y, iMapIndex;
 	if( gpBuildingLayoutList )
 	{
@@ -123,6 +127,7 @@ void RemoveCursors()
 
 void RemoveBadMarker()
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
 	if( sBadMarker < 0 )
 		return;
@@ -141,6 +146,7 @@ void RemoveBadMarker()
 
 void UpdateCursorAreas()
 {
+	PERFORMANCE_MARKER
 	INT32 x, y, iMapIndex;
 
 	RemoveCursors();
@@ -166,7 +172,7 @@ void UpdateCursorAreas()
 				fValidCursor = TRUE;
 				break;
 			case MEDIUMSELECTION: 
-			case LARGESELECTION:  
+			case LARGESELECTION:	
 			case XLARGESELECTION: 
 				//The mouse mode value reflects the size of the cursor.
 				gSelectRegion.iTop = sGridY - gusSelectionType;
@@ -195,7 +201,7 @@ void UpdateCursorAreas()
 		{
 			iMapIndex = gSelectRegion.iTop * WORLD_COLS + gSelectRegion.iLeft;
 			if( !IsLocationSittable( iMapIndex, gfRoofPlacement ) && iDrawMode != DRAW_MODE_SCHEDULEACTION || 
-				  !IsLocationSittableExcludingPeople( iMapIndex, gfRoofPlacement ) && iDrawMode == DRAW_MODE_SCHEDULEACTION )
+				!IsLocationSittableExcludingPeople( iMapIndex, gfRoofPlacement ) && iDrawMode == DRAW_MODE_SCHEDULEACTION )
 			{
 				if( sBadMarker != iMapIndex )
 				{
@@ -237,6 +243,7 @@ void UpdateCursorAreas()
 
 void ForceAreaSelectionWidth()
 {
+	PERFORMANCE_MARKER
 	UINT16 gusDecSelWidth;
 	
 	//If the anchor isn't set, we don't want to force the size yet.
@@ -277,11 +284,12 @@ void ForceAreaSelectionWidth()
 
 BOOLEAN HandleAreaSelection()
 {
+	PERFORMANCE_MARKER
 	//When the user releases the left button, then clear and process the area.
 	if( fAnchored )
 	{
-		if( !gfLeftButtonState  && !gfCurrentSelectionWithRightButton || 
-			  !gfRightButtonState &&  gfCurrentSelectionWithRightButton )
+		if( !gfLeftButtonState	&& !gfCurrentSelectionWithRightButton || 
+			!gfRightButtonState &&	gfCurrentSelectionWithRightButton )
 		{
 			fAnchored = FALSE;
 			ProcessAreaSelection( (BOOLEAN)!gfCurrentSelectionWithRightButton );
@@ -340,14 +348,16 @@ BOOLEAN HandleAreaSelection()
 
 void ValidateSelectionRegionBoundaries()
 {
+	PERFORMANCE_MARKER
 	gSelectRegion.iLeft		= max( min( 159, gSelectRegion.iLeft )	, 0 );
-	gSelectRegion.iRight	= max( min( 159, gSelectRegion.iRight  ), 0 );
-	gSelectRegion.iTop		= max( min( 159, gSelectRegion.iTop	 )	, 0 );
+	gSelectRegion.iRight	= max( min( 159, gSelectRegion.iRight	), 0 );
+	gSelectRegion.iTop		= max( min( 159, gSelectRegion.iTop	)	, 0 );
 	gSelectRegion.iBottom	= max( min( 159, gSelectRegion.iBottom ), 0 );
 }
 
 void EnsureSelectionType()
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fPrevBrushEnabledState = gfBrushEnabled;
 
 	//At time of writing, the only drawing mode supporting right mouse button 
@@ -415,6 +425,7 @@ void EnsureSelectionType()
 
 void DrawBuildingLayout( INT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	BUILDINGLAYOUTNODE *curr;
 	INT32 iOffset;
 	LEVELNODE* pNode;
@@ -446,6 +457,7 @@ void DrawBuildingLayout( INT32 iMapIndex )
 
 void RemoveBuildingLayout()
 {
+	PERFORMANCE_MARKER
 	BUILDINGLAYOUTNODE *curr;
 	INT32 iOffset;
 	INT32 iMapIndex;

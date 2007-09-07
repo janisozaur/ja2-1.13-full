@@ -100,7 +100,7 @@ void VerifyTownTrainingIsPaidFor( void );
 
 void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMapY )
 {
-	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
+	PERFORMANCE_MARKER
 	UINT8 ubMilitiaTrained = 0;
 	BOOLEAN fFoundOne;
 	INT16 sNeighbourX, sNeighbourY;
@@ -121,7 +121,7 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 	// force tactical to update militia status
 	gfStrategicMilitiaChangesMade = FALSE;
 
-	// ok, so what do we do with all this training?  Well, in order of decreasing priority:
+	// ok, so what do we do with all this training?	Well, in order of decreasing priority:
 	// 1) If there's room in training sector, create new GREEN militia guys there
 	// 2) If not enough room there, create new GREEN militia guys in friendly sectors of the same town
 	// 3) If not enough room anywhere in town, promote a number of GREENs in this sector into regulars
@@ -148,7 +148,6 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 			{
 				// great! Create a new GREEN militia guy in the training sector
 				StrategicAddMilitiaToSector(sMapX, sMapY, GREEN_MILITIA, 1);
-
 				if (sMapX == gWorldSectorX && sMapY == gWorldSectorY)
 				{
 					gfStrategicMilitiaChangesMade = TRUE;
@@ -185,7 +184,7 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 				// if we still haven't been able to train anyone
 				if (!fFoundOne)
 				{
-					// alrighty, then.  We'll have to *promote* guys instead.
+					// alrighty, then.	We'll have to *promote* guys instead.
 
 					// are there any GREEN militia men in the training sector itself?
 					if (MilitiaInSectorOfRank(sMapX, sMapY, GREEN_MILITIA) > 0)
@@ -200,7 +199,7 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 					}
 					else
 					{
-					  if( ubTownId != BLANK_SECTOR )
+					if( ubTownId != BLANK_SECTOR )
 						{
 							// dammit! Last chance - try to find other eligible sectors in the same town with a Green guy to be promoted
 							InitFriendlyTownSectorServer(ubTownId, sMapX, sMapY);
@@ -228,7 +227,7 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 							// Kaiden: Veteran militia training
 							// This is essentially copy/pasted from above
 							// But the names have been changed to protect the innocent
-						if ((!fFoundOne) && (gGameExternalOptions.gfTrainVeteranMilitia)  
+						if ((!fFoundOne) && (gGameExternalOptions.gfTrainVeteranMilitia)	
 							&& (GetWorldDay( ) >= gGameExternalOptions.guiTrainVeteranMilitiaDelay))
 						{
 							// are there any REGULAR militia men in the training sector itself?
@@ -236,7 +235,6 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 							{
 								// great! Promote a REGULAR militia guy in the training sector to a VETERAN
 								StrategicPromoteMilitiaInSector(sMapX, sMapY, REGULAR_MILITIA, 1);
-
 								if (sMapX == gWorldSectorX && sMapY == gWorldSectorY)
 								{
 									gfStrategicMilitiaChangesMade = TRUE;
@@ -276,7 +274,7 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 						// if we still haven't been able to train anyone
 						if (!fFoundOne)
 						{
-							// Well, that's it.  All eligible sectors of this town are full of REGULARs or ELITEs.
+							// Well, that's it.	All eligible sectors of this town are full of REGULARs or ELITEs.
 							// The training goes to waste in this situation.
 							break; // the main while loop
 						}
@@ -308,7 +306,7 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 		}
 	}
 
-	// the trainer announces to player that he's finished his assignment.  Make his sector flash!
+	// the trainer announces to player that he's finished his assignment.	Make his sector flash!
 	AssignmentDone( pTrainer, TRUE, FALSE );
 
 	// handle completion of town by training group
@@ -320,6 +318,7 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 // feed this a SOLDIER_CLASS_, it will return you a _MITILIA rank, or -1 if the guy's not militia
 INT8 SoldierClassToMilitiaRank(UINT8 ubSoldierClass)
 {
+	PERFORMANCE_MARKER
 	INT8 bRank = -1;
 
 	switch( ubSoldierClass )
@@ -342,6 +341,7 @@ INT8 SoldierClassToMilitiaRank(UINT8 ubSoldierClass)
 // feed this a _MITILIA rank, it will return you a SOLDIER_CLASS_, or -1 if the guy's not militia
 INT8 MilitiaRankToSoldierClass(UINT8 ubRank)
 {
+	PERFORMANCE_MARKER
 	INT8 bSoldierClass = -1;
 
 	switch( ubRank )
@@ -363,6 +363,7 @@ INT8 MilitiaRankToSoldierClass(UINT8 ubRank)
 
 void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany)
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 
 	pSectorInfo->ubNumberOfCivsAtLevel[ ubRank ] += ubHowMany;
@@ -379,6 +380,7 @@ void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 u
 
 void StrategicPromoteMilitiaInSector(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank, UINT8 ubHowMany)
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 
 	// damn well better have that many around to promote!
@@ -390,7 +392,7 @@ void StrategicPromoteMilitiaInSector(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRa
 		return;
 	}
 
-	pSectorInfo->ubNumberOfCivsAtLevel[ ubCurrentRank     ] -= ubHowMany;
+	pSectorInfo->ubNumberOfCivsAtLevel[ ubCurrentRank	 ] -= ubHowMany;
 	pSectorInfo->ubNumberOfCivsAtLevel[ ubCurrentRank + 1 ] += ubHowMany;
 
 	if (ubHowMany && sMapX == gWorldSectorX && sMapY == gWorldSectorY )
@@ -405,6 +407,7 @@ void StrategicPromoteMilitiaInSector(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRa
 
 void StrategicRemoveMilitiaFromSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany)
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 
 	// damn well better have that many around to remove!
@@ -431,6 +434,7 @@ void StrategicRemoveMilitiaFromSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UI
 // kill pts are (2 * kills) + assists
 UINT8 CheckOneMilitiaForPromotion(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank, UINT8 ubRecentKillPts)
 {
+	PERFORMANCE_MARKER
 	UINT32 uiChanceToLevel = 0;
 
 	switch( ubCurrentRank )
@@ -479,6 +483,7 @@ UINT8 CheckOneMilitiaForPromotion(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank,
 // call this if the player attacks his own militia
 void HandleMilitiaDefections(INT16 sMapX, INT16 sMapY)
 {
+	PERFORMANCE_MARKER
 	UINT8 ubRank;
 	UINT8 ubMilitiaCnt;
 	UINT8 ubCount;
@@ -507,10 +512,10 @@ void HandleMilitiaDefections(INT16 sMapX, INT16 sMapY)
 					return;
 			}
 
-			// roll the bones; should I stay or should I go now?  (for you music fans out there)
+			// roll the bones; should I stay or should I go now?	(for you music fans out there)
 			if (Random(100) < uiChanceToDefect)
 			{
-				//B'bye!  (for you SNL fans out there)
+				//B'bye!	(for you SNL fans out there)
 				StrategicRemoveMilitiaFromSector(sMapX, sMapY, ubRank, 1);
 			}
 		}
@@ -520,6 +525,7 @@ void HandleMilitiaDefections(INT16 sMapX, INT16 sMapY)
 
 UINT8 CountAllMilitiaInSector(INT16 sMapX, INT16 sMapY)
 {
+	PERFORMANCE_MARKER
 	UINT8 ubMilitiaTotal = 0;
 	UINT8 ubRank;
 
@@ -535,12 +541,14 @@ UINT8 CountAllMilitiaInSector(INT16 sMapX, INT16 sMapY)
 
 UINT8 MilitiaInSectorOfRank(INT16 sMapX, INT16 sMapY, UINT8 ubRank)
 {
+	PERFORMANCE_MARKER
 	return( SectorInfo[ SECTOR( sMapX, sMapY ) ].ubNumberOfCivsAtLevel[ ubRank ] );
 }
 
 
 BOOLEAN SectorOursAndPeaceful( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
+	PERFORMANCE_MARKER
 	// if this sector is currently loaded
 	if ( ( sMapX == gWorldSectorX ) && ( sMapY == gWorldSectorY ) && ( bMapZ == gbWorldSectorZ ) )
 	{
@@ -569,6 +577,7 @@ BOOLEAN SectorOursAndPeaceful( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT16 sSkipSectorY)
 {
+	PERFORMANCE_MARKER
 	// reset globals
 	gubTownSectorServerTownId = ubTownId;
 	gsTownSectorServerSkipX = sSkipSectorX;
@@ -583,6 +592,7 @@ void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT16 sSki
 // MUST CALL InitFriendlyTownSectorServer() before using!!!
 BOOLEAN ServeNextFriendlySectorInTown( INT16 *sNeighbourX, INT16 *sNeighbourY )
 {
+	PERFORMANCE_MARKER
 	INT32 iTownSector;
 	INT16 sMapX, sMapY;
 	BOOLEAN fStopLooking = FALSE;
@@ -601,7 +611,7 @@ BOOLEAN ServeNextFriendlySectorInTown( INT16 *sNeighbourX, INT16 *sNeighbourY )
 		// if this sector is in the town we're looking for
 		if( StrategicMap[ iTownSector ].bNameId == gubTownSectorServerTownId )
 		{
-			// A sector in the specified town.  Calculate its X & Y sector compotents
+			// A sector in the specified town.	Calculate its X & Y sector compotents
 			sMapX = iTownSector % MAP_WORLD_X;
 			sMapY = iTownSector / MAP_WORLD_X;
 
@@ -633,6 +643,7 @@ BOOLEAN ServeNextFriendlySectorInTown( INT16 *sNeighbourX, INT16 *sNeighbourY )
 
 void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	INT32 iMilitiaTrainingCost = gGameExternalOptions.iMilitiaTrainingCost;
 DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia2");
 
@@ -715,6 +726,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia2");
 
 void DoContinueMilitiaTrainingMessageBox( INT16 sSectorX, INT16 sSectorY, const STR16 str, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
+	PERFORMANCE_MARKER
 	if( sSectorX <= 10 && sSectorY >= 6 && sSectorY <= 11 )
 	{
 		DoLowerScreenIndependantMessageBox( str, usFlags, ReturnCallback );
@@ -727,6 +739,7 @@ void DoContinueMilitiaTrainingMessageBox( INT16 sSectorX, INT16 sSectorY, const 
 
 void HandleInterfaceMessageForContinuingTrainingMilitia( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	CHAR16 sString[ 128 ];
 	INT16 sSectorX = 0, sSectorY = 0;
 	CHAR16 sStringB[ 128 ];
@@ -780,7 +793,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia3");
 		{
 			// wilderness SAM site
 			GetSectorIDString( sSectorX, sSectorY, 0, sStringB, TRUE );
-			void (*tempFptr)(INT16 , INT16 , INT8  , CHAR16 *, BOOLEAN) = GetSectorIDString;
+			void (*tempFptr)(INT16 , INT16 , INT8	, CHAR16 *, BOOLEAN) = GetSectorIDString;
 			swprintf( sString, pMilitiaConfirmStrings[ 10 ], sStringB, tempFptr, iMinLoyaltyToTrain );
 		}
 		else
@@ -845,12 +858,13 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia3");
 // use 'gfYesNoPromptIsForContinue' flag to tell them apart
 void PayMilitiaTrainingYesNoBoxCallback( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	CHAR16 sString[ 128 ];
 
 	Assert( giTotalCostOfTraining > 0 );
 
 	// yes
-  if( bExitValue == MSG_BOX_RETURN_YES )
+	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		// does the player have enough
 		if( LaptopSaveInfo.iCurrentBalance >= giTotalCostOfTraining )
@@ -893,6 +907,7 @@ void PayMilitiaTrainingYesNoBoxCallback( UINT8 bExitValue )
 
 void CantTrainMilitiaOkBoxCallback( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	MilitiaTrainingRejected();
 	return;
 }
@@ -902,6 +917,7 @@ void CantTrainMilitiaOkBoxCallback( UINT8 bExitValue )
 // use 'gfYesNoPromptIsForContinue' flag to tell them apart
 void MilitiaTrainingRejected( void )
 {
+	PERFORMANCE_MARKER
 	if( gfYesNoPromptIsForContinue )
 	{
 		// take all mercs in that sector off militia training
@@ -926,6 +942,7 @@ void MilitiaTrainingRejected( void )
 
 void HandleMilitiaStatusInCurrentMapBeforeLoadingNewMap( void )
 {
+	PERFORMANCE_MARKER
 	if ( gTacticalStatus.Team[ MILITIA_TEAM ].bSide != 0 )
 	{
 		// handle militia defections and reset team to friendly
@@ -941,6 +958,7 @@ void HandleMilitiaStatusInCurrentMapBeforeLoadingNewMap( void )
 
 BOOLEAN CanNearbyMilitiaScoutThisSector( INT16 sSectorX, INT16 sSectorY )
 {
+	PERFORMANCE_MARKER
 	INT16 sSectorValue = 0, sSector = 0;
 	INT16 sCounterA = 0, sCounterB = 0;
 	UINT8 ubScoutingRange = 1;
@@ -982,6 +1000,7 @@ BOOLEAN CanNearbyMilitiaScoutThisSector( INT16 sSectorX, INT16 sSectorY )
 
 BOOLEAN IsTownFullMilitia( INT8 bTownId, INT8 iMilitiaType )
 {
+	PERFORMANCE_MARKER
 	INT32 iMaxMilitiaPerSector = gGameExternalOptions.iMaxMilitiaPerSector;
 
 	INT32 iCounter = 0;
@@ -1010,7 +1029,7 @@ BOOLEAN IsTownFullMilitia( INT8 bTownId, INT8 iMilitiaType )
 					iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, ELITE_MILITIA );
 					iMaxNumber += iMaxMilitiaPerSector;
 
-				  if (MilitiaInSectorOfRank( sSectorX, sSectorY, GREEN_MILITIA ) > 0)
+				if (MilitiaInSectorOfRank( sSectorX, sSectorY, GREEN_MILITIA ) > 0)
 						fIncreaseCost = TRUE;			
 				}
 				else if (iMilitiaType == REGULAR_MILITIA)
@@ -1050,7 +1069,7 @@ BOOLEAN IsTownFullMilitia( INT8 bTownId, INT8 iMilitiaType )
 
 		if (iMilitiaType == GREEN_MILITIA)
 		{
-			if (( iNumberOfMilitia == iMaxNumber  ) && (fIncreaseCost))
+			if (( iNumberOfMilitia == iMaxNumber	) && (fIncreaseCost))
 				return( TRUE );
 			else
 				return( FALSE );
@@ -1077,13 +1096,14 @@ BOOLEAN IsTownFullMilitia( INT8 bTownId, INT8 iMilitiaType )
 
 BOOLEAN IsSAMSiteFullOfMilitia( INT16 sSectorX, INT16 sSectorY, INT8 iMilitiaType )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fSamSitePresent = FALSE;
 	INT32 iNumberOfMilitia = 0;
 	INT32 iMaxNumber = 0;
 	INT32 iMaxMilitiaPerSector = gGameExternalOptions.iMaxMilitiaPerSector;
 DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia5");
 	// check if SAM site is ours?
-	fSamSitePresent = IsThisSectorASAMSector(  sSectorX, sSectorY, 0 );
+	fSamSitePresent = IsThisSectorASAMSector(	sSectorX, sSectorY, 0 );
 
 	if( fSamSitePresent == FALSE )
 	{
@@ -1093,7 +1113,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia5");
 	if( SectorOursAndPeaceful( sSectorX, sSectorY, 0 ) )
 	{
 
-		 //Kaiden: If we're checking for specific Militia for Price Hikes:
+		//Kaiden: If we're checking for specific Militia for Price Hikes:
 		if (iMilitiaType == GREEN_MILITIA)
 		{
 			iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, GREEN_MILITIA );
@@ -1153,6 +1173,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia5");
 
 void HandleCompletionOfTownTrainingByGroupWithTrainer( SOLDIERTYPE *pTrainer )
 {
+	PERFORMANCE_MARKER
 
 	INT16 sSectorX = 0, sSectorY = 0;
 	INT8 bSectorZ = 0;
@@ -1195,6 +1216,7 @@ void HandleCompletionOfTownTrainingByGroupWithTrainer( SOLDIERTYPE *pTrainer )
 
 void AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	INT16 sSector = 0, sCurrentSector = 0;
 	SOLDIERTYPE *pCurrentSoldier = NULL;
@@ -1231,6 +1253,7 @@ void AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining( SOLDIERTYPE
 // clear out the list of training sectors...should be done once the list is posted
 void ClearSectorListForCompletedTrainingOfMilitia( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	for( iCounter = 0; iCounter < SIZE_OF_MILITIA_COMPLETED_TRAINING_LIST; iCounter++ )
@@ -1244,6 +1267,7 @@ void ClearSectorListForCompletedTrainingOfMilitia( void )
 
 void HandleContinueOfTownTraining( void )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
 	INT32 iCounter = 0;
 	BOOLEAN fContinueEventPosted = FALSE;
@@ -1272,17 +1296,17 @@ void HandleContinueOfTownTraining( void )
 
 	if( fContinueEventPosted )
 	{ 
-    // ATE: If this event happens in tactical mode we will be switching at some time to mapscreen...
-    if ( guiCurrentScreen == GAME_SCREEN )
-    {
-		  gfEnteringMapScreen = TRUE;
-    }
+	// ATE: If this event happens in tactical mode we will be switching at some time to mapscreen...
+	if ( guiCurrentScreen == GAME_SCREEN )
+	{
+		gfEnteringMapScreen = TRUE;
+	}
 
 		//If the militia view isn't currently active, then turn it on when prompting to continue training.
 		if ( !fShowMilitia )
-    {
-		  ToggleShowMilitiaMode();
-    }
+	{
+		ToggleShowMilitiaMode();
+	}
 	}
 
 	return;
@@ -1292,6 +1316,7 @@ void HandleContinueOfTownTraining( void )
 
 void BuildListOfUnpaidTrainableSectors( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0, iCounterB = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -1357,6 +1382,7 @@ void BuildListOfUnpaidTrainableSectors( void )
 
 INT32 GetNumberOfUnpaidTrainableSectors( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	INT32 iNumberOfSectors = 0;
 
@@ -1379,6 +1405,7 @@ INT32 GetNumberOfUnpaidTrainableSectors( void )
 
 void StartTrainingInAllUnpaidTrainableSectors()
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	UINT8 ubSector;
 
@@ -1402,6 +1429,7 @@ void StartTrainingInAllUnpaidTrainableSectors()
 
 void ContinueTrainingInThisSector( void )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubSector;
 
 	Assert( pMilitiaTrainerSoldier );
@@ -1414,6 +1442,7 @@ void ContinueTrainingInThisSector( void )
 
 void PayForTrainingInSector( UINT8 ubSector )
 {
+	PERFORMANCE_MARKER
 	INT32 iMilitiaTrainingCost = gGameExternalOptions.iMilitiaTrainingCost;
 DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia6");
 	Assert( SectorInfo[ ubSector ].fMilitiaTrainingPaid == FALSE );
@@ -1456,6 +1485,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia6");
 
 void ResetDoneFlagForAllMilitiaTrainersInSector( UINT8 ubSector )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -1470,7 +1500,7 @@ void ResetDoneFlagForAllMilitiaTrainersInSector( UINT8 ubSector )
 			{
 				if( ( SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) == ubSector ) && ( pSoldier->bSectorZ == 0 ) )
 				{
-					pSoldier->fDoneAssignmentAndNothingToDoFlag = FALSE;
+					pSoldier->flags.fDoneAssignmentAndNothingToDoFlag = FALSE;
 					pSoldier->usQuoteSaidExtFlags &= ~SOLDIER_QUOTE_SAID_DONE_ASSIGNMENT;
 				}
 			}
@@ -1481,6 +1511,7 @@ void ResetDoneFlagForAllMilitiaTrainersInSector( UINT8 ubSector )
 
 BOOLEAN MilitiaTrainingAllowedInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
+	PERFORMANCE_MARKER
 	INT8 bTownId;
 	BOOLEAN fSamSitePresent = FALSE;
 
@@ -1509,11 +1540,13 @@ BOOLEAN MilitiaTrainingAllowedInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSe
 
 BOOLEAN MilitiaTrainingAllowedInTown( INT8 bTownId )
 {
+	PERFORMANCE_MARKER
 	return( gfMilitiaAllowedInTown[bTownId] );
 }
 
 void BuildMilitiaPromotionsString( STR16 str )
 {
+	PERFORMANCE_MARKER
 	CHAR16 pStr[256];
 	BOOLEAN fAddSpace = FALSE;
 	swprintf( str, L"" );

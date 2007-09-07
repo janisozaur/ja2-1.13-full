@@ -6,7 +6,7 @@
 #else
 	#include <stdio.h>
 	#include <string.h>
-    #include "explosion control.h"
+	#include "explosion control.h"
 	#include "TopicIDs.h"
 	#include "TopicOps.h"
 	#include "Debug.h"
@@ -23,7 +23,7 @@ struct
 
 	CHAR8		szCharData[MAX_CHAR_DATA_LENGTH+1];
 
-	EXPLOSION_DATA  expData;
+	EXPLOSION_DATA	expData;
 	UINT32			maxArraySize;
 	UINT32			curIndex;	
 	UINT32			currentDepth;
@@ -34,6 +34,7 @@ typedef explosionDataParseData;
 static void XMLCALL 
 explosionDataStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	explosionDataParseData * pData = (explosionDataParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -50,7 +51,7 @@ explosionDataStartElementHandle(void *userData, const XML_Char *name, const XML_
 
 			//DebugMsg(TOPIC_JA2, DBG_LEVEL_3,"MergeStartElementHandle: setting memory for curMerge");
 
-            memset(&(pData->expData),0,sizeof(EXPLOSION_DATA));
+			memset(&(pData->expData),0,sizeof(EXPLOSION_DATA));
 
 			pData->maxReadDepth++; //we are not skipping this element
 			pData->curIndex++;
@@ -59,8 +60,8 @@ explosionDataStartElementHandle(void *userData, const XML_Char *name, const XML_
 				(strcmp(name, "TransKeyFrame") == 0 ||
 				strcmp(name, "DamageKeyFrame") == 0 ||
 				strcmp(name, "ExplosionSoundID") == 0 ||
-                strcmp(name, "AltExplosionSoundID") == 0 ||
-                strcmp(name, "BlastFilename") == 0 ||
+				strcmp(name, "AltExplosionSoundID") == 0 ||
+				strcmp(name, "BlastFilename") == 0 ||
 				strcmp(name, "BlastSpeed") == 0 ))
 		{
 			pData->curElement = ELEMENT_PROPERTY;
@@ -78,11 +79,12 @@ explosionDataStartElementHandle(void *userData, const XML_Char *name, const XML_
 static void XMLCALL
 explosionDataCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	explosionDataParseData * pData = (explosionDataParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
-	  ){
+	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
 	}
 }
@@ -91,6 +93,7 @@ explosionDataCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 explosionDataEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	explosionDataParseData * pData = (explosionDataParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -105,41 +108,41 @@ explosionDataEndElementHandle(void *userData, const XML_Char *name)
 
 			if(pData->curIndex < pData->maxArraySize)
 			{
-                memcpy( &(gExpAniData[pData->curIndex]), &(pData->expData), sizeof(EXPLOSION_DATA) );
+				memcpy( &(gExpAniData[pData->curIndex]), &(pData->expData), sizeof(EXPLOSION_DATA) );
 			}
 		}
 		else if(strcmp(name, "TransKeyFrame") == 0)
 		{
 			pData->curElement = ELEMENT;
-            pData->expData.ubTransKeyFrame = (UINT8) atol(pData->szCharData);
+			pData->expData.ubTransKeyFrame = (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "DamageKeyFrame") == 0)
 		{
 			pData->curElement = ELEMENT;
-            pData->expData.ubDamageKeyFrame = (UINT8) atol(pData->szCharData);
+			pData->expData.ubDamageKeyFrame = (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ExplosionSoundID") == 0)
 		{
 			pData->curElement = ELEMENT;
-            pData->expData.uiExplosionSoundID = (UINT32) atol(pData->szCharData);
+			pData->expData.uiExplosionSoundID = (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "AltExplosionSoundID") == 0)
 		{
 			pData->curElement = ELEMENT;
-            pData->expData.uiAltExplosionSoundID = (UINT32) atol(pData->szCharData);
+			pData->expData.uiAltExplosionSoundID = (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "BlastFilename") == 0)
 		{
 			pData->curElement = ELEMENT;
-            // Lesh: maybe it is needed to check lenght of the pData->szCharData string
-            // and warn user, otherwise game behavior is unexpected when trying to 
-            // play animation from clipped filename (runtime error, crash ???)
-            strncpy(pData->expData.zBlastFilename, pData->szCharData, MAX_BLAST_FILENAME_LEN);
+			// Lesh: maybe it is needed to check lenght of the pData->szCharData string
+			// and warn user, otherwise game behavior is unexpected when trying to 
+			// play animation from clipped filename (runtime error, crash ???)
+			strncpy(pData->expData.zBlastFilename, pData->szCharData, MAX_BLAST_FILENAME_LEN);
 		}
 		else if(strcmp(name, "BlastSpeed") == 0)
 		{
 			pData->curElement = ELEMENT;
-            pData->expData.sBlastSpeed = (UINT8) atol(pData->szCharData);
+			pData->expData.sBlastSpeed = (UINT8) atol(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;
@@ -153,6 +156,7 @@ explosionDataEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInExplosionDataStats(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -194,7 +198,7 @@ BOOLEAN ReadInExplosionDataStats(STR fileName)
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 
@@ -214,6 +218,7 @@ BOOLEAN ReadInExplosionDataStats(STR fileName)
 }
 BOOLEAN WriteExplosionDataStats()
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there
@@ -226,16 +231,16 @@ BOOLEAN WriteExplosionDataStats()
 		UINT32 cnt;
 
 		FilePrintf(hFile,"<EXPDATALIST>\r\n");
-        for(cnt = 0;cnt < NUM_EXP_TYPES;cnt++)
+		for(cnt = 0;cnt < NUM_EXP_TYPES;cnt++)
 		{
 			FilePrintf(hFile,"\t<EXPDATA>\r\n");
 
-            FilePrintf(hFile,"\t\t<TransKeyFrame>%d</TransKeyFrame>\r\n",					gExpAniData[cnt].ubTransKeyFrame);
-            FilePrintf(hFile,"\t\t<DamageKeyFrame>%d</DamageKeyFrame>\r\n",					gExpAniData[cnt].ubDamageKeyFrame);
-            FilePrintf(hFile,"\t\t<ExplosionSoundID>%d</ExplosionSoundID>\r\n",				gExpAniData[cnt].uiExplosionSoundID);
-            FilePrintf(hFile,"\t\t<AltExplosionSoundID>%d</AltExplosionSoundID>\r\n",		gExpAniData[cnt].uiAltExplosionSoundID);
-            FilePrintf(hFile,"\t\t<BlastFilename>%s</BlastFilename>\r\n",					gExpAniData[cnt].zBlastFilename);
-            FilePrintf(hFile,"\t\t<BlastSpeed>%d</BlastSpeed>\r\n",							gExpAniData[cnt].sBlastSpeed);
+			FilePrintf(hFile,"\t\t<TransKeyFrame>%d</TransKeyFrame>\r\n",					gExpAniData[cnt].ubTransKeyFrame);
+			FilePrintf(hFile,"\t\t<DamageKeyFrame>%d</DamageKeyFrame>\r\n",					gExpAniData[cnt].ubDamageKeyFrame);
+			FilePrintf(hFile,"\t\t<ExplosionSoundID>%d</ExplosionSoundID>\r\n",				gExpAniData[cnt].uiExplosionSoundID);
+			FilePrintf(hFile,"\t\t<AltExplosionSoundID>%d</AltExplosionSoundID>\r\n",		gExpAniData[cnt].uiAltExplosionSoundID);
+			FilePrintf(hFile,"\t\t<BlastFilename>%s</BlastFilename>\r\n",					gExpAniData[cnt].zBlastFilename);
+			FilePrintf(hFile,"\t\t<BlastSpeed>%d</BlastSpeed>\r\n",							gExpAniData[cnt].sBlastSpeed);
 
 			FilePrintf(hFile,"\t</EXPDATA>\r\n");
 		}

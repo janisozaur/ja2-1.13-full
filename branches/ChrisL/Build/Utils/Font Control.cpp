@@ -14,8 +14,8 @@
 	#include "WinFont.h"
 #endif
 
-INT32          giCurWinFont = 0;
-BOOLEAN        gfUseWinFonts = FALSE;
+INT32		  giCurWinFont = 0;
+BOOLEAN		gfUseWinFonts = FALSE;
 
 
 // Global variables for video objects
@@ -31,14 +31,14 @@ HVOBJECT				gvoTinyFontType1;
 INT32						gp12PointFont1;
 HVOBJECT				gvo12PointFont1;
 
-INT32           gpClockFont;
-HVOBJECT        gvoClockFont;
+INT32			gpClockFont;
+HVOBJECT		gvoClockFont;
 
-INT32           gpCompFont;
-HVOBJECT        gvoCompFont;
+INT32			gpCompFont;
+HVOBJECT		gvoCompFont;
 
-INT32           gpSmallCompFont;
-HVOBJECT        gvoSmallCompFont;
+INT32			gpSmallCompFont;
+HVOBJECT		gvoSmallCompFont;
 
 INT32						gp10PointRoman;
 HVOBJECT				gvo10PointRoman;
@@ -64,10 +64,10 @@ HVOBJECT				gvo14PointArial;
 INT32						gp12PointArial;
 HVOBJECT				gvo12PointArial;
 
-INT32           gpBlockyFont;
+INT32			gpBlockyFont;
 HVOBJECT				gvoBlockyFont;
 
-INT32           gpBlockyFont2;
+INT32			gpBlockyFont2;
 HVOBJECT				gvoBlockyFont2;
 
 INT32						gp12PointArialFixedFont;
@@ -87,7 +87,7 @@ HVOBJECT				gvo14PointHumanist;
 	HVOBJECT			gvoHugeFont;
 #endif
 
-INT32          giSubTitleWinFont;
+INT32		  giSubTitleWinFont;
 
 
 
@@ -100,8 +100,9 @@ extern UINT16 gzFontName[32];
 
 BOOLEAN	InitializeFonts( )
 {
-	//INT16   zWinFontName[128]; // unused (jonathanl)
-	//COLORVAL Color;			 // usused (jonathanl)
+	PERFORMANCE_MARKER
+	//INT16	zWinFontName[128]; // unused (jonathanl)
+	//COLORVAL Color;			// usused (jonathanl)
 
 	// Initialize fonts
 //	gpLargeFontType1  = LoadFontFile( "FONTS\\lfont1.sti" );
@@ -243,6 +244,7 @@ BOOLEAN	InitializeFonts( )
 
 void ShutdownFonts( )
 {
+	PERFORMANCE_MARKER
 	UnloadFont( gpLargeFontType1 );
 	UnloadFont( gpSmallFontType1 );
 	UnloadFont( gpTinyFontType1 );
@@ -265,13 +267,14 @@ void ShutdownFonts( )
 
   // ATE: Shutdown any win fonts
 #ifdef WINFONTS
-    DeleteWinFont( giSubTitleWinFont );
+	DeleteWinFont( giSubTitleWinFont );
 #endif
 }
 
 // Set shades for fonts
 BOOLEAN SetFontShade( UINT32 uiFontID, INT8 bColorID )
 {
+	PERFORMANCE_MARKER
 	HVOBJECT pFont;
 
 	CHECKF( bColorID > 0 );
@@ -286,6 +289,7 @@ BOOLEAN SetFontShade( UINT32 uiFontID, INT8 bColorID )
 
 UINT16 CreateFontPaletteTables(HVOBJECT pObj )
 {
+	PERFORMANCE_MARKER
 	UINT32 count;
 	SGPPaletteEntry Pal[256];
 
@@ -340,32 +344,34 @@ UINT16 CreateFontPaletteTables(HVOBJECT pObj )
 	return(TRUE);
 }
 
-UINT16    WFGetFontHeight( INT32 FontNum )
+UINT16	WFGetFontHeight( INT32 FontNum )
 {
+	PERFORMANCE_MARKER
   if ( USE_WINFONTS( ) )
   {
 		// return how many Y pixels we used
-	  return( GetWinFontHeight( L"a\0", GET_WINFONT( ) ) );
+	return( GetWinFontHeight( L"a\0", GET_WINFONT( ) ) );
   }
   else
   {
 		// return how many Y pixels we used
-	  return( GetFontHeight( FontNum ) );
+	return( GetFontHeight( FontNum ) );
   }
 }
 
 
 INT16 WFStringPixLength( STR16 string,INT32 UseFont )
 {
+	PERFORMANCE_MARKER
   if ( USE_WINFONTS( ) )
   {
 		// return how many Y pixels we used
-	  return( WinFontStringPixLength( string, GET_WINFONT( ) ) );
+	return( WinFontStringPixLength( string, GET_WINFONT( ) ) );
   }
   else
   {
 		// return how many Y pixels we used
-	  return( StringPixLength( string, UseFont ) );
+	return( StringPixLength( string, UseFont ) );
   }
 }
 

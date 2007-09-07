@@ -65,7 +65,7 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 
 	EX: L"Ecran De Carte (|M)" (this is the French translation)
 
-	Other examples are used multiple times, like the Esc key or "|E|s|c" or Space -> (|S|p|a|c|e)
+	Other examples are used multiple times, like the Esc key or "|E|s|c" or Space->(|S|p|a|c|e)
 
 2) NEWLINE
 	Any place you see a \n within the string, you are looking at another string that is part of the fast help
@@ -88,7 +88,7 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 	Would appear as: (the second line is moved in a character)
 		
 				Clears all the mercs' positions,
- 				 and allows you to re-enter them manually.
+ 				and allows you to re-enter them manually.
 
 
 @@@ NOTATION
@@ -630,7 +630,7 @@ STR16 pMilitiaControlMenuStrings[] =
 //	L"Hold Position", // set militia to stationary
 //	L"Retreat", // retreat militia
 //	L"Come to me", // retreat militia
-//	L"Get down", // retreat militia		 
+//	L"Get down", // retreat militia		
 //	L"Cancel", // cancel this menu
 //};
 
@@ -664,15 +664,15 @@ STR16 pTrainingMenuStrings[] =
 
 STR16 pSquadMenuStrings[] =
 {
-	L"Trupp  1",
-	L"Trupp  2",
-	L"Trupp  3",
-	L"Trupp  4",
-	L"Trupp  5",
-	L"Trupp  6",
-	L"Trupp  7",
-	L"Trupp  8",
-	L"Trupp  9",
+	L"Trupp	1",
+	L"Trupp	2",
+	L"Trupp	3",
+	L"Trupp	4",
+	L"Trupp	5",
+	L"Trupp	6",
+	L"Trupp	7",
+	L"Trupp	8",
+	L"Trupp	9",
 	L"Trupp 10",
 	L"Trupp 11",
 	L"Trupp 12",
@@ -852,7 +852,7 @@ STR16 pLandTypeStrings[] =
 	L"Ebene",
 	L"Wüste",
 	L"Lichter Wald",
-	L"Dichter Wald",	 
+	L"Dichter Wald",	
 	L"Sumpf",
 	L"See/Ozean",	
 	L"Hügel",
@@ -895,7 +895,7 @@ STR16 pLandTypeStrings[] =
 
 STR16 gpStrategicString[] =
 {
-	//     The first %s can either be bloodcats or enemies.
+	//	 The first %s can either be bloodcats or enemies.
 	L"",	//Unused
 	L"%s wurden entdeckt in Sektor %c%d und ein weiterer Trupp wird gleich ankommen.",	//STR_DETECTED_SINGULAR
 	L"%s wurden entdeckt in Sektor %c%d und weitere Trupps werden gleich ankommen.",	//STR_DETECTED_PLURAL
@@ -1089,7 +1089,7 @@ CHAR16 zHealthStr[][13] =	//used to be 10
 	L"VERWUNDET",	//	>= 45
 	L"GESUND",		//	>= 60
 	L"STARK",			// 	>= 75
-	L"SEHR GUT",	// 	>= 90	 
+	L"SEHR GUT",	// 	>= 90	
 };
 
 STR16 gzMoneyAmounts[6] = 
@@ -1781,7 +1781,7 @@ STR16 pTransactionText[] =
 	L"Anonyme Einzahlung",
 	L"Bearbeitungsgebühr", 
 	L"Angeheuert", 				// Merc was hired
-	L"Kauf bei Bobby Rays",	 		// Bobby Ray is the name of an arms dealer
+	L"Kauf bei Bobby Rays",			// Bobby Ray is the name of an arms dealer
 	L"Ausgeglichene Konten bei M.E.R.C.",
 	L"Krankenversicherung für %s", 		// medical deposit for merc 
 	L"BSE-Profilanalyse", 		// IMP is the acronym for International Mercenary Profiling
@@ -1881,7 +1881,7 @@ STR16 pMapErrorString[] =
 	L"Marschbefehl? Wir sind in einem feindlichen Sektor!",
 	L"Wenn Söldner reisen sollen, müssen sie einem Trupp oder Fahrzeug zugewiesen werden.",
 	L"Sie haben noch keine Teammitglieder.", 		// you have no members, can't do anything 
-	L"Söldner kann nicht gehorchen.",			 		// merc can't comply with your order
+	L"Söldner kann nicht gehorchen.",					// merc can't comply with your order
 //6-10
 	L"braucht eine Eskorte. Plazieren Sie ihn in einem Trupp mit Eskorte.", // merc can't move unescorted .. for a male
 	L"braucht eine Eskorte. Plazieren Sie sie in einem Trupp mit Eskorte.", // for a female
@@ -2022,14 +2022,14 @@ STR16 pImpButtonText[] =
 	L"Porträt", 			// the personal portrait selection
 	L"Stimme %d", 			// the voice selection
 	L"Fertig", 			// done profiling
-	L"Von vorne anfangen",	 		// start over profiling
+	L"Von vorne anfangen",			// start over profiling
 	L"Ja, die Antwort paßt!", 
 	L"Ja", 
 	L"Nein",
 	L"Fertig", 			// finished answering questions
 	L"Zurück", 			// previous question..abbreviated form
 	L"Weiter", 			// next question
-	L"JA",		 		// yes, I am certain 
+	L"JA",				// yes, I am certain 
 	L"NEIN, ICH MÖCHTE VON VORNE ANFANGEN.", // no, I want to start over the profiling process
 	L"JA",
 	L"NEIN",
@@ -2075,10 +2075,10 @@ STR16 pHistoryTitle[] =
 
 STR16 pHistoryHeaders[] =
 {
-	L"Tag",	 			// the day the history event occurred
+	L"Tag",				// the day the history event occurred
 	L"Seite", 			// the current page in the history report we are in
 	L"Tag", 			// the days the history report occurs over
-	L"Ort",	 			// location (in sector) the event occurred
+	L"Ort",				// location (in sector) the event occurred
 	L"Ereignis", 			// the event label
 };
 
@@ -2219,8 +2219,8 @@ STR16 pBookMarkStrings[] =
 
 STR16 pBookmarkTitle[] =
 {
-	 L"Lesezeichen",
-	 L"Rechts klicken, um in Zukunft in dieses Menü zu gelangen.",
+	L"Lesezeichen",
+	L"Rechts klicken, um in Zukunft in dieses Menü zu gelangen.",
 };
 
 // When loading or download a web page
@@ -2492,7 +2492,7 @@ STR16			MercAccountPageText[] =
 {
 	// Text on the buttons on the bottom of the screen
 	L"Zurück",
-  L"Weiter",
+	L"Weiter",
 };
 
 //For use at the M.E.R.C. web site. Text relating a MERC mercenary
@@ -3338,7 +3338,7 @@ STR16 zOptionsScreenHelpText[] =
 	L"Durch diese Option wird vor der Rückkehr in den Echtzeit-Modus ein zusätzlicher \"Sicherheits\"-Klick verlangt.",
 
 	//Sleep/Wake notification
-    L"Wenn ANgeschaltet werden Sie informiert, wann Ihre Söldner, die sich im \"Dienst\" befinden schlafen oder die Arbeit wieder aufnehmen.",
+	L"Wenn ANgeschaltet werden Sie informiert, wann Ihre Söldner, die sich im \"Dienst\" befinden schlafen oder die Arbeit wieder aufnehmen.",
 
 	//Use the metric system
 	L"Mit dieser Option wird im Spiel das metrische System verwendet.",
@@ -3407,6 +3407,9 @@ STR16 gzGIOScreenText[] =
 	L"Groß",
 	L"Ausgezeichnet",
 	L"Fantastisch",
+	L"Inventory System",
+	L"Old",
+	L"New",
 };
 
 STR16 pDeliveryLocationStrings[] =
@@ -3539,7 +3542,7 @@ STR16 pMessageStrings[] =
 	L"Weitergeben",
 
 	L"%s weitergegeben an %s.", //"Item" passed to "merc". Please try to keep the item %s before the merc %s, otherwise,
-											 //must notify SirTech.
+											//must notify SirTech.
 	L"Kein Platz, um %s an %s weiterzugeben.", //pass "item" to "merc". Same instructions as above.
 
 	//A list of attachments appear after the items. Ex: Kevlar vest ( Ceramic Plate 'Attached )'
@@ -3579,7 +3582,7 @@ STR16 pMessageStrings[] =
 	L"Spielstand namens Spielstand99.sav kreiert. Wenn nötig, in Spielstand01 - Spielstand10 umbennen und über die Option 'Laden' aufrufen.",
 	L"%s hat %s getrunken.",
 	L"Paket in Drassen angekommen.",
-	L"%s kommt am %d. um ca. %s am Zielort an (Sektor %s).",		//first %s is mercs name(OK), next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival       !!!7 It should be like this: first one is merc (OK), next is day of arrival (OK) , next is time of the day for ex. 07:00 (not OK, now it is still sector), next should be sector (not OK, now it is still time of the day)
+	L"%s kommt am %d. um ca. %s am Zielort an (Sektor %s).",		//first %s is mercs name(OK), next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival		!!!7 It should be like this: first one is merc (OK), next is day of arrival (OK) , next is time of the day for ex. 07:00 (not OK, now it is still sector), next should be sector (not OK, now it is still time of the day)
 	L"Logbuch aktualisiert.",
 	L"Granaten Feuerstöße verwenden Ziel Cursor (Sperrfeuer aktiviert).",
 	L"Granaten Feuerstöße verwenden Flugbahn Cursor (Sperrfeuer deaktiviert).",
@@ -3793,7 +3796,7 @@ STR16	gzCreditNameFunny[]=
 
 STR16 sRepairsDoneString[] =
 {
-	L"%s hat  seine eigenen Gegenstände repariert",
+	L"%s hat	seine eigenen Gegenstände repariert",
 	L"%s hat die Waffen und Rüstungen aller Teammitglieder repariert",
 	L"%s hat die aktivierten Gegenstände aller Teammitglieder repariert",
 	L"%s hat die mitgeführten Gegenstände aller Teammitglieder repariert",
@@ -3908,7 +3911,7 @@ STR16 gzLateLocalizedString[] =
 	//46-48
 	L"%ss Gewehrlauf-Verlängerung fällt ab!",
 	L"Pro Sektor sind nicht mehr als %d Milizausbilder erlaubt.",
-  L"Sind Sie sicher?", // 
+	L"Sind Sie sicher?", // 
 
 	//49-50
 	L"Zeitraffer", //time compression

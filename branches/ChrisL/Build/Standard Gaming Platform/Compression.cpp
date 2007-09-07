@@ -13,21 +13,24 @@
 
 voidpf ZAlloc( voidpf opaque, uInt items, uInt size )
 {
-  return( MemAlloc( items * size ) );
+	PERFORMANCE_MARKER
+	return( MemAlloc( items * size ) );
 }
 
 void ZFree( voidpf opaque, voidpf address )
 {
+	PERFORMANCE_MARKER
 	MemFree( address );
 }
 
 PTR DecompressInit( BYTE * pCompressedData, UINT32 uiDataSize )
 {
+	PERFORMANCE_MARKER
 	z_stream *	pZStream;
 	int					iZRetCode;
 	
 	// allocate memory for the z_stream struct
-	pZStream = MemAlloc( sizeof( z_stream ) );
+	pZStream = (z_stream *)MemAlloc( sizeof( z_stream ) );
 	if( pZStream == NULL )
 	{ // out of memory!
 		return( NULL );
@@ -54,6 +57,7 @@ PTR DecompressInit( BYTE * pCompressedData, UINT32 uiDataSize )
 
 UINT32 Decompress( PTR pDecompPtr, BYTE * pBuffer, UINT32 uiBufferLen )
 {
+	PERFORMANCE_MARKER
 	int					iZRetCode;
 	z_stream *	pZStream = (z_stream *) pDecompPtr;
 
@@ -79,6 +83,7 @@ UINT32 Decompress( PTR pDecompPtr, BYTE * pBuffer, UINT32 uiBufferLen )
 
 void DecompressFini( PTR pDecompPtr )
 {
+	PERFORMANCE_MARKER
 	z_stream *	pZStream = (z_stream *) pDecompPtr;
 
 	// these assertions is in here to ensure that we get passed a proper z_stream pointer
@@ -98,11 +103,12 @@ UINT32 CompressedBufferSize( UINT32 uiDataSize )
 
 PTR CompressInit( BYTE * pUncompressedData, UINT32 uiDataSize )
 {
+	PERFORMANCE_MARKER
 	z_stream *	pZStream;
 	int					iZRetCode;
 	
 	// allocate memory for the z_stream struct
-	pZStream = MemAlloc( sizeof( z_stream ) );
+	pZStream = (z_stream *)MemAlloc( sizeof( z_stream ) );
 	if( pZStream == NULL )
 	{ // out of memory!
 		return( NULL );
@@ -129,6 +135,7 @@ PTR CompressInit( BYTE * pUncompressedData, UINT32 uiDataSize )
 
 UINT32 Compress( PTR pCompPtr, BYTE * pBuffer, UINT32 uiBufferLen )
 {
+	PERFORMANCE_MARKER
 	int					iZRetCode;
 	z_stream *	pZStream = (z_stream *) pCompPtr;
 
@@ -154,6 +161,7 @@ UINT32 Compress( PTR pCompPtr, BYTE * pBuffer, UINT32 uiBufferLen )
 
 void CompressFini( PTR pCompPtr )
 {
+	PERFORMANCE_MARKER
 	z_stream *	pZStream = (z_stream *) pCompPtr;
 
 	// these assertions is in here to ensure that we get passed a proper z_stream pointer

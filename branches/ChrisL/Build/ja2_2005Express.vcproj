@@ -51,7 +51,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
-				DisableSpecificWarnings="4100"
+				ForcedIncludeFiles="profiler.h"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -123,8 +123,12 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories=".\Utils;.\TileEngine;.\TacticalAI;.\Tactical;.\Strategic;&quot;.\Standard Gaming Platform&quot;;.\Res;.\lua;.\Laptop;.\Editor;$(NOINHERIT)"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				StringPooling="true"
+				ExceptionHandling="1"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
@@ -146,8 +150,6 @@
 				OutputFile="$(OutDir)\ja2_rel_1202.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
-				GenerateMapFile="true"
-				MapFileName="$(TargetDir)$(TargetName).map"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -240,6 +242,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Language Defines.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Loading Screen.cpp"
 				>
 			</File>
@@ -253,6 +259,10 @@
 			</File>
 			<File
 				RelativePath=".\Options Screen.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\profiler.cpp"
 				>
 			</File>
 			<File
@@ -374,6 +384,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\profiler.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SaveLoadGame.h"
 				>
 			</File>
@@ -391,10 +405,6 @@
 			</File>
 			<File
 				RelativePath=".\Sys Globals.h"
-				>
-			</File>
-			<File
-				RelativePath=".\VtuneApi.h"
 				>
 			</File>
 		</Filter>
@@ -454,10 +464,6 @@
 		</File>
 		<File
 			RelativePath=".\SMACKW32.LIB"
-			>
-		</File>
-		<File
-			RelativePath=".\VtuneApi.lib"
 			>
 		</File>
 	</Files>

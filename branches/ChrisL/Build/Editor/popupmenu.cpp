@@ -52,6 +52,7 @@ extern CHAR16 gszScheduleActions[ NUM_SCHEDULE_ACTIONS ][20];
 //in different ways in each instance.
 STR16 GetPopupMenuString( UINT8 ubIndex )
 {
+	PERFORMANCE_MARKER
 	switch( gPopup.ubPopupMenuID )
 	{
 		case CHANGETSET_POPUP: //tile sets
@@ -91,6 +92,7 @@ returns the menu entry number starting from 1.
 
 void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
 {
+	PERFORMANCE_MARKER
 	UINT16 usX, usY;
 	UINT16 usMenuHeight;
 	UINT16 usMenuWidth = 0;
@@ -239,6 +241,7 @@ void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
 
 void RenderPopupMenu()
 {
+	PERFORMANCE_MARKER
 	UINT16 usX, usY;
 	UINT8 ubColumn, ubEntry, ubCounter;
 	UINT8 *pDestBuf;
@@ -309,6 +312,7 @@ void RenderPopupMenu()
 //mouse is out of the menu region.
 UINT8 GetPopupIndexFromMousePosition()
 {
+	PERFORMANCE_MARKER
 	UINT8 ubNumEntriesDown;
 	UINT16 usRelX;
 	UINT8 ubCount;
@@ -339,6 +343,7 @@ UINT8 GetPopupIndexFromMousePosition()
 
 void PopupMenuHandle()
 {
+	PERFORMANCE_MARKER
 	InputAtom InputEvent;
 
 	if( gPopup.ubActiveType == POPUP_ACTIVETYPE_NOT_YET_DETERMINED )
@@ -450,6 +455,7 @@ void PopupMenuHandle()
 
 void ProcessPopupMenuSelection()
 {
+	PERFORMANCE_MARKER
 	switch( gPopup.ubPopupMenuID )
 	{
 		case CHANGETSET_POPUP:
@@ -474,6 +480,7 @@ void ProcessPopupMenuSelection()
 
 BOOLEAN ProcessPopupMenuIfActive( )
 {
+	PERFORMANCE_MARKER
 	if( !gPopup.fActive && !fWaitingForLButtonRelease )
 		return FALSE;
 	if( fWaitingForLButtonRelease )

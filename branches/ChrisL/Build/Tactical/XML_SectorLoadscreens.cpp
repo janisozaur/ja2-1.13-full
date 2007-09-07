@@ -2,43 +2,8 @@
 	#include "Tactical All.h"
 #else
 	#include "sgp.h"
-	#include "overhead types.h"
-	#include "Sound Control.h"
-	#include "Soldier Control.h"
 	#include "overhead.h"
-	#include "Event Pump.h"
 	#include "weapons.h"
-	#include "Animation Control.h"
-	#include "sys globals.h"
-	#include "Handle UI.h"
-	#include "Isometric Utils.h"
-	#include "worldman.h"
-	#include "math.h"
-	#include "points.h"
-	#include "ai.h"
-	#include "los.h"
-	#include "renderworld.h"
-	#include "opplist.h"
-	#include "interface.h"
-	#include "message.h"
-	#include "campaign.h"
-	#include "items.h"
-	#include "text.h"
-	#include "Soldier Profile.h"
-	#include "tile animation.h"
-	#include "Dialogue Control.h"
-	#include "SkillCheck.h"
-	#include "explosion control.h"
-	#include "Quests.h"
-	#include "Physics.h"
-	#include "Random.h"
-	#include "Vehicles.h"
-	#include "bullets.h"
-	#include "morale.h"
-	#include "meanwhile.h"
-	#include "SkillCheck.h"
-	#include "gamesettings.h"
-	#include "SaveLoadMap.h"
 	#include "Debug Control.h"
 	#include "expat.h"
 	#include "XML.h"
@@ -63,6 +28,7 @@ typedef sectorLoadscreensParseData;
 static void XMLCALL 
 sectorLoadscreensStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	sectorLoadscreensParseData * pData = (sectorLoadscreensParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -108,11 +74,12 @@ sectorLoadscreensStartElementHandle(void *userData, const XML_Char *name, const 
 static void XMLCALL
 sectorLoadscreensCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	sectorLoadscreensParseData * pData = (sectorLoadscreensParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
-	  ){
+	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
 	}
 }
@@ -120,7 +87,8 @@ sectorLoadscreensCharacterDataHandle(void *userData, const XML_Char *str, int le
 
 static void XMLCALL
 sectorLoadscreensEndElementHandle(void *userData, const XML_Char *name)
-{	
+{
+	PERFORMANCE_MARKER	
 	char temp;
 	sectorLoadscreensParseData * pData = (sectorLoadscreensParseData *)userData;
 
@@ -142,7 +110,7 @@ sectorLoadscreensEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curSectorLoadscreens.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curSectorLoadscreens.uiIndex	= (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "szLocation") == 0)
 		{
@@ -166,7 +134,7 @@ sectorLoadscreensEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "RandomAltSector") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curSectorLoadscreens.RandomAltSector  = (BOOLEAN) atol(pData->szCharData);
+			pData->curSectorLoadscreens.RandomAltSector	= (BOOLEAN) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "szImageFormat") == 0)
 		{
@@ -275,6 +243,7 @@ sectorLoadscreensEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInSectorLoadscreensStats(SECTOR_LOADSCREENS *pSectorLoadscreens, STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -316,7 +285,7 @@ BOOLEAN ReadInSectorLoadscreensStats(SECTOR_LOADSCREENS *pSectorLoadscreens, STR
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 
@@ -338,6 +307,7 @@ BOOLEAN ReadInSectorLoadscreensStats(SECTOR_LOADSCREENS *pSectorLoadscreens, STR
 
 BOOLEAN WriteSectorLoadscreensStats(SECTOR_LOADSCREENS *pSectorLoadscreens, STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there

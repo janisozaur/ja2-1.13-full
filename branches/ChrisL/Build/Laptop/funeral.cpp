@@ -100,11 +100,11 @@ UINT32		guiRightColumn;
 
 
 //Clicking on Funeral link
-MOUSE_REGION    gSelectedFuneralLinkRegion[ FUNERAL_NUMBER_OF_LINKS ];
+MOUSE_REGION	gSelectedFuneralLinkRegion[ FUNERAL_NUMBER_OF_LINKS ];
 void SelectFuneralLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Clicking on rip sign to make it disappear
-MOUSE_REGION    gSelectedRipSignRegion;
+MOUSE_REGION	gSelectedRipSignRegion;
 void SelectRipSignRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
@@ -115,12 +115,14 @@ void DisplayFuneralRipTombStone();
 
 void GameInitFuneral()
 {
+	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterFuneral()
 {
-  VOBJECT_DESC    VObjectDesc;
+	PERFORMANCE_MARKER
+	VOBJECT_DESC	VObjectDesc;
 	UINT16					usPosX, i;
 
 	// load the Closed graphic and add it
@@ -148,7 +150,7 @@ BOOLEAN EnterFuneral()
 	GetMLGFilename( VObjectDesc.ImageFile, MLG_MCGILLICUTTYS );
 	CHECKF(AddVideoObject(&VObjectDesc, &guiMcGillicuttys));
 
-	// load the Mortuary  graphic and add it
+	// load the Mortuary	graphic and add it
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	GetMLGFilename( VObjectDesc.ImageFile, MLG_MORTUARY );
 	CHECKF(AddVideoObject(&VObjectDesc, &guiMortuary));
@@ -165,7 +167,7 @@ BOOLEAN EnterFuneral()
 		//Mouse region for the bottom links
 
 		MSYS_DefineRegion( &gSelectedFuneralLinkRegion[i], usPosX, FUNERAL_LINK_1_Y, (UINT16)(usPosX + FUNERAL_LINK_1_WIDTH), (UINT16)(FUNERAL_LINK_1_Y + FUNERAL_LINK_1_HEIGHT), MSYS_PRIORITY_HIGH,
-							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectFuneralLinkRegionCallBack ); 
+							CURSOR_WWW, MSYS_NO_CALLBACK, SelectFuneralLinkRegionCallBack ); 
 		MSYS_AddRegion(&gSelectedFuneralLinkRegion[i]); 
 		MSYS_SetRegionUserData( &gSelectedFuneralLinkRegion[i], 0, i );	
 
@@ -173,9 +175,9 @@ BOOLEAN EnterFuneral()
 	}
 
 	MSYS_DefineRegion( &gSelectedRipSignRegion, FUNERAL_CLOSED_RIP_SIGN_X, FUNERAL_CLOSED_RIP_SIGN_Y, (UINT16)(FUNERAL_CLOSED_RIP_SIGN_X + FUNERAL_CLOSED_WIDTH), (UINT16)(FUNERAL_CLOSED_RIP_SIGN_Y + FUNERAL_CLOSED_HEIGHT), MSYS_PRIORITY_HIGH+1,
-						 CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, SelectRipSignRegionCallBack ); 
+						CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, SelectRipSignRegionCallBack ); 
 	MSYS_AddRegion(&gSelectedRipSignRegion); 
-  MSYS_DisableRegion(&gSelectedRipSignRegion); 
+	MSYS_DisableRegion(&gSelectedRipSignRegion); 
 
 
 	SetBookMark( FUNERAL_BOOKMARK );
@@ -186,6 +188,7 @@ BOOLEAN EnterFuneral()
 
 void ExitFuneral()
 {
+	PERFORMANCE_MARKER
 	UINT8 i;
 
 	DeleteVideoObjectFromIndex(guiClosedSign);
@@ -198,7 +201,7 @@ void ExitFuneral()
 
 	for(i=0; i<FUNERAL_NUMBER_OF_LINKS; i++)
 	{
-	  MSYS_RemoveRegion( &gSelectedFuneralLinkRegion[i]);
+	MSYS_RemoveRegion( &gSelectedFuneralLinkRegion[i]);
 	}
 
 	MSYS_RemoveRegion( &gSelectedRipSignRegion );
@@ -206,12 +209,14 @@ void ExitFuneral()
 
 void HandleFuneral()
 {
+	PERFORMANCE_MARKER
 
 }
 
 void RenderFuneral()
 {
-  HVOBJECT hPixHandle;
+	PERFORMANCE_MARKER
+	HVOBJECT hPixHandle;
 	UINT16 i, usPosX, usStringHeight;
 
 	WebPageTileBackground(4, 4, FUNERAL_MARBLE_WIDTH, FUNERAL_MARBLE_HEIGHT, guiMarbleBackground);
@@ -243,8 +248,8 @@ void RenderFuneral()
 
 		//Calculate the height of the string, as it needs to be vertically centered.
 		usStringHeight = IanWrappedStringHeight( 0, 0, FUNERAL_LINK_TEXT_WIDTH, 2, 
-															 FUNERAL_SENTENCE_FONT, 0, sFuneralString[i+FUNERAL_SEND_FLOWERS], 
-															 0, 0, 0 );
+															FUNERAL_SENTENCE_FONT, 0, sFuneralString[i+FUNERAL_SEND_FLOWERS], 
+															0, 0, 0 );
 		DisplayWrappedString( (UINT16)(usPosX+FUNERAL_LINK_TEXT_OFFSET_X), (UINT16)(FUNERAL_LINK_1_Y + (FUNERAL_LINK_1_HEIGHT - usStringHeight) / 2), FUNERAL_LINK_TEXT_WIDTH, 2, FUNERAL_SENTENCE_FONT, FUNERAL_TITLE_COLOR, sFuneralString[i+FUNERAL_SEND_FLOWERS], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
 
@@ -273,15 +278,16 @@ void RenderFuneral()
 	SetFontShadow(DEFAULT_SHADOW);
 
 
-  MarkButtonsDirty( );
+	MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 
 void DisplayFuneralRipTombStone()
 {
-  HVOBJECT hPixHandle;
+	PERFORMANCE_MARKER
+	HVOBJECT hPixHandle;
 
 	// rip tombstone
 	GetVideoObject(&hPixHandle, guiClosedSign);
@@ -298,16 +304,17 @@ void DisplayFuneralRipTombStone()
 
 	SetFontShadow(DEFAULT_SHADOW);
 
-  InvalidateRegion(FUNERAL_CLOSED_RIP_SIGN_X,FUNERAL_CLOSED_RIP_SIGN_Y,  FUNERAL_CLOSED_RIP_SIGN_X+FUNERAL_CLOSED_WIDTH+5, FUNERAL_CLOSED_RIP_SIGN_Y+FUNERAL_CLOSED_HEIGHT+5);
+	InvalidateRegion(FUNERAL_CLOSED_RIP_SIGN_X,FUNERAL_CLOSED_RIP_SIGN_Y,	FUNERAL_CLOSED_RIP_SIGN_X+FUNERAL_CLOSED_WIDTH+5, FUNERAL_CLOSED_RIP_SIGN_Y+FUNERAL_CLOSED_HEIGHT+5);
 
 	//enable the region to make the sign disappear
-  MSYS_EnableRegion(&gSelectedRipSignRegion); 
+	MSYS_EnableRegion(&gSelectedRipSignRegion); 
 
 }
 
 
 void SelectFuneralLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -333,13 +340,14 @@ void SelectFuneralLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 void SelectRipSignRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
 	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-	  MSYS_DisableRegion(&gSelectedRipSignRegion); 
+	MSYS_DisableRegion(&gSelectedRipSignRegion); 
 		fPausedReDrawScreenFlag = TRUE;
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)

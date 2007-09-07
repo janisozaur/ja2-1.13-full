@@ -5,6 +5,11 @@
 #include "EnemyItemDrops.h"
 #include "Loading Screen.h"
 
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
+
 enum
 {
 	ELEMENT_NONE = 0,
@@ -38,56 +43,57 @@ typedef PARSE_STAGE;
 #define	ENEMYGUNCHOICESFILENAME					"EnemyGunChoices.xml"
 #define	ENEMYITEMCHOICESFILENAME				"EnemyItemChoices.xml"
 #define	IMPITEMCHOICESFILENAME					"IMPItemChoices.xml"
+
 // CHRISL:
 #define LOADBEARINGEQUIPMENTFILENAME			"LoadBearingEquipment.xml"
 #define LBEPOCKETFILENAME						"Pockets.xml"
 #define MERCSTARTINGGEARFILENAME				"MercStartingGear.xml"
 
-#define TONYINVENTORYFILENAME                   "NPCInventory\\TonyInventory.xml"
-#define DEVININVENTORYFILENAME                  "NPCInventory\\DevinInventory.xml"
-#define FRANZINVENTORYFILENAME                  "NPCInventory\\FranzInventory.xml"
-#define KEITHINVENTORYFILENAME                  "NPCInventory\\KeithInventory.xml"
-#define SAMINVENTORYFILENAME                    "NPCInventory\\SamInventory.xml"
-#define JAKEINVENTORYFILENAME                   "NPCInventory\\JakeInventory.xml"
-#define HOWARDINVENTORYFILENAME                 "NPCInventory\\HowardInventory.xml"
-#define GABBYINVENTORYFILENAME                  "NPCInventory\\GabbyInventory.xml"
-#define FRANKINVENTORYFILENAME                  "NPCInventory\\FrankInventory.xml"
-#define ELGININVENTORYFILENAME                  "NPCInventory\\ElginInventory.xml"
-#define MANNYINVENTORYFILENAME                  "NPCInventory\\MannyInventory.xml"
-#define HERVEINVENTORYFILENAME                  "NPCInventory\\HerveInventory.xml"
-#define PETERINVENTORYFILENAME                  "NPCInventory\\PeterInventory.xml"
-#define ALBERTOINVENTORYFILENAME                "NPCInventory\\AlbertoInventory.xml"
-#define CARLOINVENTORYFILENAME                  "NPCInventory\\CarloInventory.xml"
-#define MICKEYINVENTORYFILENAME                 "NPCInventory\\MickeyInventory.xml"
-#define ARNIEINVENTORYFILENAME                  "NPCInventory\\ArnieInventory.xml"
-#define PERKOINVENTORYFILENAME                  "NPCInventory\\PerkoInventory.xml"
-#define FREDOINVENTORYFILENAME                  "NPCInventory\\FredoInventory.xml"
+#define TONYINVENTORYFILENAME					"NPCInventory\\TonyInventory.xml"
+#define DEVININVENTORYFILENAME					"NPCInventory\\DevinInventory.xml"
+#define FRANZINVENTORYFILENAME					"NPCInventory\\FranzInventory.xml"
+#define KEITHINVENTORYFILENAME					"NPCInventory\\KeithInventory.xml"
+#define SAMINVENTORYFILENAME					"NPCInventory\\SamInventory.xml"
+#define JAKEINVENTORYFILENAME					"NPCInventory\\JakeInventory.xml"
+#define HOWARDINVENTORYFILENAME				 "NPCInventory\\HowardInventory.xml"
+#define GABBYINVENTORYFILENAME					"NPCInventory\\GabbyInventory.xml"
+#define FRANKINVENTORYFILENAME					"NPCInventory\\FrankInventory.xml"
+#define ELGININVENTORYFILENAME					"NPCInventory\\ElginInventory.xml"
+#define MANNYINVENTORYFILENAME					"NPCInventory\\MannyInventory.xml"
+#define HERVEINVENTORYFILENAME					"NPCInventory\\HerveInventory.xml"
+#define PETERINVENTORYFILENAME					"NPCInventory\\PeterInventory.xml"
+#define ALBERTOINVENTORYFILENAME				"NPCInventory\\AlbertoInventory.xml"
+#define CARLOINVENTORYFILENAME					"NPCInventory\\CarloInventory.xml"
+#define MICKEYINVENTORYFILENAME				 "NPCInventory\\MickeyInventory.xml"
+#define ARNIEINVENTORYFILENAME					"NPCInventory\\ArnieInventory.xml"
+#define PERKOINVENTORYFILENAME					"NPCInventory\\PerkoInventory.xml"
+#define FREDOINVENTORYFILENAME					"NPCInventory\\FredoInventory.xml"
 
-#define BOBBYRAYSTRINGSFILENAME                 "BobbyRayStrings.xml"
-#define AMMOCALIBERSTRINGSFILENAME              "AmmoCaliberStrings.xml"
+#define BOBBYRAYSTRINGSFILENAME				 "BobbyRayStrings.xml"
+#define AMMOCALIBERSTRINGSFILENAME				"AmmoCaliberStrings.xml"
 
-#define SOUNDSFILENAME                          "Sounds\\Sounds.xml"
-#define BURSTSOUNDSFILENAME                     "Sounds\\BurstSounds.xml"
+#define SOUNDSFILENAME							"Sounds\\Sounds.xml"
+#define BURSTSOUNDSFILENAME					 "Sounds\\BurstSounds.xml"
 
-#define EXPLOSIONDATAFILENAME                   "ExplosionData.xml"
+#define EXPLOSIONDATAFILENAME					"ExplosionData.xml"
 
-#define CITYTABLEFILENAME                       "Map\\Cities.xml"
-#define MOVEMENTCOSTFILENAME                    "Map\\MovementCosts.xml"
-#define ALTSECTORSFILENAME                      "Map\\AltSectors.xml"
-#define SAMSITESFILENAME                        "Map\\SamSites.xml"
+#define CITYTABLEFILENAME						"Map\\Cities.xml"
+#define MOVEMENTCOSTFILENAME					"Map\\MovementCosts.xml"
+#define ALTSECTORSFILENAME						"Map\\AltSectors.xml"
+#define SAMSITESFILENAME						"Map\\SamSites.xml"
 #define ROAMINGMILITIAFILENAME					"Map\\RestrictedRoamingMilitia.xml"
 
 
-#define GARRISONFILENAME                        "Army\\GarrisonGroups.xml"
-#define PATROLFILENAME                          "Army\\PatrolGroups.xml"
-#define COMPOSITIONFILENAME                     "Army\\ArmyComposition.xml"
+#define GARRISONFILENAME						"Army\\GarrisonGroups.xml"
+#define PATROLFILENAME							"Army\\PatrolGroups.xml"
+#define COMPOSITIONFILENAME					 "Army\\ArmyComposition.xml"
 
 // WANNE: drops filename
-#define ENEMYWEAPONDROPSFILENAME                "EnemyWeaponDrops.xml"
-#define ENEMYAMMODROPSFILENAME                  "EnemyAmmoDrops.xml"
-#define ENEMYEXPLOSIVEDROPSFILENAME             "EnemyExplosiveDrops.xml"
-#define ENEMYARMOURDROPSFILENAME                "EnemyArmourDrops.xml"
-#define ENEMYMISCDROPSFILENAME                  "EnemyMiscDrops.xml"
+#define ENEMYWEAPONDROPSFILENAME				"EnemyWeaponDrops.xml"
+#define ENEMYAMMODROPSFILENAME					"EnemyAmmoDrops.xml"
+#define ENEMYEXPLOSIVEDROPSFILENAME			 "EnemyExplosiveDrops.xml"
+#define ENEMYARMOURDROPSFILENAME				"EnemyArmourDrops.xml"
+#define ENEMYMISCDROPSFILENAME					"EnemyMiscDrops.xml"
 
 // WANNE: Sector loadscreens [2007-05-18]
 #define SECTORLOADSCREENSFILENAME				"Map\\SectorLoadscreens.xml"

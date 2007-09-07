@@ -3,6 +3,8 @@
 
 #include "Language Defines.h"
 
+#pragma warning (disable : 4996)//disables unsafe functions (sprintf etc)
+
 // Remove comment to build Beta version (with lot of debug infos) including the Editor
 //#define	JA2BETAVERSION
 

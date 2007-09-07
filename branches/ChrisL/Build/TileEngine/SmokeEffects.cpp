@@ -8,7 +8,7 @@
 	#include "wcheck.h"
 	#include "stdlib.h"
 	#include "debug.h"
-	#include "soldier control.h"
+	//#include "soldier control.h"
 	#include "weapons.h"
 	#include "handle items.h"
 	#include "worlddef.h"	
@@ -29,6 +29,11 @@
 #endif
 
 #include "SaveLoadGame.h"
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 
 
 INT8 FromWorldFlagsToSmokeType( UINT16 ubWorldFlags );
@@ -51,6 +56,7 @@ void RecountSmokeEffects( void );
 
 INT32 GetFreeSmokeEffect( void )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumSmokeEffects; uiCount++)
@@ -67,6 +73,7 @@ INT32 GetFreeSmokeEffect( void )
 
 void RecountSmokeEffects( void )
 {
+	PERFORMANCE_MARKER
 	INT32 uiCount;
 
 	for(uiCount=guiNumSmokeEffects-1; (uiCount >=0) ; uiCount--)
@@ -85,6 +92,7 @@ void RecountSmokeEffects( void )
 // Returns NO_SMOKE_EFFECT if none there...
 INT8 GetSmokeEffectOnTile( INT16 sGridNo, INT8 bLevel )
 {
+	PERFORMANCE_MARKER
 	UINT16		ubExtFlags;
 
 	ubExtFlags = gpWorldLevelData[ sGridNo ].ubExtFlags[ bLevel ];
@@ -102,6 +110,7 @@ INT8 GetSmokeEffectOnTile( INT16 sGridNo, INT8 bLevel )
 
 INT8 FromWorldFlagsToSmokeType( UINT16 ubWorldFlags )
 {
+	PERFORMANCE_MARKER
 	if ( ubWorldFlags & MAPELEMENT_EXT_SMOKE )
 	{
 		return( NORMAL_SMOKE_EFFECT );
@@ -131,6 +140,7 @@ INT8 FromWorldFlagsToSmokeType( UINT16 ubWorldFlags )
 
 UINT16 FromSmokeTypeToWorldFlags( INT8 bType )
 {
+	PERFORMANCE_MARKER
 	switch( bType )
 	{
 		case NORMAL_SMOKE_EFFECT:
@@ -153,10 +163,10 @@ UINT16 FromSmokeTypeToWorldFlags( INT8 bType )
 			return( MAPELEMENT_EXT_BURNABLEGAS );
 			break;
 
-    case CREATURE_SMOKE_EFFECT:
-      
-      return( MAPELEMENT_EXT_CREATUREGAS );
-      break;
+	case CREATURE_SMOKE_EFFECT:
+		
+		return( MAPELEMENT_EXT_CREATUREGAS );
+		break;
 
 		default:
 
@@ -168,6 +178,7 @@ UINT16 FromSmokeTypeToWorldFlags( INT8 bType )
 
 INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
 {
+	PERFORMANCE_MARKER
 	SMOKEEFFECT *pSmoke;
 	INT32				iSmokeIndex;
 	INT8				bSmokeEffectType=0;
@@ -192,8 +203,8 @@ INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
 	}
 
 
-  switch( Explosive[Item[usItem].ubClassIndex].ubType )
-  {
+	switch( Explosive[Item[usItem].ubClassIndex].ubType )
+	{
 		case EXPLOSV_MUSTGAS:
 
 			bSmokeEffectType	=	MUSTARDGAS_SMOKE_EFFECT;
@@ -213,46 +224,46 @@ INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
 			bSmokeEffectType	=	NORMAL_SMOKE_EFFECT; 
 			break;
 
-   // case SMALL_CREATURE_GAS:
+	// case SMALL_CREATURE_GAS:
 			//bSmokeEffectType	=	CREATURE_SMOKE_EFFECT; 
 			//ubDuration				= 3;
 			//ubStartRadius			= 1;
 			//break;
 
-    case EXPLOSV_CREATUREGAS:
+	case EXPLOSV_CREATUREGAS:
 			bSmokeEffectType	=	CREATURE_SMOKE_EFFECT; 
 			break;
 
-   // case VERY_SMALL_CREATURE_GAS:
+	// case VERY_SMALL_CREATURE_GAS:
 
 			//bSmokeEffectType	=	CREATURE_SMOKE_EFFECT; 
 			//ubDuration				= 2;
 			//ubStartRadius			= 0;
-      break;
-  }
+		break;
+	}
 
 
 
 	pSmoke->ubDuration	= (UINT8)Explosive[ Item[ usItem ].ubClassIndex ].ubDuration;
-	pSmoke->ubRadius    = (UINT8)Explosive[ Item[ usItem ].ubClassIndex ].ubStartRadius;
+	pSmoke->ubRadius	= (UINT8)Explosive[ Item[ usItem ].ubClassIndex ].ubStartRadius;
 	pSmoke->bAge				= 0;
-	pSmoke->fAllocated  = TRUE;
+	pSmoke->fAllocated	= TRUE;
 	pSmoke->bType				= bSmokeEffectType;
-  pSmoke->ubOwner     = ubOwner;
+	pSmoke->ubOwner	 = ubOwner;
 
-  if ( pSmoke->bFlags & SMOKE_EFFECT_INDOORS )
-  {    
+	if ( pSmoke->bFlags & SMOKE_EFFECT_INDOORS )
+	{	
 		// Duration is increased by 2 turns...indoors
 		pSmoke->ubDuration += 3;
-  }
+	}
 
-  if ( bLevel )
-  {
-    pSmoke->bFlags |= SMOKE_EFFECT_ON_ROOF;
-  }
+	if ( bLevel )
+	{
+	pSmoke->bFlags |= SMOKE_EFFECT_ON_ROOF;
+	}
 
-  // ATE: FALSE into subsequent-- it's the first one!
-  SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, FALSE, bLevel, iSmokeIndex );
+	// ATE: FALSE into subsequent-- it's the first one!
+	SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, FALSE, bLevel, iSmokeIndex );
 
 	return( iSmokeIndex );
 }
@@ -262,19 +273,20 @@ INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
 // ( Replacement algorithm uses distance away )
 void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8 bLevel )
 {
+	PERFORMANCE_MARKER
 	ANITILE_PARAMS	AniParams;
 	ANITILE					*pAniTile;
-	SMOKEEFFECT     *pSmoke;
-  BOOLEAN         fDissipating = FALSE;
+	SMOKEEFFECT	 *pSmoke;
+	BOOLEAN		 fDissipating = FALSE;
 
 	pSmoke = &gSmokeEffectData[ iSmokeEffectID ];
 
-  if ( ( pSmoke->ubDuration - pSmoke->bAge ) < 2 )
-  {
-    fDissipating = TRUE;
-    // Remove old one...
-    RemoveSmokeEffectFromTile( sGridNo, bLevel );
-  }
+	if ( ( pSmoke->ubDuration - pSmoke->bAge ) < 2 )
+	{
+	fDissipating = TRUE;
+	// Remove old one...
+	RemoveSmokeEffectFromTile( sGridNo, bLevel );
+	}
 
 
 	// If smoke effect exists already.... stop
@@ -283,30 +295,30 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 		return;
 	}
 		
-	// OK,  Create anitile....
+	// OK,	Create anitile....
 	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 	AniParams.sGridNo							= sGridNo;
 
-  if ( bLevel == 0 )
-  {
-	  AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-  }
-  else
-  {
-	  AniParams.ubLevelID						= ANI_ONROOF_LEVEL;
-  }
+	if ( bLevel == 0 )
+	{
+	AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
+	}
+	else
+	{
+	AniParams.ubLevelID						= ANI_ONROOF_LEVEL;
+	}
 
 
 	AniParams.sDelay							= (INT16)( 300 + Random( 300 ) );
 
-  if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
-  {
-	  AniParams.sStartFrame					= (INT16)0;
-  }
-  else
-  {
-	  AniParams.sStartFrame					= (INT16)Random( 5 );
-  }
+	if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
+	{
+	AniParams.sStartFrame					= (INT16)0;
+	}
+	else
+	{
+	AniParams.sStartFrame					= (INT16)Random( 5 );
+	}
 
 
 	// Bare bones flags are...
@@ -314,14 +326,14 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 	//AniParams.uiFlags							= ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_SMOKE_EFFECT | ANITILE_LOOPING;
 
 
-  if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
-  {
-    AniParams.uiFlags	= ANITILE_PAUSED | ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_SMOKE_EFFECT | ANITILE_LOOPING;
-  }
-  else
-  {
-    AniParams.uiFlags	= ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_SMOKE_EFFECT | ANITILE_LOOPING | ANITILE_ALWAYS_TRANSLUCENT;
-  }
+	if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
+	{
+	AniParams.uiFlags	= ANITILE_PAUSED | ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_SMOKE_EFFECT | ANITILE_LOOPING;
+	}
+	else
+	{
+	AniParams.uiFlags	= ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_SMOKE_EFFECT | ANITILE_LOOPING | ANITILE_ALWAYS_TRANSLUCENT;
+	}
 
 	AniParams.sX									= CenterX( sGridNo );
 	AniParams.sY									= CenterY( sGridNo );
@@ -332,97 +344,97 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 	{
 		case NORMAL_SMOKE_EFFECT:
 
-      if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
-      {
-			   strcpy( AniParams.zCachedFile, "TILECACHE\\smkechze.STI" );			
-      }
-      else
-      {
-        if ( fDissipating )
-        {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\smalsmke.STI" );			
-        }
-        else
-        {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\SMOKE.STI" );			
-        }
-      }
+		if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
+		{
+			strcpy( AniParams.zCachedFile, "TILECACHE\\smkechze.STI" );			
+		}
+		else
+		{
+		if ( fDissipating )
+		{
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\smalsmke.STI" );			
+		}
+		else
+		{
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\SMOKE.STI" );			
+		}
+		}
 			break;
 
 		case TEARGAS_SMOKE_EFFECT:
 
-      if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
-      {
-			   strcpy( AniParams.zCachedFile, "TILECACHE\\tearchze.STI" );			
-      }
-      else
-      {
-        if ( fDissipating )
-        {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\smaltear.STI" );			
-        }
-        else
-        {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\TEARGAS.STI" );			
-        }
-      }
+		if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
+		{
+			strcpy( AniParams.zCachedFile, "TILECACHE\\tearchze.STI" );			
+		}
+		else
+		{
+		if ( fDissipating )
+		{
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\smaltear.STI" );			
+		}
+		else
+		{
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\TEARGAS.STI" );			
+		}
+		}
 			break;
 
 		case MUSTARDGAS_SMOKE_EFFECT:
 
-      if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
-      {
-			   strcpy( AniParams.zCachedFile, "TILECACHE\\mustchze.STI" );			
-      }
-      else
-      {
-        if ( fDissipating )
-        {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\smalmust.STI" );			
-        }
-        else
-        {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\MUSTARD2.STI" );			
-        }
-      }
+		if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
+		{
+			strcpy( AniParams.zCachedFile, "TILECACHE\\mustchze.STI" );			
+		}
+		else
+		{
+		if ( fDissipating )
+		{
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\smalmust.STI" );			
+		}
+		else
+		{
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\MUSTARD2.STI" );			
+		}
+		}
 			break;
 
 		case BURNABLEGAS_SMOKE_EFFECT:
 
-      if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
-      {
-			   strcpy( AniParams.zCachedFile, "TILECACHE\\FLAMCHZE.STI" );			
-      }
-      else
-      {
-        if ( fDissipating )
-        {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\smalflam.STI" );			
-        }
-        else
-        {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\FLAMETH2.STI" );			
-        }
-      }
+		if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
+		{
+			strcpy( AniParams.zCachedFile, "TILECACHE\\FLAMCHZE.STI" );			
+		}
+		else
+		{
+		if ( fDissipating )
+		{
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\smalflam.STI" );			
+		}
+		else
+		{
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\FLAMETH2.STI" );			
+		}
+		}
 			break;
 
 		case CREATURE_SMOKE_EFFECT:
 
-      if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
-      {
-			   strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.STI" );			
-      }
-      else
-      {
-        if ( fDissipating )
-        {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.STI" );			
-        }
-        else
-        {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.STI" );			
-        }
-      }
+		if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
+		{
+			strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.STI" );			
+		}
+		else
+		{
+		if ( fDissipating )
+		{
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.STI" );			
+		}
+		else
+		{
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.STI" );			
+		}
+		}
 			break;
 
 	}
@@ -441,6 +453,7 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 
 void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel )
 {
+	PERFORMANCE_MARKER
 	ANITILE *pAniTile;
 	UINT8		ubLevelID;
 
@@ -474,73 +487,74 @@ void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel )
 
 void DecaySmokeEffects( UINT32 uiTime )
 {
+	PERFORMANCE_MARKER
 	SMOKEEFFECT *pSmoke;
 	UINT32	cnt, cnt2;
-  BOOLEAN fUpdate = FALSE;
-  BOOLEAN fSpreadEffect;
-  INT8    bLevel;
-  UINT16   usNumUpdates = 1;
+	BOOLEAN fUpdate = FALSE;
+	BOOLEAN fSpreadEffect;
+	INT8	bLevel;
+	UINT16	usNumUpdates = 1;
 
 	for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
 	{
 		if ( MercSlots[ cnt ] )
 		{
 			// reset 'hit by gas' flags
-			MercSlots[ cnt ]->fHitByGasFlags = 0;
+			MercSlots[ cnt ]->flags.fHitByGasFlags = 0;
 		}
 	}
 
-  // ATE: 1 ) make first pass and delete/mark any smoke effect for update
-  // all the deleting has to be done first///
+	// ATE: 1 ) make first pass and delete/mark any smoke effect for update
+	// all the deleting has to be done first///
 
-  // age all active tear gas clouds, deactivate those that are just dispersing
-  for ( cnt = 0; cnt < guiNumSmokeEffects; cnt++ )
-  {
+	// age all active tear gas clouds, deactivate those that are just dispersing
+	for ( cnt = 0; cnt < guiNumSmokeEffects; cnt++ )
+	{
 		fSpreadEffect = TRUE;
 
 		pSmoke = &gSmokeEffectData[ cnt ];
 		
 		if ( pSmoke->fAllocated )
 		{
-      if ( pSmoke->bFlags & SMOKE_EFFECT_ON_ROOF )
-      {
-        bLevel = 1;
-      }
-      else
-      {
-        bLevel = 0;
-      }
+		if ( pSmoke->bFlags & SMOKE_EFFECT_ON_ROOF )
+		{
+		bLevel = 1;
+		}
+		else
+		{
+		bLevel = 0;
+		}
 
 
-      // Do things differently for combat /vs realtime
-      // always try to update during combat
-      if (gTacticalStatus.uiFlags & INCOMBAT )
-      {
-        fUpdate = TRUE;
-      }
-      else
-      {
-			  // ATE: Do this every so ofte, to acheive the effect we want...
-			  if ( ( uiTime - pSmoke->uiTimeOfLastUpdate ) > 10 )
-			  {
-          fUpdate = TRUE;
+		// Do things differently for combat /vs realtime
+		// always try to update during combat
+		if (gTacticalStatus.uiFlags & INCOMBAT )
+		{
+		fUpdate = TRUE;
+		}
+		else
+		{
+			// ATE: Do this every so ofte, to acheive the effect we want...
+			if ( ( uiTime - pSmoke->uiTimeOfLastUpdate ) > 10 )
+			{
+			fUpdate = TRUE;
 
-          usNumUpdates = ( UINT16 ) ( ( uiTime - pSmoke->uiTimeOfLastUpdate ) / 10 );
-        }
-      }
+			usNumUpdates = ( UINT16 ) ( ( uiTime - pSmoke->uiTimeOfLastUpdate ) / 10 );
+		}
+		}
 
-      if ( fUpdate )
-      {
+		if ( fUpdate )
+		{
 				pSmoke->uiTimeOfLastUpdate = uiTime;
 
-        for ( cnt2 = 0; cnt2 < usNumUpdates; cnt2++ )
-        {
-				  pSmoke->bAge++;
+		for ( cnt2 = 0; cnt2 < usNumUpdates; cnt2++ )
+		{
+				pSmoke->bAge++;
 
 					if ( pSmoke->bAge == 1 )
 					{
-            // ATE: At least mark for update!
-            pSmoke->bFlags |= SMOKE_EFFECT_MARK_FOR_UPDATE;
+			// ATE: At least mark for update!
+			pSmoke->bFlags |= SMOKE_EFFECT_MARK_FOR_UPDATE;
 						fSpreadEffect = FALSE;
 					}
 					else
@@ -548,66 +562,66 @@ void DecaySmokeEffects( UINT32 uiTime )
 						fSpreadEffect = TRUE;
 					}
 
-          if ( fSpreadEffect )
-          {
-				    // if this cloud remains effective (duration not reached)
-				    if ( pSmoke->bAge <= pSmoke->ubDuration)
-				    {
-              // ATE: Only mark now and increse radius - actual drawing is done
-              // in another pass cause it could
-              // just get erased...
-              pSmoke->bFlags |= SMOKE_EFFECT_MARK_FOR_UPDATE;
+			if ( fSpreadEffect )
+			{
+				 // if this cloud remains effective (duration not reached)
+				 if ( pSmoke->bAge <= pSmoke->ubDuration)
+				 {
+				// ATE: Only mark now and increse radius - actual drawing is done
+				// in another pass cause it could
+				// just get erased...
+				pSmoke->bFlags |= SMOKE_EFFECT_MARK_FOR_UPDATE;
 
-				      // calculate the new cloud radius
-				      // cloud expands by 1 every turn outdoors, and every other turn indoors
+					// calculate the new cloud radius
+					// cloud expands by 1 every turn outdoors, and every other turn indoors
 
-              // ATE: If radius is < maximun, increase radius, otherwise keep at max
-              if ( pSmoke->ubRadius < Explosive[ Item[ pSmoke->usItem ].ubClassIndex ].ubRadius )
-              {
-					      pSmoke->ubRadius++;
-              }
-				    }
-  			    else
-				    {
-					    // deactivate tear gas cloud (use last known radius)
-					    SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, ERASE_SPREAD_EFFECT, bLevel, cnt );
-					    pSmoke->fAllocated = FALSE;
-              break;
-				    }
-          }
-        }
+				// ATE: If radius is < maximun, increase radius, otherwise keep at max
+				if ( pSmoke->ubRadius < Explosive[ Item[ pSmoke->usItem ].ubClassIndex ].ubRadius )
+				{
+						pSmoke->ubRadius++;
+				}
+				 }
+				 else
+				 {
+					 // deactivate tear gas cloud (use last known radius)
+					 SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, ERASE_SPREAD_EFFECT, bLevel, cnt );
+					 pSmoke->fAllocated = FALSE;
+				break;
+				 }
+			}
+		}
 			}
 			else
 			{
 				// damage anyone standing in cloud
 				SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, REDO_SPREAD_EFFECT, bLevel, cnt );
 			}
-    }
-  }
+	}
+	}
 
-  for ( cnt = 0; cnt < guiNumSmokeEffects; cnt++ )
-  {
+	for ( cnt = 0; cnt < guiNumSmokeEffects; cnt++ )
+	{
 		pSmoke = &gSmokeEffectData[ cnt ];
 		
 		if ( pSmoke->fAllocated )
 		{
-      if ( pSmoke->bFlags & SMOKE_EFFECT_ON_ROOF )
-      {
-        bLevel = 1;
-      }
-      else
-      {
-        bLevel = 0;
-      }
+		if ( pSmoke->bFlags & SMOKE_EFFECT_ON_ROOF )
+		{
+		bLevel = 1;
+		}
+		else
+		{
+		bLevel = 0;
+		}
 
-		  // if this cloud remains effective (duration not reached)
-		  if ( pSmoke->bFlags & SMOKE_EFFECT_MARK_FOR_UPDATE )
+		// if this cloud remains effective (duration not reached)
+		if ( pSmoke->bFlags & SMOKE_EFFECT_MARK_FOR_UPDATE )
 			{
-  			SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, TRUE, bLevel, cnt );
-        pSmoke->bFlags &= (~SMOKE_EFFECT_MARK_FOR_UPDATE);
+				SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, TRUE, bLevel, cnt );
+		pSmoke->bFlags &= (~SMOKE_EFFECT_MARK_FOR_UPDATE);
 			}
-    }
-  }
+	}
+	}
 
 	AllTeamsLookForAll( TRUE );
 }
@@ -616,6 +630,7 @@ void DecaySmokeEffects( UINT32 uiTime )
 
 BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 /*
 	UINT32	uiNumBytesWritten;
 	UINT32	uiCnt=0;
@@ -662,13 +677,14 @@ BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 	UINT32	uiCnt=0;
-  INT8    bLevel;
+	INT8	bLevel;
 
-	//no longer need to load smoke effects.  They are now in temp files
-	if( guiSaveGameVersion < 75 )
+	//no longer need to load smoke effects.	They are now in temp files
+	if( guiCurrentSaveGameVersion < 75 )
 	{
 		//Clear out the old list
 		memset( gSmokeEffectData, 0, sizeof( SMOKEEFFECT ) * NUM_SMOKE_EFFECT_SLOTS );
@@ -681,7 +697,7 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 		}
 
 		//This is a TEMP hack to allow us to use the saves
-		if( guiSaveGameVersion < 37 && guiNumSmokeEffects == 0 )
+		if( guiCurrentSaveGameVersion < 37 && guiNumSmokeEffects == 0 )
 		{
 			//Load the Smoke effect Data
 			FileRead( hFile, gSmokeEffectData, sizeof( SMOKEEFFECT ), &uiNumBytesRead );
@@ -702,7 +718,7 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 				return( FALSE );
 			}
 			//This is a TEMP hack to allow us to use the saves
-			if( guiSaveGameVersion < 37 )
+			if( guiCurrentSaveGameVersion < 37 )
 				break;
 		}
 
@@ -713,14 +729,14 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 			//if this slot is allocated
 			if( gSmokeEffectData[uiCount].fAllocated )
 			{
-        if ( gSmokeEffectData[uiCount].bFlags & SMOKE_EFFECT_ON_ROOF )
-        {
-          bLevel = 1;
-        }
-        else
-        {
-          bLevel = 0;
-        }
+		if ( gSmokeEffectData[uiCount].bFlags & SMOKE_EFFECT_ON_ROOF )
+		{
+			bLevel = 1;
+		}
+		else
+		{
+			bLevel = 0;
+		}
 
 				SpreadEffect( gSmokeEffectData[uiCount].sGridNo, gSmokeEffectData[uiCount].ubRadius, gSmokeEffectData[uiCount].usItem, gSmokeEffectData[uiCount].ubOwner, TRUE, bLevel, uiCount );
 			}
@@ -733,6 +749,7 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 
 BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumSmokeEffects=0;
 	HWFILE	hFile;
 	UINT32	uiNumBytesWritten=0;
@@ -811,13 +828,13 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 	UINT32	uiCnt=0;
 	HWFILE	hFile;
-	UINT32	uiNumBytesWritten=0;
 	CHAR8		zMapName[ 128 ];
-  INT8    bLevel;
+	INT8	bLevel;
 
 	GetMapTempFileName( SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
@@ -860,14 +877,14 @@ BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		//if this slot is allocated
 		if( gSmokeEffectData[uiCount].fAllocated )
 		{
-      if ( gSmokeEffectData[uiCount].bFlags & SMOKE_EFFECT_ON_ROOF )
-      {
-        bLevel = 1;
-      }
-      else
-      {
-        bLevel = 0;
-      }
+		if ( gSmokeEffectData[uiCount].bFlags & SMOKE_EFFECT_ON_ROOF )
+		{
+		bLevel = 1;
+		}
+		else
+		{
+		bLevel = 0;
+		}
 
 			SpreadEffect( gSmokeEffectData[uiCount].sGridNo, gSmokeEffectData[uiCount].ubRadius, gSmokeEffectData[uiCount].usItem, gSmokeEffectData[uiCount].ubOwner, TRUE, bLevel, uiCount );
 		}
@@ -881,6 +898,7 @@ BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 void ResetSmokeEffects()
 {
+	PERFORMANCE_MARKER
 	//Clear out the old list
 	memset( gSmokeEffectData, 0, sizeof( SMOKEEFFECT ) * NUM_SMOKE_EFFECT_SLOTS );
 	guiNumSmokeEffects = 0;
@@ -889,9 +907,10 @@ void ResetSmokeEffects()
 
 void UpdateSmokeEffectGraphics( )
 {
-  UINT32      uiCnt;
+	PERFORMANCE_MARKER
+	UINT32		uiCnt;
 	SMOKEEFFECT *pSmoke;
-  INT8        bLevel;
+	INT8		bLevel;
 
 	//loop through and save the number of smoke effects
 	for( uiCnt=0; uiCnt < guiNumSmokeEffects; uiCnt++)
@@ -901,18 +920,18 @@ void UpdateSmokeEffectGraphics( )
 		//if the smoke is active
 		if( gSmokeEffectData[ uiCnt ].fAllocated )
 		{
-      if ( gSmokeEffectData[uiCnt].bFlags & SMOKE_EFFECT_ON_ROOF )
-      {
-        bLevel = 1;
-      }
-      else
-      {
-        bLevel = 0;
-      }
+		if ( gSmokeEffectData[uiCnt].bFlags & SMOKE_EFFECT_ON_ROOF )
+		{
+		bLevel = 1;
+		}
+		else
+		{
+		bLevel = 0;
+		}
 
 			SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, ERASE_SPREAD_EFFECT, bLevel, uiCnt );
 
-  		SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, TRUE, bLevel, uiCnt );
-    }
-  }
+			SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, TRUE, bLevel, uiCnt );
+	}
+	}
 }

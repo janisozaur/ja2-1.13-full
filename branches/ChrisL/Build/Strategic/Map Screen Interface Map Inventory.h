@@ -40,7 +40,7 @@ INT32 GetTotalNumberOfItems( void );
 void HandleFlashForHighLightedItem( void );
 
 // the list for the inventory
-extern WORLDITEM *pInventoryPoolList;
+extern std::vector<WORLDITEM> pInventoryPoolList;
 
 // autoplace down object
 BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr );
@@ -49,7 +49,6 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr );
 extern INT32 iCurrentlyHighLightedItem;
 extern BOOLEAN fFlashHighLightInventoryItemOnradarMap;
 extern INT16 sObjectSourceGridNo;
-extern WORLDITEM *pInventoryPoolList;
 extern INT32 iCurrentInventoryPoolPage;
 extern BOOLEAN fMapInventoryItemCompatable[ ];
 extern INT32 MAP_INVENTORY_POOL_SLOT_COUNT; 

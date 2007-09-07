@@ -6,7 +6,7 @@
 	#include "wcheck.h"
 	#include "stdlib.h"
 	#include "debug.h"
-	#include "soldier control.h"
+	//#include "soldier control.h"
 	#include "weapons.h"
 	#include "cursor control.h"
 	#include "cursors.h"
@@ -19,6 +19,11 @@
 	#include "points.h"
 #endif
 
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
+
 
 BURST_LOCATIONS			gsBurstLocations[ MAX_BURST_LOCATIONS ];
 INT8					gbNumBurstLocations = 0;
@@ -28,12 +33,14 @@ extern BOOLEAN gfBeginBurstSpreadTracking;
 
 void ResetBurstLocations( )
 {
+	PERFORMANCE_MARKER
 	gbNumBurstLocations = 0;
 }
 
 
 void InternalAccumulateBurstLocation( INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	INT32 cnt;
 	if ( gbNumBurstLocations < MAX_BURST_LOCATIONS )
 	{
@@ -59,6 +66,7 @@ void InternalAccumulateBurstLocation( INT16 sGridNo )
 //it will automatically latch onto enemies within iSearchRange tiles of the mouse drag.
 void AccumulateBurstLocation( INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE* pTarget;
 	int iSearchRange = 2; // number of tiles beside the mouse drag to look at
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset, sAdjacentGridNo;
@@ -79,11 +87,11 @@ void AccumulateBurstLocation( INT16 sGridNo )
 		// stay away from the edges
 
 		// determine maximum horizontal limits
-		sMaxLeft  = min( iSearchRange, (sGridNo % MAXCOL));
+		sMaxLeft	= min( iSearchRange, (sGridNo % MAXCOL));
 		sMaxRight = min( iSearchRange, MAXCOL - ((sGridNo % MAXCOL) + 1));
 
 		// determine maximum vertical limits
-		sMaxUp   = min( iSearchRange, (sGridNo / MAXROW));
+		sMaxUp	= min( iSearchRange, (sGridNo / MAXROW));
 		sMaxDown = min( iSearchRange, MAXROW - ((sGridNo / MAXROW) + 1));
 
 		// reset the "reachable" flags in the region we're looking at
@@ -121,6 +129,7 @@ void AccumulateBurstLocation( INT16 sGridNo )
 
 void PickBurstLocations( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	UINT8		ubShotsPerBurst = 0;
 	FLOAT		dAccululator = 0;
 	FLOAT		dStep = 0;
@@ -144,7 +153,7 @@ void PickBurstLocations( SOLDIERTYPE *pSoldier )
 				pSoldier->bDoAutofire++;
 				sAPCosts = CalcTotalAPsToAttack( pSoldier, gsBurstLocations[0].sGridNo, TRUE, 0);
 			}
-			while(EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) && pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Gun.ubGunShotsLeft >= pSoldier->bDoAutofire && gbNumBurstLocations >= pSoldier->bDoAutofire);
+			while(EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) && pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft >= pSoldier->bDoAutofire && gbNumBurstLocations >= pSoldier->bDoAutofire);
 			pSoldier->bDoAutofire--;
 
 			ubShotsPerBurst = __min(pSoldier->bDoAutofire,MAX_BURST_SPREAD_TARGETS);
@@ -182,6 +191,7 @@ void PickBurstLocations( SOLDIERTYPE *pSoldier )
 
 void AIPickBurstLocations( SOLDIERTYPE *pSoldier, INT8 bTargets, SOLDIERTYPE *pTargets[5] )
 {
+	PERFORMANCE_MARKER
 	UINT8		ubShotsPerBurst;
 	FLOAT		dAccululator = 0;
 	FLOAT		dStep = 0;
@@ -228,6 +238,7 @@ extern HVOBJECT GetCursorFileVideoObject( UINT32 uiCursorFile );
 
 void RenderAccumulatedBurstLocations( )
 {
+	PERFORMANCE_MARKER
 	INT32			cnt;
 	INT16			sGridNo;
 	HVOBJECT	hVObject;
@@ -287,7 +298,7 @@ void RenderAccumulatedBurstLocations( )
 				SetBackgroundRectFilled( iBack );
 			}
 
-			BltVideoObject(  FRAME_BUFFER, hVObject, 1, sXPos, sYPos, VO_BLT_SRCTRANSPARENCY, NULL );
+			BltVideoObject(	FRAME_BUFFER, hVObject, 1, sXPos, sYPos, VO_BLT_SRCTRANSPARENCY, NULL );
 		}
 	}
 }

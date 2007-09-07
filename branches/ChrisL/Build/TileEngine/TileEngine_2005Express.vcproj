@@ -48,7 +48,6 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
-				DisableSpecificWarnings="4100"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -102,7 +101,12 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				WholeProgramOptimization="true"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;"
+				StringPooling="true"
+				ExceptionHandling="1"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
@@ -220,6 +224,10 @@
 			</File>
 			<File
 				RelativePath=".\Render Fun.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Render Z.h"
 				>
 			</File>
 			<File
@@ -378,6 +386,10 @@
 			</File>
 			<File
 				RelativePath=".\Render Fun.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Render Z.cpp"
 				>
 			</File>
 			<File

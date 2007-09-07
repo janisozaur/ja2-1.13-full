@@ -27,8 +27,8 @@ UNDERGROUND_SECTORINFO* gpUndergroundSectorInfoTail = NULL;
 // Lesh: this array controls randomization of sectors
 // Note that some sectors in game already using alternative map
 // It is Skyrider quest: B15, E14, D12, C16
-//       weapon caches: E11, H5, H10, J12, M9
-//       Madlab quest: H7, H16, I11, E4
+//		weapon caches: E11, H5, H10, J12, M9
+//		Madlab quest: H7, H16, I11, E4
 // Do not enable randomization of this sectors until you are know what you're doing
 BOOLEAN RandomSector[256] = 
 {
@@ -70,6 +70,7 @@ typedef struct
 static void XMLCALL
 altSectorsStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	altSectorsParseData * pData = (altSectorsParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -101,6 +102,7 @@ altSectorsStartElementHandle(void *userData, const XML_Char *name, const XML_Cha
 static void XMLCALL
 altSectorsCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	altSectorsParseData * pData = (altSectorsParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth && strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
@@ -111,6 +113,7 @@ altSectorsCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 altSectorsEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	altSectorsParseData * pData = (altSectorsParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -147,6 +150,7 @@ altSectorsEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInAltSectors(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -183,7 +187,7 @@ BOOLEAN ReadInAltSectors(STR fileName)
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 
@@ -203,6 +207,7 @@ BOOLEAN ReadInAltSectors(STR fileName)
 
 BOOLEAN WriteInAltSectors(STR fileName)
 {
+	PERFORMANCE_MARKER
 	// Lets output the current Strategic map format using the XML structure I've devised.
 	FILE *outfile = fopen(fileName, "wt");
 
@@ -227,6 +232,7 @@ BOOLEAN WriteInAltSectors(STR fileName)
 
 UNDERGROUND_SECTORINFO* NewUndergroundNode( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 {
+	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO *curr;
 	curr = (UNDERGROUND_SECTORINFO*)MemAlloc( sizeof( UNDERGROUND_SECTORINFO ) );	
 	AssertMsg( curr, "Failed to create an underground sector info node." );
@@ -252,6 +258,7 @@ UNDERGROUND_SECTORINFO* NewUndergroundNode( UINT8 ubSectorX, UINT8 ubSectorY, UI
 // setup which know facilities are in which cities
 void InitKnowFacilitiesFlags( )
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	// Cambria hospital
@@ -290,6 +297,7 @@ void InitKnowFacilitiesFlags( )
 
 void InitMiningLocations()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	//Set up mining sites
 	
@@ -319,9 +327,10 @@ void InitMiningLocations()
 //	pSector->ubIncomeValue = 100;
 }
 
-//Mobile groups are handled separately from sectors, because they are on the move.  
+//Mobile groups are handled separately from sectors, because they are on the move.	
 void GeneratePatrolGroups()
 {
+	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	UINT8 ubNumTroops;
 	ubNumTroops = (UINT8)(3 + gGameOptions.ubDifficultyLevel + Random( 3 ));
@@ -368,6 +377,7 @@ void GeneratePatrolGroups()
 
 void TrashUndergroundSectorInfo()
 {
+	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO *curr;
 	while( gpUndergroundSectorInfoHead )
 	{
@@ -379,14 +389,14 @@ void TrashUndergroundSectorInfo()
 	gpUndergroundSectorInfoTail = NULL;
 }
 
-//Defines the sectors that can be occupied by enemies, creatures, etc.  It also
+//Defines the sectors that can be occupied by enemies, creatures, etc.	It also
 //contains the network of cave connections critical for strategic creature spreading, as we can't
-//know how the levels connect without loading the maps.  This is completely hardcoded, and any 
+//know how the levels connect without loading the maps.	This is completely hardcoded, and any 
 //changes to the maps, require changes accordingly.
 void BuildUndergroundSectorInfoList()
 {
+	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO *curr;
-	SECTORINFO			   *pSector = NULL;
 
 	TrashUndergroundSectorInfo();
 
@@ -394,13 +404,13 @@ void BuildUndergroundSectorInfoList()
 	//* BASEMENT LEVEL 1 *
 	//********************
 
-	//Miguel's basement.  Nothing here.
+	//Miguel's basement.	Nothing here.
 	curr = NewUndergroundNode( 10, 1, 1 );
 	
-	//Chitzena mine.  Nothing here.
+	//Chitzena mine.	Nothing here.
 	curr = NewUndergroundNode( 2, 2, 1 );
 
-	//San mona mine.  Nothing here.
+	//San mona mine.	Nothing here.
 	curr = NewUndergroundNode( 4, 4, 1 );
 	curr = NewUndergroundNode( 5, 4, 1 );
 
@@ -549,10 +559,11 @@ void BuildUndergroundSectorInfoList()
 }
 
 // Lesh: this function creates randomized world
-//       every sector can be randomized between common and alternative, chances 50/50
-//       randomization of individual sectors can be switched off via array RandomSector[]
+//		every sector can be randomized between common and alternative, chances 50/50
+//		randomization of individual sectors can be switched off via array RandomSector[]
 void InitWorld()
 {
+	PERFORMANCE_MARKER
 	INT16	sSectorCounter;
 
 	for (sSectorCounter = 0; sSectorCounter < 256; sSectorCounter++)
@@ -565,19 +576,20 @@ void InitWorld()
 	}
 }
 
-//This is the function that is called only once, when the player begins a new game.  This will calculate
+//This is the function that is called only once, when the player begins a new game.	This will calculate
 //starting numbers of the queen's army in various parts of the map, which will vary from campaign to campaign.
 //This is also highly effected by the game's difficulty setting.
 void InitNewCampaign()
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewCampaign");
-	//First clear all the sector information of all enemy existance.  Conveniently, the
+	//First clear all the sector information of all enemy existance.	Conveniently, the
 	//ubGroupType is also cleared, which is perceived to be an empty group.
 	memset( &SectorInfo, 0, sizeof( SECTORINFO ) * 256 );
 	InitStrategicMovementCosts();
 	RemoveAllGroups();
 
-    InitWorld();	// Lesh: generate different world each time using alternative maps
+	InitWorld();	// Lesh: generate different world each time using alternative maps
 	InitMiningLocations();
 	InitKnowFacilitiesFlags( );
 
@@ -586,7 +598,7 @@ void InitNewCampaign()
 	// allow overhead view of omerta A9 on game onset
 	SetSectorFlag( 9, 1, 0, SF_ALREADY_VISITED );
 
-	//Generates the initial forces in a new campaign.  The idea is to randomize numbers and sectors
+	//Generates the initial forces in a new campaign.	The idea is to randomize numbers and sectors
 	//so that no two games are the same.
 	InitStrategicAI();
 

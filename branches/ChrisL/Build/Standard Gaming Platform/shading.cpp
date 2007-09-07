@@ -31,17 +31,18 @@ UINT8 ubColorTables[HVOBJECT_SHADE_TABLES+3][256];
 UINT16	IntensityTable[65536];
 UINT16	ShadeTable[65536];
 UINT16	White16BPPPalette[ 256 ];
-FLOAT   guiShadePercent = (FLOAT)0.48;
-FLOAT   guiBrightPercent = (FLOAT)1.1;
+FLOAT	guiShadePercent = (FLOAT)0.48;
+FLOAT	guiBrightPercent = (FLOAT)1.1;
 
 BOOLEAN ShadesCalculateTables(SGPPaletteEntry *p8BPPPalette)
 {
+	PERFORMANCE_MARKER
 UINT32	uiCount;
 
 		// Green palette
 		ShadesCalculatePalette(p8BPPPalette, Shaded8BPPPalettes[0], 0, 255, 0, TRUE);
 		// Blue palette
-		ShadesCalculatePalette(p8BPPPalette, Shaded8BPPPalettes[HVOBJECT_SHADE_TABLES],  0, 0, 255, TRUE);
+		ShadesCalculatePalette(p8BPPPalette, Shaded8BPPPalettes[HVOBJECT_SHADE_TABLES],	0, 0, 255, TRUE);
 		// Yellow palette
 		ShadesCalculatePalette(p8BPPPalette, Shaded8BPPPalettes[HVOBJECT_SHADE_TABLES+1], 255, 255, 0, TRUE);
 		// Red palette
@@ -81,6 +82,7 @@ UINT32	uiCount;
 
 BOOLEAN ShadesCalculatePalette(SGPPaletteEntry *pSrcPalette, SGPPaletteEntry *pDestPalette, UINT16 usRed, UINT16 usGreen, UINT16 usBlue, BOOLEAN fMono)
 {
+	PERFORMANCE_MARKER
 UINT32 cnt, lumin;
 UINT32 rmod, gmod, bmod;
 
@@ -116,6 +118,7 @@ UINT32 rmod, gmod, bmod;
 
 void FindIndecies(SGPPaletteEntry *pSrcPalette, SGPPaletteEntry *pMapPalette, UINT8 *pTable)
 {
+	PERFORMANCE_MARKER
 UINT16 usCurIndex, usCurDelta, usCurCount;
 UINT32 *pSavedPtr;
 
@@ -150,19 +153,19 @@ DoNextIndex:
 		xor		bx,bx
 
 NextColor:
-		xor		ah,ah                       ; Calc delta between shaded color
+		xor		ah,ah						; Calc delta between shaded color
 		mov		al,[edi]										; and a color in the orig palette.
 		mov		bl,[esi]										; Formula:
-		sub		ax,bx                       ;  Delta = abs(red-origred) +
-		or		ax,ax												;          abs(green-origgreen) +
+		sub		ax,bx						;	Delta = abs(red-origred) +
+		or		ax,ax												;			abs(green-origgreen) +
 		jns		NC1
 		neg		ax
-NC1:mov		dx,ax                       ;          abs(blue-origblue)
+NC1:mov		dx,ax						;			abs(blue-origblue)
 		xor		ah,ah
 		mov		al,[edi+1]
 		mov		bl,[esi+1]
 		sub		ax,bx
-		or		ax,ax												;          abs(green-origgreen) +
+		or		ax,ax												;			abs(green-origgreen) +
 		jns		NC2
 		neg		ax
 NC2:add		dx,ax
@@ -170,21 +173,21 @@ NC2:add		dx,ax
 		mov		al,[edi+2]
 		mov		bl,[esi+2]
 		sub		ax,bx
-		or		ax,ax												;          abs(green-origgreen) +
+		or		ax,ax												;			abs(green-origgreen) +
 		jns		NC3
 		neg		ax
 NC3:add		dx,ax
 
 		cmp		dx,usCurDelta								; If delta < old delta
 		jae		NotThisCol									;	Save this delta and it's
-		mov		ax,256                      ;	palette index
+		mov		ax,256						;	palette index
 		mov		[usCurDelta],dx
-		sub   ax,cx
+		sub	ax,cx
 		mov		[usCurIndex],ax
 NotThisCol:
 		add		edi,4												; Try next color in orginal pal
 		dec		cx
-		jnz   NextColor
+		jnz	NextColor
 
 		pop		ebx
 		mov		ax,usCurIndex								; By now, usCurIndex holds pal index
@@ -210,9 +213,9 @@ NotThisCol:
 **********************************************************************************************/
 void BuildShadeTable(void)
 {
+	PERFORMANCE_MARKER
 	UINT16 red, green, blue;
-	UINT16 index = 0;
-
+	UINT16 index;
 
 	for(red=0; red < 256; red+=4)
 		for(green=0; green < 256; green+=4)
@@ -239,10 +242,10 @@ void BuildShadeTable(void)
 **********************************************************************************************/
 void BuildIntensityTable(void)
 {
-	UINT16 red, green, blue = 0;
-	UINT16 index = 0;
-	FLOAT  dShadedPercent = (FLOAT)0.80;
-
+	PERFORMANCE_MARKER
+	UINT16 red, green, blue;
+	UINT16 index;
+	FLOAT	dShadedPercent = (FLOAT)0.80;
 
 
 #if 0
@@ -285,6 +288,7 @@ void BuildIntensityTable(void)
 
 void SetShadeTablePercent( FLOAT uiShadePercent )
 {
+	PERFORMANCE_MARKER
 	guiShadePercent = uiShadePercent;
 	BuildShadeTable( );
 }
@@ -293,6 +297,7 @@ void SetShadeTablePercent( FLOAT uiShadePercent )
 #ifdef JA2	// Jul. 23 '97 - ALEX - because Wizardry isn't using it & no longer has a version of Set8BPPPalette() available
 void Init8BitTables(void)
 {
+	PERFORMANCE_MARKER
 SGPPaletteEntry Pal[256];
 UINT32 uiCount;
 
@@ -313,6 +318,7 @@ UINT32 uiCount;
 
 BOOLEAN Set8BitModePalette(SGPPaletteEntry *pPal)
 {
+	PERFORMANCE_MARKER
 	ShadesCalculateTables(pPal);
 	Set8BPPPalette(pPal);
 	return(TRUE);

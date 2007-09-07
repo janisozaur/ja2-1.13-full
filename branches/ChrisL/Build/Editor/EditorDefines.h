@@ -221,7 +221,7 @@ enum
 	DRAW_MODE_SELECT_BRUSH = 200,
 	DRAW_MODE_FILL_AREA,
 	DRAW_MODE_UNDO,
-	DRAW_MODE_ERASE				 = 1000
+	DRAW_MODE_ERASE				= 1000
 };
 
 extern INT32 iEditorButton[NUMBER_EDITOR_BUTTONS];
@@ -244,7 +244,7 @@ extern BOOLEAN gfPendingBasement;
 extern BOOLEAN gfPendingCaves;
 
 //When in merc-inventory mode, this flag is set when the user wishes to get an item, which requires hooking
-//into the item editing features.  It is defined here, so editoritems can get access to this mode which makes
+//into the item editing features.	It is defined here, so editoritems can get access to this mode which makes
 //certain special cases.
 extern BOOLEAN gfMercGetItem;
 

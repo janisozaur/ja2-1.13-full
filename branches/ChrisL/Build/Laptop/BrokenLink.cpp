@@ -26,22 +26,26 @@ void DrawBrokenLinkWhiteBackground();
 
 BOOLEAN EnterBrokenLink()
 {
+	PERFORMANCE_MARKER
 //	RenderBrokenLink();
 	return(TRUE);
 }
 
 void ExitBrokenLink()
 {
+	PERFORMANCE_MARKER
 }
 
 void HandleBrokenLink()
 {
+	PERFORMANCE_MARKER
 }
 
 
 
 void RenderBrokenLink()
 {
+	PERFORMANCE_MARKER
 	//Color fill the laptop white
 	DrawBrokenLinkWhiteBackground();
 
@@ -61,7 +65,8 @@ void RenderBrokenLink()
 
 void DrawBrokenLinkWhiteBackground()
 {
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, Get16BPPColor( FROMRGB(  255,   255,   255) ) );
+	PERFORMANCE_MARKER
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, Get16BPPColor( FROMRGB(	255,	255,	255) ) );
 }
 
 

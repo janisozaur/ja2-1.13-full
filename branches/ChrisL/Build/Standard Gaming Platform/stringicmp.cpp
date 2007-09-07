@@ -2,7 +2,6 @@
 // Snap: Implementation of case-insensitive string comparison classes
 //
 #include "stringicmp.h"
-//#include <cctype>
 #include <ctype.h>
 
 
@@ -34,8 +33,11 @@ bool TStringiLess::operator() (std::string const& s1, std::string const& s2) con
 		++p2;
 	}
 
-	if (!*p1) return *p2;
+//	if (!*p1) return (*p2);
+//	if (!*p2) return false;
+
 	if (!*p2) return false;
+	if (!*p1) return true;//*p2 is true;
 
 	return toupper(*p1) < toupper(*p2);
 #endif

@@ -3,7 +3,7 @@
 
 #include "vobject.h"
 #include "tiledef.h"
-#include "Soldier Control.h"
+//#include "Soldier Control.h"
 #include "structure.h"
 #include "Handle Items.h"
 
@@ -17,14 +17,51 @@
 #define CELL_X_SIZE					10
 #define CELL_Y_SIZE					10
 
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
+
+//Don't mess with this value, unless you want to force update all maps in the game!
+// Lesh: fix the sad situation with the different major map versions
+//#ifdef RUSSIAN
+	//#define MAJOR_MAP_VERSION		6.00
+//#else
+	#define MAJOR_MAP_VERSION		6.00
+//#endif
+//Current minor map version updater.
+#define MINOR_MAP_VERSION		27
+
+
+//ADB I'm tired of seeing a 5 digit number when looking at something's gridno.
+//I need to see an x and y.	I created this class for the AStar,
+//but moved it here as you can convert a regular INT16 gridno to a GridNode then print it out for debugging.
+//Don't switch between the 2 types too often, IntToGridNode is especially slow
+class GridNode
+{
+public:
+	GridNode	() {x = -1; y = -1;};
+	GridNode	(INT16 const loc) {this->x = loc % WORLD_COLS; this->y = loc / WORLD_COLS;};
+	GridNode	(int x, int y) {GridNode::x = x; GridNode::y = y;};
+	GridNode	operator + (const GridNode& point) const {return GridNode(this->x + point.x, this->y + point.y);};
+	bool		operator == (const GridNode& point) const {return this->x == point.x && this->y == point.y;};
+	bool		operator != (const GridNode& point) const {return !(*this == point);};
+	INT16		GridNodeToInt() {return (this->x + this->y * WORLD_COLS);};
+	void		IntToGridNode(INT16 const loc) {this->x = loc % WORLD_COLS; this->y = loc / WORLD_COLS;};
+	bool		isInWorld() {return (this->x < WORLD_COLS && this->x >= 0 &&
+									this->y < WORLD_ROWS && this->y >= 0);};
+	int			x;
+	int			y;
+};
+
 #define WORLD_BASE_HEIGHT			0
 #define WORLD_CLIFF_HEIGHT		80
  
 //A macro that actually memcpy's over data and increments the pointer automatically
-//based on the size.  Works like a FileRead except with a buffer instead of a file pointer.
+//based on the size.	Works like a FileRead except with a buffer instead of a file pointer.
 //Used by LoadWorld() and child functions.
 #include <memory.h>
-#define  LOADDATA( dst, src, size ) memcpy( dst, src, size ); src += size
+#define	LOADDATA( dst, src, size ) memcpy( dst, src, size ); src += size
 
 
 #define LANDHEAD							0
@@ -50,7 +87,7 @@
 #define LEVELNODE_DISPLAY_AP								0x00000400
 #define LEVELNODE_ANIMATION									0x00000800
 #define LEVELNODE_USEABSOLUTEPOS						0x00001000
-#define LEVELNODE_REVEAL					 					0x00002000
+#define LEVELNODE_REVEAL										0x00002000
 #define	LEVELNODE_REVEALTREES								0x00004000
 #define	LEVELNODE_USEBESTTRANSTYPE					0x00008000
 #define	LEVELNODE_USEZ											0x00010000
@@ -94,7 +131,7 @@
 #define MAPELEMENT_EXT_RECALCULATE_MOVEMENT			0x0010 //0x10
 #define MAPELEMENT_EXT_NOBURN_STRUCT				0x0020 //0x20
 #define MAPELEMENT_EXT_ROOFCODE_VISITED				0x0040 //0x40
-#define MAPELEMENT_EXT_CREATUREGAS     				0x0080 //0x80
+#define MAPELEMENT_EXT_CREATUREGAS	 				0x0080 //0x80
 #define MAPELEMENT_EXT_BURNABLEGAS					0x0100 //0x60
 
 #define FIRST_LEVEL 0
@@ -104,7 +141,6 @@
 #define ANY_SMOKE_EFFECT		( MAPELEMENT_EXT_CREATUREGAS | MAPELEMENT_EXT_SMOKE | MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS | MAPELEMENT_EXT_BURNABLEGAS )
 
 
-// WDS - Clean up inventory handling
 struct LEVELNODE
 {
 	struct LEVELNODE				*pNext;
@@ -263,7 +299,7 @@ void TrashMapTile(INT16 MapTile);
 BOOLEAN NewWorld( void );
 
 BOOLEAN SaveWorld( const STR8 puiFilename );
-BOOLEAN LoadWorld( const STR8 puiFilename );
+BOOLEAN LoadWorld( const STR8 puiFilename, float* pMajorMapVersion = NULL, UINT8* pMinorMapVersion = NULL );
 
 void CompileWorldMovementCosts( );
 void RecompileLocalMovementCosts( INT16 sCentreGridNo );
@@ -280,7 +316,7 @@ void RemoveWorldWireFrameTiles( );
 void RemoveWireFrameTiles( INT16 sGridNo );
 
 
-LEVELNODE *GetAnimProfileFlags( UINT16 sGridNo, UINT16 *usFlags, SOLDIERTYPE **ppTargSoldier, LEVELNODE *pGivenNode );
+LEVELNODE *GetAnimProfileFlags( INT16 sGridNo, UINT16 *usFlags, SOLDIERTYPE **ppTargSoldier, LEVELNODE *pGivenNode );
 
 void ReloadTileset( UINT8 ubID );
 

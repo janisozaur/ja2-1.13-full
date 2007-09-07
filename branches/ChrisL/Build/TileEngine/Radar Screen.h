@@ -2,7 +2,6 @@
 #define __RADAR_SCREEN_H
 
 #include "interface.h"
-#include "gamesettings.h"
 
 // RADAR MOUSE REGION STUFF
 void RadarRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason );
@@ -22,7 +21,6 @@ extern INT16	RADAR_WINDOW_STRAT_X;
 extern INT16	RADAR_WINDOW_STRAT_Y;
 
 BOOLEAN InitRadarScreen( );
-void InitRadarScreenCoords( );
 void RenderRadarScreen( );
 void MoveRadarScreen( );
 
@@ -42,6 +40,6 @@ BOOLEAN CreateDestroyMouseRegionsForSquadList( void );
 void ClearOutRadarMapImage( void );
 
 // do we render the radar screen?..or the squad list?
-extern BOOLEAN   fRenderRadarScreen;
+extern BOOLEAN	fRenderRadarScreen;
 
 #endif

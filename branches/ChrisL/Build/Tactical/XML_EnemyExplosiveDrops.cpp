@@ -2,47 +2,11 @@
 	#include "Tactical All.h"
 #else
 	#include "sgp.h"
-	#include "overhead types.h"
-	#include "Sound Control.h"
-	#include "Soldier Control.h"
 	#include "overhead.h"
-	#include "Event Pump.h"
 	#include "weapons.h"
-	#include "Animation Control.h"
-	#include "sys globals.h"
-	#include "Handle UI.h"
-	#include "Isometric Utils.h"
-	#include "worldman.h"
-	#include "math.h"
-	#include "points.h"
-	#include "ai.h"
-	#include "los.h"
-	#include "renderworld.h"
-	#include "opplist.h"
-	#include "interface.h"
-	#include "message.h"
-	#include "campaign.h"
-	#include "items.h"
-	#include "text.h"
-	#include "Soldier Profile.h"
-	#include "tile animation.h"
-	#include "Dialogue Control.h"
-	#include "SkillCheck.h"
-	#include "explosion control.h"
-	#include "Quests.h"
-	#include "Physics.h"
-	#include "Random.h"
-	#include "Vehicles.h"
-	#include "bullets.h"
-	#include "morale.h"
-	#include "meanwhile.h"
-	#include "SkillCheck.h"
-	#include "gamesettings.h"
-	#include "SaveLoadMap.h"
 	#include "Debug Control.h"
 	#include "expat.h"
 	#include "XML.h"
-	#include "EnemyItemDrops.h"
 #endif
 
 struct
@@ -63,6 +27,7 @@ typedef explosiveDropParseData;
 static void XMLCALL 
 explosiveDropStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	explosiveDropParseData * pData = (explosiveDropParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -104,11 +69,12 @@ explosiveDropStartElementHandle(void *userData, const XML_Char *name, const XML_
 static void XMLCALL
 explosiveDropCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	explosiveDropParseData * pData = (explosiveDropParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
-	  ){
+	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
 	}
 }
@@ -116,7 +82,8 @@ explosiveDropCharacterDataHandle(void *userData, const XML_Char *str, int len)
 
 static void XMLCALL
 explosiveDropEndElementHandle(void *userData, const XML_Char *name)
-{	
+{
+	PERFORMANCE_MARKER	
 	explosiveDropParseData * pData = (explosiveDropParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -137,22 +104,22 @@ explosiveDropEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosiveDrop.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curExplosiveDrop.uiIndex	= (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubType") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosiveDrop.ubType   = (UINT8) atol(pData->szCharData);
+			pData->curExplosiveDrop.ubType	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubEnemyDropRate") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosiveDrop.ubEnemyDropRate  = (UINT8) atol(pData->szCharData);
+			pData->curExplosiveDrop.ubEnemyDropRate	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubMilitiaDropRate") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosiveDrop.ubMilitiaDropRate  = (UINT8) atol(pData->szCharData);
+			pData->curExplosiveDrop.ubMilitiaDropRate	= (UINT8) atol(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;
@@ -166,6 +133,7 @@ explosiveDropEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInEnemyExplosiveDropsStats(EXPLOSIVE_DROPS *pEnemyExplosiveDrops, STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -207,7 +175,7 @@ BOOLEAN ReadInEnemyExplosiveDropsStats(EXPLOSIVE_DROPS *pEnemyExplosiveDrops, ST
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 
@@ -229,6 +197,7 @@ BOOLEAN ReadInEnemyExplosiveDropsStats(EXPLOSIVE_DROPS *pEnemyExplosiveDrops, ST
 
 BOOLEAN WriteEnemyExplosiveDropsStats(EXPLOSIVE_DROPS *pEnemyExplosiveDrops, STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there

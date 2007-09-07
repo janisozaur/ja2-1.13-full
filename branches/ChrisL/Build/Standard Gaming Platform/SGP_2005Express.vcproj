@@ -102,7 +102,12 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				WholeProgramOptimization="true"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;NO_ZLIB_COMPRESSION"
+				StringPooling="true"
+				ExceptionHandling="1"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
@@ -417,6 +422,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Compression.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Container.cpp"
 				>
 			</File>
@@ -457,6 +466,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Flic.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Font.cpp"
 				>
 			</File>
@@ -474,6 +487,10 @@
 			</File>
 			<File
 				RelativePath=".\Install.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Ja2 Libs.cpp"
 				>
 			</File>
 			<File

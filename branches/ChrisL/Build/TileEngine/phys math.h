@@ -5,11 +5,12 @@
 // explicit dependencies
 #include <math.h>		// for sqrt
 #include <float.h>
+#include "profiler.h"
 
 typedef float real;
 
-#define		 REAL_MAX				FLT_MAX
-#define		 REAL_MIN				FLT_MIN
+#define		REAL_MAX				FLT_MAX
+#define		REAL_MIN				FLT_MIN
 
 #define			PI2						3.14159265358979323846
 #define			Epsilon2 			0.00001

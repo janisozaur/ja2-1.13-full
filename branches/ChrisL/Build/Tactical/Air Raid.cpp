@@ -13,7 +13,7 @@
 	#include "jascreens.h"
 	#include "random.h"
 	#include "overhead types.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 	#include "timer control.h"
 	#include "dialogue control.h"
 	#include "overhead.h"
@@ -44,7 +44,7 @@
 #define		MOVE_X																5
 #define		MOVE_Y																5
 #define		STRAFE_DIST														80
-#define   BOMB_DIST															150
+#define	BOMB_DIST															150
 
 
 
@@ -173,6 +173,7 @@ AIR_RAID_POS	ubXYTragetInvFromDirection[ ] =
 
 void ScheduleAirRaid( AIR_RAID_DEFINITION *pAirRaidDef )
 {
+	PERFORMANCE_MARKER
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,"ScheduleAirRaid");
 	// Make sure only one is cheduled...
 	//if ( gfAirRaidScheduled )
@@ -192,6 +193,7 @@ void ScheduleAirRaid( AIR_RAID_DEFINITION *pAirRaidDef )
 
 BOOLEAN BeginAirRaid( )
 {
+	PERFORMANCE_MARKER
 	INT32 cnt=0;
 	BOOLEAN fOK = FALSE;
 	SOLDIERTYPE *pSoldier;
@@ -224,11 +226,11 @@ BOOLEAN BeginAirRaid( )
 		for ( cnt = 0, pSoldier = MercPtrs[ cnt ]; cnt < gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pSoldier++)
 		{	
 			DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("BeginAirRaid: soldier id = %d, active = %d",pSoldier->ubID,pSoldier->bActive));
-			if ( pSoldier->bActive  )
+			if ( pSoldier->bActive	)
 			{
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("BeginAirRaid: soldier sectors: x = %d, y = %d, z = %d",pSoldier->sSectorX,pSoldier->sSectorY,pSoldier->bSectorZ ));
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("BeginAirRaid: air raid sectors: x = %d, y = %d, z = %d",gAirRaidDef.sSectorX,gAirRaidDef.sSectorY,gAirRaidDef.sSectorZ ));
-				if( pSoldier->sSectorX == gAirRaidDef.sSectorX && pSoldier->sSectorY == gAirRaidDef.sSectorY && pSoldier->bSectorZ == 	gAirRaidDef.sSectorZ && !pSoldier->fBetweenSectors && pSoldier->bLife && pSoldier->bAssignment != IN_TRANSIT )
+				if( pSoldier->sSectorX == gAirRaidDef.sSectorX && pSoldier->sSectorY == gAirRaidDef.sSectorY && pSoldier->bSectorZ == 	gAirRaidDef.sSectorZ && !pSoldier->flags.fBetweenSectors && pSoldier->stats.bLife && pSoldier->bAssignment != IN_TRANSIT )
 				{
 					fOK = TRUE;
 					break;
@@ -288,16 +290,14 @@ BOOLEAN BeginAirRaid( )
 		gfAirRaidHasHadTurn = FALSE;
 
 		gpRaidSoldier = MercPtrs[ MAX_NUM_SOLDIERS - 1 ];
-                // WDS - Clean up inventory handling
-		//memset( gpRaidSoldier, 0, SIZEOF_SOLDIERTYPE );
 		gpRaidSoldier->initialize();
-		gpRaidSoldier->bLevel = 0;
+		gpRaidSoldier->pathing.bLevel = 0;
 		gpRaidSoldier->bTeam = 1;
 		gpRaidSoldier->bSide = 1;
-		gpRaidSoldier->ubID	 = MAX_NUM_SOLDIERS - 1;
+		gpRaidSoldier->ubID	= MAX_NUM_SOLDIERS - 1;
 		gpRaidSoldier->ubAttackerID = NOBODY;
 		gpRaidSoldier->usAttackingWeapon = HK21E;
-		gpRaidSoldier->inv[HANDPOS].usItem = HK21E;
+		CreateItem(HK21E, 100, &gpRaidSoldier->inv[HANDPOS]);
 
 		// Determine how many dives this one will be....
 		gbMaxDives				= (INT8)( gAirRaidDef.bIntensity + Random( gAirRaidDef.bIntensity - 1 ) );
@@ -312,6 +312,7 @@ BOOLEAN BeginAirRaid( )
 
 INT16 PickLocationNearAnyMercInSector( )
 {
+	PERFORMANCE_MARKER
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
 	UINT8	ubChosenMerc;
@@ -353,6 +354,7 @@ INT16 PickLocationNearAnyMercInSector( )
 
 INT16 PickRandomLocationAtMinSpacesAway( INT16 sGridNo, INT16 sMinValue, INT16 sRandomVar )
 {
+	PERFORMANCE_MARKER
 	INT16 sNewGridNo = NOWHERE;
 	INT16 sX, sY, sNewX, sNewY;
 	INT16 cnt = 0;
@@ -394,6 +396,7 @@ INT16 PickRandomLocationAtMinSpacesAway( INT16 sGridNo, INT16 sMinValue, INT16 s
 
 void TryToStartRaid( )
 {
+	PERFORMANCE_MARKER
 	// OK, check conditions,
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("TryToStartRaid"));
@@ -426,6 +429,7 @@ void TryToStartRaid( )
 
 void AirRaidStart( )
 {
+	PERFORMANCE_MARKER
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("AirRaidStart"));
 	// Begin ambient sound....
 	guiSoundSample = PlayJA2Sample( S_RAID_AMBIENT, RATE_11025, 0, 10000, MIDDLEPAN );
@@ -446,6 +450,7 @@ void AirRaidStart( )
 
 void AirRaidLookForDive( )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN	fDoDive = FALSE;
 	BOOLEAN	fDoQuote = FALSE;
 
@@ -569,6 +574,7 @@ void AirRaidLookForDive( )
 
 void 	AirRaidStartEnding( )
 {
+	PERFORMANCE_MARKER
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("AirRaidStartEnding"));
 	// Fade out sound.....
 	gfFadingRaidOut = TRUE;
@@ -577,6 +583,7 @@ void 	AirRaidStartEnding( )
 
 void BeginBombing( )
 {
+	PERFORMANCE_MARKER
 	INT16 sGridNo;
 	UINT32	iSoundStartDelay;
 
@@ -634,6 +641,7 @@ void BeginBombing( )
 
 void BeginDive( )
 {
+	PERFORMANCE_MARKER
 	INT16 sGridNo;
 	UINT32	iSoundStartDelay;
 
@@ -692,6 +700,7 @@ void BeginDive( )
 
 void MoveDiveAirplane( FLOAT dAngle )
 {
+	PERFORMANCE_MARKER
 	FLOAT					dDeltaPos;
 
 	// Find delta Movement for X pos
@@ -710,8 +719,9 @@ void MoveDiveAirplane( FLOAT dAngle )
 }
 
 
-void DoDive(  )
+void DoDive(	)
 {
+	PERFORMANCE_MARKER
 	INT16		sRange;
 	INT16		sGridNo, sOldGridNo;
 
@@ -779,10 +789,10 @@ void DoDive(  )
 			DebugMsg(TOPIC_JA2,DBG_LEVEL_3,"DoDive: move plane");
 			MoveDiveAirplane( dAngle );
 
-			gpRaidSoldier->dXPos	 = gsDiveX;
-			gpRaidSoldier->sX			 = gsDiveX;
-			gpRaidSoldier->dYPos	 = gsDiveY;
-			gpRaidSoldier->sY			 = gsDiveY;
+			gpRaidSoldier->dXPos	= gsDiveX;
+			gpRaidSoldier->sX			= gsDiveX;
+			gpRaidSoldier->dYPos	= gsDiveY;
+			gpRaidSoldier->sY			= gsDiveY;
 
 			// Figure gridno....
 			sGridNo = GETWORLDINDEXFROMWORLDCOORDS( gsDiveY, gsDiveX );
@@ -841,10 +851,10 @@ void DoDive(  )
 				sX = (INT16)( gsDiveX + ( (FLOAT)sin( dAngle + ( PI/2) ) * 40 ) );
 				sY = (INT16)( gsDiveY + ( (FLOAT)cos( dAngle + ( PI/2) ) * 40 ) );
 
-				gpRaidSoldier->dXPos	 = sX;
-				gpRaidSoldier->sX			 = sX;
-				gpRaidSoldier->dYPos	 = sY;
-				gpRaidSoldier->sY			 = sY;
+				gpRaidSoldier->dXPos	= sX;
+				gpRaidSoldier->sX			= sX;
+				gpRaidSoldier->dYPos	= sY;
+				gpRaidSoldier->sY			= sY;
 				gpRaidSoldier->sGridNo = GETWORLDINDEXFROMWORLDCOORDS( sY, sX );
 
 				// Get target.....
@@ -887,8 +897,9 @@ void DoDive(  )
 }
 
 
-void DoBombing(  )
+void DoBombing(	)
 {
+	PERFORMANCE_MARKER
 	INT16		sRange;
 	INT16		sGridNo, sOldGridNo, sBombGridNo;
 
@@ -951,10 +962,10 @@ void DoBombing(  )
 
 			MoveDiveAirplane( dAngle );
 
-			gpRaidSoldier->dXPos	 = gsDiveX;
-			gpRaidSoldier->sX			 = gsDiveX;
-			gpRaidSoldier->dYPos	 = gsDiveY;
-			gpRaidSoldier->sY			 = gsDiveY;
+			gpRaidSoldier->dXPos	= gsDiveX;
+			gpRaidSoldier->sX			= gsDiveX;
+			gpRaidSoldier->dYPos	= gsDiveY;
+			gpRaidSoldier->sY			= gsDiveY;
 
 			// Figure gridno....
 			sGridNo = GETWORLDINDEXFROMWORLDCOORDS( gsDiveY, gsDiveX );
@@ -1032,6 +1043,7 @@ void DoBombing(  )
 
 void HandleAirRaid( )
 {
+	PERFORMANCE_MARKER
 	INT32 iVol;
 	UINT32 uiClock;
 
@@ -1071,11 +1083,11 @@ void HandleAirRaid( )
 		for ( cnt = 0, pSoldier = MercPtrs[ cnt ]; cnt < gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pSoldier++)
 		{	
 			DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleAirRaid: soldier id = %d, active = %d",pSoldier->ubID,pSoldier->bActive));
-			if ( pSoldier->bActive  )
+			if ( pSoldier->bActive	)
 			{
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleAirRaid: soldier sectors: x = %d, y = %d, z = %d",pSoldier->sSectorX,pSoldier->sSectorY,pSoldier->bSectorZ ));
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleAirRaid: air raid sectors: x = %d, y = %d, z = %d",gAirRaidDef.sSectorX,gAirRaidDef.sSectorY,gAirRaidDef.sSectorZ ));
-				if( pSoldier->sSectorX == gAirRaidDef.sSectorX && pSoldier->sSectorY == gAirRaidDef.sSectorY && pSoldier->bSectorZ == 	gAirRaidDef.sSectorZ && !pSoldier->fBetweenSectors && pSoldier->bLife && pSoldier->bAssignment != IN_TRANSIT )
+				if( pSoldier->sSectorX == gAirRaidDef.sSectorX && pSoldier->sSectorY == gAirRaidDef.sSectorY && pSoldier->bSectorZ == 	gAirRaidDef.sSectorZ && !pSoldier->flags.fBetweenSectors && pSoldier->stats.bLife && pSoldier->bAssignment != IN_TRANSIT )
 				{
 					fOK = TRUE;
 					break;
@@ -1092,7 +1104,7 @@ void HandleAirRaid( )
 
 		uiClock = GetJA2Clock( );
 
-		if ( ( uiClock - guiRaidLastUpdate ) >  SCRIPT_DELAY )
+		if ( ( uiClock - guiRaidLastUpdate ) >	SCRIPT_DELAY )
 		{
 			giNumFrames++;
 
@@ -1253,6 +1265,7 @@ void HandleAirRaid( )
 
 BOOLEAN InAirRaid( )
 {
+	PERFORMANCE_MARKER
 	return FALSE;
 //	return( gfInAirRaid );
 }
@@ -1260,6 +1273,7 @@ BOOLEAN InAirRaid( )
 
 BOOLEAN HandleAirRaidEndTurn( UINT8 ubTeam )
 {
+	PERFORMANCE_MARKER
 	return( TRUE ); // lal bugfix air raid hangs (remove to enable air raid)
 
 	if ( !gfInAirRaid )
@@ -1312,6 +1326,7 @@ BOOLEAN HandleAirRaidEndTurn( UINT8 ubTeam )
 
 BOOLEAN SaveAirRaidInfoToSaveGameFile( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten;
 	AIR_RAID_SAVE_STRUCT sAirRaidSaveStruct;
 
@@ -1344,7 +1359,7 @@ BOOLEAN SaveAirRaidInfoToSaveGameFile( HWFILE hFile )
 
 //	if( gpRaidSoldier )
 //	{
-//		sAirRaidSaveStruct.bLevel = gpRaidSoldier->bLevel;
+//		sAirRaidSaveStruct.bLevel = gpRaidSoldier->pathing.bLevel;
 //		sAirRaidSaveStruct.bTeam = gpRaidSoldier->bTeam;
 //		sAirRaidSaveStruct.bSide = gpRaidSoldier->bSide;
 //		sAirRaidSaveStruct.ubAttackerID = gpRaidSoldier->ubAttackerID;
@@ -1378,6 +1393,7 @@ BOOLEAN SaveAirRaidInfoToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadAirRaidInfoFromSaveGameFile( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 	AIR_RAID_SAVE_STRUCT sAirRaidSaveStruct;
 	UINT32	uiNumBytesRead;
 
@@ -1421,7 +1437,7 @@ BOOLEAN LoadAirRaidInfoFromSaveGameFile( HWFILE hFile )
 	{
 		gpRaidSoldier = &Menptr[ sAirRaidSaveStruct.sRaidSoldierID ];
 
-		gpRaidSoldier->bLevel = sAirRaidSaveStruct.bLevel;
+		gpRaidSoldier->pathing.bLevel = sAirRaidSaveStruct.bLevel;
 		gpRaidSoldier->bTeam = sAirRaidSaveStruct.bTeam;
 		gpRaidSoldier->bSide = sAirRaidSaveStruct.bSide;
 		gpRaidSoldier->ubAttackerID = sAirRaidSaveStruct.ubAttackerID;
@@ -1444,6 +1460,7 @@ BOOLEAN LoadAirRaidInfoFromSaveGameFile( HWFILE hFile )
 
 void EndAirRaid( )
 {
+	PERFORMANCE_MARKER
 	gfInAirRaid = FALSE;
 
 	// Stop sound
@@ -1465,7 +1482,7 @@ void EndAirRaid( )
 			{
 				if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
 				{
-					pTeamSoldier->bAlertStatus = STATUS_GREEN;
+					pTeamSoldier->aiData.bAlertStatus = STATUS_GREEN;
 				}
 			}
 			gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition = FALSE;
@@ -1476,7 +1493,7 @@ void EndAirRaid( )
 			{
 				if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
 				{
-					pTeamSoldier->bAlertStatus = STATUS_GREEN;
+					pTeamSoldier->aiData.bAlertStatus = STATUS_GREEN;
 				}
 			}
 			gTacticalStatus.Team[ CIV_TEAM ].bAwareOfOpposition = FALSE;
@@ -1493,7 +1510,7 @@ void EndAirRaid( )
 		//pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_B9, (UINT8)(2 + Random( 2 ) + gGameOptions.ubDifficultyLevel), 0 );
 		//Move the patrol group north to attack Omerta
 		//AddWaypointToPGroup( pGroup, 9, 1 ); //A9
-		//Because we want them to arrive right away, we will toast the arrival event.  The information
+		//Because we want them to arrive right away, we will toast the arrival event.	The information
 		//is already set up though.
 		//DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
 		//Simply reinsert the event, but the time is now.
@@ -1508,6 +1525,7 @@ void EndAirRaid( )
 // Madd
 void CheckForAndSetupAirRaid ()
 {
+	PERFORMANCE_MARKER
 	//INT16 sSectorX;
 	//INT16 sSectorY;
 	//BOOLEAN fDoAirRaid=FALSE;
@@ -1587,6 +1605,7 @@ void CheckForAndSetupAirRaid ()
 
 void EnemyCallInAirStrike (INT16 sSectorX, INT16 sSectorY)
 {
+	PERFORMANCE_MARKER
 	//AIR_RAID_DEFINITION	AirRaidDef;
 
 	//AirRaidDef.sSectorX		= sSectorX;

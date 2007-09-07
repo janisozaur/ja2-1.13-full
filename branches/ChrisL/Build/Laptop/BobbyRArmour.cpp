@@ -20,12 +20,14 @@ UINT32		guiArmourGrid;
 
 void GameInitBobbyRArmour()
 {
+	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterBobbyRArmour()
 {
-  VOBJECT_DESC    VObjectDesc;
+	PERFORMANCE_MARKER
+	VOBJECT_DESC	VObjectDesc;
 
 	// load the background graphic and add it
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
@@ -56,6 +58,7 @@ BOOLEAN EnterBobbyRArmour()
 
 void ExitBobbyRArmour()
 {
+	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiArmourBackground);
 	DeleteVideoObjectFromIndex(guiArmourGrid);
 	DeleteBobbyMenuBar();
@@ -71,12 +74,14 @@ void ExitBobbyRArmour()
 
 void HandleBobbyRArmour()
 {
+	PERFORMANCE_MARKER
 }
 
 void RenderBobbyRArmour()
 {
+	PERFORMANCE_MARKER
 
-  HVOBJECT hPixHandle;
+	HVOBJECT hPixHandle;
 
 	WebPageTileBackground(BOBBYR_NUM_HORIZONTAL_TILES, BOBBYR_NUM_VERTICAL_TILES, BOBBYR_BACKGROUND_WIDTH, BOBBYR_BACKGROUND_HEIGHT, guiArmourBackground);
 
@@ -85,7 +90,7 @@ void RenderBobbyRArmour()
 
 	// GunForm
 	GetVideoObject(&hPixHandle, guiArmourGrid);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y, VO_BLT_SRCTRANSPARENCY,NULL);
 
 	DisplayItemInfo(IC_ARMOUR, guiCurrentArmourFilterMode);
 
@@ -94,10 +99,10 @@ void RenderBobbyRArmour()
 
 	UpdateArmourFilterButtons(guiCurrentArmourFilterMode, guiPrevArmourFilterMode);
 
-  MarkButtonsDirty( );
+	MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
-  	fReDrawScreenFlag = TRUE;
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+		fReDrawScreenFlag = TRUE;
 	fPausedReDrawScreenFlag = TRUE;	
 }
 

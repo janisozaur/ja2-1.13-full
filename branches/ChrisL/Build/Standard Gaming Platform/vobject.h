@@ -63,15 +63,15 @@ typedef struct
 
 // This definition mimics what is found in WINDOWS.H ( for Direct Draw compatiblity )
 // From RGB to COLORVAL
-#define FROMRGB(r, g ,b)  ((UINT32) (((UINT8) (r) | ((UINT16) (g) << 8)) | (((UINT32) (UINT8) (b)) << 16))) 
+#define FROMRGB(r, g ,b)	((UINT32) (((UINT8) (r) | ((UINT16) (g) << 8)) | (((UINT32) (UINT8) (b)) << 16))) 
 
 
 // Video object creation flags
 // Used in the VOBJECT_DESC structure to describe creation flags
 
-#define VOBJECT_CREATE_DEFAULT			  0x00000020		// Creates and empty object of given width, height and BPP
-#define VOBJECT_CREATE_FROMFILE			  0x00000040		// Creates a video object from a file ( using HIMAGE )
-#define VOBJECT_CREATE_FROMHIMAGE		  0x00000080		// Creates a video object from a pre-loaded hImage
+#define VOBJECT_CREATE_DEFAULT			0x00000020		// Creates and empty object of given width, height and BPP
+#define VOBJECT_CREATE_FROMFILE			0x00000040		// Creates a video object from a file ( using HIMAGE )
+#define VOBJECT_CREATE_FROMHIMAGE		0x00000080		// Creates a video object from a pre-loaded hImage
 
 // VOBJECT FLAGS
 #define	VOBJECT_FLAG_SHADETABLE_SHARED 0x00000100
@@ -82,7 +82,7 @@ typedef struct TAG_HVOBJECT
 {
 	UINT32							fFlags;								// Special flags
 	UINT32							uiSizePixData;			// ETRLE data size
-	SGPPaletteEntry			*pPaletteEntry;				// 8BPP Palette						  
+	SGPPaletteEntry			*pPaletteEntry;				// 8BPP Palette						
 	COLORVAL						TransparentColor;			// Defaults to 0,0,0
 	UINT16							*p16BPPPalette;				// A 16BPP palette used for 8->16 blits
 	
@@ -156,7 +156,7 @@ BOOLEAN ShutdownVideoObjectManager( );
 BOOLEAN AddStandardVideoObject( VOBJECT_DESC *VObjectDesc, UINT32 *uiIndex );
 
 // Removes a video object
-BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  );
+BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject	);
 
 UINT16 CreateObjectPaletteTables(HVOBJECT pObj, UINT32 uiType);
 
@@ -164,21 +164,21 @@ UINT16 CreateObjectPaletteTables(HVOBJECT pObj, UINT32 uiType);
 BOOLEAN GetVideoObject( HVOBJECT *hVObject, UINT32 uiIndex );
 
 // Blits a video object to another video object
-BOOLEAN BltVideoObject(  UINT32	uiDestVSurface,
-												 HVOBJECT hVSrcObject, 
-												 UINT16 usRegionIndex, 
-												 INT32	iDestX, 
-												 INT32  iDestY, 
-												 UINT32 fBltFlags, 
-												 blt_fx *pBltFx );
+BOOLEAN BltVideoObject(	UINT32	uiDestVSurface,
+												HVOBJECT hVSrcObject, 
+												UINT16 usRegionIndex, 
+												INT32	iDestX, 
+												INT32	iDestY, 
+												UINT32 fBltFlags, 
+												blt_fx *pBltFx );
 
-BOOLEAN BltVideoObjectFromIndex(  UINT32	uiDestVSurface,
-												 UINT32 uiSrcVObject, 
-												 UINT16 usRegionIndex, 
-												 INT32	iDestX, 
-												 INT32  iDestY, 
-												 UINT32 fBltFlags, 
-												 blt_fx *pBltFx );
+BOOLEAN BltVideoObjectFromIndex(	UINT32	uiDestVSurface,
+												UINT32 uiSrcVObject, 
+												UINT16 usRegionIndex, 
+												INT32	iDestX, 
+												INT32	iDestY, 
+												UINT32 fBltFlags, 
+												blt_fx *pBltFx );
 
 // Sets transparency
 BOOLEAN SetVideoObjectTransparency( UINT32 uiIndex, COLORVAL TransColor );
@@ -265,7 +265,7 @@ BOOLEAN BltVideoObjectOutlineFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObjec
 BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline );
 BOOLEAN BltVideoObjectOutlineShadowFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY );
 BOOLEAN BltVideoObjectOutlineShadow(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY );
-BOOLEAN PixelateVideoObjectRect(  UINT32	uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
+BOOLEAN PixelateVideoObjectRect(	UINT32	uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
 
 /*
 #ifdef __cplusplus

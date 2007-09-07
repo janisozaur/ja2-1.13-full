@@ -33,6 +33,7 @@ UINT32		guiLastTacticalRealTime = 0;
 
 void StrategicTurnsNewGame( )
 {
+	PERFORMANCE_MARKER
 	// Sync game start time
 	SyncStrategicTurnTimes( );
 }
@@ -40,12 +41,14 @@ void StrategicTurnsNewGame( )
 
 void SyncStrategicTurnTimes( )
 {
-	guiLastStrategicTime =  GetWorldTotalSeconds( );
-	guiLastTacticalRealTime =  GetJA2Clock( );
+	PERFORMANCE_MARKER
+	guiLastStrategicTime =	GetWorldTotalSeconds( );
+	guiLastTacticalRealTime =	GetJA2Clock( );
 }
 
 void HandleStrategicTurn( )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiTime;
 	UINT32	uiCheckTime;
 
@@ -90,7 +93,7 @@ void HandleStrategicTurn( )
 				// OK, if we have compressed time...., adjust our check value to be faster....
 				if( giTimeCompressSpeeds[ giTimeCompressMode ] > 0 )
 				{
-				  uiCheckTime = NUM_REAL_SEC_PER_TACTICAL_TURN / ( giTimeCompressSpeeds[ giTimeCompressMode ] * RT_COMPRESSION_TACTICAL_TURN_MODIFIER );
+				uiCheckTime = NUM_REAL_SEC_PER_TACTICAL_TURN / ( giTimeCompressSpeeds[ giTimeCompressMode ] * RT_COMPRESSION_TACTICAL_TURN_MODIFIER );
 				}
 			}
 
@@ -108,6 +111,7 @@ void HandleStrategicTurn( )
 
 void HandleStrategicTurnImplicationsOfExitingCombatMode( void )
 {
+	PERFORMANCE_MARKER
 	SyncStrategicTurnTimes();
 	HandleTacticalEndTurn( /*GetWorldTotalSeconds()*/ ); // doesn't take parameters
 }

@@ -18,129 +18,136 @@ HANDLE MutexTable[MAX_MUTEX_HANDLES];
 
 BOOLEAN InitializeMutexManager(void)
 {
-  UINT32 uiIndex;
+	PERFORMANCE_MARKER
+	UINT32 uiIndex;
 
-  //
-  // Register the Mutex Manager debug topic
-  //
+	//
+	// Register the Mutex Manager debug topic
+	//
 
-  RegisterDebugTopic(TOPIC_MUTEX, "Mutex Manager");
-  DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "Initializing the Mutex Manager");  
+	RegisterDebugTopic(TOPIC_MUTEX, "Mutex Manager");
+	DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "Initializing the Mutex Manager");	
 
-  //
-  // Initialize the table of mutex handles to NULL
-  //
+	//
+	// Initialize the table of mutex handles to NULL
+	//
 
-  for (uiIndex = 0; uiIndex < MAX_MUTEX_HANDLES; uiIndex++)
-  {
-    MutexTable[uiIndex] = NULL;
-  }
+	for (uiIndex = 0; uiIndex < MAX_MUTEX_HANDLES; uiIndex++)
+	{
+	MutexTable[uiIndex] = NULL;
+	}
 
-  return TRUE;
+	return TRUE;
 }
 
 void ShutdownMutexManager(void)
 {
-  UINT32 uiIndex;
+	PERFORMANCE_MARKER
+	UINT32 uiIndex;
 
-  DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "Shutting down the Mutex Manager");
+	DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "Shutting down the Mutex Manager");
 
-  //
-  // Make sure all mutex handles are closed
-  //
+	//
+	// Make sure all mutex handles are closed
+	//
 
-  for (uiIndex = 0; uiIndex < MAX_MUTEX_HANDLES; uiIndex++)
-  {
-    if (MutexTable[uiIndex] != NULL)
-    {
-      CloseHandle(MutexTable[uiIndex]);      
-      MutexTable[uiIndex] = NULL;
-    }
-  }
+	for (uiIndex = 0; uiIndex < MAX_MUTEX_HANDLES; uiIndex++)
+	{
+	if (MutexTable[uiIndex] != NULL)
+	{
+		CloseHandle(MutexTable[uiIndex]);		
+		MutexTable[uiIndex] = NULL;
+	}
+	}
 
-  UnRegisterDebugTopic(TOPIC_MUTEX, "Mutex Manager");
+	UnRegisterDebugTopic(TOPIC_MUTEX, "Mutex Manager");
 }
 
 BOOLEAN InitializeMutex(UINT32 uiMutexIndex, UINT8 *ubMutexName)
 {
-  MutexTable[uiMutexIndex] = CreateMutex(NULL, FALSE, ubMutexName);
-  if (MutexTable[uiMutexIndex] == NULL)
-  {
-    //
-    // Mutex creation has failed.
-    //
-    DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "ERROR : Mutex initialization has failed.");
-    return FALSE;
-  }
+	PERFORMANCE_MARKER
+	MutexTable[uiMutexIndex] = CreateMutex(NULL, FALSE, ubMutexName);
+	if (MutexTable[uiMutexIndex] == NULL)
+	{
+	//
+	// Mutex creation has failed.
+	//
+	DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "ERROR : Mutex initialization has failed.");
+	return FALSE;
+	}
 
-  return TRUE;
+	return TRUE;
 }
 
 BOOLEAN DeleteMutex(UINT32 uiMutexIndex)
 {
-  if (MutexTable[uiMutexIndex] == NULL)
-  {
-    //
-    // Hum ?? We just tried to initialize a mutex entry which doesn't have a reserved slot
-    //
-  
-    DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "ERROR : Mutex cannot be deleted since it does not exit");  
-    return FALSE;
-  }
-  
-  if (CloseHandle(MutexTable[uiMutexIndex]) == FALSE)
-  {
-    //
-    // Hum, the mutex deletion has failed
-    //
-    
-    DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "ERROR : Mutex cannot be deleted since it does not exit");  
-    return FALSE;
-  }
+	PERFORMANCE_MARKER
+	if (MutexTable[uiMutexIndex] == NULL)
+	{
+	//
+	// Hum ?? We just tried to initialize a mutex entry which doesn't have a reserved slot
+	//
+	
+	DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "ERROR : Mutex cannot be deleted since it does not exit");	
+	return FALSE;
+	}
+	
+	if (CloseHandle(MutexTable[uiMutexIndex]) == FALSE)
+	{
+	//
+	// Hum, the mutex deletion has failed
+	//
+	
+	DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "ERROR : Mutex cannot be deleted since it does not exit");	
+	return FALSE;
+	}
 
-  MutexTable[uiMutexIndex] = NULL;
-    
-  return TRUE;
+	MutexTable[uiMutexIndex] = NULL;
+	
+	return TRUE;
 }
 
 BOOLEAN EnterMutex(UINT32 uiMutexIndex, INT32 nLine, STR8 szFilename)
 {
-  switch (WaitForSingleObject(MutexTable[uiMutexIndex], INFINITE))
-  {
-    case WAIT_OBJECT_0
-    : return TRUE;
-    case WAIT_TIMEOUT
-    : DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "ERROR : Possible infinite loop detected due to enter mutex timeout");  
-      return FALSE;
-    case WAIT_ABANDONED
-    : DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "ERROR : Abandoned mutex has been found");
-      return FALSE;
-  }
+	PERFORMANCE_MARKER
+	switch (WaitForSingleObject(MutexTable[uiMutexIndex], INFINITE))
+	{
+	case WAIT_OBJECT_0
+	: return TRUE;
+	case WAIT_TIMEOUT
+	: DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "ERROR : Possible infinite loop detected due to enter mutex timeout");	
+		return FALSE;
+	case WAIT_ABANDONED
+	: DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "ERROR : Abandoned mutex has been found");
+		return FALSE;
+	}
 }
 
 BOOLEAN EnterMutexWithTimeout(UINT32 uiMutexIndex, UINT32 uiTimeout, INT32 nLine, STR8 szFilename)
 {
-  switch (WaitForSingleObject(MutexTable[uiMutexIndex], uiTimeout))
-  {
-    case WAIT_OBJECT_0
-    : return TRUE;
-    case WAIT_TIMEOUT
-    : return FALSE;
-    case WAIT_ABANDONED
-    : return FALSE;
-  }
-  return TRUE;
+	PERFORMANCE_MARKER
+	switch (WaitForSingleObject(MutexTable[uiMutexIndex], uiTimeout))
+	{
+	case WAIT_OBJECT_0
+	: return TRUE;
+	case WAIT_TIMEOUT
+	: return FALSE;
+	case WAIT_ABANDONED
+	: return FALSE;
+	}
+	return TRUE;
 }
 
 BOOLEAN LeaveMutex(UINT32 uiMutexIndex, INT32 nLine, STR8 szFilename)
 {
-  if (ReleaseMutex(MutexTable[uiMutexIndex]) == FALSE)
-  {
-    DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "ERROR : Failed to leave mutex");  
-    return FALSE;
-  }
-    
-  return TRUE;
+	PERFORMANCE_MARKER
+	if (ReleaseMutex(MutexTable[uiMutexIndex]) == FALSE)
+	{
+	DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "ERROR : Failed to leave mutex");	
+	return FALSE;
+	}
+	
+	return TRUE;
 }
 
 #else
@@ -153,71 +160,78 @@ CRITICAL_SECTION MutexTable[MAX_MUTEX_HANDLES];
 
 BOOLEAN InitializeMutexManager(void)
 {
-  UINT32 uiIndex;
+	PERFORMANCE_MARKER
+	UINT32 uiIndex;
 
-  //
-  // Make sure all mutex handles are opened
-  //
+	//
+	// Make sure all mutex handles are opened
+	//
 
-  for (uiIndex = 0; uiIndex < MAX_MUTEX_HANDLES; uiIndex++)
-  {
-    InitializeCriticalSection(&MutexTable[uiIndex]);
-  }
-  
-  RegisterDebugTopic(TOPIC_MUTEX, "Mutex Manager");  
+	for (uiIndex = 0; uiIndex < MAX_MUTEX_HANDLES; uiIndex++)
+	{
+	InitializeCriticalSection(&MutexTable[uiIndex]);
+	}
+	
+	RegisterDebugTopic(TOPIC_MUTEX, "Mutex Manager");	
 
-  return TRUE;
+	return TRUE;
 }
 
 void ShutdownMutexManager(void)
 {
-  UINT32 uiIndex;
+	PERFORMANCE_MARKER
+	UINT32 uiIndex;
 
-  DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "Shutting down the Mutex Manager");
+	DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "Shutting down the Mutex Manager");
 
-  //
-  // Make sure all mutex handles are closed
-  //
+	//
+	// Make sure all mutex handles are closed
+	//
 
-  for (uiIndex = 0; uiIndex < MAX_MUTEX_HANDLES; uiIndex++)
-  {
-    DeleteCriticalSection(&MutexTable[uiIndex]);
-  }
+	for (uiIndex = 0; uiIndex < MAX_MUTEX_HANDLES; uiIndex++)
+	{
+	DeleteCriticalSection(&MutexTable[uiIndex]);
+	}
 
-  UnRegisterDebugTopic(TOPIC_MUTEX, "Mutex Manager");
+	UnRegisterDebugTopic(TOPIC_MUTEX, "Mutex Manager");
 }
 
 BOOLEAN InitializeMutex(UINT32 uiMutexIndex, UINT8 *ubMutexName)
 {
-  //InitializeCriticalSection(&MutexTable[uiMutexIndex]);
+	PERFORMANCE_MARKER
+	//InitializeCriticalSection(&MutexTable[uiMutexIndex]);
 
-  return TRUE;
+	return TRUE;
 }
 
 BOOLEAN DeleteMutex(UINT32 uiMutexIndex)
 {
-  //DeleteCriticalSection(&MutexTable[uiMutexIndex]);
-    
-  return TRUE;
+	PERFORMANCE_MARKER
+	//DeleteCriticalSection(&MutexTable[uiMutexIndex]);
+	
+	return TRUE;
 }
 
 BOOLEAN EnterMutex(UINT32 uiMutexIndex, INT32 nLine, STR8 szFilename)
 {
-  EnterCriticalSection(&MutexTable[uiMutexIndex]);
-  return TRUE;
+	PERFORMANCE_MARKER
+	EnterCriticalSection(&MutexTable[uiMutexIndex]);
+	return TRUE;
 }
 
 BOOLEAN EnterMutexWithTimeout(UINT32 uiMutexIndex, UINT32 uiTimeout, INT32 nLine, STR8 szFilename)
 {
-  EnterCriticalSection(&MutexTable[uiMutexIndex]);
-  return TRUE;
+	PERFORMANCE_MARKER
+	EnterCriticalSection(&MutexTable[uiMutexIndex]);
+	return TRUE;
 }
 
 BOOLEAN LeaveMutex(UINT32 uiMutexIndex, INT32 nLine, STR8 szFilename)
 {
-  LeaveCriticalSection(&MutexTable[uiMutexIndex]);
-    
-  return TRUE;
+	PERFORMANCE_MARKER
+	LeaveCriticalSection(&MutexTable[uiMutexIndex]);
+	
+	return TRUE;
 }
 
 #endif

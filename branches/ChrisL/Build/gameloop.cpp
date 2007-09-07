@@ -9,7 +9,7 @@
 	#include "Gameloop.h"
 	#include "Screens.h"
 	#include "Wcheck.h"
-	#include "cursors.h"  
+	#include "cursors.h"	
 	#include "init.h"
 	#include "music control.h"
 	#include "sys globals.h"
@@ -31,7 +31,6 @@
 	#include "PreBattle Interface.h"
 #endif
 
-//#include "Console.h"
 #include "Lua Interpreter.h"
 
 // rain
@@ -43,7 +42,7 @@ UINT32 guiCurrentScreen;
 UINT32 guiPendingScreen = NO_PENDING_SCREEN;
 UINT32 guiPreviousScreen = NO_PENDING_SCREEN;
 
-INT32	 giStartingMemValue = 0;
+INT32	giStartingMemValue = 0;
 
 #define	DONT_CHECK_FOR_FREE_SPACE		255
 UINT8		gubCheckForFreeSpaceOnHardDriveCount=DONT_CHECK_FOR_FREE_SPACE;
@@ -69,16 +68,17 @@ void HandleNewScreenChange( UINT32 uiNewScreen, UINT32 uiOldScreen );
 BOOLEAN gubReportMapscreenLock = 0;
 void ReportMapscreenErrorLock()
 {
+	PERFORMANCE_MARKER
 	switch( gubReportMapscreenLock )
 	{
 		case 1:
-			DoScreenIndependantMessageBox( L"You have just loaded the game which is in a state that you shouldn't be able to.  You can still play, but there should be a sector with enemies co-existing with mercs.  Please don't report that.", MSG_BOX_FLAG_OK, NULL );
+			DoScreenIndependantMessageBox( L"You have just loaded the game which is in a state that you shouldn't be able to.	You can still play, but there should be a sector with enemies co-existing with mercs.	Please don't report that.", MSG_BOX_FLAG_OK, NULL );
 			fDisableDueToBattleRoster = FALSE;
 			fDisableMapInterfaceDueToBattle = FALSE;
 			gubReportMapscreenLock = 0;
 			break;
 		case 2:
-			DoScreenIndependantMessageBox( L"You have just saved the game which is in a state that you shouldn't be able to.  Please report circumstances (ex:  merc in other sector pipes up about enemies), etc.  Autocorrected, but if you reload the save, don't report the error appearing in load.", MSG_BOX_FLAG_OK, NULL );
+			DoScreenIndependantMessageBox( L"You have just saved the game which is in a state that you shouldn't be able to.	Please report circumstances (ex:	merc in other sector pipes up about enemies), etc.	Autocorrected, but if you reload the save, don't report the error appearing in load.", MSG_BOX_FLAG_OK, NULL );
 			fDisableDueToBattleRoster = FALSE;
 			fDisableMapInterfaceDueToBattle = FALSE;
 			gubReportMapscreenLock = 0;
@@ -88,7 +88,8 @@ void ReportMapscreenErrorLock()
 #endif
 
 BOOLEAN InitializeGame(void)
-{ 
+{
+	PERFORMANCE_MARKER 
 	UINT32				uiIndex;
 
 	giStartingMemValue = MemGetFree( );
@@ -151,18 +152,19 @@ BOOLEAN InitializeGame(void)
 // It will also be responsible to making sure that all Gaming Engine tasks exit properly
 
 void ShutdownGame(void)
-{ 
+{
+	PERFORMANCE_MARKER 
 	// handle shutdown of game with respect to preloaded mapscreen graphics
 	HandleRemovalOfPreLoadedMapGraphics( );
 
-	 ShutdownJA2( );
+	ShutdownJA2( );
 
 	//Save the general save game settings to disk
 	SaveGameSettings();
 
 
-	 //shutdown the file database manager
-	 ShutDownFileDatabase( );
+	//shutdown the file database manager
+	ShutDownFileDatabase( );
 
 
 	//Deletes all the Temp files in the Maps\Temp directory
@@ -181,17 +183,18 @@ static BOOLEAN gfSkipFrame = FALSE;
 
 void GameLoop(void)
 {
+	PERFORMANCE_MARKER
 	//	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop");
 
 	InputAtom	InputEvent;
 	POINT		MousePos;
 	UINT32		uiOldScreen=guiCurrentScreen;
-	clock_t		startTime = clock(); // decrease CPU load patch from defrog
+	//clock_t		startTime = clock(); // decrease CPU load patch from defrog
 
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: get mouse position");
 	GetCursorPos(&MousePos);
-    ScreenToClient(ghWindow, &MousePos); // In window coords!
-
+	ScreenToClient(ghWindow, &MousePos); // In window coords!
+	
 	// Hook into mouse stuff for MOVEMENT MESSAGES
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: get mouse hook");
 	MouseSystemHook(MOUSE_POS, (UINT16)MousePos.x ,(UINT16)MousePos.y ,_LeftButtonDown, _RightButtonDown);
@@ -202,9 +205,9 @@ void GameLoop(void)
 	while (DequeueSpecificEvent(&InputEvent, LEFT_BUTTON_REPEAT|RIGHT_BUTTON_REPEAT|LEFT_BUTTON_DOWN|LEFT_BUTTON_UP|RIGHT_BUTTON_DOWN|RIGHT_BUTTON_UP ) == TRUE )
 	{
 		// HOOK INTO MOUSE HOOKS
-	  //DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("GameLoop: mouse event %d", InputEvent.usEvent ));
+	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("GameLoop: mouse event %d", InputEvent.usEvent ));
 		switch(InputEvent.usEvent)
-	  {
+	{
 			case LEFT_BUTTON_DOWN:
 				MouseSystemHook(LEFT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
@@ -223,7 +226,7 @@ void GameLoop(void)
 			case RIGHT_BUTTON_REPEAT: 
 				MouseSystemHook(RIGHT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
-	  }
+	}
 	}
 
 
@@ -237,7 +240,7 @@ void GameLoop(void)
 	}
 
 /*
-	// Madd: removed check because it kept coming up for me, even on new games, even though I have 12GB free!!  I think the "DoesUserHaveEnoughHardDriveSpace" function is busted.
+	// Madd: removed check because it kept coming up for me, even on new games, even though I have 12GB free!!	I think the "DoesUserHaveEnoughHardDriveSpace" function is busted.
 	//if we are to check for free space on the hard drive
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: check hard drive");
 	if( gubCheckForFreeSpaceOnHardDriveCount < DONT_CHECK_FOR_FREE_SPACE )
@@ -376,6 +379,7 @@ void GameLoop(void)
 
 void SetCurrentScreen( UINT32 uiNewScreen )
 {
+	PERFORMANCE_MARKER
 	guiCurrentScreen = uiNewScreen;
  (*(GameScreens[guiCurrentScreen].HandleScreen))(); 
 
@@ -383,6 +387,7 @@ void SetCurrentScreen( UINT32 uiNewScreen )
 
 void SetPendingNewScreen( UINT32 uiNewScreen )
 {
+	PERFORMANCE_MARKER
 	guiPendingScreen = uiNewScreen;
 }
 
@@ -392,7 +397,8 @@ extern UINT32 guiRainLoop;
 
 // Gets called when the screen changes, place any needed in code in here
 void HandleNewScreenChange( UINT32 uiNewScreen, UINT32 uiOldScreen )
-{	
+{
+	PERFORMANCE_MARKER	
 	//if we are not going into the message box screen, and we didnt just come from it
 	if( ( uiNewScreen != MSG_BOX_SCREEN && uiOldScreen != MSG_BOX_SCREEN ) )
 	{
@@ -414,6 +420,7 @@ void HandleNewScreenChange( UINT32 uiNewScreen, UINT32 uiOldScreen )
 
 void HandleShortCutExitState( void )
 {
+	PERFORMANCE_MARKER
 	// look at the state of fGameIsRunning, if set false, then prompt user for confirmation
 
 	// use YES/NO Pop up box, settup for particular screen
@@ -427,7 +434,7 @@ void HandleShortCutExitState( void )
 
 	if( guiCurrentScreen == AUTORESOLVE_SCREEN )
 	{
-		DoMessageBox(  MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_EXITGAME ],  guiCurrentScreen, ( UINT8 ) ( MSG_BOX_FLAG_YESNO | MSG_BOX_FLAG_USE_CENTERING_RECT ),  EndGameMessageBoxCallBack,  &pCenteringRect );
+		DoMessageBox(	MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_EXITGAME ],	guiCurrentScreen, ( UINT8 ) ( MSG_BOX_FLAG_YESNO | MSG_BOX_FLAG_USE_CENTERING_RECT ),	EndGameMessageBoxCallBack,	&pCenteringRect );
 		return;
 	}
 
@@ -441,7 +448,7 @@ void HandleShortCutExitState( void )
 	else if( guiCurrentScreen == LAPTOP_SCREEN )
 	{
 		// set up for laptop
-		DoLapTopSystemMessageBox( MSG_BOX_LAPTOP_DEFAULT,  pMessageStrings[ MSG_EXITGAME ], LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack );
+		DoLapTopSystemMessageBox( MSG_BOX_LAPTOP_DEFAULT,	pMessageStrings[ MSG_EXITGAME ], LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack );
 	}
 	else if( guiCurrentScreen == SHOPKEEPER_SCREEN )
 	{
@@ -468,15 +475,16 @@ void HandleShortCutExitState( void )
 		}
 
 		// set up for all otherscreens
-		DoMessageBox(  MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_EXITGAME ],  guiCurrentScreen, ( UINT8 ) ( MSG_BOX_FLAG_YESNO | MSG_BOX_FLAG_USE_CENTERING_RECT ),  EndGameMessageBoxCallBack,  &pCenteringRect );
+		DoMessageBox(	MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_EXITGAME ],	guiCurrentScreen, ( UINT8 ) ( MSG_BOX_FLAG_YESNO | MSG_BOX_FLAG_USE_CENTERING_RECT ),	EndGameMessageBoxCallBack,	&pCenteringRect );
 	}
 }
 
 
 void EndGameMessageBoxCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	// yes, so start over, else stay here and do nothing for now
-  if( bExitValue == MSG_BOX_RETURN_YES )
+	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		gfProgramIsRunning = FALSE;
 	}
@@ -494,5 +502,6 @@ void EndGameMessageBoxCallBack( UINT8 bExitValue )
 
 void NextLoopCheckForEnoughFreeHardDriveSpace()
 {
+	PERFORMANCE_MARKER
 	gubCheckForFreeSpaceOnHardDriveCount = 0;
 }

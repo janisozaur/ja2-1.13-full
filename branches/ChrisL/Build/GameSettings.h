@@ -93,14 +93,13 @@ typedef struct
 
 }	GAME_SETTINGS;
 
-
-
 // CHRISL: New Enums to track inventory system
 enum
 {
 	INVENTORY_OLD = 0,
 	INVENTORY_NEW = 1
 };
+
 
 //Enums for the difficulty levels
 enum
@@ -142,6 +141,8 @@ typedef struct
 	UINT8	ubFiller[6];
 
 } GAME_OPTIONS;
+
+bool UsingNewInventorySystem();
 
 // Snap: Options read from an INI file in the default of custom Data directory
 typedef struct
@@ -260,7 +261,7 @@ typedef struct
 
 	
 	//Sight range
-	UINT32  ubStraightSightRange;
+	UINT32	ubStraightSightRange;
 	UINT32 ubVisDistDecreasePerRainIntensity;
 	BOOLEAN gfAllowLimitedVision;
 
@@ -436,7 +437,7 @@ typedef struct
 
 } GAME_EXTERNAL_OPTIONS;
 
-//This structure will contain general Ja2 settings  NOT individual game settings.
+//This structure will contain general Ja2 settings	NOT individual game settings.
 extern GAME_SETTINGS		gGameSettings;
 
 //This structure will contain the Game options set at the beginning of the game.

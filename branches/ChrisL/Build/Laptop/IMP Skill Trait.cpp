@@ -80,7 +80,7 @@ BOOLEAN	gfSkillTraitQuestions[ IMP_SKILL_TRAITS__NUMBER_SKILLS ];
 INT32 giIMPSkillTraitAnswerButton[ IMP_SKILL_TRAITS__NUMBER_SKILLS ];
 INT32 giIMPSkillTraitAnswerButtonImage[ IMP_SKILL_TRAITS__NUMBER_SKILLS ];
 
-// this is the Done  buttons
+// this is the Done	buttons
 INT32 giIMPSkillTraitFinsihButton;
 INT32 giIMPSkillTraitFinsihButtonImage;
 
@@ -123,8 +123,9 @@ BOOLEAN CameBackToSpecialtiesPageButNotFinished();
 
 void EnterIMPSkillTrait( void )
 {
+	PERFORMANCE_MARKER
 //	UINT32 uiCnt;
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 
 	//add the skill trait buttons
 	AddImpSkillTraitButtons();
@@ -141,13 +142,13 @@ void EnterIMPSkillTrait( void )
 
 
 
-  giIMPSkillTraitFinsihButtonImage =  LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
-  giIMPSkillTraitFinsihButton = CreateIconAndTextButton( giIMPSkillTraitFinsihButtonImage, pImpButtonText[ 24 ], FONT12ARIAL, 
-																 FONT_WHITE, DEFAULT_SHADOW, 
-																 FONT_WHITE, DEFAULT_SHADOW, 
-																 TEXT_CJUSTIFIED, 
-																 LAPTOP_SCREEN_UL_X +  ( 350 ), LAPTOP_SCREEN_WEB_UL_Y + ( 340 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 			 BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPSkillTraitFinishCallback );
+	giIMPSkillTraitFinsihButtonImage =	LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
+	giIMPSkillTraitFinsihButton = CreateIconAndTextButton( giIMPSkillTraitFinsihButtonImage, pImpButtonText[ 24 ], FONT12ARIAL, 
+																FONT_WHITE, DEFAULT_SHADOW, 
+																FONT_WHITE, DEFAULT_SHADOW, 
+																TEXT_CJUSTIFIED, 
+																LAPTOP_SCREEN_UL_X +	( 350 ), LAPTOP_SCREEN_WEB_UL_Y + ( 340 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+																BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPSkillTraitFinishCallback );
 
 
 
@@ -169,6 +170,7 @@ void EnterIMPSkillTrait( void )
 
 void RenderIMPSkillTrait( void )
 {
+	PERFORMANCE_MARKER
 	//render the metal background graphic
 	RenderProfileBackGround();
 
@@ -178,6 +180,7 @@ void RenderIMPSkillTrait( void )
 
 void ExitIMPSkillTrait( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iCnt;
 
 	DeleteVideoObjectFromIndex( guiIST_GreyGoldBox );
@@ -200,17 +203,19 @@ void ExitIMPSkillTrait( void )
 
 void HandleIMPSkillTrait( void )
 {
+	PERFORMANCE_MARKER
 	if( gfIST_Redraw )
 	{
 		RenderIMPSkillTrait( );
 		gfIST_Redraw = FALSE;
 	}
 
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 void AddImpSkillTraitButtons()
 {
+	PERFORMANCE_MARKER
 	INT32 iCnt = 0;
 	UINT16 usPosX, usPosY;
 
@@ -243,9 +248,9 @@ void AddImpSkillTraitButtons()
 		}
 
 		if( iCnt == 0 )
-			giIMPSkillTraitAnswerButtonImage[ iCnt ] =  LoadButtonImage( "LAPTOP\\button_6.sti", -1,0,-1,1,-1 );
+			giIMPSkillTraitAnswerButtonImage[ iCnt ] =	LoadButtonImage( "LAPTOP\\button_6.sti", -1,0,-1,1,-1 );
 		else
-			giIMPSkillTraitAnswerButtonImage[ iCnt ] =  UseLoadedButtonImage( giIMPSkillTraitAnswerButtonImage[ 0 ], -1,0,-1,1,-1 );
+			giIMPSkillTraitAnswerButtonImage[ iCnt ] =	UseLoadedButtonImage( giIMPSkillTraitAnswerButtonImage[ 0 ], -1,0,-1,1,-1 );
 
 		giIMPSkillTraitAnswerButton[iCnt] = QuickCreateButton( giIMPSkillTraitAnswerButtonImage[ iCnt ], usPosX, usPosY,
 									BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
@@ -281,6 +286,7 @@ void AddImpSkillTraitButtons()
 
 void BtnIMPSkillTraitAnswerCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
@@ -289,7 +295,7 @@ void BtnIMPSkillTraitAnswerCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 //		btn->uiFlags|=(BUTTON_CLICKED_ON);
 
-		INT32 iSkillTrait =  MSYS_GetBtnUserData( btn, 0 );
+		INT32 iSkillTrait =	MSYS_GetBtnUserData( btn, 0 );
 
 		HandleIMPSkillTraitAnswers( iSkillTrait, FALSE );
 	}
@@ -297,6 +303,7 @@ void BtnIMPSkillTraitAnswerCallback(GUI_BUTTON *btn,INT32 reason)
 
 void HandleIMPSkillTraitAnswers( UINT32 uiSkillPressed, BOOLEAN fResetAllButtons )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 
 	//if we are DONE and are just reviewing
@@ -388,6 +395,7 @@ void HandleIMPSkillTraitAnswers( UINT32 uiSkillPressed, BOOLEAN fResetAllButtons
 
 INT8	CountNumSkillStraitsSelected( BOOLEAN fIncludeNoneSkill )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiCnt;
 	INT8	iNumberSkills=0;
 	UINT32	uiUpperLimit;
@@ -416,6 +424,7 @@ INT8	CountNumSkillStraitsSelected( BOOLEAN fIncludeNoneSkill )
 
 void HandleSkillTraitButtonStates( )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 
 	for( uiCnt=0; uiCnt<IMP_SKILL_TRAITS__NUMBER_SKILLS; uiCnt++ )
@@ -440,10 +449,11 @@ void HandleSkillTraitButtonStates( )
 
 void IMPSkillTraitDisplaySkills()
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 	UINT16 usPosX, usPosY;
 	UINT16 usBoxPosX, usBoxPosY;
-  HVOBJECT	hImageHandle;
+	HVOBJECT	hImageHandle;
 
 
 	//Display the title
@@ -510,6 +520,7 @@ void IMPSkillTraitDisplaySkills()
 
 void BtnIMPSkillTraitFinishCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
@@ -543,6 +554,7 @@ void BtnIMPSkillTraitFinishCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN CameBackToSpecialtiesPageButNotFinished()
 {
+	PERFORMANCE_MARKER
 	//if we are in a page that comes after this one
 	if( iCurrentProfileMode == IMP__ATTRIBUTES )
 	{
@@ -560,6 +572,7 @@ BOOLEAN CameBackToSpecialtiesPageButNotFinished()
 
 INT8	DoesPlayerHaveExtraAttibutePointsToDistributeBasedOnSkillSelection()
 {
+	PERFORMANCE_MARKER
 	INT8		bExtraPoints=10;
 	INT8		bNumSkills=0;
 
@@ -577,7 +590,7 @@ INT8	DoesPlayerHaveExtraAttibutePointsToDistributeBasedOnSkillSelection()
 	{
 		//if the trait is not the ones you cant be expert in )
 		if( gfSkillTraitQuestions[ IMP_SKILL_TRAITS__ELECTRONICS ] ||
-				gfSkillTraitQuestions[ IMP_SKILL_TRAITS__AMBIDEXTROUS  ] ||
+				gfSkillTraitQuestions[ IMP_SKILL_TRAITS__AMBIDEXTROUS	] ||
 				gfSkillTraitQuestions[ IMP_SKILL_TRAITS__CAMO ] )
 		{
 			bExtraPoints = 5;
@@ -601,6 +614,7 @@ INT8	DoesPlayerHaveExtraAttibutePointsToDistributeBasedOnSkillSelection()
 
 BOOLEAN ShouldTraitBeSkipped( UINT32 uiTrait )
 {
+	PERFORMANCE_MARKER
 	if( uiTrait == IMP_SKILL_TRAITS__MARTIAL_ARTS && !fCharacterIsMale )
 		return( TRUE );
 	else
@@ -610,6 +624,7 @@ BOOLEAN ShouldTraitBeSkipped( UINT32 uiTrait )
 
 void AddSelectedSkillsToSkillsList()
 {
+	PERFORMANCE_MARKER
 	UINT32	uiCnt;
 
 	//loop through all the buttons and reset them
@@ -684,7 +699,7 @@ void AddSelectedSkillsToSkillsList()
 
 void HandleLastSelectedTraits( INT8 bNewTrait )
 {
-	INT8	bTemp=-1;
+	PERFORMANCE_MARKER
 	//if there are none selected
 	if( gbLastSelectedTraits[ 0 ] == -1 )
 	{

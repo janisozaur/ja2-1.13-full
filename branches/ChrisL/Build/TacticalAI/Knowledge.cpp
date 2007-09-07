@@ -14,6 +14,7 @@
 
 void CallAvailableEnemiesTo( INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	INT32	iLoop;
 	INT32	iLoop2;
 	SOLDIERTYPE * pSoldier;
@@ -35,7 +36,7 @@ void CallAvailableEnemiesTo( INT16 sGridNo )
 				iLoop2 = gTacticalStatus.Team[ iLoop ].bFirstID;
 				for ( pSoldier = MercPtrs[iLoop2]; iLoop2 <= gTacticalStatus.Team[ iLoop ].bLastID; iLoop2++, pSoldier++ )
 				{
-					if (pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE)
+					if (pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife >= OKLIFE)
 					{
 						SetNewSituation( pSoldier );
 						WearGasMaskIfAvailable( pSoldier );
@@ -51,6 +52,7 @@ void CallAvailableEnemiesTo( INT16 sGridNo )
 
 void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam )
 {
+	PERFORMANCE_MARKER
 	INT32	iLoop2;
 	SOLDIERTYPE * pSoldier;
 
@@ -69,7 +71,7 @@ void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam )
 			iLoop2 = gTacticalStatus.Team[ bTeam ].bFirstID;
 			for ( pSoldier = MercPtrs[iLoop2]; iLoop2 <= gTacticalStatus.Team[ bTeam ].bLastID; iLoop2++, pSoldier++ )
 			{
-				if (pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE)
+				if (pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife >= OKLIFE)
 				{
 					SetNewSituation( pSoldier );
 					WearGasMaskIfAvailable( pSoldier );
@@ -82,6 +84,7 @@ void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam )
 
 void CallAvailableKingpinMenTo( INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	// like call all enemies, but only affects civgroup KINGPIN guys with 
 	// NO PROFILE
 
@@ -101,7 +104,7 @@ void CallAvailableKingpinMenTo( INT16 sGridNo )
 		iLoop2 = gTacticalStatus.Team[ CIV_TEAM ].bFirstID;
 		for ( pSoldier = MercPtrs[iLoop2]; iLoop2 <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; iLoop2++, pSoldier++ )
 		{
-			if (pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE && pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP && pSoldier->ubProfile == NO_PROFILE)
+			if (pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife >= OKLIFE && pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP && pSoldier->ubProfile == NO_PROFILE)
 			{
 				SetNewSituation( pSoldier );
 			}
@@ -111,6 +114,7 @@ void CallAvailableKingpinMenTo( INT16 sGridNo )
 
 void CallEldinTo( INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	// like call all enemies, but only affects Eldin
 	SOLDIERTYPE * pSoldier;
 
@@ -120,7 +124,7 @@ void CallEldinTo( INT16 sGridNo )
 	{
 		// new situation for Eldin
 		pSoldier = FindSoldierByProfileID( ELDIN, FALSE );
-		if ( pSoldier && pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE && (pSoldier->bAlertStatus == STATUS_GREEN || pSoldier->ubNoiseVolume < (MAX_MISC_NOISE_DURATION / 2) ) )
+		if ( pSoldier && pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife >= OKLIFE && (pSoldier->aiData.bAlertStatus == STATUS_GREEN || pSoldier->aiData.ubNoiseVolume < (MAX_MISC_NOISE_DURATION / 2) ) )
 		{
 			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, 0, 0, TRUE ) )
 			{
@@ -130,15 +134,15 @@ void CallEldinTo( INT16 sGridNo )
 			}
 			else
 			{
-				pSoldier->sNoiseGridno = sGridNo;
-				pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
-				pSoldier->bAlertStatus = STATUS_RED;
-				if ( (pSoldier->bAction != AI_ACTION_GET_CLOSER) || CheckFact( FACT_MUSEUM_ALARM_WENT_OFF, 0 ) == FALSE )
+				pSoldier->aiData.sNoiseGridno = sGridNo;
+				pSoldier->aiData.ubNoiseVolume = MAX_MISC_NOISE_DURATION;
+				pSoldier->aiData.bAlertStatus = STATUS_RED;
+				if ( (pSoldier->aiData.bAction != AI_ACTION_GET_CLOSER) || CheckFact( FACT_MUSEUM_ALARM_WENT_OFF, 0 ) == FALSE )
 				{
 					CancelAIAction( pSoldier, TRUE );
-					pSoldier->bNextAction = AI_ACTION_GET_CLOSER;
-					pSoldier->usNextActionData = sGridNo;
-					RESETTIMECOUNTER( pSoldier->AICounter, 100 );
+					pSoldier->aiData.bNextAction = AI_ACTION_GET_CLOSER;
+					pSoldier->aiData.usNextActionData = sGridNo;
+					RESETTIMECOUNTER( pSoldier->timeCounters.AICounter, 100 );
 				}
 				// otherwise let AI handle this normally
 //				SetNewSituation( pSoldier );
@@ -152,6 +156,7 @@ void CallEldinTo( INT16 sGridNo )
 
 INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN * pfClimbingNecessary, BOOLEAN * pfReachable )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiLoop;
 	INT8 * pbPersOL, * pbPublOL;
 	INT16 *psLastLoc,*psNoiseGridNo;
@@ -173,7 +178,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 	psLastLoc = gsLastKnownOppLoc[pSoldier->ubID];
 
 	// hang pointers at start of this guy's personal and public opponent opplists
-	pbPersOL = pSoldier->bOppList;
+	pbPersOL = pSoldier->aiData.bOppList;
 	pbPublOL = gbPublicOpplist[pSoldier->bTeam];
 
 	// look through this man's personal & public opplists for opponents heard
@@ -182,14 +187,14 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 		pTemp = MercSlots[ uiLoop ];
 
 		// if this merc is inactive, at base, on assignment, or dead
-		if (!pTemp || !pTemp->bLife)
-			continue;          // next merc
+		if (!pTemp || !pTemp->stats.bLife)
+			continue;			// next merc
 
 		// if this merc is neutral/on same side, he's not an opponent
 		if ( CONSIDERED_NEUTRAL( pSoldier, pTemp ) || (pSoldier->bSide == pTemp->bSide))
-			continue;          // next merc
+			continue;			// next merc
 
-		pbPersOL = pSoldier->bOppList + pTemp->ubID;
+		pbPersOL = pSoldier->aiData.bOppList + pTemp->ubID;
 		pbPublOL = gbPublicOpplist[pSoldier->bTeam] + pTemp->ubID;
 		psLastLoc = gsLastKnownOppLoc[pSoldier->ubID] + pTemp->ubID;
 		pbLastLevel = gbLastKnownOppLevel[pSoldier->ubID] + pTemp->ubID;
@@ -199,7 +204,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 		{
 			// calculate how far this noise was, and its relative "importance"
 			iDistAway = SpacesAway(pSoldier->sGridNo,*psLastLoc);
-			iNoiseValue = (*pbPersOL) * iDistAway;               // always a negative number!
+			iNoiseValue = (*pbPersOL) * iDistAway;				// always a negative number!
 
 			if (iNoiseValue > iBestValue)
 			{
@@ -214,7 +219,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 		{
 			// calculate how far this noise was, and its relative "importance"
 			iDistAway = SpacesAway(pSoldier->sGridNo,gsPublicLastKnownOppLoc[pSoldier->bTeam][pTemp->ubID]);
-			iNoiseValue = (*pbPublOL) * iDistAway;               // always a negative number!
+			iNoiseValue = (*pbPublOL) * iDistAway;				// always a negative number!
 
 			if (iNoiseValue > iBestValue)
 			{
@@ -227,26 +232,26 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 	}
 
 	// if any "misc. noise" was also heard recently
-	if (pSoldier->sNoiseGridno != NOWHERE)
+	if (pSoldier->aiData.sNoiseGridno != NOWHERE)
 	{
-		if ( pSoldier->bNoiseLevel != pSoldier->bLevel || PythSpacesAway( pSoldier->sGridNo, pSoldier->sNoiseGridno ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, pSoldier->sNoiseGridno, pSoldier->bNoiseLevel, 0, FALSE, NO_DISTANCE_LIMIT ) == 0 )
+		if ( pSoldier->bNoiseLevel != pSoldier->pathing.bLevel || PythSpacesAway( pSoldier->sGridNo, pSoldier->aiData.sNoiseGridno ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, pSoldier->aiData.sNoiseGridno, pSoldier->bNoiseLevel, 0, FALSE, NO_DISTANCE_LIMIT ) == 0 )
 		{
 			// calculate how far this noise was, and its relative "importance"
-			iDistAway = SpacesAway(pSoldier->sGridNo,pSoldier->sNoiseGridno);
-			iNoiseValue = ((pSoldier->ubNoiseVolume / 2) - 6) * iDistAway;
+			iDistAway = SpacesAway(pSoldier->sGridNo,pSoldier->aiData.sNoiseGridno);
+			iNoiseValue = ((pSoldier->aiData.ubNoiseVolume / 2) - 6) * iDistAway;
 
 			if (iNoiseValue > iBestValue)
 			{
 				iBestValue = iNoiseValue;
-				sBestGridNo = pSoldier->sNoiseGridno;
+				sBestGridNo = pSoldier->aiData.sNoiseGridno;
 				bBestLevel = pSoldier->bNoiseLevel;
 			}
 		}
 		else
 		{
 			// we are there or near
-			pSoldier->sNoiseGridno = NOWHERE;        // wipe it out, not useful anymore
-			pSoldier->ubNoiseVolume = 0;
+			pSoldier->aiData.sNoiseGridno = NOWHERE;		// wipe it out, not useful anymore
+			pSoldier->aiData.ubNoiseVolume = 0;
 		}
 	}
 
@@ -258,7 +263,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 		if (*psNoiseGridNo != NOWHERE)
 		{
 			// if we are NOT there (at the noise gridno)
-			if ( *pbNoiseLevel != pSoldier->bLevel || PythSpacesAway( pSoldier->sGridNo, *psNoiseGridNo ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, *psNoiseGridNo, *pbNoiseLevel, 0, FALSE, NO_DISTANCE_LIMIT ) == 0 )
+			if ( *pbNoiseLevel != pSoldier->pathing.bLevel || PythSpacesAway( pSoldier->sGridNo, *psNoiseGridNo ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, *psNoiseGridNo, *pbNoiseLevel, 0, FALSE, NO_DISTANCE_LIMIT ) == 0 )
 			{
 				// calculate how far this noise was, and its relative "importance"
 				iDistAway = SpacesAway(pSoldier->sGridNo,*psNoiseGridNo);
@@ -280,14 +285,14 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 		*pfReachable = TRUE;
 
 		// make civs not walk to noises outside their room if on close patrol/onguard
-		if ( pSoldier->bOrders <= CLOSEPATROL && (pSoldier->bTeam == CIV_TEAM || pSoldier->ubProfile != NO_PROFILE ) )
+		if ( pSoldier->aiData.bOrders <= CLOSEPATROL && (pSoldier->bTeam == CIV_TEAM || pSoldier->ubProfile != NO_PROFILE ) )
 		{
 			UINT8	ubRoom, ubNewRoom;
 
 			// any other combo uses the default of ubRoom == 0, set above
-			if ( InARoom( pSoldier->usPatrolGrid[0], &ubRoom ) )
+			if ( InARoom( pSoldier->aiData.usPatrolGrid[0], &ubRoom ) )
 			{
-				if ( !InARoom( pSoldier->usPatrolGrid[0], &ubNewRoom ) || ubRoom != ubNewRoom )
+				if ( !InARoom( pSoldier->aiData.usPatrolGrid[0], &ubNewRoom ) || ubRoom != ubNewRoom )
 				{
 					*pfReachable = FALSE;
 				}
@@ -340,20 +345,21 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 
 INT16 WhatIKnowThatPublicDont(SOLDIERTYPE *pSoldier, UINT8 ubInSightOnly)
 {
+	PERFORMANCE_MARKER
 	UINT8 ubTotal = 0;
 	UINT32 uiLoop;
 	INT8 *pbPersOL,*pbPublOL;
 	SOLDIERTYPE * pTemp;
 
 	// if merc knows of a more important misc. noise than his team does
-	if (!(CREATURE_OR_BLOODCAT( pSoldier )) && (pSoldier->ubNoiseVolume > gubPublicNoiseVolume[pSoldier->bTeam]))
+	if (!(CREATURE_OR_BLOODCAT( pSoldier )) && (pSoldier->aiData.ubNoiseVolume > gubPublicNoiseVolume[pSoldier->bTeam]))
 	{
 		// the difference in volume is added to the "new info" total
-		ubTotal += pSoldier->ubNoiseVolume - gubPublicNoiseVolume[pSoldier->bTeam];
+		ubTotal += pSoldier->aiData.ubNoiseVolume - gubPublicNoiseVolume[pSoldier->bTeam];
 	}
 
 	// hang pointers at start of this guy's personal and public opponent opplists
-	pbPersOL = &(pSoldier->bOppList[0]);
+	pbPersOL = &(pSoldier->aiData.bOppList[0]);
 	pbPublOL = &(gbPublicOpplist[pSoldier->bTeam][0]);
 
 	// for every opponent
@@ -369,16 +375,16 @@ INT16 WhatIKnowThatPublicDont(SOLDIERTYPE *pSoldier, UINT8 ubInSightOnly)
 		// if this merc is inactive, at base, on assignment, or dead
 		if (!pTemp)
 		{
-			continue;          // next merc
+			continue;			// next merc
 		}
 
 		// if this merc is neutral/on same side, he's not an opponent
 		if ( CONSIDERED_NEUTRAL( pSoldier, pTemp ) || (pSoldier->bSide == pTemp->bSide))
 		{
-			continue;          // next merc
+			continue;			// next merc
 		}
 
-		pbPersOL = pSoldier->bOppList + pTemp->ubID;
+		pbPersOL = pSoldier->aiData.bOppList + pTemp->ubID;
 		pbPublOL = gbPublicOpplist[pSoldier->bTeam] + pTemp->ubID;
 
 

@@ -28,7 +28,7 @@
 	#include "render dirty.h"
 	#include "utilities.h"
 	#include "interface cursors.h"
-	#include "Sound Control.h"
+//	#include "Sound Control.h"
 	#include "lighting.h"
 	#include "Interface Panels.h"
 	#include "pathai.h"
@@ -51,9 +51,9 @@
 	#include "civ quotes.h"
 #endif
 
-/*  I deleted here declaration of clock coords for tactical screen i will declare them
- *  in functions that Initialize coord for SMPanet and TEAMPanel
- *  any questions? joker
+/*	I deleted here declaration of clock coords for tactical screen i will declare them
+ *	in functions that Initialize coord for SMPanet and TEAMPanel
+ *	any questions? joker
  */
 SGPRect				gOldClippingRect, gOldDirtyClippingRect;
 
@@ -78,7 +78,7 @@ extern UINT32		guiUIMessageTimeDelay;
 
 
 BOOLEAN	gfPausedTacticalRenderInterfaceFlags = FALSE;
-BOOLEAN	gfPausedTacticalRenderFlags					 = FALSE;
+BOOLEAN	gfPausedTacticalRenderFlags					= FALSE;
 
 // which assignment menu can be shown?
 extern void DetermineWhichAssignmentMenusCanBeShown( void );
@@ -89,11 +89,13 @@ extern BOOLEAN RemoveFlashItemSlot( ITEM_POOL *pItemPool );
 
 void SetTacticalInterfaceFlags( UINT32 uiFlags )
 {
+	PERFORMANCE_MARKER
 	guiTacticalInterfaceFlags = uiFlags;
 }
 
 void HandleTacticalPanelSwitch( )
 {
+	PERFORMANCE_MARKER
 	if ( gfSwitchPanel )
 	{
 		SetCurrentInterfacePanel( gbNewPanel );
@@ -109,6 +111,7 @@ void HandleTacticalPanelSwitch( )
 
 void RenderTacticalInterface( )
 {
+	PERFORMANCE_MARKER
 
 	// handle paused render of tactical
 	HandlePausedTacticalRender( );
@@ -117,7 +120,7 @@ void RenderTacticalInterface( )
 	{
 		HandleFlashingItems( );
 
-    HandleMultiPurposeLocator( );
+	HandleMultiPurposeLocator( );
  
 	}	
 
@@ -144,6 +147,7 @@ void RenderTacticalInterface( )
 
 void HandlePausedTacticalRender( void )
 {
+	PERFORMANCE_MARKER
 
 	// for a one frame paused render of tactical
 	if( gfPausedTacticalRenderFlags )
@@ -165,6 +169,7 @@ void HandlePausedTacticalRender( void )
 
 void RenderTacticalInterfaceWhileScrolling( )
 {
+	PERFORMANCE_MARKER
 	RenderButtons( );
 
 	switch( gsCurInterfacePanel )
@@ -185,8 +190,9 @@ void RenderTacticalInterfaceWhileScrolling( )
 
 void SetUpInterface( )
 {
-	SOLDIERTYPE								 *pSoldier;
-	LEVELNODE									 *pIntTile;
+	PERFORMANCE_MARKER
+	SOLDIERTYPE								*pSoldier;
+	LEVELNODE									*pIntTile;
 
 	if ( ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
@@ -341,6 +347,7 @@ void SetUpInterface( )
 
 void ResetInterface( )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
 
 	if ( ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
@@ -438,13 +445,14 @@ UINT32	guiColors[ 12 ] =
 
 void RenderRubberBanding( )
 {
-	UINT16										 usLineColor;
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
-	INT16											 iLeft, iRight, iTop, iBottom;
-	INT32											 iBack = -1;
-	static INT32							 iFlashColor = 0;
-	static INT32							 uiTimeOfLastUpdate = 0;
+	PERFORMANCE_MARKER
+	UINT16										usLineColor;
+	UINT32										uiDestPitchBYTES;
+	UINT8											*pDestBuf;
+	INT16											iLeft, iRight, iTop, iBottom;
+	INT32											iBack = -1;
+	static INT32							iFlashColor = 0;
+	static INT32							uiTimeOfLastUpdate = 0;
 
 	if ( !gRubberBandActive )
 		return;
@@ -557,13 +565,14 @@ void RenderRubberBanding( )
 
 void RenderTopmostTacticalInterface( )
 {
-	SOLDIERTYPE								 *pSoldier;
-	UINT32											 cnt;
+	PERFORMANCE_MARKER
+	SOLDIERTYPE								*pSoldier;
+	UINT32											cnt;
 	static UINT32				uiBogTarget = 0;
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 	INT16			sX, sY;
 	INT16			sOffsetX, sOffsetY, sTempY_S, sTempX_S;
-	UINT16						usMapPos;
+	INT16						sMapPos;
 	ITEM_POOL					*pItemPool;
 
 	
@@ -662,7 +671,7 @@ void RenderTopmostTacticalInterface( )
 						sX -= 10;
 						sY -= 10;
 
-						BltVideoObjectFromIndex(  FRAME_BUFFER, uiBogTarget, 0, sX, sY, VO_BLT_SRCTRANSPARENCY, NULL );
+						BltVideoObjectFromIndex(	FRAME_BUFFER, uiBogTarget, 0, sX, sY, VO_BLT_SRCTRANSPARENCY, NULL );
 						InvalidateRegion( sX, sY, sX + 20, sY + 20 );
 					}
 				}
@@ -677,7 +686,7 @@ void RenderTopmostTacticalInterface( )
 		SetFont( LARGEFONT1 );
 		SetFontBackground( FONT_MCOLOR_BLACK );
 		SetFontForeground( FONT_MCOLOR_WHITE );
-		gprintfdirty( 0, 300, L"OPPONENT %d DEADLOCKED - 'Q' TO DEBUG, <ALT><ENTER> END OPP TURN", gUIDeadlockedSoldier  );
+		gprintfdirty( 0, 300, L"OPPONENT %d DEADLOCKED - 'Q' TO DEBUG, <ALT><ENTER> END OPP TURN", gUIDeadlockedSoldier	);
 		mprintf( 0, 300, L"OPPONENT %d DEADLOCKED - 'Q' TO DEBUG, <ALT><ENTER> END OPP TURN", gUIDeadlockedSoldier );
 
 	}
@@ -692,7 +701,7 @@ void RenderTopmostTacticalInterface( )
 
 	RenderTopmostFlashingItems( );
 
-  RenderTopmostMultiPurposeLocator( );
+	RenderTopmostMultiPurposeLocator( );
 
 	RenderAccumulatedBurstLocations( );
 
@@ -705,14 +714,14 @@ void RenderTopmostTacticalInterface( )
 		{
 			if ( pSoldier->ubID == gsSelectedGuy && gfUIHandleSelectionAboveGuy )
 			{
-        
+		
 			}
 			else
 			{
 				DrawSelectedUIAboveGuy((UINT16)pSoldier->ubID);
 			}
 
-			if ( pSoldier->fDisplayDamage )
+			if ( pSoldier->flags.fDisplayDamage )
 			{
 				// Display damage
 
@@ -724,29 +733,29 @@ void RenderTopmostTacticalInterface( )
 					GetSoldierScreenPos( pSoldier, &sMercScreenX, &sMercScreenY );
 					GetSoldierAnimOffsets( pSoldier, &sOffsetX, &sOffsetY );
 
-          if ( pSoldier->ubBodyType == QUEENMONSTER )
-          {
-		        sDamageX = sMercScreenX + pSoldier->sDamageX - pSoldier->sBoundingBoxOffsetX;
-		        sDamageY = sMercScreenY + pSoldier->sDamageY - pSoldier->sBoundingBoxOffsetY;
+			if ( pSoldier->ubBodyType == QUEENMONSTER )
+			{
+			 sDamageX = sMercScreenX + pSoldier->sDamageX - pSoldier->sBoundingBoxOffsetX;
+			 sDamageY = sMercScreenY + pSoldier->sDamageY - pSoldier->sBoundingBoxOffsetY;
 
-		        sDamageX += 25;
-		        sDamageY += 10;
-          }
-          else
-          {		
-					  sDamageX = pSoldier->sDamageX + (INT16)(sMercScreenX + ( 2 * 30 / 3 )  );
-					  sDamageY = pSoldier->sDamageY + (INT16)(sMercScreenY - 5 );
+			 sDamageX += 25;
+			 sDamageY += 10;
+			}
+			else
+			{		
+					sDamageX = pSoldier->sDamageX + (INT16)(sMercScreenX + ( 2 * 30 / 3 )	);
+					sDamageY = pSoldier->sDamageY + (INT16)(sMercScreenY - 5 );
 
-					  sDamageX -= sOffsetX;
-					  sDamageY -= sOffsetY;
+					sDamageX -= sOffsetX;
+					sDamageY -= sOffsetY;
 
-			      if ( sDamageY < gsVIEWPORT_WINDOW_START_Y )
-			      {
-				      sDamageY = ( sMercScreenY - sOffsetY );
-            }
-          }
-          
-          SetFont( TINYFONT1 );
+				if ( sDamageY < gsVIEWPORT_WINDOW_START_Y )
+				{
+					sDamageY = ( sMercScreenY - sOffsetY );
+			}
+			}
+			
+			SetFont( TINYFONT1 );
 					SetFontBackground( FONT_MCOLOR_BLACK );
 					SetFontForeground( FONT_MCOLOR_WHITE );
 					
@@ -786,19 +795,19 @@ void RenderTopmostTacticalInterface( )
 	}
 
 	// CHECK IF OUR CURSOR IS OVER AN INV POOL
-	if( GetMouseMapPos( &usMapPos) )
+	if( GetMouseMapPos( &sMapPos) )
 	{
 		if ( gfUIOverItemPool )
 		{
 			if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
 			{
 				// Check if we are over an item pool
-				if ( GetItemPool( gfUIOverItemPoolGridNo, &pItemPool, pSoldier->bLevel ) )
+				if ( GetItemPool( gfUIOverItemPoolGridNo, &pItemPool, pSoldier->pathing.bLevel ) )
 				{
 					STRUCTURE					*pStructure = NULL;
 					INT16							sIntTileGridNo;
 					INT8							bZLevel = 0;
-					INT16							sActionGridNo = usMapPos;
+					INT16							sActionGridNo = sMapPos;
 
 					// Get interactive tile...
 					if ( ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE ) )
@@ -806,7 +815,7 @@ void RenderTopmostTacticalInterface( )
 						sActionGridNo = sIntTileGridNo;
 					}
 					
-					bZLevel = GetZLevelOfItemPoolGivenStructure( sActionGridNo, pSoldier->bLevel, pStructure );
+					bZLevel = GetZLevelOfItemPoolGivenStructure( sActionGridNo, pSoldier->pathing.bLevel, pStructure );
 
 					if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
 					{
@@ -817,46 +826,46 @@ void RenderTopmostTacticalInterface( )
 
 					}
 				}
-        else
-        {
-          INT8 bCheckLevel;
+		else
+		{
+			INT8 bCheckLevel;
 
-          // ATE: Allow to see list if a different level....
-          if ( pSoldier->bLevel == 0 )
-          {
-            bCheckLevel = 1;
-          }
-          else
-          {
-            bCheckLevel = 0;
-          }
+			// ATE: Allow to see list if a different level....
+			if ( pSoldier->pathing.bLevel == 0 )
+			{
+			bCheckLevel = 1;
+			}
+			else
+			{
+			bCheckLevel = 0;
+			}
 
-				  // Check if we are over an item pool
-				  if ( GetItemPool( gfUIOverItemPoolGridNo, &pItemPool, bCheckLevel ) )
-				  {
-					  STRUCTURE					*pStructure = NULL;
-					  INT16							sIntTileGridNo;
-					  INT8							bZLevel = 0;
-					  INT16							sActionGridNo = usMapPos;
+				// Check if we are over an item pool
+				if ( GetItemPool( gfUIOverItemPoolGridNo, &pItemPool, bCheckLevel ) )
+				{
+					STRUCTURE					*pStructure = NULL;
+					INT16							sIntTileGridNo;
+					INT8							bZLevel = 0;
+					INT16							sActionGridNo = sMapPos;
 
-					  // Get interactive tile...
-					  if ( ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE ) )
-					  {
-						  sActionGridNo = sIntTileGridNo;
-					  }
-					  
-					  bZLevel = GetZLevelOfItemPoolGivenStructure( sActionGridNo, bCheckLevel, pStructure );
+					// Get interactive tile...
+					if ( ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE ) )
+					{
+						sActionGridNo = sIntTileGridNo;
+					}
+					
+					bZLevel = GetZLevelOfItemPoolGivenStructure( sActionGridNo, bCheckLevel, pStructure );
 
-					  if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
-					  {
-						  DrawItemPoolList( pItemPool, gfUIOverItemPoolGridNo	, ITEMLIST_DISPLAY, bZLevel, gusMouseXPos, gusMouseYPos );
+					if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
+					{
+						DrawItemPoolList( pItemPool, gfUIOverItemPoolGridNo	, ITEMLIST_DISPLAY, bZLevel, gusMouseXPos, gusMouseYPos );
 
-						  // ATE: If over items, remove locator....
-						  RemoveFlashItemSlot( pItemPool );
+						// ATE: If over items, remove locator....
+						RemoveFlashItemSlot( pItemPool );
 
-					  }
-				  }
-        }
+					}
+				}
+		}
 			}
 		}
 	}
@@ -889,11 +898,11 @@ void RenderTopmostTacticalInterface( )
 
 	if( fRenderRadarScreen == TRUE )
 	{
-	  // Render clock
-/*  Here we was rendering closk and position string now i moved it to functions 
- *  that render SM or TEAM panel it will be usefull when RenderTownIDString will
- *  take position where render i will fix that 
- *  any questions?? joker
+	// Render clock
+/*	Here we was rendering closk and position string now i moved it to functions 
+ *	that render SM or TEAM panel it will be usefull when RenderTownIDString will
+ *	take position where render i will fix that 
+ *	any questions?? joker
  */
 //		RenderClock( CLOCK_X, CLOCK_Y );
 //		RenderTownIDString( );
@@ -931,6 +940,7 @@ void RenderTopmostTacticalInterface( )
 
 void StartViewportOverlays( )
 {
+	PERFORMANCE_MARKER
 	
 	// Set Clipping Rect to be the viewscreen
 	// Save old one
@@ -958,6 +968,7 @@ void StartViewportOverlays( )
 
 void EndViewportOverlays( )
 {
+	PERFORMANCE_MARKER
 	// Reset clipping rect
 	memcpy( &ClippingRect, &gOldClippingRect, sizeof( gOldClippingRect ) );
 	memcpy( &gDirtyClipRect, &gOldDirtyClippingRect, sizeof( gOldDirtyClippingRect ) );
@@ -967,13 +978,14 @@ void EndViewportOverlays( )
 
 void LockTacticalInterface( )
 {
+	PERFORMANCE_MARKER
 	// OK, check and see if we are not locked, if so
 	// 1) create a mouse region over the entrie interface panel
 	// 2) set flag for use in tactical to indicate we are locked
 	if ( !(guiTacticalInterfaceFlags & INTERFACE_LOCKEDLEVEL1 ) )
 	{
 		MSYS_DefineRegion( &gLockPanelOverlayRegion, 0, gsVIEWPORT_WINDOW_END_Y ,SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST,
-							 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK ); 
+							CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK ); 
 		// Add region
 		MSYS_AddRegion( &gLockPanelOverlayRegion);
 
@@ -984,6 +996,7 @@ void LockTacticalInterface( )
 
 void UnLockTacticalInterface( )
 {
+	PERFORMANCE_MARKER
 	if ( (guiTacticalInterfaceFlags & INTERFACE_LOCKEDLEVEL1 ) )
 	{
 		// Remove region
@@ -996,6 +1009,7 @@ void UnLockTacticalInterface( )
 
 void EraseInterfaceMenus( BOOLEAN fIgnoreUIUnLock )
 {
+	PERFORMANCE_MARKER
 	// ATE: If we are currently talking, setup this flag so that the
 	// automatic handler in handledialogue doesn't adjust the UI setting
 	if ( ( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) && fIgnoreUIUnLock )
@@ -1006,7 +1020,7 @@ void EraseInterfaceMenus( BOOLEAN fIgnoreUIUnLock )
 	// Remove item pointer if one active
 	CancelItemPointer( );
 
-  ShutDownQuoteBoxIfActive( );
+	ShutDownQuoteBoxIfActive( );
 	PopDownMovementMenu( );
 	PopDownOpenDoorMenu( );
 	DeleteTalkingMenu( );
@@ -1015,6 +1029,7 @@ void EraseInterfaceMenus( BOOLEAN fIgnoreUIUnLock )
 
 BOOLEAN AreWeInAUIMenu( )
 {
+	PERFORMANCE_MARKER
 	if ( gfInMovementMenu || gfInOpenDoorMenu || gfInItemPickupMenu || gfInSectorExitMenu || gfInTalkPanel )
 	{
 		return( TRUE );
@@ -1028,6 +1043,7 @@ BOOLEAN AreWeInAUIMenu( )
 
 void ResetInterfaceAndUI( )
 {
+	PERFORMANCE_MARKER
 	// Erase menus
 	EraseInterfaceMenus( FALSE );
 
@@ -1037,7 +1053,7 @@ void ResetInterfaceAndUI( )
 
 	//ResetMultiSelection( );
 
-	if ( giUIMessageOverlay != -1  )
+	if ( giUIMessageOverlay != -1	)
 	{
 		RemoveVideoOverlay( giUIMessageOverlay );
 		giUIMessageOverlay = -1;
@@ -1050,6 +1066,7 @@ void ResetInterfaceAndUI( )
 
 BOOLEAN InterfaceOKForMeanwhilePopup()
 {
+	PERFORMANCE_MARKER
 	if ( gfSwitchPanel )
 	{
 		return( FALSE );

@@ -3,8 +3,6 @@
 #else
 	#include "sgp.h"
 	#include "overhead types.h"
-	#include "Sound Control.h"
-	#include "Soldier Control.h"
 	#include "overhead.h"
 	#include "Event Pump.h"
 	#include "weapons.h"
@@ -63,6 +61,7 @@ typedef weaponDropParseData;
 static void XMLCALL 
 weaponDropStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	weaponDropParseData * pData = (weaponDropParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -104,11 +103,12 @@ weaponDropStartElementHandle(void *userData, const XML_Char *name, const XML_Cha
 static void XMLCALL
 weaponDropCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	weaponDropParseData * pData = (weaponDropParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
-	  ){
+	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
 	}
 }
@@ -116,7 +116,8 @@ weaponDropCharacterDataHandle(void *userData, const XML_Char *str, int len)
 
 static void XMLCALL
 weaponDropEndElementHandle(void *userData, const XML_Char *name)
-{	
+{
+	PERFORMANCE_MARKER	
 	weaponDropParseData * pData = (weaponDropParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -137,22 +138,22 @@ weaponDropEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curWeaponDrop.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curWeaponDrop.uiIndex	= (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubWeaponType") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curWeaponDrop.ubWeaponType   = (UINT8) atol(pData->szCharData);
+			pData->curWeaponDrop.ubWeaponType	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubEnemyDropRate") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curWeaponDrop.ubEnemyDropRate  = (UINT8) atol(pData->szCharData);
+			pData->curWeaponDrop.ubEnemyDropRate	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubMilitiaDropRate") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curWeaponDrop.ubMilitiaDropRate  = (UINT8) atol(pData->szCharData);
+			pData->curWeaponDrop.ubMilitiaDropRate	= (UINT8) atol(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;
@@ -166,6 +167,7 @@ weaponDropEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInEnemyWeaponDropsStats(WEAPON_DROPS *pEnemyWeaponDrops, STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -207,7 +209,7 @@ BOOLEAN ReadInEnemyWeaponDropsStats(WEAPON_DROPS *pEnemyWeaponDrops, STR fileNam
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 
@@ -229,6 +231,7 @@ BOOLEAN ReadInEnemyWeaponDropsStats(WEAPON_DROPS *pEnemyWeaponDrops, STR fileNam
 
 BOOLEAN WriteEnemyWeaponDropsStats(WEAPON_DROPS *pEnemyWeaponDrops, STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there

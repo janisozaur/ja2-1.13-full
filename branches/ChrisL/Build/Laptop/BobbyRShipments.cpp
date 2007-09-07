@@ -88,7 +88,7 @@ INT32		giBobbyRShipmentHomeImage;
 
 
 
-MOUSE_REGION    gSelectedPreviousShipmentsRegion[BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS];
+MOUSE_REGION	gSelectedPreviousShipmentsRegion[BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS];
 void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
@@ -111,13 +111,15 @@ INT32	CountNumberValidShipmentForTheShipmentsPage();
 
 void GameInitBobbyRShipments()
 {
+	PERFORMANCE_MARKER
 
 }
 
 
 BOOLEAN EnterBobbyRShipments()
 {
-  VOBJECT_DESC    VObjectDesc;
+	PERFORMANCE_MARKER
+	VOBJECT_DESC	VObjectDesc;
 
 	InitBobbyRWoodBackground();
 
@@ -127,23 +129,23 @@ BOOLEAN EnterBobbyRShipments()
 	CHECKF(AddVideoObject(&VObjectDesc, &guiBobbyRShipmentGrid));
 
 
-	guiBobbyRShipmentBackImage =  LoadButtonImage("LAPTOP\\CatalogueButton.sti", -1,0,-1,1,-1 );
+	guiBobbyRShipmentBackImage =	LoadButtonImage("LAPTOP\\CatalogueButton.sti", -1,0,-1,1,-1 );
 	guiBobbyRShipmetBack = CreateIconAndTextButton( guiBobbyRShipmentBackImage, BobbyROrderFormText[BOBBYR_BACK], BOBBYR_GUNS_BUTTON_FONT, 
-													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR, 
-													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR, 
-													 TEXT_CJUSTIFIED, 
-													 BOBBYR_SHIPMENT_BACK_BUTTON_X, BOBBYR_SHIPMENT_BACK_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnBobbyRShipmentBackCallback);
+													BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR, 
+													BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR, 
+													TEXT_CJUSTIFIED, 
+													BOBBYR_SHIPMENT_BACK_BUTTON_X, BOBBYR_SHIPMENT_BACK_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													DEFAULT_MOVE_CALLBACK, BtnBobbyRShipmentBackCallback);
 	SetButtonCursor( guiBobbyRShipmetBack, CURSOR_LAPTOP_SCREEN);
 
 
-	giBobbyRShipmentHomeImage =  UseLoadedButtonImage( guiBobbyRShipmentBackImage, -1,0,-1,1,-1 );
+	giBobbyRShipmentHomeImage =	UseLoadedButtonImage( guiBobbyRShipmentBackImage, -1,0,-1,1,-1 );
 	guiBobbyRShipmentHome = CreateIconAndTextButton( giBobbyRShipmentHomeImage, BobbyROrderFormText[BOBBYR_HOME], BOBBYR_GUNS_BUTTON_FONT, 
-													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR, 
-													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR, 
-													 TEXT_CJUSTIFIED, 
-													 BOBBYR_SHIPMENT_HOME_BUTTON_X, BOBBYR_SHIPMENT_HOME_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnBobbyRShipmentHomeCallback);
+													BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR, 
+													BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR, 
+													TEXT_CJUSTIFIED, 
+													BOBBYR_SHIPMENT_HOME_BUTTON_X, BOBBYR_SHIPMENT_HOME_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													DEFAULT_MOVE_CALLBACK, BtnBobbyRShipmentHomeCallback);
 	SetButtonCursor( guiBobbyRShipmentHome, CURSOR_LAPTOP_SCREEN);
 
 	CreateBobbyRayOrderTitle();
@@ -170,6 +172,7 @@ BOOLEAN EnterBobbyRShipments()
 
 void ExitBobbyRShipments()
 {
+	PERFORMANCE_MARKER
 	DeleteBobbyRWoodBackground();
 	DestroyBobbyROrderTitle();
 
@@ -185,6 +188,7 @@ void ExitBobbyRShipments()
 
 void HandleBobbyRShipments()
 {
+	PERFORMANCE_MARKER
 	if( gfBobbyRShipmentsDirty )
 	{
 		gfBobbyRShipmentsDirty = FALSE;
@@ -195,7 +199,8 @@ void HandleBobbyRShipments()
 
 void RenderBobbyRShipments()
 {
-//  HVOBJECT hPixHandle;
+	PERFORMANCE_MARKER
+//	HVOBJECT hPixHandle;
 
 	DrawBobbyRWoodBackground();
 
@@ -222,13 +227,14 @@ void RenderBobbyRShipments()
 	DisplayShipmentTitles();
 	DisplayPreviousShipments();
 
-  MarkButtonsDirty( );
+	MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 void BtnBobbyRShipmentBackCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -252,6 +258,7 @@ void BtnBobbyRShipmentBackCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnBobbyRShipmentHomeCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -261,7 +268,7 @@ void BtnBobbyRShipmentHomeCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 
-		guiCurrentLaptopMode  = LAPTOP_MODE_BOBBY_R;
+		guiCurrentLaptopMode	= LAPTOP_MODE_BOBBY_R;
 
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
@@ -275,21 +282,23 @@ void BtnBobbyRShipmentHomeCallback(GUI_BUTTON *btn,INT32 reason)
 
 void DisplayShipmentGrid()
 {
-  HVOBJECT hPixHandle;
+	PERFORMANCE_MARKER
+	HVOBJECT hPixHandle;
 
 	GetVideoObject(&hPixHandle, guiBobbyRShipmentGrid);
 
 	// Shipment Order Grid
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_SHIPMENT_DELIVERY_GRID_X, BOBBYR_SHIPMENT_DELIVERY_GRID_Y, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_SHIPMENT_DELIVERY_GRID_X, BOBBYR_SHIPMENT_DELIVERY_GRID_Y, VO_BLT_SRCTRANSPARENCY,NULL);
 
 	// Order Grid
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 1, BOBBYR_SHIPMENT_ORDER_GRID_X, BOBBYR_SHIPMENT_ORDER_GRID_Y, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject(FRAME_BUFFER, hPixHandle, 1, BOBBYR_SHIPMENT_ORDER_GRID_X, BOBBYR_SHIPMENT_ORDER_GRID_Y, VO_BLT_SRCTRANSPARENCY,NULL);
 }
 
 
 
 void DisplayShipmentTitles()
 {
+	PERFORMANCE_MARKER
 	//output the order #
 	DrawTextToScreen( gzBobbyRShipmentText[BOBBYR_SHIPMENT__ORDERED_ON], BOBBYR_SHIPMENT_SHIPMENT_ORDER_NUM_X, BOBBYR_SHIPMENT_SHIPMENT_ORDER_NUM_Y, BOBBYR_SHIPMENT_ORDER_NUM_WIDTH, BOBBYR_SHIPMENT_STATIC_TEXT_FONT, BOBBYR_SHIPMENT_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 
@@ -299,6 +308,7 @@ void DisplayShipmentTitles()
 
 void DisplayPreviousShipments()
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 	CHAR16	zText[512];
 	UINT16	usPosY = BOBBYR_SHIPMENT_ORDER_NUM_START_Y;
@@ -346,6 +356,7 @@ void DisplayPreviousShipments()
 
 void CreatePreviousShipmentsMouseRegions()
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 	UINT16	usPosY = BOBBYR_SHIPMENT_ORDER_NUM_START_Y;
 	UINT16	usWidth = BOBBYR_SHIPMENT_DELIVERY_GRID_WIDTH;
@@ -355,7 +366,7 @@ void CreatePreviousShipmentsMouseRegions()
 	for( uiCnt=0; uiCnt<uiNumItems; uiCnt++ )
 	{
 		MSYS_DefineRegion( &gSelectedPreviousShipmentsRegion[uiCnt], BOBBYR_SHIPMENT_ORDER_NUM_X, usPosY, (UINT16)(BOBBYR_SHIPMENT_ORDER_NUM_X+usWidth), (UINT16)(usPosY+usHeight), MSYS_PRIORITY_HIGH,
-								 CURSOR_WWW, MSYS_NO_CALLBACK, SelectPreviousShipmentsRegionCallBack );
+								CURSOR_WWW, MSYS_NO_CALLBACK, SelectPreviousShipmentsRegionCallBack );
 		MSYS_AddRegion(&gSelectedPreviousShipmentsRegion[uiCnt]); 
 		MSYS_SetRegionUserData( &gSelectedPreviousShipmentsRegion[uiCnt], 0, uiCnt);
 
@@ -365,18 +376,20 @@ void CreatePreviousShipmentsMouseRegions()
 
 void RemovePreviousShipmentsMouseRegions()
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 	UINT32	uiNumItems = CountNumberOfBobbyPurchasesThatAreInTransit();
 
 
 	for( uiCnt=0; uiCnt<uiNumItems; uiCnt++ )
 	{
-	  MSYS_RemoveRegion( &gSelectedPreviousShipmentsRegion[uiCnt] );
+	MSYS_RemoveRegion( &gSelectedPreviousShipmentsRegion[uiCnt] );
 	}
 }
 
 void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -413,6 +426,7 @@ void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason
 
 INT32	CountNumberValidShipmentForTheShipmentsPage()
 {
+	PERFORMANCE_MARKER
 	if( giNumberOfNewBobbyRShipment > BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS )
 		return( BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS );
 	else

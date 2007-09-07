@@ -28,7 +28,7 @@ enum
 	IMP_SKILL_TRAITS__NUMBER_SKILLS,
 };
 
-// STR16   gzIMPSkillTraitsText[];
+// STR16	gzIMPSkillTraitsText[];
 
 INT8	DoesPlayerHaveExtraAttibutePointsToDistributeBasedOnSkillSelection();
 

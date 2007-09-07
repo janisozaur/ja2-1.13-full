@@ -9,6 +9,7 @@
 
 BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 {
+	PERFORMANCE_MARKER
 	int j = 0;
 
 	if (pNameString != NULL)
@@ -19,7 +20,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 			j++;
 			if ( j<(int)strlen(Item[ubIndex].szLongItemName ))
 			{
-				pNameString[i] =  Item[ubIndex].szLongItemName  [j];
+				pNameString[i] =	Item[ubIndex].szLongItemName	[j];
 
 				#ifdef GERMAN
 				// We have a german special character
@@ -199,7 +200,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 			j++;
 			if ( j<(int)strlen(Item[ubIndex].szItemDesc ))
 			{
-				pInfoString[i] =  Item[ubIndex].szItemDesc  [j];
+				pInfoString[i] =	Item[ubIndex].szItemDesc	[j];
 
 				#ifdef GERMAN
 				// We have a german special character
@@ -386,6 +387,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 
 BOOLEAN LoadBRName(UINT16 ubIndex, STR16 pNameString )
 {
+	PERFORMANCE_MARKER
 	if (pNameString != NULL)
 	{
 		int j = -1;
@@ -395,7 +397,7 @@ BOOLEAN LoadBRName(UINT16 ubIndex, STR16 pNameString )
 			j++;
 			if ( j<(int)strlen(Item[ubIndex].szBRName))
 			{
-				pNameString[i] =  Item[ubIndex].szBRName [j];
+				pNameString[i] =	Item[ubIndex].szBRName [j];
 
 				#ifdef GERMAN
 				// We have a german special character
@@ -570,6 +572,7 @@ BOOLEAN LoadBRName(UINT16 ubIndex, STR16 pNameString )
 
 BOOLEAN LoadBRDesc(UINT16 ubIndex, STR16 pDescString )
 {
+	PERFORMANCE_MARKER
 	if (pDescString != NULL)
 	{
 		int j = -1;
@@ -579,7 +582,7 @@ BOOLEAN LoadBRDesc(UINT16 ubIndex, STR16 pDescString )
 			j++;
 			if ( j<(int)strlen(Item[ubIndex].szBRDesc))
 			{
-				pDescString[i] =  Item[ubIndex].szBRDesc [j];
+				pDescString[i] =	Item[ubIndex].szBRDesc [j];
 
 				// WANNE: German specific characters
 				#ifdef GERMAN
@@ -756,6 +759,7 @@ BOOLEAN LoadBRDesc(UINT16 ubIndex, STR16 pDescString )
 
 BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 {
+	PERFORMANCE_MARKER
 	if(pNameString != NULL)
 	{
 		int j = -1;
@@ -947,6 +951,7 @@ BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 
 void LoadAllItemNames( void )
 {
+	PERFORMANCE_MARKER
 	UINT16 usLoop;
 
 	for (usLoop = 0; usLoop < MAXITEMS; usLoop++)
@@ -961,11 +966,13 @@ void LoadAllItemNames( void )
 
 void LoadAllExternalText( void )
 {
+	PERFORMANCE_MARKER
 	LoadAllItemNames();
 }
 
 STR16 GetWeightUnitString( void )
 {
+	PERFORMANCE_MARKER
 	if ( gGameSettings.fOptions[ TOPTION_USE_METRIC_SYSTEM ] ) // metric
 	{
 		return( pMessageStrings[ MSG_KILOGRAM_ABBREVIATION ] );
@@ -978,6 +985,7 @@ STR16 GetWeightUnitString( void )
 
 FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight )
 {
+	PERFORMANCE_MARKER
 	FLOAT fWeight = 0.0f;
 
 	//if the user is smart and wants things displayed in 'metric'

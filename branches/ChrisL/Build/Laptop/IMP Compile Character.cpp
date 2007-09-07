@@ -55,15 +55,15 @@ extern BOOLEAN fLoadingCharacterForPreviousImpProfile;
 // positions of the face x and y for eyes and mouth for the 10 portraits
 INT16 sFacePositions[ NUMBER_OF_PLAYER_PORTRAITS ][ 4 ]=
 {
-  {0,0,0,0},
-  {0,0,0,0},
 	{0,0,0,0},
 	{0,0,0,0},
 	{0,0,0,0},
 	{0,0,0,0},
 	{0,0,0,0},
 	{0,0,0,0},
-  {0,0,0,0},
+	{0,0,0,0},
+	{0,0,0,0},
+	{0,0,0,0},
 	{0,0,0,0},
 	{0,0,0,0},
 	{0,0,0,0},
@@ -125,6 +125,7 @@ BOOLEAN ShouldThisMercHaveABigBody( void );
 
 void CreateACharacterFromPlayerEnteredStats( void )
 {
+	PERFORMANCE_MARKER
 
 		// Kaiden: Seems like as good a place as any to stash this function call to
 		// ensure that these lists don't get overwritten or Nulled due to the amount
@@ -134,64 +135,65 @@ void CreateACharacterFromPlayerEnteredStats( void )
 
 
 	// copy over full name
-  wcscpy( gMercProfiles[ LaptopSaveInfo.iIMPIndex ].zName, pFullName );
+	wcscpy( gMercProfiles[ LaptopSaveInfo.iIMPIndex ].zName, pFullName );
 
 	// the nickname
 	wcscpy( gMercProfiles[ LaptopSaveInfo.iIMPIndex ].zNickname, pNickName ); 
-  
+	
 	// gender 
 	if ( fCharacterIsMale == TRUE )
 	{
-    // male
-    gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bSex = MALE;
+	// male
+	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bSex = MALE;
 	}
 	else
 	{
 		// female
-    gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bSex = FEMALE;
+	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bSex = FEMALE;
 	}
 
 
 	// attributes
 	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bLifeMax		= ( INT8 )iHealth;
-	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bLife       = ( INT8 )iHealth;
-	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bAgility    = ( INT8 )iAgility;
-	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bStrength   = ( INT8 )iStrength;
-	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bDexterity  = ( INT8 )iDexterity;
-	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bWisdom     = ( INT8 )iWisdom; 
+	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bLife		= ( INT8 )iHealth;
+	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bAgility	= ( INT8 )iAgility;
+	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bStrength	= ( INT8 )iStrength;
+	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bDexterity	= ( INT8 )iDexterity;
+	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bWisdom	 = ( INT8 )iWisdom; 
 	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bLeadership = ( INT8 )iLeadership;
 
 
 		// skills
 	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bMarksmanship = ( INT8 )iMarksmanship;
-	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bMedical      = ( INT8 )iMedical;
-	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bMechanical   = ( INT8 )iMechanical;
-	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bExplosive    = ( INT8 )iExplosives;
+	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bMedical		= ( INT8 )iMedical;
+	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bMechanical	= ( INT8 )iMechanical;
+	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bExplosive	= ( INT8 )iExplosives;
 
 
-  // personality
+	// personality
 	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bPersonalityTrait = ( INT8 )iPersonality;
-  
+	
 	// attitude
-  gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bAttitude = ( INT8 )iAttitude; 
-  
+	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bAttitude = ( INT8 )iAttitude; 
+	
 	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bExpLevel = 1;
-  
+	
 	// set time away
 	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bMercStatus = 0;
 
 	
-  
+	
 	// face
-	 SelectMercFace( );
+	SelectMercFace( );
 
-	 return;
+	return;
 
 }
 
 
 BOOLEAN DoesCharacterHaveAnAttitude( void )
 {
+	PERFORMANCE_MARKER
 
 	// simply checks if caracter has an attitude other than normal
 	switch( iAttitude )
@@ -211,12 +213,13 @@ BOOLEAN DoesCharacterHaveAnAttitude( void )
 
 BOOLEAN DoesCharacterHaveAPersoanlity( void )
 {
+	PERFORMANCE_MARKER
 
 
-	  if( iPersonality != NO_PERSONALITYTRAIT )
+	if( iPersonality != NO_PERSONALITYTRAIT )
 	{
 		// yep
-	  return ( TRUE );
+	return ( TRUE );
 	}
 	else
 	{
@@ -233,10 +236,10 @@ BOOLEAN DoesCharacterHaveAPersoanlity( void )
 	return( FALSE );
 
 	// simply checks if caracter has a personality other than normal
-  if( iPersonality != NO_PERSONALITYTRAIT )
+	if( iPersonality != NO_PERSONALITYTRAIT )
 	{
 		// yep
-	  return ( TRUE );
+	return ( TRUE );
 	}
 	else
 	{
@@ -250,12 +253,13 @@ BOOLEAN DoesCharacterHaveAPersoanlity( void )
 
 void CreatePlayerAttitude( void )
 {
+	PERFORMANCE_MARKER
 
 	if(gGameSettings.fOptions[TOPTION_USE_RANDOM_PERSONALITY] == TRUE)
 		{
 			AddAnAttitudeToAttitudeList( ATT_OPTIMIST );
-			AddAnAttitudeToAttitudeList(  ATT_LONER );
-			AddAnAttitudeToAttitudeList(  ATT_FRIENDLY );
+			AddAnAttitudeToAttitudeList(	ATT_LONER );
+			AddAnAttitudeToAttitudeList(	ATT_FRIENDLY );
 			AddAnAttitudeToAttitudeList( ATT_ARROGANT );
 			AddAnAttitudeToAttitudeList( ATT_NORMAL );
 			AddAnAttitudeToAttitudeList( ATT_ASSHOLE );
@@ -333,13 +337,14 @@ void CreatePlayerAttitude( void )
 
 void AddAnAttitudeToAttitudeList( INT8 bAttitude )
 {
+	PERFORMANCE_MARKER
 	// adds an attitude to attitude list
 
 	if( iLastElementInAttitudeList < ATTITUDE_LIST_SIZE)
 	{
 		// add element
 		AttitudeList[ iLastElementInAttitudeList ] = ( INT32 )bAttitude;
-    
+	
 		// increment attitude list counter	
 		iLastElementInAttitudeList++;
 	}
@@ -350,13 +355,14 @@ void AddAnAttitudeToAttitudeList( INT8 bAttitude )
 
 void AddSkillToSkillList( INT8 bSkill )
 {
-  // adds a skill to skills list
+	PERFORMANCE_MARKER
+	// adds a skill to skills list
 
-  if( iLastElementInSkillsList < ATTITUDE_LIST_SIZE)
+	if( iLastElementInSkillsList < ATTITUDE_LIST_SIZE)
 	{
 		// add element
 		SkillsList[ iLastElementInSkillsList ] = ( INT32 )bSkill;
-    
+	
 		// increment attitude list counter	
 		iLastElementInSkillsList++;
 	}
@@ -368,6 +374,7 @@ void AddSkillToSkillList( INT8 bSkill )
 // Or for each visit there after.
 void ClearAllSkillsList( void )
 {
+	PERFORMANCE_MARKER
 	INT32		iLoop;
 
 	for ( iLoop = 0; iLoop < iLastElementInSkillsList; iLoop++ )
@@ -381,7 +388,8 @@ void ClearAllSkillsList( void )
 
 
 void RemoveSkillFromSkillsList( INT32 iIndex )
-{	
+{
+	PERFORMANCE_MARKER	
 	INT32		iLoop;
 
 	// remove a skill from the index given and shorten the list
@@ -409,6 +417,7 @@ void RemoveSkillFromSkillsList( INT32 iIndex )
 
 INT32	FindSkillInSkillsList( INT32 iSkill )
 {
+	PERFORMANCE_MARKER
 	INT32		iLoop;
 
 	for ( iLoop = 0; iLoop < iLastElementInSkillsList; iLoop++ )
@@ -424,6 +433,7 @@ INT32	FindSkillInSkillsList( INT32 iSkill )
 
 void ValidateSkillsList( void )
 {
+	PERFORMANCE_MARKER
 	INT32	iIndex;//, iValue;
 	MERCPROFILESTRUCT * pProfile;
 
@@ -440,7 +450,7 @@ void ValidateSkillsList( void )
 		}
 	}
 
-        // Kaiden using UB's code, lockpicking can't be removed from the list "yet".
+		// Kaiden using UB's code, lockpicking can't be removed from the list "yet".
 	// special check for lockpicking
 	//iValue = pProfile->bMechanical;
 	//iValue = ( iValue * pProfile->bWisdom ) / 100;
@@ -482,10 +492,10 @@ void ValidateSkillsList( void )
 
 void CreatePlayerSkills( void )
 {
+	PERFORMANCE_MARKER
 
-  // this function will 'roll a die' and decide if any attitude does exists
-  INT32 iDiceValue = 0;
-	INT32 iCounter = 0;
+	// this function will 'roll a die' and decide if any attitude does exists
+	INT32 iDiceValue = 0;
 
 	ValidateSkillsList();
 /* Kaiden - Commented out in UB to skip the whole random skill thing
@@ -500,8 +510,8 @@ void CreatePlayerSkills( void )
 
 	iSkillB = SkillsList[ iDiceValue ];
 */
-  
-        // Kaiden: This section was added in it's place:
+	
+		// Kaiden: This section was added in it's place:
 	if( iLastElementInSkillsList > 0 )
 	{
 		// set attitude
@@ -540,7 +550,7 @@ void CreatePlayerSkills( void )
 
 	/*
 	// are the same, 
-  // reroll until different, or until ATTITUDE_LIST_SIZE times
+	// reroll until different, or until ATTITUDE_LIST_SIZE times
 	iSkillB = Random( iLastElementInSkillsList + 1 );
 
 	while( (iSkillA == iSkillB ) && ( iCounter < HOW_MANY_ROLLS_FOR_SAME_SKILL_CHECK ) )
@@ -549,12 +559,12 @@ void CreatePlayerSkills( void )
 		iCounter++;
 
 		// next random 
-    iSkillB = Random( iLastElementInSkillsList + 1 );
+	iSkillB = Random( iLastElementInSkillsList + 1 );
 
 	}
-  if( iCounter == ATTITUDE_LIST_SIZE ) 
+	if( iCounter == ATTITUDE_LIST_SIZE ) 
 	{
-    iSkillB = NO_SKILLTRAIT;
+	iSkillB = NO_SKILLTRAIT;
 	}
 	return;
 
@@ -565,6 +575,7 @@ void CreatePlayerSkills( void )
 
 void AddAPersonalityToPersonalityList( INT8 bPersonlity )
 {
+	PERFORMANCE_MARKER
 	// CJC, Oct 26 98: prevent personality list from being generated
 	// because no dialogue was written to support PC personality quotes
 	
@@ -578,12 +589,12 @@ void AddAPersonalityToPersonalityList( INT8 bPersonlity )
 	//	return;
 	//}
 
-  // will add a persoanlity to persoanlity list
-  if( iLastElementInPersonalityList < ATTITUDE_LIST_SIZE)
+	// will add a persoanlity to persoanlity list
+	if( iLastElementInPersonalityList < ATTITUDE_LIST_SIZE)
 	{
 		// add element
 		PersonalityList[ iLastElementInPersonalityList ] = ( INT32 )bPersonlity;
-    
+	
 		// increment attitude list counter	
 		iLastElementInPersonalityList++;
 	}
@@ -593,6 +604,7 @@ void AddAPersonalityToPersonalityList( INT8 bPersonlity )
 
 void CreatePlayerPersonality( void )
 {
+	PERFORMANCE_MARKER
 
 	// Kaiden: Added for optional Mercenary personalities and attitudes
 
@@ -635,12 +647,12 @@ void CreatePlayerPersonality( void )
 
 			// Kaiden two chances to avoid a normal personality. As IMP
 			// says, They check it twice just to make sure :p
-  			for( iCounter = 0; iCounter < iLastElementInPersonalityList; iCounter++ )
+				for( iCounter = 0; iCounter < iLastElementInPersonalityList; iCounter++ )
 				{
 
 					DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("iDiceValue = %d",iDiceValue));
 
-					if( PersonalityList[ iDiceValue ] ==  NO_PERSONALITYTRAIT )
+					if( PersonalityList[ iDiceValue ] ==	NO_PERSONALITYTRAIT )
 						{
 							//Kaiden: Roll one more time for good measure:
 							iDiceValue = Random( iLastElementInPersonalityList + 1 );
@@ -660,17 +672,18 @@ void CreatePlayerPersonality( void )
 
 void CreatePlayersPersonalitySkillsAndAttitude( void )
 {
+	PERFORMANCE_MARKER
 
 
 
-  
+	
 	// creates personality, skills and attitudes from curretly built list
 
 	// personality
 	CreatePlayerPersonality( );
 
 	// skills are now created later after stats have been chosen
-  //CreatePlayerSkills( );
+	//CreatePlayerSkills( );
 
 	// attitude
 	CreatePlayerAttitude( );
@@ -681,9 +694,10 @@ void CreatePlayersPersonalitySkillsAndAttitude( void )
 
 void ResetSkillsAttributesAndPersonality( void )
 {
+	PERFORMANCE_MARKER
 
 	// reset count of skills attributes and personality
-  
+	
 	iLastElementInPersonalityList = 0;
 
 	iLastElementInSkillsList = 0;
@@ -695,6 +709,7 @@ void ResetSkillsAttributesAndPersonality( void )
 
 void ResetIncrementCharacterAttributes( void )
 {
+	PERFORMANCE_MARKER
 	// this resets any increments due to character generation
 	
 	// attributes
@@ -705,7 +720,7 @@ void ResetIncrementCharacterAttributes( void )
 	iAddHealth = 0;
 	iAddLeadership = 0;
 
-  // skills
+	// skills
 	iAddMarksmanship = 0;
 	iAddExplosives = 0;
 	iAddMedical = 0;
@@ -715,13 +730,14 @@ void ResetIncrementCharacterAttributes( void )
 
 void SelectMercFace( void )
 {
+	PERFORMANCE_MARKER
 	// this procedure will select the approriate face for the merc and save offsets
 
 	// grab face filename
-//  strcpy( gMercProfiles[ LaptopSaveInfo.iIMPIndex ].ubUnusedFaceFileName , pPlayerSelectedFaceFileNames[ iPortraitNumber ]);
+//	strcpy( gMercProfiles[ LaptopSaveInfo.iIMPIndex ].ubUnusedFaceFileName , pPlayerSelectedFaceFileNames[ iPortraitNumber ]);
 
 	// now the offsets
-  gMercProfiles[ LaptopSaveInfo.iIMPIndex ].ubFaceIndex = 200 + ( UINT8 )iPortraitNumber;
+	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].ubFaceIndex = 200 + ( UINT8 )iPortraitNumber;
 
 	// eyes
 	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].usEyesX = sFacePositions[ iPortraitNumber ][ 0 ];
@@ -738,11 +754,12 @@ void SelectMercFace( void )
 
 void SetMercSkinAndHairColors( void )
 {
+	PERFORMANCE_MARKER
 	enum{ PINKSKIN, TANSKIN, DARKSKIN, BLACKSKIN, NUMSKINS };
 	enum{ BROWNHEAD, BLACKHEAD, //black skin (only this line )
-		    WHITEHEAD,						//dark skin (this line plus all above)
-				BLONDHEAD, REDHEAD,   //pink/tan skin (this line plus all above )
-				NUMHEADS  
+		 WHITEHEAD,						//dark skin (this line plus all above)
+				BLONDHEAD, REDHEAD,	//pink/tan skin (this line plus all above )
+				NUMHEADS	
 			};
 
 	enum
@@ -929,6 +946,7 @@ void SetMercSkinAndHairColors( void )
 
 void HandleMercStatsForChangesInFace( )
 {
+	PERFORMANCE_MARKER
 	if ( fLoadingCharacterForPreviousImpProfile )
 	{
 		return;
@@ -941,9 +959,9 @@ void HandleMercStatsForChangesInFace( )
 	CreatePlayerSkills();
 
 	// body type
-	if ( fCharacterIsMale  )
+	if ( fCharacterIsMale	)
 	{
-    // male
+	// male
 		// big or regular
 		// Madd - don't override the skills - override the body type instead
 		if( ShouldThisMercHaveABigBody() && iSkillA != MARTIALARTS && iSkillB != MARTIALARTS )
@@ -961,13 +979,13 @@ void HandleMercStatsForChangesInFace( )
 		}
 		else
 		{
-		  gMercProfiles[ LaptopSaveInfo.iIMPIndex ].ubBodyType = REGMALE; 
-    }
+		gMercProfiles[ LaptopSaveInfo.iIMPIndex ].ubBodyType = REGMALE; 
+	}
 	}
 	else
 	{
-     // female
-	  gMercProfiles[ LaptopSaveInfo.iIMPIndex ].ubBodyType = REGFEMALE;
+	 // female
+	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].ubBodyType = REGFEMALE;
 		
 		if( iSkillA == MARTIALARTS )
 		{
@@ -981,13 +999,14 @@ void HandleMercStatsForChangesInFace( )
 
 
 	// skill trait
-  gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bSkillTrait =  ( INT8 )iSkillA;
-  gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bSkillTrait2 = ( INT8 )iSkillB;
+	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bSkillTrait =	( INT8 )iSkillA;
+	gMercProfiles[ LaptopSaveInfo.iIMPIndex ].bSkillTrait2 = ( INT8 )iSkillB;
 
 }
 
 BOOLEAN ShouldThisMercHaveABigBody( void )
 {
+	PERFORMANCE_MARKER
 	// should this merc be a big body type
 	// Madd - don't limit it by portrait
 	//if ( ( iPortraitNumber == 0 ) || ( iPortraitNumber == 6 ) || ( iPortraitNumber == 7 ) )

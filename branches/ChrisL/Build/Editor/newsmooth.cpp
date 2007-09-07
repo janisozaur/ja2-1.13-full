@@ -30,6 +30,7 @@ UINT8 CalcNewCavePerimeterValue( INT32 iMapIndex );
 
 BOOLEAN CaveAtGridNo( INT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	STRUCTURE *pStruct;
 	LEVELNODE* pLevel;
 	if( iMapIndex < 0 || iMapIndex >= NOWHERE )
@@ -58,6 +59,7 @@ BOOLEAN CaveAtGridNo( INT32 iMapIndex )
 
 UINT16 GetCaveTileIndexFromPerimeterValue( UINT8 ubTotal )
 {
+	PERFORMANCE_MARKER
 	UINT16 usType = FIRSTWALL;
 	UINT16 usIndex;
 	UINT16 usTileIndex;
@@ -77,7 +79,7 @@ UINT16 GetCaveTileIndexFromPerimeterValue( UINT8 ubTotal )
 		case 0x02: case 0x12: case 0x22: case 0x32: case 0x42: case 0x52: case 0x62: case 0x72: 
 		case 0x82: case 0x92: case 0xa2: case 0xb2: case 0xc2: case 0xd2: case 0xe2: case 0xf2:
 			usType = SECONDWALL;
-			usIndex = 5 + (UINT16)Random( 4 );  
+			usIndex = 5 + (UINT16)Random( 4 );	
 			break;
 		case 0x03: case 0x13: case 0x43: case 0x53: case 0x83: case 0x93: case 0xc3: case 0xd3: 
 			usIndex = 1;	
@@ -227,25 +229,26 @@ UINT16 GetCaveTileIndexFromPerimeterValue( UINT8 ubTotal )
 
 //	16 | 1 | 32
 //	---+---+---
-//	 8 |   | 2
+//	8 |	| 2
 //	---+---+---
 //	128| 4 | 64
 //These values are combined in any possible order ranging in 
-//values from 0 - 255.  If there is a cave existing in any of
+//values from 0 - 255.	If there is a cave existing in any of
 //these bordering gridnos, then the corresponding number is added
-//to this total.  The lookup table has been precalculated to know
-//which piece to use for all of these combinations.  In many cases,
+//to this total.	The lookup table has been precalculated to know
+//which piece to use for all of these combinations.	In many cases,
 //up to 16 combinations can share the same graphic image, as corners
 //may not effect the look of the piece.
 UINT8 CalcNewCavePerimeterValue( INT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubTotal = 0;
 	if( CaveAtGridNo( iMapIndex - WORLD_COLS ) )
 		ubTotal += 0x01;	//north
 	if( CaveAtGridNo( iMapIndex + 1 ) )
 		ubTotal += 0x02;	//east
 	if( CaveAtGridNo( iMapIndex + WORLD_COLS ) )
-		ubTotal += 0x04;	//south	 
+		ubTotal += 0x04;	//south	
 	if( CaveAtGridNo( iMapIndex - 1 ) )
 		ubTotal += 0x08;	//west
 	if( CaveAtGridNo( iMapIndex - WORLD_COLS - 1 ) )
@@ -261,6 +264,7 @@ UINT8 CalcNewCavePerimeterValue( INT32 iMapIndex )
 
 void AddCave( INT32 iMapIndex, UINT16 usIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pStruct;
 
 	if( iMapIndex < 0 || iMapIndex >= NOWHERE )
@@ -284,21 +288,21 @@ void AddCave( INT32 iMapIndex, UINT16 usIndex )
 INT8 gbWallTileLUT[NUM_WALL_TYPES][7] = 
 { 
 //	The number of variants of this tile type.
-//  |			The first relative index of the wall type (FIRSTWALL, SECONDWALL, etc. )  walltype + 10
-//	|			|		The 2nd relative index  ( walltype + 11 )
+//	|			The first relative index of the wall type (FIRSTWALL, SECONDWALL, etc. )	walltype + 10
+//	|			|		The 2nd relative index	( walltype + 11 )
 //	|			|		|		3rd	4th 5th 6th
-//	|			|		|		|		|   |   |
+//	|			|		|		|		|	|	|
 		6,		10, 11, 12, 27, 28, 29,					//INTERIOR_L
-		6,		 7,  8,  9, 24, 25, 26,					//INTERIOR_R
-		6,     4,  5,  6, 21, 22, 23,					//EXTERIOR_L
-		6,		 1,  2,  3, 18, 19, 20,					//EXTERIOR_R
-		1,		14,  0,  0,  0,  0,  0,					//INTERIOR_CORNER
-		1,    15,  0,  0,  0,  0,  0,					//INTERIOR_BOTTOMEND
-		1,    13,  0,  0,  0,  0,  0,					//EXTERIOR_BOTTOMEND
-		1,    16,  0,  0,  0,  0,  0,					//INTERIOR_EXTENDED
-		1,    57,  0,  0,  0,  0,  0,					//EXTERIOR_EXTENDED
-		1,    56,  0,  0,  0,  0,  0,					//INTERIOR_EXTENDED_BOTTOMEND  
-		1,    17,  0,  0,  0,  0,  0,					//EXTERIOR_EXTENDED_BOTTOMEND  
+		6,		7,	8,	9, 24, 25, 26,					//INTERIOR_R
+		6,	 4,	5,	6, 21, 22, 23,					//EXTERIOR_L
+		6,		1,	2,	3, 18, 19, 20,					//EXTERIOR_R
+		1,		14,	0,	0,	0,	0,	0,					//INTERIOR_CORNER
+		1,	15,	0,	0,	0,	0,	0,					//INTERIOR_BOTTOMEND
+		1,	13,	0,	0,	0,	0,	0,					//EXTERIOR_BOTTOMEND
+		1,	16,	0,	0,	0,	0,	0,					//INTERIOR_EXTENDED
+		1,	57,	0,	0,	0,	0,	0,					//EXTERIOR_EXTENDED
+		1,	56,	0,	0,	0,	0,	0,					//INTERIOR_EXTENDED_BOTTOMEND	
+		1,	17,	0,	0,	0,	0,	0,					//EXTERIOR_EXTENDED_BOTTOMEND	
 };
 
 //Roof table -- such a small table, using definitions instead.
@@ -333,8 +337,8 @@ INT8 gbWallTileLUT[NUM_WALL_TYPES][7] =
 //PRIVATELY "ENCAPSULATED" FUNCTIONS
 
 //These construction functions do all the smoothing.
-//NOTE:  passing null for wall/roof type will force the function to search for the nearest 
-//  existing respective type.
+//NOTE:	passing null for wall/roof type will force the function to search for the nearest 
+//	existing respective type.
 void BuildSlantRoof( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT16 usWallType, UINT16 usRoofType, BOOLEAN fVertical ); 
 
 void BulldozeNature( UINT32 iMapIndex );
@@ -350,16 +354,17 @@ void ConsiderEffectsOfNewWallPiece( UINT32 iMapIndex, UINT8 usWallOrientation );
 
 void BuildSlantRoof( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT16 usWallType, UINT16 usRoofType, BOOLEAN fVertical )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	UINT16 usTileIndex;
 	INT32 iMapIndex;
 	if( fVertical )
 	{
 		iMapIndex = iBottom * WORLD_COLS + iLeft;
-		//This happens to be the only mapindex that needs to be backed up.  The rest have already been
+		//This happens to be the only mapindex that needs to be backed up.	The rest have already been
 		//done because of the building code before this.
 		AddToUndoList( iMapIndex + 8 );
-		//Add the closest viewable pieces.  There are two aframe walls pieces, and extended aframe roof pieces.
+		//Add the closest viewable pieces.	There are two aframe walls pieces, and extended aframe roof pieces.
 		GetTileIndexFromTypeSubIndex( usWallType, VWALL_LEFT, &usTileIndex );
 		AddRoofToHead( iMapIndex + 4, usTileIndex );
 		GetTileIndexFromTypeSubIndex( usWallType, VWALL_RIGHT, &usTileIndex );
@@ -385,10 +390,10 @@ void BuildSlantRoof( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT1
 	else
 	{
 		iMapIndex = iTop * WORLD_COLS + iRight;
-		//This happens to be the only mapindex that needs to be backed up.  The rest have already been
+		//This happens to be the only mapindex that needs to be backed up.	The rest have already been
 		//done because of the building code before this.
 		AddToUndoList( iMapIndex + 8*WORLD_COLS );
-		//Add the closest viewable pieces.  There are two aframe walls pieces, and extended aframe roof pieces.
+		//Add the closest viewable pieces.	There are two aframe walls pieces, and extended aframe roof pieces.
 		GetTileIndexFromTypeSubIndex( usWallType, HWALL_LEFT, &usTileIndex );
 		AddRoofToHead( iMapIndex + 4*WORLD_COLS, usTileIndex );
 		GetTileIndexFromTypeSubIndex( usWallType, HWALL_RIGHT, &usTileIndex );
@@ -415,6 +420,7 @@ void BuildSlantRoof( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT1
 
 UINT16 PickAWallPiece( UINT16 usWallPieceType )
 {
+	PERFORMANCE_MARKER
 	UINT16 usVariants;
 	UINT16 usVariantChosen;
 	UINT16 usWallPieceChosen = 0;
@@ -429,16 +435,17 @@ UINT16 PickAWallPiece( UINT16 usWallPieceType )
 
 //From a given gridNo and perspective (wallpiece), it will calculate the new piece, and 
 //where to place it as well as handle the special cases.
-//NOTE:  Placing top and left pieces are placed relative to the gridno, and the gridNo will
-// shift accordingly to place the piece.  Pretend you are the floor, and you want to place a piece to
-// the left.  You pass your position, and INTERIOR_LEFT, with interior meaning from the inside of a 
-// building.  If you were outside the building, you would call EXTERIOR_LEFT.  The left tile will be 
-// placed on gridNo - 1!  Up tiles will be placed on gridNo - 160.
-//NOTE:  Passing NULL for usWallType will force it to calculate the closest existing wall type, and
-//  use that for building this new wall.  It is necessary for restructuring a building, but not for
-//  adding on to an existing building, where the type is already known.
+//NOTE:	Placing top and left pieces are placed relative to the gridno, and the gridNo will
+// shift accordingly to place the piece.	Pretend you are the floor, and you want to place a piece to
+// the left.	You pass your position, and INTERIOR_LEFT, with interior meaning from the inside of a 
+// building.	If you were outside the building, you would call EXTERIOR_LEFT.	The left tile will be 
+// placed on gridNo - 1!	Up tiles will be placed on gridNo - 160.
+//NOTE:	Passing NULL for usWallType will force it to calculate the closest existing wall type, and
+//	use that for building this new wall.	It is necessary for restructuring a building, but not for
+//	adding on to an existing building, where the type is already known.
 void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 {
+	PERFORMANCE_MARKER
 	INT16 sIndex;
 	UINT16 usTileIndex;
 	UINT16 ubWallClass;
@@ -489,7 +496,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 			ubWallClass = EXTERIOR_R;
 			iMapIndex--;
 			if( GetHorizontalWall( iMapIndex ) )
-			{	//Special case where placing the new wall will generate a corner.  This piece
+			{	//Special case where placing the new wall will generate a corner.	This piece
 				//becomes an exterior bottomend, but nothing else is effected.
 				ubWallClass = EXTERIOR_BOTTOMEND;
 			}
@@ -522,7 +529,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 				AddToUndoList( iMapIndex + WORLD_COLS - 1 );
 				GetTileIndexFromTypeSubIndex( usWallType, sIndex, &usTileIndex );
 				ReplaceStructIndex( iMapIndex + WORLD_COLS - 1, pStruct->usIndex, usTileIndex );
-				//NOTE:  Not yet checking for interior extended bottomend!
+				//NOTE:	Not yet checking for interior extended bottomend!
 			}
 			if( pStruct = GetVerticalWall( iMapIndex ) )
 			{
@@ -580,7 +587,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 		case INTERIOR_RIGHT:
 			ubWallClass = EXTERIOR_R;
 			if( GetHorizontalWall( iMapIndex ) )
-			{	//Special case where placing the new wall will generate a corner.  This piece
+			{	//Special case where placing the new wall will generate a corner.	This piece
 				//becomes an exterior bottomend, but nothing else is effected.
 				ubWallClass = EXTERIOR_BOTTOMEND;
 			}
@@ -592,7 +599,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 					ubWallClass = EXTERIOR_EXTENDED;
 			}
 			if( !gfBasement && GetHorizontalWall( iMapIndex + 1 ) && !GetHorizontalWall( iMapIndex ) 
-				  && !FloorAtGridNo( iMapIndex + WORLD_COLS ) )
+				&& !FloorAtGridNo( iMapIndex + WORLD_COLS ) )
 			{
 				GetTileIndexFromTypeSubIndex( usWallType, INTERIOR_BOTTOMEND_SHADOW_INDEX, &usTileIndex );
 				AddExclusiveShadow( iMapIndex, usTileIndex );
@@ -611,6 +618,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 
 void RebuildRoofUsingFloorInfo( INT32 iMapIndex, UINT16 usRoofType )
 {
+	PERFORMANCE_MARKER
 	UINT16 usRoofIndex, usTileIndex;
 	BOOLEAN fTop = FALSE, fBottom = FALSE, fLeft = FALSE, fRight = FALSE;
 	if( !usRoofType )
@@ -618,9 +626,9 @@ void RebuildRoofUsingFloorInfo( INT32 iMapIndex, UINT16 usRoofType )
 		usRoofType = SearchForRoofType( iMapIndex );
 	}
 	if( usRoofType == 0xffff )
-		return;  //no roof type around, so don't draw one.
+		return;	//no roof type around, so don't draw one.
 	//Analyse the mapindex for walls and set the flags.
-	//NOTE:  There is no support for more than 2 side on a roof, so if there is, draw TOPLEFT
+	//NOTE:	There is no support for more than 2 side on a roof, so if there is, draw TOPLEFT
 	AddToUndoList( iMapIndex );
 	EraseRoof( iMapIndex );
 
@@ -648,10 +656,11 @@ void RebuildRoofUsingFloorInfo( INT32 iMapIndex, UINT16 usRoofType )
 
 //Given a gridno, it will erase the current roof, and calculate the new roof piece based on the
 //wall orientions giving priority to the top and left walls before anything else.
-//NOTE:  passing NULL for usRoofType will force the function to calculate the nearest roof type,
-//  and use that for the new roof.  This is needed when erasing parts of multiple buildings simultaneously.
+//NOTE:	passing NULL for usRoofType will force the function to calculate the nearest roof type,
+//	and use that for the new roof.	This is needed when erasing parts of multiple buildings simultaneously.
 void RebuildRoof( UINT32 iMapIndex, UINT16 usRoofType )
 {
+	PERFORMANCE_MARKER
 	UINT16 usRoofIndex, usTileIndex;
 	BOOLEAN fTop, fBottom, fLeft, fRight;
 	if( !usRoofType )
@@ -659,9 +668,9 @@ void RebuildRoof( UINT32 iMapIndex, UINT16 usRoofType )
 		usRoofType = SearchForRoofType( iMapIndex );
 	}
 	if( usRoofType == 0xffff )
-		return;  //no roof type around, so don't draw one.
+		return;	//no roof type around, so don't draw one.
 	//Analyse the mapindex for walls and set the flags.
-	//NOTE:  There is no support for more than 2 side on a roof, so if there is, draw TOPLEFT
+	//NOTE:	There is no support for more than 2 side on a roof, so if there is, draw TOPLEFT
 	AddToUndoList( iMapIndex );
 	EraseRoof( iMapIndex );
 
@@ -689,6 +698,7 @@ void RebuildRoof( UINT32 iMapIndex, UINT16 usRoofType )
 
 void BulldozeNature( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	AddToUndoList( iMapIndex );
 	RemoveAllStructsOfTypeRange( iMapIndex, FIRSTISTRUCT,LASTISTRUCT );
 	RemoveAllShadowsOfTypeRange( iMapIndex, FIRSTCLIFFSHADOW, LASTCLIFFSHADOW );
@@ -701,6 +711,7 @@ void BulldozeNature( UINT32 iMapIndex )
 
 void EraseRoof( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	AddToUndoList( iMapIndex );
 	RemoveAllRoofsOfTypeRange( iMapIndex, FIRSTTEXTURE, LASTITEM );	
 	RemoveAllOnRoofsOfTypeRange( iMapIndex, FIRSTTEXTURE, LASTITEM );
@@ -709,12 +720,14 @@ void EraseRoof( UINT32 iMapIndex )
 
 void EraseFloor( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	AddToUndoList( iMapIndex );
 	RemoveAllLandsOfTypeRange( iMapIndex, FIRSTFLOOR, LASTFLOOR );
 }
 
 void EraseWalls( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	AddToUndoList( iMapIndex );
 	RemoveAllStructsOfTypeRange( iMapIndex, FIRSTTEXTURE, LASTITEM );
 	RemoveAllShadowsOfTypeRange( iMapIndex, FIRSTWALL, LASTWALL );
@@ -727,6 +740,7 @@ void EraseWalls( UINT32 iMapIndex )
 
 void EraseBuilding( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	EraseRoof( iMapIndex );
 	EraseFloor( iMapIndex );
 	EraseWalls( iMapIndex );
@@ -737,7 +751,8 @@ void EraseBuilding( UINT32 iMapIndex )
 //and the TOP_LEFT oriented wall in the gridno up one as well as the other building information at this
 //gridno.
 void EraseFloorOwnedBuildingPieces( UINT32 iMapIndex )
-{	
+{
+	PERFORMANCE_MARKER	
 	LEVELNODE	*pStruct = NULL;
 	UINT32 uiTileType;
 	UINT16 usWallOrientation;
@@ -755,7 +770,7 @@ void EraseFloorOwnedBuildingPieces( UINT32 iMapIndex )
 		{
 			GetTileType( pStruct->usIndex, &uiTileType );
 			if ( uiTileType >= FIRSTWALL && uiTileType <= LASTWALL ||
-					 uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
+					uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 			{
 				GetWallOrientation( pStruct->usIndex, &usWallOrientation );
 				if( usWallOrientation == INSIDE_TOP_RIGHT || usWallOrientation == OUTSIDE_TOP_RIGHT )
@@ -777,7 +792,7 @@ void EraseFloorOwnedBuildingPieces( UINT32 iMapIndex )
 		{
 			GetTileType( pStruct->usIndex, &uiTileType );
 			if ( uiTileType >= FIRSTWALL && uiTileType <= LASTWALL ||
-					 uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
+					uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 			{
 				GetWallOrientation( pStruct->usIndex, &usWallOrientation );
 				if( usWallOrientation == INSIDE_TOP_LEFT || usWallOrientation == OUTSIDE_TOP_LEFT )
@@ -802,6 +817,7 @@ void AddCave( INT32 iMapIndex, UINT16 usIndex );
 
 void RemoveCaveSectionFromWorld( SGPRect *pSelectRegion )
 {
+	PERFORMANCE_MARKER
 	UINT32 top, left, right, bottom, x, y;
 	UINT32 iMapIndex;
 	UINT16 usIndex;
@@ -810,20 +826,20 @@ void RemoveCaveSectionFromWorld( SGPRect *pSelectRegion )
 	left = pSelectRegion->iLeft;
 	right = pSelectRegion->iRight;
 	bottom = pSelectRegion->iBottom;
-	//Pass 1:  Remove all pieces in area
+	//Pass 1:	Remove all pieces in area
 	for( y = top; y <= bottom; y++ ) for( x = left; x <= right; x++ )
 	{
 		iMapIndex = y * WORLD_COLS + x;
 		AddToUndoList( iMapIndex );
 		RemoveAllStructsOfTypeRange( iMapIndex, FIRSTWALL, LASTWALL );		
 	}
-	//Past 2:  Go around outside perimeter and smooth each piece
+	//Past 2:	Go around outside perimeter and smooth each piece
 	for( y = top - 1; y <= bottom + 1; y++ ) for( x = left - 1; x <= right + 1; x++ )
 	{
 		iMapIndex = y * WORLD_COLS + x;
 		if( CaveAtGridNo( iMapIndex ) )
 		{
-		  ubPerimeterValue = CalcNewCavePerimeterValue( iMapIndex );
+		ubPerimeterValue = CalcNewCavePerimeterValue( iMapIndex );
 			usIndex = GetCaveTileIndexFromPerimeterValue( ubPerimeterValue );
 			AddToUndoList( iMapIndex );
 			if( usIndex != 0xffff )
@@ -838,6 +854,7 @@ void RemoveCaveSectionFromWorld( SGPRect *pSelectRegion )
 
 void AddCaveSectionToWorld( SGPRect *pSelectRegion )
 {
+	PERFORMANCE_MARKER
 	INT32 top, left, right, bottom, x, y;
 	UINT32 uiMapIndex;
 	UINT16 usIndex;
@@ -846,7 +863,7 @@ void AddCaveSectionToWorld( SGPRect *pSelectRegion )
 	left = pSelectRegion->iLeft;
 	right = pSelectRegion->iRight;
 	bottom = pSelectRegion->iBottom;
-	//Pass 1:  Add bogus piece to each gridno in region
+	//Pass 1:	Add bogus piece to each gridno in region
 	for( y = top; y <= bottom; y++ ) for( x = left; x <= right; x++ )
 	{
 		uiMapIndex = y * WORLD_COLS + x;
@@ -857,7 +874,7 @@ void AddCaveSectionToWorld( SGPRect *pSelectRegion )
 			AddCave( uiMapIndex, usIndex );
 		}
 	}
-	//Past 2:  Go around outside perimeter and smooth each piece
+	//Past 2:	Go around outside perimeter and smooth each piece
 	for( y = top - 1; y <= bottom + 1; y++ ) for( x = left - 1; x <= right + 1; x++ )
 	{
 		uiMapIndex = y * WORLD_COLS + x;
@@ -894,6 +911,7 @@ void AddCaveSectionToWorld( SGPRect *pSelectRegion )
 //outside walls missing from the new building. 
 void RemoveBuildingSectionFromWorld( SGPRect *pSelectRegion )
 {
+	PERFORMANCE_MARKER
 	UINT32 top, left, right, bottom, x, y;
 	UINT32 iMapIndex;
 	UINT16 usTileIndex;
@@ -905,17 +923,17 @@ void RemoveBuildingSectionFromWorld( SGPRect *pSelectRegion )
 	right = pSelectRegion->iRight;
 	bottom = pSelectRegion->iBottom;
 
-	//1ST PASS:  Erase all building owned by the floor tile if there is one.
+	//1ST PASS:	Erase all building owned by the floor tile if there is one.
 	for( y = top; y <= bottom; y++ ) for( x = left; x <= right; x++ )
 	{
 		iMapIndex = y * WORLD_COLS + x;
 		EraseFloorOwnedBuildingPieces( iMapIndex ); //Erase possible top and left walls in bordering tiles.
 	}
-	//2ND PASS:  Build new walls whereever there are neighboring floor tiles.
+	//2ND PASS:	Build new walls whereever there are neighboring floor tiles.
 	for( y = top; y <= bottom; y++ ) for( x = left; x <= right; x++ )
 	{
 		iMapIndex = y * WORLD_COLS + x;
-		//NOTE:  Top and bottom walls MUST be placed first -- it minimizes the number of special cases.
+		//NOTE:	Top and bottom walls MUST be placed first -- it minimizes the number of special cases.
 		if( y == top )
 		{
 			fFloor = FloorAtGridNo( iMapIndex - WORLD_COLS );
@@ -941,7 +959,7 @@ void RemoveBuildingSectionFromWorld( SGPRect *pSelectRegion )
 				BuildWallPiece( iMapIndex, EXTERIOR_RIGHT, 0 );
 		}
 	}
-	//3RD PASS:  Go around the outside of the region, and rebuild the roof.
+	//3RD PASS:	Go around the outside of the region, and rebuild the roof.
 	if( gfBasement )
 	{
 		usFloorType = GetRandomIndexByRange( FIRSTFLOOR, LASTFLOOR );
@@ -969,6 +987,7 @@ void RemoveBuildingSectionFromWorld( SGPRect *pSelectRegion )
 
 void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 {
+	PERFORMANCE_MARKER
 	INT32 top, left, right, bottom, x, y;
 	UINT32 iMapIndex;
 	UINT16 usFloorType, usWallType, usRoofType;
@@ -1002,10 +1021,10 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 		return;
 	}
 
-	//1ST PASS:  Determine if there are any floor tiles in this region.  If there are, then
-	//  that signifies that we are concantenating this building to an existing one.  Otherwise,
-	//  we are just drawing an individual building.  If we find a floor, extract the type so
-	//  we know how to draw it later.
+	//1ST PASS:	Determine if there are any floor tiles in this region.	If there are, then
+	//	that signifies that we are concantenating this building to an existing one.	Otherwise,
+	//	we are just drawing an individual building.	If we find a floor, extract the type so
+	//	we know how to draw it later.
 	fNewBuilding = TRUE;
 	for( y = top; y <= bottom; y++ ) for( x = left; x <= right; x++ )
 	{
@@ -1016,7 +1035,7 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 			UINT32 uiTileType;
 			//If a floor is found, then we are adding to an existing structure.
 			fNewBuilding = FALSE;
-			//Extract the floor type.  We already checked if there was a floor here, so it is assumed.
+			//Extract the floor type.	We already checked if there was a floor here, so it is assumed.
 			pFloor = gpWorldLevelData[ iMapIndex ].pLandHead;
 			while( pFloor )
 			{
@@ -1060,11 +1079,11 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 			return;
 	}
 
-	//2ND PASS:  Remove all walls in the region that border no floor tile, or simply walls
-	//  that are considered exterior walls.  That way, it won't wreck the inside of a building
-	//  if you select too much interior.  Also, gridnos that delete walls will also delete the 
-	//  floor and roof tiles there.  That signifies that the floorless parts will be resmoothed, 
-	//  and rebuilt in the third pass.
+	//2ND PASS:	Remove all walls in the region that border no floor tile, or simply walls
+	//	that are considered exterior walls.	That way, it won't wreck the inside of a building
+	//	if you select too much interior.	Also, gridnos that delete walls will also delete the 
+	//	floor and roof tiles there.	That signifies that the floorless parts will be resmoothed, 
+	//	and rebuilt in the third pass.
 	for( y = top; y <= bottom; y++ ) for( x = left; x <= right; x++ )
 	{
 		iMapIndex = y * WORLD_COLS + x;
@@ -1104,7 +1123,7 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 			BulldozeNature( iMapIndex );
 		}
 	}
-	//3RD PASS:  Process the region, and all walls of floorless tiles are rebuilt from interior perspective.
+	//3RD PASS:	Process the region, and all walls of floorless tiles are rebuilt from interior perspective.
 	for( y = top; y <= bottom; y++ ) for( x = left; x <= right; x++ )
 	{
 		iMapIndex = y * WORLD_COLS + x;
@@ -1145,7 +1164,7 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 		BuildSlantRoof( left, top, right, bottom, usWallType, usRoofType, fVertical ); 
 	}
 
-	//4TH PASS:  Process the region, and all floorless tiles get new roofs and floors.
+	//4TH PASS:	Process the region, and all floorless tiles get new roofs and floors.
 	for( y = top; y <= bottom; y++ ) for( x = left; x <= right; x++ )
 	{
 		iMapIndex = y * WORLD_COLS + x;
@@ -1164,6 +1183,7 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 
 void AnalyseCaveMapForStructureInfo()
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pStruct;
 	UINT32 uiTileType;
 	INT32 iMapIndex;

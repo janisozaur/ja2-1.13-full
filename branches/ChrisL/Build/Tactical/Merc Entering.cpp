@@ -7,7 +7,7 @@
 	#include "wcheck.h"
 	#include "stdlib.h"
 	#include "debug.h"
-	#include "soldier control.h"
+	//#include "soldier control.h"
 	#include "weapons.h"
 	#include "handle items.h"
 	#include "worlddef.h"	
@@ -22,7 +22,7 @@
 	#include "renderworld.h"
 	#include "tile animation.h"
 	#include "merc entering.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 	#include "strategic.h"
 	#include "strategicmap.h"
 	#include "Handle UI.h"
@@ -39,6 +39,11 @@
 	#include "Dialogue Control.h"
 	#include "Music Control.h"
 #endif
+
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 #define		MAX_MERC_IN_HELI		20
 #define		MAX_HELI_SCRIPT			30
@@ -379,11 +384,13 @@ void HandleFirstHeliDropOfGame( );
 
 void ResetHeliSeats( )
 {
+	PERFORMANCE_MARKER
 	gbNumHeliSeatsOccupied = 0;
 }
 
 void AddMercToHeli( UINT8 ubID )
 {
+	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	if ( gbNumHeliSeatsOccupied < MAX_MERC_IN_HELI )
@@ -405,6 +412,7 @@ void AddMercToHeli( UINT8 ubID )
 
 void StartHelicopterRun( INT16 sGridNoSweetSpot )
 {
+	PERFORMANCE_MARKER
 	INT16 sX, sY;
 
 	gsGridNoSweetSpot = sGridNoSweetSpot;
@@ -447,6 +455,7 @@ void StartHelicopterRun( INT16 sGridNoSweetSpot )
 
 void HandleHeliDrop( )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubScriptCode;
 	UINT32	uiClock;
 	//INT16 sWorldX, sWorldY;
@@ -481,7 +490,7 @@ void HandleHeliDrop( )
 			// Remove heli
 			DeleteAniTile( gpHeli );
 
-      RebuildCurrentSquad( );
+		RebuildCurrentSquad( );
 
 			// Remove sound
 			if( uiSoundSample!=NO_SAMPLE )
@@ -500,7 +509,7 @@ void HandleHeliDrop( )
 			SelectSoldier( gusHeliSeats[ 0 ], FALSE, TRUE );
 
 			//guiCurrentEvent = LU_ENDUILOCK;
-			//gCurrentUIMode  = LOCKUI_MODE;
+			//gCurrentUIMode	= LOCKUI_MODE;
 			guiPendingOverrideEvent = LU_ENDUILOCK;
 			//UIHandleLUIEndLock( NULL );
 
@@ -513,7 +522,7 @@ void HandleHeliDrop( )
 
 		uiClock = GetJA2Clock( );
 		
-		if ( ( uiClock - guiHeliLastUpdate ) >  ME_SCRIPT_DELAY )
+		if ( ( uiClock - guiHeliLastUpdate ) >	ME_SCRIPT_DELAY )
 		{
 			guiHeliLastUpdate = uiClock;
 
@@ -553,7 +562,7 @@ void HandleHeliDrop( )
 						UnLockPauseState();
 						UnPauseGame();
 
-            RebuildCurrentSquad( );
+			RebuildCurrentSquad( );
 
 						HandleFirstHeliDropOfGame( );
 					}
@@ -568,7 +577,7 @@ void HandleHeliDrop( )
 					UnLockPauseState();
 					UnPauseGame();
 
-          RebuildCurrentSquad( );
+			RebuildCurrentSquad( );
 
 					HandleFirstHeliDropOfGame( );
 				}
@@ -600,7 +609,7 @@ void HandleHeliDrop( )
 					{
 						//sWorldX = CenterX( gsGridNoSweetSpot );
 						//sWorldY = CenterY( gsGridNoSweetSpot );
-						EVENT_InitNewSoldierAnim( MercPtrs[ gusHeliSeats[ gbCurDrop ] ], HELIDROP, 0 , FALSE );
+						MercPtrs[ gusHeliSeats[ gbCurDrop ] ]->EVENT_InitNewSoldierAnim( HELIDROP, 0 , FALSE );
 
 						// Change insertion code
 						MercPtrs[ gusHeliSeats[ gbCurDrop ] ]->ubStrategicInsertionCode = INSERTION_CODE_NORTH;
@@ -782,6 +791,7 @@ void HandleHeliDrop( )
 
 void BeginMercEntering( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	ResetHeliSeats( );
 
 	AddMercToHeli( pSoldier->ubID );
@@ -796,6 +806,7 @@ void BeginMercEntering( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 void HandleFirstHeliDropOfGame( )
 {
+	PERFORMANCE_MARKER
 	// Are we in the first heli drop?
 	if ( gfFirstHeliRun )
 	{
@@ -815,7 +826,7 @@ void HandleFirstHeliDropOfGame( )
 	}
 
 	// Send message to turn on ai again....
-	CharacterDialogueWithSpecialEvent( 0, 0,   0 , DIALOGUE_TACTICAL_UI , FALSE , FALSE , DIALOGUE_SPECIAL_EVENT_ENABLE_AI ,0, 0 );
+	CharacterDialogueWithSpecialEvent( 0, 0,	0 , DIALOGUE_TACTICAL_UI , FALSE , FALSE , DIALOGUE_SPECIAL_EVENT_ENABLE_AI ,0, 0 );
 
 }
 

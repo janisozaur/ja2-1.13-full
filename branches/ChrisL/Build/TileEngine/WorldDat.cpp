@@ -24,11 +24,12 @@ void SetTilesetFourTerrainValues();
 // where it is read from JA2SET.DAT header.
 UINT8 gubNumSets = MAX_TILESETS;
 
-TILESET	 gTilesets[ MAX_TILESETS ];
+TILESET	gTilesets[ MAX_TILESETS ];
 
 
 void InitEngineTilesets( )
 {
+	PERFORMANCE_MARKER
 	UINT32		cnt, cnt2, uiNumFiles;
 //	FILE					*hfile;
 	HWFILE			hfile;
@@ -38,7 +39,7 @@ void InitEngineTilesets( )
 	//OPEN FILE
 //	hfile = fopen( "BINARYDATA\\JA2SET.DAT", "rb" );
 	hfile = FileOpen( "BINARYDATA\\JA2SET.DAT", FILE_ACCESS_READ, FALSE );
-	if ( !hfile  )
+	if ( !hfile	)
 	{
 		SET_ERROR( "Cannot open tileset data file" );
 		return;
@@ -122,6 +123,7 @@ void InitEngineTilesets( )
 
 void SetTilesetOneTerrainValues( )
 {
+	PERFORMANCE_MARKER
 		// FIRST TEXUTRES
 		gTileSurfaceArray[ FIRSTTEXTURE ]->ubTerrainID = FLAT_GROUND;
 		gTileSurfaceArray[ SECONDTEXTURE ]->ubTerrainID = FLAT_GROUND;
@@ -150,6 +152,7 @@ void SetTilesetOneTerrainValues( )
 
 void SetTilesetTwoTerrainValues( )
 {
+	PERFORMANCE_MARKER
 		// FIRST TEXUTRES
 		gTileSurfaceArray[ FIRSTTEXTURE ]->ubTerrainID = FLAT_GROUND;
 		gTileSurfaceArray[ SECONDTEXTURE ]->ubTerrainID = FLAT_GROUND;
@@ -177,6 +180,7 @@ void SetTilesetTwoTerrainValues( )
 
 void SetTilesetThreeTerrainValues( )
 {
+	PERFORMANCE_MARKER
 		// DIFFERENCE FROM #1 IS THAT ROADS ARE PAVED
 
 		// FIRST TEXUTRES
@@ -207,6 +211,7 @@ void SetTilesetThreeTerrainValues( )
 
 void SetTilesetFourTerrainValues( )
 {
+	PERFORMANCE_MARKER
 		// DIFFERENCE FROM #1 IS THAT FLOOR2 IS NOT FLAT_FLOOR BUT FLAT_GROUND
 
 		// FIRST TEXUTRES

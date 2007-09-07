@@ -8,7 +8,6 @@
 	#include "jascreens.h"
 	#include "laptop.h"
 	#include "worlddef.h"
-	#include "Soldier Control.h"
 	#include "overhead.h"
 	#include "fade screen.h"
 	#include "gamescreen.h" 
@@ -40,7 +39,7 @@
 	#include "Creature Spreading.h"
 	#include "Quests.h"
 	#include "Strategic AI.h"
-	#include "sound control.h"
+//	#include "Sound Control.h"
 	#include "Laptopsave.h"
 	#include "AimMembers.h"
 	#include "dialogue control.h"
@@ -63,6 +62,10 @@
 	#include "Interface Panels.h"
 #endif
 
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
 // Temp function
 void QuickSetupOfMercProfileItems( UINT32 uiCount, UINT8 ubProfileIndex );
 BOOLEAN QuickGameMemberHireMerc( UINT8 ubCurrentSoldier );
@@ -78,6 +81,7 @@ UINT8			gubScreenCount=0;
 
 void InitNPCs( void )
 {
+	PERFORMANCE_MARKER
 	MERCPROFILESTRUCT * pProfile;
 
 	// add the pilot at a random location!
@@ -171,10 +175,10 @@ void InitNPCs( void )
 	// use alternate map in this sector
 	//SectorInfo[ SECTOR( pProfile->sSectorX, pProfile->sSectorY ) ].uiFlags |= SF_USE_ALTERNATE_MAP;
 
-  gfPlayerTeamSawJoey = FALSE;
+	gfPlayerTeamSawJoey = FALSE;
 
 
-	if ( gGameOptions.ubGameStyle == STYLE_SCIFI  && gGameExternalOptions.fEnableCrepitus )
+	if ( gGameOptions.ubGameStyle == STYLE_SCIFI	&& gGameExternalOptions.fEnableCrepitus )
 	{
 		// add Bob
 		pProfile = &(gMercProfiles[BOB]);
@@ -226,10 +230,11 @@ void InitNPCs( void )
 
 void InitBloodCatSectors()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
-	//Hard coded table of bloodcat populations.  We don't have
+	//Hard coded table of bloodcat populations.	We don't have
 	//access to the real population (if different) until we physically 
-	//load the map.  If the real population is different, then an error
+	//load the map.	If the real population is different, then an error
 	//will be reported.
 	for( i = 0; i < 255; i++ )
 	{
@@ -295,6 +300,7 @@ void InitBloodCatSectors()
 
 void InitStrategicLayer( void )
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitStrategicLayer");
 
 	// Clear starategic layer!
@@ -348,6 +354,7 @@ void InitStrategicLayer( void )
 
 void ShutdownStrategicLayer()
 {
+	PERFORMANCE_MARKER
 	DeleteAllStrategicEvents();
 	RemoveAllGroups();
 	TrashUndergroundSectorInfo();
@@ -357,6 +364,7 @@ void ShutdownStrategicLayer()
 
 BOOLEAN InitNewGame( BOOLEAN fReset )
 {
+	PERFORMANCE_MARKER
 	INT32		iStartingCash;
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame");
@@ -378,7 +386,7 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame: set initial inventory coords");
 	if( gubScreenCount == 0 )
 	{
-		if(gGameOptions.ubInventorySystem)
+		if((UsingNewInventorySystem() == true))
 		{
 			InitNewInventorySystem();
 			InitializeSMPanelCoordsNew();
@@ -431,11 +439,11 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 		ResetHeliSeats( );
 
 		// Setup two new messages!
-		AddPreReadEmail(OLD_ENRICO_1,OLD_ENRICO_1_LENGTH,MAIL_ENRICO,  GetWorldTotalMin() );
-		AddPreReadEmail(OLD_ENRICO_2,OLD_ENRICO_2_LENGTH,MAIL_ENRICO,  GetWorldTotalMin() );
-		AddPreReadEmail(RIS_REPORT,RIS_REPORT_LENGTH,RIS_EMAIL,  GetWorldTotalMin() );
-		AddPreReadEmail(OLD_ENRICO_3,OLD_ENRICO_3_LENGTH,MAIL_ENRICO,  GetWorldTotalMin() );
-		AddEmail(IMP_EMAIL_INTRO,IMP_EMAIL_INTRO_LENGTH,CHAR_PROFILE_SITE,  GetWorldTotalMin(), -1);
+		AddPreReadEmail(OLD_ENRICO_1,OLD_ENRICO_1_LENGTH,MAIL_ENRICO,	GetWorldTotalMin() );
+		AddPreReadEmail(OLD_ENRICO_2,OLD_ENRICO_2_LENGTH,MAIL_ENRICO,	GetWorldTotalMin() );
+		AddPreReadEmail(RIS_REPORT,RIS_REPORT_LENGTH,RIS_EMAIL,	GetWorldTotalMin() );
+		AddPreReadEmail(OLD_ENRICO_3,OLD_ENRICO_3_LENGTH,MAIL_ENRICO,	GetWorldTotalMin() );
+		AddEmail(IMP_EMAIL_INTRO,IMP_EMAIL_INTRO_LENGTH,CHAR_PROFILE_SITE,	GetWorldTotalMin(), -1);
 		//AddEmail(ENRICO_CONGRATS,ENRICO_CONGRATS_LENGTH,MAIL_ENRICO, GetWorldTotalMin() );
 		if(gGameExternalOptions.fMercDayOne)
 		{
@@ -549,7 +557,7 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 		EnterTacticalScreen( );
 
 		if( gfAtLeastOneMercWasHired == TRUE )
-		{  
+		{	
 			gubScreenCount = 3;
 		}
 		else
@@ -569,17 +577,18 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 
 BOOLEAN AnyMercsHired( )
 {
+	PERFORMANCE_MARKER
 	INT32 cnt;
 	SOLDIERTYPE		*pTeamSoldier;
-	INT16				  bLastTeamID;
+	INT16				bLastTeamID;
 
 	// Find first guy availible in team
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
 	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 
-  // look for all mercs on the same team, 
-  for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pTeamSoldier++)
+	// look for all mercs on the same team, 
+	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pTeamSoldier++)
 	{	
 		if ( pTeamSoldier->bActive )
 		{
@@ -593,6 +602,7 @@ BOOLEAN AnyMercsHired( )
 
 void QuickStartGame( )
 {
+	PERFORMANCE_MARKER
 	INT32		cnt;
 	UINT16	usVal;
 	UINT8 ub1 = 0, ub2 = 0;
@@ -636,6 +646,7 @@ void QuickStartGame( )
 // TEMP FUNCTION!
 void QuickSetupOfMercProfileItems( UINT32 uiCount, UINT8 ubProfileIndex )
 {
+	PERFORMANCE_MARKER
 	// Quickly give some guys we hire some items
  
 	if ( uiCount == 0 )
@@ -754,6 +765,7 @@ void QuickSetupOfMercProfileItems( UINT32 uiCount, UINT8 ubProfileIndex )
 
 BOOLEAN QuickGameMemberHireMerc( UINT8 ubCurrentSoldier )
 {
+	PERFORMANCE_MARKER
 	MERC_HIRE_STRUCT HireMercStruct;
 
 	memset(&HireMercStruct, 0, sizeof(MERC_HIRE_STRUCT));
@@ -796,9 +808,10 @@ BOOLEAN QuickGameMemberHireMerc( UINT8 ubCurrentSoldier )
 
 
 
-//This function is called when the game is REstarted.  Things that need to be reinited are placed in here
+//This function is called when the game is REstarted.	Things that need to be reinited are placed in here
 void ReStartingGame()
 {
+	PERFORMANCE_MARKER
 	UINT16	cnt;
 
 	//Pause the game

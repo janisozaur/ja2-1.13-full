@@ -1,65 +1,65 @@
 #ifdef PRECOMPILEDHEADERS
-#include "Tactical All.h"
+	#include "Tactical All.h"
 #else
-#include "items.h"
-#include "Action Items.h"
-#include "handle Items.h"
-#include "overhead.h"
-#include "weapons.h"
-#include "points.h"
-#include "tiledef.h"
-#include "worlddef.h"
-#include "worldman.h"
-#include "interface.h"
-#include "renderworld.h"
-#include "Animation Control.h"
-#include "font control.h"
-#include "render dirty.h"
-#include "World items.h"
-#include "text.h"
-#include "Timer Control.h"
-#include "wcheck.h"
-#include "interface items.h"
-#include "physics.h"
-#include "soldier profile.h"
-#include "interface dialogue.h"
-#include "quests.h"
-#include "message.h"
-#include "isometric utils.h"
-#include "los.h"
-#include "dialogue control.h"
-#include "ai.h"
-#include "soldier macros.h"
-#include "interface panels.h"
-#include "Strategic Town Loyalty.h"
-#include "soldier functions.h"
-#include "Map Screen Helicopter.h"
-#include "pathai.h"
-#include "fov.h"
-#include "MessageBoxScreen.h"
-#include "explosion control.h"
-#include "SkillCheck.h"
-#include "Campaign.h"
-#include "Random.h"
-#include "structure wrap.h"
-#include "interactive tiles.h"
-#include "SaveLoadMap.h"
-#include "ShopKeeper Interface.h"
-#include "Arms Dealer Init.h"
-#include "soldier add.h"
-#include "sound control.h"
-#include "squads.h"
-#include "rotting corpses.h"
-#include "soldier ani.h"
-#include "Opplist.h"
-#include "qarray.h"
-#include "render fun.h"
-#include "environment.h"
-#include "Map Information.h"
-#include "GameSettings.h"
-#include "end game.h"
-#include "interface control.h"
-#include "Map Screen Interface Map Inventory.h"
+	#include "items.h"
+	#include "Action Items.h"
+	#include "handle Items.h"
+	#include "overhead.h"
+	#include "weapons.h"
+	#include "points.h"
+	#include "tiledef.h"
+	#include "worlddef.h"
+	#include "worldman.h"
+	#include "interface.h"
+	#include "renderworld.h"
+	#include "Animation Control.h"
+	#include "font control.h"
+	#include "render dirty.h"
+	#include "World items.h"
+	#include "text.h"
+	#include "Timer Control.h"
+	#include "wcheck.h"
+	#include "interface items.h"
+	#include "physics.h"
+	#include "soldier profile.h"
+	#include "interface dialogue.h"
+	#include "quests.h"
+	#include "message.h"
+	#include "isometric utils.h"
+	#include "los.h"
+	#include "dialogue control.h"
+	#include "ai.h"
+	#include "soldier macros.h"
+	#include "interface panels.h"
+	#include "Strategic Town Loyalty.h"
+	#include "soldier functions.h"
+	#include "Map Screen Helicopter.h"
+	#include "pathai.h"
+	#include "fov.h"
+	#include "MessageBoxScreen.h"
+	#include "explosion control.h"
+	#include "SkillCheck.h"
+	#include "Campaign.h"
+	#include "Random.h"
+	#include "structure wrap.h"
+	#include "interactive tiles.h"
+	#include "SaveLoadMap.h"
+	#include "ShopKeeper Interface.h"
+	#include "Arms Dealer Init.h"
+	#include "soldier add.h"
+	#include "Sound Control.h"
+	#include "squads.h"
+	#include "rotting corpses.h"
+	#include "soldier ani.h"
+	#include "Opplist.h"
+	#include "qarray.h"
+	#include "render fun.h"
+	#include "environment.h"
+	#include "Map Information.h"
+	#include "GameSettings.h"
+	#include "end game.h"
+	#include "interface control.h"
+	#include "Map Screen Interface Map Inventory.h"
 #endif
 
 #define					NUM_ITEMS_LISTED			8
@@ -110,7 +110,7 @@ BOOLEAN ItemPoolOKForPickup( SOLDIERTYPE * pSoldier, ITEM_POOL *pItemPool, INT8 
 SOLDIERTYPE *		gpBoobyTrapSoldier;
 ITEM_POOL *			gpBoobyTrapItemPool;
 INT16						gsBoobyTrapGridNo;
-INT8            gbBoobyTrapLevel;
+INT8			gbBoobyTrapLevel;
 BOOLEAN					gfDisarmingBuriedBomb;
 extern BOOLEAN	gfDontChargeAPsToPickup;
 INT8						gbTrapDifficulty;
@@ -140,7 +140,7 @@ BOOLEAN	HandleCheckForBadChangeToGetThrough( SOLDIERTYPE *pSoldier, SOLDIERTYPE 
 
 	if ( fBadChangeToGetThrough )
 	{
-		if ( gTacticalStatus.sCantGetThroughSoldierGridNo != pSoldier->sGridNo ||  gTacticalStatus.sCantGetThroughGridNo != sTargetGridNo || gTacticalStatus.ubCantGetThroughID != pSoldier->ubID )
+		if ( gTacticalStatus.sCantGetThroughSoldierGridNo != pSoldier->sGridNo ||	gTacticalStatus.sCantGetThroughGridNo != sTargetGridNo || gTacticalStatus.ubCantGetThroughID != pSoldier->ubID )
 		{
 			gTacticalStatus.fCantGetThrough = FALSE;
 		}
@@ -184,6 +184,7 @@ BOOLEAN	HandleCheckForBadChangeToGetThrough( SOLDIERTYPE *pSoldier, SOLDIERTYPE 
 
 INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pTargetSoldier = NULL;
 	UINT16						usSoldierIndex;
 	INT16							sTargetGridNo;
@@ -199,7 +200,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 
 
 	// Remove any previous actions
-	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+	pSoldier->aiData.ubPendingAction		= NO_PENDING_ACTION;
 
 	// here is where we would set a different value if the weapon mode is on 
 	// "attached weapon"
@@ -234,14 +235,14 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		gTacticalStatus.ubAttackBusyCount = 0;
 	}
 
-	//  if ( pTargetSoldier )
-	//  {
-	//    pTargetSoldier->bBeingAttackedCount = 0;
-	//  }
+//	if ( pTargetSoldier )
+//	{
+//	pTargetSoldier->bBeingAttackedCount = 0;
+//	}
 
 
 	// Check our soldier's life for unconscious!
-	if ( pSoldier->bLife < OKLIFE )
+	if ( pSoldier->stats.bLife < OKLIFE )
 	{
 		return( ITEM_HANDLE_UNCONSCIOUS );
 	}
@@ -251,12 +252,12 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		return( ITEM_HANDLE_BROKEN );
 	}
 
-	if ( fFromUI && pSoldier->bTeam == gbPlayerNum && pTargetSoldier && (pTargetSoldier->bTeam == gbPlayerNum || pTargetSoldier->bNeutral) && pTargetSoldier->ubBodyType != CROW && Item[ usHandItem ].usItemClass != IC_MEDKIT )
+	if ( fFromUI && pSoldier->bTeam == gbPlayerNum && pTargetSoldier && (pTargetSoldier->bTeam == gbPlayerNum || pTargetSoldier->aiData.bNeutral) && pTargetSoldier->ubBodyType != CROW && Item[ usHandItem ].usItemClass != IC_MEDKIT )
 	{
-		if ( pSoldier->ubProfile != NO_PROFILE  )
+		if ( pSoldier->ubProfile != NO_PROFILE	)
 		{
 			// nice mercs won't shoot other nice guys or neutral civilians
-			if ( (gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags3 & PROFILE_MISC_FLAG3_GOODGUY) && ( (pTargetSoldier->ubProfile == NO_PROFILE && pTargetSoldier->bNeutral) || gMercProfiles[ pTargetSoldier->ubProfile ].ubMiscFlags3 & PROFILE_MISC_FLAG3_GOODGUY) )
+			if ( (gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags3 & PROFILE_MISC_FLAG3_GOODGUY) && ( (pTargetSoldier->ubProfile == NO_PROFILE && pTargetSoldier->aiData.bNeutral) || gMercProfiles[ pTargetSoldier->ubProfile ].ubMiscFlags3 & PROFILE_MISC_FLAG3_GOODGUY) )
 			{
 				TacticalCharacterDialogue( pSoldier, QUOTE_REFUSING_ORDER );
 				return( ITEM_HANDLE_REFUSAL );			
@@ -272,7 +273,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 			}
 
 			// any recruited rebel will refuse to fire on another rebel or neutral nameless civ
-			if ( pSoldier->ubCivilianGroup == REBEL_CIV_GROUP && (pTargetSoldier->ubCivilianGroup == REBEL_CIV_GROUP || ( pTargetSoldier->bNeutral && pTargetSoldier->ubProfile == NO_PROFILE && pTargetSoldier->ubCivilianGroup == NON_CIV_GROUP && pTargetSoldier->ubBodyType != CROW ) ) )
+			if ( pSoldier->ubCivilianGroup == REBEL_CIV_GROUP && (pTargetSoldier->ubCivilianGroup == REBEL_CIV_GROUP || ( pTargetSoldier->aiData.bNeutral && pTargetSoldier->ubProfile == NO_PROFILE && pTargetSoldier->ubCivilianGroup == NON_CIV_GROUP && pTargetSoldier->ubBodyType != CROW ) ) )
 			{
 				TacticalCharacterDialogue( pSoldier, QUOTE_REFUSING_ORDER );
 				return( ITEM_HANDLE_REFUSAL );
@@ -285,7 +286,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 	if ( Item[ usHandItem ].usItemClass == IC_GUN || Item[ usHandItem ].usItemClass == IC_THROWING_KNIFE )
 	{
 		// WEAPONS
-		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleItem: checking for fingerprintID, item id = %d,id required = %d, imprint id = %d, soldier id = %d",usHandItem,Item[usHandItem].fingerprintid,pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID,pSoldier->ubProfile));
+		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleItem: checking for fingerprintID, item id = %d,id required = %d, imprint id = %d, soldier id = %d",usHandItem,Item[usHandItem].fingerprintid,pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.ubImprintID,pSoldier->ubProfile));
 		if ( Item[usHandItem].fingerprintid )
 		{
 			// check imprint ID
@@ -293,12 +294,12 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 			// imprinted value is profile for mercs & NPCs and NO_PROFILE + 1 for generic dudes
 			if (pSoldier->ubProfile != NO_PROFILE)
 			{
-				if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID != pSoldier->ubProfile )
+				if ( pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.ubImprintID != pSoldier->ubProfile )
 				{
-					if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID == NO_PROFILE )
+					if ( pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.ubImprintID == NO_PROFILE )
 					{
 						// first shot using "virgin" gun... set imprint ID
-						pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID = pSoldier->ubProfile;
+						pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.ubImprintID = pSoldier->ubProfile;
 
 						// this could be an NPC (Krott)
 						if (pSoldier->bTeam == gbPlayerNum)
@@ -317,9 +318,9 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 						{
 							PlayJA2Sample( RG_ID_INVALID, RATE_11025, HIGHVOLUME, 1, MIDDLE );						
 
-							//if (Random( 100 ) < (UINT32) pSoldier->bWisdom)
+							//if (Random( 100 ) < (UINT32) pSoldier->stats.bWisdom)
 							//{
-							//	DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
+							//	pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 							//}
 							//else
 							//{
@@ -333,11 +334,11 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 			else
 			{
 				// guaranteed not to be controlled by the player, so no feedback required
-				if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID != (NO_PROFILE + 1) )
+				if ( pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.ubImprintID != (NO_PROFILE + 1) )
 				{
-					if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID == NO_PROFILE )
+					if ( pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.ubImprintID == NO_PROFILE )
 					{
-						pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID = (NO_PROFILE + 1);
+						pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.ubImprintID = (NO_PROFILE + 1);
 					}
 					else
 					{
@@ -354,14 +355,14 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 			if ( !EnoughAmmo( pSoldier, fFromUI, HANDPOS ) )
 			{
 				//ATE: Reflect that we need to reset for bursting
-				pSoldier->fDoSpread = FALSE;
+				pSoldier->flags.fDoSpread = FALSE;
 				return( ITEM_HANDLE_NOAMMO );
 			}
 
 			// Check if we are reloading
 			if ( (gTacticalStatus.uiFlags & REALTIME) || !(gTacticalStatus.uiFlags & INCOMBAT) )
 			{
-				if ( pSoldier->fReloading )
+				if ( pSoldier->flags.fReloading )
 				{
 					return( ITEM_HANDLE_RELOADING );
 				}
@@ -370,7 +371,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 
 		// Get gridno - either soldier's position or the gridno
 		// ??? Why isn't the target's gridno the same as the gridno of the soldier on that grid?
-		// Real example:  Soldier fires at 16701.  It finds a soldier there.  That soldier's sGridNo is 16547.  So why
+		// Real example:	Soldier fires at 16701.	It finds a soldier there.	That soldier's sGridNo is 16547.	So why
 		// isn't this soldier at grid 16547?
 		if ( pTargetSoldier != NULL )
 		{
@@ -385,7 +386,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		if ( fFromUI && (gTacticalStatus.uiFlags & TURNBASED ) && (gTacticalStatus.uiFlags & INCOMBAT) )
 		{
 			// Don't do if no spread!
-			if ( !pSoldier->fDoSpread )
+			if ( !pSoldier->flags.fDoSpread )
 			{
 				if ( !HandleCheckForBadChangeToGetThrough( pSoldier, pTargetSoldier, sTargetGridNo , bLevel ) )
 				{
@@ -400,7 +401,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		// Our guys NEED TRUE. We shoulkd at some time make sure the AI and
 		// our guys are deducting/checking in the same manner to avoid
 		// these differences.
-		sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, TRUE, pSoldier->bAimTime );
+		sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, TRUE, pSoldier->aiData.bAimTime );
 
 
 		GetAPChargeForShootOrStabWRTGunRaises( pSoldier, sTargetGridNo, TRUE, &fAddingTurningCost, &fAddingRaiseGunCost );
@@ -410,7 +411,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		{
 			if ( fAddingRaiseGunCost )
 			{
-				pSoldier->fDontChargeTurningAPs = TRUE;
+				pSoldier->flags.fDontChargeTurningAPs = TRUE;
 			}
 		}
 		/*else
@@ -418,7 +419,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		// If raising gun, don't charge turning!
 		if ( fAddingTurningCost )
 		{
-		pSoldier->fDontChargeReadyAPs = TRUE;
+		pSoldier->flags.fDontChargeReadyAPs = TRUE;
 		}
 		}*/
 
@@ -444,9 +445,9 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 					if ( EnoughPoints( pSoldier, sAPCost, 0, FALSE ) )
 					{
 						// we have enough points to do this burst, roll the dice and see if we want to change
-						if ( Random( 3 + pSoldier->bAimTime ) == 0 )
+						if ( Random( 3 + pSoldier->aiData.bAimTime ) == 0 )
 						{
-							DoMercBattleSound( pSoldier, BATTLE_SOUND_LAUGH1 );
+							pSoldier->DoMercBattleSound( BATTLE_SOUND_LAUGH1 );
 							pSoldier->bDoBurst = TRUE;
 							pSoldier->bWeaponMode = WM_BURST;
 							pSoldier->bDoAutofire = 0;
@@ -460,24 +461,24 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 
 			if(pSoldier->bDoAutofire && ((gTacticalStatus.uiFlags & INCOMBAT) && (gTacticalStatus.uiFlags & TURNBASED))) //this is the code that introduces uncertainty into full-auto bursts
 			{
-				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleItem: auto fire - setting dice sides, marksmanship = %d",pSoldier->bMarksmanship));
+				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleItem: auto fire - setting dice sides, marksmanship = %d",pSoldier->stats.bMarksmanship));
 				//UINT32 diceSides = RAND_MAX;
 				//Madd: tried to make this more marksmanship dependent than agility, a level 10 auto-weapons specialist with 100 in all stats was wasting wayyy too many APs on this fucker
-				//UINT32 diceSides = RAND_MAX / ( max(1,pSoldier->bMarksmanship) / 10) ;
+				//UINT32 diceSides = RAND_MAX / ( max(1,pSoldier->stats.bMarksmanship) / 10) ;
 
 				//Kaiden: Had to change the minimum value to 10 instead of 1, 
 				//Rounding down resulted in division by zero and caused a crash.
-				UINT32 diceSides = RAND_MAX / ( max(10,pSoldier->bMarksmanship) / 10) ;
+				UINT32 diceSides = RAND_MAX / ( max(10,pSoldier->stats.bMarksmanship) / 10) ;
 
-				DOUBLE avgAPadded = max(((400.0f-2.0f*pSoldier->bAgility))*(63.0f-5.0f*(pSoldier->bExpLevel+2.0f*NUM_SKILL_TRAITS( pSoldier, AUTO_WEAPS )))/2700.0f,1); //Important! don't make this zero, the formulae don't like it.
+				DOUBLE avgAPadded = max(((400.0f-2.0f*pSoldier->stats.bAgility))*(63.0f-5.0f*(pSoldier->stats.bExpLevel+2.0f*NUM_SKILL_TRAITS( pSoldier, AUTO_WEAPS )))/2700.0f,1); //Important! don't make this zero, the formulae don't like it.
 				UINT32 chanceToMisfire = (UINT32)(((DOUBLE)diceSides*(2.0f*avgAPadded+1.0f-sqrt(4.0f*avgAPadded+1.0f)))/(2.0f*avgAPadded)); //derive the chace to misfire from the desired average AP overspent, derived suing
-				UINT32 chanceToMisfireDry = (UINT32)(((DOUBLE)diceSides*(avgAPadded+1.0f-sqrt(2.0f*avgAPadded+1.0f)))/(avgAPadded)); //chance to misfire if weapon is dry.  Designed to waste avgAPadded/2 APs
+				UINT32 chanceToMisfireDry = (UINT32)(((DOUBLE)diceSides*(avgAPadded+1.0f-sqrt(2.0f*avgAPadded+1.0f)))/(avgAPadded)); //chance to misfire if weapon is dry.	Designed to waste avgAPadded/2 APs
 				//soldiers get better at controlling bursts with levels, and reflex time (agility)
 				UINT32 misfirePenaltyConst = (GetAutofireShotsPerFiveAPs(&pSoldier->inv[HANDPOS]))/5;
 				UINT32 misfirePenaltyRand = ((GetAutofireShotsPerFiveAPs(&pSoldier->inv[HANDPOS]))%5)*20; //this is the remainder translated to a probability
 				UINT32 misfirePenalty;
 				UINT32 startAuto = pSoldier->bDoAutofire;
-				UINT32 startAPcost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, TRUE, 0 );
+				//UINT32 startAPcost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, TRUE, 0 );
 				UINT32 roll;
 
 				if((pSoldier->ubProfile != NO_PROFILE) && (gMercProfiles[ pSoldier->ubProfile ].bPersonalityTrait == PSYCHO) && Random(100) < 20)
@@ -498,14 +499,14 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,"HandleItem: auto fire - Rolling dice");
 					roll = Random(diceSides);
 					//roll = rand();//Random(diceSides);
-					//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Rolled %d vs %d", roll, ((pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft >= pSoldier->bDoAutofire)?chanceToMisfire:chanceToMisfireDry));
+					//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Rolled %d vs %d", roll, ((pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft >= pSoldier->bDoAutofire)?chanceToMisfire:chanceToMisfireDry));
 
 					misfirePenalty = misfirePenaltyConst + (Chance(misfirePenaltyRand)?1:0); //apply the base integral cost and the fractional cost (in the form of probablilite)
 
 					pSoldier->bDoAutofire += misfirePenalty;
 					sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, TRUE, 0 );
 				}
-				while(EnoughPoints( pSoldier, sAPCost, 0, FALSE ) && roll < ((pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Gun.ubGunShotsLeft >= pSoldier->bDoAutofire)?chanceToMisfire:chanceToMisfireDry));
+				while(EnoughPoints( pSoldier, sAPCost, 0, FALSE ) && roll < ((pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft >= pSoldier->bDoAutofire)?chanceToMisfire:chanceToMisfireDry));
 				//note that we could misfire more bullets than we have rounds
 				//this represents the soldier running out of ammo and not noticing
 				//the max that can be lost this way is 1AP
@@ -513,17 +514,17 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 				pSoldier->bDoAutofire -= misfirePenalty;
 				sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, TRUE, 0 );
 
-				if((__min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Gun.ubGunShotsLeft) - startAuto) > 0 && pSoldier->bTeam == OUR_TEAM)
+				if((__min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft) - startAuto) > 0 && pSoldier->bTeam == OUR_TEAM)
 				{
 					// More than 1 round
-					if (__min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Gun.ubGunShotsLeft) - startAuto > 1)
+					if (__min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft) - startAuto > 1)
 					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 62 ], pSoldier->name, __min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Gun.ubGunShotsLeft) - startAuto );
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 62 ], pSoldier->name, __min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft) - startAuto );
 					}
 					// 1 round
 					else
 					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 63 ], pSoldier->name, __min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Gun.ubGunShotsLeft) - startAuto );
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 63 ], pSoldier->name, __min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft) - startAuto );
 					}
 				}
 
@@ -535,8 +536,8 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 			// Deduct points if our target is different!
 			// if attacking a new target (or if the specific target is uncertain)
 
-			// DEF:  Made into an event
-			//		EVENT_FireSoldierWeapon( pSoldier, sTargetGridNo );
+			// DEF:	Made into an event
+			//		pSoldier->EVENT_FireSoldierWeapon( sTargetGridNo );
 			if (fFromUI)
 			{
 				// set the target level; if the AI calls this it will have set the level already...
@@ -546,7 +547,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 			if ( Item[ usHandItem ].usItemClass != IC_THROWING_KNIFE )
 			{
 				// If doing spread, set down the first gridno.....
-				if ( pSoldier->fDoSpread )
+				if ( pSoldier->flags.fDoSpread )
 				{
 					if ( pSoldier->sSpreadLocations[ 0 ] != 0 )
 					{
@@ -577,7 +578,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 				// Get direction
 				ubDirection = (UINT8)GetDirectionFromGridNo( sTargetGridNo, pSoldier );
 
-				EVENT_SoldierBeginKnifeThrowAttack( pSoldier, sTargetGridNo, ubDirection );
+				pSoldier->EVENT_SoldierBeginKnifeThrowAttack( sTargetGridNo, ubDirection );
 
 			}
 
@@ -586,21 +587,21 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 				// Descrease aim by two if in real time
 				if ( (gTacticalStatus.uiFlags & REALTIME ) || !(gTacticalStatus.uiFlags & INCOMBAT) )
 				{
-					//pSoldier->bShownAimTime -= 2;
-					//if ( pSoldier->bShownAimTime < REFINE_AIM_1 )
+					//pSoldier->aiData.bShownAimTime -= 2;
+					//if ( pSoldier->aiData.bShownAimTime < REFINE_AIM_1 )
 					//{
-					//		pSoldier->bShownAimTime = REFINE_AIM_1;
+					//		pSoldier->aiData.bShownAimTime = REFINE_AIM_1;
 					//}
-					//pSoldier->fPauseAim = TRUE;
+					//pSoldier->flags.fPauseAim = TRUE;
 				}
 
 				// If in turn based - refresh aim to first level
 				if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
 				{
-					pSoldier->bShownAimTime = REFINE_AIM_1;
+					pSoldier->aiData.bShownAimTime = REFINE_AIM_1;
 
 					// Locate to soldier if he's about to shoot!
-					if ( pSoldier->bTeam != gbPlayerNum  )
+					if ( pSoldier->bTeam != gbPlayerNum	)
 					{
 						ShowRadioLocator( pSoldier->ubID, SHOW_LOCATOR_NORMAL );
 					}
@@ -628,8 +629,6 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		UINT8		ubGuyThere;
 		INT16		sGotLocation = NOWHERE;
 		BOOLEAN	fGotAdjacent = FALSE;
-		sAdjustedGridNo = NOWHERE;
-		ubDirection = 0xff;
 
 		for ( sCnt = 0; sCnt < NUM_WORLD_DIRECTIONS; sCnt++ )
 		{
@@ -642,7 +641,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 			}
 
 			// Check for who is there...
-			ubGuyThere = WhoIsThere2( sSpot, pSoldier->bLevel );
+			ubGuyThere = WhoIsThere2( sSpot, pSoldier->pathing.bLevel );
 
 			if ( pTargetSoldier != NULL && ubGuyThere == pTargetSoldier->ubID )
 			{
@@ -658,7 +657,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		if ( sGotLocation == NOWHERE )
 		{
 			// See if we can get there to punch	
-			sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+			sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 			if ( sActionGridNo != -1 )
 			{
 				// OK, we've got somebody...
@@ -673,23 +672,23 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		{
 			pSoldier->sTargetGridNo = sGridNo;
 
-			pSoldier->usActionData	= sGridNo;
+			pSoldier->aiData.usActionData	= sGridNo;
 			// CHECK IF WE ARE AT THIS GRIDNO NOW
 			if ( pSoldier->sGridNo != sGotLocation && fGotAdjacent )
 			{
 				// SEND PENDING ACTION
-				pSoldier->ubPendingAction = MERC_PUNCH;
-				pSoldier->sPendingActionData2  = sAdjustedGridNo;
-				pSoldier->bPendingActionData3  = ubDirection;
-				pSoldier->ubPendingActionAnimCount = 0;
+				pSoldier->aiData.ubPendingAction = MERC_PUNCH;
+				pSoldier->aiData.sPendingActionData2	= sAdjustedGridNo;
+				pSoldier->aiData.bPendingActionData3	= ubDirection;
+				pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 				// WALK UP TO DEST FIRST
-				EVENT_InternalGetNewSoldierPath( pSoldier, sGotLocation, pSoldier->usUIMovementMode, FALSE, TRUE );
+				pSoldier->EVENT_InternalGetNewSoldierPath( sGotLocation, pSoldier->usUIMovementMode, FALSE, TRUE );
 			}
 			else
 			{	
-				pSoldier->bAction = AI_ACTION_KNIFE_STAB;
-				EVENT_SoldierBeginPunchAttack( pSoldier, sAdjustedGridNo, ubDirection );
+				pSoldier->aiData.bAction = AI_ACTION_KNIFE_STAB;
+				pSoldier->EVENT_SoldierBeginPunchAttack( sAdjustedGridNo, ubDirection );
 			}
 
 			// OK, set UI
@@ -709,24 +708,24 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 	if ( Item[ usHandItem ].usItemClass == IC_MEDKIT )
 	{	
 		// ATE: AI CANNOT GO THROUGH HERE!
-		UINT16 usMapPos;
+		INT16 sMapPos;
 		BOOLEAN	fHadToUseCursorPos = FALSE;
 
 		if (gTacticalStatus.fAutoBandageMode)
 		{
-			usMapPos = sGridNo;
+			sMapPos = sGridNo;
 		}
 		else
 		{
-			GetMouseMapPos( &usMapPos );
+			GetMouseMapPos( &sMapPos );
 		}
 
 		// See if we can get there to stab	
-		sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+		sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 		if ( sActionGridNo == -1 )
 		{
 			// Try another location...
-			sActionGridNo =  FindAdjacentGridEx( pSoldier, usMapPos, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+			sActionGridNo =	FindAdjacentGridEx( pSoldier, sMapPos, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 
 			if ( sActionGridNo == -1 )
 			{
@@ -752,32 +751,32 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 			if ( pSoldier->sGridNo != sActionGridNo )
 			{
 				// SEND PENDING ACTION
-				pSoldier->ubPendingAction = MERC_GIVEAID;
+				pSoldier->aiData.ubPendingAction = MERC_GIVEAID;
 
 				if ( fHadToUseCursorPos )
 				{
-					pSoldier->sPendingActionData2  = usMapPos;
+					pSoldier->aiData.sPendingActionData2	= sMapPos;
 				}
 				else
 				{
 					if ( pTargetSoldier != NULL )
 					{
-						pSoldier->sPendingActionData2  = pTargetSoldier->sGridNo;
+						pSoldier->aiData.sPendingActionData2	= pTargetSoldier->sGridNo;
 					}
 					else
 					{
-						pSoldier->sPendingActionData2  = sGridNo;
+						pSoldier->aiData.sPendingActionData2	= sGridNo;
 					}
 				}
-				pSoldier->bPendingActionData3  = ubDirection;
-				pSoldier->ubPendingActionAnimCount = 0;
+				pSoldier->aiData.bPendingActionData3	= ubDirection;
+				pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 				// WALK UP TO DEST FIRST
-				EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+				pSoldier->EVENT_InternalGetNewSoldierPath( sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 			}
 			else
 			{
-				EVENT_SoldierBeginFirstAid( pSoldier, sAdjustedGridNo, ubDirection );
+				pSoldier->EVENT_SoldierBeginFirstAid( sAdjustedGridNo, ubDirection );
 			}
 
 			if ( fFromUI )
@@ -796,7 +795,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 	if ( Item[usHandItem].wirecutters && pTargetSoldier == NULL ) // Madd: quick fix to allow wirecutter/knives
 	{
 		// See if we can get there to stab	
-		sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+		sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 		if ( sActionGridNo != -1 )
 		{
 			// Calculate AP costs...
@@ -812,17 +811,17 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 				if ( pSoldier->sGridNo != sActionGridNo )
 				{
 					// SEND PENDING ACTION
-					pSoldier->ubPendingAction = MERC_CUTFFENCE;
-					pSoldier->sPendingActionData2  = sAdjustedGridNo;
-					pSoldier->bPendingActionData3  = ubDirection;
-					pSoldier->ubPendingActionAnimCount = 0;
+					pSoldier->aiData.ubPendingAction = MERC_CUTFFENCE;
+					pSoldier->aiData.sPendingActionData2	= sAdjustedGridNo;
+					pSoldier->aiData.bPendingActionData3	= ubDirection;
+					pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 					// WALK UP TO DEST FIRST
-					EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode , FALSE, TRUE );
+					pSoldier->EVENT_InternalGetNewSoldierPath( sActionGridNo, pSoldier->usUIMovementMode , FALSE, TRUE );
 				}
 				else
 				{
-					EVENT_SoldierBeginCutFence( pSoldier, sAdjustedGridNo, ubDirection );
+					pSoldier->EVENT_SoldierBeginCutFence( sAdjustedGridNo, ubDirection );
 				}
 
 
@@ -869,7 +868,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		}
 
 		// See if we can get there to stab	
-		sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+		sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 
 		if ( sActionGridNo != -1 )
 		{
@@ -883,23 +882,23 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 				if ( pSoldier->sGridNo != sActionGridNo )
 				{
 					// SEND PENDING ACTION
-					pSoldier->ubPendingAction = MERC_REPAIR;
-					pSoldier->sPendingActionData2  = sAdjustedGridNo;
+					pSoldier->aiData.ubPendingAction = MERC_REPAIR;
+					pSoldier->aiData.sPendingActionData2	= sAdjustedGridNo;
 
 					if ( fVehicle )
 					{
-						pSoldier->sPendingActionData2  = sVehicleGridNo;
+						pSoldier->aiData.sPendingActionData2	= sVehicleGridNo;
 					}
 
-					pSoldier->bPendingActionData3  = ubDirection;
-					pSoldier->ubPendingActionAnimCount = 0;
+					pSoldier->aiData.bPendingActionData3	= ubDirection;
+					pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 					// WALK UP TO DEST FIRST
-					EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+					pSoldier->EVENT_InternalGetNewSoldierPath( sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 				}
 				else
 				{
-					EVENT_SoldierBeginRepair( pSoldier, sAdjustedGridNo, ubDirection );
+					pSoldier->EVENT_SoldierBeginRepair( sAdjustedGridNo, ubDirection );
 				}
 
 				// OK, set UI
@@ -946,7 +945,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		}
 
 		// See if we can get there to stab	
-		sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+		sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 
 		if ( sActionGridNo != -1 )
 		{
@@ -960,19 +959,19 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 				if ( pSoldier->sGridNo != sActionGridNo )
 				{
 					// SEND PENDING ACTION
-					pSoldier->ubPendingAction = MERC_FUEL_VEHICLE;
-					pSoldier->sPendingActionData2  = sAdjustedGridNo;
+					pSoldier->aiData.ubPendingAction = MERC_FUEL_VEHICLE;
+					pSoldier->aiData.sPendingActionData2	= sAdjustedGridNo;
 
-					pSoldier->sPendingActionData2  = sVehicleGridNo;
-					pSoldier->bPendingActionData3  = ubDirection;
-					pSoldier->ubPendingActionAnimCount = 0;
+					pSoldier->aiData.sPendingActionData2	= sVehicleGridNo;
+					pSoldier->aiData.bPendingActionData3	= ubDirection;
+					pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 					// WALK UP TO DEST FIRST
-					EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+					pSoldier->EVENT_InternalGetNewSoldierPath( sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 				}
 				else
 				{
-					EVENT_SoldierBeginRefuel( pSoldier, sAdjustedGridNo, ubDirection );
+					pSoldier->EVENT_SoldierBeginRefuel( sAdjustedGridNo, ubDirection );
 				}
 
 				// OK, set UI
@@ -999,7 +998,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 
 	if ( Item[usHandItem].jar )
 	{
-		sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+		sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 
 		if ( sActionGridNo != -1 )
 		{
@@ -1013,17 +1012,17 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 				if ( pSoldier->sGridNo != sActionGridNo )
 				{
 					// SEND PENDING ACTION
-					pSoldier->ubPendingAction = MERC_TAKEBLOOD;
-					pSoldier->sPendingActionData2  = sAdjustedGridNo;
-					pSoldier->bPendingActionData3  = ubDirection;
-					pSoldier->ubPendingActionAnimCount = 0;
+					pSoldier->aiData.ubPendingAction = MERC_TAKEBLOOD;
+					pSoldier->aiData.sPendingActionData2	= sAdjustedGridNo;
+					pSoldier->aiData.bPendingActionData3	= ubDirection;
+					pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 					// WALK UP TO DEST FIRST
-					EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+					pSoldier->EVENT_InternalGetNewSoldierPath( sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 				}
 				else
 				{
-					EVENT_SoldierBeginTakeBlood( pSoldier, sAdjustedGridNo, ubDirection );
+					pSoldier->EVENT_SoldierBeginTakeBlood( sAdjustedGridNo, ubDirection );
 				}
 
 				// OK, set UI
@@ -1058,7 +1057,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		// We should not have null here if we are given this flag...
 		if ( pIntTile != NULL )
 		{
-			sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, FALSE, TRUE );
+			sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, FALSE, TRUE );
 
 			if ( sActionGridNo != -1 )
 			{
@@ -1072,17 +1071,17 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 					if ( pSoldier->sGridNo != sActionGridNo )
 					{
 						// SEND PENDING ACTION
-						pSoldier->ubPendingAction = MERC_ATTACH_CAN;
-						pSoldier->sPendingActionData2  = sGridNo;
-						pSoldier->bPendingActionData3  = ubDirection;
-						pSoldier->ubPendingActionAnimCount = 0;
+						pSoldier->aiData.ubPendingAction = MERC_ATTACH_CAN;
+						pSoldier->aiData.sPendingActionData2	= sGridNo;
+						pSoldier->aiData.bPendingActionData3	= ubDirection;
+						pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 						// WALK UP TO DEST FIRST
-						EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+						pSoldier->EVENT_InternalGetNewSoldierPath( sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 					}
 					else
 					{
-						EVENT_SoldierBeginTakeBlood( pSoldier, sGridNo, ubDirection );
+						pSoldier->EVENT_SoldierBeginTakeBlood( sGridNo, ubDirection );
 					}
 
 					// OK, set UI
@@ -1129,9 +1128,9 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 			else // detonator
 			{
 				// Save gridno....
-				pSoldier->sPendingActionData2  = sGridNo;
+				pSoldier->aiData.sPendingActionData2	= sGridNo;
 
-				EVENT_SoldierBeginUseDetonator( pSoldier );			
+				pSoldier->EVENT_SoldierBeginUseDetonator( );			
 
 				if ( fFromUI )
 				{
@@ -1159,7 +1158,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 	if ( Item[ usHandItem ].ubCursor == INVALIDCURS )
 	{
 		// Found detonator...
-		if ( IsDetonatorAttached( &(pSoldier->inv[ pSoldier->ubAttackingHand ] ) )  || IsRemoteDetonatorAttached( &(pSoldier->inv[ pSoldier->ubAttackingHand ] ) ) )
+		if ( IsDetonatorAttached( &(pSoldier->inv[ pSoldier->ubAttackingHand ] ) )	|| IsRemoteDetonatorAttached( &(pSoldier->inv[ pSoldier->ubAttackingHand ] ) ) )
 		{
 			fDropBomb = TRUE;
 		}
@@ -1168,20 +1167,20 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 	if ( fDropBomb )
 	{
 		// Save gridno....
-		pSoldier->sPendingActionData2  = sGridNo;
+		pSoldier->aiData.sPendingActionData2	= sGridNo;
 
 		if ( pSoldier->sGridNo != sGridNo )
 		{
 			// SEND PENDING ACTION
-			pSoldier->ubPendingAction = MERC_DROPBOMB;
-			pSoldier->ubPendingActionAnimCount = 0;
+			pSoldier->aiData.ubPendingAction = MERC_DROPBOMB;
+			pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 			// WALK UP TO DEST FIRST
-			EVENT_InternalGetNewSoldierPath( pSoldier, sGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+			pSoldier->EVENT_InternalGetNewSoldierPath( sGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 		}
 		else
 		{
-			EVENT_SoldierBeginDropBomb( pSoldier );			
+			pSoldier->EVENT_SoldierBeginDropBomb( );			
 		}
 
 		// OK, set UI
@@ -1201,42 +1200,42 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		// See if we can get there to stab	
 		if ( pSoldier->ubBodyType == BLOODCAT )
 		{
-			sActionGridNo =  FindNextToAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );	
+			sActionGridNo =	FindNextToAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );	
 		}
 		else if ( CREATURE_OR_BLOODCAT( pSoldier ) && PythSpacesAway( pSoldier->sGridNo, sGridNo ) > 1 )
 		{
-			sActionGridNo =  FindNextToAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );	
+			sActionGridNo =	FindNextToAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );	
 			if (sActionGridNo == -1)
 			{
-				sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+				sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 			}
 		}
 		else
 		{
-			sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+			sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 		}
 
 		if ( sActionGridNo != -1 )
 		{
-			pSoldier->usActionData = sActionGridNo;
+			pSoldier->aiData.usActionData = sActionGridNo;
 
 			// CHECK IF WE ARE AT THIS GRIDNO NOW
 			if ( pSoldier->sGridNo != sActionGridNo )
 			{
 				// SEND PENDING ACTION
-				pSoldier->ubPendingAction = MERC_KNIFEATTACK;
-				pSoldier->sPendingActionData2  = sAdjustedGridNo;
-				pSoldier->bPendingActionData3  = ubDirection;
-				pSoldier->ubPendingActionAnimCount = 0;
+				pSoldier->aiData.ubPendingAction = MERC_KNIFEATTACK;
+				pSoldier->aiData.sPendingActionData2	= sAdjustedGridNo;
+				pSoldier->aiData.bPendingActionData3	= ubDirection;
+				pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 				// WALK UP TO DEST FIRST
-				EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+				pSoldier->EVENT_InternalGetNewSoldierPath( sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 			}
 			else
 			{
 				// for the benefit of the AI
-				pSoldier->bAction = AI_ACTION_KNIFE_STAB;
-				EVENT_SoldierBeginBladeAttack( pSoldier, sAdjustedGridNo, ubDirection );
+				pSoldier->aiData.bAction = AI_ACTION_KNIFE_STAB;
+				pSoldier->EVENT_SoldierBeginBladeAttack( sAdjustedGridNo, ubDirection );
 			}
 
 			// OK, set UI
@@ -1264,19 +1263,19 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		//pSoldier->sLastTarget = sTargetGridNo;
 		//pSoldier->ubTargetID = WhoIsThere2( sTargetGridNo, pSoldier->bTargetLevel );
 
-		//		gTacticalStatus.ubAttackBusyCount++;
+//		gTacticalStatus.ubAttackBusyCount++;
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting swipe attack, incrementing a.b.c in HandleItems to %d", gTacticalStatus.ubAttackBusyCount) );
 		DebugAttackBusy( "Swipe attack\n");
 
 
-		sAPCost = CalcTotalAPsToAttack( pSoldier, sGridNo, FALSE, pSoldier->bAimTime );
+		sAPCost = CalcTotalAPsToAttack( pSoldier, sGridNo, FALSE, pSoldier->aiData.bAimTime );
 
 		DeductPoints( pSoldier, sAPCost, 0 );
 
-		EVENT_InitNewSoldierAnim( pSoldier, QUEEN_SWIPE, 0 , FALSE );					
+		pSoldier->EVENT_InitNewSoldierAnim( QUEEN_SWIPE, 0 , FALSE );					
 
 		//FireWeapon( pSoldier, sTargetGridNo );
-		pSoldier->bAction = AI_ACTION_KNIFE_STAB;
+		pSoldier->aiData.bAction = AI_ACTION_KNIFE_STAB;
 
 		return( ITEM_HANDLE_OK );
 	}
@@ -1307,12 +1306,12 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 			// Get new gridno!
 			sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubDirection ) );
 
-			if ( !OKFallDirection( pSoldier, sCheckGridNo, pSoldier->bLevel, ubDirection , pSoldier->usAnimState ) )
+			if ( !OKFallDirection( pSoldier, sCheckGridNo, pSoldier->pathing.bLevel, ubDirection , pSoldier->usAnimState ) )
 			{
 				return( ITEM_HANDLE_NOROOM );
 			}
 
-			pSoldier->fDontChargeAPsForStanceChange = TRUE;
+			pSoldier->flags.fDontChargeAPsForStanceChange = TRUE;
 		}
 		else if ( Item[usHandItem].grenadelauncher )//usHandItem == GLAUNCHER || usHandItem == UNDER_GLAUNCHER )
 		{
@@ -1323,7 +1322,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 			{
 				if ( fAddingRaiseGunCost )
 				{
-					pSoldier->fDontChargeTurningAPs = TRUE;
+					pSoldier->flags.fDontChargeTurningAPs = TRUE;
 				}
 			}
 			/*else
@@ -1331,7 +1330,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 			// If raising gun, don't charge turning!
 			if ( fAddingTurningCost )
 			{
-			pSoldier->fDontChargeReadyAPs = TRUE;
+			pSoldier->flags.fDontChargeReadyAPs = TRUE;
 			}
 			}*/
 		}
@@ -1341,7 +1340,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		{
 			pSoldier->ubAttackingHand = HANDPOS;
 			pSoldier->usAttackingWeapon = usHandItem;
-			pSoldier->bTargetLevel    = bLevel;
+			pSoldier->bTargetLevel	= bLevel;
 
 			// Look at the cursor, if toss cursor...
 			if ( Item[ usHandItem ].ubCursor == TOSSCURS )
@@ -1351,13 +1350,13 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 				pSoldier->ubTargetID = WhoIsThere2( sTargetGridNo, pSoldier->bTargetLevel );
 
 				// Increment attack counter...
-				//				gTacticalStatus.ubAttackBusyCount++;
+//				gTacticalStatus.ubAttackBusyCount++;
 				DebugAttackBusy( "Weapon fire\n");
 
 
 				// ATE: Don't charge turning...
-				pSoldier->fDontChargeTurningAPs = TRUE;
-				pSoldier->fDontChargeAPsForStanceChange = TRUE;
+				pSoldier->flags.fDontChargeTurningAPs = TRUE;
+				pSoldier->flags.fDontChargeAPsForStanceChange = TRUE;
 
 				FireWeapon( pSoldier, sTargetGridNo );
 			}
@@ -1386,7 +1385,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 	if ( Item[ usHandItem ].ubCursor == INVALIDCURS )
 	{
 		// Found detonator...
-		if ( IsDetonatorAttached ( &(pSoldier->inv[ usHandItem ] ) )  || IsRemoteDetonatorAttached( &(pSoldier->inv[ usHandItem ] ) ) )
+		if ( IsDetonatorAttached ( &(pSoldier->inv[ usHandItem ] ) )	|| IsRemoteDetonatorAttached( &(pSoldier->inv[ usHandItem ] ) ) )
 		{
 			StartBombMessageBox( pSoldier, sGridNo );
 
@@ -1405,6 +1404,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 
 void HandleSoldierDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	// Does this have detonator that needs info?
 	if ( IsDetonatorAttached ( &(pSoldier->inv[ HANDPOS ] ) ) || IsRemoteDetonatorAttached( &(pSoldier->inv[ HANDPOS ] ) ) )
 	{
@@ -1420,43 +1420,45 @@ void HandleSoldierDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 			if ( iResult >= 0 )
 			{
-				// EXPLOSIVES GAIN (25):  Place a bomb, or buried and armed a mine
+				// EXPLOSIVES GAIN (25):	Place a bomb, or buried and armed a mine
 				StatChange( pSoldier, EXPLODEAMT, 25, FALSE );
 
-				pSoldier->inv[ HANDPOS ].bTrap = __min( 10, ( EffectiveExplosive( pSoldier ) / 20) + (EffectiveExpLevel( pSoldier ) / 3) );
-				pSoldier->inv[ HANDPOS ].ItemData.Trigger.ubBombOwner = pSoldier->ubID + 2;
+				pSoldier->inv[ HANDPOS ][0]->data.bTrap = __min( 10, ( EffectiveExplosive( pSoldier ) / 20) + (EffectiveExpLevel( pSoldier ) / 3) );
+				pSoldier->inv[ HANDPOS ][0]->data.misc.ubBombOwner = pSoldier->ubID + 2;
 
 				// we now know there is something nasty here			
 				gpWorldLevelData[ sGridNo ].uiFlags |= MAPELEMENT_PLAYER_MINE_PRESENT;
 
-				AddItemToPool( sGridNo, &(pSoldier->inv[ HANDPOS ] ), BURIED, pSoldier->bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
-				DeleteObj( &(pSoldier->inv[ HANDPOS ]) );
+				if (pSoldier->inv[ HANDPOS ].MoveThisObjectTo(gTempObject, 1) == 0) {
+					AddItemToPool( sGridNo, &gTempObject, BURIED, pSoldier->pathing.bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
+				}
 			}
 			else
 			{
-				// EXPLOSIVES GAIN (10):  Failed to place a bomb, or bury and arm a mine
+				// EXPLOSIVES GAIN (10):	Failed to place a bomb, or bury and arm a mine
 				StatChange( pSoldier, EXPLODEAMT, 10, FROM_FAILURE );
 
-				// oops!  How badly did we screw up?
+				// oops!	How badly did we screw up?
 				if ( iResult < -20 )
 				{
 					// OOPS! ... BOOM!
-					IgniteExplosion( NOBODY, pSoldier->sX, pSoldier->sY, (INT16) (gpWorldLevelData[pSoldier->sGridNo].sHeight), pSoldier->sGridNo, pSoldier->inv[ HANDPOS ].usItem, pSoldier->bLevel );
-					DeleteObj( &(pSoldier->inv[ HANDPOS ]) );
+					IgniteExplosion( NOBODY, pSoldier->sX, pSoldier->sY, (INT16) (gpWorldLevelData[pSoldier->sGridNo].sHeight), pSoldier->sGridNo, pSoldier->inv[ HANDPOS ].usItem, pSoldier->pathing.bLevel );
+					pSoldier->inv[ HANDPOS ].MoveThisObjectTo(gTempObject, 1);
 				}
 			}
-
 		}
 	}
 }
 
 void HandleSoldierUseRemote( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	StartBombMessageBox( pSoldier, sGridNo );
 }
 
 void SoldierHandleDropItem( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	// LOOK IN PANDING DATA FOR ITEM TO DROP, AND LOCATION
 	if ( pSoldier->pTempObject != NULL )
 	{ 
@@ -1465,17 +1467,17 @@ void SoldierHandleDropItem( SOLDIERTYPE *pSoldier )
 			PlayJA2Sample( THROW_IMPACT_2, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );			
 		}
 
-		AddItemToPool( pSoldier->sGridNo, pSoldier->pTempObject, 1, pSoldier->bLevel, 0 , -1 );
+		AddItemToPool( pSoldier->sGridNo, pSoldier->pTempObject, 1, pSoldier->pathing.bLevel, 0 , -1 );
 		NotifySoldiersToLookforItems( );
 
-		MemFree( pSoldier->pTempObject );
-		pSoldier->pTempObject = NULL;
+		OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 	}
 }
 
 
 void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	// Determine what to do
 	UINT8 ubDirection;
 
@@ -1490,17 +1492,17 @@ void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 		// CHECK IF WE ARE NOT ON THE SAME GRIDNO
 		if ( sGridNo == pSoldier->sGridNo )
 		{
-			PickDropItemAnimation( pSoldier );
+			pSoldier->PickDropItemAnimation( );
 		}
 		else
 		{
 			// CHANGE DIRECTION AT LEAST
 			ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
 
-			SoldierGotoStationaryStance( pSoldier );
+			pSoldier->SoldierGotoStationaryStance( );
 
-			EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
-			pSoldier->fTurningUntilDone = TRUE;
+			pSoldier->EVENT_SetSoldierDesiredDirection( ubDirection );
+			pSoldier->flags.fTurningUntilDone = TRUE;
 
 			// Draw item depending on distance from buddy
 			if ( GetRangeFromGridNoDiff( sGridNo, pSoldier->sGridNo ) < MIN_LOB_RANGE )
@@ -1517,49 +1519,47 @@ void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 		//<SB> crouch throwing
 	case ANIM_PRONE:
-		if ( sGridNo == pSoldier->sGridNo )
-		{
-			// OK, JUST DROP ITEM!
-			if ( pSoldier->pTempObject != NULL )
+			if ( sGridNo == pSoldier->sGridNo )
 			{
-				AddItemToPool( sGridNo, pSoldier->pTempObject, 1, pSoldier->bLevel, 0, -1 );
-				NotifySoldiersToLookforItems( );
+				// OK, JUST DROP ITEM!
+				if ( pSoldier->pTempObject != NULL )
+				{
+					AddItemToPool( sGridNo, pSoldier->pTempObject, 1, pSoldier->pathing.bLevel, 0, -1 );
+					NotifySoldiersToLookforItems( );
 
-				MemFree( pSoldier->pTempObject );
-				pSoldier->pTempObject = NULL;
+					OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
+				}
+				break;
 			}
-			break;
-		}
-		ChangeSoldierStance( pSoldier, ANIM_CROUCH );
+			pSoldier->ChangeSoldierStance( ANIM_CROUCH );
 
-	case ANIM_CROUCH:
+		case ANIM_CROUCH:
 		// CHECK IF WE ARE NOT ON THE SAME GRIDNO
 		if ( sGridNo == pSoldier->sGridNo )
 		{
 			// OK, JUST DROP ITEM!
 			if ( pSoldier->pTempObject != NULL )
 			{
-				AddItemToPool( sGridNo, pSoldier->pTempObject, 1, pSoldier->bLevel, 0, -1 );
+				AddItemToPool( sGridNo, pSoldier->pTempObject, 1, pSoldier->pathing.bLevel, 0, -1 );
 				NotifySoldiersToLookforItems( );
 
-				MemFree( pSoldier->pTempObject );
-				pSoldier->pTempObject = NULL;
+				OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 			}
 		}
 		else
 		{
-			// CHANGE DIRECTION AT LEAST
+				// CHANGE DIRECTION AT LEAST
 			ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
 
-			SoldierGotoStationaryStance( pSoldier );
+				pSoldier->SoldierGotoStationaryStance( );
 
-			EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
-			pSoldier->fTurningUntilDone = TRUE;
+			pSoldier->EVENT_SetSoldierDesiredDirection( ubDirection );
+				pSoldier->flags.fTurningUntilDone = TRUE;
 
-			pSoldier->usPendingAnimation = THROW_ITEM_CROUCHED;
+				pSoldier->usPendingAnimation = THROW_ITEM_CROUCHED;
 		}
-		break;
-		//</SB>
+			break;
+//</SB>
 	}
 
 }
@@ -1567,48 +1567,47 @@ void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECTTYPE *pObject, INT8 bInvPos )
 {
+	PERFORMANCE_MARKER
 	INT16 sActionGridNo, sAdjustedGridNo;
 	UINT8	ubDirection;
 
 	// Remove any previous actions
-	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+	pSoldier->aiData.ubPendingAction		= NO_PENDING_ACTION;
 
 	// See if we can get there to stab	
-	sActionGridNo =  FindAdjacentGridEx( pSoldier, pTargetSoldier->sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+	sActionGridNo =	FindAdjacentGridEx( pSoldier, pTargetSoldier->sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 	if ( sActionGridNo != -1 )
 	{
 		// SEND PENDING ACTION
-		pSoldier->ubPendingAction = MERC_GIVEITEM;
+		pSoldier->aiData.ubPendingAction = MERC_GIVEITEM;
 
 		pSoldier->bPendingActionData5 = bInvPos;	
 		// Copy temp object
-		pSoldier->pTempObject	= (OBJECTTYPE *)MemAlloc( sizeof( OBJECTTYPE ) );
-		memcpy( pSoldier->pTempObject, pObject, sizeof( OBJECTTYPE ) );
+		OBJECTTYPE::CopyToOrCreateAt(&pSoldier->pTempObject, pObject);
 
-
-		pSoldier->sPendingActionData2  = pTargetSoldier->sGridNo;
-		pSoldier->bPendingActionData3  = ubDirection;
-		pSoldier->uiPendingActionData4 = pTargetSoldier->ubID;
-		pSoldier->ubPendingActionAnimCount = 0;
+		pSoldier->aiData.sPendingActionData2	= pTargetSoldier->sGridNo;
+		pSoldier->aiData.bPendingActionData3	= ubDirection;
+		pSoldier->aiData.uiPendingActionData4 = pTargetSoldier->ubID;
+		pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 		// Set soldier as engaged!
-		pSoldier->uiStatusFlags |= SOLDIER_ENGAGEDINACTION;
+		pSoldier->flags.uiStatusFlags |= SOLDIER_ENGAGEDINACTION;
 
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if ( pSoldier->sGridNo != sActionGridNo )
 		{
 			// WALK UP TO DEST FIRST
-			EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+			pSoldier->EVENT_InternalGetNewSoldierPath( sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 		}
 		else
 		{
-			EVENT_SoldierBeginGiveItem( pSoldier );
+			pSoldier->EVENT_SoldierBeginGiveItem( );
 			// CHANGE DIRECTION OF TARGET TO OPPOSIDE DIRECTION!
-			EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
+			pSoldier->EVENT_SetSoldierDesiredDirection( ubDirection );
 		}
 
 		// Set target as engaged!
-		pTargetSoldier->uiStatusFlags |= SOLDIER_ENGAGEDINACTION;
+		pTargetSoldier->flags.uiStatusFlags |= SOLDIER_ENGAGEDINACTION;
 
 		return;
 	}
@@ -1620,33 +1619,29 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 
 BOOLEAN SoldierDropItem( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj )
 {
-	pSoldier->pTempObject = (OBJECTTYPE *)MemAlloc( sizeof( OBJECTTYPE ) );
-	if (pSoldier->pTempObject == NULL)
-	{
-		// OUT OF MEMORY! YIKES!
-		return( FALSE );
-	}
-	memcpy( pSoldier->pTempObject, pObj, sizeof( OBJECTTYPE ) );
-	PickDropItemAnimation( pSoldier );
+	PERFORMANCE_MARKER
+	OBJECTTYPE::CopyToOrCreateAt(&pSoldier->pTempObject, pObj);
+	pSoldier->PickDropItemAnimation( );
 	return( TRUE );
 }
 
 void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel )
 {
+	PERFORMANCE_MARKER
 	INT16							sActionGridNo;
 
 	// Remove any previous actions
-	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+	pSoldier->aiData.ubPendingAction		= NO_PENDING_ACTION;
 
 	sActionGridNo = AdjustGridNoForItemPlacement( pSoldier, sGridNo );
 
 	// SET PENDING ACTIONS!
-	pSoldier->ubPendingAction = MERC_PICKUPITEM;
-	pSoldier->uiPendingActionData1 = iItemIndex;
-	pSoldier->sPendingActionData2  = sActionGridNo;
-	pSoldier->uiPendingActionData4 = sGridNo;
-	pSoldier->bPendingActionData3  = bZLevel;
-	pSoldier->ubPendingActionAnimCount = 0;
+	pSoldier->aiData.ubPendingAction = MERC_PICKUPITEM;
+	pSoldier->aiData.uiPendingActionData1 = iItemIndex;
+	pSoldier->aiData.sPendingActionData2	= sActionGridNo;
+	pSoldier->aiData.uiPendingActionData4 = sGridNo;
+	pSoldier->aiData.bPendingActionData3	= bZLevel;
+	pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 	// Deduct points!
 	//sAPCost = GetAPsToPickupItem( pSoldier, sGridNo );
@@ -1658,23 +1653,23 @@ void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, 
 	{
 		if ( pSoldier->bTeam == gbPlayerNum )
 		{
-			EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, TRUE, TRUE );
+			pSoldier->EVENT_InternalGetNewSoldierPath( sActionGridNo, pSoldier->usUIMovementMode, TRUE, TRUE );
 
 			// Say it only if we don;t have to go too far!
-			if ( pSoldier->usPathDataSize > 5 )
+			if ( pSoldier->pathing.usPathDataSize > 5 )
 			{
-				DoMercBattleSound(  pSoldier, BATTLE_SOUND_OK1 );
+				pSoldier->DoMercBattleSound( BATTLE_SOUND_OK1 );
 			}
 		}
 		else
 		{
-			EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+			pSoldier->EVENT_InternalGetNewSoldierPath( sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 		}
 	}		
 	else
 	{
 		// DO ANIMATION OF PICKUP NOW!
-		PickPickupAnimation( pSoldier, pSoldier->uiPendingActionData1, (INT16)( pSoldier->uiPendingActionData4 ), pSoldier->bPendingActionData3 );
+		PickPickupAnimation( pSoldier, pSoldier->aiData.uiPendingActionData1, (INT16)( pSoldier->aiData.uiPendingActionData4 ), pSoldier->aiData.bPendingActionData3 );
 	}
 
 }
@@ -1682,22 +1677,23 @@ void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, 
 
 void HandleAutoPlaceFail( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	if (pSoldier->bTeam == gbPlayerNum)
 	{
 		// Place it in buddy's hand!
 		if ( gpItemPointer == NULL )
 		{
-			InternalBeginItemPointer( pSoldier, &(gWorldItems[ iItemIndex ].o ), NO_SLOT );
+			InternalBeginItemPointer( pSoldier, &(gWorldItems[ iItemIndex ].object ), NO_SLOT );
 		}
 		else
 		{
 			// Add back to world...
-			AddItemToPool( sGridNo, &(gWorldItems[ iItemIndex ].o ), 1 , pSoldier->bLevel, 0, -1 );
+			AddItemToPool( sGridNo, &(gWorldItems[ iItemIndex ].object ), 1 , pSoldier->pathing.bLevel, 0, -1 );
 
 			// If we are a merc, say DAMN quote....
 			if ( pSoldier->bTeam == gbPlayerNum )
 			{
-				DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
+				pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 			}
 		}
 	}
@@ -1705,23 +1701,23 @@ void HandleAutoPlaceFail( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo
 
 void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel, BOOLEAN *pfSelectionList )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL		*		pItemPool;
 	ITEM_POOL		*		pItemPoolToDelete = NULL;
-	OBJECTTYPE			Object;
 	INT32						cnt = 0;
 	BOOLEAN					fPickup;
 	BOOLEAN					fFailedAutoPlace = FALSE;
 	INT32						iItemIndexToDelete;
 	BOOLEAN					fShouldSayCoolQuote = FALSE;
 	BOOLEAN					fDidSayCoolQuote = FALSE;
-	BOOLEAN         fSaidBoobyTrapQuote = FALSE;
+	BOOLEAN		 fSaidBoobyTrapQuote = FALSE;
 
 	// OK. CHECK IF WE ARE DOING ALL IN THIS POOL....
 	if ( iItemIndex == ITEM_PICKUP_ACTION_ALL || iItemIndex == ITEM_PICKUP_SELECTION )
 	{
 		// DO all pickup!
 		// LOOP THROUGH LIST TO FIND NODE WE WANT
-		GetItemPool( sGridNo, &pItemPool, pSoldier->bLevel );
+		GetItemPool( sGridNo, &pItemPool, pSoldier->pathing.bLevel );
 
 		while( pItemPool )
 		{
@@ -1746,30 +1742,30 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 					if ( ContinuePastBoobyTrap( pSoldier, sGridNo, bZLevel, pItemPool->iItemIndex, FALSE, &fSaidBoobyTrapQuote ) )
 					{
 						// Make copy of item
-						memcpy( &Object, &(gWorldItems[ pItemPool->iItemIndex ].o), sizeof( OBJECTTYPE ) );
+						gTempObject = gWorldItems[ pItemPool->iItemIndex ].object;
 
-						if ( ItemIsCool( &Object ) )
+						if ( ItemIsCool( &gTempObject ) )
 						{
 							fShouldSayCoolQuote = TRUE;
 						}
 
-						if (Object.usItem == SWITCH)
+						if (gTempObject.usItem == SWITCH)
 						{
 							// ask about activating the switch!
-							bTempFrequency = Object.ItemData.Trigger.BombTrigger.bFrequency;
+							bTempFrequency = gTempObject[0]->data.misc.bFrequency;
 							gpTempSoldier = pSoldier;
 							DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ ACTIVATE_SWITCH_PROMPT ] , GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, SwitchMessageBoxCallBack, NULL );
 							pItemPool = pItemPool->pNext;
 						}
 						else
 						{
-							if ( !AutoPlaceObject( pSoldier, &Object, TRUE ) )
+							if ( !AutoPlaceObject( pSoldier, &gTempObject, TRUE ) )
 							{
 								// check to see if the object has been swapped with one in inventory
-								if ( Object.usItem != gWorldItems[ pItemPool->iItemIndex ].o.usItem || Object.ubNumberOfObjects != gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects )
+								if ( gTempObject.usItem != gWorldItems[ pItemPool->iItemIndex ].object.usItem || gTempObject.ubNumberOfObjects != gWorldItems[ pItemPool->iItemIndex ].object.ubNumberOfObjects )
 								{
 									// copy back because item changed, and we must make sure the item pool reflects this.
-									memcpy( &(gWorldItems[ pItemPool->iItemIndex ].o), &Object, sizeof( OBJECTTYPE ) );
+									gWorldItems[ pItemPool->iItemIndex ].object = gTempObject;
 								}
 
 								pItemPoolToDelete = pItemPool;
@@ -1783,7 +1779,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 							if( pSoldier->bTeam == OUR_TEAM )
 							{
 							// check to see if object was owned by another
-							if( Object.fFlags & OBJECT_OWNED_BY_CIVILIAN )
+							if( gTempObject.fFlags & OBJECT_OWNED_BY_CIVILIAN )
 							{
 							// owned by a civilian
 							if( HandleLoyaltyAdjustmentForRobbery( pSoldier ) == TRUE )
@@ -1792,7 +1788,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 							}
 
 							// reset who owns object
-							Object.fFlags &= ~( OBJECT_OWNED_BY_CIVILIAN );
+							gTempObject.fFlags &= ~( OBJECT_OWNED_BY_CIVILIAN );
 							}
 							}
 							*/
@@ -1800,7 +1796,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 							//pItemPoolToDelete = pItemPool;
 							iItemIndexToDelete = pItemPool->iItemIndex;
 							pItemPool = pItemPool->pNext;
-							RemoveItemFromPool( sGridNo, iItemIndexToDelete, pSoldier->bLevel );
+							RemoveItemFromPool( sGridNo, iItemIndexToDelete, pSoldier->pathing.bLevel );
 						}
 					}
 					else
@@ -1825,31 +1821,31 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 		{
 			gfDontChargeAPsToPickup = TRUE;
 			HandleAutoPlaceFail( pSoldier, pItemPoolToDelete->iItemIndex, sGridNo );
-			RemoveItemFromPool( sGridNo, pItemPoolToDelete->iItemIndex, pSoldier->bLevel );
+			RemoveItemFromPool( sGridNo, pItemPoolToDelete->iItemIndex, pSoldier->pathing.bLevel );
 			pItemPoolToDelete = NULL;
 		}
 	}
 	else
 	{
 		// REMOVE ITEM FROM POOL
-		if ( ItemExistsAtLocation( sGridNo, iItemIndex, pSoldier->bLevel ) )
+		if ( ItemExistsAtLocation( sGridNo, iItemIndex, pSoldier->pathing.bLevel ) )
 		{	
 
 			if ( ContinuePastBoobyTrap( pSoldier, sGridNo, bZLevel, iItemIndex, FALSE, &fSaidBoobyTrapQuote ) )
 			{
 
 				// Make copy of item
-				memcpy( &Object, &(gWorldItems[ iItemIndex ].o), sizeof( OBJECTTYPE ) );
+				gTempObject = gWorldItems[ iItemIndex ].object;
 
-				if ( ItemIsCool( &Object ) )
+				if ( ItemIsCool( &gTempObject ) )
 				{
 					fShouldSayCoolQuote = TRUE;
 				}
 
-				if (Object.usItem == SWITCH)
+				if (gTempObject.usItem == SWITCH)
 				{
 					// handle switch
-					bTempFrequency = Object.ItemData.Trigger.BombTrigger.bFrequency;
+					bTempFrequency = gTempObject[0]->data.misc.bFrequency;
 					gpTempSoldier = pSoldier;
 					DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ ACTIVATE_SWITCH_PROMPT ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, SwitchMessageBoxCallBack, NULL );
 				}
@@ -1860,7 +1856,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 					if( pSoldier->bTeam == OUR_TEAM )
 					{
 					// check to see if object was owned by another
-					if( Object.fFlags & OBJECT_OWNED_BY_CIVILIAN )
+					if( gTempObject.fFlags & OBJECT_OWNED_BY_CIVILIAN )
 					{
 					// owned by a civilian
 					if( HandleLoyaltyAdjustmentForRobbery( pSoldier ) == TRUE )
@@ -1869,14 +1865,15 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 					}
 
 					// reset who owns object
-					Object.fFlags &= ~( OBJECT_OWNED_BY_CIVILIAN );
+					gTempObject.fFlags &= ~( OBJECT_OWNED_BY_CIVILIAN );
 					}
 					}
 					*/
-					RemoveItemFromPool( sGridNo, iItemIndex, pSoldier->bLevel );
+					RemoveItemFromPool( sGridNo, iItemIndex, pSoldier->pathing.bLevel );
 
-					if ( !AutoPlaceObject( pSoldier, &(gWorldItems[ iItemIndex ].o ), TRUE ) )
+					if ( !AutoPlaceObject( pSoldier, &(gWorldItems[ iItemIndex ].object ), TRUE ) )
 					{
+						//ADB well we made an animation, should we still use up points?
 						gfDontChargeAPsToPickup = TRUE;
 						HandleAutoPlaceFail( pSoldier, iItemIndex, sGridNo );
 					}
@@ -1910,14 +1907,14 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 	// Aknowledge....
 	if( pSoldier->bTeam == OUR_TEAM && !fDidSayCoolQuote && !fSaidBoobyTrapQuote )
 	{
-		DoMercBattleSound( pSoldier, BATTLE_SOUND_GOTIT );
+		pSoldier->DoMercBattleSound( BATTLE_SOUND_GOTIT );
 	}
 
 
 	// OK partner......look for any hidden items!
-	if ( pSoldier->bTeam == gbPlayerNum && LookForHiddenItems( sGridNo, pSoldier->bLevel, TRUE, 0 ) )
+	if ( pSoldier->bTeam == gbPlayerNum && LookForHiddenItems( sGridNo, pSoldier->pathing.bLevel, TRUE, 0 ) )
 	{
-		// WISDOM GAIN (5):  Found a hidden object
+		// WISDOM GAIN (5):	Found a hidden object
 		StatChange( pSoldier, WISDOMAMT, 5, FALSE );
 
 		// We've found something!
@@ -1932,11 +1929,12 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 
 void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPool;
 	UINT16				usNum;
 
 	// Draw menu if more than one item!
-	if ( GetItemPool( sGridNo, &pItemPool, pSoldier->bLevel ) )
+	if ( GetItemPool( sGridNo, &pItemPool, pSoldier->pathing.bLevel ) )
 	{
 		// OK, if an enemy, go directly ( skip menu )
 		if ( pSoldier->bTeam != gbPlayerNum )
@@ -1951,7 +1949,7 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 
 				// override the item index passed in with the one for the bomb in this
 				// tile
-				iItemIndex = FindWorldItemForBombInGridNo( sGridNo, pSoldier->bLevel );
+				iItemIndex = FindWorldItemForBombInGridNo( sGridNo, pSoldier->pathing.bLevel );
 #ifdef JA2TESTVERSION
 				if (iItemIndex == -1)
 				{
@@ -1961,12 +1959,12 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 				}
 #endif
 
-				gpBoobyTrapItemPool = GetItemPoolForIndex( sGridNo, iItemIndex, pSoldier->bLevel );
+				gpBoobyTrapItemPool = GetItemPoolForIndex( sGridNo, iItemIndex, pSoldier->pathing.bLevel );
 				gpBoobyTrapSoldier = pSoldier;
 				gsBoobyTrapGridNo = sGridNo;
-				gbBoobyTrapLevel  = pSoldier->bLevel;
+				gbBoobyTrapLevel	= pSoldier->pathing.bLevel;
 				gfDisarmingBuriedBomb = TRUE;
-				gbTrapDifficulty = gWorldItems[ iItemIndex ].o.bTrap;
+				gbTrapDifficulty = gWorldItems[ iItemIndex ].object[0]->data.bTrap;
 
 				DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ DISARM_TRAP_PROMPT ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, BoobyTrapMessageBoxCallBack, NULL );
 			}
@@ -1976,9 +1974,9 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 				if ( pSoldier->bTeam == gbPlayerNum && DoesItemPoolContainAllHiddenItems( pItemPool ) )
 				{
 					// He's touched them....
-					if ( LookForHiddenItems( sGridNo, pSoldier->bLevel, TRUE, 0 ) )
+					if ( LookForHiddenItems( sGridNo, pSoldier->pathing.bLevel, TRUE, 0 ) )
 					{
-						// WISDOM GAIN (5):  Found a hidden object
+						// WISDOM GAIN (5):	Found a hidden object
 						StatChange( pSoldier, WISDOMAMT, 5, FALSE );
 
 						// We've found something!
@@ -1987,7 +1985,7 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 					else
 					{
 						// Say NOTHING quote...
-						DoMercBattleSound( pSoldier, BATTLE_SOUND_NOTHING );
+						pSoldier->DoMercBattleSound( BATTLE_SOUND_NOTHING );
 					}
 				}
 				else
@@ -1996,7 +1994,7 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 					if ( ( usNum = GetNumOkForDisplayItemsInPool( pItemPool, bZLevel ) ) == 1 )
 					{
 						// Find first OK item....
-						while( !ItemPoolOKForDisplay( pItemPool, bZLevel  ) )
+						while( !ItemPoolOKForDisplay( pItemPool, bZLevel	) )
 						{
 							pItemPool = pItemPool->pNext;
 						}
@@ -2007,7 +2005,7 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 						if ( usNum != 0 )
 						{
 							// Freeze guy!
-							pSoldier->fPauseAllAnimation = TRUE;
+							pSoldier->flags.fPauseAllAnimation = TRUE;
 
 							InitializeItemPickupMenu( pSoldier, sGridNo, pItemPool, 0, 0, bZLevel );
 
@@ -2015,7 +2013,7 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 						}
 						else
 						{
-							DoMercBattleSound( pSoldier, BATTLE_SOUND_NOTHING );
+							pSoldier->DoMercBattleSound( BATTLE_SOUND_NOTHING );
 						}
 					}
 				}
@@ -2025,7 +2023,7 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 	else
 	{
 		// Say NOTHING quote...
-		DoMercBattleSound( pSoldier, BATTLE_SOUND_NOTHING );
+		pSoldier->DoMercBattleSound( BATTLE_SOUND_NOTHING );
 	}
 
 }
@@ -2033,6 +2031,7 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 
 LEVELNODE *AddItemGraphicToWorld( INVTYPE *pItem, INT16 sGridNo, UINT8 ubLevel )
 {
+	PERFORMANCE_MARKER
 	UINT16			usTileIndex;
 	LEVELNODE		*pNode;
 
@@ -2066,6 +2065,7 @@ LEVELNODE *AddItemGraphicToWorld( INVTYPE *pItem, INT16 sGridNo, UINT8 ubLevel )
 
 void RemoveItemGraphicFromWorld( INVTYPE *pItem, INT16 sGridNo, UINT8 ubLevel, LEVELNODE *pLevelNode )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
 
 	// OK, Do stuff differently base on level!
@@ -2113,28 +2113,31 @@ void RemoveItemGraphicFromWorld( INVTYPE *pItem, INT16 sGridNo, UINT8 ubLevel, L
 // INVENTORY POOL STUFF
 OBJECTTYPE* AddItemToPool( INT16 sGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel )
 {
+	PERFORMANCE_MARKER
 	return InternalAddItemToPool( &sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel, NULL );
 }
 
 OBJECTTYPE * AddItemToPoolAndGetIndex( INT16 sGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT32 * piItemIndex )
 {
+	PERFORMANCE_MARKER
 	return( InternalAddItemToPool( &sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel, piItemIndex ) );
 }
 
 OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT32 * piItemIndex )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
 	INT32				iWorldItem;
 	STRUCTURE		*pStructure, *pBase;
 	INT16				sDesiredLevel;
-	INT16       sNewGridNo = *psGridNo;
+	INT16		sNewGridNo = *psGridNo;
 	LEVELNODE		*pNode;
 	BOOLEAN			fForceOnGround = FALSE;
 	BOOLEAN			fObjectInOpenable = FALSE;
-	INT8        bTerrainID;
+	INT8		bTerrainID;
 
-	Assert( pObject->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT);
+	//Assert( pObject->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT);
 
 	// ATE: Check if the gridno is OK
 	if ( (*psGridNo) == NOWHERE )
@@ -2155,7 +2158,7 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 	if ( bTerrainID == DEEP_WATER || bTerrainID == LOW_WATER || bTerrainID == MED_WATER )
 	{
 		//		if ( Item[ pObject->usItem ].fFlags & ITEM_SINKS )
-		if ( Item[ pObject->usItem ].sinks  )
+		if ( Item[ pObject->usItem ].sinks	)
 		{
 			return( NULL );
 		}
@@ -2277,22 +2280,22 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 			// and they are pressure-triggered unless there is a switch structure there
 			if (FindStructure( *psGridNo, STRUCTURE_SWITCH ) != NULL)
 			{
-				pObject->ItemData.Trigger.bDetonatorType = BOMB_SWITCH;
+				(*pObject)[0]->data.misc.bDetonatorType = BOMB_SWITCH;
 			}
 			else
 			{
-				pObject->ItemData.Trigger.bDetonatorType = BOMB_PRESSURE;
+				(*pObject)[0]->data.misc.bDetonatorType = BOMB_PRESSURE;
 			}
 		}
 		else
 		{
 			// else they are manually controlled
-			pObject->ItemData.Trigger.bDetonatorType = BOMB_SWITCH;
+			(*pObject)[0]->data.misc.bDetonatorType = BOMB_SWITCH;
 		}
 	}
 	else if ( pObject->usItem == ACTION_ITEM )
 	{
-		switch( pObject->ItemData.Trigger.bActionValue )
+		switch( (*pObject)[0]->data.misc.bActionValue )
 		{
 		case ACTION_ITEM_SMALL_PIT:
 		case ACTION_ITEM_LARGE_PIT:
@@ -2310,9 +2313,9 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 	}
 
 
-	//First add the item to the global list.  This is so the game can keep track 
+	//First add the item to the global list.	This is so the game can keep track 
 	//of where the items are, for file i/o, etc.
-	iWorldItem = AddItemToWorld( *psGridNo,  pObject, ubLevel, usFlags, bRenderZHeightAboveLevel, bVisible );
+	iWorldItem = AddItemToWorld( *psGridNo,	pObject, ubLevel, usFlags, bRenderZHeightAboveLevel, bVisible );
 
 	// Check for and existing pool on the object layer
 	if ( GetItemPool( *psGridNo, &pItemPool, ubLevel ) )
@@ -2384,12 +2387,12 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 	}
 
 	// Set flahs timer
-	pItemPool->bFlashColor							 = FALSE;
-	pItemPool->sGridNo									 = *psGridNo;
-	pItemPool->ubLevel									 = ubLevel;
-	pItemPool->usFlags									 = usFlags;
-	pItemPool->bVisible									 = bVisible;
-	pItemPool->bRenderZHeightAboveLevel	 = bRenderZHeightAboveLevel;
+	pItemPool->bFlashColor							= FALSE;
+	pItemPool->sGridNo									= *psGridNo;
+	pItemPool->ubLevel									= ubLevel;
+	pItemPool->usFlags									= usFlags;
+	pItemPool->bVisible									= bVisible;
+	pItemPool->bRenderZHeightAboveLevel	= bRenderZHeightAboveLevel;
 
 	// ATE: Get head of pool again....
 	if ( GetItemPool( *psGridNo, &pItemPool, ubLevel ) )
@@ -2402,15 +2405,15 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 		*piItemIndex = iWorldItem;
 	}
 
-	return( &(gWorldItems[ iWorldItem ].o ) );
+	return( &(gWorldItems[ iWorldItem ].object ) );
 }
 
 
 BOOLEAN ItemExistsAtLocation( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
-	BOOLEAN			fItemFound = FALSE;
 
 	// Check for an existing pool on the object layer
 	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
@@ -2433,9 +2436,9 @@ BOOLEAN ItemExistsAtLocation( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel )
 
 BOOLEAN ItemTypeExistsAtLocation( INT16 sGridNo, UINT16 usItem, UINT8 ubLevel, INT32 * piItemIndex )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
-	BOOLEAN			fItemFound = FALSE;
 
 	// Check for an existing pool on the object layer
 	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
@@ -2444,7 +2447,7 @@ BOOLEAN ItemTypeExistsAtLocation( INT16 sGridNo, UINT16 usItem, UINT8 ubLevel, I
 		pItemPoolTemp = pItemPool;
 		while( pItemPoolTemp != NULL )
 		{
-			if ( gWorldItems[ pItemPoolTemp->iItemIndex ].o.usItem == usItem )
+			if ( gWorldItems[ pItemPoolTemp->iItemIndex ].object.usItem == usItem )
 			{
 				if ( piItemIndex )
 				{
@@ -2462,9 +2465,9 @@ BOOLEAN ItemTypeExistsAtLocation( INT16 sGridNo, UINT16 usItem, UINT8 ubLevel, I
 
 BOOLEAN MarblesExistAtLocation( INT16 sGridNo, UINT8 ubLevel, INT32 * piItemIndex )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
-	BOOLEAN			fItemFound = FALSE;
 
 	// Check for an existing pool on the object layer
 	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
@@ -2473,7 +2476,7 @@ BOOLEAN MarblesExistAtLocation( INT16 sGridNo, UINT8 ubLevel, INT32 * piItemInde
 		pItemPoolTemp = pItemPool;
 		while( pItemPoolTemp != NULL )
 		{
-			if ( Item[gWorldItems[ pItemPoolTemp->iItemIndex ].o.usItem].marbles )
+			if ( Item[gWorldItems[ pItemPoolTemp->iItemIndex ].object.usItem].marbles )
 			{
 				if ( piItemIndex )
 				{
@@ -2492,9 +2495,9 @@ BOOLEAN MarblesExistAtLocation( INT16 sGridNo, UINT8 ubLevel, INT32 * piItemInde
 
 INT32 GetItemOfClassTypeInPool( INT16 sGridNo, UINT32 uiItemClass, UINT8 ubLevel )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
-	BOOLEAN			fItemFound = FALSE;
 
 	// Check for an existing pool on the object layer
 	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
@@ -2503,7 +2506,7 @@ INT32 GetItemOfClassTypeInPool( INT16 sGridNo, UINT32 uiItemClass, UINT8 ubLevel
 		pItemPoolTemp = pItemPool;
 		while( pItemPoolTemp != NULL )
 		{
-			if ( Item[ gWorldItems[ pItemPoolTemp->iItemIndex ].o.usItem ].usItemClass & uiItemClass )
+			if ( Item[ gWorldItems[ pItemPoolTemp->iItemIndex ].object.usItem ].usItemClass & uiItemClass )
 			{
 				return( pItemPoolTemp->iItemIndex );
 			}
@@ -2517,9 +2520,9 @@ INT32 GetItemOfClassTypeInPool( INT16 sGridNo, UINT32 uiItemClass, UINT8 ubLevel
 
 ITEM_POOL * GetItemPoolForIndex( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
-	BOOLEAN			fItemFound = FALSE;
 
 	// Check for an existing pool on the object layer
 	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
@@ -2544,6 +2547,7 @@ ITEM_POOL * GetItemPoolForIndex( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel 
 
 BOOLEAN DoesItemPoolContainAnyHiddenItems( ITEM_POOL *pItemPool )
 {
+	PERFORMANCE_MARKER
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
 	while( pItemPool != NULL )
 	{
@@ -2560,6 +2564,7 @@ BOOLEAN DoesItemPoolContainAnyHiddenItems( ITEM_POOL *pItemPool )
 
 BOOLEAN DoesItemPoolContainAllHiddenItems( ITEM_POOL *pItemPool )
 {
+	PERFORMANCE_MARKER
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
 	while( pItemPool != NULL )
 	{
@@ -2577,6 +2582,7 @@ BOOLEAN DoesItemPoolContainAllHiddenItems( ITEM_POOL *pItemPool )
 
 BOOLEAN LookForHiddenItems( INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocator, INT8 bZLevel )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL *pItemPool = NULL;
 	ITEM_POOL *pHeadItemPool = NULL;
 	BOOLEAN		fFound = FALSE;
@@ -2588,7 +2594,7 @@ BOOLEAN LookForHiddenItems( INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocator, IN
 		// LOOP THROUGH LIST TO FIND NODE WE WANT
 		while( pItemPool != NULL )
 		{
-			if ( gWorldItems[ pItemPool->iItemIndex ].bVisible == HIDDEN_ITEM && gWorldItems[ pItemPool->iItemIndex ].o.usItem != OWNERSHIP )
+			if ( gWorldItems[ pItemPool->iItemIndex ].bVisible == HIDDEN_ITEM && gWorldItems[ pItemPool->iItemIndex ].object.usItem != OWNERSHIP )
 			{
 				fFound = TRUE;
 
@@ -2611,6 +2617,7 @@ BOOLEAN LookForHiddenItems( INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocator, IN
 
 INT8 GetZLevelOfItemPoolGivenStructure( INT16 sGridNo, UINT8 ubLevel, STRUCTURE *pStructure )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL *pItemPool;
 
 	if ( pStructure == NULL )
@@ -2628,6 +2635,7 @@ INT8 GetZLevelOfItemPoolGivenStructure( INT16 sGridNo, UINT8 ubLevel, STRUCTURE 
 
 INT8 GetLargestZLevelOfItemPool( ITEM_POOL *pItemPool )
 {
+	PERFORMANCE_MARKER
 	// OK, loop through pools and get any height != 0........
 	while( pItemPool != NULL )
 	{
@@ -2642,44 +2650,9 @@ INT8 GetLargestZLevelOfItemPool( ITEM_POOL *pItemPool )
 	return( 0 );
 }
 
-
-
-BOOLEAN DoesItemPoolContainAllItemsOfHigherZLevel( ITEM_POOL *pItemPool )
-{
-	// LOOP THROUGH LIST TO FIND NODE WE WANT
-	while( pItemPool != NULL )
-	{
-		if ( pItemPool->bRenderZHeightAboveLevel == 0 )
-		{
-			return( FALSE );
-		}
-
-		pItemPool = pItemPool->pNext;
-	}
-
-	return( TRUE );
-}
-
-
-BOOLEAN DoesItemPoolContainAllItemsOfZeroZLevel( ITEM_POOL *pItemPool )
-{
-	// LOOP THROUGH LIST TO FIND NODE WE WANT
-	while( pItemPool != NULL )
-	{
-		if ( pItemPool->bRenderZHeightAboveLevel != 0 )
-		{
-			return( FALSE );
-		}
-
-		pItemPool = pItemPool->pNext;
-	}
-
-	return( TRUE );
-}
-
-
 void RemoveItemPool( INT16 sGridNo, UINT8 ubLevel )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPool;
 
 	// Check for and existing pool on the object layer
@@ -2691,6 +2664,7 @@ void RemoveItemPool( INT16 sGridNo, UINT8 ubLevel )
 
 void RemoveAllUnburiedItems( INT16 sGridNo, UINT8 ubLevel )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPool;
 
 	// Check for and existing pool on the object layer
@@ -2714,6 +2688,7 @@ void RemoveAllUnburiedItems( INT16 sGridNo, UINT8 ubLevel )
 
 void LoopLevelNodeForShowThroughFlag( LEVELNODE *pNode, INT16 sGridNo, UINT8 ubLevel )
 {
+	PERFORMANCE_MARKER
 	while ( pNode != NULL )
 	{
 		if ( pNode->uiFlags & LEVELNODE_ITEM )
@@ -2743,12 +2718,13 @@ void LoopLevelNodeForShowThroughFlag( LEVELNODE *pNode, INT16 sGridNo, UINT8 ubL
 
 void HandleItemObscuredFlag( INT16 sGridNo, UINT8 ubLevel )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
 
 	if ( ubLevel == 0 )
 	{
 		pNode = gpWorldLevelData[ sGridNo ].pStructHead;
-		LoopLevelNodeForShowThroughFlag( pNode, sGridNo,  ubLevel );
+		LoopLevelNodeForShowThroughFlag( pNode, sGridNo,	ubLevel );
 	}
 	else
 	{
@@ -2760,6 +2736,7 @@ void HandleItemObscuredFlag( INT16 sGridNo, UINT8 ubLevel )
 
 BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOOLEAN fSetLocator )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPoolTemp;
 	BOOLEAN			fAtLeastModified = FALSE, fDeleted = FALSE;
 	INT8				bVisibleValue;
@@ -2773,7 +2750,7 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 		// Update each item...
 		if ( bVisibleValue != VISIBLE )
 		{
-			if ( gWorldItems[ pItemPoolTemp->iItemIndex ].o.usItem == ACTION_ITEM )
+			if ( gWorldItems[ pItemPoolTemp->iItemIndex ].object.usItem == ACTION_ITEM )
 			{
 				// NEVER MAKE VISIBLE!
 				pItemPoolTemp = pItemPoolTemp->pNext;
@@ -2781,7 +2758,7 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 			}
 
 			// If we have reached a visible value we should not modify, ignore...
-			if ( bVisibleValue >= bAllGreaterThan && gWorldItems[ pItemPoolTemp->iItemIndex ].o.usItem != OWNERSHIP )
+			if ( bVisibleValue >= bAllGreaterThan && gWorldItems[ pItemPoolTemp->iItemIndex ].object.usItem != OWNERSHIP )
 			{
 				// Update the world value
 				gWorldItems[ pItemPoolTemp->iItemIndex ].bVisible = VISIBLE;
@@ -2789,15 +2766,16 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 				fAtLeastModified = TRUE;
 			}
 
-			/*			 
-			if ( gWorldItems[ pItemPoolTemp->iItemIndex ].o.usItem == ACTION_ITEM )
+#ifdef obsoleteCode
+			/*			
+			if ( gWorldItems[ pItemPoolTemp->iItemIndex ].object.usItem == ACTION_ITEM )
 			{
-			pObj = &(gWorldItems[ pItemPoolTemp->iItemIndex ].o);
-			switch( pObj->bActionValue )
+			pObj = &(gWorldItems[ pItemPoolTemp->iItemIndex ].object);
+			switch( (*pObj)[0]->data.misc.bActionValue )
 			{
 			case ACTION_ITEM_SMALL_PIT:
 			case ACTION_ITEM_LARGE_PIT:
-			if (pObj->bDetonatorType == 0)
+			if ((*pObj)[0]->data.misc.bDetonatorType == 0)
 			{
 			// randomly set to active or destroy the item!
 			if (Random( 100 ) < 65)
@@ -2822,6 +2800,7 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 			}
 			}
 			*/
+#endif //obsoleteCode
 
 			if (fDeleted)
 			{
@@ -2872,6 +2851,7 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 
 void SetItemPoolVisibilityHidden( ITEM_POOL *pItemPool )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPoolTemp;
 
 	pItemPoolTemp = pItemPool;
@@ -2889,6 +2869,7 @@ void SetItemPoolVisibilityHidden( ITEM_POOL *pItemPool )
 // IF ANY are set to VISIBLE, MODIFY
 void AdjustItemPoolVisibility( ITEM_POOL *pItemPool )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPoolTemp;
 	BOOLEAN			fAtLeastModified = FALSE;
 
@@ -2933,6 +2914,7 @@ void AdjustItemPoolVisibility( ITEM_POOL *pItemPool )
 
 BOOLEAN RemoveItemFromPool( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
 	BOOLEAN			fItemFound = FALSE;
@@ -2964,7 +2946,7 @@ BOOLEAN RemoveItemFromPool( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel )
 		}
 
 		// REMOVE GRAPHIC
-		RemoveItemGraphicFromWorld( &(Item[ gWorldItems[ iItemIndex ].o.usItem ] ), sGridNo, ubLevel, pItemPoolTemp->pLevelNode );
+		RemoveItemGraphicFromWorld( &(Item[ gWorldItems[ iItemIndex ].object.usItem ] ), sGridNo, ubLevel, pItemPoolTemp->pLevelNode );
 
 		// IF WE ARE LOCATIONG STILL, KILL LOCATOR!
 		if ( pItemPoolTemp->bFlashColor != 0 )
@@ -3056,6 +3038,7 @@ BOOLEAN RemoveItemFromPool( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel )
 
 BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos, INT8 bStartLevel, INT8 bEndLevel )
 {
+	PERFORMANCE_MARKER
 	// note, only works between locations on the ground
 	ITEM_POOL		*pItemPool;
 	WORLDITEM		TempWorldItem;
@@ -3063,28 +3046,34 @@ BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos, INT8 bStartLevel, INT8 bE
 	// While there is an existing pool
 	while( GetItemPool( sStartPos, &pItemPool, bStartLevel ) )
 	{
-		memcpy( &TempWorldItem, &(gWorldItems[ pItemPool->iItemIndex ]), sizeof( WORLDITEM ) );
+		TempWorldItem = gWorldItems[ pItemPool->iItemIndex ];
 		RemoveItemFromPool( sStartPos, pItemPool->iItemIndex, bStartLevel );
-		//AddItemToPool( sEndPos, &(TempWorldItem.o), -1, TempWorldItem.ubLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
-		AddItemToPool( sEndPos, &(TempWorldItem.o), -1, bEndLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
+		//AddItemToPool( sEndPos, &(TempWorldItem.object), -1, TempWorldItem.ubLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
+		AddItemToPool( sEndPos, &(TempWorldItem.object), -1, bEndLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
 	}
 	return( TRUE );
 }
 
-BOOLEAN	GetItemPool( UINT16 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
+BOOLEAN	GetItemPool( INT16 sMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pObject;
 
 	if ( ubLevel == 0 )
 	{
-		pObject = gpWorldLevelData[ usMapPos ].pStructHead;
+		pObject = gpWorldLevelData[ sMapPos ].pStructHead;
 	}
 	else
 	{
-		pObject = gpWorldLevelData[ usMapPos ].pOnRoofHead;
+		pObject = gpWorldLevelData[ sMapPos ].pOnRoofHead;
 	}
-
-	(*ppItemPool) = NULL;
+	//ADB: let's not make 51200 calls to FileWrite ok?
+#ifdef JA2BETAVERSION
+	if ( pObject )
+	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("gpWorldLevelData, %d %d %d", pObject, sMapPos, (&gpWorldLevelData[25600-1]) + sizeof(MAP_ELEMENT) ) );
+	}
+#endif
 
 	// LOOP THORUGH OBJECT LAYER
 	while( pObject != NULL )
@@ -3103,13 +3092,49 @@ BOOLEAN	GetItemPool( UINT16 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
 		pObject = pObject->pNext;
 	}
 
+	(*ppItemPool) = NULL;
+
 	return( FALSE );	
 }
 
+BOOLEAN	GetItemPoolFromGround( INT16 sMapPos, ITEM_POOL **ppItemPool )
+{
+	PERFORMANCE_MARKER
+	//if we know the level, we can avoid an if, and this function is called alot
+	LEVELNODE *pObject = gpWorldLevelData[ sMapPos ].pStructHead;
+	//ADB: let's not make 51200 calls to FileWrite ok?
+#ifdef JA2BETAVERSION
+	if ( pObject )
+	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("gpWorldLevelData, %d %d %d", pObject, sMapPos, (&gpWorldLevelData[25600-1]) + sizeof(MAP_ELEMENT) ) );
+	}
+#endif
 
+	// LOOP THORUGH OBJECT LAYER
+	while( pObject != NULL )
+	{
+		if ( pObject->uiFlags & LEVELNODE_ITEM )
+		{
+			(*ppItemPool) = pObject->pItemPool;
+
+			//DEF added the check because pObject->pItemPool was NULL which was causing problems
+			if( *ppItemPool )
+				return( TRUE );
+			else
+				return( FALSE );
+		}
+
+		pObject = pObject->pNext;
+	}
+
+	(*ppItemPool) = NULL;
+
+	return( FALSE );	
+}
 
 void NotifySoldiersToLookforItems( )
 {
+	PERFORMANCE_MARKER
 	UINT32 cnt;
 	SOLDIERTYPE *pSoldier;
 
@@ -3119,7 +3144,7 @@ void NotifySoldiersToLookforItems( )
 
 		if ( pSoldier != NULL )
 		{
-			pSoldier->uiStatusFlags |= SOLDIER_LOOKFOR_ITEMS;
+			pSoldier->flags.uiStatusFlags |= SOLDIER_LOOKFOR_ITEMS;
 		}
 	}
 
@@ -3128,6 +3153,7 @@ void NotifySoldiersToLookforItems( )
 
 void AllSoldiersLookforItems( BOOLEAN fShowLocators )
 {
+	PERFORMANCE_MARKER
 	UINT32 cnt;
 	SOLDIERTYPE *pSoldier;
 
@@ -3137,7 +3163,7 @@ void AllSoldiersLookforItems( BOOLEAN fShowLocators )
 
 		if ( pSoldier != NULL )
 		{
-			RevealRoofsAndItems(pSoldier, TRUE, fShowLocators, pSoldier->bLevel, FALSE );
+			RevealRoofsAndItems(pSoldier, TRUE, fShowLocators, pSoldier->pathing.bLevel, FALSE );
 		}
 	}
 
@@ -3146,6 +3172,7 @@ void AllSoldiersLookforItems( BOOLEAN fShowLocators )
 
 INT16 GetNumOkForDisplayItemsInPool( ITEM_POOL *pItemPool, INT8 bZLevel )
 {
+	PERFORMANCE_MARKER
 	INT32						cnt;
 
 	//Determine total #
@@ -3166,6 +3193,7 @@ INT16 GetNumOkForDisplayItemsInPool( ITEM_POOL *pItemPool, INT8 bZLevel )
 
 BOOLEAN AnyItemsVisibleOnLevel( ITEM_POOL *pItemPool, INT8 bZLevel )
 {
+	PERFORMANCE_MARKER
 	if ( ( gTacticalStatus.uiFlags & SHOW_ALL_ITEMS ) )
 	{
 		return( TRUE );
@@ -3192,13 +3220,14 @@ BOOLEAN AnyItemsVisibleOnLevel( ITEM_POOL *pItemPool, INT8 bZLevel )
 
 BOOLEAN ItemPoolOKForDisplay( ITEM_POOL *pItemPool, INT8 bZLevel )
 {
+	PERFORMANCE_MARKER
 	if (gTacticalStatus.uiFlags&SHOW_ALL_ITEMS)
 	{
 		return( TRUE );
 	}
 
 	// Setup some conditions!
-	if ( gWorldItems[ pItemPool->iItemIndex ].bVisible != VISIBLE  )
+	if ( gWorldItems[ pItemPool->iItemIndex ].bVisible != VISIBLE	)
 	{
 		return( FALSE );
 	}
@@ -3214,6 +3243,7 @@ BOOLEAN ItemPoolOKForDisplay( ITEM_POOL *pItemPool, INT8 bZLevel )
 
 BOOLEAN ItemPoolOKForPickup( SOLDIERTYPE * pSoldier, ITEM_POOL *pItemPool, INT8 bZLevel )
 {
+	PERFORMANCE_MARKER
 	if (gTacticalStatus.uiFlags&SHOW_ALL_ITEMS)
 	{
 		return( TRUE );
@@ -3222,7 +3252,7 @@ BOOLEAN ItemPoolOKForPickup( SOLDIERTYPE * pSoldier, ITEM_POOL *pItemPool, INT8 
 	if ( pSoldier->bTeam == gbPlayerNum )
 	{
 		// Setup some conditions!
-		if ( gWorldItems[ pItemPool->iItemIndex ].bVisible != VISIBLE  )
+		if ( gWorldItems[ pItemPool->iItemIndex ].bVisible != VISIBLE	)
 		{
 			return( FALSE );
 		}
@@ -3243,13 +3273,13 @@ extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *p
 
 BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, INT8 bZLevel, INT16 sXPos, INT16 sYPos )
 {
+	PERFORMANCE_MARKER
 	INT16 sY;
 	INVTYPE			*pItem;
 	ITEM_POOL		*pTempItemPool;
 	CHAR16 pStr[ 100 ];
 	INT16		cnt = 0, sHeight = 0;
-	INT16	 sLargeLineWidth = 0, sLineWidth;
-	BOOLEAN			fRecalcNumListed = FALSE;
+	INT16	sLargeLineWidth = 0, sLineWidth;
 	BOOLEAN			fSelectionDone = FALSE;
 
 	INT8				gbCurrentItemSel = 0;
@@ -3312,7 +3342,7 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 		// ATE: Put some conditions on this....
 		if ( ItemPoolOKForDisplay( pTempItemPool, bZLevel ) )
 		{
-			HandleAnyMercInSquadHasCompatibleStuff( (INT8)CurrentSquad( ), &(gWorldItems[ pTempItemPool->iItemIndex ].o ), FALSE );
+			HandleAnyMercInSquadHasCompatibleStuff( (INT8)CurrentSquad( ), &(gWorldItems[ pTempItemPool->iItemIndex ].object ), FALSE );
 		}
 
 		pTempItemPool = pTempItemPool->pNext;
@@ -3335,15 +3365,15 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 		if ( ItemPoolOKForDisplay( pTempItemPool, bZLevel ) )
 		{			
 			// GET ITEM
-			pItem = &Item[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ];
+			pItem = &Item[ gWorldItems[ pTempItemPool->iItemIndex ].object.usItem ];
 			// Set string
-			if ( gWorldItems[ pTempItemPool->iItemIndex ].o.ubNumberOfObjects > 1 )
+			if ( gWorldItems[ pTempItemPool->iItemIndex ].object.ubNumberOfObjects > 1 )
 			{
-				swprintf( pStr, L"%s (%d)", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ], gWorldItems[ pTempItemPool->iItemIndex ].o.ubNumberOfObjects );
+				swprintf( pStr, L"%s (%d)", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].object.usItem ], gWorldItems[ pTempItemPool->iItemIndex ].object.ubNumberOfObjects );
 			}
 			else
 			{
-				swprintf( pStr, L"%s", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ] );
+				swprintf( pStr, L"%s", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].object.usItem ] );
 			}
 
 			// Get Width
@@ -3441,16 +3471,16 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 		if ( ItemPoolOKForDisplay( pItemPool, bZLevel ) )
 		{
 			// GET ITEM
-			pItem = &Item[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ];
+			pItem = &Item[ gWorldItems[ pItemPool->iItemIndex ].object.usItem ];
 			// Set string
 
-			if ( gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects > 1 )
+			if ( gWorldItems[ pItemPool->iItemIndex ].object.ubNumberOfObjects > 1 )
 			{
-				swprintf( pStr, L"%s (%d)", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ], gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects );
+				swprintf( pStr, L"%s (%d)", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].object.usItem ], gWorldItems[ pItemPool->iItemIndex ].object.ubNumberOfObjects );
 			}
 			else
 			{
-				swprintf( pStr, L"%s", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ] );
+				swprintf( pStr, L"%s", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].object.usItem ] );
 			}
 
 			gprintfdirty( sFontX, sY, pStr );
@@ -3478,17 +3508,17 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 			// Set string
 			if ( cnt == gbCurrentItemSel )
 			{
-				SetFontForeground( FONT_MCOLOR_LTGRAY );
-			}
-			else
-			{
-				SetFontForeground( FONT_MCOLOR_DKGRAY );
-			}
+					SetFontForeground( FONT_MCOLOR_LTGRAY );
+				}
+				else
+				{
+					SetFontForeground( FONT_MCOLOR_DKGRAY );
+				}
 			swprintf( pStr, TacticalStr[ ITEMPOOL_POPUP_MORE_STR ] );
-			gprintfdirty( sFontX, sY, pStr );
-			mprintf( sFontX, sY, pStr );
-		}
-	}
+				gprintfdirty( sFontX, sY, pStr );
+				mprintf( sFontX, sY, pStr );
+			}
+			}
 
 	return( fSelectionDone );
 
@@ -3497,11 +3527,12 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 
 INT8 GetListMouseHotSpot( INT16 sLargestLineWidth, INT8 bNumItemsListed, INT16 sFontX, INT16 sFontY, INT8 bCurStart )
 {
-	INT16	 cnt = 0;
-	INT16  sTestX1, sTestX2, sTestY1, sTestY2;
-	INT16  sLineHeight;
-	INT8	 gbCurrentItemSel = -1;
-	INT8	 bListedItems;
+	PERFORMANCE_MARKER
+	INT16	cnt = 0;
+	INT16	sTestX1, sTestX2, sTestY1, sTestY2;
+	INT16	sLineHeight;
+	INT8	gbCurrentItemSel = -1;
+	INT8	bListedItems;
 
 	sLineHeight = GetFontHeight( SMALLFONT1 ) - 2;
 
@@ -3541,6 +3572,7 @@ INT8 GetListMouseHotSpot( INT16 sLargestLineWidth, INT8 bNumItemsListed, INT16 s
 
 void SetItemPoolLocator( ITEM_POOL *pItemPool )
 {
+	PERFORMANCE_MARKER
 	pItemPool->bFlashColor = 59;
 
 	pItemPool->uiTimerID		= AddFlashItemSlot( pItemPool, NULL, 0 );
@@ -3549,6 +3581,7 @@ void SetItemPoolLocator( ITEM_POOL *pItemPool )
 
 void SetItemPoolLocatorWithCallback( ITEM_POOL *pItemPool, ITEM_POOL_LOCATOR_HOOK Callback )
 {
+	PERFORMANCE_MARKER
 	pItemPool->bFlashColor = 59;
 
 	pItemPool->uiTimerID		= AddFlashItemSlot( pItemPool, Callback, 0 );
@@ -3576,6 +3609,7 @@ void SetItemPoolLocatorWithCallback( ITEM_POOL *pItemPool, ITEM_POOL_LOCATOR_HOO
 
 INT32 GetFreeFlashItemSlot(void)
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumFlashItemSlots; uiCount++)
@@ -3593,6 +3627,7 @@ INT32 GetFreeFlashItemSlot(void)
 
 void RecountFlashItemSlots(void)
 {
+	PERFORMANCE_MARKER
 	INT32 uiCount;
 
 	for(uiCount=guiNumFlashItemSlots-1; (uiCount >=0) ; uiCount--)
@@ -3608,6 +3643,7 @@ void RecountFlashItemSlots(void)
 
 INT32	AddFlashItemSlot( ITEM_POOL *pItemPool, ITEM_POOL_LOCATOR_HOOK Callback, UINT8 ubFlags )
 {
+	PERFORMANCE_MARKER
 	INT32			iFlashItemIndex;
 
 	if( ( iFlashItemIndex = GetFreeFlashItemSlot() )==(-1) )
@@ -3616,11 +3652,11 @@ INT32	AddFlashItemSlot( ITEM_POOL *pItemPool, ITEM_POOL_LOCATOR_HOOK Callback, U
 	ubFlags |= ITEM_LOCATOR_LOCKED;
 
 
-	FlashItemSlots[ iFlashItemIndex ].pItemPool	  = pItemPool;
+	FlashItemSlots[ iFlashItemIndex ].pItemPool	= pItemPool;
 
 	FlashItemSlots[ iFlashItemIndex ].bRadioFrame				= 0;
 	FlashItemSlots[ iFlashItemIndex ].uiLastFrameUpdate = GetJA2Clock( );
-	FlashItemSlots[ iFlashItemIndex ].Callback				  = Callback;
+	FlashItemSlots[ iFlashItemIndex ].Callback				= Callback;
 	FlashItemSlots[ iFlashItemIndex ].fAllocated				= TRUE;
 	FlashItemSlots[ iFlashItemIndex ].ubFlags						= ubFlags;
 
@@ -3631,6 +3667,7 @@ INT32	AddFlashItemSlot( ITEM_POOL *pItemPool, ITEM_POOL_LOCATOR_HOOK Callback, U
 
 BOOLEAN RemoveFlashItemSlot( ITEM_POOL *pItemPool )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	CHECKF( pItemPool != NULL );
@@ -3660,6 +3697,7 @@ BOOLEAN RemoveFlashItemSlot( ITEM_POOL *pItemPool )
 
 void HandleFlashingItems( )
 {
+	PERFORMANCE_MARKER
 	UINT32 cnt;
 	ITEM_POOL		*pItemPool;
 	LEVELNODE		*pObject;
@@ -3672,7 +3710,7 @@ void HandleFlashingItems( )
 
 		for ( cnt = 0; cnt < guiNumFlashItemSlots; cnt++ )
 		{
-			pLocator  = &( FlashItemSlots[ cnt ] );
+			pLocator	= &( FlashItemSlots[ cnt ] );
 
 			if ( pLocator->fAllocated )
 			{
@@ -3736,7 +3774,7 @@ void HandleFlashingItems( )
 							if ( pItemPool->bFlashColor == 1 )
 							{
 								//pObject->uiFlags &= (~LEVELNODE_DYNAMIC);
-								//pObject->uiFlags |= ( LEVELNODE_LASTDYNAMIC  );
+								//pObject->uiFlags |= ( LEVELNODE_LASTDYNAMIC	);
 							}
 							else
 							{
@@ -3770,13 +3808,14 @@ void HandleFlashingItems( )
 
 void RenderTopmostFlashingItems( )
 {
+	PERFORMANCE_MARKER
 	UINT32 cnt;
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL_LOCATOR	*pLocator;
 
 	for ( cnt = 0; cnt < guiNumFlashItemSlots; cnt++ )
 	{
-		pLocator  = &( FlashItemSlots[ cnt ] );
+		pLocator	= &( FlashItemSlots[ cnt ] );
 
 		if ( pLocator->fAllocated )
 		{
@@ -3826,7 +3865,7 @@ void RenderTopmostFlashingItems( )
 						SetBackgroundRectFilled( iBack );
 					}
 
-					BltVideoObjectFromIndex(  FRAME_BUFFER, guiRADIO, pLocator->bRadioFrame, sXPos, sYPos, VO_BLT_SRCTRANSPARENCY, NULL );
+					BltVideoObjectFromIndex(	FRAME_BUFFER, guiRADIO, pLocator->bRadioFrame, sXPos, sYPos, VO_BLT_SRCTRANSPARENCY, NULL );
 
 					DrawItemPoolList( pItemPool, pItemPool->sGridNo	, ITEMLIST_DISPLAY, pItemPool->bRenderZHeightAboveLevel, sXPos, sYPos );
 
@@ -3842,6 +3881,7 @@ void RenderTopmostFlashingItems( )
 
 BOOLEAN VerifyGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE **ppTargetSoldier )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTSoldier;
 	UINT16 usSoldierIndex;
 	OBJECTTYPE	*pObject;
@@ -3855,11 +3895,11 @@ BOOLEAN VerifyGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE **ppTargetSoldier )
 	// Get items from pending data
 	pObject = pSoldier->pTempObject;
 
-	sGridNo		= pSoldier->sPendingActionData2;
-	ubDirection = pSoldier->bPendingActionData3;
-	ubTargetMercID = (UINT8)pSoldier->uiPendingActionData4;
+	sGridNo		= pSoldier->aiData.sPendingActionData2;
+	ubDirection = pSoldier->aiData.bPendingActionData3;
+	ubTargetMercID = (UINT8)pSoldier->aiData.uiPendingActionData4;
 
-	usSoldierIndex = WhoIsThere2( sGridNo, pSoldier->bLevel );
+	usSoldierIndex = WhoIsThere2( sGridNo, pSoldier->pathing.bLevel );
 
 	// See if our target is still available
 	if ( usSoldierIndex != NOBODY )
@@ -3883,21 +3923,20 @@ BOOLEAN VerifyGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE **ppTargetSoldier )
 	{
 		if ( pSoldier->pTempObject != NULL )
 		{
-			AddItemToPool( pSoldier->sGridNo, pSoldier->pTempObject, 1, pSoldier->bLevel, 0 , -1 );
+			AddItemToPool( pSoldier->sGridNo, pSoldier->pTempObject, 1, pSoldier->pathing.bLevel, 0 , -1 );
 
 			// Place it on the ground!
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ITEM_HAS_BEEN_PLACED_ON_GROUND_STR ], ShortItemNames[ pSoldier->pTempObject->usItem ] );		
 
 			// OK, disengage buddy
-			pSoldier->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
+			pSoldier->flags.uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
 
 			if ( ubTargetMercID != NOBODY )
 			{
-				MercPtrs[ ubTargetMercID ]->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
+				MercPtrs[ ubTargetMercID ]->flags.uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
 			}
 
-			MemFree( pSoldier->pTempObject );
-			pSoldier->pTempObject = NULL;
+			OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 
 		}
 	}
@@ -3908,9 +3947,9 @@ BOOLEAN VerifyGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE **ppTargetSoldier )
 
 void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTSoldier;
 	INT8				bInvPos;
-	OBJECTTYPE	TempObject;
 	UINT8				ubProfile;
 
 	INT16				sGridNo;
@@ -3922,13 +3961,11 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 	// Get items from pending data
 
 	// Get objectype and delete
-	memcpy( &TempObject, pSoldier->pTempObject, sizeof( OBJECTTYPE ) );
-	MemFree( pSoldier->pTempObject );
-	pSoldier->pTempObject = NULL;
-
+	gTempObject = *pSoldier->pTempObject;
+	OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 
 	bInvPos = pSoldier->bPendingActionData5;
-	usItemNum = TempObject.usItem;
+	usItemNum = gTempObject.usItem;
 
 	// ATE: OK, check if we have an item in the cursor from
 	// this soldier and from this inv slot, if so, delete!!!!!!!
@@ -3936,7 +3973,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 	{
 		if ( pSoldier->ubID == gpItemPointerSoldier->ubID )
 		{
-			if ( bInvPos == gbItemPointerSrcSlot && usItemNum == gpItemPointer->usItem  )
+			if ( bInvPos == gbItemPointerSrcSlot && usItemNum == gpItemPointer->usItem	)
 			{
 				// Remove!!!
 				EndItemPointer( );
@@ -3944,9 +3981,9 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 		}
 	}
 
-	sGridNo		= pSoldier->sPendingActionData2;
-	ubDirection = pSoldier->bPendingActionData3;
-	ubTargetMercID = (UINT8)pSoldier->uiPendingActionData4;
+	sGridNo		= pSoldier->aiData.sPendingActionData2;
+	ubDirection = pSoldier->aiData.bPendingActionData3;
+	ubTargetMercID = (UINT8)pSoldier->aiData.uiPendingActionData4;
 
 	// ATE: Deduct APs!
 	DeductPoints( pSoldier, AP_PICKUP_ITEM, 0 );
@@ -3965,7 +4002,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 			if( pTSoldier->ubProfile == MICKY )
 			{
 			//and the items are alcohol, dont enter the shopkeeper
-			if( GetArmsDealerItemTypeFromItemNumber( TempObject.usItem ) == ARMS_DEALER_ALCOHOL )
+			if( GetArmsDealerItemTypeFromItemNumber( gTempObject.usItem ) == ARMS_DEALER_ALCOHOL )
 			return;
 			}
 			*/
@@ -3977,12 +4014,12 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 			}
 			// now also check for buy/sell lines (Oct 13)
 			/*
-			else if ( NPCWillingToAcceptItem( pTSoldier->ubProfile, pSoldier->ubProfile, &TempObject ) )
+			else if ( NPCWillingToAcceptItem( pTSoldier->ubProfile, pSoldier->ubProfile, &gTempObject ) )
 			{
 			TriggerNPCWithGivenApproach( pTSoldier->ubProfile, APPROACH_GIVINGITEM, TRUE );
 			return;
 			}*/
-			else if ( !NPCWillingToAcceptItem( pTSoldier->ubProfile, pSoldier->ubProfile, &TempObject ) )
+			else if ( !NPCWillingToAcceptItem( pTSoldier->ubProfile, pSoldier->ubProfile, &gTempObject ) )
 			{
 
 				//Enter the shopkeeper interface
@@ -3993,18 +4030,19 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 				//				if ( bInvPos != NO_SLOT )
 				{
 					// MUST send in NO_SLOT, as the SKI wille expect it to exist in inv if not....
-					AddItemToPlayersOfferAreaAfterShopKeeperOpen( &TempObject, NO_SLOT );
+					AddItemToPlayersOfferAreaAfterShopKeeperOpen( &gTempObject, NO_SLOT );
 
+					//ADB TODO clean up this code???
 					/*
 					Changed because if the player gave 1 item from a pile, the rest of the items in the piule would disappear
-					// OK, r	emove the item, as the SKI will give it back once done
+					// OK, remove the item, as the SKI will give it back once done
 					DeleteObj( &( pSoldier->inv[ bInvPos ] ) );
 					*/
 
 
 					if ( bInvPos != NO_SLOT )
 					{
-						RemoveObjFrom( &pSoldier->inv[ bInvPos ], TempObject.ubNumberOfObjects );
+						pSoldier->inv[ bInvPos ].RemoveObjectAtIndex( gTempObject.ubNumberOfObjects );
 					}
 
 					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
@@ -4036,8 +4074,9 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 			DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 
 			// We are a merc, add!
-			if ( !AutoPlaceObject( pTSoldier, &TempObject, TRUE ) )
+			if ( !AutoPlaceObject( pTSoldier, &gTempObject, TRUE ) )
 			{
+				//ADB TODO clean up code!
 				// Erase!
 				if ( bInvPos != NO_SLOT )
 				{
@@ -4045,18 +4084,19 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 				}
 
-				AddItemToPool( pSoldier->sGridNo, &TempObject, 1, pSoldier->bLevel, 0 , -1 );
+				AddItemToPool( pSoldier->sGridNo, &gTempObject, 1, pSoldier->pathing.bLevel, 0 , -1 );
 
 				// We could not place it!
 				// Drop it on the ground?
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ITEM_HAS_BEEN_PLACED_ON_GROUND_STR ], ShortItemNames[ usItemNum ] );		
 
 				// OK, disengage buddy
-				pSoldier->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
-				pTSoldier->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
+				pSoldier->flags.uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
+				pTSoldier->flags.uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
 			}
 			else
 			{
+				//ADB TODO clean up code!
 				// Erase!
 				if ( bInvPos != NO_SLOT )
 				{
@@ -4071,7 +4111,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 					// are we giving money to an NPC, to whom we owe money?
 					if (pTSoldier->ubProfile != NO_PROFILE && gMercProfiles[pTSoldier->ubProfile].iBalance < 0)
 					{
-						gMercProfiles[pTSoldier->ubProfile].iBalance += TempObject.ItemData.Money.uiMoneyAmount;
+						gMercProfiles[pTSoldier->ubProfile].iBalance += gTempObject[0]->data.money.uiMoneyAmount;
 						if (gMercProfiles[pTSoldier->ubProfile].iBalance >= 0)
 						{
 							// don't let the player accumulate credit (?)
@@ -4094,18 +4134,18 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 			// Erase!
 			if ( bInvPos != NO_SLOT )
 			{
-				RemoveObjs( &(pSoldier->inv[ bInvPos ]), TempObject.ubNumberOfObjects );
+				pSoldier->inv[ bInvPos ].RemoveObjectsFromStack( gTempObject.ubNumberOfObjects );
 				DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 			}
 
 			// Now intiate conv
-			InitiateConversation( pTSoldier, pSoldier, APPROACH_GIVINGITEM, (INT32)&TempObject );
+			InitiateConversation( pTSoldier, pSoldier, APPROACH_GIVINGITEM, (INT32)&gTempObject );
 		}
 	}
 
 	// OK, disengage buddy
-	pSoldier->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
-	pTSoldier->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
+	pSoldier->flags.uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
+	pTSoldier->flags.uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
 
 }
 
@@ -4113,6 +4153,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 
 INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	STRUCTURE		*pStructure;
 	INT16				sDesiredLevel;
 	INT16				sActionGridNo;
@@ -4128,7 +4169,7 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	if( gpWorldLevelData[ sGridNo ].pStructureHead )
 	{
 		// Something is here, check obstruction in future
-		sDesiredLevel = pSoldier->bLevel ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
+		sDesiredLevel = pSoldier->pathing.bLevel ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
 		pStructure = FindStructure( (INT16)sGridNo, STRUCTURE_BLOCKSMOVES );
 		while( pStructure )
 		{
@@ -4146,12 +4187,12 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	}
 
 	// ATE: IF a person is found, use adjacent gridno for it!
-	ubTargetID = WhoIsThere2( sGridNo, pSoldier->bLevel );
+	ubTargetID = WhoIsThere2( sGridNo, pSoldier->pathing.bLevel );
 
 	if ( fStructFound || ( ubTargetID != NOBODY && ubTargetID != pSoldier->ubID ) )
 	{
 		// GET ADJACENT GRIDNO
-		sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, FALSE, FALSE );
+		sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, FALSE, FALSE );
 
 		if ( sActionGridNo == -1 )
 		{
@@ -4165,6 +4206,7 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 void StartBombMessageBox( SOLDIERTYPE * pSoldier, INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubRoom;
 
 	gpTempSoldier = pSoldier;
@@ -4181,11 +4223,11 @@ void StartBombMessageBox( SOLDIERTYPE * pSoldier, INT16 sGridNo )
 		{
 		// check to make sure the appropriate sector is loaded
 		}
-		SetOffBombsByFrequency( pSoldier->ubID, pSoldier->inv[HANDPOS].bFrequency );
+		SetOffBombsByFrequency( pSoldier->ubID, pSoldier->inv[HANDPOS][0]->data.misc.bFrequency );
 		*/
 
 		// PLay sound....
-		PlayJA2Sample( USE_STATUE_REMOTE, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );			              
+		PlayJA2Sample( USE_STATUE_REMOTE, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );						
 
 
 		// Check what sector we are in....
@@ -4193,7 +4235,7 @@ void StartBombMessageBox( SOLDIERTYPE * pSoldier, INT16 sGridNo )
 		{
 			if ( InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom == 4 )
 			{
-				DoMercBattleSound( pSoldier, BATTLE_SOUND_OK1 );
+				pSoldier->DoMercBattleSound( BATTLE_SOUND_OK1 );
 
 				// Open statue
 				ChangeO3SectorStatue( FALSE );
@@ -4201,15 +4243,15 @@ void StartBombMessageBox( SOLDIERTYPE * pSoldier, INT16 sGridNo )
 			}
 			else
 			{
-				DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
+				pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 			}
 		}
 		else
 		{
-			DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
+			pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 		}
 	}
-	else if ( IsDetonatorAttached ( &(pSoldier->inv[HANDPOS]) )  )
+	else if ( IsDetonatorAttached ( &(pSoldier->inv[HANDPOS]) )	)
 	{
 		DoMessageBox( MSG_BOX_BASIC_SMALL_BUTTONS, TacticalStr[ CHOOSE_TIMER_STR ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS, BombMessageBoxCallBack, NULL );
 	}
@@ -4221,6 +4263,7 @@ void StartBombMessageBox( SOLDIERTYPE * pSoldier, INT16 sGridNo )
 
 void BombMessageBoxCallBack( UINT8 ubExitValue )
 {
+	PERFORMANCE_MARKER
 	if (gpTempSoldier)
 	{
 		if (Item[ gpTempSoldier->inv[HANDPOS].usItem ].remotetrigger )
@@ -4242,15 +4285,15 @@ void BombMessageBoxCallBack( UINT8 ubExitValue )
 
 			if ( iResult >= 0 )
 			{
-				// EXPLOSIVES GAIN (25):  Place a bomb, or buried and armed a mine
+				// EXPLOSIVES GAIN (25):	Place a bomb, or buried and armed a mine
 				StatChange( gpTempSoldier, EXPLODEAMT, 25, FALSE );
 			}
 			else
 			{
-				// EXPLOSIVES GAIN (10):  Failed to place a bomb, or bury and arm a mine
+				// EXPLOSIVES GAIN (10):	Failed to place a bomb, or bury and arm a mine
 				StatChange( gpTempSoldier, EXPLODEAMT, 10, FROM_FAILURE );
 
-				// oops!  How badly did we screw up?
+				// oops!	How badly did we screw up?
 				if ( iResult >= -20 )
 				{
 					// messed up the setting
@@ -4268,20 +4311,21 @@ void BombMessageBoxCallBack( UINT8 ubExitValue )
 				else
 				{
 					// OOPS! ... BOOM!
-					IgniteExplosion( NOBODY, gpTempSoldier->sX, gpTempSoldier->sY, (INT16) (gpWorldLevelData[gpTempSoldier->sGridNo].sHeight), gpTempSoldier->sGridNo, gpTempSoldier->inv[ HANDPOS ].usItem, gpTempSoldier->bLevel );
+					IgniteExplosion( NOBODY, gpTempSoldier->sX, gpTempSoldier->sY, (INT16) (gpWorldLevelData[gpTempSoldier->sGridNo].sHeight), gpTempSoldier->sGridNo, gpTempSoldier->inv[ HANDPOS ].usItem, gpTempSoldier->pathing.bLevel );
 					return;
 				}
 			}
 
 			if ( ArmBomb( &(gpTempSoldier->inv[HANDPOS]), ubExitValue ) )
 			{
-				gpTempSoldier->inv[ HANDPOS ].bTrap = __min( 10, ( EffectiveExplosive( gpTempSoldier ) / 20) + (EffectiveExpLevel( gpTempSoldier ) / 3) );
+				gpTempSoldier->inv[ HANDPOS ][0]->data.bTrap = __min( 10, ( EffectiveExplosive( gpTempSoldier ) / 20) + (EffectiveExpLevel( gpTempSoldier ) / 3) );
 				// HACK IMMINENT!
 				// value of 1 is stored in maps for SIDE of bomb owner... when we want to use IDs!
 				// so we add 2 to all owner IDs passed through here and subtract 2 later
-				gpTempSoldier->inv[HANDPOS].ItemData.Trigger.ubBombOwner = gpTempSoldier->ubID + 2;
-				AddItemToPool( gsTempGridno, &(gpTempSoldier->inv[HANDPOS]), 1, gpTempSoldier->bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
-				DeleteObj( &(gpTempSoldier->inv[HANDPOS]) );
+				if (gpTempSoldier->inv[HANDPOS].MoveThisObjectTo(gTempObject, 1) == 0) {
+					gTempObject[0]->data.misc.ubBombOwner = gpTempSoldier->ubID + 2;
+					AddItemToPool( gsTempGridno, &gTempObject, 1, gpTempSoldier->pathing.bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
+				}
 			}
 		}
 	}
@@ -4291,6 +4335,7 @@ void BombMessageBoxCallBack( UINT8 ubExitValue )
 
 BOOLEAN HandItemWorks( SOLDIERTYPE *pSoldier, INT8 bSlot )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN							fItemJustBroke = FALSE, fItemWorks = TRUE;
 	OBJECTTYPE *				pObj;
 
@@ -4298,22 +4343,22 @@ BOOLEAN HandItemWorks( SOLDIERTYPE *pSoldier, INT8 bSlot )
 
 	// if the item can be damaged, than we must check that it's in good enough
 	// shape to be usable, and doesn't break during use.
-	// Exception: land mines.  You can bury them broken, they just won't blow!
+	// Exception: land mines.	You can bury them broken, they just won't blow!
 	//	if ( (Item[ pObj->usItem ].fFlags & ITEM_DAMAGEABLE) && (pObj->usItem != MINE) && (Item[ pObj->usItem ].usItemClass != IC_MEDKIT) && pObj->usItem != GAS_CAN )
 	if ( (Item[ pObj->usItem ].damageable ) && (!Item[pObj->usItem].mine ) && (Item[ pObj->usItem ].usItemClass != IC_MEDKIT) && !Item[pObj->usItem].gascan )
 	{
 		// if it's still usable, check whether it breaks
-		if ( pObj->ItemData.Generic.bStatus[0] >= USABLE)
+		if ( (*pObj)[0]->data.objectStatus >= USABLE)
 		{
 			// if a dice roll is greater than the item's status
-			if ( (Random(80) + 20) >= (UINT32) (pObj->ItemData.Generic.bStatus[0] + 50) )
+			if ( (Random(80) + 20) >= (UINT32) ((*pObj)[0]->data.objectStatus + 50) )
 			{
 				fItemJustBroke = TRUE;
 				fItemWorks = FALSE;
 
-				// item breaks, and becomes unusable...  so its status is reduced
+				// item breaks, and becomes unusable...	so its status is reduced
 				// to somewhere between 1 and the 1 less than USABLE
-				pObj->ItemData.Generic.bStatus[0] = (INT8) ( 1 + Random( USABLE - 1 ) );
+				(*pObj)[0]->data.objectStatus = (INT8) ( 1 + Random( USABLE - 1 ) );
 			}
 		}
 		else	// it's already unusable
@@ -4336,8 +4381,8 @@ BOOLEAN HandItemWorks( SOLDIERTYPE *pSoldier, INT8 bSlot )
 	{
 		// are we using two guns at once?
 		if ( Item[ pSoldier->inv[SECONDHANDPOS].usItem ].usItemClass == IC_GUN &&
-			pSoldier->inv[SECONDHANDPOS].ItemData.Gun.bGunStatus >= USABLE &&
-			pSoldier->inv[SECONDHANDPOS].ItemData.Gun.ubGunShotsLeft > 0)
+			pSoldier->inv[SECONDHANDPOS][0]->data.gun.bGunStatus >= USABLE &&
+			pSoldier->inv[SECONDHANDPOS][0]->data.gun.ubGunShotsLeft > 0)
 		{
 			// check the second gun for breakage, and if IT breaks, return false
 			return( HandItemWorks( pSoldier, SECONDHANDPOS ) );
@@ -4350,10 +4395,11 @@ BOOLEAN HandItemWorks( SOLDIERTYPE *pSoldier, INT8 bSlot )
 
 void SetOffBoobyTrapInMapScreen( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubPtsDmg = 0;
 
 	// check if trapped item is an explosive, if so then up the amount of dmg
-	if( ( pObject -> usItem == TNT )|| (  pObject -> usItem == RDX ) )
+	if( ( pObject->usItem == TNT )|| (	pObject->usItem == RDX ) )
 	{
 		// for explosive
 		ubPtsDmg = 0;
@@ -4365,7 +4411,7 @@ void SetOffBoobyTrapInMapScreen( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 	}
 
 	// injure the inventory character
-	SoldierTakeDamage( pSoldier, 0, ubPtsDmg, ubPtsDmg, TAKE_DAMAGE_EXPLOSION, NOBODY, NOWHERE, 0, TRUE );
+	pSoldier->SoldierTakeDamage( 0, ubPtsDmg, ubPtsDmg, TAKE_DAMAGE_EXPLOSION, NOBODY, NOWHERE, 0, TRUE );
 
 	// play the sound
 	PlayJA2Sample( EXPLOSION_1, RATE_11025, BTNVOLUME, 1, MIDDLEPAN );			
@@ -4375,6 +4421,7 @@ void SetOffBoobyTrapInMapScreen( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 
 void SetOffBoobyTrap( ITEM_POOL * pItemPool )
 {
+	PERFORMANCE_MARKER
 	if ( pItemPool )
 	{
 		INT16 sX, sY;
@@ -4388,40 +4435,41 @@ void SetOffBoobyTrap( ITEM_POOL * pItemPool )
 
 BOOLEAN ContinuePastBoobyTrap( SOLDIERTYPE * pSoldier, INT16 sGridNo, INT8 bLevel, INT32 iItemIndex, BOOLEAN fInStrategic, BOOLEAN *pfSaidQuote )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN					fBoobyTrapKnowledge;
 	INT8						bTrapDifficulty, bTrapDetectLevel;
 	OBJECTTYPE *		pObj;
 
-	pObj = &(gWorldItems[ iItemIndex ].o);
+	pObj = &(gWorldItems[ iItemIndex ].object);
 
 	(*pfSaidQuote) = FALSE;
 
-	if (pObj->bTrap > 0)
+	if ((*pObj)[0]->data.bTrap > 0)
 	{
 		if (pSoldier->bTeam == gbPlayerNum)
 		{
 			// does the player know about this item?
-			fBoobyTrapKnowledge = ((pObj->fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) > 0);
+			fBoobyTrapKnowledge = (((*pObj).fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) > 0);
 
 			// blue flag stuff?
 
 			if (!fBoobyTrapKnowledge)
 			{
-				bTrapDifficulty = pObj->bTrap;
+				bTrapDifficulty = (*pObj)[0]->data.bTrap;
 				bTrapDetectLevel = CalcTrapDetectLevel( pSoldier, FALSE );
 				if (bTrapDetectLevel >= bTrapDifficulty)
 				{
 					// spotted the trap!
-					pObj->fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
+					(*pObj).fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
 					fBoobyTrapKnowledge = TRUE;
 
 					// Make him warn us:
 
 					// Set things up..
 					gpBoobyTrapSoldier = pSoldier;
-					gpBoobyTrapItemPool = GetItemPoolForIndex( sGridNo, iItemIndex, pSoldier->bLevel );
+					gpBoobyTrapItemPool = GetItemPoolForIndex( sGridNo, iItemIndex, pSoldier->pathing.bLevel );
 					gsBoobyTrapGridNo = sGridNo;
-					gbBoobyTrapLevel  = pSoldier->bLevel;
+					gbBoobyTrapLevel	= pSoldier->pathing.bLevel;
 					gfDisarmingBuriedBomb = FALSE;
 					gbTrapDifficulty = bTrapDifficulty;
 
@@ -4435,15 +4483,15 @@ BOOLEAN ContinuePastBoobyTrap( SOLDIERTYPE * pSoldier, INT16 sGridNo, INT8 bLeve
 				}
 			}
 
-			gpBoobyTrapItemPool = GetItemPoolForIndex( sGridNo, iItemIndex, pSoldier->bLevel );
+			gpBoobyTrapItemPool = GetItemPoolForIndex( sGridNo, iItemIndex, pSoldier->pathing.bLevel );
 			if (fBoobyTrapKnowledge)
 			{
 				// have the computer ask us if we want to proceed
 				gpBoobyTrapSoldier = pSoldier;
 				gsBoobyTrapGridNo = sGridNo;
-				gbBoobyTrapLevel  = pSoldier->bLevel;
+				gbBoobyTrapLevel	= pSoldier->pathing.bLevel;
 				gfDisarmingBuriedBomb = FALSE;
-				gbTrapDifficulty = pObj->bTrap;
+				gbTrapDifficulty = (*pObj)[0]->data.bTrap;
 
 				if( fInStrategic )
 				{
@@ -4471,27 +4519,29 @@ BOOLEAN ContinuePastBoobyTrap( SOLDIERTYPE * pSoldier, INT16 sGridNo, INT8 bLeve
 
 void BoobyTrapDialogueCallBack( void )
 {
+	PERFORMANCE_MARKER
 	gfJustFoundBoobyTrap = TRUE;
 
 	// now prompt the user...
 	if( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
 	{
-		DoScreenIndependantMessageBox( TacticalStr[ DISARM_BOOBYTRAP_PROMPT ],  ( UINT8 )MSG_BOX_FLAG_YESNO, BoobyTrapInMapScreenMessageBoxCallBack );
+		DoScreenIndependantMessageBox( TacticalStr[ DISARM_BOOBYTRAP_PROMPT ],	( UINT8 )MSG_BOX_FLAG_YESNO, BoobyTrapInMapScreenMessageBoxCallBack );
 	}
 	else
 	{
-		DoScreenIndependantMessageBox( TacticalStr[ DISARM_BOOBYTRAP_PROMPT ],  ( UINT8 )MSG_BOX_FLAG_YESNO, BoobyTrapMessageBoxCallBack );
+		DoScreenIndependantMessageBox( TacticalStr[ DISARM_BOOBYTRAP_PROMPT ],	( UINT8 )MSG_BOX_FLAG_YESNO, BoobyTrapMessageBoxCallBack );
 	}
 }
 
 void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 {
+	PERFORMANCE_MARKER
 	if ( gfJustFoundBoobyTrap )
 	{
 		// NOW award for finding boobytrap
-		// WISDOM GAIN:  Detected a booby-trap
+		// WISDOM GAIN:	Detected a booby-trap
 		StatChange( gpBoobyTrapSoldier, WISDOMAMT, (UINT16) (3 * gbTrapDifficulty), FALSE );
-		// EXPLOSIVES GAIN:  Detected a booby-trap
+		// EXPLOSIVES GAIN:	Detected a booby-trap
 		StatChange( gpBoobyTrapSoldier, EXPLODEAMT, (UINT16) (3 * gbTrapDifficulty), FALSE );
 		gfJustFoundBoobyTrap = FALSE;
 	}
@@ -4499,11 +4549,8 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 	if (ubExitValue == MSG_BOX_RETURN_YES)
 	{
 		INT32						iCheckResult;
-		OBJECTTYPE 			Object;
-
-
 		// get the item 
-		memcpy( &Object, &(gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].o), sizeof( OBJECTTYPE ) );
+		gTempObject = gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].object;
 
 		// Snap: make it easier to disarm our own traps.
 		// If we succede - we get exp, but if we fail - we pay fair and square!
@@ -4511,9 +4558,9 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 		// NB owner grossness... bombs 'owned' by the enemy are stored with side value 1 in 
 		// the map. So if we want to detect a bomb placed by the player, owner is > 1, and
 		// owner - 2 gives the ID of the character who planted it
-		if ( Object.ItemData.Trigger.ubBombOwner > 1 && ( (INT32)Object.ItemData.Trigger.ubBombOwner - 2 >= gTacticalStatus.Team[ OUR_TEAM ].bFirstID && Object.ItemData.Trigger.ubBombOwner - 2 <= gTacticalStatus.Team[ OUR_TEAM ].bLastID ) )
+		if ( gTempObject[0]->data.misc.ubBombOwner > 1 && ( (INT32)gTempObject[0]->data.misc.ubBombOwner - 2 >= gTacticalStatus.Team[ OUR_TEAM ].bFirstID && gTempObject[0]->data.misc.ubBombOwner - 2 <= gTacticalStatus.Team[ OUR_TEAM ].bLastID ) )
 		{
-			if ( Object.ItemData.Trigger.ubBombOwner - 2 == gpBoobyTrapSoldier->ubID )
+			if ( gTempObject[0]->data.misc.ubBombOwner - 2 == gpBoobyTrapSoldier->ubID )
 			{
 				// my own boobytrap!
 				iCheckResult = SkillCheck( gpBoobyTrapSoldier, DISARM_TRAP_CHECK, 40 );
@@ -4532,9 +4579,9 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 		if (iCheckResult >= 0)
 		{
 
-			if ( Object.ItemData.Trigger.ubBombOwner > 1 && ( (INT32)Object.ItemData.Trigger.ubBombOwner - 2 >= gTacticalStatus.Team[ OUR_TEAM ].bFirstID && Object.ItemData.Trigger.ubBombOwner - 2 <= gTacticalStatus.Team[ OUR_TEAM ].bLastID ) )
+			if ( gTempObject[0]->data.misc.ubBombOwner > 1 && ( (INT32)gTempObject[0]->data.misc.ubBombOwner - 2 >= gTacticalStatus.Team[ OUR_TEAM ].bFirstID && gTempObject[0]->data.misc.ubBombOwner - 2 <= gTacticalStatus.Team[ OUR_TEAM ].bLastID ) )
 			{
-				if ( Object.ItemData.Trigger.ubBombOwner - 2 == gpBoobyTrapSoldier->ubID )
+				if ( gTempObject[0]->data.misc.ubBombOwner - 2 == gpBoobyTrapSoldier->ubID )
 				{
 					// disarmed my own boobytrap!
 					StatChange( gpBoobyTrapSoldier, EXPLODEAMT, (UINT16) (2 * gbTrapDifficulty), FALSE );
@@ -4552,24 +4599,24 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 			}
 
 			// have merc say this is good
-			DoMercBattleSound( gpBoobyTrapSoldier, BATTLE_SOUND_COOL1 );
+			gpBoobyTrapSoldier->DoMercBattleSound( BATTLE_SOUND_COOL1 );
 
 			if (gfDisarmingBuriedBomb)
 			{	
-				if (Object.usItem == SWITCH)
+				if (gTempObject.usItem == SWITCH)
 				{
 					// give the player a remote trigger instead
-					CreateItem( REMOTEBOMBTRIGGER, (INT8) (1 + Random( 9 )), &Object );
+					CreateItem( REMOTEBOMBTRIGGER, (INT8) (1 + Random( 9 )), &gTempObject );
 				}
-				else if (Object.usItem == ACTION_ITEM && Object.ItemData.Trigger.bActionValue != ACTION_ITEM_BLOW_UP )
+				else if (gTempObject.usItem == ACTION_ITEM && gTempObject[0]->data.misc.bActionValue != ACTION_ITEM_BLOW_UP )
 				{
 					// give the player a detonator instead
-					CreateItem( DETONATOR, (INT8) (1 + Random( 9 )), &Object );
+					CreateItem( DETONATOR, (INT8) (1 + Random( 9 )), &gTempObject );
 				}
 				else
 				{
 					// switch action item to the real item type
-					CreateItem( Object.ItemData.Trigger.usBombItem, Object.ItemData.Trigger.bBombStatus, &Object );
+					CreateItem( gTempObject[0]->data.misc.usBombItem, gTempObject[0]->data.misc.bBombStatus, &gTempObject );
 				}
 
 				// remove any blue flag graphic
@@ -4577,12 +4624,12 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 			}
 			else
 			{
-				Object.bTrap = 0;
-				Object.fFlags &= ~( OBJECT_KNOWN_TO_BE_TRAPPED );
+				gTempObject[0]->data.bTrap = 0;
+				gTempObject.fFlags &= ~( OBJECT_KNOWN_TO_BE_TRAPPED );
 			}
 
 			// place it in the guy's inventory/cursor
-			if ( AutoPlaceObject( gpBoobyTrapSoldier, &Object, TRUE ) )
+			if ( AutoPlaceObject( gpBoobyTrapSoldier, &gTempObject, TRUE ) )
 			{
 				// remove it from the ground
 				RemoveItemFromPool( gsBoobyTrapGridNo, gpBoobyTrapItemPool->iItemIndex, gbBoobyTrapLevel );
@@ -4590,8 +4637,8 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 			else
 			{
 				// make sure the item in the world is untrapped
-				gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].o.bTrap = 0;
-				gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].o.fFlags &= ~( OBJECT_KNOWN_TO_BE_TRAPPED );
+				gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].object[0]->data.bTrap = 0;
+				gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].object.fFlags &= ~( OBJECT_KNOWN_TO_BE_TRAPPED );
 
 				// ATE; If we failed to add to inventory, put failed one in our cursor...
 				gfDontChargeAPsToPickup = TRUE;
@@ -4604,7 +4651,7 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 			// oops! trap goes off
 			StatChange( gpBoobyTrapSoldier, EXPLODEAMT, (INT8) (3 * gbTrapDifficulty ), FROM_FAILURE );
 
-			DoMercBattleSound( gpBoobyTrapSoldier, BATTLE_SOUND_CURSE1 );
+			gpBoobyTrapSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 
 			if (gfDisarmingBuriedBomb)
 			{
@@ -4628,13 +4675,14 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 
 void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue )
 {
+	PERFORMANCE_MARKER
 	if ( gfJustFoundBoobyTrap )
 	{
 		// NOW award for finding boobytrap
 
-		// WISDOM GAIN:  Detected a booby-trap
+		// WISDOM GAIN:	Detected a booby-trap
 		StatChange( gpBoobyTrapSoldier, WISDOMAMT, (UINT16) (3 * gbTrapDifficulty), FALSE );
-		// EXPLOSIVES GAIN:  Detected a booby-trap
+		// EXPLOSIVES GAIN:	Detected a booby-trap
 		StatChange( gpBoobyTrapSoldier, EXPLODEAMT, (UINT16) (3 * gbTrapDifficulty), FALSE );
 		gfJustFoundBoobyTrap = FALSE;
 	}
@@ -4642,8 +4690,6 @@ void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue )
 	if (ubExitValue == MSG_BOX_RETURN_YES)
 	{
 		INT32						iCheckResult;
-		OBJECTTYPE 			Object;
-
 		iCheckResult = SkillCheck( gpBoobyTrapSoldier, DISARM_TRAP_CHECK, 0 );
 
 		if (iCheckResult >= 0)
@@ -4653,41 +4699,41 @@ void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue )
 
 
 			// have merc say this is good
-			DoMercBattleSound( gpBoobyTrapSoldier, BATTLE_SOUND_COOL1 );
+			gpBoobyTrapSoldier->DoMercBattleSound( BATTLE_SOUND_COOL1 );
 
 			// get the item 
-			memcpy( &Object, gpItemPointer, sizeof( OBJECTTYPE ) );
+			gTempObject = *gpItemPointer;
 
 			if (gfDisarmingBuriedBomb)
 			{	
-				if (Object.usItem == SWITCH)
+				if (gTempObject.usItem == SWITCH)
 				{
 					// give the player a remote trigger instead
-					CreateItem( REMOTEBOMBTRIGGER, (INT8) (1 + Random( 9 )), &Object );
+					CreateItem( REMOTEBOMBTRIGGER, (INT8) (1 + Random( 9 )), &gTempObject );
 				}
-				else if (Object.usItem == ACTION_ITEM && Object.ItemData.Trigger.bActionValue != ACTION_ITEM_BLOW_UP )
+				else if (gTempObject.usItem == ACTION_ITEM && gTempObject[0]->data.misc.bActionValue != ACTION_ITEM_BLOW_UP )
 				{
 					// give the player a detonator instead
-					CreateItem( DETONATOR, (INT8) (1 + Random( 9 )), &Object );
+					CreateItem( DETONATOR, (INT8) (1 + Random( 9 )), &gTempObject );
 				}
 				else
 				{
 					// switch action item to the real item type
-					CreateItem( Object.ItemData.Trigger.usBombItem, Object.ItemData.Trigger.bBombStatus, &Object );
+					CreateItem( gTempObject[0]->data.misc.usBombItem, gTempObject[0]->data.misc.bBombStatus, &gTempObject );
 				}
 			}
 			else
 			{
-				Object.bTrap = 0;
-				Object.fFlags &= ~( OBJECT_KNOWN_TO_BE_TRAPPED );
+				gTempObject[0]->data.bTrap = 0;
+				gTempObject.fFlags &= ~( OBJECT_KNOWN_TO_BE_TRAPPED );
 			}
 
 			MAPEndItemPointer( );
 
 			// place it in the guy's inventory/cursor
-			if ( !AutoPlaceObject( gpBoobyTrapSoldier, &Object, TRUE ) )
+			if ( !AutoPlaceObject( gpBoobyTrapSoldier, &gTempObject, TRUE ) )
 			{
-				AutoPlaceObjectInInventoryStash( &Object );
+				AutoPlaceObjectInInventoryStash( &gTempObject );
 			}
 
 			HandleButtonStatesWhileMapInventoryActive( );
@@ -4697,7 +4743,7 @@ void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue )
 			// oops! trap goes off
 			StatChange( gpBoobyTrapSoldier, EXPLODEAMT, (INT8) (3 * gbTrapDifficulty ), FROM_FAILURE );
 
-			DoMercBattleSound( gpBoobyTrapSoldier, BATTLE_SOUND_CURSE1 );
+			gpBoobyTrapSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 
 			if (gfDisarmingBuriedBomb)
 			{
@@ -4723,17 +4769,19 @@ void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue )
 
 void SwitchMessageBoxCallBack( UINT8 ubExitValue )
 {
+	PERFORMANCE_MARKER
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
 		// Message that switch is activated...
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 60 ] );		
 
-		SetOffBombsByFrequency( gpTempSoldier->ubID,  bTempFrequency );
+		SetOffBombsByFrequency( gpTempSoldier->ubID,	bTempFrequency );
 	}
 }
 
 BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN fCheckAroundGridno, INT16 * psProblemGridNo )
 {
+	PERFORMANCE_MARKER
 	INT16						sNextGridNo;
 	// BOOLEAN fWorthChecking = FALSE, fProblemExists = FALSE, fDetectedProblem = FALSE;
 	UINT8						ubDetectLevel, ubDirection;
@@ -4747,7 +4795,7 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 
 	ubDetectLevel = 0;
 
-	if (  FindMetalDetector( pSoldier ) != NO_SLOT )
+	if (	FindMetalDetector( pSoldier ) != NO_SLOT )
 	{
 		fMining = TRUE;
 	}
@@ -4795,7 +4843,7 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 			sNextGridNo = NewGridNo( sGridNo, (INT16) DirectionInc( (UINT8) ubDirection ) );
 
 			// don't check directions that are impassable!
-			ubMovementCost = gubWorldMovementCosts[ sNextGridNo ][ ubDirection ][ pSoldier->bLevel ];
+			ubMovementCost = gubWorldMovementCosts[ sNextGridNo ][ ubDirection ][ pSoldier->pathing.bLevel ];
 			if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 			{
 				ubMovementCost = DoorTravelCost( NULL, sNextGridNo, ubMovementCost, FALSE, NULL );
@@ -4826,26 +4874,26 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 		{
 			if (gWorldBombs[uiWorldBombIndex].fExists && gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].sGridNo == sNextGridNo)
 			{
-				pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-				if ( pObj->ItemData.Trigger.bDetonatorType == BOMB_PRESSURE && !(pObj->fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) && (!(pObj->fFlags & OBJECT_DISABLED_BOMB)) )
+				pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
+				if ( (*pObj)[0]->data.misc.bDetonatorType == BOMB_PRESSURE && !((*pObj).fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) && (!((*pObj).fFlags & OBJECT_DISABLED_BOMB)) )
 				{
-					if ( fMining && pObj->bTrap <= 10 )
+					if ( fMining && (*pObj)[0]->data.bTrap <= 10 )
 					{
 						// add blue flag
-						AddBlueFlag( sNextGridNo, pSoldier->bLevel );
+						AddBlueFlag( sNextGridNo, pSoldier->pathing.bLevel );
 						fFoundMetal = TRUE;
 						break;
 					}
-					else if (ubDetectLevel >= pObj->bTrap)
+					else if (ubDetectLevel >= (*pObj)[0]->data.bTrap)
 					{
-						if (pSoldier->uiStatusFlags & SOLDIER_PC )
+						if (pSoldier->flags.uiStatusFlags & SOLDIER_PC )
 						{
 							// detected exposives buried nearby...
-							StatChange( pSoldier, EXPLODEAMT, (UINT16) (pObj->bTrap), FALSE );
-							StatChange( pSoldier, WISDOMAMT, (UINT16) (pObj->bTrap), FALSE );
+							StatChange( pSoldier, EXPLODEAMT, (UINT16) ((*pObj)[0]->data.bTrap), FALSE );
+							StatChange( pSoldier, WISDOMAMT, (UINT16) ((*pObj)[0]->data.bTrap), FALSE );
 
 							// set item as known
-							pObj->fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
+							(*pObj).fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
 						}
 
 						*psProblemGridNo = sNextGridNo;
@@ -4860,21 +4908,21 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 		if (fMining)
 		{
 		// add blue flags where we find metallic objects hidden
-		GetItemPool( sNextGridNo, &pItemPool, pSoldier->bLevel );
+		GetItemPool( sNextGridNo, &pItemPool, pSoldier->pathing.bLevel );
 		while( pItemPool )
 		{
-		if ( pItemPool->bVisible == BURIED || (pItemPool->bVisible != TRUE && gWorldItems[ pItemPool->iItemIndex ].o.bTrap > 0 ) )
+		if ( pItemPool->bVisible == BURIED || (pItemPool->bVisible != TRUE && gWorldItems[ pItemPool->iItemIndex ].object.bTrap > 0 ) )
 		{
-		pObj = &( gWorldItems[ pItemPool->iItemIndex ].o );
-		if ( pObj->usItem == ACTION_ITEM && pObj-> )
+		pObj = &( gWorldItems[ pItemPool->iItemIndex ].object );
+		if ( pObj->usItem == ACTION_ITEM && pObj->)
 		{
-		switch( pObj->bActionValue )
+		switch( (*pObj)[0]->data.misc.bActionValue )
 		{
 		case ACTION_ITEM_BLOW_UP:
 		case ACTION_ITEM_LOCAL_ALARM:
 		case ACTION_ITEM_GLOBAL_ALARM:
 		// add blue flag
-		AddBlueFlag( sNextGridNo, pSoldier->bLevel );
+		AddBlueFlag( sNextGridNo, pSoldier->pathing.bLevel );
 		fFoundMetal = TRUE;
 		break;
 		default:
@@ -4885,7 +4933,7 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 		else if (Item[ pObj->usItem ].fFlags & ITEM_METAL)
 		{
 		// add blue flag
-		AddBlueFlag( sNextGridNo, pSoldier->bLevel );
+		AddBlueFlag( sNextGridNo, pSoldier->pathing.bLevel );
 		fFoundMetal = TRUE;
 		break;
 		}
@@ -4910,6 +4958,7 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 
 void MineSpottedDialogueCallBack( void )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL * pItemPool;
 
 	// ATE: REALLY IMPORTANT - ALL CALLBACK ITEMS SHOULD UNLOCK
@@ -4925,6 +4974,7 @@ void MineSpottedDialogueCallBack( void )
 
 void MineSpottedLocatorCallback( void )
 {
+	PERFORMANCE_MARKER
 	guiPendingOverrideEvent = LU_ENDUILOCK;
 
 	// now ask the player if he wants to place a blue flag.
@@ -4933,6 +4983,7 @@ void MineSpottedLocatorCallback( void )
 
 void MineSpottedMessageBoxCallBack( UINT8 ubExitValue )
 {
+	PERFORMANCE_MARKER
 	if (ubExitValue == MSG_BOX_RETURN_YES)
 	{
 		// place a blue flag where the mine was found
@@ -4942,6 +4993,7 @@ void MineSpottedMessageBoxCallBack( UINT8 ubExitValue )
 
 void RemoveBlueFlagDialogueCallBack( UINT8 ubExitValue )
 {
+	PERFORMANCE_MARKER
 	if (ubExitValue == MSG_BOX_RETURN_YES)
 	{
 		RemoveBlueFlag( gsBoobyTrapGridNo, gbBoobyTrapLevel );
@@ -4950,6 +5002,7 @@ void RemoveBlueFlagDialogueCallBack( UINT8 ubExitValue )
 
 void AddBlueFlag( INT16 sGridNo ,INT8 bLevel )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
 
 	ApplyMapChangesToMapTempFile( TRUE );
@@ -4969,6 +5022,7 @@ void AddBlueFlag( INT16 sGridNo ,INT8 bLevel )
 
 void RemoveBlueFlag( INT16 sGridNo, INT8 bLevel )
 {
+	PERFORMANCE_MARKER
 	ApplyMapChangesToMapTempFile( TRUE );
 	gpWorldLevelData[sGridNo].uiFlags &= ~(MAPELEMENT_PLAYER_MINE_PRESENT);
 
@@ -4988,6 +5042,7 @@ void RemoveBlueFlag( INT16 sGridNo, INT8 bLevel )
 
 void MakeNPCGrumpyForMinorOffense( SOLDIERTYPE * pSoldier, SOLDIERTYPE *pOffendingSoldier )
 {
+	PERFORMANCE_MARKER
 	CancelAIAction( pSoldier, TRUE );
 
 	switch( pSoldier->ubProfile )
@@ -5018,15 +5073,16 @@ void MakeNPCGrumpyForMinorOffense( SOLDIERTYPE * pSoldier, SOLDIERTYPE *pOffendi
 
 	if ( pOffendingSoldier )
 	{
-		pSoldier->bNextAction = AI_ACTION_CHANGE_FACING;
-		pSoldier->usNextActionData = atan8( pSoldier->sX, pSoldier->sY, pOffendingSoldier->sX, pOffendingSoldier->sY );
+		pSoldier->aiData.bNextAction = AI_ACTION_CHANGE_FACING;
+		pSoldier->aiData.usNextActionData = atan8( pSoldier->sX, pSoldier->sY, pOffendingSoldier->sX, pOffendingSoldier->sY );
 	}
 }
 
 
 void TestPotentialOwner( SOLDIERTYPE * pSoldier )
 {
-	if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE )
+	PERFORMANCE_MARKER
+	if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife >= OKLIFE )
 	{
 		if ( SoldierToSoldierLineOfSightTest( pSoldier, gpTempSoldier, TRUE, CALC_FROM_ALL_DIRS ) )
 		{
@@ -5037,6 +5093,7 @@ void TestPotentialOwner( SOLDIERTYPE * pSoldier )
 
 void CheckForPickedOwnership( void )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL *				pItemPool;
 	UINT8							ubProfile;
 	UINT8							ubCivGroup;
@@ -5044,24 +5101,24 @@ void CheckForPickedOwnership( void )
 	UINT8							ubLoop;
 
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
-	GetItemPool( gsTempGridno, &pItemPool, gpTempSoldier->bLevel );
+	GetItemPool( gsTempGridno, &pItemPool, gpTempSoldier->pathing.bLevel );
 
 	while( pItemPool )
 	{
-		if ( gWorldItems[ pItemPool->iItemIndex ].o.usItem == OWNERSHIP )
+		if ( gWorldItems[ pItemPool->iItemIndex ].object.usItem == OWNERSHIP )
 		{
-			if ( gWorldItems[ pItemPool->iItemIndex ].o.ItemData.Owner.ubOwnerProfile != NO_PROFILE )
+			if ( gWorldItems[ pItemPool->iItemIndex ].object[0]->data.owner.ubOwnerProfile != NO_PROFILE )
 			{
-				ubProfile = gWorldItems[ pItemPool->iItemIndex ].o.ItemData.Owner.ubOwnerProfile;
+				ubProfile = gWorldItems[ pItemPool->iItemIndex ].object[0]->data.owner.ubOwnerProfile;
 				pSoldier = FindSoldierByProfileID( ubProfile, FALSE );
 				if ( pSoldier )
 				{
 					TestPotentialOwner( pSoldier );
 				}
 			}
-			if ( gWorldItems[ pItemPool->iItemIndex ].o.ItemData.Owner.ubOwnerCivGroup != NON_CIV_GROUP ) 
+			if ( gWorldItems[ pItemPool->iItemIndex ].object[0]->data.owner.ubOwnerCivGroup != NON_CIV_GROUP ) 
 			{
-				ubCivGroup = gWorldItems[ pItemPool->iItemIndex ].o.ItemData.Owner.ubOwnerCivGroup;
+				ubCivGroup = gWorldItems[ pItemPool->iItemIndex ].object[0]->data.owner.ubOwnerCivGroup;
 				if ( ubCivGroup == HICKS_CIV_GROUP && CheckFact( FACT_HICKS_MARRIED_PLAYER_MERC, 0 ) )
 				{
 					// skip because hicks appeased
@@ -5087,6 +5144,7 @@ void CheckForPickedOwnership( void )
 
 void LoopLevelNodeForItemGlowFlag( LEVELNODE *pNode, INT16 sGridNo, UINT8 ubLevel, BOOLEAN fOn )
 {
+	PERFORMANCE_MARKER
 	while ( pNode != NULL )
 	{
 		if ( pNode->uiFlags & LEVELNODE_ITEM )
@@ -5107,12 +5165,13 @@ void LoopLevelNodeForItemGlowFlag( LEVELNODE *pNode, INT16 sGridNo, UINT8 ubLeve
 
 void HandleItemGlowFlag( INT16 sGridNo, UINT8 ubLevel, BOOLEAN fOn )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
 
 	if ( ubLevel == 0 )
 	{
 		pNode = gpWorldLevelData[ sGridNo ].pStructHead;
-		LoopLevelNodeForItemGlowFlag( pNode, sGridNo,  ubLevel, fOn );
+		LoopLevelNodeForItemGlowFlag( pNode, sGridNo,	ubLevel, fOn );
 	}
 	else
 	{
@@ -5123,6 +5182,7 @@ void HandleItemGlowFlag( INT16 sGridNo, UINT8 ubLevel, BOOLEAN fOn )
 
 void ToggleItemGlow( BOOLEAN fOn )
 {
+	PERFORMANCE_MARKER
 	UINT32 cnt;
 
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
@@ -5145,26 +5205,27 @@ void ToggleItemGlow( BOOLEAN fOn )
 
 BOOLEAN ContinuePastBoobyTrapInMapScreen( OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN					fBoobyTrapKnowledge;
 	INT8						bTrapDifficulty, bTrapDetectLevel;
 
-	if (pObject->bTrap > 0)
+	if ((*pObject)[0]->data.bTrap > 0)
 	{
 		if (pSoldier->bTeam == gbPlayerNum)
 		{
 			// does the player know about this item?
-			fBoobyTrapKnowledge = ((pObject->fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) > 0);
+			fBoobyTrapKnowledge = (((*pObject).fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) > 0);
 
 			// blue flag stuff?
 
 			if (!fBoobyTrapKnowledge)
 			{
-				bTrapDifficulty = pObject->bTrap;
+				bTrapDifficulty = (*pObject)[0]->data.bTrap;
 				bTrapDetectLevel = CalcTrapDetectLevel( pSoldier, FALSE );
 				if (bTrapDetectLevel >= bTrapDifficulty)
 				{
 					// spotted the trap!
-					pObject->fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
+					(*pObject).fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
 					fBoobyTrapKnowledge = TRUE;
 
 					// Make him warn us:
@@ -5182,7 +5243,7 @@ BOOLEAN ContinuePastBoobyTrapInMapScreen( OBJECTTYPE *pObject, SOLDIERTYPE *pSol
 			{
 				// have the computer ask us if we want to proceed
 				gpBoobyTrapSoldier = pSoldier;
-				gbTrapDifficulty = pObject->bTrap;
+				gbTrapDifficulty = (*pObject)[0]->data.bTrap;
 				DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ DISARM_BOOBYTRAP_PROMPT ], MAP_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, BoobyTrapInMapScreenMessageBoxCallBack, NULL );	
 			}
 			else
@@ -5203,6 +5264,7 @@ BOOLEAN ContinuePastBoobyTrapInMapScreen( OBJECTTYPE *pObject, SOLDIERTYPE *pSol
 // Well, clears all item pools
 void ClearAllItemPools( )
 {
+	PERFORMANCE_MARKER
 	UINT32 cnt;
 
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
@@ -5216,17 +5278,19 @@ void ClearAllItemPools( )
 // Refresh item pools
 void RefreshItemPools( WORLDITEM * pItemList, INT32 iNumberOfItems )
 {
+	PERFORMANCE_MARKER
 	ClearAllItemPools( );
 
-	RefreshWorldItemsIntoItemPools(  pItemList, iNumberOfItems );
+	RefreshWorldItemsIntoItemPools(	pItemList, iNumberOfItems );
 }
 
 
 INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2, cnt3;
+	PERFORMANCE_MARKER
+	INT16	sTop, sBottom;
+	INT16	sLeft, sRight;
+	INT16	cnt1, cnt2, cnt3;
 	INT16		sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
 	INT16		sLowestGridNo=0;
@@ -5235,11 +5299,10 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 	SOLDIERTYPE soldier;
 	UINT8 ubSaveNPCAPBudget;
 	UINT8 ubSaveNPCDistLimit;
-	BOOLEAN	fSetDirection   = FALSE;
 
 	cnt3 = 0;
 
-	//Save AI pathing vars.  changing the distlimit restricts how 
+	//Save AI pathing vars.	changing the distlimit restricts how 
 	//far away the pathing will consider.
 	ubSaveNPCAPBudget = gubNPCAPBudget;
 	ubSaveNPCDistLimit = gubNPCDistLimit;
@@ -5248,16 +5311,13 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
-	// WDS - Clean up inventory handling
-	//memset( &soldier, 0, SIZEOF_SOLDIERTYPE );
-	soldier.initialize();
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
 	sTop		= ubRadius;
 	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
+	sLeft	= - ubRadius;
+	sRight	= ubRadius;
 
 	//clear the mapelements of potential residue MAPELEMENT_REACHABLE flags
 	//in the square region.
@@ -5290,7 +5350,7 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 				gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
 			{
 				// Go on sweet stop
-				if ( NewOKDestination( &soldier, sGridNo, TRUE, soldier.bLevel ) )
+				if ( NewOKDestination( &soldier, sGridNo, TRUE, soldier.pathing.bLevel ) )
 				{
 					uiRange = GetRangeInCellCoordsFromGridNoDiff( sSweetGridNo, sGridNo );
 
@@ -5316,6 +5376,7 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 
 BOOLEAN CanPlayerUseRocketRifle( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay )
 {
+	PERFORMANCE_MARKER
 	if ( Item[pSoldier->inv[ pSoldier->ubAttackingHand ].usItem].fingerprintid )
 	{
 		// check imprint ID
@@ -5323,10 +5384,10 @@ BOOLEAN CanPlayerUseRocketRifle( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay )
 		// imprinted value is profile for mercs & NPCs and NO_PROFILE + 1 for generic dudes
 		if (pSoldier->ubProfile != NO_PROFILE)
 		{
-			if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID != pSoldier->ubProfile )
+			if ( pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.ubImprintID != pSoldier->ubProfile )
 			{
 				// NOT a virgin gun...
-				if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID != NO_PROFILE )
+				if ( pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.ubImprintID != NO_PROFILE )
 				{
 					// access denied!
 					if (pSoldier->bTeam == gbPlayerNum)
@@ -5354,24 +5415,24 @@ BOOLEAN CanPlayerUseRocketRifle( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay )
 */
 UINT8 StealItems(SOLDIERTYPE* pSoldier,SOLDIERTYPE* pOpponent, UINT8* ubIndexRet)
 {
+	PERFORMANCE_MARKER
 	UINT8		ubCount=0;
-	ITEM_POOL	*pItemPool,*pTempItemPool,*pTempLastItemPool = NULL;
+	ITEM_POOL	*pItemPool,*pTempItemPool,*pTempLastItemPool = 0;
 	OBJECTTYPE	*pObject;	
 	UINT8		i;
 	BOOLEAN		fStealItem = FALSE;
 
 	//Create a temporary item pool, with index in Opponent's inventory as index
 	pItemPool=NULL;
-	for(i=0 ; i<NUM_INV_SLOTS; i++)
+	for(i=0 ; i<pOpponent->inv.size(); i++)
 	{
 		fStealItem = FALSE;
 
-		// WDS - Clean up inventory handling
 		pObject=&pOpponent->inv[i];
-		if (pObject->usItem!=0)
+		if (pObject->exists() == true)
 		{
 			// Is the enemy collapsed
-			if ( pOpponent->bLife < OKLIFE || pOpponent->bCollapsed )
+			if ( pOpponent->stats.bLife < OKLIFE || pOpponent->bCollapsed )
 			{
 				// We can steal any of his items in the inventory
 				fStealItem = TRUE;
@@ -5459,7 +5520,7 @@ UINT8 StealItems(SOLDIERTYPE* pSoldier,SOLDIERTYPE* pOpponent, UINT8* ubIndexRet
 	}
 	if (ubCount == 0)
 	{
-		DoMercBattleSound( pSoldier, BATTLE_SOUND_NOTHING );
+		pSoldier->DoMercBattleSound( BATTLE_SOUND_NOTHING );
 		return( 0);
 	}
 
@@ -5472,11 +5533,11 @@ UINT8 StealItems(SOLDIERTYPE* pSoldier,SOLDIERTYPE* pOpponent, UINT8* ubIndexRet
 	}
 
 	// Freeze guy!
-	pSoldier->fPauseAllAnimation = TRUE;
+	pSoldier->flags.fPauseAllAnimation = TRUE;
 
 	InitializeStealItemPickupMenu( pSoldier, pOpponent, pItemPool, ubCount);
 	guiPendingOverrideEvent = G_GETTINGITEM;
-	HandleTacticalUI(); // 0verhaul:  Added to keep this event from going out of style before it is acted on
+	HandleTacticalUI(); // 0verhaul:	Added to keep this event from going out of style before it is acted on
 	return( ubCount );
 }
 
@@ -5487,11 +5548,10 @@ UINT8 StealItems(SOLDIERTYPE* pSoldier,SOLDIERTYPE* pOpponent, UINT8* ubIndexRet
 */
 void SoldierStealItemFromSoldier( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent,ITEM_POOL *pItemPool, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel, BOOLEAN *pfSelectionList )
 {
+	PERFORMANCE_MARKER
 	ITEM_POOL		*pTempItemPool;
-	OBJECTTYPE		Object;
 	INT32			cnt = 0;
 	BOOLEAN			fPickup;
-	BOOLEAN			fFailedAutoPlace = FALSE;
 	BOOLEAN			fShouldSayCoolQuote = FALSE;
 	BOOLEAN			fDidSayCoolQuote = FALSE;
 
@@ -5514,17 +5574,15 @@ void SoldierStealItemFromSoldier( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent,
 			cnt++;
 			if ( fPickup )
 			{
-				// WDS - Clean up inventory handling
 				// Make copy of item
-				//				memcpy( &Object, pOpponent->inv+pTempItemPool->iItemIndex, sizeof( OBJECTTYPE ) );
-				Object = pOpponent->inv[pTempItemPool->iItemIndex];
-				if ( ItemIsCool( &Object ) )
+				gTempObject = pOpponent->inv[pTempItemPool->iItemIndex];
+				if ( ItemIsCool( &gTempObject ) )
 				{
 					fShouldSayCoolQuote = TRUE;
 				}
-				if ( !AutoPlaceObject( pSoldier, &Object, TRUE ) )
+				if ( !AutoPlaceObject( pSoldier, &gTempObject, TRUE ) )
 				{
-					AddItemToPool( pSoldier->sGridNo, &Object, 1, pSoldier->bLevel, 0, -1 );
+					AddItemToPool( pSoldier->sGridNo, &gTempObject, 1, pSoldier->pathing.bLevel, 0, -1 );
 				}
 				DeleteObj(&pOpponent->inv[pTempItemPool->iItemIndex]);
 			}
@@ -5552,7 +5610,7 @@ void SoldierStealItemFromSoldier( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent,
 	// Aknowledge....
 	if( pSoldier->bTeam == OUR_TEAM && !fDidSayCoolQuote )
 	{
-		DoMercBattleSound( pSoldier, BATTLE_SOUND_GOTIT );
+		pSoldier->DoMercBattleSound( BATTLE_SOUND_GOTIT );
 	}
 	gpTempSoldier = pSoldier;
 	gsTempGridno = sGridNo;

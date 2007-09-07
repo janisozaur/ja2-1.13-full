@@ -18,13 +18,7 @@
 	#include "Scheduling.h"
 #endif
 
-
-
-// To reduce memory fragmentation from frequent MemRealloc(), we allocate memory for more than one special slot each
-// time we run out of space.  Odds are that if we need one, we'll need another soon.
-#define SPECIAL_ITEMS_ALLOCED_AT_ONCE			3
-// Once allocated, the special item slots remain allocated for the duration of the game, or until the dealer dies.
-// This is a little bit wasteful, but saves an awful lot of hassles, and avoid unnecessary memory fragmentation
+#include <list>
 
 #define	MIN_REPAIR_TIME_IN_MINUTES				15		// minutes
 #define MIN_REPAIR_COST										10		// dollars
@@ -41,13 +35,13 @@ UINT8 gubLastSpecialItemAddedAtElement = 255;
 
 // THIS STRUCTURE HAS UNCHANGING INFO THAT DOESN'T GET SAVED/RESTORED/RESET
 // TODO: externalize 
-ARMS_DEALER_INFO  ArmsDealerInfo[ NUM_ARMS_DEALERS ] = 
+ARMS_DEALER_INFO	ArmsDealerInfo[ NUM_ARMS_DEALERS ] = 
 {
 									//Buying		Selling	Merc ID#	Type									Initial						Flags	
 									//Price			Price							Of											Cash	
 									//Modifier	Modifier					Dealer
 
-/* Tony  */					{ 0.75f,	1.25f,	TONY,			ARMS_DEALER_BUYS_SELLS, 15000,	ARMS_DEALER_SOME_USED_ITEMS | ARMS_DEALER_GIVES_CHANGE	},
+/* Tony	*/					{ 0.75f,	1.25f,	TONY,			ARMS_DEALER_BUYS_SELLS, 15000,	ARMS_DEALER_SOME_USED_ITEMS | ARMS_DEALER_GIVES_CHANGE	},
 /* Franz Hinkle */	{ 1.0f,		1.5f,		FRANZ,		ARMS_DEALER_BUYS_SELLS,	5000,	ARMS_DEALER_SOME_USED_ITEMS | ARMS_DEALER_GIVES_CHANGE	},
 /* Keith Hemps */		{ 0.75f,	1.0f,		KEITH,		ARMS_DEALER_BUYS_SELLS,	1500,	ARMS_DEALER_ONLY_USED_ITEMS | ARMS_DEALER_GIVES_CHANGE	},
 /* Jake Cameron */	{ 0.8f,		1.1f,		JAKE,			ARMS_DEALER_BUYS_SELLS,	2500,	ARMS_DEALER_ONLY_USED_ITEMS | ARMS_DEALER_GIVES_CHANGE	},
@@ -56,12 +50,12 @@ ARMS_DEALER_INFO  ArmsDealerInfo[ NUM_ARMS_DEALERS ] =
 /* Devin Connell*/	{ 0.75f,	1.25f,	DEVIN,		ARMS_DEALER_SELLS_ONLY,	5000,	ARMS_DEALER_GIVES_CHANGE																},
 /* Howard Filmore*/	{ 1.0f,		1.0f,		HOWARD,		ARMS_DEALER_SELLS_ONLY,	3000,	ARMS_DEALER_GIVES_CHANGE																},
 /* Sam Rozen */			{ 1.0f,		1.0f,		SAM,			ARMS_DEALER_SELLS_ONLY,	3000,	ARMS_DEALER_GIVES_CHANGE																},
-/* Frank */					{ 1.0f,		1.0f,		FRANK,		ARMS_DEALER_SELLS_ONLY,	 500,	ARMS_DEALER_ACCEPTS_GIFTS																},
+/* Frank */					{ 1.0f,		1.0f,		FRANK,		ARMS_DEALER_SELLS_ONLY,	500,	ARMS_DEALER_ACCEPTS_GIFTS																},
 
-/* Bar Bro 1 */			{ 1.0f,		1.0f,		HERVE,		ARMS_DEALER_SELLS_ONLY,	 250,	ARMS_DEALER_ACCEPTS_GIFTS																},
-/* Bar Bro 2 */			{ 1.0f,		1.0f,		PETER,		ARMS_DEALER_SELLS_ONLY,	 250,	ARMS_DEALER_ACCEPTS_GIFTS																},
-/* Bar Bro 3 */			{ 1.0f,		1.0f,		ALBERTO,	ARMS_DEALER_SELLS_ONLY,	 250,	ARMS_DEALER_ACCEPTS_GIFTS																},
-/* Bar Bro 4 */			{ 1.0f,		1.0f,		CARLO,		ARMS_DEALER_SELLS_ONLY,	 250,	ARMS_DEALER_ACCEPTS_GIFTS																},
+/* Bar Bro 1 */			{ 1.0f,		1.0f,		HERVE,		ARMS_DEALER_SELLS_ONLY,	250,	ARMS_DEALER_ACCEPTS_GIFTS																},
+/* Bar Bro 2 */			{ 1.0f,		1.0f,		PETER,		ARMS_DEALER_SELLS_ONLY,	250,	ARMS_DEALER_ACCEPTS_GIFTS																},
+/* Bar Bro 3 */			{ 1.0f,		1.0f,		ALBERTO,	ARMS_DEALER_SELLS_ONLY,	250,	ARMS_DEALER_ACCEPTS_GIFTS																},
+/* Bar Bro 4 */			{ 1.0f,		1.0f,		CARLO,		ARMS_DEALER_SELLS_ONLY,	250,	ARMS_DEALER_ACCEPTS_GIFTS																},
 
 /* Micky O'Brien*/	{ 1.0f,		1.4f,		MICKY,		ARMS_DEALER_BUYS_ONLY, 10000,	ARMS_DEALER_HAS_NO_INVENTORY | ARMS_DEALER_GIVES_CHANGE },
 
@@ -69,27 +63,23 @@ ARMS_DEALER_INFO  ArmsDealerInfo[ NUM_ARMS_DEALERS ] =
 										//Speed		Cost
 /* Arnie Brunzwell*/{ 0.1f,		0.8f,		ARNIE,		ARMS_DEALER_REPAIRS,		1500,	ARMS_DEALER_HAS_NO_INVENTORY | ARMS_DEALER_GIVES_CHANGE	},
 /* Fredo */					{ 0.6f,		0.6f,		FREDO,		ARMS_DEALER_REPAIRS,		1000,	ARMS_DEALER_HAS_NO_INVENTORY | ARMS_DEALER_GIVES_CHANGE },
-/* Perko */					{ 1.0f,		0.4f,	  PERKO,		ARMS_DEALER_REPAIRS,		1000,	ARMS_DEALER_HAS_NO_INVENTORY | ARMS_DEALER_GIVES_CHANGE },
+/* Perko */					{ 1.0f,		0.4f,	PERKO,		ARMS_DEALER_REPAIRS,		1000,	ARMS_DEALER_HAS_NO_INVENTORY | ARMS_DEALER_GIVES_CHANGE },
 
-/* Elgin */					{ 1.0f,		1.0f,	  DRUGGIST,	ARMS_DEALER_SELLS_ONLY,	 500,	ARMS_DEALER_ACCEPTS_GIFTS																},
-/* Manny */					{ 1.0f,		1.0f,	  MANNY,		ARMS_DEALER_SELLS_ONLY,	 500,	ARMS_DEALER_ACCEPTS_GIFTS																},
+/* Elgin */					{ 1.0f,		1.0f,	DRUGGIST,	ARMS_DEALER_SELLS_ONLY,	500,	ARMS_DEALER_ACCEPTS_GIFTS																},
+/* Manny */					{ 1.0f,		1.0f,	MANNY,		ARMS_DEALER_SELLS_ONLY,	500,	ARMS_DEALER_ACCEPTS_GIFTS																},
 
 };
 
 
 // THESE GET SAVED/RESTORED/RESET
 ARMS_DEALER_STATUS	gArmsDealerStatus[ NUM_ARMS_DEALERS ];
-DEALER_ITEM_HEADER	gArmsDealersInventory[ NUM_ARMS_DEALERS ][ MAXITEMS ];
+std::vector<DealerItemList>	gArmsDealersInventory;
 
 
 
-
-
-void		InitializeOneArmsDealer( UINT8 ubArmsDealer );
 
 void		AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubShotsLeft );
-void		AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, UINT8 ubHowMany );
-void		AddSpecialItemToArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement, SPECIAL_ITEM_INFO *pSpclItemInfo );
+void		AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 objectStatus, UINT8 ubHowMany, UINT8 ubImprintID = NO_PROFILE );
 
 void		RemoveRandomItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany );
 
@@ -101,21 +91,15 @@ void		LimitArmsDealersInventory( UINT8 ubArmsDealer, UINT32 uDealerItemType, UIN
 void		GuaranteeAtLeastOneItemOfType( UINT8 ubArmsDealer, UINT32 uiDealerItemType );
 void		GuaranteeAtLeastXItemsOfIndex( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany );
 
-BOOLEAN AllocMemsetSpecialItemArray( DEALER_ITEM_HEADER *pDealerItem, UINT8 ubElementsNeeded );
-BOOLEAN ResizeSpecialItemArray( DEALER_ITEM_HEADER *pDealerItem, UINT8 ubElementsNeeded );
-void		FreeSpecialItemArray( DEALER_ITEM_HEADER *pDealerItem );
+BOOLEAN AllocMemsetSpecialItemArray( OLD_DEALER_ITEM_HEADER_101 *pDealerItem, UINT8 ubElementsNeeded );
+BOOLEAN ResizeSpecialItemArray( OLD_DEALER_ITEM_HEADER_101 *pDealerItem, UINT8 ubElementsNeeded );
+void		FreeSpecialItemArray( OLD_DEALER_ITEM_HEADER_101 *pDealerItem );
 
 void		ArmsDealerGetsFreshStock( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubNumItems );
 BOOLEAN ItemContainsLiquid( UINT16 usItemIndex );
 UINT8		DetermineDealerItemCondition( UINT8 ubArmsDealer, UINT16 usItemIndex );
 
-BOOLEAN IsItemInfoSpecial( SPECIAL_ITEM_INFO *pSpclItemInfo, UINT16 usItemIndex );
-
 BOOLEAN DoesItemAppearInDealerInventoryList( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer );
-
-BOOLEAN LoadIncompleteArmsDealersStatus( HWFILE hFile, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny );
-
-//INT16 GetSpecialItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo );
 
 void GuaranteeMinimumAlcohol( UINT8 ubArmsDealer );
 
@@ -123,18 +107,42 @@ BOOLEAN ItemIsARocketRifle( INT16 sItemIndex );
 
 BOOLEAN GetArmsDealerShopHours( UINT8 ubArmsDealer, UINT32 *puiOpeningTime, UINT32 *puiClosingTime );
 
+ARMS_DEALER_STATUS& ARMS_DEALER_STATUS::operator=(const OLD_ARMS_DEALER_STATUS_101& status)
+{
+	this->initialize();
+	this->fOutOfBusiness = status.fOutOfBusiness;
+	this->fRepairDelayBeenUsed = status.fRepairDelayBeenUsed;
+	this->fUnusedKnowsPlayer = status.fUnusedKnowsPlayer;
+	this->ubSpecificDealerFlags = status.ubSpecificDealerFlags;
+	this->uiArmsDealersCash = status.uiArmsDealersCash;
+	this->uiTimePlayerLastInSKI = status.uiTimePlayerLastInSKI;
+	return *this;
+}
 
+void ARMS_DEALER_STATUS::initialize()
+{
+	memset(this, 0, sizeof(ARMS_DEALER_STATUS));
+}
+
+void SPECIAL_ITEM_INFO::initialize()
+{
+	PERFORMANCE_MARKER
+	memset(this, 0, sizeof(SPECIAL_ITEM_INFO));
+}
+
+void DEALER_SPECIAL_ITEM::initialize()
+{
+	memset(this, 0, SIZEOF_DEALER_SPECIAL_ITEM_POD);
+	object.initialize();
+	PERFORMANCE_MARKER
+}
 
 void InitAllArmsDealers()
 {
+	PERFORMANCE_MARKER
 	UINT8		ubArmsDealer;
 
-	//Memset all dealers' status tables to zeroes
-	memset( gArmsDealerStatus, 0, sizeof( gArmsDealerStatus ) );
-
-	//Memset all dealers' inventory tables to zeroes
-	memset( gArmsDealersInventory, 0, sizeof( gArmsDealersInventory ) );
-
+	ShutDownArmsDealers();
 	//Initialize the initial status & inventory for each of the arms dealers
 	for( ubArmsDealer = 0; ubArmsDealer < NUM_ARMS_DEALERS; ubArmsDealer++ )
 	{
@@ -148,13 +156,13 @@ void InitAllArmsDealers()
 
 void InitializeOneArmsDealer( UINT8 ubArmsDealer )
 {
+	PERFORMANCE_MARKER
 	UINT16	usItemIndex;
 	UINT8		ubNumItems=0;
 
 
 	memset( &( gArmsDealerStatus[ ubArmsDealer ] ), 0, sizeof( ARMS_DEALER_STATUS ) );
-	memset( &( gArmsDealersInventory[ ubArmsDealer ] ), 0, sizeof( DEALER_ITEM_HEADER ) * MAXITEMS );
-
+	gArmsDealersInventory.resize(gArmsDealersInventory.size() + 1);
 
 	//Reset the arms dealers cash on hand to the default initial value
 	gArmsDealerStatus[ ubArmsDealer ].uiArmsDealersCash = ArmsDealerInfo[ ubArmsDealer ].iInitialCash;
@@ -169,7 +177,7 @@ void InitializeOneArmsDealer( UINT8 ubArmsDealer )
 	//loop through all the item types
 	for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
 	{
-		if ( Item[usItemIndex].usItemClass  == 0 )
+		if ( Item[usItemIndex].usItemClass	== 0 )
 			break;
 		//Can the item be sold by the arms dealer
 		if( CanDealerTransactItem( ubArmsDealer, usItemIndex, FALSE ) )
@@ -189,33 +197,24 @@ void InitializeOneArmsDealer( UINT8 ubArmsDealer )
 
 void ShutDownArmsDealers()
 {
-	UINT8		ubArmsDealer;
-	UINT16	usItemIndex;
-
-	// loop through all the dealers
-	for( ubArmsDealer=0; ubArmsDealer<NUM_ARMS_DEALERS; ubArmsDealer++ )
-	{
-		//loop through all the item types
-		for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
-		{
-			if ( Item[usItemIndex].usItemClass  == 0 )
-				break;
-			if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced > 0 )
-			{
-				FreeSpecialItemArray( &gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ] );
-			}
-		}
-	}
+	PERFORMANCE_MARKER
+	gArmsDealersInventory.clear();
 }
 
 
 
 BOOLEAN SaveArmsDealerInventoryToSaveGameFile( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten;
 	UINT8		ubArmsDealer;
-	UINT16	usItemIndex;
 
+	//save the number of dealers to load
+	int dealers = NUM_ARMS_DEALERS;
+	if (!FileWrite( hFile, &dealers, sizeof( int ), &uiNumBytesWritten ))
+	{
+		return( FALSE );
+	}
 
 	//Save the arms dealers status
 	if (!FileWrite( hFile, gArmsDealerStatus, sizeof( gArmsDealerStatus ), &uiNumBytesWritten ))
@@ -223,27 +222,19 @@ BOOLEAN SaveArmsDealerInventoryToSaveGameFile( HWFILE hFile )
 		return( FALSE );
 	}
 
-	//save the dealers inventory item headers (all at once)
-	if (!FileWrite( hFile, gArmsDealersInventory, sizeof( gArmsDealersInventory ), &uiNumBytesWritten ))
-	{
-		return( FALSE );
-	}
-
 	//loop through all the dealers inventories
 	for( ubArmsDealer=0; ubArmsDealer<NUM_ARMS_DEALERS; ubArmsDealer++ )
 	{
-		//loop through this dealer's individual items
-		for(usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
+		int size = gArmsDealersInventory[ubArmsDealer].size();
+		if (!FileWrite( hFile, &size, sizeof( int ), &uiNumBytesWritten ))
 		{
-			if ( Item[usItemIndex].usItemClass  == 0 )
-				break;
-			//if there are any special item elements allocated for this item, save them
-			if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced > 0 )
-			{
-				if (!FileWrite( hFile, &gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[0], sizeof( DEALER_SPECIAL_ITEM ) * gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced, &uiNumBytesWritten ))
-				{
-					return( FALSE );
-				}
+			return( FALSE );
+		}
+		//loop through this dealer's individual items
+		for (DealerItemList::iterator iter = gArmsDealersInventory[ubArmsDealer].begin();
+			iter != gArmsDealersInventory[ubArmsDealer].end(); ++iter) {
+			if (! iter->Save(hFile) ) {
+				return FALSE;
 			}
 		}
 	}
@@ -251,72 +242,44 @@ BOOLEAN SaveArmsDealerInventoryToSaveGameFile( HWFILE hFile )
 	return( TRUE );
 }
 
-
-BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny )
+bool DEALER_SPECIAL_ITEM::OKToSaveOrLoad()
 {
-	UINT32	uiNumBytesRead;
-	UINT8		ubArmsDealer;
-	UINT16	usItemIndex;
-
-
-	//Free all the dealers special inventory arrays
-	ShutDownArmsDealers();
-
-	// Elgin was added to the dealers list in Game Version #54, enlarging these 2 tables...
-	// Manny was added to the dealers list in Game Version #55, enlarging these 2 tables...
-	if ( fIncludesElgin && fIncludesManny )
-	{
-		// info for all dealers is in the save file
-
-		//Load the arms dealers status
-		if ( !FileRead( hFile, gArmsDealerStatus, sizeof( gArmsDealerStatus ), &uiNumBytesRead ))
-		{
-			return( FALSE );
-		}
-
-		//load the dealers inventory item headers (all at once)
-		if ( !FileRead( hFile, gArmsDealersInventory, sizeof( gArmsDealersInventory ), &uiNumBytesRead ))
-		{
-			return( FALSE );
-		}
+	if (object.exists() == true) {
+		return true;
 	}
-	else
-	{
-		if ( !LoadIncompleteArmsDealersStatus( hFile, fIncludesElgin, fIncludesManny ) )
-		{
-			return( FALSE );
-		}
+	if (ubQtyOnOrder > 0) {
+		return true;
 	}
-
-	//loop through all the dealers inventories
-	for( ubArmsDealer=0; ubArmsDealer<NUM_ARMS_DEALERS; ubArmsDealer++ )
-	{
-		//loop through this dealer's individual items
-		for(usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
-		{
-			if ( Item[usItemIndex].usItemClass  == 0 )
-				break;
-			//if there are any elements allocated for this item, load them
-			if( gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced > 0 )
-			{
-				//Allocate memory for the inventory
-				if ( !AllocMemsetSpecialItemArray( &gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ], gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced ))
-					return(FALSE);
-
-				if (!FileRead( hFile, &gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[0], sizeof( DEALER_SPECIAL_ITEM ) * gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced, &uiNumBytesRead ))
-				{
-					return( FALSE );
-				}
-			}
-		}
-	}
-
-	return( TRUE );
+	//item doesn't exist, it was loaded empty during the conversion
+	return false;
 }
+
+
+void DEALER_SPECIAL_ITEM::ConvertFrom101(OLD_DEALER_ITEM_HEADER_101& header, OLD_DEALER_SPECIAL_ITEM_101& special, int usItemIndex)
+{
+	this->bItemCondition = special.oldInfo.bItemCondition;
+	this->ubImprintID = special.oldInfo.ubImprintID;
+
+	this->uiRepairDoneTime = special.uiRepairDoneTime;
+	this->fActive = special.fActive;
+	this->ubOwnerProfileId = special.ubOwnerProfileId;
+
+	this->uiOrderArrivalTime = header.uiOrderArrivalTime;
+	this->ubQtyOnOrder = header.ubQtyOnOrder;
+
+	CreateItem(usItemIndex, bItemCondition, &(this->object));
+	for (int x = 0; x < OLD_MAX_ATTACHMENTS_101; ++x) {
+		if (special.oldInfo.usAttachment[x] && special.oldInfo.bAttachmentStatus[x] ) {
+			CreateItem(special.oldInfo.usAttachment[x], special.oldInfo.bAttachmentStatus[x], &gTempObject);
+			this->object.AttachObject(0, &gTempObject, FALSE);
+		}
+	}
+};
 
 
 void DailyUpdateOfArmsDealersInventory()
 {
+	PERFORMANCE_MARKER
 	// if Gabby has creature blood, start turning it into extra elixir
 	ConvertCreatureBloodToElixir();
 
@@ -334,12 +297,12 @@ void DailyUpdateOfArmsDealersInventory()
 // Once a day, loop through each dealer's inventory items and possibly sell some
 void SimulateArmsDealerCustomer()
 {
+	PERFORMANCE_MARKER
 	UINT8		ubArmsDealer=0;
 	UINT16	usItemIndex;
-	UINT8   ubItemsSold=0;
-	UINT8		ubElement;
-	SPECIAL_ITEM_INFO SpclItemInfo;
+	UINT8	ubItemsSold=0;
 
+	static int numPerfectItems[MAXITEMS];
 
 	//loop through all the arms dealers
 	for( ubArmsDealer=0;ubArmsDealer<NUM_ARMS_DEALERS;ubArmsDealer++ )
@@ -351,43 +314,52 @@ void SimulateArmsDealerCustomer()
 		if( ArmsDealerInfo[ ubArmsDealer ].uiFlags & ARMS_DEALER_HAS_NO_INVENTORY )
 			continue;
 
+		memset (&numPerfectItems, 0, sizeof(numPerfectItems));
+
+		for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
+			iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
+			if (iter->bItemCondition == 100 && iter->IsBeingOrdered() == false) {
+				numPerfectItems[iter->object.usItem] += iter->object.ubNumberOfObjects;
+			}
+		}
+
 		//loop through all items of the same type
 		for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
 		{
-			if ( Item[usItemIndex].usItemClass  == 0 )
+			if ( Item[usItemIndex].usItemClass	== 0 )
 				break;
 			//if there are some of these in stock
-			if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems > 0)
+			if( numPerfectItems[usItemIndex] > 0)
 			{
 				// first, try to sell all the new (perfect) ones
 				if ( usItemIndex == JAR_ELIXIR )
 				{
 					// only allow selling of standard # of items so those converted from blood given by player will be available
-					ubItemsSold = HowManyItemsAreSold( ubArmsDealer, usItemIndex, (UINT8) __min( 3, gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubPerfectItems), FALSE);
+					ubItemsSold = HowManyItemsAreSold( ubArmsDealer, usItemIndex, (UINT8) __min( 3, numPerfectItems[usItemIndex]), FALSE);
 				}
 				else
 				{
-					ubItemsSold = HowManyItemsAreSold( ubArmsDealer, usItemIndex, gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubPerfectItems, FALSE);
+					ubItemsSold = HowManyItemsAreSold( ubArmsDealer, usItemIndex, numPerfectItems[usItemIndex], FALSE);
 				}
 				if ( ubItemsSold > 0)
 				{
-					// create item info describing a perfect item
-					SetSpecialItemInfoToDefaults( &SpclItemInfo );
-					//Now remove that many NEW ones (condition 100) of that item
-					RemoveItemFromArmsDealerInventory( ubArmsDealer, usItemIndex, &SpclItemInfo, ubItemsSold);
+					RemoveItemFromArmsDealerInventory( ubArmsDealer, usItemIndex, ubItemsSold);
 				}
+			}
+		}
 
-				// next, try to sell all the used ones, gotta do these one at a time so we can remove them by element
-				for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
-				{
-					// don't worry about negative condition, repairmen can't come this far, they don't sell!
-					if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive )
+		for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
+			iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
+			// next, try to sell all the used ones, gotta do these one at a time so we can remove them by element
+			// don't worry about negative condition, repairmen can't come this far, they don't sell!
+			if (iter->bItemCondition < 100 && iter->bItemCondition > 0) {
+				if ( iter->fActive ) {
+					// try selling just this one
+					if (HowManyItemsAreSold( ubArmsDealer, iter->object.usItem, 1, TRUE) > 0)
 					{
-						// try selling just this one
-						if (HowManyItemsAreSold( ubArmsDealer, usItemIndex, 1, TRUE) > 0)
-						{
-							//Sold, now remove that particular USED one!
-							RemoveSpecialItemFromArmsDealerInventoryAtElement( ubArmsDealer, usItemIndex, ubElement );
+						iter = gArmsDealersInventory[ ubArmsDealer ].erase(iter);
+						if (iter == gArmsDealersInventory[ ubArmsDealer ].end()) {
+							break;
 						}
 					}
 				}
@@ -399,12 +371,12 @@ void SimulateArmsDealerCustomer()
 
 void DailyCheckOnItemQuantities()
 {
+	PERFORMANCE_MARKER
 	UINT8		ubArmsDealer;
 	UINT16	usItemIndex;
 	UINT8		ubMaxSupply;
 	UINT8		ubNumItems;
 	UINT32	uiArrivalDay;
-	BOOLEAN fPrevElig;
 	UINT8		ubReorderDays;
 
 
@@ -421,34 +393,53 @@ void DailyCheckOnItemQuantities()
 		if( ArmsDealerInfo[ ubArmsDealer ].uiFlags & ARMS_DEALER_HAS_NO_INVENTORY )
 			continue;
 
+		int numTotalItems[MAXITEMS] = { 0 };
+		bool itemsAreOnOrder[MAXITEMS] = { false };
+		for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
+			iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
+			if (iter->IsBeingOrdered() == false) {
+				numTotalItems[iter->object.usItem] += iter->object.ubNumberOfObjects;
+			}
+			else {
+				itemsAreOnOrder[iter->object.usItem] = true;
+				//and today is the day the items come in
+				if( iter->uiOrderArrivalTime >= GetWorldDay() )
+				{
+					UINT16 usItem = iter->object.usItem;
+					int quantity = iter->ubQtyOnOrder;
+					iter = gArmsDealersInventory[ ubArmsDealer ].erase(iter);
+					ArmsDealerGetsFreshStock( ubArmsDealer, usItem, quantity);
+					if (iter == gArmsDealersInventory[ ubArmsDealer ].end()) {
+						break;
+					}
+				}
+			}
+		}
 
 		//loop through all items of the same type
 		for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
 		{
-			if ( Item[usItemIndex].usItemClass  == 0 )
+			if ( Item[usItemIndex].usItemClass	== 0 )
 				break;
 			//if the dealer can sell the item type
 			if( CanDealerTransactItem( ubArmsDealer, usItemIndex, FALSE ) )
 			{
 				//if there are no items on order
-				if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubQtyOnOrder == 0 )
+				if ( itemsAreOnOrder[ usItemIndex ] == false )
 				{
 					ubMaxSupply = GetDealersMaxItemAmount( ubArmsDealer, usItemIndex );
 
 					//if the qty on hand is half the desired amount or fewer
-					if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems <= (UINT32)( ubMaxSupply / 2 ) )
+					if( numTotalItems[ usItemIndex ] <= (INT32)( ubMaxSupply / 2 ) )
 					{
-						// remember value of the "previously eligible" flag
-						fPrevElig = gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].fPreviouslyEligible;
-
 						//determine if the item can be restocked (assume new, use items aren't checked for until the stuff arrives)
 						if (ItemTransactionOccurs( ubArmsDealer, usItemIndex, DEALER_BUYING, FALSE ))
 						{
 							// figure out how many items to reorder (items are reordered an entire batch at a time)
-							ubNumItems = HowManyItemsToReorder( ubMaxSupply, gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems );
+							ubNumItems = HowManyItemsToReorder( ubMaxSupply, numTotalItems[ usItemIndex ] );
 
 							// if this is the first day the player is eligible to have access to this thing
-							if ( !fPrevElig )
+							if ( gArmsDealerStatus[ubArmsDealer].fPreviouslyEligible[ usItemIndex ] == false )
 							{
 								// eliminate the ordering delay and stock the items instantly!
 								// This is just a way to reward the player right away for making progress without the reordering lag...
@@ -470,22 +461,13 @@ void DailyCheckOnItemQuantities()
 								uiArrivalDay = GetWorldDay() + ubReorderDays;	// consider changing this to minutes
 
 								// post new order
-								gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubQtyOnOrder = ubNumItems;
-								gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].uiOrderArrivalTime = uiArrivalDay;
+								gArmsDealersInventory[ ubArmsDealer ].push_back(DEALER_SPECIAL_ITEM());
+								DEALER_SPECIAL_ITEM* pOrder = &(gArmsDealersInventory[ ubArmsDealer ].back());
+
+								pOrder->ubQtyOnOrder = ubNumItems;
+								pOrder->uiOrderArrivalTime = uiArrivalDay;
 							}
 						}
-					}
-				}
-				else //items are on order
-				{
-					//and today is the day the items come in
-					if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].uiOrderArrivalTime >= GetWorldDay() )
-					{
-						ArmsDealerGetsFreshStock( ubArmsDealer, usItemIndex, gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubQtyOnOrder);
-
-						//reset order
-						gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubQtyOnOrder = 0;
-						gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].uiOrderArrivalTime = 0;
 					}
 				}
 			}
@@ -495,22 +477,23 @@ void DailyCheckOnItemQuantities()
 
 void ConvertCreatureBloodToElixir( void )
 {
-	UINT8	ubBloodAvailable;
+	PERFORMANCE_MARKER
+	UINT8	ubBloodAvailable = 0;
 	UINT8 ubAmountToConvert;
-	SPECIAL_ITEM_INFO SpclItemInfo;
 
-	ubBloodAvailable = gArmsDealersInventory[ ARMS_DEALER_GABBY ][ JAR_CREATURE_BLOOD ].ubTotalItems;
+	for (DealerItemList::iterator iter = gArmsDealersInventory[ ARMS_DEALER_GABBY ].begin();
+		iter != gArmsDealersInventory[ ARMS_DEALER_GABBY ].end(); ++iter) {
+		if (iter->object.usItem == JAR_CREATURE_BLOOD) {
+			ubBloodAvailable += iter->object.ubNumberOfObjects;
+		}
+	}
 	if ( ubBloodAvailable )
 	{
 		// start converting blood into elixir!
 		//ubAmountToConvert = (UINT8) __min( 5 + Random( 3 ), ubBloodAvailable );
 		ubAmountToConvert = ubBloodAvailable;
 
-		// create item info describing a perfect item
-		SetSpecialItemInfoToDefaults( &SpclItemInfo );
-
-		//Now remove that many NEW ones (condition 100) of that item
-		RemoveItemFromArmsDealerInventory( ARMS_DEALER_GABBY, JAR_CREATURE_BLOOD, &SpclItemInfo, ubAmountToConvert );
+		RemoveItemFromArmsDealerInventory( ARMS_DEALER_GABBY, JAR_CREATURE_BLOOD, ubAmountToConvert );
 
 		ArmsDealerGetsFreshStock( ARMS_DEALER_GABBY, JAR_ELIXIR, ubAmountToConvert );
 	}
@@ -518,6 +501,7 @@ void ConvertCreatureBloodToElixir( void )
 
 BOOLEAN AdjustCertainDealersInventory( )
 {
+	PERFORMANCE_MARKER
 	//Adjust Tony's items (this restocks *instantly* 1/day, doesn't use the reorder system)
 	GuaranteeAtLeastOneItemOfType( ARMS_DEALER_TONY, ARMS_DEALER_BIG_GUNS );
 	LimitArmsDealersInventory( ARMS_DEALER_TONY, ARMS_DEALER_BIG_GUNS, 2 );
@@ -555,169 +539,175 @@ BOOLEAN AdjustCertainDealersInventory( )
 
 void LimitArmsDealersInventory( UINT8 ubArmsDealer, UINT32 uiDealerItemType, UINT8 ubMaxNumberOfItemType )
 {
-	UINT16	usItemIndex=0;
-	UINT32	uiItemsToRemove=0;
-	SPECIAL_ITEM_INFO SpclItemInfo;
-
-	UINT16	usAvailableItem[ MAXITEMS ] = { NOTHING };
-	UINT8		ubNumberOfAvailableItem[ MAXITEMS ] = { 0 };
-	UINT32	uiTotalNumberOfItems = 0, uiRandomChoice;
-	UINT32	uiNumAvailableItems = 0, uiIndex;
-
-	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
-	Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
-
+	PERFORMANCE_MARKER
 	if( gArmsDealerStatus[ ubArmsDealer ].fOutOfBusiness )
 		return;
 
+	//ADB, ya, a whole 1 line of extra code!
+	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
+	//Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
+	int numTotalItems[MAXITEMS] = { 0 };
+	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
+		iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
+		if (iter->IsUnderRepair() == false) {
+			numTotalItems[iter->object.usItem] += iter->object.ubNumberOfObjects;
+		}
+	}
+
+	UINT32	uiTotalNumberOfItems = 0, uiRandomChoice;
+	UINT32	uiIndex;
+
+	UINT16	usItemIndex=0;
+	std::vector<int> usAvailableItems;
+	std::vector<UINT32> ubNumberOfAvailableItem;
 	//loop through all items of the same class and count the number in stock
 	for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
 	{
-		if ( Item[usItemIndex].usItemClass  == 0 )
+		if ( Item[usItemIndex].usItemClass	== 0 )
 			break;
 		//if there is some items in stock
-		if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems > 0)
+		if( numTotalItems[usItemIndex] > 0)
 		{
 			//if the item is of the same dealer item type
 			if( uiDealerItemType & GetArmsDealerItemTypeFromItemNumber( usItemIndex ) )
 			{
-				usAvailableItem[ uiNumAvailableItems ] = usItemIndex;
-
+				usAvailableItems.push_back(usItemIndex);
 				//if the dealer item type is ammo
 				if( uiDealerItemType == ARMS_DEALER_AMMO )
 				{
 					// all ammo of same type counts as only one item
-					ubNumberOfAvailableItem[ uiNumAvailableItems ] = 1;
+					ubNumberOfAvailableItem.push_back(1);
 					uiTotalNumberOfItems++;
 				}
 				else
 				{
 					// items being repaired don't count against the limit
-					ubNumberOfAvailableItem[ uiNumAvailableItems ] = gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems;
-					uiTotalNumberOfItems += ubNumberOfAvailableItem[ uiNumAvailableItems ];
+					ubNumberOfAvailableItem.push_back(numTotalItems[usItemIndex]);
+					uiTotalNumberOfItems += ubNumberOfAvailableItem.back();
 				}
-				uiNumAvailableItems++;
 			}
 		}
 	}
 
 	//if there is more of the given type than we want
-	if( uiNumAvailableItems > ubMaxNumberOfItemType )
+	INT32 uiItemsToRemove = usAvailableItems.size() - ubMaxNumberOfItemType;
+
+	while (uiItemsToRemove > 0)
 	{
-		uiItemsToRemove = uiNumAvailableItems - ubMaxNumberOfItemType;
+		uiRandomChoice = Random( uiTotalNumberOfItems );
 
-		do
+		for ( uiIndex = 0; uiIndex < usAvailableItems.size(); uiIndex++ )
 		{
-			uiRandomChoice = Random( uiTotalNumberOfItems );
-
-			for ( uiIndex = 0; uiIndex < uiNumAvailableItems; uiIndex++ )
+			if ( uiRandomChoice <= ubNumberOfAvailableItem[ uiIndex ] )
 			{
-				if ( uiRandomChoice <= ubNumberOfAvailableItem[ uiIndex ] )
+				usItemIndex = usAvailableItems[ uiIndex ];
+				if ( uiDealerItemType == ARMS_DEALER_AMMO )
 				{
-					usItemIndex = usAvailableItem[ uiIndex ];
-					if ( uiDealerItemType == ARMS_DEALER_AMMO )
-					{
-						// remove all of them, since each ammo item counts as only one "item" here
-						// create item info describing a perfect item
-						SetSpecialItemInfoToDefaults( &SpclItemInfo );
-						// ammo will always be only condition 100, there's never any in special slots
-						RemoveItemFromArmsDealerInventory( ubArmsDealer, usItemIndex, &SpclItemInfo, gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems );
-					}
-					else
-					{
-						// pick 1 random one, don't care about its condition
-						RemoveRandomItemFromArmsDealerInventory( ubArmsDealer, usItemIndex, 1 );
-					}
-					// now remove entry from the array by replacing it with the last and decrementing
-					// the size of the array
-					usAvailableItem[ uiIndex ] = usAvailableItem[ uiNumAvailableItems -  1 ];
-					ubNumberOfAvailableItem[ uiIndex ] = ubNumberOfAvailableItem[ uiNumAvailableItems - 1 ];
-					uiNumAvailableItems--;
-
-					// decrement count of # of items to remove
-					uiItemsToRemove--;
-					break; // and out of 'for' loop
-
+					// remove all of them, since each ammo item counts as only one "item" here
+					// ammo will always be only condition 100, there's never any in special slots
+					RemoveItemFromArmsDealerInventory( ubArmsDealer, usItemIndex, ubNumberOfAvailableItem[uiIndex] );
 				}
 				else
 				{
-					// next item!
-					uiRandomChoice -= ubNumberOfAvailableItem[ uiIndex ];
+					// pick 1 random one, don't care about its condition
+					RemoveRandomItemFromArmsDealerInventory( ubArmsDealer, usItemIndex, 1 );
 				}
+				// now remove entry from the array by replacing it with the last and decrementing
+				// the size of the array
+				usAvailableItems[ uiIndex ] = usAvailableItems.back();
+				usAvailableItems.pop_back();
+				ubNumberOfAvailableItem[ uiIndex ] = ubNumberOfAvailableItem.back();
+				ubNumberOfAvailableItem.pop_back();
+
+				// decrement count of # of items to remove
+				uiItemsToRemove--;
+				break; // and out of 'for' loop
+
 			}
-
-			/*
-			//loop through all items of the same type
-			for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
+			else
 			{
-				//if there are some non-repairing items in stock
-				if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems )
+				// next item!
+				uiRandomChoice -= ubNumberOfAvailableItem[ uiIndex ];
+			}
+		}
+
+		/*
+		//loop through all items of the same type
+		for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
+		{
+			//if there are some non-repairing items in stock
+			if( gOldArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems )
+			{
+				//if the item is of the same dealer item type
+				if( uiDealerItemType & GetArmsDealerItemTypeFromItemNumber( usItemIndex ) )
 				{
-					//if the item is of the same dealer item type
-					if( uiDealerItemType & GetArmsDealerItemTypeFromItemNumber( usItemIndex ) )
+					// a random chance that the item will be removed
+					if( Random( 100 ) < 30 )
 					{
-						// a random chance that the item will be removed
-						if( Random( 100 ) < 30 )
+						//remove the item
+
+						//if the dealer item type is ammo
+						if( uiDealerItemType == ARMS_DEALER_AMMO )
 						{
-							//remove the item
+							// remove all of them, since each ammo item counts as only one "item" here
 
-							//if the dealer item type is ammo
-							if( uiDealerItemType == ARMS_DEALER_AMMO )
-							{
-								// remove all of them, since each ammo item counts as only one "item" here
-
-								// create item info describing a perfect item
-								SetSpecialItemInfoToDefaults( &SpclItemInfo );
-								// ammo will always be only condition 100, there's never any in special slots
-								RemoveItemFromArmsDealerInventory( ubArmsDealer, usItemIndex, &SpclItemInfo, gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems );
-							}
-							else
-							{
-								// pick 1 random one, don't care about its condition
-								RemoveRandomItemFromArmsDealerInventory( ubArmsDealer, usItemIndex, 1 );
-							}
-
-							uiItemsToRemove--;
-							if( uiItemsToRemove == 0)
-								break;
+							// create item info describing a perfect item
+							SetSpecialItemInfoToDefaults( &SpclItemInfo );
+							// ammo will always be only condition 100, there's never any in special slots
+							RemoveItemFromArmsDealerInventory( ubArmsDealer, usItemIndex, gOldArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems );
 						}
+						else
+						{
+							// pick 1 random one, don't care about its condition
+							RemoveRandomItemFromArmsDealerInventory( ubArmsDealer, usItemIndex, 1 );
+						}
+
+						uiItemsToRemove--;
+						if( uiItemsToRemove == 0)
+							break;
 					}
 				}
 			}
-			*/
-		} while (uiItemsToRemove > 0);
+		}
+		*/
 	}
 }
 
 
 void GuaranteeAtLeastOneItemOfType( UINT8 ubArmsDealer, UINT32 uiDealerItemType )
 {
+	PERFORMANCE_MARKER
 	UINT16 usItemIndex;
 	UINT8 ubChance;
-	BOOLEAN fFoundEligibleItemOfSameType = FALSE;
-	BOOLEAN fItemHasBeenAdded = FALSE;
-	BOOLEAN fFailedOnce = FALSE;
-	UINT16	usAvailableItem[ MAXITEMS ] = { NOTHING };
-	UINT8		ubChanceForAvailableItem[ MAXITEMS ] = { 0 };
 	UINT32	uiTotalChances = 0;
-	UINT32	uiNumAvailableItems = 0, uiIndex, uiRandomChoice;
+	UINT32	uiIndex, uiRandomChoice;
 	
-	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
-	Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
-
 	if( gArmsDealerStatus[ ubArmsDealer ].fOutOfBusiness )
 		return;
 
+	//ADB, ya, a whole 1 line of extra code!
+	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
+	//Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
+	int numTotalItems[MAXITEMS] = { 0 };
+	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
+		iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
+		if (iter->IsUnderRepair() == false) {
+			numTotalItems[iter->object.usItem] += iter->object.ubNumberOfObjects;
+		}
+	}
+
+	std::vector<UINT16> usAvailableItems;
+	std::vector<UINT8> ubChanceForAvailableItem;
 	//loop through all items of the same type
 	for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
 	{
-		if ( Item[usItemIndex].usItemClass  == 0 )
+		if ( Item[usItemIndex].usItemClass	== 0 )
 			break;
 		//if the item is of the same dealer item type
 		if( uiDealerItemType & GetArmsDealerItemTypeFromItemNumber( usItemIndex ) )
 		{
 			//if there are any of these in stock
-			if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems > 0 )
+			if( numTotalItems[usItemIndex] > 0 )
 			{
 				//there is already at least 1 item of that type, return
 				return;
@@ -730,9 +720,8 @@ void GuaranteeAtLeastOneItemOfType( UINT8 ubArmsDealer, UINT32 uiDealerItemType 
 				ubChance = ChanceOfItemTransaction( ubArmsDealer, usItemIndex, DEALER_BUYING, FALSE );
 				if ( ubChance > 0 )
 				{
-					usAvailableItem[ uiNumAvailableItems ] = usItemIndex;
-					ubChanceForAvailableItem[ uiNumAvailableItems ] = ubChance;
-					uiNumAvailableItems++;
+					usAvailableItems.push_back(usItemIndex);
+					ubChanceForAvailableItem.push_back(ubChance);
 					uiTotalChances += ubChance; 
 				}
 			}
@@ -740,7 +729,7 @@ void GuaranteeAtLeastOneItemOfType( UINT8 ubArmsDealer, UINT32 uiDealerItemType 
 	}
 
 	// if there aren't any such items, the following loop would never finish, so quit before trying it!
-	if (uiNumAvailableItems == 0)
+	if (usAvailableItems.empty() == true)
 	{
 		return;
 	}
@@ -751,11 +740,11 @@ void GuaranteeAtLeastOneItemOfType( UINT8 ubArmsDealer, UINT32 uiDealerItemType 
 	// randomize number within uiTotalChances and then loop forwards till we find that item
 	uiRandomChoice = Random( uiTotalChances );
 
-	for ( uiIndex = 0; uiIndex < uiNumAvailableItems; uiIndex++ )
+	for ( uiIndex = 0; uiIndex < usAvailableItems.size(); uiIndex++ )
 	{
 		if ( uiRandomChoice <= ubChanceForAvailableItem[ uiIndex ] )
 		{
-			ArmsDealerGetsFreshStock( ubArmsDealer, usAvailableItem[ uiIndex ], 1 );
+			ArmsDealerGetsFreshStock( ubArmsDealer, usAvailableItems[ uiIndex ], 1 );
 			return;
 		}
 		else
@@ -765,31 +754,42 @@ void GuaranteeAtLeastOneItemOfType( UINT8 ubArmsDealer, UINT32 uiDealerItemType 
 		}
 	}
 
+	Assert(false);
 	// internal logic failure!
 }
 
 
 void GuaranteeAtLeastXItemsOfIndex( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany )
 {
-	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
-	Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
-
+	PERFORMANCE_MARKER
 	if( gArmsDealerStatus[ ubArmsDealer ].fOutOfBusiness )
 		return;
 
-	//if there are any of these in stock
-	if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems >= ubHowMany )
-	{
-		// have what we need...
-		return;
+	//ADB, ya, a whole 1 line of extra code!
+	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
+	//Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
+	int itemsIHave = 0;
+	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
+		iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
+		if (iter->object.usItem == usItemIndex
+			&& iter->IsUnderRepair() == false) {
+			itemsIHave += iter->object.ubNumberOfObjects;
+			//if there are any of these in stock
+			if( itemsIHave >= ubHowMany )
+			{
+				// have what we need...
+				return;
+			}
+		}
 	}
+
 
 	// if he can stock it (it appears in his inventory list)
 // RESTRICTION REMOVED: Jake must be able to guarantee GAS even though it's not in his list, it's presence is conditional
 //	if( GetDealersMaxItemAmount( ubArmsDealer, usItemIndex ) > 0)
 	{
 		//add the item
-		ArmsDealerGetsFreshStock( ubArmsDealer, usItemIndex, (UINT8)( ubHowMany - gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems ) );
+		ArmsDealerGetsFreshStock( ubArmsDealer, usItemIndex, (UINT8)( ubHowMany - itemsIHave ) );
 	}
 }
 
@@ -797,6 +797,7 @@ void GuaranteeAtLeastXItemsOfIndex( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT
 
 UINT32 GetArmsDealerItemTypeFromItemNumber( UINT16 usItem )
 {
+	PERFORMANCE_MARKER
 	switch( Item[ usItem ].usItemClass )
 	{
 		case IC_NONE:
@@ -804,7 +805,7 @@ UINT32 GetArmsDealerItemTypeFromItemNumber( UINT16 usItem )
 			break;
 
 		case IC_GUN:
-			switch(  Weapon[ Item[ usItem ].ubClassIndex ].ubWeaponClass )
+			switch(	Weapon[ Item[ usItem ].ubClassIndex ].ubWeaponClass )
 			{
 				case HANDGUNCLASS:
 					return( ARMS_DEALER_HANDGUNCLASS );
@@ -972,7 +973,7 @@ UINT32 GetArmsDealerItemTypeFromItemNumber( UINT16 usItem )
 			return( 0 );
 			break;
 		default:
-			AssertMsg( FALSE, String( "GetArmsDealerItemTypeFromItemNumber(), invalid class %d for item %d.  DF 0.", Item[ usItem ].usItemClass, usItem ) );
+			AssertMsg( FALSE, String( "GetArmsDealerItemTypeFromItemNumber(), invalid class %d for item %d.	DF 0.", Item[ usItem ].usItemClass, usItem ) );
 			break;
 	}
 	return( 0 );
@@ -982,6 +983,7 @@ UINT32 GetArmsDealerItemTypeFromItemNumber( UINT16 usItem )
 
 BOOLEAN IsMercADealer( UINT8 ubMercID )
 {
+	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	// Manny is not actually a valid dealer unless a particular event sets that fact
@@ -1003,6 +1005,7 @@ BOOLEAN IsMercADealer( UINT8 ubMercID )
 
 INT8 GetArmsDealerIDFromMercID( UINT8 ubMercID )
 {
+	PERFORMANCE_MARKER
 	INT8	cnt;
 
 	//loop through the list of arms dealers
@@ -1019,12 +1022,14 @@ INT8 GetArmsDealerIDFromMercID( UINT8 ubMercID )
 
 UINT8 GetTypeOfArmsDealer( UINT8	ubDealerID )
 {
+	PERFORMANCE_MARKER
 	return( ArmsDealerInfo[ ubDealerID ].ubTypeOfArmsDealer );
 }
 
 
 BOOLEAN	DoesDealerDoRepairs( UINT8 ubArmsDealer )
 {
+	PERFORMANCE_MARKER
 	if( ArmsDealerInfo[ ubArmsDealer ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 		return( TRUE );
 	else
@@ -1032,36 +1037,11 @@ BOOLEAN	DoesDealerDoRepairs( UINT8 ubArmsDealer )
 }
 
 
-/*
-INT16 GetSpecialItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo )
-{
-	UINT8 ubElement;
-
-	// this function won't find perfect items!
-	Assert( IsItemInfoSpecial( pSpclItemInfo, usItemIndex ) );
-
-	for( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
-	{
-		// if this is the one we're looking for
-		if( memcmp( &(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info), pSpclItemInfo, sizeof( SPECIAL_ITEM_INFO ) ) == 0 )
-		{
-			return( ubElement );
-		}
-	}
-
-	// not found!
-	return( -1 );
-}
-*/
-
-
 BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 {
+	PERFORMANCE_MARKER
 	INT8		bArmsDealer;
 	BOOLEAN fHaveOnlyUnRepairedItems=FALSE;
-	UINT8		ubElement;
-	UINT16	usItemIndex;
-
 
 	bArmsDealer = GetArmsDealerIDFromMercID( ubProfileID );
 	if( bArmsDealer == -1 )
@@ -1072,33 +1052,24 @@ BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 		return( FALSE );
 
 	//loop through the dealers inventory and check if there are only unrepaired items
-	for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
-	{
-		if ( Item[usItemIndex].usItemClass  == 0 )
-			break;
-		//if there is some items in stock
-		if( gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].ubTotalItems )
+	for (DealerItemList::iterator iter = gArmsDealersInventory[ bArmsDealer ].begin();
+		iter != gArmsDealersInventory[ bArmsDealer ].end(); ++iter) {
+		if ( Item[iter->object.usItem].usItemClass == 0 )
+			continue;
+		if (iter->fActive == false)
+			continue;
+
+		if( iter->IsUnderRepair() == true )
 		{
-			//loop through the array of items
-			for( ubElement=0; ubElement< gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
+			//if the item has been repaired
+			if( iter->uiRepairDoneTime <= GetWorldTotalMin() )
 			{
-				if ( gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive )
-				{
-					//if the items status is below 0, the item is being repaired
-					if( gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info.bItemCondition < 0 )
-					{
-						//if the item has been repaired
-						if( gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime <= GetWorldTotalMin() )
-						{
-							//A repair item is ready, therefore, return false
-							return( FALSE );
-						}
-						else
-						{
-							fHaveOnlyUnRepairedItems = TRUE;
-						}
-					}
-				}
+				//A repair item is ready, therefore, return false
+				return( FALSE );
+			}
+			else
+			{
+				fHaveOnlyUnRepairedItems = TRUE;
 			}
 		}
 	}
@@ -1106,29 +1077,9 @@ BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 	return( fHaveOnlyUnRepairedItems );
 }
 
-
-UINT32 GetTimeToFixItemBeingRepaired( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement )
-{
-	//dealer must be a repair dealer
-	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
-	// element index must be valid
-	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced );
-	// that item must be active
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive );
-	// that item must be in repair
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info.bItemCondition < 0 );
-
-	//if the item has already been repaired
-	if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime <= GetWorldTotalMin() )
-		return( 0 );
-
-	//Return how many more minutes it will take to fix the item
-	return( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime - GetWorldTotalMin() );
-}
-
-
 BOOLEAN CanDealerTransactItem( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer )
 {
+	PERFORMANCE_MARKER
 	switch ( ArmsDealerInfo[ ubArmsDealer ].ubTypeOfArmsDealer )
 	{
 		case ARMS_DEALER_SELLS_ONLY:
@@ -1173,7 +1124,7 @@ BOOLEAN CanDealerTransactItem( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN f
 			return( CanDealerRepairItem( ubArmsDealer, usItemIndex ) );
 
 		default:
-			AssertMsg( FALSE, String( "CanDealerTransactItem(), type of dealer %d.  AM 0.", ArmsDealerInfo[ ubArmsDealer ].ubTypeOfArmsDealer ) );
+			AssertMsg( FALSE, String( "CanDealerTransactItem(), type of dealer %d.	AM 0.", ArmsDealerInfo[ ubArmsDealer ].ubTypeOfArmsDealer ) );
 			return(FALSE);
 	}
 
@@ -1183,13 +1134,14 @@ BOOLEAN CanDealerTransactItem( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN f
 
 BOOLEAN CanDealerRepairItem( UINT8 ubArmsDealer, UINT16 usItemIndex )
 {
+	PERFORMANCE_MARKER
 //	UINT32 uiFlags;
 
 //	uiFlags = Item[ usItemIndex ].fFlags;
 
 	// can't repair anything that's not repairable!
 //	if ( !( uiFlags & ITEM_REPAIRABLE ) )
-	if ( !( Item[ usItemIndex ].repairable  ) )
+	if ( !( Item[ usItemIndex ].repairable	) )
 	{
 		return(FALSE);
 	}
@@ -1209,14 +1161,14 @@ BOOLEAN CanDealerRepairItem( UINT8 ubArmsDealer, UINT16 usItemIndex )
 		case ARMS_DEALER_FREDO:
 			// repairs ONLY electronics
 //			if ( uiFlags & ITEM_ELECTRONIC )
-			if ( Item[ usItemIndex ].electronic  )
+			if ( Item[ usItemIndex ].electronic	)
 			{
 				return(TRUE);
 			}
 			break;
 
 		default:
-			AssertMsg( FALSE, String( "CanDealerRepairItem(), Arms Dealer %d is not a recognized repairman!.  AM 1.", ubArmsDealer ) );
+			AssertMsg( FALSE, String( "CanDealerRepairItem(), Arms Dealer %d is not a recognized repairman!.	AM 1.", ubArmsDealer ) );
 	}
 
 	// can't repair this...
@@ -1224,29 +1176,9 @@ BOOLEAN CanDealerRepairItem( UINT8 ubArmsDealer, UINT16 usItemIndex )
 }
 
 
-BOOLEAN AllocMemsetSpecialItemArray( DEALER_ITEM_HEADER *pDealerItem, UINT8 ubElementsNeeded )
+BOOLEAN ResizeSpecialItemArray( OLD_DEALER_ITEM_HEADER_101 *pDealerItem, UINT8 ubElementsNeeded )
 {
-	Assert(pDealerItem);
-	Assert( ubElementsNeeded > 0);
-
-	pDealerItem->SpecialItem = (DEALER_SPECIAL_ITEM *) MemAlloc( sizeof( DEALER_SPECIAL_ITEM ) * ubElementsNeeded );
-	if( pDealerItem->SpecialItem == NULL )
-	{
-		Assert( 0 );
-		return(FALSE);
-	}
-
-	// zero them out (they're inactive until an item is actually added)
-	memset( pDealerItem->SpecialItem, 0, sizeof( DEALER_SPECIAL_ITEM ) * ubElementsNeeded );
-
-	pDealerItem->ubElementsAlloced = ubElementsNeeded;
-
-	return(TRUE);
-}
-
-
-BOOLEAN ResizeSpecialItemArray( DEALER_ITEM_HEADER *pDealerItem, UINT8 ubElementsNeeded )
-{
+	PERFORMANCE_MARKER
 	Assert(pDealerItem);
 	// must already have a ptr allocated!
 	Assert(pDealerItem->SpecialItem);
@@ -1259,19 +1191,20 @@ BOOLEAN ResizeSpecialItemArray( DEALER_ITEM_HEADER *pDealerItem, UINT8 ubElement
 	}
 
 	// already allocated, but change its size
-	pDealerItem->SpecialItem = (DEALER_SPECIAL_ITEM *) MemRealloc( pDealerItem->SpecialItem, sizeof( DEALER_SPECIAL_ITEM ) * ubElementsNeeded );
-	if( pDealerItem->SpecialItem == NULL )
+	OLD_DEALER_SPECIAL_ITEM_101* pNew = new OLD_DEALER_SPECIAL_ITEM_101[ ubElementsNeeded ];
+	if( pNew == NULL )
 	{
 		Assert( 0 );
 		return(FALSE);
 	}
 
-	// if adding more elements
-	if ( ubElementsNeeded > pDealerItem->ubElementsAlloced)
+	for (int x = 0; x < __min(pDealerItem->ubElementsAlloced, ubElementsNeeded); ++x)
 	{
-		// zero them out (they're inactive until an item is actually added)
-		memset( &(pDealerItem->SpecialItem[pDealerItem->ubElementsAlloced]), 0, sizeof( DEALER_SPECIAL_ITEM ) * ( ubElementsNeeded - pDealerItem->ubElementsAlloced) );
+		pNew[x] = pDealerItem->SpecialItem[x];
 	}
+
+	delete[] pDealerItem->SpecialItem;
+	pDealerItem->SpecialItem = pNew;
 
 	pDealerItem->ubElementsAlloced = ubElementsNeeded;
 
@@ -1279,13 +1212,14 @@ BOOLEAN ResizeSpecialItemArray( DEALER_ITEM_HEADER *pDealerItem, UINT8 ubElement
 }
 
 
-void FreeSpecialItemArray( DEALER_ITEM_HEADER *pDealerItem)
+void FreeSpecialItemArray( OLD_DEALER_ITEM_HEADER_101 *pDealerItem)
 {
+	PERFORMANCE_MARKER
 	Assert(pDealerItem);
 	// must already have a ptr allocated!
 	Assert(pDealerItem->SpecialItem);
 
-	MemFree( pDealerItem->SpecialItem );
+	delete[]( pDealerItem->SpecialItem );
 	pDealerItem->SpecialItem = NULL;
 
 	pDealerItem->ubElementsAlloced = 0;
@@ -1298,14 +1232,10 @@ void FreeSpecialItemArray( DEALER_ITEM_HEADER *pDealerItem)
 
 void ArmsDealerGetsFreshStock( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubNumItems )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubCnt;
-	UINT8 ubItemCondition;
+	UINT8 ubItemCondition = 0;
 	UINT8 ubPerfectOnes = 0;
-	SPECIAL_ITEM_INFO SpclItemInfo;
-
-	// create item info describing a perfect item
-	SetSpecialItemInfoToDefaults( &SpclItemInfo );
-
 
 	// determine the condition of each one, counting up new ones, but adding damaged ones right away
 	for ( ubCnt = 0; ubCnt < ubNumItems; ubCnt++ )
@@ -1320,16 +1250,16 @@ void ArmsDealerGetsFreshStock( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubN
 		else
 		{
 			// add a used item with that condition to his inventory
-			SpclItemInfo.bItemCondition = (INT8) ubItemCondition;
-			AddItemToArmsDealerInventory( ubArmsDealer, usItemIndex, &SpclItemInfo, 1 );
+			CreateItem(usItemIndex, ubItemCondition, &gTempObject);
+			AddObjectToArmsDealerInventory( ubArmsDealer, &gTempObject );
 		}
 	}
 
 	// now add all the perfect ones, in one shot
 	if ( ubPerfectOnes > 0)
 	{
-		SpclItemInfo.bItemCondition = 100;
-		AddItemToArmsDealerInventory( ubArmsDealer, usItemIndex, &SpclItemInfo, ubPerfectOnes );
+		CreateItems(usItemIndex, ubItemCondition, ubPerfectOnes, &gTempObject);
+		AddObjectToArmsDealerInventory( ubArmsDealer, &gTempObject );
 	}
 }
 
@@ -1337,6 +1267,7 @@ void ArmsDealerGetsFreshStock( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubN
 
 UINT8 DetermineDealerItemCondition( UINT8 ubArmsDealer, UINT16 usItemIndex )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubCondition = 100;
 
 	// if it's a damagable item, and not a liquid (those are always sold full)
@@ -1345,7 +1276,7 @@ UINT8 DetermineDealerItemCondition( UINT8 ubArmsDealer, UINT16 usItemIndex )
 	{
 		// if he ONLY has used items, or 50% of the time if he carries both used & new items
 		if ( ( ArmsDealerInfo[ ubArmsDealer ].uiFlags & ARMS_DEALER_ONLY_USED_ITEMS ) ||
-			 ( ( ArmsDealerInfo[ ubArmsDealer ].uiFlags & ARMS_DEALER_SOME_USED_ITEMS ) && ( Random( 100 ) < 50 ) ) )
+			( ( ArmsDealerInfo[ ubArmsDealer ].uiFlags & ARMS_DEALER_SOME_USED_ITEMS ) && ( Random( 100 ) < 50 ) ) )
 		{
 			// make the item a used one
 			ubCondition = (UINT8)(20 + Random( 60 ));
@@ -1359,6 +1290,7 @@ UINT8 DetermineDealerItemCondition( UINT8 ubArmsDealer, UINT16 usItemIndex )
 
 BOOLEAN ItemContainsLiquid( UINT16 usItemIndex )
 {
+	PERFORMANCE_MARKER
 	if(Item[usItemIndex].containsliquid)
 		return TRUE;
 	else
@@ -1380,59 +1312,53 @@ BOOLEAN ItemContainsLiquid( UINT16 usItemIndex )
 	//return( FALSE );
 }
 
-
-/*
-UINT32 CountTotalItemsInArmsDealersInventory( UINT8 ubArmsDealer )
+bool ItemIsSpecial(DEALER_SPECIAL_ITEM& item)
 {
-	UINT32	uiNumOfItems=0;
-	UINT16	usItemIndex;
-
-	//loop through all the items in this dealer's inventory
-	for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
-	{
-		// This counts each pack of ammo or stacked item as one.  See the "distinct" version of this for an alternate version
-		uiNumOfItems += gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems;
+	if (item.object[0]->attachments.empty() == false) {
+		//items with attachments are special
+		return true;
 	}
-
-	return( uiNumOfItems );
+	if (item.IsBeingOrdered() == true) {
+		//empty item being ordered
+		return true;
+	}
+	if (item.IsUnderRepair() == true) {
+		//items in for repairs are special
+		return true;
+	}
+	return false;
 }
-*/
-
 
 UINT32 CountDistinctItemsInArmsDealersInventory( UINT8 ubArmsDealer )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumOfItems=0;
-	UINT16	usItemIndex;
-
-
-	for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
-	{
-		if ( Item[usItemIndex].usItemClass  == 0 )
-			break;
-		//if there are any items 
-		if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems > 0 )
-		{
-			// if there are any items in perfect condition
-			if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubPerfectItems > 0 )
-			{
-				// if the items can be stacked
-				// NOTE: This test must match the one inside AddItemsToTempDealerInventory() exactly!
-				if ( DealerItemIsSafeToStack( usItemIndex ) )
-				{
-					// regardless of how many there are, they count as 1 *distinct* item!  They will all be together in one box...
+	for (DealerItemList::iterator iter = gArmsDealersInventory[ubArmsDealer].begin();
+		iter != gArmsDealersInventory[ubArmsDealer].end(); ++iter) {
+		//if there are any items, doesn't count items on order
+		if (iter->IsBeingOrdered() == false) {
+			if (iter->object.ubNumberOfObjects) {
+				if (ItemIsSpecial(*iter) == true) {
+					// each *active* special item counts as one additional distinct item (each one occupied a separate shopkeeper box!)
+					// NOTE: This is including items being repaired!!!
+					Assert(iter->object.ubNumberOfObjects == 1);
 					uiNumOfItems++;
 				}
-				else
-				{
-					// non-stacking items must be stored in one / box , because each may have unique fields besides bStatus[]
-					// Example: guns all have ammo, ammo type, etc.  We need these uniquely represented for pricing & manipulation
-					uiNumOfItems += gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubPerfectItems;
+				else {
+					// if the items can be stacked
+					if ( DealerItemIsSafeToStack( iter->object.usItem ) )
+					{
+						// regardless of how many there are, they count as 1 *distinct* item!	They will all be together in one box...
+						uiNumOfItems++;
+					}
+					else
+					{
+						// non-stacking items must be stored in one / box , because each may have unique fields besides status.bStatus[]
+						// Example: guns all have ammo, ammo type, etc.	We need these uniquely represented for pricing & manipulation
+						uiNumOfItems += iter->object.ubNumberOfObjects;
+					}
 				}
 			}
-
-			// each *active* special item counts as one additional distinct item (each one occupied a separate shopkeeper box!)
-			// NOTE: This is including items being repaired!!!
-			uiNumOfItems += CountActiveSpecialItemsInArmsDealersInventory( ubArmsDealer, usItemIndex);
 		}
 	}
 
@@ -1442,26 +1368,23 @@ UINT32 CountDistinctItemsInArmsDealersInventory( UINT8 ubArmsDealer )
 
 UINT8 CountActiveSpecialItemsInArmsDealersInventory( UINT8 ubArmsDealer, UINT16 usItemIndex )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubActiveSpecialItems = 0;
-	UINT8 ubElement;
-
-
-	// next, try to sell all the used ones, gotta do these one at a time so we can remove them by element
-	for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
-	{
-		// don't worry about negative condition, repairmen can't come this far, they don't sell!
-		if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive )
-		{
-			ubActiveSpecialItems++;
+	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
+		iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
+		if (iter->object.usItem == usItemIndex) {
+			if (iter->fActive) {
+				ubActiveSpecialItems++;
+			}
 		}
 	}
-
 	return( ubActiveSpecialItems );
 }
 
 
 UINT16 CountTotalItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer )
 {
+	PERFORMANCE_MARKER
 	UINT16	usItemIndex;
 	UINT16	usHowManyInForRepairs = 0;
 
@@ -1472,7 +1395,7 @@ UINT16 CountTotalItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer )
 	//loop through the dealers inventory and count the number of items in for repairs
 	for( usItemIndex=0; usItemIndex < MAXITEMS; usItemIndex++ )
 	{
-		if ( Item[usItemIndex].usItemClass  == 0 )
+		if ( Item[usItemIndex].usItemClass	== 0 )
 			break;
 		usHowManyInForRepairs += CountSpecificItemsRepairDealerHasInForRepairs( ubArmsDealer, usItemIndex );
 	}
@@ -1483,7 +1406,7 @@ UINT16 CountTotalItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer )
 
 UINT8 CountSpecificItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer, UINT16 usItemIndex )
 {
-	UINT8		ubElement;
+	PERFORMANCE_MARKER
 	UINT8		ubHowManyInForRepairs = 0;
 
 	//if the dealer is not a repair dealer, no need to count, return 0
@@ -1491,23 +1414,17 @@ UINT8 CountSpecificItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer, UINT16 
 		return( 0 );
 
 
-	//if there is some items in stock
-	if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems )
-	{
-		//loop through the array of items
-		for( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
-		{
-			if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive)
-			{
-				//if the item's status is below 0, the item is being repaired
-				if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info.bItemCondition < 0 )
+	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
+		iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
+		if (iter->object.usItem == usItemIndex) {
+			if (iter->fActive) {
+				if( iter->IsUnderRepair() == true )
 				{
 					ubHowManyInForRepairs++;
 				}
 			}
 		}
 	}
-
 	return( ubHowManyInForRepairs );
 }
 
@@ -1515,101 +1432,106 @@ UINT8 CountSpecificItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer, UINT16 
 
 void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 {
-	UINT8 ubCnt;
-	SPECIAL_ITEM_INFO SpclItemInfo;
-
-
-	SetSpecialItemInfoFromObject( &SpclItemInfo, pObject );
-
+	PERFORMANCE_MARKER
 
 	// split up all the components of an objecttype and add them as seperate items into the dealer's inventory
-	switch ( Item [ pObject->usItem ].usItemClass )
+	int total = 0;
+	for (UINT8 ubCnt = 0; ubCnt < pObject->ubNumberOfObjects; ubCnt++ )
 	{
-		case IC_GUN:
-			// add the gun (keeps the object's status and imprintID)
-			// if the gun was jammed, this will forget about the jam (i.e. dealer immediately unjams anything he buys)
-			AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, &SpclItemInfo, 1 );
-
-			// if any GunAmmoItem is specified
-			if( pObject->ItemData.Gun.usGunAmmoItem != NONE)
-			{
-				// if it's regular ammo
-				if( Item[ pObject->ItemData.Gun.usGunAmmoItem ].usItemClass == IC_AMMO )
-				{
-					// and there are some remaining
-					if ( pObject->ItemData.Gun.ubGunShotsLeft > 0 )
-					{
-						// add the bullets of its remaining ammo
-						AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->ItemData.Gun.usGunAmmoItem, pObject->ItemData.Gun.ubGunShotsLeft );
-					}
-				}
-				else	// assume it's attached ammo (mortar shells, grenades)
-				{
-					// add the launchable item (can't be imprinted, or have attachments!)
-					SetSpecialItemInfoToDefaults( &SpclItemInfo );
-					SpclItemInfo.bItemCondition = pObject->ItemData.Gun.bGunAmmoStatus;
-
-					// if the gun it was in was jammed, get rid of the negative status now
-					if ( SpclItemInfo.bItemCondition < 0 )
-					{
-						SpclItemInfo.bItemCondition *= -1;
-					}
-
-					AddItemToArmsDealerInventory( ubArmsDealer, pObject->ItemData.Gun.usGunAmmoItem, &SpclItemInfo, 1 );
-				}
-			}
-			break;
-
-		case IC_AMMO:
-			// add the contents of each magazine (multiple mags may have vastly different #bullets left)
-			for ( ubCnt = 0; ubCnt < pObject->ubNumberOfObjects; ubCnt++ )
-			{
-				AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->usItem, pObject->ItemData.Ammo.ubShotsLeft[ ubCnt ] );
- 			}
-			break;
-
-		default:
-			// add each object seperately (multiple objects may have vastly different statuses, keep any imprintID)
-			for ( ubCnt = 0; ubCnt < pObject->ubNumberOfObjects; ubCnt++ )
-			{
-				SpclItemInfo.bItemCondition = pObject->ItemData.Generic.bStatus[ ubCnt ];
-				AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, &SpclItemInfo, 1 );
-			}
-			break;
-	}
-
-
-	// loop through any detachable attachments and add them as seperate items
-	for( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		if( pObject->usAttachItem[ ubCnt ] != NONE )
+		StackedObjectData* pData = (*pObject)[ubCnt];
+		switch ( Item [ pObject->usItem ].usItemClass )
 		{
-// ARM: Note: this is only used for selling, not repairs, so attachmentes are seperated when sold to a dealer
+			case IC_GUN:
+				// add the gun (keeps the object's status and imprintID)
+				// if the gun was jammed, this will forget about the jam (i.e. dealer immediately unjams anything he buys)
+				AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, pData->data.objectStatus, 1, pData->data.ubImprintID );
+
+				// if any GunAmmoItem is specified
+				if( pData->data.gun.usGunAmmoItem != NONE)
+				{
+					// if it's regular ammo
+					if( Item[ pData->data.gun.usGunAmmoItem ].usItemClass == IC_AMMO )
+					{
+						// and there are some remaining
+						if ( pData->data.gun.ubGunShotsLeft > 0 )
+						{
+							// add the bullets of its remaining ammo
+							AddAmmoToArmsDealerInventory( ubArmsDealer, pData->data.gun.usGunAmmoItem, pData->data.gun.ubGunShotsLeft );
+						}
+					}
+					else	// assume it's attached ammo (mortar shells, grenades)
+					{
+						// add the launchable item (can't be imprinted, or have attachments!)
+						int bItemCondition = pData->data.gun.bGunAmmoStatus;
+
+						// if the gun it was in was jammed, get rid of the negative status now
+						if ( bItemCondition < 0 )
+						{
+							bItemCondition *= -1;
+						}
+
+						AddItemToArmsDealerInventory( ubArmsDealer, pData->data.gun.usGunAmmoItem, bItemCondition, 1 );
+					}
+				}
+				break;
+
+			case IC_AMMO:
+				// add the contents of each magazine (multiple mags may have vastly different #bullets left)
+				total += pData->data.ubShotsLeft;
+				break;
+
+			default:
+				// add each object seperately (multiple objects may have vastly different statuses, keep any imprintID)
+				if (pData->data.objectStatus == 100) {
+					total += 1;
+				}
+				else {
+					AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, pData->data.objectStatus, 1 );
+				}
+		}
+
+
+		// loop through any detachable attachments and add them as seperate items
+		for (attachmentList::iterator iter = pData->attachments.begin(); iter != pData->attachments.end(); ++iter) {
+	// ARM: Note: this is only used for selling, not repairs, so attachmentes are seperated when sold to a dealer
 			// If the attachment is detachable
-//			if (! (Item[ pObject->usAttachItem[ubCnt] ].fFlags & ITEM_INSEPARABLE ) )
-			if (! (Item[ pObject->usAttachItem[ubCnt] ].inseparable  ) )
+			if (! (Item[ iter->usItem ].inseparable	) )
 			{
 				// add this particular attachment (they can't be imprinted, or themselves have attachments!)
-				SetSpecialItemInfoToDefaults( &SpclItemInfo );
-				SpclItemInfo.bItemCondition = pObject->bAttachStatus[ ubCnt ];
-				AddItemToArmsDealerInventory( ubArmsDealer, pObject->usAttachItem[ ubCnt ], &SpclItemInfo, 1 );
+				AddObjectToArmsDealerInventory( ubArmsDealer, &(*iter) );
+				iter = pData->attachments.erase(iter);
+				if (iter == pData->attachments.end()) {
+					break;
+				}
 			}
 		}
 	}
 
+	switch ( Item [ pObject->usItem ].usItemClass )
+	{
+		case IC_GUN:
+			break;
+		case IC_AMMO:
+			AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->usItem, total );
+			break;
+		default:
+			if (total) {
+				AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, 100, total );
+			}
+			break;
+	}
 
+	//ADB not necessary any more
 	// nuke the original object to prevent any possible item duplication
-	memset( pObject, 0, sizeof( OBJECTTYPE ) );
+	//pObject->initialize();
 }
 
 
 void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubShotsLeft )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubMagCapacity;
 	UINT8 *pubStrayAmmo;
-	SPECIAL_ITEM_INFO SpclItemInfo;
-
-
 
 	// Ammo only, please!!!
 	if (Item [ usItemIndex ].usItemClass != IC_AMMO )
@@ -1629,8 +1551,7 @@ void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8
 	if ( ubShotsLeft >= ubMagCapacity )
 	{
 		// add however many FULL magazines the #shot left represents	
-		SetSpecialItemInfoToDefaults( &SpclItemInfo );
-		AddItemToArmsDealerInventory( ubArmsDealer, usItemIndex, &SpclItemInfo, ( UINT8 ) ( ubShotsLeft / ubMagCapacity ) );
+		AddItemToArmsDealerInventory( ubArmsDealer, usItemIndex, 100, ( UINT8 ) ( ubShotsLeft / ubMagCapacity ) );
 		ubShotsLeft %= ubMagCapacity;
 	}
 
@@ -1638,204 +1559,78 @@ void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8
 	if ( ubShotsLeft > 0 )
 	{
 		// handle "stray" ammo - add it to the dealer's stray pile
-		pubStrayAmmo = &(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubStrayAmmo);
+
+		pubStrayAmmo = &(gArmsDealerStatus[ubArmsDealer].ubStrayAmmo[ usItemIndex ]);
 		*pubStrayAmmo += ubShotsLeft;
 
 		// if dealer has accumulated enough stray ammo to make another full magazine, convert it!
 		if ( *pubStrayAmmo >= ubMagCapacity )
 		{
-			SetSpecialItemInfoToDefaults( &SpclItemInfo );
-			AddItemToArmsDealerInventory( ubArmsDealer, usItemIndex, &SpclItemInfo, ( UINT8 ) ( *pubStrayAmmo / ubMagCapacity ) );
-			*pubStrayAmmo = *pubStrayAmmo % ubMagCapacity;
+			AddItemToArmsDealerInventory( ubArmsDealer, usItemIndex, 100, ( UINT8 ) ( *pubStrayAmmo / ubMagCapacity ) );
+			*pubStrayAmmo %= ubMagCapacity;
 		}
-		// I know, I know, this is getting pretty anal...  But what the hell, it was easy enough to do.  ARM.
+		// I know, I know, this is getting pretty anal...	But what the hell, it was easy enough to do.	ARM.
 	}
 }
 
 
 //Use AddObjectToArmsDealerInventory() instead of this when converting a complex item in OBJECTTYPE format.
-void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, UINT8 ubHowMany )
+void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 objectStatus, UINT8 ubHowMany, UINT8 ubImprintID )
 {
-	UINT8 ubRoomLeft;
-	UINT8 ubElement;
-	UINT8 ubElementsToAdd;
-	BOOLEAN fFoundOne;
-	BOOLEAN fSuccess;
-
-
+	PERFORMANCE_MARKER
 	Assert( ubHowMany > 0);
-
-	ubRoomLeft = 255 - gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems;
-
-	if ( ubHowMany > ubRoomLeft)
-	{
-		// not enough room to store that many, any extras vanish into thin air!
-		ubHowMany = ubRoomLeft;
-	}
-
-	if ( ubHowMany == 0)
-	{
-		return;
-	}
-
-	// decide whether this item is "special" or not
-	if ( IsItemInfoSpecial( pSpclItemInfo, usItemIndex ) )
-	{
-		// Anything that's used/damaged or imprinted is store as a special item in the SpecialItem array,
-		// exactly one item per element.  We (re)allocate memory dynamically as necessary to hold the additional items.
-
-		do
-		{
-			// search for an already allocated, empty element in the special item array
- 			fFoundOne = FALSE;
-			for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
-			{
-				if ( !( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive ) )
-				{
-					//Great!  Store it here, then.
-					AddSpecialItemToArmsDealerInventoryAtElement( ubArmsDealer, usItemIndex, ubElement, pSpclItemInfo );
-					fFoundOne = TRUE;
-					break;
-				}
-			}
-
-			// if we didn't find any inactive elements already allocated
-			if (!fFoundOne)
-			{
-				// then we're going to have to allocate some more space...
-				ubElementsToAdd = max( SPECIAL_ITEMS_ALLOCED_AT_ONCE, ubHowMany);
-
-				// if there aren't any allocated at all right now
-				if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced == 0 )
-				{
-					// allocate new memory for the real buffer
-					fSuccess = AllocMemsetSpecialItemArray( &gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ], ubElementsToAdd );
-				}
-				else
-				{
-					// we have some allocated, but they're all full and we need more.  MemRealloc existing amount + # addition elements
-					fSuccess = ResizeSpecialItemArray( &gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ], (UINT8)( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced + ubElementsToAdd ) );
-				}
-
-				if ( !fSuccess )
-				{
-					return;
-				}
-
-				// now add the special item at the first of the newly added elements (still stored in ubElement!)
-				AddSpecialItemToArmsDealerInventoryAtElement( ubArmsDealer, usItemIndex, ubElement, pSpclItemInfo );
-			}
-
-			// store the # of the element it was placed in globally so anyone who needs that can grab it there
-			gubLastSpecialItemAddedAtElement = ubElement;
-
-			ubHowMany--;
-		} while ( ubHowMany > 0);
-	}
-	else	// adding perfect item(s)
-	{
-		// then it's stored as a "perfect" item, simply add it to that counter!
-		gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubPerfectItems += ubHowMany;
-		// increase total items of this type
-		gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems += ubHowMany;
-	}
-}
-
-
-void AddSpecialItemToArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement, SPECIAL_ITEM_INFO *pSpclItemInfo )
-{
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems < 255 );
-	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced );
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive == FALSE );
-	Assert( IsItemInfoSpecial( pSpclItemInfo , usItemIndex) );
-
-
-	//Store the special values in that element, and make it active
-	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive = TRUE;
-
-	memcpy( &(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info), pSpclItemInfo, sizeof( SPECIAL_ITEM_INFO ) );
-
-	// increase the total items
-	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems++;
-}
-
-
-// WDS bug fix (07/24/2007) - Items with default attachments have to be handled specially
-
-BOOLEAN SpecialItemInfoIsIdentical (SPECIAL_ITEM_INFO& baseItem, SPECIAL_ITEM_INFO& actualItem, UINT16 usItemIndex)
-{
-	BOOLEAN firstAttachmentIsDefault = 
-		((actualItem.usAttachment[ 0 ] == Item [ usItemIndex ].defaultattachment) &&
-		 (actualItem.bAttachmentStatus[0] == 100));
-	for (int idx=0; idx < MAX_ATTACHMENTS; ++idx) {
-		if ((idx != 0) || (!firstAttachmentIsDefault)) {
-			if (baseItem.usAttachment[idx] != actualItem.usAttachment[idx])
-				return FALSE;
-			if (baseItem.bAttachmentStatus[idx] != actualItem.bAttachmentStatus[idx])
-				return FALSE;
-		}
-	}
-	if (baseItem.bItemCondition != actualItem.bItemCondition)
-		return FALSE;
-	if (baseItem.ubImprintID != actualItem.ubImprintID)
-		return FALSE;
-
-	return TRUE;
-}
-
-
-
-// removes ubHowMany items of usItemIndex with the matching Info from dealer ubArmsDealer
-void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, UINT8 ubHowMany )
-{
-	DEALER_SPECIAL_ITEM *pSpecialItem;
-	UINT8 ubElement;
-
-	Assert( ubHowMany <= gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems );
-
-	if ( ubHowMany == 0)
-	{
-		return;
-	}
-
-
-	// decide whether this item is "special" or not
-	if ( IsItemInfoSpecial( pSpclItemInfo, usItemIndex ) )
-	{
-		// look through the elements, trying to find special items matching the specifications
-		for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
-		{
-			pSpecialItem = &(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ]);
-
-			// if this element is in use
-			if ( pSpecialItem->fActive )
-			{
-				// and its contents are exactly what we're looking for
-//				if( memcmp( &(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info), pSpclItemInfo, sizeof( SPECIAL_ITEM_INFO ) ) == 0 )
-				if( SpecialItemInfoIsIdentical( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info, *pSpclItemInfo, usItemIndex))
-				{
-					// Got one!  Remove it
-					RemoveSpecialItemFromArmsDealerInventoryAtElement( ubArmsDealer, usItemIndex, ubElement );
-
-					ubHowMany--;
-					if ( ubHowMany == 0)
-					{
-						break;
+	if (objectStatus == 100) {
+		//first find existing items with same perfect status, if found add to that, else create new one
+		for (DealerItemList::iterator iter = gArmsDealersInventory[ubArmsDealer].begin();
+			iter != gArmsDealersInventory[ubArmsDealer].end(); ++iter) {
+			if (iter->object.usItem == usItemIndex &&
+				iter->bItemCondition == 100) {//won't find objects in for repair
+				//make sure it's not something special, objects with default attachments aren't handled, but oh well
+				if (ItemIsSpecial(*iter) == false) {
+					ubHowMany = iter->object.AddObjectsToStack(ubHowMany, objectStatus);
+					if (ubHowMany == 0) {
+						return;
 					}
 				}
 			}
 		}
-
-		// when we've searched all the special item elements, we'd better not have any more items to remove!
-		Assert( ubHowMany == 0);
 	}
-	else	// removing perfect item(s)
+
+	if (ubHowMany) {
+		gArmsDealersInventory[ubArmsDealer].push_back(DEALER_SPECIAL_ITEM());
+		DEALER_SPECIAL_ITEM* pItem = &(gArmsDealersInventory[ubArmsDealer].back());
+		CreateItems(usItemIndex, objectStatus, ubHowMany, &(pItem->object));
+		pItem->bItemCondition = objectStatus;
+		pItem->fActive = true;
+		pItem->ubImprintID = ubImprintID;
+	}
+}
+
+// removes ubHowMany items of usItemIndex with the matching Info from dealer ubArmsDealer
+void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany )
+{
+	PERFORMANCE_MARKER
+	if ( ubHowMany == 0)
 	{
-		// then it's stored as a "perfect" item, simply subtract from tha counter!
-		Assert( ubHowMany <= gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubPerfectItems );
-		gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubPerfectItems -= ubHowMany;
-		// decrease total items of this type
-		gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems -= ubHowMany;
+		return;
+	}
+	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
+		iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
+		if (iter->object.usItem == usItemIndex) {
+			if (iter->IsBeingOrdered() == false) {
+				if (ubHowMany >= iter->object.ubNumberOfObjects) {
+					ubHowMany -= iter->object.ubNumberOfObjects;
+					iter = gArmsDealersInventory[ ubArmsDealer ].erase(iter);
+					if (ubHowMany > 0 || iter == gArmsDealersInventory[ ubArmsDealer ].end()) {
+						return;
+					}
+				}
+				else {
+					iter->object.RemoveObjectsFromStack(ubHowMany);
+					return;
+				}
+			}
+		}
 	}
 }
 
@@ -1843,100 +1638,52 @@ void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, 
 
 void RemoveRandomItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany )
 {
-	UINT8 ubWhichOne;
-	UINT8 ubSkippedAlready;
-	BOOLEAN fFoundIt;
-	UINT8 ubElement;
-	SPECIAL_ITEM_INFO SpclItemInfo;
+	PERFORMANCE_MARKER
 
-
-	// not permitted for repair dealers - would take extra code to subtract items under repair from ubTotalItems!!!
-	Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
-	// Can't remove any items in for repair, though!
-	Assert( ubHowMany <= gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems );
-
+	//ADB, ya, a whole 1 line of extra code!
+	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
+	//Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
+	std::vector<DealerItemList::iterator> foundObjects;
 	while ( ubHowMany > 0)
 	{
-		// pick a random one to get rid of
-		ubWhichOne = (UINT8)Random(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems );
-
-		// if we picked one of the perfect ones...
-		if ( ubWhichOne < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubPerfectItems )
-		{
-			// create item info describing a perfect item
-			SetSpecialItemInfoToDefaults( &SpclItemInfo );
-			// then that's easy, its condition is 100, so remove one of those
-			RemoveItemFromArmsDealerInventory( ubArmsDealer, usItemIndex, &SpclItemInfo, 1 );
-		}
-		else
-		{
-			// Yikes!  Gotta look through the special items.  We already know it's not any of the perfect ones, subtract those
-			ubWhichOne -= gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubPerfectItems;
-			ubSkippedAlready = 0;
-
-			fFoundIt = FALSE;
-
-			for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
-			{
-				// if this is an active special item, not in repair
-				if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive ) // &&
-//					 ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info.bItemCondition > 0 ) )
-				{
-					// if we skipped the right amount of them
-					if ( ubSkippedAlready == ubWhichOne )
-					{
-						// then this one is it!  That's the one we're gonna remove
-						RemoveSpecialItemFromArmsDealerInventoryAtElement( ubArmsDealer, usItemIndex, ubElement );
-						fFoundIt = TRUE;
-						break;
-					}
-					else
-					{
-						// keep looking...
-						ubSkippedAlready++;
-					}
-				}
+		int numItems = 0;
+		foundObjects.clear();
+		for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
+			iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
+			if (iter->object.usItem == usItemIndex
+				&& iter->IsUnderRepair() == false
+				&& iter->IsBeingOrdered() == false) {
+				foundObjects.push_back(iter);
+				numItems += iter->object.ubNumberOfObjects;
 			}
-		
-			// this HAS to work, or the data structure is corrupt!
-			Assert(fFoundIt);
+		}
+		if (numItems == 0) {
+			return;
 		}
 
+		// pick a random one to get rid of
+		UINT8 ubWhichOne = (UINT8)Random(numItems);
+		std::vector<DealerItemList::iterator>::iterator iterToRemove = foundObjects.begin();
+		for (int x = (*iterToRemove)->object.ubNumberOfObjects - 1; x < ubWhichOne;) {
+			x += (*iterToRemove)->object.ubNumberOfObjects;
+			++iterToRemove;
+		}
+		if ((*iterToRemove)->object.ubNumberOfObjects == 1) {
+			gArmsDealersInventory[ubArmsDealer].erase(*iterToRemove);
+		}
+		else {
+			//not totally random, but close enough
+			(*iterToRemove)->object.RemoveObjectsFromStack(1);
+		}
 		ubHowMany--;
 	}
 }
 
 
-
-void RemoveSpecialItemFromArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement )
-{
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems > 0 );
-	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced );
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive == TRUE );
-
-	// wipe it out (turning off fActive)
-	memset( &( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ] ), 0, sizeof( DEALER_SPECIAL_ITEM ) );
-
-	// one fewer item remains...
-	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems--;
-}
-
-
-
 BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 {
+	PERFORMANCE_MARKER
 	INT8	bArmsDealer;
-	SOLDIERTYPE	*pSoldier;
-	UINT16	usItemIndex;	
-	UINT8 ubElement;
-	UINT8 ubHowManyMaxAtATime;
-	UINT8 ubLeftToDrop;
-	UINT8	ubNowDropping;
-	OBJECTTYPE TempObject;
-	DEALER_SPECIAL_ITEM *pSpecialItem;
-	SPECIAL_ITEM_INFO SpclItemInfo;
-
-
 	//Get Dealer ID from from merc Id
 	bArmsDealer = GetArmsDealerIDFromMercID( ubMercID );
 	if( bArmsDealer == -1 )
@@ -1945,6 +1692,7 @@ BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 		return( FALSE );
 	}
 
+	SOLDIERTYPE	*pSoldier;
 
 	// mark the dealer as being out of business!
 	gArmsDealerStatus[ bArmsDealer ].fOutOfBusiness = TRUE;
@@ -1960,131 +1708,64 @@ BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 		return( FALSE );
 	}
 
-
 	//loop through all the items in the dealer's inventory, and drop them all where the dealer was set up.
-
-	for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
-	{
-		if ( Item[usItemIndex].usItemClass  == 0 )
-			break;
-		//if the dealer has any items of this type
-		if( gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].ubTotalItems > 0)
-		{
-			// if he has any perfect items of this time
-			if ( gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].ubPerfectItems > 0 )
-			{
-				// drop all the perfect items first
-
-				// drop stackable items like ammo in stacks of whatever will fit into a large pocket instead of one at a time
-				ubHowManyMaxAtATime = ItemSlotLimit( usItemIndex, BIGPOCK1POS );
-				if ( ubHowManyMaxAtATime < 1 )
-				{
-					ubHowManyMaxAtATime = 1;
-				}
-
-				// create item info describing a perfect item
-				SetSpecialItemInfoToDefaults( &SpclItemInfo );
-
-				ubLeftToDrop = gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].ubPerfectItems;
-
-        // ATE: While it IS leagal here to use pSoldier->sInitialGridNo, cause of where this
-        // function is called, there are times when we're not guarenteed that sGridNo is good
-				while ( ubLeftToDrop > 0)
-				{
-					ubNowDropping = min( ubLeftToDrop, ubHowManyMaxAtATime );
-
-					MakeObjectOutOfDealerItems( usItemIndex, &SpclItemInfo, &TempObject, ubNowDropping );
-					AddItemToPool( pSoldier->sInitialGridNo, &TempObject, INVISIBLE, 0, 0, 0 );
-					
-					ubLeftToDrop -= ubNowDropping;
-				}
-
-				// remove them all from his inventory
-				RemoveItemFromArmsDealerInventory( bArmsDealer, usItemIndex, &SpclItemInfo, gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].ubPerfectItems );
-			}
-
-			// then drop all the special items
-			for ( ubElement = 0; ubElement < gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
-			{
-				pSpecialItem = &(gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ]);
-
-				if ( pSpecialItem->fActive )
-				{
-					MakeObjectOutOfDealerItems(usItemIndex, &(pSpecialItem->Info), &TempObject, 1 );
-					AddItemToPool( pSoldier->sInitialGridNo, &TempObject, INVISIBLE, 0, 0, 0 );
-					RemoveItemFromArmsDealerInventory( bArmsDealer, usItemIndex, &(pSpecialItem->Info), 1 );
-				}
-			}
-
-			// release any memory allocated for special items, he won't need it now...
-			if( gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].ubElementsAlloced > 0 )
-			{
-				FreeSpecialItemArray( &gArmsDealersInventory[ bArmsDealer ][ usItemIndex ] );
-			}
-		}
+	for (DealerItemList::iterator iter = gArmsDealersInventory[bArmsDealer].begin();
+		iter != gArmsDealersInventory[bArmsDealer].end(); ++iter) {
+		AddItemToPool( pSoldier->sInitialGridNo, &(iter->object), INVISIBLE, 0, 0, 0 );
 	}
+
+	gArmsDealersInventory[bArmsDealer].clear();
+
 
 	//if the dealer has money
 	if( gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash > 0 )
 	{
 		//Create the object
-		memset( &TempObject, 0, sizeof( OBJECTTYPE ) );
-		if( !CreateMoney( gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash, &TempObject ) )
+		if( !CreateMoney( gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash, &gTempObject ) )
 		{
 			return( FALSE );
 		}
 
 		//add the money item to the dealers feet
-		AddItemToPool( pSoldier->sInitialGridNo, &TempObject, INVISIBLE, 0, 0, 0 );
+		AddItemToPool( pSoldier->sInitialGridNo, &gTempObject, INVISIBLE, 0, 0, 0 );
 
 		gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash = 0;
 	}
-
-
 	return( TRUE );
 }
 
 
-void MakeObjectOutOfDealerItems( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE *pObject, UINT8 ubHowMany )
+void MakeObjectOutOfDealerItems( DEALER_SPECIAL_ITEM *pSpclItemInfo, OBJECTTYPE *pObject )
 {
+	PERFORMANCE_MARKER
 	INT8 bItemCondition;
-	UINT8 ubCnt;
+
+	*pObject = pSpclItemInfo->object;
 
 	bItemCondition = pSpclItemInfo->bItemCondition;
-
 	//if the item condition is below 0, the item is in for repairs, so flip the sign
 	if( bItemCondition < 0 )
 	{
 		bItemCondition *= -1;
 	}
 
-	memset( pObject, 0, sizeof( OBJECTTYPE ) );
-
-	//Create the item object
-	CreateItems( usItemIndex, bItemCondition, ubHowMany, pObject );
+	if (pObject->ubNumberOfObjects > 1) {
+		//if it gets here, handle multiples
+		DebugBreak();
+	}
+	(*pObject)[0]->data.objectStatus = bItemCondition;
 
 	// set the ImprintID
-	pObject->ubImprintID = pSpclItemInfo->ubImprintID;
-
-	// add any attachments we've been storing
-	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		if ( pSpclItemInfo->usAttachment[ ubCnt ] != NONE )
-		{
-			// store what it is, and its condition
-			pObject->usAttachItem[ ubCnt ]  = pSpclItemInfo->usAttachment[ ubCnt ];
-			pObject->bAttachStatus[ ubCnt ] = pSpclItemInfo->bAttachmentStatus[ ubCnt ];
-		}
-	}
+	(*pObject)[0]->data.ubImprintID = pSpclItemInfo->ubImprintID;
 
 	// if it's a gun
 	if (Item [ pObject->usItem ].usItemClass == IC_GUN )
 	{
-		// Empty out the bullets put in by CreateItem().  We now sell all guns empty of bullets.  This is so that we don't 
-		// have to keep track of #bullets in a gun throughout dealer inventory.  Without this, players could "reload" guns
-		// they don't have ammo for by selling them to Tony & buying them right back fully loaded!  One could repeat this
+		// Empty out the bullets put in by CreateItem().	We now sell all guns empty of bullets.	This is so that we don't 
+		// have to keep track of #bullets in a gun throughout dealer inventory.	Without this, players could "reload" guns
+		// they don't have ammo for by selling them to Tony & buying them right back fully loaded!	One could repeat this
 		// ad nauseum (empty the gun between visits) as a (really expensive) way to get unlimited special ammo like rockets.
-		pObject->ItemData.Gun.ubGunShotsLeft = 0;
+		(*pObject)[0]->data.gun.ubGunShotsLeft = 0;
 	}
 }
 
@@ -2092,8 +1773,7 @@ void MakeObjectOutOfDealerItems( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclIte
 
 void GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, UINT8 ubOwnerProfileId )
 {
-//	UINT8 ubCnt;
-	SPECIAL_ITEM_INFO SpclItemInfo;
+	PERFORMANCE_MARKER
 
 
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
@@ -2106,62 +1786,49 @@ void GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, U
 	Assert( CanDealerRepairItem( ubArmsDealer, pObject->usItem ) );
 
 	//		c) Actually damaged, or a rocket rifle (being reset)
-	Assert( ( pObject->ItemData.Generic.bStatus[ 0 ] < 100 ) || ItemIsARocketRifle( pObject->usItem ) );
+	Assert( ( (*pObject)[0]->data.objectStatus < 100 ) || ItemIsARocketRifle( pObject->usItem ) );
 
 /* ARM: Can now repair with removeable attachments still attached...
 	//		d) Already stripped of all *detachable* attachments
-	for( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		if ( pObject->usAttachItem[ ubCnt ] != NONE )
-		{
-			// If the attachment is detachable
-			if (! (Item[ pObject->usAttachItem[ubCnt] ].fFlags & ITEM_INSEPARABLE ) )
-			{
-				Assert( 0 );
-			}
-		}
-	}
 */
 
 	//		e) If a gun, stripped of any non-ammo-class GunAmmoItems, and bullets
 	if (Item [ pObject->usItem ].usItemClass == IC_GUN )
 	{
 		// if any GunAmmoItem is specified
-		if( pObject->ItemData.Gun.usGunAmmoItem != NONE)
+		if( (*pObject)[0]->data.gun.usGunAmmoItem != NONE)
 		{
 			// it better be regular ammo, and empty
-			Assert( Item[ pObject->ItemData.Gun.usGunAmmoItem ].usItemClass == IC_AMMO );
-			Assert( pObject->ItemData.Gun.ubGunShotsLeft == 0 );
+			Assert( Item[ (*pObject)[0]->data.gun.usGunAmmoItem ].usItemClass == IC_AMMO );
+			Assert( (*pObject)[0]->data.gun.ubGunShotsLeft == 0 );
 		}
 	}
 
-
-	SetSpecialItemInfoFromObject( &SpclItemInfo, pObject );
-
 	// ok, given all that, now everything is easy!
 	// if the gun was jammed, this will forget about the jam (i.e. dealer immediately unjams anything he will be repairing)
-	GiveItemToArmsDealerforRepair( ubArmsDealer, pObject->usItem, &SpclItemInfo, ubOwnerProfileId );
+	GiveItemToArmsDealerforRepair( ubArmsDealer, pObject, ubOwnerProfileId );
 }
 
 
 //PLEASE: Use GiveObjectToArmsDealerForRepair() instead of this when repairing a item in OBJECTTYPE format.
-void GiveItemToArmsDealerforRepair( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, UINT8 ubOwnerProfileId )
+void GiveItemToArmsDealerforRepair( UINT8 ubArmsDealer, OBJECTTYPE* pObject, UINT8 ubOwnerProfileId )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiTimeWhenFreeToStartIt;
 	UINT32	uiMinutesToFix;
-	UINT32  uiMinutesShopClosedBeforeItsDone;
+	UINT32	uiMinutesShopClosedBeforeItsDone;
 	UINT32	uiDoneWhen;
 
 
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
-	Assert( pSpclItemInfo->bItemCondition > 0 );
-	Assert( ( pSpclItemInfo->bItemCondition < 100 ) || ItemIsARocketRifle( usItemIndex ) );
+	Assert( (*pObject)[0]->data.objectStatus > 0 );
+	Assert( ( (*pObject)[0]->data.objectStatus < 100 ) || ItemIsARocketRifle( pObject->usItem ) );
 
 	// figure out the earliest the repairman will be free to start repairing this item
 	uiTimeWhenFreeToStartIt = WhenWillRepairmanBeAllDoneRepairing( ubArmsDealer );
 
 	//Determine how long it will take to fix
-	uiMinutesToFix = CalculateSpecialItemRepairTime( ubArmsDealer, usItemIndex, pSpclItemInfo );
+	uiMinutesToFix = CalculateObjectItemRepairTime( ubArmsDealer, pObject );
 
 	uiMinutesShopClosedBeforeItsDone = CalculateOvernightRepairDelay( ubArmsDealer, uiTimeWhenFreeToStartIt, uiMinutesToFix );
 
@@ -2169,24 +1836,23 @@ void GiveItemToArmsDealerforRepair( UINT8 ubArmsDealer, UINT16 usItemIndex, SPEC
 	uiDoneWhen = uiTimeWhenFreeToStartIt + uiMinutesToFix + uiMinutesShopClosedBeforeItsDone;
 
 	// Negate the status
-	pSpclItemInfo->bItemCondition *= -1;
+	(*pObject)[0]->data.objectStatus *= -1;
 
-	// give it to the dealer
-	AddItemToArmsDealerInventory( ubArmsDealer, usItemIndex, pSpclItemInfo, 1 );
+	gArmsDealersInventory[ ubArmsDealer ].push_back(DEALER_SPECIAL_ITEM());
+	gArmsDealersInventory[ ubArmsDealer ].back().object = *pObject;
 
 	//Set the time at which item will be fixed
-	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ gubLastSpecialItemAddedAtElement ].uiRepairDoneTime = uiDoneWhen;
+	gArmsDealersInventory[ ubArmsDealer ].back().uiRepairDoneTime = uiDoneWhen;
 	//Remember the original owner of the item
-	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ gubLastSpecialItemAddedAtElement ].ubOwnerProfileId = ubOwnerProfileId;
+	gArmsDealersInventory[ ubArmsDealer ].back().ubOwnerProfileId = ubOwnerProfileId;
 }
 
 
 
 UINT32 WhenWillRepairmanBeAllDoneRepairing( UINT8 ubArmsDealer )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiWhenFree;
-	UINT16	usItemIndex;
-	UINT8		ubElement;
 
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
 
@@ -2194,77 +1860,40 @@ UINT32 WhenWillRepairmanBeAllDoneRepairing( UINT8 ubArmsDealer )
 	uiWhenFree = GetWorldTotalMin();
 
 	//loop through the dealers inventory
-	for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
-	{
-		if ( Item[usItemIndex].usItemClass  == 0 )
-			break;
-		//if there is some items in stock
-		if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems > 0 )
+	for (DealerItemList::iterator iter = gArmsDealersInventory[ubArmsDealer].begin();
+		iter != gArmsDealersInventory[ubArmsDealer].end(); ++iter) {
+		if ( iter->fActive )
 		{
-			for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
+			if( iter->IsUnderRepair() == true )
 			{
-				if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive )
+				// if this item will be done later than the latest we've found so far
+				if ( iter->uiRepairDoneTime > uiWhenFree )
 				{
-					//if the item is in for repairs
-					if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info.bItemCondition < 0 )
-					{
-						// if this item will be done later than the latest we've found so far
-						if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime > uiWhenFree )
-						{
-							// then we're busy til then!
-							uiWhenFree = gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime;
-						}
-					}
+					// then we're busy til then!
+					uiWhenFree = iter->uiRepairDoneTime;
 				}
 			}
 		}
 	}
-
 	return( uiWhenFree );
-}
-
-
-
-UINT32 CalculateSpecialItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo )
-{
-	UINT32 uiRepairTime;
-	UINT8 ubCnt;
-
-	uiRepairTime = CalculateSimpleItemRepairTime( ubArmsDealer, usItemIndex, pSpclItemInfo->bItemCondition );
-
-	// add time to repair any attachments on it
-	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		if ( pSpclItemInfo->usAttachment[ ubCnt ] != NONE )
-		{
-			// if damaged and repairable
-			if ( ( pSpclItemInfo->bAttachmentStatus[ ubCnt ] < 100 ) && CanDealerRepairItem( ubArmsDealer, pSpclItemInfo->usAttachment[ ubCnt ] ) )
-			{
-				uiRepairTime += CalculateSimpleItemRepairTime( ubArmsDealer, pSpclItemInfo->usAttachment[ ubCnt ], pSpclItemInfo->bAttachmentStatus[ ubCnt ] );
-			}
-		}
-	}
-
-	return( uiRepairTime );
 }
 
 
 UINT32 CalculateObjectItemRepairTime( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject )
 {
-	UINT32 uiRepairTime;
-	UINT8 ubCnt;
+	PERFORMANCE_MARKER
+	UINT32 uiRepairTime = 0;
 
-	uiRepairTime = CalculateSimpleItemRepairTime( ubArmsDealer, pItemObject->usItem, pItemObject->ItemData.Generic.bStatus[ 0 ] );
+	for (int x = 0; x < pItemObject->ubNumberOfObjects; ++x) {
+		uiRepairTime += CalculateSimpleItemRepairTime( ubArmsDealer, pItemObject->usItem, (*pItemObject)[x]->data.objectStatus );
 
-	// add time to repair any attachments on it
-	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		if ( pItemObject->usAttachItem[ ubCnt ] != NONE )
-		{
+		// add time to repair any attachments on it
+		for (attachmentList::iterator iter = (*pItemObject)[x]->attachments.begin(); iter != (*pItemObject)[x]->attachments.end(); ++iter) {
 			// if damaged and repairable
-			if ( ( pItemObject->bAttachStatus[ ubCnt ] < 100 ) && CanDealerRepairItem( ubArmsDealer, pItemObject->usAttachItem[ ubCnt ] ) )
+			if ( ( (*iter)[x]->data.objectStatus < 100 ) && CanDealerRepairItem( ubArmsDealer, iter->usItem ) )
 			{
-				uiRepairTime += CalculateSimpleItemRepairTime( ubArmsDealer, pItemObject->usAttachItem[ ubCnt ], pItemObject->bAttachStatus[ ubCnt ] );
+				//uiRepairTime += CalculateSimpleItemRepairTime( ubArmsDealer, iter->usItem, (*iter)[x]->data.objectStatus );
+				uiRepairTime += CalculateObjectItemRepairTime( ubArmsDealer, &(*iter) );
 			}
 		}
 	}
@@ -2275,6 +1904,7 @@ UINT32 CalculateObjectItemRepairTime( UINT8 ubArmsDealer, OBJECTTYPE *pItemObjec
 
 UINT32 CalculateSimpleItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 bItemCondition )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiTimeToRepair = 0;
 	UINT32	uiRepairCost = 0;
 
@@ -2286,14 +1916,14 @@ UINT32 CalculateSimpleItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, IN
 	// Now adjust that for the repairman's individual repair speed.
 	// For a repairman, his BUY modifier controls his REPAIR SPEED (1.0 means minutes to repair = price in $)
 	// with a REPAIR SPEED of 1.0, typical gun price of $2000, and a REPAIR COST of 0.5 this works out to 16.6 hrs
-	//		 for a full 100% status repair...  Not bad.
+	//		for a full 100% status repair...	Not bad.
 	uiTimeToRepair = (UINT32)( uiRepairCost * ArmsDealerInfo[ ubArmsDealer ].dRepairSpeed );
 
 	// repairs on electronic items take twice as long if the guy doesn't have the skill
 	// for dealers, this means anyone but Fredo the Electronics guy takes twice as long (but doesn't charge double)
-	// (Mind you, current he's the ONLY one who CAN repair Electronics at all!  Oh well.)
+	// (Mind you, current he's the ONLY one who CAN repair Electronics at all!	Oh well.)
 //	if( ( Item[ usItemIndex ].fFlags & ITEM_ELECTRONIC ) && ( ubArmsDealer != ARMS_DEALER_FREDO ) )
-	if( ( Item[ usItemIndex ].electronic  ) && ( ubArmsDealer != ARMS_DEALER_FREDO ) )
+	if( ( Item[ usItemIndex ].electronic	) && ( ubArmsDealer != ARMS_DEALER_FREDO ) )
 	{
 		uiTimeToRepair *= 2;
 	}
@@ -2309,46 +1939,20 @@ UINT32 CalculateSimpleItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, IN
 
 
 
-UINT32 CalculateSpecialItemRepairCost( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo )
-{
-	UINT32 uiRepairCost;
-	UINT8 ubCnt;
-
-	uiRepairCost = CalculateSimpleItemRepairCost( ubArmsDealer, usItemIndex, pSpclItemInfo->bItemCondition );
-
-	// add cost of repairing any attachments on it
-	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		if ( pSpclItemInfo->usAttachment[ ubCnt ] != NONE )
-		{
-			// if damaged and repairable
-			if ( ( pSpclItemInfo->bAttachmentStatus[ ubCnt ] < 100 ) && CanDealerRepairItem( ubArmsDealer, pSpclItemInfo->usAttachment[ ubCnt ] ) )
-			{
-				uiRepairCost += CalculateSimpleItemRepairCost( ubArmsDealer, pSpclItemInfo->usAttachment[ ubCnt ], pSpclItemInfo->bAttachmentStatus[ ubCnt ] );
-			}
-		}
-	}
-
-	return( uiRepairCost );
-}
-
-
 UINT32 CalculateObjectItemRepairCost( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject )
 {
-	UINT32 uiRepairCost;
-	UINT8 ubCnt;
+	PERFORMANCE_MARKER
+	UINT32 uiRepairCost = 0;
 
-	uiRepairCost = CalculateSimpleItemRepairCost( ubArmsDealer, pItemObject->usItem, pItemObject->ItemData.Generic.bStatus[ 0 ] );
+	for (int x = 0; x < pItemObject->ubNumberOfObjects; ++x) {
+		uiRepairCost = CalculateSimpleItemRepairCost( ubArmsDealer, pItemObject->usItem, (*pItemObject)[x]->data.objectStatus );
 
-	// add cost of repairing any attachments on it
-	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		if ( pItemObject->usAttachItem[ ubCnt ] != NONE )
-		{
+		// add cost of repairing any attachments on it
+		for (attachmentList::iterator iter = (*pItemObject)[x]->attachments.begin(); iter != (*pItemObject)[x]->attachments.end(); ++iter) {
 			// if damaged and repairable
-			if ( ( pItemObject->bAttachStatus[ ubCnt ] < 100 ) && CanDealerRepairItem( ubArmsDealer, pItemObject->usAttachItem[ ubCnt ] ) )
+			if ( ( (*iter)[x]->data.objectStatus < 100 ) && CanDealerRepairItem( ubArmsDealer, iter->usItem ) )
 			{
-				uiRepairCost += CalculateSimpleItemRepairCost( ubArmsDealer, pItemObject->usAttachItem[ ubCnt ], pItemObject->bAttachStatus[ ubCnt ] );
+				uiRepairCost += CalculateObjectItemRepairCost( ubArmsDealer, &(*iter));
 			}
 		}
 	}
@@ -2359,6 +1963,7 @@ UINT32 CalculateObjectItemRepairCost( UINT8 ubArmsDealer, OBJECTTYPE *pItemObjec
 
 UINT32 CalculateSimpleItemRepairCost( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 bItemCondition )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiItemCost = 0;
 	UINT32	uiRepairCost = 0;
 	INT16		sRepairCostAdj = 0;
@@ -2406,111 +2011,9 @@ UINT32 CalculateSimpleItemRepairCost( UINT8 ubArmsDealer, UINT16 usItemIndex, IN
 }
 
 
-
-void SetSpecialItemInfoToDefaults( SPECIAL_ITEM_INFO *pSpclItemInfo )
-{
-	UINT8 ubCnt;
-
-	memset( pSpclItemInfo, 0, sizeof( SPECIAL_ITEM_INFO ) );
-
-	pSpclItemInfo->bItemCondition = 100;
-	pSpclItemInfo->ubImprintID = NO_PROFILE;
-
-	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		pSpclItemInfo->usAttachment[ ubCnt ] = NONE;
-		pSpclItemInfo->bAttachmentStatus[ ubCnt ] = 0;
-	}
-}
-
-
-void SetSpecialItemInfoFromObject( SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE *pObject )
-{
-	UINT8 ubCnt;
-
-
-	memset(pSpclItemInfo, 0, sizeof( SPECIAL_ITEM_INFO ) );
-
-
-	if( Item[ pObject->usItem ].usItemClass == IC_AMMO )
-	{
-		// ammo condition is always 100, don't use status, which holds the #bullets
-		pSpclItemInfo->bItemCondition = 100;
-	}
-	else
-	{
-		pSpclItemInfo->bItemCondition = pObject->ItemData.Generic.bStatus[ 0 ];
-	}
-
-	// only guns currently have imprintID properly initialized...
-	if ( Item[ pObject->usItem ].usItemClass == IC_GUN)
-	{
-		pSpclItemInfo->ubImprintID = pObject->ubImprintID;
-	}
-	else
-	{
-		// override garbage imprintIDs (generally 0) for non-guns
-		pSpclItemInfo->ubImprintID = NO_PROFILE;
-	}
-
-	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		if( pObject->usAttachItem[ ubCnt ] != NONE )
-		{
-			// store what it is
-			pSpclItemInfo->usAttachment[ ubCnt ] = pObject->usAttachItem[ ubCnt ];
-			pSpclItemInfo->bAttachmentStatus[ ubCnt ] = pObject->bAttachStatus[ ubCnt ];
-		}
-		else
-		{
-			pSpclItemInfo->usAttachment[ ubCnt ] = NONE;
-			pSpclItemInfo->bAttachmentStatus[ ubCnt ] = 0;
-		}
-	}
-}
-
-
-
-BOOLEAN IsItemInfoSpecial( SPECIAL_ITEM_INFO *pSpclItemInfo, UINT16 usItemIndex )
-{
-	UINT8 ubCnt;
-
-	// being damaged / in repairs makes an item special
-	if ( pSpclItemInfo->bItemCondition != 100 )
-	{
-		return(TRUE);
-	}
-
-	// being imprinted makes an item special
-	if (pSpclItemInfo->ubImprintID != NO_PROFILE)
-	{
-		return(TRUE);
-	}
-
-	// having an attachment makes an item special
-	// ...unless it is a default attachment (WDS fix 07/24/2007)
-	BOOLEAN firstAttachmentIsDefault = 
-		((pSpclItemInfo->usAttachment[ 0 ] == Item [ usItemIndex ].defaultattachment) &&
-		 (pSpclItemInfo->bAttachmentStatus[0] == 100));
-
-	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		if ((ubCnt != 0) || (!firstAttachmentIsDefault)) {
-			if ( (pSpclItemInfo->usAttachment[ ubCnt ] != NONE) )
-			{
-				return(TRUE);
-			}
-		}
-	}
-
-	// otherwise, it's just a "perfect" item, nothing special about it
-	return(FALSE);
-}
-
-
-
 BOOLEAN DoesItemAppearInDealerInventoryList( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer )
 {
+	PERFORMANCE_MARKER
 	DEALER_POSSIBLE_INV *pDealerInv=NULL;
 	UINT16 usCnt;
 
@@ -2543,6 +2046,7 @@ BOOLEAN DoesItemAppearInDealerInventoryList( UINT8 ubArmsDealer, UINT16 usItemIn
 
 UINT16 CalcValueOfItemToDealer( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerSelling )
 {
+	PERFORMANCE_MARKER
 	UINT16 usBasePrice;
 	UINT8 ubItemPriceClass;
 	UINT8 ubDealerPriceClass;
@@ -2661,58 +2165,9 @@ UINT16 CalcValueOfItemToDealer( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN 
 }
 
 
-
-// this only exists to support saves made with game versions < 54 or 55!
-BOOLEAN LoadIncompleteArmsDealersStatus( HWFILE hFile, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny )
-{
-	UINT32  uiDealersSaved;
-	UINT32	uiNumBytesRead;
-
-	Assert( !fIncludesElgin || !fIncludesManny );
-
-	if ( !fIncludesElgin )
-	{
-		// read 2 fewer element without Elgin or Manny in there...
-		uiDealersSaved = NUM_ARMS_DEALERS - 2;
-	}
-	else
-	{
-		// read one fewer element without Elgin in there...
-		uiDealersSaved = NUM_ARMS_DEALERS - 1;
-	}
-
-
-	// read in all other dealer's status
-	if (!FileRead( hFile, gArmsDealerStatus, uiDealersSaved * sizeof( ARMS_DEALER_STATUS ), &uiNumBytesRead ))
-	{
-		return( FALSE );
-	}
-
-	// read in all other dealer's inventory
-	if (!FileRead( hFile, gArmsDealersInventory, uiDealersSaved * sizeof( DEALER_ITEM_HEADER ) * MAXITEMS, &uiNumBytesRead ))
-	{
-		return( FALSE );
-	}
-
-	if ( !fIncludesElgin )
-	{
-		// initialize Elgin now...
-		InitializeOneArmsDealer( ARMS_DEALER_ELGIN );
-	}
-
-	if ( !fIncludesManny )
-	{
-		// initialize Manny now...
-		InitializeOneArmsDealer( ARMS_DEALER_MANNY );
-	}
-
-	return(TRUE);
-}
-
-
-
 BOOLEAN DealerItemIsSafeToStack( UINT16 usItemIndex )
 {
+	PERFORMANCE_MARKER
 	// basically any item type with nothing unique about it besides its status can be stacked in dealer's inventory boxes...
 	// NOTE: This test is only applied to items already KNOWN to be perfect - special items are obviously not-stackable
 
@@ -2721,13 +2176,6 @@ BOOLEAN DealerItemIsSafeToStack( UINT16 usItemIndex )
 		return( FALSE );
 	}
 
-/*
-	if ( ItemSlotLimit( usItemIndex, BIGPOCK1POS ) > 1 )
-	{
-		return( TRUE );
-	}
-*/
-
 	return( TRUE );
 }
 
@@ -2735,6 +2183,7 @@ BOOLEAN DealerItemIsSafeToStack( UINT16 usItemIndex )
 
 void GuaranteeMinimumAlcohol( UINT8 ubArmsDealer )
 {
+	PERFORMANCE_MARKER
 	GuaranteeAtLeastXItemsOfIndex( ubArmsDealer, BEER,		( UINT8 ) ( GetDealersMaxItemAmount( ubArmsDealer, BEER ) / 3 ) );
 	GuaranteeAtLeastXItemsOfIndex( ubArmsDealer, WINE,		( UINT8 ) ( GetDealersMaxItemAmount( ubArmsDealer, WINE ) / 3 ) );
 	GuaranteeAtLeastXItemsOfIndex( ubArmsDealer, ALCOHOL, ( UINT8 ) ( GetDealersMaxItemAmount( ubArmsDealer, ALCOHOL ) / 3 ) );
@@ -2744,7 +2193,8 @@ void GuaranteeMinimumAlcohol( UINT8 ubArmsDealer )
 
 BOOLEAN ItemIsARocketRifle( INT16 sItemIndex )
 {
-	if ( Item[sItemIndex].fingerprintid  )
+	PERFORMANCE_MARKER
+	if ( Item[sItemIndex].fingerprintid	)
 	{
 		return( TRUE );
 	}
@@ -2758,6 +2208,7 @@ BOOLEAN ItemIsARocketRifle( INT16 sItemIndex )
 
 BOOLEAN GetArmsDealerShopHours( UINT8 ubArmsDealer, UINT32 *puiOpeningTime, UINT32 *puiClosingTime )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
 	pSoldier = FindSoldierByProfileID( ArmsDealerInfo[ ubArmsDealer ].ubShopKeeperID, FALSE );
@@ -2780,6 +2231,7 @@ BOOLEAN GetArmsDealerShopHours( UINT8 ubArmsDealer, UINT32 *puiOpeningTime, UINT
 
 UINT32 CalculateOvernightRepairDelay( UINT8 ubArmsDealer, UINT32 uiTimeWhenFreeToStartIt, UINT32 uiMinutesToFix )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiOpeningTime, uiClosingTime;
 	UINT32 uiMinutesClosedOvernight;
 	UINT32 uiDelayInDays = 0;
@@ -2823,6 +2275,7 @@ UINT32 CalculateOvernightRepairDelay( UINT8 ubArmsDealer, UINT32 uiTimeWhenFreeT
 
 UINT32 CalculateMinutesClosedBetween( UINT8 ubArmsDealer, UINT32 uiStartTime, UINT32 uiEndTime )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiOpeningTime, uiClosingTime;
 	UINT32 uiMinutesClosedOvernight;
 	UINT32 uiDaysDifference = 0;
@@ -2889,7 +2342,7 @@ UINT32 CalculateMinutesClosedBetween( UINT8 ubArmsDealer, UINT32 uiStartTime, UI
 	{
 		Assert( uiEndTime < uiStartTime );
 
-		// recursive calls!  Add two separate times: before midnight, and after midnight
+		// recursive calls!	Add two separate times: before midnight, and after midnight
 		uiMinutesClosed += CalculateMinutesClosedBetween( ubArmsDealer, uiStartTime, NUM_MIN_IN_DAY );
 		uiMinutesClosed += CalculateMinutesClosedBetween( ubArmsDealer, 0, uiEndTime );
 	}

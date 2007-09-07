@@ -22,9 +22,10 @@
 
 void InitializeRandom()
 {
-  // Seed the random-number generator with current time so that
-  // the numbers will be different every time we run.
-  srand( (unsigned) time(NULL) );
+	PERFORMANCE_MARKER
+	// Seed the random-number generator with current time so that
+	// the numbers will be different every time we run.
+	srand( (unsigned) time(NULL) );
 	#ifdef PRERANDOM_GENERATOR
 		//Pregenerate all of the random numbers.
 		for( guiPreRandomIndex = 0; guiPreRandomIndex < MAX_PREGENERATED_NUMS; guiPreRandomIndex++ )
@@ -38,6 +39,7 @@ void InitializeRandom()
 // Returns a pseudo-random integer between 0 and uiRange
 UINT32 Random(UINT32 uiRange)
 {
+	PERFORMANCE_MARKER
 	// Always return 0, if no range given (it's not an error)
 	#ifdef JA2BETAVERSION
 		if( gfCountRandoms )
@@ -46,13 +48,14 @@ UINT32 Random(UINT32 uiRange)
 		}
 	#endif
 
-  if (uiRange == 0)	
+	if (uiRange == 0)	
 		return(0);
 	return rand() * uiRange / RAND_MAX % uiRange;
 }
 
 BOOLEAN Chance( UINT32 uiChance )
 {
+	PERFORMANCE_MARKER
 	return (BOOLEAN)(Random( 100 ) < uiChance);
 }
 
@@ -60,6 +63,7 @@ BOOLEAN Chance( UINT32 uiChance )
 
 UINT32 PreRandom( UINT32 uiRange )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiNum;
 	#ifdef JA2BETAVERSION
 		if( gfCountRandoms )
@@ -73,7 +77,7 @@ UINT32 PreRandom( UINT32 uiRange )
 	uiNum = guiPreRandomNums[ guiPreRandomIndex ] * uiRange / RAND_MAX % uiRange;
 	//Replace the current pregenerated number with a new one.
 
-	//This was removed in the name of optimization.  Uncomment if you hate recycling.
+	//This was removed in the name of optimization.	Uncomment if you hate recycling.
 	//guiPreRandomNums[ guiPreRandomIndex ] = rand();
 
 	//Go to the next index.
@@ -85,12 +89,14 @@ UINT32 PreRandom( UINT32 uiRange )
 
 BOOLEAN PreChance( UINT32 uiChance )
 {
+	PERFORMANCE_MARKER
 	return (BOOLEAN)(PreRandom( 100 ) < uiChance);
 }
 
 #ifdef JA2BETAVERSION
 void CountRandomCalls( BOOLEAN fStart )
 {
+	PERFORMANCE_MARKER
 	gfCountRandoms = fStart;
 	if( fStart )
 	{
@@ -101,6 +107,7 @@ void CountRandomCalls( BOOLEAN fStart )
 
 void GetRandomCalls( UINT32 *puiRandoms, UINT32 *puiPreRandoms )
 {
+	PERFORMANCE_MARKER
 	*puiRandoms = guiRandoms;
 	*puiPreRandoms = guiPreRandoms;
 }

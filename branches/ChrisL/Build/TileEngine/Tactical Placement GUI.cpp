@@ -91,7 +91,7 @@ UINT8	gubHilightedGroupID = 0;
 UINT8 gubCursorGroupID = 0;
 INT8	gbSelectedMercID = -1;
 INT8	gbHilightedMercID = -1;
-INT8  gbCursorMercID = -1;
+INT8	gbCursorMercID = -1;
 SOLDIERTYPE *gpTacticalPlacementSelectedSoldier = NULL;
 SOLDIERTYPE *gpTacticalPlacementHilightedSoldier = NULL;
 
@@ -121,22 +121,23 @@ BOOLEAN gfChangedEntrySide = FALSE;
 
 void FindValidInsertionCode( UINT8 *pubStrategicInsertionCode )
 {
+	PERFORMANCE_MARKER
 	if( gMapInformation.sNorthGridNo == -1 &&
 			gMapInformation.sEastGridNo == -1 &&
 			gMapInformation.sSouthGridNo == -1 &&
 			gMapInformation.sWestGridNo == -1 )
 	{
-		AssertMsg( 0, "Map has no entry points at all.  Can't generate edge points.  LC:1" );
+		AssertMsg( 0, "Map has no entry points at all.	Can't generate edge points.	LC:1" );
 	}
 	if( gMapInformation.sNorthGridNo	!= -1 && !gps1stNorthEdgepointArray	|| 
 			gMapInformation.sEastGridNo		!= -1 && !gps1stEastEdgepointArray		|| 
 			gMapInformation.sSouthGridNo	!= -1 && !gps1stSouthEdgepointArray	|| 
-			gMapInformation.sWestGridNo		!= -1 && !gps1stWestEdgepointArray		 )
+			gMapInformation.sWestGridNo		!= -1 && !gps1stWestEdgepointArray		)
 	{
 		InvalidateScreen();
 		DrawTextToScreen( L"Map doesn't has entrypoints without corresponding edgepoints. LC:1",
 			iOffsetHorizontal + 30, iOffsetVertical + 150, 600, FONT10ARIALBOLD, FONT_RED, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);
-		DrawTextToScreen( L"GENERATING MAP EDGEPOINTS!  Please wait...",
+		DrawTextToScreen( L"GENERATING MAP EDGEPOINTS!	Please wait...",
 			iOffsetHorizontal + 30, iOffsetVertical + 160, 600, FONT10ARIALBOLD, FONT_YELLOW, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);
 			
 		RefreshScreen( NULL );
@@ -145,19 +146,19 @@ void FindValidInsertionCode( UINT8 *pubStrategicInsertionCode )
 		{
 			case INSERTION_CODE_NORTH:	
 				if( !gps1stNorthEdgepointArray )
-					AssertMsg( 0, "Map Edgepoint generation failed.  KM : 0 -- send map" );
+					AssertMsg( 0, "Map Edgepoint generation failed.	KM : 0 -- send map" );
 				break;
 			case INSERTION_CODE_EAST:
 				if( !gps1stEastEdgepointArray )
-					AssertMsg( 0, "Map Edgepoint generation failed.  KM : 0 -- send map" );
+					AssertMsg( 0, "Map Edgepoint generation failed.	KM : 0 -- send map" );
 				break;
 			case INSERTION_CODE_SOUTH:	
 				if( !gps1stSouthEdgepointArray )
-					AssertMsg( 0, "Map Edgepoint generation failed.  KM : 0 -- send map" );
+					AssertMsg( 0, "Map Edgepoint generation failed.	KM : 0 -- send map" );
 				break;
 			case INSERTION_CODE_WEST:		
 				if( !gps1stWestEdgepointArray )
-					AssertMsg( 0, "Map Edgepoint generation failed.  KM : 0 -- send map" );
+					AssertMsg( 0, "Map Edgepoint generation failed.	KM : 0 -- send map" );
 				break;
 		}
 		return;
@@ -190,6 +191,7 @@ void FindValidInsertionCode( UINT8 *pubStrategicInsertionCode )
 
 void CheckForValidMapEdge( UINT8 *pubStrategicInsertionCode )
 {
+	PERFORMANCE_MARKER
 	switch( *pubStrategicInsertionCode )
 	{
 		case INSERTION_CODE_NORTH:	
@@ -216,6 +218,7 @@ void CheckForValidMapEdge( UINT8 *pubStrategicInsertionCode )
 
 void InitTacticalPlacementGUI()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC VObjectDesc;
 	INT32 i, xp, yp;
 	UINT8 ubFaceIndex;
@@ -307,16 +310,16 @@ void InitTacticalPlacementGUI()
 	SpecifyButtonHilitedTextColors( iTPButtons[ GROUP_BUTTON ], FONT_WHITE, FONT_NEARBLACK );
 	SpecifyButtonHilitedTextColors( iTPButtons[ DONE_BUTTON ], FONT_WHITE, FONT_NEARBLACK );
 
-	//First pass:  Count the number of mercs that are going to be placed by the player.
-	//             This determines the size of the array we will allocate.
+	//First pass:	Count the number of mercs that are going to be placed by the player.
+	//			 This determines the size of the array we will allocate.
 	giPlacements = 0;
 	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 	{
 
-		if( MercPtrs[ i ]->bActive && !MercPtrs[ i ]->fBetweenSectors && 
+		if( MercPtrs[ i ]->bActive && !MercPtrs[ i ]->flags.fBetweenSectors && 
 				MercPtrs[ i ]->sSectorX == gpBattleGroup->ubSectorX &&
 				MercPtrs[ i ]->sSectorY == gpBattleGroup->ubSectorY	&& 
-				!( MercPtrs[ i ]->uiStatusFlags & ( SOLDIER_VEHICLE ) ) && // ATE Ignore vehicles
+				!( MercPtrs[ i ]->flags.uiStatusFlags & ( SOLDIER_VEHICLE ) ) && // ATE Ignore vehicles
 				MercPtrs[ i ]->bAssignment != ASSIGNMENT_POW &&
 				MercPtrs[ i ]->bAssignment != IN_TRANSIT &&
 				!MercPtrs[ i ]->bSectorZ )
@@ -327,21 +330,21 @@ void InitTacticalPlacementGUI()
 	//Allocate the array based on how many mercs there are.
 	gMercPlacement = (MERCPLACEMENT*)MemAlloc( sizeof( MERCPLACEMENT ) * giPlacements );
 	Assert( gMercPlacement );
-	//Second pass:  Assign the mercs to their respective slots.
+	//Second pass:	Assign the mercs to their respective slots.
 	giPlacements = 0;
 	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && !MercPtrs[ i ]->fBetweenSectors && 
+		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->stats.bLife && !MercPtrs[ i ]->flags.fBetweenSectors && 
 				MercPtrs[ i ]->sSectorX == gpBattleGroup->ubSectorX &&
 				MercPtrs[ i ]->sSectorY == gpBattleGroup->ubSectorY	&& 
 				MercPtrs[ i ]->bAssignment != ASSIGNMENT_POW &&
 				MercPtrs[ i ]->bAssignment != IN_TRANSIT &&
-				!( MercPtrs[ i ]->uiStatusFlags & ( SOLDIER_VEHICLE ) ) && // ATE Ignore vehicles
+				!( MercPtrs[ i ]->flags.uiStatusFlags & ( SOLDIER_VEHICLE ) ) && // ATE Ignore vehicles
 				!MercPtrs[ i ]->bSectorZ )
 		{
 
 			// ATE: If we are in a vehicle - remove ourselves from it!
-			//if ( MercPtrs[ i ]->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) )
+			//if ( MercPtrs[ i ]->flags.uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) )
 			//{
 			//	RemoveSoldierFromVehicle( MercPtrs[ i ], MercPtrs[ i ]->bVehicleID );
 			//}
@@ -422,7 +425,7 @@ void InitTacticalPlacementGUI()
 		for( i = 0; i < giPlacements; i++ )
 		{ //go from the currently selected soldier to the end
 			if( !gMercPlacement[ i ].fPlaced )
-			{ //Found an unplaced merc.  Select him.
+			{ //Found an unplaced merc.	Select him.
 				gbSelectedMercID = (INT8)i;
 				if( gubDefaultButton == GROUP_BUTTON )
 					gubSelectedGroupID = gMercPlacement[ i ].pSoldier->ubGroupID;
@@ -437,6 +440,7 @@ void InitTacticalPlacementGUI()
 
 void RenderTacticalPlacementGUI()
 {
+	PERFORMANCE_MARKER
 	INT32 i, xp, yp, width, height;
 	INT32 iStartY;
 	SOLDIERTYPE *pSoldier;
@@ -508,10 +512,10 @@ void RenderTacticalPlacementGUI()
 			BltVideoObjectFromIndex( FRAME_BUFFER, giMercPanelImage, 0, xp, yp, VO_BLT_SRCTRANSPARENCY, NULL );
 			BltVideoObjectFromIndex( FRAME_BUFFER, gMercPlacement[ i ].uiVObjectID, 0, xp+2, yp+2, VO_BLT_SRCTRANSPARENCY, NULL );
 			//HEALTH BAR
-			if( !pSoldier->bLife )
+			if( !pSoldier->stats.bLife )
 				continue;
 			//yellow one for bleeding
-			iStartY = yp + 29 - 27*pSoldier->bLifeMax/100;
+			iStartY = yp + 29 - 27*pSoldier->stats.bLifeMax/100;
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+36, iStartY, xp+37, yp+29, Get16BPPColor( FROMRGB( 107, 107, 57 ) ) );
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+37, iStartY, xp+38, yp+29, Get16BPPColor( FROMRGB( 222, 181, 115 ) ) );
 			//pink one for bandaged.
@@ -519,7 +523,7 @@ void RenderTacticalPlacementGUI()
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+36, iStartY, xp+37, yp+29, Get16BPPColor( FROMRGB( 156, 57, 57 ) ) );
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+37, iStartY, xp+38, yp+29, Get16BPPColor( FROMRGB( 222, 132, 132 ) ) );
 			//red one for actual health
-			iStartY = yp + 29 - 27*pSoldier->bLife/100;
+			iStartY = yp + 29 - 27*pSoldier->stats.bLife/100;
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+36, iStartY, xp+37, yp+29, Get16BPPColor( FROMRGB( 107, 8, 8 ) ) );
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+37, iStartY, xp+38, yp+29, Get16BPPColor( FROMRGB( 206, 0, 0 ) ) );
 			//BREATH BAR
@@ -527,7 +531,7 @@ void RenderTacticalPlacementGUI()
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+39, iStartY, xp+40, yp+29, Get16BPPColor( FROMRGB( 8, 8, 132 ) ) );
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+40, iStartY, xp+41, yp+29, Get16BPPColor( FROMRGB( 8, 8, 107 ) ) );
 			//MORALE BAR
-			iStartY = yp + 29 - 27*pSoldier->bMorale/100;
+			iStartY = yp + 29 - 27*pSoldier->aiData.bMorale/100;
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+42, iStartY, xp+43, yp+29, Get16BPPColor( FROMRGB( 8, 156, 8 ) ) );
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+43, iStartY, xp+44, yp+29, Get16BPPColor( FROMRGB( 8, 107, 8 ) ) );
 		}
@@ -567,7 +571,7 @@ void RenderTacticalPlacementGUI()
 			gTPClipRect.iLeft		= iOffsetHorizontal;
 			gTPClipRect.iTop		= iOffsetVertical + 3;
 			//gTPClipRect.iRight		= iOffsetHorizontal + 640;
-			gTPClipRect.iRight		= iOffsetHorizontal + 634;  // 635
+			gTPClipRect.iRight		= iOffsetHorizontal + 634;	// 635
 			gTPClipRect.iBottom		= iOffsetVertical + 320;
 			switch( gMercPlacement[ gbCursorMercID ].ubStrategicInsertionCode )
 			{
@@ -601,12 +605,12 @@ void RenderTacticalPlacementGUI()
 		//yp = (i % 2) ? 422 : 371;
 		//NAME
 		if( gubDefaultButton == GROUP_BUTTON && gMercPlacement[ i ].pSoldier->ubGroupID == gubSelectedGroupID ||
-			  gubDefaultButton != GROUP_BUTTON && i == gbSelectedMercID )
+			gubDefaultButton != GROUP_BUTTON && i == gbSelectedMercID )
 		{
 			ubColor = FONT_YELLOW;
 		}
 		else if( gubDefaultButton == GROUP_BUTTON && gMercPlacement[ i ].pSoldier->ubGroupID == gubHilightedGroupID ||
-						 gubDefaultButton != GROUP_BUTTON && i == gbHilightedMercID )
+						gubDefaultButton != GROUP_BUTTON && i == gbHilightedMercID )
 		{
 			ubColor = FONT_WHITE;
 		}
@@ -640,6 +644,7 @@ void RenderTacticalPlacementGUI()
 
 void EnsureDoneButtonStatus()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	//static BOOLEAN fInside = FALSE;
 	//BOOLEAN fChanged = FALSE;
@@ -664,7 +669,8 @@ void EnsureDoneButtonStatus()
 
 void TacticalPlacementHandle()
 {
-  InputAtom InputEvent;
+	PERFORMANCE_MARKER
+	InputAtom InputEvent;
 
 	EnsureDoneButtonStatus();
 
@@ -677,8 +683,8 @@ void TacticalPlacementHandle()
 		gpTacticalPlacementSelectedSoldier = NULL;
 	}
 
-  while( DequeueEvent( &InputEvent ) )
-  {
+	while( DequeueEvent( &InputEvent ) )
+	{
 		if( InputEvent.usEvent == KEY_DOWN )
 		{
 			switch( InputEvent.usParam )
@@ -724,11 +730,11 @@ void TacticalPlacementHandle()
 					gfValidCursor = TRUE;
 				break;
 			case INSERTION_CODE_EAST:		
-				if( gusMouseXPos >= (iOffsetHorizontal + 610) )   // 600
+				if( gusMouseXPos >= (iOffsetHorizontal + 610) )	// 600
 					gfValidCursor = TRUE;
 				break;
 			case INSERTION_CODE_SOUTH:	
-				if( gusMouseYPos >= (iOffsetVertical + 290) )  // 280
+				if( gusMouseYPos >= (iOffsetVertical + 290) )	// 280
 					gfValidCursor = TRUE;
 				break;
 			case INSERTION_CODE_WEST:		
@@ -775,6 +781,7 @@ void TacticalPlacementHandle()
 
 void KillTacticalPlacementGUI()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 
 	gbHilightedMercID = -1;
@@ -828,17 +835,18 @@ void KillTacticalPlacementGUI()
 	#ifdef JA2BETAVERSION
 	if( gfChangedEntrySide )
 	{
-		ScreenMsg( FONT_RED, MSG_ERROR, L"Substituted different entry side due to invalid entry points or map edgepoints.  KM, LC : 1" );
+		ScreenMsg( FONT_RED, MSG_ERROR, L"Substituted different entry side due to invalid entry points or map edgepoints.	KM, LC : 1" );
 	}
 	#endif
 }
 
 void ChooseRandomEdgepoints()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = 0; i < giPlacements; i++ )
 	{
-		if ( !( gMercPlacement[ i ].pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+		if ( !( gMercPlacement[ i ].pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
 			gMercPlacement[ i ].pSoldier->usStrategicInsertionData = ChooseMapEdgepoint( gMercPlacement[ i ].ubStrategicInsertionCode );
 			if( gMercPlacement[ i ].pSoldier->usStrategicInsertionData != NOWHERE )
@@ -862,6 +870,7 @@ void ChooseRandomEdgepoints()
 
 void PlaceMercs()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	switch( gubDefaultButton )
 	{
@@ -886,6 +895,7 @@ void PlaceMercs()
 
 void DoneOverheadPlacementClickCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfKillTacticalGUI = 2;
@@ -894,6 +904,7 @@ void DoneOverheadPlacementClickCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SpreadPlacementsCallback ( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gubDefaultButton = SPREAD_BUTTON;
@@ -908,6 +919,7 @@ void SpreadPlacementsCallback ( GUI_BUTTON *btn, INT32 reason )
 
 void GroupPlacementsCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if( gubDefaultButton == GROUP_BUTTON )
@@ -930,6 +942,7 @@ void GroupPlacementsCallback( GUI_BUTTON *btn, INT32 reason )
 
 void ClearPlacementsCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iTPButtons[ GROUP_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
@@ -941,6 +954,7 @@ void ClearPlacementsCallback( GUI_BUTTON *btn, INT32 reason )
 
 void MercMoveCallback( MOUSE_REGION *reg, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reg->uiFlags & MSYS_MOUSE_IN_AREA )
 	{
 		INT8 i;
@@ -964,6 +978,7 @@ void MercMoveCallback( MOUSE_REGION *reg, INT32 reason )
 
 void MercClickCallback( MOUSE_REGION *reg, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		INT8 i;
@@ -988,13 +1003,14 @@ void MercClickCallback( MOUSE_REGION *reg, INT32 reason )
 
 void SelectNextUnplacedUnit()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	if( gbSelectedMercID == -1 )
 		return;
 	for( i = gbSelectedMercID; i < giPlacements; i++ )
 	{ //go from the currently selected soldier to the end
 		if( !gMercPlacement[ i ].fPlaced )
-		{ //Found an unplaced merc.  Select him.
+		{ //Found an unplaced merc.	Select him.
 			gbSelectedMercID = (INT8)i;
 			if( gubDefaultButton == GROUP_BUTTON )
 				gubSelectedGroupID = gMercPlacement[ i ].pSoldier->ubGroupID;
@@ -1007,7 +1023,7 @@ void SelectNextUnplacedUnit()
 	for( i = 0; i < gbSelectedMercID; i++ )
 	{ //go from the beginning to the currently selected soldier
 		if( !gMercPlacement[ i ].fPlaced )
-		{ //Found an unplaced merc.  Select him.
+		{ //Found an unplaced merc.	Select him.
 			gbSelectedMercID = (INT8)i;
 			if( gubDefaultButton == GROUP_BUTTON )
 				gubSelectedGroupID = gMercPlacement[ i ].pSoldier->ubGroupID;
@@ -1017,7 +1033,7 @@ void SelectNextUnplacedUnit()
 			return;
 		}
 	}
-	//checked the whole array, and everybody has been placed.  Select nobody.
+	//checked the whole array, and everybody has been placed.	Select nobody.
 	if( !gfEveryonePlaced )
 	{
 		gfEveryonePlaced = TRUE;
@@ -1032,6 +1048,7 @@ void SelectNextUnplacedUnit()
 
 void HandleTacticalPlacementClicksInOverheadMap( MOUSE_REGION *reg, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	INT16 sGridNo;
 	BOOLEAN fInvalidArea = FALSE;
@@ -1048,9 +1065,9 @@ void HandleTacticalPlacementClicksInOverheadMap( MOUSE_REGION *reg, INT32 reason
 					if( gubDefaultButton == GROUP_BUTTON )
 					{ //We are placing a whole group.
 						for( i = 0; i < giPlacements; i++ )
-						{ //Find locations of each member of the group, but don't place them yet.  If 
+						{ //Find locations of each member of the group, but don't place them yet.	If 
 							//one of the mercs can't be placed, then we won't place any, and tell the user
-							//the problem.  If everything's okay, we will place them all.
+							//the problem.	If everything's okay, we will place them all.
 							if( gMercPlacement[ i ].pSoldier->ubGroupID == gubSelectedGroupID )
 							{
 								gMercPlacement[ i ].pSoldier->usStrategicInsertionData = SearchForClosestPrimaryMapEdgepoint( sGridNo, gMercPlacement[ i ].ubStrategicInsertionCode );
@@ -1075,7 +1092,7 @@ void HandleTacticalPlacementClicksInOverheadMap( MOUSE_REGION *reg, INT32 reason
 						}
 					}
 					else
-					{ //This is a single merc placement.  If valid, then place him, else report error.
+					{ //This is a single merc placement.	If valid, then place him, else report error.
 						gMercPlacement[ gbSelectedMercID ].pSoldier->usStrategicInsertionData = SearchForClosestPrimaryMapEdgepoint( sGridNo, gMercPlacement[ gbSelectedMercID ].ubStrategicInsertionCode );
 						if( gMercPlacement[ gbSelectedMercID ].pSoldier->usStrategicInsertionData != NOWHERE )
 						{
@@ -1104,7 +1121,7 @@ void HandleTacticalPlacementClicksInOverheadMap( MOUSE_REGION *reg, INT32 reason
 						{
 							//Report error due to invalid placement.
 							SGPRect CenterRect = { 100, 100, SCREEN_WIDTH - 100, 300 };
-						DoMessageBox( MSG_BOX_BASIC_STYLE, gpStrategicString[ STR_TP_INACCESSIBLE_MESSAGE ],  guiCurrentScreen, MSG_BOX_FLAG_OK | MSG_BOX_FLAG_USE_CENTERING_RECT, DialogRemoved,  &CenterRect );
+						DoMessageBox( MSG_BOX_BASIC_STYLE, gpStrategicString[ STR_TP_INACCESSIBLE_MESSAGE ],	guiCurrentScreen, MSG_BOX_FLAG_OK | MSG_BOX_FLAG_USE_CENTERING_RECT, DialogRemoved,	&CenterRect );
 					}
 					}
 					else
@@ -1123,7 +1140,7 @@ void HandleTacticalPlacementClicksInOverheadMap( MOUSE_REGION *reg, INT32 reason
 					&& gusMouseXPos > iOffsetHorizontal && gusMouseXPos < (iOffsetHorizontal + 640))
 				{					
 					SGPRect CenterRect = { 100, 100, SCREEN_WIDTH - 100, 300 };
-				DoMessageBox( MSG_BOX_BASIC_STYLE, gpStrategicString[ STR_TP_INVALID_MESSAGE ],  guiCurrentScreen, MSG_BOX_FLAG_OK | MSG_BOX_FLAG_USE_CENTERING_RECT, DialogRemoved,  &CenterRect );
+				DoMessageBox( MSG_BOX_BASIC_STYLE, gpStrategicString[ STR_TP_INVALID_MESSAGE ],	guiCurrentScreen, MSG_BOX_FLAG_OK | MSG_BOX_FLAG_USE_CENTERING_RECT, DialogRemoved,	&CenterRect );
 				}
 			}
 		}
@@ -1132,10 +1149,11 @@ void HandleTacticalPlacementClicksInOverheadMap( MOUSE_REGION *reg, INT32 reason
 
 void SetCursorMerc( INT8 bPlacementID )
 {
+	PERFORMANCE_MARKER
 	if( gbCursorMercID != bPlacementID )
 	{
 		if( gbCursorMercID == -1 || bPlacementID == -1 || 
-			  gMercPlacement[ gbCursorMercID ].ubStrategicInsertionCode != gMercPlacement[ bPlacementID ].ubStrategicInsertionCode )
+			gMercPlacement[ gbCursorMercID ].ubStrategicInsertionCode != gMercPlacement[ bPlacementID ].ubStrategicInsertionCode )
 			gfValidLocationsChanged = TRUE;
 		gbCursorMercID = bPlacementID;
 	}
@@ -1144,6 +1162,7 @@ void SetCursorMerc( INT8 bPlacementID )
 
 void PutDownMercPiece( INT32 iPlacement )
 {
+	PERFORMANCE_MARKER
 	INT16 sGridNo, sCellX, sCellY;
 	UINT8 ubDirection;
 
@@ -1176,8 +1195,8 @@ void PutDownMercPiece( INT32 iPlacement )
 	if( sGridNo != NOWHERE )
 	{
 		ConvertGridNoToCellXY( sGridNo, &sCellX, &sCellY );
-		EVENT_SetSoldierPosition( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
-		EVENT_SetSoldierDirection( pSoldier, ubDirection );
+		pSoldier->EVENT_SetSoldierPosition( (FLOAT)sCellX, (FLOAT)sCellY );
+		pSoldier->EVENT_SetSoldierDirection( ubDirection );
 		pSoldier->ubInsertionDirection = pSoldier->bDirection;
 		gMercPlacement[ iPlacement ].fPlaced = TRUE;
 		gMercPlacement[ iPlacement ].pSoldier->bInSector = TRUE;
@@ -1186,24 +1205,28 @@ void PutDownMercPiece( INT32 iPlacement )
 
 void PickUpMercPiece( INT32 iPlacement )
 {
-	RemoveSoldierFromGridNo( gMercPlacement[ iPlacement ].pSoldier );
+	PERFORMANCE_MARKER
+	gMercPlacement[ iPlacement ].pSoldier->RemoveSoldierFromGridNo( );
 	gMercPlacement[ iPlacement ].fPlaced = FALSE;
 	gMercPlacement[ iPlacement ].pSoldier->bInSector = FALSE;
 }
 
 void FastHelpRemovedCallback()
 {
+	PERFORMANCE_MARKER
 	gfTacticalPlacementGUIDirty = TRUE;
 }
 
 void FastHelpRemoved2Callback()
 {
+	PERFORMANCE_MARKER
 	gfTacticalPlacementGUIDirty = TRUE;
 	gfValidLocationsChanged = 2; //because fast help text covers it.
 }
 
 void DialogRemoved( UINT8 ubResult )
 {
+	PERFORMANCE_MARKER
 	gfTacticalPlacementGUIDirty = TRUE;
 	gfValidLocationsChanged = TRUE; 
 }

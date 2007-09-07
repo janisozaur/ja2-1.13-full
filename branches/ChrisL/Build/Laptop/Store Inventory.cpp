@@ -19,61 +19,61 @@ UINT8 StoreInventory[MAXITEMS][BOBBY_RAY_LISTS]; //=
 //// The first column is for Bobby Rays new inventory,					BOBBY_RAY_NEW,
 //// The second column is for Bobby Rays used inventory,				BOBBY_RAY_USED,
 ////
-//	{0,   0 },		/* nothing */
+//	{0,	0 },		/* nothing */
 //// MADD MARKER
 ////---WEAPONS---
-//	{8,		1 },		/* Glock 17        */	
-//	{6,		1 },		/* Glock 18        */	
-//	{8,		1 },		/* Beretta 92F     */	
-//	{6,		1 },		/* Beretta 93R     */	
+//	{8,		1 },		/* Glock 17		*/	
+//	{6,		1 },		/* Glock 18		*/	
+//	{8,		1 },		/* Beretta 92F	 */	
+//	{6,		1 },		/* Beretta 93R	 */	
 //	{8,		1 },		/* .38 S&W Special */	
-//	{8,		1 },		/* .357 Barracuda  */	
+//	{8,		1 },		/* .357 Barracuda	*/	
 //	{6,		1 },		/* .357 DesertEagle*/ 
-//	{7,		1 },		/* .45 M1911			 */ 
-//	{4,		1 },		/* H&K MP5K      	 */	
-//	{4,		1 },		/* .45 MAC-10	     */			// 10
+//	{7,		1 },		/* .45 M1911			*/ 
+//	{4,		1 },		/* H&K MP5K			*/	
+//	{4,		1 },		/* .45 MAC-10		*/			// 10
 //
-//	{4,		1 },		/* Thompson M1A1   */	
-//	{4,		1 },		/* Colt Commando   */	
-//	{4,		1 },		/* H&K MP53		 		 */	
-//	{4,		1 },		/* AKSU-74         */ 
-//	{2,		1 },		/* 5.7mm FN P90    */ 
-//	{4,		1 },		/* Type-85         */ 
-//	{3,		1 },		/* SKS             */ 
-//	{2,		1 },		/* Dragunov        */ 
-//	{2,		1 },		/* M24             */ 
-//	{3,		1 },		/* Steyr AUG       */			//20
+//	{4,		1 },		/* Thompson M1A1	*/	
+//	{4,		1 },		/* Colt Commando	*/	
+//	{4,		1 },		/* H&K MP53				*/	
+//	{4,		1 },		/* AKSU-74		 */ 
+//	{2,		1 },		/* 5.7mm FN P90	*/ 
+//	{4,		1 },		/* Type-85		 */ 
+//	{3,		1 },		/* SKS			 */ 
+//	{2,		1 },		/* Dragunov		*/ 
+//	{2,		1 },		/* M24			 */ 
+//	{3,		1 },		/* Steyr AUG		*/			//20
 //
-//	{3,		1 },		/* H&K G41         */ 
-//	{3,		1 },		/* Ruger Mini-14   */ 
-//	{3,		1 },		/* C-7             */ 
-//	{3,		1 },		/* FA-MAS          */ 
-//	{3,		1 },		/* AK-74           */ 
-//	{3,		1 },		/* AKM             */ 
-//	{3,		1 },		/* M-14            */ 
-//	{3,		1 },		/* FN-FAL          */	
-//	{3,		1 },		/* H&K G3A3        */ 
-//	{3,		1 },		/* H&K G11         */			// 30
+//	{3,		1 },		/* H&K G41		 */ 
+//	{3,		1 },		/* Ruger Mini-14	*/ 
+//	{3,		1 },		/* C-7			 */ 
+//	{3,		1 },		/* FA-MAS			*/ 
+//	{3,		1 },		/* AK-74			*/ 
+//	{3,		1 },		/* AKM			 */ 
+//	{3,		1 },		/* M-14			*/ 
+//	{3,		1 },		/* FN-FAL			*/	
+//	{3,		1 },		/* H&K G3A3		*/ 
+//	{3,		1 },		/* H&K G11		 */			// 30
 //
-//	{5,		1 },		/* Remington M870  */	
-//	{3,		1 },		/* SPAS-15         */ 
-//	{2,		1 },		/* CAWS            */
-//	{2,		1 },		/* FN Minimi       */
-//	{2,		1 },		/* RPK-74          */
-//	{2,		1 },		/* H&K 21E         */	
-//	{5,		0 },		/* combat knife    */
-//	{7,		0 },		/* throwing knife  */
-//	{0,		0 },		/* rock            */
+//	{5,		1 },		/* Remington M870	*/	
+//	{3,		1 },		/* SPAS-15		 */ 
+//	{2,		1 },		/* CAWS			*/
+//	{2,		1 },		/* FN Minimi		*/
+//	{2,		1 },		/* RPK-74			*/
+//	{2,		1 },		/* H&K 21E		 */	
+//	{5,		0 },		/* combat knife	*/
+//	{7,		0 },		/* throwing knife	*/
+//	{0,		0 },		/* rock			*/
 //	{2,		0 },		/* grenade launcher*/		//	40
 //
 //	{2,		0 },		/* mortar */
-//	{0,		0 },		/* another rock    */
+//	{0,		0 },		/* another rock	*/
 //	{0,		0 },		/* claws */			
 //	{0,		0 },		/* claws */
 //	{0,		0 },		/* claws */
 //	{0,		0 },		/* claws */
 //	{0,		0 },		/* tentacles */
-//	{0,		0 },		/* spit  */
+//	{0,		0 },		/* spit	*/
 //	{2,		0 },		/* brass knuckles */
 //	{6,		0 },		/* underslung g.l. */				// 50
 //
@@ -91,7 +91,7 @@ UINT8 StoreInventory[MAXITEMS][BOBBY_RAY_LISTS]; //=
 //	{2,		1 },		/* dart gun */
 //	{0,		0 },		/* bloody throwing knife */
 //	{0,		0 },		/* flamethrower */
-//	{3,		0 },		/* Crowbar       */	
+//	{3,		0 },		/* Crowbar		*/	
 //	{1,		0 },		/* Auto Rocket Rifle */
 //	{2,		1 },		/* barrett - nothing */
 //	{2,		1 },		/* val silent - nothing */
@@ -146,7 +146,7 @@ UINT8 StoreInventory[MAXITEMS][BOBBY_RAY_LISTS]; //=
 //
 //	{5,		0 },		/* CLIPROCKET_AP */
 //	{5,		0 },		/* CLIPROCKET_HE */	
-//	{5,		0 },		/* CLIPROCKET_HEAT  */	
+//	{5,		0 },		/* CLIPROCKET_HEAT	*/	
 //	{20,	0 },		/* sleep dart */
 //	{0,		0 },		/* Clip Flame */
 //	{6,		0 },		/* CLIP50_11 */	
@@ -168,20 +168,20 @@ UINT8 StoreInventory[MAXITEMS][BOBBY_RAY_LISTS]; //=
 //
 ////---EXPLOSIVES---
 //	{7,		0 },		/* stun grenade				*/
-//	{7,		0 },		/* tear gas grenade   */
+//	{7,		0 },		/* tear gas grenade	*/
 //	{5,		0 },		/* mustard gas grenade*/
-//	{7,		0 },		/* mini hand grenade  */
-//	{6, 	0 },		/* reg hand grenade   */
-//	{0,		0 },		/* RDX                */
+//	{7,		0 },		/* mini hand grenade	*/
+//	{6, 	0 },		/* reg hand grenade	*/
+//	{0,		0 },		/* RDX				*/
 //	{6,		0 },		/* TNT (="explosives")*/
-//	{0,		0 },		/* HMX (=RDX+TNT)     */
-//	{0,		0 },		/* C1  (=RDX+min oil) */
-//	{6,		0 },		/* mortar shell       */		//140
+//	{0,		0 },		/* HMX (=RDX+TNT)	 */
+//	{0,		0 },		/* C1	(=RDX+min oil) */
+//	{6,		0 },		/* mortar shell		*/		//140
 //
-//	{0,		0 },		/* mine               */
-//	{2,		0 },		/* C4  ("plastique")  */
-//	{0,		0 },		/* trip flare				  */
-//	{0,		0 },		/* trip klaxon        */
+//	{0,		0 },		/* mine				*/
+//	{2,		0 },		/* C4	("plastique")	*/
+//	{0,		0 },		/* trip flare				*/
+//	{0,		0 },		/* trip klaxon		*/
 //	{4,		0 },		/* shaped charge */
 //	{4,		0 },		/* break light */
 //	{5,		0 },		/* 40mm HE grenade */
@@ -201,13 +201,13 @@ UINT8 StoreInventory[MAXITEMS][BOBBY_RAY_LISTS]; //=
 //	{0,		0 },		/* nothing */					//160
 //
 ////---ARMOUR---
-//	{2,		1 },		/* Flak jacket     */
+//	{2,		1 },		/* Flak jacket	 */
 //	{0,		0 },		/* Flak jacket w X */
 //	{0,		0 },		/* Flak jacket w Y */
-//	{1,		1 },		/* Kevlar vest   */
+//	{1,		1 },		/* Kevlar vest	*/
 //	{0,		0 },		/* Kevlar vest w X */
 //	{0,		0 },		/* Kevlar vest w Y */
-//	{1,		1 },		/* Spectra vest  */
+//	{1,		1 },		/* Spectra vest	*/
 //	{0,		0 },		/* Spectra vest w X*/
 //	{0,		0 },		/* Spectra vest w Y*/
 //	{1,		1 },		/* Kevlar leggings */			//170
@@ -217,15 +217,15 @@ UINT8 StoreInventory[MAXITEMS][BOBBY_RAY_LISTS]; //=
 //	{1,		1 },		/* Spectra leggings*/
 //	{0,		0 },		/* Spectra legs w X*/
 //	{0,		0 },		/* Spectra legs w Y*/
-//	{3,		1 },		/* Steel helmet    */
-//	{1,		1 },		/* Kevlar helmet   */
+//	{3,		1 },		/* Steel helmet	*/
+//	{1,		1 },		/* Kevlar helmet	*/
 //	{0,		0 },		/* Kevlar helm w X */
 //	{0,		0 },		/* Kevlar helm w Y */
-//	{1,		1 },		/* Spectra helmet  */				//180
+//	{1,		1 },		/* Spectra helmet	*/				//180
 //
 //	{0,		0 },		/* Spectra helm w X*/
 //	{0,		0 },		/* Spectra helm w Y*/
-//	{0,		0 },		/* Ceramic plates  */ 
+//	{0,		0 },		/* Ceramic plates	*/ 
 //	{0,		0 },		/* hide */
 //	{0,		0 },		/* hide */
 //	{0,		0 },		/* hide */
@@ -247,54 +247,54 @@ UINT8 StoreInventory[MAXITEMS][BOBBY_RAY_LISTS]; //=
 //
 ////---MISC---
 //	{8,		0 },		/* First aid kit */
-//	{6,		0 },		/* Medical Kit   */
-//	{4,		1 },		/* Tool Kit	     */
-//	{3,		1 },	  /* Locksmith kit */
-//	{4,		0 },	  /* Camouflage kit*/
-//	{0,		0 },	  /* nothing */					// Boobytrap kit - unused
-//	{6,		1 },		/* Silencer      */
-//	{6,		1 },		/* Sniper scope  */
-//	{6,		1 },		/* Bipod         */
-//	{6,		1 },		/* Extended ear	 */		// 210
+//	{6,		0 },		/* Medical Kit	*/
+//	{4,		1 },		/* Tool Kit		*/
+//	{3,		1 },	/* Locksmith kit */
+//	{4,		0 },	/* Camouflage kit*/
+//	{0,		0 },	/* nothing */					// Boobytrap kit - unused
+//	{6,		1 },		/* Silencer		*/
+//	{6,		1 },		/* Sniper scope	*/
+//	{6,		1 },		/* Bipod		 */
+//	{6,		1 },		/* Extended ear	*/		// 210
 //
 //	{6,		1 },		/* Night goggles */
-//	{8,		0 },		/* Sun goggles	 */
-//	{6,		1 },		/* Gas mask   	 */
-//	{10,	0 },		/* Canteen       */
+//	{8,		0 },		/* Sun goggles	*/
+//	{6,		1 },		/* Gas mask		*/
+//	{10,	0 },		/* Canteen		*/
 //	{2,		0 },		/* Metal detector*/	
-//	{6,		0 },		/* Compound 18	 */	
+//	{6,		0 },		/* Compound 18	*/	
 //	{0,		0 },		/* Jar w/Queen Blood */	
 //	{0,		0 },		/* Jar w/Elixir */
-//	{0,		0 },		/* Money         */
-//	{0,		0 },		/* Glass jar		 */		//220
+//	{0,		0 },		/* Money		 */
+//	{0,		0 },		/* Glass jar		*/		//220
 //
 //	{0,		0 },		/* Jar w/Creature Blood */
 //	{0,		0 },		/* Adrenaline Booster */
-//	{6,		0 },		/* Detonator     */	
+//	{6,		0 },		/* Detonator	 */	
 //	{6,		0 },		/* Rem Detonator */	
-//	{0,		0 },		/* VideoTape     */	
-//	{0,		0 },		/* Deed					 */	
-//	{0,		0 },		/* Letter				 */
+//	{0,		0 },		/* VideoTape	 */	
+//	{0,		0 },		/* Deed					*/	
+//	{0,		0 },		/* Letter				*/
 //	{0,		0 },		/* Terrorist Info */	
-//	{0,		0 },		/* Chalice       */	
-//	{0,		0 },		/* Mission4      */		//230
+//	{0,		0 },		/* Chalice		*/	
+//	{0,		0 },		/* Mission4		*/		//230
 //
-//	{0,		0 },		/* Mission5      */
-//	{0,		0 },		/* Mission6      */	
-//	{0,		0 },		/* Switch        */
-//	{0,		0 },		/* Action Item   */	
-//	{0,		0 },		/* Syringe2      */	
-//	{0,		0 },		/* Syringe3      */
-//	{0,		0 },		/* Syringe4      */
-//	{0,		0 },		/* Syringe5      */
-//	{0,		0 },		/* Jar w/Human blood   */
+//	{0,		0 },		/* Mission5		*/
+//	{0,		0 },		/* Mission6		*/	
+//	{0,		0 },		/* Switch		*/
+//	{0,		0 },		/* Action Item	*/	
+//	{0,		0 },		/* Syringe2		*/	
+//	{0,		0 },		/* Syringe3		*/
+//	{0,		0 },		/* Syringe4		*/
+//	{0,		0 },		/* Syringe5		*/
+//	{0,		0 },		/* Jar w/Human blood	*/
 //	{0,		0 },		/* Ownership item */		//240
 //
-//	{6,		1 },		/* Laser scope   */
+//	{6,		1 },		/* Laser scope	*/
 //	{6,		0 },		/* Remote trigger*/
-//	{3,		0 },		/* Wirecutters   */			//243
-//	{3,		0 },		/* Duckbill      */		
-//	{0,		0 },	/* Alcohol  */				
+//	{3,		0 },		/* Wirecutters	*/			//243
+//	{3,		0 },		/* Duckbill		*/		
+//	{0,		0 },	/* Alcohol	*/				
 //	{1,		1 },	/* UV Goggles */
 //	{0,		0 },	/* Discarded LAW */
 //	{0,		0 },	/* head - generic */	
@@ -305,9 +305,9 @@ UINT8 StoreInventory[MAXITEMS][BOBBY_RAY_LISTS]; //=
 //	{0,		0 },	/* head - Druggist */	
 //	{0,		0 },	/* head - Matron */		
 //	{0,		0 },	/* head - Tiffany */	
-//	{0,		0 },	/* wine     */				
-//	{0,		0 },	/* beer    */				
-//	{0,		0 },	/* pornos  */				
+//	{0,		0 },	/* wine	 */				
+//	{0,		0 },	/* beer	*/				
+//	{0,		0 },	/* pornos	*/				
 //	{0,		0 },	/* video camera */				
 //	{0,		0 },	/* robot remote control */				
 //	{0,		0 },	/* creature claws */		// 260
@@ -419,58 +419,58 @@ INT16 WeaponROF[ MAXITEMS ];//=
 //{
 //	0,		/* Nothing */	
 //
-//	40,		/* Glock 17        */	
-//	1300,		/* Glock 18        */	
-//	45,		/* Beretta 92F     */	
-//	1100,		/* Beretta 93R     */	
+//	40,		/* Glock 17		*/	
+//	1300,		/* Glock 18		*/	
+//	45,		/* Beretta 92F	 */	
+//	1100,		/* Beretta 93R	 */	
 //	25,		/* .38 S&W Special */	
-//	23,		/* .357 Barracuda  */	
+//	23,		/* .357 Barracuda	*/	
 //	27,		/* .357 DesertEagle*/ 
-//	35,		/* .45 M1911			 */ 
-//	900,		/* H&K MP5K      	 */	
-//	1090,		/* .45 MAC-10	     */			// 10
+//	35,		/* .45 M1911			*/ 
+//	900,		/* H&K MP5K			*/	
+//	1090,		/* .45 MAC-10		*/			// 10
 //
-//	700,		/* Thompson M1A1   */	
-//	900,		/* Colt Commando   */	
-//	800,		/* H&K MP53		 		 */	
-//	900,		/* AKSU-74         */ 
-//	900,		/* 5.7mm FN P90    */ 
-//	780,		/* Type-85         */ 
-//	40,		/* SKS             */ 
-//	20,		/* Dragunov        */ 
-//	20,		/* M24             */ 
-//	650,		/* Steyr AUG       */			//20
+//	700,		/* Thompson M1A1	*/	
+//	900,		/* Colt Commando	*/	
+//	800,		/* H&K MP53				*/	
+//	900,		/* AKSU-74		 */ 
+//	900,		/* 5.7mm FN P90	*/ 
+//	780,		/* Type-85		 */ 
+//	40,		/* SKS			 */ 
+//	20,		/* Dragunov		*/ 
+//	20,		/* M24			 */ 
+//	650,		/* Steyr AUG		*/			//20
 //
-//	850,		/* H&K G41         */ 
-//	750,		/* Ruger Mini-14   */ 
-//	600,		/* C-7             */ 
-//	900,		/* FA-MAS          */ 
-//	650,		/* AK-74           */ 
-//	600,		/* AKM             */ 
-//	750,		/* M-14            */ 
-//	650,		/* FN-FAL          */	
-//	500,		/* H&K G3A3        */ 
-//	600,		/* H&K G11         */			// 30
+//	850,		/* H&K G41		 */ 
+//	750,		/* Ruger Mini-14	*/ 
+//	600,		/* C-7			 */ 
+//	900,		/* FA-MAS			*/ 
+//	650,		/* AK-74			*/ 
+//	600,		/* AKM			 */ 
+//	750,		/* M-14			*/ 
+//	650,		/* FN-FAL			*/	
+//	500,		/* H&K G3A3		*/ 
+//	600,		/* H&K G11		 */			// 30
 //
-//	21,		/* Remington M870  */	
-//	30,		/* SPAS-15         */ 
-//	-1,		/* CAWS            */
-//	750,		/* FN Minimi       */
-//	800,		/* RPK-74          */
-//	800,		/* H&K 21E         */	
+//	21,		/* Remington M870	*/	
+//	30,		/* SPAS-15		 */ 
+//	-1,		/* CAWS			*/
+//	750,		/* FN Minimi		*/
+//	800,		/* RPK-74			*/
+//	800,		/* H&K 21E		 */	
 //	0,			/* combat knife */
 //	0,			/* throwing knife */
 //	0,			/* rock */
 //	1,			/* grenade launcher */		// 40
 //
 //	1,		/* mortar */
-//	0,		/* another rock    */
+//	0,		/* another rock	*/
 //	0,		/* claws */			
 //	0,		/* claws */
 //	0,		/* claws */
 //	0,		/* claws */
 //	0,		/* tentacles */
-//	0,		/* spit  */
+//	0,		/* spit	*/
 //	0,		/* brass knuckles */
 //	1,		/* underslung g.l. */				// 50
 //
@@ -755,7 +755,7 @@ INT16 WeaponROF[ MAXITEMS ];//=
 //	0,		// nothing
 //	0,		// nothing
 //	1300,		/* m900 */			
-//	600,		/* m950  */
+//	600,		/* m950	*/
 //	600,		/* m960a - 330 */
 //	800,		/* micro uzi */
 //	600,		/* enfield */
@@ -791,6 +791,7 @@ INT16 WeaponROF[ MAXITEMS ];//=
 // SetupStoreInventory sets up the initial quantity on hand for all of Bobby Ray's inventory items
 void SetupStoreInventory( STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed )
 {
+	PERFORMANCE_MARKER
 	UINT16 i;
 	UINT16 usItemIndex;
 	UINT8 ubNumBought;
@@ -830,6 +831,7 @@ void SetupStoreInventory( STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed )
 
 BOOLEAN DoesGunOfSameClassExistInInventory( UINT8 ubItemIndex, UINT8 ubDealerID )
 {
+	PERFORMANCE_MARKER
 	UINT16 i;
 
 	STORE_INVENTORY *pInventoryArray;
@@ -870,6 +872,7 @@ BOOLEAN DoesGunOfSameClassExistInInventory( UINT8 ubItemIndex, UINT8 ubDealerID 
 
 STORE_INVENTORY *GetPtrToStoreInventory( UINT8 ubDealerID )
 {
+	PERFORMANCE_MARKER
 	if( ubDealerID >= BOBBY_RAY_LISTS )
 		return( NULL );
 
@@ -880,9 +883,6 @@ STORE_INVENTORY *GetPtrToStoreInventory( UINT8 ubDealerID )
 		return( LaptopSaveInfo.BobbyRayUsedInventory );
 	else
 		Assert( 0 );
-//	else
-//		return( gArmsDealersInventory[ ubDealerID - TONYS_ITEMS ] );
-
 
 	return( NULL );
 }
@@ -892,6 +892,7 @@ STORE_INVENTORY *GetPtrToStoreInventory( UINT8 ubDealerID )
 /*
 INT16	CountNumberOfItemsInStoreInventory( UINT8 ubArmsDealerID )
 {
+	PERFORMANCE_MARKER
 	UINT16	cnt;
 	INT16		ubNumItems=0;
 

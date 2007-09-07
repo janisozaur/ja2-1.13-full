@@ -2,43 +2,8 @@
 	#include "Tactical All.h"
 #else
 	#include "sgp.h"
-	#include "overhead types.h"
-	#include "Sound Control.h"
-	#include "Soldier Control.h"
 	#include "overhead.h"
-	#include "Event Pump.h"
 	#include "weapons.h"
-	#include "Animation Control.h"
-	#include "sys globals.h"
-	#include "Handle UI.h"
-	#include "Isometric Utils.h"
-	#include "worldman.h"
-	#include "math.h"
-	#include "points.h"
-	#include "ai.h"
-	#include "los.h"
-	#include "renderworld.h"
-	#include "opplist.h"
-	#include "interface.h"
-	#include "message.h"
-	#include "campaign.h"
-	#include "items.h"
-	#include "text.h"
-	#include "Soldier Profile.h"
-	#include "tile animation.h"
-	#include "Dialogue Control.h"
-	#include "SkillCheck.h"
-	#include "explosion control.h"
-	#include "Quests.h"
-	#include "Physics.h"
-	#include "Random.h"
-	#include "Vehicles.h"
-	#include "bullets.h"
-	#include "morale.h"
-	#include "meanwhile.h"
-	#include "SkillCheck.h"
-	#include "gamesettings.h"
-	#include "SaveLoadMap.h"
 	#include "Debug Control.h"
 	#include "expat.h"
 	#include "XML.h"
@@ -61,6 +26,7 @@ typedef attachmentinfoParseData;
 static void XMLCALL 
 attachmentinfoStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	attachmentinfoParseData * pData = (attachmentinfoParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -103,19 +69,21 @@ attachmentinfoStartElementHandle(void *userData, const XML_Char *name, const XML
 static void XMLCALL
 attachmentinfoCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	attachmentinfoParseData * pData = (attachmentinfoParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
-	  ){
+	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
-	  }
+	}
 }
 
 
 static void XMLCALL
 attachmentinfoEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	attachmentinfoParseData * pData = (attachmentinfoParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -136,12 +104,12 @@ attachmentinfoEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentInfo.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curAttachmentInfo.uiIndex	= (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "usItem") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentInfo.usItem   = (UINT16) atol(pData->szCharData);
+			pData->curAttachmentInfo.usItem	= (UINT16) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "uiItemClass") == 0)
 		{
@@ -151,12 +119,12 @@ attachmentinfoEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "bAttachmentSkillCheck") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentInfo.bAttachmentSkillCheck  = (INT8) atol(pData->szCharData);
+			pData->curAttachmentInfo.bAttachmentSkillCheck	= (INT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "bAttachmentSkillCheckMod") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentInfo.bAttachmentSkillCheckMod  = (INT8) atol(pData->szCharData);
+			pData->curAttachmentInfo.bAttachmentSkillCheckMod	= (INT8) atol(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;
@@ -170,6 +138,7 @@ attachmentinfoEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInAttachmentInfoStats(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -211,7 +180,7 @@ BOOLEAN ReadInAttachmentInfoStats(STR fileName)
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 
@@ -232,6 +201,7 @@ BOOLEAN ReadInAttachmentInfoStats(STR fileName)
 }
 BOOLEAN WriteAttachmentInfoStats()
 {
+	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeattachmentinfostats");
 	HWFILE		hFile;
 
@@ -252,9 +222,9 @@ BOOLEAN WriteAttachmentInfoStats()
 
 			FilePrintf(hFile,"\t\t<uiIndex>%d</uiIndex>\r\n",								cnt );
 			FilePrintf(hFile,"\t\t<usItem>%d</usItem>\r\n",								AttachmentInfo[cnt].usItem );
-			FilePrintf(hFile,"\t\t<uiItemClass>%d</uiItemClass>\r\n",								AttachmentInfo[cnt].uiItemClass  );
-			FilePrintf(hFile,"\t\t<bAttachmentSkillCheck>%d</bAttachmentSkillCheck>\r\n",								AttachmentInfo[cnt].bAttachmentSkillCheck  );
-			FilePrintf(hFile,"\t\t<bAttachmentSkillCheckMod>%d</bAttachmentSkillCheckMod>\r\n",								AttachmentInfo[cnt].bAttachmentSkillCheckMod   );
+			FilePrintf(hFile,"\t\t<uiItemClass>%d</uiItemClass>\r\n",								AttachmentInfo[cnt].uiItemClass	);
+			FilePrintf(hFile,"\t\t<bAttachmentSkillCheck>%d</bAttachmentSkillCheck>\r\n",								AttachmentInfo[cnt].bAttachmentSkillCheck	);
+			FilePrintf(hFile,"\t\t<bAttachmentSkillCheckMod>%d</bAttachmentSkillCheckMod>\r\n",								AttachmentInfo[cnt].bAttachmentSkillCheckMod	);
 
 			FilePrintf(hFile,"\t</ATTACHMENTINFO>\r\n");
 		}

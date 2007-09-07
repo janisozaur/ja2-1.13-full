@@ -24,10 +24,6 @@
 #include "Windows.h"
 
 #include "FileCat.h"
-#include "TopicOps.h"
-#include "Debug.h"
-
-#include <vector>
 
 //**************************************************************************
 //
@@ -35,10 +31,10 @@
 //
 //**************************************************************************
 
-#define MAX_FILENAME_LEN        48
+#define MAX_FILENAME_LEN		48
 
-#define FILE_ACCESS_READ	      0x01
-#define FILE_ACCESS_WRITE	      0x02
+#define FILE_ACCESS_READ		0x01
+#define FILE_ACCESS_WRITE		0x02
 #define FILE_ACCESS_READWRITE		0x03
 
 #define FILE_CREATE_NEW				0x0010	// create new file. fail if exists
@@ -88,8 +84,8 @@ typedef	FILETIME				SGP_FILETIME;
 
 // Snap: At program launch we build two directory catalogues:
 // one for the default Data directory, the other for the custom Data directory.
-extern TFileCat gDefaultDataCat;  // Init in InitializeStandardGamingPlatform (sgp.cpp)
-extern TFileCat gCustomDataCat;   // Init in InitializeStandardGamingPlatform (sgp.cpp)
+extern TFileCat gDefaultDataCat;	// Init in InitializeStandardGamingPlatform (sgp.cpp)
+extern TFileCat gCustomDataCat;	// Init in InitializeStandardGamingPlatform (sgp.cpp)
 
 //**************************************************************************
 //
@@ -102,7 +98,7 @@ extern "C" {
 #endif
 */
 
-extern BOOLEAN	InitializeFileManager(  STR strIndexFilename );
+extern BOOLEAN	InitializeFileManager(	STR strIndexFilename );
 
 extern void		ShutdownFileManager( void );
 extern void		FileDebug( BOOLEAN f );
@@ -119,7 +115,7 @@ extern BOOLEAN	FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *
 extern BOOLEAN	FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten );
 extern BOOLEAN	FileLoad( STR filename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
 
-extern BOOLEAN _cdecl FilePrintf( HWFILE hFile, STR8  strFormatted, ... );
+extern BOOLEAN _cdecl FilePrintf( HWFILE hFile, STR8	strFormatted, ... );
 
 extern BOOLEAN	FileSeek( HWFILE, UINT32 uiDistance, UINT8 uiHow );
 extern INT32	FileGetPos( HWFILE );
@@ -191,80 +187,8 @@ BOOLEAN AddSubdirectoryToPath(CHAR8 *pDirectory);
 //Gets the amount of free space on the hard drive that the main executeablt is runnning from
 UINT32		GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( );
 
-//Gets the free hard drive space from the drive letter passed in.  It has to be the root dir.  ( eg. c:\ )
+//Gets the free hard drive space from the drive letter passed in.	It has to be the root dir.	( eg. c:\ )
 UINT32		GetFreeSpaceOnHardDrive( STR pzDriveLetter );
-
-
-
-// WDS Inventory cleanup, phase 2
-//
-// SaveVector will save any vector into a file.
-// Note!  The vector is assumed to be POD data (plain 'ol data, i.e., no complex classes)
-//
-template<class _Ty>
-BOOLEAN SaveVector(HWFILE& hFile, std::vector<_Ty>& vectorToSave) {
-	UINT32 uiNumBytesWritten = 0;
-
-	// First write how many elements there are in the vector into the file
-	UINT32 uiSaveSize = sizeof(UINT32);
-	UINT32 vectorSize = vectorToSave.size();
-	FileWrite( hFile, &vectorSize, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize ) {
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Write Vector to File (1)" ) );
-		return FALSE;
-	}
-
-	// Second write each of the elements in the vector into the file
-	uiSaveSize = sizeof(_Ty);
-	for (vector<_Ty>::iterator current = vectorToSave.begin(); current != vectorToSave.end(); ++current) {
-		FileWrite( hFile, &*current, uiSaveSize, &uiNumBytesWritten );
-		if( uiNumBytesWritten != uiSaveSize ) {
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Write Vector to File (2)" ) );
-			return FALSE;
-		}
-	}
-
-	return TRUE;
-}
-
-//
-// LoadVector will save any vector into a file.
-// Note!  The vector is assumed to be POD data (plain 'ol data, i.e., no complex classes).
-// If the vector is not empty whatever current elements there are will be thrown away.
-//
-template<class _Ty>
-BOOLEAN LoadVector(HWFILE& hFile, std::vector<_Ty>& vectorToLoad) {
-	UINT32 uiNumBytesRead = 0;
-
-	// First read how many elements there will be in the vector from the file
-	UINT32 uiSaveSize = sizeof(UINT32);
-	UINT32 vectorSize;
-	FileRead( hFile, &vectorSize, uiSaveSize, &uiNumBytesRead );
-	if( uiNumBytesRead != uiSaveSize )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Vector from File (1)" ) );
-		return FALSE;
-	}
-
-	// Empty the vector of any current elements
-	vectorToLoad.clear();
-//	vectorToLoad.resize(vectorSize);  // Not needed?
-
-	// Read each elements from the file and add it to the end of the vector
-	uiSaveSize = sizeof(_Ty);
-	for (unsigned cnt=0; cnt < vectorSize; ++cnt) {
-		_Ty local;
-		FileRead( hFile, &local, uiSaveSize, &uiNumBytesRead );
-		if( uiNumBytesRead != uiSaveSize )
-		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Vector from File (2)" ) );
-			return FALSE;
-		}
-		vectorToLoad.push_back(local);
-	}
-
-	return TRUE;
-}
 
 /*
 #ifdef __cplusplus

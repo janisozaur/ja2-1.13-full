@@ -22,52 +22,57 @@ UINT32 guiCurrentTime;
 
 void CALLBACK Clock( HWND hWindow, UINT uMessage, UINT idEvent, DWORD dwTime )
 {
-  guiCurrentTime = GetTickCount();
-  if (guiCurrentTime < guiStartupTime)
-  { // Adjust guiCurrentTime because of loopback on the timer value
-    guiCurrentTime = guiCurrentTime + (0xffffffff - guiStartupTime);
-  }
-  else
-  { // Adjust guiCurrentTime because of loopback on the timer value
-    guiCurrentTime = guiCurrentTime - guiStartupTime;
-  }
+	guiCurrentTime = GetTickCount();
+	if (guiCurrentTime < guiStartupTime)
+	{ // Adjust guiCurrentTime because of loopback on the timer value
+	guiCurrentTime = guiCurrentTime + (0xffffffff - guiStartupTime);
+	}
+	else
+	{ // Adjust guiCurrentTime because of loopback on the timer value
+	guiCurrentTime = guiCurrentTime - guiStartupTime;
+	}
 }
 
 BOOLEAN InitializeClockManager(void)
 {
+	PERFORMANCE_MARKER
 
-  // Register the start time (use WIN95 API call)
-  guiCurrentTime = guiStartupTime = GetTickCount();
-  SetTimer(ghWindow, MAIN_TIMER_ID, 10, (TIMERPROC)Clock);
+	// Register the start time (use WIN95 API call)
+	guiCurrentTime = guiStartupTime = GetTickCount();
+	SetTimer(ghWindow, MAIN_TIMER_ID, 10, (TIMERPROC)Clock);
 
 
-  return TRUE;
+	return TRUE;
 }
 
-void    ShutdownClockManager(void)
+void	ShutdownClockManager(void)
 {
+	PERFORMANCE_MARKER
 
-  // Make sure we kill the timer
-  KillTimer(ghWindow, MAIN_TIMER_ID);
+	// Make sure we kill the timer
+	KillTimer(ghWindow, MAIN_TIMER_ID);
 
 }
 
-TIMER   GetClock(void)
+TIMER	GetClock(void)
 {
-  return guiCurrentTime;
+	PERFORMANCE_MARKER
+	return guiCurrentTime;
 }
 
-TIMER   SetCountdownClock(UINT32 uiTimeToElapse)
+TIMER	SetCountdownClock(UINT32 uiTimeToElapse)
 {
-  return (guiCurrentTime + uiTimeToElapse);
+	PERFORMANCE_MARKER
+	return (guiCurrentTime + uiTimeToElapse);
 }
 
 UINT32 ClockIsTicking(TIMER uiTimer)
 {
-  if (uiTimer > guiCurrentTime)
-  { // Well timer still hasn't elapsed
-    return (uiTimer - guiCurrentTime);
-  }
-  // Time's up
-  return 0;
+	PERFORMANCE_MARKER
+	if (uiTimer > guiCurrentTime)
+	{ // Well timer still hasn't elapsed
+	return (uiTimer - guiCurrentTime);
+	}
+	// Time's up
+	return 0;
 }

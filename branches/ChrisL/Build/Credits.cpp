@@ -2,12 +2,10 @@
 	#include "JA2 All.h"
 	#include "Credits.h"
 	#include "Encrypted File.h"
-	//#include "Utils All.h" 
 	#include "Language Defines.h" 
 #else
 	#include "Types.h"
 	#include "Credits.h"
-	//#include "Utils All.h" 
 	#include "Language Defines.h" 
 	#include "vsurface.h"
 	#include "mousesystem.h"
@@ -188,7 +186,7 @@ typedef struct
 
 CDRT_FACE		gCreditFaces[] = 
 {
-//  x		y				w		h			
+//	x		y				w		h			
 	298, 137,			37, 49, 310, 157,		304, 170,	2500, 0, 0,											//Camfield
 	348, 137,			43, 47, 354, 153,		354, 153,	3700, 0, 0,											//Shawn
 	407, 132,			30, 50, 408, 151,		410, 164,	3000, 0, 0,											//Kris
@@ -392,6 +390,7 @@ void			InitCreditEyeBlinking();
 
 UINT32	CreditScreenInit( void )
 {
+	PERFORMANCE_MARKER
 	gfCreditsScreenEntry = TRUE;
 	return( 1 );
 }
@@ -400,6 +399,7 @@ UINT32	CreditScreenInit( void )
 
 UINT32	CreditScreenHandle( void )
 {
+	PERFORMANCE_MARKER
 	StartFrameBufferRender();
 
 	if( gfCreditsScreenEntry )
@@ -449,6 +449,7 @@ UINT32	CreditScreenHandle( void )
 
 UINT32	CreditScreenShutdown( void )
 {
+	PERFORMANCE_MARKER
 	return( 1 );
 }
 
@@ -464,8 +465,9 @@ UINT32	CreditScreenShutdown( void )
 //eee
 BOOLEAN		EnterCreditsScreen()
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 /*
 
 	VSURFACE_DESC		vs_desc;
@@ -480,7 +482,7 @@ BOOLEAN		EnterCreditsScreen()
 	}
 */
 
-    gfModCredits = TRUE;
+	gfModCredits = TRUE;
 
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0 );
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
@@ -537,7 +539,7 @@ BOOLEAN		EnterCreditsScreen()
 	{
 		// Make a mouse region
 		MSYS_DefineRegion( &gCrdtMouseRegions[uiCnt], gCreditFaces[uiCnt].sX, gCreditFaces[uiCnt].sY, (INT16)(gCreditFaces[uiCnt].sX + gCreditFaces[uiCnt].sWidth), (INT16)(gCreditFaces[uiCnt].sY + gCreditFaces[uiCnt].sHeight), MSYS_PRIORITY_NORMAL,
-							 CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, SelectCreditFaceRegionCallBack );
+							CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, SelectCreditFaceRegionCallBack );
 
 		// Add region
 		MSYS_AddRegion( &gCrdtMouseRegions[uiCnt] );
@@ -567,6 +569,7 @@ BOOLEAN		EnterCreditsScreen()
 
 BOOLEAN		ExitCreditScreen()
 {
+	PERFORMANCE_MARKER
 	UINT32	uiCnt;
 
 
@@ -598,6 +601,7 @@ BOOLEAN		ExitCreditScreen()
 //hhh
 void			HandleCreditScreen()
 {
+	PERFORMANCE_MARKER
 //	UINT32	uiTime = GetJA2Clock();
 
 	if( gubCreditScreenRenderFlags == CRDT_RENDER_ALL )
@@ -640,11 +644,12 @@ void			HandleCreditScreen()
 //rrr
 BOOLEAN		RenderCreditScreen()
 {
+	PERFORMANCE_MARKER
 
-  HVOBJECT hPixHandle;
+	HVOBJECT hPixHandle;
 
 	GetVideoObject(&hPixHandle, guiCreditBackGroundImage );
-  BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY, NULL);
+	BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY, NULL);
 /*
 	HVSURFACE hVSurface;
 
@@ -668,6 +673,7 @@ BOOLEAN		RenderCreditScreen()
 
 void			GetCreditScreenUserInput()
 {
+	PERFORMANCE_MARKER
 	InputAtom Event;
 
 	while( DequeueEvent( &Event ) )
@@ -714,6 +720,7 @@ void			GetCreditScreenUserInput()
 
 void SetCreditsExitScreen( UINT32 uiScreenToGoTo )
 {
+	PERFORMANCE_MARKER
 	gfCreditsScreenExit = TRUE;
 
 	guiCreditsExitScreen = uiScreenToGoTo;
@@ -723,6 +730,7 @@ void SetCreditsExitScreen( UINT32 uiScreenToGoTo )
 
 BOOLEAN	InitCreditNode( )
 {
+	PERFORMANCE_MARKER
 	if( gCrdtRootNode != NULL )
 		Assert( 0 );
 
@@ -734,6 +742,7 @@ BOOLEAN	InitCreditNode( )
 
 BOOLEAN ShutDownCreditList()
 {
+	PERFORMANCE_MARKER
 	CRDT_NODE	*pNodeToDelete=NULL;
 	CRDT_NODE	*pTemp=NULL;
 
@@ -755,6 +764,7 @@ BOOLEAN ShutDownCreditList()
 
 BOOLEAN	DeleteNode( CRDT_NODE	*pNodeToDelete )
 {
+	PERFORMANCE_MARKER
 	CRDT_NODE	*pTempNode;
 
 	pTempNode = pNodeToDelete;
@@ -811,6 +821,7 @@ BOOLEAN	DeleteNode( CRDT_NODE	*pNodeToDelete )
 //aaa
 BOOLEAN	AddCreditNode( UINT32 uiType, UINT32 uiFlags, STR16 pString )
 {
+	PERFORMANCE_MARKER
 	CRDT_NODE	*pNodeToAdd=NULL;
 	CRDT_NODE	*pTemp=NULL;
 	UINT32	uiSizeOfString = ( wcslen( pString ) + 2 ) * 2;
@@ -957,7 +968,7 @@ BOOLEAN	AddCreditNode( UINT32 uiType, UINT32 uiFlags, STR16 pString )
 
 void HandleCreditNodes()
 {
-	UINT32	uiCurrentTime =GetJA2Clock();
+	PERFORMANCE_MARKER
 	CRDT_NODE	*pCurrent=NULL;
 	CRDT_NODE	*pTemp=NULL;
 
@@ -999,6 +1010,7 @@ void HandleCreditNodes()
 
 void HandleCurrentCreditNode( CRDT_NODE	*pCurrent )
 {
+	PERFORMANCE_MARKER
 	//switch on the type of node
 	switch( pCurrent->uiType )
 	{
@@ -1015,8 +1027,7 @@ void HandleCurrentCreditNode( CRDT_NODE	*pCurrent )
 
 void HandleNode_Default( CRDT_NODE	*pCurrent )
 {
-	UINT32	uiCurrentTime =GetJA2Clock();
-
+	PERFORMANCE_MARKER
 	//if it is time to update the current node
 //	if( ( uiCurrentTime - pCurrent->uiLastTime ) > guiCrdtNodeScrollSpeed )
 	{
@@ -1050,6 +1061,7 @@ void HandleNode_Default( CRDT_NODE	*pCurrent )
 
 BOOLEAN DisplayCreditNode( CRDT_NODE	*pCurrent )
 {
+	PERFORMANCE_MARKER
 	HVSURFACE hVSurface;
 
 	//Currently, we have no need to display a node that doesnt have a string
@@ -1102,16 +1114,15 @@ BOOLEAN DisplayCreditNode( CRDT_NODE	*pCurrent )
 //return false from this function when there are no more items in the text file
 BOOLEAN	GetNextCreditFromTextFile()
 {
-	BOOLEAN	fDone = FALSE;
-	UINT32	uiStringWidth = 20;
+	PERFORMANCE_MARKER
 	CHAR16	zOriginalString[512];
 	CHAR16	zString[512];
 	CHAR16	zCodes[512];
 	STR16		pzNewCode=NULL;
-	UINT32	uiCodeType = 0;
 	UINT32	uiNodeType = 0;
 	UINT32	uiStartLoc = 0;
 	UINT32	uiFlags=0;
+
 
 	// 1.)	MOD Credits
 	if (gfModCredits == TRUE)
@@ -1180,6 +1191,10 @@ BOOLEAN	GetNextCreditFromTextFile()
 			case 8:
 				wcscpy(zOriginalString, L"Madd Mugsy");
 			break;
+
+
+
+
 
 			case 9:
 				wcscpy(zOriginalString, L"Overhaul");
@@ -1258,7 +1273,7 @@ BOOLEAN	GetNextCreditFromTextFile()
 			break;
 
 			case 28:
-				wcscpy(zOriginalString,  L"Starwalker");
+				wcscpy(zOriginalString,	L"Starwalker");
 			break;
 
 			case 29:
@@ -1325,9 +1340,19 @@ BOOLEAN	GetNextCreditFromTextFile()
 				wcscpy(zOriginalString, L"TheDrill");
 			break;
 
+
 			case 45:
 				wcscpy(zOriginalString, L"Wil473");
 			break;
+
+
+
+
+
+
+
+
+
 
 			case 46:
 				wcscpy(zOriginalString, pCreditsJA2113[6]);
@@ -1447,6 +1472,7 @@ BOOLEAN	GetNextCreditFromTextFile()
 //return any flags that need to be set in the node
 UINT32	GetAndHandleCreditCodeFromCodeString( STR16 pzCode )
 {
+	PERFORMANCE_MARKER
 //new codes:
 
 
@@ -1459,7 +1485,7 @@ UINT32	GetAndHandleCreditCodeFromCodeString( STR16 pzCode )
 		swscanf( &pzCode[1], L"%d%*s", &uiNewDelay );
 
 //		guiCrdtDelayBetweenNodes = uiNewDelay;
-		guiGapBetweenCreditNodes  = uiNewDelay;
+		guiGapBetweenCreditNodes	= uiNewDelay;
 
 		return( CRDT_NODE_NONE );
 	}
@@ -1563,6 +1589,7 @@ UINT32	GetAndHandleCreditCodeFromCodeString( STR16 pzCode )
 
 UINT32 CountNumberOfCreditNodes()
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumNodes = 0;
 	CRDT_NODE	*pTempNode = gCrdtRootNode;
 
@@ -1578,6 +1605,7 @@ UINT32 CountNumberOfCreditNodes()
 
 STR16	GetNextCreditCode( STR16 pString, UINT32 *pSizeOfCode )
 {
+	PERFORMANCE_MARKER
 	STR16	pzNewCode=NULL;
 	UINT32 uiSizeOfCode = 0;
 
@@ -1610,6 +1638,7 @@ STR16	GetNextCreditCode( STR16 pString, UINT32 *pSizeOfCode )
 //Flags:
 void HandleCreditFlags( UINT32 uiFlags )
 {
+	PERFORMANCE_MARKER
 	if( uiFlags & CRDT_FLAG__TITLE )
 	{
 	}
@@ -1631,6 +1660,7 @@ void HandleCreditFlags( UINT32 uiFlags )
 
 void SelectCreditFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -1643,7 +1673,8 @@ void SelectCreditFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		giCurrentlySelectedFace = -1;
@@ -1659,6 +1690,7 @@ void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION * pRegion, INT32 iReaso
 
 void InitCreditEyeBlinking()
 {
+	PERFORMANCE_MARKER
 	UINT8 ubCnt;
 
 	for( ubCnt=0; ubCnt<NUM_PEOPLE_IN_CREDITS; ubCnt++ )
@@ -1669,7 +1701,8 @@ void InitCreditEyeBlinking()
 
 void HandleCreditEyeBlinking()
 {
-  HVOBJECT hPixHandle;
+	PERFORMANCE_MARKER
+	HVOBJECT hPixHandle;
 	UINT8 ubCnt;
 
 	GetVideoObject(&hPixHandle, guiCreditFaces );

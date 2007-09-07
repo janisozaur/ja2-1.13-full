@@ -3,7 +3,7 @@
 #else
 	#include "Types.h"
 	#include "ArmsDealerInvInit.h"
-	#include "Item Types.h"
+	//#include "Item Types.h"
 	#include "Arms Dealer Init.h"
 	#include "DEbug.h"
 	#include "weapons.h"
@@ -15,6 +15,11 @@
 	#include "Random.h"
 	#include "Shopkeeper Interface.h"
 #endif
+
+
+//forward declarations of common classes to eliminate includes
+class OBJECTTYPE;
+class SOLDIERTYPE;
 
 
 extern INT8	gbSelectedArmsDealerID;
@@ -686,6 +691,7 @@ INT8	GetMaxItemAmount( DEALER_POSSIBLE_INV *pInv, UINT16 usItemIndex );
 
 INT8 GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex )
 {
+	PERFORMANCE_MARKER
 	switch( ubDealerID )
 	{
 		case ARMS_DEALER_TONY:
@@ -774,6 +780,7 @@ INT8 GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex )
 
 INT8 GetMaxItemAmount( DEALER_POSSIBLE_INV *pInv, UINT16 usItemIndex )
 {
+	PERFORMANCE_MARKER
 	UINT16	usCnt=0;
 
 	//loop through the array until a the LAST_DEALER_ITEM is hit
@@ -793,6 +800,7 @@ INT8 GetMaxItemAmount( DEALER_POSSIBLE_INV *pInv, UINT16 usItemIndex )
 
 DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID )
 {
+	PERFORMANCE_MARKER
 	switch( ubArmsDealerID )
 	{
 		case ARMS_DEALER_TONY:
@@ -880,6 +888,7 @@ DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID 
 //Madd: added boolean fUsed
 UINT8 GetCurrentSuitabilityForItem( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fUsed )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubItemCoolness;
 	UINT8 ubMinCoolness, ubMaxCoolness;
 
@@ -1008,6 +1017,7 @@ UINT8 GetCurrentSuitabilityForItem( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEA
 
 UINT8 ChanceOfItemTransaction( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerIsSelling, BOOLEAN fUsed )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubItemCoolness;
 	UINT8 ubChance = 0;
 	BOOLEAN fBobbyRay = FALSE;
@@ -1105,6 +1115,7 @@ UINT8 ChanceOfItemTransaction( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDe
 
 BOOLEAN ItemTransactionOccurs( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerIsSelling, BOOLEAN fUsed )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubChance;
 	INT16 sInventorySlot;
 
@@ -1130,7 +1141,7 @@ BOOLEAN ItemTransactionOccurs( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDe
 		}
 		else
 		{
-			gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].fPreviouslyEligible = TRUE;
+			gArmsDealerStatus[ bArmsDealer ].fPreviouslyEligible[ usItemIndex ] = TRUE;
 		}
 	}
 
@@ -1149,6 +1160,7 @@ BOOLEAN ItemTransactionOccurs( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDe
 
 UINT8 DetermineInitialInvItems( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubChances, BOOLEAN fUsed)
 {
+	PERFORMANCE_MARKER
 	UINT8 ubNumBought;
 	UINT8 ubCnt;
 
@@ -1169,6 +1181,7 @@ UINT8 DetermineInitialInvItems( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ub
 
 UINT8 HowManyItemsAreSold( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubNumInStock, BOOLEAN fUsed)
 {
+	PERFORMANCE_MARKER
 	UINT8 ubNumSold;
 	UINT8 ubCnt;
 
@@ -1190,6 +1203,7 @@ UINT8 HowManyItemsAreSold( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubNumIn
 
 UINT8 HowManyItemsToReorder(UINT8 ubWanted, UINT8 ubStillHave)
 {
+	PERFORMANCE_MARKER
 	UINT8 ubNumReordered;
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3,String("HowManyItemsToReorder: wanted = %d, still have = %d",ubWanted, ubStillHave));
 
@@ -1216,78 +1230,25 @@ UINT8 HowManyItemsToReorder(UINT8 ubWanted, UINT8 ubStillHave)
 
 int BobbyRayItemQsortCompare(const void *pArg1, const void *pArg2)
 {
+	PERFORMANCE_MARKER
 	UINT16	usItem1Index;
 	UINT16	usItem2Index;
 	UINT8		ubItem1Quality;
 	UINT8		ubItem2Quality;
 
-	usItem1Index = ( ( STORE_INVENTORY * ) pArg1 ) -> usItemIndex;
-	usItem2Index = ( ( STORE_INVENTORY * ) pArg2 ) -> usItemIndex;
+	usItem1Index = ( ( STORE_INVENTORY * ) pArg1 )->usItemIndex;
+	usItem2Index = ( ( STORE_INVENTORY * ) pArg2 )->usItemIndex;
 
-	ubItem1Quality = ( ( STORE_INVENTORY * ) pArg1 ) -> ubItemQuality;
-	ubItem2Quality = ( ( STORE_INVENTORY * ) pArg2 ) -> ubItemQuality;
-
-	return( CompareItemsForSorting( usItem1Index, usItem2Index, ubItem1Quality, ubItem2Quality ) );
-}
-
-
-
-int ArmsDealerItemQsortCompare(const void *pArg1, const void *pArg2)
-{
-	UINT16	usItem1Index;
-	UINT16	usItem2Index;
-	UINT8		ubItem1Quality;
-	UINT8		ubItem2Quality;
-
-	usItem1Index = ( ( INVENTORY_IN_SLOT * ) pArg1 ) -> sItemIndex;
-	usItem2Index = ( ( INVENTORY_IN_SLOT * ) pArg2 ) -> sItemIndex;
-
-	ubItem1Quality = ( ( INVENTORY_IN_SLOT * ) pArg1 ) -> ItemObject.ItemData.Generic.bStatus[ 0 ];
-	ubItem2Quality = ( ( INVENTORY_IN_SLOT * ) pArg2 ) -> ItemObject.ItemData.Generic.bStatus[ 0 ];
+	ubItem1Quality = ( ( STORE_INVENTORY * ) pArg1 )->ubItemQuality;
+	ubItem2Quality = ( ( STORE_INVENTORY * ) pArg2 )->ubItemQuality;
 
 	return( CompareItemsForSorting( usItem1Index, usItem2Index, ubItem1Quality, ubItem2Quality ) );
 }
-
-
-
-int RepairmanItemQsortCompare(const void *pArg1, const void *pArg2)
-{
-	INVENTORY_IN_SLOT* pInvSlot1;
-	INVENTORY_IN_SLOT* pInvSlot2;
-	UINT32	uiRepairTime1;
-	UINT32	uiRepairTime2;
-
-
-	pInvSlot1 = ( INVENTORY_IN_SLOT * ) pArg1;
-	pInvSlot2 = ( INVENTORY_IN_SLOT * ) pArg2;
-
-	Assert( pInvSlot1->sSpecialItemElement != -1);
-	Assert( pInvSlot2->sSpecialItemElement != -1);
-
-	uiRepairTime1 = gArmsDealersInventory[ gbSelectedArmsDealerID ][ pInvSlot1->sItemIndex ].SpecialItem[ pInvSlot1->sSpecialItemElement ].uiRepairDoneTime;
-	uiRepairTime2 = gArmsDealersInventory[ gbSelectedArmsDealerID ][ pInvSlot2->sItemIndex ].SpecialItem[ pInvSlot2->sSpecialItemElement ].uiRepairDoneTime;
-
-
-	// lower reapir time first
-  if ( uiRepairTime1 < uiRepairTime2 )
-  {
-    return( -1 );
-  }
-  else
-  if ( uiRepairTime1 > uiRepairTime2 )
-  {
-    return( 1 );
-  }
-  else
-  {
-    return( 0 );
-	}
-}
-
 
 
 int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT8 ubItem1Quality, UINT8 ubItem2Quality )
 {
+	PERFORMANCE_MARKER
 	UINT8		ubItem1Category;
 	UINT8		ubItem2Category;
 	//UINT16	usItem1Price;
@@ -1299,130 +1260,122 @@ int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT8 ubIt
 	ubItem2Category = GetDealerItemCategoryNumber( usItem2Index );
 
 	// lower category first
-  if ( ubItem1Category < ubItem2Category )
-  {
-    return( -1 );
-  }
-  else
-  if ( ubItem1Category > ubItem2Category )
-  {
-    return( 1 );
-  }
-  else
-  {
-		// the same category 
-		//if ( Item[ usItem1Index ].usItemClass == IC_AMMO && Item[ usItem2Index ].usItemClass == IC_AMMO )
-		//{
-			//UINT8		ubItem1Calibre;
-			//UINT8		ubItem2Calibre;
-			//UINT8		ubItem1MagSize;
-			//UINT8		ubItem2MagSize;
+	if ( ubItem1Category < ubItem2Category )
+	{
+		return( -1 );
+	}
+	else if ( ubItem1Category > ubItem2Category )
+	{
+		return( 1 );
+	}
 
-			// AMMO is sorted by caliber first
-			//ubItem1Calibre = Magazine[ Item[ usItem1Index ].ubClassIndex ].ubCalibre;
-			//ubItem2Calibre = Magazine[ Item[ usItem2Index ].ubClassIndex ].ubCalibre;
-			//if ( ubItem1Calibre > ubItem2Calibre )
-			//{
-			//	return( -1 );
-			//}
-			//else
-			//if ( ubItem1Calibre < ubItem2Calibre )
-			//{
-			//	return( 1 );
-			//}
-			//// the same caliber - compare size of magazine, then fall out of if statement
-			//ubItem1MagSize = Magazine[ Item[ usItem1Index ].ubClassIndex ].ubMagSize;
-			//ubItem2MagSize = Magazine[ Item[ usItem2Index ].ubClassIndex ].ubMagSize;
-			//if ( ubItem1MagSize > ubItem2MagSize )
-			//{
-			//	return( -1 );
-			//}
-			//else
-			//if ( ubItem1MagSize < ubItem2MagSize )
-			//{
-			//	return( 1 );
-			//}
-		//}
-		//else
-		//{
-			// items other than ammo are compared on coolness first
-			//ubItem1Coolness = Item[ usItem1Index ].ubCoolness;
-			//ubItem2Coolness = Item[ usItem2Index ].ubCoolness;
+	// the same category 
+	//if ( Item[ usItem1Index ].usItemClass == IC_AMMO && Item[ usItem2Index ].usItemClass == IC_AMMO )
+	//{
+		//UINT8		ubItem1Calibre;
+		//UINT8		ubItem2Calibre;
+		//UINT8		ubItem1MagSize;
+		//UINT8		ubItem2MagSize;
 
-			//// higher coolness first
-			//if ( ubItem1Coolness > ubItem2Coolness )
-			//{
-			//	return( -1 );
-			//}
-			//else
-			//if ( ubItem1Coolness < ubItem2Coolness )
-			//{
-			//	return( 1 );
-			//}
-		//}
-
-		// the same coolness/caliber - compare base prices then
-		//usItem1Price = Item[ usItem1Index ].usPrice;
-		//usItem2Price = Item[ usItem2Index ].usPrice;
-
-		//// higher price first
-		//if ( usItem1Price > usItem2Price )
+		// AMMO is sorted by caliber first
+		//ubItem1Calibre = Magazine[ Item[ usItem1Index ].ubClassIndex ].ubCalibre;
+		//ubItem2Calibre = Magazine[ Item[ usItem2Index ].ubClassIndex ].ubCalibre;
+		//if ( ubItem1Calibre > ubItem2Calibre )
 		//{
 		//	return( -1 );
 		//}
 		//else
-		//if ( usItem1Price < usItem2Price )
+		//if ( ubItem1Calibre < ubItem2Calibre )
 		//{
 		//	return( 1 );
 		//}
-		//else
+		//// the same caliber - compare size of magazine, then fall out of if statement
+		//ubItem1MagSize = Magazine[ Item[ usItem1Index ].ubClassIndex ].ubMagSize;
+		//ubItem2MagSize = Magazine[ Item[ usItem2Index ].ubClassIndex ].ubMagSize;
+		//if ( ubItem1MagSize > ubItem2MagSize )
 		//{
-			// the same price - compare item #s, then
-
-			//// lower index first
-			//if ( usItem1Index < usItem2Index )
-			//{
-			//	return( -1 );
-			//}
-			//else
-			//if ( usItem1Index > usItem2Index )
-			//{
-			//	return( 1 );
-			//}
-
-			//Madd: sort by name (for now at least):
-			if (_stricmp(Item[usItem1Index].szBRName,Item[usItem2Index].szBRName) < 0 )
-				return -1;
-			else if (_stricmp(Item[usItem1Index].szBRName,Item[usItem2Index].szBRName) > 0 )
-				return 1;
-			else
-			{
-				// same item type = compare item quality, then
-
-				// higher quality first
-				if ( ubItem1Quality > ubItem2Quality )
-				{
-					return( -1 );
-				}
-				else
-				if ( ubItem1Quality < ubItem2Quality )
-				{
-					return( 1 );
-				}
-				else
-				{
-					// identical items!
-					return( 0 );
-				}
-			}
+		//	return( -1 );
 		//}
-  }
+		//else
+		//if ( ubItem1MagSize < ubItem2MagSize )
+		//{
+		//	return( 1 );
+		//}
+	//}
+	//else
+	//{
+		// items other than ammo are compared on coolness first
+		//ubItem1Coolness = Item[ usItem1Index ].ubCoolness;
+		//ubItem2Coolness = Item[ usItem2Index ].ubCoolness;
+
+		//// higher coolness first
+		//if ( ubItem1Coolness > ubItem2Coolness )
+		//{
+		//	return( -1 );
+		//}
+		//else
+		//if ( ubItem1Coolness < ubItem2Coolness )
+		//{
+		//	return( 1 );
+		//}
+	//}
+
+	// the same coolness/caliber - compare base prices then
+	//usItem1Price = Item[ usItem1Index ].usPrice;
+	//usItem2Price = Item[ usItem2Index ].usPrice;
+
+	//// higher price first
+	//if ( usItem1Price > usItem2Price )
+	//{
+	//	return( -1 );
+	//}
+	//else
+	//if ( usItem1Price < usItem2Price )
+	//{
+	//	return( 1 );
+	//}
+	//else
+	//{
+		// the same price - compare item #s, then
+
+		//// lower index first
+		//if ( usItem1Index < usItem2Index )
+		//{
+		//	return( -1 );
+		//}
+		//else
+		//if ( usItem1Index > usItem2Index )
+		//{
+		//	return( 1 );
+		//}
+
+		//Madd: sort by name (for now at least):
+		if (_stricmp(Item[usItem1Index].szBRName,Item[usItem2Index].szBRName) < 0 )
+			return -1;
+		else if (_stricmp(Item[usItem1Index].szBRName,Item[usItem2Index].szBRName) > 0 )
+			return 1;
+
+
+		// same item type = compare item quality, then
+		// higher quality first
+		if ( ubItem1Quality > ubItem2Quality )
+		{
+			return( -1 );
+		}
+		else if ( ubItem1Quality < ubItem2Quality )
+		{
+			return( 1 );
+		}
+	//}
+	// identical items!
+	return( 0 );
 }
 
 
 
 UINT8 GetDealerItemCategoryNumber( UINT16 usItemIndex )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiItemClass;
 	UINT8		ubWeaponClass;
 	UINT8		ubCategory = 0;
@@ -1479,6 +1432,7 @@ UINT8 GetDealerItemCategoryNumber( UINT16 usItemIndex )
 
 BOOLEAN CanDealerItemBeSoldUsed( UINT16 usItemIndex )
 {
+	PERFORMANCE_MARKER
 //	if ( !( Item[ usItemIndex ].fFlags & ITEM_DAMAGEABLE ) )
 	if ( !( Item[ usItemIndex ].damageable  ) )
 		return(FALSE);

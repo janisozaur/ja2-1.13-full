@@ -9,9 +9,11 @@
 #endif
 
 #include "Language Defines.h"
+#include "profiler.h"
 
 BOOLEAN GetMLGFilename( SGPFILENAME filename, UINT16 usMLGGraphicID )
 {
+	PERFORMANCE_MARKER
 	#if defined( ENGLISH ) || defined( TAIWANESE ) || defined( FRENCH )
 		switch( usMLGGraphicID )
 		{
@@ -238,26 +240,26 @@ BOOLEAN GetMLGFilename( SGPFILENAME filename, UINT16 usMLGGraphicID )
 		//
 		//		"GERMAN\\IMPSymbol_German.sti"
 
-		#if   defined( DUTCH )
-		  sprintf( zLanguage, "DUTCH" );
+		#if	defined( DUTCH )
+		sprintf( zLanguage, "DUTCH" );
 		#elif defined( FRENCH )
-		  sprintf( zLanguage, "FRENCH" );
+		sprintf( zLanguage, "FRENCH" );
 		#elif defined( GERMAN )
-		  sprintf( zLanguage, "GERMAN" );
+		sprintf( zLanguage, "GERMAN" );
 		#elif defined( ITALIAN )
-		  sprintf( zLanguage, "ITALIAN" );
+		sprintf( zLanguage, "ITALIAN" );
 		#elif defined( JAPANESE )
-		  sprintf( zLanguage, "JAPANESE" );
+		sprintf( zLanguage, "JAPANESE" );
 		#elif defined( KOREAN )
-		  sprintf( zLanguage, "KOREAN" );
+		sprintf( zLanguage, "KOREAN" );
 		#elif defined( POLISH )
-		  sprintf( zLanguage, "POLISH" );
+		sprintf( zLanguage, "POLISH" );
 		#elif defined( RUSSIAN )
-		  sprintf( (char *)zLanguage, "RUSSIAN" );
+		sprintf( (char *)zLanguage, "RUSSIAN" );
 		#elif defined( SPANISH )
-		  sprintf( zLanguage, "SPANISH" );
+		sprintf( zLanguage, "SPANISH" );
 		#elif defined( TAIWANESE )
-		  sprintf( zLanguage, "TAIWANESE" );
+		sprintf( zLanguage, "TAIWANESE" );
 		#endif
 
 		switch( usMLGGraphicID )

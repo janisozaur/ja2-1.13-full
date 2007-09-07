@@ -67,10 +67,14 @@ void		CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue );
 //Change this number when we want any who gets the new build to reset the options
 #define				GAME_SETTING_CURRENT_VERSION		522
 
-
+bool UsingNewInventorySystem()
+{
+	return (gGameOptions.ubInventorySystem == INVENTORY_NEW);
+}
 
 BOOLEAN LoadGameSettings()
 {
+	PERFORMANCE_MARKER
 	HWFILE	hFile;
 	UINT32	uiNumBytesRead;
 	char gameSettingsFilePath[MAX_PATH];
@@ -174,6 +178,7 @@ BOOLEAN LoadGameSettings()
 
 BOOLEAN	SaveGameSettings()
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32	uiNumBytesWritten;
 	char gameSettingsFilePath[MAX_PATH];
@@ -216,6 +221,7 @@ BOOLEAN	SaveGameSettings()
 
 void InitGameSettings()
 {
+	PERFORMANCE_MARKER
 	memset( &gGameSettings, 0, sizeof( GAME_SETTINGS ) );
 
 	//Init the Game Settings
@@ -288,6 +294,7 @@ void InitGameSettings()
 
 void InitGameOptions()
 {
+	PERFORMANCE_MARKER
 	memset( &gGameOptions, 0, sizeof( GAME_OPTIONS ) );
 
 	//Init the game options
@@ -322,6 +329,7 @@ extern INT32 CountEmptyIMPSlots( INT8 iSex );
 // Snap: Read options from an INI file in the default of custom Data directory
 void LoadGameExternalOptions()
 {
+	PERFORMANCE_MARKER
 	//Kaiden: Setting Ja2_Options.ini file to be read
 	CIniReader iniReader(GAME_EXTERNAL_OPTIONS_FILE);
 
@@ -340,9 +348,9 @@ void LoadGameExternalOptions()
 	}
 
 	//
-	// Note: put -1 between male/female slots and -1 at end.  This allows everything to be
-	// counted dynamically quite easily.  Note that all the code assumes there is AT
-	// LEAST ONE slot for each sex.  If that changes the code will have to be updated.
+	// Note: put -1 between male/female slots and -1 at end.	This allows everything to be
+	// counted dynamically quite easily.	Note that all the code assumes there is AT
+	// LEAST ONE slot for each sex.	If that changes the code will have to be updated.
 	//
 	// Because errors in these values can really goof things up we will try to fix up bad
 	// values and use the defaults instead.
@@ -398,11 +406,11 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.fAllMercsAvailable		= iniReader.ReadBoolean("JA2 Laptop Settings","ALL_MERCS_AT_MERC",FALSE);
 
 	//Merc Death Settings:
-	gGameExternalOptions.gfMercsDieOnAssignment			  = iniReader.ReadBoolean("JA2 Laptop Settings","MERCS_DIE_ON_ASSIGNMENT",TRUE);
-	gGameExternalOptions.giEasyMercDeaths		          = iniReader.ReadInteger("JA2 Laptop Settings","EASY_MERC_DEATHS",1);
-	gGameExternalOptions.giExperiencedMercDeaths	    = iniReader.ReadInteger("JA2 Laptop Settings","EXPERIENCED_MERC_DEATHS",2);
-	gGameExternalOptions.giExpertMercDeaths	          = iniReader.ReadInteger("JA2 Laptop Settings","EXPERT_MERC_DEATHS",3);
-	gGameExternalOptions.giInsaneMercDeaths	          = iniReader.ReadInteger("JA2 Laptop Settings","INSANE_MERC_DEATHS",4);
+	gGameExternalOptions.gfMercsDieOnAssignment			= iniReader.ReadBoolean("JA2 Laptop Settings","MERCS_DIE_ON_ASSIGNMENT",TRUE);
+	gGameExternalOptions.giEasyMercDeaths				= iniReader.ReadInteger("JA2 Laptop Settings","EASY_MERC_DEATHS",1);
+	gGameExternalOptions.giExperiencedMercDeaths	 = iniReader.ReadInteger("JA2 Laptop Settings","EXPERIENCED_MERC_DEATHS",2);
+	gGameExternalOptions.giExpertMercDeaths			= iniReader.ReadInteger("JA2 Laptop Settings","EXPERT_MERC_DEATHS",3);
+	gGameExternalOptions.giInsaneMercDeaths			= iniReader.ReadInteger("JA2 Laptop Settings","INSANE_MERC_DEATHS",4);
 
 	//################# System Settings #################
 	gGameExternalOptions.gubDeadLockDelay = iniReader.ReadInteger("JA2 System Settings","DEAD_LOCK_DELAY",15);
@@ -428,7 +436,7 @@ void LoadGameExternalOptions()
 
 	//################# Tactical Settings #################
 
-	gGameExternalOptions.gfRevealItems  = iniReader.ReadBoolean("JA2 Tactical Settings","REVEAL_ITEMS_AFTER_COMBAT",TRUE);
+	gGameExternalOptions.gfRevealItems	= iniReader.ReadBoolean("JA2 Tactical Settings","REVEAL_ITEMS_AFTER_COMBAT",TRUE);
 
 	// Militia Settings	
 	gGameExternalOptions.fAllowTacticalMilitiaCommand	= iniReader.ReadBoolean("JA2 Tactical Settings","ALLOW_TACTICAL_MILITIA_COMMAND",0);
@@ -483,7 +491,7 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.fEnableArmorCoverage				= iniReader.ReadBoolean("JA2 Tactical Settings", "ENABLE_ARMOR_COVERAGE", FALSE); // ShadoWarrior for Captain J's armor coverage
 
 	//################# Rain Settings ##################
-	  
+	
 	// Rain settings
 	gGameExternalOptions.gfAllowRain									= iniReader.ReadBoolean("JA2 Rain Settings","ALLOW_RAIN",0);
 	gGameExternalOptions.gusRainChancePerDay							= iniReader.ReadInteger("JA2 Rain Settings","RAIN_CHANCE_PER_DAY",100);
@@ -515,6 +523,7 @@ void LoadGameExternalOptions()
 
 	//Lalien: Game starting time
 	gGameExternalOptions.iGameStartingTime			= iniReader.ReadInteger("JA2 Gameplay Settings", "GAME_STARTING_TIME", NUM_SEC_IN_HOUR);
+
 	
 	// WANNE: Check for invalid starting time
 	if (gGameExternalOptions.iGameStartingTime < 0 || gGameExternalOptions.iGameStartingTime >= NUM_SEC_IN_DAY)
@@ -527,7 +536,7 @@ void LoadGameExternalOptions()
 	}
 
 	gGameExternalOptions.iFirstArrivalDelay			= iniReader.ReadInteger("JA2 Gameplay Settings", "FIRST_ARRIVAL_DELAY", 6 * NUM_SEC_IN_HOUR);
-	
+		
 	//################# Settings valid on game start only end ##################
 
 
@@ -539,15 +548,15 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.fStealingDisabled			= iniReader.ReadBoolean("JA2 Gameplay Settings","STEALING_FROM_SHIPMENTS_DISABLED",FALSE);
 
 	// WDS: Game progress 
-	gGameExternalOptions.ubGameProgressPortionKills     = iniReader.ReadInteger("JA2 Gameplay Settings","GAME_PROGRESS_KILLS",25);
+	gGameExternalOptions.ubGameProgressPortionKills	 = iniReader.ReadInteger("JA2 Gameplay Settings","GAME_PROGRESS_KILLS",25);
 	gGameExternalOptions.ubGameProgressPortionControl	= iniReader.ReadInteger("JA2 Gameplay Settings","GAME_PROGRESS_CONTROL",25);
 	gGameExternalOptions.ubGameProgressPortionIncome	= iniReader.ReadInteger("JA2 Gameplay Settings","GAME_PROGRESS_INCOME",50);
 	gGameExternalOptions.ubGameProgressPortionVisited	= iniReader.ReadInteger("JA2 Gameplay Settings","GAME_PROGRESS_VISITED",0);
-    
+	
 	// Any way to warn on this?
 	if (gGameExternalOptions.ubGameProgressPortionKills + gGameExternalOptions.ubGameProgressPortionControl + gGameExternalOptions.ubGameProgressPortionIncome + gGameExternalOptions.ubGameProgressPortionVisited != 100) 
 	{
-		gGameExternalOptions.ubGameProgressPortionKills     = 25;
+		gGameExternalOptions.ubGameProgressPortionKills	 = 25;
 		gGameExternalOptions.ubGameProgressPortionControl	= 25;
 		gGameExternalOptions.ubGameProgressPortionIncome	= 50;
 		gGameExternalOptions.ubGameProgressPortionVisited	= 0;
@@ -711,9 +720,9 @@ void LoadGameExternalOptions()
 
 BOOLEAN GetCDLocation( )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiStrngLength = 0;
 	CHAR8		zCdLocation[ SGPFILENAME_LEN ];
-	UINT32	uiDriveType=0;
 	UINT32	uiRetVal=0;
 
 	//Do a crude check to make sure the Ja2.ini file is the right on
@@ -744,9 +753,9 @@ BOOLEAN GetCDLocation( )
 		}
 
 		//Now create a new file
-		 WritePrivateProfileString( "Ja2 Settings", "CD", zCdLocation, GAME_INI_FILE );
+		WritePrivateProfileString( "Ja2 Settings", "CD", zCdLocation, GAME_INI_FILE );
 
-		 GetPrivateProfileString( "Ja2 Settings","CD", "", zCdLocation, SGPFILENAME_LEN, GAME_INI_FILE );
+		GetPrivateProfileString( "Ja2 Settings","CD", "", zCdLocation, SGPFILENAME_LEN, GAME_INI_FILE );
 	}
 
 	uiStrngLength = strlen( zCdLocation );
@@ -775,6 +784,7 @@ BOOLEAN GetCDLocation( )
 
 BOOLEAN GetCDromDriveLetter( STR8	pString )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiSize=0;
 	UINT8		ubCnt=0;
 	CHAR8		zDriveLetters[512];
@@ -876,6 +886,7 @@ BOOLEAN GetCDromDriveLetter( STR8	pString )
 
 BOOLEAN CheckIfGameCdromIsInCDromDrive()
 {
+	PERFORMANCE_MARKER
 	CHAR8		zVolumeNameBuffer[512];
 	UINT32	uiVolumeSerialNumber=0;
 	UINT32	uiMaxComponentLength=0;
@@ -885,7 +896,6 @@ BOOLEAN CheckIfGameCdromIsInCDromDrive()
 	CHAR8		zCdFile[ SGPFILENAME_LEN ];
 
 	CHAR8		zCdromRootDrive[512];
-	BOOLEAN	fFailed = FALSE;
 	UINT32	uiVolumeReturnValue;
 	UINT32	uiLastError = ERROR_SUCCESS;
 
@@ -896,7 +906,7 @@ BOOLEAN CheckIfGameCdromIsInCDromDrive()
 
 	if( !uiVolumeReturnValue )
 	{
-		 uiLastError = GetLastError();
+		uiLastError = GetLastError();
 	}
 
 	// OK, build filename
@@ -910,7 +920,7 @@ BOOLEAN CheckIfGameCdromIsInCDromDrive()
 			//if a game has been started, add the msg about saving the game to a different entry
 			if( gTacticalStatus.fHasAGameBeenStarted )
 			{
-				sprintf( sString, "%S  %S", pMessageStrings[ MSG_INTEGRITY_WARNING ], pMessageStrings[ MSG_CDROM_SAVE_GAME ] );
+				sprintf( sString, "%S	%S", pMessageStrings[ MSG_INTEGRITY_WARNING ], pMessageStrings[ MSG_CDROM_SAVE_GAME ] );
 
 				SaveGame( SAVE__ERROR_NUM, pMessageStrings[ MSG_CDROM_SAVE ] );
 			}
@@ -919,15 +929,15 @@ BOOLEAN CheckIfGameCdromIsInCDromDrive()
 				sprintf( sString, "%S", pMessageStrings[ MSG_INTEGRITY_WARNING ] );
 			}
 
-      // ATE: These are ness. due to reference counting
-      // in showcursor(). I'm not about to go digging in low level stuff at this
-      // point in the game development, so keep these here, as this works...
-//      ShowCursor(TRUE);
-//      ShowCursor(TRUE);
-      ShutdownWithErrorBox( sString );
+		// ATE: These are ness. due to reference counting
+		// in showcursor(). I'm not about to go digging in low level stuff at this
+		// point in the game development, so keep these here, as this works...
+//		ShowCursor(TRUE);
+//		ShowCursor(TRUE);
+		ShutdownWithErrorBox( sString );
 
-      //DoTester( );
-      //MessageBox(NULL, sString, "Error", MB_OK | MB_ICONERROR  );
+		//DoTester( );
+		//MessageBox(NULL, sString, "Error", MB_OK | MB_ICONERROR	);
 
 			return( FALSE );
 	}
@@ -938,6 +948,7 @@ BOOLEAN CheckIfGameCdromIsInCDromDrive()
 
 BOOLEAN GetCdromLocationFromIniFile( STR pRootOfCdromDrive )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiRetVal=0;
 
 	//Do a crude check to make sure the Ja2.ini file is the right on
@@ -959,6 +970,7 @@ BOOLEAN GetCdromLocationFromIniFile( STR pRootOfCdromDrive )
 
 void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	if( bExitValue == MSG_BOX_RETURN_OK )
 	{
 		guiPreviousOptionScreen = GAME_SCREEN;
@@ -977,6 +989,7 @@ void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
 
 BOOLEAN IsDriveLetterACDromDrive( STR pDriveLetter )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiDriveType;
 	CHAR8		zRootName[512];
 
@@ -1001,6 +1014,7 @@ BOOLEAN IsDriveLetterACDromDrive( STR pDriveLetter )
 
 void DisplayGameSettings( )
 {
+	PERFORMANCE_MARKER
 	//Display the version number
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%s: %s (%S)", pMessageStrings[ MSG_VERSION ], zVersionLabel, czVersionNumber );
 
@@ -1049,6 +1063,7 @@ void DisplayGameSettings( )
 
 BOOLEAN MeanwhileSceneSeen( UINT8 ubMeanwhile )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiCheckFlag;
 
 	if ( ubMeanwhile > 32 || ubMeanwhile > NUM_MEANWHILES )
@@ -1070,6 +1085,7 @@ BOOLEAN MeanwhileSceneSeen( UINT8 ubMeanwhile )
 
 BOOLEAN SetMeanwhileSceneSeen( UINT8 ubMeanwhile )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiCheckFlag;
 
 	if ( ubMeanwhile > 32 || ubMeanwhile > NUM_MEANWHILES )
@@ -1084,6 +1100,7 @@ BOOLEAN SetMeanwhileSceneSeen( UINT8 ubMeanwhile )
 
 BOOLEAN	CanGameBeSaved()
 {
+	PERFORMANCE_MARKER
 	//if the iron man mode is on
 	if( gGameOptions.fIronManMode )
 	{

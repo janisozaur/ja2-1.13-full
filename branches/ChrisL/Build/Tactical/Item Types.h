@@ -3,8 +3,115 @@
 
 #include "types.h"
 #include <vector>
+#include <list>
 
-using namespace std;
+//if the number of slots are ever changed, the loading / saving checksum should use this value to make conversion easier
+#define NUM_ORIGINAL_INV_SLOTS 19
+
+
+// I don't care if this isn't intuitive!	The hand positions go right
+// before the big pockets so we can loop through them that way. --CJC
+#define NO_SLOT -1
+
+// NOTE NOTE NOTE!	Leave this alone until it is no longer needed.	It must match the
+// original definition so old files can be read.
+namespace OldInventory {
+	enum {
+		HELMETPOS = 0,
+		VESTPOS,
+		LEGPOS,
+		HEAD1POS,
+		HEAD2POS,
+		HANDPOS,
+		SECONDHANDPOS,
+		BIGPOCK1POS,
+		BIGPOCK2POS,
+		BIGPOCK3POS,
+		BIGPOCK4POS,
+		SMALLPOCK1POS,
+		SMALLPOCK2POS,
+		SMALLPOCK3POS,
+		SMALLPOCK4POS,
+		SMALLPOCK5POS,
+		SMALLPOCK6POS,
+		SMALLPOCK7POS,
+		SMALLPOCK8POS, // = 18, so 19 pockets needed
+
+		NUM_INV_SLOTS = NUM_ORIGINAL_INV_SLOTS
+	};
+};
+
+/* CHRISL: Added listings for each of the new inventory pockets.  Also split the enum so we could include
+endpoint markers for each type (big, med, sml) of pocket. */
+typedef enum INVENTORY_SLOT{
+	HELMETPOS = 0,
+	VESTPOS,
+	LEGPOS,
+	HEAD1POS,
+	HEAD2POS,
+	HANDPOS,
+	SECONDHANDPOS,
+	VESTPOCKPOS,
+	LTHIGHPOCKPOS,
+	RTHIGHPOCKPOS,
+	CPACKPOCKPOS,
+	BPACKPOCKPOS,
+	GUNSLINGPOCKPOS,
+	KNIFEPOCKPOS,
+	BIGPOCK1POS,
+	BIGPOCK2POS,
+	BIGPOCK3POS,
+	BIGPOCK4POS,
+	BIGPOCK5POS,
+	BIGPOCK6POS,
+	BIGPOCK7POS,
+	MEDPOCK1POS,
+	MEDPOCK2POS,
+	MEDPOCK3POS,
+	MEDPOCK4POS,
+	SMALLPOCK1POS,
+	SMALLPOCK2POS,
+	SMALLPOCK3POS,
+	SMALLPOCK4POS,
+	SMALLPOCK5POS,
+	SMALLPOCK6POS,
+	SMALLPOCK7POS,
+	SMALLPOCK8POS,
+	SMALLPOCK9POS,
+	SMALLPOCK10POS,
+	SMALLPOCK11POS,
+	SMALLPOCK12POS,
+	SMALLPOCK13POS,
+	SMALLPOCK14POS,
+	SMALLPOCK15POS,
+	SMALLPOCK16POS,
+	SMALLPOCK17POS,
+	SMALLPOCK18POS,
+	SMALLPOCK19POS,
+	SMALLPOCK20POS,
+	SMALLPOCK21POS,
+	SMALLPOCK22POS,
+	SMALLPOCK23POS,
+	SMALLPOCK24POS,
+	SMALLPOCK25POS,
+	SMALLPOCK26POS,
+	SMALLPOCK27POS,
+	SMALLPOCK28POS,
+	SMALLPOCK29POS,
+	SMALLPOCK30POS,
+	NUM_INV_SLOTS,
+};
+
+#define INV_START_POS			0
+#define BODYPOSSTART		HELMETPOS
+#define BODYPOSFINAL		BIGPOCK1POS
+#define BIGPOCKSTART		BIGPOCK1POS
+#define BIGPOCKFINAL		MEDPOCK1POS
+#define MEDPOCKSTART		MEDPOCK1POS
+#define MEDPOCKFINAL		SMALLPOCK1POS
+#define SMALLPOCKSTART		SMALLPOCK1POS
+#define SMALLPOCKFINAL		NUM_INV_SLOTS
+#define STACK_SIZE_LIMIT	NUM_INV_SLOTS
 
 #define INVALIDCURS 0
 #define QUESTCURS 1
@@ -72,11 +179,54 @@ typedef enum
 
 #define GS_CARTRIDGE_IN_CHAMBER				0x01
 
-typedef struct
+//forward declaration
+class OBJECTTYPE;
+class SOLDIERTYPE;
+
+#define MAX_ITEMS_IN_LBE 12
+
+//CHRISL:
+class LBENODE
 {
-	UINT16	usItem;
-	UINT8		ubNumberOfObjects;
-	union
+public:
+	//ADB TODO make this a variable sized vector???
+	LBENODE() { initialize();};
+	void	initialize() {inv.clear();};
+	BOOLEAN	Load( HWFILE hFile );
+	BOOLEAN	Save( HWFILE hFile );
+
+	UINT32				lbeClass;
+	UINT16				lbeIndex;
+	UINT8				ubID;
+	BOOLEAN				ZipperFlag;
+	UINT32				uiNodeChecksum;
+	char				endOfPOD;
+	//compiler complains about too big an array since OBJECTTYPE's size is unknown at this time, because of forward declaration
+	//OBJECTTYPE			inv[ITEMS_IN_LBE];
+	std::vector<OBJECTTYPE> inv;
+};
+#define SIZEOF_LBENODE_POD (offsetof(LBENODE, endOfPOD))
+void	CreateLBE(OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets);
+bool	DestroyLBEIfEmpty(OBJECTTYPE* pObj);
+void	GetLBESlots(UINT32 LBEType, std::vector<INT8>& LBESlots);
+void	MoveItemsInSlotsToLBE( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, LBENODE* pLBE, OBJECTTYPE* pObj);
+
+// CHRISL:
+BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, UINT32 uiHandPos, OBJECTTYPE *pObj );
+BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
+BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
+INT16 GetFreeLBEPackIndex( void );
+
+extern	std::vector<LBENODE>	LBEArray;
+
+//do not alter or saves will break, create new defines if the size changes
+#define OLD_MAX_ATTACHMENTS_101 4
+#define OLD_MAX_OBJECTS_PER_SLOT_101 8
+
+namespace Version101
+{
+	//union was originally unnamed
+	union OLD_OBJECTTYPE_101_UNION
 	{
 		struct
 		{
@@ -86,68 +236,80 @@ typedef struct
 			UINT16		usGunAmmoItem;	// the item # for the item table
 			INT8		bGunAmmoStatus; // only for "attached ammo" - grenades, mortar shells
 			UINT8		ubGunState; // SB manual recharge
-			UINT8		ubGunUnused[MAX_OBJECTS_PER_SLOT - 6];
-		} Gun;
+	//warning, this unused space is the wrong size, 7 bytes above, 2 in the array, but it's been saved like that
+			UINT8		ubGunUnused[OLD_MAX_OBJECTS_PER_SLOT_101 - 6];
+		};
 		struct
 		{
-			UINT8		ubShotsLeft[MAX_OBJECTS_PER_SLOT];
-		} Ammo;
+			UINT8		ubShotsLeft[OLD_MAX_OBJECTS_PER_SLOT_101];
+		};
 		struct
 		{
-			INT8		bStatus[MAX_OBJECTS_PER_SLOT];
-		} Generic;		
+			INT8		bStatus[OLD_MAX_OBJECTS_PER_SLOT_101];
+		};		
 		struct
 		{
 			INT8		bMoneyStatus;
-			UINT32	uiMoneyAmount;
-			UINT8		ubMoneyUnused[MAX_OBJECTS_PER_SLOT - 5];
-		} Money;
+			UINT32		uiMoneyAmount;
+			UINT8		ubMoneyUnused[OLD_MAX_OBJECTS_PER_SLOT_101 - 5];
+		};
 		struct
 		{ // this is used by placed bombs, switches, and the action item
 			INT8		bBombStatus;			// % status
 			INT8		bDetonatorType;		// timed, remote, or pressure-activated
-			UINT16	usBombItem;				// the usItem of the bomb.
+			UINT16		usBombItem;				// the usItem of the bomb.
 			union
 			{
-				//struct
-				//{
+				struct
+				{
 					INT8		bDelay;				// >=0 values used only
-				//};
-				//struct
-				//{
+				};
+				struct
+				{
 					INT8		bFrequency;		// >=0 values used only
-				//};
-			} BombTrigger;
-			UINT8 ubBombOwner; // side which placed the bomb
+				};
+			};
+			UINT8	ubBombOwner; // side which placed the bomb
 			UINT8	bActionValue;// this is used by the ACTION_ITEM fake item
 			union
 			{
-				//struct
-				//{
+				struct
+				{
 					UINT8 ubTolerance; // tolerance value for panic triggers
-				//};
-				//struct 
-				//{
+				};
+				struct 
+				{
 					UINT8 ubLocationID; // location value for remote non-bomb (special!) triggers
-				//};
-			} Area;
-		} Trigger;
+				};
+			};		
+		};
 		struct
 		{
 			INT8 bKeyStatus[ 6 ];
 			UINT8 ubKeyID;
 			UINT8 ubKeyUnused[1];
-		} Key;
+		};
 		struct
 		{
 			UINT8 ubOwnerProfile;
 			UINT8 ubOwnerCivGroup;
 			UINT8 ubOwnershipUnused[6];
-		} Owner;
-	} ItemData;
+		};
+	};
+};
+#define SIZEOF_OLD_OBJECTTYPE_101_UNION (sizeof(Version101::OLD_OBJECTTYPE_101_UNION))
+
+class OLD_OBJECTTYPE_101
+{
+public:
+	UINT16		usItem;
+	UINT8		ubNumberOfObjects;
+
+	Version101::OLD_OBJECTTYPE_101_UNION	ugYucky;
+
   // attached objects
-	UINT16	usAttachItem[MAX_ATTACHMENTS];
-	INT8		bAttachStatus[MAX_ATTACHMENTS];
+	UINT16		usAttachItem[OLD_MAX_ATTACHMENTS_101];
+	INT8		bAttachStatus[OLD_MAX_ATTACHMENTS_101];
 
 	INT8		fFlags;
 	UINT8		ubMission;
@@ -155,34 +317,165 @@ typedef struct
 	UINT8		ubImprintID;	// ID of merc that item is imprinted on
 	UINT16		ubWeight;	// CHRISL:
 	UINT8		fUsed;				// flags for whether the item is used or not
-} OBJECTTYPE;
+};
 
-/*
-typedef struct
+namespace ObjectDataStructs {
+	struct OBJECT_GUN
+	{
+		INT8		bGunStatus;		// status % of gun
+		UINT8		ubGunAmmoType;	// ammo type, as per weapons.h
+		UINT8		ubGunShotsLeft;	// duh, amount of ammo left
+		UINT16		usGunAmmoItem;	// the item # for the item table
+		INT8		bGunAmmoStatus; // only for "attached ammo" - grenades, mortar shells
+		UINT8		ubGunState;		// SB manual recharge
+	};
+	struct OBJECT_MONEY
+	{
+		INT8		bMoneyStatus;
+		UINT32		uiMoneyAmount;
+	};
+	struct OBJECT_BOMBS_AND_OTHER
+	{ // this is used by placed bombs, switches, and the action item
+		INT8		bBombStatus;		// % status
+		INT8		bDetonatorType;		// timed, remote, or pressure-activated
+		UINT16		usBombItem;			// the usItem of the bomb.
+		union
+		{
+			INT8		bDelay;			// >=0 values used only
+			INT8		bFrequency;		// >=0 values used only
+		};
+		UINT8	ubBombOwner;			// side which placed the bomb
+		UINT8	bActionValue;			// this is used by the ACTION_ITEM fake item
+		union
+		{
+			UINT8 ubTolerance;			// tolerance value for panic triggers
+			UINT8 ubLocationID;			// location value for remote non-bomb (special!) triggers
+		};	
+	};
+	struct OBJECT_KEY
+	{
+		INT8 bKeyStatus[ 6 ];
+		UINT8 ubKeyID;
+	};
+	struct OBJECT_OWNER
+	{
+		UINT8 ubOwnerProfile;
+		UINT8 ubOwnerCivGroup;
+	};
+};
+
+class ObjectData
 {
-	UINT8		ubCursor;
-	INT8		bSoundType;
-	UINT8		ubGraphicNum;
-	INT8		bMaxLoad;
+public:
+	//needs a default ctor that inits stuff so that an objectStack can be init with 1 empty ObjectData
+	ObjectData() {initialize();};
+	void	initialize() {memset(this, 0, sizeof(ObjectData));};
+	bool operator==(ObjectData& compare);
+	bool operator==(const ObjectData& compare)const;
 
-	UINT8		ubPerPocket;
-	UINT8		ubCanDamage;
-	UINT8		ubWaterDamage;
-	UINT8		ubCanRepair;
-
-	UINT8		ubSeeMeter;
-	UINT8		ubRange;
-	UINT8		ubMetal;
-	UINT8		ubSinkable;
-
-	UINT16	ubPrice;
-	UINT8		ubMission;
-	UINT8		ubCoolness;
-} INVTYPE;
-
-*/
+	//BOOLEAN	Load( HWFILE hFile );
+	//BOOLEAN	Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
+	//BOOLEAN	Save( HWFILE hFile, bool fSavingMap );
 
 
+	union {
+		INT8										objectStatus;//holds the same value as bStatus[0]
+		UINT8										ubShotsLeft;//holds the same value as ubShotsLeft[0]
+		ObjectDataStructs::OBJECT_GUN				gun;
+		ObjectDataStructs::OBJECT_MONEY				money;
+		ObjectDataStructs::OBJECT_BOMBS_AND_OTHER	misc;
+		ObjectDataStructs::OBJECT_KEY				key;
+		ObjectDataStructs::OBJECT_OWNER				owner;
+	};
+	INT8		bTrap;			// 1-10 exp_lvl to detect
+	UINT8		fUsed;			// flags for whether the item is used or not
+	UINT8		ubImprintID;	// ID of merc that item is imprinted on
+};
+
+
+typedef	std::list<OBJECTTYPE>	attachmentList;
+class StackedObjectData  {
+public:
+	void	initialize() {attachments.clear(); data.initialize();};
+	OBJECTTYPE* GetAttachmentAtIndex(UINT8 index);
+	bool operator==(StackedObjectData& compare);
+	bool operator==(const StackedObjectData& compare)const;
+
+	BOOLEAN	Load( HWFILE hFile );
+	BOOLEAN	Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
+	BOOLEAN	Save( HWFILE hFile, bool fSavingMap );
+
+	attachmentList	attachments;
+	ObjectData		data;
+};
+typedef std::list<StackedObjectData>	StackedObjects;
+
+class OBJECTTYPE
+{
+public:
+	// Constructor
+	OBJECTTYPE();
+	// Conversion operator
+    OBJECTTYPE& operator=(const OLD_OBJECTTYPE_101&);
+	// Copy Constructor
+	OBJECTTYPE(const OBJECTTYPE&);
+	// Assignment operator
+    OBJECTTYPE& operator=(const OBJECTTYPE&);
+	// Destructor
+	~OBJECTTYPE();
+
+	StackedObjectData* operator[](const unsigned int index);
+
+	// Initialize the soldier.  
+	//  Use this instead of the old method of calling memset.
+	//  Note that the constructor does this automatically.
+	void	initialize();
+
+	bool	operator==(OBJECTTYPE& compare);
+	bool	operator==(const OBJECTTYPE& compare)const;
+	bool	exists();
+	bool	IsLBE();
+	LBENODE*	GetLBEPointer(int stackSlot = 0);
+	int		GetLBEIndex(int stackSlot = 0);
+
+
+	UINT16	GetWeightOfObjectInStack(unsigned int index = 0);
+	int		AddObjectsToStack(int howMany, int objectStatus = 100);
+	int		AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany = -1);
+	int		RemoveObjectsFromStack(int howMany = 1, OBJECTTYPE* destObject = NULL);
+	bool	RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject = NULL);
+	void	DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany = -1);
+	int		MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove = -1);
+private://this is only a helper for the above functions
+	void	SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, StackedObjects::iterator beginIter);
+public:
+
+	BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachment, BOOLEAN playSound = TRUE);
+	BOOLEAN RemoveAttachment( OBJECTTYPE* pAttachment, OBJECTTYPE * pNewObj = NULL);
+
+
+	//see comments in .cpp
+	static	void DeleteMe(OBJECTTYPE** ppObject);
+	static	void CopyToOrCreateAt(OBJECTTYPE** ppTarget, OBJECTTYPE* pSource);
+
+	BOOLEAN	Load( HWFILE hFile );
+	BOOLEAN	Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
+	BOOLEAN	Save( HWFILE hFile, bool fSavingMap );
+
+	//POD
+	UINT16		usItem;
+	UINT8		ubNumberOfObjects;
+	UINT8		ubMission;		//EDIT THIS OUT WHEN THERE ARE NO ASSERTS!
+	UINT16		ubWeight;		//used to be UINT8
+	INT8		fFlags;
+
+	char		endOfPOD;
+#define SIZEOF_OBJECTTYPE_POD	(offsetof(OBJECTTYPE, endOfPOD))
+
+	StackedObjects		objectStack;
+};
+
+extern OBJECTTYPE gTempObject;
 
 // SUBTYPES
 #define IC_NONE						0x00000001
@@ -412,10 +705,20 @@ public:
 	UINT32			lbeClass;
 	UINT8			lbeCombo;
 	char			POD;
-	vector<UINT8>	lbePocketIndex;
+	std::vector<UINT8>	lbePocketIndex;
 };
 #define SIZEOF_LBETYPE offsetof( LBETYPE, POD )
-extern vector<LBETYPE> LoadBearingEquipment;
+extern std::vector<LBETYPE> LoadBearingEquipment;
+typedef enum eLBE_CLASS	// Designation of lbeClass
+{
+	THIGH_PACK=1,
+	VEST_PACK,
+	COMBAT_PACK,
+	BACKPACK,
+	LBE_POCKET,
+	OTHER_POCKET
+};
+
 
 class POCKETTYPE{
 public:
@@ -429,19 +732,30 @@ public:
 	UINT16			pType;
 	UINT32			pRestriction;
 	char			POD;
-	vector<UINT8>	ItemCapacityPerSize;
+	std::vector<UINT8>	ItemCapacityPerSize;
 };
 #define SIZEOF_POCKETTYPE offsetof( POCKETTYPE, POD )
-extern vector<POCKETTYPE> LBEPocketType;
-
-enum	// Designation of lbeClass
+extern std::vector<POCKETTYPE> LBEPocketType;
+typedef enum ePOCKET_TYPE
 {
-	THIGH_PACK=1,
-	VEST_PACK,
-	COMBAT_PACK,
-	BACKPACK,
-	LBE_POCKET,
-	OTHER_POCKET
+	NO_POCKET_TYPE = 0,
+	GUNSLING_POCKET_TYPE = 1,
+	KNIFE_POCKET_TYPE = 2,
+	BIG_POCKET_TYPE = 3,
+	COMBAT_PACK_POCKET_TYPE = 4,
+	MEDIUM_POCKET_TYPE = 5,
+	SMG_HOLSTER_POCKET_TYPE = 6,
+	TNT_POCKET_TYPE = 7,
+	LARGE_MAG_POCKET_TYPE = 8,
+	AR_MAG_POCKET_TYPE = 9,
+	PISTOL_HOLSTER_POCKET_TYPE = 10,
+	SMG_MAG_POCKET_TYPE = 11,
+	RIFLE_GRENADE_POCKET_TYPE = 12,
+	GRENADE_POCKET_TYPE = 13,
+	PISTOL_MAG_POCKET_TYPE = 14,
+	TINY_POCKET_TYPE = 15,
+	SMALL_POCKET_TYPE = 16,
+	BELT_CLIP_POCKET_TYPE = 17,
 };
 
 #define FIRST_WEAPON 1

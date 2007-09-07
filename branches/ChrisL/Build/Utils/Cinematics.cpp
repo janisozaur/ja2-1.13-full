@@ -5,9 +5,9 @@
 //	Stolen from Nemesis by Derek Beland.
 //	Originally by Derek Beland and Bret Rowden.
 //
-//  ChangeLog:
-//      10.12.2005 Lesh ripped everything that refers to MSS
-//      15.12.2005 Lesh enabled sound in video
+//	ChangeLog:
+//		10.12.2005 Lesh ripped everything that refers to MSS
+//		15.12.2005 Lesh enabled sound in video
 //----------------------------------------------------------------------------------
 //#include "LocalCodeAll.h"
 
@@ -87,6 +87,7 @@ void SmkShutdownVideo(void);
 
 BOOLEAN SmkPollFlics(void)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 BOOLEAN fFlicStatus=FALSE;
 DDSURFACEDESC SurfaceDescription;
@@ -101,7 +102,7 @@ DDSURFACEDESC SurfaceDescription;
 				if(!SmackWait(SmkList[uiCount].SmackHandle))
 				{
 					DDLockSurface(SmkList[uiCount].lpDDS, NULL, &SurfaceDescription, 0, NULL);
-			    SmackToBuffer(SmkList[uiCount].SmackHandle,SmkList[uiCount].uiLeft,
+			 SmackToBuffer(SmkList[uiCount].SmackHandle,SmkList[uiCount].uiLeft,
 																					SmkList[uiCount].uiTop,
 																					SurfaceDescription.lPitch,
 																					SmkList[uiCount].SmackHandle->Height,
@@ -136,6 +137,7 @@ DDSURFACEDESC SurfaceDescription;
 // Lesh changed this function only -----------------------------
 void SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight)
 {
+	PERFORMANCE_MARKER
 	void *pSoundDriver = NULL;
 
 	// Wipe the flic list clean
@@ -159,6 +161,7 @@ void SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight)
 
 void SmkShutdown(void)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	// Close and deallocate any open flics
@@ -171,6 +174,7 @@ UINT32 uiCount;
 
 SMKFLIC *SmkPlayFlic(CHAR8 *cFilename, UINT32 uiLeft, UINT32 uiTop, BOOLEAN fClose)
 {
+	PERFORMANCE_MARKER
 SMKFLIC *pSmack;
 
 	// Open the flic
@@ -190,18 +194,21 @@ SMKFLIC *pSmack;
 
 SMKFLIC *SmkOpenFlic(CHAR8 *cFilename)
 {
+	PERFORMANCE_MARKER
 	SMKFLIC *pSmack;
 	HANDLE	hFile;
 
 	// Get an available flic slot from the list
-	if(!(pSmack=SmkGetFreeFlic()))
+	pSmack=SmkGetFreeFlic();
+	if(! pSmack)
 	{
 		ErrorMsg("SMK ERROR: Out of flic slots, cannot open another");
 		return(NULL);
 	}
 
 	// Attempt opening the filename
-	if(!(pSmack->hFileHandle=FileOpen(cFilename, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE)))
+	pSmack->hFileHandle=FileOpen(cFilename, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE);
+	if(! pSmack->hFileHandle)
 	{
 		ErrorMsg("SMK ERROR: Can't open the SMK file");
 		return(NULL);
@@ -211,13 +218,15 @@ SMKFLIC *SmkOpenFlic(CHAR8 *cFilename)
 	hFile = GetRealFileHandleFromFileManFileHandle( pSmack->hFileHandle );
 
 	// Allocate a Smacker buffer for video decompression
-	if(!(pSmack->SmackBuffer=SmackBufferOpen(hDisplayWindow,SMACKAUTOBLIT,SCREEN_WIDTH,SCREEN_HEIGHT,0,0)))
+	pSmack->SmackBuffer=SmackBufferOpen(hDisplayWindow,SMACKAUTOBLIT,SCREEN_WIDTH,SCREEN_HEIGHT,0,0);
+	if(! pSmack->SmackBuffer)
 	{
 		ErrorMsg("SMK ERROR: Can't allocate a Smacker decompression buffer");
 		return(NULL);
 	}
 
-	if(!(pSmack->SmackHandle=SmackOpen((CHAR8 *)hFile, SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA)))
+	pSmack->SmackHandle=SmackOpen((CHAR8 *)hFile, SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA);
+	if(! pSmack->SmackHandle)
 //	if(!(pSmack->SmackHandle=SmackOpen(cFilename, SMACKTRACKS, SMACKAUTOEXTRA)))
 	{
 		ErrorMsg("SMK ERROR: Smacker won't open the SMK file");
@@ -239,12 +248,14 @@ SMKFLIC *SmkOpenFlic(CHAR8 *cFilename)
 
 void SmkSetBlitPosition(SMKFLIC *pSmack, UINT32 uiLeft, UINT32 uiTop)
 {
+	PERFORMANCE_MARKER
 	pSmack->uiLeft=uiLeft;
 	pSmack->uiTop=uiTop;
 }
 	
 void SmkCloseFlic(SMKFLIC *pSmack)
 {
+	PERFORMANCE_MARKER
 	// Attempt opening the filename
 	FileClose(pSmack->hFileHandle);
 
@@ -260,6 +271,7 @@ void SmkCloseFlic(SMKFLIC *pSmack)
 
 SMKFLIC *SmkGetFreeFlic(void)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	for(uiCount=0; uiCount < SMK_NUM_FLICS; uiCount++)
@@ -271,6 +283,7 @@ UINT32 uiCount;
 
 void SmkSetupVideo(void)
 {
+	PERFORMANCE_MARKER
 	DDSURFACEDESC SurfaceDescription;
 	HRESULT ReturnCode;
 	UINT16 usRed, usGreen, usBlue;
@@ -282,18 +295,18 @@ void SmkSetupVideo(void)
 	GetVideoSurface( &hVSurface, FRAME_BUFFER );
 	lpVideoPlayback2 = GetVideoSurfaceDDSurface( hVSurface );
 
-  ZEROMEM(SurfaceDescription);
-  SurfaceDescription.dwSize = sizeof (DDSURFACEDESC);
-  ReturnCode = IDirectDrawSurface2_GetSurfaceDesc ( lpVideoPlayback2, &SurfaceDescription );
-  if (ReturnCode != DD_OK)
-  {
-    DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-    return;
-  }
-  
-	usRed   = (UINT16) SurfaceDescription.ddpfPixelFormat.dwRBitMask;
+	ZEROMEM(SurfaceDescription);
+	SurfaceDescription.dwSize = sizeof (DDSURFACEDESC);
+	ReturnCode = IDirectDrawSurface2_GetSurfaceDesc ( lpVideoPlayback2, &SurfaceDescription );
+	if (ReturnCode != DD_OK)
+	{
+	DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
+	return;
+	}
+	
+	usRed	= (UINT16) SurfaceDescription.ddpfPixelFormat.dwRBitMask;
 	usGreen = (UINT16) SurfaceDescription.ddpfPixelFormat.dwGBitMask;
-	usBlue  = (UINT16) SurfaceDescription.ddpfPixelFormat.dwBBitMask;
+	usBlue	= (UINT16) SurfaceDescription.ddpfPixelFormat.dwBBitMask;
 
 	if((usRed==0xf800) && (usGreen==0x07e0) && (usBlue==0x001f))
 		guiSmackPixelFormat=SMACKBUFFER565;
@@ -304,6 +317,7 @@ void SmkSetupVideo(void)
 
 void SmkShutdownVideo(void)
 {
+	PERFORMANCE_MARKER
 //DEF:
 //	CinematicModeOff();
 }

@@ -32,12 +32,13 @@ extern BOOLEAN fMapScreenBottomDirty;
 
 void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString )
 {
+	PERFORMANCE_MARKER
 	// will build a string stating current facilities present in sector
 
 	if( SectorInfo[ SECTOR( sMapX, sMapY ) ].uiFacilitiesFlags == 0 )
 	{
 		// none
-	  swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 0 ] );
+	swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 0 ] );
 		return;
 	}
 
@@ -53,7 +54,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 	{
 		if( wcslen( sFacilitiesString ) == 0 )
 		{
-		  swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 2 ] );
+		swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 2 ] );
 		}
 		else
 		{
@@ -67,7 +68,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 	{
 		if( wcslen( sFacilitiesString ) == 0 )
 		{
-		  swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 3 ] );
+		swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 3 ] );
 		}
 		else
 		{
@@ -81,7 +82,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 	{
 		if( wcslen( sFacilitiesString ) == 0 )
 		{
-		  swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 5 ] );
+		swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 5 ] );
 		}
 		else
 		{
@@ -95,7 +96,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 	{
 		if( wcslen( sFacilitiesString ) == 0 )
 		{
-		  swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 6 ] );
+		swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 6 ] );
 		}
 		else
 		{
@@ -113,6 +114,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 // ALL changes of control to player must be funneled through here!
 BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BOOLEAN fContested )
 {
+	PERFORMANCE_MARKER
 	// NOTE: MapSector must be 16-bit, cause MAX_WORLD_X is actually 18, so the sector numbers exceed 256 although we use only 16x16
 	UINT16 usMapSector = 0;
 	BOOLEAN fWasEnemyControlled = FALSE;
@@ -138,7 +140,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 		}
 */
 		if( NumHostilesInSector( sMapX, sMapY, bMapZ ) )
-		{ //too premature:  enemies still in sector.
+		{ //too premature:	enemies still in sector.
 			return FALSE;
 		}
 
@@ -148,7 +150,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 			LaptopSaveInfo.fBobbyRSiteCanBeAccessed = TRUE;
 
 			//If the player has been to Bobbyr when it was down, and we havent already sent email, send him an email
-			if( LaptopSaveInfo.ubHaveBeenToBobbyRaysAtLeastOnceWhileUnderConstruction == BOBBYR_BEEN_TO_SITE_ONCE &&  LaptopSaveInfo.ubHaveBeenToBobbyRaysAtLeastOnceWhileUnderConstruction != BOBBYR_ALREADY_SENT_EMAIL )
+			if( LaptopSaveInfo.ubHaveBeenToBobbyRaysAtLeastOnceWhileUnderConstruction == BOBBYR_BEEN_TO_SITE_ONCE &&	LaptopSaveInfo.ubHaveBeenToBobbyRaysAtLeastOnceWhileUnderConstruction != BOBBYR_ALREADY_SENT_EMAIL )
 			{
 				AddEmail( BOBBYR_NOW_OPEN, BOBBYR_NOW_OPEN_LENGTH, BOBBY_R, GetWorldTotalMin(), -1);
 				LaptopSaveInfo.ubHaveBeenToBobbyRaysAtLeastOnceWhileUnderConstruction = BOBBYR_ALREADY_SENT_EMAIL;
@@ -268,9 +270,9 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 		SectorInfo[ SECTOR( sMapX, sMapY ) ].fSurfaceWasEverPlayerControlled = TRUE;
 	}
 
-	//KM : Aug 11, 1999 -- Patch fix:  Relocated this check so it gets called everytime a sector changes hands,
-	//     even if the sector isn't a SAM site.  There is a bug _somewhere_ that fails to update the airspace,
-	//     even though the player controls it.  
+	//KM : Aug 11, 1999 -- Patch fix:	Relocated this check so it gets called everytime a sector changes hands,
+	//	 even if the sector isn't a SAM site.	There is a bug _somewhere_ that fails to update the airspace,
+	//	 even though the player controls it.	
 	UpdateAirspaceControl( );
 
 	// redraw map/income if in mapscreen
@@ -284,6 +286,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 // ALL changes of control to enemy must be funneled through here!
 BOOLEAN SetThisSectorAsEnemyControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BOOLEAN fContested )
 {
+	PERFORMANCE_MARKER
 	UINT16 usMapSector = 0;
 	BOOLEAN fWasPlayerControlled = FALSE;
 	INT8 bTownId = 0;
@@ -291,8 +294,8 @@ BOOLEAN SetThisSectorAsEnemyControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BO
 	UINT8 ubSectorID;
 
 	//KM : August 6, 1999 Patch fix
-	//     This check was added because this function gets called when player mercs retreat from an unresolved
-	//     battle between militia and enemies.  It will get called again AFTER autoresolve is finished.
+	//	 This check was added because this function gets called when player mercs retreat from an unresolved
+	//	 battle between militia and enemies.	It will get called again AFTER autoresolve is finished.
 	if( gfAutomaticallyStartAutoResolve )
 	{
 		return( FALSE );
@@ -310,7 +313,7 @@ BOOLEAN SetThisSectorAsEnemyControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BO
 		if ( fWasPlayerControlled )
 		{
 			if( PlayerMercsInSector( (UINT8)sMapX, (UINT8)sMapY, (UINT8)bMapZ ) )
-			{ //too premature:  Player mercs still in sector.
+			{ //too premature:	Player mercs still in sector.
 				return FALSE;
 			}
 
@@ -361,13 +364,13 @@ BOOLEAN SetThisSectorAsEnemyControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BO
 			NotifyPlayerWhenEnemyTakesControlOfImportantSector( sMapX, sMapY, 0, fContested );
 		}
 
-		// NOTE: Stealing is intentionally OUTSIDE the fWasPlayerControlled branch.  This function gets called if new
+		// NOTE: Stealing is intentionally OUTSIDE the fWasPlayerControlled branch.	This function gets called if new
 		// enemy reinforcements arrive, and they deserve another crack at stealing what the first group missed! :-)
 
 		// stealing should fail anyway 'cause there shouldn't be a temp file for unvisited sectors, but let's check anyway
 		if ( GetSectorFlagStatus( sMapX, sMapY, ( UINT8 ) bMapZ, SF_ALREADY_VISITED ) == TRUE )
 		{
-			// enemies can steal items left lying about (random chance).  The more there are, the more they take!
+			// enemies can steal items left lying about (random chance).	The more there are, the more they take!
 			ubTheftChance = 5 * NumEnemiesInAnySector( sMapX, sMapY, bMapZ );
 			// max 90%, some stuff may just simply not get found
 			if (ubTheftChance > 90 )
@@ -386,9 +389,9 @@ BOOLEAN SetThisSectorAsEnemyControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BO
 		SectorInfo[ SECTOR( sMapX, sMapY ) ].fPlayer[ bMapZ ] = FALSE;
 	}
 
-	//KM : Aug 11, 1999 -- Patch fix:  Relocated this check so it gets called everytime a sector changes hands,
-	//     even if the sector isn't a SAM site.  There is a bug _somewhere_ that fails to update the airspace,
-	//     even though the player controls it.  
+	//KM : Aug 11, 1999 -- Patch fix:	Relocated this check so it gets called everytime a sector changes hands,
+	//	 even if the sector isn't a SAM site.	There is a bug _somewhere_ that fails to update the airspace,
+	//	 even though the player controls it.	
 	UpdateAirspaceControl( );
 
 	// redraw map/income if in mapscreen
@@ -402,6 +405,7 @@ BOOLEAN SetThisSectorAsEnemyControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BO
 #ifdef JA2TESTVERSION
 void ClearMapControlledFlags( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounterA = 0, iCounterB = 0;
 	UINT16 usMapSector = 0;
 
@@ -422,6 +426,7 @@ void ClearMapControlledFlags( void )
 /*
 BOOLEAN IsTheSectorPerceivedToBeUnderEnemyControl( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
+	PERFORMANCE_MARKER
 
 	// are we in battle in this sector?
 	if( ( sMapX == gWorldSectorX ) && ( sMapY == gWorldSectorY ) && ( bMapZ == gbWorldSectorZ ) && ( gTacticalStatus.uiFlags & INCOMBAT ) )
@@ -437,6 +442,7 @@ BOOLEAN IsTheSectorPerceivedToBeUnderEnemyControl( INT16 sMapX, INT16 sMapY, INT
 
 void MakePlayerPerceptionOfSectorControlCorrect( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
+	PERFORMANCE_MARKER
 	if (bMapZ == 0)
 	{
 		SectorInfo[ SECTOR( sMapX, sMapY ) ].fPlayer[ bMapZ ] = !( StrategicMap[ CALCULATE_STRATEGIC_INDEX( sMapX, sMapY ) ].fEnemyControlled ); 
@@ -449,6 +455,7 @@ void MakePlayerPerceptionOfSectorControlCorrect( INT16 sMapX, INT16 sMapY, INT8 
 
 void ReplaceSoldierProfileInPlayerGroup( UINT8 ubGroupID, UINT8 ubOldProfile, UINT8 ubNewProfile )
 {
+	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	PLAYERGROUP *curr;
 

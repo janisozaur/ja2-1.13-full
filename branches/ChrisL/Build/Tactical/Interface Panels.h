@@ -18,8 +18,6 @@ typedef enum
 	MUTE_BUTTON,
 	SM_DONE_BUTTON,
 	SM_MAP_SCREEN_BUTTON,
-	BACKPACK_BUTTON,
-	ZIPPER_BUTTON,
 	NUM_SM_BUTTONS
 };
 
@@ -45,8 +43,8 @@ typedef enum
 #define SHOW_LOCATOR_FAST					2
 
 BOOLEAN CreateSMPanelButtons( );
-void    RemoveSMPanelButtons( );
-BOOLEAN InitializeSMPanel(  );
+void	RemoveSMPanelButtons( );
+BOOLEAN InitializeSMPanel(	);
 BOOLEAN ShutdownSMPanel( );
 void RenderSMPanel( BOOLEAN *pfDirty );
 void EnableSMPanelButtons( BOOLEAN fEnable, BOOLEAN fFromItemPickup );
@@ -58,12 +56,14 @@ void EnableSMPanelButtons( BOOLEAN fEnable, BOOLEAN fFromItemPickup );
  * and when we will read all values we return TRUE if not we will retunf FALSE
  * any questions? joker
  */
+//BOOLEAN InitializeSMPanelCoords( ); 
 BOOLEAN InitializeSMPanelCoordsNew();
 BOOLEAN InitializeSMPanelCoordsOld(); 
 
+
 BOOLEAN CreateTEAMPanelButtons( );
-void    RemoveTEAMPanelButtons( );
-BOOLEAN InitializeTEAMPanel(  );
+void	RemoveTEAMPanelButtons( );
+BOOLEAN InitializeTEAMPanel(	);
 BOOLEAN ShutdownTEAMPanel( );
 void RenderTEAMPanel( BOOLEAN fDirty );
 void UpdateTEAMPanel( );
@@ -75,7 +75,7 @@ BOOLEAN InitializeTEAMPanelCoords( );
 
 void SetSMPanelCurrentMerc( UINT8 ubNewID );
 void SetTEAMPanelCurrentMerc( UINT8 ubNewID );
-UINT16 GetSMPanelCurrentMerc(  );
+UINT16 GetSMPanelCurrentMerc(	);
 void UpdateSMPanel( );
 
 BOOLEAN InitTEAMSlots( );
@@ -94,6 +94,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason );
 // CHRISL: New functions to handle initialization of inventory systems
 void InitNewInventorySystem( );
 void InitOldInventorySystem( );
+
 
 
 // ATE TO BE MOVED TO INTERFACE_ITEMS.C

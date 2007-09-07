@@ -38,6 +38,7 @@ UINT8	gubNPCDebugOutPutLevel = QD_OUTPUT_LEVEL_ALL;
 //set the current output mode for either the NPC or the quest output
 void ToggleQuestDebugModes( UINT8 ubType )
 {
+	PERFORMANCE_MARKER
 	CHAR16	sType[16];
 	UINT8 ubLevel;
 
@@ -87,19 +88,20 @@ void ToggleQuestDebugModes( UINT8 ubType )
 
 void QuestDebugFileMsg( UINT8 ubQuoteType, UINT8 ubPriority, STR pStringA, ...)
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN	fFirstTimeIn = TRUE;
 	static UINT32		uiLineNumber = 1;
 	HWFILE		hFile;
 	UINT32		uiByteWritten;
-  va_list		argptr;
-  char			TempString[1024];
-  char			DestString[1024];
+	va_list		argptr;
+	char			TempString[1024];
+	char			DestString[1024];
 
 
 	TempString[0] = '\0';
 	DestString[0] = '\0';
 
-	va_start(argptr, pStringA);       	// Set up variable argument pointer
+	va_start(argptr, pStringA);			// Set up variable argument pointer
 	vsprintf(TempString, pStringA, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 

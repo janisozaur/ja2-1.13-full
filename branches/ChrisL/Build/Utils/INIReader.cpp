@@ -7,8 +7,9 @@
 // Kaiden: INI reading function definitions:
 
 
-CIniReader::CIniReader(const STR8  szFileName)
+CIniReader::CIniReader(const STR8	szFileName)
 {
+	PERFORMANCE_MARKER
 	// Snap: Look for the INI file in the custom Data directory.
 	// If not there, leave at default location.
 	if ( gCustomDataCat.FindFile(szFileName) ) {
@@ -20,15 +21,17 @@ CIniReader::CIniReader(const STR8  szFileName)
 }
 
 
-int CIniReader::ReadInteger(const STR8  szSection, const STR8  szKey, int iDefaultValue)
+int CIniReader::ReadInteger(const STR8	szSection, const STR8	szKey, int iDefaultValue)
 {
-	return GetPrivateProfileInt(szSection,  szKey, iDefaultValue, m_szFileName); 
+	PERFORMANCE_MARKER
+	return GetPrivateProfileInt(szSection,	szKey, iDefaultValue, m_szFileName); 
 }
 
 
-int CIniReader::ReadInteger(const STR8  szSection, const STR8  szKey, int iDefaultValue, int iMinValue, int iMaxValue)
+int CIniReader::ReadInteger(const STR8	szSection, const STR8	szKey, int iDefaultValue, int iMinValue, int iMaxValue)
 {
-	int i = GetPrivateProfileInt(szSection,  szKey, iDefaultValue, m_szFileName); 
+	PERFORMANCE_MARKER
+	int i = GetPrivateProfileInt(szSection,	szKey, iDefaultValue, m_szFileName); 
 	if (i < iMinValue)
 		return iMinValue;
 	else if (i > iMaxValue)
@@ -36,39 +39,42 @@ int CIniReader::ReadInteger(const STR8  szSection, const STR8  szKey, int iDefau
 	return i;
 }
 
-	int ReadInteger(const STR8  szSection, const STR8  szKey, int iDefaultValue, int iMinValue, int iMaxValue);
+	int ReadInteger(const STR8	szSection, const STR8	szKey, int iDefaultValue, int iMinValue, int iMaxValue);
 
 
 
-float CIniReader::ReadFloat(const STR8  szSection, const STR8  szKey, float fltDefaultValue)
+float CIniReader::ReadFloat(const STR8	szSection, const STR8	szKey, float fltDefaultValue)
 {
+	PERFORMANCE_MARKER
  char szResult[255];
  char szDefault[255];
  float fltResult;
  sprintf(szDefault, "%f",fltDefaultValue);
- GetPrivateProfileString(szSection,  szKey, szDefault, szResult, 255, m_szFileName); 
+ GetPrivateProfileString(szSection,	szKey, szDefault, szResult, 255, m_szFileName); 
  fltResult = (float) atof(szResult);
  return fltResult;
 }
 
 
-bool CIniReader::ReadBoolean(const STR8  szSection, const STR8  szKey, bool bolDefaultValue)
+bool CIniReader::ReadBoolean(const STR8	szSection, const STR8	szKey, bool bolDefaultValue)
 {
+	PERFORMANCE_MARKER
  char szResult[255];
  char szDefault[255];
  bool bolResult;
  sprintf(szDefault, "%s", bolDefaultValue? "TRUE" : "FALSE");
  GetPrivateProfileString(szSection, szKey, szDefault, szResult, 255, m_szFileName); 
- bolResult =  (strcmp(szResult, "TRUE") == 0 || strcmp(szResult, "TRUE") == 0) ? true : false;
+ bolResult =	(strcmp(szResult, "TRUE") == 0 || strcmp(szResult, "TRUE") == 0) ? true : false;
  return bolResult;
 }
 
 
-STR8  CIniReader::ReadString(const STR8  szSection, const STR8  szKey, const STR8  szDefaultValue)
+STR8	CIniReader::ReadString(const STR8	szSection, const STR8	szKey, const STR8	szDefaultValue)
 {
- STR8  szResult = new char[255];
+	PERFORMANCE_MARKER
+ STR8	szResult = new char[255];
  memset(szResult, 0x00, 255);
- GetPrivateProfileString(szSection,  szKey, szDefaultValue, szResult, 255, m_szFileName); 
+ GetPrivateProfileString(szSection,	szKey, szDefaultValue, szResult, 255, m_szFileName); 
  return szResult;
 }
 

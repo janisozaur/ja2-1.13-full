@@ -24,6 +24,7 @@ UINT8						gubNumberOfBuildings;
 
 BUILDING * CreateNewBuilding( UINT8 * pubBuilding )
 {
+	PERFORMANCE_MARKER
 	if (gubNumberOfBuildings + 1 >= MAX_BUILDINGS)
 	{
 		return( NULL );
@@ -39,6 +40,7 @@ BUILDING * CreateNewBuilding( UINT8 * pubBuilding )
 
 BUILDING * GenerateBuilding( INT16 sDesiredSpot )
 {
+	PERFORMANCE_MARKER
 
 	UINT32	uiLoop;
 	UINT32	uiLoop2;
@@ -61,12 +63,9 @@ BUILDING * GenerateBuilding( INT16 sDesiredSpot )
 		return( NULL );
 	}
 
-	// WDS - Clean up inventory handling
 	// set up fake soldier for location testing
-//	memset( &FakeSoldier, 0, SIZEOF_SOLDIERTYPE );
-	FakeSoldier.initialize();
 	FakeSoldier.sGridNo = sDesiredSpot;
-	FakeSoldier.bLevel = 1;
+	FakeSoldier.pathing.bLevel = 1;
 	FakeSoldier.bTeam = 1;
 
 #ifdef ROOF_DEBUG
@@ -362,6 +361,7 @@ BUILDING * GenerateBuilding( INT16 sDesiredSpot )
 
 BUILDING * FindBuilding( INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	UINT8					ubBuildingID;
 	//UINT8					ubRoomNo;
 
@@ -400,6 +400,7 @@ BUILDING * FindBuilding( INT16 sGridNo )
 
 BOOLEAN InBuilding( INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	if ( FindBuilding( sGridNo ) == NULL )
 	{
 		return( FALSE );
@@ -410,6 +411,7 @@ BOOLEAN InBuilding( INT16 sGridNo )
 
 void GenerateBuildings( void )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiLoop;
 
 	// init building structures and variables
@@ -444,6 +446,7 @@ void GenerateBuildings( void )
 
 INT16 FindClosestClimbPoint( SOLDIERTYPE *pSoldier, INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN fClimbUp )
 {
+	PERFORMANCE_MARKER
 	BUILDING *	pBuilding;
 	UINT8				ubNumClimbSpots;
 	INT16 *			psClimbSpots;
@@ -487,6 +490,7 @@ INT16 FindClosestClimbPoint( SOLDIERTYPE *pSoldier, INT16 sStartGridNo, INT16 sD
 
 BOOLEAN SameBuilding( INT16 sGridNo1, INT16 sGridNo2 )
 {
+	PERFORMANCE_MARKER
 	if ( gubBuildingInfo[ sGridNo1 ] == NO_BUILDING )
 	{
 		return( FALSE );

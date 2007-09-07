@@ -34,7 +34,6 @@
 	#include "weapons.h"
 	#include "Random.h"
 	#include "GameSettings.h"
-	#include "GameVersion.h"
 #endif
 
 #define IMP_FILENAME_SUFFIX ".dat"
@@ -143,6 +142,7 @@ void GiveItemsToPC( UINT8 ubProfileId );
 void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
 void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
 INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHowMany);
+
 // CHRISL:
 void RedistributeStartingItems(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 sPocket);
 void DistributeInitialGear(MERCPROFILESTRUCT *pProfile);
@@ -157,6 +157,7 @@ void BtnIMPConfirmYes( GUI_BUTTON *btn,INT32 reason );
 
 void EnterIMPConfirm( void )
 {
+	PERFORMANCE_MARKER
 	// create buttons
 	CreateConfirmButtons( );
 	return;
@@ -164,69 +165,74 @@ void EnterIMPConfirm( void )
 
 void RenderIMPConfirm( void )
 {
+	PERFORMANCE_MARKER
 
-	 // the background
+	// the background
 	RenderProfileBackGround( );
 	
 		// indent
-  RenderAvgMercIndentFrame(90, 40 ); 
+	RenderAvgMercIndentFrame(90, 40 ); 
 
 	// highlight answer
-  PrintImpText( );
+	PrintImpText( );
 
 	return;
 }
 
 void ExitIMPConfirm( void )
 {
+	PERFORMANCE_MARKER
 
 	// destroy buttons
-  DestroyConfirmButtons( );
+	DestroyConfirmButtons( );
 	return;
 }
 
 void HandleIMPConfirm( void )
 {
+	PERFORMANCE_MARKER
 	return;
 }
 
 void CreateConfirmButtons( void )
 {
+	PERFORMANCE_MARKER
 	// create buttons for confirm screen
-  
-	giIMPConfirmButtonImage[0]=  LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
+	
+	giIMPConfirmButtonImage[0]=	LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
 	giIMPConfirmButton[0] = CreateIconAndTextButton( giIMPConfirmButtonImage[0], pImpButtonText[ 16 ], FONT12ARIAL, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 LAPTOP_SCREEN_UL_X +  ( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 254 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPConfirmYes);
-  
-	giIMPConfirmButtonImage[1]=  LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
+														FONT_WHITE, DEFAULT_SHADOW, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														LAPTOP_SCREEN_UL_X +	( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 254 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPConfirmYes);
+	
+	giIMPConfirmButtonImage[1]=	LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
 	giIMPConfirmButton[1] = CreateIconAndTextButton( giIMPConfirmButtonImage[ 1 ], pImpButtonText[ 17 ], FONT12ARIAL, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 LAPTOP_SCREEN_UL_X +  ( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 314 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPConfirmNo);
+														FONT_WHITE, DEFAULT_SHADOW, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														LAPTOP_SCREEN_UL_X +	( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 314 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPConfirmNo);
  
  SetButtonCursor(giIMPConfirmButton[ 0 ], CURSOR_WWW);
  SetButtonCursor(giIMPConfirmButton[ 1 ], CURSOR_WWW);
-    
+	
 	return;
 }
 
 
 void DestroyConfirmButtons( void )
 {
-  // destroy buttons for confirm screen
+	PERFORMANCE_MARKER
+	// destroy buttons for confirm screen
 	
-  RemoveButton(giIMPConfirmButton[ 0 ] );
-  UnloadButtonImage(giIMPConfirmButtonImage[ 0 ] );
+	RemoveButton(giIMPConfirmButton[ 0 ] );
+	UnloadButtonImage(giIMPConfirmButtonImage[ 0 ] );
 
-  
+	
 	RemoveButton(giIMPConfirmButton[ 1 ] );
-  UnloadButtonImage(giIMPConfirmButtonImage[ 1 ] );
+	UnloadButtonImage(giIMPConfirmButtonImage[ 1 ] );
 	return;
 }
 
@@ -234,6 +240,7 @@ void DestroyConfirmButtons( void )
 
 BOOLEAN AddCharacterToPlayersTeam( void )
 {
+	PERFORMANCE_MARKER
 
 	MERC_HIRE_STRUCT HireMercStruct;
 
@@ -254,8 +261,8 @@ BOOLEAN AddCharacterToPlayersTeam( void )
 	}
 
 
-	HireMercStruct.sSectorX									 = gsMercArriveSectorX;
-	HireMercStruct.sSectorY									 = gsMercArriveSectorY;
+	HireMercStruct.sSectorX									= gsMercArriveSectorX;
+	HireMercStruct.sSectorY									= gsMercArriveSectorY;
 	HireMercStruct.fUseLandingZoneForArrival = TRUE;
 
 	HireMercStruct.fCopyProfileItemsOver = TRUE;
@@ -280,8 +287,9 @@ BOOLEAN AddCharacterToPlayersTeam( void )
 }
 
 
-void  BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
+void	BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP Homepage About US button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -289,7 +297,7 @@ void  BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -308,7 +316,7 @@ void  BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
 			if( LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE )
 			{
 				// not enough
-		    return;
+		 return;
 			}
 
 			// line moved by CJC Nov 28 2002 to AFTER the check for money
@@ -316,7 +324,7 @@ void  BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
 
 			// charge the player
 			AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(LaptopSaveInfo.iIMPIndex), GetWorldTotalMin( ), - ( COST_OF_PROFILE ) );
-      AddHistoryToPlayersLog( HISTORY_CHARACTER_GENERATED, 0,GetWorldTotalMin( ), -1, -1 );
+		AddHistoryToPlayersLog( HISTORY_CHARACTER_GENERATED, 0,GetWorldTotalMin( ), -1, -1 );
 			AddCharacterToPlayersTeam( );
 			
 			// write the created imp merc
@@ -353,13 +361,14 @@ void  BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
 // fixed? by CJC Nov 28 2002
 void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
 {
-  	// btn callback for IMP Homepage About US button
+	PERFORMANCE_MARKER
+		// btn callback for IMP Homepage About US button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -383,9 +392,9 @@ void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
 				fButtonPendingFlag = TRUE;
 				iCurrentImpPage = IMP_HOME_PAGE;
 			}
-      fNoAlreadySelected = TRUE;
+		fNoAlreadySelected = TRUE;
 			*/
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 		}
 	}
 }
@@ -393,15 +402,16 @@ void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
 /*
 void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
 {
+	PERFORMANCE_MARKER
 	
 
-  	// btn callback for IMP Homepage About US button
+		// btn callback for IMP Homepage About US button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -414,8 +424,8 @@ void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
 				fButtonPendingFlag = TRUE;
 				iCurrentImpPage = IMP_HOME_PAGE;
 			}
-      fNoAlreadySelected = TRUE;
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		fNoAlreadySelected = TRUE;
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 		}
 	}
 }
@@ -430,12 +440,12 @@ void DistributeInitialGear(MERCPROFILESTRUCT *pProfile)
 	INVNODE			tInv[NUM_INV_SLOTS];
 	int				i, j, number;
 	UINT8			count = 0, length;
-	vector<int>		iOrder;
+	int				iOrder[NUM_INV_SLOTS];
 	INT32			iSlot;
 	BOOLEAN			iSet = FALSE;
 
 	// First move profile information to temporary storage
-	for(i=0; i<NUM_INV_SLOTS; i++)
+	for(i=INV_START_POS; i<NUM_INV_SLOTS; i++)
 	{
 		if(pProfile->inv[i] != NOTHING)
 		{
@@ -460,8 +470,9 @@ void DistributeInitialGear(MERCPROFILESTRUCT *pProfile)
 		{
 			if(tInv[i].iSize == j)
 			{
-				int *filler = new int;
-				iOrder.push_back(*filler);
+				//ADB this is a mem leak!!!
+				//int *filler = new int;
+				//iOrder.push_back(*filler);
 				iOrder[count] = i;
 				count++;
 			}
@@ -526,12 +537,14 @@ void DistributeInitialGear(MERCPROFILESTRUCT *pProfile)
 	}
 }
 
+
 void GiveItemsToPC( UINT8 ubProfileId )
 {
+	PERFORMANCE_MARKER
 	MERCPROFILESTRUCT *pProfile;
 
 
-  // gives starting items to merc
+	// gives starting items to merc
 	// NOTE: Any guns should probably be from those available in regular gun set
 
 	pProfile = &(gMercProfiles[ubProfileId]);
@@ -718,14 +731,15 @@ void GiveItemsToPC( UINT8 ubProfileId )
 
 void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany)
 {
-	INT32 iSlot=-1;
+	PERFORMANCE_MARKER
+	INT32 iSlot = -1;
 
-	if(!gGameOptions.ubInventorySystem)
+	if((UsingNewInventorySystem() == false))
 		iSlot = FirstFreeBigEnoughPocket(pProfile, usItem, ubHowMany);
 	else
 	{
 		// CHRISL: Alter the placement of initial equipment to come last.  At this stage, just add items, one pocket at a time
-		for(int i=0; i<NUM_INV_SLOTS; i++)
+		for(int i=INV_START_POS; i<NUM_INV_SLOTS; i++)
 		{
 			if(pProfile->inv[i] == NOTHING)
 			{
@@ -745,15 +759,6 @@ void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 	MakeProfileInvItemThisSlot(pProfile, iSlot, usItem, ubStatus, ubHowMany);
 }
 
-
-void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany)
-{
-  pProfile->inv[uiPos]				= usItem;
-  pProfile->bInvStatus[uiPos] = ubStatus;
-  pProfile->bInvNumber[uiPos] = ubHowMany;
-}
-
-
 // CHRISL: New function to move initial gear into LBE pockets when LBE items are given during creation
 void RedistributeStartingItems(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 sPocket)
 {
@@ -765,7 +770,7 @@ void RedistributeStartingItems(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 	lbeClass = LoadBearingEquipment[lbeIndex].lbeClass;
 
 	// Move non-worn items into temporary storage
-	for(int i=0; i<NUM_INV_SLOTS; i++)
+	for(int i=INV_START_POS; i<NUM_INV_SLOTS; i++)
 	{
 		if(i>=BODYPOSFINAL)
 		{
@@ -799,12 +804,12 @@ void RedistributeStartingItems(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 	}
 
 	// Redistribute stored items with the assumption of the new LBE item
-	for(int i=0; i<NUM_INV_SLOTS; i++)
+	for(int i=INV_START_POS; i<NUM_INV_SLOTS; i++)
 	{
 		if(inv[i] != NONE)
 		{
 			iSize = Item[inv[i]].ItemSize;
-			for(int j=0; j<NUM_INV_SLOTS; j++)
+			for(int j=INV_START_POS; j<NUM_INV_SLOTS; j++)
 			{
 				if(icLBE[j] == sPocket && pProfile->inv[j] == NONE && LBEPocketType[LoadBearingEquipment[lbeIndex].lbePocketIndex[icPocket[j]]].ItemCapacityPerSize[iSize] != NONE)
 				{
@@ -879,7 +884,7 @@ INT32 SpecificFreePocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHow
 					return KNIFEPOCKPOS;
 				break;
 			case IC_BOMB:
-				for(int i=BODYPOSFINAL; i<NUM_INV_SLOTS; i++)
+				for(int i=BIGPOCKSTART; i<NUM_INV_SLOTS; i++)
 				{
 					if(LoadBearingEquipment[Item[pProfile->inv[icLBE[i]]].ubClassIndex].lbePocketIndex[icPocket[i]]==7)	// TNT Pocket
 						if(pProfile->inv[i] == NONE)
@@ -887,7 +892,7 @@ INT32 SpecificFreePocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHow
 				}
 				break;
 			case IC_GRENADE:
-				for(int i=BODYPOSFINAL; i<NUM_INV_SLOTS; i++)
+				for(int i=BIGPOCKSTART; i<NUM_INV_SLOTS; i++)
 				{
 					if(pProfile->inv[i]==NONE && Item[usItem].ItemSize==16 && LoadBearingEquipment[Item[pProfile->inv[icLBE[i]]].ubClassIndex].lbePocketIndex[icPocket[i]]==12)	// Rifle Grenade
 						return i;
@@ -900,10 +905,10 @@ INT32 SpecificFreePocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHow
 					return HANDPOS;
 				if ( pProfile->inv[SECONDHANDPOS] == NONE && !(Item[pProfile->inv[HANDPOS]].twohanded))
 					return SECONDHANDPOS;
-				if(gGameOptions.ubInventorySystem)
+				if((UsingNewInventorySystem() == true))
 					if ( pProfile->inv[GUNSLINGPOCKPOS] == NONE && pProfile->inv[BPACKPOCKPOS] == NONE && LBEPocketType[1].ItemCapacityPerSize[Item[usItem].ItemSize]!=0)
 						return GUNSLINGPOCKPOS;
-				for(int i=BODYPOSFINAL; i<NUM_INV_SLOTS; i++)
+				for(int i=BIGPOCKSTART; i<NUM_INV_SLOTS; i++)
 				{
 					lbePocket = LoadBearingEquipment[Item[pProfile->inv[icLBE[i]]].ubClassIndex].lbePocketIndex[icPocket[i]];
 					if(pProfile->inv[i]==NONE && (lbePocket==6 || lbePocket==10) && LBEPocketType[lbePocket].ItemCapacityPerSize[Item[usItem].ItemSize]!=0)
@@ -923,6 +928,15 @@ INT32 SpecificFreePocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHow
 	return(-1);
 }
 
+
+void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany)
+{
+	PERFORMANCE_MARKER
+	pProfile->inv[uiPos]				= usItem;
+	pProfile->bInvStatus[uiPos] = ubStatus;
+	pProfile->bInvNumber[uiPos] = ubHowMany;
+}
+
 //INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHowMany, UINT32 usClass)
 INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv)
 {
@@ -936,15 +950,15 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv)
 	for(int i=0; i<3; i++)
 	{
 		if(i==0){
-			startPos = MEDPOCKFINAL;
-			endPos = NUM_INV_SLOTS;
+			startPos = SMALLPOCKSTART;
+			endPos = SMALLPOCKFINAL;
 		}
 		else if (i==1){
-			startPos = BIGPOCKFINAL;
+			startPos = MEDPOCKSTART;
 			endPos = MEDPOCKFINAL;
 		}
 		else{
-			startPos = BODYPOSFINAL;
+			startPos = BIGPOCKSTART;
 			endPos = BIGPOCKFINAL;
 		}
 		for(uiPos = startPos; uiPos<endPos; uiPos++)
@@ -969,45 +983,10 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv)
 	return(-1);
 }
 
-// CHRISL: This function will place objects anywhere it can.  It tries to use active pockets but will use any pocket as a last resort
-INT32 AnyFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv)
-{
-	INT32		iSlot;
-	UINT32		uiPos;
-	UINT16		iSize, lbeCap, usItem;
-
-	iSlot = FirstFreeBigEnoughPocket (pProfile, tInv);
-	if(iSlot != -1)
-		return(iSlot);
-	else
-	{
-		usItem = tInv->inv;
-		for(uiPos = BODYPOSFINAL; uiPos < NUM_INV_SLOTS; uiPos ++)
-		{
-			iSize = Item[usItem].ubPerPocket;
-			lbeCap = iSize * 2;
-			if(uiPos >= MEDPOCKFINAL && iSize > 0)
-				return(-1);
-			else
-			{
-				if(pProfile->inv[uiPos] == NONE)
-					return(uiPos);
-				else if(pProfile->inv[uiPos] == usItem)
-				{
-					if((uiPos < BIGPOCKFINAL && iSize >= (tInv->iNumber+1)) || (uiPos >= BIGPOCKFINAL && lbeCap >= (tInv->iNumber+1)))
-					{
-					tInv->iNumber++;
-					return(uiPos);
-					}
-				}
-			}
-		}
-	}
-	return(-1);
-}
 
 INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHowMany)
 {
+	PERFORMANCE_MARKER
 	UINT32 uiPos;
 
 	if (ubHowMany == 1)
@@ -1029,6 +1008,7 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 		if ( pProfile->inv[SECONDHANDPOS] == NONE )
 			return SECONDHANDPOS;
 	}
+	//ADB TODO
 	// if it fits into a small pocket
 	if (Item[usItem].ubPerPocket != 0)
 	{
@@ -1054,9 +1034,48 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 	return(-1);
 }
 
+// CHRISL: This function will place objects anywhere it can.  It tries to use active pockets but will use any pocket as a last resort
+INT32 AnyFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv)
+{
+	INT32		iSlot;
+	UINT32		uiPos;
+	UINT16		iSize, lbeCap, usItem;
+
+	iSlot = FirstFreeBigEnoughPocket (pProfile, tInv);
+	if(iSlot != -1)
+		return(iSlot);
+	else
+	{
+		usItem = tInv->inv;
+		for(uiPos = BIGPOCKSTART; uiPos < NUM_INV_SLOTS; uiPos ++)
+		{
+			//ADB TODO
+			iSize = Item[usItem].ubPerPocket;
+			lbeCap = iSize * 2;
+			if(uiPos >= MEDPOCKFINAL && iSize > 0)
+				return(-1);
+			else
+			{
+				if(pProfile->inv[uiPos] == NONE)
+					return(uiPos);
+				else if(pProfile->inv[uiPos] == usItem)
+				{
+					if((uiPos < BIGPOCKFINAL && iSize >= (tInv->iNumber+1)) || (uiPos >= BIGPOCKFINAL && lbeCap >= (tInv->iNumber+1)))
+					{
+					tInv->iNumber++;
+					return(uiPos);
+					}
+				}
+			}
+		}
+	}
+	return(-1);
+}
+
 
 void WriteOutCurrentImpCharacter( INT32 iProfileId )
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("WriteOutCurrentImpCharacter: IMP.dat"));
 	char zImpFileName[13];
 	strcpy(zImpFileName,IMP_MERC_FILENAME);
@@ -1083,6 +1102,7 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId )
 
 void WriteOutCurrentImpCharacter( INT32 iProfileId, STR fileName )
 {
+	PERFORMANCE_MARKER
 	// grab the profile number and write out what is contained there in 
 	HWFILE hFile;
 	UINT32 uiBytesWritten = 0;
@@ -1108,17 +1128,11 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId, STR fileName )
 	}
 
 	// write out the profile itself
-        // WDS - Clean up inventory handling
-	gMercProfiles[ iProfileId ].CopyNewInventoryToOld();
-	if (FileWrite(hFile, &gMercProfiles[ iProfileId ], SIZEOF_MERCPROFILESTRUCT_POD, &uiBytesWritten)) {
-
-		// Write all the vectors from the soldier into the file
-		if (SaveVector (hFile, gMercProfiles[ iProfileId ].inv)) {
-			if (SaveVector (hFile, gMercProfiles[ iProfileId ].bInvStatus)) {
-				if (SaveVector (hFile, gMercProfiles[ iProfileId ].bInvNumber)) {
-				}
-			}
-		}
+	if ( !gMercProfiles[ iProfileId ].Save(hFile) )
+	{
+		if (hFile)
+			FileClose(hFile);
+		return;
 	}
 
 	// close file
@@ -1130,12 +1144,13 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId, STR fileName )
 
 BOOLEAN ImpExists ( STR nickName )
 {
+	PERFORMANCE_MARKER
 	char zFileName[13];
 
 	strcpy(zFileName,nickName);
 	strcat(zFileName,IMP_FILENAME_SUFFIX);
 
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ImpExists: %s",  zFileName));
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ImpExists: %s",	zFileName));
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ImpExists: %d", FileExistsNoDB(zFileName) ));
 
 	return FileExistsNoDB(zFileName);
@@ -1143,6 +1158,7 @@ BOOLEAN ImpExists ( STR nickName )
 
 BOOLEAN LoadImpCharacter( STR nickName )
 {
+	PERFORMANCE_MARKER
 	INT32 iProfileId = 0;
 	HWFILE hFile;
 	UINT32 uiBytesRead = 0;
@@ -1186,18 +1202,10 @@ BOOLEAN LoadImpCharacter( STR nickName )
 		LaptopSaveInfo.iIMPIndex = iProfileId;
 
 		// read in the profile
-                // WDS - Clean up inventory handling
-		if (!FileRead(hFile, &gMercProfiles[ iProfileId ] , SIZEOF_MERCPROFILESTRUCT_POD, &uiBytesRead))
+		if ( !gMercProfiles[ iProfileId ].Load(hFile, false) )
 		{
 			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 			return FALSE;
-		}
-		gMercProfiles[ iProfileId ].CopyOldInventoryToNew();
-
-		if (guiSavedGameVersion >= SAVE_GAMES_HAVE_NEW_INVENTORY_VECTORS) {
-			if (!LoadVector (hFile, gMercProfiles[ iProfileId ].inv)) { return FALSE; }
-			if (!LoadVector (hFile, gMercProfiles[ iProfileId ].bInvStatus)) { return FALSE; }
-			if (!LoadVector (hFile, gMercProfiles[ iProfileId ].bInvNumber)) { return FALSE; }
 		}
 
 		// close file
@@ -1234,7 +1242,7 @@ BOOLEAN LoadImpCharacter( STR nickName )
 		FileClose(hFile);
 
 		// WDS: Allow flexible numbers of IMPs of each sex
-		//  note: check this
+		//	note: check this
 
 		// You cannot have more than 3 I.M.P characters with the same gender on your team.
 		DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 9 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
@@ -1246,23 +1254,25 @@ BOOLEAN LoadImpCharacter( STR nickName )
 
 void ResetIMPCharactersEyesAndMouthOffsets( UINT8 ubMercProfileID )
 {
-  // ATE: Check boundary conditions!
-  if( ( ( gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200 ) > 16 ) || ( ubMercProfileID >= PROF_HUMMER ) )
-  {
-    return;
-  }
+	PERFORMANCE_MARKER
+	// ATE: Check boundary conditions!
+	if( ( ( gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200 ) > 16 ) || ( ubMercProfileID >= PROF_HUMMER ) )
+	{
+	return;
+	}
 
 	gMercProfiles[ ubMercProfileID ].usEyesX = uiEyeXPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200 ];
-	gMercProfiles[ ubMercProfileID ].usEyesY = uiEyeYPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200  ];
+	gMercProfiles[ ubMercProfileID ].usEyesY = uiEyeYPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200	];
 
 
-	gMercProfiles[ ubMercProfileID ].usMouthX = uiMouthXPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200  ];
-	gMercProfiles[ ubMercProfileID ].usMouthY = uiMouthYPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200  ];
+	gMercProfiles[ ubMercProfileID ].usMouthX = uiMouthXPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200	];
+	gMercProfiles[ ubMercProfileID ].usMouthY = uiMouthYPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200	];
 }
 
 
 void GiveIMPRandomItems( MERCPROFILESTRUCT *pProfile, UINT8 typeIndex )
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("GiveIMPRandomItems: typeIndex = %d",typeIndex ));
 
 	UINT16 usItem = 0;
@@ -1305,6 +1315,7 @@ void GiveIMPRandomItems( MERCPROFILESTRUCT *pProfile, UINT8 typeIndex )
 
 void GiveIMPItems( MERCPROFILESTRUCT *pProfile, INT8 abilityValue, UINT8 typeIndex )
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("GiveIMPItems: typeIndex = %d, abilityValue = %d",typeIndex,abilityValue ));
 
 	UINT16 usItem = 0;
@@ -1352,5 +1363,4 @@ void GiveIMPItems( MERCPROFILESTRUCT *pProfile, INT8 abilityValue, UINT8 typeInd
 
 
 }
-
 

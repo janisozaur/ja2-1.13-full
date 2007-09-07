@@ -70,12 +70,10 @@
 
 #include "Reinforcement.h"
 
-//#include "vtuneapi.h"
-
 //#define INVULNERABILITY
 
 // default = 7 (%)
-#define EXP_BONUS  7
+#define EXP_BONUS	7
 
 #define MAX_AR_TEAM_SIZE 255 // Must fit in 8 bits
 
@@ -140,10 +138,10 @@ typedef struct AUTORESOLVE_STRUCT
 	INT32 iIndent;
 	INT32 iInterfaceBuffer;
 	INT32 iNumMercFaces;
-	INT32 iActualMercFaces; //this represents the real number of merc faces.  Because
-													 //my debug mode allows to freely add and subtract mercs, we
-													 //can add/remove temp mercs, but we don't want to remove the
-													 //actual mercs.
+	INT32 iActualMercFaces; //this represents the real number of merc faces.	Because
+													//my debug mode allows to freely add and subtract mercs, we
+													//can add/remove temp mercs, but we don't want to remove the
+													//actual mercs.
 	UINT32 uiTimeSlice;
 	UINT32 uiTotalElapsedBattleTimeInMilliseconds;
 	UINT32 uiPrevTime, uiCurrTime;
@@ -215,7 +213,7 @@ typedef struct AUTORESOLVE_STRUCT
 #define CELL_HITBYATTACKER		0x00001000
 #define CELL_HITLASTFRAME			0x00002000
 //Cell statii
-#define CELL_SHOWRETREATTEXT  0x00004000
+#define CELL_SHOWRETREATTEXT	0x00004000
 #define CELL_RETREATING				0x00008000
 #define CELL_RETREATED				0x00010000
 #define CELL_DIRTY						0x00020000
@@ -228,7 +226,7 @@ typedef struct AUTORESOLVE_STRUCT
 #define CELL_PLAYER						( CELL_MERC | CELL_MILITIA )
 #define CELL_ENEMY						( CELL_ELITE | CELL_TROOP | CELL_ADMIN )
 #define CELL_CREATURE					( CELL_AF_CREATURE | CELL_AM_CREATURE | CELL_YF_CREATURE | CELL_YM_CREATURE )
-#define CELL_FEMALECREATURE	  ( CELL_AF_CREATURE | CELL_YF_CREATURE )
+#define CELL_FEMALECREATURE	( CELL_AF_CREATURE | CELL_YF_CREATURE )
 #define CELL_MALECREATURE			( CELL_AM_CREATURE | CELL_YM_CREATURE )
 #define CELL_YOUNGCREATURE		( CELL_YF_CREATURE | CELL_YM_CREATURE )
 #define CELL_INVOLVEDINCOMBAT ( CELL_FIREDATTARGET | CELL_DODGEDATTACK | CELL_HITBYATTACKER )
@@ -354,17 +352,19 @@ SOLDIERCELL *gpMercs = NULL;
 SOLDIERCELL *gpCivs = NULL;
 SOLDIERCELL *gpEnemies = NULL;
 
-//Simple wrappers for autoresolve sounds that are played.  
+//Simple wrappers for autoresolve sounds that are played.	
 void PlayAutoResolveSample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
 {
+	PERFORMANCE_MARKER
 	if( gpAR->fSound )
 	{
 		PlayJA2Sample( usNum, usRate, ubVolume, ubLoops, uiPan );
 	}
 }
 
-void  PlayAutoResolveSampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
+void	PlayAutoResolveSampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
 {
+	PERFORMANCE_MARKER
 	if( gpAR->fSound )
 	{
 		PlayJA2SampleFromFile( szFileName, usRate, ubVolume, ubLoops, uiPan );
@@ -376,13 +376,14 @@ extern void ClearPreviousAIGroupAssignment( GROUP *pGroup );
 
 void EliminateAllMercs()
 {
+	PERFORMANCE_MARKER
 	SOLDIERCELL *pAttacker = NULL;
 	INT32 i, iNum = 0;
 	if( gpAR )
 	{
 		for( i = 0; i < gpAR->ubEnemies; i++ )
 		{
-			if( gpEnemies[ i ].pSoldier->bLife )
+			if( gpEnemies[ i ].pSoldier->stats.bLife )
 			{
 				pAttacker = &gpEnemies[ i ];
 				break;
@@ -392,10 +393,10 @@ void EliminateAllMercs()
 		{
 			for( i = 0; i < gpAR->ubMercs; i++ )
 			{
-				if( gpMercs[ i ].pSoldier->bLife )
+				if( gpMercs[ i ].pSoldier->stats.bLife )
 				{
 					iNum++;
-					gpMercs[ i ].pSoldier->bLife = 1;
+					gpMercs[ i ].pSoldier->stats.bLife = 1;
 					gpMercs[ i ].usNextHit[0] = (UINT16)(250 * iNum);
 					gpMercs[ i ].usHitDamage[0] = 100;
 					gpMercs[ i ].pAttacker[0] = pAttacker;
@@ -407,17 +408,18 @@ void EliminateAllMercs()
 
 void EliminateAllFriendlies()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	if( gpAR )
 	{
 		for( i = 0; i < gpAR->ubMercs; i++ )
 		{
-			gpMercs[ i ].pSoldier->bLife = 0;
+			gpMercs[ i ].pSoldier->stats.bLife = 0;
 		}
 		gpAR->ubAliveMercs = 0;
 		for( i = 0; i < gpAR->ubCivs; i++ )
 		{
-			gpCivs[ i ].pSoldier->bLife = 0;
+			gpCivs[ i ].pSoldier->stats.bLife = 0;
 		}
 		gpAR->ubAliveCivs = 0;
 	}
@@ -425,6 +427,7 @@ void EliminateAllFriendlies()
 
 void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 {
+	PERFORMANCE_MARKER
 	GROUP *pGroup, *pDeleteGroup;
 	SECTORINFO *pSector;
 	INT32 i;
@@ -495,7 +498,7 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 	{
 		for( i = 0; i < gpAR->ubEnemies; i++ )
 		{
-			gpEnemies[ i ].pSoldier->bLife = 0;
+			gpEnemies[ i ].pSoldier->stats.bLife = 0;
 		}
 		gpAR->ubAliveEnemies = 0;
 	}
@@ -509,6 +512,7 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 
 void DoTransitionFromPreBattleInterfaceToAutoResolve()
 {
+	PERFORMANCE_MARKER
 	SGPRect SrcRect, DstRect;
 	UINT32 uiStartTime, uiCurrTime;
 	INT32 iPercentage, iFactor;
@@ -551,7 +555,7 @@ void DoTransitionFromPreBattleInterfaceToAutoResolve()
 	BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, (UINT16)SrcRect.iLeft, (UINT16)SrcRect.iTop, (UINT16)SrcRect.iRight, (UINT16)SrcRect.iBottom );
 
 	PlayJA2SampleFromFile( "SOUNDS\\Laptop power up (8-11).wav", RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
-	while( iPercentage < 100  )
+	while( iPercentage < 100	)
 	{
 		uiCurrTime = GetJA2Clock();
 		iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
@@ -588,6 +592,7 @@ extern UINT8 guiDirNumber;
 
 void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY )
 {
+	PERFORMANCE_MARKER
 	#ifdef JA2BETAVERSION
 		CountRandomCalls( TRUE );
 	#endif
@@ -610,13 +615,13 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve1");
 	Assert( gpMercs );
 	memset( gpMercs, 0, sizeof( SOLDIERCELL ) * 20 );
 	//Militia -- MAX_ALLOWABLE_MILITIA_PER_SECTOR max
-	gpCivs = (SOLDIERCELL*)MemAlloc( sizeof( SOLDIERCELL) * MAX_AR_TEAM_SIZE  );
+	gpCivs = (SOLDIERCELL*)MemAlloc( sizeof( SOLDIERCELL) * MAX_AR_TEAM_SIZE	);
 	Assert( gpCivs );
-	memset( gpCivs, 0, sizeof( SOLDIERCELL ) * MAX_AR_TEAM_SIZE  );
+	memset( gpCivs, 0, sizeof( SOLDIERCELL ) * MAX_AR_TEAM_SIZE	);
 	//Enemies -- 32 max
-	gpEnemies = (SOLDIERCELL*)MemAlloc( sizeof( SOLDIERCELL) * MAX_AR_TEAM_SIZE  );
+	gpEnemies = (SOLDIERCELL*)MemAlloc( sizeof( SOLDIERCELL) * MAX_AR_TEAM_SIZE	);
 	Assert( gpEnemies );
-	memset( gpEnemies, 0, sizeof( SOLDIERCELL ) * MAX_AR_TEAM_SIZE  );
+	memset( gpEnemies, 0, sizeof( SOLDIERCELL ) * MAX_AR_TEAM_SIZE	);
 
 	//Set up autoresolve 
 	gpAR->fEnteringAutoResolve = TRUE;
@@ -652,17 +657,20 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve1");
 
 UINT32 AutoResolveScreenInit()
 {
+	PERFORMANCE_MARKER
 	return TRUE;
 }
 
 UINT32 AutoResolveScreenShutdown()
 {
+	PERFORMANCE_MARKER
 	gpBattleGroup = NULL;
 	return TRUE;
 }
 
 UINT32 AutoResolveScreenHandle()
 {
+	PERFORMANCE_MARKER
 	RestoreBackgroundRects();
 
 	if( !gpAR )
@@ -739,21 +747,23 @@ UINT32 AutoResolveScreenHandle()
 
 void RefreshMerc( SOLDIERTYPE *pSoldier )
 {
-	pSoldier->bLife = pSoldier->bLifeMax;
+	PERFORMANCE_MARKER
+	pSoldier->stats.bLife = pSoldier->stats.bLifeMax;
 	pSoldier->bBleeding = 0;
 	pSoldier->bBreath = pSoldier->bBreathMax = 100;
 	pSoldier->sBreathRed = 0;
 	if( gpAR->pRobotCell)
 	{
-		UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );
+		gpAR->pRobotCell->pSoldier->UpdateRobotControllerGivenRobot(	);
 	}
 	//gpAR->fUnlimitedAmmo = TRUE;
 }
 
-//Now assign the pSoldier->ubGroupIDs for the enemies, so we know where to remove them.  Start with
+//Now assign the pSoldier->ubGroupIDs for the enemies, so we know where to remove them.	Start with
 //stationary groups first.
 void AssociateEnemiesWithStrategicGroups()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	GROUP *pGroup;
 	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
@@ -852,7 +862,7 @@ void AssociateEnemiesWithStrategicGroups()
 	pGroup = gpGroupList;
 	while( pGroup )
 	{	// Don't process road block. It'll be processed as static
-		if( pGroup->ubGroupID &&  !pGroup->fPlayer && IsGroupInARightSectorToReinforce( pGroup, gpAR->ubSectorX, gpAR->ubSectorY ) )
+		if( pGroup->ubGroupID &&	!pGroup->fPlayer && IsGroupInARightSectorToReinforce( pGroup, gpAR->ubSectorX, gpAR->ubSectorY ) )
 		{
 			ubNumElitesInGroup = pGroup->pEnemyGroup->ubNumElites;
 			ubNumTroopsInGroup = pGroup->pEnemyGroup->ubNumTroops;
@@ -942,6 +952,7 @@ void AssociateEnemiesWithStrategicGroups()
 
 void CalculateSoldierCells( BOOLEAN fReset )
 {
+	PERFORMANCE_MARKER
 	INT32 i, x, y;
 	INT32 index, iStartY, iTop, gapStartRow;
 	INT32 iMaxTeamSize;
@@ -951,7 +962,7 @@ void CalculateSoldierCells( BOOLEAN fReset )
 	gpAR->ubAliveEnemies = gpAR->ubEnemies;
 
 	//iMaxTeamSize = max( gpAR->ubMercs + gpAR->ubCivs, gpAR->ubEnemies );
-	iMaxTeamSize = max( min( 40,  gpAR->ubMercs + gpAR->ubCivs ), min( 40,  gpAR->ubEnemies ) );
+	iMaxTeamSize = max( min( 40,	gpAR->ubMercs + gpAR->ubCivs ), min( 40,	gpAR->ubEnemies ) );
 
 	
 	if( iMaxTeamSize > 12 )
@@ -1005,7 +1016,7 @@ void CalculateSoldierCells( BOOLEAN fReset )
 				MercCellMouseMoveCallback, MercCellMouseClickCallback );
 			if( fReset )
 				RefreshMerc( gpMercs[ index ].pSoldier );
-			if( !gpMercs[ index ].pSoldier->bLife )
+			if( !gpMercs[ index ].pSoldier->stats.bLife )
 				gpAR->ubAliveMercs--;
 		}
 	}
@@ -1018,7 +1029,7 @@ void CalculateSoldierCells( BOOLEAN fReset )
 
 		for( index = 0; index < gpAR->ubCivs ; ++index )
 		{
-			x = gpAR->ubCivCols - 1  - index % gpAR->ubCivCols;
+			x = gpAR->ubCivCols - 1	- index % gpAR->ubCivCols;
 			y = index / gpAR->ubCivCols;
 
 			gpCivs[ index ].xp = gpAR->sCenterStartX + 3 - 55*(x+1);
@@ -1068,6 +1079,7 @@ void CalculateSoldierCells( BOOLEAN fReset )
 
 INT32 DetermineCellID( SOLDIERCELL *pCell )
 {
+	PERFORMANCE_MARKER
 	INT32 iIndex;
 
 	if( pCell->pSoldier->bTeam == ENEMY_TEAM )
@@ -1087,6 +1099,7 @@ INT32 DetermineCellID( SOLDIERCELL *pCell )
 
 BOOLEAN IsItAllowedToRender( SOLDIERCELL *pCell )
 {
+	PERFORMANCE_MARKER
 	INT32 iID = DetermineCellID( pCell );
 
 	switch( pCell->pSoldier->bTeam )
@@ -1104,6 +1117,7 @@ BOOLEAN IsItAllowedToRender( SOLDIERCELL *pCell )
 
 void RenderSoldierCell( SOLDIERCELL *pCell )
 {
+	PERFORMANCE_MARKER
 	UINT8 x;
 
 	if( !IsItAllowedToRender( pCell ) ) return;
@@ -1120,7 +1134,7 @@ void RenderSoldierCell( SOLDIERCELL *pCell )
 		BltVideoObjectFromIndex( FRAME_BUFFER, gpAR->iPanelImages, OTHER_PANEL, pCell->xp, pCell->yp, VO_BLT_SRCTRANSPARENCY, NULL );
 		x = 6;
 	}
-	if( !pCell->pSoldier->bLife )
+	if( !pCell->pSoldier->stats.bLife )
 	{
 		SetObjectHandleShade( pCell->uiVObjectID, 0 );
 		if( !(pCell->uiFlags & CELL_CREATURE) )
@@ -1147,7 +1161,7 @@ void RenderSoldierCell( SOLDIERCELL *pCell )
 		}
 	}
 	
-	if( pCell->pSoldier->bLife > 0 && pCell->pSoldier->bLife < OKLIFE && !(pCell->uiFlags & (CELL_HITBYATTACKER|CELL_HITLASTFRAME|CELL_CREATURE)) )
+	if( pCell->pSoldier->stats.bLife > 0 && pCell->pSoldier->stats.bLife < OKLIFE && !(pCell->uiFlags & (CELL_HITBYATTACKER|CELL_HITLASTFRAME|CELL_CREATURE)) )
 	{ //Merc is unconcious (and not taking damage), so darken his portrait.
 		UINT8 *pDestBuf;
 		UINT32 uiDestPitchBYTES;
@@ -1190,12 +1204,13 @@ void RenderSoldierCell( SOLDIERCELL *pCell )
 
 void RenderSoldierCellBars( SOLDIERCELL *pCell )
 {
+	PERFORMANCE_MARKER
 	INT32 iStartY;
 	//HEALTH BAR
-	if( !pCell->pSoldier->bLife )
+	if( !pCell->pSoldier->stats.bLife )
 		return;
 	//yellow one for bleeding
-	iStartY = pCell->yp + 29 - 25*pCell->pSoldier->bLifeMax/100;
+	iStartY = pCell->yp + 29 - 25*pCell->pSoldier->stats.bLifeMax/100;
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+37, iStartY, pCell->xp+38, pCell->yp+29, Get16BPPColor( FROMRGB( 107, 107, 57 ) ) );
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+38, iStartY, pCell->xp+39, pCell->yp+29, Get16BPPColor( FROMRGB( 222, 181, 115 ) ) );
 	//pink one for bandaged.
@@ -1203,7 +1218,7 @@ void RenderSoldierCellBars( SOLDIERCELL *pCell )
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+37, iStartY, pCell->xp+38, pCell->yp+29, Get16BPPColor( FROMRGB( 156, 57, 57 ) ) );
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+38, iStartY, pCell->xp+39, pCell->yp+29, Get16BPPColor( FROMRGB( 222, 132, 132 ) ) );
 	//red one for actual health
-	iStartY = pCell->yp + 29 - 25*pCell->pSoldier->bLife/100;
+	iStartY = pCell->yp + 29 - 25*pCell->pSoldier->stats.bLife/100;
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+37, iStartY, pCell->xp+38, pCell->yp+29, Get16BPPColor( FROMRGB( 107, 8, 8 ) ) );
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+38, iStartY, pCell->xp+39, pCell->yp+29, Get16BPPColor( FROMRGB( 206, 0, 0 ) ) );
 	//BREATH BAR
@@ -1211,13 +1226,14 @@ void RenderSoldierCellBars( SOLDIERCELL *pCell )
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+41, iStartY, pCell->xp+42, pCell->yp+29, Get16BPPColor( FROMRGB( 8, 8, 132 ) ) );
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+42, iStartY, pCell->xp+43, pCell->yp+29, Get16BPPColor( FROMRGB( 8, 8, 107 ) ) );
 	//MORALE BAR
-	iStartY = pCell->yp + 29 - 25*pCell->pSoldier->bMorale/100;
+	iStartY = pCell->yp + 29 - 25*pCell->pSoldier->aiData.bMorale/100;
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+45, iStartY, pCell->xp+46, pCell->yp+29, Get16BPPColor( FROMRGB( 8, 156, 8 ) ) );
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+46, iStartY, pCell->xp+47, pCell->yp+29, Get16BPPColor( FROMRGB( 8, 107, 8 ) ) );
 }
 
 void BuildInterfaceBuffer()
 {
+	PERFORMANCE_MARKER
 	VSURFACE_DESC		vs_desc;
 	UINT16					usUselessWidth, usUselessHeight;
 	UINT8						ubBitDepth;
@@ -1238,8 +1254,8 @@ void BuildInterfaceBuffer()
 	DestRect.iRight			= gpAR->sWidth;
 	DestRect.iBottom		= gpAR->sHeight;
 
-	//create buffer for the transition slot for merc items.  This slot contains the newly
-	//selected item graphic in it's inventory size version.  This buffer is then scaled down
+	//create buffer for the transition slot for merc items.	This slot contains the newly
+	//selected item graphic in it's inventory size version.	This buffer is then scaled down
 	//into the associated merc inventory panel slot buffer which is approximately 20% smaller.
 	GetCurrentVideoSettings( &usUselessWidth, &usUselessHeight, &ubBitDepth );
 	vs_desc.fCreateFlags = VSURFACE_CREATE_DEFAULT | VSURFACE_SYSTEM_MEM_USAGE;
@@ -1300,6 +1316,7 @@ void BuildInterfaceBuffer()
 
 void ExpandWindow()
 {
+	PERFORMANCE_MARKER
 	SGPRect OldRect;
 	UINT32	uiDestPitchBYTES;
 	UINT32 uiCurrentTime, uiTimeRange, uiPercent;
@@ -1395,15 +1412,16 @@ void ExpandWindow()
 
 UINT32 VirtualSoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, OBJECTTYPE *pKit, INT16 sKitPts, INT16 sStatus )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiDressSkill, uiPossible, uiActual, uiMedcost, uiDeficiency, uiAvailAPs, uiUsedAPs;
 	UINT8 bBelowOKlife, bPtsLeft;
 
 	if( pVictim->bBleeding < 1 )
 		return 0;		// nothing to do, shouldn't have even been called!
-	if ( pVictim->bLife == 0 )
+	if ( pVictim->stats.bLife == 0 )
 		return 0;
 
-	// calculate wound-dressing skill (3x medical,  2x equip,1x level, 1x dex)
+	// calculate wound-dressing skill (3x medical,	2x equip,1x level, 1x dex)
 	uiDressSkill = ( ( 3 * EffectiveMedical( pSoldier ) ) +		// medical knowledge
 									( 2 * sStatus) + 													// state of medical kit
 									(10 * EffectiveExpLevel( pSoldier ) ) +		// battle injury experience
@@ -1431,10 +1449,10 @@ UINT32 VirtualSoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, OB
 	uiActual = uiPossible;		// start by assuming maximum possible
 
 	// figure out how far below OKLIFE the victim is
-	if (pVictim->bLife >= OKLIFE)
+	if (pVictim->stats.bLife >= OKLIFE)
 		bBelowOKlife = 0;
 	else
-		bBelowOKlife = OKLIFE - pVictim->bLife;
+		bBelowOKlife = OKLIFE - pVictim->stats.bLife;
 
 	// figure out how many healing pts we need to stop dying (2x cost)
 	uiDeficiency = (2 * bBelowOKlife );
@@ -1455,7 +1473,7 @@ UINT32 VirtualSoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, OB
 		uiMedcost = uiActual / 2;		// cost is only half
 		if ( uiMedcost == 0 && uiActual > 0)
 			uiMedcost = 1;
-		if ( uiMedcost > (UINT32)sKitPts )     		// if we can't afford this
+		if ( uiMedcost > (UINT32)sKitPts )	 		// if we can't afford this
 		{
 			uiMedcost = sKitPts;		// what CAN we afford?
 			uiActual = uiMedcost * 2;		// give double this as aid
@@ -1467,19 +1485,19 @@ UINT32 VirtualSoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, OB
 		if ( uiMedcost == 0 && uiActual > 0)
 			uiMedcost = 1;
 		if ( uiMedcost > (UINT32)sKitPts)		// can't afford it
-			uiMedcost = uiActual = sKitPts;   	// recalc cost AND aid
+			uiMedcost = uiActual = sKitPts;		// recalc cost AND aid
 	}
 		
 	bPtsLeft = (INT8)uiActual;
 	// heal real life points first (if below OKLIFE) because we don't want the
 	// patient still DYING if bandages run out, or medic is disabled/distracted!
 	// NOTE: Dressing wounds for life below OKLIFE now costs 2 pts/life point!
-	if ( bPtsLeft && pVictim->bLife < OKLIFE)
+	if ( bPtsLeft && pVictim->stats.bLife < OKLIFE)
 	{
 		// if we have enough points to bring him all the way to OKLIFE this turn
 		if ( bPtsLeft >= (2 * bBelowOKlife ) )
 		{ // raise life to OKLIFE
-			pVictim->bLife = OKLIFE;
+			pVictim->stats.bLife = OKLIFE;
 			// reduce bleeding by the same number of life points healed up
 			pVictim->bBleeding -= bBelowOKlife;
 			// use up appropriate # of actual healing points
@@ -1487,7 +1505,7 @@ UINT32 VirtualSoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, OB
 		}
 		else
 		{
-			pVictim->bLife += ( bPtsLeft / 2);
+			pVictim->stats.bLife += ( bPtsLeft / 2);
 			pVictim->bBleeding -= ( bPtsLeft / 2);
 			bPtsLeft = bPtsLeft % 2;	// if ptsLeft was odd, ptsLeft = 1
 		}
@@ -1497,14 +1515,14 @@ UINT32 VirtualSoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, OB
 			pVictim->bBleeding = 0;
 
 		// if this healing brought the patient out of the worst of it, cancel dying
-		if (pVictim->bLife >= OKLIFE )
+		if (pVictim->stats.bLife >= OKLIFE )
 		{ // turn off merc QUOTE flags
-			pVictim->fDyingComment = FALSE;
+			pVictim->flags.fDyingComment = FALSE;
 		}
 
 		if ( pVictim->bBleeding <= MIN_BLEEDING_THRESHOLD )
 		{
-			pVictim->fWarnedAboutBleeding = FALSE;
+			pVictim->flags.fWarnedAboutBleeding = FALSE;
 		}
 	}
 
@@ -1534,11 +1552,11 @@ UINT32 VirtualSoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, OB
 		uiUsedAPs = ( uiUsedAPs * 2) / 3;	// reverse 50% bonus by taking 2/3rds
 
 	if ( uiActual / 2)
-		// MEDICAL GAIN (actual / 2):  Helped someone by giving first aid
+		// MEDICAL GAIN (actual / 2):	Helped someone by giving first aid
 		StatChange(pSoldier,MEDICALAMT,( (UINT16)(uiActual / 2) ),FALSE);
 
 	if ( uiActual / 4)
-		// DEXTERITY GAIN (actual / 4):  Helped someone by giving first aid
+		// DEXTERITY GAIN (actual / 4):	Helped someone by giving first aid
 		StatChange(pSoldier,DEXTAMT,(UINT16)( ( uiActual / 4) ),FALSE);
 
 	return uiMedcost;
@@ -1546,6 +1564,7 @@ UINT32 VirtualSoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, OB
 
 OBJECTTYPE* FindMedicalKit()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	INT32 iSlot;
 	for( i = 0; i < gpAR->ubMercs; i++ )
@@ -1561,7 +1580,8 @@ OBJECTTYPE* FindMedicalKit()
 
 UINT32 AutoBandageMercs()
 {
-  INT32 i, iBest;
+	PERFORMANCE_MARKER
+	INT32 i, iBest;
 	UINT32 uiPointsUsed, uiCurrPointsUsed, uiMaxPointsUsed, uiParallelPointsUsed;
 	UINT16 usKitPts;
 	OBJECTTYPE *pKit = NULL;
@@ -1569,14 +1589,14 @@ UINT32 AutoBandageMercs()
 	BOOLEAN fComplete = TRUE;
 	INT8 bSlot, cnt;
 
-	//Do we have any doctors?  If so, bandage selves first.
+	//Do we have any doctors?	If so, bandage selves first.
 	fFound = FALSE;
 	uiMaxPointsUsed = uiParallelPointsUsed = 0;
 	for( i = 0; i < gpAR->ubMercs; i++ )
 	{
-		if( gpMercs[ i ].pSoldier->bLife >= OKLIFE && 
-			  !gpMercs[ i ].pSoldier->bCollapsed && 
-				gpMercs[ i ].pSoldier->bMedical > 0 &&
+		if( gpMercs[ i ].pSoldier->stats.bLife >= OKLIFE && 
+			!gpMercs[ i ].pSoldier->bCollapsed && 
+				gpMercs[ i ].pSoldier->stats.bMedical > 0 &&
 				( bSlot = FindObjClass( gpMercs[ i ].pSoldier, IC_MEDKIT ) ) != NO_SLOT )
 		{
 			fFound = TRUE;
@@ -1590,7 +1610,7 @@ UINT32 AutoBandageMercs()
 				if( !usKitPts )
 				{ //attempt to find another kit before stopping
 					if( ( bSlot = FindObjClass( gpMercs[ i ].pSoldier, IC_MEDKIT ) ) != NO_SLOT )
-					  continue;
+					continue;
 					break;
 				}
 				uiPointsUsed = VirtualSoldierDressWound( gpMercs[ i ].pSoldier, gpMercs[ i ].pSoldier, pKit, usKitPts, usKitPts );
@@ -1612,9 +1632,9 @@ UINT32 AutoBandageMercs()
 	iBest = 0;
 	for( i = 0; i < gpAR->ubMercs; i++ )
 	{
-		if( gpMercs[ i ].pSoldier->bLife >= OKLIFE && !gpMercs[ i ].pSoldier->bCollapsed && gpMercs[ i ].pSoldier->bMedical > 0 )
+		if( gpMercs[ i ].pSoldier->stats.bLife >= OKLIFE && !gpMercs[ i ].pSoldier->bCollapsed && gpMercs[ i ].pSoldier->stats.bMedical > 0 )
 		{
-			if( gpMercs[ i ].pSoldier->bMedical > gpMercs[ iBest ].pSoldier->bMedical )
+			if( gpMercs[ i ].pSoldier->stats.bMedical > gpMercs[ iBest ].pSoldier->stats.bMedical )
 			{
 				iBest = i;
 			}
@@ -1623,7 +1643,7 @@ UINT32 AutoBandageMercs()
 
 	for( i = 0; i < gpAR->ubMercs; i++ )
 	{
-		while( gpMercs[ i ].pSoldier->bBleeding && gpMercs[ i ].pSoldier->bLife )
+		while( gpMercs[ i ].pSoldier->bBleeding && gpMercs[ i ].pSoldier->stats.bLife )
 		{ //This merc needs medical attention
 			if( !pKit )
 			{
@@ -1662,13 +1682,11 @@ UINT32 AutoBandageMercs()
 
 void RenderAutoResolve()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	HVSURFACE hVSurface;
 	INT32 xp, yp;
-	SOLDIERCELL *pCell = NULL;
-	INT32 index = 0;
 	CHAR16 str[100];
-	UINT8 bTownId = 0;
 	UINT8 ubGood, ubBad;
 	
 	if( gpAR->fExpanding )
@@ -1848,7 +1866,7 @@ void RenderAutoResolve()
 				case BATTLE_CAPTURED:
 					for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 					{
-						if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && !(MercPtrs[ i ]->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT( MercPtrs[ i ] ) )
+						if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->stats.bLife && !(MercPtrs[ i ]->flags.uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT( MercPtrs[ i ] ) )
 						{ //Merc is active and alive, and not a vehicle or robot
 							if ( PlayerMercInvolvedInThisCombat( MercPtrs[ i ] ) )
 							{
@@ -1938,7 +1956,7 @@ void RenderAutoResolve()
 
 			//Render the total battle time elapsed.
 			SetFont( FONT10ARIAL );
-			swprintf( str, L"%s:  %dm %02ds", 
+			swprintf( str, L"%s:	%dm %02ds", 
 				gpStrategicString[ STR_AR_TIME_ELAPSED ],
 				gpAR->uiTotalElapsedBattleTimeInMilliseconds/60000,
 				(gpAR->uiTotalElapsedBattleTimeInMilliseconds%60000)/1000 );
@@ -1954,6 +1972,7 @@ void RenderAutoResolve()
 
 static void ARCreateMilitia( UINT8 mclass, INT32 i, INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 	// reset counter of how many mortars this team has rolled
 	ResetMortarsOnTeamCount();
 
@@ -2013,6 +2032,7 @@ static void ARCreateMilitia( UINT8 mclass, INT32 i, INT16 sX, INT16 sY)
 
 static void ARCreateMilitiaSquad( UINT8 *cnt, UINT8 ubEliteMilitia, UINT8 ubRegMilitia, UINT8 ubGreenMilitia, INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 	while( *cnt < gpAR->ubCivs && (ubEliteMilitia || ubRegMilitia || ubGreenMilitia) )
 	{
 		if (ubEliteMilitia)
@@ -2037,7 +2057,8 @@ static void ARCreateMilitiaSquad( UINT8 *cnt, UINT8 ubEliteMilitia, UINT8 ubRegM
 
 void CreateAutoResolveInterface()
 {
-	VOBJECT_DESC    VObjectDesc;
+	PERFORMANCE_MARKER
+	VOBJECT_DESC	VObjectDesc;
 	INT32 i, index;
 	HVOBJECT hVObject;
 	UINT8 ubGreenMilitia, ubRegMilitia, ubEliteMilitia;
@@ -2134,9 +2155,9 @@ void CreateAutoResolveInterface()
 		}
 	}
 
-	// 0verhaul:  The following code was modified so that militia bookkeeping could be handled.
+	// 0verhaul:	The following code was modified so that militia bookkeeping could be handled.
 	// In the previous auto-resolve method, promotions were often lost because the sector did not 
-	// actually have the militia to be promoted--they came from surrounding sectors.  The
+	// actually have the militia to be promoted--they came from surrounding sectors.	The
 	// sector X and Y are not actually used for auto-resolve itself, so I can use it to adjust
 	// both the actual sector counts and the promotions, by using the origin sectors of each
 	// soldier.
@@ -2144,7 +2165,7 @@ void CreateAutoResolveInterface()
 	ubRegMilitia = MilitiaInSectorOfRank( gpAR->ubSectorX, gpAR->ubSectorY, REGULAR_MILITIA );
 	ubGreenMilitia = MilitiaInSectorOfRank( gpAR->ubSectorX, gpAR->ubSectorY, GREEN_MILITIA );
 
-	// This block should be unnecessary.  If the counts do not line up, there is a bug.
+	// This block should be unnecessary.	If the counts do not line up, there is a bug.
 #if 0
 	while( ubEliteMilitia + ubRegMilitia + ubGreenMilitia < gpAR->ubCivs )
 	{
@@ -2175,7 +2196,6 @@ void CreateAutoResolveInterface()
 
 		ARCreateMilitiaSquad( &cnt, ubEliteMilitia, ubRegMilitia, ubGreenMilitia, sX, sY );
 	}
-
 	if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 	{
 		for( i = 0, index = 0; i < gpAR->ubElites; i++, index++ )
@@ -2263,7 +2283,7 @@ void CreateAutoResolveInterface()
 		gfBlitBattleSectorLocator = FALSE;
 	}
 
-	//Build the interface buffer, and blit the "shaded" background.  This info won't
+	//Build the interface buffer, and blit the "shaded" background.	This info won't
 	//change from now on, but will be used to restore text.
 	BuildInterfaceBuffer();
 	BlitBufferToBuffer( guiSAVEBUFFER, FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
@@ -2325,6 +2345,7 @@ void CreateAutoResolveInterface()
 
 void RemoveAutoResolveInterface( BOOLEAN fDeleteForGood )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	UINT8 ubCurrentRank;
 	UINT8 ubCurrentGroupID = 0;
@@ -2343,11 +2364,11 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
 	{ //Delete the soldier instances -- done when we are completely finished.
 
 		//KM: By request of AM, I have added this bleeding event in cases where autoresolve is
-		//	  complete and there are bleeding mercs remaining.  AM coded the internals
-		//    of the strategic event.
+		//	complete and there are bleeding mercs remaining.	AM coded the internals
+		//	of the strategic event.
 		for( i = 0; i < gpAR->ubMercs; i++ )
 		{
-			if( gpMercs[ i ].pSoldier->bBleeding && gpMercs[ i ].pSoldier->bLife )
+			if( gpMercs[ i ].pSoldier->bBleeding && gpMercs[ i ].pSoldier->stats.bLife )
 			{
 				// ARM: only one event is needed regardless of how many are bleeding
 				AddStrategicEvent( EVENT_BANDAGE_BLEEDING_MERCS, GetWorldTotalMin() + 1, 0 );
@@ -2361,7 +2382,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
 		
 		if( gpAR->pRobotCell)
 		{
-			UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );
+			gpAR->pRobotCell->pSoldier->UpdateRobotControllerGivenRobot( );
 		}
 		for( i = 0; i < gpAR->iNumMercFaces; i++ )
 		{
@@ -2369,7 +2390,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
 				TacticalRemoveSoldierPointer( gpMercs[ i ].pSoldier, FALSE );
 			else
 			{ //Record finishing information for our mercs
-				if( !gpMercs[ i ].pSoldier->bLife )
+				if( !gpMercs[ i ].pSoldier->stats.bLife )
 				{
 					StrategicHandlePlayerTeamMercDeath( gpMercs[ i ].pSoldier );
 					
@@ -2392,7 +2413,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
 		}
 		for( i = 0; i < gpAR->iNumMercFaces; i++ )
 		{
-			if( gpAR->ubBattleStatus == BATTLE_VICTORY && gpMercs[ i ].pSoldier->bLife >= OKLIFE )
+			if( gpAR->ubBattleStatus == BATTLE_VICTORY && gpMercs[ i ].pSoldier->stats.bLife >= OKLIFE )
 			{
 				if( gpMercs[ i ].pSoldier->ubGroupID != ubCurrentGroupID )
 				{
@@ -2448,7 +2469,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
 					#endif
 					break;
 			}
-			if( fDeleteForGood && gpCivs[ i ].pSoldier->bLife < OKLIFE/2 )
+			if( fDeleteForGood && gpCivs[ i ].pSoldier->stats.bLife < OKLIFE/2 )
 			{
 				AddDeadSoldierToUnLoadedSector( gpAR->ubSectorX, gpAR->ubSectorY, 0, gpCivs[ i ].pSoldier, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT );
 				StrategicRemoveMilitiaFromSector( gpCivs[ i ].pSoldier->sSectorX, gpCivs[ i ].pSoldier->sSectorY, ubCurrentRank, 1 );
@@ -2492,7 +2513,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
 	{
 		if( gpEnemies[ i ].pSoldier )
 		{
-			if( fDeleteForGood && gpEnemies[ i ].pSoldier->bLife < OKLIFE )
+			if( fDeleteForGood && gpEnemies[ i ].pSoldier->stats.bLife < OKLIFE )
 			{
 				TrackEnemiesKilled( ENEMY_KILLED_IN_AUTO_RESOLVE, gpEnemies[ i ].pSoldier->ubSoldierClass );
 				if( ProcessLoyalty() )HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_ENEMY_KILLED, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
@@ -2507,8 +2528,8 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
 	if( fDeleteForGood )
 	{ //Warp the game time accordingly
 		if( gpAR->ubBattleStatus == BATTLE_VICTORY )
-		{	//Get rid of any extra enemies that could be here.  It is possible for the number of total enemies to exceed 32, but
-			//autoresolve can only process 32.  We basically cheat by eliminating the rest of them.
+		{	//Get rid of any extra enemies that could be here.	It is possible for the number of total enemies to exceed 32, but
+			//autoresolve can only process 32.	We basically cheat by eliminating the rest of them.
 			EliminateAllEnemies( gpAR->ubSectorX, gpAR->ubSectorY );
 		}
 		else
@@ -2531,7 +2552,6 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
 		UnloadButtonImage( gpAR->iButtonImage[ i ] );
 		RemoveButton( gpAR->iButton[ i ] );
 	}
-
 	if( fDeleteForGood )
 	{ //Warp the game time accordingly
 
@@ -2564,15 +2584,11 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
 		gubSectorIDOfCreatureAttack = 0;
 	}
 	//VtPauseSampling();
-
-	if (gfStrategicMilitiaChangesMade)
-	{
-		ResetMilitia();
-	}
 }
 
 void PauseButtonCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ gpAR->iButton[ PLAY_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
@@ -2584,6 +2600,7 @@ void PauseButtonCallback( GUI_BUTTON *btn, INT32 reason )
 
 void PlayButtonCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ gpAR->iButton[ PAUSE_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
@@ -2596,6 +2613,7 @@ void PlayButtonCallback( GUI_BUTTON *btn, INT32 reason )
 
 void FastButtonCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ gpAR->iButton[ PAUSE_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
@@ -2608,6 +2626,7 @@ void FastButtonCallback( GUI_BUTTON *btn, INT32 reason )
 
 void FinishButtonCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ gpAR->iButton[ PAUSE_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
@@ -2622,6 +2641,7 @@ void FinishButtonCallback( GUI_BUTTON *btn, INT32 reason )
 
 void RetreatButtonCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		INT32 i;
@@ -2663,14 +2683,15 @@ void RetreatButtonCallback( GUI_BUTTON *btn, INT32 reason )
 
 void DetermineBandageButtonState()
 {
-  INT32 i;
+	PERFORMANCE_MARKER
+	INT32 i;
 	OBJECTTYPE *pKit = NULL;
 	BOOLEAN fFound = FALSE;
 
 	//Does anyone need bandaging?
 	for( i = 0; i < gpAR->ubMercs; i++ )
 	{
-		if( gpMercs[ i ].pSoldier->bBleeding && gpMercs[ i ].pSoldier->bLife )
+		if( gpMercs[ i ].pSoldier->bBleeding && gpMercs[ i ].pSoldier->stats.bLife )
 		{
 			fFound = TRUE;
 			break;
@@ -2683,13 +2704,13 @@ void DetermineBandageButtonState()
 		return;
 	}
 
-	//Do we have any doctors?  
+	//Do we have any doctors?	
 	fFound = FALSE;
 	for( i = 0; i < gpAR->ubMercs; i++ )
 	{
-		if( gpMercs[ i ].pSoldier->bLife >= OKLIFE && 
-			  !gpMercs[ i ].pSoldier->bCollapsed && 
-				gpMercs[ i ].pSoldier->bMedical > 0 )
+		if( gpMercs[ i ].pSoldier->stats.bLife >= OKLIFE && 
+			!gpMercs[ i ].pSoldier->bCollapsed && 
+				gpMercs[ i ].pSoldier->stats.bMedical > 0 )
 		{
 			fFound = TRUE;
 		}
@@ -2717,6 +2738,7 @@ void DetermineBandageButtonState()
 
 void BandageButtonCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		AutoBandageMercs();
@@ -2726,6 +2748,7 @@ void BandageButtonCallback( GUI_BUTTON *btn, INT32 reason )
 
 void DoneButtonCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gpAR->fExitAutoResolve = TRUE; 
@@ -2734,6 +2757,7 @@ void DoneButtonCallback( GUI_BUTTON *btn, INT32 reason )
 
 void MercCellMouseMoveCallback( MOUSE_REGION *reg, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	//Find the merc with the same region.
 	INT32 i;
 	SOLDIERCELL *pCell = NULL;
@@ -2769,6 +2793,7 @@ void MercCellMouseMoveCallback( MOUSE_REGION *reg, INT32 reason )
 
 void MercCellMouseClickCallback( MOUSE_REGION *reg, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		//Find the merc with the same region.
@@ -2832,9 +2857,10 @@ void MercCellMouseClickCallback( MOUSE_REGION *reg, INT32 reason )
 }
 
 //Determine how many players, militia, and enemies that are going at it, and use these values
-//to figure out how many rows and columns we can use.  The will effect the size of the panel.
+//to figure out how many rows and columns we can use.	The will effect the size of the panel.
 void CalculateAutoResolveInfo()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC VObjectDesc;
 	GROUP *pGroup;
 	PLAYERGROUP *pPlayer;
@@ -2882,7 +2908,7 @@ void CalculateAutoResolveInfo()
 				{
 					gpMercs[ gpAR->ubMercs ].pSoldier = pPlayer->pSoldier;
 
-					//!!! CLEAR OPPCOUNT HERE.  All of these soldiers are guaranteed to not be in tactical anymore.
+					//!!! CLEAR OPPCOUNT HERE.	All of these soldiers are guaranteed to not be in tactical anymore.
 					//ClearOppCount( pPlayer->pSoldier );
 
 					gpAR->ubMercs++;
@@ -2893,7 +2919,7 @@ void CalculateAutoResolveInfo()
 					if( AM_A_ROBOT( pPlayer->pSoldier ) )
 					{
 						gpAR->pRobotCell = &gpMercs[ gpAR->ubMercs - 1 ];
-						UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );
+						gpAR->pRobotCell->pSoldier->UpdateRobotControllerGivenRobot( );
 					}
 				}
 				pPlayer = pPlayer->next;
@@ -2911,6 +2937,7 @@ void CalculateAutoResolveInfo()
 
 void ResetAutoResolveInterface()
 {
+	PERFORMANCE_MARKER
 	guiPreRandomIndex = gpAR->uiPreRandomIndex;
 
 	RemoveAutoResolveInterface( FALSE );
@@ -2935,7 +2962,7 @@ void ResetAutoResolveInterface()
 	{
 		switch( PreRandom( 5 ) )
 		{
-			case 0:				  gpAR->ubElites++; break;
+			case 0:				gpAR->ubElites++; break;
 			case 1: case 2: gpAR->ubAdmins++; break;
 			case 3: case 4: gpAR->ubTroops++; break;
 		}
@@ -2959,7 +2986,7 @@ void ResetAutoResolveInterface()
 		gpAR->fSound = TRUE;
 	}
 	gpAR->uiTimeSlice = 1000;
-	gpAR->uiTotalElapsedBattleTimeInMilliseconds	 = 0;
+	gpAR->uiTotalElapsedBattleTimeInMilliseconds	= 0;
 	gpAR->uiCurrTime = 0;
 	gpAR->fPlayerRejectedSurrenderOffer = FALSE;
 	gpAR->fPendingSurrender = FALSE;
@@ -2973,8 +3000,9 @@ void ResetAutoResolveInterface()
 
 void CalculateRowsAndColumns()
 {
+	PERFORMANCE_MARKER
 	//now that we have the number on each team, calculate the number of rows and columns to be used on 
-	//the player's sides.  NOTE:  Militia won't appear on the same row as mercs.
+	//the player's sides.	NOTE:	Militia won't appear on the same row as mercs.
 	if( !gpAR->ubMercs )
 	{ //0
 		gpAR->ubMercCols = gpAR->ubMercRows = 0;
@@ -3052,11 +3080,11 @@ void CalculateRowsAndColumns()
 
 
 	//Now, that we have the number of mercs, militia, and enemies, it is possible that there
-	//may be some conflicts.  Our goal is to make the window as small as possible.  Bumping up
-	//the number of columns to 5 or rows to 10 will force one or both axes to go full screen.  If we
+	//may be some conflicts.	Our goal is to make the window as small as possible.	Bumping up
+	//the number of columns to 5 or rows to 10 will force one or both axes to go full screen.	If we
 	//have high numbers of both, then we will have to.
 
-	//Step one:  equalize the number of columns for both the mercs and civs.
+	//Step one:	equalize the number of columns for both the mercs and civs.
 	if( gpAR->ubMercs && gpAR->ubCivs && gpAR->ubMercCols != gpAR->ubCivCols )
 	{
 		if( gpAR->ubMercCols < gpAR->ubCivCols )
@@ -3115,8 +3143,8 @@ void CalculateRowsAndColumns()
 	gpAR->sHeight /= 40;
 	gpAR->sHeight *= 40;
 
-	//Here is a extremely bitchy case.  The formulae throughout this module work for most cases.
-	//However, when combining mercs and civs, the column must be the same.  However, we retract that
+	//Here is a extremely bitchy case.	The formulae throughout this module work for most cases.
+	//However, when combining mercs and civs, the column must be the same.	However, we retract that
 	//in cases where there are less mercs than available to fill up *most* of the designated space.
 	if( gpAR->ubMercs && gpAR->ubCivs )
 	{
@@ -3129,6 +3157,7 @@ void CalculateRowsAndColumns()
 
 void HandleAutoResolveInput()
 {
+	PERFORMANCE_MARKER
 
 DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve3");
 	
@@ -3374,11 +3403,12 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve3");
 
 void RenderSoldierCellHealth( SOLDIERCELL *pCell )
 {
+	PERFORMANCE_MARKER
 	INT32 cnt, cntStart;
 	INT32 xp, yp;
 	STR16 pStr;
 	CHAR16 str[20];
-	UINT8	 *pDestBuf, *pSrcBuf;
+	UINT8	*pDestBuf, *pSrcBuf;
 	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
 	UINT16 usColor;
 	
@@ -3393,9 +3423,9 @@ void RenderSoldierCellHealth( SOLDIERCELL *pCell )
 	UnLockVideoSurface( gpAR->iInterfaceBuffer );
 	UnLockVideoSurface( FRAME_BUFFER );
 
-	if( pCell->pSoldier->bLife )
+	if( pCell->pSoldier->stats.bLife )
 	{
-		if( pCell->pSoldier->bLife == pCell->pSoldier->bLifeMax )
+		if( pCell->pSoldier->stats.bLife == pCell->pSoldier->stats.bLifeMax )
 		{
 			cntStart = 4;
 		}
@@ -3405,7 +3435,7 @@ void RenderSoldierCellHealth( SOLDIERCELL *pCell )
 		}
 		for( cnt = cntStart; cnt < 6; cnt ++ )
 		{
-			if( pCell->pSoldier->bLife < bHealthStrRanges[ cnt ] )
+			if( pCell->pSoldier->stats.bLife < bHealthStrRanges[ cnt ] )
 			{
 				break;
 			}
@@ -3424,11 +3454,11 @@ void RenderSoldierCellHealth( SOLDIERCELL *pCell )
 				usColor = FONT_GRAY1;
 				break;
 		}
-		if( cnt > 3 && pCell->pSoldier->bLife != pCell->pSoldier->bLifeMax )
+		if( cnt > 3 && pCell->pSoldier->stats.bLife != pCell->pSoldier->stats.bLifeMax )
 		{ //Merc has taken damage, even though his life if good.
 			usColor = FONT_YELLOW;
 		}
-		if( pCell->pSoldier->bLife == pCell->pSoldier->bLifeMax )
+		if( pCell->pSoldier->stats.bLife == pCell->pSoldier->stats.bLifeMax )
 			usColor = FONT_GRAY1;
 		pStr = zHealthStr[ cnt ];
 	}
@@ -3448,8 +3478,8 @@ void RenderSoldierCellHealth( SOLDIERCELL *pCell )
 	}
 	else if( pCell->uiFlags & CELL_RETREATING && gpAR->ubBattleStatus == BATTLE_IN_PROGRESS )
 	{
-		if( pCell->pSoldier->bLife >= OKLIFE )
-		{ //Retreating is shared with the status string.  Alternate between the
+		if( pCell->pSoldier->stats.bLife >= OKLIFE )
+		{ //Retreating is shared with the status string.	Alternate between the
 			//two every 450 milliseconds
 			if( GetJA2Clock() % 900 < 450 )
 			{ //override the health string with the retreating string.
@@ -3461,7 +3491,7 @@ void RenderSoldierCellHealth( SOLDIERCELL *pCell )
 	}
 	else if( pCell->uiFlags & CELL_SHOWRETREATTEXT && gpAR->ubBattleStatus == BATTLE_IN_PROGRESS )
 	{
-		if( pCell->pSoldier->bLife >= OKLIFE )
+		if( pCell->pSoldier->stats.bLife >= OKLIFE )
 		{
 			SetFontForeground( FONT_YELLOW );
 			swprintf( str, gpStrategicString[ STR_AR_MERC_RETREAT ] );
@@ -3478,6 +3508,7 @@ void RenderSoldierCellHealth( SOLDIERCELL *pCell )
 
 UINT8 GetUnusedMercProfileID()
 {
+	PERFORMANCE_MARKER
 	UINT8 ubRandom=0;
 	INT32 i;
 	BOOLEAN fUnique = FALSE;
@@ -3499,13 +3530,12 @@ UINT8 GetUnusedMercProfileID()
 
 void CreateTempPlayerMerc()
 {
+	PERFORMANCE_MARKER
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	static INT32       iSoldierCount=0;     
+	static INT32		iSoldierCount=0;	 
 	UINT8							ubID;
 
 	//Init the merc create structure with basic information
-        // WDS - Clean up inventory handling
-	//memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );	
 	MercCreateStruct.bTeam									= SOLDIER_CREATE_AUTO_TEAM;
 	MercCreateStruct.ubProfile							= GetUnusedMercProfileID();
 	MercCreateStruct.sSectorX								= gpAR->ubSectorX;
@@ -3525,6 +3555,7 @@ void CreateTempPlayerMerc()
 
 void DetermineTeamLeader( BOOLEAN fFriendlyTeam )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	SOLDIERCELL *pBestLeaderCell = NULL;
 	//For each team (civs and players count as same team), find the merc with the best 
@@ -3534,17 +3565,17 @@ void DetermineTeamLeader( BOOLEAN fFriendlyTeam )
 		gpAR->ubPlayerLeadership = 0;
 		for( i = 0; i < gpAR->ubMercs; i++ )
 		{
-			if( gpMercs[ i ].pSoldier->bLeadership > gpAR->ubPlayerLeadership )
+			if( gpMercs[ i ].pSoldier->stats.bLeadership > gpAR->ubPlayerLeadership )
 			{
-				gpAR->ubPlayerLeadership = gpMercs[ i ].pSoldier->bLeadership;
+				gpAR->ubPlayerLeadership = gpMercs[ i ].pSoldier->stats.bLeadership;
 				pBestLeaderCell = &gpMercs[ i ];
 			}
 		}
 		for( i = 0; i < gpAR->ubCivs; i++ )
 		{
-			if( gpCivs[ i ].pSoldier->bLeadership > gpAR->ubPlayerLeadership )
+			if( gpCivs[ i ].pSoldier->stats.bLeadership > gpAR->ubPlayerLeadership )
 			{
-				gpAR->ubPlayerLeadership = gpCivs[ i ].pSoldier->bLeadership;
+				gpAR->ubPlayerLeadership = gpCivs[ i ].pSoldier->stats.bLeadership;
 				pBestLeaderCell = &gpCivs[ i ];
 			}
 		}
@@ -3560,9 +3591,9 @@ void DetermineTeamLeader( BOOLEAN fFriendlyTeam )
 	gpAR->ubEnemyLeadership = 0;
 	for( i = 0; i < gpAR->ubEnemies; i++ )
 	{
-		if( gpEnemies[ i ].pSoldier->bLeadership > gpAR->ubEnemyLeadership )
+		if( gpEnemies[ i ].pSoldier->stats.bLeadership > gpAR->ubEnemyLeadership )
 		{
-			gpAR->ubEnemyLeadership = gpEnemies[ i ].pSoldier->bLeadership;
+			gpAR->ubEnemyLeadership = gpEnemies[ i ].pSoldier->stats.bLeadership;
 			pBestLeaderCell = &gpEnemies[ i ];
 		}
 	}
@@ -3575,6 +3606,7 @@ void DetermineTeamLeader( BOOLEAN fFriendlyTeam )
 
 void ResetNextAttackCounter( SOLDIERCELL *pCell )
 {
+	PERFORMANCE_MARKER
 	pCell->usNextAttack = min( 1000 - pCell->usAttack, 800 );
 	pCell->usNextAttack = (UINT16)(1000 + pCell->usNextAttack * 5 + PreRandom( 2000 - pCell->usAttack ) );
 	if( pCell->uiFlags & CELL_CREATURE )
@@ -3585,6 +3617,7 @@ void ResetNextAttackCounter( SOLDIERCELL *pCell )
 
 FLOAT CalcClassBonusOrPenalty( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	switch( pSoldier->ubSoldierClass )
 	{
 	case SOLDIER_CLASS_ELITE:
@@ -3603,6 +3636,7 @@ FLOAT CalcClassBonusOrPenalty( SOLDIERTYPE *pSoldier )
 
 void CalculateAttackValues()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	SOLDIERCELL *pCell;
 	SOLDIERTYPE *pSoldier;
@@ -3610,7 +3644,6 @@ void CalculateAttackValues()
 	UINT16 usBestAttack = 0xffff;
 	UINT16 usBreathStrengthPercentage;
 	//INT16 sOutnumberBonus = 0;
-	INT16 sMaxBonus = 0;
 	//PLAYER TEAM
 	gpAR->usPlayerAttack = 0;
 	gpAR->usPlayerDefence = 0;
@@ -3627,13 +3660,13 @@ void CalculateAttackValues()
 	{
 		pCell = &gpMercs[ i ];	
 		pSoldier = pCell->pSoldier;
-		if( !pSoldier->bLife )
+		if( !pSoldier->stats.bLife )
 			continue;
-		pCell->usAttack =		pSoldier->bStrength + 
-												pSoldier->bDexterity +
-												pSoldier->bWisdom +
-												pSoldier->bMarksmanship +
-												pSoldier->bMorale;
+		pCell->usAttack =		pSoldier->stats.bStrength + 
+												pSoldier->stats.bDexterity +
+												pSoldier->stats.bWisdom +
+												pSoldier->stats.bMarksmanship +
+												pSoldier->aiData.bMorale;
 		//Give player controlled mercs a significant bonus to compensate for lack of control
 		//as the player would typically do much better in tactical.
 		if( pCell->usAttack < 1000 )
@@ -3643,17 +3676,17 @@ void CalculateAttackValues()
 		}
 		usBreathStrengthPercentage = 100 - ( 100 - pCell->pSoldier->bBreathMax ) / 3;
 		pCell->usAttack =		pCell->usAttack * usBreathStrengthPercentage / 100;
-		pCell->usDefence =	pSoldier->bAgility +
-												pSoldier->bWisdom +
+		pCell->usDefence =	pSoldier->stats.bAgility +
+												pSoldier->stats.bWisdom +
 												pSoldier->bBreathMax +
-												pSoldier->bMedical +
-												pSoldier->bMorale;
+												pSoldier->stats.bMedical +
+												pSoldier->aiData.bMorale;
 		//100 team leadership adds a bonus of 10%, 
 		usBonus = 100 + gpAR->ubPlayerLeadership/10;// + sOutnumberBonus;
 
 		//bExpLevel adds a bonus of 7% per level after 2, level 1 soldiers get a 7% decrease
-		//usBonus += 7 * (pSoldier->bExpLevel-2);
-		usBonus += EXP_BONUS * (pSoldier->bExpLevel-5);
+		//usBonus += 7 * (pSoldier->stats.bExpLevel-2);
+		usBonus += EXP_BONUS * (pSoldier->stats.bExpLevel-5);
 		usBonus += gpAR->ubPlayerDefenceAdvantage;
 		pCell->usAttack = pCell->usAttack * usBonus / 100;
 		pCell->usDefence = pCell->usDefence * usBonus / 100;
@@ -3682,22 +3715,22 @@ void CalculateAttackValues()
 	{
 		pCell = &gpCivs[ i ];	
 		pSoldier = pCell->pSoldier;
-		pCell->usAttack =		pSoldier->bStrength + 
-												pSoldier->bDexterity +
-												pSoldier->bWisdom +
-												pSoldier->bMarksmanship +
-												pSoldier->bMorale;
+		pCell->usAttack =		pSoldier->stats.bStrength + 
+												pSoldier->stats.bDexterity +
+												pSoldier->stats.bWisdom +
+												pSoldier->stats.bMarksmanship +
+												pSoldier->aiData.bMorale;
 		pCell->usAttack =		pCell->usAttack * pSoldier->bBreath / 100;
-		pCell->usDefence =	pSoldier->bAgility +
-												pSoldier->bWisdom +
+		pCell->usDefence =	pSoldier->stats.bAgility +
+												pSoldier->stats.bWisdom +
 												pSoldier->bBreathMax +
-												pSoldier->bMedical +
-												pSoldier->bMorale;
+												pSoldier->stats.bMedical +
+												pSoldier->aiData.bMorale;
 		//100 team leadership adds a bonus of 10%
 		usBonus = 100 + gpAR->ubPlayerLeadership/10;// + sOutnumberBonus;
 		//bExpLevel adds a bonus of 7% per level after 2, level 1 soldiers get a 7% decrease
-		//usBonus += 7 * (pSoldier->bExpLevel-2);
-		usBonus += EXP_BONUS * (pSoldier->bExpLevel-5);
+		//usBonus += 7 * (pSoldier->stats.bExpLevel-2);
+		usBonus += EXP_BONUS * (pSoldier->stats.bExpLevel-5);
 		usBonus += gpAR->ubPlayerDefenceAdvantage;
 		pCell->usAttack = pCell->usAttack * usBonus / 100;
 		pCell->usDefence = pCell->usDefence * usBonus / 100;
@@ -3717,9 +3750,9 @@ void CalculateAttackValues()
 		}
 
 
-		if( i >= CountAllMilitiaInSector( gpAR->ubSectorX, gpAR->ubSectorY  ) )
+		if( i >= CountAllMilitiaInSector( gpAR->ubSectorX, gpAR->ubSectorY	) )
 		{ //Extra delay if soldier's from reinforcement
-			pCell->usNextAttack += REINFORCMENT_ATTACK_DELAY_PER_SOLDIER_IN_SECTOR * CountAllMilitiaInSector( gpAR->ubSectorX, gpAR->ubSectorY  );
+			pCell->usNextAttack += REINFORCMENT_ATTACK_DELAY_PER_SOLDIER_IN_SECTOR * CountAllMilitiaInSector( gpAR->ubSectorX, gpAR->ubSectorY	);
 		}
 
 
@@ -3741,26 +3774,26 @@ void CalculateAttackValues()
 	{
 		pCell = &gpEnemies[ i ];	
 		pSoldier = pCell->pSoldier;
-		pCell->usAttack =		pSoldier->bStrength + 
-												pSoldier->bDexterity +
-												pSoldier->bWisdom +
-												pSoldier->bMarksmanship +
-												pSoldier->bMorale;
+		pCell->usAttack =		pSoldier->stats.bStrength + 
+												pSoldier->stats.bDexterity +
+												pSoldier->stats.bWisdom +
+												pSoldier->stats.bMarksmanship +
+												pSoldier->aiData.bMorale;
 		pCell->usAttack =		pCell->usAttack * pSoldier->bBreath / 100;
-		pCell->usDefence =	pSoldier->bAgility +
-												pSoldier->bWisdom +
+		pCell->usDefence =	pSoldier->stats.bAgility +
+												pSoldier->stats.bWisdom +
 												pSoldier->bBreathMax +
-												pSoldier->bMedical +
-												pSoldier->bMorale;
+												pSoldier->stats.bMedical +
+												pSoldier->aiData.bMorale;
 		//100 team leadership adds a bonus of 10%
 		usBonus = 100 + gpAR->ubPlayerLeadership/10;// + sOutnumberBonus;
 		//bExpLevel adds a bonus of 7% per level after 2, level 1 soldiers get a 7% decrease
-		//usBonus += 7 * (pSoldier->bExpLevel-2);
-		usBonus += EXP_BONUS * (pSoldier->bExpLevel-5);
+		//usBonus += 7 * (pSoldier->stats.bExpLevel-2);
+		usBonus += EXP_BONUS * (pSoldier->stats.bExpLevel-5);
 		usBonus += gpAR->ubEnemyDefenceAdvantage;
-		pCell->usAttack  = pCell->usAttack * usBonus / 100;
+		pCell->usAttack	= pCell->usAttack * usBonus / 100;
 		pCell->usDefence = pCell->usDefence * usBonus / 100;
-		pCell->usAttack  = (UINT16)( pCell->usAttack * CalcClassBonusOrPenalty( pCell->pSoldier ) );
+		pCell->usAttack	= (UINT16)( pCell->usAttack * CalcClassBonusOrPenalty( pCell->pSoldier ) );
 		pCell->usDefence = (UINT16)( pCell->usDefence * CalcClassBonusOrPenalty( pCell->pSoldier ) );
 
 		pCell->usAttack = min( pCell->usAttack, 1000 );
@@ -3775,16 +3808,16 @@ void CalculateAttackValues()
 			pCell->usNextAttack += (UINT32)( ( i - 4 ) * 1000 );
 		}
 
-		if(i >= NumEnemiesInSector( gpAR->ubSectorX, gpAR->ubSectorY  ) && !(pCell->uiFlags & CELL_CREATURE) )
+		if(i >= NumEnemiesInSector( gpAR->ubSectorX, gpAR->ubSectorY	) && !(pCell->uiFlags & CELL_CREATURE) )
 		{ //Extra delay if it's a reinforcement
-			pCell->usNextAttack += REINFORCMENT_ATTACK_DELAY_PER_SOLDIER_IN_SECTOR * NumEnemiesInSector( gpAR->ubSectorX, gpAR->ubSectorY  );
+			pCell->usNextAttack += REINFORCMENT_ATTACK_DELAY_PER_SOLDIER_IN_SECTOR * NumEnemiesInSector( gpAR->ubSectorX, gpAR->ubSectorY	);
 		}
 
 		
 		if( pCell->usNextAttack < usBestAttack )
 			usBestAttack = pCell->usNextAttack;
 	}
-	//Now, because we are starting a new battle, we want to get the ball rolling a bit earlier.  So,
+	//Now, because we are starting a new battle, we want to get the ball rolling a bit earlier.	So,
 	//we will take the usBestAttack value and subtract 60% of it from everybody's next attack.
 	usBestAttack = usBestAttack * 60 / 100;
 	for( i = 0; i < gpAR->ubMercs; i++ )
@@ -3797,6 +3830,7 @@ void CalculateAttackValues()
 
 void DrawDebugText( SOLDIERCELL *pCell )
 {
+	PERFORMANCE_MARKER
 	INT32 xp, yp;
 	if( !gpAR->fDebugInfo )
 		return;
@@ -3844,6 +3878,7 @@ void DrawDebugText( SOLDIERCELL *pCell )
 
 SOLDIERCELL* ChooseTarget( SOLDIERCELL *pAttacker )
 {
+	PERFORMANCE_MARKER
 	INT32 iAvailableTargets;
 	INT32 index;
 	INT32 iRandom = -1;
@@ -3858,7 +3893,7 @@ SOLDIERCELL* ChooseTarget( SOLDIERCELL *pAttacker )
 		while( iAvailableTargets )
 		{
 			pTarget = ( index < gpAR->ubMercs ) ? &gpMercs[ index ] : &gpCivs[ index - gpAR->ubMercs ];
-			if( !pTarget->pSoldier->bLife || pTarget->uiFlags & CELL_RETREATED )
+			if( !pTarget->pSoldier->stats.bLife || pTarget->uiFlags & CELL_RETREATED )
 			{
 				index++;
 				iAvailableTargets--;
@@ -3876,7 +3911,7 @@ SOLDIERCELL* ChooseTarget( SOLDIERCELL *pAttacker )
 		}
 		if( !IsBattleOver() )
 		{
-			AssertMsg( 0, String("***Please send PRIOR save and screenshot of this message***  iAvailableTargets %d, index %d, iRandom %d, defence %d. ",
+			AssertMsg( 0, String("***Please send PRIOR save and screenshot of this message***	iAvailableTargets %d, index %d, iRandom %d, defence %d. ",
 				iAvailableTargets, index, iRandom, gpAR->usPlayerDefence) );
 		}
 	}
@@ -3888,7 +3923,7 @@ SOLDIERCELL* ChooseTarget( SOLDIERCELL *pAttacker )
 		while( iAvailableTargets )
 		{
 			pTarget = &gpEnemies[ index ];
-			if( !pTarget->pSoldier->bLife )
+			if( !pTarget->pSoldier->stats.bLife )
 			{
 				index++;
 				iAvailableTargets--;
@@ -3911,9 +3946,9 @@ SOLDIERCELL* ChooseTarget( SOLDIERCELL *pAttacker )
 
 BOOLEAN FireAShot( SOLDIERCELL *pAttacker )
 {
+	PERFORMANCE_MARKER
 	OBJECTTYPE *pItem;
 	SOLDIERTYPE *pSoldier;
-	INT32 i;
 
 	pSoldier = pAttacker->pSoldier;
 
@@ -3923,7 +3958,7 @@ BOOLEAN FireAShot( SOLDIERCELL *pAttacker )
 		pAttacker->bWeaponSlot = SECONDHANDPOS;
 		return TRUE;
 	}
-	for( i = 0; i < NUM_INV_SLOTS; i++ )
+	for( UINT32 i = 0; i < pSoldier->inv.size(); i++ )
 	{
 		pItem = &pSoldier->inv[ i ];
 
@@ -3935,15 +3970,15 @@ BOOLEAN FireAShot( SOLDIERCELL *pAttacker )
 				PlayAutoResolveSample( Weapon[ pItem->usItem ].sSound, RATE_11025, 50, 1, MIDDLEPAN );			
 				return TRUE;
 			}
-			if( !pItem->ItemData.Gun.ubGunShotsLeft )
+			if( !(*pItem)[0]->data.gun.ubGunShotsLeft )
 			{
 				AutoReload( pSoldier );
-				if ( pItem->ItemData.Gun.ubGunShotsLeft && Weapon[ pItem->usItem ].sLocknLoadSound )
+				if ( (*pItem)[0]->data.gun.ubGunShotsLeft && Weapon[ pItem->usItem ].sLocknLoadSound )
 				{
 					PlayAutoResolveSample( Weapon[ pItem->usItem ].sLocknLoadSound, RATE_11025, 50, 1, MIDDLEPAN );
 				}
 			}
-			if( pItem->ItemData.Gun.ubGunShotsLeft )
+			if( (*pItem)[0]->data.gun.ubGunShotsLeft )
 			{
 				PlayAutoResolveSample( Weapon[ pItem->usItem ].sSound, RATE_11025, 50, 1, MIDDLEPAN );			
 				if( pAttacker->uiFlags & CELL_MERC )
@@ -3953,7 +3988,7 @@ BOOLEAN FireAShot( SOLDIERCELL *pAttacker )
 
 					StatChange( pAttacker->pSoldier, MARKAMT, 3, FALSE );
 				}
-				pItem->ItemData.Gun.ubGunShotsLeft--;
+				(*pItem)[0]->data.gun.ubGunShotsLeft--;
 				return TRUE;
 			}
 		}
@@ -3964,8 +3999,8 @@ BOOLEAN FireAShot( SOLDIERCELL *pAttacker )
 
 BOOLEAN AttackerHasKnife( SOLDIERCELL *pAttacker )
 {
-	INT32 i;
-	for( i = 0; i < NUM_INV_SLOTS; i++ )
+	PERFORMANCE_MARKER
+	for( UINT32 i = 0; i < pAttacker->pSoldier->inv.size(); i++ )
 	{
 		if( Item[ pAttacker->pSoldier->inv[ i ].usItem ].usItemClass == IC_BLADE )
 		{
@@ -3979,9 +4014,9 @@ BOOLEAN AttackerHasKnife( SOLDIERCELL *pAttacker )
 
 BOOLEAN TargetHasLoadedGun( SOLDIERTYPE *pSoldier )
 {
-	INT32 i;
+	PERFORMANCE_MARKER
 	OBJECTTYPE *pItem;
-	for( i = 0; i < NUM_INV_SLOTS; i++ )
+	for( UINT32 i = 0; i < pSoldier->inv.size(); i++ )
 	{
 		pItem = &pSoldier->inv[ i ];
 		if( Item[ pItem->usItem ].usItemClass == IC_GUN )
@@ -3990,7 +4025,7 @@ BOOLEAN TargetHasLoadedGun( SOLDIERTYPE *pSoldier )
 			{
 				return TRUE;
 			}
-			if( pItem->ItemData.Gun.ubGunShotsLeft )
+			if( (*pItem)[0]->data.gun.ubGunShotsLeft )
 			{
 				return TRUE;
 			}
@@ -4001,6 +4036,7 @@ BOOLEAN TargetHasLoadedGun( SOLDIERTYPE *pSoldier )
 
 void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 {
+	PERFORMANCE_MARKER
 	UINT16 usAttack;
 	UINT16 usDefence;
 	UINT8 ubImpact;
@@ -4020,7 +4056,7 @@ void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 	else 
 		usAttack = (UINT16)(950 + PreRandom( 50 ));
 	if( pTarget->uiFlags & CELL_RETREATING && !(pAttacker->uiFlags & CELL_FEMALECREATURE) )
-	{ //Attacking a retreating merc is harder.  Modify the attack value to 70% of it's value.
+	{ //Attacking a retreating merc is harder.	Modify the attack value to 70% of it's value.
 		//This allows retreaters to have a better chance of escaping.
 		usAttack = usAttack * 7 / 10;
 	}
@@ -4072,8 +4108,8 @@ void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 	}
 	if( usAttack < usDefence )
 	{
-		if( pTarget->pSoldier->bLife >= OKLIFE || !PreRandom( 5 ) )
-		{	//Attacker misses -- use up a round of ammo.  If target is unconcious, then 80% chance of hitting.
+		if( pTarget->pSoldier->stats.bLife >= OKLIFE || !PreRandom( 5 ) )
+		{	//Attacker misses -- use up a round of ammo.	If target is unconcious, then 80% chance of hitting.
 			pTarget->uiFlags |= CELL_DODGEDATTACK | CELL_DIRTY;
 			if( fMelee )
 			{
@@ -4128,14 +4164,13 @@ void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 	else
 	{
 		OBJECTTYPE *pItem;
-		//OBJECTTYPE tempItem;
 		PlayAutoResolveSample( (UINT8)(BULLET_IMPACT_1+PreRandom(3)), RATE_11025, 50, 1, MIDDLEPAN );
-		if( !pTarget->pSoldier->bLife )
+		if( !pTarget->pSoldier->stats.bLife )
 		{ //Soldier already dead (can't kill him again!)
 			return;
 		}
 
-		ubAccuracy = (UINT8)((usAttack - usDefence + PreRandom( usDefence - pTarget->usDefence ) )/10);  
+		ubAccuracy = (UINT8)((usAttack - usDefence + PreRandom( usDefence - pTarget->usDefence ) )/10);	
 
 		//Determine attacking weapon.
 		pAttacker->pSoldier->usAttackingWeapon = 0;
@@ -4148,18 +4183,18 @@ void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 		
 		//if( pAttacker->bWeaponSlot != HANDPOS )
 		//{ //switch items			
-		//	memcpy( &tempItem, &pAttacker->pSoldier->inv[ HANDPOS ], sizeof( OBJECTTYPE ) );			
-		//	memcpy( &pAttacker->pSoldier->inv[ HANDPOS ], &pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ], sizeof( OBJECTTYPE ) ); //CTD
+		//	tempItem = pAttacker->pSoldier->inv[ HANDPOS ];			
+		//	pAttacker->pSoldier->inv[ HANDPOS ] = pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ]; //CTD
 		//	iImpact = HTHImpact( pAttacker->pSoldier, pTarget->pSoldier, ubAccuracy, (BOOLEAN)(fKnife | fClaw) );
-		//	memcpy( &pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ], &pAttacker->pSoldier->inv[ HANDPOS ], sizeof( OBJECTTYPE ) );
-		//	memcpy( &pAttacker->pSoldier->inv[ HANDPOS ], &tempItem, sizeof( OBJECTTYPE ) );
+		//	pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ] = pAttacker->pSoldier->inv[ HANDPOS ];
+		//	pAttacker->pSoldier->inv[ HANDPOS ] = tempItem;
 		//}
 		//else
 		//{
 		//	iImpact = HTHImpact( pAttacker->pSoldier, pTarget->pSoldier, ubAccuracy, (BOOLEAN)(fKnife || fClaw) );
 		//}
 		iImpact = 0;
-		iNewLife = pTarget->pSoldier->bLife - iImpact;
+		iNewLife = pTarget->pSoldier->stats.bLife - iImpact;
 
 		if( pAttacker->uiFlags & CELL_MERC )
 		{ //Attacker is a player, so increment the number of shots that hit.
@@ -4173,13 +4208,13 @@ void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 			// EXPERIENCE GAIN: Took some damage
 			StatChange( pTarget->pSoldier, EXPERAMT, ( UINT16 )( 5 * ( iImpact / 10 ) ), FALSE );
 		}
-		if( pTarget->pSoldier->bLife >= CONSCIOUSNESS || pTarget->uiFlags & CELL_CREATURE )
+		if( pTarget->pSoldier->stats.bLife >= CONSCIOUSNESS || pTarget->uiFlags & CELL_CREATURE )
 		{
 			if( gpAR->fSound )
-				DoMercBattleSound( pTarget->pSoldier, (INT8)( BATTLE_SOUND_HIT1 + PreRandom( 2 ) ) );
+				pTarget->pSoldier->DoMercBattleSound( (INT8)( BATTLE_SOUND_HIT1 + PreRandom( 2 ) ) );
 		}
-		if( !(pTarget->uiFlags & CELL_CREATURE) && iNewLife < OKLIFE && pTarget->pSoldier->bLife >= OKLIFE )
-		{ //the hit caused the merc to fall.  Play the falling sound
+		if( !(pTarget->uiFlags & CELL_CREATURE) && iNewLife < OKLIFE && pTarget->pSoldier->stats.bLife >= OKLIFE )
+		{ //the hit caused the merc to fall.	Play the falling sound
 			PlayAutoResolveSample( (UINT8)FALL_1, RATE_11025, 50, 1, MIDDLEPAN );
 			pTarget->uiFlags &= ~CELL_RETREATING;
 		}
@@ -4201,19 +4236,19 @@ void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 			}
 		}
 		//Adjust the soldiers stats based on the damage.
-		pTarget->pSoldier->bLife = (INT8)max( iNewLife, 0 );
+		pTarget->pSoldier->stats.bLife = (INT8)max( iNewLife, 0 );
 		if( pTarget->uiFlags & CELL_MERC && gpAR->pRobotCell)
 		{
-			UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );
+			gpAR->pRobotCell->pSoldier->UpdateRobotControllerGivenRobot( );
 		}
 		if( fKnife || fClaw )
 		{
-			if( pTarget->pSoldier->bLifeMax - pTarget->pSoldier->bBleeding - iImpact >= pTarget->pSoldier->bLife )
+			if( pTarget->pSoldier->stats.bLifeMax - pTarget->pSoldier->bBleeding - iImpact >= pTarget->pSoldier->stats.bLife )
 				pTarget->pSoldier->bBleeding += (INT8)iImpact;
 			else
-				pTarget->pSoldier->bBleeding = (INT8)(pTarget->pSoldier->bLifeMax - pTarget->pSoldier->bLife);
+				pTarget->pSoldier->bBleeding = (INT8)(pTarget->pSoldier->stats.bLifeMax - pTarget->pSoldier->stats.bLife);
 		}
-		if( !pTarget->pSoldier->bLife )
+		if( !pTarget->pSoldier->stats.bLife )
 		{
 			gpAR->fRenderAutoResolve = TRUE;
 			#ifdef INVULNERABILITY
@@ -4252,9 +4287,10 @@ void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 
 void TargetHitCallback( SOLDIERCELL *pTarget, INT32 index )
 {
+	PERFORMANCE_MARKER
 	INT32 iNewLife;
 	SOLDIERCELL *pAttacker;
-	if( !pTarget->pSoldier->bLife )
+	if( !pTarget->pSoldier->stats.bLife )
 	{ //Soldier already dead (can't kill him again!)
 		return;
 	}
@@ -4279,7 +4315,7 @@ void TargetHitCallback( SOLDIERCELL *pTarget, INT32 index )
 			break;
 	}
 	
-	iNewLife = pTarget->pSoldier->bLife - pTarget->usHitDamage[index];
+	iNewLife = pTarget->pSoldier->stats.bLife - pTarget->usHitDamage[index];
 	if( !pTarget->usHitDamage[index] )
 	{ //bullet missed -- play a ricochet sound.
 		if( pTarget->uiFlags & CELL_MERC )
@@ -4305,13 +4341,13 @@ void TargetHitCallback( SOLDIERCELL *pTarget, INT32 index )
 	//bullet hit -- play an impact sound and a merc hit sound
 	PlayAutoResolveSample( (UINT8)(BULLET_IMPACT_1+PreRandom(3)), RATE_11025, 50, 1, MIDDLEPAN );
 
-	if( pTarget->pSoldier->bLife >= CONSCIOUSNESS )
+	if( pTarget->pSoldier->stats.bLife >= CONSCIOUSNESS )
 	{
 		if( gpAR->fSound )
-			DoMercBattleSound( pTarget->pSoldier, (INT8)( BATTLE_SOUND_HIT1 + PreRandom( 2 ) ) );
+			pTarget->pSoldier->DoMercBattleSound( (INT8)( BATTLE_SOUND_HIT1 + PreRandom( 2 ) ) );
 	}
-	if( iNewLife < OKLIFE && pTarget->pSoldier->bLife >= OKLIFE )
-	{ //the hit caused the merc to fall.  Play the falling sound
+	if( iNewLife < OKLIFE && pTarget->pSoldier->stats.bLife >= OKLIFE )
+	{ //the hit caused the merc to fall.	Play the falling sound
 		PlayAutoResolveSample( (UINT8)FALL_1, RATE_11025, 50, 1, MIDDLEPAN );
 		pTarget->uiFlags &= ~CELL_RETREATING;
 	}
@@ -4336,9 +4372,9 @@ void TargetHitCallback( SOLDIERCELL *pTarget, INT32 index )
 				{
 					gMercProfiles[ pKiller->pSoldier->ubProfile ].usKills++;
 					gStrategicStatus.usPlayerKills++;
-					// EXPERIENCE CLASS GAIN:  Earned a kill
-					StatChange( pKiller->pSoldier, EXPERAMT, ( UINT16 )( 10 * pTarget->pSoldier->bLevel ), FALSE );
-					HandleMoraleEvent( pKiller->pSoldier, MORALE_KILLED_ENEMY, gpAR->ubSectorX, gpAR->ubSectorY, 0  );
+					// EXPERIENCE CLASS GAIN:	Earned a kill
+					StatChange( pKiller->pSoldier, EXPERAMT, ( UINT16 )( 10 * pTarget->pSoldier->pathing.bLevel ), FALSE );
+					HandleMoraleEvent( pKiller->pSoldier, MORALE_KILLED_ENEMY, gpAR->ubSectorX, gpAR->ubSectorY, 0	);
 				}
 				else if( pKiller->uiFlags & CELL_MILITIA )
 					pKiller->pSoldier->ubMilitiaKills += 2;
@@ -4348,8 +4384,8 @@ void TargetHitCallback( SOLDIERCELL *pTarget, INT32 index )
 				if( pAssister1->uiFlags & CELL_MERC )
 				{
 					gMercProfiles[ pAssister1->pSoldier->ubProfile ].usAssists++;
-					// EXPERIENCE CLASS GAIN:  Earned an assist
-					StatChange( pAssister1->pSoldier, EXPERAMT, ( UINT16 )( 5 * pTarget->pSoldier->bLevel ), FALSE );
+					// EXPERIENCE CLASS GAIN:	Earned an assist
+					StatChange( pAssister1->pSoldier, EXPERAMT, ( UINT16 )( 5 * pTarget->pSoldier->pathing.bLevel ), FALSE );
 				}
 				else if( pAssister1->uiFlags & CELL_MILITIA )
 					pAssister1->pSoldier->ubMilitiaKills++;
@@ -4359,8 +4395,8 @@ void TargetHitCallback( SOLDIERCELL *pTarget, INT32 index )
 				if( pAssister2->uiFlags & CELL_MERC )
 				{
 					gMercProfiles[ pAssister2->pSoldier->ubProfile ].usAssists++;
-					// EXPERIENCE CLASS GAIN:  Earned an assist
-					StatChange( pAssister2->pSoldier, EXPERAMT, ( UINT16 )( 5 * pTarget->pSoldier->bLevel ), FALSE );
+					// EXPERIENCE CLASS GAIN:	Earned an assist
+					StatChange( pAssister2->pSoldier, EXPERAMT, ( UINT16 )( 5 * pTarget->pSoldier->pathing.bLevel ), FALSE );
 				}
 				else if( pAssister2->uiFlags & CELL_MILITIA )
 					pAssister2->pSoldier->ubMilitiaKills++;
@@ -4385,7 +4421,7 @@ void TargetHitCallback( SOLDIERCELL *pTarget, INT32 index )
 		{ //Normal death
 			if( gpAR->fSound )
 			{
-				DoMercBattleSound( pTarget->pSoldier, BATTLE_SOUND_DIE1 );
+				pTarget->pSoldier->DoMercBattleSound( BATTLE_SOUND_DIE1 );
 			}
 		}
 		#ifdef INVULNERABILITY
@@ -4394,17 +4430,17 @@ void TargetHitCallback( SOLDIERCELL *pTarget, INT32 index )
 		#endif
 	}
 	//Adjust the soldiers stats based on the damage.
-	pTarget->pSoldier->bLife = (INT8)max( iNewLife, 0 );
+	pTarget->pSoldier->stats.bLife = (INT8)max( iNewLife, 0 );
 	if( pTarget->uiFlags & CELL_MERC && gpAR->pRobotCell)
 	{
-		UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );
+		gpAR->pRobotCell->pSoldier->UpdateRobotControllerGivenRobot( );
 	}
 
-	if( pTarget->pSoldier->bLifeMax - pTarget->pSoldier->bBleeding - pTarget->usHitDamage[index] >= pTarget->pSoldier->bLife )
+	if( pTarget->pSoldier->stats.bLifeMax - pTarget->pSoldier->bBleeding - pTarget->usHitDamage[index] >= pTarget->pSoldier->stats.bLife )
 		pTarget->pSoldier->bBleeding += (INT8)pTarget->usHitDamage[index];
 	else
-		pTarget->pSoldier->bBleeding = (INT8)(pTarget->pSoldier->bLifeMax - pTarget->pSoldier->bLife);
-	if( !pTarget->pSoldier->bLife )
+		pTarget->pSoldier->bBleeding = (INT8)(pTarget->pSoldier->stats.bLifeMax - pTarget->pSoldier->stats.bLife);
+	if( !pTarget->pSoldier->stats.bLife )
 	{
 		gpAR->fRenderAutoResolve = TRUE;
 		if( pTarget->uiFlags & CELL_MERC )
@@ -4437,6 +4473,7 @@ void TargetHitCallback( SOLDIERCELL *pTarget, INT32 index )
 
 void Delay( UINT32 uiMilliseconds )
 {
+	PERFORMANCE_MARKER
 	INT32 iTime;
 	iTime = GetJA2Clock();
 	while( GetJA2Clock() < iTime + uiMilliseconds );
@@ -4444,6 +4481,7 @@ void Delay( UINT32 uiMilliseconds )
 
 BOOLEAN IsBattleOver()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	INT32 iNumInvolvedMercs = 0;
 	INT32 iNumMercsRetreated = 0;
@@ -4452,7 +4490,7 @@ BOOLEAN IsBattleOver()
 		return TRUE;
 	for( i = 0; i < gpAR->ubMercs; i++ )
 	{
-		if( !(gpMercs[ i ].uiFlags & CELL_RETREATED) && gpMercs[ i ].pSoldier->bLife )
+		if( !(gpMercs[ i ].uiFlags & CELL_RETREATED) && gpMercs[ i ].pSoldier->stats.bLife )
 		{
 			if( !(gpMercs[ i ].uiFlags & CELL_EPC) )
 			{
@@ -4475,8 +4513,8 @@ BOOLEAN IsBattleOver()
 			gpAR->pRobotCell->usAttack = 0;
 			if( iNumInvolvedMercs == 1 && !gpAR->ubAliveCivs )
 			{ //Robot is the only one left in battle, so instantly kill him.
-				DoMercBattleSound( pRobot, BATTLE_SOUND_DIE1 );
-				pRobot->bLife = 0;
+				pRobot->DoMercBattleSound( BATTLE_SOUND_DIE1 );
+				pRobot->stats.bLife = 0;
 				gpAR->ubAliveMercs--;
 				iNumInvolvedMercs = 0;
 			}
@@ -4499,19 +4537,19 @@ BOOLEAN IsBattleOver()
 			{
 				if( gpMercs[ i ].uiFlags & CELL_EPC )
 				{
-					DoMercBattleSound( gpMercs[ i ].pSoldier, BATTLE_SOUND_DIE1 );
-					gpMercs[ i ].pSoldier->bLife = 0;
+					gpMercs[ i ].pSoldier->DoMercBattleSound( BATTLE_SOUND_DIE1 );
+					gpMercs[ i ].pSoldier->stats.bLife = 0;
 					gpAR->ubAliveMercs--;
 				}
 			}
 		}
 		for( i = 0; i < gpAR->ubEnemies; i++ )
 		{
-			if( gpEnemies[ i ].pSoldier->bLife )
+			if( gpEnemies[ i ].pSoldier->stats.bLife )
 			{
 				if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 				{
-					DoMercBattleSound( gpEnemies[ i ].pSoldier, BATTLE_SOUND_LAUGH1 );
+					gpEnemies[ i ].pSoldier->DoMercBattleSound( BATTLE_SOUND_LAUGH1 );
 				}
 				else
 				{
@@ -4539,6 +4577,7 @@ BOOLEAN IsBattleOver()
 
 BOOLEAN AttemptPlayerCapture()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	BOOLEAN fConcious;
 	INT32 iConciousEnemies;
@@ -4559,7 +4598,7 @@ BOOLEAN AttemptPlayerCapture()
 		return FALSE;
 	}
 	if( gpAR->fCaptureNotPermittedDueToEPCs )
-	{ //EPCs make things much more difficult when considering capture.  Simply don't allow it.
+	{ //EPCs make things much more difficult when considering capture.	Simply don't allow it.
 		return FALSE;
 	}
 	//Only attempt capture of mercs if there are 2 or 3 of them alive
@@ -4576,7 +4615,7 @@ BOOLEAN AttemptPlayerCapture()
 	iConciousEnemies = 0;
 	for( i = 0; i < gpAR->ubEnemies; i++ )
 	{
-		if( gpEnemies[ i ].pSoldier->bLife >= OKLIFE )
+		if( gpEnemies[ i ].pSoldier->stats.bLife >= OKLIFE )
 		{
 			iConciousEnemies++;
 		}
@@ -4586,8 +4625,8 @@ BOOLEAN AttemptPlayerCapture()
 		return FALSE;
 	}
 
-	//So far, the conditions are right.  Now, we will determine if the the remaining players are
-	//wounded and/or unconcious.  If any are concious, we will prompt for a surrender, otherwise,
+	//So far, the conditions are right.	Now, we will determine if the the remaining players are
+	//wounded and/or unconcious.	If any are concious, we will prompt for a surrender, otherwise,
 	//it is automatic.
 	fConcious = FALSE;
 	for( i = 0; i < gpAR->ubMercs; i++ )
@@ -4597,11 +4636,11 @@ BOOLEAN AttemptPlayerCapture()
 		{
 			return FALSE;
 		}
-		if( gpMercs[ i ].pSoldier->bLife*100 > gpMercs[ i ].pSoldier->bLifeMax*60 )
+		if( gpMercs[ i ].pSoldier->stats.bLife*100 > gpMercs[ i ].pSoldier->stats.bLifeMax*60 )
 		{
 			return FALSE;
 		}
-		if( gpMercs[ i ].pSoldier->bLife >= OKLIFE )
+		if( gpMercs[ i ].pSoldier->stats.bLife >= OKLIFE )
 		{
 			fConcious = TRUE;
 		}
@@ -4630,6 +4669,7 @@ BOOLEAN AttemptPlayerCapture()
 
 void SetupDoneInterface()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	gpAR->fRenderAutoResolve = TRUE;
 
@@ -4658,6 +4698,7 @@ void SetupDoneInterface()
 
 void SetupSurrenderInterface()
 {
+	PERFORMANCE_MARKER
 	HideButton( gpAR->iButton[ PAUSE_BUTTON ] );
 	HideButton( gpAR->iButton[ PLAY_BUTTON ] );
 	HideButton( gpAR->iButton[ FAST_BUTTON ] );
@@ -4674,6 +4715,7 @@ void SetupSurrenderInterface()
 
 void HideSurrenderInterface()
 {
+	PERFORMANCE_MARKER
 	HideButton( gpAR->iButton[ PAUSE_BUTTON ] );
 	HideButton( gpAR->iButton[ PLAY_BUTTON ] );
 	HideButton( gpAR->iButton[ FAST_BUTTON ] );
@@ -4690,6 +4732,7 @@ void HideSurrenderInterface()
 
 void AcceptSurrenderCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		BeginCaptureSquence( );
@@ -4702,6 +4745,7 @@ void AcceptSurrenderCallback( GUI_BUTTON *btn, INT32 reason )
 
 void RejectSurrenderCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gpAR->fPlayerRejectedSurrenderOffer = TRUE;
@@ -4712,6 +4756,7 @@ void RejectSurrenderCallback( GUI_BUTTON *btn, INT32 reason )
 
 void ProcessBattleFrame()
 {
+	PERFORMANCE_MARKER
 	INT32 iRandom;
 	INT32 i;
 	SOLDIERCELL *pAttacker, *pTarget;
@@ -4770,8 +4815,8 @@ void ProcessBattleFrame()
 
 		//Now process each of the players
 		iTotal = gpAR->ubMercs + gpAR->ubCivs + gpAR->ubEnemies + 1;
-		iMercs	 = iMercsLeft		= gpAR->ubMercs;
-		iCivs		 = iCivsLeft		= gpAR->ubCivs;
+		iMercs	= iMercsLeft		= gpAR->ubMercs;
+		iCivs		= iCivsLeft		= gpAR->ubCivs;
 		iEnemies = iEnemiesLeft = gpAR->ubEnemies;
 		for( i = 0; i < gpAR->ubMercs; i++ )
 			gpMercs[ i ].uiFlags &= ~CELL_PROCESSED;
@@ -4784,9 +4829,9 @@ void ProcessBattleFrame()
 			INT32 cnt;
 			if( iTimeSlice != 0x7fffffff && GetJA2Clock() > gpAR->uiCurrTime+17 ||
 				!gpAR->fInstantFinish && iAttacksThisFrame > (gpAR->ubMercs+gpAR->ubCivs+gpAR->ubEnemies)/4 )
-			{ //We have spent too much time in here.  In order to maintain 60FPS, we will
+			{ //We have spent too much time in here.	In order to maintain 60FPS, we will
 				//leave now, which will allow for updating of the graphics (and mouse cursor),
-				//and all of the necessary locals are saved via static variables.  It'll check
+				//and all of the necessary locals are saved via static variables.	It'll check
 				//the fContinue flag, and goto the CONTINUE_BATTLE label the next time this function
 				//is called.
 				fContinue = TRUE;
@@ -4852,7 +4897,7 @@ void ProcessBattleFrame()
 						iTime = pAttacker->usNextHit[ cnt ];
 						iTime -= uiSlice;
 						if( iTime >= 0 )
-						{ //Bullet still on route.  
+						{ //Bullet still on route.	
 							pAttacker->usNextHit[ cnt ] = (UINT16)iTime;
 						}
 						else
@@ -4863,9 +4908,9 @@ void ProcessBattleFrame()
 					}
 				}
 			}
-			if( pAttacker->pSoldier->bLife < OKLIFE || pAttacker->uiFlags & CELL_RETREATED )
+			if( pAttacker->pSoldier->stats.bLife < OKLIFE || pAttacker->uiFlags & CELL_RETREATED )
 			{
-				if( !(pAttacker->uiFlags & CELL_CREATURE) || !pAttacker->pSoldier->bLife )
+				if( !(pAttacker->uiFlags & CELL_CREATURE) || !pAttacker->pSoldier->stats.bLife )
 					continue; //can't attack if you are unconcious or not around (Or a live creature)
 			}
 			iTime = pAttacker->usNextAttack;
@@ -4878,7 +4923,7 @@ void ProcessBattleFrame()
 			else
 			{
 				if( pAttacker->uiFlags & CELL_RETREATING )
-				{ //The merc has successfully retreated.  Remove the stats, and continue on.
+				{ //The merc has successfully retreated.	Remove the stats, and continue on.
 					if( pAttacker == gpAR->pRobotCell )
 					{
 						if( gpAR->pRobotCell->pSoldier->ubRobotRemoteHolderID == NOBODY )
@@ -4917,6 +4962,7 @@ void ProcessBattleFrame()
 
 BOOLEAN IsAutoResolveActive()
 {
+	PERFORMANCE_MARKER
 	//is the autoresolve up or not?
 	if( gpAR )
 	{
@@ -4927,6 +4973,7 @@ BOOLEAN IsAutoResolveActive()
 
 UINT8 GetAutoResolveSectorID()
 {
+	PERFORMANCE_MARKER
 	if( gpAR )
 	{
 		return (UINT8)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
@@ -4937,6 +4984,7 @@ UINT8 GetAutoResolveSectorID()
 //Returns TRUE if a battle is happening or sector is loaded
 BOOLEAN GetCurrentBattleSectorXYZ( INT16 *psSectorX, INT16 *psSectorY, INT16 *psSectorZ )
 {
+	PERFORMANCE_MARKER
 	if( gpAR )
 	{
 		*psSectorX = gpAR->ubSectorX;	
@@ -4970,6 +5018,7 @@ BOOLEAN GetCurrentBattleSectorXYZ( INT16 *psSectorX, INT16 *psSectorY, INT16 *ps
 //Returns TRUE if a battle is happening ONLY
 BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle( INT16 *psSectorX, INT16 *psSectorY, INT16 *psSectorZ )
 {
+	PERFORMANCE_MARKER
 	if ( ( psSectorX == NULL )||(psSectorY == NULL )||(psSectorZ == NULL ) )
 	{	
 		return FALSE;
@@ -5011,18 +5060,20 @@ BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle( INT16 *psSectorX
 
 void AutoBandageFinishedCallback( UINT8 ubResult )
 {
+	PERFORMANCE_MARKER
 	SetupDoneInterface();
 }
 
 BOOLEAN ProcessLoyalty()
 {
+	PERFORMANCE_MARKER
 	if( !gpAR ) return FALSE;
 
 	if( PlayerMercsInSector( gpAR->ubSectorX, gpAR->ubSectorY, 0 ) )
 		return TRUE;
 
-	if( GetTownIdForSector(  gpAR->ubSectorX,  gpAR->ubSectorY ) != BLANK_SECTOR ||
-		IsThisSectorASAMSector(   gpAR->ubSectorX,  gpAR->ubSectorY, 0 ) )
+	if( GetTownIdForSector(	gpAR->ubSectorX,	gpAR->ubSectorY ) != BLANK_SECTOR ||
+		IsThisSectorASAMSector(	gpAR->ubSectorX,	gpAR->ubSectorY, 0 ) )
 		return TRUE;
 
 	return FALSE;

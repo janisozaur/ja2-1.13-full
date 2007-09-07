@@ -69,6 +69,7 @@ MOUSE_REGION EditorRegion;
 
 void EnableEditorRegion( INT8 bRegionID )
 {
+	PERFORMANCE_MARKER
 	switch( bRegionID )
 	{
 		case BASE_TERRAIN_TILE_REGION_ID:
@@ -86,6 +87,7 @@ void EnableEditorRegion( INT8 bRegionID )
 
 void DisableEditorRegion( INT8	bRegionID )
 {
+	PERFORMANCE_MARKER
 	switch( bRegionID )
 	{
 		case BASE_TERRAIN_TILE_REGION_ID:
@@ -103,6 +105,7 @@ void DisableEditorRegion( INT8	bRegionID )
 
 void RemoveEditorRegions()
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 	MSYS_RemoveRegion( &EditorRegion );
 	for(x = BASE_TERRAIN_TILE_REGION_ID; x < NUM_TERRAIN_TILE_REGIONS; x++ )
@@ -115,10 +118,11 @@ void RemoveEditorRegions()
 
 void InitEditorRegions()
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 
 	//By doing this, all of the buttons underneath are blanketed and can't be used anymore.
-	//Any new buttons will cover this up as well.  Think of it as a barrier between the editor buttons,
+	//Any new buttons will cover this up as well.	Think of it as a barrier between the editor buttons,
 	//and the game's interface panel buttons and regions.
 	MSYS_DefineRegion( &EditorRegion, 0, SCREEN_HEIGHT - 120, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
 
@@ -145,7 +149,8 @@ void InitEditorRegions()
 
 void LoadEditorImages()
 {
-  VOBJECT_DESC    VObjectDesc;
+	PERFORMANCE_MARKER
+	VOBJECT_DESC	VObjectDesc;
 
 	//Set up the merc inventory panel
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
@@ -173,6 +178,7 @@ void LoadEditorImages()
 
 void DeleteEditorImages()
 {
+	PERFORMANCE_MARKER
 	//The merc inventory panel
 	DeleteVideoObjectFromIndex( guiMercInventoryPanel );
 	DeleteVideoObjectFromIndex( guiOmertaMap );
@@ -186,14 +192,15 @@ void DeleteEditorImages()
 
 void CreateEditorBuffers()
 {
+	PERFORMANCE_MARKER
 
 	INT32						i;
 	VSURFACE_DESC		vs_desc;
 	UINT16					usUselessWidth, usUselessHeight;
 	UINT8						ubBitDepth;
 
-	//create buffer for the transition slot for merc items.  This slot contains the newly
-	//selected item graphic in it's inventory size version.  This buffer is then scaled down
+	//create buffer for the transition slot for merc items.	This slot contains the newly
+	//selected item graphic in it's inventory size version.	This buffer is then scaled down
 	//into the associated merc inventory panel slot buffer which is approximately 20% smaller.
 	GetCurrentVideoSettings( &usUselessWidth, &usUselessHeight, &ubBitDepth );
 	vs_desc.fCreateFlags = VSURFACE_CREATE_DEFAULT | VSURFACE_SYSTEM_MEM_USAGE;
@@ -215,6 +222,7 @@ void CreateEditorBuffers()
 
 void DeleteEditorBuffers()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	DeleteVideoSurfaceFromIndex( guiMercTempBuffer );
 	for( i = 0; i < 9; i++ )
@@ -225,6 +233,7 @@ void DeleteEditorBuffers()
 
 void ShowEditorToolbar( INT32 iNewTaskMode )
 {
+	PERFORMANCE_MARKER
 	switch( iNewTaskMode )
 	{
 		case TASK_TERRAIN:		ShowEditorButtons( FIRST_TERRAIN_BUTTON, LAST_TERRAIN_BUTTON );								break;
@@ -239,6 +248,7 @@ void ShowEditorToolbar( INT32 iNewTaskMode )
 
 void HideEditorToolbar( INT32 iOldTaskMode )
 {
+	PERFORMANCE_MARKER
 	INT32 i, iStart, iEnd;
 	switch( iOldTaskMode )
 	{
@@ -259,6 +269,7 @@ void HideEditorToolbar( INT32 iOldTaskMode )
 
 void CreateEditorTaskbar()
 {
+	PERFORMANCE_MARKER
 	InitEditorRegions();
 	LoadEditorImages();
 	CreateEditorBuffers();
@@ -268,6 +279,7 @@ void CreateEditorTaskbar()
 
 void DeleteEditorTaskbar()
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 
 	iOldTaskMode = iCurrentTaskbar;
@@ -283,6 +295,7 @@ void DeleteEditorTaskbar()
 
 void DoTaskbar(void)
 {
+	PERFORMANCE_MARKER
 	if(!iTaskMode || iTaskMode == iCurrentTaskbar )
 	{
 		return;
@@ -401,6 +414,7 @@ void DoTaskbar(void)
 //Disables the task bar, but leaves it on screen. Used when a selection window is up.
 void DisableEditorTaskbar(void)
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 	for(x = 0; x < NUMBER_EDITOR_BUTTONS; x++ )
 		DisableButton( iEditorButton[ x ] );
@@ -409,6 +423,7 @@ void DisableEditorTaskbar(void)
 
 void EnableEditorTaskbar(void)
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 	
 	for(x = 0; x < NUMBER_EDITOR_BUTTONS; x++ )
@@ -425,17 +440,18 @@ void EnableEditorTaskbar(void)
 }
 
 //A specialized mprint function that'll restore the editor panel underneath the
-//string before rendering the string.  This is obviously only useful for drawing text
+//string before rendering the string.	This is obviously only useful for drawing text
 //in the editor taskbar.
 void mprintfEditor(INT16 x, INT16 y, STR16 pFontString, ...)
 {
+	PERFORMANCE_MARKER
 	va_list argptr;
 	CHAR16	string[512];
 	UINT16 uiStringLength, uiStringHeight;
 
 	Assert( pFontString != NULL );
 
-	va_start( argptr, pFontString );       	// Set up variable argument pointer
+	va_start( argptr, pFontString );			// Set up variable argument pointer
 	vswprintf( string, pFontString, argptr);	// process gprintf string (get output str)
 	va_end( argptr );
 
@@ -448,6 +464,7 @@ void mprintfEditor(INT16 x, INT16 y, STR16 pFontString, ...)
 
 void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 {
+	PERFORMANCE_MARKER
 	ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, sTop, sRight, sBottom, gusEditorTaskbarColor );
 
 	if( !sLeft )
@@ -471,10 +488,11 @@ void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 
 //Kris:
 //This is a new function which duplicates the older "yellow info boxes" that
-//are common throughout the editor.  This draws the yellow box with the indentation
+//are common throughout the editor.	This draws the yellow box with the indentation
 //look.
 void DrawEditorInfoBox( STR16 str, UINT32 uiFont, UINT16 x, UINT16 y, UINT16 w, UINT16 h )
 {
+	PERFORMANCE_MARKER
 	UINT16 usFillColorDark, usFillColorLight, usFillColorBack;
 	UINT16 x2, y2;
 	UINT16 usStrWidth;
@@ -509,6 +527,7 @@ void DrawEditorInfoBox( STR16 str, UINT32 uiFont, UINT16 x, UINT16 y, UINT16 w, 
 
 void ClickEditorButton( INT32 iEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *butn;
 	if ( iEditorButtonID < 0 || iEditorButtonID >= NUMBER_EDITOR_BUTTONS )
 		return;
@@ -522,6 +541,7 @@ void ClickEditorButton( INT32 iEditorButtonID )
 
 void UnclickEditorButton( INT32 iEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *butn;
 	if ( iEditorButtonID < 0 || iEditorButtonID >= NUMBER_EDITOR_BUTTONS )
 		return;
@@ -535,26 +555,31 @@ void UnclickEditorButton( INT32 iEditorButtonID )
 
 void HideEditorButton( INT32 iEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	HideButton( iEditorButton[ iEditorButtonID ] );
 }
 
 void ShowEditorButton( INT32 iEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	ShowButton( iEditorButton[ iEditorButtonID ] );
 }
 
 void DisableEditorButton( INT32 iEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	DisableButton( iEditorButton[ iEditorButtonID ] );
 }
 
 void EnableEditorButton( INT32 iEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	EnableButton( iEditorButton[ iEditorButtonID ] );
 }
 
 void ClickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	GUI_BUTTON *b;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
@@ -568,6 +593,7 @@ void ClickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 
 void UnclickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	GUI_BUTTON *b;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
@@ -581,6 +607,7 @@ void UnclickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID
 
 void HideEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
 		HideButton( iEditorButton[ i ] );
@@ -588,6 +615,7 @@ void HideEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 
 void ShowEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
 		ShowButton( iEditorButton[ i ] );
@@ -595,6 +623,7 @@ void ShowEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 
 void DisableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
 		DisableButton( iEditorButton[ i ] );
@@ -602,6 +631,7 @@ void DisableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID
 
 void EnableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
 		EnableButton( iEditorButton[ i ] );
@@ -609,6 +639,7 @@ void EnableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID 
 
 void RenderMapEntryPointsAndLights()
 {
+	PERFORMANCE_MARKER
 	INT16 sGridNo;
 	INT16 sScreenX, sScreenY;
 	INT32 i;
@@ -621,7 +652,7 @@ void RenderMapEntryPointsAndLights()
 	if( sGridNo != -1 )
 	{
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)  && sScreenX < SCREEN_WIDTH )
+		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)	&& sScreenX < SCREEN_WIDTH )
 		{
 			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"North Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 		}
@@ -630,7 +661,7 @@ void RenderMapEntryPointsAndLights()
 	if( sGridNo != -1 )
 	{
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)  && sScreenX < SCREEN_WIDTH )
+		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)	&& sScreenX < SCREEN_WIDTH )
 		{
 			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"West Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 		}
@@ -639,7 +670,7 @@ void RenderMapEntryPointsAndLights()
 	if( sGridNo != -1 )
 	{
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)  && sScreenX < SCREEN_WIDTH )
+		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)	&& sScreenX < SCREEN_WIDTH )
 		{
 			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"East Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 		}
@@ -648,7 +679,7 @@ void RenderMapEntryPointsAndLights()
 	if( sGridNo != -1 )
 	{
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= ( - 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)  && sScreenX < SCREEN_WIDTH )
+		if( sScreenY >= ( - 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)	&& sScreenX < SCREEN_WIDTH )
 		{
 			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"South Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 		}
@@ -657,7 +688,7 @@ void RenderMapEntryPointsAndLights()
 	if( sGridNo != -1 )
 	{
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)  && sScreenX < SCREEN_WIDTH )
+		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)	&& sScreenX < SCREEN_WIDTH )
 		{
 			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"Center Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 		}
@@ -666,7 +697,7 @@ void RenderMapEntryPointsAndLights()
 	if( sGridNo != -1 )
 	{
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)  && sScreenX < SCREEN_WIDTH )
+		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)	&& sScreenX < SCREEN_WIDTH )
 		{
 			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"Isolated Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 		}
@@ -677,7 +708,7 @@ void RenderMapEntryPointsAndLights()
 	{
 		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE )
 		{
-			// Check for light out of bounds.  This actually happens in Drassen.
+			// Check for light out of bounds.	This actually happens in Drassen.
 			if (LightSprites[ i ].iY < 0 || LightSprites[ i ].iY > WORLD_ROWS ||
 				LightSprites[ i ].iX < 0 || LightSprites[ i ].iX > WORLD_COLS)
 			{
@@ -687,7 +718,7 @@ void RenderMapEntryPointsAndLights()
 
 			sGridNo = LightSprites[ i ].iY * WORLD_COLS + LightSprites[ i ].iX;
 			GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-			if( sScreenY >= (- 50) && sScreenY < (2 * iScreenHeightOffset + 300) && sScreenX >= (- 40)  && sScreenX < SCREEN_WIDTH )
+			if( sScreenY >= (- 50) && sScreenY < (2 * iScreenHeightOffset + 300) && sScreenX >= (- 40)	&& sScreenX < SCREEN_WIDTH )
 			{
 				if( LightSprites[ i ].uiFlags & LIGHT_PRIMETIME )
 					DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 50, 2, FONT10ARIAL, FONT_ORANGE, L"Prime", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
@@ -702,34 +733,36 @@ void RenderMapEntryPointsAndLights()
 
 void BuildTriggerName( OBJECTTYPE *pItem, STR16 szItemName )
 {
+	PERFORMANCE_MARKER
 	if( pItem->usItem == SWITCH )
 	{
-		if( pItem->ItemData.Trigger.BombTrigger.bFrequency == PANIC_FREQUENCY )
+		if( (*pItem)[0]->data.misc.bFrequency == PANIC_FREQUENCY )
 			swprintf( szItemName, L"Panic Trigger1" );
-		else if( pItem->ItemData.Trigger.BombTrigger.bFrequency == PANIC_FREQUENCY_2 )
+		else if( (*pItem)[0]->data.misc.bFrequency == PANIC_FREQUENCY_2 )
 			swprintf( szItemName, L"Panic Trigger2" );
-		else if( pItem->ItemData.Trigger.BombTrigger.bFrequency == PANIC_FREQUENCY_3 )
+		else if( (*pItem)[0]->data.misc.bFrequency == PANIC_FREQUENCY_3 )
 			swprintf( szItemName, L"Panic Trigger3" );
 		else
-			swprintf( szItemName, L"Trigger%d", pItem->ItemData.Trigger.BombTrigger.bFrequency - 50 );
+			swprintf( szItemName, L"Trigger%d", (*pItem)[0]->data.misc.bFrequency - 50 );
 	}
 	else
 	{ //action item
-		if( pItem->ItemData.Trigger.bDetonatorType == BOMB_PRESSURE )
+		if( (*pItem)[0]->data.misc.bDetonatorType == BOMB_PRESSURE )
 			swprintf( szItemName, L"Pressure Action" );
-		else if( pItem->ItemData.Trigger.BombTrigger.bFrequency == PANIC_FREQUENCY )
+		else if( (*pItem)[0]->data.misc.bFrequency == PANIC_FREQUENCY )
 			swprintf( szItemName, L"Panic Action1" );
-		else if( pItem->ItemData.Trigger.BombTrigger.bFrequency == PANIC_FREQUENCY_2 )
+		else if( (*pItem)[0]->data.misc.bFrequency == PANIC_FREQUENCY_2 )
 			swprintf( szItemName, L"Panic Action2" );
-		else if( pItem->ItemData.Trigger.BombTrigger.bFrequency == PANIC_FREQUENCY_3 )
+		else if( (*pItem)[0]->data.misc.bFrequency == PANIC_FREQUENCY_3 )
 			swprintf( szItemName, L"Panic Action3" );
 		else
-			swprintf( szItemName, L"Action%d", pItem->ItemData.Trigger.BombTrigger.bFrequency - 50 );
+			swprintf( szItemName, L"Action%d", (*pItem)[0]->data.misc.bFrequency - 50 );
 	}
 }
 
 void RenderDoorLockInfo()
 {
+	PERFORMANCE_MARKER
 	INT16 i, xp, yp;
 	INT16 sScreenX, sScreenY;
 	CHAR16 str[ 50 ];
@@ -781,6 +814,7 @@ void RenderDoorLockInfo()
 
 void RenderSelectedItemBlownUp()
 {
+	PERFORMANCE_MARKER
 	UINT32 uiVideoObjectIndex;
 	HVOBJECT hVObject;
 	INT16 sScreenX, sScreenY, xp, yp;
@@ -818,7 +852,7 @@ void RenderSelectedItemBlownUp()
 	}
 	else if( Item[ gpItem->usItem ].usItemClass == IC_KEY )
 	{
-		swprintf( szItemName, L"%S", LockTable[ gpItem->ItemData.Key.ubKeyID ].ubEditorName );
+		swprintf( szItemName, L"%S", LockTable[ (*gpItem)[0]->data.key.ubKeyID ].ubEditorName );
 	}
 	else
 	{
@@ -842,7 +876,7 @@ void RenderSelectedItemBlownUp()
 
 	//Count the number of items in the current pool, and display that.
 	i = 0;
-	GetItemPool( gsItemGridNo, &pItemPool, 0 );
+	GetItemPoolFromGround( gsItemGridNo, &pItemPool );
 	Assert( pItemPool );
 	while( pItemPool )
 	{
@@ -869,19 +903,20 @@ void RenderSelectedItemBlownUp()
 
 void RenderEditorInfo( )
 {
+	PERFORMANCE_MARKER
 	CHAR16					FPSText[ 50 ];
 	static INT32		iSpewWarning = 0;
-	UINT16						uiMapIndex;
+	INT16						iMapIndex;
 
 	SetFont( FONT12POINT1 );
 	SetFontForeground( FONT_BLACK );
 	SetFontBackground( FONT_BLACK );
 
 	//Display the mapindex position
-	if( GetMouseMapPos( &uiMapIndex ) )
-		swprintf( FPSText, L"   (%d)   ", uiMapIndex );
+	if( GetMouseMapPos( &iMapIndex ) )
+		swprintf( FPSText, L"	(%d)	", iMapIndex );
 	else
-		swprintf( FPSText, L"          " );
+		swprintf( FPSText, L"			" );
 	mprintfEditor( (UINT16)(iScreenWidthOffset + 50-StringPixLength( FPSText, FONT12POINT1 )/2), 2 * iScreenHeightOffset + 463, FPSText );
 
 	switch( iCurrentTaskbar )
@@ -890,7 +925,7 @@ void RenderEditorInfo( )
 			if( !gfWorldLoaded || giCurrentTilesetID < 0 )
 				mprintf( iScreenWidthOffset + 260, 2 * iScreenHeightOffset + 445, L"No map currently loaded." );
 			else
-				mprintf( iScreenWidthOffset + 260, 2 * iScreenHeightOffset + 445, L"File:  %S, Current Tileset:  %s", 
+				mprintf( iScreenWidthOffset + 260, 2 * iScreenHeightOffset + 445, L"File:	%S, Current Tileset:	%s", 
 					gubFilename, gTilesets[ giCurrentTilesetID ].zName );
 			break;
 		case TASK_TERRAIN:
@@ -931,13 +966,14 @@ void RenderEditorInfo( )
 	}
 }
 
-//This is in ButtonSystem.c as a hack.  Because we need to save the buffer whenever we do a full
-//taskbar render, we need to draw the buttons without hilites, hence this flag.  This flag is
+//This is in ButtonSystem.c as a hack.	Because we need to save the buffer whenever we do a full
+//taskbar render, we need to draw the buttons without hilites, hence this flag.	This flag is
 //always true in ButtonSystem.c, so it won't effect anything else.
 extern BOOLEAN gfGotoGridNoUI;
 
 void ProcessEditorRendering()
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fSaveBuffer = FALSE;
 	if( gfRenderTaskbar ) //do a full taskbar render.
 	{
@@ -952,13 +988,13 @@ void ProcessEditorRendering()
 	}
 	if( gfRenderDrawingMode )
 	{
-	  if( iCurrentTaskbar == TASK_BUILDINGS || iCurrentTaskbar == TASK_TERRAIN || iCurrentTaskbar == TASK_ITEMS ) 
+	if( iCurrentTaskbar == TASK_BUILDINGS || iCurrentTaskbar == TASK_TERRAIN || iCurrentTaskbar == TASK_ITEMS ) 
 		{
 			ShowCurrentDrawingMode();
 			gfRenderDrawingMode = FALSE;
 		}
 	}
-	//render dynamically changed buttons only  
+	//render dynamically changed buttons only	
 	RenderButtons( );
 
 	if( gfSummaryWindowActive )
@@ -980,7 +1016,7 @@ void ProcessEditorRendering()
 		if( iCurrentTaskbar == TASK_MAPINFO )
 			RenderMapEntryPointsAndLights();
 		if( iDrawMode == DRAW_MODE_PLACE_ITEM && eInfo.uiItemType == TBAR_MODE_ITEM_KEYS || 
-			  iDrawMode == DRAW_MODE_DOORKEYS )
+			iDrawMode == DRAW_MODE_DOORKEYS )
 			RenderDoorLockInfo();
 	}
 
@@ -991,7 +1027,7 @@ void ProcessEditorRendering()
 
 	//Make sure this is TRUE at all times.
 	//It is set to false when before we save the buffer, so the buttons don't get 
-	//rendered with hilites, in case the mouse is over one.  
+	//rendered with hilites, in case the mouse is over one.	
 	gfRenderHilights = TRUE;
 
 	RenderButtonsFastHelp();

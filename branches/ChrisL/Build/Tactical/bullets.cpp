@@ -37,12 +37,13 @@
 
 // GLOBAL FOR FACES LISTING
 BULLET	gBullets[ NUM_BULLET_SLOTS ];
-UINT32  guiNumBullets = 0;
+UINT32	guiNumBullets = 0;
 BOOLEAN	fTracer = FALSE;
 
 
 INT32 GetFreeBullet(void)
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumBullets; uiCount++)
@@ -60,6 +61,7 @@ INT32 GetFreeBullet(void)
 
 void RecountBullets(void)
 {
+	PERFORMANCE_MARKER
 	INT32 uiCount;
 
 	for(uiCount=guiNumBullets-1; (uiCount >=0) ; uiCount--)
@@ -76,6 +78,7 @@ void RecountBullets(void)
 
 INT32	CreateBullet( UINT8 ubFirerID, BOOLEAN fFake, UINT16 usFlags,UINT16 fromItem )
 {
+	PERFORMANCE_MARKER
 	INT32			iBulletIndex;
 	BULLET		*pBullet;
 
@@ -103,7 +106,7 @@ INT32	CreateBullet( UINT8 ubFirerID, BOOLEAN fFake, UINT16 usFlags,UINT16 fromIt
 		pBullet->fReal = TRUE;
 //		gBullets[ iBullet ].pFirer->bBulletsLeft++;
 		gTacticalStatus.ubAttackBusyCount++;
-		DebugAttackBusy( String( "Creating a new bullet for %d.  ABC now %d\n", ubFirerID, gTacticalStatus.ubAttackBusyCount) );
+		DebugAttackBusy( String( "Creating a new bullet for %d.	ABC now %d\n", ubFirerID, gTacticalStatus.ubAttackBusyCount) );
 	}
 
 	return( iBulletIndex );
@@ -112,6 +115,7 @@ INT32	CreateBullet( UINT8 ubFirerID, BOOLEAN fFake, UINT16 usFlags,UINT16 fromIt
 
 void HandleBulletSpecialFlags( INT32 iBulletIndex )
 {
+	PERFORMANCE_MARKER
 	BULLET		*pBullet;
 	ANITILE_PARAMS	AniParams;
 	FLOAT		dX, dY;
@@ -142,7 +146,7 @@ void HandleBulletSpecialFlags( INT32 iBulletIndex )
 			else if ( pBullet->usFlags & ( BULLET_FLAG_KNIFE ) )
 			{
 				strcpy( AniParams.zCachedFile, "TILECACHE\\KNIFING.STI" );
-				pBullet->ubItemStatus = pBullet->pFirer->inv[ HANDPOS ].ItemData.Generic.bStatus[0];
+				pBullet->ubItemStatus = pBullet->pFirer->inv[ HANDPOS ][0]->data.objectStatus;
 			}
 
 			// Get direction to use for this guy....
@@ -170,6 +174,7 @@ void HandleBulletSpecialFlags( INT32 iBulletIndex )
 
 void RemoveBullet( INT32 iBullet )
 {
+	PERFORMANCE_MARKER
 	CHECKV( iBullet < NUM_BULLET_SLOTS );
 
 	// decrease soldier's bullet count
@@ -182,7 +187,7 @@ void RemoveBullet( INT32 iBullet )
 		// decrement reference to bullet in the firer
 //		gBullets[ iBullet ].pFirer->bBulletsLeft--;
 //		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Ending bullet, bullets left %d", gBullets[ iBullet ].pFirer->bBulletsLeft ) );
-//		DebugAttackBusy( String( "Deleting a bullet for %d.  Total count now %d\n", gBullets[ iBullet].ubFirerID, gBullets[ iBullet ].pFirer->bBulletsLeft) );
+//		DebugAttackBusy( String( "Deleting a bullet for %d.	Total count now %d\n", gBullets[ iBullet].ubFirerID, gBullets[ iBullet ].pFirer->bBulletsLeft) );
 		// Nah, just decrement the attack busy count and be done with it
 		DebugAttackBusy( String( "Deleting a bullet for %d.\n", gBullets[ iBullet].ubFirerID ) );
 		ReduceAttackBusyCount( );
@@ -217,31 +222,33 @@ void RemoveBullet( INT32 iBullet )
 
 void LocateBullet( INT32 iBulletIndex )
 {
+	PERFORMANCE_MARKER
 	if ( gGameSettings.fOptions[ TOPTION_SHOW_MISSES ] )
 	{
-	  // Check if a bad guy fired!
-	  if ( gBullets[ iBulletIndex ].ubFirerID != NOBODY )
-	  {
-		  if ( MercPtrs[ gBullets[ iBulletIndex ].ubFirerID ]->bSide == gbPlayerNum )
-		  {
-			  if ( !gBullets[ iBulletIndex ].fLocated )
-			  {
-				  gBullets[ iBulletIndex ].fLocated = TRUE;
+	// Check if a bad guy fired!
+	if ( gBullets[ iBulletIndex ].ubFirerID != NOBODY )
+	{
+		if ( MercPtrs[ gBullets[ iBulletIndex ].ubFirerID ]->bSide == gbPlayerNum )
+		{
+			if ( !gBullets[ iBulletIndex ].fLocated )
+			{
+				gBullets[ iBulletIndex ].fLocated = TRUE;
 
-				  //Only if we are in turnbased and noncombat
-				  if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
-				  {
-					  LocateGridNo( (INT16)gBullets[ iBulletIndex ].sGridNo );
-				  }
-			  }
-		  }
-	  }
-  }
+				//Only if we are in turnbased and noncombat
+				if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
+				{
+					LocateGridNo( (INT16)gBullets[ iBulletIndex ].sGridNo );
+				}
+			}
+		}
+	}
+	}
 }
 
 
 void UpdateBullets( )
 {
+	PERFORMANCE_MARKER
 	UINT32					uiCount;
 	LEVELNODE				*pNode;
 	BOOLEAN					fDeletedSome = FALSE;
@@ -299,7 +306,7 @@ void UpdateBullets( )
 						{
 							gBullets[ uiCount ].pAniTile->sRelativeX	= (INT16) FIXEDPT_TO_INT32( gBullets[ uiCount ].qCurrX );
 							gBullets[ uiCount ].pAniTile->sRelativeY	= (INT16) FIXEDPT_TO_INT32( gBullets[ uiCount ].qCurrY );
-							gBullets[ uiCount ].pAniTile->pLevelNode->sRelativeZ  = (INT16) CONVERT_HEIGHTUNITS_TO_PIXELS( FIXEDPT_TO_INT32( gBullets[ uiCount ].qCurrZ ) );
+							gBullets[ uiCount ].pAniTile->pLevelNode->sRelativeZ	= (INT16) CONVERT_HEIGHTUNITS_TO_PIXELS( FIXEDPT_TO_INT32( gBullets[ uiCount ].qCurrZ ) );
 
 							if ( gBullets[ uiCount ].usFlags & ( BULLET_FLAG_KNIFE ) )
 							{
@@ -367,6 +374,7 @@ void UpdateBullets( )
 
 BULLET *GetBulletPtr( INT32 iBullet )
 {
+	PERFORMANCE_MARKER
 	BULLET	*pBullet;
 
 	CHECKN( iBullet < NUM_BULLET_SLOTS );
@@ -379,6 +387,7 @@ BULLET *GetBulletPtr( INT32 iBullet )
 
 void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT qCurrZ )
 {
+	PERFORMANCE_MARKER
 	ANITILE_PARAMS	AniParams;
 
 	// If we are a small missle, don't show
@@ -454,7 +463,7 @@ void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT q
 		LightSpritePosition( pBullet->pAniTile->lightSprite, (INT16)(sXPos/CELL_X_SIZE), (INT16)(sYPos/CELL_Y_SIZE));
 
 #if 0
-		if ( pBullet->pFirer->bLevel > 0 ) // if firer on roof then
+		if ( pBullet->pFirer->pathing.bLevel > 0 ) // if firer on roof then
 		{
 			if ( FindBuilding(AniParams.sGridNo) != NULL ) // if this spot is still within the building's grid area
 			{
@@ -473,6 +482,7 @@ void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT q
 
 BOOLEAN SaveBulletStructureToSaveGameFile( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten;
 	UINT16	usCnt;
 	UINT32	uiBulletCount=0;
@@ -517,6 +527,7 @@ BOOLEAN SaveBulletStructureToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadBulletStructureFromSavedGameFile( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 	UINT16	usCnt;
 
@@ -558,6 +569,7 @@ BOOLEAN LoadBulletStructureFromSavedGameFile( HWFILE hFile )
 
 void StopBullet( INT32 iBullet )
 {
+	PERFORMANCE_MARKER
 	gBullets[ iBullet ].usFlags |= BULLET_STOPPED;
 
 	RemoveStruct( gBullets[ iBullet ].sGridNo, BULLETTILE1 );
@@ -567,6 +579,7 @@ void StopBullet( INT32 iBullet )
 
 void DeleteAllBullets( )
 {
+	PERFORMANCE_MARKER
 	UINT32					uiCount;
 
 	for ( uiCount = 0; uiCount < guiNumBullets; uiCount++ )

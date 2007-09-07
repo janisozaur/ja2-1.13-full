@@ -126,6 +126,7 @@ void	DisplaySirtechSplashScreen();
 
 UINT32	IntroScreenInit( void )
 {
+	PERFORMANCE_MARKER
 	//Set so next time we come in, we can set up
 	gfIntroScreenEntry = TRUE;
 
@@ -135,12 +136,14 @@ UINT32	IntroScreenInit( void )
 
 UINT32	IntroScreenShutdown( void )
 {
+	PERFORMANCE_MARKER
 	return( 1 );
 }
 
 
 UINT32	IntroScreenHandle( void )
 {
+	PERFORMANCE_MARKER
 	if( gfIntroScreenEntry )
 	{
 		EnterIntroScreen();
@@ -174,6 +177,7 @@ UINT32	IntroScreenHandle( void )
 
 BOOLEAN EnterIntroScreen()
 {
+	PERFORMANCE_MARKER
 	INT32 iFirstVideoID = -1;
 
 	ClearMainMenu();
@@ -225,10 +229,12 @@ BOOLEAN EnterIntroScreen()
 
 void RenderIntroScreen()
 {
+	PERFORMANCE_MARKER
 }
 
 void ExitIntroScreen()
 {
+	PERFORMANCE_MARKER
 
 	//shutdown smaker
 	SmkShutdown();
@@ -236,6 +242,7 @@ void ExitIntroScreen()
 
 void HandleIntroScreen()
 {
+	PERFORMANCE_MARKER
 	BOOLEAN	fFlicStillPlaying = FALSE;
 
 	//if we are exiting this screen, this frame, dont update the screen
@@ -271,18 +278,19 @@ void HandleIntroScreen()
 
 void		GetIntroScreenUserInput()
 {
+	PERFORMANCE_MARKER
 	InputAtom Event;
-	POINT  MousePos;
+	POINT	MousePos;
 
 
 	GetCursorPos(&MousePos);
-    ScreenToClient(ghWindow, &MousePos); // In window coords!
+	ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 	while( DequeueEvent( &Event ) )
 	{
 		// HOOK INTO MOUSE HOOKS
 		switch( Event.usEvent)
-	  {
+	{
 			case LEFT_BUTTON_DOWN:
 				MouseSystemHook(LEFT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
@@ -340,6 +348,7 @@ void		GetIntroScreenUserInput()
 
 void PrepareToExitIntroScreen()
 {
+	PERFORMANCE_MARKER
 	//if its the intro at the begining of the game
 	if( gbIntroScreenMode == INTRO_BEGINING )
 	{
@@ -369,6 +378,7 @@ void PrepareToExitIntroScreen()
 
 INT32 GetNextIntroVideo( UINT32 uiCurrentVideo )
 {
+	PERFORMANCE_MARKER
 	INT32 iStringToUse = -1;
 
 	//switch on whether it is the beginging or the end game video
@@ -449,6 +459,7 @@ INT32 GetNextIntroVideo( UINT32 uiCurrentVideo )
 
 void StartPlayingIntroFlic( INT32 iIndexOfFlicToPlay )
 {
+	PERFORMANCE_MARKER
 
 	if( iIndexOfFlicToPlay != -1 )
 	{
@@ -475,6 +486,7 @@ void StartPlayingIntroFlic( INT32 iIndexOfFlicToPlay )
 
 void SetIntroType( INT8 bIntroType )
 {
+	PERFORMANCE_MARKER
 	if( bIntroType == INTRO_BEGINING )
 	{
 		gbIntroScreenMode = INTRO_BEGINING;
@@ -492,12 +504,13 @@ void SetIntroType( INT8 bIntroType )
 
 void DisplaySirtechSplashScreen()
 {
-  HVOBJECT hPixHandle;
-  VOBJECT_DESC    VObjectDesc;
+	PERFORMANCE_MARKER
+	HVOBJECT hPixHandle;
+	VOBJECT_DESC	VObjectDesc;
 	UINT32 uiLogoID;
 
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
+	UINT32										uiDestPitchBYTES;
+	UINT8											*pDestBuf;
 
 
 	// CLEAR THE FRAME BUFFER
@@ -513,22 +526,22 @@ void DisplaySirtechSplashScreen()
 //	FilenameForBPP("INTERFACE\\TShold.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject(&VObjectDesc, &uiLogoID) )
 	{	
-  	FilenameForBPP("GERMAN\\SPLASH_GERMAN.sti", VObjectDesc.ImageFile);
-	  if( !AddVideoObject(&VObjectDesc, &uiLogoID) )
-	  {	
-      /* 
-       * This is the place, where most non english coders stranding.
-       * Don't hesitate, don't give up! 
-       * I'll now tell You what You made wrong
-       *                                (2006-10-10, Sergeant_Kolja)
-       */
-      #ifdef _DEBUG
-      #  if defined(ENGLISH)
-		     AssertMsg( 0, String( "Wheter English nor German works. May be You built English - but have only German or other foreign Disk?" ) );
-      #  elif defined(GERMAN)
-		     AssertMsg( 0, String( "Weder Englisch noch Deutsch geht. Deutsche Version kompiliert und mit englischer CDs gestartet? Das geht nicht!" ) );
-      #  endif
-      #endif
+		FilenameForBPP("GERMAN\\SPLASH_GERMAN.sti", VObjectDesc.ImageFile);
+	if( !AddVideoObject(&VObjectDesc, &uiLogoID) )
+	{	
+		/* 
+		* This is the place, where most non english coders stranding.
+		* Don't hesitate, don't give up! 
+		* I'll now tell You what You made wrong
+		*								(2006-10-10, Sergeant_Kolja)
+		*/
+		#ifdef _DEBUG
+		#	if defined(ENGLISH)
+			AssertMsg( 0, String( "Wheter English nor German works. May be You built English - but have only German or other foreign Disk?" ) );
+		#	elif defined(GERMAN)
+			AssertMsg( 0, String( "Weder Englisch noch Deutsch geht. Deutsche Version kompiliert und mit englischer CDs gestartet? Das geht nicht!" ) );
+		#	endif
+		#endif
 		AssertMsg( 0, String( "Failed to load %s", VObjectDesc.ImageFile ) );
 		return;
 	}

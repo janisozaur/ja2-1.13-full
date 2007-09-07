@@ -195,6 +195,10 @@ INT32			giGioMessageBox = -1;
 //extern	INT32						gp16PointArial;
 
 
+// CHRISL: checkbox to toggle INV selection
+UINT32	guiINVOptionToggles[ NUM_INV_OPTIONS ];
+void BtnINVOptionTogglesCallback(GUI_BUTTON *btn,INT32 reason);
+
 // Done Button
 void BtnGIODoneCallback(GUI_BUTTON *btn,INT32 reason);
 UINT32	guiGIODoneButton;
@@ -233,9 +237,6 @@ void BtnGameSaveTogglesCallback(GUI_BUTTON *btn,INT32 reason);
 UINT32	guiBROptionToggles[ NUM_BR_OPTIONS ];
 void BtnBROptionTogglesCallback(GUI_BUTTON *btn,INT32 reason);
 
-// CHRISL: checkbox to toggle INV selection
-UINT32	guiINVOptionToggles[ NUM_INV_OPTIONS ];
-void BtnINVOptionTogglesCallback(GUI_BUTTON *btn,INT32 reason);
 
 ////////////////////////////////////////////
 //
@@ -269,12 +270,14 @@ void			ConfirmGioIronManMessageBoxCallBack( UINT8 bExitValue );
 
 UINT32	GameInitOptionsScreenInit( void )
 {
+	PERFORMANCE_MARKER
 	return( 1 );
 }
 
 
 UINT32	GameInitOptionsScreenHandle( void )
 {
+	PERFORMANCE_MARKER
 	StartFrameBufferRender();
 
 	if( gfGIOScreenEntry )
@@ -336,13 +339,15 @@ UINT32	GameInitOptionsScreenHandle( void )
 
 UINT32	GameInitOptionsScreenShutdown( void )
 {
+	PERFORMANCE_MARKER
 	return( 1 );
 }
 
 
 BOOLEAN		EnterGIOScreen()
 {
-  VOBJECT_DESC    VObjectDesc;
+	PERFORMANCE_MARKER
+	VOBJECT_DESC	VObjectDesc;
 	UINT16					cnt;
 	UINT16					usPosY;
 
@@ -372,11 +377,11 @@ BOOLEAN		EnterGIOScreen()
 	//Ok button
 	giGIODoneBtnImage = LoadButtonImage("INTERFACE\\PreferencesButtons.sti", -1,0,-1,2,-1 );
 	guiGIODoneButton = CreateIconAndTextButton( giGIODoneBtnImage, gzGIOScreenText[GIO_OK_TEXT], OPT_BUTTON_FONT, 
-													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
-													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
-													 TEXT_CJUSTIFIED, 
-													 GIO_BTN_OK_X, GIO_BTN_OK_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnGIODoneCallback);
+													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
+													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
+													TEXT_CJUSTIFIED, 
+													GIO_BTN_OK_X, GIO_BTN_OK_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													DEFAULT_MOVE_CALLBACK, BtnGIODoneCallback);
 
 	SpecifyButtonSoundScheme( guiGIODoneButton, BUTTON_SOUND_SCHEME_BIGSWITCH3 );
 	SpecifyDisabledButtonStyle( guiGIODoneButton, DISABLED_STYLE_NONE );
@@ -384,11 +389,11 @@ BOOLEAN		EnterGIOScreen()
 	//Cancel button
 	giGIOCancelBtnImage = UseLoadedButtonImage( giGIODoneBtnImage, -1,1,-1,3,-1 );
 	guiGIOCancelButton = CreateIconAndTextButton( giGIOCancelBtnImage, gzGIOScreenText[GIO_CANCEL_TEXT], OPT_BUTTON_FONT, 
-													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
-													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
-													 TEXT_CJUSTIFIED, 
-													 GIO_CANCEL_X, GIO_BTN_OK_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnGIOCancelCallback );
+													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
+													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
+													TEXT_CJUSTIFIED, 
+													GIO_CANCEL_X, GIO_BTN_OK_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													DEFAULT_MOVE_CALLBACK, BtnGIOCancelCallback );
 	SpecifyButtonSoundScheme( guiGIOCancelButton, BUTTON_SOUND_SCHEME_BIGSWITCH3 );
 
 
@@ -570,6 +575,7 @@ BOOLEAN		EnterGIOScreen()
 
 BOOLEAN		ExitGIOScreen()
 {
+	PERFORMANCE_MARKER
 	UINT16	cnt;
 
 	if( !gfGIOButtonsAllocated )
@@ -631,6 +637,7 @@ BOOLEAN		ExitGIOScreen()
 
 void			HandleGIOScreen()
 {
+	PERFORMANCE_MARKER
 	if( gubGameOptionScreenHandler != GIO_NOTHING )
 	{
 		switch( gubGameOptionScreenHandler )
@@ -676,6 +683,7 @@ void			HandleGIOScreen()
 
 BOOLEAN		RenderGIOScreen()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT	hPixHandle;
 	UINT16		usPosY;
 
@@ -798,8 +806,9 @@ BOOLEAN		RenderGIOScreen()
 
 void			GetGIOScreenUserInput()
 {
+	PERFORMANCE_MARKER
 	InputAtom Event;
-//	POINT  MousePos;
+//	POINT	MousePos;
 
 //	GetCursorPos(&MousePos);
 
@@ -836,6 +845,7 @@ void			GetGIOScreenUserInput()
 
 void BtnDifficultyTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
@@ -876,6 +886,7 @@ void BtnDifficultyTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 //Madd
 void BtnBROptionTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
@@ -953,6 +964,7 @@ void BtnINVOptionTogglesCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnGameStyleTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
@@ -991,6 +1003,7 @@ void BtnGameStyleTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 
 void BtnGameSaveTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 //		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
@@ -1029,6 +1042,7 @@ void BtnGameSaveTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 
 void BtnGunOptionsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
@@ -1069,6 +1083,7 @@ void BtnGunOptionsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 /*
 void BtnTimedTurnsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
@@ -1111,6 +1126,7 @@ void BtnTimedTurnsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 
 void BtnGIODoneCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1135,6 +1151,7 @@ void BtnGIODoneCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnGIOCancelCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1153,6 +1170,7 @@ void BtnGIOCancelCallback(GUI_BUTTON *btn,INT32 reason)
 
 UINT8	GetCurrentDifficultyButtonSetting()
 {
+	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<NUM_DIFF_SETTINGS; cnt++)
@@ -1171,6 +1189,7 @@ UINT8	GetCurrentDifficultyButtonSetting()
 //Madd
 UINT8	GetCurrentBROptionButtonSetting()
 {
+	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<NUM_BR_OPTIONS; cnt++)
@@ -1200,6 +1219,7 @@ UINT8	GetCurrentINVOptionButtonSetting()
 
 UINT8	GetCurrentGameStyleButtonSetting()
 {
+	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<NUM_GAME_STYLES; cnt++)
@@ -1216,6 +1236,7 @@ UINT8	GetCurrentGameStyleButtonSetting()
 
 UINT8	GetCurrentGunButtonSetting()
 {
+	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<NUM_GUN_OPTIONS; cnt++)
@@ -1232,6 +1253,7 @@ UINT8	GetCurrentGunButtonSetting()
 /*
 UINT8	GetCurrentTimedTurnsButtonSetting()
 {
+	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<GIO_NUM_TIMED_TURN_OPTIONS; cnt++)
@@ -1247,6 +1269,7 @@ UINT8	GetCurrentTimedTurnsButtonSetting()
 
 UINT8	GetCurrentGameSaveButtonSetting()
 {
+	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<NUM_SAVE_OPTIONS; cnt++)
@@ -1263,6 +1286,7 @@ UINT8	GetCurrentGameSaveButtonSetting()
 
 void RestoreGIOButtonBackGrounds()
 {
+	PERFORMANCE_MARKER
 	UINT8	cnt;
 	UINT16 usPosY;
 
@@ -1320,7 +1344,6 @@ void RestoreGIOButtonBackGrounds()
 		RestoreExternBackgroundRect( GIO_BR_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 ); 
 		usPosY += GIO_GAP_BN_SETTINGS-5;
 	}
-
 // CHRISL
 
 	usPosY = GIO_INV_SETTING_Y-GIO_OFFSET_TO_TOGGLE_BOX_Y;
@@ -1334,6 +1357,7 @@ void RestoreGIOButtonBackGrounds()
 
 void DoneFadeOutForExitGameInitOptionScreen( void )
 {
+	PERFORMANCE_MARKER
 	// loop through and get the status of all the buttons
 	// Madd
 	gGameOptions.fGunNut = GetCurrentGunButtonSetting();
@@ -1370,6 +1394,7 @@ void DoneFadeOutForExitGameInitOptionScreen( void )
 			gGameOptions.ubInventorySystem = INVENTORY_NEW;
 			break;
 	}
+
 	//	gubGIOExitScreen = INIT_SCREEN;
 	gubGIOExitScreen = INTRO_SCREEN;
 
@@ -1399,19 +1424,21 @@ void DoneFadeOutForExitGameInitOptionScreen( void )
 
 void DoneFadeInForExitGameInitOptionScreen( void )
 {
+	PERFORMANCE_MARKER
 	SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 }
 
 
 BOOLEAN DoGioMessageBox( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-  SGPRect CenteringRect= {0, 0, SCREEN_WIDTH-1, SCREEN_HEIGHT-1 };
-  
+	PERFORMANCE_MARKER
+	SGPRect CenteringRect= {0, 0, SCREEN_WIDTH-1, SCREEN_HEIGHT-1 };
+	
 	// reset exit mode
 //	gfExitGioDueToMessageBox = TRUE;
 
 	// do message box and return
-  giGioMessageBox = DoMessageBox(  ubStyle,  zString,  uiExitScreen, ( UINT16 ) ( usFlags| MSG_BOX_FLAG_USE_CENTERING_RECT ),  ReturnCallback,  &CenteringRect );
+	giGioMessageBox = DoMessageBox(	ubStyle,	zString,	uiExitScreen, ( UINT16 ) ( usFlags| MSG_BOX_FLAG_USE_CENTERING_RECT ),	ReturnCallback,	&CenteringRect );
 
 	// send back return state
 	return( ( giGioMessageBox != -1 ) );
@@ -1421,6 +1448,7 @@ BOOLEAN DoGioMessageBox( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen
 
 void DisplayMessageToUserAboutGameDifficulty()
 {
+	PERFORMANCE_MARKER
 	UINT8 ubDiffLevel = GetCurrentDifficultyButtonSetting();
 
 	switch( ubDiffLevel )
@@ -1443,6 +1471,7 @@ void DisplayMessageToUserAboutGameDifficulty()
 
 void	ConfirmGioDifSettingMessageBoxCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		gubGameOptionScreenHandler = GIO_EXIT;
@@ -1451,6 +1480,7 @@ void	ConfirmGioDifSettingMessageBoxCallBack( UINT8 bExitValue )
 
 BOOLEAN DisplayMessageToUserAboutIronManMode()
 {
+	PERFORMANCE_MARKER
 	// Madd
 	UINT8 ubIronManMode = GetCurrentGameSaveButtonSetting(); //FALSE; 
 
@@ -1467,6 +1497,7 @@ BOOLEAN DisplayMessageToUserAboutIronManMode()
 
 void			ConfirmGioIronManMessageBoxCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		gubGameOptionScreenHandler = GIO_IRON_MAN_MODE;

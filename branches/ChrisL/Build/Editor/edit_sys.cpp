@@ -39,9 +39,9 @@ void PasteTextureEx( INT16 sGridNo, UINT16 usType );
 void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius );
 
 
-BOOLEAN			gfWarning = FALSE;   
+BOOLEAN			gfWarning = FALSE;	
 
-BOOLEAN			gfDoFill = FALSE;   
+BOOLEAN			gfDoFill = FALSE;	
 UINT16			CurrentPaste = NO_TILE;
 UINT16			gDebrisPaste = NO_TILE;
 UINT16			gChangeElevation = FALSE;
@@ -58,6 +58,7 @@ UINT32			gDoCliffs = NO_CLIFFS;
 //
 void QuickEraseMapTile( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	if ( iMapIndex >= 0x8000 )
 		return;
 	AddToUndoList( iMapIndex );
@@ -73,6 +74,7 @@ void QuickEraseMapTile( UINT32 iMapIndex )
 //
 void DeleteStuffFromMapTile( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	//UINT16		usUseIndex;
 	//UINT16		usType;
 	//UINT32		uiCheckType;
@@ -101,6 +103,7 @@ void DeleteStuffFromMapTile( UINT32 iMapIndex )
 //
 void EraseMapTile( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	INT32			iEraseMode;
 	UINT32		uiCheckType;
 	if ( iMapIndex >= 0x8000 )
@@ -223,6 +226,7 @@ void EraseMapTile( UINT32 iMapIndex )
 //
 void PasteDebris( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
 	INT32					iRandSelIndex;
@@ -232,7 +236,7 @@ void PasteDebris( UINT32 iMapIndex )
 	pNumSelList = &iNumDebrisSelected;
 
 	if ( iMapIndex < 0x8000 )
-	{  
+	{	
 		AddToUndoList( iMapIndex );
 
 		// Remove any debris that is currently at this map location
@@ -257,6 +261,7 @@ void PasteDebris( UINT32 iMapIndex )
 
 void PasteSingleWall( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleWall;
 	pNumSelList = &iNumWallsSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -264,6 +269,7 @@ void PasteSingleWall( UINT32 iMapIndex )
 
 void PasteSingleDoor( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleDoor;
 	pNumSelList = &iNumDoorsSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -271,6 +277,7 @@ void PasteSingleDoor( UINT32 iMapIndex )
 
 void PasteSingleWindow( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleWindow;
 	pNumSelList = &iNumWindowsSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -278,6 +285,7 @@ void PasteSingleWindow( UINT32 iMapIndex )
 
 void PasteSingleRoof( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleRoof;
 	pNumSelList = &iNumRoofsSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -285,6 +293,7 @@ void PasteSingleRoof( UINT32 iMapIndex )
 
 void PasteRoomNumber( UINT32 iMapIndex, UINT8 ubRoomNumber )
 {
+	PERFORMANCE_MARKER
 	if( gubWorldRoomInfo[ iMapIndex ] != ubRoomNumber )
 	{
 		AddToUndoList( iMapIndex );
@@ -294,6 +303,7 @@ void PasteRoomNumber( UINT32 iMapIndex, UINT8 ubRoomNumber )
 
 void PasteSingleBrokenWall( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT16 usIndex, usObjIndex, usTileIndex, usWallOrientation;
 
 	pSelList = SelSingleBrokenWall;
@@ -313,6 +323,7 @@ void PasteSingleBrokenWall( UINT32 iMapIndex )
 
 void PasteSingleDecoration( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleDecor;
 	pNumSelList = &iNumDecorSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -320,6 +331,7 @@ void PasteSingleDecoration( UINT32 iMapIndex )
 
 void PasteSingleDecal( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleDecal;
 	pNumSelList = &iNumDecalsSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -327,6 +339,7 @@ void PasteSingleDecal( UINT32 iMapIndex )
 
 void PasteSingleFloor( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleFloor;
 	pNumSelList = &iNumFloorsSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -334,6 +347,7 @@ void PasteSingleFloor( UINT32 iMapIndex )
 
 void PasteSingleToilet( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleToilet;
 	pNumSelList = &iNumToiletsSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -347,12 +361,13 @@ void PasteSingleToilet( UINT32 iMapIndex )
 //
 void PasteSingleWallCommon( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
 	UINT16				usTempIndex;
 
 	if ( iMapIndex < 0x8000 )
-	{  
+	{	
 		AddToUndoList( iMapIndex );
 
 		usUseIndex = pSelList[ iCurBank ].usIndex;
@@ -382,7 +397,7 @@ void PasteSingleWallCommon( UINT32 iMapIndex )
 		{
 			// PLace shadow for doors
 			if( !gfBasement )
-				AddExclusiveShadow( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex - FIRSTDOOR + FIRSTDOORSHADOW ] + usUseIndex  ) );
+				AddExclusiveShadow( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex - FIRSTDOOR + FIRSTDOORSHADOW ] + usUseIndex	) );
 		}
 
 		// Is it a wall?
@@ -402,12 +417,12 @@ void PasteSingleWallCommon( UINT32 iMapIndex )
 		} 		
 		// Is it a door/window/decoration?
 		else if ( ( (usUseObjIndex >= FIRSTDOOR) && (usUseObjIndex <= LASTDOOR)) ||
-				 ((usUseObjIndex >= FIRSTDECORATIONS) && (usUseObjIndex <= LASTDECORATIONS)) )
+				((usUseObjIndex >= FIRSTDECORATIONS) && (usUseObjIndex <= LASTDECORATIONS)) )
 		{
 			// Slap down wall/window/door/decoration (no smoothing)
 			AddWallToStructLayer( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex), TRUE );
 		}
-		else if ( ((usUseObjIndex >= FIRSTROOF) && (usUseObjIndex <= LASTROOF))  ||
+		else if ( ((usUseObjIndex >= FIRSTROOF) && (usUseObjIndex <= LASTROOF))	||
 							((usUseObjIndex >= FIRSTSLANTROOF) && (usUseObjIndex <= LASTSLANTROOF)) )
 		{
 			// Put a roof on this tile (even if nothing else is here)
@@ -423,7 +438,7 @@ void PasteSingleWallCommon( UINT32 iMapIndex )
 			AddLandToHead( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) );
 		}
 		else if( usUseObjIndex >= FIRSTWALLDECAL && usUseObjIndex <= LASTWALLDECAL ||
-						 usUseObjIndex >= FIFTHWALLDECAL && usUseObjIndex <= EIGTHWALLDECAL )
+						usUseObjIndex >= FIFTHWALLDECAL && usUseObjIndex <= EIGTHWALLDECAL )
 		{
 			// Plop a decal here
 			RemoveAllStructsOfTypeRange( iMapIndex, FIRSTWALLDECAL, LASTWALLDECAL );
@@ -452,6 +467,7 @@ void PasteSingleWallCommon( UINT32 iMapIndex )
 //	from that list. If no such objects are in the list, we return 0xffff (-1).
 UINT16 GetRandomIndexByRange( UINT16 usRangeStart, UINT16 usRangeEnd )
 {
+	PERFORMANCE_MARKER
 	UINT16	usPickList[50];
 	UINT16	usNumInPickList;
 	UINT16	usWhich;
@@ -472,11 +488,12 @@ UINT16 GetRandomIndexByRange( UINT16 usRangeStart, UINT16 usRangeEnd )
 
 UINT16 GetRandomTypeByRange( UINT16 usRangeStart, UINT16 usRangeEnd )
 {
+	PERFORMANCE_MARKER
 	UINT16	usPickList[50];
 	UINT16	usNumInPickList;
 	UINT16	i;
 	UINT16	usObject;
-	UINT32  uiType;
+	UINT32	uiType;
 	// Get a list of valid object to select from
 	usNumInPickList = 0;
 	for ( i = 0; i < *pNumSelList; i++ )
@@ -500,6 +517,7 @@ UINT16 GetRandomTypeByRange( UINT16 usRangeStart, UINT16 usRangeEnd )
 //
 void PasteStructure( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelOStructs;
 	pNumSelList = &iNumOStructsSelected;
 
@@ -513,6 +531,7 @@ void PasteStructure( UINT32 iMapIndex )
 //
 void PasteStructure1( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelOStructs1;
 	pNumSelList = &iNumOStructs1Selected;
 
@@ -526,6 +545,7 @@ void PasteStructure1( UINT32 iMapIndex )
 //
 void PasteStructure2( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelOStructs2;
 	pNumSelList = &iNumOStructs2Selected;
 
@@ -541,7 +561,7 @@ void PasteStructure2( UINT32 iMapIndex )
 //
 void PasteStructureCommon( UINT32 iMapIndex )
 {
-//	BOOLEAN				fDoPaste = FALSE;
+	PERFORMANCE_MARKER
 	UINT32				fHeadType;
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
@@ -549,7 +569,7 @@ void PasteStructureCommon( UINT32 iMapIndex )
 	BOOLEAN				fOkayToAdd;
 
 	if ( iMapIndex < 0x8000 )
-	{  
+	{	
 	/*
 		if ( gpWorldLevelData[ iMapIndex ].pStructHead != NULL )
 		{
@@ -583,7 +603,7 @@ void PasteStructureCommon( UINT32 iMapIndex )
 				// For now, adjust to shadows by a hard-coded amount,
 			
 				// Add mask if in long grass
-				GetLandHeadType( iMapIndex, &fHeadType  );
+				GetLandHeadType( iMapIndex, &fHeadType	);
 			}
 		}
 	}
@@ -602,6 +622,7 @@ void PasteStructureCommon( UINT32 iMapIndex )
 //
 void PasteBanks( UINT32 iMapIndex, UINT16 usStructIndex , BOOLEAN fReplace)
 {
+	PERFORMANCE_MARKER
 	BOOLEAN				fDoPaste = FALSE;
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
@@ -614,10 +635,10 @@ void PasteBanks( UINT32 iMapIndex, UINT16 usStructIndex , BOOLEAN fReplace)
 	usUseObjIndex = (UINT16)pSelList[ iCurBank ].uiObject;
 
 	if ( iMapIndex < 0x8000 )
-	{  
+	{	
 		fDoPaste = TRUE;
 
-		if (  gpWorldLevelData[ iMapIndex ].pStructHead != NULL )
+		if (	gpWorldLevelData[ iMapIndex ].pStructHead != NULL )
 		{
 				// CHECK IF THE SAME TILE IS HERE
 				if ( gpWorldLevelData[ iMapIndex ].pStructHead->usIndex == (UINT16)( gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex ) )
@@ -660,6 +681,7 @@ void PasteBanks( UINT32 iMapIndex, UINT16 usStructIndex , BOOLEAN fReplace)
 
 void PasteRoads( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT16				usUseIndex;
 		
 	pSelList = SelRoads;
@@ -678,6 +700,7 @@ void PasteRoads( UINT32 iMapIndex )
 //
 void PasteTexture( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	ChooseWeightedTerrainTile(); //Kris
 	PasteTextureCommon( iMapIndex );
 }
@@ -691,56 +714,57 @@ void PasteTexture( UINT32 iMapIndex )
 //
 void PasteTextureCommon( UINT32 iMapIndex )
 {
-	 UINT8					ubLastHighLevel;
-	 UINT16					usTileIndex;
-	 //UINT16					Dummy;
-   
-	 if ( CurrentPaste != NO_TILE && iMapIndex < 0x8000 )
-	 {
+	PERFORMANCE_MARKER
+	UINT8					ubLastHighLevel;
+	UINT16					usTileIndex;
+	//UINT16					Dummy;
+	
+	if ( CurrentPaste != NO_TILE && iMapIndex < 0x8000 )
+	{
 
-		 // Set undo, then set new
-		 AddToUndoList( iMapIndex );
+		// Set undo, then set new
+		AddToUndoList( iMapIndex );
 
-		 if ( CurrentPaste == DEEPWATERTEXTURE )
-		 {
-			 // IF WE ARE PASTING DEEP WATER AND WE ARE NOT OVER WATER, IGNORE!
-	 		 if ( TypeExistsInLandLayer( iMapIndex, REGWATERTEXTURE, &usTileIndex ) )
-			 {
+		if ( CurrentPaste == DEEPWATERTEXTURE )
+		{
+			// IF WE ARE PASTING DEEP WATER AND WE ARE NOT OVER WATER, IGNORE!
+			if ( TypeExistsInLandLayer( iMapIndex, REGWATERTEXTURE, &usTileIndex ) )
+			{
 					if ( !gTileDatabase[ usTileIndex ].ubFullTile )
 					{
-						 return;
+						return;
 					}
-			 }
-			 else
-			 {
+			}
+			else
+			{
 					return;
-			 }
-		 }
+			}
+		}
 
-		 // Don't draw over floors
-	 	 if ( TypeRangeExistsInLandLayer( iMapIndex, FIRSTFLOOR, FOURTHFLOOR, &usTileIndex ) )
-		 {
-			 return;
-		 }
+		// Don't draw over floors
+		if ( TypeRangeExistsInLandLayer( iMapIndex, FIRSTFLOOR, FOURTHFLOOR, &usTileIndex ) )
+		{
+			return;
+		}
 
 
 
-		 // Compare heights and do appropriate action
-		 if ( AnyHeigherLand( iMapIndex, CurrentPaste, &ubLastHighLevel ) )
-		 {
-			 // Here we do the following:
-			 // - Remove old type from layer
-			 // - Smooth World with old type
-			 // - Add a 3 by 3 square of new type at head
-			 // - Smooth World with new type
-			 PasteHigherTexture( iMapIndex, CurrentPaste );
+		// Compare heights and do appropriate action
+		if ( AnyHeigherLand( iMapIndex, CurrentPaste, &ubLastHighLevel ) )
+		{
+			// Here we do the following:
+			// - Remove old type from layer
+			// - Smooth World with old type
+			// - Add a 3 by 3 square of new type at head
+			// - Smooth World with new type
+			PasteHigherTexture( iMapIndex, CurrentPaste );
 
-		 }
-		 else
-		 {
+		}
+		else
+		{
 				PasteTextureEx( (INT16)iMapIndex, CurrentPaste );
 				SmoothTerrainRadius( iMapIndex, CurrentPaste, 1, TRUE );
-		 }
+		}
 	}
 }
 
@@ -753,17 +777,18 @@ void PasteTextureCommon( UINT32 iMapIndex )
 //
 void PasteHigherTexture( UINT32 iMapIndex, UINT32 fNewType )
 {
-	 UINT16					NewTile;
-	 UINT8					ubLastHighLevel;
-	 UINT32					*puiDeletedTypes = NULL;
-	 UINT8					ubNumTypes;
-	 UINT8					cnt;
+	PERFORMANCE_MARKER
+	UINT16					NewTile;
+	UINT8					ubLastHighLevel;
+	UINT32					*puiDeletedTypes = NULL;
+	UINT8					ubNumTypes;
+	UINT8					cnt;
 
-	 // Here we do the following:
-	 // - Remove old type from layer
-	 // - Smooth World with old type
-	 // - Add a 3 by 3 square of new type at head
-	 // - Smooth World with new type
+	// Here we do the following:
+	// - Remove old type from layer
+	// - Smooth World with old type
+	// - Add a 3 by 3 square of new type at head
+	// - Smooth World with new type
 
 		//if ( iMapIndex < 0x8000 && TypeRangeExistsInLandLayer( iMapIndex, FIRSTFLOOR, LASTFLOOR, &NewTile ) )
 		//ATE: DONOT DO THIS!!!!!!! - I know what was intended - not to draw over floors - this
@@ -771,41 +796,41 @@ void PasteHigherTexture( UINT32 iMapIndex, UINT32 fNewType )
 			//return;
 
 
-	 if ( iMapIndex < 0x8000 && AnyHeigherLand( iMapIndex, fNewType, &ubLastHighLevel ))
-	 {
-		 AddToUndoList( iMapIndex );
+	if ( iMapIndex < 0x8000 && AnyHeigherLand( iMapIndex, fNewType, &ubLastHighLevel ))
+	{
+		AddToUndoList( iMapIndex );
 
-		 // - For all heigher level, remove
-		 RemoveHigherLandLevels( iMapIndex, fNewType, &puiDeletedTypes, &ubNumTypes );
+		// - For all heigher level, remove
+		RemoveHigherLandLevels( iMapIndex, fNewType, &puiDeletedTypes, &ubNumTypes );
 
-		 // Set with a radius of 1 and smooth according to height difference
-		 SetLowerLandIndexWithRadius( iMapIndex, fNewType, 1 , TRUE );
+		// Set with a radius of 1 and smooth according to height difference
+		SetLowerLandIndexWithRadius( iMapIndex, fNewType, 1 , TRUE );
 
-		 // Smooth all deleted levels
-		 for ( cnt = 0; cnt < ubNumTypes; cnt++ )
-		 {
+		// Smooth all deleted levels
+		for ( cnt = 0; cnt < ubNumTypes; cnt++ )
+		{
 				SmoothTerrainRadius( iMapIndex, puiDeletedTypes[ cnt ], 1, TRUE );
-		 }
+		}
 
-		 MemFree( puiDeletedTypes );
+		MemFree( puiDeletedTypes );
 
-	 }
-	 else if ( iMapIndex < 0x8000 )
-	 {
+	}
+	else if ( iMapIndex < 0x8000 )
+	{
 			AddToUndoList( iMapIndex );
 
-	    GetTileIndexFromTypeSubIndex( fNewType, REQUIRES_SMOOTHING_TILE, &NewTile );
+	 GetTileIndexFromTypeSubIndex( fNewType, REQUIRES_SMOOTHING_TILE, &NewTile );
 			SetLandIndex( iMapIndex, NewTile, fNewType, FALSE );
 
 			// Smooth item then adding here
 			SmoothTerrain( iMapIndex, fNewType, &NewTile, FALSE );
 
-		  if ( NewTile != NO_TILE )
-		  {
+		if ( NewTile != NO_TILE )
+		{
 				// Change tile
 				SetLandIndex( iMapIndex, NewTile, fNewType, FALSE );
-		  }
-	 }
+		}
+	}
 }
 
 
@@ -816,17 +841,18 @@ void PasteHigherTexture( UINT32 iMapIndex, UINT32 fNewType )
 //
 BOOLEAN PasteHigherTextureFromRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
+	PERFORMANCE_MARKER
+	INT16	sTop, sBottom;
+	INT16	sLeft, sRight;
+	INT16	cnt1, cnt2;
 	INT32				iNewIndex;
 	INT32				iXPos,iYPos;
 	
 	// Determine start and end indicies and num rows
 	sTop		= ubRadius;
 	sBottom = -ubRadius;
-	sLeft   = -ubRadius;
-	sRight  = ubRadius;
+	sLeft	= -ubRadius;
+	sRight	= ubRadius;
 
 	iXPos = (iMapIndex % WORLD_COLS);
 	iYPos = (iMapIndex - iXPos) / WORLD_COLS;
@@ -865,6 +891,7 @@ BOOLEAN PasteHigherTextureFromRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 u
 //
 BOOLEAN PasteExistingTexture( UINT32 iMapIndex, UINT16 usIndex )
 {
+	PERFORMANCE_MARKER
 	UINT32					uiNewType;
 	UINT16					usNewIndex;
 	//UINT16					Dummy;
@@ -881,7 +908,7 @@ BOOLEAN PasteExistingTexture( UINT32 iMapIndex, UINT16 usIndex )
 	//if ( TypeRangeExistsInLandLayer( iMapIndex, FIRSTFLOOR, LASTFLOOR, &Dummy ) )
 	//	return( FALSE );
 
-  // Get top tile index
+	// Get top tile index
 	// Remove all land peices except
 	GetTileType( usIndex, &uiNewType );
 
@@ -899,7 +926,7 @@ BOOLEAN PasteExistingTexture( UINT32 iMapIndex, UINT16 usIndex )
 	SetLandIndex( iMapIndex, usIndex, uiNewType, FALSE );
 
 	// ATE: Set this land peice to require smoothing again!
-  SmoothAllTerrainTypeRadius( iMapIndex, 2, TRUE );
+	SmoothAllTerrainTypeRadius( iMapIndex, 2, TRUE );
 
 	return( TRUE );
 }
@@ -912,21 +939,22 @@ BOOLEAN PasteExistingTexture( UINT32 iMapIndex, UINT16 usIndex )
 //
 BOOLEAN PasteExistingTextureFromRadius( INT32 iMapIndex, UINT16 usIndex, UINT8 ubRadius )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
+	PERFORMANCE_MARKER
+	INT16	sTop, sBottom;
+	INT16	sLeft, sRight;
+	INT16	cnt1, cnt2;
 	INT32				iNewIndex;
 	INT32				leftmost;
 	
 	// Determine start end end indicies and num rows
 	sTop		= ubRadius;
 	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
+	sLeft	= - ubRadius;
+	sRight	= ubRadius;
 
 	if ( iMapIndex >= 0x8000 )
 		return ( FALSE );
-	 
+	
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
 
@@ -937,7 +965,7 @@ BOOLEAN PasteExistingTextureFromRadius( INT32 iMapIndex, UINT16 usIndex, UINT8 u
 			iNewIndex = iMapIndex + ( WORLD_COLS * cnt1 ) + cnt2;
 
 			if ( iNewIndex >=0 && iNewIndex < WORLD_MAX && 
-				   iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
+				iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
 			{
 				AddToUndoList( iMapIndex );
 				PasteExistingTexture( iNewIndex, usIndex );
@@ -957,24 +985,25 @@ BOOLEAN PasteExistingTextureFromRadius( INT32 iMapIndex, UINT16 usIndex, UINT8 u
 //
 BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace )
 {
+	PERFORMANCE_MARKER
 	UINT16				usTempIndex;
 	INT16					sTop, sBottom;
 	INT16					sLeft, sRight;
 	INT16					cnt1, cnt2;
-	INT32				  iNewIndex;
+	INT32				iNewIndex;
 	BOOLEAN				fDoPaste = FALSE;
 	INT32					leftmost;
 	UINT8					ubLastHighLevel;
-  UINT32				*puiSmoothTiles = NULL;
-	INT16 			  sNumSmoothTiles = 0;
+	UINT32				*puiSmoothTiles = NULL;
+	INT16 			sNumSmoothTiles = 0;
 	UINT16				usTemp;
 	UINT16				NewTile; //,Dummy;
 
 	// Determine start end end indicies and num rows
 	sTop		= ubRadius;
 	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
+	sLeft	= - ubRadius;
+	sRight	= ubRadius;
 
 	if ( iMapIndex >= 0x8000 )
 		return ( FALSE );
@@ -989,7 +1018,7 @@ BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ub
 			iNewIndex = iMapIndex + ( WORLD_COLS * cnt1 ) + cnt2;
 
 			if ( iNewIndex >=0 && iNewIndex < WORLD_MAX && 
-				   iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
+				iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
 			{
 
 				if ( fReplace )
@@ -1005,7 +1034,7 @@ BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ub
 				}
 				
 				//if ( fDoPaste && !TypeRangeExistsInLandLayer( iMapIndex, FIRSTFLOOR, LASTFLOOR, &Dummy ) )
-				if ( fDoPaste  )
+				if ( fDoPaste	)
 				{
 					if ( iMapIndex == iNewIndex )
 					{
@@ -1046,7 +1075,7 @@ BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ub
 	// Once here, smooth any tiles that need it
 	if ( sNumSmoothTiles > 0 )
 	{
-		for (	 cnt1 = 0; cnt1 < sNumSmoothTiles; cnt1++ )
+		for (	cnt1 = 0; cnt1 < sNumSmoothTiles; cnt1++ )
 		{
 
 			SmoothTerrainRadius( puiSmoothTiles[ cnt1 ], uiNewType, 10, FALSE );
@@ -1061,18 +1090,19 @@ BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ub
 // ATE FIXES
 void PasteTextureEx( INT16 sGridNo, UINT16 usType )
 {
+	PERFORMANCE_MARKER
 	UINT16 usIndex;
-	UINT8	 ubTypeLevel;
+	UINT8	ubTypeLevel;
 	UINT16 NewTile;
 
 	// CHECK IF THIS TEXTURE EXISTS!
-  if ( TypeExistsInLandLayer( sGridNo, usType, &usIndex ) )
-  {
+	if ( TypeExistsInLandLayer( sGridNo, usType, &usIndex ) )
+	{
 			if ( GetTypeLandLevel( sGridNo, usType, &ubTypeLevel ) )
 			{
 				// If top-land , do not change
 				if ( ubTypeLevel != LANDHEAD )
-				{		 							
+				{									
 					PasteExistingTexture( sGridNo, usIndex );
 				}
 			}
@@ -1080,10 +1110,10 @@ void PasteTextureEx( INT16 sGridNo, UINT16 usType )
 	else
 	{
 
-		 // Fill with just first tile, smoothworld() will pick proper piece later
-		 GetTileIndexFromTypeSubIndex( usType, REQUIRES_SMOOTHING_TILE, &NewTile );
+		// Fill with just first tile, smoothworld() will pick proper piece later
+		GetTileIndexFromTypeSubIndex( usType, REQUIRES_SMOOTHING_TILE, &NewTile );
 
-		 SetLandIndex( sGridNo, NewTile, usType, FALSE );
+		SetLandIndex( sGridNo, NewTile, usType, FALSE );
 	}
 
 }
@@ -1091,21 +1121,22 @@ void PasteTextureEx( INT16 sGridNo, UINT16 usType )
 
 void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
+	PERFORMANCE_MARKER
+	INT16	sTop, sBottom;
+	INT16	sLeft, sRight;
+	INT16	cnt1, cnt2;
 	INT32				iNewIndex;
 	INT32				leftmost;
 	
 	// Determine start end end indicies and num rows
 	sTop		= ubRadius;
 	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
+	sLeft	= - ubRadius;
+	sRight	= ubRadius;
 
 	if ( sGridNo >= 0x8000 )
 		return;
-	 
+	
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
 
@@ -1116,7 +1147,7 @@ void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius )
 			iNewIndex = sGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
 
 			if ( iNewIndex >=0 && iNewIndex < WORLD_MAX && 
-				   iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
+				iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
 			{
 				PasteTextureEx( sGridNo, usType );
 			}
@@ -1136,6 +1167,7 @@ void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius )
 #define LAND_DROP_5 FIRSTCLIFF8
 void RaiseWorldLand( )
 {
+	PERFORMANCE_MARKER
 	INT32					cnt;
 	UINT32				sTempGridNo;
 	LEVELNODE			*pStruct;
@@ -1145,8 +1177,6 @@ void RaiseWorldLand( )
 	BOOLEAN fSomethingRaised = FALSE;
 	UINT8 ubLoop;
 	UINT16 usIndex;
-	BOOLEAN fStopRaise = FALSE;
-	INT32 iCounterA = 0, iCounterB = 0;
 	INT32 iStartNumberOfRaises = 0;
 	INT32 iNumberOfRaises = 0;
 	BOOLEAN fAboutToRaise = FALSE;
@@ -1176,7 +1206,6 @@ void RaiseWorldLand( )
 				pStruct = pStruct->pNext;
 				continue;
 			}
-
 			pTileElement = &(gTileDatabase[ pStruct->usIndex ]);
 			if (pTileElement->fType==FIRSTCLIFF)
 			{	
@@ -1322,9 +1351,9 @@ void RaiseWorldLand( )
 	// the system uses world_cord=x+y*(row_size) 
 
 
-	for (cnt=WORLD_MAX-1; cnt >= 0;  cnt--)
+	for (cnt=WORLD_MAX-1; cnt >= 0;	cnt--)
 	{
-		//  reset the RAISE to FALSE
+		//	reset the RAISE to FALSE
 		// End of the row 
 		if ( !(cnt % WORLD_ROWS) )
 		{
@@ -1332,7 +1361,7 @@ void RaiseWorldLand( )
 			iStartNumberOfRaises = 0;
 		}
 
-		if( ( gpWorldLevelData[cnt].uiFlags & MAPELEMENT_RAISE_LAND_END ) )      
+		if( ( gpWorldLevelData[cnt].uiFlags & MAPELEMENT_RAISE_LAND_END ) )		
 		{
 			if( cnt > 1 )
 			{
@@ -1348,7 +1377,7 @@ void RaiseWorldLand( )
 			// raises
 			if( cnt < WORLD_MAX - 2 )
 			{
-				if( ( !( gpWorldLevelData[ cnt + 1 ].uiFlags & MAPELEMENT_RAISE_LAND_START) && !( gpWorldLevelData[ cnt + 2 ].uiFlags & MAPELEMENT_RAISE_LAND_START ) )  )
+				if( ( !( gpWorldLevelData[ cnt + 1 ].uiFlags & MAPELEMENT_RAISE_LAND_START) && !( gpWorldLevelData[ cnt + 2 ].uiFlags & MAPELEMENT_RAISE_LAND_START ) )	)
 				{
 					iNumberOfRaises++;
 				}
@@ -1373,11 +1402,11 @@ void RaiseWorldLand( )
 		}
 	}
 
-	for (cnt=WORLD_MAX-1; cnt >= 0;  cnt--)
+	for (cnt=WORLD_MAX-1; cnt >= 0;	cnt--)
 	{
 		if( ( cnt < WORLD_MAX - WORLD_ROWS ) && ( cnt > WORLD_ROWS ) )
 		{
-			if( ( gpWorldLevelData[cnt + WORLD_ROWS ].sHeight == gpWorldLevelData[cnt - WORLD_ROWS ].sHeight ) && ( gpWorldLevelData[ cnt  ].sHeight!= gpWorldLevelData[cnt - WORLD_ROWS ].sHeight ) )
+			if( ( gpWorldLevelData[cnt + WORLD_ROWS ].sHeight == gpWorldLevelData[cnt - WORLD_ROWS ].sHeight ) && ( gpWorldLevelData[ cnt	].sHeight!= gpWorldLevelData[cnt - WORLD_ROWS ].sHeight ) )
 			{
 				gpWorldLevelData[cnt].sHeight = gpWorldLevelData[cnt + WORLD_ROWS ].sHeight;
 			}
@@ -1385,7 +1414,7 @@ void RaiseWorldLand( )
 			{
 				if( gpWorldLevelData[cnt - WORLD_ROWS ].sHeight > gpWorldLevelData[cnt + WORLD_ROWS ].sHeight )
 				{
-					 gpWorldLevelData[ cnt ].sHeight = gpWorldLevelData[cnt - WORLD_ROWS ].sHeight;
+					gpWorldLevelData[ cnt ].sHeight = gpWorldLevelData[cnt - WORLD_ROWS ].sHeight;
 				}
 				else
 				{
@@ -1401,6 +1430,7 @@ void RaiseWorldLand( )
 
 void EliminateObjectLayerRedundancy()
 {
+	PERFORMANCE_MARKER
 	INT32 i, numRoads, numAnothers;
 	UINT32 uiType;
 	LEVELNODE *pObject, *pValidRoad, *pValidAnother;

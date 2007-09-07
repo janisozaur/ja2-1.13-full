@@ -13,6 +13,7 @@ extern BOOLEAN	gfPotentialTeamChangeDuringDeath;
 extern MERCPROFILESTRUCT gMercProfiles[ NUM_PROFILES ];
 extern MERCPROFILEGEAR gMercProfileGear[ NUM_PROFILES ];
 
+
 #define AIM_AND_MERC_MERCS		51		// A.I.M. is 0-39, M.E.R.C.s are 40-50
 
 //use this to sort out the above define

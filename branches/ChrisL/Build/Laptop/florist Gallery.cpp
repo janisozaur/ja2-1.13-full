@@ -89,36 +89,39 @@ void ChangingFloristGallerySubPage( UINT8 ubSubPageNumber );
 
 void GameInitFloristGallery()
 {
+	PERFORMANCE_MARKER
 
 }
 
 void EnterInitFloristGallery()
 {
+	PERFORMANCE_MARKER
 	memset( &FloristGallerySubPagesVisitedFlag, 0, 4);
 }
 
 
 BOOLEAN EnterFloristGallery()
 {
+	PERFORMANCE_MARKER
 	InitFloristDefaults();
 
 	//the next previous buttons
 	guiFloralGalleryButtonImage	= LoadButtonImage("LAPTOP\\FloristButtons.sti", -1,0,-1,1,-1 );
 
 	guiFloralGalleryButton[0] = CreateIconAndTextButton( guiFloralGalleryButtonImage, sFloristGalleryText[FLORIST_GALLERY_PREV], FLORIST_BUTTON_TEXT_FONT, 
-													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR, 
-													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR, 
-													 TEXT_CJUSTIFIED, 
-													 FLOR_GALLERY_BACK_BUTTON_X, FLOR_GALLERY_BACK_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnFloralGalleryBackButtonCallback);
+													FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR, 
+													FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR, 
+													TEXT_CJUSTIFIED, 
+													FLOR_GALLERY_BACK_BUTTON_X, FLOR_GALLERY_BACK_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													DEFAULT_MOVE_CALLBACK, BtnFloralGalleryBackButtonCallback);
 	SetButtonCursor(guiFloralGalleryButton[0], CURSOR_WWW );
 
 	guiFloralGalleryButton[1] = CreateIconAndTextButton( guiFloralGalleryButtonImage, sFloristGalleryText[FLORIST_GALLERY_NEXT], FLORIST_BUTTON_TEXT_FONT, 
-													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR, 
-													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR, 
-													 TEXT_CJUSTIFIED, 
-													 FLOR_GALLERY_NEXT_BUTTON_X, FLOR_GALLERY_NEXT_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnFloralGalleryNextButtonCallback);
+													FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR, 
+													FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR, 
+													TEXT_CJUSTIFIED, 
+													FLOR_GALLERY_NEXT_BUTTON_X, FLOR_GALLERY_NEXT_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													DEFAULT_MOVE_CALLBACK, BtnFloralGalleryNextButtonCallback);
 	SetButtonCursor(guiFloralGalleryButton[1], CURSOR_WWW );
 
 	RenderFloristGallery();
@@ -130,6 +133,7 @@ BOOLEAN EnterFloristGallery()
 
 void ExitFloristGallery()
 {
+	PERFORMANCE_MARKER
 	UINT16 i;
 
 	RemoveFloristDefaults();
@@ -137,7 +141,7 @@ void ExitFloristGallery()
 	for(i=0; i<2; i++)
 		RemoveButton( guiFloralGalleryButton[i] );
 
-	UnloadButtonImage( guiFloralGalleryButtonImage  );
+	UnloadButtonImage( guiFloralGalleryButtonImage	);
 
 	DeleteFlowerButtons();
 
@@ -145,6 +149,7 @@ void ExitFloristGallery()
 
 void HandleFloristGallery()
 {
+	PERFORMANCE_MARKER
 	if( gfRedrawFloristGallery )
 	{
 		gfRedrawFloristGallery=FALSE;
@@ -160,6 +165,7 @@ void HandleFloristGallery()
 
 void RenderFloristGallery()
 {
+	PERFORMANCE_MARKER
 	DisplayFloristDefaults();
 
 	DrawTextToScreen(sFloristGalleryText[FLORIST_GALLERY_CLICK_TO_ORDER], FLOR_GALLERY_TITLE_TEXT_X, FLOR_GALLERY_TITLE_TEXT_Y, FLOR_GALLERY_TITLE_TEXT_WIDTH, FLOR_GALLERY_TITLE_FONT, FLOR_GALLERY_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
@@ -167,14 +173,15 @@ void RenderFloristGallery()
 
 	DisplayFloralDescriptions();
 
-  MarkButtonsDirty( );
+	MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 
 void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -207,6 +214,7 @@ void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -249,6 +257,7 @@ void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnGalleryFlowerButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -278,10 +287,11 @@ void BtnGalleryFlowerButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN InitFlowerButtons()
 {
+	PERFORMANCE_MARKER
 	UINT16 i,j, count;
 	UINT16 usPosY;
 	char		sTemp[40];
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 
 	
 	if( (FLOR_GALLERY_NUMBER_FLORAL_IMAGES - gubCurFlowerIndex) >= 3 )
@@ -321,7 +331,7 @@ BOOLEAN InitFlowerButtons()
 		count ++;
 	}
 
-	//if its the first page, display the 'back' text  in place of the 'prev' text on the top left button
+	//if its the first page, display the 'back' text	in place of the 'prev' text on the top left button
 	if( gubCurFlowerIndex == 0 )
 		SpecifyButtonText( guiFloralGalleryButton[0], sFloristGalleryText[FLORIST_GALLERY_HOME] );
 	else
@@ -340,6 +350,7 @@ BOOLEAN InitFlowerButtons()
 
 void DeleteFlowerButtons()
 {
+	PERFORMANCE_MARKER
 	UINT16 i;
 
 	for(i=0; i<gubPrevNumberOfFlowers; i++)
@@ -359,6 +370,7 @@ void DeleteFlowerButtons()
 
 BOOLEAN DisplayFloralDescriptions()
 {
+	PERFORMANCE_MARKER
 	CHAR16		sTemp[ 640 ];
 	UINT32	uiStartLoc=0, i;
 	UINT16	usPosY, usPrice;
@@ -386,7 +398,7 @@ BOOLEAN DisplayFloralDescriptions()
 		//Display Flower Desc
 		uiStartLoc = FLOR_GALLERY_TEXT_TOTAL_SIZE * (i + gubCurFlowerIndex) + FLOR_GALLERY_TEXT_TITLE_SIZE + FLOR_GALLERY_TEXT_PRICE_SIZE;
 		LoadEncryptedDataFromFile(FLOR_GALLERY_TEXT_FILE, sTemp, uiStartLoc, FLOR_GALLERY_TEXT_DESC_SIZE);
-		DisplayWrappedString(FLOR_GALLERY_FLOWER_TITLE_X, (UINT16)(usPosY+FLOR_GALLERY_FLOWER_DESC_OFFSET_Y), FLOR_GALLERY_DESC_WIDTH, 2, FLOR_GALLERY_FLOWER_DESC_FONT, FLOR_GALLERY_FLOWER_DESC_COLOR,  sTemp, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
+		DisplayWrappedString(FLOR_GALLERY_FLOWER_TITLE_X, (UINT16)(usPosY+FLOR_GALLERY_FLOWER_DESC_OFFSET_Y), FLOR_GALLERY_DESC_WIDTH, 2, FLOR_GALLERY_FLOWER_DESC_FONT, FLOR_GALLERY_FLOWER_DESC_COLOR,	sTemp, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
 		usPosY += FLOR_GALLERY_FLOWER_BUTTON_OFFSET_Y;
 	}
@@ -397,6 +409,7 @@ BOOLEAN DisplayFloralDescriptions()
 
 void ChangingFloristGallerySubPage( UINT8 ubSubPageNumber )
 {
+	PERFORMANCE_MARKER
 	fLoadPendingFlag = TRUE;
 
 	//there are 3 flowers per page

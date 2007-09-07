@@ -13,7 +13,7 @@
 	#include "wcheck.h"
 	#include "worlddef.h" 
 	#include "renderworld.h"
-	#include "font.h"  
+	#include "font.h"	
 	#include "screenids.h"
 	#include "screens.h"
 	#include "overhead.h"
@@ -21,7 +21,7 @@
 	#include "sysutil.h"
 	#include "input.h" 
 	#include "Event Pump.h"
-	#include "Font Control.h"  
+	#include "Font Control.h"	
 	#include "Timer Control.h"
 	#include "Radar Screen.h"
 	#include "Render Dirty.h"
@@ -29,7 +29,7 @@
 	#include "Handle UI.h"
 	#include <wchar.h>
 	#include <tchar.h>
-	#include "cursors.h"    
+	#include "cursors.h"	
 	#include "vobject_blitters.h"
 	#include "Button System.h"
 	#include "lighting.h"
@@ -92,7 +92,7 @@
 #define		ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
 
 BOOLEAN	fDirtyRectangleMode = FALSE;
-UINT16  *gpFPSBuffer=NULL;
+UINT16	*gpFPSBuffer=NULL;
 // MarkNote
 // extern ScrollStringStPtr pStringS=NULL;
 UINT32 counter=0;
@@ -146,18 +146,19 @@ BOOLEAN	guiTacticalLeaveScreen		= FALSE;
 
 void HandleModalTactical( );
 extern void CheckForDisabledRegionRemove( );
-extern void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce );
+extern void InternalLocateGridNo( INT16 sGridNo, BOOLEAN fForce );
 
 
 
 UINT32 MainGameScreenInit(void)
-{  
+{
+	PERFORMANCE_MARKER	
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 	UINT32			uiDestPitchBYTES;
 	UINT8				*pDestBuf=NULL;
 
-/*  If any 1 have time please calculate how big this buffer should be
- *  any questions? joker
+/*	If any 1 have time please calculate how big this buffer should be
+ *	any questions? joker
  */
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	gpZBuffer=InitZBuffer( uiDestPitchBYTES, SCREEN_HEIGHT);
@@ -174,40 +175,41 @@ UINT32 MainGameScreenInit(void)
 
 	// Init Video Overlays
 	// FIRST, FRAMERATE
-	VideoOverlayDesc.sLeft			 = 0;
-	VideoOverlayDesc.sTop				 = 0;
-	VideoOverlayDesc.uiFontID    = SMALLFONT1;
-	VideoOverlayDesc.ubFontBack  = FONT_MCOLOR_BLACK ;
-	VideoOverlayDesc.ubFontFore  = FONT_MCOLOR_DKGRAY ;
-	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
+	VideoOverlayDesc.sLeft			= 0;
+	VideoOverlayDesc.sTop				= 0;
+	VideoOverlayDesc.uiFontID	= SMALLFONT1;
+	VideoOverlayDesc.ubFontBack	= FONT_MCOLOR_BLACK ;
+	VideoOverlayDesc.ubFontFore	= FONT_MCOLOR_DKGRAY ;
+	VideoOverlayDesc.sX					= VideoOverlayDesc.sLeft;
+	VideoOverlayDesc.sY					= VideoOverlayDesc.sTop;
 	swprintf( VideoOverlayDesc.pzText, L"90" );
 	VideoOverlayDesc.BltCallback = BlitMFont;
-	giFPSOverlay =  RegisterVideoOverlay( ( VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
+	giFPSOverlay =	RegisterVideoOverlay( ( VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
 
 	// SECOND, PERIOD COUNTER
-	VideoOverlayDesc.sLeft			 = 30;
-	VideoOverlayDesc.sTop				 = 0;
-	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
+	VideoOverlayDesc.sLeft			= 30;
+	VideoOverlayDesc.sTop				= 0;
+	VideoOverlayDesc.sX					= VideoOverlayDesc.sLeft;
+	VideoOverlayDesc.sY					= VideoOverlayDesc.sTop;
 	swprintf( VideoOverlayDesc.pzText, L"Levelnodes: 100000" );
 	VideoOverlayDesc.BltCallback = BlitMFont;
-	giCounterPeriodOverlay =  RegisterVideoOverlay( ( VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
-  
+	giCounterPeriodOverlay =	RegisterVideoOverlay( ( VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
+	
 	// register debug topics
 	RegisterJA2DebugTopic( TOPIC_JA2, "Reg JA2 Debug" );
-  // MarkNote
-  
-  return TRUE;
+	// MarkNote
+	
+	return TRUE;
 }
-   
+	
 
 
 // The ShutdownGame function will free up/undo all things that were started in InitializeGame()
 // It will also be responsible to making sure that all Gaming Engine tasks exit properly
 
 UINT32 MainGameScreenShutdown(void)
-{ 
+{
+	PERFORMANCE_MARKER 
 	ShutdownZBuffer(gpZBuffer);
 	ShutdownBackgroundRects();
 
@@ -221,6 +223,7 @@ UINT32 MainGameScreenShutdown(void)
 
 void FadeInGameScreen( )
 {
+	PERFORMANCE_MARKER
 	fFirstTimeInGameScreen = TRUE;
 
 	FadeInNextFrame( );
@@ -228,16 +231,18 @@ void FadeInGameScreen( )
 
 void FadeOutGameScreen( )
 {
+	PERFORMANCE_MARKER
 	FadeOutNextFrame( );
 }
 
 void EnterTacticalScreen( )
 {
+	PERFORMANCE_MARKER
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EnterTacticalScreen"));
 	guiTacticalLeaveScreen = FALSE;
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EnterTacticalScreen: setpositionsndsactive"));
-  SetPositionSndsActive( );
+	SetPositionSndsActive( );
 
 	// Set pending screen
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EnterTacticalScreen: setpendingnewscreen"));
@@ -263,7 +268,7 @@ void EnterTacticalScreen( )
 		}
 		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EnterTacticalScreen: who is selected? %d", gusSelectedSoldier));
 		// ATE: If the current guy is sleeping, change....
-		if ( gusSelectedSoldier != NOBODY && MercPtrs[ gusSelectedSoldier ]->fMercAsleep )
+		if ( gusSelectedSoldier != NOBODY && MercPtrs[ gusSelectedSoldier ]->flags.fMercAsleep )
 		{
 			DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EnterTacticalScreen: SelectNextAvailSoldier, merc asleep"));
 			SelectNextAvailSoldier( MercPtrs[ gusSelectedSoldier ] );			
@@ -275,12 +280,12 @@ void EnterTacticalScreen( )
 		SetCurrentInterfacePanel( (UINT8)TEAM_PANEL );
 	}
 
-  DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EnterTacticalScreen:enable viewport region"));
+	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EnterTacticalScreen:enable viewport region"));
 	if( !gfTacticalPlacementGUIActive )
 	{
 		MSYS_EnableRegion(&gRadarRegion);
 	}
-  MSYS_EnableRegion( &gViewportRegion );
+	MSYS_EnableRegion( &gViewportRegion );
 
 	// set default squad on sector entry
 	// ATE: moved these 2 call after initalizing the interface!
@@ -291,7 +296,7 @@ void EnterTacticalScreen( )
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EnterTacticalScreen: Init Interface"));
 
-	// Init interface ( ALWAYS TO TEAM PANEL.  DEF changed it to go back to the previous panel )
+	// Init interface ( ALWAYS TO TEAM PANEL.	DEF changed it to go back to the previous panel )
 	if( !gfTacticalPlacementGUIActive )
 	{
 		//make sure the gsCurInterfacePanel is valid
@@ -335,7 +340,7 @@ void EnterTacticalScreen( )
 	}
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EnterTacticalScreen: clear messages"));
-  // Clear tactical message q
+	// Clear tactical message q
 	ClearTacticalMessageQueue( );
 
 	// ATE: Enable messages again...
@@ -347,6 +352,7 @@ void EnterTacticalScreen( )
 
 void LeaveTacticalScreen( UINT32 uiNewScreen )
 {
+	PERFORMANCE_MARKER
 	guiTacticalLeaveScreenID = uiNewScreen;
 	guiTacticalLeaveScreen = TRUE;
 }
@@ -354,15 +360,16 @@ void LeaveTacticalScreen( UINT32 uiNewScreen )
 
 void InternalLeaveTacticalScreen( UINT32 uiNewScreen )
 {
-  gpCustomizableTimerCallback = NULL;
+	PERFORMANCE_MARKER
+	gpCustomizableTimerCallback = NULL;
 
 	// unload the sector they teleported out of
-  if ( !gfAutomaticallyStartAutoResolve )
-  {
-	  CheckAndHandleUnloadingOfCurrentWorld();
-  }
+	if ( !gfAutomaticallyStartAutoResolve )
+	{
+	CheckAndHandleUnloadingOfCurrentWorld();
+	}
 
-  SetPositionSndsInActive( );
+	SetPositionSndsInActive( );
 
 	// Turn off active flag
 	gTacticalStatus.uiFlags &= ( ~ACTIVE );
@@ -385,7 +392,7 @@ void InternalLeaveTacticalScreen( UINT32 uiNewScreen )
 
 	//disable the radar map
 	MSYS_DisableRegion(&gRadarRegion);
-  //MSYS_DisableRegion( &gViewportRegion );
+	//MSYS_DisableRegion( &gViewportRegion );
 
 	// We are leaving... turn off pedning autobadage...
 	SetAutoBandagePending( FALSE );
@@ -422,12 +429,10 @@ extern INT32 iInterfaceDialogueBox;
 	extern BOOLEAN gfDoDialogOnceGameScreenFadesIn;
 #endif
 
-UINT32  MainGameScreenHandle(void)
+UINT32	MainGameScreenHandle(void)
 {
+	PERFORMANCE_MARKER
 	UINT32		uiNewScreen = GAME_SCREEN;
-	BOOLEAN		fEnterDemoMode = FALSE;
-
-
 	//DO NOT MOVE THIS FUNCTION CALL!!!
 	//This determines if the help screen should be active
 //	if( ( !gfTacticalDoHeliRun && !gfFirstHeliRun ) && ShouldTheHelpScreenComeUp( HELP_SCREEN_TACTICAL, FALSE ) )
@@ -461,7 +466,7 @@ UINT32  MainGameScreenHandle(void)
 		pDestBuf = LockVideoSurface(guiRENDERBUFFER, &uiDestPitchBYTES);
 
 		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES, 
-					(UINT16 *)pData, uiPitch,  
+					(UINT16 *)pData, uiPitch,	
 					0 , 0, 
 					0 , 0, 
 					64, 64 );
@@ -561,9 +566,9 @@ UINT32  MainGameScreenHandle(void)
 			{
 				if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum )
 				{
-					AdjustNoAPToFinishMove( MercPtrs[ gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID ], FALSE );
+					MercPtrs[ gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID ]->AdjustNoAPToFinishMove( FALSE );
 				}
-				MercPtrs[ gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID ]->fPauseAllAnimation = FALSE;
+				MercPtrs[ gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID ]->flags.fPauseAllAnimation = FALSE;
 
 				gTacticalStatus.fEnemySightingOnTheirTurn = FALSE;
 			}
@@ -676,9 +681,9 @@ UINT32  MainGameScreenHandle(void)
 	HandleHeliDrop( );
 
 	if ( !ARE_IN_FADE_IN( ) )
-  {
-	  HandleAutoBandagePending( );
-  }
+	{
+	HandleAutoBandagePending( );
+	}
 
 
 	// ATE: CHRIS_C LOOK HERE FOR GETTING AI CONSTANTLY GOING
@@ -781,7 +786,7 @@ UINT32  MainGameScreenHandle(void)
 	}
 
 	#ifdef NETWORKED
-	// DEF:  Test Code
+	// DEF:	Test Code
 	PrintNetworkInfo();
 	#endif
 
@@ -839,14 +844,14 @@ UINT32  MainGameScreenHandle(void)
 		gprintfdirty( 0, 25, L"Schedules: %d", iSchedules );
 	}
 #endif
-  
-  
+	
+	
 	// Render view window
 	RenderRadarScreen( );
-    
+	
 	ResetInterface( );
 
-	if ( gfScrollPending  )
+	if ( gfScrollPending	)
 	{
 		AllocateVideoOverlaysArea( );
 		SaveVideoOverlaysArea( FRAME_BUFFER );
@@ -870,7 +875,7 @@ UINT32  MainGameScreenHandle(void)
 			if ( gusSelectedSoldier != NOBODY )
 			{
 				if( !gGameSettings.fOptions[ TOPTION_MUTE_CONFIRMATIONS ] )
-					DoMercBattleSound( MercPtrs[ gusSelectedSoldier ], BATTLE_SOUND_ATTN1 );
+					MercPtrs[ gusSelectedSoldier ]->DoMercBattleSound( BATTLE_SOUND_ATTN1 );
 			}
 		}
 
@@ -888,8 +893,8 @@ UINT32  MainGameScreenHandle(void)
 
 	CheckForMeanwhileOKStart( );
 
-  ScrollString( );
-  
+	ScrollString( );
+	
 	ExecuteBaseDirtyRectQueue( );
 
 	//KillBackgroundRects( );
@@ -938,12 +943,14 @@ UINT32  MainGameScreenHandle(void)
 
 void SetRenderHook( RENDER_HOOK pRenderOverride )
 {
+	PERFORMANCE_MARKER
 	gRenderOverride = pRenderOverride;
 }
 
 
 void DisableFPSOverlay( BOOLEAN fEnable )
 {
+	PERFORMANCE_MARKER
 
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 
@@ -951,7 +958,7 @@ void DisableFPSOverlay( BOOLEAN fEnable )
 
 
 	VideoOverlayDesc.fDisabled	= fEnable;
-	VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_DISABLED;
+	VideoOverlayDesc.uiFlags	= VOVERLAY_DESC_DISABLED;
 
 	UpdateVideoOverlay( &VideoOverlayDesc, giFPSOverlay, FALSE );
 	UpdateVideoOverlay( &VideoOverlayDesc, giCounterPeriodOverlay, FALSE );
@@ -961,6 +968,7 @@ void DisableFPSOverlay( BOOLEAN fEnable )
 
 void TacticalScreenLocateToSoldier( )
 {
+	PERFORMANCE_MARKER
 	INT32					cnt;
 	SOLDIERTYPE		*pSoldier;
 	INT16					bLastTeamID;
@@ -997,6 +1005,7 @@ void TacticalScreenLocateToSoldier( )
  
 void EnterMapScreen( )
 {
+	PERFORMANCE_MARKER
 	// ATE: These flags well get set later on in mapscreen....
 	//SetTacticalInterfaceFlags( INTERFACE_MAPSCREEN );
 	//fInterfacePanelDirty = DIRTYLEVEL2;
@@ -1006,6 +1015,7 @@ void EnterMapScreen( )
 
 void UpdateTeamPanelAssignments( )
 {
+	PERFORMANCE_MARKER
 	INT32					cnt;
 	SOLDIERTYPE		*pSoldier;
 	INT16					bLastTeamID;
@@ -1016,7 +1026,7 @@ void UpdateTeamPanelAssignments( )
 	// Set locator to first merc
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
+	for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
 	{	
 		// Setup team interface
 		CheckForAndAddMercToTeamPanel( pSoldier );
@@ -1027,6 +1037,7 @@ void UpdateTeamPanelAssignments( )
 
 void EnterModalTactical( INT8 bMode )
 {
+	PERFORMANCE_MARKER
 	gbTacticalDisableMode = bMode;
 	gfTacticalIsModal			= TRUE;
 
@@ -1037,7 +1048,7 @@ void EnterModalTactical( INT8 bMode )
 			gfTacticalDisableRegionActive = TRUE;
 
 			MSYS_DefineRegion( &gTacticalDisableRegion, 0, 0 ,SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH,
-								 VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+								VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
 			// Add region
 			MSYS_AddRegion( &gTacticalDisableRegion );
 		}
@@ -1049,6 +1060,7 @@ void EnterModalTactical( INT8 bMode )
 
 void EndModalTactical( )
 {
+	PERFORMANCE_MARKER
 	if ( gfTacticalDisableRegionActive )
 	{	
 		MSYS_RemoveRegion( &gTacticalDisableRegion );
@@ -1066,18 +1078,19 @@ void EndModalTactical( )
 
 	gfTacticalIsModal = FALSE;
 
-  SetRenderFlags( RENDER_FLAG_FULL );
+	SetRenderFlags( RENDER_FLAG_FULL );
 }
 
 
 void HandleModalTactical( )
 {
+	PERFORMANCE_MARKER
 	StartFrameBufferRender( );
 
 	RestoreBackgroundRects();
 
 	
-  RenderWorld( );
+	RenderWorld( );
 	RenderRadarScreen( );
 	ExecuteVideoOverlays( );
 
@@ -1107,6 +1120,7 @@ void HandleModalTactical( )
 
 void InitHelicopterEntranceByMercs( void )
 {
+	PERFORMANCE_MARKER
 	if( DidGameJustStart() )
 	{
 		AIR_RAID_DEFINITION	AirRaidDef;
@@ -1121,7 +1135,7 @@ void InitHelicopterEntranceByMercs( void )
 		AirRaidDef.uiFlags		=	AIR_RAID_BEGINNING_GAME;
 		AirRaidDef.ubNumMinsFromCurrentTime	= Random(5) + 1;
 
-		// Madd - nevermind initial air strike.  It just seems silly, since Deidranna doesn't know the mercs are there.
+		// Madd - nevermind initial air strike.	It just seems silly, since Deidranna doesn't know the mercs are there.
 		//if ( gGameOptions.fAirStrikes )
 		//	ScheduleAirRaid( &AirRaidDef );
 

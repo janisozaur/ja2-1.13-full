@@ -19,6 +19,7 @@ BOOLEAN STCISetPalette( PTR pSTCIPalette, HIMAGE hImage );
 
 BOOLEAN LoadSTCIFileToImage( HIMAGE hImage, UINT16 fContents )
 {
+	PERFORMANCE_MARKER
 	HWFILE			hFile;
 	STCIHeader	Header;
 	UINT32			uiBytesRead;
@@ -87,6 +88,7 @@ BOOLEAN LoadSTCIFileToImage( HIMAGE hImage, UINT16 fContents )
 
 BOOLEAN STCILoadRGB( HIMAGE hImage, UINT16 fContents, HWFILE hFile, STCIHeader * pHeader )
 {
+	PERFORMANCE_MARKER
 	UINT32			uiBytesRead;
 
 	if (fContents & IMAGE_PALETTE && !(fContents & IMAGE_ALLIMAGEDATA))
@@ -116,7 +118,7 @@ BOOLEAN STCILoadRGB( HIMAGE hImage, UINT16 fContents, HWFILE hFile, STCIHeader *
 
 			if (gusRedMask != (UINT16) pHeader->RGB.uiRedMask || gusGreenMask != (UINT16) pHeader->RGB.uiGreenMask || gusBlueMask != (UINT16) pHeader->RGB.uiBlueMask )
 			{
-				// colour distribution of the file is different from hardware!  We have to change it!
+				// colour distribution of the file is different from hardware!	We have to change it!
 				DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Converting to current RGB distribution!" );
 				// Convert the image to the current hardware's specifications
 				if (gusRedMask > gusGreenMask && gusGreenMask > gusBlueMask)
@@ -164,6 +166,7 @@ BOOLEAN STCILoadRGB( HIMAGE hImage, UINT16 fContents, HWFILE hFile, STCIHeader *
 
 BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, STCIHeader * pHeader )
 {
+	PERFORMANCE_MARKER
 	UINT32			uiFileSectionSize;
 	UINT32			uiBytesRead;
 	PTR					pSTCIPalette;
@@ -348,6 +351,7 @@ BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, STCIHead
 
 BOOLEAN STCISetPalette( PTR pSTCIPalette, HIMAGE hImage )
 {
+	PERFORMANCE_MARKER
 	UINT16								usIndex;
 	STCIPaletteElement *	pubPalette;
 
@@ -362,21 +366,22 @@ BOOLEAN STCISetPalette( PTR pSTCIPalette, HIMAGE hImage )
 		return( FALSE );
 	}
 
-  // Initialize the proper palette entries
-  for (usIndex = 0; usIndex < 256; usIndex++)
-  { 
-		hImage->pPalette[ usIndex ].peRed   = pubPalette->ubRed;
+	// Initialize the proper palette entries
+	for (usIndex = 0; usIndex < 256; usIndex++)
+	{ 
+		hImage->pPalette[ usIndex ].peRed	= pubPalette->ubRed;
 		hImage->pPalette[ usIndex ].peGreen = pubPalette->ubGreen;
-    hImage->pPalette[ usIndex ].peBlue  = pubPalette->ubBlue;
-    hImage->pPalette[ usIndex ].peFlags = 0;
+	hImage->pPalette[ usIndex ].peBlue	= pubPalette->ubBlue;
+	hImage->pPalette[ usIndex ].peFlags = 0;
 		pubPalette ++;
-  }
-  return TRUE;
+	}
+	return TRUE;
 }
 
 
 BOOLEAN IsSTCIETRLEFile( CHAR8 * ImageFile )
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	STCIHeader	Header;
 	UINT32		uiBytesRead;
@@ -396,10 +401,10 @@ BOOLEAN IsSTCIETRLEFile( CHAR8 * ImageFile )
 	FileClose( hFile );
 	if (Header.fFlags & STCI_ETRLE_COMPRESSED)
 	{
-	    return( TRUE );
+	 return( TRUE );
 	}
 	else
 	{
-	    return( FALSE );
+	 return( FALSE );
 	}
 } 

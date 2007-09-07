@@ -22,11 +22,13 @@ BOOLEAN DisplayAmmoInfo();
 
 void GameInitBobbyRAmmo()
 {
+	PERFORMANCE_MARKER
 }
 
 BOOLEAN EnterBobbyRAmmo()
 {
-  VOBJECT_DESC    VObjectDesc;
+	PERFORMANCE_MARKER
+	VOBJECT_DESC	VObjectDesc;
 
 	//gfBigImageMouseRegionCreated = FALSE;
 
@@ -58,6 +60,7 @@ BOOLEAN EnterBobbyRAmmo()
 
 void ExitBobbyRAmmo()
 {
+	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiAmmoBackground);
 	DeleteVideoObjectFromIndex(guiAmmoGrid);
 	DeleteBobbyMenuBar();
@@ -73,10 +76,12 @@ void ExitBobbyRAmmo()
 
 void HandleBobbyRAmmo()
 {
+	PERFORMANCE_MARKER
 }
 
 void RenderBobbyRAmmo()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	WebPageTileBackground(BOBBYR_NUM_HORIZONTAL_TILES, BOBBYR_NUM_VERTICAL_TILES, BOBBYR_BACKGROUND_WIDTH, BOBBYR_BACKGROUND_HEIGHT, guiAmmoBackground);
@@ -96,7 +101,7 @@ void RenderBobbyRAmmo()
 	MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );
 	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
-  	fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = TRUE;
 	fPausedReDrawScreenFlag = TRUE;	
 }
 

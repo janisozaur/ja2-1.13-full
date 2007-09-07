@@ -7,11 +7,11 @@
 // The HIMAGE module provides a common interface for managing image data. This module
 // includes:
 // - A set of data structures representing image data. Data can be 8 or 16 bpp and/or
-//   compressed
+//	compressed
 // - A set of file loaders which load specific file formats into the internal data format
 // - A set of blitters which blt the data to memory
 // - A comprehensive automatic blitter which blits the appropriate type based on the
-//   image header.
+//	image header.
 
 
 // Defines for type of file readers
@@ -36,11 +36,11 @@
 
 // Palette structure, mimics that of Win32
 typedef struct tagSGPPaletteEntry
-{  
-  UINT8 peRed; 
-  UINT8 peGreen; 
-  UINT8 peBlue; 
-  UINT8 peFlags; 
+{	
+	UINT8 peRed; 
+	UINT8 peGreen; 
+	UINT8 peBlue; 
+	UINT8 peFlags; 
 
 } SGPPaletteEntry; 
 
@@ -134,9 +134,9 @@ typedef struct
 } image_type, *HIMAGE;
 
 
-#define SGPGetRValue(rgb)   ((BYTE) (rgb))  
-#define SGPGetBValue(rgb)   ((BYTE) ((rgb) >> 16))  
-#define SGPGetGValue(rgb)   ((BYTE) (((UINT16) (rgb)) >> 8))  
+#define SGPGetRValue(rgb)	((BYTE) (rgb))	
+#define SGPGetBValue(rgb)	((BYTE) ((rgb) >> 16))	
+#define SGPGetGValue(rgb)	((BYTE) (((UINT16) (rgb)) >> 8))	
 
 // *****************************************************************************
 //
@@ -156,7 +156,7 @@ HIMAGE CreateImage( SGPFILENAME ImageFile, UINT16 fContents );
 BOOLEAN DestroyImage( HIMAGE hImage );
 
 // This function releases data allocated to various parts of the image based
-// on the contents flags passed as a parameter.  If a contents flag is given
+// on the contents flags passed as a parameter.	If a contents flag is given
 // and the image does not contain that data, no error is raised
 BOOLEAN ReleaseImageData( HIMAGE hImage, UINT16 fContents );
 
@@ -198,9 +198,9 @@ extern UINT16 gusAlphaMask;
 extern UINT16 gusRedMask;
 extern UINT16 gusGreenMask;
 extern UINT16 gusBlueMask;
-extern INT16  gusRedShift;
-extern INT16  gusBlueShift;
-extern INT16  gusGreenShift;
+extern INT16	gusRedShift;
+extern INT16	gusBlueShift;
+extern INT16	gusGreenShift;
 
 // used to convert 565 RGB data into different bit-formats
 void ConvertRGBDistribution565To555( UINT16 * p16BPPData, UINT32 uiNumberOfPixels );
