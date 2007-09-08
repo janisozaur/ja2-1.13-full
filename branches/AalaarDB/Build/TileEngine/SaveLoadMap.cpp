@@ -36,7 +36,7 @@ UINT8				*gpRevealedMap;
 void RemoveSavedStructFromMap( UINT32 uiMapIndex, UINT16 usIndex );
 void AddObjectFromMapTempFileToMap( UINT32 uiMapIndex, UINT16 usIndex );
 void AddBloodOrSmellFromMapTempFileToMap( MODIFY_MAP *pMap );
-void SetSectorsRevealedBit( UINT16	usMapIndex );
+void SetSectorsRevealedBit( INT16	sMapIndex );
 void SetMapRevealedStatus();
 void DamageStructsFromMapTempFile( MODIFY_MAP * pMap );
 BOOLEAN ModifyWindowStatus( UINT32 uiMapIndex );
@@ -339,7 +339,7 @@ void AddStructToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
 
-	Map.sGridNo = (UINT16)uiMapIndex;
+	Map.sGridNo = (INT16)uiMapIndex;
 //	Map.usIndex		= usIndex;
 	Map.usImageType = (UINT16)uiType;
 	Map.usSubImageIndex = usSubIndex;
@@ -375,7 +375,7 @@ void AddObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
 
-	Map.sGridNo = (UINT16)uiMapIndex;
+	Map.sGridNo = (INT16)uiMapIndex;
 //	Map.usIndex		= usIndex;
 	Map.usImageType = (UINT16)uiType;
 	Map.usSubImageIndex = usSubIndex;
@@ -410,7 +410,7 @@ void AddRemoveObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
 
-	Map.sGridNo = (UINT16)uiMapIndex;
+	Map.sGridNo = (INT16)uiMapIndex;
 //	Map.usIndex		= usIndex;
 	Map.usImageType = (UINT16)uiType;
 	Map.usSubImageIndex = usSubIndex;
@@ -439,7 +439,7 @@ void RemoveStructFromMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
 
-	Map.sGridNo	= (UINT16)uiMapIndex;
+	Map.sGridNo	= (INT16)uiMapIndex;
 //	Map.usIndex			= usIndex;
 	Map.usImageType = (UINT16)uiType;
 	Map.usSubImageIndex = usSubIndex;
@@ -483,7 +483,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 
 
 			// Save the BloodInfo in the bottom byte and the smell info in the upper byte
-			Map.sGridNo	= cnt;
+			Map.sGridNo	= (INT16)cnt;
 //			Map.usIndex			= gpWorldLevelData[cnt].ubBloodInfo | ( gpWorldLevelData[cnt].ubSmellInfo << 8 );
 			Map.usImageType = gpWorldLevelData[cnt].ubBloodInfo;
 			Map.usSubImageIndex = gpWorldLevelData[cnt].ubSmellInfo;
@@ -526,7 +526,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 					memset( &Map, 0, sizeof( MODIFY_MAP ) );
 
 					// Save the Damaged value
-					Map.sGridNo	= cnt;
+					Map.sGridNo	= (INT16)cnt;
 //					Map.usIndex			= StructureFlagToType( pCurrent->fFlags ) | ( pCurrent->ubHitPoints << 8 );
 					Map.usImageType = StructureFlagToType( pCurrent->fFlags );
 					Map.usSubImageIndex = pCurrent->ubHitPoints;
@@ -694,14 +694,14 @@ BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
 	return( TRUE );
 }
 
-void SetSectorsRevealedBit( UINT16	usMapIndex )
+void SetSectorsRevealedBit( INT16	sMapIndex )
 {
 	PERFORMANCE_MARKER
 	UINT16	usByteNumber;
 	UINT8		ubBitNumber;
 
-	usByteNumber = usMapIndex / 8;
-	ubBitNumber	= usMapIndex % 8;
+	usByteNumber = sMapIndex / 8;
+	ubBitNumber	= sMapIndex % 8;
 
 	gpRevealedMap[ usByteNumber ] |= 1 << ubBitNumber;
 }
@@ -713,7 +713,7 @@ void SetMapRevealedStatus()
 	PERFORMANCE_MARKER
 	UINT16	usByteCnt;
 	UINT8		ubBitCnt;
-	UINT16	usMapIndex;
+	INT16	sMapIndex;
 
 	if( gpRevealedMap == NULL )
 		AssertMsg( 0, "gpRevealedMap is NULL.	DF 1" );
@@ -727,16 +727,16 @@ void SetMapRevealedStatus()
 		//loop through all the bits in the byte
 		for( ubBitCnt=0; ubBitCnt<8; ubBitCnt++)
 		{
-			usMapIndex = ( usByteCnt * 8 ) + ubBitCnt;
+			sMapIndex = ( usByteCnt * 8 ) + ubBitCnt;
 
 			if( gpRevealedMap[ usByteCnt ] & ( 1 << ubBitCnt ) )
 			{
-				gpWorldLevelData[ usMapIndex ].uiFlags |= MAPELEMENT_REVEALED;
-				SetGridNoRevealedFlag( usMapIndex );
+				gpWorldLevelData[ sMapIndex ].uiFlags |= MAPELEMENT_REVEALED;
+				SetGridNoRevealedFlag( sMapIndex );
 			}
 			else
 			{
-				gpWorldLevelData[ usMapIndex ].uiFlags &= (~MAPELEMENT_REVEALED );
+				gpWorldLevelData[ sMapIndex ].uiFlags &= (~MAPELEMENT_REVEALED );
 			}
 		}
 	}
@@ -800,7 +800,7 @@ void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sS
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
 
-	Map.sGridNo = (UINT16)uiMapIndex;
+	Map.sGridNo = (INT16)uiMapIndex;
 //	Map.usIndex		= usIndex;
 	Map.usImageType = (UINT16)uiType;
 	Map.usSubImageIndex = usSubIndex;
@@ -826,7 +826,7 @@ void AddObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sS
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
 
-	Map.sGridNo = (UINT16)uiMapIndex;
+	Map.sGridNo = (INT16)uiMapIndex;
 //	Map.usIndex		= usIndex;
 	Map.usImageType = (UINT16)uiType;
 	Map.usSubImageIndex = usSubIndex;
@@ -852,7 +852,7 @@ void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
 
-	Map.sGridNo	= (UINT16)uiMapIndex;
+	Map.sGridNo	= (INT16)uiMapIndex;
 //	Map.usIndex			= usIndex;
 	Map.usImageType = (UINT16)uiType;
 	Map.usSubImageIndex = usSubIndex;
@@ -878,7 +878,7 @@ void AddRemoveObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, IN
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
 
-	Map.sGridNo = (UINT16)uiMapIndex;
+	Map.sGridNo = (INT16)uiMapIndex;
 //	Map.usIndex		= usIndex;
 	Map.usImageType = (UINT16)uiType;
 	Map.usSubImageIndex = usSubIndex;
@@ -1018,7 +1018,7 @@ void AddOpenableStructStatusToMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened )
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
 
-	Map.sGridNo = (UINT16)uiMapIndex;
+	Map.sGridNo = (INT16)uiMapIndex;
 	Map.usImageType = fOpened;
 
 	Map.ubType = SLM_OPENABLE_STRUCT;
@@ -1033,7 +1033,7 @@ void AddWindowHitToMapTempFile( UINT32 uiMapIndex )
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
 
-	Map.sGridNo = (UINT16)uiMapIndex;
+	Map.sGridNo = (INT16)uiMapIndex;
 	Map.ubType = SLM_WINDOW_HIT;
 
 	SaveModifiedMapStructToMapTempFile( &Map, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
@@ -1063,7 +1063,7 @@ void SetOpenableStructStatusFromMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened 
 	ITEM_POOL			*pItemPool;
 	INT16	 sBaseGridNo = (INT16)uiMapIndex;
 
-	pStructure = FindStructure( (UINT16)uiMapIndex, STRUCTURE_OPENABLE );
+	pStructure = FindStructure( (INT16)uiMapIndex, STRUCTURE_OPENABLE );
 
 	if( pStructure == NULL )
 	{

@@ -1351,20 +1351,10 @@ BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier )
 
 bool FitsInSmallPocket(OBJECTTYPE* pObj)
 {
-	return Item[pObj->usItem].ubPerPocket != 0;
-}
-
-bool FitsInMediumPocket(OBJECTTYPE* pObj)
-{
-	if (UsingNewInventorySystem() == false) {
-		return false;
-	}
-	if (FitsInSmallPocket(pObj) == true) {
+	if (UsingNewInventorySystem() == true) {
 		return true;
 	}
-
-	//ADB TODO what index to use for medium pockets???
-	return (0 != LBEPocketType[MEDIUM_POCKET_TYPE].ItemCapacityPerSize[CalculateItemSize(pObj)]);
+	return Item[pObj->usItem].ubPerPocket != 0;
 }
 
 // CHRISL: New definition for this function so that we can look at soldiers LBE pockets.
@@ -1381,29 +1371,12 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 		return 2;
 	}
 
-	//doesn't matter what inventory method we are using, mostly
-	if(FitsInSmallPocket(pObject) == false) {
-		if ( bSlot == STACK_SIZE_LIMIT
-			|| (bSlot < BIGPOCKFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS) )
-		{
-			return( 1 );
-		}
-		else if (UsingNewInventorySystem() == true && bSlot >= BIGPOCKFINAL && bSlot < MEDPOCKFINAL) {
-			//under the new method, some large objects like SMGs fit in medium pockets
-			//therefore, do nothing and let the code below handle it!
-		}
-		else {
-			//else medium or small pocket
-			return 0;
-		}
-	}
-
+	//handle old method first
 	ubSlotLimit = Item[usItem].ubPerPocket;
-	if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT ) {
-		ubSlotLimit = MAX_OBJECTS_PER_SLOT;
-	}
-
 	if (UsingNewInventorySystem() == false) {
+		if (bSlot < BIGPOCKFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS) {
+			return 1;
+		}
 		if (bSlot != STACK_SIZE_LIMIT) {//if it is stack size limit we want it to be a big slot
 			if (bSlot >= BIGPOCKFINAL && ubSlotLimit > 1)
 			{
@@ -1411,6 +1384,10 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 			}
 		}
 		return( ubSlotLimit );
+	}
+
+	if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT ) {
+		ubSlotLimit = MAX_OBJECTS_PER_SLOT;
 	}
 
 	//UsingNewInventorySystem == true
@@ -3931,11 +3908,6 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 			}
 			break;
 		case LTHIGHPOCKPOS:
-			if (Item[pObj->usItem].usItemClass != IC_LBEGEAR || LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass != THIGH_PACK)
-			{
-				return( FALSE );
-			}
-			break;
 		case RTHIGHPOCKPOS:
 			if (Item[pObj->usItem].usItemClass != IC_LBEGEAR || LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass != THIGH_PACK)
 			{
@@ -4166,15 +4138,9 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 
 	if (pInSlot->exists() == false)
 	{
-		// placement in an empty slot
-		ubNumberToDrop = pObj->ubNumberOfObjects;
-
-		// drop as many as possible into pocket
-		ubNumberToDrop = __max( ubSlotLimit, 1 );
-
 		// could be wrong type of object for slot... need to check...
 		// but assuming it isn't
-		pObj->MoveThisObjectTo(*pInSlot, ubNumberToDrop);
+		pObj->MoveThisObjectTo(*pInSlot, ubSlotLimit);
 /*
 		//if we are in the shopkeeper interface
 		if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
@@ -4203,38 +4169,10 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	{
 		// replacement/reloading/merging/stacking	
 		// keys have an additional check for key ID being the same
-		if ( (pObj->usItem == pInSlot->usItem) && ( Item[ pObj->usItem ].usItemClass != IC_KEY || (*pObj)[0]->data.key.ubKeyID == (*pInSlot)[0]->data.key.ubKeyID ) )
+		if ( pObj->usItem == pInSlot->usItem )
 		{
-			if (Item[ pObj->usItem ].usItemClass == IC_MONEY)
-			{
-	
-				UINT32 uiMoneyMax = MoneySlotLimit( bPos );
-
-				// always allow money to be combined!
-				// IGNORE STATUS!
-
-				if ((*pInSlot)[0]->data.money.uiMoneyAmount + (*pObj)[0]->data.money.uiMoneyAmount > uiMoneyMax)
-				{
-					// remove X dollars
-					(*pObj)[0]->data.money.uiMoneyAmount -= (uiMoneyMax - (*pInSlot)[0]->data.money.uiMoneyAmount);
-					// set in slot to maximum
-					(*pInSlot)[0]->data.money.uiMoneyAmount = uiMoneyMax;
-				}
-				else
-				{
-					(*pInSlot)[0]->data.money.uiMoneyAmount += (*pObj)[0]->data.money.uiMoneyAmount;
-					DeleteObj( pObj );
-/*
-					if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-					{
-						gMoveingItem.initialize();
-						SetSkiCursor( CURSOR_NORMAL );
-					}
-*/
-				}
-			}
 			// CHRISL
-			else if ( ubSlotLimit == 1 || (ubSlotLimit == 0 && bPos >= HANDPOS && bPos < BIGPOCKFINAL ) )
+			if ( ubSlotLimit == 1 )
 			{
 				if (pObj->ubNumberOfObjects <= 1)
 				{
@@ -4254,10 +4192,6 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 			{
 				// stacking
 				ubNumberToDrop = ubSlotLimit - pInSlot->ubNumberOfObjects;
-				if (ubNumberToDrop > pObj->ubNumberOfObjects)
-				{
-					ubNumberToDrop = pObj->ubNumberOfObjects;
-				}
 				pInSlot->AddObjectsToStack( *pObj, ubNumberToDrop );
 			}
 		}
@@ -4306,7 +4240,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 					SwapObjs( pObj, pInSlot );	
 				}
 			}
-			else if (pObj->ubNumberOfObjects <= __max( ubSlotLimit, 1 ) )
+			else if (pObj->ubNumberOfObjects <= ubSlotLimit )
 			{
 				// swapping
 				SwapObjs( pObj, pInSlot );
@@ -4386,7 +4320,7 @@ bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem)
 	}
 
 	//try to STACK in big pockets, and possibly medium pockets
-	int bigPocketEnd = (FitsInMediumPocket(pObj) == true) ? MEDPOCKFINAL : BIGPOCKFINAL;
+	int bigPocketEnd = (UsingNewInventorySystem() == true) ? MEDPOCKFINAL : BIGPOCKFINAL;
 	for(int bSlot = BIGPOCKSTART; bSlot < bigPocketEnd; bSlot++) {
 		if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
 			return true;
@@ -4441,7 +4375,7 @@ bool PlaceInAnyPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem)
 	}
 
 	//try to STACK in big pockets, and possibly medium pockets
-	int bigPocketEnd = (FitsInMediumPocket(pObj) == true) ? MEDPOCKFINAL : BIGPOCKFINAL;
+	int bigPocketEnd = (UsingNewInventorySystem() == true) ? MEDPOCKFINAL : BIGPOCKFINAL;
 	for(int bSlot = BIGPOCKSTART; bSlot < bigPocketEnd; bSlot++) {
 		if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
 			return true;
@@ -4471,7 +4405,7 @@ bool PlaceInAnyBigOrMediumPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool f
 	//a special note, although some items do not fit in small pockets, and under the old system are restricted to big pockets,
 	//under the new system they are intended to fit in medium pockets, if the item size and the pocket agree
 	//An example would be a SMG fitting in a gun holster, which is medium.
-	int bigPocketEnd = (FitsInMediumPocket(pObj) == true) ? MEDPOCKFINAL : BIGPOCKFINAL;
+	int bigPocketEnd = (UsingNewInventorySystem() == true) ? MEDPOCKFINAL : BIGPOCKFINAL;
 	//first, try to STACK the item
 	for(int bSlot = BIGPOCKSTART; bSlot < bigPocketEnd; bSlot++) {
 		if (TryToStackInSlot(pSoldier, pObj, bSlot) == true) {

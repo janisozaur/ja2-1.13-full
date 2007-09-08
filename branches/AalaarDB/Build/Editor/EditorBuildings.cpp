@@ -125,13 +125,13 @@ void KillBuilding( UINT32 iMapIndex )
 		return;
 	}
 
-	if( GridNoOnVisibleWorldTile( (UINT16)( iMapIndex - WORLD_COLS ) ) )
+	if( GridNoOnVisibleWorldTile( (INT16)( iMapIndex - WORLD_COLS ) ) )
 		KillBuilding( iMapIndex - WORLD_COLS );
-	if( GridNoOnVisibleWorldTile( (UINT16)( iMapIndex + WORLD_COLS ) ) )
+	if( GridNoOnVisibleWorldTile( (INT16)( iMapIndex + WORLD_COLS ) ) )
 		KillBuilding( iMapIndex + WORLD_COLS );
-	if( GridNoOnVisibleWorldTile( (UINT16)( iMapIndex + 1 ) ) )
+	if( GridNoOnVisibleWorldTile( (INT16)( iMapIndex + 1 ) ) )
 		KillBuilding( iMapIndex + 1 );
-	if( GridNoOnVisibleWorldTile( (UINT16)( iMapIndex - 1 ) ) )
+	if( GridNoOnVisibleWorldTile( (INT16)( iMapIndex - 1 ) ) )
 		KillBuilding( iMapIndex - 1 );
 
 	if( gfBasement )

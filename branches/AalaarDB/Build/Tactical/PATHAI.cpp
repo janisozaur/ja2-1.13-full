@@ -2673,7 +2673,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 					if ( fPathingForPlayer )
 					{
 						// Is this obstcale a hidden tile that has not been revealed yet?
-						if( DoesGridnoContainHiddenStruct( (UINT16)newLoc, &fHiddenStructVisible ) )
+						if( DoesGridnoContainHiddenStruct( (INT16)newLoc, &fHiddenStructVisible ) )
 						{
 							// Are we not visible, if so use terrain costs!
 							if ( !fHiddenStructVisible )

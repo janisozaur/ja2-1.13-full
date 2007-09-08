@@ -1106,7 +1106,7 @@ public:
 	BOOLEAN ChangeSoldierState( UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce );
 	void EVENT_SetSoldierPosition( FLOAT dNewXPos, FLOAT dNewYPos );
 	void EVENT_SetSoldierDestination( UINT16	usNewDirection );
-	void EVENT_GetNewSoldierPath( UINT16 sDestGridNo, UINT16 usMovementAnim );
+	void EVENT_GetNewSoldierPath( INT16 sDestGridNo, UINT16 usMovementAnim );
 
 	void EVENT_SetSoldierDirection( UINT16	usNewDirection );
 	void EVENT_SetSoldierDesiredDirection( UINT16	usNewDirection );
@@ -1131,7 +1131,7 @@ public:
 	void EVENT_SoldierBeginAttachCan( INT16 sGridNo, UINT8 ubDirection );
 	void EVENT_BeginMercTurn( BOOLEAN fFromRealTime, INT32 iRealTimeCounter );
 
-	BOOLEAN EVENT_InternalGetNewSoldierPath( UINT16 sDestGridNo, UINT16 usMovementAnim, BOOLEAN fFromUI, BOOLEAN fForceRestart );
+	BOOLEAN EVENT_InternalGetNewSoldierPath( INT16 sDestGridNo, UINT16 usMovementAnim, BOOLEAN fFromUI, BOOLEAN fForceRestart );
 	void EVENT_InternalSetSoldierDestination( UINT16	usNewDirection, BOOLEAN fFromMove, UINT16 usAnimState );
 	void EVENT_InternalSetSoldierPosition( FLOAT dNewXPos, FLOAT dNewYPos ,BOOLEAN fUpdateDest, BOOLEAN fUpdateFinalDest, BOOLEAN fForceDelete );
 
@@ -1327,7 +1327,7 @@ INT16 GetDirectionToGridNoFromGridNo( INT16 sGridNoDest, INT16 sGridNoSrc );
 // WRAPPERS FOR SOLDIER EVENTS
 void SendSoldierPositionEvent( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos );
 void SendSoldierDestinationEvent( SOLDIERTYPE *pSoldier, UINT16 usNewDestination );
-void SendGetNewSoldierPathEvent( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim );
+void SendGetNewSoldierPathEvent( SOLDIERTYPE *pSoldier, INT16 sDestGridNo, UINT16 usMovementAnim );
 void SendSoldierSetDirectionEvent( SOLDIERTYPE *pSoldier, UINT16 usNewDirection );
 void SendSoldierSetDesiredDirectionEvent( SOLDIERTYPE *pSoldier, UINT16 usDesiredDirection );
 void SendChangeSoldierStanceEvent( SOLDIERTYPE *pSoldier, UINT8 ubNewStance );

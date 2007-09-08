@@ -299,7 +299,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 						curr->pBasicPlacement->ubSoldierClass			= curr->pDetailedPlacement->ubSoldierClass;
 						curr->pBasicPlacement->ubCivilianGroup		= curr->pDetailedPlacement->ubCivilianGroup;
 						curr->pBasicPlacement->fHasKeys						= curr->pDetailedPlacement->fHasKeys;
-						curr->pBasicPlacement->usStartingGridNo		= curr->pDetailedPlacement->sInsertionGridNo;				
+						curr->pBasicPlacement->sStartingGridNo		= curr->pDetailedPlacement->sInsertionGridNo;				
 
 						curr->pBasicPlacement->bPatrolCnt			= curr->pDetailedPlacement->bPatrolCnt;
 						memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid, 
@@ -461,7 +461,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 					else
 					{ //use original position
 						curr->pDetailedPlacement->fOnRoof								= curr->pBasicPlacement->fOnRoof;
-						curr->pDetailedPlacement->sInsertionGridNo			= curr->pBasicPlacement->usStartingGridNo;
+						curr->pDetailedPlacement->sInsertionGridNo			= curr->pBasicPlacement->sStartingGridNo;
 					}
 				}
 
@@ -901,7 +901,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 					curr->pBasicPlacement->ubSoldierClass			= curr->pDetailedPlacement->ubSoldierClass;
 					curr->pBasicPlacement->ubCivilianGroup		= curr->pDetailedPlacement->ubCivilianGroup;
 					curr->pBasicPlacement->fHasKeys						= curr->pDetailedPlacement->fHasKeys;
-					curr->pBasicPlacement->usStartingGridNo		= curr->pDetailedPlacement->sInsertionGridNo;				
+					curr->pBasicPlacement->sStartingGridNo		= curr->pDetailedPlacement->sInsertionGridNo;				
 
 					curr->pBasicPlacement->bPatrolCnt			= curr->pDetailedPlacement->bPatrolCnt;
 					memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid, 
@@ -1215,7 +1215,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 						curr->pBasicPlacement->ubSoldierClass			= curr->pDetailedPlacement->ubSoldierClass;
 						curr->pBasicPlacement->ubCivilianGroup		= curr->pDetailedPlacement->ubCivilianGroup;
 						curr->pBasicPlacement->fHasKeys						= curr->pDetailedPlacement->fHasKeys;
-						curr->pBasicPlacement->usStartingGridNo		= curr->pDetailedPlacement->sInsertionGridNo;				
+						curr->pBasicPlacement->sStartingGridNo		= curr->pDetailedPlacement->sInsertionGridNo;				
 
 						curr->pBasicPlacement->bPatrolCnt			= curr->pDetailedPlacement->bPatrolCnt;
 						memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid, 
@@ -1384,7 +1384,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 							{
 								//use original position
 								curr->pDetailedPlacement->fOnRoof				= curr->pBasicPlacement->fOnRoof;
-								curr->pDetailedPlacement->sInsertionGridNo		= curr->pBasicPlacement->usStartingGridNo;
+								curr->pDetailedPlacement->sInsertionGridNo		= curr->pBasicPlacement->sStartingGridNo;
 							}
 						}
 

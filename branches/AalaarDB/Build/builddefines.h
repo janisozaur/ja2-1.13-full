@@ -29,7 +29,7 @@
 
 //#define DEBUG_ATTACKBUSY
 
-#define DEBUGDECISIONS
+//#define DEBUGDECISIONS
 
 //#define ROBOT_ALWAYS_READY
 
@@ -68,3 +68,4 @@
 #define _CRT_NON_CONFORMING_SWPRINTFS
 
 #endif
+

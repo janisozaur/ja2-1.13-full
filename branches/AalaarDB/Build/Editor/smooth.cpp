@@ -96,8 +96,8 @@ INT16 gbSmoothWaterStruct[] =
 		-1
 };
 	
-BOOLEAN HigherLevel( UINT32 gridno, UINT8 NewLevel	);
-BOOLEAN ContainsWater( UINT32 gridno );
+BOOLEAN HigherLevel( INT32 gridno, UINT8 NewLevel	);
+BOOLEAN ContainsWater( INT32 gridno );
 
 void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 {

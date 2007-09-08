@@ -1748,7 +1748,7 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 		return;
 	pp->fStatic								= FALSE;
 	pp->ubProfile							= NO_PROFILE;
-	pp->sInsertionGridNo			= bp->usStartingGridNo;
+	pp->sInsertionGridNo			= bp->sStartingGridNo;
 	pp->fPlayerMerc						= FALSE;
 	pp->fPlayerPlan						= FALSE;
 	pp->fCopyProfileItemsOver = FALSE;
@@ -2030,7 +2030,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	spp->initialize();
 	spp->fStatic								= TRUE;
 	spp->ubProfile							= NO_PROFILE;
-	spp->sInsertionGridNo				= bp->usStartingGridNo;
+	spp->sInsertionGridNo				= bp->sStartingGridNo;
 	spp->fPlayerMerc						= FALSE;
 	spp->fPlayerPlan						= FALSE;
 	spp->fCopyProfileItemsOver	= FALSE;
@@ -2113,7 +2113,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 		pp->bTeam = bp->bTeam;
 
 		pp->bDirection						= bp->bDirection;
-		pp->sInsertionGridNo			= bp->usStartingGridNo;
+		pp->sInsertionGridNo			= bp->sStartingGridNo;
 
 		//ATE: Copy over sector coordinates from profile to create struct
 		pp->sSectorX							= gMercProfiles[ pp->ubProfile ].sSectorX;

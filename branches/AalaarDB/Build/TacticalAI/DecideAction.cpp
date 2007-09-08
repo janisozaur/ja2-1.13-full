@@ -70,14 +70,14 @@ INT8 DO_ACTION_LOCKDOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 {
 	PERFORMANCE_MARKER
 	SCHEDULENODE * pSchedule = GetSchedule( pSoldier->ubScheduleID );
-	UINT16						usGridNo1, usGridNo2;
+	INT16						sGridNo1, sGridNo2;
 	INT8							bDirection;
 	STRUCTURE *				pStructure;
 	BOOLEAN						fDoUseDoor;
 	DOOR_STATUS	*			pDoorStatus;
 
-	usGridNo1 = pSchedule->usData1[ iScheduleIndex ];
-	usGridNo2 = pSchedule->usData2[ iScheduleIndex ];
+	sGridNo1 = pSchedule->usData1[ iScheduleIndex ];
+	sGridNo2 = pSchedule->usData2[ iScheduleIndex ];
 
 	//Uses first gridno for locking door, then second to move to after door is locked.
 	//It is possible that the second gridno will border the edge of the map, meaning that
@@ -87,36 +87,36 @@ INT8 DO_ACTION_LOCKDOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 	switch( pSoldier->bAIScheduleProgress )
 	{
 	case 0: // move to gridno specified
-		if (pSoldier->sGridNo == usGridNo1)
+		if (pSoldier->sGridNo == sGridNo1)
 		{
 			pSoldier->bAIScheduleProgress++;
 			// fall through
 		}
 		else
 		{
-			pSoldier->aiData.usActionData = usGridNo1;
+			pSoldier->aiData.usActionData = sGridNo1;
 			pSoldier->sAbsoluteFinalDestination = pSoldier->aiData.usActionData;
 			return( AI_ACTION_SCHEDULE_MOVE );
 		}
 		// fall through
 	case 1:
 		// start the door open: find the door...
-		usGridNo1 = FindDoorAtGridNoOrAdjacent( usGridNo1 );
+		sGridNo1 = FindDoorAtGridNoOrAdjacent( sGridNo1 );
 
-		if ( usGridNo1 == NOWHERE )
+		if ( sGridNo1 == NOWHERE )
 		{
 			// do nothing right now!
 			return( AI_ACTION_NONE );
 		}
 
-		pDoorStatus = GetDoorStatus( usGridNo1 );
+		pDoorStatus = GetDoorStatus( sGridNo1 );
 		if (pDoorStatus && pDoorStatus->ubFlags & DOOR_BUSY)
 		{
 			// do nothing right now!
 			return( AI_ACTION_NONE );
 		}
 
-		pStructure = FindStructure( usGridNo1, STRUCTURE_ANYDOOR );
+		pStructure = FindStructure( sGridNo1, STRUCTURE_ANYDOOR );
 		if (pStructure == NULL)
 		{
 			fDoUseDoor = FALSE;
@@ -136,7 +136,7 @@ INT8 DO_ACTION_LOCKDOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 			{
 				DOOR * pDoor;
 
-				pDoor = FindDoorInfoAtGridNo( usGridNo1 );
+				pDoor = FindDoorInfoAtGridNo( sGridNo1 );
 				if (pDoor)
 				{
 					if (pDoor->fLocked)
@@ -151,7 +151,7 @@ INT8 DO_ACTION_LOCKDOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 				}
 				else
 				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Schedule involved locked door at %d but there's no lock there!", usGridNo1 );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Schedule involved locked door at %d but there's no lock there!", sGridNo1 );
 					fDoUseDoor = FALSE;
 				}
 			}
@@ -159,7 +159,7 @@ INT8 DO_ACTION_LOCKDOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 
 		if (fDoUseDoor)
 		{
-			pSoldier->aiData.usActionData = usGridNo1;
+			pSoldier->aiData.usActionData = sGridNo1;
 			return( AI_ACTION_LOCK_DOOR );
 		}
 
@@ -168,7 +168,7 @@ INT8 DO_ACTION_LOCKDOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 		// fall through
 
 	case 2:
-		if (pSoldier->sGridNo == usGridNo2 || pSoldier->sGridNo == NOWHERE)
+		if (pSoldier->sGridNo == sGridNo2 || pSoldier->sGridNo == NOWHERE)
 		{
 			// NOWHERE indicates we were supposed to go off map and have done so
 			DoneScheduleAction( pSoldier );
@@ -180,12 +180,12 @@ INT8 DO_ACTION_LOCKDOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 		}
 		else
 		{
-			if ( GridNoOnEdgeOfMap( usGridNo2, &bDirection ) )
+			if ( GridNoOnEdgeOfMap( sGridNo2, &bDirection ) )
 			{
 				// told to go to edge of map, so go off at that point!
 				pSoldier->ubQuoteActionID = GetTraversalQuoteActionID( bDirection );
 			}
-			pSoldier->aiData.usActionData = usGridNo2;
+			pSoldier->aiData.usActionData = sGridNo2;
 			pSoldier->sAbsoluteFinalDestination = pSoldier->aiData.usActionData;
 			return( AI_ACTION_SCHEDULE_MOVE );
 		}
@@ -197,14 +197,14 @@ INT8 DO_ACTION_DOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex, UINT8 ubSche
 {
 	PERFORMANCE_MARKER
 	SCHEDULENODE * pSchedule = GetSchedule( pSoldier->ubScheduleID );
-	UINT16						usGridNo1, usGridNo2;
+	INT16						sGridNo1, sGridNo2;
 	INT8							bDirection;
 	STRUCTURE *				pStructure;
 	BOOLEAN						fDoUseDoor;
 	DOOR_STATUS	*			pDoorStatus;
 
-	usGridNo1 = pSchedule->usData1[ iScheduleIndex ];
-	usGridNo2 = pSchedule->usData2[ iScheduleIndex ];
+	sGridNo1 = pSchedule->usData1[ iScheduleIndex ];
+	sGridNo2 = pSchedule->usData2[ iScheduleIndex ];
 
 	//Uses first gridno for opening/closing/unlocking door, then second to move to after door is opened.
 	//It is possible that the second gridno will border the edge of the map, meaning that
@@ -212,36 +212,36 @@ INT8 DO_ACTION_DOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex, UINT8 ubSche
 	switch( pSoldier->bAIScheduleProgress )
 	{
 	case 0: // move to gridno specified
-		if (pSoldier->sGridNo == usGridNo1)
+		if (pSoldier->sGridNo == sGridNo1)
 		{
 			pSoldier->bAIScheduleProgress++;
 			// fall through
 		}
 		else
 		{
-			pSoldier->aiData.usActionData = usGridNo1;
+			pSoldier->aiData.usActionData = sGridNo1;
 			pSoldier->sAbsoluteFinalDestination = pSoldier->aiData.usActionData;
 			return( AI_ACTION_SCHEDULE_MOVE );
 		}
 		// fall through
 	case 1:
 		// start the door open: find the door...
-		usGridNo1 = FindDoorAtGridNoOrAdjacent( usGridNo1 );
+		sGridNo1 = FindDoorAtGridNoOrAdjacent( sGridNo1 );
 
-		if ( usGridNo1 == NOWHERE )
+		if ( sGridNo1 == NOWHERE )
 		{
 			// do nothing right now!
 			return( AI_ACTION_NONE );
 		}
 
-		pDoorStatus = GetDoorStatus( usGridNo1 );
+		pDoorStatus = GetDoorStatus( sGridNo1 );
 		if (pDoorStatus && pDoorStatus->ubFlags & DOOR_BUSY)
 		{
 			// do nothing right now!
 			return( AI_ACTION_NONE );
 		}
 
-		pStructure = FindStructure( usGridNo1, STRUCTURE_ANYDOOR );
+		pStructure = FindStructure( sGridNo1, STRUCTURE_ANYDOOR );
 		if (pStructure == NULL)
 		{
 			fDoUseDoor = FALSE;
@@ -264,7 +264,7 @@ INT8 DO_ACTION_DOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex, UINT8 ubSche
 					// set the door to unlocked
 					DOOR * pDoor;
 
-					pDoor = FindDoorInfoAtGridNo( usGridNo1 );
+					pDoor = FindDoorInfoAtGridNo( sGridNo1 );
 					if (pDoor)
 					{
 						if (pDoor->fLocked)
@@ -280,7 +280,7 @@ INT8 DO_ACTION_DOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex, UINT8 ubSche
 					else
 					{
 						// WTF?  Warning time!
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Schedule involved locked door at %d but there's no lock there!", usGridNo1 );
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Schedule involved locked door at %d but there's no lock there!", sGridNo1 );
 						fDoUseDoor = FALSE;
 					}
 				}
@@ -306,7 +306,7 @@ INT8 DO_ACTION_DOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex, UINT8 ubSche
 
 		if (fDoUseDoor)
 		{
-			pSoldier->aiData.usActionData = usGridNo1;
+			pSoldier->aiData.usActionData = sGridNo1;
 			if (ubScheduleAction == SCHEDULE_ACTION_UNLOCKDOOR)
 			{
 				return( AI_ACTION_UNLOCK_DOOR );
@@ -322,7 +322,7 @@ INT8 DO_ACTION_DOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex, UINT8 ubSche
 		// fall through
 
 	case 2:
-		if (pSoldier->sGridNo == usGridNo2 || pSoldier->sGridNo == NOWHERE)
+		if (pSoldier->sGridNo == sGridNo2 || pSoldier->sGridNo == NOWHERE)
 		{
 			// NOWHERE indicates we were supposed to go off map and have done so
 			DoneScheduleAction( pSoldier );
@@ -333,12 +333,12 @@ INT8 DO_ACTION_DOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex, UINT8 ubSche
 		}
 		else
 		{
-			if ( GridNoOnEdgeOfMap( usGridNo2, &bDirection ) )
+			if ( GridNoOnEdgeOfMap( sGridNo2, &bDirection ) )
 			{
 				// told to go to edge of map, so go off at that point!
 				pSoldier->ubQuoteActionID = GetTraversalQuoteActionID( bDirection );
 			}
-			pSoldier->aiData.usActionData = usGridNo2;
+			pSoldier->aiData.usActionData = sGridNo2;
 			pSoldier->sAbsoluteFinalDestination = pSoldier->aiData.usActionData;
 			return( AI_ACTION_SCHEDULE_MOVE );
 		}
@@ -350,12 +350,12 @@ INT8 DO_ACTION_GRIDNO ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 {
 	PERFORMANCE_MARKER
 	SCHEDULENODE * pSchedule = GetSchedule( pSoldier->ubScheduleID );
-	UINT16						usGridNo1;
+	INT16						sGridNo1;
 
-	usGridNo1 = pSchedule->usData1[ iScheduleIndex ];
+	sGridNo1 = pSchedule->usData1[ iScheduleIndex ];
 
 	// Only uses the first gridno
-	if ( pSoldier->sGridNo == usGridNo1 )
+	if ( pSoldier->sGridNo == sGridNo1 )
 	{
 		// done!
 		DoneScheduleAction( pSoldier );
@@ -367,7 +367,7 @@ INT8 DO_ACTION_GRIDNO ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 	else
 	{
 		// move!
-		pSoldier->aiData.usActionData = usGridNo1;
+		pSoldier->aiData.usActionData = sGridNo1;
 		pSoldier->sAbsoluteFinalDestination = pSoldier->aiData.usActionData;
 		return( AI_ACTION_SCHEDULE_MOVE );
 	}
@@ -441,10 +441,10 @@ INT8 DO_ACTION_ENTERSECTOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 {
 	PERFORMANCE_MARKER
 	SCHEDULENODE * pSchedule = GetSchedule( pSoldier->ubScheduleID );
-	UINT16						usGridNo1;
+	INT16						sGridNo1;
 	INT16							sX, sY;
 
-	usGridNo1 = pSchedule->usData1[ iScheduleIndex ];
+	sGridNo1 = pSchedule->usData1[ iScheduleIndex ];
 
 	if ( pSoldier->ubProfile != NO_PROFILE && gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags & PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR )
 	{
@@ -460,12 +460,12 @@ INT8 DO_ACTION_ENTERSECTOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 		pSoldier->EVENT_SetSoldierPosition( sX, sY );
 		pSoldier->bInSector = TRUE;
 		MoveSoldierFromAwayToMercSlot( pSoldier );
-		pSoldier->aiData.usActionData = usGridNo1;
+		pSoldier->aiData.usActionData = sGridNo1;
 		pSoldier->bAIScheduleProgress++;
 		pSoldier->sAbsoluteFinalDestination = pSoldier->aiData.usActionData;
 		return( AI_ACTION_SCHEDULE_MOVE );
 	case 1:
-		if (pSoldier->sGridNo == usGridNo1)
+		if (pSoldier->sGridNo == sGridNo1)
 		{
 			DoneScheduleAction( pSoldier );
 			if ( pSoldier->sGridNo != NOWHERE )
@@ -475,7 +475,7 @@ INT8 DO_ACTION_ENTERSECTOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 		}
 		else
 		{
-			pSoldier->aiData.usActionData = usGridNo1;
+			pSoldier->aiData.usActionData = sGridNo1;
 			pSoldier->sAbsoluteFinalDestination = pSoldier->aiData.usActionData;
 			return( AI_ACTION_SCHEDULE_MOVE );
 		}
@@ -508,11 +508,11 @@ INT8 DO_ACTION_SLEEP ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 {
 	PERFORMANCE_MARKER
 	SCHEDULENODE * pSchedule = GetSchedule( pSoldier->ubScheduleID );
-	UINT16						usGridNo1;
-	usGridNo1 = pSchedule->usData1[ iScheduleIndex ];
+	INT16						sGridNo1;
+	sGridNo1 = pSchedule->usData1[ iScheduleIndex ];
 
 	// Go to this position
-	if (pSoldier->sGridNo == usGridNo1)
+	if (pSoldier->sGridNo == sGridNo1)
 	{
 		// Sleep
 		pSoldier->aiData.fAIFlags |= AI_ASLEEP;
@@ -524,7 +524,7 @@ INT8 DO_ACTION_SLEEP ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 	}
 	else
 	{
-		pSoldier->aiData.usActionData = usGridNo1;
+		pSoldier->aiData.usActionData = sGridNo1;
 		pSoldier->sAbsoluteFinalDestination = pSoldier->aiData.usActionData;
 		return( AI_ACTION_SCHEDULE_MOVE );
 	}
@@ -2201,7 +2201,7 @@ INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 			ubOpponentDir = (UINT8)GetDirectionFromGridNo( BestThrow.sTarget, pSoldier );
 
 			// Get new gridno!
-			sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubOpponentDir ) );
+			sCheckGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubOpponentDir ) );
 
 			if ( OKFallDirection( pSoldier, sCheckGridNo, pSoldier->pathing.bLevel, ubOpponentDir, pSoldier->usAnimState ) )
 			{
@@ -2222,7 +2222,7 @@ INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 				BestThrow.ubPossible = FALSE;
 
 				// try behind us, see if there's room to move back
-				sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( gOppositeDirection[ ubOpponentDir ] ) );
+				sCheckGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)DirectionInc( gOppositeDirection[ ubOpponentDir ] ) );
 				if ( OKFallDirection( pSoldier, sCheckGridNo, pSoldier->pathing.bLevel, gOppositeDirection[ ubOpponentDir ], pSoldier->usAnimState ) )
 				{
 					pSoldier->aiData.usActionData = sCheckGridNo;
@@ -4005,7 +4005,7 @@ INT8 BlackAlert_EvaluateThrowingSomething(SOLDIERTYPE* pSoldier, BlackAlertFlags
 			UINT8 ubOpponentDir = (UINT8)GetDirectionFromGridNo( flags.BestThrow.sTarget, pSoldier );
 
 			// Get new gridno!
-			INT16 sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubOpponentDir ) );
+			INT16 sCheckGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubOpponentDir ) );
 
 			if ( !OKFallDirection( pSoldier, sCheckGridNo, pSoldier->pathing.bLevel, ubOpponentDir, pSoldier->usAnimState ) )
 			{
@@ -4013,7 +4013,7 @@ INT8 BlackAlert_EvaluateThrowingSomething(SOLDIERTYPE* pSoldier, BlackAlertFlags
 				flags.BestThrow.ubPossible = FALSE;
 
 				// try behind us, see if there's room to move back
-				sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( gOppositeDirection[ ubOpponentDir ] ) );
+				sCheckGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)DirectionInc( gOppositeDirection[ ubOpponentDir ] ) );
 				if ( OKFallDirection( pSoldier, sCheckGridNo, pSoldier->pathing.bLevel, gOppositeDirection[ ubOpponentDir ], pSoldier->usAnimState ) )
 				{
 					pSoldier->aiData.usActionData = sCheckGridNo;

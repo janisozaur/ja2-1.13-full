@@ -41,7 +41,7 @@ class SOLDIERTYPE;
 typedef struct
 {
 	BOOLEAN fDetailedPlacement;			//Specialized information.	Has a counterpart containing all info.
-	UINT16 usStartingGridNo;				//Where the placement position is.
+	INT16 sStartingGridNo;				//Where the placement position is.
 	INT8 bTeam;											//The team this individual is part of.
 	INT8 bRelativeAttributeLevel;		
 	INT8 bRelativeEquipmentLevel;		

@@ -142,7 +142,7 @@ typedef struct
 	BOOLEAN							ubItemsSeenOnAttackSoldier;
 	BOOLEAN							fBeenInCombatOnce;
 	BOOLEAN							fSaidCreatureSmellQuote;
-	UINT16							usItemsSeenOnAttackGridNo;
+	INT16							sItemsSeenOnAttackGridNo;
 	BOOLEAN							fLockItemLocators;
 	UINT8								ubLastQuoteSaid;
 	UINT8								ubLastQuoteProfileNUm;

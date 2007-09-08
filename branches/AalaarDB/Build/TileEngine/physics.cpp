@@ -107,7 +107,7 @@ void						PhysicsDeleteObject( REAL_OBJECT *pObject );
 BOOLEAN					PhysicsHandleCollisions( REAL_OBJECT *pObject, INT32 *piCollisionID, real DeltaTime );
 FLOAT						CalculateForceFromRange( INT16 sRange, FLOAT dDegrees );
 
-UINT16			RandomGridFromRadius( INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius );
+INT16			RandomGridFromRadius( INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius );
 
 // Lesh: needed to fix item throwing through window
 extern INT16 DirIncrementer[8];
@@ -2755,7 +2755,7 @@ BOOLEAN	LoadPhysicsTableFromSavedGameFile( HWFILE hFile )
 }
 
 
-UINT16 RandomGridFromRadius( INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius )
+INT16 RandomGridFromRadius( INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius )
 {
 	PERFORMANCE_MARKER
 	INT16		sX, sY;

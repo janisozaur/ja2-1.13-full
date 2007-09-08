@@ -793,7 +793,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 			{
 				if ( IncompatibleAttachments[i][0] == NONE )
 					break;
-			
+
 				if ( IncompatibleAttachments[i][0] == usAttachIndex && IncompatibleAttachments[i][1] == usScopeIndex )
 				{
 					// scope wins
@@ -2085,16 +2085,7 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 		}
 	}
 
-	if( FitsInMediumPocket(pObject) == true ) {
-		for( i = MEDPOCKSTART; i < MEDPOCKFINAL; i++ )
-		{
-			if( pp->Inv[ i ].exists() == false && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
-			{
-				pp->Inv[ i ] = *pObject;
-				return TRUE;
-			}
-		}
-	}
+	//NPCs skip medium pockets
 
 	// CHRISL: Change static inventory pocket definition to dynamic
 	for( i = BIGPOCKSTART; i < BIGPOCKFINAL; i++ )

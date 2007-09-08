@@ -63,7 +63,7 @@ INT8 gzMeanwhileStr[][30] =
 
 
 // the snap to grid nos for meanwhile scenes
-UINT16 gusMeanWhileGridNo[]=
+INT16 gsMeanWhileGridNo[]=
 {
 	12248,
 	12248,
@@ -937,7 +937,7 @@ void LocateMeanWhileGrid( void )
 	INT16 sGridNo = 0;
 
 	// go to the approp. gridno
-	sGridNo = gusMeanWhileGridNo[ ubCurrentMeanWhileId ];
+	sGridNo = gsMeanWhileGridNo[ ubCurrentMeanWhileId ];
 
 	InternalLocateGridNo( sGridNo, TRUE );
 

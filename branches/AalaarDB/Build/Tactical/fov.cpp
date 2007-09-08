@@ -743,7 +743,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 													{
 														gTacticalStatus.fItemsSeenOnAttack = TRUE;
 														gTacticalStatus.ubItemsSeenOnAttackSoldier = pSoldier->ubID;
-														gTacticalStatus.usItemsSeenOnAttackGridNo	= (INT16)(marker);
+														gTacticalStatus.sItemsSeenOnAttackGridNo	= (INT16)(marker);
 													}
 													else
 													{

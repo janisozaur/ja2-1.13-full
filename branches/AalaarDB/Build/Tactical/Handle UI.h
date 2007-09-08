@@ -203,13 +203,13 @@ extern UINT16		gsUIHandleShowMoveGridLocation;
 
 extern BOOLEAN		gfUIDisplayDamage;
 extern INT8			gbDamage;
-extern UINT16		gsDamageGridNo;
+extern INT16		gsDamageGridNo;
 
 extern BOOLEAN		gfFontPopupDo;
 
 extern BOOLEAN		gUITargetReady;
 extern BOOLEAN		gUITargetShotWaiting;
-extern UINT16		gsUITargetShotGridNo;
+extern INT16		gsUITargetShotGridNo;
 
 extern CHAR16		gzLocation[ 20 ];
 extern BOOLEAN		gfUIBodyHitLocation;

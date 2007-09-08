@@ -5,7 +5,7 @@
 #include <ostream>
 
 #ifndef PROFILER_ENABLED
-//#define PROFILER_ENABLED
+#define PROFILER_ENABLED
 #endif
 
 #ifdef PROFILER_ENABLED

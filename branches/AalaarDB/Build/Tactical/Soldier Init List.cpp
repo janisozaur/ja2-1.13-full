@@ -550,7 +550,7 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr, GROUP *pGroup = NULL )
 	{
 		while (1)
 		{
-			ROTTING_CORPSE *pCorpse = GetCorpseAtGridNo( curr->pBasicPlacement->usStartingGridNo, 0); // I assume we don't find tanks on the roof
+			ROTTING_CORPSE *pCorpse = GetCorpseAtGridNo( curr->pBasicPlacement->sStartingGridNo, 0); // I assume we don't find tanks on the roof
 			if (pCorpse)
 			{
 				// Assume this is a dead tank and have the replacement tank haul it away
