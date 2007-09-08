@@ -1381,46 +1381,40 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 		return 2;
 	}
 
-	//doesn't matter what inventory method we are using, mostly
-	if(FitsInSmallPocket(pObject) == false) {
-		if ( bSlot == STACK_SIZE_LIMIT
-			|| (bSlot < BIGPOCKFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS) )
-		{
-			return( 1 );
-		}
-		else if (UsingNewInventorySystem() == true && bSlot >= BIGPOCKFINAL && bSlot < MEDPOCKFINAL) {
-			//under the new method, some large objects like SMGs fit in medium pockets
-			//therefore, do nothing and let the code below handle it!
-		}
-		else {
-			//else medium or small pocket
-			return 0;
-		}
-	}
+	//doesn't matter what inventory method we are using, "body" slots always have a capacity of 1
+	if(bSlot < BODYPOSFINAL)
+			return 1;
 
+	/* For the moment, this is useful in both inventory modes.  ubPerPocket is sole factor for old inventory system
+	and we're currently using it for vehicles in new system. */
 	ubSlotLimit = Item[usItem].ubPerPocket;
-	if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT ) {
+	if( ubSlotLimit > MAX_OBJECTS_PER_SLOT )
 		ubSlotLimit = MAX_OBJECTS_PER_SLOT;
+
+	// If we submit STACK_SIZE_LIMIT, then we want maximum large pocket capacity based on old inventory methods
+	if (bSlot == STACK_SIZE_LIMIT)
+	{
+		if(ubSlotLimit == 0)
+			return 1;
+		else
+			return ubSlotLimit;
 	}
 
-	if (UsingNewInventorySystem() == false) {
-		if (bSlot != STACK_SIZE_LIMIT) {//if it is stack size limit we want it to be a big slot
-			if (bSlot >= BIGPOCKFINAL && ubSlotLimit > 1)
-			{
-				ubSlotLimit /= 2;
-			}
-		}
+	/*Old system bases capacity on ubPerPocket value and pocket size*/
+	if(UsingNewInventorySystem() == false)
+	{
+		if (bSlot >= BIGPOCKFINAL && ubSlotLimit > 1)
+			ubSlotLimit /= 2;
 		return( ubSlotLimit );
 	}
 
 	//UsingNewInventorySystem == true
 	if (pSoldier != NULL && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 	{
-		return( ubSlotLimit );
-	}
-	else if (bSlot < BODYPOSFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS)
-	{
-		return( 1 );
+		if(ubSlotLimit == 0)
+			return 1;
+		else
+			return( ubSlotLimit );
 	}
 	else
 	{
@@ -1430,11 +1424,6 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 		}
 		else if (bSlot == KNIFEPOCKPOS) {
 			pIndex = KNIFE_POCKET_TYPE;
-		}
-		else if (bSlot == STACK_SIZE_LIMIT) {
-			//calculate the size pretending we are putting it into a big slot in an LBE
-			//or some other big pocket
-			pIndex = BIG_POCKET_TYPE;
 		}
 		else {
 			Assert(icLBE[bSlot] != -1 && icClass[bSlot] != -1 && icPocket[bSlot] != -1);
@@ -1454,12 +1443,6 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 			ubSlotLimit = 1;
 
 		if(LBEPocketType[pIndex].pRestriction != 0 && LBEPocketType[pIndex].pRestriction != Item[usItem].usItemClass) {
-			//if item only fits in big pockets
-			if ( bSlot < BIGPOCKFINAL && bSlot != KNIFEPOCKPOS && bSlot != GUNSLINGPOCKPOS )
-			{
-				return( 1 );
-			}
-			//else medium or small pocket
 			return 0;
 		}
 	
