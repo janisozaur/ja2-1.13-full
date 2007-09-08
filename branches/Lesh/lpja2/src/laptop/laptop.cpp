@@ -699,27 +699,7 @@ GetLaptopKeyboardInput()
   while (DequeueEvent(&InputEvent) == TRUE)
   {
 		// HOOK INTO MOUSE HOOKS
-		switch(InputEvent.usEvent)
-	  {
-			case LEFT_BUTTON_DOWN:
-				MouseSystemHook(LEFT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
-				break;
-			case LEFT_BUTTON_UP:
-				MouseSystemHook(LEFT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y ,_LeftButtonDown, _RightButtonDown);			
-				break;
-			case RIGHT_BUTTON_DOWN:
-				MouseSystemHook(RIGHT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
-				break;
-			case RIGHT_BUTTON_UP: 
-				MouseSystemHook(RIGHT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);	
-				break;
-			case RIGHT_BUTTON_REPEAT: 
-				MouseSystemHook(RIGHT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);			
-				break;
-			case LEFT_BUTTON_REPEAT: 
-				MouseSystemHook(LEFT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);				
-				break;
-	  }
+		MouseSystemHook(InputEvent.usEvent, (INT16)MousePos.x, (INT16)MousePos.y);
 		
 		HandleKeyBoardShortCutsForLapTop( InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState );
 		

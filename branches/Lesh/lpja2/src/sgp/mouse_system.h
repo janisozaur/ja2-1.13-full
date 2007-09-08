@@ -32,33 +32,33 @@
 #endif
 
 typedef void (*MOUSE_CALLBACK)(struct _MOUSE_REGION *,INT32);	// Define MOUSE_CALLBACK type as pointer to void 
-typedef void (*MOUSE_HELPTEXT_DONE_CALLBACK)( ); // the help is done callback
+typedef void (*MOUSE_HELPTEXT_DONE_CALLBACK)( ); 				// the help is done callback
 
 typedef struct _MOUSE_REGION {
-	UINT16								IDNumber;						// Region's ID number, set by mouse system
-	INT8									PriorityLevel;			// Region's Priority, set by system and/or caller
-	UINT32								uiFlags;						// Region's state flags
-	INT16									RegionTopLeftX;			// Screen area affected by this region (absolute coordinates)
-	INT16									RegionTopLeftY;
-	INT16									RegionBottomRightX;
-	INT16									RegionBottomRightY;
-	INT16									MouseXPos;					// Mouse's Coordinates in absolute screen coordinates
-	INT16									MouseYPos;
-	INT16									RelativeXPos;				// Mouse's Coordinates relative to the Top-Left corner of the region
-	INT16									RelativeYPos;
-	UINT16								ButtonState;				// Current state of the mouse buttons
-	UINT16								Cursor;							// Cursor to use when mouse in this region (see flags)
-	MOUSE_CALLBACK				MovementCallback;		// Pointer to callback function if movement occured in this region
-	MOUSE_CALLBACK				ButtonCallback;		// Pointer to callback function if button action occured in this region
-	INT32									UserData[4];				// User Data, can be set to anything!
+	UINT16				IDNumber;				// Region's ID number, set by mouse system
+	INT8				PriorityLevel;			// Region's Priority, set by system and/or caller
+	UINT32				uiFlags;				// Region's state flags
+	INT16				RegionTopLeftX;			// Screen area affected by this region (absolute coordinates)
+	INT16				RegionTopLeftY;
+	INT16				RegionBottomRightX;
+	INT16				RegionBottomRightY;
+	INT16				MouseXPos;				// Mouse's Coordinates in absolute screen coordinates
+	INT16				MouseYPos;
+	INT16				RelativeXPos;			// Mouse's Coordinates relative to the Top-Left corner of the region
+	INT16				RelativeYPos;
+	UINT16				ButtonState;			// Current state of the mouse buttons
+	UINT16				Cursor;					// Cursor to use when mouse in this region (see flags)
+	MOUSE_CALLBACK		MovementCallback;		// Pointer to callback function if movement occured in this region
+	MOUSE_CALLBACK		ButtonCallback;			// Pointer to callback function if button action occured in this region
+	INT32				UserData[4];			// User Data, can be set to anything!
 	
 	//Fast help vars.
-	INT16					FastHelpTimer;		// Countdown timer for FastHelp text
-	STR16					FastHelpText;		// Text string for the FastHelp (describes buttons if left there a while)
-	INT32					FastHelpRect;
-	MOUSE_HELPTEXT_DONE_CALLBACK HelpDoneCallback;
+	INT16				FastHelpTimer;			// Countdown timer for FastHelp text
+	STR16				FastHelpText;			// Text string for the FastHelp (describes buttons if left there a while)
+	INT32				FastHelpRect;
+	MOUSE_HELPTEXT_DONE_CALLBACK	HelpDoneCallback;
 
-	struct _MOUSE_REGION	*next;							// List maintenance, do NOT touch these entries
+	struct _MOUSE_REGION	*next;				// List maintenance, do NOT touch these entries
 	struct _MOUSE_REGION	*prev;
 } MOUSE_REGION;
 
@@ -70,28 +70,28 @@ typedef struct _MOUSE_REGION {
 // *****************************************************************************
 
 // Mouse Region Flags
-#define MSYS_NO_FLAGS										0x00000000
-#define MSYS_MOUSE_IN_AREA							0x00000001
-#define MSYS_SET_CURSOR									0x00000002
-#define MSYS_MOVE_CALLBACK							0x00000004
-#define MSYS_BUTTON_CALLBACK						0x00000008
-#define MSYS_REGION_EXISTS							0x00000010
-#define MSYS_SYSTEM_INIT								0x00000020
-#define MSYS_REGION_ENABLED							0x00000040
-#define MSYS_FASTHELP										0x00000080
-#define MSYS_GOT_BACKGROUND							0x00000100
-#define MSYS_HAS_BACKRECT								0x00000200
-#define MSYS_FASTHELP_RESET							0x00000400
+#define MSYS_NO_FLAGS						0x00000000
+#define MSYS_MOUSE_IN_AREA					0x00000001
+#define MSYS_SET_CURSOR						0x00000002
+#define MSYS_MOVE_CALLBACK					0x00000004
+#define MSYS_BUTTON_CALLBACK				0x00000008
+#define MSYS_REGION_EXISTS					0x00000010
+#define MSYS_SYSTEM_INIT					0x00000020
+#define MSYS_REGION_ENABLED					0x00000040
+#define MSYS_FASTHELP						0x00000080
+#define MSYS_GOT_BACKGROUND					0x00000100
+#define MSYS_HAS_BACKRECT					0x00000200
+#define MSYS_FASTHELP_RESET					0x00000400
 #define MSYS_ALLOW_DISABLED_FASTHELP		0x00000800
 
 // Mouse region IDs
-#define MSYS_ID_BASE						1
-#define MSYS_ID_MAX							0xfffffff // ( INT32 max )
+#define MSYS_ID_BASE					1
+#define MSYS_ID_MAX						0xfffffff // ( INT32 max )
 #define MSYS_ID_SYSTEM					0
 
 // Mouse region priorities
 #define MSYS_PRIORITY_LOWEST		0
-#define MSYS_PRIORITY_LOW				15
+#define MSYS_PRIORITY_LOW			15
 #define MSYS_PRIORITY_BASE			31
 #define MSYS_PRIORITY_NORMAL		31
 #define MSYS_PRIORITY_HIGH			63
@@ -100,40 +100,47 @@ typedef struct _MOUSE_REGION {
 #define MSYS_PRIORITY_AUTO			-1
 
 // Mouse system defines used during updates
-#define MSYS_NO_ACTION					0
-#define MSYS_DO_MOVE						1
+#define MSYS_NO_ACTION				0
+#define MSYS_DO_MOVE				1
 #define MSYS_DO_LBUTTON_DWN			2
 #define MSYS_DO_LBUTTON_UP			4
 #define MSYS_DO_RBUTTON_DWN			8
 #define MSYS_DO_RBUTTON_UP			16
-#define MSYS_DO_LBUTTON_REPEAT	32
-#define MSYS_DO_RBUTTON_REPEAT	64
+#define MSYS_DO_LBUTTON_REPEAT		32
+#define MSYS_DO_RBUTTON_REPEAT		64
+#define MSYS_DO_MBUTTON_DWN			128
+#define MSYS_DO_MBUTTON_UP			256
+#define MSYS_DO_MBUTTON_REPEAT		512
+#define MSYS_DO_WHEEL_UP			1024
+#define MSYS_DO_WHEEL_DOWN			2048
 
-#define MSYS_DO_BUTTONS					(MSYS_DO_LBUTTON_DWN|MSYS_DO_LBUTTON_UP|MSYS_DO_RBUTTON_DWN|MSYS_DO_RBUTTON_UP|MSYS_DO_RBUTTON_REPEAT|MSYS_DO_LBUTTON_REPEAT)
+#define MSYS_DO_BUTTONS				(MSYS_DO_LBUTTON_DWN|MSYS_DO_LBUTTON_UP|MSYS_DO_LBUTTON_REPEAT|\
+									MSYS_DO_RBUTTON_DWN|MSYS_DO_RBUTTON_UP|MSYS_DO_RBUTTON_REPEAT|\
+									MSYS_DO_MBUTTON_DWN|MSYS_DO_MBUTTON_UP|MSYS_DO_MBUTTON_REPEAT)
+#define MSYS_DO_WHEEL				(MSYS_DO_WHEEL_UP|MSYS_DO_WHEEL_DOWN)
 
 // Mouse system button masks
-#define MSYS_LEFT_BUTTON				1
-#define MSYS_RIGHT_BUTTON				2
+#define MSYS_LEFT_BUTTON			1
+#define MSYS_RIGHT_BUTTON			2
+#define MSYS_MIDDLE_BUTTON			4
 
 // Mouse system special values
-#define MSYS_NO_CALLBACK				NULL
-#define MSYS_NO_CURSOR					65534
+#define MSYS_NO_CALLBACK			NULL
+#define MSYS_NO_CURSOR				65534
 
 // Mouse system callback reasons
-#define MSYS_CALLBACK_REASON_NONE									0
-#define MSYS_CALLBACK_REASON_INIT									1
-#define MSYS_CALLBACK_REASON_MOVE									2
-#define MSYS_CALLBACK_REASON_LBUTTON_DWN					4
-#define MSYS_CALLBACK_REASON_LBUTTON_UP						8
-#define MSYS_CALLBACK_REASON_RBUTTON_DWN					16
-#define MSYS_CALLBACK_REASON_RBUTTON_UP						32
-#define MSYS_CALLBACK_REASON_BUTTONS							(MSYS_CALLBACK_REASON_LBUTTON_DWN|MSYS_CALLBACK_REASON_LBUTTON_UP| \
-																									MSYS_CALLBACK_REASON_RBUTTON_DWN|MSYS_CALLBACK_REASON_RBUTTON_UP)
-#define MSYS_CALLBACK_REASON_LOST_MOUSE						64
-#define MSYS_CALLBACK_REASON_GAIN_MOUSE						128
+#define MSYS_CALLBACK_REASON_NONE					0
+#define MSYS_CALLBACK_REASON_INIT					1
+#define MSYS_CALLBACK_REASON_MOVE					2
+#define MSYS_CALLBACK_REASON_LBUTTON_DWN			4
+#define MSYS_CALLBACK_REASON_LBUTTON_UP				8
+#define MSYS_CALLBACK_REASON_RBUTTON_DWN			16
+#define MSYS_CALLBACK_REASON_RBUTTON_UP				32
+#define MSYS_CALLBACK_REASON_LOST_MOUSE				64
+#define MSYS_CALLBACK_REASON_GAIN_MOUSE				128
 
-#define	MSYS_CALLBACK_REASON_LBUTTON_REPEAT				256
-#define	MSYS_CALLBACK_REASON_RBUTTON_REPEAT				512
+#define	MSYS_CALLBACK_REASON_LBUTTON_REPEAT			256
+#define	MSYS_CALLBACK_REASON_RBUTTON_REPEAT			512
 
 //Kris:  Nov 31, 1999
 //Added support for double clicks.  The DOUBLECLICK event is passed combined with
@@ -142,11 +149,21 @@ typedef struct _MOUSE_REGION {
 //supports double clicks and single clicks, make sure the DOUBLECLICK event is checked first (rejecting
 //the LBUTTON_DWN event if detected)
 #define MSYS_CALLBACK_REASON_LBUTTON_DOUBLECLICK	1024
+#define MSYS_CALLBACK_REASON_MBUTTON_DWN			2048
+#define MSYS_CALLBACK_REASON_MBUTTON_UP				4096
+#define	MSYS_CALLBACK_REASON_MBUTTON_REPEAT			8192
+#define MSYS_CALLBACK_REASON_WHEEL_UP				16384
+#define MSYS_CALLBACK_REASON_WHEEL_DOWN				32768
 
+#define MSYS_CALLBACK_REASON_BUTTONS				(MSYS_CALLBACK_REASON_LBUTTON_DWN|MSYS_CALLBACK_REASON_LBUTTON_UP| \
+													MSYS_CALLBACK_REASON_RBUTTON_DWN|MSYS_CALLBACK_REASON_RBUTTON_UP| \
+													MSYS_CALLBACK_REASON_MBUTTON_DWN|MSYS_CALLBACK_REASON_MBUTTON_UP)
+
+#define MSYS_CALLBACK_REASON_WHEEL					(MSYS_CALLBACK_REASON_WHEEL_UP|MSYS_CALLBACK_REASON_WHEEL_DOWN)
 
 // Mouse grabbing return codes
-#define MSYS_GRABBED_OK						0
-#define MSYS_ALREADY_GRABBED			1
+#define MSYS_GRABBED_OK				0
+#define MSYS_ALREADY_GRABBED		1
 #define MSYS_REGION_NOT_IN_LIST		2
 
 // *****************************************************************************

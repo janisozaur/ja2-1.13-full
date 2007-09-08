@@ -183,46 +183,20 @@ static BOOLEAN gfSkipFrame = FALSE;
 
 void GameLoop(void)
 {
-//	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop");
-
 	InputAtom					InputEvent;
 	SGPPos  MousePos;
 	UINT32	uiOldScreen=guiCurrentScreen;
 
-	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: get mouse position");
 	GetMousePos(&MousePos);
 	// Hook into mouse stuff for MOVEMENT MESSAGES
-	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: get mouse hook");
-	MouseSystemHook(MOUSE_POS, (INT16)MousePos.x, (INT16)MousePos.y, _LeftButtonDown, _RightButtonDown);
-	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: get music");
+	MouseSystemHook(MOUSE_POS, (INT16)MousePos.x, (INT16)MousePos.y);
 	MusicPoll( FALSE );
 
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: check for mouse events");
-  while (DequeueSpecificEvent(&InputEvent, LEFT_BUTTON_REPEAT|RIGHT_BUTTON_REPEAT|LEFT_BUTTON_DOWN|LEFT_BUTTON_UP|RIGHT_BUTTON_DOWN|RIGHT_BUTTON_UP ) == TRUE )
-  {
+  	while (DequeueSpecificEvent(&InputEvent, MOUSE_BUTTONS_INPUT | MOUSE_WHEEL_INPUTS ) == TRUE )
+  	{
 		// HOOK INTO MOUSE HOOKS
-	  //DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("GameLoop: mouse event %d", InputEvent.usEvent ));
-		switch(InputEvent.usEvent)
-	  {
-			case LEFT_BUTTON_DOWN:
-				MouseSystemHook(LEFT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
-				break;
-			case LEFT_BUTTON_UP:
-				MouseSystemHook(LEFT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y ,_LeftButtonDown, _RightButtonDown);
-				break;
-			case RIGHT_BUTTON_DOWN:
-				MouseSystemHook(RIGHT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
-				break;
-			case RIGHT_BUTTON_UP: 
-				MouseSystemHook(RIGHT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
-				break;
-			case LEFT_BUTTON_REPEAT: 
-				MouseSystemHook(LEFT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
-				break;
-			case RIGHT_BUTTON_REPEAT: 
-				MouseSystemHook(RIGHT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
-				break;
-	  }
+	  MouseSystemHook(InputEvent.usEvent, (INT16)MousePos.x, (INT16)MousePos.y);
 	}
 
 	

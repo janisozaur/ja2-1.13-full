@@ -222,7 +222,7 @@ void MSYS_Shutdown(void)
 //
 //	Hook to the SGP's mouse handler
 //
-void MSYS_SGP_Mouse_Handler_Hook(UINT16 Type,UINT16 Xcoord, UINT16 Ycoord, BOOLEAN LeftButton, BOOLEAN RightButton)
+void MSYS_SGP_Mouse_Handler_Hook(UINT16 Type,UINT16 Xcoord, UINT16 Ycoord)
 {
 	// If the mouse system isn't initialized, get out o' here
 	if(!MSYS_SystemInitialized)
@@ -239,12 +239,18 @@ void MSYS_SGP_Mouse_Handler_Hook(UINT16 Type,UINT16 Xcoord, UINT16 Ycoord, BOOLE
 		case LEFT_BUTTON_UP:
 		case RIGHT_BUTTON_DOWN:
 		case RIGHT_BUTTON_UP:
+		case MIDDLE_BUTTON_DOWN:
+		case MIDDLE_BUTTON_UP:
 			//MSYS_Action|=MSYS_DO_BUTTONS;
 			if(Type == LEFT_BUTTON_DOWN)
+			{
 				MSYS_Action |= MSYS_DO_LBUTTON_DWN;
+				MSYS_CurrentButtons|=MSYS_LEFT_BUTTON;
+			}
 			else if(Type == LEFT_BUTTON_UP)
 			{
 				MSYS_Action |= MSYS_DO_LBUTTON_UP;
+				MSYS_CurrentButtons&=(~MSYS_LEFT_BUTTON);
 				//Kris:
 				//Used only if applicable.  This is used for that special button that is locked with the
 				//mouse press -- just like windows.  When you release the button, the previous state
@@ -257,67 +263,69 @@ void MSYS_SGP_Mouse_Handler_Hook(UINT16 Type,UINT16 Xcoord, UINT16 Ycoord, BOOLE
 				#endif
 			}
 			else if(Type == RIGHT_BUTTON_DOWN)
-				MSYS_Action |= MSYS_DO_RBUTTON_DWN;
-			else if(Type == RIGHT_BUTTON_UP)
-				MSYS_Action |= MSYS_DO_RBUTTON_UP;
-
-			if(LeftButton)
-				MSYS_CurrentButtons|=MSYS_LEFT_BUTTON;
-			else
-				MSYS_CurrentButtons&=(~MSYS_LEFT_BUTTON);
-
-			if(RightButton)
-				MSYS_CurrentButtons|=MSYS_RIGHT_BUTTON;
-			else
-				MSYS_CurrentButtons&=(~MSYS_RIGHT_BUTTON);
-
-			if((Xcoord != MSYS_CurrentMX) || (Ycoord != MSYS_CurrentMY))
 			{
-				MSYS_Action|=MSYS_DO_MOVE;
-				MSYS_CurrentMX = Xcoord;
-				MSYS_CurrentMY = Ycoord;
+				MSYS_Action |= MSYS_DO_RBUTTON_DWN;
+				MSYS_CurrentButtons|=MSYS_RIGHT_BUTTON;
 			}
-
-			MSYS_UpdateMouseRegion();
+			else if(Type == RIGHT_BUTTON_UP)
+			{
+				MSYS_Action |= MSYS_DO_RBUTTON_UP;
+				MSYS_CurrentButtons&=(~MSYS_RIGHT_BUTTON);
+			}
+			else if(Type == MIDDLE_BUTTON_DOWN)
+			{
+				MSYS_Action |= MSYS_DO_MBUTTON_DWN;
+				MSYS_CurrentButtons|=MSYS_MIDDLE_BUTTON;
+			}
+			else if(Type == MIDDLE_BUTTON_UP)
+			{
+				MSYS_Action |= MSYS_DO_MBUTTON_UP;
+				MSYS_CurrentButtons&=(~MSYS_MIDDLE_BUTTON);
+			}
 			break;
 
 		// ATE: Checks here for mouse button repeats.....
 		// Call mouse region with new reason
 		case LEFT_BUTTON_REPEAT:
 		case RIGHT_BUTTON_REPEAT:
+		case MIDDLE_BUTTON_REPEAT:
 
 			if(Type == LEFT_BUTTON_REPEAT)
 				MSYS_Action |= MSYS_DO_LBUTTON_REPEAT;
 			else if(Type == RIGHT_BUTTON_REPEAT)
 				MSYS_Action |= MSYS_DO_RBUTTON_REPEAT;
-
-			if((Xcoord != MSYS_CurrentMX) || (Ycoord != MSYS_CurrentMY))
-			{
-				MSYS_Action|=MSYS_DO_MOVE;
-				MSYS_CurrentMX = Xcoord;
-				MSYS_CurrentMY = Ycoord;
-			}
-
-			MSYS_UpdateMouseRegion();
+			else if(Type == MIDDLE_BUTTON_REPEAT)
+				MSYS_Action |= MSYS_DO_MBUTTON_REPEAT;
 			break;
 
 		case MOUSE_POS:
-			if((Xcoord != MSYS_CurrentMX) || (Ycoord != MSYS_CurrentMY) || gfRefreshUpdate )
-			{
-				MSYS_Action|=MSYS_DO_MOVE;
-				MSYS_CurrentMX = Xcoord;
-				MSYS_CurrentMY = Ycoord;
-
-				gfRefreshUpdate = FALSE;
-
-				MSYS_UpdateMouseRegion();
-			}
+			gfRefreshUpdate = FALSE;
 			break;
 
+		case MOUSE_WHEEL_UP:
+		case MOUSE_WHEEL_DOWN:
+			if(Type == MOUSE_WHEEL_UP)
+				MSYS_Action |= MSYS_DO_WHEEL_UP;
+			else if(Type == MOUSE_WHEEL_DOWN)
+				MSYS_Action |= MSYS_DO_WHEEL_DOWN;
+			break;
+		
 		default:
-		  DbgMessage(TOPIC_MOUSE_SYSTEM, DBG_LEVEL_0, "ERROR -- MSYS 2 SGP Mouse Hook got bad type");
+//		  DbgMessage(TOPIC_MOUSE_SYSTEM, DBG_LEVEL_0, "ERROR -- MSYS 2 SGP Mouse Hook got bad type");
 			break;
 	}
+
+	// check for moved mouse
+	if((Xcoord != MSYS_CurrentMX) || (Ycoord != MSYS_CurrentMY) || gfRefreshUpdate )
+	{
+		MSYS_Action|=MSYS_DO_MOVE;
+		MSYS_CurrentMX = Xcoord;
+		MSYS_CurrentMY = Ycoord;
+	}
+	
+	// update if something happened
+	if (MSYS_Action != MSYS_NO_ACTION)
+		MSYS_UpdateMouseRegion();
 }
 
 
