@@ -1461,50 +1461,19 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItemPtr )
 {
 	PERFORMANCE_MARKER
-	UINT8 ubNumberToDrop, ubSlotLimit;
-
 	// if there is something there, swap it, if they are of the same type and stackable then add to the count
-
-	ubSlotLimit = ItemSlotLimit(pItemPtr, STACK_SIZE_LIMIT);
-
 	if (pInventorySlot->exists() == false)
 	{
 		// placement in an empty slot
-		ubNumberToDrop = pItemPtr->ubNumberOfObjects;
-
-		if (ubNumberToDrop > ubSlotLimit && ubSlotLimit != 0)
-		{
-			// drop as many as possible into pocket
-			ubNumberToDrop = ubSlotLimit;
-		}
-
-		// could be wrong type of object for slot... need to check...
-		// but assuming it isn't
-		pItemPtr->MoveThisObjectTo(*pInventorySlot, ubNumberToDrop);
+		pItemPtr->MoveThisObjectTo(*pInventorySlot);
 	}
 	else
 	{
 		// replacement/reloading/merging/stacking 
-
-		// placement in an empty slot
-		ubNumberToDrop = pItemPtr->ubNumberOfObjects;
-
-		if (pItemPtr->usItem == pInventorySlot->usItem)
+		if (pItemPtr->usItem == pInventorySlot->usItem && ItemSlotLimit(pItemPtr, STACK_SIZE_LIMIT) >= 2)
 		{
-			if (ubSlotLimit < 2)
-			{
-				// swapping
-				SwapObjs( pItemPtr, pInventorySlot );
-			}
-			else
-			{
-				// stacking
-				if( ubNumberToDrop > ubSlotLimit - pInventorySlot->ubNumberOfObjects )
-				{
-					ubNumberToDrop = ubSlotLimit - pInventorySlot->ubNumberOfObjects;
-				}
-				pItemPtr->MoveThisObjectTo(*pInventorySlot, ubNumberToDrop);
-			}
+			// stacking
+			pItemPtr->MoveThisObjectTo(*pInventorySlot);
 		}
 		else
 		{
@@ -1518,7 +1487,6 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 {
 	PERFORMANCE_MARKER
-	UINT8 ubNumberToDrop, ubSlotLimit;
 	OBJECTTYPE *pInventorySlot;
 
 
@@ -1526,19 +1494,9 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 	pInventorySlot =  &( pInventoryPoolList[ pInventoryPoolList.size() ].object );
 	
 	// placement in an empty slot
-	ubNumberToDrop = pItemPtr->ubNumberOfObjects;
-
-	ubSlotLimit = ItemSlotLimit( pItemPtr, STACK_SIZE_LIMIT );
-
-	if (ubNumberToDrop > ubSlotLimit && ubSlotLimit != 0)
-	{
-		// drop as many as possible into pocket
-		ubNumberToDrop = ubSlotLimit;
-	}
-
 	// could be wrong type of object for slot... need to check...
 	// but assuming it isn't
-	pItemPtr->MoveThisObjectTo(*pInventorySlot, ubNumberToDrop );
+	pItemPtr->MoveThisObjectTo(*pInventorySlot);
 	
 	return( TRUE );
 }

@@ -102,9 +102,9 @@ typedef enum INVENTORY_SLOT{
 	NUM_INV_SLOTS,
 };
 
-#define INV_START_POS			0
+#define INV_START_POS		0
 #define BODYPOSSTART		HELMETPOS
-#define BODYPOSFINAL		BIGPOCK1POS
+#define BODYPOSFINAL		GUNSLINGPOCKPOS
 #define BIGPOCKSTART		BIGPOCK1POS
 #define BIGPOCKFINAL		MEDPOCK1POS
 #define MEDPOCKSTART		MEDPOCK1POS
@@ -112,6 +112,15 @@ typedef enum INVENTORY_SLOT{
 #define SMALLPOCKSTART		SMALLPOCK1POS
 #define SMALLPOCKFINAL		NUM_INV_SLOTS
 #define STACK_SIZE_LIMIT	NUM_INV_SLOTS
+
+// CHRISL: Arrays to track ic group information
+//							{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54}
+const INT8	icLBE[NUM_INV_SLOTS] =		{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,10,10,10,11,11,11,11, 7, 7, 8, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9,10,10,10,10,11,11,11,11,11,11,11,11};
+const INT8	icClass[NUM_INV_SLOTS] =	{-1,-1,-1,-1,-1,-1,-1, 5, 5, 5, 5, 5, 6, 6, 3, 3, 3, 4, 4, 4, 4, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4};
+const INT8	icPocket[NUM_INV_SLOTS] =	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 4, 5, 6, 8, 9,10,11,10,11, 4, 4, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 4, 5, 6, 7};
+const INT8	oldInv[NUM_INV_SLOTS] =	{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+const INT8	vehicleInv[NUM_INV_SLOTS]=	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0};
+
 
 #define INVALIDCURS 0
 #define QUESTCURS 1
@@ -189,7 +198,6 @@ class SOLDIERTYPE;
 class LBENODE
 {
 public:
-	//ADB TODO make this a variable sized vector???
 	LBENODE() { initialize();};
 	void	initialize() {inv.clear();};
 	BOOLEAN	Load( HWFILE hFile );
@@ -199,6 +207,7 @@ public:
 	UINT16				lbeIndex;
 	UINT8				ubID;
 	BOOLEAN				ZipperFlag;
+	unsigned short		uniqueID;
 	UINT32				uiNodeChecksum;
 	char				endOfPOD;
 	//compiler complains about too big an array since OBJECTTYPE's size is unknown at this time, because of forward declaration
@@ -208,16 +217,17 @@ public:
 #define SIZEOF_LBENODE_POD (offsetof(LBENODE, endOfPOD))
 void	CreateLBE(OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets);
 bool	DestroyLBEIfEmpty(OBJECTTYPE* pObj);
+void	DestroyLBE(OBJECTTYPE* pObj);
 void	GetLBESlots(UINT32 LBEType, std::vector<INT8>& LBESlots);
 void	MoveItemsInSlotsToLBE( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, LBENODE* pLBE, OBJECTTYPE* pObj);
 
 // CHRISL:
-BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, UINT32 uiHandPos, OBJECTTYPE *pObj );
-BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
-BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
-INT16 GetFreeLBEPackIndex( void );
+BOOLEAN	MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, UINT32 uiHandPos, OBJECTTYPE *pObj );
+BOOLEAN	MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos );
+BOOLEAN	MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
+bool	IsSlotAnLBESlot(int slot);
 
-extern	std::vector<LBENODE>	LBEArray;
+extern	std::list<LBENODE>	LBEArray;
 
 //do not alter or saves will break, create new defines if the size changes
 #define OLD_MAX_ATTACHMENTS_101 4
@@ -315,7 +325,7 @@ public:
 	UINT8		ubMission;
 	INT8		bTrap;        // 1-10 exp_lvl to detect
 	UINT8		ubImprintID;	// ID of merc that item is imprinted on
-	UINT16		ubWeight;	// CHRISL:
+	UINT8		ubWeight;
 	UINT8		fUsed;				// flags for whether the item is used or not
 };
 
@@ -410,6 +420,8 @@ public:
 };
 typedef std::list<StackedObjectData>	StackedObjects;
 
+
+#define ALL_OBJECTS -1
 class OBJECTTYPE
 {
 public:
@@ -436,16 +448,15 @@ public:
 	bool	exists();
 	bool	IsLBE();
 	LBENODE*	GetLBEPointer(int stackSlot = 0);
-	int		GetLBEIndex(int stackSlot = 0);
 
 
 	UINT16	GetWeightOfObjectInStack(unsigned int index = 0);
 	int		AddObjectsToStack(int howMany, int objectStatus = 100);
-	int		AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany = -1);
-	int		RemoveObjectsFromStack(int howMany = 1, OBJECTTYPE* destObject = NULL);
+	int		AddObjectsToStack(OBJECTTYPE& sourceObject, int howManyWanted = ALL_OBJECTS, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT, bool allowLBETransfer = true);
+	int		MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove = ALL_OBJECTS, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT);
+	int		RemoveObjectsFromStack(int howMany = 1, OBJECTTYPE* destObject = NULL, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT);
 	bool	RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject = NULL);
-	void	DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany = -1);
-	int		MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove = -1);
+	void	DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany = ALL_OBJECTS);
 private://this is only a helper for the above functions
 	void	SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, StackedObjects::iterator beginIter);
 public:

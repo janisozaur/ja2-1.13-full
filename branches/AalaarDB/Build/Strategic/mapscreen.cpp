@@ -7536,8 +7536,6 @@ BOOLEAN MAPInternalInitItemDescriptionBox( OBJECTTYPE *pObject, UINT8 ubStatusIn
 }
 
 //CHRISL: functons for LBENODE system
-extern BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
-extern BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
 extern BOOLEAN ChangeZipperStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus);
 extern BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement );
 
@@ -7607,7 +7605,6 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 							pSoldier->flags.DropPackFlag = TRUE;
 						}
 					}
-					MoveItemToLBEItem( pSoldier, uiHandPos, gpItemPointer );
 				}
 			}
 
@@ -7690,13 +7687,6 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 				// else handle normally
 			}
 
-			/* CHRISL: For New Inventory system.  Are we swapping LBE Items?  We'll need to move any
-			items in the associated IC group pockets into a new LBENODE.  We'll have to check
-			whether we already have an LBENODE for this type of LBE item and, if so, remove
-			the items from it, place them in the LBE Items current sector, and delete the existing
-			LBENODE.  Then we need to know if the LBE Item in the cursor is an LBENODE
-			or just a normal OBJECTTYPE.  If it's an LBENODE, we need to move it's items into
-			the appropriate pockets for the soldier and then delete the LBENODE.*/
 			if((UsingNewInventorySystem() == true) && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 			{
 				if((uiHandPos == VESTPOCKPOS || uiHandPos == LTHIGHPOCKPOS || uiHandPos == RTHIGHPOCKPOS || uiHandPos == CPACKPOCKPOS || uiHandPos == BPACKPOCKPOS) && CanItemFitInPosition(pSoldier, gpItemPointer, uiHandPos, FALSE))
@@ -7711,10 +7701,6 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 						if(pSoldier->flags.DropPackFlag)
 							pSoldier->flags.DropPackFlag = FALSE;
 					}
-					// Are we swaping LBE items?
-					if(pSoldier->inv[uiHandPos].exists() == true)	// Item already exists in this pocket
-						MoveItemToLBEItem( pSoldier, uiHandPos, gpItemPointer );
-					MoveItemFromLBEItem( pSoldier, uiHandPos, gpItemPointer );
 				}
 			}
 

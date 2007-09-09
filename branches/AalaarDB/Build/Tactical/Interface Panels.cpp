@@ -3031,10 +3031,6 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				return;
 			}
 			
-			/* CHRISL: For New Inventory system.  Are we removing an existing LBE item?  If so, we need to pull
-			all items in the relevant IC Group pockets out of the soldiers inventory and put them into the LBE items
-			inventory. But first, find out if we already have a LBE item inventory for this item and this merc.  If we 
-			do, remove the items from it and place them into the sector the LBE inventory is located in.*/
 			if((UsingNewInventorySystem() == true))
 			{
 				if(uiHandPos == VESTPOCKPOS || uiHandPos == LTHIGHPOCKPOS || uiHandPos == RTHIGHPOCKPOS || uiHandPos == CPACKPOCKPOS || uiHandPos == BPACKPOCKPOS)
@@ -3054,7 +3050,6 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 							RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 						}
 					}
-					MoveItemToLBEItem( gpSMCurrentMerc, uiHandPos, gpItemPointer );
 				}
 			}
 
@@ -3196,10 +3191,10 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 								gpSMCurrentMerc->flags.DropPackFlag = FALSE;
 							RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 						}
+						//ADB TODO move this
 						// Are we swaping LBE items?
 						if(gpSMCurrentMerc->inv[uiHandPos].exists() == true)	// Item already exists in this pocket
-							MoveItemToLBEItem( gpSMCurrentMerc, uiHandPos, gpItemPointer );
-						MoveItemFromLBEItem( gpSMCurrentMerc, uiHandPos, gpItemPointer );
+							MoveItemToLBEItem( gpSMCurrentMerc, uiHandPos );
 					}
 				}
 
@@ -3427,7 +3422,7 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	// Dropping a pack?
 	if(newStatus)
 	{
-		if(!MoveItemToLBEItem( pSoldier, BPACKPOCKPOS, NULL ))
+		if(!MoveItemToLBEItem( pSoldier, BPACKPOCKPOS ))
 			newStatus = FALSE;
 		InternalAddItemToPool(&pSoldier->sGridNo, &pSoldier->inv[BPACKPOCKPOS], 1, pSoldier->stats.bExpLevel, 0 , -1, &worldKey );
 		// Item successfully added to world

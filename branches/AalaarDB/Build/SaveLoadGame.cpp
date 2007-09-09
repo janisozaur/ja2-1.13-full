@@ -509,18 +509,22 @@ void TruncateStrategicGroupSizes();
 
 //if all that sounds compilcated, it is
 
-
+extern unsigned short gLastLBEUniqueID;
 BOOLEAN SaveLBENODEToSaveGameFile( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
 	UINT32 uiNumBytesWritten;
 
+	if ( !FileWrite( hFile, &gLastLBEUniqueID, sizeof(gLastLBEUniqueID), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
 	int size = LBEArray.size();
 	if ( !FileWrite( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
 	{
 		return(FALSE);
 	}
-	for (std::vector<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+	for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
 		if (! iter->Save(hFile)) {
 			return FALSE;
 		}
@@ -534,6 +538,10 @@ BOOLEAN LoadLBENODEFromSaveGameFile( HWFILE hFile )
 	//if we are at the most current version, then fine
 	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
 	{
+		if ( !FileRead( hFile, &gLastLBEUniqueID, sizeof(gLastLBEUniqueID), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
 		int size;
 		if ( !FileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
 		{
@@ -541,7 +549,7 @@ BOOLEAN LoadLBENODEFromSaveGameFile( HWFILE hFile )
 		}
 
 		LBEArray.resize(size);
-		for (std::vector<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+		for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
 			if (! iter->Load(hFile)) {
 				return FALSE;
 			}

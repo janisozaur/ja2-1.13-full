@@ -4543,20 +4543,22 @@ void RenderItemDescriptionBox( )
 // CHRISL: New function to display items stored in an LBENODE
 void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScreen )
 {
+	//ADB TODO clean up
 	extern INV_REGION_DESC gSMInvPocketXY[NUM_INV_SLOTS];
 	extern INV_REGION_DESC gMapScreenInvPocketXY[NUM_INV_SLOTS];
 	SOLDIERTYPE	*pSoldier;
 	OBJECTTYPE	*pObject;
 	int			offSetX;
 	int			offSetY;
-	int			pocketKey[12];
-	int			Num_Pockets;
 	INT16		sX, sY;
 	INT16		sBarX, sBarY;
 	INT16		lbePocket = ITEM_NOT_FOUND;
 	BOOLEAN		fHatchItOut = FALSE;
 	UINT32		lClass;
-	UINT16		lIndex;
+
+	// Start by verifying that this item is an LBENODE
+	if(Item[pObj->usItem].usItemClass != IC_LBEGEAR)
+		return;
 
 	// Set selected merc
 	if(guiCurrentItemDescriptionScreen == MAP_SCREEN)
@@ -4564,29 +4566,25 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 	else
 		pSoldier = gpSMCurrentMerc;
 	
-	// Start by verifying that this item is an LBENODE
-//	if(pObj->bDetonatorType != -1)
-	if(Item[pObj->usItem].usItemClass != IC_LBEGEAR)
-		return;
-
+	LBENODE* pLBE = NULL;
 	if(pObj->IsLBE())
 	{
-		lIndex = pObj->GetLBEIndex();
-		lClass = pObj->GetLBEPointer()->lbeClass;
+		pLBE = pObj->GetLBEPointer();
+		lClass = pLBE->lbeClass;
+		if(lClass == 1 && pObj == &pSoldier->inv[RTHIGHPOCKPOS]) {
+			lClass = 5;
+		}
 	}
-	else
+	else {
 		lClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
-	if(lClass == 1 && pObj->IsLBE() && pObj == &pSoldier->inv[RTHIGHPOCKPOS])
-		lClass = 5;
+	}
+
+	std::vector<INT8> pocketKey;
+	GetLBESlots(lClass, pocketKey);
 	// Setup pocket coords
 	switch (lClass)
 	{
 		case THIGH_PACK:
-			pocketKey[0] = SMALLPOCK11POS;
-			pocketKey[1] = SMALLPOCK12POS;
-			pocketKey[2] = SMALLPOCK13POS;
-			pocketKey[3] = SMALLPOCK14POS;
-			pocketKey[4] = MEDPOCK3POS;
 			if(stratScreen){
 				offSetX = 83;
 				offSetY = -1;
@@ -4595,21 +4593,8 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				offSetX = 203;
 				offSetY = -79;
 			}
-			Num_Pockets = 5;
 			break;
 		case VEST_PACK:
-			pocketKey[0] = SMALLPOCK1POS;
-			pocketKey[1] = SMALLPOCK2POS;
-			pocketKey[2] = SMALLPOCK3POS;
-			pocketKey[3] = SMALLPOCK4POS;
-			pocketKey[4] = SMALLPOCK5POS;
-			pocketKey[5] = SMALLPOCK6POS;
-			pocketKey[6] = SMALLPOCK7POS;
-			pocketKey[7] = SMALLPOCK8POS;
-			pocketKey[8] = SMALLPOCK9POS;
-			pocketKey[9] = SMALLPOCK10POS;
-			pocketKey[10] = MEDPOCK1POS;
-			pocketKey[11] = MEDPOCK2POS;
 			if(stratScreen){
 				offSetX = 0;
 				offSetY = 111;
@@ -4618,16 +4603,8 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				offSetX = 94;
 				offSetY = 30;
 			}
-			Num_Pockets = 12;
 			break;
 		case COMBAT_PACK:
-			pocketKey[0] = SMALLPOCK19POS;
-			pocketKey[1] = SMALLPOCK20POS;
-			pocketKey[2] = SMALLPOCK21POS;
-			pocketKey[3] = SMALLPOCK22POS;
-			pocketKey[4] = BIGPOCK1POS;
-			pocketKey[5] = BIGPOCK2POS;
-			pocketKey[6] = BIGPOCK3POS;
 			if(stratScreen){
 				offSetX = -82;
 				offSetY = -1;
@@ -4636,21 +4613,8 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				offSetX = -8;
 				offSetY = -87;
 			}
-			Num_Pockets = 7;
 			break;
 		case BACKPACK:
-			pocketKey[0] = SMALLPOCK23POS;
-			pocketKey[1] = SMALLPOCK24POS;
-			pocketKey[2] = SMALLPOCK25POS;
-			pocketKey[3] = SMALLPOCK26POS;
-			pocketKey[4] = SMALLPOCK27POS;
-			pocketKey[5] = SMALLPOCK28POS;
-			pocketKey[6] = SMALLPOCK29POS;
-			pocketKey[7] = SMALLPOCK30POS;
-			pocketKey[8] = BIGPOCK4POS;
-			pocketKey[9] = BIGPOCK5POS;
-			pocketKey[10] = BIGPOCK6POS;
-			pocketKey[11] = BIGPOCK7POS;
 			if(stratScreen){
 				offSetX = 42;
 				offSetY = -104;
@@ -4659,15 +4623,9 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				offSetX = -170;
 				offSetY = 12;
 			}
-			Num_Pockets = 12;
 			break;
 			//ADB TODO, what case is this?
 		case 5:
-			pocketKey[0] = SMALLPOCK15POS;
-			pocketKey[1] = SMALLPOCK16POS;
-			pocketKey[2] = SMALLPOCK17POS;
-			pocketKey[3] = SMALLPOCK18POS;
-			pocketKey[4] = MEDPOCK4POS;
 			if(stratScreen){
 				offSetX = 1;
 				offSetY = -1;
@@ -4676,14 +4634,12 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				offSetX = 117;
 				offSetY = -79;
 			}
-			Num_Pockets = 5;
 			break;
 		default:
-			Num_Pockets = 0;
 			break;
 	}
 	// Display contents of LBENODE
-	for(int cnt=0; cnt<Num_Pockets; cnt++)
+	for(unsigned int cnt=0; cnt<pocketKey.size(); cnt++)
 	{
 		if(stratScreen){
 			sX = gMapScreenInvPocketXY[pocketKey[cnt]].sX + offSetX;
@@ -4695,7 +4651,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 		}
 		lbePocket = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbePocketIndex[icPocket[pocketKey[cnt]]];
 		if(activeNode)
-			pObject = &(LBEArray[lIndex].inv[cnt]);
+			pObject = &pLBE->inv[cnt];
 		else
 		{
 			if(pObj == &pSoldier->inv[VESTPOCKPOS] || pObj == &pSoldier->inv[LTHIGHPOCKPOS] || pObj == &pSoldier->inv[RTHIGHPOCKPOS] || pObj == &pSoldier->inv[CPACKPOCKPOS] || pObj == &pSoldier->inv[BPACKPOCKPOS])
@@ -4929,19 +4885,17 @@ void InternalBeginItemPointer( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject, INT8 
 void BeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 {
 	PERFORMANCE_MARKER
-	BOOLEAN			fOk;
-	fOk = pSoldier->inv[ubHandPos].exists();
-	if (_KeyDown( SHIFT ))
+	if (pSoldier->inv[ubHandPos].exists() == true)
 	{
-		// Remove all from soldier's slot
-		pSoldier->inv[ubHandPos].MoveThisObjectTo(gTempObject);
-	}
-	else
-	{
-		pSoldier->inv[ubHandPos].MoveThisObjectTo(gTempObject, 1);
-	}
-	if (fOk)
-	{
+		if (_KeyDown( SHIFT ))
+		{
+			// Remove all from soldier's slot
+			pSoldier->inv[ubHandPos].MoveThisObjectTo(gTempObject, ALL_OBJECTS, pSoldier, ubHandPos);
+		}
+		else
+		{
+			pSoldier->inv[ubHandPos].MoveThisObjectTo(gTempObject, 1, pSoldier, ubHandPos);
+		}
 		InternalBeginItemPointer( pSoldier, &gTempObject, ubHandPos );
 	}
 }
