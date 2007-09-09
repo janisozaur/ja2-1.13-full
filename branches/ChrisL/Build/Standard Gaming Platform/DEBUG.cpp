@@ -343,7 +343,7 @@ void DbgClearAllTopics( void )
 	}
 }
 
-
+extern bool gRecordingProfile;
 //**************************************************************************
 //
 // DbgMessageReal
@@ -362,7 +362,7 @@ void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, STR8 
 #ifndef _NO_DEBUG_TXT
   FILE      *OutFile;
 #endif
-
+  if (gRecordingProfile) {
 	// Check for a registered topic ID
 	if ( uiTopicId < MAX_TOPICS_ALLOTED )//&& gfDebugTopics[uiTopicId] )
 	{
@@ -379,6 +379,7 @@ void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, STR8 
 		}
 #endif
 	}
+  }
 
 }
 

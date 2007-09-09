@@ -68,7 +68,7 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 	if ( pSoldier->bTeam == gbPlayerNum )
 	{
 		// Is this obstcale a hidden tile that has not been revealed yet?
-		if( DoesGridnoContainHiddenStruct( (UINT16)sGridno, &fHiddenStructVisible ) )
+		if( DoesGridnoContainHiddenStruct( (INT16)sGridno, &fHiddenStructVisible ) )
 		{
 			// Are we not visible, if so use terrain costs!
 			if ( !fHiddenStructVisible )
@@ -1829,7 +1829,7 @@ UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 
 		if ( pSoldier->sGridNo != sActionGridNo )
 		{
-			sAPCost = PlotPath( pSoldier, sActionGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+			sAPCost = PlotPath( pSoldier, sActionGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, (INT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
 		
 			// If point cost is zero, return 0
 			if ( sAPCost != 0 )

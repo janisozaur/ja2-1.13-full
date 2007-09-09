@@ -909,13 +909,13 @@ void CompileTileMovementCosts( INT16 sGridNo )
 							SET_CURRMOVEMENTCOST( ubDirLoop, TRAVELCOST_OBSTACLE );	
 						}
 
-						if ( FindStructure( (UINT16) (sGridNo - WORLD_COLS), STRUCTURE_OBSTACLE ) == FALSE && FindStructure( (UINT16)(sGridNo + WORLD_COLS), STRUCTURE_OBSTACLE ) == FALSE )
+						if ( FindStructure( (INT16) (sGridNo - WORLD_COLS), STRUCTURE_OBSTACLE ) == FALSE && FindStructure( (INT16)(sGridNo + WORLD_COLS), STRUCTURE_OBSTACLE ) == FALSE )
 						{
 							FORCE_SET_MOVEMENTCOST( sGridNo, NORTH, 0, TRAVELCOST_FENCE );
 							FORCE_SET_MOVEMENTCOST( sGridNo, SOUTH, 0, TRAVELCOST_FENCE );
 						}
 
-						if ( FindStructure( (UINT16)(sGridNo - 1), STRUCTURE_OBSTACLE ) == FALSE && FindStructure( (UINT16)(sGridNo + 1), STRUCTURE_OBSTACLE ) == FALSE )
+						if ( FindStructure( (INT16)(sGridNo - 1), STRUCTURE_OBSTACLE ) == FALSE && FindStructure( (INT16)(sGridNo + 1), STRUCTURE_OBSTACLE ) == FALSE )
 						{
 							FORCE_SET_MOVEMENTCOST( sGridNo, EAST, 0, TRAVELCOST_FENCE );
 							FORCE_SET_MOVEMENTCOST( sGridNo, WEST, 0, TRAVELCOST_FENCE );
@@ -2596,7 +2596,7 @@ BOOLEAN EvaluateWorld( STR8 pSector, UINT8 ubLevel )
 	{
 		EXITGRID exitGrid;
 		INT32 loop;
-		UINT16 usMapIndex;
+		INT16 sMapIndex;
 		BOOLEAN fExitGridFound;
 		RenderProgressBar( 0, 98 ); 
 		//RenderProgressBar( 1, 98 ); 
@@ -2605,7 +2605,7 @@ BOOLEAN EvaluateWorld( STR8 pSector, UINT8 ubLevel )
 
 		for( i = 0; i < cnt; i++ )
 		{
-			LOADDATA( &usMapIndex, pBuffer, 2 );
+			LOADDATA( &sMapIndex, pBuffer, 2 );
 			LOADDATA( &exitGrid, pBuffer, 5 );
 			fExitGridFound = FALSE;
 			for( loop = 0; loop < pSummary->ubNumExitGridDests; loop++ )

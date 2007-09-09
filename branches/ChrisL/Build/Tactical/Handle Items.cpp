@@ -1304,7 +1304,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 			ubDirection = (UINT8)GetDirectionFromGridNo( sTargetGridNo, pSoldier );
 
 			// Get new gridno!
-			sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubDirection ) );
+			sCheckGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubDirection ) );
 
 			if ( !OKFallDirection( pSoldier, sCheckGridNo, pSoldier->pathing.bLevel, ubDirection , pSoldier->usAnimState ) )
 			{

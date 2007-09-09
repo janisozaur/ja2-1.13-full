@@ -420,21 +420,15 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 		numToAdd = min(numToAdd, howMany);
 	}
 
+
 	//stacking control, restrict certain things here
 	if (numToAdd > 0) {
-		//Keys, triggers, and other specials can never stack, should LBEs?
-		if (Item[usItem].usItemClass == IC_KEY
-			|| Item[usItem].usItemClass == IC_BOMB
-			|| Item[usItem].usItemClass == IC_LBEGEAR) {
-			//we could have been asked to put the item into an empty object, in which case we allow 1
-			if (ubNumberOfObjects == 0) {
-				numToAdd = 1;
-			}
-			else {
+		if (exists() == true) {
+			//Triggers, and other specials can never stack
+			if (Item[usItem].usItemClass == IC_BOMB) {
 				//exit and do not continue
 				return 0;
 			}
-		}
 
 		if (Item[usItem].usItemClass == IC_MONEY) {
 			//money doesn't stack, it merges
@@ -442,19 +436,25 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 			int thisStatus = (*this)[0]->data.money.bMoneyStatus * (*this)[0]->data.money.uiMoneyAmount;
 			int sourceStatus = sourceObject[0]->data.money.bMoneyStatus * sourceObject[0]->data.money.uiMoneyAmount;
 			int average = (*this)[0]->data.money.uiMoneyAmount + sourceObject[0]->data.money.uiMoneyAmount;
+
 			(*this)[0]->data.objectStatus = ( (thisStatus + sourceStatus) / average);
+				(*this)[0]->data.money.uiMoneyAmount += sourceObject[0]->data.money.uiMoneyAmount;
+				return 0;
+			}
 
-			(*this)[0]->data.money.uiMoneyAmount += sourceObject[0]->data.money.uiMoneyAmount;
-			return 0;
-		}
+			//keys can stack if the same key
+			if (Item[usItem].usItemClass == IC_KEY) {
+				if ((*this)[0]->data.key.ubKeyID != sourceObject[0]->data.key.ubKeyID) {
+				return 0;
+				}
+			}
 
-		//for convenience sake, do not allow mixed flags to stack!
-		//continue on because you might find something else with the same flags
-		if (sourceObject.fFlags != this->fFlags) {
-			numToAdd = 0;
-		}
+			//for convenience sake, do not allow mixed flags to stack!
+			//continue on because you might find something else with the same flags
+			if (sourceObject.fFlags != this->fFlags) {
+				numToAdd = 0;
+			}
 
-		if (exists() == true) {
 			if (sourceObject[0]->data.ubImprintID != (*this)[0]->data.ubImprintID) {
 				numToAdd = 0;
 			}
@@ -464,10 +464,11 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 				|| (*this)[0]->data.bTrap > 0) {
 				return 0;
 			}
+			//ADB TODO, other specials
 		}
-		//ADB TODO, other specials
 	}
 
+	//this recalcs weight too!
 	SpliceData(sourceObject, numToAdd, sourceObject.objectStack.begin());
 	
 
@@ -525,7 +526,9 @@ int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject)
 	int numToRemove = min(ubNumberOfObjects, howMany);
 	if (destObject) {
 		//destObject should be empty especially if numToRemove is 0
-		destObject->initialize();
+		if (destObject->exists() == true) {
+			destObject->initialize();
+		}
 		if (numToRemove > 0) {
 			//this handles the removal too
 			return destObject->AddObjectsToStack(*this, numToRemove);

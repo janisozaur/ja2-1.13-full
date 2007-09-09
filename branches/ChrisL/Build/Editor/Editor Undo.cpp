@@ -115,13 +115,13 @@ BOOLEAN gfIgnoreUndoCmdsForLights = FALSE;
 typedef struct MapIndexBinaryTree
 {
 	struct MapIndexBinaryTree *left, *right;
-	UINT16 usMapIndex;
+	INT16 sMapIndex;
 }MapIndexBinaryTree;
 
 MapIndexBinaryTree *top = NULL;
 void ClearUndoMapIndexTree();
-BOOLEAN AddMapIndexToTree( UINT16 usMapIndex );
-void CheckMapIndexForMultiTileStructures( UINT16 usMapIndex );
+BOOLEAN AddMapIndexToTree( INT16 sMapIndex );
+void CheckMapIndexForMultiTileStructures( INT16 sMapIndex );
 void CheckForMultiTilesInTreeAndAddToUndoList( MapIndexBinaryTree *node );
 
 
@@ -145,7 +145,7 @@ void ClearUndoMapIndexTree()
 		DeleteTreeNode( &top );
 }
 
-BOOLEAN AddMapIndexToTree( UINT16 usMapIndex )
+BOOLEAN AddMapIndexToTree( INT16 sMapIndex )
 {
 	PERFORMANCE_MARKER
 	MapIndexBinaryTree *curr, *parent;
@@ -153,7 +153,7 @@ BOOLEAN AddMapIndexToTree( UINT16 usMapIndex )
 	{
 		top = (MapIndexBinaryTree*)MemAlloc( sizeof( MapIndexBinaryTree ) );
 		Assert( top );
-		top->usMapIndex = usMapIndex;
+		top->sMapIndex = sMapIndex;
 		top->left = NULL;
 		top->right = NULL;
 		return TRUE;
@@ -166,21 +166,21 @@ BOOLEAN AddMapIndexToTree( UINT16 usMapIndex )
 	while( curr )
 	{
 		parent = curr;
-		if( curr->usMapIndex == usMapIndex ) //found a match, so stop
+		if( curr->sMapIndex == sMapIndex ) //found a match, so stop
 			return FALSE;
 		//if the mapIndex is < node's mapIndex, then go left, else right
-		curr = ( usMapIndex < curr->usMapIndex ) ? curr->left : curr->right;
+		curr = ( sMapIndex < curr->sMapIndex ) ? curr->left : curr->right;
 	}
 	//if we made it this far, then curr is null and parent is pointing
 	//directly above.
 	//Create the new node and fill in the information.
 	curr = (MapIndexBinaryTree*)MemAlloc( sizeof( MapIndexBinaryTree ) );
 	Assert( curr );
-	curr->usMapIndex = usMapIndex;
+	curr->sMapIndex = sMapIndex;
 	curr->left = NULL;
 	curr->right = NULL;
 	//Now link the new node to the parent.
-	if( curr->usMapIndex < parent->usMapIndex )
+	if( curr->sMapIndex < parent->sMapIndex )
 		parent->left = curr;
 	else
 		parent->right = curr;
@@ -431,7 +431,7 @@ BOOLEAN AddToUndoList( INT32 iMapIndex )
 	//Check to see if the tile in question is even on the visible map, then
 	//if that is true, then check to make sure we don't already have the mapindex
 	//saved in the new binary tree (which only holds unique mapindex values).
-	if( GridNoOnVisibleWorldTile( (INT16)iMapIndex ) && AddMapIndexToTree( (UINT16)iMapIndex ) )
+	if( GridNoOnVisibleWorldTile( (INT16)iMapIndex ) && AddMapIndexToTree( (INT16)iMapIndex ) )
 
 	{
 		if( AddToUndoListCmd( iMapIndex, ++iCount ) )
@@ -531,14 +531,14 @@ BOOLEAN AddToUndoListCmd( INT32 iMapIndex, INT32 iCmdCount )
 }
 
 
-void CheckMapIndexForMultiTileStructures( UINT16 usMapIndex )
+void CheckMapIndexForMultiTileStructures( INT16 sMapIndex )
 {
 	PERFORMANCE_MARKER
 	STRUCTURE *		pStructure;
 	UINT8					ubLoop;
 	INT32					iCoveredMapIndex;
 
-	pStructure = gpWorldLevelData[usMapIndex].pStructureHead;
+	pStructure = gpWorldLevelData[sMapIndex].pStructureHead;
 	while (pStructure)
 	{
 		if (pStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles > 1)
@@ -548,7 +548,7 @@ void CheckMapIndexForMultiTileStructures( UINT16 usMapIndex )
 				// for multi-tile structures we have to add, to the undo list, all the other tiles covered by the structure
 				if (pStructure->fFlags & STRUCTURE_BASE_TILE)
 				{
-					iCoveredMapIndex = usMapIndex + pStructure->pDBStructureRef->ppTile[ubLoop]->sPosRelToBase;
+					iCoveredMapIndex = sMapIndex + pStructure->pDBStructureRef->ppTile[ubLoop]->sPosRelToBase;
 				}
 				else
 				{
@@ -564,7 +564,7 @@ void CheckMapIndexForMultiTileStructures( UINT16 usMapIndex )
 void CheckForMultiTilesInTreeAndAddToUndoList( MapIndexBinaryTree *node )
 {
 	PERFORMANCE_MARKER
-	CheckMapIndexForMultiTileStructures( node->usMapIndex );
+	CheckMapIndexForMultiTileStructures( node->sMapIndex );
 	if( node->left ) 
 		CheckForMultiTilesInTreeAndAddToUndoList( node->left );
 	if( node->right ) 
@@ -606,7 +606,7 @@ BOOLEAN ExecuteUndoList( void )
 	{
 		iUndoMapIndex = gpTileUndoStack->pData->iMapIndex;
 
-		fExitGrid = ExitGridAtGridNo( (UINT16)iUndoMapIndex );
+		fExitGrid = ExitGridAtGridNo( (INT16)iUndoMapIndex );
 
 		// Find which map tile we are to "undo"
 		if( gpTileUndoStack->pData->fLightSaved )
@@ -648,11 +648,11 @@ BOOLEAN ExecuteUndoList( void )
 		//hacking around this by erasing all cursors here.
 		RemoveAllTopmostsOfTypeRange( iUndoMapIndex, FIRSTPOINTERS, FIRSTPOINTERS );
 
-		if( fExitGrid && !ExitGridAtGridNo( (UINT16)iUndoMapIndex ) )
+		if( fExitGrid && !ExitGridAtGridNo( (INT16)iUndoMapIndex ) )
 		{ //An exitgrid has been removed, so get rid of the associated indicator.
 			RemoveTopmost( (UINT16)iUndoMapIndex, FIRSTPOINTERS8 );
 		}
-		else if( !fExitGrid && ExitGridAtGridNo( (UINT16)iUndoMapIndex ) )
+		else if( !fExitGrid && ExitGridAtGridNo( (INT16)iUndoMapIndex ) )
 		{ //An exitgrid has been added, so add the associated indicator
 			AddTopmostToTail( (UINT16)iUndoMapIndex, FIRSTPOINTERS8 );
 		}

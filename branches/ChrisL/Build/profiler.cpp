@@ -1,6 +1,11 @@
 #include "profiler.h"
 #include <sstream>
 
+#define PERIODIC_PROFILING
+#ifdef PERIODIC_PROFILING
+bool gRecordingProfile = false;
+#endif
+
 PerfManager* PerfManager::_instance(NULL);
 
 PerfDatum::PerfDatum(	const char* const fileName, 
@@ -183,9 +188,19 @@ PerfMarker::PerfMarker( const char* const fileName,
 						const char* const functionName,
 						const int lineNumber)
 	:
+#ifdef PERIODIC_PROFILING
+	_onStack(gRecordingProfile)
+#else
 	_onStack(true)
+#endif
 {
-	PerfManager::instance()->enterFunction(fileName,functionName,lineNumber);
+#ifdef PERIODIC_PROFILING
+	if (gRecordingProfile == true) {
+#endif
+		PerfManager::instance()->enterFunction(fileName,functionName,lineNumber);
+#ifdef PERIODIC_PROFILING
+	}
+#endif
 }
 
 PerfMarker::~PerfMarker()

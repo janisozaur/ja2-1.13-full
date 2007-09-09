@@ -118,6 +118,7 @@
 
 #include	"Quest Debug System.h"
 
+extern bool gRecordingProfile;
 
 //forward declarations of common classes to eliminate includes
 class OBJECTTYPE;
@@ -1840,6 +1841,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			fShift = InputEvent.usKeyState & SHIFT_DOWN ? TRUE : FALSE;
 			switch( InputEvent.usParam )
 			{
+			case ',':
+				gRecordingProfile ? gRecordingProfile = false : gRecordingProfile = true;
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3,  String( "gRecordingProfile" ));
+				break;
 			case SPACE:
 
 				// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel

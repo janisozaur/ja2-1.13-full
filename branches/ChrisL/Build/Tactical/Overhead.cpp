@@ -1567,7 +1567,7 @@ BOOLEAN ExecuteOverhead( )
 												{
 													INT16 sNewGridNo;
 
-													sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
+													sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
 
 													SetDelayedTileWaiting( pSoldier, sNewGridNo, 1 );
 												}
@@ -1853,7 +1853,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 	PERFORMANCE_MARKER
 	INT16							sAPCost;
 	INT16							sBPCost;
-	UINT16							usNewGridNo, sOverFenceGridNo, sMineGridNo;
+	INT16							sNewGridNo, sOverFenceGridNo, sMineGridNo;
 
 	if (gTacticalStatus.uiFlags & INCOMBAT && fInitialMove )
 	{
@@ -1897,10 +1897,10 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 
 	}
 
-	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ] ) );
+	sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ] ) );
 
 	// OK, check if this is a fence cost....
-	if ( gubWorldMovementCosts[ usNewGridNo ][ (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ] ][ pSoldier->pathing.bLevel ] == TRAVELCOST_FENCE )
+	if ( gubWorldMovementCosts[ sNewGridNo ][ (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ] ][ pSoldier->pathing.bLevel ] == TRAVELCOST_FENCE )
 	{
 		// We have been told to jump fence....
 
@@ -1922,7 +1922,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 		if ( EnoughPoints( pSoldier, sAPCost, sBPCost, FALSE )	)
 		{
 			// ATE: Check for tile being clear....
-			sOverFenceGridNo = NewGridNo( usNewGridNo, DirectionInc( (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex + 1 ] ) );
+			sOverFenceGridNo = NewGridNo( sNewGridNo, DirectionInc( (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex + 1 ] ) );
 
 			if ( HandleNextTile( pSoldier, (INT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex + 1 ], sOverFenceGridNo, pSoldier->pathing.sFinalDestination ) )
 			{
@@ -1951,7 +1951,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 
 		return( FALSE ); 
 	}
-	else if ( InternalDoorTravelCost( pSoldier, usNewGridNo, gubWorldMovementCosts[ usNewGridNo ][ (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ] ][ pSoldier->pathing.bLevel ], (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), NULL, TRUE ) == TRAVELCOST_DOOR )
+	else if ( InternalDoorTravelCost( pSoldier, sNewGridNo, gubWorldMovementCosts[ sNewGridNo ][ (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ] ][ pSoldier->pathing.bLevel ], (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), NULL, TRUE ) == TRAVELCOST_DOOR )
 	{
 		STRUCTURE * pStructure;
 		INT8				bDirection;
@@ -1969,7 +1969,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 		// OK, based on the direction, get door gridno
 		if ( bDirection == NORTH || bDirection == WEST )
 		{
-			sDoorGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ] ) );
+			sDoorGridNo = NewGridNo( (INT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ] ) );
 		}
 		else if ( bDirection == SOUTH || bDirection == EAST )
 		{
@@ -2019,13 +2019,13 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 
 
 	// Find out how much it takes to move here!
-	sAPCost = ActionPointCost( pSoldier, usNewGridNo, (INT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], usAnimState );				
-	sBPCost = TerrainBreathPoints( pSoldier, usNewGridNo, (INT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], usAnimState );
+	sAPCost = ActionPointCost( pSoldier, sNewGridNo, (INT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], usAnimState );				
+	sBPCost = TerrainBreathPoints( pSoldier, sNewGridNo, (INT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], usAnimState );
 
 	// CHECK IF THIS TILE IS A GOOD ONE!
-	if ( !HandleNextTile( pSoldier, (INT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], usNewGridNo, pSoldier->pathing.sFinalDestination ) )
+	if ( !HandleNextTile( pSoldier, (INT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], sNewGridNo, pSoldier->pathing.sFinalDestination ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "HandleGotoNewGridNo() Failed: Tile %d Was blocked", usNewGridNo ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "HandleGotoNewGridNo() Failed: Tile %d Was blocked", sNewGridNo ) );
 
 		// ATE: If our own guy and an initial move.. display message
 		//if ( fInitialMove && pSoldier->bTeam == gbPlayerNum	)
@@ -2040,7 +2040,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 
 
 	// just check the tile we're going to walk into
-	if ( NearbyGroundSeemsWrong( pSoldier, usNewGridNo, FALSE, (INT16 *) &sMineGridNo ) )
+	if ( NearbyGroundSeemsWrong( pSoldier, sNewGridNo, FALSE, (INT16 *) &sMineGridNo ) )
 	{
 		if ( pSoldier->flags.uiStatusFlags & SOLDIER_PC )
 		{
@@ -7762,14 +7762,14 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 		// Display quote!
 		if ( !AM_AN_EPC( MercPtrs[ gTacticalStatus.ubItemsSeenOnAttackSoldier ] ) )
 		{
-			TacticalCharacterDialogueWithSpecialEvent( MercPtrs[ gTacticalStatus.ubItemsSeenOnAttackSoldier ], (UINT16)( QUOTE_SPOTTED_SOMETHING_ONE + Random( 2 ) ), DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START, gTacticalStatus.usItemsSeenOnAttackGridNo, 0 );
+			TacticalCharacterDialogueWithSpecialEvent( MercPtrs[ gTacticalStatus.ubItemsSeenOnAttackSoldier ], (UINT16)( QUOTE_SPOTTED_SOMETHING_ONE + Random( 2 ) ), DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START, gTacticalStatus.sItemsSeenOnAttackGridNo, 0 );
 		}
 		else
 		{
 			// Turn off item lock for locators...
 			gTacticalStatus.fLockItemLocators = FALSE;
 			// Slide to location!
-			SlideToLocation( 0,	gTacticalStatus.usItemsSeenOnAttackGridNo );
+			SlideToLocation( 0,	gTacticalStatus.sItemsSeenOnAttackGridNo );
 		}
 	}
 

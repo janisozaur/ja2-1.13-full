@@ -274,7 +274,7 @@ LEVELNODE				*gpInvTileThatCausedMoveConfirm = NULL;
 BOOLEAN					gfResetUIMovementOptimization = FALSE;
 BOOLEAN					gfResetUIItemCursorOptimization = FALSE;
 BOOLEAN					gfBeginVehicleCursor = FALSE;
-UINT16					gsOutOfRangeGridNo = NOWHERE;
+INT16					gsOutOfRangeGridNo = NOWHERE;
 UINT8						gubOutOfRangeMerc = NOBODY;
 BOOLEAN					gfOKForExchangeCursor = FALSE;
 UINT32					guiUIInterfaceSwapCursorsTime = 0;
@@ -393,7 +393,7 @@ BOOLEAN fIgnoreLeftUp		= FALSE;
 
 BOOLEAN	gUITargetReady = FALSE;
 BOOLEAN	gUITargetShotWaiting = FALSE;
-UINT16	gsUITargetShotGridNo	= NOWHERE;
+INT16	gsUITargetShotGridNo	= NOWHERE;
 BOOLEAN	gUIUseReverse					= FALSE;
 
 SGPRect	gRubberBandRect = { 0, 0, 0, 0 };
@@ -445,7 +445,7 @@ INT16			gsSelectedGuy										= NOBODY;
 
 BOOLEAN		gfUIDisplayDamage								= FALSE;
 INT8			gbDamage												= 0;
-UINT16		gsDamageGridNo									= 0;
+INT16		gsDamageGridNo									= 0;
 
 BOOLEAN		gfUIRefreshArrows								= FALSE;
 
@@ -1637,12 +1637,13 @@ UINT32 UIHandlePositionMenu( UI_EVENT *pUIEvent )
 UINT32 UIHandleAOnTerrain( UI_EVENT *pUIEvent )
 {
 	PERFORMANCE_MARKER
+	//ADB WARNING SUPER SERIOUS MEM LEAK IF THIS IS SIGNED, LEAVE UNSIGNED
 	INT16						sMapPos;
 	SOLDIERTYPE				*pSoldier;
 	//	INT16							sTargetXPos, sTargetYPos;
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("UIHandleAOnTerrain"));
 
-	if( !GetMouseMapPos( &sMapPos) )
+	if( !GetMouseMapPos( (INT16*)&sMapPos) )
 	{
 		return( GAME_SCREEN );
 	}

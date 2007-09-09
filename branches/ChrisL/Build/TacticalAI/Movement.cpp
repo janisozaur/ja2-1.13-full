@@ -793,7 +793,7 @@ INT16 GoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bActi
 void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 {
 	PERFORMANCE_MARKER
-	INT16 usNewGridNo,bAPCost;
+	INT16 sNewGridNo,bAPCost;
 
 
 	// turn off the flag now that we're going to do something about it...
@@ -843,15 +843,15 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 #endif
 	}
 
-	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ] ) );
+	sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ] ) );
 
 	// Find out how much it takes to move here!
-	bAPCost = EstimateActionPointCost( pSoldier, usNewGridNo, (INT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], pSoldier->usUIMovementMode, (INT8) pSoldier->pathing.usPathIndex, (INT8) pSoldier->pathing.usPathDataSize );
+	bAPCost = EstimateActionPointCost( pSoldier, sNewGridNo, (INT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], pSoldier->usUIMovementMode, (INT8) pSoldier->pathing.usPathIndex, (INT8) pSoldier->pathing.usPathDataSize );
 
 	if (pSoldier->bActionPoints >= bAPCost)
 	{
 		// seems to have enough points...
-		NewDest(pSoldier,usNewGridNo);
+		NewDest(pSoldier,sNewGridNo);
 		// maybe we didn't actually start the action last turn...
 		pSoldier->aiData.bActionInProgress = TRUE;
 #ifdef TESTAI
@@ -1199,9 +1199,9 @@ UINT16 RunAway( SOLDIERTYPE * pSoldier )
 				break;
 		}
 		iRunGridNo = iRunX + iRunY * WORLD_COLS;
-		if (LegalNPCDestination( pSoldier, (UINT16) iRunGridNo, ENSURE_PATH, TRUE,0))
+		if (LegalNPCDestination( pSoldier, (INT16) iRunGridNo, ENSURE_PATH, TRUE,0))
 		{
-			return( (UINT16) iRunGridNo );
+			return( (INT16) iRunGridNo );
 		}
 		// otherwise we'll try again another time
 	}

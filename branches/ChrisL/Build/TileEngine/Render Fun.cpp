@@ -196,7 +196,7 @@ void SetGridNoRevealedFlag( INT16 sGridNo )
 }
 
 
-void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
+void ExamineGridNoForSlantRoofExtraGraphic( INT16 sCheckGridNo )
 {
 	PERFORMANCE_MARKER
 	LEVELNODE					*pNode = NULL;
@@ -282,7 +282,7 @@ void RemoveRoomRoof( INT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 		if ( gubWorldRoomInfo[ cnt ] == bRoomNum )
 		{
 
-			SetGridNoRevealedFlag( (UINT16)cnt );
+			SetGridNoRevealedFlag( (INT16)cnt );
 
 			RemoveRoofIndexFlagsFromTypeRange( cnt, FIRSTROOF, SECONDSLANTROOF, LEVELNODE_REVEAL	);
 
@@ -316,7 +316,7 @@ void RemoveRoomRoof( INT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 	//{
 	//	if ( gubWorldRoomInfo[ cnt ] == bRoomNum )
 	//	{
-	//		ExamineGridNoForSlantRoofExtraGraphic( (UINT16)cnt );
+	//		ExamineGridNoForSlantRoofExtraGraphic( (INT16)cnt );
 	//	}
 	//}
 

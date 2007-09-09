@@ -51,11 +51,11 @@ void ConvertINT32ToExitGrid( INT32 iExitGridInfo, EXITGRID *pExitGrid )
 	pExitGrid->sGridNo					= (UINT16)(iExitGridInfo & 0x0000ffff);
 }
 
-BOOLEAN	GetExitGrid( UINT16 usMapIndex, EXITGRID *pExitGrid )
+BOOLEAN	GetExitGrid( INT16 sMapIndex, EXITGRID *pExitGrid )
 {
 	PERFORMANCE_MARKER
 	LEVELNODE *pShadow;
-	pShadow = gpWorldLevelData[ usMapIndex ].pShadowHead;
+	pShadow = gpWorldLevelData[ sMapIndex ].pShadowHead;
 	//Search through object layer for an exitgrid
 	while( pShadow )
 	{
@@ -73,11 +73,11 @@ BOOLEAN	GetExitGrid( UINT16 usMapIndex, EXITGRID *pExitGrid )
 	return FALSE;	
 }
 
-BOOLEAN	ExitGridAtGridNo( UINT16 usMapIndex )
+BOOLEAN	ExitGridAtGridNo( INT16 sMapIndex )
 {
 	PERFORMANCE_MARKER
 	LEVELNODE *pShadow;
-	pShadow = gpWorldLevelData[ usMapIndex ].pShadowHead;
+	pShadow = gpWorldLevelData[ sMapIndex ].pShadowHead;
 	//Search through object layer for an exitgrid
 	while( pShadow )
 	{
@@ -90,11 +90,11 @@ BOOLEAN	ExitGridAtGridNo( UINT16 usMapIndex )
 	return FALSE;	
 }
 
-BOOLEAN	GetExitGridLevelNode( UINT16 usMapIndex, LEVELNODE **ppLevelNode )
+BOOLEAN	GetExitGridLevelNode( INT16 sMapIndex, LEVELNODE **ppLevelNode )
 {
 	PERFORMANCE_MARKER
 	LEVELNODE *pShadow;
-	pShadow = gpWorldLevelData[ usMapIndex ].pShadowHead;
+	pShadow = gpWorldLevelData[ sMapIndex ].pShadowHead;
 	//Search through object layer for an exitgrid
 	while( pShadow )
 	{
@@ -181,17 +181,17 @@ void LoadExitGrids( INT8 **hBuffer )
 	EXITGRID exitGrid;
 	UINT16 x;
 	UINT16 usNumSaved;
-	UINT16 usMapIndex;
+	INT16 sMapIndex;
 	gfLoadingExitGrids = TRUE;
 	LOADDATA( &usNumSaved, *hBuffer, 2 );
 	//FileRead( hfile, &usNumSaved, 2, NULL);
 	for( x = 0; x < usNumSaved; x++ )
 	{
-		LOADDATA( &usMapIndex, *hBuffer, 2 );
-		//FileRead( hfile, &usMapIndex, 2, NULL);
+		LOADDATA( &sMapIndex, *hBuffer, 2 );
+		//FileRead( hfile, &sMapIndex, 2, NULL);
 		LOADDATA( &exitGrid, *hBuffer, 5 );
 		//FileRead( hfile, &exitGrid, 5, NULL);
-		AddExitGridToWorld( usMapIndex, &exitGrid );
+		AddExitGridToWorld( sMapIndex, &exitGrid );
 	}
 	gfLoadingExitGrids = FALSE;
 }
@@ -240,7 +240,7 @@ void AttemptToChangeFloorLevel( INT8 bRelativeZLevel )
 }
 
 
-UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
+INT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
 	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
@@ -362,7 +362,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwe
 }
 
 
-UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadius )
+INT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadius )
 {
 	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;

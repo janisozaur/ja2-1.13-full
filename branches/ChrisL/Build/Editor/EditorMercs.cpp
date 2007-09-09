@@ -530,7 +530,7 @@ void AddMercToWorld( INT32 iMapIndex )
 		//Set up some general information.
 		gTempBasicPlacement.fDetailedPlacement = FALSE;
 		gTempBasicPlacement.fPriorityExistance = FALSE;
-		gTempBasicPlacement.usStartingGridNo = (UINT16)iMapIndex;
+		gTempBasicPlacement.sStartingGridNo = (INT16)iMapIndex;
 		gTempBasicPlacement.bOrders = gbDefaultOrders;	
 		gTempBasicPlacement.bAttitude = gbDefaultAttitude;
 		gTempBasicPlacement.bRelativeAttributeLevel = gbDefaultRelativeAttributeLevel; 
@@ -617,7 +617,7 @@ void HandleRightClickOnMerc( INT32 iMapIndex )
 			gpSelected->pSoldier->SetSoldierHeight(	0.0 );
 		}
 		gsSelectedMercGridNo = (INT16)iMapIndex;
-		gpSelected->pBasicPlacement->usStartingGridNo = gsSelectedMercGridNo;
+		gpSelected->pBasicPlacement->sStartingGridNo = gsSelectedMercGridNo;
 		if( gpSelected->pDetailedPlacement )
 			gpSelected->pDetailedPlacement->sInsertionGridNo = gsSelectedMercGridNo;
 		AddObjectToHead( gsSelectedMercGridNo, CONFIRMMOVE1 );
@@ -647,8 +647,8 @@ void ResetAllMercPositions()
 			TacticalRemoveSoldier( curr->pSoldier->ubID );
 			curr->pSoldier = NULL;
 		}
-		//usMapIndex = gpSelected->pBasicPlacement->usStartingGridNo;
-		//ConvertGridNoToCellXY( usMapIndex, &sCellX, &sCellY );
+		//sMapIndex = gpSelected->pBasicPlacement->sStartingGridNo;
+		//ConvertGridNoToCellXY( sMapIndex, &sCellX, &sCellY );
 		//if( gpSelected->pSoldier )
 		//{
 		//	EVENT_SetSoldierPosition( gpSelected->pSoldier, (FLOAT)(sCellX + 5), (FLOAT)(sCellY + 5) );
@@ -2197,7 +2197,7 @@ void SpecifyEntryPoint( UINT32 iMapIndex )
 			AddToUndoList( *psEntryGridNo );
 			RemoveAllTopmostsOfTypeRange( *psEntryGridNo, FIRSTPOINTERS, FIRSTPOINTERS );
 		}
-		*psEntryGridNo = (UINT16)iMapIndex;
+		*psEntryGridNo = (INT16)iMapIndex;
 		ValidateEntryPointGridNo( psEntryGridNo );
 		AddToUndoList( *psEntryGridNo );
 		AddTopmostToTail( *psEntryGridNo, FIRSTPOINTERS2 );
@@ -3738,7 +3738,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 
 		//Set up some general information.
 		//gTempBasicPlacement.fDetailedPlacement = TRUE;
-		gTempBasicPlacement.usStartingGridNo = (UINT16)iMapIndex;
+		gTempBasicPlacement.sStartingGridNo = (INT16)iMapIndex;
 
 		//Generate detailed placement information given the temp placement information.
 		if( gTempBasicPlacement.fDetailedPlacement )

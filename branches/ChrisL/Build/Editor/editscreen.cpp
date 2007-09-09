@@ -3375,7 +3375,7 @@ void HandleMouseClicksInGameScreen()
 				RestoreWalls( iMapIndex );
 				break;
 			case DRAW_MODE_EXITGRID:
-				if( GetExitGrid( (UINT16)iMapIndex, &gExitGrid ) )
+				if( GetExitGrid( (INT16)iMapIndex, &gExitGrid ) )
 					ApplyNewExitGridValuesToTextFields();
 				break;
 			default:

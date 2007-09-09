@@ -79,26 +79,26 @@ void OutputDebugInfoForTurnBasedNextTileWaiting( SOLDIERTYPE * pSoldier )
 	if ( (gTacticalStatus.uiFlags & INCOMBAT) && (pSoldier->pathing.usPathDataSize > 0) )
 	{
 		UINT32	uiLoop;
-		UINT16	usTemp = NOWHERE;
-		UINT16	usNewGridNo;
+		INT16	sTemp = NOWHERE;
+		INT16	sNewGridNo;
 
-		usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ] ) );
+		sNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ] ) );
 
 		// provide more info!!
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("	Soldier path size %d, index %d", pSoldier->pathing.usPathDataSize, pSoldier->pathing.usPathIndex ) );
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("	Who is at blocked gridno: %d", WhoIsThere2( usNewGridNo, pSoldier->pathing.bLevel ) ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("	Who is at blocked gridno: %d", WhoIsThere2( sNewGridNo, pSoldier->pathing.bLevel ) ) );
 
 		for ( uiLoop = 0; uiLoop < pSoldier->pathing.usPathDataSize; uiLoop++ )
 		{
 			if ( uiLoop > pSoldier->pathing.usPathIndex )
 			{					
-				usTemp = NewGridNo( usTemp, DirectionInc( (UINT8)pSoldier->pathing.usPathingData[ uiLoop ] ) );
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("	Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->pathing.usPathingData[uiLoop], usTemp ) );
+				sTemp = NewGridNo( sTemp, DirectionInc( (UINT8)pSoldier->pathing.usPathingData[ uiLoop ] ) );
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("	Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->pathing.usPathingData[uiLoop], sTemp ) );
 			}
 			else if ( uiLoop == pSoldier->pathing.usPathIndex )
 			{
-				usTemp = usNewGridNo;
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("	Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->pathing.usPathingData[uiLoop], usTemp ) );
+				sTemp = sNewGridNo;
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("	Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->pathing.usPathingData[uiLoop], sTemp ) );
 			}
 			else
 			{
@@ -276,7 +276,7 @@ INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,	INT16 sGridNo, INT8 bL
 							pSoldier->flags.fBlockedByAnotherMerc = FALSE;
 
 							// Is the next tile blocked too?
-							sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
+							sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
 
 							return( TileIsClear( pSoldier, (UINT8)guiPathingData[ 0 ], sNewGridNo, pSoldier->pathing.bLevel ) );
 						} 
@@ -355,7 +355,7 @@ INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,	INT16 sGridNo, INT8 bL
 					gpWorldLevelData[ sGridNo ].uiFlags|=MAPELEMENT_REVEALED;
 					gpWorldLevelData[ sGridNo ].uiFlags|=MAPELEMENT_REDRAW;
 					SetRenderFlags(RENDER_FLAG_MARKED);
-					RecompileLocalMovementCosts( (UINT16)sGridNo );
+					RecompileLocalMovementCosts( (INT16)sGridNo );
 				}
 
 				// Unset flag for blocked by soldier...
@@ -622,7 +622,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 				if ( sCost > 0 )
 				{
 					// Is the next tile blocked too?
-					sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
+					sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
 
 					bPathBlocked = TileIsClear( pSoldier, (UINT8)guiPathingData[ 0 ], sNewGridNo, pSoldier->pathing.bLevel );
 
@@ -640,7 +640,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 						gfPlotPathToExitGrid = FALSE;
 
 						// Is the next tile in this new path blocked too?
-						sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
+						sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
 
 						bPathBlocked = TileIsClear( pSoldier, (UINT8)guiPathingData[ 0 ], sNewGridNo, pSoldier->pathing.bLevel );
 

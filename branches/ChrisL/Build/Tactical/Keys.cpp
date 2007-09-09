@@ -1330,7 +1330,7 @@ BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
 	INT8										bDirs[ 8 ] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
 	SOLDIERTYPE							*pSoldier;
 	DOOR_STATUS							*pDoorStatus;
-	INT16											usNewGridNo;
+	INT16											sNewGridNo;
 
 	// Get door
 	pDoorStatus = GetDoorStatus( sGridNo );
@@ -1364,10 +1364,10 @@ BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
 			// Now try other adjacent gridnos...
 			for ( cnt2 = 0; cnt2 < 8; cnt2++ )
 			{
-				usNewGridNo = NewGridNo( sGridNo, DirectionInc( bDirs[ cnt2 ] ) );
+				sNewGridNo = NewGridNo( sGridNo, DirectionInc( bDirs[ cnt2 ] ) );
 				// and we can trace a line of sight to his x,y coordinates?
 				// (taking into account we are definitely aware of this guy now)
-				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, usNewGridNo, 0, 0, TRUE, CALC_FROM_ALL_DIRS ) )
+				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sNewGridNo, 0, 0, TRUE, CALC_FROM_ALL_DIRS ) )
 				{
 					// Update status...
 					if ( fUpdateValue )
@@ -1391,7 +1391,7 @@ BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
 	INT16										sGridNo;
 	DOOR_STATUS							*pDoorStatus;
 	INT8										bDirs[ 8 ] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
-	INT16										usNewGridNo;
+	INT16										sNewGridNo;
 
 
 
@@ -1424,10 +1424,10 @@ BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
 		// Now try other adjacent gridnos...
 		for ( cnt2 = 0; cnt2 < 8; cnt2++ )
 		{
-			usNewGridNo = NewGridNo( sGridNo, DirectionInc( bDirs[ cnt2 ] ) );
+			sNewGridNo = NewGridNo( sGridNo, DirectionInc( bDirs[ cnt2 ] ) );
 			// and we can trace a line of sight to his x,y coordinates?
 			// (taking into account we are definitely aware of this guy now)
-			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, usNewGridNo, 0, 0, TRUE, CALC_FROM_ALL_DIRS ) )
+			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sNewGridNo, 0, 0, TRUE, CALC_FROM_ALL_DIRS ) )
 			{
 				// Update status...
 				if ( fUpdateValue )

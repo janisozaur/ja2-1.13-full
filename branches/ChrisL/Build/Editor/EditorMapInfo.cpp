@@ -245,7 +245,7 @@ void ExtractAndUpdateMapInfo()
 		gExitGrid.ubGotoSectorY = (UINT8)max( min( gExitGrid.ubGotoSectorY, 16 ), 1 );
 	}
 	gExitGrid.ubGotoSectorZ	= (UINT8)max( min( GetNumericStrictValueFromField( 8 ), 3 ), 0 );
-	gExitGrid.sGridNo					= (UINT16)max( min( GetNumericStrictValueFromField( 9 ), 25600 ), 0 );
+	gExitGrid.sGridNo					= (INT16)max( min( GetNumericStrictValueFromField( 9 ), 25600 ), 0 );
 
 	UpdateMapInfoFields();
 }
@@ -267,7 +267,7 @@ BOOLEAN ApplyNewExitGridValuesToTextFields()
 	return TRUE;
 }
 
-UINT16 usCurrentExitGridNo = 0;
+INT16 usCurrentExitGridNo = 0;
 void LocateNextExitGrid()
 {
 	PERFORMANCE_MARKER
