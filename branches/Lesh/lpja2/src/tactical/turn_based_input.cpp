@@ -119,9 +119,6 @@
 
 
 extern UIKEYBOARD_HOOK					gUIKeyboardHook;
-extern BOOLEAN	fRightButtonDown;
-extern BOOLEAN	fLeftButtonDown;
-extern BOOLEAN fIgnoreLeftUp;
 extern UINT32  guiCurrentEvent;
 extern UINT8	gubIntTileCheckFlags;
 extern UINT32	guiCurrentUICursor;
@@ -239,8 +236,10 @@ extern void DetermineWhichMilitiaControlMenusCanBeShown( void ); //lalien
 
 void	GetTBMouseButtonInput( UINT32 *puiNewEvent )
 {
-	 QueryTBLeftButton( puiNewEvent );
-	 QueryTBRightButton( puiNewEvent );
+	QueryTBLeftButton( puiNewEvent );
+	QueryTBRightButton( puiNewEvent );
+	QueryTBMiddleButton( puiNewEvent );
+	QueryTBWheel( puiNewEvent );
 }
 
 void	QueryTBLeftButton( UINT32 *puiNewEvent )
@@ -969,6 +968,55 @@ void	QueryTBRightButton( UINT32 *puiNewEvent )
 
 }
 
+void	QueryTBMiddleButton( UINT32 *puiNewEvent )
+{
+	// stub
+}
+
+void	QueryTBWheel( UINT32 *puiNewEvent )
+{
+	SOLDIERTYPE		*pSoldier;
+	UINT16				usMapPos;
+
+	// stub
+	if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
+	{
+		if ( gViewportRegion.WheelState != 0 )
+		{
+//			printf("wheel %d\n", gViewportRegion.WheelState);
+			if ( gpItemPointer == NULL )
+			{
+				// ATE:
+				if ( gusSelectedSoldier != NOBODY )
+				{
+					// Switch on UI mode
+					switch( gCurrentUIMode )
+					{
+						case IDLE_MODE:
+						case MOVE_MODE:
+						case ACTION_MODE:
+						case CONFIRM_MOVE_MODE:
+						case HANDCURSOR_MODE:
+						case LOOKCURSOR_MODE:
+						case TALKCURSOR_MODE:
+						case MENU_MODE:
+
+							break;
+
+						case CONFIRM_ACTION_MODE:
+
+								if ( GetSoldier( &pSoldier, gusSelectedSoldier ) )
+								{
+									HandleWheelAdjustCursor( pSoldier, usMapPos, gViewportRegion.WheelState );
+								}
+								break;
+					}
+				}
+			}
+			ResetWheelState( &gViewportRegion );
+		}
+	}
+}
 
 extern BOOLEAN	gUIActionModeChangeDueToMouseOver;
 

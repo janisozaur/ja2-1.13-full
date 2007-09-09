@@ -14,6 +14,8 @@ void DetermineCursorBodyLocation( UINT8 ubSoldierID, BOOLEAN fDisplay, BOOLEAN f
 
 void HandleLeftClickCursor( SOLDIERTYPE *pSoldier );
 void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos );
+void HandleMiddleClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos );
+void HandleWheelAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos, INT16 sDelta );
 
 UINT8 GetActionModeCursor( SOLDIERTYPE *pSoldier );
 

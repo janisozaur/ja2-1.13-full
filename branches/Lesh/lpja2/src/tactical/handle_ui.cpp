@@ -383,9 +383,12 @@ BOOLEAN				gfUserTurnRegionActive = FALSE;
 
 
 // For use with mouse button query routines
-BOOLEAN	fRightButtonDown = FALSE;
-BOOLEAN	fLeftButtonDown = FALSE;
-BOOLEAN fIgnoreLeftUp		= FALSE;
+BOOLEAN	fRightButtonDown  = FALSE;
+BOOLEAN	fLeftButtonDown   = FALSE;
+BOOLEAN fMiddleButtonDown = FALSE; // Lesh: don't know why Sir-Tech has chosen such
+BOOLEAN fWheelUp          = FALSE; // polling mechanism, instead of callbacks
+BOOLEAN fWheelDown        = FALSE;
+BOOLEAN fIgnoreLeftUp     = FALSE;
 
 BOOLEAN	gUITargetReady = FALSE;
 BOOLEAN	gUITargetShotWaiting = FALSE;

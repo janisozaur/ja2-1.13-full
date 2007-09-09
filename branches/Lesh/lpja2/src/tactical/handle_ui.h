@@ -238,6 +238,13 @@ extern BOOLEAN		gfUIRefreshArrows;
 
 extern BOOLEAN		gfUIHandlePhysicsTrajectory;
 
+// GLOBALS FOR MAOUSE HANDLING
+extern BOOLEAN fRightButtonDown;
+extern BOOLEAN fLeftButtonDown;
+extern BOOLEAN fMiddleButtonDown;
+extern BOOLEAN fWheelUp;
+extern BOOLEAN fWheelDown;
+extern BOOLEAN fIgnoreLeftUp;
 
 // GLOBALS FOR FAST LOOKUP FOR FINDING MERCS FROM THE MOUSE
 extern BOOLEAN	gfUISelectiveTargetFound;
@@ -279,6 +286,8 @@ void GetTBMouseButtonInput( UINT32 *puiNewEvent );
 void GetTBMousePositionInput( UINT32 *puiNewEvent );
 void QueryTBLeftButton( UINT32 *puiNewEvent );
 void QueryTBRightButton( UINT32 *puiNewEvent );
+void QueryTBMiddleButton( UINT32 *puiNewEvent );
+void QueryTBWheel( UINT32 *puiNewEvent );
 void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight );
 void HandleKeyInputOnEnemyTurn(  );
 

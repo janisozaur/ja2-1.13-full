@@ -47,6 +47,7 @@ typedef struct _MOUSE_REGION {
 	INT16				RelativeXPos;			// Mouse's Coordinates relative to the Top-Left corner of the region
 	INT16				RelativeYPos;
 	UINT16				ButtonState;			// Current state of the mouse buttons
+	INT16				WheelState;				// Wheel state +/-number of wheel units
 	UINT16				Cursor;					// Cursor to use when mouse in this region (see flags)
 	MOUSE_CALLBACK		MovementCallback;		// Pointer to callback function if movement occured in this region
 	MOUSE_CALLBACK		ButtonCallback;			// Pointer to callback function if button action occured in this region
@@ -211,6 +212,8 @@ void MSYS_MoveMouseRegionBy( MOUSE_REGION *region, INT16 sDeltaX, INT16 sDeltaY)
 void MSYS_MoveMouseRegionTo( MOUSE_REGION *region, INT16 sX, INT16 sY);
 
 void MSYS_AllowDisabledRegionFastHelp( MOUSE_REGION *region, BOOLEAN fAllow );
+
+void ResetWheelState( MOUSE_REGION *region );
 
 // This function will force a re-evaluation of mous regions
 // Usually used to force change of mouse cursor if panels switch, etc

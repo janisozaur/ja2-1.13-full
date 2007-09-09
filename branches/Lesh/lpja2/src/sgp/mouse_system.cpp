@@ -72,6 +72,7 @@ INT16 MSYS_CurrentMX=0;
 INT16 MSYS_CurrentMY=0;
 INT16 MSYS_CurrentButtons=0;
 INT16 MSYS_Action=0;
+INT16 MSYS_Wheel=0;
 
 BOOLEAN	MSYS_SystemInitialized=FALSE;
 BOOLEAN MSYS_UseMouseHandlerHook=FALSE;
@@ -106,7 +107,7 @@ void ExecuteMouseHelpEndCallBack( MOUSE_REGION *region );
 //values there as well.  That's the only reason why I left this here.
 MOUSE_REGION MSYS_SystemBaseRegion = {
 								MSYS_ID_SYSTEM, MSYS_PRIORITY_SYSTEM, BASE_REGION_FLAGS,
-								-32767, -32767, 32767, 32767, 0, 0, 0, 0, 0, 0,
+								-32767, -32767, 32767, 32767, 0, 0, 0, 0, 0, 0, 0,
 								MSYS_NO_CALLBACK, MSYS_NO_CALLBACK, { 0,0,0,0 },
 								0, 0, -1, MSYS_NO_CALLBACK, NULL, NULL };
 
@@ -150,6 +151,7 @@ INT32 MSYS_Init(void)
 	MSYS_CurrentMX = 0;
 	MSYS_CurrentMY = 0;
 	MSYS_CurrentButtons = 0;
+	MSYS_Wheel = 0;
 	MSYS_Action=MSYS_NO_ACTION;
 
 	MSYS_PrevRegion = NULL;
@@ -305,9 +307,15 @@ void MSYS_SGP_Mouse_Handler_Hook(UINT16 Type,UINT16 Xcoord, UINT16 Ycoord)
 		case MOUSE_WHEEL_UP:
 		case MOUSE_WHEEL_DOWN:
 			if(Type == MOUSE_WHEEL_UP)
+			{
 				MSYS_Action |= MSYS_DO_WHEEL_UP;
+				MSYS_Wheel++;
+			}
 			else if(Type == MOUSE_WHEEL_DOWN)
+			{
 				MSYS_Action |= MSYS_DO_WHEEL_DOWN;
+				MSYS_Wheel--;
+			}
 			break;
 		
 		default:
@@ -706,6 +714,8 @@ void MSYS_UpdateMouseRegion(void)
 			MSYS_CurrRegion->RelativeYPos = MSYS_CurrentMY - MSYS_CurrRegion->RegionTopLeftY;
 
 			MSYS_CurrRegion->ButtonState = MSYS_CurrentButtons;
+			MSYS_CurrRegion->WheelState  = MSYS_Wheel;
+			MSYS_Wheel = 0;
 
 			if( MSYS_CurrRegion->uiFlags & MSYS_REGION_ENABLED &&
 					MSYS_CurrRegion->uiFlags & MSYS_MOVE_CALLBACK && MSYS_Action & MSYS_DO_MOVE )
@@ -1731,4 +1741,9 @@ void DisableMouseFastHelp( void )
 void ResetClickedMode(void)
 {
 	gfClickedModeOn = FALSE;
+}
+
+void ResetWheelState( MOUSE_REGION *region )
+{
+	region->WheelState = 0;
 }

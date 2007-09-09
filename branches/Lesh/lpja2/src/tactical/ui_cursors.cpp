@@ -370,6 +370,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 		{
 			if(pSoldier->bDoAutofire)
 			{
+/*
 				if(pSoldier->bDoAutofire == 1) //try to maximize the # of bullets because 1 may not be optimal
 				{
 					INT16 sCurAPCosts, sAPCosts;
@@ -384,7 +385,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 					while(EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) && sAPCosts == sCurAPCosts && pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft >= pSoldier->bDoAutofire);
 					pSoldier->bDoAutofire--;
 				}
-
+*/
 				gfUIAutofireBulletCount = TRUE;
 				gsBulletCount = pSoldier->bDoAutofire;
 				gsTotalBulletCount = pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft;
@@ -402,13 +403,13 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 			gfUIDisplayActionPoints = TRUE;
 			gfUIDisplayActionPointsCenter = TRUE;
 
-			
+/*			
 			while(!EnoughPoints( pSoldier, gsCurrentActionPoints, 0 , FALSE ) && pSoldier->bDoAutofire > 1) //oops, we don't have enough points if we are in auto-fire try to decrease bulletcount
 			{
 				pSoldier->bDoAutofire--;
 				gsCurrentActionPoints = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, (INT8)(pSoldier->bShownAimTime ) );
 			}
-
+*/
 			// If we don't have any points and we are at the first refine, do nothing but warn!
 			if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0 , FALSE ) )
 			{
@@ -2272,6 +2273,184 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 }
 
+void HandleMiddleClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
+{
+	// stub
+	//printf("mid btn\n");
+}
+
+BOOLEAN CanSoldierAffordAimTime( SOLDIERTYPE *pSoldier, INT16 usMapPos, INT8 bAimTime )
+{
+	INT8		maxAimLevels;
+	INT16		sAPCosts;
+
+	maxAimLevels = AllowedAimingLevels(pSoldier);
+
+	if ( bAimTime < REFINE_AIM_1 || bAimTime > maxAimLevels )
+		return FALSE;
+	
+	sAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, bAimTime );
+	
+	if ( !EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) )
+		return FALSE;
+
+	return TRUE;
+}
+
+BOOLEAN CanSoldierAffordPunching( SOLDIERTYPE *pSoldier, INT16 usMapPos, INT8 bRefineTime )
+{
+	INT16		sAPCosts;
+
+	if ( bRefineTime < REFINE_PUNCH_1 || bRefineTime > REFINE_PUNCH_2 )
+		return FALSE;
+	
+	sAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, bRefineTime );
+	
+	if ( !EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) )
+		return FALSE;
+
+	return TRUE;
+}
+
+BOOLEAN CanSoldierAffordKnifing( SOLDIERTYPE *pSoldier, INT16 usMapPos, INT8 bRefineTime )
+{
+	INT16		sAPCosts;
+
+	if ( bRefineTime < REFINE_KNIFE_1 || bRefineTime > REFINE_KNIFE_2 )
+		return FALSE;
+	
+	sAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, bRefineTime );
+	
+	if ( !EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) )
+		return FALSE;
+
+	return TRUE;
+}
+
+BOOLEAN CanSoldierAffordBurstBullets( SOLDIERTYPE *pSoldier, INT16 usMapPos )
+{
+	INT16		sAPCosts;
+	INT8		bSaveDoAutofire;
+
+	if ( pSoldier->bDoAutofire < 1 )
+	{
+		pSoldier->bDoAutofire = 1;
+		return FALSE;
+	}
+	
+	if ( pSoldier->bDoAutofire > pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft )
+	{
+		pSoldier->bDoAutofire = pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft;
+		return FALSE;
+	}
+
+	sAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, 0);
+
+	if ( !EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) )
+		return FALSE;
+	
+	return TRUE;
+}
+
+void HandleWheelAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos, INT16 sDelta )
+{
+	UINT8					ubCursor;
+	INT8					bFutureAim;	
+	
+	ubCursor =  GetActionModeCursor( pSoldier );
+
+	// 'snap' cursor to target tile....
+	if ( gfUIFullTargetFound )
+	{
+		usMapPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
+	}
+
+	switch( ubCursor )
+	{
+		case TARGETCURS:
+			// warn if bad chance to get through
+			if ( gfUIFullTargetFound &&
+				!HandleCheckForBadChangeToGetThrough( pSoldier, MercPtrs[ gusUIFullTargetID ],
+							MercPtrs[ gusUIFullTargetID ]->sGridNo , MercPtrs[ gusUIFullTargetID ]->bLevel ) )
+			{
+				return;
+			}
+
+			if ( pSoldier->bDoBurst && !pSoldier->bDoAutofire )
+			{
+			}
+			else if( pSoldier->bDoAutofire )
+			{
+				// AUTOFIRE section
+				INT16 sCurAPCosts, sFutureAPCost;
+
+				if(pSoldier->autofireLastStep)
+				{
+					pSoldier->autofireLastStep = FALSE;
+				}
+
+				// change burst length until AP difference is shown
+				sCurAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, 0);
+				do
+				{
+					pSoldier->bDoAutofire += sDelta;
+					sFutureAPCost = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, 0);
+				} while ( CanSoldierAffordBurstBullets( pSoldier, usMapPos ) && (sFutureAPCost - sCurAPCosts) == 0 );
+				
+				// complement burst by adding bullets, until next bullet produce AP difference
+				sFutureAPCost = sCurAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, 0);
+				while ( CanSoldierAffordBurstBullets( pSoldier, usMapPos ) && (sFutureAPCost - sCurAPCosts) == 0 )
+				{
+					pSoldier->bDoAutofire += 1;	// now it goes as future burst length
+					sFutureAPCost = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, 0);
+				}
+
+				// display red numbers, if it is last possible burst ap spenditure
+				pSoldier->autofireLastStep = !CanSoldierAffordBurstBullets( pSoldier, usMapPos );
+				
+				// restore last iteration bullet count (before ap difference)
+				pSoldier->bDoAutofire--;
+			}
+			else
+			{
+				// SINGLE SHOT section
+				bFutureAim = pSoldier->bShownAimTime + sDelta;
+				
+				if ( CanSoldierAffordAimTime( pSoldier, usMapPos, bFutureAim) )
+				{
+					pSoldier->bShownAimTime += sDelta;
+					// display yellow circle, if it is last possible aim level
+					gfDisplayFullCountRing = !CanSoldierAffordAimTime( pSoldier, usMapPos, bFutureAim + 1);
+				}
+			}
+			break;
+			
+		case PUNCHCURS:
+			// PUNCHING section
+			bFutureAim = pSoldier->bShownAimTime + sDelta * REFINE_PUNCH_2;	// possibly dirty hack
+			
+			if ( CanSoldierAffordPunching( pSoldier, usMapPos, bFutureAim) )
+			{
+				pSoldier->bShownAimTime += sDelta * REFINE_PUNCH_2;
+				// display yellow circle, if it is last possible aim level
+				gfDisplayFullCountRing = !CanSoldierAffordPunching( pSoldier, usMapPos, bFutureAim + 1);
+			}
+			break;
+		
+		case KNIFECURS:
+			// KNIFING section
+			bFutureAim = pSoldier->bShownAimTime + sDelta * REFINE_KNIFE_2;	// possibly dirty hack
+			
+			if ( CanSoldierAffordKnifing( pSoldier, usMapPos, bFutureAim) )
+			{
+				pSoldier->bShownAimTime += sDelta * REFINE_KNIFE_2;
+				// display yellow circle, if it is last possible aim level
+				gfDisplayFullCountRing = !CanSoldierAffordKnifing( pSoldier, usMapPos, bFutureAim + 1);
+			}
+			break;
+
+	};
+}
 
 UINT8 GetActionModeCursor( SOLDIERTYPE *pSoldier )
 {
