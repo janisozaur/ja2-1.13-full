@@ -591,7 +591,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 					 //{
 					//		pSoldier->bShownAimTime = REFINE_AIM_1;
 					 //}
-					 //pSoldier->fPauseAim = TRUE;
+					 pSoldier->fPauseAim = TRUE;
 				}
 
 				// If in turn based - refresh aim to first level
