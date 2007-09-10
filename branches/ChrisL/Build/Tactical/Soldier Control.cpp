@@ -234,51 +234,10 @@ BATTLESNDS_STRUCT	 gBattleSndsData[] =
 };
 
 // CHRISL:
-MERCPROFILEGEAR::MERCPROFILEGEAR() {
-	invCnt = 19;
-	lbeCnt = 5;
-	inv.reserve(invCnt);
-	iStatus.reserve(invCnt);
-	iDrop.reserve(invCnt);
-	iNumber.reserve(invCnt);
-	lbe.reserve(lbeCnt);
-	lStatus.reserve(lbeCnt);
-	for (int idx=0; idx < invCnt; ++idx) {
-		inv.push_back(0);
-		iStatus.push_back(0);
-		iDrop.push_back(0);
-		iNumber.push_back(0);
-	}
-	for (int idx=0; idx < lbeCnt; ++idx) {
-		lbe.push_back(0);
-		lStatus.push_back(0);
-	}
+MERCPROFILEGEAR::MERCPROFILEGEAR()
+{
+	clearInventory();
 	initialize();
-
-	Assert(inv.size() == invCnt);
-	Assert(iStatus.size() == invCnt);
-	Assert(iDrop.size() == invCnt);
-	Assert(iNumber.size() == invCnt);
-	Assert(lbe.size() == lbeCnt);
-	Assert(lStatus.size() == lbeCnt);
-}
-
-// Copy Constructor
-MERCPROFILEGEAR::MERCPROFILEGEAR(const MERCPROFILEGEAR& src) {
-	memcpy(this, &src, SIZEOF_MERCPROFILEGEAR_POD);
-	inv = src.inv;
-	iStatus = src.iStatus;
-	iDrop = src.iDrop;
-	iNumber = src.iNumber;
-	lbe = src.lbe;
-	lStatus = src.lStatus;
-
-	Assert(inv.size() == invCnt);
-	Assert(iStatus.size() == invCnt);
-	Assert(iDrop.size() == invCnt);
-	Assert(iNumber.size() == invCnt);
-	Assert(lbe.size() == lbeCnt);
-	Assert(lStatus.size() == lbeCnt);
 }
 
 // Assignment operator
@@ -294,12 +253,6 @@ MERCPROFILEGEAR& MERCPROFILEGEAR::operator=(const MERCPROFILEGEAR& src) {
 		invCnt = src.invCnt;
 		lbeCnt = src.lbeCnt;
     }
-	Assert(inv.size() == invCnt);
-	Assert(iStatus.size() == invCnt);
-	Assert(iDrop.size() == invCnt);
-	Assert(iNumber.size() == invCnt);
-	Assert(lbe.size() == lbeCnt);
-	Assert(lStatus.size() == lbeCnt);
 	return *this;
 }
 
@@ -313,31 +266,28 @@ MERCPROFILEGEAR::~MERCPROFILEGEAR() {
 void MERCPROFILEGEAR::initialize() {
 	memset( this, 0, SIZEOF_MERCPROFILEGEAR_POD);
 	clearInventory();
-	Assert(inv.size() == invCnt);
-	Assert(iStatus.size() == invCnt);
-	Assert(iDrop.size() == invCnt);
-	Assert(iNumber.size() == invCnt);
-	Assert(lbe.size() == lbeCnt);
-	Assert(lStatus.size() == lbeCnt);
 }
 
 void MERCPROFILEGEAR::clearInventory() {
-	for (int idx=0; idx < (int)inv.size(); ++idx) {
-		inv[idx] = 0;
-		iStatus[idx] = 0;
-		iDrop[idx] = 0;
-		iNumber[idx] = 0;
-	}
-	for (int idx=0; idx < (int)lbe.size(); ++idx) {
-		lbe[idx] = 0;
-		lStatus[idx] = 0;
-	}
-	Assert(inv.size() == invCnt);
-	Assert(iStatus.size() == invCnt);
-	Assert(iDrop.size() == invCnt);
-	Assert(iNumber.size() == invCnt);
-	Assert(lbe.size() == lbeCnt);
-	Assert(lStatus.size() == lbeCnt);
+	//ADB these really should be defines
+	invCnt = 19;
+	lbeCnt = 5;
+
+	inv.clear();
+	iStatus.clear();
+	iDrop.clear();
+	iNumber.clear();
+
+	inv.resize(invCnt);
+	iStatus.resize(invCnt);
+	iDrop.resize(invCnt);
+	iNumber.resize(invCnt);
+
+	lbe.clear();
+	lStatus.clear();
+
+	lbe.resize(lbeCnt);
+	lStatus.resize(lbeCnt);
 }
 
 // ----------------------------------------
@@ -562,7 +512,7 @@ void STRUCT_AIData::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 {
 	PERFORMANCE_MARKER
 	memcpy( &(this->bOppList), &(src.bOppList), sizeof(INT8) * MAX_NUM_SOLDIERS ); // AI knowledge database
-	memcpy( &(this->usPatrolGrid), &(src.usPatrolGrid), sizeof(INT16) * MAXPATROLGRIDS );// AI list for ptr->orders==PATROL	
+	memcpy( &(this->sPatrolGrid), &(src.usPatrolGrid), sizeof(INT16) * MAXPATROLGRIDS );// AI list for ptr->orders==PATROL	
 	this->bLastAction = src.bLastAction;
 	this->bAction = src.bAction;
 	this->usActionData = src.usActionData;
@@ -4035,7 +3985,7 @@ void SOLDIERTYPE::SetSoldierGridNo( INT16 sNewGridNo, BOOLEAN fForceRemove )
 		if ( thisSoldier->sInitialGridNo == 0 )
 		{
 			thisSoldier->sInitialGridNo = sNewGridNo;
-			thisSoldier->aiData.usPatrolGrid[0] = sNewGridNo;
+			thisSoldier->aiData.sPatrolGrid[0] = sNewGridNo;
 		}
 
 		// Add records of this guy being adjacent

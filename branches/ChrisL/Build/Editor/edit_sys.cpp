@@ -125,7 +125,7 @@ void EraseMapTile( UINT32 iMapIndex )
 		case DRAW_MODE_EXITGRID:
 			AddToUndoList( iMapIndex );
 			RemoveExitGridFromWorld( iMapIndex );
-			RemoveTopmost( (UINT16)iMapIndex, FIRSTPOINTERS8 );
+			RemoveTopmost( (INT16)iMapIndex, FIRSTPOINTERS8 );
 			break;
 		case DRAW_MODE_GROUND:		
 			// Is there ground on this tile? if not, get out o here

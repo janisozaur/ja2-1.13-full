@@ -190,8 +190,8 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 	INT16							sTargetGridNo;
 	INT16							sAPCost;
 	INT16							sActionGridNo;
-	UINT8							ubDirection;
-	INT16							sAdjustedGridNo;
+	UINT8							ubDirection = 0;
+	INT16							sAdjustedGridNo = 0;
 	BOOLEAN						fDropBomb = FALSE;
 	BOOLEAN						fAddingTurningCost = FALSE;
 	BOOLEAN						fAddingRaiseGunCost = FALSE;
@@ -1741,24 +1741,25 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 				{
 					if ( ContinuePastBoobyTrap( pSoldier, sGridNo, bZLevel, pItemPool->iItemIndex, FALSE, &fSaidBoobyTrapQuote ) )
 					{
-						// Make copy of item
-						gTempObject = gWorldItems[ pItemPool->iItemIndex ].object;
-
-						if ( ItemIsCool( &gTempObject ) )
+						if ( ItemIsCool( &gWorldItems[ pItemPool->iItemIndex ].object ) )
 						{
 							fShouldSayCoolQuote = TRUE;
 						}
 
-						if (gTempObject.usItem == SWITCH)
+						if (gWorldItems[ pItemPool->iItemIndex ].object.usItem == SWITCH)
 						{
 							// ask about activating the switch!
-							bTempFrequency = gTempObject[0]->data.misc.bFrequency;
+							bTempFrequency = gWorldItems[ pItemPool->iItemIndex ].object[0]->data.misc.bFrequency;
 							gpTempSoldier = pSoldier;
 							DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ ACTIVATE_SWITCH_PROMPT ] , GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, SwitchMessageBoxCallBack, NULL );
 							pItemPool = pItemPool->pNext;
 						}
 						else
 						{
+							// Make copy of item
+							//ADB TODO, I don't like this copy if it's an LBE
+							gTempObject = gWorldItems[ pItemPool->iItemIndex ].object;
+
 							if ( !AutoPlaceObject( pSoldier, &gTempObject, TRUE ) )
 							{
 								// check to see if the object has been swapped with one in inventory
@@ -1833,19 +1834,15 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 
 			if ( ContinuePastBoobyTrap( pSoldier, sGridNo, bZLevel, iItemIndex, FALSE, &fSaidBoobyTrapQuote ) )
 			{
-
-				// Make copy of item
-				gTempObject = gWorldItems[ iItemIndex ].object;
-
-				if ( ItemIsCool( &gTempObject ) )
+				if ( ItemIsCool( &gWorldItems[ iItemIndex ].object ) )
 				{
 					fShouldSayCoolQuote = TRUE;
 				}
 
-				if (gTempObject.usItem == SWITCH)
+				if (gWorldItems[ iItemIndex ].object.usItem == SWITCH)
 				{
 					// handle switch
-					bTempFrequency = gTempObject[0]->data.misc.bFrequency;
+					bTempFrequency = gWorldItems[ iItemIndex ].object[0]->data.misc.bFrequency;
 					gpTempSoldier = pSoldier;
 					DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ ACTIVATE_SWITCH_PROMPT ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, SwitchMessageBoxCallBack, NULL );
 				}

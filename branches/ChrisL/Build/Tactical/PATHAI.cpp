@@ -1945,7 +1945,7 @@ bool AStarPathfinder::IsSomeoneInTheWay()
 	// when doing a reachable test, ignore all locations with people in them
 	if (fPathAroundPeople && ( (CurrentNode != DestNode) || fCopyReachable) ) {
 		// ATE: ONLY cancel if they are moving.....
-		UINT8 ubMerc = WhoIsThere2( (UINT16) CurrentNodeIndex, pSoldier->pathing.bLevel);
+		UINT8 ubMerc = WhoIsThere2( (INT16) CurrentNodeIndex, pSoldier->pathing.bLevel);
 		if ( ubMerc < NOBODY && ubMerc != pSoldier->ubID ) {
 			// Check for movement....
 			//if ( fTurnBased || ( (Menptr[ ubMerc ].sFinalDestination == Menptr[ ubMerc ].sGridNo) || (Menptr[ ubMerc ].fDelayedMovement) ) )
@@ -2897,7 +2897,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 			if (fPathAroundPeople && ( (newLoc != iDestination) || fCopyReachable) )
 			{
 				// ATE: ONLY cancel if they are moving.....
-				ubMerc = WhoIsThere2( (UINT16) newLoc, s->pathing.bLevel);
+				ubMerc = WhoIsThere2( (INT16) newLoc, s->pathing.bLevel);
 
 				if ( ubMerc < TOTAL_SOLDIERS && ubMerc != s->ubID )
 				{	

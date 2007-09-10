@@ -290,9 +290,9 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 			UINT8	ubRoom, ubNewRoom;
 
 			// any other combo uses the default of ubRoom == 0, set above
-			if ( InARoom( pSoldier->aiData.usPatrolGrid[0], &ubRoom ) )
+			if ( InARoom( pSoldier->aiData.sPatrolGrid[0], &ubRoom ) )
 			{
-				if ( !InARoom( pSoldier->aiData.usPatrolGrid[0], &ubNewRoom ) || ubRoom != ubNewRoom )
+				if ( !InARoom( pSoldier->aiData.sPatrolGrid[0], &ubNewRoom ) || ubRoom != ubNewRoom )
 				{
 					*pfReachable = FALSE;
 				}

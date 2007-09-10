@@ -2807,7 +2807,7 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 	}
 
 	// CHRISL: if item is LBENODE
-	if( (UsingNewInventorySystem() == true) && pItemObject->IsLBE())
+	if( (UsingNewInventorySystem() == true) && pItemObject->IsActiveLBE())
 	{
 		//Display the '*' in the bottom right corner of the square
 		swprintf( zTemp, L"*" );
@@ -5119,7 +5119,7 @@ void BtnSKI_AtmButtonCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		UINT8	ubButton = (UINT8) MSYS_GetBtnUserData( btn, 0 );
+		/*UINT8	ubButton = (UINT8) */MSYS_GetBtnUserData( btn, 0 );
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 
 //ATM:

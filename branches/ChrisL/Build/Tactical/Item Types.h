@@ -128,6 +128,7 @@ const INT8	oldInv[55] =	{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 
 // Determines which pockets to use for vehicles in the new inventory system.
 const INT8	vehicleInv[55]=	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0};
 
+
 #define INVALIDCURS 0
 #define QUESTCURS 1
 #define PUNCHCURS 2
@@ -204,7 +205,6 @@ class SOLDIERTYPE;
 class LBENODE
 {
 public:
-	//ADB TODO make this a variable sized vector???
 	LBENODE() { initialize();};
 	void	initialize() {inv.clear();};
 	BOOLEAN	Load( HWFILE hFile );
@@ -214,6 +214,7 @@ public:
 	UINT16				lbeIndex;
 	UINT8				ubID;
 	BOOLEAN				ZipperFlag;
+	unsigned short		uniqueID;
 	UINT32				uiNodeChecksum;
 	char				endOfPOD;
 	//compiler complains about too big an array since OBJECTTYPE's size is unknown at this time, because of forward declaration
@@ -223,16 +224,17 @@ public:
 #define SIZEOF_LBENODE_POD (offsetof(LBENODE, endOfPOD))
 void	CreateLBE(OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets);
 bool	DestroyLBEIfEmpty(OBJECTTYPE* pObj);
+void	DestroyLBE(OBJECTTYPE* pObj);
 void	GetLBESlots(UINT32 LBEType, std::vector<INT8>& LBESlots);
 void	MoveItemsInSlotsToLBE( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, LBENODE* pLBE, OBJECTTYPE* pObj);
 
 // CHRISL:
 BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, UINT32 uiHandPos, OBJECTTYPE *pObj );
-BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
+BOOLEAN	MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos );
 BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
-INT16 GetFreeLBEPackIndex( void );
+bool	IsSlotAnLBESlot(int slot);
 
-extern	std::vector<LBENODE>	LBEArray;
+extern	std::list<LBENODE>	LBEArray;
 
 //do not alter or saves will break, create new defines if the size changes
 #define OLD_MAX_ATTACHMENTS_101 4
@@ -330,7 +332,7 @@ public:
 	UINT8		ubMission;
 	INT8		bTrap;        // 1-10 exp_lvl to detect
 	UINT8		ubImprintID;	// ID of merc that item is imprinted on
-	UINT16		ubWeight;	// CHRISL:
+	UINT8		ubWeight;
 	UINT8		fUsed;				// flags for whether the item is used or not
 };
 
@@ -425,6 +427,8 @@ public:
 };
 typedef std::list<StackedObjectData>	StackedObjects;
 
+
+#define ALL_OBJECTS -1
 class OBJECTTYPE
 {
 public:
@@ -449,18 +453,17 @@ public:
 	bool	operator==(OBJECTTYPE& compare);
 	bool	operator==(const OBJECTTYPE& compare)const;
 	bool	exists();
-	bool	IsLBE();
-	LBENODE*	GetLBEPointer(int stackSlot = 0);
-	int		GetLBEIndex(int stackSlot = 0);
+	bool	IsActiveLBE();
+	LBENODE*	GetLBEPointer();
 
 
 	UINT16	GetWeightOfObjectInStack(unsigned int index = 0);
 	int		AddObjectsToStack(int howMany, int objectStatus = 100);
-	int		AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany = -1);
-	int		RemoveObjectsFromStack(int howMany = 1, OBJECTTYPE* destObject = NULL);
+	int		AddObjectsToStack(OBJECTTYPE& sourceObject, int howManyWanted = ALL_OBJECTS, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT, bool allowLBETransfer = true);
+	int		MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove = ALL_OBJECTS, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT);
+	int		RemoveObjectsFromStack(int howMany = 1, OBJECTTYPE* destObject = NULL, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT);
 	bool	RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject = NULL);
-	void	DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany = -1);
-	int		MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove = -1);
+	void	DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany = ALL_OBJECTS);
 private://this is only a helper for the above functions
 	void	SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, StackedObjects::iterator beginIter);
 public:
@@ -751,27 +754,12 @@ public:
 };
 #define SIZEOF_POCKETTYPE offsetof( POCKETTYPE, POD )
 extern std::vector<POCKETTYPE> LBEPocketType;
-// CHRISL: Def 3 and up should not be here in the code because these definitions could be changed.
 typedef enum ePOCKET_TYPE
 {
 	NO_POCKET_TYPE = 0,
 	GUNSLING_POCKET_TYPE = 1,
 	KNIFE_POCKET_TYPE = 2,
-	BIG_POCKET_TYPE = 3,
-	COMBAT_PACK_POCKET_TYPE = 4,
-	MEDIUM_POCKET_TYPE = 5,
-	SMG_HOLSTER_POCKET_TYPE = 6,
-	TNT_POCKET_TYPE = 7,
-	LARGE_MAG_POCKET_TYPE = 8,
-	AR_MAG_POCKET_TYPE = 9,
-	PISTOL_HOLSTER_POCKET_TYPE = 10,
-	SMG_MAG_POCKET_TYPE = 11,
-	RIFLE_GRENADE_POCKET_TYPE = 12,
-	GRENADE_POCKET_TYPE = 13,
-	PISTOL_MAG_POCKET_TYPE = 14,
-	TINY_POCKET_TYPE = 15,
-	SMALL_POCKET_TYPE = 16,
-	BELT_CLIP_POCKET_TYPE = 17,
+	VEHICLE_POCKET_TYPE = 3,
 };
 
 #define FIRST_WEAPON 1

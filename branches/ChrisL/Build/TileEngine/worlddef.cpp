@@ -3784,7 +3784,7 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 			bNumWallsSameGridNo = 0;
 
 			// Check our gridno, if we have a roof over us that has not beenr evealed, no need for a wiereframe
-			if ( IsRoofVisibleForWireframe( (UINT16)cnt ) && !( gpWorldLevelData[ cnt ].uiFlags & MAPELEMENT_REVEALED ) )
+			if ( IsRoofVisibleForWireframe( (INT16)cnt ) && !( gpWorldLevelData[ cnt ].uiFlags & MAPELEMENT_REVEALED ) )
 			{
 				continue;
 			}

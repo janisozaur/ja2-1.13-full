@@ -175,7 +175,7 @@ INT8 DO_ACTION_LOCKDOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 
 			if ( pSoldier->sGridNo != NOWHERE )
 			{
-				pSoldier->aiData.usPatrolGrid[0] = pSoldier->sGridNo;
+				pSoldier->aiData.sPatrolGrid[0] = pSoldier->sGridNo;
 			}
 		}
 		else
@@ -328,7 +328,7 @@ INT8 DO_ACTION_DOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex, UINT8 ubSche
 			DoneScheduleAction( pSoldier );
 			if ( pSoldier->sGridNo != NOWHERE )
 			{
-				pSoldier->aiData.usPatrolGrid[0] = pSoldier->sGridNo;
+				pSoldier->aiData.sPatrolGrid[0] = pSoldier->sGridNo;
 			}
 		}
 		else
@@ -361,7 +361,7 @@ INT8 DO_ACTION_GRIDNO ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 		DoneScheduleAction( pSoldier );
 		if ( pSoldier->sGridNo != NOWHERE )
 		{
-			pSoldier->aiData.usPatrolGrid[0] = pSoldier->sGridNo;
+			pSoldier->aiData.sPatrolGrid[0] = pSoldier->sGridNo;
 		}
 	}
 	else
@@ -470,7 +470,7 @@ INT8 DO_ACTION_ENTERSECTOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 			DoneScheduleAction( pSoldier );
 			if ( pSoldier->sGridNo != NOWHERE )
 			{
-				pSoldier->aiData.usPatrolGrid[0] = pSoldier->sGridNo;
+				pSoldier->aiData.sPatrolGrid[0] = pSoldier->sGridNo;
 			}
 		}
 		else
@@ -492,7 +492,7 @@ INT8 DO_ACTION_WAKE ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 	{
 		// th-th-th-that's it!
 		DoneScheduleAction( pSoldier );
-		pSoldier->aiData.usPatrolGrid[0] = pSoldier->sGridNo;
+		pSoldier->aiData.sPatrolGrid[0] = pSoldier->sGridNo;
 	}
 	else
 	{
@@ -519,7 +519,7 @@ INT8 DO_ACTION_SLEEP ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 		DoneScheduleAction( pSoldier );
 		if ( pSoldier->sGridNo != NOWHERE )
 		{
-			pSoldier->aiData.usPatrolGrid[0] = pSoldier->sGridNo;
+			pSoldier->aiData.sPatrolGrid[0] = pSoldier->sGridNo;
 		}
 	}
 	else
@@ -5087,11 +5087,11 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 				// temporarily make boxer have orders of CLOSEPATROL rather than STATIONARY
 				// And make him patrol the ring, not his usual place
 				// so he has a good roaming range
-				USHORT tgrd = pSoldier->aiData.usPatrolGrid[0];
-				pSoldier->aiData.usPatrolGrid[0] = pSoldier->sGridNo;
+				USHORT tgrd = pSoldier->aiData.sPatrolGrid[0];
+				pSoldier->aiData.sPatrolGrid[0] = pSoldier->sGridNo;
 				pSoldier->aiData.bOrders = CLOSEPATROL;
 				pSoldier->aiData.usActionData = GoAsFarAsPossibleTowards( pSoldier, sClosestOpponent, AI_ACTION_GET_CLOSER );
-				pSoldier->aiData.usPatrolGrid[0] = tgrd;
+				pSoldier->aiData.sPatrolGrid[0] = tgrd;
 				pSoldier->aiData.bOrders = STATIONARY;
 				if ( pSoldier->aiData.usActionData != NOWHERE )
 				{

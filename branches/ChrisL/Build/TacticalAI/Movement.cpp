@@ -272,7 +272,7 @@ INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier)
  if (pSoldier->aiData.bNextPatrolPnt > pSoldier->aiData.bPatrolCnt)
 	pSoldier->aiData.bNextPatrolPnt = 1;	// ZERO is not used!
 
- return(pSoldier->aiData.usPatrolGrid[pSoldier->aiData.bNextPatrolPnt]);
+ return(pSoldier->aiData.sPatrolGrid[pSoldier->aiData.bNextPatrolPnt]);
 }
 
 
@@ -286,7 +286,7 @@ INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
  std::string tempstr;
 #endif
 
- sPatrolPoint = pSoldier->aiData.usPatrolGrid[pSoldier->aiData.bNextPatrolPnt];
+ sPatrolPoint = pSoldier->aiData.sPatrolGrid[pSoldier->aiData.bNextPatrolPnt];
 
  // if we're already there, advance next patrol point
  if (pSoldier->sGridNo == sPatrolPoint || pSoldier->aiData.bNextPatrolPnt == 0)
@@ -365,7 +365,7 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 	INT8	bOldOrders, bPatrolIndex;
 	INT8	bCnt;
 
-	sPatrolPoint = pSoldier->aiData.usPatrolGrid[pSoldier->aiData.bNextPatrolPnt];
+	sPatrolPoint = pSoldier->aiData.sPatrolGrid[pSoldier->aiData.bNextPatrolPnt];
 
 	// if we're already there, advance next patrol point
 	if (pSoldier->sGridNo == sPatrolPoint || pSoldier->aiData.bNextPatrolPnt == 0)
@@ -378,7 +378,7 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 		{
 			// usPatrolGrid[0] gets used for centre of close etc patrols, so we have to add 1 to the Random #
 			bPatrolIndex = (INT8) PreRandom( pSoldier->aiData.bPatrolCnt ) + 1;
-			sPatrolPoint = pSoldier->aiData.usPatrolGrid[ bPatrolIndex];
+			sPatrolPoint = pSoldier->aiData.sPatrolGrid[ bPatrolIndex];
 			bCnt++;
 		}
 		while ( (sPatrolPoint == pSoldier->sGridNo) || ( (sPatrolPoint != NOWHERE) && (bCnt < pSoldier->aiData.bPatrolCnt) && (NewOKDestination(pSoldier,sPatrolPoint,IGNOREPEOPLE, pSoldier->pathing.bLevel ) < 1)) ); 
@@ -486,7 +486,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 
 	if ( pSoldier->aiData.bOrders <= CLOSEPATROL && (pSoldier->bTeam == CIV_TEAM || pSoldier->ubProfile != NO_PROFILE ) )
 	{
-		if ( InARoom( pSoldier->aiData.usPatrolGrid[0], &ubRoomRequired ) )
+		if ( InARoom( pSoldier->aiData.sPatrolGrid[0], &ubRoomRequired ) )
 		{
 			// make sure this doesn't interfere with pathing for scripts
 			if ( pSoldier->sAbsoluteFinalDestination != NOWHERE )

@@ -685,7 +685,7 @@ void AddMercWaypoint( UINT32 iMapIndex )
 			gpSelected->pBasicPlacement->sPatrolGrid[iNum] = (INT16)iMapIndex;
 			if( gpSelected->pDetailedPlacement )
 				gpSelected->pDetailedPlacement->sPatrolGrid[iNum] = (INT16)iMapIndex;
-			gpSelected->pSoldier->aiData.usPatrolGrid[iNum] = (UINT16)iMapIndex;
+			gpSelected->pSoldier->aiData.sPatrolGrid[iNum] = (INT16)iMapIndex;
 		}
 		
 		gpSelected->pBasicPlacement->bPatrolCnt = (INT8)iActionParam;
@@ -700,7 +700,7 @@ void AddMercWaypoint( UINT32 iMapIndex )
 		gpSelected->pBasicPlacement->sPatrolGrid[iActionParam] = (INT16)iMapIndex;
 		if( gpSelected->pDetailedPlacement )
 			gpSelected->pDetailedPlacement->sPatrolGrid[iActionParam] = (INT16)iMapIndex;
-		gpSelected->pSoldier->aiData.usPatrolGrid[iActionParam] = (UINT16)iMapIndex;
+		gpSelected->pSoldier->aiData.sPatrolGrid[iActionParam] = (INT16)iMapIndex;
 	}
 	gfRenderWorld = TRUE;
 }
@@ -725,7 +725,7 @@ void EraseMercWaypoint()
 		gpSelected->pBasicPlacement->sPatrolGrid[iNum] = gpSelected->pBasicPlacement->sPatrolGrid[iNum+1];
 		if( gpSelected->pDetailedPlacement )
 			gpSelected->pDetailedPlacement->sPatrolGrid[iNum] = gpSelected->pDetailedPlacement->sPatrolGrid[iNum+1];
-		gpSelected->pSoldier->aiData.usPatrolGrid[iNum] = gpSelected->pSoldier->aiData.usPatrolGrid[iNum+1];
+		gpSelected->pSoldier->aiData.sPatrolGrid[iNum] = gpSelected->pSoldier->aiData.sPatrolGrid[iNum+1];
 	}
 
 	gpSelected->pBasicPlacement->bPatrolCnt--;
@@ -1341,7 +1341,7 @@ void DisplayWayPoints(void)
 	for ( bPoint = 1; bPoint <= pSoldier->aiData.bPatrolCnt; bPoint++ )
 	{
 		// Get the next point
-		sGridNo = (INT16)pSoldier->aiData.usPatrolGrid[bPoint];
+		sGridNo = (INT16)pSoldier->aiData.sPatrolGrid[bPoint];
 
 		// Can we see it?
 		if ( !GridNoOnVisibleWorldTile( sGridNo ) )
@@ -3383,7 +3383,7 @@ void RegisterCurrentScheduleAction( INT32 iMapIndex )
 		if( gfSingleAction )
 			return;
 		iDrawMode = DRAW_MODE_PLAYER + gpSelected->pBasicPlacement->bTeam;
-		gCurrSchedule.usData2[ gubCurrentScheduleActionIndex ] = (UINT16)iMapIndex;
+		gCurrSchedule.usData2[ gubCurrentScheduleActionIndex ] = (INT16)iMapIndex;
 		SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1B + gubCurrentScheduleActionIndex ], str );
 		DetermineScheduleEditability();
 		gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_NONE;
@@ -3426,7 +3426,7 @@ void RegisterCurrentScheduleAction( INT32 iMapIndex )
 			case SCHEDULE_ACTION_NONE:
 				break;
 		}
-		gCurrSchedule.usData1[ gubCurrentScheduleActionIndex ] = (UINT16)iMapIndex;
+		gCurrSchedule.usData1[ gubCurrentScheduleActionIndex ] = (INT16)iMapIndex;
 		SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1A + gubCurrentScheduleActionIndex ], str );
 	}
 }

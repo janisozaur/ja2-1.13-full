@@ -2,35 +2,112 @@
 #include "Item Types.h"
 #include "Debug.h"
 #include "Items.h"
+#include "GameSettings.h"
 
 OBJECTTYPE gTempObject;
 OBJECTTYPE gStackTempObject;
-std::vector<LBENODE>	LBEArray;
+std::list<LBENODE>	LBEArray;
+unsigned short gLastLBEUniqueID = 0;
+
+bool IsSlotAnLBESlot(int slot)
+{
+	switch(slot) {
+	case VESTPOCKPOS:
+	case LTHIGHPOCKPOS:
+	case RTHIGHPOCKPOS:
+	case CPACKPOCKPOS:
+	case BPACKPOCKPOS:
+		return true;
+	}
+	return false;
+}
 
 void CreateLBE (OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets)
 {
-	int index = GetFreeLBEPackIndex();
-	LBEArray[index].ubID = ubID;
-	LBEArray[index].lbeIndex = Item[pObj->usItem].ubClassIndex;
-	LBEArray[index].lbeClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
-	LBEArray[index].inv.clear();
-	LBEArray[index].inv.resize(numSubPockets);
+	int uniqueID;
+	LBENODE* pLBE = NULL;
+	if (pObj->IsActiveLBE() == true) {
+		uniqueID = (*pObj)[0]->data.misc.usBombItem;
+		for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+			if (iter->uniqueID == uniqueID) {
+				pLBE = &(*iter);
+				break;
+			}
+		}
+		Assert(pLBE);
+	}
+	else {
+		uniqueID = gLastLBEUniqueID++;
+		LBEArray.push_back(LBENODE());
+		pLBE = &LBEArray.back();
+		pLBE->uniqueID = uniqueID;
+	}
+	pLBE->ubID = ubID;
+	pLBE->lbeIndex = Item[pObj->usItem].ubClassIndex;
+	pLBE->lbeClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
+	pLBE->inv.clear();
+	pLBE->inv.resize(numSubPockets);
 	(*pObj)[0]->data.misc.bDetonatorType = -1;
-	(*pObj)[0]->data.misc.usBombItem = index;
+	(*pObj)[0]->data.misc.usBombItem = uniqueID;
 }
 
 bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
 {
-	LBENODE* pLBE = pObj->GetLBEPointer();
-	for (unsigned int x = 0; x < pLBE->inv.size(); ++x) {
-		if (pLBE->inv[x].exists() == true) {
+	if (pObj->IsActiveLBE() == true) {
+		LBENODE* pLBE = pObj->GetLBEPointer();
+		if (pLBE) {
+			for (unsigned int x = 0; x < pLBE->inv.size(); ++x) {
+				if (pLBE->inv[x].exists() == true) {
+					return false;
+				}
+			}
+			for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+				if (iter->uniqueID == pLBE->uniqueID) {
+					if (pLBE->uniqueID == gLastLBEUniqueID - 1) {
+						//might as well save on IDs
+						if (LBEArray.empty() == true) {
+							gLastLBEUniqueID = 0;
+						}
+						else {
+							gLastLBEUniqueID = LBEArray.back().uniqueID + 1;
+						}
+					}
+					LBEArray.erase(iter);
+					break;
+				}
+			}
+			(*pObj)[0]->data.misc.usBombItem = 0;
+			(*pObj)[0]->data.misc.bDetonatorType = 0;
 			return true;
 		}
 	}
-	pLBE->initialize();
-	(*pObj)[0]->data.misc.usBombItem = 0;
-	(*pObj)[0]->data.misc.bDetonatorType = 0;
-	return true;
+	return false;
+}
+
+void DestroyLBE(OBJECTTYPE* pObj)
+{
+	if (pObj->IsActiveLBE() == true) {
+		LBENODE* pLBE = pObj->GetLBEPointer();
+		if (pLBE) {
+			for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+				if (iter->uniqueID == pLBE->uniqueID) {
+					if (pLBE->uniqueID == gLastLBEUniqueID - 1) {
+						//might as well save on IDs
+						if (LBEArray.empty() == true) {
+							gLastLBEUniqueID = 0;
+						}
+						else {
+							gLastLBEUniqueID = LBEArray.back().uniqueID + 1;
+						}
+					}
+					LBEArray.erase(iter);
+					break;
+				}
+			}
+			(*pObj)[0]->data.misc.usBombItem = 0;
+			(*pObj)[0]->data.misc.bDetonatorType = 0;
+		}
+	}
 }
 
 void MoveItemsInSlotsToLBE( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, LBENODE* pLBE, OBJECTTYPE* pObj)
@@ -53,6 +130,8 @@ void MoveItemsInSlotsToLBE( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, 
 			if(LBEPocketType[LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbePocketIndex[j]].ItemCapacityPerSize[dSize] == NONE)	// Pocket can't hold this item size
 				continue;
 			// Default item will fit in this pocket.  Setup the LBENODE if necessary
+
+			//ADB the object is already in the LBE, we are just moving it from soldier inv to LBE inv
 			pSoldier->inv[LBESlots[i]].MoveThisObjectTo(pLBE->inv[j]);
 			if (pSoldier->inv[LBESlots[i]].exists() == false) {
 				break;
@@ -73,11 +152,11 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBES
 {
 	BOOLEAN	flag=FALSE;
 
-	if(pObj->IsLBE() == false) {
+	if(pObj->IsActiveLBE() == false) {
 		CreateLBE(pObj, pSoldier->ubID, LBESlots.size());
 	}
 
-	LBENODE* pLBE = &(LBEArray[pObj->GetLBEIndex()]);
+	LBENODE* pLBE = pObj->GetLBEPointer();
 	MoveItemsInSlotsToLBE(pSoldier, LBESlots, pLBE, pObj);
 	DestroyLBEIfEmpty(pObj);
 
@@ -86,7 +165,7 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBES
 	{
 		if(pSoldier->inv[LBESlots[x]].exists() == false)
 			continue;
-		for(int i=BIGPOCKSTART; i<NUM_INV_SLOTS; i++)
+		for(int i=INV_START_POS; i<NUM_INV_SLOTS; i++)
 		{
 			if(pSoldier->inv[i].exists() == true)	// Item already in that location
 				continue;
@@ -103,7 +182,7 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBES
 				continue;
 			if(CanItemFitInPosition(pSoldier, &(pSoldier->inv[LBESlots[x]]), i, FALSE))
 			{
-				pSoldier->inv[LBESlots[x]].MoveThisObjectTo(pSoldier->inv[i]);
+				pSoldier->inv[LBESlots[x]].MoveThisObjectTo(pSoldier->inv[i], ALL_OBJECTS, pSoldier, i);
 				break;
 			}
 		}
@@ -186,7 +265,7 @@ void GetLBESlots(UINT32 LBEType, std::vector<INT8>& LBESlots)
 
 
 // CHRISL: New function to handle moving soldier items to lbe items
-BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj )
+BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos )
 {
 	std::vector<INT8> LBESlots;
 	// Determine which LBE item we're removing so we can associate the correct pockets with it.
@@ -199,6 +278,7 @@ BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *
 		// Is there an item in this pocket?
 		if(pSoldier->inv[LBESlots[i]].exists() == true)
 		{
+			//ADB the object is already in the LBE, we are just moving it from soldier inv to LBE inv
 			pSoldier->inv[LBESlots[i]].MoveThisObjectTo(pLBE->inv[i]);
 		}
 	}
@@ -220,7 +300,7 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 
 	if(pSoldier->inv[uiHandPos].exists() == false)
 		MoveItemsToActivePockets(pSoldier, LBESlots, uiHandPos, pObj);
-	if(pObj->IsLBE() == false) {
+	if(pObj->IsActiveLBE() == false) {
 		return (FALSE);
 	}
 
@@ -230,7 +310,7 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 		// Is there an item in this LBE pocket?
 		if(pLBE->inv[i].exists() == true)
 		{
-			pLBE->inv[i].MoveThisObjectTo(pSoldier->inv[LBESlots[i]]);
+			pLBE->inv[i].MoveThisObjectTo(pSoldier->inv[LBESlots[i]], ALL_OBJECTS, pSoldier, LBESlots[i]);
 		}
 	}
 	if (DestroyLBEIfEmpty(pObj) == false) {
@@ -240,23 +320,6 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 	}
 
 	return (TRUE);
-}
-
-// CHRISL: Find an unused LBE Pack index
-INT16 GetFreeLBEPackIndex( void )
-{
-	UINT16 uiCount;
-	for(uiCount=0; uiCount < LBEArray.size(); uiCount++)
-	{
-		if ( LBEArray[ uiCount ].lbeIndex == 0)
-			return( (INT16)uiCount );
-	}
-
-	//ADB this is a mem leak!!!!!!!
-	//LBENODE *filler = new LBENODE;
-	//LBEArray.push_back(*filler);
-	LBEArray.push_back(LBENODE());
-	return(uiCount);
 }
 
 LBETYPE::LBETYPE(){
@@ -300,38 +363,35 @@ POCKETTYPE::~POCKETTYPE(){
 
 //ADB TODO: ChrisL, rewrite this to your liking, then insert it everywhere you have (*pObject)[0]->data.misc.bDetonatorType == -1.
 //Go ahead and add a new variable to OBJECTTYPE if you want, but then add it to all the functions.
-bool OBJECTTYPE::IsLBE()
+bool OBJECTTYPE::IsActiveLBE()
 {
 	PERFORMANCE_MARKER
 	if (exists() == true) {
-		//stacks cannot have mixed types, so who cares if there are more than 1
 		return ((*this)[0]->data.misc.bDetonatorType == -1);
 	}
 	return false;
 }
 
-//here we DO care about which subObject in the stack it is
-//although currently LBEs cannot be stacked, it could change
-LBENODE* OBJECTTYPE::GetLBEPointer(int stackSlot)
+LBENODE* OBJECTTYPE::GetLBEPointer()
 {
 	PERFORMANCE_MARKER
-	return &(LBEArray[GetLBEIndex(stackSlot)]);
-}
-
-//here we DO care about which subObject in the stack it is
-//although currently LBEs cannot be stacked, it could change
-int OBJECTTYPE::GetLBEIndex(int stackSlot)
-{
-	PERFORMANCE_MARKER
-	return (*this)[stackSlot]->data.misc.usBombItem;
+	unsigned short uniqueID = (*this)[0]->data.misc.usBombItem;
+	for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+		if (iter->uniqueID == uniqueID) {
+			return &(*iter);
+		}
+		else if (iter->uniqueID > uniqueID) {
+			//because of the linearity of the IDs we know the ID is not here
+			//this will happen when an LBE is copied bitwise, then one is deleted and the other is deleted
+			break;
+		}
+	}
+	return NULL;
 }
 
 bool OBJECTTYPE::exists()
 {
 	PERFORMANCE_MARKER
-	if (objectStack.size() > 20) {
-		DebugBreak();
-	}
 	return (ubNumberOfObjects > 0 && usItem != NOTHING);
 }
 
@@ -350,9 +410,6 @@ void OBJECTTYPE::SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, 
 		++stopIter;
 	}
 	objectStack.splice(objectStack.begin(), sourceObject.objectStack, beginIter, stopIter);
-	if (objectStack.size() > 20) {
-		DebugBreak();
-	}
 
 	ubNumberOfObjects += numToSplice;
 	ubWeight = CalculateObjectWeight(this);
@@ -370,23 +427,16 @@ void OBJECTTYPE::SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, 
 int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 {
 	PERFORMANCE_MARKER
-	//Keys, triggers, and other specials can never stack, should LBEs?
-	if (Item[usItem].usItemClass == IC_KEY
-		|| Item[usItem].usItemClass == IC_BOMB
-		|| Item[usItem].usItemClass == IC_LBEGEAR
-		|| Item[usItem].usItemClass == IC_MONEY) {
-		//exit and do not continue
-		return 0;
-	}
-	if ((*this)[0]->data.bTrap > 0) {
-		return 0;
-	}
+	//ADB TODO make the stacking restrictions match!!!!
 
-	//if howMany is -1 the stack will become full
-	int numToAdd = ItemSlotLimit( this, STACK_SIZE_LIMIT ) - ubNumberOfObjects;
-	if (howMany >= 0) {
+	//This function is never called from a soldier, so get the max size
+	int numToAdd = max(0, ItemSlotLimit( this, STACK_SIZE_LIMIT ) - ubNumberOfObjects);
+
+	//if howMany is ALL_OBJECTS the stack will become full
+	if (howMany != ALL_OBJECTS) {
 		numToAdd = min(numToAdd, howMany);
 	}
+
 	if (numToAdd) {
 		CreateItem(usItem, objectStatus, &gStackTempObject);
 		for (int x = ubNumberOfObjects; x < ubNumberOfObjects + numToAdd; ++x) {
@@ -401,7 +451,7 @@ int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 	return howMany - numToAdd;
 }
 
-int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
+int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany, SOLDIERTYPE* pSoldier, int slot, bool allowLBETransfer)
 {
 	PERFORMANCE_MARKER
 	if (exists() == false) {
@@ -413,10 +463,10 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 	Assert(sourceObject.usItem == usItem);
 
 	//can't add too much, can't take too many
-	int freeObjectsInStack = max(0, (ItemSlotLimit( this, STACK_SIZE_LIMIT ) - ubNumberOfObjects));
+	int freeObjectsInStack = max(0, (ItemSlotLimit( this, slot, pSoldier ) - ubNumberOfObjects));
 	int numToAdd = min (freeObjectsInStack, sourceObject.ubNumberOfObjects);
-	//if howMany is -1 the stack will become full if sourceObject has enough
-	if (howMany >= 0) {
+	//if howMany is ALL_OBJECTS the stack will become full if sourceObject has enough
+	if (howMany != ALL_OBJECTS) {
 		numToAdd = min(numToAdd, howMany);
 	}
 
@@ -471,13 +521,24 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 	//this recalcs weight too!
 	SpliceData(sourceObject, numToAdd, sourceObject.objectStack.begin());
 	
+	//ADB TODO
+	if (numToAdd && UsingNewInventorySystem() == true && pSoldier != NULL) {
+		//CHRISL: For New Inventory system.  Are we handling an LBE item FROM a soldier?
+		if(IsSlotAnLBESlot(slot) == true && allowLBETransfer == true)
+		{
+			//we know this must be an LBE because of the slot and ubNumberOfObjects
+			//since we are putting this LBE into an LBE slot in a soldier
+			//we need to move the items inside the LBE into the soldier's inventory
+			MoveItemFromLBEItem( pSoldier, slot, this );
+		}
+	}
 
 	//returns how many were NOT added
-	if (howMany > 0) {
+	if (howMany != ALL_OBJECTS) {
 		return howMany - numToAdd;
 	}
 	else {
-		//-1 means move all, if all were moved the new size should be 0
+		//ALL_OBJECTS means move all, if all were moved the new size should be 0
 		return sourceObject.ubNumberOfObjects;
 	}
 }
@@ -486,7 +547,7 @@ void OBJECTTYPE::DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany)
 {
 	PERFORMANCE_MARKER
 	int numToDupe;
-	if (howMany >= 0) {
+	if (howMany != ALL_OBJECTS) {
 		numToDupe = min(howMany, sourceObject.ubNumberOfObjects);
 	}
 	else {
@@ -511,19 +572,51 @@ void OBJECTTYPE::DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany)
 	return;
 }
 
-int OBJECTTYPE::MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove)
+int OBJECTTYPE::MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove, SOLDIERTYPE* pSoldier, int slot)
 {
-	return (RemoveObjectsFromStack(numToMove, &destObject));
+	//ADB yes I said I normally remove functions like this, but this is different
+	//this exists to make reading easier and to be more descriptive.
+	return (RemoveObjectsFromStack(numToMove, &destObject, pSoldier, slot));
 }
 
-int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject)
+int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject, SOLDIERTYPE* pSoldier, int slot)
 {
 	PERFORMANCE_MARKER
-	if (howMany == -1) {
+	//ADB this function only needs to know soldier and slot
+	//if there is a dest object we are putting the removed objects into
+	//in this case it is acting as a move and has probably been called by MoveThisObjectTo
+	//otherwise it is acting as a delete and has probably been called by name
+	if (howMany == ALL_OBJECTS) {
 		howMany = ubNumberOfObjects;
 	}
 
 	int numToRemove = min(ubNumberOfObjects, howMany);
+
+	bool allowLBETransfer = false;
+	if (numToRemove && UsingNewInventorySystem() == true && pSoldier != NULL) {
+		//CHRISL: For New Inventory system.  Are we handling an LBE item FROM a soldier?
+		if(IsSlotAnLBESlot(slot) == true) {
+			//we know this must be an LBE because of the slot and ubNumberOfObjects
+			//but are we taking the LBE out of the pocket or putting it in?
+
+			if (pSoldier->inv[slot].exists() == true) {
+				//the object exists and it is an LBE, so we must be taking it out of the pocket
+				//since we are moving this LBE, it needs to have the items in its pockets moved
+				//from the soldier's inv to the LBE's inv
+				MoveItemToLBEItem( pSoldier, slot );
+			}
+			else {
+				//we must be putting it into the pocket, so allow the LBE to
+				//transfer its contents into the soldier
+				//but first make room by putting anything in the soldier's default LBE pockets into other pockets
+				std::vector<INT8> LBESlots;
+				GetLBESlots(slot, LBESlots);
+				MoveItemsToActivePockets(pSoldier, LBESlots, slot, this);
+				allowLBETransfer = true;
+			}
+		}
+	}
+
 	if (destObject) {
 		//destObject should be empty especially if numToRemove is 0
 		if (destObject->exists() == true) {
@@ -531,7 +624,7 @@ int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject)
 		}
 		if (numToRemove > 0) {
 			//this handles the removal too
-			return destObject->AddObjectsToStack(*this, numToRemove);
+			return destObject->AddObjectsToStack(*this, numToRemove, pSoldier, slot, allowLBETransfer);
 		}
 	}
 	else if (numToRemove > 0) {
@@ -555,6 +648,8 @@ int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject)
 bool OBJECTTYPE::RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject)
 {
 	PERFORMANCE_MARKER
+	//Note, this function does NOT care what the stack size of destObject will be
+	//because destObject will never be an object in a soldier's inventory!
 	if (index >= ubNumberOfObjects || exists() == false) {
 		return false;
 	}
@@ -580,6 +675,7 @@ bool OBJECTTYPE::RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject)
 	if (destObject) {
 		destObject->usItem = usItem;
 		destObject->fFlags = fFlags;
+		//handles weight calc and ubNumber too
 		destObject->SpliceData((*this), 1, spliceIter);
 	}
 	else {
@@ -599,9 +695,6 @@ bool OBJECTTYPE::RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject)
 StackedObjectData* OBJECTTYPE::operator [](const unsigned int index)
 {
 	PERFORMANCE_MARKER
-	if (objectStack.size() > 20) {
-		DebugBreak();
-	}
 	Assert(index < objectStack.size());
 	StackedObjects::iterator iter = objectStack.begin();
 	for (unsigned int x = 0; x < index; ++x) {
@@ -692,15 +785,18 @@ OBJECTTYPE::OBJECTTYPE()
 void OBJECTTYPE::initialize()
 {
 	PERFORMANCE_MARKER
+	//this is an easy way to init it and get rid of attachments
+	objectStack.clear();
 	//ubNumberOfObjects should be 0 so any loop checking it will not work
 	//however objectStack should always have at least one, because there are so
-	//many uses of (*pObj)[0]->data.objectStatus and such
+	//many uses of (*pObj)[0]->data.objectStatus and such, including DestroyLBE
+	objectStack.resize(1);
+
+	DestroyLBE(this);
+
 	memset(this, 0, SIZEOF_OBJECTTYPE_POD);
 	//ubNumberOfObjects = 1;
 
-	//this is an easy way to init it and get rid of attachments
-	objectStack.clear();
-	objectStack.resize(1);
 }
 
 bool OBJECTTYPE::operator==(const OBJECTTYPE& compare)const
@@ -733,10 +829,23 @@ OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
 		this->ubWeight = src.ubWeight;
-		this->objectStack = src.objectStack;
 		this->fFlags = src.fFlags;
-
 		this->ubMission = src.ubMission;
+
+		if (this->objectStack.empty() == false) {
+			DestroyLBE(this);
+		}
+		this->objectStack = src.objectStack;
+
+		if (this->IsActiveLBE() == true) {
+			//we want to duplicate this LBE data too!
+			LBENODE* pLBE = this->GetLBEPointer();
+			unsigned short uniqueID = gLastLBEUniqueID++;
+			LBEArray.push_back(*pLBE);
+			pLBE = &LBEArray.back();
+			pLBE->uniqueID = uniqueID;
+			(*this)[0]->data.misc.usBombItem = uniqueID;
+		}
 	}
 }
 
@@ -748,10 +857,23 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
 		this->ubWeight = src.ubWeight;
-		this->objectStack = src.objectStack;
 		this->fFlags = src.fFlags;
-
 		this->ubMission = src.ubMission;
+
+		if (this->objectStack.empty() == false) {
+			DestroyLBE(this);
+		}
+		this->objectStack = src.objectStack;
+
+		if (this->IsActiveLBE() == true) {
+			//we want to duplicate this LBE data too!
+			LBENODE* pLBE = this->GetLBEPointer();
+			unsigned short uniqueID = gLastLBEUniqueID++;
+			LBEArray.push_back(*pLBE);
+			pLBE = &LBEArray.back();
+			pLBE->uniqueID = uniqueID;
+			(*this)[0]->data.misc.usBombItem = uniqueID;
+		}
 	}
 	return *this;
 }
@@ -826,5 +948,9 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 
 OBJECTTYPE::~OBJECTTYPE()
 {
-	objectStack.clear();
+	//we need to clear out the LBE data if we have deleted this object during runtime
+	//since every single OBJECTTYPE gets its dtor called when the game ends
+	//this has the side effect of clearing ALL LBE data when shutting down
+	//if this causes problems then add a shutting down flag.
+	DestroyLBE(this);
 }

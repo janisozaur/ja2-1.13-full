@@ -118,7 +118,9 @@
 
 #include	"Quest Debug System.h"
 
+#ifdef PERIODIC_PROFILING
 extern bool gRecordingProfile;
+#endif
 
 //forward declarations of common classes to eliminate includes
 class OBJECTTYPE;
@@ -1841,10 +1843,16 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			fShift = InputEvent.usKeyState & SHIFT_DOWN ? TRUE : FALSE;
 			switch( InputEvent.usParam )
 			{
+#ifdef PERIODIC_PROFILING
+				//ADB I have included this here so you can define periodic profiling and instead of having
+				//profiling take place all the time you can turn it on and off.  This proved to be a very useful
+				//feature when I was trying to find a mem leak, I started the mem leak, turned it on, and then off
+				//then all I had to do was look at the functions that ran during this period to find the ones that changed!
 			case ',':
-				gRecordingProfile ? gRecordingProfile = false : gRecordingProfile = true;
+				(gRecordingProfile == true) ? gRecordingProfile = false : gRecordingProfile = true;
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3,  String( "gRecordingProfile" ));
 				break;
+#endif
 			case SPACE:
 
 				// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel

@@ -781,13 +781,13 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 				// CHECK FOR HIDDEN STRUCTS
 				// IF we had a hidden struct here that is not visible ( which will still be true because
 				// we set it revealed below...
-				if ( DoesGridnoContainHiddenStruct( (UINT16)marker, &fHiddenStructVisible ) )
+				if ( DoesGridnoContainHiddenStruct( (INT16)marker, &fHiddenStructVisible ) )
 				{
 					if ( !fHiddenStructVisible )
 					{
 						gpWorldLevelData[marker].uiFlags|=MAPELEMENT_REDRAW;
 						SetRenderFlags(RENDER_FLAG_MARKED);
-						RecompileLocalMovementCosts( (UINT16)marker );
+						RecompileLocalMovementCosts( (INT16)marker );
 					}
 				}
 
