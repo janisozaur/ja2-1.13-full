@@ -65,7 +65,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Winmm.lib"
-				OutputFile="$(OutDir)\ja2_deb.exe"
+				OutputFile="$(OutDir)\ja2_deb_ADB_LBE.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"

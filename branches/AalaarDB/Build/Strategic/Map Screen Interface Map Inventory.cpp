@@ -1473,7 +1473,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 		if (pItemPtr->usItem == pInventorySlot->usItem && ItemSlotLimit(pItemPtr, STACK_SIZE_LIMIT) >= 2)
 		{
 			// stacking
-			pItemPtr->MoveThisObjectTo(*pInventorySlot);
+			pItemPtr->AddObjectsToStack(*pInventorySlot);
 		}
 		else
 		{
@@ -2123,6 +2123,7 @@ void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArr
 			break;
 		}
 	}
+	++endSort;
 
 	//ADB I'm not sure qsort will work with OO data, so replace it with stl sort, which is faster anyways
 	std::sort(pInventory.begin(), endSort);

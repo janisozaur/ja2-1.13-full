@@ -512,7 +512,7 @@ void STRUCT_AIData::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 {
 	PERFORMANCE_MARKER
 	memcpy( &(this->bOppList), &(src.bOppList), sizeof(INT8) * MAX_NUM_SOLDIERS ); // AI knowledge database
-	memcpy( &(this->usPatrolGrid), &(src.usPatrolGrid), sizeof(INT16) * MAXPATROLGRIDS );// AI list for ptr->orders==PATROL	
+	memcpy( &(this->sPatrolGrid), &(src.usPatrolGrid), sizeof(INT16) * MAXPATROLGRIDS );// AI list for ptr->orders==PATROL	
 	this->bLastAction = src.bLastAction;
 	this->bAction = src.bAction;
 	this->usActionData = src.usActionData;

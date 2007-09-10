@@ -848,7 +848,7 @@ void BtnDifficultyTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
+		/*UINT8	ubButton = (UINT8)*/MSYS_GetBtnUserData( btn, 0 );
 
 		if( btn->uiFlags & BUTTON_CLICKED_ON )
 		{
@@ -889,7 +889,7 @@ void BtnBROptionTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
+		/*UINT8	ubButton = (UINT8)*/MSYS_GetBtnUserData( btn, 0 );
 
 		if( btn->uiFlags & BUTTON_CLICKED_ON )
 		{
@@ -928,7 +928,7 @@ void BtnINVOptionTogglesCallback(GUI_BUTTON *btn,INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
+		/*UINT8	ubButton = (UINT8)*/MSYS_GetBtnUserData( btn, 0 );
 
 		if( btn->uiFlags & BUTTON_CLICKED_ON )
 		{
@@ -967,7 +967,7 @@ void BtnGameStyleTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
+		/*UINT8	ubButton = (UINT8)*/MSYS_GetBtnUserData( btn, 0 );
 
 		if( btn->uiFlags & BUTTON_CLICKED_ON )
 		{
@@ -1045,7 +1045,7 @@ void BtnGunOptionsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
+		/*UINT8	ubButton = (UINT8)*/MSYS_GetBtnUserData( btn, 0 );
 
 		if( btn->uiFlags & BUTTON_CLICKED_ON )
 		{
