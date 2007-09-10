@@ -733,7 +733,7 @@ void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 			else
 			{
 				// let this person patrol from here from now on
-				pSoldier->aiData.usPatrolGrid[0] = pSchedule->usData2[ index ];
+				pSoldier->aiData.sPatrolGrid[0] = pSchedule->usData2[ index ];
 			}
 			break;
 		case SCHEDULE_ACTION_GRIDNO:
@@ -741,7 +741,7 @@ void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 			ConvertGridNoToCellXY( pSchedule->usData1[ index ], &sCellX, &sCellY );
 			pSoldier->EVENT_SetSoldierPositionForceDelete( (FLOAT)sCellX, (FLOAT)sCellY );
 			// let this person patrol from here from now on
-			pSoldier->aiData.usPatrolGrid[0] = pSchedule->usData1[ index ];
+			pSoldier->aiData.sPatrolGrid[0] = pSchedule->usData1[ index ];
 			break;
 		case SCHEDULE_ACTION_ENTERSECTOR:
 			if ( pSoldier->ubProfile != NO_PROFILE && gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags2 & PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR )
@@ -755,14 +755,14 @@ void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 			MoveSoldierFromAwayToMercSlot( pSoldier );
 			pSoldier->bInSector = TRUE;
 			// let this person patrol from here from now on
-			pSoldier->aiData.usPatrolGrid[0] = pSchedule->usData1[ index ];
+			pSoldier->aiData.sPatrolGrid[0] = pSchedule->usData1[ index ];
 			break;
 		case SCHEDULE_ACTION_WAKE:
 			BumpAnyExistingMerc( pSoldier->sInitialGridNo );
 			ConvertGridNoToCellXY( pSoldier->sInitialGridNo, &sCellX, &sCellY );
 			pSoldier->EVENT_SetSoldierPositionForceDelete( (FLOAT)sCellX, (FLOAT)sCellY );
 			// let this person patrol from here from now on
-			pSoldier->aiData.usPatrolGrid[0] = pSoldier->sInitialGridNo;
+			pSoldier->aiData.sPatrolGrid[0] = pSoldier->sInitialGridNo;
 			break;
 		case SCHEDULE_ACTION_SLEEP:
 			pSoldier->aiData.fAIFlags |= AI_ASLEEP;
@@ -770,7 +770,7 @@ void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 			BumpAnyExistingMerc( pSchedule->usData1[ index ] );
 			ConvertGridNoToCellXY( pSchedule->usData1[ index ], &sCellX, &sCellY );
 			pSoldier->EVENT_SetSoldierPositionForceDelete( (FLOAT)sCellX, (FLOAT)sCellY );
-			pSoldier->aiData.usPatrolGrid[0] = pSchedule->usData1[ index ];
+			pSoldier->aiData.sPatrolGrid[0] = pSchedule->usData1[ index ];
 			break;
 		case SCHEDULE_ACTION_LEAVESECTOR:
 			sGridNo = FindNearestEdgePoint( pSoldier->sGridNo );

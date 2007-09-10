@@ -1643,15 +1643,22 @@ BOOLEAN Inventory::Load( HWFILE hFile )
 	inv.resize(sizeInventory);
 	bNewItemCount.resize(sizeInventory);
 	bNewItemCycleCount.resize(sizeInventory);
-	InventoryItem item;
 	for (int x = 0; x < sizeInventory; ++x) {
-		if ( !item.Load(hFile) )
+		//load the OO OBJECTTYPE
+		if ( !inv[x].Load(hFile) )
 		{
-			return (FALSE);
+			return FALSE;
 		}
-		inv[x] = item.object;
-		bNewItemCount[x] = item.bNewItemCount;
-		bNewItemCycleCount[x] = item.bNewItemCycleCount;
+
+		UINT32 uiNumBytesRead;
+		if ( !FileRead( hFile, &bNewItemCount[x], sizeof(int), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		if ( !FileRead( hFile, &bNewItemCycleCount[x], sizeof(int), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
 	}
 	return (TRUE);
 }
@@ -1670,15 +1677,15 @@ BOOLEAN Inventory::Load(INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMap
 	bNewItemCount.resize(sizeInventory);
 	bNewItemCycleCount.resize(sizeInventory);
 
-	InventoryItem item;
 	for (int x = 0; x < sizeInventory; ++x) {
-		if ( !item.Load(hBuffer, dMajorMapVersion, ubMinorMapVersion ) )
+		//load the OO OBJECTTYPE
+		if ( !inv[x].Load(hBuffer, dMajorMapVersion, ubMinorMapVersion) )
 		{
-			return (FALSE);
+			return FALSE;
 		}
-		inv[x] = item.object;
-		bNewItemCount[x] = item.bNewItemCount;
-		bNewItemCycleCount[x] = item.bNewItemCycleCount;
+
+		LOADDATA( &bNewItemCount[x], *hBuffer, sizeof(int) );
+		LOADDATA( &bNewItemCycleCount[x], *hBuffer, sizeof(int) );
 	}
 	return TRUE;
 }
@@ -1693,76 +1700,24 @@ BOOLEAN Inventory::Save( HWFILE hFile, bool fSavingMap )
 		return(FALSE);
 	}
 
-	InventoryItem item;
 	for (int x = 0; x < sizeInventory; ++x) {
-		item.object = inv[x];
-		item.bNewItemCount = bNewItemCount[x];
-		item.bNewItemCycleCount = bNewItemCycleCount[x];
-		if ( !item.Save(hFile, fSavingMap ) )
+		//save the OO OBJECTTYPE
+		if ( !inv[x].Save(hFile, fSavingMap) )
 		{
 			return (FALSE);
+		}
+
+		if ( !FileWrite( hFile, &(bNewItemCount[x]), sizeof(int), &uiNumBytesWritten ) )
+		{
+			return(FALSE);
+		}
+		if ( !FileWrite( hFile, &(bNewItemCycleCount[x]), sizeof(int), &uiNumBytesWritten ) )
+		{
+			return(FALSE);
 		}
 	}
 	return TRUE;
 }
-
-BOOLEAN InventoryItem::Load( HWFILE hFile )
-{
-	PERFORMANCE_MARKER
-	//load the OO OBJECTTYPE
-	if ( !object.Load(hFile) )
-	{
-		return FALSE;
-	}
-
-	UINT32 uiNumBytesRead;
-	if ( !FileRead( hFile, &bNewItemCount, sizeof(int), &uiNumBytesRead ) )
-	{
-		return(FALSE);
-	}
-	if ( !FileRead( hFile, &bNewItemCycleCount, sizeof(int), &uiNumBytesRead ) )
-	{
-		return(FALSE);
-	}
-	return (TRUE);
-}
-
-BOOLEAN InventoryItem::Load(INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion)
-{
-	PERFORMANCE_MARKER
-
-	//load the OO OBJECTTYPE
-	if ( !object.Load(hBuffer, dMajorMapVersion, ubMinorMapVersion) )
-	{
-		return FALSE;
-	}
-
-	LOADDATA( &bNewItemCount, *hBuffer, sizeof(int) );
-	LOADDATA( &bNewItemCycleCount, *hBuffer, sizeof(int) );
-	return (TRUE);
-}
-
-BOOLEAN InventoryItem::Save( HWFILE hFile, bool fSavingMap )
-{
-	PERFORMANCE_MARKER
-	//save the OO OBJECTTYPE
-	if ( !object.Save(hFile, fSavingMap) )
-	{
-		return (FALSE);
-	}
-
-	UINT32 uiNumBytesWritten;
-	if ( !FileWrite( hFile, &(this->bNewItemCount), sizeof(int), &uiNumBytesWritten ) )
-	{
-		return(FALSE);
-	}
-	if ( !FileWrite( hFile, &(this->bNewItemCycleCount), sizeof(int), &uiNumBytesWritten ) )
-	{
-		return(FALSE);
-	}
-	return TRUE;
-}
-
 
 // Snap: Initializes gSaveDir global, creating the save directory if necessary
 // The save directory now resides in the data directory (default or custom)

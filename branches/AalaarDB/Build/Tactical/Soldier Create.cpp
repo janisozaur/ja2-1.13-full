@@ -203,7 +203,7 @@ SOLDIERCREATE_STRUCT& SOLDIERCREATE_STRUCT::operator=(const SOLDIERTYPE& Soldier
 
 	//Copy patrol points
 	this->bPatrolCnt						= Soldier.aiData.bPatrolCnt;
-	memcpy( this->sPatrolGrid, Soldier.aiData.usPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+	memcpy( this->sPatrolGrid, Soldier.aiData.sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
 			
 	//copy colors for soldier based on the body type.
 	sprintf( this->HeadPal,		Soldier.HeadPal );
@@ -995,7 +995,7 @@ BOOLEAN TacticalCopySoldierFromProfile( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STR
 	pSoldier->aiData.bAttitude							= pCreateStruct->bAttitude;
 	pSoldier->bDirection						= pCreateStruct->bDirection;
 	pSoldier->aiData.bPatrolCnt						= pCreateStruct->bPatrolCnt;
-	memcpy( pSoldier->aiData.usPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+	memcpy( pSoldier->aiData.sPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
 	
 	if ( HAS_SKILL_TRAIT( pSoldier, CAMOUFLAGED ) )
 	{
@@ -1419,7 +1419,7 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 	//Adding patrol points
 	//CAUTION:	CONVERTING SIGNED TO UNSIGNED though the values should never be negative.
 	pSoldier->aiData.bPatrolCnt						= pCreateStruct->bPatrolCnt;
-	memcpy( pSoldier->aiData.usPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+	memcpy( pSoldier->aiData.sPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
 			
 	//Kris:	November 10, 1997
 	//Expanded the default names based on team.

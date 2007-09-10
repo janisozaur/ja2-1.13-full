@@ -190,8 +190,8 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 	INT16							sTargetGridNo;
 	INT16							sAPCost;
 	INT16							sActionGridNo;
-	UINT8							ubDirection;
-	INT16							sAdjustedGridNo;
+	UINT8							ubDirection = 0;
+	INT16							sAdjustedGridNo = 0;
 	BOOLEAN						fDropBomb = FALSE;
 	BOOLEAN						fAddingTurningCost = FALSE;
 	BOOLEAN						fAddingRaiseGunCost = FALSE;

@@ -446,8 +446,8 @@ public:
 	bool	operator==(OBJECTTYPE& compare);
 	bool	operator==(const OBJECTTYPE& compare)const;
 	bool	exists();
-	bool	IsLBE();
-	LBENODE*	GetLBEPointer(int stackSlot = 0);
+	bool	IsActiveLBE();
+	LBENODE*	GetLBEPointer();
 
 
 	UINT16	GetWeightOfObjectInStack(unsigned int index = 0);

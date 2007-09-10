@@ -2455,7 +2455,7 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 	//for each object in the stack, hopefully there is only 1
 	for (int numStacked = 0; numStacked < pObject->ubNumberOfObjects; ++numStacked) {
 		// Check if we're looking at a LBENODE or not
-		if(pObject->IsLBE() == false)
+		if(pObject->IsActiveLBE() == false)
 		{
 			continue;
 		}
@@ -2466,7 +2466,7 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 			iSize += CalculateItemSize(&(*iter));;
 		}
 
-		LBENODE* pLBE = pObject->GetLBEPointer(numStacked);
+		LBENODE* pLBE = pObject->GetLBEPointer();
 		if(pLBE)
 		{
 			newSize = 0;
@@ -2594,9 +2594,9 @@ UINT16 OBJECTTYPE::GetWeightOfObjectInStack(unsigned int index)
 	if ( pItem->usItemClass != IC_AMMO )
 	{
 		// Are we looking at an LBENODE item?  New inventory only.
-		if(pItem->usItemClass == IC_LBEGEAR && IsLBE() && (UsingNewInventorySystem() == true))
+		if(pItem->usItemClass == IC_LBEGEAR && IsActiveLBE() && (UsingNewInventorySystem() == true))
 		{
-			LBENODE* pLBE = GetLBEPointer(index);
+			LBENODE* pLBE = GetLBEPointer();
 			for ( unsigned int subObjects = 0; subObjects < pLBE->inv.size(); subObjects++)
 			{
 				if (pLBE->inv[subObjects].exists() == true)
@@ -3389,13 +3389,9 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 		// second half of this 'if' is for attaching GL grenades to a gun w/attached GL
 		if ( fValidLaunchable || (Item[pAttachment->usItem].glgrenade && FindAttachmentByClass(this, IC_LAUNCHER) != 0 ) )
 		{
+			canOnlyAttach1 = true;
 			// try replacing if possible
 			pAttachmentPosition = FindAttachmentByClass( this, Item[ pAttachment->usItem ].usItemClass );
-			if ( pAttachmentPosition )
-			{
-				canOnlyAttach1 = true;
-				// we can only do a swap if there is only 1 grenade being attached
-			}
 		}
 		else
 		{

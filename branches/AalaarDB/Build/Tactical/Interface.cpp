@@ -3017,7 +3017,7 @@ BOOLEAN AddTopMessage( UINT8 ubType, STR16 pzString )
 void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, STR16 psString )
 {
 	PERFORMANCE_MARKER
-	UINT32	uiBAR, uiPLAYERBAR, uiINTBAR;
+	UINT32	uiBAR, uiPLAYERBAR = 0, uiINTBAR = 0;
 	VOBJECT_DESC	VObjectDesc;
 	INT16		sX, sY;
 	INT32		cnt2;
@@ -3901,7 +3901,7 @@ void ResetAimCubeAI( )
 void RenderAimCubeUI( )
 {
 	PERFORMANCE_MARKER
-	INT16 sScreenX, sScreenY;
+	INT16 sScreenX = 0, sScreenY = 0;
 	INT32	cnt;
 	INT16	sBarHeight;
 	INT32 iBack;

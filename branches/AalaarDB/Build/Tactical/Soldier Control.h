@@ -324,7 +324,7 @@ struct LEVELNODE;
 //forward declarations for versioning, it's so long I want it at the end
 class OLDSOLDIERTYPE_101;
 
-
+#ifdef NO_LONGER_USED
 //atm only used for saving and loading
 //many changes needed if inventory is going to use a vector of these
 class InventoryItem
@@ -337,6 +337,7 @@ public:
 	BOOLEAN	Load( INT8 ** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
 	BOOLEAN	Save( HWFILE hFile, bool fSavingMap );
 };
+#endif
 
 //ADB inventory needs a little work, for instance, how to get objects and counts to agree on sizes?
 //also makes things more bloated when saving
@@ -408,7 +409,7 @@ public:
 	INT8												bDominantDir;				// AI main direction to face...
 	INT8												bPatrolCnt;					// number of patrol gridnos
 	INT8												bNextPatrolPnt;			// index to next patrol gridno
-	INT16											usPatrolGrid[MAXPATROLGRIDS];// AI list for ptr->orders==PATROL
+	INT16											sPatrolGrid[MAXPATROLGRIDS];// AI list for ptr->orders==PATROL
 	INT16												sNoiseGridno;
 	UINT8												ubNoiseVolume;
 	INT8												bLastAttackHit;

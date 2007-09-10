@@ -3315,7 +3315,7 @@ void HandleMouseClicksInGameScreen()
 			case DRAW_MODE_PLACE_ITEM:
 				if( gfFirstPlacement )
 				{
-					AddSelectedItemToWorld( (UINT16)iMapIndex );
+					AddSelectedItemToWorld( (INT16)iMapIndex );
 					gfFirstPlacement = FALSE;
 				}
 				break;
@@ -3337,7 +3337,7 @@ void HandleMouseClicksInGameScreen()
 				HandleRightClickOnMerc( iMapIndex );
 				break;
 			case DRAW_MODE_PLACE_ITEM:
-				HandleRightClickOnItem( (UINT16)iMapIndex );
+				HandleRightClickOnItem( (INT16)iMapIndex );
 				break;
 
 			// Handle the right clicks in the main window to bring up the appropriate selection window
@@ -3632,7 +3632,7 @@ void DrawObjectsBasedOnSelectionRegion()
 					case DRAW_MODE_EXITGRID:	
 						AddToUndoList( iMapIndex );
 						AddExitGridToWorld( iMapIndex, &gExitGrid );			
-						AddTopmostToTail( (UINT16)iMapIndex, FIRSTPOINTERS8 );
+						AddTopmostToTail( (INT16)iMapIndex, FIRSTPOINTERS8 );
 						break;
 					case DRAW_MODE_DEBRIS:		PasteDebris( iMapIndex );													break;
 					case DRAW_MODE_FLOORS:		PasteSingleFloor( iMapIndex );										break;

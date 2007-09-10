@@ -166,8 +166,6 @@ class MERCPROFILEGEAR {
 public:
 	// Constructor
 	MERCPROFILEGEAR();
-	// Copy Constructor
-	MERCPROFILEGEAR(const MERCPROFILEGEAR&);
 	// Assignment operator
 	MERCPROFILEGEAR& operator=(const MERCPROFILEGEAR&);
 	// Destructor

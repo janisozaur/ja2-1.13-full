@@ -1266,7 +1266,7 @@ BOOLEAN AddStructToHead( UINT32 iMapIndex, UINT16 usIndex )
 	// Set head
 	gpWorldLevelData[ iMapIndex ].pStructHead = pNextStruct;
 
-	SetWorldFlagsFromNewNode( (UINT16)iMapIndex, pNextStruct->usIndex );
+	SetWorldFlagsFromNewNode( (INT16)iMapIndex, pNextStruct->usIndex );
 
 	if ( usIndex < NUMBEROFTILES )
 	{
@@ -1516,7 +1516,7 @@ BOOLEAN RemoveStruct( UINT32 iMapIndex, UINT16 usIndex )
 	}
 
 	// Could not find it, return FALSE
-	RemoveWorldFlagsFromNewNode( (UINT16)iMapIndex, usIndex );
+	RemoveWorldFlagsFromNewNode( (INT16)iMapIndex, usIndex );
 
 	return( FALSE );
 
@@ -1578,7 +1578,7 @@ BOOLEAN RemoveStructFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode )
 	}
 
 	// Could not find it, return FALSE
-	RemoveWorldFlagsFromNewNode( (UINT16)iMapIndex, usIndex );
+	RemoveWorldFlagsFromNewNode( (INT16)iMapIndex, usIndex );
 
 	return( FALSE );
 
@@ -2210,7 +2210,7 @@ BOOLEAN AddMercToHead( UINT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fAddStru
 		// Set soldier's levelnode
 		pSoldier->pLevelNode	= pNextMerc;
 
-		AddMercStructureInfo( (UINT16)iMapIndex, pSoldier );
+		AddMercStructureInfo( (INT16)iMapIndex, pSoldier );
 	}
 	
 	// Set head

@@ -768,7 +768,7 @@ INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 	if ( pSoldier->aiData.bOrders <= CLOSEPATROL && (pSoldier->bTeam == CIV_TEAM || pSoldier->ubProfile != NO_PROFILE ) )
 	{
 		// any other combo uses the default of ubRoom == 0, set above
-		if ( !InARoom( pSoldier->aiData.usPatrolGrid[0], &ubRoom ) )
+		if ( !InARoom( pSoldier->aiData.sPatrolGrid[0], &ubRoom ) )
 		{
 			ubRoom = 0;
 		}
@@ -2292,13 +2292,13 @@ INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT16 * pusFromGridNo)
 	if ( pSoldier->aiData.bOrders == POINTPATROL || pSoldier->aiData.bOrders == RNDPTPATROL )
 	{
 		// roam near NEXT PATROL POINT, not from where merc starts out
-		*pusFromGridNo = pSoldier->aiData.usPatrolGrid[pSoldier->aiData.bNextPatrolPnt];
+		*pusFromGridNo = pSoldier->aiData.sPatrolGrid[pSoldier->aiData.bNextPatrolPnt];
 	}
 	else
 	{
 		// roam around where mercs started
 		//*pusFromGridNo = pSoldier->sInitialGridNo;
-		*pusFromGridNo = pSoldier->aiData.usPatrolGrid[0];
+		*pusFromGridNo = pSoldier->aiData.sPatrolGrid[0];
 	}
 
 	switch (pSoldier->aiData.bOrders)

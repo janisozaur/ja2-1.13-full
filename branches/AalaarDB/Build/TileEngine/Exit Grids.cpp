@@ -48,7 +48,7 @@ void ConvertINT32ToExitGrid( INT32 iExitGridInfo, EXITGRID *pExitGrid )
 	pExitGrid->ubGotoSectorX		= (UINT8)(((iExitGridInfo & 0xf0000000)>>28)+1);
 	pExitGrid->ubGotoSectorY		= (UINT8)(((iExitGridInfo & 0x0f000000)>>24)+1);
 	pExitGrid->ubGotoSectorZ		= (UINT8)((iExitGridInfo & 0x00f00000)>>20);
-	pExitGrid->sGridNo					= (UINT16)(iExitGridInfo & 0x0000ffff);
+	pExitGrid->sGridNo					= (INT16)(iExitGridInfo & 0x0000ffff);
 }
 
 BOOLEAN	GetExitGrid( INT16 sMapIndex, EXITGRID *pExitGrid )
@@ -122,7 +122,7 @@ void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid )
 		if( pShadow->uiFlags & LEVELNODE_EXITGRID )
 		{ //we have found an existing exitgrid in this node, so replace it with the new information.
 			pShadow->iExitGridInfo = ConvertExitGridToINT32( pExitGrid );
-			//SmoothExitGridRadius( (UINT16)iMapIndex, 0 );
+			//SmoothExitGridRadius( (INT16)iMapIndex, 0 );
 			return;
 		}
 		pShadow = pShadow->pNext;
@@ -140,7 +140,7 @@ void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid )
 	//Add the exit grid to the sector, only if we call ApplyMapChangesToMapTempFile() first.
 	if( !gfEditMode && !gfLoadingExitGrids )
 	{
-		AddExitGridToMapTempFile( (UINT16)iMapIndex, pExitGrid, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+		AddExitGridToMapTempFile( (INT16)iMapIndex, pExitGrid, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 	}
 }
 

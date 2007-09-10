@@ -26,7 +26,7 @@ void CreateLBE (OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets)
 {
 	int uniqueID;
 	LBENODE* pLBE = NULL;
-	if (pObj->IsLBE() == true) {
+	if (pObj->IsActiveLBE() == true) {
 		uniqueID = (*pObj)[0]->data.misc.usBombItem;
 		for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
 			if (iter->uniqueID == uniqueID) {
@@ -53,8 +53,7 @@ void CreateLBE (OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets)
 
 bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
 {
-	if (pObj->IsLBE() == true) {
-		Assert(pObj->ubNumberOfObjects == 1);
+	if (pObj->IsActiveLBE() == true) {
 		LBENODE* pLBE = pObj->GetLBEPointer();
 		if (pLBE) {
 			for (unsigned int x = 0; x < pLBE->inv.size(); ++x) {
@@ -66,7 +65,12 @@ bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
 				if (iter->uniqueID == pLBE->uniqueID) {
 					if (pLBE->uniqueID == gLastLBEUniqueID - 1) {
 						//might as well save on IDs
-						--gLastLBEUniqueID;
+						if (LBEArray.empty() == true) {
+							gLastLBEUniqueID = 0;
+						}
+						else {
+							gLastLBEUniqueID = LBEArray.back().uniqueID + 1;
+						}
 					}
 					LBEArray.erase(iter);
 					break;
@@ -82,23 +86,26 @@ bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
 
 void DestroyLBE(OBJECTTYPE* pObj)
 {
-	if (pObj->IsLBE() == true) {
-		for (int x = 0; x < pObj->ubNumberOfObjects; ++x) {
-			LBENODE* pLBE = pObj->GetLBEPointer(x);
-			if (pLBE) {
-				for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
-					if (iter->uniqueID == pLBE->uniqueID) {
-						if (pLBE->uniqueID == gLastLBEUniqueID - 1) {
-							//might as well save on IDs
-							--gLastLBEUniqueID;
+	if (pObj->IsActiveLBE() == true) {
+		LBENODE* pLBE = pObj->GetLBEPointer();
+		if (pLBE) {
+			for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+				if (iter->uniqueID == pLBE->uniqueID) {
+					if (pLBE->uniqueID == gLastLBEUniqueID - 1) {
+						//might as well save on IDs
+						if (LBEArray.empty() == true) {
+							gLastLBEUniqueID = 0;
 						}
-						break;
-						LBEArray.erase(iter);
+						else {
+							gLastLBEUniqueID = LBEArray.back().uniqueID + 1;
+						}
 					}
+					LBEArray.erase(iter);
+					break;
 				}
-				(*pObj)[x]->data.misc.usBombItem = 0;
-				(*pObj)[x]->data.misc.bDetonatorType = 0;
 			}
+			(*pObj)[0]->data.misc.usBombItem = 0;
+			(*pObj)[0]->data.misc.bDetonatorType = 0;
 		}
 	}
 }
@@ -145,7 +152,7 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBES
 {
 	BOOLEAN	flag=FALSE;
 
-	if(pObj->IsLBE() == false) {
+	if(pObj->IsActiveLBE() == false) {
 		CreateLBE(pObj, pSoldier->ubID, LBESlots.size());
 	}
 
@@ -293,7 +300,7 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 
 	if(pSoldier->inv[uiHandPos].exists() == false)
 		MoveItemsToActivePockets(pSoldier, LBESlots, uiHandPos, pObj);
-	if(pObj->IsLBE() == false) {
+	if(pObj->IsActiveLBE() == false) {
 		return (FALSE);
 	}
 
@@ -356,22 +363,19 @@ POCKETTYPE::~POCKETTYPE(){
 
 //ADB TODO: ChrisL, rewrite this to your liking, then insert it everywhere you have (*pObject)[0]->data.misc.bDetonatorType == -1.
 //Go ahead and add a new variable to OBJECTTYPE if you want, but then add it to all the functions.
-bool OBJECTTYPE::IsLBE()
+bool OBJECTTYPE::IsActiveLBE()
 {
 	PERFORMANCE_MARKER
 	if (exists() == true) {
-		//stacks cannot have mixed types, so who cares if there are more than 1
 		return ((*this)[0]->data.misc.bDetonatorType == -1);
 	}
 	return false;
 }
 
-//here we DO care about which subObject in the stack it is
-//although currently LBEs cannot be stacked, it could change
-LBENODE* OBJECTTYPE::GetLBEPointer(int stackSlot)
+LBENODE* OBJECTTYPE::GetLBEPointer()
 {
 	PERFORMANCE_MARKER
-	unsigned short uniqueID = (*this)[stackSlot]->data.misc.usBombItem;
+	unsigned short uniqueID = (*this)[0]->data.misc.usBombItem;
 	for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
 		if (iter->uniqueID == uniqueID) {
 			return &(*iter);
@@ -388,9 +392,6 @@ LBENODE* OBJECTTYPE::GetLBEPointer(int stackSlot)
 bool OBJECTTYPE::exists()
 {
 	PERFORMANCE_MARKER
-	if (objectStack.size() > 20) {
-		DebugBreak();
-	}
 	return (ubNumberOfObjects > 0 && usItem != NOTHING);
 }
 
@@ -409,9 +410,6 @@ void OBJECTTYPE::SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, 
 		++stopIter;
 	}
 	objectStack.splice(objectStack.begin(), sourceObject.objectStack, beginIter, stopIter);
-	if (objectStack.size() > 20) {
-		DebugBreak();
-	}
 
 	ubNumberOfObjects += numToSplice;
 	ubWeight = CalculateObjectWeight(this);
@@ -697,9 +695,6 @@ bool OBJECTTYPE::RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject)
 StackedObjectData* OBJECTTYPE::operator [](const unsigned int index)
 {
 	PERFORMANCE_MARKER
-	if (objectStack.size() > 20) {
-		DebugBreak();
-	}
 	Assert(index < objectStack.size());
 	StackedObjects::iterator iter = objectStack.begin();
 	for (unsigned int x = 0; x < index; ++x) {
@@ -790,15 +785,18 @@ OBJECTTYPE::OBJECTTYPE()
 void OBJECTTYPE::initialize()
 {
 	PERFORMANCE_MARKER
+	//this is an easy way to init it and get rid of attachments
+	objectStack.clear();
 	//ubNumberOfObjects should be 0 so any loop checking it will not work
 	//however objectStack should always have at least one, because there are so
-	//many uses of (*pObj)[0]->data.objectStatus and such
+	//many uses of (*pObj)[0]->data.objectStatus and such, including DestroyLBE
+	objectStack.resize(1);
+
+	DestroyLBE(this);
+
 	memset(this, 0, SIZEOF_OBJECTTYPE_POD);
 	//ubNumberOfObjects = 1;
 
-	//this is an easy way to init it and get rid of attachments
-	objectStack.clear();
-	objectStack.resize(1);
 }
 
 bool OBJECTTYPE::operator==(const OBJECTTYPE& compare)const
@@ -831,10 +829,23 @@ OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
 		this->ubWeight = src.ubWeight;
-		this->objectStack = src.objectStack;
 		this->fFlags = src.fFlags;
-
 		this->ubMission = src.ubMission;
+
+		if (this->objectStack.empty() == false) {
+			DestroyLBE(this);
+		}
+		this->objectStack = src.objectStack;
+
+		if (this->IsActiveLBE() == true) {
+			//we want to duplicate this LBE data too!
+			LBENODE* pLBE = this->GetLBEPointer();
+			unsigned short uniqueID = gLastLBEUniqueID++;
+			LBEArray.push_back(*pLBE);
+			pLBE = &LBEArray.back();
+			pLBE->uniqueID = uniqueID;
+			(*this)[0]->data.misc.usBombItem = uniqueID;
+		}
 	}
 }
 
@@ -846,10 +857,23 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
 		this->ubWeight = src.ubWeight;
-		this->objectStack = src.objectStack;
 		this->fFlags = src.fFlags;
-
 		this->ubMission = src.ubMission;
+
+		if (this->objectStack.empty() == false) {
+			DestroyLBE(this);
+		}
+		this->objectStack = src.objectStack;
+
+		if (this->IsActiveLBE() == true) {
+			//we want to duplicate this LBE data too!
+			LBENODE* pLBE = this->GetLBEPointer();
+			unsigned short uniqueID = gLastLBEUniqueID++;
+			LBEArray.push_back(*pLBE);
+			pLBE = &LBEArray.back();
+			pLBE->uniqueID = uniqueID;
+			(*this)[0]->data.misc.usBombItem = uniqueID;
+		}
 	}
 	return *this;
 }

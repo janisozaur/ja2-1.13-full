@@ -2389,8 +2389,8 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 	INT16									sCenX, sCenY, sNewY, sNewX;
 	HVOBJECT							hVObject;
 	BOOLEAN								fLineSplit = FALSE;
-	INT16									sFontX2, sFontY2;
-	INT16									sFontX, sFontY;
+	INT16									sFontX2 = 0, sFontY2 = 0;
+	INT16									sFontX = 0, sFontY = 0;
 
 	static CHAR16					pStr[ 100 ], pStr2[ 100 ];
 
@@ -2572,7 +2572,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 			if((UsingNewInventorySystem() == true))
 			{
 				// CHRISL: Display astrisk when LBENODE active
-				if ( pObject->IsLBE() )
+				if ( pObject->IsActiveLBE() )
 				{
 					SetFontForeground( FONT_BLUE );
 
@@ -3531,7 +3531,7 @@ void RenderItemDescriptionBox( )
 		// CHRISL: Determine if we're looking at an LBENODE and display alternate box graphic
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsLBE())
+			if(gpItemDescObject->IsActiveLBE())
 				showBox = gpItemDescObject->GetLBEPointer()->lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
@@ -3559,7 +3559,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsLBE())
+			if(gpItemDescObject->IsActiveLBE())
 				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
@@ -3636,7 +3636,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsLBE())
+			if(gpItemDescObject->IsActiveLBE())
 				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
@@ -4041,7 +4041,7 @@ void RenderItemDescriptionBox( )
 		RenderBackpackButtons(1);
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsLBE())
+			if(gpItemDescObject->IsActiveLBE())
 				showBox = gpItemDescObject->GetLBEPointer()->lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
@@ -4072,7 +4072,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsLBE())
+			if(gpItemDescObject->IsActiveLBE())
 				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
@@ -4152,7 +4152,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsLBE())
+			if(gpItemDescObject->IsActiveLBE())
 				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
@@ -4548,8 +4548,8 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 	extern INV_REGION_DESC gMapScreenInvPocketXY[NUM_INV_SLOTS];
 	SOLDIERTYPE	*pSoldier;
 	OBJECTTYPE	*pObject;
-	int			offSetX;
-	int			offSetY;
+	int			offSetX = 0;
+	int			offSetY = 0;
 	INT16		sX, sY;
 	INT16		sBarX, sBarY;
 	INT16		lbePocket = ITEM_NOT_FOUND;
@@ -4567,7 +4567,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 		pSoldier = gpSMCurrentMerc;
 	
 	LBENODE* pLBE = NULL;
-	if(pObj->IsLBE())
+	if(pObj->IsActiveLBE())
 	{
 		pLBE = pObj->GetLBEPointer();
 		lClass = pLBE->lbeClass;
@@ -4624,8 +4624,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				offSetY = 12;
 			}
 			break;
-			//ADB TODO, what case is this?
-		case 5:
+		case LBE_POCKET:
 			if(stratScreen){
 				offSetX = 1;
 				offSetY = -1;
@@ -7389,7 +7388,7 @@ void RenderItemPickupMenu( )
 			  if((UsingNewInventorySystem() == true))
 			  {
 				  // CHRISL: Show astrisk for active LBENODE
-				  if ( pObject->IsLBE())
+				  if ( pObject->IsActiveLBE())
 				  {
 					  SetFontForeground( FONT_BLUE );
 						SetFontShadow( DEFAULT_SHADOW );

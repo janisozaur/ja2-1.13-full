@@ -3399,7 +3399,7 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	{
 		// If we're standing over the backpack that we're trying to pick up, reset the ap cost to 0
 		if(!newStatus)
-			if(gWorldItems[pSoldier->DropPackKey].object.IsLBE())
+			if(gWorldItems[pSoldier->DropPackKey].object.IsActiveLBE())
 				if(gWorldItems[pSoldier->DropPackKey].object.GetLBEPointer()->lbeIndex != NONE)
 					if(gWorldItems[pSoldier->DropPackKey].sGridNo == pSoldier->sGridNo)
 					{
@@ -3439,7 +3439,7 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	else
 	{
 		// Is the item we dropped in this sector and does it have an active LBENODE flag?
-		if(gWorldItems[pSoldier->DropPackKey].object.IsLBE())
+		if(gWorldItems[pSoldier->DropPackKey].object.IsActiveLBE())
 		{
 			// Is the LBENODE we're trying to pick up actually in use?
 			if(gWorldItems[pSoldier->DropPackKey].object.GetLBEPointer()->lbeIndex != NONE)
