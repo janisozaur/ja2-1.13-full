@@ -1011,14 +1011,14 @@ void OurTeamRadiosRandomlyAbout(UINT8 ubAbout)
 INT16 TeamNoLongerSeesMan( UINT8 ubTeam, SOLDIERTYPE *pOpponent, UINT8 ubExcludeID, INT8 bIteration )
 {
 	PERFORMANCE_MARKER
- UINT16 bLoop;
- SOLDIERTYPE *pMate;
+	UINT16 bLoop;
+	SOLDIERTYPE *pMate;
 
 
- bLoop = gTacticalStatus.Team[ubTeam].bFirstID;
+	bLoop = gTacticalStatus.Team[ubTeam].bFirstID;
 
  // look for all mercs on the same team, check opplists for this soldier
- for (pMate = MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[ubTeam].bLastID; bLoop++,pMate++)
+	for (pMate = MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[ubTeam].bLastID; bLoop++,pMate++)
 	{
 	// if this "teammate" is me, myself, or I (whom we want to exclude)
 	if (bLoop == ubExcludeID)
@@ -1099,6 +1099,7 @@ INT16 MaxNormalDistanceVisible( void )
 
 INT16 SOLDIERTYPE::GetMaxDistanceVisible(INT16 sGridNo, INT8 bLevel, int calcAsType)
 {
+	PERFORMANCE_MARKER
 	if (sGridNo == -1) {
 		return MaxNormalDistanceVisible();
 	}
@@ -1116,6 +1117,7 @@ INT16 SOLDIERTYPE::GetMaxDistanceVisible(INT16 sGridNo, INT8 bLevel, int calcAsT
 
 INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT16 sSubjectGridNo, INT8 bLevel )
 {
+	PERFORMANCE_MARKER
 	INT16	sDistVisible;
 	INT8	bLightLevel;
 	SOLDIERTYPE * pSubject;

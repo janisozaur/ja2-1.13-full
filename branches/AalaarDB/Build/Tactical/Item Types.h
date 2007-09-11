@@ -212,7 +212,8 @@ public:
 	LBENODE() { initialize();};
 	void	initialize() {inv.clear();};
 	BOOLEAN	Load( HWFILE hFile );
-	BOOLEAN	Save( HWFILE hFile );
+	BOOLEAN	Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
+	BOOLEAN	Save( HWFILE hFile, bool fSavingMap );
 
 	UINT32				lbeClass;
 	UINT16				lbeIndex;

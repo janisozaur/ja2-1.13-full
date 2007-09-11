@@ -1637,8 +1637,7 @@ UINT32 UIHandlePositionMenu( UI_EVENT *pUIEvent )
 UINT32 UIHandleAOnTerrain( UI_EVENT *pUIEvent )
 {
 	PERFORMANCE_MARKER
-	//ADB WARNING SUPER SERIOUS MEM LEAK IF THIS IS SIGNED, LEAVE UNSIGNED
-	INT16						sMapPos;
+	UINT16						sMapPos;
 	SOLDIERTYPE				*pSoldier;
 	//	INT16							sTargetXPos, sTargetYPos;
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("UIHandleAOnTerrain"));
@@ -1710,7 +1709,7 @@ UINT32 UIHandleAOnTerrain( UI_EVENT *pUIEvent )
 					//	ConvertGridNoToXY( sMapPos, &sTargetXPos, &sTargetYPos );
 
 					// Ready weapon
-					//		pSoldier->SoldierReadyWeapon(, sTargetXPos, sTargetYPos, FALSE );
+					//		pSoldier->SoldierReadyWeapon(sTargetXPos, sTargetYPos, FALSE );
 
 					gUITargetReady = TRUE;
 				}

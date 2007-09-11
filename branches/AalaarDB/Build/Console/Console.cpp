@@ -2091,7 +2091,7 @@ void Console::CreateNewBrush() {
 /////////////////////////////////////////////////////////////////////////////
 
 void Console::CreateCursor() {
-	
+	PERFORMANCE_MARKER
 	switch (m_dwCursorStyle) {
 		case CURSOR_STYLE_XTERM :
 			m_pCursor = (Cursor*)new XTermCursor(m_hWnd, m_hdcConsole, m_crCursorColor);
