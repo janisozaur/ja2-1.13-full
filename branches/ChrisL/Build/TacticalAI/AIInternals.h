@@ -209,8 +209,8 @@ UINT16 RealtimeDelay( SOLDIERTYPE * pSoldier );
 
 //ADB if I had better control over the scoping, I could temporarily rearrange pockets when swapping weapons
 // with a local object with ctor and dtor, but I don't, so settle for 2 wrappers around RearrangePocket that have some safety checks
-#define AssureItemIsInHandPos(a,b,c) (Assure_Item_Is_In_HandPos_WithLineNumber((a),(b),(c),__LINE__,__FUNCTION__,__FILE__))
-#define UndoAssureItemIsInHandPos(a,b,c) (Undo_Assure_Item_Is_In_HandPos_WithLineNumber((a),(b),(c),__LINE__,__FUNCTION__,__FILE__))
+#define AssureItemIsInHandPos(a,b,c) //(Assure_Item_Is_In_HandPos_WithLineNumber((a),(b),(c),__LINE__,__FUNCTION__,__FILE__))
+#define UndoAssureItemIsInHandPos(a,b,c) //(Undo_Assure_Item_Is_In_HandPos_WithLineNumber((a),(b),(c),__LINE__,__FUNCTION__,__FILE__))
 
 void Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 bPocketIndex, UINT8 bPermanent, INT32 lineNumber, STR8 szFunctionName, STR8 szFilename );
 void Undo_Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 bPocketIndex, UINT8 bPermanent, INT32 lineNumber, STR8 szFunctionName, STR8 szFilename );

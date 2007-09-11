@@ -379,6 +379,11 @@ namespace ObjectDataStructs {
 		UINT8 ubOwnerProfile;
 		UINT8 ubOwnerCivGroup;
 	};
+	struct OBJECT_LBE
+	{
+		INT8	bLBE;				// Marks item as LBENODE
+		UINT16	usLBEItem;			// lbeIndex of the LBENODE
+	};
 };
 
 class ObjectData
@@ -403,6 +408,7 @@ public:
 		ObjectDataStructs::OBJECT_BOMBS_AND_OTHER	misc;
 		ObjectDataStructs::OBJECT_KEY				key;
 		ObjectDataStructs::OBJECT_OWNER				owner;
+		ObjectDataStructs::OBJECT_LBE				lbe;
 	};
 	INT8		bTrap;			// 1-10 exp_lvl to detect
 	UINT8		fUsed;			// flags for whether the item is used or not
@@ -722,6 +728,7 @@ public:
 	UINT16			lbeIndex;
 	UINT32			lbeClass;
 	UINT8			lbeCombo;
+	UINT8			lbeFilledSize;
 	char			POD;
 	std::vector<UINT8>	lbePocketIndex;
 };

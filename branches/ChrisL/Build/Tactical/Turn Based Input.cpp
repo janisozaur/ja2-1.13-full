@@ -2601,14 +2601,15 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped						
 						{
+							for (int x = 0; x < gWorldItems[ uiLoop ].object.ubNumberOfObjects; ++x) {
 							if (( Item[ gWorldItems[ uiLoop ].object.usItem ].usItemClass == IC_GUN ) && (gGameExternalOptions.gfShiftFUnloadWeapons == TRUE) )//item is a gun and unloading is allowed
 							{										
 								//Remove magazine 
-								if ( (gWorldItems[ uiLoop ].object[0]->data.gun.usGunAmmoItem != NONE) && (gWorldItems[ uiLoop ].object[0]->data.gun.ubGunShotsLeft > 0) )
-								{
-									CreateAmmo(gWorldItems[ uiLoop ].object[0]->data.gun.usGunAmmoItem, &gTempObject, gWorldItems[ uiLoop ].object[0]->data.gun.ubGunShotsLeft);
-									gWorldItems[ uiLoop ].object[0]->data.gun.ubGunShotsLeft = 0;
-									gWorldItems[ uiLoop ].object[0]->data.gun.usGunAmmoItem = NONE;
+									if ( (gWorldItems[ uiLoop ].object[x]->data.gun.usGunAmmoItem != NONE) && (gWorldItems[ uiLoop ].object[x]->data.gun.ubGunShotsLeft > 0) )
+									{
+										CreateAmmo(gWorldItems[ uiLoop ].object[x]->data.gun.usGunAmmoItem, &gTempObject, gWorldItems[ uiLoop ].object[x]->data.gun.ubGunShotsLeft);
+										gWorldItems[ uiLoop ].object[x]->data.gun.ubGunShotsLeft = 0;
+										gWorldItems[ uiLoop ].object[x]->data.gun.usGunAmmoItem = NONE;
 
 									// put it on the ground
 									AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
@@ -2618,8 +2619,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							//remove attachments
 							if ( gGameExternalOptions.gfShiftFRemoveAttachments == TRUE )
 							{
-								for (attachmentList::iterator iter = gWorldItems[ uiLoop ].object[0]->attachments.begin();
-									iter != gWorldItems[ uiLoop ].object[0]->attachments.end(); ++iter) {
+									for (attachmentList::iterator iter = gWorldItems[ uiLoop ].object[x]->attachments.begin();
+										iter != gWorldItems[ uiLoop ].object[x]->attachments.end(); ++iter) {
 									if ( !Item[ iter->usItem ].inseparable )
 									{												
 										// put it on the ground
@@ -2629,9 +2630,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
 										}
 										//restart, I don't feel like manipulating iters
-										iter = gWorldItems[ uiLoop ].object[0]->attachments.erase(iter);
-										if (iter == gWorldItems[ uiLoop ].object[0]->attachments.end()) {
-											break;
+											iter = gWorldItems[ uiLoop ].object[x]->attachments.begin();
+											if (iter == gWorldItems[ uiLoop ].object[x]->attachments.end()) {
+												break;
+											}
 										}
 									}
 								}

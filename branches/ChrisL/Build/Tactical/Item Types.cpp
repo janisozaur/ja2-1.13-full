@@ -27,7 +27,7 @@ void CreateLBE (OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets)
 	int uniqueID;
 	LBENODE* pLBE = NULL;
 	if (pObj->IsActiveLBE() == true) {
-		uniqueID = (*pObj)[0]->data.misc.usBombItem;
+		uniqueID = (*pObj)[0]->data.lbe.usLBEItem;
 		for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
 			if (iter->uniqueID == uniqueID) {
 				pLBE = &(*iter);
@@ -47,8 +47,8 @@ void CreateLBE (OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets)
 	pLBE->lbeClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
 	pLBE->inv.clear();
 	pLBE->inv.resize(numSubPockets);
-	(*pObj)[0]->data.misc.bDetonatorType = -1;
-	(*pObj)[0]->data.misc.usBombItem = uniqueID;
+	(*pObj)[0]->data.lbe.bLBE = -1;
+	(*pObj)[0]->data.lbe.usLBEItem = uniqueID;
 }
 
 bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
@@ -76,8 +76,8 @@ bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
 					break;
 				}
 			}
-			(*pObj)[0]->data.misc.usBombItem = 0;
-			(*pObj)[0]->data.misc.bDetonatorType = 0;
+			(*pObj)[0]->data.lbe.usLBEItem = 0;
+			(*pObj)[0]->data.lbe.bLBE = 0;
 			return true;
 		}
 	}
@@ -104,8 +104,8 @@ void DestroyLBE(OBJECTTYPE* pObj)
 					break;
 				}
 			}
-			(*pObj)[0]->data.misc.usBombItem = 0;
-			(*pObj)[0]->data.misc.bDetonatorType = 0;
+			(*pObj)[0]->data.lbe.usLBEItem = 0;
+			(*pObj)[0]->data.lbe.bLBE = 0;
 		}
 	}
 }
@@ -361,13 +361,13 @@ POCKETTYPE::~POCKETTYPE(){
 
 
 
-//ADB TODO: ChrisL, rewrite this to your liking, then insert it everywhere you have (*pObject)[0]->data.misc.bDetonatorType == -1.
+//ADB TODO: ChrisL, rewrite this to your liking, then insert it everywhere you have (*pObject)[0]->data.lbe.bLBE == -1.
 //Go ahead and add a new variable to OBJECTTYPE if you want, but then add it to all the functions.
 bool OBJECTTYPE::IsActiveLBE()
 {
 	PERFORMANCE_MARKER
 	if (exists() == true) {
-		return ((*this)[0]->data.misc.bDetonatorType == -1);
+		return ((*this)[0]->data.lbe.bLBE == -1);
 	}
 	return false;
 }
@@ -375,7 +375,7 @@ bool OBJECTTYPE::IsActiveLBE()
 LBENODE* OBJECTTYPE::GetLBEPointer()
 {
 	PERFORMANCE_MARKER
-	unsigned short uniqueID = (*this)[0]->data.misc.usBombItem;
+	unsigned short uniqueID = (*this)[0]->data.lbe.usLBEItem;
 	for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
 		if (iter->uniqueID == uniqueID) {
 			return &(*iter);
@@ -844,7 +844,7 @@ OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 			LBEArray.push_back(*pLBE);
 			pLBE = &LBEArray.back();
 			pLBE->uniqueID = uniqueID;
-			(*this)[0]->data.misc.usBombItem = uniqueID;
+			(*this)[0]->data.lbe.usLBEItem = uniqueID;
 		}
 	}
 }
@@ -872,7 +872,7 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 			LBEArray.push_back(*pLBE);
 			pLBE = &LBEArray.back();
 			pLBE->uniqueID = uniqueID;
-			(*this)[0]->data.misc.usBombItem = uniqueID;
+			(*this)[0]->data.lbe.usLBEItem = uniqueID;
 		}
 	}
 	return *this;

@@ -45,6 +45,7 @@ lbeStartElementHandle(void *userData, const XML_Char *name, const XML_Char **att
 				(strcmp(name, "lbeIndex") == 0 ||
 				strcmp(name, "lbeClass") == 0 ||
 				strcmp(name, "lbeCombo") == 0 ||
+				strcmp(name, "lbeFilledSize") == 0 ||
 				strcmp(name, "lbePocketIndex.1") == 0 ||
 				strcmp(name, "lbePocketIndex.2") == 0 ||
 				strcmp(name, "lbePocketIndex.3") == 0 ||
@@ -113,6 +114,11 @@ lbeEndElementHandle(void *userData, const XML_Char *name)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBE.lbeCombo  = (UINT32) atol(pData->szCharData);
+		}
+		else if(strcmp(name, "lbeFilledSize") == 0)
+		{
+			pData->curElement = ELEMENT;
+			pData->curLBE.lbeFilledSize  = (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "lbePocketIndex.1") == 0)
 		{
@@ -269,6 +275,7 @@ BOOLEAN WritelbeEquipmentStats()
 			FilePrintf(hFile,"\t\t<lbeIndex>%d</lbeIndex>\r\n",								cnt );
 			FilePrintf(hFile,"\t\t<lbeClass>%d</lbeClass>\r\n",								LoadBearingEquipment[cnt].lbeClass  );
 			FilePrintf(hFile,"\t\t<lbeCombo>%d</lbeCombo>\r\n",								LoadBearingEquipment[cnt].lbeCombo  );
+			FilePrintf(hFile,"\t\t<lbeFilledSize>%d</lbeFilledSize>\r\n",								LoadBearingEquipment[cnt].lbeFilledSize  );
 			FilePrintf(hFile,"\t\t<lbePocketIndex.1>%d</lbePocketIndex.1>\r\n",								LoadBearingEquipment[cnt].lbePocketIndex[0]   );
 			FilePrintf(hFile,"\t\t<lbePocketIndex.2>%d</lbePocketIndex.2>\r\n",								LoadBearingEquipment[cnt].lbePocketIndex[1]   );
 			FilePrintf(hFile,"\t\t<lbePocketIndex.3>%d</lbePocketIndex.3>\r\n",								LoadBearingEquipment[cnt].lbePocketIndex[2]   );

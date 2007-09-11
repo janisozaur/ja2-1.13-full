@@ -4580,11 +4580,13 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 	}
 
 	std::vector<INT8> pocketKey;
-	GetLBESlots(lClass, pocketKey);
+	// CHRISL: GetLBESlots doesn't use lClass.  It uses the soldier pocket.  We have to convert if we're going to use this function
+	//GetLBESlots(lClass, pocketKey);
 	// Setup pocket coords
 	switch (lClass)
 	{
 		case THIGH_PACK:
+			GetLBESlots(LTHIGHPOCKPOS, pocketKey);
 			if(stratScreen){
 				offSetX = 83;
 				offSetY = -1;
@@ -4595,6 +4597,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 			}
 			break;
 		case VEST_PACK:
+			GetLBESlots(VESTPOCKPOS, pocketKey);
 			if(stratScreen){
 				offSetX = 0;
 				offSetY = 111;
@@ -4605,6 +4608,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 			}
 			break;
 		case COMBAT_PACK:
+			GetLBESlots(CPACKPOCKPOS, pocketKey);
 			if(stratScreen){
 				offSetX = -82;
 				offSetY = -1;
@@ -4615,6 +4619,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 			}
 			break;
 		case BACKPACK:
+			GetLBESlots(BPACKPOCKPOS, pocketKey);
 			if(stratScreen){
 				offSetX = 42;
 				offSetY = -104;
@@ -4625,6 +4630,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 			}
 			break;
 		case LBE_POCKET:
+			GetLBESlots(RTHIGHPOCKPOS, pocketKey);
 			if(stratScreen){
 				offSetX = 1;
 				offSetY = -1;
