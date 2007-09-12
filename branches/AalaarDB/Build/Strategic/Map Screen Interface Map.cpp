@@ -2086,6 +2086,7 @@ void PlotATemporaryPathForHelicopter( INT16 sX, INT16 sY )
 {
 	PERFORMANCE_MARKER
 	// clear old temp path
+	pTempHelicopterPath = MoveToBeginningOfPathList( pTempHelicopterPath);
 	pTempHelicopterPath = ClearStrategicPathList( pTempHelicopterPath, 0 );
 
 	// is cursor allowed here?..if not..don't build temp path

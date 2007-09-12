@@ -11,11 +11,11 @@ void luaWS_newlstr (lua_State *L, const CHAR16 *str, size_t l)
 	PERFORMANCE_MARKER
 	TWString *ts;
 
-	// Create and initialize this data
-	int size = sizewstring( l);
-	ts = (TWString*) lua_newuserdata( L, size );
-	ts->len = l;
-	memcpy( ts->data, str, size);
+  // Create and initialize this data
+  int size = sizewstring( l);
+  ts = (TWString*) lua_newuserdata( L, size );
+  ts->len = l;
+  memcpy( ts->data, str, l*sizeof(CHAR16)+sizeof(CHAR16));
 
 	// Make this data a wstring
 	luaL_getmetatable(L, "wstring");

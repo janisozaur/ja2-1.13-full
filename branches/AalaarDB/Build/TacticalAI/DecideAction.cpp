@@ -619,7 +619,7 @@ INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE *pSoldier)
 				ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sDesiredMercLoc),CenterY(sDesiredMercLoc));
 
 				// if not already facing in that direction,
-				if ( pSoldier->bDirection != ubDesiredMercDir && pSoldier->InternalSoldierReadyWeapon( ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
+				if ( pSoldier->ubDirection != ubDesiredMercDir && pSoldier->InternalSoldierReadyWeapon( ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 				{
 
 					pSoldier->aiData.usActionData = ubDesiredMercDir;
@@ -680,7 +680,7 @@ INT8 DecideActionNamedNPC( SOLDIERTYPE * pSoldier )
 			ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sDesiredMercLoc),CenterY(sDesiredMercLoc));
 
 			// if not already facing in that direction,
-			if (pSoldier->bDirection != ubDesiredMercDir && pSoldier->InternalSoldierReadyWeapon( ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
+			if (pSoldier->ubDirection != ubDesiredMercDir && pSoldier->InternalSoldierReadyWeapon( ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 			{
 
 				pSoldier->aiData.usActionData = ubDesiredMercDir;
@@ -816,10 +816,13 @@ INT8 GreenAlert_TryToDoBoxing(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 			// face ring!
 
 			ubRingDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(CENTER_OF_RING),CenterY(CENTER_OF_RING));
-			if ( pSoldier->bDirection != ubRingDir )
+			if ( pSoldier->ubDirection != ubRingDir )
 			{
-				pSoldier->aiData.usActionData = ubRingDir;
-				return( AI_ACTION_CHANGE_FACING );
+				if ( pSoldier->ubDirection != ubRingDir )
+				{
+					pSoldier->aiData.usActionData = ubRingDir;
+					return( AI_ACTION_CHANGE_FACING );
+				}
 			}
 		}
 	}
@@ -1189,7 +1192,7 @@ INT8 GreenAlert_TryToLookAround(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 				// if man has a LEGAL dominant facing, and isn't facing it, he will turn
 				// back towards that facing 50% of the time here (normally just enemies)
 				if ((pSoldier->aiData.bDominantDir >= 0) && (pSoldier->aiData.bDominantDir <= 8) &&
-					(pSoldier->bDirection != pSoldier->aiData.bDominantDir) && PreRandom(2) && pSoldier->aiData.bOrders != SNIPER )
+					(pSoldier->ubDirection != pSoldier->aiData.bDominantDir) && PreRandom(2) && pSoldier->aiData.bOrders != SNIPER )
 				{
 					pSoldier->aiData.usActionData = pSoldier->aiData.bDominantDir;
 				}
@@ -1204,12 +1207,12 @@ INT8 GreenAlert_TryToLookAround(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 					if (sNoiseGridNo != NOWHERE)
 						ubNoiseDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sNoiseGridNo),CenterY(sNoiseGridNo));
 
-					if ( sNoiseGridNo != NOWHERE && pSoldier->bDirection != ubNoiseDir )
+					if ( sNoiseGridNo != NOWHERE && pSoldier->ubDirection != ubNoiseDir )
 						pSoldier->aiData.usActionData = ubNoiseDir;
 					else
 						pSoldier->aiData.usActionData = (UINT16)PreRandom(8);
 				}
-			} while (pSoldier->aiData.usActionData == pSoldier->bDirection);
+			} while (pSoldier->aiData.usActionData == pSoldier->ubDirection);
 
 
 #ifdef DEBUGDECISIONS
@@ -1451,7 +1454,7 @@ INT8 YellowAlert_TryToLookAround(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 	// and the noise source is close enough that it could possibly be seen
 	if ( !gfTurnBasedAI || GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints )
 	{
-		if ((pSoldier->bDirection != ubNoiseDir) && PythSpacesAway(pSoldier->sGridNo,flags.sNoiseGridNo) <= pSoldier->GetMaxDistanceVisible(flags.sNoiseGridNo) )
+		if ((pSoldier->ubDirection != ubNoiseDir) && PythSpacesAway(pSoldier->sGridNo,flags.sNoiseGridNo) <= pSoldier->GetMaxDistanceVisible(flags.sNoiseGridNo) )
 		{
 			INT32 iChance;
 			// set base chance according to orders
@@ -1497,7 +1500,7 @@ INT8 YellowAlert_TryToFlank(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 
 	if ( pSoldier->numFlanks > 0 && pSoldier->numFlanks < MAX_FLANKS_YELLOW )
 	{
-		INT16 currDir = GetDirectionFromGridNo ( tempGridNo, pSoldier );
+		INT16 currDir = (UINT8)GetDirectionFromGridNo ( tempGridNo, pSoldier );
 		INT16 origDir = pSoldier->origDir;
 		pSoldier->numFlanks += 1;
 		if ( pSoldier->flags.lastFlankLeft )
@@ -1739,7 +1742,7 @@ INT8 YellowAlert_TryToSeekNoise(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 					if ( pSoldier->lastFlankSpot != flags.sNoiseGridNo)
 						pSoldier->numFlanks = 0;
 
-					pSoldier->origDir = GetDirectionFromGridNo ( flags.sNoiseGridNo, pSoldier);
+					pSoldier->origDir = (UINT8)GetDirectionFromGridNo ( flags.sNoiseGridNo, pSoldier);
 					pSoldier->lastFlankSpot = flags.sNoiseGridNo;
 					pSoldier->numFlanks++;
 					return(action);
@@ -2500,7 +2503,7 @@ INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 	if ( pSoldier->numFlanks > 0 && pSoldier->numFlanks < MAX_FLANKS_RED  && gAnimControl[ pSoldier->usAnimState ].ubHeight != ANIM_PRONE )
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"decideactionred: continue flanking");
-		INT16 currDir = GetDirectionFromGridNo ( tempGridNo, pSoldier );
+		INT16 currDir = (UINT8)GetDirectionFromGridNo ( tempGridNo, pSoldier );
 		INT16 origDir = pSoldier->origDir;
 		pSoldier->numFlanks += 1;
 		if ( pSoldier->flags.lastFlankLeft )
@@ -2797,7 +2800,7 @@ INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 									pSoldier->numFlanks=0;
 
 
-								pSoldier->origDir = GetDirectionFromGridNo ( sClosestDisturbance, pSoldier);
+								pSoldier->origDir = (UINT8)GetDirectionFromGridNo ( sClosestDisturbance, pSoldier);
 								pSoldier->lastFlankSpot = sClosestDisturbance;
 								pSoldier->numFlanks++;
 								return(action);
@@ -2847,7 +2850,7 @@ INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 
 					// if soldier is not already facing in that direction,
 					// and the opponent is close enough that he could possibly be seen
-					if ( pSoldier->bDirection != ubOpponentDir && pSoldier->InternalIsValidStance( ubOpponentDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
+					if ( pSoldier->ubDirection != ubOpponentDir && pSoldier->InternalIsValidStance( ubOpponentDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 					{
 						// turn
 						pSoldier->aiData.usActionData = ubOpponentDir;
@@ -3104,7 +3107,7 @@ INT8 RedAlert_TryToLookAround(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 		// note, have to change this to use the level returned from ClosestKnownOpponent
 		sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sClosestOpponent, 0 );
 
-		if ((pSoldier->bDirection != ubOpponentDir) && (PythSpacesAway(pSoldier->sGridNo,sClosestOpponent) <= sDistVisible))
+		if ((pSoldier->ubDirection != ubOpponentDir) && (PythSpacesAway(pSoldier->sGridNo,sClosestOpponent) <= sDistVisible))
 		{
 			// set base chance according to orders
 			if ((pSoldier->aiData.bOrders == STATIONARY) || (pSoldier->aiData.bOrders == ONGUARD))
@@ -3141,7 +3144,7 @@ INT8 RedAlert_TryToLookAround(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 				return(AI_ACTION_CHANGE_FACING);
 			}
 		}
-		else if ( pSoldier->bDirection == ubOpponentDir && pSoldier->aiData.bOrders == SNIPER )
+		else if ( pSoldier->ubDirection == ubOpponentDir && pSoldier->aiData.bOrders == SNIPER )
 		{
 			if (!gfTurnBasedAI || GetAPsToReadyWeapon( pSoldier, READY_RIFLE_CROUCH ) <= pSoldier->bActionPoints)
 			{
@@ -3163,7 +3166,7 @@ INT8 RedAlert_TryTankAI(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 		if ( sClosestDisturbance != NOWHERE )
 		{
 			ubOpponentDir = atan8( CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), CenterX( sClosestDisturbance ), CenterY( sClosestDisturbance ) );
-			if ( pSoldier->bDirection == ubOpponentDir )
+			if ( pSoldier->ubDirection == ubOpponentDir )
 			{
 				ubOpponentDir = (UINT8) PreRandom( NUM_WORLD_DIRECTIONS );
 			}
@@ -3173,7 +3176,7 @@ INT8 RedAlert_TryTankAI(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 			ubOpponentDir = (UINT8) PreRandom( NUM_WORLD_DIRECTIONS );
 		}
 
-		if ( (pSoldier->bDirection != ubOpponentDir) )
+		if ( (pSoldier->ubDirection != ubOpponentDir) )
 		{
 			if ( (pSoldier->bActionPoints == pSoldier->bInitialActionPoints || (INT16)PreRandom(100) < 60) && pSoldier->InternalSoldierReadyWeapon( ubOpponentDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 			{
@@ -3589,7 +3592,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 		if ( sClosestDisturbance != NOWHERE )
 		{
 			ubOpponentDir = atan8( CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), CenterX( sClosestDisturbance ), CenterY( sClosestDisturbance ) );
-			if ( pSoldier->bDirection != ubOpponentDir )
+			if ( pSoldier->ubDirection != ubOpponentDir )
 			{
 				if ( !gfTurnBasedAI || GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints )
 				{
@@ -4312,7 +4315,7 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 			if (flags.ubBestStance != 0)
 			{
 				// change stance first!
-				if ( pSoldier->bDirection != bDirection && pSoldier->InternalSoldierReadyWeapon( bDirection, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
+				if ( pSoldier->ubDirection != bDirection && pSoldier->InternalSoldierReadyWeapon( bDirection, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 				{
 					// we're not facing towards him, so turn first!
 					pSoldier->aiData.usActionData = bDirection;
@@ -4551,7 +4554,7 @@ INT8 BlackAlert_ChangeStance(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 				INT8 bDirection = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sClosestOpponent),CenterY(sClosestOpponent));
 
 				// if we're not facing towards him
-				if (pSoldier->bDirection != bDirection)
+				if (pSoldier->ubDirection != bDirection)
 				{
 					if ( pSoldier->InternalSoldierReadyWeapon( bDirection, (INT8) pSoldier->aiData.usActionData) )
 					{
@@ -4752,7 +4755,7 @@ INT8 BlackAlert_TryToFaceEnemy(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 			INT8 bDirection = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sClosestOpponent),CenterY(sClosestOpponent));
 
 			// if we're not facing towards him
-			if ( pSoldier->bDirection != bDirection && pSoldier->InternalSoldierReadyWeapon( bDirection, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
+			if ( pSoldier->ubDirection != bDirection && pSoldier->InternalSoldierReadyWeapon( bDirection, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 			{
 				pSoldier->aiData.usActionData = bDirection;
 

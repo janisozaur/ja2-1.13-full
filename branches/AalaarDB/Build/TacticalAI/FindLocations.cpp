@@ -2493,7 +2493,7 @@ INT16 FindFlankingSpot(SOLDIERTYPE *pSoldier, INT16 sPos, INT8 bAction )
 
 
 	// get direction of position to flank from soldier's position
-	INT16 sDir = GetDirectionFromGridNo ( sPos, pSoldier) ;
+	INT16 sDir = (UINT8)GetDirectionFromGridNo ( sPos, pSoldier) ;
 	INT16 sDesiredDir;
 	INT16 sTempDir;
 	INT16 sTempDist, sBestDist=0;

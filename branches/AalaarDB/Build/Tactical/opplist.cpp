@@ -1168,7 +1168,7 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 				bSubjectDir = (INT8) GetDirectionToGridNoFromGridNo( pSoldier->sGridNo, sSubjectGridNo );
 			}
 			if (bFacingDir == DIRECTION_IRRELEVANT) {
-				bFacingDir = pSoldier->bDirection;
+				bFacingDir = pSoldier->ubDirection;
 			}
 
 			sDistVisible = gbLookDistance[bFacingDir][bSubjectDir];
@@ -1222,8 +1222,8 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 	// valid map references then use the ambient light level instead.
 	if(0 > sSubjectGridNo || sSubjectGridNo > WORLD_MAX)
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("113/UC Warning! Tried to detect the light level when character %ls[%d] looks at a location outside of the valid map (gridno %d). Assigning default %d",
-			pSoldier->name, pSoldier->ubID, pSoldier->sGridNo, ubAmbientLightLevel));
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("113/UC Warning! Tried to detect the light level when character %ls[%d] looks at a location outside of the valid map (gridno %d). Assigning default %d",
+				pSoldier->name, pSoldier->ubID, pSoldier->sGridNo, ubAmbientLightLevel));
 
 		bLightLevel = ubAmbientLightLevel;
 	}
@@ -1249,7 +1249,7 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 		sDistVisible += sDistVisible * GetTotalVisionRangeBonus(pSoldier, bLightLevel) / 100;
 	}
 
-	
+
 	// give one step better vision for people with nightops
 	if (HAS_SKILL_TRAIT( pSoldier, NIGHTOPS ))
 	{
@@ -1271,7 +1271,7 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 		if ( TANK(pSoldier) && sDistVisible > 0 && pSubject)
 		{
 			sDistVisible = __max( sDistVisible + 5, pSubject->GetMaxDistanceVisible(pSoldier->sGridNo, pSoldier->pathing.bLevel) );
-		}
+	}
 		else {
 			sDistVisible = __max( sDistVisible + 5, pSoldier->GetMaxDistanceVisible() );
 		}
@@ -2138,7 +2138,7 @@ void ManSeesMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, INT16 sOppGridno,
 								{
 									CancelAIAction( pSoldier, TRUE );
 									pSoldier->sAbsoluteFinalDestination = NOWHERE;
-									pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+									pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 									TriggerNPCRecord( ANGEL, 20 );
 									// trigger Angel to walk off afterwards
 									//TriggerNPCRecord( ANGEL, 24 );
@@ -3897,7 +3897,7 @@ void DebugSoldierPage2( )
 		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
 		gprintf( 0, LINE_HEIGHT * ubLine, L"Direction:");
 		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%S", gzDirectionStr[ pSoldier->bDirection] );
+		gprintf( 150, LINE_HEIGHT * ubLine, L"%S", gzDirectionStr[ pSoldier->ubDirection] );
 		ubLine++;
 
 		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
@@ -5976,14 +5976,14 @@ void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bL
 		sNoiseX = CenterX(sGridNo);
 		sNoiseY = CenterY(sGridNo);
 		bDirection = atan8(pSoldier->sX,pSoldier->sY,sNoiseX,sNoiseY);
-		if ( pSoldier->bDirection != bDirection && pSoldier->bDirection != gOneCDirection[ bDirection ] && pSoldier->bDirection != gOneCCDirection[ bDirection ] )
+		if ( pSoldier->ubDirection != bDirection && pSoldier->ubDirection != gOneCDirection[ bDirection ] && pSoldier->ubDirection != gOneCCDirection[ bDirection ] )
 		{
 			// temporarily turn off muzzle flash so DistanceVisible can be calculated without it
 			MercPtrs[ ubNoiseMaker ]->flags.fMuzzleFlash = FALSE;
 			fMuzzleFlash = TRUE;
 		}
 	}
-
+	
     int sDistVisible = pSoldier->GetMaxDistanceVisible(sGridNo, bLevel, CALC_FROM_WANTED_DIR );
 
 	if ( fMuzzleFlash )
@@ -5991,14 +5991,14 @@ void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bL
 		// turn flash on again
 		MercPtrs[ ubNoiseMaker ]->flags.fMuzzleFlash = TRUE;
 	}
-
+		
 	if (PythSpacesAway(pSoldier->sGridNo,sGridNo) <= sDistVisible )
 	{
 		// just use the XXadjustedXX center of the gridno
 		sNoiseX = CenterX(sGridNo);
 		sNoiseY = CenterY(sGridNo);
 
-		if (pSoldier->bDirection != atan8(pSoldier->sX,pSoldier->sY,sNoiseX,sNoiseY))
+		if (pSoldier->ubDirection != atan8(pSoldier->sX,pSoldier->sY,sNoiseX,sNoiseY))
 		{
 			bHadToTurn = TRUE;
 		}
@@ -6832,7 +6832,7 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 	if ( pAttacker->flags.fMuzzleFlash )
 	{
 		bDirection = atan8( pDefender->sX,pDefender->sY, pAttacker->sX, pAttacker->sY );
-		if ( pDefender->bDirection != bDirection && pDefender->bDirection != gOneCDirection[ bDirection ] && pDefender->bDirection != gOneCCDirection[ bDirection ] )
+		if ( pDefender->ubDirection != bDirection && pDefender->ubDirection != gOneCDirection[ bDirection ] && pDefender->ubDirection != gOneCCDirection[ bDirection ] )
 		{
 			// temporarily turn off muzzle flash so DistanceVisible can be calculated without it
 			pAttacker->flags.fMuzzleFlash = FALSE;

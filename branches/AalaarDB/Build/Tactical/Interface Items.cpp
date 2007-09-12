@@ -29,6 +29,7 @@
 	#include "utilities.h"
 	#include "Interface Panels.h"
 	#include "Animation Control.h"
+	#include "Soldier Control.h"
 
 	#include "pathai.h"
 	#include "weapons.h"
@@ -5028,7 +5029,7 @@ BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo )
 	bTargetDirection = (INT8)GetDirectionToGridNoFromGridNo( pSoldier->sGridNo, sSrcGridNo );
 
 	// Look 3 directions Clockwise from what we are facing....
-	bDirection = pSoldier->bDirection;
+	bDirection = pSoldier->ubDirection;
 
 	for ( cnt = 0; cnt < 3; cnt++ )
 	{
@@ -5041,7 +5042,7 @@ BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo )
 	}
 
 	// Look 3 directions CounterClockwise from what we are facing....
-	bDirection = pSoldier->bDirection;
+	bDirection = pSoldier->ubDirection;
 
 	for ( cnt = 0; cnt < 3; cnt++ )
 	{
@@ -5388,7 +5389,7 @@ BOOLEAN HandleItemPointerClick( INT16 sMapPos )
 	}
 
 	// Don't allow if our soldier is a # of things...
-	if ( AM_AN_EPC( gpItemPointerSoldier ) || gpItemPointerSoldier->stats.bLife < OKLIFE || gpItemPointerSoldier->bOverTerrainType == DEEP_WATER )
+	if ( AM_AN_EPC( gpItemPointerSoldier ) || gpItemPointerSoldier->stats.bLife < OKLIFE || MercInDeepWater( gpItemPointerSoldier) )
 	{
 		return( FALSE );
 	}
@@ -5702,7 +5703,7 @@ BOOLEAN HandleItemPointerClick( INT16 sMapPos )
 						  ubFacingDirection = (UINT8)GetDirectionFromGridNo( gpItemPointerSoldier->sGridNo, pSoldier );
 
 						  // Stop merc first....
-						  pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+						  pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 
 						  // WANNE: Also turn merc if he is crouched and he passes an item
 						  if ( !pSoldier->MercInWater( ) )

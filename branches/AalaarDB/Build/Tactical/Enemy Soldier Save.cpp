@@ -291,7 +291,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 						}
 						
 						curr->pBasicPlacement->fPriorityExistance	=	TRUE;
-						curr->pBasicPlacement->bDirection					= curr->pDetailedPlacement->bDirection;
+						curr->pBasicPlacement->ubDirection					= curr->pDetailedPlacement->ubDirection;
 						curr->pBasicPlacement->bOrders						= curr->pDetailedPlacement->bOrders;
 						curr->pBasicPlacement->bAttitude					= curr->pDetailedPlacement->bAttitude;
 						curr->pBasicPlacement->bBodyType					= curr->pDetailedPlacement->bBodyType;
@@ -893,7 +893,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 					}
 					
 					curr->pBasicPlacement->fPriorityExistance	=	TRUE;
-					curr->pBasicPlacement->bDirection					= curr->pDetailedPlacement->bDirection;
+					curr->pBasicPlacement->ubDirection					= curr->pDetailedPlacement->ubDirection;
 					curr->pBasicPlacement->bOrders						= curr->pDetailedPlacement->bOrders;
 					curr->pBasicPlacement->bAttitude					= curr->pDetailedPlacement->bAttitude;
 					curr->pBasicPlacement->bBodyType					= curr->pDetailedPlacement->bBodyType;
@@ -1207,7 +1207,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 						*curr->pDetailedPlacement = tempDetailedPlacement;
 						
 						curr->pBasicPlacement->fPriorityExistance	=	TRUE;
-						curr->pBasicPlacement->bDirection					= curr->pDetailedPlacement->bDirection;
+						curr->pBasicPlacement->ubDirection					= curr->pDetailedPlacement->ubDirection;
 						curr->pBasicPlacement->bOrders						= curr->pDetailedPlacement->bOrders;
 						curr->pBasicPlacement->bAttitude					= curr->pDetailedPlacement->bAttitude;
 						curr->pBasicPlacement->bBodyType					= curr->pDetailedPlacement->bBodyType;
@@ -1766,7 +1766,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 					*curr->pDetailedPlacement = tempDetailedPlacement;
 					
 					curr->pBasicPlacement->fPriorityExistance	=	TRUE;
-					curr->pBasicPlacement->bDirection					= curr->pDetailedPlacement->bDirection;
+					curr->pBasicPlacement->ubDirection					= curr->pDetailedPlacement->ubDirection;
 					curr->pBasicPlacement->bOrders						= curr->pDetailedPlacement->bOrders;
 					curr->pBasicPlacement->bAttitude					= curr->pDetailedPlacement->bAttitude;
 					curr->pBasicPlacement->bBodyType					= curr->pDetailedPlacement->bBodyType;

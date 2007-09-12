@@ -225,7 +225,7 @@ INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT16 sGridno,INT8 bDir, UINT1
 	iPoints = iPoints * BreathPointAdjustmentForCarriedWeight( pSoldier ) / 100;
 
 	// ATE - MAKE MOVEMENT ALWAYS WALK IF IN WATER
-	if ( gpWorldLevelData[ sGridno ].ubTerrainID == DEEP_WATER || gpWorldLevelData[ sGridno ].ubTerrainID == MED_WATER || gpWorldLevelData[ sGridno ].ubTerrainID == LOW_WATER )
+	if ( TERRAIN_IS_WATER( gpWorldLevelData[ sGridno ].ubTerrainID) )
 	{
 	usMovementMode = WALKING;
 	}
@@ -286,7 +286,7 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 	}
 
 	// ATE - MAKE MOVEMENT ALWAYS WALK IF IN WATER
-	if ( gpWorldLevelData[ sGridNo ].ubTerrainID == DEEP_WATER || gpWorldLevelData[ sGridNo ].ubTerrainID == MED_WATER || gpWorldLevelData[ sGridNo ].ubTerrainID == LOW_WATER )
+	if ( TERRAIN_IS_WATER( gpWorldLevelData[ sGridNo ].ubTerrainID) )
 	{
 	usMovementMode = WALKING;
 	}
@@ -1322,7 +1322,7 @@ void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT16 sGridNo
 			ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
 
 			// Is it the same as he's facing?
-			if ( ubDirection != pSoldier->bDirection )
+			if ( ubDirection != pSoldier->ubDirection )
 			{
 					fAddingTurningCost = TRUE;
 			}
@@ -1532,9 +1532,19 @@ UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost
 		ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
 
 		// Is it the same as he's facing?
-		if ( ubDirection != pSoldier->bDirection )
+		if ( ubDirection != pSoldier->ubDirection )
 		{
-				bAPCost += AP_LOOK_STANDING;
+			if ( pSoldier->sGridNo == sGridNo )
+			{
+				// ATE: Use standing turn cost....
+				ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
+
+				// Is it the same as he's facing?
+				if ( ubDirection != pSoldier->ubDirection )
+				{
+					bAPCost += AP_LOOK_STANDING;
+				}
+			}
 		}
 	 }
 	}
@@ -1589,7 +1599,7 @@ INT8	PtsToMoveDirection(SOLDIERTYPE *pSoldier, INT8 bDirection )
 	// ATE: Check if the new place is watter and we were tying to run....
 	bOverTerrainType = GetTerrainType( sGridno );
 
-	if ( bOverTerrainType == MED_WATER || bOverTerrainType == DEEP_WATER || bOverTerrainType == LOW_WATER )
+	if ( TERRAIN_IS_WATER( bOverTerrainType) )
 	{
 		usMoveModeToUse = WALKING;
 	}
@@ -2312,7 +2322,7 @@ INT16 MinAPsToThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCos
 			ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
 
 			// Is it the same as he's facing?
-			if ( ubDirection != pSoldier->bDirection )
+			if ( ubDirection != pSoldier->ubDirection )
 			{
 				//Lalien: disabled it again 
 				//AXP 25.03.2007: Reenabled look cost

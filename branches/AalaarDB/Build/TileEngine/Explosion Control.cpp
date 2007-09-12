@@ -417,7 +417,7 @@ void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion )
 	AniParams.sStartFrame = pExplosion->sCurrentFrame;
 	AniParams.uiFlags	= ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_EXPLOSION;
 
-	if ( ubTerrainType == LOW_WATER || ubTerrainType == MED_WATER || ubTerrainType == DEEP_WATER )
+	if ( TERRAIN_IS_WATER(ubTerrainType) )
 	{
 		// Change type to water explosion...
 		ubTypeID = WATER_BLAST;
@@ -1224,7 +1224,6 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 
 STRUCTURE *gStruct;
 
-// Lesh: somewhere here once I got CTD when militia stepped on mine in cambria sam
 void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLEAN *pfRecompileMovementCosts, BOOLEAN fOnlyWalls, INT8 bMultiStructSpecialFlag, BOOLEAN fSubSequentMultiTilesTransitionDamage, UINT8 ubOwner, INT8 bLevel )
 {
 	PERFORMANCE_MARKER
@@ -1249,7 +1248,7 @@ void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 	// (1) we might need to destroy the currently-examined structure
 	while (pCurrent != NULL)
 	{
-		// ATE: These are for the chacks below for multi-structs....
+		// ATE: These are for the checks below for multi-structs....
 		pBaseStructure = FindBaseStructure( pCurrent );
 
 		if ( pBaseStructure )
@@ -1259,7 +1258,6 @@ void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 			fMultiStructure = ( ( pBaseStructure->fFlags & STRUCTURE_MULTI ) != 0 );
 			ppTile = (DB_STRUCTURE_TILE **) MemAlloc( sizeof( DB_STRUCTURE_TILE* ) * ubNumberOfTiles );
 
-			// Lesh: CTD was in next line once
 			memcpy( ppTile, pBaseStructure->pDBStructureRef->ppTile, sizeof( DB_STRUCTURE_TILE* ) * ubNumberOfTiles );
 
 			if ( bMultiStructSpecialFlag == -1 )
@@ -1290,7 +1288,7 @@ void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 		{
 			fExplodeDamageReturn = ExplosiveDamageStructureAtGridNo( pCurrent, &pNextCurrent,	sGridNo, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, 0, ubOwner, bLevel );
 
-			// Are we overwritting damage due to multi-tile...?
+			// Are we overwriting damage due to multi-tile...?
 			if ( fExplodeDamageReturn )
 			{
 				if ( fSubSequentMultiTilesTransitionDamage == 2)
@@ -1307,65 +1305,74 @@ void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 			{
 				fToBreak = TRUE;
 			}
-		}
+			//}
 
-		// OK, for multi-structs...
-		// AND we took damage...
-		if ( fMultiStructure && !fOnlyWalls && fExplodeDamageReturn == 0 )
-		{
-			// ATE: Don't after first attack...
-			if ( uiDist > 1 )
+			// 0verhaul:  The following was combined with the previous code block.  I don't think they intended to execute this
+			// part unless fExplodeDamageReturn was actually set.  When it was being executed, tossing a grenade just behind the
+			// plane in Drassen, for instance, would cause an infinite recursion in this code.  The reason is that the plane's
+			// armor is (amazingly enough) stronger than a grenade blast can even damage.  This code here seems to rely on the
+			// structure in question being destroyed by the blast since it indiscriminently recurses on neighbors, creating a 
+			// ping pong on two adjacent parts of the plane.  Probably the reason this was not found before is that fExplodeDamageReturn
+			// was uninitialized before and usually was non-zero.  Now it is initialized to false.
+
+			// OK, for multi-structs...
+			// AND we took damage...
+			if ( fMultiStructure && !fOnlyWalls && fExplodeDamageReturn == 0 )
 			{
-				if ( pBaseStructure )
+				// ATE: Don't after first attack...
+				if ( uiDist > 1 )
 				{
-					MemFree( ppTile );
-				}
-				return;
-			}
-
-			{
-
-				for ( ubLoop = BASE_TILE; ubLoop < ubNumberOfTiles; ubLoop++)
-				{
-					sNewGridNo = sBaseGridNo + ppTile[ubLoop]->sPosRelToBase;
-
-					// look in adjacent tiles
-					for ( ubLoop2 = 0; ubLoop2 < NUM_WORLD_DIRECTIONS; ubLoop2++ )
+					if ( pBaseStructure )
 					{
-						sNewGridNo2 = NewGridNo( sNewGridNo, DirectionInc( ubLoop2 ) );
-						if ( sNewGridNo2 != sNewGridNo && sNewGridNo2 != sGridNo )
+						MemFree( ppTile );
+					}
+					return;
+				}
+
+				{
+
+					for ( ubLoop = BASE_TILE; ubLoop < ubNumberOfTiles; ubLoop++)
+					{
+						sNewGridNo = sBaseGridNo + ppTile[ubLoop]->sPosRelToBase;
+
+						// look in adjacent tiles
+						for ( ubLoop2 = 0; ubLoop2 < NUM_WORLD_DIRECTIONS; ubLoop2++ )
 						{
-							pStructure = FindStructure( sNewGridNo2, STRUCTURE_MULTI );
-							if ( pStructure ) 
+							sNewGridNo2 = NewGridNo( sNewGridNo, DirectionInc( ubLoop2 ) );
+							if ( sNewGridNo2 != sNewGridNo && sNewGridNo2 != sGridNo )
 							{
-								fMultiStructSpecialFlag = ( ( pStructure->fFlags & STRUCTURE_SPECIAL ) != 0 );
-
-								if ( ( bMultiStructSpecialFlag == fMultiStructSpecialFlag ) )
+								pStructure = FindStructure( sNewGridNo2, STRUCTURE_MULTI );
+								if ( pStructure ) 
 								{
-									// If we just damaged it, use same damage value....
-									if ( fMultiStructSpecialFlag )
-									{
-										ExplosiveDamageGridNo( sNewGridNo2, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, bMultiStructSpecialFlag, 1, ubOwner, bLevel );
-									}
-									else
-									{
-										ExplosiveDamageGridNo( sNewGridNo2, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, bMultiStructSpecialFlag, 2, ubOwner, bLevel );
-									}
+									fMultiStructSpecialFlag = ( ( pStructure->fFlags & STRUCTURE_SPECIAL ) != 0 );
 
+									if ( ( bMultiStructSpecialFlag == fMultiStructSpecialFlag ) )
 									{
-										InternalIgniteExplosion( ubOwner, CenterX( sNewGridNo2 ), CenterY( sNewGridNo2 ), 0, sNewGridNo2, RDX, FALSE, bLevel );
-									}
+										// If we just damaged it, use same damage value....
+										if ( fMultiStructSpecialFlag )
+										{
+											ExplosiveDamageGridNo( sNewGridNo2, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, bMultiStructSpecialFlag, 1, ubOwner, bLevel );
+										}
+										else
+										{
+											ExplosiveDamageGridNo( sNewGridNo2, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, bMultiStructSpecialFlag, 2, ubOwner, bLevel );
+										}
 
-									fToBreak = TRUE;
+										{
+											InternalIgniteExplosion( ubOwner, CenterX( sNewGridNo2 ), CenterY( sNewGridNo2 ), 0, sNewGridNo2, RDX, FALSE, bLevel );
+										}
+
+										fToBreak = TRUE;
+									}
 								}
 							}
 						}
 					}
 				}
-			}
-			if ( fToBreak )
-			{
-				break;
+				if ( fToBreak )
+				{
+					break;
+				}
 			}
 		}
 
@@ -2892,7 +2899,7 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 					{
 
 						// stop the merc...
-						MercPtrs[ ubID ]->EVENT_StopMerc( MercPtrs[ ubID ]->sGridNo, MercPtrs[ ubID ]->bDirection );
+						MercPtrs[ ubID ]->EVENT_StopMerc( MercPtrs[ ubID ]->sGridNo, MercPtrs[ ubID ]->ubDirection );
 
 						switch( sGridNo )
 						{
@@ -3719,7 +3726,7 @@ UINT8 DetermineFlashbangEffect( SOLDIERTYPE *pSoldier, INT8 ubExplosionDir, BOOL
 	INT8 bNumTurns;
 	UINT16 usHeadItem1, usHeadItem2;
 
-	bNumTurns	= FindNumTurnsBetweenDirs(pSoldier->bDirection, ubExplosionDir);
+	bNumTurns	= FindNumTurnsBetweenDirs(pSoldier->ubDirection, ubExplosionDir);
 	usHeadItem1 = pSoldier->inv[ HEAD1POS ].usItem;
 	usHeadItem2 = pSoldier->inv[ HEAD2POS ].usItem;
 

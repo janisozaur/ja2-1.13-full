@@ -1282,7 +1282,7 @@ BOOLEAN HandleFiredDeadMerc( SOLDIERTYPE *pSoldier )
 		SET_PALETTEREP_ID ( Corpse.SkinPal,		pSoldier->SkinPal );
 		SET_PALETTEREP_ID ( Corpse.PantsPal,	pSoldier->PantsPal );
 
-		Corpse.bDirection	= pSoldier->bDirection;
+		Corpse.bDirection	= pSoldier->ubDirection;
 
 		// Set time of death
 		Corpse.uiTimeOfDeath = GetWorldTotalMin( );

@@ -455,7 +455,7 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 			{
 //	 		gTacticalStatus.ubAttackBusyCount++;
 				DebugAttackBusy( "Killing off a queen ally.\n");
-				pTeamSoldier->EVENT_SoldierGotHit( 0, 10000, 0, pTeamSoldier->bDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, pTeamSoldier->bAimShotLocation, 0, NOWHERE );
+				pTeamSoldier->EVENT_SoldierGotHit( 0, 10000, 0, pTeamSoldier->ubDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, pTeamSoldier->bAimShotLocation, 0, NOWHERE );
 			}
 		}
 	}

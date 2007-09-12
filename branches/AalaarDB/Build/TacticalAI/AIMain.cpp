@@ -1150,7 +1150,7 @@ void FreeUpNPCFromTurning(SOLDIERTYPE *pSoldier, INT8 bLook)
 	{
 #ifdef TESTAI
 		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3, 
-			String("FREEUPNPCFROMTURNING: our action %d, desdir %d dir %d",pSoldier->aiData.bAction,pSoldier->pathing.bDesiredDirection,pSoldier->bDirection) );
+			String("FREEUPNPCFROMTURNING: our action %d, desdir %d dir %d",pSoldier->aiData.bAction,pSoldier->pathing.bDesiredDirection,pSoldier->ubDirection) );
 #endif
 
 
@@ -1212,7 +1212,7 @@ void ActionDone(SOLDIERTYPE *pSoldier)
 		{
 #ifdef TESTAI
 			DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3, 
-				String("Cancelling actiondone: our action %d, desdir %d dir %d",pSoldier->aiData.bAction,pSoldier->pathing.bDesiredDirection,pSoldier->bDirection) );
+				String("Cancelling actiondone: our action %d, desdir %d dir %d",pSoldier->aiData.bAction,pSoldier->pathing.bDesiredDirection,pSoldier->ubDirection) );
 #endif
 		}
 
@@ -1229,7 +1229,7 @@ void ActionDone(SOLDIERTYPE *pSoldier)
 
 		if ( !pSoldier->flags.fNoAPToFinishMove )
 		{
-			pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+			pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 			pSoldier->AdjustNoAPToFinishMove( FALSE );
 		}
 
@@ -1329,9 +1329,9 @@ void NPCDoesAct(SOLDIERTYPE *pSoldier)
 
 	// CJC Feb 18 99: make sure that soldier is not in the middle of a turn due to visual crap to make enemies
 	// face and point their guns at us
-	if ( pSoldier->pathing.bDesiredDirection != pSoldier->bDirection )
+	if ( pSoldier->pathing.bDesiredDirection != pSoldier->ubDirection )
 	{
-		pSoldier->pathing.bDesiredDirection = pSoldier->bDirection;
+		pSoldier->pathing.bDesiredDirection = pSoldier->ubDirection;
 	}
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"NPCDoesAct done");
@@ -1481,16 +1481,16 @@ NameMessage(pSoldier,"will now be freed up from turning...",2000);
 
 // force him to face in the right direction (as long as it's legal)
 if ((pSoldier->pathing.bDesiredDirection >= 1) && (pSoldier->pathing.bDesiredDirection <= 8))
-pSoldier->bDirection = pSoldier->pathing.bDesiredDirection;
+pSoldier->ubDirection = pSoldier->pathing.bDesiredDirection;
 else
-pSoldier->pathing.bDesiredDirection = pSoldier->bDirection;
+pSoldier->pathing.bDesiredDirection = pSoldier->ubDirection;
 
 // free up ONLY players from whom we haven't received an AI_ACTION_DONE yet
 // we can all agree the action is DONE and we can continue...
 // (otherwise they'll be calling FreeUp... twice and get REAL screwed up)
 NetSend.msgType    = NET_FREE_UP_TURN;
 NetSend.ubID     = pSoldier->ubID;
-NetSend.misc_UCHAR = pSoldier->bDirection;
+NetSend.misc_UCHAR = pSoldier->ubDirection;
 NetSend.answer     = pSoldier->pathing.bDesiredDirection;
 
 for (cnt = 0; cnt < MAXPLAYERS; cnt++)
@@ -2489,7 +2489,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 	case AI_ACTION_PULL_TRIGGER:          // activate an adjacent panic trigger
 
 		// turn to face trigger first
-		if ( FindStructure( (INT16)(pSoldier->sGridNo + DirectionInc( NORTH )), STRUCTURE_SWITCH ) )
+		if ( FindStructure( pSoldier->sGridNo + DirectionInc( NORTH ), STRUCTURE_SWITCH ) )
 		{
 			SendSoldierSetDesiredDirectionEvent( pSoldier, NORTH );
 		}
@@ -2626,17 +2626,17 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 	case AI_ACTION_LOCK_DOOR:
 		{
 			STRUCTURE *		pStructure;
-			INT8					bDirection;
+			UINT8					ubDirection;
 			INT16					sDoorGridNo;
 
-			bDirection = (INT8) GetDirectionFromGridNo( pSoldier->aiData.usActionData, pSoldier );
-			if (bDirection == EAST || bDirection == SOUTH)
+			ubDirection = GetDirectionFromGridNo( pSoldier->aiData.usActionData, pSoldier );
+			if (ubDirection == EAST || ubDirection == SOUTH)
 			{
 				sDoorGridNo = pSoldier->sGridNo;
 			}
 			else
 			{
-				sDoorGridNo = pSoldier->sGridNo + DirectionInc( bDirection );
+				sDoorGridNo = pSoldier->sGridNo + DirectionInc( ubDirection );
 			}
 
 			pStructure = FindStructure( sDoorGridNo, STRUCTURE_ANYDOOR );
@@ -2655,14 +2655,14 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				EndAIGuysTurn( pSoldier );				
 			}
 
-			StartInteractiveObject( sDoorGridNo, pStructure->usStructureID, pSoldier, bDirection );
-			InteractWithInteractiveObject( pSoldier, pStructure, bDirection );
+			StartInteractiveObject( sDoorGridNo, pStructure->usStructureID, pSoldier, ubDirection );
+			InteractWithInteractiveObject( pSoldier, pStructure, ubDirection );
 		}
 		break;
 
 	case AI_ACTION_LOWER_GUN:
 		// for now, just do "action done"
-		pSoldier->InternalSoldierReadyWeapon(pSoldier->bDirection,TRUE);
+		pSoldier->InternalSoldierReadyWeapon(pSoldier->ubDirection,TRUE);
 		HandleSight(pSoldier, SIGHT_LOOK );
 		ActionDone( pSoldier );
 		break;

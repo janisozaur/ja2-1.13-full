@@ -6,6 +6,7 @@
 	#include "weapons.h"
 	#include "Interface Cursors.h"
 
+	#include "Soldier Control.h"
 	#include "overhead.h"
 	#include "Handle UI.h"
 	#include "Animation Control.h"
@@ -5149,6 +5150,7 @@ BOOLEAN CreateGun( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 	{
 		pStackedObject->data.gun.ubGunShotsLeft = GetMagSize(pObj);
 		pStackedObject->data.gun.ubGunAmmoType = AMMO_MONSTER;
+		pStackedObject->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER; // 0verhaul:  Monsters don't have to reload!
 	}
 	else if ( EXPLOSIVE_GUN( usItem ) )
 	{
@@ -5973,7 +5975,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 	INT8		bLoop, bDamage, bDieSize;
 	UINT32	uiRoll;
 
-	if ( pSoldier->bOverTerrainType == DEEP_WATER )
+	if ( MercInDeepWater( pSoldier) )
 	{
 		for ( bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++ )
 		{
@@ -6008,7 +6010,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 	{
 		// reduce camouflage by 2% per tile of deep water
 		// and 1% for medium water
-		if ( pSoldier->bOverTerrainType == DEEP_WATER )
+		if ( MercInDeepWater( pSoldier) )
 			pSoldier->bCamo = __max( 0, pSoldier->bCamo - 2 );
 		else
 			pSoldier->bCamo = __max( 0, pSoldier->bCamo - 1 );
@@ -6021,7 +6023,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 	{
 		// reduce camouflage by 2% per tile of deep water
 		// and 1% for medium water
-		if ( pSoldier->bOverTerrainType == DEEP_WATER )
+		if ( MercInDeepWater( pSoldier) )
 			pSoldier->urbanCamo = __max( 0, pSoldier->urbanCamo - 2 );
 		else
 			pSoldier->urbanCamo = __max( 0, pSoldier->urbanCamo - 1 );
@@ -6034,7 +6036,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 	{
 		// reduce camouflage by 2% per tile of deep water
 		// and 1% for medium water
-		if ( pSoldier->bOverTerrainType == DEEP_WATER )
+		if ( MercInDeepWater( pSoldier) )
 			pSoldier->desertCamo = __max( 0, pSoldier->desertCamo - 2 );
 		else
 			pSoldier->desertCamo = __max( 0, pSoldier->desertCamo - 1 );
@@ -6047,7 +6049,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 	{
 		// reduce camouflage by 2% per tile of deep water
 		// and 1% for medium water
-		if ( pSoldier->bOverTerrainType == DEEP_WATER )
+		if ( MercInDeepWater( pSoldier) )
 			pSoldier->snowCamo = __max( 0, pSoldier->snowCamo - 2 );
 		else
 			pSoldier->snowCamo = __max( 0, pSoldier->snowCamo - 1 );
@@ -6073,7 +6075,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 
 	if ( pSoldier->bTeam == gbPlayerNum && pSoldier->aiData.bMonsterSmell > 0 )
 	{
-		if ( pSoldier->bOverTerrainType == DEEP_WATER )
+		if ( MercInDeepWater( pSoldier) )
 		{
 			bDieSize = 10;
 		}
@@ -6889,7 +6891,8 @@ INT16 GetVisionRangeBonus( SOLDIERTYPE * pSoldier )
 		}
 	}
 
-	// Snap: check only attachments on a raised weapon!
+	// Snap: check only attachments on a readied weapon!
+	// 0verhaul:  Moved this bug fix into WeaponReady so that all CTH modifier functions may benefit from this fix
 	//AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
 	if ( usingGunScope == true )
 	{
@@ -7163,6 +7166,8 @@ UINT8 GetPercentTunnelVision( SOLDIERTYPE * pSoldier )
 	UINT16 usItem;
 	INVTYPE *pItem;
 
+	//ADB and AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
+	bool usingGunScope = WeaponReady(pSoldier);
 	// CHRISL:
 	for (int i = BODYPOSSTART; i < BODYPOSFINAL; i++)
 	{
@@ -7183,7 +7188,6 @@ UINT8 GetPercentTunnelVision( SOLDIERTYPE * pSoldier )
 		}
 	}
 
-	bool usingGunScope = WeaponReady(pSoldier);
 	// Snap: check only attachments on a raised weapon!
 	if ( usingGunScope == true )
 	{
@@ -7212,6 +7216,7 @@ BOOLEAN HasThermalOptics( SOLDIERTYPE * pSoldier )
 {
 	PERFORMANCE_MARKER
 
+	//ADB and AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
 	bool usingGunScope = WeaponReady(pSoldier);
 	for (int i = BODYPOSSTART; i < BODYPOSFINAL; i++)
 	{

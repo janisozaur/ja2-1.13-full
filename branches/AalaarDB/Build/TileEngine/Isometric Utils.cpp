@@ -567,10 +567,10 @@ INT16 NewGridNo(INT16 sGridno, INT16 sDirInc)
 }
 
 
-INT16 DirectionInc(INT16 sDirection)
+INT16 DirectionInc(UINT8 ubDirection)
 {
 	PERFORMANCE_MARKER
- if ((sDirection < 0) || (sDirection > 7))
+ if ((ubDirection < 0) || (ubDirection > 7))
 	{
 
 //#ifdef BETAVERSION
@@ -578,11 +578,11 @@ INT16 DirectionInc(INT16 sDirection)
 //#endif
 
 	//direction = random(8);	// replace garbage with random direction
-	sDirection = 1;
+	ubDirection = 1;
 	}
 
  
- return(DirIncrementer[sDirection]);
+ return(DirIncrementer[ubDirection]);
 }
 
 BOOLEAN CellXYToScreenXY(INT16 sCellX, INT16 sCellY, INT16 *sScreenX, INT16 *sScreenY)

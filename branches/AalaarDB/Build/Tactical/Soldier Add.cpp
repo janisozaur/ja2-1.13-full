@@ -295,7 +295,7 @@ INT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAni
 	// If we are already at this gridno....
 	if ( pSoldier->sGridNo == sSweetGridNo && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
-	*pubDirection = pSoldier->bDirection;
+	*pubDirection = pSoldier->ubDirection;
 	return( sSweetGridNo );
 	}
 
@@ -458,7 +458,7 @@ INT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( SOLDIERTYPE
 	// If we are already at this gridno....
 	if ( pSoldier->sGridNo == sSweetGridNo && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
-	*pubDirection = pSoldier->bDirection;
+	*pubDirection = pSoldier->ubDirection;
 	return( sSweetGridNo );
 	}
 
@@ -1216,7 +1216,7 @@ BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOO
 
 		//Add
 		if(gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
-			AddSoldierToSectorGridNo( pSoldier, sGridNo, pSoldier->bDirection, fUseAnimation, usAnimState, usAnimCode );
+			AddSoldierToSectorGridNo( pSoldier, sGridNo, pSoldier->ubDirection, fUseAnimation, usAnimState, usAnimCode );
 		else
 			AddSoldierToSectorGridNo( pSoldier, sGridNo, ubDirection, fUseAnimation, usAnimState, usAnimCode );
 
@@ -1280,7 +1280,7 @@ void InternalSoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN
 	pSoldier->EVENT_SetSoldierDirection( ubNewDirection );
 	pSoldier->EVENT_SetSoldierDesiredDirection( ubNewDirection );
 
-	//pSoldier->pathing.bDesiredDirection = pSoldier->bDirection;
+	//pSoldier->pathing.bDesiredDirection = pSoldier->ubDirection;
 
 	if ( AM_AN_EPC( pSoldier ) )
 	{
@@ -1322,7 +1322,7 @@ void SoldierInSectorIncompaciated( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	pSoldier->EVENT_SetSoldierDirection( ubNewDirection );
 	pSoldier->EVENT_SetSoldierDesiredDirection( ubNewDirection );
 
-	//pSoldier->pathing.bDesiredDirection = pSoldier->bDirection;
+	//pSoldier->pathing.bDesiredDirection = pSoldier->ubDirection;
 
 	pSoldier->EVENT_InitNewSoldierAnim( STAND_FALLFORWARD_STOP, 1, TRUE );
 }
@@ -1360,7 +1360,7 @@ void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	pSoldier->EVENT_SetSoldierDirection( ubNewDirection );
 	pSoldier->EVENT_SetSoldierDesiredDirection( ubNewDirection );
 
-	//pSoldier->pathing.bDesiredDirection = pSoldier->bDirection;
+	//pSoldier->pathing.bDesiredDirection = pSoldier->ubDirection;
 
 	if ( !IS_MERC_BODY_TYPE( pSoldier ) )
 	{
@@ -1396,7 +1396,7 @@ void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	pSoldier->EVENT_SetSoldierDirection( ubNewDirection );
 	pSoldier->EVENT_SetSoldierDesiredDirection( ubNewDirection );
 
-	//pSoldier->pathing.bDesiredDirection = pSoldier->bDirection;
+	//pSoldier->pathing.bDesiredDirection = pSoldier->ubDirection;
 
 	if ( !IS_MERC_BODY_TYPE( pSoldier ) )
 	{
@@ -1432,7 +1432,7 @@ void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	pSoldier->EVENT_SetSoldierDirection( ubNewDirection );
 	pSoldier->EVENT_SetSoldierDesiredDirection( ubNewDirection );
 
-	//pSoldier->pathing.bDesiredDirection = pSoldier->bDirection;
+	//pSoldier->pathing.bDesiredDirection = pSoldier->ubDirection;
 
 	if ( !IS_MERC_BODY_TYPE( pSoldier ) )
 	{

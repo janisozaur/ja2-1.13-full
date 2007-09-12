@@ -3355,6 +3355,9 @@ void TrashWorld( void )
 		}
 	}
 
+	// Reset attack busy since a militia might have been in the middle of radioing
+	gTacticalStatus.ubAttackBusyCount = 0;
+
 	RemoveCorpses( );
 
 	// Remove all ani tiles...

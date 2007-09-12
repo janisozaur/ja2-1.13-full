@@ -715,7 +715,7 @@ public:
 	FLOAT											dOldYPos;
 	INT16												sInitialGridNo;
 	INT16												sGridNo;
-	INT8												bDirection;
+	UINT8												ubDirection;
 	INT16												sHeightAdjustment;
 	INT16												sDesiredHeight;
 	INT16												sTempNewGridNo;					// New grid no for advanced animations
@@ -1308,14 +1308,17 @@ BOOLEAN DeletePaletteData( );
 
 // UTILITY FUNCTUIONS
 void MoveMercFacingDirection( SOLDIERTYPE *pSoldier, BOOLEAN fReverse, FLOAT dMovementDist );
-INT16 GetDirectionFromXY( INT16 sXPos, INT16 sYPos, SOLDIERTYPE *pSoldier );
-INT16 GetDirectionFromGridNo( INT16 sGridNo, SOLDIERTYPE *pSoldier );
+UINT8 GetDirectionFromXY( INT16 sXPos, INT16 sYPos, SOLDIERTYPE *pSoldier );
+UINT8 GetDirectionFromGridNo( INT16 sGridNo, SOLDIERTYPE *pSoldier );
 UINT8 atan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 );
 UINT8 atan8FromAngle( DOUBLE dAngle );
 INT16 GetDirectionToGridNoFromGridNo( INT16 sGridNoDest, INT16 sGridNoSrc );
 // This function is now obsolete.	Call ReduceAttackBusyCount instead.
 // void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier );
 
+BOOLEAN MercInDeepWater( SOLDIERTYPE *pSoldier );
+BOOLEAN MercInHighWater( SOLDIERTYPE *pSoldier );
+BOOLEAN MercInShallowWater( SOLDIERTYPE *pSoldier );
 
 
 // WRAPPERS FOR SOLDIER EVENTS
@@ -1460,7 +1463,7 @@ public:
 	FLOAT											dOldYPos;
 	INT16												sInitialGridNo;
 	INT16												sGridNo;
-	INT8												bDirection;
+	UINT8												ubDirection;
 	INT16												sHeightAdjustment;
 	INT16												sDesiredHeight;
 	INT16												sTempNewGridNo;					// New grid no for advanced animations

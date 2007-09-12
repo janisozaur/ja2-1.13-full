@@ -2061,13 +2061,13 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 				{		
 					if ( pSoldier2->bActive )
 					{
-						pSoldier2->EVENT_StopMerc( pSoldier2->sGridNo, pSoldier2->bDirection );				
+						pSoldier2->EVENT_StopMerc( pSoldier2->sGridNo, pSoldier2->ubDirection );				
 					}
 				}
 			}
 			else
 			{
-				pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+				pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 			}
 
 			(*pfKeepMoving) = FALSE;
@@ -2087,7 +2087,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 			if (sMineGridNo != NOWHERE)
 			{
 
-				pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+				pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 				(*pfKeepMoving) = FALSE;
 
 				if (pSoldier->bSide != 0)
@@ -2217,7 +2217,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 				{
 					if ( pExplosive )
 					{
-						pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+						pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 						fDontContinue = TRUE;
 
 						DishOutGasDamage( pSoldier, pExplosive, TRUE, FALSE, 
@@ -2253,7 +2253,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 				}
 
 				if ( (pSoldier->bBlindedCounter > 0) && (pSoldier->usAnimState == RUNNING) && (Random( 5 ) == 0) && 
-					OKFallDirection( pSoldier, (INT16) (pSoldier->sGridNo + DirectionInc( pSoldier->bDirection ) ), pSoldier->pathing.bLevel, pSoldier->bDirection, pSoldier->usAnimState ) )
+					OKFallDirection( pSoldier, (INT16) (pSoldier->sGridNo + DirectionInc( pSoldier->ubDirection ) ), pSoldier->pathing.bLevel, pSoldier->ubDirection, pSoldier->usAnimState ) )
 				{
 					// 20% chance of falling over!
 					pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
@@ -2266,7 +2266,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 					return( FALSE );
 				}
 				else if ( ( GetDrunkLevel( pSoldier ) == DRUNK ) && (Random( 5 ) == 0) && 
-					OKFallDirection( pSoldier, (INT16) (pSoldier->sGridNo + DirectionInc( pSoldier->bDirection ) ), pSoldier->pathing.bLevel, pSoldier->bDirection, pSoldier->usAnimState ) )
+					OKFallDirection( pSoldier, (INT16) (pSoldier->sGridNo + DirectionInc( pSoldier->ubDirection ) ), pSoldier->pathing.bLevel, pSoldier->ubDirection, pSoldier->usAnimState ) )
 				{
 					// 20% chance of falling over!
 					pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
@@ -2293,7 +2293,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 							pSoldier->ubNumTilesMovesSinceLastForget = 0;
 
 							TacticalCharacterDialogue( pSoldier, QUOTE_PERSONALITY_TRAIT );
-							pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+							pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 							if (pSoldier->bActionPoints > 0)
 							{
 								pSoldier->bActionPoints -= (INT8) (Random( pSoldier->bActionPoints ) + 1);
@@ -2412,7 +2412,7 @@ void HandleMaryArrival( SOLDIERTYPE * pSoldier )
 		// Mary has arrived
 		SetFactTrue( FACT_MARY_OR_JOHN_ARRIVED );
 
-		pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+		pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 
 		TriggerNPCRecord( MARY, 13 );
 	}
@@ -2457,12 +2457,12 @@ void HandleJohnArrival( SOLDIERTYPE * pSoldier )
 
 		SetFactTrue( FACT_MARY_OR_JOHN_ARRIVED );
 
-		pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+		pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 
 		// if Mary is alive/dead
 		if ( pSoldier2 )
 		{
-			pSoldier2->EVENT_StopMerc( pSoldier2->sGridNo, pSoldier2->bDirection );
+			pSoldier2->EVENT_StopMerc( pSoldier2->sGridNo, pSoldier2->ubDirection );
 			TriggerNPCRecord( JOHN, 13 );
 		}
 		else
@@ -2560,7 +2560,7 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 	if (SetOffBombsInGridNo( pSoldier->ubID, pSoldier->sGridNo, FALSE, pSoldier->pathing.bLevel ) )
 	{
 		(*pfKeepMoving) = FALSE;
-		pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+		pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 		return( FALSE );
 	}
 
@@ -2656,13 +2656,13 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 				{		
 					if ( pSoldier2->bActive )
 					{
-						pSoldier2->EVENT_StopMerc( pSoldier2->sGridNo, pSoldier2->bDirection );				
+						pSoldier2->EVENT_StopMerc( pSoldier2->sGridNo, pSoldier2->ubDirection );				
 					}
 				}
 			}
 			else
 			{
-				pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+				pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 			}
 
 			(*pfKeepMoving) = FALSE;
@@ -2682,7 +2682,7 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 			if (sMineGridNo != NOWHERE)
 			{
 
-				pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+				pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 				(*pfKeepMoving) = FALSE;
 
 				gpWorldLevelData[ sMineGridNo ].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
@@ -2709,7 +2709,7 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 					if (PythSpacesAway( pSoldier->sGridNo, 8842 ) < 11)
 					{
 						// Skyrider has arrived!
-						pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+						pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 						SetFactTrue( FACT_SKYRIDER_CLOSE_TO_CHOPPER );
 						TriggerNPCRecord( SKYRIDER, 15 );
 						SetUpHelicopterForPlayer( 13, MAP_ROW_B );
@@ -2739,7 +2739,7 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 				// if Joey walks near Martha then trigger Martha record 7
 				if ( CheckFact( FACT_JOEY_NEAR_MARTHA, 0 ) )
 				{
-					pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+					pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 					TriggerNPCRecord( JOEY, 9 );
 				}
 			}
@@ -4684,7 +4684,7 @@ INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirect
 	// Set default direction
 	if (pubDirection)
 	{
-		*pubDirection = pSoldier->bDirection;
+		*pubDirection = pSoldier->ubDirection;
 	}
 
 	// CHECK IF WE WANT TO FORCE GRIDNO TO PERSON
@@ -4978,7 +4978,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 	// CHECK IF IT'S THE SAME ONE AS WE'RE ON, IF SO, RETURN THAT!
 	if ( pSoldier->sGridNo == sGridNo )
 	{
-		*pubDirection = pSoldier->bDirection;
+		*pubDirection = pSoldier->ubDirection;
 		return( sGridNo );
 	}
 
@@ -5105,7 +5105,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 		{
 			(*pubDirection) = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
 		}
-			//*pubDirection = pSoldier->bDirection;
+			//*pubDirection = pSoldier->ubDirection;
 			return( sSpot );
 		}
 
@@ -5504,7 +5504,7 @@ void CommonEnterCombatModeCode( )
 				pSoldier->usQuoteSaidFlags &= (~SOLDIER_QUOTE_SAID_MULTIPLE_CREATURES);
 
 				// Hault!
-				pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+				pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 
 				// END AI actions
 				CancelAIAction( pSoldier, TRUE );
@@ -7165,7 +7165,7 @@ void HandleSuppressionFire( UINT8 ubTargetedMerc, UINT8 ubCausedAttacker )
 					}
 					break;
 				default: // standing!
-					if (pSoldier->bOverTerrainType == LOW_WATER || pSoldier->bOverTerrainType == DEEP_WATER)
+					if ( pSoldier->MercInWater())
 					{
 						// can't change stance here!
 						break;
@@ -8023,7 +8023,7 @@ void CencelAllActionsForTimeCompression( void )
 			if ( pSoldier->bInSector )
 			{
 				// Hault!
-				pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+				pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 
 				// END AI actions
 				CancelAIAction( pSoldier, TRUE );
