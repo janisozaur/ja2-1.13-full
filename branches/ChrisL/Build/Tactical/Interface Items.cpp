@@ -4581,7 +4581,6 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 
 	std::vector<INT8> pocketKey;
 	// CHRISL: GetLBESlots doesn't use lClass.  It uses the soldier pocket.  We have to convert if we're going to use this function
-	//GetLBESlots(lClass, pocketKey);
 	// Setup pocket coords
 	switch (lClass)
 	{
@@ -4890,17 +4889,28 @@ void InternalBeginItemPointer( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject, INT8 
 void BeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 {
 	PERFORMANCE_MARKER
-	if (pSoldier->inv[ubHandPos].exists() == true)
+	int numToMove = 0;
+	if (_KeyDown( SHIFT ))
 	{
-		if (_KeyDown( SHIFT ))
-		{
-			// Remove all from soldier's slot
-			pSoldier->inv[ubHandPos].MoveThisObjectTo(gTempObject, ALL_OBJECTS, pSoldier, ubHandPos);
-		}
-		else
-		{
-			pSoldier->inv[ubHandPos].MoveThisObjectTo(gTempObject, 1, pSoldier, ubHandPos);
-		}
+		// Remove all from soldier's slot
+		numToMove = ALL_OBJECTS;
+	}
+	else
+	{
+		numToMove = 1;
+	}
+	pSoldier->inv[ubHandPos].MoveThisObjectTo(gTempObject, numToMove, pSoldier, ubHandPos);
+
+	if ( gTempObject.exists() == false )
+	{
+		//oops, the move failed.  It might have failed because the object was force placed
+		//to a slot where the ItemSizeLimit is 0, try again
+		//this method won't work with LBEs in LBE pockets
+		pSoldier->inv[ubHandPos].MoveThisObjectTo(gTempObject, numToMove);
+	}
+
+	if ( gTempObject.exists() == true )
+	{
 		InternalBeginItemPointer( pSoldier, &gTempObject, ubHandPos );
 	}
 }

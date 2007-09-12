@@ -1850,7 +1850,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				//then all I had to do was look at the functions that ran during this period to find the ones that changed!
 			case ',':
 				(gRecordingProfile == true) ? gRecordingProfile = false : gRecordingProfile = true;
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3,  String( "gRecordingProfile" ));
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3,  String( "gRecordingProfile = ", gRecordingProfile ));
 				break;
 #endif
 			case SPACE:

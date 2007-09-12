@@ -2871,7 +2871,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 		{
 			if ( pSoldier->inv[ cnt2 ].exists() == true && ValidAttachment( gTempObject.usItem, pSoldier->inv[ cnt2 ].usItem ) )
 			{
-				pSoldier->inv[ cnt2 ].AttachObject( pSoldier, &gTempObject );
+				pSoldier->inv[ cnt2 ].AttachObject( NULL, &gTempObject, FALSE );
 				break;
 			}
 		}

@@ -13,7 +13,7 @@
 #define NAMED_	PERFORMANCE_MARKER(x) PerfMarker x(__FILE__, STRINGIZE(x), __LINE__);
 #define END_NAMED_	PERFORMANCE_MARKER(x) x.endMark();
 #define PERFORMANCE_MARKER PerfMarker MARK(__FILE__, __FUNCTION__, __LINE__);
-//#define PERIODIC_PROFILING
+#define PERIODIC_PROFILING
 #else
 #define PERFORMANCE_MARKER
 #endif

@@ -4180,7 +4180,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 			}
 		}
 
-		else if (IsSlotAnLBESlot(bPos) == true || ubSlotLimit > pObj->ubNumberOfObjects)
+		else if (IsSlotAnLBESlot(bPos) == true || ubSlotLimit < pObj->ubNumberOfObjects)
 		{
 			//it could be an LBE, or not enough room, so we free up some space
 			return( FreeUpSlotIfPossibleThenPlaceObject( pSoldier, bPos, pObj ) );
@@ -4231,6 +4231,7 @@ bool TryToPlaceInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, in
 {
 	bSlot = FindEmptySlotWithin( pSoldier, bSlot, endSlot );
 	if (bSlot == ITEM_NOT_FOUND) {
+		bSlot = endSlot;
 		return false;
 	}
 

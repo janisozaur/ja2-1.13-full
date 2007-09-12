@@ -954,7 +954,7 @@ void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT1
 //INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHowMany, UINT32 usClass)
 INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv)
 {
-	INT32	sPocket=-1, mPocket=-1, lPocket=-1, pocket=-1;
+	INT32	sPocket=-1, mPocket=-1, lPocket=-1;
 	UINT8	sCapacity=0;
 	UINT8	mCapacity=0;
 	UINT8	lCapacity=0;

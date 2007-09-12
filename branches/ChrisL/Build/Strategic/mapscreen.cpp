@@ -7838,7 +7838,6 @@ void InternalMAPBeginItemPointer( SOLDIERTYPE *pSoldier )
 void MAPBeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 {
 	PERFORMANCE_MARKER
-	BOOLEAN	fOk;
 
 	// If not null return
 	if ( gpItemPointer != NULL )
@@ -7846,20 +7845,29 @@ void MAPBeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 		return;
 	}
 
-	fOk = pSoldier->inv[ubHandPos].exists();
+	int numToMove = 0;
 	if (_KeyDown( SHIFT ))
 	{
 		// Remove all from soldier's slot
-		pSoldier->inv[ubHandPos].MoveThisObjectTo(gItemPointer);
+		numToMove = ALL_OBJECTS;
 	}
 	else
 	{
-		pSoldier->inv[ubHandPos].MoveThisObjectTo(gItemPointer, 1);
+		numToMove = 1;
+	}
+	pSoldier->inv[ubHandPos].MoveThisObjectTo(gItemPointer, numToMove, pSoldier, ubHandPos);
+
+	if ( gItemPointer.exists() == false )
+	{
+		//oops, the move failed.  It might have failed because the object was force placed
+		//to a slot where the ItemSizeLimit is 0, try again
+		//this method won't work with LBEs in LBE pockets
+		pSoldier->inv[ubHandPos].MoveThisObjectTo(gItemPointer, numToMove);
 	}
 
-	if ( fOk )
+	if ( gItemPointer.exists() == true )
 	{
-	InternalMAPBeginItemPointer( pSoldier );
+		InternalMAPBeginItemPointer( pSoldier );
 	}
 }
 

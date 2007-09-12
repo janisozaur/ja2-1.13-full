@@ -1099,6 +1099,7 @@ INT16 MaxNormalDistanceVisible( void )
 
 INT16 SOLDIERTYPE::GetMaxDistanceVisible(INT16 sGridNo, INT8 bLevel, int calcAsType)
 {
+	PERFORMANCE_MARKER
 	if (sGridNo == -1) {
 		return MaxNormalDistanceVisible();
 	}
@@ -1116,6 +1117,7 @@ INT16 SOLDIERTYPE::GetMaxDistanceVisible(INT16 sGridNo, INT8 bLevel, int calcAsT
 
 INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT16 sSubjectGridNo, INT8 bLevel )
 {
+	PERFORMANCE_MARKER
 	INT16	sDistVisible;
 	INT8	bLightLevel;
 	SOLDIERTYPE * pSubject;

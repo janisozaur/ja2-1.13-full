@@ -510,59 +510,6 @@ void TruncateStrategicGroupSizes();
 //if all that sounds compilcated, it is
 
 extern unsigned short gLastLBEUniqueID;
-BOOLEAN SaveLBENODEToSaveGameFile( HWFILE hFile )
-{
-	PERFORMANCE_MARKER
-	UINT32 uiNumBytesWritten;
-
-	if ( !FileWrite( hFile, &gLastLBEUniqueID, sizeof(gLastLBEUniqueID), &uiNumBytesWritten ) )
-	{
-		return(FALSE);
-	}
-	int size = LBEArray.size();
-	if ( !FileWrite( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
-	{
-		return(FALSE);
-	}
-	for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
-		if (! iter->Save(hFile)) {
-			return FALSE;
-		}
-	}
-	return TRUE;
-}
-
-BOOLEAN LoadLBENODEFromSaveGameFile( HWFILE hFile )
-{
-	UINT32	uiNumBytesRead;
-	//if we are at the most current version, then fine
-	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
-	{
-		if ( !FileRead( hFile, &gLastLBEUniqueID, sizeof(gLastLBEUniqueID), &uiNumBytesRead ) )
-		{
-			return(FALSE);
-		}
-		int size;
-		if ( !FileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
-		{
-			return(FALSE);
-		}
-
-		LBEArray.resize(size);
-		for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
-			if (! iter->Load(hFile)) {
-				return FALSE;
-			}
-		}
-	}
-	else
-	{
-		//we shouldn't be loading from anything before the first change
-		Assert(guiCurrentSaveGameVersion >= FIRST_SAVEGAME_DATATYPE_CHANGE );
-	}
-	return TRUE;
-}
-
 // CHRISL: New function to save/load LBENODE data
 BOOLEAN LBENODE::Load( HWFILE hFile )
 {
@@ -596,7 +543,25 @@ BOOLEAN LBENODE::Load( HWFILE hFile )
 	return TRUE;
 }
 
-BOOLEAN LBENODE::Save( HWFILE hFile )
+BOOLEAN	LBENODE::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion )
+{
+	PERFORMANCE_MARKER
+	if (dMajorMapVersion >= 6.0 && ubMinorMapVersion > 26 ) {
+		LOADDATA( this, *hBuffer, SIZEOF_LBENODE_POD );
+		int size;
+		LOADDATA( &size, *hBuffer, sizeof(int) );
+		inv.resize(size);
+		for (std::vector<OBJECTTYPE>::iterator iter = inv.begin(); iter != inv.end(); ++iter) {
+			iter->Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
+		}
+	}
+	else {
+		Assert(guiCurrentSaveGameVersion >= FIRST_SAVEGAME_DATATYPE_CHANGE );
+	}
+	return TRUE;
+}
+
+BOOLEAN LBENODE::Save( HWFILE hFile, bool fSavingMap )
 {
 	PERFORMANCE_MARKER
 	UINT32 uiNumBytesWritten;
@@ -1543,6 +1508,12 @@ BOOLEAN OBJECTTYPE::Load( HWFILE hFile )
 				return FALSE;
 			}
 		}
+		if (this->IsActiveLBE() == true) {
+			LBEArray.push_back(LBENODE());
+			if (! LBEArray.back().Load(hFile)) {
+				return FALSE;
+			}
+		}
 	}
 	else
 	{
@@ -1592,6 +1563,12 @@ BOOLEAN OBJECTTYPE::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorM
 		for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter) {
 			iter->Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
 		}
+		if (this->IsActiveLBE() == true) {
+			LBEArray.push_back(LBENODE());
+			if (! LBEArray.back().Load(hBuffer, dMajorMapVersion, ubMinorMapVersion)) {
+				return FALSE;
+			}
+		}
 	}
 	else
 	{
@@ -1619,6 +1596,18 @@ BOOLEAN OBJECTTYPE::Save( HWFILE hFile, bool fSavingMap )
 	for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter) {
 		if (! iter->Save(hFile, fSavingMap)) {
 			return FALSE;
+		}
+	}
+	if (this->IsActiveLBE() == true) {
+		LBENODE* pLBE = this->GetLBEPointer();
+		if (! pLBE->Save(hFile, fSavingMap)) {
+			return FALSE;
+		}
+		unsigned short uniqueID = (*this)[0]->data.lbe.uniqueID;
+		for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+			if (iter->uniqueID == uniqueID) {
+				LBEArray.erase(iter);
+			}
 		}
 	}
 	return TRUE;
@@ -2596,16 +2585,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	#endif
 
 	
-	//CHRISL: Save LBENODE information
-	if( !SaveLBENODEToSaveGameFile( hFile ) )
-	{
-		goto FAILED_TO_SAVE;
-	}
-	#ifdef JA2BETAVERSION
-	SaveGameFilePosition( FileGetPos( hFile ), "LBENODE Data" );
-	#endif
-
-
 	//Close the saved game file
 	FileClose( hFile );
 
@@ -3961,22 +3940,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		HandleOldBobbyRMailOrders();
 	}
-
-
-	//CHRISL: Load LBENODE information
-	if( SaveGameHeader.uiSavedGameVersion >= FIRST_SAVEGAME_DATATYPE_CHANGE )
-	{
-		if ( !LoadLBENODEFromSaveGameFile( hFile ) )
-		{
-			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
-			return( FALSE );
-		}
-		#ifdef JA2BETAVERSION
-			LoadGameFilePosition( FileGetPos( hFile ), "LBENODE Data" );
-		#endif
-	}
-
 
 
 	uiRelEndPerc += 1;

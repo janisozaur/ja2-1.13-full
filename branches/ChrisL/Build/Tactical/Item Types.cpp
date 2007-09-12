@@ -11,6 +11,7 @@ unsigned short gLastLBEUniqueID = 0;
 
 bool IsSlotAnLBESlot(int slot)
 {
+	PERFORMANCE_MARKER
 	switch(slot) {
 	case VESTPOCKPOS:
 	case LTHIGHPOCKPOS:
@@ -24,10 +25,11 @@ bool IsSlotAnLBESlot(int slot)
 
 void CreateLBE (OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets)
 {
+	PERFORMANCE_MARKER
 	int uniqueID;
 	LBENODE* pLBE = NULL;
 	if (pObj->IsActiveLBE() == true) {
-		uniqueID = (*pObj)[0]->data.lbe.usLBEItem;
+		uniqueID = (*pObj)[0]->data.lbe.uniqueID;
 		for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
 			if (iter->uniqueID == uniqueID) {
 				pLBE = &(*iter);
@@ -47,12 +49,13 @@ void CreateLBE (OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets)
 	pLBE->lbeClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
 	pLBE->inv.clear();
 	pLBE->inv.resize(numSubPockets);
-	(*pObj)[0]->data.lbe.bLBE = -1;
-	(*pObj)[0]->data.lbe.usLBEItem = uniqueID;
+	(*pObj)[0]->data.lbe.bLBE = true;
+	(*pObj)[0]->data.lbe.uniqueID = uniqueID;
 }
 
 bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
 {
+	PERFORMANCE_MARKER
 	if (pObj->IsActiveLBE() == true) {
 		LBENODE* pLBE = pObj->GetLBEPointer();
 		if (pLBE) {
@@ -65,19 +68,14 @@ bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
 				if (iter->uniqueID == pLBE->uniqueID) {
 					if (pLBE->uniqueID == gLastLBEUniqueID - 1) {
 						//might as well save on IDs
-						if (LBEArray.empty() == true) {
-							gLastLBEUniqueID = 0;
-						}
-						else {
-							gLastLBEUniqueID = LBEArray.back().uniqueID + 1;
-						}
+						--gLastLBEUniqueID;
 					}
 					LBEArray.erase(iter);
 					break;
 				}
 			}
-			(*pObj)[0]->data.lbe.usLBEItem = 0;
-			(*pObj)[0]->data.lbe.bLBE = 0;
+			(*pObj)[0]->data.lbe.uniqueID = 0;
+			(*pObj)[0]->data.lbe.bLBE = false;
 			return true;
 		}
 	}
@@ -86,6 +84,7 @@ bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
 
 void DestroyLBE(OBJECTTYPE* pObj)
 {
+	PERFORMANCE_MARKER
 	if (pObj->IsActiveLBE() == true) {
 		LBENODE* pLBE = pObj->GetLBEPointer();
 		if (pLBE) {
@@ -93,25 +92,21 @@ void DestroyLBE(OBJECTTYPE* pObj)
 				if (iter->uniqueID == pLBE->uniqueID) {
 					if (pLBE->uniqueID == gLastLBEUniqueID - 1) {
 						//might as well save on IDs
-						if (LBEArray.empty() == true) {
-							gLastLBEUniqueID = 0;
-						}
-						else {
-							gLastLBEUniqueID = LBEArray.back().uniqueID + 1;
-						}
+						--gLastLBEUniqueID;
 					}
 					LBEArray.erase(iter);
 					break;
 				}
 			}
-			(*pObj)[0]->data.lbe.usLBEItem = 0;
-			(*pObj)[0]->data.lbe.bLBE = 0;
+			(*pObj)[0]->data.lbe.uniqueID = 0;
+			(*pObj)[0]->data.lbe.bLBE = false;
 		}
 	}
 }
 
 void MoveItemsInSlotsToLBE( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, LBENODE* pLBE, OBJECTTYPE* pObj)
 {
+	PERFORMANCE_MARKER
 	for(unsigned int i=0; i<LBESlots.size(); i++)	// Go through default pockets one by one
 	{
 		if(pSoldier->inv[LBESlots[i]].exists() == false)	// No item in this pocket
@@ -150,6 +145,7 @@ extern BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, IN
 // CHRISL: New function to move items from default pockets to usable pockets
 BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, UINT32 uiHandPos, OBJECTTYPE *pObj )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN	flag=FALSE;
 
 	if(pObj->IsActiveLBE() == false) {
@@ -204,6 +200,7 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBES
 
 void GetLBESlots(UINT32 LBEType, std::vector<INT8>& LBESlots)
 {
+	PERFORMANCE_MARKER
 	switch (LBEType)
 	{
 		case VESTPOCKPOS:
@@ -267,6 +264,7 @@ void GetLBESlots(UINT32 LBEType, std::vector<INT8>& LBESlots)
 // CHRISL: New function to handle moving soldier items to lbe items
 BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos )
 {
+	PERFORMANCE_MARKER
 	std::vector<INT8> LBESlots;
 	// Determine which LBE item we're removing so we can associate the correct pockets with it.
 	GetLBESlots(uiHandPos, LBESlots);
@@ -293,6 +291,7 @@ BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos )
 // CHRISL: New function to handle moving lbe items to soldier items
 BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj )
 {
+	PERFORMANCE_MARKER
 	std::vector<INT8> LBESlots;
 
 	// Determine which LBE item we're adding so we can associate the correct pockets with it.
@@ -323,15 +322,18 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 }
 
 LBETYPE::LBETYPE(){
+	PERFORMANCE_MARKER
 	memset(this, 0, SIZEOF_LBETYPE);
 	lbePocketIndex.clear();
 	lbePocketIndex.resize(MAX_ITEMS_IN_LBE);
 }
 LBETYPE::LBETYPE(const LBETYPE& src) {
+	PERFORMANCE_MARKER
 	memcpy(this, &src, SIZEOF_LBETYPE);
 	lbePocketIndex = src.lbePocketIndex;
 }
 LBETYPE& LBETYPE::operator=(const LBETYPE& src){
+	PERFORMANCE_MARKER
     if (this != &src) {
 		memcpy(this, &src, SIZEOF_LBETYPE);
 		lbePocketIndex = src.lbePocketIndex;
@@ -341,15 +343,18 @@ LBETYPE& LBETYPE::operator=(const LBETYPE& src){
 LBETYPE::~LBETYPE(){
 }
 POCKETTYPE::POCKETTYPE(){
+	PERFORMANCE_MARKER
 	memset(this, 0, SIZEOF_POCKETTYPE);
 	ItemCapacityPerSize.resize(35);
 }
 POCKETTYPE::POCKETTYPE(const POCKETTYPE& src){
+	PERFORMANCE_MARKER
 	memcpy(this, &src, SIZEOF_POCKETTYPE);
 	ItemCapacityPerSize.resize(35);
 	ItemCapacityPerSize = src.ItemCapacityPerSize;
 }
 POCKETTYPE& POCKETTYPE::operator=(const POCKETTYPE& src){
+	PERFORMANCE_MARKER
     if (this != &src) {
 		memcpy(this, &src, SIZEOF_POCKETTYPE);
 		ItemCapacityPerSize = src.ItemCapacityPerSize;
@@ -359,15 +364,11 @@ POCKETTYPE& POCKETTYPE::operator=(const POCKETTYPE& src){
 POCKETTYPE::~POCKETTYPE(){
 }
 
-
-
-//ADB TODO: ChrisL, rewrite this to your liking, then insert it everywhere you have (*pObject)[0]->data.lbe.bLBE == -1.
-//Go ahead and add a new variable to OBJECTTYPE if you want, but then add it to all the functions.
 bool OBJECTTYPE::IsActiveLBE()
 {
 	PERFORMANCE_MARKER
 	if (exists() == true) {
-		return ((*this)[0]->data.lbe.bLBE == -1);
+		return ((*this)[0]->data.lbe.bLBE);
 	}
 	return false;
 }
@@ -375,15 +376,12 @@ bool OBJECTTYPE::IsActiveLBE()
 LBENODE* OBJECTTYPE::GetLBEPointer()
 {
 	PERFORMANCE_MARKER
-	unsigned short uniqueID = (*this)[0]->data.lbe.usLBEItem;
-	for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
-		if (iter->uniqueID == uniqueID) {
-			return &(*iter);
-		}
-		else if (iter->uniqueID > uniqueID) {
-			//because of the linearity of the IDs we know the ID is not here
-			//this will happen when an LBE is copied bitwise, then one is deleted and the other is deleted
-			break;
+	if (LBEArray.empty() == false) {
+		unsigned short uniqueID = (*this)[0]->data.lbe.uniqueID;
+		for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+			if (iter->uniqueID == uniqueID) {
+				return &(*iter);
+			}
 		}
 	}
 	return NULL;
@@ -844,7 +842,7 @@ OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 			LBEArray.push_back(*pLBE);
 			pLBE = &LBEArray.back();
 			pLBE->uniqueID = uniqueID;
-			(*this)[0]->data.lbe.usLBEItem = uniqueID;
+			(*this)[0]->data.lbe.uniqueID = uniqueID;
 		}
 	}
 }
@@ -872,7 +870,7 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 			LBEArray.push_back(*pLBE);
 			pLBE = &LBEArray.back();
 			pLBE->uniqueID = uniqueID;
-			(*this)[0]->data.lbe.usLBEItem = uniqueID;
+			(*this)[0]->data.lbe.uniqueID = uniqueID;
 		}
 	}
 	return *this;
