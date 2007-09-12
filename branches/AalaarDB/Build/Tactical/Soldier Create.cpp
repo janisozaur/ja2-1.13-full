@@ -2871,7 +2871,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 		{
 			if ( pSoldier->inv[ cnt2 ].exists() == true && ValidAttachment( gTempObject.usItem, pSoldier->inv[ cnt2 ].usItem ) )
 			{
-				pSoldier->inv[ cnt2 ].AttachObject( pSoldier, &gTempObject );
+				pSoldier->inv[ cnt2 ].AttachObject( NULL, &gTempObject, FALSE );
 				break;
 			}
 		}
@@ -2884,7 +2884,15 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 				success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
 			}
 			else {
-				success = PlaceObject( pSoldier, cnt, &gTempObject );
+				if(cnt < BIGPOCKSTART) {
+					success = PlaceObject( pSoldier, cnt, &gTempObject );
+				}
+				else{
+					success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
+					if(success == FALSE) {
+						success = PlaceObject( pSoldier, cnt, &gTempObject );
+					}
+				}
 			}
 			if (success == FALSE && pSoldier->inv[cnt].exists() == false) {
 				pSoldier->inv[cnt] = gTempObject;

@@ -384,6 +384,12 @@ namespace ObjectDataStructs {
 		UINT8 ubOwnerProfile;
 		UINT8 ubOwnerCivGroup;
 	};
+	struct OBJECT_LBE
+	{
+		INT8	bLBEStatus;
+		bool	bLBE;				// Marks item as LBENODE
+		int		uniqueID;			// how the LBENODE is accessed
+	};
 };
 
 class ObjectData
@@ -408,6 +414,7 @@ public:
 		ObjectDataStructs::OBJECT_BOMBS_AND_OTHER	misc;
 		ObjectDataStructs::OBJECT_KEY				key;
 		ObjectDataStructs::OBJECT_OWNER				owner;
+		ObjectDataStructs::OBJECT_LBE				lbe;
 	};
 	INT8		bTrap;			// 1-10 exp_lvl to detect
 	UINT8		fUsed;			// flags for whether the item is used or not
@@ -727,6 +734,7 @@ public:
 	UINT16			lbeIndex;
 	UINT32			lbeClass;
 	UINT8			lbeCombo;
+	UINT8			lbeFilledSize;
 	char			POD;
 	std::vector<UINT8>	lbePocketIndex;
 };
@@ -764,21 +772,7 @@ typedef enum ePOCKET_TYPE
 	NO_POCKET_TYPE = 0,
 	GUNSLING_POCKET_TYPE = 1,
 	KNIFE_POCKET_TYPE = 2,
-	BIG_POCKET_TYPE = 3,
-	COMBAT_PACK_POCKET_TYPE = 4,
-	MEDIUM_POCKET_TYPE = 5,
-	SMG_HOLSTER_POCKET_TYPE = 6,
-	TNT_POCKET_TYPE = 7,
-	LARGE_MAG_POCKET_TYPE = 8,
-	AR_MAG_POCKET_TYPE = 9,
-	PISTOL_HOLSTER_POCKET_TYPE = 10,
-	SMG_MAG_POCKET_TYPE = 11,
-	RIFLE_GRENADE_POCKET_TYPE = 12,
-	GRENADE_POCKET_TYPE = 13,
-	PISTOL_MAG_POCKET_TYPE = 14,
-	TINY_POCKET_TYPE = 15,
-	SMALL_POCKET_TYPE = 16,
-	BELT_CLIP_POCKET_TYPE = 17,
+	VEHICLE_POCKET_TYPE = 3,
 };
 
 #define FIRST_WEAPON 1

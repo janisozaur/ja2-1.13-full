@@ -4580,11 +4580,12 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 	}
 
 	std::vector<INT8> pocketKey;
-	GetLBESlots(lClass, pocketKey);
+	// CHRISL: GetLBESlots doesn't use lClass.  It uses the soldier pocket.  We have to convert if we're going to use this function
 	// Setup pocket coords
 	switch (lClass)
 	{
 		case THIGH_PACK:
+			GetLBESlots(LTHIGHPOCKPOS, pocketKey);
 			if(stratScreen){
 				offSetX = 83;
 				offSetY = -1;
@@ -4595,6 +4596,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 			}
 			break;
 		case VEST_PACK:
+			GetLBESlots(VESTPOCKPOS, pocketKey);
 			if(stratScreen){
 				offSetX = 0;
 				offSetY = 111;
@@ -4605,6 +4607,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 			}
 			break;
 		case COMBAT_PACK:
+			GetLBESlots(CPACKPOCKPOS, pocketKey);
 			if(stratScreen){
 				offSetX = -82;
 				offSetY = -1;
@@ -4615,6 +4618,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 			}
 			break;
 		case BACKPACK:
+			GetLBESlots(BPACKPOCKPOS, pocketKey);
 			if(stratScreen){
 				offSetX = 42;
 				offSetY = -104;
@@ -4625,6 +4629,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 			}
 			break;
 		case LBE_POCKET:
+			GetLBESlots(RTHIGHPOCKPOS, pocketKey);
 			if(stratScreen){
 				offSetX = 1;
 				offSetY = -1;
@@ -4884,17 +4889,28 @@ void InternalBeginItemPointer( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject, INT8 
 void BeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 {
 	PERFORMANCE_MARKER
-	if (pSoldier->inv[ubHandPos].exists() == true)
+	int numToMove = 0;
+	if (_KeyDown( SHIFT ))
 	{
-		if (_KeyDown( SHIFT ))
-		{
-			// Remove all from soldier's slot
-			pSoldier->inv[ubHandPos].MoveThisObjectTo(gTempObject, ALL_OBJECTS, pSoldier, ubHandPos);
-		}
-		else
-		{
-			pSoldier->inv[ubHandPos].MoveThisObjectTo(gTempObject, 1, pSoldier, ubHandPos);
-		}
+		// Remove all from soldier's slot
+		numToMove = ALL_OBJECTS;
+	}
+	else
+	{
+		numToMove = 1;
+	}
+	pSoldier->inv[ubHandPos].MoveThisObjectTo(gTempObject, numToMove, pSoldier, ubHandPos);
+
+	if ( gTempObject.exists() == false )
+	{
+		//oops, the move failed.  It might have failed because the object was force placed
+		//to a slot where the ItemSizeLimit is 0, try again
+		//this method won't work with LBEs in LBE pockets
+		pSoldier->inv[ubHandPos].MoveThisObjectTo(gTempObject, numToMove);
+	}
+
+	if ( gTempObject.exists() == true )
+	{
 		InternalBeginItemPointer( pSoldier, &gTempObject, ubHandPos );
 	}
 }

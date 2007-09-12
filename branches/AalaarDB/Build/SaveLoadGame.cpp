@@ -1602,7 +1602,7 @@ BOOLEAN OBJECTTYPE::Save( HWFILE hFile, bool fSavingMap )
 		if (! pLBE->Save(hFile, fSavingMap)) {
 			return FALSE;
 		}
-		unsigned short uniqueID = (*this)[0]->data.misc.usBombItem;
+		unsigned short uniqueID = (*this)[0]->data.lbe.uniqueID;
 		for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
 			if (iter->uniqueID == uniqueID) {
 				LBEArray.erase(iter);

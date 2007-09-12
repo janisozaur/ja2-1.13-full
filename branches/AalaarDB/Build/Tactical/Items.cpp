@@ -1394,49 +1394,39 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 
 
 	//UsingNewInventorySystem == true
-	if (pSoldier != NULL && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
-	{
-		return (max(1, ubSlotLimit));
+	// IC Group Slots
+	if (pSoldier != NULL && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE)) {
+		pIndex = VEHICLE_POCKET_TYPE;
 	}
-	else
-	{
-		// IC Group Slots
-		if (bSlot == GUNSLINGPOCKPOS) {
-			pIndex = GUNSLING_POCKET_TYPE;
-		}
-		else if (bSlot == KNIFEPOCKPOS) {
-			pIndex = KNIFE_POCKET_TYPE;
-		}
-		else if (bSlot == STACK_SIZE_LIMIT) {
-			//calculate the size pretending we are putting it into a big slot in an LBE
-			//or some other big pocket
-			pIndex = BIG_POCKET_TYPE;
+	else if (bSlot == GUNSLINGPOCKPOS) {
+		pIndex = GUNSLING_POCKET_TYPE;
+	}
+	else if (bSlot == KNIFEPOCKPOS) {
+		pIndex = KNIFE_POCKET_TYPE;
+	}
+	else {
+		Assert(icLBE[bSlot] != -1 && icClass[bSlot] != -1 && icPocket[bSlot] != -1);
+		//find the class of the LBE, then find what size the pocket of the slot in the LBE is
+		if (pSoldier == NULL || pSoldier->inv[icLBE[bSlot]].exists() == false) {
+			pIndex = LoadBearingEquipment[icClass[bSlot]].lbePocketIndex[icPocket[bSlot]];
 		}
 		else {
-			Assert(icLBE[bSlot] != -1 && icClass[bSlot] != -1 && icPocket[bSlot] != -1);
-			//find the class of the LBE, then find what size the pocket of the slot in the LBE is
-			if (pSoldier == NULL || pSoldier->inv[icLBE[bSlot]].exists() == false) {
-				pIndex = LoadBearingEquipment[icClass[bSlot]].lbePocketIndex[icPocket[bSlot]];
-			}
-			else {
-				pIndex = LoadBearingEquipment[Item[pSoldier->inv[icLBE[bSlot]].usItem].ubClassIndex].lbePocketIndex[icPocket[bSlot]];
-			}
+			pIndex = LoadBearingEquipment[Item[pSoldier->inv[icLBE[bSlot]].usItem].ubClassIndex].lbePocketIndex[icPocket[bSlot]];
 		}
-
-		iSize = CalculateItemSize(pObject);
-		ubSlotLimit = LBEPocketType[pIndex].ItemCapacityPerSize[iSize];
-
-		//this could be changed, we know guns are physically able to stack
-		if ( iSize < 10 && ubSlotLimit > 1)
-			ubSlotLimit = 1;
-
-		if(LBEPocketType[pIndex].pRestriction != 0 && LBEPocketType[pIndex].pRestriction != Item[usItem].usItemClass) {
-			//if item only fits in big pockets
-			return 0;
-		}
-	
-		return( ubSlotLimit );
 	}
+
+	iSize = CalculateItemSize(pObject);
+	ubSlotLimit = LBEPocketType[pIndex].ItemCapacityPerSize[iSize];
+
+	//this could be changed, we know guns are physically able to stack
+	//if ( iSize < 10 && ubSlotLimit > 1)
+	//	ubSlotLimit = 1;
+
+	if(LBEPocketType[pIndex].pRestriction != 0 && LBEPocketType[pIndex].pRestriction != Item[usItem].usItemClass) {
+		return 0;
+	}
+
+	return( ubSlotLimit );
 }
 
 UINT32 MoneySlotLimit( INT8 bSlot )
@@ -2439,10 +2429,10 @@ void GetPocketDimensionsBySize(int pocketSize, int& sizeX, int& sizeY)
 UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 {
 	PERFORMANCE_MARKER
-	UINT16		iSize, newSize, testSize;
+	UINT16		iSize, newSize, testSize, maxSize;
 	UINT32		cisIndex;
-	int			originalSizeX, originalSizeY;
-	int			newSizeX, newSizeY;
+//	int			originalSizeX, originalSizeY;
+//	int			newSizeX, newSizeY;
 	// Determine default ItemSize based on item and attachments
 	cisIndex = pObject->usItem;
 	iSize = Item[cisIndex].ItemSize;
@@ -2450,55 +2440,70 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 		iSize = 34;
 
 	//store the original size for later calculations
-	GetPocketDimensionsBySize(iSize, originalSizeX, originalSizeY);
+	//CHRISL: I don't think we need to use this any longer
+//	GetPocketDimensionsBySize(iSize, originalSizeX, originalSizeY);
 
 	//for each object in the stack, hopefully there is only 1
 	for (int numStacked = 0; numStacked < pObject->ubNumberOfObjects; ++numStacked) {
-		// Check if we're looking at a LBENODE or not
-		if(pObject->IsActiveLBE() == false)
-		{
-			continue;
-		}
-
-		//for each attachment to this object
-		for (attachmentList::iterator iter = (*pObject)[numStacked]->attachments.begin();
-			iter != (*pObject)[numStacked]->attachments.end(); ++iter) {
-			iSize += CalculateItemSize(&(*iter));;
-		}
-
-		LBENODE* pLBE = pObject->GetLBEPointer();
-		if(pLBE)
-		{
-			newSize = 0;
-			for(unsigned int x = 0; x < pLBE->inv.size(); ++x)
-			{
-				if(pLBE->inv[x].exists() == true)
-				{
-					testSize = CalculateItemSize(&(pLBE->inv[x]));
-					newSize = (testSize > newSize) ? testSize : newSize;
+		//some weapon attachments can adjust the ItemSize of a weapon
+		if(iSize<10) {
+			for (attachmentList::iterator iter = (*pObject)[numStacked]->attachments.begin(); iter != (*pObject)[numStacked]->attachments.end(); ++iter) {
+				if (iter->exists() == true) {
+					iSize += Item[iter->usItem].itemsizebonus;
 				}
 			}
+		}
 
-			//ADB TODO i'm sure this will fail starting around here because of stacks.
-			// Resize based on contents
-			if(newSize > 0)
+		// LBENODE has it's ItemSize adjusted based on what it's storing
+		if(pObject->IsActiveLBE() == true) {
+			LBENODE* pLBE = pObject->GetLBEPointer();
+			if(pLBE)
 			{
-				GetPocketDimensionsBySize(newSize, newSizeX, newSizeY);
-				if((originalSizeX-2)>=newSizeX) {	// Stored item is much smaller then an empty LBE item.  Don't change size
+				newSize = 0;
+				maxSize = max(iSize, LoadBearingEquipment[Item[pObject->usItem].ubClassIndex].lbeFilledSize);
+				// Look for the ItemSize of the largest item in this LBENODE
+				for(unsigned int x = 0; x < pLBE->inv.size(); ++x)
+				{
+					if(pLBE->inv[x].exists() == true)
+					{
+						testSize = CalculateItemSize(&(pLBE->inv[x]));
+						newSize = max(testSize, newSize);
+					}
+				}
+				// If largest item is smaller then LBE, don't change ItemSize
+				if(newSize > 0 && newSize < iSize) {
 					iSize = iSize;
 				}
-				else if((originalSizeX-1)==newSizeX)	// Stored item is large enough to increase LBE item size.
-				{
-					if(newSizeY > originalSizeY) {
-						originalSizeY = newSizeY;
-					}
-					iSize = GetPocketSizeByDimensions(originalSizeX, originalSizeY);
+				// if largest item is larget then LBE but smaller then max size, partially increase ItemSize
+				else if(newSize >= iSize && newSize < maxSize) {
+					iSize = newSize;
 				}
-				else	// Stored item is very large compared to the LBE item.
-				{
-					originalSizeY = 3;
-					iSize = GetPocketSizeByDimensions(originalSizeX, originalSizeY);
+				// if largest item is larger then max size, reset ItemSize to max size
+				else if(newSize >= maxSize) {
+					iSize = maxSize;
 				}
+
+				//ADB TODO i'm sure this will fail starting around here because of stacks.
+				// Resize based on contents
+//				if(newSize > 0)
+//				{
+//					GetPocketDimensionsBySize(newSize, newSizeX, newSizeY);
+//					if((originalSizeX-2)>=newSizeX) {	// Stored item is much smaller then an empty LBE item.  Don't change size
+//						iSize = iSize;
+//					}
+//					else if((originalSizeX-1)==newSizeX)	// Stored item is large enough to increase LBE item size.
+//					{
+//						if(newSizeY > originalSizeY) {
+//							originalSizeY = newSizeY;
+//						}
+//						iSize = GetPocketSizeByDimensions(originalSizeX, originalSizeY);
+//					}
+//					else	// Stored item is very large compared to the LBE item.
+//					{
+//						originalSizeY = 3;
+//						iSize = GetPocketSizeByDimensions(originalSizeX, originalSizeY);
+//					}
+//				}
 			}
 		}
 	}
@@ -4175,7 +4180,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 			}
 		}
 
-		else if (IsSlotAnLBESlot(bPos) == true || ubSlotLimit > pObj->ubNumberOfObjects)
+		else if (IsSlotAnLBESlot(bPos) == true || ubSlotLimit < pObj->ubNumberOfObjects)
 		{
 			//it could be an LBE, or not enough room, so we free up some space
 			return( FreeUpSlotIfPossibleThenPlaceObject( pSoldier, bPos, pObj ) );
@@ -4226,6 +4231,7 @@ bool TryToPlaceInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, in
 {
 	bSlot = FindEmptySlotWithin( pSoldier, bSlot, endSlot );
 	if (bSlot == ITEM_NOT_FOUND) {
+		bSlot = endSlot;
 		return false;
 	}
 
