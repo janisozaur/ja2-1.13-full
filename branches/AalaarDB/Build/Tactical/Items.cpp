@@ -2432,17 +2432,11 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 	PERFORMANCE_MARKER
 	UINT16		iSize, newSize, testSize, maxSize;
 	UINT32		cisIndex;
-//	int			originalSizeX, originalSizeY;
-//	int			newSizeX, newSizeY;
 	// Determine default ItemSize based on item and attachments
 	cisIndex = pObject->usItem;
 	iSize = Item[cisIndex].ItemSize;
 	if(iSize>34)
 		iSize = 34;
-
-	//store the original size for later calculations
-	//CHRISL: I don't think we need to use this any longer
-//	GetPocketDimensionsBySize(iSize, originalSizeX, originalSizeY);
 
 	//for each object in the stack, hopefully there is only 1
 	for (int numStacked = 0; numStacked < pObject->ubNumberOfObjects; ++numStacked) {
@@ -2456,8 +2450,8 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 		}
 
 		// LBENODE has it's ItemSize adjusted based on what it's storing
-		if(pObject->IsActiveLBE() == true) {
-			LBENODE* pLBE = pObject->GetLBEPointer();
+		if(pObject->IsActiveLBE(numStacked) == true) {
+			LBENODE* pLBE = pObject->GetLBEPointer(numStacked);
 			if(pLBE)
 			{
 				newSize = 0;
@@ -2483,28 +2477,6 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 				else if(newSize >= maxSize) {
 					iSize = maxSize;
 				}
-
-				//ADB TODO i'm sure this will fail starting around here because of stacks.
-				// Resize based on contents
-//				if(newSize > 0)
-//				{
-//					GetPocketDimensionsBySize(newSize, newSizeX, newSizeY);
-//					if((originalSizeX-2)>=newSizeX) {	// Stored item is much smaller then an empty LBE item.  Don't change size
-//						iSize = iSize;
-//					}
-//					else if((originalSizeX-1)==newSizeX)	// Stored item is large enough to increase LBE item size.
-//					{
-//						if(newSizeY > originalSizeY) {
-//							originalSizeY = newSizeY;
-//						}
-//						iSize = GetPocketSizeByDimensions(originalSizeX, originalSizeY);
-//					}
-//					else	// Stored item is very large compared to the LBE item.
-//					{
-//						originalSizeY = 3;
-//						iSize = GetPocketSizeByDimensions(originalSizeX, originalSizeY);
-//					}
-//				}
 			}
 		}
 	}
@@ -2600,15 +2572,20 @@ UINT16 OBJECTTYPE::GetWeightOfObjectInStack(unsigned int index)
 	if ( pItem->usItemClass != IC_AMMO )
 	{
 		// Are we looking at an LBENODE item?  New inventory only.
-		if(pItem->usItemClass == IC_LBEGEAR && IsActiveLBE() && (UsingNewInventorySystem() == true))
+		if(pItem->usItemClass == IC_LBEGEAR && IsActiveLBE(index) && (UsingNewInventorySystem() == true))
 		{
-			LBENODE* pLBE = GetLBEPointer();
-			for ( unsigned int subObjects = 0; subObjects < pLBE->inv.size(); subObjects++)
-			{
-				if (pLBE->inv[subObjects].exists() == true)
+			LBENODE* pLBE = GetLBEPointer(index);
+			if (pLBE) {
+				for ( unsigned int subObjects = 0; subObjects < pLBE->inv.size(); subObjects++)
 				{
-					weight += CalculateObjectWeight(&(pLBE->inv[subObjects]));
+					if (pLBE->inv[subObjects].exists() == true)
+					{
+						weight += CalculateObjectWeight(&(pLBE->inv[subObjects]));
+					}
 				}
+			}
+			else {
+				DebugBreak();
 			}
 			//do not search for attachments to an LBE
 			return weight;

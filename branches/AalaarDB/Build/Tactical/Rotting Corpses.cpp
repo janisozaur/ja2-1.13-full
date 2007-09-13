@@ -874,10 +874,6 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 		  Corpse.ubDirection = gb2DirectionsFrom8[ Corpse.ubDirection ];
 		}
 	}
-	else
-	{
-		Corpse.ubDirection = gb2DirectionsFrom8[ Corpse.ubDirection ];
-	}
 
 	if ( ubType == QUEEN_MONSTER_DEAD || ubType == BURNT_DEAD || ubType == EXPLODE_DEAD )
 	{

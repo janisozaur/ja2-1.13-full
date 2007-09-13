@@ -2573,7 +2573,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 			if((UsingNewInventorySystem() == true))
 			{
 				// CHRISL: Display astrisk when LBENODE active
-				if ( pObject->IsActiveLBE() )
+				if ( pObject->HasAnyActiveLBEs() )
 				{
 					SetFontForeground( FONT_BLUE );
 
@@ -3532,8 +3532,8 @@ void RenderItemDescriptionBox( )
 		// CHRISL: Determine if we're looking at an LBENODE and display alternate box graphic
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE())
-				showBox = gpItemDescObject->GetLBEPointer()->lbeClass;
+			if(gpItemDescObject->IsActiveLBE(0))
+				showBox = gpItemDescObject->GetLBEPointer(0)->lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
 		}
@@ -3560,7 +3560,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE())
+			if(gpItemDescObject->IsActiveLBE(0))
 				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
@@ -3637,7 +3637,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE())
+			if(gpItemDescObject->IsActiveLBE(0))
 				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
@@ -4042,8 +4042,8 @@ void RenderItemDescriptionBox( )
 		RenderBackpackButtons(1);
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE())
-				showBox = gpItemDescObject->GetLBEPointer()->lbeClass;
+			if(gpItemDescObject->IsActiveLBE(0))
+				showBox = gpItemDescObject->GetLBEPointer(0)->lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
 		}
@@ -4073,7 +4073,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE())
+			if(gpItemDescObject->IsActiveLBE(0))
 				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
@@ -4153,7 +4153,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE())
+			if(gpItemDescObject->IsActiveLBE(0))
 				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
@@ -4568,9 +4568,9 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 		pSoldier = gpSMCurrentMerc;
 	
 	LBENODE* pLBE = NULL;
-	if(pObj->IsActiveLBE())
+	if(pObj->IsActiveLBE(0))
 	{
-		pLBE = pObj->GetLBEPointer();
+		pLBE = pObj->GetLBEPointer(0);
 		lClass = pLBE->lbeClass;
 		if(lClass == 1 && pObj == &pSoldier->inv[RTHIGHPOCKPOS]) {
 			lClass = 5;
@@ -6761,8 +6761,12 @@ void ItemPopupFullRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 #define NUM_PICKUP_SLOTS				6
 
-typedef struct
+#define SIZEOF_ITEM_PICKUP_MENU_STRUCT_POD offsetof(ITEM_PICKUP_MENU_STRUCT, endOfPod)
+class ITEM_PICKUP_MENU_STRUCT
 {
+public:
+	ITEM_PICKUP_MENU_STRUCT() {initialize();};
+	void	initialize() {memset(this, 0, SIZEOF_ITEM_PICKUP_MENU_STRUCT_POD); CompAmmoObject.initialize();};
 	ITEM_POOL			*pItemPool;
 	INT16					sX;
 	INT16					sY;
@@ -6799,10 +6803,10 @@ typedef struct
 	MOUSE_REGION	BackRegion;
 	BOOLEAN				*pfSelectedArray;
 	BOOLEAN				fAtLeastOneSelected;
-	OBJECTTYPE		CompAmmoObject;
 	BOOLEAN				fAllSelected;
-
-} ITEM_PICKUP_MENU_STRUCT;
+	char	endOfPod;
+	OBJECTTYPE		CompAmmoObject;
+};
 
 #define					ITEMPICK_UP_X				55
 #define					ITEMPICK_UP_Y				5
@@ -6872,8 +6876,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 	// Make sure menu is located if not on screen
 	LocateSoldier( pSoldier->ubID, FALSE );
 
-	// memset values
-	memset( &gItemPickupMenu, 0, sizeof( gItemPickupMenu ) );
+	gItemPickupMenu.initialize();
 
 	//Set item pool value
 	gItemPickupMenu.pItemPool		= pItemPool;
@@ -7405,7 +7408,7 @@ void RenderItemPickupMenu( )
 			  if((UsingNewInventorySystem() == true))
 			  {
 				  // CHRISL: Show astrisk for active LBENODE
-				  if ( pObject->IsActiveLBE())
+				  if ( pObject->IsActiveLBE(0))
 				  {
 					  SetFontForeground( FONT_BLUE );
 						SetFontShadow( DEFAULT_SHADOW );
@@ -8593,8 +8596,7 @@ BOOLEAN InitializeStealItemPickupMenu( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOppo
 	// Make sure menu is located if not on screen
 	LocateSoldier( pOpponent->ubID, FALSE );
 
-	// memset values
-	memset( &gItemPickupMenu, 0, sizeof( gItemPickupMenu ) );
+	gItemPickupMenu.initialize();
 
 	//Set item pool value
 	gItemPickupMenu.pItemPool	= pItemPool;
