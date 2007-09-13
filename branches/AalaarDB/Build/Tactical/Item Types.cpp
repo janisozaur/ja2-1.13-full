@@ -4,6 +4,14 @@
 #include "Items.h"
 #include "GameSettings.h"
 
+
+int		BODYPOSFINAL		= GUNSLINGPOCKPOS;//RESET in initInventory
+int		BIGPOCKFINAL		= MEDPOCK1POS;//RESET in initInventory
+int		MEDPOCKSTART		= MEDPOCK1POS;//RESET in initInventory
+int		MEDPOCKFINAL		= SMALLPOCK1POS;//RESET in initInventory
+int		SMALLPOCKFINAL		= NUM_INV_SLOTS;//RESET in initInventory
+
+
 OBJECTTYPE gTempObject;
 OBJECTTYPE gStackTempObject;
 std::list<LBENODE>	LBEArray;
@@ -432,8 +440,6 @@ void OBJECTTYPE::SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, 
 int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 {
 	PERFORMANCE_MARKER
-	//ADB TODO make the stacking restrictions match!!!!
-
 	//This function is never called from a soldier, so get the max size
 	int numToAdd = max(0, ItemSlotLimit( this, STACK_SIZE_LIMIT ) - ubNumberOfObjects);
 
@@ -443,17 +449,63 @@ int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 	}
 
 	if (numToAdd) {
-		CreateItem(usItem, objectStatus, &gStackTempObject);
-		for (int x = ubNumberOfObjects; x < ubNumberOfObjects + numToAdd; ++x) {
-			objectStack.push_front(gStackTempObject.objectStack.front());
-		}
-
-		ubNumberOfObjects += numToAdd;
-		ubWeight = CalculateObjectWeight(this);
+		CreateItems(usItem, objectStatus, numToAdd, &gStackTempObject);
+		this->AddObjectsToStack(gStackTempObject);
 	}
 
 	//returns how many were NOT added
 	return howMany - numToAdd;
+}
+
+bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
+{
+	//stacking control, restrict certain things here
+	if (numToStack > 0) {
+		if (exists() == true) {
+			//Triggers, and other specials can never stack
+			if (Item[usItem].usItemClass == IC_BOMB) {
+				//exit and do not continue
+				return false;
+			}
+
+			if (Item[usItem].usItemClass == IC_MONEY) {
+				//money doesn't stack, it merges
+				// average out the status values using a weighted average...
+				int thisStatus = (*this)[0]->data.money.bMoneyStatus * (*this)[0]->data.money.uiMoneyAmount;
+				int sourceStatus = sourceObject[0]->data.money.bMoneyStatus * sourceObject[0]->data.money.uiMoneyAmount;
+				int average = (*this)[0]->data.money.uiMoneyAmount + sourceObject[0]->data.money.uiMoneyAmount;
+
+				(*this)[0]->data.objectStatus = ( (thisStatus + sourceStatus) / average);
+				(*this)[0]->data.money.uiMoneyAmount += sourceObject[0]->data.money.uiMoneyAmount;
+				return false;
+			}
+
+			//keys can stack if the same key
+			if (Item[usItem].usItemClass == IC_KEY) {
+				if ((*this)[0]->data.key.ubKeyID != sourceObject[0]->data.key.ubKeyID) {
+					return false;
+				}
+			}
+
+			//for convenience sake, do not allow mixed flags to stack!
+			//continue on because you might find something else with the same flags
+			if (sourceObject.fFlags != this->fFlags) {
+				numToStack = 0;
+			}
+
+			if (sourceObject[0]->data.ubImprintID != (*this)[0]->data.ubImprintID) {
+				numToStack = 0;
+			}
+
+			//nor allow trapped items to stack
+			if (sourceObject[0]->data.bTrap > 0
+				|| (*this)[0]->data.bTrap > 0) {
+				return false;
+			}
+			//ADB TODO, other specials
+		}
+	}
+	return true;
 }
 
 int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany, SOLDIERTYPE* pSoldier, int slot, bool allowLBETransfer)
@@ -475,58 +527,13 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany, SOLDIER
 		numToAdd = min(numToAdd, howMany);
 	}
 
-
-	//stacking control, restrict certain things here
-	if (numToAdd > 0) {
-		if (exists() == true) {
-			//Triggers, and other specials can never stack
-			if (Item[usItem].usItemClass == IC_BOMB) {
-				//exit and do not continue
-				return 0;
-			}
-
-			if (Item[usItem].usItemClass == IC_MONEY) {
-				//money doesn't stack, it merges
-				// average out the status values using a weighted average...
-				int thisStatus = (*this)[0]->data.money.bMoneyStatus * (*this)[0]->data.money.uiMoneyAmount;
-				int sourceStatus = sourceObject[0]->data.money.bMoneyStatus * sourceObject[0]->data.money.uiMoneyAmount;
-				int average = (*this)[0]->data.money.uiMoneyAmount + sourceObject[0]->data.money.uiMoneyAmount;
-
-				(*this)[0]->data.objectStatus = ( (thisStatus + sourceStatus) / average);
-				(*this)[0]->data.money.uiMoneyAmount += sourceObject[0]->data.money.uiMoneyAmount;
-				return 0;
-			}
-
-			//keys can stack if the same key
-			if (Item[usItem].usItemClass == IC_KEY) {
-				if ((*this)[0]->data.key.ubKeyID != sourceObject[0]->data.key.ubKeyID) {
-					return 0;
-				}
-			}
-
-			//for convenience sake, do not allow mixed flags to stack!
-			//continue on because you might find something else with the same flags
-			if (sourceObject.fFlags != this->fFlags) {
-				numToAdd = 0;
-			}
-
-			if (sourceObject[0]->data.ubImprintID != (*this)[0]->data.ubImprintID) {
-				numToAdd = 0;
-			}
-
-			//nor allow trapped items to stack
-			if (sourceObject[0]->data.bTrap > 0
-				|| (*this)[0]->data.bTrap > 0) {
-				return 0;
-			}
-			//ADB TODO, other specials
-		}
+	if (this->CanStack(sourceObject, numToAdd) == false) {
+		return 0;
 	}
 
 	//this recalcs weight too!
 	SpliceData(sourceObject, numToAdd, sourceObject.objectStack.begin());
 
-	//ADB TODO
 	if (numToAdd && UsingNewInventorySystem() == true && pSoldier != NULL) {
 		//CHRISL: For New Inventory system.  Are we handling an LBE item FROM a soldier?
 		if(IsSlotAnLBESlot(slot) == true && allowLBETransfer == true)
@@ -546,35 +553,6 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany, SOLDIER
 		//ALL_OBJECTS means move all, if all were moved the new size should be 0
 		return sourceObject.ubNumberOfObjects;
 	}
-}
-
-void OBJECTTYPE::DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany)
-{
-	PERFORMANCE_MARKER
-	int numToDupe;
-	if (howMany != ALL_OBJECTS) {
-		numToDupe = min(howMany, sourceObject.ubNumberOfObjects);
-	}
-	else {
-		numToDupe = sourceObject.ubNumberOfObjects;
-	}
-
-	if (numToDupe) {
-		objectStack.clear();
-		this->usItem = sourceObject.usItem;
-		this->fFlags = sourceObject.fFlags;
-		StackedObjects::iterator iter = sourceObject.objectStack.begin();
-		for (int x = 0; x < numToDupe; ++x) {
-			objectStack.push_back(*iter);
-			++iter;
-		}
-		ubNumberOfObjects = numToDupe;
-		ubWeight = CalculateObjectWeight(this);
-	}
-	else {
-		initialize();
-	}
-	return;
 }
 
 int OBJECTTYPE::MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove, SOLDIERTYPE* pSoldier, int slot)

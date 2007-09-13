@@ -2424,8 +2424,6 @@ void GetPocketDimensionsBySize(int pocketSize, int& sizeX, int& sizeY)
 }
 
 
-//ADB TODO: Chris, check these out and see if they are ok with you
-
 // CHRISL: New function to dynamically modify ItemSize based on attachments, stack size, etc
 UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 {
@@ -2747,7 +2745,6 @@ void DistributeStatus(OBJECTTYPE* pSourceObject, OBJECTTYPE* pTargetObject, INT8
 	}
 }
 
-//ADB TODO move into OBJECTTYPE and clean up?
 BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex )
 {
 	PERFORMANCE_MARKER
@@ -2758,12 +2755,13 @@ BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetO
 	if (ubIndex < pTargetObj->ubNumberOfObjects)
 	{
 		// swap
-		gTempObject.DuplicateObjectsInStack(*pSourceObj, 1);
+		//std::swap??
+		StackedObjectData data = *((*pSourceObj)[0]);
 
 		*((*pSourceObj)[0]) = *((*pTargetObj)[ubIndex]);
 		pSourceObj->ubWeight = CalculateObjectWeight(pSourceObj);
 
-		*((*pTargetObj)[ubIndex]) = *(gTempObject[0]);
+		*((*pTargetObj)[ubIndex]) = data;
 		pTargetObj->ubWeight = CalculateObjectWeight(pTargetObj);
 		return( TRUE );
 	}
@@ -3798,13 +3796,13 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 				{
 					// two items in hands; try moving the second one so we can swap 
 					// CHRISL: Adjust parameters to include the new inventory system
-					if (FitsInSmallPocket(&pSoldier->inv[SECONDHANDPOS]) == false)
+					if (FitsInSmallPocket(&pSoldier->inv[SECONDHANDPOS]) == true)
 					{
-						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCKSTART, MEDPOCKFINAL );
+						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCKSTART, NUM_INV_SLOTS );
 					}
 					else
 					{
-						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCKSTART, NUM_INV_SLOTS );
+						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCKSTART, MEDPOCKFINAL );
 					}
 
 					if (bNewPos == NO_SLOT)
@@ -4005,13 +4003,6 @@ BOOLEAN FreeUpSlotIfPossibleThenPlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, 
 		return( PlaceObject( pSoldier, bPos, pObj ) );
 	}
 	return( FALSE );
-}
-
-void TryToStackThisItem(SOLDIERTYPE* pSoldier, UINT8 index)
-{
-	PERFORMANCE_MARKER
-	Assert(UsingNewInventorySystem() == false);
-	//ADB TODO
 }
 
 BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
@@ -4447,15 +4438,14 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 					}
 					break;
 				case ARMOURCLASS_LEGGINGS:
-					// CHRISL:
+					/* CHRISL:  If we're wearing leg protectors and pick up leggings, we want to leggings to override. 
+					This is only an issue during merc hiring when leggings will often be placed after leg protectors.
+					However, this isn't as big an issue at this point because of the redesigns in the profile item sorting
+					functions.*/
 					if(Item[pSoldier->inv[LEGPOS].usItem].attachment)
 					{
-						//ADB TODO, figure out what this code does, and fix it
-						/*
-						pObj->usAttachItem[0] = pSoldier->inv[LEGPOS].usItem;
-						pObj->bAttachStatus[0] = pSoldier->inv[LEGPOS].ItemData.Generic.bStatus[0];
-						pSoldier->inv[LEGPOS].usItem = NONE;
-						*/
+						SwapObjs(pObj, &pSoldier->inv[LEGPOS]);
+						pSoldier->inv[LEGPOS].AttachObject(pSoldier, pObj, FALSE);
 					}
 					if (pSoldier->inv[LEGPOS].exists() == false)
 					{
@@ -4568,7 +4558,6 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 			break;
 	}
 
-	//ADB TODO include exclude slot
 	if (PlaceInAnySlot(pSoldier, pObj, (fNewItem == TRUE), bExcludeSlot) == true) {
 		return TRUE;
 	}

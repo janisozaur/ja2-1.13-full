@@ -866,6 +866,13 @@ void InitInvData(INT8 num, BOOLEAN fBigPocket, INT16 sBarDx, INT16 sBarDy, INT16
 }
 void InitInventoryOld()
 {
+	int		BODYPOSFINAL		= GUNSLINGPOCKPOS;//RESET in initInventory
+	int		BIGPOCKFINAL		= BIGPOCK5POS;//RESET in initInventory
+	int		MEDPOCKSTART		= SMALLPOCK1POS;//RESET in initInventory
+	int		MEDPOCKFINAL		= SMALLPOCK1POS;//RESET in initInventory
+	int		SMALLPOCKFINAL		= SMALLPOCK9POS;//RESET in initInventory
+
+
 	InitInvData(HELMETPOS,		FALSE,	INV_BAR_DX,	INV_BAR_DY,	HEAD_INV_SLOT_WIDTH,	HEAD_INV_SLOT_HEIGHT,	0, 0);	// HELMETPOS
 	InitInvData(VESTPOS,		FALSE,	INV_BAR_DX,	INV_BAR_DY,	VEST_INV_SLOT_WIDTH,	VEST_INV_SLOT_HEIGHT,	0, 0);	// VESTPOS
 	InitInvData(LEGPOS,			FALSE,	INV_BAR_DX,	INV_BAR_DY,	LEGS_INV_SLOT_WIDTH,	LEGS_INV_SLOT_HEIGHT,	0, 0);	// LEGPOS
@@ -888,6 +895,13 @@ void InitInventoryOld()
 }
 void InitInventoryNew()
 {
+	int		BODYPOSFINAL		= GUNSLINGPOCKPOS;//RESET in initInventory
+	int		BIGPOCKFINAL		= MEDPOCK1POS;//RESET in initInventory
+	int		MEDPOCKSTART		= MEDPOCK1POS;//RESET in initInventory
+	int		MEDPOCKFINAL		= SMALLPOCK1POS;//RESET in initInventory
+	int		SMALLPOCKFINAL		= NUM_INV_SLOTS;//RESET in initInventory
+
+
 	InitInvData(0,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	HEAD_INV_SLOT_WIDTH,	HEAD_INV_SLOT_HEIGHT,	0, 0);	// HELMETPOS
 	InitInvData(1,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	VEST_INV_SLOT_WIDTH,	VEST_INV_SLOT_HEIGHT,	0, 0);	// VESTPOS
 	InitInvData(2,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	LEGS_INV_SLOT_WIDTH,	LEGS_INV_SLOT_HEIGHT,	0, 0);	// LEGPOS
@@ -3312,7 +3326,7 @@ void ItemDescAmmoCallback(GUI_BUTTON *btn,INT32 reason)
 void DoAttachment( void )
 {
 	PERFORMANCE_MARKER
-	//ADB TODO works ok placing and removing a stack, does NOT display it ok.
+	//ADB TODO works ok placing and removing a stack, does NOT display it ok - not sure that's easily fixable
 	//ADB TODO also in the process of testing this I found if you move around attachments,
 	//the tooltip does not change.  eg if there are 2, and you remove the first one, the second one
 	//moves over to the first's spot, but rollover tooltip says it is the first item!
@@ -3322,13 +3336,12 @@ void DoAttachment( void )
 		if (gpItemPointer->exists() == false)
 		{
 			// attachment attached, merge item consumed, etc
-
-    	if ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
-      {
-        MAPEndItemPointer( );
-      }
-      else
-      {
+			if ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
+			{
+				MAPEndItemPointer( );
+			}
+			else
+			{
 				// End Item pickup
 				gpItemPointer = NULL;
 				EnableSMPanelButtons( TRUE , TRUE );

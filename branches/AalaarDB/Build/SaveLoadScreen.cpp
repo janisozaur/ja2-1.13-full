@@ -2560,7 +2560,6 @@ void ClearSelectedSaveSlot()
 }
 
 
-extern BOOLEAN gfIgnoreShutdownAssertions;
 void SaveGameToSlotNum()
 {
 	PERFORMANCE_MARKER
@@ -2596,10 +2595,6 @@ void SaveGameToSlotNum()
 	RenderButtons();
 
 
-	//ADB when I save and set a breakpoint it takes so long that another game loop takes place
-	//which tries to destroy the buttons again which causes an assert!
-	BOOLEAN previous = gfIgnoreShutdownAssertions;
-	gfIgnoreShutdownAssertions = TRUE;
 	if( !SaveGame( gbSelectedSaveLocation, gzGameDescTextField ) )
 	{
 		//Unset the fact that we are saving a game
@@ -2609,8 +2604,6 @@ void SaveGameToSlotNum()
 	}
 
 //			gfExitAfterMessageBox = TRUE;
-
-	gfIgnoreShutdownAssertions = previous;
 	SetSaveLoadExitScreen( guiPreviousOptionScreen );
 }
 

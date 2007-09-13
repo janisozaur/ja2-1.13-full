@@ -746,20 +746,7 @@ void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 	PERFORMANCE_MARKER
 	INT32 iSlot = -1;
 
-	if((UsingNewInventorySystem() == false))
-		iSlot = FirstFreeBigEnoughPocket(pProfile, usItem, ubHowMany);
-	else
-	{
-		// CHRISL: Alter the placement of initial equipment to come last.  At this stage, just add items, one pocket at a time
-		for(int i=INV_START_POS; i<NUM_INV_SLOTS; i++)
-		{
-			if(pProfile->inv[i] == NOTHING)
-			{
-				iSlot = i;
-				break;
-			}
-		}
-	}
+	iSlot = FirstFreeBigEnoughPocket(pProfile, usItem, ubHowMany);
 
 	if (iSlot == -1)
 	{
@@ -1113,12 +1100,23 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 		if ( pProfile->inv[SECONDHANDPOS] == NONE )
 			return SECONDHANDPOS;
 	}
-	//ADB TODO
+
+	CreateItems(usItem, 100, ubHowMany, &gTempObject);
 	// if it fits into a small pocket
-	if (Item[usItem].ubPerPocket != 0)
+	if (FitsInSmallPocket(&gTempObject) && ubHowMany <= ItemSlotLimit(&gTempObject, SMALLPOCK1POS))
 	{
 		// check small pockets first
-		for (uiPos = SMALLPOCK1POS; uiPos <= SMALLPOCK8POS; uiPos++)
+		for (uiPos = SMALLPOCKSTART; uiPos < SMALLPOCKFINAL; uiPos++)
+		{
+			if (pProfile->inv[uiPos] == NONE)
+			{
+				return(uiPos);
+			}
+		}
+	}
+
+	if (UsingNewInventorySystem() == true && ubHowMany <= ItemSlotLimit(&gTempObject, MEDPOCK1POS)) {
+		for (uiPos = MEDPOCKSTART; uiPos < MEDPOCKFINAL; uiPos++)
 		{
 			if (pProfile->inv[uiPos] == NONE)
 			{
@@ -1128,11 +1126,13 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 	}
 
 	// check large pockets
-	for (uiPos = BIGPOCK1POS; uiPos <= BIGPOCK4POS; uiPos++)
-	{
-		if (pProfile->inv[uiPos] == NONE)
+	if (ubHowMany <= ItemSlotLimit(&gTempObject, BIGPOCK1POS)) {
+		for (uiPos = BIGPOCKSTART; uiPos < BIGPOCKFINAL; uiPos++)
 		{
-			return(uiPos);
+			if (pProfile->inv[uiPos] == NONE)
+			{
+				return(uiPos);
+			}
 		}
 	}
 

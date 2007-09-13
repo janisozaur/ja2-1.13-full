@@ -3191,10 +3191,6 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 								gpSMCurrentMerc->flags.DropPackFlag = FALSE;
 							RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 						}
-						//ADB TODO move this
-						// Are we swaping LBE items?
-						if(gpSMCurrentMerc->inv[uiHandPos].exists() == true)	// Item already exists in this pocket
-							MoveItemToLBEItem( gpSMCurrentMerc, uiHandPos );
 					}
 				}
 
