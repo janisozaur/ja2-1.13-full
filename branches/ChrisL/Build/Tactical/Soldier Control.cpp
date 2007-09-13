@@ -5100,7 +5100,7 @@ void SOLDIERTYPE::EVENT_SoldierGotHit( UINT16 usWeaponIndex, INT16 sDamage, INT1
 		if (pNewSoldier != NULL)
 		{
 			//warning, if this code is ever uncommented, rename all thisSoldier
-			//to pSoldier in this function, then init pSoldier to thisSoldier
+			//to thisSoldier in this function, then init thisSoldier to thisSoldier
 			thisSoldier = pNewSoldier;
 		}
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Tried to free up attacker, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
@@ -6163,14 +6163,14 @@ void SOLDIERTYPE::ChangeSoldierStance( UINT8 ubDesiredStance )
 		}
 	}
 
-void SOLDIERTYPE::EVENT_InternalSetSoldierDestination( UINT8	ubNewDirection, BOOLEAN fFromMove, UINT16 usAnimState )
+void SOLDIERTYPE::EVENT_InternalSetSoldierDestination( UINT16 usNewDirection, BOOLEAN fFromMove, UINT16 usAnimState )
 {
 	PERFORMANCE_MARKER
 	INT16	sNewGridNo;
 	INT16		sXPos, sYPos;
 
 	// Get dest gridno, convert to center coords
-	sNewGridNo = NewGridNo( thisSoldier->sGridNo, DirectionInc( ubNewDirection ) );
+	sNewGridNo = NewGridNo( (INT16)thisSoldier->sGridNo, DirectionInc( usNewDirection ) );
 
 	ConvertMapPosToWorldTileCenter( sNewGridNo, &sXPos, &sYPos );
 
@@ -6179,7 +6179,7 @@ void SOLDIERTYPE::EVENT_InternalSetSoldierDestination( UINT8	ubNewDirection, BOO
 	thisSoldier->pathing.sDestXPos = sXPos;
 	thisSoldier->pathing.sDestYPos = sYPos;
 
-	thisSoldier->bMovementDirection = (INT8)ubNewDirection;
+	thisSoldier->bMovementDirection = (INT8)usNewDirection;
 
 
 	// OK, ATE: If we are side_stepping, calculate a NEW desired direction....
@@ -6188,7 +6188,7 @@ void SOLDIERTYPE::EVENT_InternalSetSoldierDestination( UINT8	ubNewDirection, BOO
 		UINT8 ubPerpDirection;
 
 		// Get a new desired direction, 
-		ubPerpDirection = gPurpendicularDirection[ thisSoldier->ubDirection ][ ubNewDirection ];
+		ubPerpDirection = gPurpendicularDirection[ thisSoldier->ubDirection ][ usNewDirection ];
 
 		// CHange actual and desired direction....
 		thisSoldier->EVENT_SetSoldierDirection( ubPerpDirection );
@@ -6198,7 +6198,7 @@ void SOLDIERTYPE::EVENT_InternalSetSoldierDestination( UINT8	ubNewDirection, BOO
 	{
 		if ( !( gAnimControl[ usAnimState ].uiFlags & ANIM_SPECIALMOVE ) )
 		{
-			EVENT_InternalSetSoldierDesiredDirection( thisSoldier, ubNewDirection, fFromMove, usAnimState );
+			EVENT_InternalSetSoldierDesiredDirection( thisSoldier, usNewDirection, fFromMove, usAnimState );
 		}
 	}
 }
@@ -6402,10 +6402,10 @@ void EVENT_InternalSetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT8	ubNe
 }
 
 
-void SOLDIERTYPE::EVENT_SetSoldierDesiredDirection( UINT8	ubNewDirection )
+void SOLDIERTYPE::EVENT_SetSoldierDesiredDirection( UINT16	usNewDirection )
 {
 	PERFORMANCE_MARKER
-	EVENT_InternalSetSoldierDesiredDirection( thisSoldier, ubNewDirection, FALSE, thisSoldier->usAnimState );
+	EVENT_InternalSetSoldierDesiredDirection( thisSoldier, usNewDirection, FALSE, thisSoldier->usAnimState );
 }
 
 
@@ -7920,8 +7920,10 @@ void SOLDIERTYPE::BeginSoldierClimbUpRoof( void )
 	PERFORMANCE_MARKER
 
 	//CHRISL: Disable climbing up to a roof while wearing a backpack
-	if((UsingNewInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true)
+	if((UsingNewInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true) {
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Cannot climb while wearing a backpack" );
 		return;
+	}
 	INT8							bNewDirection;
 	UINT8							ubWhoIsThere;
 
@@ -12513,12 +12515,12 @@ void SOLDIERTYPE::ResetSoldierChangeStatTimer( void )
 }
 
 
-void SOLDIERTYPE::ChangeToFlybackAnimation( UINT8 ubDirection )
+void SOLDIERTYPE::ChangeToFlybackAnimation( INT8 bDirection )
 {
 	PERFORMANCE_MARKER
-	INT16 sNewGridNo;
 	UINT8 ubOppositeDir;
 	INT16 sDirectionInc;
+	INT16 sNewGridNo;
 
 	ubOppositeDir = gOppositeDirection[ ubDirection ];
 	sDirectionInc = DirectionInc( ubOppositeDir);
@@ -12528,7 +12530,7 @@ void SOLDIERTYPE::ChangeToFlybackAnimation( UINT8 ubDirection )
 	if ( gubWorldMovementCosts[ sNewGridNo ][ ubOppositeDir ][ thisSoldier->pathing.bLevel ] >= TRAVELCOST_BLOCKED )
 	{
 		// No room to fly back.  Pretend we hit the wall and fall forward instead
-		thisSoldier->BeginTyingToFall( );
+		thisSoldier->BeginTyingToFall();
 		thisSoldier->ChangeSoldierState( FALLFORWARD_FROMHIT_STAND, 0, FALSE );
 		return;
 	}
@@ -12537,7 +12539,7 @@ void SOLDIERTYPE::ChangeToFlybackAnimation( UINT8 ubDirection )
 	if ( gubWorldMovementCosts[ sNewGridNo ][ ubOppositeDir ][ thisSoldier->pathing.bLevel ] >= TRAVELCOST_BLOCKED )
 	{
 		// No room to fly back.  Fall back instead
-		thisSoldier->BeginTyingToFall( );
+		thisSoldier->BeginTyingToFall();
 		thisSoldier->ChangeSoldierState( FALLBACK_HIT_STAND, 0, FALSE );
 	}
 
@@ -12548,9 +12550,9 @@ void SOLDIERTYPE::ChangeToFlybackAnimation( UINT8 ubDirection )
 	// Set path....
 	thisSoldier->pathing.usPathDataSize = 0;
 	thisSoldier->pathing.usPathIndex    = 0;
-	thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathDataSize ] = ubOppositeDir;
+	thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathDataSize ] = gOppositeDirection[ thisSoldier->ubDirection ];
 	thisSoldier->pathing.usPathDataSize++;
-	thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathDataSize ] = ubOppositeDir;
+	thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathDataSize ] = gOppositeDirection[ thisSoldier->ubDirection ];
 	thisSoldier->pathing.usPathDataSize++;
 	thisSoldier->pathing.sFinalDestination = sNewGridNo;
 	thisSoldier->EVENT_InternalSetSoldierDestination( thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathIndex ], FALSE, FLYBACK_HIT );
@@ -12559,7 +12561,7 @@ void SOLDIERTYPE::ChangeToFlybackAnimation( UINT8 ubDirection )
 	thisSoldier->EVENT_InitNewSoldierAnim( FLYBACK_HIT, 0 , FALSE );
 }
 
-void SOLDIERTYPE::ChangeToFallbackAnimation( UINT8 ubDirection )
+void SOLDIERTYPE::ChangeToFallbackAnimation( INT8 bDirection )
 {
 	PERFORMANCE_MARKER
 	INT16 sNewGridNo;
@@ -12574,14 +12576,14 @@ void SOLDIERTYPE::ChangeToFallbackAnimation( UINT8 ubDirection )
 	if ( gubWorldMovementCosts[ sNewGridNo ][ ubOppositeDir ][ thisSoldier->pathing.bLevel ] >= TRAVELCOST_BLOCKED )
 	{
 		// No room to fly back.  Pretend we hit the wall and fall forward instead
-		thisSoldier->BeginTyingToFall( );
+		thisSoldier->BeginTyingToFall();
 		thisSoldier->ChangeSoldierState( FALLFORWARD_FROMHIT_STAND, 0, FALSE );
 		return;
 	}
 
 	// Get dest gridno, convert to center coords
 	//sNewGridNo = NewGridNo( sNewGridNo, sDirection );
-	//sNewGridNo = NewGridNo( (INT16)sNewGridNo, (UINT16)(-1 * DirectionInc( bDirection ) ) );
+	//usNewGridNo = NewGridNo( (UINT16)usNewGridNo, (UINT16)(-1 * DirectionInc( bDirection ) ) );
 
 	// Remove any previous actions
 	thisSoldier->aiData.ubPendingAction		 = NO_PENDING_ACTION;
@@ -12589,11 +12591,10 @@ void SOLDIERTYPE::ChangeToFallbackAnimation( UINT8 ubDirection )
 	// Set path....
 	thisSoldier->pathing.usPathDataSize = 0;
 	thisSoldier->pathing.usPathIndex    = 0;
-	thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathDataSize ] = ubOppositeDir;
+	thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathDataSize ] = gOppositeDirection[ thisSoldier->ubDirection ];
 	thisSoldier->pathing.usPathDataSize++;
 	thisSoldier->pathing.sFinalDestination = sNewGridNo;
-	//thisSoldier->pathing.sFinalDestination = thisSoldier->sGridNo;
-	thisSoldier->EVENT_InternalSetSoldierDestination( ubOppositeDir, FALSE, FALLBACK_HIT_STAND );
+	thisSoldier->EVENT_InternalSetSoldierDestination( thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathIndex ], FALSE, FALLBACK_HIT_STAND );
 
 	// Get a new direction based on direction
 	thisSoldier->EVENT_InitNewSoldierAnim( FALLBACK_HIT_STAND, 0 , FALSE );

@@ -329,7 +329,7 @@ int LuaSoldierChangeStance( lua_State *L )
 	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) luaL_checkudata( L, 1, SOLDIER_CLASS );
 	SOLDIERTYPE *pSoldier = *ppSoldier;
 	int newstance = luaL_checkinteger( L, 2);
-	pSoldier->ChangeSoldierStance( (UINT8) newstance);
+	pSoldier->ChangeSoldierStance((UINT8) newstance);
 	return 0;
 }
 

@@ -215,7 +215,7 @@ public:
 	UINT16				lbeIndex;
 	UINT8				ubID;
 	BOOLEAN				ZipperFlag;
-	unsigned short		uniqueID;
+	int					uniqueID;
 	UINT32				uiNodeChecksum;
 	char				endOfPOD;
 	//compiler complains about too big an array since OBJECTTYPE's size is unknown at this time, because of forward declaration
@@ -383,7 +383,7 @@ namespace ObjectDataStructs {
 	struct OBJECT_LBE
 	{
 		INT8	bLBEStatus;
-		bool	bLBE;				// Marks item as LBENODE
+		INT8	bLBE;				// Marks item as LBENODE
 		int		uniqueID;			// how the LBENODE is accessed
 	};
 };
@@ -393,13 +393,18 @@ class ObjectData
 public:
 	//needs a default ctor that inits stuff so that an objectStack can be init with 1 empty ObjectData
 	ObjectData() {initialize();};
+	~ObjectData();
+	// Copy Constructor
+	ObjectData(const ObjectData&);
+	// Assignment operator
+    ObjectData& operator=(const ObjectData&);
+
+
 	void	initialize() {memset(this, 0, sizeof(ObjectData));};
+	void	DeleteLBE();
+	void	DuplicateLBE();
 	bool operator==(ObjectData& compare);
 	bool operator==(const ObjectData& compare)const;
-
-	//BOOLEAN	Load( HWFILE hFile );
-	//BOOLEAN	Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
-	//BOOLEAN	Save( HWFILE hFile, bool fSavingMap );
 
 
 	union {
@@ -461,8 +466,9 @@ public:
 	bool	operator==(OBJECTTYPE& compare);
 	bool	operator==(const OBJECTTYPE& compare)const;
 	bool	exists();
-	bool	IsActiveLBE();
-	LBENODE*	GetLBEPointer();
+	bool	IsActiveLBE(unsigned int index);
+	bool	HasAnyActiveLBEs();
+	LBENODE*	GetLBEPointer(unsigned int index);
 
 
 	UINT16	GetWeightOfObjectInStack(unsigned int index = 0);
@@ -963,10 +969,10 @@ typedef enum
 	BIG_TEAR_GAS,
 	SMALL_CREATURE_GAS,
 	LARGE_CREATURE_GAS,
-  VERY_SMALL_CREATURE_GAS,
+	VERY_SMALL_CREATURE_GAS=995, // Renumbered because the original 160 was lost
 
 	// armor
-	FLAK_JACKET,						//= FIRST_ARMOUR, ( We're out of space! )
+	FLAK_JACKET=161,					//= FIRST_ARMOUR, ( We're out of space! )
 	FLAK_JACKET_18,
 	FLAK_JACKET_Y,
 	KEVLAR_VEST,

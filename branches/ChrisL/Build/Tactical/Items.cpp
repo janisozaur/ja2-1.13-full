@@ -6,6 +6,7 @@
 	#include "weapons.h"
 	#include "Interface Cursors.h"
 
+	#include "Soldier Control.h"
 	#include "overhead.h"
 	#include "Handle UI.h"
 	#include "Animation Control.h"
@@ -2431,17 +2432,11 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 	PERFORMANCE_MARKER
 	UINT16		iSize, newSize, testSize, maxSize;
 	UINT32		cisIndex;
-//	int			originalSizeX, originalSizeY;
-//	int			newSizeX, newSizeY;
 	// Determine default ItemSize based on item and attachments
 	cisIndex = pObject->usItem;
 	iSize = Item[cisIndex].ItemSize;
 	if(iSize>34)
 		iSize = 34;
-
-	//store the original size for later calculations
-	//CHRISL: I don't think we need to use this any longer
-//	GetPocketDimensionsBySize(iSize, originalSizeX, originalSizeY);
 
 	//for each object in the stack, hopefully there is only 1
 	for (int numStacked = 0; numStacked < pObject->ubNumberOfObjects; ++numStacked) {
@@ -2455,8 +2450,8 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 		}
 
 		// LBENODE has it's ItemSize adjusted based on what it's storing
-		if(pObject->IsActiveLBE() == true) {
-			LBENODE* pLBE = pObject->GetLBEPointer();
+		if(pObject->IsActiveLBE(numStacked) == true) {
+			LBENODE* pLBE = pObject->GetLBEPointer(numStacked);
 			if(pLBE)
 			{
 				newSize = 0;
@@ -2482,28 +2477,6 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 				else if(newSize >= maxSize) {
 					iSize = maxSize;
 				}
-
-				//ADB TODO i'm sure this will fail starting around here because of stacks.
-				// Resize based on contents
-//				if(newSize > 0)
-//				{
-//					GetPocketDimensionsBySize(newSize, newSizeX, newSizeY);
-//					if((originalSizeX-2)>=newSizeX) {	// Stored item is much smaller then an empty LBE item.  Don't change size
-//						iSize = iSize;
-//					}
-//					else if((originalSizeX-1)==newSizeX)	// Stored item is large enough to increase LBE item size.
-//					{
-//						if(newSizeY > originalSizeY) {
-//							originalSizeY = newSizeY;
-//						}
-//						iSize = GetPocketSizeByDimensions(originalSizeX, originalSizeY);
-//					}
-//					else	// Stored item is very large compared to the LBE item.
-//					{
-//						originalSizeY = 3;
-//						iSize = GetPocketSizeByDimensions(originalSizeX, originalSizeY);
-//					}
-//				}
 			}
 		}
 	}
@@ -2599,15 +2572,20 @@ UINT16 OBJECTTYPE::GetWeightOfObjectInStack(unsigned int index)
 	if ( pItem->usItemClass != IC_AMMO )
 	{
 		// Are we looking at an LBENODE item?  New inventory only.
-		if(pItem->usItemClass == IC_LBEGEAR && IsActiveLBE() && (UsingNewInventorySystem() == true))
+		if(pItem->usItemClass == IC_LBEGEAR && IsActiveLBE(index) && (UsingNewInventorySystem() == true))
 		{
-			LBENODE* pLBE = GetLBEPointer();
-			for ( unsigned int subObjects = 0; subObjects < pLBE->inv.size(); subObjects++)
-			{
-				if (pLBE->inv[subObjects].exists() == true)
+			LBENODE* pLBE = GetLBEPointer(index);
+			if (pLBE) {
+				for ( unsigned int subObjects = 0; subObjects < pLBE->inv.size(); subObjects++)
 				{
-					weight += CalculateObjectWeight(&(pLBE->inv[subObjects]));
+					if (pLBE->inv[subObjects].exists() == true)
+					{
+						weight += CalculateObjectWeight(&(pLBE->inv[subObjects]));
+					}
 				}
+			}
+			else {
+				DebugBreak();
 			}
 			//do not search for attachments to an LBE
 			return weight;
@@ -5149,6 +5127,7 @@ BOOLEAN CreateGun( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 	{
 		pStackedObject->data.gun.ubGunShotsLeft = GetMagSize(pObj);
 		pStackedObject->data.gun.ubGunAmmoType = AMMO_MONSTER;
+		pStackedObject->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER; // 0verhaul:  Monsters don't have to reload!
 	}
 	else if ( EXPLOSIVE_GUN( usItem ) )
 	{
@@ -5973,7 +5952,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 	INT8		bLoop, bDamage, bDieSize;
 	UINT32	uiRoll;
 
-	if ( pSoldier->bOverTerrainType == DEEP_WATER )
+	if ( pSoldier->MercInDeepWater( ) )
 	{
 		for ( bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++ )
 		{
@@ -6008,7 +5987,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 	{
 		// reduce camouflage by 2% per tile of deep water
 		// and 1% for medium water
-		if ( pSoldier->bOverTerrainType == DEEP_WATER )
+		if ( pSoldier->MercInDeepWater( ) )
 			pSoldier->bCamo = __max( 0, pSoldier->bCamo - 2 );
 		else
 			pSoldier->bCamo = __max( 0, pSoldier->bCamo - 1 );
@@ -6021,7 +6000,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 	{
 		// reduce camouflage by 2% per tile of deep water
 		// and 1% for medium water
-		if ( pSoldier->bOverTerrainType == DEEP_WATER )
+		if ( pSoldier->MercInDeepWater( ) )
 			pSoldier->urbanCamo = __max( 0, pSoldier->urbanCamo - 2 );
 		else
 			pSoldier->urbanCamo = __max( 0, pSoldier->urbanCamo - 1 );
@@ -6034,7 +6013,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 	{
 		// reduce camouflage by 2% per tile of deep water
 		// and 1% for medium water
-		if ( pSoldier->bOverTerrainType == DEEP_WATER )
+		if ( pSoldier->MercInDeepWater( ) )
 			pSoldier->desertCamo = __max( 0, pSoldier->desertCamo - 2 );
 		else
 			pSoldier->desertCamo = __max( 0, pSoldier->desertCamo - 1 );
@@ -6047,7 +6026,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 	{
 		// reduce camouflage by 2% per tile of deep water
 		// and 1% for medium water
-		if ( pSoldier->bOverTerrainType == DEEP_WATER )
+		if ( pSoldier->MercInDeepWater( ) )
 			pSoldier->snowCamo = __max( 0, pSoldier->snowCamo - 2 );
 		else
 			pSoldier->snowCamo = __max( 0, pSoldier->snowCamo - 1 );
@@ -6073,7 +6052,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 
 	if ( pSoldier->bTeam == gbPlayerNum && pSoldier->aiData.bMonsterSmell > 0 )
 	{
-		if ( pSoldier->bOverTerrainType == DEEP_WATER )
+		if ( pSoldier->MercInDeepWater( ) )
 		{
 			bDieSize = 10;
 		}
@@ -6889,7 +6868,8 @@ INT16 GetVisionRangeBonus( SOLDIERTYPE * pSoldier )
 		}
 	}
 
-	// Snap: check only attachments on a raised weapon!
+	// Snap: check only attachments on a readied weapon!
+	// 0verhaul:  Moved this bug fix into WeaponReady so that all CTH modifier functions may benefit from this fix
 	//AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
 	if ( usingGunScope == true )
 	{
@@ -7163,6 +7143,8 @@ UINT8 GetPercentTunnelVision( SOLDIERTYPE * pSoldier )
 	UINT16 usItem;
 	INVTYPE *pItem;
 
+	//ADB and AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
+	bool usingGunScope = WeaponReady(pSoldier);
 	// CHRISL:
 	for (int i = BODYPOSSTART; i < BODYPOSFINAL; i++)
 	{
@@ -7183,7 +7165,6 @@ UINT8 GetPercentTunnelVision( SOLDIERTYPE * pSoldier )
 		}
 	}
 
-	bool usingGunScope = WeaponReady(pSoldier);
 	// Snap: check only attachments on a raised weapon!
 	if ( usingGunScope == true )
 	{
@@ -7212,6 +7193,7 @@ BOOLEAN HasThermalOptics( SOLDIERTYPE * pSoldier )
 {
 	PERFORMANCE_MARKER
 
+	//ADB and AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
 	bool usingGunScope = WeaponReady(pSoldier);
 	for (int i = BODYPOSSTART; i < BODYPOSFINAL; i++)
 	{

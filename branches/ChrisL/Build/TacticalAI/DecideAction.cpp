@@ -71,7 +71,7 @@ INT8 DO_ACTION_LOCKDOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 	PERFORMANCE_MARKER
 	SCHEDULENODE * pSchedule = GetSchedule( pSoldier->ubScheduleID );
 	INT16						sGridNo1, sGridNo2;
-	INT8							ubDirection;
+	INT8							bDirection;
 	STRUCTURE *				pStructure;
 	BOOLEAN						fDoUseDoor;
 	DOOR_STATUS	*			pDoorStatus;
@@ -180,10 +180,10 @@ INT8 DO_ACTION_LOCKDOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 		}
 		else
 		{
-			if ( GridNoOnEdgeOfMap( sGridNo2, &ubDirection ) )
+			if ( GridNoOnEdgeOfMap( sGridNo2, &bDirection ) )
 			{
 				// told to go to edge of map, so go off at that point!
-				pSoldier->ubQuoteActionID = GetTraversalQuoteActionID( ubDirection );
+				pSoldier->ubQuoteActionID = GetTraversalQuoteActionID( bDirection );
 			}
 			pSoldier->aiData.usActionData = sGridNo2;
 			pSoldier->sAbsoluteFinalDestination = pSoldier->aiData.usActionData;
@@ -818,8 +818,11 @@ INT8 GreenAlert_TryToDoBoxing(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 			ubRingDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(CENTER_OF_RING),CenterY(CENTER_OF_RING));
 			if ( pSoldier->ubDirection != ubRingDir )
 			{
-				pSoldier->aiData.usActionData = ubRingDir;
-				return( AI_ACTION_CHANGE_FACING );
+				if ( pSoldier->ubDirection != ubRingDir )
+				{
+					pSoldier->aiData.usActionData = ubRingDir;
+					return( AI_ACTION_CHANGE_FACING );
+				}
 			}
 		}
 	}
@@ -1497,7 +1500,7 @@ INT8 YellowAlert_TryToFlank(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 
 	if ( pSoldier->numFlanks > 0 && pSoldier->numFlanks < MAX_FLANKS_YELLOW )
 	{
-		INT16 currDir = GetDirectionFromGridNo ( tempGridNo, pSoldier );
+		INT16 currDir = (UINT8)GetDirectionFromGridNo ( tempGridNo, pSoldier );
 		INT16 origDir = pSoldier->origDir;
 		pSoldier->numFlanks += 1;
 		if ( pSoldier->flags.lastFlankLeft )
@@ -1739,7 +1742,7 @@ INT8 YellowAlert_TryToSeekNoise(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 					if ( pSoldier->lastFlankSpot != flags.sNoiseGridNo)
 						pSoldier->numFlanks = 0;
 
-					pSoldier->origDir = GetDirectionFromGridNo ( flags.sNoiseGridNo, pSoldier);
+					pSoldier->origDir = (UINT8)GetDirectionFromGridNo ( flags.sNoiseGridNo, pSoldier);
 					pSoldier->lastFlankSpot = flags.sNoiseGridNo;
 					pSoldier->numFlanks++;
 					return(action);
@@ -2198,10 +2201,10 @@ INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 		// if firing mortar make sure we have room
 		if ( Item[pSoldier->inv[ BestThrow.bWeaponIn ].usItem].mortar )
 		{
-			ubOpponentDir = GetDirectionFromGridNo( BestThrow.sTarget, pSoldier );
+			ubOpponentDir = (UINT8)GetDirectionFromGridNo( BestThrow.sTarget, pSoldier );
 
 			// Get new gridno!
-			sCheckGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( ubOpponentDir ) );
+			sCheckGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubOpponentDir ) );
 
 			if ( OKFallDirection( pSoldier, sCheckGridNo, pSoldier->pathing.bLevel, ubOpponentDir, pSoldier->usAnimState ) )
 			{
@@ -2222,10 +2225,10 @@ INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 				BestThrow.ubPossible = FALSE;
 
 				// try behind us, see if there's room to move back
-				sCheckGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( gOppositeDirection[ ubOpponentDir ] ) );
+				sCheckGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)DirectionInc( gOppositeDirection[ ubOpponentDir ] ) );
 				if ( OKFallDirection( pSoldier, sCheckGridNo, pSoldier->pathing.bLevel, gOppositeDirection[ ubOpponentDir ], pSoldier->usAnimState ) )
 				{
-					pSoldier->aiData.usActionData = (UINT16) sCheckGridNo;
+					pSoldier->aiData.usActionData = sCheckGridNo;
 
 					return( AI_ACTION_GET_CLOSER );
 				}
@@ -2500,7 +2503,7 @@ INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 	if ( pSoldier->numFlanks > 0 && pSoldier->numFlanks < MAX_FLANKS_RED  && gAnimControl[ pSoldier->usAnimState ].ubHeight != ANIM_PRONE )
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"decideactionred: continue flanking");
-		INT16 currDir = GetDirectionFromGridNo ( tempGridNo, pSoldier );
+		INT16 currDir = (UINT8)GetDirectionFromGridNo ( tempGridNo, pSoldier );
 		INT16 origDir = pSoldier->origDir;
 		pSoldier->numFlanks += 1;
 		if ( pSoldier->flags.lastFlankLeft )
@@ -2797,7 +2800,7 @@ INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 									pSoldier->numFlanks=0;
 
 
-								pSoldier->origDir = GetDirectionFromGridNo ( sClosestDisturbance, pSoldier);
+								pSoldier->origDir = (UINT8)GetDirectionFromGridNo ( sClosestDisturbance, pSoldier);
 								pSoldier->lastFlankSpot = sClosestDisturbance;
 								pSoldier->numFlanks++;
 								return(action);
@@ -3645,7 +3648,7 @@ struct BlackAlertFlags
 {
 	UINT8	ubMinAPCost,ubCanMove;
 	INT8		bInWater,bInDeepWater,bInGas;
-	INT8		ubDirection;
+	INT8		bDirection;
 	UINT8	ubBestAttackAction;
 	INT8		bCanAttack,bActionReturned;
 	INT8		bWeaponIn;
@@ -5096,7 +5099,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 				if ( pSoldier->aiData.usActionData != NOWHERE )
 				{
 					// truncate path to 1 step
-					pSoldier->aiData.usActionData = pSoldier->sGridNo + DirectionInc( (UINT8) pSoldier->pathing.usPathingData[0] );
+					pSoldier->aiData.usActionData = pSoldier->sGridNo + DirectionInc( pSoldier->pathing.usPathingData[0] );
 					pSoldier->pathing.sFinalDestination = pSoldier->aiData.usActionData;
 					pSoldier->aiData.bNextAction = AI_ACTION_END_TURN;
 					return( AI_ACTION_GET_CLOSER );

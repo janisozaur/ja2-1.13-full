@@ -3398,20 +3398,26 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	if(gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		// If we're standing over the backpack that we're trying to pick up, reset the ap cost to 0
-		if(!newStatus)
-			if(gWorldItems[pSoldier->DropPackKey].object.IsActiveLBE())
-				if(gWorldItems[pSoldier->DropPackKey].object.GetLBEPointer()->lbeIndex != NONE)
-					if(gWorldItems[pSoldier->DropPackKey].sGridNo == pSoldier->sGridNo)
-					{
-						sAPCost = 0;
+		if(!newStatus) {
+			for (int x = 0; x < gWorldItems[pSoldier->DropPackKey].object.ubNumberOfObjects; ++x) {
+				if(gWorldItems[pSoldier->DropPackKey].object.IsActiveLBE(x)) {
+					if(gWorldItems[pSoldier->DropPackKey].object.GetLBEPointer(x)->lbeIndex != NONE) {
+						if(gWorldItems[pSoldier->DropPackKey].sGridNo == pSoldier->sGridNo)
+						{
+							sAPCost = 0;
+							break;
+						}
+						// If not, we can't pick up the item
+						else
+						{
+							CHAR16 dropMSG[] = L"Cannot pickup backpack at this time";
+							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, dropMSG );
+							return FALSE;
+						}
 					}
-					// If not, we can't pick up the item
-					else
-					{
-						CHAR16 dropMSG[] = L"Cannot pickup backpack at this time";
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, dropMSG );
-						return FALSE;
-					}
+				}
+			}
+		}
 		// Do we have enough APs to complete this action?
 		if(EnoughPoints(pSoldier, sAPCost, iBPCost, TRUE))
 			DeductPoints(pSoldier, sAPCost, iBPCost);
@@ -3438,37 +3444,32 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	// Picking up a pack?
 	else
 	{
-		// Is the item we dropped in this sector and does it have an active LBENODE flag?
-		if(gWorldItems[pSoldier->DropPackKey].object.IsActiveLBE())
-		{
-			// Is the LBENODE we're trying to pick up actually in use?
-			if(gWorldItems[pSoldier->DropPackKey].object.GetLBEPointer()->lbeIndex != NONE)
-			{
-				// Try to pickup the LBENODE
-				if(AutoPlaceObject(pSoldier, &(gWorldItems[ pSoldier->DropPackKey ].object ), TRUE ))
+		for (int x = 0; x < gWorldItems[pSoldier->DropPackKey].object.ubNumberOfObjects; ++x) {
+			// Is the item we dropped in this sector and does it have an active LBENODE flag?
+			if(gWorldItems[pSoldier->DropPackKey].object.IsActiveLBE(x)) {
+				// Is the LBENODE we're trying to pick up actually in use?
+				if(gWorldItems[pSoldier->DropPackKey].object.GetLBEPointer(x)->lbeIndex != NONE)
 				{
-					RemoveItemFromPool(gWorldItems[pSoldier->DropPackKey].sGridNo, pSoldier->DropPackKey, gWorldItems[pSoldier->DropPackKey].ubLevel);
-					gpSMCurrentMerc->DropPackKey = -1;
-					gpSMCurrentMerc->flags.DropPackFlag = newStatus;
-					gfUIStanceDifferent = TRUE;
-				}
-				else
-				{
-					CHAR16 dropMSG[] = L"No place to put backpack";
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, dropMSG );
+					// Try to pickup the LBENODE
+					if(AutoPlaceObject(pSoldier, &(gWorldItems[ pSoldier->DropPackKey ].object ), TRUE ))
+					{
+						RemoveItemFromPool(gWorldItems[pSoldier->DropPackKey].sGridNo, pSoldier->DropPackKey, gWorldItems[pSoldier->DropPackKey].ubLevel);
+						gpSMCurrentMerc->DropPackKey = -1;
+						gpSMCurrentMerc->flags.DropPackFlag = newStatus;
+						gfUIStanceDifferent = TRUE;
+						return TRUE;
+					}
+					else
+					{
+						CHAR16 dropMSG[] = L"No place to put backpack";
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, dropMSG );
+						return TRUE;
+					}
 				}
 			}
-			else
-			{
-				CHAR16 dropMSG[] = L"Backpack not found";
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, dropMSG );
-			}
 		}
-		else
-		{
-			CHAR16 dropMSG[] = L"Backpack not found";
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, dropMSG );
-		}
+		CHAR16 dropMSG[] = L"Backpack not found";
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, dropMSG );
 	}
 
 	return TRUE;

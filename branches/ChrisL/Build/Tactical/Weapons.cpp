@@ -2109,7 +2109,7 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 			SWeaponHit.uiUniqueId       = pTargetSoldier->uiUniqueSoldierIdValue;
 			SWeaponHit.usWeaponIndex		= pSoldier->usAttackingWeapon;
 			SWeaponHit.sDamage					= (INT16) iImpact;
-			SWeaponHit.usDirection			= GetDirectionFromGridNo( pSoldier->sGridNo, pTargetSoldier );
+			SWeaponHit.usDirection			= (UINT8)GetDirectionFromGridNo( pSoldier->sGridNo, pTargetSoldier );
 			SWeaponHit.sXPos						= (INT16)pTargetSoldier->dXPos;
 			SWeaponHit.sYPos						= (INT16)pTargetSoldier->dYPos;
 			SWeaponHit.sZPos						= 20;
@@ -2504,7 +2504,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 				SWeaponHit.usSoldierID			= pTargetSoldier->ubID;
 				SWeaponHit.usWeaponIndex		= pSoldier->usAttackingWeapon;
 				SWeaponHit.sDamage					= (INT16) iImpact;
-				SWeaponHit.usDirection			= GetDirectionFromGridNo( pSoldier->sGridNo, pTargetSoldier );
+				SWeaponHit.usDirection			= (UINT8)GetDirectionFromGridNo( pSoldier->sGridNo, pTargetSoldier );
 				SWeaponHit.sXPos						= (INT16)pTargetSoldier->dXPos;
 				SWeaponHit.sYPos						= (INT16)pTargetSoldier->dYPos;
 				SWeaponHit.sZPos						= 20;
@@ -2930,7 +2930,7 @@ BOOLEAN DoSpecialEffectAmmoMiss( UINT8 ubAttackerID, INT16 sGridNo, INT16 sXPos,
 		// fix this correctly is to detach 'alien spit' as a special caliber and instead add 3 new calibers for actual "ammo":
 		// very small spit, small spit, and large spit.  Then we need to add a special effect miss index to point to the
 		// appropriate smoke effect to disperse.
-  //    	NewSmokeEffect( sGridNo, usItem, 0, ubAttackerID );
+		//NewSmokeEffect( sGridNo, usItem, 0, ubAttackerID);
 
 	    // Do Spread effect.......
 		switch( usItem )
@@ -4528,7 +4528,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 				break;
 			case AIM_SHOT_LEGS:
 				// is the damage enough to make us fall over?
-				if ( pubSpecial && IS_MERC_BODY_TYPE( pTarget ) && gAnimControl[ pTarget->usAnimState ].ubEndHeight == ANIM_STAND && !pTarget->MercInWater( ) )
+				if ( pubSpecial && IS_MERC_BODY_TYPE( pTarget ) && gAnimControl[ pTarget->usAnimState ].ubEndHeight == ANIM_STAND && !pTarget->MercInWater() )
 				{
 					if (iImpactForCrits > MIN_DAMAGE_FOR_AUTO_FALL_OVER )					
 					{

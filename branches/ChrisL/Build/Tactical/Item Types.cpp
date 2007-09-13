@@ -7,7 +7,7 @@
 OBJECTTYPE gTempObject;
 OBJECTTYPE gStackTempObject;
 std::list<LBENODE>	LBEArray;
-unsigned short gLastLBEUniqueID = 0;
+int gLastLBEUniqueID = 0;
 
 bool IsSlotAnLBESlot(int slot)
 {
@@ -28,7 +28,7 @@ void CreateLBE (OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets)
 	PERFORMANCE_MARKER
 	int uniqueID;
 	LBENODE* pLBE = NULL;
-	if (pObj->IsActiveLBE() == true) {
+	if (pObj->IsActiveLBE(0) == true) {
 		uniqueID = (*pObj)[0]->data.lbe.uniqueID;
 		for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
 			if (iter->uniqueID == uniqueID) {
@@ -49,15 +49,15 @@ void CreateLBE (OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets)
 	pLBE->lbeClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
 	pLBE->inv.clear();
 	pLBE->inv.resize(numSubPockets);
-	(*pObj)[0]->data.lbe.bLBE = true;
+	(*pObj)[0]->data.lbe.bLBE = -1;
 	(*pObj)[0]->data.lbe.uniqueID = uniqueID;
 }
 
 bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
 {
 	PERFORMANCE_MARKER
-	if (pObj->IsActiveLBE() == true) {
-		LBENODE* pLBE = pObj->GetLBEPointer();
+	if (pObj->IsActiveLBE(0) == true) {
+		LBENODE* pLBE = pObj->GetLBEPointer(0);
 		if (pLBE) {
 			for (unsigned int x = 0; x < pLBE->inv.size(); ++x) {
 				if (pLBE->inv[x].exists() == true) {
@@ -66,44 +66,38 @@ bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
 			}
 			for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
 				if (iter->uniqueID == pLBE->uniqueID) {
-					if (pLBE->uniqueID == gLastLBEUniqueID - 1) {
-						//might as well save on IDs
-						--gLastLBEUniqueID;
-					}
 					LBEArray.erase(iter);
 					break;
 				}
 			}
 			(*pObj)[0]->data.lbe.uniqueID = 0;
-			(*pObj)[0]->data.lbe.bLBE = false;
+			(*pObj)[0]->data.lbe.bLBE = 0;
 			return true;
 		}
 	}
 	return false;
 }
-
+/*
 void DestroyLBE(OBJECTTYPE* pObj)
 {
 	PERFORMANCE_MARKER
-	if (pObj->IsActiveLBE() == true) {
-		LBENODE* pLBE = pObj->GetLBEPointer();
-		if (pLBE) {
-			for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
-				if (iter->uniqueID == pLBE->uniqueID) {
-					if (pLBE->uniqueID == gLastLBEUniqueID - 1) {
-						//might as well save on IDs
-						--gLastLBEUniqueID;
+	for (int x = 0; x < pObj->ubNumberOfObjects; ++x) {
+		if (pObj->IsActiveLBE(x) == true) {
+			LBENODE* pLBE = pObj->GetLBEPointer(x);
+			if (pLBE) {
+				for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+					if (iter->uniqueID == pLBE->uniqueID) {
+						LBEArray.erase(iter);
+						break;
 					}
-					LBEArray.erase(iter);
-					break;
 				}
+				(*pObj)[x]->data.lbe.uniqueID = 0;
+				(*pObj)[x]->data.lbe.bLBE = 0;
 			}
-			(*pObj)[0]->data.lbe.uniqueID = 0;
-			(*pObj)[0]->data.lbe.bLBE = false;
 		}
 	}
 }
-
+*/
 void MoveItemsInSlotsToLBE( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, LBENODE* pLBE, OBJECTTYPE* pObj)
 {
 	PERFORMANCE_MARKER
@@ -148,11 +142,11 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBES
 	PERFORMANCE_MARKER
 	BOOLEAN	flag=FALSE;
 
-	if(pObj->IsActiveLBE() == false) {
+	if(pObj->IsActiveLBE(0) == false) {
 		CreateLBE(pObj, pSoldier->ubID, LBESlots.size());
 	}
 
-	LBENODE* pLBE = pObj->GetLBEPointer();
+	LBENODE* pLBE = pObj->GetLBEPointer(0);
 	MoveItemsInSlotsToLBE(pSoldier, LBESlots, pLBE, pObj);
 	DestroyLBEIfEmpty(pObj);
 
@@ -270,7 +264,7 @@ BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos )
 	GetLBESlots(uiHandPos, LBESlots);
 
 	CreateLBE(&(pSoldier->inv[uiHandPos]), pSoldier->ubID, LBESlots.size());
-	LBENODE* pLBE = pSoldier->inv[uiHandPos].GetLBEPointer();
+	LBENODE* pLBE = pSoldier->inv[uiHandPos].GetLBEPointer(0);
 	for(unsigned int i=0; i<LBESlots.size(); i++)
 	{
 		// Is there an item in this pocket?
@@ -299,11 +293,11 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 
 	if(pSoldier->inv[uiHandPos].exists() == false)
 		MoveItemsToActivePockets(pSoldier, LBESlots, uiHandPos, pObj);
-	if(pObj->IsActiveLBE() == false) {
+	if(pObj->IsActiveLBE(0) == false) {
 		return (FALSE);
 	}
 
-	LBENODE* pLBE = pObj->GetLBEPointer();
+	LBENODE* pLBE = pObj->GetLBEPointer(0);
 	for(unsigned int i=0; i<LBESlots.size(); i++)
 	{
 		// Is there an item in this LBE pocket?
@@ -364,20 +358,33 @@ POCKETTYPE& POCKETTYPE::operator=(const POCKETTYPE& src){
 POCKETTYPE::~POCKETTYPE(){
 }
 
-bool OBJECTTYPE::IsActiveLBE()
+bool OBJECTTYPE::IsActiveLBE(unsigned int index)
 {
 	PERFORMANCE_MARKER
 	if (exists() == true) {
-		return ((*this)[0]->data.lbe.bLBE);
+		return ((*this)[index]->data.lbe.bLBE == -1);
 	}
 	return false;
 }
 
-LBENODE* OBJECTTYPE::GetLBEPointer()
+bool OBJECTTYPE::HasAnyActiveLBEs()
+{
+	PERFORMANCE_MARKER
+	if (exists() == true) {
+		for (int x = 0; x < ubNumberOfObjects; ++x) {
+			if ((*this)[x]->data.lbe.bLBE == -1) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+LBENODE* OBJECTTYPE::GetLBEPointer(unsigned int index)
 {
 	PERFORMANCE_MARKER
 	if (LBEArray.empty() == false) {
-		unsigned short uniqueID = (*this)[0]->data.lbe.uniqueID;
+		int uniqueID = (*this)[index]->data.lbe.uniqueID;
 		for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
 			if (iter->uniqueID == uniqueID) {
 				return &(*iter);
@@ -774,6 +781,84 @@ bool ObjectData::operator==(const ObjectData& compare)const
 	return (memcmp(this, &compare, sizeof(ObjectData)) == 0);
 }
 
+ObjectData::ObjectData(const ObjectData& src)
+{
+	PERFORMANCE_MARKER
+	if ((void*)this != (void*)&src) {
+		//first get rid of any LBE this might have
+		DeleteLBE();
+
+		//copy over the data
+		this->bTrap = src.bTrap;
+		this->fUsed = src.fUsed;
+		this->ubImprintID = src.ubImprintID;
+		//copy over the union
+		this->gun = src.gun;
+
+		//duplicate the LBE data
+		DuplicateLBE();
+	}
+}
+
+ObjectData& ObjectData::operator =(const ObjectData& src)
+{
+	PERFORMANCE_MARKER
+	if ((void*)this != (void*)&src) {
+		//first get rid of any LBE this might have
+		DeleteLBE();
+
+		//copy over the data
+		this->bTrap = src.bTrap;
+		this->fUsed = src.fUsed;
+		this->ubImprintID = src.ubImprintID;
+		//copy over the union
+		this->gun = src.gun;
+
+		//duplicate the LBE data
+		DuplicateLBE();
+	}
+	return *this;
+}
+
+ObjectData::~ObjectData()
+{
+	DeleteLBE();
+}
+
+void ObjectData::DeleteLBE()
+{
+	if (LBEArray.empty() == false) {
+		if (this->lbe.bLBE == -1) {
+			int uniqueID = this->lbe.uniqueID;
+			for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+				if (iter->uniqueID == uniqueID) {
+					LBEArray.erase(iter);
+					break;
+				}
+			}
+		}
+	}
+}
+
+void ObjectData::DuplicateLBE()
+{
+	if (this->lbe.bLBE == -1) {
+		LBENODE* pLBE = NULL;
+		int uniqueID = this->lbe.uniqueID;
+		for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+			if (iter->uniqueID == uniqueID) {
+				pLBE = &(*iter);
+				break;
+			}
+		}
+		uniqueID = gLastLBEUniqueID++;
+		LBEArray.push_back(*pLBE);
+		pLBE = &LBEArray.back();
+		pLBE->uniqueID = uniqueID;
+		this->lbe.uniqueID = uniqueID;
+	}
+}
+
 // Constructor
 OBJECTTYPE::OBJECTTYPE()
 {
@@ -783,18 +868,15 @@ OBJECTTYPE::OBJECTTYPE()
 void OBJECTTYPE::initialize()
 {
 	PERFORMANCE_MARKER
+
+	memset(this, 0, SIZEOF_OBJECTTYPE_POD);
+
 	//this is an easy way to init it and get rid of attachments
 	objectStack.clear();
 	//ubNumberOfObjects should be 0 so any loop checking it will not work
 	//however objectStack should always have at least one, because there are so
-	//many uses of (*pObj)[0]->data.objectStatus and such, including DestroyLBE
+	//many uses of (*pObj)[0]->data.objectStatus and such
 	objectStack.resize(1);
-
-	DestroyLBE(this);
-
-	memset(this, 0, SIZEOF_OBJECTTYPE_POD);
-	//ubNumberOfObjects = 1;
-
 }
 
 bool OBJECTTYPE::operator==(const OBJECTTYPE& compare)const
@@ -829,21 +911,7 @@ OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 		this->ubWeight = src.ubWeight;
 		this->fFlags = src.fFlags;
 		this->ubMission = src.ubMission;
-
-		if (this->objectStack.empty() == false) {
-			DestroyLBE(this);
-		}
 		this->objectStack = src.objectStack;
-
-		if (this->IsActiveLBE() == true) {
-			//we want to duplicate this LBE data too!
-			LBENODE* pLBE = this->GetLBEPointer();
-			unsigned short uniqueID = gLastLBEUniqueID++;
-			LBEArray.push_back(*pLBE);
-			pLBE = &LBEArray.back();
-			pLBE->uniqueID = uniqueID;
-			(*this)[0]->data.lbe.uniqueID = uniqueID;
-		}
 	}
 }
 
@@ -857,21 +925,7 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 		this->ubWeight = src.ubWeight;
 		this->fFlags = src.fFlags;
 		this->ubMission = src.ubMission;
-
-		if (this->objectStack.empty() == false) {
-			DestroyLBE(this);
-		}
 		this->objectStack = src.objectStack;
-
-		if (this->IsActiveLBE() == true) {
-			//we want to duplicate this LBE data too!
-			LBENODE* pLBE = this->GetLBEPointer();
-			unsigned short uniqueID = gLastLBEUniqueID++;
-			LBEArray.push_back(*pLBE);
-			pLBE = &LBEArray.back();
-			pLBE->uniqueID = uniqueID;
-			(*this)[0]->data.lbe.uniqueID = uniqueID;
-		}
 	}
 	return *this;
 }
@@ -946,9 +1000,4 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 
 OBJECTTYPE::~OBJECTTYPE()
 {
-	//we need to clear out the LBE data if we have deleted this object during runtime
-	//since every single OBJECTTYPE gets its dtor called when the game ends
-	//this has the side effect of clearing ALL LBE data when shutting down
-	//if this causes problems then add a shutting down flag.
-	DestroyLBE(this);
 }

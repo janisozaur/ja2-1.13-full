@@ -85,6 +85,7 @@
 #include "qarray.h"
 #include "environment.h"
 #include "Map Information.h"
+#include "Soldier Control.h"
 #endif
 
 
@@ -5487,7 +5488,7 @@ UINT32 UIHandleJumpOver( UI_EVENT *pUIEvent )
 
 
 	pSoldier->flags.fDontChargeTurningAPs = TRUE;
-	pSoldier->EVENT_SetSoldierDesiredDirection( ubDirection);
+	pSoldier->EVENT_SetSoldierDesiredDirection(ubDirection);
 	pSoldier->flags.fTurningUntilDone = TRUE;
 	// ATE: Reset flag to go back to prone...
 	//pSoldier->flags.fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;

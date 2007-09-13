@@ -219,7 +219,7 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 			gpUIPlannedSoldier->ubPlannedUIAPCost = (UINT8)gpUIPlannedSoldier->bActionPoints;
 
 			// Get direction from gridno
-			bDirection = (INT8)GetDirectionFromGridNo( sGridNo, gpUIPlannedSoldier );
+			bDirection = GetDirectionFromGridNo( sGridNo, gpUIPlannedSoldier );
 
 			// Set direction
 			gpUIPlannedSoldier->ubDirection = bDirection;

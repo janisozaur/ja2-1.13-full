@@ -2284,7 +2284,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 	SWeaponHit.sDamage					= (INT16) iDamage;
 	// breath loss is based on original impact of bullet
 	SWeaponHit.sBreathLoss			= (INT16) ( (iImpact * BP_GET_WOUNDED * (pTarget->bBreathMax * 100 - pTarget->sBreathRed)) / 10000 );
-	SWeaponHit.usDirection			= GetDirectionFromGridNo( pFirer->sGridNo, pTarget );
+	SWeaponHit.usDirection			= (UINT8)GetDirectionFromGridNo( pFirer->sGridNo, pTarget );
 	SWeaponHit.sXPos						= (INT16)pTarget->dXPos;
 	SWeaponHit.sYPos						= (INT16)pTarget->dYPos;
 	SWeaponHit.sZPos						= 20;

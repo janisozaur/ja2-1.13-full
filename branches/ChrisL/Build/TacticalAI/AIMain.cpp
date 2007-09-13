@@ -2629,7 +2629,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			UINT8					ubDirection;
 			INT16					sDoorGridNo;
 
-			ubDirection = GetDirectionFromGridNo( (INT16)pSoldier->aiData.usActionData, pSoldier );
+			ubDirection = GetDirectionFromGridNo( pSoldier->aiData.usActionData, pSoldier );
 			if (ubDirection == EAST || ubDirection == SOUTH)
 			{
 				sDoorGridNo = pSoldier->sGridNo;

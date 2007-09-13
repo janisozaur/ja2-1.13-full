@@ -509,8 +509,31 @@ void TruncateStrategicGroupSizes();
 
 //if all that sounds compilcated, it is
 
-extern unsigned short gLastLBEUniqueID;
+extern int gLastLBEUniqueID;
+/*
 // CHRISL: New function to save/load LBENODE data
+BOOLEAN SaveLBENODEToSaveGameFile( HWFILE hFile )
+{
+	PERFORMANCE_MARKER
+	UINT32	uiNumBytesWritten;
+	if ( !FileWrite( hFile, &gLastLBEUniqueID, sizeof(int), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	return TRUE;
+}
+
+BOOLEAN LoadLBENODEFromSaveGameFile( HWFILE hFile )
+{
+	PERFORMANCE_MARKER
+	UINT32	uiNumBytesRead;
+	if ( !FileRead( hFile, &gLastLBEUniqueID, sizeof(int), &uiNumBytesRead ) )
+	{
+		return(FALSE);
+	}
+	return TRUE;
+}
+*/
 BOOLEAN LBENODE::Load( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
@@ -521,6 +544,11 @@ BOOLEAN LBENODE::Load( HWFILE hFile )
 		if ( !FileRead( hFile, this, SIZEOF_LBENODE_POD, &uiNumBytesRead ) )
 		{
 			return(FALSE);
+		}
+		if (uniqueID >= gLastLBEUniqueID) {
+			//can happen because of the order things are saved and loaded,
+			//when combined with copy assignment which makes a new LBENODE
+			gLastLBEUniqueID = uniqueID + 1;
 		}
 		int size;
 		if ( !FileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
@@ -538,7 +566,7 @@ BOOLEAN LBENODE::Load( HWFILE hFile )
 	else
 	{
 		//we shouldn't be loading from anything before the first change
-		Assert(guiCurrentSaveGameVersion >= FIRST_SAVEGAME_DATATYPE_CHANGE );
+		Assert(guiCurrentSaveGameVersion >= FIRST_SAVEGAME_DATATYPE_CHANGE);
 	}
 	return TRUE;
 }
@@ -548,6 +576,11 @@ BOOLEAN	LBENODE::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapV
 	PERFORMANCE_MARKER
 	if (dMajorMapVersion >= 6.0 && ubMinorMapVersion > 26 ) {
 		LOADDATA( this, *hBuffer, SIZEOF_LBENODE_POD );
+		if (uniqueID >= gLastLBEUniqueID) {
+			//can happen because of the order things are saved and loaded,
+			//when combined with copy assignment which makes a new LBENODE
+			gLastLBEUniqueID = uniqueID + 1;
+		}
 		int size;
 		LOADDATA( &size, *hBuffer, sizeof(int) );
 		inv.resize(size);
@@ -556,7 +589,7 @@ BOOLEAN	LBENODE::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapV
 		}
 	}
 	else {
-		Assert(guiCurrentSaveGameVersion >= FIRST_SAVEGAME_DATATYPE_CHANGE );
+		Assert(guiCurrentSaveGameVersion >= FIRST_SAVEGAME_DATATYPE_CHANGE);
 	}
 	return TRUE;
 }
@@ -1503,15 +1536,16 @@ BOOLEAN OBJECTTYPE::Load( HWFILE hFile )
 		}
 
 		objectStack.resize(size);
-		for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter) {
+		int x = 0;
+		for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter, ++x) {
 			if (! iter->Load(hFile)) {
 				return FALSE;
 			}
-		}
-		if (this->IsActiveLBE() == true) {
-			LBEArray.push_back(LBENODE());
-			if (! LBEArray.back().Load(hFile)) {
-				return FALSE;
+			if (this->IsActiveLBE(x) == true) {
+				LBEArray.push_back(LBENODE());
+				if (! LBEArray.back().Load(hFile)) {
+					return FALSE;
+				}
 			}
 		}
 	}
@@ -1560,13 +1594,14 @@ BOOLEAN OBJECTTYPE::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorM
 		LOADDATA(this, *hBuffer, SIZEOF_OBJECTTYPE_POD );
 		LOADDATA(&size, *hBuffer, sizeof(int) );
 		objectStack.resize(size);
-		for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter) {
+		int x = 0;
+		for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter, ++x) {
 			iter->Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
-		}
-		if (this->IsActiveLBE() == true) {
-			LBEArray.push_back(LBENODE());
-			if (! LBEArray.back().Load(hBuffer, dMajorMapVersion, ubMinorMapVersion)) {
-				return FALSE;
+			if (this->IsActiveLBE(x) == true) {
+				LBEArray.push_back(LBENODE());
+				if (! LBEArray.back().Load(hBuffer, dMajorMapVersion, ubMinorMapVersion)) {
+					return FALSE;
+				}
 			}
 		}
 	}
@@ -1593,20 +1628,22 @@ BOOLEAN OBJECTTYPE::Save( HWFILE hFile, bool fSavingMap )
 	{
 		return(FALSE);
 	}
-	for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter) {
+	int x = 0;
+	for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter, ++x) {
 		if (! iter->Save(hFile, fSavingMap)) {
 			return FALSE;
 		}
-	}
-	if (this->IsActiveLBE() == true) {
-		LBENODE* pLBE = this->GetLBEPointer();
-		if (! pLBE->Save(hFile, fSavingMap)) {
-			return FALSE;
-		}
-		unsigned short uniqueID = (*this)[0]->data.lbe.uniqueID;
-		for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
-			if (iter->uniqueID == uniqueID) {
-				LBEArray.erase(iter);
+		if (this->IsActiveLBE(x) == true) {
+			LBENODE* pLBE = this->GetLBEPointer(x);
+			if (! pLBE->Save(hFile, fSavingMap)) {
+				return FALSE;
+			}
+			int uniqueID = (*this)[x]->data.lbe.uniqueID;
+			for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+				if (iter->uniqueID == uniqueID) {
+					LBEArray.erase(iter);
+					break;
+				}
 			}
 		}
 	}
@@ -2780,7 +2817,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FileOpen failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return(FALSE);
 	}
 
@@ -2832,7 +2868,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 #endif
 		//Fail loading the save
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return(FALSE);
 	}
 
@@ -2858,7 +2893,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadTacticalStatusFromSavedGame failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return(FALSE);
 	}
 	#ifdef JA2BETAVERSION
@@ -2875,7 +2909,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadGameClock failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return(FALSE);
 	}
 	#ifdef JA2BETAVERSION
@@ -2953,7 +2986,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadStrategicEventsFromSavedGame failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return(FALSE);
 	}
 	#ifdef JA2BETAVERSION
@@ -2972,7 +3004,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadLaptopInfoFromSavedGame failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return( FALSE );
 	}
 	#ifdef JA2BETAVERSION
@@ -2993,7 +3024,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadSavedMercProfiles failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return(FALSE);
 	}
 
@@ -3015,7 +3045,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadSoldierStructure failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return(FALSE);
 	}
 	#ifdef JA2BETAVERSION
@@ -3037,7 +3066,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadFilesFromSavedGame FINANCES_DATA_FILE failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return(FALSE);
 	}
 	#ifdef JA2BETAVERSION
@@ -3060,7 +3088,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadFilesFromSavedGame HISTORY_DATA_FILE failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return(FALSE);
 	}
 	#ifdef JA2BETAVERSION
@@ -3083,7 +3110,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadFilesFromSavedGame FILES_DAT_FILE failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return(FALSE);
 	}
 	#ifdef JA2BETAVERSION
@@ -3103,7 +3129,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadEmailFromSavedGame failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return(FALSE);
 	}
 	#ifdef JA2BETAVERSION
@@ -3124,7 +3149,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadStrategicInfoFromSavedFile failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return( FALSE );
 	}
 	#ifdef JA2BETAVERSION
@@ -3144,7 +3168,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadUnderGroundSectorInfoFromSavedGame failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return( FALSE );
 	}
 	#ifdef JA2BETAVERSION
@@ -3163,7 +3186,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadSquadInfoFromSavedGameFile failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return( FALSE );
 	}
 	#ifdef JA2BETAVERSION
@@ -3182,7 +3204,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadStrategicMovementGroupsFromSavedGameFile failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return( FALSE );
 	}
 	#ifdef JA2BETAVERSION
@@ -3200,7 +3221,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadMapTempFilesFromSavedGameFile failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return( FALSE );
 	}
 	#ifdef JA2BETAVERSION
@@ -3220,7 +3240,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadQuestInfoFromSavedGameFile failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return( FALSE );
 	}
 	#ifdef JA2BETAVERSION
@@ -3238,7 +3257,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadOppListInfoFromSavedGame failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return( FALSE );
 	}
 	#ifdef JA2BETAVERSION
@@ -3259,7 +3277,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadMapScreenMessagesFromSaveGameFile failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return( FALSE );
 	}
 	#ifdef JA2BETAVERSION
@@ -3279,7 +3296,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadNPCInfoFromSavedGameFile failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return( FALSE );
 	}
 	#ifdef JA2BETAVERSION
@@ -3299,7 +3315,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadKeyTableFromSaveedGameFile failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return( FALSE );
 	}
 	#ifdef JA2BETAVERSION
@@ -3318,7 +3333,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadTempNpcQuoteArrayToSaveGameFile failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return( FALSE );
 	}
 	#ifdef JA2BETAVERSION
@@ -3338,7 +3352,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadPreRandomNumbersFromSaveGameFile failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return( FALSE );
 	}
 	#ifdef JA2BETAVERSION
@@ -3359,7 +3372,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadSmokeEffectsFromLoadGameFile failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return( FALSE );
 	}
 	#ifdef JA2BETAVERSION
@@ -3379,7 +3391,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadArmsDealerInventoryFromSavedGameFile failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return( FALSE );
 	}
 	#ifdef JA2BETAVERSION
@@ -3397,7 +3408,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadGeneralInfo failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return(FALSE);
 	}
 	#ifdef JA2BETAVERSION
@@ -3415,7 +3425,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadMineStatusFromSavedGameFile failed" ) );
 		FileClose( hFile );
-		guiCurrentSaveGameVersion=0;
 		return(FALSE);
 	}
 	#ifdef JA2BETAVERSION
@@ -3439,7 +3448,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadStrategicTownLoyaltyFromSavedGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return(FALSE);
 		}
 		#ifdef JA2BETAVERSION
@@ -3464,7 +3472,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadVehicleInformationFromSavedGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return(FALSE);
 		}
 		#ifdef JA2BETAVERSION
@@ -3487,7 +3494,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadBulletStructureFromSavedGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return(FALSE);
 		}
 		#ifdef JA2BETAVERSION
@@ -3512,7 +3518,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadPhysicsTableFromSavedGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return(FALSE);
 		}
 		#ifdef JA2BETAVERSION
@@ -3536,7 +3541,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadAirRaidInfoFromSaveGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return(FALSE);
 		}
 		#ifdef JA2BETAVERSION
@@ -3559,7 +3563,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadTeamTurnsFromTheSavedGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return(FALSE);
 		}
 		#ifdef JA2BETAVERSION
@@ -3583,7 +3586,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadExplosionTableFromSavedGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return(FALSE);
 		}
 		#ifdef JA2BETAVERSION
@@ -3608,7 +3610,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadCreatureDirectives failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return(FALSE);
 		}
 		#ifdef JA2BETAVERSION
@@ -3633,7 +3634,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadStrategicStatusFromSaveGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return(FALSE);
 		}
 		#ifdef JA2BETAVERSION
@@ -3656,7 +3656,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadStrategicAI failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return(FALSE);
 		}
 		#ifdef JA2BETAVERSION
@@ -3679,7 +3678,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadLightEffectsFromLoadGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return(FALSE);
 		}
 		#ifdef JA2BETAVERSION
@@ -3702,7 +3700,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadWatchedLocsFromSavedGame failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return( FALSE );
 		}
 	}
@@ -3725,7 +3722,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadItemCursorFromSavedGame failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return( FALSE );
 		}
 	}
@@ -3748,7 +3744,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadCivQuotesFromLoadGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return FALSE;
 		}
 	}
@@ -3772,7 +3767,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadBackupNPCInfoFromSavedGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return( FALSE );
 		}
 	}
@@ -3795,7 +3789,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadMeanwhileDefsFromSaveGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return( FALSE );
 		}
 		#ifdef JA2BETAVERSION
@@ -3825,7 +3818,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadSchedulesFromSave failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return( FALSE );
 		}
 		#ifdef JA2BETAVERSION
@@ -3850,7 +3842,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadVehicleMovementInfoFromSavedGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return( FALSE );
 		}
 		#ifdef JA2BETAVERSION
@@ -3863,7 +3854,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("NewLoadVehicleMovementInfoFromSavedGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return( FALSE );
 		}
 		#ifdef JA2BETAVERSION
@@ -3891,7 +3881,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadContractRenewalDataFromSaveGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return( FALSE );
 		}
 		#ifdef JA2BETAVERSION
@@ -3906,7 +3895,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadLeaveItemList failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return( FALSE );
 		}
 		#ifdef JA2BETAVERSION
@@ -3927,7 +3915,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("NewWayOfLoadingBobbyRMailOrdersToSaveGameFile failed" ) );
 			FileClose( hFile );
-			guiCurrentSaveGameVersion=0;
 			return( FALSE );
 		}
 		#ifdef JA2BETAVERSION
@@ -3946,7 +3933,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Final Checks..." );
 	RenderProgressBar( 0, 100 );
 	uiRelStartPerc = uiRelEndPerc;
-
 
 
 
@@ -3980,7 +3966,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadCurrentSectorsInformationFromTempItemsFile failed" ) );
 			InitExitGameDialogBecauseFileHackDetected();
-			guiCurrentSaveGameVersion=0;
 			return( TRUE );
 		}
 		guiCurrentSaveGameVersion = tempVersion;

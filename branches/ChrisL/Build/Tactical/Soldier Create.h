@@ -212,7 +212,7 @@ public:
 	//Location information
 	INT16							sSectorX;
 	INT16							sSectorY;
-	INT8							ubDirection;
+	UINT8							ubDirection;
 	INT16							sInsertionGridNo;
 
 	// Can force a team, but needs flag set

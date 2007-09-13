@@ -1592,7 +1592,7 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 	}
 	else
 	{
-		ubAmmoType = (*pObj)[0]->data.gun.ubGunAmmoType;
+		ubAmmoType = pSoldier->inv[pSoldier->ubAttackingHand][0]->data.gun.ubGunAmmoType;
 	}
 
 	// calculate distance to target, obtain his gun's maximum range rating

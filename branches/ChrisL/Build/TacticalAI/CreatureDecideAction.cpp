@@ -1681,7 +1681,7 @@ INT8 CrowDecideActionGreen( SOLDIERTYPE * pSoldier )
 		if ( SpacesAway( pSoldier->sGridNo, sCorpseGridNo ) < 2 )
 		{
 			// Change facing
-			sFacingDir = GetDirectionFromGridNo( sCorpseGridNo, pSoldier );
+			sFacingDir = (UINT8)GetDirectionFromGridNo( sCorpseGridNo, pSoldier );
 
 				if ( sFacingDir != pSoldier->ubDirection )
 				{

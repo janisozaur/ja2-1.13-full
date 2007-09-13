@@ -1534,7 +1534,17 @@ UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost
 		// Is it the same as he's facing?
 		if ( ubDirection != pSoldier->ubDirection )
 		{
-				bAPCost += AP_LOOK_STANDING;
+			if ( pSoldier->sGridNo == sGridNo )
+			{
+				// ATE: Use standing turn cost....
+				ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
+
+				// Is it the same as he's facing?
+				if ( ubDirection != pSoldier->ubDirection )
+				{
+					bAPCost += AP_LOOK_STANDING;
+				}
+			}
 		}
 	 }
 	}
