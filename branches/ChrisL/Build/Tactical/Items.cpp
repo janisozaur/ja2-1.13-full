@@ -2424,8 +2424,6 @@ void GetPocketDimensionsBySize(int pocketSize, int& sizeX, int& sizeY)
 }
 
 
-//ADB TODO: Chris, check these out and see if they are ok with you
-
 // CHRISL: New function to dynamically modify ItemSize based on attachments, stack size, etc
 UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 {
@@ -4447,7 +4445,10 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 					}
 					break;
 				case ARMOURCLASS_LEGGINGS:
-					// CHRISL:
+					/* CHRISL:  If we're wearing leg protectors and pick up leggings, we want to leggings to override. 
+					This is only an issue during merc hiring when leggings will often be placed after leg protectors.
+					However, this isn't as big an issue at this point because of the redesigns in the profile item sorting
+					functions.*/
 					if(Item[pSoldier->inv[LEGPOS].usItem].attachment)
 					{
 						//ADB TODO, figure out what this code does, and fix it
