@@ -1815,7 +1815,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			// see if we are facing this person
 			ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(pSoldier2->sGridNo),CenterY(pSoldier2->sGridNo));
 			// if not already facing in that direction,
-			if (pSoldier->bDirection != ubDesiredMercDir)
+			if (pSoldier->ubDirection != ubDesiredMercDir)
 			{
 				pSoldier->EVENT_SetSoldierDesiredDirection( ubDesiredMercDir );
 			}
@@ -2001,7 +2001,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
 				if (pSoldier && pSoldier->inv[HANDPOS].exists() == true)
 				{
-					sGridNo = pSoldier->sGridNo + DirectionInc( pSoldier->bDirection );
+					sGridNo = pSoldier->sGridNo + DirectionInc( pSoldier->ubDirection );
 					pSoldier->SoldierReadyWeapon( (INT16) (sGridNo % WORLD_COLS), (INT16) (sGridNo / WORLD_COLS), FALSE );
 				}
 				break;
@@ -2266,7 +2266,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				if (bItemIn != NO_SLOT && bItemIn != HANDPOS)
 				{
 					SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[bItemIn]) );
-					sGridNo = pSoldier->sGridNo + DirectionInc( pSoldier->bDirection );
+					sGridNo = pSoldier->sGridNo + DirectionInc( pSoldier->ubDirection );
 					pSoldier->SoldierReadyWeapon( (INT16) (sGridNo % WORLD_COLS), (INT16) (sGridNo / WORLD_COLS), FALSE ); 
 				}
 				// fall through so that the person faces the nearest merc!
@@ -2280,7 +2280,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 						// see if we are facing this person
 						ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sGridNo),CenterY(sGridNo));
 						// if not already facing in that direction,
-						if (pSoldier->bDirection != ubDesiredMercDir)
+						if (pSoldier->ubDirection != ubDesiredMercDir)
 						{
 							pSoldier->EVENT_SetSoldierDesiredDirection( ubDesiredMercDir );
 						}
@@ -2433,7 +2433,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				if (pSoldier)
 				{	
 					DeleteTalkingMenu();
-					pSoldier->EVENT_SoldierGotHit( 1, 100, 10, pSoldier->bDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, AIM_SHOT_TORSO, 0, NOWHERE );
+					pSoldier->EVENT_SoldierGotHit( 1, 100, 10, pSoldier->ubDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, AIM_SHOT_TORSO, 0, NOWHERE );
 				}
 				break;
 

@@ -1097,7 +1097,7 @@ BOOLEAN CheckIfRadioIsEquipped( void )
 //sFacingDir = GetDirectionFromXY( sXPos, sYPos, pTMilitiaSoldier );
 //SendSoldierSetDesiredDirectionEvent( pTMilitiaSoldier, sFacingDir );
 //SendSoldierSetDesiredDirectionEvent( pTMilitiaSoldier, gOppositeDirection[ sFacingDir ] );
-//EVENT_StopMerc( pTMilitiaSoldier, pTMilitiaSoldier->sGridNo, pTMilitiaSoldier->bDirection );
+//EVENT_StopMerc( pTMilitiaSoldier, pTMilitiaSoldier->sGridNo, pTMilitiaSoldier->ubDirection );
 
 //SendChangeSoldierStanceEvent( pTMilitiaSoldier, ANIM_PRONE );
 //SendChangeSoldierStanceEvent( pTMilitiaSoldier, ANIM_CROUCH );

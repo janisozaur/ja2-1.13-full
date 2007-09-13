@@ -1168,7 +1168,7 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 				bSubjectDir = (INT8) GetDirectionToGridNoFromGridNo( pSoldier->sGridNo, sSubjectGridNo );
 			}
 			if (bFacingDir == DIRECTION_IRRELEVANT) {
-				bFacingDir = pSoldier->bDirection;
+				bFacingDir = pSoldier->ubDirection;
 			}
 
 			sDistVisible = gbLookDistance[bFacingDir][bSubjectDir];
@@ -2138,7 +2138,7 @@ void ManSeesMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, INT16 sOppGridno,
 								{
 									CancelAIAction( pSoldier, TRUE );
 									pSoldier->sAbsoluteFinalDestination = NOWHERE;
-									pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+									pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 									TriggerNPCRecord( ANGEL, 20 );
 									// trigger Angel to walk off afterwards
 									//TriggerNPCRecord( ANGEL, 24 );
@@ -3897,7 +3897,7 @@ void DebugSoldierPage2( )
 		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
 		gprintf( 0, LINE_HEIGHT * ubLine, L"Direction:");
 		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%S", gzDirectionStr[ pSoldier->bDirection] );
+		gprintf( 150, LINE_HEIGHT * ubLine, L"%S", gzDirectionStr[ pSoldier->ubDirection] );
 		ubLine++;
 
 		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
@@ -5976,7 +5976,7 @@ void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bL
 		sNoiseX = CenterX(sGridNo);
 		sNoiseY = CenterY(sGridNo);
 		bDirection = atan8(pSoldier->sX,pSoldier->sY,sNoiseX,sNoiseY);
-		if ( pSoldier->bDirection != bDirection && pSoldier->bDirection != gOneCDirection[ bDirection ] && pSoldier->bDirection != gOneCCDirection[ bDirection ] )
+		if ( pSoldier->ubDirection != bDirection && pSoldier->ubDirection != gOneCDirection[ bDirection ] && pSoldier->ubDirection != gOneCCDirection[ bDirection ] )
 		{
 			// temporarily turn off muzzle flash so DistanceVisible can be calculated without it
 			MercPtrs[ ubNoiseMaker ]->flags.fMuzzleFlash = FALSE;
@@ -5998,7 +5998,7 @@ void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bL
 		sNoiseX = CenterX(sGridNo);
 		sNoiseY = CenterY(sGridNo);
 
-		if (pSoldier->bDirection != atan8(pSoldier->sX,pSoldier->sY,sNoiseX,sNoiseY))
+		if (pSoldier->ubDirection != atan8(pSoldier->sX,pSoldier->sY,sNoiseX,sNoiseY))
 		{
 			bHadToTurn = TRUE;
 		}
@@ -6832,7 +6832,7 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 	if ( pAttacker->flags.fMuzzleFlash )
 	{
 		bDirection = atan8( pDefender->sX,pDefender->sY, pAttacker->sX, pAttacker->sY );
-		if ( pDefender->bDirection != bDirection && pDefender->bDirection != gOneCDirection[ bDirection ] && pDefender->bDirection != gOneCCDirection[ bDirection ] )
+		if ( pDefender->ubDirection != bDirection && pDefender->ubDirection != gOneCDirection[ bDirection ] && pDefender->ubDirection != gOneCCDirection[ bDirection ] )
 		{
 			// temporarily turn off muzzle flash so DistanceVisible can be calculated without it
 			pAttacker->flags.fMuzzleFlash = FALSE;

@@ -715,7 +715,7 @@ public:
 	FLOAT											dOldYPos;
 	INT16												sInitialGridNo;
 	INT16												sGridNo;
-	INT8												bDirection;
+	UINT8												ubDirection;
 	INT16												sHeightAdjustment;
 	INT16												sDesiredHeight;
 	INT16												sTempNewGridNo;					// New grid no for advanced animations
@@ -1103,7 +1103,7 @@ public:
 	void EVENT_GetNewSoldierPath( INT16 sDestGridNo, UINT16 usMovementAnim );
 
 	void EVENT_SetSoldierDirection( UINT16	usNewDirection );
-	void EVENT_SetSoldierDesiredDirection( UINT16	usNewDirection );
+	void EVENT_SetSoldierDesiredDirection( UINT8	ubNewDirection );
 	void EVENT_FireSoldierWeapon( INT16 sTargetGridNo );
 	void EVENT_SoldierGotHit( UINT16 usWeaponIndex, INT16 ubDamage, INT16 sBreathLoss, UINT16 bDirection , UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation, INT16 sSubsequent, INT16 sLocationGridNo );
 	void EVENT_SoldierBeginBladeAttack( INT16 sGridNo, UINT8 ubDirection );
@@ -1126,7 +1126,7 @@ public:
 	void EVENT_BeginMercTurn( BOOLEAN fFromRealTime, INT32 iRealTimeCounter );
 
 	BOOLEAN EVENT_InternalGetNewSoldierPath( INT16 sDestGridNo, UINT16 usMovementAnim, BOOLEAN fFromUI, BOOLEAN fForceRestart );
-	void EVENT_InternalSetSoldierDestination( UINT16	usNewDirection, BOOLEAN fFromMove, UINT16 usAnimState );
+	void EVENT_InternalSetSoldierDestination( UINT8	ubNewDirection, BOOLEAN fFromMove, UINT16 usAnimState );
 	void EVENT_InternalSetSoldierPosition( FLOAT dNewXPos, FLOAT dNewYPos ,BOOLEAN fUpdateDest, BOOLEAN fUpdateFinalDest, BOOLEAN fForceDelete );
 
 
@@ -1149,6 +1149,9 @@ public:
 	// This function is now obsolete.	Call ReduceAttackBusyCount instead.
 	// void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier );
 	BOOLEAN MercInWater( void );
+	BOOLEAN MercInShallowWater( void );
+	BOOLEAN MercInDeepWater( void );
+	BOOLEAN MercInHighWater( void );
 	UINT16 GetNewSoldierStateFromNewStance( UINT8 ubDesiredStance );
 	UINT16 GetMoveStateBasedOnStance( UINT8 ubStanceHeight );
 	void SoldierGotoStationaryStance( void );
@@ -1196,8 +1199,8 @@ public:
 	void BeginTyingToFall( void );
 	void HandleAnimationProfile( UINT16	usAnimState, BOOLEAN fRemove );
 	void HandleSoldierTakeDamageFeedback( void );
-	void ChangeToFlybackAnimation( INT8 bDirection );
-	void ChangeToFallbackAnimation( INT8 bDirection );
+	void ChangeToFlybackAnimation( UINT8 ubDirection );
+	void ChangeToFallbackAnimation( UINT8 ubDirection );
 
 
 	void UpdateRobotControllerGivenController( void );
@@ -1308,8 +1311,8 @@ BOOLEAN DeletePaletteData( );
 
 // UTILITY FUNCTUIONS
 void MoveMercFacingDirection( SOLDIERTYPE *pSoldier, BOOLEAN fReverse, FLOAT dMovementDist );
-INT16 GetDirectionFromXY( INT16 sXPos, INT16 sYPos, SOLDIERTYPE *pSoldier );
-INT16 GetDirectionFromGridNo( INT16 sGridNo, SOLDIERTYPE *pSoldier );
+UINT8 GetDirectionFromXY( INT16 sXPos, INT16 sYPos, SOLDIERTYPE *pSoldier );
+UINT8 GetDirectionFromGridNo( INT16 sGridNo, SOLDIERTYPE *pSoldier );
 UINT8 atan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 );
 UINT8 atan8FromAngle( DOUBLE dAngle );
 INT16 GetDirectionToGridNoFromGridNo( INT16 sGridNoDest, INT16 sGridNoSrc );
@@ -1460,7 +1463,7 @@ public:
 	FLOAT											dOldYPos;
 	INT16												sInitialGridNo;
 	INT16												sGridNo;
-	INT8												bDirection;
+	INT8												ubDirection;
 	INT16												sHeightAdjustment;
 	INT16												sDesiredHeight;
 	INT16												sTempNewGridNo;					// New grid no for advanced animations

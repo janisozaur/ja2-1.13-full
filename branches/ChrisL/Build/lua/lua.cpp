@@ -268,6 +268,33 @@ int LuaSetSoldierGrid( lua_State *L )
 	return 0;
 }
 
+int LuaGetSoldierAPs( lua_State *L )
+{
+	PERFORMANCE_MARKER
+	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) lua_touserdata( L, 1 );
+	SOLDIERTYPE *pSoldier = *ppSoldier;
+	if (!pSoldier)
+	{
+		lua_pushnil( L );
+	}
+	else
+	{
+		lua_pushinteger( L, pSoldier->bActionPoints);
+	}
+	return 1;
+}
+
+int LuaSetSoldierAPs( lua_State *L )
+{
+	PERFORMANCE_MARKER
+	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) lua_touserdata( L, 1 );
+	SOLDIERTYPE *pSoldier = *ppSoldier;
+	int newaps = luaL_checkinteger( L, 3);
+	luaL_argcheck( L, newaps > 0 && newaps < 256, 2, "The grid number must be on screen!" );
+	pSoldier->bActionPoints = (INT8) newaps;
+	return 0;
+}
+
 int LuaSoldierWalkTo( lua_State *L )
 {
 	PERFORMANCE_MARKER
@@ -296,12 +323,24 @@ int LuaSoldierRunTo( lua_State *L )
 	return 0;
 }
 
+int LuaSoldierChangeStance( lua_State *L )
+{
+	PERFORMANCE_MARKER
+	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) luaL_checkudata( L, 1, SOLDIER_CLASS );
+	SOLDIERTYPE *pSoldier = *ppSoldier;
+	int newstance = luaL_checkinteger( L, 2);
+	pSoldier->ChangeSoldierStance( (UINT8) newstance);
+	return 0;
+}
+
 LuaAttrib Soldier[] = {
 	{ "name", LuaGetSoldierName, },
 	{ "fullname", LuaGetSoldierFullName, },
 	{ "grid", LuaGetSoldierGrid, LuaSetSoldierGrid },
+	{ "APs", LuaGetSoldierAPs, LuaSetSoldierAPs },
 	{ "walkto", NULL, NULL, LuaSoldierWalkTo },
 	{ "runto", NULL, NULL, LuaSoldierRunTo },
+	{ "changestance", NULL, NULL, LuaSoldierChangeStance },
 	{ NULL, },
 };
 

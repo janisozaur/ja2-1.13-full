@@ -1332,28 +1332,36 @@ BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 			else
 			{
 				// ATE: PAtch up - bookkeeping for spreading done out of whak
-				if ( pSoldier->flags.fDoSpread && !pSoldier->bDoBurst )
+				if ( pSoldier->flags.fDoSpread)
 				{
-					pSoldier->flags.fDoSpread = FALSE;
-				}
-
-				if ( pSoldier->flags.fDoSpread >= MAX_BURST_SPREAD_TARGETS )
-				{
-					//If we have more than MAX_BURST_SPREAD_TARGETS bullets, loop over and start again from the first target location
-					pSoldier->flags.fDoSpread = 1;
+					if (pSoldier->bDoBurst )
+					{
+						pSoldier->flags.fDoSpread = FALSE;
+					}
+					// 0verhaul:  The original code seemed brain damaged:  If the current spread target was 0 it would shoot at the
+					// non-spread target grid # instead.  Also fDoSpread is used as a counter from 1 to MAX_BURST_SPREAD_TARGETS, 
+					// but was actually reset before it got there.  So the final spread target would never be shot at.  Hopefully this
+					// will work better.
+					else if (pSoldier->flags.fDoSpread > MAX_BURST_SPREAD_TARGETS ||
+						pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] == 0)
+					{
+						if (pSoldier->flags.fDoSpread == 1)
+						{
+							// If no spread locations are defined, don't spread
+							pSoldier->flags.fDoSpread = 0;
+						}
+						else
+						{
+							// If we hit the end of the array, either by finding a 0 or by exceeding its size, reset
+							pSoldier->flags.fDoSpread = 1;
+						}
+					}
 				}
 
 
 				if ( pSoldier->flags.fDoSpread )
 				{
-					if ( pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] != 0 )
-					{
-						UseGun( pSoldier, pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] );
-					}
-					else
-					{
-						UseGun( pSoldier, sTargetGridNo );
-					}
+					UseGun( pSoldier, pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] );
 					pSoldier->flags.fDoSpread++;
 				}
 				else
@@ -1375,28 +1383,36 @@ BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				UseGun( pSoldier, sTargetGridNo );
 			else
 				// ATE: PAtch up - bookkeeping for spreading done out of whak
-				if ( pSoldier->flags.fDoSpread && !pSoldier->bDoBurst )
+				if ( pSoldier->flags.fDoSpread)
 				{
-					pSoldier->flags.fDoSpread = FALSE;
-				}
+					if (!pSoldier->bDoBurst )
+					{
+						pSoldier->flags.fDoSpread = FALSE;
+					}
 
-				if ( pSoldier->flags.fDoSpread >= MAX_BURST_SPREAD_TARGETS )
-				{
-					//If we have more than MAX_BURST_SPREAD_TARGETS bullets, loop over and start again from the first target location
-					pSoldier->flags.fDoSpread = 1;
+					// 0verhaul:  The original code seemed brain damaged:  If the current spread target was 0 it would shoot at the
+					// non-spread target grid # instead.  Also fDoSpread is used as a counter from 1 to MAX_BURST_SPREAD_TARGETS, 
+					// but was actually reset before it got there.  So the final spread target would never be shot at.  Hopefully this
+					// will work better.
+					else if ( pSoldier->flags.fDoSpread > MAX_BURST_SPREAD_TARGETS ||
+						pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] == 0)
+					{
+						if (pSoldier->flags.fDoSpread == 1)
+						{
+							// If no spread locations are defined, don't spread
+							pSoldier->flags.fDoSpread = 0;
+						}
+						else
+						{
+							// If we hit the end of the array, either by finding a 0 or by exceeding its size, reset
+							pSoldier->flags.fDoSpread = 1;
+						}
+					}
 				}
-
 
 				if ( pSoldier->flags.fDoSpread )
 				{
-					if ( pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] != 0 )
-					{
-						UseLauncher( pSoldier, pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] );
-					}
-					else
-					{
-						UseLauncher( pSoldier, sTargetGridNo );
-					}
+					UseLauncher( pSoldier, pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] );
 					pSoldier->flags.fDoSpread++;
 				}
 				else
@@ -1927,7 +1943,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 		}
 
 		// Direction to center of explosion
-		ubDirection = gOppositeDirection[ pSoldier->bDirection ];
+		ubDirection = gOppositeDirection[ pSoldier->ubDirection ];
 		sNewGridNo  = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)(1 * DirectionInc( ubDirection ) ) );
 
 		// Check if a person exists here and is not prone....
@@ -1942,7 +1958,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incrementing Attack: Exaust from LAW", gTacticalStatus.ubAttackBusyCount ) );
 				DebugAttackBusy( "Incrementing Attack: Exaust from LAW\n" );
 
-				MercPtrs[ ubMerc ]->EVENT_SoldierGotHit( MINI_GRENADE, 10, 200, pSoldier->bDirection, 0, pSoldier->ubID, 0, ANIM_CROUCH, 0, sNewGridNo );
+				MercPtrs[ ubMerc ]->EVENT_SoldierGotHit( MINI_GRENADE, 10, 200, pSoldier->ubDirection, 0, pSoldier->ubID, 0, ANIM_CROUCH, 0, sNewGridNo );
 			}
 		}
 	}
@@ -2617,7 +2633,7 @@ BOOLEAN UseThrown( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 
 	//AXP 25.03.2007: Cleaned up throwing AP costs. Now only turning + stance change AP 
 	//	costs are deducted. Final throw cost is deducted on creating the grenade object
-	if ( (UINT8)GetDirectionFromGridNo( sTargetGridNo, pSoldier ) != pSoldier->bDirection )
+	if ( (UINT8)GetDirectionFromGridNo( sTargetGridNo, pSoldier ) != pSoldier->ubDirection )
 			sAPCost += (INT16)GetAPsToLook( pSoldier );
 	sAPCost += (INT16)GetAPsToChangeStance( pSoldier, ANIM_STAND );
 
@@ -2910,28 +2926,29 @@ BOOLEAN DoSpecialEffectAmmoMiss( UINT8 ubAttackerID, INT16 sGridNo, INT16 sXPos,
 	  // DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incrementing Attack: Explosion gone off, COunt now %d", gTacticalStatus.ubAttackBusyCount ) );
 
 		PlayJA2Sample( CREATURE_GAS_NOISE, RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );			
-
-// WDS fix 07/25/2007
-// Don't have monsters cause explosions
+		// 0verhaul:  Not ready to simplify this to a single call yet.  What we need in order to
+		// fix this correctly is to detach 'alien spit' as a special caliber and instead add 3 new calibers for actual "ammo":
+		// very small spit, small spit, and large spit.  Then we need to add a special effect miss index to point to the
+		// appropriate smoke effect to disperse.
   //    	NewSmokeEffect( sGridNo, usItem, 0, ubAttackerID );
 
-	//  // Do Spread effect.......
-  //  switch( usItem )
-  //  {
-  //		case CREATURE_YOUNG_MALE_SPIT:
-		//case CREATURE_INFANT_SPIT:
+	    // Do Spread effect.......
+		switch( usItem )
+	    {
+  			case CREATURE_YOUNG_MALE_SPIT:
+			case CREATURE_INFANT_SPIT:
 
-  //    	NewSmokeEffect( sGridNo, VERY_SMALL_CREATURE_GAS, 0, ubAttackerID );
-  //      break;
-  //    case CREATURE_OLD_MALE_SPIT:
-  //    	NewSmokeEffect( sGridNo, SMALL_CREATURE_GAS, 0, ubAttackerID );
-  //      break;
+		  	NewSmokeEffect( sGridNo, VERY_SMALL_CREATURE_GAS, 0, ubAttackerID );
+	        break;
+	      case CREATURE_OLD_MALE_SPIT:
+		  	NewSmokeEffect( sGridNo, SMALL_CREATURE_GAS, 0, ubAttackerID );
+			break;
 
-  //    case CREATURE_QUEEN_SPIT:
-  //    	NewSmokeEffect( sGridNo, LARGE_CREATURE_GAS, 0, ubAttackerID );
-  //      break;
-  //  }
-  }
+	      case CREATURE_QUEEN_SPIT:
+		  	NewSmokeEffect( sGridNo, LARGE_CREATURE_GAS, 0, ubAttackerID );
+			break;
+	    }
+	}
 
 	return( FALSE );
 }
@@ -2993,7 +3010,7 @@ void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 s
 	DoSpecialEffectAmmoMiss( ubAttackerID, pTargetSoldier->sGridNo, sXPos, sYPos, sZPos, FALSE, FALSE, 0 );
 
 	// OK, SHOT HAS HIT, DO THINGS APPROPRIATELY
-	// ATE: This is 'cause of that darn smoke effect that could potnetially kill
+	// ATE: This is 'cause of that darn smoke effect that could potentially kill
 	// the poor bastard .. so check
 	if ( !pTargetSoldier->flags.fDoingExternalDeath )
 	{
@@ -3001,7 +3018,7 @@ void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 s
 	}
 	// else
 	// {
-	//	Buddy had died from additional dammage - free up attacker here...
+	//	Buddy had died from additional damage - free up attacker here...
 	//	ReduceAttackBusyCount( pTargetSoldier->ubAttackerID, FALSE );
 	//	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Special effect killed before bullet impact, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
 	//	OutputDebugString( "Special effect killed before bullet impact\n" );
@@ -3240,7 +3257,7 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 				usMissTileType	= FIRSTMISS;
 
 				// Check if we are in water...
-				if ( gpWorldLevelData[ sGridNo ].ubTerrainID == LOW_WATER ||  gpWorldLevelData[ sGridNo ].ubTerrainID == DEEP_WATER )
+				if ( TERRAIN_IS_WATER( gpWorldLevelData[ sGridNo ].ubTerrainID) )
 				{
 					usMissTileIndex = SECONDMISS1;
 					usMissTileType	= SECONDMISS;
@@ -4511,7 +4528,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 				break;
 			case AIM_SHOT_LEGS:
 				// is the damage enough to make us fall over?
-				if ( pubSpecial && IS_MERC_BODY_TYPE( pTarget ) && gAnimControl[ pTarget->usAnimState ].ubEndHeight == ANIM_STAND && pTarget->bOverTerrainType != LOW_WATER && pTarget->bOverTerrainType != MED_WATER && pTarget->bOverTerrainType != DEEP_WATER  )
+				if ( pubSpecial && IS_MERC_BODY_TYPE( pTarget ) && gAnimControl[ pTarget->usAnimState ].ubEndHeight == ANIM_STAND && !pTarget->MercInWater( ) )
 				{
 					if (iImpactForCrits > MIN_DAMAGE_FOR_AUTO_FALL_OVER )					
 					{
@@ -5379,6 +5396,14 @@ INT32 CalcMaxTossRange( SOLDIERTYPE * pSoldier, UINT16 usItem, BOOLEAN fArmed )
 			// better max range due to expertise
 			iRange = iRange * (100 + gbSkillTraitBonus[THROWING] * NUM_SKILL_TRAITS( pSoldier, THROWING ) ) / 100;	
 		}
+
+		// Adjust for thrower's stance
+		if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight < ANIM_STAND)
+		{
+			// For now we just assume the thrower is crouched since we don't allow prone tossing at the moment
+			// So dock 30% from the distance
+			iRange = (iRange * 70) / 100;
+		}
 	}
 
 	if (iRange < 1)
@@ -5818,12 +5843,13 @@ bool WeaponReady(SOLDIERTYPE * pSoldier)
 	if ( AM_A_ROBOT( pSoldier) )
 		return true;
 #endif
-	if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_FIREREADY )
+	if ( (gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_FIREREADY ) || 
+		(gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_FIRE ) )
 		return true;
 	else
 		return false;
-
 }
+
 INT8 GetAPsToReload( OBJECTTYPE *pObj )
 {
 	PERFORMANCE_MARKER

@@ -718,6 +718,12 @@ void LoadGameExternalOptions()
 }
 
 
+void FreeGameExternalOptions()
+{
+	PERFORMANCE_MARKER
+	MemFree( gGameExternalOptions.iaIMPSlots);
+}
+
 BOOLEAN GetCDLocation( )
 {
 	PERFORMANCE_MARKER

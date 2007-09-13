@@ -117,7 +117,7 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 				bDirection = (INT8)gpUIPlannedSoldier->pathing.usPathingData[ gpUIPlannedSoldier->pathing.usPathDataSize - 1 ];
 
 				// Set direction
-				pPlanSoldier->bDirection = bDirection;
+				pPlanSoldier->ubDirection = bDirection;
 				pPlanSoldier->pathing.bDesiredDirection = bDirection;
 
 				// Set walking animation
@@ -196,7 +196,7 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 					bDirection = (INT8)gpUIPlannedSoldier->pathing.usPathingData[ gpUIPlannedSoldier->pathing.usPathDataSize - 1 ];
 
 					// Set direction
-					pPlanSoldier->bDirection = bDirection;
+					pPlanSoldier->ubDirection = bDirection;
 					pPlanSoldier->pathing.bDesiredDirection = bDirection;
 
 					// Set walking animation
@@ -222,7 +222,7 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 			bDirection = (INT8)GetDirectionFromGridNo( sGridNo, gpUIPlannedSoldier );
 
 			// Set direction
-			gpUIPlannedSoldier->bDirection = bDirection;
+			gpUIPlannedSoldier->ubDirection = bDirection;
 			gpUIPlannedSoldier->pathing.bDesiredDirection = bDirection;
 
 			// Set to shooting animation

@@ -359,7 +359,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 
 
 	who = pSoldier->ubID;
-	dir = pSoldier->bDirection;
+	dir = pSoldier->ubDirection;
 
  //NumMessage("good old reveal",dir);
 
@@ -382,7 +382,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 
 	// create gridno increment for NOVIEW - in other words, no increment!
 	Inc[5] = 0;
-	Dir[5] = pSoldier->bDirection;
+	Dir[5] = pSoldier->ubDirection;
 
 	if (dir % 2 == 1)	/* even numbers use ViewPath2 */
 	 Path2 = TRUE;

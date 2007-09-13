@@ -582,7 +582,7 @@ void RenderMovingGroupsAndMercs()
 
 			if( pGroup->fPlayer )
 			{
-				ubIconType = ( pGroup->uiTraverseTime ) ? ICON_TYPE_ASSAULT : ICON_TYPE_STOPPED;
+				ubIconType = (UINT8) (( pGroup->uiTraverseTime ) ? ICON_TYPE_ASSAULT : ICON_TYPE_STOPPED);
 				ubIconColor = ICON_COLOR_GREEN;
 				ubFontColor = FONT_YELLOW;
 			}
@@ -1480,16 +1480,16 @@ void ExtractAndUpdatePopulations()
 	//CIniReader iniReader("..\\Ja2_Options.ini");
 	//INT32 iMaxEnemyGroupSize = iniReader.ReadInteger("Options","MAX_STRATEGIC_TEAM_SIZE",20);
 
-	gsAINumAdmins = min( GetNumericStrictValueFromField( 0 ), gGameExternalOptions.iMaxEnemyGroupSize );
+	gsAINumAdmins = (INT16) min( GetNumericStrictValueFromField( 0 ), gGameExternalOptions.iMaxEnemyGroupSize );
 	SetInputFieldStringWithNumericStrictValue( 0, gsAINumAdmins );
 
-	gsAINumTroops = min( GetNumericStrictValueFromField( 1 ), gGameExternalOptions.iMaxEnemyGroupSize );
+	gsAINumTroops = (INT16) min( GetNumericStrictValueFromField( 1 ), gGameExternalOptions.iMaxEnemyGroupSize );
 	SetInputFieldStringWithNumericStrictValue( 1, gsAINumTroops );
 
-	gsAINumElites = min( GetNumericStrictValueFromField( 2 ), gGameExternalOptions.iMaxEnemyGroupSize );
+	gsAINumElites = (INT16) min( GetNumericStrictValueFromField( 2 ), gGameExternalOptions.iMaxEnemyGroupSize );
 	SetInputFieldStringWithNumericStrictValue( 2, gsAINumElites );
 
-	gsAINumCreatures = min( GetNumericStrictValueFromField( 3 ), gGameExternalOptions.iMaxEnemyGroupSize );
+	gsAINumCreatures = (INT16) min( GetNumericStrictValueFromField( 3 ), gGameExternalOptions.iMaxEnemyGroupSize );
 	SetInputFieldStringWithNumericStrictValue( 3, gsAINumCreatures );
 }
 
@@ -1904,7 +1904,7 @@ void BlitGroupIcon( UINT8 ubIconType, UINT8 ubIconColor, UINT32 uiX, UINT32 uiY,
 	Assert( ubIconType < NUM_ICON_TYPES );
 	Assert( ubIconColor < NUM_ICON_COLORS );
 
-	ubObjectIndex = ( ubIconType * NUM_ICON_COLORS ) + ubIconColor;
+	ubObjectIndex = (UINT8)( ubIconType * NUM_ICON_COLORS ) + ubIconColor;
 	BltVideoObject( FRAME_BUFFER, hVObject, ubObjectIndex, uiX, uiY, VO_BLT_SRCTRANSPARENCY, NULL );
 }
 

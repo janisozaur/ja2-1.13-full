@@ -312,7 +312,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 		if ( pDoorStatus && (pDoorStatus->ubFlags & DOOR_BUSY) )
 		{
 			// Send this guy into stationary stance....
-			pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+			pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 
 			if ( pSoldier->bTeam == gbPlayerNum )
 			{

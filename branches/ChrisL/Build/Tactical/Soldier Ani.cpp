@@ -244,7 +244,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 406:
 
 				// Move merc up
-				if ( pSoldier->bDirection == NORTH )
+				if ( pSoldier->ubDirection == NORTH )
 				{
 					pSoldier->SetSoldierHeight( (FLOAT)(pSoldier->sHeightAdjustment + 2 )	);
 				}
@@ -263,14 +263,14 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				{
 					INT16		sXPos, sYPos;
 
-					//sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)DirectionInc( pSoldier->bDirection ) );
+					//sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)DirectionInc( pSoldier->ubDirection ) );
 					ConvertMapPosToWorldTileCenter( pSoldier->sTempNewGridNo, &sXPos, &sYPos );
 					pSoldier->EVENT_SetSoldierPosition( (FLOAT)sXPos, (FLOAT)sYPos );
 				}
 				// Move two CC directions
-				pSoldier->EVENT_SetSoldierDirection( gTwoCCDirection[ pSoldier->bDirection ] );
+				pSoldier->EVENT_SetSoldierDirection( gTwoCCDirection[ pSoldier->ubDirection ] );
 
-				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->ubDirection );
 
 				// Set desired anim height!
 				pSoldier->ubDesiredHeight = ANIM_CROUCH;
@@ -330,9 +330,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				// CODE: SPECIALMOVE CLIMB DOWN EVENT
 				// Move two C directions
-				pSoldier->EVENT_SetSoldierDirection( gTwoCDirection[ pSoldier->bDirection ] );
+				pSoldier->EVENT_SetSoldierDirection( gTwoCDirection[ pSoldier->ubDirection ] );
 
-				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->ubDirection );
 				// Adjust height
 				pSoldier->SetSoldierHeight( (FLOAT)gClimbDownRoofStartDist[ pSoldier->ubBodyType ] );
 				// Adjust position
@@ -485,14 +485,14 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 437:
 
 				// CHANGE DIRECTION AND GET-UP
-				//sGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)(-1 * DirectionInc( pSoldier->bDirection ) ) );
+				//sGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)(-1 * DirectionInc( pSoldier->ubDirection ) ) );
 				//ConvertMapPosToWorldTileCenter( pSoldier->sGridNo, &sXPos, &sYPos );
 				//SetSoldierPosition( pSoldier, (FLOAT)sXPos, (FLOAT)sYPos );
 
 
 				// Reverse direction
-				pSoldier->EVENT_SetSoldierDirection(	gOppositeDirection[ pSoldier->bDirection ] );
-				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+				pSoldier->EVENT_SetSoldierDirection(	gOppositeDirection[ pSoldier->ubDirection ] );
+				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->ubDirection );
 
 				pSoldier->ChangeSoldierState( GETUP_FROM_ROLLOVER, 0 , FALSE );
 				return( TRUE );
@@ -564,7 +564,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					INT16	sNewGridNo;
 					INT16 sXPos, sYPos;
 
-					sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
+					sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, DirectionInc( pSoldier->ubDirection ) );
 					ConvertGridNoToCenterCellXY( sNewGridNo, &sXPos, &sYPos );
 					LightSpritePosition( pSoldier->iMuzFlash, (INT16)(sXPos/CELL_X_SIZE), (INT16)(sYPos/CELL_Y_SIZE));
 
@@ -589,7 +589,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 443:
 
 				// MOVE GUY FORWARD FOR FENCE HOP ANIMATION
-				switch( pSoldier->bDirection )
+				switch( pSoldier->ubDirection )
 				{
 				case SOUTH:
 				case EAST:
@@ -612,9 +612,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				sY = CenterY( pSoldier->sForcastGridno );
 
 				pSoldier->EVENT_InternalSetSoldierPosition( (FLOAT) sX, (FLOAT) sY, FALSE, FALSE, FALSE );
-				pSoldier->EVENT_SetSoldierDirection(	gTwoCDirection[ pSoldier->bDirection ] );
+				pSoldier->EVENT_SetSoldierDirection(	gTwoCDirection[ pSoldier->ubDirection ] );
 				pSoldier->sZLevelOverride = -1;
-				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->ubDirection );
 
 
 				if ( gTacticalStatus.bBoxingState == BOXING_WAITING_FOR_PLAYER || gTacticalStatus.bBoxingState == PRE_BOXING || gTacticalStatus.bBoxingState == BOXING )
@@ -624,7 +624,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				if ( SetOffBombsInGridNo( pSoldier->ubID, pSoldier->sGridNo, FALSE, pSoldier->pathing.bLevel ))
 				{
-					pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+					pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 					return( TRUE );	
 				}
 
@@ -657,7 +657,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 445:
 
 				// CODE: MOVE GUY FORWARD ONE TILE, BASED ON WHERE WE ARE FACING
-				switch( pSoldier->bDirection )
+				switch( pSoldier->ubDirection )
 				{
 				case SOUTH:
 				case EAST:
@@ -689,14 +689,14 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// TRY FORWARDS...
 					// FIRST GRIDNO
-					sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+					sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->ubDirection ) ) );
 
-					if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->pathing.bLevel, pSoldier->bDirection, FALLFORWARD_HITDEATH_STOP ) )
+					if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->pathing.bLevel, pSoldier->ubDirection, FALLFORWARD_HITDEATH_STOP ) )
 					{
 						// SECOND GRIDNO
-						// sNewGridNo = NewGridNo( (INT16)sNewGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+						// sNewGridNo = NewGridNo( (INT16)sNewGridNo, (UINT16)( DirectionInc( pSoldier->ubDirection ) ) );
 
-						// if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->pathing.bLevel, pSoldier->bDirection, FALLFORWARD_HITDEATH_STOP ) )
+						// if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->pathing.bLevel, pSoldier->ubDirection, FALLFORWARD_HITDEATH_STOP ) )
 						{
 							// ALL'S OK HERE...
 							pSoldier->flags.fTryingToFall = FALSE;
@@ -709,17 +709,17 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// ATE: Added Feb1 - can be either direction....
 					if ( pSoldier->flags.fFallClockwise )
 					{
-						pSoldier->EVENT_SetSoldierDirection(	gOneCDirection[ pSoldier->bDirection ] );
+						pSoldier->EVENT_SetSoldierDirection(	gOneCDirection[ pSoldier->ubDirection ] );
 					}
 					else
 					{
-						pSoldier->EVENT_SetSoldierDirection(	gOneCCDirection[ pSoldier->bDirection ] );
+						pSoldier->EVENT_SetSoldierDirection(	gOneCCDirection[ pSoldier->ubDirection ] );
 					}
-					pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+					pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->ubDirection );
 					sLastAniFrame = gusAnimInst[ pSoldier->usAnimState ][ ( pSoldier->usAniCode - 2 ) ];
 					pSoldier->ConvertAniCodeToAniFrame( (INT16)( sLastAniFrame ) );
 
-					if ( pSoldier->bDirection == pSoldier->bStartFallDir )
+					if ( pSoldier->ubDirection == pSoldier->bStartFallDir )
 					{
 						// GO FORWARD HERE...
 						pSoldier->flags.fTryingToFall = FALSE;
@@ -857,7 +857,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					if ( pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] != 0 )
 					{
 						pSoldier->EVENT_SetSoldierDirection( (INT8)GetDirectionToGridNoFromGridNo( pSoldier->sGridNo, pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] ) );
-						pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+						pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->ubDirection );
 					}
 				}
 				break;
@@ -874,8 +874,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				//CODE: BEGINHOPFENCE
 				// MOVE TWO FACGIN GRIDNOS
-				sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
-				sNewGridNo = NewGridNo( (INT16)sNewGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+				sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->ubDirection ) ) );
+				sNewGridNo = NewGridNo( (INT16)sNewGridNo, (UINT16)( DirectionInc( pSoldier->ubDirection ) ) );
 				pSoldier->sForcastGridno = sNewGridNo;
 				break;
 
@@ -883,7 +883,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 451:
 
 				// CODE: MANAGE START z-buffer override
-				switch( pSoldier->bDirection )
+				switch( pSoldier->ubDirection )
 				{
 				case NORTH:
 				case WEST:
@@ -896,7 +896,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 452:
 
 				// CODE: MANAGE END z-buffer override
-				switch( pSoldier->bDirection )
+				switch( pSoldier->ubDirection )
 				{
 				case SOUTH:
 				case EAST:
@@ -924,7 +924,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				// CODE: HANDLE CLIMBING ROOF,
 				// Move merc up
-				if ( pSoldier->bDirection == NORTH )
+				if ( pSoldier->ubDirection == NORTH )
 				{
 					pSoldier->SetSoldierHeight( (FLOAT)(pSoldier->aiData.dHeightAdjustment + gClimbUpRoofDist[ pSoldier->ubBodyType ] ) );
 				}
@@ -948,7 +948,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				// CODE: HANDLE CLIMBING ROOF,
 				// Move merc DOWN
-				if ( pSoldier->bDirection == NORTH )
+				if ( pSoldier->ubDirection == NORTH )
 				{
 					pSoldier->SetSoldierHeight( (FLOAT)(pSoldier->aiData.dHeightAdjustment - gClimbUpRoofDist[ pSoldier->ubBodyType ] ) );
 				}
@@ -1044,7 +1044,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					INT16 sTempGridNo, sNewX, sNewY;
 
 					//Get Next GridNo;
-					sTempGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (INT16)( DirectionInc(pSoldier->bDirection ) ) );
+					sTempGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (INT16)( DirectionInc(pSoldier->ubDirection ) ) );
 
 					// Get center XY
 					ConvertGridNoToCenterCellXY( sTempGridNo, &sNewX, &sNewY );
@@ -1053,8 +1053,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					pSoldier->EVENT_SetSoldierPosition( sNewX, sNewY );
 
 					// Move two CC directions
-					pSoldier->EVENT_SetSoldierDirection( gTwoCCDirection[ pSoldier->bDirection ] );
-					pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+					pSoldier->EVENT_SetSoldierDirection( gTwoCCDirection[ pSoldier->ubDirection ] );
+					pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->ubDirection );
 
 					// Set desired anim height!
 					pSoldier->ubDesiredHeight = ANIM_CROUCH;
@@ -1116,7 +1116,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				///CODE: FOR HELIDROP, SET DIRECTION
 				pSoldier->EVENT_SetSoldierDirection( EAST );
-				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->ubDirection );
 
 				gfIngagedInDrop = FALSE;
 
@@ -1271,7 +1271,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					{
 						if ( pSoldier->stats.bLife >= OKLIFE )
 						{
-							pSoldier->InternalSoldierReadyWeapon(pSoldier->bDirection, FALSE );
+							pSoldier->InternalSoldierReadyWeapon(pSoldier->ubDirection, FALSE );
 						}
 						return( TRUE );
 					}
@@ -1363,7 +1363,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->bBreath > 0 && pSoldier->pathing.bLevel == 0 )
 						{
 							// Save old direction
-							pSoldier->aiData.uiPendingActionData1 = pSoldier->bDirection;
+							pSoldier->aiData.uiPendingActionData1 = pSoldier->ubDirection;
 
 							// If we got a head shot...more chance of turning...
 							if ( pSoldier->ubHitLocation != AIM_SHOT_HEAD )
@@ -1373,21 +1373,21 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 								// 30 % chance to change direction one way
 								if ( uiChance	< 30 )
 								{
-									bNewDirection = gOneCDirection[ pSoldier->bDirection ];
+									bNewDirection = gOneCDirection[ pSoldier->ubDirection ];
 								}
 								// 30 % chance to change direction the other way
 								else if ( uiChance >= 30 && uiChance < 60 )
 								{
-									bNewDirection = gOneCCDirection[ pSoldier->bDirection ];
+									bNewDirection = gOneCCDirection[ pSoldier->ubDirection ];
 								}
 								// 30 % normal....
 								else
 								{
-									bNewDirection = pSoldier->bDirection;
+									bNewDirection = pSoldier->ubDirection;
 								}
 
 								pSoldier->EVENT_SetSoldierDirection( bNewDirection );
-								pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+								pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->ubDirection );
 
 							}
 							else
@@ -1406,13 +1406,13 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 									// Pick evenly between both
 									if ( Random( 50 ) < 25 )
 									{
-										bNewDirection = gOneCDirection[ pSoldier->bDirection ];
+										bNewDirection = gOneCDirection[ pSoldier->ubDirection ];
 										bNewDirection = gOneCDirection[ bNewDirection ];
 										bNewDirection = gOneCDirection[ bNewDirection ];
 									}
 									else
 									{
-										bNewDirection = gOneCCDirection[ pSoldier->bDirection ];
+										bNewDirection = gOneCCDirection[ pSoldier->ubDirection ];
 										bNewDirection = gOneCCDirection[ bNewDirection ];
 										bNewDirection = gOneCCDirection[ bNewDirection ];
 									}
@@ -1435,7 +1435,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					//{
 					///	if ( !( pSoldier->flags.uiStatusFlags & SOLDIER_TURNINGFROMHIT ) )
 					//	{
-					///		pSoldier->bDirection				= (INT8)pSoldier->aiData.uiPendingActionData1;
+					///		pSoldier->ubDirection				= (INT8)pSoldier->aiData.uiPendingActionData1;
 					//		pSoldier->pathing.bDesiredDirection = (INT8)pSoldier->aiData.uiPendingActionData1;
 					//	}
 					//}
@@ -1719,7 +1719,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 								if ( gAnimControl[ pTSoldier->usAnimState ].ubHeight == ANIM_STAND )
 								{
 									// OK, stop merc....
-									pTSoldier->EVENT_StopMerc( pTSoldier->sGridNo, pTSoldier->bDirection );
+									pTSoldier->EVENT_StopMerc( pTSoldier->sGridNo, pTSoldier->ubDirection );
 
 									if ( pTSoldier->bTeam != gbPlayerNum )
 									{
@@ -2623,7 +2623,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				{
 					// Dish out damage!
-					MercPtrs[ pSoldier->aiData.uiPendingActionData4 ]->EVENT_SoldierGotHit( TAKE_DAMAGE_BLADE, (INT16) 25, (INT16) 25, gOppositeDirection[ pSoldier->bDirection ], 50, pSoldier->ubID, 0, ANIM_PRONE, 0, 0 );
+					MercPtrs[ pSoldier->aiData.uiPendingActionData4 ]->EVENT_SoldierGotHit( TAKE_DAMAGE_BLADE, (INT16) 25, (INT16) 25, gOppositeDirection[ pSoldier->ubDirection ], 50, pSoldier->ubID, 0, ANIM_PRONE, 0, 0 );
 				}
 				break;
 
@@ -2673,7 +2673,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					InternalDropBlood( pSoldier->sGridNo, pSoldier->pathing.bLevel, 0, (UINT8)(MAXBLOODQUANTITY), 1 );
 
 					// Move forward one gridno....
-					sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)( DirectionInc( gOppositeDirection[ pSoldier->bDirection ] ) ) );
+					sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)( DirectionInc( gOppositeDirection[ pSoldier->ubDirection ] ) ) );
 
 					InternalDropBlood( sNewGridNo, pSoldier->pathing.bLevel, 0, (UINT8)(MAXBLOODQUANTITY), 1 );
 
@@ -3510,7 +3510,7 @@ void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier )
 		// Randomly fall back or forward, if we are in the standing hit animation
 		if ( pSoldier->usAnimState == GENERIC_HIT_STAND || pSoldier->usAnimState == STANDING_BURST_HIT || pSoldier->usAnimState == RIFLE_STAND_HIT )
 		{
-			INT8		bTestDirection	= pSoldier->bDirection;
+			INT8		bTestDirection	= pSoldier->ubDirection;
 			BOOLEAN		fForceDirection = FALSE;
 			BOOLEAN		fDoFallback		= FALSE;
 
@@ -3568,7 +3568,7 @@ void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier )
 					pSoldier->EVENT_SetSoldierDesiredDirection( bTestDirection );
 					pSoldier->EVENT_SetSoldierDirection( bTestDirection );
 				}
-				pSoldier->ChangeToFallbackAnimation( pSoldier->bDirection );
+				pSoldier->ChangeToFallbackAnimation( pSoldier->ubDirection );
 				return;
 			}
 		}
@@ -3758,7 +3758,7 @@ BOOLEAN CheckForImproperFireGunEnd( SOLDIERTYPE *pSoldier )
 		if ( Item[ pSoldier->inv[ SECONDHANDPOS ].usItem ].usItemClass != IC_GUN )
 		{
 			// OK, put gun down....
-			pSoldier->InternalSoldierReadyWeapon(pSoldier->bDirection, TRUE );
+			pSoldier->InternalSoldierReadyWeapon(pSoldier->ubDirection, TRUE );
 			return( TRUE );
 		}
 	}
@@ -3858,7 +3858,7 @@ if ( pSoldier->stats.bLife >= OKLIFE )
 	// Randomly fall back or forward, if we are in the standing hit animation
 	if ( pSoldier->usAnimState == GENERIC_HIT_STAND || pSoldier->usAnimState == RIFLE_STAND_HIT )
 	{
-		INT8			bTestDirection = pSoldier->bDirection;
+		INT8			bTestDirection = pSoldier->ubDirection;
 		BOOLEAN		fForceDirection = FALSE;
 		BOOLEAN		fDoFallback			= FALSE;
 
@@ -3894,21 +3894,23 @@ if ( pSoldier->stats.bLife >= OKLIFE )
 
 #endif
 
-BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8 bTestDirection, UINT16 usAnimState )
+BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubTestDirection, UINT16 usAnimState )
 {
 	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"OKFallDirection");
 	STRUCTURE_FILE_REF *	pStructureFileRef;
 	UINT16								usAnimSurface;
+	UINT8					bOverTerrainType;
 
 	// How are the movement costs?
-	if ( gubWorldMovementCosts[ sGridNo ][ bTestDirection ][ bLevel ] > TRAVELCOST_SHORE )
+	if ( gubWorldMovementCosts[ sGridNo ][ ubTestDirection ][ bLevel ] > TRAVELCOST_SHORE )
 	{
 		return( FALSE );
 	}
 
+	bOverTerrainType = GetTerrainType( sGridNo);
 	//NOT ok if in water....
-	if ( GetTerrainType( sGridNo ) == MED_WATER || GetTerrainType( sGridNo ) == DEEP_WATER || GetTerrainType( sGridNo ) == LOW_WATER )
+	if ( TERRAIN_IS_WATER( bOverTerrainType) )
 	{
 		return( FALSE );
 	}
@@ -3935,9 +3937,9 @@ BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8
 		// work now.	The function is passing in an adjacent gridno but we need to place the structure
 		// data in the tile BEFORE.	So we take one step back in the direction opposite to bTestDirection
 		// and use that gridno
-		sTestGridNo = NewGridNo( sGridNo, (UINT16)( DirectionInc( gOppositeDirection[ bTestDirection ] ) ) );
+		sTestGridNo = NewGridNo( sGridNo, DirectionInc( gOppositeDirection[ ubTestDirection ] ) );
 
-		if ( ! OkayToAddStructureToWorld( sTestGridNo, bLevel, &(pStructureFileRef->pDBStructureRef[ gOneCDirection[ bTestDirection ] ]), usStructureID ) )
+		if ( ! OkayToAddStructureToWorld( sTestGridNo, bLevel, &(pStructureFileRef->pDBStructureRef[ gOneCDirection[ ubTestDirection ] ]), usStructureID ) )
 		{
 			// can't go in that dir!
 			return( FALSE );
@@ -4086,7 +4088,7 @@ void KickOutWheelchair( SOLDIERTYPE *pSoldier )
 	INT16 sNewGridNo;
 
 	// Move forward one gridno....
-	sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+	sNewGridNo = NewGridNo( (INT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->ubDirection ) ) );
 
 	// ATE: Make sure that the gridno is unoccupied!
 	if ( !NewOKDestination( pSoldier, sNewGridNo, TRUE, pSoldier->pathing.bLevel ) )
@@ -4095,7 +4097,7 @@ void KickOutWheelchair( SOLDIERTYPE *pSoldier )
 		sNewGridNo = pSoldier->sGridNo;
 	}
 
-	pSoldier->EVENT_StopMerc( sNewGridNo, pSoldier->bDirection );
+	pSoldier->EVENT_StopMerc( sNewGridNo, pSoldier->ubDirection );
 	pSoldier->ubBodyType = REGMALE;
 	if ( pSoldier->ubProfile == SLAY && pSoldier->bTeam == CIV_TEAM && !pSoldier->aiData.bNeutral )
 	{

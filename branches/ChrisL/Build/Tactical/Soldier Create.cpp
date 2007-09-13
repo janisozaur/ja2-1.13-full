@@ -122,7 +122,7 @@ SOLDIERCREATE_STRUCT& SOLDIERCREATE_STRUCT::operator=(const OLD_SOLDIERCREATE_ST
 		this->bAttitude = src.bAttitude;
 		this->bBodyType = src.bBodyType;
 		this->bDexterity = src.bDexterity;
-		this->bDirection = src.bDirection;
+		this->ubDirection = src.ubDirection;
 		this->bExpLevel = src.bExpLevel;
 		this->bExplosive = src.bExplosive;
 		this->bLeadership = src.bLeadership;
@@ -194,7 +194,7 @@ SOLDIERCREATE_STRUCT& SOLDIERCREATE_STRUCT::operator=(const SOLDIERTYPE& Soldier
 	this->bSectorZ							= Soldier.bSectorZ;
 	this->ubSoldierClass				= Soldier.ubSoldierClass;
 	this->bTeam									= Soldier.bTeam;
-	this->bDirection						= Soldier.bDirection;
+	this->ubDirection						= Soldier.ubDirection;
 
 	this->fOnRoof								= Soldier.pathing.bLevel;
 	this->sInsertionGridNo			= Soldier.sGridNo;
@@ -240,7 +240,7 @@ UINT16 SOLDIERCREATE_STRUCT::GetChecksum()
 	this->sSectorX							* 7		-
 	this->ubSoldierClass					* 4		+
 	this->bTeam								* 7		+
-	this->bDirection						* 5		+
+	this->ubDirection						* 5		+
 	this->fOnRoof							* 17	+ 
 	this->sInsertionGridNo					* 1		+ 
 	3);
@@ -602,10 +602,10 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		Soldier.sSectorX							= pCreateStruct->sSectorX;
 		Soldier.sSectorY							= pCreateStruct->sSectorY;
 		Soldier.bSectorZ							= pCreateStruct->bSectorZ;
-		Soldier.ubInsertionDirection	= pCreateStruct->bDirection;
-		Soldier.pathing.bDesiredDirection			= pCreateStruct->bDirection;
-		Soldier.aiData.bDominantDir					= pCreateStruct->bDirection;
-		Soldier.bDirection						= pCreateStruct->bDirection;
+		Soldier.ubInsertionDirection	= pCreateStruct->ubDirection;
+		Soldier.pathing.bDesiredDirection			= pCreateStruct->ubDirection;
+		Soldier.aiData.bDominantDir					= pCreateStruct->ubDirection;
+		Soldier.ubDirection						= pCreateStruct->ubDirection;
 
 		Soldier.sInsertionGridNo			= pCreateStruct->sInsertionGridNo;
 		Soldier.bOldLife							= Soldier.stats.bLifeMax;
@@ -993,7 +993,7 @@ BOOLEAN TacticalCopySoldierFromProfile( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STR
 
 	pSoldier->aiData.bOrders								= pCreateStruct->bOrders;
 	pSoldier->aiData.bAttitude							= pCreateStruct->bAttitude;
-	pSoldier->bDirection						= pCreateStruct->bDirection;
+	pSoldier->ubDirection						= pCreateStruct->ubDirection;
 	pSoldier->aiData.bPatrolCnt						= pCreateStruct->bPatrolCnt;
 	memcpy( pSoldier->aiData.sPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
 	
@@ -1828,7 +1828,7 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 	//Pass over mandatory information specified from the basic placement
 	pp->bOrders = bp->bOrders;
 	pp->bAttitude = bp->bAttitude;
-	pp->bDirection = bp->bDirection;
+	pp->ubDirection = bp->ubDirection;
 
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateDetailedPlacementGivenBasicPlacementInfo: determine soldier's class"));
@@ -2046,7 +2046,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	//Pass over mandatory information specified from the basic placement
 	spp->bOrders = bp->bOrders;
 	spp->bAttitude = bp->bAttitude;
-	spp->bDirection = bp->bDirection;
+	spp->ubDirection = bp->ubDirection;
 
 	//Only creatures have mandatory body types specified.
 	if( spp->bTeam == CREATURE_TEAM )
@@ -2112,7 +2112,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 		// Copy over team
 		pp->bTeam = bp->bTeam;
 
-		pp->bDirection						= bp->bDirection;
+		pp->ubDirection						= bp->ubDirection;
 		pp->sInsertionGridNo			= bp->sStartingGridNo;
 
 		//ATE: Copy over sector coordinates from profile to create struct
@@ -2124,7 +2124,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 
 		pp->bOrders								= bp->bOrders;
 		pp->bAttitude							= bp->bAttitude;
-		pp->bDirection						= bp->bDirection;
+		pp->ubDirection						= bp->ubDirection;
 		pp->bPatrolCnt						= bp->bPatrolCnt;
 		memcpy( pp->sPatrolGrid, bp->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
 		pp->fHasKeys							= bp->fHasKeys;
@@ -2555,7 +2555,8 @@ SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 	UINT8 ubID;
 	SOLDIERTYPE * pSoldier;
 
-	if (gpBattleGroup->ubSectorZ == gbWorldSectorZ &&
+	if (gpBattleGroup &&
+		gpBattleGroup->ubSectorZ == gbWorldSectorZ &&
 		gpBattleGroup->ubSectorX == gWorldSectorX &&
 		gpBattleGroup->ubSectorY == gWorldSectorY &&
 		guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
