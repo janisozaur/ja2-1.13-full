@@ -6040,12 +6040,13 @@
 	</ITEM>
 	<ITEM>
 		<uiIndex>270</uiIndex>
-		<szItemName>Nada</szItemName>
-		<szLongItemName>Nothing</szLongItemName>
-		<szItemDesc>Index 270</szItemDesc>
-		<szBRName>Nothing</szBRName>
-		<szBRDesc>Nothing</szBRDesc>
-		<usItemClass>1</usItemClass>
+		<szItemName>Very Small Creature Gas</szItemName>
+		<szLongItemName>Very Small Creature Gas</szLongItemName>
+		<szItemDesc>INTERNAL ITEM</szItemDesc>
+		<szBRName>Very Small Creature Gas</szBRName>
+		<szBRDesc>INTERNAL ITEM</szBRDesc>
+		<usItemClass>512</usItemClass>
+		<ubClassIndex>73</ubClassIndex>
 		<ItemSize>34</ItemSize>
 		<NotBuyable>1</NotBuyable>
 	</ITEM>
@@ -18049,7 +18050,7 @@
 		<uiIndex>760</uiIndex>
 		<szItemName>.50 Beo</szItemName>
 		<szLongItemName>.50 Beowulf Rifle</szLongItemName>
-		<szItemDesc>A rifle to fire a really oversized pistol round.</szItemDesc>
+		<szItemDesc>Designed to slay "monsters" in a single blow, the .50 Beowulf rifle from Alexander Arms will make you a legend in your own time; heroic deeds are just moments away - let the ballads begin.</szItemDesc>
 		<szBRName>.50 Beowulf Rifle</szBRName>
 		<szBRDesc>Use what the U.S Coast Guard uses: they know what they're doing.</szBRDesc>
 		<usItemClass>2</usItemClass>
@@ -23560,15 +23561,15 @@
 	</ITEM>
 	<ITEM>
 		<uiIndex>995</uiIndex>
-		<szItemName>Very Small Creature Gas</szItemName>
-		<szLongItemName>Very Small Creature Gas</szLongItemName>
-		<szItemDesc>INTERNAL ITEM</szItemDesc>
-		<szBRName>Very Small Creature Gas</szBRName>
-		<szBRDesc>INTERNAL ITEM</szBRDesc>
-		<usItemClass>512</usItemClass>
-		<ubClassIndex>73</ubClassIndex>
+		<szItemName>Nada</szItemName>
+		<szLongItemName>Nothing</szLongItemName>
+		<szItemDesc>Index 995</szItemDesc>
+		<szBRName>Nothing</szBRName>
+		<szBRDesc>Nothing</szBRDesc>
+		<usItemClass>1</usItemClass>
 		<ItemSize>34</ItemSize>
 		<NotBuyable>1</NotBuyable>
+		<BigGunList>1</BigGunList>
 	</ITEM>
 	<ITEM>
 		<uiIndex>996</uiIndex>
@@ -27820,7 +27821,7 @@
 		<usItemClass>131072</usItemClass>
 		<ubClassIndex>26</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
-		<ubGraphicNum>706</ubGraphicNum>
+		<ubGraphicNum>714</ubGraphicNum>
 		<ubWeight>8</ubWeight>
 		<ItemSize>21</ItemSize>
 		<usPrice>85</usPrice>
@@ -27843,7 +27844,7 @@
 		<usItemClass>131072</usItemClass>
 		<ubClassIndex>27</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
-		<ubGraphicNum>706</ubGraphicNum>
+		<ubGraphicNum>715</ubGraphicNum>
 		<ubWeight>8</ubWeight>
 		<ItemSize>21</ItemSize>
 		<usPrice>80</usPrice>
@@ -27866,7 +27867,7 @@
 		<usItemClass>131072</usItemClass>
 		<ubClassIndex>28</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
-		<ubGraphicNum>706</ubGraphicNum>
+		<ubGraphicNum>716</ubGraphicNum>
 		<ubWeight>8</ubWeight>
 		<ItemSize>21</ItemSize>
 		<usPrice>85</usPrice>
@@ -27958,7 +27959,7 @@
 		<usItemClass>131072</usItemClass>
 		<ubClassIndex>32</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
-		<ubGraphicNum>698</ubGraphicNum>
+		<ubGraphicNum>711</ubGraphicNum>
 		<ubWeight>8</ubWeight>
 		<ItemSize>23</ItemSize>
 		<usPrice>90</usPrice>
