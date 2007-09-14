@@ -3545,8 +3545,8 @@ void RenderItemDescriptionBox( )
 		// CHRISL: Determine if we're looking at an LBENODE and display alternate box graphic
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(0))
-				showBox = gpItemDescObject->GetLBEPointer(0)->lbeClass;
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+				showBox = gpItemDescObject->GetLBEPointer(gubItemDescStatusIndex)->lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
 		}
@@ -3573,10 +3573,10 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(0))
-				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE, gubItemDescStatusIndex );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
-				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
+				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE, gubItemDescStatusIndex );
 		}
 
 		if (gpItemPointer)
@@ -3594,8 +3594,8 @@ void RenderItemDescriptionBox( )
 		
 		// Display attachments
 		cnt = 0;
-		for (attachmentList::iterator iter = (*gpItemDescObject)[0]->attachments.begin();
-			iter != (*gpItemDescObject)[0]->attachments.end(); ++iter, ++cnt) {
+		for (attachmentList::iterator iter = (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.begin();
+			iter != (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.end(); ++iter, ++cnt) {
 
 			sCenX = (INT16)( gsInvDescX + gMapItemDescAttachmentsXY[cnt].sX + 5 );
 			sCenY = (INT16)( gsInvDescY + gMapItemDescAttachmentsXY[cnt].sY - 1 );
@@ -3650,10 +3650,10 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(0))
-				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE, gubItemDescStatusIndex );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
-				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
+				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE, gubItemDescStatusIndex );
 		}
 
 		// Render font desc
@@ -3676,10 +3676,10 @@ void RenderItemDescriptionBox( )
 		
 		if ( ITEM_PROS_AND_CONS( gpItemDescObject->usItem ) )
 		{
-			if ( (Item[gpItemDescObject->usItem].fingerprintid ) && (*gpItemDescObject)[0]->data.ubImprintID < NO_PROFILE )
+			if ( (Item[gpItemDescObject->usItem].fingerprintid ) && (*gpItemDescObject)[gubItemDescStatusIndex]->data.ubImprintID < NO_PROFILE )
 			{
 				// add name noting imprint
-				swprintf( pStr, L"%s %s (%s)", AmmoCaliber[ Weapon[ gpItemDescObject->usItem ].ubCalibre ], WeaponType[ Weapon[ gpItemDescObject->usItem ].ubWeaponType ], gMercProfiles[ (*gpItemDescObject)[0]->data.ubImprintID ].zNickname );
+				swprintf( pStr, L"%s %s (%s)", AmmoCaliber[ Weapon[ gpItemDescObject->usItem ].ubCalibre ], WeaponType[ Weapon[ gpItemDescObject->usItem ].ubWeaponType ], gMercProfiles[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.ubImprintID ].zNickname );
 			}
 			else
 			{
@@ -3955,7 +3955,7 @@ void RenderItemDescriptionBox( )
 		{
 			SetFontForeground( FONT_FCOLOR_WHITE );
 			SetFontShadow( DEFAULT_SHADOW );
-			swprintf( pStr, L"%ld", (*gpItemDescObject)[0]->data.money.uiMoneyAmount );
+			swprintf( pStr, L"%ld", (*gpItemDescObject)[gubItemDescStatusIndex]->data.money.uiMoneyAmount );
 			InsertCommasForDollarFigure( pStr );
 			InsertDollarSignInToString( pStr );
 			uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
@@ -4024,12 +4024,12 @@ void RenderItemDescriptionBox( )
 
 				
 				SetFontForeground( 5 );
-				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usSectorFound ), sTempString  ); 
+				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.key.ubKeyID ].usSectorFound ), sTempString  ); 
 				swprintf( pStr, L"%s", sTempString );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gMapWeaponStats[ 4 ].sY + gsInvDescY ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 
-				swprintf( pStr, L"%d", KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usDateFound );
+				swprintf( pStr, L"%d", KeyTable[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.key.ubKeyID ].usDateFound );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gMapWeaponStats[ 4 ].sY + gsInvDescY + GetFontHeight( BLOCKFONT ) + 2 ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
@@ -4055,8 +4055,8 @@ void RenderItemDescriptionBox( )
 		RenderBackpackButtons(1);
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(0))
-				showBox = gpItemDescObject->GetLBEPointer(0)->lbeClass;
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+				showBox = gpItemDescObject->GetLBEPointer(gubItemDescStatusIndex)->lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
 		}
@@ -4086,10 +4086,10 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(0))
-				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE, gubItemDescStatusIndex );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
-				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
+				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE, gubItemDescStatusIndex );
 		}
 
 		if (gpItemPointer)
@@ -4107,8 +4107,8 @@ void RenderItemDescriptionBox( )
 
 		// Display attachments
 		cnt = 0;
-		for (attachmentList::iterator iter = (*gpItemDescObject)[0]->attachments.begin();
-			iter != (*gpItemDescObject)[0]->attachments.end(); ++iter, ++cnt) {
+		for (attachmentList::iterator iter = (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.begin();
+			iter != (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.end(); ++iter, ++cnt) {
 			sCenX = (INT16)( gsInvDescX + gItemDescAttachmentsXY[cnt].sX + 5 );
 			sCenY = (INT16)( gsInvDescY + gItemDescAttachmentsXY[cnt].sY - 1 );
 
@@ -4166,10 +4166,10 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(0))
-				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE, gubItemDescStatusIndex );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
-				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
+				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE, gubItemDescStatusIndex );
 		}
 
 		// Render font desc
@@ -4195,10 +4195,10 @@ void RenderItemDescriptionBox( )
 
 		if ( ITEM_PROS_AND_CONS( gpItemDescObject->usItem ) )
 		{
-			if ( ( Item[gpItemDescObject->usItem].fingerprintid ) && (*gpItemDescObject)[0]->data.ubImprintID < NO_PROFILE )
+			if ( ( Item[gpItemDescObject->usItem].fingerprintid ) && (*gpItemDescObject)[gubItemDescStatusIndex]->data.ubImprintID < NO_PROFILE )
 			{
 				// add name noting imprint
-				swprintf( pStr, L"%s %s (%s)", AmmoCaliber[ Weapon[ gpItemDescObject->usItem ].ubCalibre ], WeaponType[ Weapon[ gpItemDescObject->usItem ].ubWeaponType ], gMercProfiles[ (*gpItemDescObject)[0]->data.ubImprintID ].zNickname );
+				swprintf( pStr, L"%s %s (%s)", AmmoCaliber[ Weapon[ gpItemDescObject->usItem ].ubCalibre ], WeaponType[ Weapon[ gpItemDescObject->usItem ].ubWeaponType ], gMercProfiles[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.ubImprintID ].zNickname );
 			}
 			else
 			{
@@ -4300,7 +4300,7 @@ void RenderItemDescriptionBox( )
 			}
 
 			//Status
-			swprintf( pStr, L"%2d%%", (*gpItemDescObject)[0]->data.gun.bGunStatus );
+			swprintf( pStr, L"%2d%%", (*gpItemDescObject)[gubItemDescStatusIndex]->data.gun.bGunStatus );
 			FindFontRightCoordinates( (INT16)(gWeaponStats[ 1 ].sX + gsInvDescX + gWeaponStats[ 1 ].sValDx), (INT16)(gWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 			wcscat( pStr, L"%%" );
 			mprintf( usX, usY, pStr );
@@ -4468,7 +4468,7 @@ void RenderItemDescriptionBox( )
 		{
 			SetFontForeground( FONT_FCOLOR_WHITE );
 			SetFontShadow( DEFAULT_SHADOW );
-			swprintf( pStr, L"%ld", (*gpItemDescObject)[0]->data.money.uiMoneyAmount );
+			swprintf( pStr, L"%ld", (*gpItemDescObject)[gubItemDescStatusIndex]->data.money.uiMoneyAmount );
 			InsertCommasForDollarFigure( pStr );
 			InsertDollarSignInToString( pStr );
 
@@ -4529,12 +4529,12 @@ void RenderItemDescriptionBox( )
 
 				
 				SetFontForeground( 5 );
-				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usSectorFound ), sTempString  ); 
+				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.key.ubKeyID ].usSectorFound ), sTempString  ); 
 				swprintf( pStr, L"%s", sTempString );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gWeaponStats[ 4 ].sY + gsInvDescY ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 
-				swprintf( pStr, L"%d", KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usDateFound );
+				swprintf( pStr, L"%d", KeyTable[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.key.ubKeyID ].usDateFound );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gWeaponStats[ 4 ].sY + gsInvDescY + GetFontHeight( BLOCKFONT ) + 2 ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
@@ -4555,9 +4555,8 @@ void RenderItemDescriptionBox( )
 }
 
 // CHRISL: New function to display items stored in an LBENODE
-void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScreen )
+void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScreen, int subObject )
 {
-	//ADB TODO clean up
 	extern INV_REGION_DESC gSMInvPocketXY[NUM_INV_SLOTS];
 	extern INV_REGION_DESC gMapScreenInvPocketXY[NUM_INV_SLOTS];
 	SOLDIERTYPE	*pSoldier;
@@ -4581,9 +4580,9 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 		pSoldier = gpSMCurrentMerc;
 	
 	LBENODE* pLBE = NULL;
-	if(pObj->IsActiveLBE(0))
+	if(pObj->IsActiveLBE(subObject))
 	{
-		pLBE = pObj->GetLBEPointer(0);
+		pLBE = pObj->GetLBEPointer(subObject);
 		lClass = pLBE->lbeClass;
 		if(lClass == 1 && pObj == &pSoldier->inv[RTHIGHPOCKPOS]) {
 			lClass = 5;

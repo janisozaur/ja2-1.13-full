@@ -117,7 +117,7 @@ void INVRenderSilhouette( UINT32 uiBugger, INT16 PocketIndex, INT16 SilIndex, IN
 // CHRISL: New function to handle display of inventory quantities based on item current in cursor
 void RenderPocketItemCapacity( INT8 pCapacity, INT16 bPos, SOLDIERTYPE *pSoldier );
 // CHRISL: New function to display items stored in an LBENODE
-void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScreen );
+void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScreen, int subObject );
 // CHRISL: New function to setup GSMInvData based on game options
 void InitInvData(INT8 num, BOOLEAN fBigPocket, INT16 sBarDx, INT16 sBarDy, INT16 sWidth, INT16 sHeight, INT16 sX, INT16 sY);
 void InitInventoryOld();

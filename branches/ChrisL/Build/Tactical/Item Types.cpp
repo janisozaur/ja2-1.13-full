@@ -503,7 +503,7 @@ bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
 				|| (*this)[0]->data.bTrap > 0) {
 				return false;
 			}
-			//ADB TODO, other specials
+			//TODO other specials if there are any
 		}
 	}
 	return true;

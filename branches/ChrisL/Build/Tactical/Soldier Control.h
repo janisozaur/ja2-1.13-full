@@ -1199,8 +1199,8 @@ public:
 	void BeginTyingToFall( void );
 	void HandleAnimationProfile( UINT16	usAnimState, BOOLEAN fRemove );
 	void HandleSoldierTakeDamageFeedback( void );
-	void ChangeToFlybackAnimation( INT8 bDirection );
-	void ChangeToFallbackAnimation( INT8 bDirection );
+	void ChangeToFlybackAnimation( UINT8 flyBackDirection );
+	void ChangeToFallbackAnimation( UINT8 fallBackDirection );
 
 
 	void UpdateRobotControllerGivenController( void );
