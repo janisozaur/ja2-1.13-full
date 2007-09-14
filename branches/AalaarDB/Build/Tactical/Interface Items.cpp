@@ -866,11 +866,79 @@ void InitInvData(INT8 num, BOOLEAN fBigPocket, INT16 sBarDx, INT16 sBarDy, INT16
 }
 void InitInventoryOld()
 {
-	int		BODYPOSFINAL		= GUNSLINGPOCKPOS;//RESET in initInventory
-	int		BIGPOCKFINAL		= BIGPOCK5POS;//RESET in initInventory
-	int		MEDPOCKSTART		= SMALLPOCK1POS;//RESET in initInventory
-	int		MEDPOCKFINAL		= SMALLPOCK1POS;//RESET in initInventory
-	int		SMALLPOCKFINAL		= SMALLPOCK9POS;//RESET in initInventory
+	/*
+	UINT8 oldItemDroppableFlags[NUM_INV_SLOTS] =
+	{
+		0x01,
+		0x02,
+		0x04,
+		0,
+		0,
+		0x08,//HANDPOS
+
+		0, //SECONDHANDPOS,
+		0, //VESTPOCKPOS,
+		0, //LTHIGHPOCKPOS,
+		0, //RTHIGHPOCKPOS,
+		0, //CPACKPOCKPOS,
+		0, //BPACKPOCKPOS,
+		0, //GUNSLINGPOCKPOS,
+		0, //KNIFEPOCKPOS,
+
+		0x10,//BIGPOCK1POS
+		0x20,
+		0x40,
+		0x80,
+
+		0, //BIGPOCK5POS,
+		0, //BIGPOCK6POS,
+		0, //BIGPOCK7POS,
+		0, //MEDPOCK1POS,
+		0, //MEDPOCK2POS,
+		0, //MEDPOCK3POS,
+		0, //MEDPOCK4POS,
+		0, //SMALLPOCK1POS,
+		0, //SMALLPOCK2POS,
+		0, //SMALLPOCK3POS,
+		0, //SMALLPOCK4POS,
+		0, //SMALLPOCK5POS,
+		0, //SMALLPOCK6POS,
+		0, //SMALLPOCK7POS,
+		0, //SMALLPOCK8POS,
+		0, //SMALLPOCK9POS,
+		0, //SMALLPOCK10POS,
+		0, //SMALLPOCK11POS,
+		0, //SMALLPOCK12POS,
+		0, //SMALLPOCK13POS,
+		0, //SMALLPOCK14POS,
+		0, //SMALLPOCK15POS,
+		0, //SMALLPOCK16POS,
+		0, //SMALLPOCK17POS,
+		0, //SMALLPOCK18POS,
+		0, //SMALLPOCK19POS,
+		0, //SMALLPOCK20POS,
+		0, //SMALLPOCK21POS,
+		0, //SMALLPOCK22POS,
+		0, //SMALLPOCK23POS,
+		0, //SMALLPOCK24POS,
+		0, //SMALLPOCK25POS,
+		0, //SMALLPOCK26POS,
+		0, //SMALLPOCK27POS,
+		0, //SMALLPOCK28POS,
+		0, //SMALLPOCK29POS,
+		0, //SMALLPOCK30POS,
+	};
+
+	gubItemDroppableFlag = oldItemDroppableFlags;
+*/
+
+
+
+	BODYPOSFINAL		= GUNSLINGPOCKPOS;//RESET in initInventory
+	BIGPOCKFINAL		= BIGPOCK5POS;//RESET in initInventory
+	MEDPOCKSTART		= SMALLPOCK1POS;//RESET in initInventory
+	MEDPOCKFINAL		= SMALLPOCK1POS;//RESET in initInventory
+	SMALLPOCKFINAL		= SMALLPOCK9POS;//RESET in initInventory
 
 
 	InitInvData(HELMETPOS,		FALSE,	INV_BAR_DX,	INV_BAR_DY,	HEAD_INV_SLOT_WIDTH,	HEAD_INV_SLOT_HEIGHT,	0, 0);	// HELMETPOS
@@ -895,11 +963,78 @@ void InitInventoryOld()
 }
 void InitInventoryNew()
 {
-	int		BODYPOSFINAL		= GUNSLINGPOCKPOS;//RESET in initInventory
-	int		BIGPOCKFINAL		= MEDPOCK1POS;//RESET in initInventory
-	int		MEDPOCKSTART		= MEDPOCK1POS;//RESET in initInventory
-	int		MEDPOCKFINAL		= SMALLPOCK1POS;//RESET in initInventory
-	int		SMALLPOCKFINAL		= NUM_INV_SLOTS;//RESET in initInventory
+	/*
+	UINT8 newItemDroppableFlags[NUM_INV_SLOTS] =
+	{
+		0x01,
+		0x02,
+		0x04,
+		0,
+		0,
+		0x08,//HANDPOS
+
+		0, //SECONDHANDPOS,
+		0, //VESTPOCKPOS,
+		0, //LTHIGHPOCKPOS,
+		0, //RTHIGHPOCKPOS,
+		0, //CPACKPOCKPOS,
+		0, //BPACKPOCKPOS,
+		0, //GUNSLINGPOCKPOS,
+		0, //KNIFEPOCKPOS,
+
+		0x10,//BIGPOCK1POS
+		0x20,
+		0x40,
+		0x80,
+
+		0, //BIGPOCK5POS,
+		0, //BIGPOCK6POS,
+		0, //BIGPOCK7POS,
+		0, //MEDPOCK1POS,
+		0, //MEDPOCK2POS,
+		0, //MEDPOCK3POS,
+		0, //MEDPOCK4POS,
+		0, //SMALLPOCK1POS,
+		0, //SMALLPOCK2POS,
+		0, //SMALLPOCK3POS,
+		0, //SMALLPOCK4POS,
+		0, //SMALLPOCK5POS,
+		0, //SMALLPOCK6POS,
+		0, //SMALLPOCK7POS,
+		0, //SMALLPOCK8POS,
+		0, //SMALLPOCK9POS,
+		0, //SMALLPOCK10POS,
+		0, //SMALLPOCK11POS,
+		0, //SMALLPOCK12POS,
+		0, //SMALLPOCK13POS,
+		0, //SMALLPOCK14POS,
+		0, //SMALLPOCK15POS,
+		0, //SMALLPOCK16POS,
+		0, //SMALLPOCK17POS,
+		0, //SMALLPOCK18POS,
+		0, //SMALLPOCK19POS,
+		0, //SMALLPOCK20POS,
+		0, //SMALLPOCK21POS,
+		0, //SMALLPOCK22POS,
+		0, //SMALLPOCK23POS,
+		0, //SMALLPOCK24POS,
+		0, //SMALLPOCK25POS,
+		0, //SMALLPOCK26POS,
+		0, //SMALLPOCK27POS,
+		0, //SMALLPOCK28POS,
+		0, //SMALLPOCK29POS,
+		0, //SMALLPOCK30POS,
+	};
+
+	gubItemDroppableFlag = newItemDroppableFlags;
+*/
+
+
+	BODYPOSFINAL		= GUNSLINGPOCKPOS;//RESET in initInventory
+	BIGPOCKFINAL		= MEDPOCK1POS;//RESET in initInventory
+	MEDPOCKSTART		= MEDPOCK1POS;//RESET in initInventory
+	MEDPOCKFINAL		= SMALLPOCK1POS;//RESET in initInventory
+	SMALLPOCKFINAL		= NUM_INV_SLOTS;//RESET in initInventory
 
 
 	InitInvData(0,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	HEAD_INV_SLOT_WIDTH,	HEAD_INV_SLOT_HEIGHT,	0, 0);	// HELMETPOS
@@ -3506,7 +3641,7 @@ void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
 void RenderItemDescriptionBox( )
 {
 	PERFORMANCE_MARKER
-  ETRLEObject						*pTrav;
+	ETRLEObject						*pTrav;
 	UINT32								usHeight, usWidth;
 	INT16									sCenX, sCenY, sStrX;
 	HVOBJECT							hVObject;
@@ -3545,8 +3680,8 @@ void RenderItemDescriptionBox( )
 		// CHRISL: Determine if we're looking at an LBENODE and display alternate box graphic
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(0))
-				showBox = gpItemDescObject->GetLBEPointer(0)->lbeClass;
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+				showBox = gpItemDescObject->GetLBEPointer(gubItemDescStatusIndex)->lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
 		}
@@ -3573,10 +3708,10 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(0))
-				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE, gubItemDescStatusIndex );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
-				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
+				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE, gubItemDescStatusIndex );
 		}
 
 		if (gpItemPointer)
@@ -3594,8 +3729,8 @@ void RenderItemDescriptionBox( )
 		
 		// Display attachments
 		cnt = 0;
-		for (attachmentList::iterator iter = (*gpItemDescObject)[0]->attachments.begin();
-			iter != (*gpItemDescObject)[0]->attachments.end(); ++iter, ++cnt) {
+		for (attachmentList::iterator iter = (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.begin();
+			iter != (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.end(); ++iter, ++cnt) {
 
 			sCenX = (INT16)( gsInvDescX + gMapItemDescAttachmentsXY[cnt].sX + 5 );
 			sCenY = (INT16)( gsInvDescY + gMapItemDescAttachmentsXY[cnt].sY - 1 );
@@ -3650,10 +3785,10 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(0))
-				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE, gubItemDescStatusIndex );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
-				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
+				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE, gubItemDescStatusIndex );
 		}
 
 		// Render font desc
@@ -3676,10 +3811,10 @@ void RenderItemDescriptionBox( )
 		
 		if ( ITEM_PROS_AND_CONS( gpItemDescObject->usItem ) )
 		{
-			if ( (Item[gpItemDescObject->usItem].fingerprintid ) && (*gpItemDescObject)[0]->data.ubImprintID < NO_PROFILE )
+			if ( (Item[gpItemDescObject->usItem].fingerprintid ) && (*gpItemDescObject)[gubItemDescStatusIndex]->data.ubImprintID < NO_PROFILE )
 			{
 				// add name noting imprint
-				swprintf( pStr, L"%s %s (%s)", AmmoCaliber[ Weapon[ gpItemDescObject->usItem ].ubCalibre ], WeaponType[ Weapon[ gpItemDescObject->usItem ].ubWeaponType ], gMercProfiles[ (*gpItemDescObject)[0]->data.ubImprintID ].zNickname );
+				swprintf( pStr, L"%s %s (%s)", AmmoCaliber[ Weapon[ gpItemDescObject->usItem ].ubCalibre ], WeaponType[ Weapon[ gpItemDescObject->usItem ].ubWeaponType ], gMercProfiles[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.ubImprintID ].zNickname );
 			}
 			else
 			{
@@ -3955,7 +4090,7 @@ void RenderItemDescriptionBox( )
 		{
 			SetFontForeground( FONT_FCOLOR_WHITE );
 			SetFontShadow( DEFAULT_SHADOW );
-			swprintf( pStr, L"%ld", (*gpItemDescObject)[0]->data.money.uiMoneyAmount );
+			swprintf( pStr, L"%ld", (*gpItemDescObject)[gubItemDescStatusIndex]->data.money.uiMoneyAmount );
 			InsertCommasForDollarFigure( pStr );
 			InsertDollarSignInToString( pStr );
 			uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
@@ -4024,12 +4159,12 @@ void RenderItemDescriptionBox( )
 
 				
 				SetFontForeground( 5 );
-				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usSectorFound ), sTempString  ); 
+				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.key.ubKeyID ].usSectorFound ), sTempString  ); 
 				swprintf( pStr, L"%s", sTempString );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gMapWeaponStats[ 4 ].sY + gsInvDescY ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 
-				swprintf( pStr, L"%d", KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usDateFound );
+				swprintf( pStr, L"%d", KeyTable[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.key.ubKeyID ].usDateFound );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gMapWeaponStats[ 4 ].sY + gsInvDescY + GetFontHeight( BLOCKFONT ) + 2 ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
@@ -4055,8 +4190,8 @@ void RenderItemDescriptionBox( )
 		RenderBackpackButtons(1);
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(0))
-				showBox = gpItemDescObject->GetLBEPointer(0)->lbeClass;
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+				showBox = gpItemDescObject->GetLBEPointer(gubItemDescStatusIndex)->lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
 		}
@@ -4086,10 +4221,10 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(0))
-				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE, gubItemDescStatusIndex );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
-				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
+				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE, gubItemDescStatusIndex );
 		}
 
 		if (gpItemPointer)
@@ -4107,8 +4242,8 @@ void RenderItemDescriptionBox( )
 
 		// Display attachments
 		cnt = 0;
-		for (attachmentList::iterator iter = (*gpItemDescObject)[0]->attachments.begin();
-			iter != (*gpItemDescObject)[0]->attachments.end(); ++iter, ++cnt) {
+		for (attachmentList::iterator iter = (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.begin();
+			iter != (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.end(); ++iter, ++cnt) {
 			sCenX = (INT16)( gsInvDescX + gItemDescAttachmentsXY[cnt].sX + 5 );
 			sCenY = (INT16)( gsInvDescY + gItemDescAttachmentsXY[cnt].sY - 1 );
 
@@ -4166,10 +4301,10 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(0))
-				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE, gubItemDescStatusIndex );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
-				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
+				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE, gubItemDescStatusIndex );
 		}
 
 		// Render font desc
@@ -4195,10 +4330,10 @@ void RenderItemDescriptionBox( )
 
 		if ( ITEM_PROS_AND_CONS( gpItemDescObject->usItem ) )
 		{
-			if ( ( Item[gpItemDescObject->usItem].fingerprintid ) && (*gpItemDescObject)[0]->data.ubImprintID < NO_PROFILE )
+			if ( ( Item[gpItemDescObject->usItem].fingerprintid ) && (*gpItemDescObject)[gubItemDescStatusIndex]->data.ubImprintID < NO_PROFILE )
 			{
 				// add name noting imprint
-				swprintf( pStr, L"%s %s (%s)", AmmoCaliber[ Weapon[ gpItemDescObject->usItem ].ubCalibre ], WeaponType[ Weapon[ gpItemDescObject->usItem ].ubWeaponType ], gMercProfiles[ (*gpItemDescObject)[0]->data.ubImprintID ].zNickname );
+				swprintf( pStr, L"%s %s (%s)", AmmoCaliber[ Weapon[ gpItemDescObject->usItem ].ubCalibre ], WeaponType[ Weapon[ gpItemDescObject->usItem ].ubWeaponType ], gMercProfiles[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.ubImprintID ].zNickname );
 			}
 			else
 			{
@@ -4300,7 +4435,7 @@ void RenderItemDescriptionBox( )
 			}
 
 			//Status
-			swprintf( pStr, L"%2d%%", (*gpItemDescObject)[0]->data.gun.bGunStatus );
+			swprintf( pStr, L"%2d%%", (*gpItemDescObject)[gubItemDescStatusIndex]->data.gun.bGunStatus );
 			FindFontRightCoordinates( (INT16)(gWeaponStats[ 1 ].sX + gsInvDescX + gWeaponStats[ 1 ].sValDx), (INT16)(gWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 			wcscat( pStr, L"%%" );
 			mprintf( usX, usY, pStr );
@@ -4468,7 +4603,7 @@ void RenderItemDescriptionBox( )
 		{
 			SetFontForeground( FONT_FCOLOR_WHITE );
 			SetFontShadow( DEFAULT_SHADOW );
-			swprintf( pStr, L"%ld", (*gpItemDescObject)[0]->data.money.uiMoneyAmount );
+			swprintf( pStr, L"%ld", (*gpItemDescObject)[gubItemDescStatusIndex]->data.money.uiMoneyAmount );
 			InsertCommasForDollarFigure( pStr );
 			InsertDollarSignInToString( pStr );
 
@@ -4529,12 +4664,12 @@ void RenderItemDescriptionBox( )
 
 				
 				SetFontForeground( 5 );
-				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usSectorFound ), sTempString  ); 
+				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.key.ubKeyID ].usSectorFound ), sTempString  ); 
 				swprintf( pStr, L"%s", sTempString );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gWeaponStats[ 4 ].sY + gsInvDescY ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 
-				swprintf( pStr, L"%d", KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usDateFound );
+				swprintf( pStr, L"%d", KeyTable[ (*gpItemDescObject)[gubItemDescStatusIndex]->data.key.ubKeyID ].usDateFound );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gWeaponStats[ 4 ].sY + gsInvDescY + GetFontHeight( BLOCKFONT ) + 2 ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
@@ -4555,9 +4690,8 @@ void RenderItemDescriptionBox( )
 }
 
 // CHRISL: New function to display items stored in an LBENODE
-void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScreen )
+void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScreen, int subObject )
 {
-	//ADB TODO clean up
 	extern INV_REGION_DESC gSMInvPocketXY[NUM_INV_SLOTS];
 	extern INV_REGION_DESC gMapScreenInvPocketXY[NUM_INV_SLOTS];
 	SOLDIERTYPE	*pSoldier;
@@ -4581,9 +4715,9 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 		pSoldier = gpSMCurrentMerc;
 	
 	LBENODE* pLBE = NULL;
-	if(pObj->IsActiveLBE(0))
+	if(pObj->IsActiveLBE(subObject))
 	{
-		pLBE = pObj->GetLBEPointer(0);
+		pLBE = pObj->GetLBEPointer(subObject);
 		lClass = pLBE->lbeClass;
 		if(lClass == 1 && pObj == &pSoldier->inv[RTHIGHPOCKPOS]) {
 			lClass = 5;

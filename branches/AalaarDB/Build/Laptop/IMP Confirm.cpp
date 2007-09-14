@@ -737,7 +737,9 @@ void GiveItemsToPC( UINT8 ubProfileId )
 	}
 
 	// CHRISL: Now that all items have been issued, distribute them into appropriate pockets, starting with the largest items
-	DistributeInitialGear(pProfile);
+	if((UsingNewInventorySystem() == true)) {
+		DistributeInitialGear(pProfile);
+	}
 }
 
 

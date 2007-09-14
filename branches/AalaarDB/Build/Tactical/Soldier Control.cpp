@@ -5566,7 +5566,7 @@ void SoldierGotHitGunFire( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sD
 		// Only for mercs...
 		if ( pSoldier->ubBodyType < 4 )
 		{
-			pSoldier->ChangeToFlybackAnimation( (INT8)bDirection );
+			pSoldier->ChangeToFlybackAnimation( bDirection );
 			return;
 		}
 	}
@@ -5692,7 +5692,7 @@ void SoldierGotHitExplosion( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 
 				{
 					pSoldier->EVENT_SetSoldierDirection( (INT8)bDirection );
 					pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->ubDirection );
-					pSoldier->ChangeToFallbackAnimation( (INT8)bDirection );
+					pSoldier->ChangeToFallbackAnimation( bDirection );
 				}
 				else
 				{
@@ -5729,7 +5729,7 @@ void SoldierGotHitExplosion( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 
 
 		if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->pathing.bLevel, gOppositeDirection[ bDirection ], FLYBACK_HIT ) )
 		{
-			pSoldier->ChangeToFallbackAnimation( (INT8)bDirection );
+			pSoldier->ChangeToFallbackAnimation( bDirection );
 		}
 		else
 		{
@@ -12517,14 +12517,14 @@ void SOLDIERTYPE::ResetSoldierChangeStatTimer( void )
 }
 
 
-void SOLDIERTYPE::ChangeToFlybackAnimation( INT8 bDirection )
+void SOLDIERTYPE::ChangeToFlybackAnimation( UINT8 flyBackDirection )
 {
 	PERFORMANCE_MARKER
 	UINT8 ubOppositeDir;
 	INT16 sDirectionInc;
 	INT16 sNewGridNo;
 
-	ubOppositeDir = gOppositeDirection[ ubDirection ];
+	ubOppositeDir = gOppositeDirection[ flyBackDirection ];
 	sDirectionInc = DirectionInc( ubOppositeDir);
 
 	// Get dest gridno, convert to center coords
@@ -12563,14 +12563,14 @@ void SOLDIERTYPE::ChangeToFlybackAnimation( INT8 bDirection )
 	thisSoldier->EVENT_InitNewSoldierAnim( FLYBACK_HIT, 0 , FALSE );
 }
 
-void SOLDIERTYPE::ChangeToFallbackAnimation( INT8 bDirection )
+void SOLDIERTYPE::ChangeToFallbackAnimation( UINT8 fallBackDirection )
 {
 	PERFORMANCE_MARKER
 	INT16 sNewGridNo;
 	UINT8 ubOppositeDir;
 	INT16 sDirection;
 
-	ubOppositeDir = gOppositeDirection[ ubDirection ];
+	ubOppositeDir = gOppositeDirection[ fallBackDirection ];
 	sDirection = DirectionInc( ubOppositeDir);
 
 	// Get dest gridno, convert to center coords

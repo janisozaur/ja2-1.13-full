@@ -3765,7 +3765,6 @@ BOOLEAN CanItemFitInVehicle( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos,
 }
 
 
-//ADB TODO
 BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement )
 {
 	PERFORMANCE_MARKER
@@ -3813,8 +3812,8 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 
 					if ( fDoingPlacement )
 					{
-						// otherwise move it, it can fail if it is a medium pocket but in that case no harm is done
-						pSoldier->inv[SECONDHANDPOS].MoveThisObjectTo(pSoldier->inv[bNewPos], ALL_OBJECTS, pSoldier, bNewPos);
+						// otherwise move it, forget about bNewPos!
+						PlaceInAnyPocket(pSoldier, &pSoldier->inv[SECONDHANDPOS], FALSE);
 					}
 				}
 			}
@@ -4003,6 +4002,16 @@ BOOLEAN FreeUpSlotIfPossibleThenPlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, 
 		return( PlaceObject( pSoldier, bPos, pObj ) );
 	}
 	return( FALSE );
+}
+
+BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj, BOOLEAN fNewItem )
+{
+	PERFORMANCE_MARKER
+	if (PlaceObject(pSoldier, bPos, pObj) == TRUE) {
+		SetNewItem(pSoldier, bPos, fNewItem);
+		return TRUE;
+	}
+	return FALSE;
 }
 
 BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
@@ -4210,8 +4219,7 @@ bool TryToPlaceInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, in
 		}
 	}
 
-	PlaceObject( pSoldier, bSlot, pObj );
-	SetNewItem( pSoldier, bSlot, fNewItem );
+	PlaceObject( pSoldier, bSlot, pObj, fNewItem );
 	if (pObj->exists() == false) {
 		return( true );
 	}
@@ -4378,8 +4386,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 			// CHRISL: 
 			if((UsingNewInventorySystem() == true) && (pItem->twohanded) && pSoldier->inv[GUNSLINGPOCKPOS].exists() == false)	// Long Gun use Gun Sling
 			{
-				PlaceObject( pSoldier, GUNSLINGPOCKPOS, pObj );
-				SetNewItem( pSoldier, GUNSLINGPOCKPOS, fNewItem );
+				PlaceObject( pSoldier, GUNSLINGPOCKPOS, pObj, fNewItem );
 				if (pObj->exists() == false)
 					return( TRUE );
 			}
@@ -4387,8 +4394,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 			// CHRISL:
 			if((UsingNewInventorySystem() == true) && pSoldier->inv[KNIFEPOCKPOS].exists() == false)	// Knife
 			{
-				PlaceObject( pSoldier, KNIFEPOCKPOS, pObj );
-				SetNewItem( pSoldier, KNIFEPOCKPOS, fNewItem );
+				PlaceObject( pSoldier, KNIFEPOCKPOS, pObj, fNewItem );
 				if (pObj->exists() == false)
 					return( TRUE );
 			}
@@ -4400,8 +4406,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 				if (pSoldier->inv[HANDPOS].exists() == false)
 				{
 					// put the one-handed weapon in the guy's hand...
-					PlaceObject( pSoldier, HANDPOS, pObj );
-					SetNewItem( pSoldier, HANDPOS, fNewItem );
+					PlaceObject( pSoldier, HANDPOS, pObj, fNewItem );
 					if ( pObj->exists() == false )
 					{
 						return( TRUE );
@@ -4410,8 +4415,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 				else if ( !(Item[pSoldier->inv[HANDPOS].usItem].twohanded ) && pSoldier->inv[SECONDHANDPOS].exists() == false)
 				{
 					// put the one-handed weapon in the guy's 2nd hand...
-					PlaceObject( pSoldier, SECONDHANDPOS, pObj );
-					SetNewItem( pSoldier, SECONDHANDPOS, fNewItem );
+					PlaceObject( pSoldier, SECONDHANDPOS, pObj, fNewItem );
 					if ( pObj->exists() == false )
 					{
 						return( TRUE );
@@ -4429,8 +4433,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 					if (pSoldier->inv[VESTPOS].exists() == false)
 					{
 						// put on the armour!
-						PlaceObject( pSoldier, VESTPOS, pObj );
-						SetNewItem( pSoldier, VESTPOS, fNewItem );
+						PlaceObject( pSoldier, VESTPOS, pObj, fNewItem );
 						if ( pObj->exists() == false )
 						{
 							return( TRUE );
@@ -4450,8 +4453,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 					if (pSoldier->inv[LEGPOS].exists() == false)
 					{
 						// put on the armour!
-						PlaceObject( pSoldier, LEGPOS, pObj );
-						SetNewItem( pSoldier, LEGPOS, fNewItem );
+						PlaceObject( pSoldier, LEGPOS, pObj, fNewItem );
 						if ( pObj->exists() == false )
 						{
 							return( TRUE );
@@ -4462,8 +4464,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 					if (pSoldier->inv[HELMETPOS].exists() == false)
 					{
 						// put on the armour!
-						PlaceObject( pSoldier, HELMETPOS, pObj );
-						SetNewItem( pSoldier, HELMETPOS, fNewItem );
+						PlaceObject( pSoldier, HELMETPOS, pObj, fNewItem );
 						if ( pObj->exists() == false )
 						{
 							return( TRUE );
@@ -4478,8 +4479,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 		case IC_FACE:
 			if ( (pSoldier->inv[HEAD1POS].exists() == false) && CompatibleFaceItem( pObj->usItem, pSoldier->inv[HEAD2POS].usItem ) )
 			{
-				PlaceObject( pSoldier, HEAD1POS, pObj );
-				SetNewItem( pSoldier, HEAD1POS, fNewItem );
+				PlaceObject( pSoldier, HEAD1POS, pObj, fNewItem );
 				if ( pObj->exists() == false )
 				{
 					return( TRUE );
@@ -4487,8 +4487,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 			}
 			else if ( (pSoldier->inv[HEAD2POS].exists() == false) && CompatibleFaceItem( pObj->usItem, pSoldier->inv[HEAD1POS].usItem ) )
 			{
-				PlaceObject( pSoldier, HEAD2POS, pObj );
-				SetNewItem( pSoldier, HEAD2POS, fNewItem );
+				PlaceObject( pSoldier, HEAD2POS, pObj, fNewItem );
 				if ( pObj->exists() == false )
 				{
 					return( TRUE );
@@ -4504,22 +4503,19 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 			if(lbeClass == THIGH_PACK)	// Thigh pack
 			{
 				if (pSoldier->inv[LTHIGHPOCKPOS].exists() == false) {
-					PlaceObject( pSoldier, LTHIGHPOCKPOS, pObj );
-					SetNewItem( pSoldier, LTHIGHPOCKPOS, fNewItem );
+					PlaceObject( pSoldier, LTHIGHPOCKPOS, pObj, fNewItem );
 					if(pObj->exists() == false)
 						return( TRUE );
 				}
 				if (pSoldier->inv[RTHIGHPOCKPOS].exists() == false) {
-					PlaceObject( pSoldier, RTHIGHPOCKPOS, pObj );
-					SetNewItem( pSoldier, RTHIGHPOCKPOS, fNewItem );
+					PlaceObject( pSoldier, RTHIGHPOCKPOS, pObj, fNewItem );
 					if(pObj->exists() == false)
 						return( TRUE );
 				}
 			}
 			else if(pSoldier->inv[VESTPOCKPOS].exists() == false && lbeClass == VEST_PACK)	// Vest pack
 			{
-				PlaceObject( pSoldier, VESTPOCKPOS, pObj );
-				SetNewItem( pSoldier, VESTPOCKPOS, fNewItem );
+				PlaceObject( pSoldier, VESTPOCKPOS, pObj, fNewItem );
 				if(pObj->exists() == false)
 					return( TRUE );
 			}
@@ -4529,8 +4525,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 				backCombo = LoadBearingEquipment[Item[pSoldier->inv[BPACKPOCKPOS].usItem].ubClassIndex].lbeCombo;
 				if((pSoldier->inv[BPACKPOCKPOS].exists() == true && packCombo != 0 && backCombo == packCombo) || pSoldier->inv[BPACKPOCKPOS].exists() == false)
 				{
-					PlaceObject( pSoldier, CPACKPOCKPOS, pObj );
-					SetNewItem( pSoldier, CPACKPOCKPOS, fNewItem );
+					PlaceObject( pSoldier, CPACKPOCKPOS, pObj, fNewItem );
 					if(pObj->exists() == false)
 						return( TRUE );
 				}
@@ -4543,8 +4538,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 					backCombo = LoadBearingEquipment[pItem->ubClassIndex].lbeCombo;
 					if((pSoldier->inv[CPACKPOCKPOS].exists() == true && backCombo != 0 && backCombo == packCombo) || pSoldier->inv[CPACKPOCKPOS].exists() == false)
 					{
-						PlaceObject( pSoldier, BPACKPOCKPOS, pObj );
-						SetNewItem( pSoldier, BPACKPOCKPOS, fNewItem );
+						PlaceObject( pSoldier, BPACKPOCKPOS, pObj, fNewItem );
 						pSoldier->flags.DropPackFlag = FALSE;
 						pSoldier->flags.ZipperFlag = FALSE;
 						RenderBackpackButtons(0);
