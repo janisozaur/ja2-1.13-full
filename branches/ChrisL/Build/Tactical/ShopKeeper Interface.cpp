@@ -437,13 +437,15 @@ UINT32	guiLastTimeDealerSaidNormalEvaluationQuote = 0;
 
 BOOLEAN	gfSkiDisplayDropItemToGroundText = FALSE;
 
-typedef struct
+class ITEM_TO_ADD_AFTER_SKI_OPEN
 {
+public:
+	ITEM_TO_ADD_AFTER_SKI_OPEN() {initialize();};
+	void			initialize() {fActive = FALSE; bPreviousInvPos = 0; ItemObject.initialize();};
 	BOOLEAN			fActive;
-	OBJECTTYPE	ItemObject;
-	INT8 bPreviousInvPos;
-
-} ITEM_TO_ADD_AFTER_SKI_OPEN;
+	INT8			bPreviousInvPos;
+	OBJECTTYPE		ItemObject;
+};
 ITEM_TO_ADD_AFTER_SKI_OPEN gItemToAdd;
 
 
@@ -1144,8 +1146,7 @@ ATM:
 		}
 
 		//Clear the contents of the structure
-		memset( &gItemToAdd, 0, sizeof( ITEM_TO_ADD_AFTER_SKI_OPEN ) );
-		gItemToAdd.fActive = FALSE;
+		gItemToAdd.initialize();
 	}
 
 	// Dirty the bottom panel
@@ -2026,22 +2027,20 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 			DeleteItemDescriptionBox( );
 		}
 
-//ADB TODO
-#if 0
 		//if the item has been seleceted
 		if( gpTempDealersInventory[ ubSelectedInvSlot ].uiFlags & ARMS_INV_ITEM_SELECTED )
 		{
 			//Check to see it there is more then 1 item in the location
-			if( ArmsDealerOfferArea[ gpTempDealersInventory[ ubSelectedInvSlot ].bSlotIdInOtherLocation ].ItemObject.ubNumberOfObjects > 0 )
+			if( ArmsDealerOfferArea[ gpTempDealersInventory[ ubSelectedInvSlot ].bSlotIdInOtherLocation ].ItemObject.exists() == true )
 			{
-				//Increase the number in the dealer inventory
-				gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.ubNumberOfObjects ++;
-
 				//Decrease the number in the dealer offer area
-				ArmsDealerOfferArea[ gpTempDealersInventory[ ubSelectedInvSlot ].bSlotIdInOtherLocation ].ItemObject.ubNumberOfObjects--;
+				ArmsDealerOfferArea[ gpTempDealersInventory[ ubSelectedInvSlot ].bSlotIdInOtherLocation ].ItemObject.RemoveObjectsFromStack(1, &gTempObject);
+
+				//Increase the number in the dealer inventory
+				gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.AddObjectsToStack(gTempObject);
 
 				//if there is nothing left in the arms dealer offer area
-				if( ArmsDealerOfferArea[ gpTempDealersInventory[ ubSelectedInvSlot ].bSlotIdInOtherLocation ].ItemObject.ubNumberOfObjects == 0 )
+				if( ArmsDealerOfferArea[ gpTempDealersInventory[ ubSelectedInvSlot ].bSlotIdInOtherLocation ].ItemObject.exists() == false )
 				{
 					RemoveItemFromArmsDealerOfferArea( gpTempDealersInventory[ ubSelectedInvSlot ].bSlotIdInOtherLocation, FALSE );
 				}
@@ -2050,7 +2049,6 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 				gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 			}
 		}
-#endif
 	} 
 }
 
@@ -2944,7 +2942,7 @@ bool RepairmanItemQsortCompare(INVENTORY_IN_SLOT& pInvSlot1, INVENTORY_IN_SLOT& 
 	{
 		return true;
 	}
-	//ADB TODO
+	//ADB TODO, why is there a TODO here?
 	if (pInvSlot1.uiRepairDoneTime < pInvSlot2.uiRepairDoneTime) {
 		DebugBreak();
 	}
@@ -3380,15 +3378,15 @@ INT8 AddItemToArmsDealerOfferArea( INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIdInOt
 		if( ArmsDealerOfferArea[bCnt].fActive == FALSE )
 		{
 			//Copy the inventory items
+			ArmsDealerOfferArea[bCnt] = *pInvSlot;
 
 			//if the shift key is being pressed, add them all
 			if( gfKeyState[ SHIFT ] ) {
-				ArmsDealerOfferArea[bCnt] = *pInvSlot;
+				//nothing needed
 			}
 			//If there was more then 1 item, reduce it to only 1 item moved
 			else if( pInvSlot->ItemObject.ubNumberOfObjects > 1 ) {
-				//ADB should the one item be removed?
-				ArmsDealerOfferArea[bCnt].ItemObject.DuplicateObjectsInStack(pInvSlot->ItemObject, 1);
+				ArmsDealerOfferArea[bCnt].ItemObject.RemoveObjectsFromStack(ArmsDealerOfferArea[bCnt].ItemObject.ubNumberOfObjects - 1);
 			}
 
 			//Remember where the item came from

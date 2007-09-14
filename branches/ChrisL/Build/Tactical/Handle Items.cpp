@@ -1757,7 +1757,6 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 						else
 						{
 							// Make copy of item
-							//ADB TODO, I don't like this copy if it's an LBE
 							gTempObject = gWorldItems[ pItemPool->iItemIndex ].object;
 
 							if ( !AutoPlaceObject( pSoldier, &gTempObject, TRUE ) )
@@ -3958,7 +3957,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 	// Get items from pending data
 
 	// Get objectype and delete
-	gTempObject = *pSoldier->pTempObject;
+	pSoldier->pTempObject->MoveThisObjectTo(gTempObject);
 	OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 
 	bInvPos = pSoldier->bPendingActionData5;
@@ -4029,14 +4028,6 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 					// MUST send in NO_SLOT, as the SKI wille expect it to exist in inv if not....
 					AddItemToPlayersOfferAreaAfterShopKeeperOpen( &gTempObject, NO_SLOT );
 
-					//ADB TODO clean up this code???
-					/*
-					Changed because if the player gave 1 item from a pile, the rest of the items in the piule would disappear
-					// OK, remove the item, as the SKI will give it back once done
-					DeleteObj( &( pSoldier->inv[ bInvPos ] ) );
-					*/
-
-
 					if ( bInvPos != NO_SLOT )
 					{
 						pSoldier->inv[ bInvPos ].RemoveObjectAtIndex( gTempObject.ubNumberOfObjects );
@@ -4073,7 +4064,6 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 			// We are a merc, add!
 			if ( !AutoPlaceObject( pTSoldier, &gTempObject, TRUE ) )
 			{
-				//ADB TODO clean up code!
 				// Erase!
 				if ( bInvPos != NO_SLOT )
 				{
@@ -4093,7 +4083,6 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 			}
 			else
 			{
-				//ADB TODO clean up code!
 				// Erase!
 				if ( bInvPos != NO_SLOT )
 				{
@@ -4131,7 +4120,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 			// Erase!
 			if ( bInvPos != NO_SLOT )
 			{
-				pSoldier->inv[ bInvPos ].RemoveObjectsFromStack( gTempObject.ubNumberOfObjects );
+				DeleteObj(&pSoldier->inv[ bInvPos ]);
 				DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 			}
 

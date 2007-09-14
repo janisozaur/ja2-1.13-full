@@ -271,9 +271,8 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		}
 		// weapon in off hand info code block end
 
-		//ADB TODO
 		// large objects in big inventory slots info code block start
-		for ( UINT8 BigSlot = BIGPOCK1POS; BigSlot <= BIGPOCK4POS; BigSlot++ )
+		for ( UINT8 BigSlot = BIGPOCKSTART; BigSlot < BIGPOCKFINAL; BigSlot++ )
 		{
 			if ( pSoldier->inv[ BigSlot ].exists() == false )
 				continue; // slot is empty, move on to the next slot

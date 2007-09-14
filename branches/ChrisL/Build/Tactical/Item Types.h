@@ -104,13 +104,13 @@ typedef enum INVENTORY_SLOT{
 
 #define INV_START_POS			0
 #define BODYPOSSTART		HELMETPOS
-#define BODYPOSFINAL		GUNSLINGPOCKPOS
-#define BIGPOCKSTART		BIGPOCK1POS
-#define BIGPOCKFINAL		MEDPOCK1POS
-#define MEDPOCKSTART		MEDPOCK1POS
-#define MEDPOCKFINAL		SMALLPOCK1POS
-#define SMALLPOCKSTART		SMALLPOCK1POS
-#define SMALLPOCKFINAL		NUM_INV_SLOTS
+extern	int		BODYPOSFINAL		;//= GUNSLINGPOCKPOS;//RESET in initInventory
+#define			BIGPOCKSTART		BIGPOCK1POS
+extern	int		BIGPOCKFINAL		;//= MEDPOCK1POS;//RESET in initInventory
+extern	int		MEDPOCKSTART		;//= MEDPOCK1POS;//RESET in initInventory
+extern	int		MEDPOCKFINAL		;//= SMALLPOCK1POS;//RESET in initInventory
+#define			SMALLPOCKSTART		SMALLPOCK1POS
+extern	int		SMALLPOCKFINAL		;//= NUM_INV_SLOTS;//RESET in initInventory
 #define STACK_SIZE_LIMIT	NUM_INV_SLOTS
 
 /* CHRISL: Arrays to track ic group information.  These allow us to determine which LBE slots control which pockets and
@@ -167,7 +167,7 @@ const INT8	vehicleInv[55]=	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 
 
 #define USABLE          10      // minimum work% of items to still be usable
 
-#define MAX_OBJECTS_PER_SLOT 8
+#define MAX_OBJECTS_PER_SLOT 255
 #define MAX_ATTACHMENTS 4
 #define MAX_MONEY_PER_SLOT 20000
 
@@ -477,9 +477,9 @@ public:
 	int		MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove = ALL_OBJECTS, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT);
 	int		RemoveObjectsFromStack(int howMany = 1, OBJECTTYPE* destObject = NULL, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT);
 	bool	RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject = NULL);
-	void	DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany = ALL_OBJECTS);
-private://this is only a helper for the above functions
+private://these are only helpers for the above functions
 	void	SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, StackedObjects::iterator beginIter);
+	bool	CanStack(OBJECTTYPE& sourceObject, int& numToStack);
 public:
 
 	BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachment, BOOLEAN playSound = TRUE);

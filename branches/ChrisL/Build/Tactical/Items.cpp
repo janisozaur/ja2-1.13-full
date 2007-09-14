@@ -2745,7 +2745,6 @@ void DistributeStatus(OBJECTTYPE* pSourceObject, OBJECTTYPE* pTargetObject, INT8
 	}
 }
 
-//ADB TODO move into OBJECTTYPE and clean up?
 BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex )
 {
 	PERFORMANCE_MARKER
@@ -2756,12 +2755,13 @@ BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetO
 	if (ubIndex < pTargetObj->ubNumberOfObjects)
 	{
 		// swap
-		gTempObject.DuplicateObjectsInStack(*pSourceObj, 1);
+		//std::swap??
+		StackedObjectData data = *((*pSourceObj)[0]);
 
 		*((*pSourceObj)[0]) = *((*pTargetObj)[ubIndex]);
 		pSourceObj->ubWeight = CalculateObjectWeight(pSourceObj);
 
-		*((*pTargetObj)[ubIndex]) = *(gTempObject[0]);
+		*((*pTargetObj)[ubIndex]) = data;
 		pTargetObj->ubWeight = CalculateObjectWeight(pTargetObj);
 		return( TRUE );
 	}
@@ -3796,13 +3796,13 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 				{
 					// two items in hands; try moving the second one so we can swap 
 					// CHRISL: Adjust parameters to include the new inventory system
-					if (FitsInSmallPocket(&pSoldier->inv[SECONDHANDPOS]) == false)
+					if (FitsInSmallPocket(&pSoldier->inv[SECONDHANDPOS]) == true)
 					{
-						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCKSTART, MEDPOCKFINAL );
+						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCKSTART, NUM_INV_SLOTS );
 					}
 					else
 					{
-						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCKSTART, NUM_INV_SLOTS );
+						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCKSTART, MEDPOCKFINAL );
 					}
 
 					if (bNewPos == NO_SLOT)
@@ -4003,13 +4003,6 @@ BOOLEAN FreeUpSlotIfPossibleThenPlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, 
 		return( PlaceObject( pSoldier, bPos, pObj ) );
 	}
 	return( FALSE );
-}
-
-void TryToStackThisItem(SOLDIERTYPE* pSoldier, UINT8 index)
-{
-	PERFORMANCE_MARKER
-	Assert(UsingNewInventorySystem() == false);
-	//ADB TODO
 }
 
 BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
@@ -4227,11 +4220,13 @@ bool TryToPlaceInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, in
 
 bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int bExcludeSlot)
 {
+	/*CHRISL: By including CanItemFitInPosition in the condition, we include new inventory pocket
+	restrictions as well as making sure we only worry about functional pockets in the old system. */
 	//first, try to STACK the item
 	if (FitsInSmallPocket(pObj) == true) {
 		//try to STACK in small pockets
 		for(int bSlot = SMALLPOCKSTART; bSlot < SMALLPOCKFINAL; bSlot++) {
-			if (bSlot != bExcludeSlot && TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
+			if (bSlot != bExcludeSlot && TryToStackInSlot(pSoldier, pObj, bSlot) == true && CanItemFitInPosition(pSoldier, pObj, bSlot, false)) {
 				return true;
 			}
 		}
@@ -4240,14 +4235,14 @@ bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int 
 	//try to STACK in big pockets, and possibly medium pockets
 	int bigPocketEnd = (UsingNewInventorySystem() == true) ? MEDPOCKFINAL : BIGPOCKFINAL;
 	for(int bSlot = BIGPOCKSTART; bSlot < bigPocketEnd; bSlot++) {
-		if (bSlot != bExcludeSlot && TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
+		if (bSlot != bExcludeSlot && TryToStackInSlot(pSoldier, pObj, bSlot) == true && CanItemFitInPosition(pSoldier, pObj, bSlot, false)) {
 			return true;
 		}
 	}
 
 	//try to STACK in any slot
 	for(int bSlot = BODYPOSSTART; bSlot < BODYPOSFINAL; bSlot++) {
-		if (bSlot != bExcludeSlot && TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
+		if (bSlot != bExcludeSlot && TryToStackInSlot(pSoldier, pObj, bSlot) == true && CanItemFitInPosition(pSoldier, pObj, bSlot, false)) {
 			return true;
 		}
 	}
@@ -4258,7 +4253,7 @@ bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int 
 	if (FitsInSmallPocket(pObj) == true) {
 		//try to PLACE in small pockets
 		for(int bSlot = SMALLPOCKSTART; bSlot < SMALLPOCKFINAL; bSlot++) {
-			if (bSlot != bExcludeSlot && TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, NUM_INV_SLOTS) == true) {
+			if (bSlot != bExcludeSlot && TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, NUM_INV_SLOTS) == true && CanItemFitInPosition(pSoldier, pObj, bSlot, false)) {
 				return true;
 			}
 		}
@@ -4266,14 +4261,14 @@ bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int 
 
 	//try to PLACE in big pockets, and possibly medium pockets
 	for(int bSlot = BIGPOCKSTART; bSlot < bigPocketEnd; bSlot++) {
-		if (bSlot != bExcludeSlot && TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, bigPocketEnd) == true) {
+		if (bSlot != bExcludeSlot && TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, bigPocketEnd) == true && CanItemFitInPosition(pSoldier, pObj, bSlot, false)) {
 			return true;
 		}
 	}
 
 	//try to PLACE in any slot
 	for(int bSlot = BODYPOSSTART; bSlot < BODYPOSFINAL; bSlot++) {
-		if (bSlot != bExcludeSlot && TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, BODYPOSFINAL) == true) {
+		if (bSlot != bExcludeSlot && TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, BODYPOSFINAL) == true && CanItemFitInPosition(pSoldier, pObj, bSlot, false)) {
 			return true;
 		}
 	}
@@ -4451,12 +4446,8 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 					functions.*/
 					if(Item[pSoldier->inv[LEGPOS].usItem].attachment)
 					{
-						//ADB TODO, figure out what this code does, and fix it
-						/*
-						pObj->usAttachItem[0] = pSoldier->inv[LEGPOS].usItem;
-						pObj->bAttachStatus[0] = pSoldier->inv[LEGPOS].ItemData.Generic.bStatus[0];
-						pSoldier->inv[LEGPOS].usItem = NONE;
-						*/
+						SwapObjs(pObj, &pSoldier->inv[LEGPOS]);
+						pSoldier->inv[LEGPOS].AttachObject(pSoldier, pObj, FALSE);
 					}
 					if (pSoldier->inv[LEGPOS].exists() == false)
 					{
@@ -4569,7 +4560,6 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 			break;
 	}
 
-	//ADB TODO include exclude slot
 	if (PlaceInAnySlot(pSoldier, pObj, (fNewItem == TRUE), bExcludeSlot) == true) {
 		return TRUE;
 	}
@@ -5184,7 +5174,7 @@ BOOLEAN CreateAmmo( UINT16 usItem, OBJECTTYPE * pObj, INT16 ubShotsLeft )
 		(*pObj)[0]->data.ubShotsLeft = Magazine[ Item[usItem].ubClassIndex ].ubMagSize;
 	}
 	else {
-		(*pObj)[0]->data.ubShotsLeft = ubShotsLeft;
+		(*pObj)[0]->data.ubShotsLeft = (UINT8)ubShotsLeft;
 	}
 	pObj->ubWeight = CalculateObjectWeight( pObj );
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateAmmo: done"));
