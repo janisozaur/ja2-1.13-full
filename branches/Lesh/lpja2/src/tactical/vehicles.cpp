@@ -2018,14 +2018,17 @@ BOOLEAN LoadVehicleInformationFromSavedGameFile( HWFILE hFile, UINT32 uiSavedGam
 				//loop through all the passengers
 				for(ubPassengerCnt=0; ubPassengerCnt<10; ubPassengerCnt++)
 				{
+		          	UINT8	profile;
           if ( uiSavedGameVersion < 86 )
           {
+         	
 					  if( pVehicleList[cnt].pPassengers[ubPassengerCnt] != 0 )
 					  {
 						  // ! The id of the soldier was saved in the passenger pointer.  The passenger pointer is converted back
 						  // ! to a UINT8 so we can get the REAL pointer to the soldier.
-// Lesh: seems weird and unused
-						  //pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)(pVehicleList[cnt].pPassengers[ ubPassengerCnt ]), FALSE );
+// Lesh: very nasty way to convert stored bindings
+						  profile = (UINT32)(pVehicleList[cnt].pPassengers[ ubPassengerCnt ]);
+						  pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( profile, FALSE );
   					}
           }
           else
@@ -2034,8 +2037,9 @@ BOOLEAN LoadVehicleInformationFromSavedGameFile( HWFILE hFile, UINT32 uiSavedGam
 					  {
 						  // ! The id of the soldier was saved in the passenger pointer.  The passenger pointer is converted back
 						  // ! to a UINT8 so we can get the REAL pointer to the soldier.
-// Lesh: seems weird and unused
-						  //pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
+// Lesh: very nasty way to convert stored bindings
+						  profile = (UINT32)(pVehicleList[cnt].pPassengers[ ubPassengerCnt ]);
+						  pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( profile, FALSE );
   					}
             else
             {
