@@ -20,11 +20,11 @@
 #include "topic_ops.h"
 #include "topic_ids.h"
 
-/*
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-*/
+
 
 #define INVALID_TOPIC		0xffff
 #define MAX_TOPICS_ALLOTED	1024
@@ -166,10 +166,10 @@ extern	void		_DebugMessage(UINT8 *pSourceFile, UINT32 uiLineNum, UINT8 *pString)
 //*******************************************************************************************
 #endif
 
-/*
+
 #ifdef __cplusplus
 }
 #endif
-*/
+
 
 #endif
