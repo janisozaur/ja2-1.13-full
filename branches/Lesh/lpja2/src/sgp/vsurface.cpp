@@ -1294,12 +1294,12 @@ BOOLEAN SetVideoSurfaceTransparencyColor( HVSURFACE hVSurface, COLORVAL TransCol
 	Assert( hVSurface != NULL );
 
 	//Set trans color into Video Surface
-	hVSurface->TransparentColor = TransColor;
+	hVSurface->TransparentColor = Get16BPPColor( TransColor );
 
 	// Get surface pointer
 	if ( hVSurface->pSurface )
 	{
-		SDL_SetColorKey(hVSurface->pSurface, SDL_SRCCOLORKEY, TransColor);
+		SDL_SetColorKey(hVSurface->pSurface, SDL_SRCCOLORKEY, Get16BPPColor( TransColor ) );
 	}
 	//lpDDSurface = (LPDIRECTDRAWSURFACE2)hVSurface->pSurfaceData;
 	//CHECKF( lpDDSurface != NULL );
