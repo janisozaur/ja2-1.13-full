@@ -585,7 +585,7 @@ void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY )
 		CountRandomCalls( TRUE );
 	#endif
 
-	printf("Entering autoresolve battle at sector %c%d...\n", ubSectorY + 0x40, ubSectorX);
+//	printf("Entering autoresolve battle at sector %c%d...\n", ubSectorY + 0x40, ubSectorX);
 	guiDirNumber = 0;
 
 	//Set up mapscreen for removal
@@ -2266,7 +2266,7 @@ void RemoveAutoResolveInterface( BOOLEAN fDeleteForGood )
 	UINT8 ubCurrentGroupID = 0;
 	BOOLEAN fFirstGroup = TRUE;
 
-	printf("Removing autoresolve interface...\n");
+//	printf("Removing autoresolve interface...\n");
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
 	//VtResumeSampling();
@@ -2501,7 +2501,7 @@ void RemoveAutoResolveInterface( BOOLEAN fDeleteForGood )
 		gubSectorIDOfCreatureAttack = 0;
 	}
 	//VtPauseSampling();
-	printf("Removing autoresolve interface finished\n");
+//	printf("Removing autoresolve interface finished\n");
 }
 
 void PauseButtonCallback( GUI_BUTTON *btn, INT32 reason )
@@ -2512,7 +2512,7 @@ void PauseButtonCallback( GUI_BUTTON *btn, INT32 reason )
 		ButtonList[ gpAR->iButton[ FAST_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
 		ButtonList[ gpAR->iButton[ FINISH_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
 		gpAR->fPaused = TRUE;
-		printf("Autoresolve paused\n");
+//		printf("Autoresolve paused\n");
 	}
 }
 
@@ -2525,7 +2525,7 @@ void PlayButtonCallback( GUI_BUTTON *btn, INT32 reason )
 		ButtonList[ gpAR->iButton[ FINISH_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
 		gpAR->uiTimeSlice = 1000 * gpAR->ubTimeModifierPercentage / 100;
 		gpAR->fPaused = FALSE;
-		printf("Autoresolve speed = normal\n");
+//		printf("Autoresolve speed = normal\n");
 	}
 }
 
@@ -2538,7 +2538,7 @@ void FastButtonCallback( GUI_BUTTON *btn, INT32 reason )
 		ButtonList[ gpAR->iButton[ FINISH_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
 		gpAR->uiTimeSlice = 4000;
 		gpAR->fPaused = FALSE;
-		printf("Autoresolve speed = fast\n");
+//		printf("Autoresolve speed = fast\n");
 	}
 }
 
@@ -2553,7 +2553,7 @@ void FinishButtonCallback( GUI_BUTTON *btn, INT32 reason )
 		gpAR->fSound = FALSE;
 		gpAR->fPaused = FALSE;
 		PlayJA2StreamingSample( AUTORESOLVE_FINISHFX, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
-		printf("Autoresolve speed = maximum\n");
+//		printf("Autoresolve speed = maximum\n");
 	}
 }
 
@@ -2561,7 +2561,7 @@ void RetreatButtonCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		printf("Retreat button pressed\n");
+//		printf("Retreat button pressed\n");
 		INT32 i;
 		for( i = 0; i < gpAR->ubMercs; i++ )
 		{
@@ -2657,7 +2657,7 @@ void BandageButtonCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		printf("Bandage button pressed\n");
+//		printf("Bandage button pressed\n");
 		AutoBandageMercs();
 		SetupDoneInterface();
 	}
@@ -2667,7 +2667,7 @@ void DoneButtonCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		printf("Done button pressed\n");
+//		printf("Done button pressed\n");
 		gpAR->fExitAutoResolve = TRUE; 
 	}
 }
@@ -2781,17 +2781,17 @@ void CalculateAutoResolveInfo()
 	Assert( gpAR->ubSectorX >= 1 && gpAR->ubSectorX <= 16 );
 	Assert( gpAR->ubSectorY >= 1 && gpAR->ubSectorY <= 16 );
 
-	printf("Calculating autoresolve info...\n");
+//	printf("Calculating autoresolve info...\n");
 	if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 	{
 //		GetNumberOfEnemiesInSector( gpAR->ubSectorX, gpAR->ubSectorY, 
 		GetNumberOfEnemiesInFiveSectors( gpAR->ubSectorX, gpAR->ubSectorY, 
 																&gpAR->ubAdmins, &gpAR->ubTroops, &gpAR->ubElites );
 		gpAR->ubEnemies = (UINT8)min( gpAR->ubAdmins + gpAR->ubTroops + gpAR->ubElites, MAX_AR_TEAM_SIZE );
-		printf("Admins  = %d\n", gpAR->ubAdmins);
-		printf("Troops  = %d\n", gpAR->ubTroops);
-		printf("Elites  = %d\n", gpAR->ubElites);
-		printf("Total   = %d\n", gpAR->ubEnemies);
+//		printf("Admins  = %d\n", gpAR->ubAdmins);
+//		printf("Troops  = %d\n", gpAR->ubTroops);
+//		printf("Elites  = %d\n", gpAR->ubElites);
+//		printf("Total   = %d\n", gpAR->ubEnemies);
 	}
 	else
 	{
@@ -2808,12 +2808,12 @@ void CalculateAutoResolveInfo()
 																				&gpAR->ubAMCreatures, &gpAR->ubAFCreatures );
 		}
 		gpAR->ubEnemies = (UINT8)min( gpAR->ubYMCreatures + gpAR->ubYFCreatures + gpAR->ubAMCreatures + gpAR->ubAFCreatures, MAX_AR_TEAM_SIZE );
-		printf("Creatures aren't tracked\n");
+//		printf("Creatures aren't tracked\n");
 	}
 	gfTransferTacticalOppositionToAutoResolve = FALSE;
 //	gpAR->ubCivs = CountAllMilitiaInSector( gpAR->ubSectorX, gpAR->ubSectorY );
 	gpAR->ubCivs = CountAllMilitiaInFiveSectors( gpAR->ubSectorX, gpAR->ubSectorY );
-	printf("Militia = %d\n", gpAR->ubCivs);
+//	printf("Militia = %d\n", gpAR->ubCivs);
 	gpAR->ubMercs = 0;
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 	pGroup = gpGroupList;
@@ -2851,7 +2851,7 @@ void CalculateAutoResolveInfo()
 	gpAR->iNumMercFaces = gpAR->ubMercs;
 	gpAR->iActualMercFaces = gpAR->ubMercs; 
 
-	printf("Mercs   = %d\n", gpAR->ubMercs);
+//	printf("Mercs   = %d\n", gpAR->ubMercs);
 
 	giMaxMilitiaToRender = 50 - ( (gpAR->ubMercs + 4) / 5 ) * 5;
 	
@@ -3092,7 +3092,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve3");
 			{
 				case SPACE:
 					gpAR->fPaused ^= TRUE;
-					printf("Autoresolve paused\n");
+//					printf("Autoresolve paused\n");
 					if( gpAR->fPaused )
 					{
 						ButtonList[ gpAR->iButton[ PAUSE_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
@@ -3499,8 +3499,8 @@ void DetermineTeamLeader( BOOLEAN fFriendlyTeam )
 		{
 			//Assign the best leader the honour of team leader.
 			pBestLeaderCell->uiFlags |= CELL_TEAMLEADER;
-			printf("Soldier #%d (%ls) is chosen as a militia team leader with leadership %d\n",
-				pBestLeaderCell->pSoldier->ubID, pBestLeaderCell->pSoldier->name, pBestLeaderCell->pSoldier->bLeadership);
+//			printf("Soldier #%d (%ls) is chosen as a militia team leader with leadership %d\n",
+//				pBestLeaderCell->pSoldier->ubID, pBestLeaderCell->pSoldier->name, pBestLeaderCell->pSoldier->bLeadership);
 		}
 		return;
 	}
@@ -3518,8 +3518,8 @@ void DetermineTeamLeader( BOOLEAN fFriendlyTeam )
 	{
 		//Assign the best enemy leader the honour of team leader
 		pBestLeaderCell->uiFlags |= CELL_TEAMLEADER;
-		printf("Soldier #%d (%ls) is chosen as an enemy team leader with leadership %d\n",
-			pBestLeaderCell->pSoldier->ubID, pBestLeaderCell->pSoldier->name, pBestLeaderCell->pSoldier->bLeadership);
+//		printf("Soldier #%d (%ls) is chosen as an enemy team leader with leadership %d\n",
+//			pBestLeaderCell->pSoldier->ubID, pBestLeaderCell->pSoldier->name, pBestLeaderCell->pSoldier->bLeadership);
 	}
 }
 
