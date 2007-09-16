@@ -523,7 +523,7 @@ UINT32 InitializeJA2(void)
 	}
 #endif
 
-#ifdef JA2BETAVERSION
+//#ifdef JA2BETAVERSION
 	#ifdef JA2EDITOR
 		// CHECK COMMANDLINE FOR SPECIAL UTILITY
 		if( gCmdLineParams.fEditorAuto )
@@ -555,7 +555,7 @@ UINT32 InitializeJA2(void)
 			return( GAME_SCREEN );
 		}
 	#endif
-#endif
+//#endif
 
 	return( INIT_SCREEN );
 }

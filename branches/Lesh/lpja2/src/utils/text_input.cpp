@@ -422,7 +422,7 @@ void SetInputFieldStringWith8BitString( UINT8 ubField, CHAR8 * szNewText )
 			{
 				curr->ubStrLen = (UINT8)strlen( szNewText );
 				Assert( curr->ubStrLen <= curr->ubMaxChars );
-				WSTR_SPrintf( curr->szString, curr->ubMaxChars, L"%S", szNewText );
+				WSTR_SPrintf( curr->szString, curr->ubMaxChars, L"%hs", szNewText );
 			}
 			else if( !curr->fUserField )
 			{
@@ -440,7 +440,7 @@ void SetInputFieldStringWith8BitString( UINT8 ubField, CHAR8 * szNewText )
 }
 
 //Allows external functions to access the strings within the fields at anytime.
-void Get8BitStringFromField( UINT8 ubField, UINT8 *szString )
+void Get8BitStringFromField( UINT8 ubField, CHAR8 *szString )
 {
 	TEXTINPUTNODE *curr;
   curr = gpTextInputHead;

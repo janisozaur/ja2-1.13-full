@@ -18,8 +18,8 @@
 	#include "smooth.h"
 	#include "edit_screen.h"
 	#include "select_win.h"
-	#include "isometric utils.h"
-	#include "structure wrap.h"
+	#include "isometric_utils.h"
+	#include "structure_wrap.h"
 	#include "exit_grids.h"
 	#include "editor_undo.h"
 #endif

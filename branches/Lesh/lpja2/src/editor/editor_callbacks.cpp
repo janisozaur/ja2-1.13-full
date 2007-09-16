@@ -32,6 +32,8 @@
 	#include "input.h"
 	#include "map_information.h"
 	#include "editor_map_info.h"
+	#include "platform.h"
+	
 #endif
 
 extern SOLDIERINITNODE *gpSelected;

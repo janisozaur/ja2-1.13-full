@@ -25,8 +25,8 @@
 	#include "select_win.h"
 	#include "video.h"
 	#include "vobject_blitters.h"
-	#include "interface panels.h"
-	#include "interface items.h"
+	#include "interface_panels.h"
+	#include "interface_items.h"
 	#include "utilities.h"
 	#include "world_items.h"
 	#include "world_man.h"
@@ -43,11 +43,11 @@
 	#include "strategic_map.h"
 	#include "soldier_add.h"
 	#include "soldier_control.h"
-	#include "Soldier Profile Type.h"
+	#include "soldier_profile_type.h"
 	#include "soldier_profile.h"
 	#include "text_input.h"
-	#include "Random.h"
-	#include "wordwrap.h"
+	#include "random.h"
+	#include "word_wrap.h"
 	#include "editor_items.h"
 	#include "editor_taskbar_utils.h"
 	#include "exit_grids.h"
@@ -57,6 +57,9 @@
 	#include "editor_map_info.h"
 	#include "environment.h"
 	#include "simple_render_utils.h"
+	#include "platform.h"
+	#include "sgp_str.h"
+	
 #endif
 
 INT8 gbDefaultLightType = PRIMETIME_LIGHT;
@@ -67,38 +70,38 @@ BOOLEAN gfEditorForceShadeTableRebuild = FALSE;
 
 void SetupTextInputForMapInfo()
 {
-	wchar_t str[10];
+	CHAR16 str[10];
 	
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 
 	AddUserInputField( NULL );  //just so we can use short cut keys while not typing.
 
 	//light rgb fields
-	swprintf( str, L"%d", gEditorLightColor.peRed );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gEditorLightColor.peRed );
 	AddTextInputField( iScreenWidthOffset + 10, 2 * iScreenHeightOffset + 394, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gEditorLightColor.peGreen );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gEditorLightColor.peGreen );
 	AddTextInputField( iScreenWidthOffset + 10, 2 * iScreenHeightOffset + 414, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gEditorLightColor.peBlue );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gEditorLightColor.peBlue );
 	AddTextInputField( iScreenWidthOffset + 10, 2 * iScreenHeightOffset + 434, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 
-	swprintf( str, L"%d", gsLightRadius );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gsLightRadius );
 	AddTextInputField( iScreenWidthOffset + 120, 2 * iScreenHeightOffset + 394, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gusLightLevel );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gusLightLevel );
 	AddTextInputField( iScreenWidthOffset + 120, 2 * iScreenHeightOffset + 414, 25, 18, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 
 	//Scroll restriction ID
 	if( !gMapInformation.ubRestrictedScrollID )
-		swprintf( str, L"" );
+		WSTR_SPrintf( str, WSTRLEN(str), L"" );
 	else
-		swprintf( str, L"%d", gMapInformation.ubRestrictedScrollID );
+		WSTR_SPrintf( str, WSTRLEN(str), L"%d", gMapInformation.ubRestrictedScrollID );
 	AddTextInputField( iScreenWidthOffset + 210, 2 * iScreenHeightOffset + 420, 30, 20, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 
 	//exit grid input fields
-	swprintf( str, L"%c%d", gExitGrid.ubGotoSectorY + 'A' - 1, gExitGrid.ubGotoSectorX );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%c%d", gExitGrid.ubGotoSectorY + 'A' - 1, gExitGrid.ubGotoSectorX );
 	AddTextInputField( iScreenWidthOffset + 338, 2 * iScreenHeightOffset + 363, 30, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_EXCLUSIVE_COORDINATE );
-	swprintf( str, L"%d", gExitGrid.ubGotoSectorZ );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gExitGrid.ubGotoSectorZ );
 	AddTextInputField( iScreenWidthOffset + 338, 2 * iScreenHeightOffset + 383, 30, 18, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gExitGrid.usGridNo );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gExitGrid.usGridNo );
 	AddTextInputField( iScreenWidthOffset + 338, 2 * iScreenHeightOffset + 403, 40, 18, MSYS_PRIORITY_NORMAL, str, 5, INPUTTYPE_NUMERICSTRICT );
 }
 
@@ -148,25 +151,25 @@ void UpdateMapInfo()
 
 void UpdateMapInfoFields()
 {
-	wchar_t str[10];
+	CHAR16 str[10];
 	//Update the text fields to reflect the validated values.
 	//light rgb fields
-	swprintf( str, L"%d", gEditorLightColor.peRed );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gEditorLightColor.peRed );
 	SetInputFieldStringWith16BitString( 1, str );
-	swprintf( str, L"%d", gEditorLightColor.peGreen );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gEditorLightColor.peGreen );
 	SetInputFieldStringWith16BitString( 2, str );
-	swprintf( str, L"%d", gEditorLightColor.peBlue );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gEditorLightColor.peBlue );
 	SetInputFieldStringWith16BitString( 3, str );
 
-	swprintf( str, L"%d", gsLightRadius );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gsLightRadius );
 	SetInputFieldStringWith16BitString( 4, str );
-	swprintf( str, L"%d", gusLightLevel );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gusLightLevel );
 	SetInputFieldStringWith16BitString( 5, str );
 
 	if( !gMapInformation.ubRestrictedScrollID )
-		swprintf( str, L"" );
+		WSTR_SPrintf( str, WSTRLEN(str), L"" );
 	else
-		swprintf( str, L"%d", gMapInformation.ubRestrictedScrollID );
+		WSTR_SPrintf( str, WSTRLEN(str), L"%d", gMapInformation.ubRestrictedScrollID );
 	SetInputFieldStringWith16BitString( 6, str );
 
 	ApplyNewExitGridValuesToTextFields();
@@ -174,7 +177,7 @@ void UpdateMapInfoFields()
 
 void ExtractAndUpdateMapInfo()
 {
-	wchar_t str[10];
+	CHAR16 str[10];
 	INT32 temp;
 	BOOLEAN fUpdateLight1 = FALSE;
 	//extract light1 colors
@@ -245,15 +248,15 @@ void ExtractAndUpdateMapInfo()
 
 BOOLEAN ApplyNewExitGridValuesToTextFields()
 {
-	wchar_t str[10];
+	CHAR16 str[10];
 	//exit grid input fields
 	if( iCurrentTaskbar != TASK_MAPINFO )
 		return FALSE;
-	swprintf( str, L"%c%d", gExitGrid.ubGotoSectorY + 'A' - 1, gExitGrid.ubGotoSectorX );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%c%d", gExitGrid.ubGotoSectorY + 'A' - 1, gExitGrid.ubGotoSectorX );
 	SetInputFieldStringWith16BitString( 7, str );
-	swprintf( str, L"%d", gExitGrid.ubGotoSectorZ );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gExitGrid.ubGotoSectorZ );
 	SetInputFieldStringWith16BitString( 8, str );
-	swprintf( str, L"%d", gExitGrid.usGridNo );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gExitGrid.usGridNo );
 	SetInputFieldStringWith16BitString( 9, str );
 	SetActiveField( 0 );
 	return TRUE;

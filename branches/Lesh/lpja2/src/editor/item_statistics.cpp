@@ -8,12 +8,10 @@
 #ifdef JA2EDITOR
 
 #ifndef PRECOMPILEDHEADERS
-	#include <memory.h>
-	#include <stdio.h>
 	#include "types.h"
 	#include "mouse_system.h"
 	#include "button_system.h"
-	#include "font control.h"
+	#include "font_control.h"
 	#include "editor_defines.h"
 	#include "editor_taskbar_utils.h"
 	#include "editor_mercs.h"
@@ -21,17 +19,20 @@
 	#include "item_statistics.h"
 	#include "text_input.h"
 	#include "action_items.h"
-	#include "Item types.h"
+	#include "item_types.h"
 	#include "video.h"
 	#include "simple_render_utils.h"
 	#include "weapons.h"
 	#include "items.h"
 	#include "edit_screen.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "handle_items.h"
 	#include "world_items.h"
-	#include "PopupMenu.h"
+	#include "popup_menu.h"
 	#include "pits.h"
+	#include "sgp_str.h"
+	#include "platform.h"
+	
 #endif
 
 INT32 giBothCheckboxButton = -1;
@@ -40,7 +41,7 @@ INT32 giSciFiCheckboxButton = -1;
 INT32 giAlarmTriggerButton = -1;
 INT32 giOwnershipGroupButton = -1;
 
-UINT16 gszActionItemDesc[ NUM_ACTIONITEMS ][ 30 ] = 
+CHAR16 gszActionItemDesc[ NUM_ACTIONITEMS ][ 30 ] = 
 {
 	L"Klaxon Mine",
 	L"Flare Mine",
@@ -78,7 +79,7 @@ UINT16 gszActionItemDesc[ NUM_ACTIONITEMS ][ 30 ] =
 	L"Big teargas",
 };
 
-UINT16* GetActionItemName( OBJECTTYPE *pItem )
+CHAR16* GetActionItemName( OBJECTTYPE *pItem )
 {
 	if( !pItem || pItem->usItem != ACTION_ITEM )
 		return NULL;
@@ -139,19 +140,19 @@ enum
 	GLAUNCHER_ATTACHMENT_BUTTON,
 	NUM_ATTACHMENT_BUTTONS
 };
-UINT32 guiAttachmentButton[ NUM_ATTACHMENT_BUTTONS ];
+INT32 guiAttachmentButton[ NUM_ATTACHMENT_BUTTONS ];
 BOOLEAN gfAttachment[ NUM_ATTACHMENT_BUTTONS ];
 void ToggleAttachment( GUI_BUTTON *btn, INT32 reason );
 
-UINT32 guiCeramicPlatesButton;
+INT32 guiCeramicPlatesButton;
 BOOLEAN gfCeramicPlates;
 void ToggleCeramicPlates( GUI_BUTTON *btn, INT32 reason );
 
-UINT32 guiDetonatorButton;
+INT32 guiDetonatorButton;
 BOOLEAN gfDetonator;
 void ToggleDetonator( GUI_BUTTON *btn, INT32 reason );
 
-UINT32 guiActionItemButton;
+INT32 guiActionItemButton;
 void ActionItemCallback( GUI_BUTTON *btn, INT32 reason );
 INT8 gbActionItemIndex = ACTIONITEM_MEDIUM;
 INT8 gbDefaultBombTrapLevel = 9;
@@ -603,13 +604,13 @@ void SetupGameTypeFlags()
 	if( gpEditingItemPool )
 	{
 		giBothCheckboxButton = 
-			CreateCheckBoxButton(	iScreenWidthOffset + 573, 2 * iScreenHeightOffset + 365, "EDITOR//radiobutton.sti", MSYS_PRIORITY_NORMAL, BothModesCheckboxCallback );
+			CreateCheckBoxButton(	iScreenWidthOffset + 573, 2 * iScreenHeightOffset + 365, "EDITOR\\radiobutton.sti", MSYS_PRIORITY_NORMAL, BothModesCheckboxCallback );
 		SetButtonFastHelpText( giBothCheckboxButton, L"Item appears in both Sci-Fi and Realistic modes. (|B)" );
 		giRealisticCheckboxButton = 
-			CreateCheckBoxButton(	iScreenWidthOffset + 595, 2 * iScreenHeightOffset + 365, "EDITOR//radiobutton.sti", MSYS_PRIORITY_NORMAL, RealisticOnlyCheckboxCallback );
+			CreateCheckBoxButton(	iScreenWidthOffset + 595, 2 * iScreenHeightOffset + 365, "EDITOR\\radiobutton.sti", MSYS_PRIORITY_NORMAL, RealisticOnlyCheckboxCallback );
 		SetButtonFastHelpText( giRealisticCheckboxButton, L"Item appears in |Realistic mode only." );
 		giSciFiCheckboxButton = 
-			CreateCheckBoxButton(	iScreenWidthOffset + 616, 2 * iScreenHeightOffset + 365, "EDITOR//radiobutton.sti", MSYS_PRIORITY_NORMAL, SciFiOnlyCheckboxCallback );
+			CreateCheckBoxButton(	iScreenWidthOffset + 616, 2 * iScreenHeightOffset + 365, "EDITOR\\radiobutton.sti", MSYS_PRIORITY_NORMAL, SciFiOnlyCheckboxCallback );
 		SetButtonFastHelpText( giSciFiCheckboxButton, L"Item appears in |Sci-Fi mode only." );
 		
 		if( gWorldItems[ gpEditingItemPool->iItemIndex ].usFlags & WORLD_ITEM_REALISTIC_ONLY )
@@ -642,18 +643,18 @@ void RemoveGameTypeFlags()
 
 void SetupGunGUI()
 {
-	wchar_t str[20];
+	CHAR16 str[20];
 	INT16 yp;
 	memset( gfAttachment, 0, NUM_ATTACHMENT_BUTTONS );
-	swprintf( str, L"%d", gpItem->bGunStatus );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->bGunStatus );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->ubGunShotsLeft );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->ubGunShotsLeft );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 420, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		WSTR_SPrintf( str, WSTRLEN(str), L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
 		AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 	//Attachments are a dynamic part of guns.  None, some, or all attachments could be available
@@ -788,14 +789,14 @@ void ExtractAndUpdateGunGUI()
 
 void SetupAmmoGUI()
 {
-	wchar_t str[20];
-	swprintf( str, L"%d", gpItem->ubNumberOfObjects );
+	CHAR16 str[20];
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->ubNumberOfObjects );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		WSTR_SPrintf( str, WSTRLEN(str), L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
 		AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -833,14 +834,14 @@ void ExtractAndUpdateAmmoGUI()
 
 void SetupArmourGUI()
 {
-	wchar_t str[20];
-	swprintf( str, L"%d", gpItem->bStatus[0] );
+	CHAR16 str[20];
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->bStatus[0] );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		WSTR_SPrintf( str, WSTRLEN(str), L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
 		AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 
@@ -894,14 +895,14 @@ void ExtractAndUpdateArmourGUI()
 
 void SetupEquipGUI()
 {
-	wchar_t str[20];
-	swprintf( str, L"%d", gpItem->bStatus[0] );
+	CHAR16 str[20];
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->bStatus[0] );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		WSTR_SPrintf( str, WSTRLEN(str), L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
 		AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -938,21 +939,21 @@ void ExtractAndUpdateEquipGUI()
 
 void SetupExplosivesGUI()
 {
-	wchar_t str[20];
+	CHAR16 str[20];
 	INT16 yp;
-	swprintf( str, L"%d", gpItem->bStatus[0] );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->bStatus[0] );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->ubNumberOfObjects );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->ubNumberOfObjects );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
 	if( Item[ gpItem->usItem ].ubPerPocket == 1 )
 	{
 		DisableTextField( 2 );
 	}
-	swprintf( str, L"%d", gpItem->bTrap );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 420, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		WSTR_SPrintf( str, WSTRLEN(str), L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
 		AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 	yp = 375;
@@ -1020,12 +1021,12 @@ void ExtractAndUpdateExplosivesGUI()
 
 void SetupMoneyGUI()
 {
-	wchar_t str[20];
-	swprintf( str, L"%d", gpItem->uiMoneyAmount );
+	CHAR16 str[20];
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->uiMoneyAmount );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 45, 15, MSYS_PRIORITY_NORMAL, str, 5, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		WSTR_SPrintf( str, WSTRLEN(str), L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
 		AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -1058,8 +1059,8 @@ void RemoveMoneyGUI()
 
 void SetupOwnershipGUI()
 {
-	wchar_t str[20];
-	swprintf( str, L"%d", gpItem->ubOwnerProfile );
+	CHAR16 str[20];
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->ubOwnerProfile );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	giOwnershipGroupButton = 
 		CreateTextButton( gszCivGroupNames[ gpItem->ubOwnerCivGroup ], SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT,
@@ -1104,10 +1105,10 @@ void RemoveOwnershipGUI()
 
 void SetupKeysGUI()
 {
-	wchar_t str[20];
+	CHAR16 str[20];
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		WSTR_SPrintf( str, WSTRLEN(str), L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
 		AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -1130,15 +1131,15 @@ void RemoveKeysGUI()
 
 void SetupActionItemsGUI()
 {
-	wchar_t str[4];
-	UINT16 *pStr;
-	swprintf( str, L"%d", gpItem->bStatus[0] );
+	CHAR16 str[4];
+	CHAR16 *pStr;
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->bStatus[0] );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 365, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 385, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		WSTR_SPrintf( str, WSTRLEN(str), L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
 		AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 	pStr = GetActionItemName( gpItem );
@@ -1197,19 +1198,19 @@ void AlarmTriggerCheckboxCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SetupTriggersGUI()
 {
-	wchar_t str[4];
-	swprintf( str, L"%d", gpItem->bTrap );
+	CHAR16 str[4];
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 365, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->ubTolerance );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gpItem->ubTolerance );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 385, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		WSTR_SPrintf( str, WSTRLEN(str), L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
 		AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 		if( gpItem->bFrequency <= PANIC_FREQUENCY && gpItem->bFrequency >= PANIC_FREQUENCY_3 )
 		{
 			giAlarmTriggerButton = 
-				CreateCheckBoxButton(	iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 405, "EDITOR//smCheckBox.sti", MSYS_PRIORITY_NORMAL, AlarmTriggerCheckboxCallback );
+				CreateCheckBoxButton(	iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 405, "EDITOR\\smCheckBox.sti", MSYS_PRIORITY_NORMAL, AlarmTriggerCheckboxCallback );
 			SetButtonFastHelpText( giAlarmTriggerButton, L"If the panic trigger is an alarm trigger,\nenemies won't attempt to use it if they\nare already aware of your presence.");
 			if( gpItem->fFlags & OBJECT_ALARM_TRIGGER )
 				ButtonList[ giAlarmTriggerButton ]->uiFlags |= BUTTON_CLICKED_ON;

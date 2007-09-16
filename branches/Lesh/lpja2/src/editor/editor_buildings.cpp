@@ -28,6 +28,9 @@
 	#include "environment.h"
 	#include "select_win.h"
 	#include "simple_render_utils.h"
+	#include "platform.h"
+	#include "sgp_str.h"
+	
 #endif
 
 BOOLEAN fBuildingShowRoofs, fBuildingShowWalls, fBuildingShowRoomInfo;
@@ -530,7 +533,7 @@ void InitDoorEditing( INT32 iMapIndex )
 	AddTextInputField( iScreenWidthOffset + 210, iScreenHeightOffset + 175, 25, 16, MSYS_PRIORITY_HIGH, L"0", 2, INPUTTYPE_NUMERICSTRICT );
 	AddTextInputField( iScreenWidthOffset + 210, iScreenHeightOffset + 195, 25, 16, MSYS_PRIORITY_HIGH, L"0", 2, INPUTTYPE_NUMERICSTRICT );
 	iDoorButton[ DOOR_LOCKED ] = 
-		CreateCheckBoxButton(	iScreenWidthOffset + 210, iScreenHeightOffset + 215, "EDITOR//SmCheckbox.sti", MSYS_PRIORITY_HIGH, DoorToggleLockedCallback );
+		CreateCheckBoxButton(	iScreenWidthOffset + 210, iScreenHeightOffset + 215, "EDITOR\\SmCheckbox.sti", MSYS_PRIORITY_HIGH, DoorToggleLockedCallback );
 
 	pDoor = FindDoorInfoAtGridNo( iDoorMapIndex );
 	if( pDoor )
@@ -695,7 +698,7 @@ void DoorToggleLockedCallback( GUI_BUTTON *btn, INT32 reason )
 void AddLockedDoorCursors()
 {
 	DOOR *pDoor;
-	INT i;
+	INT32 i;
 	for( i = 0; i < gubNumDoors; i++ )
 	{
 		pDoor = &DoorTable[ i ];
@@ -706,7 +709,7 @@ void AddLockedDoorCursors()
 void RemoveLockedDoorCursors()
 {
 	DOOR *pDoor;
-	INT i;
+	INT32 i;
 	LEVELNODE* pNode;
 	LEVELNODE* pTemp;
 	for( i = 0; i < gubNumDoors; i++ )
@@ -729,16 +732,16 @@ void RemoveLockedDoorCursors()
 
 void SetupTextInputForBuildings()
 {
-	wchar_t str[4];
+	CHAR16 str[4];
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 	AddUserInputField( NULL );  //just so we can use short cut keys while not typing.
-	swprintf( str, L"%d", gubMaxRoomNumber );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gubMaxRoomNumber );
 	AddTextInputField( iScreenWidthOffset + 410, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 }
 
 void ExtractAndUpdateBuildingInfo()
 {
-	wchar_t str[4];
+	CHAR16 str[4];
 	INT32 temp;
 	//extract light1 colors
 	temp = min( GetNumericStrictValueFromField( 1 ), 255 );
@@ -750,7 +753,7 @@ void ExtractAndUpdateBuildingInfo()
 	{
 		gubCurrRoomNumber = 0;
 	}
-	swprintf( str, L"%d", gubCurrRoomNumber );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%d", gubCurrRoomNumber );
 	SetInputFieldStringWith16BitString( 1, str );
 	SetActiveField( 0 );
 }

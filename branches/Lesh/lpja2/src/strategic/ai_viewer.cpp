@@ -39,10 +39,12 @@
 	#include "strategic_status.h"
 	#include "auto_resolve.h"
 	#include "campaign.h"
+	#include "ai_viewer.h"
+	#include "screen_ids.h"
 	
 #endif
 
-#ifdef JA2BETAVERSION
+//#ifdef JA2BETAVERSION
 	
 #define VIEWER_LEFT			15
 #define VIEWER_TOP			15
@@ -2056,4 +2058,4 @@ void PrintDetailedEnemiesInSectorInfo( INT32 iScreenX, INT32 iScreenY, UINT8 ubS
 }
 
 
-#endif
+//#endif

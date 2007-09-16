@@ -11,21 +11,20 @@
 #ifndef PRECOMPILEDHEADERS
 	#include "tile_def.h"
 	#include "vsurface.h"
-	#include "worlddat.h"
+	#include "world_dat.h"
 	#include "random.h"
 	#include "sysutil.h"
 	#include "font_control.h"
 	#include "select_win.h"
 	#include "editor_defines.h"
 	#include "editor_taskbar_utils.h"
+	#include "platform.h"
+	#include "vobject_blitters.h"
+	
 #endif
 
 
 extern BOOLEAN gfOverheadMapDirty;
-
-extern void SetClippingRect(SGPRect *clip);
-extern void GetClippingRect(SGPRect *clip);
-
 
 extern INT32 iEditorToolbar;
 
@@ -184,10 +183,10 @@ void CreateJA2SelectionWindow( INT16 sWhat )
 	DisableEditorTaskbar( );
 	
 	// Load up the button images
-	iButtonIcons[ CANCEL_ICON ] = LoadGenericButtonIcon( "EDITOR//bigX.sti" );
-	iButtonIcons[ UP_ICON ] = LoadGenericButtonIcon( "EDITOR//lgUpArrow.sti" );
-	iButtonIcons[ DOWN_ICON ] = LoadGenericButtonIcon( "EDITOR//lgDownArrow.sti" );
-	iButtonIcons[ OK_ICON ] = LoadGenericButtonIcon( "EDITOR//checkmark.sti" );
+	iButtonIcons[ CANCEL_ICON ] = LoadGenericButtonIcon( "EDITOR\\bigX.sti" );
+	iButtonIcons[ UP_ICON ] = LoadGenericButtonIcon( "EDITOR\\lgUpArrow.sti" );
+	iButtonIcons[ DOWN_ICON ] = LoadGenericButtonIcon( "EDITOR\\lgDownArrow.sti" );
+	iButtonIcons[ OK_ICON ] = LoadGenericButtonIcon( "EDITOR\\checkmark.sti" );
 	
 	iSelectWin = CreateHotSpot(0, 0, 600, 360, MSYS_PRIORITY_HIGH,
 														DEFAULT_MOVE_CALLBACK, SelWinClkCallback);	
@@ -1062,19 +1061,19 @@ void DisplaySelectionWindowGraphicalInformation()
 		//usIndex = pNode->uiIndex;
 		if( !gTilesets[ giCurrentTilesetID].TileSurfaceFilenames[ pNode->uiObjIndx ][0] )
 		{
-			mprintf( 2, 2, L"%S[%d] is from default tileset %s (%S)",
+			mprintf( 2, 2, L"%hs[%d] is from default tileset %ls (%hs)",
 				gTilesets[0].TileSurfaceFilenames[ pNode->uiObjIndx ],
 				pNode->uiIndex, gTilesets[0].zName,
 				gTileSurfaceName[ pNode->uiObjIndx ] );
 		}
 		else
 		{
-			mprintf( 2, 2, L"File:  %S, subindex:  %d (%S)", 
+			mprintf( 2, 2, L"File:  %hs, subindex:  %d (%hs)", 
 				gTilesets[ giCurrentTilesetID ].TileSurfaceFilenames[ pNode->uiObjIndx ],
 				pNode->uiIndex, gTileSurfaceName[ pNode->uiObjIndx ] );
 		}
 	}
-	mprintf( 350, 2, L"Current Tileset:  %s",	gTilesets[ giCurrentTilesetID ].zName );
+	mprintf( 350, 2, L"Current Tileset:  %ls",	gTilesets[ giCurrentTilesetID ].zName );
 }	
 
 //----------------------------------------------------------------------------------------------

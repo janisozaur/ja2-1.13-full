@@ -10,9 +10,11 @@
 #ifndef PRECOMPILEDHEADERS
 	#include "types.h"
 	#include "road_smoothing.h"
-	#include "tiledat.h"
+	#include "tile_dat.h"
 	#include "world_def.h"
 	#include "world_man.h"
+	#include "editor_undo.h"
+	
 #endif
 
 

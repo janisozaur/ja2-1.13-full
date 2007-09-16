@@ -4,6 +4,9 @@
 #include "types.h"
 #include <stdarg.h>
 
+#define STRLEN(x)	( sizeof(x) / sizeof(CHAR8)  )
+#define WSTRLEN(x)	( sizeof(x) / sizeof(CHAR16) )
+
 INT32	WSTR_SPrintf (CHAR16 *pString, INT16 usMaxLen, const CHAR16 *pFormat, ...);
 INT32	WSTR_VSPrintf(CHAR16 *pString, INT16 usMaxLen, const CHAR16 *pFormat, va_list arg);
 

@@ -261,8 +261,9 @@ void TrashWorld(void);
 void TrashMapTile(INT16 MapTile);
 BOOLEAN NewWorld( void );
 
-BOOLEAN SaveWorld( UINT8 * puiFilename );
-BOOLEAN LoadWorld( UINT8 *puiFilename );
+BOOLEAN SaveWorld( CHAR8 * puiFilename );
+BOOLEAN LoadWorld( CHAR8 *puiFilename );
+BOOLEAN EvaluateWorld( CHAR8 * pSector, UINT8 ubLevel );
 
 void CompileWorldMovementCosts( );
 void RecompileLocalMovementCosts( INT16 sCentreGridNo );

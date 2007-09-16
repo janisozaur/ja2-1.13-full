@@ -24,15 +24,15 @@
 	#include "font.h"
 	#include "font_control.h"
 	#include "line.h"
-	#include "worlddat.h"
+	#include "world_dat.h"
 	#include "select_win.h"
 	#include "popup_menu.h"
 	#include "editor_defines.h"
-	#include "render dirty.h"
+	#include "render_dirty.h"
 	#include "debug.h"
 	#include "mouse_system.h"
 	#include "cursors.h"
-	#include "overhead types.h"
+	#include "overhead_types.h"
 	#include "editor_mercs.h"
 	#include "scheduling.h"
 	#include "english.h"
@@ -46,11 +46,11 @@ MOUSE_REGION popupRegion;
 UINT16 gusEntryHeight;
 BOOLEAN fWaitingForLButtonRelease = FALSE;
 
-extern UINT16 gszScheduleActions[ NUM_SCHEDULE_ACTIONS ][20];
+extern CHAR16 gszScheduleActions[ NUM_SCHEDULE_ACTIONS ][20];
 
 //Finds the string for any popup menu in JA2 -- the strings are stored
 //in different ways in each instance.
-INT16* GetPopupMenuString( UINT8 ubIndex )
+CHAR16* GetPopupMenuString( UINT8 ubIndex )
 {
 	switch( gPopup.ubPopupMenuID )
 	{
@@ -58,11 +58,11 @@ INT16* GetPopupMenuString( UINT8 ubIndex )
 			return gTilesets[ ubIndex ].zName;
 		case OWNERSHIPGROUP_POPUP: //civilian groups
 		case CHANGECIVGROUP_POPUP: //civilian groups
-			return (INT16 *)gszCivGroupNames[ ubIndex ];
+			return gszCivGroupNames[ ubIndex ];
 		case SCHEDULEACTION_POPUP: //setting scheduling actions
-			return (INT16 *)gszScheduleActions[ ubIndex ];
+			return gszScheduleActions[ ubIndex ];
 		case ACTIONITEM_POPUP:
-			return (INT16 *)gszActionItemDesc[ ubIndex ];
+			return gszActionItemDesc[ ubIndex ];
 		default:
 			return 0;
 	}
@@ -288,12 +288,12 @@ void RenderPopupMenu()
 			{
 				//This is the highlighted menu entry.
 				SetFontForeground( FONT_MCOLOR_LTBLUE );
-				mprintf( usX, usY, L" %s ", GetPopupMenuString( ubCounter ) );
+				mprintf( usX, usY, L" %ls ", GetPopupMenuString( ubCounter ) );
 				SetFontForeground( FONT_MCOLOR_WHITE );
 			}
 			else
 			{
-				mprintf( usX, usY, L" %s ", GetPopupMenuString( ubCounter ) );
+				mprintf( usX, usY, L" %ls ", GetPopupMenuString( ubCounter ) );
 			}
 			ubCounter++;
 		}

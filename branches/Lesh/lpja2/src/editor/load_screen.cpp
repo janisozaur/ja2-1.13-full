@@ -8,11 +8,10 @@
 #ifdef JA2EDITOR
 
 #ifndef PRECOMPILEDHEADERS
-	#include <stdio.h>
 	#include "font_control.h" 
 	#include "render_world.h"
-	#include "render dirty.h"
-	#include "loadscreen.h"
+	#include "render_dirty.h"
+	#include "load_screen.h"
 	#include "select_win.h"
 	#include "editor_defines.h"
 	#include "messagebox.h"
@@ -43,6 +42,9 @@
 	#include "pits.h"
 	#include "item_statistics.h"
 	#include "scheduling.h"
+	#include "sgp_str.h"
+	#include "message_box_screen.h"
+	
 #endif
 
 //===========================================================================
@@ -86,7 +88,7 @@ INT32 iCurrFileShown;
 INT32	iLastFileClicked;
 INT32 iLastClickTime;
 
-UINT16 gzFilename[31];
+CHAR16 gzFilename[31];
 
 FDLG_LIST *FileList = NULL;
 
@@ -101,7 +103,7 @@ BOOLEAN gfIllegalName;
 BOOLEAN gfDeleteFile;
 BOOLEAN gfNoFiles;
 
-UINT16 zOrigName[60];
+CHAR16 zOrigName[60];
 GETFILESTRUCT FileInfo;
 
 BOOLEAN fEnteringLoadSaveScreen = TRUE;
@@ -169,9 +171,9 @@ void LoadSaveScreenEntry()
 		GetFileClose(&FileInfo);
 	}
 
-	swprintf( zOrigName, L"%s Map (*.dat)", iCurrentAction == ACTION_SAVE_MAP ? L"Save" : L"Load" );
+	WSTR_SPrintf( zOrigName, WSTRLEN(zOrigName), L"%ls Map (*.dat)", iCurrentAction == ACTION_SAVE_MAP ? L"Save" : L"Load" );
 
-	swprintf( gzFilename, L"%S", gubFilename );
+	WSTR_SPrintf( gzFilename, WSTRLEN(gzFilename), L"%hs", gubFilename );
 
 	CreateFileDialog( zOrigName );
 
@@ -225,7 +227,7 @@ UINT32 ProcessLoadSaveScreenMessageBoxResult()
 				if( !temp )
 					wcscpy( gzFilename, L"" );
 				else
-					swprintf( gzFilename, L"%S", temp->FileInfo.zFileName );
+					WSTR_SPrintf( gzFilename, WSTRLEN(gzFilename), L"%hs", temp->FileInfo.zFileName );
 				if( ValidFilename() )
 				{
 					SetInputFieldStringWith16BitString( 0, gzFilename );
@@ -367,17 +369,17 @@ UINT32 LoadSaveScreenHandle(void)
 			fEnteringLoadSaveScreen = TRUE;
 			return EDIT_SCREEN;
 		case DIALOG_DELETE:
-			sprintf( gszCurrFilename, "MAPS\\%S", gzFilename );
+			sprintf( gszCurrFilename, "MAPS\\%hs", gzFilename );
 			if( GetFileFirst(gszCurrFilename, &FileInfo) )
 			{
-				wchar_t str[40];
-				if( FileInfo.uiFileAttribs & (FILE_IS_READONLY|FILE_IS_HIDDEN|FILE_IS_SYSTEM) )
-				{
-					swprintf( str, L" Delete READ-ONLY file %s? ", gzFilename );
-					gfReadOnly = TRUE;
-				}
-				else
-					swprintf( str, L" Delete file %s? ", gzFilename );
+				CHAR16 str[40];
+//				if( FileInfo.uiFileAttribs & (FILE_IS_READONLY|FILE_IS_HIDDEN|FILE_IS_SYSTEM) )
+//				{
+//					WSTR_SPrintf( str, WSTRLEN(str), L" Delete READ-ONLY file %ls? ", gzFilename );
+//					gfReadOnly = TRUE;
+//				}
+//				else
+					WSTR_SPrintf( str, WSTRLEN(str), L" Delete file %ls? ", gzFilename );
 				gfDeleteFile = TRUE;
 				CreateMessageBox( str );
 			}
@@ -390,15 +392,15 @@ UINT32 LoadSaveScreenHandle(void)
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
 			}
-			sprintf( gszCurrFilename, "MAPS\\%S", gzFilename );
+			sprintf( gszCurrFilename, "MAPS\\%hs", gzFilename );
 			if ( FileExists( gszCurrFilename ) ) 
 			{
 				gfFileExists = TRUE;
 				gfReadOnly = FALSE;
 				if( GetFileFirst(gszCurrFilename, &FileInfo) )
 				{
-					if( FileInfo.uiFileAttribs & (FILE_IS_READONLY|FILE_IS_DIRECTORY|FILE_IS_HIDDEN|FILE_IS_SYSTEM|FILE_IS_OFFLINE|FILE_IS_TEMPORARY) )
-						gfReadOnly = TRUE;
+//					if( FileInfo.uiFileAttribs & (FILE_IS_READONLY|FILE_IS_DIRECTORY|FILE_IS_HIDDEN|FILE_IS_SYSTEM|FILE_IS_OFFLINE|FILE_IS_TEMPORARY) )
+//						gfReadOnly = TRUE;
 					GetFileClose(&FileInfo);
 				}
 				if( gfReadOnly )
@@ -421,7 +423,7 @@ UINT32 LoadSaveScreenHandle(void)
 			RemoveFileDialog();
 			CreateProgressBar( 0, iScreenWidthOffset + 118, iScreenHeightOffset + 183, iScreenWidthOffset + 522, iScreenHeightOffset + 202 );
 			DefineProgressBarPanel( 0, 65, 79, 94, iScreenWidthOffset + 100, iScreenHeightOffset + 155, iScreenWidthOffset + 540, iScreenHeightOffset + 235 );
-			swprintf( zOrigName, L"Loading map:  %s", gzFilename );
+			WSTR_SPrintf( zOrigName, WSTRLEN(zOrigName), L"Loading map:  %ls", gzFilename );
 			SetProgressBarTitle( 0, zOrigName, BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
 			gbCurrentFileIOStatus = INITIATE_MAP_LOAD;
 			return LOADSAVE_SCREEN ;
@@ -433,7 +435,7 @@ UINT32 LoadSaveScreenHandle(void)
 }
 
 
-void CreateFileDialog( UINT16 *zTitle )
+void CreateFileDialog( STR16 zTitle )
 {
 
 	iFDlgState = DIALOG_NONE;
@@ -449,9 +451,9 @@ void CreateFileDialog( UINT16 *zTitle )
 		BUTTON_USE_DEFAULT, iScreenWidthOffset + 406, iScreenHeightOffset + 225, 50, 30, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, FDlgCancelCallback );
 
 	//Scroll buttons
-	iFileDlgButtons[2] = CreateSimpleButton( iScreenWidthOffset + 426, iScreenHeightOffset + 92,"EDITOR//uparrow.sti", BUTTON_NO_TOGGLE,
+	iFileDlgButtons[2] = CreateSimpleButton( iScreenWidthOffset + 426, iScreenHeightOffset + 92,"EDITOR\\uparrow.sti", BUTTON_NO_TOGGLE,
 																MSYS_PRIORITY_HIGH, FDlgUpCallback );
-	iFileDlgButtons[3] = CreateSimpleButton( iScreenWidthOffset + 426, iScreenHeightOffset + 182,"EDITOR//downarrow.sti", BUTTON_NO_TOGGLE,
+	iFileDlgButtons[3] = CreateSimpleButton( iScreenWidthOffset + 426, iScreenHeightOffset + 182,"EDITOR\\downarrow.sti", BUTTON_NO_TOGGLE,
 																MSYS_PRIORITY_HIGH, FDlgDwnCallback );
 
 	//File list window
@@ -469,7 +471,7 @@ void CreateFileDialog( UINT16 *zTitle )
 	if( iCurrentAction == ACTION_SAVE_MAP )
 	{	//checkboxes
 		//The update world info checkbox
-		iFileDlgButtons[6] = CreateCheckBoxButton( iScreenWidthOffset + 183, iScreenHeightOffset + 229, "EDITOR//smcheckbox.sti", MSYS_PRIORITY_HIGH, UpdateWorldInfoCallback );
+		iFileDlgButtons[6] = CreateCheckBoxButton( iScreenWidthOffset + 183, iScreenHeightOffset + 229, "EDITOR\\smcheckbox.sti", MSYS_PRIORITY_HIGH, UpdateWorldInfoCallback );
 		if( gfUpdateSummaryInfo )
 			ButtonList[ iFileDlgButtons[6] ]->uiFlags |= BUTTON_CLICKED_ON;
 	}
@@ -510,7 +512,7 @@ void FileDialogModeCallback( UINT8 ubID, BOOLEAN fEntering )
 			if( iCurrFileShown == (x-iTopFileShown) )
 			{
 				FListNode->FileInfo.zFileName[30] = 0;
-				SetInputFieldStringWith8BitString( 0, (UINT8 *)FListNode->FileInfo.zFileName );
+				SetInputFieldStringWith8BitString( 0, FListNode->FileInfo.zFileName );
 				return;
 			}
 			FListNode = FListNode->pNext;
@@ -599,7 +601,7 @@ void SelectFileDialogYPos( UINT16 usRelativeYPos )
 			INT32 iCurrClickTime;
 			iCurrFileShown = x;
 			FListNode->FileInfo.zFileName[30] = 0;
-			swprintf( gzFilename, L"%S", FListNode->FileInfo.zFileName );
+			WSTR_SPrintf( gzFilename, WSTRLEN(gzFilename), L"%hs", FListNode->FileInfo.zFileName );
 			if( ValidFilename() )
 			{
 				SetInputFieldStringWith16BitString( 0, gzFilename );
@@ -720,7 +722,7 @@ void SetTopFileToLetter( UINT16 usLetter )
 		iTopFileShown = x;
 		if( iTopFileShown > iTotalFiles - 7 )
 			iTopFileShown = iTotalFiles - 7;
-		SetInputFieldStringWith8BitString( 0, (UINT8 *)prev->FileInfo.zFileName );
+		SetInputFieldStringWith8BitString( 0, prev->FileInfo.zFileName );
 	}
 }
 
@@ -813,16 +815,16 @@ void HandleMainKeyEvents( InputAtom *pEvent )
 		}
 		if( curr )	
 		{
-			SetInputFieldStringWith8BitString( 0, (UINT8 *)curr->FileInfo.zFileName );
-			swprintf( gzFilename, L"%S", curr->FileInfo.zFileName );
+			SetInputFieldStringWith8BitString( 0, curr->FileInfo.zFileName );
+			WSTR_SPrintf( gzFilename, WSTRLEN(gzFilename), L"%hs", curr->FileInfo.zFileName );
 		}
 	}
 }
 
 //editor doesn't care about the z value.  It uses it's own methods.
-void SetGlobalSectorValues( UINT16 *szFilename )
+void SetGlobalSectorValues( STR16 szFilename )
 {
-	UINT16 *pStr;
+	CHAR16 *pStr;
 	if( ValidCoordinate() )
 	{
 		//convert the coordinate string into into the actual global sector coordinates.
@@ -868,7 +870,7 @@ void InitErrorCatchDialog()
 UINT32 ProcessFileIO()
 {
 	INT16 usStartX, usStartY;
-	UINT8 ubNewFilename[50];
+	CHAR8 ubNewFilename[50];
 	switch( gbCurrentFileIOStatus )
 	{
 		case INITIATE_MAP_SAVE:	//draw save message 
@@ -878,7 +880,7 @@ UINT32 ProcessFileIO()
 			SetFontForeground( FONT_LTKHAKI );
 			SetFontShadow( FONT_DKKHAKI );
 			SetFontBackground( 0 );
-			swprintf( zOrigName, L"Saving map:  %s", gzFilename );
+			WSTR_SPrintf( zOrigName, WSTRLEN(zOrigName), L"Saving map:  %ls", gzFilename );
 			usStartX = iScreenWidthOffset + 320 - StringPixLength( zOrigName, LARGEFONT1 ) / 2;
 			usStartY = iScreenHeightOffset + 180 - GetFontHeight( LARGEFONT1 ) / 2;
 			mprintf( usStartX, usStartY, zOrigName );
@@ -888,7 +890,7 @@ UINT32 ProcessFileIO()
 			gbCurrentFileIOStatus = SAVING_MAP;
 			return LOADSAVE_SCREEN;
 		case SAVING_MAP: //save map
-			sprintf( (char *)ubNewFilename, "%S", gzFilename );
+			sprintf( ubNewFilename, "%ls", gzFilename );
 			RaiseWorldLand();
 			if( gfShowPits )
 				RemoveAllPits();
@@ -933,7 +935,7 @@ UINT32 ProcessFileIO()
 			return LOADSAVE_SCREEN;
 		case LOADING_MAP: //load map
 			DisableUndo();
-			sprintf( (char *)ubNewFilename, "%S", gzFilename );
+			sprintf( ubNewFilename, "%ls", gzFilename );
 			
 			RemoveMercsInSector( );
 
@@ -1096,7 +1098,7 @@ BOOLEAN ValidCoordinate()
 
 BOOLEAN ValidFilename()
 {
-	UINT16 *pDest;
+	CHAR16 *pDest;
 	if( gzFilename[0] != '\0' )// ; <----- I really think they didn't mean this!! (jonathanl)
 	{
 		pDest = wcsstr( gzFilename, L".dat" );
@@ -1108,7 +1110,7 @@ BOOLEAN ValidFilename()
 	return FALSE;
 }
 
-BOOLEAN ExternalLoadMap( UINT16 *szFilename )
+BOOLEAN ExternalLoadMap( STR16 szFilename )
 {
 	Assert( szFilename );
 	if( !wcslen( szFilename ) )
@@ -1126,7 +1128,7 @@ BOOLEAN ExternalLoadMap( UINT16 *szFilename )
 	return FALSE;
 }
 
-BOOLEAN ExternalSaveMap( UINT16 *szFilename )
+BOOLEAN ExternalSaveMap( STR16 szFilename )
 {
 	Assert( szFilename );
 	if( !wcslen( szFilename ) )

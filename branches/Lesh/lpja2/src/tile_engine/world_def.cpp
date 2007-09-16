@@ -1624,7 +1624,7 @@ void CompileWorldMovementCosts( )
 
 
 // SAVING CODE
-BOOLEAN SaveWorld( UINT8 * puiFilename )
+BOOLEAN SaveWorld( CHAR8 * puiFilename )
 {
 #ifdef JA2EDITOR
 	INT32			cnt;
@@ -2223,7 +2223,7 @@ void InitLoadedWorld( )
 extern double MasterStart, MasterEnd;
 extern BOOLEAN gfUpdatingNow;
 
-BOOLEAN EvaluateWorld( UINT8 * pSector, UINT8 ubLevel )
+BOOLEAN EvaluateWorld( CHAR8 * pSector, UINT8 ubLevel )
 {
 	FLOAT	dMajorMapVersion;
 	SUMMARYFILE *pSummary;
@@ -2624,7 +2624,7 @@ BOOLEAN EvaluateWorld( UINT8 * pSector, UINT8 ubLevel )
 extern UINT8 GetCurrentSummaryVersion();
 extern void LoadShadeTablesFromTextFile();
 
-BOOLEAN LoadWorld( UINT8 *	puiFilename )
+BOOLEAN LoadWorld( CHAR8 *	puiFilename )
 {
 	HWFILE					hfile;
 	FLOAT						dMajorMapVersion;
@@ -3968,14 +3968,14 @@ void ReloadTileset( UINT8 ubID )
 	giCurrentTilesetID = ubID;
 
 	// Save Map
-	SaveWorld( (UINT8 *)TEMP_FILE_FOR_TILESET_CHANGE );
+	SaveWorld( TEMP_FILE_FOR_TILESET_CHANGE );
 
 	//IMPORTANT:  If this is not set, the LoadTileset() will assume that
 	//it is loading the same tileset and ignore it...
 	giCurrentTilesetID = iCurrTilesetID;
 
 	// Load Map with new tileset
-	LoadWorld( (UINT8 *)TEMP_FILE_FOR_TILESET_CHANGE );
+	LoadWorld( TEMP_FILE_FOR_TILESET_CHANGE );
 
 	// Delete file
 	sprintf( aFilename, "MAPS\\%s", TEMP_FILE_FOR_TILESET_CHANGE );

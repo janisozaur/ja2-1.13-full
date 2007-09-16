@@ -78,7 +78,7 @@ void InitEngineTilesets( )
 		FileRead( hfile, &(gTilesets[ cnt ].ubAmbientID), sizeof( UINT8 ), &uiNumBytesRead );
 
 		// Set into tileset 
-		WSTR_SPrintf( (wchar_t *)gTilesets[ cnt ].zName, 32, L"%S", zName );
+		WSTR_SPrintf( gTilesets[ cnt ].zName, 32, L"%ls", zName );
 
 		// Loop for files
 		for ( cnt2 = 0; cnt2 < uiNumFiles; cnt2++ )

@@ -18,23 +18,23 @@
 	#include "edit_sys.h"
 	#include "screen_ids.h"
 	#include "edit_screen.h"
-	#include "sys globals.h"
+	#include "sys_globals.h"
 	#include "smart_method.h"
 	#include "select_win.h"
 	#include "interface.h"
 	#include "lighting.h"
 	#include "interactive_tiles.h"
-	#include "overhead types.h"
+	#include "overhead_types.h"
 	#include "overhead.h"
 	#include "soldier_control.h"
 	#include "handle_ui.h"
 	#include "event_pump.h"
-	#include "world items.h" 
-	#include "loadscreen.h"
-	#include "render dirty.h"
-	#include "isometric utils.h"
+	#include "world_items.h" 
+	#include "load_screen.h"
+	#include "render_dirty.h"
+	#include "isometric_utils.h"
 	#include "message.h"
-	#include "render fun.h"
+	#include "render_fun.h"
 	#include "popup_menu.h"
 	#include "overhead_map.h"
 	#include "editor_defines.h"
@@ -73,6 +73,9 @@
 	#include "inventory_choosing.h"
 	#include "music_control.h"
 	#include "soldier_profile.h"
+	#include "game_settings.h"
+	#include "sgp_str.h"
+	
 #endif
 
 
@@ -277,7 +280,7 @@ BOOLEAN EditModeInit( void )
 	INT32 i;
 	SGPPaletteEntry	LColors[2];
 
-	OutputDebugString( "Entering editor mode...\n" );
+//	OutputDebugString( "Entering editor mode...\n" );
 
 
 	gfRealGunNut = gGameOptions.fGunNut;
@@ -417,7 +420,7 @@ BOOLEAN EditModeInit( void )
 	}
 	else
 	{
-		OutputDebugString( "Creating summary window...\n" );
+//		OutputDebugString( "Creating summary window...\n" );
 		CreateSummaryWindow();
 		gfNeedToInitGame = TRUE;
 	}
@@ -432,7 +435,7 @@ BOOLEAN EditModeInit( void )
 
 	gfIntendOnEnteringEditor = FALSE;
 
-	OutputDebugString( "Finished entering editor mode...\n" );
+//	OutputDebugString( "Finished entering editor mode...\n" );
 
 	return(TRUE);
 }
@@ -3389,11 +3392,13 @@ BOOLEAN DoIRenderASpecialMouseCursor()
 	// Draw basic mouse
 	if ( GetMouseXY( &sMouseX_M, &sMouseY_M ) )
 	{
+		// Lesh: nothing to do
+		/*
 		if ( (gsCursorGridNo = MAPROWCOLTOPOS( sMouseY_M, sMouseX_M )) < 0x8000 )
 		{
 			// Add basic cursor
 			//gBasicCursorNode = AddTopmostToTail( gsCursorGridNo, FIRSTPOINTERS1 );
-		}
+		}*/
 	}
 
 	if ( iCurrentTaskbar != TASK_OPTIONS )
@@ -3540,8 +3545,8 @@ void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 				gubMaxRoomNumber++;
 				if( iCurrentTaskbar == TASK_BUILDINGS && TextInputMode() )
 				{
-					wchar_t str[4];
-					swprintf( str, L"%d", gubCurrRoomNumber );
+					CHAR16 str[4];
+					WSTR_SPrintf( str, WSTRLEN(str), L"%d", gubCurrRoomNumber );
 					SetInputFieldStringWith16BitString( 1, str );
 					SetActiveField( 0 );
 				}
@@ -3816,8 +3821,8 @@ void UpdateLastActionBeforeLeaving()
 
 void ReloadMap()
 {
-	UINT16 szFilename[30];
-	swprintf( szFilename, L"%S", gubFilename );
+	CHAR16 szFilename[30];
+	WSTR_SPrintf( szFilename, WSTRLEN(szFilename), L"%hs", gubFilename );
 	ExternalLoadMap( szFilename );
 }
 

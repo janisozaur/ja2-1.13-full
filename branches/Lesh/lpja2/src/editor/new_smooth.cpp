@@ -8,7 +8,6 @@
 #ifdef JA2EDITOR
 
 #ifndef PRECOMPILEDHEADERS
-	#include <stdlib.h>
 	#include "tile_def.h"
 	#include "world_def.h"
 	#include "world_man.h"
@@ -20,7 +19,7 @@
 	#include "editor_undo.h"
 	#include "structure_internals.h"
 	#include "environment.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "render_fun.h"
 #endif
 

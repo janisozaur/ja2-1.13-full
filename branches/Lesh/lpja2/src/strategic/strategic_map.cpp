@@ -2377,7 +2377,7 @@ BOOLEAN EnterSector( INT16 sSectorX, INT16 sSectorY , INT8 bSectorZ )
 	//	swprintf( str, L"Loading map:  %S", bFilename );
 	//	SetProgressBarTitle( 0, str, FONT12POINT1, FONT_BLACK, FONT_BLACK );
 	//#endif
-	if( !LoadWorld((UINT8 *) bFilename ) )
+	if( !LoadWorld( bFilename ) )
 	{
 		return( FALSE );
 	}

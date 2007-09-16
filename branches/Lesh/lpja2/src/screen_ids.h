@@ -29,9 +29,9 @@ typedef enum ScreenTypes
 	INTRO_SCREEN,
 	CREDIT_SCREEN,
 
-#ifdef JA2BETAVERSION
+//#ifdef JA2BETAVERSION
 	AIVIEWER_SCREEN,
-#endif
+//#endif
 
 //#ifdef JA2BETAVERSION
 	QUEST_DEBUG_SCREEN,

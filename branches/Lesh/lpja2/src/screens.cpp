@@ -47,9 +47,9 @@ Screens GameScreens[MAX_SCREENS] =
 	{ CreditScreenInit,						CreditScreenHandle,						CreditScreenShutdown				},
 
 
-#ifdef JA2BETAVERSION
+//#ifdef JA2BETAVERSION
 	{ AIViewerScreenInit,					AIViewerScreenHandle,			AIViewerScreenShutdown			},
-#endif
+//#endif
 
 	{ QuestDebugScreenInit,				QuestDebugScreenHandle,		QuestDebugScreenShutdown		}
 };

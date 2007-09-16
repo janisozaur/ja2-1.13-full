@@ -24,7 +24,7 @@
 	#include "select_win.h"
 	#include "video.h"
 	#include "vobject_blitters.h"
-	#include "interface panels.h"
+	#include "interface_panels.h"
 	#include "utilities.h"
 	#include "world_items.h"
 	#include "editor_defines.h"

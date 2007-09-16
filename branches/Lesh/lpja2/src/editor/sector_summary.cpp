@@ -9,7 +9,6 @@
 
 
 #ifndef PRECOMPILEDHEADERS
-	#include <stdio.h>
 	#include "types.h"
 	#include "sector_summary.h"
 	#include "timer_control.h"
@@ -21,22 +20,27 @@
 	#include "line.h"
 	#include "input.h"
 	#include "vobject_blitters.h"
-	#include "loadscreen.h"
+	#include "load_screen.h"
 	#include "text_input.h"
 	#include "mouse_system.h"
 	#include "strategic_map.h"
-	#include "Fileman.h"
+	#include "file_man.h"
 	#include "exit_grids.h"
 	#include "map_information.h"
 	#include "summary_info.h"
 	#include "animated_progressbar.h"
 	#include "world_def.h"
-	#include "worlddat.h"
+	#include "world_dat.h"
 	#include "editor_defines.h"
 	#include "edit_screen.h"
 	#include "english.h"
 	#include "world_items.h"
 	#include "text.h"
+	#include "soldier_create.h"
+	#include "sgp_str.h"
+	#include "platform.h"
+	#include "ai_viewer.h"
+	
 #endif
 
 extern BOOLEAN gfOverheadMapDirty;
@@ -54,7 +58,7 @@ enum{
 	BETA,
 	RELEASE
 };
-UINT16 gszVersionType[5][10] = { L"Pre-Alpha", L"Alpha", L"Demo", L"Beta", L"Release" };
+CHAR16 gszVersionType[5][10] = { L"Pre-Alpha", L"Alpha", L"Demo", L"Beta", L"Release" };
 #define GLOBAL_SUMMARY_STATE			RELEASE
 
 //Regular masks
@@ -85,7 +89,7 @@ BOOLEAN gfMustForceUpdateAllMaps = FALSE;
 UINT16 gusNumberOfMapsToBeForceUpdated = 0;
 BOOLEAN gfMajorUpdate = FALSE;
 
-void LoadSummary( UINT8 *pSector, UINT8 ubLevel, FLOAT dMajorMapVersion );
+void LoadSummary( CHAR8 *pSector, UINT8 ubLevel, FLOAT dMajorMapVersion );
 void RegenerateSummaryInfoForAllOutdatedMaps();
 
 void SetupItemDetailsMode( BOOLEAN fAllowRecursion );
@@ -202,21 +206,15 @@ BOOLEAN gfOverride;
 INT16 gsSectorX, gsSectorY;
 //The layer of the sector that is currently loaded in memory.
 INT32 gsSectorLayer;
-//The sector coordinates of the mouse position (yellow)
 
-extern INT16 gsHiSectorX; // symbol already declared globally in AI Viewer.cpp (jonathanl)
-extern INT16 gsHiSectorY; // symbol already declared globally in AI Viewer.cpp (jonathanl)
-//The sector coordinates of the selected sector (red)
 
-extern INT16 gsSelSectorX; // symbol already declared globally in AI Viewer.cpp (jonathanl)
-extern INT16 gsSelSectorY; // symbol already declared globally in AI Viewer.cpp (jonathanl)
 //Used to determine how long the F5 key has been held down for to determine whether or not the
 //summary is going to be persistant or not.
 UINT32 giInitTimer;
 
-UINT16 gszFilename[40];
-UINT16 gszTempFilename[21];
-UINT16 gszDisplayName[21];
+CHAR16 gszFilename[40];
+CHAR16 gszTempFilename[21];
+CHAR16 gszDisplayName[21];
 
 void CalculateOverrideStatus();
 
@@ -287,12 +285,12 @@ void CreateSummaryWindow()
 	//GiveButtonDefaultStatus( iSummaryButton[ SUMMARY_OKAY ], DEFAULT_STATUS_WINDOWS95 );
 
 	iSummaryButton[ SUMMARY_GRIDCHECKBOX ] = 
-		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 5 ), "EDITOR//smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleGridCallback );
+		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 5 ), "EDITOR\\smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleGridCallback );
 	ButtonList[ iSummaryButton[ SUMMARY_GRIDCHECKBOX ] ]->uiFlags |= BUTTON_CLICKED_ON;
 	gfRenderGrid = TRUE;
 
 	iSummaryButton[ SUMMARY_PROGRESSCHECKBOX ] = 
-		CreateCheckBoxButton(	( INT16 ) ( MAP_LEFT + 50 ), ( INT16 ) ( MAP_BOTTOM + 5 ), "EDITOR//smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleProgressCallback );
+		CreateCheckBoxButton(	( INT16 ) ( MAP_LEFT + 50 ), ( INT16 ) ( MAP_BOTTOM + 5 ), "EDITOR\\smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleProgressCallback );
 	ButtonList[ iSummaryButton[ SUMMARY_PROGRESSCHECKBOX ] ]->uiFlags |= BUTTON_CLICKED_ON;
 	gfRenderProgress = TRUE;
 	
@@ -328,7 +326,7 @@ void CreateSummaryWindow()
 		ButtonList[ iSummaryButton[ SUMMARY_B3 ] ]->uiFlags |= BUTTON_CLICKED_ON;
 
 	iSummaryButton[ SUMMARY_ALTERNATE ] = 
-		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 25 ), "EDITOR//smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleAlternateCallback );
+		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 25 ), "EDITOR\\smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleAlternateCallback );
 	if( gfAlternateMaps )
 		ButtonList[ iSummaryButton[ SUMMARY_ALTERNATE ] ]->uiFlags |= BUTTON_CLICKED_ON;
 
@@ -526,7 +524,7 @@ void RenderSectorInformation()
 		ePoints++;
 	//start at 10,35
 	SetFontForeground( FONT_ORANGE );
-	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 32,		L"Tileset:  %s", gTilesets[ s->ubTilesetID ].zName ); 
+	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 32,		L"Tileset:  %ls", gTilesets[ s->ubTilesetID ].zName ); 
 	if( m->ubMapVersion < 10 )
 		SetFontForeground( FONT_RED );
 	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 42,    L"Version Info:  Summary:  1.%02d,  Map:  %d.%02d", s->ubSummaryVersion, (INT32)s->dMajorMapVersion, m->ubMapVersion );
@@ -770,7 +768,7 @@ void RenderItemDetails()
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
 				LoadShortNameItemInfo( (UINT16)index, str );
-				mprintf( xp, yp, L"%s", str );
+				mprintf( xp, yp, L"%ls", str );
 				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance ); 
 				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
 				yp += 10;
@@ -800,25 +798,25 @@ void RenderItemDetails()
 					SetFontForeground( 77 );
 				switch( i )
 				{
-					case 0: swprintf( str, L"Panic1" );		break;
-					case 1:	swprintf( str, L"Panic2" );		break;
-					case 2:	swprintf( str, L"Panic3" );		break;
-					case 3:	swprintf( str, L"Norm1" );		break;
-					case 4:	swprintf( str, L"Norm2" );		break;
-					case 5:	swprintf( str, L"Norm3" );		break;
-					case 6:	swprintf( str, L"Norm4" );		break;
-					case 7:	swprintf( str, L"Pressure Actions" );		break;
+					case 0: wcscpy( str, L"Panic1" );		break;
+					case 1:	wcscpy( str, L"Panic2" );		break;
+					case 2:	wcscpy( str, L"Panic3" );		break;
+					case 3:	wcscpy( str, L"Norm1" );		break;
+					case 4:	wcscpy( str, L"Norm2" );		break;
+					case 5:	wcscpy( str, L"Norm3" );		break;
+					case 6:	wcscpy( str, L"Norm4" );		break;
+					case 7:	wcscpy( str, L"Pressure Actions" );		break;
 				}
 				if( i < 7 )
 				{
 					dAvgExistChance = (FLOAT)(uiTriggerExistChance[i] / 100.0);
 					dAvgStatus = (FLOAT)(uiActionExistChance[i] / 100.0);
-					mprintf( xp, yp, L"%s:  %3.02f trigger(s), %3.02f action(s)", str, dAvgExistChance, dAvgStatus );
+					mprintf( xp, yp, L"%ls:  %3.02f trigger(s), %3.02f action(s)", str, dAvgExistChance, dAvgStatus );
 				}
 				else 
 				{
 					dAvgExistChance = (FLOAT)(uiActionExistChance[i] / 100.0);
-					mprintf( xp, yp, L"%s:  %3.02f", str, dAvgExistChance );
+					mprintf( xp, yp, L"%ls:  %3.02f", str, dAvgExistChance );
 				}
 				yp += 10;
 				if( yp >= (UINT32)(iScreenHeightOffset + 355 ))
@@ -877,7 +875,7 @@ void RenderItemDetails()
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
 				LoadShortNameItemInfo( (UINT16)index, str );
-				mprintf( xp, yp, L"%s", str );
+				mprintf( xp, yp, L"%ls", str );
 				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance ); 
 				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
 				yp += 10;
@@ -950,7 +948,7 @@ void RenderItemDetails()
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
 				LoadShortNameItemInfo( (UINT16)index, str );
-				mprintf( xp, yp, L"%s", str );
+				mprintf( xp, yp, L"%ls", str );
 				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance ); 
 				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
 				yp += 10;
@@ -1010,7 +1008,7 @@ void RenderSummaryWindow()
 		SetFontBackground( 0 );
 		if( !gfItemDetailsMode )
 		{
-			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 5, L"CAMPAIGN EDITOR -- %s Version 1.%02d", 
+			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 5, L"CAMPAIGN EDITOR -- %ls Version 1.%02d", 
 				gszVersionType[ GLOBAL_SUMMARY_STATE ], GLOBAL_SUMMARY_VERSION );
 		}
 		
@@ -1025,7 +1023,7 @@ void RenderSummaryWindow()
 		SetFontShadow( FONT_NEARBLACK );
 		if( gfGlobalSummaryExists )
 		{
-			wchar_t str[100];
+			CHAR16 str[100];
 			BOOLEAN fSectorSummaryExists = FALSE;
 			if( gusNumEntriesWithOutdatedOrNoSummaryInfo && !gfOutdatedDenied )
 			{
@@ -1063,8 +1061,8 @@ void RenderSummaryWindow()
 					x = gsSelSectorX - 1, y = gsSelSectorY - 1;
 				else
 					x = gsSectorX - 1, y = gsSectorY - 1;
-				swprintf( str, L"%c%d", y + 'A', x + 1 );
-				swprintf( gszFilename, str );
+				WSTR_SPrintf( str, WSTRLEN(str), L"%c%d", y + 'A', x + 1 );
+				wcscpy( gszFilename, str );
 				giCurrLevel = giCurrentViewLevel;
 				switch( giCurrentViewLevel )
 				{
@@ -1192,7 +1190,7 @@ void RenderSummaryWindow()
 						case 6:	wcscat( gszFilename, L"_b2_a.dat" );	break;
 						case 7:	wcscat( gszFilename, L"_b3_a.dat" );	break;
 					}
-					swprintf( gszDisplayName, gszFilename );
+					wcscpy( gszDisplayName, gszFilename );
 					EnableButton( iSummaryButton[ SUMMARY_LOAD ] );
 					if( gpCurrentSectorSummary )
 					{
@@ -1211,12 +1209,12 @@ void RenderSummaryWindow()
 								SetupItemDetailsMode( TRUE );
 								gfSetupItemDetailsMode = FALSE;
 							}
-							mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 5, L"ITEM DETAILS -- sector %s", str );
+							mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 5, L"ITEM DETAILS -- sector %ls", str );
 							RenderItemDetails();
 						}
 						else
 						{
-							mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 20, L"Summary Information for sector %s:", str );
+							mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 20, L"Summary Information for sector %ls:", str );
 							HideButton( iSummaryButton[ SUMMARY_REAL ] );
 							HideButton( iSummaryButton[ SUMMARY_SCIFI ] );
 							HideButton( iSummaryButton[ SUMMARY_ENEMY ] );
@@ -1228,12 +1226,12 @@ void RenderSummaryWindow()
 						SetFontForeground( FONT_RED );
 						if( gfItemDetailsMode )
 						{
-							mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 5, L"Summary Information for sector %s" , str );
+							mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 5, L"Summary Information for sector %ls" , str );
 							mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 15, L"does not exist." );
 						}
 						else
 						{
-							mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 20, L"Summary Information for sector %s" , str );
+							mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 20, L"Summary Information for sector %ls" , str );
 							mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 30, L"does not exist." );
 						}
 						ShowButton( iSummaryButton[ SUMMARY_UPDATE ] );
@@ -1249,9 +1247,9 @@ void RenderSummaryWindow()
 						SetFontShadow( 0 );
 					}
 					if( gfItemDetailsMode )
-						mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 5, L"No information exists for sector %s.", str );
+						mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 5, L"No information exists for sector %ls.", str );
 					else
-						mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 20, L"No information exists for sector %s.", str );
+						mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 20, L"No information exists for sector %ls.", str );
 					SetFontShadow( FONT_NEARBLACK );
 
 					switch( giCurrentViewLevel )
@@ -1267,7 +1265,7 @@ void RenderSummaryWindow()
 						case ALTERNATE_B2_MASK:			wcscat( gszFilename, L"_b2_a.dat" );	break;
 						case ALTERNATE_B3_MASK:			wcscat( gszFilename, L"_b3_a.dat" );	break;
 					}
-					swprintf( gszDisplayName, gszFilename );
+					wcscpy( gszDisplayName, gszFilename );
 					DisableButton( iSummaryButton[ SUMMARY_LOAD ] );
 				}
 				SPECIALCASE_LABEL:
@@ -1279,7 +1277,7 @@ void RenderSummaryWindow()
 						SetFontForeground( FONT_LTKHAKI );
 					else
 						SetFontForeground( FONT_LTBLUE );
-					mprintf( MAP_LEFT+110, MAP_BOTTOM+55, L"FILE:  %s", gszDisplayName );
+					mprintf( MAP_LEFT+110, MAP_BOTTOM+55, L"FILE:  %ls", gszDisplayName );
 				}
 				else //little higher to make room for the override checkbox and text.
 				{
@@ -1287,7 +1285,7 @@ void RenderSummaryWindow()
 						SetFontForeground( FONT_LTKHAKI );
 					else
 						SetFontForeground( FONT_LTBLUE );
-					mprintf( MAP_LEFT+110, MAP_BOTTOM+46, L"FILE:  %s", gszDisplayName );
+					mprintf( MAP_LEFT+110, MAP_BOTTOM+46, L"FILE:  %ls", gszDisplayName );
 					if( gubOverrideStatus == READONLY )
 					{
 						SetFontForeground( (UINT8)(gfOverride ? FONT_YELLOW : FONT_LTRED) );
@@ -1379,8 +1377,8 @@ void RenderSummaryWindow()
 		}
 		for( x = 1; x <= 16; x++ )
 		{
-			wchar_t str[3];
-			swprintf( str, L"%d", x );
+			CHAR16 str[4];
+			WSTR_SPrintf( str, WSTRLEN(str), L"%d", x );
 			mprintf( MAP_LEFT+x*13-(13+StringPixLength( str, SMALLCOMPFONT ))/2, MAP_TOP-8, str );
 		}
 		if( gfRenderGrid )
@@ -1402,7 +1400,7 @@ void RenderSummaryWindow()
 		if( gfRenderProgress )
 		{
 			UINT8 ubNumUndergroundLevels;
-			wchar_t str[2];
+			CHAR16 str[4];
 			for( y = 0; y < 16; y++ ) 
 			{
 				ClipRect.iTop = MAP_TOP + y*13;
@@ -1420,7 +1418,7 @@ void RenderSummaryWindow()
 							//is no ground level, then it'll be shadowed.
 							SetFont( SMALLCOMPFONT );
 							SetFontForeground( FONT_YELLOW );
-							swprintf( str, L"%d", ubNumUndergroundLevels );
+							WSTR_SPrintf( str, WSTRLEN(str), L"%d", ubNumUndergroundLevels );
 							mprintf( MAP_LEFT + x*13 + 4, ClipRect.iTop + 4, str );
 						}
 						if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
@@ -1440,7 +1438,7 @@ void RenderSummaryWindow()
 							//is no ground level, then it'll be shadowed.
 							SetFont( SMALLCOMPFONT );
 							SetFontForeground( FONT_YELLOW );
-							swprintf( str, L"%d", ubNumUndergroundLevels );
+							WSTR_SPrintf( str, WSTRLEN(str), L"%d", ubNumUndergroundLevels );
 							mprintf( MAP_LEFT + x*13 + 4, ClipRect.iTop + 4, str );
 						}
 						if( gbSectorLevels[x][y] & ALTERNATE_GROUND_MASK )
@@ -1526,11 +1524,11 @@ void RenderSummaryWindow()
 	}
 }
 
-void UpdateSectorSummary( UINT16 *gszFilename, BOOLEAN fUpdate )
+void UpdateSectorSummary( STR16 gszFilename, BOOLEAN fUpdate )
 {
-	wchar_t str[50];
-	UINT8 szCoord[40];
-	UINT16 *ptr;
+	CHAR16 str[50];
+	CHAR8 szCoord[40];
+	CHAR16 *ptr;
 	INT16 x, y;
 
 	gfRenderSummary = TRUE;
@@ -1622,7 +1620,7 @@ void UpdateSectorSummary( UINT16 *gszFilename, BOOLEAN fUpdate )
 		SetFont( FONT10ARIAL );
 		SetFontForeground( FONT_LTKHAKI );
 		SetFontShadow( FONT_NEARBLACK );
-		swprintf( str, L"Analyzing map:  %s...", gszFilename );
+		WSTR_SPrintf( str, WSTRLEN(str), L"Analyzing map:  %ls...", gszFilename );
 
 		if( gfSummaryWindowActive )
 		{
@@ -1637,7 +1635,7 @@ void UpdateSectorSummary( UINT16 *gszFilename, BOOLEAN fUpdate )
 			CreateProgressBar( 0, iScreenWidthOffset + 250, iScreenHeightOffset + 200, iScreenWidthOffset + 390, iScreenHeightOffset + 210 );
 		}
 
-		sprintf( (char *)szCoord, "%S", gszFilename );
+		sprintf( szCoord, "%ls", gszFilename );
 		if( gsSectorX > 9 )
 			szCoord[3] = '\0';
 		else
@@ -1887,12 +1885,12 @@ void CreateGlobalSummary()
 	STRING512			Dir;
 	STRING512			ExecDir;
 
-	OutputDebugString( "Generating GlobalSummary Information...\n" );
+//	OutputDebugString( "Generating GlobalSummary Information...\n" );
 
 	gfGlobalSummaryExists = FALSE;
 	//Set current directory to JA2\DevInfo which contains all of the summary data
 	GetExecutableDirectory( ExecDir );
-	sprintf( Dir, "%s\\DevInfo", ExecDir );
+	sprintf( Dir, "%hs\\DevInfo", ExecDir );
 
 	// Snap: save current directory
 	//GetFileManCurrentDirectory( DataDir );
@@ -1905,20 +1903,20 @@ void CreateGlobalSummary()
 	//Generate a simple readme file.
 	fp = fopen( "readme.txt", "w" );
 	Assert( fp );
-	fprintf( fp, "%s\n%s\n", "This information is used in conjunction with the editor.",
+	fprintf( fp, "%hs\n%hs\n", "This information is used in conjunction with the editor.",
 		"This directory or it's contents shouldn't be included with final release." );
 	fclose( fp );
 
 	// Snap: Restore the data directory once we are finished.
 	//SetFileManCurrentDirectory( DataDir );
-	//sprintf( Dir, "%s\\Data", ExecDir );
+	//sprintf( Dir, "%hs\\Data", ExecDir );
 	//SetFileManCurrentDirectory( Dir );
 
 	LoadGlobalSummary();
 	RegenerateSummaryInfoForAllOutdatedMaps();
 	gfRenderSummary = TRUE;
 
-	OutputDebugString( "GlobalSummary Information generated successfully.\n" );
+//	OutputDebugString( "GlobalSummary Information generated successfully.\n" );
 }
 
 void MapMoveCallback( MOUSE_REGION *reg, INT32 reason )
@@ -2088,15 +2086,15 @@ void SummaryLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		UINT16 *ptr;
-		wchar_t str[ 50 ];
+		CHAR16 *ptr;
+		CHAR16 str[ 50 ];
 		gfRenderSummary = TRUE;
 		
 		SetFont( FONT10ARIAL );
 		SetFontForeground( FONT_LTKHAKI );
 		SetFontShadow( FONT_NEARBLACK );
 
-		//swprintf( str, L"Loading map:  %s...", gszDisplayName );
+		//WSTR_SPrintf( str, WSTRLEN(str), L"Loading map:  %ls...", gszDisplayName );
 		//mprintf( MAP_LEFT, MAP_BOTTOM+100, str );
 		//InvalidateRegion( MAP_LEFT, MAP_BOTTOM+100, MAP_LEFT+150,	MAP_BOTTOM+110 );
 		
@@ -2104,7 +2102,7 @@ void SummaryLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
 
 		//DefineProgressBarPanel( 0, 65, 79, 94, MAP_LEFT, iScreenHeightOffset + 318, iScreenWidthOffset + 578, iScreenHeightOffset + 356 );
 		DefineProgressBarPanel( 0, 65, 79, 94, MAP_LEFT, iScreenHeightOffset + 318, MAP_LEFT + 161, iScreenHeightOffset + 356 );
-		swprintf( str, L"Loading map:  %s", gszDisplayName );
+		WSTR_SPrintf( str, WSTRLEN(str), L"Loading map:  %ls", gszDisplayName );
 		SetProgressBarTitle( 0, str, BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
 		SetProgressBarMsgAttributes( 0, SMALLCOMPFONT, FONT_BLACK, FONT_BLACK );
 
@@ -2145,8 +2143,8 @@ void SummarySaveMapCallback( GUI_BUTTON *btn, INT32 reason )
 		{
 			if( gubOverrideStatus == READONLY )
 			{
-				UINT8 filename[40];
-				sprintf( (char *)filename, "MAPS\\%S", gszDisplayName );
+				CHAR8 filename[40];
+				sprintf( filename, "MAPS\\%ls", gszDisplayName );
 			}	
 			if(	ExternalSaveMap( gszDisplayName ) )
 			{
@@ -2184,7 +2182,7 @@ void CalculateOverrideStatus()
 	if( gfTempFile )
 	{
 		CHAR8 *ptr;
-		sprintf( szFilename, "MAPS\\%S", gszTempFilename );
+		sprintf( szFilename, "MAPS\\%ls", gszTempFilename );
 		if( strlen( szFilename ) == 5 )
 			strcat( szFilename, "test.dat" );
 		ptr = strstr( szFilename, "." );
@@ -2194,15 +2192,15 @@ void CalculateOverrideStatus()
 			sprintf( ptr, ".dat" );
 	}
 	else
-		sprintf( szFilename, "MAPS\\%S", gszFilename );
-	swprintf( gszDisplayName, L"%S", &(szFilename[5]) );
+		sprintf( szFilename, "MAPS\\%ls", gszFilename );
+	WSTR_SPrintf( gszDisplayName, WSTRLEN(gszDisplayName), L"%hs", &(szFilename[5]) );
 	if( GetFileFirst( szFilename, &FileInfo) )
 	{
 		if( gfWorldLoaded )
 		{
-			if( FileInfo.uiFileAttribs & ( FILE_IS_READONLY | FILE_IS_SYSTEM ) )
-				gubOverrideStatus = READONLY;
-			else
+//			if( FileInfo.uiFileAttribs & ( FILE_IS_READONLY | FILE_IS_SYSTEM ) )
+//				gubOverrideStatus = READONLY;
+//			else
 				gubOverrideStatus = OVERWRITE;
 			ShowButton( iSummaryButton[ SUMMARY_OVERRIDE ] );
 			ButtonList[ iSummaryButton[ SUMMARY_OVERRIDE ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
@@ -2230,11 +2228,11 @@ void LoadGlobalSummary()
 	STRING512			MapsDir;
 	UINT32 uiNumBytesRead;
 	FLOAT	dMajorVersion;
-  INT32 x,y;
-	UINT8 szFilename[40];
-	UINT8 szSector[6];
+	INT32 x,y;
+	CHAR8 szFilename[40];
+	CHAR8 szSector[6];
 
-	OutputDebugString( "Executing LoadGlobalSummary()...\n" );
+//	OutputDebugString( "Executing LoadGlobalSummary()...\n" );
 
 	// Snap: save current directory
 	GetFileManCurrentDirectory( DataDir );
@@ -2244,13 +2242,13 @@ void LoadGlobalSummary()
 	gfGlobalSummaryExists = FALSE;
 	//Set current directory to JA2\DevInfo which contains all of the summary data
 	GetExecutableDirectory( ExecDir );
-	sprintf( DevInfoDir, "%s\\DevInfo", ExecDir );
-	sprintf( MapsDir, "%s\\Maps", DataDir );
+	sprintf( DevInfoDir, "%hs\\DevInfo", ExecDir );
+	sprintf( MapsDir, "%hs\\Maps", DataDir );
 
 	//Check to make sure we have a DevInfo directory.  If we don't create one!
 	if( !SetFileManCurrentDirectory( DevInfoDir ) )
 	{
-		OutputDebugString( "LoadGlobalSummary() aborted -- doesn't exist on this local computer.\n");
+//		OutputDebugString( "LoadGlobalSummary() aborted -- doesn't exist on this local computer.\n");
 		return;
 	}
 
@@ -2268,10 +2266,10 @@ void LoadGlobalSummary()
 		for( x = 0; x < 16; x++ )
 		{
 			gbSectorLevels[x][y] = 0;
-			sprintf( (char *)szSector, "%c%d", 'A' + y, x + 1 );
+			sprintf( szSector, "%c%d", 'A' + y, x + 1 );
 
 			//main ground level
-			sprintf( (char *)szFilename, "%c%d.dat", 'A' + y, x + 1 );
+			sprintf( szFilename, "%c%d.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
 			hfile = FileOpen( (STR)szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
 			SetFileManCurrentDirectory( DevInfoDir );
@@ -2284,11 +2282,11 @@ void LoadGlobalSummary()
 			}
 			else
 			{
-				sprintf( (char *)szFilename, "%s.sum", szSector );
+				sprintf( szFilename, "%hs.sum", szSector );
 				FileDelete( (STR)szFilename );
 			}
 			//main B1 level
-			sprintf( (char *)szFilename, "%c%d_b1.dat", 'A' + y, x + 1 );
+			sprintf( szFilename, "%c%d_b1.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
 			hfile = FileOpen( (STR)szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
 			SetFileManCurrentDirectory( DevInfoDir );
@@ -2301,11 +2299,11 @@ void LoadGlobalSummary()
 			}
 			else
 			{
-				sprintf( (char *)szFilename, "%s_b1.sum", szSector );
-				FileDelete( (STR)szFilename );
+				sprintf( szFilename, "%hs_b1.sum", szSector );
+				FileDelete( szFilename );
 			}
 			//main B2 level
-			sprintf( (char *)szFilename, "%c%d_b2.dat", 'A' + y, x + 1 );
+			sprintf( szFilename, "%c%d_b2.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
 			hfile = FileOpen( (STR)szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
 			SetFileManCurrentDirectory( DevInfoDir );
@@ -2318,11 +2316,11 @@ void LoadGlobalSummary()
 			}
 			else
 			{
-				sprintf( (char *)szFilename, "%s_b2.sum", szSector );
+				sprintf( szFilename, "%hs_b2.sum", szSector );
 				FileDelete( (STR)szFilename );
 			}
 			//main B3 level
-			sprintf( (char *)szFilename, "%c%d_b3.dat", 'A' + y, x + 1 );
+			sprintf( szFilename, "%c%d_b3.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
 			hfile = FileOpen( (STR)szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
 			SetFileManCurrentDirectory( DevInfoDir );
@@ -2335,11 +2333,11 @@ void LoadGlobalSummary()
 			}
 			else
 			{
-				sprintf( (char *)szFilename, "%s_b3.sum", szSector );
+				sprintf( szFilename, "%hs_b3.sum", szSector );
 				FileDelete( (STR)szFilename );
 			}
 			//alternate ground level
-			sprintf( (char *)szFilename, "%c%d_a.dat", 'A' + y, x + 1 );
+			sprintf( szFilename, "%c%d_a.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
 			hfile = FileOpen( (STR)szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
 			SetFileManCurrentDirectory( DevInfoDir );
@@ -2352,11 +2350,11 @@ void LoadGlobalSummary()
 			}
 			else
 			{
-				sprintf( (char *)szFilename, "%s_a.sum", szSector );
+				sprintf( szFilename, "%hs_a.sum", szSector );
 				FileDelete( (STR)szFilename );
 			}
 			//alternate B1 level
-			sprintf( (char *)szFilename, "%c%d_b1_a.dat", 'A' + y, x + 1 );
+			sprintf( szFilename, "%c%d_b1_a.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
 			hfile = FileOpen( (STR)szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
 			SetFileManCurrentDirectory( DevInfoDir );
@@ -2369,11 +2367,11 @@ void LoadGlobalSummary()
 			}
 			else
 			{
-				sprintf( (char *)szFilename, "%s_b1_a.sum", szSector );
+				sprintf( szFilename, "%hs_b1_a.sum", szSector );
 				FileDelete( (STR)szFilename );
 			}
 			//alternate B2 level
-			sprintf( (char *)szFilename, "%c%d_b2_a.dat", 'A' + y, x + 1 );
+			sprintf( szFilename, "%c%d_b2_a.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
 			hfile = FileOpen( (STR)szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
 			SetFileManCurrentDirectory( DevInfoDir );
@@ -2386,11 +2384,11 @@ void LoadGlobalSummary()
 			}
 			else
 			{
-				sprintf( (char *)szFilename, "%s_b2_a.sum", szSector );
+				sprintf( szFilename, "%hs_b2_a.sum", szSector );
 				FileDelete( (STR)szFilename );
 			}
 			//alternate B3 level
-			sprintf( (char *)szFilename, "%c%d_b3_a.dat", 'A' + y, x + 1 );
+			sprintf( szFilename, "%c%d_b3_a.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
 			hfile = FileOpen( (STR)szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
 			SetFileManCurrentDirectory( DevInfoDir );
@@ -2403,26 +2401,26 @@ void LoadGlobalSummary()
 			}
 			else
 			{
-				sprintf( (char *)szFilename, "%s_b3_a.sum", szSector );
+				sprintf( szFilename, "%hs_b3_a.sum", szSector );
 				FileDelete( (STR)szFilename );
 			}
 		}
-		OutputDebugString( (LPCSTR)String("Sector Row %c complete... \n", y + 'A') );
+//		OutputDebugString( (LPCSTR)String("Sector Row %c complete... \n", y + 'A') );
 	}
 
 	// Snap: Restore the data directory once we are finished.
 	SetFileManCurrentDirectory( DataDir );
 
-	//sprintf( MapsDir, "%s\\Data", ExecDir );
+	//sprintf( MapsDir, "%hs\\Data", ExecDir );
 	//SetFileManCurrentDirectory( MapsDir );
 
 	if( gfMustForceUpdateAllMaps )
 	{
-		OutputDebugString( (LPCSTR)String( "A MAJOR MAP UPDATE EVENT HAS BEEN DETECTED FOR %d MAPS!!!!.\n", gusNumberOfMapsToBeForceUpdated ) );
+//		OutputDebugString( (LPCSTR)String( "A MAJOR MAP UPDATE EVENT HAS BEEN DETECTED FOR %d MAPS!!!!.\n", gusNumberOfMapsToBeForceUpdated ) );
 	}
 
 
-	OutputDebugString( "LoadGlobalSummary() finished...\n" );
+//	OutputDebugString( "LoadGlobalSummary() finished...\n" );
 }
 
 void GenerateSummaryList()
@@ -2437,7 +2435,7 @@ void GenerateSummaryList()
 
 	//Set current directory to JA2\DevInfo which contains all of the summary data
 	GetExecutableDirectory( ExecDir );
-	sprintf( Dir, "%s\\DevInfo", ExecDir );
+	sprintf( Dir, "%hs\\DevInfo", ExecDir );
 	if( !SetFileManCurrentDirectory( Dir ) )
 	{
 		//Directory doesn't exist, so create it, and continue.
@@ -2448,7 +2446,7 @@ void GenerateSummaryList()
 		//Generate a simple readme file.
 		fp = fopen( "readme.txt", "w" );
 		Assert( fp );
-		fprintf( fp, "%s\n%s\n", "This information is used in conjunction with the editor.",
+		fprintf( fp, "%hs\n%hs\n", "This information is used in conjunction with the editor.",
 			"This directory or it's contents shouldn't be included with final release." );
 		fclose( fp );
 	}
@@ -2457,11 +2455,11 @@ void GenerateSummaryList()
 	// Snap: Restore the data directory once we are finished.
 	SetFileManCurrentDirectory( DataDir );
 	//Set current directory back to data directory!
-	//sprintf( Dir, "%s\\Data", ExecDir );
+	//sprintf( Dir, "%hs\\Data", ExecDir );
 	//SetFileManCurrentDirectory( Dir );
 }
 
-void WriteSectorSummaryUpdate( UINT8 *puiFilename, UINT8 ubLevel, SUMMARYFILE *pSummaryFileInfo )
+void WriteSectorSummaryUpdate( CHAR8 *puiFilename, UINT8 ubLevel, SUMMARYFILE *pSummaryFileInfo )
 {
 	FILE *fp;
 	STRING512			DataDir;
@@ -2475,7 +2473,7 @@ void WriteSectorSummaryUpdate( UINT8 *puiFilename, UINT8 ubLevel, SUMMARYFILE *p
 
 	//Set current directory to JA2\DevInfo which contains all of the summary data
 	GetExecutableDirectory( ExecDir );
-	sprintf( Dir, "%s\\DevInfo", ExecDir );
+	sprintf( Dir, "%hs\\DevInfo", ExecDir );
 	if( !SetFileManCurrentDirectory( Dir ) )
 		AssertMsg( 0, "JA2\\DevInfo folder not found and should exist!");
 
@@ -2508,7 +2506,7 @@ void WriteSectorSummaryUpdate( UINT8 *puiFilename, UINT8 ubLevel, SUMMARYFILE *p
 	// Snap: Restore the data directory once we are finished.
 	SetFileManCurrentDirectory( DataDir );
 	//Set current directory back to data directory!
-	//sprintf( Dir, "%s\\Data", ExecDir );
+	//sprintf( Dir, "%hs\\Data", ExecDir );
 	//SetFileManCurrentDirectory( Dir );
 }
 
@@ -2545,17 +2543,17 @@ void SummaryNewCaveLevelCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void LoadSummary( UINT8 *pSector, UINT8 ubLevel, FLOAT dMajorMapVersion )
+void LoadSummary( CHAR8 *pSector, UINT8 ubLevel, FLOAT dMajorMapVersion )
 {
-	UINT8 filename[40];
+	CHAR8 filename[40];
 	SUMMARYFILE temp;
 	INT32 x, y;
 	FILE *fp;
-	sprintf( (char *)filename, (const char *)pSector );
+	sprintf( filename, pSector );
 	if( ubLevel % 4 )
 	{
-		UINT8 str[4];
-		sprintf( (char *)str, "_b%d", ubLevel % 4 );
+		CHAR8 str[4];
+		sprintf( str, "_b%d", ubLevel % 4 );
 		strcat( filename, str );
 	}
 	if( ubLevel >= 4 )
@@ -2619,20 +2617,20 @@ void UpdateMasterProgress()
 	}
 }
 
-void ReportError( UINT8 *pSector, UINT8 ubLevel )
+void ReportError( CHAR8 *pSector, UINT8 ubLevel )
 {
 	static INT32 yp = iScreenHeightOffset + 180;
-	wchar_t str[40];
-	UINT16 temp[10];
+	CHAR16 str[40];
+	CHAR16 temp[10];
 
 	//Make sure the file exists... if not, then return false
-	swprintf( str, L"%S", pSector );
+	WSTR_SPrintf( str, WSTRLEN(str), L"%hs", pSector );
 	if( ubLevel % 4  )
 	{
-		swprintf( temp, L"_b%d.dat", ubLevel % 4 );
+		WSTR_SPrintf( temp, WSTRLEN(temp), L"_b%d.dat", ubLevel % 4 );
 		wcscat( str, temp );
 	}
-	mprintf( iScreenWidthOffset + 10, yp, L"Skipping update for %s.  Probably due to tileset conflicts...", str );
+	mprintf( iScreenWidthOffset + 10, yp, L"Skipping update for %ls.  Probably due to tileset conflicts...", str );
 	InvalidateScreen();
 	yp++;
 }
@@ -2641,7 +2639,7 @@ void ReportError( UINT8 *pSector, UINT8 ubLevel )
 void RegenerateSummaryInfoForAllOutdatedMaps()
 {
 	INT32 x, y;
-	UINT8 str[40];
+	CHAR8 str[40];
 	SUMMARYFILE *pSF;
 	//CreateProgressBar( 0, 20, 120, 300, 132 ); //slave (individual)
 	//CreateProgressBar( 1, 20, 100, 300, 112 ); //master (total)
@@ -2658,7 +2656,7 @@ void RegenerateSummaryInfoForAllOutdatedMaps()
 
 	for( y = 0; y < 16; y++ ) for( x = 0; x < 16; x++ )
 	{
-		sprintf( (char *)str, "%c%d", y + 'A', x + 1 );
+		sprintf( str, "%c%d", y + 'A', x + 1 );
 		if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
 		{
 			pSF = gpSectorSummary[x][y][0];
@@ -2725,7 +2723,7 @@ void SummaryUpdateCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		UINT8 str[40];
+		CHAR8 str[40];
 		CreateProgressBar( 0, iScreenWidthOffset + 20, iScreenHeightOffset + 100, iScreenWidthOffset + 300, iScreenHeightOffset + 112 ); //slave (individual)
 		DefineProgressBarPanel( 0, 65, 79, 94, iScreenWidthOffset + 10, iScreenHeightOffset + 80, iScreenWidthOffset + 310, iScreenHeightOffset + 132 );
 		SetProgressBarTitle( 0, L"Generating map summary", BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
@@ -2737,7 +2735,7 @@ void SummaryUpdateCallback( GUI_BUTTON *btn, INT32 reason )
 			gpCurrentSectorSummary = NULL;
 		}
 
-		sprintf( (char *)str, "%c%d", gsSelSectorY + 'A' - 1, gsSelSectorX );
+		sprintf( str, "%c%d", gsSelSectorY + 'A' - 1, gsSelSectorX );
 		EvaluateWorld( str, (UINT8)giCurrLevel );
 
 		gpSectorSummary[ gsSelSectorX ][ gsSelSectorY ][ giCurrLevel ] = gpCurrentSectorSummary;
@@ -2750,7 +2748,7 @@ void SummaryUpdateCallback( GUI_BUTTON *btn, INT32 reason )
 
 void ExtractTempFilename()
 {
-	wchar_t str[40];
+	CHAR16 str[40];
 	Get16BitStringFromField( 1, str );
 	if( wcscmp( gszTempFilename, str ) )
 	{
@@ -2759,14 +2757,14 @@ void ExtractTempFilename()
 		gfOverrideDirty = TRUE;
 	}
 	if( !wcslen( str ) )
-		swprintf( gszDisplayName, L"test.dat" );
+		WSTR_SPrintf( gszDisplayName, WSTRLEN(gszDisplayName), L"test.dat" );
 }
 
 void ApologizeOverrideAndForceUpdateEverything()
 {
 	INT32 x, y;
-	wchar_t str[ 50 ];
-	UINT8 name[50];
+	CHAR16 str[ 50 ];
+	CHAR8 name[50];
 	SUMMARYFILE *pSF;
 	//Create one huge assed button
 	gfMajorUpdate = TRUE;
@@ -2781,11 +2779,11 @@ void ApologizeOverrideAndForceUpdateEverything()
 	SetFont( HUGEFONT );
 	SetFontForeground( FONT_RED );
 	SetFontShadow( FONT_NEARBLACK );
-	swprintf( str, L"MAJOR VERSION UPDATE" );
+	WSTR_SPrintf( str, WSTRLEN(str), L"MAJOR VERSION UPDATE" );
 	mprintf( (iScreenWidthOffset + 320) - StringPixLength( str, HUGEFONT )/2, iScreenHeightOffset + 105, str );
 	SetFont( FONT10ARIAL );
 	SetFontForeground( FONT_YELLOW );
-	swprintf( str, L"There are %d maps requiring a major version update.", gusNumberOfMapsToBeForceUpdated );
+	WSTR_SPrintf( str, WSTRLEN(str), L"There are %d maps requiring a major version update.", gusNumberOfMapsToBeForceUpdated );
 	mprintf( (iScreenWidthOffset + 320) - StringPixLength( str, FONT10ARIAL )/2, iScreenHeightOffset + 130, str );
 
 	CreateProgressBar( 2, iScreenWidthOffset + 120, iScreenHeightOffset + 170, iScreenWidthOffset + 520, iScreenHeightOffset + 202 ); 
@@ -2800,7 +2798,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 
 	for( y = 0; y < 16; y++ ) for( x = 0; x < 16; x++ )
 	{
-		sprintf( (char *)name, "%c%d", y + 'A', x + 1 );
+		sprintf( name, "%c%d", y + 'A', x + 1 );
 		if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
 		{
 			pSF = gpSectorSummary[x][y][0];
@@ -2883,7 +2881,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 		}
 	}
 
-	EvaluateWorld( (UINT8 *)"p3_m.dat", 0 );
+	EvaluateWorld( "p3_m.dat", 0 );
 
 	RemoveProgressBar( 2 );
 	gfUpdatingNow = FALSE;
@@ -2900,7 +2898,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 	HWFILE hfile;
 	UINT32 uiNumBytesRead;
 	UINT32 uiNumItems;
-	UINT8 szFilename[40];
+	CHAR8 szFilename[40];
 	BASIC_SOLDIERCREATE_STRUCT basic;
 	SOLDIERCREATE_STRUCT priority;
 	INT32 i, j;
@@ -2936,7 +2934,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ giCurrLevel ];
 	}
 	//Open the original map for the sector
-	sprintf( (char *)szFilename, "MAPS\\%S", gszFilename );
+	sprintf( szFilename, "MAPS\\%ls", gszFilename );
 	hfile = FileOpen( (STR)szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
 	if( !hfile )
 	{ //The file couldn't be found!

@@ -24,8 +24,8 @@
 	#include "select_win.h"
 	#include "video.h"
 	#include "vobject_blitters.h"
-	#include "interface panels.h"
-	#include "interface items.h"
+	#include "interface_panels.h"
+	#include "interface_items.h"
 	#include "text.h"
 	#include "utilities.h"
 	#include "action_items.h"
@@ -35,13 +35,16 @@
 	#include "editor_mercs.h"
 	#include "weapons.h"
 	#include "editor_taskbar_utils.h"
-	#include "wordwrap.h"
+	#include "word_wrap.h"
 	#include "item_statistics.h"
 	#include "simple_render_utils.h"
 	#include "world_man.h"
 	#include "random.h"
-	#include "Pits.h"
+	#include "pits.h"
 	#include "keys.h"
+	#include "platform.h"
+	#include "sgp_str.h"
+		
 #endif
 
 #define NUMBER_TRIGGERS			27
@@ -220,8 +223,8 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	INT16 sWidth, sOffset, sStart;
 	INT16 i, x, y;
 	UINT16 usCounter;
-	INT16 pStr[ 100 ];//, pStr2[ 100 ];
-	UINT16 pItemName[SIZE_ITEM_NAME];
+	CHAR16 pStr[ 100 ];//, pStr2[ 100 ];
+	CHAR16 pItemName[SIZE_ITEM_NAME];
 	UINT8						ubBitDepth;
 	BOOLEAN fTypeMatch;
 	INT32 iEquipCount = 0;
@@ -365,8 +368,8 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			SetFontForeground( FONT_MCOLOR_WHITE );
 			SetFontDestBuffer( eInfo.uiBuffer, 0, 0, eInfo.sWidth, eInfo.sHeight, FALSE );
 
-			swprintf( (wchar_t *)pStr, (wchar_t *)L"%S", LockTable[ i ].ubEditorName );
-			DisplayWrappedString(x, (UINT16)(y+25), 60, 2, SMALLCOMPFONT, FONT_WHITE, (STR16) pStr, FONT_BLACK, TRUE, CENTER_JUSTIFIED );
+			WSTR_SPrintf( pStr, WSTRLEN(pStr), L"%hs", LockTable[ i ].ubEditorName );
+			DisplayWrappedString(x, (UINT16)(y+25), 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 
 			//Calculate the center position of the graphic in a 60 pixel wide area.
 			sWidth = hVObject->pETRLEObject[item->ubGraphicNum].usWidth;
@@ -473,41 +476,41 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 				if( eInfo.uiItemType != TBAR_MODE_ITEM_TRIGGERS )
 				{
 					LoadItemInfo( usCounter, pItemName, NULL );
-					swprintf( (wchar_t *)pStr, (wchar_t *)L"%s", pItemName );
+					WSTR_SPrintf( pStr, WSTRLEN(pStr), L"%ls", pItemName );
 				}
 				else
 				{
 					if( i == PRESSURE_ACTION_ID )
 					{
-						swprintf( (wchar_t *)pStr, (wchar_t *)L"Pressure Action" );
+						WSTR_SPrintf( pStr, WSTRLEN(pStr), L"Pressure Action" );
 					}
 					else if( i < 2 )
 					{
 						if( usCounter == SWITCH )
-							swprintf( (wchar_t *)pStr, (wchar_t *)L"Panic Trigger1" );
+							WSTR_SPrintf( pStr, WSTRLEN(pStr), L"Panic Trigger1" );
 						else
-							swprintf( (wchar_t *)pStr, (wchar_t *)L"Panic Action1" );
+							WSTR_SPrintf( pStr, WSTRLEN(pStr), L"Panic Action1" );
 					}
 					else if( i < 4 )
 					{
 						if( usCounter == SWITCH )
-							swprintf( (wchar_t *)pStr, (wchar_t *)L"Panic Trigger2" );
+							WSTR_SPrintf( pStr, WSTRLEN(pStr), L"Panic Trigger2" );
 						else
-							swprintf( (wchar_t *)pStr, (wchar_t *)L"Panic Action2" );
+							WSTR_SPrintf( pStr, WSTRLEN(pStr), L"Panic Action2" );
 					}
 					else if( i < 6 )
 					{
 						if( usCounter == SWITCH )
-							swprintf( (wchar_t *)pStr, (wchar_t *)L"Panic Trigger3" );
+							WSTR_SPrintf( pStr, WSTRLEN(pStr), L"Panic Trigger3" );
 						else
-							swprintf( (wchar_t *)pStr, (wchar_t *)L"Panic Action3" );
+							WSTR_SPrintf( pStr, WSTRLEN(pStr), L"Panic Action3" );
 					}
 					else
 					{
 						if( usCounter == SWITCH )
-							swprintf( (wchar_t *)pStr, (wchar_t *)L"Trigger%d", (i-4)/2 );
+							WSTR_SPrintf( pStr, WSTRLEN(pStr), L"Trigger%d", (i-4)/2 );
 						else
-							swprintf( (wchar_t *)pStr, (wchar_t *)L"Action%d", (i-4)/2 );
+							WSTR_SPrintf( pStr, WSTRLEN(pStr), L"Action%d", (i-4)/2 );
 					}
 				}
 
@@ -1615,7 +1618,7 @@ void DisplayItemStatistics()
 {
 	BOOLEAN fUseSelectedItem;
 	INT16 usItemIndex;
-	UINT16 pItemName[SIZE_ITEM_NAME];
+	CHAR16 pItemName[SIZE_ITEM_NAME];
 	INVTYPE *pItem;
 	
 	if( !eInfo.fActive )

@@ -23,7 +23,7 @@
 	#include "environment.h"
 	#include "world_def.h"
 	#include "exit_grids.h"
-	#include "Worldman.h"
+	#include "world_man.h"
 #endif
 
 BOOLEAN gfShowExitGrids = FALSE;
