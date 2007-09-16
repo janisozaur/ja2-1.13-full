@@ -38,6 +38,8 @@ const int	DL_Basic		= 2;
 const int	DL_Full			= 3;
 const int	DL_Debug		= 4;
 
+const CHAR16	*szEmpty	= L"";
+
 void DisplayWeaponInfo( SOLDIERTYPE*, CHAR16*, UINT16, UINT8, UINT8 );
 void DrawMouseTooltip(void);
 
@@ -55,7 +57,8 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		IsPointInScreenRectWithRelative( gusMouseXPos, gusMouseYPos, &aRect, &a1, &a2 ) )
 	{
 		MOUSETT		*pRegion = &mouseTT;
-		CHAR16		pStrInfo[ sizeof( pRegion->FastHelpText ) ];
+		CHAR16		pStrInfo[ WSTRLEN( pRegion->FastHelpText ) ];
+		CHAR16		pTail[512];
 		int			iNVG = 0;
 		INT16		sSoldierGridNo;
 		BOOLEAN		fDisplayBigSlotItem	= FALSE;
@@ -146,37 +149,71 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			}
 		}
 
-		WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), L"" );
+		wcscpy( pStrInfo, szEmpty );
+		wcscpy( pTail, szEmpty );
 		if ( ubTooltipDetailLevel == DL_Debug )
 		{
 			// display "debug" info
 			if ( gGameExternalOptions.fEnableSoldierTooltipLocation )
-				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_LOCATION], pStrInfo, sSoldierGridNo );
+			{
+				WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_LOCATION], szEmpty, sSoldierGridNo );
+				wcscat( pStrInfo, pTail );
+			}
 			if ( gGameExternalOptions.fEnableSoldierTooltipBrightness )
-				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_BRIGHTNESS], pStrInfo, SHADE_MIN - LightTrueLevel( sSoldierGridNo, gsInterfaceLevel ), SHADE_MIN );
+			{
+				WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_BRIGHTNESS], szEmpty, SHADE_MIN - LightTrueLevel( sSoldierGridNo, gsInterfaceLevel ), SHADE_MIN );
+				wcscat( pStrInfo, pTail );
+			}
 			if ( gGameExternalOptions.fEnableSoldierTooltipRangeToTarget )
-				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_RANGE_TO_TARGET], pStrInfo, iRangeToTarget );
+			{
+				WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_RANGE_TO_TARGET], szEmpty, iRangeToTarget );
+				wcscat( pStrInfo, pTail );
+			}
 			if ( gGameExternalOptions.fEnableSoldierTooltipID )
-				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_ID], pStrInfo, pSoldier->ubID );
+			{
+				WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_ID], szEmpty, pSoldier->ubID );
+				wcscat( pStrInfo, pTail );
+			}
 			if ( gGameExternalOptions.fEnableSoldierTooltipOrders )
-				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_ORDERS], pStrInfo, pSoldier->bOrders );
+			{
+				WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_ORDERS], szEmpty, pSoldier->bOrders );
+				wcscat( pStrInfo, pTail );
+			}
 			if ( gGameExternalOptions.fEnableSoldierTooltipAttitude )
-				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_ATTITUDE], pStrInfo, pSoldier->bAttitude );
+			{
+				WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_ATTITUDE], szEmpty, pSoldier->bAttitude );
+				wcscat( pStrInfo, pTail );
+			}
 			if ( gGameExternalOptions.fEnableSoldierTooltipActionPoints )
-				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_CURRENT_APS], pStrInfo, pSoldier->bActionPoints );
+			{
+				WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_CURRENT_APS], szEmpty, pSoldier->bActionPoints );
+				wcscat( pStrInfo, pTail );
+			}
 			if ( gGameExternalOptions.fEnableSoldierTooltipHealth )
-				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_CURRENT_HEALTH], pStrInfo, pSoldier->bLife );
+			{
+				WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_CURRENT_HEALTH], szEmpty, pSoldier->bLife );
+				wcscat( pStrInfo, pTail );
+			}
 		}
 
 		// armor info code block start
 		if ( ubTooltipDetailLevel >= DL_Full )
 		{
 			if ( gGameExternalOptions.fEnableSoldierTooltipHelmet )
-				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_HELMET], pStrInfo, pSoldier->inv[HELMETPOS].usItem ? ItemNames[ pSoldier->inv[HELMETPOS].usItem ] : gzTooltipStrings[STR_TT_NO_HELMET] );
+			{
+				WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_HELMET], szEmpty, pSoldier->inv[HELMETPOS].usItem ? ItemNames[ pSoldier->inv[HELMETPOS].usItem ] : gzTooltipStrings[STR_TT_NO_HELMET] );
+				wcscat( pStrInfo, pTail );
+			}
 			if ( gGameExternalOptions.fEnableSoldierTooltipVest )
-				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_VEST], pStrInfo, pSoldier->inv[VESTPOS].usItem ? ItemNames[ pSoldier->inv[VESTPOS].usItem ] : gzTooltipStrings[STR_TT_NO_VEST] );
+			{
+				WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_VEST], szEmpty, pSoldier->inv[VESTPOS].usItem ? ItemNames[ pSoldier->inv[VESTPOS].usItem ] : gzTooltipStrings[STR_TT_NO_VEST] );
+				wcscat( pStrInfo, pTail );
+			}
 			if ( gGameExternalOptions.fEnableSoldierTooltipLeggings )
-				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_LEGGINGS], pStrInfo, pSoldier->inv[LEGPOS].usItem ? ItemNames[ pSoldier->inv[LEGPOS].usItem ] : gzTooltipStrings[STR_TT_NO_LEGGING] );
+			{
+				WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_LEGGINGS], szEmpty, pSoldier->inv[LEGPOS].usItem ? ItemNames[ pSoldier->inv[LEGPOS].usItem ] : gzTooltipStrings[STR_TT_NO_LEGGING] );
+				wcscat( pStrInfo, pTail );
+			}
 		}
 		else
 		{
@@ -187,25 +224,37 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			{
 				if ( ArmourPercent( pSoldier ) )
 				{
-					WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_ARMOR] );
+					WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_ARMOR] );
+					wcscat( pStrInfo, pTail );
 					if ( ubTooltipDetailLevel == DL_Basic )
 					{
 						if ( gGameExternalOptions.fEnableSoldierTooltipHelmet )
-							WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), L"%ls%ls", pStrInfo, pSoldier->inv[HELMETPOS].usItem ? gzTooltipStrings[STR_TT_HELMET] : L"" );
+						{
+							WSTR_SPrintf( pTail, WSTRLEN( pTail ), L"%ls%ls", szEmpty, pSoldier->inv[HELMETPOS].usItem ? gzTooltipStrings[STR_TT_HELMET] : L"" );
+							wcscat( pStrInfo, pTail );
+						}
 						if ( gGameExternalOptions.fEnableSoldierTooltipVest )
-							WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), L"%ls%ls", pStrInfo, pSoldier->inv[VESTPOS].usItem ? gzTooltipStrings[STR_TT_VEST] : L"" );
+						{
+							WSTR_SPrintf( pTail, WSTRLEN( pTail ), L"%ls%ls", szEmpty, pSoldier->inv[VESTPOS].usItem ? gzTooltipStrings[STR_TT_VEST] : L"" );
+							wcscat( pStrInfo, pTail );
+						}
 						if ( gGameExternalOptions.fEnableSoldierTooltipLeggings )
-							WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), L"%ls%ls", pStrInfo, pSoldier->inv[LEGPOS].usItem ? gzTooltipStrings[STR_TT_LEGGINGS] : L"" );
+						{
+							WSTR_SPrintf( pTail, WSTRLEN( pTail ), L"%ls%ls", szEmpty, pSoldier->inv[LEGPOS].usItem ? gzTooltipStrings[STR_TT_LEGGINGS] : L"" );
+							wcscat( pStrInfo, pTail );
+						}
 						wcscat( pStrInfo, L"\n" );
 					}
 					else // ubTooltipDetailLevel == DL_Limited
 					{
-						WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_ARMOR_2], gzTooltipStrings[STR_TT_WORN] );
+						WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_ARMOR_2], gzTooltipStrings[STR_TT_WORN] );
+						wcscat( pStrInfo, pTail );
 					}
 				}
 				else
 				{
-					WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_ARMOR_2], gzTooltipStrings[STR_TT_NO_ARMOR] );
+					WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_ARMOR_2], gzTooltipStrings[STR_TT_NO_ARMOR] );
+					wcscat( pStrInfo, pTail );
 				}
 			}
 		}
@@ -226,30 +275,40 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			{
 				if ( ubTooltipDetailLevel >= DL_Full )
 				{
-					WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_NVG], pStrInfo,
+					WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_NVG], szEmpty,
 						iNVG ? ItemNames[ pSoldier->inv[ iNVG ].usItem ] : gzTooltipStrings[STR_TT_NO_NVG] );
+					wcscat( pStrInfo, pTail );
 				}
 				else
 				{
-					WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_NVG], pStrInfo, iNVG ? gzTooltipStrings[STR_TT_WORN] : gzTooltipStrings[STR_TT_NO_NVG] );
+					WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_NVG], szEmpty, iNVG ? gzTooltipStrings[STR_TT_WORN] : gzTooltipStrings[STR_TT_NO_NVG] );
+					wcscat( pStrInfo, pTail );
 				}
-				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_GAS_MASK], pStrInfo,
+				WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_GAS_MASK], szEmpty,
 					( FindGasMask(pSoldier) != NO_SLOT ) ? gzTooltipStrings[STR_TT_WORN] : gzTooltipStrings[STR_TT_NO_MASK] );
+				wcscat( pStrInfo, pTail );
 			}
 		}
 		else // gGameExternalOptions.ubSoldierTooltipDetailLevel == DL_Debug
 		{
 			if ( gGameExternalOptions.fEnableSoldierTooltipHeadItem1 )
-				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_HEAD_POS_1], pStrInfo, ItemNames[ pSoldier->inv[HEAD1POS].usItem ] );
+			{
+				WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_HEAD_POS_1], szEmpty, ItemNames[ pSoldier->inv[HEAD1POS].usItem ] );
+				wcscat( pStrInfo, pTail );
+			}
 			if ( gGameExternalOptions.fEnableSoldierTooltipHeadItem2 )
-				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_HEAD_POS_2], pStrInfo, ItemNames[ pSoldier->inv[HEAD2POS].usItem ] );
+			{
+				WSTR_SPrintf( pTail, WSTRLEN( pTail ), gzTooltipStrings[STR_TT_CAT_HEAD_POS_2], szEmpty, ItemNames[ pSoldier->inv[HEAD2POS].usItem ] );
+				wcscat( pStrInfo, pTail );
+			}
 		}
 		// head slots info code block end
 
 		// weapon in primary hand info code block start
 		if ( gGameExternalOptions.fEnableSoldierTooltipWeapon )
 		{
-			DisplayWeaponInfo( pSoldier, pStrInfo, sizeof( pRegion->FastHelpText ), HANDPOS, ubTooltipDetailLevel );
+			DisplayWeaponInfo( pSoldier, pTail, WSTRLEN( pTail ), HANDPOS, ubTooltipDetailLevel );
+			wcscat( pStrInfo, pTail );
 		} // gGameExternalOptions.fEnableSoldierTooltipWeapon
 		// weapon in primary hand info code block end
 
@@ -260,7 +319,8 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			{
 				// if there's something in the slot display it
 				wcscat( pStrInfo, L"\n" );
-				DisplayWeaponInfo( pSoldier, pStrInfo, sizeof( pRegion->FastHelpText ), SECONDHANDPOS, ubTooltipDetailLevel );
+				DisplayWeaponInfo( pSoldier, pTail, WSTRLEN( pTail ), SECONDHANDPOS, ubTooltipDetailLevel );
+				wcscat( pStrInfo, pTail );
 			}
 		}
 		// weapon in off hand info code block end
@@ -318,7 +378,8 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			if ( fDisplayBigSlotItem )
 			{
 				wcscat( pStrInfo, gzTooltipStrings[STR_TT_IN_BACKPACK] );
-				DisplayWeaponInfo( pSoldier, pStrInfo, sizeof( pRegion->FastHelpText ), BigSlot, ubTooltipDetailLevel );
+				DisplayWeaponInfo( pSoldier, pTail, WSTRLEN( pTail ), BigSlot, ubTooltipDetailLevel );
+				wcscat( pStrInfo, pTail );
 				fDisplayBigSlotItem = FALSE;
 			}
 		}
