@@ -39,6 +39,8 @@
     <Compile Include="BackEnd\INIHelper\INIFile.cs" />
     <Compile Include="BackEnd\INIHelper\INIProperty.cs" />
     <Compile Include="BackEnd\INIHelper\INISection.cs" />
+    <Compile Include="BackEnd\XML\Helper.cs" />
+    <Compile Include="BackEnd\XML\XMLObject.cs" />
     <Compile Include="GUI\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

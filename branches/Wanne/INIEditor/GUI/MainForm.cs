@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using INIEditor.BackEnd.INIHelper;
 using System.IO;
+using INIEditor.BackEnd.XML;
 
 namespace INIEditor.GUI
 {
@@ -14,18 +15,27 @@ namespace INIEditor.GUI
     {
         #region Constants
         private const string JA2_PATH = @"C:\games\jagged alliance 2";
+        private const string XML_SETTINGS_PATH = @"C:\games\jagged alliance 2";
         #endregion
         #region Fields
         private INIFile _iniFile = null;
+        private INISettings _iniSettings = null;
         #endregion
         #region CTOR
         public MainForm()
         {
             InitializeComponent();
+            InitializeXMLSettingsFile();
             InitializeFiles();
         }
         #endregion
         #region Initialize
+        private void InitializeXMLSettingsFile()
+        {
+            string path = Path.Combine(XML_SETTINGS_PATH, "INIEditorInit.xml");
+            _iniSettings = Helper.LoadObjectFromXMLFile(path);
+        }
+
         private void InitializeFiles()
         {
             DirectoryInfo ja2DirInfo = new DirectoryInfo(JA2_PATH);
