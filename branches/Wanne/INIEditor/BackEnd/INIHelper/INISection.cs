@@ -4,59 +4,61 @@ namespace INIEditor.BackEnd.INIHelper
 {
     public class INISection
     {
-        private string name;
-        private List<INIProperty> propertys = new List<INIProperty>();
-
-        
-
-        public void AddProperty(INIProperty prop)
+        #region Fields
+        private string _name;
+        private List<INIProperty> _propertys = new List<INIProperty>();
+        private object _tag = null;
+        #endregion
+        #region Properties
+        public List<INIProperty> Properties
         {
-            this.propertys.Add(prop);
-        }
-
-        public List<INIProperty> GetPropertys()
-        {
-            return this.propertys;
-        }
-
-        public INIProperty this[string propertyName]
-        {
-            get
-            {
-                INIProperty matchingProp = null;
-                foreach (INIProperty prop in this.propertys)
-                {
-                    if (prop.Name == propertyName)
-                    {
-                        matchingProp = prop;
-                        break;
-                    }
-                }
-                return matchingProp;
-            }
-            set
-            {
-                for (int i = 0; i < this.propertys.Count; i++ )
-                {
-                    INIProperty prop = this.propertys[i];
-                    if (prop.Name == propertyName)
-                    {
-                        prop = value;
-                    }
-                }
-            }
+            get { return this._propertys; }
         }
 
         public string Name
         {
             get
             {
-                return this.name;
+                return this._name;
             }
             set
             {
-                this.name = value;
-            }   
+                this._name = value;
+            }
         }
+
+        public object Tag
+        {
+            get
+            {
+                return _tag;
+            }
+            set
+            {
+                _tag = value;
+            }
+        }
+        #endregion
+        #region Public Methods
+        public INIProperty GetPropertyByName(string propertyName)
+        {
+            INIProperty matchingProperty = null;
+            foreach (INIProperty property in this.Properties)
+            {
+                if (property.Name.ToLower() == propertyName.ToLower())
+                {
+                    matchingProperty = property;
+                    break;
+                }
+            }
+            return matchingProperty;
+        }
+        #endregion
+        #region Private Methods
+        public void AddProperty(INIProperty prop)
+        {
+            this._propertys.Add(prop);
+        }
+        #endregion
     }
 }

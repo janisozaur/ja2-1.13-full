@@ -44,11 +44,11 @@ namespace INIEditor.GUI
             this.tabActions = new System.Windows.Forms.TabControl();
             this.tpSection = new System.Windows.Forms.TabPage();
             this.dgvProperties = new System.Windows.Forms.DataGridView();
+            this.tpProperty = new System.Windows.Forms.TabPage();
             this.colSection = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colProperty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tpProperty = new System.Windows.Forms.TabPage();
             this.mnuMain.SuspendLayout();
             this.pnlFiles.SuspendLayout();
             this.pnlSectionHeader.SuspendLayout();
@@ -206,9 +206,21 @@ namespace INIEditor.GUI
             this.dgvProperties.Location = new System.Drawing.Point(0, 0);
             this.dgvProperties.MultiSelect = false;
             this.dgvProperties.Name = "dgvProperties";
+            this.dgvProperties.ReadOnly = true;
             this.dgvProperties.RowHeadersVisible = false;
+            this.dgvProperties.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvProperties.Size = new System.Drawing.Size(446, 339);
             this.dgvProperties.TabIndex = 0;
+            this.dgvProperties.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProperties_CellDoubleClick);
+            // 
+            // tpProperty
+            // 
+            this.tpProperty.Location = new System.Drawing.Point(4, 22);
+            this.tpProperty.Name = "tpProperty";
+            this.tpProperty.Padding = new System.Windows.Forms.Padding(3);
+            this.tpProperty.Size = new System.Drawing.Size(446, 339);
+            this.tpProperty.TabIndex = 1;
+            this.tpProperty.UseVisualStyleBackColor = true;
             // 
             // colSection
             // 
@@ -233,19 +245,9 @@ namespace INIEditor.GUI
             // 
             // colDescription
             // 
-            this.colDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.colDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colDescription.HeaderText = "Description";
             this.colDescription.Name = "colDescription";
-            this.colDescription.Width = 83;
-            // 
-            // tpProperty
-            // 
-            this.tpProperty.Location = new System.Drawing.Point(4, 22);
-            this.tpProperty.Name = "tpProperty";
-            this.tpProperty.Padding = new System.Windows.Forms.Padding(3);
-            this.tpProperty.Size = new System.Drawing.Size(446, 339);
-            this.tpProperty.TabIndex = 1;
-            this.tpProperty.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -295,11 +297,11 @@ namespace INIEditor.GUI
         private System.Windows.Forms.TabControl tabActions;
         private System.Windows.Forms.TabPage tpSection;
         private System.Windows.Forms.DataGridView dgvProperties;
+        private System.Windows.Forms.TabPage tpProperty;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSection;
         private System.Windows.Forms.DataGridViewTextBoxColumn colProperty;
         private System.Windows.Forms.DataGridViewTextBoxColumn colValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDescription;
-        private System.Windows.Forms.TabPage tpProperty;
     }
 }
 

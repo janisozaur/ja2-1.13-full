@@ -23,7 +23,6 @@ namespace INIEditor.GUI
         {
             InitializeComponent();
             InitializeFiles();
-            //InitializeTabs();
         }
         #endregion
         #region Initialize
@@ -59,7 +58,7 @@ namespace INIEditor.GUI
             string iniFilePath = Path.Combine(JA2_PATH, cmbFiles.SelectedItem.ToString());
             _iniFile.ReadFile(iniFilePath);
 
-            List<INISection> sections = _iniFile.GetSections();
+            List<INISection> sections = _iniFile.Sections;
 
             TreeNode iniFileNode = new TreeNode();
             iniFileNode.Name = cmbFiles.SelectedItem.ToString();
@@ -77,8 +76,7 @@ namespace INIEditor.GUI
                 iniFileNode.Nodes.Add(sectionNode);
 
                 // Loop through all the properties of the current selection
-                List<INIProperty> properties = section.GetPropertys();
-                foreach (INIProperty property in properties)
+                foreach (INIProperty property in section.Properties)
                 {
                     TreeNode propertyNode = new TreeNode();
                     propertyNode.Name = property.Name;
@@ -89,38 +87,32 @@ namespace INIEditor.GUI
             }
         }
 
-        private void InitializeTabs<T>(T node, string sectionHeader)
+        private void InitializeTabs<T>(T item, string sectionHeader)
         {
-            tpSection.Text = sectionHeader;
-
-            // INI file node
-            if (node is INIFile)
-            {
-                INIFile file = node as INIFile;
-            }
-            else if (node is INISection)
-            {
-                INISection section = node as INISection;
-            }
-        }
-
-        private void InitializePropertiesGrid<T>(T node, string sectionHeader)
-        {
-            lblSectionHeader.Text = sectionHeader;
             dgvProperties.Rows.Clear();
 
-            // INI file node
-            if (node is INIFile)
+            // INI file item
+            if (item is INIFile)
             {
+                if (tabActions.TabPages.Contains(tpProperty))
+                {
+                    tabActions.TabPages.Remove(tpProperty);
+                }
+                tpSection.Text = "All Sections and Properties";
+                if (!tabActions.TabPages.Contains(tpSection))
+                {
+                    tabActions.TabPages.Add(tpSection);
+                }
+
+                lblSectionHeader.Text = sectionHeader;
+
                 colSection.Visible = true;
 
-                INIFile file = node as INIFile;
+                INIFile file = item as INIFile;
 
-                List<INISection> sections = file.GetSections();
-                foreach (INISection section in sections)
+                foreach (INISection section in file.Sections)
                 {
-                    List<INIProperty> properties = section.GetPropertys();
-                    foreach (INIProperty property in properties)
+                    foreach (INIProperty property in section.Properties)
                     {
                         int rowIndex = dgvProperties.Rows.Add();
 
@@ -135,14 +127,25 @@ namespace INIEditor.GUI
                 }
 
             }
-            // Section node
-            else if (node is INISection)
+            // Section item
+            else if (item is INISection)
             {
+                if (tabActions.TabPages.Contains(tpProperty))
+                {
+                    tabActions.TabPages.Remove(tpProperty);
+                }
+                tpSection.Text = "All Properties in the selected Section";
+                if (!tabActions.TabPages.Contains(tpSection))
+                {
+                    tabActions.TabPages.Add(tpSection);
+                }
+
+                lblSectionHeader.Text = sectionHeader;
+
                 colSection.Visible = false;
 
-                INISection section = node as INISection;
-                List<INIProperty> properties = section.GetPropertys();
-                foreach (INIProperty property in properties)
+                INISection section = item as INISection;
+                foreach (INIProperty property in section.Properties)
                 {
                     int rowIndex = dgvProperties.Rows.Add();
 
@@ -152,6 +155,23 @@ namespace INIEditor.GUI
                     dgvProperties[colSection.Index, rowIndex].Tag = section;
                     dgvProperties[colProperty.Index, rowIndex].Tag = property;
                     // TODO: Add description from xml file here!
+                }
+            }
+            else if (item is INIProperty)
+            {
+                lblSectionHeader.Text = sectionHeader;
+
+                INIProperty property = item as INIProperty;
+
+                if (tabActions.TabPages.Contains(tpSection))
+                {
+                    tabActions.TabPages.Remove(tpSection);
+                }
+
+                tpProperty.Text = property.Name;
+                if (!tabActions.TabPages.Contains(tpProperty))
+                {
+                    tabActions.TabPages.Add(tpProperty);
                 }
             }
         }
@@ -172,8 +192,15 @@ namespace INIEditor.GUI
 
         private void trvSections_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            InitializeTabs(e.Node.Tag, e.Node.Name);
-            InitializePropertiesGrid(e.Node.Tag, e.Node.Name);
+            string sectionHeader = e.Node.Text;
+            if (e.Node.Tag is INIProperty)
+            {
+                TreeNode sectionNode = e.Node.Parent;
+                sectionHeader = sectionNode.Text;
+
+            }
+
+            InitializeTabs(e.Node.Tag, sectionHeader);
         }
 
         private void dgvProperties_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -183,8 +210,9 @@ namespace INIEditor.GUI
             INISection section = (INISection)row.Cells[colSection.Index].Tag;
             INIProperty property = (INIProperty)row.Cells[colProperty.Index].Tag;
 
-            //DetailForm detailForm = new DetailForm(section, property);
-            //DialogResult result = detailForm.ShowDialog();
+            //trvSections.Nodes
+
+            //InitializeTabs(property, section._name);
         }
         #endregion
     }

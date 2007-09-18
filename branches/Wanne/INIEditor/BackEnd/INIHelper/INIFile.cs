@@ -5,29 +5,41 @@ namespace INIEditor.BackEnd.INIHelper
 {
     public class INIFile
     {
-        private List<INISection> sections = new List<INISection>();
-
-        public string ExtractPropertyName(string line)
+        #region Fields
+        private List<INISection> _sections = new List<INISection>();
+        private object _tag = null;
+        #endregion
+        #region Properties
+        public object Tag
         {
-            string property = line.Split(new char[] { '=' })[0].Trim();
-            return property;
+            get
+            {
+                return _tag;
+            }
+            set
+            {
+                _tag = value;
+            }
         }
 
-        public string ExtractPropertyValue(string line)
+        public List<INISection> Sections
         {
-            string value = line.Split(new char[] { '=' })[1].Trim();
-            return value;
+            get { return this._sections; }
         }
-
-        public string ExtractSectionName(string line)
+        #endregion
+        #region Public Methods
+        public INISection GetSectionByName(string sectionName)
         {
-            string section = line.Substring(1, line.Length - 2).Trim();
-            return section;
-        }
-
-        public List<INISection> GetSections()
-        {
-            return this.sections;
+            INISection matchingSection = null;
+            foreach (INISection section in this.Sections)
+            {
+                if (section.Name.ToLower() == sectionName.ToLower())
+                {
+                    matchingSection = section;
+                    break;
+                }
+            }
+            return matchingSection;
         }
 
         public bool IsProperty(string line)
@@ -61,7 +73,7 @@ namespace INIEditor.BackEnd.INIHelper
                     {
                         section = new INISection();
                         section.Name = this.ExtractSectionName(line);
-                        this.sections.Add(section);
+                        this._sections.Add(section);
                         num++;
                     }
                     else if (this.IsProperty(line) && (section != null))
@@ -69,7 +81,7 @@ namespace INIEditor.BackEnd.INIHelper
                         INIProperty prop = new INIProperty();
                         prop.Name = this.ExtractPropertyName(line);
                         prop.Value = this.ExtractPropertyValue(line);
-                        this.sections[num].AddProperty(prop);
+                        this._sections[num].AddProperty(prop);
                     }
                 }
             }
@@ -79,14 +91,14 @@ namespace INIEditor.BackEnd.INIHelper
         public void WriteFile(string name)
         {
             StreamWriter writer = File.CreateText(name);
-            List<INISection>.Enumerator enumerator = this.sections.GetEnumerator();
+            List<INISection>.Enumerator enumerator = this._sections.GetEnumerator();
             try
             {
                 while (enumerator.MoveNext())
                 {
                     INISection section = enumerator.Current;
                     writer.WriteLine("[" + section.Name + "]");
-                    List<INIProperty>.Enumerator enumerator2 = section.GetPropertys().GetEnumerator();
+                    List<INIProperty>.Enumerator enumerator2 = section.Properties.GetEnumerator();
                     try
                     {
                         while (enumerator2.MoveNext())
@@ -108,6 +120,26 @@ namespace INIEditor.BackEnd.INIHelper
             }
             writer.Close();
         }
+        #endregion
+        #region Private Methods
+        private string ExtractPropertyName(string line)
+        {
+            string property = line.Split(new char[] { '=' })[0].Trim();
+            return property;
+        }
+
+        private string ExtractPropertyValue(string line)
+        {
+            string value = line.Split(new char[] { '=' })[1].Trim();
+            return value;
+        }
+
+        private string ExtractSectionName(string line)
+        {
+            string section = line.Substring(1, line.Length - 2).Trim();
+            return section;
+        }
+        #endregion
     }
 }
 
