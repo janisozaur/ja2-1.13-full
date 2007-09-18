@@ -50,7 +50,7 @@ namespace INIEditor.GUI
             }
         }
 
-        private void InitializeSections()
+        private void InitializeSectionTree()
         {
             trvSections.Nodes.Clear();
 
@@ -66,6 +66,9 @@ namespace INIEditor.GUI
             iniFileNode.Tag = _iniFile;
             trvSections.Nodes.Add(iniFileNode);
 
+            // The ini file has a reference to the tree node
+            _iniFile.Tag = iniFileNode;
+
             // Loop through all the sections of the ini file
             foreach (INISection section in sections)
             {
@@ -75,6 +78,9 @@ namespace INIEditor.GUI
                 sectionNode.Tag = section;
                 iniFileNode.Nodes.Add(sectionNode);
 
+                // The section has a reference to the tree node
+                section.Tag = sectionNode;
+
                 // Loop through all the properties of the current selection
                 foreach (INIProperty property in section.Properties)
                 {
@@ -83,6 +89,9 @@ namespace INIEditor.GUI
                     propertyNode.Text = property.Name;
                     propertyNode.Tag = property;
                     sectionNode.Nodes.Add(propertyNode);   
+
+                    // The property has a reference to the tree node
+                    property.Tag = propertyNode;
                 }
             }
         }
@@ -174,6 +183,31 @@ namespace INIEditor.GUI
                     tabActions.TabPages.Add(tpProperty);
                 }
             }
+
+            SelectTreeNode(item);
+        }
+
+        private void SelectTreeNode<T>(T item)
+        {
+            TreeNode treeNode = null;
+            if (item is INIFile)
+            {
+                INIFile iniFile = item as INIFile;
+                treeNode = iniFile.Tag as TreeNode;
+            }
+            else if (item is INISection)
+            {
+                INISection section = item as INISection;
+                treeNode = section.Tag as TreeNode;
+            }
+            else if (item is INIProperty)
+            {
+                INIProperty property = item as INIProperty;
+                treeNode = property.Tag as TreeNode;
+            }
+            
+            trvSections.SelectedNode = treeNode;
+            trvSections.SelectedNode.Expand();
         }
         #endregion
         #region Events
@@ -181,7 +215,7 @@ namespace INIEditor.GUI
         {
             if (cmbFiles.SelectedItem != null)
             {
-                InitializeSections();
+                InitializeSectionTree();
                 if (trvSections.Nodes.Count > 0)
                 {
                     trvSections.SelectedNode = trvSections.Nodes[0];
@@ -210,9 +244,7 @@ namespace INIEditor.GUI
             INISection section = (INISection)row.Cells[colSection.Index].Tag;
             INIProperty property = (INIProperty)row.Cells[colProperty.Index].Tag;
 
-            //trvSections.Nodes
-
-            //InitializeTabs(property, section._name);
+            InitializeTabs(property, section.Name);
         }
         #endregion
     }

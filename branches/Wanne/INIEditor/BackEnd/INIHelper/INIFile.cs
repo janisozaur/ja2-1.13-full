@@ -42,6 +42,26 @@ namespace INIEditor.BackEnd.INIHelper
             return matchingSection;
         }
 
+        public INIProperty GetPropertyByName(string sectionName, string propertyName)
+        {
+            INIProperty matchingProperty = null;
+            foreach (INISection section in this.Sections)
+            {
+                if (section.Name.ToLower() == sectionName.ToLower())
+                {
+                    foreach (INIProperty property in section.Properties)
+                    {
+                        if (property.Name.ToLower() == propertyName.ToLower())
+                        {
+                            matchingProperty = property;
+                            break;
+                        }
+                    }
+                }
+            }
+            return matchingProperty;
+        }
+
         public bool IsProperty(string line)
         {
             return line.Contains("=");
