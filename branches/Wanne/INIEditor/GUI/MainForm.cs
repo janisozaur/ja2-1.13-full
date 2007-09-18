@@ -257,5 +257,17 @@ namespace INIEditor.GUI
             InitializeTabs(property, section.Name);
         }
         #endregion
+
+        private void mnuToolsGenerateXMLFile_Click(object sender, EventArgs e)
+        {
+            if (_iniFile != null)
+            {
+
+
+                foreach (INISection section in _iniFile.Sections)
+                {
+                }
+            }
+        }
     }
 }

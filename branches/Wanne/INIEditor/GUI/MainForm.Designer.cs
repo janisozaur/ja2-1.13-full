@@ -29,9 +29,12 @@ namespace INIEditor.GUI
         private void InitializeComponent()
         {
             this.mnuMain = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuToolsGenerateXMLFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.tbrMain = new System.Windows.Forms.ToolStrip();
             this.stsMain = new System.Windows.Forms.StatusStrip();
             this.pnlFiles = new System.Windows.Forms.Panel();
@@ -44,11 +47,11 @@ namespace INIEditor.GUI
             this.tabActions = new System.Windows.Forms.TabControl();
             this.tpSection = new System.Windows.Forms.TabPage();
             this.dgvProperties = new System.Windows.Forms.DataGridView();
-            this.tpProperty = new System.Windows.Forms.TabPage();
             this.colSection = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colProperty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tpProperty = new System.Windows.Forms.TabPage();
             this.mnuMain.SuspendLayout();
             this.pnlFiles.SuspendLayout();
             this.pnlSectionHeader.SuspendLayout();
@@ -60,32 +63,56 @@ namespace INIEditor.GUI
             // mnuMain
             // 
             this.mnuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.editToolStripMenuItem,
-            this.helpToolStripMenuItem});
+            this.mnuFile,
+            this.mnuEdit,
+            this.mnuTools,
+            this.mnuHelp});
             this.mnuMain.Location = new System.Drawing.Point(0, 0);
             this.mnuMain.Name = "mnuMain";
             this.mnuMain.Size = new System.Drawing.Size(798, 24);
             this.mnuMain.TabIndex = 0;
             this.mnuMain.Text = "menuStrip1";
             // 
-            // fileToolStripMenuItem
+            // mnuFile
             // 
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
-            this.fileToolStripMenuItem.Text = "File";
+            this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripMenuItem});
+            this.mnuFile.Name = "mnuFile";
+            this.mnuFile.Size = new System.Drawing.Size(35, 20);
+            this.mnuFile.Text = "File";
             // 
-            // editToolStripMenuItem
+            // saveToolStripMenuItem
             // 
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.editToolStripMenuItem.Text = "Edit";
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.saveToolStripMenuItem.Text = "Save";
             // 
-            // helpToolStripMenuItem
+            // mnuEdit
             // 
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
-            this.helpToolStripMenuItem.Text = "Help";
+            this.mnuEdit.Name = "mnuEdit";
+            this.mnuEdit.Size = new System.Drawing.Size(37, 20);
+            this.mnuEdit.Text = "Edit";
+            // 
+            // mnuTools
+            // 
+            this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuToolsGenerateXMLFile});
+            this.mnuTools.Name = "mnuTools";
+            this.mnuTools.Size = new System.Drawing.Size(44, 20);
+            this.mnuTools.Text = "Tools";
+            // 
+            // mnuToolsGenerateXMLFile
+            // 
+            this.mnuToolsGenerateXMLFile.Name = "mnuToolsGenerateXMLFile";
+            this.mnuToolsGenerateXMLFile.Size = new System.Drawing.Size(190, 22);
+            this.mnuToolsGenerateXMLFile.Text = "Generate XML Init File";
+            this.mnuToolsGenerateXMLFile.Click += new System.EventHandler(this.mnuToolsGenerateXMLFile_Click);
+            // 
+            // mnuHelp
+            // 
+            this.mnuHelp.Name = "mnuHelp";
+            this.mnuHelp.Size = new System.Drawing.Size(40, 20);
+            this.mnuHelp.Text = "Help";
             // 
             // tbrMain
             // 
@@ -213,6 +240,37 @@ namespace INIEditor.GUI
             this.dgvProperties.TabIndex = 0;
             this.dgvProperties.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProperties_CellDoubleClick);
             // 
+            // colSection
+            // 
+            this.colSection.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.colSection.HeaderText = "Section";
+            this.colSection.Name = "colSection";
+            this.colSection.ReadOnly = true;
+            this.colSection.Width = 66;
+            // 
+            // colProperty
+            // 
+            this.colProperty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.colProperty.HeaderText = "Property";
+            this.colProperty.Name = "colProperty";
+            this.colProperty.ReadOnly = true;
+            this.colProperty.Width = 69;
+            // 
+            // colValue
+            // 
+            this.colValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.colValue.HeaderText = "Value";
+            this.colValue.Name = "colValue";
+            this.colValue.ReadOnly = true;
+            this.colValue.Width = 57;
+            // 
+            // colDescription
+            // 
+            this.colDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colDescription.HeaderText = "Description";
+            this.colDescription.Name = "colDescription";
+            this.colDescription.ReadOnly = true;
+            // 
             // tpProperty
             // 
             this.tpProperty.Location = new System.Drawing.Point(4, 22);
@@ -221,33 +279,6 @@ namespace INIEditor.GUI
             this.tpProperty.Size = new System.Drawing.Size(446, 339);
             this.tpProperty.TabIndex = 1;
             this.tpProperty.UseVisualStyleBackColor = true;
-            // 
-            // colSection
-            // 
-            this.colSection.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colSection.HeaderText = "Section";
-            this.colSection.Name = "colSection";
-            this.colSection.Width = 66;
-            // 
-            // colProperty
-            // 
-            this.colProperty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colProperty.HeaderText = "Property";
-            this.colProperty.Name = "colProperty";
-            this.colProperty.Width = 69;
-            // 
-            // colValue
-            // 
-            this.colValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colValue.HeaderText = "Value";
-            this.colValue.Name = "colValue";
-            this.colValue.Width = 57;
-            // 
-            // colDescription
-            // 
-            this.colDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colDescription.HeaderText = "Description";
-            this.colDescription.Name = "colDescription";
             // 
             // MainForm
             // 
@@ -291,9 +322,9 @@ namespace INIEditor.GUI
         private System.Windows.Forms.Label lblFiles;
         private System.Windows.Forms.Panel pnlSectionHeader;
         private System.Windows.Forms.Label lblSectionHeader;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mnuFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuEdit;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelp;
         private System.Windows.Forms.TabControl tabActions;
         private System.Windows.Forms.TabPage tpSection;
         private System.Windows.Forms.DataGridView dgvProperties;
@@ -302,6 +333,9 @@ namespace INIEditor.GUI
         private System.Windows.Forms.DataGridViewTextBoxColumn colProperty;
         private System.Windows.Forms.DataGridViewTextBoxColumn colValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDescription;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mnuTools;
+        private System.Windows.Forms.ToolStripMenuItem mnuToolsGenerateXMLFile;
     }
 }
 
