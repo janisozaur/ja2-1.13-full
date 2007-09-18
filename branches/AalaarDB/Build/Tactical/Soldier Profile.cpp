@@ -223,6 +223,8 @@ extern SOLDIERTYPE			*gpSMCurrentMerc;
 extern BOOLEAN	gfRerenderInterfaceFromHelpText;
 
 
+// CHRISL: External function call to resort profile inventory
+extern void DistributeInitialGear(MERCPROFILESTRUCT *pProfile);
 BOOLEAN LoadMercProfiles(void)
 {
 	PERFORMANCE_MARKER
@@ -241,7 +243,7 @@ BOOLEAN LoadMercProfiles(void)
 	STR8 pFileName3_Tons = "BINARYDATA\\Prof_Expert_TonsOfGuns.dat";
 	STR8 pFileName4_Tons = "BINARYDATA\\Prof_Insane_TonsOfGuns.dat";
 
-	UINT32 uiLoop, uiLoop2;//, uiLoop3;
+	UINT32 invSlot;//, uiLoop3;
 	UINT16 usItem;//, usNewGun, usAmmo, usNewAmmo;
 	switch ( gGameOptions.ubDifficultyLevel)
 	{
@@ -280,94 +282,105 @@ BOOLEAN LoadMercProfiles(void)
 		return(FALSE);
 	}
 
-	for(uiLoop=0; uiLoop< NUM_PROFILES; uiLoop++)
+	for(int profileNum=0; profileNum< NUM_PROFILES; profileNum++)
 	{
-		if( !gMercProfiles[uiLoop].Load(fptr, true))
+		if( !gMercProfiles[profileNum].Load(fptr, true))
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s",uiLoop, pFileName) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s",profileNum, pFileName) );
 			FileClose( fptr );
 			return(FALSE);
 		}
 
 		// CHRISL: Overwrite inventory data pulled from prof.dat with data stored in gMercProfileGear
 		// Start by resetting all profile inventory values to 0
-		gMercProfiles[uiLoop].clearInventory();
-		gMercProfiles[uiLoop].ubInvUndroppable = 0;
+		gMercProfiles[profileNum].clearInventory();
+		gMercProfiles[profileNum].ubInvUndroppable = 0;
 		// Next, go through and assign everything but lbe gear
-		for(uiLoop2=INV_START_POS; uiLoop2<OldInventory::NUM_INV_SLOTS; uiLoop2++)
+		for(invSlot=INV_START_POS; invSlot<NUM_INV_SLOTS; invSlot++)
 		{
-			gMercProfiles[uiLoop].inv[uiLoop2] = gMercProfileGear[uiLoop].inv[uiLoop2];
-			gMercProfiles[uiLoop].bInvStatus[uiLoop2] = gMercProfileGear[uiLoop].iStatus[uiLoop2];
-			if(gMercProfiles[uiLoop].inv[uiLoop2] != NONE)
+			gMercProfiles[profileNum].inv[invSlot] = gMercProfileGear[profileNum].inv[invSlot];
+			gMercProfiles[profileNum].bInvStatus[invSlot] = gMercProfileGear[profileNum].iStatus[invSlot];
+			if(gMercProfiles[profileNum].inv[invSlot] != NONE)
 			{
-				if(uiLoop2 > 5)
-					gMercProfiles[uiLoop].bInvNumber[uiLoop2] = gMercProfileGear[uiLoop].iNumber[uiLoop2];
+				if(invSlot < BODYPOSFINAL)
+					gMercProfiles[profileNum].bInvNumber[invSlot] = 1;
 				else
-					gMercProfiles[uiLoop].bInvNumber[uiLoop2] = 1;
-				if(!gMercProfileGear[uiLoop].iDrop[uiLoop2] && uiLoop > 56)
-					gMercProfiles[uiLoop].ubInvUndroppable |= gubItemDroppableFlag[uiLoop2];
+					gMercProfiles[profileNum].bInvNumber[invSlot] = gMercProfileGear[profileNum].iNumber[invSlot];
+
+				if(!gMercProfileGear[profileNum].iDrop[invSlot] && profileNum > 56)
+					gMercProfiles[profileNum].ubInvUndroppable |= gubItemDroppableFlag[invSlot];
 			}
 		}
 		// Last, go through and assign LBE items.  Only needed for new inventory system
-		if((UsingNewInventorySystem() == true))
+		if(UsingNewInventorySystem() == true)
 		{
-			for(uiLoop2=0; uiLoop2<5; uiLoop2++)
+			for(int LBESlot=0; LBESlot<5; LBESlot++)
 			{
-				UINT32 uiLoop3 = uiLoop2 + OldInventory::NUM_INV_SLOTS; 
-				gMercProfiles[uiLoop].inv[uiLoop3] = gMercProfileGear[uiLoop].lbe[uiLoop2];
-				gMercProfiles[uiLoop].bInvStatus[uiLoop3] = gMercProfileGear[uiLoop].lStatus[uiLoop2];
-				if(gMercProfiles[uiLoop].inv[uiLoop3] != NONE)
-					gMercProfiles[uiLoop].bInvNumber[uiLoop3] = 1;
+				for (unsigned int freeSlot = BIGPOCKSTART; freeSlot < SMALLPOCKFINAL; ++freeSlot) {
+					if (gMercProfiles[profileNum].inv[freeSlot] == NONE) {
+						gMercProfiles[profileNum].inv[freeSlot] = gMercProfileGear[profileNum].lbe[LBESlot];
+						gMercProfiles[profileNum].bInvStatus[freeSlot] = gMercProfileGear[profileNum].lStatus[LBESlot];
+						if(gMercProfiles[profileNum].inv[freeSlot] != NONE)
+							gMercProfiles[profileNum].bInvNumber[freeSlot] = 1;
+						break;
+					}
+				}
 			}
 		}
 
+
+		//ADB once all items are in the first 19 or 24 slots or so, rearrange them
+		//needs to happen in old and new, until the time when old inv is set up properly
+		//this function can handle old and new!!!
+		DistributeInitialGear(&gMercProfiles[profileNum]);
+
 		//if the Dialogue exists for the merc, allow the merc to be hired
-		if( DialogueDataFileExistsForProfile( (UINT8)uiLoop, 0, FALSE, NULL ) )
+		if( DialogueDataFileExistsForProfile( (UINT8)profileNum, 0, FALSE, NULL ) )
 		{
-			gMercProfiles[uiLoop].bMercStatus = 0;
+			gMercProfiles[profileNum].bMercStatus = 0;
 		}
 		else
-			gMercProfiles[uiLoop].bMercStatus = MERC_HAS_NO_TEXT_FILE;
+			gMercProfiles[profileNum].bMercStatus = MERC_HAS_NO_TEXT_FILE;
 
 		// if the merc has a medical deposit
-		if( gMercProfiles[ uiLoop ].bMedicalDeposit )
+		if( gMercProfiles[ profileNum ].bMedicalDeposit )
 		{
-			gMercProfiles[uiLoop].sMedicalDepositAmount = CalcMedicalDeposit( &gMercProfiles[uiLoop]);
+			gMercProfiles[profileNum].sMedicalDepositAmount = CalcMedicalDeposit( &gMercProfiles[profileNum]);
 		}
 		else
-			gMercProfiles[uiLoop].sMedicalDepositAmount = 0;
+			gMercProfiles[profileNum].sMedicalDepositAmount = 0;
 
 		// ATE: New, face display indipendent of ID num now
 		// Setup face index value
 		// Default is the ubCharNum
-		gMercProfiles[uiLoop].ubFaceIndex = (UINT8)uiLoop;
+		gMercProfiles[profileNum].ubFaceIndex = (UINT8)profileNum;
 /*
 		if ( !gGameOptions.fGunNut )
 		{
 
 			// CJC: replace guns in profile if they aren't available
-			for ( uiLoop2 = 0; uiLoop2 < gMercProfiles[uiLoop].inv.size(); uiLoop2++ )
+			for ( invSlot = 0; invSlot < gMercProfiles[profileNum].inv.size(); invSlot++ )
 			{
-				usItem = gMercProfiles[uiLoop].inv[ uiLoop2 ];
+				usItem = gMercProfiles[profileNum].inv[ invSlot ];
 
 				if ( ( Item[ usItem ].usItemClass & IC_GUN ) && ExtendedGunListGun( usItem ) )
 				{
 					usNewGun = StandardGunListReplacement( usItem );
 					if ( usNewGun != NOTHING )
 					{
-						gMercProfiles[uiLoop].inv[ uiLoop2 ] = usNewGun;
+						gMercProfiles[profileNum].inv[ invSlot ] = usNewGun;
 
 						// must search through inventory and replace ammo accordingly
-						for ( uiLoop3 = 0; uiLoop3 < gMercProfiles[ uiLoop ].inv.size(); uiLoop3++ )
+						for ( uiLoop3 = 0; uiLoop3 < gMercProfiles[ profileNum ].inv.size(); uiLoop3++ )
 						{
-							usAmmo = gMercProfiles[ uiLoop ].inv[ uiLoop3 ];
+							usAmmo = gMercProfiles[ profileNum ].inv[ uiLoop3 ];
 							if ( (Item[ usAmmo ].usItemClass & IC_AMMO) )
 							{
 								usNewAmmo = FindReplacementMagazineIfNecessary( usItem, usAmmo, usNewGun );
 								if (usNewAmmo != NOTHING )
 								{
 									// found a new magazine, replace...
-									gMercProfiles[ uiLoop ].inv[ uiLoop3 ] = usNewAmmo;
+									gMercProfiles[ profileNum ].inv[ uiLoop3 ] = usNewAmmo;
 								}
 							}
 						}
@@ -380,25 +393,25 @@ BOOLEAN LoadMercProfiles(void)
 */
 		//ATE: Calculate some inital attractiveness values for buddy's inital equipment...
 		// Look for gun and armour
-		gMercProfiles[uiLoop].bMainGunAttractiveness		= -1;
-		gMercProfiles[uiLoop].bArmourAttractiveness			= -1;
+		gMercProfiles[profileNum].bMainGunAttractiveness		= -1;
+		gMercProfiles[profileNum].bArmourAttractiveness			= -1;
 
-		for ( uiLoop2 = 0; uiLoop2 < gMercProfiles[uiLoop].inv.size(); uiLoop2++ )
+		for ( invSlot = 0; invSlot < gMercProfiles[profileNum].inv.size(); invSlot++ )
 		{
-			usItem = gMercProfiles[uiLoop].inv[ uiLoop2 ];
+			usItem = gMercProfiles[profileNum].inv[ invSlot ];
 
 			if ( usItem != NOTHING )
 			{
 				// Check if it's a gun
 				if ( Item[ usItem ].usItemClass & IC_GUN )
 				{
-					gMercProfiles[uiLoop].bMainGunAttractiveness = Weapon[ usItem ].ubDeadliness;
+					gMercProfiles[profileNum].bMainGunAttractiveness = Weapon[ usItem ].ubDeadliness;
 				}
 
 				// If it's armour
 				if ( Item[ usItem ].usItemClass & IC_ARMOUR )
 				{
-					gMercProfiles[uiLoop].bArmourAttractiveness = min(128,Armour[ Item[ usItem ].ubClassIndex ].ubProtection);
+					gMercProfiles[profileNum].bArmourAttractiveness = min(128,Armour[ Item[ usItem ].ubClassIndex ].ubProtection);
 				}
 			}
 		}
@@ -407,28 +420,28 @@ BOOLEAN LoadMercProfiles(void)
 		// OK, if we are a created slot, this will get overriden at some time..
 
 		//add up the items the merc has for the usOptionalGearCost
-		gMercProfiles[ uiLoop ].usOptionalGearCost = 0;
-		for ( uiLoop2 = 0; uiLoop2< gMercProfiles[ uiLoop ].inv.size(); uiLoop2++ )
+		gMercProfiles[ profileNum ].usOptionalGearCost = 0;
+		for ( invSlot = 0; invSlot< gMercProfiles[ profileNum ].inv.size(); invSlot++ )
 		{
-			if ( gMercProfiles[ uiLoop ].inv[ uiLoop2 ] != NOTHING )
+			if ( gMercProfiles[ profileNum ].inv[ invSlot ] != NOTHING )
 			{
 				//get the item
-				usItem = gMercProfiles[ uiLoop ].inv[ uiLoop2 ];
+				usItem = gMercProfiles[ profileNum ].inv[ invSlot ];
 
 				//add the cost
-				gMercProfiles[ uiLoop ].usOptionalGearCost += Item[ usItem ].usPrice;
+				gMercProfiles[ profileNum ].usOptionalGearCost += Item[ usItem ].usPrice;
 			}
 		}
 
 		//These variables to get loaded in
-		gMercProfiles[ uiLoop ].fUseProfileInsertionInfo = FALSE;
-		gMercProfiles[ uiLoop ].sGridNo = 0;
+		gMercProfiles[ profileNum ].fUseProfileInsertionInfo = FALSE;
+		gMercProfiles[ profileNum ].sGridNo = 0;
 
 		// ARM: this is also being done inside the profile editor, but put it here too, so this project's code makes sense
-		gMercProfiles[ uiLoop ].bHatedCount[0]	= gMercProfiles[ uiLoop ].bHatedTime[0];
-		gMercProfiles[ uiLoop ].bHatedCount[1]	= gMercProfiles[ uiLoop ].bHatedTime[1];
-		gMercProfiles[ uiLoop ].bLearnToHateCount = gMercProfiles[ uiLoop ].bLearnToHateTime;
-		gMercProfiles[ uiLoop ].bLearnToLikeCount = gMercProfiles[ uiLoop ].bLearnToLikeTime;
+		gMercProfiles[ profileNum ].bHatedCount[0]	= gMercProfiles[ profileNum ].bHatedTime[0];
+		gMercProfiles[ profileNum ].bHatedCount[1]	= gMercProfiles[ profileNum ].bHatedTime[1];
+		gMercProfiles[ profileNum ].bLearnToHateCount = gMercProfiles[ profileNum ].bLearnToHateTime;
+		gMercProfiles[ profileNum ].bLearnToLikeCount = gMercProfiles[ profileNum ].bLearnToLikeTime;
 	}
 
 	// SET SOME DEFAULT LOCATIONS FOR STARTING NPCS

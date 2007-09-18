@@ -266,6 +266,10 @@ UINT32 EditScreenShutdown(void)
 	GameShutdownEditorMercsInfo();
 	RemoveAllFromUndoList();
 	KillClipboard();
+	if( gfWorldLoaded )
+	{
+		KillItemPoolList();
+	}
 	return TRUE;
 }
 

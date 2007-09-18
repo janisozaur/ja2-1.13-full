@@ -410,8 +410,10 @@ BOOLEAN RenderItemInPoolSlot( INT32 iCurrentSlot, INT32 iFirstSlotOnPage )
 				( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].bSectorZ == iCurrentMapSectorZ )
 			) )
 	{
-		//Shade the item
-		DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, MAP_INVEN_SLOT_WIDTH, MAP_INVEN_SLOT_IMAGE_HEIGHT );
+		//Shade the item, but only if it is an active item!
+		if ( pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].object.exists() == true) {
+			DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, MAP_INVEN_SLOT_WIDTH, MAP_INVEN_SLOT_IMAGE_HEIGHT );
+		}
 	}
 
 
@@ -816,8 +818,6 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 	INT32 iCounter = 0;
 	UINT16 usOldItemIndex, usNewItemIndex;
 	INT32 iOldNumberOfObjects = 0;
-	INT16 sDistanceFromObject = 0;
-	SOLDIERTYPE *pSoldier = NULL;
 	CHAR16 sString[ 128 ];
 
 	iCounter = MSYS_GetRegionUserData( pRegion, 0 );
@@ -905,6 +905,7 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 				return;
 			}
 
+#ifdef UNUSEDCODE
 			sObjectSourceGridNo = pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].sGridNo;
 
 			// check if this is the loaded sector, if so, then notify player, can't do anything
@@ -915,15 +916,15 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 
 				sDistanceFromObject = PythSpacesAway( sObjectSourceGridNo, pSoldier->sGridNo);
 
-			/*	if( sDistanceFromObject > MAX_DISTANCE_TO_PICKUP_ITEM )
+				if( sDistanceFromObject > MAX_DISTANCE_TO_PICKUP_ITEM )
 				{
 					// see for the loaded sector if the merc is cloase enough?
 					swprintf( sString, pMapInventoryErrorString[ 0 ], Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].name ); 
 					DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 					return;
 				}
-				*/
 			}
+#endif
 
 			BeginInventoryPoolPtr( &( pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].object ) );
 		}
@@ -1385,30 +1386,35 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 	}
 	else
 	{
-		fOk = (0 == pInventorySlot->MoveThisObjectTo(gItemPointer));
+		fOk = (0 == pInventorySlot->MoveThisObjectTo(gItemPointer, 1));
 	}
 
 	if (fOk)
 	{
+		if (pInventorySlot->exists() == false) {
+			pInventorySlot->usItem = NOTHING;
+		}
 		// Dirty interface
 		fMapPanelDirty = TRUE;
 		gpItemPointer = &gItemPointer;
 
-		if ( _KeyDown ( CTRL ))
+		if ( _KeyDown ( CTRL ))//Delete Item
 		{
-			INT16 usDesiredItemType = gItemPointer.usItem;
-
 			gpItemPointer = NULL;
 			fMapInventoryItem = FALSE;
 
 			if ( _KeyDown ( 89 )) //Lalien: delete all items of this type on Ctrl+Y 
 			{
-				DeleteItemsOfType( usDesiredItemType );
+				DeleteItemsOfType( gItemPointer.usItem );
+				ScreenMsg( FONT_MCOLOR_LTRED, MSG_INTERFACE, L"Deleted all items of this type" );
+			}
+			else {
+				ScreenMsg( FONT_MCOLOR_LTRED, MSG_INTERFACE, L"Deleted item" );
 			}
 			if ( fShowMapInventoryPool )
 				HandleButtonStatesWhileMapInventoryActive();
 		}
-		else if ( _KeyDown ( ALT ) && fSELLALL)
+		else if ( _KeyDown ( ALT ) && fSELLALL)//Sell Item
 		{
 			INT32 iPrice = SellItem( gItemPointer );
 		    PlayJA2Sample( COMPUTER_BEEP2_IN, RATE_11025, 15, 1, MIDDLEPAN );			              
@@ -1425,11 +1431,18 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 					}
 				}
 			}
-
 			//ADB you can sell items for 0, but that's not fair
 			//and it's not easy to stop the sale so make the price 1
 			if (iPrice == 0) {
 				iPrice = 1;
+			}
+
+			if ( _KeyDown ( 89 )) //Lalien: sell all items of this type on Alt+Y 
+			{
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Sold all items of this type" );
+			}
+			else {
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Sold item" );
 			}
 
 			AddTransactionToPlayersBook( SOLD_ITEMS, 0, GetWorldTotalMin(), iPrice );
@@ -1473,7 +1486,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 		if (pItemPtr->usItem == pInventorySlot->usItem && ItemSlotLimit(pItemPtr, STACK_SIZE_LIMIT) >= 2)
 		{
 			// stacking
-			pItemPtr->AddObjectsToStack(*pInventorySlot);
+			pInventorySlot->AddObjectsToStack(*pItemPtr);
 		}
 		else
 		{
@@ -2079,7 +2092,7 @@ void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArr
 		//if object exists, we want to try to stack it
 		if (iter->fExists && iter->object.exists() == true) {
 
-			//TODO if it is active and reachable etc
+			//ADB TODO if it is active and reachable etc
 #if 0
 			if (iter->object.ubNumberOfObjects < ItemSlotLimit( iter->object.usItem, STACK_SIZE_LIMIT )) {
 				std::vector<WORLDITEM>::iterator second = iter;

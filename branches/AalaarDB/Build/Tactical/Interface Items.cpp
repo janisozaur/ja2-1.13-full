@@ -866,74 +866,6 @@ void InitInvData(INT8 num, BOOLEAN fBigPocket, INT16 sBarDx, INT16 sBarDy, INT16
 }
 void InitInventoryOld()
 {
-	/*
-	UINT8 oldItemDroppableFlags[NUM_INV_SLOTS] =
-	{
-		0x01,
-		0x02,
-		0x04,
-		0,
-		0,
-		0x08,//HANDPOS
-
-		0, //SECONDHANDPOS,
-		0, //VESTPOCKPOS,
-		0, //LTHIGHPOCKPOS,
-		0, //RTHIGHPOCKPOS,
-		0, //CPACKPOCKPOS,
-		0, //BPACKPOCKPOS,
-		0, //GUNSLINGPOCKPOS,
-		0, //KNIFEPOCKPOS,
-
-		0x10,//BIGPOCK1POS
-		0x20,
-		0x40,
-		0x80,
-
-		0, //BIGPOCK5POS,
-		0, //BIGPOCK6POS,
-		0, //BIGPOCK7POS,
-		0, //MEDPOCK1POS,
-		0, //MEDPOCK2POS,
-		0, //MEDPOCK3POS,
-		0, //MEDPOCK4POS,
-		0, //SMALLPOCK1POS,
-		0, //SMALLPOCK2POS,
-		0, //SMALLPOCK3POS,
-		0, //SMALLPOCK4POS,
-		0, //SMALLPOCK5POS,
-		0, //SMALLPOCK6POS,
-		0, //SMALLPOCK7POS,
-		0, //SMALLPOCK8POS,
-		0, //SMALLPOCK9POS,
-		0, //SMALLPOCK10POS,
-		0, //SMALLPOCK11POS,
-		0, //SMALLPOCK12POS,
-		0, //SMALLPOCK13POS,
-		0, //SMALLPOCK14POS,
-		0, //SMALLPOCK15POS,
-		0, //SMALLPOCK16POS,
-		0, //SMALLPOCK17POS,
-		0, //SMALLPOCK18POS,
-		0, //SMALLPOCK19POS,
-		0, //SMALLPOCK20POS,
-		0, //SMALLPOCK21POS,
-		0, //SMALLPOCK22POS,
-		0, //SMALLPOCK23POS,
-		0, //SMALLPOCK24POS,
-		0, //SMALLPOCK25POS,
-		0, //SMALLPOCK26POS,
-		0, //SMALLPOCK27POS,
-		0, //SMALLPOCK28POS,
-		0, //SMALLPOCK29POS,
-		0, //SMALLPOCK30POS,
-	};
-
-	gubItemDroppableFlag = oldItemDroppableFlags;
-*/
-
-
-
 	BODYPOSFINAL		= GUNSLINGPOCKPOS;//RESET in initInventory
 	BIGPOCKFINAL		= BIGPOCK5POS;//RESET in initInventory
 	MEDPOCKSTART		= SMALLPOCK1POS;//RESET in initInventory
@@ -963,73 +895,6 @@ void InitInventoryOld()
 }
 void InitInventoryNew()
 {
-	/*
-	UINT8 newItemDroppableFlags[NUM_INV_SLOTS] =
-	{
-		0x01,
-		0x02,
-		0x04,
-		0,
-		0,
-		0x08,//HANDPOS
-
-		0, //SECONDHANDPOS,
-		0, //VESTPOCKPOS,
-		0, //LTHIGHPOCKPOS,
-		0, //RTHIGHPOCKPOS,
-		0, //CPACKPOCKPOS,
-		0, //BPACKPOCKPOS,
-		0, //GUNSLINGPOCKPOS,
-		0, //KNIFEPOCKPOS,
-
-		0x10,//BIGPOCK1POS
-		0x20,
-		0x40,
-		0x80,
-
-		0, //BIGPOCK5POS,
-		0, //BIGPOCK6POS,
-		0, //BIGPOCK7POS,
-		0, //MEDPOCK1POS,
-		0, //MEDPOCK2POS,
-		0, //MEDPOCK3POS,
-		0, //MEDPOCK4POS,
-		0, //SMALLPOCK1POS,
-		0, //SMALLPOCK2POS,
-		0, //SMALLPOCK3POS,
-		0, //SMALLPOCK4POS,
-		0, //SMALLPOCK5POS,
-		0, //SMALLPOCK6POS,
-		0, //SMALLPOCK7POS,
-		0, //SMALLPOCK8POS,
-		0, //SMALLPOCK9POS,
-		0, //SMALLPOCK10POS,
-		0, //SMALLPOCK11POS,
-		0, //SMALLPOCK12POS,
-		0, //SMALLPOCK13POS,
-		0, //SMALLPOCK14POS,
-		0, //SMALLPOCK15POS,
-		0, //SMALLPOCK16POS,
-		0, //SMALLPOCK17POS,
-		0, //SMALLPOCK18POS,
-		0, //SMALLPOCK19POS,
-		0, //SMALLPOCK20POS,
-		0, //SMALLPOCK21POS,
-		0, //SMALLPOCK22POS,
-		0, //SMALLPOCK23POS,
-		0, //SMALLPOCK24POS,
-		0, //SMALLPOCK25POS,
-		0, //SMALLPOCK26POS,
-		0, //SMALLPOCK27POS,
-		0, //SMALLPOCK28POS,
-		0, //SMALLPOCK29POS,
-		0, //SMALLPOCK30POS,
-	};
-
-	gubItemDroppableFlag = newItemDroppableFlags;
-*/
-
-
 	BODYPOSFINAL		= GUNSLINGPOCKPOS;//RESET in initInventory
 	BIGPOCKFINAL		= MEDPOCK1POS;//RESET in initInventory
 	MEDPOCKSTART		= MEDPOCK1POS;//RESET in initInventory
@@ -1613,10 +1478,7 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 	if (!gfSMDisableForItems && (UsingNewInventorySystem() == true) && gpItemPointer != NULL)
 	{
 		int itemSlotLimit = ItemSlotLimit(gpItemPointer, sPocket, pSoldier);
-		RenderPocketItemCapacity( itemSlotLimit, sPocket, pSoldier);
-		if(itemSlotLimit == 0 || !CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)sPocket, FALSE)) {
-			fHatchItOut = TRUE;
-		}
+		fHatchItOut = !RenderPocketItemCapacity( itemSlotLimit, sPocket, pSoldier);
 	}
 
 	// CHRISL: Change whether we hatch a pocket to be dependant on the current item
@@ -2449,23 +2311,26 @@ void InitItemInterface( )
 }
 
 // CHRISL: Function to display pocket inventory quantity based on object in cursor
-void RenderPocketItemCapacity( INT8 pCapacity, INT16 bPos, SOLDIERTYPE *pSoldier )
+bool RenderPocketItemCapacity( INT8 pCapacity, INT16 bPos, SOLDIERTYPE *pSoldier )
 {
 	INT16				sX, sY;
 	static CHAR16		pStr[ 100 ];
 
-	// Can pocket hold the item in the cursor?
-	if(!CanItemFitInPosition( pSoldier, gpItemPointer, (INT8)bPos, FALSE ) || (pCapacity == 0 && !CompatibleAmmoForGun(gpItemPointer, &pSoldier->inv[bPos])) || InItemDescriptionBox( ))
-		return;
-
+	bool shouldNOTBeHatched = false;
+	bool thereIsText = false;
 	// Setup display parameters
 	SetFont( ITEM_FONT );
 	SetFontBackground( FONT_MCOLOR_BLACK );
 	SetFontForeground( FONT_RED );
-	if(CompatibleAmmoForGun(gpItemPointer, &pSoldier->inv[bPos]))
+	if(CompatibleAmmoForGun(gpItemPointer, &pSoldier->inv[bPos])) {
+		shouldNOTBeHatched = true;
+		thereIsText = true;
 		swprintf( pStr, L"L" );
+	}
 	else if(pCapacity != 0 && CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)bPos, FALSE))
 	{
+		shouldNOTBeHatched = true;
+		thereIsText = true;
 		// Adjust capacity to account for current items
 		if(gpItemPointer->usItem == pSoldier->inv[bPos].usItem)
 		{
@@ -2478,18 +2343,24 @@ void RenderPocketItemCapacity( INT8 pCapacity, INT16 bPos, SOLDIERTYPE *pSoldier
 		else
 			swprintf( pStr, L"%d", pCapacity );
 	}
-	sX = gSMInvData[ bPos ].sX + 1;
-	sY = gSMInvData[ bPos ].sY;
-	UINT32 uiWhichBuffer = ( guiCurrentItemDescriptionScreen == MAP_SCREEN ) ? guiSAVEBUFFER : guiRENDERBUFFER;
-
-	// Display pocket capacity
-	if ( uiWhichBuffer == guiSAVEBUFFER )
-	{
-		RestoreExternBackgroundRect( sX, sY, 15, 15 );
+	else if (pSoldier->inv[bPos].exists() == true && ValidAttachment(gpItemPointer->usItem, pSoldier->inv[bPos].usItem) == TRUE) {
+		shouldNOTBeHatched = false;
+		thereIsText = true;
+		swprintf( pStr, L"A" );
 	}
-	mprintf( sX, sY, pStr );
-	gprintfinvalidate( sX, sY, pStr );
-	return;
+
+	if (thereIsText == true) {
+		sX = gSMInvData[ bPos ].sX + 1;
+		sY = gSMInvData[ bPos ].sY;
+		// Display pocket capacity
+		if ( guiCurrentItemDescriptionScreen == MAP_SCREEN )
+		{
+			RestoreExternBackgroundRect( sX, sY, 15, 15 );
+		}
+		mprintf( sX, sY, pStr );
+		gprintfinvalidate( sX, sY, pStr );
+	}
+	return shouldNOTBeHatched;
 }
 // CHRISL: New function to render silhouettes
 void INVRenderSilhouette( UINT32 uiBuffer, INT16 PocketIndex, INT16 SilIndex, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight)

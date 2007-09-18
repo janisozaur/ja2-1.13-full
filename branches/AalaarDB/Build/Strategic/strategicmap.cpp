@@ -4525,6 +4525,7 @@ BOOLEAN IsThereAFunctionalSAMSiteInSector( INT16 sSectorX, INT16 sSectorY, INT8 
 BOOLEAN IsThisSectorASAMSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
 	PERFORMANCE_MARKER
+	INT32	cnt;
 
 	// is the sector above ground?
 	if( bSectorZ != 0 )
@@ -4532,21 +4533,10 @@ BOOLEAN IsThisSectorASAMSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 		return( FALSE );
 	}
 
-	if( ( SAM_1_X == sSectorX ) && ( SAM_1_Y == sSectorY ) )
+	for ( cnt = 0; cnt < NUMBER_OF_SAMS; cnt++ )
 	{
-		return( TRUE );
-	}
-	else 	if( ( SAM_2_X == sSectorX ) && ( SAM_2_Y == sSectorY ) )
-	{
-		return( TRUE );
-	}
-	else 	if( ( SAM_3_X == sSectorX ) && ( SAM_3_Y == sSectorY ) )
-	{
-		return( TRUE );
-	}
-	else 	if( ( SAM_4_X == sSectorX ) && ( SAM_4_Y == sSectorY ) )
-	{
-		return( TRUE );
+		if( ( sSectorX == gpSamSectorX[cnt] ) && ( sSectorY == gpSamSectorY[cnt] ) )
+			return( TRUE );
 	}
 
 	return ( FALSE );

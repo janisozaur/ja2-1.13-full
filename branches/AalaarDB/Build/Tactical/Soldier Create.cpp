@@ -2808,9 +2808,9 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 
 	//ADB this needs to happen for all profiles, player or not.
 	// CHRISL: Resort profile items to use LBE pockets properly
-	if((UsingNewInventorySystem() == true)) {
+	//if((UsingNewInventorySystem() == true)) {
 		DistributeInitialGear(pProfile);
-	}
+	//}
 
 
 

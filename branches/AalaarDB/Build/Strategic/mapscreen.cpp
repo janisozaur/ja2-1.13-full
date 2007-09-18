@@ -7589,21 +7589,18 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 			do, remove the items from it and place them into the sector the LBE inventory is located in.*/
 			if((UsingNewInventorySystem() == true) && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 			{
-				if(uiHandPos == VESTPOCKPOS || uiHandPos == LTHIGHPOCKPOS || uiHandPos == RTHIGHPOCKPOS || uiHandPos == CPACKPOCKPOS || uiHandPos == BPACKPOCKPOS)
+				/*if we pick up a backpack without reactivating the drop pack button, and we have a
+				dropkey, reactivate the button*/
+				if(uiHandPos == BPACKPOCKPOS)
 				{
-					/*if we pick up a backpack without reactivating the drop pack button, and we have a
-					dropkey, reactivate the button*/
-					if(uiHandPos == BPACKPOCKPOS)
+					// Deal with the zipper before we do anything
+					if(pSoldier->flags.ZipperFlag)
+						if(!ChangeZipperStatus(pSoldier, FALSE))
+							return;
+					// Do we still have a linked backpack?  If so, reset droppackflag
+					if(pSoldier->DropPackKey != ITEM_NOT_FOUND)
 					{
-						// Deal with the zipper before we do anything
-						if(pSoldier->flags.ZipperFlag)
-							if(!ChangeZipperStatus(pSoldier, FALSE))
-								return;
-						// Do we still have a linked backpack?  If so, reset droppackflag
-						if(pSoldier->DropPackKey != ITEM_NOT_FOUND)
-						{
-							pSoldier->flags.DropPackFlag = TRUE;
-						}
+						pSoldier->flags.DropPackFlag = TRUE;
 					}
 				}
 			}

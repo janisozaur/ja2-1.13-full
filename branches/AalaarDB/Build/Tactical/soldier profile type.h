@@ -186,9 +186,6 @@ public:
 	std::vector<int>	iNumber;
 	std::vector<int>	lbe;
 	std::vector<int>	lStatus;
-private:
-	int			invCnt;
-	int			lbeCnt;
 };
 #define SIZEOF_MERCPROFILEGEAR_POD offsetof( MERCPROFILEGEAR, endOfPOD )
 

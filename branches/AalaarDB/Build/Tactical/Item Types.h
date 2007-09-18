@@ -102,16 +102,16 @@ typedef enum INVENTORY_SLOT{
 	NUM_INV_SLOTS,
 };
 
-#define			INV_START_POS		0
-#define			BODYPOSSTART		HELMETPOS
-extern	int		BODYPOSFINAL		;//= GUNSLINGPOCKPOS;//RESET in initInventory
-#define			BIGPOCKSTART		BIGPOCK1POS
-extern	int		BIGPOCKFINAL		;//= MEDPOCK1POS;//RESET in initInventory
-extern	int		MEDPOCKSTART		;//= MEDPOCK1POS;//RESET in initInventory
-extern	int		MEDPOCKFINAL		;//= SMALLPOCK1POS;//RESET in initInventory
-#define			SMALLPOCKSTART		SMALLPOCK1POS
-extern	int		SMALLPOCKFINAL		;//= NUM_INV_SLOTS;//RESET in initInventory
-#define			STACK_SIZE_LIMIT	NUM_INV_SLOTS
+#define					INV_START_POS		0
+#define					BODYPOSSTART		HELMETPOS
+extern	unsigned int	BODYPOSFINAL		;//= GUNSLINGPOCKPOS;//RESET in initInventory
+#define					BIGPOCKSTART		BIGPOCK1POS
+extern	unsigned int	BIGPOCKFINAL		;//= MEDPOCK1POS;//RESET in initInventory
+extern	unsigned int	MEDPOCKSTART		;//= MEDPOCK1POS;//RESET in initInventory
+extern	unsigned int	MEDPOCKFINAL		;//= SMALLPOCK1POS;//RESET in initInventory
+#define					SMALLPOCKSTART		SMALLPOCK1POS
+extern	unsigned int	SMALLPOCKFINAL		;//= NUM_INV_SLOTS;//RESET in initInventory
+#define					STACK_SIZE_LIMIT	NUM_INV_SLOTS
 
 /* CHRISL: Arrays to track ic group information.  These allow us to determine which LBE slots control which pockets and
 what LBE class the pockets are. We need to staticly set the number of keys rather then using NUM_INV_SLOTS so we don't
@@ -238,6 +238,7 @@ BOOLEAN	MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBES
 BOOLEAN	MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos );
 BOOLEAN	MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
 bool	IsSlotAnLBESlot(int slot);
+bool	IsSlotASmallPocket(int slot);
 
 extern	std::list<LBENODE>	LBEArray;
 

@@ -250,8 +250,6 @@ MERCPROFILEGEAR& MERCPROFILEGEAR::operator=(const MERCPROFILEGEAR& src) {
 		iNumber = src.iNumber;
 		lbe = src.lbe;
 		lStatus = src.lStatus;
-		invCnt = src.invCnt;
-		lbeCnt = src.lbeCnt;
     }
 	return *this;
 }
@@ -269,25 +267,21 @@ void MERCPROFILEGEAR::initialize() {
 }
 
 void MERCPROFILEGEAR::clearInventory() {
-	//ADB these really should be defines
-	invCnt = 19;
-	lbeCnt = 5;
-
 	inv.clear();
 	iStatus.clear();
 	iDrop.clear();
 	iNumber.clear();
 
-	inv.resize(invCnt);
-	iStatus.resize(invCnt);
-	iDrop.resize(invCnt);
-	iNumber.resize(invCnt);
+	inv.resize(NUM_INV_SLOTS);
+	iStatus.resize(NUM_INV_SLOTS);
+	iDrop.resize(NUM_INV_SLOTS);
+	iNumber.resize(NUM_INV_SLOTS);
 
 	lbe.clear();
 	lStatus.clear();
 
-	lbe.resize(lbeCnt);
-	lStatus.resize(lbeCnt);
+	lbe.resize(5);
+	lStatus.resize(5);
 }
 
 // ----------------------------------------

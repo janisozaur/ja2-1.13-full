@@ -149,9 +149,7 @@ void DistributeInitialGear(MERCPROFILESTRUCT *pProfile);
 INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv);
 INT32 AnyFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv);
 INT32 SpecificFreePocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHowMany, UINT32 usClass);
-INT32 PickSmallPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 iNumber, UINT8 * cap);
-INT32 PickMediumPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 iNumber, UINT8 * cap);
-INT32 PickLargePocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 iNumber, UINT8 * cap);
+INT32 PickPocket(MERCPROFILESTRUCT *pProfile, UINT8 ppStart, UINT8 ppStop, UINT16 usItem, UINT8 iNumber, UINT8 * cap);
 
 // callbacks
 void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason );
@@ -737,9 +735,9 @@ void GiveItemsToPC( UINT8 ubProfileId )
 	}
 
 	// CHRISL: Now that all items have been issued, distribute them into appropriate pockets, starting with the largest items
-	if((UsingNewInventorySystem() == true)) {
+	//if((UsingNewInventorySystem() == true)) {
 		DistributeInitialGear(pProfile);
-	}
+	//}
 }
 
 
@@ -953,11 +951,11 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv)
 	all the pockets we're going to activate.  LBE Items were all placed in SpecificFreePocket function
 	which should activate everything. */
 	//Start with active big pockets
-	sPocket=PickSmallPocket(pProfile, tInv->inv, tInv->iNumber, &sCapacity);
+	sPocket=PickPocket(pProfile, SMALLPOCKSTART, SMALLPOCKFINAL, tInv->inv, tInv->iNumber, &sCapacity);
 	//Next search active medium pockets
-	mPocket=PickMediumPocket(pProfile, tInv->inv, tInv->iNumber, &mCapacity);
+	mPocket=PickPocket(pProfile, MEDPOCKSTART, MEDPOCKFINAL, tInv->inv, tInv->iNumber, &mCapacity);
 	//Lastly search active small pockets
-	lPocket=PickLargePocket(pProfile, tInv->inv, tInv->iNumber, &lCapacity);
+	lPocket=PickPocket(pProfile, BIGPOCKSTART, BIGPOCKFINAL, tInv->inv, tInv->iNumber, &lCapacity);
 	//Finally, compare the three pockets we've found and return the pocket that is most logical to use
 	capacity = min(sCapacity, mCapacity);
 	capacity = min(lCapacity, capacity);
@@ -977,13 +975,13 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv)
 }
 
 // CHRISL: Use to find best pocket to store item in.  Could probably be merged with FitsInSmallPocket
-INT32 PickSmallPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 iNumber, UINT8 * cap)
+INT32 PickPocket(MERCPROFILESTRUCT *pProfile, UINT8 ppStart, UINT8 ppStop, UINT16 usItem, UINT8 iNumber, UINT8 * cap)
 {
 	UINT16	pIndex=0;
 	INT32	pocket=0;
 	UINT8	capacity=254;
 
-	for(UINT32 uiPos=SMALLPOCKSTART; uiPos<SMALLPOCKFINAL; uiPos++){
+	for(UINT32 uiPos=ppStart; uiPos<ppStop; uiPos++){
 		if(pProfile->inv[icLBE[uiPos]]==0){
 			pIndex=LoadBearingEquipment[icClass[uiPos]].lbePocketIndex[icPocket[uiPos]];
 		}
@@ -1010,73 +1008,6 @@ INT32 PickSmallPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 iNumber,
 		return -1;
 	}
 }
-INT32 PickMediumPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 iNumber, UINT8 * cap)
-{
-	UINT16	pIndex=0;
-	INT32	pocket=0;
-	UINT8	capacity=254;
-
-	for(UINT32 uiPos=MEDPOCKSTART; uiPos<MEDPOCKFINAL; uiPos++){
-		if(pProfile->inv[icLBE[uiPos]]==0){
-			pIndex=LoadBearingEquipment[icClass[uiPos]].lbePocketIndex[icPocket[uiPos]];
-		}
-		else {
-			pIndex=LoadBearingEquipment[Item[pProfile->inv[icLBE[uiPos]]].ubClassIndex].lbePocketIndex[icPocket[uiPos]];
-		}
-		// Here's were we get complicated.  We should look for the smallest pocket all items can fit in
-		if(LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize] >= iNumber &&
-			LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize] < capacity &&
-			pProfile->inv[uiPos] == 0) {
-				if((LBEPocketType[pIndex].pRestriction != 0 && LBEPocketType[pIndex].pRestriction == Item[usItem].usItemClass) ||
-					LBEPocketType[pIndex].pRestriction == 0) {
-						capacity = LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize];
-						pocket = uiPos;
-				}
-		}
-	}
-	if(pocket!=0){
-		*cap=capacity;
-		return pocket;
-	}
-	else{
-		*cap=254;
-		return -1;
-	}
-}
-INT32 PickLargePocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 iNumber, UINT8 * cap)
-{
-	UINT16	pIndex=0;
-	INT32	pocket=0;
-	UINT8	capacity=254;
-
-	for(UINT32 uiPos=BIGPOCKSTART; uiPos<BIGPOCKFINAL; uiPos++){
-		if(pProfile->inv[icLBE[uiPos]]==0){
-			pIndex=LoadBearingEquipment[icClass[uiPos]].lbePocketIndex[icPocket[uiPos]];
-		}
-		else {
-			pIndex=LoadBearingEquipment[Item[pProfile->inv[icLBE[uiPos]]].ubClassIndex].lbePocketIndex[icPocket[uiPos]];
-		}
-		// Here's were we get complicated.  We should look for the smallest pocket all items can fit in
-		if(LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize] >= iNumber &&
-			LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize] < capacity &&
-			pProfile->inv[uiPos] == 0) {
-				if((LBEPocketType[pIndex].pRestriction != 0 && LBEPocketType[pIndex].pRestriction == Item[usItem].usItemClass) ||
-					LBEPocketType[pIndex].pRestriction == 0) {
-						capacity = LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize];
-						pocket = uiPos;
-				}
-		}
-	}
-	if(pocket!=0){
-		*cap=capacity;
-		return pocket;
-	}
-	else{
-		*cap=254;
-		return -1;
-	}
-}
-
 
 INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHowMany)
 {
@@ -1105,7 +1036,8 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 
 	CreateItems(usItem, 100, ubHowMany, &gTempObject);
 	// if it fits into a small pocket
-	if (FitsInSmallPocket(&gTempObject) && ubHowMany <= ItemSlotLimit(&gTempObject, SMALLPOCK1POS))
+	if (FitsInSmallPocket(&gTempObject) &&
+		(UsingNewInventorySystem() == true || ubHowMany <= ItemSlotLimit(&gTempObject, SMALLPOCK1POS)))
 	{
 		// check small pockets first
 		for (uiPos = SMALLPOCKSTART; uiPos < SMALLPOCKFINAL; uiPos++)
@@ -1117,7 +1049,7 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 		}
 	}
 
-	if (UsingNewInventorySystem() == true && ubHowMany <= ItemSlotLimit(&gTempObject, MEDPOCK1POS)) {
+	if (UsingNewInventorySystem() == true) {
 		for (uiPos = MEDPOCKSTART; uiPos < MEDPOCKFINAL; uiPos++)
 		{
 			if (pProfile->inv[uiPos] == NONE)
@@ -1128,7 +1060,7 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 	}
 
 	// check large pockets
-	if (ubHowMany <= ItemSlotLimit(&gTempObject, BIGPOCK1POS)) {
+	if (ubHowMany <= ItemSlotLimit(&gTempObject, STACK_SIZE_LIMIT)) {
 		for (uiPos = BIGPOCKSTART; uiPos < BIGPOCKFINAL; uiPos++)
 		{
 			if (pProfile->inv[uiPos] == NONE)

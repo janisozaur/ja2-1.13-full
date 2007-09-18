@@ -115,7 +115,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE	*pObject
 // CHRISL: Add a new function that will be used to render a pocket silhouette
 void INVRenderSilhouette( UINT32 uiBugger, INT16 PocketIndex, INT16 SilIndex, INT16 sX, INT16 sY, INT16 sWideth, INT16 sHeight);
 // CHRISL: New function to handle display of inventory quantities based on item current in cursor
-void RenderPocketItemCapacity( INT8 pCapacity, INT16 bPos, SOLDIERTYPE *pSoldier );
+bool RenderPocketItemCapacity( INT8 pCapacity, INT16 bPos, SOLDIERTYPE *pSoldier );
 // CHRISL: New function to display items stored in an LBENODE
 void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScreen, int subObject );
 // CHRISL: New function to setup GSMInvData based on game options
