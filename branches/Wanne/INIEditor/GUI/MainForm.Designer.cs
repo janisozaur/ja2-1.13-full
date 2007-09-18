@@ -52,6 +52,7 @@ namespace INIEditor.GUI
             this.colValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tpProperty = new System.Windows.Forms.TabPage();
+            this.mnuToolsMerge = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMain.SuspendLayout();
             this.pnlFiles.SuspendLayout();
             this.pnlSectionHeader.SuspendLayout();
@@ -96,7 +97,8 @@ namespace INIEditor.GUI
             // mnuTools
             // 
             this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuToolsGenerateXMLFile});
+            this.mnuToolsGenerateXMLFile,
+            this.mnuToolsMerge});
             this.mnuTools.Name = "mnuTools";
             this.mnuTools.Size = new System.Drawing.Size(44, 20);
             this.mnuTools.Text = "Tools";
@@ -104,7 +106,7 @@ namespace INIEditor.GUI
             // mnuToolsGenerateXMLFile
             // 
             this.mnuToolsGenerateXMLFile.Name = "mnuToolsGenerateXMLFile";
-            this.mnuToolsGenerateXMLFile.Size = new System.Drawing.Size(190, 22);
+            this.mnuToolsGenerateXMLFile.Size = new System.Drawing.Size(268, 22);
             this.mnuToolsGenerateXMLFile.Text = "Generate XML Init File";
             this.mnuToolsGenerateXMLFile.Click += new System.EventHandler(this.mnuToolsGenerateXMLFile_Click);
             // 
@@ -280,6 +282,12 @@ namespace INIEditor.GUI
             this.tpProperty.TabIndex = 1;
             this.tpProperty.UseVisualStyleBackColor = true;
             // 
+            // mnuToolsMerge
+            // 
+            this.mnuToolsMerge.Name = "mnuToolsMerge";
+            this.mnuToolsMerge.Size = new System.Drawing.Size(268, 22);
+            this.mnuToolsMerge.Text = "Merge missing Sections and Properties";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -336,6 +344,7 @@ namespace INIEditor.GUI
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuTools;
         private System.Windows.Forms.ToolStripMenuItem mnuToolsGenerateXMLFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuToolsMerge;
     }
 }
 

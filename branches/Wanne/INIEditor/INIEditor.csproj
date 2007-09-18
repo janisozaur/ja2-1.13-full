@@ -36,6 +36,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackEnd\Constants.cs" />
+    <Compile Include="BackEnd\Enumerations.cs" />
     <Compile Include="BackEnd\INIHelper\INIFile.cs" />
     <Compile Include="BackEnd\INIHelper\INIProperty.cs" />
     <Compile Include="BackEnd\INIHelper\INISection.cs" />

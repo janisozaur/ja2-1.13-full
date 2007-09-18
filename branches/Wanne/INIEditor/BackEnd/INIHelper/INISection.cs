@@ -8,6 +8,8 @@ namespace INIEditor.BackEnd.INIHelper
         private string _name;
         private List<INIProperty> _propertys = new List<INIProperty>();
         private object _tag = null;
+        private string _description_ger = Constants.MISSING_SECTION_DESCRIPTION_GER;
+        private string _description_eng = Constants.MISSING_SECTION_DESCRIPTION_ENG;
         #endregion
         #region Properties
         public List<INIProperty> Properties
@@ -37,6 +39,18 @@ namespace INIEditor.BackEnd.INIHelper
             {
                 _tag = value;
             }
+        }
+
+        public string Description_GER
+        {
+            get { return _description_ger; }
+            set { _description_ger = value; }
+        }
+
+        public string Description_ENG
+        {
+            get { return _description_eng; }
+            set { _description_eng = value; }
         }
         #endregion
         #region Public Methods

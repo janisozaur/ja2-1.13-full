@@ -31,5 +31,20 @@ namespace INIEditor.BackEnd.XML
             return iniSettings;
         }
 
+        public static void SaveObjectToXMLFile(INISettings iniSettings, string path)
+        {
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(@path, false, Encoding.Unicode))
+                {
+                    XmlSerializer xmlSerial = new XmlSerializer(typeof (INISettings));
+                    xmlSerial.Serialize(sw, iniSettings);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+            }
+        }
     }
 }
