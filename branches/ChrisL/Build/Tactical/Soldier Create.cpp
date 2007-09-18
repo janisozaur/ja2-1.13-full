@@ -2765,160 +2765,135 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 	pProfile = &(gMercProfiles[pCreateStruct->ubProfile]);
 
 	// Copy over inv if we want to
-	if ( !(pCreateStruct->fCopyProfileItemsOver || pSoldier->bTeam != OUR_TEAM) )
+	if ( pCreateStruct->fCopyProfileItemsOver || pSoldier->bTeam != OUR_TEAM )
 	{
-		return;
-	}
-
-	//ADB this needs to happen for all profiles, player or not.
-	// CHRISL: Resort profile items to use LBE pockets properly
-	if((UsingNewInventorySystem() == true)) {
-		DistributeInitialGear(pProfile);
-	}
-
-
-
-	for ( cnt = 0; cnt < pProfile->inv.size(); cnt++ )
-	{
-		//place all items that are NOT attachments, also place keys
-		if ( pProfile->inv[ cnt ] == NOTHING || Item[pProfile->inv[cnt]].attachment) {
-			continue;
-		}
-		bool createdKey = false;
-		if (pCreateStruct->fPlayerMerc && Item[ pProfile->inv[ cnt ] ].usItemClass == IC_KEY )
+		if (pCreateStruct->fPlayerMerc)
 		{
-			// since keys depend on 2 values, they pretty much have to be hardcoded.
-			// and if a case isn't handled here it's better to not give any key than
-			// to provide one which doesn't work and would confuse everything.
-			switch( pCreateStruct->ubProfile )
-			{
-				case BREWSTER:
-					if ( pProfile->inv[ cnt ] >= KEY_1 && pProfile->inv[ cnt ] <= KEY_32)
-					{
-						CreateKeyObject( &gTempObject , pProfile->bInvNumber[ cnt ], 19 );
-						createdKey = true;
-					}
-					break;
-				case SKIPPER:
-					if ( pProfile->inv[ cnt ] >= KEY_1 && pProfile->inv[ cnt ] <= KEY_32)
-					{
-						CreateKeyObject( &gTempObject, pProfile->bInvNumber[ cnt ], 11 );
-						createdKey = true;
-					}
-					break;
-				case DOREEN:
-					if ( pProfile->inv[ cnt ] >= KEY_1 && pProfile->inv[ cnt ] <= KEY_32)
-					{
-						CreateKeyObject( &gTempObject, pProfile->bInvNumber[ cnt ], 32 );
-						createdKey = true;
-					}
+			// do some special coding to put stuff in the profile in better-looking
+			// spots
+			// CHRISL: Resort profile items to use LBE pockets properly
+			if((UsingNewInventorySystem() == true)) {
+				DistributeInitialGear(pProfile);
 			}
-		}
-		//if we did not just make a key!
-		if (createdKey == false) {
-			CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &gTempObject );
-		}
-		if (!(pCreateStruct->fPlayerMerc)) {
-			//only do this if this isn't a player merc
-			if ( Item[gTempObject.usItem].fingerprintid )
+			//place all items that are NOT attachments
+			for ( cnt = 0; cnt < pProfile->inv.size(); cnt++ )
 			{
-				for (int x = 0; x < pProfile->bInvNumber[ cnt ]; ++x) {
-					gTempObject[x]->data.ubImprintID = pSoldier->ubProfile;
+				if ( pProfile->inv[ cnt ] == NOTHING || Item[pProfile->inv[cnt]].attachment) {
+					continue;
 				}
-			}
-			if (gubItemDroppableFlag[cnt])
-			{
-				if (pProfile->ubInvUndroppable & gubItemDroppableFlag[cnt])
-				{
-					gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+				CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &gTempObject );
+				BOOLEAN success;
+				//CHRISL: Place items by slots chosen in profile if using new inventory system
+				if((UsingNewInventorySystem() == false)) {
+					success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
 				}
-			}
-		}
-		BOOLEAN success;
-		//CHRISL: Place items by slots chosen in profile if using new inventory system
-		if((UsingNewInventorySystem() == false)) {
-			success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
-		}
-		else {
-			success = PlaceObject( pSoldier, cnt, &gTempObject );
-		}
-		if (success == FALSE && pSoldier->inv[cnt].exists() == false) {
-			pSoldier->inv[cnt] = gTempObject;
-		}
-	}
-
-	//done placing all non attachments, now place all attachments on objects!
-	for ( cnt = 0; cnt < pProfile->inv.size(); cnt++ )
-	{
-		if ( pProfile->inv[ cnt ] == NOTHING) {
-			continue;
-		}
-		if (!Item[pProfile->inv[cnt]].attachment) {
-			continue;
-		}
-
-		CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &gTempObject );
-		if (!(pCreateStruct->fPlayerMerc)) {
-			//only do this if this isn't a player merc
-			if ( Item[gTempObject.usItem].fingerprintid )
-			{
-				for (int x = 0; x < pProfile->bInvNumber[ cnt ]; ++x) {
-					gTempObject[x]->data.ubImprintID = pSoldier->ubProfile;
-				}
-			}
-			if (gubItemDroppableFlag[cnt])
-			{
-				if (pProfile->ubInvUndroppable & gubItemDroppableFlag[cnt])
-				{
-					gTempObject.fFlags |= OBJECT_UNDROPPABLE;
-				}
-			}
-		}
-
-		// try to find the appropriate item to attach to!
-		for ( cnt2 = INV_START_POS; cnt2 < NUM_INV_SLOTS; cnt2++ )
-		{
-			if ( pSoldier->inv[ cnt2 ].exists() == true && ValidAttachment( gTempObject.usItem, pSoldier->inv[ cnt2 ].usItem ) )
-			{
-				pSoldier->inv[ cnt2 ].AttachObject( NULL, &gTempObject, FALSE );
-				break;
-			}
-		}
-		if (cnt2 == NUM_INV_SLOTS)
-		{
-			// oh well, couldn't find anything to attach to!
-			BOOLEAN success;
-			//CHRISL: Place items by slots chosen in profile if using new inventory system
-			if((UsingNewInventorySystem() == false)) {
-				success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
-			}
-			else {
-				if(cnt < BIGPOCKSTART) {
+				else {
 					success = PlaceObject( pSoldier, cnt, &gTempObject );
 				}
-				else{
-					success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
-					if(success == FALSE) {
-						success = PlaceObject( pSoldier, cnt, &gTempObject );
+				if (success == FALSE && pSoldier->inv[cnt].exists() == false) {
+					pSoldier->inv[cnt] = gTempObject;
+				}
+			}
+			//done placing all non attachments, now place all attachments on objects!
+			for ( cnt = 0; cnt < pProfile->inv.size(); cnt++ )
+			{
+				if ( pProfile->inv[ cnt ] == NOTHING) {
+					continue;
+				}
+				if (!Item[pProfile->inv[cnt]].attachment) {
+					continue;
+				}
+				CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &gTempObject );
+				// try to find the appropriate item to attach to!
+				for ( cnt2 = INV_START_POS; cnt2 < NUM_INV_SLOTS; cnt2++ )
+				{
+					if ( pSoldier->inv[ cnt2 ].exists() == true && ValidAttachment( gTempObject.usItem, pSoldier->inv[ cnt2 ].usItem ) )
+					{
+						pSoldier->inv[ cnt2 ].AttachObject( NULL, &gTempObject, FALSE );
+						break;
+					}
+				}
+				if (cnt2 == NUM_INV_SLOTS)
+				{
+					// oh well, couldn't find anything to attach to!
+					BOOLEAN success;
+					//CHRISL: Place items by slots chosen in profile if using new inventory system
+					if((UsingNewInventorySystem() == false)) {
+						success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
+					}
+					else {
+						// CHRISL: If we're placing a "body" item, then just place it.  Otherwise, first
+						// try to autoplace the item.  Only use "PlaceObject" as a last resort.
+						if(cnt < BIGPOCKSTART) {
+							success = PlaceObject( pSoldier, cnt, &gTempObject );
+						}
+						else{
+							success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
+							if(success == FALSE) {
+								success = PlaceObject( pSoldier, cnt, &gTempObject );
+							}
+						}
+					}
+					if (success == FALSE && pSoldier->inv[cnt].exists() == false) {
+						pSoldier->inv[cnt] = gTempObject;
 					}
 				}
 			}
-			if (success == FALSE && pSoldier->inv[cnt].exists() == false) {
-				pSoldier->inv[cnt] = gTempObject;
-			}
 		}
-	}
-
-	if (pCreateStruct->fPlayerMerc) {
-		//we have bought the optional gear of an AIM member!
-		pProfile->usOptionalGearCost = 0;
-	}
-	else {
-		if (pProfile->uiMoney > 0)
+		else
 		{
-			//only npcs can have money
-			CreateMoney(pProfile->uiMoney, &gTempObject );
-			PlaceInAnySlot(pSoldier, &gTempObject, true);
+			for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+			{
+				if ( pProfile->inv[ cnt ] != NOTHING )
+				{
+					if ( Item[ pProfile->inv[ cnt ] ].usItemClass == IC_KEY )
+					{
+						// since keys depend on 2 values, they pretty much have to be hardcoded.
+						// and if a case isn't handled here it's better to not give any key than
+						// to provide one which doesn't work and would confuse everything.
+						switch( pCreateStruct->ubProfile )
+						{
+							case BREWSTER:
+								if ( pProfile->inv[ cnt ] >= KEY_1 && pProfile->inv[ cnt ] <= KEY_32){
+									CreateKeyObject( &gTempObject , pProfile->bInvNumber[ cnt ], 19 );
+								}
+								break;
+							case SKIPPER:
+								if ( pProfile->inv[ cnt ] >= KEY_1 && pProfile->inv[ cnt ] <= KEY_32){
+									CreateKeyObject( &gTempObject, pProfile->bInvNumber[ cnt ], 11 );
+								}
+								break;
+							case DOREEN:
+								if ( pProfile->inv[ cnt ] >= KEY_1 && pProfile->inv[ cnt ] <= KEY_32){
+									CreateKeyObject( &gTempObject, pProfile->bInvNumber[ cnt ], 32 );
+								}
+						}
+					}
+					else
+					{
+						CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &gTempObject );
+					}
+					if ( Item[gTempObject.usItem].fingerprintid )
+					{
+						for (int x = 0; x < pProfile->bInvNumber[ cnt ]; ++x) {
+							gTempObject[x]->data.ubImprintID = pSoldier->ubProfile;
+						}
+					}
+					if (gubItemDroppableFlag[cnt])
+					{
+						if (pProfile->ubInvUndroppable & gubItemDroppableFlag[cnt])
+						{
+							gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+						}
+					}
+				}
+			}
+			if (pProfile->uiMoney > 0)
+			{
+				//only npcs can have money
+				CreateMoney(pProfile->uiMoney, &gTempObject );
+				PlaceInAnySlot(pSoldier, &gTempObject, true);
+			}
 		}
 	}
 }

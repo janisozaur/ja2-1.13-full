@@ -1380,11 +1380,6 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 							lbePocket = 2;
 						INVRenderSilhouette( guiSAVEBUFFER, lbePocket, 0, sX, sY, gSMInvData[ sPocket ].sWidth, gSMInvData[ sPocket ].sHeight);
 					}
-					// Removed backpack/gunsling restrictions
-					//if(sPocket == GUNSLINGPOCKPOS && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-					//{
-					//	fHatchItOut = TRUE;
-					//}
 					break;
 				default:
 					if ( pObject->exists() == false )
@@ -1487,8 +1482,14 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 	// CHRISL: Change whether we hatch a pocket to be dependant on the current item
 	if(gpItemPointer != NULL)
 	{
-		if(!gfSMDisableForItems && !CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)sPocket, FALSE))
-			fHatchItOut = TRUE;
+		if(!gfSMDisableForItems && !CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)sPocket, FALSE)){
+			if(!ValidAttachment(gpItemPointer->usItem, pObject->usItem)){
+				fHatchItOut = TRUE;
+			}
+			else{
+				fHatchItOut = FALSE;
+			}
+		}
 	}
 	else if(pObject->exists() == true)
 	{

@@ -466,7 +466,8 @@ bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
 			//Triggers, and other specials can never stack
 			if (Item[usItem].usItemClass == IC_BOMB) {
 				//exit and do not continue
-				return false;
+				//CHRISL: Explosives need to stack, though, so we can't just return false.
+				//return false;
 			}
 
 		if (Item[usItem].usItemClass == IC_MONEY) {

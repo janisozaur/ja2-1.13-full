@@ -304,8 +304,10 @@ BOOLEAN LoadMercProfiles(void)
 					gMercProfiles[uiLoop].bInvNumber[uiLoop2] = gMercProfileGear[uiLoop].iNumber[uiLoop2];
 				else
 					gMercProfiles[uiLoop].bInvNumber[uiLoop2] = 1;
-				if(!gMercProfileGear[uiLoop].iDrop[uiLoop2] && uiLoop > 56)
-					gMercProfiles[uiLoop].ubInvUndroppable |= gubItemDroppableFlag[uiLoop2];
+			}
+			//CHRISL: Moved outside first condition we we set ubInvUndroppable regardless of having an item
+			if(gMercProfileGear[uiLoop].iDrop[uiLoop2] == 0 && uiLoop > 56){
+				gMercProfiles[uiLoop].ubInvUndroppable |= gubItemDroppableFlag[uiLoop2];
 			}
 		}
 		// Last, go through and assign LBE items.  Only needed for new inventory system
