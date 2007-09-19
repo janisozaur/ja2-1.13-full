@@ -35,7 +35,7 @@ JA2.INI.  Linux is case sensitive. After that, ~/ja2-1.13 will contain:
 
 You may get these files from SVN:  
 
-svn co -r <revision> https://<host>/source/ja2_v1.13/GameDir  
+svn co -r <revision> https://<host>/source/ja2_v1.13_data/GameDir
 
 <revision> after -r is the current revision number of the game data files the
 Linux port uses.  
@@ -50,10 +50,13 @@ while you're looking at it.
 You should also read the entire thread to determine which revision of the data
 files is in use.
 
-6. Get *.slf from the Data directory in an existing Windows installation, and
-copy them to Data/ in ~/ja2-1.13.
+6. Get *.slf files from the Data directory in an existing Windows installation,
+and copy them to Data/ in ~/ja2-1.13.
 
-6. Edit resources.cfg.  You'll need to specify where all the slf files are 
+7. Copy whole Tilecache\ directory from the Data directory in an
+existing Windows installation to ~/ja2-1.13/Data/.
+
+8. Edit resources.cfg.  You'll need to specify where all the slf files are 
 located.  Edit the parameter StdBaseDir. Unfortunately, you must specify 
 the full path, "~/ja2-1.13" won't work.  Then look at the parameter 
 StdSources.  Change the slf filenames to match what is actually in the Data
@@ -62,7 +65,7 @@ files themselves, so they match the names in StdSources.  The main
 difference will be due to case insensitivity on Windows, so the upper/lower
 case mixture of the filenames is likely to differ from what's in resources.cfg.
 
-7. Run the game executable (default: ~/lpja2/bin/release/ja2lp) from the 
+9. Run the game executable (default: ~/lpja2/bin/release/ja2lp) from the 
 console.  You can run 'ja2lp --help' to learn what command line switches 
 are supported.
 
