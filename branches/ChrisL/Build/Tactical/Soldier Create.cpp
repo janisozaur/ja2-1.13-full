@@ -350,15 +350,8 @@ UINT32 guiCurrentUniqueSoldierId = 1;
 
 // CJC note: trust me, it's easiest just to put this here; this is the only
 // place it should need to be used
-/* CHRISL: There's nothing to fix here.  This array is only used on non-hireable NPCs to designate whether an object can
-be dropped or not.  And we only have an 8bit field to store these flags.  So there's no need to change anything.  New or
-Old inventory system, NPC profiles use the old style pocket system.*/
-//ADB actually that's not correct, all NPC profiles use the new pocket system.
-//To verify this, give Fatima the letter then check what slot it is in when she is in A10.
-//AFAIK there is no way to seperate non hireable NPCs from hireable NPCs, so to fix Ira all NPC profiles are adjusted.
-/* CHRISL: You can't make change to this.  You can add values to the end if you want, but prof.dat requires
-this setup.  That's one of the many reasons I setup the new inventory system to NOT be used by computer
-controlled characters. */
+/* CHRISL: I've reset this.  I've also included a change to LoadMercProfiles to try and reset things so
+that prof.dat will work with these new settings. */
 UINT8 gubItemDroppableFlag[NUM_INV_SLOTS] =
 {
 	0x01,
@@ -368,17 +361,17 @@ UINT8 gubItemDroppableFlag[NUM_INV_SLOTS] =
 	0,
 	0x08,
 	0,
-	0x10,
-	0x20,
-	0x40,
-	0x80,
+	0,	//0x10,
+	0,	//0x20,
+	0,	//0x40,
+	0,	//0x80,
 	0,
 	0,
 	0,
-	0,
-	0,
-	0,
-	0,
+	0x10,	//0,
+	0x20,	//0,
+	0x40,	//0,
+	0x80,	//0,
 	0
 };
 

@@ -1272,8 +1272,9 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 	// Their info is an array of item status, not weapon info, and they don't repeat
 	// fire anyway.
 	rof = Weapon[ pObj->usItem ].ubShotsPer4Turns;
-	if (ItemSlotLimit(pObj, BIGPOCK1POS) <= 1)
+	if (ItemSlotLimit(pObj, STACK_SIZE_LIMIT) == 1)//NOT STACKABLE!
 	{
+		//ADB TODO this check should be changed so that if guns ever stack they still get the bonus!
 		rof += GetRateOfFireBonus(pObj);
 	}
 
@@ -1286,7 +1287,7 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 
 	// Snap: Refactored the formula to reduce the number of integer divisions
 	Top = 8 * bAPs;
-	if (ItemSlotLimit(pObj, STACK_SIZE_LIMIT) <= 1)
+	if (ItemSlotLimit(pObj, STACK_SIZE_LIMIT) == 1)
 	{
 		Top *= ( 100 - GetPercentAPReduction(pObj) );
 	}
