@@ -4804,7 +4804,7 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 		// Render clock
 		// CHRISL: Change coords to base off of right side of screen and use new paramters in RenderTownIDString
 		RenderClock( INTERFACE_CLOCK_TM_X, INTERFACE_CLOCK_TM_Y );
-		CreateMouseRegionForPauseOfClock( INTERFACE_CLOCK_TM_Y, INTERFACE_CLOCK_TM_Y );
+		CreateMouseRegionForPauseOfClock( INTERFACE_CLOCK_TM_X, INTERFACE_CLOCK_TM_Y );
 		RenderTownIDString( LOCATION_NAME_TM_X, LOCATION_NAME_TM_Y);
 	}
 	else

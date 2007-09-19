@@ -1484,13 +1484,15 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 	// CHRISL: Change whether we hatch a pocket to be dependant on the current item
 	if(gpItemPointer != NULL)
 	{
-		if(!gfSMDisableForItems && !CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)sPocket, FALSE))
+		if (!gfSMDisableForItems && ShouldHatchItem(gpItemPointer, pSoldier, sPocket) == true) {
 			fHatchItOut = TRUE;
+		}
 	}
 	else if(pObject->exists() == true)
 	{
-		if(!gfSMDisableForItems && !CanItemFitInPosition(pSoldier, pObject, (INT8)sPocket, FALSE))
+		if (!gfSMDisableForItems && ShouldHatchItem(pObject, pSoldier, sPocket) == true) {
 			fHatchItOut = TRUE;
+		}
 	}
 	// CHRISL: Don't hatch second hand position if we're holding a two handed item
 	if(sPocket == SECONDHANDPOS)
@@ -2310,6 +2312,23 @@ void InitItemInterface( )
 
 }
 
+bool ShouldHatchItem(OBJECTTYPE* pObject, SOLDIERTYPE* pSoldier, int bPos)
+{
+	if(CompatibleAmmoForGun(pObject, &pSoldier->inv[bPos])) {
+		return false;
+	}
+	if (CanItemFitInPosition(pSoldier, pObject, (INT8)bPos, FALSE)) {
+		return false;
+	}
+	if (pSoldier->inv[bPos].exists() == true && 
+		(ValidAttachment(pObject->usItem, pSoldier->inv[bPos].usItem) == TRUE
+		//|| ValidMerge(pObject->usItem, pSoldier->inv[bPos].usItem) == TRUE
+		)) {
+		return false;
+	}
+	return true;
+}
+
 // CHRISL: Function to display pocket inventory quantity based on object in cursor
 bool RenderPocketItemCapacity( INT8 pCapacity, INT16 bPos, SOLDIERTYPE *pSoldier )
 {
@@ -2344,7 +2363,8 @@ bool RenderPocketItemCapacity( INT8 pCapacity, INT16 bPos, SOLDIERTYPE *pSoldier
 			swprintf( pStr, L"%d", pCapacity );
 	}
 	else if (pSoldier->inv[bPos].exists() == true && ValidAttachment(gpItemPointer->usItem, pSoldier->inv[bPos].usItem) == TRUE) {
-		shouldNOTBeHatched = false;
+		//ADB originally was set to false, some people want it set to true
+		shouldNOTBeHatched = true;
 		thereIsText = true;
 		swprintf( pStr, L"A" );
 	}

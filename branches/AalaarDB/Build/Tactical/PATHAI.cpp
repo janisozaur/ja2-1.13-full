@@ -473,9 +473,9 @@ void AStarPathfinder::ResetAStarList()
 	PERFORMANCE_MARKER
 	//only the starting node's data needs to be init,
 	//and all other data doesn't need to be at all
-	for each (GridNode node in ClosedList) {
-		SetAStarStatus(node, AStar_Init);
-		SetAStarG(node, 0);
+	for (std::vector<GridNode>::iterator node = ClosedList.begin(); node != ClosedList.end(); ++node) {
+		SetAStarStatus(*node, AStar_Init);
+		SetAStarG(*node, 0);
 	}
 	for (int size = OpenHeap.size(); size > 0; --size) {
 		GridNode node = OpenHeap.peekElement(size).data;

@@ -3213,7 +3213,7 @@ STR16			zSaveLoadText[] =
 	L"Loaded the game successfully",
 	L"ERROR loading the game!",
 
-	L"The game version in the saved game file is different then the current version.	It is most likely safe to continue.	Continue?",
+	L"The game version in the saved game file is different than the current version. It is most likely safe to continue. Continue?",
 	L"The saved game files may be invalidated.	Do you want them all deleted?",
 
 	//Translators, the next two strings are for the same thing.	The first one is for beta version releases and the second one
