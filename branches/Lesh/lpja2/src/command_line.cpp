@@ -66,5 +66,7 @@ void	PrintCommandLineHelp( void )
 	printf("\t--help\t\thelp info (you are looking at it)\n");
 	printf("\t--fullscreen\trun game at fullscreen\n");
 	printf("\t--windowed\trun game in window\n");
+	printf("\t--editor\trun editor (debug version only)\n");
+	printf("\t--editor-auto\trun editor and load sector A9  (debug version only)\n");
 	printf("\t--nosound\trun game without sound\n\n");
 }
