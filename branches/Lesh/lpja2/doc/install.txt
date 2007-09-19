@@ -1,42 +1,73 @@
-This is a quick setup description, how to run ja2 linux port.
+This is a quick description of how to install the ja2 linux port.  This
+document assumes that this package is stored in ~/lpja2.
 
-I believe, that this package is stored in dir ~/lpja2.
+1. Install some libs: libexpat1, libexpat1-dev, libsdl1.2, libsdl1.2-dev (for 
+the future).  Just use whatever your distro normally supports for new system 
+software, e.g., apt, yum, etc.
 
-1. Install some libs: libexpat1, libexpat1-dev, libsdl1.2, libsdl1.2-dev (for future).
+2. Enter the following in a console:
 
-2. Run in console:
 	cd ~/lpja2/project/
-	sh ./install_fmod.sh
+	sudo sh ./install_fmod.sh
 
-This will install libfmod to your system.
+This will install libfmod to your system.  If you forget to run under sudo, the script will remind you.
 
-3. Continue to run in console:
+3. Enter into the console:
 	make user-dir
 
-This will create ja2-1.13 directory in your home dir and a file "resources.cfg" will be copied to this new dir.
+This will create ja2-1.13 directory in your home dir, and a file
+called "resources.cfg" will be copied to this new dir.
 
-4. Continue to run in console:
+4. Enter into the console:
 	sh ./build_release.sh
 
 Then go drink something, you'll be free for about 10 minutes. ;)
-This will compile game executable file (hopefully). It will be named as ~/lpja2/bin/release/ja2lp.
-You can copy it to another place.
+This will compile the game executable file (hopefully). It will be named
+~/lpja2/bin/release/ja2lp.  You may safely copy it to another place.
 
-5. Copy Ja2.ini file and Data and Data-1.13 directories to ~/ja2-1.13.
-Note, that Ja2.ini must be named exactly Ja2.ini, not Ja2.INI, not JA2.ini or JA2.INI.
-Linux file-system is case sensitive. After that ~/ja2-1.13 must contain:
+5. Copy the file Ja2.ini and the Data and Data-1.13 directories to ~/ja2-1.13.
+Note that Ja2.ini must be named exactly "Ja2.ini," not Ja2.INI, not JA2.ini or 
+JA2.INI.  Linux is case sensitive. After that, ~/ja2-1.13 will contain:
 	Data/
 	Data-1.13/
 	Ja2.ini
 	resources.cfg
 
-6. Edit resources.cfg. You'll need to specify, where is all slf-files are located.
-Edit parameter StdBaseDir. Unfortunately, ~/ja2-1.13 isn't work. You'll need to specify
-full path. Then look at parameter StdSources. Edit game filenames, if they differ.
-Or you can rename slf-files, so they match to this names in StdSources.
+You may get these files from SVN:  
 
-7. Run game executable (default: ~/lpja2/bin/release/ja2lp) from console.
+svn co -r <revision> https://<host>/source/ja2_v1.13/GameDir  
+
+<revision> after -r is the current revision number of the game data files the
+Linux port uses.  
+
+Visit the forums at 
+
+http://www.ja-galaxy-forum.com/board/ubbthreads.php/ubb/showflat/Number/150445/page/1#Post150445
+
+for the exact host name/IP address, and verify that the path hasn't changed 
+while you're looking at it.
+
+You should also read the entire thread to determine which revision of the data
+files is in use.
+
+6. Get *.slf from the Data directory in an existing Windows installation, and
+copy them to Data/ in ~/ja2-1.13.
+
+6. Edit resources.cfg.  You'll need to specify where all the slf files are 
+located.  Edit the parameter StdBaseDir. Unfortunately, you must specify 
+the full path, "~/ja2-1.13" won't work.  Then look at the parameter 
+StdSources.  Change the slf filenames to match what is actually in the Data
+directory, if they differ (they probably will).  Or you can rename the 
+files themselves, so they match the names in StdSources.  The main 
+difference will be due to case insensitivity on Windows, so the upper/lower
+case mixture of the filenames is likely to differ from what's in resources.cfg.
+
+7. Run the game executable (default: ~/lpja2/bin/release/ja2lp) from the 
+console.  You can run 'ja2lp --help' to learn what command line switches 
+are supported.
 
 
-NB: I cannot guarantee, that most recent revision of game directory will work with this exe.
-Personally, I am using rev.791 of game data.
+NB: I cannot guarantee that the most recent revision of the game data files 
+will work with this exe.  Personally, I am using rev.791 of the game data, as
+of the last writing of this file.  Check the forum thread above for the 
+current revision number in use.
