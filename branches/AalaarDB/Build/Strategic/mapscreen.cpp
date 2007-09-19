@@ -7336,10 +7336,18 @@ void BltCharInvPanel()
 	else if((UsingNewInventorySystem() == true))
 	{
 		InitializeInvPanelCoordsNew();
+		
+		//ADB I don't know what this code does.  Removing it seems to have no adverse affect on the game.
+		//It causes the no tooltips bug because it destroys the mouse region
+		//which makes previous mouse region not work which means previous mouse region never gets the no-update-timer flag
+		//this continually resets the timer and no tooltips are displayed
+
+		/*
 		fShowInventoryFlag = FALSE;
 		CreateDestroyMapInvButton();
 		fShowInventoryFlag = TRUE;
 		CreateDestroyMapInvButton();
+		*/
 //		ResetMapInvRegions(gMapScreenInvPocketXY, MAPInvMoveCallback, MAPInvClickCallback, FALSE);
 		Blt8BPPDataTo16BPPBufferTransparent( pDestBuf, uiDestPitchBYTES, hCharListHandle, PLAYER_INFO_X, PLAYER_INFO_Y, 1);
 	}
