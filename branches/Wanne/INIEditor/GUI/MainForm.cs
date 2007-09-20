@@ -1,14 +1,9 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+using System.IO;
 using System.Windows.Forms;
 using INIEditor.BackEnd;
 using INIEditor.BackEnd.INIHelper;
-using System.IO;
 using INIEditor.BackEnd.XML;
 
 namespace INIEditor.GUI
@@ -18,11 +13,14 @@ namespace INIEditor.GUI
         #region Fields
         private INIFile _iniFile = null;
         private Hashtable _iniSettingsList = null;
+        private Enumerations.Language _descriptionLanguage = Enumerations.Language.English;
+        private Enumerations.Permission _permission = Enumerations.Permission.Admin;    // TODO: Change to "User" in Release version!
         #endregion
         #region CTOR
         public MainForm()
         {
             InitializeComponent();
+            InitializeMenu();
             InitializeFiles();
             InitializeXMLSettingsFile();
 
@@ -35,6 +33,15 @@ namespace INIEditor.GUI
         }
         #endregion
         #region Initialize
+        private void InitializeMenu()
+        {
+            // Disable some menu entries that should not be visible for the user
+            if (_permission == Enumerations.Permission.User)
+            {
+                mnuToolsGenerateXMLFile.Visible = false;
+            }
+        }
+
         private void InitializeXMLSettingsFile()
         {
             string path = Path.Combine(Constants.XML_SETTINGS_PATH, Constants.INI_EDITOR_INIT_FILE);
@@ -71,72 +78,6 @@ namespace INIEditor.GUI
                     cmbFiles.Items.Add(iniFile);
                 }
             }
-        }
-
-        private Settings GetXMLIniFile()
-        {
-            Settings xmlIniSettings = null;
-            if (_iniSettingsList.ContainsKey(Constants.INI_FILE))
-            {
-                xmlIniSettings = _iniSettingsList[Constants.INI_FILE] as Settings;
-            }
-
-            if (xmlIniSettings == null)
-            {
-                xmlIniSettings = new Settings();
-                xmlIniSettings.Description_ENG = Constants.MISSING_INI_DESCRIPTION_ENG;
-                xmlIniSettings.Description_GER = Constants.MISSING_INI_DESCRIPTION_GER;
-            }
-            return xmlIniSettings;
-        }
-
-        private Section GetXMLSection(string section)
-        {
-            Section matchingXMLSection = null;
-
-            if (_iniSettingsList.ContainsKey(section))
-            {
-                matchingXMLSection = _iniSettingsList[section] as Section;
-            }
-
-            if (matchingXMLSection == null)
-            {
-                matchingXMLSection = new Section();
-                matchingXMLSection.Description_ENG = Constants.MISSING_SECTION_DESCRIPTION_ENG;
-                matchingXMLSection.Description_GER = Constants.MISSING_SECTION_DESCRIPTION_GER;
-            }
-
-            return matchingXMLSection;
-        }
-
-        private Property GetXMLProperty(string section, string property)
-        {
-            Property matchingXMLProperty = null;
-
-            if (_iniSettingsList.ContainsKey(section))
-            {
-                Section xmlSection = _iniSettingsList[section] as Section;
-                foreach (Property xmlProperty in xmlSection.Properties)
-                {
-                    if (xmlProperty.Name == property)
-                    {
-                        matchingXMLProperty = xmlProperty;
-                        break;
-                    }
-                }
-            }
-
-            if (matchingXMLProperty == null)
-            {
-                matchingXMLProperty = new Property();
-                matchingXMLProperty.Description_ENG = Constants.MISSING_PROPERTY_DESCRIPTION_ENG;
-                matchingXMLProperty.Description_GER = Constants.MISSING_PROPERTY_DESCRIPTION_GER;
-                matchingXMLProperty.DataType = Constants.MISSING_DATA_TYPE;
-                matchingXMLProperty.MinValue = Constants.MISSING_MIN_VALUE;
-                matchingXMLProperty.MaxValue = Constants.MISSING_MAX_VALUE;
-            }
-
-            return matchingXMLProperty;
         }
 
         private void InitializeSectionTree()
@@ -207,10 +148,12 @@ namespace INIEditor.GUI
                 }
 
                 lblSectionHeader.Text = sectionHeader;
-
+                
                 colSection.Visible = true;
 
                 INIFile file = item as INIFile;
+                //txtSectionDescription.Text = file.XMLSettings.Description_ENG;
+                txtSectionDescription.Text = GetDescription(file.XMLSettings);
 
                 foreach (INISection section in file.Sections)
                 {
@@ -221,8 +164,8 @@ namespace INIEditor.GUI
                         dgvProperties[colSection.Index, rowIndex].Value = section.Name;
                         dgvProperties[colProperty.Index, rowIndex].Value = property.Name;
                         dgvProperties[colValue.Index, rowIndex].Value = property.Value;
-                        // TODO: Language specific description
-                        dgvProperties[colDescription.Index, rowIndex].Value = property.XMLProperty.Description_ENG;
+
+                        dgvProperties[colDescription.Index, rowIndex].Value = GetDescription(property.XMLProperty);
 
                         dgvProperties[colSection.Index, rowIndex].Tag = section;
                         dgvProperties[colProperty.Index, rowIndex].Tag = property;
@@ -248,14 +191,15 @@ namespace INIEditor.GUI
                 colSection.Visible = false;
 
                 INISection section = item as INISection;
+                txtSectionDescription.Text = GetDescription(section.XMLSection);
+
                 foreach (INIProperty property in section.Properties)
                 {
                     int rowIndex = dgvProperties.Rows.Add();
 
                     dgvProperties[colProperty.Index, rowIndex].Value = property.Name;
                     dgvProperties[colValue.Index, rowIndex].Value = property.Value;
-                    // TODO: Language specific description
-                    dgvProperties[colDescription.Index, rowIndex].Value = property.XMLProperty.Description_ENG;
+                    dgvProperties[colDescription.Index, rowIndex].Value = GetDescription(property.XMLProperty);
 
                     dgvProperties[colSection.Index, rowIndex].Tag = section;
                     dgvProperties[colProperty.Index, rowIndex].Tag = property;
@@ -266,7 +210,8 @@ namespace INIEditor.GUI
                 lblSectionHeader.Text = sectionHeader;
 
                 INIProperty property = item as INIProperty;
-
+                txtSectionDescription.Text = GetDescription(property.Section.XMLSection);
+                
                 if (tabActions.TabPages.Contains(tpSection))
                 {
                     tabActions.TabPages.Remove(tpSection);
@@ -280,6 +225,90 @@ namespace INIEditor.GUI
             }
 
             SelectTreeNode(item);
+        }
+        #endregion
+        #region Private Methods
+        private Settings GetXMLIniFile()
+        {
+            Settings xmlIniSettings = null;
+            if (_iniSettingsList.ContainsKey(Constants.INI_FILE))
+            {
+                xmlIniSettings = _iniSettingsList[Constants.INI_FILE] as Settings;
+            }
+
+            if (xmlIniSettings == null)
+            {
+                xmlIniSettings = new Settings();
+                xmlIniSettings.Description_ENG = Constants.MISSING_INI_DESCRIPTION_ENG;
+                xmlIniSettings.Description_GER = Constants.MISSING_INI_DESCRIPTION_GER;
+            }
+            return xmlIniSettings;
+        }
+
+        private Section GetXMLSection(string section)
+        {
+            Section matchingXMLSection = null;
+
+            if (_iniSettingsList.ContainsKey(section))
+            {
+                matchingXMLSection = _iniSettingsList[section] as Section;
+            }
+
+            if (matchingXMLSection == null)
+            {
+                matchingXMLSection = new Section();
+                matchingXMLSection.Description_ENG = Constants.MISSING_SECTION_DESCRIPTION_ENG;
+                matchingXMLSection.Description_GER = Constants.MISSING_SECTION_DESCRIPTION_GER;
+            }
+
+            return matchingXMLSection;
+        }
+
+        private Property GetXMLProperty(string section, string property)
+        {
+            Property matchingXMLProperty = null;
+
+            if (_iniSettingsList.ContainsKey(section))
+            {
+                Section xmlSection = _iniSettingsList[section] as Section;
+                foreach (Property xmlProperty in xmlSection.Properties)
+                {
+                    if (xmlProperty.Name == property)
+                    {
+                        matchingXMLProperty = xmlProperty;
+                        break;
+                    }
+                }
+            }
+
+            if (matchingXMLProperty == null)
+            {
+                matchingXMLProperty = new Property();
+                matchingXMLProperty.Description_ENG = Constants.MISSING_PROPERTY_DESCRIPTION_ENG;
+                matchingXMLProperty.Description_GER = Constants.MISSING_PROPERTY_DESCRIPTION_GER;
+                matchingXMLProperty.DataType = Constants.MISSING_DATA_TYPE;
+                matchingXMLProperty.MinValue = Constants.MISSING_MIN_VALUE;
+                matchingXMLProperty.MaxValue = Constants.MISSING_MAX_VALUE;
+            }
+
+            return matchingXMLProperty;
+        }
+
+        private string GetDescription(BaseElements baseElements)
+        {
+            string description = "";
+
+            switch (_descriptionLanguage)
+            {
+                case Enumerations.Language.English:
+                    description = baseElements.Description_ENG;
+                    break;
+                case Enumerations.Language.German:
+                    description = baseElements.Description_GER;
+                    break;
+            }
+
+            return description;
         }
 
         private void SelectTreeNode<T>(T item)
@@ -300,7 +329,7 @@ namespace INIEditor.GUI
                 INIProperty property = item as INIProperty;
                 treeNode = property.Tag as TreeNode;
             }
-            
+
             trvSections.SelectedNode = treeNode;
             trvSections.SelectedNode.Expand();
         }
@@ -341,7 +370,26 @@ namespace INIEditor.GUI
 
             InitializeTabs(property, section.Name);
         }
-        #endregion
+
+        private void mnuViewDescLangEnglish_Click(object sender, EventArgs e)
+        {
+            if (_descriptionLanguage != Enumerations.Language.English)
+            {
+                _descriptionLanguage = Enumerations.Language.English;
+                TreeNode selectedNode = trvSections.SelectedNode;
+                InitializeTabs(selectedNode.Tag, lblSectionHeader.Text);
+            }
+        }
+
+        private void mnuViewDescLangGerman_Click(object sender, EventArgs e)
+        {
+            if (_descriptionLanguage != Enumerations.Language.German)
+            {
+                _descriptionLanguage = Enumerations.Language.German;
+                TreeNode selectedNode = trvSections.SelectedNode;
+                InitializeTabs(selectedNode.Tag, lblSectionHeader.Text);
+            }
+        }
 
         /// <summary>
         /// This method creates a new "INIEditorInit_Output.xml" file,
@@ -361,12 +409,12 @@ namespace INIEditor.GUI
                 {
                     Section xmlSection = new Section();
                     xmlSection = section.XMLSection;
-                    
+
                     foreach (INIProperty property in section.Properties)
                     {
                         Property xmlProperty = new Property();
                         xmlProperty = property.XMLProperty;
-     
+
                         xmlSection.Properties.Add(xmlProperty);
                     }
 
@@ -377,5 +425,6 @@ namespace INIEditor.GUI
                 Helper.SaveObjectToXMLFile(generatedIniSettings, path);
             }
         }
+        #endregion
     }
 }

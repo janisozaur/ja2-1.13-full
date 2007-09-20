@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace INIEditor.BackEnd
 {
     public class Enumerations
@@ -10,6 +6,12 @@ namespace INIEditor.BackEnd
         {
             English,
             German
+        }
+
+        public enum Permission
+        {
+            Admin,
+            User
         }
     }
 }

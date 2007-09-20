@@ -7,6 +7,7 @@ namespace INIEditor.BackEnd.INIHelper
         #region Fields
         private string _name;
         private string _value;
+        private INISection _section;    // The section the property belongs to
         private object _tag = null;
         private Property _xmlProperty = null;
         #endregion
@@ -27,6 +28,12 @@ namespace INIEditor.BackEnd.INIHelper
         {
             get { return this._value; }
             set { this._value = value; }
+        }
+
+        public INISection Section
+        {
+            get { return _section; }
+            set { _section = value; }
         }
 
         public Property XMLProperty

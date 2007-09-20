@@ -101,6 +101,7 @@ namespace INIEditor.BackEnd.INIHelper
                     else if (this.IsProperty(line) && (section != null))
                     {
                         INIProperty prop = new INIProperty();
+                        prop.Section = section;
                         prop.Name = this.ExtractPropertyName(line);
                         prop.Value = this.ExtractPropertyValue(line);
                         this._sections[num].AddProperty(prop);
