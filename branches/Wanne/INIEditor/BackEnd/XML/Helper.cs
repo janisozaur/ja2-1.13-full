@@ -8,17 +8,17 @@ namespace INIEditor.BackEnd.XML
 {
     public class Helper
     {
-        public static INISettings LoadObjectFromXMLFile(string path)
+        public static Settings LoadObjectFromXMLFile(string path)
         {
-            INISettings iniSettings = null;
+            Settings iniSettings = null;
             try
             {
                 // Use Unicode (=UTF-16) encoding for German "Umlaute"
                 using (StreamReader s = new StreamReader(@path, Encoding.Unicode))
                 {
                     // typeof (root of the xml file)
-                    XmlSerializer xmlSerial = new XmlSerializer(typeof(INISettings));
-                    iniSettings = (INISettings) xmlSerial.Deserialize(s);
+                    XmlSerializer xmlSerial = new XmlSerializer(typeof(Settings));
+                    iniSettings = (Settings) xmlSerial.Deserialize(s);
 
                     return iniSettings;
                 }
@@ -31,13 +31,13 @@ namespace INIEditor.BackEnd.XML
             return iniSettings;
         }
 
-        public static void SaveObjectToXMLFile(INISettings iniSettings, string path)
+        public static void SaveObjectToXMLFile(Settings iniSettings, string path)
         {
             try
             {
                 using (StreamWriter sw = new StreamWriter(@path, false, Encoding.Unicode))
                 {
-                    XmlSerializer xmlSerial = new XmlSerializer(typeof (INISettings));
+                    XmlSerializer xmlSerial = new XmlSerializer(typeof (Settings));
                     xmlSerial.Serialize(sw, iniSettings);
                 }
             }

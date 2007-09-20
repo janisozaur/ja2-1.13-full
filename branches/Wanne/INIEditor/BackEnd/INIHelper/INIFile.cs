@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using INIEditor.BackEnd.XML;
 
 namespace INIEditor.BackEnd.INIHelper
 {
@@ -8,10 +9,20 @@ namespace INIEditor.BackEnd.INIHelper
         #region Fields
         private List<INISection> _sections = new List<INISection>();
         private object _tag = null;
-        private string _description_ger = Constants.MISSING_INI_DESCRIPTION_GER;
-        private string _description_eng = Constants.MISSING_INI_DESCRIPTION_ENG;
+        //private string _description_ger = Constants.MISSING_INI_DESCRIPTION_GER;
+        //private string _description_eng = Constants.MISSING_INI_DESCRIPTION_ENG;
+
+        private Settings _xmlSettings = null;
+
         #endregion
         #region Properties
+        public Settings XMLSettings
+        {
+            get { return _xmlSettings;  }
+            set { _xmlSettings = value; }
+        }
+
+
         public object Tag
         {
             get
@@ -24,17 +35,17 @@ namespace INIEditor.BackEnd.INIHelper
             }
         }
 
-        public string Description_GER
-        {
-            get { return _description_ger; }
-            set { _description_ger = value; }
-        }
+        //public string Description_GER
+        //{
+        //    get { return _description_ger; }
+        //    set { _description_ger = value; }
+        //}
 
-        public string Description_ENG
-        {
-            get { return _description_eng; }
-            set { _description_eng = value; }
-        }
+        //public string Description_ENG
+        //{
+        //    get { return _description_eng; }
+        //    set { _description_eng = value; }
+        //}
 
         public List<INISection> Sections
         {

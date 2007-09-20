@@ -4,41 +4,27 @@ using System.Xml.Serialization;
 namespace INIEditor.BackEnd.XML
 {
     #region XML Root Element
-    [XmlRoot("INISettings")]
-    public class INISettings
+    [XmlRoot("Settings")]
+    public class Settings : BaseElements
     {
-        // Elementes
-        [XmlElement("Description_ENG")]
-        public string Description_ENG;
-
-        [XmlElement("Description_GER")]
-        public string Description_GER;
-
         // Elementes-List
         [XmlArray("Sections"), XmlArrayItem("Section", typeof(Section))]
         public ArrayList Sections = new ArrayList();
     }
     #endregion
     #region XML Sub Elementes
-    public class Section
+    public class Section : BaseElements
     {
         // Attributes
         [XmlAttribute("name")] 
         public string Name;
-
-        // Elementes
-        [XmlElement("Description_ENG")] 
-        public string Description_ENG;
-
-        [XmlElement("Description_GER")]
-        public string Description_GER;
 
         // Elementes-List
         [XmlArray("Properties"), XmlArrayItem("Property", typeof(Property))]
         public ArrayList Properties = new ArrayList();
     }
 
-    public class Property
+    public class Property : BaseElements
     {
         // Attributes
         [XmlAttribute("name")]
@@ -52,13 +38,6 @@ namespace INIEditor.BackEnd.XML
 
         [XmlAttribute("maxvalue")]
         public int MaxValue;
-
-        // Elementes
-        [XmlElement("Description_ENG")]
-        public string Description_ENG;
-
-        [XmlElement("Description_GER")]
-        public string Description_GER;
     }
     #endregion
 }

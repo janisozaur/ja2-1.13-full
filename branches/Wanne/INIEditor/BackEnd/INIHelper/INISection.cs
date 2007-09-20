@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using INIEditor.BackEnd.XML;
 
 namespace INIEditor.BackEnd.INIHelper
 {
@@ -8,8 +9,9 @@ namespace INIEditor.BackEnd.INIHelper
         private string _name;
         private List<INIProperty> _propertys = new List<INIProperty>();
         private object _tag = null;
-        private string _description_ger = Constants.MISSING_SECTION_DESCRIPTION_GER;
-        private string _description_eng = Constants.MISSING_SECTION_DESCRIPTION_ENG;
+        private Section _xmlSection = null;
+        //private string _description_ger = Constants.MISSING_SECTION_DESCRIPTION_GER;
+        //private string _description_eng = Constants.MISSING_SECTION_DESCRIPTION_ENG;
         #endregion
         #region Properties
         public List<INIProperty> Properties
@@ -41,17 +43,24 @@ namespace INIEditor.BackEnd.INIHelper
             }
         }
 
-        public string Description_GER
+        //public string Description_GER
+        //{
+        //    get { return _description_ger; }
+        //    set { _description_ger = value; }
+        //}
+
+        //public string Description_ENG
+        //{
+        //    get { return _description_eng; }
+        //    set { _description_eng = value; }
+        //}
+
+        public Section XMLSection
         {
-            get { return _description_ger; }
-            set { _description_ger = value; }
+            get { return _xmlSection;  }
+            set { _xmlSection = value; }
         }
 
-        public string Description_ENG
-        {
-            get { return _description_eng; }
-            set { _description_eng = value; }
-        }
         #endregion
         #region Public Methods
         public INIProperty GetPropertyByName(string propertyName)
