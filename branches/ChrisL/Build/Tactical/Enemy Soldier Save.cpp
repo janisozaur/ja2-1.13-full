@@ -35,6 +35,13 @@
 	#include "Scheduling.h"
 #endif
 
+#include "GameVersion.h"
+//ADB When a savegame is loaded, the enemy and civ stuff needs to be loaded and updated, but this can only happen
+//when the temp file is loaded which can happen much later, it cannot load convert and save when updating the savegame
+//therefore store a flag to load and convert later
+int gEnemyPreservedTempFileVersion[256];
+int gCivPreservedTempFileVersion[256];
+
 BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *pNode, GROUP *pGroup = NULL );
 
 BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( UINT8 *pubNumElites, UINT8 *pubNumRegulars, UINT8 *pubNumAdmins, UINT8 *pubNumCreatures );
@@ -261,7 +268,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 
 	for( i = 0; i < slots; i++ )
 	{
-		if ( !tempDetailedPlacement.Load(hfile) )
+		if ( !tempDetailedPlacement.Load(hfile, gEnemyPreservedTempFileVersion[SECTOR( sSectorX,sSectorY)]) )
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.	KM", i );
@@ -397,6 +404,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 		return FALSE;
 }
 
+#ifdef OBSOLETE_CODE
 //OLD SAVE METHOD:	This is the older way of saving the civilian and the enemies placement into a temp file
 BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8	ubFirstIdTeam, UINT8 ubLastIdTeam, BOOLEAN fAppendToFile )
 {
@@ -640,7 +648,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 		FileClose( hfile );
 		return FALSE;
 }
-
+#endif
 
 BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 {
@@ -867,7 +875,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	for( i = 0; i < slots; i++ )
 	{
-		if ( !tempDetailedPlacement.Load(hfile) )
+		if ( !tempDetailedPlacement.Load(hfile, gEnemyPreservedTempFileVersion[SECTOR(sSectorX, sSectorY)]) )
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.	KM", i );
@@ -1180,7 +1188,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 
 	for( i = 0; i < slots; i++ )
 	{
-		if ( !tempDetailedPlacement.Load(hfile) )
+		if ( !tempDetailedPlacement.Load(hfile, gCivPreservedTempFileVersion[SECTOR(sSectorX, sSectorY)]) )
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "Civilian -- EOF while reading tempDetailedPlacment %d.	KM", i );
@@ -1541,10 +1549,12 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 	if( fEnemy )
 	{
 		SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS );
+		gEnemyPreservedTempFileVersion[SECTOR(sSectorX, sSectorY)] = SAVE_GAME_VERSION;
 	}
 	else
 	{
 		SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_CIV_PRESERVED_TEMP_FILE_EXISTS );
+		gCivPreservedTempFileVersion[SECTOR(sSectorX, sSectorY)] = SAVE_GAME_VERSION;
 	}
 
 	return TRUE;
@@ -1726,7 +1736,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 
 	for( i = 0; i < slots; i++ )
 	{
-		if ( !tempDetailedPlacement.Load(hfile) )
+		if ( !tempDetailedPlacement.Load(hfile, gEnemyPreservedTempFileVersion[SECTOR( sSectorX,sSectorY)]) )
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "Check EnemySoldier -- EOF while reading tempDetailedPlacment %d.	KM", i );
