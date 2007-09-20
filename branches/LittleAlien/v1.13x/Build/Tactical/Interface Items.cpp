@@ -4455,7 +4455,7 @@ BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT32 sSrcGridNo )
 	bTargetDirection = (INT8)GetDirectionToGridNoFromGridNo( pSoldier->sGridNo, sSrcGridNo );
 
 	// Look 3 directions Clockwise from what we are facing....
-	bDirection = pSoldier->bDirection;
+	bDirection = pSoldier->ubDirection;
 
 	for ( cnt = 0; cnt < 3; cnt++ )
 	{
@@ -4468,7 +4468,7 @@ BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT32 sSrcGridNo )
 	}
 
 	// Look 3 directions CounterClockwise from what we are facing....
-	bDirection = pSoldier->bDirection;
+	bDirection = pSoldier->ubDirection;
 
 	for ( cnt = 0; cnt < 3; cnt++ )
 	{
@@ -4826,7 +4826,7 @@ BOOLEAN HandleItemPointerClick( INT32 usMapPos )
 	}
 
 	// Don't allow if our soldier is a # of things...
-	if ( AM_AN_EPC( gpItemPointerSoldier ) || gpItemPointerSoldier->bLife < OKLIFE || gpItemPointerSoldier->bOverTerrainType == DEEP_WATER )
+	if ( AM_AN_EPC( gpItemPointerSoldier ) || gpItemPointerSoldier->bLife < OKLIFE || MercInDeepWater( gpItemPointerSoldier) )
 	{
 		return( FALSE );
 	}
@@ -5127,10 +5127,10 @@ BOOLEAN HandleItemPointerClick( INT32 usMapPos )
 						  UINT8	ubFacingDirection;
 
 						  // Get direction to face.....
-						  ubFacingDirection = (UINT8)GetDirectionFromGridNo( gpItemPointerSoldier->sGridNo, pSoldier );
+						  ubFacingDirection = GetDirectionFromGridNo( gpItemPointerSoldier->sGridNo, pSoldier );
 
 						  // Stop merc first....
-						  EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+						  EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 
 						  // WANNE: Also turn merc if he is crouched and he passes an item
 						  if ( !MercInWater( pSoldier ) )
@@ -5231,7 +5231,7 @@ BOOLEAN HandleItemPointerClick( INT32 usMapPos )
 						}
 						
 						// Get direction
-						ubDirection = (UINT8)GetDirectionFromGridNo( gpItemPointerSoldier->sGridNo, pSoldier );
+						ubDirection = GetDirectionFromGridNo( gpItemPointerSoldier->sGridNo, pSoldier );
 
 						// ATE: Goto stationary...
 						SoldierGotoStationaryStance( pSoldier );
@@ -5245,7 +5245,7 @@ BOOLEAN HandleItemPointerClick( INT32 usMapPos )
 			
 
 			// CHANGE DIRECTION AT LEAST
-			ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, gpItemPointerSoldier );
+			ubDirection = GetDirectionFromGridNo( sGridNo, gpItemPointerSoldier );
 			EVENT_SetSoldierDesiredDirection( gpItemPointerSoldier, ubDirection );
 			gpItemPointerSoldier->fTurningUntilDone = TRUE;
 

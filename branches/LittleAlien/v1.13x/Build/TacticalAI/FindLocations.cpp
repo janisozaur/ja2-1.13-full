@@ -197,9 +197,10 @@ INT8 CalcBestCTGT( SOLDIERTYPE *pSoldier, UINT8 ubOppID, INT32 sOppGridNo, INT8 
 
 	// using only ints for maximum execution speed here
 	// CJC: Well, so much for THAT idea!
-	INT32 sCentralGridNo, sAdjSpot, sNorthGridNo, sSouthGridNo, sDir, sCheckSpot, sOKTest;
+	INT32 sCentralGridNo, sAdjSpot, sNorthGridNo, sSouthGridNo, sCheckSpot, sOKTest;
 	
 	INT8 bThisCTGT, bBestCTGT = 0;
+	UINT8 sDir = 0;
 
 	sCheckSpot = -1;
 
@@ -212,7 +213,8 @@ INT8 CalcBestCTGT( SOLDIERTYPE *pSoldier, UINT8 ubOppID, INT32 sOppGridNo, INT8 
 	sSouthGridNo = NewGridNo( sCentralGridNo, DirectionInc(SOUTH) );
 
 	// look into all 8 adjacent tiles & determine where the cover is the worst
-	for (sDir = 1; sDir <= 8; sDir++)
+	// Lalien: shouldn't this start at 0 than?
+	for (sDir = 0; sDir < NUM_WORLD_DIRECTIONS; sDir++)
 	{
 		// get the gridno of the adjacent spot lying in that direction
 		sAdjSpot = NewGridNo( sCentralGridNo, DirectionInc( sDir ) );

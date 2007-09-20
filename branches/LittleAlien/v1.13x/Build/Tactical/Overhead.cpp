@@ -2023,13 +2023,13 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 				{       
 					if ( pSoldier2->bActive )
 					{
-						EVENT_StopMerc( pSoldier2, pSoldier2->sGridNo, pSoldier2->bDirection );			     
+						EVENT_StopMerc( pSoldier2, pSoldier2->sGridNo, pSoldier2->ubDirection );			     
 					}
 				}
 			}
 			else
 			{
-				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 			}
 
 			(*pfKeepMoving) = FALSE;
@@ -2049,7 +2049,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 			if (sMineGridNo != NOWHERE)
 			{
 
-				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 				(*pfKeepMoving) = FALSE;
 
 				if (pSoldier->bSide != 0)
@@ -2179,7 +2179,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 				{
 					if ( pExplosive )
 					{
-						EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+						EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 						fDontContinue = TRUE;
 
 						DishOutGasDamage( pSoldier, pExplosive, TRUE, FALSE, 
@@ -2215,7 +2215,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 				}
 
 				if ( (pSoldier->bBlindedCounter > 0) && (pSoldier->usAnimState == RUNNING) && (Random( 5 ) == 0) && 
-							OKFallDirection( pSoldier, pSoldier->sGridNo + DirectionInc( pSoldier->bDirection ) , pSoldier->bLevel, pSoldier->bDirection, pSoldier->usAnimState ) )
+							OKFallDirection( pSoldier, pSoldier->sGridNo + DirectionInc( pSoldier->ubDirection ) , pSoldier->bLevel, pSoldier->ubDirection, pSoldier->usAnimState ) )
 				{
 					// 20% chance of falling over!
 					DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
@@ -2228,7 +2228,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 					return( FALSE );
 				}
 				else if ( ( GetDrunkLevel( pSoldier ) == DRUNK ) && (Random( 5 ) == 0) && 
-							OKFallDirection( pSoldier, pSoldier->sGridNo + DirectionInc( pSoldier->bDirection ) , pSoldier->bLevel, pSoldier->bDirection, pSoldier->usAnimState ) )
+							OKFallDirection( pSoldier, pSoldier->sGridNo + DirectionInc( pSoldier->ubDirection ) , pSoldier->bLevel, pSoldier->ubDirection, pSoldier->usAnimState ) )
 				{
 					// 20% chance of falling over!
 					DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
@@ -2255,7 +2255,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 							pSoldier->ubNumTilesMovesSinceLastForget = 0;
 
 							TacticalCharacterDialogue( pSoldier, QUOTE_PERSONALITY_TRAIT );
-							EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+							EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 							if (pSoldier->bActionPoints > 0)
 							{
 								pSoldier->bActionPoints -= (INT8) (Random( pSoldier->bActionPoints ) + 1);
@@ -2373,7 +2373,7 @@ void HandleMaryArrival( SOLDIERTYPE * pSoldier )
 		// Mary has arrived
 		SetFactTrue( FACT_MARY_OR_JOHN_ARRIVED );
 
-		EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+		EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 
 		TriggerNPCRecord( MARY, 13 );
 	}
@@ -2417,12 +2417,12 @@ void HandleJohnArrival( SOLDIERTYPE * pSoldier )
 
 		SetFactTrue( FACT_MARY_OR_JOHN_ARRIVED );
 
-		EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+		EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 
 		// if Mary is alive/dead
 		if ( pSoldier2 )
 		{
-			EVENT_StopMerc( pSoldier2, pSoldier2->sGridNo, pSoldier2->bDirection );
+			EVENT_StopMerc( pSoldier2, pSoldier2->sGridNo, pSoldier2->ubDirection );
 			TriggerNPCRecord( JOHN, 13 );
 		}
 		else
@@ -2519,7 +2519,7 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 	if (SetOffBombsInGridNo( pSoldier->ubID, pSoldier->sGridNo, FALSE, pSoldier->bLevel ) )
 	{
 		(*pfKeepMoving) = FALSE;
-		EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+		EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 		return( FALSE );
 	}
 
@@ -2615,13 +2615,13 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 				{       
 					if ( pSoldier2->bActive )
 					{
-						EVENT_StopMerc( pSoldier2, pSoldier2->sGridNo, pSoldier2->bDirection );			     
+						EVENT_StopMerc( pSoldier2, pSoldier2->sGridNo, pSoldier2->ubDirection );			     
 					}
 				}
 			}
 			else
 			{
-				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 			}
 
 			(*pfKeepMoving) = FALSE;
@@ -2641,7 +2641,7 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 			if (sMineGridNo != NOWHERE)
 			{
 
-				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 				(*pfKeepMoving) = FALSE;
 
 				gpWorldLevelData[ sMineGridNo ].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
@@ -2668,7 +2668,7 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 					if (PythSpacesAway( pSoldier->sGridNo, 8842 ) < 11)
 					{
 						// Skyrider has arrived!
-						EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+						EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 						SetFactTrue( FACT_SKYRIDER_CLOSE_TO_CHOPPER );
 						TriggerNPCRecord( SKYRIDER, 15 );
 						SetUpHelicopterForPlayer( 13, MAP_ROW_B );
@@ -2698,7 +2698,7 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 				// if Joey walks near Martha then trigger Martha record 7
 				if ( CheckFact( FACT_JOEY_NEAR_MARTHA, 0 ) )
 				{
-					EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+					EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 					TriggerNPCRecord( JOEY, 9 );
 				}
 			}
@@ -4586,8 +4586,8 @@ INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirect
 	// fDoor determines whether special door-handling code should be used (for interacting with doors)
 
 	INT32 sFourGrids[4], sDistance=0;
-	INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
-	INT32 cnt;
+	INT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
+	//INT32 cnt;
 	//INT32 sClosest=NOWHERE, sSpot, sOkTest;
 	INT32 sClosest = MAX_MAP_POS, sSpot, sOkTest; //Lalien: changed to ensure compability with new definition of NOWHERE
 	//INT32 sCloseGridNo=NOWHERE;
@@ -4605,7 +4605,7 @@ INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirect
 	// Set default direction
 	if (pubDirection)
 	{
-		*pubDirection = pSoldier->bDirection;
+		*pubDirection = pSoldier->ubDirection;
 	}
 
 	// CHECK IF WE WANT TO FORCE GRIDNO TO PERSON
@@ -4641,7 +4641,7 @@ INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirect
 					sSpot = NewGridNo( sGridNo, DirectionInc( SOUTH ) );
 					if (pubDirection)
 					{
-						(*pubDirection) = (UINT8)GetDirectionFromGridNo( sSpot, pSoldier );
+						(*pubDirection) = GetDirectionFromGridNo( sSpot, pSoldier );
 					}			
 				}
 
@@ -4651,7 +4651,7 @@ INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirect
 					sSpot = NewGridNo( sGridNo, DirectionInc( EAST ) );
 					if (pubDirection)
 					{
-						(*pubDirection) = (UINT8)GetDirectionFromGridNo( sSpot, pSoldier );
+						(*pubDirection) = GetDirectionFromGridNo( sSpot, pSoldier );
 					}
 				}
 			}
@@ -4683,7 +4683,7 @@ INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirect
 				// Use direction to this guy!
 				if (pubDirection)
 				{
-					(*pubDirection) = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
+					(*pubDirection) = GetDirectionFromGridNo( sGridNo, pSoldier );
 				}
 			}
 		}       
@@ -4719,15 +4719,15 @@ INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirect
 
 			 if ( sDistance < sClosest )
 			 {
-				 sClosest                        = sDistance;
-					sCloseGridNo  = sGridNo;
+				 sClosest      = sDistance;
+				 sCloseGridNo  = sGridNo;
 			 }
 		 }
 		}
 	}
 
 
-	for (cnt = 0; cnt < 4; cnt++)
+	for (INT8 cnt = 0; cnt < 4; cnt++)
 	{
 		// MOVE OUT TWO DIRECTIONS
 		sFourGrids[cnt] = sSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );
@@ -4791,14 +4791,14 @@ INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirect
 			 // Use direction to the door!
 			 if (pubDirection)
 				{
-					(*pubDirection) = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
+					(*pubDirection) = GetDirectionFromGridNo( sGridNo, pSoldier );
 				}
 		 }
 		 return( sSpot );
 		}
 
 		// don't store path, just measure it
-		ubDir = (UINT8)GetDirectionToGridNoFromGridNo( sSpot, sGridNo );	 
+		ubDir = GetDirectionToGridNoFromGridNo( sSpot, sGridNo );	 
 
 		if ( ( NewOKDestinationAndDirection( pSoldier, sSpot, ubDir, TRUE, pSoldier->bLevel ) > 0 ) &&
 			( ( sDistance = PlotPath( pSoldier, sSpot,  NO_COPYROUTE, NO_PLOT, TEMPORARY, (INT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints ) ) > 0 ) )
@@ -4846,7 +4846,7 @@ INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirect
 		else
 		{
 			// Calculate direction if our gridno is different....
-			ubDir = (UINT8)GetDirectionToGridNoFromGridNo( sCloseGridNo, sGridNo );
+			ubDir = GetDirectionToGridNoFromGridNo( sCloseGridNo, sGridNo );
 			if (pubDirection)
 			{
 				*pubDirection = ubDir;
@@ -4882,8 +4882,8 @@ INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pub
 	// fDoor determines whether special door-handling code should be used (for interacting with doors)
 
  INT32 sFourGrids[4], sDistance=0;
-	INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
-	INT32 cnt;
+	INT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
+	//INT32 cnt;
  INT32 sClosest=WORLD_MAX, sSpot, sSpot2, sOkTest;
  INT32 sCloseGridNo=NOWHERE;
 	UINT32                                         uiMercFlags;
@@ -4904,7 +4904,7 @@ INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pub
 	// CHECK IF IT'S THE SAME ONE AS WE'RE ON, IF SO, RETURN THAT!
 	if ( pSoldier->sGridNo == sGridNo )
 	{
-		*pubDirection = pSoldier->bDirection;
+		*pubDirection = pSoldier->ubDirection;
 		return( sGridNo );
 	}
 
@@ -4960,7 +4960,7 @@ INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pub
 	}
 
 
-	for (cnt = 0; cnt < 4; cnt++)
+	for (INT8 cnt = 0; cnt < 4; cnt++)
 	{
 		// MOVE OUT TWO DIRECTIONS
 		sFourGrids[cnt] = sSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );
@@ -4972,7 +4972,7 @@ INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pub
 			ubTestDirection = gOppositeDirection[ ubTestDirection ];
 		}
 
-	 if ( gubWorldMovementCosts[ sSpot ][ ubTestDirection ][ pSoldier->bLevel ] >= TRAVELCOST_BLOCKED )
+		if ( gubWorldMovementCosts[ sSpot ][ ubTestDirection ][ pSoldier->bLevel ] >= TRAVELCOST_BLOCKED )
 		{
 			// obstacle or wall there!
 			continue;
@@ -5008,8 +5008,8 @@ INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pub
 
 		// first tile is okay, how about the second?
 		sSpot2 = NewGridNo( sSpot, DirectionInc( sDirs[ cnt ] ) );
-	 if ( gubWorldMovementCosts[ sSpot2 ][ sDirs[cnt] ][ pSoldier->bLevel ] >= TRAVELCOST_BLOCKED ||
-				DoorTravelCost( pSoldier, sSpot2, gubWorldMovementCosts[ sSpot2 ][ sDirs[cnt] ][ pSoldier->bLevel ], (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), NULL ) == TRAVELCOST_DOOR ) // closed door blocks!
+		if ( gubWorldMovementCosts[ sSpot2 ][ sDirs[cnt] ][ pSoldier->bLevel ] >= TRAVELCOST_BLOCKED ||
+			DoorTravelCost( pSoldier, sSpot2, gubWorldMovementCosts[ sSpot2 ][ sDirs[cnt] ][ pSoldier->bLevel ], (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), NULL ) == TRAVELCOST_DOOR ) // closed door blocks!
 		{
 			// obstacle or wall there!
 			continue;
@@ -5029,13 +5029,13 @@ INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pub
 		{
 			if (pubDirection)
 		 {
-			 (*pubDirection) = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
+			 (*pubDirection) = GetDirectionFromGridNo( sGridNo, pSoldier );
 		 }
-			//*pubDirection = pSoldier->bDirection;
+			//*pubDirection = pSoldier->ubDirection;
 			return( sSpot );
 		}
 
-		ubDir = (UINT8)GetDirectionToGridNoFromGridNo( sSpot, sGridNo );	 
+		ubDir = GetDirectionToGridNoFromGridNo( sSpot, sGridNo );	 
 
 		// don't store path, just measure it
 		if ( ( NewOKDestinationAndDirection( pSoldier, sSpot, ubDir, TRUE , pSoldier->bLevel ) > 0 ) &&
@@ -5082,7 +5082,7 @@ INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pub
 		else
 		{
 			// Calculate direction if our gridno is different....
-			ubDir = (UINT8)GetDirectionToGridNoFromGridNo( sCloseGridNo, sGridNo );
+			ubDir = GetDirectionToGridNoFromGridNo( sCloseGridNo, sGridNo );
 			if (pubDirection)
 			{
 				*pubDirection = ubDir;
@@ -5127,7 +5127,7 @@ INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pub
 	else
 	{
 	// Calculate direction if our gridno is different....
-	ubDir = (UINT8)GetDirectionToGridNoFromGridNo( sCloseGridNo, sGridNo );
+	ubDir = GetDirectionToGridNoFromGridNo( sCloseGridNo, sGridNo );
 	*pubDirection = ubDir;
 	}
 	return( sCloseGridNo );
@@ -5139,15 +5139,15 @@ INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pub
 
 INT32 FindAdjacentPunchTarget( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier, INT32 * psAdjustedTargetGridNo, UINT8 * pubDirection )
 {
-	INT16	cnt;
+	//INT16	cnt;
 	INT32	sSpot;	
 	UINT8	ubGuyThere;
 
-	for ( cnt = 0; cnt < NUM_WORLD_DIRECTIONS; cnt++ )
+	for ( INT8 cnt = 0; cnt < NUM_WORLD_DIRECTIONS; cnt++ )
 	{
-			sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( cnt ) );
+		sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( cnt ) );
 
-			if ( DoorTravelCost( pSoldier, sSpot, gubWorldMovementCosts[ sSpot ][ cnt ][ pSoldier->bLevel ], FALSE, NULL ) >= TRAVELCOST_BLOCKED )
+		if ( DoorTravelCost( pSoldier, sSpot, gubWorldMovementCosts[ sSpot ][ cnt ][ pSoldier->bLevel ], FALSE, NULL ) >= TRAVELCOST_BLOCKED )
 		{
 			// blocked!
 			continue;
@@ -5425,7 +5425,7 @@ void CommonEnterCombatModeCode( )
 				pSoldier->usQuoteSaidFlags &= (~SOLDIER_QUOTE_SAID_MULTIPLE_CREATURES);
 
 				// Hault!
-				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 
 				// END AI actions
 				CancelAIAction( pSoldier, TRUE );
@@ -7061,7 +7061,7 @@ void HandleSuppressionFire( UINT8 ubTargetedMerc, UINT8 ubCausedAttacker )
 					}
 					break;
 				default: // standing!
-					if (pSoldier->bOverTerrainType == LOW_WATER || pSoldier->bOverTerrainType == DEEP_WATER)
+					if ( MercInWater( pSoldier ))
 					{
 						// can't change stance here!
 						break;
@@ -7908,7 +7908,7 @@ void CencelAllActionsForTimeCompression( void )
 			if ( pSoldier->bInSector )
 			{
 				// Hault!
-				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 
 				// END AI actions
 				CancelAIAction( pSoldier, TRUE );

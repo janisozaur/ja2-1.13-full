@@ -528,7 +528,7 @@ void AddMercToWorld( INT32 iMapIndex )
 		gTempBasicPlacement.bAttitude = gbDefaultAttitude;
 		gTempBasicPlacement.bRelativeAttributeLevel = gbDefaultRelativeAttributeLevel; 
 		gTempBasicPlacement.bRelativeEquipmentLevel = gbDefaultRelativeEquipmentLevel; 
-		gTempBasicPlacement.bDirection = gbDefaultDirection;
+		gTempBasicPlacement.ubDirection = gbDefaultDirection;
 
 		//Generate detailed placement information given the temp placement information.
 		CreateDetailedPlacementGivenBasicPlacementInfo( &gTempDetailedPlacement, &gTempBasicPlacement );
@@ -645,7 +645,7 @@ void ResetAllMercPositions()
 		//	EVENT_SetSoldierPosition( gpSelected->pSoldier, (FLOAT)(sCellX + 5), (FLOAT)(sCellY + 5) );
 		//	if( gpSelected->pBasicPlacement->fOnRoof )
 		//		SetSoldierHeight( gpSelected->pSoldier, 58.0 );
-		//	SetMercDirection( gpSelected->pBasicPlacement->bDirection );
+		//	SetMercDirection( gpSelected->pBasicPlacement->ubDirection );
 		//}
 		curr = curr->next;
 	}
@@ -1451,7 +1451,7 @@ void SetMercDirection( INT8 bDirection )
 	ClickEditorButton( FIRST_MERCS_DIRECTION_BUTTON + bDirection );
 
 	gbDefaultDirection = bDirection;
-	gpSelected->pBasicPlacement->bDirection = bDirection;
+	gpSelected->pBasicPlacement->ubDirection = bDirection;
 
 	// ATE: Changed these to call functions....
 	EVENT_SetSoldierDirection( gpSelected->pSoldier, bDirection );
@@ -1676,7 +1676,7 @@ void IndicateSelectedMerc( INT16 sID )
 	//assigns the soldier with the same orders/attitude.
 	SetMercOrders( gpSelected->pSoldier->bOrders );
 	SetMercAttitude( gpSelected->pSoldier->bAttitude );
-	SetMercDirection( gpSelected->pSoldier->bDirection );
+	SetMercDirection( gpSelected->pSoldier->ubDirection );
 	if( gpSelected->pBasicPlacement->fPriorityExistance )
 		ClickEditorButton( MERCS_PRIORITYEXISTANCE_CHECKBOX );
 	else
@@ -2075,6 +2075,7 @@ void ChangeBodyType( INT8 bOffset )  //+1 or -1 only
 				break;
 		}
 		SetSoldierAnimationSurface( gpSelected->pSoldier, gpSelected->pSoldier->usAnimState );
+		ConvertAniCodeToAniFrame( gpSelected->pSoldier, 0 );
 	}
 	//Update the placement's info as well.
 	gpSelected->pBasicPlacement->bBodyType = (INT8)iIndex;
@@ -2973,7 +2974,9 @@ void UpdateMercItemSlots()
 	{
 		if( gpSelected->pDetailedPlacement->ubProfile != NO_PROFILE )
 		{
-			memcpy( &gpSelected->pDetailedPlacement->Inv, &gpSelected->pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
+			// 0verhaul:  Inventory is now a C++ class.  Bad memcpy!  No biscuit!
+			//memcpy( &gpSelected->pDetailedPlacement->Inv, &gpSelected->pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
+			gpSelected->pDetailedPlacement->Inv = gpSelected->pSoldier->inv;
 		}
 		for( x = 0; x < 9; x++ )
 		{

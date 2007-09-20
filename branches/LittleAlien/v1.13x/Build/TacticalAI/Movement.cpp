@@ -574,7 +574,7 @@ INT32 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT32 sDesGrid, IN
 				ubDirChecked[ubDirection] = TRUE;
 
 				// determine the gridno 1 tile away from current friend in this direction
-				sTempDest = NewGridNo(sDesGrid,DirectionInc( (INT16)(ubDirection + 1) ));
+				sTempDest = NewGridNo(sDesGrid, DirectionInc( ubDirection + 1 ) );
 
 				// if that's out of bounds, ignore it & check next direction
 				if (sTempDest == sDesGrid)
@@ -625,8 +625,8 @@ INT32 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT32 sDesGrid, IN
   {
    // what is the next gridno in the path?
 
-	 //sTempDest = NewGridNo( sGoToGrid,DirectionInc( (INT16) (pSoldier->usPathingData[sLoop] + 1) ) );
-	 sTempDest = NewGridNo( sGoToGrid,DirectionInc( (INT16) (pSoldier->usPathingData[sLoop]) ) );
+	 //sTempDest = NewGridNo( sGoToGrid,DirectionInc( (pSoldier->usPathingData[sLoop] + 1) ) );
+	 sTempDest = NewGridNo( sGoToGrid, DirectionInc( pSoldier->usPathingData[sLoop] ) );
    //NumMessage("sTempDest = ",sTempDest);
 
    // this should NEVER be out of bounds
@@ -998,7 +998,7 @@ INT32 TrackScent( SOLDIERTYPE * pSoldier )
 							ubBestStrength = ubStrength;
 							bDir = atan8( (INT16) iXStart, (INT16) iYStart, (INT16) (iXStart + iXDiff), (INT16) (iYStart + iYDiff) );
 							// now convert it into a difference in degree between it and our current dir
-							ubBestDirDiff = abs( pSoldier->bDirection - bDir );
+							ubBestDirDiff = abs( pSoldier->ubDirection - bDir );
 							if (ubBestDirDiff > 4 ) // dir 0 compared with dir 6, for instance
 							{
 								ubBestDirDiff = 8 - ubBestDirDiff;
@@ -1018,7 +1018,7 @@ INT32 TrackScent( SOLDIERTYPE * pSoldier )
 								// start by calculating direction to the new gridno
 								bDir = atan8( (INT16) iXStart, (INT16) iYStart, (INT16) (iXStart + iXDiff), (INT16) (iYStart + iYDiff) );
 								// now convert it into a difference in degree between it and our current dir
-								ubDirDiff = abs( pSoldier->bDirection - bDir );
+								ubDirDiff = abs( pSoldier->ubDirection - bDir );
 								if (ubDirDiff > 4 ) // dir 0 compared with dir 6, for instance
 								{
 									ubDirDiff = 8 - ubDirDiff;

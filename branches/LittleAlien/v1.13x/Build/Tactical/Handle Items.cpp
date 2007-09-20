@@ -575,7 +575,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, UINT16 usHa
 				// Start knife throw attack
 
 				// Get direction
-				ubDirection = (UINT8)GetDirectionFromGridNo( sTargetGridNo, pSoldier );
+				ubDirection = GetDirectionFromGridNo( sTargetGridNo, pSoldier );
 
 				EVENT_SoldierBeginKnifeThrowAttack( pSoldier, sTargetGridNo, ubDirection );
 
@@ -623,7 +623,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, UINT16 usHa
 	//TRY PUNCHING
 	if ( Item[ usHandItem ].usItemClass == IC_PUNCH )
 	{
-		INT16	sCnt;
+		//INT16	sCnt;
 		 INT32	sSpot;	
 		UINT8		ubGuyThere;
 		 INT32		sGotLocation = NOWHERE;
@@ -631,7 +631,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, UINT16 usHa
 		sAdjustedGridNo = NOWHERE;
 		ubDirection = 0xff;
 
-		for ( sCnt = 0; sCnt < NUM_WORLD_DIRECTIONS; sCnt++ )
+		for ( INT8 sCnt = 0; sCnt < NUM_WORLD_DIRECTIONS; sCnt++ )
 		{
 			sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( sCnt ) );
 
@@ -1302,7 +1302,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, UINT16 usHa
 		// Check if these is room to place mortar!
 		if ( Item[usHandItem].mortar )
 		{
-			ubDirection = (UINT8)GetDirectionFromGridNo( sTargetGridNo, pSoldier );
+			ubDirection = GetDirectionFromGridNo( sTargetGridNo, pSoldier );
 
 			// Get new gridno!
 			sCheckGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)DirectionInc( ubDirection ) );
@@ -1495,7 +1495,7 @@ void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 		else
 		{
 			// CHANGE DIRECTION AT LEAST
-			ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
+			ubDirection = GetDirectionFromGridNo( sGridNo, pSoldier );
 
 			SoldierGotoStationaryStance( pSoldier );
 
@@ -1549,7 +1549,7 @@ void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 		else
 		{
 			// CHANGE DIRECTION AT LEAST
-			ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
+			ubDirection = GetDirectionFromGridNo( sGridNo, pSoldier );
 
 			SoldierGotoStationaryStance( pSoldier );
 
@@ -2152,7 +2152,7 @@ OBJECTTYPE* InternalAddItemToPool( INT32 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 	// IF SO, DONT'T ADD!
 	bTerrainID = GetTerrainType( *psGridNo );
 
-	if ( bTerrainID == DEEP_WATER || bTerrainID == LOW_WATER || bTerrainID == MED_WATER )
+	if ( TERRAIN_IS_WATER( bTerrainID) )
 	{
 		//		if ( Item[ pObject->usItem ].fFlags & ITEM_SINKS )
 		if ( Item[ pObject->usItem ].sinks  )

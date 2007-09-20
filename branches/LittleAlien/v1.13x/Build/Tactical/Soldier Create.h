@@ -43,7 +43,7 @@ typedef struct
 	INT8 bTeam;											//The team this individual is part of.
 	INT8 bRelativeAttributeLevel;		
 	INT8 bRelativeEquipmentLevel;		
-	INT8 bDirection;								//1 of 8 values (always mandatory)
+	UINT8 ubDirection;								//1 of 8 values (always mandatory)
 	INT8 bOrders;										
 	INT8 bAttitude;									
 	INT8 bBodyType;									//up to 128 body types, -1 means random
@@ -66,7 +66,7 @@ typedef struct
 	INT8 bTeam;											//The team this individual is part of.
 	INT8 bRelativeAttributeLevel;		
 	INT8 bRelativeEquipmentLevel;		
-	INT8 bDirection;								//1 of 8 values (always mandatory)
+	UINT8 ubDirection;								//1 of 8 values (always mandatory)
 	INT8 bOrders;										
 	INT8 bAttitude;									
 	INT8 bBodyType;									//up to 128 body types, -1 means random
@@ -293,7 +293,7 @@ public:
 	//Location information
 	INT16							sSectorX;
 	INT16							sSectorY;
-	INT8							bDirection;
+	UINT8							ubDirection;
 	INT16							_old_sInsertionGridNo;
 
 	// Can force a team, but needs flag set

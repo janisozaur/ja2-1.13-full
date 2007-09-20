@@ -900,7 +900,7 @@ void UpdateSMPanel( )
 		}
 	}
 	
-	if ( FindFenceJumpDirection( gpSMCurrentMerc, gpSMCurrentMerc->sGridNo, gpSMCurrentMerc->bDirection, &bDirection ) )
+	if ( FindFenceJumpDirection( gpSMCurrentMerc, gpSMCurrentMerc->sGridNo, gpSMCurrentMerc->ubDirection, &bDirection ) )
 	{
 		EnableButton( iSMPanelButtons[ CLIMB_BUTTON ] );		
 	}
@@ -2876,7 +2876,7 @@ void MergeMessageBoxCallBack( UINT8 ubExitValue )
 void HandleMouseOverSoldierFaceForContMove( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 {
 	FACETYPE *pFace;
-	INT32 sGridNo;
+	INT32 sGridNo = NOWHERE;
 
 	if ( pSoldier == NULL )
 	{
@@ -3140,7 +3140,7 @@ void BtnClimbCallback(GUI_BUTTON *btn,INT32 reason)
 			BeginSoldierClimbUpRoof( gpSMCurrentMerc );
 		}
 
-		if ( FindFenceJumpDirection( gpSMCurrentMerc, gpSMCurrentMerc->sGridNo, gpSMCurrentMerc->bDirection, &bDirection ) )
+		if ( FindFenceJumpDirection( gpSMCurrentMerc, gpSMCurrentMerc->sGridNo, gpSMCurrentMerc->ubDirection, &bDirection ) )
 		{
 			BeginSoldierClimbFence( gpSMCurrentMerc );
 		}

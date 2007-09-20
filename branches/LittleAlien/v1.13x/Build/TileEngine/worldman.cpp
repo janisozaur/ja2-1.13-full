@@ -2208,18 +2208,18 @@ BOOLEAN AddMercStructureInfoFromAnimSurface( INT32 sGridNo, SOLDIERTYPE *pSoldie
 		}
 		else
 		{
-			fReturn = AddStructureToWorld( sGridNo, pSoldier->bLevel, &( pStructureFileRef->pDBStructureRef[ gOneCDirection[ pSoldier->bDirection ] ] ), pSoldier->pLevelNode );
+			fReturn = AddStructureToWorld( sGridNo, pSoldier->bLevel, &( pStructureFileRef->pDBStructureRef[ gOneCDirection[ pSoldier->ubDirection ] ] ), pSoldier->pLevelNode );
 		}
 /*
 		if ( fReturn == FALSE )
 		{
 			// try to add default
-			ScreenMsg( MSG_FONT_YELLOW, MSG_DEBUG, L"FAILED: add struct info for merc: %d, at %d direction %d, trying default instead", pSoldier->ubID, sGridNo, pSoldier->bDirection );
+			ScreenMsg( MSG_FONT_YELLOW, MSG_DEBUG, L"FAILED: add struct info for merc: %d, at %d direction %d, trying default instead", pSoldier->ubID, sGridNo, pSoldier->ubDirection );
 
 			pStructureFileRef = GetDefaultStructureRef( pSoldier->ubID );
 			if ( pStructureFileRef )
 			{
-				fReturn = AddStructureToWorld( sGridNo, pSoldier->bLevel, &( pStructureFileRef->pDBStructureRef[ gOneCDirection[ pSoldier->bDirection ] ] ), pSoldier->pLevelNode );
+				fReturn = AddStructureToWorld( sGridNo, pSoldier->bLevel, &( pStructureFileRef->pDBStructureRef[ gOneCDirection[ pSoldier->ubDirection ] ] ), pSoldier->pLevelNode );
 			}
 		}
 		*/
@@ -2228,9 +2228,9 @@ BOOLEAN AddMercStructureInfoFromAnimSurface( INT32 sGridNo, SOLDIERTYPE *pSoldie
 		{
 
 			// Debug msg
-			ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"FAILED: add struct info for merc %d (%s), at %d direction %d", pSoldier->ubID, pSoldier->name, sGridNo, pSoldier->bDirection );
+			ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"FAILED: add struct info for merc %d (%s), at %d direction %d", pSoldier->ubID, pSoldier->name, sGridNo, pSoldier->ubDirection );
 
-			if ( pStructureFileRef->pDBStructureRef[ gOneCDirection[ pSoldier->bDirection ] ].pDBStructure->ubNumberOfTiles > 1 )
+			if ( pStructureFileRef->pDBStructureRef[ gOneCDirection[ pSoldier->ubDirection ] ].pDBStructure->ubNumberOfTiles > 1 )
 			{
 				// If we have more than one tile
 				pSoldier->uiStatusFlags |= SOLDIER_MULTITILE_Z;
@@ -3445,7 +3445,7 @@ BOOLEAN Water( INT32 sGridNo )
 	}
 
 	pMapElement = &(gpWorldLevelData[sGridNo]);
-	if ( pMapElement->ubTerrainID == LOW_WATER || pMapElement->ubTerrainID == MED_WATER || pMapElement->ubTerrainID == DEEP_WATER )
+	if ( TERRAIN_IS_WATER( pMapElement->ubTerrainID) )
 	{
 		// check for a bridge!  otherwise...
 		return( TRUE );
@@ -3467,7 +3467,7 @@ BOOLEAN DeepWater( INT32 sGridNo )
 
 	pMapElement = &(gpWorldLevelData[sGridNo]);
 
-	if (pMapElement->ubTerrainID == DEEP_WATER)
+	if (TERRAIN_IS_DEEP_WATER( pMapElement->ubTerrainID) )
 	{
 		// check for a bridge!  otherwise...
 		return( TRUE );

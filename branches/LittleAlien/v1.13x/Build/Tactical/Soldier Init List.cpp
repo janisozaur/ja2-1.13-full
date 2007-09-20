@@ -325,7 +325,7 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion  )
 			LOADDATA( &tempDetailedPlacement, *hBuffer, SIZEOF_SOLDIERCREATE_STRUCT_POD );
 			tempDetailedPlacement.CopyOldInventoryToNew();
 			//allocate memory for new static detailed placement
-			pNode->pDetailedPlacement = new (MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT )) SOLDIERCREATE_STRUCT;//(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
+			pNode->pDetailedPlacement = new SOLDIERCREATE_STRUCT;//(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
 			if( !pNode->pDetailedPlacement )
 			{
 				AssertMsg( 0, "Failed to allocate memory for new detailed placement in LoadSoldiersFromMap." );
@@ -2392,7 +2392,9 @@ void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated()
 		{
 			if( curr->pBasicPlacement->bTeam == ENEMY_TEAM )
 			{
-				MemFree( curr->pDetailedPlacement );
+				// pDetailedPlacement has been C++'d
+				//MemFree( curr->pDetailedPlacement );
+				delete curr->pDetailedPlacement;
 				curr->pDetailedPlacement = NULL;
 				curr->pBasicPlacement->fDetailedPlacement = FALSE;
 				curr->pBasicPlacement->fPriorityExistance = FALSE;

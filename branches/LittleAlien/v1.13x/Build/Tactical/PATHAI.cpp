@@ -603,6 +603,10 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 	iOriginationX = iOriginationY = 0;
 	iOrigination = s->sGridNo;
 
+	if (sDestination == NOWHERE)
+	{
+		return 0; // There is no path to nowhere, because everywhere you can go is somewhere!
+	}
 	//if (iOrigination < 0 || iOrigination >= WORLD_MAX)
 	if ( TileIsOutOfBounds( iOrigination ) )
 	{
@@ -964,7 +968,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 		{
 			if (trailTreeNdx < 2)
 			{
-				iLastDir = s->bDirection;
+				iLastDir = s->ubDirection;
 			}
 			else if ( trailTree[pCurrPtr->sPathNdx].fFlags & STEP_BACKWARDS )
 			{
@@ -2216,7 +2220,7 @@ void RoofReachableTest( INT32 sStartGridNo, UINT8 ubBuildingID )
 
 void ErasePath(char bEraseOldOne)
 {
-	INT16 iCnt;
+	INT32 iCnt;
 
  // NOTE: This routine must be called BEFORE anything happens that changes
  //       a merc's gridno, else the....
@@ -2326,7 +2330,7 @@ INT32 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridNo, INT8 bCopyRoute, INT8 bPl
 
 
      // We should reduce points for starting to run if first tile is a fence...
-		 sTestGridNo  = NewGridNo(pSold->sGridNo,(INT16) DirectionInc( (UINT16)guiPathingData[0]));
+		sTestGridNo  = NewGridNo(pSold->sGridNo, DirectionInc( guiPathingData[0]));
      if ( gubWorldMovementCosts[ sTestGridNo ][ (INT8)guiPathingData[0] ][ pSold->bLevel] == TRAVELCOST_FENCE )
      {
 	    if ( usMovementMode == RUNNING && pSold->usAnimState != RUNNING )
@@ -2380,7 +2384,7 @@ INT32 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridNo, INT8 bCopyRoute, INT8 bPl
 			// what is the next gridno in the path?
 			sOldGrid   = sTempGrid;
 
-			sTempGrid  = NewGridNo(sTempGrid,(INT16) DirectionInc( (UINT16)guiPathingData[iCnt]));
+			sTempGrid  = NewGridNo(sTempGrid, DirectionInc( guiPathingData[iCnt]));
 
 			// Get switch value...
 			sSwitchValue = gubWorldMovementCosts[ sTempGrid ][ (INT8)guiPathingData[iCnt] ][ pSold->bLevel];
@@ -2391,7 +2395,7 @@ INT32 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridNo, INT8 bCopyRoute, INT8 bPl
       usMovementModeToUseForAPs = usMovementMode;
 
       // ATE - MAKE MOVEMENT ALWAYS WALK IF IN WATER
-	    if ( gpWorldLevelData[ sTempGrid ].ubTerrainID == DEEP_WATER || gpWorldLevelData[ sTempGrid ].ubTerrainID == MED_WATER || gpWorldLevelData[ sTempGrid ].ubTerrainID == LOW_WATER )
+			if ( TERRAIN_IS_WATER( gpWorldLevelData[ sTempGrid ].ubTerrainID) )
       {
         usMovementModeToUseForAPs = WALKING;
       }

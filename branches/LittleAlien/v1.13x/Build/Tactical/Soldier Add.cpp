@@ -146,7 +146,7 @@ INT32 FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 u
 	if ( fFound )
 	{
 		// Set direction to center of map!
-		*pubDirection =  (UINT8)GetDirectionToGridNoFromGridNo( sLowestGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
+		*pubDirection =  GetDirectionToGridNoFromGridNo( sLowestGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
 		return( sLowestGridNo );
 	}
 	else
@@ -245,7 +245,7 @@ INT32 FindGridNoFromSweetSpotThroughPeople( SOLDIERTYPE *pSoldier, INT32 sSweetG
 	if ( fFound )
 	{
 		// Set direction to center of map!
-		*pubDirection =  (UINT8)GetDirectionToGridNoFromGridNo( sLowestGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
+		*pubDirection =  GetDirectionToGridNoFromGridNo( sLowestGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
 		return( sLowestGridNo );
 	}
 	else
@@ -296,7 +296,7 @@ INT32 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAni
   // If we are already at this gridno....
   if ( pSoldier->sGridNo == sSweetGridNo && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
   {
-    *pubDirection = pSoldier->bDirection;
+    *pubDirection = pSoldier->ubDirection;
     return( sSweetGridNo );
   }
 
@@ -461,7 +461,7 @@ INT32 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( SOLDIERTYPE
   // If we are already at this gridno....
   if ( pSoldier->sGridNo == sSweetGridNo && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
   {
-    *pubDirection = pSoldier->bDirection;
+    *pubDirection = pSoldier->ubDirection;
     return( sSweetGridNo );
   }
 
@@ -813,7 +813,7 @@ INT32 FindGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, INT32 sS
 	if ( fFound )
 	{
 		// Set direction to center of map!
-		*pubDirection =  (UINT8)GetDirectionToGridNoFromGridNo( sLowestGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
+		*pubDirection =  GetDirectionToGridNoFromGridNo( sLowestGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
 
 		return( sLowestGridNo );
 	}
@@ -887,7 +887,7 @@ INT32 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( SOLDIERTYPE *pSoldier
 	if ( fFound )
 	{
 		// Set direction to center of map!
-		*pubDirection =  (UINT8)GetDirectionToGridNoFromGridNo( sLowestGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
+		*pubDirection =  GetDirectionToGridNoFromGridNo( sLowestGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
 
 		return( sLowestGridNo );
 	}
@@ -1031,7 +1031,7 @@ INT32 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, 
 	} while( !fFound );
 
 	// Set direction to center of map!
-	*pubDirection =  (UINT8)GetDirectionToGridNoFromGridNo( sGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
+	*pubDirection =  GetDirectionToGridNoFromGridNo( sGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
 
 	gubNPCAPBudget = ubSaveNPCAPBudget;
 	gubNPCDistLimit = ubSaveNPCDistLimit;
@@ -1082,7 +1082,7 @@ INT32 FindRandomGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, IN
 	} while( !fFound );
 
 	// Set direction to center of map!
-	*pubDirection =  (UINT8)GetDirectionToGridNoFromGridNo( sGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
+	*pubDirection =  GetDirectionToGridNoFromGridNo( sGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
 
 	return( sGridNo );
 
@@ -1209,7 +1209,7 @@ BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOO
 					{
 						// We found one
 						// Calculate direction...
-						ubDirection = (UINT8)GetDirectionToGridNoFromGridNo( sExitGridNo, sGridNo );						
+						ubDirection = GetDirectionToGridNoFromGridNo( sExitGridNo, sGridNo );						
 					}
 				}
 			}
@@ -1221,7 +1221,7 @@ BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOO
 
 		//Add
 		if(gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
-			AddSoldierToSectorGridNo( pSoldier, sGridNo, pSoldier->bDirection, fUseAnimation, usAnimState, usAnimCode );
+			AddSoldierToSectorGridNo( pSoldier, sGridNo, pSoldier->ubDirection, fUseAnimation, usAnimState, usAnimCode );
 		else
 			AddSoldierToSectorGridNo( pSoldier, sGridNo, ubDirection, fUseAnimation, usAnimState, usAnimCode );
 
@@ -1281,7 +1281,7 @@ void InternalSoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN
 	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
 
-	//pSoldier->bDesiredDirection = pSoldier->bDirection;
+	//pSoldier->bDesiredDirection = pSoldier->ubDirection;
 
 	if ( AM_AN_EPC( pSoldier ) )
 	{
@@ -1322,7 +1322,7 @@ void SoldierInSectorIncompaciated( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
 
-	//pSoldier->bDesiredDirection = pSoldier->bDirection;
+	//pSoldier->bDesiredDirection = pSoldier->ubDirection;
 
 	EVENT_InitNewSoldierAnim( pSoldier, STAND_FALLFORWARD_STOP, 1, TRUE );
 }
@@ -1358,7 +1358,7 @@ void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
 
-	//pSoldier->bDesiredDirection = pSoldier->bDirection;
+	//pSoldier->bDesiredDirection = pSoldier->ubDirection;
 
 	if ( !IS_MERC_BODY_TYPE( pSoldier ) )
 	{
@@ -1393,7 +1393,7 @@ void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
 
-	//pSoldier->bDesiredDirection = pSoldier->bDirection;
+	//pSoldier->bDesiredDirection = pSoldier->ubDirection;
 
 	if ( !IS_MERC_BODY_TYPE( pSoldier ) )
 	{
@@ -1428,7 +1428,7 @@ void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
 
-	//pSoldier->bDesiredDirection = pSoldier->bDirection;
+	//pSoldier->bDesiredDirection = pSoldier->ubDirection;
 
 	if ( !IS_MERC_BODY_TYPE( pSoldier ) )
 	{

@@ -36,7 +36,7 @@ void GetNumberOfEnemiesInFiveSectors( INT16 sSectorX, INT16 sSectorY, UINT8 *pub
 	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
 	UINT16 pusMoveDir[4][3];
 	UINT8 ubDirNumber, ubIndex;
-	
+
 	GetNumberOfStationaryEnemiesInSector( sSectorX, sSectorY, pubNumAdmins, pubNumTroops, pubNumElites );
 
 	GetNumberOfMobileEnemiesInSectorWithoutRoadBlock( sSectorX, sSectorY, &ubNumAdmins, &ubNumTroops, &ubNumElites );
@@ -74,7 +74,7 @@ void GetNumberOfEnemiesInFiveSectors( INT16 sSectorX, INT16 sSectorY, UINT8 *pub
 				ubNumAdmins--;
 			}
 		}
-		
+
 
 		GetNumberOfMobileEnemiesInSectorWithoutRoadBlock( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ),  &ubNumAdmins, &ubNumTroops, &ubNumElites );
 
@@ -89,7 +89,7 @@ UINT8 NumEnemiesInFiveSectors( INT16 sMapX, INT16 sMapY )
 	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
 
 	GetNumberOfEnemiesInFiveSectors( sMapX, sMapY, &ubNumAdmins, &ubNumTroops, &ubNumElites );
-	
+
 	return ubNumAdmins + ubNumTroops + ubNumElites;
 }
 
@@ -134,7 +134,7 @@ UINT8 CountAllMilitiaInFiveSectors(INT16 sMapX, INT16 sMapY)
 	UINT8 ubResult = 0;
 	UINT16 pusMoveDir[4][3];
 	UINT8 ubDirNumber, ubIndex;
-	
+
 	ubResult = CountAllMilitiaInSector( sMapX, sMapY );
 
 	if( !gGameExternalOptions.gfAllowReinforcements )
@@ -155,7 +155,7 @@ UINT8 MilitiaInFiveSectorsOfRank( INT16 sMapX, INT16 sMapY, UINT8 ubRank )
 	UINT8 ubResult = 0;
 	UINT16 pusMoveDir[4][3];
 	UINT8 ubDirNumber, ubIndex;
-	
+
 	ubResult = MilitiaInSectorOfRank( sMapX, sMapY, ubRank );
 
 	if( !gGameExternalOptions.gfAllowReinforcements )
@@ -167,7 +167,7 @@ UINT8 MilitiaInFiveSectorsOfRank( INT16 sMapX, INT16 sMapY, UINT8 ubRank )
 	for( ubIndex = 0; ubIndex < ubDirNumber; ubIndex++ )
 		ubResult += MilitiaInSectorOfRank( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ), ubRank );
 
-	
+
 	return ubResult;
 }
 
@@ -183,7 +183,7 @@ BOOLEAN ARMoveBestMilitiaManFromAdjacentSector(INT16 sMapX, INT16 sMapY)
 
 	if( CountAllMilitiaInSector( sMapX, sMapY ) >= gGameExternalOptions.guiMaxMilitiaSquadSize ||
 		CountAllMilitiaInFiveSectors( sMapX, sMapY ) - CountAllMilitiaInSector( sMapX, sMapY ) == 0 )
-			return FALSE;
+		return FALSE;
 
 	GenerateDirectionInfos( sMapX, sMapY, &ubDirNumber, pusMoveDir, 
 		( GetTownIdForSector( sMapX, sMapY ) != BLANK_SECTOR ? TRUE : FALSE ), TRUE, IS_ONLY_IN_CITIES );
@@ -247,7 +247,7 @@ UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
 	UINT16 pusMoveDir[4][3];
 	UINT8 ubDirNumber = 0, ubIndex;
 	GROUP *pGroup;
-	ENEMYGROUP *pEnemyGroup;
+	//ENEMYGROUP *pEnemyGroup;
 	SECTORINFO *pThisSector, *pSector;
 
 	if( !gGameExternalOptions.gfAllowReinforcements )
@@ -261,10 +261,8 @@ UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
 	GenerateDirectionInfos( sMapX, sMapY, &ubDirNumber, pusMoveDir, 
 		( GetTownIdForSector( sMapX, sMapY ) != BLANK_SECTOR ? TRUE : FALSE ), TRUE, IS_ONLY_IN_CITIES );
 
-
-	// Combine this with the next part so that reinforcements from enemy groups can also come in from random sides
 	for( ubIndex = 0; ubIndex < ubDirNumber; ubIndex++ )
-		{
+	{
 		while ((pGroup = GetEnemyGroupInSector( SECTORX( pusMoveDir[ ubIndex][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ) ) ) != NULL)
 		{
 			pGroup->ubPrevX = pGroup->ubSectorX;
@@ -281,15 +279,6 @@ UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
 	while( ubDirNumber > 0)
 	{
 		ubIndex = Random(ubDirNumber);
-// This should be handled in AddPossiblePendingEnemiesToBattle
-
-
-				// The entire group has finally moved into the sector.
-
-
-
-				// Otherwise we move a soldier into the sector from the group
-
 
 		if( NumEnemiesInSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ) ) > gubReinforcementMinEnemyStaticGroupSize )
 		{
@@ -323,9 +312,12 @@ UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
 		}
 		else
 		{
+			// If there are no reinforcements from this direction, remove this as a direction
 			memcpy( &(pusMoveDir[ubIndex][0]), &(pusMoveDir[ --ubDirNumber][0]), sizeof(pusMoveDir[0]));
 		}
 	}
+
+	// No reinforcements from other sectors are available
 	return 255;
 }
 
@@ -404,8 +396,8 @@ void AddPossiblePendingMilitiaToBattle()
 	static UINT8 ubPredefinedInsertionCode = 255;
 	static UINT8 ubPredefinedRank = 255;
 
-//	if( !PlayerMercsInSector( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY, 0 ) || !CountAllMilitiaInSector( gWorldSectorX, gWorldSectorY ) 
-//		|| !NumEnemiesInSector( gWorldSectorX, gWorldSectorY ) ) return;
+	//	if( !PlayerMercsInSector( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY, 0 ) || !CountAllMilitiaInSector( gWorldSectorX, gWorldSectorY ) 
+	//		|| !NumEnemiesInSector( gWorldSectorX, gWorldSectorY ) ) return;
 	if( !PlayerMercsInSector( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY, 0 ) 
 		|| !(gTacticalStatus.uiFlags & WANT_MILITIA_REINFORCEMENTS)
 		|| !NumEnemiesInSector( gWorldSectorX, gWorldSectorY ) 
