@@ -194,7 +194,7 @@ public:
 	//	Note that the constructor does this automatically.
 	void initialize();
 
-	BOOLEAN Load(HWFILE hFile, int versionToLoad);
+	BOOLEAN Load(HWFILE hFile);
 	BOOLEAN Load(INT8 **hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion);
 	BOOLEAN Save(HWFILE hFile, bool fSavingMap);
 

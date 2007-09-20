@@ -310,7 +310,8 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer, float dMajorMapVersion, UINT8 ubMin
 				return FALSE;
 			}
 			//allocate memory for new static detailed placement
-			pNode->pDetailedPlacement = new SOLDIERCREATE_STRUCT;//(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
+			//copy the file information from temp var to node in list.
+			pNode->pDetailedPlacement = new SOLDIERCREATE_STRUCT(tempDetailedPlacement);//(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
 			if( !pNode->pDetailedPlacement )
 			{
 				AssertMsg( 0, "Failed to allocate memory for new detailed placement in LoadSoldiersFromMap." );

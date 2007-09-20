@@ -410,10 +410,8 @@ BOOLEAN RenderItemInPoolSlot( INT32 iCurrentSlot, INT32 iFirstSlotOnPage )
 				( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].bSectorZ == iCurrentMapSectorZ )
 			) )
 	{
-		//Shade the item, but only if it is an active item!
-		if ( pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].object.exists() == true) {
-			DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, MAP_INVEN_SLOT_WIDTH, MAP_INVEN_SLOT_IMAGE_HEIGHT );
-		}
+		//Shade the item
+		DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, MAP_INVEN_SLOT_WIDTH, MAP_INVEN_SLOT_IMAGE_HEIGHT );
 	}
 
 
@@ -1387,35 +1385,30 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 	}
 	else
 	{
-		fOk = (0 == pInventorySlot->MoveThisObjectTo(gItemPointer, 1));
+		fOk = (0 == pInventorySlot->MoveThisObjectTo(gItemPointer));
 	}
 
 	if (fOk)
 	{
-		if (pInventorySlot->exists() == false) {
-			pInventorySlot->usItem = NOTHING;
-		}
 		// Dirty interface
 		fMapPanelDirty = TRUE;
 		gpItemPointer = &gItemPointer;
 
-		if ( _KeyDown ( CTRL ))//Delete Item
+		if ( _KeyDown ( CTRL ))
 		{
+			INT16 usDesiredItemType = gItemPointer.usItem;
+
 			gpItemPointer = NULL;
 			fMapInventoryItem = FALSE;
 
 			if ( _KeyDown ( 89 )) //Lalien: delete all items of this type on Ctrl+Y 
 			{
-				DeleteItemsOfType( gItemPointer.usItem );
-				ScreenMsg( FONT_MCOLOR_LTRED, MSG_INTERFACE, L"Deleted all items of this type" );
-			}
-			else {
-				ScreenMsg( FONT_MCOLOR_LTRED, MSG_INTERFACE, L"Deleted item" );
+				DeleteItemsOfType( usDesiredItemType );
 			}
 			if ( fShowMapInventoryPool )
 				HandleButtonStatesWhileMapInventoryActive();
 		}
-		else if ( _KeyDown ( ALT ) && fSELLALL)//Sell Item
+		else if ( _KeyDown ( ALT ) && fSELLALL)
 		{
 			INT32 iPrice = SellItem( gItemPointer );
 		    PlayJA2Sample( COMPUTER_BEEP2_IN, RATE_11025, 15, 1, MIDDLEPAN );			              
@@ -1432,18 +1425,11 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 					}
 				}
 			}
+
 			//ADB you can sell items for 0, but that's not fair
 			//and it's not easy to stop the sale so make the price 1
 			if (iPrice == 0) {
 				iPrice = 1;
-			}
-
-			if ( _KeyDown ( 89 )) //Lalien: sell all items of this type on Alt+Y 
-			{
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Sold all items of this type" );
-			}
-			else {
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Sold item" );
 			}
 
 			AddTransactionToPlayersBook( SOLD_ITEMS, 0, GetWorldTotalMin(), iPrice );
@@ -1487,7 +1473,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 		if (pItemPtr->usItem == pInventorySlot->usItem && ItemSlotLimit(pItemPtr, STACK_SIZE_LIMIT) >= 2)
 		{
 			// stacking
-			pInventorySlot->AddObjectsToStack(*pItemPtr);
+			pItemPtr->AddObjectsToStack(*pInventorySlot);
 		}
 		else
 		{
@@ -2093,7 +2079,7 @@ void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArr
 		//if object exists, we want to try to stack it
 		if (iter->fExists && iter->object.exists() == true) {
 
-			//ADB TODO if it is active and reachable etc
+			//TODO if it is active and reachable etc
 #if 0
 			if (iter->object.ubNumberOfObjects < ItemSlotLimit( iter->object.usItem, STACK_SIZE_LIMIT )) {
 				std::vector<WORLDITEM>::iterator second = iter;

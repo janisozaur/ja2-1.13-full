@@ -7336,18 +7336,10 @@ void BltCharInvPanel()
 	else if((UsingNewInventorySystem() == true))
 	{
 		InitializeInvPanelCoordsNew();
-		
-		//ADB I don't know what this code does.  Removing it seems to have no adverse affect on the game.
-		//It causes the no tooltips bug because it destroys the mouse region
-		//which makes previous mouse region not work which means previous mouse region never gets the no-update-timer flag
-		//this continually resets the timer and no tooltips are displayed
-
-		/*
 		fShowInventoryFlag = FALSE;
 		CreateDestroyMapInvButton();
 		fShowInventoryFlag = TRUE;
 		CreateDestroyMapInvButton();
-		*/
 //		ResetMapInvRegions(gMapScreenInvPocketXY, MAPInvMoveCallback, MAPInvClickCallback, FALSE);
 		Blt8BPPDataTo16BPPBufferTransparent( pDestBuf, uiDestPitchBYTES, hCharListHandle, PLAYER_INFO_X, PLAYER_INFO_Y, 1);
 	}
@@ -7597,18 +7589,21 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 			do, remove the items from it and place them into the sector the LBE inventory is located in.*/
 			if((UsingNewInventorySystem() == true) && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 			{
-				/*if we pick up a backpack without reactivating the drop pack button, and we have a
-				dropkey, reactivate the button*/
-				if(uiHandPos == BPACKPOCKPOS)
+				if(uiHandPos == VESTPOCKPOS || uiHandPos == LTHIGHPOCKPOS || uiHandPos == RTHIGHPOCKPOS || uiHandPos == CPACKPOCKPOS || uiHandPos == BPACKPOCKPOS)
 				{
-					// Deal with the zipper before we do anything
-					if(pSoldier->flags.ZipperFlag)
-						if(!ChangeZipperStatus(pSoldier, FALSE))
-							return;
-					// Do we still have a linked backpack?  If so, reset droppackflag
-					if(pSoldier->DropPackKey != ITEM_NOT_FOUND)
+					/*if we pick up a backpack without reactivating the drop pack button, and we have a
+					dropkey, reactivate the button*/
+					if(uiHandPos == BPACKPOCKPOS)
 					{
-						pSoldier->flags.DropPackFlag = TRUE;
+						// Deal with the zipper before we do anything
+						if(pSoldier->flags.ZipperFlag)
+							if(!ChangeZipperStatus(pSoldier, FALSE))
+								return;
+						// Do we still have a linked backpack?  If so, reset droppackflag
+						if(pSoldier->DropPackKey != ITEM_NOT_FOUND)
+						{
+							pSoldier->flags.DropPackFlag = TRUE;
+						}
 					}
 				}
 			}

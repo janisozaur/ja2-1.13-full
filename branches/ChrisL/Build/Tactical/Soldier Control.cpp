@@ -270,7 +270,7 @@ void MERCPROFILEGEAR::initialize() {
 
 void MERCPROFILEGEAR::clearInventory() {
 	//ADB these really should be defines
-	invCnt = 55;
+	invCnt = 19;
 	lbeCnt = 5;
 
 	inv.clear();

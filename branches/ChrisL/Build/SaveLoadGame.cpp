@@ -1002,29 +1002,24 @@ BOOLEAN SOLDIERCREATE_STRUCT::Load(INT8 **hBuffer, float dMajorMapVersion, UINT8
 	return TRUE;
 }
 
-BOOLEAN SOLDIERCREATE_STRUCT::Load(HWFILE hFile, int versionToLoad)
+BOOLEAN SOLDIERCREATE_STRUCT::Load(HWFILE hFile)
 {
 	PERFORMANCE_MARKER
 	UINT32 uiNumBytesRead;
 
-	int tempVersion = guiCurrentSaveGameVersion;
-	guiCurrentSaveGameVersion = versionToLoad;
-
 	//if we are at the most current version, then fine
-	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION)
+	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
 	{
 		//the info has changed at version 102
 		//first, load the POD
 		if ( !FileRead( hFile, this, SIZEOF_SOLDIERCREATE_STRUCT_POD, &uiNumBytesRead ) )
 		{
-			guiCurrentSaveGameVersion = tempVersion;
 			return(FALSE);
 		}
 
 		//load the OO inventory
 		if ( !this->Inv.Load(hFile) )
 		{
-			guiCurrentSaveGameVersion = tempVersion;
 			return(FALSE);
 		}
 	}
@@ -1037,7 +1032,6 @@ BOOLEAN SOLDIERCREATE_STRUCT::Load(HWFILE hFile, int versionToLoad)
 		{
 			if ( !FileRead( hFile, &OldSavedSoldierInfo101, SIZEOF_OLD_SOLDIERCREATE_STRUCT_101_POD, &uiNumBytesRead ) )
 			{
-				guiCurrentSaveGameVersion = tempVersion;
 				return FALSE;
 			}
 		}
@@ -1075,7 +1069,6 @@ BOOLEAN SOLDIERCREATE_STRUCT::Load(HWFILE hFile, int versionToLoad)
 			sprintf( zReason, "Load SoldierCreateStruct -- EOF while reading usCheckSum.	KM"	);
 			AssertMsg( 0, zReason );
 		#endif
-		guiCurrentSaveGameVersion = tempVersion;
 		return FALSE;
 	}
 	//verify the checksum equation (anti-hack) -- see save 
@@ -1086,10 +1079,8 @@ BOOLEAN SOLDIERCREATE_STRUCT::Load(HWFILE hFile, int versionToLoad)
 			sprintf( zReason, "EnemySoldier -- checksum for placement %d failed.	KM", usFileCheckSum );
 			AssertMsg( 0, zReason );
 		#endif
-		guiCurrentSaveGameVersion = tempVersion;
 		return FALSE;
 	}
-	guiCurrentSaveGameVersion = tempVersion;
 	return TRUE;
 }
 
@@ -2731,8 +2722,6 @@ FAILED_TO_SAVE:
 
 
 UINT32 guiBrokenSaveGameVersion = 0;
-extern int gEnemyPreservedTempFileVersion[256];
-extern int gCivPreservedTempFileVersion[256];
 
 BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 {
@@ -2934,11 +2923,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		gfUseAlternateMap = TRUE;
 	}
 
-
-	for (int x = 0; x < 256; ++x) {
-		gEnemyPreservedTempFileVersion[x] = guiCurrentSaveGameVersion;
-		gCivPreservedTempFileVersion[x] = guiCurrentSaveGameVersion;
-	}
 
 	//if the world was loaded when saved, reload it, otherwise dont
 	if( SaveGameHeader.fWorldLoaded || guiCurrentSaveGameVersion < 50 )

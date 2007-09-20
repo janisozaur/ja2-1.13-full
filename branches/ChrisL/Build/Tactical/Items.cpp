@@ -1386,9 +1386,6 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 	}
 
 	if (UsingNewInventorySystem() == false) {
-		if (ubSlotLimit == 0 && bSlot < BIGPOCKFINAL) {
-			return 1;
-		}
 		if (bSlot >= BIGPOCKFINAL && ubSlotLimit > 1)
 		{
 			ubSlotLimit /= 2;
@@ -4134,14 +4131,9 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 				}
 		//if we didn't reload, then we know we are stacking or swapping!
 
-		if (IsSlotASmallPocket(bPos) == true && FitsInSmallPocket(pObj) == false) {
-			//there is nothing we can do, just return
-			return FALSE;
-		}
-
 		// CHRISL:
 		ubSlotLimit = ItemSlotLimit( pObj, bPos, pSoldier );
-		if (ubSlotLimit == 0)
+		if (ubSlotLimit == 0) // trying to drop into a small pocket
 		{
 			//we have tried to stack but the stack is full, or we have tried to swap but the slot is wrong
 			return( FreeUpSlotIfPossibleThenPlaceObject( pSoldier, bPos, pObj ) );

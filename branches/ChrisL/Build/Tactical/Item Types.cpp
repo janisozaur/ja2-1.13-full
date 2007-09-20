@@ -5,11 +5,11 @@
 #include "GameSettings.h"
 
 
-unsigned int		BODYPOSFINAL		= GUNSLINGPOCKPOS;//RESET in initInventory
-unsigned int		BIGPOCKFINAL		= MEDPOCK1POS;//RESET in initInventory
-unsigned int		MEDPOCKSTART		= MEDPOCK1POS;//RESET in initInventory
-unsigned int		MEDPOCKFINAL		= SMALLPOCK1POS;//RESET in initInventory
-unsigned int		SMALLPOCKFINAL		= NUM_INV_SLOTS;//RESET in initInventory
+int		BODYPOSFINAL		= GUNSLINGPOCKPOS;//RESET in initInventory
+int		BIGPOCKFINAL		= MEDPOCK1POS;//RESET in initInventory
+int		MEDPOCKSTART		= MEDPOCK1POS;//RESET in initInventory
+int		MEDPOCKFINAL		= SMALLPOCK1POS;//RESET in initInventory
+int		SMALLPOCKFINAL		= NUM_INV_SLOTS;//RESET in initInventory
 
 
 OBJECTTYPE gTempObject;
@@ -26,15 +26,6 @@ bool IsSlotAnLBESlot(int slot)
 	case RTHIGHPOCKPOS:
 	case CPACKPOCKPOS:
 	case BPACKPOCKPOS:
-		return true;
-	}
-	return false;
-}
-
-bool IsSlotASmallPocket(int slot)
-{
-	PERFORMANCE_MARKER
-	if (slot >= SMALLPOCKSTART && slot < SMALLPOCKFINAL) {
 		return true;
 	}
 	return false;
@@ -431,7 +422,7 @@ void OBJECTTYPE::SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, 
 	for (unsigned int x = 0; x < numToSplice; ++x) {
 		++stopIter;
 	}
-	objectStack.splice(objectStack.end(), sourceObject.objectStack, beginIter, stopIter);
+	objectStack.splice(objectStack.begin(), sourceObject.objectStack, beginIter, stopIter);
 
 	ubNumberOfObjects += numToSplice;
 	ubWeight = CalculateObjectWeight(this);
@@ -472,6 +463,13 @@ bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
 	//stacking control, restrict certain things here
 	if (numToStack > 0) {
 		if (exists() == true) {
+			//Triggers, and other specials can never stack
+			if (Item[usItem].usItemClass == IC_BOMB) {
+				//exit and do not continue
+				//CHRISL: Explosives need to stack, though, so we can't just return false.
+				//return false;
+			}
+
 		if (Item[usItem].usItemClass == IC_MONEY) {
 			//money doesn't stack, it merges
 			// average out the status values using a weighted average...
