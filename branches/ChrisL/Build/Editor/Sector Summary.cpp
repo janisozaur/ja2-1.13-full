@@ -37,6 +37,7 @@
 	#include "World Items.h"
 	#include "text.h"
 	#include "Soldier Create.h"
+	#include "Campaign Types.h"
 #endif
 
 extern BOOLEAN gfOverheadMapDirty;
@@ -2933,6 +2934,9 @@ void ApologizeOverrideAndForceUpdateEverything()
 	gusNumberOfMapsToBeForceUpdated = 0;
 }
 
+//CHRISL: ADB changed the way this load file is handled
+extern int gEnemyPreservedTempFileVersion[256];
+extern int gCivPreservedTempFileVersion[256];
 void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 {
 	PERFORMANCE_MARKER
@@ -3038,7 +3042,9 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement 
-			if ( !priority.Load(hfile) )
+			//CHRISL: ADB changed the way this load file is handled
+			//if ( !priority.Load(hfile) )
+			if ( !priority.Load(hfile, gEnemyPreservedTempFileVersion[SECTOR(gsSelSectorX, gsSelSectorY)]) )
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;
@@ -3099,7 +3105,9 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement 
-			if ( !priority.Load(hfile) )
+			//CHRISL: ADB changed the way this load file is handled
+			//if ( !priority.Load(hfile) )
+			if ( !priority.Load(hfile, gEnemyPreservedTempFileVersion[SECTOR(gsSelSectorX, gsSelSectorY)]) )
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;

@@ -343,12 +343,10 @@ BOOLEAN RenderItemInPoolSlot( INT32 iCurrentSlot, INT32 iFirstSlotOnPage )
 
 	// check if anything there
 	
-#ifdef DONT_DISPLAY_NADA
 	if( pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].object.exists() == false ) 
 	{
 		return ( FALSE );
 	}
-#endif
 
 	GetVideoObject( &hHandle, GetInterfaceGraphicForItem( &(Item[ pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].object.usItem ] ) ) );
 
