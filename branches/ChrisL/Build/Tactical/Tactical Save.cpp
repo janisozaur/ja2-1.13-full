@@ -339,6 +339,8 @@ BOOLEAN SaveMapTempFilesToSavedGameFile( HWFILE hFile )
 	return( TRUE );
 }
 
+extern int gEnemyPreservedTempFileVersion[256];
+extern int gCivPreservedTempFileVersion[256];
 
 // LoadMapTempFilesFromSavedGameFile() loads all the temp files from the saved game file and writes them into the temp directory
 BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
@@ -438,6 +440,7 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 			{
 				if ( !RetrieveTempFileFromSavedGame( hFile, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, sMapX, sMapY, 0 ) )
 					return FALSE;
+				gEnemyPreservedTempFileVersion[SECTOR( sMapX,sMapY)] = guiCurrentSaveGameVersion;
 			}
 
 			if( SectorInfo[ SECTOR( sMapX,sMapY) ].uiFlags & SF_CIV_PRESERVED_TEMP_FILE_EXISTS )
@@ -457,6 +460,8 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 					SectorInfo[ SECTOR( sMapX,sMapY) ].uiFlags &= (~SF_CIV_PRESERVED_TEMP_FILE_EXISTS);
 
 				}
+
+				gCivPreservedTempFileVersion[SECTOR( sMapX,sMapY)] = guiCurrentSaveGameVersion;
 			}
 
 			if( SectorInfo[ SECTOR( sMapX,sMapY) ].uiFlags & SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS )
@@ -609,9 +614,31 @@ BOOLEAN UpdateWorldItemsTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	return TRUE;
 }
 
+/*
+BOOLEAN UpdateENEMYTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+{
+	PERFORMANCE_MARKER
+	NewWayOfSavingEnemyAndCivliansToTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE, TRUE );
+	NewWayOfSavingEnemyAndCivliansToTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, FALSE, TRUE );
+	LoadWorldItemsFromTempItemFile( sMapX,  sMapY, bMapZ, pTotalSectorList );
+	int backup = guiCurrentSaveGameVersion;
+	guiCurrentSaveGameVersion = SAVE_GAME_VERSION;
+	SaveWorldItemsToTempItemFile( sMapX, sMapY, bMapZ, uiTotalNumberOfItems, pTotalSectorList);
+	guiCurrentSaveGameVersion = backup;
+}
 
 
-
+BOOLEAN UpdateCIVTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+{
+	PERFORMANCE_MARKER
+	LoadWorldItemsFromTempItemFile( sMapX,  sMapY, bMapZ, pTotalSectorList );
+	int backup = guiCurrentSaveGameVersion;
+	guiCurrentSaveGameVersion = SAVE_GAME_VERSION;
+	SaveWorldItemsToTempItemFile( sMapX, sMapY, bMapZ, uiTotalNumberOfItems, pTotalSectorList);
+	guiCurrentSaveGameVersion = backup;
+	return TRUE;
+}
+*/
 
 BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM* pData )
 {
