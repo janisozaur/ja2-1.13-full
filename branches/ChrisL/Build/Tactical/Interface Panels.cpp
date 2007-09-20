@@ -3033,22 +3033,19 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			
 			if((UsingNewInventorySystem() == true))
 			{
-				if(uiHandPos == VESTPOCKPOS || uiHandPos == LTHIGHPOCKPOS || uiHandPos == RTHIGHPOCKPOS || uiHandPos == CPACKPOCKPOS || uiHandPos == BPACKPOCKPOS)
+				/*if we pick up a backpack without reactivating the drop pack button, and we have a
+				dropkey, reactivate the button*/
+				if(uiHandPos == BPACKPOCKPOS)
 				{
-					/*if we pick up a backpack without reactivating the drop pack button, and we have a
-					dropkey, reactivate the button*/
-					if(uiHandPos == BPACKPOCKPOS)
+					// Deal with the zipper before we do anything
+					if(gpSMCurrentMerc->flags.ZipperFlag)
+						if(!ChangeZipperStatus(gpSMCurrentMerc, FALSE))
+							return;
+					// Do we still have a linked backpack?  If so, reset droppackflag
+					if(gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
 					{
-						// Deal with the zipper before we do anything
-						if(gpSMCurrentMerc->flags.ZipperFlag)
-							if(!ChangeZipperStatus(gpSMCurrentMerc, FALSE))
-								return;
-						// Do we still have a linked backpack?  If so, reset droppackflag
-						if(gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
-						{
-							gpSMCurrentMerc->flags.DropPackFlag = TRUE;
-							RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
-						}
+						gpSMCurrentMerc->flags.DropPackFlag = TRUE;
+						RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 					}
 				}
 			}
@@ -3178,19 +3175,16 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				the appropriate pockets for the soldier and then delete the LBENODE.*/
 				if((UsingNewInventorySystem() == true))
 				{
-					if((uiHandPos == VESTPOCKPOS || uiHandPos == LTHIGHPOCKPOS || uiHandPos == RTHIGHPOCKPOS || uiHandPos == CPACKPOCKPOS || uiHandPos == BPACKPOCKPOS) && CanItemFitInPosition(gpSMCurrentMerc, gpItemPointer, uiHandPos, FALSE))
+					//If we put a new pack in the backpack pocket, turn off the droppack button
+					if(uiHandPos == BPACKPOCKPOS && CanItemFitInPosition(gpSMCurrentMerc, gpItemPointer, uiHandPos, FALSE))
 					{
-						//If we put a new pack in the backpack pocket, turn off the droppack button
-						if(uiHandPos == BPACKPOCKPOS)
-						{
-							// First, deal with the zipper
-							if(gpSMCurrentMerc->flags.ZipperFlag)
-								if(!ChangeZipperStatus(gpSMCurrentMerc, FALSE))
-									return;
-							if(gpSMCurrentMerc->flags.DropPackFlag)
-								gpSMCurrentMerc->flags.DropPackFlag = FALSE;
-							RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
-						}
+						// First, deal with the zipper
+						if(gpSMCurrentMerc->flags.ZipperFlag)
+							if(!ChangeZipperStatus(gpSMCurrentMerc, FALSE))
+								return;
+						if(gpSMCurrentMerc->flags.DropPackFlag)
+							gpSMCurrentMerc->flags.DropPackFlag = FALSE;
+						RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 					}
 				}
 
@@ -6876,4 +6870,5 @@ void HandleTacticalEffectsOfEquipmentChange( SOLDIERTYPE *pSoldier, UINT32 uiInv
 		}
 	}
 }
+
 

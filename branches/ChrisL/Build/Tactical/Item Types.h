@@ -102,31 +102,35 @@ typedef enum INVENTORY_SLOT{
 	NUM_INV_SLOTS,
 };
 
-#define INV_START_POS			0
-#define BODYPOSSTART		HELMETPOS
-extern	int		BODYPOSFINAL		;//= GUNSLINGPOCKPOS;//RESET in initInventory
-#define			BIGPOCKSTART		BIGPOCK1POS
-extern	int		BIGPOCKFINAL		;//= MEDPOCK1POS;//RESET in initInventory
-extern	int		MEDPOCKSTART		;//= MEDPOCK1POS;//RESET in initInventory
-extern	int		MEDPOCKFINAL		;//= SMALLPOCK1POS;//RESET in initInventory
-#define			SMALLPOCKSTART		SMALLPOCK1POS
-extern	int		SMALLPOCKFINAL		;//= NUM_INV_SLOTS;//RESET in initInventory
-#define STACK_SIZE_LIMIT	NUM_INV_SLOTS
+#define					INV_START_POS		0
+#define					BODYPOSSTART		HELMETPOS
+extern	unsigned int	BODYPOSFINAL		;//= GUNSLINGPOCKPOS;//RESET in initInventory
+#define					BIGPOCKSTART		BIGPOCK1POS
+extern	unsigned int	BIGPOCKFINAL		;//= MEDPOCK1POS;//RESET in initInventory
+extern	unsigned int	MEDPOCKSTART		;//= MEDPOCK1POS;//RESET in initInventory
+extern	unsigned int	MEDPOCKFINAL		;//= SMALLPOCK1POS;//RESET in initInventory
+#define					SMALLPOCKSTART		SMALLPOCK1POS
+extern	unsigned int	SMALLPOCKFINAL		;//= NUM_INV_SLOTS;//RESET in initInventory
+#define					STACK_SIZE_LIMIT	NUM_INV_SLOTS
 
 /* CHRISL: Arrays to track ic group information.  These allow us to determine which LBE slots control which pockets and
 what LBE class the pockets are. We need to staticly set the number of keys rather then using NUM_INV_SLOTS so we don't
 accidentally cause an error if a slot is ever removed.*/
-//							{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54}
+//										{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54}
 // Determines which LBE Slot controls each pocket
-const INT8	icLBE[55] =		{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,10,10,10,11,11,11,11, 7, 7, 8, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9,10,10,10,10,11,11,11,11,11,11,11,11};
+const INT8	icLBE[NUM_INV_SLOTS] =		{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,10,10,10,11,11,11,11, 7, 7, 8, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9,10,10,10,10,11,11,11,11,11,11,11,11};
+
 // Determines the class (and default definition) of the controlling pocket
-const INT8	icClass[55] =	{-1,-1,-1,-1,-1,-1,-1, 5, 5, 5, 5, 5, 6, 6, 3, 3, 3, 4, 4, 4, 4, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4};
+const INT8	icClass[NUM_INV_SLOTS] =	{-1,-1,-1,-1,-1,-1,-1, 5, 5, 5, 5, 5, 6, 6, 3, 3, 3, 4, 4, 4, 4, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4};
+
 // Determines the pocket number to look at in LBETYPE
-const INT8	icPocket[55] =	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 4, 5, 6, 8, 9,10,11,10,11, 4, 4, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 4, 5, 6, 7};
+const INT8	icPocket[NUM_INV_SLOTS] =	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 4, 5, 6, 8, 9,10,11,10,11, 4, 4, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 4, 5, 6, 7};
+
 // Determines which pockets are used in the old inventory system.
-const INT8	oldInv[55] =	{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+const INT8	oldInv[NUM_INV_SLOTS] =		{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
 // Determines which pockets to use for vehicles in the new inventory system.
-const INT8	vehicleInv[55]=	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0};
+const INT8	vehicleInv[NUM_INV_SLOTS]=	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0};
 
 
 #define INVALIDCURS 0
@@ -234,6 +238,7 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBES
 BOOLEAN	MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos );
 BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
 bool	IsSlotAnLBESlot(int slot);
+bool	IsSlotASmallPocket(int slot);
 
 extern	std::list<LBENODE>	LBEArray;
 
