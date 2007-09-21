@@ -1569,7 +1569,7 @@ INT8 MinPtsToMove(SOLDIERTYPE *pSoldier)
 
 	if ( TANK( pSoldier ) )
 	{
-		return( (INT8)sLowest);
+	return( (INT8)sLowest);
 	}
 
 	for (cnt=0; cnt <= 7; cnt++)

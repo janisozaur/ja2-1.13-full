@@ -205,7 +205,7 @@ INT8 CalcBestCTGT( SOLDIERTYPE *pSoldier, UINT8 ubOppID, INT16 sOppGridNo, INT8 
 
 	// using only ints for maximum execution speed here
 	// CJC: Well, so much for THAT idea!
-	INT16 sCentralGridNo, sAdjSpot, sNorthGridNo, sSouthGridNo, sCheckSpot, sOKTest;	
+	INT16 sCentralGridNo, sAdjSpot, sNorthGridNo, sSouthGridNo, sCheckSpot, sOKTest;
 	INT8 bThisCTGT, bBestCTGT = 0;
 	UINT8 sDir = 0;
 
@@ -510,7 +510,7 @@ INT32 CalcCoverValue(SOLDIERTYPE *pMe, INT16 sMyGridNo, INT32 iMyThreat, INT32 i
 	iCoverValue = (iCoverValue * iReductionFactor) / 100;
 
 #ifdef DEBUGCOVER
-	DebugAI( String( "CalcCoverValue: iCoverValue %d, sMyGridNo %d, sHisGrid %d, iRange %d, morale %d\n",iCoverValue,sMyGridNo,sHisGridNo,iRange,morale) );
+	DebugAI( String( "CalcCoverValue: iCoverValue %d, sMyGridNo x%d y%d, sHisGrid x%d y%d, iRange %d, morale %d\n",iCoverValue,GridNode(sMyGridNo).x,GridNode(sMyGridNo).y,GridNode(sHisGridNo).x,GridNode(sHisGridNo).y,iRange,morale) );
 	DebugAI( String( "CalcCoverValue: iCertainty %d, his bOppCnt %d, my bOppCnt %d\n",Threat[uiThreatIndex].iCertainty,pHim->aiData.bOppCnt,pMe->aiData.bOppCnt) );
 	DebugAI( String( "CalcCoverValue: bHisCTGT = %d, hisThreat = %d, hisFullAPs = %d\n",bHisCTGT,Threat[uiThreatIndex].iValue,Threat[uiThreatIndex].iAPs) );
 	DebugAI( String( "CalcCoverValue: bMyCTGT = %d,	iMyThreat = %d,	iMyAPsLeft = %d\n", bMyCTGT, iMyThreat,iMyAPsLeft) );
