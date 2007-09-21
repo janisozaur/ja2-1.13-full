@@ -3159,7 +3159,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 	uiOldAnimFlags = gAnimControl[ thisSoldier->usAnimState ].uiFlags;
 	uiNewAnimFlags = gAnimControl[ usNewState ].uiFlags;
 
-	sNewGridNo = NewGridNo( (INT16)thisSoldier->sGridNo, (UINT16)DirectionInc( thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathIndex ] ) );
+	sNewGridNo = NewGridNo( thisSoldier->sGridNo, DirectionInc( thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathIndex ] ) );
 
 
 	// CHECKING IF WE HAVE A HIT FINISH BUT NO DEATH IS DONE WITH A SPECIAL ANI CODE

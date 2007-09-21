@@ -6455,8 +6455,8 @@ BOOLEAN IsValidJumpLocation( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fChec
 {
 	PERFORMANCE_MARKER
 	INT16 sFourGrids[4], sSpot, sIntSpot;
-	INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
-	INT32 cnt;
+	INT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
+	//INT32 cnt;
 	UINT8	ubGuyThere;
 	UINT8 ubMovementCost;
 	INT32 iDoorGridNo;
@@ -6469,7 +6469,7 @@ BOOLEAN IsValidJumpLocation( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fChec
 	}
 
 	// Loop through positions...
-	for (cnt = 0; cnt < 4; cnt++)
+	for (INT8 cnt = 0; cnt < 4; cnt++)
 	{
 		// MOVE OUT TWO DIRECTIONS
 		sIntSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );

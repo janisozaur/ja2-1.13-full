@@ -1416,7 +1416,7 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 			fMapInventoryItem = FALSE;
 			if ( _KeyDown ( 89 )) //Lalien: sell all items of this type on Alt+Y 
 			{
-				for( UINT32 iNumber = 0 ; iNumber <  pInventoryPoolList.size() ; ++iNumber)
+				for( INT32 iNumber = 0 ; iNumber <  pInventoryPoolList.size() ; ++iNumber)
 				{
 					if ( pInventoryPoolList[ iNumber ].object.usItem == gItemPointer.usItem )
 					{

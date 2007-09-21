@@ -585,7 +585,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 				ubDirChecked[ubDirection] = TRUE;
 
 				// determine the gridno 1 tile away from current friend in this direction
-				sTempDest = NewGridNo(sDesGrid,DirectionInc( (INT16)(ubDirection + 1) ));
+				sTempDest = NewGridNo(sDesGrid, DirectionInc( ubDirection + 1 ) );
 
 				// if that's out of bounds, ignore it & check next direction
 				if (sTempDest == sDesGrid)
@@ -636,8 +636,8 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	{
 	// what is the next gridno in the path?
 
-	//sTempDest = NewGridNo( sGoToGrid,DirectionInc( (INT16) (pSoldier->pathing.usPathingData[sLoop] + 1) ) );
-	sTempDest = NewGridNo( sGoToGrid,DirectionInc( (INT16) (pSoldier->pathing.usPathingData[sLoop]) ) );
+	//sTempDest = NewGridNo( sGoToGrid,DirectionInc( (pSoldier->pathing.usPathingData[sLoop] + 1) ) );
+	sTempDest = NewGridNo( sGoToGrid, DirectionInc( pSoldier->pathing.usPathingData[sLoop] ) );
 	//NumMessage("sTempDest = ",sTempDest);
 
 	// this should NEVER be out of bounds

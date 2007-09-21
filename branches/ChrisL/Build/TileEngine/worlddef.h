@@ -32,7 +32,7 @@ class SOLDIERTYPE;
 //Current minor map version updater.
 #define MINOR_MAP_VERSION		27
 
-
+#ifdef USE_ASTAR_PATHS
 //ADB I'm tired of seeing a 5 digit number when looking at something's gridno.
 //I need to see an x and y.	I created this class for the AStar,
 //but moved it here as you can convert a regular INT16 gridno to a GridNode then print it out for debugging.
@@ -53,7 +53,7 @@ public:
 	int			x;
 	int			y;
 };
-
+#endif
 #define WORLD_BASE_HEIGHT			0
 #define WORLD_CLIFF_HEIGHT		80
  
