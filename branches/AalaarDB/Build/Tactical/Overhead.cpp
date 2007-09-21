@@ -4667,8 +4667,8 @@ INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirect
 	// fDoor determines whether special door-handling code should be used (for interacting with doors)
 
 	INT16 sFourGrids[4], sDistance=0;
-	INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
-	INT32 cnt;
+	INT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
+	//INT32 cnt;
 	INT16 sClosest=NOWHERE, sSpot, sOkTest;
 	INT16 sCloseGridNo=NOWHERE;
 	UINT32										 uiMercFlags;
@@ -4799,14 +4799,14 @@ INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirect
 			if ( sDistance < sClosest )
 			{
 				sClosest						= sDistance;
-				sCloseGridNo	= (INT16)sGridNo;
+				sCloseGridNo	= sGridNo;
 			}
 		}
 		}
 	}
 
 
-	for (cnt = 0; cnt < 4; cnt++)
+	for (INT8 cnt = 0; cnt < 4; cnt++)
 	{
 		// MOVE OUT TWO DIRECTIONS
 		sFourGrids[cnt] = sSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );
@@ -4956,8 +4956,8 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 	// fDoor determines whether special door-handling code should be used (for interacting with doors)
 
 	INT16 sFourGrids[4], sDistance=0;
-	INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
-	INT32 cnt;
+	INT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
+	//INT32 cnt;
 	INT16 sClosest=WORLD_MAX, sSpot, sSpot2, sOkTest;
 	INT16 sCloseGridNo=NOWHERE;
 	UINT32										 uiMercFlags;
@@ -5034,7 +5034,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 	}
 
 
-	for (cnt = 0; cnt < 4; cnt++)
+	for (INT8 cnt = 0; cnt < 4; cnt++)
 	{
 		// MOVE OUT TWO DIRECTIONS
 		sFourGrids[cnt] = sSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );
@@ -5214,13 +5214,12 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 INT16 FindAdjacentPunchTarget( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier, INT16 * psAdjustedTargetGridNo, UINT8 * pubDirection )
 {
 	PERFORMANCE_MARKER
-	INT16	cnt;
 	INT16	sSpot;	
 	UINT8	ubGuyThere;
 
-	for ( cnt = 0; cnt < NUM_WORLD_DIRECTIONS; cnt++ )
+	for ( INT8 cnt = 0; cnt < NUM_WORLD_DIRECTIONS; cnt++ )
 	{
-		sSpot = (INT16)NewGridNo( pSoldier->sGridNo, DirectionInc( cnt ) );
+		sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( cnt ) );
 
 		if ( DoorTravelCost( pSoldier, sSpot, gubWorldMovementCosts[ sSpot ][ cnt ][ pSoldier->pathing.bLevel ], FALSE, NULL ) >= TRAVELCOST_BLOCKED )
 		{

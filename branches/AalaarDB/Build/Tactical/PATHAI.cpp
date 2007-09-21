@@ -3854,14 +3854,14 @@ INT16 PlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPl
 
 
 	 // We should reduce points for starting to run if first tile is a fence...
-		sTestGridno	= NewGridNo(pSold->sGridNo,(INT16) DirectionInc( (UINT16)guiPathingData[0]));
-	 if ( gubWorldMovementCosts[ sTestGridno ][ (INT8)guiPathingData[0] ][ pSold->pathing.bLevel] == TRAVELCOST_FENCE )
-	 {
-	 if ( usMovementMode == RUNNING && pSold->usAnimState != RUNNING )
-	 {
-		 sPoints -= AP_START_RUN_COST;
-	 }
-	 }
+		sTestGridno	= NewGridNo(pSold->sGridNo,DirectionInc(guiPathingData[0]));
+		if ( gubWorldMovementCosts[ sTestGridno ][ (INT8)guiPathingData[0] ][ pSold->pathing.bLevel] == TRAVELCOST_FENCE )
+		{
+			if ( usMovementMode == RUNNING && pSold->usAnimState != RUNNING )
+			{
+				sPoints -= AP_START_RUN_COST;
+			}
+		}
 
 		// FIRST, add up "startup" additional costs - such as intermediate animations, etc.
 /* removing warning C4060 (jonathanl)
@@ -3908,7 +3908,7 @@ INT16 PlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPl
 			// what is the next gridno in the path?
 			sOldGrid	= sTempGrid;
 
-			sTempGrid	= NewGridNo(sTempGrid,(INT16) DirectionInc( (UINT16)guiPathingData[iCnt]));
+			sTempGrid	= NewGridNo(sTempGrid, DirectionInc(guiPathingData[iCnt]));
 
 			// Get switch value...
 			sSwitchValue = gubWorldMovementCosts[ sTempGrid ][ (INT8)guiPathingData[iCnt] ][ pSold->pathing.bLevel];
