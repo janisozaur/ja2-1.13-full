@@ -352,7 +352,7 @@ void DrawMoraleUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 s
 }
 
 
-void DrawItemUIBarEx( OBJECTTYPE *pObject, UINT8 ubStatus, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight, INT16 sColor1, INT16 sColor2, BOOLEAN fErase, UINT32 uiBuffer )
+void DrawItemUIBarEx( OBJECTTYPE *pObject, UINT8 ubStatus, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight, INT16 sColor1, INT16 sColor2, BOOLEAN fErase, UINT32 uiBuffer, UINT8 iter )
 {
 	PERFORMANCE_MARKER
 	FLOAT											dStart, dEnd, dPercentage;
@@ -367,7 +367,7 @@ void DrawItemUIBarEx( OBJECTTYPE *pObject, UINT8 ubStatus, INT16 sXPos, INT16 sY
 	if ( ubStatus >= DRAW_ITEM_STATUS_ATTACHMENT1 )
 	{
 		sValue = 0;
-		OBJECTTYPE* pAttachment = (*pObject)[0]->GetAttachmentAtIndex( ubStatus - DRAW_ITEM_STATUS_ATTACHMENT1 );
+		OBJECTTYPE* pAttachment = (*pObject)[iter]->GetAttachmentAtIndex( ubStatus - DRAW_ITEM_STATUS_ATTACHMENT1 );
 		if (pAttachment) {
 			sValue = (*pAttachment)[0]->data.objectStatus;
 		}
@@ -390,8 +390,8 @@ void DrawItemUIBarEx( OBJECTTYPE *pObject, UINT8 ubStatus, INT16 sXPos, INT16 sY
 
 		if ( sValue < 0 )
 		{
-			sValue = (*pObject)[0]->data.ubShotsLeft * 100 / Magazine[ Item[ pObject->usItem ].ubClassIndex ].ubMagSize;
-			DebugMsg ( TOPIC_JA2, DBG_LEVEL_3, String("Ammo status: shots left %d * 100 / Mag Size %d = value %d",(*pObject)[0]->data.ubShotsLeft,Magazine[ Item[ pObject->usItem ].ubClassIndex ].ubMagSize,sValue ));
+			sValue = (*pObject)[iter]->data.ubShotsLeft * 100 / Magazine[ Item[ pObject->usItem ].ubClassIndex ].ubMagSize;
+			DebugMsg ( TOPIC_JA2, DBG_LEVEL_3, String("Ammo status: shots left %d * 100 / Mag Size %d = value %d",(*pObject)[iter]->data.ubShotsLeft,Magazine[ Item[ pObject->usItem ].ubClassIndex ].ubMagSize,sValue ));
 		}
 		if ( sValue > 100 )
 		{

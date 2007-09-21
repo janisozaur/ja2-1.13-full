@@ -1896,11 +1896,22 @@ OBJECTTYPE* FindNonSmokeLaunchableAttachment( OBJECTTYPE * pObj, UINT16 usWeapon
 
 
 //Simple check to see if the item has any attachments
-BOOLEAN ItemHasAttachments( OBJECTTYPE * pObj )
+BOOLEAN ItemHasAttachments( OBJECTTYPE * pObj, SOLDIERTYPE * pSoldier, UINT8 iter )
 {
 	PERFORMANCE_MARKER
 	if (pObj->exists() == true) {
-		return ((*pObj)[0]->attachments.empty() == false);
+		if(pSoldier != NULL){
+			for (iter = 0; iter != pObj->objectStack.size(); ++iter) {
+				if((*pObj)[iter]->attachments.empty() == false){
+					return TRUE;
+				}
+			}
+		}
+		else{
+			if((*pObj)[iter]->attachments.empty() == false){
+				return TRUE;
+			}
+		}
 	}
 	return FALSE;
 }

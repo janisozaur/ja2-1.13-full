@@ -5,11 +5,11 @@
 #include "GameSettings.h"
 
 
-unsigned int		BODYPOSFINAL		= GUNSLINGPOCKPOS;//RESET in initInventory
-unsigned int		BIGPOCKFINAL		= MEDPOCK1POS;//RESET in initInventory
-unsigned int		MEDPOCKSTART		= MEDPOCK1POS;//RESET in initInventory
-unsigned int		MEDPOCKFINAL		= SMALLPOCK1POS;//RESET in initInventory
-unsigned int		SMALLPOCKFINAL		= NUM_INV_SLOTS;//RESET in initInventory
+int		BODYPOSFINAL		= GUNSLINGPOCKPOS;//RESET in initInventory
+int		BIGPOCKFINAL		= MEDPOCK1POS;//RESET in initInventory
+int		MEDPOCKSTART		= MEDPOCK1POS;//RESET in initInventory
+int		MEDPOCKFINAL		= SMALLPOCK1POS;//RESET in initInventory
+int		SMALLPOCKFINAL		= NUM_INV_SLOTS;//RESET in initInventory
 
 
 OBJECTTYPE gTempObject;

@@ -2395,7 +2395,7 @@ void INVRenderSilhouette( UINT32 uiBuffer, INT16 PocketIndex, INT16 SilIndex, IN
 }
 
 
-void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 *pubHighlightCounter, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor )
+void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 *pubHighlightCounter, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor, UINT8 iter )
 {
 	PERFORMANCE_MARKER
 	UINT16								uiStringLength;
@@ -2421,7 +2421,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 	}
 	else
 	{
-		pItem = &Item[ (*pObject)[0]->GetAttachmentAtIndex( ubStatusIndex - RENDER_ITEM_ATTACHMENT1 )->usItem ];
+		pItem = &Item[ (*pObject)[iter]->GetAttachmentAtIndex( ubStatusIndex - RENDER_ITEM_ATTACHMENT1 )->usItem ];
 	}
 
 	if ( fDirtyLevel == DIRTYLEVEL2 )
@@ -2473,8 +2473,8 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				sNewY = sY + sHeight - 10;
 				sNewX = sX + 1;
 
-				SetFontForeground ( AmmoTypes[(*pObject)[0]->data.gun.ubGunAmmoType].fontColour );
-				//switch ((*pObject)[0]->data.gun.ubGunAmmoType)
+				SetFontForeground ( AmmoTypes[(*pObject)[iter]->data.gun.ubGunAmmoType].fontColour );
+				//switch ((*pObject)[iter]->data.gun.ubGunAmmoType)
 				//{
 				//	case AMMO_AP:
 				//	case AMMO_SUPER_AP:
@@ -2499,7 +2499,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				//}
 	
 
-				swprintf( pStr, L"%d", (*pObject)[0]->data.gun.ubGunShotsLeft );
+				swprintf( pStr, L"%d", (*pObject)[iter]->data.gun.ubGunShotsLeft );
 				if ( uiBuffer == guiSAVEBUFFER )
 				{
 					RestoreExternBackgroundRect( sNewX, sNewY, 20, 15 );
@@ -2510,7 +2510,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				SetFontForeground( FONT_MCOLOR_DKGRAY );
 
 				// Display 'JAMMED' if we are jammed
-				if ( (*pObject)[0]->data.gun.bGunAmmoStatus < 0 )
+				if ( (*pObject)[iter]->data.gun.bGunAmmoStatus < 0 )
 				{
 					SetFontForeground( FONT_MCOLOR_RED );
 
@@ -2557,7 +2557,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				}
 			}
 
-			if ( ItemHasAttachments( pObject ) )
+			if ( ItemHasAttachments( pObject, pSoldier, iter ) )
 			{
 				if ( !IsGrenadeLauncherAttached( pObject ) )
 				{
@@ -2673,7 +2673,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 			}
 			else
 			{
-				OBJECTTYPE* pAttachment = (*pObject)[0]->GetAttachmentAtIndex(ubStatusIndex - RENDER_ITEM_ATTACHMENT1);
+				OBJECTTYPE* pAttachment = (*pObject)[iter]->GetAttachmentAtIndex(ubStatusIndex - RENDER_ITEM_ATTACHMENT1);
 				if (pAttachment) {
 					swprintf( pStr, L"%s", ShortItemNames[ pAttachment->usItem ] );
 				}
@@ -3600,10 +3600,10 @@ void RenderItemDescriptionBox( )
 
 			sCenX = (INT16)( gsInvDescX + gMapItemDescAttachmentsXY[cnt].sX + 5 );
 			sCenY = (INT16)( gsInvDescY + gMapItemDescAttachmentsXY[cnt].sY - 1 );
-			INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gMapItemDescAttachmentsXY[cnt].sWidth, gMapItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0 );
+			INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gMapItemDescAttachmentsXY[cnt].sWidth, gMapItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0, gubItemDescStatusIndex );
 			sCenX = sCenX - gItemDescAttachmentsXY[cnt].sBarDx;
 			sCenY = sCenY + gItemDescAttachmentsXY[cnt].sBarDy;
-			DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER );
+			DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER, gubItemDescStatusIndex );
 			//this code was the same inside both branches of the if below!
 #if 0
 			if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
@@ -4113,11 +4113,11 @@ void RenderItemDescriptionBox( )
 			sCenX = (INT16)( gsInvDescX + gItemDescAttachmentsXY[cnt].sX + 5 );
 			sCenY = (INT16)( gsInvDescY + gItemDescAttachmentsXY[cnt].sY - 1 );
 
-			INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gItemDescAttachmentsXY[cnt].sWidth, gItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0 );
+			INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gItemDescAttachmentsXY[cnt].sWidth, gItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0, gubItemDescStatusIndex );
 
 			sCenX = sCenX - gItemDescAttachmentsXY[cnt].sBarDx;
 			sCenY = sCenY + gItemDescAttachmentsXY[cnt].sBarDy;
-			DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER );
+			DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER, gubItemDescStatusIndex );
 
 			SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), ItemNames[ iter->usItem ] );
 			SetRegionHelpEndCallback( &(gItemDescAttachmentRegions[ cnt ]), HelpTextDoneCallback );
@@ -6123,13 +6123,13 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 			//sX = (INT16)(gsItemPopupX + ( cnt * usWidth ) + 11);
 			//sY = (INT16)( gsItemPopupY + 3 );
 
-			INVRenderItem( FRAME_BUFFER, NULL, gpItemPopupObject, sX+11, sY+3, 29, 23, DIRTYLEVEL2, NULL, (UINT8)RENDER_ITEM_NOSTATUS, FALSE, 0 );
+			INVRenderItem( FRAME_BUFFER, NULL, gpItemPopupObject, sX+11, sY+3, 29, 23, DIRTYLEVEL2, NULL, (UINT8)RENDER_ITEM_NOSTATUS, FALSE, 0, cnt );
 
 			// CHRISL: Coord updates to work with mutliple rows
 			// Do status bar here...
 			sNewX = (INT16)( gsItemPopupX + ( cnt * usWidth ) + 7 );
 			sNewY = gsItemPopupY + INV_BAR_DY + 3;
-			DrawItemUIBarEx( gpItemPopupObject, (UINT8)cnt, sX+7, sY+INV_BAR_DY+3, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, 	Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , FRAME_BUFFER );
+			DrawItemUIBarEx( gpItemPopupObject, (UINT8)cnt, sX+7, sY+INV_BAR_DY+3, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, 	Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , FRAME_BUFFER, cnt );
 
 		}
 	}
