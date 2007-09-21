@@ -3541,7 +3541,7 @@ void RenderItemDescriptionBox( )
 	UINT16								uiStringLength, uiRightLength;
 	static CHAR16					pStr[ 100 ];
 	INT32									cnt;
-	FLOAT									fWeight;
+	FLOAT									fWeight = 0.0f;
 	INT16								usX, usY;
 	UINT8									ubAttackAPs;
 	BOOLEAN								fHatchOutAttachments = gfItemDescObjectIsAttachment; // if examining attachment, always hatch out attachment slots
@@ -3550,9 +3550,13 @@ void RenderItemDescriptionBox( )
 
 	int status = 0;
 	int shotsLeft = 0;
+	bool itemInStackExists = true;
 	if (gpItemDescObject && gubItemDescStatusIndex < gpItemDescObject->ubNumberOfObjects) {
 		status = (*gpItemDescObject)[ gubItemDescStatusIndex ]->data.objectStatus;
 		shotsLeft = (*gpItemDescObject)[ gubItemDescStatusIndex ]->data.ubShotsLeft;
+	}
+	else {
+		itemInStackExists = false;
 	}
 
 	if( ( guiCurrentItemDescriptionScreen == MAP_SCREEN ) &&(gfInItemDescBox ) )
@@ -3571,7 +3575,7 @@ void RenderItemDescriptionBox( )
 		// CHRISL: Determine if we're looking at an LBENODE and display alternate box graphic
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex) && itemInStackExists == true)
 				showBox = gpItemDescObject->GetLBEPointer(gubItemDescStatusIndex)->lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
@@ -3599,7 +3603,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex) && itemInStackExists == true)
 				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE, gubItemDescStatusIndex );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE, gubItemDescStatusIndex );
@@ -3620,24 +3624,26 @@ void RenderItemDescriptionBox( )
 		
 		// Display attachments
 		cnt = 0;
-		for (attachmentList::iterator iter = (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.begin();
-			iter != (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.end(); ++iter, ++cnt) {
+		if (itemInStackExists == true) {
+			for (attachmentList::iterator iter = (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.begin();
+				iter != (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.end(); ++iter, ++cnt) {
 
-			sCenX = (INT16)( gsInvDescX + gMapItemDescAttachmentsXY[cnt].sX + 5 );
-			sCenY = (INT16)( gsInvDescY + gMapItemDescAttachmentsXY[cnt].sY - 1 );
-			INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gMapItemDescAttachmentsXY[cnt].sWidth, gMapItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0 );
-			sCenX = sCenX - gItemDescAttachmentsXY[cnt].sBarDx;
-			sCenY = sCenY + gItemDescAttachmentsXY[cnt].sBarDy;
-			DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER );
-			//this code was the same inside both branches of the if below!
+				sCenX = (INT16)( gsInvDescX + gMapItemDescAttachmentsXY[cnt].sX + 5 );
+				sCenY = (INT16)( gsInvDescY + gMapItemDescAttachmentsXY[cnt].sY - 1 );
+				INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gMapItemDescAttachmentsXY[cnt].sWidth, gMapItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0 );
+				sCenX = sCenX - gItemDescAttachmentsXY[cnt].sBarDx;
+				sCenY = sCenY + gItemDescAttachmentsXY[cnt].sBarDy;
+				DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER );
+				//this code was the same inside both branches of the if below!
 #if 0
-			if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
-			{
-			}
-			else
-			{
-			}
+				if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
+				{
+				}
+				else
+				{
+				}
 #endif
+			}
 		}
 		for (cnt = 0; cnt < MAX_ATTACHMENTS; ++cnt)
 		{
@@ -3676,7 +3682,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex) && itemInStackExists == true)
 				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE, gubItemDescStatusIndex );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE, gubItemDescStatusIndex );
@@ -3760,7 +3766,9 @@ void RenderItemDescriptionBox( )
 		uiRightLength=35;
 
 		// Calculate total weight of item and attachments
-		fWeight = gpItemDescObject->GetWeightOfObjectInStack(gubItemDescStatusIndex) / 10.0f;
+		if (itemInStackExists == true) {
+			fWeight = gpItemDescObject->GetWeightOfObjectInStack(gubItemDescStatusIndex) / 10.0f;
+		}
 
 		if ( !gGameSettings.fOptions[ TOPTION_USE_METRIC_SYSTEM ] ) // metric units not enabled
 		{
@@ -4081,7 +4089,7 @@ void RenderItemDescriptionBox( )
 		RenderBackpackButtons(1);
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex) && itemInStackExists == true)
 				showBox = gpItemDescObject->GetLBEPointer(gubItemDescStatusIndex)->lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
@@ -4112,7 +4120,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex) && itemInStackExists == true)
 				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE, gubItemDescStatusIndex );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE, gubItemDescStatusIndex );
@@ -4133,19 +4141,21 @@ void RenderItemDescriptionBox( )
 
 		// Display attachments
 		cnt = 0;
-		for (attachmentList::iterator iter = (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.begin();
-			iter != (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.end(); ++iter, ++cnt) {
-			sCenX = (INT16)( gsInvDescX + gItemDescAttachmentsXY[cnt].sX + 5 );
-			sCenY = (INT16)( gsInvDescY + gItemDescAttachmentsXY[cnt].sY - 1 );
+		if (itemInStackExists == true) {
+			for (attachmentList::iterator iter = (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.begin();
+				iter != (*gpItemDescObject)[gubItemDescStatusIndex]->attachments.end(); ++iter, ++cnt) {
+				sCenX = (INT16)( gsInvDescX + gItemDescAttachmentsXY[cnt].sX + 5 );
+				sCenY = (INT16)( gsInvDescY + gItemDescAttachmentsXY[cnt].sY - 1 );
 
-			INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gItemDescAttachmentsXY[cnt].sWidth, gItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0 );
+				INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gItemDescAttachmentsXY[cnt].sWidth, gItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0 );
 
-			sCenX = sCenX - gItemDescAttachmentsXY[cnt].sBarDx;
-			sCenY = sCenY + gItemDescAttachmentsXY[cnt].sBarDy;
-			DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER );
+				sCenX = sCenX - gItemDescAttachmentsXY[cnt].sBarDx;
+				sCenY = sCenY + gItemDescAttachmentsXY[cnt].sBarDy;
+				DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER );
 
-			SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), ItemNames[ iter->usItem ] );
-			SetRegionHelpEndCallback( &(gItemDescAttachmentRegions[ cnt ]), HelpTextDoneCallback );
+				SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), ItemNames[ iter->usItem ] );
+				SetRegionHelpEndCallback( &(gItemDescAttachmentRegions[ cnt ]), HelpTextDoneCallback );
+			}
 		}
 		for (; cnt < MAX_ATTACHMENTS; ++cnt)
 		{
@@ -4192,7 +4202,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingNewInventorySystem() == true))
 		{
-			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
+			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex) && itemInStackExists == true)
 				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE, gubItemDescStatusIndex );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE, gubItemDescStatusIndex );
@@ -4269,7 +4279,9 @@ void RenderItemDescriptionBox( )
 		uiRightLength=35;
 
 		// Calculate total weight of item and attachments
-		fWeight = gpItemDescObject->GetWeightOfObjectInStack(gubItemDescStatusIndex) / 10.0f;
+		if (itemInStackExists == true) {
+			fWeight = gpItemDescObject->GetWeightOfObjectInStack(gubItemDescStatusIndex) / 10.0f;
+		}
 
 		if ( !gGameSettings.fOptions[ TOPTION_USE_METRIC_SYSTEM ] ) // metric units not enabled
 		{

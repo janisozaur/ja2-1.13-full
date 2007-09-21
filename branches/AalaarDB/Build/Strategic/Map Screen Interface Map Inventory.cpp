@@ -329,6 +329,7 @@ void RenderItemsForCurrentPageOfInventoryPool( void )
 }
 
 
+#define DONT_DISPLAY_NADA
 BOOLEAN RenderItemInPoolSlot( INT32 iCurrentSlot, INT32 iFirstSlotOnPage )
 {
 	PERFORMANCE_MARKER

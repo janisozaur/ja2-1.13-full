@@ -310,7 +310,7 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer, float dMajorMapVersion, UINT8 ubMin
 				return FALSE;
 			}
 			//allocate memory for new static detailed placement
-			pNode->pDetailedPlacement = new SOLDIERCREATE_STRUCT;//(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
+			pNode->pDetailedPlacement = new SOLDIERCREATE_STRUCT(tempDetailedPlacement);//(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
 			if( !pNode->pDetailedPlacement )
 			{
 				AssertMsg( 0, "Failed to allocate memory for new detailed placement in LoadSoldiersFromMap." );
@@ -1272,7 +1272,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 				/* DISABLE THE OVERRIDE FOR NOW...
 				if( curr->pDetailedPlacement )
 				{ //delete the detailed placement information.
-					MemFree( curr->pDetailedPlacement );
+					delete( curr->pDetailedPlacement );
 					curr->pDetailedPlacement = NULL;
 					curr->pBasicPlacement->fDetailedPlacement = FALSE;
 				}
@@ -1358,7 +1358,7 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 				curr->pBasicPlacement->bAttitude = (INT8) Random( MAXATTITUDES );
 				if( curr->pDetailedPlacement )
 				{ //delete the detailed placement information.
-					MemFree( curr->pDetailedPlacement );
+					delete( curr->pDetailedPlacement );
 					curr->pDetailedPlacement = NULL;
 					curr->pBasicPlacement->fDetailedPlacement = FALSE;
 					RandomizeRelativeLevel( &( curr->pBasicPlacement->bRelativeAttributeLevel ), curr->pBasicPlacement->ubSoldierClass );
@@ -1508,7 +1508,7 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 				curr->pBasicPlacement->bAttitude = (INT8) Random( MAXATTITUDES );
 				if( curr->pDetailedPlacement )
 				{ //delete the detailed placement information.
-					MemFree( curr->pDetailedPlacement );
+					delete( curr->pDetailedPlacement );
 					curr->pDetailedPlacement = NULL;
 					curr->pBasicPlacement->fDetailedPlacement = FALSE;
 					RandomizeRelativeLevel( &( curr->pBasicPlacement->bRelativeAttributeLevel), curr->pBasicPlacement->ubSoldierClass );
@@ -1772,7 +1772,7 @@ void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier )
 				//RECORD UBNODEID IN TEMP FILE.
 
 				curr->pSoldier = NULL;
-				MemFree( curr->pDetailedPlacement );
+				delete( curr->pDetailedPlacement );
 				curr->pDetailedPlacement = NULL;
 				return;
 			}
@@ -1793,7 +1793,7 @@ void RemoveDetailedPlacementInfo( UINT8 ubNodeID )
 		{
 			if( curr->pDetailedPlacement )
 			{
-				MemFree( curr->pDetailedPlacement );
+				delete( curr->pDetailedPlacement );
 				curr->pDetailedPlacement = NULL;
 				return;
 			}

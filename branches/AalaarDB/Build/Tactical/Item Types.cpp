@@ -17,7 +17,7 @@ OBJECTTYPE gStackTempObject;
 std::list<LBENODE>	LBEArray;
 int gLastLBEUniqueID = 0;
 
-bool IsSlotAnLBESlot(int slot)
+bool IsSlotAnLBESlot(unsigned int slot)
 {
 	PERFORMANCE_MARKER
 	switch(slot) {
@@ -31,7 +31,7 @@ bool IsSlotAnLBESlot(int slot)
 	return false;
 }
 
-bool IsSlotASmallPocket(int slot)
+bool IsSlotASmallPocket(unsigned int slot)
 {
 	PERFORMANCE_MARKER
 	if (slot >= SMALLPOCKSTART && slot < SMALLPOCKFINAL) {

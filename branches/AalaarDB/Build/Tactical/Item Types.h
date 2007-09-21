@@ -237,8 +237,8 @@ void	MoveItemsInSlotsToLBE( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, 
 BOOLEAN	MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, UINT32 uiHandPos, OBJECTTYPE *pObj );
 BOOLEAN	MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos );
 BOOLEAN	MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
-bool	IsSlotAnLBESlot(int slot);
-bool	IsSlotASmallPocket(int slot);
+bool	IsSlotAnLBESlot(unsigned int slot);
+bool	IsSlotASmallPocket(unsigned int slot);
 
 extern	std::list<LBENODE>	LBEArray;
 
