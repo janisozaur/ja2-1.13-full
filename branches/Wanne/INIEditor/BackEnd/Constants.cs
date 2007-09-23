@@ -26,5 +26,7 @@ namespace INIEditor.BackEnd
         public const string MISSING_DATA_TYPE = "MISSING_DATA_TYPE";
         public const int MISSING_MIN_VALUE = -99999;
         public const int MISSING_MAX_VALUE = 99999;
+        public const string MISSING_PROPERTY_VALUE = "66666"; // Use a string type, because we can cast it with to any needed type!
+        public const int PROPERTY_INVERVAL = 1;
     }
 }

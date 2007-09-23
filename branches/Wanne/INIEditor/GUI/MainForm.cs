@@ -15,6 +15,7 @@ namespace INIEditor.GUI
         private Hashtable _iniSettingsList = null;
         private Enumerations.Language _descriptionLanguage = Enumerations.Language.English;
         private Enumerations.Permission _permission = Enumerations.Permission.Admin;    // TODO: Change to "User" in Release version!
+        private Control _ctlPropertyNewValue = new Control();
         #endregion
         #region CTOR
         public MainForm()
@@ -211,6 +212,9 @@ namespace INIEditor.GUI
 
                 INIProperty property = item as INIProperty;
                 txtSectionDescription.Text = GetDescription(property.Section.XMLSection);
+                txtPropertyDescription.Text = GetDescription(property.XMLProperty);
+                
+                SetPropertyValues(property);
                 
                 if (tabActions.TabPages.Contains(tpSection))
                 {
@@ -226,8 +230,116 @@ namespace INIEditor.GUI
 
             SelectTreeNode(item);
         }
+
+        private void InitializeNumericProperty(INIProperty property)
+        {
+            // Show used controls
+            lblPropertyMinValue.Visible = true;
+            txtPropertyMinValue.Visible = true;
+            lblPropertyMaxValue.Visible = true;
+            txtPropertyMaxValue.Visible = true;
+            lblPropertyInterval.Visible = true;
+            txtPropertyInterval.Visible = true;
+
+            int diffHeight = 35;
+
+            // Set the Top location of the controls. Left locations is already set by the designer!
+            lblPropertyMinValue.Top = lblPropertyDataType.Top + diffHeight;
+            txtPropertyMinValue.Top = txtPropertyDataType.Top + diffHeight;
+            lblPropertyMaxValue.Top = lblPropertyMinValue.Top + diffHeight;
+            txtPropertyMaxValue.Top = txtPropertyMinValue.Top + diffHeight;
+            lblPropertyInterval.Top = lblPropertyMaxValue.Top + diffHeight;
+            txtPropertyInterval.Top = txtPropertyMaxValue.Top + diffHeight;
+            lblPropertyCurrentValue.Top = lblPropertyInterval.Top + diffHeight;
+            txtPropertyCurrentValue.Top = txtPropertyInterval.Top + diffHeight;
+            lblPropertyNewValue.Top = lblPropertyCurrentValue.Top + diffHeight;
+
+            NumericUpDown nudPropertyNewValue = new NumericUpDown();
+            nudPropertyNewValue.Name = "ctlPropertyNewValue";
+            nudPropertyNewValue.Increment = property.XMLProperty.Interval;
+            nudPropertyNewValue.Minimum = property.XMLProperty.MinValue;
+            nudPropertyNewValue.Maximum = property.XMLProperty.MaxValue;
+            nudPropertyNewValue.Value = Convert.ToDecimal(property.XMLProperty.Value);
+
+            nudPropertyNewValue.Left = txtPropertyInterval.Left;
+            nudPropertyNewValue.Top = txtPropertyCurrentValue.Top + diffHeight;
+            nudPropertyNewValue.Width = txtPropertyDataType.Width;
+
+            // Store the control in the class variable
+            _ctlPropertyNewValue = nudPropertyNewValue;
+
+            pnlProperty.Controls.Add(_ctlPropertyNewValue);
+        }
+
+        private void InitializeBooleanProperty(INIProperty property)
+        {
+            int diffHeight = 35;
+
+            // Hide unused controls
+            lblPropertyMinValue.Visible = false;
+            txtPropertyMinValue.Visible = false;
+            lblPropertyMaxValue.Visible = false;
+            txtPropertyMaxValue.Visible = false;
+            lblPropertyInterval.Visible = false;
+            txtPropertyInterval.Visible = false;
+
+            // Set the top location of the controls. Left location is already set by the designer
+            lblPropertyCurrentValue.Top = lblPropertyDataType.Top + diffHeight;
+            txtPropertyCurrentValue.Top = txtPropertyDataType.Top + diffHeight;
+            
+            lblPropertyNewValue.Top = txtPropertyCurrentValue.Top + diffHeight;
+
+            ComboBox cmbPropertyNewValue = new ComboBox();
+            cmbPropertyNewValue.Name = "ctlPropertyNewValue";
+            cmbPropertyNewValue.Items.Add("TRUE");
+            cmbPropertyNewValue.Items.Add("FALSE");
+            cmbPropertyNewValue.SelectedText = property.XMLProperty.Value;
+
+            cmbPropertyNewValue.Left = txtPropertyInterval.Left;
+            cmbPropertyNewValue.Top = txtPropertyCurrentValue.Top + diffHeight;
+            cmbPropertyNewValue.Width = txtPropertyDataType.Width;
+
+            // Store the control in the class variable
+            _ctlPropertyNewValue = cmbPropertyNewValue;
+
+            pnlProperty.Controls.Add(_ctlPropertyNewValue);
+        }
+
+
         #endregion
         #region Private Methods
+        private void SetPropertyValues(INIProperty property)
+        {
+            txtPropertyDataType.Text = property.XMLProperty.DataType;
+            txtPropertyMinValue.Text = Convert.ToString(property.XMLProperty.MinValue);
+            txtPropertyMaxValue.Text = Convert.ToString(property.XMLProperty.MaxValue);
+            txtPropertyInterval.Text = Convert.ToString(property.XMLProperty.Interval);
+            txtPropertyCurrentValue.Text = Convert.ToString(property.XMLProperty.Value);
+
+            _ctlPropertyNewValue.Text = "_ctlPropertyNewValue";
+
+            if (pnlProperty.Controls.Contains(_ctlPropertyNewValue))
+            {
+                pnlProperty.Controls.Remove(_ctlPropertyNewValue);
+            }
+
+            // Boolean -> Drop down list control
+            if (property.XMLProperty.DataType.ToLower() == Enumerations.DataType.Boolean.ToString().ToLower())
+            {
+                InitializeBooleanProperty(property);                
+            }
+            // Numeric -> Numeric up down control
+            else if (property.XMLProperty.DataType.ToLower() == Enumerations.DataType.Numeric.ToString().ToLower())
+            {
+                InitializeNumericProperty(property);
+            }
+            // String -> Text box control
+            else if (property.XMLProperty.DataType.ToLower() == Enumerations.DataType.String.ToString().ToLower())
+            {
+                
+            }   
+        }
+
         private Settings GetXMLIniFile()
         {
             Settings xmlIniSettings = null;
@@ -289,6 +401,8 @@ namespace INIEditor.GUI
                 matchingXMLProperty.DataType = Constants.MISSING_DATA_TYPE;
                 matchingXMLProperty.MinValue = Constants.MISSING_MIN_VALUE;
                 matchingXMLProperty.MaxValue = Constants.MISSING_MAX_VALUE;
+                matchingXMLProperty.Interval = Constants.PROPERTY_INVERVAL;
+                matchingXMLProperty.Value = Constants.MISSING_PROPERTY_VALUE;
             }
 
             return matchingXMLProperty;

@@ -32,6 +32,10 @@ namespace INIEditor.GUI
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuViewDescriptionLanguage = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuViewDescLangEnglish = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuViewDescLangGerman = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuToolsGenerateXMLFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,7 +48,7 @@ namespace INIEditor.GUI
             this.splVertical = new System.Windows.Forms.Splitter();
             this.pnlSectionHeader = new System.Windows.Forms.Panel();
             this.lblSectionHeader = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlSectionDescription = new System.Windows.Forms.Panel();
             this.txtSectionDescription = new System.Windows.Forms.TextBox();
             this.splHorizontal = new System.Windows.Forms.Splitter();
             this.tabActions = new System.Windows.Forms.TabControl();
@@ -55,17 +59,31 @@ namespace INIEditor.GUI
             this.colValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tpProperty = new System.Windows.Forms.TabPage();
-            this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuViewDescriptionLanguage = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuViewDescLangEnglish = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuViewDescLangGerman = new System.Windows.Forms.ToolStripMenuItem();
+            this.pnlProperty = new System.Windows.Forms.Panel();
+            this.lblPropertyNewValue = new System.Windows.Forms.Label();
+            this.txtPropertyInterval = new System.Windows.Forms.TextBox();
+            this.lblPropertyInterval = new System.Windows.Forms.Label();
+            this.txtPropertyMaxValue = new System.Windows.Forms.TextBox();
+            this.txtPropertyMinValue = new System.Windows.Forms.TextBox();
+            this.txtPropertyDataType = new System.Windows.Forms.TextBox();
+            this.lblPropertyMaxValue = new System.Windows.Forms.Label();
+            this.lblPropertyMinValue = new System.Windows.Forms.Label();
+            this.lblPropertyDataType = new System.Windows.Forms.Label();
+            this.splPropertyDescription = new System.Windows.Forms.Splitter();
+            this.pnlPropertyDescription = new System.Windows.Forms.Panel();
+            this.txtPropertyDescription = new System.Windows.Forms.TextBox();
+            this.lblPropertyCurrentValue = new System.Windows.Forms.Label();
+            this.txtPropertyCurrentValue = new System.Windows.Forms.TextBox();
             this.mnuMain.SuspendLayout();
             this.pnlFiles.SuspendLayout();
             this.pnlSectionHeader.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.pnlSectionDescription.SuspendLayout();
             this.tabActions.SuspendLayout();
             this.tpSection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProperties)).BeginInit();
+            this.tpProperty.SuspendLayout();
+            this.pnlProperty.SuspendLayout();
+            this.pnlPropertyDescription.SuspendLayout();
             this.SuspendLayout();
             // 
             // mnuMain
@@ -78,7 +96,7 @@ namespace INIEditor.GUI
             this.mnuHelp});
             this.mnuMain.Location = new System.Drawing.Point(0, 0);
             this.mnuMain.Name = "mnuMain";
-            this.mnuMain.Size = new System.Drawing.Size(798, 24);
+            this.mnuMain.Size = new System.Drawing.Size(883, 24);
             this.mnuMain.TabIndex = 0;
             this.mnuMain.Text = "menuStrip1";
             // 
@@ -101,6 +119,37 @@ namespace INIEditor.GUI
             this.mnuEdit.Name = "mnuEdit";
             this.mnuEdit.Size = new System.Drawing.Size(37, 20);
             this.mnuEdit.Text = "Edit";
+            // 
+            // mnuView
+            // 
+            this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuViewDescriptionLanguage});
+            this.mnuView.Name = "mnuView";
+            this.mnuView.Size = new System.Drawing.Size(41, 20);
+            this.mnuView.Text = "View";
+            // 
+            // mnuViewDescriptionLanguage
+            // 
+            this.mnuViewDescriptionLanguage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuViewDescLangEnglish,
+            this.mnuViewDescLangGerman});
+            this.mnuViewDescriptionLanguage.Name = "mnuViewDescriptionLanguage";
+            this.mnuViewDescriptionLanguage.Size = new System.Drawing.Size(188, 22);
+            this.mnuViewDescriptionLanguage.Text = "Description Language";
+            // 
+            // mnuViewDescLangEnglish
+            // 
+            this.mnuViewDescLangEnglish.Name = "mnuViewDescLangEnglish";
+            this.mnuViewDescLangEnglish.Size = new System.Drawing.Size(122, 22);
+            this.mnuViewDescLangEnglish.Text = "English";
+            this.mnuViewDescLangEnglish.Click += new System.EventHandler(this.mnuViewDescLangEnglish_Click);
+            // 
+            // mnuViewDescLangGerman
+            // 
+            this.mnuViewDescLangGerman.Name = "mnuViewDescLangGerman";
+            this.mnuViewDescLangGerman.Size = new System.Drawing.Size(122, 22);
+            this.mnuViewDescLangGerman.Text = "German";
+            this.mnuViewDescLangGerman.Click += new System.EventHandler(this.mnuViewDescLangGerman_Click);
             // 
             // mnuTools
             // 
@@ -127,15 +176,15 @@ namespace INIEditor.GUI
             // 
             this.tbrMain.Location = new System.Drawing.Point(0, 24);
             this.tbrMain.Name = "tbrMain";
-            this.tbrMain.Size = new System.Drawing.Size(798, 25);
+            this.tbrMain.Size = new System.Drawing.Size(883, 25);
             this.tbrMain.TabIndex = 1;
             this.tbrMain.Text = "toolStrip1";
             // 
             // stsMain
             // 
-            this.stsMain.Location = new System.Drawing.Point(0, 507);
+            this.stsMain.Location = new System.Drawing.Point(0, 631);
             this.stsMain.Name = "stsMain";
-            this.stsMain.Size = new System.Drawing.Size(798, 22);
+            this.stsMain.Size = new System.Drawing.Size(883, 22);
             this.stsMain.TabIndex = 5;
             // 
             // pnlFiles
@@ -146,7 +195,7 @@ namespace INIEditor.GUI
             this.pnlFiles.Location = new System.Drawing.Point(0, 49);
             this.pnlFiles.Name = "pnlFiles";
             this.pnlFiles.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.pnlFiles.Size = new System.Drawing.Size(798, 42);
+            this.pnlFiles.Size = new System.Drawing.Size(883, 42);
             this.pnlFiles.TabIndex = 8;
             // 
             // cmbFiles
@@ -172,7 +221,7 @@ namespace INIEditor.GUI
             this.trvSections.Dock = System.Windows.Forms.DockStyle.Left;
             this.trvSections.Location = new System.Drawing.Point(0, 91);
             this.trvSections.Name = "trvSections";
-            this.trvSections.Size = new System.Drawing.Size(341, 416);
+            this.trvSections.Size = new System.Drawing.Size(341, 540);
             this.trvSections.TabIndex = 9;
             this.trvSections.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trvSections_AfterSelect);
             // 
@@ -181,7 +230,7 @@ namespace INIEditor.GUI
             this.splVertical.BackColor = System.Drawing.Color.Silver;
             this.splVertical.Location = new System.Drawing.Point(341, 91);
             this.splVertical.Name = "splVertical";
-            this.splVertical.Size = new System.Drawing.Size(3, 416);
+            this.splVertical.Size = new System.Drawing.Size(3, 540);
             this.splVertical.TabIndex = 10;
             this.splVertical.TabStop = false;
             // 
@@ -193,7 +242,7 @@ namespace INIEditor.GUI
             this.pnlSectionHeader.Location = new System.Drawing.Point(344, 91);
             this.pnlSectionHeader.Name = "pnlSectionHeader";
             this.pnlSectionHeader.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.pnlSectionHeader.Size = new System.Drawing.Size(454, 39);
+            this.pnlSectionHeader.Size = new System.Drawing.Size(539, 39);
             this.pnlSectionHeader.TabIndex = 12;
             // 
             // lblSectionHeader
@@ -208,14 +257,14 @@ namespace INIEditor.GUI
             this.lblSectionHeader.Size = new System.Drawing.Size(0, 18);
             this.lblSectionHeader.TabIndex = 0;
             // 
-            // panel1
+            // pnlSectionDescription
             // 
-            this.panel1.Controls.Add(this.txtSectionDescription);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(344, 130);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(454, 112);
-            this.panel1.TabIndex = 15;
+            this.pnlSectionDescription.Controls.Add(this.txtSectionDescription);
+            this.pnlSectionDescription.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlSectionDescription.Location = new System.Drawing.Point(344, 130);
+            this.pnlSectionDescription.Name = "pnlSectionDescription";
+            this.pnlSectionDescription.Size = new System.Drawing.Size(539, 112);
+            this.pnlSectionDescription.TabIndex = 15;
             // 
             // txtSectionDescription
             // 
@@ -225,7 +274,7 @@ namespace INIEditor.GUI
             this.txtSectionDescription.Location = new System.Drawing.Point(4, 6);
             this.txtSectionDescription.Multiline = true;
             this.txtSectionDescription.Name = "txtSectionDescription";
-            this.txtSectionDescription.Size = new System.Drawing.Size(446, 100);
+            this.txtSectionDescription.Size = new System.Drawing.Size(531, 100);
             this.txtSectionDescription.TabIndex = 0;
             // 
             // splHorizontal
@@ -234,7 +283,7 @@ namespace INIEditor.GUI
             this.splHorizontal.Dock = System.Windows.Forms.DockStyle.Top;
             this.splHorizontal.Location = new System.Drawing.Point(344, 242);
             this.splHorizontal.Name = "splHorizontal";
-            this.splHorizontal.Size = new System.Drawing.Size(454, 3);
+            this.splHorizontal.Size = new System.Drawing.Size(539, 3);
             this.splHorizontal.TabIndex = 16;
             this.splHorizontal.TabStop = false;
             // 
@@ -246,7 +295,7 @@ namespace INIEditor.GUI
             this.tabActions.Location = new System.Drawing.Point(344, 245);
             this.tabActions.Name = "tabActions";
             this.tabActions.SelectedIndex = 0;
-            this.tabActions.Size = new System.Drawing.Size(454, 262);
+            this.tabActions.Size = new System.Drawing.Size(539, 386);
             this.tabActions.TabIndex = 17;
             // 
             // tpSection
@@ -254,7 +303,7 @@ namespace INIEditor.GUI
             this.tpSection.Controls.Add(this.dgvProperties);
             this.tpSection.Location = new System.Drawing.Point(4, 22);
             this.tpSection.Name = "tpSection";
-            this.tpSection.Size = new System.Drawing.Size(446, 236);
+            this.tpSection.Size = new System.Drawing.Size(479, 300);
             this.tpSection.TabIndex = 0;
             this.tpSection.UseVisualStyleBackColor = true;
             // 
@@ -276,7 +325,7 @@ namespace INIEditor.GUI
             this.dgvProperties.ReadOnly = true;
             this.dgvProperties.RowHeadersVisible = false;
             this.dgvProperties.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvProperties.Size = new System.Drawing.Size(446, 236);
+            this.dgvProperties.Size = new System.Drawing.Size(479, 300);
             this.dgvProperties.TabIndex = 0;
             this.dgvProperties.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProperties_CellDoubleClick);
             // 
@@ -313,52 +362,172 @@ namespace INIEditor.GUI
             // 
             // tpProperty
             // 
+            this.tpProperty.Controls.Add(this.pnlProperty);
+            this.tpProperty.Controls.Add(this.splPropertyDescription);
+            this.tpProperty.Controls.Add(this.pnlPropertyDescription);
             this.tpProperty.Location = new System.Drawing.Point(4, 22);
             this.tpProperty.Name = "tpProperty";
             this.tpProperty.Padding = new System.Windows.Forms.Padding(3);
-            this.tpProperty.Size = new System.Drawing.Size(446, 236);
+            this.tpProperty.Size = new System.Drawing.Size(531, 360);
             this.tpProperty.TabIndex = 1;
             this.tpProperty.UseVisualStyleBackColor = true;
             // 
-            // mnuView
+            // pnlProperty
             // 
-            this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuViewDescriptionLanguage});
-            this.mnuView.Name = "mnuView";
-            this.mnuView.Size = new System.Drawing.Size(41, 20);
-            this.mnuView.Text = "View";
+            this.pnlProperty.Controls.Add(this.txtPropertyCurrentValue);
+            this.pnlProperty.Controls.Add(this.lblPropertyCurrentValue);
+            this.pnlProperty.Controls.Add(this.lblPropertyNewValue);
+            this.pnlProperty.Controls.Add(this.txtPropertyInterval);
+            this.pnlProperty.Controls.Add(this.lblPropertyInterval);
+            this.pnlProperty.Controls.Add(this.txtPropertyMaxValue);
+            this.pnlProperty.Controls.Add(this.txtPropertyMinValue);
+            this.pnlProperty.Controls.Add(this.txtPropertyDataType);
+            this.pnlProperty.Controls.Add(this.lblPropertyMaxValue);
+            this.pnlProperty.Controls.Add(this.lblPropertyMinValue);
+            this.pnlProperty.Controls.Add(this.lblPropertyDataType);
+            this.pnlProperty.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlProperty.Location = new System.Drawing.Point(3, 106);
+            this.pnlProperty.Name = "pnlProperty";
+            this.pnlProperty.Size = new System.Drawing.Size(525, 251);
+            this.pnlProperty.TabIndex = 2;
             // 
-            // mnuViewDescriptionLanguage
+            // lblPropertyNewValue
             // 
-            this.mnuViewDescriptionLanguage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuViewDescLangEnglish,
-            this.mnuViewDescLangGerman});
-            this.mnuViewDescriptionLanguage.Name = "mnuViewDescriptionLanguage";
-            this.mnuViewDescriptionLanguage.Size = new System.Drawing.Size(188, 22);
-            this.mnuViewDescriptionLanguage.Text = "Description Language";
+            this.lblPropertyNewValue.AutoSize = true;
+            this.lblPropertyNewValue.Location = new System.Drawing.Point(4, 183);
+            this.lblPropertyNewValue.Name = "lblPropertyNewValue";
+            this.lblPropertyNewValue.Size = new System.Drawing.Size(62, 13);
+            this.lblPropertyNewValue.TabIndex = 8;
+            this.lblPropertyNewValue.Text = "New Value:";
             // 
-            // mnuViewDescLangEnglish
+            // txtPropertyInterval
             // 
-            this.mnuViewDescLangEnglish.Name = "mnuViewDescLangEnglish";
-            this.mnuViewDescLangEnglish.Size = new System.Drawing.Size(152, 22);
-            this.mnuViewDescLangEnglish.Text = "English";
-            this.mnuViewDescLangEnglish.Click += new System.EventHandler(this.mnuViewDescLangEnglish_Click);
+            this.txtPropertyInterval.BackColor = System.Drawing.Color.LemonChiffon;
+            this.txtPropertyInterval.Enabled = false;
+            this.txtPropertyInterval.Location = new System.Drawing.Point(130, 112);
+            this.txtPropertyInterval.Name = "txtPropertyInterval";
+            this.txtPropertyInterval.Size = new System.Drawing.Size(161, 20);
+            this.txtPropertyInterval.TabIndex = 7;
             // 
-            // mnuViewDescLangGerman
+            // lblPropertyInterval
             // 
-            this.mnuViewDescLangGerman.Name = "mnuViewDescLangGerman";
-            this.mnuViewDescLangGerman.Size = new System.Drawing.Size(152, 22);
-            this.mnuViewDescLangGerman.Text = "German";
-            this.mnuViewDescLangGerman.Click += new System.EventHandler(this.mnuViewDescLangGerman_Click);
+            this.lblPropertyInterval.AutoSize = true;
+            this.lblPropertyInterval.Location = new System.Drawing.Point(4, 115);
+            this.lblPropertyInterval.Name = "lblPropertyInterval";
+            this.lblPropertyInterval.Size = new System.Drawing.Size(48, 13);
+            this.lblPropertyInterval.TabIndex = 6;
+            this.lblPropertyInterval.Text = "Inverval:";
+            // 
+            // txtPropertyMaxValue
+            // 
+            this.txtPropertyMaxValue.BackColor = System.Drawing.Color.LemonChiffon;
+            this.txtPropertyMaxValue.Enabled = false;
+            this.txtPropertyMaxValue.Location = new System.Drawing.Point(130, 78);
+            this.txtPropertyMaxValue.Name = "txtPropertyMaxValue";
+            this.txtPropertyMaxValue.Size = new System.Drawing.Size(161, 20);
+            this.txtPropertyMaxValue.TabIndex = 5;
+            // 
+            // txtPropertyMinValue
+            // 
+            this.txtPropertyMinValue.BackColor = System.Drawing.Color.LemonChiffon;
+            this.txtPropertyMinValue.Enabled = false;
+            this.txtPropertyMinValue.Location = new System.Drawing.Point(130, 42);
+            this.txtPropertyMinValue.Name = "txtPropertyMinValue";
+            this.txtPropertyMinValue.Size = new System.Drawing.Size(161, 20);
+            this.txtPropertyMinValue.TabIndex = 4;
+            // 
+            // txtPropertyDataType
+            // 
+            this.txtPropertyDataType.BackColor = System.Drawing.Color.LemonChiffon;
+            this.txtPropertyDataType.Enabled = false;
+            this.txtPropertyDataType.Location = new System.Drawing.Point(130, 7);
+            this.txtPropertyDataType.Name = "txtPropertyDataType";
+            this.txtPropertyDataType.Size = new System.Drawing.Size(161, 20);
+            this.txtPropertyDataType.TabIndex = 3;
+            // 
+            // lblPropertyMaxValue
+            // 
+            this.lblPropertyMaxValue.AutoSize = true;
+            this.lblPropertyMaxValue.Location = new System.Drawing.Point(3, 81);
+            this.lblPropertyMaxValue.Name = "lblPropertyMaxValue";
+            this.lblPropertyMaxValue.Size = new System.Drawing.Size(84, 13);
+            this.lblPropertyMaxValue.TabIndex = 2;
+            this.lblPropertyMaxValue.Text = "Maximum Value:";
+            // 
+            // lblPropertyMinValue
+            // 
+            this.lblPropertyMinValue.AutoSize = true;
+            this.lblPropertyMinValue.Location = new System.Drawing.Point(4, 45);
+            this.lblPropertyMinValue.Name = "lblPropertyMinValue";
+            this.lblPropertyMinValue.Size = new System.Drawing.Size(81, 13);
+            this.lblPropertyMinValue.TabIndex = 1;
+            this.lblPropertyMinValue.Text = "Minimum Value:";
+            // 
+            // lblPropertyDataType
+            // 
+            this.lblPropertyDataType.AutoSize = true;
+            this.lblPropertyDataType.Location = new System.Drawing.Point(4, 10);
+            this.lblPropertyDataType.Name = "lblPropertyDataType";
+            this.lblPropertyDataType.Size = new System.Drawing.Size(60, 13);
+            this.lblPropertyDataType.TabIndex = 0;
+            this.lblPropertyDataType.Text = "Data Type:";
+            // 
+            // splPropertyDescription
+            // 
+            this.splPropertyDescription.BackColor = System.Drawing.Color.Silver;
+            this.splPropertyDescription.Dock = System.Windows.Forms.DockStyle.Top;
+            this.splPropertyDescription.Location = new System.Drawing.Point(3, 103);
+            this.splPropertyDescription.Name = "splPropertyDescription";
+            this.splPropertyDescription.Size = new System.Drawing.Size(525, 3);
+            this.splPropertyDescription.TabIndex = 1;
+            this.splPropertyDescription.TabStop = false;
+            // 
+            // pnlPropertyDescription
+            // 
+            this.pnlPropertyDescription.Controls.Add(this.txtPropertyDescription);
+            this.pnlPropertyDescription.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlPropertyDescription.Location = new System.Drawing.Point(3, 3);
+            this.pnlPropertyDescription.Name = "pnlPropertyDescription";
+            this.pnlPropertyDescription.Size = new System.Drawing.Size(525, 100);
+            this.pnlPropertyDescription.TabIndex = 0;
+            // 
+            // txtPropertyDescription
+            // 
+            this.txtPropertyDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPropertyDescription.Location = new System.Drawing.Point(3, 3);
+            this.txtPropertyDescription.Multiline = true;
+            this.txtPropertyDescription.Name = "txtPropertyDescription";
+            this.txtPropertyDescription.Size = new System.Drawing.Size(517, 91);
+            this.txtPropertyDescription.TabIndex = 0;
+            // 
+            // lblPropertyCurrentValue
+            // 
+            this.lblPropertyCurrentValue.AutoSize = true;
+            this.lblPropertyCurrentValue.Location = new System.Drawing.Point(4, 148);
+            this.lblPropertyCurrentValue.Name = "lblPropertyCurrentValue";
+            this.lblPropertyCurrentValue.Size = new System.Drawing.Size(74, 13);
+            this.lblPropertyCurrentValue.TabIndex = 9;
+            this.lblPropertyCurrentValue.Text = "Current Value:";
+            // 
+            // txtPropertyCurrentValue
+            // 
+            this.txtPropertyCurrentValue.BackColor = System.Drawing.Color.LemonChiffon;
+            this.txtPropertyCurrentValue.Enabled = false;
+            this.txtPropertyCurrentValue.Location = new System.Drawing.Point(130, 145);
+            this.txtPropertyCurrentValue.Name = "txtPropertyCurrentValue";
+            this.txtPropertyCurrentValue.Size = new System.Drawing.Size(161, 20);
+            this.txtPropertyCurrentValue.TabIndex = 10;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(798, 529);
+            this.ClientSize = new System.Drawing.Size(883, 653);
             this.Controls.Add(this.tabActions);
             this.Controls.Add(this.splHorizontal);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlSectionDescription);
             this.Controls.Add(this.pnlSectionHeader);
             this.Controls.Add(this.splVertical);
             this.Controls.Add(this.trvSections);
@@ -375,11 +544,16 @@ namespace INIEditor.GUI
             this.pnlFiles.PerformLayout();
             this.pnlSectionHeader.ResumeLayout(false);
             this.pnlSectionHeader.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.pnlSectionDescription.ResumeLayout(false);
+            this.pnlSectionDescription.PerformLayout();
             this.tabActions.ResumeLayout(false);
             this.tpSection.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProperties)).EndInit();
+            this.tpProperty.ResumeLayout(false);
+            this.pnlProperty.ResumeLayout(false);
+            this.pnlProperty.PerformLayout();
+            this.pnlPropertyDescription.ResumeLayout(false);
+            this.pnlPropertyDescription.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -403,7 +577,7 @@ namespace INIEditor.GUI
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuTools;
         private System.Windows.Forms.ToolStripMenuItem mnuToolsGenerateXMLFile;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlSectionDescription;
         private System.Windows.Forms.Splitter splHorizontal;
         private System.Windows.Forms.TabControl tabActions;
         private System.Windows.Forms.TabPage tpSection;
@@ -418,6 +592,21 @@ namespace INIEditor.GUI
         private System.Windows.Forms.ToolStripMenuItem mnuViewDescriptionLanguage;
         private System.Windows.Forms.ToolStripMenuItem mnuViewDescLangEnglish;
         private System.Windows.Forms.ToolStripMenuItem mnuViewDescLangGerman;
+        private System.Windows.Forms.Splitter splPropertyDescription;
+        private System.Windows.Forms.Panel pnlPropertyDescription;
+        private System.Windows.Forms.TextBox txtPropertyDescription;
+        private System.Windows.Forms.Panel pnlProperty;
+        private System.Windows.Forms.TextBox txtPropertyMaxValue;
+        private System.Windows.Forms.TextBox txtPropertyMinValue;
+        private System.Windows.Forms.TextBox txtPropertyDataType;
+        private System.Windows.Forms.Label lblPropertyMaxValue;
+        private System.Windows.Forms.Label lblPropertyMinValue;
+        private System.Windows.Forms.Label lblPropertyDataType;
+        private System.Windows.Forms.Label lblPropertyNewValue;
+        private System.Windows.Forms.TextBox txtPropertyInterval;
+        private System.Windows.Forms.Label lblPropertyInterval;
+        private System.Windows.Forms.TextBox txtPropertyCurrentValue;
+        private System.Windows.Forms.Label lblPropertyCurrentValue;
     }
 }
 

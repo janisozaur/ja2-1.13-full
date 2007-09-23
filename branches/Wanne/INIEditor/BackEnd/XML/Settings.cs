@@ -38,6 +38,12 @@ namespace INIEditor.BackEnd.XML
 
         [XmlAttribute("maxvalue")]
         public int MaxValue;
+
+        [XmlAttribute("inverval")] 
+        public int Interval;
+
+        [XmlAttribute("value")]
+        public string Value;
     }
     #endregion
 }

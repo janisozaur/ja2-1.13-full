@@ -13,5 +13,12 @@ namespace INIEditor.BackEnd
             Admin,
             User
         }
+
+        public enum DataType
+        {
+            String,
+            Numeric,
+            Boolean
+        }
     }
 }
