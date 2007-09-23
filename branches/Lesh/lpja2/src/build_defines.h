@@ -3,7 +3,7 @@
 
 #ifdef __linux__
 	#define JA2_LINUX
-#elif __WIN32__
+#elif defined(__WIN32__) || defined(WIN32)
 	#define JA2_WIN
 #else
 	#error "Unsupported operating system!"
