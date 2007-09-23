@@ -1,6 +1,8 @@
 #ifndef __LANGUAGE_DEFINES_H
 #define __LANGUAGE_DEFINES_H
 
+#include "build_defines.h"
+
 //#pragma once
 
 /* ============================================================================
@@ -33,6 +35,8 @@
  * Regardless of if we did it Workspace wide or by uncommenting above,
  * HERE we must see, what language was selected. If one, we
  */
+#ifdef JA2_WIN
+
 #if defined(ENGLISH)
 #  pragma message(" (Language set to ENGLISH, You'll need english CDs)")
 #elif defined(GERMAN)
@@ -47,6 +51,7 @@
 #  error "At least You have to specify a Language somewhere. See comments above."
 #endif
 
+#endif //JA2_WIN
 
 
 
