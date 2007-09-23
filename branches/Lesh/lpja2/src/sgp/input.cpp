@@ -596,20 +596,27 @@ void KeyChange(SDL_keysym *KeySym, UINT8 ufKeyState)
 		// !! ubChar holds code of pressed key.
 		// 8 low bits is the code, 3 next is a shift, ctrl or alt mod
 		// we will be using only 8 lowest bits
+		// if the alt tab key was pressed
+		if( ubChar == TAB && gfAltState )
+		{
+			// therefore minimize the application
+			SDL_WM_IconifyWindow();
+			gfKeyState[ ALT ] = FALSE;
+			gfAltState = FALSE;
+		}
+		// check for alt+enter
+		else if ( ubChar == ENTER && gfAltState )
+		{
+			SDL_WM_ToggleFullScreen( SDL_GetVideoSurface() );
+			gfKeyState[ ALT ] = FALSE;
+			gfAltState = FALSE;
+		}
 		// Find out if the key is already pressed and if so, queue an event and update the gfKeyState array
 		if (gfKeyState[ ubChar & 0xFF ] == TRUE)
 		{ 
 			// Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
 			gfKeyState[ ubChar & 0xFF ] = FALSE;
 			QueueEvent(KEY_UP, ubChar, uiTmpLParam);
-		}
-		//else if the alt tab key was pressed
-		else if( ubChar == TAB && gfAltState )
-		{
-			// therefore minimize the application
-			SDL_WM_IconifyWindow();
-			gfKeyState[ ALT ] = FALSE;
-			gfAltState = FALSE;
 		}
 	}
 }
