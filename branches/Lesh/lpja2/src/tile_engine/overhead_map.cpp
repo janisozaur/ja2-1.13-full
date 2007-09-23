@@ -128,16 +128,22 @@ void InitNewOverheadDB( UINT8 ubTilesetID )
 	{
 
 		// Create video object
-
-		// Adjust for BPP
-		FilenameForBPP( gTilesets[ ubTilesetID ].TileSurfaceFilenames[ uiLoop ], cFileBPP);
-
-		// Adjust for tileset position
-		sprintf( cAdjustedFile, "TILESETS\\%d\\T\\%s", ubTilesetID, cFileBPP );	
-
-		VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-		strcpy( VObjectDesc.ImageFile, cAdjustedFile);
-		hVObject = CreateVideoObject( &VObjectDesc );
+		if ( strlen( gTilesets[ ubTilesetID ].TileSurfaceFilenames[ uiLoop ] ) == 0 )
+		{
+			hVObject = NULL;
+		}
+		else
+		{
+			// Adjust for BPP
+			FilenameForBPP( gTilesets[ ubTilesetID ].TileSurfaceFilenames[ uiLoop ], cFileBPP);
+			
+			// Adjust for tileset position
+			sprintf( cAdjustedFile, "TILESETS\\%d\\T\\%s", ubTilesetID, cFileBPP );	
+			
+			VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
+			strcpy( VObjectDesc.ImageFile, cAdjustedFile);
+			hVObject = CreateVideoObject( &VObjectDesc );
+		}
 
 		if ( hVObject == NULL )
 		{
