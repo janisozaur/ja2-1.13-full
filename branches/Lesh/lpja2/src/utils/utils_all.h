@@ -30,7 +30,6 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
-#include "container.h"
 #include "wcheck.h"
 #include "event_manager.h"
 #include "event_pump.h"

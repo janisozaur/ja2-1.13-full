@@ -22,7 +22,7 @@ INT32	UTF16toUTF32(UINT16 *pUTF16, CHAR16 *pUTF32, UINT16 usMaxLen);
 // Use converter only in linux version
 #ifdef JA2_LINUX
 #	define ConvertUTF16to32(x,y,z)	UTF16toUTF32(x,y,z)
-#elif defined( JA2_WINDOWS )
+#elif defined( JA2_WIN )
 #	define ConvertUTF16to32(x,y,z)	memcpy(y,x,z)
 #endif
 

@@ -125,7 +125,6 @@
 #include "text.h"
 #include "squads.h"
 #include "map_screen_interface_map_inventory.h"
-//#include "container.h"
 #include "fov.h"
 #include "Overhead types.h"
 #include "tactical_save.h"

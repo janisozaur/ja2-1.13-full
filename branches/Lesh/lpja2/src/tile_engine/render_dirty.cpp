@@ -9,7 +9,6 @@
 	#include "vsurface.h"
 	#include "render_dirty.h"
 	#include "sysutil.h"
-	#include "container.h"
 	#include "wcheck.h"
 	#include "video.h"
 	#include "vobject_blitters.h"

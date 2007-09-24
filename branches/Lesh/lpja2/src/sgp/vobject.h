@@ -2,7 +2,6 @@
 #define __VOBJECT_H
 
 #include "types.h"
-#include "container.h"
 #include "image.h"
 #include "SDL.h"
 
@@ -234,7 +233,6 @@ BOOLEAN GetETRLEPixelValue( UINT8 * pDest, HVOBJECT hVObject, UINT16 usETLREInde
 // Globals
 //
 // ****************************************************************************
-extern HLIST ghVideoObjects;
 
 // ****************************************************************************
 //

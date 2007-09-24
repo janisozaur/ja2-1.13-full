@@ -13,7 +13,6 @@
 	#include "input.h"
 	#include "font.h"  
 	#include "screen_ids.h"
-	#include "container.h" 
 	#include "overhead.h"
 	#include "isometric_utils.h"
 	#include "sysutil.h"

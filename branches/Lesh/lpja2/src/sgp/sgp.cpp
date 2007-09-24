@@ -27,6 +27,7 @@
 	#include "vfs.hpp"
 	#include "io_layer.h"
 	#include "game.h"
+	#include "container.h"
 	
 #endif
 

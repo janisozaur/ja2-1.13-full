@@ -62,6 +62,8 @@
 	#include "qarray.h"
 	#include "file_man.h"
 	#include "sgp_str.h"
+	#include "container.h"
+	
 #endif
 
 #define		DIALOGUESIZE					480

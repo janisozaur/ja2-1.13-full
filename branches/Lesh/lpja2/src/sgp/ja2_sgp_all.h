@@ -36,7 +36,6 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <stdio.h>
-#include "container.h"
 #if _MSC_VER < 1300 //(iostream.h was removed from VC.NET2003)
 #include <iostream.h>
 #endif

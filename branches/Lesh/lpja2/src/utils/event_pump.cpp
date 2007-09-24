@@ -3,7 +3,6 @@
 #else
 	#include "platform.h"
 	#include "sgp.h"
-	#include "container.h"
 	#include "wcheck.h"
 	#include "event_pump.h"
 	#include "soldier_control.h"

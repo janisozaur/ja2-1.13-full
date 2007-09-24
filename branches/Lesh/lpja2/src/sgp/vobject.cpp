@@ -52,7 +52,6 @@
 
 
 
-HLIST	ghVideoObjects     = NULL;
 BOOLEAN	gfVideoObjectsInit = FALSE;
 
 typedef struct VOBJECT_NODE

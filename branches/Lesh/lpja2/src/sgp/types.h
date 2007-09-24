@@ -143,7 +143,7 @@ typedef UINT32 TIMER;			// timer definition
 #define INVALID_HANDLE_VALUE 0xFFFFFFFF
 typedef long long		SGP_FILETIME;
 
-#elif defined( JA2_WINDOWS )
+#elif defined( JA2_WIN )
 
 typedef	FILETIME		SGP_FILETIME;
 
