@@ -81,7 +81,7 @@ namespace INIEditor.GUI
             }
         }
 
-        private void InitializeSectionTree()
+        private void InitializeSectionTree(string selectedTreeNode)
         {
             trvSections.Nodes.Clear();
 
@@ -97,6 +97,7 @@ namespace INIEditor.GUI
             iniFileNode.ImageKey = "INIFile.ico";
             iniFileNode.SelectedImageKey = "INIFile.ico";
             iniFileNode.Tag = _iniFile;
+            //iniFileNode.Collapse();
             trvSections.Nodes.Add(iniFileNode);
 
             // The ini file has a reference to the tree node
@@ -105,7 +106,7 @@ namespace INIEditor.GUI
             // Loop through all the sections of the ini file
             foreach (INISection section in _iniFile.Sections)
             {
-                section.XMLSection = GetXMLSection(section.Name);
+                section.XMLSection = GetXMLSection(section);
 
                 TreeNode sectionNode = new TreeNode();
                 sectionNode.Name = section.Name;
@@ -121,7 +122,7 @@ namespace INIEditor.GUI
                 // Loop through all the properties of the current selection
                 foreach (INIProperty property in section.Properties)
                 {
-                    property.XMLProperty = GetXMLProperty(section.Name, property.Name);
+                    property.XMLProperty = GetXMLProperty(property);
 
                     TreeNode propertyNode = new TreeNode();
                     propertyNode.Name = property.Name;
@@ -133,6 +134,38 @@ namespace INIEditor.GUI
 
                     // The property has a reference to the tree node
                     property.Tag = propertyNode;
+                }
+            }
+
+            ReselectTreeNodeInNewSectionTree(selectedTreeNode);
+        }
+
+        private void ReselectTreeNodeInNewSectionTree(string selectedTreeNode)
+        {
+            if (trvSections.Nodes.Count > 0)
+            {
+                if (trvSections.Nodes[0].Text == selectedTreeNode)
+                {
+                    trvSections.SelectedNode = trvSections.Nodes[0];
+                    return;
+                }
+
+                foreach (TreeNode sectionNode in trvSections.Nodes[0].Nodes)
+                {
+                    if (sectionNode.Text == selectedTreeNode)
+                    {
+                        trvSections.SelectedNode = sectionNode;
+                        return;
+                    }
+
+                    foreach (TreeNode propertyNode in sectionNode.Nodes)
+                    {
+                        if (propertyNode.Text == selectedTreeNode)
+                        {
+                            trvSections.SelectedNode = propertyNode;
+                            return;
+                        }
+                    }
                 }
             }
         }
@@ -159,7 +192,6 @@ namespace INIEditor.GUI
                 colSection.Visible = true;
 
                 INIFile file = item as INIFile;
-                //txtSectionDescription.Text = file.XMLSettings.Description_ENG;
                 txtSectionDescription.Text = GetDescription(file.XMLSettings);
 
                 foreach (INISection section in file.Sections)
@@ -176,6 +208,16 @@ namespace INIEditor.GUI
 
                         dgvProperties[colSection.Index, rowIndex].Tag = section;
                         dgvProperties[colProperty.Index, rowIndex].Tag = property;
+
+                        // The value has been changed
+                        if (property.CurrentValue != property.NewValue)
+                        {
+                            dgvProperties[colSection.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                            dgvProperties[colProperty.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                            dgvProperties[colDescription.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                            dgvProperties[colCurrentValue.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                            dgvProperties[colNewValue.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                        }
                     }
                 }
 
@@ -211,6 +253,15 @@ namespace INIEditor.GUI
 
                     dgvProperties[colSection.Index, rowIndex].Tag = section;
                     dgvProperties[colProperty.Index, rowIndex].Tag = property;
+
+                    // The value has been changed
+                    if (property.CurrentValue != property.NewValue)
+                    {
+                        dgvProperties[colProperty.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                        dgvProperties[colCurrentValue.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                        dgvProperties[colNewValue.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                        dgvProperties[colDescription.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                    }
                 }
             }
             else if (item is INIProperty)
@@ -365,18 +416,19 @@ namespace INIEditor.GUI
             return xmlIniSettings;
         }
 
-        private Section GetXMLSection(string section)
+        private Section GetXMLSection(INISection section)
         {
             Section matchingXMLSection = null;
 
-            if (_iniSettingsList.ContainsKey(section))
+            if (_iniSettingsList.ContainsKey(section.Name))
             {
-                matchingXMLSection = _iniSettingsList[section] as Section;
+                matchingXMLSection = _iniSettingsList[section.Name] as Section;
             }
 
             if (matchingXMLSection == null)
             {
                 matchingXMLSection = new Section();
+                matchingXMLSection.Name = section.Name;
                 matchingXMLSection.Description_ENG = Constants.MISSING_SECTION_DESCRIPTION_ENG;
                 matchingXMLSection.Description_GER = Constants.MISSING_SECTION_DESCRIPTION_GER;
             }
@@ -384,16 +436,16 @@ namespace INIEditor.GUI
             return matchingXMLSection;
         }
 
-        private Property GetXMLProperty(string section, string property)
+        private Property GetXMLProperty(INIProperty property)
         {
             Property matchingXMLProperty = null;
 
-            if (_iniSettingsList.ContainsKey(section))
+            if (_iniSettingsList.ContainsKey(property.Section.Name))
             {
-                Section xmlSection = _iniSettingsList[section] as Section;
+                Section xmlSection = _iniSettingsList[property.Section.Name] as Section;
                 foreach (Property xmlProperty in xmlSection.Properties)
                 {
-                    if (xmlProperty.Name == property)
+                    if (xmlProperty.Name == property.Name)
                     {
                         matchingXMLProperty = xmlProperty;
                         break;
@@ -404,12 +456,14 @@ namespace INIEditor.GUI
             if (matchingXMLProperty == null)
             {
                 matchingXMLProperty = new Property();
+                matchingXMLProperty.Name = property.Name;
                 matchingXMLProperty.Description_ENG = Constants.MISSING_PROPERTY_DESCRIPTION_ENG;
                 matchingXMLProperty.Description_GER = Constants.MISSING_PROPERTY_DESCRIPTION_GER;
                 matchingXMLProperty.DataType = Constants.MISSING_DATA_TYPE;
                 matchingXMLProperty.MinValue = Constants.MISSING_MIN_VALUE;
                 matchingXMLProperty.MaxValue = Constants.MISSING_MAX_VALUE;
                 matchingXMLProperty.Interval = Constants.PROPERTY_INVERVAL;
+                
             }
 
             return matchingXMLProperty;
@@ -460,7 +514,7 @@ namespace INIEditor.GUI
         {
             if (cmbFiles.SelectedItem != null)
             {
-                InitializeSectionTree();
+                InitializeSectionTree(cmbFiles.SelectedItem.ToString());
                 if (trvSections.Nodes.Count > 0)
                 {
                     trvSections.SelectedNode = trvSections.Nodes[0];
@@ -478,7 +532,6 @@ namespace INIEditor.GUI
                 sectionHeader = sectionNode.Text;
 
             }
-
             InitializeTabs(e.Node.Tag, sectionHeader);
         }
 
@@ -525,7 +578,8 @@ namespace INIEditor.GUI
             if (_iniFile != null)
             {
                 Settings generatedIniSettings = new Settings();
-                generatedIniSettings = _iniFile.XMLSettings;
+                generatedIniSettings.Description_ENG = _iniFile.XMLSettings.Description_ENG;
+                generatedIniSettings.Description_GER = _iniFile.XMLSettings.Description_GER;
 
                 foreach (INISection section in _iniFile.Sections)
                 {
@@ -570,6 +624,44 @@ namespace INIEditor.GUI
                 propertyNode.ForeColor = Constants.DEFAULT_TREE_NODE_TEXT_COLOR;
                 sectionNode.ForeColor = Constants.DEFAULT_TREE_NODE_TEXT_COLOR;
             }
+        }
+
+        private void SaveFile()
+        {
+            string dataFolder = Path.GetDirectoryName(cmbFiles.SelectedItem.ToString());
+            string path = Path.Combine(Constants.JA2_PATH, dataFolder);
+
+            path = Path.Combine(path, Constants.INI_FILE_OUT);
+            _iniFile.WriteFile(path);
+
+            TreeNode selectedTreeNode = trvSections.SelectedNode;
+
+            InitializeSectionTree(selectedTreeNode.Text);
+        }
+
+        //private void RefreshSectionTree()
+        //{
+        //    // Loop through all the sections in the tree
+        //    foreach (TreeNode sectionNode in trvSections.Nodes)
+        //    {
+        //        sectionNode.ForeColor = Constants.DEFAULT_TREE_NODE_TEXT_COLOR;
+
+        //        // Loop through all the properties of the current section in the tree
+        //        foreach (TreeNode propertyNode in sectionNode.Nodes)
+        //        {
+        //            propertyNode.ForeColor = Constants.DEFAULT_TREE_NODE_TEXT_COLOR;
+        //        }
+        //    }
+        //}
+
+        private void mnuFileSave_Click(object sender, EventArgs e)
+        {
+            SaveFile();
+        }
+
+        private void tbrSave_Click(object sender, EventArgs e)
+        {
+            SaveFile();
         }
     }
 }

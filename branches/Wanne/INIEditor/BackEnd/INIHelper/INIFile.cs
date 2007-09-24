@@ -128,7 +128,7 @@ namespace INIEditor.BackEnd.INIHelper
                         while (enumerator2.MoveNext())
                         {
                             INIProperty property = enumerator2.Current;
-                            writer.WriteLine(property.Name + "=" + property.NewValue);
+                            writer.WriteLine(property.Name + " = " + property.NewValue);
                         }
                         continue;
                     }

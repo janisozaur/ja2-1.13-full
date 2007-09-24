@@ -50,6 +50,7 @@ namespace INIEditor.GUI
             this.mnuToolsGenerateXMLFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.tbrMain = new System.Windows.Forms.ToolStrip();
+            this.tbrSave = new System.Windows.Forms.ToolStripButton();
             this.stsMain = new System.Windows.Forms.StatusStrip();
             this.pnlFiles = new System.Windows.Forms.Panel();
             this.cmbFiles = new System.Windows.Forms.ComboBox();
@@ -65,6 +66,11 @@ namespace INIEditor.GUI
             this.tabActions = new System.Windows.Forms.TabControl();
             this.tpSection = new System.Windows.Forms.TabPage();
             this.dgvProperties = new System.Windows.Forms.DataGridView();
+            this.colSection = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProperty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCurrentValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colNewValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tpProperty = new System.Windows.Forms.TabPage();
             this.pnlProperty = new System.Windows.Forms.Panel();
             this.txtPropertyCurrentValue = new System.Windows.Forms.TextBox();
@@ -81,12 +87,8 @@ namespace INIEditor.GUI
             this.splPropertyDescription = new System.Windows.Forms.Splitter();
             this.pnlPropertyDescription = new System.Windows.Forms.Panel();
             this.txtPropertyDescription = new System.Windows.Forms.TextBox();
-            this.colSection = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colProperty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colCurrentValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colNewValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mnuMain.SuspendLayout();
+            this.tbrMain.SuspendLayout();
             this.pnlFiles.SuspendLayout();
             this.pnlSectionHeader.SuspendLayout();
             this.pnlSectionDescription.SuspendLayout();
@@ -122,19 +124,22 @@ namespace INIEditor.GUI
             // 
             // mnuFileSave
             // 
+            this.mnuFileSave.Image = ((System.Drawing.Image)(resources.GetObject("mnuFileSave.Image")));
             this.mnuFileSave.Name = "mnuFileSave";
-            this.mnuFileSave.Size = new System.Drawing.Size(109, 22);
+            this.mnuFileSave.Size = new System.Drawing.Size(152, 22);
             this.mnuFileSave.Text = "Save";
+            this.mnuFileSave.ToolTipText = "Save File";
+            this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(106, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // viewToolStripMenuItem
@@ -235,11 +240,24 @@ namespace INIEditor.GUI
             // 
             // tbrMain
             // 
+            this.tbrMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tbrSave});
             this.tbrMain.Location = new System.Drawing.Point(0, 24);
             this.tbrMain.Name = "tbrMain";
             this.tbrMain.Size = new System.Drawing.Size(883, 25);
             this.tbrMain.TabIndex = 1;
             this.tbrMain.Text = "toolStrip1";
+            // 
+            // tbrSave
+            // 
+            this.tbrSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbrSave.Image = ((System.Drawing.Image)(resources.GetObject("tbrSave.Image")));
+            this.tbrSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbrSave.Name = "tbrSave";
+            this.tbrSave.Size = new System.Drawing.Size(23, 22);
+            this.tbrSave.Text = "Save";
+            this.tbrSave.ToolTipText = "Save File";
+            this.tbrSave.Click += new System.EventHandler(this.tbrSave_Click);
             // 
             // stsMain
             // 
@@ -407,6 +425,45 @@ namespace INIEditor.GUI
             this.dgvProperties.TabIndex = 0;
             this.dgvProperties.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProperties_CellDoubleClick);
             // 
+            // colSection
+            // 
+            this.colSection.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.colSection.HeaderText = "Section";
+            this.colSection.Name = "colSection";
+            this.colSection.ReadOnly = true;
+            this.colSection.Width = 66;
+            // 
+            // colProperty
+            // 
+            this.colProperty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.colProperty.HeaderText = "Property";
+            this.colProperty.Name = "colProperty";
+            this.colProperty.ReadOnly = true;
+            this.colProperty.Width = 69;
+            // 
+            // colDescription
+            // 
+            this.colDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colDescription.HeaderText = "Description";
+            this.colDescription.Name = "colDescription";
+            this.colDescription.ReadOnly = true;
+            // 
+            // colCurrentValue
+            // 
+            this.colCurrentValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.colCurrentValue.HeaderText = "Current Value";
+            this.colCurrentValue.Name = "colCurrentValue";
+            this.colCurrentValue.ReadOnly = true;
+            this.colCurrentValue.Width = 94;
+            // 
+            // colNewValue
+            // 
+            this.colNewValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.colNewValue.HeaderText = "New Value";
+            this.colNewValue.Name = "colNewValue";
+            this.colNewValue.ReadOnly = true;
+            this.colNewValue.Width = 82;
+            // 
             // tpProperty
             // 
             this.tpProperty.Controls.Add(this.pnlProperty);
@@ -567,45 +624,6 @@ namespace INIEditor.GUI
             this.txtPropertyDescription.Size = new System.Drawing.Size(517, 91);
             this.txtPropertyDescription.TabIndex = 0;
             // 
-            // colSection
-            // 
-            this.colSection.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colSection.HeaderText = "Section";
-            this.colSection.Name = "colSection";
-            this.colSection.ReadOnly = true;
-            this.colSection.Width = 66;
-            // 
-            // colProperty
-            // 
-            this.colProperty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colProperty.HeaderText = "Property";
-            this.colProperty.Name = "colProperty";
-            this.colProperty.ReadOnly = true;
-            this.colProperty.Width = 69;
-            // 
-            // colDescription
-            // 
-            this.colDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colDescription.HeaderText = "Description";
-            this.colDescription.Name = "colDescription";
-            this.colDescription.ReadOnly = true;
-            // 
-            // colCurrentValue
-            // 
-            this.colCurrentValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colCurrentValue.HeaderText = "Current Value";
-            this.colCurrentValue.Name = "colCurrentValue";
-            this.colCurrentValue.ReadOnly = true;
-            this.colCurrentValue.Width = 94;
-            // 
-            // colNewValue
-            // 
-            this.colNewValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colNewValue.HeaderText = "New Value";
-            this.colNewValue.Name = "colNewValue";
-            this.colNewValue.ReadOnly = true;
-            this.colNewValue.Width = 82;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -626,6 +644,8 @@ namespace INIEditor.GUI
             this.Text = "INI Editor";
             this.mnuMain.ResumeLayout(false);
             this.mnuMain.PerformLayout();
+            this.tbrMain.ResumeLayout(false);
+            this.tbrMain.PerformLayout();
             this.pnlFiles.ResumeLayout(false);
             this.pnlFiles.PerformLayout();
             this.pnlSectionHeader.ResumeLayout(false);
@@ -703,6 +723,7 @@ namespace INIEditor.GUI
         private System.Windows.Forms.DataGridViewTextBoxColumn colDescription;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCurrentValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn colNewValue;
+        private System.Windows.Forms.ToolStripButton tbrSave;
     }
 }
 

@@ -97,6 +97,12 @@
   <ItemGroup>
     <None Include="GUI\Resources\Section.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="GUI\Resources\SectionSelected.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GUI\Resources\INIFile.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
