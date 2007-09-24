@@ -28,5 +28,8 @@ namespace INIEditor.BackEnd
         public const int MISSING_MAX_VALUE = 99999;
         public const string MISSING_PROPERTY_VALUE = "66666"; // Use a string type, because we can cast it with to any needed type!
         public const int PROPERTY_INVERVAL = 1;
+
+        public static readonly System.Drawing.Color CHANGED_TREE_NODE_TEXT_COLOR = System.Drawing.Color.Red;
+        public static readonly System.Drawing.Color DEFAULT_TREE_NODE_TEXT_COLOR = System.Drawing.Color.Black;
     }
 }

@@ -103,7 +103,8 @@ namespace INIEditor.BackEnd.INIHelper
                         INIProperty prop = new INIProperty();
                         prop.Section = section;
                         prop.Name = this.ExtractPropertyName(line);
-                        prop.Value = this.ExtractPropertyValue(line);
+                        prop.CurrentValue = this.ExtractPropertyValue(line);
+                        prop.NewValue = this.ExtractPropertyValue(line);
                         this._sections[num].AddProperty(prop);
                     }
                 }
@@ -127,7 +128,7 @@ namespace INIEditor.BackEnd.INIHelper
                         while (enumerator2.MoveNext())
                         {
                             INIProperty property = enumerator2.Current;
-                            writer.WriteLine(property.Name + "=" + property.Value);
+                            writer.WriteLine(property.Name + "=" + property.NewValue);
                         }
                         continue;
                     }

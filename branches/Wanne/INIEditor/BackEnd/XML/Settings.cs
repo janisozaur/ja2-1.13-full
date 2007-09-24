@@ -41,9 +41,6 @@ namespace INIEditor.BackEnd.XML
 
         [XmlAttribute("inverval")] 
         public int Interval;
-
-        [XmlAttribute("value")]
-        public string Value;
     }
     #endregion
 }

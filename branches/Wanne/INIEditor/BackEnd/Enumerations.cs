@@ -16,7 +16,6 @@ namespace INIEditor.BackEnd
 
         public enum DataType
         {
-            String,
             Numeric,
             Boolean
         }

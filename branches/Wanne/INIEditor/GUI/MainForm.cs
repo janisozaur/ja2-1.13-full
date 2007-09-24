@@ -14,7 +14,7 @@ namespace INIEditor.GUI
         private INIFile _iniFile = null;
         private Hashtable _iniSettingsList = null;
         private Enumerations.Language _descriptionLanguage = Enumerations.Language.English;
-        private Enumerations.Permission _permission = Enumerations.Permission.Admin;    // TODO: Change to "User" in Release version!
+        private readonly Enumerations.Permission _permission = Enumerations.Permission.Admin;    // TODO: Change to "User" in Release version!
         private Control _ctlPropertyNewValue = new Control();
         #endregion
         #region CTOR
@@ -94,6 +94,8 @@ namespace INIEditor.GUI
             TreeNode iniFileNode = new TreeNode();
             iniFileNode.Name = cmbFiles.SelectedItem.ToString();
             iniFileNode.Text = cmbFiles.SelectedItem.ToString();
+            iniFileNode.ImageKey = "INIFile.ico";
+            iniFileNode.SelectedImageKey = "INIFile.ico";
             iniFileNode.Tag = _iniFile;
             trvSections.Nodes.Add(iniFileNode);
 
@@ -108,6 +110,8 @@ namespace INIEditor.GUI
                 TreeNode sectionNode = new TreeNode();
                 sectionNode.Name = section.Name;
                 sectionNode.Text = section.Name;
+                sectionNode.ImageKey = "Section.ico";
+                sectionNode.SelectedImageKey = "SectionSelected.ico";
                 sectionNode.Tag = section;
                 iniFileNode.Nodes.Add(sectionNode);
 
@@ -122,6 +126,8 @@ namespace INIEditor.GUI
                     TreeNode propertyNode = new TreeNode();
                     propertyNode.Name = property.Name;
                     propertyNode.Text = property.Name;
+                    propertyNode.ImageKey = "Property.ico";
+                    propertyNode.SelectedImageKey = "PropertySelected.ico";
                     propertyNode.Tag = property;
                     sectionNode.Nodes.Add(propertyNode);   
 
@@ -164,9 +170,9 @@ namespace INIEditor.GUI
 
                         dgvProperties[colSection.Index, rowIndex].Value = section.Name;
                         dgvProperties[colProperty.Index, rowIndex].Value = property.Name;
-                        dgvProperties[colValue.Index, rowIndex].Value = property.Value;
-
                         dgvProperties[colDescription.Index, rowIndex].Value = GetDescription(property.XMLProperty);
+                        dgvProperties[colCurrentValue.Index, rowIndex].Value = property.CurrentValue;
+                        dgvProperties[colNewValue.Index, rowIndex].Value = property.NewValue;
 
                         dgvProperties[colSection.Index, rowIndex].Tag = section;
                         dgvProperties[colProperty.Index, rowIndex].Tag = property;
@@ -199,7 +205,8 @@ namespace INIEditor.GUI
                     int rowIndex = dgvProperties.Rows.Add();
 
                     dgvProperties[colProperty.Index, rowIndex].Value = property.Name;
-                    dgvProperties[colValue.Index, rowIndex].Value = property.Value;
+                    dgvProperties[colCurrentValue.Index, rowIndex].Value = property.CurrentValue;
+                    dgvProperties[colNewValue.Index, rowIndex].Value = property.NewValue;
                     dgvProperties[colDescription.Index, rowIndex].Value = GetDescription(property.XMLProperty);
 
                     dgvProperties[colSection.Index, rowIndex].Tag = section;
@@ -256,14 +263,17 @@ namespace INIEditor.GUI
 
             NumericUpDown nudPropertyNewValue = new NumericUpDown();
             nudPropertyNewValue.Name = "ctlPropertyNewValue";
+            nudPropertyNewValue.Tag = property;
             nudPropertyNewValue.Increment = property.XMLProperty.Interval;
             nudPropertyNewValue.Minimum = property.XMLProperty.MinValue;
             nudPropertyNewValue.Maximum = property.XMLProperty.MaxValue;
-            nudPropertyNewValue.Value = Convert.ToDecimal(property.XMLProperty.Value);
+            nudPropertyNewValue.Value = Convert.ToDecimal(property.NewValue);
 
             nudPropertyNewValue.Left = txtPropertyInterval.Left;
             nudPropertyNewValue.Top = txtPropertyCurrentValue.Top + diffHeight;
             nudPropertyNewValue.Width = txtPropertyDataType.Width;
+
+            nudPropertyNewValue.Leave += new System.EventHandler(this.txtPropertyNewValue_Leave);
 
             // Store the control in the class variable
             _ctlPropertyNewValue = nudPropertyNewValue;
@@ -291,13 +301,16 @@ namespace INIEditor.GUI
 
             ComboBox cmbPropertyNewValue = new ComboBox();
             cmbPropertyNewValue.Name = "ctlPropertyNewValue";
+            cmbPropertyNewValue.Tag = property;
             cmbPropertyNewValue.Items.Add("TRUE");
             cmbPropertyNewValue.Items.Add("FALSE");
-            cmbPropertyNewValue.SelectedText = property.XMLProperty.Value;
+            cmbPropertyNewValue.SelectedText = property.NewValue;
 
             cmbPropertyNewValue.Left = txtPropertyInterval.Left;
             cmbPropertyNewValue.Top = txtPropertyCurrentValue.Top + diffHeight;
             cmbPropertyNewValue.Width = txtPropertyDataType.Width;
+
+            cmbPropertyNewValue.Leave += new System.EventHandler(this.txtPropertyNewValue_Leave);
 
             // Store the control in the class variable
             _ctlPropertyNewValue = cmbPropertyNewValue;
@@ -314,7 +327,7 @@ namespace INIEditor.GUI
             txtPropertyMinValue.Text = Convert.ToString(property.XMLProperty.MinValue);
             txtPropertyMaxValue.Text = Convert.ToString(property.XMLProperty.MaxValue);
             txtPropertyInterval.Text = Convert.ToString(property.XMLProperty.Interval);
-            txtPropertyCurrentValue.Text = Convert.ToString(property.XMLProperty.Value);
+            txtPropertyCurrentValue.Text = Convert.ToString(property.CurrentValue);
 
             _ctlPropertyNewValue.Text = "_ctlPropertyNewValue";
 
@@ -333,11 +346,6 @@ namespace INIEditor.GUI
             {
                 InitializeNumericProperty(property);
             }
-            // String -> Text box control
-            else if (property.XMLProperty.DataType.ToLower() == Enumerations.DataType.String.ToString().ToLower())
-            {
-                
-            }   
         }
 
         private Settings GetXMLIniFile()
@@ -402,7 +410,6 @@ namespace INIEditor.GUI
                 matchingXMLProperty.MinValue = Constants.MISSING_MIN_VALUE;
                 matchingXMLProperty.MaxValue = Constants.MISSING_MAX_VALUE;
                 matchingXMLProperty.Interval = Constants.PROPERTY_INVERVAL;
-                matchingXMLProperty.Value = Constants.MISSING_PROPERTY_VALUE;
             }
 
             return matchingXMLProperty;
@@ -484,8 +491,9 @@ namespace INIEditor.GUI
 
             InitializeTabs(property, section.Name);
         }
+        #endregion
 
-        private void mnuViewDescLangEnglish_Click(object sender, EventArgs e)
+        private void mnuViewDescLanguageEnglish_Click(object sender, EventArgs e)
         {
             if (_descriptionLanguage != Enumerations.Language.English)
             {
@@ -495,7 +503,7 @@ namespace INIEditor.GUI
             }
         }
 
-        private void mnuViewDescLangGerman_Click(object sender, EventArgs e)
+        private void mnuViewDescLanguageGerman_Click(object sender, EventArgs e)
         {
             if (_descriptionLanguage != Enumerations.Language.German)
             {
@@ -512,7 +520,7 @@ namespace INIEditor.GUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void mnuToolsGenerateXMLFile_Click(object sender, EventArgs e)
+        private void mnuToolsGenerateXML_Click(object sender, EventArgs e)
         {
             if (_iniFile != null)
             {
@@ -539,6 +547,29 @@ namespace INIEditor.GUI
                 Helper.SaveObjectToXMLFile(generatedIniSettings, path);
             }
         }
-        #endregion
+
+        private void txtPropertyNewValue_Leave(object sender, EventArgs e)
+        {
+            Control control = sender as Control;
+            INIProperty property = control.Tag as INIProperty;
+
+            property.NewValue = control.Text;
+
+            TreeNode propertyNode = property.Tag as TreeNode;
+            INISection section = property.Section;
+            TreeNode sectionNode = section.Tag as TreeNode;
+
+            // Value has been changed to a new value
+            if (property.NewValue != property.CurrentValue)
+            {
+                propertyNode.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                sectionNode.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+            }
+            else
+            {
+                propertyNode.ForeColor = Constants.DEFAULT_TREE_NODE_TEXT_COLOR;
+                sectionNode.ForeColor = Constants.DEFAULT_TREE_NODE_TEXT_COLOR;
+            }
+        }
     }
 }
