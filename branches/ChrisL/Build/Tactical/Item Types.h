@@ -472,7 +472,7 @@ public:
 	bool	operator==(const OBJECTTYPE& compare)const;
 	bool	exists();
 	bool	IsActiveLBE(unsigned int index);
-	bool	HasAnyActiveLBEs();
+	bool	HasAnyActiveLBEs(SOLDIERTYPE * pSoldier = NULL, UINT8 iter = 0);
 	LBENODE*	GetLBEPointer(unsigned int index);
 
 

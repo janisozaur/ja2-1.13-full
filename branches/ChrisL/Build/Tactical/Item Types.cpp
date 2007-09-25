@@ -384,12 +384,19 @@ bool OBJECTTYPE::IsActiveLBE(unsigned int index)
 	return false;
 }
 
-bool OBJECTTYPE::HasAnyActiveLBEs()
+bool OBJECTTYPE::HasAnyActiveLBEs(SOLDIERTYPE * pSoldier, UINT8 iter)
 {
 	PERFORMANCE_MARKER
 	if (exists() == true) {
-		for (int x = 0; x < ubNumberOfObjects; ++x) {
-			if ((*this)[x]->data.lbe.bLBE == -1) {
+		if(pSoldier != NULL){
+			for (int x = 0; x < ubNumberOfObjects; ++x) {
+				if ((*this)[x]->data.lbe.bLBE == -1) {
+					return true;
+				}
+			}
+		}
+		else{
+			if((*this)[iter]->data.lbe.bLBE == -1){
 				return true;
 			}
 		}

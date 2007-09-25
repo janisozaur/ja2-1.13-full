@@ -4390,7 +4390,7 @@ bool PlaceInAnySmallPocket(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewIte
 BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNewItem, INT8 bExcludeSlot )
 {
 	PERFORMANCE_MARKER
-	INVTYPE	* pItem;
+	INVTYPE			*pItem;
 	UINT8			packCombo, backCombo;
 
 	// statuses of extra objects would be 0 if the # exceeds the maximum
@@ -4554,8 +4554,9 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 			}
 			else if(pSoldier->inv[BPACKPOCKPOS].exists() == false && lbeClass == BACKPACK)	// Backpack
 			{
-				if(pSoldier->inv[GUNSLINGPOCKPOS].exists() == false)
-				{
+				//CHRISL: We're no longer restricting backpacks and gunslings from being used together
+				//if(pSoldier->inv[GUNSLINGPOCKPOS].exists() == false)
+				//{
 					packCombo = LoadBearingEquipment[Item[pSoldier->inv[CPACKPOCKPOS].usItem].ubClassIndex].lbeCombo;
 					backCombo = LoadBearingEquipment[pItem->ubClassIndex].lbeCombo;
 					if((pSoldier->inv[CPACKPOCKPOS].exists() == true && backCombo != 0 && backCombo == packCombo) || pSoldier->inv[CPACKPOCKPOS].exists() == false)
@@ -4567,7 +4568,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 						if(pObj->exists() == false)
 							return( TRUE );
 					}
-				}
+				//}
 			}
 			break;
 		default:

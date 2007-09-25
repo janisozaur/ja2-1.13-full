@@ -2588,7 +2588,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 			if((UsingNewInventorySystem() == true))
 			{
 				// CHRISL: Display astrisk when LBENODE active
-				if ( pObject->HasAnyActiveLBEs() )
+				if ( pObject->HasAnyActiveLBEs(pSoldier, iter) )
 				{
 					SetFontForeground( FONT_BLUE );
 
@@ -4585,13 +4585,16 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 	{
 		pLBE = pObj->GetLBEPointer(subObject);
 		lClass = pLBE->lbeClass;
-		if(lClass == 1 && pObj == &pSoldier->inv[RTHIGHPOCKPOS]) {
-			lClass = 5;
-		}
+		//CHRISL: We want to set the class to 5 if this is NOT an LBENODE item
+		//if(lClass == 1 && pObj == &pSoldier->inv[RTHIGHPOCKPOS]) {
+		//	lClass = 5;
+		//}
 	}
 	else {
 		lClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
 	}
+	if(lClass == 1 && pObj->IsActiveLBE(subObject) == false && pObj == &pSoldier->inv[RTHIGHPOCKPOS])
+		lClass = 5;
 
 	std::vector<INT8> pocketKey;
 	// CHRISL: GetLBESlots doesn't use lClass.  It uses the soldier pocket.  We have to convert if we're going to use this function

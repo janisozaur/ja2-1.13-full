@@ -2872,6 +2872,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 					else
 					{
 						CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &gTempObject );
+						pSoldier->inv[cnt] = gTempObject;
 					}
 					if ( Item[gTempObject.usItem].fingerprintid )
 					{
