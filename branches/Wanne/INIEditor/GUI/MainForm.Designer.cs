@@ -39,6 +39,7 @@ namespace INIEditor.GUI
             this.mnuViewDescLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewDescLanguageEnglish = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewDescLanguageGerman = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuViewSearch = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuToolsGenerateXML = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,7 +52,11 @@ namespace INIEditor.GUI
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.tbrMain = new System.Windows.Forms.ToolStrip();
             this.tbrSave = new System.Windows.Forms.ToolStripButton();
+            this.tbrSearch = new System.Windows.Forms.ToolStripButton();
             this.stsMain = new System.Windows.Forms.StatusStrip();
+            this.tsbLanguage = new System.Windows.Forms.ToolStripSplitButton();
+            this.tsbLanguageGerman = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsbLanguageEnglish = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlFiles = new System.Windows.Forms.Panel();
             this.cmbFiles = new System.Windows.Forms.ComboBox();
             this.lblFiles = new System.Windows.Forms.Label();
@@ -87,8 +92,13 @@ namespace INIEditor.GUI
             this.splPropertyDescription = new System.Windows.Forms.Splitter();
             this.pnlPropertyDescription = new System.Windows.Forms.Panel();
             this.txtPropertyDescription = new System.Windows.Forms.TextBox();
+            this.tpSearchResults = new System.Windows.Forms.TabPage();
+            this.dgvSearchResults = new System.Windows.Forms.DataGridView();
+            this.colSearchResultsSection = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSearchResultsSectionDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mnuMain.SuspendLayout();
             this.tbrMain.SuspendLayout();
+            this.stsMain.SuspendLayout();
             this.pnlFiles.SuspendLayout();
             this.pnlSectionHeader.SuspendLayout();
             this.pnlSectionDescription.SuspendLayout();
@@ -98,6 +108,8 @@ namespace INIEditor.GUI
             this.tpProperty.SuspendLayout();
             this.pnlProperty.SuspendLayout();
             this.pnlPropertyDescription.SuspendLayout();
+            this.tpSearchResults.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvSearchResults)).BeginInit();
             this.SuspendLayout();
             // 
             // mnuMain
@@ -126,7 +138,7 @@ namespace INIEditor.GUI
             // 
             this.mnuFileSave.Image = ((System.Drawing.Image)(resources.GetObject("mnuFileSave.Image")));
             this.mnuFileSave.Name = "mnuFileSave";
-            this.mnuFileSave.Size = new System.Drawing.Size(152, 22);
+            this.mnuFileSave.Size = new System.Drawing.Size(109, 22);
             this.mnuFileSave.Text = "Save";
             this.mnuFileSave.ToolTipText = "Save File";
             this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
@@ -134,18 +146,19 @@ namespace INIEditor.GUI
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(106, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuViewDescLanguage});
+            this.mnuViewDescLanguage,
+            this.mnuViewSearch});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -161,6 +174,7 @@ namespace INIEditor.GUI
             // 
             // mnuViewDescLanguageEnglish
             // 
+            this.mnuViewDescLanguageEnglish.Image = ((System.Drawing.Image)(resources.GetObject("mnuViewDescLanguageEnglish.Image")));
             this.mnuViewDescLanguageEnglish.Name = "mnuViewDescLanguageEnglish";
             this.mnuViewDescLanguageEnglish.Size = new System.Drawing.Size(122, 22);
             this.mnuViewDescLanguageEnglish.Text = "English";
@@ -168,10 +182,20 @@ namespace INIEditor.GUI
             // 
             // mnuViewDescLanguageGerman
             // 
+            this.mnuViewDescLanguageGerman.Image = ((System.Drawing.Image)(resources.GetObject("mnuViewDescLanguageGerman.Image")));
             this.mnuViewDescLanguageGerman.Name = "mnuViewDescLanguageGerman";
             this.mnuViewDescLanguageGerman.Size = new System.Drawing.Size(122, 22);
             this.mnuViewDescLanguageGerman.Text = "German";
             this.mnuViewDescLanguageGerman.Click += new System.EventHandler(this.mnuViewDescLanguageGerman_Click);
+            // 
+            // mnuViewSearch
+            // 
+            this.mnuViewSearch.Image = ((System.Drawing.Image)(resources.GetObject("mnuViewSearch.Image")));
+            this.mnuViewSearch.Name = "mnuViewSearch";
+            this.mnuViewSearch.Size = new System.Drawing.Size(188, 22);
+            this.mnuViewSearch.Text = "Search";
+            this.mnuViewSearch.ToolTipText = "Search";
+            this.mnuViewSearch.Click += new System.EventHandler(this.mnuViewSearch_Click);
             // 
             // mnuTools
             // 
@@ -241,7 +265,8 @@ namespace INIEditor.GUI
             // tbrMain
             // 
             this.tbrMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tbrSave});
+            this.tbrSave,
+            this.tbrSearch});
             this.tbrMain.Location = new System.Drawing.Point(0, 24);
             this.tbrMain.Name = "tbrMain";
             this.tbrMain.Size = new System.Drawing.Size(883, 25);
@@ -259,12 +284,53 @@ namespace INIEditor.GUI
             this.tbrSave.ToolTipText = "Save File";
             this.tbrSave.Click += new System.EventHandler(this.tbrSave_Click);
             // 
+            // tbrSearch
+            // 
+            this.tbrSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbrSearch.Image = ((System.Drawing.Image)(resources.GetObject("tbrSearch.Image")));
+            this.tbrSearch.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbrSearch.Name = "tbrSearch";
+            this.tbrSearch.Size = new System.Drawing.Size(23, 22);
+            this.tbrSearch.Text = "Search";
+            this.tbrSearch.Click += new System.EventHandler(this.tbrSearch_Click);
+            // 
             // stsMain
             // 
+            this.stsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsbLanguage});
+            this.stsMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.stsMain.Location = new System.Drawing.Point(0, 631);
             this.stsMain.Name = "stsMain";
             this.stsMain.Size = new System.Drawing.Size(883, 22);
             this.stsMain.TabIndex = 5;
+            // 
+            // tsbLanguage
+            // 
+            this.tsbLanguage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbLanguage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsbLanguageGerman,
+            this.tsbLanguageEnglish});
+            this.tsbLanguage.Image = ((System.Drawing.Image)(resources.GetObject("tsbLanguage.Image")));
+            this.tsbLanguage.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbLanguage.Name = "tsbLanguage";
+            this.tsbLanguage.Size = new System.Drawing.Size(32, 20);
+            this.tsbLanguage.Text = "Language";
+            // 
+            // tsbLanguageGerman
+            // 
+            this.tsbLanguageGerman.Image = ((System.Drawing.Image)(resources.GetObject("tsbLanguageGerman.Image")));
+            this.tsbLanguageGerman.Name = "tsbLanguageGerman";
+            this.tsbLanguageGerman.Size = new System.Drawing.Size(122, 22);
+            this.tsbLanguageGerman.Text = "German";
+            this.tsbLanguageGerman.Click += new System.EventHandler(this.tsbLanguageGerman_Click);
+            // 
+            // tsbLanguageEnglish
+            // 
+            this.tsbLanguageEnglish.Image = ((System.Drawing.Image)(resources.GetObject("tsbLanguageEnglish.Image")));
+            this.tsbLanguageEnglish.Name = "tsbLanguageEnglish";
+            this.tsbLanguageEnglish.Size = new System.Drawing.Size(122, 22);
+            this.tsbLanguageEnglish.Text = "English";
+            this.tsbLanguageEnglish.Click += new System.EventHandler(this.tsbLanguageEnglish_Click);
             // 
             // pnlFiles
             // 
@@ -319,6 +385,8 @@ namespace INIEditor.GUI
             this.imageList.Images.SetKeyName(5, "Generate.ico");
             this.imageList.Images.SetKeyName(6, "Save.ico");
             this.imageList.Images.SetKeyName(7, "Search.ico");
+            this.imageList.Images.SetKeyName(8, "gb.ico");
+            this.imageList.Images.SetKeyName(9, "de.ico");
             // 
             // splVertical
             // 
@@ -386,6 +454,7 @@ namespace INIEditor.GUI
             // 
             this.tabActions.Controls.Add(this.tpSection);
             this.tabActions.Controls.Add(this.tpProperty);
+            this.tabActions.Controls.Add(this.tpSearchResults);
             this.tabActions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabActions.Location = new System.Drawing.Point(344, 245);
             this.tabActions.Name = "tabActions";
@@ -624,6 +693,42 @@ namespace INIEditor.GUI
             this.txtPropertyDescription.Size = new System.Drawing.Size(517, 91);
             this.txtPropertyDescription.TabIndex = 0;
             // 
+            // tpSearchResults
+            // 
+            this.tpSearchResults.Controls.Add(this.dgvSearchResults);
+            this.tpSearchResults.Location = new System.Drawing.Point(4, 22);
+            this.tpSearchResults.Name = "tpSearchResults";
+            this.tpSearchResults.Size = new System.Drawing.Size(531, 360);
+            this.tpSearchResults.TabIndex = 2;
+            this.tpSearchResults.Text = "Search Results";
+            this.tpSearchResults.UseVisualStyleBackColor = true;
+            // 
+            // dgvSearchResults
+            // 
+            this.dgvSearchResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvSearchResults.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colSearchResultsSection,
+            this.colSearchResultsSectionDesc});
+            this.dgvSearchResults.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvSearchResults.Location = new System.Drawing.Point(0, 0);
+            this.dgvSearchResults.Name = "dgvSearchResults";
+            this.dgvSearchResults.RowHeadersVisible = false;
+            this.dgvSearchResults.Size = new System.Drawing.Size(531, 360);
+            this.dgvSearchResults.TabIndex = 0;
+            // 
+            // colSearchResultsSection
+            // 
+            this.colSearchResultsSection.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.colSearchResultsSection.HeaderText = "Section";
+            this.colSearchResultsSection.Name = "colSearchResultsSection";
+            this.colSearchResultsSection.Width = 66;
+            // 
+            // colSearchResultsSectionDesc
+            // 
+            this.colSearchResultsSectionDesc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colSearchResultsSectionDesc.HeaderText = "Section Description";
+            this.colSearchResultsSectionDesc.Name = "colSearchResultsSectionDesc";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -646,6 +751,8 @@ namespace INIEditor.GUI
             this.mnuMain.PerformLayout();
             this.tbrMain.ResumeLayout(false);
             this.tbrMain.PerformLayout();
+            this.stsMain.ResumeLayout(false);
+            this.stsMain.PerformLayout();
             this.pnlFiles.ResumeLayout(false);
             this.pnlFiles.PerformLayout();
             this.pnlSectionHeader.ResumeLayout(false);
@@ -660,6 +767,8 @@ namespace INIEditor.GUI
             this.pnlProperty.PerformLayout();
             this.pnlPropertyDescription.ResumeLayout(false);
             this.pnlPropertyDescription.PerformLayout();
+            this.tpSearchResults.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvSearchResults)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -724,6 +833,15 @@ namespace INIEditor.GUI
         private System.Windows.Forms.DataGridViewTextBoxColumn colCurrentValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn colNewValue;
         private System.Windows.Forms.ToolStripButton tbrSave;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewSearch;
+        private System.Windows.Forms.ToolStripButton tbrSearch;
+        private System.Windows.Forms.ToolStripSplitButton tsbLanguage;
+        private System.Windows.Forms.ToolStripMenuItem tsbLanguageGerman;
+        private System.Windows.Forms.ToolStripMenuItem tsbLanguageEnglish;
+        private System.Windows.Forms.TabPage tpSearchResults;
+        private System.Windows.Forms.DataGridView dgvSearchResults;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsSection;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsSectionDesc;
     }
 }
 

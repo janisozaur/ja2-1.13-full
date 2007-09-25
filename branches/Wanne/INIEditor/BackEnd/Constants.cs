@@ -32,5 +32,7 @@ namespace INIEditor.BackEnd
 
         public static readonly System.Drawing.Color CHANGED_TREE_NODE_TEXT_COLOR = System.Drawing.Color.Red;
         public static readonly System.Drawing.Color DEFAULT_TREE_NODE_TEXT_COLOR = System.Drawing.Color.Black;
+
+        public static readonly System.Drawing.Color DEFAULT_SEARCH_RESULT_TEXT_COLOR = System.Drawing.Color.Blue;
     }
 }

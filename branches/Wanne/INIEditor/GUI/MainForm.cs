@@ -16,6 +16,8 @@ namespace INIEditor.GUI
         private Enumerations.Language _descriptionLanguage = Enumerations.Language.English;
         private readonly Enumerations.Permission _permission = Enumerations.Permission.Admin;    // TODO: Change to "User" in Release version!
         private Control _ctlPropertyNewValue = new Control();
+        private readonly System.ComponentModel.ComponentResourceManager _resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+        private SearchParams _searchParams = null;
         #endregion
         #region CTOR
         public MainForm()
@@ -548,22 +550,31 @@ namespace INIEditor.GUI
 
         private void mnuViewDescLanguageEnglish_Click(object sender, EventArgs e)
         {
-            if (_descriptionLanguage != Enumerations.Language.English)
+            SetDescriptionLanguage(Enumerations.Language.English);
+        }
+
+        private void SetDescriptionLanguage(Enumerations.Language language)
+        {
+            if (_descriptionLanguage != language)
             {
-                _descriptionLanguage = Enumerations.Language.English;
+                _descriptionLanguage = language;
                 TreeNode selectedNode = trvSections.SelectedNode;
                 InitializeTabs(selectedNode.Tag, lblSectionHeader.Text);
+
+                if (language == Enumerations.Language.English)
+                {
+                    tsbLanguage.Image = ((System.Drawing.Image)(_resources.GetObject("tsbLanguageEnglish.Image")));
+                }
+                else if (language == Enumerations.Language.German)
+                {
+                    tsbLanguage.Image = ((System.Drawing.Image)(_resources.GetObject("tsbLanguageGerman.Image")));
+                }
             }
         }
 
         private void mnuViewDescLanguageGerman_Click(object sender, EventArgs e)
         {
-            if (_descriptionLanguage != Enumerations.Language.German)
-            {
-                _descriptionLanguage = Enumerations.Language.German;
-                TreeNode selectedNode = trvSections.SelectedNode;
-                InitializeTabs(selectedNode.Tag, lblSectionHeader.Text);
-            }
+            SetDescriptionLanguage(Enumerations.Language.German);
         }
 
         /// <summary>
@@ -639,21 +650,6 @@ namespace INIEditor.GUI
             InitializeSectionTree(selectedTreeNode.Text);
         }
 
-        //private void RefreshSectionTree()
-        //{
-        //    // Loop through all the sections in the tree
-        //    foreach (TreeNode sectionNode in trvSections.Nodes)
-        //    {
-        //        sectionNode.ForeColor = Constants.DEFAULT_TREE_NODE_TEXT_COLOR;
-
-        //        // Loop through all the properties of the current section in the tree
-        //        foreach (TreeNode propertyNode in sectionNode.Nodes)
-        //        {
-        //            propertyNode.ForeColor = Constants.DEFAULT_TREE_NODE_TEXT_COLOR;
-        //        }
-        //    }
-        //}
-
         private void mnuFileSave_Click(object sender, EventArgs e)
         {
             SaveFile();
@@ -662,6 +658,148 @@ namespace INIEditor.GUI
         private void tbrSave_Click(object sender, EventArgs e)
         {
             SaveFile();
+        }
+
+        private void mnuViewSearch_Click(object sender, EventArgs e)
+        {
+            DisplaySearchForm();
+        }
+
+        private void DisplaySearchForm()
+        {
+            SearchForm searchForm = new SearchForm(this, _descriptionLanguage);
+            searchForm.Show(this);
+            searchForm.TopLevel = true;
+        }
+
+        private void tbrSearch_Click(object sender, EventArgs e)
+        {
+            DisplaySearchForm();
+        }
+
+        private void tsbLanguageGerman_Click(object sender, EventArgs e)
+        {
+            SetDescriptionLanguage(Enumerations.Language.German);
+        }
+
+        private void tsbLanguageEnglish_Click(object sender, EventArgs e)
+        {
+            SetDescriptionLanguage(Enumerations.Language.English);
+        }
+
+        
+        private void AddSearchResultToSearchResults(INIProperty property, bool foundSectionDesc,
+            bool foundPropertyDesc, bool foundPropertyCurrentValue, bool foundPropertyNewValue)
+        {
+           int rowIndex = -1;
+
+           if (_descriptionLanguage == Enumerations.Language.English)
+           {
+               rowIndex = dgvSearchResults.Rows.Add();
+               dgvSearchResults[colSearchResultsSection.Index, rowIndex].Value = property.Section.Name;
+               dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = property.Section.XMLSection.Description_ENG;
+           }
+
+           // Color the results
+           if (foundSectionDesc)
+               dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
+
+        }
+
+        private void AddSearchResultToSearchResults(INISection section)
+        {
+            int rowIndex = -1;
+
+            if (_descriptionLanguage == Enumerations.Language.English)
+            {
+                rowIndex = dgvSearchResults.Rows.Add();
+                dgvSearchResults[colSearchResultsSection.Index, rowIndex].Value = section.Name;
+                dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = section.XMLSection.Description_ENG;
+            }
+
+            // Color the results
+            dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
+
+        }
+
+        public void Search(SearchParams searchParams)
+        {
+            dgvSearchResults.Rows.Clear();
+
+            _searchParams = searchParams;
+
+            tabActions.SelectTab(tpSearchResults);
+
+            bool foundSectionDesc_ENG = false;
+            bool foundPropertyNewValue = false;
+            bool foundPropertyCurrentValue = false;
+            bool foundPropertyDesc_ENG = false;
+            
+            foreach (INISection section in _iniFile.Sections)
+            {
+                if (_searchParams.LookInSectionDescriptions && (!_searchParams.LookInPropertyDescriptions
+                    || !_searchParams.LookInPropertyValues))
+                {
+                    string sectionDesc_ENG = section.XMLSection.Description_ENG.ToLower();
+                    string sectionDesc_GER = section.XMLSection.Description_GER.ToLower();
+
+                    if (_descriptionLanguage == Enumerations.Language.English)
+                    {
+                        if (searchParams.LookInSectionDescriptions
+                            && sectionDesc_ENG.Contains(searchParams.FindWhat.ToLower()))
+                        {
+                            AddSearchResultToSearchResults(section);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (INIProperty property in section.Properties)
+                    {
+                        string sectionDesc_ENG = property.Section.XMLSection.Description_ENG.ToLower();
+                        string sectionDesc_GER = property.Section.XMLSection.Description_GER.ToLower();
+                        string propertyDesc_ENG = property.XMLProperty.Description_ENG.ToLower();
+                        string propertyDesc_GER = property.XMLProperty.Description_GER.ToLower();
+                        string propertyCurrentValue = property.CurrentValue.ToLower();
+                        string propertyNewValue = property.NewValue.ToLower();
+
+                        if (_descriptionLanguage == Enumerations.Language.English)
+                        {
+                            if (searchParams.LookInSectionDescriptions
+                                && sectionDesc_ENG.Contains(searchParams.FindWhat.ToLower()))
+                            {
+                                foundSectionDesc_ENG = true;
+                            }
+                            if (searchParams.LookInPropertyDescriptions
+                                && propertyDesc_ENG.Contains(searchParams.FindWhat.ToLower()))
+                            {
+                                foundPropertyDesc_ENG = true;
+                            }
+                        }
+
+                        if (searchParams.LookInPropertyValues
+                            && propertyCurrentValue.Contains(searchParams.FindWhat.ToLower()))
+                        {
+                            foundPropertyCurrentValue = true;
+                        }
+                        if (searchParams.LookInPropertyValues
+                            && propertyNewValue.Contains(searchParams.FindWhat.ToLower()))
+                        {
+                            foundPropertyNewValue = true;
+                        }
+
+                        if (_descriptionLanguage == Enumerations.Language.English)
+                        {
+                            if (foundSectionDesc_ENG || foundPropertyDesc_ENG ||
+                                foundPropertyCurrentValue || foundPropertyNewValue)
+                            {
+                                AddSearchResultToSearchResults(property, foundSectionDesc_ENG, foundPropertyDesc_ENG,
+                                                               foundPropertyCurrentValue, foundPropertyNewValue);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
