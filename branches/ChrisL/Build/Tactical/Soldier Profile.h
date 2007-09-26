@@ -174,7 +174,7 @@ BOOLEAN UnRecruitEPC( UINT8 ubCharNum );
 INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy );
 INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated );
 
-SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam );
+SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam, bool resortItems = false );
 
 BOOLEAN IsProfileATerrorist( UINT8 ubProfile );
 BOOLEAN IsProfileAHeadMiner( UINT8 ubProfile );

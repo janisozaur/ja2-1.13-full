@@ -22,6 +22,27 @@ class OBJECTTYPE;
 class SOLDIERTYPE;
 
 
+ //ADB I'm tired of seeing a 5 digit number when looking at something's gridno.
+//I need to see an x and y.	I created this class for the AStar,
+//but moved it here as you can convert a regular INT16 gridno to a GridNode then print it out for debugging.
+//Don't switch between the 2 types too often, IntToGridNode is especially slow
+class GridNode
+{
+public:
+	GridNode	() {x = -1; y = -1;};
+	GridNode	(INT16 const loc) {this->x = loc % WORLD_COLS; this->y = loc / WORLD_COLS;};
+	GridNode	(int x, int y) {GridNode::x = x; GridNode::y = y;};
+	GridNode	operator + (const GridNode& point) const {return GridNode(this->x + point.x, this->y + point.y);};
+	bool		operator == (const GridNode& point) const {return this->x == point.x && this->y == point.y;};
+	bool		operator != (const GridNode& point) const {return !(*this == point);};
+	INT16		GridNodeToInt() {return (this->x + this->y * WORLD_COLS);};
+	void		IntToGridNode(INT16 const loc) {this->x = loc % WORLD_COLS; this->y = loc / WORLD_COLS;};
+	bool		isInWorld() {return (this->x < WORLD_COLS && this->x >= 0 &&
+									this->y < WORLD_ROWS && this->y >= 0);};
+	int			x;
+	int			y;
+};
+
 //Don't mess with this value, unless you want to force update all maps in the game!
 // Lesh: fix the sad situation with the different major map versions
 //#ifdef RUSSIAN

@@ -3916,6 +3916,8 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 			break;
 		case GUNSLINGPOCKPOS:	// Gun Sling
 			//if (Item[pObj->usItem].usItemClass != IC_GUN && Item[pObj->usItem].usItemClass != IC_BLADE && Item[pObj->usItem].usItemClass != IC_LAUNCHER)
+			if(pObj->usItem == MONEY)
+				return( FALSE );
 			if(Item[pObj->usItem].usItemClass == IC_AMMO || Item[pObj->usItem].usItemClass == IC_GRENADE)
 				return(CompatibleAmmoForGun(pObj, &pSoldier->inv[GUNSLINGPOCKPOS]));
 			// Removed backpack/gunsling restrictions
@@ -3923,6 +3925,8 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 			//	return(CompatibleAmmoForGun(pObj, &pSoldier->inv[GUNSLINGPOCKPOS]));
 			break;
 		case KNIFEPOCKPOS:	// Knife sheath
+			if(pObj->usItem == MONEY)
+				return( FALSE );
 			if (Item[pObj->usItem].usItemClass != IC_BLADE && Item[pObj->usItem].usItemClass != IC_THROWING_KNIFE )
 				return(CompatibleAmmoForGun(pObj, &pSoldier->inv[KNIFEPOCKPOS]));
 			break;

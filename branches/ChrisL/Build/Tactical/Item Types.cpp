@@ -488,6 +488,8 @@ bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
 
 			(*this)[0]->data.objectStatus = ( (thisStatus + sourceStatus) / average);
 				(*this)[0]->data.money.uiMoneyAmount += sourceObject[0]->data.money.uiMoneyAmount;
+				//CHRISL: We need to delete sourceObject at this point since we've just merged the two items
+				sourceObject.initialize();
 				return false;
 			}
 

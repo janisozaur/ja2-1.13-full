@@ -2772,9 +2772,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 			// do some special coding to put stuff in the profile in better-looking
 			// spots
 			// CHRISL: Resort profile items to use LBE pockets properly
-			if((UsingNewInventorySystem() == true)) {
-				DistributeInitialGear(pProfile);
-			}
+			DistributeInitialGear(pProfile);
 			//place all items that are NOT attachments
 			for ( cnt = 0; cnt < pProfile->inv.size(); cnt++ )
 			{

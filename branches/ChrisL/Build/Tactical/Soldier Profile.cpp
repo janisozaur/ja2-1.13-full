@@ -918,7 +918,7 @@ SOLDIERTYPE * FindSoldierByProfileID( UINT8 ubProfileID, BOOLEAN fPlayerMercsOnl
 
 
 
-SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
+SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam, bool resortItems )
 {
 	PERFORMANCE_MARKER
 	UINT8										ubID;
@@ -973,6 +973,11 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 		MercCreateStruct.fPlayerMerc = TRUE;
 	}
 
+	//CHRISL:
+	if((UsingNewInventorySystem() == true) && resortItems == true) {
+		MercCreateStruct.fCopyProfileItemsOver = TRUE;
+	}
+
 	if ( TacticalCreateSoldier( &MercCreateStruct, &ubID ) )
 	{
 		pNewSoldier = MercPtrs[ ubID ];
@@ -999,10 +1004,13 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 			pNewSoldier->bVisible											= 1;
 		}
 
-		// Copy over any items....
-		for ( cnt = 0; cnt < pNewSoldier->inv.size(); cnt++ )
-		{
-			pNewSoldier->inv[ cnt ] = pSoldier->inv[ cnt ];
+		//CHRISL:
+		if((UsingNewInventorySystem() == true) && resortItems == false) {
+			// Copy over any items....
+			for ( cnt = 0; cnt < pNewSoldier->inv.size(); cnt++ )
+			{
+				pNewSoldier->inv[ cnt ] = pSoldier->inv[ cnt ];
+			}
 		}
 
 		// OK, loop through all active merc slots, change
@@ -1065,7 +1073,6 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 	return( pNewSoldier );
 }
 
-
 BOOLEAN RecruitRPC( UINT8 ubCharNum )
 {
 	PERFORMANCE_MARKER
@@ -1083,7 +1090,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 	gMercProfiles[ ubCharNum ].ubMiscFlags |= PROFILE_MISC_FLAG_RECRUITED;
 
 	// Add this guy to our team!
-	pNewSoldier = ChangeSoldierTeam( pSoldier, gbPlayerNum );
+	pNewSoldier = ChangeSoldierTeam( pSoldier, gbPlayerNum, false );
 
 	// handle set up any RPC's that will leave us in time
 	if ( ubCharNum == SLAY )
