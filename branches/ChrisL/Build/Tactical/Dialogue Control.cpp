@@ -1102,7 +1102,7 @@ void HandleDialogue( )
 		{
 			if ( QItem->bUIHandlerID == DIALOGUE_NPC_UI )
 			{
-				HandleNPCDoAction( (UINT8)QItem->uiSpecialEventData, (INT16)QItem->uiSpecialEventData2, (UINT8)QItem->uiSpecialEventData3 );
+				HandleNPCDoAction( (UINT8)QItem->uiSpecialEventData, (UINT16)QItem->uiSpecialEventData2, (UINT8)QItem->uiSpecialEventData3 );
 			}
 		}
 		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CLOSE_PANEL )

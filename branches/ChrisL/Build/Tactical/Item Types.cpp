@@ -815,7 +815,7 @@ ObjectData& ObjectData::operator =(const ObjectData& src)
 
 ObjectData::~ObjectData()
 {
-	DeleteLBE();
+	//DeleteLBE();
 }
 
 void ObjectData::DeleteLBE()

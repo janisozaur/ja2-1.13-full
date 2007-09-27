@@ -680,7 +680,7 @@ INT8 DecideActionNamedNPC( SOLDIERTYPE * pSoldier )
 			ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sDesiredMercLoc),CenterY(sDesiredMercLoc));
 
 			// if not already facing in that direction,
-			if (pSoldier->ubDirection != ubDesiredMercDir && pSoldier->InternalSoldierReadyWeapon( ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
+			if (pSoldier->ubDirection != ubDesiredMercDir && pSoldier->InternalIsValidStance( ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 			{
 
 				pSoldier->aiData.usActionData = ubDesiredMercDir;
