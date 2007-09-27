@@ -1759,7 +1759,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>85</ubGraphicNum>
 		<ubWeight>30</ubWeight>
-		<ItemSize>28</ItemSize>
+		<ItemSize>24</ItemSize>
 		<usPrice>40</usPrice>
 		<ubCoolness>1</ubCoolness>
 		<bRepairEase>-4</bRepairEase>
@@ -4845,7 +4845,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>52</ubGraphicNum>
-		<ubWeight>5</ubWeight>
+		<ubWeight>3</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>12</ItemSize>
 		<usPrice>750</usPrice>
@@ -4871,7 +4871,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>171</ubGraphicNum>
-		<ubWeight>10</ubWeight>
+		<ubWeight>5</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>20</ItemSize>
 		<usPrice>1000</usPrice>
@@ -5516,7 +5516,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>51</ubGraphicNum>
-		<ubWeight>4</ubWeight>
+		<ubWeight>1</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>12</ItemSize>
 		<usPrice>1500</usPrice>
@@ -5594,7 +5594,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>90</ubGraphicNum>
-		<ubWeight>9</ubWeight>
+		<ubWeight>6</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>18</ItemSize>
 		<usPrice>100</usPrice>
@@ -6872,7 +6872,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>2</ubGraphicType>
 		<ubGraphicNum>33</ubGraphicNum>
-		<ubWeight>4</ubWeight>
+		<ubWeight>1</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>16</ItemSize>
 		<usPrice>100</usPrice>
@@ -6937,7 +6937,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>134</ubGraphicNum>
-		<ubWeight>6</ubWeight>
+		<ubWeight>5</ubWeight>
 		<ubPerPocket>2</ubPerPocket>
 		<ItemSize>16</ItemSize>
 		<usPrice>75</usPrice>
@@ -13072,7 +13072,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>710</ubGraphicNum>
-		<ubWeight>15</ubWeight>
+		<ubWeight>8</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>16</ItemSize>
 		<usPrice>1200</usPrice>
@@ -22434,7 +22434,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>693</ubGraphicNum>
-		<ubWeight>4</ubWeight>
+		<ubWeight>3</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>16</ItemSize>
 		<usPrice>500</usPrice>
@@ -22488,7 +22488,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>565</ubGraphicNum>
-		<ubWeight>4</ubWeight>
+		<ubWeight>3</ubWeight>
 		<ubPerPocket>2</ubPerPocket>
 		<ItemSize>18</ItemSize>
 		<usPrice>1500</usPrice>
@@ -22515,7 +22515,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>566</ubGraphicNum>
-		<ubWeight>6</ubWeight>
+		<ubWeight>4</ubWeight>
 		<ubPerPocket>2</ubPerPocket>
 		<ItemSize>18</ItemSize>
 		<usPrice>2500</usPrice>
@@ -23749,7 +23749,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>149</ubGraphicNum>
-		<ubWeight>4</ubWeight>
+		<ubWeight>2</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>12</ItemSize>
 		<usPrice>200</usPrice>
@@ -23773,7 +23773,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>155</ubGraphicNum>
-		<ubWeight>4</ubWeight>
+		<ubWeight>3</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>18</ItemSize>
 		<usPrice>1600</usPrice>
@@ -23834,7 +23834,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>156</ubGraphicNum>
-		<ubWeight>2</ubWeight>
+		<ubWeight>1</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>10</ItemSize>
 		<usPrice>1400</usPrice>
@@ -23861,7 +23861,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>76</ubGraphicNum>
-		<ubWeight>6</ubWeight>
+		<ubWeight>4</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>20</ItemSize>
 		<usPrice>600</usPrice>
@@ -23995,7 +23995,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>180</ubGraphicNum>
-		<ubWeight>7</ubWeight>
+		<ubWeight>6</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>16</ItemSize>
 		<usPrice>1000</usPrice>
@@ -27890,7 +27890,7 @@
 		<usItemClass>131072</usItemClass>
 		<ubClassIndex>29</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
-		<ubGraphicNum>706</ubGraphicNum>
+		<ubGraphicNum>717</ubGraphicNum>
 		<ubWeight>9</ubWeight>
 		<ItemSize>21</ItemSize>
 		<usPrice>85</usPrice>
@@ -27913,7 +27913,7 @@
 		<usItemClass>131072</usItemClass>
 		<ubClassIndex>30</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
-		<ubGraphicNum>706</ubGraphicNum>
+		<ubGraphicNum>718</ubGraphicNum>
 		<ubWeight>8</ubWeight>
 		<ItemSize>21</ItemSize>
 		<usPrice>85</usPrice>
@@ -27936,7 +27936,7 @@
 		<usItemClass>131072</usItemClass>
 		<ubClassIndex>31</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
-		<ubGraphicNum>706</ubGraphicNum>
+		<ubGraphicNum>719</ubGraphicNum>
 		<ubWeight>7</ubWeight>
 		<ItemSize>21</ItemSize>
 		<usPrice>85</usPrice>
