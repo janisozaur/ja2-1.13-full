@@ -56,6 +56,8 @@ void CreateLBE (OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets)
 		Assert(pLBE);
 	}
 	else {
+		//CHRISL: I don't understand why we do this instead of using the old GetFreeLBEPackIndex function to
+		// generate a uniqueID only when one is needed.
 		uniqueID = gLastLBEUniqueID++;
 		LBEArray.push_back(LBENODE());
 		pLBE = &LBEArray.back();
@@ -777,7 +779,7 @@ ObjectData::ObjectData(const ObjectData& src)
 	PERFORMANCE_MARKER
 	if ((void*)this != (void*)&src) {
 		//first get rid of any LBE this might have
-		DeleteLBE();
+		//DeleteLBE();
 
 		//copy over the data
 		this->bTrap = src.bTrap;
@@ -787,7 +789,7 @@ ObjectData::ObjectData(const ObjectData& src)
 		this->gun = src.gun;
 
 		//duplicate the LBE data
-		DuplicateLBE();
+		//DuplicateLBE();
 	}
 }
 
@@ -796,7 +798,7 @@ ObjectData& ObjectData::operator =(const ObjectData& src)
 	PERFORMANCE_MARKER
 	if ((void*)this != (void*)&src) {
 		//first get rid of any LBE this might have
-		DeleteLBE();
+		//DeleteLBE();
 
 		//copy over the data
 		this->bTrap = src.bTrap;
@@ -806,7 +808,7 @@ ObjectData& ObjectData::operator =(const ObjectData& src)
 		this->gun = src.gun;
 
 		//duplicate the LBE data
-		DuplicateLBE();
+		//DuplicateLBE();
 	}
 	return *this;
 }
