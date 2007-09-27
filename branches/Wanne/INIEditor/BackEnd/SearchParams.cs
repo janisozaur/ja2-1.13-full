@@ -6,21 +6,23 @@ namespace INIEditor.BackEnd
 {
     public class SearchParams
     {
-        private string _findWhat;
-        private bool _lookInSectionDescriptions;
-        private bool _lookInPropertyDescriptions;
-        private bool _lookInPropertyValues;
-        private Enumerations.Language _language;
+        private string _findWhat = "";
+        private bool _lookInSectionDescriptions = false;
+        private bool _lookInPropertyDescriptions = true;
+        private bool _lookInPropertyValues = true;
 
         #region CTOR
+        public SearchParams()
+        {
+        }
+
         public SearchParams(string findWhat, bool lookInSectionDescriptions,
-            bool lookInPropertyDescriptions, bool lookInPropertyValues, Enumerations.Language language)
+            bool lookInPropertyDescriptions, bool lookInPropertyValues)
         {
             _findWhat = findWhat;
             _lookInSectionDescriptions = lookInSectionDescriptions;
             _lookInPropertyDescriptions = lookInPropertyDescriptions;
             _lookInPropertyValues = lookInPropertyValues;
-            _language = language;
         }
         #endregion
 
@@ -42,11 +44,6 @@ namespace INIEditor.BackEnd
         public bool LookInPropertyValues
         {
             get { return _lookInPropertyValues; }
-        }
-
-        public Enumerations.Language Language
-        {
-            get { return _language; }
         }
     }
 }

@@ -17,7 +17,7 @@ namespace INIEditor.GUI
         private readonly Enumerations.Permission _permission = Enumerations.Permission.Admin;    // TODO: Change to "User" in Release version!
         private Control _ctlPropertyNewValue = new Control();
         private readonly System.ComponentModel.ComponentResourceManager _resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-        private SearchParams _searchParams = null;
+        private SearchParams _searchParams = new SearchParams();
         #endregion
         #region CTOR
         public MainForm()
@@ -179,15 +179,20 @@ namespace INIEditor.GUI
             // INI file item
             if (item is INIFile)
             {
+                tabActions.TabPages.Remove(tpSearchResults);
+
                 if (tabActions.TabPages.Contains(tpProperty))
                 {
                     tabActions.TabPages.Remove(tpProperty);
                 }
+
                 tpSection.Text = Constants.TP_SECTIONS_INI_FILE;
                 if (!tabActions.TabPages.Contains(tpSection))
                 {
                     tabActions.TabPages.Add(tpSection);
                 }
+
+                tabActions.TabPages.Add(tpSearchResults);
 
                 lblSectionHeader.Text = sectionHeader;
                 
@@ -227,15 +232,19 @@ namespace INIEditor.GUI
             // Section item
             else if (item is INISection)
             {
+                tabActions.TabPages.Remove(tpSearchResults);
                 if (tabActions.TabPages.Contains(tpProperty))
                 {
                     tabActions.TabPages.Remove(tpProperty);
                 }
+
                 tpSection.Text = Constants.TP_SECTIONS_SECTION;
                 if (!tabActions.TabPages.Contains(tpSection))
                 {
                     tabActions.TabPages.Add(tpSection);
                 }
+
+                tabActions.TabPages.Add(tpSearchResults);
 
                 lblSectionHeader.Text = sectionHeader;
 
@@ -268,6 +277,8 @@ namespace INIEditor.GUI
             }
             else if (item is INIProperty)
             {
+                tabActions.TabPages.Remove(tpSearchResults);
+
                 lblSectionHeader.Text = sectionHeader;
 
                 INIProperty property = item as INIProperty;
@@ -275,7 +286,7 @@ namespace INIEditor.GUI
                 txtPropertyDescription.Text = GetDescription(property.XMLProperty);
                 
                 SetPropertyValues(property);
-                
+
                 if (tabActions.TabPages.Contains(tpSection))
                 {
                     tabActions.TabPages.Remove(tpSection);
@@ -286,6 +297,8 @@ namespace INIEditor.GUI
                 {
                     tabActions.TabPages.Add(tpProperty);
                 }
+
+                tabActions.TabPages.Add(tpSearchResults);
             }
 
             SelectTreeNode(item);
@@ -667,7 +680,7 @@ namespace INIEditor.GUI
 
         private void DisplaySearchForm()
         {
-            SearchForm searchForm = new SearchForm(this, _descriptionLanguage);
+            SearchForm searchForm = new SearchForm(this, _searchParams);
             searchForm.Show(this);
             searchForm.TopLevel = true;
         }
@@ -691,18 +704,32 @@ namespace INIEditor.GUI
         private void AddSearchResultToSearchResults(INIProperty property, bool foundSectionDesc,
             bool foundPropertyDesc, bool foundPropertyCurrentValue, bool foundPropertyNewValue)
         {
-           int rowIndex = -1;
+            int rowIndex = -1;
 
-           if (_descriptionLanguage == Enumerations.Language.English)
-           {
+            if (_descriptionLanguage == Enumerations.Language.English)
+            {
                rowIndex = dgvSearchResults.Rows.Add();
                dgvSearchResults[colSearchResultsSection.Index, rowIndex].Value = property.Section.Name;
                dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = property.Section.XMLSection.Description_ENG;
-           }
+               dgvSearchResults[colSearchResultsPropertyDesc.Index, rowIndex].Value = property.XMLProperty.Description_ENG;
+               dgvSearchResults[colSearchResultsPropertyCurrentValue.Index, rowIndex].Value = property.CurrentValue;
+               dgvSearchResults[colSearchResultsPropertyNewValue.Index, rowIndex].Value = property.NewValue;
 
-           // Color the results
-           if (foundSectionDesc)
+               // Tag
+               dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Tag = property.Section;
+               dgvSearchResults[colSearchResultsPropertyDesc.Index, rowIndex].Tag = property;
+
+            }
+
+            // Color the results
+            if (foundSectionDesc)
                dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
+            if (foundPropertyDesc)
+               dgvSearchResults[colSearchResultsPropertyDesc.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
+            if (foundPropertyCurrentValue)
+               dgvSearchResults[colSearchResultsPropertyCurrentValue.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
+            if (foundPropertyNewValue)
+               dgvSearchResults[colSearchResultsPropertyNewValue.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
 
         }
 
@@ -715,6 +742,9 @@ namespace INIEditor.GUI
                 rowIndex = dgvSearchResults.Rows.Add();
                 dgvSearchResults[colSearchResultsSection.Index, rowIndex].Value = section.Name;
                 dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = section.XMLSection.Description_ENG;
+
+                // Tag
+                dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Tag = section;
             }
 
             // Color the results
@@ -724,9 +754,27 @@ namespace INIEditor.GUI
 
         public void Search(SearchParams searchParams)
         {
-            dgvSearchResults.Rows.Clear();
-
             _searchParams = searchParams;
+            // Only "Section Descriptions" was selected
+            if (_searchParams.LookInSectionDescriptions && (!_searchParams.LookInPropertyDescriptions
+                    || !_searchParams.LookInPropertyValues))
+            {
+                colSearchResultsSection.Visible = true;
+                colSearchResultsSectionDesc.Visible = true;
+                colSearchResultsPropertyDesc.Visible = false;
+                colSearchResultsPropertyCurrentValue.Visible = false;
+                colSearchResultsPropertyNewValue.Visible = false;
+            }
+            else
+            {
+                colSearchResultsSection.Visible = true;
+                colSearchResultsSectionDesc.Visible = true;
+                colSearchResultsPropertyDesc.Visible = true;
+                colSearchResultsPropertyCurrentValue.Visible = true;
+                colSearchResultsPropertyNewValue.Visible = true;
+            }
+
+            dgvSearchResults.Rows.Clear();
 
             tabActions.SelectTab(tpSearchResults);
 
@@ -734,9 +782,11 @@ namespace INIEditor.GUI
             bool foundPropertyNewValue = false;
             bool foundPropertyCurrentValue = false;
             bool foundPropertyDesc_ENG = false;
-            
+
             foreach (INISection section in _iniFile.Sections)
             {
+                foundSectionDesc_ENG = false;
+
                 if (_searchParams.LookInSectionDescriptions && (!_searchParams.LookInPropertyDescriptions
                     || !_searchParams.LookInPropertyValues))
                 {
@@ -756,6 +806,11 @@ namespace INIEditor.GUI
                 {
                     foreach (INIProperty property in section.Properties)
                     {
+                        foundSectionDesc_ENG = false;
+                        foundPropertyNewValue = false;
+                        foundPropertyCurrentValue = false;
+                        foundPropertyDesc_ENG = false;
+
                         string sectionDesc_ENG = property.Section.XMLSection.Description_ENG.ToLower();
                         string sectionDesc_GER = property.Section.XMLSection.Description_GER.ToLower();
                         string propertyDesc_ENG = property.XMLProperty.Description_ENG.ToLower();
@@ -799,6 +854,23 @@ namespace INIEditor.GUI
                         }
                     }
                 }
+            }
+        }
+
+        private void dgvSearchResults_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Get the clicked row
+            DataGridViewRow row = dgvSearchResults.Rows[e.RowIndex];
+            INISection section = (INISection)row.Cells[colSearchResultsSectionDesc.Index].Tag;
+
+            if (colSearchResultsPropertyDesc.Visible)
+            {
+                INIProperty property = (INIProperty)row.Cells[colSearchResultsPropertyDesc.Index].Tag;
+                InitializeTabs(property, section.Name);
+            }
+            else
+            {
+                InitializeTabs(_iniFile, section.Name);
             }
         }
     }

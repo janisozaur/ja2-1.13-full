@@ -71,11 +71,6 @@ namespace INIEditor.GUI
             this.tabActions = new System.Windows.Forms.TabControl();
             this.tpSection = new System.Windows.Forms.TabPage();
             this.dgvProperties = new System.Windows.Forms.DataGridView();
-            this.colSection = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colProperty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colCurrentValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colNewValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tpProperty = new System.Windows.Forms.TabPage();
             this.pnlProperty = new System.Windows.Forms.Panel();
             this.txtPropertyCurrentValue = new System.Windows.Forms.TextBox();
@@ -94,8 +89,16 @@ namespace INIEditor.GUI
             this.txtPropertyDescription = new System.Windows.Forms.TextBox();
             this.tpSearchResults = new System.Windows.Forms.TabPage();
             this.dgvSearchResults = new System.Windows.Forms.DataGridView();
+            this.colSection = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProperty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCurrentValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colNewValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSearchResultsSection = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSearchResultsSectionDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSearchResultsPropertyDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSearchResultsPropertyCurrentValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSearchResultsPropertyNewValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mnuMain.SuspendLayout();
             this.tbrMain.SuspendLayout();
             this.stsMain.SuspendLayout();
@@ -138,7 +141,7 @@ namespace INIEditor.GUI
             // 
             this.mnuFileSave.Image = ((System.Drawing.Image)(resources.GetObject("mnuFileSave.Image")));
             this.mnuFileSave.Name = "mnuFileSave";
-            this.mnuFileSave.Size = new System.Drawing.Size(109, 22);
+            this.mnuFileSave.Size = new System.Drawing.Size(152, 22);
             this.mnuFileSave.Text = "Save";
             this.mnuFileSave.ToolTipText = "Save File";
             this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
@@ -193,7 +196,7 @@ namespace INIEditor.GUI
             this.mnuViewSearch.Image = ((System.Drawing.Image)(resources.GetObject("mnuViewSearch.Image")));
             this.mnuViewSearch.Name = "mnuViewSearch";
             this.mnuViewSearch.Size = new System.Drawing.Size(188, 22);
-            this.mnuViewSearch.Text = "Search";
+            this.mnuViewSearch.Text = "Search...";
             this.mnuViewSearch.ToolTipText = "Search";
             this.mnuViewSearch.Click += new System.EventHandler(this.mnuViewSearch_Click);
             // 
@@ -207,6 +210,7 @@ namespace INIEditor.GUI
             // 
             // mnuToolsGenerateXML
             // 
+            this.mnuToolsGenerateXML.Image = ((System.Drawing.Image)(resources.GetObject("mnuToolsGenerateXML.Image")));
             this.mnuToolsGenerateXML.Name = "mnuToolsGenerateXML";
             this.mnuToolsGenerateXML.Size = new System.Drawing.Size(215, 22);
             this.mnuToolsGenerateXML.Text = "Generate XML File [ADMIN]";
@@ -346,9 +350,9 @@ namespace INIEditor.GUI
             // cmbFiles
             // 
             this.cmbFiles.FormattingEnabled = true;
-            this.cmbFiles.Location = new System.Drawing.Point(111, 12);
+            this.cmbFiles.Location = new System.Drawing.Point(66, 12);
             this.cmbFiles.Name = "cmbFiles";
-            this.cmbFiles.Size = new System.Drawing.Size(288, 21);
+            this.cmbFiles.Size = new System.Drawing.Size(370, 21);
             this.cmbFiles.TabIndex = 1;
             this.cmbFiles.SelectedIndexChanged += new System.EventHandler(this.cmbFiles_SelectedIndexChanged);
             // 
@@ -357,9 +361,9 @@ namespace INIEditor.GUI
             this.lblFiles.AutoSize = true;
             this.lblFiles.Location = new System.Drawing.Point(12, 15);
             this.lblFiles.Name = "lblFiles";
-            this.lblFiles.Size = new System.Drawing.Size(93, 13);
+            this.lblFiles.Size = new System.Drawing.Size(48, 13);
             this.lblFiles.TabIndex = 0;
-            this.lblFiles.Text = "JA2 1.13 INI Files:";
+            this.lblFiles.Text = "INI Files:";
             // 
             // trvSections
             // 
@@ -493,45 +497,6 @@ namespace INIEditor.GUI
             this.dgvProperties.Size = new System.Drawing.Size(531, 360);
             this.dgvProperties.TabIndex = 0;
             this.dgvProperties.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProperties_CellDoubleClick);
-            // 
-            // colSection
-            // 
-            this.colSection.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colSection.HeaderText = "Section";
-            this.colSection.Name = "colSection";
-            this.colSection.ReadOnly = true;
-            this.colSection.Width = 66;
-            // 
-            // colProperty
-            // 
-            this.colProperty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colProperty.HeaderText = "Property";
-            this.colProperty.Name = "colProperty";
-            this.colProperty.ReadOnly = true;
-            this.colProperty.Width = 69;
-            // 
-            // colDescription
-            // 
-            this.colDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colDescription.HeaderText = "Description";
-            this.colDescription.Name = "colDescription";
-            this.colDescription.ReadOnly = true;
-            // 
-            // colCurrentValue
-            // 
-            this.colCurrentValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colCurrentValue.HeaderText = "Current Value";
-            this.colCurrentValue.Name = "colCurrentValue";
-            this.colCurrentValue.ReadOnly = true;
-            this.colCurrentValue.Width = 94;
-            // 
-            // colNewValue
-            // 
-            this.colNewValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colNewValue.HeaderText = "New Value";
-            this.colNewValue.Name = "colNewValue";
-            this.colNewValue.ReadOnly = true;
-            this.colNewValue.Width = 82;
             // 
             // tpProperty
             // 
@@ -705,16 +670,65 @@ namespace INIEditor.GUI
             // 
             // dgvSearchResults
             // 
+            this.dgvSearchResults.AllowUserToAddRows = false;
+            this.dgvSearchResults.AllowUserToDeleteRows = false;
+            this.dgvSearchResults.AllowUserToOrderColumns = true;
+            this.dgvSearchResults.CausesValidation = false;
             this.dgvSearchResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvSearchResults.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colSearchResultsSection,
-            this.colSearchResultsSectionDesc});
+            this.colSearchResultsSectionDesc,
+            this.colSearchResultsPropertyDesc,
+            this.colSearchResultsPropertyCurrentValue,
+            this.colSearchResultsPropertyNewValue});
             this.dgvSearchResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvSearchResults.Location = new System.Drawing.Point(0, 0);
             this.dgvSearchResults.Name = "dgvSearchResults";
             this.dgvSearchResults.RowHeadersVisible = false;
+            this.dgvSearchResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvSearchResults.Size = new System.Drawing.Size(531, 360);
             this.dgvSearchResults.TabIndex = 0;
+            this.dgvSearchResults.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSearchResults_CellDoubleClick);
+            // 
+            // colSection
+            // 
+            this.colSection.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.colSection.HeaderText = "Section";
+            this.colSection.Name = "colSection";
+            this.colSection.ReadOnly = true;
+            this.colSection.Width = 66;
+            // 
+            // colProperty
+            // 
+            this.colProperty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.colProperty.HeaderText = "Property";
+            this.colProperty.Name = "colProperty";
+            this.colProperty.ReadOnly = true;
+            this.colProperty.Width = 69;
+            // 
+            // colDescription
+            // 
+            this.colDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colDescription.HeaderText = "Description";
+            this.colDescription.MinimumWidth = 200;
+            this.colDescription.Name = "colDescription";
+            this.colDescription.ReadOnly = true;
+            // 
+            // colCurrentValue
+            // 
+            this.colCurrentValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.colCurrentValue.HeaderText = "Current Value";
+            this.colCurrentValue.Name = "colCurrentValue";
+            this.colCurrentValue.ReadOnly = true;
+            this.colCurrentValue.Width = 94;
+            // 
+            // colNewValue
+            // 
+            this.colNewValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.colNewValue.HeaderText = "New Value";
+            this.colNewValue.Name = "colNewValue";
+            this.colNewValue.ReadOnly = true;
+            this.colNewValue.Width = 82;
             // 
             // colSearchResultsSection
             // 
@@ -727,7 +741,29 @@ namespace INIEditor.GUI
             // 
             this.colSearchResultsSectionDesc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colSearchResultsSectionDesc.HeaderText = "Section Description";
+            this.colSearchResultsSectionDesc.MinimumWidth = 200;
             this.colSearchResultsSectionDesc.Name = "colSearchResultsSectionDesc";
+            // 
+            // colSearchResultsPropertyDesc
+            // 
+            this.colSearchResultsPropertyDesc.HeaderText = "Property Description";
+            this.colSearchResultsPropertyDesc.MinimumWidth = 200;
+            this.colSearchResultsPropertyDesc.Name = "colSearchResultsPropertyDesc";
+            this.colSearchResultsPropertyDesc.Width = 200;
+            // 
+            // colSearchResultsPropertyCurrentValue
+            // 
+            this.colSearchResultsPropertyCurrentValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.colSearchResultsPropertyCurrentValue.HeaderText = "Current Value";
+            this.colSearchResultsPropertyCurrentValue.Name = "colSearchResultsPropertyCurrentValue";
+            this.colSearchResultsPropertyCurrentValue.Width = 94;
+            // 
+            // colSearchResultsPropertyNewValue
+            // 
+            this.colSearchResultsPropertyNewValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.colSearchResultsPropertyNewValue.HeaderText = "New Value";
+            this.colSearchResultsPropertyNewValue.Name = "colSearchResultsPropertyNewValue";
+            this.colSearchResultsPropertyNewValue.Width = 82;
             // 
             // MainForm
             // 
@@ -744,6 +780,7 @@ namespace INIEditor.GUI
             this.Controls.Add(this.stsMain);
             this.Controls.Add(this.tbrMain);
             this.Controls.Add(this.mnuMain);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mnuMain;
             this.Name = "MainForm";
             this.Text = "INI Editor";
@@ -827,11 +864,6 @@ namespace INIEditor.GUI
         private System.Windows.Forms.ToolStripMenuItem mnuViewDescLanguageEnglish;
         private System.Windows.Forms.ToolStripMenuItem mnuViewDescLanguageGerman;
         private System.Windows.Forms.ToolStripMenuItem mnuToolsGenerateXML;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colSection;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colProperty;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colDescription;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colCurrentValue;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colNewValue;
         private System.Windows.Forms.ToolStripButton tbrSave;
         private System.Windows.Forms.ToolStripMenuItem mnuViewSearch;
         private System.Windows.Forms.ToolStripButton tbrSearch;
@@ -840,8 +872,16 @@ namespace INIEditor.GUI
         private System.Windows.Forms.ToolStripMenuItem tsbLanguageEnglish;
         private System.Windows.Forms.TabPage tpSearchResults;
         private System.Windows.Forms.DataGridView dgvSearchResults;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSection;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProperty;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDescription;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCurrentValue;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colNewValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsSection;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsSectionDesc;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsPropertyDesc;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsPropertyCurrentValue;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsPropertyNewValue;
     }
 }
 

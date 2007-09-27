@@ -28,6 +28,7 @@ namespace INIEditor.GUI
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchForm));
             this.lblFindWhat = new System.Windows.Forms.Label();
             this.txtFindWhat = new System.Windows.Forms.TextBox();
             this.grpLookIn = new System.Windows.Forms.GroupBox();
@@ -35,8 +36,6 @@ namespace INIEditor.GUI
             this.chkPropertyDescriptions = new System.Windows.Forms.CheckBox();
             this.chkPropertyValues = new System.Windows.Forms.CheckBox();
             this.btnSearch = new System.Windows.Forms.Button();
-            this.cmbDescLanguage = new System.Windows.Forms.ComboBox();
-            this.lblDescLanguage = new System.Windows.Forms.Label();
             this.grpLookIn.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,9 +63,9 @@ namespace INIEditor.GUI
             this.grpLookIn.Controls.Add(this.chkSectionDescriptions);
             this.grpLookIn.Controls.Add(this.chkPropertyDescriptions);
             this.grpLookIn.Controls.Add(this.chkPropertyValues);
-            this.grpLookIn.Location = new System.Drawing.Point(12, 96);
+            this.grpLookIn.Location = new System.Drawing.Point(12, 68);
             this.grpLookIn.Name = "grpLookIn";
-            this.grpLookIn.Size = new System.Drawing.Size(357, 88);
+            this.grpLookIn.Size = new System.Drawing.Size(360, 88);
             this.grpLookIn.TabIndex = 3;
             this.grpLookIn.TabStop = false;
             this.grpLookIn.Text = "Look in:";
@@ -74,14 +73,13 @@ namespace INIEditor.GUI
             // chkSectionDescriptions
             // 
             this.chkSectionDescriptions.AutoSize = true;
-            this.chkSectionDescriptions.Checked = true;
-            this.chkSectionDescriptions.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkSectionDescriptions.Location = new System.Drawing.Point(6, 20);
             this.chkSectionDescriptions.Name = "chkSectionDescriptions";
             this.chkSectionDescriptions.Size = new System.Drawing.Size(123, 17);
             this.chkSectionDescriptions.TabIndex = 3;
             this.chkSectionDescriptions.Text = "Section Descriptions";
             this.chkSectionDescriptions.UseVisualStyleBackColor = true;
+            this.chkSectionDescriptions.CheckedChanged += new System.EventHandler(this.chkSectionDescriptions_CheckedChanged);
             // 
             // chkPropertyDescriptions
             // 
@@ -94,6 +92,7 @@ namespace INIEditor.GUI
             this.chkPropertyDescriptions.TabIndex = 2;
             this.chkPropertyDescriptions.Text = "Property Descriptions";
             this.chkPropertyDescriptions.UseVisualStyleBackColor = true;
+            this.chkPropertyDescriptions.CheckedChanged += new System.EventHandler(this.chkPropertyDescriptions_CheckedChanged);
             // 
             // chkPropertyValues
             // 
@@ -106,10 +105,11 @@ namespace INIEditor.GUI
             this.chkPropertyValues.TabIndex = 1;
             this.chkPropertyValues.Text = "Property Values";
             this.chkPropertyValues.UseVisualStyleBackColor = true;
+            this.chkPropertyValues.CheckedChanged += new System.EventHandler(this.chkPropertyValues_CheckedChanged);
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(297, 211);
+            this.btnSearch.Location = new System.Drawing.Point(297, 168);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(75, 23);
             this.btnSearch.TabIndex = 4;
@@ -117,44 +117,24 @@ namespace INIEditor.GUI
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
-            // cmbDescLanguage
-            // 
-            this.cmbDescLanguage.FormattingEnabled = true;
-            this.cmbDescLanguage.Items.AddRange(new object[] {
-            "English",
-            "German"});
-            this.cmbDescLanguage.Location = new System.Drawing.Point(126, 63);
-            this.cmbDescLanguage.Name = "cmbDescLanguage";
-            this.cmbDescLanguage.Size = new System.Drawing.Size(121, 21);
-            this.cmbDescLanguage.TabIndex = 5;
-            // 
-            // lblDescLanguage
-            // 
-            this.lblDescLanguage.AutoSize = true;
-            this.lblDescLanguage.Location = new System.Drawing.Point(9, 66);
-            this.lblDescLanguage.Name = "lblDescLanguage";
-            this.lblDescLanguage.Size = new System.Drawing.Size(111, 13);
-            this.lblDescLanguage.TabIndex = 6;
-            this.lblDescLanguage.Text = "Description Language";
-            // 
             // SearchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(382, 246);
-            this.Controls.Add(this.lblDescLanguage);
-            this.Controls.Add(this.cmbDescLanguage);
+            this.ClientSize = new System.Drawing.Size(382, 203);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.grpLookIn);
             this.Controls.Add(this.txtFindWhat);
             this.Controls.Add(this.lblFindWhat);
             this.HelpButton = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(390, 280);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(390, 280);
+            this.MinimumSize = new System.Drawing.Size(390, 237);
             this.Name = "SearchForm";
-            this.Text = "SearchForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Search";
             this.grpLookIn.ResumeLayout(false);
             this.grpLookIn.PerformLayout();
             this.ResumeLayout(false);
@@ -171,7 +151,5 @@ namespace INIEditor.GUI
         private System.Windows.Forms.CheckBox chkPropertyValues;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.CheckBox chkSectionDescriptions;
-        private System.Windows.Forms.ComboBox cmbDescLanguage;
-        private System.Windows.Forms.Label lblDescLanguage;
     }
 }
