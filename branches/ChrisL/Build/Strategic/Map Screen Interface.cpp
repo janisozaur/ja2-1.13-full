@@ -3856,11 +3856,11 @@ void AddStringsToMoveBox( void )
 				// add mercs in squads
 				if( IsSoldierSelectedForMovement( pSoldierMovingList[ iCountB ] ) == TRUE )
 				{
-					swprintf( sString, L"	*%s*", pSoldierMovingList[ iCountB ]->name );
+					swprintf( sString, L" *%s*", pSoldierMovingList[ iCountB ]->name );
 				}
 				else
 				{
-					swprintf( sString, L"	%s", pSoldierMovingList[ iCountB ]->name );
+					swprintf( sString, L" %s", pSoldierMovingList[ iCountB ]->name );
 				}
 				AddMonoString(&hStringHandle, sString );
 			}
@@ -3890,11 +3890,11 @@ void AddStringsToMoveBox( void )
 				// add mercs in vehicles
 				if( IsSoldierSelectedForMovement( pSoldierMovingList[ iCountB ] ) == TRUE )
 				{
-					swprintf( sString, L"	*%s*", pSoldierMovingList[ iCountB ]->name );
+					swprintf( sString, L" *%s*", pSoldierMovingList[ iCountB ]->name );
 				}
 				else
 				{
-					swprintf( sString, L"	%s", pSoldierMovingList[ iCountB ]->name );
+					swprintf( sString, L" %s", pSoldierMovingList[ iCountB ]->name );
 				}
 				AddMonoString(&hStringHandle, sString );
 			}

@@ -290,7 +290,7 @@ BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos )
 		if(pSoldier->inv[LBESlots[i]].exists() == true)
 		{
 			//ADB the object is already in the LBE, we are just moving it from soldier inv to LBE inv
-			pSoldier->inv[LBESlots[i]].MoveThisObjectTo(pLBE->inv[i]);
+			pSoldier->inv[LBESlots[i]].MoveThisObjectTo(pLBE->inv[i], -1, pSoldier, LBESlots[i]);
 		}
 	}
 
@@ -820,14 +820,9 @@ ObjectData::~ObjectData()
 
 void ObjectData::DeleteLBE()
 {
-	/*CHRISL: This function, in conjunction with ObjectData::DuplicateLBE, does not work as it should.  The uniqueID of
-	an LBENODE is constantly incremented every time the LBENODE is moved into the cursor.  Also, phantom LBENODEs are
-	constantly created.  At a minimum, 1 phantom LBENODE is created if there are any values in LBEArray.  Plus, an
-	additional LBENODE is created for every LBENODE that's stored inside another LBENODE (like if you put a gun into a
-	holster, the holster into a backpack, and then put that backpack on the ground, you get 1 phantom LBENODE simply
-	from the fact that LBENODEs exist, plus a second phantom LBENODE for the holster simply because it's stored inside
-	another LBENODE).*/
-	return;
+	/*CHRISL: We still need to resolve the incrementing uniqueID issue, but ADB has a valid concern for
+	leaving this code in place. We just need to update things so that the uniqueID only increments when we
+	actually have to create a new LBENODE. */
 	if (LBEArray.empty() == false) {
 		if (this->lbe.bLBE == -1) {
 			int uniqueID = this->lbe.uniqueID;
@@ -843,14 +838,9 @@ void ObjectData::DeleteLBE()
 
 void ObjectData::DuplicateLBE()
 {
-	/*CHRISL: This function, in conjunction with ObjectData::DeleteLBE, does not work as it should.  The uniqueID of
-	an LBENODE is constantly incremented every time the LBENODE is moved into the cursor.  Also, phantom LBENODEs are
-	constantly created.  At a minimum, 1 phantom LBENODE is created if there are any values in LBEArray.  Plus, an
-	additional LBENODE is created for every LBENODE that's stored inside another LBENODE (like if you put a gun into a
-	holster, the holster into a backpack, and then put that backpack on the ground, you get 1 phantom LBENODE simply
-	from the fact that LBENODEs exist, plus a second phantom LBENODE for the holster simply because it's stored inside
-	another LBENODE).*/
-	return;
+	/*CHRISL: We still need to resolve the incrementing uniqueID issue, but ADB has a valid concern for
+	leaving this code in place. We just need to update things so that the uniqueID only increments when we
+	actually have to create a new LBENODE. */
 	if (this->lbe.bLBE == -1) {
 		LBENODE* pLBE = NULL;
 		int uniqueID = this->lbe.uniqueID;

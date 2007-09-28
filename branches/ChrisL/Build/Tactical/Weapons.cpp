@@ -980,7 +980,7 @@ INT32 EffectiveArmour( OBJECTTYPE * pObj )
 			INT32 iValue2;
 
 			iValue2 = Armour[ Item[ iter->usItem ].ubClassIndex ].ubProtection;
-			iValue2 *= (*iter)[0]->data.objectStatus * Armour[ Item[ iter->usItem ].ubClassIndex ].ubCoverage / 10000;
+			iValue2 = iValue2 * (*iter)[0]->data.objectStatus * Armour[ Item[ iter->usItem ].ubClassIndex ].ubCoverage / 10000;
 
 			iValue += iValue2;
 		}

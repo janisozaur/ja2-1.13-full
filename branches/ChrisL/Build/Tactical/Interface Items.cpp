@@ -353,7 +353,7 @@ INT16				gsItemPopupWidth;
 INT16				gsItemPopupHeight;
 INT16				gsItemPopupX;
 INT16				gsItemPopupY;
-MOUSE_REGION				gItemPopupRegions[8];
+MOUSE_REGION				gItemPopupRegions[MAX_OBJECTS_PER_SLOT];
 MOUSE_REGION				gKeyRingRegions[ NUMBER_KEYS_ON_KEYRING ];
 BOOLEAN							gfInKeyRingPopup = FALSE;
 UINT8								gubNumItemPopups = 0;
@@ -3045,8 +3045,11 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 			// Add region
 			MSYS_AddRegion( &gItemDescAttachmentRegions[cnt]);
 			MSYS_SetRegionUserData( &gItemDescAttachmentRegions[cnt], 0, cnt );
+			//CHRISL: Include the ubStatusIndex in the region information so we know which object in a stack we're looking at
+			MSYS_SetRegionUserData( &gItemDescAttachmentRegions[cnt], 1, ubStatusIndex );
 
-			OBJECTTYPE* pAttachment = (*pObject)[0]->GetAttachmentAtIndex(cnt);
+			// CHRISL: Instead of looking at object 0, let's look at the object we actually right clicked on using ubStatusIndex
+			OBJECTTYPE* pAttachment = (*pObject)[ubStatusIndex]->GetAttachmentAtIndex(cnt);
 			if (pAttachment) {
 				SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), ItemNames[ pAttachment->usItem ] );
 				SetRegionHelpEndCallback( &(gItemDescAttachmentRegions[ cnt ]), HelpTextDoneCallback );
@@ -3150,8 +3153,9 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	{
 		gpAttachSoldier = pSoldier;
 	}
+	//CHRISL: Instead of using attachments on item 0, use attachments on item we right clicked on using ubStatusIndex
 	// store attachments that item originally had
-	gOriginalAttachments = (*pObject)[0]->attachments;
+	gOriginalAttachments = (*pObject)[ubStatusIndex]->attachments;
 
 	if ( (gpItemPointer != NULL) && (gfItemDescHelpTextOffset == FALSE) && (CheckFact( FACT_ATTACHED_ITEM_BEFORE, 0 ) == FALSE) )
 	{
@@ -3390,7 +3394,7 @@ void PermanantAttachmentMessageBoxCallBack( UINT8 ubExitValue )
 void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
 	PERFORMANCE_MARKER
-	UINT32					uiItemPos;
+	UINT32					uiItemPos, ubStatusIndex;
 	static BOOLEAN	fRightDown = FALSE;
 
 	if ( gfItemDescObjectIsAttachment )
@@ -3400,7 +3404,8 @@ void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	}
 
 	uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
-	OBJECTTYPE* pAttachment = (*gpItemDescObject)[0]->GetAttachmentAtIndex(uiItemPos);
+	ubStatusIndex = MSYS_GetRegionUserData( pRegion, 1 );
+	OBJECTTYPE* pAttachment = (*gpItemDescObject)[ubStatusIndex]->GetAttachmentAtIndex(uiItemPos);
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -4699,6 +4704,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 			sBarY = sY + gSMInvData[ pocketKey[cnt] ].sBarDy;
 			DrawItemUIBarEx( pObject, 0, sBarX, sBarY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT,	Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER);
 		}
+		ShadowVideoSurfaceRect(guiSAVEBUFFER,sX,sY,(gSMInvData[ pocketKey[cnt] ].sWidth+sX),(gSMInvData[ pocketKey[cnt] ].sHeight+sY));
 	}
 }
 
@@ -5902,6 +5908,7 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	UINT16				 usPopupWidth, usPopupHeight;
 	INT16					sItemSlotWidth, sItemSlotHeight;
 	INT16 sItemWidth = 0, sOffSetY = 0;
+	static CHAR16		pStr[ 512 ];
 
 	
 	// CHRISL: Setup witdh and offset to layer inventory boxes if necessary
@@ -5944,16 +5951,6 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 //      ubLimit = 6;
 //    }
 //  }
-
-
-	if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
-	{
-		//ADB probably shouldn't be hard coded, but it doesn't match MAX_OBJECTS_IN_SLOT so I won't change it to that.
-		if ( ubLimit > 6 )
-		{
-		  ubLimit = 6;
-		}
-	}
 
 	// Load graphics
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
@@ -6021,7 +6018,14 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 0, cnt );
 		
 		//OK, for each item, set dirty text if applicable!
-		SetRegionFastHelpText( &(gItemPopupRegions[ cnt ]), ItemNames[ pSoldier->inv[ ubPosition ].usItem ] );
+		//CHRISL: TODO Need to alter this so we display items names with attachments if appropriate
+		if(cnt < pSoldier->inv[ubPosition].ubNumberOfObjects && pSoldier->inv[ubPosition].exists() == true){
+			GetHelpTextForItem( pStr, &( pSoldier->inv[ ubPosition ] ), pSoldier, cnt );
+			SetRegionFastHelpText( &(gItemPopupRegions[ cnt ]), pStr );
+		}
+		else{
+			SetRegionFastHelpText( &(gItemPopupRegions[ cnt ]), ItemNames[ pSoldier->inv[ ubPosition ].usItem ] );
+		}
 		SetRegionHelpEndCallback( &(gItemPopupRegions[ cnt ]), HelpTextDoneCallback );
 		gfItemPopupRegionCallbackEndFix = FALSE;
 	}
@@ -6074,12 +6078,12 @@ void EndItemStackPopupWithItemInHand( )
 void RenderItemStackPopup( BOOLEAN fFullRender )
 {
 	PERFORMANCE_MARKER
-  ETRLEObject						*pTrav;
-	UINT32								usHeight, usWidth;
-	HVOBJECT							hVObject;
-	UINT32								cnt;
-	INT16									sX, sY, sNewX, sNewY;
-	INT16 sItemWidth = 0, sOffSetY = 0;
+	ETRLEObject		*pTrav;
+	UINT32			usHeight, usWidth;
+	HVOBJECT		hVObject;
+	UINT32			cnt;
+	INT16			sX, sY, sNewX, sNewY;
+	INT16			sItemWidth = 0, sOffSetY = 0;
 
 	// CHRISL: Setup witdh and offset to layer inventory boxes if necessary
 	if( guiCurrentScreen == MAP_SCREEN )
@@ -6132,7 +6136,7 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 			// Do status bar here...
 			sNewX = (INT16)( gsItemPopupX + ( cnt * usWidth ) + 7 );
 			sNewY = gsItemPopupY + INV_BAR_DY + 3;
-			DrawItemUIBarEx( gpItemPopupObject, (UINT8)cnt, sX+7, sY+INV_BAR_DY+3, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, 	Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , FRAME_BUFFER, cnt );
+			DrawItemUIBarEx( gpItemPopupObject, (UINT8)cnt, sX+7, sY+INV_BAR_DY+3, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , FRAME_BUFFER, cnt );
 
 		}
 	}
@@ -8101,12 +8105,13 @@ void RemoveMoney()
 }
 
 
-void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier )
+void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier, INT8 stackNum )
 {
 	PERFORMANCE_MARKER
 	CHAR16	pStr[ 250 ]; 
 	UINT16	usItem = pObject->usItem;
 	INT32	iNumAttachments = 0;
+	INT16	sValue;
 
 	if( pSoldier != NULL )
 	{
@@ -8121,15 +8126,21 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 	if ( pObject->exists() == true )
 	{
 		// Retrieve the status of the items
-		// Find the minimum status value - not just the first one
-		INT16 sValue = (*pObject)[0]->data.objectStatus;
+		//CHRISL: If looking at an item in stack popup, show just that item
+		if(stackNum == -1){
+			// Find the minimum status value - not just the first one
+			sValue = (*pObject)[0]->data.objectStatus;
 
-		for(INT16 i = 1; i < pObject->ubNumberOfObjects; i++)
-		{
-			if((*pObject)[ i ]->data.objectStatus < sValue)
+			for(INT16 i = 1; i < pObject->ubNumberOfObjects; i++)
 			{
-				sValue = (*pObject)[ i ]->data.objectStatus;
+				if((*pObject)[ i ]->data.objectStatus < sValue)
+				{
+					sValue = (*pObject)[ i ]->data.objectStatus;
+				}
 			}
+		}
+		else{
+			sValue = (*pObject)[stackNum]->data.objectStatus;
 		}
 
 		//get item weight
@@ -8146,15 +8157,19 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 		}
 
 
-		if ( Item[usItem].usItemClass != IC_AMMO || !gGameExternalOptions.fAmmoDynamicWeight ) //Madd: quick fix to display total stack weight
-			fWeight *= pObject->ubNumberOfObjects;
+		if(stackNum == -1){
+			if ( Item[usItem].usItemClass != IC_AMMO || !gGameExternalOptions.fAmmoDynamicWeight ){ //Madd: quick fix to display total stack weight
+				fWeight *= pObject->ubNumberOfObjects;
+			}
+			stackNum = 0;
+		}
 
 		switch( Item[ usItem ].usItemClass )
 		{
 		case MONEY:
 			//Money
 			{	
-				swprintf( pStr, L"%ld", (*pObject)[0]->data.money.uiMoneyAmount );
+				swprintf( pStr, L"%ld", (*pObject)[stackNum]->data.money.uiMoneyAmount );
 				InsertCommasForDollarFigure( pStr );
 				InsertDollarSignInToString( pStr );
 			}
@@ -8165,7 +8180,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 			//if ( Item[ usItem ].usItemClass == IC_MONEY )
 			{ 
 				CHAR16		pStr2[20];
-				swprintf( pStr2, L"%ld", (*pObject)[0]->data.money.uiMoneyAmount );
+				swprintf( pStr2, L"%ld", (*pObject)[stackNum]->data.money.uiMoneyAmount );
 				InsertCommasForDollarFigure( pStr2 );
 				InsertDollarSignInToString( pStr2 );
 
@@ -8302,7 +8317,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 				// The next is for ammunition which gets the measurement 'rnds'		
 				swprintf( pStr, L"%s [%d rnds]\n%s %1.1f %s", 				
 					ItemNames[ usItem ],		//Item long name
-					(*pObject)[0]->data.ubShotsLeft,	//Shots left
+					(*pObject)[stackNum]->data.ubShotsLeft,	//Shots left
 					gWeaponStatsDesc[ 12 ],		//Weight String
 					fWeight,					//Weight
 					GetWeightUnitString()		//Weight units
@@ -8404,16 +8419,16 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 
 
 		// Fingerprint ID (Soldier Name)
-		if ( ( Item[pObject->usItem].fingerprintid ) && (*pObject)[0]->data.ubImprintID < NO_PROFILE )
+		if ( ( Item[pObject->usItem].fingerprintid ) && (*pObject)[stackNum]->data.ubImprintID < NO_PROFILE )
 		{
 			CHAR16		pStr2[20];
-			swprintf( pStr2, L" [%s]", gMercProfiles[ (*pObject)[0]->data.ubImprintID ].zNickname );
+			swprintf( pStr2, L" [%s]", gMercProfiles[ (*pObject)[stackNum]->data.ubImprintID ].zNickname );
 			wcscat( pStr, pStr2 );
 		}
 
 
 		// Add attachment string....
-		for (attachmentList::iterator iter = (*pObject)[0]->attachments.begin(); iter != (*pObject)[0]->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = (*pObject)[stackNum]->attachments.begin(); iter != (*pObject)[stackNum]->attachments.end(); ++iter) {
 			iNumAttachments++;
 
 			if ( iNumAttachments == 1 )
