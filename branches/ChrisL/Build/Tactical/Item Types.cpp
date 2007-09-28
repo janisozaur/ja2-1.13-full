@@ -779,7 +779,7 @@ ObjectData::ObjectData(const ObjectData& src)
 	PERFORMANCE_MARKER
 	if ((void*)this != (void*)&src) {
 		//first get rid of any LBE this might have
-		//DeleteLBE();
+		DeleteLBE();
 
 		//copy over the data
 		this->bTrap = src.bTrap;
@@ -789,7 +789,7 @@ ObjectData::ObjectData(const ObjectData& src)
 		this->gun = src.gun;
 
 		//duplicate the LBE data
-		//DuplicateLBE();
+		DuplicateLBE();
 	}
 }
 
@@ -798,7 +798,7 @@ ObjectData& ObjectData::operator =(const ObjectData& src)
 	PERFORMANCE_MARKER
 	if ((void*)this != (void*)&src) {
 		//first get rid of any LBE this might have
-		//DeleteLBE();
+		DeleteLBE();
 
 		//copy over the data
 		this->bTrap = src.bTrap;
@@ -808,18 +808,26 @@ ObjectData& ObjectData::operator =(const ObjectData& src)
 		this->gun = src.gun;
 
 		//duplicate the LBE data
-		//DuplicateLBE();
+		DuplicateLBE();
 	}
 	return *this;
 }
 
 ObjectData::~ObjectData()
 {
-	//DeleteLBE();
+	DeleteLBE();
 }
 
 void ObjectData::DeleteLBE()
 {
+	/*CHRISL: This function, in conjunction with ObjectData::DuplicateLBE, does not work as it should.  The uniqueID of
+	an LBENODE is constantly incremented every time the LBENODE is moved into the cursor.  Also, phantom LBENODEs are
+	constantly created.  At a minimum, 1 phantom LBENODE is created if there are any values in LBEArray.  Plus, an
+	additional LBENODE is created for every LBENODE that's stored inside another LBENODE (like if you put a gun into a
+	holster, the holster into a backpack, and then put that backpack on the ground, you get 1 phantom LBENODE simply
+	from the fact that LBENODEs exist, plus a second phantom LBENODE for the holster simply because it's stored inside
+	another LBENODE).*/
+	return;
 	if (LBEArray.empty() == false) {
 		if (this->lbe.bLBE == -1) {
 			int uniqueID = this->lbe.uniqueID;
@@ -835,6 +843,14 @@ void ObjectData::DeleteLBE()
 
 void ObjectData::DuplicateLBE()
 {
+	/*CHRISL: This function, in conjunction with ObjectData::DeleteLBE, does not work as it should.  The uniqueID of
+	an LBENODE is constantly incremented every time the LBENODE is moved into the cursor.  Also, phantom LBENODEs are
+	constantly created.  At a minimum, 1 phantom LBENODE is created if there are any values in LBEArray.  Plus, an
+	additional LBENODE is created for every LBENODE that's stored inside another LBENODE (like if you put a gun into a
+	holster, the holster into a backpack, and then put that backpack on the ground, you get 1 phantom LBENODE simply
+	from the fact that LBENODEs exist, plus a second phantom LBENODE for the holster simply because it's stored inside
+	another LBENODE).*/
+	return;
 	if (this->lbe.bLBE == -1) {
 		LBENODE* pLBE = NULL;
 		int uniqueID = this->lbe.uniqueID;
@@ -845,9 +861,10 @@ void ObjectData::DuplicateLBE()
 			}
 		}
 		uniqueID = gLastLBEUniqueID++;
-		LBEArray.push_back(*pLBE);
-		pLBE = &LBEArray.back();
-		pLBE->uniqueID = uniqueID;
+		LBEArray.push_back(LBENODE());
+		LBENODE* pInserted = &LBEArray.back();
+		*pInserted = *pLBE;
+		pInserted->uniqueID = uniqueID;
 		this->lbe.uniqueID = uniqueID;
 	}
 }
