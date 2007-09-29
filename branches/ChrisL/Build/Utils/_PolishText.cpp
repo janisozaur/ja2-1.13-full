@@ -11,33 +11,33 @@
 ******************************************************************************************************
 
 GENERAL INSTRUCTIONS
-- Always be aware that foreign strings should be of equal or shorter length than the English equivalent.	
+- Always be aware that foreign strings should be of equal or shorter length than the English equivalent. 
 	I know that this is difficult to do on many occasions due to the nature of foreign languages when 
-	compared to English.	By doing so, this will greatly reduce the amount of work on both sides.	In 
-	most cases (but not all), JA2 interfaces were designed with just enough space to fit the English word.	
+	compared to English. By doing so, this will greatly reduce the amount of work on both sides. In 
+	most cases (but not all), JA2 interfaces were designed with just enough space to fit the English word. 
 	The general rule is if the string is very short (less than 10 characters), then it's short because of 
-	interface limitations.	On the other hand, full sentences commonly have little limitations for length.	
+	interface limitations. On the other hand, full sentences commonly have little limitations for length. 
 	Strings in between are a little dicey.
-- Never translate a string to appear on multiple lines.	All strings L"This is a really long string...", 
-	must fit on a single line no matter how long the string is.	All strings start with L" and end with ",
-- Never remove any extra spaces in strings.	In addition, all strings containing multiple sentences only 
-	have one space after a period, which is different than standard typing convention.	Never modify sections 
-	of strings contain combinations of % characters.	These are special format characters and are always 
-	used in conjunction with other characters.	For example, %s means string, and is commonly used for names,
-	locations, items, etc.	%d is used for numbers.	%c%d is a character and a number (such as A9).	
-	%% is how a single % character is built.	There are countless types, but strings containing these 
-	special characters are usually commented to explain what they mean.	If it isn't commented, then 
+- Never translate a string to appear on multiple lines. All strings L"This is a really long string...", 
+	must fit on a single line no matter how long the string is. All strings start with L" and end with ",
+- Never remove any extra spaces in strings. In addition, all strings containing multiple sentences only 
+	have one space after a period, which is different than standard typing convention. Never modify sections 
+	of strings contain combinations of % characters. These are special format characters and are always 
+	used in conjunction with other characters. For example, %s means string, and is commonly used for names,
+	locations, items, etc. %d is used for numbers. %c%d is a character and a number (such as A9). 
+	%% is how a single % character is built. There are countless types, but strings containing these 
+	special characters are usually commented to explain what they mean. If it isn't commented, then 
 	if you can't figure out the context, then feel free to ask SirTech.
 - Comments are always started with // Anything following these two characters on the same line are 
-	considered to be comments.	Do not translate comments.	Comments are always applied to the following 
-	string(s) on the next line(s), unless the comment is on the same line as a string.	
-- All new comments made by SirTech will use "//@@@ comment" (without the quotes) notation.	By searching 
+	considered to be comments. Do not translate comments. Comments are always applied to the following 
+	string(s) on the next line(s), unless the comment is on the same line as a string. 
+- All new comments made by SirTech will use "//@@@ comment" (without the quotes) notation. By searching 
 	for @@@ everytime you recieve a new version, it will simplify your task and identify special instructions.
-	Commonly, these types of comments will be used to ask you to abbreviate a string.	Please leave the 
+	Commonly, these types of comments will be used to ask you to abbreviate a string. Please leave the 
 	comments intact, and SirTech will remove them once the translation for that particular area is resolved.
 - If you have a problem or question with translating certain strings, please use "//!!! comment" 
-	(without the quotes).	The syntax is important, and should be identical to the comments used with @@@ 
-	symbols.	SirTech will search for !!! to look for your problems and questions.	This is a more 
+	(without the quotes). The syntax is important, and should be identical to the comments used with @@@ 
+	symbols. SirTech will search for !!! to look for your problems and questions. This is a more 
 	efficient method than detailing questions in email, so try to do this whenever possible.
 
 
@@ -46,15 +46,15 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 **************
 
 1) BOLDED LETTERS
-	The popup help text system supports special characters to specify the hot key(s) for a button.	
+	The popup help text system supports special characters to specify the hot key(s) for a button. 
 	Anytime you see a '|' symbol within the help text string, that means the following key is assigned
-	to activate the action which is usually a button.	
+	to activate the action which is usually a button. 
 
 	EX:	L"|Map Screen" 
 
-	This means the 'M' is the hotkey.	In the game, when somebody hits the 'M' key, it activates that
-	button.	When translating the text to another language, it is best to attempt to choose a word that
-	uses 'M'.	If you can't always find a match, then the best thing to do is append the 'M' at the end
+	This means the 'M' is the hotkey. In the game, when somebody hits the 'M' key, it activates that
+	button. When translating the text to another language, it is best to attempt to choose a word that
+	uses 'M'. If you can't always find a match, then the best thing to do is append the 'M' at the end
 	of the string in this format:
 
 	EX:	L"Ecran De Carte (|M)"	(this is the French translation)
@@ -63,7 +63,7 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 
 2) NEWLINE
 	Any place you see a \n within the string, you are looking at another string that is part of the fast help
-	text system.	\n notation doesn't need to be precisely placed within that string, but whereever you wish 
+	text system. \n notation doesn't need to be precisely placed within that string, but whereever you wish 
 	to start a new line. 
 
 	EX:	L"Clears all the mercs' positions,\nand allows you to re-enter them manually." 
@@ -73,7 +73,7 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 				Clears all the mercs' positions,
 				and allows you to re-enter them manually.
 
-	NOTE:	It is important that you don't pad the characters adjacent to the \n with spaces.	If we did this
+	NOTE:	It is important that you don't pad the characters adjacent to the \n with spaces. If we did this
 		in the above example, we would see
 
 	WRONG WAY -- spaces before and after the \n
@@ -88,9 +88,9 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 @@@ NOTATION
 ************
 
-	Throughout the text files, you'll find an assortment of comments.	Comments are used to describe the
-	text to make translation easier, but comments don't need to be translated.	A good thing is to search for
-	"@@@" after receiving new version of the text file, and address the special notes in this manner.	
+	Throughout the text files, you'll find an assortment of comments. Comments are used to describe the
+	text to make translation easier, but comments don't need to be translated. A good thing is to search for
+	"@@@" after receiving new version of the text file, and address the special notes in this manner. 
 
 !!! NOTATION
 ************
@@ -955,14 +955,14 @@ STR16 gpStrategicString[] =
 
 	L"Czas trwania",							//STR_AR_TIME_ELAPSED,
 
-	//Labels for status of merc if retreating.	(UPPERCASE)			
+	//Labels for status of merc if retreating. (UPPERCASE)			
 
 	L"WYCOFA£(A) SIÊ",								//STR_AR_MERC_RETREATED,
 	L"WYCOFUJE SIÊ",								//STR_AR_MERC_RETREATING,
 	L"WYCOFAJ SIÊ",								//STR_AR_MERC_RETREAT,
 
 	//PRE BATTLE INTERFACE STRINGS 
-	//Goes on the three buttons in the prebattle interface.	The Auto resolve button represents
+	//Goes on the three buttons in the prebattle interface. The Auto resolve button represents
 	//a system that automatically resolves the combat for the player without having to do anything.
 	//These strings must be short (two lines -- 6-8 chars per line)
 
@@ -979,8 +979,8 @@ STR16 gpStrategicString[] =
 	L"ATAK DZIKICH KOTÓW",							//STR_PB_BLOODCATAMBUSH_HEADER
 	L"WEJŒCIE DO LEGOWISKA DZIKICH KOTÓW",			//STR_PB_ENTERINGBLOODCATLAIR_HEADER
 
-	//Various single words for direct translation.	The Civilians represent the civilian
-	//militia occupying the sector being attacked.	Limited to 9-10 chars
+	//Various single words for direct translation. The Civilians represent the civilian
+	//militia occupying the sector being attacked. Limited to 9-10 chars
 
 	L"Po³o¿enie",
 	L"Wrogowie",
@@ -1002,7 +1002,7 @@ STR16 gpStrategicString[] =
 	L"Zgrupuj",
 	L"OK",
 
-	//The help text for the four buttons.	Use \n to denote new line (just like enter).
+	//The help text for the four buttons. Use \n to denote new line (just like enter).
 
 	L"Kasuje wszystkie pozy|cje najemników, \ni pozwala ponownie je wprowadziæ.", 
 	L"Po ka¿dym naciœniêciu rozmie|szcza\nlosowo twoich najemników.",
@@ -1015,25 +1015,25 @@ STR16 gpStrategicString[] =
 	L"Sektor",
 	L"Wybierz pocz¹tkowe pozycje",
 
-	//Strings used for various popup message boxes.	Can be as long as desired.
+	//Strings used for various popup message boxes. Can be as long as desired.
 
 	L"To miejsce nie jest zbyt dobre. Jest niedostêpne. Spróbuj gdzie indziej.",
 	L"Rozmieœæ swoich najemników na podœwietlonej czêœci mapy.",
 
-	//This message is for mercs arriving in sectors.	Ex:	Red has arrived in sector A9.
+	//This message is for mercs arriving in sectors. Ex:	Red has arrived in sector A9.
 	//Don't uppercase first character, or add spaces on either end.
 
 	L"przyby³(a) do sektora", 
 
-	//These entries are for button popup help text for the prebattle interface.	All popup help
-	//text supports the use of \n to denote new line.	Do not use spaces before or after the \n.
+	//These entries are for button popup help text for the prebattle interface. All popup help
+	//text supports the use of \n to denote new line. Do not use spaces before or after the \n.
 	L"|Automatycznie prowadzi walkê za ciebie,\nnie ³aduj¹c planszy.",
 	L"Atakuj¹c sektor wroga nie mo¿na automatycznie rozstrzygn¹æ walki.",
 	L"Wejœcie do s|ektora by nawi¹zaæ walkê z wrogiem.",
 	L"Wycofuje oddzia³ do s¹siedniego sekto|ra.",				//singular version
 	L"Wycofuje wszystkie oddzia³y do s¹siedniego sekto|ra.", //multiple groups with same previous sector
 
-	//various popup messages for battle conditions.	
+	//various popup messages for battle conditions. 
 
 	//%c%d is the sector -- ex:	A9
 	L"Nieprzyjaciel zatakowa³ oddzia³y samoobrony w sektorze %c%d.",
@@ -1043,15 +1043,15 @@ STR16 gpStrategicString[] =
 	//Note:	the minimum number of civilians eaten will be two.
 	L"Stworzenia zatakowa³y i zabi³y %d cywili w sektorze %s.",
 	//%c%d is the sector -- ex:	A9
-	L"Nieprzyjaciel zatakowa³ twoich najemników w sektorze %s.	¯aden z twoich najemników nie mo¿e walczyæ!",
+	L"Nieprzyjaciel zatakowa³ twoich najemników w sektorze %s. ¯aden z twoich najemników nie mo¿e walczyæ!",
 	//%c%d is the sector -- ex:	A9
-	L"Stworzenia zatakowa³y twoich najemników w sektorze %s.	¯aden z twoich najemników nie mo¿e walczyæ!",
+	L"Stworzenia zatakowa³y twoich najemników w sektorze %s. ¯aden z twoich najemników nie mo¿e walczyæ!",
 
 };
 
 STR16 gpGameClockString[] = 
 {
-	//This is the day represented in the game clock.	Must be very short, 4 characters max.
+	//This is the day represented in the game clock. Must be very short, 4 characters max.
 	L"Dzieñ",	
 };
 
@@ -1409,7 +1409,7 @@ STR16 pExitingSectorHelpText[] =
 	L"Gdy wyprowadzisz swoich pozosta³ych najemników z tego sektora,\ns¹siedni sektor zostanie automatycznie za³adowany.",
 	L"Gdy wyprowadzisz swoich pozosta³ych najemników z tego sektora,\nto na czas podró¿y pojawi siê automatycznie ekran mapy.",
 
-	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted.	The "single" button is disabled.
+	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted. The "single" button is disabled.
 	L"%s jest pod eskort¹ twoich najemników i nie mo¿e bez nich opuœciæ tego sektora.",
 
 	//If only one conscious merc is left and is selected, and there are EPCs in the squad, the merc will be prohibited from leaving alone.
@@ -1426,16 +1426,16 @@ STR16 pExitingSectorHelpText[] =
 
 	L"", //UNUSED
 
-	//Standard helptext for single movement.	Explains what will happen (splitting the squad)
+	//Standard helptext for single movement. Explains what will happen (splitting the squad)
 	L"Jeœli zaznaczysz tê opcjê, %s bêdzie podró¿owaæ w pojedynkê\ni automatycznie znajdzie siê w osobnym oddziale.",
 
-	//Standard helptext for all movement.	Explains what will happen (moving the squad)
+	//Standard helptext for all movement. Explains what will happen (moving the squad)
 	L"Jeœli zaznaczysz tê opcjê, aktualnie\nwybrany oddzia³ opuœci ten sektor.",
 
-	//This strings is used BEFORE the "exiting sector" interface is created.	If you have an EPC selected and you attempt to tactically
+	//This strings is used BEFORE the "exiting sector" interface is created. If you have an EPC selected and you attempt to tactically
 	//traverse the EPC while the escorting mercs aren't near enough (or dead, dying, or unconscious), this message will appear and the
-	//"exiting sector" interface will not appear.	This is just like the situation where
-	//This string is special, as it is not used as helptext.	Do not use the special newline character (\n) for this string.
+	//"exiting sector" interface will not appear. This is just like the situation where
+	//This string is special, as it is not used as helptext. Do not use the special newline character (\n) for this string.
 	L"%s jest pod eskort¹ twoich najemników i nie mo¿e bez nich opuœciæ tego sektora. Aby opuœciæ sektor twoi najemnicy musz¹ byæ w pobli¿u.",
 };
 
@@ -1855,7 +1855,7 @@ STR16 pTransactionText[] =
 	L"Transfer funduszy do - %s", 			// transfer funds to a merc
 	L"Transfer funduszy od - %s", 		// transfer funds from a merc
 	L"Samoobrona w - %s", // initial cost to equip a town's militia
-	L"Zakupy u - %s.",	//is used for the Shop keeper interface.	The dealers name will be appended to the end of the string.
+	L"Zakupy u - %s.",	//is used for the Shop keeper interface. The dealers name will be appended to the end of the string.
 	L"%s wp³aci³(a) pieni¹dze.",
 };
 
@@ -2867,7 +2867,7 @@ STR16			BobbyRText[] =
 	L"FORMULARZ",
 	L"Strona g³ówna",			//10
 
-	//The following 2 lines are used on the Ammunition page.	
+	//The following 2 lines are used on the Ammunition page. 
 	//They are used for help text to display how many items the player's merc has
 	//that can use this type of ammo
 
@@ -3326,18 +3326,18 @@ STR16			zSaveLoadText[] =
 	L"Wersja gry w zapisanym pliku ró¿ni siê od bie¿¹cej. Prawdopodobnie mo¿na bezpiecznie kontynuowaæ. Kontynuowaæ?",
 	L"Zapisane pliki gier mog¹ byæ uszkodzone. Czy chcesz je usun¹æ?",
 
-	//Translators, the next two strings are for the same thing.	The first one is for beta version releases and the second one
-	//is used for the final version.	Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
-	//used by the compiler and will cause program errors if modified/removed.	It's okay to translate the strings though.	
+	//Translators, the next two strings are for the same thing. The first one is for beta version releases and the second one
+	//is used for the final version. Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
+	//used by the compiler and will cause program errors if modified/removed. It's okay to translate the strings though. 
 #ifdef JA2BETAVERSION
 	L"Nieprawid³owa wersja zapisu gry. W razie problemów prosimy o raport. Kontynuowaæ?",
 #else
 	L"Próba odczytu starszej wersji zapisu gry. Zaktualizowaæ ten zapis i odczytaæ grê?",
 #endif
 
-	//Translators, the next two strings are for the same thing.	The first one is for beta version releases and the second one
-	//is used for the final version.	Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
-	//used by the compiler and will cause program errors if modified/removed.	It's okay to translate the strings though.
+	//Translators, the next two strings are for the same thing. The first one is for beta version releases and the second one
+	//is used for the final version. Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
+	//used by the compiler and will cause program errors if modified/removed. It's okay to translate the strings though.
 #ifdef JA2BETAVERSION
 	L"Nieprawid³owa wersja zapisu gry. W razie problemów prosimy o raport. Kontynuowaæ?",
 #else
@@ -3350,7 +3350,7 @@ STR16			zSaveLoadText[] =
 
 	//The first %d is a number that contains the amount of free space on the users hard drive,
 	//the second is the recommended amount of free space.
-	L"Brak miejsca na dysku twardym.	Na dysku wolne jest %d MB, a wymagane jest przynajmniej %d MB.",	
+	L"Brak miejsca na dysku twardym. Na dysku wolne jest %d MB, a wymagane jest przynajmniej %d MB.",	
 
 	L"Zapisujê...",			//When saving a game, a message box with this string appears on the screen
 
@@ -3375,7 +3375,7 @@ STR16			zSaveLoadText[] =
 STR16		zMarksMapScreenText[] =
 {
 	L"Poziom mapy",
-	L"Nie masz jeszcze ¿o³nierzy samoobrony.	Musisz najpierw wytrenowaæ mieszkañców miast.",
+	L"Nie masz jeszcze ¿o³nierzy samoobrony. Musisz najpierw wytrenowaæ mieszkañców miast.",
 	L"Dzienny przychód",
 	L"Najmemnik ma polisê ubezpieczeniow¹", 
 	L"%s nie potrzebuje snu.", 
@@ -3435,7 +3435,7 @@ STR16	gzMoneyWithdrawMessageText[] =
 
 STR16	gzCopyrightText[] = 
 {
-	L"Copyright (C) 1999 Sir-tech Canada Ltd.	All rights reserved.",
+	L"Copyright (C) 1999 Sir-tech Canada Ltd. All rights reserved.",
 };
 
 //option Text
@@ -3594,7 +3594,7 @@ STR16 pDeliveryLocationStrings[] =
 {
 	L"Austin",			//Austin, Texas, USA	
 	L"Bagdad",			//Baghdad, Iraq (Suddam Hussein's home)
-	L"Drassen",			//The main place in JA2 that you can receive items.	The other towns are dummy names...
+	L"Drassen",			//The main place in JA2 that you can receive items. The other towns are dummy names...
 	L"Hong Kong",		//Hong Kong, Hong Kong
 	L"Bejrut",			//Beirut, Lebanon	(Middle East)
 	L"Londyn",			//London, England
@@ -3612,8 +3612,8 @@ STR16 pDeliveryLocationStrings[] =
 };
 
 STR16 pSkillAtZeroWarning[] =
-{ //This string is used in the IMP character generation.	It is possible to select 0 ability
-	//in a skill meaning you can't use it.	This text is confirmation to the player.
+{ //This string is used in the IMP character generation. It is possible to select 0 ability
+	//in a skill meaning you can't use it. This text is confirmation to the player.
 	L"Na pewno? Wartoœæ zero oznacza brak jakichkolwiek umiejêtnoœci w tej dziedzinie.",
 };
 
@@ -3692,14 +3692,14 @@ STR16 pMessageStrings[] =
 	L"USD",					//Abbreviation to US dollars
 	L"N/D",					//Lowercase acronym for not applicable.
 	L"Tymczasem",		//Meanwhile
-	L"%s przyby³(a) do sektora %s%s", //Name/Squad has arrived in sector A9.	Order must not change without notifying
+	L"%s przyby³(a) do sektora %s%s", //Name/Squad has arrived in sector A9. Order must not change without notifying
 																		//SirTech
 	L"Wersja",
 	L"Wolna pozycja na szybki zapis",
 	L"Ta pozycja zarezerwowana jest na szybkie zapisy wykonywane podczas gry kombinacj¹ klawiszy ALT+S.",
 	L"Otw.",
 	L"Zamkn.",
-	L"Brak miejsca na dysku twardym.	Na dysku wolne jest %s MB, a wymagane jest przynajmniej %s MB.",
+	L"Brak miejsca na dysku twardym. Na dysku wolne jest %s MB, a wymagane jest przynajmniej %s MB.",
 	L"Najêto - %s z A.I.M.", 
 	L"%s z³apa³(a) %s",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
 	L"%s zaaplikowa³(a) sobie lekarstwo", //'Merc name' has taken the drug
@@ -3720,11 +3720,11 @@ STR16 pMessageStrings[] =
 	L"Rzuæ",
 	L"Podaj",
 
-	L"%s przekazano do - %s.", //"Item" passed to "merc".	Please try to keep the item %s before the merc %s, otherwise,
+	L"%s przekazano do - %s.", //"Item" passed to "merc". Please try to keep the item %s before the merc %s, otherwise,
 											//must notify SirTech.
-	L"Brak wolnego miejsca, by przekazaæ %s do - %s.", //pass "item" to "merc".	Same instructions as above.
+	L"Brak wolnego miejsca, by przekazaæ %s do - %s.", //pass "item" to "merc". Same instructions as above.
 
-	//A list of attachments appear after the items.	Ex:	Kevlar vest ( Ceramic Plate 'Attached )'
+	//A list of attachments appear after the items. Ex:	Kevlar vest ( Ceramic Plate 'Attached )'
 	L" do³¹czono )",
 
 	//Cheat modes
@@ -3738,12 +3738,12 @@ STR16 pMessageStrings[] =
 	L"%s ma wy³¹czony tryb skradania siê.",
 
 	//Wireframes are shown through buildings to reveal doors and windows that can't otherwise be seen in 
-	//an isometric engine.	You can toggle this mode freely in the game.
+	//an isometric engine. You can toggle this mode freely in the game.
 	L"Dodatkowe siatki w³¹czone.",
 	L"Dodatkowe siatki wy³¹czone.",
 
-	//These are used in the cheat modes for changing levels in the game.	Going from a basement level to
-	//an upper level, etc.	
+	//These are used in the cheat modes for changing levels in the game. Going from a basement level to
+	//an upper level, etc. 
 	L"Nie mo¿na wyjœæ do góry z tego poziomu...",
 	L"Nie ma ju¿ ni¿szych poziomów...",
 	L"Wejœcie na %d poziom pod ziemi¹...",
@@ -3988,7 +3988,7 @@ STR16 zGioDifConfirmText[]=
 	L"Wybrano opcjê Nowicjusz. Opcja ta jest przeznaczona dla niedoœwiadczonych graczy, lub dla tych, którzy nie maj¹ ochoty na d³ugie i ciê¿kie walki. Pamiêtaj, ¿e opcja ta ma wp³yw na przebieg ca³ej gry. Czy na pewno chcesz graæ w trybie Nowicjusz?",
 	L"Wybrano opcjê Doœwiadczony. Opcja ta jest przenaczona dla graczy posiadaj¹cych ju¿ pewne doœwiadczenie w grach tego typu. Pamiêtaj, ¿e opcja ta ma wp³yw na przebieg ca³ej gry. Czy na pewno chcesz graæ w trybie Doœwiadczony?",
 	L"Wybrano opcjê Ekspert. Jakby co, to ostrzegaliœmy ciê. Nie obwiniaj nas, jeœli wrócisz w plastikowym worku. Pamiêtaj, ¿e opcja ta ma wp³yw na przebieg ca³ej gry. Czy na pewno chcesz graæ w trybie Ekspert?",
-	L"You have chosen INSANE mode. WARNING: Don't blame us if you get shipped back in little pieces... Deidranna WILL kick your ass.	Hard.	Your choice will affect things throughout the entire course of the game, so choose wisely. Are you sure you want to play in INSANE mode?",
+	L"You have chosen INSANE mode. WARNING: Don't blame us if you get shipped back in little pieces... Deidranna WILL kick your ass. Hard. Your choice will affect things throughout the entire course of the game, so choose wisely. Are you sure you want to play in INSANE mode?",
 };
 
 
@@ -4000,7 +4000,7 @@ STR16 gzLateLocalizedString[] =
 	L"Robot nie mo¿e opuœciæ sektora bez operatora.",
 
 	//This message comes up if you have pending bombs waiting to explode in tactical.
-	L"Nie mo¿na teraz kompresowaæ czasu.	Poczekaj na fajerwerki!",	
+	L"Nie mo¿na teraz kompresowaæ czasu. Poczekaj na fajerwerki!",	
 
 	//'Name' refuses to move.
 	L"%s nie chce siê przesun¹æ.",
@@ -4075,7 +4075,7 @@ STR16 gzLateLocalizedString[] =
 	L"(Oddzia³ %d)",
 
 	//35
-	//Ex: "Red has repaired Scope's MP5K".	Careful to maintain the proper order (Red before Scope, Scope before MP5K)
+	//Ex: "Red has repaired Scope's MP5K". Careful to maintain the proper order (Red before Scope, Scope before MP5K)
 	L"%s naprawi³(a) najemnikowi - %s, jego/jej - %s",
 
 	//36
@@ -4086,7 +4086,7 @@ STR16 gzLateLocalizedString[] =
 	L"Nie mo¿na st¹d podnieœæ tego przedmiotu.",
 
 	//39
-	L"¯aden z twoich najemników nie jest w stanie walczyæ.	¯o³nierze samoobrony sami bêd¹ walczyæ z robalami.",
+	L"¯aden z twoich najemników nie jest w stanie walczyæ. ¯o³nierze samoobrony sami bêd¹ walczyæ z robalami.",
 
 	//40-43
 	//%s is the name of merc.
