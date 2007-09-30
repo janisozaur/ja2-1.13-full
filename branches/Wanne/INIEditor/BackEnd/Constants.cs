@@ -11,7 +11,7 @@ namespace INIEditor.BackEnd
         public const string INI_FILE = "ja2_options.ini";
         public const string INI_FILE_OUT = "ja2_options.ini";   // INI Output file
         public const string INI_EDITOR_INIT_FILE = "INIEditorInit.xml";
-        public const string INI_EDITOR_INIT_FILE_OUTPUT = "INIEditorInit_Out.xml";   // XML Output file
+        public const string INI_EDITOR_INIT_FILE_OUTPUT = "INIEditorInit.xml";   // XML Output file
 
         public const string TP_SECTIONS_INI_FILE = "All Sections and Properties";
         public const string TP_SECTIONS_SECTION = "All Properties in the selected Section";

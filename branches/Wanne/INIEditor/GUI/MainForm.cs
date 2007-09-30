@@ -200,6 +200,7 @@ namespace INIEditor.GUI
 
                 INIFile file = item as INIFile;
                 txtSectionDescription.Text = GetDescription(file.XMLSettings);
+                txtSectionDescription.Tag = file;
 
                 foreach (INISection section in file.Sections)
                 {
@@ -252,6 +253,7 @@ namespace INIEditor.GUI
 
                 INISection section = item as INISection;
                 txtSectionDescription.Text = GetDescription(section.XMLSection);
+                txtSectionDescription.Tag = section;
 
                 foreach (INIProperty property in section.Properties)
                 {
@@ -283,7 +285,9 @@ namespace INIEditor.GUI
 
                 INIProperty property = item as INIProperty;
                 txtSectionDescription.Text = GetDescription(property.Section.XMLSection);
+                txtSectionDescription.Tag = property.Section;
                 txtPropertyDescription.Text = GetDescription(property.XMLProperty);
+                txtPropertyDescription.Tag = property;
                 
                 SetPropertyValues(property);
 
@@ -590,14 +594,7 @@ namespace INIEditor.GUI
             SetDescriptionLanguage(Enumerations.Language.German);
         }
 
-        /// <summary>
-        /// This method creates a new "INIEditorInit_Output.xml" file,
-        /// which contains all the INI-Settings. Missing settings in the
-        /// file are set to constant values (see Constants.cs) for easy replacement.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void mnuToolsGenerateXML_Click(object sender, EventArgs e)
+        private void SaveXMLFile()
         {
             if (_iniFile != null)
             {
@@ -626,31 +623,62 @@ namespace INIEditor.GUI
             }
         }
 
-        private void txtPropertyNewValue_Leave(object sender, EventArgs e)
+        /// <summary>
+        /// This method creates a new "INIEditorInit_Output.xml" file,
+        /// which contains all the INI-Settings. Missing settings in the
+        /// file are set to constant values (see Constants.cs) for easy replacement.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuToolsGenerateXML_Click(object sender, EventArgs e)
         {
-            Control control = sender as Control;
-            INIProperty property = control.Tag as INIProperty;
+            BindCurrentSelectedSectionAndProperty();
+            SaveXMLFile();
+        }
 
-            property.NewValue = control.Text;
+        /// <summary>
+        /// This method is used to bind the current selected section and property values before saving the files.
+        /// This is a workaround, because the "Leave" events do not fire, when the user clicks on the "Save" button.
+        /// </summary>
+        private void BindCurrentSelectedSectionAndProperty()
+        {
+            BindSectionDescription();
+            BindPropertyDescription();
+            BindPropertyNewValue();
+        }
 
-            TreeNode propertyNode = property.Tag as TreeNode;
-            INISection section = property.Section;
-            TreeNode sectionNode = section.Tag as TreeNode;
-
-            // Value has been changed to a new value
-            if (property.NewValue != property.CurrentValue)
+        private void BindPropertyNewValue()
+        {
+            if (_ctlPropertyNewValue != null && _ctlPropertyNewValue.Tag != null)
             {
-                propertyNode.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
-                sectionNode.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
-            }
-            else
-            {
-                propertyNode.ForeColor = Constants.DEFAULT_TREE_NODE_TEXT_COLOR;
-                sectionNode.ForeColor = Constants.DEFAULT_TREE_NODE_TEXT_COLOR;
+                INIProperty property = _ctlPropertyNewValue.Tag as INIProperty;
+
+                property.NewValue = _ctlPropertyNewValue.Text;
+
+                TreeNode propertyNode = property.Tag as TreeNode;
+                INISection section = property.Section;
+                TreeNode sectionNode = section.Tag as TreeNode;
+
+                // Value has been changed to a new value
+                if (property.NewValue != property.CurrentValue)
+                {
+                    propertyNode.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                    sectionNode.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                }
+                else
+                {
+                    propertyNode.ForeColor = Constants.DEFAULT_TREE_NODE_TEXT_COLOR;
+                    sectionNode.ForeColor = Constants.DEFAULT_TREE_NODE_TEXT_COLOR;
+                }
             }
         }
 
-        private void SaveFile()
+        private void txtPropertyNewValue_Leave(object sender, EventArgs e)
+        {
+            BindPropertyNewValue();
+        }
+
+        private void SaveINIFile()
         {
             string dataFolder = Path.GetDirectoryName(cmbFiles.SelectedItem.ToString());
             string path = Path.Combine(Constants.JA2_PATH, dataFolder);
@@ -665,12 +693,24 @@ namespace INIEditor.GUI
 
         private void mnuFileSave_Click(object sender, EventArgs e)
         {
-            SaveFile();
+            BindCurrentSelectedSectionAndProperty();
+
+            SaveINIFile();
+            if (_permission == Enumerations.Permission.Admin)
+            {
+                SaveXMLFile();
+            }
         }
 
         private void tbrSave_Click(object sender, EventArgs e)
         {
-            SaveFile();
+            BindCurrentSelectedSectionAndProperty();
+
+            SaveINIFile();
+            if (_permission == Enumerations.Permission.Admin)
+            {
+                SaveXMLFile();
+            }
         }
 
         private void mnuViewSearch_Click(object sender, EventArgs e)
@@ -872,6 +912,64 @@ namespace INIEditor.GUI
             {
                 InitializeTabs(_iniFile, section.Name);
             }
+        }
+
+        private void txtPropertyDescription_Leave(object sender, EventArgs e)
+        {
+            BindPropertyDescription();
+        }
+
+        private void BindPropertyDescription()
+        {
+            // Check if we are on a property value
+            if (txtPropertyDescription.Tag != null)
+            {
+                INIProperty property = txtPropertyDescription.Tag as INIProperty;
+                if (_descriptionLanguage == Enumerations.Language.English)
+                {
+                    property.XMLProperty.Description_ENG = txtPropertyDescription.Text;
+                }
+                else if (_descriptionLanguage == Enumerations.Language.German)
+                {
+                    property.XMLProperty.Description_GER = txtPropertyDescription.Text;
+                }
+            }
+        }
+
+        private void BindSectionDescription()
+        {
+            if (txtSectionDescription.Tag != null)
+            {
+                if (txtSectionDescription.Tag is INIFile)
+                {
+                    INIFile file = txtSectionDescription.Tag as INIFile;
+                    if (_descriptionLanguage == Enumerations.Language.English)
+                    {
+                        file.XMLSettings.Description_ENG = txtSectionDescription.Text;
+                    }
+                    else if (_descriptionLanguage == Enumerations.Language.German)
+                    {
+                        file.XMLSettings.Description_GER = txtSectionDescription.Text;
+                    }
+                }
+                else if (txtSectionDescription.Tag is INISection)
+                {
+                    INISection section = txtSectionDescription.Tag as INISection;
+                    if (_descriptionLanguage == Enumerations.Language.English)
+                    {
+                        section.XMLSection.Description_ENG = txtSectionDescription.Text;
+                    }
+                    else if (_descriptionLanguage == Enumerations.Language.German)
+                    {
+                        section.XMLSection.Description_GER = txtSectionDescription.Text;
+                    }
+                }
+            }
+        }
+
+        private void txtSectionDescription_Leave(object sender, EventArgs e)
+        {
+            BindSectionDescription();
         }
     }
 }
