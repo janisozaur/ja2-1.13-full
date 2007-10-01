@@ -441,6 +441,7 @@ namespace INIEditor.GUI
             this.txtSectionDescription.Location = new System.Drawing.Point(4, 6);
             this.txtSectionDescription.Multiline = true;
             this.txtSectionDescription.Name = "txtSectionDescription";
+            this.txtSectionDescription.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtSectionDescription.Size = new System.Drawing.Size(531, 100);
             this.txtSectionDescription.TabIndex = 0;
             this.txtSectionDescription.Leave += new System.EventHandler(this.txtSectionDescription_Leave);
@@ -696,6 +697,7 @@ namespace INIEditor.GUI
             this.txtPropertyDescription.Location = new System.Drawing.Point(3, 3);
             this.txtPropertyDescription.Multiline = true;
             this.txtPropertyDescription.Name = "txtPropertyDescription";
+            this.txtPropertyDescription.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtPropertyDescription.Size = new System.Drawing.Size(517, 91);
             this.txtPropertyDescription.TabIndex = 0;
             this.txtPropertyDescription.Leave += new System.EventHandler(this.txtPropertyDescription_Leave);

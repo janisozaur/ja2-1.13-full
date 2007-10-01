@@ -502,6 +502,8 @@ namespace INIEditor.GUI
                     break;
             }
 
+            description = description.Replace("\n", "\r\n");
+
             return description;
         }
 
@@ -606,14 +608,6 @@ namespace INIEditor.GUI
                 {
                     Section xmlSection = new Section();
                     xmlSection = section.XMLSection;
-
-                    foreach (INIProperty property in section.Properties)
-                    {
-                        Property xmlProperty = new Property();
-                        xmlProperty = property.XMLProperty;
-
-                        xmlSection.Properties.Add(xmlProperty);
-                    }
 
                     generatedIniSettings.Sections.Add(xmlSection);
                 }
@@ -919,6 +913,12 @@ namespace INIEditor.GUI
             BindPropertyDescription();
         }
 
+        private string GetOutputDescriptionText(string unmodifiedText)
+        {
+            string modifiedText = unmodifiedText.Replace("\r\n", "\n");
+            return modifiedText;
+        }
+
         private void BindPropertyDescription()
         {
             // Check if we are on a property value
@@ -927,11 +927,11 @@ namespace INIEditor.GUI
                 INIProperty property = txtPropertyDescription.Tag as INIProperty;
                 if (_descriptionLanguage == Enumerations.Language.English)
                 {
-                    property.XMLProperty.Description_ENG = txtPropertyDescription.Text;
+                    property.XMLProperty.Description_ENG = GetOutputDescriptionText(txtPropertyDescription.Text);
                 }
                 else if (_descriptionLanguage == Enumerations.Language.German)
                 {
-                    property.XMLProperty.Description_GER = txtPropertyDescription.Text;
+                    property.XMLProperty.Description_GER = GetOutputDescriptionText(txtPropertyDescription.Text);
                 }
             }
         }
@@ -945,11 +945,11 @@ namespace INIEditor.GUI
                     INIFile file = txtSectionDescription.Tag as INIFile;
                     if (_descriptionLanguage == Enumerations.Language.English)
                     {
-                        file.XMLSettings.Description_ENG = txtSectionDescription.Text;
+                        file.XMLSettings.Description_ENG = GetOutputDescriptionText(txtSectionDescription.Text);
                     }
                     else if (_descriptionLanguage == Enumerations.Language.German)
                     {
-                        file.XMLSettings.Description_GER = txtSectionDescription.Text;
+                        file.XMLSettings.Description_GER = GetOutputDescriptionText(txtSectionDescription.Text);
                     }
                 }
                 else if (txtSectionDescription.Tag is INISection)
@@ -957,11 +957,11 @@ namespace INIEditor.GUI
                     INISection section = txtSectionDescription.Tag as INISection;
                     if (_descriptionLanguage == Enumerations.Language.English)
                     {
-                        section.XMLSection.Description_ENG = txtSectionDescription.Text;
+                        section.XMLSection.Description_ENG = GetOutputDescriptionText(txtSectionDescription.Text);
                     }
                     else if (_descriptionLanguage == Enumerations.Language.German)
                     {
-                        section.XMLSection.Description_GER = txtSectionDescription.Text;
+                        section.XMLSection.Description_GER = GetOutputDescriptionText(txtSectionDescription.Text);
                     }
                 }
             }
