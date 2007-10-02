@@ -13,7 +13,16 @@ namespace INIEditor.GUI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+
+            try
+            {
+                MainForm mainForm = new MainForm();
+                Application.Run(mainForm);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "INI Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);  
+            }            
         }
     }
 }

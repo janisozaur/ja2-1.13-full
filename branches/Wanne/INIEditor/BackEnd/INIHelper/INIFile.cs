@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using INIEditor.BackEnd.XML;
@@ -80,36 +81,43 @@ namespace INIEditor.BackEnd.INIHelper
 
         public void ReadFile(string name)
         {
-            StreamReader reader = File.OpenText(name);
-            INISection section = null;
-            int num = -1;
-            while (!reader.EndOfStream)
+            try
             {
-                string line = reader.ReadLine();
-                line.Trim();
-
-                if (line.StartsWith(";") == false)
+                StreamReader reader = File.OpenText(name);
+                INISection section = null;
+                int num = -1;
+                while (!reader.EndOfStream)
                 {
-                    // Skip comments
-                    if (this.IsSection(line))
+                    string line = reader.ReadLine();
+                    line.Trim();
+
+                    if (line.StartsWith(";") == false)
                     {
-                        section = new INISection();
-                        section.Name = this.ExtractSectionName(line);
-                        this._sections.Add(section);
-                        num++;
-                    }
-                    else if (this.IsProperty(line) && (section != null))
-                    {
-                        INIProperty prop = new INIProperty();
-                        prop.Section = section;
-                        prop.Name = this.ExtractPropertyName(line);
-                        prop.CurrentValue = this.ExtractPropertyValue(line);
-                        prop.NewValue = this.ExtractPropertyValue(line);
-                        this._sections[num].AddProperty(prop);
+                        // Skip comments
+                        if (this.IsSection(line))
+                        {
+                            section = new INISection();
+                            section.Name = this.ExtractSectionName(line);
+                            this._sections.Add(section);
+                            num++;
+                        }
+                        else if (this.IsProperty(line) && (section != null))
+                        {
+                            INIProperty prop = new INIProperty();
+                            prop.Section = section;
+                            prop.Name = this.ExtractPropertyName(line);
+                            prop.CurrentValue = this.ExtractPropertyValue(line);
+                            prop.NewValue = this.ExtractPropertyValue(line);
+                            this._sections[num].AddProperty(prop);
+                        }
                     }
                 }
+                reader.Close();
             }
-            reader.Close();
+            catch (Exception ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
         }
 
         public void WriteFile(string name)
@@ -137,6 +145,10 @@ namespace INIEditor.BackEnd.INIHelper
                         enumerator2.Dispose();
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(ex.Message);
             }
             finally
             {

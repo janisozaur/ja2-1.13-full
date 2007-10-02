@@ -36,6 +36,7 @@ namespace INIEditor.GUI
             this.chkPropertyDescriptions = new System.Windows.Forms.CheckBox();
             this.chkPropertyValues = new System.Windows.Forms.CheckBox();
             this.btnSearch = new System.Windows.Forms.Button();
+            this.chkProperties = new System.Windows.Forms.CheckBox();
             this.grpLookIn.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,12 +61,13 @@ namespace INIEditor.GUI
             // 
             // grpLookIn
             // 
+            this.grpLookIn.Controls.Add(this.chkProperties);
             this.grpLookIn.Controls.Add(this.chkSectionDescriptions);
             this.grpLookIn.Controls.Add(this.chkPropertyDescriptions);
             this.grpLookIn.Controls.Add(this.chkPropertyValues);
             this.grpLookIn.Location = new System.Drawing.Point(12, 68);
             this.grpLookIn.Name = "grpLookIn";
-            this.grpLookIn.Size = new System.Drawing.Size(360, 88);
+            this.grpLookIn.Size = new System.Drawing.Size(360, 92);
             this.grpLookIn.TabIndex = 3;
             this.grpLookIn.TabStop = false;
             this.grpLookIn.Text = "Look in:";
@@ -86,7 +88,7 @@ namespace INIEditor.GUI
             this.chkPropertyDescriptions.AutoSize = true;
             this.chkPropertyDescriptions.Checked = true;
             this.chkPropertyDescriptions.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkPropertyDescriptions.Location = new System.Drawing.Point(6, 43);
+            this.chkPropertyDescriptions.Location = new System.Drawing.Point(209, 66);
             this.chkPropertyDescriptions.Name = "chkPropertyDescriptions";
             this.chkPropertyDescriptions.Size = new System.Drawing.Size(126, 17);
             this.chkPropertyDescriptions.TabIndex = 2;
@@ -99,7 +101,7 @@ namespace INIEditor.GUI
             this.chkPropertyValues.AutoSize = true;
             this.chkPropertyValues.Checked = true;
             this.chkPropertyValues.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkPropertyValues.Location = new System.Drawing.Point(6, 66);
+            this.chkPropertyValues.Location = new System.Drawing.Point(209, 43);
             this.chkPropertyValues.Name = "chkPropertyValues";
             this.chkPropertyValues.Size = new System.Drawing.Size(100, 17);
             this.chkPropertyValues.TabIndex = 1;
@@ -116,6 +118,19 @@ namespace INIEditor.GUI
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
+            // chkProperties
+            // 
+            this.chkProperties.AutoSize = true;
+            this.chkProperties.Checked = true;
+            this.chkProperties.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkProperties.Location = new System.Drawing.Point(209, 20);
+            this.chkProperties.Name = "chkProperties";
+            this.chkProperties.Size = new System.Drawing.Size(73, 17);
+            this.chkProperties.TabIndex = 4;
+            this.chkProperties.Text = "Properties";
+            this.chkProperties.UseVisualStyleBackColor = true;
+            this.chkProperties.CheckedChanged += new System.EventHandler(this.chkProperties_CheckedChanged);
             // 
             // SearchForm
             // 
@@ -151,5 +166,6 @@ namespace INIEditor.GUI
         private System.Windows.Forms.CheckBox chkPropertyValues;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.CheckBox chkSectionDescriptions;
+        private System.Windows.Forms.CheckBox chkProperties;
     }
 }

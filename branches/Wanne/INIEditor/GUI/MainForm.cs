@@ -14,10 +14,12 @@ namespace INIEditor.GUI
         private INIFile _iniFile = null;
         private Hashtable _iniSettingsList = null;
         private Enumerations.Language _descriptionLanguage = Enumerations.Language.English;
-        private readonly Enumerations.Permission _permission = Enumerations.Permission.Admin;    // TODO: Change to "User" in Release version!
+        private readonly Enumerations.Permission _permission = Enumerations.Permission.User;    // TODO: Change to "User" in Release version!
         private Control _ctlPropertyNewValue = new Control();
         private readonly System.ComponentModel.ComponentResourceManager _resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
         private SearchParams _searchParams = new SearchParams();
+        private bool _changedValues = false;
+        private string _previousSelectedIniFile = "";
         #endregion
         #region CTOR
         public MainForm()
@@ -26,6 +28,12 @@ namespace INIEditor.GUI
             InitializeMenu();
             InitializeFiles();
             InitializeXMLSettingsFile();
+
+            if (_permission == Enumerations.Permission.User)
+            {
+                txtSectionDescription.ReadOnly = true;
+                txtPropertyDescription.ReadOnly = true;
+            }
 
             // Select the first INI - File in the combo box
             if (cmbFiles.Items.Count > 0)
@@ -41,7 +49,8 @@ namespace INIEditor.GUI
             // Disable some menu entries that should not be visible for the user
             if (_permission == Enumerations.Permission.User)
             {
-                mnuToolsGenerateXMLFile.Visible = false;
+                mnuTools.Visible = false;
+                //mnuToolsGenerateXML.Visible = false;
             }
         }
 
@@ -81,65 +90,77 @@ namespace INIEditor.GUI
                     cmbFiles.Items.Add(iniFile);
                 }
             }
+
+            if (cmbFiles.Items.Count == 0)
+            {
+                throw new ApplicationException("There are no 'ja2_options.ini' files available in the data folders", null);
+            }
         }
 
         private void InitializeSectionTree(string selectedTreeNode)
         {
-            trvSections.Nodes.Clear();
-
-            _iniFile = new INIFile();
-            string iniFilePath = Path.Combine(Constants.JA2_PATH, cmbFiles.SelectedItem.ToString());
-            _iniFile.ReadFile(iniFilePath);
-
-            _iniFile.XMLSettings = GetXMLIniFile();
-             
-            TreeNode iniFileNode = new TreeNode();
-            iniFileNode.Name = cmbFiles.SelectedItem.ToString();
-            iniFileNode.Text = cmbFiles.SelectedItem.ToString();
-            iniFileNode.ImageKey = "INIFile.ico";
-            iniFileNode.SelectedImageKey = "INIFile.ico";
-            iniFileNode.Tag = _iniFile;
-            //iniFileNode.Collapse();
-            trvSections.Nodes.Add(iniFileNode);
-
-            // The ini file has a reference to the tree node
-            _iniFile.Tag = iniFileNode;
-
-            // Loop through all the sections of the ini file
-            foreach (INISection section in _iniFile.Sections)
+            try
             {
-                section.XMLSection = GetXMLSection(section);
+                trvSections.Nodes.Clear();
 
-                TreeNode sectionNode = new TreeNode();
-                sectionNode.Name = section.Name;
-                sectionNode.Text = section.Name;
-                sectionNode.ImageKey = "Section.ico";
-                sectionNode.SelectedImageKey = "SectionSelected.ico";
-                sectionNode.Tag = section;
-                iniFileNode.Nodes.Add(sectionNode);
+                _iniFile = new INIFile();
+                string iniFilePath = Path.Combine(Constants.JA2_PATH, cmbFiles.SelectedItem.ToString());
+                _iniFile.ReadFile(iniFilePath);
 
-                // The section has a reference to the tree node
-                section.Tag = sectionNode;
+                _iniFile.XMLSettings = GetXMLIniFile();
 
-                // Loop through all the properties of the current selection
-                foreach (INIProperty property in section.Properties)
+                TreeNode iniFileNode = new TreeNode();
+                iniFileNode.Name = cmbFiles.SelectedItem.ToString();
+                iniFileNode.Text = cmbFiles.SelectedItem.ToString();
+                iniFileNode.ImageKey = "INIFile.ico";
+                iniFileNode.SelectedImageKey = "INIFile.ico";
+                iniFileNode.Tag = _iniFile;
+                //iniFileNode.Collapse();
+                trvSections.Nodes.Add(iniFileNode);
+
+                // The ini file has a reference to the tree node
+                _iniFile.Tag = iniFileNode;
+
+                // Loop through all the sections of the ini file
+                foreach (INISection section in _iniFile.Sections)
                 {
-                    property.XMLProperty = GetXMLProperty(property);
+                    section.XMLSection = GetXMLSection(section);
 
-                    TreeNode propertyNode = new TreeNode();
-                    propertyNode.Name = property.Name;
-                    propertyNode.Text = property.Name;
-                    propertyNode.ImageKey = "Property.ico";
-                    propertyNode.SelectedImageKey = "PropertySelected.ico";
-                    propertyNode.Tag = property;
-                    sectionNode.Nodes.Add(propertyNode);   
+                    TreeNode sectionNode = new TreeNode();
+                    sectionNode.Name = section.Name;
+                    sectionNode.Text = section.Name;
+                    sectionNode.ImageKey = "Section.ico";
+                    sectionNode.SelectedImageKey = "SectionSelected.ico";
+                    sectionNode.Tag = section;
+                    iniFileNode.Nodes.Add(sectionNode);
 
-                    // The property has a reference to the tree node
-                    property.Tag = propertyNode;
+                    // The section has a reference to the tree node
+                    section.Tag = sectionNode;
+
+                    // Loop through all the properties of the current selection
+                    foreach (INIProperty property in section.Properties)
+                    {
+                        property.XMLProperty = GetXMLProperty(property);
+
+                        TreeNode propertyNode = new TreeNode();
+                        propertyNode.Name = property.Name;
+                        propertyNode.Text = property.Name;
+                        propertyNode.ImageKey = "Property.ico";
+                        propertyNode.SelectedImageKey = "PropertySelected.ico";
+                        propertyNode.Tag = property;
+                        sectionNode.Nodes.Add(propertyNode);
+
+                        // The property has a reference to the tree node
+                        property.Tag = propertyNode;
+                    }
                 }
-            }
 
-            ReselectTreeNodeInNewSectionTree(selectedTreeNode);
+                ReselectTreeNodeInNewSectionTree(selectedTreeNode);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "INI Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);  
+            }
         }
 
         private void ReselectTreeNodeInNewSectionTree(string selectedTreeNode)
@@ -220,6 +241,8 @@ namespace INIEditor.GUI
                         // The value has been changed
                         if (property.CurrentValue != property.NewValue)
                         {
+                            _changedValues = true;
+
                             dgvProperties[colSection.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
                             dgvProperties[colProperty.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
                             dgvProperties[colDescription.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
@@ -270,6 +293,8 @@ namespace INIEditor.GUI
                     // The value has been changed
                     if (property.CurrentValue != property.NewValue)
                     {
+                        _changedValues = true;
+
                         dgvProperties[colProperty.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
                         dgvProperties[colCurrentValue.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
                         dgvProperties[colNewValue.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
@@ -533,6 +558,24 @@ namespace INIEditor.GUI
         #region Events
         private void cmbFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // Save changes?
+            if (_changedValues)
+            {
+                DialogResult result = MessageBox.Show("Would you like to save the changes to '" + _previousSelectedIniFile + "'?", "INI Editor", MessageBoxButtons.YesNo,
+                                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    BindCurrentSelectedSectionAndProperty();
+
+                    SaveINIFile(Path.GetDirectoryName(_previousSelectedIniFile));
+                    if (_permission == Enumerations.Permission.Admin)
+                    {
+                        SaveXMLFile();
+                    }
+                }
+            }
+
             if (cmbFiles.SelectedItem != null)
             {
                 InitializeSectionTree(cmbFiles.SelectedItem.ToString());
@@ -542,6 +585,8 @@ namespace INIEditor.GUI
                     tpProperty.Visible = false;
                 }
             }
+
+            _previousSelectedIniFile = cmbFiles.SelectedItem.ToString();
         }
 
         private void trvSections_AfterSelect(object sender, TreeViewEventArgs e)
@@ -614,6 +659,10 @@ namespace INIEditor.GUI
 
                 string path = Path.Combine(Constants.XML_SETTINGS_PATH, Constants.INI_EDITOR_INIT_FILE_OUTPUT);
                 Helper.SaveObjectToXMLFile(generatedIniSettings, path);
+
+                MessageBox.Show("The XML file '" + path + "' was successfully saved!", "INI Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                _changedValues = false;
             }
         }
 
@@ -656,6 +705,8 @@ namespace INIEditor.GUI
                 // Value has been changed to a new value
                 if (property.NewValue != property.CurrentValue)
                 {
+                    _changedValues = true;
+
                     propertyNode.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
                     sectionNode.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
                 }
@@ -672,24 +723,35 @@ namespace INIEditor.GUI
             BindPropertyNewValue();
         }
 
-        private void SaveINIFile()
+        private void SaveINIFile(string dataDirectory)
         {
-            string dataFolder = Path.GetDirectoryName(cmbFiles.SelectedItem.ToString());
-            string path = Path.Combine(Constants.JA2_PATH, dataFolder);
+            try
+            {
+                string dataFolder = Path.GetDirectoryName(dataDirectory);
+                string path = Path.Combine(Constants.JA2_PATH, dataFolder);
 
-            path = Path.Combine(path, Constants.INI_FILE_OUT);
-            _iniFile.WriteFile(path);
+                path = Path.Combine(path, Constants.INI_FILE_OUT);
+                _iniFile.WriteFile(path);
 
-            TreeNode selectedTreeNode = trvSections.SelectedNode;
+                TreeNode selectedTreeNode = trvSections.SelectedNode;
 
-            InitializeSectionTree(selectedTreeNode.Text);
+                InitializeSectionTree(selectedTreeNode.Text);
+
+                MessageBox.Show("The INI file '" + path + "' was successfully saved!", "INI Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
+                _changedValues = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "INI Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void mnuFileSave_Click(object sender, EventArgs e)
         {
             BindCurrentSelectedSectionAndProperty();
 
-            SaveINIFile();
+            SaveINIFile(Path.GetDirectoryName(cmbFiles.SelectedItem.ToString()));
             if (_permission == Enumerations.Permission.Admin)
             {
                 SaveXMLFile();
@@ -700,7 +762,7 @@ namespace INIEditor.GUI
         {
             BindCurrentSelectedSectionAndProperty();
 
-            SaveINIFile();
+            SaveINIFile(Path.GetDirectoryName(cmbFiles.SelectedItem.ToString()));
             if (_permission == Enumerations.Permission.Admin)
             {
                 SaveXMLFile();
@@ -971,5 +1033,22 @@ namespace INIEditor.GUI
         {
             BindSectionDescription();
         }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Do you really want to close the application?\nAny unsafed changes will be lost.", "INI Editor", MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Question);
+
+            if (result == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void mnuFileExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
     }
 }

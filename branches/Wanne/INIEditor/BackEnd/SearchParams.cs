@@ -10,6 +10,7 @@ namespace INIEditor.BackEnd
         private bool _lookInSectionDescriptions = false;
         private bool _lookInPropertyDescriptions = true;
         private bool _lookInPropertyValues = true;
+        private bool _lookInProperties = true;
 
         #region CTOR
         public SearchParams()
@@ -17,12 +18,13 @@ namespace INIEditor.BackEnd
         }
 
         public SearchParams(string findWhat, bool lookInSectionDescriptions,
-            bool lookInPropertyDescriptions, bool lookInPropertyValues)
+            bool lookInPropertyDescriptions, bool lookInPropertyValues, bool lookInProperties)
         {
             _findWhat = findWhat;
             _lookInSectionDescriptions = lookInSectionDescriptions;
             _lookInPropertyDescriptions = lookInPropertyDescriptions;
             _lookInPropertyValues = lookInPropertyValues;
+            _lookInProperties = lookInProperties;
         }
         #endregion
 
@@ -44,6 +46,11 @@ namespace INIEditor.BackEnd
         public bool LookInPropertyValues
         {
             get { return _lookInPropertyValues; }
+        }
+
+        public bool LookInProperties
+        {
+            get { return _lookInProperties; }
         }
     }
 }

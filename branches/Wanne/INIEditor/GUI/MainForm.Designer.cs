@@ -34,7 +34,7 @@ namespace INIEditor.GUI
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSave = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileExit = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewDescLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewDescLanguageEnglish = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,7 +48,6 @@ namespace INIEditor.GUI
             this.mnuViewDescriptionLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewDescLangEnglish = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewDescLangGerman = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuToolsGenerateXMLFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.tbrMain = new System.Windows.Forms.ToolStrip();
             this.tbrSave = new System.Windows.Forms.ToolStripButton();
@@ -132,7 +131,7 @@ namespace INIEditor.GUI
             this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFileSave,
             this.toolStripSeparator1,
-            this.exitToolStripMenuItem});
+            this.mnuFileExit});
             this.mnuFile.Name = "mnuFile";
             this.mnuFile.Size = new System.Drawing.Size(35, 20);
             this.mnuFile.Text = "File";
@@ -141,7 +140,7 @@ namespace INIEditor.GUI
             // 
             this.mnuFileSave.Image = ((System.Drawing.Image)(resources.GetObject("mnuFileSave.Image")));
             this.mnuFileSave.Name = "mnuFileSave";
-            this.mnuFileSave.Size = new System.Drawing.Size(109, 22);
+            this.mnuFileSave.Size = new System.Drawing.Size(152, 22);
             this.mnuFileSave.Text = "Save";
             this.mnuFileSave.ToolTipText = "Save File";
             this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
@@ -149,13 +148,14 @@ namespace INIEditor.GUI
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(106, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
-            // exitToolStripMenuItem
+            // mnuFileExit
             // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
+            this.mnuFileExit.Name = "mnuFileExit";
+            this.mnuFileExit.Size = new System.Drawing.Size(152, 22);
+            this.mnuFileExit.Text = "Exit";
+            this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
             // 
             // viewToolStripMenuItem
             // 
@@ -254,11 +254,6 @@ namespace INIEditor.GUI
             // 
             this.mnuViewDescLangGerman.Name = "mnuViewDescLangGerman";
             this.mnuViewDescLangGerman.Size = new System.Drawing.Size(78, 22);
-            // 
-            // mnuToolsGenerateXMLFile
-            // 
-            this.mnuToolsGenerateXMLFile.Name = "mnuToolsGenerateXMLFile";
-            this.mnuToolsGenerateXMLFile.Size = new System.Drawing.Size(32, 19);
             // 
             // mnuHelp
             // 
@@ -788,6 +783,7 @@ namespace INIEditor.GUI
             this.MainMenuStrip = this.mnuMain;
             this.Name = "MainForm";
             this.Text = "INI Editor";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.mnuMain.ResumeLayout(false);
             this.mnuMain.PerformLayout();
             this.tbrMain.ResumeLayout(false);
@@ -830,7 +826,6 @@ namespace INIEditor.GUI
         private System.Windows.Forms.ToolStripMenuItem mnuEdit;
         private System.Windows.Forms.ToolStripMenuItem mnuHelp;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mnuToolsGenerateXMLFile;
         private System.Windows.Forms.Panel pnlSectionDescription;
         private System.Windows.Forms.Splitter splHorizontal;
         private System.Windows.Forms.TabControl tabActions;
@@ -861,7 +856,7 @@ namespace INIEditor.GUI
         private System.Windows.Forms.ToolStripMenuItem mnuFile;
         private System.Windows.Forms.ToolStripMenuItem mnuFileSave;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileExit;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuTools;
         private System.Windows.Forms.ToolStripMenuItem mnuViewDescLanguage;

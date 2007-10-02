@@ -25,10 +25,8 @@ namespace INIEditor.BackEnd.XML
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                throw new ApplicationException(ex.Message);
             }
-
-            return iniSettings;
         }
 
         public static void SaveObjectToXMLFile(Settings iniSettings, string path)

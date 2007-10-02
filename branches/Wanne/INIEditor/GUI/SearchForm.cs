@@ -24,6 +24,7 @@ namespace INIEditor.GUI
         {
             txtFindWhat.Text = searchParams.FindWhat;
             chkSectionDescriptions.Checked = searchParams.LookInSectionDescriptions;
+            chkProperties.Checked = searchParams.LookInProperties;
             chkPropertyDescriptions.Checked = searchParams.LookInPropertyDescriptions;
             chkPropertyValues.Checked = searchParams.LookInPropertyValues;
         }
@@ -31,7 +32,7 @@ namespace INIEditor.GUI
         private void btnSearch_Click(object sender, EventArgs e)
         {
             SearchParams searchParams = new SearchParams(txtFindWhat.Text, chkSectionDescriptions.Checked, chkPropertyDescriptions.Checked,
-                chkPropertyValues.Checked);
+                chkPropertyValues.Checked, chkProperties.Checked);
 
             _mainForm.Search(searchParams);
         }
@@ -40,7 +41,8 @@ namespace INIEditor.GUI
         {
             if (chkSectionDescriptions.Checked == false &&
                 chkPropertyDescriptions.Checked == false &&
-                chkPropertyValues.Checked == false)
+                chkPropertyValues.Checked == false &&
+                chkProperties.Checked == false)
             {
                 btnSearch.Enabled = false;
             }
@@ -61,6 +63,11 @@ namespace INIEditor.GUI
         }
 
         private void chkPropertyValues_CheckedChanged(object sender, EventArgs e)
+        {
+            SetSearchButtonState();
+        }
+
+        private void chkProperties_CheckedChanged(object sender, EventArgs e)
         {
             SetSearchButtonState();
         }
