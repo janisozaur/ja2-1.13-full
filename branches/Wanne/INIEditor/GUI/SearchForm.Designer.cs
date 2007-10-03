@@ -32,12 +32,16 @@ namespace INIEditor.GUI
             this.lblFindWhat = new System.Windows.Forms.Label();
             this.txtFindWhat = new System.Windows.Forms.TextBox();
             this.grpLookIn = new System.Windows.Forms.GroupBox();
+            this.chkProperties = new System.Windows.Forms.CheckBox();
             this.chkSectionDescriptions = new System.Windows.Forms.CheckBox();
             this.chkPropertyDescriptions = new System.Windows.Forms.CheckBox();
             this.chkPropertyValues = new System.Windows.Forms.CheckBox();
             this.btnSearch = new System.Windows.Forms.Button();
-            this.chkProperties = new System.Windows.Forms.CheckBox();
+            this.picLanguage_GER = new System.Windows.Forms.PictureBox();
+            this.picLanguage_ENG = new System.Windows.Forms.PictureBox();
             this.grpLookIn.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLanguage_GER)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picLanguage_ENG)).BeginInit();
             this.SuspendLayout();
             // 
             // lblFindWhat
@@ -56,7 +60,7 @@ namespace INIEditor.GUI
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFindWhat.Location = new System.Drawing.Point(12, 27);
             this.txtFindWhat.Name = "txtFindWhat";
-            this.txtFindWhat.Size = new System.Drawing.Size(360, 20);
+            this.txtFindWhat.Size = new System.Drawing.Size(335, 20);
             this.txtFindWhat.TabIndex = 1;
             // 
             // grpLookIn
@@ -71,6 +75,19 @@ namespace INIEditor.GUI
             this.grpLookIn.TabIndex = 3;
             this.grpLookIn.TabStop = false;
             this.grpLookIn.Text = "Look in:";
+            // 
+            // chkProperties
+            // 
+            this.chkProperties.AutoSize = true;
+            this.chkProperties.Checked = true;
+            this.chkProperties.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkProperties.Location = new System.Drawing.Point(209, 20);
+            this.chkProperties.Name = "chkProperties";
+            this.chkProperties.Size = new System.Drawing.Size(73, 17);
+            this.chkProperties.TabIndex = 4;
+            this.chkProperties.Text = "Properties";
+            this.chkProperties.UseVisualStyleBackColor = true;
+            this.chkProperties.CheckedChanged += new System.EventHandler(this.chkProperties_CheckedChanged);
             // 
             // chkSectionDescriptions
             // 
@@ -119,24 +136,31 @@ namespace INIEditor.GUI
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
-            // chkProperties
+            // picLanguage_GER
             // 
-            this.chkProperties.AutoSize = true;
-            this.chkProperties.Checked = true;
-            this.chkProperties.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkProperties.Location = new System.Drawing.Point(209, 20);
-            this.chkProperties.Name = "chkProperties";
-            this.chkProperties.Size = new System.Drawing.Size(73, 17);
-            this.chkProperties.TabIndex = 4;
-            this.chkProperties.Text = "Properties";
-            this.chkProperties.UseVisualStyleBackColor = true;
-            this.chkProperties.CheckedChanged += new System.EventHandler(this.chkProperties_CheckedChanged);
+            this.picLanguage_GER.Image = ((System.Drawing.Image)(resources.GetObject("picLanguage_GER.Image")));
+            this.picLanguage_GER.Location = new System.Drawing.Point(356, 29);
+            this.picLanguage_GER.Name = "picLanguage_GER";
+            this.picLanguage_GER.Size = new System.Drawing.Size(16, 16);
+            this.picLanguage_GER.TabIndex = 5;
+            this.picLanguage_GER.TabStop = false;
+            // 
+            // picLanguage_ENG
+            // 
+            this.picLanguage_ENG.Image = ((System.Drawing.Image)(resources.GetObject("picLanguage_ENG.Image")));
+            this.picLanguage_ENG.Location = new System.Drawing.Point(356, 29);
+            this.picLanguage_ENG.Name = "picLanguage_ENG";
+            this.picLanguage_ENG.Size = new System.Drawing.Size(16, 16);
+            this.picLanguage_ENG.TabIndex = 6;
+            this.picLanguage_ENG.TabStop = false;
             // 
             // SearchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(382, 203);
+            this.Controls.Add(this.picLanguage_ENG);
+            this.Controls.Add(this.picLanguage_GER);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.grpLookIn);
             this.Controls.Add(this.txtFindWhat);
@@ -152,6 +176,8 @@ namespace INIEditor.GUI
             this.Text = "Search";
             this.grpLookIn.ResumeLayout(false);
             this.grpLookIn.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLanguage_GER)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picLanguage_ENG)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -167,5 +193,7 @@ namespace INIEditor.GUI
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.CheckBox chkSectionDescriptions;
         private System.Windows.Forms.CheckBox chkProperties;
+        private System.Windows.Forms.PictureBox picLanguage_GER;
+        private System.Windows.Forms.PictureBox picLanguage_ENG;
     }
 }

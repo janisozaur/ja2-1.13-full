@@ -40,6 +40,7 @@ namespace INIEditor.GUI
             this.mnuViewDescLanguageEnglish = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewDescLanguageGerman = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewSearch = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuViewClearSearchResults = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuToolsGenerateXML = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,6 +53,7 @@ namespace INIEditor.GUI
             this.tbrMain = new System.Windows.Forms.ToolStrip();
             this.tbrSave = new System.Windows.Forms.ToolStripButton();
             this.tbrSearch = new System.Windows.Forms.ToolStripButton();
+            this.tbrClearSearchResults = new System.Windows.Forms.ToolStripButton();
             this.stsMain = new System.Windows.Forms.StatusStrip();
             this.tsbLanguage = new System.Windows.Forms.ToolStripSplitButton();
             this.tsbLanguageGerman = new System.Windows.Forms.ToolStripMenuItem();
@@ -95,6 +97,7 @@ namespace INIEditor.GUI
             this.dgvSearchResults = new System.Windows.Forms.DataGridView();
             this.colSearchResultsSection = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSearchResultsSectionDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSearchResultsProperty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSearchResultsPropertyDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSearchResultsPropertyCurrentValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSearchResultsPropertyNewValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -140,7 +143,7 @@ namespace INIEditor.GUI
             // 
             this.mnuFileSave.Image = ((System.Drawing.Image)(resources.GetObject("mnuFileSave.Image")));
             this.mnuFileSave.Name = "mnuFileSave";
-            this.mnuFileSave.Size = new System.Drawing.Size(152, 22);
+            this.mnuFileSave.Size = new System.Drawing.Size(109, 22);
             this.mnuFileSave.Text = "Save";
             this.mnuFileSave.ToolTipText = "Save File";
             this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
@@ -148,12 +151,12 @@ namespace INIEditor.GUI
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(106, 6);
             // 
             // mnuFileExit
             // 
             this.mnuFileExit.Name = "mnuFileExit";
-            this.mnuFileExit.Size = new System.Drawing.Size(152, 22);
+            this.mnuFileExit.Size = new System.Drawing.Size(109, 22);
             this.mnuFileExit.Text = "Exit";
             this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
             // 
@@ -161,7 +164,8 @@ namespace INIEditor.GUI
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuViewDescLanguage,
-            this.mnuViewSearch});
+            this.mnuViewSearch,
+            this.mnuViewClearSearchResults});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -199,6 +203,14 @@ namespace INIEditor.GUI
             this.mnuViewSearch.Text = "Search...";
             this.mnuViewSearch.ToolTipText = "Search";
             this.mnuViewSearch.Click += new System.EventHandler(this.mnuViewSearch_Click);
+            // 
+            // mnuViewClearSearchResults
+            // 
+            this.mnuViewClearSearchResults.Image = ((System.Drawing.Image)(resources.GetObject("mnuViewClearSearchResults.Image")));
+            this.mnuViewClearSearchResults.Name = "mnuViewClearSearchResults";
+            this.mnuViewClearSearchResults.Size = new System.Drawing.Size(188, 22);
+            this.mnuViewClearSearchResults.Text = "Clear Search Results";
+            this.mnuViewClearSearchResults.Click += new System.EventHandler(this.mnuViewClearSearchResults_Click);
             // 
             // mnuTools
             // 
@@ -265,7 +277,8 @@ namespace INIEditor.GUI
             // 
             this.tbrMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tbrSave,
-            this.tbrSearch});
+            this.tbrSearch,
+            this.tbrClearSearchResults});
             this.tbrMain.Location = new System.Drawing.Point(0, 24);
             this.tbrMain.Name = "tbrMain";
             this.tbrMain.Size = new System.Drawing.Size(883, 25);
@@ -292,6 +305,16 @@ namespace INIEditor.GUI
             this.tbrSearch.Size = new System.Drawing.Size(23, 22);
             this.tbrSearch.Text = "Search";
             this.tbrSearch.Click += new System.EventHandler(this.tbrSearch_Click);
+            // 
+            // tbrClearSearchResults
+            // 
+            this.tbrClearSearchResults.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbrClearSearchResults.Image = ((System.Drawing.Image)(resources.GetObject("tbrClearSearchResults.Image")));
+            this.tbrClearSearchResults.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbrClearSearchResults.Name = "tbrClearSearchResults";
+            this.tbrClearSearchResults.Size = new System.Drawing.Size(23, 22);
+            this.tbrClearSearchResults.Text = "Clear Search Results";
+            this.tbrClearSearchResults.Click += new System.EventHandler(this.tbrClearSearchResults_Click);
             // 
             // stsMain
             // 
@@ -398,7 +421,7 @@ namespace INIEditor.GUI
             // 
             // pnlSectionHeader
             // 
-            this.pnlSectionHeader.BackColor = System.Drawing.Color.Beige;
+            this.pnlSectionHeader.BackColor = System.Drawing.SystemColors.Window;
             this.pnlSectionHeader.Controls.Add(this.lblSectionHeader);
             this.pnlSectionHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlSectionHeader.Location = new System.Drawing.Point(344, 91);
@@ -568,10 +591,9 @@ namespace INIEditor.GUI
             // 
             // txtPropertyCurrentValue
             // 
-            this.txtPropertyCurrentValue.BackColor = System.Drawing.Color.LemonChiffon;
-            this.txtPropertyCurrentValue.Enabled = false;
             this.txtPropertyCurrentValue.Location = new System.Drawing.Point(130, 145);
             this.txtPropertyCurrentValue.Name = "txtPropertyCurrentValue";
+            this.txtPropertyCurrentValue.ReadOnly = true;
             this.txtPropertyCurrentValue.Size = new System.Drawing.Size(161, 20);
             this.txtPropertyCurrentValue.TabIndex = 10;
             // 
@@ -595,10 +617,9 @@ namespace INIEditor.GUI
             // 
             // txtPropertyInterval
             // 
-            this.txtPropertyInterval.BackColor = System.Drawing.Color.LemonChiffon;
-            this.txtPropertyInterval.Enabled = false;
             this.txtPropertyInterval.Location = new System.Drawing.Point(130, 112);
             this.txtPropertyInterval.Name = "txtPropertyInterval";
+            this.txtPropertyInterval.ReadOnly = true;
             this.txtPropertyInterval.Size = new System.Drawing.Size(161, 20);
             this.txtPropertyInterval.TabIndex = 7;
             // 
@@ -613,28 +634,25 @@ namespace INIEditor.GUI
             // 
             // txtPropertyMaxValue
             // 
-            this.txtPropertyMaxValue.BackColor = System.Drawing.Color.LemonChiffon;
-            this.txtPropertyMaxValue.Enabled = false;
             this.txtPropertyMaxValue.Location = new System.Drawing.Point(130, 78);
             this.txtPropertyMaxValue.Name = "txtPropertyMaxValue";
+            this.txtPropertyMaxValue.ReadOnly = true;
             this.txtPropertyMaxValue.Size = new System.Drawing.Size(161, 20);
             this.txtPropertyMaxValue.TabIndex = 5;
             // 
             // txtPropertyMinValue
             // 
-            this.txtPropertyMinValue.BackColor = System.Drawing.Color.LemonChiffon;
-            this.txtPropertyMinValue.Enabled = false;
             this.txtPropertyMinValue.Location = new System.Drawing.Point(130, 42);
             this.txtPropertyMinValue.Name = "txtPropertyMinValue";
+            this.txtPropertyMinValue.ReadOnly = true;
             this.txtPropertyMinValue.Size = new System.Drawing.Size(161, 20);
             this.txtPropertyMinValue.TabIndex = 4;
             // 
             // txtPropertyDataType
             // 
-            this.txtPropertyDataType.BackColor = System.Drawing.Color.LemonChiffon;
-            this.txtPropertyDataType.Enabled = false;
             this.txtPropertyDataType.Location = new System.Drawing.Point(130, 7);
             this.txtPropertyDataType.Name = "txtPropertyDataType";
+            this.txtPropertyDataType.ReadOnly = true;
             this.txtPropertyDataType.Size = new System.Drawing.Size(161, 20);
             this.txtPropertyDataType.TabIndex = 3;
             // 
@@ -717,6 +735,7 @@ namespace INIEditor.GUI
             this.dgvSearchResults.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colSearchResultsSection,
             this.colSearchResultsSectionDesc,
+            this.colSearchResultsProperty,
             this.colSearchResultsPropertyDesc,
             this.colSearchResultsPropertyCurrentValue,
             this.colSearchResultsPropertyNewValue});
@@ -743,6 +762,11 @@ namespace INIEditor.GUI
             this.colSearchResultsSectionDesc.MinimumWidth = 200;
             this.colSearchResultsSectionDesc.Name = "colSearchResultsSectionDesc";
             // 
+            // colSearchResultsProperty
+            // 
+            this.colSearchResultsProperty.HeaderText = "Property";
+            this.colSearchResultsProperty.Name = "colSearchResultsProperty";
+            // 
             // colSearchResultsPropertyDesc
             // 
             this.colSearchResultsPropertyDesc.HeaderText = "Property Description";
@@ -768,6 +792,7 @@ namespace INIEditor.GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(883, 653);
             this.Controls.Add(this.tabActions);
             this.Controls.Add(this.splHorizontal);
@@ -878,9 +903,12 @@ namespace INIEditor.GUI
         private System.Windows.Forms.DataGridViewTextBoxColumn colNewValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsSection;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsSectionDesc;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsProperty;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsPropertyDesc;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsPropertyCurrentValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsPropertyNewValue;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewClearSearchResults;
+        private System.Windows.Forms.ToolStripButton tbrClearSearchResults;
     }
 }
 

@@ -21,6 +21,7 @@ namespace INIEditor.GUI
         private bool _changedValues = false;
         private string _previousSelectedIniFile = "";
         #endregion
+
         #region CTOR
         public MainForm()
         {
@@ -43,6 +44,7 @@ namespace INIEditor.GUI
 
         }
         #endregion
+
         #region Initialize
         private void InitializeMenu()
         {
@@ -415,6 +417,7 @@ namespace INIEditor.GUI
 
 
         #endregion
+
         #region Private Methods
         private void SetPropertyValues(INIProperty property)
         {
@@ -458,6 +461,25 @@ namespace INIEditor.GUI
                 xmlIniSettings.Description_GER = Constants.MISSING_INI_DESCRIPTION_GER;
             }
             return xmlIniSettings;
+        }
+
+        private void SetDescriptionLanguage(Enumerations.Language language)
+        {
+            if (_descriptionLanguage != language)
+            {
+                _descriptionLanguage = language;
+                TreeNode selectedNode = trvSections.SelectedNode;
+                InitializeTabs(selectedNode.Tag, lblSectionHeader.Text);
+
+                if (language == Enumerations.Language.English)
+                {
+                    tsbLanguage.Image = ((System.Drawing.Image)(_resources.GetObject("tsbLanguageEnglish.Image")));
+                }
+                else if (language == Enumerations.Language.German)
+                {
+                    tsbLanguage.Image = ((System.Drawing.Image)(_resources.GetObject("tsbLanguageGerman.Image")));
+                }
+            }
         }
 
         private Section GetXMLSection(INISection section)
@@ -554,92 +576,6 @@ namespace INIEditor.GUI
             trvSections.SelectedNode = treeNode;
             trvSections.SelectedNode.Expand();
         }
-        #endregion
-        #region Events
-        private void cmbFiles_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // Save changes?
-            if (_changedValues)
-            {
-                DialogResult result = MessageBox.Show("Would you like to save the changes to '" + _previousSelectedIniFile + "'?", "INI Editor", MessageBoxButtons.YesNo,
-                                    MessageBoxIcon.Question);
-
-                if (result == DialogResult.Yes)
-                {
-                    BindCurrentSelectedSectionAndProperty();
-
-                    SaveINIFile(Path.GetDirectoryName(_previousSelectedIniFile));
-                    if (_permission == Enumerations.Permission.Admin)
-                    {
-                        SaveXMLFile();
-                    }
-                }
-            }
-
-            if (cmbFiles.SelectedItem != null)
-            {
-                InitializeSectionTree(cmbFiles.SelectedItem.ToString());
-                if (trvSections.Nodes.Count > 0)
-                {
-                    trvSections.SelectedNode = trvSections.Nodes[0];
-                    tpProperty.Visible = false;
-                }
-            }
-
-            _previousSelectedIniFile = cmbFiles.SelectedItem.ToString();
-        }
-
-        private void trvSections_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            string sectionHeader = e.Node.Text;
-            if (e.Node.Tag is INIProperty)
-            {
-                TreeNode sectionNode = e.Node.Parent;
-                sectionHeader = sectionNode.Text;
-
-            }
-            InitializeTabs(e.Node.Tag, sectionHeader);
-        }
-
-        private void dgvProperties_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            // Get the clicked row
-            DataGridViewRow row = dgvProperties.Rows[e.RowIndex];
-            INISection section = (INISection)row.Cells[colSection.Index].Tag;
-            INIProperty property = (INIProperty)row.Cells[colProperty.Index].Tag;
-
-            InitializeTabs(property, section.Name);
-        }
-        #endregion
-
-        private void mnuViewDescLanguageEnglish_Click(object sender, EventArgs e)
-        {
-            SetDescriptionLanguage(Enumerations.Language.English);
-        }
-
-        private void SetDescriptionLanguage(Enumerations.Language language)
-        {
-            if (_descriptionLanguage != language)
-            {
-                _descriptionLanguage = language;
-                TreeNode selectedNode = trvSections.SelectedNode;
-                InitializeTabs(selectedNode.Tag, lblSectionHeader.Text);
-
-                if (language == Enumerations.Language.English)
-                {
-                    tsbLanguage.Image = ((System.Drawing.Image)(_resources.GetObject("tsbLanguageEnglish.Image")));
-                }
-                else if (language == Enumerations.Language.German)
-                {
-                    tsbLanguage.Image = ((System.Drawing.Image)(_resources.GetObject("tsbLanguageGerman.Image")));
-                }
-            }
-        }
-
-        private void mnuViewDescLanguageGerman_Click(object sender, EventArgs e)
-        {
-            SetDescriptionLanguage(Enumerations.Language.German);
-        }
 
         private void SaveXMLFile()
         {
@@ -664,19 +600,6 @@ namespace INIEditor.GUI
 
                 _changedValues = false;
             }
-        }
-
-        /// <summary>
-        /// This method creates a new "INIEditorInit_Output.xml" file,
-        /// which contains all the INI-Settings. Missing settings in the
-        /// file are set to constant values (see Constants.cs) for easy replacement.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void mnuToolsGenerateXML_Click(object sender, EventArgs e)
-        {
-            BindCurrentSelectedSectionAndProperty();
-            SaveXMLFile();
         }
 
         /// <summary>
@@ -718,11 +641,6 @@ namespace INIEditor.GUI
             }
         }
 
-        private void txtPropertyNewValue_Leave(object sender, EventArgs e)
-        {
-            BindPropertyNewValue();
-        }
-
         private void SaveINIFile(string dataDirectory)
         {
             try
@@ -738,7 +656,7 @@ namespace INIEditor.GUI
                 InitializeSectionTree(selectedTreeNode.Text);
 
                 MessageBox.Show("The INI file '" + path + "' was successfully saved!", "INI Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
+
                 _changedValues = false;
             }
             catch (Exception ex)
@@ -747,85 +665,45 @@ namespace INIEditor.GUI
             }
         }
 
-        private void mnuFileSave_Click(object sender, EventArgs e)
-        {
-            BindCurrentSelectedSectionAndProperty();
-
-            SaveINIFile(Path.GetDirectoryName(cmbFiles.SelectedItem.ToString()));
-            if (_permission == Enumerations.Permission.Admin)
-            {
-                SaveXMLFile();
-            }
-        }
-
-        private void tbrSave_Click(object sender, EventArgs e)
-        {
-            BindCurrentSelectedSectionAndProperty();
-
-            SaveINIFile(Path.GetDirectoryName(cmbFiles.SelectedItem.ToString()));
-            if (_permission == Enumerations.Permission.Admin)
-            {
-                SaveXMLFile();
-            }
-        }
-
-        private void mnuViewSearch_Click(object sender, EventArgs e)
-        {
-            DisplaySearchForm();
-        }
-
         private void DisplaySearchForm()
         {
-            SearchForm searchForm = new SearchForm(this, _searchParams);
+            SearchForm searchForm = new SearchForm(this, _searchParams, _descriptionLanguage);
             searchForm.Show(this);
             searchForm.TopLevel = true;
         }
 
-        private void tbrSearch_Click(object sender, EventArgs e)
-        {
-            DisplaySearchForm();
-        }
-
-        private void tsbLanguageGerman_Click(object sender, EventArgs e)
-        {
-            SetDescriptionLanguage(Enumerations.Language.German);
-        }
-
-        private void tsbLanguageEnglish_Click(object sender, EventArgs e)
-        {
-            SetDescriptionLanguage(Enumerations.Language.English);
-        }
-
-        
         private void AddSearchResultToSearchResults(INIProperty property, bool foundSectionDesc,
-            bool foundPropertyDesc, bool foundPropertyCurrentValue, bool foundPropertyNewValue)
+            bool foundPropertyDesc, bool foundPropertyCurrentValue, bool foundPropertyNewValue, bool foundProperty)
         {
             int rowIndex = -1;
 
             if (_descriptionLanguage == Enumerations.Language.English)
             {
-               rowIndex = dgvSearchResults.Rows.Add();
-               dgvSearchResults[colSearchResultsSection.Index, rowIndex].Value = property.Section.Name;
-               dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = property.Section.XMLSection.Description_ENG;
-               dgvSearchResults[colSearchResultsPropertyDesc.Index, rowIndex].Value = property.XMLProperty.Description_ENG;
-               dgvSearchResults[colSearchResultsPropertyCurrentValue.Index, rowIndex].Value = property.CurrentValue;
-               dgvSearchResults[colSearchResultsPropertyNewValue.Index, rowIndex].Value = property.NewValue;
+                rowIndex = dgvSearchResults.Rows.Add();
+                dgvSearchResults[colSearchResultsSection.Index, rowIndex].Value = property.Section.Name;
+                dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = property.Section.XMLSection.Description_ENG;
+                dgvSearchResults[colSearchResultsProperty.Index, rowIndex].Value = property.Name;
+                dgvSearchResults[colSearchResultsPropertyDesc.Index, rowIndex].Value = property.XMLProperty.Description_ENG;
+                dgvSearchResults[colSearchResultsPropertyCurrentValue.Index, rowIndex].Value = property.CurrentValue;
+                dgvSearchResults[colSearchResultsPropertyNewValue.Index, rowIndex].Value = property.NewValue;
 
-               // Tag
-               dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Tag = property.Section;
-               dgvSearchResults[colSearchResultsPropertyDesc.Index, rowIndex].Tag = property;
+                // Tag
+                dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Tag = property.Section;
+                dgvSearchResults[colSearchResultsPropertyDesc.Index, rowIndex].Tag = property;
 
             }
 
             // Color the results
             if (foundSectionDesc)
-               dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
+                dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
+            if (foundProperty)
+                dgvSearchResults[colSearchResultsProperty.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
             if (foundPropertyDesc)
-               dgvSearchResults[colSearchResultsPropertyDesc.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
+                dgvSearchResults[colSearchResultsPropertyDesc.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
             if (foundPropertyCurrentValue)
-               dgvSearchResults[colSearchResultsPropertyCurrentValue.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
+                dgvSearchResults[colSearchResultsPropertyCurrentValue.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
             if (foundPropertyNewValue)
-               dgvSearchResults[colSearchResultsPropertyNewValue.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
+                dgvSearchResults[colSearchResultsPropertyNewValue.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
 
         }
 
@@ -851,12 +729,15 @@ namespace INIEditor.GUI
         public void Search(SearchParams searchParams)
         {
             _searchParams = searchParams;
+
+            #region Set columns for search grid
             // Only "Section Descriptions" was selected
             if (_searchParams.LookInSectionDescriptions && (!_searchParams.LookInPropertyDescriptions
                     || !_searchParams.LookInPropertyValues))
             {
                 colSearchResultsSection.Visible = true;
                 colSearchResultsSectionDesc.Visible = true;
+                colSearchResultsProperty.Visible = false;
                 colSearchResultsPropertyDesc.Visible = false;
                 colSearchResultsPropertyCurrentValue.Visible = false;
                 colSearchResultsPropertyNewValue.Visible = false;
@@ -865,30 +746,27 @@ namespace INIEditor.GUI
             {
                 colSearchResultsSection.Visible = true;
                 colSearchResultsSectionDesc.Visible = true;
+                colSearchResultsProperty.Visible = true;
                 colSearchResultsPropertyDesc.Visible = true;
                 colSearchResultsPropertyCurrentValue.Visible = true;
                 colSearchResultsPropertyNewValue.Visible = true;
             }
+            #endregion
 
             dgvSearchResults.Rows.Clear();
 
             tabActions.SelectTab(tpSearchResults);
 
-            bool foundSectionDesc_ENG = false;
-            bool foundPropertyNewValue = false;
-            bool foundPropertyCurrentValue = false;
-            bool foundPropertyDesc_ENG = false;
-
             foreach (INISection section in _iniFile.Sections)
             {
-                foundSectionDesc_ENG = false;
-
+                #region Only look in section description
                 if (_searchParams.LookInSectionDescriptions && (!_searchParams.LookInPropertyDescriptions
                     || !_searchParams.LookInPropertyValues))
                 {
                     string sectionDesc_ENG = section.XMLSection.Description_ENG.ToLower();
                     string sectionDesc_GER = section.XMLSection.Description_GER.ToLower();
 
+                    #region Add search result to search grid
                     if (_descriptionLanguage == Enumerations.Language.English)
                     {
                         if (searchParams.LookInSectionDescriptions
@@ -897,18 +775,33 @@ namespace INIEditor.GUI
                             AddSearchResultToSearchResults(section);
                         }
                     }
+                    else if (_descriptionLanguage == Enumerations.Language.German)
+                    {
+                        if (searchParams.LookInSectionDescriptions
+                            && sectionDesc_GER.Contains(searchParams.FindWhat.ToLower()))
+                        {
+                            AddSearchResultToSearchResults(section);
+                        }
+                    }
+                    #endregion
                 }
+                #endregion
+                #region Look in section description and property
                 else
                 {
                     foreach (INIProperty property in section.Properties)
                     {
-                        foundSectionDesc_ENG = false;
-                        foundPropertyNewValue = false;
-                        foundPropertyCurrentValue = false;
-                        foundPropertyDesc_ENG = false;
+                        bool foundSectionDesc_ENG = false;
+                        bool foundSectionDesc_GER = false;
+                        bool foundProperty = false;
+                        bool foundPropertyNewValue = false;
+                        bool foundPropertyCurrentValue = false;
+                        bool foundPropertyDesc_ENG = false;
+                        bool foundPropertyDesc_GER = false;
 
                         string sectionDesc_ENG = property.Section.XMLSection.Description_ENG.ToLower();
                         string sectionDesc_GER = property.Section.XMLSection.Description_GER.ToLower();
+                        string propertyName = property.Name.ToLower();
                         string propertyDesc_ENG = property.XMLProperty.Description_ENG.ToLower();
                         string propertyDesc_GER = property.XMLProperty.Description_GER.ToLower();
                         string propertyCurrentValue = property.CurrentValue.ToLower();
@@ -927,6 +820,25 @@ namespace INIEditor.GUI
                                 foundPropertyDesc_ENG = true;
                             }
                         }
+                        else if (_descriptionLanguage == Enumerations.Language.German)
+                        {
+                            if (searchParams.LookInSectionDescriptions
+                                && sectionDesc_GER.Contains(searchParams.FindWhat.ToLower()))
+                            {
+                                foundSectionDesc_GER = true;
+                            }
+                            if (searchParams.LookInPropertyDescriptions
+                                && propertyDesc_GER.Contains(searchParams.FindWhat.ToLower()))
+                            {
+                                foundPropertyDesc_GER = true;
+                            }
+                        }
+
+                        if (searchParams.LookInProperties
+                            && propertyName.Contains(searchParams.FindWhat.ToLower()))
+                        {
+                            foundProperty = true;
+                        }
 
                         if (searchParams.LookInPropertyValues
                             && propertyCurrentValue.Contains(searchParams.FindWhat.ToLower()))
@@ -938,41 +850,32 @@ namespace INIEditor.GUI
                         {
                             foundPropertyNewValue = true;
                         }
-
+                        #region Add search result to search grid
                         if (_descriptionLanguage == Enumerations.Language.English)
                         {
                             if (foundSectionDesc_ENG || foundPropertyDesc_ENG ||
-                                foundPropertyCurrentValue || foundPropertyNewValue)
+                                foundProperty || foundPropertyCurrentValue || foundPropertyNewValue)
                             {
                                 AddSearchResultToSearchResults(property, foundSectionDesc_ENG, foundPropertyDesc_ENG,
-                                                               foundPropertyCurrentValue, foundPropertyNewValue);
+                                                               foundPropertyCurrentValue, foundPropertyNewValue,
+                                                               foundProperty);
                             }
                         }
+                        else if (_descriptionLanguage == Enumerations.Language.German)
+                        {
+                            if (foundSectionDesc_GER || foundPropertyDesc_GER ||
+                                foundProperty || foundPropertyCurrentValue || foundPropertyNewValue)
+                            {
+                                AddSearchResultToSearchResults(property, foundSectionDesc_GER, foundPropertyDesc_GER,
+                                                               foundPropertyCurrentValue, foundPropertyNewValue,
+                                                               foundProperty);
+                            }
+                        }
+                        #endregion
                     }
                 }
+                #endregion
             }
-        }
-
-        private void dgvSearchResults_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            // Get the clicked row
-            DataGridViewRow row = dgvSearchResults.Rows[e.RowIndex];
-            INISection section = (INISection)row.Cells[colSearchResultsSectionDesc.Index].Tag;
-
-            if (colSearchResultsPropertyDesc.Visible)
-            {
-                INIProperty property = (INIProperty)row.Cells[colSearchResultsPropertyDesc.Index].Tag;
-                InitializeTabs(property, section.Name);
-            }
-            else
-            {
-                InitializeTabs(_iniFile, section.Name);
-            }
-        }
-
-        private void txtPropertyDescription_Leave(object sender, EventArgs e)
-        {
-            BindPropertyDescription();
         }
 
         private string GetOutputDescriptionText(string unmodifiedText)
@@ -1029,6 +932,160 @@ namespace INIEditor.GUI
             }
         }
 
+        private void ClearSearchResults()
+        {
+            dgvSearchResults.Rows.Clear();
+        }
+        #endregion
+
+        #region Events
+        private void cmbFiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Save changes?
+            if (_changedValues)
+            {
+                DialogResult result = MessageBox.Show("Would you like to save the changes to '" + _previousSelectedIniFile + "'?", "INI Editor", MessageBoxButtons.YesNo,
+                                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    BindCurrentSelectedSectionAndProperty();
+
+                    SaveINIFile(Path.GetDirectoryName(_previousSelectedIniFile));
+                    if (_permission == Enumerations.Permission.Admin)
+                    {
+                        SaveXMLFile();
+                    }
+                }
+            }
+
+            if (cmbFiles.SelectedItem != null)
+            {
+                InitializeSectionTree(cmbFiles.SelectedItem.ToString());
+                if (trvSections.Nodes.Count > 0)
+                {
+                    trvSections.SelectedNode = trvSections.Nodes[0];
+                    tpProperty.Visible = false;
+                }
+            }
+
+            _previousSelectedIniFile = cmbFiles.SelectedItem.ToString();
+        }
+
+        private void trvSections_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            string sectionHeader = e.Node.Text;
+            if (e.Node.Tag is INIProperty)
+            {
+                TreeNode sectionNode = e.Node.Parent;
+                sectionHeader = sectionNode.Text;
+
+            }
+            InitializeTabs(e.Node.Tag, sectionHeader);
+        }
+
+        private void dgvProperties_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Get the clicked row
+            DataGridViewRow row = dgvProperties.Rows[e.RowIndex];
+            INISection section = (INISection)row.Cells[colSection.Index].Tag;
+            INIProperty property = (INIProperty)row.Cells[colProperty.Index].Tag;
+
+            InitializeTabs(property, section.Name);
+        }
+
+        private void mnuViewDescLanguageGerman_Click(object sender, EventArgs e)
+        {
+            SetDescriptionLanguage(Enumerations.Language.German);
+        }
+
+        private void mnuViewDescLanguageEnglish_Click(object sender, EventArgs e)
+        {
+            SetDescriptionLanguage(Enumerations.Language.English);
+        }
+
+        /// <summary>
+        /// This method creates a new "INIEditorInit_Output.xml" file,
+        /// which contains all the INI-Settings. Missing settings in the
+        /// file are set to constant values (see Constants.cs) for easy replacement.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuToolsGenerateXML_Click(object sender, EventArgs e)
+        {
+            BindCurrentSelectedSectionAndProperty();
+            SaveXMLFile();
+        }
+
+        private void txtPropertyNewValue_Leave(object sender, EventArgs e)
+        {
+            BindPropertyNewValue();
+        }
+
+        private void mnuFileSave_Click(object sender, EventArgs e)
+        {
+            BindCurrentSelectedSectionAndProperty();
+
+            SaveINIFile(Path.GetDirectoryName(cmbFiles.SelectedItem.ToString()));
+            if (_permission == Enumerations.Permission.Admin)
+            {
+                SaveXMLFile();
+            }
+        }
+
+        private void tbrSave_Click(object sender, EventArgs e)
+        {
+            BindCurrentSelectedSectionAndProperty();
+
+            SaveINIFile(Path.GetDirectoryName(cmbFiles.SelectedItem.ToString()));
+            if (_permission == Enumerations.Permission.Admin)
+            {
+                SaveXMLFile();
+            }
+        }
+
+        private void mnuViewSearch_Click(object sender, EventArgs e)
+        {
+            DisplaySearchForm();
+        }
+
+        private void tbrSearch_Click(object sender, EventArgs e)
+        {
+            DisplaySearchForm();
+        }
+
+        private void tsbLanguageGerman_Click(object sender, EventArgs e)
+        {
+            SetDescriptionLanguage(Enumerations.Language.German);
+        }
+
+        private void tsbLanguageEnglish_Click(object sender, EventArgs e)
+        {
+            SetDescriptionLanguage(Enumerations.Language.English);
+        }
+
+        private void dgvSearchResults_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Get the clicked row
+            DataGridViewRow row = dgvSearchResults.Rows[e.RowIndex];
+            INISection section = (INISection)row.Cells[colSearchResultsSectionDesc.Index].Tag;
+
+            if (colSearchResultsPropertyDesc.Visible)
+            {
+                INIProperty property = (INIProperty)row.Cells[colSearchResultsPropertyDesc.Index].Tag;
+                InitializeTabs(property, section.Name);
+            }
+            else
+            {
+                InitializeTabs(_iniFile, section.Name);
+            }
+        }
+
+        private void txtPropertyDescription_Leave(object sender, EventArgs e)
+        {
+            BindPropertyDescription();
+        }
+
         private void txtSectionDescription_Leave(object sender, EventArgs e)
         {
             BindSectionDescription();
@@ -1036,7 +1093,13 @@ namespace INIEditor.GUI
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DialogResult result = MessageBox.Show("Do you really want to close the application?\nAny unsafed changes will be lost.", "INI Editor", MessageBoxButtons.YesNo,
+            string message = "Do you really want to close the application?";
+
+            if (_changedValues)
+            {
+                message += "\nUnsafed changes will be lost!";
+            }
+            DialogResult result = MessageBox.Show(message, "INI Editor", MessageBoxButtons.YesNo,
                                 MessageBoxIcon.Question);
 
             if (result == DialogResult.No)
@@ -1050,5 +1113,15 @@ namespace INIEditor.GUI
             this.Close();
         }
 
+        private void tbrClearSearchResults_Click(object sender, EventArgs e)
+        {
+            ClearSearchResults();
+        }
+
+        private void mnuViewClearSearchResults_Click(object sender, EventArgs e)
+        {
+            ClearSearchResults();
+        }
+        #endregion
     }
 }

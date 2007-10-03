@@ -1,9 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using INIEditor.BackEnd;
 
@@ -11,32 +6,42 @@ namespace INIEditor.GUI
 {
     public partial class SearchForm : Form
     {
-        private MainForm _mainForm;
+        #region Fields
+        private readonly MainForm _mainForm;
+        #endregion
 
-        public SearchForm(MainForm mainForm, SearchParams searchParams)
+        #region CTOR
+        public SearchForm(MainForm mainForm, SearchParams searchParams, Enumerations.Language descLanguage)
         {
             _mainForm = mainForm;
             InitializeComponent();
-            InitializeSearchForm(searchParams);
+            InitializeSearchForm(searchParams, descLanguage);
         }
+        #endregion
 
-        private void InitializeSearchForm(SearchParams searchParams)
+        #region Initialize
+        private void InitializeSearchForm(SearchParams searchParams, Enumerations.Language descLanguage)
         {
+            if (descLanguage == Enumerations.Language.English)
+            {
+                picLanguage_ENG.Visible = true;
+                picLanguage_GER.Visible = false;
+            }
+            else if (descLanguage == Enumerations.Language.German)
+            {
+                picLanguage_GER.Visible = true;
+                picLanguage_ENG.Visible = false;
+            }
+
             txtFindWhat.Text = searchParams.FindWhat;
             chkSectionDescriptions.Checked = searchParams.LookInSectionDescriptions;
             chkProperties.Checked = searchParams.LookInProperties;
             chkPropertyDescriptions.Checked = searchParams.LookInPropertyDescriptions;
             chkPropertyValues.Checked = searchParams.LookInPropertyValues;
         }
+        #endregion
 
-        private void btnSearch_Click(object sender, EventArgs e)
-        {
-            SearchParams searchParams = new SearchParams(txtFindWhat.Text, chkSectionDescriptions.Checked, chkPropertyDescriptions.Checked,
-                chkPropertyValues.Checked, chkProperties.Checked);
-
-            _mainForm.Search(searchParams);
-        }
-
+        #region Private Methods
         private void SetSearchButtonState()
         {
             if (chkSectionDescriptions.Checked == false &&
@@ -50,6 +55,16 @@ namespace INIEditor.GUI
             {
                 btnSearch.Enabled = true;
             }
+        }
+        #endregion
+
+        #region Events
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            SearchParams searchParams = new SearchParams(txtFindWhat.Text, chkSectionDescriptions.Checked, chkPropertyDescriptions.Checked,
+                chkPropertyValues.Checked, chkProperties.Checked);
+
+            _mainForm.Search(searchParams);
         }
 
         private void chkSectionDescriptions_CheckedChanged(object sender, EventArgs e)
@@ -71,5 +86,6 @@ namespace INIEditor.GUI
         {
             SetSearchButtonState();
         }
+        #endregion
     }
 }
