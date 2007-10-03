@@ -55,6 +55,8 @@
 
 //forward declarations of common classes to eliminate includes
 class OBJECTTYPE;
+
+
 class SOLDIERTYPE;
 
 
