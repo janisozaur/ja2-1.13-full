@@ -161,7 +161,7 @@ namespace INIEditor.GUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "INI Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);  
+                MessageBox.Show(ex.Message, Constants.APP_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);  
             }
         }
 
@@ -596,7 +596,7 @@ namespace INIEditor.GUI
                 string path = Path.Combine(Constants.XML_SETTINGS_PATH, Constants.INI_EDITOR_INIT_FILE_OUTPUT);
                 Helper.SaveObjectToXMLFile(generatedIniSettings, path);
 
-                MessageBox.Show("The XML file '" + path + "' was successfully saved!", "INI Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("The XML file '" + path + "' was successfully saved!", Constants.APP_NAME, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 _changedValues = false;
             }
@@ -655,13 +655,13 @@ namespace INIEditor.GUI
 
                 InitializeSectionTree(selectedTreeNode.Text);
 
-                MessageBox.Show("The INI file '" + path + "' was successfully saved!", "INI Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("The INI file '" + path + "' was successfully saved!", Constants.APP_NAME, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 _changedValues = false;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "INI Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, Constants.APP_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -944,7 +944,7 @@ namespace INIEditor.GUI
             // Save changes?
             if (_changedValues)
             {
-                DialogResult result = MessageBox.Show("Would you like to save the changes to '" + _previousSelectedIniFile + "'?", "INI Editor", MessageBoxButtons.YesNo,
+                DialogResult result = MessageBox.Show("Would you like to save the changes to '" + _previousSelectedIniFile + "'?", Constants.APP_NAME, MessageBoxButtons.YesNo,
                                     MessageBoxIcon.Question);
 
                 if (result == DialogResult.Yes)
@@ -1099,7 +1099,7 @@ namespace INIEditor.GUI
             {
                 message += "\nUnsafed changes will be lost!";
             }
-            DialogResult result = MessageBox.Show(message, "INI Editor", MessageBoxButtons.YesNo,
+            DialogResult result = MessageBox.Show(message, Constants.APP_NAME, MessageBoxButtons.YesNo,
                                 MessageBoxIcon.Question);
 
             if (result == DialogResult.No)

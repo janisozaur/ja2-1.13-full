@@ -1,7 +1,9 @@
 using System;
 using System.Windows.Forms;
+using INIEditor.BackEnd;
+using INIEditor.GUI;
 
-namespace INIEditor.GUI
+namespace INIEditor
 {
     static class Program
     {
@@ -11,17 +13,17 @@ namespace INIEditor.GUI
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
             try
             {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+
                 MainForm mainForm = new MainForm();
                 Application.Run(mainForm);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "INI Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);  
+                MessageBox.Show(ex.Message, Constants.APP_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);  
             }            
         }
     }

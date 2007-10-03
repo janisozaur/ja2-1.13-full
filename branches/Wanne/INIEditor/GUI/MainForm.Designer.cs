@@ -1,3 +1,5 @@
+using INIEditor.BackEnd;
+
 namespace INIEditor.GUI
 {
     partial class MainForm
@@ -807,7 +809,7 @@ namespace INIEditor.GUI
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mnuMain;
             this.Name = "MainForm";
-            this.Text = "INI Editor";
+            this.Text = Constants.APP_NAME;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.mnuMain.ResumeLayout(false);
             this.mnuMain.PerformLayout();
