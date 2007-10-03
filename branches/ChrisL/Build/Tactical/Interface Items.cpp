@@ -2610,7 +2610,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				}
 			}
 
-			if ( pSoldier && pObject == &(pSoldier->inv[HANDPOS] ) && pSoldier->bWeaponMode != WM_NORMAL )
+			if ( pSoldier && pObject == &(pSoldier->inv[HANDPOS] ) && pSoldier->bWeaponMode != WM_NORMAL && Item[pSoldier->inv[HANDPOS].usItem].usItemClass == IC_GUN )
 			{
 				sNewY = sY + 13; // rather arbitrary
 				if ( pSoldier->bWeaponMode == WM_BURST )
@@ -4574,6 +4574,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 	INT16		lbePocket = ITEM_NOT_FOUND;
 	BOOLEAN		fHatchItOut = FALSE;
 	UINT32		lClass;
+	UINT8		usColor = 0;
 
 	// Start by verifying that this item is an LBENODE
 	if(Item[pObj->usItem].usItemClass != IC_LBEGEAR)
@@ -4694,8 +4695,13 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 			INVRenderItem( guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[ pocketKey[cnt] ].sWidth, gSMInvData[ pocketKey[cnt] ].sHeight, 2, NULL, 0, 0, 0 );
 		if (gpItemPointer != NULL)
 			RenderPocketItemCapacity( ItemSlotLimit(gpItemPointer, pocketKey[cnt], pSoldier), pocketKey[cnt], pSoldier);
-		if ( fHatchItOut )
-			DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, (UINT16)(gSMInvData[ pocketKey[cnt] ].sWidth-1), (UINT16)(gSMInvData[ pocketKey[cnt] ].sHeight-1) );
+		if ( fHatchItOut ){
+			usColor = 0;
+		}
+		else{
+			usColor = 10;
+		}
+		DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, (UINT16)(gSMInvData[ pocketKey[cnt] ].sWidth-1), (UINT16)(gSMInvData[ pocketKey[cnt] ].sHeight-1), usColor );
 		// if there's an item in there
 		if ( pObject != NULL && pObject->exists() == true )
 		{
@@ -4704,7 +4710,8 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 			sBarY = sY + gSMInvData[ pocketKey[cnt] ].sBarDy;
 			DrawItemUIBarEx( pObject, 0, sBarX, sBarY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT,	Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER);
 		}
-		ShadowVideoSurfaceRect(guiSAVEBUFFER,sX,sY,(gSMInvData[ pocketKey[cnt] ].sWidth+sX),(gSMInvData[ pocketKey[cnt] ].sHeight+sY));
+		//CHRISL: Remove this line for now.  Though we do need something to better show that pockets on this screen are read-only
+		//ShadowVideoSurfaceRect(guiSAVEBUFFER,sX,sY,(gSMInvData[ pocketKey[cnt] ].sWidth+sX),(gSMInvData[ pocketKey[cnt] ].sHeight+sY));
 	}
 }
 

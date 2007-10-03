@@ -1733,11 +1733,18 @@ void DisplayCurrentSector( void )
 void ResizeInventoryList( void )
 {
 	PERFORMANCE_MARKER
+	INT32 iNumberOfTakenSlots = 0;
+
 	if (pInventoryPoolList.empty() == true) {
 		pInventoryPoolList.resize(MAP_INVENTORY_POOL_SLOT_COUNT);
 	}
-	if (pInventoryPoolList.size() % MAP_INVENTORY_POOL_SLOT_COUNT) {
-		pInventoryPoolList.resize(pInventoryPoolList.size() + MAP_INVENTORY_POOL_SLOT_COUNT - pInventoryPoolList.size() % MAP_INVENTORY_POOL_SLOT_COUNT);
+	for(UINT32 cnt = 0; cnt < pInventoryPoolList.size(); cnt++){
+		if(pInventoryPoolList[cnt].object.exists() == true){
+			iNumberOfTakenSlots++;
+		}
+	}
+	if( ( pInventoryPoolList.size() - iNumberOfTakenSlots ) < 2 ){
+		pInventoryPoolList.resize(pInventoryPoolList.size() + MAP_INVENTORY_POOL_SLOT_COUNT);
 	}
 
 	iLastInventoryPoolPage = ( ( pInventoryPoolList.size()  - 1 ) / MAP_INVENTORY_POOL_SLOT_COUNT );

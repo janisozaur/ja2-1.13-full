@@ -3101,7 +3101,7 @@ BOOLEAN RepairIsDone(DEALER_SPECIAL_ITEM* pSpecial)
 }
 
 
-void DrawHatchOnInventory( UINT32 uiSurface, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight )
+void DrawHatchOnInventory( UINT32 uiSurface, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight, UINT8 usColor )
 {
 	PERFORMANCE_MARKER
 	UINT8	 *pDestBuf;
@@ -3125,7 +3125,12 @@ void DrawHatchOnInventory( UINT32 uiSurface, UINT16 usPosX, UINT16 usPosY, UINT1
 	ClipRect.iBottom = usPosY + usHeight;
 
 	pDestBuf = LockVideoSurface( uiSurface, &uiDestPitchBYTES );
-	Blt16BPPBufferPixelateRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect, Pattern );
+	if(usColor == 0){
+		Blt16BPPBufferPixelateRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect, Pattern );
+	}
+	else{
+		Blt16BPPBufferPixelateRectWithColor( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect, Pattern, usColor );
+	}
 	UnLockVideoSurface( uiSurface );
 }
 

@@ -10,7 +10,7 @@
 #define _PATHAI_H
 #include "isometric utils.h"
 
-#define USE_ASTAR_PATHS
+//#define USE_ASTAR_PATHS
 
 #ifdef USE_ASTAR_PATHS
 
