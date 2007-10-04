@@ -3102,7 +3102,7 @@ BOOLEAN RepairIsDone(DEALER_SPECIAL_ITEM* pSpecial)
 }
 
 
-void DrawHatchOnInventory( UINT32 uiSurface, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight, UINT8 usColor )
+void DrawHatchOnInventory( UINT32 uiSurface, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight, UINT16 usColor )
 {
 	PERFORMANCE_MARKER
 	UINT8	 *pDestBuf;

@@ -4574,7 +4574,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 	INT16		lbePocket = ITEM_NOT_FOUND;
 	BOOLEAN		fHatchItOut = FALSE;
 	UINT32		lClass;
-	UINT8		usColor = 0;
+	UINT16		usColor;
 
 	// Start by verifying that this item is an LBENODE
 	if(Item[pObj->usItem].usItemClass != IC_LBEGEAR)
@@ -4687,28 +4687,30 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				pObject = NULL;
 		}
 		fHatchItOut = FALSE;
-		if (lbePocket == 0)	// Deactivate Pocket
+		if (lbePocket == 0){	// Deactivate Pocket
 			fHatchItOut = TRUE;
-		else if ( pObject == NULL || pObject->exists() == false )	// Nothing in sPocket.  Display silouhette.
+		}
+		else if ( pObject == NULL || pObject->exists() == false ){	// Nothing in sPocket.  Display silouhette.
 			INVRenderSilhouette( guiSAVEBUFFER, lbePocket, 0, sX, sY, gSMInvData[ pocketKey[cnt] ].sWidth, gSMInvData[ pocketKey[cnt] ].sHeight);
-		if(pObject != NULL)
+		}
+		if(pObject != NULL){
 			INVRenderItem( guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[ pocketKey[cnt] ].sWidth, gSMInvData[ pocketKey[cnt] ].sHeight, 2, NULL, 0, 0, 0 );
-		if (gpItemPointer != NULL)
-			RenderPocketItemCapacity( ItemSlotLimit(gpItemPointer, pocketKey[cnt], pSoldier), pocketKey[cnt], pSoldier);
-		if ( fHatchItOut ){
-			usColor = 0;
-		}
-		else{
-			usColor = 10;
-		}
-		DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, (UINT16)(gSMInvData[ pocketKey[cnt] ].sWidth-1), (UINT16)(gSMInvData[ pocketKey[cnt] ].sHeight-1), usColor );
-		// if there's an item in there
-		if ( pObject != NULL && pObject->exists() == true )
-		{
-			// Add item status bar
 			sBarX = sX - gSMInvData[ pocketKey[cnt] ].sBarDx;
 			sBarY = sY + gSMInvData[ pocketKey[cnt] ].sBarDy;
 			DrawItemUIBarEx( pObject, 0, sBarX, sBarY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT,	Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER);
+		}
+//		if (gpItemPointer != NULL)
+//			RenderPocketItemCapacity( ItemSlotLimit(gpItemPointer, pocketKey[cnt], pSoldier), pocketKey[cnt], pSoldier);
+		if ( fHatchItOut ){
+			usColor = 0;
+			DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, (UINT16)(gSMInvData[ pocketKey[cnt] ].sWidth-1), (UINT16)(gSMInvData[ pocketKey[cnt] ].sHeight-1), usColor );
+		}
+		else{
+			usColor = 10;	// light blue
+			//usColor = 450;	// light green
+			//usColor = 59015;	// yellow
+			//usColor = 65534;	// white
+			//DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, (UINT16)(gSMInvData[ pocketKey[cnt] ].sWidth-1), (UINT16)(gSMInvData[ pocketKey[cnt] ].sHeight-1), usColor );
 		}
 		//CHRISL: Remove this line for now.  Though we do need something to better show that pockets on this screen are read-only
 		//ShadowVideoSurfaceRect(guiSAVEBUFFER,sX,sY,(gSMInvData[ pocketKey[cnt] ].sWidth+sX),(gSMInvData[ pocketKey[cnt] ].sHeight+sY));
