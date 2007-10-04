@@ -2596,9 +2596,6 @@ UINT16 OBJECTTYPE::GetWeightOfObjectInStack(unsigned int index)
 					}
 				}
 			}
-			else {
-				DebugBreak();
-			}
 			//do not search for attachments to an LBE
 			return weight;
 		}
@@ -2759,7 +2756,7 @@ void DistributeStatus(OBJECTTYPE* pSourceObject, OBJECTTYPE* pTargetObject, INT8
 	}
 }
 
-BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex )
+BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex, UINT32 ubCap )
 {
 	PERFORMANCE_MARKER
 	if (pSourceObj->usItem != pTargetObj->usItem)
@@ -2782,7 +2779,7 @@ BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetO
 	else
 	{
 		// add to end
-		pTargetObj->AddObjectsToStack( *pSourceObj, 1 );
+		pTargetObj->AddObjectsToStack( *pSourceObj, 1, NULL, NUM_INV_SLOTS, ubCap );
 		return( FALSE );
 	}
 }
@@ -5209,7 +5206,7 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 
 	if (usItem >= MAXITEMS)
 	{
-		DebugBreak();
+		//DebugBreak();
 		return( FALSE );
 	}
 	if (Item[ usItem ].usItemClass == IC_GUN)

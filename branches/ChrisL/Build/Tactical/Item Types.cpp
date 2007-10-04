@@ -268,7 +268,9 @@ void GetLBESlots(UINT32 LBEType, std::vector<INT8>& LBESlots)
 			LBESlots.push_back(BIGPOCK7POS);
 			break;
 		default:
-			DebugBreak();
+			//CHRISL: Technically, this should never occur but we don't want the program to crash.
+			Assert(0);
+			//DebugBreak();
 	}
 	return;
 }
@@ -328,7 +330,7 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 	if (DestroyLBEIfEmpty(pObj) == false) {
 		//we should have copied all the items from the LBE to the soldier
 		//which means the LBE should be empty and destroyed
-		DebugBreak();
+		//DebugBreak();
 	}
 
 	return (TRUE);
@@ -523,9 +525,10 @@ bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
 	return true;
 }
 
-int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany, SOLDIERTYPE* pSoldier, int slot, bool allowLBETransfer)
+int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany, SOLDIERTYPE* pSoldier, int slot, int cap, bool allowLBETransfer)
 {
 	PERFORMANCE_MARKER
+	int freeObjectsInStack;
 	if (exists() == false) {
 		//we are adding to an empty object, it can happen
 		Assert(sourceObject.exists() == true);
@@ -535,13 +538,21 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany, SOLDIER
 	Assert(sourceObject.usItem == usItem);
 
 	//can't add too much, can't take too many
-	int freeObjectsInStack = max(0, (ItemSlotLimit( this, slot, pSoldier ) - ubNumberOfObjects));
+	if(cap > 0){
+		freeObjectsInStack = max(0, (cap - ubNumberOfObjects));
+	}
+	else{
+		freeObjectsInStack = max(0, (ItemSlotLimit( this, slot, pSoldier ) - ubNumberOfObjects));
+	}
 	int numToAdd = min (freeObjectsInStack, sourceObject.ubNumberOfObjects);
 	//if howMany is ALL_OBJECTS the stack will become full if sourceObject has enough
 	if (howMany != ALL_OBJECTS) {
 		numToAdd = min(numToAdd, howMany);
 	}
 
+	if(numToAdd == 0){
+		return 0;
+	}
 	if (this->CanStack(sourceObject, numToAdd) == false) {
 		return 0;
 	}
@@ -622,7 +633,7 @@ int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject, SOLD
 		}
 		if (numToRemove > 0) {
 			//this handles the removal too
-			return destObject->AddObjectsToStack(*this, numToRemove, pSoldier, slot, allowLBETransfer);
+			return destObject->AddObjectsToStack(*this, numToRemove, pSoldier, slot, 0, allowLBETransfer);
 		}
 	}
 	else if (numToRemove > 0) {
@@ -693,8 +704,11 @@ bool OBJECTTYPE::RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject)
 StackedObjectData* OBJECTTYPE::operator [](const unsigned int index)
 {
 	PERFORMANCE_MARKER
-	Assert(index < objectStack.size());
 	StackedObjects::iterator iter = objectStack.begin();
+	if(index >= objectStack.size()){
+		return &(*iter);
+	}
+	Assert(index < objectStack.size());
 	for (unsigned int x = 0; x < index; ++x) {
 		++iter;
 	}
@@ -720,7 +734,7 @@ void OBJECTTYPE::CopyToOrCreateAt(OBJECTTYPE** ppTarget, OBJECTTYPE* pSource)
 	}
 	else {
 		//ADB leaving this in for a while, not sure if the code ever even reaches here and this will tell me
-		DebugBreak();
+		//DebugBreak();
 		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("Found mem leak, but it was corrected."));
 		**ppTarget = *pSource;
 	}
@@ -950,9 +964,10 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 		//therefore, keep ubNumberOfObjects at 0 but resize objectStack to at least 1
 		this->objectStack.resize(max(ubNumberOfObjects, 1));
 		if (ubNumberOfObjects == 0) {
-			if (this->usItem != NONE) {
-				DebugBreak();
-			}
+			//CHRISL: I'm not sure what we're trying to accomplish here since we're going to blank usItem in the next line
+//			if (this->usItem != NONE) {
+//				DebugBreak();
+//			}
 			this->usItem = NONE;
 		}
 

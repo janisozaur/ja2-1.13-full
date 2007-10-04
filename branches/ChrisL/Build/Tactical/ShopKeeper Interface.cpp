@@ -3001,10 +3001,11 @@ bool RepairmanItemQsortCompare(INVENTORY_IN_SLOT& pInvSlot1, INVENTORY_IN_SLOT& 
 	{
 		return true;
 	}
+	//CHRISL: This condition should never run as it's identical to the above condition.  I've commented it for the time being.
 	//ADB TODO, why is there a TODO here?
-	if (pInvSlot1.uiRepairDoneTime < pInvSlot2.uiRepairDoneTime) {
-		DebugBreak();
-	}
+//	if (pInvSlot1.uiRepairDoneTime < pInvSlot2.uiRepairDoneTime) {
+//		DebugBreak();
+//	}
 	return false;
 }
 
@@ -4184,6 +4185,9 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			Rect.iTop = SKI_DEALER_OFFER_AREA_Y;
 			Rect.iRight = SKI_ITEM_MOVEMENT_AREA_X + SKI_ITEM_MOVEMENT_AREA_WIDTH;
 			Rect.iBottom = SKI_ITEM_MOVEMENT_AREA_Y + SKI_ITEM_MOVEMENT_AREA_HEIGHT;
+			if((UsingNewInventorySystem() == true)){
+				Rect.iBottom += 60;
+			}
 
 			gpItemPointer = &gMoveingItem.ItemObject;
 
@@ -4231,6 +4235,9 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			Rect.iTop = SKI_ITEM_MOVEMENT_AREA_Y;
 			Rect.iRight = SKI_ITEM_MOVEMENT_AREA_X + SKI_ITEM_MOVEMENT_AREA_WIDTH;
 			Rect.iBottom = SKI_ITEM_MOVEMENT_AREA_Y + SKI_ITEM_MOVEMENT_AREA_HEIGHT;
+			if((UsingNewInventorySystem() == true)){
+				Rect.iBottom += 60;
+			}
 
 			gpItemPointer = &gMoveingItem.ItemObject;
 
@@ -4300,6 +4307,9 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 				Rect.iTop = SKI_ITEM_MOVEMENT_AREA_Y;
 				Rect.iRight = SKI_ITEM_MOVEMENT_AREA_X + SKI_ITEM_MOVEMENT_AREA_WIDTH;
 				Rect.iBottom = SKI_ITEM_MOVEMENT_AREA_Y + SKI_ITEM_MOVEMENT_AREA_HEIGHT;
+				if((UsingNewInventorySystem() == true)){
+					Rect.iBottom += 60;
+				}
 
 				gpItemPointer = &gMoveingItem.ItemObject;
 				gpItemPointerSoldier = gpSMCurrentMerc;

@@ -6023,9 +6023,12 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 		// Add region
 		MSYS_AddRegion( &gItemPopupRegions[cnt]);
 		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 0, cnt );
+		//CHRISL: Include the pockets capacity as UserData 1
+		int cap = ItemSlotLimit( &pSoldier->inv[ubPosition], ubPosition, pSoldier );
+		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 1, cap );
 		
 		//OK, for each item, set dirty text if applicable!
-		//CHRISL: TODO Need to alter this so we display items names with attachments if appropriate
+		//CHRISL:
 		if(cnt < pSoldier->inv[ubPosition].ubNumberOfObjects && pSoldier->inv[ubPosition].exists() == true){
 			GetHelpTextForItem( pStr, &( pSoldier->inv[ ubPosition ] ), pSoldier, cnt );
 			SetRegionFastHelpText( &(gItemPopupRegions[ cnt ]), pStr );
@@ -6634,8 +6637,10 @@ void ItemPopupRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
 	PERFORMANCE_MARKER
 	UINT32					uiItemPos;
+	UINT32					iItemCap;
 
 	uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
+	iItemCap = MSYS_GetRegionUserData( pRegion, 1 );
 
 	// TO ALLOW ME TO DELETE REGIONS IN CALLBACKS!
 	if ( gfItemPopupRegionCallbackEndFix )
@@ -6649,32 +6654,32 @@ void ItemPopupRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		//If one in our hand, place it
 		if ( gpItemPointer != NULL )
 		{
-				if ( !PlaceObjectAtObjectIndex( gpItemPointer, gpItemPopupObject, (UINT8)uiItemPos ) )
+			if ( !PlaceObjectAtObjectIndex( gpItemPointer, gpItemPopupObject, (UINT8)uiItemPos, iItemCap ) )
+			{
+				if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 				{
-    		  if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-          {
-            MAPEndItemPointer( );
-          }
-          else
-          {
-					  gpItemPointer = NULL;
-					  MSYS_ChangeRegionCursor( &gSMPanelRegion , CURSOR_NORMAL );	
-					  SetCurrentCursorFromDatabase( CURSOR_NORMAL );
+					MAPEndItemPointer( );
+				}
+				else
+				{
+					gpItemPointer = NULL;
+					MSYS_ChangeRegionCursor( &gSMPanelRegion , CURSOR_NORMAL );	
+					SetCurrentCursorFromDatabase( CURSOR_NORMAL );
 
-						if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-						{
-							gMoveingItem.initialize();
-							SetSkiCursor( CURSOR_NORMAL );
-						}
-          }
-
-					// re-evaluate repairs
-					gfReEvaluateEveryonesNothingToDo = TRUE;
+					if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+					{
+						gMoveingItem.initialize();
+						SetSkiCursor( CURSOR_NORMAL );
+					}
 				}
 
-				//Dirty interface
-				//fInterfacePanelDirty = DIRTYLEVEL2;
-				//RenderItemStackPopup( FALSE );
+				// re-evaluate repairs
+				gfReEvaluateEveryonesNothingToDo = TRUE;
+			}
+
+			//Dirty interface
+			//fInterfacePanelDirty = DIRTYLEVEL2;
+			//RenderItemStackPopup( FALSE );
 		}
 		else
 		{

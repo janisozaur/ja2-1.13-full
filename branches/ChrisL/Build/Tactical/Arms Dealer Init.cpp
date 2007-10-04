@@ -1751,22 +1751,25 @@ void MakeObjectOutOfDealerItems( DEALER_SPECIAL_ITEM *pSpclItemInfo, OBJECTTYPE 
 
 	if (pObject->ubNumberOfObjects > 1) {
 		//if it gets here, handle multiples
-		DebugBreak();
+		//DebugBreak();
+		//CHRISL: I'm not exactly sure why ADB added ths condition but I can't see a need for it at this point.
 	}
-	(*pObject)[0]->data.objectStatus = bItemCondition;
-
-	// set the ImprintID
-	(*pObject)[0]->data.ubImprintID = pSpclItemInfo->ubImprintID;
-
-	// if it's a gun
-	if (Item [ pObject->usItem ].usItemClass == IC_GUN )
-	{
-		// Empty out the bullets put in by CreateItem().	We now sell all guns empty of bullets.	This is so that we don't 
-		// have to keep track of #bullets in a gun throughout dealer inventory.	Without this, players could "reload" guns
-		// they don't have ammo for by selling them to Tony & buying them right back fully loaded!	One could repeat this
-		// ad nauseum (empty the gun between visits) as a (really expensive) way to get unlimited special ammo like rockets.
-		(*pObject)[0]->data.gun.ubGunShotsLeft = 0;
+	for(int cnt = 0; cnt < pObject->ubNumberOfObjects; cnt++){
+		(*pObject)[cnt]->data.objectStatus = bItemCondition;
+		// set the ImprintID
+		(*pObject)[cnt]->data.ubImprintID = pSpclItemInfo->ubImprintID;
+		// if it's a gun
+		if (Item [ pObject->usItem ].usItemClass == IC_GUN )
+		{
+			// Empty out the bullets put in by CreateItem().	We now sell all guns empty of bullets.	This is so that we don't 
+			// have to keep track of #bullets in a gun throughout dealer inventory.	Without this, players could "reload" guns
+			// they don't have ammo for by selling them to Tony & buying them right back fully loaded!	One could repeat this
+			// ad nauseum (empty the gun between visits) as a (really expensive) way to get unlimited special ammo like rockets.
+			(*pObject)[cnt]->data.gun.ubGunShotsLeft = 0;
+		}
 	}
+
+
 }
 
 

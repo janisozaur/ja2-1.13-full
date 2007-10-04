@@ -37,7 +37,7 @@ extern void DeleteObj(OBJECTTYPE * pObj );
 extern void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 );
 
 //Returns true if swapped, false if added to end of stack
-extern BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex );
+extern BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex, UINT32 ubCap );
 
 UINT16	CalculateObjectWeight( OBJECTTYPE *pObject );
 UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier );

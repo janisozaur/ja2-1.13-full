@@ -478,7 +478,7 @@ public:
 
 	UINT16	GetWeightOfObjectInStack(unsigned int index = 0);
 	int		AddObjectsToStack(int howMany, int objectStatus = 100);
-	int		AddObjectsToStack(OBJECTTYPE& sourceObject, int howManyWanted = ALL_OBJECTS, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT, bool allowLBETransfer = true);
+	int		AddObjectsToStack(OBJECTTYPE& sourceObject, int howManyWanted = ALL_OBJECTS, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT, int cap = 0, bool allowLBETransfer = true);
 	int		MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove = ALL_OBJECTS, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT);
 	int		RemoveObjectsFromStack(int howMany = 1, OBJECTTYPE* destObject = NULL, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT);
 	bool	RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject = NULL);
