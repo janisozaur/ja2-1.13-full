@@ -8,8 +8,14 @@ namespace INIEditor.BackEnd
     {
         public const string APP_NAME = "JA2 v1.13 - INI Editor";
 
-        public const string JA2_PATH = @"C:\games\jagged alliance 2";
-        public const string XML_SETTINGS_PATH = @"C:\games\jagged alliance 2";
+        // TODO: This is for test version!
+        //public const string JA2_PATH = @"C:\games\jagged alliance 2";
+        //public const string XML_SETTINGS_PATH = @"C:\games\jagged alliance 2";
+
+        // TODO: This is for release version!
+        public const string JA2_PATH = @".\";
+        public const string XML_SETTINGS_PATH = @".\";
+
         public const string INI_FILE = "ja2_options.ini";
         public const string INI_FILE_OUT = "ja2_options.ini";   // INI Output file
         public const string INI_EDITOR_INIT_FILE = "INIEditorInit.xml";

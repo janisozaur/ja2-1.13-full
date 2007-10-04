@@ -14,7 +14,7 @@ namespace INIEditor.GUI
         private INIFile _iniFile = null;
         private Hashtable _iniSettingsList = null;
         private Enumerations.Language _descriptionLanguage = Enumerations.Language.English;
-        private readonly Enumerations.Permission _permission = Enumerations.Permission.User;    // TODO: Change to "User" in Release version!
+        private readonly Enumerations.Permission _permission = Enumerations.Permission.Admin;    // TODO: Change to "User" in Release version!
         private Control _ctlPropertyNewValue = new Control();
         private readonly System.ComponentModel.ComponentResourceManager _resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
         private SearchParams _searchParams = new SearchParams();
@@ -645,7 +645,7 @@ namespace INIEditor.GUI
         {
             try
             {
-                string dataFolder = Path.GetDirectoryName(dataDirectory);
+                string dataFolder = dataDirectory;
                 string path = Path.Combine(Constants.JA2_PATH, dataFolder);
 
                 path = Path.Combine(path, Constants.INI_FILE_OUT);
