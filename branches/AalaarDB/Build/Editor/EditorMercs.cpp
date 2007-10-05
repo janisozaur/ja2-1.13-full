@@ -2123,7 +2123,7 @@ void ChangeBodyType( INT8 bOffset )	//+1 or -1 only
 				break;
 		}
 		SetSoldierAnimationSurface( gpSelected->pSoldier, gpSelected->pSoldier->usAnimState );
-		ConvertAniCodeToAniFrame( gpSelected->pSoldier, 0 );
+		gpSelected->pSoldier->ConvertAniCodeToAniFrame( 0 );
 	}
 	//Update the placement's info as well.
 	gpSelected->pBasicPlacement->bBodyType = (INT8)iIndex;
@@ -2663,7 +2663,7 @@ void UpdateMercsInfo()
 					default:
 						return;
 				}
-				wcscat( str, L"	Hit ESC to abort entering this line in the schedule." );
+				wcscat( str, L" Hit ESC to abort entering this line in the schedule." );
 				DisplayWrappedString( iScreenWidthOffset + 436, 2 * iScreenHeightOffset + 392, 149, 2, FONT10ARIAL, FONT_YELLOW, str, FONT_BLACK, FALSE, LEFT_JUSTIFIED );
 			}
 			break;

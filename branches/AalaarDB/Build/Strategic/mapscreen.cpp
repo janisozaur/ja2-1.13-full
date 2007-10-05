@@ -6954,7 +6954,7 @@ void MAPInvMoveCallback( MOUSE_REGION *pRegion, INT32 iReason )
 
 	//gbCheckForMouseOverItemPos = -1;
 
-	if ( pSoldier->inv[ uiHandPos ].usItem == NOTHING )
+	if ( pSoldier->inv[ uiHandPos ].exists() == false )
 		return;
 
 	if (iReason == MSYS_CALLBACK_REASON_MOVE)
@@ -7022,7 +7022,7 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 		if ( gpItemPointer == NULL )
 		{
 			// Return if empty
-			if ( pSoldier->inv[ uiHandPos ].usItem == NOTHING )
+			if ( pSoldier->inv[ uiHandPos ].exists() == false )
 			{
 				return;
 			}
@@ -7072,7 +7072,7 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 			if ( _KeyDown(CTRL) )
 			{
 				CleanUpStack( &( pSoldier->inv[ uiHandPos ] ), gpItemPointer );
-				if ( gpItemPointer->ubNumberOfObjects == 0 )
+				if ( gpItemPointer->exists() == false )
 				{
 					MAPEndItemPointer( );
 				}
@@ -7126,7 +7126,7 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 				fMapPanelDirty = TRUE;
 
 				// Check if cursor is empty now
-				if ( gpItemPointer->ubNumberOfObjects == 0 )
+				if ( gpItemPointer->exists() == false )
 				{
 					MAPEndItemPointer( );
 				}
@@ -7568,6 +7568,7 @@ void CheckToSeeIfMouseHasLeftMapRegionDuringPathPlotting(	)
 				// clear the temp path
 				if( pTempCharacterPath )
 				{
+					pTempCharacterPath = MoveToBeginningOfPathList( pTempCharacterPath);
 					pTempCharacterPath = ClearStrategicPathList( pTempCharacterPath, 0 );
 				}
 			}

@@ -161,35 +161,6 @@ typedef enum{
 #define BUDDY_OPINION +25
 #define HATED_OPINION -25
 
-//ADB TODO
-// CHRISL: Class to handle profile equipment from XML_MercStartingGear
-class MERCPROFILEGEAR {
-public:
-	// Constructor
-	MERCPROFILEGEAR();
-	// Assignment operator
-	MERCPROFILEGEAR& operator=(const MERCPROFILEGEAR&);
-	// Destructor
-	~MERCPROFILEGEAR();
-
-	// Initialize the mercenary profile gear
-	void initialize();
-
-	//  Note that the constructor does this automatically.
-	void clearInventory();
-public:
-	UINT16		mIndex;
-	CHAR8		mName[80];
-	char		endOfPOD;	// marker for end of POD (plain old data)
-	std::vector<int>	inv;
-	std::vector<int>	iStatus;
-	std::vector<int>	iDrop;
-	std::vector<int>	iNumber;
-	std::vector<int>	lbe;
-	std::vector<int>	lStatus;
-};
-#define SIZEOF_MERCPROFILEGEAR_POD offsetof( MERCPROFILEGEAR, endOfPOD )
-
 class OLD_MERCPROFILESTRUCT_101
 {
 public:

@@ -419,7 +419,7 @@ void DbgFailedAssertion( BOOLEAN fExpression, STR8 szFile, int nLine )
 
 	if ( fExpression == FALSE )
 	{
-		DebugBreak();
+		DebugBreakpoint();
 		if ((OutFile = fopen(gpcDebugLogFileName, "a+t")) != NULL)
 		{ 
 		  fprintf(OutFile, "Assertion Failed at:\n    line %i\n    %s\n", nLine, szFile);
@@ -506,7 +506,7 @@ extern HVOBJECT FontObjs[25];
 void _FailMessage( STR8 pString, UINT32 uiLineNum, STR8 pSourceFile )
 {
 	PERFORMANCE_MARKER 
-	DebugBreak();
+	DebugBreakpoint();
 	CHAR8 ubOutputString[512];
 #ifndef _NO_DEBUG_TXT
 	MSG Message;

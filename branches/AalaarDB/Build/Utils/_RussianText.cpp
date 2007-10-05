@@ -11,37 +11,37 @@
 /*
 
 ******************************************************************************************************
-**									IMPORTANT TRANSLATION NOTES									 **
+**                                  IMPORTANT TRANSLATION NOTES                                     **
 ******************************************************************************************************
 
 GENERAL TOPWARE INSTRUCTIONS
-- Always be aware that German strings should be of equal or shorter length than the English equivalent.	
+- Always be aware that German strings should be of equal or shorter length than the English equivalent.  
 	I know that this is difficult to do on many occasions due to the nature of the German language when 
-	compared to English.	By doing so, this will greatly reduce the amount of work on both sides.	In 
-	most cases (but not all), JA2 interfaces were designed with just enough space to fit the English word.	
+	compared to English.  By doing so, this will greatly reduce the amount of work on both sides.  In 
+	most cases (but not all), JA2 interfaces were designed with just enough space to fit the English word.  
 	The general rule is if the string is very short (less than 10 characters), then it's short because of 
-	interface limitations.	On the other hand, full sentences commonly have little limitations for length.	
+	interface limitations.  On the other hand, full sentences commonly have little limitations for length.  
 	Strings in between are a little dicey.
-- Never translate a string to appear on multiple lines.	All strings L"This is a really long string...", 
-	must fit on a single line no matter how long the string is.	All strings start with L" and end with ",
-- Never remove any extra spaces in strings.	In addition, all strings containing multiple sentences only 
-	have one space after a period, which is different than standard typing convention.	Never modify sections 
-	of strings contain combinations of % characters.	These are special format characters and are always 
-	used in conjunction with other characters.	For example, %s means string, and is commonly used for names,
-	locations, items, etc.	%d is used for numbers.	%c%d is a character and a number (such as A9).	
-	%% is how a single % character is built.	There are countless types, but strings containing these 
-	special characters are usually commented to explain what they mean.	If it isn't commented, then 
+- Never translate a string to appear on multiple lines.  All strings L"This is a really long string...", 
+	must fit on a single line no matter how long the string is.  All strings start with L" and end with ",
+- Never remove any extra spaces in strings.  In addition, all strings containing multiple sentences only 
+	have one space after a period, which is different than standard typing convention.  Never modify sections 
+	of strings contain combinations of % characters.  These are special format characters and are always 
+	used in conjunction with other characters.  For example, %s means string, and is commonly used for names,
+	locations, items, etc.  %d is used for numbers.  %c%d is a character and a number (such as A9).  
+	%% is how a single % character is built.  There are countless types, but strings containing these 
+	special characters are usually commented to explain what they mean.  If it isn't commented, then 
 	if you can't figure out the context, then feel free to ask SirTech.
 - Comments are always started with // Anything following these two characters on the same line are 
-	considered to be comments.	Do not translate comments.	Comments are always applied to the following 
-	string(s) on the next line(s), unless the comment is on the same line as a string.	
-- All new comments made by SirTech will use "//@@@ comment" (without the quotes) notation.	By searching 
+	considered to be comments.  Do not translate comments.  Comments are always applied to the following 
+	string(s) on the next line(s), unless the comment is on the same line as a string.  
+- All new comments made by SirTech will use "//@@@ comment" (without the quotes) notation.  By searching 
 	for @@@ everytime you recieve a new version, it will simplify your task and identify special instructions.
-	Commonly, these types of comments will be used to ask you to abbreviate a string.	Please leave the 
+  Commonly, these types of comments will be used to ask you to abbreviate a string.  Please leave the 
 	comments intact, and SirTech will remove them once the translation for that particular area is resolved.
 - If you have a problem or question with translating certain strings, please use "//!!! comment" 
-	(without the quotes).	The syntax is important, and should be identical to the comments used with @@@ 
-	symbols.	SirTech will search for !!! to look for Topware problems and questions.	This is a more 
+	(without the quotes).  The syntax is important, and should be identical to the comments used with @@@ 
+	symbols.  SirTech will search for !!! to look for Topware problems and questions.  This is a more 
 	efficient method than detailing questions in email, so try to do this whenever possible.
 
 
@@ -50,51 +50,51 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 **************
 
 1) BOLDED LETTERS
-	The popup help text system supports special characters to specify the hot key(s) for a button.	
+	The popup help text system supports special characters to specify the hot key(s) for a button.  
 	Anytime you see a '|' symbol within the help text string, that means the following key is assigned
-	to activate the action which is usually a button.	
+	to activate the action which is usually a button.  
 
-	EX:	L"|Map Screen"
+	EX:  L"|Map Screen"
 
-	This means the 'M' is the hotkey.	In the game, when somebody hits the 'M' key, it activates that
-	button.	When translating the text to another language, it is best to attempt to choose a word that
-	uses 'M'.	If you can't always find a match, then the best thing to do is append the 'M' at the end
+	This means the 'M' is the hotkey.  In the game, when somebody hits the 'M' key, it activates that
+	button.  When translating the text to another language, it is best to attempt to choose a word that
+	uses 'M'.  If you can't always find a match, then the best thing to do is append the 'M' at the end
 	of the string in this format:
 
-	EX:	L"Ecran De Carte (|M)"	(this is the French translation)
+	EX:  L"Ecran De Carte (|M)"  (this is the French translation)
 
-	Other examples are used multiple times, like the Esc key	or "|E|s|c" or Space->(|S|p|a|c|e)
+	Other examples are used multiple times, like the Esc key  or "|E|s|c" or Space -> (|S|p|a|c|e)
 
 2) NEWLINE
-	Any place you see a \n within the string, you are looking at another string that is part of the fast help
-	text system.	\n notation doesn't need to be precisely placed within that string, but whereever you wish 
+  Any place you see a \n within the string, you are looking at another string that is part of the fast help
+	text system.  \n notation doesn't need to be precisely placed within that string, but whereever you wish 
 	to start a new line. 
 
-	EX:	L"Clears all the mercs' positions,\nand allows you to re-enter them manually."
+	EX:  L"Clears all the mercs' positions,\nand allows you to re-enter them manually."
 
 	Would appear as:
 
 				Clears all the mercs' positions,
 				and allows you to re-enter them manually.
 
-	NOTE:	It is important that you don't pad the characters adjacent to the \n with spaces.	If we did this
-		in the above example, we would see
+	NOTE:  It is important that you don't pad the characters adjacent to the \n with spaces.  If we did this
+	       in the above example, we would see
 
 	WRONG WAY -- spaces before and after the \n
-	EX:	L"Clears all the mercs' positions, \n and allows you to re-enter them manually."
+	EX:  L"Clears all the mercs' positions, \n and allows you to re-enter them manually."
 
 	Would appear as: (the second line is moved in a character)
 		
 				Clears all the mercs' positions,
- 				and allows you to re-enter them manually.
+ 				 and allows you to re-enter them manually.
 
 
 @@@ NOTATION
 ************
 
-	Throughout the text files, you'll find an assortment of comments.	Comments are used to describe the
-	text to make translation easier, but comments don't need to be translated.	A good thing is to search for
-	"@@@" after receiving new version of the text file, and address the special notes in this manner.	
+	Throughout the text files, you'll find an assortment of comments.  Comments are used to describe the
+	text to make translation easier, but comments don't need to be translated.  A good thing is to search for
+	"@@@" after receiving new version of the text file, and address the special notes in this manner.  
 
 !!! NOTATION
 ************
@@ -282,7 +282,7 @@ CHAR16 Message[][STRING_LENGTH] =
 	L"Приложения",
 	
 	//You cannot use "item(s)" and your "other item" at the same time.
-	//Ex:	You cannot use sun goggles and you gas mask at the same time.
+	//Ex:  You cannot use sun goggles and you gas mask at the same time.
 	L"Нельзя использовать %s и %s одновр.",
 
 	L"Вещь,на к-рую указывает курсор,можно присоединить к другим вещам,поместив ее в одну из связных ячеек.",
@@ -300,7 +300,7 @@ CHAR16 Message[][STRING_LENGTH] =
 	L"Сдаться?",
 	L"Человек отверг твою помощь",
 	L"Я так НЕ ДУМАЮ!",
-	L"Чтобы воспользоваться вертолетеом Всадника, выберите ПРИНАДЛЕЖНОСТЬ и МАШИНА.",
+  L"Чтобы воспользоваться вертолетеом Всадника, выберите ПРИНАДЛЕЖНОСТЬ и МАШИНА.",
 	L"%s успевает зарядить только один пистолет",
 	L"ход Кошки-Убийцы",
 	L"automatic",
@@ -346,7 +346,7 @@ STR16 sTimeStrings[] =
 };
 
 
-// Assignment Strings: what assignment does the merc	have right now? For example, are they on a squad, training, 
+// Assignment Strings: what assignment does the merc  have right now? For example, are they on a squad, training, 
 // administering medical aid (doctor) or training a town. All are abbreviated. 8 letters is the longest it can be.
 
 STR16 pAssignmentStrings[] =
@@ -377,8 +377,8 @@ STR16 pAssignmentStrings[] =
 	L"Машина", // in a vehicle
 	L"В пути", //транзитом - сокращение
 	L"Ремонт", // ремонтируются
-	L"Практика", // тренируются	
-	L"Ополчение", //готовят восстание среди горожан 
+	L"Практика", // тренируются  
+  L"Ополчение", //готовят восстание среди горожан 
 	L"Тренер", // training a teammate
 	L"Студент", // being trained by someone else 
 	L"Мертв", // мертв
@@ -457,7 +457,7 @@ STR16 pPersonnelAssignmentStrings[] =
 	L"В пути",
 	L"Ремонт",
 	L"Практика", 
-	L"Тренировка ополч",
+  L"Тренировка ополч",
 	L"Тренер",
 	L"Ученик", 
 	L"Мертв",
@@ -499,7 +499,7 @@ STR16 pLongAssignmentStrings[] =
 	L"В пути",
 	L"Ремонт",
 	L"Практика", 
-	L"Тренинг ополч",
+  L"Тренинг ополч",
 	L"Тренинг команды",
 	L"Ученик", 
 	L"Мертв",
@@ -525,14 +525,14 @@ STR16 pContractStrings[] =
 
 STR16 pPOWStrings[] =
 {
-	L"ВП",	//an acronym for Prisoner of War
+	L"ВП",  //an acronym for Prisoner of War
 	L"??",
 };
 
 STR16 pLongAttributeStrings[] =
 {
-	L"СИЛА", 
-	L"ЛОВКОСТЬ",	
+    L"СИЛА", 
+	L"ЛОВКОСТЬ",  
 	L"ПОДВИЖНОСТЬ", 
 	L"МУДРОСТЬ", 
 	L"МЕТКОСТЬ",
@@ -580,7 +580,7 @@ STR16 pUpperLeftMapScreenStrings[] =
 STR16 pTrainingStrings[] =
 {
 	L"Практика", // tell merc to train self 
-	L"Ополчение", // tell merc to train town 
+    L"Ополчение", // tell merc to train town 
 	L"Тренер", // tell merc to act as trainer
 	L"Ученик", // tell merc to be train by other 
 };
@@ -593,7 +593,7 @@ STR16 pGuardMenuStrings[] =
 	L" Пока не стрелять", // fire only when the merc needs to 
 	L"Другие опции:", // other options available to merc
 	L" Отступить", // merc can retreat
-	L" Искать укрытие",	// merc is allowed to seek cover
+	L" Искать укрытие",  // merc is allowed to seek cover
 	L" Можно помочь команде", // merc can assist teammates
 	L"Готово", // done with this menu
 	L"Отмена", // cancel this menu
@@ -652,7 +652,7 @@ STR16 pMilitiaControlMenuStrings[] =
 //	L"Hold Position", // set militia to stationary
 //	L"Retreat", // retreat militia
 //	L"Come to me", // retreat militia
-//	L"Get down", // retreat militia		
+//	L"Get down", // retreat militia		 
 //	L"Cancel", // cancel this menu
 //};
 
@@ -681,22 +681,22 @@ STR16 pTrainingMenuStrings[] =
  L"Практика", // train yourself 
  L"Ополч.", // train the town 
  L"Тренер", // train your teammates 
- L"Ученик",	// be trained by an instructor 
+ L"Ученик",  // be trained by an instructor 
  L"Отмена", // cancel this menu
 };
 
 
 STR16 pSquadMenuStrings[] =
 {
-	L"Отряд	1",
-	L"Отряд	2",
-	L"Отряд	3",
-	L"Отряд	4",
-	L"Отряд	5",
-	L"Отряд	6",
-	L"Отряд	7",
-	L"Отряд	8",
-	L"Отряд	9",
+	L"Отряд  1",
+	L"Отряд  2",
+	L"Отряд  3",
+	L"Отряд  4",
+	L"Отряд  5",
+	L"Отряд  6",
+	L"Отряд  7",
+	L"Отряд  8",
+	L"Отряд  9",
 	L"Отряд 10",
 	L"Отряд 11",
 	L"Отряд 12",
@@ -883,7 +883,7 @@ STR16 pLandTypeStrings[] =
 	L"Равнина",
 	L"Пустыня",
 	L"Леса",
-	L"Роща",	
+	L"Роща",	 
 	L"Болото",
 	L"Вода",	
 	L"Холмы",
@@ -968,14 +968,14 @@ STR16 gpStrategicString[] =
 
 	L"Время истекло",							//STR_AR_TIME_ELAPSED,
 
-	//Labels for status of merc if retreating.	(UPPERCASE)			
+	//Labels for status of merc if retreating.  (UPPERCASE)			
 
 	L"ОТСТУПИЛ",								//STR_AR_MERC_RETREATED,
 	L"ОТСТУПАЕТ",								//STR_AR_MERC_RETREATING,
 	L"ОТСТУПЛЕНИЕ",								//STR_AR_MERC_RETREAT,
 
 	//PRE BATTLE INTERFACE STRINGS 
-	//Goes on the three buttons in the prebattle interface.	The Auto resolve button represents
+	//Goes on the three buttons in the prebattle interface.  The Auto resolve button represents
 	//a system that automatically resolves the combat for the player without having to do anything.
 	//These strings must be short (two lines -- 6-8 chars per line)
 
@@ -992,8 +992,8 @@ STR16 gpStrategicString[] =
 	L"ЗАСАДА КОШКИ",							//STR_PB_BLOODCATAMBUSH_HEADER
 	L"ИДТИ В ЛОГОВО КОШКИ-УБИЙЦЫ",			//STR_PB_ENTERINGBLOODCATLAIR_HEADER
 
-	//Various single words for direct translation.	The Civilians represent the civilian
-	//militia occupying the sector being attacked.	Limited to 9-10 chars
+	//Various single words for direct translation.  The Civilians represent the civilian
+	//militia occupying the sector being attacked.  Limited to 9-10 chars
 
 	L"Место",
 	L"Враги",
@@ -1015,7 +1015,7 @@ STR16 gpStrategicString[] =
 	L"Группа",
 	L"Готово",
 
-	//The help text for the four buttons.	Use \n to denote new line (just like enter).
+	//The help text for the four buttons.  Use \n to denote new line (just like enter).
 
 	L"Убрать позиции наемников \nдля повторного их ввода ( |C).", 
 	L"Рассредоточить наемников вручную (|S).",
@@ -1028,43 +1028,43 @@ STR16 gpStrategicString[] =
 	L"Сектор",
 	L"Выбрать место входа",
 
-	//Strings used for various popup message boxes.	Can be as long as desired.
+	//Strings used for various popup message boxes.  Can be as long as desired.
 
 	L"Выглядит непривлекательно. Место недоступно. Выберите другое место.",
 	L"Поместите своих наемников в выделенное место на карте.",
 
-	//This message is for mercs arriving in sectors.	Ex:	Red has arrived in sector A9.
+	//This message is for mercs arriving in sectors.  Ex:  Red has arrived in sector A9.
 	//Don't uppercase first character, or add spaces on either end.
 
 	L"прибыл в сектор", 
 
-	//These entries are for button popup help text for the prebattle interface.	All popup help
-	//text supports the use of \n to denote new line.	Do not use spaces before or after the \n.
+	//These entries are for button popup help text for the prebattle interface.  All popup help
+	//text supports the use of \n to denote new line.  Do not use spaces before or after the \n.
 	L"Битва разрешается автоматически\nбез загрузки карты(|A)",
 	L"Нельзя исп.авторазрешение когда\nигрок атакует.",
 	L"Войти в сектор:стычка с врагом (|E).",
 	L"Группа отступает в прежний сектор (|R).",				//singular version
 	L"Все группы отступают в прежние сектора (|R)", //multiple groups with same previous sector
 //!!!What about repeated "R" as hotkey?
-	//various popup messages for battle conditions.	
+	//various popup messages for battle conditions.  
 
-	//%c%d is the sector -- ex:	A9
+	//%c%d is the sector -- ex:  A9
 	L"Враги атакуют ваше ополчение в секторе %c%d.",
-	//%c%d сектор -- напр:	A9
+	//%c%d сектор -- напр:  A9
 	L"Существа атакуют ваше ополч.в секторе %c%d.",
-	//1st %d refers to the number of civilians eaten by monsters,	%c%d is the sector -- ex:	A9
-	//Note:	the minimum number of civilians eaten will be two.
+	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
+	//Note:  the minimum number of civilians eaten will be two.
 	L"Существа атакуют и убивают %d жителей в секторе %s.",
-	//%s is the sector location -- ex:	A9: Omerta
+	//%s is the sector location -- ex:  A9: Omerta
 	L"Враги атакуют ваших наемн.в секторе %s. Никто из наемников не может драться!",
-	//%s is the sector location -- ex:	A9: Omerta
+	//%s is the sector location -- ex:  A9: Omerta
 	L"Существа атакуют ваших наемн.в секторе%s. Никто из наемников не может драться!",
 
 };
 
 STR16 gpGameClockString[] = 
 {
-	//This is the day represented in the game clock.	Must be very short, 4 characters max.
+	//This is the day represented in the game clock.  Must be very short, 4 characters max.
 	L"День",	
 };
 
@@ -1120,10 +1120,10 @@ CHAR16 zHealthStr[][13] =
 	L"УМИРАЕТ",		//	>= 0
 	L"КРИТИЧЕН", 		//	>= 15
 	L"ПЛОХ",		//	>= 30
-	L"РАНЕН",		//	>= 45
-	L"ЗДОРОВ",		//	>= 60
-	L"СИЛЕН",	 	// 	>= 75
-	L"ОТЛИЧНО",		// 	>= 90
+	L"РАНЕН",    	//	>= 45
+	L"ЗДОРОВ",    	//	>= 60
+	L"СИЛЕН",     	// 	>= 75
+  L"ОТЛИЧНО",		// 	>= 90
 };
 
 STR16	gzMoneyAmounts[6] = 
@@ -1252,7 +1252,7 @@ CHAR16 TacticalStr[][ MED_STRING_LENGTH ] =
 
 	L"%s.Оплачено сполна.",
 	L"%s.Еще должен %d.",
-	L"Выбрать частоту детонатора:",		//in this case, frequency refers to a radio signal
+	L"Выбрать частоту детонатора:",  	//in this case, frequency refers to a radio signal
 	L"Кол-во ходов перед взрывом:",	//how much time, in turns, until the bomb blows
 	L"Устан.частоту дистанц.взрывателя:", 	//in this case, frequency refers to a radio signal
 	L"Разрядить ловушку?",
@@ -1403,7 +1403,7 @@ CHAR16 TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Замок разрушен",
 	L"Кто-то еще пытается воспользов.этой дверью.",
 	L"Здоровье: %d/%d\nБенз: %d/%d",
-	L"%s не видит %s.",	// Cannot see person trying to talk to
+	L"%s не видит %s.",  // Cannot see person trying to talk to
 	L"Attachment removed",
 };
 
@@ -1422,7 +1422,7 @@ STR16 pExitingSectorHelpText[] =
 	L"Выводя оставшихся наемников из этого сектора,\nучти, что соседний сектор будет занят немедленно.",
 	L"Выведя оставшихся наемников из этого сектора,\nвы автоматически перемещаетесь в окно карты \nвашему наемнику понадобится время на дорогу.",
 
-	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted.	The "single" button is disabled.
+	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted.  The "single" button is disabled.
 	L"%s не может покинуть этот сектор один, его надо сопроводить.",
 
 	//If only one conscious merc is left and is selected, and there are EPCs in the squad, the merc will be prohibited from leaving alone.
@@ -1430,25 +1430,25 @@ STR16 pExitingSectorHelpText[] =
 	//DO NOT USE THE NEWLINE HERE AS IT IS USED FOR BOTH HELPTEXT AND SCREEN MESSAGES!
 	L"%s не может покинуть сектор один-он сопровождает %s.", //male singular
 	L"%s не может покинуть сектор одна-она сопровождает %s.", //female singular
-	L"%s не может покинуть сектор один-он	сопровождает группу.", //male plural
+	L"%s не может покинуть сектор один-он  сопровождает группу.", //male plural
 	L"%s не может покинуть сектор одна-она сопровождает группу.", //female plural
 
-	//If one or more of your mercs in the selected squad aren't in range of the traversal area, then the	"move all" option is disabled,
+	//If one or more of your mercs in the selected squad aren't in range of the traversal area, then the  "move all" option is disabled,
 	//and this helptext explains why.
 	L"Чтобы дать отряд мог пойти,\nвсе ваши наемники дожны быть в рядом.",
 
 	L"", //UNUSED
 
-	//Standard helptext for single movement.	Explains what will happen (splitting the squad)
+	//Standard helptext for single movement.  Explains what will happen (splitting the squad)
 	L"После проверки %s поедет один, и\nавтоматически попадет в уникальный отряд.",
 
-	//Standard helptext for all movement.	Explains what will happen (moving the squad)
+	//Standard helptext for all movement.  Explains what will happen (moving the squad)
 	L"После проверки выбранный вами сейчас \nотряд покинет этот сектор.",
 
-	//This strings is used BEFORE the "exiting sector" interface is created.	If you have an EPC selected and you attempt to tactically
+	//This strings is used BEFORE the "exiting sector" interface is created.  If you have an EPC selected and you attempt to tactically
 	//traverse the EPC while the escorting mercs aren't near enough (or dead, dying, or unconscious), this message will appear and the
-	//"exiting sector" interface will not appear.	This is just like the situation where
-	//This string is special, as it is not used as helptext.	Do not use the special newline character (\n) for this string.
+	//"exiting sector" interface will not appear.  This is just like the situation where
+	//This string is special, as it is not used as helptext.  Do not use the special newline character (\n) for this string.
 	L"%s не может покинуть этот сектор один, его надо сопроводить. Остальные наемники остаются пока с вами.",
 };
 
@@ -1494,16 +1494,16 @@ STR16 sStatGainStrings[] =
 
 STR16 pHelicopterEtaStrings[] =
 {
-	L"Общее расст.:	", 			// total distance for helicopter to travel
-	L" Безопасно:	", 			// distance to travel to destination
+	L"Общее расст.:  ", 			// total distance for helicopter to travel
+	L" Безопасно:  ", 			// distance to travel to destination
 	L" Опасно:", 			// distance to return from destination to airport
 	L"Общ.цена: ", 		// total cost of trip by helicopter
-	L"УВП:	", 			// ETA is an acronym for "estimated time of arrival" 
-	L"В вертолете мало топлива, он вынужд.сесть на враж.территории!",	// warning that the sector the helicopter is going to use for refueling is under enemy control->
-	L"Пассажиры: ",
-	L"Выбрать высадку Всадника или Прибывающих?",
-	L"Всадник",
-	L"Прибывающие",
+	L"УВП:  ", 			// ETA is an acronym for "estimated time of arrival" 
+	L"В вертолете мало топлива, он вынужд.сесть на враж.территории!",	// warning that the sector the helicopter is going to use for refueling is under enemy control -> 
+  L"Пассажиры: ",
+  L"Выбрать высадку Всадника или Прибывающих?",
+  L"Всадник",
+  L"Прибывающие",
 };
 
 STR16 sMapLevelString[] =
@@ -1610,7 +1610,7 @@ STR16 pwMiscSectorStrings[] =
 STR16 pMapInventoryErrorString[] =
 {
 	L"%s недостаточно близко",	//Merc is in sector with item but not close enough
-	L"Нельзя выбрать этого.",	//MARK CARTER
+	L"Нельзя выбрать этого.",  //MARK CARTER
 	L"%s не в секторе и не может взять эту вещь",
 	L"Во время битвы надо подбирать эти вещи вручную",
 	L"Во время битвы надо бросать вещи вручную.",
@@ -1765,8 +1765,8 @@ STR16 pSenderNameList[] =
 
 STR16 pTraverseStrings[] =
 {
-	L"Предыд",
-	L"След",
+  L"Предыд",
+  L"След",
 };
 
 // new mail notify string 
@@ -1830,7 +1830,7 @@ STR16 pFinanceSummary[] =
 
 STR16 pFinanceHeaders[] =
 {
-	L"Day", 					// the day column
+  L"Day", 					// the day column
 	L"Кредит", 				// the credits column
 	L"Дебет",				// the debits column
 	L"Перевод", 			// transaction type - see TransactionText below
@@ -1868,7 +1868,7 @@ STR16 pTransactionText[] =
 	L"Перевод средств на имя %s", 			// transfer funds to a merc
 	L"Перевод средств от %s", 		// transfer funds from a merc
 	L"Стоим.экипировки ополч: %s", // initial cost to equip a town's militia
-	L"Покупки у %s.",	//is used for the Shop keeper interface.	The dealers name will be appended to the end of the string.
+	L"Покупки у %s.",	//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
 	L"%s положил деньги.",
 	L"Sold Item(s) to the Locals",
 };
@@ -2137,15 +2137,15 @@ STR16 pExtraIMPStrings[] =
 
 STR16 pFilesTitle[] =
 {
-	L"Просмотр файлов",
+  L"Просмотр файлов",
 };
 
 STR16 pFilesSenderList[] =
 {
-	L"Отчет разведки", 		// the recon report sent to the player. Recon is an abbreviation for reconissance
+  L"Отчет разведки", 		// the recon report sent to the player. Recon is an abbreviation for reconissance
 	L"Перехват #1", 		// first intercept file .. Intercept is the title of the organization sending the file...similar in function to INTERPOL/CIA/KGB..refer to fist record in files.txt for the translated title
-	L"Перехват #2",	// second intercept file
-	L"Перехват #3",			// third intercept file
+	L"Перехват #2",	   // second intercept file
+	L"Перехват #3",			 // third intercept file
 	L"Перехват #4", // fourth intercept file
 	L"Перехват #5", // fifth intercept file
 	L"Перехват #6", // sixth intercept file
@@ -2196,7 +2196,7 @@ STR16 pHistoryStrings[] =
 	L"начало.", 															// a particular quest started
 	//16-20
 	L"завершен.",
-	L"Разговор с начальн.шахт в 						s",									// talked to head miner of town
+	L"Разговор с начальн.шахт в 						 s",									// talked to head miner of town
 	L"Освобожден %s",
 	L"Был использован обман",
 	L"Пища должна быть в Омерте до завтра",
@@ -2602,7 +2602,7 @@ STR16			MercAccountPageText[] =
 {
 	// Text on the buttons on the bottom of the screen
 	L"Previous",
-	L"Next",
+  L"Next",
 };
 
 //For use at the M.E.R.C. web site. Text relating a MERC mercenary
@@ -2629,7 +2629,7 @@ STR16			MercInfo[] =
 	L"На гл.страницу",
 	L"Нанят",
 	L"Зарплата:",
-	L"в день	.",
+	L"в день   .",
 	L"Мертвец",
 
 	L"Похоже,вы увлеклись набором наемников.Ваш предел-18 чел.",
@@ -2881,7 +2881,7 @@ STR16			BobbyRText[] =
 	L"БЛАНК",
 	L"На гл.стр.",			//10
 
-	//The following 2 lines are used on the Ammunition page.	
+	//The following 2 lines are used on the Ammunition page.  
 	//They are used for help text to display how many items the player's merc has
 	//that can use this type of ammo
 
@@ -3244,7 +3244,7 @@ STR16 SKI_Text[ ] =
 	L"ГОТОВО",				//Text for the button which will leave the shopkeeper interface.
 	L"СТОИМ.РЕМОНТА",			//The amount the dealer will charge to repair the merc's goods
 	L"1 ЧАС",			// SINGULAR! The text underneath the inventory slot when an item is given to the dealer to be repaired
-	L"%d ЧАСОВ",		// PLURAL!	The text underneath the inventory slot when an item is given to the dealer to be repaired
+	L"%d ЧАСОВ",		// PLURAL!   The text underneath the inventory slot when an item is given to the dealer to be repaired
 	L"ОТРЕМОНТИРОВАНО",		// Text appearing over an item that has just been repaired by a NPC repairman dealer
 	L"Вам уже некуда класть вещи.",	//Message box that tells the user there is no more room to put there stuff
 	L"%d МИНУТ",		// The text underneath the inventory slot when an item is given to the dealer to be repaired
@@ -3340,18 +3340,18 @@ STR16			zSaveLoadText[] =
 	L"Сохраненная версия игры отличается от текущей.Надежнее всего продолжить.Продолжить?",
 	L"Файлы сохраненной игры могут быть с ошибкой.Уничтожить их все?",
 
-	//Translators, the next two strings are for the same thing.	The first one is for beta version releases and the second one
-	//is used for the final version.	Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
-	//used by the compiler and will cause program errors if modified/removed.	It's okay to translate the strings though.
+	//Translators, the next two strings are for the same thing.  The first one is for beta version releases and the second one
+	//is used for the final version.  Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
+	//used by the compiler and will cause program errors if modified/removed.  It's okay to translate the strings though.
 #ifdef JA2BETAVERSION
 	L"Сохр.версия была изменена.Сообщите о проблемах.Продолжить?",
 #else
 	L"Попытка загрузки старой версии. Обновить автоматически и загрузить?",
 #endif
 
-	//Translators, the next two strings are for the same thing.	The first one is for beta version releases and the second one
-	//is used for the final version.	Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
-	//used by the compiler and will cause program errors if modified/removed.	It's okay to translate the strings though.
+	//Translators, the next two strings are for the same thing.  The first one is for beta version releases and the second one
+	//is used for the final version.  Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
+	//used by the compiler and will cause program errors if modified/removed.  It's okay to translate the strings though.
 #ifdef JA2BETAVERSION
 	L"Сохр.версии и версии игры были изменены. Сообщите о проблемах. Продолжить?",
 #else
@@ -3414,7 +3414,7 @@ STR16		zMarksMapScreenText[] =
 	L"Недостаточно людей,желающих пройти подготовку.",
 	L"%s:много ополченцев.",
 	L"У наемн.конечн.контракт.", 
-	L"Контракт наемн.не застрахован",
+  L"Контракт наемн.не застрахован",
 	L"Map Overview",		// 24
 };
 
@@ -3432,7 +3432,7 @@ STR16 pMilitiaConfirmStrings[] =
 	L"У вас нет денег на это.", // telling the player they can't afford to train this town
 	L"Продолжить тренировку ополчения в %s (%s %d)?", // continue training this town?
 	L"Стоит $", // the cost in dollars to train militia
-	L"( Д/Н )",	// abbreviated yes/no
+	L"( Д/Н )",   // abbreviated yes/no
 	L"",	// unused
 	L"Тренировка отряда город.ополч.в секторе %d будет стоить $ %d. %s", // cost to train sveral sectors at once
 	L"У вас нет $%d на тренировку город.ополчения здесь.",
@@ -3599,16 +3599,13 @@ STR16	gzGIOScreenText[] =
 	L"Great",
 	L"Excellent",
 	L"Awesome",
-	L"Inventory System",
-	L"Old",
-	L"New",
 };
 
 STR16 pDeliveryLocationStrings[] =
 {
 	L"Остен",			//Austin, Texas, USA	
 	L"Багдад",			//Baghdad, Iraq (Suddam Hussein's home)
-	L"Драссен",			//The main place in JA2 that you can receive items.	The other towns are dummy names...
+	L"Драссен",			//The main place in JA2 that you can receive items.  The other towns are dummy names...
 	L"Гон Конг",		//Hong Kong, Hong Kong
 	L"Бейрут",			//Beirut, Lebanon	(Middle East)
 	L"Лондон",			//London, England
@@ -3626,8 +3623,8 @@ STR16 pDeliveryLocationStrings[] =
 };
 
 STR16 pSkillAtZeroWarning[] =
-{ //This string is used in the IMP character generation.	It is possible to select 0 ability
-	//in a skill meaning you can't use it.	This text is confirmation to the player.
+{ //This string is used in the IMP character generation.  It is possible to select 0 ability
+	//in a skill meaning you can't use it.  This text is confirmation to the player.
 	L"Уверен? Ноль означает отсутствие навыков."
 };
 
@@ -3706,7 +3703,7 @@ STR16 pMessageStrings[] =
 	L"USD",					//Abbreviation to US dollars
 	L"н/п",					//Lowercase acronym for not applicable.
 	L"В это время",		//Meanwhile
-	L"%s прибыл(а) в сектор %s%s", //Name/Squad has arrived in sector A9.	Order must not change without notifying
+	L"%s прибыл(а) в сектор %s%s", //Name/Squad has arrived in sector A9.  Order must not change without notifying
 																		//SirTech
 	L"Версия",
 	L"Пустая ячейка быстрого сохр",
@@ -3734,11 +3731,11 @@ STR16 pMessageStrings[] =
 	L"Бросить",
 	L"Передать",
 
-	L"%s передано %s.", //"Item" passed to "merc".	Please try to keep the item %s before the merc %s, otherwise,
-											//must notify SirTech.
-	L"Нельзя передать %s %s.", //pass "item" to "merc".	Same instructions as above.
+	L"%s передано %s.", //"Item" passed to "merc".  Please try to keep the item %s before the merc %s, otherwise,
+											 //must notify SirTech.
+	L"Нельзя передать %s %s.", //pass "item" to "merc".  Same instructions as above.
 
-	//A list of attachments appear after the items.	Ex:	Kevlar vest ( Ceramic Plate 'Attached )'
+	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
 	L" Присоединено )",
 
 	//Cheat modes
@@ -3752,12 +3749,12 @@ STR16 pMessageStrings[] =
 	L"%s открыт.",
 
 	//Wireframes are shown through buildings to reveal doors and windows that can't otherwise be seen in 
-	//an isometric engine.	You can toggle this mode freely in the game.
+	//an isometric engine.  You can toggle this mode freely in the game.
 	L"Дополнительные Каркасы Вкл",//$$
 	L"Дополнительные Каркасы Выкл",//$$
 
-	//These are used in the cheat modes for changing levels in the game.	Going from a basement level to
-	//an upper level, etc.	
+	//These are used in the cheat modes for changing levels in the game.  Going from a basement level to
+	//an upper level, etc.  
 	L"Нельзя подняться с этого уровня...",
 	L"Ниже уровней нет...",
 	L"Входим в подвальный уровень %d...",
@@ -3899,7 +3896,7 @@ STR16 pNewNoiseStr[] =
 	L"%s слышит %s УДАР с %sА.",
 	L"%s слышит %s УДАР с %sА.",
 	L"%s слышит %s ЗВОН, идущий с %sА.",
-	L"%s слышит %s ГРОХОТ, идущий	%sА.",
+	L"%s слышит %s ГРОХОТ, идущий  %sА.",
 };
 
 STR16 wMapScreenSortButtonHelpText[] =
@@ -4001,7 +3998,7 @@ STR16 zGioDifConfirmText[]=
 	L"Вы выбрали ЛЕГКИЙ режим. Это подходит для новичков в Jagged Alliance 'Агония Власти', для новичков в жанре стратегий, или для тех, кто желает сократить битвы в игре. Ваш выбор скажется на игре в целом, так что выбирайте с умом. Вы уверены, что хотите играть в Легком режиме?",
 	L"Вы выбрали НОРМАЛЬНЫЙ режим. Это подходит для всех тех, кто уже знаком с Jagged Alliance 'Агония Власти' или с подобными играми. Ваш выбор скажется на игре в целом, так что выбирайте с умом. Вы уверены, что хотите играть в Нормальном режиме?",
 	L"Вы выбрали ТРУДНЫЙ режим. Мы Вас предупреждаем. Нечего на нас пенять, если вас доставят назад в цинковом гробу. Ваш выбор скажется на игре в целом, так что выбирайте с умом. Вы уверены, что хотите играть в Трудном режиме?",
-	L"You have chosen INSANE mode. WARNING: Don't blame us if you get shipped back in little pieces... Deidranna WILL kick your ass.	Hard.	Your choice will affect things throughout the entire course of the game, so choose wisely. Are you sure you want to play in INSANE mode?",
+	L"You have chosen INSANE mode. WARNING: Don't blame us if you get shipped back in little pieces... Deidranna WILL kick your ass.  Hard.  Your choice will affect things throughout the entire course of the game, so choose wisely. Are you sure you want to play in INSANE mode?",
 };
 
 STR16 gzLateLocalizedString[] =
@@ -4041,7 +4038,7 @@ STR16 gzLateLocalizedString[] =
 	//14
 	L"Арулько",
 
-	L"(roof)",
+  L"(roof)",
 
 	L"Здоровье: %d/%d",
 
@@ -4049,9 +4046,9 @@ STR16 gzLateLocalizedString[] =
 	//"vs." is the abbreviation of versus.
 	L"%d против %d",
 	
-	L"%s полон!",	//(ex "The ice cream truck is full")
+	L"%s полон!",  //(ex "The ice cream truck is full")
 
-	L"%s нуждается не в перевязке и первой помощи, а в серьезном медицинском обследовании и/или отдыхе.", 
+  L"%s нуждается не в перевязке и первой помощи, а в серьезном медицинском обследовании и/или отдыхе.", 
 
 	//20
 	//Happens when you get shot in the legs, and you fall down.
@@ -4087,7 +4084,7 @@ STR16 gzLateLocalizedString[] =
 	L"(Отряд %d)",
 
 	//35
-	//Ex: "Red has repaired Scope's MP5K".	Careful to maintain the proper order (Red before Scope, Scope before MP5K)
+	//Ex: "Red has repaired Scope's MP5K".  Careful to maintain the proper order (Red before Scope, Scope before MP5K)
 	L"%s починил %s %s",
 
 	//36
@@ -4114,7 +4111,7 @@ STR16 gzLateLocalizedString[] =
 	//46-48
 	L"%s'. Барабан его пистолета сломан!",
 	L"Не разрешается больше %d тренеров ополчения на сектор.",
-	L"Уверен?",
+  L"Уверен?",
 
 	//49-50
 	L"Компрессия времени",
@@ -4142,7 +4139,7 @@ STR16 gzLateLocalizedString[] =
 	//59
 	L"Сопроводить Джона и Мэри?",
 	
-	L"Выключатель нажат.",
+  L"Выключатель нажат.",
 
 	L"%s's armour attachment has been smashed!",
 	L"%s fires %d more rounds than intended!",

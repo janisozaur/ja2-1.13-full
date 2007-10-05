@@ -1,7 +1,6 @@
 #include "profiler.h"
 #include <sstream>
 
-#define PERIODIC_PROFILING
 #ifdef PERIODIC_PROFILING
 bool gRecordingProfile = false;
 #endif
@@ -169,7 +168,10 @@ void PerfManager::log(std::ostream &os)
 			cyclesString >> tempString;
 			os.width(cyclesWidth);
 			os << tempString.c_str() << ", ";
-			cyclesString << (i->_cycles / i->_calls);
+			__int64 cyclesPerCall = i->_cycles / i->_calls;
+			cyclesString.clear();
+			tempString.clear();
+			cyclesString << cyclesPerCall;
 			cyclesString >> tempString;
 			os.width(cyclesWidth);
 			os << tempString.c_str() << "] cycles (";

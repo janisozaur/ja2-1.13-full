@@ -84,5 +84,4 @@ BOOLEAN CanChangeSleepStatusForSoldier( SOLDIERTYPE *pSoldier );
 
 BOOLEAN MapCharacterHasAccessibleInventory( INT8 bCharNumber );
 
-//ADB TODO check out cpp
 #endif

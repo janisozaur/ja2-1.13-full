@@ -74,7 +74,6 @@ BOOLEAN	gfPotentialTeamChangeDuringDeath = FALSE;
 #define		SET_PROFILE_GAINS2			500, 500, 500, 500, 500, 500, 500, 500, 500
 
 MERCPROFILESTRUCT gMercProfiles[ NUM_PROFILES ];
-MERCPROFILEGEAR gMercProfileGear[ NUM_PROFILES ];
 
 extern UINT8 gubItemDroppableFlag[NUM_INV_SLOTS];
 
@@ -1093,7 +1092,8 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 				}
 			}
 			// swap item to hand
-			SwapObjs( &(pNewSoldier->inv[ bSlot ]), &(pNewSoldier->inv[ HANDPOS ]) );
+			//SwapObjs( &(pNewSoldier->inv[ bSlot ]), &(pNewSoldier->inv[ HANDPOS ]) );
+			SwapObjs( pNewSoldier, bSlot, HANDPOS );
 		}
 	}
 

@@ -2322,7 +2322,7 @@ BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals( GROUP *pFirstGroup )
 		swprintf( str, pStr, 
 			pEnemyType, //Enemy type (Enemies or bloodcats)
 			'A' + gpPendingSimultaneousGroup->ubSectorY - 1, gpPendingSimultaneousGroup->ubSectorX ); //Sector location
-		wcscat( str, L"	" );
+		wcscat( str, L"  " );
 		wcscat( str, gpStrategicString[ STR_COORDINATE ] );
 		//Setup the dialog
 
@@ -5282,14 +5282,14 @@ void ValidateGroups( GROUP *pGroup )
 		if( pGroup->ubSectorIDOfLastReassignment == 255 )
 		{
 			swprintf( str, L"Enemy group found with 0 troops in it.	This is illegal and group will be deleted."
-										L"	Group %d in sector %c%d originated from sector %c%d.",
+										L"  Group %d in sector %c%d originated from sector %c%d.",
 										pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
 										SECTORY( pGroup->ubCreatedSectorID ) + 'A' - 1, SECTORX( pGroup->ubCreatedSectorID ) );
 		}
 		else
 		{
 			swprintf( str, L"Enemy group found with 0 troops in it.	This is illegal and group will be deleted."
-										L"	Group %d in sector %c%d originated from sector %c%d and last reassignment location was %c%d.",
+										L"  Group %d in sector %c%d originated from sector %c%d and last reassignment location was %c%d.",
 										pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
 										SECTORY( pGroup->ubCreatedSectorID ) + 'A' - 1, SECTORX( pGroup->ubCreatedSectorID ),
 										SECTORY( pGroup->ubSectorIDOfLastReassignment ) + 'A' - 1, SECTORX( pGroup->ubSectorIDOfLastReassignment ) );

@@ -914,9 +914,9 @@ void RenderEditorInfo( )
 
 	//Display the mapindex position
 	if( GetMouseMapPos( &iMapIndex ) )
-		swprintf( FPSText, L"	(%d)	", iMapIndex );
+		swprintf( FPSText, L" (%d) ", iMapIndex );
 	else
-		swprintf( FPSText, L"			" );
+		swprintf( FPSText, L"      " );
 	mprintfEditor( (UINT16)(iScreenWidthOffset + 50-StringPixLength( FPSText, FONT12POINT1 )/2), 2 * iScreenHeightOffset + 463, FPSText );
 
 	switch( iCurrentTaskbar )

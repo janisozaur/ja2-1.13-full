@@ -204,23 +204,6 @@ public:
 	UINT8		ubPadding[2];					// filler
 
 };
-
-class SPECIAL_ITEM_INFO
-{
-public:
-	SPECIAL_ITEM_INFO() {initialize();};
-	void	initialize();
-
-	INT8		bItemCondition;				// if 0, no item is stored
-																// from 1 to 100 indicates an item with that status
-																// -1 to -100 means the item is in for repairs, flip sign for the actual status
-
-	UINT8		ubImprintID;					// imprint ID for imprinted items (during repair!)
-	UINT16		usAttachment[OLD_MAX_ATTACHMENTS_101];		// item index of any attachments on the item
-	INT8		bAttachmentStatus[OLD_MAX_ATTACHMENTS_101];	// status of any attachments on the item
-};
-
-
 class OLD_DEALER_SPECIAL_ITEM_101
 {
 public:
@@ -266,17 +249,18 @@ class DEALER_SPECIAL_ITEM
 {
 public:
 	DEALER_SPECIAL_ITEM() {initialize();};
-	void ConvertFrom101(OLD_DEALER_ITEM_HEADER_101& header, OLD_DEALER_SPECIAL_ITEM_101& special, int usItemIndex);
+	void ConvertFrom101(OLD_DEALER_ITEM_HEADER_101& header, OLD_DEALER_SPECIAL_ITEM_101& special, int ubArmsDealer, int usItemIndex);
 	BOOLEAN Save(HWFILE hFile);
 	BOOLEAN Load(HWFILE hFile);
-	bool	OKToSaveOrLoad();
 	void	initialize();
+	bool	operator == (const DEALER_SPECIAL_ITEM& compare);
 
 	bool	IsUnderRepair() {return bItemCondition < 0;};
 	bool	IsBeingOrdered() {return ubQtyOnOrder > 0;};
+	bool	ItemIsInInventory() {return (this->object.exists() == true && this->IsBeingOrdered() == false);};
 
-	//data from SPECIAL_ITEM_INFO
-	UINT8		ubImprintID;				// imprint ID for imprinted items (during repair!)
+	//data from OLD_SPECIAL_ITEM_INFO_101
+	//UINT8		ubImprintID;				// imprint ID for imprinted items (during repair!)
 	INT8		bItemCondition;				// if 0, no item is stored
 											// from 1 to 100 indicates an item with that status
 											// -1 to -100 means the item is in for repairs, flip sign for the actual status
@@ -284,7 +268,7 @@ public:
 
 	//data from OLD_DEALER_SPECIAL_ITEM_101
 	UINT32		uiRepairDoneTime;			// If the item is in for repairs, this holds the time when it will be repaired (in min)
-	BOOLEAN		fActive;					// TRUE means an item is stored here (empty elements may not always be freed immediately)
+	//BOOLEAN		fActive;					// TRUE means an item is stored here (empty elements may not always be freed immediately)
 	UINT8		ubOwnerProfileId;			// stores which merc previously owned an item being repaired
 
 
@@ -300,6 +284,7 @@ public:
 
 typedef std::list<DEALER_SPECIAL_ITEM> DealerItemList;
 extern std::vector<DealerItemList>	gArmsDealersInventory;
+void OrderDealerItems(int armsDealer, int usItem, int numItems, int arrivalDay);
 
 extern ARMS_DEALER_INFO			ArmsDealerInfo[ NUM_ARMS_DEALERS ];
 extern ARMS_DEALER_STATUS		gArmsDealerStatus[ NUM_ARMS_DEALERS ];
@@ -319,8 +304,6 @@ UINT32	GetArmsDealerItemTypeFromItemNumber( UINT16 usItem );
 //Count every single item the dealer has in stock
 //UINT32	CountTotalItemsInArmsDealersInventory( UINT8 ubArmsDealer );
 //Count only the # of "distinct" item types (for shopkeeper purposes)
-UINT32	CountDistinctItemsInArmsDealersInventory( UINT8 ubArmsDealer );
-UINT8		CountActiveSpecialItemsInArmsDealersInventory( UINT8 ubArmsDealer, UINT16 usItemIndex );
 UINT16	CountTotalItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer );
 UINT8		CountSpecificItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer, UINT16 usItemIndex );
 
@@ -348,6 +331,7 @@ BOOLEAN CanDealerRepairItem( UINT8 ubArmsDealer, UINT16 usItemIndex );
 BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID );
 
 void		MakeObjectOutOfDealerItems( DEALER_SPECIAL_ITEM *pSpclItemInfo, OBJECTTYPE *pObject );
+void		CreateObjectForDealer( int usItem, int status, int numObjects, OBJECTTYPE *pObject );
 
 void		GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, UINT8 ubOwnerProfileId );
 void		GiveItemToArmsDealerforRepair( UINT8 ubArmsDealer, OBJECTTYPE* pObject, UINT8 ubOwnerProfileId );
@@ -361,8 +345,6 @@ UINT32 CalculateSimpleItemRepairCost( UINT8 ubArmsDealer, UINT16	usItemIndex, IN
 
 
 UINT16	CalcValueOfItemToDealer( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerSelling );
-
-BOOLEAN DealerItemIsSafeToStack( UINT16 usItemIndex );
 
 UINT32 CalculateOvernightRepairDelay( UINT8 ubArmsDealer, UINT32 uiTimeWhenFreeToStartIt, UINT32 uiMinutesToFix );
 UINT32 CalculateMinutesClosedBetween( UINT8 ubArmsDealer, UINT32 uiStartTime, UINT32 uiEndTime );

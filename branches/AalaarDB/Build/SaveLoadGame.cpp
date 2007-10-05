@@ -596,7 +596,7 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 		}
 
 		OLD_DEALER_SPECIAL_ITEM_101 oldSpecial;
-		DEALER_SPECIAL_ITEM newSpecial;
+		DEALER_SPECIAL_ITEM loadedSpecial;
 		//loop through all the dealers inventories
 		for( ubArmsDealer=0; ubArmsDealer<uiDealersSaved; ubArmsDealer++ )
 		{
@@ -604,17 +604,35 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 			for(usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
 			{
 				if ( Item[usItemIndex].usItemClass == 0 )
-					break;
-				//if there are any elements allocated for this item, load them
+					continue;
+
+				//TODO stray ammo not currently handled, imo not terribly important
+
+				//if there are any perfect items, insert them immediately
+				if ((*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex].ubPerfectItems) {
+					gArmsDealersInventory[ubArmsDealer].push_back(DEALER_SPECIAL_ITEM());
+					DEALER_SPECIAL_ITEM* pPerfectItem = &gArmsDealersInventory[ubArmsDealer].back();
+					CreateObjectForDealer(usItemIndex, 100, (*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex].ubPerfectItems, &pPerfectItem->object);
+					//cannot set to 100, could be ammo
+					pPerfectItem->bItemCondition = pPerfectItem->object[0]->data.objectStatus;
+				}
+
+				//if there are any items on order, order them
+				if ((*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex].ubQtyOnOrder) {
+					OrderDealerItems(ubArmsDealer, usItemIndex,
+						(*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex].ubQtyOnOrder, 
+						(*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex].uiOrderArrivalTime);
+				}
+
+				//if there are any special elements allocated for this item, load them
 				for ( int x = 0; x < (*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex].ubElementsAlloced; ++x) {
 					if (!FileRead( hFile, &oldSpecial, sizeof( OLD_DEALER_SPECIAL_ITEM_101 ), &uiNumBytesRead ))
 					{
 						return( FALSE );
 					}
-					newSpecial.ConvertFrom101((*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex], oldSpecial, usItemIndex);
-					if (newSpecial.OKToSaveOrLoad() == true) {
-						gArmsDealersInventory[ubArmsDealer].push_back(newSpecial);
-					}
+					//not all elements alloced are full, some are empty!
+					//convert and add to arms dealer list (if applicable)
+					loadedSpecial.ConvertFrom101((*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex], oldSpecial, ubArmsDealer, usItemIndex);
 				}
 			}
 		}
@@ -633,11 +651,9 @@ BOOLEAN DEALER_SPECIAL_ITEM::Save(HWFILE hFile)
 	{
 		return FALSE;
 	}
-	if (this->IsBeingOrdered() == false) {
-		if ( !this->object.Save(hFile, FALSE) )
-		{
-			return FALSE;
-		}
+	if ( !this->object.Save(hFile, FALSE) )
+	{
+		return FALSE;
 	}
 	return TRUE;
 }
@@ -653,14 +669,9 @@ BOOLEAN DEALER_SPECIAL_ITEM::Load(HWFILE hFile)
 		{
 			return FALSE;
 		}
-		if (this->IsBeingOrdered() == false) {
-			if ( !this->object.Load(hFile) )
-			{
-				return FALSE;
-			}
-		}
-		else {
-			this->object.initialize();
+		if ( !this->object.Load(hFile) )
+		{
+			return FALSE;
 		}
 	}
 	else
@@ -1391,7 +1402,7 @@ BOOLEAN StackedObjectData::Save( HWFILE hFile, bool fSavingMap )
 		}
 		else {
 			//attachments should always exist, if they didn't they should have been removed from the list
-			DebugBreak();
+			DebugBreakpoint();
 		}
 	}
 

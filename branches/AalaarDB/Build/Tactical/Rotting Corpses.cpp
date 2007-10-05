@@ -1868,7 +1868,8 @@ void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 
 	if ( bObjSlot != NO_SLOT )
 	{
-		SwapObjs( &(pSoldier->inv[ bObjSlot ] ), &gTempObject );
+		//SwapObjs( &(pSoldier->inv[ bObjSlot ] ), &gTempObject );
+		SwapObjs( pSoldier, bObjSlot, &gTempObject );
 	}
 }
 

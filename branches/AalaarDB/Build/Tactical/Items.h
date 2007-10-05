@@ -33,8 +33,10 @@ extern INT8 FindGLGrenade( SOLDIERTYPE * pSoldier );
 extern INT8 FindThrowableGrenade( SOLDIERTYPE * pSoldier );
 extern INT8 FindUsableObj( SOLDIERTYPE * pSoldier, UINT16 usItem );
 
-extern void DeleteObj(OBJECTTYPE * pObj );
-extern void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 );
+void DeleteObj(OBJECTTYPE * pObj );
+void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 );
+void SwapObjs(SOLDIERTYPE* pSoldier, int leftSlot, int rightSlot);
+void SwapObjs(SOLDIERTYPE* pSoldier, int slot, OBJECTTYPE* pObject);
 
 //Returns true if swapped, false if added to end of stack
 extern BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex );

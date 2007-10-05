@@ -64,7 +64,6 @@ typedef enum INVENTORY_SLOT{
 	NUM_INV_SLOTS,
 };
 
-//ADB TODO
 #define					INV_START_POS		0
 #define					BODYPOSSTART		HELMETPOS
 #define					BODYPOSFINAL		BIGPOCK1POS
@@ -362,10 +361,12 @@ public:
 	UINT16	GetWeightOfObjectInStack(unsigned int index = 0);
 	int		AddObjectsToStack(int howMany, int objectStatus = 100);
 	int		AddObjectsToStack(OBJECTTYPE& sourceObject, int howManyWanted = ALL_OBJECTS, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT);
+	int		ForceAddObjectsToStack(OBJECTTYPE& sourceObject, int howManyWanted = ALL_OBJECTS);
 	int		MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove = ALL_OBJECTS, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT);
-	int		RemoveObjectsFromStack(int howMany = 1, OBJECTTYPE* destObject = NULL, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT);
+	int		RemoveObjectsFromStack(int howMany);
 	bool	RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject = NULL);
 private://these are only helpers for the above functions
+	int		PrivateRemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject = NULL, SOLDIERTYPE* pSoldier = NULL, int slot = STACK_SIZE_LIMIT);
 	void	SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, StackedObjects::iterator beginIter);
 	bool	CanStack(OBJECTTYPE& sourceObject, int& numToStack);
 public:

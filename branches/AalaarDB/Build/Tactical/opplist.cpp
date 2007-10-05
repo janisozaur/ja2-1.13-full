@@ -4437,7 +4437,7 @@ void WriteQuantityAndAttachments( OBJECTTYPE *pObject, INT32 yp )
 	//100%	Qty: 2	
 	//100%	Attach:
 	//100%
-	if( !pObject->usItem )
+	if( pObject->exists() == false )
 		return;
 	//Build attachment string
 	fAttachments = FALSE;

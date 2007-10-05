@@ -6352,7 +6352,6 @@ BOOLEAN ValidQuickExchangePosition( )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier, *pOverSoldier;
-	INT16							sDistVisible = FALSE;
 	BOOLEAN						fOnValidGuy = FALSE;
 	static BOOLEAN		fOldOnValidGuy = FALSE;
 
@@ -6365,26 +6364,26 @@ BOOLEAN ValidQuickExchangePosition( )
 		//if ( ( pOverSoldier->bSide != gbPlayerNum ) && pOverSoldier->aiData.bNeutral	)
 		if ( ( pOverSoldier->bTeam != gbPlayerNum && pOverSoldier->aiData.bNeutral ) || (pOverSoldier->bTeam == MILITIA_TEAM && pOverSoldier->bSide == 0 ) )
 		{
-		// hehe - don't allow animals to exchange places
-		if ( !( pOverSoldier->flags.uiStatusFlags & ( SOLDIER_ANIMAL ) ) )
-		{
-			// OK, we have a civ , now check if they are near selected guy.....
-			if ( GetSoldier( &pSoldier, gusSelectedSoldier ) )
+			// hehe - don't allow animals to exchange places
+			if ( !( pOverSoldier->flags.uiStatusFlags & ( SOLDIER_ANIMAL ) ) )
 			{
-				if ( PythSpacesAway( pSoldier->sGridNo, pOverSoldier->sGridNo ) == 1 )
+				// OK, we have a civ , now check if they are near selected guy.....
+				if ( GetSoldier( &pSoldier, gusSelectedSoldier ) )
 				{
-					// Check if we have LOS to them....
-					sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, pOverSoldier->sGridNo, pOverSoldier->pathing.bLevel );
-
-					if ( SoldierTo3DLocationLineOfSightTest( pSoldier, pOverSoldier->sGridNo,	pOverSoldier->pathing.bLevel, (UINT8)3, (UINT8) sDistVisible, TRUE ) )
+					if ( PythSpacesAway( pSoldier->sGridNo, pOverSoldier->sGridNo ) == 1 )
 					{
+						// Check if we have LOS to them....
 						if ( SoldierTo3DLocationLineOfSightTest( pSoldier, pOverSoldier->sGridNo,  pOverSoldier->pathing.bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
 						{
-							fOnValidGuy = TRUE;
+							// ATE:
+							// Check that the path is good!
+							if ( FindBestPath( pSoldier, pOverSoldier->sGridNo, pSoldier->pathing.bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, PATH_IGNORE_PERSON_AT_DEST ) == 1 )
+							{
+								fOnValidGuy = TRUE;
+							}
 						}
 					}
 				}
-		}
 			}
 		}
 	}

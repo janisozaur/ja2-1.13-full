@@ -4024,11 +4024,11 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 				//				if ( bInvPos != NO_SLOT )
 				{
 					// MUST send in NO_SLOT, as the SKI wille expect it to exist in inv if not....
-					AddItemToPlayersOfferAreaAfterShopKeeperOpen( &gTempObject, NO_SLOT );
+					AddItemToPlayersOfferAreaAfterShopKeeperOpen( &gTempObject );
 
 					if ( bInvPos != NO_SLOT )
 					{
-						pSoldier->inv[ bInvPos ].RemoveObjectAtIndex( gTempObject.ubNumberOfObjects );
+						pSoldier->inv[ bInvPos ].initialize();
 					}
 
 					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );

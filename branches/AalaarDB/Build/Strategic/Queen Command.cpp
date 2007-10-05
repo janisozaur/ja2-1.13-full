@@ -1892,7 +1892,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 		// OK, drop all items!
 		for ( i = 0; i < pSoldier->inv.size(); i++ )
 		{ 
-			if( pSoldier->inv[ i ].usItem != 0 )
+			if( pSoldier->inv[ i ].exists() == true )
 			{
 				WorldItem.fExists = TRUE;
 				WorldItem.sGridNo = sAlmaCaptureItemsGridNo[ gStrategicStatus.ubNumCapturedForRescue ];
@@ -1924,7 +1924,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 		// OK, drop all items!
 		for ( i = 0; i < pSoldier->inv.size(); i++ )
 		{ 
-			if( pSoldier->inv[ i ].usItem != 0 )
+			if( pSoldier->inv[ i ].exists() == true )
 			{
 				WorldItem.fExists = TRUE;
 				WorldItem.sGridNo = sInterrogationItemGridNo[ gStrategicStatus.ubNumCapturedForRescue ];

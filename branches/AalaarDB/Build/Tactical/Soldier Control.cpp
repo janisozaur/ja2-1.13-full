@@ -233,57 +233,6 @@ BATTLESNDS_STRUCT	 gBattleSndsData[] =
 	"enem",			0,				1,			1,		1,		0,
 };
 
-// CHRISL:
-MERCPROFILEGEAR::MERCPROFILEGEAR()
-{
-	clearInventory();
-	initialize();
-}
-
-// Assignment operator
-MERCPROFILEGEAR& MERCPROFILEGEAR::operator=(const MERCPROFILEGEAR& src) {
-    if (this != &src) {
-		memcpy(this, &src, SIZEOF_MERCPROFILEGEAR_POD);
-		inv = src.inv;
-		iStatus = src.iStatus;
-		iDrop = src.iDrop;
-		iNumber = src.iNumber;
-		lbe = src.lbe;
-		lStatus = src.lStatus;
-    }
-	return *this;
-}
-
-// Destructor
-MERCPROFILEGEAR::~MERCPROFILEGEAR() {
-}
-
-// Initialize the soldier.  
-//  Use this instead of the old method of calling memset!
-//  Note that the constructor does this automatically.
-void MERCPROFILEGEAR::initialize() {
-	memset( this, 0, SIZEOF_MERCPROFILEGEAR_POD);
-	clearInventory();
-}
-
-void MERCPROFILEGEAR::clearInventory() {
-	inv.clear();
-	iStatus.clear();
-	iDrop.clear();
-	iNumber.clear();
-
-	inv.resize(NUM_INV_SLOTS);
-	iStatus.resize(NUM_INV_SLOTS);
-	iDrop.resize(NUM_INV_SLOTS);
-	iNumber.resize(NUM_INV_SLOTS);
-
-	lbe.clear();
-	lStatus.clear();
-
-	lbe.resize(5);
-	lStatus.resize(5);
-}
-
 // ----------------------------------------
 // New inventory handling code.
 // ----------------------------------------
@@ -329,7 +278,7 @@ OBJECTTYPE& Inventory::operator [] (unsigned int idx)
 		inv.resize(idx+1);
 		bNewItemCount.resize(idx+1);
 		bNewItemCycleCount.resize(idx+1);
-		DebugBreak();
+		DebugBreakpoint();
 	}
 	return inv[idx];
 };
@@ -11471,8 +11420,14 @@ BOOLEAN SOLDIERTYPE::InternalIsValidStance( INT8 bDirection, INT8 bNewStance )
 
 	if ( thisSoldier->bCollapsed )
 	{
-		if ( bNewStance == ANIM_STAND || bNewStance == ANIM_CROUCH )
+		if ( bNewStance == ANIM_CROUCH )
 		{
+			return( FALSE );
+		}
+		//when civilians are collapsed and die they may change to stand in order to fall forward
+		if ( bNewStance == ANIM_STAND && thisSoldier->ubBodyType <= REGFEMALE )
+		{
+			//if we are trying to stand and we are a MERC
 			return( FALSE );
 		}
 	}

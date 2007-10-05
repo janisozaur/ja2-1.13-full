@@ -880,7 +880,7 @@ void AStarPathfinder::ExecuteAStarLogic()
 
 	if (fContinuousTurnNeeded) {
 		GridNode parent = GetAStarParent(ParentNode);
-		if (parent != GridNode(-1,-1)) {
+		if (parent == GridNode(-1,-1)) {
 			lastDir = pSoldier->ubDirection;
 		}
 		else if ( GetLoopState(parent) == false ) {
@@ -1418,6 +1418,7 @@ int AStarPathfinder::CalcH()
 	}
 }
 
+#ifdef ASTAR_USING_EXTRACOVER
 int AStarPathfinder::CalcGCover(int const NodeIndex,
 								int const APCost)
 {
@@ -1724,6 +1725,8 @@ int AStarPathfinder::CalcCoverValue(INT16 sMyGridNo, INT32 iMyThreat, INT32 iMyA
 
 	return( max(iCoverValue, 0) );
 }
+#endif // ASTAR_USING_EXTRACOVER
+
 
 #ifdef VEHICLE	
 void AStarPathfinder::InitVehicle()

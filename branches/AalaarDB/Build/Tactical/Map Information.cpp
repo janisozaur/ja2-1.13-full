@@ -70,7 +70,9 @@ Version 11 -- Kris -- obsolete May 2, 1998
 
 	Version 6.27 ADB July 22 07
 	Changing the format of OBJECTTYPE means the maps should be loaded, converted, and saved
-	**Note** this hasn't happened yet
+	if one wants to take advantage of the new format
+	Converting to the new format is not necessary to load a map and run the game.
+	**Note** this conversion hasn't happened yet
 */
 
 //EntryPoints can't be placed on the top two gridnos in a map.	So all we do in this case

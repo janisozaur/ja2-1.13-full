@@ -37,6 +37,7 @@
 	#include "World Items.h"
 	#include "text.h"
 	#include "Soldier Create.h"
+	#include "GameVersion.h"
 #endif
 
 extern BOOLEAN gfOverheadMapDirty;
@@ -3038,7 +3039,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement 
-			if ( !priority.Load(hfile) )
+			if ( !priority.Load(hfile, SAVE_GAME_VERSION) )
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;
@@ -3099,7 +3100,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement 
-			if ( !priority.Load(hfile) )
+			if ( !priority.Load(hfile, SAVE_GAME_VERSION) )
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;

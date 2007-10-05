@@ -1851,6 +1851,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			case ',':
 				(gRecordingProfile == true) ? gRecordingProfile = false : gRecordingProfile = true;
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3,  String( "gRecordingProfile = ", gRecordingProfile ));
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Recording Profile = %d", gRecordingProfile );
 				break;
 #endif
 			case SPACE:
@@ -5434,7 +5435,8 @@ void SwapGoggles()
 					}
 					if ( pGoggles )
 					{
-						SwapObjs( pGoggles, &(pTeamSoldier->inv[bSlot1] ) );
+						//SwapObjs( pGoggles, &(pTeamSoldier->inv[bSlot1] ) );
+						SwapObjs( pTeamSoldier, bSlot1, pGoggles );
 						break;
 					}
 				}
@@ -5457,7 +5459,8 @@ void SwapGoggles()
 					}
 					if ( pGoggles )
 					{
-						SwapObjs( pGoggles, &(pTeamSoldier->inv[bSlot1] ) );
+						//SwapObjs( pGoggles, &(pTeamSoldier->inv[bSlot1] ) );
+						SwapObjs( pTeamSoldier, bSlot1, pGoggles );
 						break;
 					}
 				}

@@ -329,7 +329,6 @@ void RenderItemsForCurrentPageOfInventoryPool( void )
 }
 
 
-#define DONT_DISPLAY_NADA
 BOOLEAN RenderItemInPoolSlot( INT32 iCurrentSlot, INT32 iFirstSlotOnPage )
 {
 	PERFORMANCE_MARKER
@@ -344,12 +343,10 @@ BOOLEAN RenderItemInPoolSlot( INT32 iCurrentSlot, INT32 iFirstSlotOnPage )
 
 	// check if anything there
 	
-#ifdef DONT_DISPLAY_NADA
 	if( pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].object.exists() == false ) 
 	{
 		return ( FALSE );
 	}
-#endif
 
 	GetVideoObject( &hHandle, GetInterfaceGraphicForItem( &(Item[ pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].object.usItem ] ) ) );
 
@@ -971,7 +968,7 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 				//}
 
 				// Check if it's the same now!
-				if ( gpItemPointer->ubNumberOfObjects == 0 )
+				if ( gpItemPointer->exists() == false )
 				{
 					MAPEndItemPointer( );
 				}
@@ -1393,7 +1390,7 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 	if (fOk)
 	{
 		if (pInventorySlot->exists() == false) {
-			pInventorySlot->usItem = NOTHING;
+			pInventorySlot->initialize();
 		}
 		// Dirty interface
 		fMapPanelDirty = TRUE;
@@ -1737,10 +1734,32 @@ void ResizeInventoryList( void )
 	if (pInventoryPoolList.empty() == true) {
 		pInventoryPoolList.resize(MAP_INVENTORY_POOL_SLOT_COUNT);
 	}
+
+	int emptySlots = 0;
+	//if it's not the exact size of a page, then make it so
 	if (pInventoryPoolList.size() % MAP_INVENTORY_POOL_SLOT_COUNT) {
-		pInventoryPoolList.resize(pInventoryPoolList.size() + MAP_INVENTORY_POOL_SLOT_COUNT - pInventoryPoolList.size() % MAP_INVENTORY_POOL_SLOT_COUNT);
+		emptySlots = MAP_INVENTORY_POOL_SLOT_COUNT - (pInventoryPoolList.size() % MAP_INVENTORY_POOL_SLOT_COUNT);
+		pInventoryPoolList.resize(pInventoryPoolList.size() + emptySlots);
 	}
 
+	iLastInventoryPoolPage = ( ( pInventoryPoolList.size()  - 1 ) / MAP_INVENTORY_POOL_SLOT_COUNT );
+	int lastPageIndex = iLastInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT;
+	int activeSlotsOnPage = 0;
+	for (int x = 0; x < MAP_INVENTORY_POOL_SLOT_COUNT; ++x) {
+		//don't test fExists because that hasn't been set yet, test object.exists
+		if (pInventoryPoolList[lastPageIndex + x].object.exists() == true) {
+			++activeSlotsOnPage;
+		}
+	}
+
+	//if there aren't enough empty slots we need to grow it further
+	emptySlots = MAP_INVENTORY_POOL_SLOT_COUNT - activeSlotsOnPage;
+	if (emptySlots < 3) {
+		//we want 1 blank page
+		pInventoryPoolList.resize(pInventoryPoolList.size() + MAP_INVENTORY_POOL_SLOT_COUNT);
+	}
+
+	//do this again, it may have changed
 	iLastInventoryPoolPage = ( ( pInventoryPoolList.size()  - 1 ) / MAP_INVENTORY_POOL_SLOT_COUNT );
 	
 	return;
@@ -2017,10 +2036,11 @@ BOOLEAN IsMapScreenWorldItemVisibleInMapInventory( WORLDITEM *pWorldItem )
 {
 	PERFORMANCE_MARKER
 	if( pWorldItem->bVisible == 1 && 
-			pWorldItem->fExists && 
-			pWorldItem->object.usItem != SWITCH && 
-			pWorldItem->object.usItem != ACTION_ITEM &&
-			pWorldItem->object[0]->data.bTrap <= 0 )
+		pWorldItem->fExists && 
+		pWorldItem->object.exists() == true && 
+		pWorldItem->object.usItem != SWITCH && 
+		pWorldItem->object.usItem != ACTION_ITEM &&
+		pWorldItem->object[0]->data.bTrap <= 0 )
 	{
 		return( TRUE );
 	}
@@ -2033,7 +2053,8 @@ BOOLEAN IsMapScreenWorldItemInvisibleInMapInventory( WORLDITEM *pWorldItem )
 {
 	PERFORMANCE_MARKER
 	if( pWorldItem->fExists &&
-			!IsMapScreenWorldItemVisibleInMapInventory( pWorldItem ) )
+		pWorldItem->object.exists() == true && 
+		!IsMapScreenWorldItemVisibleInMapInventory( pWorldItem ) )
 	{
 		return( TRUE );
 	}
@@ -2093,7 +2114,7 @@ void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArr
 		//if object exists, we want to try to stack it
 		if (iter->fExists && iter->object.exists() == true) {
 
-			//ADB TODO if it is active and reachable etc
+			//ADB TODO if it is active and reachable etc, alternatively if it's on the same gridNo
 #if 0
 			if (iter->object.ubNumberOfObjects < ItemSlotLimit( iter->object.usItem, STACK_SIZE_LIMIT )) {
 				std::vector<WORLDITEM>::iterator second = iter;
@@ -2148,6 +2169,8 @@ void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArr
 		if (pInventory[x * MAP_INVENTORY_POOL_SLOT_COUNT].fExists == false
 			&& pInventory[x * MAP_INVENTORY_POOL_SLOT_COUNT].object.exists() == false) {
 			//we have found a page where the first item on the page does not exist, resize to this
+			//we may have just cut off a blank page leaving the previous page full with no place to put
+			//any new objects, but ResizeInventoryList after this will take care of that.
 			pInventory.resize(x * MAP_INVENTORY_POOL_SLOT_COUNT);
 		}
 	}
@@ -2202,12 +2225,6 @@ BOOLEAN CanPlayerUseSectorInventory( SOLDIERTYPE *pSelectedSoldier )
 void DeleteAllItemsInInventoryPool()
 {
 	PERFORMANCE_MARKER
-	/*
-	for( UINT32 iNumber = 0 ; iNumber <  pInventoryPoolList.size() ; ++iNumber)
-	{
-		DeleteObj( &pInventoryPoolList [ iNumber ].object );
-	}
-	*/
 	pInventoryPoolList.clear();
 
 	fMapPanelDirty = TRUE;
