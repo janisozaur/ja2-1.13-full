@@ -161,6 +161,7 @@ typedef enum{
 #define BUDDY_OPINION +25
 #define HATED_OPINION -25
 
+//ADB TODO
 // CHRISL: Class to handle profile equipment from XML_MercStartingGear
 class MERCPROFILEGEAR {
 public:

@@ -70,8 +70,6 @@ extern BOOLEAN GetCDromDriveLetter( STR8	pString );
 
 #ifdef JA2EDITOR
 #define BUILD_AS_EDITOR_ONLY
-#else
-#undef BUILD_AS_EDITOR_ONLY
 #endif
 
 #ifdef JA2BETAVERSION
@@ -274,30 +272,6 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	strcat(fileName, ARMOURSFILENAME);
 	if(!ReadInArmourStats(fileName))
 		return FALSE;
-
-	// CHRISL:
-	strcpy(fileName, directoryName);
-	strcat(fileName, LOADBEARINGEQUIPMENTFILENAME);
-	if(!ReadInlbeStats(fileName))
-		return FALSE;
-//	if(!WritelbeEquipmentStats())
-//		return FALSE;
-
-	// CHRISL:
-	strcpy(fileName, directoryName);
-	strcat(fileName, LBEPOCKETFILENAME);
-	if(!ReadInLBEPocketStats(fileName))
-		return FALSE;
-//	if(!WriteLBEPocketEquipmentStats())
-//		return FALSE;
-
-	// CHRISL:
-	strcpy(fileName, directoryName);
-	strcat(fileName, MERCSTARTINGGEARFILENAME);
-	if(!ReadInMercStartingGearStats(fileName))
-		return FALSE;
-//	if(!WriteMercStartingGearStats())
-//		return FALSE;
 
 	strcpy(fileName, directoryName);
 	strcat(fileName, WEAPONSFILENAME);
@@ -556,6 +530,7 @@ UINT32 InitializeJA2(void)
 	//but we don't want to recreate it every single time CTGT is called, so init the GLOCK here
 	CreateItem(GLOCK_17, 100, &GLOCK_17_ForUseWithLOS);
 
+
 #ifdef JA2BETAVERSION
 	#ifdef JA2EDITOR
 
@@ -567,7 +542,7 @@ UINT32 InitializeJA2(void)
 	}
 	#endif
 #endif
-
+	
 #ifdef JA2BETAVERSION
 	if( ProcessIfMultilingualCmdLineArgDetected( gzCommandLine ) )
 	{ //If the multilingual text code generator has activated, quit now.

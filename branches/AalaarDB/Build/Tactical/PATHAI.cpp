@@ -1109,12 +1109,7 @@ int AStarPathfinder::CalcAP(int const terrainCost)
 
 		//case TRAVELCOST_DOOR:		movementAPCost = AP_MOVEMENT_FLAT; break;
 
-		case TRAVELCOST_FENCE		: 
-			if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-				movementAPCost = AP_JUMPFENCEBPACK;
-			else
-				movementAPCost = AP_JUMPFENCE;
-			break;
+		case TRAVELCOST_FENCE		: movementAPCost = AP_JUMPFENCE; break;
 
 		case TRAVELCOST_OBSTACLE: 
 		default:					return -1;	// Cost too much to be considered!
@@ -1139,29 +1134,17 @@ int AStarPathfinder::CalcAP(int const terrainCost)
 		case RUNNING:	
 		case ADULTMONSTER_WALKING:	
 			// save on casting
-			if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-				movementAPCost = movementAPCost * 10 / ( (UINT8) (RUNDIVISORBPACK * 10));
-			else
-				movementAPCost = movementAPCost * 10 / ( (UINT8) (RUNDIVISOR * 10));
+			movementAPCost = movementAPCost * 10 / ( (UINT8) (RUNDIVISOR * 10));
 			//movementAPCost = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );	break;
 			break;
 		case WALKING:
 		case ROBOT_WALK:
-			if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-				movementAPCost = (movementAPCost + WALKCOSTBPACK);
-			else
-				movementAPCost = (movementAPCost + WALKCOST);
+			movementAPCost = (movementAPCost + WALKCOST);
 			break;
 		case SWATTING:
-			if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-				movementAPCost = (movementAPCost + SWATCOSTBPACK);
-			else
-				movementAPCost = (movementAPCost + SWATCOST);
+			movementAPCost = (movementAPCost + SWATCOST);
 			break;
 		case CRAWLING:
-			if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-				movementAPCost = (movementAPCost + CRAWLCOSTBPACK);
-			else
 			movementAPCost = (movementAPCost + CRAWLCOST);
 			break;
 	}
@@ -2986,11 +2969,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 					//case TRAVELCOST_DOOR		:	ubAPCost = AP_MOVEMENT_FLAT;
 					//													break;
 
-					case TRAVELCOST_FENCE		: 
-						if((UsingNewInventorySystem() == true) && s->inv[BPACKPOCKPOS].exists() == true)
-							ubAPCost = AP_JUMPFENCEBPACK;
-						else
-							ubAPCost = AP_JUMPFENCE;
+					case TRAVELCOST_FENCE		:	ubAPCost = AP_JUMPFENCE;
 			
 /*
 			if ( sSwitchValue == TRAVELCOST_FENCE )
@@ -3054,35 +3033,22 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 		}
 
 				// adjust AP cost for movement mode
-		// CHRISL: Adjusted system to use different move costs while wearing a backpack
 				switch( usMovementModeToUseForAPs )
 				{
 					case RUNNING:	
 					case ADULTMONSTER_WALKING:	
 						// save on casting
-						if((UsingNewInventorySystem() == true) && s->inv[BPACKPOCKPOS].exists() == true)
-							ubAPCost = ubAPCost * 10 / ( (UINT8) (RUNDIVISORBPACK * 10));
-						else
-							ubAPCost = ubAPCost * 10 / ( (UINT8) (RUNDIVISOR * 10));
+						ubAPCost = ubAPCost * 10 / ( (UINT8) (RUNDIVISOR * 10));
 						//ubAPCost = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );	break;
 						break;
 					case WALKING:
 					case ROBOT_WALK:
-						if((UsingNewInventorySystem() == true) && s->inv[BPACKPOCKPOS].exists() == true)
-							ubAPCost = (ubAPCost + WALKCOSTBPACK);
-						else
-							ubAPCost = (ubAPCost + WALKCOST);
+						ubAPCost = (ubAPCost + WALKCOST);
 						break;
 					case SWATTING:
-						if((UsingNewInventorySystem() == true) && s->inv[BPACKPOCKPOS].exists() == true)
-							ubAPCost = (ubAPCost + SWATCOSTBPACK);
-						else
-							ubAPCost = (ubAPCost + SWATCOST);
+						ubAPCost = (ubAPCost + SWATCOST);
 						break;
 					case CRAWLING:
-						if((UsingNewInventorySystem() == true) && s->inv[BPACKPOCKPOS].exists() == true)
-							ubAPCost = (ubAPCost + CRAWLCOSTBPACK);
-						else
 						ubAPCost = (ubAPCost + CRAWLCOST);
 						break;
 				}
@@ -3994,40 +3960,14 @@ INT16 PlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPl
 				}
 
 				// so, then we must modify it for other movement styles and accumulate
-				  // CHRISL: Force display path to calculate AP cost differently if we're wearing a backpack
-				  switch( usMovementModeToUseForAPs )
-				  {
-					  case RUNNING:
-						  if((UsingNewInventorySystem() == true) && pSold->inv[BPACKPOCKPOS].exists() == true)
-							  sPoints += (INT16)(DOUBLE)( (sTileCost / RUNDIVISORBPACK) ) + sExtraCostStand;
-						  else
-							  sPoints += (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) ) + sExtraCostStand;
-						  break;
-					  case WALKING :
-						  if((UsingNewInventorySystem() == true) && pSold->inv[BPACKPOCKPOS].exists() == true)
-							 sPoints += (sTileCost + WALKCOSTBPACK) + sExtraCostStand;
-						  else
-							  sPoints += (sTileCost + WALKCOST) + sExtraCostStand;
-						  break;
-					  case SWATTING:
-						  if((UsingNewInventorySystem() == true) && pSold->inv[BPACKPOCKPOS].exists() == true)
-							  sPoints += (sTileCost + SWATCOSTBPACK) + sExtraCostSwat;
-						  else
-							  sPoints += (sTileCost + SWATCOST) + sExtraCostSwat;
-						  break;
-					  case CRAWLING:
-						  if((UsingNewInventorySystem() == true) && pSold->inv[BPACKPOCKPOS].exists() == true)
-							  sPoints += (sTileCost + CRAWLCOSTBPACK) + sExtraCostCrawl;
-						  else
-							  sPoints += (sTileCost + CRAWLCOST) + sExtraCostCrawl;
-						  break;
-					  default      :
-						  if((UsingNewInventorySystem() == true) && pSold->inv[BPACKPOCKPOS].exists() == true)
-							  sPoints += sTileCost;
-						  else
-							  sPoints += sTileCost;
-						  break;
-				  }
+				switch( usMovementModeToUseForAPs )
+				{
+					case RUNNING:		sPoints += (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) ) + sExtraCostStand;	break;
+					case WALKING :	sPoints += (sTileCost + WALKCOST) + sExtraCostStand;		break;
+					case SWATTING:	sPoints += (sTileCost + SWATCOST) + sExtraCostSwat;		break;
+					case CRAWLING:	sPoints += (sTileCost + CRAWLCOST) + sExtraCostCrawl;		break;
+					default		:	sPoints += sTileCost;									break;
+				}
 			}		
 		}
 
@@ -4037,30 +3977,17 @@ INT16 PlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPl
 			{
 				// ATE; TODO: Put stuff in here to allow for fact of costs other than movement ( jump fence, open door )
 
-				// CHRISL: Adjusted system to use different move costs while wearing a backpack
 				// store WALK cost
-				if((UsingNewInventorySystem() == true) && pSold->inv[BPACKPOCKPOS].exists() == true)
-					sPointsWalk += (sTileCost + WALKCOSTBPACK) + sExtraCostStand;
-				else
-					sPointsWalk += (sTileCost + WALKCOST) + sExtraCostStand;
+				sPointsWalk += (sTileCost + WALKCOST) + sExtraCostStand;
 			
 				// now get cost as if CRAWLING
-				if((UsingNewInventorySystem() == true) && pSold->inv[BPACKPOCKPOS].exists() == true)
-					sPointsCrawl += (sTileCost + CRAWLCOSTBPACK) + sExtraCostCrawl; 
-				else
-					sPointsCrawl += (sTileCost + CRAWLCOST) + sExtraCostCrawl; 
+				sPointsCrawl += (sTileCost + CRAWLCOST) + sExtraCostCrawl; 
 
 				// now get cost as if SWATTING
-				if((UsingNewInventorySystem() == true) && pSold->inv[BPACKPOCKPOS].exists() == true)
-					sPointsSwat += (sTileCost + SWATCOSTBPACK) + sExtraCostSwat;
-				else
-					sPointsSwat += (sTileCost + SWATCOST) + sExtraCostSwat;
+				sPointsSwat += (sTileCost + SWATCOST) + sExtraCostSwat;
 
 				// now get cost as if RUNNING
-				if((UsingNewInventorySystem() == true) && pSold->inv[BPACKPOCKPOS].exists() == true)
-					sPointsRun += (INT16)(DOUBLE)( (sTileCost / RUNDIVISORBPACK) ) + sExtraCostStand;
-				else
-					sPointsRun += (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) ) + sExtraCostStand;
+				sPointsRun += (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) ) + sExtraCostStand;
 			}
 			
 			if ( iCnt == 0 && bPlot )

@@ -10,8 +10,8 @@
 
 #define MAX_TOWN_NAME_LENGHT	32
 
-#define MAX_TOWNS			50	//13 //50
-#define MAX_TOWN_SECTORS	260	//40 //260
+#define MAX_TOWNS			50	//13
+#define MAX_TOWN_SECTORS	260	//40
 
 // Sector name identifiers
 enum Towns
@@ -84,9 +84,5 @@ BOOLEAN CanChangeSleepStatusForSoldier( SOLDIERTYPE *pSoldier );
 
 BOOLEAN MapCharacterHasAccessibleInventory( INT8 bCharNumber );
 
-// CHRISL: New functions to handle initialization of inventory coordinates
-BOOLEAN InitializeInvPanelCoordsOld( );
-BOOLEAN InitializeInvPanelCoordsNew( );
-BOOLEAN InitializeInvPanelCoordsVehicle( );
-
+//ADB TODO check out cpp
 #endif

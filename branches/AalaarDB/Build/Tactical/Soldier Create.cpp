@@ -350,12 +350,6 @@ UINT32 guiCurrentUniqueSoldierId = 1;
 
 // CJC note: trust me, it's easiest just to put this here; this is the only
 // place it should need to be used
-/* CHRISL: There's nothing to fix here.  This array is only used on non-hireable NPCs to designate whether an object can
-be dropped or not.  And we only have an 8bit field to store these flags.  So there's no need to change anything.  New or
-Old inventory system, NPC profiles use the old style pocket system.*/
-//ADB actually that's not correct, all NPC profiles use the new pocket system.
-//To verify this, give Fatima the letter then check what slot it is in when she is in A10.
-//AFAIK there is no way to seperate non hireable NPCs from hireable NPCs, so to fix Ira all NPC profiles are adjusted.
 UINT8 gubItemDroppableFlag[NUM_INV_SLOTS] =
 {
 	0x01,
@@ -363,59 +357,20 @@ UINT8 gubItemDroppableFlag[NUM_INV_SLOTS] =
 	0x04,
 	0,
 	0,
-	0x08,//HANDPOS
-
-	0, //SECONDHANDPOS,
-	0, //VESTPOCKPOS,
-	0, //LTHIGHPOCKPOS,
-	0, //RTHIGHPOCKPOS,
-	0, //CPACKPOCKPOS,
-	0, //BPACKPOCKPOS,
-	0, //GUNSLINGPOCKPOS,
-	0, //KNIFEPOCKPOS,
-
-	0x10,//BIGPOCK1POS
+	0x08,
+	0,
+	0x10,
 	0x20,
 	0x40,
 	0x80,
-
-	0, //BIGPOCK5POS,
-	0, //BIGPOCK6POS,
-	0, //BIGPOCK7POS,
-	0, //MEDPOCK1POS,
-	0, //MEDPOCK2POS,
-	0, //MEDPOCK3POS,
-	0, //MEDPOCK4POS,
-	0, //SMALLPOCK1POS,
-	0, //SMALLPOCK2POS,
-	0, //SMALLPOCK3POS,
-	0, //SMALLPOCK4POS,
-	0, //SMALLPOCK5POS,
-	0, //SMALLPOCK6POS,
-	0, //SMALLPOCK7POS,
-	0, //SMALLPOCK8POS,
-	0, //SMALLPOCK9POS,
-	0, //SMALLPOCK10POS,
-	0, //SMALLPOCK11POS,
-	0, //SMALLPOCK12POS,
-	0, //SMALLPOCK13POS,
-	0, //SMALLPOCK14POS,
-	0, //SMALLPOCK15POS,
-	0, //SMALLPOCK16POS,
-	0, //SMALLPOCK17POS,
-	0, //SMALLPOCK18POS,
-	0, //SMALLPOCK19POS,
-	0, //SMALLPOCK20POS,
-	0, //SMALLPOCK21POS,
-	0, //SMALLPOCK22POS,
-	0, //SMALLPOCK23POS,
-	0, //SMALLPOCK24POS,
-	0, //SMALLPOCK25POS,
-	0, //SMALLPOCK26POS,
-	0, //SMALLPOCK27POS,
-	0, //SMALLPOCK28POS,
-	0, //SMALLPOCK29POS,
-	0, //SMALLPOCK30POS,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0
 };
 
 
@@ -747,7 +702,6 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		{
 			INT32 i;
 			BOOLEAN fSecondFaceItem = FALSE;
-			// CHRISL:
 			for( i = BIGPOCKSTART; i < BIGPOCKFINAL; i++ )
 			{
 				if( Item[ Soldier.inv[ i ].usItem ].usItemClass & IC_FACE )
@@ -2789,9 +2743,6 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 	}
 }
 
-// CHRISL: External function call to resort profile inventory
-extern void DistributeInitialGear(MERCPROFILESTRUCT *pProfile);
-
 void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruct )
 {
 	PERFORMANCE_MARKER
@@ -2805,14 +2756,6 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 	{
 		return;
 	}
-
-	//ADB this needs to happen for all profiles, player or not.
-	// CHRISL: Resort profile items to use LBE pockets properly
-	//if((UsingNewInventorySystem() == true)) {
-		DistributeInitialGear(pProfile);
-	//}
-
-
 
 	for ( cnt = 0; cnt < pProfile->inv.size(); cnt++ )
 	{
@@ -2871,13 +2814,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 			}
 		}
 		BOOLEAN success;
-		//CHRISL: Place items by slots chosen in profile if using new inventory system
-		if((UsingNewInventorySystem() == false)) {
-			success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
-		}
-		else {
-			success = PlaceObject( pSoldier, cnt, &gTempObject );
-		}
+		success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
 		if (success == FALSE && pSoldier->inv[cnt].exists() == false) {
 			pSoldier->inv[cnt] = gTempObject;
 		}
@@ -2924,21 +2861,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 		{
 			// oh well, couldn't find anything to attach to!
 			BOOLEAN success;
-			//CHRISL: Place items by slots chosen in profile if using new inventory system
-			if((UsingNewInventorySystem() == false)) {
-				success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
-			}
-			else {
-				if(cnt < BIGPOCKSTART) {
-					success = PlaceObject( pSoldier, cnt, &gTempObject );
-				}
-				else{
-					success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
-					if(success == FALSE) {
-						success = PlaceObject( pSoldier, cnt, &gTempObject );
-					}
-				}
-			}
+			success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
 			if (success == FALSE && pSoldier->inv[cnt].exists() == false) {
 				pSoldier->inv[cnt] = gTempObject;
 			}

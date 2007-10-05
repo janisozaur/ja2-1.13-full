@@ -223,8 +223,6 @@ extern SOLDIERTYPE			*gpSMCurrentMerc;
 extern BOOLEAN	gfRerenderInterfaceFromHelpText;
 
 
-// CHRISL: External function call to resort profile inventory
-extern void DistributeInitialGear(MERCPROFILESTRUCT *pProfile);
 BOOLEAN LoadMercProfiles(void)
 {
 	PERFORMANCE_MARKER
@@ -282,61 +280,17 @@ BOOLEAN LoadMercProfiles(void)
 		return(FALSE);
 	}
 
+	MERCPROFILESTRUCT tempProfile;
 	for(int profileNum=0; profileNum< NUM_PROFILES; profileNum++)
 	{
-		if( !gMercProfiles[profileNum].Load(fptr, true))
+		if( !tempProfile.Load(fptr, true))
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s",profileNum, pFileName) );
 			FileClose( fptr );
 			return(FALSE);
 		}
 
-		// CHRISL: Overwrite inventory data pulled from prof.dat with data stored in gMercProfileGear
-		// Start by resetting all profile inventory values to 0
-		gMercProfiles[profileNum].clearInventory();
-		gMercProfiles[profileNum].ubInvUndroppable = 0;
-		// Next, go through and assign everything but lbe gear
-		for(invSlot=INV_START_POS; invSlot<NUM_INV_SLOTS; invSlot++)
-		{
-			gMercProfiles[profileNum].inv[invSlot] = gMercProfileGear[profileNum].inv[invSlot];
-			gMercProfiles[profileNum].bInvStatus[invSlot] = gMercProfileGear[profileNum].iStatus[invSlot];
-			if(gMercProfiles[profileNum].inv[invSlot] != NONE)
-			{
-				if(invSlot < BODYPOSFINAL)
-					gMercProfiles[profileNum].bInvNumber[invSlot] = 1;
-				else
-					gMercProfiles[profileNum].bInvNumber[invSlot] = gMercProfileGear[profileNum].iNumber[invSlot];
-
-				//if(!gMercProfileGear[profileNum].iDrop[invSlot] && profileNum > 56)
-				//	gMercProfiles[profileNum].ubInvUndroppable |= gubItemDroppableFlag[invSlot];
-			}
-			//CHRISL: Moved outside first condition we we set ubInvUndroppable regardless of having an item
-			if(gMercProfileGear[profileNum].iDrop[invSlot] == 0 && profileNum > 56) {
-				gMercProfiles[profileNum].ubInvUndroppable |= gubItemDroppableFlag[invSlot];
-			}
-		}
-		// Last, go through and assign LBE items.  Only needed for new inventory system
-		if(UsingNewInventorySystem() == true)
-		{
-			for(int LBESlot=0; LBESlot<5; LBESlot++)
-			{
-				for (unsigned int freeSlot = BIGPOCKSTART; freeSlot < SMALLPOCKFINAL; ++freeSlot) {
-					if (gMercProfiles[profileNum].inv[freeSlot] == NONE) {
-						gMercProfiles[profileNum].inv[freeSlot] = gMercProfileGear[profileNum].lbe[LBESlot];
-						gMercProfiles[profileNum].bInvStatus[freeSlot] = gMercProfileGear[profileNum].lStatus[LBESlot];
-						if(gMercProfiles[profileNum].inv[freeSlot] != NONE)
-							gMercProfiles[profileNum].bInvNumber[freeSlot] = 1;
-						break;
-					}
-				}
-			}
-		}
-
-
-		//ADB once all items are in the first 19 or 24 slots or so, rearrange them
-		//needs to happen in old and new, until the time when old inv is set up properly
-		//this function can handle old and new!!!
-		DistributeInitialGear(&gMercProfiles[profileNum]);
+		gMercProfiles[ profileNum ] = tempProfile;
 
 		//if the Dialogue exists for the merc, allow the merc to be hired
 		if( DialogueDataFileExistsForProfile( (UINT8)profileNum, 0, FALSE, NULL ) )

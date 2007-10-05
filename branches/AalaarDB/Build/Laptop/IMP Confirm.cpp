@@ -33,20 +33,9 @@
 	#include "strategic.h"
 	#include "weapons.h"
 	#include "Random.h"
-	#include "GameSettings.h"
 #endif
 
 #define IMP_FILENAME_SUFFIX ".dat"
-
-//CHRISL: structure needed to store temporary inventory information during IMP creation
-typedef struct
-{
-	UINT16		inv;
-	UINT8		iSize;
-	UINT32		iClass;
-	UINT8		iStatus;
-	UINT8		iNumber;
-}	INVNODE;
 
 IMP_ITEM_CHOICE_TYPE gIMPItemChoices[MAX_IMP_ITEM_TYPES];
 	
@@ -142,14 +131,6 @@ void GiveItemsToPC( UINT8 ubProfileId );
 void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
 void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
 INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHowMany);
-
-// CHRISL:
-void RedistributeStartingItems(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 sPocket);
-void DistributeInitialGear(MERCPROFILESTRUCT *pProfile);
-INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv);
-INT32 AnyFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv);
-INT32 SpecificFreePocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHowMany, UINT32 usClass);
-INT32 PickPocket(MERCPROFILESTRUCT *pProfile, UINT8 ppStart, UINT8 ppStop, UINT16 usItem, UINT8 iNumber, UINT8 * cap);
 
 // callbacks
 void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason );
@@ -435,118 +416,6 @@ void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
 
 #define PROFILE_HAS_SKILL_TRAIT( p, t ) ((p->bSkillTrait == t) || (p->bSkillTrait2 == t))
 
-//CHRISL: New function to handle proper distribution of starting gear
-void DistributeInitialGear(MERCPROFILESTRUCT *pProfile)
-{
-	INVNODE			tInv[NUM_INV_SLOTS];
-	int				i, j, number;
-	UINT8			count = 0, length;
-	int				iOrder[NUM_INV_SLOTS];
-	INT32			iSlot;
-	BOOLEAN			iSet = FALSE;
-
-	// First move profile information to temporary storage
-	for(i=INV_START_POS; i<NUM_INV_SLOTS; i++)
-	{
-		if(pProfile->inv[i] != NOTHING)
-		{
-			tInv[count].inv = pProfile->inv[i];
-			tInv[count].iSize = Item[pProfile->inv[i]].ItemSize;
-			tInv[count].iClass = Item[pProfile->inv[i]].usItemClass;
-			tInv[count].iStatus = (pProfile->bInvStatus[i] > 0) ? pProfile->bInvStatus[i] : 100;
-			tInv[count].iNumber = (pProfile->bInvNumber[i] == 0) ? 1 :pProfile->bInvNumber[i];
-			pProfile->inv[i] = 0;
-			pProfile->bInvStatus[i] = 0;
-			pProfile->bInvNumber[i] = 0;
-			count++;
-		}
-	}
-
-	length = count;
-	count = 0;
-	// Next sort list by size
-	for(j=34; j>=0; j--)
-	{
-		for(i=0; i<length; i++)
-		{
-			if(tInv[i].iSize == j)
-			{
-				//ADB this is a mem leak!!!
-				//int *filler = new int;
-				//iOrder.push_back(*filler);
-				iOrder[count] = i;
-				count++;
-			}
-		}
-	}
-
-	// Last, go through the temp data and put items into appropriate pockets
-	// Start by putting items into specific pockets
-	for(i=0; i<count; i++)
-	{
-		iSlot = SpecificFreePocket(pProfile, tInv[iOrder[i]].inv, tInv[iOrder[i]].iNumber, tInv[iOrder[i]].iClass);
-		if(iSlot != -1)
-		{
-			MakeProfileInvItemThisSlot(pProfile, iSlot, tInv[iOrder[i]].inv, tInv[iOrder[i]].iStatus, tInv[iOrder[i]].iNumber);
-			iOrder[i]=-1;
-		}
-	}
-	// Next, put anything that isn't an attachment into a pocket
-	for(i=0; i<count; i++)
-	{
-		if(iOrder[i]!=-1)
-		{
-			// skip if this item is an attachment
-			if(Item[tInv[iOrder[i]].inv].attachment)
-				continue;
-			iSet = FALSE;
-			number = tInv[iOrder[i]].iNumber;
-			while(number > 0)
-			{
-				iSlot = FirstFreeBigEnoughPocket (pProfile, &tInv[iOrder[i]]);
-				if(iSlot != -1)
-				{
-					MakeProfileInvItemThisSlot(pProfile, iSlot, tInv[iOrder[i]].inv, tInv[iOrder[i]].iStatus, tInv[iOrder[i]].iNumber);
-					iSet = TRUE;
-					number -= tInv[iOrder[i]].iNumber;
-					tInv[iOrder[i]].iNumber = number;
-				}
-				else if(tInv[iOrder[i]].iNumber>1){
-					tInv[iOrder[i]].iNumber --;
-				}
-				else {
-					iSet = FALSE;
-					tInv[iOrder[i]].iNumber = number;
-					number = 0;
-				}
-			}
-			if(iSet)
-				iOrder[i]=-1;
-		}
-	}
-	// finish by putting anything that's left into any pocket, including inactive pockets
-	for(i=0; i<count; i++)
-	{
-		if(iOrder[i]!=-1)
-		{
-			iSet = FALSE;
-			number = tInv[iOrder[i]].iNumber;
-			tInv[iOrder[i]].iNumber = 1;
-			for(int j=0; j<number; j++)
-			{
-				iSlot = AnyFreeBigEnoughPocket (pProfile, &tInv[iOrder[i]]);
-				if(iSlot != -1)
-				{
-					MakeProfileInvItemThisSlot(pProfile, iSlot, tInv[iOrder[i]].inv, tInv[iOrder[i]].iStatus, tInv[iOrder[i]].iNumber);
-					iSet = TRUE;
-				}
-			}
-			if(iSet)
-				iOrder[i] = -1;
-		}
-	}
-}
-
 
 void GiveItemsToPC( UINT8 ubProfileId )
 {
@@ -733,18 +602,13 @@ void GiveItemsToPC( UINT8 ubProfileId )
 	{
 		GiveIMPRandomItems(pProfile,IMP_THIEF);
 	}
-
-	// CHRISL: Now that all items have been issued, distribute them into appropriate pockets, starting with the largest items
-	//if((UsingNewInventorySystem() == true)) {
-		DistributeInitialGear(pProfile);
-	//}
 }
 
 
 void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany)
 {
 	PERFORMANCE_MARKER
-	INT32 iSlot = -1;
+	INT32 iSlot;
 
 	iSlot = FirstFreeBigEnoughPocket(pProfile, usItem, ubHowMany);
 
@@ -758,177 +622,6 @@ void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 	MakeProfileInvItemThisSlot(pProfile, iSlot, usItem, ubStatus, ubHowMany);
 }
 
-// CHRISL: New function to move initial gear into LBE pockets when LBE items are given during creation
-void RedistributeStartingItems(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 sPocket)
-{
-	UINT16	lbeIndex;
-	UINT8	lbeClass, iSize;
-	UINT16	inv[NUM_INV_SLOTS], istatus[NUM_INV_SLOTS], inumber[NUM_INV_SLOTS];
-
-	lbeIndex = Item[usItem].ubClassIndex;
-	lbeClass = LoadBearingEquipment[lbeIndex].lbeClass;
-
-	// Move non-worn items into temporary storage
-	for(int i=INV_START_POS; i<NUM_INV_SLOTS; i++)
-	{
-		if(i>=BODYPOSFINAL)
-		{
-			inv[i] = pProfile->inv[i];
-			istatus[i] = pProfile->bInvStatus[i];
-			inumber[i] = pProfile->bInvNumber[i];
-			pProfile->inv[i] = 0;
-			pProfile->bInvStatus[i] = 0;
-			pProfile->bInvNumber[i] = 0;
-		}
-		else
-		{
-			switch (i)
-			{
-				case HANDPOS:
-				case SECONDHANDPOS:
-					inv[i] = pProfile->inv[i];
-					istatus[i] = pProfile->bInvStatus[i];
-					inumber[i] = pProfile->bInvNumber[i];
-					pProfile->inv[i] = 0;
-					pProfile->bInvStatus[i] = 0;
-					pProfile->bInvNumber[i] = 0;
-					break;
-				default:
-					inv[i] = 0;
-					istatus[i] = 0;
-					inumber[i] = 0;
-					break;
-			}
-		}
-	}
-
-	// Redistribute stored items with the assumption of the new LBE item
-	for(int i=INV_START_POS; i<NUM_INV_SLOTS; i++)
-	{
-		if(inv[i] != NONE)
-		{
-			iSize = Item[inv[i]].ItemSize;
-			for(int j=INV_START_POS; j<NUM_INV_SLOTS; j++)
-			{
-				if(icLBE[j] == sPocket && pProfile->inv[j] == NONE && LBEPocketType[LoadBearingEquipment[lbeIndex].lbePocketIndex[icPocket[j]]].ItemCapacityPerSize[iSize] != NONE)
-				{
-					pProfile->inv[j] = inv[i];
-					pProfile->bInvStatus[j] = istatus[i];
-					pProfile->bInvNumber[j] = inumber[i];
-					inv[i] = istatus[i] = inumber[i] = 0;
-					break;
-				}
-			}
-			pProfile->inv[i] = inv[i];
-			pProfile->bInvStatus[i] = istatus[i];
-			pProfile->bInvNumber[i] = inumber[i];
-			inv[i] = istatus[i] = inumber[i] = 0;
-		}
-	}
-}
-
-// CHRISL: New function to work with LBE pockets
-INT32 SpecificFreePocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHowMany, UINT32 usClass)
-{
-	UINT8	lbePocket;
-
-	if (ubHowMany == 1)
-	{
-		switch (usClass)
-		{
-			case IC_LBEGEAR:
-				if(pProfile->inv[VESTPOCKPOS]==NONE && LoadBearingEquipment[Item[usItem].ubClassIndex].lbeClass==VEST_PACK)
-					return VESTPOCKPOS;
-				if(pProfile->inv[LTHIGHPOCKPOS]==NONE && LoadBearingEquipment[Item[usItem].ubClassIndex].lbeClass==THIGH_PACK)
-					return LTHIGHPOCKPOS;
-				if(pProfile->inv[RTHIGHPOCKPOS]==NONE && LoadBearingEquipment[Item[usItem].ubClassIndex].lbeClass==THIGH_PACK)
-					return RTHIGHPOCKPOS;
-				if(LoadBearingEquipment[Item[usItem].ubClassIndex].lbeClass==COMBAT_PACK)
-				{
-					if(pProfile->inv[CPACKPOCKPOS]==NONE)
-					{
-						if(LoadBearingEquipment[Item[usItem].ubClassIndex].lbeCombo!=0)
-						{
-							if((pProfile->inv[BPACKPOCKPOS]!=NONE && LoadBearingEquipment[Item[pProfile->inv[BPACKPOCKPOS]].ubClassIndex].lbeCombo==LoadBearingEquipment[Item[usItem].ubClassIndex].lbeCombo) || pProfile->inv[BPACKPOCKPOS]==NONE)
-								return CPACKPOCKPOS;
-						}
-						else if(pProfile->inv[BPACKPOCKPOS]==NONE)
-							return CPACKPOCKPOS;
-					}
-				}
-				if(LoadBearingEquipment[Item[usItem].ubClassIndex].lbeClass==BACKPACK)
-				{
-					if(pProfile->inv[BPACKPOCKPOS]==NONE)
-					{
-						if(LoadBearingEquipment[Item[usItem].ubClassIndex].lbeCombo!=0)
-						{
-							if((pProfile->inv[CPACKPOCKPOS]!=NONE && LoadBearingEquipment[Item[pProfile->inv[CPACKPOCKPOS]].ubClassIndex].lbeCombo==LoadBearingEquipment[Item[usItem].ubClassIndex].lbeCombo) || pProfile->inv[CPACKPOCKPOS]==NONE)
-								return BPACKPOCKPOS;
-						}
-						else if(pProfile->inv[CPACKPOCKPOS]==NONE)
-							return BPACKPOCKPOS;
-					}
-				}
-				break;
-			case IC_ARMOUR:
-				if ( pProfile->inv[HELMETPOS] == NONE && Armour[Item[usItem].ubClassIndex].ubArmourClass == ARMOURCLASS_HELMET )
-					return HELMETPOS;
-				if ( pProfile->inv[VESTPOS] == NONE && Armour[Item[usItem].ubClassIndex].ubArmourClass == ARMOURCLASS_VEST )
-					return VESTPOS;
-				if ( pProfile->inv[LEGPOS] == NONE && Armour[Item[usItem].ubClassIndex].ubArmourClass == ARMOURCLASS_LEGGINGS && !(Item[usItem].attachment))
-					return LEGPOS;
-				break;
-			case IC_BLADE:
-				if ( pProfile->inv[KNIFEPOCKPOS] == NONE)
-					return KNIFEPOCKPOS;
-				break;
-			/* CHRISL: This won't work without hard coding pocket definitions since there is no way to
-			guarantee that the pocket definitions won't change. */
-//			case IC_BOMB:
-//				for(int i=BIGPOCKSTART; i<NUM_INV_SLOTS; i++)
-//				{
-//					if(LoadBearingEquipment[Item[pProfile->inv[icLBE[i]]].ubClassIndex].lbePocketIndex[icPocket[i]]==7)	// TNT Pocket
-//						if(pProfile->inv[i] == NONE)
-//							return i;
-//				}
-//				break;
-//			case IC_GRENADE:
-//				for(int i=BIGPOCKSTART; i<NUM_INV_SLOTS; i++)
-//				{
-//					if(pProfile->inv[i]==NONE && Item[usItem].ItemSize==16 && LoadBearingEquipment[Item[pProfile->inv[icLBE[i]]].ubClassIndex].lbePocketIndex[icPocket[i]]==12)	// Rifle Grenade
-//						return i;
-//					else if(pProfile->inv[i]==NONE && LoadBearingEquipment[Item[pProfile->inv[icLBE[i]]].ubClassIndex].lbePocketIndex[icPocket[i]]==13)	// Grenade
-//						return i;
-//				}
-//				break;
-			case IC_GUN:
-				if ( pProfile->inv[HANDPOS] == NONE )
-					return HANDPOS;
-				if ( pProfile->inv[SECONDHANDPOS] == NONE && !(Item[pProfile->inv[HANDPOS]].twohanded))
-					return SECONDHANDPOS;
-				if((UsingNewInventorySystem() == true))
-					if ( pProfile->inv[GUNSLINGPOCKPOS] == NONE && pProfile->inv[BPACKPOCKPOS] == NONE && LBEPocketType[1].ItemCapacityPerSize[Item[usItem].ItemSize]!=0)
-						return GUNSLINGPOCKPOS;
-				for(int i=BIGPOCKSTART; i<NUM_INV_SLOTS; i++)
-				{
-					lbePocket = LoadBearingEquipment[Item[pProfile->inv[icLBE[i]]].ubClassIndex].lbePocketIndex[icPocket[i]];
-					if(pProfile->inv[i]==NONE && (lbePocket==6 || lbePocket==10) && LBEPocketType[lbePocket].ItemCapacityPerSize[Item[usItem].ItemSize]!=0)
-						return i;
-				}
-				break;
-			case IC_FACE:
-				if ( pProfile->inv[HEAD1POS] == NONE && CompatibleFaceItem(usItem,pProfile->inv[HEAD2POS]) )
-					return HEAD1POS;
-				if ( pProfile->inv[HEAD2POS] == NONE && CompatibleFaceItem(usItem,pProfile->inv[HEAD1POS]) )
-					return HEAD2POS;
-				break;
-			default:
-				break;
-		}
-	}
-	return(-1);
-}
-
 
 void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany)
 {
@@ -938,76 +631,6 @@ void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT1
 	pProfile->bInvNumber[uiPos] = ubHowMany;
 }
 
-//INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHowMany, UINT32 usClass)
-INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv)
-{
-	INT32	sPocket=-1, mPocket=-1, lPocket=-1;
-	UINT8	sCapacity=0;
-	UINT8	mCapacity=0;
-	UINT8	lCapacity=0;
-	UINT8	capacity=0;
-
-	/*CHRISL: Make the assumption that by the time we get to this function, we've already activated
-	all the pockets we're going to activate.  LBE Items were all placed in SpecificFreePocket function
-	which should activate everything. */
-	//Start with active big pockets
-	sPocket=PickPocket(pProfile, SMALLPOCKSTART, SMALLPOCKFINAL, tInv->inv, tInv->iNumber, &sCapacity);
-	//Next search active medium pockets
-	mPocket=PickPocket(pProfile, MEDPOCKSTART, MEDPOCKFINAL, tInv->inv, tInv->iNumber, &mCapacity);
-	//Lastly search active small pockets
-	lPocket=PickPocket(pProfile, BIGPOCKSTART, BIGPOCKFINAL, tInv->inv, tInv->iNumber, &lCapacity);
-	//Finally, compare the three pockets we've found and return the pocket that is most logical to use
-	capacity = min(sCapacity, mCapacity);
-	capacity = min(lCapacity, capacity);
-	if(capacity == 254) {	//no pocket found
-		return -1;
-	}
-	else if(capacity == sCapacity) {
-		return sPocket;
-	}
-	else if(capacity == mCapacity) {
-		return mPocket;
-	}
-	else if(capacity == lCapacity) {
-		return lPocket;
-	}
-	return(-1);
-}
-
-// CHRISL: Use to find best pocket to store item in.  Could probably be merged with FitsInSmallPocket
-INT32 PickPocket(MERCPROFILESTRUCT *pProfile, UINT8 ppStart, UINT8 ppStop, UINT16 usItem, UINT8 iNumber, UINT8 * cap)
-{
-	UINT16	pIndex=0;
-	INT32	pocket=0;
-	UINT8	capacity=254;
-
-	for(UINT32 uiPos=ppStart; uiPos<ppStop; uiPos++){
-		if(pProfile->inv[icLBE[uiPos]]==0){
-			pIndex=LoadBearingEquipment[icClass[uiPos]].lbePocketIndex[icPocket[uiPos]];
-		}
-		else {
-			pIndex=LoadBearingEquipment[Item[pProfile->inv[icLBE[uiPos]]].ubClassIndex].lbePocketIndex[icPocket[uiPos]];
-		}
-		// Here's were we get complicated.  We should look for the smallest pocket all items can fit in
-		if(LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize] >= iNumber &&
-			LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize] < capacity &&
-			pProfile->inv[uiPos] == 0) {
-				if((LBEPocketType[pIndex].pRestriction != 0 && LBEPocketType[pIndex].pRestriction == Item[usItem].usItemClass) ||
-					LBEPocketType[pIndex].pRestriction == 0) {
-						capacity = LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize];
-						pocket = uiPos;
-				}
-		}
-	}
-	if(pocket!=0){
-		*cap=capacity;
-		return pocket;
-	}
-	else{
-		*cap=254;
-		return -1;
-	}
-}
 
 INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHowMany)
 {
@@ -1033,24 +656,11 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 		if ( pProfile->inv[SECONDHANDPOS] == NONE )
 			return SECONDHANDPOS;
 	}
-
-	CreateItems(usItem, 100, ubHowMany, &gTempObject);
 	// if it fits into a small pocket
-	if (FitsInSmallPocket(&gTempObject) &&
-		(UsingNewInventorySystem() == true || ubHowMany <= ItemSlotLimit(&gTempObject, SMALLPOCK1POS)))
+	if (Item[usItem].ubPerPocket != 0)
 	{
 		// check small pockets first
-		for (uiPos = SMALLPOCKSTART; uiPos < SMALLPOCKFINAL; uiPos++)
-		{
-			if (pProfile->inv[uiPos] == NONE)
-			{
-				return(uiPos);
-			}
-		}
-	}
-
-	if (UsingNewInventorySystem() == true) {
-		for (uiPos = MEDPOCKSTART; uiPos < MEDPOCKFINAL; uiPos++)
+		for (uiPos = SMALLPOCK1POS; uiPos <= SMALLPOCK8POS; uiPos++)
 		{
 			if (pProfile->inv[uiPos] == NONE)
 			{
@@ -1060,55 +670,14 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 	}
 
 	// check large pockets
-	if (ubHowMany <= ItemSlotLimit(&gTempObject, STACK_SIZE_LIMIT)) {
-		for (uiPos = BIGPOCKSTART; uiPos < BIGPOCKFINAL; uiPos++)
-		{
-			if (pProfile->inv[uiPos] == NONE)
-			{
-				return(uiPos);
-			}
-		}
-	}
-
-	return(-1);
-}
-
-// CHRISL: This function will place objects anywhere it can.  It tries to use active pockets but will use any pocket as a last resort
-INT32 AnyFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv)
-{
-	INT32		iSlot;
-	UINT32		uiPos;
-	UINT16		iSize, lbeCap, usItem;
-
-	iSlot = FirstFreeBigEnoughPocket (pProfile, tInv);
-	if(iSlot != -1)
-		return(iSlot);
-	else
+	for (uiPos = BIGPOCK1POS; uiPos <= BIGPOCK4POS; uiPos++)
 	{
-		/* CHRISL: FAILSAFE: We can't find any active pockets to put this item. Rather then losing the item,
-		put it in any pocket using old inventory method.  Player can then manually resort items later. */
-		usItem = tInv->inv;
-		iSize = Item[usItem].ubPerPocket;
-		lbeCap = max(1, (iSize/2));
-		for(uiPos = BIGPOCKSTART; uiPos < NUM_INV_SLOTS; uiPos ++)
+		if (pProfile->inv[uiPos] == NONE)
 		{
-			if(uiPos >= MEDPOCKFINAL && iSize > 0)
-				return(-1);
-			else
-			{
-				if(pProfile->inv[uiPos] == NONE)
-					return(uiPos);
-				else if(pProfile->inv[uiPos] == usItem)
-				{
-					if((uiPos < BIGPOCKFINAL && iSize >= (tInv->iNumber+1)) || (uiPos >= BIGPOCKFINAL && lbeCap >= (tInv->iNumber+1)))
-					{
-					tInv->iNumber++;
-					return(uiPos);
-					}
-				}
-			}
+			return(uiPos);
 		}
 	}
+
 	return(-1);
 }
 

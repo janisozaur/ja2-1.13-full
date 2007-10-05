@@ -28,7 +28,7 @@
 	#include "render dirty.h"
 	#include "utilities.h"
 	#include "interface cursors.h"
-//	#include "Sound Control.h"
+	#include "Sound Control.h"
 	#include "lighting.h"
 	#include "Interface Panels.h"
 	#include "pathai.h"
@@ -67,8 +67,7 @@ BOOLEAN		gfRerenderInterfaceFromHelpText = FALSE;
 
 MOUSE_REGION		gLockPanelOverlayRegion;
 
-// CHRISL: Change function definition to allow passing of X,Y coords to control placement of TownID string
-extern void			RenderTownIDString( INT16 sX, INT16 sY );
+extern void			RenderTownIDString( );
 extern BOOLEAN	gfUIOverItemPool;
 extern INT16		gfUIOverItemPoolGridNo;
 extern BOOLEAN	gfInMovementMenu;

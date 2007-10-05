@@ -380,11 +380,6 @@ class STRUCT_AIData//last edited at version 102
 {
 public:
 	void				ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
-
-	//not yet used
-	//cached value for which ai profile this soldier should use, ie regular, sniper,	civilian, etc
-	//BOOLEAN				eSoldierProfileType;
-
 public:
 	// AI STUFF from before the changes to the memory structure
 	INT8												bOppList[MAX_NUM_SOLDIERS]; // AI knowledge database
@@ -536,11 +531,6 @@ public:
 	BOOLEAN					autofireLastStep;
 	BOOLEAN lastFlankLeft;
 	UINT32											uiStatusFlags;
-
-	//LBE node stuff
-	BOOLEAN			ZipperFlag;
-	BOOLEAN			DropPackFlag;
-
 };
 
 class STRUCT_TimeChanges//last edited at version 102
@@ -1062,8 +1052,6 @@ public:
 
 	INT8	snowCamo;	
 	INT8	wornSnowCamo;
-
-	INT16	DropPackKey;
 
 	char endOfPOD;	// marker for end of POD (plain old data)
 

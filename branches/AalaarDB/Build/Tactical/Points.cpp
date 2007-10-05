@@ -121,12 +121,7 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 															break;
 
 		// cost for jumping a fence REPLACES all other AP costs!
-	// CHRISL: 
-	case TRAVELCOST_FENCE		: 
-		 if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-			 return( AP_JUMPFENCEBPACK );
-		 else
-			  return( AP_JUMPFENCE );
+	case TRAVELCOST_FENCE		: return( AP_JUMPFENCE );
 
 	case TRAVELCOST_NONE			: return( 0 );
 
@@ -292,7 +287,6 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 	}
 
 	// so, then we must modify it for other movement styles and accumulate
-	// CHRISL: Adjusted system to use different move costs while wearing a backpack
 	if (sTileCost > 0)
 	{
 		switch(usMovementMode)
@@ -300,12 +294,7 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 			case RUNNING:	
 			case ADULTMONSTER_WALKING:	
 			case BLOODCAT_RUN:
-				// CHRISL
-				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-					sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISORBPACK) );
-				else
-					sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );
-				break;
+				sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );	break;
 
 			case CROW_FLY:
 			case SIDE_STEP:
@@ -313,30 +302,13 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 			case ROBOT_WALK:
 			case BLOODCAT_WALK_BACKWARDS:
 			case MONSTER_WALK_BACKWARDS:
-      case LARVAE_WALK:
-			case WALKING :
-				// CHRISL
-				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-					sPoints = (sTileCost + WALKCOSTBPACK);
-				else
-					sPoints = (sTileCost + WALKCOST);
-				break;
+		case LARVAE_WALK:
+			case WALKING :	sPoints = (sTileCost + WALKCOST);		break;
 
 			case START_SWAT:
 			case SWAT_BACKWARDS:
-			// CHRISL
-			case SWATTING:
-				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-					sPoints = (sTileCost + SWATCOSTBPACK);
-				else
-					sPoints = (sTileCost + SWATCOST);
-				break;
-			case CRAWLING:
-				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-					sPoints = (sTileCost + CRAWLCOSTBPACK);
-				else
-					sPoints = (sTileCost + CRAWLCOST);
-				break;
+			case SWATTING:	sPoints = (sTileCost + SWATCOST);		break;
+			case CRAWLING:	sPoints = (sTileCost + CRAWLCOST);		break;
 
 			default:
 
@@ -379,7 +351,6 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 	sTileCost = TerrainActionPoints( pSoldier, sGridNo, bDir, pSoldier->pathing.bLevel );
 
 	// so, then we must modify it for other movement styles and accumulate
-	// CHRISL: Adjusted system to use different move costs while wearing a backpack
 	if (sTileCost > 0)
 	{
 		switch(usMovementMode)
@@ -387,12 +358,7 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 			case RUNNING:	
 			case ADULTMONSTER_WALKING:	
 			case BLOODCAT_RUN:
-				// CHRISL
-				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-					sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISORBPACK) );
-				else
-					sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );
-				break;
+				sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );	break;
 
 			case CROW_FLY:
 			case SIDE_STEP:
@@ -400,30 +366,13 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 			case WALK_BACKWARDS:
 			case BLOODCAT_WALK_BACKWARDS:
 			case MONSTER_WALK_BACKWARDS:
-			case LARVAE_WALK:
-			// CHRISL
-			case WALKING :
-				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-					sPoints = (sTileCost + WALKCOSTBPACK);
-				else
-					sPoints = (sTileCost + WALKCOST);
-				break;
+		case LARVAE_WALK:
+			case WALKING :	sPoints = (sTileCost + WALKCOST);		break;
 
 			case START_SWAT:
 			case SWAT_BACKWARDS:
-			// CHRISL
-			case SWATTING:
-				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-					sPoints = (sTileCost + SWATCOSTBPACK);
-				else
-					sPoints = (sTileCost + SWATCOST);
-				break;
-			case CRAWLING:
-				if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-					sPoints = (sTileCost + CRAWLCOSTBPACK);
-				else
-					sPoints = (sTileCost + CRAWLCOST);
-				break;
+			case SWATTING:	sPoints = (sTileCost + SWATCOST);		break;
+			case CRAWLING:	sPoints = (sTileCost + CRAWLCOST);		break;
 
 			default:
 

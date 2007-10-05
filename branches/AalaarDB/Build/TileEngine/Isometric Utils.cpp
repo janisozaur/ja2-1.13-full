@@ -353,7 +353,7 @@ BOOLEAN GetMouseMapPos( INT16	*psMapPos )
 }
 #endif
 
-BOOLEAN GetMouseMapPos( INT16	*pusMapPos )
+BOOLEAN GetMouseMapPos( INT16	*psMapPos )
 {
 	PERFORMANCE_MARKER
 	INT16				sWorldX, sWorldY;
@@ -363,7 +363,7 @@ BOOLEAN GetMouseMapPos( INT16	*pusMapPos )
 	// Check if this is the same frame as before, return already calculated value if so!
 	if ( uiOldFrameNumber == guiGameCycleCounter && !guiForceRefreshMousePositionCalculation )
 	{
-		( *pusMapPos ) = sSameCursorPos;
+		( *psMapPos ) = sSameCursorPos;
 
 		if ( sSameCursorPos == 0 )
 		{	
@@ -378,14 +378,14 @@ BOOLEAN GetMouseMapPos( INT16	*pusMapPos )
 
 	if ( GetMouseXY( &sWorldX, &sWorldY ) )
 	{
-			*pusMapPos = MAPROWCOLTOPOS( sWorldY, sWorldX );
-			sSameCursorPos = (*pusMapPos);
+			*psMapPos = MAPROWCOLTOPOS( sWorldY, sWorldX );
+			sSameCursorPos = (*psMapPos);
 			return( TRUE );
 	}
 	else
 	{
-		*pusMapPos = 0;
-			sSameCursorPos = (*pusMapPos);
+		*psMapPos = 0;
+			sSameCursorPos = (*psMapPos);
 			return( FALSE );
 	}
 

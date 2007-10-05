@@ -88,8 +88,6 @@ void EquipTank( SOLDIERCREATE_STRUCT *pp );
 void ChooseKitsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bKitClass );
 void ChooseMiscGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bMiscClass );
 void ChooseBombsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bBombClass );
-// Headrock: Added function definition for LBE chooser
-void ChooseLBEsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bLBEClass );
 
 UINT16 PickARandomItem(UINT8 typeIndex);
 UINT16 PickARandomItem(UINT8 typeIndex, UINT8 maxCoolness);
@@ -229,8 +227,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 	INT8 bKitClass = 0;
 	INT8 bMiscClass = 0;
 	INT8 bBombClass = 0;
-	// Headrock: Added Zeroed LBE integer
-	INT8 bLBEClass = 0;
 	//special weapons
 	BOOLEAN fMortar = FALSE;
 	BOOLEAN fGrenadeLauncher = FALSE;
@@ -298,8 +294,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			bRating = (INT8)max( MIN_EQUIPMENT_CLASS, min( MAX_EQUIPMENT_CLASS, bRating ) );
 
 			bWeaponClass = bRating;
-			//Headrocktest, remove for release
-			bLBEClass = bRating;
 
 			//Note:  in some cases the class of armour and/or helmet won't be high enough to make 
 			//			 the lowest level.
@@ -318,8 +312,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 				bKitClass = bRating;
 				bMiscClass = bRating;
-				// Headrock: Low Level LBEs possible on Administrators:
-				bLBEClass = bRating;
 			}
 
 			if( bRating >= GREAT_ADMINISTRATOR_EQUIPMENT_RATING )
@@ -350,8 +342,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			bVestClass = bRating;
 			bHelmetClass = bRating;
 			bGrenadeClass = bRating;
-			// Headrock: Added LBE set to Coolness Rating
-			bLBEClass = bRating;
 
 
 			if( ( bRating >= GOOD_ARMY_EQUIPMENT_RATING ) && ( Random( 100 ) < 33 ) )
@@ -388,10 +378,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 			if( Random( 2 ) )
 				bKnifeClass = bRating;
-
-			// Headrock: Chance for soldier to carry better LBE
-			if( Chance( 50 ) )
-				bLBEClass++;
 
 			if( ( bRating > MIN_EQUIPMENT_CLASS ) && bRating < MAX_EQUIPMENT_CLASS )
 			{
@@ -474,9 +460,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			bKitClass = bRating;
 			bMiscClass = bRating;
 
-			// Headrock: Elite LBEs
-			bLBEClass = bRating;
-
 			if ( Chance( 25 ) )
 			{
 				bBombClass = bRating;
@@ -496,8 +479,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 			if( ( bRating > MIN_EQUIPMENT_CLASS ) && bRating < MAX_EQUIPMENT_CLASS )
 			{
-				UINT32 uiRange = ((UsingNewInventorySystem() == false)) ? Random(11) : Random(12);
-				switch( uiRange )
+				switch( Random( 11 ) )
 				{
 					case 4:		bWeaponClass++, bVestClass--;		break;
 					case 5:		bWeaponClass--, bVestClass--;		break;
@@ -506,7 +488,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 					case 8:		bHelmetClass++;						break;
 					case 9:		bVestClass++;						break;
 					case 10:	bWeaponClass++;						break;
-					case 11:	bLBEClass++;						break;
 				}
 			}
 
@@ -619,10 +600,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 				case IC_BOMB:
 					bBombClass = 0;
 					break;
-				// Headrock: Added failsafe for LBEs
-				case IC_LBEGEAR:
-					bLBEClass = 0;
-					break;
 			}
 		}
 	}
@@ -638,8 +615,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 	//Now actually choose the equipment!
 	ChooseWeaponForSoldierCreateStruct( pp, bWeaponClass, bAmmoClips, bAttachClass, fAttachment );
-	// Headrock: This is where the program calls LBE choosing
-	ChooseLBEsForSoldierCreateStruct( pp, bLBEClass );
 	ChooseSpecialWeaponsForSoldierCreateStruct( pp, bKnifeClass, fGrenadeLauncher, fLAW, fMortar, fRPG );
 	ChooseGrenadesForSoldierCreateStruct( pp, bGrenades, bGrenadeClass, fGrenadeLauncher );
 	ChooseArmourForSoldierCreateStruct( pp, bHelmetClass, bVestClass, bLeggingClass );
@@ -647,9 +622,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 	ChooseKitsForSoldierCreateStruct( pp, bKitClass );
 	ChooseMiscGearForSoldierCreateStruct( pp, bMiscClass );
 	ChooseBombsForSoldierCreateStruct( pp, bBombClass );
-	//ADB why is this here twice?
-	// Headrock: This is where the program calls LBE choosing
-	ChooseLBEsForSoldierCreateStruct( pp, bLBEClass );
 	ChooseLocationSpecificGearForSoldierCreateStruct( pp );
 	RandomlyChooseWhichItemsAreDroppable( pp, bSoldierClass );
 
@@ -1687,7 +1659,6 @@ void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 
 	//Look for any face item in the big pocket positions (the only place they can be added in the editor)
 	//If any are found, then don't assign any
-	// CHRISL: Change static inventory pocket definition to dynamic
 	for( i = BIGPOCKSTART; i < BIGPOCKFINAL; i++ )
 	{
 		if( Item[ pp->Inv[ i ].usItem ].usItemClass == IC_FACE ) 
@@ -2024,29 +1995,6 @@ void ChooseBombsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bBombClas
 #endif //obsoleteCode
 }
 
-// Headrock: Added a function to randomly create LBEs
-void ChooseLBEsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bLBEClass )
-{
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ChooseLBEsForSoldierCreateStruct");
-	//UINT16 i;
-	//INVTYPE *pItem;
-	//UINT16 usRandom;
-	UINT16 usItem = 0;
-
-	// CHRISL: If we're using the old inventory system, just return
-	if((UsingNewInventorySystem() == false))
-		return;
-
-	usItem = PickARandomItem( LBE , bLBEClass, FALSE );
-	if ( usItem > 0 )
-	{
-		CreateItem( usItem, (INT8)(80 + Random( 21 )), &gTempObject );
-		gTempObject.fFlags |= OBJECT_UNDROPPABLE;
-		PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
-	}
-}
-
-
 void ChooseLocationSpecificGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 {
 	PERFORMANCE_MARKER
@@ -2073,7 +2021,6 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 	INT8 i;
 
 	if( FitsInSmallPocket(pObject) == true ) {
-		// CHRISL: Change static inventory pocket definition to dynamic
 		//try to get it into a small pocket first
 		for( i = SMALLPOCKSTART; i < SMALLPOCKFINAL; i++ )
 		{
@@ -2087,7 +2034,6 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 
 	//NPCs skip medium pockets
 
-	// CHRISL: Change static inventory pocket definition to dynamic
 	for( i = BIGPOCKSTART; i < BIGPOCKFINAL; i++ )
 	{ //no space free in small pockets, so put it into a large pocket.
 		if( pp->Inv[ i ].exists() == false && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )

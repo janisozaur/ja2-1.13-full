@@ -67,11 +67,6 @@ void		CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue );
 //Change this number when we want any who gets the new build to reset the options
 #define				GAME_SETTING_CURRENT_VERSION		522
 
-bool UsingNewInventorySystem()
-{
-	return (gGameOptions.ubInventorySystem == INVENTORY_NEW);
-}
-
 BOOLEAN LoadGameSettings()
 {
 	PERFORMANCE_MARKER
@@ -303,7 +298,6 @@ void InitGameOptions()
 	gGameOptions.fAirStrikes		= FALSE;
 	gGameOptions.ubGameStyle		= STYLE_SCIFI;
 	gGameOptions.ubDifficultyLevel	= DIF_LEVEL_MEDIUM;
-	gGameOptions.ubInventorySystem	= INVENTORY_OLD;
 	//gGameOptions.fTurnTimeLimit	= FALSE;
 	
 	gGameOptions.fIronManMode		= FALSE;

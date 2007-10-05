@@ -1933,23 +1933,6 @@ UINT32 UIHandleCMoveMerc( UI_EVENT *pUIEvent )
 			// Get soldier
 			if ( GetSoldier( &pSoldier, gusSelectedSoldier )	)
 			{
-				// CHRISL: This block should only run if we're running in the new inventory system
-				if((UsingNewInventorySystem() == true))
-				{
-					// CHRISL: If we're in combat and zipper is active, don't allow movement
-					if((gTacticalStatus.uiFlags & INCOMBAT) && pSoldier->flags.ZipperFlag)
-					{
-						CHAR16 noPackText[STRING_LENGTH] = L"Can not move while backpack zipper active";
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, noPackText );
-						return( GAME_SCREEN );
-					}
-					// CHRISL: If we're not in combat but the zipper is active and we're moving, deactivate the zipper
-					if(!(gTacticalStatus.uiFlags & INCOMBAT) && pSoldier->flags.ZipperFlag)
-					{
-						pSoldier->flags.ZipperFlag=FALSE;
-						RenderBackpackButtons(0);
-					}
-				}
 				// FOR REALTIME - DO MOVEMENT BASED ON STANCE!
 				if ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) )
 				{
@@ -4418,51 +4401,29 @@ BOOLEAN SoldierCanAffordNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance 
 
 	// Now change to appropriate animation
 
-	// CHRISL: Modify function to include extra cost if wearing a backpack but only while running new inventory system
 	switch( bCurrentHeight )
 	{
 	case ANIM_STAND - ANIM_CROUCH:
-		if((UsingNewInventorySystem() == true))
-			if(pSoldier->inv[BPACKPOCKPOS].exists() == true && !pSoldier->flags.ZipperFlag)
-				bAP = bBP = 1;
-		bAP += AP_CROUCH;
-		bBP += BP_CROUCH;
-		break;
 	case ANIM_CROUCH - ANIM_STAND:
-		if((UsingNewInventorySystem() == true))
-			if(pSoldier->inv[BPACKPOCKPOS].exists() == true && !pSoldier->flags.ZipperFlag)
-				bAP = bBP = 2;
-		bAP += AP_CROUCH;
-		bBP += BP_CROUCH;
+
+		bAP = AP_CROUCH;
+		bBP = BP_CROUCH;
 		break;
+
 	case ANIM_STAND - ANIM_PRONE:
-		if((UsingNewInventorySystem() == true))
-			if(pSoldier->inv[BPACKPOCKPOS].exists() == true && !pSoldier->flags.ZipperFlag)
-				bAP = bBP = 2;
-		bAP += AP_CROUCH + AP_PRONE;
-		bBP += BP_CROUCH + BP_PRONE;
-		break;
 	case ANIM_PRONE - ANIM_STAND:
-		if((UsingNewInventorySystem() == true))
-			if(pSoldier->inv[BPACKPOCKPOS].exists() == true && !pSoldier->flags.ZipperFlag)
-				bAP = bBP = 4;
-		bAP += AP_CROUCH + AP_PRONE;
-		bBP += BP_CROUCH + BP_PRONE;
+
+		bAP = AP_CROUCH + AP_PRONE;
+		bBP = BP_CROUCH + BP_PRONE;
 		break;
+
 	case ANIM_CROUCH - ANIM_PRONE:
-		if((UsingNewInventorySystem() == true))
-			if(pSoldier->inv[BPACKPOCKPOS].exists() == true && !pSoldier->flags.ZipperFlag)
-				bAP = bBP = 1;
-		bAP += AP_PRONE;
-		bBP += BP_PRONE;
-		break;
 	case ANIM_PRONE - ANIM_CROUCH:
-		if((UsingNewInventorySystem() == true))
-			if(pSoldier->inv[BPACKPOCKPOS].exists() == true && !pSoldier->flags.ZipperFlag)
-				bAP = bBP = 2;
-		bAP += AP_PRONE;
-		bBP += BP_PRONE;
+
+		bAP = AP_PRONE;
+		bBP = BP_PRONE;
 		break;
+
 	}
 
 	return ( EnoughPoints( pSoldier, bAP, bBP , TRUE ) );

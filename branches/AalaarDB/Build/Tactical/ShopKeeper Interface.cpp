@@ -1364,8 +1364,7 @@ void HandleShopKeeperInterface()
 	}
 
 	RenderClock( CLOCK_X, CLOCK_Y );
-	// CHRISL: Added X,Y parameters to allow control of TownID string placement.
-	RenderTownIDString( CLOCK_X, (CLOCK_Y - 29) );
+	RenderTownIDString( );
 
 //ATM:
 //	RenderSkiAtmPanel();
@@ -1512,8 +1511,7 @@ BOOLEAN RenderShopKeeperInterface()
 
 	//Render the clock and the town name
 	RenderClock( CLOCK_X, CLOCK_Y );
-	// CHRISL: Added X,Y parameters to allow control of TownID string placement.
-	RenderTownIDString( CLOCK_X, (CLOCK_Y - 29) );
+	RenderTownIDString( );
 
 //	RenderTacticalInterface( );
 //	RenderSMPanel( &fDirty );
@@ -2034,7 +2032,7 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 			if( ArmsDealerOfferArea[ gpTempDealersInventory[ ubSelectedInvSlot ].bSlotIdInOtherLocation ].ItemObject.exists() == true )
 			{
 				//Decrease the number in the dealer offer area
-				ArmsDealerOfferArea[ gpTempDealersInventory[ ubSelectedInvSlot ].bSlotIdInOtherLocation ].ItemObject.RemoveObjectsFromStack(1, &gTempObject);
+				ArmsDealerOfferArea[ gpTempDealersInventory[ ubSelectedInvSlot ].bSlotIdInOtherLocation ].ItemObject.MoveThisObjectTo(gTempObject, 1);
 
 				//Increase the number in the dealer inventory
 				gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.AddObjectsToStack(gTempObject);
@@ -2804,14 +2802,6 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 		DrawTextToScreen( zTemp, (UINT16)(usPosX+SKI_ATTACHMENT_SYMBOL_X_OFFSET), (UINT16)(usPosY+SKI_ATTACHMENT_SYMBOL_Y_OFFSET), 0, TINYFONT1, FONT_GREEN, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
 	}
 
-	// CHRISL: if item is LBENODE
-	else if( (UsingNewInventorySystem() == true) && pItemObject->HasAnyActiveLBEs() == true)
-	{
-		//Display the '*' in the bottom right corner of the square
-		swprintf( zTemp, L"*" );
-		DrawTextToScreen( zTemp, (UINT16)(usPosX+SKI_ATTACHMENT_SYMBOL_X_OFFSET), (UINT16)(usPosY+SKI_ATTACHMENT_SYMBOL_Y_OFFSET), 0, TINYFONT1, FONT_BLUE, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
-	}
-
 	// Display 'JAMMED' if it's jammed
 	if ( (*pItemObject)[0]->data.gun.bGunAmmoStatus < 0 )
 	{
@@ -3059,6 +3049,7 @@ void DrawHatchOnInventory( UINT32 uiSurface, UINT16 usPosX, UINT16 usPosY, UINT1
 		1,0,1,0,1,0,1,0,
 		0,1,0,1,0,1,0,1
 	};
+	//ADB TODO check this
 	// CHRISL:
 	ClipRect.iLeft = usPosX-1;
 	ClipRect.iRight = usPosX + usWidth-1;
@@ -3189,6 +3180,7 @@ UINT32 CalcShopKeeperItemPrice( BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, 
 	}
 
 
+
 	// if Flo is doing the dealin' and wheelin'
 	if ( gpSMCurrentMerc->ubProfile == FLO )
 	{
@@ -3233,14 +3225,12 @@ UINT32 CalcShopKeeperItemPrice( BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, 
 
 	// we're always count the first one
 	uiTotalPrice = uiUnitPrice;
-
 	// if NOT pricing just one
 	if ( !fUnitPriceOnly )
 	{
 		// add value of all that weren't already counted
 		uiTotalPrice += ( ubItemsNotCounted * uiUnitPrice );
 	}
-
 	return( uiTotalPrice );
 }
 
@@ -6832,8 +6822,6 @@ BOOLEAN ShopkeeperAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObject,
 	// the entire pObj will get memset to 0 by RemoveObjs() if all the items are successfully placed,
 	// so we have to keep a copy to retrieve with every iteration of the loop
 	OBJECTTYPE CopyOfObject ( *pObject );
-
-
 	ubObjectsLeftToPlace = pObject->ubNumberOfObjects;
 
 	while ( ubObjectsLeftToPlace > 0 )
@@ -6841,7 +6829,6 @@ BOOLEAN ShopkeeperAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObject,
 		// figure out how many to place during this loop iteration.  Can't do more than MAX_OBJECTS_PER_SLOT at a time
 		pObject->ubNumberOfObjects = min( MAX_OBJECTS_PER_SLOT, ubObjectsLeftToPlace);
 		ubObjectsLeftToPlace -= pObject->ubNumberOfObjects;
-
 		if (!AutoPlaceObject( pSoldier, pObject, fNewItem ))
 		{
 			// no more room, didn't all fit - add back in any that we didn't even get to yet
@@ -6868,7 +6855,6 @@ void ShopkeeperAddItemToPool( INT16 sGridNo, OBJECTTYPE *pObject, INT8 bVisible,
 	// the entire pObj will get memset to 0 by RemoveObjs() if all the items are successfully placed,
 	// so we have to keep a copy to retrieve with every iteration of the loop
 	OBJECTTYPE CopyOfObject ( *pObject );
-
 	ubObjectsLeftToPlace = pObject->ubNumberOfObjects;
 
 	while ( ubObjectsLeftToPlace > 0 )
@@ -6876,7 +6862,6 @@ void ShopkeeperAddItemToPool( INT16 sGridNo, OBJECTTYPE *pObject, INT8 bVisible,
 		// figure out how many to place during this loop iteration.  Can't do more than MAX_OBJECTS_PER_SLOT at a time
 		pObject->ubNumberOfObjects = min( MAX_OBJECTS_PER_SLOT, ubObjectsLeftToPlace);
 		ubObjectsLeftToPlace -= pObject->ubNumberOfObjects;
-
 		AddItemToPool( sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel );
 
 		// restore object properties from our backup copy

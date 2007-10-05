@@ -191,7 +191,6 @@ void EntryInitEditorItemsInfo()
 				case IC_MEDKIT:
 				case IC_KIT:
 				case IC_FACE:
-				case IC_LBEGEAR:
 				case IC_MISC:
 				case IC_MONEY:
 					if( eInfo.sNumEquipment1 < 30 )
@@ -445,7 +444,6 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 				case IC_MEDKIT:
 				case IC_KIT:
 				case IC_FACE:
-				case IC_LBEGEAR:
 				case IC_MISC:
 				case IC_MONEY:
 					if( usCounter == ACTION_ITEM || usCounter == SWITCH )

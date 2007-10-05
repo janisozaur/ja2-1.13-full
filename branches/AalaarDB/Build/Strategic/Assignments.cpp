@@ -96,37 +96,28 @@ enum{
 };
 
 
-/* CHRISL: Adjusted enumerations to allow for seperation of the three different pocket types in the new 
-inventory system. */
 enum {
 	REPAIR_HANDS_AND_ARMOR = 0,
 	REPAIR_HEADGEAR,
-	REPAIR_BIG_POCKETS,
-	REPAIR_MED_POCKETS,
-	REPAIR_SML_POCKETS,
+	REPAIR_POCKETS,
 	NUM_REPAIR_PASS_TYPES,
 };
 
-#define FINAL_REPAIR_PASS			REPAIR_SML_POCKETS
+#define FINAL_REPAIR_PASS			REPAIR_POCKETS
 
 
-/* CHRISL: bSlot[xx] array declaration needs to reflect largest number of inventory locations.  New inventory
-system increses possible locations from 12 to 30. Also added a new field so we can set number of choices based
-on game options. */
 typedef struct REPAIR_PASS_SLOTS_TYPE
 {
-	UINT8		ubChoices[2];						// how many valid choices there are in this pass
-	INT8		bSlot[ 30 ];					// list of slots to be repaired in this pass
+	UINT8		ubChoices;						// how many valid choices there are in this pass
+	INT8		bSlot[ 12 ];					// list of slots to be repaired in this pass
 } REPAIR_PASS_SLOTS_TYPE;
 
-/* CHRISL:  Added new definitions introduced by the new inventory system.*/
+
 REPAIR_PASS_SLOTS_TYPE gRepairPassSlotList[ NUM_REPAIR_PASS_TYPES ] =
-{					// pass		# choices	# new choices		slots repaired in this pass
-	{ /* hands and armor */		5,			12,					HANDPOS, SECONDHANDPOS, VESTPOS, HELMETPOS, LEGPOS, VESTPOCKPOS, LTHIGHPOCKPOS, RTHIGHPOCKPOS, CPACKPOCKPOS, BPACKPOCKPOS, GUNSLINGPOCKPOS, KNIFEPOCKPOS, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-	{ /* headgear */			2,			2,					HEAD1POS, HEAD2POS, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-	{ /* big pockets */			4,			7,					BIGPOCK1POS, BIGPOCK2POS, BIGPOCK3POS, BIGPOCK4POS, BIGPOCK5POS, BIGPOCK6POS, BIGPOCK7POS, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-	{ /* med pockets */			0,			4,					MEDPOCK1POS, MEDPOCK2POS, MEDPOCK3POS, MEDPOCK4POS, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }, 
-	{ /* sml pockets */			8,			30,					SMALLPOCK1POS, SMALLPOCK2POS, SMALLPOCK3POS, SMALLPOCK4POS, SMALLPOCK5POS, SMALLPOCK6POS, SMALLPOCK7POS, SMALLPOCK8POS, SMALLPOCK9POS, SMALLPOCK10POS, SMALLPOCK11POS, SMALLPOCK12POS, SMALLPOCK13POS, SMALLPOCK14POS, SMALLPOCK15POS, SMALLPOCK16POS, SMALLPOCK17POS, SMALLPOCK18POS, SMALLPOCK19POS, SMALLPOCK20POS, SMALLPOCK21POS, SMALLPOCK22POS, SMALLPOCK23POS, SMALLPOCK24POS, SMALLPOCK25POS, SMALLPOCK26POS, SMALLPOCK27POS, SMALLPOCK28POS, SMALLPOCK29POS, SMALLPOCK30POS },
+{					// pass					# choices												slots repaired in this pass
+	{ /* hands and armor */			5,	HANDPOS, SECONDHANDPOS, VESTPOS, HELMETPOS, LEGPOS, -1, -1, -1, -1, -1, -1, -1 },
+	{ /* headgear */						2,	HEAD1POS, HEAD2POS, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
+	{ /* pockets */						12,	BIGPOCK1POS, BIGPOCK2POS, BIGPOCK3POS, BIGPOCK4POS, SMALLPOCK1POS, SMALLPOCK2POS, SMALLPOCK3POS, SMALLPOCK4POS, SMALLPOCK5POS, SMALLPOCK6POS, SMALLPOCK7POS, SMALLPOCK8POS },
 };
 
 extern STR16 sRepairsDoneString[];
@@ -668,7 +659,6 @@ BOOLEAN CanCharacterDoctor( SOLDIERTYPE *pSoldier )
 	}
 
 	// find med kit
-	// CHRISL: Changed to dynamically determine max inventory locations.
 	for (bPocket = HANDPOS; bPocket < NUM_INV_SLOTS; bPocket++)
 	{
 		// doctoring is allowed using either type of med kit (but first aid kit halves doctoring effectiveness)
@@ -778,7 +768,6 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 
 
 	// check for jams
-	// CHRISL: Changed to dynamically determine max inventory locations.
 	for (bPocket = HELMETPOS; bPocket < NUM_INV_SLOTS; bPocket++)
 	{
 		ubItemsInPocket = pSoldier->inv[ bPocket ].ubNumberOfObjects;
@@ -795,7 +784,6 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 	}
 
 	// now check for items to repair
-	// CHRISL: Changed to dynamically determine max inventory locations.
 	for( bPocket = HELMETPOS; bPocket < NUM_INV_SLOTS; bPocket++ )
 	{
 		pObj = &(pSoldier->inv[ bPocket ]);
@@ -835,7 +823,6 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 			{
 				// okay, seems like a candidate!	Check if he has anything that needs unjamming or repairs
 
-				// CHRISL: Changed to dynamically determine max inventory locations.
 				for ( bPocket = HANDPOS; bPocket < NUM_INV_SLOTS; bPocket++ )
 				{
 					// the object a weapon? and jammed?
@@ -2281,13 +2268,12 @@ UINT16 ToolKitPoints(SOLDIERTYPE *pSoldier)
 	UINT8 ubPocket;
 
 	// add up kit points
-	// CHRISL: Changed to dynamically determine max inventory locations.
 	for (ubPocket=HANDPOS; ubPocket < NUM_INV_SLOTS; ubPocket++)
 	{
 		if( Item[pSoldier->inv[ ubPocket ].usItem].toolkit )
-	{
+		{
 			usKitpts += TotalPoints( &( pSoldier->inv[ ubPocket ] ) );
-	}
+		}
 	}
 
 	return( usKitpts );
@@ -2301,14 +2287,13 @@ UINT16 TotalMedicalKitPoints(SOLDIERTYPE *pSoldier)
 	UINT16 usKitpts=0;
 
 	// add up kit points of all medkits
-	// CHRISL: Changed to dynamically determine max inventory locations.
 	for (ubPocket = HANDPOS; ubPocket < NUM_INV_SLOTS; ubPocket++)
 	{
 		// NOTE: Here, we don't care whether these are MEDICAL BAGS or FIRST AID KITS!
-	if ( IsMedicalKitItem( &( pSoldier->inv[ ubPocket ] ) ) )
-	{
+		if ( IsMedicalKitItem( &( pSoldier->inv[ ubPocket ] ) ) )
+		{
 			usKitpts += TotalPoints( &( pSoldier->inv[ ubPocket ] ) );
-	}
+		}
 	}
 
 	return( usKitpts );
@@ -2729,7 +2714,6 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 
 		// go through doctor's pockets and heal, starting at with his in-hand item
 		// the healing pts are based on what type of medkit is in his hand, so we HAVE to start there first!
-		// CHRISL: Changed to dynamically determine max inventory locations.
 		for (bPocket = HANDPOS; bPocket < NUM_INV_SLOTS; bPocket++)
 		{
 			bMedFactor = IsMedicalKitItem( &( pDoctor->inv[ bPocket ] ) );
@@ -2772,7 +2756,6 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 
 		// go through doctor's pockets and heal, starting at with his in-hand item
 		// the healing pts are based on what type of medkit is in his hand, so we HAVE to start there first!
-		// CHRISL: Changed to dynamically determine max inventory locations.
 		for (bPocket = HANDPOS; bPocket < NUM_INV_SLOTS; bPocket++)
 		{
 			bMedFactor = IsMedicalKitItem( &( pDoctor->inv[ bPocket ] ) );
@@ -3028,8 +3011,7 @@ OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPa
 
 	pPassList = &( gRepairPassSlotList[ ubPassType ] );
 
-	// CHRISL:
-	for ( bLoop = 0; bLoop < pPassList->ubChoices[UsingNewInventorySystem()]; bLoop++ )
+	for ( bLoop = 0; bLoop < pPassList->ubChoices; bLoop++ )
 	{
 		bSlotToCheck = pPassList->bSlot[ bLoop ];
 		Assert( bSlotToCheck != -1 );
@@ -3245,7 +3227,6 @@ void HandleRepairBySoldier( SOLDIERTYPE *pSoldier )
 			if ( bLoop == 0 )
 			{
 				bLoopStart = SECONDHANDPOS;
-				// CHRISL: Changed to dynamically determine max inventory locations.
 				bLoopEnd = (NUM_INV_SLOTS - 1);
 			}
 			else
@@ -5551,7 +5532,6 @@ void MakeSureToolKitIsInHand( SOLDIERTYPE *pSoldier )
 	if( !Item[pSoldier->inv[ HANDPOS].usItem].toolkit )
 	{
 		// run through rest of inventory looking for toolkits, swap the first one into hand if found
-		// CHRISL: Changed to dynamically determine max inventory locations.
 		for (bPocket = SECONDHANDPOS; bPocket < NUM_INV_SLOTS; bPocket++)
 		{
 			if( Item[pSoldier->inv[ bPocket ].usItem].toolkit )
@@ -5579,7 +5559,6 @@ BOOLEAN MakeSureMedKitIsInHand( SOLDIERTYPE *pSoldier )
 	}
 
 	// run through rest of inventory looking 1st for MEDICAL BAGS, swap the first one into hand if found
-	// CHRISL: Changed to dynamically determine max inventory locations.
 	for (bPocket = SECONDHANDPOS; bPocket < NUM_INV_SLOTS; bPocket++)
 	{
 		if ( Item[pSoldier->inv[ bPocket ].usItem].medicalkit )
@@ -5597,13 +5576,12 @@ BOOLEAN MakeSureMedKitIsInHand( SOLDIERTYPE *pSoldier )
 	}
 
 	// run through rest of inventory looking 1st for MEDICAL BAGS, swap the first one into hand if found
-	// CHRISL: Changed to dynamically determine max inventory locations.
 	for (bPocket = SECONDHANDPOS; bPocket < NUM_INV_SLOTS; bPocket++)
 	{
 		if ( Item[pSoldier->inv[ bPocket ].usItem].firstaidkit )
 		{
 			// CHRISL: This needs to start with the first "non-big" pocket.
-			if( ( Item[ pSoldier -> inv[ HANDPOS ].usItem ].twohanded  ) && ( bPocket >= MEDPOCKSTART ) )
+			if( ( Item[ pSoldier -> inv[ HANDPOS ].usItem ].twohanded  ) && ( bPocket >= SMALLPOCKSTART ) )
 			{
 				// first move from hand to second hand
 				SwapObjs( &pSoldier->inv[ HANDPOS ], &pSoldier->inv[ SECONDHANDPOS ] );
@@ -11697,7 +11675,6 @@ BOOLEAN UnjamGunsOnSoldier( SOLDIERTYPE *pOwnerSoldier, SOLDIERTYPE *pRepairSold
 
 
 	// try to unjam everything before beginning any actual repairs.. successful unjamming costs 2 points per weapon
-	// CHRISL: Changed to dynamically determine max inventory locations.
 	for (bPocket = HANDPOS; bPocket < NUM_INV_SLOTS; bPocket++)
 	{
 		// the object a weapon? and jammed?

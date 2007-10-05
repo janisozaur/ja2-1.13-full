@@ -419,10 +419,6 @@ BOOLEAN		LoadSavedMercProfiles( HWFILE hwFile );
 BOOLEAN		SaveSoldierStructure( HWFILE hFile );
 BOOLEAN		LoadSoldierStructure( HWFILE hFile );
 
-// CHRISL: New functions to save and load LBENODE data
-BOOLEAN SaveLBENODEToSaveGameFile( HWFILE hFile );
-BOOLEAN LoadLBENODEFromSaveGameFile( HWFILE hFile );
-
 //BOOLEAN		SavePtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile );
 //BOOLEAN		LoadPtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile );
 
@@ -508,114 +504,6 @@ void TruncateStrategicGroupSizes();
 //LoadWorld, if it is, you've got to rebuild the maps
 
 //if all that sounds compilcated, it is
-
-extern int gLastLBEUniqueID;
-/*
-// CHRISL: New function to save/load LBENODE data
-BOOLEAN SaveLBENODEToSaveGameFile( HWFILE hFile )
-{
-	PERFORMANCE_MARKER
-	UINT32	uiNumBytesWritten;
-	if ( !FileWrite( hFile, &gLastLBEUniqueID, sizeof(int), &uiNumBytesWritten ) )
-	{
-		return(FALSE);
-	}
-	return TRUE;
-}
-
-BOOLEAN LoadLBENODEFromSaveGameFile( HWFILE hFile )
-{
-	PERFORMANCE_MARKER
-	UINT32	uiNumBytesRead;
-	if ( !FileRead( hFile, &gLastLBEUniqueID, sizeof(int), &uiNumBytesRead ) )
-	{
-		return(FALSE);
-	}
-	return TRUE;
-}
-*/
-BOOLEAN LBENODE::Load( HWFILE hFile )
-{
-	PERFORMANCE_MARKER
-	UINT32	uiNumBytesRead;
-	//if we are at the most current version, then fine
-	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
-	{
-		if ( !FileRead( hFile, this, SIZEOF_LBENODE_POD, &uiNumBytesRead ) )
-		{
-			return(FALSE);
-		}
-		if (uniqueID >= gLastLBEUniqueID) {
-			//can happen because of the order things are saved and loaded,
-			//when combined with copy assignment which makes a new LBENODE
-			gLastLBEUniqueID = uniqueID + 1;
-		}
-		int size;
-		if ( !FileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
-		{
-			return(FALSE);
-		}
-
-		inv.resize(size);
-		for (std::vector<OBJECTTYPE>::iterator iter = inv.begin(); iter != inv.end(); ++iter) {
-			if (! iter->Load(hFile)) {
-				return FALSE;
-			}
-		}
-	}
-	else
-	{
-		//we shouldn't be loading from anything before the first change
-		Assert(guiCurrentSaveGameVersion >= FIRST_SAVEGAME_DATATYPE_CHANGE);
-	}
-	return TRUE;
-}
-
-BOOLEAN	LBENODE::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion )
-{
-	if (dMajorMapVersion >= 6.0 && ubMinorMapVersion > 26 ) {
-		LOADDATA( this, *hBuffer, SIZEOF_LBENODE_POD );
-		if (uniqueID >= gLastLBEUniqueID) {
-			//can happen because of the order things are saved and loaded,
-			//when combined with copy assignment which makes a new LBENODE
-			gLastLBEUniqueID = uniqueID + 1;
-		}
-		int size;
-		LOADDATA( &size, *hBuffer, sizeof(int) );
-		inv.resize(size);
-		for (std::vector<OBJECTTYPE>::iterator iter = inv.begin(); iter != inv.end(); ++iter) {
-			iter->Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
-		}
-	}
-	else {
-		Assert(guiCurrentSaveGameVersion >= FIRST_SAVEGAME_DATATYPE_CHANGE);
-	}
-	return TRUE;
-}
-
-BOOLEAN LBENODE::Save( HWFILE hFile, bool fSavingMap )
-{
-	PERFORMANCE_MARKER
-	UINT32 uiNumBytesWritten;
-	int size = inv.size();
-
-	if ( !FileWrite( hFile, this, SIZEOF_LBENODE_POD, &uiNumBytesWritten ) )
-	{
-		return(FALSE);
-	}
-	if ( !FileWrite( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
-	{
-		return(FALSE);
-	}
-	for (std::vector<OBJECTTYPE>::iterator iter = inv.begin(); iter != inv.end(); ++iter) {
-		//we are not saving to a map, at least not yet
-		if (! iter->Save(hFile, false)) {
-			return FALSE;
-		}
-	}
-	return TRUE;
-}
-
 
 BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 {
@@ -1549,12 +1437,6 @@ BOOLEAN OBJECTTYPE::Load( HWFILE hFile )
 			if (! iter->Load(hFile)) {
 				return FALSE;
 			}
-			if (this->IsActiveLBE(x) == true) {
-				LBEArray.push_back(LBENODE());
-				if (! LBEArray.back().Load(hFile)) {
-					return FALSE;
-				}
-			}
 		}
 	}
 	else
@@ -1605,12 +1487,6 @@ BOOLEAN OBJECTTYPE::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorM
 		int x = 0;
 		for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter, ++x) {
 			iter->Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
-			if (this->IsActiveLBE(x) == true) {
-				LBEArray.push_back(LBENODE());
-				if (! LBEArray.back().Load(hBuffer, dMajorMapVersion, ubMinorMapVersion)) {
-					return FALSE;
-				}
-			}
 		}
 	}
 	else
@@ -1640,19 +1516,6 @@ BOOLEAN OBJECTTYPE::Save( HWFILE hFile, bool fSavingMap )
 	for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter, ++x) {
 		if (! iter->Save(hFile, fSavingMap)) {
 			return FALSE;
-		}
-		if (this->IsActiveLBE(x) == true) {
-			LBENODE* pLBE = this->GetLBEPointer(x);
-			if (! pLBE->Save(hFile, fSavingMap)) {
-				return FALSE;
-			}
-			int uniqueID = (*this)[x]->data.lbe.uniqueID;
-			for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
-				if (iter->uniqueID == uniqueID) {
-					LBEArray.erase(iter);
-					break;
-				}
-			}
 		}
 	}
 	return TRUE;
@@ -1920,9 +1783,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	}
 
 	SaveGameHeader.uiRandom = Random( RAND_MAX );
-
-	// CHRISL: We need to know what inventory system we're using early on
-	SaveGameHeader.ubInventorySystem = gGameOptions.ubInventorySystem;
 
 	//
 	// Save the Save Game header file
@@ -2855,25 +2715,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	guiJA2EncryptionSet = CalcJA2EncryptionSet( &SaveGameHeader );
 	guiCurrentSaveGameVersion = SaveGameHeader.uiSavedGameVersion;
 	guiBrokenSaveGameVersion = SaveGameHeader.uiSavedGameVersion;
-
-	// CHRISL: We need to know what inventory system we're using early on
-	if(SaveGameHeader.uiSavedGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE)
-		SaveGameHeader.ubInventorySystem = 0;
-	gGameOptions.ubInventorySystem = SaveGameHeader.ubInventorySystem;
-	if((UsingNewInventorySystem() == true))
-	{
-		InitInventoryNew();
-		InitNewInventorySystem();
-		InitializeSMPanelCoordsNew();
-		InitializeInvPanelCoordsNew();
-	}
-	else
-	{
-		InitInventoryOld();
-		InitOldInventorySystem();
-		InitializeSMPanelCoordsOld();
-		InitializeInvPanelCoordsOld();
-	}
 
 	//if the player is loading up an older version of the game, and the person DOESNT have the cheats on, 
 	if( guiCurrentSaveGameVersion < 65 && !CHEATER_CHEAT_LEVEL( ) )

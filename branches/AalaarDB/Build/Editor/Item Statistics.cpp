@@ -423,7 +423,6 @@ void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex )
 		case IC_KIT:
 		case IC_MISC:
 		case IC_FACE:
-		case IC_LBEGEAR:
 		case IC_BLADE:
 		case IC_LAUNCHER:
 		case IC_THROWING_KNIFE:

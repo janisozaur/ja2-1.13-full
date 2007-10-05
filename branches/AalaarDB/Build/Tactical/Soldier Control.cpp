@@ -395,9 +395,6 @@ void STRUCT_TimeChanges::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 void STRUCT_Flags::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 {
 	PERFORMANCE_MARKER
-	this->ZipperFlag = FALSE;
-	this->DropPackFlag = FALSE;
-
 	this->bHasKeys = src.bHasKeys;			// allows AI controlled dudes to open locked doors
 	this->fHitByGasFlags = src.fHitByGasFlags;						// flags 
 	this->fIsSoldierMoving = src.fIsSoldierMoving;							// ie.  Record time is on
@@ -589,8 +586,6 @@ SOLDIERTYPE& SOLDIERTYPE::operator=(const OLDSOLDIERTYPE_101& src)
 {
 	PERFORMANCE_MARKER
     if ((void*)this != (void*)&src) {
-		this->DropPackKey = 0;
-
 		//member classes
 		aiData.ConvertFrom_101_To_102(src);
 		flags.ConvertFrom_101_To_102(src);
@@ -3211,7 +3206,6 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 	{
 
 		// Do special things based on new state
-		// CHRISL: Make changes so that we charge extra APs while wearing a backpack while using new inventory system
 		switch( usNewState )
 		{
 		case STANDING:
@@ -3276,14 +3270,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 			// Only if our previous is not running
 			if ( thisSoldier->usAnimState != RUNNING )
 			{
-				// CHRISL
-				if((UsingNewInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true)
-				{
-					sAPCost = AP_START_RUN_COST + 2;
-					sBPCost += 2;
-				}
-				else
-					sAPCost = AP_START_RUN_COST;
+				sAPCost = AP_START_RUN_COST;
 				DeductPoints( thisSoldier, sAPCost, sBPCost );
 			}
 			// Set pending action count to 0
@@ -3306,31 +3293,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 
 			if ( !thisSoldier->flags.fDontChargeAPsForStanceChange )
 			{
-				// CHRISL
-				if((UsingNewInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true && !thisSoldier->flags.ZipperFlag)
-				{
-					if(usNewState == KNEEL_UP)
-					{
-						sAPCost=AP_CROUCH+2;
-						sBPCost=BP_CROUCH+2;
-					}
-					else if(usNewState == KNEEL_DOWN)
-					{
-						sAPCost=AP_CROUCH+1;
-						sBPCost=BP_CROUCH+1;
-					}
-					else
-					{
-						sAPCost=AP_CROUCH;
-						sBPCost=BP_CROUCH;
-					}
-				}
-				else
-				{
-					sAPCost=AP_CROUCH;
-					sBPCost=BP_CROUCH;
-				}
-				DeductPoints( thisSoldier, sAPCost, sBPCost );
+				DeductPoints( thisSoldier, AP_CROUCH, BP_CROUCH );
 			}
 			thisSoldier->flags.fDontChargeAPsForStanceChange = FALSE;
 			break;
@@ -3344,26 +3307,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 				// ATE: Don't do this if we are still 'moving'....
 				if ( thisSoldier->sGridNo == thisSoldier->pathing.sFinalDestination || thisSoldier->pathing.usPathIndex == 0 )
 				{
-					// CHRISL
-					if((UsingNewInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true && !thisSoldier->flags.ZipperFlag)
-					{
-						if(usNewState == PRONE_UP)
-						{
-						sAPCost=AP_PRONE+2;
-						sBPCost=BP_PRONE+2;
-						}
-						else
-						{
-						sAPCost=AP_PRONE+1;
-						sBPCost=BP_PRONE+1;
-						}
-					}
-					else
-					{
-					sAPCost=AP_PRONE;
-					sBPCost=BP_PRONE;
-					}
-					DeductPoints( thisSoldier, sAPCost, sBPCost );
+					DeductPoints( thisSoldier, AP_PRONE, BP_PRONE );
 				}
 			}
 			thisSoldier->flags.fDontChargeAPsForStanceChange = FALSE;
@@ -3430,11 +3374,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 
 		case HOPFENCE:
 
-			// CHRISL
-			if((UsingNewInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true)
-				DeductPoints( thisSoldier, AP_JUMPFENCEBPACK, BP_JUMPFENCEBPACK );
-			else
-				DeductPoints( thisSoldier, AP_JUMPFENCE, BP_JUMPFENCE );
+			DeductPoints( thisSoldier, AP_JUMPFENCE, BP_JUMPFENCE );
 			break;
 
 			// Deduct aps for falling down....
@@ -7913,11 +7853,6 @@ void SOLDIERTYPE::BeginSoldierClimbUpRoof( void )
 {
 	PERFORMANCE_MARKER
 
-	//CHRISL: Disable climbing up to a roof while wearing a backpack
-	if((UsingNewInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true) {
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Cannot climb while wearing a backpack" );
-		return;
-	}
 	INT8							bNewDirection;
 	UINT8							ubWhoIsThere;
 

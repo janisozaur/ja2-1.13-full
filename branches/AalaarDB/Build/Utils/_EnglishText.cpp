@@ -2861,7 +2861,6 @@ STR16			BobbyRFilter[] =
 	L"Med. Kits",
 	L"Kits",
 	L"Face Items",
-	L"LBE Gear",
 	L"Misc.",
 };
 

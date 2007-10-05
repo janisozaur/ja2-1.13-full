@@ -296,19 +296,6 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 					if ( !gGameExternalOptions.fEnableSoldierTooltipBigSlot4 )
 						continue;
 					break;
-// CHRISL: Added new large pockets introduced by new inventory system
-				case BIGPOCK5POS:
-					if ( !gGameExternalOptions.fEnableSoldierTooltipBigSlot5 )
-						continue;
-					break;
-				case BIGPOCK6POS:
-					if ( !gGameExternalOptions.fEnableSoldierTooltipBigSlot6 )
-						continue;
-					break;
-				case BIGPOCK7POS:
-					if ( !gGameExternalOptions.fEnableSoldierTooltipBigSlot7 )
-						continue;
-				    break;
 			}
 
 			if ( Item[ pSoldier->inv[ BigSlot ].usItem ].rocketlauncher )

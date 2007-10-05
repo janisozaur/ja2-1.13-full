@@ -8,6 +8,7 @@
 	#include "jascreens.h"
 	#include "laptop.h"
 	#include "worlddef.h"
+	#include "Soldier Control.h"
 	#include "overhead.h"
 	#include "fade screen.h"
 	#include "gamescreen.h" 
@@ -39,7 +40,7 @@
 	#include "Creature Spreading.h"
 	#include "Quests.h"
 	#include "Strategic AI.h"
-//	#include "Sound Control.h"
+	#include "sound control.h"
 	#include "Laptopsave.h"
 	#include "AimMembers.h"
 	#include "dialogue control.h"
@@ -59,12 +60,7 @@
 	#include "Air Raid.h"
 	#include "Interface.h"
 	#include "cheats.h"
-	#include "Interface Panels.h"
 #endif
-
-//forward declarations of common classes to eliminate includes
-class OBJECTTYPE;
-class SOLDIERTYPE;
 
 // Temp function
 void QuickSetupOfMercProfileItems( UINT32 uiCount, UINT8 ubProfileIndex );
@@ -360,7 +356,6 @@ void ShutdownStrategicLayer()
 	TrashUndergroundSectorInfo();
 	DeleteCreatureDirectives();
 	KillStrategicAI();
-	ClearTacticalMessageQueue();
 }
 
 BOOLEAN InitNewGame( BOOLEAN fReset )
@@ -382,24 +377,6 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 
 	// Reset the selected soldier
 	gusSelectedSoldier = NOBODY;
-
-	// CHRISL: Init inventory
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame: set initial inventory coords");
-	if( gubScreenCount == 0 )
-	{
-		if((UsingNewInventorySystem() == true))
-		{
-			InitNewInventorySystem();
-			InitializeSMPanelCoordsNew();
-			InitializeInvPanelCoordsNew();
-		}
-		else
-		{
-			InitOldInventorySystem();
-			InitializeSMPanelCoordsOld();
-			InitializeInvPanelCoordsOld();
-		}
-	}
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame: loading merc profiles");
 	if( gubScreenCount == 0 )

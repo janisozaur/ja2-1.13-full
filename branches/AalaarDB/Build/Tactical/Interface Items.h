@@ -111,21 +111,7 @@ BOOLEAN HandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, INT8 bInvPos, BOOLEAN fOn
 //											-	if == 1 will only dirty the name space and then set counter to 0
 //	Last parameter used mainly for when mouse is over item
 
-bool ShouldHatchItem(OBJECTTYPE* pObject, SOLDIERTYPE* pSoldier, int bPos);
 void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE	*pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 *pubHighlightCounter, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor );
-// CHRISL: Add a new function that will be used to render a pocket silhouette
-void INVRenderSilhouette( UINT32 uiBugger, INT16 PocketIndex, INT16 SilIndex, INT16 sX, INT16 sY, INT16 sWideth, INT16 sHeight);
-// CHRISL: New function to handle display of inventory quantities based on item current in cursor
-bool RenderPocketItemCapacity( INT8 pCapacity, INT16 bPos, SOLDIERTYPE *pSoldier );
-// CHRISL: New function to display items stored in an LBENODE
-void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScreen, int subObject );
-// CHRISL: New function to setup GSMInvData based on game options
-void InitInvData(INT8 num, BOOLEAN fBigPocket, INT16 sBarDx, INT16 sBarDy, INT16 sWidth, INT16 sHeight, INT16 sX, INT16 sY);
-void InitInventoryOld();
-void InitInventoryNew();
-void InitInventoryVehicle(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, BOOLEAN fSetHighestPrioity);
-void ResetMapInvRegions(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, BOOLEAN fSetHighestPrioity);
-
 
 
 extern BOOLEAN		gfInItemDescBox;
@@ -182,6 +168,10 @@ UINT16 GetTileGraphicForItem( INVTYPE *pItem );
 BOOLEAN LoadTileGraphicForItem( INVTYPE *pItem, UINT32 *puiVo );
 
 void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier );
+
+BOOLEAN AttemptToApplyCamo( SOLDIERTYPE *pSoldier, UINT16 usItemIndex );
+
+UINT8 GetPrefferedItemSlotGraphicNum( UINT16 usItem );
 
 void CancelItemPointer( );
 

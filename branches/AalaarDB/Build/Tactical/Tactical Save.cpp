@@ -2934,25 +2934,6 @@ void InitExitGameDialogBecauseFileHackDetected()
 											GAME_SCREEN, MSG_BOX_FLAG_OK, TempFileLoadErrorMessageReturnCallback, &CenteringRect );
 }
 
-// CHRISL: New Checksum for LBENODE
-UINT32 LBENODEChecksum( LBENODE * pNode )
-{
-	UINT32	uiChecksum = 1;
-	UINT32	uiLoop;
-
-	uiChecksum += (pNode->lbeClass + 1);
-	uiChecksum *= (pNode->lbeIndex +1);
-	uiChecksum += (pNode->ubID +1);
-
-	for ( uiLoop = 0; uiLoop < pNode->inv.size(); uiLoop++ )
-	{
-		uiChecksum += pNode->inv[ uiLoop ].usItem;
-	}
-
-	return( uiChecksum );
-}
-
-
 //UINT8 gubEncryptionArray4[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_ARRAY_SIZE ] =
 UINT8 * GetRotationArray( void )
 {
