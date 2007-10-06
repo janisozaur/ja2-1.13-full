@@ -14,7 +14,7 @@ namespace INIEditor.GUI
         private INIFile _iniFile = null;
         private Hashtable _iniSettingsList = null;
         private Enumerations.Language _descriptionLanguage = Enumerations.Language.English;
-        private readonly Enumerations.Permission _permission = Enumerations.Permission.Admin;    // TODO: Change to "User" in Release version!
+        private readonly Enumerations.Permission _permission = Enumerations.Permission.User;    // TODO: Change to "User" in Release version!
         private Control _ctlPropertyNewValue = new Control();
         private readonly System.ComponentModel.ComponentResourceManager _resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
         private SearchParams _searchParams = new SearchParams();
@@ -1001,12 +1001,22 @@ namespace INIEditor.GUI
 
         private void dgvProperties_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Get the clicked row
-            DataGridViewRow row = dgvProperties.Rows[e.RowIndex];
-            INISection section = (INISection)row.Cells[colSection.Index].Tag;
-            INIProperty property = (INIProperty)row.Cells[colProperty.Index].Tag;
+            try
+            {
+                if (e.RowIndex >= 0)
+                {
+                    // Get the clicked row
+                    DataGridViewRow row = dgvProperties.Rows[e.RowIndex];
+                    INISection section = (INISection) row.Cells[colSection.Index].Tag;
+                    INIProperty property = (INIProperty) row.Cells[colProperty.Index].Tag;
 
-            InitializeTabs(property, section.Name);
+                    InitializeTabs(property, section.Name);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Constants.APP_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);  
+            }
         }
 
         private void mnuViewDescLanguageGerman_Click(object sender, EventArgs e)
@@ -1081,18 +1091,28 @@ namespace INIEditor.GUI
 
         private void dgvSearchResults_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Get the clicked row
-            DataGridViewRow row = dgvSearchResults.Rows[e.RowIndex];
-            INISection section = (INISection)row.Cells[colSearchResultsSectionDesc.Index].Tag;
+            try
+            {
+                if (e.RowIndex >= 0)
+                {
+                    // Get the clicked row
+                    DataGridViewRow row = dgvSearchResults.Rows[e.RowIndex];
+                    INISection section = (INISection) row.Cells[colSearchResultsSectionDesc.Index].Tag;
 
-            if (colSearchResultsPropertyDesc.Visible)
-            {
-                INIProperty property = (INIProperty)row.Cells[colSearchResultsPropertyDesc.Index].Tag;
-                InitializeTabs(property, section.Name);
+                    if (colSearchResultsPropertyDesc.Visible)
+                    {
+                        INIProperty property = (INIProperty) row.Cells[colSearchResultsPropertyDesc.Index].Tag;
+                        InitializeTabs(property, section.Name);
+                    }
+                    else
+                    {
+                        InitializeTabs(_iniFile, section.Name);
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                InitializeTabs(_iniFile, section.Name);
+                MessageBox.Show(ex.Message, Constants.APP_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);  
             }
         }
 
@@ -1108,18 +1128,21 @@ namespace INIEditor.GUI
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            string message = "Do you really want to close the application?";
-
             if (_changedValues)
             {
-                message += "\nUnsafed changes will be lost!";
-            }
-            DialogResult result = MessageBox.Show(message, Constants.APP_NAME, MessageBoxButtons.YesNo,
-                                MessageBoxIcon.Question);
+                DialogResult result = MessageBox.Show("Would you like to save the changes to '" + _previousSelectedIniFile + "'?", Constants.APP_NAME, MessageBoxButtons.YesNo,
+                                                      MessageBoxIcon.Question);
 
-            if (result == DialogResult.No)
-            {
-                e.Cancel = true;
+                if (result == DialogResult.Yes)
+                {
+                    BindCurrentSelectedSectionAndProperty();
+
+                    SaveINIFile(Path.GetDirectoryName(_previousSelectedIniFile));
+                    if (_permission == Enumerations.Permission.Admin)
+                    {
+                        SaveXMLFile();
+                    }
+                }
             }
         }
 
