@@ -197,45 +197,103 @@ namespace INIEditor.GUI
 
         private void InitializeTabs<T>(T item, string sectionHeader)
         {
-            dgvProperties.Rows.Clear();
-
-            // INI file item
-            if (item is INIFile)
+            try
             {
-                tabActions.TabPages.Remove(tpSearchResults);
+                dgvProperties.Rows.Clear();
 
-                if (tabActions.TabPages.Contains(tpProperty))
+                // INI file item
+                if (item is INIFile)
                 {
-                    tabActions.TabPages.Remove(tpProperty);
+                    tabActions.TabPages.Remove(tpSearchResults);
+
+                    if (tabActions.TabPages.Contains(tpProperty))
+                    {
+                        tabActions.TabPages.Remove(tpProperty);
+                    }
+
+                    tpSection.Text = Constants.TP_SECTIONS_INI_FILE;
+                    if (!tabActions.TabPages.Contains(tpSection))
+                    {
+                        tabActions.TabPages.Add(tpSection);
+                    }
+
+                    tabActions.TabPages.Add(tpSearchResults);
+
+                    lblSectionHeader.Text = sectionHeader;
+
+                    colSection.Visible = true;
+
+                    INIFile file = item as INIFile;
+                    txtSectionDescription.Text = GetDescription(file.XMLSettings);
+                    txtSectionDescription.Tag = file;
+
+                    foreach (INISection section in file.Sections)
+                    {
+                        foreach (INIProperty property in section.Properties)
+                        {
+                            int rowIndex = dgvProperties.Rows.Add();
+
+                            dgvProperties[colSection.Index, rowIndex].Value = section.Name;
+                            dgvProperties[colProperty.Index, rowIndex].Value = property.Name;
+                            dgvProperties[colDescription.Index, rowIndex].Value = GetDescription(property.XMLProperty);
+                            dgvProperties[colCurrentValue.Index, rowIndex].Value = property.CurrentValue;
+                            dgvProperties[colNewValue.Index, rowIndex].Value = property.NewValue;
+
+                            dgvProperties[colSection.Index, rowIndex].Tag = section;
+                            dgvProperties[colProperty.Index, rowIndex].Tag = property;
+
+                            // The value has been changed
+                            if (property.CurrentValue != property.NewValue)
+                            {
+                                _changedValues = true;
+
+                                dgvProperties[colSection.Index, rowIndex].Style.ForeColor =
+                                    Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                                dgvProperties[colProperty.Index, rowIndex].Style.ForeColor =
+                                    Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                                dgvProperties[colDescription.Index, rowIndex].Style.ForeColor =
+                                    Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                                dgvProperties[colCurrentValue.Index, rowIndex].Style.ForeColor =
+                                    Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                                dgvProperties[colNewValue.Index, rowIndex].Style.ForeColor =
+                                    Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                            }
+                        }
+                    }
                 }
-
-                tpSection.Text = Constants.TP_SECTIONS_INI_FILE;
-                if (!tabActions.TabPages.Contains(tpSection))
+                    // Section item
+                else if (item is INISection)
                 {
-                    tabActions.TabPages.Add(tpSection);
-                }
+                    tabActions.TabPages.Remove(tpSearchResults);
+                    if (tabActions.TabPages.Contains(tpProperty))
+                    {
+                        tabActions.TabPages.Remove(tpProperty);
+                    }
 
-                tabActions.TabPages.Add(tpSearchResults);
+                    tpSection.Text = Constants.TP_SECTIONS_SECTION;
+                    if (!tabActions.TabPages.Contains(tpSection))
+                    {
+                        tabActions.TabPages.Add(tpSection);
+                    }
 
-                lblSectionHeader.Text = sectionHeader;
-                
-                colSection.Visible = true;
+                    tabActions.TabPages.Add(tpSearchResults);
 
-                INIFile file = item as INIFile;
-                txtSectionDescription.Text = GetDescription(file.XMLSettings);
-                txtSectionDescription.Tag = file;
+                    lblSectionHeader.Text = sectionHeader;
 
-                foreach (INISection section in file.Sections)
-                {
+                    colSection.Visible = false;
+
+                    INISection section = item as INISection;
+                    txtSectionDescription.Text = GetDescription(section.XMLSection);
+                    txtSectionDescription.Tag = section;
+
                     foreach (INIProperty property in section.Properties)
                     {
                         int rowIndex = dgvProperties.Rows.Add();
 
-                        dgvProperties[colSection.Index, rowIndex].Value = section.Name;
                         dgvProperties[colProperty.Index, rowIndex].Value = property.Name;
-                        dgvProperties[colDescription.Index, rowIndex].Value = GetDescription(property.XMLProperty);
                         dgvProperties[colCurrentValue.Index, rowIndex].Value = property.CurrentValue;
                         dgvProperties[colNewValue.Index, rowIndex].Value = property.NewValue;
+                        dgvProperties[colDescription.Index, rowIndex].Value = GetDescription(property.XMLProperty);
 
                         dgvProperties[colSection.Index, rowIndex].Tag = section;
                         dgvProperties[colProperty.Index, rowIndex].Tag = property;
@@ -245,94 +303,51 @@ namespace INIEditor.GUI
                         {
                             _changedValues = true;
 
-                            dgvProperties[colSection.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
-                            dgvProperties[colProperty.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
-                            dgvProperties[colDescription.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
-                            dgvProperties[colCurrentValue.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
-                            dgvProperties[colNewValue.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                            dgvProperties[colProperty.Index, rowIndex].Style.ForeColor =
+                                Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                            dgvProperties[colCurrentValue.Index, rowIndex].Style.ForeColor =
+                                Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                            dgvProperties[colNewValue.Index, rowIndex].Style.ForeColor =
+                                Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                            dgvProperties[colDescription.Index, rowIndex].Style.ForeColor =
+                                Constants.CHANGED_TREE_NODE_TEXT_COLOR;
                         }
                     }
                 }
-
-            }
-            // Section item
-            else if (item is INISection)
-            {
-                tabActions.TabPages.Remove(tpSearchResults);
-                if (tabActions.TabPages.Contains(tpProperty))
+                else if (item is INIProperty)
                 {
-                    tabActions.TabPages.Remove(tpProperty);
-                }
+                    tabActions.TabPages.Remove(tpSearchResults);
 
-                tpSection.Text = Constants.TP_SECTIONS_SECTION;
-                if (!tabActions.TabPages.Contains(tpSection))
-                {
-                    tabActions.TabPages.Add(tpSection);
-                }
+                    lblSectionHeader.Text = sectionHeader;
 
-                tabActions.TabPages.Add(tpSearchResults);
+                    INIProperty property = item as INIProperty;
+                    txtSectionDescription.Text = GetDescription(property.Section.XMLSection);
+                    txtSectionDescription.Tag = property.Section;
+                    txtPropertyDescription.Text = GetDescription(property.XMLProperty);
+                    txtPropertyDescription.Tag = property;
 
-                lblSectionHeader.Text = sectionHeader;
+                    SetPropertyValues(property);
 
-                colSection.Visible = false;
-
-                INISection section = item as INISection;
-                txtSectionDescription.Text = GetDescription(section.XMLSection);
-                txtSectionDescription.Tag = section;
-
-                foreach (INIProperty property in section.Properties)
-                {
-                    int rowIndex = dgvProperties.Rows.Add();
-
-                    dgvProperties[colProperty.Index, rowIndex].Value = property.Name;
-                    dgvProperties[colCurrentValue.Index, rowIndex].Value = property.CurrentValue;
-                    dgvProperties[colNewValue.Index, rowIndex].Value = property.NewValue;
-                    dgvProperties[colDescription.Index, rowIndex].Value = GetDescription(property.XMLProperty);
-
-                    dgvProperties[colSection.Index, rowIndex].Tag = section;
-                    dgvProperties[colProperty.Index, rowIndex].Tag = property;
-
-                    // The value has been changed
-                    if (property.CurrentValue != property.NewValue)
+                    if (tabActions.TabPages.Contains(tpSection))
                     {
-                        _changedValues = true;
-
-                        dgvProperties[colProperty.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
-                        dgvProperties[colCurrentValue.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
-                        dgvProperties[colNewValue.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
-                        dgvProperties[colDescription.Index, rowIndex].Style.ForeColor = Constants.CHANGED_TREE_NODE_TEXT_COLOR;
+                        tabActions.TabPages.Remove(tpSection);
                     }
+
+                    tpProperty.Text = property.Name;
+                    if (!tabActions.TabPages.Contains(tpProperty))
+                    {
+                        tabActions.TabPages.Add(tpProperty);
+                    }
+
+                    tabActions.TabPages.Add(tpSearchResults);
                 }
+
+                SelectTreeNode(item);
             }
-            else if (item is INIProperty)
+            catch (Exception ex)
             {
-                tabActions.TabPages.Remove(tpSearchResults);
-
-                lblSectionHeader.Text = sectionHeader;
-
-                INIProperty property = item as INIProperty;
-                txtSectionDescription.Text = GetDescription(property.Section.XMLSection);
-                txtSectionDescription.Tag = property.Section;
-                txtPropertyDescription.Text = GetDescription(property.XMLProperty);
-                txtPropertyDescription.Tag = property;
-                
-                SetPropertyValues(property);
-
-                if (tabActions.TabPages.Contains(tpSection))
-                {
-                    tabActions.TabPages.Remove(tpSection);
-                }
-
-                tpProperty.Text = property.Name;
-                if (!tabActions.TabPages.Contains(tpProperty))
-                {
-                    tabActions.TabPages.Add(tpProperty);
-                }
-
-                tabActions.TabPages.Add(tpSearchResults);
+                MessageBox.Show(ex.Message, Constants.APP_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);  
             }
-
-            SelectTreeNode(item);
         }
 
         private void InitializeNumericProperty(INIProperty property)
