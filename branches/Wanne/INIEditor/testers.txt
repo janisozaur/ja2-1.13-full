@@ -1,5 +1,6 @@
 User		Language	Email			Forum		TODO
 ---------------------------------------------------------------------------
 gpmg		ENG		rod.batten@gmail.com 	Bears Pit	Tester
-Trillian	DEU		melster@gmx.de		JA2 Gamigo	Tester + Übersetzer
-Realist		DEU		_realist@web.de		JA2 Gamigo	Tester
+Trillian	DEU		melster@gmx.de			JA2 Gamigo	Tester + Übersetzer	(1. Hälfte)
+Realist		DEU		_realist@web.de			JA2 Gamigo	Tester
+Vassil		DEU		v.drabik@gmx.net		JA2 Gamigo	Test + Übersetzer (2. Hälfte)

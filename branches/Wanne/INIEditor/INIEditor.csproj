@@ -58,6 +58,12 @@
     <Compile Include="GUI\SearchForm.Designer.cs">
       <DependentUpon>SearchForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\SplashForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\SplashForm.Designer.cs">
+      <DependentUpon>SplashForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="GUI\MainForm.resx">
@@ -67,6 +73,10 @@
     <EmbeddedResource Include="GUI\SearchForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>SearchForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\SplashForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SplashForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

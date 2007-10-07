@@ -146,7 +146,7 @@ namespace INIEditor.GUI
             this.mnuFileSave.Image = ((System.Drawing.Image)(resources.GetObject("mnuFileSave.Image")));
             this.mnuFileSave.Name = "mnuFileSave";
             this.mnuFileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.mnuFileSave.Size = new System.Drawing.Size(152, 22);
+            this.mnuFileSave.Size = new System.Drawing.Size(147, 22);
             this.mnuFileSave.Text = "Save";
             this.mnuFileSave.ToolTipText = "Save File";
             this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
@@ -154,12 +154,12 @@ namespace INIEditor.GUI
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(144, 6);
             // 
             // mnuFileExit
             // 
             this.mnuFileExit.Name = "mnuFileExit";
-            this.mnuFileExit.Size = new System.Drawing.Size(152, 22);
+            this.mnuFileExit.Size = new System.Drawing.Size(147, 22);
             this.mnuFileExit.Text = "Exit";
             this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
             // 
@@ -809,6 +809,7 @@ namespace INIEditor.GUI
             this.Name = "MainForm";
             this.Text = "JA2 v1.13 - INI Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.mnuMain.ResumeLayout(false);
             this.mnuMain.PerformLayout();
             this.tbrMain.ResumeLayout(false);

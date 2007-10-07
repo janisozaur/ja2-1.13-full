@@ -14,21 +14,35 @@ namespace INIEditor.GUI
         private INIFile _iniFile = null;
         private Hashtable _iniSettingsList = null;
         private Enumerations.Language _descriptionLanguage = Enumerations.Language.English;
-        private readonly Enumerations.Permission _permission = Enumerations.Permission.User;    // TODO: Change to "User" in Release version!
+        private readonly Enumerations.Permission _permission = Enumerations.Permission.Admin;    // TODO: Change to "User" in Release version!
         private Control _ctlPropertyNewValue = new Control();
         private readonly System.ComponentModel.ComponentResourceManager _resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
         private SearchParams _searchParams = new SearchParams();
         private bool _changedValues = false;
         private string _previousSelectedIniFile = "";
+        private SplashForm _splashForm = null;
         #endregion
 
         #region CTOR
         public MainForm()
         {
+            _splashForm = new SplashForm();
+            _splashForm.Show();
+
+            _splashForm.UpdateLoadingText("Initializing Components...");
+
             InitializeComponent();
             InitializeMenu();
+            _splashForm.UpdateProgressBar(20);
+
+            _splashForm.UpdateLoadingText("Initializing INI Files...");
+
             InitializeFiles();
+            _splashForm.UpdateProgressBar(40);
+
+            _splashForm.UpdateLoadingText("Loading XML Description File...");
             InitializeXMLSettingsFile();
+            _splashForm.UpdateProgressBar(70);
 
             if (_permission == Enumerations.Permission.User)
             {
@@ -36,12 +50,17 @@ namespace INIEditor.GUI
                 txtPropertyDescription.ReadOnly = true;
             }
 
+            _splashForm.UpdateLoadingText("Binding Values...");
+
             // Select the first INI - File in the combo box
             if (cmbFiles.Items.Count > 0)
             {
                 cmbFiles.SelectedIndex = 0;
             }
 
+            _splashForm.UpdateProgressBar(100);
+
+            //splash = null;
         }
         #endregion
 
@@ -985,6 +1004,12 @@ namespace INIEditor.GUI
             }
 
             _previousSelectedIniFile = cmbFiles.SelectedItem.ToString();
+
+            //if (_splashForm != null)
+            //{
+            //    _splashForm.Close();
+            //    _splashForm = null;
+            //}
         }
 
         private void trvSections_AfterSelect(object sender, TreeViewEventArgs e)
@@ -1159,6 +1184,16 @@ namespace INIEditor.GUI
         private void mnuViewClearSearchResults_Click(object sender, EventArgs e)
         {
             ClearSearchResults();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            if (_splashForm != null)
+            {
+                _splashForm.Close();
+                _splashForm = null;
+                BringToFront();
+            }
         }
         #endregion
     }
