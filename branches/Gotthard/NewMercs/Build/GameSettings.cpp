@@ -636,11 +636,8 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.gfInvestigateSector				= iniReader.ReadBoolean("JA2 Gameplay Settings","ENEMY_INVESTIGATE_SECTOR",FALSE);
 	gGameExternalOptions.gfReassignPendingReinforcements	= iniReader.ReadBoolean("JA2 Gameplay Settings","REASSIGN_PENDING_REINFORCEMENTS",TRUE);
 
-
-	// WANNE: Drop Items
 	gGameExternalOptions.ubEnemiesItemDrop					= iniReader.ReadInteger("JA2 Gameplay Settings","ENEMIES_ITEM_DROP", 0);
 
-	// WANNE: External sector Loadscreens [2007-05-19]
 	gGameExternalOptions.gfUseExternalLoadscreens				= iniReader.ReadBoolean("JA2 Gameplay Settings","USE_EXTERNALIZED_LOADSCREENS", FALSE);
 
 	// Militia settings
@@ -710,6 +707,11 @@ void LoadGameExternalOptions()
 
 }
 
+
+void FreeGameExternalOptions()
+{
+	MemFree( gGameExternalOptions.iaIMPSlots);
+}
 
 BOOLEAN GetCDLocation( )
 {
