@@ -1614,7 +1614,7 @@ void GetCurrentWorldSector( INT16 *psMapX, INT16 *psMapY )
 }
 
 //not in overhead.h!
-extern UINT8 NumEnemyInSector();
+extern UINT16 NumEnemyInSector();
 
 void HandleRPCDescriptionOfSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
@@ -2169,7 +2169,7 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 	UINT8		ubRandomMiner[RANDOM_HEAD_MINERS] = { 106, 156, 157, 158 };
 	UINT8		ubMiner, ubMinersPlaced;
 	UINT8		ubMine, ubThisMine;
-	UINT8		cnt;
+	UINT16		cnt;
 	SOLDIERTYPE * pSoldier;
 
 	if ( CheckFact( FACT_ALL_TERRORISTS_KILLED, 0 ) )
@@ -3086,10 +3086,11 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	SOLDIERTYPE *pValidSoldier = NULL;
 	GROUP *pGroup;
 	UINT32 uiTraverseTime=0;
-	UINT8 ubDirection = 0xff;
+	//INT8 ubDirection = 0xff;
+	INT8 ubDirection = 0x7f;//Just to update from 0xff (255) to 0x7f(127) due to UINT8->INT8 change.  Gotthard, 10/3/07
 	EXITGRID ExitGrid;
 	INT8 bPrevAssignment;
-	UINT8 ubPrevGroupID;
+	INT8 ubPrevGroupID;
 	
 	// Set initial selected
 	// ATE: moved this towards top...
@@ -3230,7 +3231,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	{	//For player groups, update the soldier information
 		PLAYERGROUP *curr;
 		INT32 sGridNo;
-		UINT8				ubNum = 0;
+		UINT16				ubNum = 0;
 
 		curr = pGroup->pPlayerList;
 		while( curr )
@@ -3854,7 +3855,7 @@ void DoneFadeOutAdjacentSector( )
 		PLAYERGROUP *curr;
 		UINT32 uiAttempts;
 		INT32 sGridNo, sOldGridNo;
-		UINT8				ubNum = 0;
+		UINT16 ubNum = 0;
 		INT16 sWorldX, sWorldY;
 		curr = gpAdjacentGroup->pPlayerList;
 		while( curr )
@@ -3918,7 +3919,7 @@ BOOLEAN SoldierOKForSectorExit( SOLDIERTYPE * pSoldier, INT8 bExitDirection, UIN
 	INT16 sYMapPos;
 	INT16 sWorldX;
 	INT16 sWorldY;
-	UINT8	ubDirection;
+	INT8 ubDirection;
 	INT32 sGridNo;
 	INT16	sAPs;
 
@@ -4022,7 +4023,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 	UINT8			ubReturnVal = FALSE;
 	UINT8			ubNumControllableMercs = 0;
 	UINT8		  ubNumMercs = 0, ubNumEPCs = 0;
-	UINT8     ubPlayerControllableMercsInSquad = 0;
+	UINT16 ubPlayerControllableMercsInSquad = 0;
 
 	if( gusSelectedSoldier == NOBODY )
 	{ //must have a selected soldier to be allowed to tactically traverse.
@@ -4130,7 +4131,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 	// If we are here, at least one guy is controllable in this sector, at least he can go!
 	if( fAtLeastOneMercControllable )
 	{
-		ubPlayerControllableMercsInSquad = (UINT8)NumberOfPlayerControllableMercsInSquad( MercPtrs[ gusSelectedSoldier ]->bAssignment );
+		ubPlayerControllableMercsInSquad = NumberOfPlayerControllableMercsInSquad( MercPtrs[ gusSelectedSoldier ]->bAssignment );
 		if( fAtLeastOneMercControllable <= ubPlayerControllableMercsInSquad )
 		{ //if the selected merc is an EPC and we can only leave with that merc, then prevent it
 			//as EPCs aren't allowed to leave by themselves.  Instead of restricting this in the 
