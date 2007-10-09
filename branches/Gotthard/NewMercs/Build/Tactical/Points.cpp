@@ -989,7 +989,7 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTur
 	UINT16						sAPCost = 0;
 	UINT16						usItemNum;	
 	INT32 sActionGridNo;
-	UINT8							ubDirection;
+	INT8 ubDirection;
 	INT32 sAdjustedGridNo;
 	UINT32						uiItemClass;
 	
@@ -1038,7 +1038,7 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTur
 			{
 				//INT32		cnt;
 				//INT16		sSpot;	
-				UINT8		ubGuyThere;
+				INT16		ubGuyThere;
 				INT32		sGotLocation = NOWHERE;
 				BOOLEAN	fGotAdjacent = FALSE;
 				SOLDIERTYPE	*pTarget;
@@ -1238,7 +1238,7 @@ void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT32 sGridNo
 {
 	 UINT8 ubDirection;
    UINT32	uiMercFlags;
-   UINT16	usTargID;
+   INT16	usTargID;
    BOOLEAN	fAddingTurningCost = FALSE;
    BOOLEAN	fAddingRaiseGunCost = FALSE;
 	
@@ -1291,7 +1291,7 @@ void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT32 sGridNo
 UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost, UINT8 ubForceRaiseGunCost)
 {
 	UINT32	uiMercFlags;
-	UINT16	usTargID;
+	INT16	usTargID;
 	INT8	bFullAPs;
 	INT8 bAimSkill;
 	UINT8	bAPCost = AP_MIN_AIM_ATTACK;
@@ -1496,6 +1496,7 @@ INT8 MinPtsToMove(SOLDIERTYPE *pSoldier)
  for (cnt=0; cnt <= 7; cnt++)
   {
     sGridNo = NewGridNo(pSoldier->sGridNo,DirectionInc((INT16) cnt));
+
     if (sGridNo != pSoldier->sGridNo)
 		{
        if ( (sCost=ActionPointCost( pSoldier, sGridNo, (UINT8)cnt , pSoldier->usUIMovementMode ) ) < sLowest )
@@ -1521,7 +1522,7 @@ INT8  PtsToMoveDirection(SOLDIERTYPE *pSoldier, INT8 bDirection )
 	// ATE: Check if the new place is watter and we were tying to run....
 	bOverTerrainType = GetTerrainType( sGridNo );
 
-	if ( bOverTerrainType == MED_WATER || bOverTerrainType == DEEP_WATER || bOverTerrainType == LOW_WATER )
+	if ( TERRAIN_IS_WATER( bOverTerrainType) )
 	{
 		usMoveModeToUse = WALKING;
 	}
@@ -1892,7 +1893,7 @@ UINT16 GetAPsToReloadRobot( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pRobot )
 {
 	UINT16						sAPCost = 0;
 	INT32 sActionGridNo;
-  UINT8             ubDirection;
+	INT8 ubDirection;
 	INT32 sAdjustedGridNo;
 
 	sActionGridNo = FindAdjacentGridEx( pSoldier, pRobot->sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
@@ -2185,7 +2186,7 @@ INT16 MinAPsToThrow( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCos
 	INT32	iFullAPs;
 	INT32 iAPCost = AP_MIN_AIM_ATTACK;
 	UINT16 usInHand;
-	UINT16 usTargID;
+	INT16 usTargID;
 	UINT32 uiMercFlags;
 	UINT8 ubDirection;
 

@@ -189,7 +189,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, UINT16 usHa
 	INT32							sTargetGridNo;
 	INT16							sAPCost;
 	INT32							sActionGridNo;
-	UINT8							ubDirection;
+	INT8 ubDirection;
 	INT32							sAdjustedGridNo;
 	BOOLEAN						fDropBomb = FALSE;
 	BOOLEAN						fAddingTurningCost = FALSE;
@@ -625,12 +625,12 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, UINT16 usHa
 	{
 		INT16	sCnt;
 		 INT32	sSpot;	
-		UINT8		ubGuyThere;
+		INT16		ubGuyThere;
 		 INT32		sGotLocation = NOWHERE;
 		BOOLEAN	fGotAdjacent = FALSE;
 		sAdjustedGridNo = NOWHERE;
-		ubDirection = 0xff;
-
+		//ubDirection = 0xff;
+		ubDirection = 0x7f;//Changed to account for new INT8 type for direction.  Gotthard 10/8/07
 		for ( sCnt = 0; sCnt < NUM_WORLD_DIRECTIONS; sCnt++ )
 		{
 			sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( sCnt ) );
@@ -846,7 +846,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, UINT16 usHa
 
 	if ( Item[usHandItem].toolkit )
 	{
-		UINT8 ubMercID;
+		INT16 ubMercID;
 		BOOLEAN	fVehicle = FALSE;
 		INT32		sVehicleGridNo=-1;
 
@@ -854,7 +854,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, UINT16 usHa
 		if ( IsRepairableStructAtGridNo( sGridNo, &ubMercID ) == 2 )
 		{
 			INT32 sNewGridNo;
-			UINT8	ubDirection;
+			INT8	ubDirection;
 
 			sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier( pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, MercPtrs[ ubMercID ] );
 
@@ -925,14 +925,14 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, UINT16 usHa
 
 	if ( Item[usHandItem].gascan )
 	{
-		UINT8 ubMercID;
+		 INT16 ubMercID;
 		 INT32		sVehicleGridNo=-1;
 
 		// For repair, check if we are over a vehicle, then get gridnot to edge of that vehicle!
 		if ( IsRefuelableStructAtGridNo( sGridNo, &ubMercID ) )
 		{
-				INT32 sNewGridNo;
-			UINT8	ubDirection;
+			INT32 sNewGridNo;
+			INT8	ubDirection;
 
 			sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier( pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, MercPtrs[ ubMercID ] );
 
@@ -1568,7 +1568,7 @@ void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECTTYPE *pObject, INT8 bInvPos )
 {
 	INT32 sActionGridNo, sAdjustedGridNo;
-	UINT8	ubDirection;
+	INT8	ubDirection;
 
 	// Remove any previous actions
 	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
@@ -2152,7 +2152,7 @@ OBJECTTYPE* InternalAddItemToPool( INT32 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 	// IF SO, DONT'T ADD!
 	bTerrainID = GetTerrainType( *psGridNo );
 
-	if ( bTerrainID == DEEP_WATER || bTerrainID == LOW_WATER || bTerrainID == MED_WATER )
+	if ( TERRAIN_IS_WATER( bTerrainID) )
 	{
 		//		if ( Item[ pObject->usItem ].fFlags & ITEM_SINKS )
 		if ( Item[ pObject->usItem ].sinks  )
@@ -3911,11 +3911,11 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 	SOLDIERTYPE *pTSoldier;
 	INT8				bInvPos;
 	OBJECTTYPE	TempObject;
-	UINT8				ubProfile;
+	INT16				ubProfile;
 
 	INT32 sGridNo;
 	UINT8				ubDirection;
-	UINT8				ubTargetMercID;
+	INT16				ubTargetMercID;
 	UINT16			usItemNum;
 	BOOLEAN			fToTargetPlayer = FALSE;
 
@@ -4117,9 +4117,9 @@ INT32 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 	INT16				sDesiredLevel;
 	INT32 sActionGridNo;
 	BOOLEAN			fStructFound = FALSE;
-	UINT8				ubDirection;
+	INT8 ubDirection;
 	INT32 sAdjustedGridNo;
-	UINT8				ubTargetID;
+	INT16				ubTargetID;
 
 
 	sActionGridNo = sGridNo;
@@ -4165,7 +4165,7 @@ INT32 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 
 void StartBombMessageBox( SOLDIERTYPE * pSoldier, INT32 sGridNo )
 {
-	UINT8 ubRoom;
+	INT16 ubRoom;
 
 	gpTempSoldier = pSoldier;
 	gsTempGridNo = sGridNo;
@@ -5038,10 +5038,10 @@ void TestPotentialOwner( SOLDIERTYPE * pSoldier )
 void CheckForPickedOwnership( void )
 {
 	ITEM_POOL *				pItemPool;
-	UINT8							ubProfile;
-	UINT8							ubCivGroup;
+	INT16 ubProfile;
+	UINT8 ubCivGroup;
 	SOLDIERTYPE *			pSoldier;
-	UINT8							ubLoop;
+	UINT16							ubLoop;
 
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
 	GetItemPool( gsTempGridNo, &pItemPool, gpTempSoldier->bLevel );
