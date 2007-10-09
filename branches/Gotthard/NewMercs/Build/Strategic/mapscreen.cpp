@@ -1075,7 +1075,7 @@ void DumpItemsList( void );
 
 
 // the tries to select a mapscreen character by his soldier ID
-BOOLEAN SetInfoChar( UINT8 ubID )
+BOOLEAN SetInfoChar( INT16 ubID )
 {
 	INT8 bCounter;
 
@@ -2113,10 +2113,10 @@ void DrawCharacterInfo(INT16 sCharNumber)
 		ConvertMinTimeToETADayHourMinString( pSoldier->uiTimeSoldierWillArrive, sString );
 	}
 	// traveling ?
-	else if ( PlayerIDGroupInMotion( GetSoldierGroupId( pSoldier ) ) )
+	else if ( PlayerIDGroupInMotion( GetSoldierGroupID( pSoldier ) ) )
 	{
 		// show ETA
-		uiArrivalTime = GetWorldTotalMin( ) + CalculateTravelTimeOfGroupId( GetSoldierGroupId( pSoldier ) );
+		uiArrivalTime = GetWorldTotalMin( ) + CalculateTravelTimeOfGroupId( GetSoldierGroupID( pSoldier ) );
 		ConvertMinTimeToETADayHourMinString( uiArrivalTime, sString );
 	}
 	else
@@ -2381,7 +2381,7 @@ INT32 GetPathTravelTimeDuringPlotting( PathStPtr pPath )
 	WAYPOINT pCurrent;
 	WAYPOINT pNext;
 	GROUP *pGroup;
-	UINT8 ubGroupId = 0;
+	INT8 ubGroupId = 0;
 	BOOLEAN fSkipFirstNode = FALSE;
 
 
@@ -7510,6 +7510,7 @@ void CheckToSeeIfMouseHasLeftMapRegionDuringPathPlotting(  )
 				// clear the temp path
 				if( pTempCharacterPath )
 				{
+					pTempCharacterPath = MoveToBeginningOfPathList( pTempCharacterPath);
 					pTempCharacterPath = ClearStrategicPathList( pTempCharacterPath, 0 );
 				}
 			}
@@ -9098,7 +9099,7 @@ void ReBuildCharactersList( void )
 
 void HandleChangeOfInfoChar( void )
 {
-	static INT8 bOldInfoChar = -1;
+	static UINT16 bOldInfoChar = -1;
 
 	if( bSelectedInfoChar != bOldInfoChar )
 	{
@@ -9510,7 +9511,7 @@ void RebuildWayPointsForAllSelectedCharsGroups( void )
 	SOLDIERTYPE *pSoldier = NULL;
 	INT32 iVehicleId;
 	PathStPtr *ppMovePath = NULL;
-	UINT8 ubGroupId;
+	INT8 ubGroupId;
 
 
 	memset( fGroupIDRebuilt, FALSE, sizeof( fGroupIDRebuilt ) );
@@ -12334,7 +12335,7 @@ void RandomAwakeSelectedMercConfirmsStrategicMove( void )
 {
 	SOLDIERTYPE *pSoldier = NULL;
 	INT32 iCounter;
-	UINT8	ubSelectedMercID[ 20 ];
+	UINT16	ubSelectedMercID[ 20 ];
 	UINT8	ubSelectedMercIndex[ 20 ];
 	UINT8	ubNumMercs = 0;
 	UINT8	ubChosenMerc;
@@ -12697,7 +12698,7 @@ void GetMapscreenMercDestinationString( SOLDIERTYPE *pSoldier, CHAR16 sString[] 
 			{
 				// he must be returning to his previous (reversed so as to be the next) sector, so show that as his destination
 				// individual soldiers don't store previous/next sector coordinates, must go to his group for that
-				pGroup = GetGroup( GetSoldierGroupId( pSoldier ) );
+				pGroup = GetGroup( GetSoldierGroupID( pSoldier ) );
 				Assert( pGroup );
 				iSectorX = pGroup->ubNextX;
 				iSectorY = pGroup->ubNextY;
@@ -12815,7 +12816,7 @@ void RestorePreviousPaths( void )
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 	PathStPtr *ppMovePath = NULL;
-	UINT8 ubGroupId = 0;
+	INT8 ubGroupId = 0;
 	BOOLEAN fPathChanged = FALSE;
 
 

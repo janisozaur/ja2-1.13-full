@@ -94,7 +94,7 @@ void ModifyPlayerReputation(INT8 bRepChange)
 }
 
 
-BOOLEAN MercThinksDeathRateTooHigh( UINT8 ubProfileID )
+BOOLEAN MercThinksDeathRateTooHigh( UINT16 ubProfileID )
 {
 	INT8	bDeathRateTolerance;
 
@@ -120,7 +120,7 @@ BOOLEAN MercThinksDeathRateTooHigh( UINT8 ubProfileID )
 }
 
 
-BOOLEAN MercThinksBadReputationTooHigh( UINT8 ubProfileID )
+BOOLEAN MercThinksBadReputationTooHigh( UINT16 ubProfileID )
 {
 	INT8	bRepTolerance;
 

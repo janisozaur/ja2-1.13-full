@@ -778,7 +778,7 @@ BOOLEAN DeInitAnimationSystem( )
 
 
 
-STRUCTURE_FILE_REF	*InternalGetAnimationStructureRef( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState, BOOLEAN fUseAbsolute )
+STRUCTURE_FILE_REF	*InternalGetAnimationStructureRef( INT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState, BOOLEAN fUseAbsolute )
 {
 	INT8	bStructDataType;
 
@@ -807,19 +807,19 @@ STRUCTURE_FILE_REF	*InternalGetAnimationStructureRef( UINT16 usSoldierID, UINT16
 }
 
 
-STRUCTURE_FILE_REF	*GetAnimationStructureRef( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState )
+STRUCTURE_FILE_REF	*GetAnimationStructureRef( INT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState )
 {
 	return( InternalGetAnimationStructureRef( usSoldierID, usSurfaceIndex, usAnimState, FALSE ) );
 }
 
 
-STRUCTURE_FILE_REF	*GetDefaultStructureRef( UINT16 usSoldierID )
+STRUCTURE_FILE_REF	*GetDefaultStructureRef( INT16 usSoldierID )
 {
 	return( gAnimStructureDatabase[ MercPtrs[ usSoldierID ]->ubBodyType ][ DEFAULT_STRUCT ].pStructureFileRef );
 }
 
 // Surface mamagement functions
-BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState )
+BOOLEAN LoadAnimationSurface( INT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState )
 {
 	AuxObjectData *pAuxData;
 
@@ -946,7 +946,7 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 }
 
 
-BOOLEAN UnLoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex )
+BOOLEAN UnLoadAnimationSurface( INT16 usSoldierID, UINT16 usSurfaceIndex )
 {
 
 	if (usSurfaceIndex == 251)
@@ -998,7 +998,7 @@ BOOLEAN UnLoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex )
 
 }
 
-void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID )
+void ClearAnimationSurfacesUsageHistory(INT16 usSoldierID )
 {
 	UINT32 cnt;
 

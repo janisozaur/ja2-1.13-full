@@ -40,7 +40,7 @@
 #define VIEWPATHLENGTH	13
 
 
-extern INT16 DirIncrementer[8];
+extern INT8 DirIncrementer[8];
 
 //UINT8		gubGridNoMarkers[ WORLD_MAX ];
 UINT8	*	gubGridNoMarkers = NULL;
@@ -295,9 +295,9 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
  INT8	itemVisible = FALSE;
  INT8 Blocking,twoMoreTiles,markerDir;
  INT8 nextDir=0,AlreadySawItem=FALSE;
- UINT8 who; //,itemIndex; // for each square checked
+ INT16 who; //,itemIndex; // for each square checked
  UINT8 dir,range,Path2;
- UINT8	ubRoomNo;
+ INT16 ubRoomNo;
  BOOLEAN	fCheckForRooms = FALSE;
  ITEM_POOL					*pItemPool;
  BOOLEAN			fHiddenStructVisible;

@@ -245,7 +245,7 @@ typedef struct
 	UINT8										ubAdjacentSoldierCnt;
 	UINT8										ubTerrainID;
 
- 	UINT8										ubReservedSoldierID;
+ 	INT16										ubReservedSoldierID;
 	UINT8										ubBloodInfo;
 	UINT8										ubSmellInfo;
 } MAP_ELEMENT;

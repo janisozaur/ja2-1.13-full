@@ -218,7 +218,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 	INT8	bSlot;
 	INT32	iLoop;
 	SOLDIERTYPE * pTeamSoldier;
-	INT8	bBuddyIndex;
+	INT16	bBuddyIndex;
   BOOLEAN fForceDamnSound = FALSE;
 
 	iReportChance = -1;

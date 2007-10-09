@@ -18,7 +18,7 @@
 
 
 
-UINT8			AimMercArray[ MAX_NUMBER_MERCS ];
+UINT16			AimMercArray[ MAX_NUMBER_MERCS ];
 
 UINT8			gCurrentAimPage[ NUM_AIM_SCREENS ] = 
 {

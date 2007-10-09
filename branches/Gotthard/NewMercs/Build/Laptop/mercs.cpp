@@ -178,8 +178,8 @@ UINT32		guiMercBackGround;
 UINT32		guiMercVideoFaceBackground;
 UINT32		guiMercVideoPopupBackground;
 
-UINT8			gubMercArray[ NUMBER_OF_MERCS ];
-UINT8			gubCurMercIndex;
+UINT16			gubMercArray[ NUMBER_OF_MERCS ];
+UINT16			gubCurMercIndex;
 
 INT32			iMercPopUpBox = -1;
 
@@ -297,8 +297,8 @@ void			HandleTalkingSpeck();
 BOOLEAN		DistortVideoMercImage( UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight );
 BOOLEAN		IsAnyMercMercsHired( );
 BOOLEAN		IsAnyMercMercsDead();
-UINT8			CountNumberOfMercMercsHired();
-UINT8			CountNumberOfMercMercsWhoAreDead();
+UINT16			CountNumberOfMercMercsHired();
+UINT16			CountNumberOfMercMercsWhoAreDead();
 BOOLEAN		GetSpeckConditionalOpening( BOOLEAN fJustEnteredScreen );
 void			RemoveSpeckPopupTextBox();
 BOOLEAN		ShouldSpeckStartTalkingDueToActionOnSubPage();
@@ -311,11 +311,11 @@ void			IncreaseMercRandomQuoteValue( UINT8 ubQuoteID, UINT8 ubValue );
 BOOLEAN		ShouldTheMercSiteServerGoDown();
 void			DrawMercVideoBackGround();
 BOOLEAN		CanMercQuoteBeSaid( UINT32 uiQuoteID );
-UINT8			NumberOfMercMercsDead();
+UINT16			NumberOfMercMercsDead();
 void			MakeBiffAwayForCoupleOfDays();
 BOOLEAN		AreAnyOfTheNewMercsAvailable();
 void			ShouldAnyNewMercMercBecomeAvailable();
-BOOLEAN		CanMercBeAvailableYet( UINT8 ubMercToCheck );
+BOOLEAN		CanMercBeAvailableYet( INT16 ubMercToCheck );
 UINT32		CalcMercDaysServed();
 //ppp
 
@@ -745,7 +745,7 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 {
 	SOLDIERTYPE *pSoldier;
 	INT16		sSoldierID, i;
-	UINT8		ubMercID;
+	INT16		ubMercID;
 	INT32		iNumDays;
 	BOOLEAN fAlreadySentEmailToPlayerThisTurn = FALSE;
 
@@ -965,7 +965,7 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 
 
 //Gets the actual merc id from the array
-UINT8 GetMercIDFromMERCArray(UINT8 ubMercID)
+INT16 GetMercIDFromMERCArray(INT16 ubMercID)
 {
 	//if it is one of the regular MERCS
 	if( ubMercID <= 6 )
@@ -1611,7 +1611,7 @@ BOOLEAN	GetSpeckConditionalOpening( BOOLEAN fJustEnteredScreen )
 {
 	static UINT16	usQuoteToSay=MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 	UINT8	ubRandom=0;
-	UINT8	ubCnt;
+	INT16	ubCnt;
 	BOOLEAN	fCanSayLackOfPaymentQuote = TRUE;
 	BOOLEAN fCanUseIdleTag = FALSE;
 
@@ -1701,7 +1701,7 @@ BOOLEAN	GetSpeckConditionalOpening( BOOLEAN fJustEnteredScreen )
 
 		else
 		{
-			UINT8	ubNumMercsDead = NumberOfMercMercsDead();
+			UINT16	ubNumMercsDead = NumberOfMercMercsDead();
 			UINT8	ubRandom = ( UINT8 ) Random( 100 );
 
 			//if business is good
@@ -1788,7 +1788,7 @@ BOOLEAN	GetSpeckConditionalOpening( BOOLEAN fJustEnteredScreen )
 	//if any mercs are dead
 	if( IsAnyMercMercsDead() )
 	{
-		UINT8 ubMercID;
+		INT16 ubMercID;
 		//if no merc has died before
 		if( !LaptopSaveInfo.fHasAMercDiedAtMercSite )
 		{
@@ -1799,7 +1799,7 @@ BOOLEAN	GetSpeckConditionalOpening( BOOLEAN fJustEnteredScreen )
 		//loop through all the mercs and see if any are dead and the quote is not said
 		for( ubCnt=0; ubCnt<NUMBER_OF_MERCS; ubCnt++ )
 		{
-			ubMercID = GetMercIDFromMERCArray( (UINT8) ubCnt );
+			ubMercID = GetMercIDFromMERCArray(ubCnt );
 			//if the merc is dead
 			if( IsMercDead( ubMercID ) )
 			{
@@ -1894,8 +1894,8 @@ BOOLEAN	GetSpeckConditionalOpening( BOOLEAN fJustEnteredScreen )
 
 BOOLEAN IsAnyMercMercsHired( )
 {
-	UINT8	ubMercID;
-	UINT8	i;
+	INT16	ubMercID;
+	INT16	i;
 
 	//loop through all of the hired mercs from M.E.R.C.
 	for(i=0; i<NUMBER_OF_MERCS; i++)
@@ -1912,8 +1912,8 @@ BOOLEAN IsAnyMercMercsHired( )
 
 BOOLEAN IsAnyMercMercsDead()
 {
-	UINT8	i;
-	UINT8 ubMercID;
+	INT16	i;
+	INT16 ubMercID;
 
 	//loop through all of the hired mercs from M.E.R.C.
 	for(i=0; i<NUMBER_OF_MERCS; i++)
@@ -1927,16 +1927,16 @@ BOOLEAN IsAnyMercMercsDead()
 }
 
 
-UINT8 NumberOfMercMercsDead()
+UINT16 NumberOfMercMercsDead()
 {
-	UINT8	i;
-	UINT8	ubNumDead = 0;
-	UINT8	ubMercID;
+	INT16	i;
+	UINT16	ubNumDead = 0;
+	INT16	ubMercID;
 
 	//loop through all of the hired mercs from M.E.R.C.
 	for(i=0; i<NUMBER_OF_MERCS; i++)
 	{
-		ubMercID = GetMercIDFromMERCArray( (UINT8) i );
+		ubMercID = GetMercIDFromMERCArray(i);
 		if( gMercProfiles[ ubMercID ].bMercStatus == MERC_IS_DEAD )
 			ubNumDead++;
 	}
@@ -1946,11 +1946,11 @@ UINT8 NumberOfMercMercsDead()
 
 
 
-UINT8	CountNumberOfMercMercsHired()
+UINT16	CountNumberOfMercMercsHired()
 {
-	UINT8	ubMercID;
-	UINT8	i;
-	UINT8	ubCount=0;
+	INT16	ubMercID;
+	INT16	i;
+	UINT16	ubCount=0;
 
 	//loop through all of the hired mercs from M.E.R.C.
 	for(i=0; i<NUMBER_OF_MERCS; i++)
@@ -1966,16 +1966,16 @@ UINT8	CountNumberOfMercMercsHired()
 }
 
 
-UINT8	CountNumberOfMercMercsWhoAreDead()
+UINT16	CountNumberOfMercMercsWhoAreDead()
 {
-	UINT8	i;
-	UINT8	ubCount=0;
-	UINT8	ubMercID;
+	INT16	i;
+	UINT16	ubCount=0;
+	INT16	ubMercID;
 
 	//loop through all of the hired mercs from M.E.R.C.
 	for(i=0; i<NUMBER_OF_MERCS; i++)
 	{
-		ubMercID = GetMercIDFromMERCArray( (UINT8) i );
+		ubMercID = GetMercIDFromMERCArray(i);
 
 		if( gMercProfiles[ ubMercID ].bMercStatus == MERC_IS_DEAD )
 		{
@@ -2021,7 +2021,7 @@ void RemoveSpeckPopupTextBox()
 
 
 
-void HandlePlayerHiringMerc( UINT8 ubHiredMercID )
+void HandlePlayerHiringMerc( INT16 ubHiredMercID )
 {
 	gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 
@@ -2095,9 +2095,9 @@ void HandlePlayerHiringMerc( UINT8 ubHiredMercID )
 }
 
 
-BOOLEAN IsMercMercAvailable( UINT8 ubMercID )
+BOOLEAN IsMercMercAvailable( INT16 ubMercID )
 {
-	UINT8	cnt;
+	UINT16	cnt;
 
 	//loop through the array of mercs
 	for( cnt=0; cnt<LaptopSaveInfo.gubLastMercIndex; cnt++ )
@@ -2444,8 +2444,8 @@ void MakeBiffAwayForCoupleOfDays()
 
 BOOLEAN AreAnyOfTheNewMercsAvailable()
 {
-	UINT8	i;
-	UINT8	ubMercID;
+	UINT16	i;
+	INT16	ubMercID;
 
 
 	if( LaptopSaveInfo.fNewMercsAvailableAtMercSite )
@@ -2537,7 +2537,7 @@ void ShouldAnyNewMercMercBecomeAvailable()
 		}
 }
 
-BOOLEAN CanMercBeAvailableYet( UINT8 ubMercToCheck )
+BOOLEAN CanMercBeAvailableYet( INT16 ubMercToCheck )
 {
 	//if the merc is already available
 	if( gConditionsForMercAvailability[ ubMercToCheck ].ubMercArrayID <= LaptopSaveInfo.gubLastMercIndex )
@@ -2642,7 +2642,7 @@ void NewMercsAvailableAtMercSiteCallBack( )
 //used for older saves
 void CalcAproximateAmountPaidToSpeck()
 {
-	UINT8	i, ubMercID;
+	INT16	i, ubMercID;
 
 	//loop through all the mercs and tally up the amount speck should have been paid
 	for(i=0; i<NUMBER_OF_MERCS; i++)
@@ -2658,7 +2658,7 @@ void CalcAproximateAmountPaidToSpeck()
 // CJC Dec 1 2002: calculate whether any MERC characters have been used at all
 UINT32 CalcMercDaysServed()
 {
-	UINT8	i, ubMercID;
+	UINT16	i, ubMercID;
 	UINT32 uiDaysServed = 0;
 
 	for(i=0; i<NUMBER_OF_MERCS; i++)

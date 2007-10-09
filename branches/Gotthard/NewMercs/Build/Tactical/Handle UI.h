@@ -191,10 +191,10 @@ extern BOOLEAN		gfUIHandleSelectionAboveGuy;
 extern INT32		gsSelectedGridNo;
 extern INT16		gsSelectedGuy;
 extern BOOLEAN		gfUIInDeadlock;
-extern UINT8		gUIDeadlockedSoldier;
+extern INT16		gUIDeadlockedSoldier;
 
 extern BOOLEAN		gfUIMouseOnValidCatcher;
-extern UINT8		gubUIValidCatcherID;
+extern INT16		gubUIValidCatcherID;
 extern BOOLEAN		gUIUseReverse;
 
 
@@ -241,11 +241,11 @@ extern BOOLEAN		gfUIHandlePhysicsTrajectory;
 
 // GLOBALS FOR FAST LOOKUP FOR FINDING MERCS FROM THE MOUSE
 extern BOOLEAN	gfUISelectiveTargetFound;
-extern UINT16	gusUISelectiveTargetID;
+extern INT16	gusUISelectiveTargetID;
 extern UINT32	guiUISelectiveTargetFlags;
 
 extern BOOLEAN	gfUIFullTargetFound;
-extern UINT16	gusUIFullTargetID;
+extern INT16	gusUIFullTargetID;
 extern UINT32	guiUIFullTargetFlags;
 
 extern BOOLEAN	gfUIConfirmExitArrows;
@@ -292,13 +292,13 @@ void AdjustSoldierCreationStartValues( );
 
 BOOLEAN SelectedMercCanAffordAttack( );
 BOOLEAN SelectedMercCanAffordMove(  );
-void GetMercClimbDirection( UINT8 ubSoldierID, BOOLEAN *pfGoDown, BOOLEAN *pfGoUp );
+void GetMercClimbDirection( INT16 ubSoldierID, BOOLEAN *pfGoDown, BOOLEAN *pfGoUp );
 
 void ToggleHandCursorMode( UINT32 *puiNewEvent );
 void ToggleTalkCursorMode( UINT32 *puiNewEvent );
 void ToggleLookCursorMode( UINT32 *puiNewEvent );
 
-void UIHandleSoldierStanceChange( UINT8 ubSoldierID, INT8	bNewStance );
+void UIHandleSoldierStanceChange( INT16 ubSoldierID, INT8	bNewStance );
 void GetCursorMovementFlags( UINT32 *puiCursorFlags );
 
 BOOLEAN HandleUIMovementCursor( SOLDIERTYPE *pSoldier, UINT32 uiCursorFlags, INT32 usMapPos, UINT32 uiFlags );
@@ -306,15 +306,15 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier );
 
 BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT32 sGridNo );
 
-BOOLEAN IsValidTalkableNPCFromMouse( UINT8 *pubSoldierID, BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed );
-BOOLEAN IsValidTalkableNPC( UINT8 ubSoldierID, BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed );
+BOOLEAN IsValidTalkableNPCFromMouse( INT16 *pubSoldierID, BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed );
+BOOLEAN IsValidTalkableNPC( INT16 ubSoldierID, BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed );
 
 BOOLEAN HandleTalkInit(  );
 
 BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustForConfirm );
 
-void SetUIBusy( UINT8 ubID );
-void UnSetUIBusy( UINT8 ubID );
+void SetUIBusy( INT16 ubID );
+void UnSetUIBusy( INT16 ubID );
 
 UINT32 UIHandleLUIEndLock( UI_EVENT *pUIEvent );
 

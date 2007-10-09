@@ -148,7 +148,7 @@ void DecayStrategicMorale( SOLDIERTYPE * pSoldier )
 void DecayTacticalMoraleModifiers( void )
 {
 	SOLDIERTYPE * pSoldier;
-	UINT8					ubLoop, ubLoop2;
+	INT16					ubLoop, ubLoop2;
 	BOOLEAN				fHandleNervous;
 
 	ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
@@ -248,7 +248,7 @@ void DecayTacticalMoraleModifiers( void )
 void DecayStrategicMoraleModifiers( void )
 {
 	SOLDIERTYPE * pSoldier;
-	UINT8					ubLoop;
+	INT16					ubLoop;
 
 	ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 	for ( pSoldier = MercPtrs[ ubLoop ]; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++, pSoldier++ )
@@ -436,7 +436,7 @@ void HandleMoraleEventForSoldier( SOLDIERTYPE * pSoldier, INT8 bMoraleEvent )
 
 void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	UINT8									ubLoop;
+	INT16									ubLoop;
 	SOLDIERTYPE *					pTeamSoldier;
 	MERCPROFILESTRUCT *		pProfile;
 
@@ -733,21 +733,21 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 
 void HourlyMoraleUpdate( void )
 {
-	INT8									bMercID, bOtherID;
+	INT16									bMercID, bOtherID;
 	INT8									bActualTeamOpinion;
 	INT8									bTeamMoraleModChange, bTeamMoraleModDiff;
 	INT8									bOpinion=-1;
 	INT32									iTotalOpinions;
 	INT8									bNumTeamMembers;
 	INT8									bHighestTeamLeadership = 0;
-	INT8									bLastTeamID;
+	INT16									bLastTeamID;
 	SOLDIERTYPE *					pSoldier;
 	SOLDIERTYPE *					pOtherSoldier;
 	MERCPROFILESTRUCT *		pProfile;
 	BOOLEAN								fSameGroupOnly;
 	static INT8						bStrategicMoraleUpdateCounter = 0;
 	BOOLEAN								fFoundHated = FALSE;
-	INT8									bHated;
+	INT16									bHated;
 
 	bMercID = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;

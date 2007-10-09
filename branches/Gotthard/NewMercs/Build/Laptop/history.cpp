@@ -104,7 +104,7 @@ void CreateHistoryButtons( void );
 void DestroyHistoryButtons( void );
 void CreateHistoryButtons( void );
 void DrawHistoryTitleText( void );
-UINT32 ProcessAndEnterAHistoryRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubColor );
+UINT32 ProcessAndEnterAHistoryRecord( UINT8 ubCode, UINT32 uiDate, UINT16 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubColor );
 void OpenAndReadHistoryFile( void );
 BOOLEAN OpenAndWriteHistoryFile( void );
 void ClearHistoryList( void );
@@ -122,8 +122,8 @@ void SetLastPageInHistoryRecords( void );
 UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber( void );
 BOOLEAN AppendHistoryToEndOfFile( HistoryUnitPtr pHistory );
 BOOLEAN WriteOutHistoryRecords( UINT32 uiPage );
-void		GetQuestStartedString( UINT8 ubQuestValue, STR16 sQuestString );
-void		GetQuestEndedString( UINT8 ubQuestValue, STR16 sQuestString );
+void		GetQuestStartedString( UINT16 ubQuestValue, STR16 sQuestString );
+void		GetQuestEndedString( UINT16 ubQuestValue, STR16 sQuestString );
 INT32		GetNumberOfHistoryPages();
 
 
@@ -136,7 +136,7 @@ void PerformCheckOnHistoryRecord( UINT32 uiErrorCode, INT16 sSectorX, INT16 sSec
 void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON *btn,INT32 reason);
 void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON *btn,INT32 reason);
 
-UINT32 SetHistoryFact( UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY )
+UINT32 SetHistoryFact( UINT8 ubCode, UINT16 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY )
 {
 	// adds History item to player's log(History List), returns unique id number of it
 	// outside of the History system(the code in this .c file), this is the only function you'll ever need
@@ -181,7 +181,7 @@ UINT32 SetHistoryFact( UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sS
 }
 
 
-UINT32 AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY)
+UINT32 AddHistoryToPlayersLog(UINT8 ubCode, UINT16 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY)
 {
 	// adds History item to player's log(History List), returns unique id number of it
 	// outside of the History system(the code in this .c file), this is the only function you'll ever need
@@ -574,7 +574,7 @@ BOOLEAN IncrementCurrentPageHistoryDisplay( void )
 }
 
 
-UINT32 ProcessAndEnterAHistoryRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , UINT8 ubColor )
+UINT32 ProcessAndEnterAHistoryRecord( UINT8 ubCode, UINT32 uiDate, UINT16 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , UINT8 ubColor )
 {
   UINT32 uiId=0;
   HistoryUnitPtr pHistory=pHistoryListHead;
@@ -1644,7 +1644,7 @@ void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY )
 	  LoadNextHistoryPage( );
 	}
 
-	SetHistoryFact( HISTORY_QUEST_FINISHED, ubCode, GetWorldTotalMin(), sSectorX, sSectorY );
+	SetHistoryFact( HISTORY_QUEST_FINISHED, (UINT16)(ubCode), GetWorldTotalMin(), sSectorX, sSectorY );
 	return;
 }
 
@@ -1693,14 +1693,14 @@ UINT32 GetTimeQuestWasStarted( UINT8 ubCode )
 	return( uiTime );
 }
 
-void GetQuestStartedString( UINT8 ubQuestValue, STR16 sQuestString )
+void GetQuestStartedString( UINT16 ubQuestValue, STR16 sQuestString )
 {
 	// open the file and copy the string
 	LoadEncryptedDataFromFile( "BINARYDATA\\quests.edt", sQuestString, 160 * ( ubQuestValue * 2  ), 160 );
 }
 
 
-void GetQuestEndedString( UINT8 ubQuestValue, STR16 sQuestString )
+void GetQuestEndedString( UINT16 ubQuestValue, STR16 sQuestString )
 {
 	// open the file and copy the string
 	LoadEncryptedDataFromFile( "BINARYDATA\\quests.edt", sQuestString, 160 * ( ( ubQuestValue  * 2 ) + 1), 160 );

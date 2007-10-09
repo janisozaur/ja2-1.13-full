@@ -790,7 +790,7 @@ void ProcessImplicationsOfMeanwhile( void )
 void EndMeanwhile( )
 {
 	UINT32		cnt;
-	UINT8		ubProfile;
+	INT16 ubProfile;
 
 	EmptyDialogueQueue();
 	ProcessImplicationsOfMeanwhile();
@@ -848,7 +848,7 @@ void EndMeanwhile( )
 void DoneFadeOutMeanwhileOnceDone( )
 {
 	UINT32		cnt;
-	UINT8		ubProfile;
+	INT16 ubProfile;
 
 	// OK, insertion data found, enter sector!
 	gfReloadingScreenFromMeanwhile = TRUE;

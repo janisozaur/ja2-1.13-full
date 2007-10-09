@@ -5571,7 +5571,7 @@ void AddCharacterToOtherList( SOLDIERTYPE *pSoldier )
 // If you have hired a merc before, then the they left for whatever reason, and now you are hiring them again, 
 // we must get rid of them from the departed section in the personnel screen.  ( wouldnt make sense for them 
 //to be on your team list, and departed list )
-BOOLEAN RemoveNewlyHiredMercFromPersonnelDepartedList( UINT8 ubProfile )
+BOOLEAN RemoveNewlyHiredMercFromPersonnelDepartedList( INT16 ubProfile )
 {
 	INT32 iCounter = 0;
 

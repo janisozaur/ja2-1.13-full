@@ -46,7 +46,7 @@ BOOLEAN AddUIPlan( INT32 sGridNo, UINT8 ubPlanID )
 	INT8							bDirection;
 	INT32							iLoop;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	UINT8							ubNewIndex;
+	INT16							ubNewIndex;
 
 	// Depeding on stance and direction facing, add guy!
 	

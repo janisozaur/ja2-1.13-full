@@ -110,17 +110,17 @@ INT16		gsForm1InsuranceLengthNumber;
 INT16		gsForm2InsuranceLengthNumber;
 INT16		gsForm3InsuranceLengthNumber;
 
-UINT8		gubMercIDForMercInForm1;
-UINT8		gubMercIDForMercInForm2;
-UINT8		gubMercIDForMercInForm3;
+INT16		gubMercIDForMercInForm1;
+INT16		gubMercIDForMercInForm2;
+INT16		gubMercIDForMercInForm3;
 
-UINT8		gubNumberofDisplayedInsuranceGrids;
+UINT16		gubNumberofDisplayedInsuranceGrids;
 
 BOOLEAN	gfChangeInsuranceFormButtons = FALSE;
 
-UINT8		gubInsuranceMercArray[ 20 ];
+UINT16		gubInsuranceMercArray[ 20 ];
 INT16		gsCurrentInsuranceMercIndex;
-INT16		gsMaxPlayersOnTeam;
+UINT16		gsMaxPlayersOnTeam;
 
 
 //link to the varios pages
@@ -155,14 +155,14 @@ UINT32	guiInsuranceAcceptClearForm3Button;
 //
 //	Function Prototypes
 //
-BOOLEAN		DisplayOrderGrid( UINT8 ubGridNumber, UINT8 ubMercID );
-INT8			GetNumberOfHireMercsStartingFromID( UINT8 ubStartMercID );
+BOOLEAN		DisplayOrderGrid( UINT8 ubGridNumber, INT16 ubMercID );
+UINT16			GetNumberOfHireMercsStartingFromID(INT16 ubStartMercID );
 //INT32			CalculateInsuranceCost( SOLDIERTYPE *pSoldier, BOOLEAN fHaveInsurance );
 void			InsuranceContractUserTextFieldCallBack( UINT8 ubID, BOOLEAN fEntering );
 INT8			CountInsurableMercs();
 void			DisableInsuranceContractNextPreviousbuttons();
 void			CreateDestroyInsuranceContractFormButtons( BOOLEAN fCreate);
-void			HandleAcceptButton( UINT8 ubSoldierID, UINT8 ubFormID );
+void			HandleAcceptButton( INT16 ubSoldierID, UINT8 ubFormID );
 FLOAT			DiffFromNormRatio( INT16 sThisValue, INT16 sNormalValue );
 void			InsContractNoMercsPopupCallBack( UINT8 bExitValue );
 void			BuildInsuranceArray();
@@ -171,7 +171,7 @@ BOOLEAN		MercIsInsurable( SOLDIERTYPE *pSoldier );
 void			EnableDisableInsuranceContractAcceptButtons();
 UINT32		GetTimeRemainingOnSoldiersContract( SOLDIERTYPE *pSoldier );
 UINT32		GetTimeRemainingOnSoldiersInsuranceContract( SOLDIERTYPE *pSoldier );
-void			EnableDisableIndividualInsuranceContractButton( UINT8 ubMercIDForMercInForm1, UINT32 *puiAcceptButton );
+void			EnableDisableIndividualInsuranceContractButton( INT16 ubMercIDForMercInForm1, UINT32 *puiAcceptButton );
 BOOLEAN		CanSoldierExtendInsuranceContract( SOLDIERTYPE *pSoldier );
 INT32			CalculateSoldiersInsuranceContractLength( SOLDIERTYPE *pSoldier );
 INT32			CalcStartDayOfInsurance( SOLDIERTYPE *pSoldier );
@@ -209,7 +209,7 @@ BOOLEAN EnterInsuranceContract()
 	//build the list of mercs that are can be displayed
 	BuildInsuranceArray();
 
-	gubNumberofDisplayedInsuranceGrids = GetNumberOfHireMercsStartingFromID( (UINT8) gsCurrentInsuranceMercIndex );
+	gubNumberofDisplayedInsuranceGrids = GetNumberOfHireMercsStartingFromID(gsCurrentInsuranceMercIndex );
 	if( gubNumberofDisplayedInsuranceGrids > 3 )
 		gubNumberofDisplayedInsuranceGrids = 3;
 	
@@ -304,7 +304,7 @@ void HandleInsuranceContract()
 		CreateDestroyInsuranceContractFormButtons( FALSE );
 
 		//Get the new number of displayed insurance grids
-		gubNumberofDisplayedInsuranceGrids = GetNumberOfHireMercsStartingFromID( (UINT8) gsCurrentInsuranceMercIndex );
+		gubNumberofDisplayedInsuranceGrids = GetNumberOfHireMercsStartingFromID( gsCurrentInsuranceMercIndex );
 		if( gubNumberofDisplayedInsuranceGrids > 3 )
 			gubNumberofDisplayedInsuranceGrids = 3;
 
@@ -386,7 +386,7 @@ void RenderInsuranceContract()
 	DisplaySmallRedLineWithShadow( INS_CTRCT_FIRST_BULLET_TEXT_X, INS_CTRCT_RED_BAR_UNDER_INSTRUCTION_TEXT_Y, INS_CTRCT_FIRST_BULLET_TEXT_X+INS_CTRCT_INTSRUCTION_TEXT_WIDTH, INS_CTRCT_RED_BAR_UNDER_INSTRUCTION_TEXT_Y);
 
 
-	sNextMercID =	gsCurrentInsuranceMercIndex;
+	sNextMercID = gsCurrentInsuranceMercIndex;
 	while( ( ubCount < gubNumberofDisplayedInsuranceGrids ) && ( sNextMercID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID ) )
 	{
 		sMercID = gubInsuranceMercArray[ sNextMercID ];
@@ -494,7 +494,7 @@ void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 
 
 
-BOOLEAN DisplayOrderGrid( UINT8 ubGridNumber, UINT8 ubMercID )
+BOOLEAN DisplayOrderGrid( UINT8 ubGridNumber, INT16 ubMercID )
 {
   VOBJECT_DESC    VObjectDesc;
   HVOBJECT hPixHandle;
@@ -869,7 +869,7 @@ void BtnInsuranceAcceptClearForm3ButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 
 
-INT8 GetNumberOfHireMercsStartingFromID( UINT8 ubStartMercID )
+UINT16 GetNumberOfHireMercsStartingFromID( INT16 ubStartMercID )
 {
 	UINT8	i;
 	UINT8	ubCount=0;
@@ -1067,7 +1067,7 @@ void CreateDestroyInsuranceContractFormButtons( BOOLEAN fCreate)
 
 
 
-void HandleAcceptButton( UINT8 ubSoldierID, UINT8 ubFormID )
+void HandleAcceptButton( INT16 ubSoldierID, UINT8 ubFormID )
 {
 	INT32	iAmountOfMoneyTransfer = -1;
 
@@ -1130,7 +1130,7 @@ void DailyUpdateOfInsuredMercs()
 #define MAX_INSURANCE_RATIO		10.0f
 
 
-INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID )
+INT32	CalculateInsuranceContractCost( INT32 iLength, INT16 ubMercID )
 {
 	MERCPROFILESTRUCT * pProfile;
 	INT16	sTotalSkill=0;
@@ -1269,7 +1269,7 @@ void BuildInsuranceArray()
 
 BOOLEAN AddLifeInsurancePayout( SOLDIERTYPE *pSoldier )
 {
-	UINT8	ubPayoutID;
+	INT16	ubPayoutID;
 	UINT32 uiTimeInMinutes;
 	MERCPROFILESTRUCT *pProfile;
 	UINT32 uiCostPerDay;
@@ -1354,7 +1354,7 @@ BOOLEAN AddLifeInsurancePayout( SOLDIERTYPE *pSoldier )
 }
 
 
-void StartInsuranceInvestigation( UINT8	ubPayoutID )
+void StartInsuranceInvestigation( INT16	ubPayoutID )
 {
 	UINT8 ubDays;
 
@@ -1389,7 +1389,7 @@ void StartInsuranceInvestigation( UINT8	ubPayoutID )
 }
 
 
-void EndInsuranceInvestigation( UINT8	ubPayoutID )
+void EndInsuranceInvestigation( INT16	ubPayoutID )
 {
 	// send an email telling player the investigation is over
 	if ( gMercProfiles[ LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubMercID ].ubSuspiciousDeath == VERY_SUSPICIOUS_DEATH )
@@ -1408,7 +1408,7 @@ void EndInsuranceInvestigation( UINT8	ubPayoutID )
 
 
 //void InsuranceContractPayLifeInsuranceForDeadMerc( LIFE_INSURANCE_PAYOUT *pPayoutStruct )
-void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8 ubPayoutID )
+void InsuranceContractPayLifeInsuranceForDeadMerc( INT16 ubPayoutID )
 {
 	//if the mercs id number is the same what is in the soldier array
 	if( LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubSoldierID == Menptr[ LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubSoldierID ].ubID )
@@ -1494,7 +1494,7 @@ void EnableDisableInsuranceContractAcceptButtons()
 }
 
 
-void EnableDisableIndividualInsuranceContractButton( UINT8 ubMercIDForMercInForm, UINT32 *puiAcceptButton )
+void EnableDisableIndividualInsuranceContractButton( INT16 ubMercIDForMercInForm, UINT32 *puiAcceptButton )
 {
 	INT16	sSoldierID = 0;
 

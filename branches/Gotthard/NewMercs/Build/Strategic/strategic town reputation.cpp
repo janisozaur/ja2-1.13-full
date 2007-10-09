@@ -60,7 +60,7 @@ void PostEventsForSpreadOfTownOpinion( void )
 }
 
 
-UINT8 GetTownOpinionOfMerc( UINT8 ubProfileId, UINT8 ubTownId )
+UINT8 GetTownOpinionOfMerc( UINT16 ubProfileId, UINT8 ubTownId )
 {
 	Assert(ubProfileId < FIRST_NPC);
 	Assert(ubTownId < NUM_TOWNS);
@@ -85,7 +85,7 @@ UINT8 GetTownOpinionOfMercForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubTownId )
 }
 
 
-void UpdateTownOpinionOfThisMerc( UINT8 ubProfileId, UINT8 ubTownId, INT8 bAmount )
+void UpdateTownOpinionOfThisMerc( UINT16 ubProfileId, UINT8 ubTownId, INT8 bAmount )
 {
 	Assert(ubProfileId < FIRST_NPC);
 	Assert(ubTownId < NUM_TOWNS);
@@ -139,7 +139,7 @@ void HandleSpreadOfAllTownsOpinion( void )
 }
 
 
-void HandleSpreadOfTownOpinionForMerc( UINT8 ubProfileId )
+void HandleSpreadOfTownOpinionForMerc( UINT16 ubProfileId )
 {
 	// handle opinion spread for this grunt
 	INT32 iDistanceBetweenTowns;
@@ -167,7 +167,7 @@ void HandleSpreadOfTownOpinionForMerc( UINT8 ubProfileId )
 }
 
 
-void HandleOpinionOfTownsAboutSoldier( INT8 bTownA, INT8 bTownB, INT32 iDistanceBetweenThem, UINT8 ubProfile )
+void HandleOpinionOfTownsAboutSoldier( INT8 bTownA, INT8 bTownB, INT32 iDistanceBetweenThem, UINT16 ubProfile )
 {
 	// ARM: System has been scrapped
 }

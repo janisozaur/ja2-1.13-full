@@ -163,7 +163,7 @@ void ViewCreaturesCallback( GUI_BUTTON *btn, INT32 reason );
 void ExtractAndUpdatePopulations();
 void PrintEnemyPopTable();
 void PrintEnemiesKilledTable();
-UINT8 ChooseEnemyIconColor( UINT8 ubAdmins, UINT8 ubTroops, UINT8 ubElites );
+UINT8 ChooseEnemyIconColor( UINT16 ubAdmins, UINT16 ubTroops, UINT16 ubElites );
 void BlitGroupIcon( UINT8 ubIconType, UINT8 ubIconColor, UINT32 uiX, UINT32 uiY, HVOBJECT hVObject );
 void PrintDetailedEnemiesInSectorInfo( INT32 iScreenX, INT32 iScreenY, UINT8 ubSectorX, UINT8 ubSectorY );
 
@@ -537,7 +537,7 @@ void RenderMovingGroupsAndMercs()
 	GROUP *pGroup;
 	HVOBJECT hVObject;
 	INT32 x, y;
-	UINT8 ubNumTroops, ubNumAdmins, ubNumElites;
+	UINT16 ubNumTroops, ubNumAdmins, ubNumElites;
 	float ratio;
 	INT32 minX, maxX, minY, maxY;
 	INT32 iSector = 0;
@@ -1820,7 +1820,7 @@ void PrintEnemiesKilledTable()
 
 
 
-UINT8 ChooseEnemyIconColor( UINT8 ubAdmins, UINT8 ubTroops, UINT8 ubElites )
+UINT8 ChooseEnemyIconColor( UINT16 ubAdmins, UINT16 ubTroops, UINT16 ubElites )
 {
 	UINT8 ubIconColor;
 

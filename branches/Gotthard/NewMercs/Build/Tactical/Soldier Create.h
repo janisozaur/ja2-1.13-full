@@ -24,7 +24,19 @@ using namespace std;
 //Rebels		32
 //Civilians 32
 //Total			148
-#define MAX_INDIVIDUALS											148
+
+//#define MAX_INDIVIDUALS											148
+
+//No Idea what a good value for this will be, but I plan on normalizing it to 4096.
+//Gotthard 9/11/07
+//Players		596
+//Enemies		975
+//Creatures		875
+//Rebels		875
+//Civilians		875
+//Total			4096
+
+#define MAX_INDIVIDUALS												4096
 
 //Kris:  SERIALIZING INFORMATION
 //All maps must have:
@@ -170,7 +182,7 @@ typedef struct
 	BOOLEAN						fStatic;  
 
 	//Profile information used for special NPCs and player mercs.
-	UINT8							ubProfile;
+	INT16							ubProfile;
 	BOOLEAN						fPlayerMerc;
 	BOOLEAN						fPlayerPlan;
 	BOOLEAN						fCopyProfileItemsOver;
@@ -234,7 +246,7 @@ typedef struct
 	UINT8							ubCivilianGroup;
 
 	BOOLEAN						fKillSlotIfOwnerDies;
-	UINT8							ubScheduleID;
+	INT16							ubScheduleID;
 
 	BOOLEAN						fUseGivenVehicle;				
 	INT8							bUseGivenVehicleID;				
@@ -285,7 +297,7 @@ public:
 	BOOLEAN						fStatic;  
 	
 	//Profile information used for special NPCs and player mercs.
-	UINT8							ubProfile;
+	INT16							ubProfile;
 	BOOLEAN						fPlayerMerc;
 	BOOLEAN						fPlayerPlan;
 	BOOLEAN						fCopyProfileItemsOver;
@@ -351,7 +363,7 @@ public:
 	UINT8							ubCivilianGroup;
 
 	BOOLEAN						fKillSlotIfOwnerDies;
-	UINT8							ubScheduleID;
+	INT16							ubScheduleID;
 
 	BOOLEAN						fUseGivenVehicle;				
 	INT8							bUseGivenVehicleID;				
@@ -388,7 +400,7 @@ void RandomizeNewSoldierStats( SOLDIERCREATE_STRUCT *pCreateStruct );
 
 //Kris:
 //Modified return type from BOOLEAN to SOLDIERTYPE*
-SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *pubID );
+SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, INT16 *pubID );
 
 //Randomly generated enemies used by strategic AI.
 SOLDIERTYPE* TacticalCreateAdministrator();
@@ -451,18 +463,18 @@ void UpdateSoldierWithStaticDetailedInformation( SOLDIERTYPE *s, SOLDIERCREATE_S
 
 //In the case of setting a profile ID in order to extract a soldier from the profile array, we
 //also want to copy that information to the static detailed placement, for editor viewing purposes.
-void UpdateStaticDetailedPlacementWithProfileInformation( SOLDIERCREATE_STRUCT *spp, UINT8 ubProfile );
+void UpdateStaticDetailedPlacementWithProfileInformation( SOLDIERCREATE_STRUCT *spp, INT16 ubProfile );
 
 //When the editor modifies the soldier's relative attribute level,
 //this function is called to update that information.
 void ModifySoldierAttributesWithNewRelativeLevel( SOLDIERTYPE *s, INT8 bLevel );
 
 // Force the soldier to be a different ID
-void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID );
+void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, INT16 ubProfileID );
 
 void GeneratePaletteForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubSoldierClass );
 
-void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID );
+void QuickCreateProfileMerc( INT8 bTeam, INT16 ubProfileID );
 
 BOOLEAN InternalTacticalRemoveSoldier( UINT16 usSoldierIndex, BOOLEAN fRemoveVehicle );
 

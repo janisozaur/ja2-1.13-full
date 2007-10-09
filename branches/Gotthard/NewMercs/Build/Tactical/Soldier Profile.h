@@ -15,7 +15,7 @@ extern MERCPROFILESTRUCT gMercProfiles[ NUM_PROFILES ];
 #define AIM_AND_MERC_MERCS		51		// A.I.M. is 0-39, M.E.R.C.s are 40-50
 
 //use this to sort out the above define
-BOOLEAN IsProfileIdAnAimOrMERCMerc( UINT8 ubProfileID );
+BOOLEAN IsProfileIdAnAimOrMERCMerc( INT16 ubProfileID );
 //enums for the mercs 
 enum NPCIDs
 {
@@ -161,27 +161,27 @@ enum NPCIDs
 BOOLEAN LoadMercProfiles(void);
 
 // This function will overload the default for the face index ( which is the ubCharNum )
-void SetProfileFaceData( UINT8 ubCharNum, UINT8 ubFaceIndex, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY );
-SOLDIERTYPE * FindSoldierByProfileID( UINT8 ubProfileID, BOOLEAN fPlayerMercsOnly );
+void SetProfileFaceData( INT16 ubCharNum, UINT8 ubFaceIndex, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY );
+SOLDIERTYPE * FindSoldierByProfileID( INT16 ubProfileID, BOOLEAN fPlayerMercsOnly );
 
-BOOLEAN RecruitRPC( UINT8 ubCharNum );
+BOOLEAN RecruitRPC( INT16 ubCharNum );
 
-BOOLEAN RecruitEPC( UINT8 ubCharNum );
-BOOLEAN UnRecruitEPC( UINT8 ubCharNum );
+BOOLEAN RecruitEPC( INT16 ubCharNum );
+BOOLEAN UnRecruitEPC( INT16 ubCharNum );
 
-INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy );
-INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated );
+INT16 WhichBuddy( INT16 ubCharNum, INT16 ubBuddy );
+INT16 WhichHated( INT16 ubCharNum, INT16 ubHated );
 
 SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam );
 
-BOOLEAN IsProfileATerrorist( UINT8 ubProfile );
-BOOLEAN IsProfileAHeadMiner( UINT8 ubProfile );
+BOOLEAN IsProfileATerrorist( INT16 ubProfile );
+BOOLEAN IsProfileAHeadMiner( INT16 ubProfile );
 
 void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs );
 
 
 // Returns true if a buddy of the merc is on team
-BOOLEAN DoesMercHaveABuddyOnTheTeam( UINT8 ubMercID );
+BOOLEAN DoesMercHaveABuddyOnTheTeam( INT16 ubMercID );
 
 void StartSomeMercsOnAssignment( void );
 

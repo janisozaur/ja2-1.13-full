@@ -140,10 +140,10 @@ UINT32	guiMercBackButton;
 //
 //****************************
 
-BOOLEAN DisplayMercFace( UINT8 ubMercID);
-void LoadAndDisplayMercBio( UINT8 ubMercID );
-void DisplayMercsStats( UINT8 ubMercID );
-BOOLEAN MercFilesHireMerc(UINT8 ubMercID);
+BOOLEAN DisplayMercFace(INT16 ubMercID);
+void LoadAndDisplayMercBio(INT16 ubMercID );
+void DisplayMercsStats(INT16 ubMercID );
+BOOLEAN MercFilesHireMerc(INT16 ubMercID);
 void EnableDisableMercFilesNextPreviousButton( );
 
 
@@ -274,7 +274,7 @@ void RenderMercsFiles()
 	DrawTextToScreen(gMercProfiles[ GetMercIDFromMERCArray( gubCurMercIndex ) ].zName, MERC_NAME_X, MERC_NAME_Y, 0, MERC_NAME_FONT, MERC_NAME_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
 	//Load and display the mercs bio
-	UINT8 mercID = GetMercIDFromMERCArray( gubCurMercIndex );
+	INT16 mercID = GetMercIDFromMERCArray( gubCurMercIndex );
 	if ( mercID < GASTON )
 		mercID -= BIFF;
 	else
@@ -429,7 +429,7 @@ void BtnMercHireButtonCallback(GUI_BUTTON *btn,INT32 reason)
 } 
 
 
-BOOLEAN DisplayMercFace( UINT8 ubMercID)
+BOOLEAN DisplayMercFace( INT16 ubMercID)
 {
   HVOBJECT hFaceHandle;
   HVOBJECT hPortraitHandle;
@@ -509,7 +509,7 @@ BOOLEAN DisplayMercFace( UINT8 ubMercID)
 }
 
 
-void LoadAndDisplayMercBio( UINT8 ubMercID )
+void LoadAndDisplayMercBio( INT16 ubMercID )
 {
 	CHAR16	sText[400];
 	UINT32	uiStartLoc = 0;
@@ -530,7 +530,7 @@ void LoadAndDisplayMercBio( UINT8 ubMercID )
 }
 
 
-void DisplayMercsStats( UINT8 ubMercID )
+void DisplayMercsStats( INT16 ubMercID )
 {
 	UINT16 usPosY, usPosX;
 	CHAR16 sString[128];
@@ -603,10 +603,10 @@ void DisplayMercsStats( UINT8 ubMercID )
 
 
 
-BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
+BOOLEAN MercFilesHireMerc(INT16 ubMercID)
 {
 	MERC_HIRE_STRUCT HireMercStruct;
-	INT8	bReturnCode;
+	INT16	bReturnCode;
 
 	memset(&HireMercStruct, 0, sizeof(MERC_HIRE_STRUCT));
 

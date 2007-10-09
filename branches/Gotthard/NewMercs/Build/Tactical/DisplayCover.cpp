@@ -305,7 +305,7 @@ void CalculateCoverInRadiusAroundGridNo( INT32 sTargetGridNo, INT8	bSearchRange 
 	SOLDIERTYPE *pSoldier=NULL;
 	INT32 sGridNo;
 	INT16	sCounterX, sCounterY;
-	UINT8	ubID;
+	UINT16	ubID;
 	INT8 bStance;
 //	BOOLEAN fRoof;
 
@@ -929,7 +929,7 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT32 sTargetGridNo, BOOL
 	INT32 iLosForGridNo=0;
 	UINT16	usSightLimit=0;
 	INT8  *pPersOL,*pbPublOL;
-	UINT8 ubID;
+	INT16 ubID;
 	BOOLEAN	bAware=FALSE;
 
 	if( fRoof )
@@ -989,7 +989,7 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT32 sTargetGridNo, BOOL
 
 BOOLEAN IsTheRoofVisible( INT32 sGridNo )
 {
-	UINT8 ubRoom;
+	INT16 ubRoom;
 
 	if( InARoom( sGridNo, &ubRoom ) )
 	{

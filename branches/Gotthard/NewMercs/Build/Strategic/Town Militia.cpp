@@ -361,7 +361,7 @@ INT8 MilitiaRankToSoldierClass(UINT8 ubRank)
 }
 
 
-void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany)
+void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT16 ubHowMany)
 {
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 
@@ -377,7 +377,7 @@ void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 u
 }
 
 
-void StrategicPromoteMilitiaInSector(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank, UINT8 ubHowMany)
+void StrategicPromoteMilitiaInSector(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank, UINT16 ubHowMany)
 {
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 
@@ -403,7 +403,7 @@ void StrategicPromoteMilitiaInSector(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRa
 }
 
 
-void StrategicRemoveMilitiaFromSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany)
+void StrategicRemoveMilitiaFromSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT16 ubHowMany)
 {
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 
@@ -480,8 +480,8 @@ UINT8 CheckOneMilitiaForPromotion(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank,
 void HandleMilitiaDefections(INT16 sMapX, INT16 sMapY)
 {
 	UINT8 ubRank;
-	UINT8 ubMilitiaCnt;
-	UINT8 ubCount;
+	UINT16 ubMilitiaCnt;
+	UINT16 ubCount;
 	UINT32 uiChanceToDefect;
 
 	for( ubRank = 0; ubRank < MAX_MILITIA_LEVELS; ubRank++ )
@@ -518,9 +518,9 @@ void HandleMilitiaDefections(INT16 sMapX, INT16 sMapY)
 }
 
 
-UINT8 CountAllMilitiaInSector(INT16 sMapX, INT16 sMapY)
+UINT16 CountAllMilitiaInSector(INT16 sMapX, INT16 sMapY)
 {
-	UINT8 ubMilitiaTotal = 0;
+	UINT16 ubMilitiaTotal = 0;
 	UINT8 ubRank;
 
 	// find out if there are any town militia in this SECTOR (don't care about other sectors in same town)
@@ -533,7 +533,7 @@ UINT8 CountAllMilitiaInSector(INT16 sMapX, INT16 sMapY)
 }
 
 
-UINT8 MilitiaInSectorOfRank(INT16 sMapX, INT16 sMapY, UINT8 ubRank)
+UINT16 MilitiaInSectorOfRank(INT16 sMapX, INT16 sMapY, UINT8 ubRank)
 {
 	return( SectorInfo[ SECTOR( sMapX, sMapY ) ].ubNumberOfCivsAtLevel[ ubRank ] );
 }

@@ -32,8 +32,8 @@ extern	INT16 WeaponROF[ MAXITEMS ];
 
 
 void SetupStoreInventory( STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed );
-BOOLEAN DoesGunOfSameClassExistInInventory( UINT8 ubItemIndex, UINT8 ubDealerID );
-STORE_INVENTORY *GetPtrToStoreInventory( UINT8 ubDealerID );
-//INT16	CountNumberOfItemsInStoreInventory( UINT8 ubArmsDealerID );
+BOOLEAN DoesGunOfSameClassExistInInventory( UINT8 ubItemIndex, INT16 ubDealerID );
+STORE_INVENTORY *GetPtrToStoreInventory( INT16 ubDealerID );
+//INT16	CountNumberOfItemsInStoreInventory( UINT16 ubArmsDealerID );
 
 #endif

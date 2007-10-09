@@ -134,7 +134,7 @@ INT32 giFinanceButton[4];
 INT32 giFinanceButtonImage[4];
 
 // internal functions
-UINT32 ProcessAndEnterAFinacialRecord( UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT8 ubSecondCode, INT32 iBalanceToDate);
+UINT32 ProcessAndEnterAFinacialRecord( UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT16 ubSecondCode, INT32 iBalanceToDate);
 void RenderBackGround( void );
 BOOLEAN LoadFinances();
 void DrawSummary( void );
@@ -179,7 +179,7 @@ INT32 GetTodaysOtherDeposits( void );
 INT32 GetYesterdaysDebits( void );
 
 
-UINT32 AddTransactionToPlayersBook (UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT32 iAmount)
+UINT32 AddTransactionToPlayersBook (UINT8 ubCode, UINT16 ubSecondCode, UINT32 uiDate, INT32 iAmount)
 {
 	// adds transaction to player's book(Financial List), returns unique id number of it
 	// outside of the financial system(the code in this .c file), this is the only function you'll ever need
@@ -1195,7 +1195,7 @@ void ClearFinanceList( void )
 }
 
 
-UINT32 ProcessAndEnterAFinacialRecord( UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT8 ubSecondCode, INT32 iBalanceToDate )
+UINT32 ProcessAndEnterAFinacialRecord( UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT16 ubSecondCode, INT32 iBalanceToDate )
 {
   UINT32 uiId = 0;
   FinanceUnitPtr pFinance=pFinanceListHead;

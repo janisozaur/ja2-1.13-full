@@ -29,7 +29,7 @@ typedef struct TAG_SMOKE_EFFECT
 	BOOLEAN	fAllocated;
 	INT8		bType;
 	UINT16	usItem;
-  UINT8   ubOwner;
+	INT16   ubOwner;
   UINT8   ubPadding;
 	UINT32	uiTimeOfLastUpdate;
 
@@ -49,7 +49,7 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT32 sGridNo, INT8
 
 void RemoveSmokeEffectFromTile( INT32 sGridNo, INT8 bLevel );
 
-INT32 NewSmokeEffect( INT32 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner );
+INT32 NewSmokeEffect( INT32 sGridNo, UINT16 usItem, INT8 bLevel, INT16 ubOwner );
 
 
 BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile );

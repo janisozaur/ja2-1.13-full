@@ -6,13 +6,13 @@
 
 
 //For Autoresolve (mostly)
-void GetNumberOfEnemiesInFiveSectors( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites );
+void GetNumberOfEnemiesInFiveSectors( INT16 sSectorX, INT16 sSectorY, UINT16 *pubNumAdmins, UINT16 *pubNumTroops, UINT16 *pubNumElites );
 BOOLEAN IsGroupInARightSectorToReinforce( GROUP *pGroup, INT16 sSectorX, INT16 sSectorY );
 UINT8 GetAdjacentSectors( UINT8 pSectors[4], INT16 sSectorX, INT16 sSectorY );
-UINT8 CountAllMilitiaInFiveSectors(INT16 sMapX, INT16 sMapY);
-UINT8 MilitiaInFiveSectorsOfRank(INT16 sMapX, INT16 sMapY, UINT8 ubRank);
+UINT16 CountAllMilitiaInFiveSectors(INT16 sMapX, INT16 sMapY);
+UINT16 MilitiaInFiveSectorsOfRank(INT16 sMapX, INT16 sMapY, UINT8 ubRank);
 BOOLEAN ARRemoveMilitiaMan( INT16 sMapX, INT16 sMapY, UINT8 ubRank );
-UINT8 NumEnemiesInFiveSectors( INT16 sMapX, INT16 sMapY );
+UINT16 NumEnemiesInFiveSectors( INT16 sMapX, INT16 sMapY );
 
 //For Tactical
 UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY );

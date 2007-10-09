@@ -9,7 +9,7 @@ extern	BOOLEAN			gfNpcLogButton;
 extern	INT32				gusQdsEnteringGridNo;
 
 
-void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT8 ubApproach );
+void NpcRecordLoggingInit( INT16 ubNpcID, INT16 ubMercID, UINT8 ubQuoteNum, UINT8 ubApproach );
 void NpcRecordLogging( UINT8 ubApproach, STR pStringA, ...);
 
 

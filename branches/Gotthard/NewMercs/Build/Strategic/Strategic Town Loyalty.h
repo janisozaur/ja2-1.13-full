@@ -173,7 +173,7 @@ INT32 GetNumberOfWholeTownsUnderControl( void );
 INT32 IsTownUnderCompleteControlByPlayer( INT8 bTownId );
 
 // used when monsters attack a town sector without going through tactical and they win
-void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 ubHowMany);
+void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT16 ubHowMany);
 
 // these are used to handle global loyalty events (ones that effect EVERY town on the map)
 void IncrementTownLoyaltyEverywhere( UINT32 uiLoyaltyIncrease );
@@ -185,7 +185,7 @@ void AffectAllTownsLoyaltyByDistanceFrom( INT32 iLoyaltyChange, INT16 sSectorX, 
 void CheckIfEntireTownHasBeenLiberated( INT8 bTownId, INT16 sSectorX, INT16 sSectorY );
 void CheckIfEntireTownHasBeenLost( INT8 bTownId, INT16 sSectorX, INT16 sSectorY );
 
-void HandleLoyaltyChangeForNPCAction( UINT8 ubNPCProfileId );
+void HandleLoyaltyChangeForNPCAction( INT16 ubNPCProfileId );
 
 BOOLEAN  DidFirstBattleTakePlaceInThisTown( INT8 bTownId );
 void SetTheFirstBattleSector( INT16 sSectorValue );

@@ -228,13 +228,13 @@ void DecideToAssignSniperOrders( SOLDIERCREATE_STRUCT * pp )
 	}
 }
 
-SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *pubID )
+SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, INT16 *pubID )
 {
 	SOLDIERTYPE			Soldier;
 	INT32						cnt;
 	SOLDIERTYPE			*pTeamSoldier;
 	BOOLEAN					fGuyAvail = FALSE;
-	UINT8						bLastTeamID;
+	INT16						bLastTeamID;
 	UINT8						ubVehicleID = 0;
 
 	*pubID = NOBODY;
@@ -767,7 +767,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 
 BOOLEAN TacticalCopySoldierFromProfile( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruct )
 {
-	UINT8						ubProfileIndex;
+	INT16						ubProfileIndex;
 	MERCPROFILESTRUCT * pProfile;
 
 	ubProfileIndex = pCreateStruct->ubProfile;
@@ -2077,7 +2077,7 @@ void UpdateSoldierWithStaticDetailedInformation( SOLDIERTYPE *s, SOLDIERCREATE_S
 
 //In the case of setting a profile ID in order to extract a soldier from the profile array, we
 //also want to copy that information to the static detailed placement, for editor viewing purposes.
-void UpdateStaticDetailedPlacementWithProfileInformation( SOLDIERCREATE_STRUCT *spp, UINT8 ubProfile )
+void UpdateStaticDetailedPlacementWithProfileInformation( SOLDIERCREATE_STRUCT *spp, INT16 ubProfile )
 {
 	UINT32					cnt;
 	MERCPROFILESTRUCT * pProfile;
@@ -2149,7 +2149,7 @@ void ModifySoldierAttributesWithNewRelativeLevel( SOLDIERTYPE *s, INT8 bRelative
 }
 
 
-void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID )
+void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, INT16 ubProfileID )
 {
 	SOLDIERCREATE_STRUCT CreateStruct;
 
@@ -2225,7 +2225,7 @@ SOLDIERTYPE* TacticalCreateAdministrator()
 {
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
-	UINT8 ubID;
+	INT16 ubID;
 	SOLDIERTYPE * pSoldier;
 
 	if( guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
@@ -2261,7 +2261,7 @@ SOLDIERTYPE* TacticalCreateArmyTroop()
 {
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
-	UINT8 ubID;
+	INT16 ubID;
 	SOLDIERTYPE * pSoldier;
 
 	if( guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
@@ -2298,7 +2298,7 @@ SOLDIERTYPE* TacticalCreateEliteEnemy()
 {
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
-	UINT8 ubID;
+	INT16 ubID;
 	SOLDIERTYPE * pSoldier;
 
 	if( guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
@@ -2380,10 +2380,11 @@ SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 {
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
-	UINT8 ubID;
+	INT16 ubID;
 	SOLDIERTYPE * pSoldier;
 
-	if (gpBattleGroup->ubSectorZ == gbWorldSectorZ &&
+	if (gpBattleGroup &&
+		gpBattleGroup->ubSectorZ == gbWorldSectorZ &&
 		gpBattleGroup->ubSectorX == gWorldSectorX &&
 		gpBattleGroup->ubSectorY == gWorldSectorY &&
 		guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
@@ -2415,7 +2416,7 @@ SOLDIERTYPE* TacticalCreateCreature( INT8 bCreatureBodyType )
 {
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
-	UINT8 ubID;
+	INT16 ubID;
 	SOLDIERTYPE * pSoldier;
 
 	if( guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
@@ -2539,12 +2540,12 @@ void RandomizeRelativeLevel( INT8 *pbRelLevel, UINT8 ubSoldierClass )
 
 
 //This function shouldn't be called outside of tactical
-void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
+void QuickCreateProfileMerc( INT8 bTeam, INT16 ubProfileID )
 {
 	// Create guy # X
-	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	INT16										sWorldX, sWorldY, sSectorX, sSectorY, sGridX, sGridY;
-	UINT8									ubID;
+	SOLDIERCREATE_STRUCT MercCreateStruct;
+	INT16 sWorldX, sWorldY, sSectorX, sSectorY, sGridX, sGridY;
+	INT16 ubID;
 	INT32 usMapPos;
 
 	if ( GetMouseXY( &sGridX, &sGridY ) )

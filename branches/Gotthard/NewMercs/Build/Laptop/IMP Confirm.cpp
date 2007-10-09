@@ -127,7 +127,7 @@ BOOLEAN fLoadingCharacterForPreviousImpProfile = FALSE;
 
 void CreateConfirmButtons( void );
 void DestroyConfirmButtons( void );
-void GiveItemsToPC( UINT8 ubProfileId );
+void GiveItemsToPC( UINT16 ubProfileId );
 void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
 void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
 INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHowMany);
@@ -407,7 +407,7 @@ void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
 #define PROFILE_HAS_SKILL_TRAIT( p, t ) ((p->bSkillTrait == t) || (p->bSkillTrait2 == t))
 
 
-void GiveItemsToPC( UINT8 ubProfileId )
+void GiveItemsToPC( UINT16 ubProfileId )
 {
 	MERCPROFILESTRUCT *pProfile;
 
@@ -847,7 +847,7 @@ BOOLEAN LoadImpCharacter( STR nickName )
 
 
 
-void ResetIMPCharactersEyesAndMouthOffsets( UINT8 ubMercProfileID )
+void ResetIMPCharactersEyesAndMouthOffsets( INT16 ubMercProfileID )
 {
   // ATE: Check boundary conditions!
   if( ( ( gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200 ) > 16 ) || ( ubMercProfileID >= PROF_HUMMER ) )

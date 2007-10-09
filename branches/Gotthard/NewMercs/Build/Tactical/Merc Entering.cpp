@@ -345,7 +345,7 @@ UINT8			ubHeliScripts[ NUM_HELI_STATES ][ MAX_HELI_SCRIPT ] =
 
 
 BOOLEAN		gfHandleHeli = FALSE;
-UINT8			gusHeliSeats[ MAX_MERC_IN_HELI ];
+INT16			gusHeliSeats[ MAX_MERC_IN_HELI ];
 INT8			gbNumHeliSeatsOccupied = 0;
 
 BOOLEAN		gfFirstGuyDown = FALSE;
@@ -382,7 +382,7 @@ void ResetHeliSeats( )
 	gbNumHeliSeatsOccupied = 0;
 }
 
-void AddMercToHeli( UINT8 ubID )
+void AddMercToHeli( INT16 ubID )
 {
 	INT32 cnt;
 

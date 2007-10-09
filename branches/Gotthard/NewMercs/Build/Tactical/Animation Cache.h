@@ -17,11 +17,11 @@ typedef struct
 
 extern UINT32 guiCacheSize;
 
-BOOLEAN GetCachedAnimationSurface( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache, UINT16 usSurfaceIndex, UINT16 usCurrentAnimation );
-BOOLEAN InitAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache );
-void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache );
+BOOLEAN GetCachedAnimationSurface( INT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache, UINT16 usSurfaceIndex, UINT16 usCurrentAnimation );
+BOOLEAN InitAnimationCache( INT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache );
+void DeleteAnimationCache( INT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache );
 void DetermineOptimumAnimationCacheSize( );
-void UnLoadCachedAnimationSurfaces( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache );
+void UnLoadCachedAnimationSurfaces( INT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache );
 
 
 

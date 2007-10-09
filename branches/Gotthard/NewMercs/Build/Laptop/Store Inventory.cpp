@@ -828,7 +828,7 @@ void SetupStoreInventory( STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed )
 }
 
 
-BOOLEAN DoesGunOfSameClassExistInInventory( UINT8 ubItemIndex, UINT8 ubDealerID )
+BOOLEAN DoesGunOfSameClassExistInInventory( UINT8 ubItemIndex, INT16 ubDealerID )
 {
 	UINT16 i;
 
@@ -868,7 +868,7 @@ BOOLEAN DoesGunOfSameClassExistInInventory( UINT8 ubItemIndex, UINT8 ubDealerID 
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
 
-STORE_INVENTORY *GetPtrToStoreInventory( UINT8 ubDealerID )
+STORE_INVENTORY *GetPtrToStoreInventory( INT16 ubDealerID )
 {
 	if( ubDealerID >= BOBBY_RAY_LISTS )
 		return( NULL );
@@ -890,7 +890,7 @@ STORE_INVENTORY *GetPtrToStoreInventory( UINT8 ubDealerID )
 
 
 /*
-INT16	CountNumberOfItemsInStoreInventory( UINT8 ubArmsDealerID )
+INT16	CountNumberOfItemsInStoreInventory( UINT16 ubArmsDealerID )
 {
 	UINT16	cnt;
 	INT16		ubNumItems=0;

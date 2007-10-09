@@ -923,7 +923,7 @@ void SaveMapEdgepoints( HWFILE fp )
 		FileWrite( fp, gps2ndWestEdgepointArray, gus2ndWestEdgepointArraySize * sizeof( INT32 ), NULL );
 }
 
-void OldLoadMapEdgepoints( INT8 **hBuffer )
+void OldLoadMapEdgepoints( INT16 **hBuffer )
 {
 	LOADDATA( &gus1stNorthEdgepointArraySize, *hBuffer, 2 );
 	LOADDATA( &gus1stNorthEdgepointMiddleIndex, *hBuffer, 2 );
@@ -959,7 +959,7 @@ void OldLoadMapEdgepoints( INT8 **hBuffer )
 	}
 }
 
-BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
+BOOLEAN LoadMapEdgepoints( INT16 **hBuffer, FLOAT dMajorMapVersion )
 {
 	TrashMapEdgepoints();
 	if( gMapInformation.ubMapVersion < 17 )
@@ -1130,7 +1130,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
 	return TRUE;
 }
 
-INT32 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
+INT32 ChooseMapEdgepoint( UINT16 ubStrategicInsertionCode )
 {
 	INT32 *psArray=NULL;
 	UINT16 usArraySize=0;
@@ -1167,7 +1167,7 @@ INT32 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
 	return psArray[ Random( usArraySize ) ];
 }
 
-void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategicInsertionCode, UINT8 ubNumDesiredPoints )
+void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT16 ubStrategicInsertionCode, UINT8 ubNumDesiredPoints )
 {
 	INT32 *psArray=NULL;
 	UINT16 usArraySize=0;
@@ -1252,7 +1252,7 @@ void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategic
 	psArray = psTempArray;
 	for (i = 0; i < usArraySize; i++)
 	{
-		if (GetTerrainType(psArray[ i ]) == MED_WATER || GetTerrainType(psArray[ i ]) == DEEP_WATER)
+		if (TERRAIN_IS_HIGH_WATER( GetTerrainType(psArray[ i ]) ) )
 		{
 			if (i == usArraySize - 1)
 			{
@@ -1341,7 +1341,7 @@ void EndMapEdgepointSearch()
 
 
 //THIS CODE ISN'T RECOMMENDED FOR TIME CRITICAL AREAS.
-INT32 SearchForClosestPrimaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode )
+INT32 SearchForClosestPrimaryMapEdgepoint( INT32 sGridNo, UINT16 ubInsertionCode )
 {
 	INT32 i, iDirectionLoop;
 	INT32 *psArray=NULL;
@@ -1468,7 +1468,7 @@ INT32 SearchForClosestPrimaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode 
 	return NOWHERE ;
 }
 
-INT32 SearchForClosestSecondaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode )
+INT32 SearchForClosestSecondaryMapEdgepoint( INT32 sGridNo, UINT16 ubInsertionCode )
 {
 	INT32 i, iDirectionLoop;
 	INT32 *psArray=NULL;

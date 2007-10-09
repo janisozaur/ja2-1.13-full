@@ -531,7 +531,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 	INT8	bLoopState = LOOPING_CLOCKWISE;
 	//BOOLEAN fLoopForwards = FALSE;
 	BOOLEAN	fCheckedBehind = FALSE;
-	UINT8	ubMerc;
+	INT16	ubMerc;
 	INT32 iDestX,iDestY, iLocX, iLocY, dx, dy;
 	INT32	newLoc,curLoc;
 	//INT32 curY;
@@ -603,6 +603,10 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 	iOriginationX = iOriginationY = 0;
 	iOrigination = s->sGridNo;
 
+	if (sDestination == NOWHERE)
+	{
+		return 0; // There is no path to nowhere, because everywhere you can go is somewhere!
+	}
 	//if (iOrigination < 0 || iOrigination >= WORLD_MAX)
 	if ( TileIsOutOfBounds( iOrigination ) )
 	{
@@ -2391,7 +2395,7 @@ INT32 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridNo, INT8 bCopyRoute, INT8 bPl
       usMovementModeToUseForAPs = usMovementMode;
 
       // ATE - MAKE MOVEMENT ALWAYS WALK IF IN WATER
-	    if ( gpWorldLevelData[ sTempGrid ].ubTerrainID == DEEP_WATER || gpWorldLevelData[ sTempGrid ].ubTerrainID == MED_WATER || gpWorldLevelData[ sTempGrid ].ubTerrainID == LOW_WATER )
+			if ( TERRAIN_IS_WATER( gpWorldLevelData[ sTempGrid ].ubTerrainID) )
       {
         usMovementModeToUseForAPs = WALKING;
       }

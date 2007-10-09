@@ -29,7 +29,7 @@
 //TACTICAL OVERHEAD STUFF
 //#define			NO_SOLDIER			TOTAL_SOLDIERS // SAME AS NOBODY
 //#define			NOBODY				NO_SOLDIER
-#define				NOBODY				TOTAL_SOLDIERS
+#define				NOBODY				-1//Was originally MAX_SOLDIERS, changed by Gotthard 9/18/07 according to lalienx
 
 
 
@@ -257,7 +257,7 @@ enum WorldDirections
 
 
 // ENUMERATION OF SOLDIER POSIITONS IN GLOBAL SOLDIER LIST
-#define	MAX_NUM_SOLDIERS		148
+#define	MAX_NUM_SOLDIERS		4096
 #define	NUM_PLANNING_MERCS	8
 #define	TOTAL_SOLDIERS			( NUM_PLANNING_MERCS + MAX_NUM_SOLDIERS )
 

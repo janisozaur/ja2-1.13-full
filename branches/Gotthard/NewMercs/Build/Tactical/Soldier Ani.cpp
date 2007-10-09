@@ -94,10 +94,10 @@ BOOLEAN HandleUnjamAnimation( SOLDIERTYPE *pSoldier );
 
 extern void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC );
 extern void PlaySoldierFootstepSound( SOLDIERTYPE *pSoldier );
-extern UINT8 NumCapableEnemyInSector( );
+extern UINT16 NumCapableEnemyInSector( );
 extern BOOLEAN gfKillingGuysForLosingBattle;
 
-extern UINT8 gubInterruptProvoker;
+extern INT16 gubInterruptProvoker;
 
 extern UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady );
 
@@ -127,7 +127,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 	UINT8					ubRandomHandIndex;		// Index value into random animation table to use base don what is in the guys hand...
 	UINT16				usItem;
 	RANDOM_ANI_DEF	*pAnimDef;
-	UINT8					ubNewDirection;
+	INT8					ubNewDirection;
 	UINT8					ubDesiredHeight;
 	BOOLEAN				bOKFireWeapon;
 	BOOLEAN				bWeaponJammed;
@@ -1701,7 +1701,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				{
 					SOLDIERTYPE *pTSoldier;
 					UINT32 uiMercFlags;
-					UINT16 usSoldierIndex;
+					INT16 usSoldierIndex;
 
 					if ( FindSoldier( pSoldier->sTargetGridNo, &usSoldierIndex, &uiMercFlags, FIND_SOLDIER_GRIDNO ) )
 					{	
@@ -2548,7 +2548,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				// Reload robot....
 				{
-					UINT8				ubPerson;
+					INT16				ubPerson;
 					SOLDIERTYPE	*pRobot;
 
 					// Get pointer...
@@ -2708,7 +2708,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				// REFUELING A VEHICLE
 				// THE GAS_CAN IS IN THE MERCS MAIN HAND AT THIS TIME
 				{
-					UINT8				ubPerson;
+					INT16				ubPerson;
 					SOLDIERTYPE *pVehicle;
 
 					// Get pointer to vehicle...
@@ -2908,10 +2908,10 @@ BOOLEAN ShouldMercSayHappyWithGunQuote( SOLDIERTYPE *pSoldier )
 void SayBuddyWitnessedQuoteFromKill( SOLDIERTYPE *pKillerSoldier, INT32 sGridNo, INT8 bLevel )
 {
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
-	INT8	bBuddyIndex[ 20 ] = { -1 };
-	INT8  bTempBuddyIndex;
-	UINT8	ubNumMercs = 0;
-	UINT8	ubChosenMerc;
+	INT16	bBuddyIndex[ 20 ] = { -1 };
+	INT16  bTempBuddyIndex;
+	UINT16	ubNumMercs = 0;
+	INT16	ubChosenMerc;
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
 	INT16		sDistVisible = FALSE;
@@ -3014,14 +3014,14 @@ void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier
 {	
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
-	UINT8	ubMercsInSector[ 20 ] = { 0 };
-	UINT8	ubNumMercs = 0;
-	UINT8	ubChosenMerc;
+	UINT16	ubMercsInSector[ 20 ] = { 0 };
+	UINT16	ubNumMercs = 0;
+	UINT16	ubChosenMerc;
 	BOOLEAN fDoSomeoneElse = FALSE;
 	BOOLEAN	fCanWeSeeLocation = FALSE;
 	INT16		sDistVisible = FALSE;
 
-	gfLastMercTalkedAboutKillingID = pKilledSoldier->ubID;
+	gfLastMercTalkedAboutKillingID = (BOOLEAN)pKilledSoldier->ubID;
 
 	// Can we see location?
 	fCanWeSeeLocation = ( SoldierTo3DLocationLineOfSightTest( pKillerSoldier, sGridNo,  bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) != 0 );
@@ -3227,7 +3227,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 		}
 		else
 		{
-			UINT8	ubAssister;
+			INT16	ubAssister;
 
 			// IF this guy has an attacker and he's a good guy, play sound
 			if ( pSoldier->ubAttackerID != NOBODY )
@@ -3888,6 +3888,7 @@ BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, INT8
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"OKFallDirection");
 	STRUCTURE_FILE_REF *	pStructureFileRef;
 	UINT16								usAnimSurface;
+	UINT8					bOverTerrainType;
 
 	// How are the movement costs?
 	if ( gubWorldMovementCosts[ sGridNo ][ bTestDirection ][ bLevel ] > TRAVELCOST_SHORE )
@@ -3895,8 +3896,9 @@ BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, INT8
 		return( FALSE );
 	}
 
+	bOverTerrainType = GetTerrainType( sGridNo);
 	//NOT ok if in water....
-	if ( GetTerrainType( sGridNo ) == MED_WATER || GetTerrainType( sGridNo ) == DEEP_WATER || GetTerrainType( sGridNo ) == LOW_WATER )
+	if ( TERRAIN_IS_WATER( bOverTerrainType) )
 	{
 		return( FALSE );
 	}

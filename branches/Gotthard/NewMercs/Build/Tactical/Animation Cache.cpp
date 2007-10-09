@@ -25,7 +25,7 @@ void DetermineOptimumAnimationCacheSize( )
 	guiCacheSize = MIN_CACHE_SIZE;
 }
 
-BOOLEAN InitAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
+BOOLEAN InitAnimationCache( INT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
 {
 	UINT32 cnt;
 
@@ -52,7 +52,7 @@ BOOLEAN InitAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnim
 	return( TRUE );
 }
 
-void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
+void DeleteAnimationCache( INT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
 {
 	// Allocate entries
 	if ( pAnimCache->usCachedSurfaces!= NULL )
@@ -69,7 +69,7 @@ void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimC
 }
 
 
-BOOLEAN GetCachedAnimationSurface( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache, UINT16 usSurfaceIndex, UINT16 usCurrentAnimation )
+BOOLEAN GetCachedAnimationSurface( INT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache, UINT16 usSurfaceIndex, UINT16 usCurrentAnimation )
 {
 	UINT8			cnt;
 	UINT8			ubLowestIndex = 0;
@@ -151,7 +151,7 @@ BOOLEAN GetCachedAnimationSurface( UINT16 usSoldierID, AnimationSurfaceCacheType
 
 
 
-void UnLoadCachedAnimationSurfaces( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
+void UnLoadCachedAnimationSurfaces( INT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
 {
 	UINT8			cnt;
 

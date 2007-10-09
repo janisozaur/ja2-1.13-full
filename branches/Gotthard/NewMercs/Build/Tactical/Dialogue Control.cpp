@@ -78,7 +78,7 @@
 typedef struct
 {
 	UINT16	usQuoteNum;
-	UINT8		ubCharacterNum;
+	INT16		ubCharacterNum;
 	INT8		bUIHandlerID;
 	INT32		iFaceIndex;
 	INT32		iTimeStamp;
@@ -136,7 +136,7 @@ UINT8							gubNumStopTimeQuotes = 2;
 #define		INITIAL_Q_SIZE				10
 HQUEUE		ghDialogueQ						= NULL;
 FACETYPE	*gpCurrentTalkingFace	= NULL;
-UINT8			gubCurrentTalkingID   = NO_PROFILE;
+INT16			gubCurrentTalkingID   = NO_PROFILE;
 INT8			gbUIHandlerID;
 
 INT32				giNPCReferenceCount = 0;
@@ -197,11 +197,11 @@ void FaceOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason );
 
 // Handler functions for tactical ui diaplay
 void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, STR16 zQuoteStr );
-void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, STR16 zQuoteStr );
-void HandleTacticalSpeechUI( UINT8 ubCharacterNum, INT32 iFaceIndex );
+void HandleTacticalNPCTextUI( INT16 ubCharacterNum, STR16 zQuoteStr );
+void HandleTacticalSpeechUI( INT16 ubCharacterNum, INT32 iFaceIndex );
 
-void DisplayTextForExternalNPC(  UINT8 ubCharacterNum, STR16 zQuoteStr );
-void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE *pSoldier, STR16 zQuoteStr );
+void DisplayTextForExternalNPC(  INT16 ubCharacterNum, STR16 zQuoteStr );
+void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, INT16 ubCharacterNum, SOLDIERTYPE *pSoldier, STR16 zQuoteStr );
 
 
 void HandleExternNPCSpeechFace( INT32 iIndex );
@@ -600,7 +600,7 @@ void HandleDialogue( )
 				 // Decrement refrence count...
 				 giNPCReferenceCount--;
 
-				 TriggerNPCRecord( (UINT8)gpCurrentTalkingFace->uiUserData1, (UINT8)gpCurrentTalkingFace->uiUserData2 );
+				 TriggerNPCRecord( (INT16)gpCurrentTalkingFace->uiUserData1, (UINT8)gpCurrentTalkingFace->uiUserData2 );
 				 //Reset flag!
 				 gpCurrentTalkingFace->uiFlags &= (~FACE_PCTRIGGER_NPC );
 			}
@@ -647,7 +647,7 @@ void HandleDialogue( )
 		{
 			SOLDIERTYPE * pMike;
 			INT32	sPlayerGridNo;
-			UINT8	ubPlayerID;
+			INT16	ubPlayerID;
 
 			pMike = FindSoldierByProfileID( MIKE, FALSE );
 			if ( pMike )
@@ -1077,7 +1077,7 @@ void HandleDialogue( )
 		{
 			if ( QItem->bUIHandlerID == DIALOGUE_NPC_UI )
 			{
-				HandleNPCGotoGridNo( (UINT8)QItem->uiSpecialEventData, (UINT16)QItem->uiSpecialEventData2, (UINT8)QItem->uiSpecialEventData3 );
+				HandleNPCGotoGridNo( (UINT16)QItem->uiSpecialEventData, (UINT32)QItem->uiSpecialEventData2, (UINT8)QItem->uiSpecialEventData3 );
 			}
 		}
 		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_ACTION )
@@ -1193,7 +1193,7 @@ void HandleDialogue( )
 	MemFree( QItem );
 }
 
-BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, STR16 zDialogueText, UINT32 *puiSoundID, CHAR8 *zSoundString );
+BOOLEAN GetDialogue( INT16 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, STR16 zDialogueText, UINT32 *puiSoundID, CHAR8 *zSoundString );
 
 
 BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
@@ -1368,7 +1368,7 @@ BOOLEAN TacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 // NB;				The queued system is not yet implemented, but will be transpatent to the caller....
 
 
-BOOLEAN CharacterDialogueWithSpecialEvent( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2 )
+BOOLEAN CharacterDialogueWithSpecialEvent( INT16 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2 )
 {
 	DIALOGUE_Q_STRUCT				*QItem;
 
@@ -1401,7 +1401,7 @@ BOOLEAN CharacterDialogueWithSpecialEvent( UINT8 ubCharacterNum, UINT16 usQuoteN
 	return( TRUE );
 }
 
-BOOLEAN CharacterDialogueWithSpecialEventEx( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3 )
+BOOLEAN CharacterDialogueWithSpecialEventEx( INT16 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3 )
 {
 	DIALOGUE_Q_STRUCT				*QItem;
 
@@ -1436,7 +1436,7 @@ BOOLEAN CharacterDialogueWithSpecialEventEx( UINT8 ubCharacterNum, UINT16 usQuot
 }
 
 
-BOOLEAN CharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed )
+BOOLEAN CharacterDialogue( INT16 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed )
 {
 	DIALOGUE_Q_STRUCT				*QItem;
 
@@ -1530,7 +1530,7 @@ BOOLEAN SpecialCharacterDialogueEventWithExtraParam( UINT32 uiSpecialEventFlag, 
 	return( TRUE );
 }
 
-BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier )
+BOOLEAN ExecuteCharacterDialogue( INT16 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier )
 {
 	CHAR8		zSoundString[ 164 ];
 	UINT32	uiSoundID;
@@ -1657,7 +1657,7 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 }
 
 
-void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE *pSoldier, STR16 zQuoteStr )
+void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, INT16 ubCharacterNum, SOLDIERTYPE *pSoldier, STR16 zQuoteStr )
 {
 
 	// Show text, if on
@@ -1715,10 +1715,10 @@ void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum,
 }
 
 
-CHAR8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile )
+CHAR8 *GetDialogueDataFilename( INT16 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile )
 {
 	static CHAR8 zFileName[164];
-	UINT8		ubFileNumID;
+	INT16		ubFileNumID;
 
 	// Are we an NPC OR an RPC that has not been recruited?
 	// ATE: Did the || clause here to allow ANY RPC that talks while the talking menu is up to use an npc quote file
@@ -1818,7 +1818,7 @@ CHAR8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN
 }
 
 // Used to see if the dialog text file exists
-BOOLEAN DialogueDataFileExistsForProfile( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile, STR8 *ppStr )
+BOOLEAN DialogueDataFileExistsForProfile( INT16 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile, STR8 *ppStr )
 {
     STR8 pFilename;
 	
@@ -1832,7 +1832,7 @@ BOOLEAN DialogueDataFileExistsForProfile( UINT8 ubCharacterNum, UINT16 usQuoteNu
 	return( FileExists( pFilename ) );
 }
 
-BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, STR16 zDialogueText, UINT32 *puiSoundID, CHAR8 *zSoundString )
+BOOLEAN GetDialogue( INT16 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, STR16 zDialogueText, UINT32 *puiSoundID, CHAR8 *zSoundString )
 {
   STR8 pFilename;
 
@@ -1899,7 +1899,7 @@ BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, 
 
 
 // Handlers for tactical UI stuff
-void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, STR16 zQuoteStr )
+void HandleTacticalNPCTextUI( INT16 ubCharacterNum, STR16 zQuoteStr )
 {
 	CHAR16									zText[ QUOTE_MESSAGE_SIZE ];
 
@@ -1922,7 +1922,7 @@ void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, STR16 zQuoteStr )
 
 
 // Handlers for tactical UI stuff
-void DisplayTextForExternalNPC(  UINT8 ubCharacterNum, STR16 zQuoteStr )
+void DisplayTextForExternalNPC(  INT16 ubCharacterNum, STR16 zQuoteStr )
 {
 	CHAR16									zText[ QUOTE_MESSAGE_SIZE ];
 	INT16									sLeft;
@@ -2114,7 +2114,7 @@ void HandleExternNPCSpeechFace( INT32 iIndex )
 }
 
 
-void HandleTacticalSpeechUI( UINT8 ubCharacterNum, INT32 iFaceIndex  )
+void HandleTacticalSpeechUI( INT16 ubCharacterNum, INT32 iFaceIndex  )
 {
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 	INT32									iFaceOverlay;
@@ -2765,7 +2765,7 @@ void SetStopTimeQuoteCallback( MODAL_HOOK pCallBack )
 }
 
 
-BOOLEAN IsMercSayingDialogue( UINT8 ubProfileID )
+BOOLEAN IsMercSayingDialogue( INT16 ubProfileID )
 {
 	if ( gpCurrentTalkingFace != NULL && gubCurrentTalkingID == ubProfileID )
 	{
@@ -2778,7 +2778,7 @@ BOOLEAN IsMercSayingDialogue( UINT8 ubProfileID )
 
 
 
-BOOLEAN ShouldMercSayPrecedentToRepeatOneSelf( UINT8 ubMercID, UINT32 uiQuoteID )
+BOOLEAN ShouldMercSayPrecedentToRepeatOneSelf( INT16 ubMercID, UINT32 uiQuoteID )
 {
 	UINT8	ubQuoteBit=0;
 
@@ -2806,7 +2806,7 @@ BOOLEAN ShouldMercSayPrecedentToRepeatOneSelf( UINT8 ubMercID, UINT32 uiQuoteID 
 
 
 
-BOOLEAN GetMercPrecedentQuoteBitStatus( UINT8 ubMercID, UINT8 ubQuoteBit )
+BOOLEAN GetMercPrecedentQuoteBitStatus( INT16 ubMercID, UINT8 ubQuoteBit )
 {
 	if( gMercProfiles[ ubMercID ].uiPrecedentQuoteSaid & ( 1 << ( ubQuoteBit - 1 ) ) )
 		return( TRUE );
@@ -2814,7 +2814,7 @@ BOOLEAN GetMercPrecedentQuoteBitStatus( UINT8 ubMercID, UINT8 ubQuoteBit )
 		return( FALSE );
 }
 
-BOOLEAN SetMercPrecedentQuoteBitStatus( UINT8 ubMercID, UINT8 ubBitToSet )
+BOOLEAN SetMercPrecedentQuoteBitStatus( INT16 ubMercID, UINT8 ubBitToSet )
 {
 	//Set the bit
 	gMercProfiles[ ubMercID ].uiPrecedentQuoteSaid |= 1 << ( ubBitToSet - 1 );

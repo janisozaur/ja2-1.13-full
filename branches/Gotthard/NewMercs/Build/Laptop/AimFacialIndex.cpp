@@ -18,7 +18,7 @@
 
 extern UINT8	gubCurrentSortMode; // symbol already defined in AimSort.cpp (jonathanl)
 extern UINT8	gubCurrentListMode; // symbol already declared globally in AimSort.cpp (jonathanl)
-extern UINT8	gbCurrentIndex;
+extern UINT16	gbCurrentIndex;
 
 
 UINT32		guiMugShotBorder;
@@ -213,7 +213,7 @@ void SelectMercFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS;
-		gbCurrentIndex = (UINT8) MSYS_GetRegionUserData( pRegion, 0 );
+		gbCurrentIndex = (UINT16) MSYS_GetRegionUserData( pRegion, 0 );
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{

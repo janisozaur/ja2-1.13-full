@@ -38,7 +38,7 @@ const int	DL_Basic		= 2;
 const int	DL_Full			= 3;
 const int	DL_Debug		= 4;
 
-void DisplayWeaponInfo( SOLDIERTYPE*, CHAR16*, UINT8, UINT8 );
+void DisplayWeaponInfo( SOLDIERTYPE*, CHAR16*, INT8, UINT8 );
 void DrawMouseTooltip(void);
 
 #define MAX(a, b) (a > b ? a : b)
@@ -266,7 +266,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		// weapon in off hand info code block end
 
 		// large objects in big inventory slots info code block start
-		for ( UINT8 BigSlot = BIGPOCK1POS; BigSlot <= BIGPOCK4POS; BigSlot++ )
+		for ( INT8 BigSlot = BIGPOCK1POS; BigSlot <= BIGPOCK4POS; BigSlot++ )
 		{
 			if ( pSoldier->inv[ BigSlot ].usItem == 0 )
 				continue; // slot is empty, move on to the next slot
@@ -341,7 +341,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 } // SoldierTooltip(SOLDIERTYPE* pSoldier)
 
 
-void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, UINT8 ubSlot, UINT8 ubTooltipDetailLevel )
+void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, INT8 ubSlot, UINT8 ubTooltipDetailLevel )
 {
 	INT32		iNumAttachments		= 0;
 	BOOLEAN		fDisplayAttachment	= FALSE;

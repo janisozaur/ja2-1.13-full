@@ -121,7 +121,7 @@ BOOLEAN GetMouseRecalcAndShowAPFlags( UINT32 *puiCursorFlags, BOOLEAN *pfShowAPs
 
 
 // FUNCTIONS FOR CURSOR DETERMINATION!
-UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, INT32 usMapPos, BOOLEAN fActivated )
+UINT8	GetProperItemCursor( INT16 ubSoldierID, UINT16 ubItemIndex, INT32 usMapPos, BOOLEAN fActivated )
 {
 	SOLDIERTYPE				*pSoldier;
 	UINT32						uiCursorFlags;
@@ -363,7 +363,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, INT32 usMapPos, BOOLEA
 		// Determine where we are shooting / aiming
 		//if ( fRecalc )
 		{
-			DetermineCursorBodyLocation( (UINT8)gusSelectedSoldier, TRUE, TRUE );
+			DetermineCursorBodyLocation( gusSelectedSoldier, TRUE, TRUE );
 		}
 
 		if ( gTacticalStatus.uiFlags & TURNBASED && ( gTacticalStatus.uiFlags & INCOMBAT ) )
@@ -962,9 +962,8 @@ UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, INT32 usMapPos , BO
 	{
 		if (( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) )
 		{
-			//DetermineCursorBodyLocation( (UINT8)gusSelectedSoldier, FALSE, fRecalc );
-			DetermineCursorBodyLocation( (UINT8)gusSelectedSoldier, fShowAPs, fRecalc );
 
+			DetermineCursorBodyLocation( gusSelectedSoldier, fShowAPs, fRecalc );
 			if ( pSoldier->fReloading || pSoldier->fPauseAim )
 			{
 				return( ACTION_TARGET_RELOADING );
@@ -997,7 +996,7 @@ UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, INT32 usMapPos , BO
 
 	if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT ) )
 	{
-		DetermineCursorBodyLocation( (UINT8)gusSelectedSoldier, fShowAPs, fRecalc );
+		DetermineCursorBodyLocation( gusSelectedSoldier, fShowAPs, fRecalc );
 
 		gsCurrentActionPoints = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, (INT8)(pSoldier->bShownAimTime ) );
 
@@ -1109,7 +1108,7 @@ UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, INT32 usMapPos , BO
 }
 
 
-void DetermineCursorBodyLocation( UINT8 ubSoldierID, BOOLEAN fDisplay, BOOLEAN fRecalc )
+void DetermineCursorBodyLocation( INT16 ubSoldierID, BOOLEAN fDisplay, BOOLEAN fRecalc )
 {
 	INT32 usMapPos;
 	SOLDIERTYPE				*pTargetSoldier = NULL, *pSoldier;
@@ -2347,7 +2346,7 @@ UINT8 GetActionModeCursor( SOLDIERTYPE *pSoldier )
 	}
 
 	// Now check our terrain to see if we cannot do the action now...
-	if ( pSoldier->bOverTerrainType == DEEP_WATER )
+	if ( WaterTooDeepForAttacks( pSoldier->sGridNo) )
 	{
 		ubCursor = INVALIDCURS;
 	}

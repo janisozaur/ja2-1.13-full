@@ -171,7 +171,7 @@ extern BOOLEAN fInMapMode;
 INT8 gbTrainingMode = -1;
 
 // who is the highlighted guy
-extern UINT16 gusUIFullTargetID;
+extern INT16 gusUIFullTargetID;
 
 // showing town info?
 extern BOOLEAN fShowTownInfo;
@@ -749,7 +749,7 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 {
 	INT8	bPocket;
 	UINT8	ubItemsInPocket, ubObjectInPocketCounter;
-	INT8 bLoop;
+	INT16 bLoop;
 	SOLDIERTYPE * pOtherSoldier;
 	OBJECTTYPE * pObj;
 	UINT8 ubPassType;
@@ -1199,7 +1199,7 @@ BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia( SOLDIERTYPE *pSol
 
 INT8 CountMilitiaTrainersInSoldiersSector( SOLDIERTYPE * pSoldier )
 {
-	INT8	bLoop;
+	INT16	bLoop;
 	SOLDIERTYPE * pOtherSoldier;
 	INT8	bCount = 0;
 
@@ -3476,7 +3476,7 @@ void HandleTrainingInSector( INT16 sMapX, INT16 sMapY, INT8 bZ )
 	SOLDIERTYPE *pStudent;
 	UINT8 ubStat;
 	BOOLEAN fAtGunRange = FALSE;
-  UINT32 uiCnt=0;
+	INT32 uiCnt=0;
 	INT16 sTotalTrainingPts = 0;
 	INT16 sTrainingPtsDueToInstructor = 0;
 	SOLDIERTYPE *pStatTrainerList[ NUM_TRAINABLE_STATS ];		// can't have more "best" trainers than trainable stats
@@ -3951,7 +3951,7 @@ INT16 GetSoldierStudentPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAtG
 
 	INT16 sBestTrainingPts, sTrainingPtsDueToInstructor;
 	UINT16	usMaxTrainerPts, usBestMaxTrainerPts = 0;
-	UINT32	uiCnt;
+	INT32	uiCnt;
 	SOLDIERTYPE * pTrainer;
 
 	// assume training impossible for max pts
@@ -11444,7 +11444,7 @@ void ResumeOldAssignment( SOLDIERTYPE *pSoldier )
 void RepairItemsOnOthers( SOLDIERTYPE *pSoldier, UINT8 *pubRepairPtsLeft )
 {
 	UINT8 ubPassType;
-	INT8 bLoop;
+	INT16 bLoop;
 	INT8 bPocket;
 	SOLDIERTYPE * pOtherSoldier;
 	SOLDIERTYPE * pBestOtherSoldier;

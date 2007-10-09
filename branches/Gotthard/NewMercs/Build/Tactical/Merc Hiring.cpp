@@ -79,12 +79,12 @@ INT16	gsMercArriveSectorY = 1;
 void CheckForValidArrivalSector( );
 
 
-INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
+INT16 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 {
 	SOLDIERTYPE	*pSoldier;
-	UINT8		iNewIndex;
-	UINT8		ubCount=0;
-	UINT8		ubCurrentSoldier = pHireMerc->ubProfileID;
+	INT16		iNewIndex;
+	UINT16		ubCount=0;
+	INT16		ubCurrentSoldier = pHireMerc->ubProfileID;
 	MERCPROFILESTRUCT				*pMerc;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	BOOLEAN fReturn = FALSE;
@@ -98,7 +98,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	if( ( pMerc->bMercStatus != 0 ) && (pMerc->bMercStatus != MERC_ANNOYED_BUT_CAN_STILL_CONTACT ) && ( pMerc->bMercStatus != MERC_HIRED_BUT_NOT_ARRIVED_YET ) )
 		return( MERC_HIRE_FAILED );
 
-	if( NumberOfMercsOnPlayerTeam() >= 18 )
+	if( NumberOfMercsOnPlayerTeam() >= 36 )	//THIS WAS ORIGINALLY >= 18
 		return( MERC_HIRE_OVER_18_MERCS_HIRED );
 
 	// ATE: if we are to use landing zone, update to latest value
@@ -111,7 +111,8 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	}
 
 	// BUILD STRUCTURES
-	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
+	// MercCreateStruct has been C++'d
+	//memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 	MercCreateStruct.ubProfile						= ubCurrentSoldier;
 	MercCreateStruct.fPlayerMerc					= TRUE;
 	MercCreateStruct.sSectorX							= pHireMerc->sSectorX;
@@ -283,7 +284,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 }
 
 
-void MercArrivesCallback(	UINT8	ubSoldierID )
+void MercArrivesCallback(INT16 ubSoldierID )
 {
 	MERCPROFILESTRUCT				*pMerc;
 	SOLDIERTYPE							*pSoldier;
@@ -409,7 +410,7 @@ void MercArrivesCallback(	UINT8	ubSoldierID )
 }
 
 
-BOOLEAN IsMercHireable( UINT8 ubMercID )
+BOOLEAN IsMercHireable(INT16 ubMercID )
 {
 	//If the merc has an .EDT file, is not away on assignment, and isnt already hired (but not arrived yet), he is not DEAD and he isnt returning home
 	if( ( gMercProfiles[ ubMercID ].bMercStatus == MERC_HAS_NO_TEXT_FILE ) || 
@@ -425,7 +426,7 @@ BOOLEAN IsMercHireable( UINT8 ubMercID )
 		return(TRUE);
 }
 
-BOOLEAN IsMercDead( UINT8 ubMercID )
+BOOLEAN IsMercDead(INT16 ubMercID )
 {
 	if( gMercProfiles[ ubMercID ].bMercStatus == MERC_IS_DEAD )
 		return(TRUE);
@@ -433,7 +434,7 @@ BOOLEAN IsMercDead( UINT8 ubMercID )
 		return(FALSE);
 }
 
-BOOLEAN IsTheSoldierAliveAndConcious( SOLDIERTYPE		*pSoldier )
+BOOLEAN IsTheSoldierAliveAndConcious( SOLDIERTYPE *pSoldier )
 {
 	if( pSoldier->bLife >= CONSCIOUSNESS )	
 		return(TRUE);
@@ -441,12 +442,12 @@ BOOLEAN IsTheSoldierAliveAndConcious( SOLDIERTYPE		*pSoldier )
 		return(FALSE);
 }
 
-UINT8	NumberOfMercsOnPlayerTeam()
+UINT16	NumberOfMercsOnPlayerTeam()
 {
-	INT8					cnt;
+	INT16					cnt;
 	SOLDIERTYPE		*pSoldier;
 	INT16					bLastTeamID;
-	UINT8					ubCount=0;
+	INT16					ubCount=0;
 
 	// Set locator to first merc
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
@@ -467,7 +468,7 @@ UINT8	NumberOfMercsOnPlayerTeam()
 
 void HandleMercArrivesQuotes( SOLDIERTYPE *pSoldier )
 {
-	INT8										cnt, bHated, bLastTeamID;
+	INT16 cnt, bHated, bLastTeamID;
 	SOLDIERTYPE							*pTeamSoldier;
  
 	// If we are approaching with helicopter, don't say any ( yet )

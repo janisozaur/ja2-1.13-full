@@ -97,7 +97,7 @@ UINT32 uniqueIDMask[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
 //Internal function manipulation prototypes
 
-UINT8 AddGroupToList( GROUP *pGroup );
+INT8 AddGroupToList( GROUP *pGroup );
 
 void HandleOtherGroupsArrivingSimultaneously( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
 BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals( GROUP *pGroup );
@@ -201,7 +201,7 @@ UINT8 CreateNewVehicleGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY
 }
 
 //Allows you to add players to the group.
-BOOLEAN AddPlayerToGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
+BOOLEAN AddPlayerToGroup( INT8 ubGroupID, SOLDIERTYPE *pSoldier )
 {
 	GROUP *pGroup;
 	PLAYERGROUP *pPlayer, *curr;
@@ -370,7 +370,7 @@ BOOLEAN RemovePlayerFromPGroup( GROUP *pGroup, SOLDIERTYPE *pSoldier )
 	return FALSE;
 }
 
-BOOLEAN RemovePlayerFromGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
+BOOLEAN RemovePlayerFromGroup( INT8 ubGroupID, SOLDIERTYPE *pSoldier )
 {
 	GROUP *pGroup;
 	pGroup = GetGroup( ubGroupID );
@@ -638,7 +638,7 @@ BOOLEAN AddWaypointToPGroup( GROUP* pGroup, UINT8 ubSectorX, UINT8 ubSectorY ) /
 	return TRUE;
 }
 
-BOOLEAN AddWaypointToGroup( UINT8 ubGroupID, UINT8 ubSectorX, UINT8 ubSectorY )
+BOOLEAN AddWaypointToGroup( INT8 ubGroupID, UINT8 ubSectorX, UINT8 ubSectorY )
 {
 	GROUP *pGroup;
 	pGroup = GetGroup( ubGroupID );
@@ -646,7 +646,7 @@ BOOLEAN AddWaypointToGroup( UINT8 ubGroupID, UINT8 ubSectorX, UINT8 ubSectorY )
 }
 
 // NOTE: This does NOT expect a strategic sector ID
-BOOLEAN AddWaypointIDToGroup( UINT8 ubGroupID, UINT8 ubSectorID )
+BOOLEAN AddWaypointIDToGroup( INT8 ubGroupID, UINT8 ubSectorID )
 {
 	GROUP *pGroup;
 	pGroup = GetGroup( ubGroupID );
@@ -662,7 +662,7 @@ BOOLEAN AddWaypointIDToPGroup( GROUP *pGroup, UINT8 ubSectorID )
 	return AddWaypointToPGroup( pGroup, ubSectorX, ubSectorY );
 }
 
-BOOLEAN AddWaypointStrategicIDToGroup( UINT8 ubGroupID, UINT32 uiSectorID )
+BOOLEAN AddWaypointStrategicIDToGroup( INT8 ubGroupID, UINT32 uiSectorID )
 {
 	GROUP *pGroup;
 	pGroup = GetGroup( ubGroupID );
@@ -680,7 +680,7 @@ BOOLEAN AddWaypointStrategicIDToPGroup( GROUP *pGroup, UINT32 uiSectorID )
 
 //Enemy grouping functions -- private use by the strategic AI.
 //............................................................
-GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites )
+GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT16 ubNumAdmins, UINT16 ubNumTroops, UINT16 ubNumElites )
 {
 	GROUP *pNew;
 	AssertMsg( uiSector >= 0 && uiSector <= 255, String( "CreateNewEnemyGroup with out of range value of %d", uiSector ) );
@@ -760,7 +760,7 @@ GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmin
 //1)  Find the first unused ID (unique)
 //2)  Assign that ID to the new group
 //3)  Insert the group at the end of the list.
-UINT8 AddGroupToList( GROUP *pGroup )
+INT8 AddGroupToList( GROUP *pGroup )
 {
 	GROUP *curr;
 	UINT32 bit, index, mask;
@@ -792,7 +792,7 @@ UINT8 AddGroupToList( GROUP *pGroup )
 	return FALSE;
 }
 
-void RemoveGroupIdFromList( UINT8 ubId )
+void RemoveGroupIdFromList( INT8 ubId )
 {
 	GROUP *pGroup;
 
@@ -859,7 +859,7 @@ void RemoveGroupFromList( GROUP *pGroup )
 	}
 }
 
-GROUP* GetGroup( UINT8 ubGroupID )
+GROUP* GetGroup( INT8 ubGroupID )
 {
 	GROUP *curr;
 	curr = gpGroupList;
@@ -895,9 +895,9 @@ void PrepareForPreBattleInterface( GROUP *pPlayerDialogGroup, GROUP *pInitiating
 	// ATE; Changed alogrithm here...
 	// We first loop through the group and save ubID's ov valid guys to talk....
 	// ( Can't if sleeping, unconscious, and EPC, etc....
-	UINT8				ubMercsInGroup[ 20 ] = { 0 };
-	UINT8				ubNumMercs = 0;
-	UINT8				ubChosenMerc;
+	UINT16				ubMercsInGroup[ 20 ] = { 0 };
+	UINT16				ubNumMercs = 0;
+	UINT16				ubChosenMerc;
 	SOLDIERTYPE *pSoldier;
 	PLAYERGROUP *pPlayer;
 
@@ -1600,7 +1600,7 @@ void AddCorpsesToBloodcatLair( INT16 sSectorX, INT16 sSectorY )
 //This is called whenever any group arrives in the next sector (player or enemy)
 //This function will first check to see if a battle should start, or if they
 //aren't at the final destination, they will move to the next sector. 
-void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNeverLeft )
+void GroupArrivedAtSector( INT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNeverLeft )
 {
 	GROUP *pGroup;
 	INT32 iVehId = -1;
@@ -2537,7 +2537,7 @@ void InitiateGroupMovementToNextSector( GROUP *pGroup )
 	}
 }
 
-void RemoveGroupWaypoints( UINT8 ubGroupID )
+void RemoveGroupWaypoints( INT8 ubGroupID )
 {
 	GROUP *pGroup;
 	pGroup = GetGroup( ubGroupID );
@@ -2571,7 +2571,7 @@ void RemovePGroupWaypoints( GROUP *pGroup )
 
 
 // set groups waypoints as cancelled
-void SetWayPointsAsCanceled( UINT8 ubGroupID )
+void SetWayPointsAsCanceled( INT8 ubGroupID )
 {
 	GROUP *pGroup;
 	pGroup = GetGroup( ubGroupID );
@@ -2584,7 +2584,7 @@ void SetWayPointsAsCanceled( UINT8 ubGroupID )
 
 
 // set this groups previous sector values
-void SetGroupPrevSectors( UINT8 ubGroupID, UINT8 ubX, UINT8 ubY )
+void SetGroupPrevSectors( INT8 ubGroupID, UINT8 ubX, UINT8 ubY )
 {
 	GROUP *pGroup;
 	pGroup = GetGroup( ubGroupID );
@@ -2597,7 +2597,7 @@ void SetGroupPrevSectors( UINT8 ubGroupID, UINT8 ubX, UINT8 ubY )
 }
 
 
-void RemoveGroup( UINT8 ubGroupID )
+void RemoveGroup( INT8 ubGroupID )
 {
 	GROUP *pGroup;
 	pGroup = GetGroup( ubGroupID );
@@ -2693,7 +2693,7 @@ void RemoveAllGroups()
 	gfRemovingAllGroups = FALSE;
 }
 
-void SetGroupSectorValue( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 ubGroupID )
+void SetGroupSectorValue( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT8 ubGroupID )
 {
 	GROUP *pGroup;
 	PLAYERGROUP *pPlayer;
@@ -2755,7 +2755,7 @@ void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID )
 }
 
 
-void SetGroupNextSectorValue( INT16 sSectorX, INT16 sSectorY, UINT8 ubGroupID )
+void SetGroupNextSectorValue( INT16 sSectorX, INT16 sSectorY, INT8 ubGroupID )
 {
 	GROUP *pGroup;
 	
@@ -2779,7 +2779,7 @@ void SetGroupNextSectorValue( INT16 sSectorX, INT16 sSectorY, UINT8 ubGroupID )
 
 
 // get eta of the group with this id
-INT32 CalculateTravelTimeOfGroupId( UINT8 ubId )
+INT32 CalculateTravelTimeOfGroupId( INT8 ubId )
 {
 	GROUP *pGroup;
 	
@@ -3152,7 +3152,7 @@ UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 
 
 // is the player group with this id in motion?
-BOOLEAN PlayerIDGroupInMotion( UINT8 ubID )
+BOOLEAN PlayerIDGroupInMotion( INT8 ubID )
 {
 	GROUP *pGroup;
 	
@@ -3179,7 +3179,7 @@ BOOLEAN PlayerGroupInMotion( GROUP *pGroup )
 
 
 // get travel time for this group
-INT32 GetTravelTimeForGroup( UINT8 ubSector, UINT8 ubDirection, UINT8 ubGroup )
+INT32 GetTravelTimeForGroup( UINT8 ubSector, UINT8 ubDirection, INT8 ubGroup )
 {	
 	GROUP *pGroup;
 	
@@ -3286,7 +3286,7 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 	BOOLEAN fRetreatingFromBattle = FALSE;
 	BOOLEAN fHandleRetreats = FALSE;
 	BOOLEAN fHelicopterGroup = FALSE;
-	UINT8 ubMercsInGroup = 0;
+	UINT16 ubMercsInGroup = 0;
 
 
 	*iCountEnter = 0;
@@ -3421,7 +3421,7 @@ void MoveAllGroupsInCurrentSectorToSector( UINT8 ubSectorX, UINT8 ubSectorY, UIN
 }
 
 
-void GetGroupPosition( UINT8 *ubNextX, UINT8 *ubNextY, UINT8 *ubPrevX, UINT8 *ubPrevY, UINT32 *uiTraverseTime, UINT32 *uiArriveTime, UINT8 ubGroupId )
+void GetGroupPosition( UINT8 *ubNextX, UINT8 *ubNextY, UINT8 *ubPrevX, UINT8 *ubPrevY, UINT32 *uiTraverseTime, UINT32 *uiArriveTime, INT8 ubGroupId )
 {
 	GROUP *pGroup;
 
@@ -3456,7 +3456,7 @@ void GetGroupPosition( UINT8 *ubNextX, UINT8 *ubNextY, UINT8 *ubPrevX, UINT8 *ub
 
 
 // this is only for grunts who were in mvt groups between sectors and are set to a new squad...NOTHING ELSE!!!!!
-void SetGroupPosition( UINT8 ubNextX, UINT8 ubNextY, UINT8 ubPrevX, UINT8 ubPrevY, UINT32 uiTraverseTime, UINT32 uiArriveTime, UINT8 ubGroupId )
+void SetGroupPosition( UINT8 ubNextX, UINT8 ubNextY, UINT8 ubPrevX, UINT8 ubPrevY, UINT32 uiTraverseTime, UINT32 uiArriveTime, INT8 ubGroupId )
 {
 	GROUP *pGroup;
 	PLAYERGROUP *pPlayer;
@@ -3887,7 +3887,7 @@ BOOLEAN LoadEnemyGroupStructFromSavedGame( HWFILE hFile, GROUP *pGroup )
 void CheckMembersOfMvtGroupAndComplainAboutBleeding( SOLDIERTYPE *pSoldier )
 {
 	// run through members of group
-	UINT8 ubGroupId = pSoldier -> ubGroupID;
+	INT8 ubGroupId = pSoldier -> ubGroupID;
 	GROUP	*pGroup;
 	PLAYERGROUP *pPlayer=NULL;
 	SOLDIERTYPE *pCurrentSoldier=NULL;
@@ -4816,7 +4816,7 @@ void NotifyPlayerOfBloodcatBattle( UINT8 ubSectorX, UINT8 ubSectorY )
 
 
 
-void PlaceGroupInSector( UINT8 ubGroupID, INT16 sPrevX, INT16 sPrevY, INT16 sNextX, INT16 sNextY, INT8 bZ, BOOLEAN fCheckForBattle )
+void PlaceGroupInSector( INT8 ubGroupID, INT16 sPrevX, INT16 sPrevY, INT16 sNextX, INT16 sNextY, INT8 bZ, BOOLEAN fCheckForBattle )
 {
 	ClearMercPathsAndWaypointsForAllInGroup( GetGroup( ubGroupID ) );
 
@@ -5116,7 +5116,7 @@ void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback( UINT8 ubExitVa
 }
 
 
-BOOLEAN DoesPlayerExistInPGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
+BOOLEAN DoesPlayerExistInPGroup( INT8 ubGroupID, SOLDIERTYPE *pSoldier )
 {
 	GROUP *pGroup;
 	PLAYERGROUP *curr;

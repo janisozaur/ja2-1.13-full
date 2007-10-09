@@ -109,7 +109,7 @@ BOOLEAN IsThisSquadFull( INT8 bSquadValue )
 
 INT8 GetFirstEmptySquad( void )
 {
-	UINT8 ubCounter = 0;
+	INT8 ubCounter = 0;
 
 	for( ubCounter = 0; ubCounter < NUMBER_OF_SQUADS; ubCounter++ )
 	{
@@ -424,7 +424,7 @@ BOOLEAN RemoveCharacterFromSquads( SOLDIERTYPE *pCharacter )
 {
 	INT32 iCounterA = 0;
 	INT32 iCounter = 0;
-	UINT8 ubGroupId = 0;
+	UINT8 ubGroupID = 0;
 	// find character and remove.. check characters in all squads
 
 
@@ -455,10 +455,10 @@ BOOLEAN RemoveCharacterFromSquads( SOLDIERTYPE *pCharacter )
 
 				if( ( pCharacter->fBetweenSectors )&&( pCharacter-> uiStatusFlags & SOLDIER_VEHICLE ) )
 				{
-					ubGroupId = CreateNewPlayerGroupDepartingFromSector( ( INT8 ) ( pCharacter -> sSectorX ) , ( INT8 ) ( pCharacter -> sSectorY ) );
+					ubGroupID = CreateNewPlayerGroupDepartingFromSector( ( INT8 ) ( pCharacter -> sSectorX ) , ( INT8 ) ( pCharacter -> sSectorY ) );
 				
 					// assign to a group
-					AddPlayerToGroup( ubGroupId, pCharacter );			
+					AddPlayerToGroup( ubGroupID, pCharacter );			
 				}
 			
 				RebuildSquad( ( INT8 )iCounterA );
@@ -585,7 +585,7 @@ INT8 SquadCharacterIsIn( SOLDIERTYPE *pCharacter )
 	return ( -1 );
 }
 
-INT8 NumberOfPeopleInSquad( INT8 bSquadValue )
+UINT16 NumberOfPeopleInSquad( INT8 bSquadValue )
 {
 	INT8 bCounter = 0;
 	INT8 bSquadCount = 0;
@@ -611,7 +611,7 @@ INT8 NumberOfPeopleInSquad( INT8 bSquadValue )
 	return( bSquadCount );
 }
 
-INT8 NumberOfNonEPCsInSquad( INT8 bSquadValue )
+UINT16 NumberOfNonEPCsInSquad( INT8 bSquadValue )
 {
 	INT8 bCounter = 0;
 	INT8 bSquadCount = 0;
@@ -895,7 +895,7 @@ void ExamineCurrentSquadLights( void )
 {
 	// rebuilds current squad to reset faces in tactical
 	INT32 iCounter = 0;
-	UINT8	ubLoop;
+	INT16	ubLoop;
 
 	// OK, we should add lights for any guy currently bInSector who is not bad OKLIFE...
 	ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
@@ -1029,7 +1029,7 @@ INT32 GetLastSquadActive( void )
 }
 
 
-void GetSquadPosition( UINT8 *ubNextX, UINT8 *ubNextY, UINT8 *ubPrevX, UINT8 *ubPrevY, UINT32 *uiTraverseTime, UINT32 *uiArriveTime, UINT8 ubSquadValue )
+void GetSquadPosition( UINT8 *ubNextX, UINT8 *ubNextY, UINT8 *ubPrevX, UINT8 *ubPrevY, UINT32 *uiTraverseTime, UINT32 *uiArriveTime, INT8 ubSquadValue )
 {
 	// grab the mvt group for this squad and find all this information
 
@@ -1051,7 +1051,7 @@ void GetSquadPosition( UINT8 *ubNextX, UINT8 *ubNextY, UINT8 *ubPrevX, UINT8 *ub
 }
 
 
-void SetSquadPositionBetweenSectors( UINT8 ubNextX, UINT8 ubNextY, UINT8 ubPrevX, UINT8 ubPrevY, UINT32 uiTraverseTime, UINT32 uiArriveTime, UINT8 ubSquadValue  )
+void SetSquadPositionBetweenSectors( UINT8 ubNextX, UINT8 ubNextY, UINT8 ubPrevX, UINT8 ubPrevY, UINT32 uiTraverseTime, UINT32 uiArriveTime, INT8 ubSquadValue  )
 {
 	// set mvt group position for squad for 
 
@@ -1226,7 +1226,7 @@ void RebuildSquad( INT8 bSquadValue )
 
 void UpdateCurrentlySelectedMerc( SOLDIERTYPE *pSoldier, INT8 bSquadValue )
 {
-	UINT8	ubID;
+	INT16	ubID;
 
 	// if this squad is the current one and and the psoldier is the currently selected soldier, get rid of 'em
 	if( bSquadValue != iCurrentTacticalSquad )
@@ -1299,7 +1299,7 @@ BOOLEAN IsSquadInSector( SOLDIERTYPE *pSoldier, UINT8 ubSquad )
 }
 
 
-BOOLEAN IsAnyMercOnSquadAsleep( UINT8 ubSquadValue )
+BOOLEAN IsAnyMercOnSquadAsleep( INT8 ubSquadValue )
 {
 	INT32 iCounter = 0;
 
@@ -1400,12 +1400,12 @@ BOOLEAN IsDeadGuyOnAnySquad( SOLDIERTYPE *pSoldier )
 	return ( FALSE );
 }
 
-BOOLEAN IsDeadGuyInThisSquadSlot( INT8 bSlotId, INT8 bSquadValue , INT8 *bNumberOfDeadGuysSoFar )
+BOOLEAN IsDeadGuyInThisSquadSlot( INT16 bSlotID, INT8 bSquadValue , UINT16 *bNumberOfDeadGuysSoFar )
 {
 	INT32 iCounter = 0, iCount = 0;
 
 	// see if we have gone too far?
-	if( bSlotId < *bNumberOfDeadGuysSoFar )
+	if( bSlotID < *bNumberOfDeadGuysSoFar )
 	{
 		// reset
 		*bNumberOfDeadGuysSoFar = 0;
@@ -1502,7 +1502,7 @@ BOOLEAN IsMercOnCurrentSquad( SOLDIERTYPE *pSoldier )
 	return( FALSE );
 }
 
-INT8 NumberOfPlayerControllableMercsInSquad( INT8 bSquadValue )
+UINT16 NumberOfPlayerControllableMercsInSquad( INT8 bSquadValue )
 {
 	SOLDIERTYPE *pSoldier;
 	INT8 bCounter = 0;

@@ -36,15 +36,15 @@ typedef struct
 
 
 
-INT8	GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex );
+UINT8	GetDealersMaxItemAmount( INT16 ubDealerID, UINT16 usItemIndex );
 
-DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID );
+DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( INT16 ubArmsDealerID );
 
-UINT8 GetCurrentSuitabilityForItem( INT8 bArmsDealer, UINT16 usItemIndex );
-UINT8 ChanceOfItemTransaction( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerSelling, BOOLEAN fUsed );
-BOOLEAN ItemTransactionOccurs( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerSelling, BOOLEAN fUsed );
-UINT8 DetermineInitialInvItems( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubChances, BOOLEAN fUsed);
-UINT8 HowManyItemsAreSold( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubNumInStock, BOOLEAN fUsed);
+UINT8 GetCurrentSuitabilityForItem( INT16 bArmsDealer, UINT16 usItemIndex );
+UINT8 ChanceOfItemTransaction( INT16 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerSelling, BOOLEAN fUsed );
+BOOLEAN ItemTransactionOccurs( INT16 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerSelling, BOOLEAN fUsed );
+UINT8 DetermineInitialInvItems( INT16 bArmsDealerID, UINT16 usItemIndex, UINT8 ubChances, BOOLEAN fUsed);
+UINT8 HowManyItemsAreSold( INT16 bArmsDealerID, UINT16 usItemIndex, UINT8 ubNumInStock, BOOLEAN fUsed);
 UINT8 HowManyItemsToReorder(UINT8 ubWanted, UINT8 ubStillHave);
 
 int BobbyRayItemQsortCompare(const void *pArg1, const void *pArg2);

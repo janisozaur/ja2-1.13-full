@@ -8,7 +8,7 @@
 
 //#define MAXIMUM_MILITIA_SQUAD_SIZE 30 
 
-extern UINT8 gpAttackDirs[5][4];
+extern UINT16 gpAttackDirs[5][4];
 extern UINT8 guiDirNumber;
 
 // Updates movement orders for militia squads

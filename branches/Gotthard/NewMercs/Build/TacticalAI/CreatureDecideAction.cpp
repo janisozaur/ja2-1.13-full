@@ -60,7 +60,7 @@ INT8 gbHuntCallPriority[NUM_CREATURE_CALLS] =
 void CreatureCall( SOLDIERTYPE * pCaller )
 {
 	UINT8		ubCallerType=0;
-	UINT8		ubReceiver;
+	UINT16		ubReceiver;
 	INT8		bFullPriority;
 	INT8		bPriority;
 	SOLDIERTYPE * pReceiver;
@@ -437,7 +437,7 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 {
 	// monster AI - heard something 
-	UINT8 ubNoiseDir;
+	INT8 ubNoiseDir;
 	INT32 sNoiseGridNo;
 	INT32 iNoiseValue;
 	INT32 iChance, iSneaky;
@@ -601,7 +601,7 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  INT32 iChance, sClosestOpponent /*,sClosestOpponent,sClosestFriend*/;
  INT32 sClosestDisturbance;
  INT32 sDistVisible;
- UINT8 ubCanMove,ubOpponentDir;
+ INT8 ubCanMove,ubOpponentDir;
  //INT8 bInWater;
  INT8 bInGas;
  INT8 bSeekPts = 0, bHelpPts = 0, bHidePts = 0;
@@ -1685,7 +1685,7 @@ INT8 CrowDecideActionRed( SOLDIERTYPE * pSoldier )
 INT8 CrowDecideActionGreen( SOLDIERTYPE * pSoldier )
 {
 	INT32 sCorpseGridNo;
-	UINT8 ubDirection;
+	INT8 ubDirection;
 	INT16 sFacingDir;
 
 	// Look for a corse!

@@ -531,9 +531,9 @@ INT8 DecideActionSchedule( SOLDIERTYPE * pSoldier )
 
 INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE *pSoldier)
 {
-	UINT8 ubRoom;
+	INT16 ubRoom;
 	INT32	sDesiredMercLoc;
-	UINT8 ubDesiredMercDir;
+	INT8 ubDesiredMercDir;
 #ifdef DEBUGDECISIONS
 	STR16 tempstr;
 #endif
@@ -579,8 +579,8 @@ INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE *pSoldier)
 INT8 DecideActionNamedNPC( SOLDIERTYPE * pSoldier )
 {
 	INT32 sDesiredMercLoc;
-	UINT8	ubDesiredMercDir;
-	UINT8	ubDesiredMerc;
+	INT8	ubDesiredMercDir;
+	INT16	ubDesiredMerc;
 	INT32	sDesiredMercDist;
 #ifdef DEBUGDECISIONS
 	STR16 tempstr;
@@ -701,7 +701,7 @@ INT8 DecideActionGreen(SOLDIERTYPE *pSoldier)
 			}
 			else
 			{
-				UINT8	ubRoom;
+				INT16 ubRoom;
 				UINT8 ubLoop;
 
 				// boxer... but since in status green, it's time to leave the ring!
@@ -748,7 +748,7 @@ INT8 DecideActionGreen(SOLDIERTYPE *pSoldier)
 		//else if ( (gTacticalStatus.bBoxingState == PRE_BOXING || gTacticalStatus.bBoxingState == BOXING) && ( PythSpacesAway( pSoldier->sGridNo, CENTER_OF_RING ) <= MaxDistanceVisible() ) )
 		else if ( PythSpacesAway( pSoldier->sGridNo, CENTER_OF_RING ) <= MaxNormalDistanceVisible() )
 		{
-			UINT8 ubRingDir;
+			INT8 ubRingDir;
 			// face ring!
 
 			ubRingDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(CENTER_OF_RING),CenterY(CENTER_OF_RING));
@@ -1230,7 +1230,7 @@ INT8 DecideActionGreen(SOLDIERTYPE *pSoldier)
 						BOOLEAN fClimb;
 						BOOLEAN fReachable;
 						INT32 sNoiseGridNo = MostImportantNoiseHeard(pSoldier,&iNoiseValue, &fClimb, &fReachable);
-						UINT8 ubNoiseDir;
+						INT8 ubNoiseDir;
 
 						if (sNoiseGridNo == NOWHERE || 
 							(ubNoiseDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sNoiseGridNo),CenterY(sNoiseGridNo))
@@ -1284,7 +1284,7 @@ INT8 DecideActionGreen(SOLDIERTYPE *pSoldier)
 INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 {
 	INT32 iDummy;
-	UINT8 ubNoiseDir;
+	INT8 ubNoiseDir;
 	INT32 sNoiseGridNo;
 	INT32 iNoiseValue;
 	INT32 iChance, iSneaky;
@@ -1902,7 +1902,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 	INT32 iDummy;
 	INT32 iChance,sClosestOpponent,sClosestFriend;
 	INT32 sClosestDisturbance, sDistVisible, sCheckGridNo;
-	UINT8 ubCanMove,ubOpponentDir;
+	UINT8 ubCanMove;
+	INT8 ubOpponentDir;
 	INT8 bInWater, bInDeepWater, bInGas;
 	INT8 bSeekPts = 0, bHelpPts = 0, bHidePts = 0, bWatchPts = 0;
 	INT8	bHighestWatchLoc;

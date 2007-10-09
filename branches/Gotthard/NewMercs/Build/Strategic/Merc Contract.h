@@ -16,7 +16,7 @@ enum
 
 typedef struct 
 {
-	UINT8 ubProfileID;
+	UINT16 ubProfileID;
 	UINT8	ubFiller[ 3 ];
 
 } CONTRACT_NEWAL_LIST_NODE;

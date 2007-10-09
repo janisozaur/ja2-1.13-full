@@ -546,7 +546,7 @@ extern UINT8 gubFact[NUM_FACTS];
 
 extern void SetFactTrue( UINT16 usFact );
 extern void SetFactFalse( UINT16 usFact );
-extern BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID );
+extern BOOLEAN CheckFact( UINT16 usFact, INT16 ubProfileID );
 
 extern void StartQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY );
 extern void EndQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY );

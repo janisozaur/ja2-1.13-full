@@ -15,7 +15,7 @@ typedef struct
 {
 	UINT32											uiFlags;
 
-	UINT8												ubOwner;
+	UINT16												ubOwner;
 	INT8												ubTypeID;
 
 	UINT16											usItem;
@@ -98,21 +98,21 @@ extern	EXPLOSIONTYPE								gExplosionData[ NUM_EXPLOSION_SLOTS ];
 extern UINT8 gubElementsOnExplosionQueue;
 extern BOOLEAN gfExplosionQueueActive;
 
-void IgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT32 sGridNo, UINT16 usItem, INT8 bLevel );
-void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT32 sGridNo, UINT16 usItem, BOOLEAN fLocate, INT8 bLevel );
+void IgniteExplosion( INT16 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT32 sGridNo, UINT16 usItem, INT8 bLevel );
+void InternalIgniteExplosion( INT16 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT32 sGridNo, UINT16 usItem, BOOLEAN fLocate, INT8 bLevel );
 
 
 void GenerateExplosion( EXPLOSION_PARAMS *pExpParams );
 
-void SpreadEffect( INT32 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, BOOLEAN fSubsequent, INT8 bLevel, INT32 iSmokeEffectNum );
+void SpreadEffect( INT32 sGridNo, UINT8 ubRadius, UINT16 usItem, INT16 ubOwner, BOOLEAN fSubsequent, INT8 bLevel, INT32 iSmokeEffectNum );
 
 void AddBombToQueue( UINT32 uiWorldBombIndex, UINT32 uiTimeStamp );
 
 void DecayBombTimers( void );
-void SetOffBombsByFrequency( UINT8 ubID, INT8 bFrequency );
-BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT32 sGridNo, BOOLEAN fAllBombs, INT8 bLevel );
-void ActivateSwitchInGridNo( UINT8 ubID, INT32 sGridNo );
-void SetOffPanicBombs( UINT8 ubID, INT8 bPanicTrigger );
+void SetOffBombsByFrequency( INT16 ubID, INT8 bFrequency );
+BOOLEAN SetOffBombsInGridNo( INT16 ubID, INT32 sGridNo, BOOLEAN fAllBombs, INT8 bLevel );
+void ActivateSwitchInGridNo( INT16 ubID, INT32 sGridNo );
+void SetOffPanicBombs( INT16 ubID, INT8 bPanicTrigger );
 
 void UpdateExplosionFrame( INT32 iIndex, INT16 sCurrentFrame );
 void RemoveExplosionData( INT32 iIndex );
@@ -131,6 +131,6 @@ void RemoveAllActiveTimedBombs( void );
 
 #define GASMASK_MIN_STATUS 70
 
-BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, INT16 sSubsequent, BOOLEAN fRecompileMovementCosts, INT16 sWoundAmt, INT16 sBreathAmt, UINT8 ubOwner );
+BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, INT16 sSubsequent, BOOLEAN fRecompileMovementCosts, INT16 sWoundAmt, INT16 sBreathAmt, INT16 ubOwner );
 
 #endif

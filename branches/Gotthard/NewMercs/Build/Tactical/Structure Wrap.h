@@ -36,8 +36,8 @@ BOOLEAN CutWireFence( INT32 sGridNo );
 BOOLEAN IsCuttableWireFenceAtGridNo( INT32 sGridNo );
 BOOLEAN IsCutWireFenceAtGridNo( INT32 sGridNo );
 
-BOOLEAN IsRepairableStructAtGridNo( INT32 sGridNo, UINT8 *pubID );
-BOOLEAN IsRefuelableStructAtGridNo( INT32 sGridNo, UINT8 *pubID );
+BOOLEAN IsRepairableStructAtGridNo( INT32 sGridNo, INT16 *pubID );
+BOOLEAN IsRefuelableStructAtGridNo( INT32 sGridNo, INT16 *pubID );
 
 
 BOOLEAN	IsRoofPresentAtGridNo( INT32 sGridNo );

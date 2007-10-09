@@ -2,7 +2,7 @@
 
 typedef struct AILIST
 {
-	UINT8							ubID;
+	INT16							ubID;
 	INT8							bPriority;
 	UINT8							ubUnused;
 	struct AILIST *		pNext;
@@ -11,8 +11,8 @@ typedef struct AILIST
 #define MAX_AI_PRIORITY 100
 
 extern void ClearAIList( void );
-extern AILIST * CreateNewAIListEntry( UINT8 ubNewEntry, UINT8 ubID, INT8 bAlertStatus );
-extern BOOLEAN InsertIntoAIList( UINT8 ubID, INT8 bAlertStatus );
-extern UINT8 RemoveFirstAIListEntry( void );
-extern BOOLEAN BuildAIListForTeam( INT8 bTeam );
-extern BOOLEAN MoveToFrontOfAIList( UINT8 ubID );
+extern AILIST * CreateNewAIListEntry( INT16 ubNewEntry, INT16 ubID, INT8 bAlertStatus );
+extern BOOLEAN InsertIntoAIList( INT16 ubID, INT8 bAlertStatus );
+extern INT16 RemoveFirstAIListEntry( void );
+extern BOOLEAN BuildAIListForTeam( UINT8 bTeam );
+extern BOOLEAN MoveToFrontOfAIList( INT16 ubID );

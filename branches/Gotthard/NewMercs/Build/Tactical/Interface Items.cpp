@@ -233,7 +233,7 @@ extern	MOUSE_REGION    gMPanelRegion;
 extern	BOOLEAN					fMapInventoryItem;
 extern	BOOLEAN					gfAddingMoneyToMercFromPlayersAccount;
 extern	SOLDIERTYPE			*gpSMCurrentMerc;
-extern  UINT8 gubSelectSMPanelToMerc;
+extern  INT16 gubSelectSMPanelToMerc;
 extern	MOUSE_REGION		gSM_SELMERCMoneyRegion;
 extern	UINT32					guiMapInvSecondHandBlockout;
 
@@ -4489,8 +4489,8 @@ BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT32 sSrcGridNo )
 void DrawItemTileCursor( )
 {
 	INT32 usMapPos;
-	UINT16						usIndex;
-	UINT8							ubSoldierID;
+	INT16						usIndex;
+	INT16							ubSoldierID;
 	INT16							sAPCost;
 	BOOLEAN						fRecalc;
 	UINT32						uiCursorFlags;
@@ -4499,7 +4499,7 @@ void DrawItemTileCursor( )
 	SOLDIERTYPE				*pSoldier;
 	BOOLEAN						fGiveItem = FALSE;
 	INT32 sActionGridNo;
-	UINT8							ubDirection;
+	INT8 ubDirection;
 	static UINT32			uiOldCursorId = 0;
 	static UINT16			usOldMousePos = 0;
 	INT16							sEndZ = 0;
@@ -4586,7 +4586,7 @@ void DrawItemTileCursor( )
 						{
 							// OK, on a valid pass
 							gfUIMouseOnValidCatcher = 4;
-							gubUIValidCatcherID			= (UINT8)gusUIFullTargetID;
+							gubUIValidCatcherID			= (UINT16)gusUIFullTargetID;
 						}
 						else
 						{
@@ -4595,7 +4595,7 @@ void DrawItemTileCursor( )
 							{
 								// OK, set global that this buddy can see catch...
 								gfUIMouseOnValidCatcher = TRUE;
-								gubUIValidCatcherID			= (UINT8)gusUIFullTargetID;
+								gubUIValidCatcherID			= (UINT16)gusUIFullTargetID;
 							}
 						}
 					}
@@ -4629,7 +4629,7 @@ void DrawItemTileCursor( )
 
 				// OK, set global that this buddy can see catch...
 				gfUIMouseOnValidCatcher = 2;
-				gubUIValidCatcherID			= (UINT8)gusUIFullTargetID;
+				gubUIValidCatcherID			= (UINT16)gusUIFullTargetID;
 
 				// If this is a robot, change to say 'reload'
 				if ( MercPtrs[ gusUIFullTargetID ]->uiStatusFlags & SOLDIER_ROBOT )
@@ -4801,7 +4801,7 @@ BOOLEAN HandleItemPointerClick( INT32 usMapPos )
 {
 	// Determine what to do
 	UINT8 ubDirection;
-	UINT8	ubSoldierID;
+	INT16	ubSoldierID;
 	UINT16	  usItem;
 	INT16			sAPCost;
 	SOLDIERTYPE		*pSoldier=NULL;
@@ -4931,7 +4931,7 @@ BOOLEAN HandleItemPointerClick( INT32 usMapPos )
 				if ( IsValidAmmoToReloadRobot( MercPtrs[ ubSoldierID ], &TempObject ) )
 				{
 					 INT32 sActionGridNo;
-					 UINT8	ubDirection;
+					 INT8	ubDirection;
 					 INT32 sAdjustedGridNo;
 						
 					 // Walk up to him and reload!
@@ -6247,7 +6247,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT32 sGridNo, ITEM_POO
 	// Change to INV panel if not there already...
 	gfSwitchPanel = TRUE;
 	gbNewPanel = SM_PANEL;
-	gubNewPanelParam = (UINT8)pSoldier->ubID;
+	gubNewPanelParam = pSoldier->ubID;
 
 	//Determine total #
 	cnt = 0;
@@ -6433,7 +6433,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT32 sGridNo, ITEM_POO
 	// Ignore scrolling
 	gfIgnoreScrolling = TRUE;
 
-	HandleAnyMercInSquadHasCompatibleStuff( (INT8) CurrentSquad( ), NULL, TRUE );
+	HandleAnyMercInSquadHasCompatibleStuff( (UINT8) CurrentSquad( ), NULL, TRUE );
 	gubSelectSMPanelToMerc = pSoldier->ubID;
 	ReEvaluateDisabledINVPanelButtons( );
 	DisableTacticalTeamPanelButtons( TRUE );
@@ -7331,7 +7331,7 @@ void RemoveMoney()
 
 			InvSlot.fActive = TRUE;
 			InvSlot.sItemIndex = MONEY;
-			InvSlot.bSlotIdInOtherLocation = -1;
+			InvSlot.bSlotIDInOtherLocation = -1;
 
 			//Remove the money from the money in the pocket
 			gpItemDescObject->ItemData.Money.uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
@@ -7836,7 +7836,7 @@ void CancelItemPointer( )
 typedef struct 
 {
 	OBJECTTYPE	ItemPointerInfo;
-	UINT8				ubSoldierID;
+	UINT16				ubSoldierID;
 	UINT8				ubInvSlot;
 	BOOLEAN			fCursorActive;
 	INT8				bPadding[5];
@@ -7998,7 +7998,7 @@ BOOLEAN InitializeStealItemPickupMenu( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOppo
 	// Change to INV panel if not there already...
 	gfSwitchPanel = TRUE;
 	gbNewPanel = SM_PANEL;
-	gubNewPanelParam = (UINT8)pSoldier->ubID;
+	gubNewPanelParam = pSoldier->ubID;
 
 	gItemPickupMenu.ubTotalItems = ubCount;
 

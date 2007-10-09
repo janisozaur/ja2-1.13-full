@@ -283,7 +283,7 @@ void PasteSingleRoof( INT32 iMapIndex )
 	PasteSingleWallCommon( iMapIndex );
 }
 
-void PasteRoomNumber( INT32 iMapIndex, UINT8 ubRoomNumber )
+void PasteRoomNumber( INT32 iMapIndex, INT16 ubRoomNumber )
 {
 	if( gubWorldRoomInfo[ iMapIndex ] != ubRoomNumber )
 	{

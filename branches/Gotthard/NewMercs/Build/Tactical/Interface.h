@@ -71,7 +71,7 @@ enum
 extern BOOLEAN		gfSwitchPanel;
 extern BOOLEAN		gfUIStanceDifferent;
 extern UINT8		gbNewPanel;
-extern UINT8		gubNewPanelParam;
+extern INT16		gubNewPanelParam;
 extern INT16		gsCurInterfacePanel;
 
 
@@ -150,13 +150,13 @@ void BeginOverlayMessage( UINT32 uiFont, STR16 pFontString, ... );
 void EndOverlayMessage( );
 
 
-void DrawSelectedUIAboveGuy( UINT16 usSoldierID );
+void DrawSelectedUIAboveGuy( INT16 usSoldierID );
 
 void CreateCurrentTacticalPanelButtons( );
 void RemoveCurrentTacticalPanelButtons( );
-void SetCurrentTacticalPanelCurrentMerc( UINT8 ubID );
+void SetCurrentTacticalPanelCurrentMerc( INT16 ubID );
 void SetCurrentInterfacePanel( UINT8 ubNewPanel );
-BOOLEAN IsMercPortraitVisible( UINT8 ubSoldierID );
+BOOLEAN IsMercPortraitVisible( INT16 ubSoldierID );
 
 BOOLEAN InitializeCurrentPanel( );
 void ShutdownCurrentPanel( );
@@ -171,7 +171,7 @@ void HandleUpDownArrowBackgrounds( );
 
 void EndDeadlockMsg( );
 
-void HandleLocateSelectMerc( UINT8 ubID, INT8 bFlag );
+void HandleLocateSelectMerc( INT16 ubID, INT8 bFlag );
 
 void DirtyMercPanelInterface( SOLDIERTYPE *pSoldier, UINT8 ubDirtyLevel );
 
@@ -185,7 +185,7 @@ void InternalBeginUIMessage( BOOLEAN fUseSkullIcon, STR16 pFontString, ... );
 void BeginMapUIMessage( UINT8 fPosition, STR16 pFontString, ... );
 
 
-extern UINT16	gusUIOldSelectedSoldier;
+extern INT16	gusUIOldSelectedSoldier;
 
 extern INT32	giUIMessageOverlay;
 extern UINT32	guiUIMessageTime;
@@ -211,7 +211,7 @@ void EndTopMessage( );
 
 void PauseRT( BOOLEAN fPause );
 
-void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies );
+void InitEnemyUIBar( UINT16 ubNumEnemies, UINT16 ubDoneEnemies );
 
 STR16 GetSoldierHealthString( SOLDIERTYPE *pSoldier );
 

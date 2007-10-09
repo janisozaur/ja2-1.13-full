@@ -35,10 +35,10 @@
 
 #include "Reinforcement.h"
 
-extern void DecayPublicOpplist( INT8 bTeam );
+extern void DecayPublicOpplist( UINT8 bTeam );
 
 //not in overhead.h!
-extern UINT8 NumEnemyInSector();
+extern UINT16 NumEnemyInSector();
 
 
 
@@ -138,7 +138,8 @@ void HandleRPCDescription(  )
 
 void HandleTacticalEndTurn( )
 {	
-	UINT32 cnt;
+	INT32 cnt;
+	UINT32 ucnt;//it's unsigned, not foul! And getting rid of sign warnings. Gotthard 10/8/07
 	SOLDIERTYPE		*pSoldier;
 	UINT32				uiTime;
   static UINT32 uiTimeSinceLastStrategicUpdate = 0;
@@ -241,9 +242,9 @@ void HandleTacticalEndTurn( )
 		// OK, loop through the mercs to perform 'end turn' events on each...
 		// We're looping through only mercs in tactical engine, ignoring our mercs
 		// because they were done earilier...
-		for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
+		for ( ucnt = 0; ucnt < guiNumMercSlots; ucnt++ )
 		{
-			pSoldier = MercSlots[ cnt ];
+			pSoldier = MercSlots[ ucnt ];
 
 			if ( pSoldier != NULL )
 			{

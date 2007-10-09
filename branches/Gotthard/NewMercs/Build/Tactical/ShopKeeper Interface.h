@@ -47,10 +47,10 @@ typedef struct
 	INT16				sItemIndex;
 	UINT32			uiFlags;
 	OBJECTTYPE	ItemObject;
-	UINT8				ubLocationOfObject;					//An enum value for the location of the item ( either in the arms dealers inventory, one of the offer areas or in the users inventory)
-	INT8				bSlotIdInOtherLocation;
+	UINT8 ubLocationOfObject;					//An enum value for the location of the item ( either in the arms dealers inventory, one of the offer areas or in the users inventory)
+	INT8 bSlotIDInOtherLocation;
 
-	UINT8				ubIdOfMercWhoOwnsTheItem;
+	INT16				ubIdOfMercWhoOwnsTheItem;
 	UINT32			uiItemPrice;								//Only used for the players item that have been evaluated
 
 	INT16				sSpecialItemElement;				// refers to which special item element an item in a dealer's inventory area
@@ -90,12 +90,12 @@ UINT32	ShopKeeperScreenShutdown( void );
 
 
 
-void			EnterShopKeeperInterfaceScreen( UINT8	ubArmsDealer );
+void EnterShopKeeperInterfaceScreen( INT16 ubArmsDealer );
 
 
 void			DrawHatchOnInventory( UINT32 uiSurface, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight );
-BOOLEAN		ShouldSoldierDisplayHatchOnItem( UINT8	ubProfileID, INT16 sSlotNum );
-INT8			AddItemToPlayersOfferArea( UINT8 ubProfileID, INVENTORY_IN_SLOT* pInvSlot, INT8	bSlotIdInOtherLocation );
+BOOLEAN		ShouldSoldierDisplayHatchOnItem( INT16	ubProfileID, INT16 sSlotNum );
+INT8			AddItemToPlayersOfferArea( INT16 ubProfileID, INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIDInOtherLocation );
 void			ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack( UINT8 bExitValue );
 void			ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack( UINT8 bExitValue );
 
@@ -112,11 +112,11 @@ void			DeleteShopKeeperItemDescBox();
 
 BOOLEAN		CanMercInteractWithSelectedShopkeeper( SOLDIERTYPE *pSoldier );
 
-void			DealerGetsBribed( UINT8 ubProfileId, UINT32 uiMoneyAmount );
+void			DealerGetsBribed( INT16 ubProfileID, UINT32 uiMoneyAmount );
 
 
 #ifdef JA2TESTVERSION
-void AddShopkeeperToGridNo( UINT8 ubProfile, INT32 sGridNo );
+void AddShopkeeperToGridNo( INT16 ubProfile, INT32 sGridNo );
 #endif
 
 void			RestrictSkiMouseCursor();

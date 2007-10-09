@@ -3374,7 +3374,7 @@ BOOLEAN IsRoofVisible2( INT32 sMapPos )
 }
 
 
-UINT8 WhoIsThere2( INT32 sGridNo, INT8 bLevel )
+INT16 WhoIsThere2( INT32 sGridNo, INT8 bLevel )
 {
 	STRUCTURE * pStructure;
 
@@ -3398,7 +3398,7 @@ UINT8 WhoIsThere2( INT32 sGridNo, INT8 bLevel )
 				{
 					// found a person, on the right level!
 					// structure ID and merc ID are identical for merc structures
-					return( (UINT8) pStructure->usStructureID );
+					return(pStructure->usStructureID );
 				}
 			}
 			pStructure = pStructure->pNext;
@@ -3406,7 +3406,7 @@ UINT8 WhoIsThere2( INT32 sGridNo, INT8 bLevel )
 
 	}
 
-	return( (UINT8)NOBODY );
+	return(NOBODY );
 }
 
 UINT8	GetTerrainType( INT32 sGridNo )
@@ -3445,7 +3445,7 @@ BOOLEAN Water( INT32 sGridNo )
 	}
 
 	pMapElement = &(gpWorldLevelData[sGridNo]);
-	if ( pMapElement->ubTerrainID == LOW_WATER || pMapElement->ubTerrainID == MED_WATER || pMapElement->ubTerrainID == DEEP_WATER )
+	if ( TERRAIN_IS_WATER( pMapElement->ubTerrainID) )
 	{
 		// check for a bridge!  otherwise...
 		return( TRUE );
@@ -3467,7 +3467,7 @@ BOOLEAN DeepWater( INT32 sGridNo )
 
 	pMapElement = &(gpWorldLevelData[sGridNo]);
 
-	if (pMapElement->ubTerrainID == DEEP_WATER)
+	if (TERRAIN_IS_DEEP_WATER( pMapElement->ubTerrainID) )
 	{
 		// check for a bridge!  otherwise...
 		return( TRUE );

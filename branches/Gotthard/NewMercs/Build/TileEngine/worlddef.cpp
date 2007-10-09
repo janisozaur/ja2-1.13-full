@@ -111,6 +111,7 @@ UINT32			gCurrentBackground = FIRSTTEXTURE;
 
 // From memman.c in SGP
 extern					UINT32		guiMemTotal;
+extern UINT32 gusCurMousePos;
 
 
 CHAR8 TileSurfaceFilenames[NUMBEROFTILETYPES][32]; 
@@ -137,7 +138,7 @@ extern void GetRootName( STR8 pDestStr, const STR8 pSrcStr );
 
 
 void SaveMapLights( HWFILE hfile );
-void LoadMapLights( INT8 **hBuffer );
+void LoadMapLights( INT16 **hBuffer );
 
 // Global Variables
 MAP_ELEMENT			*gpWorldLevelData;
@@ -2696,8 +2697,8 @@ BOOLEAN LoadWorld( const STR8	puiFilename )
 	UINT8						ubCombine;
 //	UINT8							bCounts[ WORLD_MAX ][8];
 	UINT8**							bCounts = NULL;
-	INT8						*pBuffer;
-	INT8						*pBufferHead;
+	INT16						*pBuffer;
+	INT16						*pBufferHead;
 	BOOLEAN					fGenerateEdgePoints = FALSE;
 	UINT8					ubMinorMapVersion;
 	INT32					i;
@@ -2748,7 +2749,7 @@ BOOLEAN LoadWorld( const STR8	puiFilename )
 	//Get the file size and alloc one huge buffer for it.
 	//We will use this buffer to transfer all of the data from.
 	uiFileSize = FileGetSize( hfile );
-	pBuffer = (INT8*)MemAlloc( uiFileSize );
+	pBuffer = (INT16*)MemAlloc( uiFileSize );
 	pBufferHead = pBuffer;
 	FileRead( hfile, pBuffer, uiFileSize, &uiBytesRead );
 	FileClose( hfile );
@@ -3361,6 +3362,9 @@ void TrashWorld( void )
 			}
 		}
 	}
+
+	// Reset attack busy since a militia might have been in the middle of radioing
+	gTacticalStatus.ubAttackBusyCount = 0;
 
 	RemoveCorpses( );
 
@@ -4127,7 +4131,7 @@ void SaveMapLights( HWFILE hfile )
 	}
 }	
 
-void LoadMapLights( INT8 **hBuffer )
+void LoadMapLights( INT16 **hBuffer )
 {
 	SGPPaletteEntry	LColors[3];
 	UINT8 ubNumColors;
@@ -4242,7 +4246,7 @@ extern UINT8 * gubGridNoMarkers;
 extern UINT8 * gubFOVDebugInfoInfo;
 extern INT16 gsFullTileDirections[ MAX_FULLTILE_DIRECTIONS ];
 extern INT32 dirDelta[8];
-extern INT16 DirIncrementer[8];
+extern INT8 DirIncrementer[8];
 extern INT16 *	gsCoverValue;
 
 extern INT32 gsTempActionGridNo;
@@ -4282,7 +4286,7 @@ void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 	
 	if(gubWorldRoomInfo)
 		MemFree(gubWorldRoomInfo);
-	gubWorldRoomInfo = (UINT8*)MemAlloc(WORLD_MAX);
+	gubWorldRoomInfo = (INT16*)MemAlloc(WORLD_MAX);
 	memset( gubWorldRoomInfo, 0, sizeof( gubWorldRoomInfo ) );
 
 	if(gubWorldMovementCosts)

@@ -125,7 +125,7 @@ UINT8 gubMonsterMineInfestation[]={
 // the static NPC dialogue faces
 extern UINT32 uiExternalStaticNPCFaces[];
 extern FACETYPE	*gpCurrentTalkingFace;
-extern UINT8			gubCurrentTalkingID;
+extern INT16 gubCurrentTalkingID;
 
 
 
@@ -1006,7 +1006,7 @@ void IssueHeadMinerQuote( INT8 bMineIndex, UINT8 ubQuoteType )
 }
 
 
-UINT8 GetHeadMinersMineIndex( UINT8 ubMinerProfileId)
+UINT8 GetHeadMinersMineIndex( UINT16 ubMinerProfileId)
 {
 	UINT8 ubMineIndex;
 
@@ -1025,7 +1025,7 @@ UINT8 GetHeadMinersMineIndex( UINT8 ubMinerProfileId)
 }
 
 
-void PlayerSpokeToHeadMiner( UINT8 ubMinerProfileId )
+void PlayerSpokeToHeadMiner( UINT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1040,7 +1040,7 @@ void PlayerSpokeToHeadMiner( UINT8 ubMinerProfileId )
 }
 
 
-BOOLEAN IsHisMineRunningOut( UINT8 ubMinerProfileId )
+BOOLEAN IsHisMineRunningOut( UINT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1048,7 +1048,7 @@ BOOLEAN IsHisMineRunningOut( UINT8 ubMinerProfileId )
 	return(gMineStatus[ ubMineIndex ].fRunningOut);
 }
 
-BOOLEAN IsHisMineEmpty( UINT8 ubMinerProfileId )
+BOOLEAN IsHisMineEmpty( UINT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1056,7 +1056,7 @@ BOOLEAN IsHisMineEmpty( UINT8 ubMinerProfileId )
 	return(gMineStatus[ ubMineIndex ].fEmpty);
 }
 
-BOOLEAN IsHisMineDisloyal( UINT8 ubMinerProfileId )
+BOOLEAN IsHisMineDisloyal( UINT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1074,7 +1074,7 @@ BOOLEAN IsHisMineDisloyal( UINT8 ubMinerProfileId )
 	}
 }
 
-BOOLEAN IsHisMineInfested( UINT8 ubMinerProfileId )
+BOOLEAN IsHisMineInfested( UINT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1082,7 +1082,7 @@ BOOLEAN IsHisMineInfested( UINT8 ubMinerProfileId )
 	return(!MineClearOfMonsters( ubMineIndex ));
 }
 
-BOOLEAN IsHisMineLostAndRegained( UINT8 ubMinerProfileId )
+BOOLEAN IsHisMineLostAndRegained( UINT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1098,7 +1098,7 @@ BOOLEAN IsHisMineLostAndRegained( UINT8 ubMinerProfileId )
 	}
 }
 
-void ResetQueenRetookMine( UINT8 ubMinerProfileId )
+void ResetQueenRetookMine( UINT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1107,7 +1107,7 @@ void ResetQueenRetookMine( UINT8 ubMinerProfileId )
 	gMineStatus[ ubMineIndex ].fQueenRetookProducingMine = FALSE;
 }
 
-BOOLEAN IsHisMineAtMaxProduction( UINT8 ubMinerProfileId )
+BOOLEAN IsHisMineAtMaxProduction( UINT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1154,7 +1154,7 @@ BOOLEAN HasAnyMineBeenAttackedByMonsters(void)
 }
 
 
-void PlayerAttackedHeadMiner( UINT8 ubMinerProfileId )
+void PlayerAttackedHeadMiner( UINT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 	INT8 bTownId;
@@ -1181,7 +1181,7 @@ void PlayerAttackedHeadMiner( UINT8 ubMinerProfileId )
 }
 
 
-BOOLEAN HasHisMineBeenProducingForPlayerForSomeTime( UINT8 ubMinerProfileId )
+BOOLEAN HasHisMineBeenProducingForPlayerForSomeTime( UINT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 

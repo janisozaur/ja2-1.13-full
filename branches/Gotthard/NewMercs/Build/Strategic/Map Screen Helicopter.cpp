@@ -59,7 +59,7 @@
 
 
 extern FACETYPE	*gpCurrentTalkingFace;
-extern UINT8			gubCurrentTalkingID;
+extern INT16 gubCurrentTalkingID;
 
 // current temp path for dest char
 extern PathStPtr pTempHelicopterPath;
@@ -162,7 +162,7 @@ SOLDIERTYPE *pSkyRider;
 BOOLEAN HeliCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum );
 
 // does skyrider notice bad guys in sector?
-BOOLEAN DoesSkyriderNoticeEnemiesInSector( UINT8 ubNumEnemies );
+BOOLEAN DoesSkyriderNoticeEnemiesInSector( UINT16 ubNumEnemies );
 
 // are we at the end of the path for the helicopter
 BOOLEAN EndOfHelicoptersPath( void );
@@ -290,7 +290,7 @@ BOOLEAN RemoveSoldierFromHelicopter( SOLDIERTYPE *pSoldier )
 
 BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 {
-	UINT8 ubNumEnemies;
+	UINT16 ubNumEnemies;
 
 	
 	// check for SAM attack upon the chopper.  If it's destroyed by the attack, do nothing else here
@@ -740,7 +740,7 @@ void HandleHeliHoverTooLong( void )
 
 
 // check if anyone in the chopper sees any baddies in sector
-BOOLEAN DoesSkyriderNoticeEnemiesInSector( UINT8 ubNumEnemies )
+BOOLEAN DoesSkyriderNoticeEnemiesInSector( UINT16 ubNumEnemies )
 {
 	UINT8 ubChance;
 
@@ -971,7 +971,7 @@ UINT8 MoveAllInHelicopterToFootMovementGroup( void )
 	INT8 bNewSquad;
 	BOOLEAN fAnyoneAboard = FALSE;
 	BOOLEAN fSuccess;
-	UINT8   ubInsertionCode = 0;
+	UINT16   ubInsertionCode = 0;
   BOOLEAN fInsertionCodeSet = FALSE;
 	UINT16  usInsertionData = 0;
 

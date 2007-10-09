@@ -166,7 +166,7 @@ UINT16 FromSmokeTypeToWorldFlags( INT8 bType )
 
 
 
-INT32 NewSmokeEffect( INT32 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
+INT32 NewSmokeEffect( INT32 sGridNo, UINT16 usItem, INT8 bLevel, INT16 ubOwner )
 {
 	SMOKEEFFECT *pSmoke;
 	INT32				iSmokeIndex;

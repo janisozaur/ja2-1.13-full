@@ -423,7 +423,7 @@ void HandleEmptySectorNoticedByGarrison( UINT8 ubGarrisonSectorID, UINT8 ubEmpty
 BOOLEAN PlayerForceTooStrong( UINT8 ubSectorID, UINT16 usOffensePoints, UINT16 *pusDefencePoints );
 void RequestAttackOnSector( UINT8 ubSectorID, UINT16 usDefencePoints );
 void RequestHighPriorityStagingGroupReinforcements( GROUP *pGroup );
-void RequestHighPriorityGarrisonReinforcements( INT32 iGarrisonID, UINT8 ubSoldiersRequested );
+void RequestHighPriorityGarrisonReinforcements( INT32 iGarrisonID, UINT16 ubSoldiersRequested );
 
 BOOLEAN GarrisonCanProvideMinimumReinforcements( INT32 iGarrisonID );
 BOOLEAN GarrisonRequestingMinimumReinforcements( INT32 iGarrisonID );
@@ -463,9 +463,9 @@ void SendReinforcementsForPatrol( INT32 iPatrolID, GROUP **pOptionalGroup );
 
 void ClearPreviousAIGroupAssignment( GROUP *pGroup );
 
-void CalcNumTroopsBasedOnComposition( UINT8 *pubNumTroops, UINT8 *pubNumElites, UINT8 ubTotal, INT32 iCompositionID );
+void CalcNumTroopsBasedOnComposition( UINT16 *pubNumTroops, UINT16 *pubNumElites, UINT16 ubTotal, INT32 iCompositionID );
 void ConvertGroupTroopsToComposition( GROUP *pGroup, INT32 iCompositionID );
-void RemoveSoldiersFromGarrisonBasedOnComposition( INT32 iGarrisonID, UINT8 ubSize );
+void RemoveSoldiersFromGarrisonBasedOnComposition( INT32 iGarrisonID, UINT16 ubSize );
 
 //If there are any enemy groups that will be moving through this sector due, they will have to repath which
 //will cause them to avoid the sector.  Returns the number of redirected groups.
@@ -1120,7 +1120,7 @@ void InitStrategicAI()
 	INT32 iStartPop, iDesiredPop, iPriority;
 	SECTORINFO *pSector = NULL;
 	GROUP *pGroup;
-	UINT8 ubNumTroops;
+	UINT16 ubNumTroops;
 	INT32 iPercentElitesBonus;
 	INT32 iMaxEnemyGroupSize = gGameExternalOptions.iMaxEnemyGroupSize;
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic3");
@@ -1746,7 +1746,7 @@ void HandlePlayerGroupNoticedByGarrison( GROUP *pPlayerGroup, UINT8 ubSectorID )
 		
 		if( iReinforcementsApproved*2 > pPlayerGroup->ubGroupSize*3 && iReinforcementsApproved > gubMinEnemyGroupSize )
 		{ //Then enemy's available outnumber the player by at least 3:2, so attack them.
-			pGroup = CreateNewEnemyGroupDepartingFromSector( ubSectorID, 0, (UINT8)iReinforcementsApproved, 0 );
+			pGroup = CreateNewEnemyGroupDepartingFromSector( ubSectorID, 0, (UINT16)iReinforcementsApproved, 0 );
 
 			ConvertGroupTroopsToComposition( pGroup, gGarrisonGroup[ pSector->ubGarrisonID ].ubComposition );
 
@@ -1935,7 +1935,7 @@ void HandleEmptySectorNoticedByGarrison( UINT8 ubGarrisonSectorID, UINT8 ubEmpty
 
 	if( ubAvailableTroops >= gubMinEnemyGroupSize * 2 )
 	{ //split group into two groups, and move one of the groups to the next sector.
-		pGroup = CreateNewEnemyGroupDepartingFromSector( ubGarrisonSectorID, 0, (UINT8)(ubAvailableTroops / 2), 0 );
+		pGroup = CreateNewEnemyGroupDepartingFromSector( ubGarrisonSectorID, 0, (UINT16)(ubAvailableTroops / 2), 0 );
 		ConvertGroupTroopsToComposition( pGroup, gGarrisonGroup[ ubDstGarrisonID ].ubComposition );
 		RemoveSoldiersFromGarrisonBasedOnComposition( ubSrcGarrisonID, pGroup->ubGroupSize );
 		gGarrisonGroup[ ubDstGarrisonID ].ubPendingGroupID = pGroup->ubGroupID;
@@ -2890,7 +2890,7 @@ void SendReinforcementsForGarrison( INT32 iDstGarrisonID, UINT16 usDefencePoints
 		}
 
 
-		pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_P3, 0, (UINT8)iReinforcementsApproved, 0 );
+		pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_P3, 0, (UINT16)iReinforcementsApproved, 0 );
 		ConvertGroupTroopsToComposition( pGroup, gGarrisonGroup[ iDstGarrisonID ].ubComposition );
 		pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
 		//Madd: unlimited reinforcements?
@@ -2973,7 +2973,7 @@ void SendReinforcementsForGarrison( INT32 iDstGarrisonID, UINT16 usDefencePoints
 				}
 			}
 
-			pGroup = CreateNewEnemyGroupDepartingFromSector( gGarrisonGroup[ iSrcGarrisonID ].ubSectorID, 0, (UINT8)iReinforcementsApproved, 0 );
+			pGroup = CreateNewEnemyGroupDepartingFromSector( gGarrisonGroup[ iSrcGarrisonID ].ubSectorID, 0, (UINT16)iReinforcementsApproved, 0 );
 			ConvertGroupTroopsToComposition( pGroup, gGarrisonGroup[ iDstGarrisonID ].ubComposition );
 			RemoveSoldiersFromGarrisonBasedOnComposition( iSrcGarrisonID, pGroup->ubGroupSize );
 			pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
@@ -3059,7 +3059,7 @@ void SendReinforcementsForPatrol( INT32 iPatrolID, GROUP **pOptionalGroup )
 		{
 			iReinforcementsApproved = iReinforcementsApproved;
 		}
-		pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_P3, 0, (UINT8)iReinforcementsApproved, 0 );
+		pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_P3, 0, (UINT16)iReinforcementsApproved, 0 );
 		pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
 
 		//Madd: unlimited reinforcements?
@@ -3097,7 +3097,7 @@ void SendReinforcementsForPatrol( INT32 iPatrolID, GROUP **pOptionalGroup )
 						iReinforcementsAvailable = ReinforcementsAvailable( iSrcGarrisonID );
 						//Send the lowest of the two:  number requested or number available
 						iReinforcementsApproved = min( iReinforcementsRequested, iReinforcementsAvailable );
-						pGroup = CreateNewEnemyGroupDepartingFromSector( gGarrisonGroup[ iSrcGarrisonID ].ubSectorID, 0, (UINT8)iReinforcementsApproved, 0 );
+						pGroup = CreateNewEnemyGroupDepartingFromSector( gGarrisonGroup[ iSrcGarrisonID ].ubSectorID, 0, (UINT16)iReinforcementsApproved, 0 );
 						pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
 						gPatrolGroup[ iPatrolID ].ubPendingGroupID = pGroup->ubGroupID;
 
@@ -4159,7 +4159,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 	UINT8 ubSectorID;
 	UINT8 ubSourceSectorID;
 	UINT8 ubTargetSectorID;
-	UINT8 ubNumSoldiers;
+	UINT16 ubNumSoldiers;
 
 	switch( usActionCode )
 	{
@@ -4240,7 +4240,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 				ubSourceSectorID = SEC_P3;
 			}
 			
-			ubNumSoldiers = (UINT8)( gubMinEnemyGroupSize + gGameOptions.ubDifficultyLevel * 3);
+			ubNumSoldiers = (UINT16)( gubMinEnemyGroupSize + gGameOptions.ubDifficultyLevel * 3);
 			
 			pGroup0 = CreateNewEnemyGroupDepartingFromSector( ubSourceSectorID, 0, ubNumSoldiers, ubNumSoldiers - ubNumSoldiers / gGameOptions.ubDifficultyLevel );
 			pGroup1 = CreateNewEnemyGroupDepartingFromSector( ubSourceSectorID, 0, ubNumSoldiers, ubNumSoldiers - ubNumSoldiers / gGameOptions.ubDifficultyLevel );
@@ -4285,7 +4285,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 			//those troops will get reassigned.
 			ubSectorID = (UINT8)STRATEGIC_INDEX_TO_SECTOR_INFO( sWorldSectorLocationOfFirstBattle ); 
 			pSector = &SectorInfo[ ubSectorID ];
-			ubNumSoldiers = (UINT8)( gubMinEnemyGroupSize + gGameOptions.ubDifficultyLevel * 4);
+			ubNumSoldiers = (UINT16)( gubMinEnemyGroupSize + gGameOptions.ubDifficultyLevel * 4);
 			pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_P3, 0, ubNumSoldiers, 0 );
 
 			//Madd: unlimited reinforcements?
@@ -4320,9 +4320,9 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 			break;
 
 		case NPC_ACTION_SEND_SOLDIERS_TO_OMERTA:
-			ubNumSoldiers = (UINT8)( gubMinEnemyGroupSize + gGameOptions.ubDifficultyLevel * 6); //6, 12, or 18 based on difficulty.
-			pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_P3, 0, ubNumSoldiers, (UINT8)(ubNumSoldiers/7) ); //add 1 elite to normal, and 2 for hard
-			ubNumSoldiers = (UINT8)(ubNumSoldiers + ubNumSoldiers / 7);
+			ubNumSoldiers = (UINT16)( gubMinEnemyGroupSize + gGameOptions.ubDifficultyLevel * 6); //6, 12, or 18 based on difficulty.
+			pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_P3, 0, ubNumSoldiers, (UINT16)(ubNumSoldiers/7) ); //add 1 elite to normal, and 2 for hard
+			ubNumSoldiers = (UINT16)(ubNumSoldiers + ubNumSoldiers / 7);
 
 			//Madd: unlimited reinforcements
 			if ( !gfUnlimitedTroops )
@@ -4794,7 +4794,7 @@ UINT8 SectorDistance( UINT8 ubSectorID1, UINT8 ubSectorID2 )
 	return ubDist;
 }
 
-void RequestHighPriorityGarrisonReinforcements( INT32 iGarrisonID, UINT8 ubSoldiersRequested )
+void RequestHighPriorityGarrisonReinforcements( INT32 iGarrisonID, UINT16 ubSoldiersRequested )
 {
 	INT32 i, iBestIndex;
 	GROUP *pGroup;
@@ -4931,7 +4931,7 @@ void MassFortifyTowns()
 	INT32 i;
 	SECTORINFO *pSector;
 	//GROUP *pGroup;
-	UINT8 ubNumTroops, ubDesiredTroops;
+	UINT16 ubNumTroops, ubDesiredTroops;
 
 	Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
@@ -4947,7 +4947,7 @@ void MassFortifyTowns()
 				gGarrisonGroup[ i ].ubComposition != ROADBLOCK &&
 				EnemyPermittedToAttackSector( NULL, gGarrisonGroup[ i ].ubSectorID ) )
 			{
-				RequestHighPriorityGarrisonReinforcements( i, (UINT8)(ubDesiredTroops - ubNumTroops) );
+				RequestHighPriorityGarrisonReinforcements( i, (UINT16)(ubDesiredTroops - ubNumTroops) );
 			}
 		}
 	}
@@ -5219,7 +5219,7 @@ void UpgradeAdminsToTroops()
 	INT32 i;
 	SECTORINFO *pSector;
 	INT8 bPriority;
-	UINT8 ubAdminsToCheck;
+	UINT16 ubAdminsToCheck;
 	GROUP *pGroup;
 	INT16 sPatrolIndex;
 
@@ -5634,7 +5634,7 @@ void ClearPreviousAIGroupAssignment( GROUP *pGroup )
 	}
 }
 
-void CalcNumTroopsBasedOnComposition( UINT8 *pubNumTroops, UINT8 *pubNumElites, UINT8 ubTotal, INT32 iCompositionID )
+void CalcNumTroopsBasedOnComposition( UINT16 *pubNumTroops, UINT16 *pubNumElites, UINT16 ubTotal, INT32 iCompositionID )
 {
 	*pubNumTroops = gArmyComp[ iCompositionID ].bTroopPercentage * ubTotal / 100;
 	*pubNumElites = gArmyComp[ iCompositionID ].bElitePercentage * ubTotal / 100;
@@ -5664,19 +5664,19 @@ void ConvertGroupTroopsToComposition( GROUP *pGroup, INT32 iCompositionID )
 	ValidateLargeGroup( pGroup );
 }
 
-void RemoveSoldiersFromGarrisonBasedOnComposition( INT32 iGarrisonID, UINT8 ubSize )
+void RemoveSoldiersFromGarrisonBasedOnComposition( INT32 iGarrisonID, UINT16 ubSize )
 {
 	SECTORINFO *pSector;
 	INT32 iCompositionID;
-	UINT8 ubNumTroops, ubNumElites;
+	UINT16 ubNumTroops, ubNumElites;
 
 	//debug stuff
-	UINT8 ubOrigSectorAdmins;
-	UINT8 ubOrigSectorTroops;
-	UINT8 ubOrigSectorElites;
-	UINT8 ubOrigNumElites;
-	UINT8 ubOrigNumTroops;
-	UINT8 ubOrigSize;
+	UINT16 ubOrigSectorAdmins;
+	UINT16 ubOrigSectorTroops;
+	UINT16 ubOrigSectorElites;
+	UINT16 ubOrigNumElites;
+	UINT16 ubOrigNumTroops;
+	UINT16 ubOrigSize;
 
  Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	iCompositionID = gGarrisonGroup[ iGarrisonID ].ubComposition;

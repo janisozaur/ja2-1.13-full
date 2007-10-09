@@ -503,7 +503,7 @@ void StopMapScreenHelpText( void );
 // set up the help text
 void SetUpMapScreenFastHelpText( void );
 
-void TurnOnSectorLocator( UINT8 ubProfileID );
+void TurnOnSectorLocator( INT16 ubProfileID );
 void TurnOffSectorLocator();
 
 extern INT16 gsSectorLocatorX;

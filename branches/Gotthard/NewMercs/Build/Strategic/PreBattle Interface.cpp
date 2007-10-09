@@ -249,10 +249,10 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 {
   VOBJECT_DESC    VObjectDesc;
 	INT32 i;
-	UINT8 ubGroupID = 0;
-	UINT8 ubNumStationaryEnemies = 0;
-	UINT8 ubNumMobileEnemies = 0;
-	UINT8 ubNumMercs;
+	INT8 ubGroupID = 0;
+	UINT16 ubNumStationaryEnemies = 0;
+	UINT16 ubNumMobileEnemies = 0;
+	UINT16 ubNumMercs;
 	BOOLEAN fUsePluralVersion = FALSE;
 	INT8	bBestExpLevel = 0;
 	BOOLEAN fRetreatAnOption = TRUE;

@@ -1875,7 +1875,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						{
 							if ( gusSelectedSoldier != NOBODY )
 							{ //Select next merc
-								UINT8 bID;
+								INT16 bID;
 
 								bID = FindNextMercInTeamPanel( MercPtrs[ gusSelectedSoldier ], FALSE, FALSE );
 
@@ -2085,7 +2085,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 #ifdef JA2TESTVERSION
 				if( fAlt )
 				{
-					UINT8 ubProfile = TONY;
+					INT16 ubProfile = TONY;
 
 					GetMouseMapPos( &gusQdsEnteringGridNo );
 					AddShopkeeperToGridNo( ubProfile, gusQdsEnteringGridNo );
@@ -3062,8 +3062,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						*/
 					SOLDIERTYPE	*pTeamSoldier;
 						OBJECTTYPE * pObj;
-						INT8		bLoop, bSlot1, bSlot2, bSlot3, temp, tempStatus=0;
-						INT16		lastBonus=0, tempItem=0;
+						INT16		bLoop, bSlot1, bSlot2, bSlot3, temp;
+						INT8 tempStatus=0;
+						INT16		lastBonus=0; 
+						UINT16		tempItem=0;
 					for (bLoop=gTacticalStatus.Team[gbPlayerNum].bFirstID, pTeamSoldier=MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[gbPlayerNum].bLastID; bLoop++, pTeamSoldier++)
 					{
 						if ( OK_CONTROLLABLE_MERC( pTeamSoldier ) && pTeamSoldier->bAssignment == CurrentSquad( ) && !AM_A_ROBOT( pTeamSoldier ) )
@@ -3286,7 +3288,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				if (! ( gTacticalStatus.fEnemyInSector ) )
 				{
 					SOLDIERTYPE	*pTeamSoldier;
-					INT8		bLoop;
+					INT16		bLoop;
 					OBJECTTYPE *pGun, *pAmmo;
 
 					// Search for soldier
@@ -3339,7 +3341,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				else
 				{
 					SOLDIERTYPE	*pTeamSoldier;
-					INT8		bLoop;
+					INT16		bLoop;
 					OBJECTTYPE *pGun, *pAmmo;
 
 					for (bLoop=gTacticalStatus.Team[gbPlayerNum].bFirstID, pTeamSoldier=MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[gbPlayerNum].bLastID; bLoop++, pTeamSoldier++)
@@ -3750,7 +3752,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					// For each guy on squad...
 					{
 						SOLDIERTYPE				*pTeamSoldier;
-						INT8							bLoop;
+						INT16							bLoop;
 						BOOLEAN						fStealthOn = FALSE;
 
 						// Check if at least one guy is on stealth....
@@ -4581,7 +4583,7 @@ void CreateNextCivType()
 		MercCreateStruct.sInsertionGridNo		= usMapPos;
 		RandomizeNewSoldierStats( &MercCreateStruct );
 
-		if ( TacticalCreateSoldier( &MercCreateStruct, (UINT8 *)&iNewIndex ) )
+		if ( TacticalCreateSoldier( &MercCreateStruct, (INT16 *)&iNewIndex ) )
 		{
 			AddSoldierToSector( iNewIndex );
 
@@ -4631,7 +4633,7 @@ void CreateCow()
 		MercCreateStruct.sInsertionGridNo		= usMapPos;
 		RandomizeNewSoldierStats( &MercCreateStruct );
 
-		if ( TacticalCreateSoldier( &MercCreateStruct, (UINT8 *)&iNewIndex ) )
+		if ( TacticalCreateSoldier( &MercCreateStruct, (INT16 *)&iNewIndex ) )
 		{
 			AddSoldierToSector( iNewIndex );
 
@@ -4664,7 +4666,7 @@ void CreatePlayerControlledCow()
 
 		RandomizeNewSoldierStats( &MercCreateStruct );
 
-		if ( TacticalCreateSoldier( &MercCreateStruct, (UINT8 *)&iNewIndex ) )
+		if ( TacticalCreateSoldier( &MercCreateStruct, (INT16 *)&iNewIndex ) )
 		{
 			AddSoldierToSector( iNewIndex );
 
@@ -4748,7 +4750,7 @@ void CreatePlayerControlledMonster()
 		MercCreateStruct.sInsertionGridNo		= usMapPos;
 		RandomizeNewSoldierStats( &MercCreateStruct );
 
-		if ( TacticalCreateSoldier( &MercCreateStruct, (UINT8 *)&iNewIndex ) )
+		if ( TacticalCreateSoldier( &MercCreateStruct, (INT16 *)&iNewIndex ) )
 		{
 			AddSoldierToSector( iNewIndex );
 		}
@@ -4760,7 +4762,7 @@ INT8 CheckForAndHandleHandleVehicleInteractiveClick( SOLDIERTYPE *pSoldier, UINT
 {
 	// Look for an item pool
 	INT32 sActionGridNo;
-	UINT8							ubDirection;
+	INT8							ubDirection;
 	SOLDIERTYPE       *pTSoldier;
 	INT16							sAPCost = 0;
 
@@ -4822,7 +4824,7 @@ void HandleHandCursorClick( INT32 usMapPos, UINT32 *puiNewEvent )
 	LEVELNODE					*pIntTile;
 	INT32 sIntTileGridNo;
 	INT32 sActionGridNo;
-	UINT8							ubDirection;
+	INT8 ubDirection;
 	INT16							sAPCost;
 	INT32 sAdjustedGridNo;
 	STRUCTURE					*pStructure = NULL;
@@ -4996,7 +4998,7 @@ INT8 HandleMoveModeInteractiveClick( INT32 usMapPos, UINT32 *puiNewEvent )
 	LEVELNODE					*pIntTile;
 	INT32 sIntTileGridNo;
 	INT32 sActionGridNo;
-	UINT8							ubDirection;
+	INT8 ubDirection;
 	INT8							bReturnCode = 0;
 	INT8							bZLevel;
 	STRUCTURE					*pStructure = NULL;
@@ -5197,7 +5199,7 @@ void ChangeCurrentSquad( INT32 iSquad )
 
 void HandleSelectMercSlot( UINT8 ubPanelSlot, INT8 bCode )
 {
-	UINT8 ubID;
+	INT16 ubID;
 
 	if ( GetPlayerIDFromInterfaceTeamSlot( ubPanelSlot, &ubID ) )
 	{
@@ -5251,7 +5253,7 @@ void TestMeanWhile( INT32 iID )
 void EscapeUILock( )
 {
 	//UNLOCK UI
-	UnSetUIBusy( (UINT8)gusSelectedSoldier );
+	UnSetUIBusy( gusSelectedSoldier );
 
 	// Decrease global busy  counter...
 	gTacticalStatus.ubAttackBusyCount = 0;

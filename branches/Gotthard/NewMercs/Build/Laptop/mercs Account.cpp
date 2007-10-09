@@ -180,7 +180,7 @@ void BtnAccountNextPageButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 INT32 GetNumberOfHiredMercs()
 {
-	UINT8 usMercID;
+	INT16 usMercID;
 	UINT8 i = 0;
 	UINT8 count = 0;
 	UINT32	uiContractCharge;
@@ -468,10 +468,11 @@ void DisplayHiredMercs()
 	UINT16	usPosY;
 	UINT32	uiContractCharge;	
 	CHAR16	sTemp[20];
-	UINT8	i, usMercID;
-	UINT8	ubFontColor;
-	UINT8 usMercIDStart;
-	UINT8 usMercIDEnd;
+	INT16 i; 
+	INT16 usMercID;
+	UINT8 ubFontColor;
+	INT16 usMercIDStart;
+	INT16 usMercIDEnd;
 	INT16 usCurrentRow = -1;
 
 	usPosY = MERC_AC_FIRST_ROW_Y + 3;
@@ -559,7 +560,7 @@ void SettleMercAccounts()
 {
 //	SOLDIERTYPE *pSoldier;
 	INT16	i;
-	UINT8 ubMercID;
+	INT16 ubMercID;
 	INT32	iPartialPayment=0;
 	INT32	iContractCharge=0;
 
@@ -567,7 +568,7 @@ void SettleMercAccounts()
 	//loop through all the MERC mercs the player has on the team
 	for(i=0; i<NUMBER_OF_MERCS; i++)
 	{
-		ubMercID = GetMercIDFromMERCArray( (UINT8) i );
+		ubMercID = GetMercIDFromMERCArray(i);
 
 		//if the merc is on the team, or does the player owe money for a fired merc
 		if( IsMercOnTeam( ubMercID ) || ( gMercProfiles[ ubMercID ].iMercMercContractLength != 0 ) )

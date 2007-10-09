@@ -103,7 +103,7 @@ void	GetRTMouseButtonInput( UINT32 *puiNewEvent )
 
 void	QueryRTLeftButton( UINT32 *puiNewEvent )
 {
-	UINT16	usSoldierIndex;
+	INT16	usSoldierIndex;
 	SOLDIERTYPE *pSoldier;
 	UINT32	uiMercFlags;
 	static	UINT32 uiSingleClickTime;

@@ -80,37 +80,37 @@ void RecalculateSoldiersAniSpeed()
 
 
 
-extern void DecayPublicOpplist(INT8 bTeam);
+extern void DecayPublicOpplist(UINT8 bTeam);
 extern void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier);
 void EndInterrupt( BOOLEAN fMarkInterruptOccurred );
-void DeleteFromIntList( UINT8 ubIndex, BOOLEAN fCommunicate);
+void DeleteFromIntList( INT16 ubIndex, BOOLEAN fCommunicate);
 
 #define END_OF_INTERRUPTS 255
 
-UINT8 gubOutOfTurnOrder[MAXMERCS] = { END_OF_INTERRUPTS, 0 };
-UINT8 gubOutOfTurnPersons = 0;
+INT16 gubOutOfTurnOrder[MAXMERCS] = { END_OF_INTERRUPTS, 0 };
+INT16 gubOutOfTurnPersons = 0;
 
 #define LATEST_INTERRUPT_GUY (gubOutOfTurnOrder[gubOutOfTurnPersons])
-#define REMOVE_LATEST_INTERRUPT_GUY()	(DeleteFromIntList( (UINT8) (gubOutOfTurnPersons), TRUE ))
+#define REMOVE_LATEST_INTERRUPT_GUY()	(DeleteFromIntList( gubOutOfTurnPersons, TRUE ))
 #define INTERRUPTS_OVER (gubOutOfTurnPersons == 1)
 
 INT16 InterruptOnlyGuynum = NOBODY;
 BOOLEAN InterruptsAllowed = TRUE;
 BOOLEAN gfHiddenInterrupt = FALSE;
-UINT8		gubLastInterruptedGuy = 0;
+INT16		gubLastInterruptedGuy = 0;
 
 extern UINT16 gsWhoThrewRock;
 extern UINT8 gubSightFlags;
 
 typedef struct
 {
-	UINT8		ubOutOfTurnPersons;
+	INT16		ubOutOfTurnPersons;
 
 	INT16		InterruptOnlyGuynum;
 	INT16		sWhoThrewRock;
 	BOOLEAN InterruptsAllowed;
 	BOOLEAN fHiddenInterrupt;
-	UINT8		ubLastInterruptedGuy;
+	INT16		ubLastInterruptedGuy;
 
 	UINT8	ubFiller[16];
 } TEAM_TURN_SAVE_STRUCT;
@@ -413,7 +413,7 @@ void BeginTeamTurn( UINT8 ubTeam )
 {
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"BeginTeamTurn");
 	INT32 cnt;
-	UINT8	ubID;
+	UINT16	ubID;
 	SOLDIERTYPE		*pSoldier;
 	
 	//rain
@@ -649,12 +649,12 @@ BOOLEAN EveryoneInInterruptListOnSameTeam( void )
 
 void StartInterrupt( void )
 {
-	UINT8						ubFirstInterrupter;
+	INT16						ubFirstInterrupter;
 	INT8						bTeam;
 	SOLDIERTYPE *		pSoldier;
 	SOLDIERTYPE *		pTempSoldier;
-	UINT8						ubInterrupter;
-	INT32						cnt;
+	INT16						ubInterrupter;
+	INT16						cnt;
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"StartInterrupt");
 	ubFirstInterrupter = LATEST_INTERRUPT_GUY;
@@ -870,10 +870,10 @@ void StartInterrupt( void )
 
 void EndInterrupt( BOOLEAN fMarkInterruptOccurred )
 {
-	UINT8						ubInterruptedSoldier;
+	UINT16						ubInterruptedSoldier;
 	SOLDIERTYPE *		pSoldier;
 	SOLDIERTYPE *		pTempSoldier;
-	INT32						cnt;
+	INT16						cnt;
 	BOOLEAN					fFound;
 	UINT8						ubMinAPsToAttack;
 
@@ -1137,7 +1137,7 @@ void EndInterrupt( BOOLEAN fMarkInterruptOccurred )
 }
 
 
-BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, INT8 bOldOppList)
+BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, INT16 ubOpponentID, INT8 bOldOppList)
 {
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"StandardInterruptConditionsMet");
 //	UINT8 ubAniType;
@@ -1422,7 +1422,7 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 }
 
 
-INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, BOOLEAN fUseWatchSpots )
+INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, INT16 ubOpponentID, BOOLEAN fUseWatchSpots )
 {
 	INT32 iPoints;
 	INT8 bLightLevel;
@@ -1630,11 +1630,11 @@ BOOLEAN InterruptDuel( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOpponent)
 }
 
 
-void DeleteFromIntList( UINT8 ubIndex, BOOLEAN fCommunicate)
+void DeleteFromIntList( INT16 ubIndex, BOOLEAN fCommunicate)
 {
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"DeleteFromIntList");
-	UINT8 ubLoop;
-	UINT8 ubID;
+	INT16 ubLoop;
+	INT16 ubID;
 
 	if ( ubIndex > gubOutOfTurnPersons)
 	{
@@ -1672,10 +1672,10 @@ void DeleteFromIntList( UINT8 ubIndex, BOOLEAN fCommunicate)
 	*/
 }
 
-void AddToIntList( UINT8 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate )
+void AddToIntList( INT16 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate )
 {
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"AddToIntList");
-	UINT8 ubLoop;
+	INT16 ubLoop;
 
 //	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%d added to int list", ubID );
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: adding ID %d who %s", ubID, fGainControl ? "gains control" : "loses control" ) );
@@ -1736,11 +1736,12 @@ void AddToIntList( UINT8 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate )
 void VerifyOutOfTurnOrderArray()
 {
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"VerifyOutOfTurnOrderArray");
-	UINT8		ubTeamHighest[ MAXTEAMS ] = { 0 };
+	UINT16		ubTeamHighest[ MAXTEAMS ] = { 0 };
 	UINT8		ubTeamsInList;
-	UINT8		ubNextInArrayOnTeam, ubNextIndex;
+	INT16 ubNextInArrayOnTeam, ubNextIndex;
 	UINT8		ubTeam;
-	UINT8		ubLoop, ubLoop2;
+	INT16 ubLoop;
+	UINT8 ubLoop2;
 	BOOLEAN	fFoundLoop = FALSE;
 
 	for (ubLoop = 1; ubLoop <= gubOutOfTurnPersons; ubLoop++)
@@ -1862,13 +1863,13 @@ void DoneAddingToIntList( SOLDIERTYPE * pSoldier, BOOLEAN fChange, UINT8 ubInter
 void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 {
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ResolveInterruptsVs: Soldier ID = %d, APs = %d",pSoldier->ubID,pSoldier->bActionPoints));
-	UINT8 ubTeam, ubOpp;
+	UINT16 ubTeam, ubOpp;
 	UINT8 ubIntCnt;
-	UINT8 ubIntList[MAXMERCS];
+	INT16 ubIntList[MAXMERCS];
 	UINT8 ubIntDiff[MAXMERCS];
 	UINT8 ubSmallestDiff;
-	UINT8 ubSlot, ubSmallestSlot;
-	UINT8 ubLoop;
+	UINT16 ubSlot, ubSmallestSlot;
+	UINT16 ubLoop;
 	BOOLEAN fIntOccurs;
 	SOLDIERTYPE * pOpponent;
 	BOOLEAN fControlChanged = FALSE;

@@ -209,7 +209,7 @@ extern UINT32 guiSAVEBUFFER;
 
 extern BOOLEAN fShowInventoryFlag;
 extern FACETYPE *gpCurrentTalkingFace;
-extern UINT8			gubCurrentTalkingID;
+extern INT16 gubCurrentTalkingID;
 extern BOOLEAN fMapScreenBottomDirty;
 extern MOUSE_REGION    gMPanelRegion;
 
@@ -2294,9 +2294,9 @@ void RandomMercInGroupSaysQuote( GROUP *pGroup, UINT16 usQuoteNum )
 {
 	PLAYERGROUP *pPlayer;
 	SOLDIERTYPE *pSoldier;
-	UINT8				ubMercsInGroup[ 20 ];
+	UINT16				ubMercsInGroup[ 20 ];
 	UINT8				ubNumMercs = 0;
-	UINT8				ubChosenMerc;
+	UINT16				ubChosenMerc;
 
 
 	// if traversing tactically, don't do this, unless time compression was required for some reason (don't go to sector)
@@ -5948,7 +5948,8 @@ BOOLEAN CanCharacterMoveInStrategic( SOLDIERTYPE *pSoldier, INT8 *pbErrorNumber 
 	if ( ( pSoldier->sSectorX == 12 ) && ( pSoldier->sSectorY == MAP_ROW_L ) && ( pSoldier->bSectorZ == 0 ) &&
 			 ( !pSoldier->fBetweenSectors ) && gMercProfiles[ ELDIN ].bMercStatus != MERC_IS_DEAD )
 	{
-		UINT8	ubRoom, cnt;
+		INT16 ubRoom;
+		UINT16 cnt;
 		SOLDIERTYPE * pSoldier2;
 
 		if ( InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom >= 22 && ubRoom <= 41 )
@@ -6058,8 +6059,8 @@ BOOLEAN CanEntireMovementGroupMercIsInMove( SOLDIERTYPE *pSoldier, INT8 *pbError
 {
 	SOLDIERTYPE *pCurrentSoldier = NULL;
 	INT32 iCounter = 0;
-	UINT8 ubGroup = 0;
-	UINT8 ubCurrentGroup = 0;
+	INT8 ubGroup = 0;
+	INT8 ubCurrentGroup = 0;
 
 
 	// first check the requested character himself
@@ -6470,7 +6471,7 @@ BOOLEAN LoadLeaveItemList( HWFILE hFile )
 
 
 
-void TurnOnSectorLocator( UINT8 ubProfileID )
+void TurnOnSectorLocator(INT16 ubProfileID)
 {
 	SOLDIERTYPE *pSoldier;
 

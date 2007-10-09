@@ -290,7 +290,7 @@ BOOLEAN LoadMercProfiles(void)
 		gMercProfiles[ uiLoop ].CopyOldInventoryToNew();
 
 		//if the Dialogue exists for the merc, allow the merc to be hired
-		if( DialogueDataFileExistsForProfile( (UINT8)uiLoop, 0, FALSE, NULL ) )
+		if( DialogueDataFileExistsForProfile( uiLoop, 0, FALSE, NULL ) )
 		{
 			gMercProfiles[uiLoop].bMercStatus = 0;
 		}
@@ -774,7 +774,7 @@ void StartSomeMercsOnAssignment(void)
 	// some randomly picked A.I.M. mercs will start off "on assignment" at the beginning of each new game
 	for( uiCnt = 0; uiCnt < AIM_AND_MERC_MERCS; uiCnt++)
 	{
-		if( !IsProfileIdAnAimOrMERCMerc( (UINT8)uiCnt ) )
+		if( !IsProfileIdAnAimOrMERCMerc( (INT16)uiCnt ) )
 		{
 			continue;
 		}
@@ -801,7 +801,7 @@ void StartSomeMercsOnAssignment(void)
 }
 
 
-void SetProfileFaceData( UINT8 ubCharNum, UINT8 ubFaceIndex, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY )
+void SetProfileFaceData( INT16 ubCharNum, UINT8 ubFaceIndex, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY )
 {
 	 gMercProfiles[ ubCharNum ].ubFaceIndex = ubFaceIndex;
 	 gMercProfiles[ ubCharNum ].usEyesX			= usEyesX;
@@ -852,9 +852,9 @@ INT16 CalcMedicalDeposit( MERCPROFILESTRUCT * pProfile )
 	return(usDeposit);
 }
 
-SOLDIERTYPE * FindSoldierByProfileID( UINT8 ubProfileID, BOOLEAN fPlayerMercsOnly )
+SOLDIERTYPE * FindSoldierByProfileID( INT16 ubProfileID, BOOLEAN fPlayerMercsOnly )
 {
-	UINT8 ubLoop, ubLoopLimit;
+	UINT16 ubLoop, ubLoopLimit;
 	SOLDIERTYPE * pSoldier;
 
 	if (fPlayerMercsOnly)
@@ -880,13 +880,13 @@ SOLDIERTYPE * FindSoldierByProfileID( UINT8 ubProfileID, BOOLEAN fPlayerMercsOnl
 
 SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 {
-	UINT8										ubID;
+	INT16										ubID;
 	SOLDIERTYPE							*pNewSoldier = NULL;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	UINT32									cnt;
 	INT32										sOldGridNo;
 
-	UINT8										ubOldID;
+	INT16										ubOldID;
 	UINT32									uiOldUniqueId;
 
 	UINT32									uiSlot;
@@ -1027,7 +1027,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 }
 
 
-BOOLEAN RecruitRPC( UINT8 ubCharNum )
+BOOLEAN RecruitRPC( INT16 ubCharNum )
 {
 	SOLDIERTYPE *pSoldier, *pNewSoldier;
 
@@ -1115,7 +1115,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 	return( TRUE );
 }
 
-BOOLEAN RecruitEPC( UINT8 ubCharNum )
+BOOLEAN RecruitEPC( INT16 ubCharNum )
 {
 	SOLDIERTYPE *pSoldier, *pNewSoldier;
 
@@ -1165,7 +1165,7 @@ BOOLEAN RecruitEPC( UINT8 ubCharNum )
 }
 
 
-BOOLEAN UnRecruitEPC( UINT8 ubCharNum )
+BOOLEAN UnRecruitEPC( INT16 ubCharNum )
 {
 	SOLDIERTYPE *pSoldier, *pNewSoldier;
 
@@ -1229,10 +1229,10 @@ BOOLEAN UnRecruitEPC( UINT8 ubCharNum )
 
 
 
-INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy )
+INT16 WhichBuddy( INT16 ubCharNum, INT16 ubBuddy )
 {
 	MERCPROFILESTRUCT *	pProfile;
-	INT8								bLoop;
+	INT16								bLoop;
 
 	pProfile = &( gMercProfiles[ ubCharNum ] );
 
@@ -1246,10 +1246,10 @@ INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy )
 	return( -1 );
 }
 
-INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated )
+INT16 WhichHated( INT16 ubCharNum, INT16 ubHated )
 {
 	MERCPROFILESTRUCT *	pProfile;
-	INT8								bLoop;
+	INT16								bLoop;
 
 	pProfile = &( gMercProfiles[ ubCharNum ] );
 
@@ -1264,7 +1264,7 @@ INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated )
 }
 
 
-BOOLEAN IsProfileATerrorist( UINT8 ubProfile )
+BOOLEAN IsProfileATerrorist( INT16 ubProfile )
 {
 	if ( ubProfile == 83 || ubProfile == 111 ||
 			 ubProfile == 64 || ubProfile == 112 ||
@@ -1278,7 +1278,7 @@ BOOLEAN IsProfileATerrorist( UINT8 ubProfile )
 	}
 }
 
-BOOLEAN IsProfileAHeadMiner( UINT8 ubProfile )
+BOOLEAN IsProfileAHeadMiner( INT16 ubProfile )
 {
 	if ( ubProfile == 106 || ubProfile == 148 ||
 			 ubProfile == 156 || ubProfile == 157 ||
@@ -1353,7 +1353,7 @@ void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs )
 
 
 
-BOOLEAN DoesMercHaveABuddyOnTheTeam( UINT8 ubMercID )
+BOOLEAN DoesMercHaveABuddyOnTheTeam( INT16 ubMercID )
 {
 	UINT8	ubCnt;
 	INT8	bBuddyID;
@@ -1394,8 +1394,8 @@ BOOLEAN MercIsHot( SOLDIERTYPE * pSoldier )
 
 SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier )
 {
-	UINT8	ubSrcProfile;
-	UINT8	ubDestProfile;
+	INT16	ubSrcProfile;
+	INT16	ubDestProfile;
 	MERCPROFILESTRUCT * pNewProfile;
 
 	ubSrcProfile = pSoldier->ubProfile;
@@ -1516,7 +1516,7 @@ SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier )
 
 BOOLEAN DoesNPCOwnBuilding( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
-  UINT8 ubRoomInfo;
+  INT16 ubRoomInfo;
 
   // Get room info
   ubRoomInfo = gubWorldRoomInfo[ sGridNo ];
@@ -1548,7 +1548,7 @@ BOOLEAN DoesNPCOwnBuilding( SOLDIERTYPE *pSoldier, INT32 sGridNo )
   return( FALSE );
 }
 
-BOOLEAN IsProfileIdAnAimOrMERCMerc( UINT8 ubProfileID )
+BOOLEAN IsProfileIdAnAimOrMERCMerc( INT16 ubProfileID )
 {
 
 	if( ubProfileID < BIFF ||

@@ -48,7 +48,7 @@ typedef struct
 	INT16 sWestGridNo;
 	//This contains the number of individuals in the map.
 	//Individuals include NPCs, enemy placements, creatures, civilians, rebels, and animals.
-	UINT8 ubNumIndividuals;
+	INT16 ubNumIndividuals;
 	UINT8 ubMapVersion;
 	UINT8 ubRestrictedScrollID;
 	UINT8 ubEditorSmoothingType;  //normal, basement, or caves
@@ -61,7 +61,7 @@ typedef struct
 extern MAPCREATE_STRUCT gMapInformation;
 
 void SaveMapInformation( HWFILE fp );
-void LoadMapInformation( INT8 **hBuffer, FLOAT dMajorMapVersion );
+void LoadMapInformation( INT16 **hBuffer, FLOAT dMajorMapVersion );
 void ValidateAndUpdateMapVersionIfNecessary();
 BOOLEAN ValidateEntryPointGridNo( INT32 *sGridNo );
 

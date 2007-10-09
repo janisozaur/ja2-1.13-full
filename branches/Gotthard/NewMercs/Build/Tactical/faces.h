@@ -83,8 +83,8 @@ typedef struct
 	INT32			iVideoOverlay;									// Value for video overlay ( not used too much )
 
 	UINT32		uiSoundID;											// Sound ID if one being played
-	UINT8			ubSoldierID;										// SoldierID if one specified
-	UINT8			ubCharacterNum;									// Profile ID num
+	INT16			ubSoldierID;										// SoldierID if one specified
+	INT16			ubCharacterNum;									// Profile ID num
 
   UINT16		usFaceX;												// X location to render face
   UINT16		usFaceY;												// Y location to render face
@@ -130,7 +130,7 @@ typedef struct
 	BOOLEAN		fOldShowHighlight;
 	INT8			bOldAssignment;
 	INT8			ubOldServiceCount;
-	UINT8			ubOldServicePartner;
+	INT16		ubOldServicePartner;
 	BOOLEAN		fOldShowMoveHilight;
 
 	UINT16		sMouthFrame;
@@ -160,14 +160,14 @@ extern FACETYPE	gFacesData[ NUM_FACE_SLOTS ];
 // FACE HANDLING
 //
 // Faces are done like this: Call
-INT32	InitFace( UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitFlags );
+INT32	InitFace( INT16 usMercProfileID, INT16 ubSoldierID, UINT32 uiInitFlags );
 // The first parameter is the profile ID and the second is the soldier ID ( which for most cases
 // will be NOBODY if the face is not created from a SOLDIERTYPE )
 // This function allocates a slot in the table for the face, loads it's STI file, sets some
 // values for X,Y locations of eyes from the profile. Does not mkae the face visible or anything like that
 
 // INternal init face, called if you don;t want to give a profile ID ( send NO_PROFILE ) for ID
-INT32	InternalInitFace( UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitFlags, INT32 iFaceFileID, UINT32 uiBlinkFrequency, UINT32 uiExpressionFrequency );
+INT32	InternalInitFace( INT16 ubMercProfileID, INT16 ubSoldierID, UINT32 uiInitFlags, INT32 iFaceFileID, UINT32 uiBlinkFrequency, UINT32 uiExpressionFrequency );
 
 
 // Removes the face from the internal table, deletes any memory allocated if any.
@@ -233,10 +233,10 @@ void HandleTalkingAutoFaces( );
 // Same Functions but taking soldier ID first to get profile ID 
 INT32		InitSoldierFace( SOLDIERTYPE *pSoldier );
 void		DeleteSoldierFace( SOLDIERTYPE *pSoldier );
-void		SetAutoFaceActiveFromSoldier( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, UINT8 ubSoldierID , UINT16 usFaceX, UINT16 usFaceY );
-void		SetAutoFaceInActiveFromSoldier( UINT8 ubSoldierID );
-BOOLEAN RenderAutoFaceFromSoldier( UINT8 ubSoldierID );
-BOOLEAN ExternRenderFaceFromSoldier( UINT32 uiBuffer, UINT8 ubSoldierID, INT16 sX, INT16 sY );
+void		SetAutoFaceActiveFromSoldier( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, INT16 ubSoldierID , UINT16 usFaceX, UINT16 usFaceY );
+void		SetAutoFaceInActiveFromSoldier( INT16 ubSoldierID );
+BOOLEAN RenderAutoFaceFromSoldier( INT16 ubSoldierID );
+BOOLEAN ExternRenderFaceFromSoldier( UINT32 uiBuffer, INT16 ubSoldierID, INT16 sX, INT16 sY );
 
 
 

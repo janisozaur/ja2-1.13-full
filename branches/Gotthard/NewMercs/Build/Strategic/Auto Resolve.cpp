@@ -162,13 +162,13 @@ typedef struct AUTORESOLVE_STRUCT
 
 	UINT8 ubEnemyLeadership;
 	UINT8 ubPlayerLeadership;
-	UINT8 ubMercs, ubCivs, ubEnemies;
-	UINT8 ubAdmins, ubTroops, ubElites;
-	UINT8 ubYMCreatures, ubYFCreatures, ubAMCreatures, ubAFCreatures;
-	UINT8 ubAliveMercs, ubAliveCivs, ubAliveEnemies;
-	UINT8 ubMercCols, ubMercRows;
-	UINT8 ubEnemyCols, ubEnemyRows;
-	UINT8 ubCivCols, ubCivRows;
+	UINT16 ubMercs, ubCivs, ubEnemies;
+	UINT16 ubAdmins, ubTroops, ubElites;
+	UINT16 ubYMCreatures, ubYFCreatures, ubAMCreatures, ubAFCreatures;
+	UINT16 ubAliveMercs, ubAliveCivs, ubAliveEnemies;
+	UINT16 ubMercCols, ubMercRows;
+	UINT16 ubEnemyCols, ubEnemyRows;
+	UINT16 ubCivCols, ubCivRows;
 	UINT8 ubTimeModifierPercentage;
 	UINT8 ubSectorX, ubSectorY;
 	INT8 bVerticalOffset;
@@ -428,7 +428,7 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 	GROUP *pGroup, *pDeleteGroup;
 	SECTORINFO *pSector;
 	INT32 i;
-	UINT8 ubNumEnemies[ NUM_ENEMY_RANKS ];
+	UINT16 ubNumEnemies[ NUM_ENEMY_RANKS ];
 	UINT8 ubRankIndex;
 
 	//Clear any possible battle locator
@@ -756,9 +756,9 @@ void AssociateEnemiesWithStrategicGroups()
 {
 	SECTORINFO *pSector;
 	GROUP *pGroup;
-	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
-	UINT8 ubISNumAdmins, ubISNumTroops, ubISNumElites;
-	UINT8 ubNumElitesInGroup, ubNumTroopsInGroup, ubNumAdminsInGroup;
+	UINT16 ubNumAdmins, ubNumTroops, ubNumElites;
+	UINT16 ubISNumAdmins, ubISNumTroops, ubISNumElites;
+	UINT16 ubNumElitesInGroup, ubNumTroopsInGroup, ubNumAdminsInGroup;
 	INT32 i;
 	UINT8 pSectors[4];
 	UINT8 ubDirAmount;
@@ -1669,7 +1669,7 @@ void RenderAutoResolve()
 	INT32 index = 0;
 	CHAR16 str[100];
 	UINT8 bTownId = 0;
-	UINT8 ubGood, ubBad;
+	UINT16 ubGood, ubBad;
 	
 	if( gpAR->fExpanding )
 	{ //animate the expansion of the window.
@@ -1957,6 +1957,10 @@ static void ARCreateMilitia( UINT8 mclass, INT32 i, INT16 sX, INT16 sY)
 	// reset counter of how many mortars this team has rolled
 	ResetMortarsOnTeamCount();
 
+	if( !gpBattleGroup ) {
+		AssertMsg(0, "No battle group set while creating militia");
+	}
+
 	if( mclass == SOLDIER_CLASS_ELITE_MILITIA )
 	{
 		gpCivs[i].pSoldier = TacticalCreateMilitia( SOLDIER_CLASS_ELITE_MILITIA );
@@ -2007,7 +2011,7 @@ static void ARCreateMilitia( UINT8 mclass, INT32 i, INT16 sX, INT16 sY)
 	swprintf( gpCivs[i].pSoldier->name, gpStrategicString[ STR_AR_MILITIA_NAME ] );
 }
 
-static void ARCreateMilitiaSquad( UINT8 *cnt, UINT8 ubEliteMilitia, UINT8 ubRegMilitia, UINT8 ubGreenMilitia, INT16 sX, INT16 sY)
+static void ARCreateMilitiaSquad( UINT16 *cnt, UINT16 ubEliteMilitia, UINT16 ubRegMilitia, UINT16 ubGreenMilitia, INT16 sX, INT16 sY)
 {
 	while( *cnt < gpAR->ubCivs && (ubEliteMilitia || ubRegMilitia || ubGreenMilitia) )
 	{
@@ -2036,10 +2040,10 @@ void CreateAutoResolveInterface()
 	VOBJECT_DESC    VObjectDesc;
 	INT32 i, index;
 	HVOBJECT hVObject;
-	UINT8 ubGreenMilitia, ubRegMilitia, ubEliteMilitia;
+	UINT16 ubGreenMilitia, ubRegMilitia, ubEliteMilitia;
 	UINT16 pMoveDir[4][3];
 	UINT8 uiDirNumber = 0;
-	UINT8 cnt;
+	UINT16 cnt;
 
 	//Setup new autoresolve blanket interface.
 	MSYS_DefineRegion( &gpAR->AutoResolveRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH-1, 0,
@@ -2323,7 +2327,7 @@ void RemoveAutoResolveInterface( BOOLEAN fDeleteForGood )
 {
 	INT32 i;
 	UINT8 ubCurrentRank;
-	UINT8 ubCurrentGroupID = 0;
+	INT8 ubCurrentGroupID = 0;
 	BOOLEAN fFirstGroup = TRUE;
 
 DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
@@ -2634,7 +2638,7 @@ void RetreatButtonCallback( GUI_BUTTON *btn, INT32 reason )
 		}
 		if( gpAR->pRobotCell )
 		{ //if robot is retreating, set the retreat time to be the same as the robot's controller.
-			UINT8 ubRobotControllerID;
+			UINT16 ubRobotControllerID;
 			
 			ubRobotControllerID = gpAR->pRobotCell->pSoldier->ubRobotRemoteHolderID;
 			
@@ -2805,7 +2809,7 @@ void MercCellMouseClickCallback( MOUSE_REGION *reg, INT32 reason )
 
 		if( gpAR->pRobotCell )
 		{ //if controller is retreating, make the robot retreat too.
-			UINT8 ubRobotControllerID;
+			UINT16 ubRobotControllerID;
 			
 			ubRobotControllerID = gpAR->pRobotCell->pSoldier->ubRobotRemoteHolderID;
 			
@@ -2842,23 +2846,19 @@ void CalculateAutoResolveInfo()
 //		GetNumberOfEnemiesInSector( gpAR->ubSectorX, gpAR->ubSectorY, 
 		GetNumberOfEnemiesInFiveSectors( gpAR->ubSectorX, gpAR->ubSectorY, 
 																&gpAR->ubAdmins, &gpAR->ubTroops, &gpAR->ubElites );
-		gpAR->ubEnemies = (UINT8)min( gpAR->ubAdmins + gpAR->ubTroops + gpAR->ubElites, MAX_AR_TEAM_SIZE );
+		gpAR->ubEnemies = (UINT16)min( gpAR->ubAdmins + gpAR->ubTroops + gpAR->ubElites, MAX_AR_TEAM_SIZE );
 	}
 	else
 	{
 		if( gfTransferTacticalOppositionToAutoResolve )
 		{
-			DetermineCreatureTownCompositionBasedOnTacticalInformation( &gubNumCreaturesAttackingTown, 
-																				&gpAR->ubYMCreatures, &gpAR->ubYFCreatures,
-																				&gpAR->ubAMCreatures, &gpAR->ubAFCreatures );
+			DetermineCreatureTownCompositionBasedOnTacticalInformation( &gubNumCreaturesAttackingTown, &gpAR->ubYMCreatures, &gpAR->ubYFCreatures, &gpAR->ubAMCreatures, &gpAR->ubAFCreatures );
 		}
 		else
 		{
-			DetermineCreatureTownComposition( gubNumCreaturesAttackingTown, 
-																				&gpAR->ubYMCreatures, &gpAR->ubYFCreatures,
-																				&gpAR->ubAMCreatures, &gpAR->ubAFCreatures );
+			DetermineCreatureTownComposition( gubNumCreaturesAttackingTown, &gpAR->ubYMCreatures, &gpAR->ubYFCreatures, &gpAR->ubAMCreatures, &gpAR->ubAFCreatures );
 		}
-		gpAR->ubEnemies = (UINT8)min( gpAR->ubYMCreatures + gpAR->ubYFCreatures + gpAR->ubAMCreatures + gpAR->ubAFCreatures, MAX_AR_TEAM_SIZE );
+		gpAR->ubEnemies = (UINT16)min( gpAR->ubYMCreatures + gpAR->ubYFCreatures + gpAR->ubAMCreatures + gpAR->ubAFCreatures, MAX_AR_TEAM_SIZE );
 	}
 	gfTransferTacticalOppositionToAutoResolve = FALSE;
 //	gpAR->ubCivs = CountAllMilitiaInSector( gpAR->ubSectorX, gpAR->ubSectorY );
@@ -3497,7 +3497,7 @@ void CreateTempPlayerMerc()
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	static INT32       iSoldierCount=0;     
-	UINT8							ubID;
+	INT16	ubID;
 
 	//Init the merc create structure with basic information
         // WDS - Clean up inventory handling

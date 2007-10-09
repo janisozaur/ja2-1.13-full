@@ -143,7 +143,7 @@ void UpdateOldMapCreateStruct(MAPCREATE_STRUCT * pNew, _OLD_MAPCREATE_STRUCT * p
 	pNew->sIsolatedGridNo = pOld->sIsolatedGridNo;
 }
 
-void LoadMapInformation( INT8 **hBuffer, FLOAT dMajorMapVersion )
+void LoadMapInformation( INT16 **hBuffer, FLOAT dMajorMapVersion )
 {
 	if(dMajorMapVersion<7.0)
 	{

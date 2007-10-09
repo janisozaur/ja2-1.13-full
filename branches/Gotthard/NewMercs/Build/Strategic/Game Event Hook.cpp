@@ -207,7 +207,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		//If a merc gets hired and they dont show up immediately, the merc gets added to the queue and shows up
 		// uiTimeTillMercArrives  minutes later
 		case EVENT_DELAYED_HIRING_OF_MERC:
-			MercArrivesCallback(	(UINT8) pEvent->uiParam );
+			MercArrivesCallback(	(UINT16) pEvent->uiParam );
 			break;
 		//handles the life insurance contract for a merc from AIM.
 		case EVENT_HANDLE_INSURED_MERCS:

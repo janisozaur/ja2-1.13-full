@@ -13,7 +13,7 @@ typedef struct TEAMSUMMARY
 {
 	UINT8 ubTotal;
 	UINT8 ubDetailed;
-	UINT8 ubProfile;
+	INT16 ubProfile;
 	UINT8	ubExistance;
 	UINT8 ubNumAnimals;
 	UINT8 ubBadA, ubPoorA, ubAvgA, ubGoodA, ubGreatA; //attributes

@@ -666,7 +666,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 
 void EndAIGuysTurn( SOLDIERTYPE *pSoldier )
 {
-	UINT8					ubID;
+	UINT16					ubID;
 
 	if (gfTurnBasedAI)
 	{
@@ -701,7 +701,7 @@ void EndAIGuysTurn( SOLDIERTYPE *pSoldier )
 
 			if ( !(pSoldier->uiStatusFlags & SOLDIER_BOXER)	|| !( gTacticalStatus.bBoxingState == PRE_BOXING || gTacticalStatus.bBoxingState == BOXING ) )
 			{
-				UINT8 ubFirstProfile;
+				INT16 ubFirstProfile;
 
 				ubFirstProfile = CivilianGroupMembersChangeSidesWithinProximity( pSoldier );
 				if ( ubFirstProfile != NO_PROFILE )
@@ -931,12 +931,12 @@ INT32 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT32 sGridNo)
 	return(sCheapestDest);
 }
 
-UINT8 GetMostThreateningOpponent( SOLDIERTYPE *pSoldier )
+UINT16 GetMostThreateningOpponent( SOLDIERTYPE *pSoldier )
 {
 	UINT32				uiLoop;
 	INT32					iThreatVal,iMinThreat = 30000;
 	SOLDIERTYPE		*pTargetSoldier;
-	UINT8					ubTargetSoldier = NOBODY;
+	UINT16					ubTargetSoldier = NOBODY;
 
 	// Loop through all mercs 
 
@@ -1020,7 +1020,7 @@ void FreeUpNPCFromPendingAction( 	SOLDIERTYPE *pSoldier )
 	}
 }
 
-void FreeUpNPCFromAttacking(UINT8 ubID)
+void FreeUpNPCFromAttacking(INT16 ubID)
 {
 	SOLDIERTYPE *pSoldier;
 

@@ -31,8 +31,8 @@
 
 BOOLEAN fBuildingShowRoofs, fBuildingShowWalls, fBuildingShowRoomInfo;
 UINT16 usCurrentMode;
-UINT8 gubCurrRoomNumber;
-UINT8 gubMaxRoomNumber;
+UINT16 gubCurrRoomNumber;
+UINT16 gubMaxRoomNumber;
 BOOLEAN	gfEditingDoor;
 
 //BEGINNNING OF BUILDING INITIALIZATION FUNCTIONS
@@ -743,7 +743,7 @@ void ExtractAndUpdateBuildingInfo()
 	temp = min( GetNumericStrictValueFromField( 1 ), 255 );
 	if( temp != -1 )
 	{
-		gubCurrRoomNumber = (UINT8)temp;
+		gubCurrRoomNumber = (UINT16)temp;
 	}
 	else
 	{

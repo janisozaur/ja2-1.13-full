@@ -140,7 +140,7 @@ typedef struct
 		};
 	};
 
-	UINT8		ubShopKeeperID;					// Merc Id for the dealer
+	INT16		ubShopKeeperID;					// Merc Id for the dealer
 	UINT8		ubTypeOfArmsDealer;			// Whether he buys/sells, sells, buys, or repairs
 	INT32		iInitialCash;						// How much cash dealer starts with (we now reset to this amount once / day)
 	UINT32	uiFlags;								// various flags which control the dealer's operations
@@ -173,7 +173,7 @@ typedef struct
 																// from 1 to 100 indicates an item with that status
 																// -1 to -100 means the item is in for repairs, flip sign for the actual status
 
-	UINT8		ubImprintID;					// imprint ID for imprinted items (during repair!)
+	INT16		ubImprintID;					// imprint ID for imprinted items (during repair!)
 
 	INT8		bAttachmentStatus[MAX_ATTACHMENTS];	// status of any attachments on the item
 
@@ -193,7 +193,7 @@ typedef struct
 
 	BOOLEAN fActive;							// TRUE means an item is stored here (empty elements may not always be freed immediately)
 
-	UINT8		ubOwnerProfileId;			// stores which merc previously owned an item being repaired
+	INT16 ubOwnerProfileId;			// stores which merc previously owned an item being repaired
 
 	UINT8		ubPadding[6];					// filler
 
@@ -238,62 +238,62 @@ void		ShutDownArmsDealers();
 UINT32	GetArmsDealerItemTypeFromItemNumber( UINT16 usItem );
 
 //Count every single item the dealer has in stock
-//UINT32	CountTotalItemsInArmsDealersInventory( UINT8 ubArmsDealer );
+//UINT32	CountTotalItemsInArmsDealersInventory( UINT16 ubArmsDealer );
 //Count only the # of "distinct" item types (for shopkeeper purposes)
-UINT32	CountDistinctItemsInArmsDealersInventory( UINT8 ubArmsDealer );
-UINT8		CountActiveSpecialItemsInArmsDealersInventory( UINT8 ubArmsDealer, UINT16 usItemIndex );
-UINT16	CountTotalItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer );
-UINT8		CountSpecificItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer, UINT16 usItemIndex );
+UINT32	CountDistinctItemsInArmsDealersInventory( INT16 ubArmsDealer );
+UINT8		CountActiveSpecialItemsInArmsDealersInventory( INT16 ubArmsDealer, UINT16 usItemIndex );
+UINT16	CountTotalItemsRepairDealerHasInForRepairs( INT16 ubArmsDealer );
+UINT8		CountSpecificItemsRepairDealerHasInForRepairs( INT16 ubArmsDealer, UINT16 usItemIndex );
 
-void		AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject );
+void		AddObjectToArmsDealerInventory( INT16 ubArmsDealer, OBJECTTYPE *pObject );
 
-void		RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, UINT8 ubHowMany );
-void		RemoveSpecialItemFromArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement );
+void		RemoveItemFromArmsDealerInventory( INT16 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, UINT8 ubHowMany );
+void		RemoveSpecialItemFromArmsDealerInventoryAtElement( INT16 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement );
 
-BOOLEAN IsMercADealer( UINT8 ubMercID );
-INT8		GetArmsDealerIDFromMercID( UINT8 ubMercID );
+BOOLEAN IsMercADealer( INT16 ubMercID );
+INT16 GetArmsDealerIDFromMercID( INT16 ubMercID );
 
 BOOLEAN SaveArmsDealerInventoryToSaveGameFile( HWFILE hFile );
 BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny );
 
 void		DailyUpdateOfArmsDealersInventory();
 
-UINT8		GetTypeOfArmsDealer( UINT8 ubDealerID );
+UINT8 GetTypeOfArmsDealer( INT16 ubDealerID );
 
-BOOLEAN	DoesDealerDoRepairs( UINT8 ubArmsDealer );
-BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID );
+BOOLEAN	DoesDealerDoRepairs( INT16 ubArmsDealer );
+BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( INT16 ubProfileID );
 
-UINT32	GetTimeToFixItemBeingRepaired( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement );
+UINT32	GetTimeToFixItemBeingRepaired( INT16 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement );
 
-BOOLEAN CanDealerTransactItem( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer );
-BOOLEAN CanDealerRepairItem( UINT8 ubArmsDealer, UINT16 usItemIndex );
+BOOLEAN CanDealerTransactItem( INT16 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer );
+BOOLEAN CanDealerRepairItem( INT16 ubArmsDealer, UINT16 usItemIndex );
 
-BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID );
+BOOLEAN AddDeadArmsDealerItemsToWorld( INT16 ubMercID );
 
-void		MakeObjectOutOfDealerItems( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE *pObject, UINT8 ubHowMany );
+void MakeObjectOutOfDealerItems( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE *pObject, UINT8 ubHowMany );
 
-void		GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, UINT8 ubOwnerProfileId );
-void		GiveItemToArmsDealerforRepair( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, UINT8 ubOwnerProfileId );
-UINT32	WhenWillRepairmanBeAllDoneRepairing( UINT8 ubArmsDealer );
+void GiveObjectToArmsDealerForRepair( INT16 ubArmsDealer, OBJECTTYPE *pObject, INT16 ubOwnerProfileId );
+void GiveItemToArmsDealerforRepair( INT16 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, INT16 ubOwnerProfileId );
+UINT32 WhenWillRepairmanBeAllDoneRepairing( INT16 ubArmsDealer );
 
-UINT32 CalculateSpecialItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo );
-UINT32 CalculateObjectItemRepairTime( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject );
-UINT32 CalculateSimpleItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 bItemCondition );
+UINT32 CalculateSpecialItemRepairTime( INT16 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo );
+UINT32 CalculateObjectItemRepairTime( INT16 ubArmsDealer, OBJECTTYPE *pItemObject );
+UINT32 CalculateSimpleItemRepairTime( INT16 ubArmsDealer, UINT16 usItemIndex, INT8 bItemCondition );
 
-UINT32 CalculateSpecialItemRepairCost( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo );
-UINT32 CalculateObjectItemRepairCost( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject );
-UINT32 CalculateSimpleItemRepairCost( UINT8 ubArmsDealer, UINT16	usItemIndex, INT8 bItemCondition );
+UINT32 CalculateSpecialItemRepairCost( INT16 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo );
+UINT32 CalculateObjectItemRepairCost( INT16 ubArmsDealer, OBJECTTYPE *pItemObject );
+UINT32 CalculateSimpleItemRepairCost( INT16 ubArmsDealer, UINT16	usItemIndex, INT8 bItemCondition );
 
 
 void SetSpecialItemInfoToDefaults( SPECIAL_ITEM_INFO *pSpclItemInfo );
 void SetSpecialItemInfoFromObject( SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE *pObject );
 
-UINT16	CalcValueOfItemToDealer( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerSelling );
+UINT16	CalcValueOfItemToDealer( INT16 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerSelling );
 
 BOOLEAN DealerItemIsSafeToStack( UINT16 usItemIndex );
 
-UINT32 CalculateOvernightRepairDelay( UINT8 ubArmsDealer, UINT32 uiTimeWhenFreeToStartIt, UINT32 uiMinutesToFix );
-UINT32 CalculateMinutesClosedBetween( UINT8 ubArmsDealer, UINT32 uiStartTime, UINT32 uiEndTime );
+UINT32 CalculateOvernightRepairDelay( INT16 ubArmsDealer, UINT32 uiTimeWhenFreeToStartIt, UINT32 uiMinutesToFix );
+UINT32 CalculateMinutesClosedBetween( INT16 ubArmsDealer, UINT32 uiStartTime, UINT32 uiEndTime );
 
 
 #endif

@@ -121,10 +121,10 @@ extern BOOLEAN SoldierCanAffordNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesired
 void ResetMilitia()
 {
 	BOOLEAN fBattleInProgress = FALSE;
-	UINT8 ubNumGreen = 0;
-	UINT8 ubNumReg = 0;
-	UINT8 ubNumVet = 0;
-	UINT32 cnt;
+	UINT16 ubNumGreen = 0;
+	UINT16 ubNumReg = 0;
+	UINT16 ubNumVet = 0;
+	//UINT32 cnt;
 
 //	if ( gWorldSectorX !=0 && gWorldSectorY != 0 && NumEnemiesInSector( gWorldSectorX, gWorldSectorY ) )
 //		fBattleInProgress = TRUE;
@@ -214,7 +214,7 @@ void PrepareMilitiaForTactical( BOOLEAN fPrepareAll)
 {
 	SECTORINFO *pSector;
 	INT32 x;
-	UINT8 ubGreen, ubRegs, ubElites;
+	UINT16 ubGreen, ubRegs, ubElites;
 	if( gbWorldSectorZ > 0 )
 		return;
 
@@ -283,7 +283,7 @@ void PrepareMilitiaForTactical( BOOLEAN fPrepareAll)
 
 void HandleMilitiaPromotions( void )
 {
-	UINT8						cnt;
+	INT16						cnt;
 	UINT8						ubMilitiaRank;
 	SOLDIERTYPE *		pTeamSoldier;
 	UINT8						ubPromotions;
@@ -1376,7 +1376,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 						if ( (pTMilitiaSoldier->bActive) && (pTMilitiaSoldier->bInSector) && (pTMilitiaSoldier->bLife >= OKLIFE) )
 						{
 							INT32 sActionGridNo, sGridNo, sAdjustedGridNo;
-							UINT8	ubDirection;
+							INT8 ubDirection;
 
 							if ( GetSoldier( &pSoldier, gusSelectedSoldier )  )
 							{
@@ -1491,7 +1491,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 				case( MILCON_MENU_ALL_ATTACK ):
 					{
-						UINT8 cnt;
+						INT16 cnt;
 						SOLDIERTYPE *pTeamSoldier;
 						
 						cnt = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID;
@@ -1524,7 +1524,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 				case( MILCON_MENU_ALL_HOLD ):
 					{
-						UINT8 cnt;						
+						INT16 cnt;						
 						SOLDIERTYPE *pTeamSoldier;
 						
 						cnt = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID;
@@ -1556,7 +1556,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 				case( MILCON_MENU_ALL_RETREAT ):
 					{
-						UINT8 cnt;
+						INT16 cnt;
 						INT16 sActionGridNo;
 						SOLDIERTYPE *pTeamSoldier;
 						
@@ -1619,7 +1619,8 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 				
 				case( MILCON_MENU_ALL_COMETOME ):
 					{
-						UINT8 cnt, ubDirection;
+						INT16 cnt;
+						INT8 ubDirection;
 						INT32 sActionGridNo, sGridNo, sAdjustedGridNo;
 						SOLDIERTYPE *pTeamSoldier;
 						
@@ -1674,7 +1675,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 				case( MILCON_MENU_ALL_SPREAD ):
 					{
-						UINT8 cnt;
+						INT16 cnt;
 						INT32 sActionGridNo;
 						SOLDIERTYPE *pTeamSoldier;
 
@@ -1726,7 +1727,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 				case( MILCON_MENU_ALL_GETDOWN ):
 					{
-						UINT8 cnt;
+						INT16 cnt;
 						SOLDIERTYPE *pTeamSoldier;
 						
 						cnt = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID;
@@ -1786,7 +1787,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 						//}
 
 
-						UINT8 cnt;
+						INT16 cnt;
 						INT16 sActionGridNo;
 						INT32 iDummy;
 						SOLDIERTYPE *pTeamSoldier;

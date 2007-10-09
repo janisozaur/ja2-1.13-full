@@ -95,13 +95,13 @@ void RebuildWayPointsForGroupPath( PathStPtr pHeadOfPath, INT16 sMvtGroup );
 void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier );
 
 // start movement of this group to this sector...not to be used by the player merc groups.
-BOOLEAN MoveGroupFromSectorToSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY );
+BOOLEAN MoveGroupFromSectorToSector( INT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY );
 
-BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY );
-BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY );
+BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( INT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY );
+BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd( INT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY );
 
 /*
-BOOLEAN MoveGroupToOriginalSector( UINT8 ubGroupID );
+BOOLEAN MoveGroupToOriginalSector( INT8 ubGroupID );
 */
 
 
@@ -115,7 +115,7 @@ BOOLEAN CheckIfPathIsEmpty( PathStPtr pHeadPath );
 PathStPtr GetSoldierMercPathPtr( SOLDIERTYPE *pSoldier );
 PathStPtr GetGroupMercPathPtr( GROUP *pGroup );
 
-UINT8 GetSoldierGroupId( SOLDIERTYPE *pSoldier );
+INT8 GetSoldierGroupID( SOLDIERTYPE *pSoldier );
 
 // clears this groups strategic movement (mercpaths and waypoints), include those in the vehicle structs(!)
 void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup );

@@ -8,8 +8,8 @@
 #include "vobject_blitters.h"
 
 extern BOOLEAN fBuildingShowRoofs, fBuildingShowWalls, fBuildingShowRoomInfo;
-extern UINT8 gubCurrRoomNumber;
-extern UINT8 gubMaxRoomNumber;
+extern UINT16 gubCurrRoomNumber;
+extern UINT16 gubMaxRoomNumber;
 
 void SetupTextInputForBuildings();
 void ExtractAndUpdateBuildingInfo();

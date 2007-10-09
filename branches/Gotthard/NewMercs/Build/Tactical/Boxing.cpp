@@ -27,7 +27,7 @@
 #endif
 
 INT32	gsBoxerGridNo[ NUM_BOXERS ] = { 11393, 11233, 11073 };
-UINT8 gubBoxerID[ NUM_BOXERS ] = { NOBODY, NOBODY, NOBODY };
+INT16 gubBoxerID[ NUM_BOXERS ] = { NOBODY, NOBODY, NOBODY };
 BOOLEAN gfBoxerFought[ NUM_BOXERS ] = { FALSE, FALSE, FALSE };
 BOOLEAN	gfLastBoxingMatchWonByPlayer = FALSE;
 UINT8	gubBoxingMatchesWon = 0;
@@ -38,21 +38,23 @@ extern void RecalculateOppCntsDueToBecomingNeutral( SOLDIERTYPE * pSoldier );
 
 void ExitBoxing( void )
 {
-	UINT8						ubRoom;
+	INT16 ubRoom;
 	SOLDIERTYPE *		pSoldier;
-	UINT32					uiLoop;
+	INT32 iLoop;//Getting rid of more sign mismatches.  Yay!  Gotthard 10/8/07
 	UINT8						ubPass;
 
 	// find boxers and turn them neutral again
 
 	// first time through loop, look for AI guy, then for PC guy.... for stupid
 	// oppcnt/alert status reasons
+
 	for( ubPass = 0; ubPass < 2; ubPass++ )
 	{
 		// because boxer could die, loop through all soldier ptrs
-		for ( uiLoop = 0; uiLoop < gTacticalStatus.Team[ CIV_TEAM ].bLastID; uiLoop++ )
+
+		for ( iLoop = 0; iLoop < gTacticalStatus.Team[ CIV_TEAM ].bLastID; iLoop++ )
 		{
-			pSoldier = MercPtrs[ uiLoop ];
+			pSoldier = MercPtrs[ iLoop ];
 
 			if ( pSoldier != NULL )
 			{
@@ -171,7 +173,7 @@ UINT8 CountPeopleInBoxingRing( void )
 {
 	SOLDIERTYPE * pSoldier;
 	UINT32 uiLoop;
-	UINT8 ubRoom;
+	INT16 ubRoom;
 	UINT8 ubTotalInRing = 0;
 
 	for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++ )
@@ -194,7 +196,7 @@ void CountPeopleInBoxingRingAndDoActions( void )
 {
 	UINT32					uiLoop;
 	UINT8						ubTotalInRing = 0;
-	UINT8						ubRoom;
+	INT16						ubRoom;
 	UINT8						ubPlayersInRing = 0;
 	SOLDIERTYPE *		pSoldier;
 	SOLDIERTYPE *		pInRing[2] = { NULL, NULL };
@@ -300,7 +302,7 @@ void CountPeopleInBoxingRingAndDoActions( void )
 BOOLEAN CheckOnBoxers( void )
 {
 	UINT32					uiLoop;
-	UINT8						ubID;
+	INT16						ubID;
 
 	// repick boxer IDs every time
 	if ( gubBoxerID[0] == NOBODY )
@@ -435,7 +437,7 @@ BOOLEAN AnotherFightPossible( void )
 	// a player has at least OKLIFE + 5 life
 
 	// and at least one fight HAS occurred
-	UINT8						ubLoop;
+	UINT16						ubLoop;
 	SOLDIERTYPE *		pSoldier;
 	UINT8						ubAvailable;
 	
@@ -463,7 +465,7 @@ BOOLEAN AnotherFightPossible( void )
 
 void BoxingMovementCheck( SOLDIERTYPE * pSoldier )
 {
-	UINT8 ubRoom;
+	INT16 ubRoom;
 
 	if ( InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom == BOXING_RING)
 	{

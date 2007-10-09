@@ -149,7 +149,7 @@ typedef struct
 	INT8		fFlags;
 	UINT8		ubMission;
 	INT8		bTrap;        // 1-10 exp_lvl to detect
-	UINT8		ubImprintID;	// ID of merc that item is imprinted on
+	INT16		ubImprintID;	// ID of merc that item is imprinted on
 	UINT8		ubWeight;
 	UINT8		fUsed;				// flags for whether the item is used or not
 } OBJECTTYPE;
@@ -586,10 +586,10 @@ typedef enum
 	BIG_TEAR_GAS,
 	SMALL_CREATURE_GAS,
 	LARGE_CREATURE_GAS,
-  VERY_SMALL_CREATURE_GAS,
+	VERY_SMALL_CREATURE_GAS=270, // Renumbered because the original 160 was lost
 
 	// armor
-	FLAK_JACKET,						//= FIRST_ARMOUR, ( We're out of space! )
+	FLAK_JACKET=161,					//= FIRST_ARMOUR, ( We're out of space! )
 	FLAK_JACKET_18,
 	FLAK_JACKET_Y,
 	KEVLAR_VEST,

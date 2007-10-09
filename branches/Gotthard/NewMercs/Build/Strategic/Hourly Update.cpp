@@ -82,7 +82,7 @@ void HandleHourlyUpdate()
 
 void UpdateRegenCounters( void )
 {
-	UINT8	ubID;
+	UINT16	ubID;
 		
 	for ( ubID = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; ubID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubID++ )
 	{

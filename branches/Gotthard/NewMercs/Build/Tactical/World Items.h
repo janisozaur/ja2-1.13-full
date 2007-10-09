@@ -65,7 +65,7 @@ INT32 AddItemToWorld( INT32 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 
 void RemoveItemFromWorld( INT32 iItemIndex );
 INT32 FindWorldItem( UINT16 usItem );
 
-void LoadWorldItemsFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion );
+void LoadWorldItemsFromMap( INT16 **hBuffer, FLOAT dMajorMapVersion );
 void SaveWorldItemsToMap( HWFILE fp );
 
 void TrashWorldItems();

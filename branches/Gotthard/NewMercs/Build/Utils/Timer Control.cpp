@@ -74,6 +74,7 @@ MMRESULT	gTimerID;
 
 // GLOBALS FOR CALLBACK
 UINT32				gCNT;
+INT32				CNT;//Extra value to get rid of sign mismatch errors.  So I'm a bit retentive... Gotthard 10/8/07
 SOLDIERTYPE		*gPSOLDIER;
 
 // GLobal for displaying time diff ( DIAG )
@@ -140,13 +141,13 @@ void CALLBACK TimeProc( UINT uID,	UINT uMsg, DWORD dwUser, DWORD dw1,	DWORD dw2	
       if( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
       {
         // IN Mapscreen, loop through player's team.....
-			  for ( gCNT = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; gCNT <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; gCNT++ )
+			  for ( CNT = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; CNT <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; CNT++ )
 			  {
-				  gPSOLDIER = MercPtrs[ gCNT ];
+				  gPSOLDIER = MercPtrs[ CNT ];
 					UPDATETIMECOUNTER( gPSOLDIER->PortraitFlashCounter );
 					UPDATETIMECOUNTER( gPSOLDIER->PanelAnimateCounter );
-        }
-      }
+			  }
+	  }
       else
       {
 			  // Set update flags for soldiers

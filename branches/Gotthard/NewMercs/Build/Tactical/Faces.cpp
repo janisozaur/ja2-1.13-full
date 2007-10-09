@@ -145,7 +145,7 @@ UINT8	ubRPCNumSmallFaceValues = 28;
 
 extern BOOLEAN	gfSMDisableForItems;
 extern INT16		gsCurInterfacePanel;
-extern UINT16		gusSMCurrentMerc;
+extern INT16		gusSMCurrentMerc;
 extern BOOLEAN	gfRerenderInterfaceFromHelpText;
 extern	BOOLEAN	gfInItemPickupMenu;
 	
@@ -200,7 +200,7 @@ INT32	InitSoldierFace( SOLDIERTYPE *pSoldier )
 }
 
 
-INT32	InitFace( UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitFlags )
+INT32	InitFace( INT16 usMercProfileID, INT16 ubSoldierID, UINT32 uiInitFlags )
 {
 	UINT32	uiBlinkFrequency;
 	UINT32	uiExpressionFrequency;
@@ -227,7 +227,7 @@ INT32	InitFace( UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitFlags )
 }
 
 
-INT32	InternalInitFace( UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitFlags, INT32 iFaceFileID, UINT32 uiBlinkFrequency, UINT32 uiExpressionFrequency )
+INT32	InternalInitFace( INT16 usMercProfileID, INT16 ubSoldierID, UINT32 uiInitFlags, INT32 iFaceFileID, UINT32 uiBlinkFrequency, UINT32 uiExpressionFrequency )
 {
 	FACETYPE					*pFace;
   VOBJECT_DESC			VObjectDesc;
@@ -476,7 +476,7 @@ void DeleteFace( INT32 iFaceIndex )
 
 }
 
-void	SetAutoFaceActiveFromSoldier( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, UINT8 ubSoldierID , UINT16 usFaceX, UINT16 usFaceY )
+void	SetAutoFaceActiveFromSoldier( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, INT16 ubSoldierID , UINT16 usFaceX, UINT16 usFaceY )
 {
 	if( ubSoldierID == NOBODY )
 	{
@@ -489,7 +489,7 @@ void	SetAutoFaceActiveFromSoldier( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffe
 
 void GetFaceRelativeCoordinates( FACETYPE *pFace, UINT16 *pusEyesX, UINT16 *pusEyesY, UINT16 *pusMouthX, UINT16 *pusMouthY )
 {
-	UINT16						usMercProfileID;
+	INT16						usMercProfileID;
 	UINT16						usEyesX;
 	UINT16						usEyesY;
 	UINT16						usMouthX;
@@ -687,7 +687,7 @@ void InternalSetAutoFaceActive( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, 
 }
 
 
-void SetAutoFaceInActiveFromSoldier( UINT8 ubSoldierID )
+void SetAutoFaceInActiveFromSoldier( INT16 ubSoldierID )
 {
 	// Check for valid soldier
 	CHECKV( ubSoldierID != NOBODY );
@@ -1184,7 +1184,7 @@ void SetFaceShade( SOLDIERTYPE *pSoldier, FACETYPE *pFace, BOOLEAN fExternBlit )
 	}
 }
 
-BOOLEAN RenderAutoFaceFromSoldier( UINT8 ubSoldierID )
+BOOLEAN RenderAutoFaceFromSoldier( INT16 ubSoldierID )
 {
 	// Check for valid soldier
 	CHECKF( ubSoldierID != NOBODY );
@@ -1636,7 +1636,7 @@ BOOLEAN RenderAutoFace( INT32 iFaceIndex )
 }
 
 
-BOOLEAN ExternRenderFaceFromSoldier( UINT32 uiBuffer, UINT8 ubSoldierID, INT16 sX, INT16 sY )
+BOOLEAN ExternRenderFaceFromSoldier( UINT32 uiBuffer, INT16 ubSoldierID, INT16 sX, INT16 sY )
 {
 	// Check for valid soldier
 	CHECKF( ubSoldierID != NOBODY );

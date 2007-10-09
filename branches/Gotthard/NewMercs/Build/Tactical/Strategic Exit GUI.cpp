@@ -78,7 +78,7 @@ typedef struct
 	UINT8							ubLeaveSectorType;
 	UINT8							ubLeaveSectorCode;
 	UINT8							ubDirection;
-	UINT8							ubNumPeopleOnSquad;
+	UINT16							ubNumPeopleOnSquad;
 	INT8							bSingleMoveWillIsolateEPC; //if not -1, then that means the slot number is an EPC
 	INT8							bHandled;
 	BOOLEAN						fRender;
@@ -206,7 +206,7 @@ BOOLEAN InternalInitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
 		gExitDialog.fGotoSector							= TRUE;
 	}
 
-	gExitDialog.ubNumPeopleOnSquad				= NumberOfPlayerControllableMercsInSquad( MercPtrs[ gusSelectedSoldier ]->bAssignment );
+	gExitDialog.ubNumPeopleOnSquad = NumberOfPlayerControllableMercsInSquad( MercPtrs[ gusSelectedSoldier ]->bAssignment );
 
 	//Determine 
 	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )

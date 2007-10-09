@@ -60,7 +60,7 @@
 	#include "NPC.h"
 #endif
 
-extern INT8		gbNumMercsUntilWaitingOver;
+extern INT16		gbNumMercsUntilWaitingOver;
 extern UINT8	gubWaitingForAllMercsToExitCode;
 
 
@@ -108,7 +108,7 @@ void OutputDebugInfoForTurnBasedNextTileWaiting( SOLDIERTYPE * pSoldier )
 
 void SetDelayedTileWaiting( SOLDIERTYPE *pSoldier, INT32 sCauseGridNo, INT8 bValue )
 {
-	UINT8		ubPerson;
+	INT16		ubPerson;
 
 	// Cancel AI Action
 	// CancelAIAction( pSoldier, TRUE );
@@ -212,7 +212,7 @@ void UnMarkMovementReserved( SOLDIERTYPE *pSoldier )
 
 INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,  INT32 sGridNo, INT8 bLevel )
 {
-	UINT8		ubPerson;
+	INT16		ubPerson;
 	INT32		sTempDestGridNo;
 	INT32 sNewGridNo;
 	BOOLEAN	fSwapInDoor = FALSE;
@@ -471,7 +471,7 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT32 sGridNo, I
 			bOverTerrainType = GetTerrainType( sGridNo );
 
 			// Check if we are going into water!
-			if ( bOverTerrainType == LOW_WATER || bOverTerrainType == MED_WATER || bOverTerrainType == DEEP_WATER )
+			if ( TERRAIN_IS_WATER( bOverTerrainType) )
 			{
 				// Check if we are of prone or crawl height and change stance accordingly....
 				switch( gAnimControl[ pSoldier->usAnimState ].ubHeight )
@@ -505,8 +505,8 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 	INT8		bBlocked, bPathBlocked;
 	INT32		sCost;
 	INT32 sNewGridNo, sCheckGridNo;
-	UINT8		ubDirection, bCauseDirection;
-	UINT8		ubPerson;
+	INT8		ubDirection, bCauseDirection;
+	INT16		ubPerson;
 	UINT8		fFlags = 0;
 
  

@@ -25,8 +25,8 @@
 
 // Room Information
 //UINT8						gubWorldRoomInfo[ WORLD_MAX ];
-UINT8*						gubWorldRoomInfo = NULL;
-UINT8						gubWorldRoomHidden[ MAX_ROOMS ];
+INT16*						gubWorldRoomInfo = NULL;
+INT16						gubWorldRoomHidden[ MAX_ROOMS ];
 
 
 BOOLEAN InitRoomDatabase( )
@@ -41,13 +41,13 @@ void ShutdownRoomDatabase( )
 
 }
 
-void SetTileRoomNum( INT32 sGridNo, UINT8 ubRoomNum )
+void SetTileRoomNum( INT32 sGridNo, INT16 ubRoomNum )
 {
 	// Add to global room list
 	gubWorldRoomInfo[ sGridNo ] = ubRoomNum;
 }
 
-void SetTileRangeRoomNum( SGPRect *pSelectRegion, UINT8 ubRoomNum )
+void SetTileRangeRoomNum( SGPRect *pSelectRegion, INT16 ubRoomNum )
 {
 	INT32 cnt1, cnt2;
 
@@ -61,7 +61,7 @@ void SetTileRangeRoomNum( SGPRect *pSelectRegion, UINT8 ubRoomNum )
 
 }
 
-BOOLEAN InARoom( INT32 sGridNo, UINT8 *pubRoomNo )
+BOOLEAN InARoom( INT32 sGridNo, INT16 *pubRoomNo )
 {
 	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
 	{
@@ -76,7 +76,7 @@ BOOLEAN InARoom( INT32 sGridNo, UINT8 *pubRoomNo )
 }
 
 
-BOOLEAN InAHiddenRoom( INT32 sGridNo, UINT8 *pubRoomNo )
+BOOLEAN InAHiddenRoom( INT32 sGridNo, INT16 *pubRoomNo )
 {
 	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
 	{
@@ -260,7 +260,7 @@ void ExamineGridNoForSlantRoofExtraGraphic( INT32 sCheckGridNo )
 }
 
 
-void RemoveRoomRoof( INT32 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
+void RemoveRoomRoof( INT32 sGridNo, INT16 bRoomNum, SOLDIERTYPE *pSoldier )
 {
 	INT32			cnt;
 	ITEM_POOL		*pItemPool;

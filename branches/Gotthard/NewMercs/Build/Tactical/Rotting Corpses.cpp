@@ -193,7 +193,7 @@ CHAR8	zNoBloodCorpseFilenames[ NUM_CORPSES ][70] =
   "ANIMS\\CORPSES\\S_EXPLD.STI",
 };
 
-UINT8		gb4DirectionsFrom8[8] =
+INT8 gb4DirectionsFrom8[8] =
 {
 //	7,		// NORTH
 	0,
@@ -206,7 +206,7 @@ UINT8		gb4DirectionsFrom8[8] =
 	0			// NW
 };
 
-UINT8		gb2DirectionsFrom8[8] =
+INT8		gb2DirectionsFrom8[8] =
 {
 	0,		// NORTH
 	7,		// NE
@@ -1056,11 +1056,11 @@ void AddCrowToCorpse( ROTTING_CORPSE *pCorpse )
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT8										bBodyType = CROW;
-	UINT8										iNewIndex;
+	INT16										iNewIndex;
 	INT32 sGridNo;
-	UINT8										ubDirection;
+	INT8 ubDirection;
 	SOLDIERTYPE							*pSoldier;
-	UINT8										ubRoomNum;
+	INT16										ubRoomNum;
 
 	// No crows inside :(
 	if ( InARoom( pCorpse->def.sGridNo, &ubRoomNum ) )
@@ -1139,7 +1139,7 @@ void HandleCrowLeave( SOLDIERTYPE *pSoldier )
 
 void HandleCrowFlyAway( SOLDIERTYPE *pSoldier )
 {
-	UINT8 ubDirection;
+	INT8 ubDirection;
 	INT32 sGridNo;
 
 	// Set desired height
@@ -1179,7 +1179,7 @@ void HandleRottingCorpses( )
 	// ATE: Check for multiple crows.....
 	// Couint how many we have now...
 	{
-		UINT8 bLoop;
+		INT16 bLoop;
 		SOLDIERTYPE * pSoldier;
 
 		for (bLoop=gTacticalStatus.Team[ CIV_TEAM ].bFirstID, pSoldier=MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; bLoop++, pSoldier++)
@@ -1448,7 +1448,7 @@ ROTTING_CORPSE  *FindCorpseBasedOnStructure( INT32 sGridNo, STRUCTURE *pStructur
 }
 
 
-void CorpseHit( INT32 sGridNo, UINT16 usStructureID )
+void CorpseHit( INT32 sGridNo, INT16 usStructureID )
 {
 #if 0
 	STRUCTURE				*pStructure, *pBaseStructure;
@@ -1499,7 +1499,7 @@ void CorpseHit( INT32 sGridNo, UINT16 usStructureID )
 }
 
 
-void VaporizeCorpse( INT32 sGridNo, UINT16 usStructureID )
+void VaporizeCorpse( INT32 sGridNo, INT16 usStructureID )
 {
 	STRUCTURE				*pStructure, *pBaseStructure;
 	ROTTING_CORPSE	*pCorpse = NULL;
@@ -1939,7 +1939,7 @@ void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT32 sGridNo, U
 }
 
 
-INT32 GetGridNoOfCorpseGivenProfileID( UINT8 ubProfileID )
+INT32 GetGridNoOfCorpseGivenProfileID( INT16 ubProfileID )
 {
 	INT32                    cnt;
 	ROTTING_CORPSE					 *pCorpse;

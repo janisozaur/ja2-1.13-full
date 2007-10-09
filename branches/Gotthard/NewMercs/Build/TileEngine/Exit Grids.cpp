@@ -192,7 +192,7 @@ void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
 	Assert( usNumExitGrids == usNumSaved );
 }
 
-void LoadExitGrids( INT8 **hBuffer, FLOAT dMajorMapVersion )
+void LoadExitGrids( INT16 **hBuffer, FLOAT dMajorMapVersion )
 {
 	EXITGRID exitGrid;
 	UINT16 x;
@@ -276,7 +276,7 @@ void AttemptToChangeFloorLevel( INT8 bRelativeZLevel )
 }
 
 
-INT32 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
+INT32 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, INT8 *pubDirection )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;

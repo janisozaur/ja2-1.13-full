@@ -283,7 +283,7 @@ public:
 
 	INT16	sSalary;
 	INT8	bLife;
-	INT8		bDexterity;		// dexterity (hand coord) value
+	INT8	bDexterity;		// dexterity (hand coord) value
 	INT8	bPersonalityTrait;
 	INT8	bSkillTrait;
 
@@ -327,7 +327,7 @@ public:
 	UINT16 usStatChangeChances[ 12 ];		// used strictly for balancing, never shown!
 	UINT16 usStatChangeSuccesses[ 12 ];	// used strictly for balancing, never shown!
 
-	UINT8	ubStrategicInsertionCode;
+	INT16	ubStrategicInsertionCode;
 
 	UINT8	ubRoomRangeEnd[2];
 
@@ -373,7 +373,7 @@ public:
 	INT8 bFriendlyOrDirectDefaultResponseUsedRecently;
 	INT8 bRecruitDefaultResponseUsedRecently;
 	INT8 bThreatenDefaultResponseUsedRecently;
-	INT8 bNPCData;			// NPC specific
+	INT16 bNPCData;			// NPC specific
 	INT32	iBalance;
 	INT16 sTrueSalary; // for use when the person is working for us for free but has a positive salary value
 	UINT8	ubCivilianGroup;
@@ -487,8 +487,8 @@ typedef struct
 	INT8		bMedicalDelta;
 	INT8		bMechanicDelta;
 	INT8		bExplosivesDelta;
-	INT8    bStrengthDelta;
-	INT8    bLeadershipDelta;
+	INT8		bStrengthDelta;
+	INT8		bLeadershipDelta;
 	UINT16  usKills;
 	UINT16  usAssists;
 	UINT16  usShotsFired;

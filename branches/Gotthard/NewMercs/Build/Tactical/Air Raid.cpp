@@ -112,7 +112,7 @@ typedef	struct
 	INT8					bLevel;
 	INT8					bTeam;
 	INT8					bSide;
-	UINT8					ubAttackerID;
+	INT16					ubAttackerID;
 	UINT16				usAttackingWeapon;
 	FLOAT					dXPos;
 	FLOAT					dYPos;
@@ -312,9 +312,9 @@ BOOLEAN BeginAirRaid( )
 
 INT32 PickLocationNearAnyMercInSector( )
 {
-	UINT8	ubMercsInSector[ 20 ] = { 0 };
-	UINT8	ubNumMercs = 0;
-	UINT8	ubChosenMerc;
+	UINT16	ubMercsInSector[ 20 ] = { 0 };
+	UINT16	ubNumMercs = 0;
+	INT16	ubChosenMerc;
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt=0;
 
@@ -332,7 +332,7 @@ INT32 PickLocationNearAnyMercInSector( )
 		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("PickLocationNearAnyMercInSector: looping %d",cnt));
 		if ( OK_INSECTOR_MERC( pTeamSoldier ) )
 		{
-			ubMercsInSector[ ubNumMercs ] = (UINT8)cnt;
+			ubMercsInSector[ ubNumMercs ] = cnt;
 			ubNumMercs++;
 		}
 	}
@@ -341,7 +341,7 @@ INT32 PickLocationNearAnyMercInSector( )
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("PickLocationNearAnyMercInSector: number of guys %d",ubNumMercs));
 	if ( ubNumMercs > 0 )
 	{
-		ubChosenMerc = (UINT8)Random( ubNumMercs );
+		ubChosenMerc = Random( ubNumMercs );
 
 		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("PickLocationNearAnyMercInSector: chosen guy = %d",ubChosenMerc));
 		return( MercPtrs[ ubMercsInSector[ ubChosenMerc ] ]->sGridNo );		
@@ -1490,7 +1490,7 @@ void EndAirRaid( )
 		// Talk to strategic AI for this...
 		//GROUP *pGroup;
 		//Create a patrol group originating from sector B9
-		//pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_B9, (UINT8)(2 + Random( 2 ) + gGameOptions.ubDifficultyLevel), 0 );
+		//pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_B9, (UINT16)(2 + Random( 2 ) + gGameOptions.ubDifficultyLevel), 0 );
 		//Move the patrol group north to attack Omerta
 		//AddWaypointToPGroup( pGroup, 9, 1 ); //A9
 		//Because we want them to arrive right away, we will toast the arrival event.  The information

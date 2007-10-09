@@ -574,8 +574,8 @@ void AddCommonInfoToBox(void)
 	CHAR16 wString[ 64 ];
 	UINT32 hStringHandle = 0;
 	BOOLEAN fUnknownSAMSite = FALSE;
-	UINT8 ubMilitiaTotal = 0;
-	UINT8 ubNumEnemies;
+	UINT16 ubMilitiaTotal = 0;
+	UINT16 ubNumEnemies;
 
 
 	switch( SECTOR( bCurrentTownMineSectorX, bCurrentTownMineSectorY ) )

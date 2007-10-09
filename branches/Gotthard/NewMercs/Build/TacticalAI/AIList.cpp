@@ -28,11 +28,11 @@
 AILIST		gAIList[ AI_LIST_SIZE ];
 AILIST *	gpFirstAIListEntry = NULL;
 
-BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount, BOOLEAN fDoRandomChecks );
+BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT16 * pubDoneCount, BOOLEAN fDoRandomChecks );
 
 void ClearAIList( void )
 {
-	UINT8	ubLoop;
+	UINT16	ubLoop;
 
 	for ( ubLoop = 0; ubLoop < AI_LIST_SIZE; ubLoop++ )
 	{
@@ -43,14 +43,14 @@ void ClearAIList( void )
 	gpFirstAIListEntry = NULL; // ??
 }
 
-void DeleteAIListEntry( AILIST *	pEntry )
+void DeleteAIListEntry( AILIST * pEntry )
 {
 	pEntry->ubID = NOBODY;
 	pEntry->bPriority = 0;
 	pEntry->pNext = NULL;
 }
 
-UINT8	FindEmptyAIListEntry( void )
+UINT16 FindEmptyAIListEntry( void )
 {
 	UINT8	ubLoop;
 
@@ -65,7 +65,7 @@ UINT8	FindEmptyAIListEntry( void )
 	return( AI_LIST_SIZE );
 }
 
-AILIST * CreateNewAIListEntry( UINT8 ubNewEntry, UINT8 ubID, INT8 bPriority )
+AILIST * CreateNewAIListEntry( INT16 ubNewEntry, INT16 ubID, INT8 bPriority )
 {
 	gAIList[ ubNewEntry ].ubID = ubID;
 	gAIList[ ubNewEntry ].bPriority = bPriority;
@@ -73,10 +73,10 @@ AILIST * CreateNewAIListEntry( UINT8 ubNewEntry, UINT8 ubID, INT8 bPriority )
 	return( &(gAIList[ ubNewEntry ]) );
 }
 
-UINT8 RemoveFirstAIListEntry( void )
+INT16 RemoveFirstAIListEntry( void )
 {
 	AILIST *	pOldFirstEntry;
-	UINT8			ubID;
+	INT16			ubID;
 
 	while ( gpFirstAIListEntry != NULL)
 	{
@@ -98,7 +98,7 @@ UINT8 RemoveFirstAIListEntry( void )
 	return( NOBODY );
 }
 
-void RemoveAIListEntryForID( UINT8 ubID )
+void RemoveAIListEntryForID( INT16 ubID )
 {
 	AILIST *	pEntry;
 	AILIST *	pPrevEntry;
@@ -127,9 +127,9 @@ void RemoveAIListEntryForID( UINT8 ubID )
 	// none found, that's okay
 }
 
-BOOLEAN InsertIntoAIList( UINT8 ubID, INT8 bPriority )
+BOOLEAN InsertIntoAIList( INT16 ubID, INT8 bPriority )
 {
-	UINT8			ubNewEntry;
+	INT16 ubNewEntry;
 	AILIST *	pEntry, * pNewEntry, * pPrevEntry = NULL;
 
 	ubNewEntry = FindEmptyAIListEntry();
@@ -182,7 +182,7 @@ BOOLEAN InsertIntoAIList( UINT8 ubID, INT8 bPriority )
 	return( FALSE );
 }
 
-BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount, BOOLEAN fDoRandomChecks ) 
+BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT16 * pubDoneCount, BOOLEAN fDoRandomChecks ) 
 {
 	if ( (gTacticalStatus.bBoxingState == BOXING) && !(pSoldier->uiStatusFlags & SOLDIER_BOXER) )
 	{
@@ -280,12 +280,12 @@ BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount,
 	return( TRUE );
 }
 
-BOOLEAN MoveToFrontOfAIList( UINT8 ubID )
+BOOLEAN MoveToFrontOfAIList( INT16 ubID )
 {
 	// we'll have to fake this guy's alert status (in the list) to be the same as the current
 	// front of the list
 	INT8			bPriority;
-	UINT8			ubNewEntry;
+	INT16			ubNewEntry;
 	AILIST *	pNewEntry;
 
 	if ( !SatisfiesAIListConditions( MercPtrs[ ubID ], NULL, FALSE ) )
@@ -313,15 +313,15 @@ BOOLEAN MoveToFrontOfAIList( UINT8 ubID )
 	}
 }
 
-BOOLEAN BuildAIListForTeam( INT8 bTeam )
+BOOLEAN BuildAIListForTeam( UINT8 bTeam )
 {
 	// loop through all non-player-team guys and add to list
 	UINT32					uiLoop;
 	BOOLEAN					fInsertRet;
 	SOLDIERTYPE *		pSoldier;
 	BOOLEAN					fRet = FALSE;
-	UINT8						ubCount = 0;
-	UINT8						ubDoneCount = 0;
+	UINT16						ubCount = 0;
+	UINT16						ubDoneCount = 0;
 	INT8						bPriority;
 
 	// this team is being given control so reset their muzzle flashes

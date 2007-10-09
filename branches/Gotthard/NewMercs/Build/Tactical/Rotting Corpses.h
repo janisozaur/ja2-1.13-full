@@ -108,7 +108,7 @@ typedef struct
 
 	INT8												bVisible;
 	INT8												bNumServicingCrows;
-	UINT8												ubProfile;
+	INT16												ubProfile;
   BOOLEAN                     fHeadTaken;
   	UINT8												ubAIWarningValue;
 
@@ -153,7 +153,7 @@ void AllMercsOnTeamLookForCorpse( ROTTING_CORPSE *pCorpse, INT8 bTeam );
 void MercLooksForCorpses( SOLDIERTYPE *pSoldier );
 void RebuildAllCorpseShadeTables( );
 
-UINT16				CreateCorpsePaletteTables( ROTTING_CORPSE *pCorpse );
+UINT16 CreateCorpsePaletteTables( ROTTING_CORPSE *pCorpse );
 
 INT32 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef, INT8 ubRadius );
 
@@ -161,8 +161,8 @@ INT32 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef
 void HandleRottingCorpses( );
 void AddCrowToCorpse( ROTTING_CORPSE *pCorpse );
 
-void VaporizeCorpse( INT32 sGridNo, UINT16 usStructureID );
-void CorpseHit( INT32 sGridNo, UINT16 usStructureID );
+void VaporizeCorpse( INT32 sGridNo, INT16 usStructureID );
+void CorpseHit( INT32 sGridNo, INT16 usStructureID );
 
 void HandleCrowLeave( SOLDIERTYPE *pSoldier );
 
@@ -172,7 +172,7 @@ void HandleCrowFlyAway( SOLDIERTYPE *pSoldier );
 
 extern ROTTING_CORPSE	gRottingCorpse[ MAX_ROTTING_CORPSES ];
 extern INT32					giNumRottingCorpse;
-extern UINT8					gb4DirectionsFrom8[8];
+extern INT8					gb4DirectionsFrom8[8];
 
 ROTTING_CORPSE *GetCorpseAtGridNo( INT32 sGridNo , INT8 bLevel );
 BOOLEAN IsValidDecapitationCorpse( ROTTING_CORPSE *pCorpse );
@@ -184,7 +184,7 @@ UINT16 GetCorpseStructIndex( ROTTING_CORPSE_DEFINITION *pCorpseDef, BOOLEAN fFor
 
 void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubLevel );
 
-INT32 GetGridNoOfCorpseGivenProfileID( UINT8 ubProfileID );
+INT32 GetGridNoOfCorpseGivenProfileID( INT16 ubProfileID );
 
 void DecayRottingCorpseAIWarnings( void );
 UINT8 GetNearestRottingCorpseAIWarning( INT32 sGridNo );

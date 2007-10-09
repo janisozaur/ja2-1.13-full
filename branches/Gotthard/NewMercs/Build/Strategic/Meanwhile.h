@@ -31,8 +31,8 @@ typedef struct
 	INT16				sSectorY;
 	UINT16			usTriggerEvent;
 
-	UINT8				ubMeanwhileID;
-	UINT8				ubNPCNumber;
+	UINT8 ubMeanwhileID;
+	INT16 ubNPCNumber;
 
 } MEANWHILE_DEFINITION;
 

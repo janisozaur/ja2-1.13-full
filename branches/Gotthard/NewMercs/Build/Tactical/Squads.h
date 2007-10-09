@@ -75,13 +75,13 @@ INT8 SquadCharacterIsIn( SOLDIERTYPE *pCharacter );
 INT8 SlotCharacterIsInSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue );
 
 // return number of people in this squad
-INT8 NumberOfPeopleInSquad( INT8 bSquadValue );
+UINT16 NumberOfPeopleInSquad( INT8 bSquadValue );
 
-INT8 NumberOfNonEPCsInSquad( INT8 bSquadValue );
+UINT16 NumberOfNonEPCsInSquad( INT8 bSquadValue );
 
 BOOLEAN IsRobotControllerInSquad( INT8 bSquadValue );
 
-INT8 NumberOfPlayerControllableMercsInSquad( INT8 bSquadValue );
+UINT16 NumberOfPlayerControllableMercsInSquad( INT8 bSquadValue );
 
 // what sector is the squad currently in?..return if anyone in squad
 BOOLEAN SectorSquadIsIn(INT8 bSquadValue, INT16 *sMapX, INT16 *sMapY, INT16 *sMapZ );
@@ -118,10 +118,10 @@ void SetDefaultSquadOnSectorEntry( BOOLEAN fForce );
 INT32 GetLastSquadActive( void );
 
 // set squads between sector position
-void SetSquadPositionBetweenSectors( UINT8 ubNextX, UINT8 ubNextY, UINT8 ubPrevX, UINT8 ubPrevY, UINT32 uiTraverseTime, UINT32 uiArriveTime, UINT8 ubSquadValue  );
+void SetSquadPositionBetweenSectors( UINT8 ubNextX, UINT8 ubNextY, UINT8 ubPrevX, UINT8 ubPrevY, UINT32 uiTraverseTime, UINT32 uiArriveTime, INT8 ubSquadValue  );
 
 // get squads between sector positions and times
-void GetSquadPosition( UINT8 *ubNextX, UINT8 *ubNextY, UINT8 *ubPrevX, UINT8 *ubPrevY, UINT32 *uiTraverseTime, UINT32 *uiArriveTime, UINT8 ubSquadValue );
+void GetSquadPosition( UINT8 *ubNextX, UINT8 *ubNextY, UINT8 *ubPrevX, UINT8 *ubPrevY, UINT32 *uiTraverseTime, UINT32 *uiArriveTime, INT8 ubSquadValue );
 
 void ExamineCurrentSquadLights( void );
 
@@ -142,10 +142,10 @@ INT8 GetFirstEmptySquad( void );
 BOOLEAN IsSquadInSector( SOLDIERTYPE *pSoldier, UINT8 ubSquad );
 
 // is any merc on squad asleep?
-BOOLEAN IsAnyMercOnSquadAsleep( UINT8 ubSquadValue );
+BOOLEAN IsAnyMercOnSquadAsleep( INT8 ubSquadValue );
 
 // is therea  dead guy here
-BOOLEAN IsDeadGuyInThisSquadSlot( INT8 bSlotId, INT8 bSquadValue , INT8 *bNumberOfDeadGuysSoFar );
+BOOLEAN IsDeadGuyInThisSquadSlot( INT16 bSlotID, INT8 bSquadValue , UINT16 *bNumberOfDeadGuysSoFar );
 
 // dead soldier was on squad
 BOOLEAN SoldierIsDeadAndWasOnSquad( SOLDIERTYPE *pSoldier, INT8 bSquadValue );

@@ -377,7 +377,7 @@ void SaveWorldItemsToMap( HWFILE fp )
 }
 
 
-void LoadWorldItemsFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion )
+void LoadWorldItemsFromMap( INT16 **hBuffer, FLOAT dMajorMapVersion )
 {
 	// Start loading itmes...
 	

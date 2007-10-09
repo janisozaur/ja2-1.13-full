@@ -269,7 +269,7 @@ typedef struct
 
 	INT16		sCurInterfacePanel;
 
-	UINT8		ubSMCurrentMercID;
+	UINT16		ubSMCurrentMercID;
 
 	BOOLEAN	fFirstTimeInMapScreen;
 
@@ -434,8 +434,8 @@ BOOLEAN		SetMercsInsertionGridNo( );
 BOOLEAN		LoadOppListInfoFromSavedGame( HWFILE hFile );
 BOOLEAN		SaveOppListInfoToSavedGame( HWFILE hFile );
 
-BOOLEAN		LoadMercPathToSoldierStruct( HWFILE hFilem, UINT8	ubID );
-BOOLEAN		SaveMercPathFromSoldierStruct( HWFILE hFilem, UINT8	ubID );
+BOOLEAN		LoadMercPathToSoldierStruct( HWFILE hFilem, INT16 ubID );
+BOOLEAN		SaveMercPathFromSoldierStruct( HWFILE hFilem, INT16	ubID );
 
 BOOLEAN		LoadGeneralInfo( HWFILE hFile );
 BOOLEAN		SaveGeneralInfo( HWFILE hFile );
@@ -3015,7 +3015,7 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 
 BOOLEAN SaveSoldierStructure( HWFILE hFile )
 {
-	UINT16	cnt;
+	INT16	cnt;
 	UINT32	uiNumBytesWritten=0;
 	UINT8		ubOne = 1;
 	UINT8		ubZero = 0;
@@ -3075,7 +3075,7 @@ BOOLEAN SaveSoldierStructure( HWFILE hFile )
 
 
 			//Save the pMercPath
-			if( !SaveMercPathFromSoldierStruct( hFile, (UINT8)cnt ) )
+			if( !SaveMercPathFromSoldierStruct( hFile, cnt ) )
 				return( FALSE );
 
 
@@ -3124,7 +3124,7 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 	SOLDIERTYPE SavedSoldierInfo;
 	// WDS - Clean up inventory handling
 	UINT32	uiSaveSize = SIZEOF_SOLDIERTYPE_POD; //SIZEOF_SOLDIERTYPE;
-	UINT8		ubId;
+	INT16		ubId;
 	UINT8		ubOne = 1;
 	UINT8		ubActive = 1;
 	UINT32	uiPercentage;
@@ -4193,7 +4193,7 @@ void CreateSavedGameFileNameFromNumber( UINT8 ubSaveGameID, STR pzNewFileName )
 
 
 
-BOOLEAN SaveMercPathFromSoldierStruct( HWFILE hFile, UINT8	ubID )
+BOOLEAN SaveMercPathFromSoldierStruct( HWFILE hFile, INT16	ubID )
 {
 	UINT32	uiNumOfNodes=0;
 	PathStPtr	pTempPath = Menptr[ ubID ].pMercPath;
@@ -4239,7 +4239,7 @@ BOOLEAN SaveMercPathFromSoldierStruct( HWFILE hFile, UINT8	ubID )
 
 
 
-BOOLEAN LoadMercPathToSoldierStruct( HWFILE hFile, UINT8	ubID )
+BOOLEAN LoadMercPathToSoldierStruct( HWFILE hFile, INT16 ubID )
 {
 	UINT32	uiNumOfNodes=0;
 	PathStPtr	pTempPath = NULL;

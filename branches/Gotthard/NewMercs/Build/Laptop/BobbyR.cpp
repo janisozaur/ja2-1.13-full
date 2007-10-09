@@ -767,7 +767,7 @@ UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, UINT8 u
 
 
 	// decide if he can get stock for this item (items are reordered an entire batch at a time)
-	if (ItemTransactionOccurs( -1, usItemIndex, DEALER_BUYING, ubBobbyRayNewUsed ))
+	if (ItemTransactionOccurs( -1, usItemIndex, DEALER_BUYING, (BOOLEAN)(ubBobbyRayNewUsed) ))
 	{
 		if (ubBobbyRayNewUsed == BOBBY_RAY_NEW)
 		{

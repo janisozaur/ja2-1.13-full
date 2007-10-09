@@ -557,16 +557,16 @@ extern AnimationStructureType	gAnimStructureDatabase[ TOTALBODYTYPES ][ NUM_STRU
 // Functions
 BOOLEAN InitAnimationSystem( );
 BOOLEAN DeInitAnimationSystem( );
-BOOLEAN LoadAnimationSurface(  UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState );
-BOOLEAN UnLoadAnimationSurface(  UINT16 usSoldierID, UINT16 usSurfaceIndex );
-void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID );
+BOOLEAN LoadAnimationSurface(  INT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState );
+BOOLEAN UnLoadAnimationSurface(  INT16 usSoldierID, UINT16 usSurfaceIndex );
+void ClearAnimationSurfacesUsageHistory( INT16 usSoldierID );
 
 
 void DeleteAnimationProfiles( );
 BOOLEAN LoadAnimationProfiles( );
 
-STRUCTURE_FILE_REF	*GetAnimationStructureRef( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState );
-STRUCTURE_FILE_REF	*GetDefaultStructureRef( UINT16 usSoldierID );
+STRUCTURE_FILE_REF	*GetAnimationStructureRef( INT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState );
+STRUCTURE_FILE_REF	*GetDefaultStructureRef( INT16 usSoldierID );
 
 // Profile data
 extern ANIM_PROF	*gpAnimProfiles;

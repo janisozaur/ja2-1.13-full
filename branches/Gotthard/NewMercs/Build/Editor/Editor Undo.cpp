@@ -78,7 +78,7 @@ typedef struct
 	BOOLEAN				fLightSaved;	 //determines that a light has been saved
 	UINT8					ubLightRadius; //the radius of the light to build if undo is called
 	UINT8					ubLightID;		 //only applies if a light was saved.
-	UINT8					ubRoomNum;
+	INT16 ubRoomNum;
 } undo_struct;
 
 // Undo stack node

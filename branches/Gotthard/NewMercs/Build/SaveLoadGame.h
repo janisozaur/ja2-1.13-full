@@ -35,7 +35,7 @@ typedef struct
 	INT16		sSectorX;
 	INT16		sSectorY;
 	INT8		bSectorZ;
-	UINT8		ubNumOfMercsOnPlayersTeam;
+	UINT16		ubNumOfMercsOnPlayersTeam;
 	INT32		iCurrentBalance;
 
 	UINT32	uiCurrentScreen;

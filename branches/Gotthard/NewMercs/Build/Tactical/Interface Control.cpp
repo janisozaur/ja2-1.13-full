@@ -708,7 +708,7 @@ void RenderTopmostTacticalInterface( )
 			}
 			else
 			{
-				DrawSelectedUIAboveGuy((UINT16)pSoldier->ubID);
+				DrawSelectedUIAboveGuy(pSoldier->ubID);
 			}
 
 			if ( pSoldier->fDisplayDamage )
@@ -764,7 +764,7 @@ void RenderTopmostTacticalInterface( )
 
 	if ( gfUIHandleSelectionAboveGuy && gsSelectedGuy != NOBODY )
 	{
-		DrawSelectedUIAboveGuy((UINT16)gsSelectedGuy );
+		DrawSelectedUIAboveGuy(gsSelectedGuy );
 	}
 
 	// FOR THE MOST PART, DISABLE INTERFACE STUFF WHEN IT'S ENEMY'S TURN

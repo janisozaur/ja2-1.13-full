@@ -963,7 +963,7 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 	UINT8 ubNumTear = 0;
 	UINT8 ubNumMustard = 0;
 	UINT8 ubNumMini = 0;
-	UINT8 ubNumReg = 0;
+	UINT16 ubNumReg = 0;
 	UINT8 ubNumSmoke = 0;
 	UINT8 ubNumFlare = 0;
 	UINT8 count = 0;

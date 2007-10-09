@@ -639,7 +639,7 @@ void HandleOverheadUI( )
 {
   InputAtom					InputEvent;
 	INT32							sMousePos=0;
-	UINT8							ubID;
+	UINT16							ubID;
 
 	// CHECK FOR MOUSE OVER REGIONS...
 	if ( GetOverheadMouseGridNo( &sMousePos ) )

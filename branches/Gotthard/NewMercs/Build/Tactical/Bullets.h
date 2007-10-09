@@ -20,8 +20,8 @@
 typedef struct
 {
 	INT32		iBullet;
-	UINT8		ubFirerID;
-	UINT8		ubTargetID;
+	INT16		ubFirerID;
+	INT16		ubTargetID;
 	INT8		bStartCubesAboveLevelZ;
 	INT8		bEndCubesAboveLevelZ;
 	INT32	sGridNo;
@@ -66,7 +66,7 @@ typedef struct
 
 extern UINT32 guiNumBullets;
 
-INT32  CreateBullet( UINT8 ubFirer, BOOLEAN fFake, UINT16 usFlags,UINT16 fromItem );
+INT32  CreateBullet( INT16 ubFirer, BOOLEAN fFake, UINT16 usFlags,UINT16 fromItem );
 void	 RemoveBullet( INT32 iBullet );
 void	 StopBullet( INT32 iBullet );
 void	 UpdateBullets( );

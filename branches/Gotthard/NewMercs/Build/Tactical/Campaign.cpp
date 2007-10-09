@@ -439,7 +439,7 @@ void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubSta
 	BOOLEAN fChangeTypeIncrease;
 	BOOLEAN fChangeSalary;
 	UINT32 uiLevelCnt;
-	UINT8 ubMercMercIdValue = 0;
+	UINT16 ubMercMercIdValue = 0;
 	UINT16 usIncreaseValue = 0;
 	UINT16 usSubpointsPerPoint;
 
@@ -1500,7 +1500,7 @@ void TestDumpStatChanges(void)
 void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 {
 	UINT16 usXPs = 0;
-	UINT8 ubGuynum;
+	UINT16 ubGuynum;
 	SOLDIERTYPE *pSoldier;
 
 
@@ -1615,7 +1615,7 @@ UINT16 CountSurfaceSectorsVisited( void )
 	return( ubSectorsVisited );
 }
 
-void MERCMercWentUpALevelSendEmail( UINT8 ubMercMercIdValue )
+void MERCMercWentUpALevelSendEmail( INT16 ubMercMercIdValue )
 {
 	UINT8 ubEmailOffset = 0;
 

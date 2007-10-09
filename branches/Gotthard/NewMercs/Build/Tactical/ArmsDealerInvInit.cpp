@@ -17,7 +17,7 @@
 #endif
 
 
-extern INT8	gbSelectedArmsDealerID;
+extern INT16 gbSelectedArmsDealerID;
 
 
 // This table controls the order items appear in inventory at BR's and dealers, and which kinds of items are sold used
@@ -682,7 +682,7 @@ INT8	GetMaxItemAmount( DEALER_POSSIBLE_INV *pInv, UINT16 usItemIndex );
 
 
 
-INT8 GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex )
+UINT8 GetDealersMaxItemAmount( INT16 ubDealerID, UINT16 usItemIndex )
 {
 	switch( ubDealerID )
 	{
@@ -789,7 +789,7 @@ INT8 GetMaxItemAmount( DEALER_POSSIBLE_INV *pInv, UINT16 usItemIndex )
 }
 
 
-DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID )
+DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( INT16 ubArmsDealerID )
 {
 	switch( ubArmsDealerID )
 	{
@@ -876,7 +876,7 @@ DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID 
 
 
 //Madd: added boolean fUsed
-UINT8 GetCurrentSuitabilityForItem( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fUsed )
+UINT8 GetCurrentSuitabilityForItem( INT16 bArmsDealer, UINT16 usItemIndex, BOOLEAN fUsed )
 {
 	UINT8 ubItemCoolness;
 	UINT8 ubMinCoolness, ubMaxCoolness;
@@ -1004,7 +1004,7 @@ UINT8 GetCurrentSuitabilityForItem( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEA
 
 
 
-UINT8 ChanceOfItemTransaction( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerIsSelling, BOOLEAN fUsed )
+UINT8 ChanceOfItemTransaction( INT16 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerIsSelling, BOOLEAN fUsed )
 {
 	UINT8 ubItemCoolness;
 	UINT8 ubChance = 0;
@@ -1101,7 +1101,7 @@ UINT8 ChanceOfItemTransaction( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDe
 
 
 
-BOOLEAN ItemTransactionOccurs( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerIsSelling, BOOLEAN fUsed )
+BOOLEAN ItemTransactionOccurs( INT16 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerIsSelling, BOOLEAN fUsed )
 {
 	UINT8 ubChance;
 	INT16 sInventorySlot;
@@ -1145,7 +1145,7 @@ BOOLEAN ItemTransactionOccurs( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDe
 
 
 
-UINT8 DetermineInitialInvItems( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubChances, BOOLEAN fUsed)
+UINT8 DetermineInitialInvItems( INT16 bArmsDealerID, UINT16 usItemIndex, UINT8 ubChances, BOOLEAN fUsed)
 {
 	UINT8 ubNumBought;
 	UINT8 ubCnt;
@@ -1165,7 +1165,7 @@ UINT8 DetermineInitialInvItems( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ub
 
 
 
-UINT8 HowManyItemsAreSold( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubNumInStock, BOOLEAN fUsed)
+UINT8 HowManyItemsAreSold( INT16 bArmsDealerID, UINT16 usItemIndex, UINT8 ubNumInStock, BOOLEAN fUsed)
 {
 	UINT8 ubNumSold;
 	UINT8 ubCnt;

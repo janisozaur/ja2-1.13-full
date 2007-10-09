@@ -11,7 +11,7 @@ BOOLEAN LoadImpCharacter( STR fileName );
 void WriteOutCurrentImpCharacter( INT32 iProfileId );
 void WriteOutCurrentImpCharacter( INT32 iProfileId, STR fileName );
 
-void ResetIMPCharactersEyesAndMouthOffsets( UINT8 ubMercProfileID );
+void ResetIMPCharactersEyesAndMouthOffsets( INT16 ubMercProfileID );
 
 BOOLEAN ImpExists ( STR fileName );
 

@@ -447,8 +447,8 @@ BOOLEAN			gfUseLocalNPCs = FALSE;
 
 UINT8				gubNPCInventoryPopupAction = QD_DROP_DOWN_NO_ACTION;
 
-UINT8				gubCurrentNpcInSector[ QUEST_DBS_SIZE_NPC_ARRAY ];
-UINT8				gubNumNPCinSector;
+INT16				gubCurrentNpcInSector[ QUEST_DBS_SIZE_NPC_ARRAY ];
+UINT16				gubNumNPCinSector;
 
 UINT8				gubCurQuestSelected;
 UINT16			gusCurFactSelected;
@@ -642,7 +642,7 @@ void			EndMercTalking();
 void			EnableFactMouseRegions();
 void			DisableFactMouseRegions();
 INT32			GetMaxNumberOfQuotesToPlay( );
-void			GetDebugLocationString( UINT16 usProfileID, STR16 pzText );
+void			GetDebugLocationString( INT16 usProfileID, STR16 pzText );
 
 //ppp
 
@@ -1953,7 +1953,7 @@ void DisplaySelectedListBox( )
 
 void DisplaySelectedNPC()
 {
-	UINT16	i;
+	INT16	i;
 	UINT16	usPosX, usPosY;
 	INT16  usLocationX = 0, usLocationY = 0;
 	UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
@@ -2488,7 +2488,7 @@ void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON *btn,INT32 reason)
 		if( gfUseLocalNPCs )
 			pSoldier = FindSoldierByProfileID( gubCurrentNpcInSector[ gNpcListBox.sCurSelectedItem ], FALSE );
 		else
-			pSoldier = FindSoldierByProfileID( (UINT8) gNpcListBox.sCurSelectedItem, FALSE );
+			pSoldier = FindSoldierByProfileID(gNpcListBox.sCurSelectedItem, FALSE );
 
 		if( !pSoldier )
 		{
@@ -2636,7 +2636,7 @@ void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		BOOLEAN fRetVal = FALSE;
 		CHAR16	zTemp[128];
-		UINT8		ubMercID=0;
+		UINT16		ubMercID=0;
 
 		if( gfUseLocalNPCs )
 		{
@@ -2649,7 +2649,7 @@ void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
 			{
 				// NB ubMercID is really profile ID
 				ubMercID = (UINT8)gNpcListBox.sCurSelectedItem;
-				fRetVal = ReloadQuoteFile( (UINT8)gNpcListBox.sCurSelectedItem );
+				fRetVal = ReloadQuoteFile( gNpcListBox.sCurSelectedItem );
 				gMercProfiles[ ubMercID ].ubLastDateSpokenTo = 0;
 			}
 		}
@@ -2964,7 +2964,7 @@ void AddNPCToGridNo( INT32 iGridNo )
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT16										sSectorX, sSectorY;
-	UINT8									ubID;
+	INT16									ubID;
 
 	GetCurrentWorldSector( &sSectorX, &sSectorY );
 
@@ -3075,7 +3075,7 @@ void CreateDestroyDisplayNPCInventoryPopup( UINT8 ubAction )
 			if( gfUseLocalNPCs )
 				pSoldier = FindSoldierByProfileID( gubCurrentNpcInSector[ gNpcListBox.sCurSelectedItem ], FALSE );
 			else
-				pSoldier = FindSoldierByProfileID( (UINT8)gNpcListBox.sCurSelectedItem, FALSE );
+				pSoldier = FindSoldierByProfileID( gNpcListBox.sCurSelectedItem, FALSE );
 
 			if( !pSoldier )
 			{
@@ -3133,7 +3133,7 @@ void CreateDestroyDisplayNPCInventoryPopup( UINT8 ubAction )
 			if( gfUseLocalNPCs )
 				pSoldier = FindSoldierByProfileID( gubCurrentNpcInSector[ gNpcListBox.sCurSelectedItem ], FALSE );
 			else
-				pSoldier = FindSoldierByProfileID( (UINT8)gNpcListBox.sCurSelectedItem, FALSE );
+				pSoldier = FindSoldierByProfileID( gNpcListBox.sCurSelectedItem, FALSE );
 
 			if( pSoldier )
 			{
@@ -3359,7 +3359,7 @@ void BtnQDPgDownButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT8 ubApproach )
+void NpcRecordLoggingInit( INT16 ubNpcID, INT16 ubMercID, UINT8 ubQuoteNum, UINT8 ubApproach )
 {
 	static BOOLEAN	fFirstTimeIn = TRUE;
 
@@ -4026,12 +4026,12 @@ INT32	GetMaxNumberOfQuotesToPlay( )
 }
 
 
-void GetDebugLocationString( UINT16 usProfileID, STR16 pzText )
+void GetDebugLocationString( INT16 usProfileID, STR16 pzText )
 {
 	SOLDIERTYPE *pSoldier;
 
 		//Get a soldier pointer
-	pSoldier = FindSoldierByProfileID( (UINT8)usProfileID, FALSE );
+	pSoldier = FindSoldierByProfileID(usProfileID, FALSE );
 
 	//if their is a soldier, the soldier is alive and the soldier is off the map
 	if( pSoldier != NULL && pSoldier->bActive && pSoldier->uiStatusFlags & SOLDIER_OFF_MAP )

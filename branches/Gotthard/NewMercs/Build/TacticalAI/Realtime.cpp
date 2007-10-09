@@ -87,7 +87,7 @@ UINT16 RealtimeDelay( SOLDIERTYPE * pSoldier )
 		
 		if ( pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP )
 		{
-			UINT8		ubRoom;
+			INT16 ubRoom;
 
 			if ( InARoom( pSoldier->sGridNo, &ubRoom ) && IN_BROTHEL( ubRoom ) )
 			{
@@ -244,7 +244,7 @@ void RTHandleAI( SOLDIERTYPE * pSoldier )
 				pSoldier->usActionData = (UINT16) REALTIME_AI_DELAY;
 				if ( pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP )
 				{
-					UINT8		ubRoom;
+					INT16 ubRoom;
 
 					if ( InARoom( pSoldier->sGridNo, &ubRoom ) && IN_BROTHEL( ubRoom ) )
 					{

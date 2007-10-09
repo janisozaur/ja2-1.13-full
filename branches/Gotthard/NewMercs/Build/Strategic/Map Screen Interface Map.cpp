@@ -529,14 +529,14 @@ void MilitiaBoxMaskBtnCallback(MOUSE_REGION * pRegion, INT32 iReason );
 
 // display potential path, yes or no?
 void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY );
-void ShowEnemiesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sNumberOfEnemies, UINT8 ubIconPosition );
+void ShowEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT16 sNumberOfEnemies, UINT16 ubIconPosition );
 void ShowUncertainNumberEnemiesInSector( INT16 sSectorX, INT16 sSectorY );
-void HandleShowingOfEnemyForcesInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubIconPosition );
+void HandleShowingOfEnemyForcesInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT16 ubIconPosition );
 
 BOOLEAN CanMilitiaAutoDistribute( void );
 
 void ShowItemsOnMap( void );
-void DrawMapBoxIcon( HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, INT16 sMapY, UINT8 ubIconPosition );
+void DrawMapBoxIcon( HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, INT16 sMapY, UINT16 ubIconPosition );
 void DisplayDestinationOfHelicopter( void );
 void DrawOrta();
 void DrawTixa();
@@ -1044,7 +1044,7 @@ void DrawTownLabels(STR16 pString, STR16 pStringA, UINT16 usFirstX, UINT16 usFir
 // "on duty" includes mercs inside vehicles
 INT32 ShowOnDutyTeam( INT16 sMapX, INT16 sMapY )
 {
-  UINT8 ubCounter = 0, ubIconPosition = 0;
+  UINT16 ubCounter = 0, ubIconPosition = 0;
   HVOBJECT hIconHandle;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -1076,7 +1076,7 @@ INT32 ShowOnDutyTeam( INT16 sMapX, INT16 sMapY )
 
 INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 {
- 	UINT8 ubCounter, ubIconPosition;
+ 	UINT16 ubCounter, ubIconPosition;
   HVOBJECT hIconHandle;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -1118,7 +1118,7 @@ INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 
 INT32 ShowVehicles(INT16 sMapX, INT16 sMapY, INT32 iCount)
 {
-  UINT8 ubCounter, ubIconPosition;
+  UINT16 ubCounter, ubIconPosition;
   HVOBJECT hIconHandle;
 	SOLDIERTYPE *pVehicleSoldier;
 
@@ -1163,10 +1163,10 @@ INT32 ShowVehicles(INT16 sMapX, INT16 sMapY, INT32 iCount)
 }
 
 
-void ShowEnemiesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sNumberOfEnemies, UINT8 ubIconPosition )
+void ShowEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT16 sNumberOfEnemies, UINT16 ubIconPosition )
 {
 	HVOBJECT hIconHandle;
-	UINT8 ubEnemy = 0;
+	UINT16 ubEnemy = 0;
 
 	// get the video object
 	GetVideoObject(&hIconHandle, guiCHARICONS);
@@ -1724,7 +1724,7 @@ void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN 
 
 	// will plot a path from current position to sX, sY
 	// get last sector in characters list, build new path, remove tail section, move to beginning of list, and append onto old list
-	pCharacter->pMercPath = AppendStrategicPath( MoveToBeginningOfPathList ( BuildAStrategicPath( NULL, GetLastSectorIdInCharactersPath( pCharacter ), ( INT16 )( sX + sY*( MAP_WORLD_X ) ), GetSoldierGroupId( pCharacter ), fTacticalTraversal /*, FALSE */ ) ), pCharacter->pMercPath );
+	pCharacter->pMercPath = AppendStrategicPath( MoveToBeginningOfPathList ( BuildAStrategicPath( NULL, GetLastSectorIdInCharactersPath( pCharacter ), ( INT16 )( sX + sY*( MAP_WORLD_X ) ), GetSoldierGroupID( pCharacter ), fTacticalTraversal /*, FALSE */ ) ), pCharacter->pMercPath );
 
 	// move to beginning of list
 	pCharacter->pMercPath = MoveToBeginningOfPathList( pCharacter->pMercPath );
@@ -1757,7 +1757,7 @@ void PlotATemporaryPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY
 	}
 
 	// build path
-	pTempCharacterPath = BuildAStrategicPath( pTempCharacterPath, GetLastSectorIdInCharactersPath( pCharacter ) , ( INT16 )( sX + sY*( MAP_WORLD_X ) ), GetSoldierGroupId( pCharacter ), FALSE /*, TRUE */ );
+	pTempCharacterPath = BuildAStrategicPath( pTempCharacterPath, GetLastSectorIdInCharactersPath( pCharacter ) , ( INT16 )( sX + sY*( MAP_WORLD_X ) ), GetSoldierGroupID( pCharacter ), FALSE /*, TRUE */ );
 
 	return;
 }
@@ -2055,6 +2055,7 @@ void PlotPathForHelicopter( INT16 sX, INT16 sY )
 void PlotATemporaryPathForHelicopter( INT16 sX, INT16 sY )
 {
 	// clear old temp path
+	pTempHelicopterPath = MoveToBeginningOfPathList( pTempHelicopterPath);
 	pTempHelicopterPath = ClearStrategicPathList( pTempHelicopterPath, 0 );
 
 	// is cursor allowed here?..if not..don't build temp path
@@ -6256,7 +6257,7 @@ void DrawTownMilitiaForcesOnMap( void )
 					iIconValue += 2;
 				}
 
-				DrawMapBoxIcon( hVObject, ( UINT16 ) iIconValue, sSectorX, sSectorY, (UINT8) iCounterB );
+				DrawMapBoxIcon( hVObject, ( UINT16 ) iIconValue, sSectorX, sSectorY, iCounterB );
 			}
 		}
 	}
@@ -6569,9 +6570,9 @@ BOOLEAN CanMercsScoutThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 
 
 
-void HandleShowingOfEnemyForcesInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubIconPosition )
+void HandleShowingOfEnemyForcesInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT16 ubIconPosition )
 {
-	INT16 sNumberOfEnemies = 0;
+	UINT16 sNumberOfEnemies = 0;
 
 
 	// ATE: If game has just started, don't do it!
@@ -6917,7 +6918,7 @@ void ShowItemsOnMap( void )
 
 
 
-void DrawMapBoxIcon( HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, INT16 sMapY, UINT8 ubIconPosition )
+void DrawMapBoxIcon( HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, INT16 sMapY, UINT16 ubIconPosition )
 {
   INT32 iRowNumber, iColumnNumber;
 	INT32 iX, iY;

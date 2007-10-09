@@ -1317,7 +1317,7 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 	// find out is something was said
 	SOLDIERTYPE *pSoldier = NULL, *pSoldierWhoWillQuit = NULL;
 	INT32				iCounter= 0, iNumberOnTeam = 0;
-	UINT8				ubPotentialMercs[ 20 ] = { 0 };
+	UINT16				ubPotentialMercs[ 20 ] = { 0 };
 	UINT8				ubNumMercs = 0;
 	UINT8				ubChosenMerc;
 

@@ -27,6 +27,6 @@ BOOLEAN IsTheSectorPerceivedToBeUnderEnemyControl( INT16 sMapX, INT16 sMapY, INT
 void MakePlayerPerceptionOfSectorControlCorrect( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
 */
 
-void ReplaceSoldierProfileInPlayerGroup( UINT8 ubGroupID, UINT8 ubOldProfile, UINT8 ubNewProfile );
+void ReplaceSoldierProfileInPlayerGroup( UINT8 ubGroupID, INT16 ubOldProfile, INT16 ubNewProfile );
 
 #endif

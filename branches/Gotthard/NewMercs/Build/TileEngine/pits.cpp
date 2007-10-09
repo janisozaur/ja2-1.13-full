@@ -210,7 +210,7 @@ void RemoveAllPits()
 void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT32 sGridNo, INT16 sRadius )
 {
 	INT32 x, y, sNewGridNo;
-	UINT8	ubID;
+	INT16	ubID;
 	SOLDIERTYPE *pSoldier;
 
 
@@ -241,7 +241,7 @@ void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT32 sGridNo, INT16 s
 	}
 }
 
-void HandleFallIntoPitFromAnimation( UINT8 ubID )
+void HandleFallIntoPitFromAnimation( INT16 ubID )
 {
 	SOLDIERTYPE *pSoldier = MercPtrs[ ubID ];
 	EXITGRID ExitGrid;

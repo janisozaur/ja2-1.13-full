@@ -34,7 +34,7 @@ INT32 GetFundsOnMerc( SOLDIERTYPE *pSoldier );
 BOOLEAN TransferFundsFromMercToBank( SOLDIERTYPE *pSoldier, INT32 iCurrentBalance );
 BOOLEAN TransferFundsFromBankToMerc( SOLDIERTYPE *pSoldier, INT32 iCurrentBalance );
 
-BOOLEAN RemoveNewlyHiredMercFromPersonnelDepartedList( UINT8 ubProfile );
+BOOLEAN RemoveNewlyHiredMercFromPersonnelDepartedList( INT16 ubProfile );
 
 #endif
 

@@ -132,11 +132,11 @@ INT32 giDestroyedLairID = 0;
 //prebattle interface, autoresolve, etc.
 INT16 gsCreatureInsertionCode = 0;
 INT32 gsCreatureInsertionGridNo = 0;
-UINT8 gubNumCreaturesAttackingTown = 0;
-UINT8 gubYoungMalesAttackingTown = 0;
-UINT8 gubYoungFemalesAttackingTown = 0;
-UINT8 gubAdultMalesAttackingTown = 0;
-UINT8 gubAdultFemalesAttackingTown = 0;
+UINT16 gubNumCreaturesAttackingTown = 0;
+UINT16 gubYoungMalesAttackingTown = 0;
+UINT16 gubYoungFemalesAttackingTown = 0;
+UINT16 gubAdultMalesAttackingTown = 0;
+UINT16 gubAdultFemalesAttackingTown = 0;
 UINT8 gubCreatureBattleCode = CREATURE_BATTLE_CODE_NONE;
 UINT8 gubSectorIDOfCreatureAttack = 0;
 
@@ -618,7 +618,7 @@ void DecayCreatures()
 
 }
 
-void AddCreaturesToBattle( UINT8 ubNumYoungMales, UINT8 ubNumYoungFemales, UINT8 ubNumAdultMales, UINT8 ubNumAdultFemales )
+void AddCreaturesToBattle( UINT16 ubNumYoungMales, UINT16 ubNumYoungFemales, UINT16 ubNumAdultMales, UINT16 ubNumAdultFemales )
 {
 	INT32 iRandom;
 	SOLDIERTYPE *pSoldier;
@@ -1101,9 +1101,7 @@ BOOLEAN MineClearOfMonsters( UINT8 ubMineIndex )
 	return TRUE;
 }
 
-void DetermineCreatureTownComposition( UINT8 ubNumCreatures, 
-																			 UINT8 *pubNumYoungMales, UINT8 *pubNumYoungFemales,
-																			 UINT8 *pubNumAdultMales, UINT8 *pubNumAdultFemales )
+void DetermineCreatureTownComposition( UINT16 ubNumCreatures, UINT16 *pubNumYoungMales, UINT16 *pubNumYoungFemales, UINT16 *pubNumAdultMales, UINT16 *pubNumAdultFemales )
 {
 	INT32 i, iRandom;
 	UINT8 ubYoungMalePercentage = 10;
@@ -1135,9 +1133,7 @@ void DetermineCreatureTownComposition( UINT8 ubNumCreatures,
 	}
 }
 
-void DetermineCreatureTownCompositionBasedOnTacticalInformation( UINT8 *pubNumCreatures, 
-																			 UINT8 *pubNumYoungMales, UINT8 *pubNumYoungFemales,
-																			 UINT8 *pubNumAdultMales, UINT8 *pubNumAdultFemales )
+void DetermineCreatureTownCompositionBasedOnTacticalInformation( UINT16 *pubNumCreatures, UINT16 *pubNumYoungMales, UINT16 *pubNumYoungFemales, UINT16 *pubNumAdultMales, UINT16 *pubNumAdultFemales )
 {
 	SECTORINFO *pSector;
 	INT32 i;
@@ -1191,14 +1187,14 @@ BOOLEAN PrepareCreaturesForBattle()
 	UINT8 ubAdultMalePercentage;
 	UINT8 ubAdultFemalePercentage;
 	UINT8 ubCreatureHabitat;
-	UINT8 ubNumLarvae = 0;
-	UINT8 ubNumInfants = 0;
-	UINT8 ubNumYoungMales = 0;
-	UINT8 ubNumYoungFemales = 0;
-	UINT8 ubNumAdultMales = 0;
-	UINT8 ubNumAdultFemales = 0;
+	UINT16 ubNumLarvae = 0;
+	UINT16 ubNumInfants = 0;
+	UINT16 ubNumYoungMales = 0;
+	UINT16 ubNumYoungFemales = 0;
+	UINT16 ubNumAdultMales = 0;
+	UINT16 ubNumAdultFemales = 0;
 	UINT8 ubPercentage = 0;
-	UINT8 ubNumCreatures;
+	UINT16 ubNumCreatures;
 
 	if( !gubCreatureBattleCode )
 	{

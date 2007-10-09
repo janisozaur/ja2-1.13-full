@@ -46,7 +46,7 @@ extern UINT32 guiBrownBackgroundForTeamPanel;
 extern UINT32 guiGoldBackgroundForTeamPanel;
 
 // selected grunt
-extern UINT16 gusSelectedSoldier;
+extern INT16 gusSelectedSoldier;
 
 // car portraits
 enum{

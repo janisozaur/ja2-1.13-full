@@ -4,24 +4,24 @@
 #include <stdio.h>
 #include "worlddef.h"
 
-#define		NO_ROOM			0
-#define   MAX_ROOMS		250
+#define		NO_ROOM			-1
+#define   MAX_ROOMS		2048
 
 
-extern UINT8	gubWorldRoomHidden[ MAX_ROOMS ];
+extern INT16	gubWorldRoomHidden[ MAX_ROOMS ];
 //UINT8						gubWorldRoomInfo[ WORLD_MAX ];
-extern UINT8*						gubWorldRoomInfo;
+extern INT16*						gubWorldRoomInfo;
 
 
 BOOLEAN InitRoomDatabase( );
 void ShutdownRoomDatabase( );
 
-void SetTileRoomNum( INT32 sGridNo, UINT8 ubRoomNum );
-void SetTileRangeRoomNum( SGPRect *pSelectRegion, UINT8 ubRoomNum );
+void SetTileRoomNum( INT32 sGridNo, INT16 ubRoomNum );
+void SetTileRangeRoomNum( SGPRect *pSelectRegion, INT16 ubRoomNum );
 
-void RemoveRoomRoof( INT32 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier );
-BOOLEAN InARoom( INT32 sGridNo, UINT8 *pubRoomNo );
-BOOLEAN InAHiddenRoom( INT32 sGridNo, UINT8 *pubRoomNo );
+void RemoveRoomRoof( INT32 sGridNo, INT16 bRoomNum, SOLDIERTYPE *pSoldier );
+BOOLEAN InARoom( INT32 sGridNo, INT16 *pubRoomNo );
+BOOLEAN InAHiddenRoom( INT32 sGridNo, INT16 *pubRoomNo );
 
 void SetGridNoRevealedFlag( INT32 sGridNo );
 

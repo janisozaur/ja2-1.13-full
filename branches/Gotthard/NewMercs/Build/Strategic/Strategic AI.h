@@ -122,7 +122,7 @@ typedef struct PATROL_GROUP
 	INT8  bPriority;
 	UINT8 ubSectorID[4];
 	INT8  bFillPermittedAfterDayMod100;
-	UINT8 ubGroupID;
+	INT8 ubGroupID;
 	INT8  bWeight;
 	UINT8 ubPendingGroupID;
 	INT8  bPadding[10];

@@ -94,7 +94,7 @@ void HandleSoldierDeadComments( SOLDIERTYPE *pSoldier )
 {
 	INT32 cnt = 0;
 	SOLDIERTYPE *pTeamSoldier;
-	INT8 bBuddyIndex;
+	INT16 bBuddyIndex;
 
 	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
 	cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;

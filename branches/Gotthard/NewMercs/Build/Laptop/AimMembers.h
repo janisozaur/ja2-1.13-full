@@ -16,7 +16,7 @@ void DisplayTextForMercFaceVideoPopUp(STR16 pString);
 BOOLEAN DisplayTalkingMercFaceForVideoPopUp(INT32	iFaceIndex);
 void EnterInitAimMembers();
 BOOLEAN RenderAIMMembersTopLevel();
-void ResetMercAnnoyanceAtPlayer( UINT8 ubMercID );
+void ResetMercAnnoyanceAtPlayer( INT16 ubMercID );
 BOOLEAN DisableNewMailMessage();
 void DisplayPopUpBoxExplainingMercArrivalLocationAndTime( );
 

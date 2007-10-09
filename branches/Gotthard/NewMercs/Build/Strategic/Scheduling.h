@@ -47,8 +47,8 @@ typedef struct SCHEDULENODE
 	UINT32 usData1[MAX_SCHEDULE_ACTIONS]; //typically the gridno, but depends on the action
 	UINT32 usData2[MAX_SCHEDULE_ACTIONS]; //secondary information, not used by most actions
 	UINT8 ubAction[MAX_SCHEDULE_ACTIONS];
-	UINT8 ubScheduleID;
-	UINT8 ubSoldierID;
+	UINT16 ubScheduleID;
+	INT16 ubSoldierID;
 	UINT16 usFlags;
 }SCHEDULENODE;
 
@@ -69,7 +69,7 @@ extern UINT8				gubScheduleID;
 extern SCHEDULENODE *gpScheduleList;
 
 //Access functions
-SCHEDULENODE* GetSchedule( UINT8 ubScheduleID );
+SCHEDULENODE* GetSchedule( UINT16 ubScheduleID );
 
 //Removes all schedules from the event list, and cleans out the list.
 void DestroyAllSchedules();
@@ -78,9 +78,9 @@ void DestroyAllSchedulesWithoutDestroyingEvents();
 //This is the callback whenever a schedule is processed
 void ProcessTacticalSchedule( UINT8 ubScheduleID );
 
-void DeleteSchedule( UINT8 ubScheduleID );
+void DeleteSchedule( UINT16 ubScheduleID );
 
-void LoadSchedules( INT8 **hBuffer, FLOAT dMajorMapVersion );
+void LoadSchedules( INT16 **hBuffer, FLOAT dMajorMapVersion );
 BOOLEAN LoadSchedulesFromSave( HWFILE hFile );
 BOOLEAN SaveSchedules( HWFILE hFile );
 

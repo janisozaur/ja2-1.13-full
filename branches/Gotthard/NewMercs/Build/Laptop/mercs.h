@@ -62,13 +62,13 @@ BOOLEAN InitMercBackGround();
 BOOLEAN DrawMecBackGround();
 BOOLEAN RemoveMercBackGround();
 void DailyUpdateOfMercSite( UINT16 usDate);
-UINT8 GetMercIDFromMERCArray(UINT8 ubMercID);
+INT16 GetMercIDFromMERCArray(INT16 ubMercID);
 
 void DisplayTextForSpeckVideoPopUp(STR16 pString);
 
-BOOLEAN IsMercMercAvailable( UINT8 ubMercID );
+BOOLEAN IsMercMercAvailable( INT16 ubMercID );
 
-void HandlePlayerHiringMerc( UINT8 ubHiredMercID );
+void HandlePlayerHiringMerc( INT16 ubHiredMercID );
 void EnterInitMercSite();
 
 void GetMercSiteBackOnline();
@@ -79,8 +79,8 @@ extern	UINT16			gusMercVideoSpeckSpeech;
 
 extern	UINT8			gubArrivedFromMercSubSite;
 
-extern	UINT8			gubMercArray[ NUMBER_OF_MERCS ];
-extern	UINT8			gubCurMercIndex;
+extern	UINT16			gubMercArray[ NUMBER_OF_MERCS ];
+extern	UINT16			gubCurMercIndex;
 //extern	UINT8			gubLastMercIndex;
 
 //extern	UINT32		guiNumberOfMercPaymentsInDays;

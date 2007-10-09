@@ -120,7 +120,7 @@ typedef struct
 typedef struct
 {
  UINT8 ubPossible;            // is this attack form possible?  T/F
- UINT8 ubOpponent;            // which soldier is the victim?
+ UINT16 ubOpponent;            // which soldier is the victim?
  UINT8 ubAimTime;							// how many extra APs to spend on aiming
  UINT8 ubChanceToReallyHit;   // chance to hit * chance to get through cover
  INT32 iAttackValue;          // relative worthiness of this type of attack
@@ -199,7 +199,7 @@ INT32 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT32 sDesGrid, IN
 BOOLEAN LegalNPCDestination(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags);
 void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier);
 INT32 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN * pfClimbingNecessary, BOOLEAN * pfReachable );
-INT32 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc );
+INT32 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, INT16 * pubDesiredMerc );
 void NPCDoesAct(SOLDIERTYPE *pSoldier);
 void NPCDoesNothing(SOLDIERTYPE *pSoldier);
 INT8 OKToAttack(SOLDIERTYPE *ptr, int target);

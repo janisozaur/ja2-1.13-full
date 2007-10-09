@@ -39,7 +39,7 @@ BOOLEAN FindAutobandageClimbPoint( INT32 sDesiredGridNo, BOOLEAN fClimbUp )
 	BUILDING *	pBuilding;
 	UINT8				ubNumClimbSpots;
 	UINT8				ubLoop;
-	UINT8				ubWhoIsThere;
+	INT16 ubWhoIsThere;
 
 	pBuilding = FindBuilding( sDesiredGridNo );
 	if (!pBuilding)
@@ -69,7 +69,7 @@ BOOLEAN FindAutobandageClimbPoint( INT32 sDesiredGridNo, BOOLEAN fClimbUp )
 
 BOOLEAN FullPatientCheck( SOLDIERTYPE * pPatient )
 {
-	UINT8						cnt;
+	INT16 cnt;
 	SOLDIERTYPE *		pSoldier;
 
 	if ( CanCharacterAutoBandageTeammate( pPatient ) )
@@ -116,10 +116,10 @@ BOOLEAN FullPatientCheck( SOLDIERTYPE * pPatient )
 BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck )
 {
 	// returns false if we should stop being in auto-bandage mode
-	UINT8					cnt;
+	UINT16					cnt;
 	UINT8					ubMedics = 0, ubPatients = 0;
 	SOLDIERTYPE * pSoldier;
-	static UINT8	ubIDForFullCheck = NOBODY;
+	static UINT16	ubIDForFullCheck = NOBODY;
 
 	// run though the list of chars on team
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
@@ -224,7 +224,7 @@ BOOLEAN CanCharacterBeAutoBandagedByTeammate( SOLDIERTYPE *pSoldier )
 
 INT8 FindBestPatient( SOLDIERTYPE * pSoldier, BOOLEAN * pfDoClimb )
 {
-	UINT8						cnt, cnt2;
+	UINT16						cnt, cnt2;
 	INT32						bBestPriority = 0, sBestAdjGridNo = NOWHERE;
 	INT32						sPatientGridNo = NOWHERE, sBestPatientGridNo = NOWHERE;
 	INT16						sShortestPath = 1000, sPathCost, sOtherMedicPathCost;
@@ -232,7 +232,7 @@ INT8 FindBestPatient( SOLDIERTYPE * pSoldier, BOOLEAN * pfDoClimb )
 	SOLDIERTYPE *		pBestPatient = NULL;
 	SOLDIERTYPE *		pOtherMedic;
 	INT8						bPatientPriority;
-	UINT8						ubDirection;
+	INT8						ubDirection;
 	INT32 sAdjustedGridNo, sAdjacentGridNo, sOtherAdjacentGridNo;
 	INT32						sClimbGridNo, sBestClimbGridNo = NOWHERE, sShortestClimbPath = 1000;
 	BOOLEAN					fClimbingNecessary;

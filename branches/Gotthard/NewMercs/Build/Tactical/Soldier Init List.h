@@ -6,8 +6,8 @@
 
 typedef struct SOLDIERINITNODE
 {
-	UINT8 ubNodeID;
-	UINT8 ubSoldierID;
+	UINT16 ubNodeID;
+	INT16 ubSoldierID;
 	BASIC_SOLDIERCREATE_STRUCT *pBasicPlacement;
 	SOLDIERCREATE_STRUCT *pDetailedPlacement;
 	SOLDIERTYPE *pSoldier;
@@ -21,7 +21,7 @@ extern SOLDIERINITNODE *gSoldierInitTail;
 //These serialization functions are assuming the passing of a valid file 
 //pointer to the beginning of the save/load area, at the correct part of the
 //map file.
-BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion );
+BOOLEAN LoadSoldiersFromMap( INT16 **hBuffer, FLOAT dMajorMapVersion );
 BOOLEAN SaveSoldiersToMap( HWFILE fp );
 
 //For the purpose of keeping track of which soldier belongs to which placement within the game,
@@ -37,24 +37,26 @@ void InitSoldierInitList();
 void KillSoldierInitList();
 SOLDIERINITNODE* AddBasicPlacementToSoldierInitList( BASIC_SOLDIERCREATE_STRUCT *pBasicPlacement );
 void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode );
-SOLDIERINITNODE* FindSoldierInitNodeWithID( UINT16 usID );
+SOLDIERINITNODE* FindSoldierInitNodeWithID( INT16 usID );
 
-UINT8 AddSoldierInitListTeamToWorld( INT8 bTeam, UINT8 ubMaxNum );
-void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTroops, UINT8 ubTotalElite );
-void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNumInfants,	
-																	UINT8 ubNumYoungMales, UINT8 ubNumYoungFemales, UINT8 ubNumAdultMales, 
-																	UINT8 ubNumAdultFemales );
-void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumReg, UINT8 ubNumElites );
-void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNumGreen, UINT8 ubNumReg, UINT8 ubNumElites );
+UINT8 AddSoldierInitListTeamToWorld( INT8 bTeam, UINT16 ubMaxNum );//Don't know if this needs to be changed from UINT8.  Gotthard, 9/18/07
+
+//I kept the NUMBER of people unsigned, but the ID's signed.  NOt sure if this is helpful.  Gotthard, 9/19/07
+void AddSoldierInitListEnemyDefenceSoldiers( UINT16 ubTotalAdmin, UINT16 ubTotalTroops, UINT16 ubTotalElite );
+void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT16 ubNumLarvae, UINT16 ubNumInfants,	
+																	UINT16 ubNumYoungMales, UINT16 ubNumYoungFemales, UINT16 ubNumAdultMales, 
+																	UINT16 ubNumAdultFemales );
+void AddSoldierInitListMilitia( UINT16 ubNumGreen, UINT16 ubNumReg, UINT16 ubNumElites );
+void AddSoldierInitListMilitiaOnEdge( UINT16 ubStrategicInsertionCode, UINT16 ubNumGreen, UINT16 ubNumReg, UINT16 ubNumElites );
 
 void AddSoldierInitListBloodcats();
 
 void UseEditorOriginalList();
 void UseEditorAlternateList();
-void AddPlacementToWorldByProfileID( UINT8 ubProfile );
+void AddPlacementToWorldByProfileID( INT16 ubProfile );
 
 void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier );
-void RemoveDetailedPlacementInfo( UINT8 ubNodeID );
+void RemoveDetailedPlacementInfo( UINT16 ubNodeID );//I am keeping the nodes as UINT16 for now because I don't know what they do, and they seem internal.  Gotthard, 9/18/07
 
 void AddProfilesUsingProfileInsertionData();
 void AddProfilesNotUsingProfileInsertionData();

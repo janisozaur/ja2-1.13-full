@@ -66,12 +66,12 @@ UINT8 ItemSlotLimit( UINT16 usItem, INT8 bSlot );
 
 // Function to put an item in a soldier profile
 // It's very primitive, just finds an empty place!
-BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject );
-BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, UINT16 usItem );
-INT8 FindObjectInSoldierProfile( UINT8 ubProfile, UINT16 usItem );
+BOOLEAN PlaceObjectInSoldierProfile( INT16 ubProfile, OBJECTTYPE *pObject );
+BOOLEAN RemoveObjectFromSoldierProfile( INT16 ubProfile, UINT16 usItem );
+INT8 FindObjectInSoldierProfile( INT16 ubProfile, UINT16 usItem );
 
-BOOLEAN ObjectExistsInSoldierProfile( UINT8 ubProfile, UINT16 usItem );
-void SetMoneyInSoldierProfile( UINT8 ubProfile, UINT32 uiMoney );
+BOOLEAN ObjectExistsInSoldierProfile( INT16 ubProfile, UINT16 usItem );
+void SetMoneyInSoldierProfile( INT16 ubProfile, UINT32 uiMoney );
 
 void CheckEquipmentForDamage( SOLDIERTYPE *pSoldier, INT32 iDamage );
 BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting );
@@ -171,7 +171,7 @@ UINT16 StandardGunListReplacement( UINT16 usGun );
 UINT16 FindReplacementMagazine( UINT8 ubCalibre, UINT8 ubMagSize, UINT8 ubAmmoType);
 UINT16 FindReplacementMagazineIfNecessary( UINT16 usOldGun, UINT16 usOldAmmo, UINT16 usNewGun );
 
-BOOLEAN DamageItemOnGround( OBJECTTYPE * pObject, INT32 sGridNo, INT8 bLevel, INT32 iDamage, UINT8 ubOwner );
+BOOLEAN DamageItemOnGround( OBJECTTYPE * pObject, INT32 sGridNo, INT8 bLevel, INT32 iDamage, UINT16 ubOwner );
 
 BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs );
 BOOLEAN ApplyElixir( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs );

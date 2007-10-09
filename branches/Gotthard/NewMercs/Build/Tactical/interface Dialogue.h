@@ -5,7 +5,7 @@
 #include "mousesystem.h"
 #include "npc.h"
 
-extern UINT8 gubSrcSoldierProfile;
+extern INT16 gubSrcSoldierProfile;
 
 
 // Structure used in Tactical display of NPC dialogue
@@ -17,7 +17,7 @@ typedef struct
 	INT16					sPopupX;
 	INT16					sPopupY;
 	UINT8					ubPopupOrientation;
-	UINT8					ubCharNum;
+	INT16					ubCharNum;
 	UINT32				uiPanelVO;
 	INT32					iButtonImages;
 	UINT32				uiCancelButton;
@@ -52,7 +52,7 @@ extern NPC_DIALOGUE_TYPE		gTalkPanel;
 BOOLEAN InitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pSrcSoldier, INT8 bApproach, UINT32 uiApproachData );
 
 // THis fuction will allocate and setup an NPCDiaogue structure. Loads the face for the character..
-BOOLEAN InitTalkingMenu( UINT8 ubCharacterNum, INT32 sGridNo );
+BOOLEAN InitTalkingMenu(INT16 ubCharacterNum, INT32 sGridNo );
 
 // Begins quote of NPC Dialogue
 BOOLEAN TalkingMenuDialogue( UINT16 usQuoteNum );
@@ -71,13 +71,13 @@ void RenderTalkingMenu( );
 BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey );
 
 // Gices an item to buddy
-BOOLEAN	TalkingMenuGiveItem( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos );
+BOOLEAN	TalkingMenuGiveItem(INT16 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos );
 // Triggers an NPC record
-BOOLEAN	NPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, UINT8 ubTargetApproach, BOOLEAN fShowDialogueMenu );
+BOOLEAN	NPCTriggerNPC(INT16 ubTargetNPC, UINT8 ubTargetRecord, UINT8 ubTargetApproach, BOOLEAN fShowDialogueMenu );
 // NPC goto gridno
-BOOLEAN	NPCGotoGridNo( UINT8 ubTargetNPC, INT32 usGridNo, UINT8 ubQuoteNum );
+BOOLEAN	NPCGotoGridNo(INT16 ubTargetNPC, INT32 usGridNo, UINT8 ubQuoteNum );
 // NPC Do action
-BOOLEAN	NPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum );
+BOOLEAN	NPCDoAction(INT16 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum );
 
 BOOLEAN	NPCClosePanel( );
 
@@ -85,16 +85,16 @@ void HandleWaitTimerForNPCTrigger( );
 
 
 void HandleNPCClosePanel( );
-void HandleNPCItemGiven( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos );
-void HandleNPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShowDialogueMenu, UINT8 ubTargetApproach );
-void HandleNPCGotoGridNo( UINT8 ubTargetNPC, INT32 usGridNo, UINT8 ubRecordNum );
-void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum );
+void HandleNPCItemGiven(INT16 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos );
+void HandleNPCTriggerNPC(INT16 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShowDialogueMenu, UINT8 ubTargetApproach );
+void HandleNPCGotoGridNo(INT16 ubTargetNPC, INT32 usGridNo, UINT8 ubRecordNum );
+void HandleNPCDoAction(INT16 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum );
 
-BOOLEAN ProfileCurrentlyTalkingInDialoguePanel( UINT8 ubProfile );
+BOOLEAN ProfileCurrentlyTalkingInDialoguePanel(INT16 ubProfile );
 
-BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY );
+BOOLEAN InternalInitTalkingMenu(INT16 ubCharacterNum, INT16 sX, INT16 sY );
 
-void HandleFactForNPCUnescorted( UINT8 ubNPC );
+void HandleFactForNPCUnescorted(INT16 ubNPC );
 
 
 enum
@@ -364,7 +364,7 @@ extern INT32 giHospitalRefund;
 extern INT8 gbHospitalPriceModifier;
 
 extern UINT32 CalcPatientMedicalCost( SOLDIERTYPE * pSoldier );
-extern UINT32 CalcMedicalCost( UINT8 ubId );
+extern UINT32 CalcMedicalCost( INT16 ubId );
 
 extern BOOLEAN	gfInTalkPanel;
 

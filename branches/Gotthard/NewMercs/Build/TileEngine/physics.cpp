@@ -88,7 +88,7 @@ real						Kdl	= (float)( 0.1 * TIME_MULTI );					// LINEAR DAMPENING ( WIND RESI
 
 void SimulateObject( REAL_OBJECT *pObject, real deltaT );
 
-void CheckForObjectHittingMerc( REAL_OBJECT *pObject, UINT16 usStructureID );
+void CheckForObjectHittingMerc( REAL_OBJECT *pObject, INT16 usStructureID );
 extern void DoGenericHit( SOLDIERTYPE *pSoldier, UINT8 ubSpecial, INT16 bDirection );
 
 
@@ -105,10 +105,10 @@ FLOAT						CalculateForceFromRange( INT16 sRange, FLOAT dDegrees );
 INT32          RandomGridFromRadius( INT32 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius );
 
 // Lesh: needed to fix item throwing through window
-extern INT16 DirIncrementer[8];
+extern INT8 DirIncrementer[8];
 
 void						HandleArmedObjectImpact( REAL_OBJECT *pObject );
-void ObjectHitWindow( INT32 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce );
+void ObjectHitWindow( INT32 sGridNo, INT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce );
 FLOAT CalculateObjectTrajectory( INT16 sTargetZ, OBJECTTYPE *pItem, vector_3 *vPosition, vector_3 *vForce, INT32 *psFinalGridNo );
 vector_3 FindBestForceForTrajectory( INT32 sSrcGridNo, INT32 sGridNo,INT16 sStartZ, INT16 sEndZ, real dzDegrees, OBJECTTYPE *pItem, INT32 *psGridNo, FLOAT *pzMagForce );
 INT32 ChanceToGetThroughObjectTrajectory( INT16 sTargetZ, OBJECTTYPE *pItem, vector_3 *vPosition, vector_3 *vForce, INT32 *psFinalGridNo, INT8 *pbLevel, BOOLEAN fFromUI );
@@ -116,7 +116,7 @@ FLOAT CalculateSoldierMaxForce( SOLDIERTYPE *pSoldier,  FLOAT dDegrees, OBJECTTY
 BOOLEAN AttemptToCatchObject( REAL_OBJECT *pObject );
 BOOLEAN CheckForCatchObject( REAL_OBJECT *pObject );
 BOOLEAN DoCatchObject( REAL_OBJECT *pObject );
-BOOLEAN CheckForCatcher( REAL_OBJECT *pObject, UINT16 usStructureID );
+BOOLEAN CheckForCatcher( REAL_OBJECT *pObject, INT16 usStructureID );
 
 
 /// OBJECT POOL FUNCTIONS
@@ -154,7 +154,7 @@ void RecountObjectSlots(void)
 }
 
 
-INT32	CreatePhysicalObject( OBJECTTYPE *pGameObj, real dLifeLength, real xPos, real yPos, real zPos, real xForce, real yForce, real zForce, UINT8 ubOwner, UINT8 ubActionCode, UINT32 uiActionData, BOOLEAN fTestObject )
+INT32	CreatePhysicalObject( OBJECTTYPE *pGameObj, real dLifeLength, real xPos, real yPos, real zPos, real xForce, real yForce, real zForce, INT16 ubOwner, UINT8 ubActionCode, UINT32 uiActionData, BOOLEAN fTestObject )
 {
 	INT32			iObjectIndex;
 	FLOAT			mass;
@@ -1382,7 +1382,7 @@ BOOLEAN PhysicsMoveObject( REAL_OBJECT *pObject )
 }
 #endif
 
-void ObjectHitWindow( INT32 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce )
+void ObjectHitWindow( INT32 sGridNo, INT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce )
 {
 	EV_S_WINDOWHIT	SWindowHit;
 	SWindowHit.sGridNo = sGridNo;
@@ -1909,7 +1909,7 @@ void CalculateLaunchItemBasicParams( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, I
 		{
 			// bad news - i can't throw item at myself
 			// so use dir incrementer
-			UINT8	ubDir = atan8( CenterX(pSoldier->sGridNo), CenterY(pSoldier->sGridNo), CenterX(sGridNo), CenterY(sGridNo) );
+			INT8 ubDir = atan8( CenterX(pSoldier->sGridNo), CenterY(pSoldier->sGridNo), CenterX(sGridNo), CenterY(sGridNo) );
 			sInterGridNo += DirIncrementer[ubDir];
 		}
 	}
@@ -2252,7 +2252,7 @@ void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT32 sGridNo, UI
 }
 
 
-BOOLEAN CheckForCatcher( REAL_OBJECT *pObject, UINT16 usStructureID )
+BOOLEAN CheckForCatcher( REAL_OBJECT *pObject, INT16 usStructureID )
 {
 	// Do we want to catch?
 	if ( pObject->fTestObject ==  NO_TEST_OBJECT )
@@ -2278,7 +2278,7 @@ BOOLEAN CheckForCatcher( REAL_OBJECT *pObject, UINT16 usStructureID )
 }
 
 
-void CheckForObjectHittingMerc( REAL_OBJECT *pObject, UINT16 usStructureID )
+void CheckForObjectHittingMerc( REAL_OBJECT *pObject, INT16 usStructureID )
 {
 	SOLDIERTYPE *pSoldier;
 	INT16       sDamage, sBreath;
@@ -2289,7 +2289,7 @@ void CheckForObjectHittingMerc( REAL_OBJECT *pObject, UINT16 usStructureID )
 		// Is it a guy?
 		if ( usStructureID < INVALID_STRUCTURE_ID )
 		{
-			if ( pObject->ubLastTargetTakenDamage != (UINT8)usStructureID )
+			if ( pObject->ubLastTargetTakenDamage != usStructureID )
 			{
 				pSoldier = MercPtrs[ usStructureID ];
 
@@ -2298,7 +2298,7 @@ void CheckForObjectHittingMerc( REAL_OBJECT *pObject, UINT16 usStructureID )
 
 				EVENT_SoldierGotHit( pSoldier, NOTHING, sDamage, sBreath, pSoldier->bDirection, 0, pObject->ubOwner, FIRE_WEAPON_TOSSED_OBJECT_SPECIAL, 0, 0, NOWHERE );
 
-				pObject->ubLastTargetTakenDamage = (UINT8)( usStructureID );
+				pObject->ubLastTargetTakenDamage = usStructureID;
 			}
 		}
 	}

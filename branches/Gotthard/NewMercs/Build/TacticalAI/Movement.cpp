@@ -449,7 +449,8 @@ INT32 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT32 sDesGrid, IN
 	UINT16 usMaxDist;
 	UINT8 ubDirection,ubDirsLeft,ubDirChecked[8],fFound = FALSE;
 	INT8 bAPsLeft, fPathFlags;
-	UINT8 ubRoomRequired = 0, ubTempRoom;
+	INT16 ubRoomRequired = 0;
+	INT16 ubTempRoom;
 
 	// 0verhaul:  Make sure to clear the stored path since this always calculates a new one.
 	// This is needed if the path cannot be found.

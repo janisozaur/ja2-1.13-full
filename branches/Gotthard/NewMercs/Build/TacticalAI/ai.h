@@ -195,7 +195,7 @@ BOOLEAN FindRoofClimbingPoints( SOLDIERTYPE * pSoldier, INT16 sDesiredSpot );
 INT32 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier);
 INT32 FindSweetCoverSpot(SOLDIERTYPE *pSoldier);
 
-void FreeUpNPCFromAttacking(UINT8 ubID);
+void FreeUpNPCFromAttacking(INT16 ubID);
 void FreeUpNPCFromPendingAction( SOLDIERTYPE * pSoldier );
 void FreeUpNPCFromTurning(SOLDIERTYPE *pSoldier, INT8 bLook);
 void FreeUpNPCFromStanceChange(SOLDIERTYPE *pSoldier );
@@ -203,7 +203,7 @@ void FreeUpNPCFromLoweringGun( SOLDIERTYPE *pSoldier );
 void FreeUpNPCFromRoofClimb(SOLDIERTYPE *pSoldier );
 
 UINT8 GetClosestOpponent( SOLDIERTYPE *pSoldier );
-UINT8 GetMostThreateningOpponent( SOLDIERTYPE *pSoldier );
+UINT16 GetMostThreateningOpponent( SOLDIERTYPE *pSoldier );
 
 void HandleSoldierAI( SOLDIERTYPE *pSoldier );
 void HandleInitialRedAlert( INT8 bTeam, UINT8 ubCommunicate);

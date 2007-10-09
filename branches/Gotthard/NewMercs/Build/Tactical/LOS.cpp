@@ -51,10 +51,10 @@
 
 INT32 gusLOSStartGridNo = 0;
 INT32 gusLOSEndGridNo = 0;
-UINT16 gusLOSStartSoldier = NOBODY;
-UINT16 gusLOSEndSoldier = NOBODY;
+INT16 gusLOSStartSoldier = NOBODY;
+INT16 gusLOSEndSoldier = NOBODY;
 extern UINT32 guiSoldierFlags;
-extern INT16 DirIncrementer[8];
+extern INT8 DirIncrementer[8];
 
 extern BOOLEAN fTracer;
 
@@ -1410,12 +1410,12 @@ BOOLEAN CalculateSoldierZPos( SOLDIERTYPE * pSoldier, UINT8 ubPosType, FLOAT * p
 		// Crow always as prone...
 		ubHeight = ANIM_PRONE;
 	}
-	else if (pSoldier->bOverTerrainType == DEEP_WATER)
+	else if ( MercInDeepWater( pSoldier) )
 	{
 		// treat as prone
 		ubHeight = ANIM_PRONE;
 	}
-	else if ( pSoldier->bOverTerrainType == LOW_WATER || pSoldier->bOverTerrainType == MED_WATER )
+	else if ( MercInShallowWater(pSoldier) )
 	{
 		// treat as crouched
 		ubHeight = ANIM_CROUCH;
@@ -1802,7 +1802,7 @@ INT32 SoldierTo3DLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT32 sGr
 {
 	FLOAT						dStartZPos, dEndZPos;
 	INT16						sXPos, sYPos;
-	UINT8						ubTargetID;
+	INT16						ubTargetID;
 	BOOLEAN					fOk;
 
 	CHECKF( pStartSoldier );
@@ -1895,7 +1895,7 @@ INT32 LocationToLocationLineOfSightTest( INT32 sStartGridNo, INT8 bStartLevel, I
 {
 	FLOAT						dStartZPos, dEndZPos;
 	INT16						sStartXPos, sStartYPos, sEndXPos, sEndYPos;
-	UINT8						ubStartID;
+	INT16						ubStartID;
 
 	ubStartID = WhoIsThere2( sStartGridNo, bStartLevel );
 	if ( ubStartID != NOBODY )
@@ -2044,7 +2044,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 		if (ubHitLocation == AIM_SHOT_RANDOM) // i.e. if not set yet
 		{
 
-			if (pTarget->bOverTerrainType == DEEP_WATER)
+			if (MercInDeepWater( pTarget) )
 			{
 				// automatic head hit!
 				ubHitLocation = AIM_SHOT_HEAD;
@@ -2055,7 +2055,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 				{
 				case ANIM_STAND:
 					// Fall through to crouch if in shallow or medium water
-					if ( pTarget->bOverTerrainType != LOW_WATER && pTarget->bOverTerrainType != MED_WATER )
+					if ( !MercInShallowWater( pTarget) )
 					{
 						dZPosRelToMerc = FixedToFloat( pBullet->qCurrZ ) - CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[pBullet->sGridNo].sHeight );
 						if ( dZPosRelToMerc > HEIGHT_UNITS )
@@ -2363,7 +2363,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 	return( fStopped );
 }
 
-void BulletHitStructure( BULLET * pBullet, UINT16 usStructureID, INT32 iImpact, SOLDIERTYPE * pFirer, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT qCurrZ, BOOLEAN fStopped )
+void BulletHitStructure( BULLET * pBullet, INT16 usStructureID, INT32 iImpact, SOLDIERTYPE * pFirer, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT qCurrZ, BOOLEAN fStopped )
 {
 	EV_S_STRUCTUREHIT		SStructureHit;
 
@@ -2380,7 +2380,7 @@ void BulletHitStructure( BULLET * pBullet, UINT16 usStructureID, INT32 iImpact, 
 	StructureHit( SStructureHit.iBullet, SStructureHit.usWeaponIndex, SStructureHit.bWeaponStatus, SStructureHit.ubAttackerID, SStructureHit.sXPos, SStructureHit.sYPos, SStructureHit.sZPos, SStructureHit.usStructureID, SStructureHit.iImpact, fStopped );
 }
 
-void BulletHitWindow( BULLET *pBullet, INT32 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth )
+void BulletHitWindow( BULLET *pBullet, INT32 sGridNo, INT16 usStructureID, BOOLEAN fBlowWindowSouth )
 {
 	WindowHit( sGridNo, usStructureID, fBlowWindowSouth, FALSE );
 }
@@ -3188,7 +3188,7 @@ UINT8 SoldierToSoldierBodyPartChanceToGetThrough( SOLDIERTYPE * pStartSoldier, S
 	return( ChanceToGetThrough( pStartSoldier, (FLOAT) CenterX( pEndSoldier->sGridNo ), (FLOAT) CenterY( pEndSoldier->sGridNo ), dEndZPos ) );
 }
 
-UINT8 SoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT32 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubTargetID )
+UINT8 SoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT32 sGridNo, INT8 bLevel, INT8 bCubeLevel, INT16 ubTargetID )
 {
 	FLOAT			dEndZPos;
 	INT16			sXPos;
@@ -3819,7 +3819,7 @@ void MoveBullet( INT32 iBullet )
 	FIXEDPT					qLastZ;
 
 	SOLDIERTYPE *		pTarget;
-	UINT8						ubTargetID;
+	INT16					ubTargetID;
 	BOOLEAN					fIntended;
 	BOOLEAN					fStopped;
 	INT8						bOldLOSIndexX;
@@ -4725,7 +4725,7 @@ INT32	CheckForCollision( FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDel
 	if (iCurrAboveLevelZ < 0)
 	{
 		// ground is in the way!	
-		if ( pMapElement->ubTerrainID == DEEP_WATER || pMapElement->ubTerrainID == LOW_WATER || pMapElement->ubTerrainID == MED_WATER )
+		if ( TERRAIN_IS_WATER( pMapElement->ubTerrainID) )
 		{
 			return ( COLLISION_WATER );
 		}
@@ -4765,7 +4765,7 @@ INT32	CheckForCollision( FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDel
 		if ( dZ < iLandHeight)
 		{
 			// ground is in the way!	
-			if ( pMapElement->ubTerrainID == DEEP_WATER || pMapElement->ubTerrainID == LOW_WATER || pMapElement->ubTerrainID == MED_WATER  )
+			if ( TERRAIN_IS_WATER( pMapElement->ubTerrainID) )
 			{
 				return ( COLLISION_WATER );
 			}
@@ -5004,7 +5004,7 @@ INT16 gsLOSDirLUT[3][3] =
 };
 
 
-BOOLEAN CalculateLOSNormal( 	STRUCTURE *pStructure, INT8 bLOSX, INT8 bLOSY, INT8 bLOSZ, FLOAT dDeltaX, FLOAT dDeltaY, FLOAT dDeltaZ, FLOAT *pdNormalX, FLOAT *pdNormalY, FLOAT *pdNormalZ )
+BOOLEAN CalculateLOSNormal( STRUCTURE *pStructure, INT8 bLOSX, INT8 bLOSY, INT8 bLOSZ, FLOAT dDeltaX, FLOAT dDeltaY, FLOAT dDeltaZ, FLOAT *pdNormalX, FLOAT *pdNormalY, FLOAT *pdNormalZ )
 {
 	INT32		cntx, cnty;
 	INT8		bX, bY, tX, tY;

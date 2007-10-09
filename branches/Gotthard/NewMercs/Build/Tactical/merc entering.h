@@ -3,7 +3,7 @@
 
 
 void ResetHeliSeats( );
-void AddMercToHeli( UINT8 ubID );
+void AddMercToHeli( INT16 ubID );
 
 void StartHelicopterRun( INT32 sGridNoSweetSpot );
 

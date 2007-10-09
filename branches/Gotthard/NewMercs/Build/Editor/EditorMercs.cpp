@@ -158,7 +158,7 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate );
 void RenderMercInventoryPanel();
 void SetDroppableCheckboxesBasedOnMercsInventory();
 
-extern BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode );
+extern BOOLEAN InternalAddSoldierToSector( INT16 ubID, BOOLEAN fCalculateDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode );
 
 //array which keeps track of which item is in which slot.  This is dependant on the selected merc, so
 //these temp values must be updated when different mercs are selected, and reset when a merc detailed 
@@ -514,7 +514,7 @@ void AddMercToWorld( INT32 iMapIndex )
 
 	if( IsLocationSittable( iMapIndex, gfRoofPlacement ) )
 	{
-		UINT8	ubID;
+		INT16	ubID;
 		INT16 sSectorX, sSectorY;
 		SOLDIERINITNODE *pNode;
 		
@@ -2075,6 +2075,7 @@ void ChangeBodyType( INT8 bOffset )  //+1 or -1 only
 				break;
 		}
 		SetSoldierAnimationSurface( gpSelected->pSoldier, gpSelected->pSoldier->usAnimState );
+		ConvertAniCodeToAniFrame( gpSelected->pSoldier, 0 );
 	}
 	//Update the placement's info as well.
 	gpSelected->pBasicPlacement->bBodyType = (INT8)iIndex;
@@ -2973,7 +2974,9 @@ void UpdateMercItemSlots()
 	{
 		if( gpSelected->pDetailedPlacement->ubProfile != NO_PROFILE )
 		{
-			memcpy( &gpSelected->pDetailedPlacement->Inv, &gpSelected->pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
+			// 0verhaul:  Inventory is now a C++ class.  Bad memcpy!  No biscuit!
+			//memcpy( &gpSelected->pDetailedPlacement->Inv, &gpSelected->pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
+			gpSelected->pDetailedPlacement->Inv = gpSelected->pSoldier->inv;
 		}
 		for( x = 0; x < 9; x++ )
 		{
@@ -3654,7 +3657,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 
 	if( IsLocationSittable( iMapIndex, gfRoofPlacement ) )
 	{
-		UINT8	ubID;
+		INT16	ubID;
 		INT16 sSectorX, sSectorY;
 		SOLDIERINITNODE *pNode;
 		

@@ -59,7 +59,7 @@ typedef struct
 
 typedef struct
 {
-	UINT16  usSoldierID;
+	INT16  usSoldierID;
 	UINT32  uiUniqueId;
 	UINT16	usNewState;
 	INT16		sXPos;
@@ -72,15 +72,17 @@ typedef struct
 
 typedef struct
 {
-	UINT16  usSoldierID;
+	INT16  usSoldierID;
 	UINT32  uiUniqueId;
-	INT32	usNewDestination;
+	//INT32	usNewDestination; Changed to accomodate Destination changing to INT16.
+	//Might need to change back if pathing errors occur. Gotthard 10/8/07
+	INT16 usNewDestination;
 
 } EV_S_CHANGEDEST;
 
 typedef struct
 {
-	UINT16 usSoldierID;
+	INT16 usSoldierID;
 	UINT32  uiUniqueId;
 	FLOAT	 dNewXPos;
 	FLOAT	 dNewYPos;
@@ -89,7 +91,7 @@ typedef struct
 
 typedef struct
 {
-	UINT16	 usSoldierID;
+	INT16	 usSoldierID;
 	UINT32	 uiUniqueId;
 	INT32 sDestGridNo;
 	UINT16		usMovementAnim;		 
@@ -98,13 +100,13 @@ typedef struct
 
 typedef struct
 {
-	UINT16  usSoldierID;
+	INT16  usSoldierID;
 	UINT32  uiUniqueId;
 } EV_S_BEGINTURN;
 
 typedef struct
 {
-	UINT16  usSoldierID;
+	INT16  usSoldierID;
 	UINT32  uiUniqueId;
 	UINT8		ubNewStance;
 	INT16		sXPos;
@@ -114,24 +116,24 @@ typedef struct
 
 typedef struct
 {
-	UINT16  usSoldierID;
+	INT16  usSoldierID;
 	UINT32  uiUniqueId;
-	UINT16	usNewDirection;
+	INT8 usNewDirection;
 
 } EV_S_SETDIRECTION;
 
 typedef struct
 {
-	UINT16  usSoldierID;
+	INT16  usSoldierID;
 	UINT32  uiUniqueId;
-	UINT16	usDesiredDirection;
+	INT8	usDesiredDirection;
 
 } EV_S_SETDESIREDDIRECTION;
 
 
 typedef struct
 {
-	UINT16  usSoldierID;
+	INT16  usSoldierID;
 	UINT32  uiUniqueId;
 	INT32 sTargetGridNo;
 	INT8		bTargetLevel;
@@ -141,7 +143,7 @@ typedef struct
 
 typedef struct
 {
-	UINT16  usSoldierID;
+	INT16  usSoldierID;
 	UINT32  uiUniqueId;
 	INT32 sTargetGridNo;
 	INT8		bTargetLevel;
@@ -150,17 +152,17 @@ typedef struct
 
 typedef struct
 {
-	UINT16  usSoldierID;
+	INT16  usSoldierID;
 	UINT32  uiUniqueId;
 	UINT16	usWeaponIndex;
 	INT16		sDamage;
 	INT16		sBreathLoss;
-	UINT16	usDirection;
+	INT8	usDirection;
 	INT16		sXPos;
 	INT16		sYPos;
 	INT16		sZPos;
 	INT16		sRange;
-	UINT8		ubAttackerID;
+	INT16		ubAttackerID;
 	BOOLEAN fHit;
 	UINT8		ubSpecial;
 	UINT8		ubLocation;
@@ -174,8 +176,8 @@ typedef struct
 	INT16		sZPos;
 	UINT16	usWeaponIndex;
 	INT8		bWeaponStatus;
-	UINT8		ubAttackerID;
-	UINT16	usStructureID;
+	INT16 ubAttackerID;
+	INT16 usStructureID;
 	INT32		iImpact;
 	INT32		iBullet;
 
@@ -184,19 +186,19 @@ typedef struct
 typedef struct
 {
 	INT32 sGridNo;
-	UINT16	usStructureID;
+	INT16	usStructureID;
 	BOOLEAN	fBlowWindowSouth;
 	BOOLEAN	fLargeForce;
 } EV_S_WINDOWHIT;
 
 typedef struct
 {
-	UINT8		ubAttackerID;
+	INT16		ubAttackerID;
 } EV_S_MISS;
 
 typedef struct
 {
-	UINT8 ubNoiseMaker;
+	INT16 ubNoiseMaker;
 	INT32 sGridNo;
 	UINT8 bLevel;
 	UINT8 ubTerrType;
@@ -207,7 +209,7 @@ typedef struct
 
 typedef struct
 {
-	UINT16  usSoldierID;
+	INT16  usSoldierID;
 	UINT32  uiUniqueId;
 	INT8		bDirection;
 	INT32 sGridNo;
@@ -220,7 +222,7 @@ typedef struct
 
 typedef struct
 {
-	UINT8		usSoldierID;
+	INT16 usSoldierID;
 	UINT32  uiUniqueId;
 	UINT8		usPathDataSize;			// Size of Path
 	INT32 sAtGridNo;					// Owner merc is at this tile when sending packet
@@ -236,7 +238,7 @@ typedef struct
 
 typedef struct
 {
-	UINT8		usSoldierID;	
+	INT16		usSoldierID;	
 	UINT32  uiUniqueId;
 	INT32 sAtGridNo;					// Owner merc is at this tile when sending packet
 	INT8		bActionPoints;			// current A.P. value

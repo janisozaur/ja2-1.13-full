@@ -169,25 +169,25 @@ void GetMineSector( UINT8 ubMineIndex, INT16 * psX, INT16 * psY );
 
 void IssueHeadMinerQuote( INT8 bMineIndex, UINT8 ubQuoteType );
 
-UINT8 GetHeadMinersMineIndex(UINT8 ubMinerProfileId);
+UINT8 GetHeadMinersMineIndex(UINT16 ubMinerProfileId);
 
-void PlayerSpokeToHeadMiner(UINT8 ubMinerProfile );
+void PlayerSpokeToHeadMiner(UINT16 ubMinerProfile );
 
-BOOLEAN IsHisMineRunningOut(UINT8 ubMinerProfileId );
-BOOLEAN IsHisMineEmpty(UINT8 ubMinerProfileId );
-BOOLEAN IsHisMineDisloyal(UINT8 ubMinerProfileId );
-BOOLEAN IsHisMineInfested(UINT8 ubMinerProfileId );
-BOOLEAN IsHisMineLostAndRegained(UINT8 ubMinerProfileId );
-BOOLEAN IsHisMineAtMaxProduction(UINT8 ubMinerProfileId );
-void ResetQueenRetookMine( UINT8 ubMinerProfileId );
+BOOLEAN IsHisMineRunningOut(UINT16 ubMinerProfileId );
+BOOLEAN IsHisMineEmpty(UINT16 ubMinerProfileId );
+BOOLEAN IsHisMineDisloyal(UINT16 ubMinerProfileId );
+BOOLEAN IsHisMineInfested(UINT16 ubMinerProfileId );
+BOOLEAN IsHisMineLostAndRegained(UINT16 ubMinerProfileId );
+BOOLEAN IsHisMineAtMaxProduction(UINT16 ubMinerProfileId );
+void ResetQueenRetookMine( UINT16 ubMinerProfileId );
 
 void QueenHasRegainedMineSector(INT8 bMineIndex);
 
 BOOLEAN HasAnyMineBeenAttackedByMonsters(void);
 
-void PlayerAttackedHeadMiner( UINT8 ubMinerProfileId );
+void PlayerAttackedHeadMiner( UINT16 ubMinerProfileId );
 
-BOOLEAN HasHisMineBeenProducingForPlayerForSomeTime( UINT8 ubMinerProfileId );
+BOOLEAN HasHisMineBeenProducingForPlayerForSomeTime( UINT16 ubMinerProfileId );
 
 // given sector value, get mine id value
 INT8 GetIdOfMineForSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );

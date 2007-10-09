@@ -85,7 +85,7 @@ BOOLEAN RemoveFacesForAutoBandage( void );
 
 extern BOOLEAN CanCharacterAutoBandageTeammate( SOLDIERTYPE *pSoldier );
 extern BOOLEAN CanCharacterBeAutoBandagedByTeammate( SOLDIERTYPE *pSoldier );
-extern UINT8 NumEnemyInSector( );
+extern UINT16 NumEnemyInSector( );
 
 void BeginAutoBandage( )
 {
@@ -307,7 +307,7 @@ BOOLEAN HandleAutoBandage( )
 BOOLEAN CreateAutoBandageString( void )
 {
 	INT32						cnt;
-	UINT8						ubDoctor[20], ubDoctors = 0;
+	UINT16						ubDoctor[20], ubDoctors = 0;
 	UINT32					uiDoctorNameStringLength = 1; // for end-of-string character
 	STR16						sTemp;
 	SOLDIERTYPE *		pSoldier;
@@ -390,7 +390,7 @@ void SetAutoBandageComplete( void )
 void AutoBandage( BOOLEAN fStart )
 {
 	SGPRect					aRect;
-	UINT8						ubLoop;
+	UINT16						ubLoop;
 	INT32						cnt;
 	SOLDIERTYPE *		pSoldier;
 
@@ -456,7 +456,8 @@ void AutoBandage( BOOLEAN fStart )
 		cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
 		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; cnt++,pSoldier++)
 		{
-			if ( pSoldier->bActive  )
+			// 0verhaul:  Make sure the merc is also in the sector before making him stand up!
+			if ( pSoldier->bActive && pSoldier->bInSector )
 			{
 				ActionDone( pSoldier );
 				if ( pSoldier->bSlotItemTakenFrom != NO_SLOT )
@@ -523,7 +524,12 @@ void AutoBandage( BOOLEAN fStart )
 			DoScreenIndependantMessageBox(pDoctorWarningString[ 1 ], MSG_BOX_FLAG_OK, NULL );
 			gfAutoBandageFailed = FALSE;
 		}
+
+		// Memory cleanup!
+		MemFree( sAutoBandageString);
+		sAutoBandageString = NULL;
 	}
+
 	guiAutoBandageSeconds = 0;
 
 	ResetAllMercSpeeds( );

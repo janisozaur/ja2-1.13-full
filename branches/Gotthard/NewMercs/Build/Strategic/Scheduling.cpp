@@ -78,7 +78,7 @@ void CopyScheduleToList( SCHEDULENODE *pSchedule, SOLDIERINITNODE *pNode )
 	}
 }
 
-SCHEDULENODE* GetSchedule( UINT8 ubScheduleID )
+SCHEDULENODE* GetSchedule( UINT16 ubScheduleID )
 {
 	SCHEDULENODE *curr;
 	curr = gpScheduleList;
@@ -124,7 +124,7 @@ void DestroyAllSchedulesWithoutDestroyingEvents()
 	gubScheduleID = 0;
 }
 
-void DeleteSchedule( UINT8 ubScheduleID )
+void DeleteSchedule( UINT16 ubScheduleID )
 {
 	SCHEDULENODE *curr, *temp = NULL;
 
@@ -265,7 +265,7 @@ void OptimizeSchedules()
 {
 	SCHEDULENODE *pSchedule;
 	SOLDIERINITNODE *pNode;
-	UINT8 ubOldScheduleID;
+	UINT16 ubOldScheduleID;
 	gubScheduleID = 0;
 	pSchedule = gpScheduleList;
 	while( pSchedule )
@@ -353,7 +353,7 @@ void PrepareSchedulesForEditorExit()
 	PostSchedules();
 }
 
-void LoadSchedules( INT8 **hBuffer, FLOAT dMajorMapVersion )
+void LoadSchedules( INT16 **hBuffer, FLOAT dMajorMapVersion )
 {
 	SCHEDULENODE *pSchedule = NULL;
 	SCHEDULENODE temp;
@@ -624,10 +624,10 @@ BOOLEAN SortSchedule( SCHEDULENODE *pSchedule )
 
 BOOLEAN BumpAnyExistingMerc( INT32 sGridNo ) 
 {
-	UINT8						ubID;
+	INT16 ubID;
 	SOLDIERTYPE *		pSoldier; // NB this is the person already in the location,
 	INT32 sNewGridNo;
-	UINT8						ubDir;
+	INT8						ubDir;
 	INT16						sCellX, sCellY;
 
 	// this is for autoprocessing schedules...
@@ -1346,9 +1346,9 @@ void SecureSleepSpot( SOLDIERTYPE * pSoldier, UINT32 usSleepSpot )
 {
 	SOLDIERTYPE *			pSoldier2;
 	UINT32						usSleepSpot2, usNewSleepSpot;
-	UINT32						uiLoop;
+	INT32						uiLoop;
 	SCHEDULENODE *		pSchedule;
-	UINT8							ubDirection;
+	INT8							ubDirection;
 
 	// start after this soldier's ID so we don't duplicate work done in previous passes
 	for ( uiLoop = pSoldier->ubID + 1; uiLoop <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; uiLoop++ )

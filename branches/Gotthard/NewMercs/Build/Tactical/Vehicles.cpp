@@ -168,11 +168,11 @@ INT16 sVehicleInternalOrigArmorValues[ NUMBER_OF_TYPES_OF_VEHICLES ][ NUMBER_OF_
 
 
 // set the driver of the vehicle
-void SetDriver( INT32 iID, UINT8 ubID );
+void SetDriver( INT32 iID, INT16 ubID );
 
 //void RemoveSoldierFromVehicleBetweenSectors( pSoldier, iId );
 
-void TeleportVehicleToItsClosestSector( INT32 iVehicleId, UINT8 ubGroupID );
+void TeleportVehicleToItsClosestSector( INT32 iVehicleId, INT8 ubGroupID );
 
 
 
@@ -772,7 +772,7 @@ void RemoveSoldierFromVehicleBetweenSectors( pSoldier, iId )
 	UINT8 ubCurrent, ubNext, ubDirection, ubSector;
 	UINT8 ubNextX, ubNextY, ubPrevX, ubPrevY;
 	UINT32 uiTraverseTime, uiArriveTime;
-	UINT8 ubGroupId;
+	UINT16 ubGroupID;
 	float flTripFractionCovered;
 
 
@@ -1125,12 +1125,12 @@ void UpdatePositionOfMercsInVehicle( INT32 iId )
 
 
 
-INT32 GivenMvtGroupIdFindVehicleId( UINT8 ubGroupId )
+INT32 GivenMvtGroupIdFindVehicleId( UINT8 ubGroupID )
 {
 	INT32 iCounter = 0;
 
 	// given the id of a mvt group, find a vehicle in this group
-	if( ubGroupId == 0 )
+	if( ubGroupID == 0 )
 	{
 		return ( -1 );
 	}
@@ -1140,7 +1140,7 @@ INT32 GivenMvtGroupIdFindVehicleId( UINT8 ubGroupId )
 		// might have an empty slot
 		if( pVehicleList[ iCounter ].fValid == TRUE )
 		{
-			if( pVehicleList[ iCounter ].ubMovementGroup == ubGroupId )
+			if( pVehicleList[ iCounter ].ubMovementGroup == ubGroupID )
 			{
 				return( iCounter ); 
 			}
@@ -1362,7 +1362,7 @@ SOLDIERTYPE *GetDriver( INT32 iID )
 }
 
 
-void SetDriver( INT32 iID, UINT8 ubID )
+void SetDriver( INT32 iID, INT16 ubID )
 {
 	pVehicleList[ iID ].ubDriver = ubID;
 }
@@ -1471,7 +1471,7 @@ BOOLEAN EnterVehicle( SOLDIERTYPE *pVehicle, SOLDIERTYPE *pSoldier )
 
 SOLDIERTYPE *GetVehicleSoldierPointerFromPassenger( SOLDIERTYPE *pSrcSoldier )
 {
-	UINT32									cnt;
+	INT32 cnt;
 	SOLDIERTYPE             *pSoldier;
 
 	// End the turn of player charactors
@@ -1497,7 +1497,7 @@ SOLDIERTYPE *GetVehicleSoldierPointerFromPassenger( SOLDIERTYPE *pSrcSoldier )
 BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier )
 {
 	SOLDIERTYPE		*pVehicle;
-	UINT8					ubDirection;
+	INT8 ubDirection;
 	INT32 sGridNo;
 
 	// Get vehicle from soldier...
@@ -1571,7 +1571,7 @@ void AddPassangersToTeamPanel( INT32 iId )
 }	
 
 
-void VehicleTakeDamage( UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT32 sGridNo, UINT8 ubAttackerID )
+void VehicleTakeDamage( INT16 ubID, UINT8 ubReason, INT16 sDamage, INT32 sGridNo, INT16 ubAttackerID )
 {
 	INT16 sOldDmgValue = 0;
 
@@ -1602,7 +1602,7 @@ void VehicleTakeDamage( UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT32 sGridNo
 }
 
 
-void HandleCriticalHitForVehicleInLocation( UINT8 ubID, INT16 sDmg, INT32 sGridNo, UINT8 ubAttackerID )
+void HandleCriticalHitForVehicleInLocation( INT16 ubID, INT16 sDmg, INT32 sGridNo, INT16 ubAttackerID )
 {
 	// check state the armor was s'posed to be in vs. the current state..the difference / orig state is % chance
 	// that a critical hit will occur
@@ -1773,7 +1773,7 @@ INT8 RepairVehicle( INT32 iVehicleId, INT8 bRepairPtsLeft, BOOLEAN *pfNothingToR
 
 
 /*
-INT16 GetOrigInternalArmorValueForVehicleInLocation( UINT8 ubID, UINT8 ubLocation )
+INT16 GetOrigInternalArmorValueForVehicleInLocation( INT16 ubID, UINT8 ubLocation )
 {
 	INT16 sArmorValue = 0;
 
@@ -1813,7 +1813,7 @@ SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId )
 }
 
 
-void SetUpArmorForVehicle( UINT8 ubID )
+void SetUpArmorForVehicle( INT16 ubID )
 {
 	INT32 iCounter = 0;
 
@@ -2220,7 +2220,7 @@ BOOLEAN NewLoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile )
 }
 
 
-BOOLEAN OKUseVehicle( UINT8 ubProfile )
+BOOLEAN OKUseVehicle( INT16 ubProfile )
 {
 	if ( ubProfile == PROF_HUMMER )
 	{
@@ -2243,7 +2243,7 @@ BOOLEAN OKUseVehicle( UINT8 ubProfile )
 
 
 
-void TeleportVehicleToItsClosestSector( INT32 iVehicleId, UINT8 ubGroupID )
+void TeleportVehicleToItsClosestSector( INT32 iVehicleId, INT8 ubGroupID )
 {
 	GROUP *pGroup = NULL;
 	UINT32 uiTimeToNextSector;

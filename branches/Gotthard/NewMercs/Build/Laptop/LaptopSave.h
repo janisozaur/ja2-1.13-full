@@ -21,8 +21,8 @@
 typedef struct
 {
 	BOOLEAN	fActive;
-	UINT8		ubSoldierID;
-	UINT8		ubMercID;
+	INT16		ubSoldierID;
+	INT16		ubMercID;
 	INT32		iPayOutPrice;
 } LIFE_INSURANCE_PAYOUT;
 
@@ -88,7 +88,7 @@ typedef struct
 	// MERC site info
 	UINT8								gubPlayersMercAccountStatus;
 	UINT32							guiPlayersMercAccountNumber;
-	UINT8								gubLastMercIndex;
+	UINT16								gubLastMercIndex;
 
 
 	// Aim Site
@@ -154,7 +154,7 @@ typedef struct
 
 	UINT32							uiTotalMoneyPaidToSpeck;
 
-	UINT8								ubLastMercAvailableId;
+	INT16								ubLastMercAvailableId;
 	UINT8 bPadding[ 86 ];
 
 } LaptopSaveInfoStruct;

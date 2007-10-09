@@ -49,7 +49,7 @@ typedef struct MERCPLACEMENT
 	SOLDIERTYPE		*pSoldier;
 	UINT32				uiVObjectID;
 	MOUSE_REGION	region;
-	UINT8					ubStrategicInsertionCode;
+	UINT16					ubStrategicInsertionCode;
 	BOOLEAN				fPlaced;
 }MERCPLACEMENT;
 
@@ -86,12 +86,12 @@ SGPRect gTPClipRect = {0,0,0,0};
 BOOLEAN gfValidCursor = FALSE;
 BOOLEAN gfEveryonePlaced = FALSE;
 
-UINT8	gubSelectedGroupID = 0;
-UINT8	gubHilightedGroupID = 0;
-UINT8 gubCursorGroupID = 0;
-INT8	gbSelectedMercID = -1;
-INT8	gbHilightedMercID = -1;
-INT8  gbCursorMercID = -1;
+INT8	gubSelectedGroupID = 0;
+INT8	gubHilightedGroupID = 0;
+INT8 gubCursorGroupID = 0;
+INT16	gbSelectedMercID = -1;
+INT16	gbHilightedMercID = -1;
+INT16  gbCursorMercID = -1;
 SOLDIERTYPE *gpTacticalPlacementSelectedSoldier = NULL;
 SOLDIERTYPE *gpTacticalPlacementHilightedSoldier = NULL;
 
@@ -111,7 +111,7 @@ void DialogRemoved( UINT8 ubResult );
 
 void PutDownMercPiece( INT32 iPlacement );
 void PickUpMercPiece( INT32 iPlacement );
-void SetCursorMerc( INT8 bPlacementID );
+void SetCursorMerc( INT16 bPlacementID );
 void SelectNextUnplacedUnit();
 
 #ifdef JA2BETAVERSION 
@@ -831,6 +831,8 @@ void KillTacticalPlacementGUI()
 		ScreenMsg( FONT_RED, MSG_ERROR, L"Substituted different entry side due to invalid entry points or map edgepoints.  KM, LC : 1" );
 	}
 	#endif
+
+	MemFree( gMercPlacement);
 }
 
 void ChooseRandomEdgepoints()
@@ -1130,7 +1132,7 @@ void HandleTacticalPlacementClicksInOverheadMap( MOUSE_REGION *reg, INT32 reason
 	}
 }
 
-void SetCursorMerc( INT8 bPlacementID )
+void SetCursorMerc( INT16 bPlacementID )
 {
 	if( gbCursorMercID != bPlacementID )
 	{
@@ -1146,7 +1148,7 @@ void PutDownMercPiece( INT32 iPlacement )
 {
 	INT32 sGridNo;
 	INT16 sCellX, sCellY;
-	UINT8 ubDirection;
+	INT8 ubDirection;
 
 	SOLDIERTYPE *pSoldier;
 	pSoldier = gMercPlacement[ iPlacement ].pSoldier;

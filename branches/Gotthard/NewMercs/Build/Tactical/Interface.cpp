@@ -89,8 +89,8 @@ INT32		giMenuAnchorX, giMenuAnchorY;
 #define PROG_BAR_START_Y			2
 
 BOOLEAN	gfProgBarActive      = FALSE;
-UINT8		gubProgNumEnemies		 = 0;
-UINT8		gubProgCurEnemy			 = 0;
+UINT16		gubProgNumEnemies		 = 0;
+UINT16		gubProgCurEnemy			 = 0;
 
 
 UINT32		guiPORTRAITICONS;
@@ -124,7 +124,7 @@ MOUSE_REGION	gMenuOverlayRegion;
 
 MOUSE_REGION    gBottomPanalRegion;
 
-UINT16				gusOldSelectedSoldier		= NOBODY;
+INT16				gusOldSelectedSoldier		= NOBODY;
 
 // OVerlay ID
 INT32					giPopupSlideMessageOverlay = -1;
@@ -148,7 +148,7 @@ BOOLEAN	gfPanelAllocated = FALSE;
 extern MOUSE_REGION	gDisableRegion;
 extern MOUSE_REGION gUserTurnRegion;
 extern BOOLEAN gfUserTurnRegionActive;
-extern UINT8 gubSelectSMPanelToMerc;
+extern INT16 gubSelectSMPanelToMerc;
 extern BOOLEAN gfIgnoreOnSelectedGuy;
 
 
@@ -543,7 +543,7 @@ void ShutdownCurrentPanel( )
 
 
 
-void SetCurrentTacticalPanelCurrentMerc( UINT8 ubID )
+void SetCurrentTacticalPanelCurrentMerc( INT16 ubID )
 {
 	SOLDIERTYPE *pSoldier;
 
@@ -569,7 +569,7 @@ void SetCurrentTacticalPanelCurrentMerc( UINT8 ubID )
 			break;
 
 		case TEAM_PANEL:
-			SetTEAMPanelCurrentMerc( (UINT8)gusSelectedSoldier );
+			SetTEAMPanelCurrentMerc( gusSelectedSoldier );
 			break;
 	}
 
@@ -607,7 +607,7 @@ void SetCurrentInterfacePanel( UINT8 ubNewPanel )
 void ToggleTacticalPanels( )
 {
 	gfSwitchPanel			= TRUE;
-	gubNewPanelParam  = (UINT8)gusSelectedSoldier;
+	gubNewPanelParam  = gusSelectedSoldier;
 
 	if ( gsCurInterfacePanel == SM_PANEL )
 	{
@@ -635,7 +635,7 @@ void RemoveCurrentTacticalPanelButtons( )
 }
 
 
-BOOLEAN IsMercPortraitVisible( UINT8 ubSoldierID )
+BOOLEAN IsMercPortraitVisible( INT16 ubSoldierID )
 {
 	if ( gsCurInterfacePanel == TEAM_PANEL )
 	{
@@ -1485,7 +1485,7 @@ void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT16 *psY,
 
 //QUOTE_SYSTEM_STRUCT	soldierTTInfo;
 
-void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
+void DrawSelectedUIAboveGuy( INT16 usSoldierID )
 {
 	SOLDIERTYPE		*pSoldier;
 	INT16			sXPos, sYPos;
@@ -3489,7 +3489,7 @@ void PauseRT( BOOLEAN fPause )
 }
 
 
-void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies )
+void InitEnemyUIBar( UINT16 ubNumEnemies, UINT16 ubDoneEnemies )
 {
 	// OK, set value
 	gubProgNumEnemies = ubNumEnemies + ubDoneEnemies;

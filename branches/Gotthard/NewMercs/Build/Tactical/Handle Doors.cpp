@@ -405,12 +405,12 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 
 void ProcessImplicationsOfPCMessingWithDoor( SOLDIERTYPE * pSoldier )
 {
-	UINT8						ubRoom;
-	SOLDIERTYPE *		pGoon;
+	INT16 ubRoom;
+	SOLDIERTYPE* pGoon;
 	// if player is hacking at a door in the brothel and a kingpin guy can see him
 	if ( (InARoom( pSoldier->sGridNo, &ubRoom ) && IN_BROTHEL( ubRoom )) || (gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_D && gbWorldSectorZ == 0 && (pSoldier->sGridNo == 11010 || pSoldier->sGridNo == 11177 || pSoldier->sGridNo == 11176 ) ) )
 	{
-		UINT8		ubLoop;
+		INT16 ubLoop;
 
 		// see if a kingpin goon can see us
 		for ( ubLoop = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; ubLoop <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; ubLoop++ )

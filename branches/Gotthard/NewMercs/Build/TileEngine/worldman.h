@@ -110,7 +110,7 @@ BOOLEAN RemoveShadowFromLevelNode( INT32 iMapIndex, LEVELNODE *pNode );
 
 BOOLEAN AddMercToHead( INT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fAddStructInfo );
 BOOLEAN RemoveMerc( INT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fPlaceHolder  );
-UINT8 WhoIsThere2( INT32 sGridNo, INT8 bLevel );
+INT16 WhoIsThere2( INT32 sGridNo, INT8 bLevel );
 BOOLEAN AddMercStructureInfo( INT32 sGridNo, SOLDIERTYPE *pSoldier );
 BOOLEAN AddMercStructureInfoFromAnimSurface( INT32 sGridNo, SOLDIERTYPE *pSoldier, UINT16 usAnimSurface, UINT16 usAnimState );
 BOOLEAN UpdateMercStructureInfo( SOLDIERTYPE *pSoldier );
@@ -126,7 +126,7 @@ BOOLEAN RemoveAllTopmostsOfTypeRange( INT32 iMapIndex, UINT32 fStartType, UINT32
 BOOLEAN SetMapElementShadeLevel( INT32 uiMapIndex, UINT8 ubShadeLevel );
 void SetTopmostFlags( INT32 iMapIndex, UINT32 uiFlags, UINT16 usIndex );
 void RemoveTopmostFlags( INT32 iMapIndex, UINT32 uiFlags, UINT16 usIndex );
-BOOLEAN AddUIElem( INT32 iMapIndex, UINT16 usIndex, INT8	sRelativeX, INT8 sRelativeY, LEVELNODE **ppNewNode );
+BOOLEAN AddUIElem( INT32 iMapIndex, UINT16 usIndex, INT8 sRelativeX, INT8 sRelativeY, LEVELNODE **ppNewNode );
 void RemoveUIElem( INT32 iMapIndex, UINT16 usIndex );
 BOOLEAN RemoveTopmostFromLevelNode( INT32 iMapIndex, LEVELNODE *pNode );
 

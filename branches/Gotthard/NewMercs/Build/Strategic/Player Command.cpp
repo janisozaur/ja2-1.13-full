@@ -447,7 +447,7 @@ void MakePlayerPerceptionOfSectorControlCorrect( INT16 sMapX, INT16 sMapY, INT8 
 }
 */
 
-void ReplaceSoldierProfileInPlayerGroup( UINT8 ubGroupID, UINT8 ubOldProfile, UINT8 ubNewProfile )
+void ReplaceSoldierProfileInPlayerGroup( UINT8 ubGroupID, INT16 ubOldProfile, INT16 ubNewProfile )
 {
 	GROUP *pGroup;
 	PLAYERGROUP *curr;

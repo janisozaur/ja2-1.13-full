@@ -55,7 +55,7 @@ extern INT16 sVehicleOrigArmorValues[ NUMBER_OF_TYPES_OF_VEHICLES][ NUMBER_OF_IN
 typedef struct
 {
  PathStPtr pMercPath;  // vehicle's stategic path list
- UINT8     ubMovementGroup; // the movement group this vehicle belongs to
+ INT8     ubMovementGroup; // the movement group this vehicle belongs to
  UINT8     ubVehicleType; // type of vehicle 
  INT16     sSectorX;   // X position on the Stategic Map
  INT16     sSectorY;   // Y position on the Stategic Map
@@ -63,7 +63,7 @@ typedef struct
  BOOLEAN fBetweenSectors;  // between sectors?
  INT32 sGridNo;   // location in tactical
  SOLDIERTYPE *pPassengers[ MAXPASSENGERS ];
- UINT8		 ubDriver;
+ INT16		 ubDriver;
  INT16		 sInternalHitLocations[ NUMBER_OF_EXTERNAL_HIT_LOCATIONS_ON_VEHICLE ];
  INT16		 sArmourType;
  INT16		 sExternalArmorLocationsStatus[ NUMBER_OF_EXTERNAL_HIT_LOCATIONS_ON_VEHICLE ];
@@ -75,7 +75,7 @@ typedef struct
  BOOLEAN   fFunctional;
  BOOLEAN	 fDestroyed;
  INT32		 iMovementSoundID;
- UINT8		 ubProfileID;
+ UINT16		 ubProfileID;
 
  BOOLEAN fValid;
 
@@ -133,7 +133,7 @@ BOOLEAN CopyVehiclePathToSoldier( SOLDIERTYPE *pSoldier );
 void UpdatePositionOfMercsInVehicle( INT32 iId );
 
 // find vehicle id of group with this vehicle
-INT32 GivenMvtGroupIdFindVehicleId( UINT8 ubGroupId );
+INT32 GivenMvtGroupIdFindVehicleId( UINT8 ubGroupID );
 
 // given vehicle id, add all peopel in vehicle to mvt group, after clearing mvt group out
 BOOLEAN AddVehicleMembersToMvtGroup( INT32 iId );
@@ -169,7 +169,7 @@ BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier );
 void AddPassangersToTeamPanel( INT32 iId );
 
 
-void VehicleTakeDamage( UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT32 sGridNo , UINT8 ubAttackerID );
+void VehicleTakeDamage( INT16 ubID, UINT8 ubReason, INT16 sDamage, INT32 sGridNo , INT16 ubAttackerID );
 
 // the soldiertype containing this tactical incarnation of this vehicle
 SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId );
@@ -177,13 +177,13 @@ SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId );
 void AdjustVehicleAPs( SOLDIERTYPE *pSoldier, UINT8 *pubPoints );
 
 // get orig armor values for vehicle in this location
-//INT16 GetOrigInternalArmorValueForVehicleInLocation( UINT8 ubID, UINT8 ubLocation );
+//INT16 GetOrigInternalArmorValueForVehicleInLocation( INT16 ubID, UINT8 ubLocation );
 
 // handle crit hit to vehicle in this location
-void HandleCriticalHitForVehicleInLocation( UINT8 ubID, INT16 sDmg, INT32 sGridNo, UINT8 ubAttackerID );
+void HandleCriticalHitForVehicleInLocation( INT16 ubID, INT16 sDmg, INT32 sGridNo, INT16 ubAttackerID );
 
 // ste up armor values for this vehicle
-void SetUpArmorForVehicle( UINT8 ubID );
+void SetUpArmorForVehicle( INT16 ubID );
 
 // does it need fixing?
 BOOLEAN DoesVehicleNeedAnyRepairs( INT32 iVehicleId );
@@ -213,7 +213,7 @@ BOOLEAN LoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile );
 BOOLEAN NewSaveVehicleMovementInfoToSavedGameFile( HWFILE hFile );
 BOOLEAN NewLoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile );
 
-BOOLEAN OKUseVehicle( UINT8 ubProfile );
+BOOLEAN OKUseVehicle( INT16 ubProfile );
 
 BOOLEAN IsRobotControllerInVehicle( INT32 iId );
 

@@ -1557,7 +1557,7 @@ INT32 IsTownUnderCompleteControlByEnemy( INT8 bTownId )
 	return( FALSE );
 }
 
-void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 ubHowMany)
+void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT16 ubHowMany)
 {
 	INT8 bTownId = 0;
 	UINT32 uiLoyaltyChange = 0;
@@ -1843,7 +1843,7 @@ void CheckIfEntireTownHasBeenLost( INT8 bTownId, INT16 sSectorX, INT16 sSectorY 
 
 
 
-void HandleLoyaltyChangeForNPCAction( UINT8 ubNPCProfileId )
+void HandleLoyaltyChangeForNPCAction( INT16 ubNPCProfileId )
 {
 	switch ( ubNPCProfileId )
 	{
@@ -1916,7 +1916,7 @@ BOOLEAN DidFirstBattleTakePlaceInThisTown( INT8 bTownId )
 
 UINT32 PlayerStrength( void )
 {
-	UINT8						ubLoop;
+	UINT16						ubLoop;
 	SOLDIERTYPE *		pSoldier;
 	UINT32					uiStrength, uiTotal = 0;
 
@@ -1938,7 +1938,7 @@ UINT32 PlayerStrength( void )
 
 UINT32 EnemyStrength( void )
 {
-	UINT8						ubLoop;
+	UINT16						ubLoop;
 	SOLDIERTYPE *		pSoldier;
 	UINT32					uiStrength, uiTotal = 0;
 

@@ -190,13 +190,13 @@ typedef struct SECTORINFO
 	//enemy military presence
 	BOOLEAN	fPlayer[ 4 ];				//whether the player THINKS the sector is unde his control or not. array is for sublevels
 	//enemy only info
-	UINT8	ubNumTroops;				//the actual number of troops here.
-	UINT8	ubNumElites;				//the actual number of elites here.
-	UINT8	ubNumAdmins;				//the actual number of admins here.
-	UINT8	ubNumCreatures;				//only set when immediately before ground attack made!
-	UINT8   ubTroopsInBattle, ubElitesInBattle, ubAdminsInBattle, ubCreaturesInBattle;
+	UINT16	ubNumTroops;				//the actual number of troops here.
+	UINT16	ubNumElites;				//the actual number of elites here.
+	UINT16	ubNumAdmins;				//the actual number of admins here.
+	UINT16	ubNumCreatures;				//only set when immediately before ground attack made!
+	UINT16   ubTroopsInBattle, ubElitesInBattle, ubAdminsInBattle, ubCreaturesInBattle;
 
-	INT8	bLastKnownEnemies;			// -1 means never been there, no idea, otherwise it's what we'd observed most recently
+	INT16	bLastKnownEnemies;			// -1 means never been there, no idea, otherwise it's what we'd observed most recently
 										// while this is being maintained (partially, surely buggy), nothing uses it anymore. ARM
 
 	UINT32	ubDayOfLastCreatureAttack;
@@ -215,7 +215,7 @@ typedef struct SECTORINFO
 										//the more people go near it.  A travel rating of 0 means there are never people
 										//around.  This value is used for determining how often items would "vanish" from
 										//a sector (nice theory, except it isn't being used that way.  Stealing is only in towns.  ARM)
-	UINT8	ubNumberOfCivsAtLevel[ MAX_MILITIA_LEVELS ]; // town militia per experience class, 0/1/2 is GREEN/REGULAR/ELITE
+	UINT16	ubNumberOfCivsAtLevel[ MAX_MILITIA_LEVELS ]; // town militia per experience class, 0/1/2 is GREEN/REGULAR/ELITE
 	UINT16	usUNUSEDMilitiaLevels;					// unused (ARM)
 	UINT8	ubUNUSEDNumberOfJoeBlowCivilians;		// unused (ARM)
 	UINT32	uiTimeCurrentSectorWasLastLoaded;		//Specifies the last time the player was in the sector
@@ -255,7 +255,7 @@ typedef struct UNDERGROUND_SECTORINFO
 	struct	UNDERGROUND_SECTORINFO *next;
 	UINT8	ubAdjacentSectors;			//mask containing which sectors are adjacent
 	UINT8	ubCreatureHabitat;			//determines how creatures live in this sector (see creature spreading.c)
-	UINT8	ubElitesInBattle, ubTroopsInBattle, ubAdminsInBattle, ubCreaturesInBattle;
+	UINT16	ubElitesInBattle, ubTroopsInBattle, ubAdminsInBattle, ubCreaturesInBattle;
 
 	UINT32	uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer;
 	INT8	bPadding[36];

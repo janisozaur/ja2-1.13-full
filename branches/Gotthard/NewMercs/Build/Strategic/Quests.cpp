@@ -47,7 +47,7 @@ UINT8 gubFact[ NUM_FACTS ]; // this has to be updated when we figure out how man
 INT16	gsFoodQuestSectorX;
 INT16	gsFoodQuestSectorY;
 
-extern void	GuaranteeAtLeastXItemsOfIndex( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany );
+extern void	GuaranteeAtLeastXItemsOfIndex( INT16 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany );
 
 
 
@@ -86,7 +86,7 @@ BOOLEAN CheckForNewShipment( void )
 	return( FALSE );
 }
 
-BOOLEAN CheckNPCWounded( UINT8 ubProfileID, BOOLEAN fByPlayerOnly )
+BOOLEAN CheckNPCWounded(INT16 ubProfileID, BOOLEAN fByPlayerOnly )
 {
 	SOLDIERTYPE * pSoldier;
 
@@ -117,7 +117,7 @@ BOOLEAN CheckNPCWounded( UINT8 ubProfileID, BOOLEAN fByPlayerOnly )
 	}
 }
 
-BOOLEAN CheckNPCInOkayHealth( UINT8 ubProfileID )
+BOOLEAN CheckNPCInOkayHealth( INT16 ubProfileID )
 {
 	SOLDIERTYPE * pSoldier;
 
@@ -133,7 +133,7 @@ BOOLEAN CheckNPCInOkayHealth( UINT8 ubProfileID )
 	}
 }
 
-BOOLEAN CheckNPCBleeding( UINT8 ubProfileID )
+BOOLEAN CheckNPCBleeding( INT16 ubProfileID )
 {
 	SOLDIERTYPE * pSoldier;
 
@@ -150,7 +150,7 @@ BOOLEAN CheckNPCBleeding( UINT8 ubProfileID )
 
 }
 
-BOOLEAN CheckNPCWithin( UINT8 ubFirstNPC, UINT8 ubSecondNPC, UINT8 ubMaxDistance )
+BOOLEAN CheckNPCWithin( INT16 ubFirstNPC, INT16 ubSecondNPC, UINT8 ubMaxDistance )
 {
 	SOLDIERTYPE * pFirstNPC, * pSecondNPC;
 
@@ -163,7 +163,7 @@ BOOLEAN CheckNPCWithin( UINT8 ubFirstNPC, UINT8 ubSecondNPC, UINT8 ubMaxDistance
 	return( PythSpacesAway( pFirstNPC->sGridNo, pSecondNPC->sGridNo ) <= ubMaxDistance );
 }
 
-BOOLEAN CheckGuyVisible( UINT8 ubNPC, UINT8 ubGuy )
+BOOLEAN CheckGuyVisible( INT16 ubNPC, INT16 ubGuy )
 {
 	// NB ONLY WORKS IF ON DIFFERENT TEAMS
 	SOLDIERTYPE * pNPC, * pGuy;
@@ -184,7 +184,7 @@ BOOLEAN CheckGuyVisible( UINT8 ubNPC, UINT8 ubGuy )
 	}
 }
 
-BOOLEAN CheckNPCAt( UINT8 ubNPC, INT32 sGridNo )
+BOOLEAN CheckNPCAt( INT16 ubNPC, INT32 sGridNo )
 {
 	SOLDIERTYPE * pNPC;
 
@@ -196,7 +196,7 @@ BOOLEAN CheckNPCAt( UINT8 ubNPC, INT32 sGridNo )
 	return( pNPC->sGridNo == sGridNo );
 }
 
-BOOLEAN CheckNPCIsEnemy( UINT8 ubProfileID )
+BOOLEAN CheckNPCIsEnemy( INT16 ubProfileID )
 {
 	SOLDIERTYPE * pNPC;
 
@@ -223,7 +223,7 @@ BOOLEAN CheckNPCIsEnemy( UINT8 ubProfileID )
 	}
 }
 
-BOOLEAN CheckIfMercIsNearNPC( SOLDIERTYPE *pMerc, UINT8 ubProfileId )
+BOOLEAN CheckIfMercIsNearNPC( SOLDIERTYPE *pMerc, INT16 ubProfileId )
 {
 	SOLDIERTYPE *		pNPC;
 	INT32 sGridNo;
@@ -251,7 +251,7 @@ BOOLEAN CheckIfMercIsNearNPC( SOLDIERTYPE *pMerc, UINT8 ubProfileId )
 }
 
 
-INT8 NumWoundedMercsNearby( UINT8 ubProfileID )
+INT8 NumWoundedMercsNearby(INT16 ubProfileID)
 {
 	INT8						bNumber = 0;
 	UINT32					uiLoop;
@@ -282,7 +282,7 @@ INT8 NumWoundedMercsNearby( UINT8 ubProfileID )
 	return( bNumber );
 }
 
-INT8 NumMercsNear( UINT8 ubProfileID, UINT8 ubMaxDist )
+UINT16 NumMercsNear(INT16 ubProfileID, UINT8 ubMaxDist )
 {
 	INT8						bNumber = 0;
 	UINT32					uiLoop;
@@ -313,7 +313,7 @@ INT8 NumMercsNear( UINT8 ubProfileID, UINT8 ubMaxDist )
 	return( bNumber );
 }
 
-BOOLEAN CheckNPCIsEPC( UINT8 ubProfileID )
+BOOLEAN CheckNPCIsEPC(INT16 ubProfileID)
 {
 	SOLDIERTYPE *		pNPC;
 
@@ -330,7 +330,7 @@ BOOLEAN CheckNPCIsEPC( UINT8 ubProfileID )
 	return( (pNPC->ubWhatKindOfMercAmI == MERC_TYPE__EPC ) );
 }
 
-BOOLEAN NPCInRoom( UINT8 ubProfileID, UINT8 ubRoomID )
+BOOLEAN NPCInRoom( INT16 ubProfileID, INT16 ubRoomID )
 {
 	SOLDIERTYPE *		pNPC;
 
@@ -342,7 +342,7 @@ BOOLEAN NPCInRoom( UINT8 ubProfileID, UINT8 ubRoomID )
 	return( TRUE );
 }
 
-BOOLEAN NPCInRoomRange( UINT8 ubProfileID, UINT8 ubRoomID1, UINT8 ubRoomID2 )
+BOOLEAN NPCInRoomRange( INT16 ubProfileID, INT16 ubRoomID1, INT16 ubRoomID2 )
 {
 	SOLDIERTYPE *		pNPC;
 
@@ -354,11 +354,11 @@ BOOLEAN NPCInRoomRange( UINT8 ubProfileID, UINT8 ubRoomID1, UINT8 ubRoomID2 )
 	return( TRUE );
 }
 
-BOOLEAN PCInSameRoom( UINT8 ubProfileID )
+BOOLEAN PCInSameRoom( INT16 ubProfileID )
 {
 	SOLDIERTYPE *		pNPC;
-	UINT8						ubRoom;
-	INT8		bLoop;
+	INT16 ubRoom;
+	UINT16 bLoop;
 	SOLDIERTYPE * pSoldier;
 
 	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
@@ -429,7 +429,7 @@ BOOLEAN CheckTalkerUnpropositionedFemale( void )
 	return( FALSE );
 }
 
-INT8 NumMalesPresent( UINT8 ubProfileID )
+UINT16 NumMalesPresent( INT16 ubProfileID )
 {
 	INT8						bNumber = 0;
 	UINT32					uiLoop;
@@ -464,7 +464,7 @@ INT8 NumMalesPresent( UINT8 ubProfileID )
 }
 
 
-BOOLEAN FemalePresent( UINT8 ubProfileID )
+BOOLEAN FemalePresent( INT16 ubProfileID )
 {
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pNPC;
@@ -500,7 +500,7 @@ BOOLEAN FemalePresent( UINT8 ubProfileID )
 
 BOOLEAN CheckPlayerHasHead( void )
 {
-	INT8						bLoop;
+	UINT16						bLoop;
 	SOLDIERTYPE *		pSoldier;
 
 	for ( bLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; bLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; bLoop++ )
@@ -520,7 +520,7 @@ BOOLEAN CheckPlayerHasHead( void )
 	
 }
 
-BOOLEAN CheckNPCSector( UINT8 ubProfileID, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+BOOLEAN CheckNPCSector( INT16 ubProfileID, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
 	SOLDIERTYPE * pSoldier;
 
@@ -567,11 +567,11 @@ BOOLEAN AIMMercWithin( INT32 sGridNo, INT16 sDistance )
 	return( FALSE );
 }
 
-BOOLEAN CheckNPCCowering( UINT8 ubProfileID )
+BOOLEAN CheckNPCCowering(INT16 ubProfileID)
 {
 	SOLDIERTYPE *		pNPC;
 
-	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
+	pNPC = FindSoldierByProfileID(ubProfileID, FALSE );
 	if ( !pNPC )
 	{
 		return( FALSE );
@@ -594,7 +594,7 @@ UINT8 CountBartenders( void )
 	return( ubBartenders );
 }
 
-BOOLEAN CheckNPCIsUnderFire( UINT8 ubProfileID )
+BOOLEAN CheckNPCIsUnderFire(INT16 ubProfileID)
 {
 	SOLDIERTYPE *		pNPC;
 
@@ -606,7 +606,7 @@ BOOLEAN CheckNPCIsUnderFire( UINT8 ubProfileID )
 	return( pNPC->bUnderFire != 0 );
 }
 
-BOOLEAN NPCHeardShot( UINT8 ubProfileID )
+BOOLEAN NPCHeardShot(INT16 ubProfileID)
 {
 	SOLDIERTYPE *		pNPC;
 
@@ -618,7 +618,7 @@ BOOLEAN NPCHeardShot( UINT8 ubProfileID )
 	return( pNPC->ubMiscSoldierFlags & SOLDIER_MISC_HEARD_GUNSHOT );
 }
 
-BOOLEAN InTownSectorWithTrainingLoyalty( INT16 sSectorX, INT16 sSectorY )
+BOOLEAN InTownSectorWithTrainingLoyalty(INT16 sSectorX, INT16 sSectorY)
 {
 	UINT8	ubTown;
 	INT32 iMinLoyaltyToTrain = gGameExternalOptions.iMinLoyaltyToTrain;
@@ -635,7 +635,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Quests");
 	}
 }
 
-BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
+BOOLEAN CheckFact(UINT16 usFact, INT16 ubProfileID )
 {
 	INT8 bTown = -1;
 
@@ -1250,7 +1250,7 @@ void InternalStartQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN 
 
     if ( fUpdateHistory )
     {
-		  SetHistoryFact( HISTORY_QUEST_STARTED, ubQuest, GetWorldTotalMin(), sSectorX, sSectorY );
+		  SetHistoryFact( HISTORY_QUEST_STARTED, (UINT16)(ubQuest), GetWorldTotalMin(), sSectorX, sSectorY );
     }
 	}
 	else

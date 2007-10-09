@@ -52,7 +52,7 @@ typedef struct
 	OBJECTTYPE	Obj;
 	BOOLEAN			fFirstTimeMoved;
 	INT32				sFirstGridNo;
-	UINT8				ubOwner;
+	INT16				ubOwner;
 	UINT8				ubActionCode;
 	UINT32			uiActionData;
 	BOOLEAN			fDropItem;
@@ -67,7 +67,7 @@ typedef struct
   BOOLEAN     fPotentialForDebug;
   INT32       sLevelNodeGridNo;
   INT32       iSoundID;
-  UINT8       ubLastTargetTakenDamage;
+  INT16       ubLastTargetTakenDamage;
 	UINT8				ubPadding[1];
 
 } REAL_OBJECT;	
@@ -79,7 +79,7 @@ extern  REAL_OBJECT			ObjectSlots[ NUM_OBJECT_SLOTS ];
 
 
 // OBJECT LIST STUFF
-INT32	CreatePhysicalObject( OBJECTTYPE *pGameObj, real dLifeLength, real xPos, real yPos, real zPos, real xForce, real yForce, real zForce, UINT8 ubOwner, UINT8 ubActionCode, UINT32 uiActionData, BOOLEAN fTestObject );
+INT32	CreatePhysicalObject( OBJECTTYPE *pGameObj, real dLifeLength, real xPos, real yPos, real zPos, real xForce, real yForce, real zForce, INT16 ubOwner, UINT8 ubActionCode, UINT32 uiActionData, BOOLEAN fTestObject );
 BOOLEAN		RemoveObjectSlot( INT32 iObject );
 void RemoveAllPhysicsObjects( );
 

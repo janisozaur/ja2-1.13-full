@@ -171,7 +171,7 @@ extern UINT8 gubMaxDoors;
 //File I/O for loading the door information from the map.  This automatically allocates
 //the exact number of slots when loading.
 
-extern void LoadDoorTableFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion );
+extern void LoadDoorTableFromMap( INT16 **hBuffer, FLOAT dMajorMapVersion );
 //Saves the existing door information to the map.  Before it actually saves, it'll verify that the
 //door still exists.  Otherwise, it'll ignore it.  It is possible in the editor to delete doors in 
 //many different ways, so I opted to put it in the saving routine.

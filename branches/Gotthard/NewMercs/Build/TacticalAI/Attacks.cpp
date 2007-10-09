@@ -23,7 +23,7 @@
 #include "Sound Control.h"
 #endif
 
-extern INT16 DirIncrementer[8];
+extern INT8 DirIncrementer[8];
 
 //
 // CJC DG->JA2 conversion notes
@@ -469,7 +469,7 @@ void CalcBestThrow(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
 	INT32 sGridNo, sEndGridNo, sFriendTile[MAXMERCS], sOpponentTile[MAXMERCS];
 	INT8	bFriendLevel[MAXMERCS], bOpponentLevel[MAXMERCS];
 	INT32 iEstDamage;
-	UINT8 ubFriendCnt = 0,ubOpponentCnt = 0, ubOpponentID[MAXMERCS];
+	UINT16 ubFriendCnt = 0,ubOpponentCnt = 0, ubOpponentID[MAXMERCS];
 	UINT8 ubRawAPCost,ubMinAPcost,ubMaxPossibleAimTime;
 	UINT8 ubChanceToHit,ubChanceToGetThrough,ubChanceToReallyHit;
 	UINT32 uiPenalty;
@@ -1575,6 +1575,8 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 	INT32 iTotalProt;
 	INT8 bPlatePos;
 	UINT8	ubAmmoType;
+	UINT16 usItem;
+	OBJECTTYPE *pObj;
 
 	/*
 	if ( pOpponent->uiStatusFlags & SOLDIER_VEHICLE )
@@ -1584,19 +1586,22 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 	}
 	*/
 
-	if ( Item[ pSoldier->inv[pSoldier->ubAttackingHand].usItem ].usItemClass & IC_THROWING_KNIFE )
+	pObj = &(pSoldier->inv[pSoldier->ubAttackingHand]);
+	usItem = pObj->usItem;
+
+	if ( Item[ usItem ].usItemClass & IC_THROWING_KNIFE )
 	{
 		ubAmmoType = AMMO_KNIFE;
 	}
 	else
 	{
-		ubAmmoType = pSoldier->inv[pSoldier->ubAttackingHand].ItemData.Gun.ubGunAmmoType;
+		ubAmmoType = pObj->ItemData.Gun.ubGunAmmoType;
 	}
 
 	// calculate distance to target, obtain his gun's maximum range rating
 
 	iRange = GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, pOpponent->sGridNo );
-	iMaxRange = Weapon[pSoldier->inv[HANDPOS].usItem].usRange;
+	iMaxRange = Weapon[usItem].usRange;
 
 	// bullet loses speed and penetrating power, 50% loss per maximum range
 	iPowerLost = ((50 * iRange) / iMaxRange);
@@ -1604,7 +1609,7 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 	// up to 50% extra impact for making particularly accurate successful shots
 	ubBonus = ubChanceToHit / 4;       // /4 is really /2 and /2 again
 
-	iDamage = ((GetDamage(&pSoldier->inv[HANDPOS])) * (100 - iPowerLost + ubBonus) / 100) ;
+	iDamage = ((GetDamage(pObj)) * (100 - iPowerLost + ubBonus) / 100) ;
 
 	//NumMessage("Pre-protection damage: ",damage);
 
@@ -1679,7 +1684,7 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 	{
 		// cheat and emphasize shots
 		//iDamage = (iDamage * 15) / 10;
-		switch( pSoldier->inv[pSoldier->ubAttackingHand].usItem )
+		switch( usItem )
 		{
 			// explosive damage is 100-200% that of the rated, so multiply by 3/2s here
 		case CREATURE_QUEEN_SPIT: //TODO: Madd - remove the hardcoding here

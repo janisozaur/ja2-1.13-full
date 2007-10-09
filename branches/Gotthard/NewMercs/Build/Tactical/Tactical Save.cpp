@@ -128,7 +128,7 @@ void SaveNPCInformationToProfileStruct( );
 BOOLEAN DoesTempFileExistsForMap( UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ );
 
 
-INT16 GetSoldierIDFromAnyMercID(UINT8 ubMercID);
+INT16 GetSoldierIDFromAnyMercID(UINT16 ubMercID);
 
 
 BOOLEAN SetUnderGroundSectorFlag( INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ, UINT32 uiFlagToSet );
@@ -137,8 +137,8 @@ BOOLEAN GetUnderGroundSectorFlagStatus( INT16 sSectorX, INT16 sSectorY, UINT8 ub
 BOOLEAN LoadAndAddWorldItemsFromTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
 
 BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile();
-BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId );
-BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile( UINT8 ubNpcId );
+BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( INT16 ubNpcId );
+BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile( INT16 ubNpcId );
 UINT32	GetLastTimePlayerWasInSector();
 void		SetLastTimePlayerWasInSector();
 
@@ -977,7 +977,8 @@ BOOLEAN SaveCurrentSectorsInformationToTempItemFile( )
 void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
 	// find out which items in the list are reachable
-	UINT32 uiCounter = 0;
+	INT32 iCounter = 0;
+	UINT32 uiCounter = 0;//Added to get rid of pesky sign errors.  Gotthard 10/8/07
 	UINT8	ubDir, ubMovementCost;
 	BOOLEAN fReachable = FALSE;
 	INT32 sGridNo = NOWHERE, sGridNo2 = NOWHERE;
@@ -1025,9 +1026,9 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 	{
 		sGridNo2 = gMapInformation.sIsolatedGridNo;
 
-		for( uiCounter = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; uiCounter < gTacticalStatus.Team[ gbPlayerNum ].bLastID; uiCounter++ )
+		for( iCounter = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; iCounter < gTacticalStatus.Team[ gbPlayerNum ].bLastID; iCounter++ )
 		{
-			pSoldier = MercPtrs[ uiCounter ];
+			pSoldier = MercPtrs[ iCounter ];
 			if ( pSoldier && pSoldier->bActive && pSoldier->bLife > 0 && pSoldier->sSectorX == sSectorX && pSoldier->sSectorY == sSectorY && pSoldier->bSectorZ == bSectorZ )
 			{
 				if ( FindBestPath( pSoldier, sGridNo2, pSoldier->bLevel, WALKING, NO_COPYROUTE, 0 ) )
@@ -2188,10 +2189,10 @@ BOOLEAN DoesTempFileExistsForMap( UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 
 }
 
 
-INT16 GetSoldierIDFromAnyMercID(UINT8 ubMercID)
+INT16 GetSoldierIDFromAnyMercID(INT16 ubMercID)
 {
 	UINT16 cnt;
-	UINT8		ubLastTeamID;
+	UINT16		ubLastTeamID;
 	SOLDIERTYPE		*pTeamSoldier;
 
 	cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
@@ -2270,7 +2271,7 @@ BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile()
 
 
 
-BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId )
+BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( INT16 ubNpcId )
 {
 	UINT32	uiNumBytesWritten;
 	UINT8	ubCnt;
@@ -2297,7 +2298,7 @@ BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId )
 		//Loop through and build the temp array to save
 		for( ubCnt=0; ubCnt<NUM_NPC_QUOTE_RECORDS; ubCnt++ )
 		{
-			TempNpcQuote[ ubCnt ].usFlags				= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags;
+			TempNpcQuote[ ubCnt ].usFlags = gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags;
 			TempNpcQuote[ ubCnt ].sRequiredItem = gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sRequiredItem;
 			TempNpcQuote[ ubCnt ].usGoToGridNo	= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridNo;
 		}
@@ -2326,7 +2327,7 @@ BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId )
 
 
 
-BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile( UINT8 ubNpcId )
+BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile( INT16 ubNpcId )
 {
 	UINT32	uiNumBytesRead;
 	UINT8		ubCnt;
@@ -2390,7 +2391,7 @@ BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile( UINT8 ubNpcId )
 
 
 
-void ChangeNpcToDifferentSector( UINT8 ubNpcId, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+void ChangeNpcToDifferentSector( INT16 ubNpcId, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
 	if (gMercProfiles[ ubNpcId ].ubMiscFlags2 & PROFILE_MISC_FLAG2_LEFT_COUNTRY)
 	{

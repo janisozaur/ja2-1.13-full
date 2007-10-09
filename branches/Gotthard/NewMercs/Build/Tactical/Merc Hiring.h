@@ -23,7 +23,7 @@
 
 typedef struct
 {
-	UINT8		ubProfileID;
+	INT16		ubProfileID;
 	INT16		sSectorX;
 	INT16		sSectorY;
 	INT8		bSectorZ;
@@ -41,11 +41,11 @@ extern INT16	gsMercArriveSectorX;
 extern INT16	gsMercArriveSectorY;
 
 
-INT8		HireMerc( MERC_HIRE_STRUCT *pHireMerc);
-void		MercArrivesCallback(	UINT8 ubSoldierID );
-BOOLEAN IsMercHireable( UINT8 ubMercID );
-BOOLEAN IsMercDead( UINT8 ubMercID );
-UINT8		NumberOfMercsOnPlayerTeam();
+INT16		HireMerc( MERC_HIRE_STRUCT *pHireMerc);
+void		MercArrivesCallback(	INT16 ubSoldierID );
+BOOLEAN IsMercHireable( INT16 ubMercID );
+BOOLEAN IsMercDead( INT16 ubMercID );
+UINT16		NumberOfMercsOnPlayerTeam();
 BOOLEAN IsTheSoldierAliveAndConcious( 	SOLDIERTYPE		*pSoldier );
 void		HandleMercArrivesQuotes( SOLDIERTYPE *pSoldier );
 void		UpdateAnyInTransitMercsWithGlobalArrivalSector( );

@@ -160,7 +160,7 @@ void HandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT32 sGridNo, INT8 bLev
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
 	INT16		sDistVisible = FALSE;
-	UINT8		ubKillerSoldierID = NOBODY;
+	UINT16		ubKillerSoldierID = NOBODY;
 
 	// Start victory music here...
 	SetMusicMode( MUSIC_TACTICAL_VICTORY );
@@ -450,7 +450,7 @@ void HandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT32 sGridNo, INT8 bLe
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
 	INT16		sDistVisible = FALSE;
-	UINT8		ubKillerSoldierID = NOBODY;
+	UINT16		ubKillerSoldierID = NOBODY;
 
 	// Start victory music here...
 	SetMusicMode( MUSIC_TACTICAL_VICTORY );

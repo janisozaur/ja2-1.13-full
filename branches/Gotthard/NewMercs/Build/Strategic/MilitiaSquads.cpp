@@ -25,6 +25,7 @@
 	#include "math.h"
 	#include "Auto Resolve.h"
 	#include "Vehicles.h"
+	#include "Tactical Save.h"
 #endif
 
 #include "MilitiaSquads.h"
@@ -65,7 +66,7 @@
 INT32  iRestrictedSectorArraySize;
 UINT32 gRestrictMilitia[256];
 
-UINT8 gpAttackDirs[5][4]; // 0. Green Militia 1. Regular Militia 2. Elite Militia 3. Insertion code
+UINT16 gpAttackDirs[5][4]; // 0. Green Militia 1. Regular Militia 2. Elite Militia 3. Insertion code
 UINT8 guiDirNumber = 0;
 BOOLEAN gfMSBattle = FALSE;
 
@@ -250,7 +251,7 @@ UINT16 CountDirectionEnemyRating( INT16 sMapX, INT16 sMapY, UINT8 uiDir )
 		for( sLMY = 0; sLMY < 16 ; ++sLMY )
 	{
 //		SECTORINFO *pSectorInfo = &( SectorInfo[ uiSector ] );
-		UINT8 uiSumOfEnemyTroops = NumEnemiesInSector( sLMX, sLMY );
+		UINT16 uiSumOfEnemyTroops = NumEnemiesInSector( sLMX, sLMY );
 			//pSectorInfo->ubNumAdmins + pSectorInfo->ubNumTroops + pSectorInfo->ubNumElites;
 
 		// there's an enemy
@@ -506,6 +507,7 @@ void UpdateMilitiaSquads(INT16 sMapX, INT16 sMapY )
 		{
 			if( GetWorldHour() % 2 )return;
 
+			memset(pMoveDir, 0, sizeof(pMoveDir));
 			GenerateDirectionInfos( sMapX, sMapY, &uiDirNumber, pMoveDir, FALSE, FALSE, FALSE );
 
 			if( uiDirNumber )
@@ -543,32 +545,39 @@ void UpdateMilitiaSquads(INT16 sMapX, INT16 sMapY )
 								return;
 						}
 
-					MoveMilitiaSquad( sMapX, sMapY,  SECTORX( pMoveDir[ iRandomRes ][0] ), SECTORY( pMoveDir[ iRandomRes ][0] ), FALSE );
-					AddToBlockMoveList( SECTORX( pMoveDir[ iRandomRes ][0] ), SECTORY( pMoveDir[ iRandomRes ][0] ) );
+					// WDS bug fix for moving militia
+					int targetX = SECTORX( pMoveDir[ iRandomRes ][0] );
+					int targetY = SECTORY( pMoveDir[ iRandomRes ][0] );
+					Assert(targetX >= 0 && targetX < MAP_WORLD_X);
+					Assert(targetY >= 0 && targetY < MAP_WORLD_Y);
+					MoveMilitiaSquad( sMapX, sMapY,  targetX, targetY, FALSE );
+					AddToBlockMoveList( targetX, targetY );
 					if ( gfStrategicMilitiaChangesMade)
 					{
 						ResetMilitia();
 					}
 
-					if( NumEnemiesInSector( SECTORX( pMoveDir[ iRandomRes ][0] ), SECTORY( pMoveDir[ iRandomRes ][0] ) ) )
+					if( NumEnemiesInSector( targetX, targetY ) )
 					{
-		/*				GROUP* pEnemyGroup = GetGroup( GetEnemyGroupIdInSector( SECTORX( pMoveDir[ iRandomRes ][0] ), SECTORY( pMoveDir[ iRandomRes ][0] ) ) );
+						extern GROUP *gpBattleGroup;
+						gpBattleGroup = GetGroup( GetEnemyGroupIdInSector( targetX, targetY ) );
+		/*				GROUP* pEnemyGroup = GetGroup( GetEnemyGroupIdInSector( targetX, targetY ) );
 				
 						if(pEnemyGroup && pEnemyGroup->ubGroupID)
 						{
-							//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Attacking from %ld,%ld to %ld,%ld - enemy's group id %ld", sMapX, sMapY, SECTORX( pMoveDir[ iRandomRes ][0] ), SECTORY( pMoveDir[ iRandomRes ][0], pEnemyGroup->ubGroupID ));
+							//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Attacking from %ld,%ld to %ld,%ld - enemy's group id %ld", sMapX, sMapY, targetX, SECTORY( pMoveDir[ iRandomRes ][0], pEnemyGroup->ubGroupID ));
 							//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Arrival 1, Arrival 2");
 
 							pEnemyGroup->ubPrevX = sMapX;
 							pEnemyGroup->ubPrevY = sMapY;
 
-							pEnemyGroup->ubNextX = SECTORX( pMoveDir[ iRandomRes ][0] );
-							pEnemyGroup->ubNextY = SECTORY( pMoveDir[ iRandomRes ][0] );
+							pEnemyGroup->ubNextX = targetX;
+							pEnemyGroup->ubNextY = targetY;
 		*/					
 							gfMSBattle = TRUE;
 			
 			//				GroupArrivedAtSector( pEnemyGroup->ubGroupID , TRUE, FALSE );
-							EnterAutoResolveMode( SECTORX( pMoveDir[ iRandomRes ][0] ),  SECTORY( pMoveDir[ iRandomRes ][0] ) );
+							EnterAutoResolveMode( targetX,  targetY );
 		//				}
 					}
 			}
@@ -686,7 +695,7 @@ void DoMilitiaHelpFromAdjacentSectors( INT16 sMapX, INT16 sMapY )
 	UINT16 pMoveDir[4][3];
 	UINT8 uiDirNumber = 0;
 	UINT8 x;
-	UINT8 uiNumGreen = 0, uiNumReg = 0, uiNumElite = 0;
+	UINT16 uiNumGreen = 0, uiNumReg = 0, uiNumElite = 0;
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 	BOOLEAN fMoreTroopsLeft[4] = {FALSE,FALSE,FALSE,FALSE};
 	BOOLEAN fFirstLoop = TRUE;

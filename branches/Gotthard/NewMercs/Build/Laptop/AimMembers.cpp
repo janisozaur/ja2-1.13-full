@@ -370,8 +370,8 @@ UINT32		guiVideoContractCharge;
 UINT32		guiVideoTitleBar;
 INT32			iAimMembersBoxId = -1;
 
-UINT8			gbCurrentSoldier = 0;
-UINT8			gbCurrentIndex = 0;
+INT16 gbCurrentSoldier = 0;
+UINT16 gbCurrentIndex = 0;
 
 UINT8			gubVideoConferencingMode;
 UINT8			gubVideoConferencingPreviousMode;
@@ -493,18 +493,18 @@ void SelectShutUpMercRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 //*******************************************
 
 BOOLEAN	UpdateMercInfo(void);
-BOOLEAN LoadMercBioInfo(UINT8 ubIndex, STR16 pInfoString, STR16 pAddInfo);
-BOOLEAN DisplayMercsInventory(UINT8 ubMercID);
+BOOLEAN LoadMercBioInfo(UINT16 ubIndex, STR16 pInfoString, STR16 pAddInfo);
+BOOLEAN DisplayMercsInventory(INT16 ubMercID);
 BOOLEAN DisplayMercsFace();
 void		DisplayMercStats();
-INT8		AimMemberHireMerc();
+INT16 AimMemberHireMerc();
 BOOLEAN DisplayVideoConferencingDisplay();
 BOOLEAN DisplayMercsVideoFace();
 void		DisplaySelectLights(BOOLEAN fContractDown, BOOLEAN fBuyEquipDown);
 UINT32	DisplayMercChargeAmount();
 BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, STR16 sString1, STR16 sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData);
-BOOLEAN InitVideoFaceTalking(UINT8 ubMercID, UINT16 usQuoteNum);
-BOOLEAN InitVideoFace(UINT8 ubMercID);
+BOOLEAN InitVideoFaceTalking(INT16 ubMercID, UINT16 usQuoteNum);
+BOOLEAN InitVideoFace(INT16 ubMercID);
 BOOLEAN	DisplaySnowBackground();
 UINT8		WillMercAcceptCall();
 void		HandleVideoDistortion();
@@ -529,7 +529,7 @@ BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward, BOOLEAN fInit );
 BOOLEAN DisplayBlackBackground(UINT8 ubMaxNumOfLoops);
 void		DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, STR16 pString);
 
-void		DelayMercSpeech( UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, BOOLEAN fNewQuote, BOOLEAN fReset );
+void		DelayMercSpeech(INT16 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, BOOLEAN fNewQuote, BOOLEAN fReset );
 void		DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack( UINT8 bExitValue );
 void		DisplayAimMemberClickOnFaceHelpText();
 
@@ -1095,7 +1095,7 @@ BOOLEAN	UpdateMercInfo(void)
 
 
 
-BOOLEAN LoadMercBioInfo(UINT8 ubIndex, STR16 pInfoString, STR16 pAddInfo)
+BOOLEAN LoadMercBioInfo(UINT16 ubIndex, STR16 pInfoString, STR16 pAddInfo)
 {
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
@@ -1205,7 +1205,7 @@ BOOLEAN LoadMercBioInfo(UINT8 ubIndex, STR16 pInfoString, STR16 pAddInfo)
 }
 
 
-BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
+BOOLEAN DisplayMercsInventory(INT16 ubMercID)
 {
 	UINT8				i;
 	INT16				PosX, PosY, sCenX, sCenY;
@@ -1718,13 +1718,13 @@ void BtnAuthorizeButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 
 
-INT8 AimMemberHireMerc()
+INT16 AimMemberHireMerc()
 {
 	MERC_HIRE_STRUCT HireMercStruct;
-	UINT8		ubCurrentSoldier = AimMercArray[gbCurrentIndex];
-	INT8		bReturnCode;
-	INT16		sSoldierID=0;
-	INT8		bTypeOfContract=0;
+	INT16 ubCurrentSoldier = AimMercArray[gbCurrentIndex];
+	INT16 bReturnCode;
+	INT16 sSoldierID=0;
+	INT8 bTypeOfContract=0;
 
 
 	if( LaptopSaveInfo.iCurrentBalance < giContractAmount )
@@ -2312,7 +2312,7 @@ void BtnHangUpButtonCallback(GUI_BUTTON *btn,INT32 reason)
 } 
 
 // InitVideoFace() is called once to initialize things
-BOOLEAN  InitVideoFace(UINT8 ubMercID)
+BOOLEAN  InitVideoFace(INT16 ubMercID)
 {
 	//Create the facial index
 	giMercFaceIndex = InitFace( ubMercID, NOBODY, 0 );
@@ -2332,7 +2332,7 @@ BOOLEAN  InitVideoFace(UINT8 ubMercID)
 
 
 // InitVideoFaceTalking() is called to start a merc speaking a particular message
-BOOLEAN  InitVideoFaceTalking(UINT8 ubMercID, UINT16 usQuoteNum)
+BOOLEAN  InitVideoFaceTalking(INT16 ubMercID, UINT16 usQuoteNum)
 {
 
 	//Starts the merc talking
@@ -3839,7 +3839,7 @@ BOOLEAN DisplayAnimatedAnsweringMachineMsg( BOOLEAN fInit, UINT8 ubNumSubImages)
 }
 */
 
-void ResetMercAnnoyanceAtPlayer( UINT8 ubMercID )
+void ResetMercAnnoyanceAtPlayer(INT16 ubMercID )
 {
 	//if merc is still annoyed, reset back to 0
 
@@ -4072,14 +4072,14 @@ void TempHiringOfMercs( UINT8 ubNumberOfMercs, BOOLEAN fReset )
 #endif
 
 
-void DelayMercSpeech( UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, BOOLEAN fNewQuote, BOOLEAN fReset )
+void DelayMercSpeech(INT16 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, BOOLEAN fNewQuote, BOOLEAN fReset )
 {
 	static UINT32		uiLastTime=0;
 	UINT32					uiCurTime;
 	static UINT16		usCurQuoteNum;
 	static UINT16		usCurDelay;
 	static BOOLEAN	fQuoteWaiting = FALSE;		//a quote is waiting to be said
-	static UINT8		ubCurMercID;
+	static INT16 ubCurMercID;
 	static BOOLEAN	fHangUpAfter=FALSE;
 
 	uiCurTime = GetJA2Clock();
@@ -4132,9 +4132,9 @@ void DelayMercSpeech( UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, BOOLEAN
 //TEMP!!!  
 BOOLEAN QuickHireMerc()
 {
-	INT8	bReturnCode;
+	INT16 bReturnCode;
 	MERC_HIRE_STRUCT HireMercStruct;
-	UINT8		ubCurrentSoldier = AimMercArray[gbCurrentIndex];
+	INT16		ubCurrentSoldier = AimMercArray[gbCurrentIndex];
 
 	giContractAmount = 0;
 

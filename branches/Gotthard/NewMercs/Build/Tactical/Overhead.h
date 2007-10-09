@@ -7,7 +7,7 @@
 #include "Soldier Control.h"
 #include "overhead types.h"
 #include "soldier find.h"
-#define				ADD_SOLDIER_NO_PROFILE_ID		200
+#define				ADD_SOLDIER_NO_PROFILE_ID		200//Does this need to change? Gotthard, 9/18/07
 
 #define  MAX_REALTIME_SPEED_VAL						10
 
@@ -43,12 +43,12 @@ enum
 // TACTICAL ENGINE STATUS FLAGS
 typedef struct
 {
-	UINT8			bFirstID;
-	UINT8			bLastID;
+	INT16			bFirstID;
+	INT16			bLastID;
 	COLORVAL  RadarColor;
 	INT8			bSide;
-	INT8			bMenInSector;
-	UINT8			ubLastMercToRadio;
+	INT16			bMenInSector;
+	INT16			ubLastMercToRadio;
 	INT8			bTeamActive;
 	INT8			bAwareOfOpposition;
 	INT8			bHuman;
@@ -91,8 +91,8 @@ typedef struct
 	INT8								fPanicFlags;
 	INT32								sPanicTriggerGridNoUnused;
 	INT16								sHandGrid;
-	UINT8								ubSpottersCalledForBy;
-	UINT8								ubTheChosenOne;
+	INT16								ubSpottersCalledForBy;
+	INT16								ubTheChosenOne;
 	UINT32							uiTimeOfLastInput;
 	UINT32							uiTimeSinceDemoOn;
 	UINT32							uiCountdownToRestart;
@@ -103,21 +103,21 @@ typedef struct
 	UINT8								ubLastBattleSectorX;					
 	UINT8								ubLastBattleSectorY;
 	BOOLEAN							fLastBattleWon;
-	INT8								bOriginalSizeOfEnemyForce;
+	INT16								bOriginalSizeOfEnemyForce;
 	INT8								bPanicTriggerIsAlarmUnused;
 	BOOLEAN							fVirginSector;
 	BOOLEAN							fEnemyInSector;
 	BOOLEAN							fInterruptOccurred;
 	INT8								bRealtimeSpeed;
 	UINT8								ubEnemyIntention;
-	UINT8								ubEnemyIntendedRetreatDirection;
-	UINT8								ubEnemySightingOnTheirTurnEnemyID;
-	UINT8								ubEnemySightingOnTheirTurnPlayerID;
+	INT8								ubEnemyIntendedRetreatDirection;
+	INT16								ubEnemySightingOnTheirTurnEnemyID;
+	INT16								ubEnemySightingOnTheirTurnPlayerID;
 	BOOLEAN							fEnemySightingOnTheirTurn;
 	BOOLEAN							fAutoBandageMode;
 	UINT8								ubAttackBusyCount;
-	INT8								bNumEnemiesFoughtInBattleUnused;
-	UINT8								ubEngagedInConvFromActionMercID;
+	UINT16								bNumEnemiesFoughtInBattleUnused;
+	INT16								ubEngagedInConvFromActionMercID;
 	UINT16							usTactialTurnLimitCounter;
 	BOOLEAN							fInTopMessage;
 	UINT8								ubTopMessageType;
@@ -127,7 +127,7 @@ typedef struct
 	BOOLEAN							fTactialTurnLimitStartedBeep;
 	INT8								bBoxingState;
 	INT8								bConsNumTurnsNotSeen;
-	UINT8								ubArmyGuysKilled;
+	UINT16								ubArmyGuysKilled;
 
 	INT32								sPanicTriggerGridNo[ NUM_PANIC_TRIGGERS ];
 	INT8								bPanicTriggerIsAlarm[ NUM_PANIC_TRIGGERS ];
@@ -136,7 +136,7 @@ typedef struct
 	BOOLEAN							fSaidCreatureFlavourQuote;
 	BOOLEAN							fHaveSeenCreature;
 	BOOLEAN							fKilledEnemyOnAttack;
-	UINT8								ubEnemyKilledOnAttack;
+	INT16								ubEnemyKilledOnAttack;
 	INT8								bEnemyKilledOnAttackLevel;
 	UINT16							ubEnemyKilledOnAttackLocation;
 	BOOLEAN							fItemsSeenOnAttack;
@@ -150,15 +150,15 @@ typedef struct
 	BOOLEAN							fCantGetThrough;
 	INT32								sCantGetThroughGridNo;
 	INT32								sCantGetThroughSoldierGridNo;
-	UINT8								ubCantGetThroughID;
+	INT16								ubCantGetThroughID;
 	BOOLEAN							fDidGameJustStart;
 	BOOLEAN							fStatChangeCheatOn;
-	UINT8								ubLastRequesterTargetID;
+	INT16								ubLastRequesterTargetID;
 	BOOLEAN							fGoodToAllowCrows;
 	UINT8								ubNumCrowsPossible;
 	UINT32							uiTimeCounterForGiveItemSrc;
 	BOOLEAN							fUnLockUIAfterHiddenInterrupt;
-	INT8								bNumFoughtInBattle[ MAXTEAMS ];
+	UINT16								bNumFoughtInBattle[ MAXTEAMS ];
 	UINT32							uiDecayBloodLastUpdate;
 	UINT32							uiTimeSinceLastInTactical;
 	BOOLEAN							fHasAGameBeenStarted;
@@ -167,7 +167,7 @@ typedef struct
 	UINT8								ubPaddingSmall;
 	UINT32							uiTimeSinceLastOpplistDecay;
 	INT8								bMercArrivingQuoteBeingUsed;
-	UINT8								ubEnemyKilledOnAttackKiller;
+	INT16								ubEnemyKilledOnAttackKiller;
 	BOOLEAN							fCountingDownForGuideDescription;
 	INT8								bGuideDescriptionCountDown;
 	UINT8								ubGuideDescriptionToUse;
@@ -189,8 +189,8 @@ typedef struct
 extern UINT8	gbPlayerNum;
 extern INT8		gbShowEnemies;
 
-extern UINT16	gusSelectedSoldier;
-extern UINT16	gusOldSelectedSoldier;
+extern INT16	gusSelectedSoldier;
+extern INT16	gusOldSelectedSoldier;
 
 extern CHAR8	gzAlertStr[][ 30 ];
 extern CHAR8	gzActionStr[][ 30 ];
@@ -241,25 +241,25 @@ void EndTurn( UINT8 ubNextTeam );
 void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode );
 void EndTacticalDemo( );
 
-void SelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect  );
+void SelectSoldier( INT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect  );
 
 //Kaiden: Function declaration from UB to reveal all items after combat.
 void RevealAllDroppedEnemyItems();
 
 void LocateGridNo( INT32 sGridNo );
-void LocateSoldier( UINT16 usID, BOOLEAN fSetLocator);
+void LocateSoldier( INT16 usID, BOOLEAN fSetLocator);
 
 void BeginTeamTurn( UINT8 ubTeam );
-void SlideTo(INT32 sGridNo, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSetLocator) ;
+void SlideTo(INT32 sGridNo, INT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSetLocator) ;
 void SlideToLocation( UINT16 usReasonID, INT32 sDestGridNo );
 
 void RebuildAllSoldierShadeTables( );
 void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier );
-UINT8 LastActiveTeamMember( UINT8 ubTeam );
+INT16 LastActiveTeamMember( UINT8 ubTeam );
 BOOLEAN SoldierOnVisibleWorldTile( SOLDIERTYPE *pSoldier );
 
-UINT8 FindNextActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs );
-UINT8 FindPrevActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs );
+INT16 FindNextActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs );
+INT16 FindPrevActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs );
 
 BOOLEAN CheckForPlayerTeamInMissionExit( );
 void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldier );
@@ -270,13 +270,13 @@ UINT32 EnterTacticalDemoMode();
 
 BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, INT32 usMapPos );
 
-INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirection, INT32 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor );
-INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirection, INT32 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor );
+INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 *pubDirection, INT32 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor );
+INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 *pubDirection, INT32 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor );
 
 
 void SelectNextAvailSoldier( SOLDIERTYPE *pSoldier );
 BOOLEAN TeamMemberNear(INT8 bTeam, INT32 sGridNo, INT32 iRange);
-BOOLEAN IsValidTargetMerc( UINT8 ubSoldierID );
+BOOLEAN IsValidTargetMerc( INT16 ubSoldierID );
 
 
 
@@ -308,7 +308,7 @@ SOLDIERTYPE * FreeUpAttacker( );
 
 BOOLEAN PlayerTeamFull( );
 
-void SetActionToDoOnceMercsGetToLocation( UINT8 ubActionCode,  INT8 bNumMercsWaiting, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3 );
+void SetActionToDoOnceMercsGetToLocation( UINT8 ubActionCode,  UINT16 bNumMercsWaiting, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3 );
 
 void ResetAllMercSpeeds( );
 
@@ -337,13 +337,13 @@ void MakeCivHostile( SOLDIERTYPE *pSoldier, INT8 bNewSide );
 
 BOOLEAN ProcessImplicationsOfPCAttack( SOLDIERTYPE * pSoldier, SOLDIERTYPE ** ppTarget, INT8 bReason );
 
-INT32 FindAdjacentPunchTarget( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier, INT32 * psAdjustedTargetGridNo, UINT8 * pubDirection );
+INT32 FindAdjacentPunchTarget( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier, INT32 * psAdjustedTargetGridNo, INT8 * pubDirection );
 
 SOLDIERTYPE * CivilianGroupMemberChangesSides( SOLDIERTYPE * pAttacked );
 void CivilianGroupChangesSides( UINT8 ubCivilianGroup );
 
 void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier );
-UINT8 CivilianGroupMembersChangeSidesWithinProximity( SOLDIERTYPE * pAttacked );
+INT16 CivilianGroupMembersChangeSidesWithinProximity( SOLDIERTYPE * pAttacked );
 
 void PauseAITemporarily( void );
 void PauseAIUntilManuallyUnpaused( void );
@@ -354,7 +354,7 @@ void DoPOWPathChecks( void );
 BOOLEAN HostileCiviliansWithGunsPresent( void );
 BOOLEAN HostileCiviliansPresent( void );
 BOOLEAN HostileBloodcatsPresent( void );
-UINT8 NumPCsInSector( void );
+UINT16 NumPCsInSector( void );
 
 void SetSoldierNonNeutral( SOLDIERTYPE * pSoldier );
 void SetSoldierNeutral( SOLDIERTYPE * pSoldier );
