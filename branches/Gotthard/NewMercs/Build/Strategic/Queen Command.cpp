@@ -107,9 +107,9 @@ void ValidateEnemiesHaveWeapons()
 }
 
 //Counts enemies and crepitus, but not bloodcats.
-UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
+UINT16 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
-	UINT8 ubNumHostiles = 0;
+	UINT16 ubNumHostiles = 0;
 
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
 	Assert( sSectorY >= 1 && sSectorY <= 16 );
@@ -121,7 +121,7 @@ UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 		pSector = FindUnderGroundSector( sSectorX, sSectorY, (UINT8)sSectorZ );
 		if( pSector )
 		{
-			ubNumHostiles = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumCreatures);
+			ubNumHostiles = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumCreatures;
 		}
 	}
 	else
@@ -131,7 +131,7 @@ UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 
 		//Count stationary hostiles
 		pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
-		ubNumHostiles = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumCreatures);
+		ubNumHostiles = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumCreatures;
 		
 		//Count mobile enemies
 		pGroup = gpGroupList;
@@ -148,9 +148,9 @@ UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 	return ubNumHostiles;
 }
 
-UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
+UINT16 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
-	UINT8 ubNumEnemies = 0;
+	UINT16 ubNumEnemies = 0;
 
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
 	Assert( sSectorY >= 1 && sSectorY <= 16 );
@@ -162,7 +162,7 @@ UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 		pSector = FindUnderGroundSector( sSectorX, sSectorY, (UINT8)sSectorZ );
 		if( pSector )
 		{
-			ubNumEnemies = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
+			ubNumEnemies = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
 		}
 	}
 	else
@@ -172,7 +172,7 @@ UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 
 		//Count stationary enemies
 		pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
-		ubNumEnemies = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
+		ubNumEnemies = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
 		
 		//Count mobile enemies
 		pGroup = gpGroupList;
@@ -189,17 +189,17 @@ UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 	return ubNumEnemies;
 }
 
-UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
+UINT16 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
 	SECTORINFO *pSector;
 	GROUP *pGroup;
-	UINT8 ubNumTroops;
+	UINT16 ubNumTroops;
 
 	//Assert( sSectorX >= 1 && sSectorX <= 16 );
 	//Assert( sSectorY >= 1 && sSectorY <= 16 );
 
 	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
-	ubNumTroops = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
+	ubNumTroops = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
 
 	pGroup = gpGroupList;
 	while( pGroup )
@@ -213,7 +213,7 @@ UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 	return ubNumTroops;
 }
 
-UINT8 NumStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
+UINT16 NumStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
 	SECTORINFO *pSector;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
@@ -234,14 +234,14 @@ UINT8 NumStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 		return( 0 );
 	}
 
-	return (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
+	return pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
 }
 
-UINT8 NumMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
+UINT16 NumMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
 	GROUP *pGroup;
 	SECTORINFO *pSector;
-	UINT8 ubNumTroops;
+	UINT16 ubNumTroops;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
 	Assert( sSectorY >= 1 && sSectorY <= 16 );
 
@@ -259,13 +259,13 @@ UINT8 NumMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
 	if( pSector->ubGarrisonID == ROADBLOCK )
 	{ //consider these troops as mobile troops even though they are in a garrison
-		ubNumTroops += (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
+		ubNumTroops += pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
 	}
 
 	return ubNumTroops;
 }
 
-void GetNumberOfMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
+void GetNumberOfMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT16 *pubNumAdmins, UINT16 *pubNumTroops, UINT16 *pubNumElites )
 {
 	GROUP *pGroup;
 	SECTORINFO *pSector;
@@ -296,7 +296,7 @@ void GetNumberOfMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pu
 
 }
 
-void GetNumberOfMobileEnemiesInSectorWithoutRoadBlock( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
+void GetNumberOfMobileEnemiesInSectorWithoutRoadBlock( INT16 sSectorX, INT16 sSectorY, UINT16 *pubNumAdmins, UINT16 *pubNumTroops, UINT16 *pubNumElites )
 {
 	GROUP *pGroup;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
@@ -318,7 +318,7 @@ void GetNumberOfMobileEnemiesInSectorWithoutRoadBlock( INT16 sSectorX, INT16 sSe
 }
 
 
-void GetNumberOfStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
+void GetNumberOfStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT16 *pubNumAdmins, UINT16 *pubNumTroops, UINT16 *pubNumElites )
 {
 	SECTORINFO *pSector;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
@@ -331,9 +331,9 @@ void GetNumberOfStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8
 	*pubNumElites = pSector->ubNumElites;
 }
 
-void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
+void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT16 *pubNumAdmins, UINT16 *pubNumTroops, UINT16 *pubNumElites )
 {
-	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
+	UINT16 ubNumAdmins, ubNumTroops, ubNumElites;
 	
 	GetNumberOfStationaryEnemiesInSector( sSectorX, sSectorY, pubNumAdmins, pubNumTroops, pubNumElites );
 
@@ -409,9 +409,9 @@ void EndTacticalBattleForEnemy()
 	}
 }
 
-UINT8 NumFreeEnemySlots()
+UINT16 NumFreeEnemySlots()
 {
-	UINT8 ubNumFreeSlots = 0;
+	UINT16 ubNumFreeSlots = 0;
 	INT32 i;
 	SOLDIERTYPE *pSoldier;
 	//Count the number of free enemy slots.  It is possible to have multiple groups exceed the maximum.
@@ -432,9 +432,9 @@ BOOLEAN PrepareEnemyForSectorBattle()
 	SECTORINFO *pSector;
 	GROUP *pGroup;
 	SOLDIERTYPE *pSoldier;
-	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
-	UINT8 ubTotalAdmins, ubTotalElites, ubTotalTroops;
-	UINT8 ubStationaryEnemies;
+	UINT16 ubNumAdmins, ubNumTroops, ubNumElites;
+	UINT16 ubTotalAdmins, ubTotalElites, ubTotalTroops;
+	UINT16 ubStationaryEnemies;
 	INT32 i, num;
 	INT16 sNumSlots;
 
@@ -533,12 +533,12 @@ BOOLEAN PrepareEnemyForSectorBattle()
 	}
 	else
 	{
-		ubTotalAdmins = (UINT8)(pSector->ubNumAdmins - pSector->ubAdminsInBattle);
-		ubTotalTroops = (UINT8)(pSector->ubNumTroops - pSector->ubTroopsInBattle);
-		ubTotalElites = (UINT8)(pSector->ubNumElites - pSector->ubElitesInBattle);
+		ubTotalAdmins = pSector->ubNumAdmins - pSector->ubAdminsInBattle;
+		ubTotalTroops = pSector->ubNumTroops - pSector->ubTroopsInBattle;
+		ubTotalElites = pSector->ubNumElites - pSector->ubElitesInBattle;
 	}
 
-	ubStationaryEnemies = (UINT8)(ubTotalAdmins + ubTotalTroops + ubTotalElites);
+	ubStationaryEnemies = ubTotalAdmins + ubTotalTroops + ubTotalElites;
 
 	if( ubStationaryEnemies > 32 )
 	{
@@ -732,7 +732,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 BOOLEAN PrepareEnemyForUndergroundBattle()
 {
 	UNDERGROUND_SECTORINFO *pUnderground;
-	UINT8 ubTotalAdmins, ubTotalTroops, ubTotalElites;
+	UINT16 ubTotalAdmins, ubTotalTroops, ubTotalElites;
 	pUnderground = gpUndergroundSectorInfoHead;
 	while( pUnderground )
 	{
@@ -742,9 +742,9 @@ BOOLEAN PrepareEnemyForUndergroundBattle()
 		{ //This is the sector we are going to be fighting in.
 			if( pUnderground->ubNumAdmins || pUnderground->ubNumTroops || pUnderground->ubNumElites )
 			{
-				ubTotalAdmins = (UINT8)(pUnderground->ubNumAdmins - pUnderground->ubAdminsInBattle);
-				ubTotalTroops = (UINT8)(pUnderground->ubNumTroops - pUnderground->ubTroopsInBattle);
-				ubTotalElites = (UINT8)(pUnderground->ubNumElites - pUnderground->ubElitesInBattle);
+				ubTotalAdmins = pUnderground->ubNumAdmins - pUnderground->ubAdminsInBattle;
+				ubTotalTroops = pUnderground->ubNumTroops - pUnderground->ubTroopsInBattle;
+				ubTotalElites = pUnderground->ubNumElites - pUnderground->ubElitesInBattle;
 				pUnderground->ubAdminsInBattle += ubTotalAdmins;
 				pUnderground->ubTroopsInBattle += ubTotalTroops;
 				pUnderground->ubElitesInBattle += ubTotalElites;
@@ -1176,8 +1176,8 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 //identical, though it is highly likely that they will all be successfully added on the first call.
 void AddPossiblePendingEnemiesToBattle()
 {
-	UINT8 ubSlots, ubNumAvailable;
-	UINT8 ubNumElites, ubNumTroops, ubNumAdmins;
+	UINT16 ubSlots, ubNumAvailable;
+	UINT16 ubNumElites, ubNumTroops, ubNumAdmins;
 	UINT8 ubNumGroupsInSector;
 	UINT8 ubGroupIndex;
 	GROUP *pGroup;
@@ -1458,12 +1458,12 @@ void NotifyPlayersOfNewEnemies()
 	}
 }
 
-void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites, BOOLEAN fMagicallyAppeared )
+void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT16 ubNumAdmins, UINT16 ubNumTroops, UINT16 ubNumElites, BOOLEAN fMagicallyAppeared )
 {
 	SOLDIERTYPE *pSoldier;
 	MAPEDGEPOINTINFO MapEdgepointInfo;
-	UINT8 ubCurrSlot;
-	UINT8 ubTotalSoldiers;
+	UINT16 ubCurrSlot;
+	UINT16 ubTotalSoldiers;
 	UINT8 bDesiredDirection=0;
 	switch( ubStrategicInsertionCode )
 	{
@@ -1508,7 +1508,7 @@ void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT8 ub
 
 	ubTotalSoldiers = ubNumAdmins + ubNumTroops + ubNumElites;
 
-	ChooseMapEdgepoints( &MapEdgepointInfo, ubStrategicInsertionCode, (UINT8)(ubNumAdmins+ubNumElites+ubNumTroops) );
+	ChooseMapEdgepoints( &MapEdgepointInfo, ubStrategicInsertionCode, (ubNumAdmins+ubNumElites+ubNumTroops) );
 	ubCurrSlot = 0;
 	while( ubTotalSoldiers )
 	{
@@ -1535,7 +1535,7 @@ void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT8 ub
 			}
 			UpdateMercInSector( pSoldier, gWorldSectorX, gWorldSectorY, 0 );
 		}
-		else if( ubNumTroops && (UINT8)Random( ubTotalSoldiers ) < (UINT8)(ubNumElites + ubNumTroops) )
+		else if( ubNumTroops && ((UINT16)Random( ubTotalSoldiers )) < (ubNumElites + ubNumTroops) )
 		{
 			ubNumTroops--;
 			ubTotalSoldiers--;
@@ -1558,7 +1558,7 @@ void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT8 ub
 			}
 			UpdateMercInSector( pSoldier, gWorldSectorX, gWorldSectorY, 0 );
 		}
-		else if( ubNumAdmins && (UINT8)Random( ubTotalSoldiers ) < (UINT8)(ubNumElites + ubNumTroops + ubNumAdmins) )
+		else if( ubNumAdmins && (UINT16)(Random( ubTotalSoldiers )) < (ubNumElites + ubNumTroops + ubNumAdmins) )
 		{
 			ubNumAdmins--;
 			ubTotalSoldiers--;
@@ -1946,7 +1946,7 @@ void HandleEnemyStatusInCurrentMapBeforeLoadingNewMap()
 {
 	INT32 i;
 	BOOLEAN fMadeCorpse;
-	INT8 bKilledEnemies = 0, bKilledCreatures = 0, bKilledRebels = 0, bKilledCivilians = 0;
+	UINT16 bKilledEnemies = 0, bKilledCreatures = 0, bKilledRebels = 0, bKilledCivilians = 0;
 	return;
 	//If any of the soldiers are dying, kill them now.
 	for( i = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; i <= gTacticalStatus.Team[ ENEMY_TEAM ].bLastID; i++ )
