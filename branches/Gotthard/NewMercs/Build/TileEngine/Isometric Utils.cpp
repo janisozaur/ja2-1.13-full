@@ -50,7 +50,7 @@ UINT32 guiForceRefreshMousePositionCalculation = 0;
 //};
 
 
-INT16 DirIncrementer[8] =
+INT8 DirIncrementer[8] =
 {
 		-WORLD_COLS,        //N
 		1-WORLD_COLS,       //NE
@@ -65,7 +65,7 @@ INT16 DirIncrementer[8] =
 
 
 // Opposite directions
-UINT8 gOppositeDirection[ NUM_WORLD_DIRECTIONS ] = 
+INT8 gOppositeDirection[ NUM_WORLD_DIRECTIONS ] = 
 {
 	SOUTH,
 	SOUTHWEST,
@@ -78,7 +78,7 @@ UINT8 gOppositeDirection[ NUM_WORLD_DIRECTIONS ] =
 
 };
 
-UINT8 gTwoCCDirection[ NUM_WORLD_DIRECTIONS ] = 
+INT8 gTwoCCDirection[ NUM_WORLD_DIRECTIONS ] = 
 {
 	WEST,
 	NORTHWEST,
@@ -91,7 +91,7 @@ UINT8 gTwoCCDirection[ NUM_WORLD_DIRECTIONS ] =
 
 };
 
-UINT8 gTwoCDirection[ NUM_WORLD_DIRECTIONS ] = 
+INT8 gTwoCDirection[ NUM_WORLD_DIRECTIONS ] = 
 {
 	EAST,
 	SOUTHEAST,
@@ -105,7 +105,7 @@ UINT8 gTwoCDirection[ NUM_WORLD_DIRECTIONS ] =
 };
 
 
-UINT8 gOneCDirection[ NUM_WORLD_DIRECTIONS ] = 
+INT8 gOneCDirection[ NUM_WORLD_DIRECTIONS ] = 
 {
 	NORTHEAST,
 	EAST,
@@ -117,7 +117,7 @@ UINT8 gOneCDirection[ NUM_WORLD_DIRECTIONS ] =
 	NORTH
 };
 
-UINT8 gOneCCDirection[ NUM_WORLD_DIRECTIONS ] = 
+INT8 gOneCCDirection[ NUM_WORLD_DIRECTIONS ] = 
 {
 	NORTHWEST,
 	NORTH,
@@ -130,7 +130,7 @@ UINT8 gOneCCDirection[ NUM_WORLD_DIRECTIONS ] =
 };
 
 //														DIRECTION FACING			 DIRECTION WE WANT TO GOTO
-UINT8 gPurpendicularDirection[ NUM_WORLD_DIRECTIONS ][ NUM_WORLD_DIRECTIONS ] =
+INT8 gPurpendicularDirection[ NUM_WORLD_DIRECTIONS ][ NUM_WORLD_DIRECTIONS ] =
 {
 	// NORTH
 	WEST,					// EITHER
@@ -882,9 +882,9 @@ BOOLEAN FindLowerLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir,
 }
 
 
-INT16 QuickestDirection(INT16 origin, INT16 dest)
+INT8 QuickestDirection(INT8 origin, INT8 dest)
 {
- INT16 v1,v2;
+ INT8 v1,v2;
 
  if (origin==dest)
      return(0);
@@ -913,9 +913,9 @@ INT16 QuickestDirection(INT16 origin, INT16 dest)
 }
 
 
-INT16 ExtQuickestDirection(INT16 origin, INT16 dest)
+INT8 ExtQuickestDirection(INT8 origin, INT8 dest)
 {
- INT16 v1,v2;
+ INT8 v1,v2;
 
  if (origin==dest)
      return(0);

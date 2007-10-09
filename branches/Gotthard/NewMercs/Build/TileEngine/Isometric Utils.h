@@ -24,13 +24,13 @@
 #define	ADJUST_Y_FOR_HEIGHT( pos, y )				( y -= gpWorldLevelData[ pos ].sHeight )					
 
 
-extern UINT8 gOppositeDirection[ NUM_WORLD_DIRECTIONS ];
-extern UINT8 gTwoCCDirection[ NUM_WORLD_DIRECTIONS ];
-extern UINT8 gTwoCDirection[ NUM_WORLD_DIRECTIONS ];
-extern UINT8 gOneCDirection[ NUM_WORLD_DIRECTIONS ];
-extern UINT8 gOneCCDirection[ NUM_WORLD_DIRECTIONS ];
+extern INT8 gOppositeDirection[ NUM_WORLD_DIRECTIONS ];
+extern INT8 gTwoCCDirection[ NUM_WORLD_DIRECTIONS ];
+extern INT8 gTwoCDirection[ NUM_WORLD_DIRECTIONS ];
+extern INT8 gOneCDirection[ NUM_WORLD_DIRECTIONS ];
+extern INT8 gOneCCDirection[ NUM_WORLD_DIRECTIONS ];
 
-extern UINT8 gPurpendicularDirection[ NUM_WORLD_DIRECTIONS ][ NUM_WORLD_DIRECTIONS ];
+extern INT8 gPurpendicularDirection[ NUM_WORLD_DIRECTIONS ][ NUM_WORLD_DIRECTIONS ];
 
 // Macros
 
@@ -100,8 +100,8 @@ INT8 FindNumTurnsBetweenDirs( INT8 sDir1, INT8 sDir2 );
 BOOLEAN FindHeigherLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection );
 BOOLEAN FindLowerLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection );
 	
-INT16 QuickestDirection(INT16 origin, INT16 dest);
-INT16 ExtQuickestDirection(INT16 origin, INT16 dest);
+INT8 QuickestDirection(INT8 origin, INT8 dest);
+INT8 ExtQuickestDirection(INT8 origin, INT8 dest);
 
 
 // Returns the (center ) cell coordinates in X
