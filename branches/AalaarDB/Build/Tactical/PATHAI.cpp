@@ -779,6 +779,7 @@ int AStarPathfinder::GetPath(SOLDIERTYPE *s ,
 	//TEMP:	This is returning zero when I am generating edgepoints, so I am force returning 1 until
 	//		this is fixed?
 	if( gfGeneratingMapEdgepoints ) {
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "ASTAR: generating edgepoints, path size %d", sizePath ) );
 		return 1;
 	}
 
@@ -1983,7 +1984,9 @@ void ShutDownPathAI( void )
 	PERFORMANCE_MARKER
 	MemFree( pathQ );
 	MemFree( trailCostUsed );
-	MemFree( trailCost );
+	if (trailCost) {
+		MemFree( trailCost );
+	}
 	MemFree( trailTree );
 }
 
@@ -2022,10 +2025,14 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 	PERFORMANCE_MARKER
 #ifdef USE_ASTAR_PATHS
 	int retVal = ASTAR::AStarPathfinder::GetInstance().GetPath(s, sDestination, ubLevel, usMovementMode, bCopy, fFlags);
-	if (retVal) {
+	//if the dest is nowhere, you won't find a path but you'll search everywhere.
+	//in this case return 0, don't search everywhere again under a different method, you still won't find the path
+	if (retVal || sDestination == NOWHERE) {
 		return retVal;
 	}
 	else {
+		//if we didn't find a path maybe the old code will find it, so don't return 0
+		//but, check that the old code doesn't find the path either, if it does then there is a bug in the AStar code!
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "ASTAR path failed!" ) );
 	}
 #endif
@@ -2575,7 +2582,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 #endif
 
 			newLoc = curLoc + dirDelta[iCnt];
-			if ( newLoc > GRIDSIZE )
+			if ( newLoc > GRIDSIZE  || newLoc < 0)
 			{
 				//ADB: moved here for optimization, I don't think it being later on can cause any array out of bounds though
 				// WHAT THE??? hack.
@@ -3556,6 +3563,14 @@ ENDOFLOOP:
 		#endif
 		gubNPCAPBudget = 0;
 		gubNPCDistLimit = 0;
+
+#ifdef USE_ASTAR_PATHS
+		//ok we searched using the AStar path and didn't find one
+		//but we searched with the old method and if we found one then there is an error!!!
+		if (iCnt != 0) {
+			DebugBreakpoint();
+		}
+#endif
 
 		//TEMP:	This is returning zero when I am generating edgepoints, so I am force returning 1 until
 		//		this is fixed?

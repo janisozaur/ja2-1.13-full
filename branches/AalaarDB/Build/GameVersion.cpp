@@ -13,7 +13,7 @@
 #ifdef JA2EDITOR
 
 //MAP EDITOR BUILD VERSION
-CHAR16 zVersionLabel[256]		= { L"Map Editor v1.13.1202.A5" }; 
+CHAR16 zVersionLabel[256]		= { L"Map Editor v1.13.1475.6.27" }; 
 
 #elif defined JA2BETAVERSION
 

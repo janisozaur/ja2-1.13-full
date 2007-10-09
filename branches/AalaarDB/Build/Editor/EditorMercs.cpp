@@ -2591,22 +2591,22 @@ void UpdateMercsInfo()
 				CHAR16 tempStr[500];
 				swprintf( tempStr, L"%s%s%s%s%s%d.",
 					L"By specifying a profile index, all of the information will be extracted from the profile ",
-					L"and override any values that you have edited.	It will also disable the editing features ", 
-					L"though, you will still be able to view stats, etc.	Pressing ENTER will automatically ",
-					L"extract the number you have typed.	A blank field will clear the profile.	The current ",
+					L"and override any values that you have edited.  It will also disable the editing features ", 
+					L"though, you will still be able to view stats, etc.  Pressing ENTER will automatically ",
+					L"extract the number you have typed.  A blank field will clear the profile.  The current ",
 					L"number of profiles range from 0 to ", NUM_PROFILES );
 				DisplayWrappedString(iScreenWidthOffset + 180, 2 * iScreenHeightOffset + 370, 400, 2, FONT10ARIAL, 146, tempStr,	FONT_BLACK, FALSE, LEFT_JUSTIFIED );
 				SetFont( FONT12POINT1 );
 				if( gpSelected->pDetailedPlacement->ubProfile == NO_PROFILE )
 				{
 					SetFontForeground( FONT_GRAY3 );
-					mprintfEditor( iScreenWidthOffset + 240, 2 * iScreenHeightOffset + 435, L"Current Profile:	n/a							");
+					mprintfEditor( iScreenWidthOffset + 240, 2 * iScreenHeightOffset + 435, L"Current Profile:  n/a              ");
 				}
 				else
 				{
 					SetFontForeground( FONT_WHITE );
 					ClearTaskbarRegion( iScreenWidthOffset + 240, 2 * iScreenHeightOffset + 435, iScreenWidthOffset + 580, 2 * iScreenHeightOffset + 445 );
-					mprintf( iScreenWidthOffset + 240, 2 * iScreenHeightOffset + 435, L"Current Profile:	%s", gMercProfiles[ gpSelected->pDetailedPlacement->ubProfile ].zName );
+					mprintf( iScreenWidthOffset + 240, 2 * iScreenHeightOffset + 435, L"Current Profile: %s", gMercProfiles[ gpSelected->pDetailedPlacement->ubProfile ].zName );
 				}
 			}
 			break;

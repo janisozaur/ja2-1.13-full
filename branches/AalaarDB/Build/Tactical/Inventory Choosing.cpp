@@ -539,6 +539,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 		if( !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
 		{
 			DeleteObj(&pp->Inv[ i ]);
+			//ADB this is ok, delete only inits it
 			pp->Inv[ i ].fFlags |= OBJECT_UNDROPPABLE;
 		}
 		else

@@ -609,7 +609,7 @@ UINT32 InitializeJA2(void)
 			//also set the sector
 			gWorldSectorX = 0;
 			gWorldSectorY = 0;
-			gfAutoLoadA9 = TRUE;
+			gfAutoLoadA9 = FALSE;
 			gfIntendOnEnteringEditor = TRUE;
 			gGameOptions.fGunNut = TRUE;
 			gGameOptions.fAirStrikes = FALSE;

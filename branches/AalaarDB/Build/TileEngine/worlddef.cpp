@@ -2419,10 +2419,11 @@ BOOLEAN EvaluateWorld( STR8 pSector, UINT8 ubLevel )
 		pSummary->usNumItems = (UINT16)temp;
 		//Important:	Saves the file position (byte offset) of the position where the numitems
 		//			resides.	Checking this value and comparing to usNumItems will ensure validity.
-		if( pSummary->usNumItems )
-		{
+		//ADB warning, even if the number of items is 0 we still need to store the position!!!
+		//if( pSummary->usNumItems )
+		//{
 			pSummary->uiNumItemsPosition = pBuffer - pBufferHead - 4;
-		}
+		//}
 
 		//the size of WORLDITEM has changed at 6.27, 5.26 or earlier are outdated
 		if (dMajorMapVersion >= 6.0 && ubMinorMapVersion > 26) {
