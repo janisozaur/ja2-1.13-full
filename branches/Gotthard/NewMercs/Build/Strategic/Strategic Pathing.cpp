@@ -515,9 +515,6 @@ PathStPtr BuildAStrategicPath(PathStPtr pPath , INT16 iStartSectorNum, INT16 iEn
 	 pHeadOfPathList = pNode;
  }
 
- if(iEndSectorNum < MAP_WORLD_X-1)
-	 return NULL;
- 
  iPathLength=((INT32)FindStratPath(((INT16)iStartSectorNum),((INT16)iEndSectorNum), sMvtGroupNumber, fTacticalTraversal ));
  while(iPathLength > iCount)
  {
@@ -1681,7 +1678,7 @@ void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier )
 
 
 
-BOOLEAN MoveGroupFromSectorToSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
+BOOLEAN MoveGroupFromSectorToSector( INT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
 {
 	PathStPtr pNode = NULL;
 
@@ -1705,7 +1702,7 @@ BOOLEAN MoveGroupFromSectorToSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStar
 }
 
 
-BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
+BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector( INT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
 {
 	PathStPtr pNode = NULL;
 
@@ -1731,7 +1728,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector( UINT8 ubGroupID, INT16 sS
 	return( TRUE );
 }
 
-BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
+BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( INT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
 {
 	PathStPtr pNode = NULL;
 
@@ -1773,7 +1770,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( UINT8 ubGrou
 	return( TRUE );
 }
 
-BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
+BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd( INT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
 {
 	PathStPtr pNode = NULL;
 
@@ -1948,26 +1945,26 @@ PathStPtr GetGroupMercPathPtr( GROUP *pGroup )
 
 
 
-UINT8 GetSoldierGroupId( SOLDIERTYPE *pSoldier )
+INT8 GetSoldierGroupID( SOLDIERTYPE *pSoldier )
 {
-	UINT8 ubGroupId = 0;
+	INT8 ubGroupID = 0;
 
 	// IN a vehicle?
 	if( pSoldier->bAssignment == VEHICLE )
 	{
-		ubGroupId = pVehicleList[ pSoldier->iVehicleId ].ubMovementGroup;
+		ubGroupID = pVehicleList[ pSoldier->iVehicleId ].ubMovementGroup;
 	}
 	// IS a vehicle?
 	else if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
-		ubGroupId = pVehicleList[ pSoldier->bVehicleID ].ubMovementGroup;
+		ubGroupID = pVehicleList[ pSoldier->bVehicleID ].ubMovementGroup;
 	}
 	else	// a person
 	{
-		ubGroupId = pSoldier->ubGroupID;
+		ubGroupID = pSoldier->ubGroupID;
 	}
 
-	return( ubGroupId );
+	return( ubGroupID );
 }
 
 
