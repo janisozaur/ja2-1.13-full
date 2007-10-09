@@ -582,7 +582,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier)
 {
 	UINT32				uiLoop;
 	UINT16				usMaxDist;
-	UINT8					ubFriendCount, ubFriendIDs[MAXMERCS], ubFriendID;
+	UINT16					ubFriendCount, ubFriendIDs[MAXMERCS], ubFriendID;
 	UINT16				usDirection;
 	UINT8					ubDirsLeft;
 	BOOLEAN				fDirChecked[8];
@@ -731,7 +731,8 @@ INT32 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 	INT16 sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXRange, sYRange, sXOffset, sYOffset;
 	INT16 sOrigX, sOrigY;
 	INT16 sX, sY;
-	UINT8	ubRoom = 0, ubTempRoom;
+	INT16 ubRoom = 0;
+	INT16 ubTempRoom;
 
 	sOrigX = sOrigY = -1;
 	sMaxLeft = sMaxRight = sMaxUp = sMaxDown = sXRange = sYRange = -1;
@@ -1282,7 +1283,7 @@ INT32 ClosestPC( SOLDIERTYPE *pSoldier, INT32 * psDistance )
 
 	// NOTE: skips EPCs!
 
-	UINT8					ubLoop;
+	UINT16					ubLoop;
 	SOLDIERTYPE		*pTargetSoldier;
 	INT32					sMinDist = WORLD_MAX;
 	INT32					sDist;
@@ -1524,7 +1525,7 @@ INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT32 sDestGridNo, INT
 BOOLEAN GuySawEnemyThisTurnOrBefore( SOLDIERTYPE * pSoldier )
 {
 	UINT8		ubTeamLoop;
-	UINT8		ubIDLoop;
+	UINT16		ubIDLoop;
 
 	for ( ubTeamLoop = 0; ubTeamLoop < MAXTEAMS; ubTeamLoop++ )
 	{
@@ -1636,7 +1637,7 @@ INT32 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbin
 INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier )
 {
 	// find the distance to the closest person on the same team
-	UINT8					ubLoop;
+	UINT16					ubLoop;
 	SOLDIERTYPE		*pTargetSoldier;
 	INT16					sMinDist = 1000;
 	INT16					sDist;
