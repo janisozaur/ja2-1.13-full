@@ -2663,7 +2663,7 @@ void UpdateMercsInfo()
 					default:
 						return;
 				}
-				wcscat( str, L"	Hit ESC to abort entering this line in the schedule." );
+				wcscat( str, L" Hit ESC to abort entering this line in the schedule." );
 				DisplayWrappedString( iScreenWidthOffset + 436, 2 * iScreenHeightOffset + 392, 149, 2, FONT10ARIAL, FONT_YELLOW, str, FONT_BLACK, FALSE, LEFT_JUSTIFIED );
 			}
 			break;

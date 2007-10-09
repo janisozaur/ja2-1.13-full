@@ -131,7 +131,7 @@ void			SetSkiCursor( UINT16	usCursor );
 
 void			InitShopKeeperSubTitledText( STR16 pString );
 
-void			AddItemToPlayersOfferAreaAfterShopKeeperOpen( OBJECTTYPE	*pItemObject, INT8 bPreviousInvPos );
+void			AddItemToPlayersOfferAreaAfterShopKeeperOpen( OBJECTTYPE *pItemObject);
 
 void			BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerFirst );
 

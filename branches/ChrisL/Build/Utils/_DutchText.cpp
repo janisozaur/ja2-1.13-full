@@ -8,37 +8,37 @@
 /*
 
 ******************************************************************************************************
-**									IMPORTANT TRANSLATION NOTES									 **
+**                                  IMPORTANT TRANSLATION NOTES                                     **
 ******************************************************************************************************
 
 GENERAL INSTRUCTIONS
-- Always be aware that foreign strings should be of equal or shorter length than the English equivalent. 
+- Always be aware that foreign strings should be of equal or shorter length than the English equivalent.  
 	I know that this is difficult to do on many occasions due to the nature of foreign languages when 
-	compared to English. By doing so, this will greatly reduce the amount of work on both sides. In 
-	most cases (but not all), JA2 interfaces were designed with just enough space to fit the English word. 
+	compared to English.  By doing so, this will greatly reduce the amount of work on both sides.  In 
+	most cases (but not all), JA2 interfaces were designed with just enough space to fit the English word.  
 	The general rule is if the string is very short (less than 10 characters), then it's short because of 
-	interface limitations. On the other hand, full sentences commonly have little limitations for length. 
+	interface limitations.  On the other hand, full sentences commonly have little limitations for length.  
 	Strings in between are a little dicey.
-- Never translate a string to appear on multiple lines. All strings L"This is a really long string...", 
-	must fit on a single line no matter how long the string is. All strings start with L" and end with ",
-- Never remove any extra spaces in strings. In addition, all strings containing multiple sentences only 
-	have one space after a period, which is different than standard typing convention. Never modify sections 
-	of strings contain combinations of % characters. These are special format characters and are always 
-	used in conjunction with other characters. For example, %s means string, and is commonly used for names,
-	locations, items, etc. %d is used for numbers. %c%d is a character and a number (such as A9). 
-	%% is how a single % character is built. There are countless types, but strings containing these 
-	special characters are usually commented to explain what they mean. If it isn't commented, then 
+- Never translate a string to appear on multiple lines.  All strings L"This is a really long string...", 
+	must fit on a single line no matter how long the string is.  All strings start with L" and end with ",
+- Never remove any extra spaces in strings.  In addition, all strings containing multiple sentences only 
+	have one space after a period, which is different than standard typing convention.  Never modify sections 
+	of strings contain combinations of % characters.  These are special format characters and are always 
+	used in conjunction with other characters.  For example, %s means string, and is commonly used for names,
+	locations, items, etc.  %d is used for numbers.  %c%d is a character and a number (such as A9).  
+	%% is how a single % character is built.  There are countless types, but strings containing these 
+	special characters are usually commented to explain what they mean.  If it isn't commented, then 
 	if you can't figure out the context, then feel free to ask SirTech.
 - Comments are always started with // Anything following these two characters on the same line are 
-	considered to be comments. Do not translate comments. Comments are always applied to the following 
-	string(s) on the next line(s), unless the comment is on the same line as a string. 
-- All new comments made by SirTech will use "//@@@ comment" (without the quotes) notation. By searching 
+	considered to be comments.  Do not translate comments.  Comments are always applied to the following 
+	string(s) on the next line(s), unless the comment is on the same line as a string.  
+- All new comments made by SirTech will use "//@@@ comment" (without the quotes) notation.  By searching 
 	for @@@ everytime you recieve a new version, it will simplify your task and identify special instructions.
-	Commonly, these types of comments will be used to ask you to abbreviate a string. Please leave the 
+  Commonly, these types of comments will be used to ask you to abbreviate a string.  Please leave the 
 	comments intact, and SirTech will remove them once the translation for that particular area is resolved.
 - If you have a problem or question with translating certain strings, please use "//!!! comment" 
-	(without the quotes). The syntax is important, and should be identical to the comments used with @@@ 
-	symbols. SirTech will search for !!! to look for your problems and questions. This is a more 
+	(without the quotes).  The syntax is important, and should be identical to the comments used with @@@ 
+	symbols.  SirTech will search for !!! to look for your problems and questions.  This is a more 
 	efficient method than detailing questions in email, so try to do this whenever possible.
 
 
@@ -47,51 +47,51 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 **************
 
 1) BOLDED LETTERS
-	The popup help text system supports special characters to specify the hot key(s) for a button. 
+	The popup help text system supports special characters to specify the hot key(s) for a button.  
 	Anytime you see a '|' symbol within the help text string, that means the following key is assigned
-	to activate the action which is usually a button. 
+	to activate the action which is usually a button.  
 
-	EX:	L"|Map Screen" 
+	EX:  L"|Map Screen" 
 
-	This means the 'M' is the hotkey. In the game, when somebody hits the 'M' key, it activates that
-	button. When translating the text to another language, it is best to attempt to choose a word that
-	uses 'M'. If you can't always find a match, then the best thing to do is append the 'M' at the end
+	This means the 'M' is the hotkey.  In the game, when somebody hits the 'M' key, it activates that
+	button.  When translating the text to another language, it is best to attempt to choose a word that
+	uses 'M'.  If you can't always find a match, then the best thing to do is append the 'M' at the end
 	of the string in this format:
 
-	EX:	L"Ecran De Carte (|M)"	(this is the French translation)
+	EX:  L"Ecran De Carte (|M)"  (this is the French translation)
 
-	Other examples are used multiple times, like the Esc key	or "|E|s|c" or Space->(|S|p|a|c|e)
+	Other examples are used multiple times, like the Esc key  or "|E|s|c" or Space -> (|S|p|a|c|e)
 
 2) NEWLINE
-	Any place you see a \n within the string, you are looking at another string that is part of the fast help
-	text system. \n notation doesn't need to be precisely placed within that string, but whereever you wish 
+  Any place you see a \n within the string, you are looking at another string that is part of the fast help
+	text system.  \n notation doesn't need to be precisely placed within that string, but whereever you wish 
 	to start a new line. 
 
-	EX:	L"Clears all the mercs' positions,\nand allows you to re-enter them manually." 
+	EX:  L"Clears all the mercs' positions,\nand allows you to re-enter them manually." 
 
 	Would appear as:
 
 				Clears all the mercs' positions,
 				and allows you to re-enter them manually.
 
-	NOTE:	It is important that you don't pad the characters adjacent to the \n with spaces. If we did this
-		in the above example, we would see
+	NOTE:  It is important that you don't pad the characters adjacent to the \n with spaces.  If we did this
+	       in the above example, we would see
 
 	WRONG WAY -- spaces before and after the \n
-	EX:	L"Clears all the mercs' positions, \n and allows you to re-enter them manually." 
+	EX:  L"Clears all the mercs' positions, \n and allows you to re-enter them manually." 
 
 	Would appear as: (the second line is moved in a character)
 		
 				Clears all the mercs' positions,
- 				and allows you to re-enter them manually.
+ 				 and allows you to re-enter them manually.
 
 
 @@@ NOTATION
 ************
 
-	Throughout the text files, you'll find an assortment of comments. Comments are used to describe the
-	text to make translation easier, but comments don't need to be translated. A good thing is to search for
-	"@@@" after receiving new version of the text file, and address the special notes in this manner. 
+	Throughout the text files, you'll find an assortment of comments.  Comments are used to describe the
+	text to make translation easier, but comments don't need to be translated.  A good thing is to search for
+	"@@@" after receiving new version of the text file, and address the special notes in this manner.  
 
 !!! NOTATION
 ************
@@ -273,7 +273,7 @@ CHAR16 Message[][STRING_LENGTH] =
 	L"Toebehoren",
 	
 	//You cannot use "item(s)" and your "other item" at the same time.
-	//Ex:	You cannot use sun goggles and you gas mask at the same time.
+	//Ex:  You cannot use sun goggles and you gas mask at the same time.
 	L"%s en %s zijn niet tegelijk te gebruiken.",
 
 	L"Het item dat je aanwijst, kan vastgemaakt worden aan een bepaald item door het in een van de vier uitbreidingssloten te plaatsen.",
@@ -334,7 +334,7 @@ STR16 sTimeStrings[] =
 };
 
 
-// Assignment Strings: what assignment does the merc	have right now? For example, are they on a squad, training, 
+// Assignment Strings: what assignment does the merc  have right now? For example, are they on a squad, training, 
 // administering medical aid (doctor) or training a town. All are abbreviated. 8 letters is the longest it can be.
 
 STR16 pAssignmentStrings[] =
@@ -365,7 +365,7 @@ STR16 pAssignmentStrings[] =
 	L"Voertuig", // in a vehicle
 	L"Onderweg", // in transit - abbreviated form
 	L"Repareer", // repairing
-	L"Oefenen", // training themselves	
+	L"Oefenen", // training themselves  
 	L"Militie", // training a town to revolt 
 	L"Trainer", // training a teammate
 	L"Student", // being trained by someone else 
@@ -395,7 +395,7 @@ STR16 pConditionStrings[] =
 {
 	L"Excellent", //the state of a soldier .. excellent health
 	L"Good", // good health
-	L"Fair", // fair health	 
+	L"Fair", // fair health     
 	L"Wounded", // wounded health
 	L"Tired", // tired
 	L"Bleeding", // bleeding to death
@@ -444,7 +444,7 @@ STR16 pPersonnelAssignmentStrings[] =
 	L"Voertuig", // in a vehicle
 	L"Onderweg", // in transit - abbreviated form
 	L"Repareer", // repairing
-	L"Oefenen", // training themselves	
+	L"Oefenen", // training themselves  
 	L"Militie", // training a town to revolt 
 	L"Trainer", // training a teammate
 	L"Student", // being trained by someone else 
@@ -486,7 +486,7 @@ STR16 pLongAssignmentStrings[] =
 	L"Voertuig", // in a vehicle
 	L"Onderweg", // in transit - abbreviated form
 	L"Repareer", // repairing
-	L"Oefenen", // training themselves	
+	L"Oefenen", // training themselves  
 	L"Militie", // training a town to revolt 
 	L"Trainer", // training a teammate
 	L"Student", // being trained by someone else 
@@ -513,7 +513,7 @@ STR16 pContractStrings[] =
 
 STR16 pPOWStrings[] =
 {
-	L"POW",	//an acronym for Prisoner of War
+	L"POW",  //an acronym for Prisoner of War
 	L"??",
 };
 
@@ -581,7 +581,7 @@ STR16 pGuardMenuStrings[] =
 	L" Afzien van Vuren", // fire only when the merc needs to
 	L"Andere Opties:", // other options available to merc
 	L" Kan Vluchten", // merc can retreat
-	L" Kan Dekking Zoeken",	// merc is allowed to seek cover
+	L" Kan Dekking Zoeken",  // merc is allowed to seek cover
 	L" Kan Team Helpen", // merc can assist teammates
 	L"OK", // done with this menu
 	L"Stop", // cancel this menu
@@ -608,7 +608,7 @@ STR16 pAssignMenuStrings[] =
 	L"On duty", // merc is on active duty
 	L"Doctor", // the merc is acting as a doctor
 	L"Patient", // the merc is receiving medical attention
-	L"Vehicle", // the merc is in a vehicle	 
+	L"Vehicle", // the merc is in a vehicle     
 	L"Repair", // the merc is repairing items
 	L"Train", // the merc is training
 	L"Stop", // cancel this menu
@@ -640,7 +640,7 @@ STR16 pMilitiaControlMenuStrings[] =
 //	L"Hold Position", // set militia to stationary
 //	L"Retreat", // retreat militia
 //	L"Come to me", // retreat militia
-//	L"Get down", // retreat militia		
+//	L"Get down", // retreat militia		 
 //	L"Cancel", // cancel this menu
 //};
 
@@ -686,22 +686,22 @@ STR16 pTrainingMenuStrings[] =
  L"Oefenen", // train yourself 
  L"Militie", // train the town 
  L"Trainer", // train your teammates 
- L"Student",	// be trained by an instructor 
+ L"Student",  // be trained by an instructor 
  L"Stop", // cancel this menu
 };
 
 
 STR16 pSquadMenuStrings[] =
 {
-	L"Team 1",
-	L"Team 2",
-	L"Team 3",
-	L"Team 4",
-	L"Team 5",
-	L"Team 6",
-	L"Team 7",
-	L"Team 8",
-	L"Team 9",
+	L"Team  1",
+	L"Team  2",
+	L"Team  3",
+	L"Team  4",
+	L"Team  5",
+	L"Team  6",
+	L"Team  7",
+	L"Team  8",
+	L"Team  9",
 	L"Team 10",
 	L"Team 11",
 	L"Team 12",
@@ -971,14 +971,14 @@ STR16 gpStrategicString[] =
 
 	L"Tijd verstreken",							//STR_AR_TIME_ELAPSED,
 
-	//Labels for status of merc if retreating. (UPPERCASE)			
+	//Labels for status of merc if retreating.  (UPPERCASE)			
 
 	L"GEVLUCHT",							//STR_AR_MERC_RETREATED,
 	L"VLUCHTEN",							//STR_AR_MERC_RETREATING,
 	L"VLUCHT",								//STR_AR_MERC_RETREAT,
 
 	//PRE BATTLE INTERFACE STRINGS 
-	//Goes on the three buttons in the prebattle interface. The Auto resolve button represents
+	//Goes on the three buttons in the prebattle interface.  The Auto resolve button represents
 	//a system that automatically resolves the combat for the player without having to do anything.
 	//These strings must be short (two lines -- 6-8 chars per line)
 
@@ -995,8 +995,8 @@ STR16 gpStrategicString[] =
 	L"BLOODCAT VAL",							//STR_PB_BLOODCATAMBUSH_HEADER
 	L"BINNENGAAN HOL BLOODCAT",			//STR_PB_ENTERINGBLOODCATLAIR_HEADER
 
-	//Various single words for direct translation. The Civilians represent the civilian
-	//militia occupying the sector being attacked. Limited to 9-10 chars
+	//Various single words for direct translation.  The Civilians represent the civilian
+	//militia occupying the sector being attacked.  Limited to 9-10 chars
 
 	L"Locatie",
 	L"Vijanden",
@@ -1018,7 +1018,7 @@ STR16 gpStrategicString[] =
 	L"Groeperen",
 	L"OK",
 
-	//The help text for the four buttons. Use \n to denote new line (just like enter).
+	//The help text for the four buttons.  Use \n to denote new line (just like enter).
 
 	L"Maakt posities van huurlingen vrij en\nmaakt handmatig herinvoer mogelijk. (|C)",
 	L"Ver|spreidt willekeurig je huurlingen\nelke keer als je de toets indrukt.",
@@ -1031,43 +1031,43 @@ STR16 gpStrategicString[] =
 	L"Sector",
 	L"Kies posities binnenkomst",
 
-	//Strings used for various popup message boxes. Can be as long as desired.
+	//Strings used for various popup message boxes.  Can be as long as desired.
 
 	L"Ziet er hier niet goed uit. Het is onbegaanbaar. Probeer een andere locatie.",
 	L"Plaats je huurlingen in de gemarkeerde sectie van de kaart.",
 
-	//This message is for mercs arriving in sectors. Ex:	Red has arrived in sector A9.
+	//This message is for mercs arriving in sectors.  Ex:  Red has arrived in sector A9.
 	//Don't uppercase first character, or add spaces on either end.
 
 	L"is gearriveerd in sector", 
 
-	//These entries are for button popup help text for the prebattle interface. All popup help
-	//text supports the use of \n to denote new line. Do not use spaces before or after the \n.
+	//These entries are for button popup help text for the prebattle interface.  All popup help
+	//text supports the use of \n to denote new line.  Do not use spaces before or after the \n.
 	L"Lost het gevecht |Automatisch\nop zonder de kaart te laden.",
 	L"Automatisch oplossen niet\nmogelijk als de speler aanvalt.",
 	L"Ga sector binnen om tegen\nde vijand te strijden. (|E)",
 	L"T|rek groep terug en ga naar de vorige sector.",			//singular version
 	L"T|rek alle groepen terug en\nga naar hun vorige sectors.", //multiple groups with same previous sector
 
-	//various popup messages for battle conditions. 
+	//various popup messages for battle conditions.  
 
-	//%c%d is the sector -- ex:	A9
+	//%c%d is the sector -- ex:  A9
 	L"Vijanden vallen je militie aan in sector %c%d.",
-	//%c%d is the sector -- ex:	A9
+	//%c%d is the sector -- ex:  A9
 	L"Beesten vallen je militie aan in sector %c%d.",
-	//1st %d refers to the number of civilians eaten by monsters,	%c%d is the sector -- ex:	A9
-	//Note:	the minimum number of civilians eaten will be two.
+	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
+	//Note:  the minimum number of civilians eaten will be two.
 	L"Beesten vallen aan en doden %d burgers in sector %s.",
-	//%s is the sector location -- ex:	A9: Omerta
+	//%s is the sector location -- ex:  A9: Omerta
 	L"Vijand valt je huurlingen aan in sector %s. Geen enkele huurling kan vechten!",
-	//%s is the sector location -- ex:	A9: Omerta
+	//%s is the sector location -- ex:  A9: Omerta
 	L"Beesten vallen je huurlingen aan in sector %s. Geen enkele huurling kan vechten!",
 
 };
 
 STR16 gpGameClockString[] = 
 {
-	//This is the day represented in the game clock. Must be very short, 4 characters max.
+	//This is the day represented in the game clock.  Must be very short, 4 characters max.
 	L"Dag",
 };
 
@@ -1123,9 +1123,9 @@ CHAR16 zHealthStr[][13] =
 	L"STERVEND",	//	>= 0
 	L"KRITIEK", 	//	>= 15
 	L"SLECHT",		//	>= 30
-	L"GEWOND",		//	>= 45
-	L"GEZOND",		//	>= 60
-	L"STERK",	 	// 	>= 75
+	L"GEWOND",    	//	>= 45
+	L"GEZOND",    	//	>= 60
+	L"STERK",     	// 	>= 75
 	L"EXCELLENT",	// 	>= 90
 };
 
@@ -1255,7 +1255,7 @@ CHAR16 TacticalStr[][ MED_STRING_LENGTH ] =
 
 	L"%s is helemaal betaald.",
 	L"%s heeft tegoed nog %d.",
-	L"Kies detonatie frequentie:",		//in this case, frequency refers to a radio signal
+	L"Kies detonatie frequentie:",  	//in this case, frequency refers to a radio signal
 	L"Aantal beurten tot ontploffing:",	//how much time, in turns, until the bomb blows
 	L"Stel frequentie in van ontsteking:", 	//in this case, frequency refers to a radio signal
 	L"Boobytrap ontmantelen?",
@@ -1425,7 +1425,7 @@ STR16 pExitingSectorHelpText[] =
 	L"Als de overgebleven huurlingen uit deze sector trekken,\nwordt de aanliggende sector onmiddellijk geladen.",
 	L"Als de overgebleven huurlingen uit deze sector trekken,\nwordt je automatisch in het landkaartscherm geplaatst,\nrekening houdend met de reistijd van je huurlingen.",
 
-	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted. The "single" button is disabled.
+	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted.  The "single" button is disabled.
 	L"%s moet geëscorteerd worden door jouw huurlingen\nen kan de sector niet alleen verlaten.",
 
 	//If only one conscious merc is left and is selected, and there are EPCs in the squad, the merc will be prohibited from leaving alone.
@@ -1436,22 +1436,22 @@ STR16 pExitingSectorHelpText[] =
 	L"%s kan de sector niet alleen verlaten omdat hij meerdere karakters escorteert.",	//male plural
 	L"%s kan de sector niet alleen verlaten omdat zij meerdere karakters escorteert.",	//female plural
 
-	//If one or more of your mercs in the selected squad aren't in range of the traversal area, then the	"move all" option is disabled,
+	//If one or more of your mercs in the selected squad aren't in range of the traversal area, then the  "move all" option is disabled,
 	//and this helptext explains why.
 	L"Al je huurlingen moeten in de buurt zijn om het team te laten reizen.",
 
 	L"", //UNUSED
 
-	//Standard helptext for single movement. Explains what will happen (splitting the squad)
+	//Standard helptext for single movement.  Explains what will happen (splitting the squad)
 	L"Als aangekruist, dan zal %s alleen verder reizen\nen automatisch bij een uniek team gevoegd worden.",
 
-	//Standard helptext for all movement. Explains what will happen (moving the squad)
+	//Standard helptext for all movement.  Explains what will happen (moving the squad)
 	L"Als aangekruist, dan zal je geselecteerde\nteam verder reizen, de sector verlatend.",
 
-	//This strings is used BEFORE the "exiting sector" interface is created. If you have an EPC selected and you attempt to tactically
+	//This strings is used BEFORE the "exiting sector" interface is created.  If you have an EPC selected and you attempt to tactically
 	//traverse the EPC while the escorting mercs aren't near enough (or dead, dying, or unconscious), this message will appear and the
-	//"exiting sector" interface will not appear. This is just like the situation where
-	//This string is special, as it is not used as helptext. Do not use the special newline character (\n) for this string.
+	//"exiting sector" interface will not appear.  This is just like the situation where
+	//This string is special, as it is not used as helptext.  Do not use the special newline character (\n) for this string.
 	L"%s wordt geëscorteerd door jouw huurlingen en kan de sector niet alleen verlaten. Je huurlingen moeten eerst in de buurt zijn.",
 };
 
@@ -1502,7 +1502,7 @@ STR16 pHelicopterEtaStrings[] =
 	L" Onveilig:", 			// distance to return from destination to airport
 	L"Totale Kosten: ", 		// total cost of trip by helicopter
 	L"Aank: ", 				// ETA is an acronym for "estimated time of arrival" 
-	L"Helikopter heeft weinig brandstof en moet landen in vijandelijk gebied!",	// warning that the sector the helicopter is going to use for refueling is under enemy control->
+	L"Helikopter heeft weinig brandstof en moet landen in vijandelijk gebied!",	// warning that the sector the helicopter is going to use for refueling is under enemy control -> 
 	L"Passagiers: ",
 	L"Selecteer Skyrider of Aanvoer Drop-plaats?",			// L"Select Skyrider or the Arrivals Drop-off?",
 	L"Skyrider",
@@ -1768,8 +1768,8 @@ STR16 pSenderNameList[] =
 
 STR16 pTraverseStrings[] =
 {
-	L"Vorige",
-	L"Volgende",
+  L"Vorige",
+  L"Volgende",
 };
 
 // new mail notify string 
@@ -1862,7 +1862,7 @@ STR16 pTransactionText[] =
 	L"1 week", 					// merc's contract extended for a week
 	L"2 weken", 				// ... for 2 weeks
 	L"Inkomen Mijn", 
-	L"",						//String nuked
+	L"",						 //String nuked
 	L"Gekochte Bloemen",
 	L"Volledige Medische Vergoeding voor %s",
 	L"Gedeeltelijke Medische Vergoeding voor %s",
@@ -1871,7 +1871,7 @@ STR16 pTransactionText[] =
 	L"Maak Geld over aan %s", 		// transfer funds to a merc
 	L"Maak Geld over van %s", 		// transfer funds from a merc
 	L"Rust militie uit in %s",			// initial cost to equip a town's militia
-	L"Items gekocht van %s.",		//is used for the Shop keeper interface. The dealers name will be appended to the end of the string.
+	L"Items gekocht van %s.",		//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
 	L"%s heeft geld gestort.",
 };
 
@@ -1958,7 +1958,7 @@ STR16 pMapErrorString[] =
 	L"Reisorders? Het is vijandig gebied!",
 	L"Om te verplaatsen moeten huurlingen eerst toegewezen worden aan een team of voertuig.",
 	L"Je hebt nog geen team-leden.", 			// you have no members, can't do anything
-	L"Huurling kan order niet opvolgen.",					// merc can't comply with your order
+	L"Huurling kan order niet opvolgen.",			 		// merc can't comply with your order
 //6-10
 	L"heeft een escorte nodig. Plaats hem in een team.", // merc can't move unescorted .. for a male
 	L"heeft een escorte nodig. Plaats haar in een team.", // for a female
@@ -2605,7 +2605,7 @@ STR16			MercAccountPageText[] =
 {
 	// Text on the buttons on the bottom of the screen
 	L"Previous",
-	L"Next",
+  L"Next",
 };
 
 
@@ -2860,7 +2860,6 @@ STR16			BobbyRFilter[] =
 	L"Med. Kits",
 	L"Kits",
 	L"Face Items",
-	L"LBE Gear",
 	L"Misc.",
 };
 
@@ -2885,7 +2884,7 @@ STR16			BobbyRText[] =
 	L"BESTELFORMULIER",
 	L"Home",			//10
 
-	//The following 2 lines are used on the Ammunition page. 
+	//The following 2 lines are used on the Ammunition page.  
 	//They are used for help text to display how many items the player's merc has
 	//that can use this type of ammo
 
@@ -3206,7 +3205,7 @@ STR16			AimScreenText[] =
 
 	L"A.I.M. en A.I.M.-logo zijn geregistreerde handelsmerken in de meeste landen.",
 	L"Dus denk er niet aan om ons te kopiëren.",
-	L"Copyright 1998-1999 A.I.M., Ltd. All rights reserved.",
+	L"Copyright 1998-1999 A.I.M., Ltd.  All rights reserved.",
 
 	//Text for an advertisement that gets displayed on the AIM page
 
@@ -3248,7 +3247,7 @@ STR16 SKI_Text[ ] =
 	L"OK",				//Text for the button which will leave the shopkeeper interface.
 	L"REP. KOSTEN",			//The amount the dealer will charge to repair the merc's goods
 	L"1 UUR",			// SINGULAR! The text underneath the inventory slot when an item is given to the dealer to be repaired
-	L"%d UREN",		// PLURAL!	The text underneath the inventory slot when an item is given to the dealer to be repaired
+	L"%d UREN",		// PLURAL!   The text underneath the inventory slot when an item is given to the dealer to be repaired
 	L"GEREPAREERD",		// Text appearing over an item that has just been repaired by a NPC repairman dealer
 	L"Er is geen ruimte meer.",	//Message box that tells the user there is no more room to put there stuff
 	L"%d MINUTEN",		// The text underneath the inventory slot when an item is given to the dealer to be repaired
@@ -3344,18 +3343,18 @@ STR16			zSaveLoadText[] =
 	L"De spelversie van het bewaarde spel verschilt van de huidige versie. Waarschijnlijk is het veilig om door te gaan. Doorgaan?",
 	L"De bewaarde spelen zijn waarschijnlijk ongeldig. Deze verwijderen?",
 
-	//Translators, the next two strings are for the same thing. The first one is for beta version releases and the second one
-	//is used for the final version. Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
-	//used by the compiler and will cause program errors if modified/removed. It's okay to translate the strings though.
+	//Translators, the next two strings are for the same thing.  The first one is for beta version releases and the second one
+	//is used for the final version.  Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
+	//used by the compiler and will cause program errors if modified/removed.  It's okay to translate the strings though.
 #ifdef JA2BETAVERSION
 	L"Save version has changed. Please report if there any problems. Continue?",
 #else
 	L"Attempting to load an older version save. Automatically update and load the save?",
 #endif
 
-	//Translators, the next two strings are for the same thing. The first one is for beta version releases and the second one
-	//is used for the final version. Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
-	//used by the compiler and will cause program errors if modified/removed. It's okay to translate the strings though.
+	//Translators, the next two strings are for the same thing.  The first one is for beta version releases and the second one
+	//is used for the final version.  Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
+	//used by the compiler and will cause program errors if modified/removed.  It's okay to translate the strings though.
 #ifdef JA2BETAVERSION
 	L"Save version and game version have changed. Please report if there are any problems. Continue?",
 #else
@@ -3436,7 +3435,7 @@ STR16 pMilitiaConfirmStrings[] =
 	L"je kunt dit niet betalen.", // telling the player they can't afford to train this town
 	L"Doorgaan met militie trainen %s (%s %d)?", // continue training this town?
 	L"Kosten $", // the cost in dollars to train militia
-	L"( J/N )",	// abbreviated yes/no
+	L"( J/N )",   // abbreviated yes/no
 	L"",	// unused
 	L"Stadsmilities trainen in %d sectors kost $ %d. %s", // cost to train sveral sectors at once
 	L"Je kunt de $%d niet betalen om de stadsmilitie hier te trainen.",
@@ -3453,7 +3452,7 @@ STR16	gzMoneyWithdrawMessageText[] =
 
 STR16	gzCopyrightText[] = 
 {
-	L"Copyright (C) 1999 Sir-tech Canada Ltd. All rights reserved.",
+	L"Copyright (C) 1999 Sir-tech Canada Ltd.  All rights reserved.",
 };
 
 //option Text
@@ -3602,6 +3601,7 @@ STR16	gzGIOScreenText[] =
 	L"Great",
 	L"Excellent",
 	L"Awesome",
+	L"INSANE",
 	L"Inventory System",
 	L"Old",
 	L"New",
@@ -3611,7 +3611,7 @@ STR16 pDeliveryLocationStrings[] =
 {
 	L"Austin",			//Austin, Texas, USA	
 	L"Baghdad",			//Baghdad, Iraq (Suddam Hussein's home)
-	L"Drassen",			//The main place in JA2 that you can receive items. The other towns are dummy names...
+	L"Drassen",			//The main place in JA2 that you can receive items.  The other towns are dummy names...
 	L"Hong Kong",		//Hong Kong, Hong Kong
 	L"Beirut",			//Beirut, Lebanon	(Middle East)
 	L"London",			//London, England
@@ -3629,8 +3629,8 @@ STR16 pDeliveryLocationStrings[] =
 };
 
 STR16 pSkillAtZeroWarning[] =
-{ //This string is used in the IMP character generation. It is possible to select 0 ability
-	//in a skill meaning you can't use it. This text is confirmation to the player.
+{ //This string is used in the IMP character generation.  It is possible to select 0 ability
+	//in a skill meaning you can't use it.  This text is confirmation to the player.
 	L"Are you sure? A value of zero means NO ability in this skill.",
 };
 
@@ -3709,7 +3709,7 @@ STR16 pMessageStrings[] =
 	L"USD",					//Abbreviation to US dollars
 	L"nvt",					//Lowercase acronym for not applicable.
 	L"Intussen",		//Meanwhile
-	L"%s is gearriveerd in sector %s%s", //Name/Squad has arrived in sector A9. Order must not change without notifying
+	L"%s is gearriveerd in sector %s%s", //Name/Squad has arrived in sector A9.  Order must not change without notifying
 																		//SirTech
 	L"Versie",
 	L"Leeg SnelBewaarSlot",
@@ -3737,11 +3737,11 @@ STR16 pMessageStrings[] =
 	L"Gooi",
 	L"Geef",
 
-	L"%s gegeven aan %s.",	//"Item" passed to "merc". Please try to keep the item %s before the merc %s, otherwise,
-											//must notify SirTech.
-	L"Geen plaats om %s aan %s te geven.",	//pass "item" to "merc". Same instructions as above.
+	L"%s gegeven aan %s.",	//"Item" passed to "merc".  Please try to keep the item %s before the merc %s, otherwise,
+											 //must notify SirTech.
+	L"Geen plaats om %s aan %s te geven.",	//pass "item" to "merc".  Same instructions as above.
 
-	//A list of attachments appear after the items. Ex:	Kevlar vest ( Ceramic Plate 'Attached )'
+	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
 	L" eraan vastgemaakt )",
 
 	//Cheat modes
@@ -3755,12 +3755,12 @@ STR16 pMessageStrings[] =
 	L"%s niet op sluipmodus.",
 
 	//Wireframes are shown through buildings to reveal doors and windows that can't otherwise be seen in 
-	//an isometric engine. You can toggle this mode freely in the game.
+	//an isometric engine.  You can toggle this mode freely in the game.
 	L"Extra Draadmodellen Aan",
 	L"Extra Draadmodellen Uit",
 
-	//These are used in the cheat modes for changing levels in the game. Going from a basement level to
-	//an upper level, etc. 
+	//These are used in the cheat modes for changing levels in the game.  Going from a basement level to
+	//an upper level, etc.  
 	L"Kan niet naar boven vanaf dit niveau...",
 	L"Er zijn geen lagere niveaus...",
 	L"Betreden basisniveau %d...",
@@ -4012,7 +4012,7 @@ STR16 zGioDifConfirmText[]=
 	L"Je hebt de NOVICE-modus geselecteerd. Deze instelling is geschikt voor diegenen die Jagged Alliance voor de eerste keer spelen, voor diegenen die nog niet zo bekend zijn met strategy games, of voor diegenen die kortere gevechten in de game willen hebben.", //Je keuze beïnvloedt dingen in het hele verloop van de game, dus weet wat je doet. Weet je zeker dat je in de Novice-modus wilt spelen?",
 	L"Je hebt de EXPERIENCED-modus geselecteerd. Deze instelling is geschikt voor diegenen die al bekend zijn met Jagged Alliance of dergelijke games. Je keuze beïnvloedt dingen in het hele verloop van de game, dus weet wat je doet. Weet je zeker dat je in de Experienced-modus wilt spelen ?",
 	L"Je hebt de EXPERT-modus geselecteerd. We hebben je gewaarschuwd. Geef ons niet de schuld als je in een kist terugkomt. Je keuze beïnvloedt dingen in het hele verloop van de game, dus weet wat je doet. Weet je zeker dat je in de Expert-modus wilt spelen?",
-	L"You have chosen INSANE mode. WARNING: Don't blame us if you get shipped back in little pieces... Deidranna WILL kick your ass. Hard. Your choice will affect things throughout the entire course of the game, so choose wisely. Are you sure you want to play in INSANE mode?",
+	L"You have chosen INSANE mode. WARNING: Don't blame us if you get shipped back in little pieces... Deidranna WILL kick your ass.  Hard.  Your choice will affect things throughout the entire course of the game, so choose wisely. Are you sure you want to play in INSANE mode?",
 };
 
 STR16 gzLateLocalizedString[] =
@@ -4060,7 +4060,7 @@ STR16 gzLateLocalizedString[] =
 	//"vs." is the abbreviation of versus.
 	L"%d vs. %d",
 	
-	L"%s is vol!",	//(ex "The ice cream truck is full")
+	L"%s is vol!",  //(ex "The ice cream truck is full")
 
 	L"%s heeft geen eerste hulp nodig, maar échte medische hulp of iets dergelijks.",
 
@@ -4098,7 +4098,7 @@ STR16 gzLateLocalizedString[] =
 	L"(Team %d)",
 
 	//35
-	//Ex: "Red has repaired Scope's MP5K". Careful to maintain the proper order (Red before Scope, Scope before MP5K)
+	//Ex: "Red has repaired Scope's MP5K".  Careful to maintain the proper order (Red before Scope, Scope before MP5K)
 	L"%s heeft %s's %s gerepareerd",
 
 	//36

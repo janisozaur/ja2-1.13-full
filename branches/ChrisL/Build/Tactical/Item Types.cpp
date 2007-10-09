@@ -510,10 +510,6 @@ bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
 				numToStack = 0;
 			}
 
-			if (sourceObject[0]->data.ubImprintID != (*this)[0]->data.ubImprintID) {
-				numToStack = 0;
-			}
-
 			//nor allow trapped items to stack
 			if (sourceObject[0]->data.bTrap > 0
 				|| (*this)[0]->data.bTrap > 0) {
@@ -523,6 +519,36 @@ bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
 		}
 	}
 	return true;
+}
+
+int OBJECTTYPE::ForceAddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
+{
+	PERFORMANCE_MARKER
+	if (exists() == false) {
+		//we are adding to an empty object, it can happen
+		Assert(sourceObject.exists() == true);
+		usItem = sourceObject.usItem;
+		this->fFlags = sourceObject.fFlags;
+	}
+	Assert(sourceObject.usItem == usItem);
+
+	int numToAdd = sourceObject.ubNumberOfObjects;
+	//if howMany is ALL_OBJECTS the stack will become full if sourceObject has enough
+	if (howMany != ALL_OBJECTS) {
+		numToAdd = min(numToAdd, howMany);
+	}
+
+	//this recalcs weight too!
+	SpliceData(sourceObject, numToAdd, sourceObject.objectStack.begin());
+
+	//returns how many were NOT added
+	if (howMany != ALL_OBJECTS) {
+		return howMany - numToAdd;
+	}
+	else {
+		//ALL_OBJECTS means move all, if all were moved the new size should be 0
+		return sourceObject.ubNumberOfObjects;
+	}
 }
 
 int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany, SOLDIERTYPE* pSoldier, int slot, int cap, bool allowLBETransfer)
@@ -585,16 +611,21 @@ int OBJECTTYPE::MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove, SOLDIERT
 {
 	//ADB yes I said I normally remove functions like this, but this is different
 	//this exists to make reading easier and to be more descriptive.
-	return (RemoveObjectsFromStack(numToMove, &destObject, pSoldier, slot));
+	return (PrivateRemoveObjectsFromStack(numToMove, &destObject, pSoldier, slot));
 }
 
-int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject, SOLDIERTYPE* pSoldier, int slot)
+int OBJECTTYPE::RemoveObjectsFromStack(int howMany)
+{
+	return (PrivateRemoveObjectsFromStack(howMany, NULL, NULL, STACK_SIZE_LIMIT));
+}
+
+int OBJECTTYPE::PrivateRemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject, SOLDIERTYPE* pSoldier, int slot)
 {
 	PERFORMANCE_MARKER
 	//ADB this function only needs to know soldier and slot
 	//if there is a dest object we are putting the removed objects into
 	//in this case it is acting as a move and has probably been called by MoveThisObjectTo
-	//otherwise it is acting as a delete and has probably been called by name
+	//otherwise it is acting as a delete and has probably been called by RemoveObjectsFromStack
 	if (howMany == ALL_OBJECTS) {
 		howMany = ubNumberOfObjects;
 	}
@@ -734,7 +765,7 @@ void OBJECTTYPE::CopyToOrCreateAt(OBJECTTYPE** ppTarget, OBJECTTYPE* pSource)
 	}
 	else {
 		//ADB leaving this in for a while, not sure if the code ever even reaches here and this will tell me
-		//DebugBreak();
+		//DebugBreakpoint();
 		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("Found mem leak, but it was corrected."));
 		**ppTarget = *pSource;
 	}
@@ -964,10 +995,6 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 		//therefore, keep ubNumberOfObjects at 0 but resize objectStack to at least 1
 		this->objectStack.resize(max(ubNumberOfObjects, 1));
 		if (ubNumberOfObjects == 0) {
-			//CHRISL: I'm not sure what we're trying to accomplish here since we're going to blank usItem in the next line
-//			if (this->usItem != NONE) {
-//				DebugBreak();
-//			}
 			this->usItem = NONE;
 		}
 

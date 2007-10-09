@@ -58,7 +58,7 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 
 	EX:  L"Ecran De Carte (|M)"  (this is the French translation)
 
-	Other examples are used multiple times, like the Esc key  or "|E|s|c" or Space->(|S|p|a|c|e)
+	Other examples are used multiple times, like the Esc key  or "|E|s|c" or Space -> (|S|p|a|c|e)
 
 2) NEWLINE
   Any place you see a \n within the string, you are looking at another string that is part of the fast help
@@ -675,15 +675,15 @@ STR16 pTrainingMenuStrings[] =
 
 STR16 pSquadMenuStrings[] =
 {
-	L"Squadra 1",
-	L"Squadra 2",
-	L"Squadra 3",
-	L"Squadra 4",
-	L"Squadra 5",
-	L"Squadra 6",
-	L"Squadra 7",
-	L"Squadra 8",
-	L"Squadra 9",
+	L"Squadra  1",
+	L"Squadra  2",
+	L"Squadra  3",
+	L"Squadra  4",
+	L"Squadra  5",
+	L"Squadra  6",
+	L"Squadra  7",
+	L"Squadra  8",
+	L"Squadra  9",
 	L"Squadra 10",
 	L"Squadra 11",
 	L"Squadra 12",
@@ -1486,7 +1486,7 @@ STR16 pHelicopterEtaStrings[] =
 	L"Insicura: ", 			// distance to return from destination to airport
 	L"Costo totale: ", 		// total cost of trip by helicopter
 	L"TPA: ", 			// ETA is an acronym for "estimated time of arrival" 
-	L"L'elicottero ha poco carburante e deve atterrare in territorio nemico!",	// warning that the sector the helicopter is going to use for refueling is under enemy control->
+	L"L'elicottero ha poco carburante e deve atterrare in territorio nemico!",	// warning that the sector the helicopter is going to use for refueling is under enemy control -> 
   L"Passeggeri: ",
   L"Seleziona Skyrider o gli Arrivi Drop-off?",
   L"Skyrider",
@@ -2843,7 +2843,6 @@ STR16			BobbyRFilter[] =
 	L"Med. Kits",
 	L"Kits",
 	L"Face Items",
-	L"LBE Gear",
 	L"Misc.",
 };
 
@@ -3583,6 +3582,7 @@ STR16	gzGIOScreenText[] =
 	L"Great",
 	L"Excellent",
 	L"Awesome",
+	L"INSANE",
 	L"Inventory System",
 	L"Old",
 	L"New",

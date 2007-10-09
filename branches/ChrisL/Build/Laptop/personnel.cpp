@@ -6582,12 +6582,7 @@ BOOLEAN TransferFundsFromBankToMerc( SOLDIERTYPE *pSoldier, INT32 iCurrentBalanc
 
 
 	// set up money object
-	gTempObject.usItem = MONEY;
-	gTempObject.ubNumberOfObjects = 1;
-	gTempObject[0]->data.money.bMoneyStatus = 100;
-	gTempObject[0]->data.objectStatus = 100;	
-	gTempObject[0]->data.money.uiMoneyAmount = iCurrentBalance;
-	
+	CreateMoney(iCurrentBalance, &gTempObject);
 
 	// now auto place money object
 	if( AutoPlaceObject( pSoldier, &( gTempObject ), TRUE ) == TRUE )

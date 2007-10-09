@@ -1274,7 +1274,7 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 	rof = Weapon[ pObj->usItem ].ubShotsPer4Turns;
 	if (ItemSlotLimit(pObj, STACK_SIZE_LIMIT) == 1)//NOT STACKABLE!
 	{
-		//ADB TODO this check should be changed so that if guns ever stack they still get the bonus!
+		//ADB TODO this check should be changed so that if guns ever stack (not yet, but later) they still get the bonus!
 		rof += GetRateOfFireBonus(pObj);
 	}
 

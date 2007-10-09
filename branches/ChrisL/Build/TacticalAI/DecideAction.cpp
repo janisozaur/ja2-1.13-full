@@ -973,8 +973,6 @@ INT8 GreenAlert_TryToDoRandomPatrol(SOLDIERTYPE* pSoldier, GreenAlertFlags& flag
 {
 	PERFORMANCE_MARKER
 	INT32 iChance = 25 + pSoldier->aiData.bBypassToGreen;
-	//ADB iSneaky isn't used apparently
-	//INT32 iSneaky = 10;
 
 	// set base chance according to orders
 	switch (pSoldier->aiData.bOrders)

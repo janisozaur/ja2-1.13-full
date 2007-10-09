@@ -5556,7 +5556,8 @@ void MakeSureToolKitIsInHand( SOLDIERTYPE *pSoldier )
 		{
 			if( Item[pSoldier->inv[ bPocket ].usItem].toolkit )
 			{
-				SwapObjs( &pSoldier->inv[ HANDPOS ], &pSoldier->inv[ bPocket ] );
+				//SwapObjs( &pSoldier->inv[ HANDPOS ], &pSoldier->inv[ bPocket ] );
+				SwapObjs( pSoldier, HANDPOS, bPocket );
 				break;
 			}
 		}
@@ -5585,7 +5586,8 @@ BOOLEAN MakeSureMedKitIsInHand( SOLDIERTYPE *pSoldier )
 		if ( Item[pSoldier->inv[ bPocket ].usItem].medicalkit )
 		{
 			fCharacterInfoPanelDirty = TRUE;
-			SwapObjs( &pSoldier->inv[ HANDPOS ], &pSoldier->inv[ bPocket ] );
+			//SwapObjs( &pSoldier->inv[ HANDPOS ], &pSoldier->inv[ bPocket ] );
+			SwapObjs( pSoldier, HANDPOS, bPocket );
 			return(TRUE);
 		}
 	}
@@ -5606,16 +5608,16 @@ BOOLEAN MakeSureMedKitIsInHand( SOLDIERTYPE *pSoldier )
 			if( ( Item[ pSoldier -> inv[ HANDPOS ].usItem ].twohanded  ) && ( bPocket >= MEDPOCKSTART ) )
 			{
 				// first move from hand to second hand
-				SwapObjs( &pSoldier->inv[ HANDPOS ], &pSoldier->inv[ SECONDHANDPOS ] );
+				//SwapObjs( &pSoldier->inv[ HANDPOS ], &pSoldier->inv[ SECONDHANDPOS ] );
+				SwapObjs( pSoldier, HANDPOS, SECONDHANDPOS );
 
 				// dirty mapscreen and squad panels
 				fCharacterInfoPanelDirty = TRUE;
 				fInterfacePanelDirty = DIRTYLEVEL2;
 			}
 			
-			SwapObjs( &pSoldier->inv[ HANDPOS ], &pSoldier->inv[ bPocket ] );
-			
-
+			//SwapObjs( &pSoldier->inv[ HANDPOS ], &pSoldier->inv[ bPocket ] );
+			SwapObjs( pSoldier, HANDPOS, bPocket );
 			return(TRUE);
 		}
 	}

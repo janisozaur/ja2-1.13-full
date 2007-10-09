@@ -33,7 +33,6 @@ UINT8 gubReinforcementMinEnemyStaticGroupSize = 12;
 
 void GetNumberOfEnemiesInFiveSectors( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
 	UINT16 pusMoveDir[4][3];
 	UINT8 ubDirNumber, ubIndex;
@@ -57,7 +56,7 @@ void GetNumberOfEnemiesInFiveSectors( INT16 sSectorX, INT16 sSectorY, UINT8 *pub
 
 	for( ubIndex = 0; ubIndex < ubDirNumber; ubIndex++ )
 	{
-		GetNumberOfStationaryEnemiesInSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ),	&ubNumAdmins, &ubNumTroops, &ubNumElites );
+		GetNumberOfStationaryEnemiesInSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ),  &ubNumAdmins, &ubNumTroops, &ubNumElites );
 
 		while( ubNumElites + ubNumTroops + ubNumAdmins > gubReinforcementMinEnemyStaticGroupSize)
 		{
@@ -75,9 +74,8 @@ void GetNumberOfEnemiesInFiveSectors( INT16 sSectorX, INT16 sSectorY, UINT8 *pub
 				ubNumAdmins--;
 			}
 		}
-		
 
-		GetNumberOfMobileEnemiesInSectorWithoutRoadBlock( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ),	&ubNumAdmins, &ubNumTroops, &ubNumElites );
+		GetNumberOfMobileEnemiesInSectorWithoutRoadBlock( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ),  &ubNumAdmins, &ubNumTroops, &ubNumElites );
 
 		*pubNumAdmins += ubNumAdmins;
 		*pubNumTroops += ubNumTroops;
@@ -87,7 +85,6 @@ void GetNumberOfEnemiesInFiveSectors( INT16 sSectorX, INT16 sSectorY, UINT8 *pub
 
 UINT8 NumEnemiesInFiveSectors( INT16 sMapX, INT16 sMapY )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
 
 	GetNumberOfEnemiesInFiveSectors( sMapX, sMapY, &ubNumAdmins, &ubNumTroops, &ubNumElites );
@@ -97,12 +94,11 @@ UINT8 NumEnemiesInFiveSectors( INT16 sMapX, INT16 sMapY )
 
 BOOLEAN IsGroupInARightSectorToReinforce( GROUP *pGroup, INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
 	UINT16 pusMoveDir[4][3];
 	UINT8 ubDirNumber = 0, ubIndex;
 
 	if( pGroup->ubSectorX == sSectorX && pGroup->ubSectorY == sSectorY )
-		return TRUE;	//Well, it's in the same sector, so allow to reinforce
+		return TRUE;  //Well, it's in the same sector, so allow to reinforce
 
 	if( !gGameExternalOptions.gfAllowReinforcements )
 		return FALSE;
@@ -119,7 +115,6 @@ BOOLEAN IsGroupInARightSectorToReinforce( GROUP *pGroup, INT16 sSectorX, INT16 s
 
 UINT8 GetAdjacentSectors( UINT8 pSectors[4], INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
 	UINT16 pusMoveDir[4][3];
 	UINT8 ubDirNumber = 0, ubIndex;
 	UINT8 ubCounter = 0;
@@ -135,7 +130,6 @@ UINT8 GetAdjacentSectors( UINT8 pSectors[4], INT16 sSectorX, INT16 sSectorY )
 
 UINT8 CountAllMilitiaInFiveSectors(INT16 sMapX, INT16 sMapY)
 {
-	PERFORMANCE_MARKER
 	UINT8 ubResult = 0;
 	UINT16 pusMoveDir[4][3];
 	UINT8 ubDirNumber, ubIndex;
@@ -173,41 +167,38 @@ UINT8 MilitiaInFiveSectorsOfRank( INT16 sMapX, INT16 sMapY, UINT8 ubRank )
 	for( ubIndex = 0; ubIndex < ubDirNumber; ubIndex++ )
 		ubResult += MilitiaInSectorOfRank( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ), ubRank );
 
-	
 	return ubResult;
 }
 
 BOOLEAN ARMoveBestMilitiaManFromAdjacentSector(INT16 sMapX, INT16 sMapY)
 {
-	PERFORMANCE_MARKER
 	UINT16 pusMoveDir[4][3];
 	UINT8 ubDirNumber;
 	UINT8 ubRandom;
-	
+
 	if( !gGameExternalOptions.gfAllowReinforcements )
 		return FALSE;
 
 	if( CountAllMilitiaInSector( sMapX, sMapY ) >= gGameExternalOptions.guiMaxMilitiaSquadSize ||
 		CountAllMilitiaInFiveSectors( sMapX, sMapY ) - CountAllMilitiaInSector( sMapX, sMapY ) == 0 )
-			return FALSE;
+		return FALSE;
 
 	GenerateDirectionInfos( sMapX, sMapY, &ubDirNumber, pusMoveDir, 
 		( GetTownIdForSector( sMapX, sMapY ) != BLANK_SECTOR ? TRUE : FALSE ), TRUE, IS_ONLY_IN_CITIES );
 
 	ubRandom = Random( ubDirNumber );
 
-	while( !MoveOneBestMilitiaMan( SECTORX( pusMoveDir[ ubRandom ][ 0 ] ), SECTORY( pusMoveDir[ ubRandom ][ 0 ] ), sMapX, sMapY )	)
+	while( !MoveOneBestMilitiaMan( SECTORX( pusMoveDir[ ubRandom ][ 0 ] ), SECTORY( pusMoveDir[ ubRandom ][ 0 ] ), sMapX, sMapY )  )
 		ubRandom = Random( ubDirNumber );
-	
+
 	return TRUE;
 }
 
 BOOLEAN ARRemoveMilitiaMan( INT16 sMapX, INT16 sMapY, UINT8 ubRank )
 {
-	PERFORMANCE_MARKER
 	UINT16 pusMoveDir[4][3];
 	UINT8 ubDirNumber, ubRandom;
-	
+
 	if( MilitiaInSectorOfRank( sMapX, sMapY, ubRank ) )
 	{
 		StrategicRemoveMilitiaFromSector( sMapX, sMapY, ubRank, 1 );
@@ -221,7 +212,7 @@ BOOLEAN ARRemoveMilitiaMan( INT16 sMapX, INT16 sMapY, UINT8 ubRank )
 	GenerateDirectionInfos( sMapX, sMapY, &ubDirNumber, pusMoveDir, 
 		( GetTownIdForSector( sMapX, sMapY ) != BLANK_SECTOR ? TRUE : FALSE ), TRUE, IS_ONLY_IN_CITIES );
 
-	for( ; ;	)
+	for( ; ;  )
 	{
 		ubRandom = Random( ubDirNumber );
 		if( MilitiaInSectorOfRank( SECTORX( pusMoveDir[ ubRandom ][ 0 ] ), SECTORY( pusMoveDir[ ubRandom ][ 0 ] ), ubRank ) )
@@ -237,7 +228,6 @@ BOOLEAN ARRemoveMilitiaMan( INT16 sMapX, INT16 sMapY, UINT8 ubRank )
 
 GROUP* GetEnemyGroupInSector( INT16 sMapX, INT16 sMapY )
 {
-	PERFORMANCE_MARKER
 	GROUP *curr;
 	curr = gpGroupList;
 	while( curr )
@@ -252,7 +242,6 @@ GROUP* GetEnemyGroupInSector( INT16 sMapX, INT16 sMapY )
 
 UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
 {
-	PERFORMANCE_MARKER
 	UINT16 pusMoveDir[4][3];
 	UINT8 ubDirNumber = 0, ubIndex;
 	GROUP *pGroup;
@@ -333,11 +322,10 @@ UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
 
 UINT8 NumFreeMilitiaSlots()
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNumFreeSlots = 0;
 	INT32 i;
 	SOLDIERTYPE *pSoldier;
-	//Count the number of free militia slots.	It is possible to have multiple groups exceed the maximum.
+	//Count the number of free militia slots.  It is possible to have multiple groups exceed the maximum.
 	for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM].bLastID; i++ )
 	{
 		pSoldier = &Menptr[ i ];
@@ -349,7 +337,6 @@ UINT8 NumFreeMilitiaSlots()
 
 UINT8 DoReinforcementAsPendingMilitia( INT16 sMapX, INT16 sMapY, UINT8 *pubRank )
 {
-	PERFORMANCE_MARKER
 	UINT16 pusMoveDir[4][3];
 	UINT8 ubDirNumber = 0, ubIndex;
 	SECTORINFO *pSector;//*pThisSector,
@@ -357,7 +344,7 @@ UINT8 DoReinforcementAsPendingMilitia( INT16 sMapX, INT16 sMapY, UINT8 *pubRank 
 	if( !gGameExternalOptions.gfAllowReinforcements )
 		return 255;
 
-//	pThisSector = &SectorInfo[ SECTOR( sMapX, sMapY ) ];
+	//	pThisSector = &SectorInfo[ SECTOR( sMapX, sMapY ) ];
 
 	GenerateDirectionInfos( sMapX, sMapY, &ubDirNumber, pusMoveDir, 
 		( GetTownIdForSector( sMapX, sMapY ) != BLANK_SECTOR ? TRUE : FALSE ), TRUE, IS_ONLY_IN_CITIES );
@@ -368,81 +355,79 @@ UINT8 DoReinforcementAsPendingMilitia( INT16 sMapX, INT16 sMapY, UINT8 *pubRank 
 		return 255;
 	}else
 		for(;;)
-	{
-		ubIndex = Random(ubDirNumber);
-		if( CountAllMilitiaInSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ) ) )
 		{
-			pSector = &SectorInfo[ pusMoveDir[ ubIndex ][ 0 ] ];
+			ubIndex = Random(ubDirNumber);
+			if( CountAllMilitiaInSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ) ) )
+			{
+				pSector = &SectorInfo[ pusMoveDir[ ubIndex ][ 0 ] ];
 
-			if( pSector->ubNumberOfCivsAtLevel[ ELITE_MILITIA ] )
-			{
-				StrategicAddMilitiaToSector( sMapX, sMapY,ELITE_MILITIA, 1 );
-				StrategicRemoveMilitiaFromSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ),ELITE_MILITIA, 1 );
-				*pubRank = ELITE_MILITIA;
-			}else if( pSector->ubNumberOfCivsAtLevel[ REGULAR_MILITIA ] )
-			{
-				StrategicAddMilitiaToSector( sMapX, sMapY,REGULAR_MILITIA, 1 );
-				StrategicRemoveMilitiaFromSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ),REGULAR_MILITIA, 1 );
-				*pubRank = REGULAR_MILITIA;
-			}else if( pSector->ubNumberOfCivsAtLevel[ GREEN_MILITIA ] )
-			{
-				StrategicAddMilitiaToSector( sMapX, sMapY,GREEN_MILITIA, 1 );
-				StrategicRemoveMilitiaFromSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ),GREEN_MILITIA, 1 );
-				*pubRank = GREEN_MILITIA;
+				if( pSector->ubNumberOfCivsAtLevel[ ELITE_MILITIA ] )
+				{
+					StrategicAddMilitiaToSector( sMapX, sMapY,ELITE_MILITIA, 1 );
+					StrategicRemoveMilitiaFromSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ),ELITE_MILITIA, 1 );
+					*pubRank = ELITE_MILITIA;
+				}else if( pSector->ubNumberOfCivsAtLevel[ REGULAR_MILITIA ] )
+				{
+					StrategicAddMilitiaToSector( sMapX, sMapY,REGULAR_MILITIA, 1 );
+					StrategicRemoveMilitiaFromSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ),REGULAR_MILITIA, 1 );
+					*pubRank = REGULAR_MILITIA;
+				}else if( pSector->ubNumberOfCivsAtLevel[ GREEN_MILITIA ] )
+				{
+					StrategicAddMilitiaToSector( sMapX, sMapY,GREEN_MILITIA, 1 );
+					StrategicRemoveMilitiaFromSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ),GREEN_MILITIA, 1 );
+					*pubRank = GREEN_MILITIA;
+				}
+
+				return (UINT8)pusMoveDir[ ubIndex ][ 2 ];
 			}
-
-			return (UINT8)pusMoveDir[ ubIndex ][ 2 ];
 		}
-	}
-	
 }
 
 
 void AddPossiblePendingMilitiaToBattle()
 {
-	PERFORMANCE_MARKER
 
 	UINT8 ubSlots;
 	UINT8 ubNumElites, ubNumRegulars, ubNumGreens;
 	static UINT8 ubPredefinedInsertionCode = 255;
 	static UINT8 ubPredefinedRank = 255;
 
-//	if( !PlayerMercsInSector( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY, 0 ) || !CountAllMilitiaInSector( gWorldSectorX, gWorldSectorY ) 
-//		|| !NumEnemiesInSector( gWorldSectorX, gWorldSectorY ) ) return;
+	//	if( !PlayerMercsInSector( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY, 0 ) || !CountAllMilitiaInSector( gWorldSectorX, gWorldSectorY ) 
+	//		|| !NumEnemiesInSector( gWorldSectorX, gWorldSectorY ) ) return;
 	if( !PlayerMercsInSector( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY, 0 ) 
 		|| !(gTacticalStatus.uiFlags & WANT_MILITIA_REINFORCEMENTS)
 		|| !NumEnemiesInSector( gWorldSectorX, gWorldSectorY ) 
 		) 
 		return;
-//gGameExternalOptions.guiMaxMilitiaSquadSize - CountAllMilitiaInSector( gWorldSectorX, gWorldSectorY );
+	//gGameExternalOptions.guiMaxMilitiaSquadSize - CountAllMilitiaInSector( gWorldSectorX, gWorldSectorY );
 	ubSlots = NumFreeMilitiaSlots();
 	if( !ubSlots )
-	{ //no available slots to add militia	to.	Try again later...
+	{ //no available slots to add militia  to.  Try again later...
 		return;
 	}
-	
+
 	if( ubPredefinedInsertionCode != 255 && ubPredefinedRank != 255 &&
 		CountAllMilitiaInSector( gWorldSectorX, gWorldSectorY ) )
 	{
 		ubNumElites = ubNumRegulars = ubNumGreens = 0;
 
-	//	while( ubSlots )
+		//	while( ubSlots )
 		switch( ubPredefinedRank )
 		{
-			case ELITE_MILITIA:
-				ubSlots--;
-				ubNumElites++;
-				break;
-			case REGULAR_MILITIA:
-				ubSlots--;
-				ubNumRegulars++;
-				break;
-			case GREEN_MILITIA:
-				ubSlots--;
-				ubNumGreens++;
-				break;
-			default:
-				ubSlots--;
+		case ELITE_MILITIA:
+			ubSlots--;
+			ubNumElites++;
+			break;
+		case REGULAR_MILITIA:
+			ubSlots--;
+			ubNumRegulars++;
+			break;
+		case GREEN_MILITIA:
+			ubSlots--;
+			ubNumGreens++;
+			break;
+		default:
+			ubSlots--;
 		}
 
 		if( ubNumGreens || ubNumRegulars || ubNumElites )
@@ -454,7 +439,7 @@ void AddPossiblePendingMilitiaToBattle()
 
 	if( ubSlots )
 	{ //After going through the process, we have finished with some free slots and no more enemies to add.
-	//So, we can turn off the flag, as this check is no longer needed.
+		//So, we can turn off the flag, as this check is no longer needed.
 		ubPredefinedInsertionCode = DoReinforcementAsPendingMilitia( gWorldSectorX, gWorldSectorY, &ubPredefinedRank );
 
 		if( ubPredefinedInsertionCode != 255 )

@@ -2347,7 +2347,8 @@ void RearrangePocket(SOLDIERTYPE *pSoldier, INT8 bPocket1, INT8 bPocket2, UINT8 
 {
 	PERFORMANCE_MARKER
 	// NB there's no such thing as a temporary swap for now...
-	SwapObjs( &(pSoldier->inv[bPocket1]), &(pSoldier->inv[bPocket2]) );
+	//SwapObjs( &(pSoldier->inv[bPocket1]), &(pSoldier->inv[bPocket2]) );
+	SwapObjs( pSoldier, bPocket1, bPocket2 );
 }
 
 void Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 bPocketIndex, UINT8 bPermanent, INT32 lineNumber, STR8 szFunctionName, STR8 szFilename)
@@ -2371,7 +2372,8 @@ void Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 bPocke
 		}
 #endif
 
-		SwapObjs( &(pSoldier->inv[bPocketIndex]), &(pSoldier->inv[HANDPOS]) );
+		//SwapObjs( &(pSoldier->inv[bPocketIndex]), &(pSoldier->inv[HANDPOS]) );
+		SwapObjs( pSoldier, bPocketIndex, HANDPOS );
 	}
 	return;
 }
@@ -2390,7 +2392,8 @@ void Undo_Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 b
 		}
 #endif
 
-		SwapObjs( &(pSoldier->inv[bPocketIndex]), &(pSoldier->inv[HANDPOS]) );
+		//SwapObjs( &(pSoldier->inv[bPocketIndex]), &(pSoldier->inv[HANDPOS]) );
+		SwapObjs( pSoldier, bPocketIndex, HANDPOS );
 	}
 	return;
 }

@@ -1225,7 +1225,7 @@ void		HandleQuestDebugSystem()
 
 	if( gfAddKeyNextPass )
 	{
-		swprintf( zTemp, L"	Please enter the Keys ID. ( 0 - %d )", NUM_KEYS );
+		swprintf( zTemp, L" Please enter the Keys ID. ( 0 - %d )", NUM_KEYS );
 		TextEntryBox( zTemp, AddKeyToGridNo );
 		gfAddKeyNextPass = FALSE;
 	}

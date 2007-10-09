@@ -1674,7 +1674,7 @@ INT8 FindAIUsableObjClassWithin( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, IN
 	// This is for the AI only so:
 	// Do not consider tank cannons or rocket launchers to be "guns"
 
-	for (bLoop = bLower; bLoop <= bUpper; bLoop++)
+	for (bLoop = bLower; bLoop < bUpper; bLoop++)
 	{
 		if (pSoldier->inv[bLoop].exists() == true) {
 			if ( (Item[pSoldier->inv[bLoop].usItem].usItemClass & usItemClass) && !(pSoldier->inv[bLoop].fFlags & OBJECT_AI_UNUSABLE) && (pSoldier->inv[bLoop][0]->data.objectStatus >= USABLE ) )
@@ -2667,6 +2667,26 @@ void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 )
 	*pObj2 = Temp;
 }
 
+//ADB these 2 functions were created because the code calls SwapObjs all over the place
+//but never handles the effects of that swap!
+void SwapObjs(SOLDIERTYPE* pSoldier, int leftSlot, int rightSlot)
+{
+	PERFORMANCE_MARKER
+	SwapObjs(&pSoldier->inv[ leftSlot ], &pSoldier->inv[ rightSlot ]);
+
+	//old usItem for the left slot is now stored in the right slot, and vice versa
+	HandleTacticalEffectsOfEquipmentChange(pSoldier, leftSlot, pSoldier->inv[ rightSlot ].usItem, pSoldier->inv[ leftSlot ].usItem);
+	HandleTacticalEffectsOfEquipmentChange(pSoldier, rightSlot, pSoldier->inv[ leftSlot ].usItem, pSoldier->inv[ rightSlot ].usItem);
+}
+
+void SwapObjs(SOLDIERTYPE* pSoldier, int slot, OBJECTTYPE* pObject)
+{
+	PERFORMANCE_MARKER
+	SwapObjs(&pSoldier->inv[ slot ], pObject);
+
+	HandleTacticalEffectsOfEquipmentChange(pSoldier, slot, pObject->usItem, pSoldier->inv[ slot ].usItem);
+}
+
 void DamageObj( OBJECTTYPE * pObj, INT8 bAmount )
 {
 	PERFORMANCE_MARKER
@@ -2780,7 +2800,12 @@ BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetO
 	{
 		// add to end
 		pTargetObj->AddObjectsToStack( *pSourceObj, 1, NULL, NUM_INV_SLOTS, ubCap );
-		return( FALSE );
+		if (pSourceObj->exists() == true) {
+			return( TRUE );
+		}
+		else {
+			return FALSE;
+		}
 	}
 }
 
@@ -4470,7 +4495,8 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 					functions.*/
 					if(Item[pSoldier->inv[LEGPOS].usItem].attachment)
 					{
-						SwapObjs(pObj, &pSoldier->inv[LEGPOS]);
+						//SwapObjs(pObj, &pSoldier->inv[LEGPOS]);
+						SwapObjs(pSoldier, LEGPOS, pObj);
 						pSoldier->inv[LEGPOS].AttachObject(pSoldier, pObj, FALSE);
 					}
 					if (pSoldier->inv[LEGPOS].exists() == false)
@@ -5125,7 +5151,7 @@ BOOLEAN CreateGun( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 	pObj->initialize();
 	pObj->usItem = usItem;
 	pObj->ubNumberOfObjects = 1;
-	pObj->objectStack.resize(1);
+	//pObj->objectStack.resize(1);//not necessary due to init, here for code commenting
 	StackedObjectData* pStackedObject = (*pObj)[0];
 	pStackedObject->data.gun.bGunStatus = bStatus;
 	pStackedObject->data.ubImprintID = NO_PROFILE;
@@ -5185,7 +5211,7 @@ BOOLEAN CreateAmmo( UINT16 usItem, OBJECTTYPE * pObj, INT16 ubShotsLeft )
 	pObj->initialize();
 	pObj->usItem = usItem;
 	pObj->ubNumberOfObjects = 1;
-	pObj->objectStack.resize(1);
+	//pObj->objectStack.resize(1);//not necessary due to init, here for code commenting
 	if (ubShotsLeft < 0) {
 		(*pObj)[0]->data.ubShotsLeft = Magazine[ Item[usItem].ubClassIndex ].ubMagSize;
 	}
@@ -5206,7 +5232,7 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 
 	if (usItem >= MAXITEMS)
 	{
-		//DebugBreak();
+		//DebugBreakpoint();
 		return( FALSE );
 	}
 	if (Item[ usItem ].usItemClass == IC_GUN)
@@ -5222,7 +5248,7 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 		pObj->initialize();
 		pObj->usItem = usItem;
 		pObj->ubNumberOfObjects = 1;
-		pObj->objectStack.resize(1);
+		//pObj->objectStack.resize(1);//not necessary due to init, here for code commenting
 		if (usItem == MONEY || Item[usItem].usItemClass == IC_MONEY )
 		{
 			// special case... always set status to 100 when creating
@@ -5262,22 +5288,17 @@ BOOLEAN CreateItems( UINT16 usItem, INT8 bStatus, UINT8 ubNumber, OBJECTTYPE * p
 {
 	PERFORMANCE_MARKER
 	BOOLEAN fOk;
-	// ARM: to avoid whacking memory once Assertions are removed...  Items will be lost in this situation!
-	if ( ubNumber > MAX_OBJECTS_PER_SLOT )
-	{
-		//ADB ChooseWeaponForSoldier sometimes requests more than this number!
-		//DebugBreak();
-		//ubNumber = MAX_OBJECTS_PER_SLOT;
-	}
-
 	fOk = CreateItem( usItem, bStatus, pObj );
 	if (fOk)
 	{
-		for (int x = 1; x < ubNumber; ++x) {
-			pObj->objectStack.push_back(pObj->objectStack.front());
+		if (ubNumber > 1) {
+			//no need to recalc weight if just 1, CreateItem did that.
+			for (int x = 1; x < ubNumber; ++x) {
+				pObj->objectStack.push_back(pObj->objectStack.front());
+			}
+			pObj->ubNumberOfObjects = ubNumber;
+			pObj->ubWeight = CalculateObjectWeight(pObj);
 		}
-		pObj->ubNumberOfObjects = ubNumber;
-		pObj->ubWeight *= ubNumber;
 		return( TRUE );
 	}
 	return( FALSE );
@@ -5902,7 +5923,8 @@ void SwapHandItems( SOLDIERTYPE * pSoldier )
 	if (pSoldier->inv[HANDPOS].exists() == false || pSoldier->inv[SECONDHANDPOS].exists() == false)
 	{
 		// whatever is in the second hand can be swapped to the main hand!
-		SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[SECONDHANDPOS]) );
+		//SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[SECONDHANDPOS]) );
+		SwapObjs( pSoldier, HANDPOS, SECONDHANDPOS );
 		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 	}
 	else
@@ -5917,7 +5939,8 @@ void SwapHandItems( SOLDIERTYPE * pSoldier )
 			}
 			// the main hand is now empty so a swap is going to work...
 		}
-		SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[SECONDHANDPOS]) );
+		//SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[SECONDHANDPOS]) );
+		SwapObjs( pSoldier, HANDPOS, SECONDHANDPOS );
 		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 	}
 }
@@ -5935,7 +5958,8 @@ void SwapOutHandItem( SOLDIERTYPE * pSoldier )
 		if (pSoldier->inv[SECONDHANDPOS].exists() == false)
 		{
 			// just swap the hand item to the second hand
-			SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[SECONDHANDPOS]) );
+			//SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[SECONDHANDPOS]) );
+			SwapObjs( pSoldier, HANDPOS, SECONDHANDPOS );
 			DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 			return;
 		}

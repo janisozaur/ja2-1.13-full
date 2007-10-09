@@ -300,7 +300,7 @@ INT32				giItemDescAmmoButton;
 BOOLEAN			gfItemAmmoDown = FALSE;
 SOLDIERTYPE *gpItemDescSoldier;
 BOOLEAN			fItemDescDelete = FALSE;
-MOUSE_REGION		gItemDescAttachmentRegions[4];
+MOUSE_REGION		gItemDescAttachmentRegions[MAX_ATTACHMENTS];
 MOUSE_REGION		gProsAndConsRegions[2];
 
 void				BtnMoneyButtonCallback(GUI_BUTTON *btn,INT32 reason);
@@ -1072,7 +1072,7 @@ VObjectDesc.ImageFile);
 	MSYS_AddRegion( &gSMInvCamoRegion );
 
 	// Add regions for inventory slots
-	for ( cnt = INV_START_POS; cnt < NUM_INV_SLOTS; cnt++ )
+	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 	{
 		// set inventory pocket coordinates from the table passed in
 		gSMInvData[ cnt ].sX = pRegionDesc[ cnt ].sX;
@@ -1135,7 +1135,7 @@ void DisableInvRegions( BOOLEAN fDisable )
 	PERFORMANCE_MARKER
 	INT32 cnt;
 
-	for ( cnt = INV_START_POS; cnt < NUM_INV_SLOTS; cnt++ )
+	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 	{
 		if ( fDisable )
 		{
@@ -1190,7 +1190,7 @@ void ShutdownInvSlotInterface( )
 
 	// Remove regions
 	// Add regions for inventory slots
-	for ( cnt = INV_START_POS; cnt < NUM_INV_SLOTS; cnt++ )
+	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 	{
 		// Remove region
 		MSYS_RemoveRegion( &gSMInvRegion[ cnt ] );
@@ -2063,7 +2063,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTest
 
 	if ( !fFound )
 	{
-		for ( cnt = INV_START_POS; cnt < NUM_INV_SLOTS; cnt++ )
+		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 		{
 			if ( gbCompatibleAmmo[ cnt ] )
 			{
@@ -2094,7 +2094,7 @@ void ResetCompatibleItemArray( )
 	PERFORMANCE_MARKER
 	INT32 cnt = 0;
 
-	for ( cnt = INV_START_POS; cnt < NUM_INV_SLOTS; cnt++ )
+	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 	{
 		if ( gbCompatibleAmmo[ cnt ] )
 		{
@@ -2131,7 +2131,7 @@ BOOLEAN HandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, INT8 bInvPos, BOOLEAN fOn
 			{
 				gpHighLightedItemObject = NULL;
 
-				for ( cnt = INV_START_POS; cnt < NUM_INV_SLOTS; cnt++ )
+				for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 				{
 					if ( gbCompatibleAmmo[ cnt ] )
 					{
@@ -4884,6 +4884,7 @@ void DeleteItemDescriptionBox( )
 		gfAddingMoneyToMercFromPlayersAccount = FALSE;
 
 	gfItemDescObjectIsAttachment = FALSE;
+	gpItemDescObject = NULL;
 }
 
 
@@ -6691,16 +6692,16 @@ void ItemPopupRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				//RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex )
 				gpItemPopupObject->RemoveObjectAtIndex( uiItemPos, &gItemPointer );
 
-    		if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-        {
-			    // pick it up
-          InternalMAPBeginItemPointer( gpItemPopupSoldier );
-        }
-        else
-        {
-				  gpItemPointer = &gItemPointer;
-				  gpItemPointerSoldier = gpItemPopupSoldier;
-        }
+    			if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+				{
+					// pick it up
+					InternalMAPBeginItemPointer( gpItemPopupSoldier );
+				}
+				else
+				{
+					gpItemPointer = &gItemPointer;
+					gpItemPointerSoldier = gpItemPopupSoldier;
+				}
 
 				//if we are in the shop keeper interface
 				if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
@@ -6910,6 +6911,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 	// Make sure menu is located if not on screen
 	LocateSoldier( pSoldier->ubID, FALSE );
 
+	// memset values
 	gItemPickupMenu.initialize();
 
 	//Set item pool value
@@ -8039,6 +8041,17 @@ void RemoveMoney()
 	PERFORMANCE_MARKER
 	if( gRemoveMoney.uiMoneyRemoving != 0 )
 	{
+		if (gpItemPointer != NULL && gpItemPointer->exists() == true) {
+			//ADB oops, let's not overwrite what's on the cursor!
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Unable to split money due to having an item on your cursor." );
+
+			//after this returns it will call DeleteItemDescriptionBox which will totally destroy the remaining money
+			//if the uiMoneyRemaining is 0, so reset it, because we aren't moving anything!
+			gRemoveMoney.uiMoneyRemaining = gRemoveMoney.uiTotalAmount;
+			gRemoveMoney.uiMoneyRemoving = 0;
+
+			return;
+		}
 		//if we are in the shop keeper interface
 		if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
 		{
@@ -8047,9 +8060,6 @@ void RemoveMoney()
 			InvSlot.fActive = TRUE;
 			InvSlot.sItemIndex = MONEY;
 			InvSlot.bSlotIdInOtherLocation = -1;
-
-			//Remove the money from the money in the pocket
-			(*gpItemDescObject)[0]->data.money.uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
 
 			//Create an item to get the money that is being removed
 			CreateMoney(gRemoveMoney.uiMoneyRemoving, &InvSlot.ItemObject );
@@ -8063,7 +8073,11 @@ void RemoveMoney()
 				(*gpItemDescObject)[0]->data.money.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
 
 				//take the money from the player
-				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( (*gpItemDescObject)[0]->data.money.uiMoneyAmount ) );
+				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( gRemoveMoney.uiMoneyRemoving ) );
+			}
+			else {
+				//Remove the money from the money in the pocket
+				(*gpItemDescObject)[0]->data.money.uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
 			}
 
 			gMoveingItem = InvSlot;
@@ -8092,7 +8106,7 @@ void RemoveMoney()
 				(*gpItemDescObject)[0]->data.money.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
 
 				//take the money from the player
-				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( (*gpItemDescObject)[0]->data.money.uiMoneyAmount ) );
+				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)(gRemoveMoney.uiMoneyRemoving) );
 			}
 			else
 				(*gpItemDescObject)[0]->data.money.uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
@@ -8119,7 +8133,7 @@ void RemoveMoney()
 }
 
 
-void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier, INT8 stackNum )
+void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier, int subObject )
 {
 	PERFORMANCE_MARKER
 	CHAR16	pStr[ 250 ]; 
@@ -8141,12 +8155,11 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 	{
 		// Retrieve the status of the items
 		//CHRISL: If looking at an item in stack popup, show just that item
-		if(stackNum == -1){
+		if(subObject == -1){
 			// Find the minimum status value - not just the first one
 			sValue = (*pObject)[0]->data.objectStatus;
 
-			for(INT16 i = 1; i < pObject->ubNumberOfObjects; i++)
-			{
+			for(INT16 i = 1; i < pObject->ubNumberOfObjects; i++){
 				if((*pObject)[ i ]->data.objectStatus < sValue)
 				{
 					sValue = (*pObject)[ i ]->data.objectStatus;
@@ -8154,7 +8167,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 			}
 		}
 		else{
-			sValue = (*pObject)[stackNum]->data.objectStatus;
+			sValue = (*pObject)[subObject]->data.objectStatus;
 		}
 
 		//get item weight
@@ -8171,11 +8184,11 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 		}
 
 
-		if(stackNum == -1){
+		if(subObject == -1){
 			if ( Item[usItem].usItemClass != IC_AMMO || !gGameExternalOptions.fAmmoDynamicWeight ){ //Madd: quick fix to display total stack weight
 				fWeight *= pObject->ubNumberOfObjects;
 			}
-			stackNum = 0;
+			subObject = 0;
 		}
 
 		switch( Item[ usItem ].usItemClass )
@@ -8183,7 +8196,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 		case MONEY:
 			//Money
 			{	
-				swprintf( pStr, L"%ld", (*pObject)[stackNum]->data.money.uiMoneyAmount );
+				swprintf( pStr, L"%ld", (*pObject)[subObject]->data.money.uiMoneyAmount );
 				InsertCommasForDollarFigure( pStr );
 				InsertDollarSignInToString( pStr );
 			}
@@ -8194,7 +8207,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 			//if ( Item[ usItem ].usItemClass == IC_MONEY )
 			{ 
 				CHAR16		pStr2[20];
-				swprintf( pStr2, L"%ld", (*pObject)[stackNum]->data.money.uiMoneyAmount );
+				swprintf( pStr2, L"%ld", (*pObject)[subObject]->data.money.uiMoneyAmount );
 				InsertCommasForDollarFigure( pStr2 );
 				InsertDollarSignInToString( pStr2 );
 
@@ -8331,7 +8344,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 				// The next is for ammunition which gets the measurement 'rnds'		
 				swprintf( pStr, L"%s [%d rnds]\n%s %1.1f %s", 				
 					ItemNames[ usItem ],		//Item long name
-					(*pObject)[stackNum]->data.ubShotsLeft,	//Shots left
+					(*pObject)[subObject]->data.ubShotsLeft,	//Shots left
 					gWeaponStatsDesc[ 12 ],		//Weight String
 					fWeight,					//Weight
 					GetWeightUnitString()		//Weight units
@@ -8433,16 +8446,16 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 
 
 		// Fingerprint ID (Soldier Name)
-		if ( ( Item[pObject->usItem].fingerprintid ) && (*pObject)[stackNum]->data.ubImprintID < NO_PROFILE )
+		if ( ( Item[pObject->usItem].fingerprintid ) && (*pObject)[subObject]->data.ubImprintID < NO_PROFILE )
 		{
 			CHAR16		pStr2[20];
-			swprintf( pStr2, L" [%s]", gMercProfiles[ (*pObject)[stackNum]->data.ubImprintID ].zNickname );
+			swprintf( pStr2, L" [%s]", gMercProfiles[ (*pObject)[subObject]->data.ubImprintID ].zNickname );
 			wcscat( pStr, pStr2 );
 		}
 
 
 		// Add attachment string....
-		for (attachmentList::iterator iter = (*pObject)[stackNum]->attachments.begin(); iter != (*pObject)[stackNum]->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = (*pObject)[subObject]->attachments.begin(); iter != (*pObject)[subObject]->attachments.end(); ++iter) {
 			iNumAttachments++;
 
 			if ( iNumAttachments == 1 )
@@ -8488,17 +8501,17 @@ void CancelItemPointer( )
 			// Place it back in our hands!
 			PlaceObject( gpItemPointerSoldier, gbItemPointerSrcSlot, gpItemPointer );
 
-      // ATE: This could potnetially swap!
-      // Make sure # of items is 0, if not, auto place somewhere else...
-      if ( gpItemPointer->exists() == true )
-      {
+			// ATE: This could potnetially swap!
+			// Make sure # of items is 0, if not, auto place somewhere else...
+			if ( gpItemPointer->exists() == true )
+			{
 				if ( !AutoPlaceObject( gpItemPointerSoldier, gpItemPointer, FALSE ) )
-        {
-          // Alright, place of the friggen ground!
-			    AddItemToPool( gpItemPointerSoldier->sGridNo, gpItemPointer, 1, gpItemPointerSoldier->pathing.bLevel, 0 , -1 );
-			    NotifySoldiersToLookforItems( );
-        }
-      }
+				{
+					// Alright, place of the friggen ground!
+					AddItemToPool( gpItemPointerSoldier->sGridNo, gpItemPointer, 1, gpItemPointerSoldier->pathing.bLevel, 0 , -1 );
+					NotifySoldiersToLookforItems( );
+				}
+			}
 		}
 		else
 		{

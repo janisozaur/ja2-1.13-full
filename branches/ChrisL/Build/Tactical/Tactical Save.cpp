@@ -2778,7 +2778,7 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 	uiNumberOfItems = 0;
 	for ( i = 0; i < pSoldier->inv.size(); i++ )
 	{ 
-		if( pSoldier->inv[ i ].usItem != 0 )
+		if( pSoldier->inv[ i ].exists() == true )
 		{
 			// if not a player soldier
 			if ( pSoldier->bTeam != gbPlayerNum )
@@ -2821,7 +2821,7 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 		bCount = 0;
 		for ( i = 0; i < pSoldier->inv.size(); i++ )
 		{ 
-			if( pSoldier->inv[ i ].usItem != 0 )
+			if( pSoldier->inv[ i ].exists() == true )
 			{
 				//if the item can be dropped
 				if( !(pSoldier->inv[ i ].fFlags & OBJECT_UNDROPPABLE) || pSoldier->bTeam == gbPlayerNum )

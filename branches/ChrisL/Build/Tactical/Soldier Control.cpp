@@ -335,7 +335,7 @@ OBJECTTYPE& Inventory::operator [] (unsigned int idx)
 		inv.resize(idx+1);
 		bNewItemCount.resize(idx+1);
 		bNewItemCycleCount.resize(idx+1);
-		//DebugBreak();
+		//DebugBreakpoint();
 	}
 	return inv[idx];
 };
@@ -11540,8 +11540,15 @@ BOOLEAN SOLDIERTYPE::InternalIsValidStance( INT8 bDirection, INT8 bNewStance )
 
 	if ( thisSoldier->bCollapsed )
 	{
-		if ( bNewStance == ANIM_STAND || bNewStance == ANIM_CROUCH )
+		//CHRISL: Changes from ADB rev 1475.
+		if ( bNewStance == ANIM_CROUCH )
 		{
+			return( FALSE );
+		}
+		//when civilians are collapsed and die they may change to stand in order to fall forward
+		if ( bNewStance == ANIM_STAND && thisSoldier->ubBodyType <= REGFEMALE )
+		{
+			//if we are trying to stand and we are a MERC
 			return( FALSE );
 		}
 	}

@@ -2265,7 +2265,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				bItemIn = FindAIUsableObjClass( pSoldier, IC_GUN );
 				if (bItemIn != NO_SLOT && bItemIn != HANDPOS)
 				{
-					SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[bItemIn]) );
+					//SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[bItemIn]) );
+					SwapObjs( pSoldier, HANDPOS, bItemIn );
 					sGridNo = pSoldier->sGridNo + DirectionInc( pSoldier->ubDirection );
 					pSoldier->SoldierReadyWeapon( (INT16) (sGridNo % WORLD_COLS), (INT16) (sGridNo / WORLD_COLS), FALSE ); 
 				}
@@ -3152,7 +3153,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 							if (bMoneySlot < bEmptySlot)
 							{
 								// move main stash to later in inventory!
-								SwapObjs( &(pSoldier->inv[ bEmptySlot ] ), &(pSoldier->inv[ bMoneySlot ] ) );
+								//SwapObjs( &(pSoldier->inv[ bEmptySlot ] ), &(pSoldier->inv[ bMoneySlot ] ) );
+								SwapObjs( pSoldier, bEmptySlot, bMoneySlot );
 								SoldierGiveItem( pSoldier, pSoldier2, &(pSoldier->inv[ bMoneySlot ] ), bMoneySlot );
 							}
 							else

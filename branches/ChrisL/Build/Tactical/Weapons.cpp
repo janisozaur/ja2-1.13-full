@@ -994,7 +994,7 @@ INT32 ArmourPercent( SOLDIERTYPE * pSoldier )
 	INT32 iVest, iHelmet, iLeg;
 	INT32 iDivideValue;
 
-	if (pSoldier->inv[VESTPOS].usItem)
+	if (pSoldier->inv[VESTPOS].exists() == true)
 	{
 		iVest = EffectiveArmour( &(pSoldier->inv[VESTPOS]) );
 		iDivideValue = ( ( Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubProtection * Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubCoverage ) + ( Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubProtection * Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubCoverage ) );
@@ -1015,7 +1015,7 @@ INT32 ArmourPercent( SOLDIERTYPE * pSoldier )
 		iVest = 0;
 	}
 
-	if (pSoldier->inv[HELMETPOS].usItem)
+	if (pSoldier->inv[HELMETPOS].exists() == true)
 	{
 		iHelmet = EffectiveArmour( &(pSoldier->inv[HELMETPOS]) );
 		iDivideValue = ( Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubProtection * Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubCoverage );
@@ -1036,7 +1036,7 @@ INT32 ArmourPercent( SOLDIERTYPE * pSoldier )
 		iHelmet = 0;
 	}
 
-	if (pSoldier->inv[LEGPOS].usItem)
+	if (pSoldier->inv[LEGPOS].exists() == true)
 	{
 		iLeg = EffectiveArmour( &(pSoldier->inv[LEGPOS]) );
 		iDivideValue = ( Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubProtection * Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubCoverage );
@@ -1096,7 +1096,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 	// returns the % damage reduction from grenades
 	INT32 iVest, iHelmet, iLeg;
 
-	if (pSoldier->inv[VESTPOS].usItem)
+	if (pSoldier->inv[VESTPOS].exists() == true)
 	{
 		iVest = ExplosiveEffectiveArmour( &(pSoldier->inv[VESTPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
@@ -1107,7 +1107,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 		iVest = 0;
 	}
 
-	if (pSoldier->inv[HELMETPOS].usItem)
+	if (pSoldier->inv[HELMETPOS].exists() == true)
 	{
 		iHelmet = ExplosiveEffectiveArmour( &(pSoldier->inv[HELMETPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
@@ -1118,7 +1118,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 		iHelmet = 0;
 	}
 
-	if (pSoldier->inv[LEGPOS].usItem)
+	if (pSoldier->inv[LEGPOS].exists() == true)
 	{
 		iLeg = ExplosiveEffectiveArmour( &(pSoldier->inv[LEGPOS]) );
 		// convert to % of best; ignoring bug-treated stuff

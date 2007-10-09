@@ -37,6 +37,7 @@
 	#include "World Items.h"
 	#include "text.h"
 	#include "Soldier Create.h"
+	#include "GameVersion.h"
 	#include "Campaign Types.h"
 #endif
 
@@ -3042,9 +3043,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement 
-			//CHRISL: ADB changed the way this load file is handled
-			//if ( !priority.Load(hfile) )
-			if ( !priority.Load(hfile, gEnemyPreservedTempFileVersion[SECTOR(gsSelSectorX, gsSelSectorY)]) )
+			if ( !priority.Load(hfile, SAVE_GAME_VERSION) )
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;
@@ -3105,9 +3104,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement 
-			//CHRISL: ADB changed the way this load file is handled
-			//if ( !priority.Load(hfile) )
-			if ( !priority.Load(hfile, gEnemyPreservedTempFileVersion[SECTOR(gsSelSectorX, gsSelSectorY)]) )
+			if ( !priority.Load(hfile, SAVE_GAME_VERSION) )
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;

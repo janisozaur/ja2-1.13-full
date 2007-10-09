@@ -1125,7 +1125,7 @@ void ReevaluateItemHatches( SOLDIERTYPE *pSoldier, BOOLEAN fAllValid )
 	else
 	{
 		// mark all inventory positions as valid
-		for ( cnt = INV_START_POS; cnt < NUM_INV_SLOTS; cnt++ )
+		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 		{
 			gbInvalidPlacementSlot[ cnt ] = FALSE;
 		}
@@ -3473,7 +3473,7 @@ void MergeMessageBoxCallBack( UINT8 ubExitValue )
 	{
 		//CHRISL: comment out the breakpoint for the time being.
 		//ADB see what happens here
-		//DebugBreak();
+		//DebugBreakpoint();
 		gpSMCurrentMerc->inv[ gubHandPos ].AttachObject( gpItemPointerSoldier, gpItemPointer );
 
 		// re-evaluate repairs
@@ -6337,7 +6337,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				// Fill out the inv slot for the item
 				//InvSlot.sItemIndex = gpSMCurrentMerc->inv[ uiHandPos ].usItem;
 //			InvSlot.ubNumberOfItems = gpSMCurrentMerc->inv[ uiHandPos ].ubNumberOfObjects;
-//			InvSlot.ubItemQuality = gpSMCurrentMerc->inv[ uiHandPos ][0]->data.gun.bGunStatus;
+//			InvSlot.ubItemQuality = gpSMCurrentMerc->inv[ uiHandPos ].gun.bGunStatus;
 				//InvSlot.ItemObject = gpSMCurrentMerc->inv[ uiHandPos ];
 				//InvSlot.ubLocationOfObject = PLAYERS_INVENTORY;
 

@@ -1552,7 +1552,7 @@ CHAR16 EnemyTypeString[ POP_TABLE_ENEMY_TYPES ][ 10 ] =
 	L"Stag",
 	L"Rtrt",
 	L" TOT",
-	L"	%%",
+	L" %%",
 };
 
 
@@ -1730,7 +1730,7 @@ CHAR16 EnemiesKilledString[ KILLED_TABLE_ROWS ][ 10 ] =
 	L"Tact",
 	L"Auto",
 	L" TOT",
-	L"	%%",
+	L" %%",
 };
 
 
