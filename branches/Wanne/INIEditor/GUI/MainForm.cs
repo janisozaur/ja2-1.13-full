@@ -58,6 +58,8 @@ namespace INIEditor.GUI
                 cmbFiles.SelectedIndex = 0;
             }
 
+            trvSections.SelectedNode.Expand();
+
             _splashForm.UpdateProgressBar(100);
 
             //splash = null;
@@ -608,7 +610,7 @@ namespace INIEditor.GUI
             }
 
             trvSections.SelectedNode = treeNode;
-            trvSections.SelectedNode.Expand();
+            //trvSections.SelectedNode.Expand();
         }
 
         private void SaveXMLFile()
@@ -688,6 +690,11 @@ namespace INIEditor.GUI
                 TreeNode selectedTreeNode = trvSections.SelectedNode;
 
                 InitializeSectionTree(selectedTreeNode.Text);
+
+                if (trvSections.SelectedNode != null)
+                {
+                    trvSections.SelectedNode.Expand();
+                }
 
                 MessageBox.Show("The INI file '" + path + "' was successfully saved!", Constants.APP_NAME, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -1003,6 +1010,11 @@ namespace INIEditor.GUI
             if (cmbFiles.SelectedItem != null)
             {
                 InitializeSectionTree(cmbFiles.SelectedItem.ToString());
+                if (trvSections.SelectedNode != null)
+                {
+                    trvSections.SelectedNode.Expand();
+                }
+
                 if (trvSections.Nodes.Count > 0)
                 {
                     trvSections.SelectedNode = trvSections.Nodes[0];
@@ -1011,12 +1023,6 @@ namespace INIEditor.GUI
             }
 
             _previousSelectedIniFile = cmbFiles.SelectedItem.ToString();
-
-            //if (_splashForm != null)
-            //{
-            //    _splashForm.Close();
-            //    _splashForm = null;
-            //}
         }
 
         private void trvSections_AfterSelect(object sender, TreeViewEventArgs e)
@@ -1180,7 +1186,7 @@ namespace INIEditor.GUI
 
         private void mnuFileExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void tbrClearSearchResults_Click(object sender, EventArgs e)
