@@ -71,7 +71,7 @@ namespace INIEditor.GUI
             this.grpLookIn.Controls.Add(this.chkPropertyValues);
             this.grpLookIn.Location = new System.Drawing.Point(12, 68);
             this.grpLookIn.Name = "grpLookIn";
-            this.grpLookIn.Size = new System.Drawing.Size(360, 92);
+            this.grpLookIn.Size = new System.Drawing.Size(358, 92);
             this.grpLookIn.TabIndex = 3;
             this.grpLookIn.TabStop = false;
             this.grpLookIn.Text = "Look in:";
@@ -128,7 +128,7 @@ namespace INIEditor.GUI
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(297, 168);
+            this.btnSearch.Location = new System.Drawing.Point(295, 168);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(75, 23);
             this.btnSearch.TabIndex = 4;

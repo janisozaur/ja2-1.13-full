@@ -6,7 +6,7 @@ namespace INIEditor.BackEnd
 {
     public class Constants
     {
-        public const string APP_NAME = "JA2 v1.13 - INI Editor";
+        public const string APP_NAME = "JA2 1.13 - INI Editor";
 
         // TODO: This is for test version!
         //public const string JA2_PATH = @"C:\games\jagged alliance 2";
