@@ -1677,6 +1677,10 @@ BOOLEAN OBJECTTYPE::Save( HWFILE hFile, bool fSavingMap )
 			if (! pLBE->Save(hFile, fSavingMap)) {
 				return FALSE;
 			}
+			//CHRISL: I've remarked this to resolve a problem when the autosave option is active where LBEArray info is
+			//    lost and not rebuilt until after combat is over.  This may not be the best way to resolve this, though,
+			//    as ADB may well have had a valid reason to erase the LBEArray during saves.
+/*
 			int uniqueID = (*this)[x]->data.lbe.uniqueID;
 			for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
 				if (iter->uniqueID == uniqueID) {
@@ -1684,6 +1688,7 @@ BOOLEAN OBJECTTYPE::Save( HWFILE hFile, bool fSavingMap )
 					break;
 				}
 			}
+*/
 		}
 	}
 	return TRUE;

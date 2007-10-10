@@ -1304,7 +1304,7 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 	// CHRISL: Only run if we're looking at a legitimate pocket
 	if((UsingNewInventorySystem() == false) && !oldInv[sPocket])
 		return;
-	if((pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) && !vehicleInv[sPocket])
+	if((pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) && UsingNewInventorySystem() == true && !vehicleInv[sPocket])
 		return;
 	INT16 sX, sY, newX, newY;
 	INT16	sBarX, sBarY;

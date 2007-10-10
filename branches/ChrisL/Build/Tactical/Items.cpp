@@ -3811,7 +3811,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 	// CHRISL: Only check valid pockets
 	if((UsingNewInventorySystem() == false) && !oldInv[bPos])
 		return(FALSE);
-	if((pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
+	if((pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) && UsingNewInventorySystem() == true)
 		return(CanItemFitInVehicle(pSoldier, pObj, bPos, fDoingPlacement));
 
 	ubSlotLimit = ItemSlotLimit( pObj, bPos, pSoldier );
