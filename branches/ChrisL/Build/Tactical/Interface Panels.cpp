@@ -3471,9 +3471,8 @@ void MergeMessageBoxCallBack( UINT8 ubExitValue )
 	PERFORMANCE_MARKER
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
-		//CHRISL: comment out the breakpoint for the time being.
 		//ADB see what happens here
-		//DebugBreakpoint();
+		DebugBreakpoint();
 		gpSMCurrentMerc->inv[ gubHandPos ].AttachObject( gpItemPointerSoldier, gpItemPointer );
 
 		// re-evaluate repairs

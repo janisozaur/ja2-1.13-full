@@ -335,7 +335,7 @@ OBJECTTYPE& Inventory::operator [] (unsigned int idx)
 		inv.resize(idx+1);
 		bNewItemCount.resize(idx+1);
 		bNewItemCycleCount.resize(idx+1);
-		//DebugBreakpoint();
+		DebugBreakpoint();
 	}
 	return inv[idx];
 };

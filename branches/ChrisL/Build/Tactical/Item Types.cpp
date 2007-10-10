@@ -765,7 +765,7 @@ void OBJECTTYPE::CopyToOrCreateAt(OBJECTTYPE** ppTarget, OBJECTTYPE* pSource)
 	}
 	else {
 		//ADB leaving this in for a while, not sure if the code ever even reaches here and this will tell me
-		//DebugBreakpoint();
+		DebugBreakpoint();
 		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("Found mem leak, but it was corrected."));
 		**ppTarget = *pSource;
 	}

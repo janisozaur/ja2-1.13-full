@@ -5232,7 +5232,7 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 
 	if (usItem >= MAXITEMS)
 	{
-		//DebugBreakpoint();
+		DebugBreakpoint();
 		return( FALSE );
 	}
 	if (Item[ usItem ].usItemClass == IC_GUN)

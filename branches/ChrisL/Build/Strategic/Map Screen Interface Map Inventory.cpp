@@ -1734,9 +1734,15 @@ void ResizeInventoryList( void )
 {
 	PERFORMANCE_MARKER
 	INT32 iNumberOfTakenSlots = 0;
+	int emptySlots = 0;
 
 	if (pInventoryPoolList.empty() == true) {
 		pInventoryPoolList.resize(MAP_INVENTORY_POOL_SLOT_COUNT);
+	}
+	//if it's not the exact size of a page, then make it so
+	if (pInventoryPoolList.size() % MAP_INVENTORY_POOL_SLOT_COUNT) {
+		emptySlots = MAP_INVENTORY_POOL_SLOT_COUNT - (pInventoryPoolList.size() % MAP_INVENTORY_POOL_SLOT_COUNT);
+		pInventoryPoolList.resize(pInventoryPoolList.size() + emptySlots);
 	}
 	for(UINT32 cnt = 0; cnt < pInventoryPoolList.size(); cnt++){
 		if(pInventoryPoolList[cnt].object.exists() == true){
