@@ -74,11 +74,6 @@ namespace INIEditor.GUI
             this.tabActions = new System.Windows.Forms.TabControl();
             this.tpSection = new System.Windows.Forms.TabPage();
             this.dgvProperties = new System.Windows.Forms.DataGridView();
-            this.colSection = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colProperty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colCurrentValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colNewValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tpProperty = new System.Windows.Forms.TabPage();
             this.pnlProperty = new System.Windows.Forms.Panel();
             this.txtPropertyCurrentValue = new System.Windows.Forms.TextBox();
@@ -97,6 +92,11 @@ namespace INIEditor.GUI
             this.txtPropertyDescription = new System.Windows.Forms.TextBox();
             this.tpSearchResults = new System.Windows.Forms.TabPage();
             this.dgvSearchResults = new System.Windows.Forms.DataGridView();
+            this.colSection = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProperty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCurrentValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colNewValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSearchResultsSection = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSearchResultsSectionDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSearchResultsProperty = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -522,46 +522,6 @@ namespace INIEditor.GUI
             this.dgvProperties.TabIndex = 0;
             this.dgvProperties.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProperties_CellDoubleClick);
             // 
-            // colSection
-            // 
-            this.colSection.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colSection.HeaderText = "Section";
-            this.colSection.Name = "colSection";
-            this.colSection.ReadOnly = true;
-            this.colSection.Width = 66;
-            // 
-            // colProperty
-            // 
-            this.colProperty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colProperty.HeaderText = "Property";
-            this.colProperty.Name = "colProperty";
-            this.colProperty.ReadOnly = true;
-            this.colProperty.Width = 69;
-            // 
-            // colDescription
-            // 
-            this.colDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colDescription.HeaderText = "Description";
-            this.colDescription.MinimumWidth = 200;
-            this.colDescription.Name = "colDescription";
-            this.colDescription.ReadOnly = true;
-            // 
-            // colCurrentValue
-            // 
-            this.colCurrentValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.colCurrentValue.HeaderText = "Current Value";
-            this.colCurrentValue.Name = "colCurrentValue";
-            this.colCurrentValue.ReadOnly = true;
-            this.colCurrentValue.Width = 94;
-            // 
-            // colNewValue
-            // 
-            this.colNewValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.colNewValue.HeaderText = "New Value";
-            this.colNewValue.Name = "colNewValue";
-            this.colNewValue.ReadOnly = true;
-            this.colNewValue.Width = 82;
-            // 
             // tpProperty
             // 
             this.tpProperty.Controls.Add(this.pnlProperty);
@@ -752,29 +712,61 @@ namespace INIEditor.GUI
             this.dgvSearchResults.TabIndex = 0;
             this.dgvSearchResults.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSearchResults_CellDoubleClick);
             // 
+            // colSection
+            // 
+            this.colSection.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.colSection.HeaderText = "Section";
+            this.colSection.Name = "colSection";
+            this.colSection.ReadOnly = true;
+            this.colSection.Width = 200;
+            // 
+            // colProperty
+            // 
+            this.colProperty.HeaderText = "Property";
+            this.colProperty.Name = "colProperty";
+            this.colProperty.ReadOnly = true;
+            this.colProperty.Width = 200;
+            // 
+            // colDescription
+            // 
+            this.colDescription.HeaderText = "Description";
+            this.colDescription.Name = "colDescription";
+            this.colDescription.ReadOnly = true;
+            this.colDescription.Width = 200;
+            // 
+            // colCurrentValue
+            // 
+            this.colCurrentValue.HeaderText = "Current Value";
+            this.colCurrentValue.Name = "colCurrentValue";
+            this.colCurrentValue.ReadOnly = true;
+            // 
+            // colNewValue
+            // 
+            this.colNewValue.HeaderText = "New Value";
+            this.colNewValue.Name = "colNewValue";
+            this.colNewValue.ReadOnly = true;
+            // 
             // colSearchResultsSection
             // 
-            this.colSearchResultsSection.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.colSearchResultsSection.HeaderText = "Section";
             this.colSearchResultsSection.Name = "colSearchResultsSection";
-            this.colSearchResultsSection.Width = 66;
+            this.colSearchResultsSection.Width = 200;
             // 
             // colSearchResultsSectionDesc
             // 
-            this.colSearchResultsSectionDesc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colSearchResultsSectionDesc.HeaderText = "Section Description";
-            this.colSearchResultsSectionDesc.MinimumWidth = 200;
             this.colSearchResultsSectionDesc.Name = "colSearchResultsSectionDesc";
+            this.colSearchResultsSectionDesc.Width = 200;
             // 
             // colSearchResultsProperty
             // 
             this.colSearchResultsProperty.HeaderText = "Property";
             this.colSearchResultsProperty.Name = "colSearchResultsProperty";
+            this.colSearchResultsProperty.Width = 200;
             // 
             // colSearchResultsPropertyDesc
             // 
             this.colSearchResultsPropertyDesc.HeaderText = "Property Description";
-            this.colSearchResultsPropertyDesc.MinimumWidth = 200;
             this.colSearchResultsPropertyDesc.Name = "colSearchResultsPropertyDesc";
             this.colSearchResultsPropertyDesc.Width = 200;
             // 
@@ -897,13 +889,13 @@ namespace INIEditor.GUI
         private System.Windows.Forms.ToolStripMenuItem tsbLanguageEnglish;
         private System.Windows.Forms.TabPage tpSearchResults;
         private System.Windows.Forms.DataGridView dgvSearchResults;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewClearSearchResults;
+        private System.Windows.Forms.ToolStripButton tbrClearSearchResults;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSection;
         private System.Windows.Forms.DataGridViewTextBoxColumn colProperty;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDescription;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCurrentValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn colNewValue;
-        private System.Windows.Forms.ToolStripMenuItem mnuViewClearSearchResults;
-        private System.Windows.Forms.ToolStripButton tbrClearSearchResults;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsSection;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsSectionDesc;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsProperty;

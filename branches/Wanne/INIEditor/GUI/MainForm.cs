@@ -709,22 +709,26 @@ namespace INIEditor.GUI
         private void AddSearchResultToSearchResults(INIProperty property, bool foundSectionDesc,
             bool foundPropertyDesc, bool foundPropertyCurrentValue, bool foundPropertyNewValue, bool foundProperty)
         {
-            int rowIndex = -1;
+            int rowIndex = dgvSearchResults.Rows.Add();
+
+            dgvSearchResults[colSearchResultsSection.Index, rowIndex].Value = property.Section.Name;
+            dgvSearchResults[colSearchResultsProperty.Index, rowIndex].Value = property.Name;
+            dgvSearchResults[colSearchResultsPropertyCurrentValue.Index, rowIndex].Value = property.CurrentValue;
+            dgvSearchResults[colSearchResultsPropertyNewValue.Index, rowIndex].Value = property.NewValue;
+
+            // Tag
+            dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Tag = property.Section;
+            dgvSearchResults[colSearchResultsPropertyDesc.Index, rowIndex].Tag = property;
 
             if (_descriptionLanguage == Enumerations.Language.English)
-            {
-                rowIndex = dgvSearchResults.Rows.Add();
-                dgvSearchResults[colSearchResultsSection.Index, rowIndex].Value = property.Section.Name;
-                dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = property.Section.XMLSection.Description_ENG;
-                dgvSearchResults[colSearchResultsProperty.Index, rowIndex].Value = property.Name;
+            {   
+                dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = property.Section.XMLSection.Description_ENG;   
                 dgvSearchResults[colSearchResultsPropertyDesc.Index, rowIndex].Value = property.XMLProperty.Description_ENG;
-                dgvSearchResults[colSearchResultsPropertyCurrentValue.Index, rowIndex].Value = property.CurrentValue;
-                dgvSearchResults[colSearchResultsPropertyNewValue.Index, rowIndex].Value = property.NewValue;
-
-                // Tag
-                dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Tag = property.Section;
-                dgvSearchResults[colSearchResultsPropertyDesc.Index, rowIndex].Tag = property;
-
+            }
+            else if (_descriptionLanguage == Enumerations.Language.German)
+            {
+                dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = property.Section.XMLSection.Description_GER;
+                dgvSearchResults[colSearchResultsPropertyDesc.Index, rowIndex].Value = property.XMLProperty.Description_GER;
             }
 
             // Color the results
@@ -743,21 +747,24 @@ namespace INIEditor.GUI
 
         private void AddSearchResultToSearchResults(INISection section)
         {
-            int rowIndex = -1;
+            int rowIndex = dgvSearchResults.Rows.Add();
+
+            dgvSearchResults[colSearchResultsSection.Index, rowIndex].Value = section.Name;
+
+            // Tag
+            dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Tag = section;
 
             if (_descriptionLanguage == Enumerations.Language.English)
             {
-                rowIndex = dgvSearchResults.Rows.Add();
-                dgvSearchResults[colSearchResultsSection.Index, rowIndex].Value = section.Name;
                 dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = section.XMLSection.Description_ENG;
-
-                // Tag
-                dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Tag = section;
+            }
+            else
+            {
+                dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = section.XMLSection.Description_GER;
             }
 
             // Color the results
             dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Style.ForeColor = Constants.DEFAULT_SEARCH_RESULT_TEXT_COLOR;
-
         }
 
         public void Search(SearchParams searchParams)
