@@ -124,42 +124,42 @@ void SummaryEnemyCallback( GUI_BUTTON *btn, INT32 reason );
 void MapMoveCallback( MOUSE_REGION *reg, INT32 reason );
 void MapClickCallback( MOUSE_REGION *reg, INT32 reason );
 
-//Set if there is an existing global summary.	The first time this is run on your computer, it
+//Set if there is an existing global summary.  The first time this is run on your computer, it
 //will not exist, and will have to be generated before this will be set.
 BOOLEAN gfGlobalSummaryExists;
-//If you don't wish to create a global summary, you can deny it.	This safely locks the system
+//If you don't wish to create a global summary, you can deny it.  This safely locks the system
 //from generating one.
 BOOLEAN gfDeniedSummaryCreation;
 //Set whenever the entire display is to be marked dirty.
 BOOLEAN gfRenderSummary;
 //Used externally to determine if the summary window is up or not.
 BOOLEAN gfSummaryWindowActive;
-//When set, the summary window stays up until told otherwise.	When clear, the summary will disappear
-//when the assigned key (F5) is released.	The latter mode is initiated when F5 is held down for longer
+//When set, the summary window stays up until told otherwise.  When clear, the summary will disappear
+//when the assigned key (F5) is released.  The latter mode is initiated when F5 is held down for longer
 //than .4 seconds, and is useful for quickly looking at the information in the current map being edited.
 BOOLEAN gfPersistantSummary;
-//When set, a grid is overlayed on top of the sector.	This grid defines each of the 256 sectors.	It is
+//When set, a grid is overlayed on top of the sector.  This grid defines each of the 256 sectors.  It is
 //on by default.
 BOOLEAN gfRenderGrid;
 //When set, parts of the map are darkened, showing that those sectors don't exist in the currently selected
-//layer.	When clear, the entire map is shown in full color.
+//layer.  When clear, the entire map is shown in full color.
 BOOLEAN gfRenderProgress;
 //When set, only the map section is rerendered.
 
 extern BOOLEAN gfRenderMap; // symbol already declared globally in AI Viewer.cpp (jonathanl)
-//Set whenever the ctrl key is held down.	This is used in conjunction with gfFileIO to determine whether the 
+//Set whenever the ctrl key is held down.  This is used in conjunction with gfFileIO to determine whether the 
 //selected sector is to be saved instead of loaded when clear.
 BOOLEAN gfCtrlPressed;
-//When set, it is time to load or save the selected sector.	If gfCtrlPressed is set, the the map is saved, 
-//instead of loaded.	It is impossible to load a map that doesn't exist.
+//When set, it is time to load or save the selected sector.  If gfCtrlPressed is set, the the map is saved, 
+//instead of loaded.  It is impossible to load a map that doesn't exist.
 BOOLEAN gfFileIO;
 //When set, then we are overriding the ability to use normal methods for selecting sectors for saving and 
-//loading.	Immediately upon entering the text input mode; for the temp file; then we are assuming that
+//loading.  Immediately upon entering the text input mode; for the temp file; then we are assuming that
 //the user will type in a name that doesn't follow standard naming conventions for the purposes of the 
-//campaign editor.	This is useful for naming a temp file for saving or loading.
+//campaign editor.  This is useful for naming a temp file for saving or loading.
 BOOLEAN gfTempFile;
-//When set, only the alternate version of the maps will be displayed.	This is used for alternate maps in 
-//particular sectors, such as the SkyRider quest which could be located at one of four maps randomly.	If
+//When set, only the alternate version of the maps will be displayed.  This is used for alternate maps in 
+//particular sectors, such as the SkyRider quest which could be located at one of four maps randomly.  If
 //that particular map is chosen, then the alternate map will be used.
 BOOLEAN gfAlternateMaps = FALSE;
 
@@ -189,9 +189,9 @@ UINT16 usNumSummaryFilesOutOfDate;
 
 BOOLEAN gfMapFileDirty;
 
-//Override status.	Hide is when there is nothing to override, readonly, when checked is to override a
+//Override status.  Hide is when there is nothing to override, readonly, when checked is to override a
 //readonly status file, so that you can write to it, and overwrite, when checked, allows you to save,
-//replacing the existing file.	These states are not persistant, which forces the user to check the 
+//replacing the existing file.  These states are not persistant, which forces the user to check the 
 //box before saving.
 enum{ INACTIVE, READONLY, OVERWRITE };
 UINT8 gubOverrideStatus;
@@ -251,7 +251,6 @@ INT32 iSummaryButton[ NUM_SUMMARY_BUTTONS ];
 
 void CreateSummaryWindow()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	
 	if( !gfGlobalSummaryLoaded )
@@ -389,7 +388,7 @@ void CreateSummaryWindow()
 
 	//Init the textinput field.
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
-	AddUserInputField( NULL );	//just so we can use short cut keys while not typing.
+	AddUserInputField( NULL );  //just so we can use short cut keys while not typing.
 	AddTextInputField( MAP_LEFT+112, MAP_BOTTOM+75, 100, 18, MSYS_PRIORITY_HIGH, L"", 20, INPUTTYPE_EXCLUSIVE_DOSFILENAME );
 	
 	for( i = 1; i < NUM_SUMMARY_BUTTONS; i++ )
@@ -423,7 +422,6 @@ void CreateSummaryWindow()
 
 void AutoLoadMap()
 {
-	PERFORMANCE_MARKER
 	SummaryLoadMapCallback( ButtonList[ iSummaryButton[ SUMMARY_LOAD ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
 	if( gfWorldLoaded )
 		DestroySummaryWindow();
@@ -433,7 +431,6 @@ void AutoLoadMap()
 
 void ReleaseSummaryWindow()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	UINT32 uiCurrTimer;
 	if( !gfSummaryWindowActive || gfPersistantSummary )
@@ -461,7 +458,6 @@ void ReleaseSummaryWindow()
 
 void DestroySummaryWindow()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	if( !gfSummaryWindowActive )
 		return;
@@ -505,7 +501,6 @@ void DestroySummaryWindow()
 
 void RenderSectorInformation()
 {
-	PERFORMANCE_MARKER
 	//CHAR16 str[ 100 ];
 	MAPCREATE_STRUCT *m;
 	SUMMARYFILE *s;
@@ -533,14 +528,14 @@ void RenderSectorInformation()
 		ePoints++;
 	//start at 10,35
 	SetFontForeground( FONT_ORANGE );
-	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 32,		L"Tileset:	%s", gTilesets[ s->ubTilesetID ].zName ); 
+	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 32,		L"Tileset:  %s", gTilesets[ s->ubTilesetID ].zName ); 
 	if( m->ubMapVersion < 10 )
 		SetFontForeground( FONT_RED );
-	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 42,	L"Version Info:	Summary:	1.%02d,	Map:	%d.%02d", s->ubSummaryVersion, (INT32)s->dMajorMapVersion, m->ubMapVersion );
+	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 42,    L"Version Info:  Summary:  1.%02d,  Map:  %d.%02d", s->ubSummaryVersion, (INT32)s->dMajorMapVersion, m->ubMapVersion );
 	SetFontForeground( FONT_GRAY2 );
-	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 55,		L"Number of items:	%d", s->usNumItems );
-	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 65,		L"Number of lights:	%d", s->usNumLights );
-	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 75,		L"Number of entry points:	%d", ePoints );
+	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 55,		L"Number of items:  %d", s->usNumItems );
+	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 65,		L"Number of lights:  %d", s->usNumLights );
+	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 75,		L"Number of entry points:  %d", ePoints );
 	if( ePoints )
 	{
 		INT32 x;
@@ -555,39 +550,39 @@ void RenderSectorInformation()
 		if( m->sIsolatedGridNo		!= -1	)	{	mprintf( x, iScreenHeightOffset + 75, L"I" );	x += StringPixLength( L"I", FONT10ARIAL ) + 2; }
 		mprintf( x, iScreenHeightOffset + 75, L")" );
 	}
-	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 85,		L"Number of rooms:	%d", s->ubNumRooms );
-	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 95,		L"Total map population:	%d", m->ubNumIndividuals );
-	mprintf( iScreenWidthOffset + 20, iScreenHeightOffset + 105,			L"Enemies:	%d", s->EnemyTeam.ubTotal );
-	mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 115,			L"Admins:	%d", s->ubNumAdmins );
+	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 85,		L"Number of rooms:  %d", s->ubNumRooms );
+	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 95,		L"Total map population:  %d", m->ubNumIndividuals );
+	mprintf( iScreenWidthOffset + 20, iScreenHeightOffset + 105,			L"Enemies:  %d", s->EnemyTeam.ubTotal );
+	mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 115,			L"Admins:  %d", s->ubNumAdmins );
 	if( s->ubNumAdmins )
 		mprintf( iScreenWidthOffset + 100, iScreenHeightOffset + 115,			L"(%d detailed, %d profile -- %d have priority existance)", s->ubAdminDetailed, s->ubAdminProfile, s->ubAdminExistance );
-	mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 125,			L"Troops:	%d", s->ubNumTroops );
+	mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 125,			L"Troops:  %d", s->ubNumTroops );
 	if( s->ubNumTroops )
 		mprintf( iScreenWidthOffset + 100, iScreenHeightOffset + 125,			L"(%d detailed, %d profile -- %d have priority existance)", s->ubTroopDetailed, s->ubTroopProfile, s->ubTroopExistance );
-	mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 135,			L"Elites:	%d", s->ubNumElites );
+	mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 135,			L"Elites:  %d", s->ubNumElites );
 	if( s->ubNumElites )
 		mprintf( iScreenWidthOffset + 100, iScreenHeightOffset + 135,			L"(%d detailed, %d profile -- %d have priority existance)", s->ubEliteDetailed, s->ubEliteProfile, s->ubEliteExistance );
-	mprintf( iScreenWidthOffset + 20, iScreenHeightOffset + 145,			L"Civilians:	%d", s->CivTeam.ubTotal );
+	mprintf( iScreenWidthOffset + 20, iScreenHeightOffset + 145,			L"Civilians:  %d", s->CivTeam.ubTotal );
 	if( s->CivTeam.ubTotal )
 		mprintf( iScreenWidthOffset + 100, iScreenHeightOffset + 145,			L"(%d detailed, %d profile -- %d have priority existance)", s->CivTeam.ubDetailed, s->CivTeam.ubProfile, s->CivTeam.ubExistance ); 
 	if( s->ubSummaryVersion >= 9 )
 	{
-		mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 155,		L"Humans:	%d", s->CivTeam.ubTotal - s->ubCivCows - s->ubCivBloodcats );
-		mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 165,			L"Cows:	%d", s->ubCivCows );
-		mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 175,			L"Bloodcats:	%d", s->ubCivBloodcats );
+		mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 155,		  L"Humans:  %d", s->CivTeam.ubTotal - s->ubCivCows - s->ubCivBloodcats );
+		mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 165,			L"Cows:  %d", s->ubCivCows );
+		mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 175,			L"Bloodcats:  %d", s->ubCivBloodcats );
 	}
-	mprintf( iScreenWidthOffset + 20, iScreenHeightOffset + 185,			L"Creatures:	%d", s->CreatureTeam.ubTotal );
+	mprintf( iScreenWidthOffset + 20, iScreenHeightOffset + 185,			L"Creatures:  %d", s->CreatureTeam.ubTotal );
 	if( s->ubSummaryVersion >= 9 )
 	{
-		mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 195,	 L"Monsters:	%d", s->CreatureTeam.ubTotal - s->CreatureTeam.ubNumAnimals );
-		mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 205,	 L"Bloodcats:	%d", s->CreatureTeam.ubNumAnimals );
+		mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 195,     L"Monsters:  %d", s->CreatureTeam.ubTotal - s->CreatureTeam.ubNumAnimals );
+		mprintf( iScreenWidthOffset + 30, iScreenHeightOffset + 205,     L"Bloodcats:  %d", s->CreatureTeam.ubNumAnimals );
 	}
-	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 215,		L"Number of locked and/or trapped doors:	%d", s->ubNumDoors );
-	mprintf( iScreenWidthOffset + 20, iScreenHeightOffset + 225,			L"Locked:	%d", s->ubNumDoorsLocked );
-	mprintf( iScreenWidthOffset + 20, iScreenHeightOffset + 235,			L"Trapped:	%d", s->ubNumDoorsTrapped );
-	mprintf( iScreenWidthOffset + 20, iScreenHeightOffset + 245,			L"Locked & Trapped:	%d", s->ubNumDoorsLockedAndTrapped );
+	mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 215,		L"Number of locked and/or trapped doors:  %d", s->ubNumDoors );
+	mprintf( iScreenWidthOffset + 20, iScreenHeightOffset + 225,			L"Locked:  %d", s->ubNumDoorsLocked );
+	mprintf( iScreenWidthOffset + 20, iScreenHeightOffset + 235,			L"Trapped:  %d", s->ubNumDoorsTrapped );
+	mprintf( iScreenWidthOffset + 20, iScreenHeightOffset + 245,			L"Locked & Trapped:  %d", s->ubNumDoorsLockedAndTrapped );
 	if( s->ubSummaryVersion >= 8 )
-		mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 255,			L"Civilians with schedules:	%d", s->ubCivSchedules );
+		mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 255,			L"Civilians with schedules:  %d", s->ubCivSchedules );
 	if( s->ubSummaryVersion >= 10 )
 	{
 		if( s->fTooManyExitGridDests )
@@ -607,25 +602,25 @@ void RenderSectorInformation()
 			if( ubNumInvalid )
 			{
 				SetFontForeground( FONT_RED );
-				mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 265, L"ExitGrids:	%d (%d with a long distance destination)", s->ubNumExitGridDests, ubNumInvalid );
+				mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 265, L"ExitGrids:  %d (%d with a long distance destination)", s->ubNumExitGridDests, ubNumInvalid );
 			}
 			else switch( s->ubNumExitGridDests )
 			{
 				case 0:
-					mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 265, L"ExitGrids:	none" );
+					mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 265, L"ExitGrids:  none" );
 					break;
 				case 1:
-					mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 265, L"ExitGrids:	1 destination using %d exitgrids", s->usExitGridSize[0] );
+					mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 265, L"ExitGrids:  1 destination using %d exitgrids", s->usExitGridSize[0] );
 					break;
 				case 2:
-					mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 265, L"ExitGrids:	2 -- 1) Qty: %d, 2) Qty: %d", s->usExitGridSize[0], s->usExitGridSize[1] );
+					mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 265, L"ExitGrids:  2 -- 1) Qty: %d, 2) Qty: %d", s->usExitGridSize[0], s->usExitGridSize[1] );
 					break;
 				case 3:
-					mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 265, L"ExitGrids:	3 -- 1) Qty: %d, 2) Qty: %d, 3) Qty: %d", 
+					mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 265, L"ExitGrids:  3 -- 1) Qty: %d, 2) Qty: %d, 3) Qty: %d", 
 						s->usExitGridSize[0], s->usExitGridSize[1], s->usExitGridSize[2] );
 					break;
 				case 4:
-					mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 265, L"ExitGrids:	3 -- 1) Qty: %d, 2) Qty: %d, 3) Qty: %d, 4) Qty: %d", 
+					mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 265, L"ExitGrids:  3 -- 1) Qty: %d, 2) Qty: %d, 3) Qty: %d, 4) Qty: %d", 
 						s->usExitGridSize[0], s->usExitGridSize[1], s->usExitGridSize[2], s->usExitGridSize[3] );
 					break;
 			}
@@ -633,7 +628,7 @@ void RenderSectorInformation()
 	}
 	iOverall = - ( 2 * s->EnemyTeam.ubBadA ) - s->EnemyTeam.ubPoorA + s->EnemyTeam.ubGoodA + ( 2 * s->EnemyTeam.ubGreatA );
 	usLine = iScreenHeightOffset + 275;
-	mprintf( iScreenWidthOffset + 10, usLine, L"Enemy Relative Attributes:	%d bad, %d poor, %d norm, %d good, %d great (%+d Overall)",
+	mprintf( iScreenWidthOffset + 10, usLine, L"Enemy Relative Attributes:  %d bad, %d poor, %d norm, %d good, %d great (%+d Overall)",
 		s->EnemyTeam.ubBadA, 
 		s->EnemyTeam.ubPoorA, 
 		s->EnemyTeam.ubAvgA, 
@@ -642,7 +637,7 @@ void RenderSectorInformation()
 		iOverall );
 	iOverall = - ( 2 * s->EnemyTeam.ubBadE ) - s->EnemyTeam.ubPoorE + s->EnemyTeam.ubGoodE + ( 2 * s->EnemyTeam.ubGreatE );
 	usLine += 10;
-	mprintf( iScreenWidthOffset + 10, usLine, L"Enemy Relative Equipment:	%d bad, %d poor, %d norm, %d good, %d great (%+d Overall)",
+	mprintf( iScreenWidthOffset + 10, usLine, L"Enemy Relative Equipment:  %d bad, %d poor, %d norm, %d good, %d great (%+d Overall)",
 		s->EnemyTeam.ubBadE, 
 		s->EnemyTeam.ubPoorE, 
 		s->EnemyTeam.ubAvgE, 
@@ -673,15 +668,14 @@ void RenderSectorInformation()
 		if( s->usWarningRoomNums )
 		{
 			SetFontForeground( FONT_RED );
-			mprintf( iScreenWidthOffset + 10, usLine, L"%d gridnos have questionable room numbers.	Please validate.", s->usWarningRoomNums );
+			mprintf( iScreenWidthOffset + 10, usLine, L"%d gridnos have questionable room numbers.  Please validate.", s->usWarningRoomNums );
 		}
 	}
 }
 
-//2)	CODE TRIGGER/ACTION NAMES
+//2)  CODE TRIGGER/ACTION NAMES
 void RenderItemDetails()
 {
-	PERFORMANCE_MARKER
 	FLOAT dAvgExistChance, dAvgStatus;
 	OBJECTTYPE *pItem;
 	INT32 index, i;
@@ -708,7 +702,7 @@ void RenderItemDetails()
 		memset( uiActionExistChance, 0, 32 );
 		for( index = 1; index < MAXITEMS; index++ )
 		{
-			if ( Item[index].usItemClass	== 0 )
+			if ( Item[index].usItemClass  == 0 )
 				break;
 			uiQuantity = 0;
 			uiExistChance = 0;
@@ -763,7 +757,6 @@ void RenderItemDetails()
 						pItem = &gpWorldItemsSummaryArray[ i ].object;
 						uiExistChance += (100 - gpWorldItemsSummaryArray[ i ].ubNonExistChance) * pItem->ubNumberOfObjects;
 						uiStatus += (*pItem)[0]->data.objectStatus;
-						uiQuantity += pItem->ubNumberOfObjects;
 					}
 				}
 			}
@@ -821,12 +814,12 @@ void RenderItemDetails()
 				{
 					dAvgExistChance = (FLOAT)(uiTriggerExistChance[i] / 100.0);
 					dAvgStatus = (FLOAT)(uiActionExistChance[i] / 100.0);
-					mprintf( xp, yp, L"%s:	%3.02f trigger(s), %3.02f action(s)", str, dAvgExistChance, dAvgStatus );
+					mprintf( xp, yp, L"%s:  %3.02f trigger(s), %3.02f action(s)", str, dAvgExistChance, dAvgStatus );
 				}
 				else 
 				{
 					dAvgExistChance = (FLOAT)(uiActionExistChance[i] / 100.0);
-					mprintf( xp, yp, L"%s:	%3.02f", str, dAvgExistChance );
+					mprintf( xp, yp, L"%s:  %3.02f", str, dAvgExistChance );
 				}
 				yp += 10;
 				if( yp >= (UINT32)(iScreenHeightOffset + 355 ))
@@ -859,7 +852,7 @@ void RenderItemDetails()
 		}
 		else for( index = 1; index < MAXITEMS; index++ )
 		{
-			if ( Item[index].usItemClass	== 0 )
+			if ( Item[index].usItemClass  == 0 )
 				break;
 			uiQuantity = 0;
 			uiExistChance = 0;
@@ -931,7 +924,7 @@ void RenderItemDetails()
 		}
 		for( index = 1; index < MAXITEMS; index++ )
 		{
-			if ( Item[index].usItemClass	== 0 )
+			if ( Item[index].usItemClass  == 0 )
 				break;
 			uiQuantity = 0;
 			uiExistChance = 0;
@@ -981,13 +974,12 @@ void RenderItemDetails()
 	else
 	{
 		SetFontForeground( FONT_RED );
-		mprintf( iScreenWidthOffset + 5, iScreenHeightOffset + 50, L"ERROR:	Can't load the items for this map.	Reason unknown." );
+		mprintf( iScreenWidthOffset + 5, iScreenHeightOffset + 50, L"ERROR:  Can't load the items for this map.  Reason unknown." );
 	}
 }
 
 void RenderSummaryWindow()
 {
-	PERFORMANCE_MARKER
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	SGPRect ClipRect;
@@ -1040,7 +1032,7 @@ void RenderSummaryWindow()
 				DisableButton( iSummaryButton[ SUMMARY_LOAD ] );
 				SetFontForeground( FONT_YELLOW );
 				mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 20, L"You currently have %d outdated maps.", gusNumEntriesWithOutdatedOrNoSummaryInfo);
-				mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 30, L"The more maps that need to be updated, the longer it takes.	It'll take ");
+				mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 30, L"The more maps that need to be updated, the longer it takes.  It'll take ");
 				mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 40, L"approximately 4 minutes on a P200MMX to analyse 100 maps, so");
 				mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 50, L"depending on your computer, it may vary.");
 				SetFontForeground( FONT_LTRED );
@@ -1055,7 +1047,7 @@ void RenderSummaryWindow()
 				{
 					SetFontForeground( FONT_YELLOW );
 					mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 30, L"Entering a temp file name that doesn't follow campaign editor conventions..." );
-					goto SPECIALCASE_LABEL;	//OUCH!!!
+					goto SPECIALCASE_LABEL;  //OUCH!!!
 				}
 				else if( !gfWorldLoaded )
 				{
@@ -1287,7 +1279,7 @@ void RenderSummaryWindow()
 						SetFontForeground( FONT_LTKHAKI );
 					else
 						SetFontForeground( FONT_LTBLUE );
-					mprintf( MAP_LEFT+110, MAP_BOTTOM+55, L"FILE:	%s", gszDisplayName );
+					mprintf( MAP_LEFT+110, MAP_BOTTOM+55, L"FILE:  %s", gszDisplayName );
 				}
 				else //little higher to make room for the override checkbox and text.
 				{
@@ -1295,7 +1287,7 @@ void RenderSummaryWindow()
 						SetFontForeground( FONT_LTKHAKI );
 					else
 						SetFontForeground( FONT_LTBLUE );
-					mprintf( MAP_LEFT+110, MAP_BOTTOM+46, L"FILE:	%s", gszDisplayName );
+					mprintf( MAP_LEFT+110, MAP_BOTTOM+46, L"FILE:  %s", gszDisplayName );
 					if( gubOverrideStatus == READONLY )
 					{
 						SetFontForeground( (UINT8)(gfOverride ? FONT_YELLOW : FONT_LTRED) );
@@ -1312,19 +1304,19 @@ void RenderSummaryWindow()
 		else if( !gfDeniedSummaryCreation )
 		{
 			SetFontForeground( FONT_GRAY1 );
-			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 20, L"You currently have no summary data.	By creating one, you will be able to keep track" );
-			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 30, L"of information pertaining to all of the sectors you edit and save.	The creation process" );
-			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 40, L"will analyse all maps in your \\MAPS directory, and generate a new one.	This could" );
-			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 50, L"take a few minutes depending on how many valid maps you have.	Valid maps are" );
-			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 60, L"maps following the proper naming convention from a1.dat - p16.dat.	Underground maps" );	
-			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 70, L"are signified by appending _b1 to _b3 before the .dat (ex:	a9_b1.dat). ");
+			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 20, L"You currently have no summary data.  By creating one, you will be able to keep track" );
+			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 30, L"of information pertaining to all of the sectors you edit and save.  The creation process" );
+			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 40, L"will analyse all maps in your \\MAPS directory, and generate a new one.  This could" );
+			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 50, L"take a few minutes depending on how many valid maps you have.  Valid maps are" );
+			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 60, L"maps following the proper naming convention from a1.dat - p16.dat.  Underground maps" );  
+			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 70, L"are signified by appending _b1 to _b3 before the .dat (ex:  a9_b1.dat). ");
 			SetFontForeground( FONT_LTRED );
 			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 85, L"Do you wish to do this now (y/n)?" );
 		}
 		else
 		{
 			SetFontForeground( FONT_LTRED );
-			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 20, L"No summary info.	Creation denied." );
+			mprintf( iScreenWidthOffset + 10, iScreenHeightOffset + 20, L"No summary info.  Creation denied." );
 		}
 
 		SetFont( FONT10ARIAL );
@@ -1424,7 +1416,7 @@ void RenderSummaryWindow()
 						if( gbSectorLevels[x][y] & BASEMENT2_LEVEL_MASK )		ubNumUndergroundLevels++;
 						if( gbSectorLevels[x][y] & BASEMENT3_LEVEL_MASK )		ubNumUndergroundLevels++;
 						if( ubNumUndergroundLevels )
-						{ //display the number of underground levels.	If there
+						{ //display the number of underground levels.  If there
 							//is no ground level, then it'll be shadowed.
 							SetFont( SMALLCOMPFONT );
 							SetFontForeground( FONT_YELLOW );
@@ -1444,7 +1436,7 @@ void RenderSummaryWindow()
 						if( gbSectorLevels[x][y] & ALTERNATE_B2_MASK )		ubNumUndergroundLevels++;
 						if( gbSectorLevels[x][y] & ALTERNATE_B3_MASK )		ubNumUndergroundLevels++;
 						if( ubNumUndergroundLevels )
-						{ //display the number of underground levels.	If there
+						{ //display the number of underground levels.  If there
 							//is no ground level, then it'll be shadowed.
 							SetFont( SMALLCOMPFONT );
 							SetFontForeground( FONT_YELLOW );
@@ -1467,11 +1459,11 @@ void RenderSummaryWindow()
 					pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 					Blt16BPPBufferShadowRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect );
 					if( giCurrentViewLevel == BASEMENT1_LEVEL_MASK ||
-						giCurrentViewLevel == BASEMENT2_LEVEL_MASK ||
+						  giCurrentViewLevel == BASEMENT2_LEVEL_MASK ||
 							giCurrentViewLevel == BASEMENT3_LEVEL_MASK || 
-							giCurrentViewLevel == ALTERNATE_B1_MASK		||
-							giCurrentViewLevel == ALTERNATE_B2_MASK		||
-							giCurrentViewLevel == ALTERNATE_B3_MASK		)
+							giCurrentViewLevel == ALTERNATE_B1_MASK		 ||
+							giCurrentViewLevel == ALTERNATE_B2_MASK		 ||
+							giCurrentViewLevel == ALTERNATE_B3_MASK		 )
 						Blt16BPPBufferShadowRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect );
 					UnLockVideoSurface( FRAME_BUFFER );
 				}
@@ -1536,7 +1528,6 @@ void RenderSummaryWindow()
 
 void UpdateSectorSummary( STR16 gszFilename, BOOLEAN fUpdate )
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[50];
 	CHAR8 szCoord[40];
 	STR16 ptr;
@@ -1561,8 +1552,8 @@ void UpdateSectorSummary( STR16 gszFilename, BOOLEAN fUpdate )
 	gsSectorY = gsSelSectorY = y;
 
 	//The idea here is to get a pointer to the filename's period, then
-	//focus on the character previous to it.	If it is a 1, 2, or 3, then
-	//the filename was in a basement level.	Otherwise, it is a ground level.
+	//focus on the character previous to it.  If it is a 1, 2, or 3, then
+	//the filename was in a basement level.  Otherwise, it is a ground level.
 	ptr = wcsstr( gszFilename, L"_a.dat" );
 	if( ptr )
 	{
@@ -1631,7 +1622,7 @@ void UpdateSectorSummary( STR16 gszFilename, BOOLEAN fUpdate )
 		SetFont( FONT10ARIAL );
 		SetFontForeground( FONT_LTKHAKI );
 		SetFontShadow( FONT_NEARBLACK );
-		swprintf( str, L"Analyzing map:	%s...", gszFilename );
+		swprintf( str, L"Analyzing map:  %s...", gszFilename );
 
 		if( gfSummaryWindowActive )
 		{
@@ -1662,7 +1653,6 @@ void UpdateSectorSummary( STR16 gszFilename, BOOLEAN fUpdate )
 
 void SummaryOkayCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		DestroySummaryWindow();
@@ -1671,7 +1661,6 @@ void SummaryOkayCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryToggleGridCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfRenderGrid = (BOOLEAN)(btn->uiFlags & BUTTON_CLICKED_ON);
@@ -1681,7 +1670,6 @@ void SummaryToggleGridCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryToggleAlternateCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if( btn->uiFlags & BUTTON_CLICKED_ON )
@@ -1700,7 +1688,6 @@ void SummaryToggleAlternateCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummarySciFiCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iSummaryButton[ SUMMARY_SCIFI ] ]->uiFlags |= (BUTTON_CLICKED_ON | BUTTON_DIRTY);
@@ -1715,7 +1702,6 @@ void SummarySciFiCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryRealCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iSummaryButton[ SUMMARY_SCIFI ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
@@ -1730,7 +1716,6 @@ void SummaryRealCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryEnemyCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iSummaryButton[ SUMMARY_SCIFI ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
@@ -1745,7 +1730,6 @@ void SummaryEnemyCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryToggleProgressCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfRenderProgress = (BOOLEAN)(btn->uiFlags & BUTTON_CLICKED_ON);
@@ -1779,7 +1763,6 @@ void PerformTest()
 
 BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 {
-	PERFORMANCE_MARKER
 	if( !gfSummaryWindowActive )
 		return FALSE;
 	gfCtrlPressed = pEvent->usKeyState & CTRL_DOWN;
@@ -1900,7 +1883,6 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 
 void CreateGlobalSummary()
 {
-	PERFORMANCE_MARKER
 	FILE *fp;
 	STRING512			Dir;
 	STRING512			ExecDir;
@@ -1941,7 +1923,6 @@ void CreateGlobalSummary()
 
 void MapMoveCallback( MOUSE_REGION *reg, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	static INT16 gsPrevX = 0, gsPrevY = 0;
 	//calc current sector highlighted.
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
@@ -1963,7 +1944,6 @@ void MapMoveCallback( MOUSE_REGION *reg, INT32 reason )
 
 void MapClickCallback( MOUSE_REGION *reg, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	static INT16 sLastX = -1, sLastY = -1;
 	static INT32 iLastClickTime = 0;
 	//calc current sector selected.
@@ -2065,7 +2045,6 @@ void MapClickCallback( MOUSE_REGION *reg, INT32 reason )
 
 void SummaryToggleLevelCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	INT8 i;
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -2107,7 +2086,6 @@ void SummaryToggleLevelCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		STR16 ptr;
@@ -2118,7 +2096,7 @@ void SummaryLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
 		SetFontForeground( FONT_LTKHAKI );
 		SetFontShadow( FONT_NEARBLACK );
 
-		//swprintf( str, L"Loading map:	%s...", gszDisplayName );
+		//swprintf( str, L"Loading map:  %s...", gszDisplayName );
 		//mprintf( MAP_LEFT, MAP_BOTTOM+100, str );
 		//InvalidateRegion( MAP_LEFT, MAP_BOTTOM+100, MAP_LEFT+150,	MAP_BOTTOM+110 );
 		
@@ -2126,7 +2104,7 @@ void SummaryLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
 
 		//DefineProgressBarPanel( 0, 65, 79, 94, MAP_LEFT, iScreenHeightOffset + 318, iScreenWidthOffset + 578, iScreenHeightOffset + 356 );
 		DefineProgressBarPanel( 0, 65, 79, 94, MAP_LEFT, iScreenHeightOffset + 318, MAP_LEFT + 161, iScreenHeightOffset + 356 );
-		swprintf( str, L"Loading map:	%s", gszDisplayName );
+		swprintf( str, L"Loading map:  %s", gszDisplayName );
 		SetProgressBarTitle( 0, str, BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
 		SetProgressBarMsgAttributes( 0, SMALLCOMPFONT, FONT_BLACK, FONT_BLACK );
 
@@ -2160,7 +2138,6 @@ void SummaryLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummarySaveMapCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfRenderSummary = TRUE;
@@ -2188,7 +2165,6 @@ void SummarySaveMapCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryOverrideCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfOverride ^= TRUE;
@@ -2202,7 +2178,6 @@ void SummaryOverrideCallback( GUI_BUTTON *btn, INT32 reason )
 
 void CalculateOverrideStatus()
 {
-	PERFORMANCE_MARKER
 	GETFILESTRUCT FileInfo;
 	CHAR8 szFilename[40];
 	gfOverrideDirty = FALSE;
@@ -2249,7 +2224,6 @@ void CalculateOverrideStatus()
 
 void LoadGlobalSummary()
 {
-	PERFORMANCE_MARKER
 	HWFILE	hfile;
 	STRING512			DataDir;
 	STRING512			ExecDir;
@@ -2274,7 +2248,7 @@ void LoadGlobalSummary()
 	sprintf( DevInfoDir, "%s\\DevInfo", ExecDir );
 	sprintf( MapsDir, "%s\\Maps", DataDir );
 
-	//Check to make sure we have a DevInfo directory.	If we don't create one!
+	//Check to make sure we have a DevInfo directory.  If we don't create one!
 	if( !SetFileManCurrentDirectory( DevInfoDir ) )
 	{
 		OutputDebugString( "LoadGlobalSummary() aborted -- doesn't exist on this local computer.\n");
@@ -2286,9 +2260,9 @@ void LoadGlobalSummary()
 
 	gfGlobalSummaryExists = TRUE;
 	
-	//Analyse all sectors to see if matching maps exist.	For any maps found, the information
-	//will be stored in the gbSectorLevels array.	Also, it attempts to load summaries for those
-	//maps.	If the summary information isn't found, then the occurrences are recorded and reported
+	//Analyse all sectors to see if matching maps exist.  For any maps found, the information
+	//will be stored in the gbSectorLevels array.  Also, it attempts to load summaries for those
+	//maps.  If the summary information isn't found, then the occurrences are recorded and reported
 	//to the user when finished to give the option to generate them.
 	for( y = 0; y < 16; y++ ) 
 	{
@@ -2446,6 +2420,8 @@ void LoadGlobalSummary()
 	if( gfMustForceUpdateAllMaps )
 	{
 		OutputDebugString( (LPCSTR)String( "A MAJOR MAP UPDATE EVENT HAS BEEN DETECTED FOR %d MAPS!!!!.\n", gusNumberOfMapsToBeForceUpdated ) );
+		//ADB update it!
+		ApologizeOverrideAndForceUpdateEverything();
 	}
 
 
@@ -2454,7 +2430,6 @@ void LoadGlobalSummary()
 
 void GenerateSummaryList()
 {
-	PERFORMANCE_MARKER
 	FILE *fp;
 	STRING512			DataDir;
 	STRING512			ExecDir;
@@ -2491,7 +2466,6 @@ void GenerateSummaryList()
 
 void WriteSectorSummaryUpdate( STR8 puiFilename, UINT8 ubLevel, SUMMARYFILE *pSummaryFileInfo )
 {
-	PERFORMANCE_MARKER
 	FILE *fp;
 	STRING512			DataDir;
 	STRING512			ExecDir;
@@ -2543,7 +2517,6 @@ void WriteSectorSummaryUpdate( STR8 puiFilename, UINT8 ubLevel, SUMMARYFILE *pSu
 
 void SummaryNewGroundLevelCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfPendingBasement = FALSE;
@@ -2561,7 +2534,6 @@ void SummaryNewGroundLevelCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryNewBasementLevelCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 
@@ -2570,7 +2542,6 @@ void SummaryNewBasementLevelCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryNewCaveLevelCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 
@@ -2579,7 +2550,6 @@ void SummaryNewCaveLevelCallback( GUI_BUTTON *btn, INT32 reason )
 
 void LoadSummary( STR8 pSector, UINT8 ubLevel, FLOAT dMajorMapVersion )
 {
-	PERFORMANCE_MARKER
 	CHAR8 filename[40];
 	SUMMARYFILE temp;
 	INT32 x, y;
@@ -2601,6 +2571,9 @@ void LoadSummary( STR8 pSector, UINT8 ubLevel, FLOAT dMajorMapVersion )
 	if( !fp )
 	{
 		gusNumEntriesWithOutdatedOrNoSummaryInfo++;
+		//ADB don't forget that these might need to be updated!!!
+		gusNumberOfMapsToBeForceUpdated++;
+		gfMustForceUpdateAllMaps = TRUE;
 		return;
 	}
 	fread( &temp, 1, sizeof( SUMMARYFILE ), fp );
@@ -2637,7 +2610,6 @@ double MasterStart, MasterEnd;
 
 void UpdateMasterProgress()
 {
-	PERFORMANCE_MARKER
 	if( gfUpdatingNow && gusTotal )
 	{
 		MasterStart = (gusCurrent / (double)gusTotal) * 100.0;
@@ -2655,19 +2627,18 @@ void UpdateMasterProgress()
 
 void ReportError( STR8 pSector, UINT8 ubLevel )
 {
-	PERFORMANCE_MARKER
 	static INT32 yp = iScreenHeightOffset + 180;
 	CHAR16 str[40];
 	CHAR16 temp[10];
 
 	//Make sure the file exists... if not, then return false
 	swprintf( str, L"%S", pSector );
-	if( ubLevel % 4	)
+	if( ubLevel % 4  )
 	{
 		swprintf( temp, L"_b%d.dat", ubLevel % 4 );
 		wcscat( str, temp );
 	}
-	mprintf( iScreenWidthOffset + 10, yp, L"Skipping update for %s.	Probably due to tileset conflicts...", str );
+	mprintf( iScreenWidthOffset + 10, yp, L"Skipping update for %s.  Probably due to tileset conflicts...", str );
 	InvalidateScreen();
 	yp++;
 }
@@ -2675,7 +2646,6 @@ void ReportError( STR8 pSector, UINT8 ubLevel )
 
 void RegenerateSummaryInfoForAllOutdatedMaps()
 {
-	PERFORMANCE_MARKER
 	INT32 x, y;
 	CHAR8 str[40];
 	SUMMARYFILE *pSF;
@@ -2759,7 +2729,6 @@ void RegenerateSummaryInfoForAllOutdatedMaps()
 
 void SummaryUpdateCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		CHAR8 str[40];
@@ -2777,8 +2746,9 @@ void SummaryUpdateCallback( GUI_BUTTON *btn, INT32 reason )
 		sprintf( str, "%c%d", gsSelSectorY + 'A' - 1, gsSelSectorX );
 		EvaluateWorld( str, (UINT8)giCurrLevel );
 
-		gpSectorSummary[ gsSelSectorX ][ gsSelSectorY ][ giCurrLevel ] = gpCurrentSectorSummary;
-		
+		//gpSectorSummary[ gsSelSectorX ][ gsSelSectorY ][ giCurrLevel ] = gpCurrentSectorSummary;//ADB this original code is totally wrong
+		gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ giCurrLevel ];//ADB it should be this
+	
 		gfRenderSummary = TRUE;
 
 		RemoveProgressBar( 0 );
@@ -2787,7 +2757,6 @@ void SummaryUpdateCallback( GUI_BUTTON *btn, INT32 reason )
 
 void ExtractTempFilename()
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[40];
 	Get16BitStringFromField( 1, str );
 	if( wcscmp( gszTempFilename, str ) )
@@ -2802,7 +2771,6 @@ void ExtractTempFilename()
 
 void ApologizeOverrideAndForceUpdateEverything()
 {
-	PERFORMANCE_MARKER
 	INT32 x, y;
 	//CHAR16 str[ 50 ];//char overflow if set to 50
 	CHAR16 str[ 512 ];//char overflow if set to 50
@@ -2923,7 +2891,8 @@ void ApologizeOverrideAndForceUpdateEverything()
 		}
 	}
 
-	EvaluateWorld( "p3_m.dat", 0 );
+	EvaluateWorld( "p3_m", 0 );
+	//EvaluateWorld( "p3_m.dat", 0 );
 
 	RemoveProgressBar( 2 );
 	gfUpdatingNow = FALSE;
@@ -2940,7 +2909,6 @@ extern int gEnemyPreservedTempFileVersion[256];
 extern int gCivPreservedTempFileVersion[256];
 void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 {
-	PERFORMANCE_MARKER
 	HWFILE hfile;
 	UINT32 uiNumBytesRead;
 	UINT32 uiNumItems;
@@ -2977,7 +2945,6 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		if( gpCurrentSectorSummary->ubSummaryVersion == GLOBAL_SUMMARY_VERSION )
 			gusNumEntriesWithOutdatedOrNoSummaryInfo++;
 		SummaryUpdateCallback( ButtonList[ iSummaryButton[ SUMMARY_UPDATE ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
-		gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ giCurrLevel ];
 	}
 	//Open the original map for the sector
 	sprintf( szFilename, "MAPS\\%S", gszFilename );
@@ -2986,21 +2953,29 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 	{ //The file couldn't be found!
 		return;
 	}
-	//Now fileseek directly to the file position where the number of world items are stored
-	if( !FileSeek( hfile, gpCurrentSectorSummary->uiNumItemsPosition, FILE_SEEK_FROM_START ) )
-	{ //Position couldn't be found!
-		FileClose( hfile );
-		return;
+
+	//ADB warning, numItems might be 0 !!!!
+	uiNumItems = 0;
+	if (gpCurrentSectorSummary->uiNumItemsPosition != 0) {
+		//Now fileseek directly to the file position where the number of world items are stored
+		if( !FileSeek( hfile, gpCurrentSectorSummary->uiNumItemsPosition, FILE_SEEK_FROM_START ) )
+		{ //Position couldn't be found!
+			FileClose( hfile );
+			return;
+		}
+		//Now load the number of world items from the map.
+		FileRead( hfile, &uiNumItems, 4, &uiNumBytesRead );
+		if( uiNumBytesRead != 4 )
+		{ //Invalid situation.
+			FileClose( hfile );
+			return;
+		}
 	}
-	//Now load the number of world items from the map.
-	FileRead( hfile, &uiNumItems, 4, &uiNumBytesRead );
-	if( uiNumBytesRead != 4 )
-	{ //Invalid situation.
-		FileClose( hfile );
-		return;
+	else {
+		Assert(gpCurrentSectorSummary->usNumItems == 0);
 	}
-	//Now compare this number with the number the summary thinks we should have.	If they are different,
-	//the the summary doesn't match the map.	What we will do is force regenerate the map so that they do
+	//Now compare this number with the number the summary thinks we should have.  If they are different,
+	//the the summary doesn't match the map.  What we will do is force regenerate the map so that they do
 	//match
 	if( uiNumItems != gpCurrentSectorSummary->usNumItems && fAllowRecursion )
 	{
@@ -3021,10 +2996,10 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 	}
 
 	//NOW, do the enemy's items!
-	//We need to do two passes.	The first pass simply processes all the enemies and counts all the droppable items
-	//keeping track of two different values.	The first value is the number of droppable items that come off of
+	//We need to do two passes.  The first pass simply processes all the enemies and counts all the droppable items
+	//keeping track of two different values.  The first value is the number of droppable items that come off of
 	//enemy detailed placements, the other counter keeps track of the number of droppable items that come off of 
-	//normal enemy placements.	After doing this, the memory is allocated for the tables that will store all the item
+	//normal enemy placements.  After doing this, the memory is allocated for the tables that will store all the item
 	//summary information, then the second pass will repeat the process, except it will record the actual items.
 
 	//PASS #1
@@ -3043,7 +3018,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement 
-			if ( !priority.Load(hfile, SAVE_GAME_VERSION) )
+			if ( !priority.Load(hfile, SAVE_GAME_VERSION, false) )
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;
@@ -3104,7 +3079,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement 
-			if ( !priority.Load(hfile, SAVE_GAME_VERSION) )
+			if ( !priority.Load(hfile, SAVE_GAME_VERSION, false) )
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;
@@ -3142,7 +3117,6 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 
 UINT8 GetCurrentSummaryVersion()
 {
-	PERFORMANCE_MARKER
 	if( gpCurrentSectorSummary )
 	{
 		return gpCurrentSectorSummary->MapInfo.ubMapVersion;
@@ -3151,3 +3125,4 @@ UINT8 GetCurrentSummaryVersion()
 }
 
 #endif
+

@@ -268,7 +268,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 
 	for( i = 0; i < slots; i++ )
 	{
-		if ( !tempDetailedPlacement.Load(hfile, gEnemyPreservedTempFileVersion[SECTOR( sSectorX,sSectorY)]) )
+		if ( !tempDetailedPlacement.Load(hfile, gEnemyPreservedTempFileVersion[SECTOR( sSectorX,sSectorY)], true) )
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.	KM", i );
@@ -875,7 +875,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	for( i = 0; i < slots; i++ )
 	{
-		if ( !tempDetailedPlacement.Load(hfile, gEnemyPreservedTempFileVersion[SECTOR(sSectorX, sSectorY)]) )
+		if ( !tempDetailedPlacement.Load(hfile, gEnemyPreservedTempFileVersion[SECTOR(sSectorX, sSectorY)], true) )
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.	KM", i );
@@ -1188,7 +1188,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 
 	for( i = 0; i < slots; i++ )
 	{
-		if ( !tempDetailedPlacement.Load(hfile, gCivPreservedTempFileVersion[SECTOR(sSectorX, sSectorY)]) )
+		if ( !tempDetailedPlacement.Load(hfile, gCivPreservedTempFileVersion[SECTOR(sSectorX, sSectorY)], true) )
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "Civilian -- EOF while reading tempDetailedPlacment %d.	KM", i );
@@ -1380,22 +1380,21 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 						{ //need to upgrade the placement to detailed placement
 							curr->pBasicPlacement->fDetailedPlacement = TRUE;
 							curr->pDetailedPlacement = new SOLDIERCREATE_STRUCT; //(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
-							*curr->pDetailedPlacement = *pSoldier;
-
-							//we don't want the player to think that all the enemies start in the exact position when we 
-							//left the map, so randomize the start locations either current position or original position.
-							if( PreRandom( 2 ) )
-							{
-								//use current position, which is already copied over
-							}
-							else
-							{
-								//use original position
-								curr->pDetailedPlacement->fOnRoof				= curr->pBasicPlacement->fOnRoof;
-								curr->pDetailedPlacement->sInsertionGridNo		= curr->pBasicPlacement->sStartingGridNo;
-							}
 						}
+						*curr->pDetailedPlacement = *pSoldier;
 
+						//we don't want the player to think that all the enemies start in the exact position when we 
+						//left the map, so randomize the start locations either current position or original position.
+						if( PreRandom( 2 ) )
+						{
+							//use current position, which is already copied over
+						}
+						else
+						{
+							//use original position
+							curr->pDetailedPlacement->fOnRoof				= curr->pBasicPlacement->fOnRoof;
+							curr->pDetailedPlacement->sInsertionGridNo		= curr->pBasicPlacement->sStartingGridNo;
+						}
 					}
 				}
 
@@ -1736,7 +1735,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 
 	for( i = 0; i < slots; i++ )
 	{
-		if ( !tempDetailedPlacement.Load(hfile, gEnemyPreservedTempFileVersion[SECTOR( sSectorX,sSectorY)]) )
+		if ( !tempDetailedPlacement.Load(hfile, gEnemyPreservedTempFileVersion[SECTOR( sSectorX,sSectorY)], true) )
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "Check EnemySoldier -- EOF while reading tempDetailedPlacment %d.	KM", i );

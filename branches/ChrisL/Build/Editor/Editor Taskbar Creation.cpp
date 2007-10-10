@@ -774,7 +774,7 @@ void CreateEditorTaskbarInternal()
 	PERFORMANCE_MARKER
 	//Create the tabs for the editor taskbar
 	iEditorButton[ TAB_TERRAIN ] = 
-		CreateTextButton(L"Terrain",	(UINT16)SMALLFONT1, FONT_LTKHAKI, FONT_DKKHAKI, BUTTON_USE_DEFAULT,
+		CreateTextButton(L"Terrain",  (UINT16)SMALLFONT1, FONT_LTKHAKI, FONT_DKKHAKI, BUTTON_USE_DEFAULT,
 		iScreenWidthOffset + 100, SCREEN_HEIGHT - 20, 90, 20, BUTTON_TOGGLE,MSYS_PRIORITY_HIGH,BUTTON_NO_CALLBACK, 
 		TaskTerrainCallback);
 	SpecifyButtonDownTextColors( iEditorButton[TAB_TERRAIN], FONT_YELLOW, FONT_ORANGE );

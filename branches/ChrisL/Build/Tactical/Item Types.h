@@ -431,6 +431,8 @@ public:
 typedef	std::list<OBJECTTYPE>	attachmentList;
 class StackedObjectData  {
 public:
+	StackedObjectData();
+	~StackedObjectData();
 	void	initialize() {attachments.clear(); data.initialize();};
 	OBJECTTYPE* GetAttachmentAtIndex(UINT8 index);
 	bool operator==(StackedObjectData& compare);

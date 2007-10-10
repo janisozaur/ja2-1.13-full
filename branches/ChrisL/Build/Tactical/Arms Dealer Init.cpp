@@ -1285,9 +1285,11 @@ BOOLEAN ItemContainsLiquid( UINT16 usItemIndex )
 
 bool ItemIsSpecial(DEALER_SPECIAL_ITEM& item)
 {
-	if (item.object[0]->attachments.empty() == false) {
-		//items with attachments are special
-		return true;
+	for (int x = 0; x < item.object.ubNumberOfObjects; ++x) {
+		if (item.object[x]->attachments.empty() == false) {
+			//items with attachments are special
+			return true;
+		}
 	}
 	if (item.IsBeingOrdered() == true) {
 		//item being ordered

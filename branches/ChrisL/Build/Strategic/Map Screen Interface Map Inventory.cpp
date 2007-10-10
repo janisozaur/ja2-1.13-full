@@ -1733,26 +1733,37 @@ void DisplayCurrentSector( void )
 void ResizeInventoryList( void )
 {
 	PERFORMANCE_MARKER
-	INT32 iNumberOfTakenSlots = 0;
-	int emptySlots = 0;
-
 	if (pInventoryPoolList.empty() == true) {
 		pInventoryPoolList.resize(MAP_INVENTORY_POOL_SLOT_COUNT);
 	}
+
+	int emptySlots = 0;
 	//if it's not the exact size of a page, then make it so
 	if (pInventoryPoolList.size() % MAP_INVENTORY_POOL_SLOT_COUNT) {
 		emptySlots = MAP_INVENTORY_POOL_SLOT_COUNT - (pInventoryPoolList.size() % MAP_INVENTORY_POOL_SLOT_COUNT);
 		pInventoryPoolList.resize(pInventoryPoolList.size() + emptySlots);
 	}
-	for(UINT32 cnt = 0; cnt < pInventoryPoolList.size(); cnt++){
-		if(pInventoryPoolList[cnt].object.exists() == true){
-			iNumberOfTakenSlots++;
+
+	//This lets us determine whether to create a new page based on the contents of the last page instead of every page
+	//  which lets players move things around without having to first hunt down and fill up blank slots on other pages
+	iLastInventoryPoolPage = ( ( pInventoryPoolList.size()  - 1 ) / MAP_INVENTORY_POOL_SLOT_COUNT );
+	int lastPageIndex = iLastInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT;
+	int activeSlotsOnPage = 0;
+	for (int x = 0; x < MAP_INVENTORY_POOL_SLOT_COUNT; ++x) {
+		//don't test fExists because that hasn't been set yet, test object.exists
+		if (pInventoryPoolList[lastPageIndex + x].object.exists() == true) {
+			++activeSlotsOnPage;
 		}
 	}
-	if( ( pInventoryPoolList.size() - iNumberOfTakenSlots ) < 2 ){
+
+	//if there aren't enough empty slots we need to grow it further
+	emptySlots = MAP_INVENTORY_POOL_SLOT_COUNT - activeSlotsOnPage;
+	if (emptySlots < 3) {
+		//we want 1 blank page
 		pInventoryPoolList.resize(pInventoryPoolList.size() + MAP_INVENTORY_POOL_SLOT_COUNT);
 	}
 
+	//do this again, it may have changed
 	iLastInventoryPoolPage = ( ( pInventoryPoolList.size()  - 1 ) / MAP_INVENTORY_POOL_SLOT_COUNT );
 	
 	return;

@@ -505,8 +505,11 @@ bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
 			}
 
 			//for convenience sake, do not allow mixed flags to stack!
+			//currently flags are stored on a per-stack basis - the problem with them
+			//being on a per-object-in-stack basis is a check on the flags only ever checks the top object in the stack
 			//continue on because you might find something else with the same flags
 			if (sourceObject.fFlags != this->fFlags) {
+				DebugBreakpoint();
 				numToStack = 0;
 			}
 
@@ -783,6 +786,16 @@ void OBJECTTYPE::DeleteMe(OBJECTTYPE** ppObject)
 	return;
 }
 
+StackedObjectData::StackedObjectData()
+{
+	initialize();
+}
+
+StackedObjectData::~StackedObjectData()
+{
+	attachments.clear();
+}
+
 OBJECTTYPE* StackedObjectData::GetAttachmentAtIndex(UINT8 index)
 {
 	PERFORMANCE_MARKER
@@ -1042,4 +1055,5 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 
 OBJECTTYPE::~OBJECTTYPE()
 {
+	objectStack.clear();
 }

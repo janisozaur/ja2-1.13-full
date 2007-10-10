@@ -178,7 +178,9 @@ void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
 		else
 		{
 			//bug if gets here and we aren't exiting the game, maybe a bug even if we are exiting (but who cares)
+			//bug exists since beginning of SVN
 			DebugBreakpoint();
+			//INT8 bug = 0;
 		}
 	}
 	if( pNode == gSoldierInitHead )
@@ -296,12 +298,12 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer, float dMajorMapVersion, UINT8 ubMin
 	{
 		LOADDATA( &tempBasicPlacement, *hBuffer, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
 		pNode = AddBasicPlacementToSoldierInitList( &tempBasicPlacement );
-		pNode->ubNodeID = (UINT8)i;
 		if( !pNode )
 		{
 			AssertMsg( 0, "Failed to allocate memory for new basic placement in LoadSoldiersFromMap." );
 			return FALSE;
 		}
+		pNode->ubNodeID = (UINT8)i;
 		if( tempBasicPlacement.fDetailedPlacement )
 		{ //Add the static detailed placement information in the same newly created node as the basic placement.
 			//read static detailed placement from file
@@ -543,7 +545,6 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr, GROUP *pGroup = NULL )
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("AddPlacementToWorld"));
 	// First check if this guy has a profile and if so check his location such that it matches!
 	// Get profile from placement info
-	tempDetailedPlacement.initialize();
 
 	if (curr->pBasicPlacement->bBodyType == TANK_NW ||
 		curr->pBasicPlacement->bBodyType == TANK_NE)

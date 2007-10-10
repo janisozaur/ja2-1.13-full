@@ -713,13 +713,17 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 		//loop through all the dealers inventories
 		for( ubArmsDealer=0; ubArmsDealer<uiDealersSaved; ubArmsDealer++ )
 		{
+			gArmsDealerStatus[ubArmsDealer] = gOldArmsDealerStatus[ubArmsDealer];
+
 			//loop through this dealer's individual items
 			for(usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
 			{
 				if ( Item[usItemIndex].usItemClass == 0 )
 					continue;
 
-				//TODO stray ammo not currently handled, imo not terribly important
+				//some things are much much better stored in status now
+				gArmsDealerStatus[ubArmsDealer].fPreviouslyEligible[usItemIndex] = (*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex].fPreviouslyEligible;
+				gArmsDealerStatus[ubArmsDealer].ubStrayAmmo[usItemIndex] = (*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex].ubStrayAmmo;
 
 				//if there are any perfect items, insert them immediately
 				if ((*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex].ubPerfectItems) {
@@ -987,6 +991,8 @@ BOOLEAN SOLDIERCREATE_STRUCT::Save(HWFILE hFile, bool fSavingMap)
 		return FALSE;
 	}
 
+	//ADB screw checksums, they suck, also, checksums aren't always saved
+	/*
 	if (fSavingMap == false) {
 		UINT16 usCheckSum = GetChecksum();
 		if ( !FileWrite( hFile, &usCheckSum, 2, &uiNumBytesWritten ) )
@@ -994,6 +1000,7 @@ BOOLEAN SOLDIERCREATE_STRUCT::Save(HWFILE hFile, bool fSavingMap)
 			return FALSE;
 		}
 	}
+	*/
 	return TRUE;
 }
 
@@ -1005,6 +1012,7 @@ BOOLEAN SOLDIERCREATE_STRUCT::Load(INT8 **hBuffer, float dMajorMapVersion, UINT8
 		this->Inv.Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
 	}
 	else {
+		//ADB checksum was not saved under these circumstances!
 		OLD_SOLDIERCREATE_STRUCT_101 OldSavedSoldierInfo101;
 		LOADDATA( &OldSavedSoldierInfo101, *hBuffer, SIZEOF_OLD_SOLDIERCREATE_STRUCT_101_POD );
 		OldSavedSoldierInfo101.CopyOldInventoryToNew();
@@ -1013,11 +1021,12 @@ BOOLEAN SOLDIERCREATE_STRUCT::Load(INT8 **hBuffer, float dMajorMapVersion, UINT8
 	return TRUE;
 }
 
-BOOLEAN SOLDIERCREATE_STRUCT::Load(HWFILE hFile, int versionToLoad)
+BOOLEAN SOLDIERCREATE_STRUCT::Load(HWFILE hFile, int versionToLoad, bool loadChecksum)
 {
 	PERFORMANCE_MARKER
 	UINT32 uiNumBytesRead;
 
+	//ADB need to overwrite guiCurrentSaveGameVersion so that the other things loaded (like inv) are loaded ok
 	int tempVersion = guiCurrentSaveGameVersion;
 	guiCurrentSaveGameVersion = versionToLoad;
 
@@ -1072,34 +1081,42 @@ BOOLEAN SOLDIERCREATE_STRUCT::Load(HWFILE hFile, int versionToLoad)
 			*this = OldSavedSoldierInfo999;
 		}
 		*/
+
+
+		//ADB need to make sure we are loading the checksum only if the older version saved it
+		if (loadChecksum == true) {
+#ifdef JA2TESTVERSION
+			CHAR8		zReason[256];
+#endif
+
+			UINT16 usCheckSum;
+			FileRead( hFile, &usCheckSum, 2, &uiNumBytesRead );
+			if( uiNumBytesRead != 2 )
+			{
+				#ifdef JA2TESTVERSION
+					sprintf( zReason, "Load SoldierCreateStruct -- EOF while reading usCheckSum.	KM"	);
+					AssertMsg( 0, zReason );
+				#endif
+				guiCurrentSaveGameVersion = tempVersion;
+				return FALSE;
+			}
+			//ADB screw checksums, they suck
+			/*
+			//verify the checksum equation (anti-hack) -- see save 
+			UINT16 usFileCheckSum = GetChecksum();
+			if( usCheckSum != usFileCheckSum )
+			{	//Hacker has modified the stats on the enemy placements.
+				#ifdef JA2TESTVERSION
+					sprintf( zReason, "EnemySoldier -- checksum for placement %d failed.	KM", usFileCheckSum );
+					AssertMsg( 0, zReason );
+				#endif
+				guiCurrentSaveGameVersion = tempVersion;
+				return FALSE;
+			}
+			*/
+		}
 	}
 
-	#ifdef JA2TESTVERSION
-		CHAR8		zReason[256];
-	#endif
-
-	UINT16 usCheckSum;
-	FileRead( hFile, &usCheckSum, 2, &uiNumBytesRead );
-	if( uiNumBytesRead != 2 )
-	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Load SoldierCreateStruct -- EOF while reading usCheckSum.	KM"	);
-			AssertMsg( 0, zReason );
-		#endif
-		guiCurrentSaveGameVersion = tempVersion;
-		return FALSE;
-	}
-	//verify the checksum equation (anti-hack) -- see save 
-	UINT16 usFileCheckSum = GetChecksum();
-	if( usCheckSum != usFileCheckSum )
-	{	//Hacker has modified the stats on the enemy placements.
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- checksum for placement %d failed.	KM", usFileCheckSum );
-			AssertMsg( 0, zReason );
-		#endif
-		guiCurrentSaveGameVersion = tempVersion;
-		return FALSE;
-	}
 	guiCurrentSaveGameVersion = tempVersion;
 	return TRUE;
 }
@@ -1455,7 +1472,9 @@ BOOLEAN StackedObjectData::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 u
 	//when this function is called, the file has been loaded into a buffer using FileRead
 	PERFORMANCE_MARKER
 	//if we are at the most current version, then fine
-	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	//but we can also be loading this from a map that is up to date when the savegame isn't!
+	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION 
+		|| (dMajorMapVersion == gdMajorMapVersion && gubMinorMapVersion == ubMinorMapVersion))
 	{
 		int size;
 		LOADDATA(&(this->data), *hBuffer, sizeof(ObjectData) );

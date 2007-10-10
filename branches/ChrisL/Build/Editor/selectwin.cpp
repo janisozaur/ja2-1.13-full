@@ -1078,12 +1078,12 @@ void DisplaySelectionWindowGraphicalInformation()
 		}
 		else
 		{
-			mprintf( 2, 2, L"File:	%S, subindex:	%d (%S)", 
+			mprintf( 2, 2, L"File:  %S, subindex:  %d (%S)", 
 				gTilesets[ giCurrentTilesetID ].TileSurfaceFilenames[ pNode->uiObjIndx ],
 				pNode->uiIndex, gTileSurfaceName[ pNode->uiObjIndx ] );
 		}
 	}
-	mprintf( 350, 2, L"Current Tileset:	%s",	gTilesets[ giCurrentTilesetID ].zName );
+	mprintf( 350, 2, L"Current Tileset:  %s",  gTilesets[ giCurrentTilesetID ].zName );
 }	
 
 //----------------------------------------------------------------------------------------------

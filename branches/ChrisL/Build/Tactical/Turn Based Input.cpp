@@ -4238,7 +4238,8 @@ void RefreshSoldier()
 	}
 
 	if ( GetMouseMapPos( &sMapPos ) )
-		sprintf( gDebugStr, "%d %d %d %d %d %d %d %d", gubWorldMovementCosts[ sMapPos ][ 0 ][ 0 ],
+		sprintf( gDebugStr, "%d %d %d %d %d %d %d %d",
+		gubWorldMovementCosts[ sMapPos ][ 0 ][gsInterfaceLevel],
 		gubWorldMovementCosts[ sMapPos ][ 1 ][gsInterfaceLevel],
 		gubWorldMovementCosts[ sMapPos ][ 2 ][gsInterfaceLevel],
 		gubWorldMovementCosts[ sMapPos ][ 3 ][gsInterfaceLevel],
