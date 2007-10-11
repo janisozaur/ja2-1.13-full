@@ -295,8 +295,8 @@ CHAR16 Message[][STRING_LENGTH] =
 	L"Turno dei Bloodcat",
 	L"automatic",
 	L"no full auto",
-	L"The enemy has no more items to steal!",	// WANNE
-	L"The enemy has no item in its hand!", //WANNE
+	L"The enemy has no more items to steal!",
+	L"The enemy has no item in its hand!",
 };
 
 
@@ -626,6 +626,7 @@ STR16 pMilitiaControlMenuStrings[] =
 	L"All: Hold Position",
 	L"All: Retreat",
 	L"All: Come to me",
+	L"All: Spread out",
 	L"All: Get down",
 	L"All: Take cover",
 	//L"All: Find items",
@@ -2582,7 +2583,6 @@ STR16			MercAccountText[] =
 	L"Conferma il pagamento di %s?",		//the %s is a string that contains the dollar amount ( ex. "$150" )
 };
 
-// WANNE:
 // Merc Account Page buttons
 STR16			MercAccountPageText[] = 
 {
@@ -2800,8 +2800,6 @@ STR16			BobbyROrderFormText[] =
 	L"Spedizioni",	
 };
 
-
-// WANNE
 STR16			BobbyRFilter[] =
 {
 	// Guns

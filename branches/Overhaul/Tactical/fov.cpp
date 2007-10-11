@@ -288,7 +288,8 @@ void ExamineSlantRoofFOVSlots( )
 
 void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLocators, UINT8 ubLevel, BOOLEAN fForce )
 {
- UINT32 maincnt,markercnt,marker,tilesLeftToSee,cnt,prevmarker;
+ UINT32 maincnt,markercnt,marker,tilesLeftToSee,prevmarker;
+ UINT8 cnt;
  INT32 Inc[6],Dir[6];
  INT8	itemVisible = FALSE;
  INT8 Blocking,twoMoreTiles,markerDir;
@@ -351,7 +352,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 
 
   who = pSoldier->ubID;
-  dir = pSoldier->bDirection;
+  dir = pSoldier->ubDirection;
 
  //NumMessage("good old reveal",dir);
 
@@ -370,11 +371,11 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 
   BuildSightDir(dir,(UINT32 *)&Dir[0],(UINT32 *)&Dir[1],(UINT32 *)&Dir[2],(UINT32 *)&Dir[3],(UINT32 *)&Dir[4]);
   for (cnt = 0; cnt < 5; cnt++)
-     Inc[cnt] = DirectionInc( (INT16)Dir[cnt]);
+     Inc[cnt] = DirectionInc( (UINT8) Dir[cnt]);
 
   // create gridno increment for NOVIEW - in other words, no increment!
   Inc[5] = 0;
-  Dir[5] = pSoldier->bDirection;
+  Dir[5] = pSoldier->ubDirection;
 
   if (dir % 2 == 1)	/* even numbers use ViewPath2 */
      Path2 = TRUE;

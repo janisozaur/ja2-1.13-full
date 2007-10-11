@@ -573,10 +573,12 @@ UINT8		ubTravelCost;
 	//bDirection = atan8( iX, iY, iSrcX, iSrcY );
 	bDirection = atan8( iSrcX, iSrcY, iX, iY );
 
+#if 0
   if ( usTileNo == 20415 && bDirection == 3 )
   {
     int i = 0;
   }
+#endif
 
 
 	ubTravelCost = gubWorldMovementCosts[ usTileNo ][ bDirection ][ 0 ];
@@ -781,10 +783,10 @@ void LightAddTileNode(LEVELNODE *pNode, UINT32 uiLightType, UINT8 ubShadeAdd, BO
 {
 INT16 sSum;
 
-	pNode->ubSumLights += ubShadeAdd;
+	pNode->ubSumLights = pNode->ubSumLights + ubShadeAdd;
 	if (fFake)
 	{
-		pNode->ubFakeShadeLevel += ubShadeAdd;
+		pNode->ubFakeShadeLevel = pNode->ubFakeShadeLevel + ubShadeAdd;
 	}
 
 	// Now set max
@@ -815,7 +817,7 @@ INT16 sSum;
 	}
 	else
 	{
-		pNode->ubSumLights -= ubShadeSubtract;
+		pNode->ubSumLights = pNode->ubSumLights - ubShadeSubtract;
 	}
 	if (fFake)
 	{	
@@ -825,7 +827,7 @@ INT16 sSum;
 		}
 		else
 		{
-			pNode->ubFakeShadeLevel -= ubShadeSubtract;
+			pNode->ubFakeShadeLevel = pNode->ubFakeShadeLevel - ubShadeSubtract;
 		}
 	}
 
@@ -950,7 +952,7 @@ BOOLEAN fFake;
 		  }
 
 		  if(uiFlags&LIGHT_BACKLIGHT)
-			  ubShadeAdd=(INT16)ubShade*7/10;
+			  ubShadeAdd=(UINT8)((UINT16)ubShade*7/10);
 
 		  pMerc = gpWorldLevelData[uiTile].pMercHead;	
 		  while(pMerc!=NULL)
@@ -1093,7 +1095,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 		  }
 
 		  if(uiFlags&LIGHT_BACKLIGHT)
-			  ubShadeSubtract=(INT16)ubShade*7/10;
+			  ubShadeSubtract=(UINT8) ((UINT16)ubShade*7/10);
 
 		  pMerc = gpWorldLevelData[uiTile].pMercHead;		
 		  while(pMerc!=NULL)
@@ -1423,7 +1425,7 @@ UINT16 LightGetLastNode(INT32 iLight)
 ***************************************************************************************/
 BOOLEAN LightAddNode(INT32 iLight, INT16 iHotSpotX, INT16 iHotSpotY, INT16 iX, INT16 iY, UINT8 ubIntensity, UINT16 uiFlags)
 {
-BOOLEAN fDuplicate=FALSE;
+//BOOLEAN fDuplicate=FALSE;
 DOUBLE dDistance;
 UINT8 ubShade;
 INT32 iLightDecay;
@@ -1585,7 +1587,7 @@ BOOLEAN fInsertNodes=FALSE;
 				for (i=0; i<=XDelta; i++)
 				{
 					LightInsertNode(iLight, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-					iXPos+=XAdvance;
+					iXPos=iXPos+XAdvance;
 			  }
 		 }
 		 else
@@ -1593,7 +1595,7 @@ BOOLEAN fInsertNodes=FALSE;
 				for (i=0; i<=XDelta; i++)
 				{
 					LightAddNode(iLight, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-					iXPos+=XAdvance;
+					iXPos=iXPos+XAdvance;
 			  }
 		 }
       return(TRUE);
@@ -3048,9 +3050,9 @@ BOOLEAN LightSave(INT32 iLight, STR pFilename)
 ***************************************************************************************/
 INT32 LightLoad(STR pFilename)
 {
-HWFILE hFile;
-LIGHT_NODE *pNewLight=NULL, *pLastLight=NULL;
-INT32 iLight;
+	HWFILE hFile;
+	LIGHT_NODE *pNewLight=NULL, *pLastLight=NULL;
+	INT32 iLight;
 
 	if((iLight=LightGetFree())==(-1))
 		return(-1);
@@ -3198,7 +3200,7 @@ BOOLEAN LightSetColors(SGPPaletteEntry *pPal, UINT8 ubNumColors)
 ********************************************************************************/
 INT32 LightSpriteGetFree(void)
 {
-INT32 iCount;
+	INT32 iCount;
 
 	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
 	{
@@ -3218,11 +3220,12 @@ INT32 iCount;
 ********************************************************************************/
 INT32 LightSpriteCreate(STR pName, UINT32 uiLightType)
 {
-INT32 iSprite;
+	INT32 iSprite;
 
 	if((iSprite=LightSpriteGetFree())!=(-1))
 	{
 		memset(&LightSprites[iSprite], 0, sizeof(LIGHT_SPRITE));
+
 		LightSprites[iSprite].iX=WORLD_COLS+1;
 		LightSprites[iSprite].iY=WORLD_ROWS+1;
 		LightSprites[iSprite].iOldX=WORLD_COLS+1;
@@ -3247,6 +3250,11 @@ INT32 iSprite;
 ********************************************************************************/
 BOOLEAN LightSpriteFake(INT32 iSprite)
 {
+	if ( (iSprite >= MAX_LIGHT_SPRITES ) || (iSprite < 0) )
+	{
+		return FALSE;
+	}
+
 	if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ACTIVE)
 	{
 		LightSprites[iSprite].uiFlags|=MERC_LIGHT;
@@ -3266,6 +3274,11 @@ BOOLEAN LightSpriteFake(INT32 iSprite)
 ********************************************************************************/
 BOOLEAN LightSpriteDestroy(INT32 iSprite)
 {
+	if ( (iSprite >= MAX_LIGHT_SPRITES ) || (iSprite < 0) )
+	{
+		return FALSE;
+	}
+
 	if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ACTIVE)
 	{
 		if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ERASE)
@@ -3377,6 +3390,11 @@ BOOLEAN fRenderLights=FALSE;
 ********************************************************************************/
 BOOLEAN LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY)
 {
+	if ( (iSprite >= MAX_LIGHT_SPRITES ) || (iSprite < 0) )
+	{
+		return FALSE;
+	}
+
 	if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ACTIVE)
 	{
 		if((LightSprites[iSprite].iX==iX) && (LightSprites[iSprite].iY==iY))
@@ -3421,6 +3439,11 @@ BOOLEAN LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY)
 ********************************************************************************/
 BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 {
+	if ( (iSprite >= MAX_LIGHT_SPRITES ) || (iSprite < 0) )
+	{
+		return FALSE;
+	}
+
 	if(fOnRoof && (LightSprites[iSprite].uiFlags&LIGHT_SPR_ONROOF))
 		return(FALSE);
 	
@@ -3468,6 +3491,11 @@ BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 ********************************************************************************/
 BOOLEAN LightSpritePower(INT32 iSprite, BOOLEAN fOn)
 {
+	if ( (iSprite >= MAX_LIGHT_SPRITES ) || (iSprite < 0) )
+	{
+		return FALSE;
+	}
+
 	if(fOn)
 	{
 		//LightSprites[iSprite].uiFlags|=(LIGHT_SPR_ON|LIGHT_SPR_REDRAW);

@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 // MAXIMUM NUMBER OF ENEMIES: 32
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
@@ -66,6 +65,7 @@
 	#include "Assignments.h"
 	#include "cheats.h"
 	#include "Map Information.h"
+	#include "MilitiaSquads.h"
 #endif
 
 #include "Reinforcement.h"
@@ -85,7 +85,9 @@ INT32 giMaxEnemiesToRender = 40;
 INT32 giMaxMilitiaToRender = 20;//Changes depending on merc amount
 
 extern UINT8 gubReinforcementMinEnemyStaticGroupSize;
+extern BOOLEAN gfStrategicMilitiaChangesMade;
 
+extern void ResetMilitia();
 extern BOOLEAN AutoReload( SOLDIERTYPE *pSoldier );
 extern HVSURFACE ghFrameBuffer;
 BOOLEAN gfTransferTacticalOppositionToAutoResolve = FALSE;
@@ -341,6 +343,9 @@ void RenderSoldierCellBars( SOLDIERCELL *pCell );
 	extern void CountRandomCalls( BOOLEAN fStart );
 	extern void GetRandomCalls( UINT32 *puiRandoms, UINT32 *puiPreRandoms );
 #endif
+
+void GenerateDirectionInfos( INT16 sMapX, INT16 sMapY, UINT8* uiDirNumber, UINT16 pMoveDir[4][3], BOOLEAN fWithCities, BOOLEAN fForBattle, BOOLEAN fOnlyCitySectors );
+
 
 //Dynamic globals -- to conserve memory, all global variables are allocated upon entry
 //and deleted before we leave.
@@ -959,7 +964,6 @@ void CalculateSoldierCells( BOOLEAN fReset )
 	}
 	gpAR->uiTimeSlice = gpAR->uiTimeSlice * gpAR->ubTimeModifierPercentage / 100;
 	
-	// WANNE 2
 	iTop = iScreenHeightOffset + (240 - gpAR->sHeight/2);
 	if( iTop > (iScreenHeightOffset + 120) )
 		iTop -= 40;
@@ -1222,7 +1226,6 @@ void BuildInterfaceBuffer()
 	INT32						x,y;
 
 	//Setup the blitting clip regions, so we don't draw outside of the region (for excess panelling)
-	// WANNE 2
 	gpAR->Rect.iLeft		= iScreenWidthOffset + (320 - gpAR->sWidth/2);
 	gpAR->Rect.iRight		= gpAR->Rect.iLeft + gpAR->sWidth;
 	gpAR->Rect.iTop			= iScreenHeightOffset + (240 - gpAR->sHeight/2);
@@ -1805,7 +1808,6 @@ void RenderAutoResolve()
 
 	if( gpAR->fPendingSurrender )
 	{
-		// WANNE 2
 		DisplayWrappedString( (UINT16)(gpAR->sCenterStartX+16), (UINT16)(iScreenHeightOffset + 230+gpAR->bVerticalOffset), 108, 2,
 			(UINT8)FONT10ARIAL, FONT_YELLOW, gpStrategicString[ STR_ENEMY_SURRENDER_OFFER ], FONT_BLACK, FALSE, LEFT_JUSTIFIED );
 	}
@@ -1926,7 +1928,6 @@ void RenderAutoResolve()
 					break;
 			}
 			//Render the results of the battle.
-			// WANNE 2
 			SetFont( BLOCKFONT2 );
 			xp = gpAR->sCenterStartX + 12;
 			yp = iScreenHeightOffset + 218 + gpAR->bVerticalOffset;
@@ -1942,7 +1943,6 @@ void RenderAutoResolve()
 				gpAR->uiTotalElapsedBattleTimeInMilliseconds/60000,
 				(gpAR->uiTotalElapsedBattleTimeInMilliseconds%60000)/1000 );
 			xp = gpAR->sCenterStartX + 70 - StringPixLength( str, FONT10ARIAL )/2;
-			// WANNE 2
 			yp = iScreenHeightOffset + 290 + gpAR->bVerticalOffset;
 			SetFontForeground( FONT_YELLOW );
 			mprintf( xp, yp, str );
@@ -1952,12 +1952,99 @@ void RenderAutoResolve()
 	InvalidateScreen();
 }
 
+static void ARCreateMilitia( UINT8 mclass, INT32 i, INT16 sX, INT16 sY)
+{
+	// reset counter of how many mortars this team has rolled
+	ResetMortarsOnTeamCount();
+
+	if( !gpBattleGroup ) {
+		AssertMsg(0, "No battle group set while creating militia");
+	}
+
+	if( mclass == SOLDIER_CLASS_ELITE_MILITIA )
+	{
+		gpCivs[i].pSoldier = TacticalCreateMilitia( SOLDIER_CLASS_ELITE_MILITIA );
+		if( gpCivs[i].pSoldier->ubBodyType == REGFEMALE )
+		{
+			gpCivs[i].usIndex = MILITIA3F_FACE;
+		}
+		else
+		{
+			gpCivs[i].usIndex = MILITIA3_FACE;
+		}
+	}
+	else if( mclass == SOLDIER_CLASS_REG_MILITIA )
+	{
+		gpCivs[i].pSoldier = TacticalCreateMilitia( SOLDIER_CLASS_REG_MILITIA );
+		if( gpCivs[i].pSoldier->ubBodyType == REGFEMALE )
+		{
+			gpCivs[i].usIndex = MILITIA2F_FACE;
+		}
+		else
+		{
+			gpCivs[i].usIndex = MILITIA2_FACE;
+		}
+	}
+	else if( mclass == SOLDIER_CLASS_GREEN_MILITIA )
+	{
+		gpCivs[i].pSoldier = TacticalCreateMilitia( SOLDIER_CLASS_GREEN_MILITIA );
+		if( gpCivs[i].pSoldier->ubBodyType == REGFEMALE )
+		{
+			gpCivs[i].usIndex = MILITIA1F_FACE;
+		}
+		else
+		{
+			gpCivs[i].usIndex = MILITIA1_FACE;
+		}
+	}
+	else
+	{
+		AssertMsg( 0, "Attempting to illegally create a militia soldier." );
+	}
+	if( !gpCivs[ i ].pSoldier )
+	{
+		AssertMsg( 0, "Failed to create militia soldier for autoresolve." );
+	}
+	gpCivs[i].uiVObjectID = gpAR->iFaces;
+	gpCivs[i].pSoldier->sSectorX = sX;
+	gpCivs[i].pSoldier->sSectorY = sY;
+	swprintf( gpCivs[i].pSoldier->name, gpStrategicString[ STR_AR_MILITIA_NAME ] );
+}
+
+static void ARCreateMilitiaSquad( UINT8 *cnt, UINT8 ubEliteMilitia, UINT8 ubRegMilitia, UINT8 ubGreenMilitia, INT16 sX, INT16 sY)
+{
+	while( *cnt < gpAR->ubCivs && (ubEliteMilitia || ubRegMilitia || ubGreenMilitia) )
+	{
+		if (ubEliteMilitia)
+		{
+			ARCreateMilitia( SOLDIER_CLASS_ELITE_MILITIA, *cnt, sX, sY);
+			ubEliteMilitia--;
+		}
+		else if (ubRegMilitia)
+		{
+			ARCreateMilitia( SOLDIER_CLASS_REG_MILITIA, *cnt, sX, sY);
+			ubRegMilitia--;
+		}
+		else if (ubGreenMilitia)
+		{
+			ARCreateMilitia( SOLDIER_CLASS_GREEN_MILITIA, *cnt, sX, sY);
+			ubGreenMilitia--;
+		}
+
+		(*cnt)++;
+	}
+}
+
 void CreateAutoResolveInterface()
 {
 	VOBJECT_DESC    VObjectDesc;
 	INT32 i, index;
 	HVOBJECT hVObject;
 	UINT8 ubGreenMilitia, ubRegMilitia, ubEliteMilitia;
+	UINT16 pMoveDir[4][3];
+	UINT8 uiDirNumber = 0;
+	UINT8 cnt;
+
 	//Setup new autoresolve blanket interface.
 	MSYS_DefineRegion( &gpAR->AutoResolveRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH-1, 0,
 		MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
@@ -2047,9 +2134,18 @@ void CreateAutoResolveInterface()
 		}
 	}
 
-	ubEliteMilitia = MilitiaInFiveSectorsOfRank( gpAR->ubSectorX, gpAR->ubSectorY, ELITE_MILITIA );
-	ubRegMilitia = MilitiaInFiveSectorsOfRank( gpAR->ubSectorX, gpAR->ubSectorY, REGULAR_MILITIA );
-	ubGreenMilitia = MilitiaInFiveSectorsOfRank( gpAR->ubSectorX, gpAR->ubSectorY, GREEN_MILITIA );
+	// 0verhaul:  The following code was modified so that militia bookkeeping could be handled.
+	// In the previous auto-resolve method, promotions were often lost because the sector did not 
+	// actually have the militia to be promoted--they came from surrounding sectors.  The
+	// sector X and Y are not actually used for auto-resolve itself, so I can use it to adjust
+	// both the actual sector counts and the promotions, by using the origin sectors of each
+	// soldier.
+	ubEliteMilitia = MilitiaInSectorOfRank( gpAR->ubSectorX, gpAR->ubSectorY, ELITE_MILITIA );
+	ubRegMilitia = MilitiaInSectorOfRank( gpAR->ubSectorX, gpAR->ubSectorY, REGULAR_MILITIA );
+	ubGreenMilitia = MilitiaInSectorOfRank( gpAR->ubSectorX, gpAR->ubSectorY, GREEN_MILITIA );
+
+	// This block should be unnecessary.  If the counts do not line up, there is a bug.
+#if 0
 	while( ubEliteMilitia + ubRegMilitia + ubGreenMilitia < gpAR->ubCivs )
 	{
 		switch( PreRandom( 3 ) )
@@ -2059,60 +2155,27 @@ void CreateAutoResolveInterface()
 			case 2:	ubGreenMilitia++;	break;
 		}
 	}
-	for( i = 0; i < gpAR->ubCivs; i++ )
-	{
-		// reset counter of how many mortars this team has rolled
-		ResetMortarsOnTeamCount();
+#endif
 
-		if( i < ubEliteMilitia )
-		{
-			gpCivs[i].pSoldier = TacticalCreateMilitia( SOLDIER_CLASS_ELITE_MILITIA );
-			if( gpCivs[i].pSoldier->ubBodyType == REGFEMALE )
-			{
-				gpCivs[i].usIndex = MILITIA3F_FACE;
-			}
-			else
-			{
-				gpCivs[i].usIndex = MILITIA3_FACE;
-			}
-		}
-		else if( i < ubRegMilitia + ubEliteMilitia )
-		{
-			gpCivs[i].pSoldier = TacticalCreateMilitia( SOLDIER_CLASS_REG_MILITIA );
-			if( gpCivs[i].pSoldier->ubBodyType == REGFEMALE )
-			{
-				gpCivs[i].usIndex = MILITIA2F_FACE;
-			}
-			else
-			{
-				gpCivs[i].usIndex = MILITIA2_FACE;
-			}
-		}
-		else if( i < ubGreenMilitia + ubRegMilitia + ubEliteMilitia )
-		{
-			gpCivs[i].pSoldier = TacticalCreateMilitia( SOLDIER_CLASS_GREEN_MILITIA );
-			if( gpCivs[i].pSoldier->ubBodyType == REGFEMALE )
-			{
-				gpCivs[i].usIndex = MILITIA1F_FACE;
-			}
-			else
-			{
-				gpCivs[i].usIndex = MILITIA1_FACE;
-			}
-		}
-		else
-		{
-			AssertMsg( 0, "Attempting to illegally create a militia soldier." );
-		}
-		if( !gpCivs[ i ].pSoldier )
-		{
-			AssertMsg( 0, "Failed to create militia soldier for autoresolve." );
-		}
-		gpCivs[i].uiVObjectID = gpAR->iFaces;
-		gpCivs[i].pSoldier->sSectorX = gpAR->ubSectorX;
-		gpCivs[i].pSoldier->sSectorY = gpAR->ubSectorY;
-		swprintf( gpCivs[i].pSoldier->name, gpStrategicString[ STR_AR_MILITIA_NAME ] );
+	cnt = 0;
+	// Add the militia in this sector
+	ARCreateMilitiaSquad( &cnt, ubEliteMilitia, ubRegMilitia, ubGreenMilitia, gpAR->ubSectorX, gpAR->ubSectorY);
+
+	// Add the militia in the surrounding sectors
+	GenerateDirectionInfos( gpAR->ubSectorX, gpAR->ubSectorY, &uiDirNumber, pMoveDir, 
+		( GetTownIdForSector( gpAR->ubSectorX, gpAR->ubSectorY ) != BLANK_SECTOR ? TRUE : FALSE ), TRUE, FALSE );
+	for( i=0; i<uiDirNumber; i++)
+	{
+		INT16 sX = SECTORX( pMoveDir[ i ][0] );
+		INT16 sY = SECTORY( pMoveDir[ i ][0] );
+
+		ubEliteMilitia = MilitiaInSectorOfRank( sX, sY, ELITE_MILITIA );
+		ubRegMilitia = MilitiaInSectorOfRank( sX, sY, REGULAR_MILITIA );
+		ubGreenMilitia = MilitiaInSectorOfRank( sX, sY, GREEN_MILITIA );
+
+		ARCreateMilitiaSquad( &cnt, ubEliteMilitia, ubRegMilitia, ubGreenMilitia, sX, sY );
 	}
+
 	if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 	{
 		for( i = 0, index = 0; i < gpAR->ubElites; i++, index++ )
@@ -2210,7 +2273,6 @@ void CreateAutoResolveInterface()
 
 	gpAR->bVerticalOffset = (240 - gpAR->sHeight/2) > 120 ? -40 : 0;
 	
-	// WANNE 2
 	//Create the buttons -- subject to relocation
 	gpAR->iButton[ PLAY_BUTTON ] = 
 		QuickCreateButton( gpAR->iButtonImage[ PLAY_BUTTON ] , (INT16)(gpAR->sCenterStartX+11), (INT16)(iScreenHeightOffset + 240+gpAR->bVerticalOffset), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
@@ -2389,8 +2451,8 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
 			if( fDeleteForGood && gpCivs[ i ].pSoldier->bLife < OKLIFE/2 )
 			{
 				AddDeadSoldierToUnLoadedSector( gpAR->ubSectorX, gpAR->ubSectorY, 0, gpCivs[ i ].pSoldier, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT );
-//				StrategicRemoveMilitiaFromSector( gpAR->ubSectorX, gpAR->ubSectorY, ubCurrentRank, 1 );
-				ARRemoveMilitiaMan( gpAR->ubSectorX, gpAR->ubSectorY, ubCurrentRank );
+				StrategicRemoveMilitiaFromSector( gpCivs[ i ].pSoldier->sSectorX, gpCivs[ i ].pSoldier->sSectorY, ubCurrentRank, 1 );
+//				ARRemoveMilitiaMan( gpAR->ubSectorX, gpAR->ubSectorY, ubCurrentRank );
 				if( ProcessLoyalty() )HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_NATIVE_KILLED, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
 			}
 			else
@@ -2399,7 +2461,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
 				// this will check for promotions and handle them for you
 				if( fDeleteForGood && ( gpCivs[ i ].pSoldier->ubMilitiaKills > 0) && ( ubCurrentRank < ELITE_MILITIA ) )
 				{
-					ubPromotions = CheckOneMilitiaForPromotion( gpAR->ubSectorX, gpAR->ubSectorY, ubCurrentRank, gpCivs[ i ].pSoldier->ubMilitiaKills );
+					ubPromotions = CheckOneMilitiaForPromotion( gpCivs[ i ].pSoldier->sSectorX, gpCivs[ i ].pSoldier->sSectorY, ubCurrentRank, gpCivs[ i ].pSoldier->ubMilitiaKills );
 					if( ubPromotions )
 					{
 						if( ubPromotions == 2 )
@@ -2469,6 +2531,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
 		UnloadButtonImage( gpAR->iButtonImage[ i ] );
 		RemoveButton( gpAR->iButton[ i ] );
 	}
+
 	if( fDeleteForGood )
 	{ //Warp the game time accordingly
 
@@ -2501,6 +2564,11 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
 		gubSectorIDOfCreatureAttack = 0;
 	}
 	//VtPauseSampling();
+
+	if (gfStrategicMilitiaChangesMade)
+	{
+		ResetMilitia();
+	}
 }
 
 void PauseButtonCallback( GUI_BUTTON *btn, INT32 reason )
@@ -3035,7 +3103,6 @@ void CalculateRowsAndColumns()
 	else
 		gpAR->sWidth = 146 + 55 * (max( max( gpAR->ubMercCols, gpAR->ubCivCols ), 2 ) + max( gpAR->ubEnemyCols, 2 ));
 
-	// WANNE 2
 	//gpAR->sCenterStartX = 323 - gpAR->sWidth/2 + max( max( gpAR->ubMercCols, 2), max( gpAR->ubCivCols, 2 ) ) *55;
 	gpAR->sCenterStartX = iScreenWidthOffset + (323 - gpAR->sWidth/2 + max( max( gpAR->ubMercCols, 2), max( gpAR->ubCivCols, 2 ) ) *55);
 	
@@ -3868,15 +3935,15 @@ BOOLEAN FireAShot( SOLDIERCELL *pAttacker )
 				PlayAutoResolveSample( Weapon[ pItem->usItem ].sSound, RATE_11025, 50, 1, MIDDLEPAN );			
 				return TRUE;
 			}
-			if( !pItem->ubGunShotsLeft )
+			if( !pItem->ItemData.Gun.ubGunShotsLeft )
 			{
 				AutoReload( pSoldier );
-				if ( pItem->ubGunShotsLeft && Weapon[ pItem->usItem ].sLocknLoadSound )
+				if ( pItem->ItemData.Gun.ubGunShotsLeft && Weapon[ pItem->usItem ].sLocknLoadSound )
 				{
 					PlayAutoResolveSample( Weapon[ pItem->usItem ].sLocknLoadSound, RATE_11025, 50, 1, MIDDLEPAN );
 				}
 			}
-			if( pItem->ubGunShotsLeft )
+			if( pItem->ItemData.Gun.ubGunShotsLeft )
 			{
 				PlayAutoResolveSample( Weapon[ pItem->usItem ].sSound, RATE_11025, 50, 1, MIDDLEPAN );			
 				if( pAttacker->uiFlags & CELL_MERC )
@@ -3886,7 +3953,7 @@ BOOLEAN FireAShot( SOLDIERCELL *pAttacker )
 
 					StatChange( pAttacker->pSoldier, MARKAMT, 3, FALSE );
 				}
-				pItem->ubGunShotsLeft--;
+				pItem->ItemData.Gun.ubGunShotsLeft--;
 				return TRUE;
 			}
 		}
@@ -3923,7 +3990,7 @@ BOOLEAN TargetHasLoadedGun( SOLDIERTYPE *pSoldier )
 			{
 				return TRUE;
 			}
-			if( pItem->ubGunShotsLeft )
+			if( pItem->ItemData.Gun.ubGunShotsLeft )
 			{
 				return TRUE;
 			}

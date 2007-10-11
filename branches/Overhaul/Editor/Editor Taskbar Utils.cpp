@@ -1,4 +1,3 @@
-// WANNE: EDITOR?
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -447,7 +446,6 @@ void mprintfEditor(INT16 x, INT16 y, STR16 pFontString, ...)
 	mprintf( x, y, string );
 }
 
-// WANNE: EDITOR continue
 void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 {
 	ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, sTop, sRight, sBottom, gusEditorTaskbarColor );
@@ -679,6 +677,14 @@ void RenderMapEntryPointsAndLights()
 	{
 		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE )
 		{
+			// Check for light out of bounds.  This actually happens in Drassen.
+			if (LightSprites[ i ].iY < 0 || LightSprites[ i ].iY > WORLD_ROWS ||
+				LightSprites[ i ].iX < 0 || LightSprites[ i ].iX > WORLD_COLS)
+			{
+				LightSprites[ i ].uiFlags &= (~LIGHT_SPR_ACTIVE);
+				continue;
+			}
+
 			sGridNo = LightSprites[ i ].iY * WORLD_COLS + LightSprites[ i ].iX;
 			GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
 			if( sScreenY >= (- 50) && sScreenY < (2 * iScreenHeightOffset + 300) && sScreenX >= (- 40)  && sScreenX < SCREEN_WIDTH )
@@ -698,31 +704,30 @@ void BuildTriggerName( OBJECTTYPE *pItem, STR16 szItemName )
 {
 	if( pItem->usItem == SWITCH )
 	{
-		if( pItem->bFrequency == PANIC_FREQUENCY )
+		if( pItem->ItemData.Trigger.BombTrigger.bFrequency == PANIC_FREQUENCY )
 			swprintf( szItemName, L"Panic Trigger1" );
-		else if( pItem->bFrequency == PANIC_FREQUENCY_2 )
+		else if( pItem->ItemData.Trigger.BombTrigger.bFrequency == PANIC_FREQUENCY_2 )
 			swprintf( szItemName, L"Panic Trigger2" );
-		else if( pItem->bFrequency == PANIC_FREQUENCY_3 )
+		else if( pItem->ItemData.Trigger.BombTrigger.bFrequency == PANIC_FREQUENCY_3 )
 			swprintf( szItemName, L"Panic Trigger3" );
 		else
-			swprintf( szItemName, L"Trigger%d", pItem->bFrequency - 50 );
+			swprintf( szItemName, L"Trigger%d", pItem->ItemData.Trigger.BombTrigger.bFrequency - 50 );
 	}
 	else
 	{ //action item
-		if( pItem->bDetonatorType == BOMB_PRESSURE )
+		if( pItem->ItemData.Trigger.bDetonatorType == BOMB_PRESSURE )
 			swprintf( szItemName, L"Pressure Action" );
-		else if( pItem->bFrequency == PANIC_FREQUENCY )
+		else if( pItem->ItemData.Trigger.BombTrigger.bFrequency == PANIC_FREQUENCY )
 			swprintf( szItemName, L"Panic Action1" );
-		else if( pItem->bFrequency == PANIC_FREQUENCY_2 )
+		else if( pItem->ItemData.Trigger.BombTrigger.bFrequency == PANIC_FREQUENCY_2 )
 			swprintf( szItemName, L"Panic Action2" );
-		else if( pItem->bFrequency == PANIC_FREQUENCY_3 )
+		else if( pItem->ItemData.Trigger.BombTrigger.bFrequency == PANIC_FREQUENCY_3 )
 			swprintf( szItemName, L"Panic Action3" );
 		else
-			swprintf( szItemName, L"Action%d", pItem->bFrequency - 50 );
+			swprintf( szItemName, L"Action%d", pItem->ItemData.Trigger.BombTrigger.bFrequency - 50 );
 	}
 }
 
-// WANNE: EDITOR?
 void RenderDoorLockInfo()
 {
 	INT16 i, xp, yp;
@@ -774,7 +779,6 @@ void RenderDoorLockInfo()
 	}
 }
 
-	// WANNE: EDITOR?
 void RenderSelectedItemBlownUp()
 {
 	UINT32 uiVideoObjectIndex;
@@ -814,7 +818,7 @@ void RenderSelectedItemBlownUp()
 	}
 	else if( Item[ gpItem->usItem ].usItemClass == IC_KEY )
 	{
-		swprintf( szItemName, L"%S", LockTable[ gpItem->ubKeyID ].ubEditorName );
+		swprintf( szItemName, L"%S", LockTable[ gpItem->ItemData.Key.ubKeyID ].ubEditorName );
 	}
 	else
 	{
@@ -891,7 +895,7 @@ void RenderEditorInfo( )
 			break;
 		case TASK_TERRAIN:
 
-			// WANNE: EDITOR: comment this two lines, because we always get an exception here!
+			// WANNE: Comment this two lines, because we always get an exception here.
 			//if( gusSelectionType == LINESELECTION )
 			//	swprintf( wszSelType[LINESELECTION], L"Width: %d", gusSelectionWidth );
 			
@@ -907,7 +911,7 @@ void RenderEditorInfo( )
 			UpdateBuildingsInfo();
 
 
-			// WANNE: EDITOR: comment this two lines, because we always get an exception here!
+			// WANNE: Comment this two lines, because we always get an exception here.
 			//if( gusSelectionType == LINESELECTION )
 			//	swprintf( wszSelType[LINESELECTION], L"%d", gusSelectionWidth );
 			
@@ -918,7 +922,7 @@ void RenderEditorInfo( )
 			break;
 		case TASK_MAPINFO:
 			UpdateMapInfo();
-			// WANNE: EDITOR: comment this two lines, because we always get an exception here!
+			// WANNE: EDITOR: Comment this two lines, because we always get an exception here!
 			//if( gusSelectionType == LINESELECTION )
 			//	swprintf( wszSelType[LINESELECTION], L"Width: %d", gusSelectionWidth );
 			
@@ -983,7 +987,6 @@ void ProcessEditorRendering()
 
 
 	if( fSaveBuffer )
-		// WANNE: EDITOR?
 		BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 2 * iScreenHeightOffset + 360, SCREEN_WIDTH, 120 );
 
 	//Make sure this is TRUE at all times.

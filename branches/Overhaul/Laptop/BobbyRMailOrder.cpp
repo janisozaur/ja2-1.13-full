@@ -2307,7 +2307,7 @@ BOOLEAN AddNewBobbyRShipment( BobbyRayPurchaseStruct *pPurchaseStruct, UINT8 ubD
 	else
 		gpNewBobbyrShipments[ iFoundSpot ].fDisplayedInShipmentPage = FALSE;
 
-	//get the apckage weight, if the weight is "below" the minimum, use the minimum
+	//get the package weight, if the weight is "below" the minimum, use the minimum
 	if(  uiPackageWeight < MIN_SHIPPING_WEIGHT )
 	{
 		gpNewBobbyrShipments[ iFoundSpot ].uiPackageWeight = MIN_SHIPPING_WEIGHT;
@@ -2424,6 +2424,8 @@ BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 	{
 		//Allocate memory for the list
 		gpNewBobbyrShipments = (NewBobbyRayOrderStruct *) MemAlloc( sizeof( NewBobbyRayOrderStruct ) * giNumberOfNewBobbyRShipment );
+		memset(gpNewBobbyrShipments, 0, (sizeof( NewBobbyRayOrderStruct ) * giNumberOfNewBobbyRShipment) );
+
 		if( gpNewBobbyrShipments == NULL )
 		{
 			Assert(0);

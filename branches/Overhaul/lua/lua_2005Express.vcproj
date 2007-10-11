@@ -46,8 +46,9 @@
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="4"
+				DisableSpecificWarnings="4100"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -181,6 +182,18 @@
 			>
 			<File
 				RelativePath=".\lua.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\lua_env.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\lua_strategic.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\lua_tactical.cpp"
 				>
 			</File>
 			<File

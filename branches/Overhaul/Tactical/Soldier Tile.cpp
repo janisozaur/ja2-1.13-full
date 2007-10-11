@@ -73,7 +73,7 @@ void OutputDebugInfoForTurnBasedNextTileWaiting( SOLDIERTYPE * pSoldier )
 	if ( (gTacticalStatus.uiFlags & INCOMBAT) && (pSoldier->usPathDataSize > 0) )
 	{
 		UINT32	uiLoop;
-		UINT16	usTemp;
+		UINT16	usTemp = NOWHERE;
 		UINT16	usNewGridNo;
 
 		usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
@@ -166,7 +166,7 @@ void SetFinalTile( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fGivenUp )
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NO_PATH_FOR_MERC ], pSoldier->name );
   }
 
-	EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+	EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 
 }
 
@@ -225,7 +225,7 @@ INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,  INT16 sGridNo, INT8 b
 	ubPerson = WhoIsThere2( sGridNo, bLevel );
 
 
-	if ( ubPerson != NO_SOLDIER )
+	if ( ubPerson != NOBODY )
 	{
 		// If this us?
 		if ( ubPerson != pSoldier->ubID )
@@ -427,7 +427,7 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 							OutputDebugInfoForTurnBasedNextTileWaiting( pSoldier );
 						}
 					#endif
-					EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+					EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 					// Restore...
 					pSoldier->sFinalDestination = sOldFinalDest;
 
@@ -449,7 +449,7 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 							OutputDebugInfoForTurnBasedNextTileWaiting( pSoldier );
 						}
 					#endif
-					EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+					EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 					// Restore...
 					pSoldier->sFinalDestination = sOldFinalDest;
 					
@@ -471,7 +471,7 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 			bOverTerrainType = GetTerrainType( sGridNo );
 
 			// Check if we are going into water!
-			if ( bOverTerrainType == LOW_WATER || bOverTerrainType == MED_WATER || bOverTerrainType == DEEP_WATER )
+			if ( TERRAIN_IS_WATER( bOverTerrainType) )
 			{
 				// Check if we are of prone or crawl height and change stance accordingly....
 				switch( gAnimControl[ pSoldier->usAnimState ].ubHeight )

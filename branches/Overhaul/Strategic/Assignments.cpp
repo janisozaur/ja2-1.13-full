@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 	#include "GameSettings.h"
@@ -765,7 +764,7 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 		for( ubObjectInPocketCounter = 0; ubObjectInPocketCounter < ubItemsInPocket; ubObjectInPocketCounter++ )
 		{
 			// jammed gun?
-			if ( ( Item[ pSoldier -> inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pSoldier -> inv[ bPocket ].bGunAmmoStatus < 0 ) )
+			if ( ( Item[ pSoldier -> inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pSoldier -> inv[ bPocket ].ItemData.Gun.bGunAmmoStatus < 0 ) )
 			{
 				return( TRUE );
 			}
@@ -783,7 +782,7 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 		for( ubObjectInPocketCounter = 0; ubObjectInPocketCounter < ubItemsInPocket; ubObjectInPocketCounter++ )
 		{
 			// if it's repairable and NEEDS repairing
-			if ( IsItemRepairable( pObj->usItem, pObj->bStatus[ubObjectInPocketCounter] ) )
+			if ( IsItemRepairable( pObj->usItem, pObj->ItemData.Generic.bStatus[ubObjectInPocketCounter] ) )
 			{
 				return( TRUE );
 			}				
@@ -819,7 +818,7 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 				for ( bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++ )
 				{
 					// the object a weapon? and jammed?
-					if ( ( Item[ pOtherSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pOtherSoldier->inv[ bPocket ].bGunAmmoStatus < 0 ) )
+					if ( ( Item[ pOtherSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pOtherSoldier->inv[ bPocket ].ItemData.Gun.bGunAmmoStatus < 0 ) )
 					{
 						return( TRUE );
 					}
@@ -918,8 +917,8 @@ BOOLEAN CanCharacterRepairButDoesntHaveARepairkit( SOLDIERTYPE *pSoldier )
 // check that character is alive, oklife, has repair skill, and equipment, etc.
 BOOLEAN CanCharacterRepair( SOLDIERTYPE *pSoldier )
 {
-	INT8 bPocket = 0;
-	BOOLEAN fToolKitFound = FALSE;
+	//INT8 bPocket = 0;
+	//BOOLEAN fToolKitFound = FALSE;
 
 	if ( !BasicCanCharacterAssignment( pSoldier, TRUE ) )
 	{
@@ -1566,8 +1565,8 @@ BOOLEAN CanCharacterPractise( SOLDIERTYPE *pSoldier )
 
 BOOLEAN CanCharacterTrainTeammates( SOLDIERTYPE *pSoldier )
 {
-	INT32 cnt = 0;
-	SOLDIERTYPE *pTeamSoldier = NULL;
+	//INT32 cnt = 0;
+	//SOLDIERTYPE *pTeamSoldier = NULL;
 
 	// can character train at all
 	if( CanCharacterPractise( pSoldier ) == FALSE )
@@ -1589,7 +1588,7 @@ BOOLEAN CanCharacterTrainTeammates( SOLDIERTYPE *pSoldier )
 
 BOOLEAN CanCharacterBeTrainedByOther( SOLDIERTYPE *pSoldier )
 {
-	INT32 iCounter = 0;
+	//INT32 iCounter = 0;
 
 	// can character train at all
 	if( CanCharacterPractise( pSoldier ) == FALSE )
@@ -2048,8 +2047,8 @@ UINT8 FindNumberInSectorWithAssignment( INT16 sX, INT16 sY, INT8 bAssignment )
 {
 	// run thought list of characters find number with this assignment
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
-	INT32 iCounter=0;
+	INT32 cnt=0;
+	//INT32 iCounter=0;
 	INT8 bNumberOfPeople = 0;
 	
 	// set psoldier as first in merc ptrs
@@ -2138,11 +2137,11 @@ UINT16 CalculateHealingPointsForDoctor(SOLDIERTYPE *pDoctor, UINT16 *pusMaxPts, 
 	}
 
 	// calculate effective doctoring rate (adjusted for drugs, alcohol, etc.)
-	usHealPts = ( EffectiveMedical( pDoctor ) * (( EffectiveDexterity( pDoctor ) + EffectiveWisdom( pDoctor ) ) / 2) * (100 + ( 5 * EffectiveExpLevel( pDoctor) ) ) ) / gGameExternalOptions.ubDoctoringRateDivisor;
+	usHealPts = (UINT16) (( EffectiveMedical( pDoctor ) * (( EffectiveDexterity( pDoctor ) + EffectiveWisdom( pDoctor ) ) / 2) * (100 + ( 5 * EffectiveExpLevel( pDoctor) ) ) ) / gGameExternalOptions.ubDoctoringRateDivisor);
 
 	// calculate normal doctoring rate - what it would be if his stats were "normal" (ignoring drugs, fatigue, equipment condition)
 	// and equipment was not a hindrance
-	*pusMaxPts = ( pDoctor -> bMedical * (( pDoctor -> bDexterity + pDoctor -> bWisdom ) / 2 ) * (100 + ( 5 * pDoctor->bExpLevel) ) ) / gGameExternalOptions.ubDoctoringRateDivisor;
+	*pusMaxPts = (UINT16) (( pDoctor -> bMedical * (( pDoctor -> bDexterity + pDoctor -> bWisdom ) / 2 ) * (100 + ( 5 * pDoctor->bExpLevel) ) ) / gGameExternalOptions.ubDoctoringRateDivisor);
 
 	// adjust for fatigue
 	ReducePointsForFatigue( pDoctor, &usHealPts );
@@ -2197,11 +2196,11 @@ UINT8 CalculateRepairPointsForRepairman(SOLDIERTYPE *pSoldier, UINT16 *pusMaxPts
 	}
 
 	// calculate effective repair rate (adjusted for drugs, alcohol, etc.)
-	usRepairPts = (EffectiveMechanical( pSoldier ) * EffectiveDexterity( pSoldier ) * (100 + ( 5 * EffectiveExpLevel( pSoldier) ) ) ) / ( gGameExternalOptions.ubRepairRateDivisor * gGameExternalOptions.ubAssignmentUnitsPerDay );
+	usRepairPts = (UINT16) ((EffectiveMechanical( pSoldier ) * EffectiveDexterity( pSoldier ) * (100 + ( 5 * EffectiveExpLevel( pSoldier) ) ) ) / ( gGameExternalOptions.ubRepairRateDivisor * gGameExternalOptions.ubAssignmentUnitsPerDay ));
 
 	// calculate normal repair rate - what it would be if his stats were "normal" (ignoring drugs, fatigue, equipment condition)
 	// and equipment was not a hindrance
-	*pusMaxPts = ( pSoldier -> bMechanical * pSoldier -> bDexterity * (100 + ( 5 * pSoldier->bExpLevel) ) ) / ( gGameExternalOptions.ubRepairRateDivisor * gGameExternalOptions.ubAssignmentUnitsPerDay );
+	*pusMaxPts = (UINT16) (( pSoldier -> bMechanical * pSoldier -> bDexterity * (100 + ( 5 * pSoldier->bExpLevel) ) ) / ( gGameExternalOptions.ubRepairRateDivisor * gGameExternalOptions.ubAssignmentUnitsPerDay ));
 
 
 	// adjust for fatigue
@@ -2276,7 +2275,7 @@ void HandleDoctorsInSector( INT16 sX, INT16 sY, INT8 bZ )
 {
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
   INT32 cnt=0;
-	INT32 iCounter=0;
+	//INT32 iCounter=0;
 
 	// set psoldier as first in merc ptrs
 	pSoldier = MercPtrs[0];	
@@ -2982,7 +2981,7 @@ INT8 FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPassType 
 		pObj = &( pSoldier->inv[ bSlotToCheck ] );
 		for ( bLoop2 = 0; bLoop2 < pSoldier->inv[ bSlotToCheck ].ubNumberOfObjects; bLoop2++ )
 		{
-			if ( IsItemRepairable( pObj->usItem, pObj->bStatus[bLoop2] ) )
+			if ( IsItemRepairable( pObj->usItem, pObj->ItemData.Generic.bStatus[bLoop2] ) )
 			{
 				return( bSlotToCheck );
 			}
@@ -3075,16 +3074,16 @@ BOOLEAN RepairObject( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOwner, OBJECTTYPE *
 	for ( ubLoop = 0; ubLoop < ubItemsInPocket; ubLoop++ )
 	{
 		// if it's repairable and NEEDS repairing
-		if ( IsItemRepairable( pObj->usItem, pObj->bStatus[ubLoop] ) )
+		if ( IsItemRepairable( pObj->usItem, pObj->ItemData.Generic.bStatus[ubLoop] ) )
 		{
 			// repairable, try to repair it
 
 			//void DoActualRepair( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 * pbStatus, UINT8 * pubRepairPtsLeft )
-			DoActualRepair( pSoldier, pObj->usItem, &(pObj->bStatus[ ubLoop ]), pubRepairPtsLeft );
+			DoActualRepair( pSoldier, pObj->usItem, &(pObj->ItemData.Generic.bStatus[ ubLoop ]), pubRepairPtsLeft );
 
 			fSomethingWasRepaired = TRUE;
 
-			if ( pObj->bStatus[ ubLoop ] == 100 )
+			if ( pObj->ItemData.Generic.bStatus[ ubLoop ] == 100 )
 			{
 				// report it as fixed
 				if ( pSoldier == pOwner )
@@ -3951,7 +3950,7 @@ INT16 GetSoldierStudentPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAtG
 	INT8	bSkill = 0;
 
 	INT16 sBestTrainingPts, sTrainingPtsDueToInstructor;
-	UINT16	usMaxTrainerPts, usBestMaxTrainerPts;
+	UINT16	usMaxTrainerPts, usBestMaxTrainerPts = 0;
 	UINT32	uiCnt;
 	SOLDIERTYPE * pTrainer;
 
@@ -7085,6 +7084,8 @@ void ContractMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
         }
         else
         {
+			// The game should be unpaused when this message box disappears
+			UnPauseGame();
   			  DoMapMessageBox( MSG_BOX_BASIC_STYLE, gzLateLocalizedString[ 48 ], MAP_SCREEN, MSG_BOX_FLAG_YESNO, MercDismissConfirmCallBack );
         }
 
@@ -8107,7 +8108,7 @@ void HandleShadingOfLinesForSquadMenu( void )
 	UINT32 uiCounter;
 	SOLDIERTYPE *pSoldier = NULL;
 	UINT32 uiMaxSquad;
-	INT8 bResult;
+	INT8 bResult = 0;
 
 
 	if ( ( fShowSquadMenu == FALSE ) || ( ghSquadBox == -1 ) )
@@ -8651,7 +8652,7 @@ BOOLEAN CreateDestroyAssignmentPopUpBoxes( void )
 
 		// these boxes are always created while in mapscreen...
 		CreateEPCBox( );
-		// WANNE 2 <ab>
+		
 		CreateAssignmentsBox( );
 		CreateTrainingBox( );
 		CreateAttributeBox();
@@ -8807,8 +8808,6 @@ void SetTacticalPopUpAssignmentBoxXY( void )
 	
 	gsAssignmentBoxesY = sY;
 
-
-	// WANNE 2
 	// ATE: Check if we are past tactical viewport....
 	// Use estimate width's/heights
 	if ( ( gsAssignmentBoxesX + 100 ) > SCREEN_WIDTH )
@@ -8817,7 +8816,6 @@ void SetTacticalPopUpAssignmentBoxXY( void )
 		gsAssignmentBoxesX = SCREEN_WIDTH - 100;
 	}
 
-	// WANNE 2
 	if ( ( gsAssignmentBoxesY + 130 ) > (SCREEN_HEIGHT - 160) )
 	{
 		gsAssignmentBoxesY = SCREEN_HEIGHT - 290;
@@ -8889,7 +8887,6 @@ void CheckAndUpdateTacticalAssignmentPopUpPositions( void )
 	{
 		GetBoxSize( ghRepairBox, &pDimensions );
 
-		// WANNE 2
 		if( gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight >= SCREEN_WIDTH )
 		{
 			gsAssignmentBoxesX = ( INT16 ) ( (SCREEN_WIDTH - 1) - ( pDimensions2.iRight + pDimensions.iRight ) );
@@ -8905,7 +8902,6 @@ void CheckAndUpdateTacticalAssignmentPopUpPositions( void )
 			sLongest  = ( INT16 )pDimensions.iBottom + (  ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_REPAIR );
 		}
 
-		// WANNE 2
 		if( gsAssignmentBoxesY + sLongest >= (SCREEN_HEIGHT - 120) )
 		{
 			gsAssignmentBoxesY = ( INT16 )( (SCREEN_HEIGHT - 121) - ( sLongest ) );
@@ -8937,7 +8933,6 @@ void CheckAndUpdateTacticalAssignmentPopUpPositions( void )
 			sLongest  = ( INT16 )pDimensions.iBottom;
 		}
 
-		// WANNE 2
 		if( gsAssignmentBoxesY + sLongest >= (SCREEN_HEIGHT - 120) )
 		{
 			gsAssignmentBoxesY = ( INT16 )( (SCREEN_HEIGHT - 121) - ( sLongest ) );
@@ -8954,14 +8949,12 @@ void CheckAndUpdateTacticalAssignmentPopUpPositions( void )
 		GetBoxSize( ghTrainingBox, &pDimensions );
 		GetBoxSize( ghAttributeBox, &pDimensions3 );
 
-		// WANNE 2
 		if( gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight + pDimensions3.iRight >= SCREEN_WIDTH )
 		{
 			gsAssignmentBoxesX = ( INT16 ) ( (SCREEN_WIDTH - 1) - ( pDimensions2.iRight + pDimensions.iRight + pDimensions3.iRight ) );
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		// WANNE 2
 		if( gsAssignmentBoxesY + pDimensions3.iBottom + ( GetFontHeight( MAP_SCREEN_FONT ) * ASSIGN_MENU_TRAIN ) >= (SCREEN_HEIGHT - 120) )
 		{
 			gsAssignmentBoxesY = ( INT16 )( (SCREEN_HEIGHT - 121) - ( pDimensions3.iBottom ) );
@@ -8987,14 +8980,12 @@ void CheckAndUpdateTacticalAssignmentPopUpPositions( void )
 	{
 		GetBoxSize( ghTrainingBox, &pDimensions );
 
-		// WANNE 2
 		if( gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight  >= SCREEN_WIDTH )
 		{
 			gsAssignmentBoxesX = ( INT16 ) ( (SCREEN_WIDTH - 1) - ( pDimensions2.iRight + pDimensions.iRight  ) );
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		// WANNE 2
 		if( gsAssignmentBoxesY + pDimensions2.iBottom +  ( ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN ) >= (SCREEN_HEIGHT - 120) )
 		{
 			gsAssignmentBoxesY = ( INT16 )( (SCREEN_HEIGHT - 121) - ( pDimensions2.iBottom ) - (  ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN ) );
@@ -9011,7 +9002,6 @@ void CheckAndUpdateTacticalAssignmentPopUpPositions( void )
 	}
 	else
 	{
-		// WANNE 2
 		// just the assignment box
 		if( gsAssignmentBoxesX + pDimensions2.iRight  >= SCREEN_WIDTH )
 		{
@@ -9058,7 +9048,6 @@ void PositionCursorForTacticalAssignmentBox( void )
 
 	iFontHeight = GetLineSpace( ghAssignmentBox ) + GetFontHeight( GetBoxFont( ghAssignmentBox ) ); 
 
-	// WANNE 2
 	if( gGameSettings.fOptions[ TOPTION_DONT_MOVE_MOUSE ] == FALSE )
 	{
 		//SimulateMouseMovement( pPosition.iX + pDimensions.iRight - 6, pPosition.iY + ( iFontHeight / 2 ) + 2 );
@@ -10632,7 +10621,6 @@ void RebuildAssignmentsBox( void )
 		ghAssignmentBox = -1;
 	}
 
-	// WANNE 2 <ab>
 	CreateAssignmentsBox( );
 }
 
@@ -11559,13 +11547,13 @@ BOOLEAN UnjamGunsOnSoldier( SOLDIERTYPE *pOwnerSoldier, SOLDIERTYPE *pRepairSold
 	for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 	{
 		// the object a weapon? and jammed?
-		if ( ( Item[ pOwnerSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pOwnerSoldier->inv[ bPocket ].bGunAmmoStatus < 0 ) )
+		if ( ( Item[ pOwnerSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pOwnerSoldier->inv[ bPocket ].ItemData.Gun.bGunAmmoStatus < 0 ) )
 		{
 			if ( *pubRepairPtsLeft >= gGameExternalOptions.ubRepairCostPerJam )
 			{
 				*pubRepairPtsLeft -= gGameExternalOptions.ubRepairCostPerJam;
 
-				pOwnerSoldier->inv [ bPocket ].bGunAmmoStatus *= -1;
+				pOwnerSoldier->inv [ bPocket ].ItemData.Gun.bGunAmmoStatus *= -1;
 
 				// MECHANICAL/DEXTERITY GAIN: Unjammed a gun
 				StatChange( pRepairSoldier, MECHANAMT, 5, FALSE );

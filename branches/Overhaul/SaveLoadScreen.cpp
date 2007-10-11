@@ -430,11 +430,16 @@ void SetSaveLoadExitScreen( UINT32 uiScreen )
 
 	SetPendingNewScreen( uiScreen );
 
+#if 0
+	// 0verhaul:  This is a repeat of the previous line, but with a different variable set.
+	// None of it really makes sense.  Why would a quicksave be different from a regular one?
+	// Why should ctrl+L act differently than alt+L?
 	if( gfDoingQuickLoad )
 	{
 		fFirstTimeInGameScreen = TRUE;
 		SetPendingNewScreen( uiScreen );
 	}
+#endif
 
 	ExitSaveLoadScreen();
 
@@ -450,7 +455,7 @@ BOOLEAN		EnterSaveLoadScreen()
 	UINT16 usPosX = SLG_FIRST_SAVED_SPOT_X;
 	UINT16 usPosY = SLG_FIRST_SAVED_SPOT_Y;
 	
-	// WANNE <do not draw the background black>
+	// WANNE: Do not draw the background black
 	// Black background
 	//ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0 );
 
@@ -642,7 +647,6 @@ Removed so that the user can click on it and get displayed a message that the qu
 						memset( &SaveGameHeader, 0, sizeof( SAVED_GAME_HEADER ) );
 						gbSaveGameSelectedLocation[ gbSelectedSaveLocation ] = SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
 						
-						// WANNE: NEW
 						if (gbSelectedSaveLocation != SAVE__END_TURN_NUM)
 						{
 							gbSaveGameArray[ gbSelectedSaveLocation ] = FALSE;
@@ -1809,7 +1813,7 @@ void SelectedSaveRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 
 void InitSaveLoadScreenTextInputBoxes()
 {
-	UINT32	uiStartLoc=0;
+	//UINT32	uiStartLoc=0;
 	UINT16	usPosY;
 	SAVED_GAME_HEADER SaveGameHeader;
 	

@@ -32,6 +32,7 @@
 	#include "Multi Language Graphic Utils.h"
 	#include "Encrypted File.h"
 	#include "ja2 splash.h"
+	#include "GameVersion.h"
 #endif
 
 #define	MAINMENU_TEXT_FILE						"LoadScreens\\MainMenu.edt"
@@ -554,7 +555,7 @@ BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate )
 	INT32 cnt;
 	SGPFILENAME filename;
 	INT16 sSlot;
-	INT32	iStartLoc=0;
+	//INT32	iStartLoc=0;
 #ifndef _DEBUG
 	CHAR16	zText[512];
 #endif
@@ -610,7 +611,7 @@ BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate )
 			#ifndef _DEBUG
 				//load up some info from the 'mainmenu.edt' file.  This makes sure the file is present.  The file is
 				// 'marked' with a code that identifies the testers
-				iStartLoc = MAINMENU_RECORD_SIZE * cnt;
+				INT32 iStartLoc = MAINMENU_RECORD_SIZE * cnt;
 				if( !LoadEncryptedDataFromFile(MAINMENU_TEXT_FILE, zText, iStartLoc, MAINMENU_RECORD_SIZE ) )
 				{
 					//the file was not able to be loaded properly

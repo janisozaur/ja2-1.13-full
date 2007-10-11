@@ -67,7 +67,7 @@
 				FavorSizeOrSpeed="1"
 				OptimizeForProcessor="3"
 				OptimizeForWindowsApplication="TRUE"
-				AdditionalIncludeDirectories=".\;..\;&quot;..\Standard Gaming Platform&quot;;..\TileEngine;..\Tactical;..\Utils;..\tacticalai;..\Editor;..\strategic"
+				AdditionalIncludeDirectories=".\;..\;&quot;..\Standard Gaming Platform&quot;;..\TileEngine;..\Tactical;..\Utils;..\TacticalAI;..\Editor;..\Strategic;..\Res"
 				PreprocessorDefinitions="PRECOMPILEDHEADERS;NDEBUG;WIN32;_WINDOWS;JA2;XML_STATIC;CINTERFACE"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
@@ -115,9 +115,6 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath=".\Console.cpp">
-			</File>
-			<File
 				RelativePath=".\lua.cpp">
 			</File>
 			<File
@@ -128,9 +125,6 @@
 			Name="Headerdateien"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
-			<File
-				RelativePath=".\Console.h">
-			</File>
 			<File
 				RelativePath=".\lauxlib.h">
 			</File>

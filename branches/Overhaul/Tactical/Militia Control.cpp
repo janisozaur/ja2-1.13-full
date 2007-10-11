@@ -121,20 +121,71 @@ extern BOOLEAN SoldierCanAffordNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesired
 void ResetMilitia()
 {
 	BOOLEAN fBattleInProgress = FALSE;
+	UINT8 ubNumGreen = 0;
+	UINT8 ubNumReg = 0;
+	UINT8 ubNumVet = 0;
+	//UINT32 cnt;
 
-	if ( gWorldSectorX !=0 && gWorldSectorY != 0 && NumEnemiesInSector( gWorldSectorX, gWorldSectorY ) )
-		fBattleInProgress = TRUE;
+//	if ( gWorldSectorX !=0 && gWorldSectorY != 0 && NumEnemiesInSector( gWorldSectorX, gWorldSectorY ) )
+//		fBattleInProgress = TRUE;
+
+	// 0verhaul:  Instead of relying on the "changes made" flag, which isn't even saved in a saved game and therefore not
+	// reliable, we'll just do this the hard way, by taking inventory.
+//	gfStrategicMilitiaChangesMade = FALSE;
+//	for (cnt = gTacticalStatus.Team[MILITIA_TEAM].bFirstID; cnt <= gTacticalStatus.Team[MILITIA_TEAM].bLastID; cnt++)
+//	{
+//		if (!MercPtrs[cnt]->bActive)
+//		{
+//			continue;
+//		}
+//
+//		switch (MercPtrs[cnt]->ubSoldierClass)
+//		{
+//		case SOLDIER_CLASS_GREEN_MILITIA: ubNumGreen++; break;
+//		case SOLDIER_CLASS_REG_MILITIA: ubNumReg++; break;
+//		case SOLDIER_CLASS_ELITE_MILITIA: ubNumVet++; break;
+//		default: ;
+//		}
+//	}
+//	if (MilitiaInSectorOfRank(gWorldSectorX, gWorldSectorY, GREEN_MILITIA) != ubNumGreen ||
+//		MilitiaInSectorOfRank(gWorldSectorX, gWorldSectorY, REGULAR_MILITIA) != ubNumReg ||
+//		MilitiaInSectorOfRank(gWorldSectorX, gWorldSectorY, ELITE_MILITIA) != ubNumVet)
+//	{
+//		gfStrategicMilitiaChangesMade = TRUE;
+//	}
+//
+	if (gfStrategicMilitiaChangesMade)
+	{
+		// I truly hope that we remove such inane control methods from the soldier create code when we break the merc slot barrier
+		// Hacks like this really depress me.
+		UINT32 cs = guiCurrentScreen;
+		// Make sure we aren't on the AUTORESOLVE screen for this.  Even if we are.  We are removing and creating soldiers for 
+		// tactical here, not autoresolve.  In my opinion the CreateSoldierXXX and TacticalRemoveSoldierXXX functions should take 
+		// a flag for autoresolve if different initialization or destruction is desired.
+		guiCurrentScreen = GAME_SCREEN;
+
+
+		RemoveMilitiaFromTactical();
+		ubNumGreen = MilitiaInSectorOfRank(gWorldSectorX, gWorldSectorY, GREEN_MILITIA);
+		ubNumReg = MilitiaInSectorOfRank(gWorldSectorX, gWorldSectorY, REGULAR_MILITIA);
+		ubNumVet = MilitiaInSectorOfRank(gWorldSectorX, gWorldSectorY, ELITE_MILITIA);
+
+		AddSoldierInitListMilitia( ubNumGreen, ubNumReg, ubNumVet );
+
+		// Now restore the original screen setting so the game doesn't go wacky.
+		guiCurrentScreen = cs;
+
+		gfStrategicMilitiaChangesMade = FALSE;
+	}
 
 //	if( ( gfStrategicMilitiaChangesMade && !fBattleInProgress ) || gTacticalStatus.uiFlags & LOADING_SAVED_GAME || gfMSResetMilitia )
-	if( gfStrategicMilitiaChangesMade || gTacticalStatus.uiFlags & LOADING_SAVED_GAME || gfMSResetMilitia )
-	{
-		gfStrategicMilitiaChangesMade = FALSE;
-		
-		if( !gfMSResetMilitia )
-			RemoveMilitiaFromTactical();
-		PrepareMilitiaForTactical();
-		gfMSResetMilitia = FALSE;
-	}
+//	if(gfMSResetMilitia )
+//	{
+//		if( !gfMSResetMilitia )
+//			RemoveMilitiaFromTactical();
+//		PrepareMilitiaForTactical();
+//		gfMSResetMilitia = FALSE;
+//	}
 }
 
 void RemoveMilitiaFromTactical()
@@ -159,7 +210,7 @@ void RemoveMilitiaFromTactical()
 	}
 }
 
-void PrepareMilitiaForTactical()
+void PrepareMilitiaForTactical( BOOLEAN fPrepareAll)
 {
 	SECTORINFO *pSector;
 	INT32 x;
@@ -171,29 +222,53 @@ void PrepareMilitiaForTactical()
 	if ( gWorldSectorX ==0 && gWorldSectorY == 0 )
 		return;
 
+	for (int i=0; i<TOTAL_SOLDIERS; i++)
+	{
+		Assert( !MercPtrs[i]->bActive || !MercPtrs[i]->bInSector || MercPtrs[i]->sGridNo != NOWHERE);
+	}
+
 	pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
 	ubGreen = pSector->ubNumberOfCivsAtLevel[ GREEN_MILITIA ];
 	ubRegs = pSector->ubNumberOfCivsAtLevel[ REGULAR_MILITIA ];
 	ubElites = pSector->ubNumberOfCivsAtLevel[ ELITE_MILITIA ];
-	
+
+	// Prevent militia from just waiting on the border
+	gTacticalStatus.Team[MILITIA_TEAM].bAwareOfOpposition = (pSector->uiFlags & SF_PLAYER_KNOWS_ENEMIES_ARE_HERE) != 0;
+
 	if(guiDirNumber)
-		for( x = 0 ; x < guiDirNumber ; ++x )
+	{
+		if (fPrepareAll)
 		{
-//			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ld,%ld,%ld,%ld", gpAttackDirs[ x ][ 0 ], gpAttackDirs[ x ][1], gpAttackDirs[ x ][2], gpAttackDirs[ x ][3] );
+			AddSoldierInitListMilitia( gpAttackDirs[ 0 ][0], gpAttackDirs[ 0 ][1], gpAttackDirs[ 0 ][2] );
+		}
+		// If the sector is already loaded, don't add the existing militia
+		for( x = 1; x < guiDirNumber ; ++x )
+		{
+#if 0
+			//			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ld,%ld,%ld,%ld", gpAttackDirs[ x ][ 0 ], gpAttackDirs[ x ][1], gpAttackDirs[ x ][2], gpAttackDirs[ x ][3] );
 			if( gfMSResetMilitia )
 			{
 				if( gpAttackDirs[ x ][ 3 ] != INSERTION_CODE_CENTER )
+				{
 					AddSoldierInitListMilitiaOnEdge( gpAttackDirs[ x ][ 3 ], gpAttackDirs[ x ][0], gpAttackDirs[ x ][1], gpAttackDirs[ x ][2] );
+					ubGreen -= gpAttackDirs[ x ][0];
+					ubRegs -= gpAttackDirs[ x ][1];
+					ubElites -= gpAttackDirs[ x ][2];
+				}
 			}
-			else
-				if( gpAttackDirs[ x ][ 3 ] == INSERTION_CODE_CENTER )
-					AddSoldierInitListMilitia( gpAttackDirs[ x ][0], gpAttackDirs[ x ][1], gpAttackDirs[ x ][2] );
-				else
-					AddSoldierInitListMilitiaOnEdge( gpAttackDirs[ x ][ 3 ], gpAttackDirs[ x ][0], gpAttackDirs[ x ][1], gpAttackDirs[ x ][2] );
-
+			//else
+			//{
+#endif
+			AddSoldierInitListMilitiaOnEdge( gpAttackDirs[ x ][ 3 ], gpAttackDirs[ x ][0], gpAttackDirs[ x ][1], gpAttackDirs[ x ][2] );
 		}
-		else AddSoldierInitListMilitia( ubGreen, ubRegs, ubElites );
-	
+
+		guiDirNumber = 0;
+	}
+	else if (fPrepareAll)
+	{
+		AddSoldierInitListMilitia( ubGreen, ubRegs, ubElites );
+	}
+
 //	for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
 //	{
 //		if( MercPtrs[ i ]->bInSector )
@@ -202,7 +277,11 @@ void PrepareMilitiaForTactical()
 ////			MercPtrs[ i ]->bAttitude = AGGRESSIVE;
 //		}
 //	}
-	guiDirNumber = 0;
+
+	for (int i=0; i<TOTAL_SOLDIERS; i++)
+	{
+		Assert( !MercPtrs[i]->bActive || !MercPtrs[i]->bInSector || MercPtrs[i]->sGridNo != NOWHERE);
+	}
 }
 
 void HandleMilitiaPromotions( void )
@@ -257,6 +336,11 @@ void HandleMilitiaPromotions( void )
 		// CHAR16 str[ 512 ];
 		// BuildMilitiaPromotionsString( str );
 		// DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
+	}
+
+	if (gfStrategicMilitiaChangesMade)
+	{
+		ResetMilitia();
 	}
 }
 
@@ -925,7 +1009,6 @@ void PositionCursorForMilitiaControlBox( void )
 void HandleShadingOfLinesForMilitiaControlMenu( void )
 {
 	SOLDIERTYPE *pSoldier = NULL;
-	INT16 sDistVisible;
 
 	// check if valid
 	if( ( fShowMilitiaControlMenu == FALSE ) || ( ghMilitiaControlBox == - 1 ) )
@@ -935,10 +1018,8 @@ void HandleShadingOfLinesForMilitiaControlMenu( void )
 
 	if ( GetSoldier( &pSoldier, gusSelectedSoldier )  )
 	{
-		sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, pTMilitiaSoldier->sGridNo, pTMilitiaSoldier->bLevel, pSoldier );
-
 		// Check LOS!
-		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, pTMilitiaSoldier->sGridNo,  pTMilitiaSoldier->bLevel, 3, (UINT8) sDistVisible, TRUE ) )
+		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, pTMilitiaSoldier->sGridNo,  pTMilitiaSoldier->bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
 		{
 			UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ATTACK );
 			UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_HOLD );
@@ -964,6 +1045,7 @@ void HandleShadingOfLinesForMilitiaControlMenu( void )
 		UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ALL_HOLD );
 		UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ALL_RETREAT );
 		UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ALL_COMETOME );
+		UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ALL_SPREAD );
 		UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ALL_GETDOWN );
 		UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ALL_TAKE_COVER );
 		//UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ALL_TAKE_ITEMS );
@@ -974,6 +1056,7 @@ void HandleShadingOfLinesForMilitiaControlMenu( void )
 		ShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ALL_HOLD );
 		ShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ALL_RETREAT );
 		ShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ALL_COMETOME );
+		ShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ALL_SPREAD );
 		ShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ALL_GETDOWN );
 		ShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ALL_TAKE_COVER );
 		//ShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ALL_TAKE_ITEMS );
@@ -986,7 +1069,7 @@ void HandleShadingOfLinesForMilitiaControlMenu( void )
 BOOLEAN CheckIfRadioIsEquipped( void )
 {
 	SOLDIERTYPE *pSoldier = NULL;
-	INT8 bSlot;
+	INT8 bSlot = NO_SLOT;
 
 	// do we have a radio ?
 	//pSoldier = GetSelectedAssignSoldier( FALSE ); //do not use
@@ -1016,7 +1099,7 @@ BOOLEAN CheckIfRadioIsEquipped( void )
 //sFacingDir = GetDirectionFromXY( sXPos, sYPos, pTMilitiaSoldier );
 //SendSoldierSetDesiredDirectionEvent( pTMilitiaSoldier, sFacingDir );
 //SendSoldierSetDesiredDirectionEvent( pTMilitiaSoldier, gOppositeDirection[ sFacingDir ] );
-//EVENT_StopMerc( pTMilitiaSoldier, pTMilitiaSoldier->sGridNo, pTMilitiaSoldier->bDirection );
+//EVENT_StopMerc( pTMilitiaSoldier, pTMilitiaSoldier->sGridNo, pTMilitiaSoldier->ubDirection );
 
 //SendChangeSoldierStanceEvent( pTMilitiaSoldier, ANIM_PRONE );
 //SendChangeSoldierStanceEvent( pTMilitiaSoldier, ANIM_CROUCH );
@@ -1591,6 +1674,59 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 					}
 					break;
 				
+
+				case( MILCON_MENU_ALL_SPREAD ):
+					{
+						UINT8 cnt;
+						INT16 sActionGridNo;
+						SOLDIERTYPE *pTeamSoldier;
+
+						cnt = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID;
+
+						for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
+						{
+							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->bLife >= OKLIFE) )
+							{
+
+								// See if we can get there
+								sActionGridNo =  RandDestWithinRange( pTeamSoldier );
+								if ( sActionGridNo != -1 )
+								{
+									// SEND PENDING ACTION
+									pTeamSoldier->sPendingActionData2  = sActionGridNo;
+									//pTeamSoldier->bPendingActionData3  = ubDirection;
+									pTeamSoldier->ubPendingActionAnimCount = 0;
+									pTeamSoldier->usUIMovementMode = RUNNING;
+
+									// CHECK IF WE ARE AT THIS GRIDNO NOW
+									if ( pTeamSoldier->sGridNo != sActionGridNo )
+									{
+										// WALK UP TO DEST FIRST
+										SendGetNewSoldierPathEvent( pTeamSoldier, sActionGridNo, pTeamSoldier->usUIMovementMode );
+									}
+								}
+
+							}
+						}
+
+						if ( GetSoldier( &pSoldier, gusSelectedSoldier )  )
+						{
+							DeductPoints( pSoldier, AP_TALK, 0 );
+							StatChange( pSoldier, LDRAMT, 1, FALSE );
+						}
+
+						// stop showing menu
+						fShowMilitiaControlMenu = FALSE;
+						giAssignHighLine = -1;
+
+						// set dirty flag
+						fTeamPanelDirty = TRUE;
+						fMapScreenBottomDirty = TRUE;
+					}
+					break;
+
+
+
 				case( MILCON_MENU_ALL_GETDOWN ):
 					{
 						UINT8 cnt;

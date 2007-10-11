@@ -1402,9 +1402,9 @@ BOOLEAN SourceSoldierPointerIsValidAndReachableForGive( SOLDIERTYPE * pGiver )
 	}
 
 	// pointer should always be valid anyhow
-	if ( PythSpacesAway( pGiver->sGridNo, gpSrcSoldier->sGridNo ) > MaxDistanceVisible() )
+	if( PythSpacesAway( pGiver->sGridNo, gpSrcSoldier->sGridNo ) > gpSrcSoldier->GetMaxDistanceVisible(pGiver->sGridNo, gpSrcSoldier->bLevel) )
 	{
-		return( FALSE );
+		return FALSE;
 	}
 
 	sAdjGridNo = FindAdjacentGridEx( pGiver, gpSrcSoldier->sGridNo, NULL, NULL, FALSE, FALSE );
@@ -1775,7 +1775,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			// see if we are facing this person
 			ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(pSoldier2->sGridNo),CenterY(pSoldier2->sGridNo));
 			// if not already facing in that direction,
-			if (pSoldier->bDirection != ubDesiredMercDir)
+			if (pSoldier->ubDirection != ubDesiredMercDir)
 			{
 				EVENT_SetSoldierDesiredDirection( pSoldier, ubDesiredMercDir );
 			}
@@ -1961,7 +1961,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
 				if (pSoldier && pSoldier->inv[HANDPOS].usItem != NOTHING)
 				{
-					sGridNo = pSoldier->sGridNo + DirectionInc( pSoldier->bDirection );
+					sGridNo = pSoldier->sGridNo + DirectionInc( pSoldier->ubDirection );
 					SoldierReadyWeapon( pSoldier, (INT16) (sGridNo % WORLD_COLS), (INT16) (sGridNo / WORLD_COLS), FALSE );
 				}
 				break;
@@ -2226,7 +2226,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				if (bItemIn != NO_SLOT && bItemIn != HANDPOS)
 				{
 					SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[bItemIn]) );
-					sGridNo = pSoldier->sGridNo + DirectionInc( pSoldier->bDirection );
+					sGridNo = pSoldier->sGridNo + DirectionInc( pSoldier->ubDirection );
 					SoldierReadyWeapon( pSoldier, (INT16) (sGridNo % WORLD_COLS), (INT16) (sGridNo / WORLD_COLS), FALSE ); 
 				}
 				// fall through so that the person faces the nearest merc!
@@ -2240,7 +2240,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 						// see if we are facing this person
 						ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sGridNo),CenterY(sGridNo));
 						// if not already facing in that direction,
-						if (pSoldier->bDirection != ubDesiredMercDir)
+						if (pSoldier->ubDirection != ubDesiredMercDir)
 						{
 							EVENT_SetSoldierDesiredDirection( pSoldier, ubDesiredMercDir );
 						}
@@ -2371,7 +2371,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					if (pSoldier)
 					{
 						CreateItem( MONEY, 1, &Object );
-						Object.uiMoneyAmount = 10000;
+						Object.ItemData.Money.uiMoneyAmount = 10000;
 						AddItemToPoolAndGetIndex( sGridNo, &Object, -1, pSoldier->bLevel, 0, 0, &iWorldItem );
 						
 						// shouldn't have any current action but make sure everything
@@ -2395,7 +2395,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				if (pSoldier)
 				{	
 					DeleteTalkingMenu();
-					EVENT_SoldierGotHit( pSoldier, 1, 100, 10, pSoldier->bDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, AIM_SHOT_TORSO, 0, NOWHERE );
+					EVENT_SoldierGotHit( pSoldier, 1, 100, 10, pSoldier->ubDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, AIM_SHOT_TORSO, 0, NOWHERE );
 				}
 				break;
 
@@ -3110,7 +3110,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 						if (bMoneySlot != NO_SLOT && bEmptySlot != NO_SLOT)
 						{
 							CreateMoney( gMercProfiles[ ubTargetNPC ].iBalance * 2, &(pSoldier->inv[ bEmptySlot ] ) );
-							pSoldier->inv[ bMoneySlot ].uiMoneyAmount -= gMercProfiles[ ubTargetNPC ].iBalance * 2;
+							pSoldier->inv[ bMoneySlot ].ItemData.Money.uiMoneyAmount -= gMercProfiles[ ubTargetNPC ].iBalance * 2;
 							if (bMoneySlot < bEmptySlot)
 							{
 								// move main stash to later in inventory!
@@ -3597,7 +3597,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_START_DOCTORING:
 				{
 					
-					// reset fact he is expecting money fromt he player
+					// reset fact he is expecting money fromt the player
 					SetFactFalse( FACT_VINCE_EXPECTING_MONEY );
 
 					// check fact
@@ -4374,10 +4374,6 @@ BOOLEAN PlayerTeamHasTwoSpotsLeft( )
 			uiCount++;
 		}
 	}
-
-	// WANNE
-	//if ( uiCount <= (UINT32) (gTacticalStatus.Team[ gbPlayerNum ].bLastID - 2) - 2 )
-	//if ( uiCount <= (18 - 2) )
 
 	if ( uiCount <= (UINT32) (gTacticalStatus.Team[ gbPlayerNum].bLastID - 2) - 1 )
 	{

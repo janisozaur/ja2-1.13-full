@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 	#include "GameSettings.h"
@@ -40,7 +39,6 @@
 
 extern BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM *pData );
 
-// WANNE 2
 #define MAP_INV_X_OFFSET							(((SCREEN_WIDTH - 261) - 380) / 2)
 //#define MAP_INV_Y_OFFSET					(((SCREEN_HEIGHT - 121) - 
 
@@ -92,7 +90,6 @@ extern BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMap
 #define MAP_INVEN_SLOT_HEIGHT 32 
 #define MAP_INVEN_SLOT_IMAGE_HEIGHT 24 
 
-// WANNE 2
 // Number of inventory slots in 1024x768
 #define MAP_INVENTORY_POOL_MAX_SLOTS 170
 
@@ -129,7 +126,6 @@ UINT32 uiNumberOfUnSeenItems = 0;
 
 
 // the inventory slots
-// WANNE 2 <new>
 //MOUSE_REGION MapInventoryPoolSlots[ MAP_INVENTORY_POOL_SLOT_COUNT ];
 MOUSE_REGION MapInventoryPoolSlots[ MAP_INVENTORY_POOL_MAX_SLOTS ];
 
@@ -218,6 +214,9 @@ extern void StackObjs( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 u
 extern void MAPEndItemPointer( );
 extern	BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle( INT16 *psSectorX, INT16 *psSectorY, INT16 *psSectorZ );
 
+void DeleteAllItemsInInventoryPool();
+void DeleteItemsOfType( UINT16 usItemType );
+INT32 SellItem( OBJECTTYPE& object );
 
 // load the background panel graphics for inventory
 BOOLEAN LoadInventoryPoolGraphic( void )
@@ -227,7 +226,6 @@ BOOLEAN LoadInventoryPoolGraphic( void )
 	// load the file
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 
-	// WANNE 2
 	if (iResolution == 0)
 	{
 		MAP_INV_SLOT_COLS = 8;
@@ -310,7 +308,6 @@ void BlitInventoryPoolGraphic( void )
 	// which buttons will be active and which ones not
 	HandleButtonStatesWhileMapInventoryActive( );
 
-	// WANNE 2
 	// Invalidate
 	RestoreExternBackgroundRect(MAP_BORDER_X, MAP_BORDER_Y, SCREEN_WIDTH - MAP_BORDER_X, SCREEN_HEIGHT - 121);
 
@@ -727,11 +724,6 @@ void CreateMapInventoryPoolSlots( void )
 	INT16 sXA = 0, sYA = 0;
 	INT16 sULX = 0, sULY = 0;
 	INT16 sBRX = 0, sBRY = 0;
-
-	// WANNE 2
-	//MSYS_DefineRegion( &MapInventoryPoolMask, 
-	//		MAP_INVENTORY_POOL_SLOT_START_X, 0, 640, 360,
-	//		MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapInvenPoolScreenMaskCallback);
 
 	MSYS_DefineRegion( &MapInventoryPoolMask, 
 			MAP_INVENTORY_POOL_SLOT_START_X, 0, SCREEN_WIDTH - MAP_INVENTORY_POOL_SLOT_START_X, SCREEN_HEIGHT - 120,
@@ -1411,6 +1403,7 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 	BOOLEAN fSELLALL = gGameExternalOptions.fSellAll;
 	INT16 iPriceModifier = gGameExternalOptions.iPriceModifier;
 
+
 	// If not null return
 	if ( gpItemPointer != NULL )
 	{
@@ -1438,53 +1431,47 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 
 		if ( _KeyDown ( CTRL ))
 		{
+			INT16 usDesiredItemType = gItemPointer.usItem;
+
 			gpItemPointer = NULL;
 			fMapInventoryItem = FALSE;
+
+			if ( _KeyDown ( 89 )) //Lalien: delete all items of this type on Ctrl+Y 
+			{
+				DeleteItemsOfType( usDesiredItemType );
+			}
+
 			if ( fShowMapInventoryPool )
 				HandleButtonStatesWhileMapInventoryActive();
 		}
 		else if ( _KeyDown ( ALT ) && fSELLALL)
 		{
-
-			INT32 iPrice = 0;
-			
-			if( gItemPointer.ubNumberOfObjects > 1)
-			{
-				if( Item[ gpItemPointer->usItem ].usItemClass == IC_AMMO )
-				{
-					for (INT8 bLoop = 0; bLoop < gItemPointer.ubNumberOfObjects; bLoop++)
-					{
-						iPrice += (INT32)( Item[gpItemPointer->usItem].usPrice * (float) gpItemPointer->ubShotsLeft[bLoop] / Magazine[ Item[gpItemPointer->usItem].ubClassIndex ].ubMagSize );
-					}					
-				}
-				else
-				{
-					for (INT8 bLoop = 0; bLoop < gItemPointer.ubNumberOfObjects; bLoop++)
-					{
-						iPrice += (INT32)( Item[gpItemPointer->usItem].usPrice * (float)gpItemPointer->bStatus[bLoop] / 100 );
-					}
-				}
-			}
-			else
-			{
-				iPrice = ( Item[gpItemPointer->usItem].usPrice * gpItemPointer->bStatus[0] / 100 );
-
-				for (INT8 bLoop = 0; bLoop < MAX_ATTACHMENTS; bLoop++)
-				{
-					iPrice += (INT32) ( Item[gpItemPointer->usAttachItem[bLoop]].usPrice * (float)gpItemPointer->bAttachStatus[bLoop] / 100);
-				}
-			}
-			
-			if( iPriceModifier < 1) iPriceModifier = 1;
-
-			iPrice = (INT32) (iPrice / iPriceModifier);			
-			
-			AddTransactionToPlayersBook( SOLD_ITEMS, 0, GetWorldTotalMin(), iPrice );
+			INT32 iPrice = SellItem( gItemPointer );
 		    PlayJA2Sample( COMPUTER_BEEP2_IN, RATE_11025, 15, 1, MIDDLEPAN );			              
 			gpItemPointer = NULL;
 			fMapInventoryItem = FALSE;
+			if ( _KeyDown ( 89 )) //Lalien: sell all items of this type on Alt+Y 
+			{
+				for( INT32 iNumber = 0; iNumber < iTotalNumberOfSlots ; ++iNumber)
+				{
+					if ( pInventoryPoolList[ iNumber ].o.usItem == gItemPointer.usItem )
+					{
+						iPrice += SellItem( pInventoryPoolList[ iNumber ].o );
+						DeleteObj( &pInventoryPoolList [ iNumber ].o );
+					}
+				}
+			}
+
+			//ADB you can sell items for 0, but that's not fair
+			//and it's not easy to stop the sale so make the price 1
+			if (iPrice == 0) {
+				iPrice = 1;
+			}
+
+			AddTransactionToPlayersBook( SOLD_ITEMS, 0, GetWorldTotalMin(), iPrice );
+
 			if ( fShowMapInventoryPool )
-				HandleButtonStatesWhileMapInventoryActive();
+				HandleButtonStatesWhileMapInventoryActive();		
 
 		}
 		else
@@ -1529,7 +1516,7 @@ BOOLEAN GetObjFromInventoryStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pI
 		pItemPtr->usItem = pInventorySlot->usItem;
 
 		// find first unempty slot
-		pItemPtr->bStatus[0] = pInventorySlot->bStatus[0];
+		pItemPtr->ItemData.Generic.bStatus[0] = pInventorySlot->ItemData.Generic.bStatus[0];
 		pItemPtr->ubNumberOfObjects = 1;
 		pItemPtr->ubWeight = CalculateObjectWeight( pItemPtr );
 		RemoveObjFrom( pInventorySlot, 0 );
@@ -1586,7 +1573,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 			// in the InSlot copy, zero out all the objects we didn't drop
 			for (ubLoop = ubNumberToDrop; ubLoop < pItemPtr->ubNumberOfObjects; ubLoop++)
 			{
-				pInventorySlot->bStatus[ubLoop] = 0;
+				pInventorySlot->ItemData.Generic.bStatus[ubLoop] = 0;
 			}
 		}
 		pInventorySlot->ubNumberOfObjects = ubNumberToDrop;
@@ -1607,8 +1594,8 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 			{
 				// always allow money to be combined!
 				// average out the status values using a weighted average...
-				pInventorySlot->bStatus[0] = (INT8) ( ( (UINT32)pInventorySlot->bMoneyStatus * pInventorySlot->uiMoneyAmount + (UINT32)pItemPtr->bMoneyStatus * pItemPtr->uiMoneyAmount )/ (pInventorySlot->uiMoneyAmount + pItemPtr->uiMoneyAmount) );
-				pInventorySlot->uiMoneyAmount += pItemPtr->uiMoneyAmount;
+				pInventorySlot->ItemData.Generic.bStatus[0] = (INT8) ( ( (UINT32)pInventorySlot->ItemData.Money.bMoneyStatus * pInventorySlot->ItemData.Money.uiMoneyAmount + (UINT32)pItemPtr->ItemData.Money.bMoneyStatus * pItemPtr->ItemData.Money.uiMoneyAmount )/ (pInventorySlot->ItemData.Money.uiMoneyAmount + pItemPtr->ItemData.Money.uiMoneyAmount) );
+				pInventorySlot->ItemData.Money.uiMoneyAmount += pItemPtr->ItemData.Money.uiMoneyAmount;
 
 				DeleteObj( pItemPtr );
 			}
@@ -1667,7 +1654,7 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 		// in the InSlot copy, zero out all the objects we didn't drop
 		for (ubLoop = ubNumberToDrop; ubLoop < pItemPtr->ubNumberOfObjects; ubLoop++)
 		{
-			pInventorySlot->bStatus[ubLoop] = 0;
+			pInventorySlot->ItemData.Generic.bStatus[ubLoop] = 0;
 		}
 	}
 	pInventorySlot->ubNumberOfObjects = ubNumberToDrop;
@@ -1837,7 +1824,6 @@ void DrawNumberOfIventoryPoolItems( void )
 
 void CreateMapInventoryPoolDoneButton( void )
 {
-	// WANNE 2
 	// create done button
 	guiMapInvenButtonImage[ 2 ]=  LoadButtonImage( "INTERFACE\\done_button.sti" , -1, 0, -1, 1, -1 );
 	guiMapInvenButton[ 2 ] = QuickCreateButton( guiMapInvenButtonImage[ 2 ], MAP_INV_X_OFFSET + 587 , (SCREEN_HEIGHT - 147),
@@ -1925,7 +1911,6 @@ void DrawTextOnMapInventoryBackground( void )
 	//usStringHeight = DisplayWrappedString( 369, 342, 65, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[ 1 ], FONT_BLACK, FALSE, RIGHT_JUSTIFIED | DONT_DISPLAY_TEXT );
 	//DisplayWrappedString( 369, (UINT16)(342 - (usStringHeight / 2) ), 65, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[ 1 ], FONT_BLACK, FALSE, RIGHT_JUSTIFIED );
 
-	// WANNE 2
 	//Calculate the height of the string, as it needs to be vertically centered.
 	usStringHeight = DisplayWrappedString( MAP_INV_X_OFFSET + 268, (SCREEN_HEIGHT - 138), 53, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[ 0 ], FONT_BLACK, FALSE, RIGHT_JUSTIFIED | DONT_DISPLAY_TEXT );
 	DisplayWrappedString( MAP_INV_X_OFFSET + 268, (UINT16)((SCREEN_HEIGHT - 138) - (usStringHeight / 2) ), 53, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[ 0 ], FONT_BLACK, FALSE, RIGHT_JUSTIFIED );
@@ -2253,8 +2238,8 @@ INT32 MapScreenSectorInventoryCompare( const void *pNum1, const void *pNum2)
 	usItem1Index = pFirst->o.usItem;
 	usItem2Index = pSecond->o.usItem;
 
-	ubItem1Quality = pFirst->o.bStatus[ 0 ];
-	ubItem2Quality = pSecond->o.bStatus[ 0 ];
+	ubItem1Quality = pFirst->o.ItemData.Generic.bStatus[ 0 ];
+	ubItem2Quality = pSecond->o.ItemData.Generic.bStatus[ 0 ];
 
 	return( CompareItemsForSorting( usItem1Index, usItem2Index, ubItem1Quality, ubItem2Quality ) );
 }
@@ -2282,4 +2267,78 @@ BOOLEAN CanPlayerUseSectorInventory( SOLDIERTYPE *pSelectedSoldier )
 	}
 
 	return( TRUE );
+}
+
+void DeleteAllItemsInInventoryPool()
+{
+	INT32 iNumber;
+
+	for( iNumber = 0 ; iNumber <  iTotalNumberOfSlots ; ++iNumber)
+	{
+		DeleteObj( &pInventoryPoolList [ iNumber ].o );
+	}
+
+	fMapPanelDirty = TRUE;
+
+	ClearUpTempUnSeenList( );
+	SaveSeenAndUnseenItems();
+
+	iCurrentInventoryPoolPage = 0;
+	iLastInventoryPoolPage = 0;
+
+	DestroyStash();
+	BuildStashForSelectedSector( sSelMapX, sSelMapY, iCurrentMapSectorZ);
+}
+
+
+void DeleteItemsOfType( UINT16 usItemType )
+{
+	INT32 iNumber;
+
+	for( iNumber = 0 ; iNumber <  iTotalNumberOfSlots ; ++iNumber)
+	{
+		if ( pInventoryPoolList [ iNumber ].o.usItem == usItemType )
+		{
+			DeleteObj( &pInventoryPoolList [ iNumber ].o );
+		}
+	}
+
+}
+
+
+INT32 SellItem( OBJECTTYPE& object )
+{
+	INT32 iPrice = 0;
+	INT16 iPriceModifier = gGameExternalOptions.iPriceModifier;
+	UINT16 usItemType = object.usItem;
+	UINT16 itemPrice = Item[usItemType].usPrice;
+
+	if( Item[ usItemType ].usItemClass == IC_AMMO )
+	{
+		//we are selling ammo
+		UINT8 magSize = Magazine[ Item[ usItemType ].ubClassIndex ].ubMagSize;
+		for (INT8 bLoop = 0; bLoop < object.ubNumberOfObjects; bLoop++)
+		{
+			iPrice += (INT32)( itemPrice * (float) object.ItemData.Ammo.ubShotsLeft[bLoop] / magSize );
+		}
+	}
+	else
+	{
+		//we are selling a gun or something - it could be stacked or single, and each one could have attachments
+		for (INT8 bLoop = 0; bLoop < object.ubNumberOfObjects; bLoop++)
+		{
+			iPrice += ( itemPrice * object.ItemData.Generic.bStatus[bLoop] / 100 );
+
+			for (INT8 numAttachments = 0; numAttachments < MAX_ATTACHMENTS; numAttachments++)
+			{
+				iPrice += (INT32) ( Item[object.usAttachItem[numAttachments]].usPrice * (float)object.bAttachStatus[numAttachments] / 100);
+			}
+		}					
+	}
+
+	if( iPriceModifier > 1) {
+		iPrice /= iPriceModifier;
+	}
+
+	return iPrice;
 }

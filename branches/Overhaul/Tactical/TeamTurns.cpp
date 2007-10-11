@@ -195,7 +195,7 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 		// Are we in combat already?
 		if ( gTacticalStatus.uiFlags & INCOMBAT )
 		{		
-			if ( gusSelectedSoldier != NO_SOLDIER )
+			if ( gusSelectedSoldier != NOBODY )
 			{
 				// Check if this guy is able to be selected....
 				if ( MercPtrs[ gusSelectedSoldier ]->bLife < OKLIFE )
@@ -209,7 +209,7 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 				}
 
 				// Slide to selected guy...
-				if ( gusSelectedSoldier != NO_SOLDIER )
+				if ( gusSelectedSoldier != NOBODY )
 				{
 					SlideTo( NOWHERE, gusSelectedSoldier, NOBODY ,SETLOCATOR);
 
@@ -556,7 +556,7 @@ void DisplayHiddenInterrupt( SOLDIERTYPE * pSoldier )
 	// Stop our guy....
 	AdjustNoAPToFinishMove( MercPtrs[ LATEST_INTERRUPT_GUY ], TRUE );	
 	// Stop him from going to prone position if doing a turn while prone
-	MercPtrs[ LATEST_INTERRUPT_GUY ]->fTurningFromPronePosition = FALSE;
+	MercPtrs[ LATEST_INTERRUPT_GUY ]->bTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"about to call AddTopMessage");
 	// get rid of any old overlay message
@@ -862,7 +862,7 @@ void StartInterrupt( void )
 	{
 		// Stop this guy....
 		AdjustNoAPToFinishMove( MercPtrs[ LATEST_INTERRUPT_GUY ], TRUE );	
-		MercPtrs[ LATEST_INTERRUPT_GUY ]->fTurningFromPronePosition = FALSE;
+		MercPtrs[ LATEST_INTERRUPT_GUY ]->bTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 	}
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"StartInterrupt done");
 
@@ -1018,7 +1018,7 @@ void EndInterrupt( BOOLEAN fMarkInterruptOccurred )
 				guiPendingOverrideEvent = LU_ENDUILOCK;
 				HandleTacticalUI( );
 
-				if ( gusSelectedSoldier != NO_SOLDIER )
+				if ( gusSelectedSoldier != NOBODY )
 				{
 					SlideTo( NOWHERE, gusSelectedSoldier, NOBODY ,SETLOCATOR);
 
@@ -1155,7 +1155,7 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 		return( FALSE );
 	}
 
-	if (ubOpponentID < NOBODY)
+	if (ubOpponentID < TOTAL_SOLDIERS)
 	{
 		/*
 		// only the OPPONENT'S controller's decision matters
@@ -1177,7 +1177,7 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 	else	// no opponent, so controller of 'ptr' makes the call instead
 	{
 		// ALEX
-		if (gsWhoThrewRock >= NOBODY)
+		if (gsWhoThrewRock >= TOTAL_SOLDIERS)
 		{
 #ifdef BETAVERSION
 			NumMessage("StandardInterruptConditions: ERROR - ubOpponentID is NOBODY, don't know who threw rock, guynum = ",pSoldier->guynum);
@@ -1299,7 +1299,7 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 	ubMinPtsNeeded = AP_CHANGE_FACING;
 
 	// if the opponent is SOMEBODY
-	if (ubOpponentID < NOBODY)
+	if (ubOpponentID < TOTAL_SOLDIERS)
 	{
 		// if the soldiers are on the same side
 		if (pSoldier->bSide == pOpponent->bSide)
@@ -1511,11 +1511,11 @@ INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, BOOLEAN f
 		// this soldier is moving, so give them a bonus for crawling or swatting at long distances
 		if ( !gbSeenOpponents[ ubOpponentID ][ pSoldier->ubID ] )
 		{
-			if (pSoldier->usAnimState == SWATTING && ubDistance > (MaxDistanceVisible() / 2) ) // more than 1/2 sight distance
+			if (pSoldier->usAnimState == SWATTING && ubDistance > (MaxNormalDistanceVisible() / 2) ) // more than 1/2 sight distance
 			{
 				iPoints++;
 			}
-			else if (pSoldier->usAnimState == CRAWLING && ubDistance > (MaxDistanceVisible() / 4) ) // more than 1/4 sight distance
+			else if (pSoldier->usAnimState == CRAWLING && ubDistance > (MaxNormalDistanceVisible() / 4) ) // more than 1/4 sight distance
 			{
 				iPoints += ubDistance / STRAIGHT;
 			}
@@ -1770,7 +1770,7 @@ void VerifyOutOfTurnOrderArray()
 							AdjustNoAPToFinishMove( MercPtrs[ gubOutOfTurnOrder[ ubNextIndex ] ], TRUE );
 
 							// If they were turning from prone, stop them
-							MercPtrs[ gubOutOfTurnOrder[ ubNextIndex ] ]->fTurningFromPronePosition = FALSE;
+							MercPtrs[ gubOutOfTurnOrder[ ubNextIndex ] ]->bTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 
 							DeleteFromIntList( ubNextIndex, FALSE );
 						}
@@ -1826,7 +1826,7 @@ void VerifyOutOfTurnOrderArray()
 				AdjustNoAPToFinishMove( MercPtrs[ gubOutOfTurnOrder[ ubLoop ] ], TRUE );
 
 				// If they were turning from prone, stop them
-				MercPtrs[ gubOutOfTurnOrder[ ubLoop ] ]->fTurningFromPronePosition = FALSE;
+				MercPtrs[ gubOutOfTurnOrder[ ubLoop ] ]->bTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 
 				DeleteFromIntList( ubLoop, FALSE );
 
@@ -1889,7 +1889,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 						if ( ubInterruptType == NOISEINTERRUPT )
 						{
 							// don't grant noise interrupts at greater than max. visible distance 
-							if ( PythSpacesAway( pSoldier->sGridNo, pOpponent->sGridNo ) > MaxDistanceVisible() )
+							if ( PythSpacesAway( pSoldier->sGridNo, pOpponent->sGridNo ) > MaxNormalDistanceVisible() )
 							{
 								pOpponent->bInterruptDuelPts = NO_INTERRUPT;
 
@@ -2029,7 +2029,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 					}
 				}
 
-				if (ubSmallestSlot < NOBODY)
+				if (ubSmallestSlot < TOTAL_SOLDIERS)
 				{
 					// add this guy to everyone's interrupt queue
 					AddToIntList(ubIntList[ubSmallestSlot],TRUE,TRUE);

@@ -244,9 +244,10 @@ Console::Console(LPCTSTR pszConfigFile, LPCTSTR pszShellCmdLine, LPCTSTR pszCons
 	::SetStdHandle( STD_OUTPUT_HANDLE, myOut);
 	::SetStdHandle( STD_ERROR_HANDLE, myOut);
 
-	int hConHandle = _open_osfhandle((long)myOut, _O_WTEXT);
+	int hConHandle = _open_osfhandle((long)myOut, _O_BINARY); //_O_WTEXT);
  	FILE *fp = _fdopen( hConHandle, "w" );
 	*stdout = *fp;
+	*stderr = *fp;
 	setvbuf( stdout, NULL, _IONBF, 0 );
 	
 	// create text monitor thread
@@ -282,8 +283,10 @@ Console::~Console() {
 /////////////////////////////////////////////////////////////////////////////
 // creates and shows Console window
 
-BOOL Console::Create(TCHAR* pszConfigPath) {
+BOOL Console::Create(HWND notify) {
 	
+	m_notifyhWnd = notify;
+
 	if (m_hWnd)
 	{
 		::ShowWindow( m_hWnd, SW_SHOW);
@@ -642,13 +645,13 @@ void Console::OnVScroll(WPARAM wParam) {
 		return;
 	}
 	
-	if (nDelta = max(-nCurrentPos, min(nDelta, (int)(m_dwBufferRows-m_dwRows) - nCurrentPos))) {
+	if ((nDelta = max(-nCurrentPos, min(nDelta, (int)(m_dwBufferRows-m_dwRows) - nCurrentPos))) != 0) {
 		
 		nCurrentPos += nDelta; 
 		
 		SMALL_RECT sr;
-		sr.Top = nCurrentPos;
-		sr.Bottom = nDelta;
+		sr.Top = (short) nCurrentPos;
+//		sr.Bottom = nDelta;
 		sr.Left = sr.Right = 0;
 		m_csbiConsole.srWindow = sr;
 //		::SetConsoleWindowInfo(m_hStdOutFresh, FALSE, &sr);
@@ -727,7 +730,6 @@ void Console::OnLButtonDown(UINT uiFlags, POINTS points) {
 		}
 	}
 #endif
-	wcout << "Test" << endl;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -823,6 +825,7 @@ void Console::OnMButtonDown(UINT uiFlags, POINTS points) {
 
 void Console::OnMouseMove(UINT uiFlags, POINTS points) {
 
+#if 0
 	RECT	windowRect;
 	int		deltaX, deltaY;
 	POINT	point;
@@ -903,6 +906,7 @@ void Console::OnMouseMove(UINT uiFlags, POINTS points) {
 			}
 		}
 	}
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -915,26 +919,21 @@ void Console::OnChar(WORD myChar) {
 
 	if (myChar == 8)
 	{
-		if (Input.length() > 0)
+		int l = Input.length();
+		if (l > 0)
 		{
-			wchar_t last = Input[ Input.length() - 1];
+			wchar_t last = Input[ l - 1];
+			if (last == '\n')
+			{
+				return;
+			}
 
 			text[0] = 8;
 			text[1] = L' ';
 			text[2] = 8;
 			text[3] = 0;
 
-			Input.resize( Input.length() - 1);
-
-			if (last == '\n')
-			{
-				int cx = Input.rfind( '\n') + 1;
-				cx = Input.length() - cx;
-				SendTextToConsole( text);
-				m_csbiCursor.dwCursorPosition.X = cx;
-				
-				return;
-			}
+			Input.resize( l - 1);
 		}
 		else
 		{
@@ -947,6 +946,9 @@ void Console::OnChar(WORD myChar) {
 		text[1] = '\r';
 		text[2] = 0;
 		Input += '\n';
+		SendTextToConsole( text);
+		SendMessage( m_notifyhWnd, WM_INPUTREADY, 0, (LPARAM) &Input);
+		return;
 	}
 	else
 	{
@@ -2697,11 +2699,12 @@ void Console::SetWindowSizeAndPosition() {
 		break;
 	}
 	
-	HWND hwndZ;
+	HWND hwndZ = 0;
 	switch (m_dwCurrentZOrder) {
 	case Z_ORDER_REGULAR	: hwndZ = HWND_NOTOPMOST; break;
 	case Z_ORDER_ONTOP		: hwndZ = HWND_TOPMOST; break;
 	case Z_ORDER_ONBOTTOM	: hwndZ = HWND_BOTTOM; break;
+	default                 : return;
 	}
 	
 	::SetWindowPos(
@@ -2769,7 +2772,7 @@ BOOL Console::SetTrayIcon(DWORD dwMessage) {
 	if (strToolTip.length() > 63) {
 		strToolTip.resize(59);
 		strToolTip += _T(" ...");
-		DWORD dw = strToolTip.length();
+//		DWORD dw = strToolTip.length();
 	}
 	
 	_tcscpy(tnd.szTip, strToolTip.c_str());
@@ -2804,7 +2807,7 @@ void Console::EditConfigFile() {
 		// no params, just use the config file
 		strParams = m_strConfigFile;
 	} else {
-		int nPos = strParams.find(_T("%f"));
+		tstring::size_type nPos = strParams.find(_T("%f"));
 
 		if (nPos == tstring::npos) {
 			// no '%f' in editor params, concatenate config file name
@@ -3190,8 +3193,8 @@ void Console::InitConsoleWndSize(DWORD dwColumns) {
 	
 	SMALL_RECT	srConsoleRect;
 	srConsoleRect.Top	= srConsoleRect.Left =0;
-	srConsoleRect.Right	= dwColumns - 1;
-	srConsoleRect.Bottom= m_dwRows - 1;
+//	srConsoleRect.Right	= dwColumns - 1;
+//	srConsoleRect.Bottom= m_dwRows - 1;
 	
 #if 0
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -3230,8 +3233,8 @@ void Console::ResizeConsoleWindow() {
 	
 	SMALL_RECT	srConsoleRect;
 	srConsoleRect.Top	= srConsoleRect.Left =0;
-	srConsoleRect.Right	= m_dwColumns - 1;
-	srConsoleRect.Bottom= m_dwRows - 1;
+//	srConsoleRect.Right	= m_dwColumns - 1;
+//	srConsoleRect.Bottom= m_dwRows - 1;
 
 #if 0
 	// order of setting window size and screen buffer size depends on current and desired dimensions
@@ -3311,9 +3314,9 @@ void Console::RepaintWindow() {
 	COLORREF	crBkColor	= RGB(0, 0, 0);
 	COLORREF	crTxtColor	= RGB(0, 0, 0);
 	
-	int			nNewBkMode		= TRANSPARENT;
-	COLORREF	crNewBkColor	= RGB(0, 0, 0);
-	COLORREF	crNewTxtColor	= RGB(0, 0, 0);
+//	int			nNewBkMode		= TRANSPARENT;
+//	COLORREF	crNewBkColor	= RGB(0, 0, 0);
+//	COLORREF	crNewTxtColor	= RGB(0, 0, 0);
 	
 	bool		bTextOut		= false;
 	
@@ -3635,7 +3638,7 @@ inline void Console::GetCursorRect(RECT& rectCursor) {
 		auto_ptr<wchar_t>	pszLine(new wchar_t[m_csbiCursor.dwCursorPosition.X + 2]);
 		::ZeroMemory(pszLine.get(), (m_csbiCursor.dwCursorPosition.X + 2)*sizeof(wchar_t));
 		
-		for (DWORD i = 0; i <= m_csbiCursor.dwCursorPosition.X; ++i) pszLine.get()[i] = m_pScreenBuffer[m_csbiCursor.dwCursorPosition.Y * m_dwColumns + i].Char.UnicodeChar;
+		for (short i = 0; i <= m_csbiCursor.dwCursorPosition.X; ++i) pszLine.get()[i] = m_pScreenBuffer[m_csbiCursor.dwCursorPosition.Y * m_dwColumns + i].Char.UnicodeChar;
 		
 		rectLine.left	= rectLine.right	= 0;
 		rectLine.top	= rectLine.bottom	= m_csbiCursor.dwCursorPosition.Y * m_nCharHeight;
@@ -3676,7 +3679,7 @@ inline void Console::DrawCursorBackground(RECT& rectCursor) {
 	GetCursorRect(rectCursor);
 	
 	if (m_csbiCursor.dwCursorPosition.Y < m_csbiConsole.srWindow.Top ||
-		m_csbiCursor.dwCursorPosition.Y >= m_csbiConsole.srWindow.Top + m_dwRows) {
+		m_csbiCursor.dwCursorPosition.Y >= m_csbiConsole.srWindow.Top + (SHORT) m_dwRows) {
 			return;
 	}
 
@@ -3810,11 +3813,12 @@ void Console::ToggleWindowOnTop() {
 		m_dwCurrentZOrder = m_dwOriginalZOrder;
 	}
 	
-	HWND hwndZ;
+	HWND hwndZ = 0;
 	switch (m_dwCurrentZOrder) {
 	case Z_ORDER_REGULAR	: hwndZ = HWND_NOTOPMOST; break;
 	case Z_ORDER_ONTOP		: hwndZ = HWND_TOPMOST; break;
 	case Z_ORDER_ONBOTTOM	: hwndZ = HWND_BOTTOM; break;
+	default                 : return;
 	}
 	
 	::SetWindowPos(
@@ -4098,7 +4102,7 @@ void Console::ShowReadmeFile() {
 		// no params, just use the readme file
 		strParams = m_strReadmeFile;
 	} else {
-		int nPos = strParams.find(_T("%f"));
+		tstring::size_type nPos = strParams.find(_T("%f"));
 		
 		if (nPos == tstring::npos) {
 			// no '%f' in editor params, concatenate readme file name
@@ -4135,16 +4139,20 @@ void Console::SendTextToConsole(const wchar_t *pszText) {
 	
 	if (!pszText || (wcslen(pszText) == 0)) return;
 
-	BOOL c_state = m_pCursor->GetState();
-	m_pCursor->SetState(FALSE);
-	DrawCursor();
+	BOOL c_state = FALSE;
+	if (m_pCursor)
+	{
+		c_state = (m_pCursor != NULL && m_pCursor->GetState());
+		m_pCursor->SetState(FALSE);
+		DrawCursor();
+	}
 
 	int idx = m_csbiCursor.dwCursorPosition.X + m_csbiCursor.dwCursorPosition.Y * m_dwColumns;
 
 	RECT rectInval;
 	int cursorX;
 	int cursorY;
-	int attr = m_nTextColor + (m_nTextBgColor << 4);
+	WORD attr = (WORD)(m_nTextColor + (m_nTextBgColor << 4));
 
 	cursorX = m_csbiCursor.dwCursorPosition.X * m_nCharWidth + m_nInsideBorder;
 	cursorY = m_csbiCursor.dwCursorPosition.Y * m_nCharHeight + m_nInsideBorder;
@@ -4179,7 +4187,7 @@ void Console::SendTextToConsole(const wchar_t *pszText) {
 					OnVScroll( SB_LINEUP);
 				}
 				m_csbiCursor.dwCursorPosition.Y--;
-				m_csbiCursor.dwCursorPosition.X = m_dwColumns - 1;
+				m_csbiCursor.dwCursorPosition.X = (SHORT)m_dwColumns - 1;
 				cursorX = m_nCharWidth * m_csbiCursor.dwCursorPosition.X;
 				idx--;
 			}
@@ -4192,17 +4200,17 @@ void Console::SendTextToConsole(const wchar_t *pszText) {
 			m_csbiCursor.dwCursorPosition.X++;
 		}
 		
-		if (m_csbiCursor.dwCursorPosition.X >= m_dwColumns || *pszText == '\r' || *pszText == '\n' ) {
+		if (m_csbiCursor.dwCursorPosition.X >= (SHORT) m_dwColumns || *pszText == '\r' || *pszText == '\n' ) {
 			m_csbiCursor.dwCursorPosition.X = 0;
 			cursorX = m_nInsideBorder;
 			if (*pszText != '\r') {
 				m_csbiCursor.dwCursorPosition.Y++;
-				if (m_csbiCursor.dwCursorPosition.Y >= m_dwBufferRows) {
+				if (m_csbiCursor.dwCursorPosition.Y >= (SHORT)m_dwBufferRows) {
 					m_csbiCursor.dwCursorPosition.Y--;
 					idx = m_csbiCursor.dwCursorPosition.X + m_csbiCursor.dwCursorPosition.Y * m_dwColumns;
 					::CopyMemory( m_pScreenBufferNew, m_pScreenBufferNew + m_dwColumns, idx * sizeof( CHAR_INFO));
 					::ZeroMemory( m_pScreenBufferNew + idx, m_dwColumns * sizeof( CHAR_INFO));
-				} else if (m_csbiCursor.dwCursorPosition.Y == m_csbiConsole.srWindow.Top + m_dwRows) {
+				} else if (m_csbiCursor.dwCursorPosition.Y == m_csbiConsole.srWindow.Top + (SHORT)m_dwRows) {
 					OnVScroll( SB_LINEDOWN);
 				} else {
 					cursorY += m_nCharHeight;
@@ -4215,7 +4223,10 @@ void Console::SendTextToConsole(const wchar_t *pszText) {
 	::InvalidateRect( m_hWnd, &rectInval, TRUE);
 	::SetTimer(m_hWnd, TIMER_REPAINT_CHANGE, m_dwChangeRepaintInt, NULL);
 
-	m_pCursor->SetState(c_state);
+	if (m_pCursor)
+	{
+		m_pCursor->SetState(c_state);
+	}
 
 #if 0
 	HANDLE hStdIn = ::CreateFile(_T("CONIN$"), GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
@@ -4422,7 +4433,7 @@ LRESULT CALLBACK Console::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
 #endif
 
 		case WM_CHAR:
-			myself->OnChar( wParam);
+			myself->OnChar( (WORD) wParam);
 			break;
 
 		case WM_KEYDOWN:
@@ -4504,12 +4515,12 @@ DWORD WINAPI Console::MonitorThreadStatic(LPVOID lpParam) {
 DWORD Console::MonitorThread() {
 	
 //	HANDLE	arrHandles[] = {m_hConsoleProcess, m_hQuitEvent, m_hStdOut};
-	HANDLE	arrHandles[] = { m_hStdOut};
+//	HANDLE	arrHandles[] = { m_hStdOut};
 	
-	while (1) {
+	for (;;) { // Infinite loop
+#if 0
 		DWORD dwWait = ::WaitForMultipleObjects(1, arrHandles, FALSE, INFINITE);
 
-#if 0
 		if (dwWait == WAIT_OBJECT_0) {
 			::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 			break;
@@ -4525,7 +4536,7 @@ DWORD Console::MonitorThread() {
 //		}
 	}
 
-	return 0;
+//	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -4534,13 +4545,16 @@ DWORD Console::MonitorThread() {
 /////////////////////////////////////////////////////////////////////////////
 void Console::AddOutput() {
 	DWORD bytesRead;
-	wchar_t buf[801];
+	char buf[801];
+	wchar_t wbuf[801];
+
 	::ReadFile( m_hStdOut, buf, sizeof(buf)/sizeof(wchar_t)-1, &bytesRead, NULL);
 	if (bytesRead == 0) {
 		return;
 	}
-	buf[bytesRead/sizeof(wchar_t)] = 0;
-	SendTextToConsole( buf);
+	buf[bytesRead] = 0;
+	MultiByteToWideChar( CP_UTF8, 0, buf, -1, wbuf, sizeof(wbuf)/sizeof(wbuf[0]));
+	SendTextToConsole( wbuf);
 }
 
 /////////////////////////////////////////////////////////////////////////////

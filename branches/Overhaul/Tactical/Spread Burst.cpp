@@ -121,8 +121,8 @@ void AccumulateBurstLocation( INT16 sGridNo )
 
 void PickBurstLocations( SOLDIERTYPE *pSoldier )
 {
-	UINT8		ubShotsPerBurst;
-	FLOAT		dAccululator = 0;
+	UINT8		ubShotsPerBurst = 0;
+	FLOAT		dAccumulator = 0;
 	FLOAT		dStep = 0;
 	INT32		cnt;
 	UINT8		ubLocationNum;
@@ -144,37 +144,51 @@ void PickBurstLocations( SOLDIERTYPE *pSoldier )
 				pSoldier->bDoAutofire++;
 				sAPCosts = CalcTotalAPsToAttack( pSoldier, gsBurstLocations[0].sGridNo, TRUE, 0);
 			}
-			while(EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) && pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft >= pSoldier->bDoAutofire && gbNumBurstLocations >= pSoldier->bDoAutofire);
+			while(EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) && pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Gun.ubGunShotsLeft >= pSoldier->bDoAutofire && gbNumBurstLocations >= pSoldier->bDoAutofire);
 			pSoldier->bDoAutofire--;
 
-			ubShotsPerBurst = __min(pSoldier->bDoAutofire,MAX_BURST_SPREAD_TARGETS);
+			ubShotsPerBurst = pSoldier->bDoAutofire;
 		}
 		else if ( gbNumBurstLocations > 0 )
-			ubShotsPerBurst = pSoldier->bDoAutofire / gbNumBurstLocations;
+			ubShotsPerBurst = pSoldier->bDoAutofire; // / gbNumBurstLocations;
 
 	}
 	else
 	{
 		if ( pSoldier->bWeaponMode == WM_ATTACHED_GL_BURST )
-			ubShotsPerBurst = __min(Weapon[GetAttachedGrenadeLauncher(&pSoldier->inv[HANDPOS])].ubShotsPerBurst,MAX_BURST_SPREAD_TARGETS);	
+			ubShotsPerBurst = Weapon[GetAttachedGrenadeLauncher(&pSoldier->inv[HANDPOS])].ubShotsPerBurst;
 		else
-			ubShotsPerBurst = __min(GetShotsPerBurst(&pSoldier->inv[ HANDPOS ]),MAX_BURST_SPREAD_TARGETS);
+			ubShotsPerBurst = GetShotsPerBurst(&pSoldier->inv[ HANDPOS ]);
+	}
+
+	ubShotsPerBurst = __min( ubShotsPerBurst, MAX_BURST_SPREAD_TARGETS);
+
+	if (ubShotsPerBurst == 1)
+	{
+		pSoldier->fDoSpread = FALSE;
+		return;
 	}
 
 	// Use # gridnos accululated and # burst shots to determine accululator
-	dStep = gbNumBurstLocations / (FLOAT)ubShotsPerBurst;
+	// Calculate it so that the actual last chosen shot location is the last spread point
+	dStep = (gbNumBurstLocations-1) / (FLOAT)(ubShotsPerBurst-1);
 
 	//Loop through our shots!
 	for ( cnt = 0; cnt < ubShotsPerBurst; cnt++ )
 	{
 		// Get index into list
-		ubLocationNum = (UINT8)( dAccululator );
+		ubLocationNum = (UINT8)( dAccumulator );
 
 		// Add to merc location
 		pSoldier->sSpreadLocations[ cnt ] = gsBurstLocations[ ubLocationNum ].sGridNo;
 		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("PickBurstLocations: loc#%d = %d", cnt, pSoldier->sSpreadLocations[ cnt ]));
 		// Acculuate index value
-		dAccululator += dStep;
+		dAccumulator += dStep;
+	}
+
+	for (; cnt < MAX_BURST_SPREAD_TARGETS; cnt++)
+	{
+		pSoldier->sSpreadLocations[ cnt ] = 0;
 	}
 
 	// OK, they have been added
@@ -219,6 +233,10 @@ void AIPickBurstLocations( SOLDIERTYPE *pSoldier, INT8 bTargets, SOLDIERTYPE *pT
 		dAccululator += dStep;
 	}
 
+	for (; cnt < MAX_BURST_SPREAD_TARGETS; cnt++)
+	{
+		pSoldier->sSpreadLocations[ cnt ] = 0;
+	}
 	// OK, they have been added
 }
 

@@ -123,8 +123,7 @@ LRESULT CALLBACK KeyboardHandler(int Code, WPARAM wParam, LPARAM lParam)
 	gfSGPInputReceived =  TRUE;
   }
 
-  return CallNextHookEx(ghKeyboardHook, Code, wParam, lParam);
-//  return TRUE;
+  return TRUE;
 }
 
 #ifdef JA2
@@ -1575,6 +1574,7 @@ BOOLEAN IsCursorRestricted( void )
 
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 {
+#if 0
 	FLOAT flNewXPos, flNewYPos;
 
 	// Wizardry NOTE: This function currently doesn't quite work right for in any Windows resolution other than 640x480.
@@ -1592,6 +1592,15 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 	flNewYPos = ( (FLOAT)uiNewYPos / SCREEN_HEIGHT ) * 65536;
 
 	mouse_event( MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, (UINT32)flNewXPos, (UINT32)flNewYPos, 0, 0 );
+#endif
+	// 0verhaul:
+	// The above is a bad hack.  Especially in windowed mode.  We don't want coords relative to the entire screen in that case.
+	// So instead, get screen coords and then use the setcursorpos call.
+	POINT newmouse;
+	newmouse.x = uiNewXPos;
+	newmouse.y = uiNewYPos;
+	ClientToScreen( ghWindow, &newmouse);
+	SetCursorPos( newmouse.x, newmouse.y);
 }
 
 
@@ -1614,9 +1623,15 @@ void DequeueAllKeyBoardEvents()
 
 
 	//dequeue all the events waiting in the windows queue
-	while( PeekMessage( &KeyMessage, ghWindow, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE ) );
+	//Give them proper processing like the old window hook method used to.
+	while( PeekMessage( &KeyMessage, ghWindow, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE ) )
+	{
+		TranslateMessage( &KeyMessage);
+		DispatchMessage( &KeyMessage);
+	}
 
-	//Deque all the events waiting in the SGP queue
+	//Now deque all the events waiting in the SGP queue
+	//Including those that were just posted in the code above
 	while (DequeueEvent(&InputEvent) == TRUE)
   {
 		//dont do anything

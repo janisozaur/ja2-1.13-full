@@ -553,7 +553,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 					{
 						fLAW = FALSE;
 					}
-					pItem->ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
+					pItem->ItemData.Gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
 					break;
 				case IC_AMMO:
 					bAmmoClips = 0;
@@ -563,7 +563,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 					bKnifeClass = 0;
 					break;
 				case IC_LAUNCHER:
-					pItem->ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
+					pItem->ItemData.Gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
 					fGrenadeLauncher = FALSE;
 					if (fMortar || fRPG)
 					{
@@ -660,8 +660,8 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 				usGunIndex = pp->Inv[ i ].usItem;
 				ubChanceStandardAmmo = 100 - (bWeaponClass * -9);		// weapon class is negative!
 				usAmmoIndex = RandomMagazine( usGunIndex, ubChanceStandardAmmo );
-				pp->Inv[ i ].ubGunAmmoType = Magazine[Item[usAmmoIndex].ubClassIndex].ubAmmoType;
-				pp->Inv[ i ].usGunAmmoItem = usAmmoIndex;
+				pp->Inv[ i ].ItemData.Gun.ubGunAmmoType = Magazine[Item[usAmmoIndex].ubClassIndex].ubAmmoType;
+				pp->Inv[ i ].ItemData.Gun.usGunAmmoItem = usAmmoIndex;
 
 				if ( Item[usGunIndex].fingerprintid )
 				{
@@ -903,7 +903,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ChooseWeaponForSoldierCreateStruct: Set bullets"));
 	//set bullets = to magsize including any attachments (c-mag adapters, etc)
-	pp->Inv[ HANDPOS ].ubGunShotsLeft = GetMagSize(&pp->Inv[ HANDPOS ]);
+	pp->Inv[ HANDPOS ].ItemData.Gun.ubGunShotsLeft = GetMagSize(&pp->Inv[ HANDPOS ]);
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ChooseWeaponForSoldierCreateStruct: choose ammo"));
 	if( bAmmoClips )
@@ -929,8 +929,8 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 		//}
 
 		usAmmoIndex = RandomMagazine( &pp->Inv[HANDPOS], ubChanceStandardAmmo );
-		pp->Inv[ HANDPOS ].ubGunAmmoType = Magazine[Item[usAmmoIndex].ubClassIndex].ubAmmoType;
-		pp->Inv[ HANDPOS ].usGunAmmoItem = usAmmoIndex;
+		pp->Inv[ HANDPOS ].ItemData.Gun.ubGunAmmoType = Magazine[Item[usAmmoIndex].ubClassIndex].ubAmmoType;
+		pp->Inv[ HANDPOS ].ItemData.Gun.usGunAmmoItem = usAmmoIndex;
 	}
 
 	//Ammo
@@ -1730,7 +1730,7 @@ void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 					if ( usItem > 0 )
 					{
 						CreateItem( usItem, (INT8)(70+Random(31)), &(pp->Inv[ HEAD1POS ]) );
-						pp->Inv[ HEAD2POS ].fFlags |= OBJECT_UNDROPPABLE;
+						pp->Inv[ HEAD1POS ].fFlags |= OBJECT_UNDROPPABLE;
 					}
 				}
 			}
@@ -2070,10 +2070,10 @@ if ( gGameSettings.fOptions[TOPTION_DROP_ALL] )
 {
 	ENEMYAMMODROPRATE = 100;      
 	ENEMYGRENADEDROPRATE = 100;   
-	ENEMYEQUIPDROPRATE = 50;      
+	ENEMYEQUIPDROPRATE = 100;	// WANNE: Changed from 50 to 100, because DROP ALL should mean DROP ALL!   
 	MILITIAAMMODROPRATE = 100;      
 	MILITIAGRENADEDROPRATE = 100;	
-	MILITIAEQUIPDROPRATE = 50;     
+	MILITIAEQUIPDROPRATE = 100;   // WANNE: Changed from 50 to 100, because DROP ALL should mean DROP ALL!  
 }
 else
 {
@@ -2181,7 +2181,7 @@ else
 
 			if ( gGameSettings.fOptions[TOPTION_DROP_ALL]  )
 			{
-				// WANNE - "Drop all" should mean "Drop all"
+				// WANNE: "Drop all" should mean "Drop all"
 				/*
 				if ( Item[ pp->Inv[ i ].usItem ].usItemClass == IC_FACE )
 				{
@@ -2228,10 +2228,10 @@ else
 	// WANNE: Randomly choose which type of items should be dropped
 	if (gGameExternalOptions.ubEnemiesItemDrop == 0)
 	{
-		if( /*gGameSettings.fOptions[TOPTION_DROP_ALL] ||*/ Random(100) < ubAmmoDropRate )
+		if( Random(100) < ubAmmoDropRate )
 			fAmmo = TRUE;
 
-		if( /*gGameSettings.fOptions[TOPTION_DROP_ALL] ||*/ Random(100) < ubOtherDropRate )
+		if( Random(100) < ubOtherDropRate )
 			fWeapon = TRUE;
 
 		if( Random(100) < ubOtherDropRate )
@@ -2845,7 +2845,7 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 			{
 				// have to replace!  but first (ugh) must store backup (b/c of attachments)
 				CopyObj( &(pp->Inv[ uiLoop ]), &OldObj );
-				CreateItem( usNewGun, OldObj.bGunStatus, &(pp->Inv[ uiLoop ]) );
+				CreateItem( usNewGun, OldObj.ItemData.Gun.bGunStatus, &(pp->Inv[ uiLoop ]) );
 				pp->Inv[ uiLoop ].fFlags = OldObj.fFlags;
 
 				// copy any valid attachments; for others, just drop them...
@@ -3044,7 +3044,6 @@ UINT16 PickARandomItem(UINT8 typeIndex, UINT8 maxCoolness, BOOLEAN getMatchingCo
 		}
 		usItem = gArmyItemChoices[ typeIndex ].bItemNo[ uiChoice ];
 
-		// WANNE
 		pickItem = FALSE;
 
 		if (usItem >= 0 && Item[usItem].ubCoolness <= maxCoolness && ItemIsLegal(usItem))
@@ -3075,7 +3074,6 @@ UINT16 PickARandomItem(UINT8 typeIndex, UINT8 maxCoolness, BOOLEAN getMatchingCo
 		//Madd: quickfix: don't use NVGs during the day, and no sungoggles at night either
 		//if ( usItem >= 0 && Item[usItem].ubCoolness <= maxCoolness && ItemIsLegal(usItem) && (( DayTime() && Item[usItem].nightvisionrangebonus == 0 ) || ( NightTime() && Item[usItem].dayvisionrangebonus == 0 )))
 		
-		// WANNE
 		if (pickItem == TRUE)
 		{
 			// pick a default item in case we don't find anything with a matching coolness, but pick the coolest item we can find

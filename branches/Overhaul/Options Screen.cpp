@@ -277,7 +277,6 @@ UINT32	OptionsScreenHandle()
 
 	HandleOptionsScreen();
 
-	// WANNE 2 <redraw>
 	if( gfRedrawOptionsScreen )
 	{
 		RenderOptionsScreen();
@@ -334,7 +333,7 @@ BOOLEAN		EnterOptionsScreen()
 	UINT8	cnt;
 	UINT16	usTextWidth, usTextHeight;
 
-	// WANNE <do not draw the blackground back>
+	// WANNE: Do not draw the blackground back
 	//ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0 );
 	
 	//Default this to off
@@ -471,7 +470,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 		if( usTextWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
 		{
 			//Get how many lines will be used to display the string, without displaying the string
-			UINT8	ubNumLines = DisplayWrappedString( 0, 0, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[ cnt ], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED | DONT_DISPLAY_TEXT ) / GetFontHeight( OPT_MAIN_FONT );
+			UINT8	ubNumLines = (UINT8) ( DisplayWrappedString( 0, 0, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[ cnt ], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED | DONT_DISPLAY_TEXT ) / GetFontHeight( OPT_MAIN_FONT ) );
 
 			usTextWidth = OPT_TOGGLE_BOX_TEXT_WIDTH;
 
@@ -519,7 +518,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 		if( usTextWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
 		{
 			//Get how many lines will be used to display the string, without displaying the string
-			UINT8	ubNumLines = DisplayWrappedString( 0, 0, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[ cnt ], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED | DONT_DISPLAY_TEXT ) / GetFontHeight( OPT_MAIN_FONT );
+			UINT8	ubNumLines = (UINT8) ( DisplayWrappedString( 0, 0, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[ cnt ], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED | DONT_DISPLAY_TEXT ) / GetFontHeight( OPT_MAIN_FONT ) );
 
 			usTextWidth = OPT_TOGGLE_BOX_TEXT_WIDTH;
 
@@ -774,7 +773,6 @@ void			RenderOptionsScreen()
 	//Display the Music text
 	DisplayWrappedString( OPT_MUSIC_TEXT_X, OPT_MUSIC_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_SLIDER_FONT, OPT_MAIN_COLOR, zOptionsText[ OPT_MUSIC ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );	
 	
-	// WANNE <I think this is not used>
 	InvalidateRegion( OPTIONS__TOP_LEFT_X, OPTIONS__TOP_LEFT_Y, OPTIONS__BOTTOM_RIGHT_X, OPTIONS__BOTTOM_RIGHT_Y);
 }
 
@@ -1054,7 +1052,7 @@ void BtnOptionsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 void HandleOptionToggle( UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN fPlaySound )
 {
 	static UINT32	uiOptionToggleSound = NO_SAMPLE;
-	UINT32	uiSideToPlaySoundOn = MIDDLEPAN;
+	//UINT32	uiSideToPlaySoundOn = MIDDLEPAN;
 //	static	BOOLEAN	fCheckBoxDrawnDownLastTime = FALSE;
 
 	if( fState )
@@ -1220,7 +1218,7 @@ void HandleSliderBarMovementSounds()
 {
 	static UINT32	uiLastSoundFxTime=0;
 	static UINT32	uiLastSpeechTime=0;
-	UINT32	uiCurTime = GetJA2Clock();
+	//UINT32	uiCurTime = GetJA2Clock();
 	static UINT32	uiLastPlayingSoundID = NO_SAMPLE;
 	static UINT32	uiLastPlayingSpeechID = NO_SAMPLE;
 

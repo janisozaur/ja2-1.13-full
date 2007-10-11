@@ -1,4 +1,3 @@
-// WANNE: EDITOR: done
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -263,6 +262,10 @@ UINT32 EditScreenShutdown(void)
 	GameShutdownEditorMercsInfo();
 	RemoveAllFromUndoList();
 	KillClipboard();
+	if( gfWorldLoaded )
+	{
+		KillItemPoolList();
+	}
 	return TRUE;
 }
 
@@ -779,7 +782,6 @@ BOOLEAN DrawTempMouseCursorObject(void)
 }
 			
 
-// WANNE: EDITOR?
 //Displays the current drawing object in the small, lower left window of the editor's toolbar.
 void ShowCurrentDrawingMode( void )
 {
@@ -798,12 +800,11 @@ void ShowCurrentDrawingMode( void )
 	UINT16			usFillColor;
 	INT32				iIndexToUse;
 	
-	// WANNE: EDITOR?
 	// Set up a clipping rectangle for the display window.
 	NewRect.iLeft = iScreenWidthOffset + 0;
 	NewRect.iTop = 2 * iScreenHeightOffset + 400;
 	NewRect.iRight = iScreenWidthOffset + 100;
-	NewRect.iBottom = 2 * iScreenWidthOffset + 458;
+	NewRect.iBottom = 2 * iScreenHeightOffset + 458;
 
 	GetClippingRect(&ClipRect);
 	SetClippingRect(&NewRect);
@@ -1007,7 +1008,6 @@ void ShowCurrentDrawingMode( void )
 		iPicWidth = (INT32)pETRLEObject->usWidth;
 		iPicHeight = (INT32)pETRLEObject->usHeight;
 
-		// WANNE: EDITOR?
 		// Center the picture in the display window.
 		iStartX = ( 100 - iPicWidth ) / 2;
 		iStartY = ( 60 - iPicHeight ) / 2;
@@ -1020,7 +1020,6 @@ void ShowCurrentDrawingMode( void )
 		pETRLEObject->sOffsetX = 0;
 		pETRLEObject->sOffsetY = 0;
 
-		// WANNE: EDITOR?
 		SetObjectShade( gTileDatabase[gTileTypeStartIndex[usObjIndex]].hTileSurface, DEFAULT_SHADE_LEVEL );
 		BltVideoObject( FRAME_BUFFER, gTileDatabase[gTileTypeStartIndex[usObjIndex]].hTileSurface, 
 									 usUseIndex, (iScreenWidthOffset + 0 + iStartX), (2 * iScreenHeightOffset + 400 + iStartY), 
@@ -1030,7 +1029,6 @@ void ShowCurrentDrawingMode( void )
 		pETRLEObject->sOffsetY = sTempOffsetY;
 	}
 
-	// WANNE: EDITOR?
 	// Set the color for the window's border. Blueish color = Normal, Red = Fake lighting is turned on
 	usFillColor = GenericButtonFillColors[0];
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
@@ -2401,7 +2399,6 @@ UINT32 WaitForHelpScreenResponse( void )
   InputAtom DummyEvent;
 	BOOLEAN fLeaveScreen;
 
-	// WANNE: EDITOR?
 	ColorFillVideoSurfaceArea(FRAME_BUFFER,	iScreenWidthOffset + 50, iScreenHeightOffset + 50, iScreenWidthOffset + 590, iScreenHeightOffset + 310,
 													Get16BPPColor(FROMRGB(136, 138, 135)) );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER,	iScreenWidthOffset + 51, iScreenHeightOffset + 51, iScreenWidthOffset + 590, iScreenHeightOffset + 310,
@@ -2617,7 +2614,6 @@ void ShowCurrentSlotSurface( UINT32 vSurface, INT32 iWindow )
 	INT32				iWinWidth, iWinHeight;
 	blt_vs_fx		vSfx;
 
-	// WANNE: EDITOR
 	WinRect.iLeft = (iWindow == 0) ? (iScreenWidthOffset + 336) : (iScreenWidthOffset + 488);
 	WinRect.iTop = 2 * iScreenHeightOffset + 211;
 	WinRect.iRight = (iWindow == 0) ? (iScreenWidthOffset + 485) : (iScreenWidthOffset + 637);
@@ -2685,7 +2681,6 @@ void ShowCurrentSlotImage( HVOBJECT hVObj, INT32 iWindow )
 	ETRLEObject *pETRLEObject;
 	INT32				iWinWidth, iWinHeight;
 
-	// WANNE: EDITOR?
 	NewRect.iLeft = (iWindow == 0) ? (iScreenWidthOffset + 336) : (iScreenWidthOffset + 488);
 	NewRect.iTop = 2 * iScreenHeightOffset + 211;
 	NewRect.iRight = (iWindow == 0) ? (iScreenWidthOffset + 485) : (iScreenWidthOffset + 637);
@@ -2818,9 +2813,9 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 	SOLDIERTYPE *pSoldier;
 	BOOLEAN fSoldierLight;
 	BOOLEAN fRemovedLight;
-	INT32 iMapIndex;
-	UINT32 uiLastLightType;
-	UINT8	*pLastLightName;
+	INT32 iMapIndex = 0;
+	UINT32 uiLastLightType = 0;
+	UINT8	*pLastLightName = NULL;
 
 	fRemovedLight = FALSE;
 
@@ -3770,7 +3765,6 @@ UINT32  EditScreenHandle( void )
 
 void CreateGotoGridNoUI()
 {
-	// WANNE: EDITOR
 	gfGotoGridNoUI = TRUE;
 	//Disable the rest of the editor
 	DisableEditorTaskbar();

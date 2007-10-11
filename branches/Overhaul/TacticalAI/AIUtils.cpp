@@ -101,7 +101,7 @@ INT8 OKToAttack(SOLDIERTYPE * pSoldier, int target)
 				return(NOSHOOT_NOLOAD);
 			}
 		}
-		else if (pSoldier->inv[HANDPOS].ubGunShotsLeft == 0 /*SB*/ || !(pSoldier->inv[HANDPOS].ubGunState & GS_CARTRIDGE_IN_CHAMBER))		
+		else if (pSoldier->inv[HANDPOS].ItemData.Gun.ubGunShotsLeft == 0 /*SB*/ || !(pSoldier->inv[HANDPOS].ItemData.Gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER))		
 		{
 			return(NOSHOOT_NOAMMO);
 		}
@@ -448,7 +448,7 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 {
 	INT8	bMinPointsNeeded = 0;
 	INT8 bAPForStandUp = 0;
-	INT8 bAPToLookAtWall = ( FindDirectionForClimbing( pSoldier->sGridNo ) == pSoldier->bDirection ) ? 0 : 1;
+	INT8 bAPToLookAtWall = ( FindDirectionForClimbing( pSoldier->sGridNo ) == pSoldier->ubDirection ) ? 0 : 1;
 
 	//NumMessage("AffordableAction - Guy#",pSoldier->ubID);
 
@@ -583,7 +583,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier)
 	UINT32				uiLoop;
 	UINT16				usMaxDist;
 	UINT8					ubFriendCount, ubFriendIDs[MAXMERCS], ubFriendID;
-	UINT16				usDirection;
+	UINT8				ubDirection;
 	UINT8					ubDirsLeft;
 	BOOLEAN				fDirChecked[8];
 	BOOLEAN				fRangeRestricted = FALSE, fFound = FALSE;
@@ -663,9 +663,9 @@ INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier)
 			// should be close enough, try to find a legal ->sDestination within 1 tile
 
 			// clear dirChecked flag for all 8 directions
-			for (usDirection = 0; usDirection < 8; usDirection++)
+			for (ubDirection = 0; ubDirection < 8; ubDirection++)
 			{
-				fDirChecked[usDirection] = FALSE;
+				fDirChecked[ubDirection] = FALSE;
 			}
 
 			ubDirsLeft = 8;
@@ -677,14 +677,14 @@ INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier)
 				// randomly select a direction which hasn't been 'checked' yet
 				do
 				{
-					usDirection = (UINT16) Random(8);
+					ubDirection = (UINT8) Random(8);
 				}
-				while (fDirChecked[usDirection]);
+				while (fDirChecked[ubDirection]);
 
-				fDirChecked[usDirection] = TRUE;
+				fDirChecked[ubDirection] = TRUE;
 
 				// determine the gridno 1 tile away from current friend in this direction
-				usDest = NewGridNo(Menptr[ubFriendID].sGridNo,DirectionInc((INT16)(usDirection + 1)));
+				usDest = NewGridNo(Menptr[ubFriendID].sGridNo,DirectionInc(ubDirection));
 
 				// if that's out of bounds, ignore it & check next direction
 				if (usDest == Menptr[ubFriendID].sGridNo)
@@ -869,7 +869,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 	INT16		*psLastLoc, *pusNoiseGridNo;
 	INT8		*pbLastLevel;
 	INT16		sGridNo=-1;
-	INT8		bLevel, bClosestLevel;
+	INT8		bLevel, bClosestLevel = -1;
 	BOOLEAN	fClimbingNecessary, fClosestClimbingNecessary = FALSE;
 	INT32		iPathCost;
 	INT16		sClosestDisturbance = NOWHERE;
@@ -1034,7 +1034,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 		bLevel = *pbNoiseLevel;
 
 		// if we are not NEAR the noise gridno...
-		if ( pSoldier->bLevel != bLevel || PythSpacesAway( pSoldier->sGridNo, sGridNo ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, bLevel, 0, (UINT8) MaxDistanceVisible(), FALSE ) == 0 )
+		if ( pSoldier->bLevel != bLevel || PythSpacesAway( pSoldier->sGridNo, sGridNo ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, bLevel, 0, FALSE, NO_DISTANCE_LIMIT ) == 0 )
 		// if we are NOT there (at the noise gridno)
 		//	if (sGridNo != pSoldier->sGridNo)
 		{
@@ -1354,7 +1354,7 @@ INT16 FindClosestClimbPointAvailableToAI( SOLDIERTYPE * pSoldier, INT16 sStartGr
 	// since climbing necessary involves going an extra tile, we compare against 1 less than the roam range... 
 	// or add 1 to the distance to the climb point
 
-	sGridNo = FindClosestClimbPoint( sStartGridNo, sDesiredGridNo, fClimbUp );
+	sGridNo = FindClosestClimbPoint( pSoldier, sStartGridNo, sDesiredGridNo, fClimbUp );
 
 
 	if ( PythSpacesAway( sRoamingOrigin, sGridNo ) + 1 > sRoamingRange )
@@ -2189,7 +2189,7 @@ INT32 CalcManThreatValue( SOLDIERTYPE *pEnemy, INT16 sMyGrid, UINT8 ubReduceForC
 		else
 		{
 			// ADD 5% if man's already facing me
-			if (pEnemy->bDirection == atan8(CenterX(pEnemy->sGridNo),CenterY(pEnemy->sGridNo),CenterX(sMyGrid),CenterY(sMyGrid)))
+			if (pEnemy->ubDirection == atan8(CenterX(pEnemy->sGridNo),CenterY(pEnemy->sGridNo),CenterX(sMyGrid),CenterY(sMyGrid)))
 			{
 				iThreatValue += (iThreatValue / 20);
 			}
@@ -2441,13 +2441,13 @@ BOOLEAN ValidCreatureTurn( SOLDIERTYPE * pCreature, INT8 bNewDirection )
 	INT8	bLoop;
 	BOOLEAN	fFound;
 
-	bDirChange = (INT8) QuickestDirection( pCreature->bDirection, bNewDirection );
+	bDirChange = (INT8) QuickestDirection( pCreature->ubDirection, bNewDirection );
 
 	for( bLoop = 0; bLoop < 2; bLoop++ )
 	{
 		fFound = TRUE;
 		
-		bTempDir = pCreature->bDirection;
+		bTempDir = pCreature->ubDirection;
 
 		do
 		{

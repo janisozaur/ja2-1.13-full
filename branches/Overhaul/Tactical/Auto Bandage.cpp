@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
@@ -431,7 +430,6 @@ void AutoBandage( BOOLEAN fStart )
 			giBoxId = PrepareMercPopupBox( -1, DIALOG_MERC_POPUP_BACKGROUND, DIALOG_MERC_POPUP_BORDER, sAutoBandageString, 200, 40, 10, 30, &gusTextBoxWidth, &gusTextBoxHeight );
 		}
 
-		// WANNE 2
 		aRect.iTop		= 	0;
 		aRect.iLeft		= 	0;
 		aRect.iBottom = 	INV_INTERFACE_START_Y;
@@ -458,7 +456,8 @@ void AutoBandage( BOOLEAN fStart )
 		cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
 		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; cnt++,pSoldier++)
 		{
-			if ( pSoldier->bActive  )
+			// 0verhaul:  Make sure the merc is also in the sector before making him stand up!
+			if ( pSoldier->bActive && pSoldier->bInSector )
 			{
 				ActionDone( pSoldier );
 				if ( pSoldier->bSlotItemTakenFrom != NO_SLOT )
@@ -525,7 +524,12 @@ void AutoBandage( BOOLEAN fStart )
 			DoScreenIndependantMessageBox(pDoctorWarningString[ 1 ], MSG_BOX_FLAG_OK, NULL );
 			gfAutoBandageFailed = FALSE;
 		}
+
+		// Memory cleanup!
+		MemFree( sAutoBandageString);
+		sAutoBandageString = NULL;
 	}
+
 	guiAutoBandageSeconds = 0;
 
 	ResetAllMercSpeeds( );
@@ -727,7 +731,6 @@ void DisplayAutoBandageUpdatePanel( void )
 
 	iTotalPixelsWide = TACT_UPDATE_MERC_FACE_X_WIDTH * iNumberDoctorsWide;
 
-	// WANNE 2
 	// now get the x and y position for the box
 	sXPosition = ( SCREEN_WIDTH - iTotalPixelsWide ) / 2;
 	sYPosition = ( INV_INTERFACE_START_Y - iTotalPixelsHigh ) / 2;

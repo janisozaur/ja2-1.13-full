@@ -980,7 +980,6 @@ void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
 	return;
 }
 
-// WANNE NEW
 // WDS: Allow flexible numbers of IMPs of each sex
 INT32 CountFilledIMPSlots( INT8 iSex )
 {
@@ -1049,7 +1048,6 @@ INT32 GetSexOfIMP(INT32 iIMPId)
 }
 
 
-// WANNE NEW
 INT32 GetFreeIMPSlot(INT32 iIMPId, INT32 iDefaultIMPId)
 {
 	INT32 iStart;
@@ -1080,6 +1078,11 @@ INT32 GetFreeIMPSlot(INT32 iIMPId, INT32 iDefaultIMPId)
 		{
 			iStart = GetFirstMaleSlot();
 			iEnd = GetLastMaleSlot();
+		}
+		else
+		{
+			AssertMsg( 0, "Merc neither male nor female");
+			return -1;
 		}
 
 		// Find a free imp slot

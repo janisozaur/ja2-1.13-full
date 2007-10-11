@@ -91,8 +91,8 @@ INT16							gsStartRestrictedX, gsStartRestrictedY;
 BOOLEAN						gfOverItemPool = FALSE;
 INT16							gsOveritemPoolGridNo;
 
-int iOffsetHorizontal;	// Horizontal start postion of the overview map
-int	iOffsetVertical;	// Vertical start position of the overview map	
+UINT16 iOffsetHorizontal;	// Horizontal start postion of the overview map
+UINT16 iOffsetVertical;	// Vertical start position of the overview map	
 
 
 void HandleOverheadUI( );
@@ -558,7 +558,6 @@ void GoIntoOverheadMap( )
 
 	gfInOverheadMap = TRUE;
 
-	// WANNE 2 NEW
 	//RestoreExternBackgroundRect( INTERFACE_START_X, INTERFACE_START_Y, SCREEN_WIDTH, INTERFACE_HEIGHT );
 
 	// Overview map should be centered in the middle of the tactical screen.
@@ -631,7 +630,7 @@ void GoIntoOverheadMap( )
 			DisableTacticalTeamPanelButtons( TRUE );
 		}
 
-		EmptyBackgroundRects( );
+	EmptyBackgroundRects( );
 	}
 
 }
@@ -652,7 +651,7 @@ void HandleOverheadUI( )
 		{
 			// OK, selected guy is here...
 
-			// WANNE <incomment>
+			// WANNE: Commented these lines out.
 			//gprintfdirty( gusMouseXPos, gusMouseYPos, MercPtrs[ ubID ]->name );
 			//mprintf( gusMouseXPos, gusMouseYPos, MercPtrs[ ubID ]->name );
 
@@ -761,6 +760,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 		//ColorFillVideoSurfaceArea( FRAME_BUFFER, sStartPointX_S, sStartPointY_S, sEndXS,	sEndYS, 0 );
 
 		ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0 );
+		fInterfacePanelDirty = DIRTYLEVEL2;
 
 		InvalidateScreen( );
 		gfOverheadMapDirty = FALSE;
@@ -1638,8 +1638,7 @@ void GetOverheadScreenXYFromGridNo( INT16 sGridNo, INT16 *psScreenX, INT16 *psSc
   //*psScreenY -= gpWorldLevelData[ sGridNo ].sHeight / 5;
 }
 
-// WANNE
-// Fixed bug from sir tech, which occured on smaller maps ;-)
+// WANNE: Fixed bug from sir tech, which occured on smaller maps ;-)
 BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo )
 {
 	UINT32 uiCellX, uiCellY;
@@ -1694,8 +1693,7 @@ BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo )
 }
 
 
-// WANNE
-// Fixed bug from sir tech which occured on smaller maps ;-)
+// WANNE: Fixed bug from sir tech which occured on smaller maps ;-)
 BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT16 *psGridNo )
 {
 	UINT32 uiCellX, uiCellY;

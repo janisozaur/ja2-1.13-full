@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 #include "Tactical All.h"
 #include "Language Defines.h"
@@ -328,7 +327,7 @@ void	QueryTBLeftButton( UINT32 *puiNewEvent )
 									{
 										// We're on terrain in which we can walk, walk
 										// If we're on terrain,
-										if ( gusSelectedSoldier != NO_SOLDIER )
+										if ( gusSelectedSoldier != NOBODY )
 										{
 											INT8 bReturnVal = FALSE;
 
@@ -982,7 +981,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 	SOLDIERTYPE		*pSoldier;
 	BOOLEAN						bHandleCode;
 	static BOOLEAN		fOnValidGuy = FALSE;
-	static UINT32			uiMoveTargetSoldierId = NO_SOLDIER;
+	static UINT32			uiMoveTargetSoldierId = NOBODY;
 
 
 	if (!GetMouseMapPos( &usMapPos ) )
@@ -1047,7 +1046,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 
 		case MOVE_MODE:
 
-			uiMoveTargetSoldierId = NO_SOLDIER;
+			uiMoveTargetSoldierId = NOBODY;
 
 			// Check for being on terrain
 			if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
@@ -1534,7 +1533,11 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			{
 				if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
 				{
-					LeaveTacticalScreen( GAME_SCREEN );
+					gfSaveGame = FALSE;
+					gfCameDirectlyFromGame = TRUE;
+
+					guiPreviousOptionScreen = GAME_SCREEN;
+					LeaveTacticalScreen( SAVE_LOAD_SCREEN );
 					DoQuickLoad();
 				}
 			}
@@ -1654,7 +1657,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			// Cancel out of spread burst...
 			gfBeginBurstSpreadTracking = FALSE;
 			gfRTClickLeftHoldIntercepted = TRUE;
-			if ( gusSelectedSoldier != NO_SOLDIER )
+			if ( gusSelectedSoldier != NOBODY )
 			{
 				MercPtrs[ gusSelectedSoldier ]->fDoSpread				 = FALSE;
 			}
@@ -1691,7 +1694,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 			if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
 			{
-				if ( gusSelectedSoldier != NO_SOLDIER )
+				if ( gusSelectedSoldier != NOBODY )
 				{
 					// If soldier is not stationary, stop
 					StopSoldier( MercPtrs[ gusSelectedSoldier ] );
@@ -1761,7 +1764,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				{
 					//if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
 					//	{
-					//		if ( gusSelectedSoldier != NO_SOLDIER )
+					//		if ( gusSelectedSoldier != NOBODY )
 					//		{
 					//			if ( gTacticalStatus.uiFlags & TURNBASED && !MercPtrs[ gusSelectedSoldier ]->fDontChargeReadyAPs )
 					//			{
@@ -1845,7 +1848,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							SOLDIERTYPE *pNewSoldier;
 							INT32		iCurrentSquad;
 
-							if ( gusSelectedSoldier != NO_SOLDIER )
+							if ( gusSelectedSoldier != NOBODY )
 							{ 
 								// only allow if nothing in hand and if in SM panel, the Change Squad button must be enabled
 								if ( 
@@ -1870,7 +1873,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						}
 						else
 						{
-							if ( gusSelectedSoldier != NO_SOLDIER )
+							if ( gusSelectedSoldier != NOBODY )
 							{ //Select next merc
 								UINT8 bID;
 
@@ -2355,7 +2358,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							BeginSoldierClimbUpRoof( pjSoldier );
 						}
 
-						if ( FindFenceJumpDirection( pjSoldier, pjSoldier->sGridNo, pjSoldier->bDirection, &bDirection ) )
+						if ( FindFenceJumpDirection( pjSoldier, pjSoldier->sGridNo, pjSoldier->ubDirection, &bDirection ) )
 						{
 							BeginSoldierClimbFence( pjSoldier );
 						}
@@ -2579,18 +2582,18 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 					for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ ) //for all items in sector
 					{
-						if ( (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) )//item exists and is reachable
+						if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped						
 						{
 							if (( Item[ gWorldItems[ uiLoop ].o.usItem ].usItemClass == IC_GUN ) && (gGameExternalOptions.gfShiftFUnloadWeapons == TRUE) )//item is a gun and unloading is allowed
 							{										
 								//Remove magazine 
-								if ( (gWorldItems[ uiLoop ].o.usGunAmmoItem != NONE) && (gWorldItems[ uiLoop ].o.ubGunShotsLeft > 0) )
+								if ( (gWorldItems[ uiLoop ].o.ItemData.Gun.usGunAmmoItem != NONE) && (gWorldItems[ uiLoop ].o.ItemData.Gun.ubGunShotsLeft > 0) )
 								{
 									OBJECTTYPE newObj; //Create object
-									CreateItem(gWorldItems[ uiLoop ].o.usGunAmmoItem, 100, &newObj);
-									newObj.ubShotsLeft[0] = gWorldItems[ uiLoop ].o.ubGunShotsLeft;
-									gWorldItems[ uiLoop ].o.ubGunShotsLeft = 0;
-									gWorldItems[ uiLoop ].o.usGunAmmoItem = NONE;
+									CreateItem(gWorldItems[ uiLoop ].o.ItemData.Gun.usGunAmmoItem, 100, &newObj);
+									newObj.ItemData.Ammo.ubShotsLeft[0] = gWorldItems[ uiLoop ].o.ItemData.Gun.ubGunShotsLeft;
+									gWorldItems[ uiLoop ].o.ItemData.Gun.ubGunShotsLeft = 0;
+									gWorldItems[ uiLoop ].o.ItemData.Gun.usGunAmmoItem = NONE;
 
 									// put it on the ground
 									AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &newObj, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
@@ -2829,9 +2832,9 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 			case INSERT:
 
-				// WANNE 2: commented this out, because the interface panel is not correctly redrawn!
+				// WANNE: Commented this out, because the interface panel is not correctly redrawn!
 				// I do not know the bug ;(
-				//GoIntoOverheadMap();
+				GoIntoOverheadMap();
 				break;
 
 				// Lalien: commented out, to fix "end move & LOS bug" (same button has two different actions)
@@ -2959,6 +2962,40 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				}
 				break;
 
+			case 'M':
+				if( fAlt )
+				{
+
+				}
+				else if( fCtrl )
+				{
+
+				}
+				else
+				{
+					if ( !(gTacticalStatus.fEnemyInSector) )
+					{
+						HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+
+						SOLDIERTYPE *pSoldier;
+						if ( GetSoldier( &pSoldier, gusSelectedSoldier ) )
+						{
+
+							for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ ) //for all items in sector
+							{
+								if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) && (gWorldItems[ uiLoop ].sGridNo != pSoldier->sGridNo) )//item exists and is reachable and is not already on soldiers tile
+								{									
+									MoveItemPools(gWorldItems[ uiLoop ].sGridNo, pSoldier->sGridNo, gWorldItems[ uiLoop ].ubLevel, pSoldier->bLevel);
+								}
+							}
+							
+							NotifySoldiersToLookforItems( );
+						}
+					}
+				}
+				break;
+
+
 			case PGDN:
 
 				if ( CHEATER_CHEAT_LEVEL( ) )
@@ -3066,10 +3103,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 											tempStatus = pObj->bAttachStatus[bSlot3];
 											// Replace helmet attachment with face slot
 											pObj->usAttachItem[bSlot3] = pTeamSoldier->inv[bSlot1].usItem;
-											pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].bStatus[0];
+											pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].ItemData.Generic.bStatus[0];
 											// Replace face slot with helmet attachment from temp
 											pTeamSoldier->inv[bSlot1].usItem = tempItem;
-											pTeamSoldier->inv[bSlot1].bStatus[0] = tempStatus;
+											pTeamSoldier->inv[bSlot1].ItemData.Generic.bStatus[0] = tempStatus;
 										}
 										else if ( bSlot2 != ITEM_NOT_FOUND )
 										{
@@ -3109,10 +3146,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 											tempStatus = pObj->bAttachStatus[bSlot3];
 											// Replace helmet attachment with face slot
 											pObj->usAttachItem[bSlot3] = pTeamSoldier->inv[bSlot1].usItem;
-											pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].bStatus[0];
+											pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].ItemData.Generic.bStatus[0];
 											// Replace face slot with helmet attachment from temp
 											pTeamSoldier->inv[bSlot1].usItem = tempItem;
-											pTeamSoldier->inv[bSlot1].bStatus[0] = tempStatus;
+											pTeamSoldier->inv[bSlot1].ItemData.Generic.bStatus[0] = tempStatus;
 										}
 										else if ( bSlot2 != ITEM_NOT_FOUND )
 										{
@@ -3265,13 +3302,13 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 								{	
 									pGun  = &(pTeamSoldier->inv[bLoop2]);
 									//if magazine is not full
-									if ( pGun->ubGunShotsLeft < GetMagSize( pGun )  )
+									if ( pGun->ItemData.Gun.ubGunShotsLeft < GetMagSize( pGun )  )
 									{
 
 										// Search for ammo in sector
 										for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )												
 										{
-											if ( gWorldItems[ uiLoop ].fExists)  //item exists && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE)
+											if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped
 											{
 												if ( ( Item[ gWorldItems[ uiLoop ].o.usItem ].usItemClass & IC_AMMO ) ) // the item is ammo
 												{
@@ -3280,12 +3317,12 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 													if ( CompatibleAmmoForGun( pAmmo, pGun ) ) // can use the ammo with this gun
 													{
 														// same ammo type in gun and magazine   
-														if ( Magazine[Item[pGun->usGunAmmoItem].ubClassIndex].ubAmmoType == Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType )
+														if ( Magazine[Item[pGun->ItemData.Gun.usGunAmmoItem].ubClassIndex].ubAmmoType == Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType )
 														{
 															ReloadGun( pTeamSoldier, pGun, pAmmo );
 														}
 
-														if (pAmmo->ubShotsLeft[0] == 0)
+														if (pAmmo->ItemData.Ammo.ubShotsLeft[0] == 0)
 														{														
 															RemoveItemFromPool( gWorldItems[ uiLoop ].sGridNo, uiLoop, gWorldItems[ uiLoop ].ubLevel );
 														}
@@ -3316,7 +3353,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 									pGun  = &(pTeamSoldier->inv[HANDPOS]);
 
 									//magazine is not full
-									if ( pGun->ubGunShotsLeft < GetMagSize( pGun )  )
+									if ( pGun->ItemData.Gun.ubGunShotsLeft < GetMagSize( pGun )  )
 									{
 										AutoReload( pTeamSoldier );		
 									}
@@ -3330,7 +3367,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 										{	
 											pGun  = &(pTeamSoldier->inv[bLoop2]);
 											//if magazine is not full
-											if ( pGun->ubGunShotsLeft < GetMagSize( pGun )  )
+											if ( pGun->ItemData.Gun.ubGunShotsLeft < GetMagSize( pGun )  )
 											{
 
 												// Search for ammo in soldier inventory
@@ -3343,7 +3380,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 														if ( CompatibleAmmoForGun( pAmmo, pGun ) ) // can use the ammo with this gun
 														{
 															// same ammo type in gun and magazine   
-															if ( Magazine[Item[pGun->usGunAmmoItem].ubClassIndex].ubAmmoType == Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType )
+															if ( Magazine[Item[pGun->ItemData.Gun.usGunAmmoItem].ubClassIndex].ubAmmoType == Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType )
 															{
 																ReloadGun( pTeamSoldier, pGun, pAmmo );
 
@@ -3368,7 +3405,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 
 			case 'r':
-				if( gusSelectedSoldier != NO_SOLDIER )
+				if( gusSelectedSoldier != NOBODY )
 				{
 					if( fAlt ) //reload selected merc's weapon
 					{
@@ -3381,7 +3418,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						if ( INFORMATION_CHEAT_LEVEL( ) )
 						{
-							DoChrisTest( MercPtrs[ gusSelectedSoldier ] );
 						}
 					}
 					else
@@ -3416,7 +3452,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 					for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )												
 					{
-						if ( ( gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) )//item exists and is reachable
+						if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped
 						{
 							//find out how many items can be put in a big slot
 							INT8 ubSlotLimit = ItemSlotLimit( gWorldItems[ uiLoop ].o.usItem, BIGPOCK1POS );
@@ -3609,7 +3645,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 				}
 
-				else if ( gusSelectedSoldier != NO_SOLDIER )
+				else if ( gusSelectedSoldier != NOBODY )
 					*puiNewEvent = M_CHANGE_TO_ACTION;
 				break;
 
@@ -3698,7 +3734,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						*puiNewEvent = I_LOSDEBUG;
 					}
 				}
-				//else if( gusSelectedSoldier != NO_SOLDIER )
+				//else if( gusSelectedSoldier != NOBODY )
 				break;
 			case 'z':
 				if( fCtrl )
@@ -4297,7 +4333,7 @@ void RefreshSoldier()
 void ChangeSoldiersBodyType( UINT8 ubBodyType, BOOLEAN fCreateNewPalette )
 {
 	SOLDIERTYPE *pSoldier;
-	if( gusSelectedSoldier != NO_SOLDIER )
+	if( gusSelectedSoldier != NOBODY )
 	{
 		if( GetSoldier( &pSoldier, gusSelectedSoldier ) )
 		{
@@ -4356,7 +4392,7 @@ void TeleportSelectedSoldier()
 			{
 				SetSoldierHeight( pSoldier, 0 );
 				TeleportSoldier( pSoldier, usMapPos, FALSE );
-				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 			}
 			else
 			{
@@ -4366,7 +4402,7 @@ void TeleportSelectedSoldier()
 					SetSoldierHeight( pSoldier, 50.0 );
 
 					TeleportSoldier( pSoldier, usMapPos, TRUE );
-					EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+					EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 				}
 			}
 		}
@@ -4426,7 +4462,7 @@ void TogglePlanningMode()
 			switch( gCurrentUIMode )
 			{
 			case MOVE_MODE:
-				if ( gusSelectedSoldier != NO_SOLDIER )
+				if ( gusSelectedSoldier != NOBODY )
 				{
 					GetSoldier( &pSoldier, gusSelectedSoldier );
 					BeginUIPlan( pSoldier );
@@ -4434,7 +4470,7 @@ void TogglePlanningMode()
 				}
 				break;
 			case ACTION_MODE:
-				if ( gusSelectedSoldier != NO_SOLDIER )
+				if ( gusSelectedSoldier != NOBODY )
 				{
 					GetSoldier( &pSoldier, gusSelectedSoldier );
 					BeginUIPlan( pSoldier );
@@ -4448,7 +4484,7 @@ void TogglePlanningMode()
 
 void SetBurstMode()
 {
-	if ( gusSelectedSoldier != NO_SOLDIER )
+	if ( gusSelectedSoldier != NOBODY )
 	{
 		ChangeWeaponMode( MercPtrs[ gusSelectedSoldier ] );
 	}
@@ -4483,7 +4519,7 @@ void ObliterateSector()
 			//	CreateAnimationTile( &AniParams );
 			//PlayJA2Sample( EXPLOSION_1, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
 
-			EVENT_SoldierGotHit( pTSoldier, 0, 400, 0, pTSoldier->bDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, pTSoldier->bAimShotLocation, 0, NOWHERE );
+			EVENT_SoldierGotHit( pTSoldier, 0, 400, 0, pTSoldier->ubDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, pTSoldier->bAimShotLocation, 0, NOWHERE );
 		}
 	}
 }
@@ -4508,7 +4544,7 @@ void JumpFence()
 	INT8							bDirection;
 	if ( GetSoldier( &pSoldier, gusSelectedSoldier ) )
 	{
-		if ( FindFenceJumpDirection( pSoldier, pSoldier->sGridNo, pSoldier->bDirection, &bDirection ) )
+		if ( FindFenceJumpDirection( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection, &bDirection ) )
 		{
 			BeginSoldierClimbFence( pSoldier );
 		}
@@ -4532,7 +4568,7 @@ void CreateNextCivType()
 		MercCreateStruct.sSectorY			= gWorldSectorY;
 		MercCreateStruct.bSectorZ			= gbWorldSectorZ;
 		MercCreateStruct.bBodyType		= bBodyType;
-		MercCreateStruct.bDirection = SOUTH;
+		MercCreateStruct.ubDirection = SOUTH;
 
 		bBodyType++;
 
@@ -4652,7 +4688,7 @@ void GrenadeTest1()
 	{
 		OBJECTTYPE		Object;
 		Object.usItem = MUSTARD_GRENADE;
-		Object.bStatus[ 0 ] = 100;
+		Object.ItemData.Generic.bStatus[ 0 ] = 100;
 		Object.ubNumberOfObjects = 1;
 		CreatePhysicalObject( &Object, 60,  (FLOAT)(sX * CELL_X_SIZE), (FLOAT)(sY * CELL_Y_SIZE ), 256, -20, 20, 158, NOBODY, THROW_ARM_ITEM, 0, FALSE );
 	}
@@ -4666,7 +4702,7 @@ void GrenadeTest2()
 	{
 		OBJECTTYPE		Object;
 		Object.usItem = HAND_GRENADE;
-		Object.bStatus[ 0 ] = 100;
+		Object.ItemData.Generic.bStatus[ 0 ] = 100;
 		Object.ubNumberOfObjects = 1;
 		CreatePhysicalObject( &Object, 60,  (FLOAT)(sX * CELL_X_SIZE), (FLOAT)(sY * CELL_Y_SIZE ), 256, 0, -30, 158, NOBODY, THROW_ARM_ITEM, 0, FALSE );
 	}
@@ -4680,7 +4716,7 @@ void GrenadeTest3()
 	{
 		OBJECTTYPE		Object;
 		Object.usItem = HAND_GRENADE;
-		Object.bStatus[ 0 ] = 100;
+		Object.ItemData.Generic.bStatus[ 0 ] = 100;
 		Object.ubNumberOfObjects = 1;
 		CreatePhysicalObject( &Object, 60,  (FLOAT)(sX * CELL_X_SIZE), (FLOAT)(sY * CELL_Y_SIZE ), 256, -10, 10, 158, NOBODY, THROW_ARM_ITEM, 0, FALSE );
 	}
@@ -5290,7 +5326,7 @@ void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )
 	}
 	else
 	{
-		if( gusSelectedSoldier != NO_SOLDIER )
+		if( gusSelectedSoldier != NOBODY )
 			UIHandleSoldierStanceChange( (UINT8)gusSelectedSoldier, ubAnimHeight );
 	}
 }
@@ -5348,7 +5384,7 @@ void HandleStealthChangeFromUIKeys(  )
 	}
 	else
 	{
-		if( gusSelectedSoldier != NO_SOLDIER )
+		if( gusSelectedSoldier != NOBODY )
 		{
 			if ( !AM_A_ROBOT( MercPtrs[ gusSelectedSoldier ] ) )
 			{

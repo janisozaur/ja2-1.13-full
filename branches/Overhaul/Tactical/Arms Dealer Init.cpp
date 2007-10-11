@@ -109,7 +109,7 @@ void		ArmsDealerGetsFreshStock( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ub
 BOOLEAN ItemContainsLiquid( UINT16 usItemIndex );
 UINT8		DetermineDealerItemCondition( UINT8 ubArmsDealer, UINT16 usItemIndex );
 
-BOOLEAN IsItemInfoSpecial( SPECIAL_ITEM_INFO *pSpclItemInfo );
+BOOLEAN IsItemInfoSpecial( SPECIAL_ITEM_INFO *pSpclItemInfo, UINT16 usItemIndex );
 
 BOOLEAN DoesItemAppearInDealerInventoryList( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer );
 
@@ -198,8 +198,8 @@ void ShutDownArmsDealers()
 		//loop through all the item types
 		for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
 		{
-			if ( Item[usItemIndex].usItemClass  == 0 )
-				break;
+			//if ( Item[usItemIndex].usItemClass  == 0 )
+			//	break;
 			if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced > 0 )
 			{
 				FreeSpecialItemArray( &gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ] );
@@ -294,8 +294,8 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile, BOOLEAN fInclude
 		//loop through this dealer's individual items
 		for(usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
 		{
-			if ( Item[usItemIndex].usItemClass  == 0 )
-				break;
+			//if ( Item[usItemIndex].usItemClass  == 0 )
+			//	break;
 			//if there are any elements allocated for this item, load them
 			if( gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced > 0 )
 			{
@@ -1034,7 +1034,7 @@ INT16 GetSpecialItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIn
 	UINT8 ubElement;
 
 	// this function won't find perfect items!
-	Assert( IsItemInfoSpecial( pSpclItemInfo ) );
+	Assert( IsItemInfoSpecial( pSpclItemInfo, usItemIndex ) );
 
 	for( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
 	{
@@ -1527,23 +1527,23 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 			AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, &SpclItemInfo, 1 );
 
 			// if any GunAmmoItem is specified
-			if( pObject->usGunAmmoItem != NONE)
+			if( pObject->ItemData.Gun.usGunAmmoItem != NONE)
 			{
 				// if it's regular ammo
-				if( Item[ pObject->usGunAmmoItem ].usItemClass == IC_AMMO )
+				if( Item[ pObject->ItemData.Gun.usGunAmmoItem ].usItemClass == IC_AMMO )
 				{
 					// and there are some remaining
-					if ( pObject->ubGunShotsLeft > 0 )
+					if ( pObject->ItemData.Gun.ubGunShotsLeft > 0 )
 					{
 						// add the bullets of its remaining ammo
-						AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->usGunAmmoItem, pObject->ubGunShotsLeft );
+						AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->ItemData.Gun.usGunAmmoItem, pObject->ItemData.Gun.ubGunShotsLeft );
 					}
 				}
 				else	// assume it's attached ammo (mortar shells, grenades)
 				{
 					// add the launchable item (can't be imprinted, or have attachments!)
 					SetSpecialItemInfoToDefaults( &SpclItemInfo );
-					SpclItemInfo.bItemCondition = pObject->bGunAmmoStatus;
+					SpclItemInfo.bItemCondition = pObject->ItemData.Gun.bGunAmmoStatus;
 
 					// if the gun it was in was jammed, get rid of the negative status now
 					if ( SpclItemInfo.bItemCondition < 0 )
@@ -1551,7 +1551,7 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 						SpclItemInfo.bItemCondition *= -1;
 					}
 
-					AddItemToArmsDealerInventory( ubArmsDealer, pObject->usGunAmmoItem, &SpclItemInfo, 1 );
+					AddItemToArmsDealerInventory( ubArmsDealer, pObject->ItemData.Gun.usGunAmmoItem, &SpclItemInfo, 1 );
 				}
 			}
 			break;
@@ -1560,7 +1560,7 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 			// add the contents of each magazine (multiple mags may have vastly different #bullets left)
 			for ( ubCnt = 0; ubCnt < pObject->ubNumberOfObjects; ubCnt++ )
 			{
-				AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->usItem, pObject->ubShotsLeft[ ubCnt ] );
+				AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->usItem, pObject->ItemData.Ammo.ubShotsLeft[ ubCnt ] );
 			}
 			break;
 
@@ -1568,7 +1568,7 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 			// add each object seperately (multiple objects may have vastly different statuses, keep any imprintID)
 			for ( ubCnt = 0; ubCnt < pObject->ubNumberOfObjects; ubCnt++ )
 			{
-				SpclItemInfo.bItemCondition = pObject->bStatus[ ubCnt ];
+				SpclItemInfo.bItemCondition = pObject->ItemData.Generic.bStatus[ ubCnt ];
 				AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, &SpclItemInfo, 1 );
 			}
 			break;
@@ -1674,9 +1674,8 @@ void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECI
 		return;
 	}
 
-
 	// decide whether this item is "special" or not
-	if ( IsItemInfoSpecial( pSpclItemInfo ) )
+	if ( IsItemInfoSpecial( pSpclItemInfo, usItemIndex ) )
 	{
 		// Anything that's used/damaged or imprinted is store as a special item in the SpecialItem array,
 		// exactly one item per element.  We (re)allocate memory dynamically as necessary to hold the additional items.
@@ -1684,7 +1683,7 @@ void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECI
 		do
 		{
 			// search for an already allocated, empty element in the special item array
-			fFoundOne = FALSE;
+ 			fFoundOne = FALSE;
 			for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
 			{
 				if ( !( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive ) )
@@ -1744,7 +1743,7 @@ void AddSpecialItemToArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT16 us
 	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems < 255 );
 	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced );
 	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive == FALSE );
-	Assert( IsItemInfoSpecial( pSpclItemInfo ) );
+	Assert( IsItemInfoSpecial( pSpclItemInfo , usItemIndex) );
 
 
 	//Store the special values in that element, and make it active
@@ -1757,13 +1756,36 @@ void AddSpecialItemToArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT16 us
 }
 
 
+// WDS bug fix (07/24/2007) - Items with default attachments have to be handled specially
+
+BOOLEAN SpecialItemInfoIsIdentical (SPECIAL_ITEM_INFO& baseItem, SPECIAL_ITEM_INFO& actualItem, UINT16 usItemIndex)
+{
+	BOOLEAN firstAttachmentIsDefault = 
+		((actualItem.usAttachment[ 0 ] == Item [ usItemIndex ].defaultattachment) &&
+		 (actualItem.bAttachmentStatus[0] == 100));
+	for (int idx=0; idx < MAX_ATTACHMENTS; ++idx) {
+		if ((idx != 0) || (!firstAttachmentIsDefault)) {
+			if (baseItem.usAttachment[idx] != actualItem.usAttachment[idx])
+				return FALSE;
+			if (baseItem.bAttachmentStatus[idx] != actualItem.bAttachmentStatus[idx])
+				return FALSE;
+		}
+	}
+	if (baseItem.bItemCondition != actualItem.bItemCondition)
+		return FALSE;
+	if (baseItem.ubImprintID != actualItem.ubImprintID)
+		return FALSE;
+
+	return TRUE;
+}
+
+
 
 // removes ubHowMany items of usItemIndex with the matching Info from dealer ubArmsDealer
 void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, UINT8 ubHowMany )
 {
 	DEALER_SPECIAL_ITEM *pSpecialItem;
 	UINT8 ubElement;
-
 
 	Assert( ubHowMany <= gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems );
 
@@ -1774,7 +1796,7 @@ void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, 
 
 
 	// decide whether this item is "special" or not
-	if ( IsItemInfoSpecial( pSpclItemInfo ) )
+	if ( IsItemInfoSpecial( pSpclItemInfo, usItemIndex ) )
 	{
 		// look through the elements, trying to find special items matching the specifications
 		for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
@@ -1785,7 +1807,8 @@ void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, 
 			if ( pSpecialItem->fActive )
 			{
 				// and its contents are exactly what we're looking for
-				if( memcmp( &(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info), pSpclItemInfo, sizeof( SPECIAL_ITEM_INFO ) ) == 0 )
+//				if( memcmp( &(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info), pSpclItemInfo, sizeof( SPECIAL_ITEM_INFO ) ) == 0 )
+				if( SpecialItemInfoIsIdentical( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info, *pSpclItemInfo, usItemIndex))
 				{
 					// Got one!  Remove it
 					RemoveSpecialItemFromArmsDealerInventoryAtElement( ubArmsDealer, usItemIndex, ubElement );
@@ -2023,7 +2046,6 @@ void MakeObjectOutOfDealerItems( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclIte
 	INT8 bItemCondition;
 	UINT8 ubCnt;
 
-
 	bItemCondition = pSpclItemInfo->bItemCondition;
 
 	//if the item condition is below 0, the item is in for repairs, so flip the sign
@@ -2058,7 +2080,7 @@ void MakeObjectOutOfDealerItems( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclIte
 		// have to keep track of #bullets in a gun throughout dealer inventory.  Without this, players could "reload" guns
 		// they don't have ammo for by selling them to Tony & buying them right back fully loaded!  One could repeat this
 		// ad nauseum (empty the gun between visits) as a (really expensive) way to get unlimited special ammo like rockets.
-		pObject->ubGunShotsLeft = 0;
+		pObject->ItemData.Gun.ubGunShotsLeft = 0;
 	}
 }
 
@@ -2080,7 +2102,7 @@ void GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, U
 	Assert( CanDealerRepairItem( ubArmsDealer, pObject->usItem ) );
 
 	//		c) Actually damaged, or a rocket rifle (being reset)
-	Assert( ( pObject->bStatus[ 0 ] < 100 ) || ItemIsARocketRifle( pObject->usItem ) );
+	Assert( ( pObject->ItemData.Generic.bStatus[ 0 ] < 100 ) || ItemIsARocketRifle( pObject->usItem ) );
 
 /* ARM: Can now repair with removeable attachments still attached...
 	//		d) Already stripped of all *detachable* attachments
@@ -2101,11 +2123,11 @@ void GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, U
 	if (Item [ pObject->usItem ].usItemClass == IC_GUN )
 	{
 		// if any GunAmmoItem is specified
-		if( pObject->usGunAmmoItem != NONE)
+		if( pObject->ItemData.Gun.usGunAmmoItem != NONE)
 		{
 			// it better be regular ammo, and empty
-			Assert( Item[ pObject->usGunAmmoItem ].usItemClass == IC_AMMO );
-			Assert( pObject->ubGunShotsLeft == 0 );
+			Assert( Item[ pObject->ItemData.Gun.usGunAmmoItem ].usItemClass == IC_AMMO );
+			Assert( pObject->ItemData.Gun.ubGunShotsLeft == 0 );
 		}
 	}
 
@@ -2228,7 +2250,7 @@ UINT32 CalculateObjectItemRepairTime( UINT8 ubArmsDealer, OBJECTTYPE *pItemObjec
 	UINT32 uiRepairTime;
 	UINT8 ubCnt;
 
-	uiRepairTime = CalculateSimpleItemRepairTime( ubArmsDealer, pItemObject->usItem, pItemObject->bStatus[ 0 ] );
+	uiRepairTime = CalculateSimpleItemRepairTime( ubArmsDealer, pItemObject->usItem, pItemObject->ItemData.Generic.bStatus[ 0 ] );
 
 	// add time to repair any attachments on it
 	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
@@ -2312,7 +2334,7 @@ UINT32 CalculateObjectItemRepairCost( UINT8 ubArmsDealer, OBJECTTYPE *pItemObjec
 	UINT32 uiRepairCost;
 	UINT8 ubCnt;
 
-	uiRepairCost = CalculateSimpleItemRepairCost( ubArmsDealer, pItemObject->usItem, pItemObject->bStatus[ 0 ] );
+	uiRepairCost = CalculateSimpleItemRepairCost( ubArmsDealer, pItemObject->usItem, pItemObject->ItemData.Generic.bStatus[ 0 ] );
 
 	// add cost of repairing any attachments on it
 	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
@@ -2413,7 +2435,7 @@ void SetSpecialItemInfoFromObject( SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE 
 	}
 	else
 	{
-		pSpclItemInfo->bItemCondition = pObject->bStatus[ 0 ];
+		pSpclItemInfo->bItemCondition = pObject->ItemData.Generic.bStatus[ 0 ];
 	}
 
 	// only guns currently have imprintID properly initialized...
@@ -2445,10 +2467,9 @@ void SetSpecialItemInfoFromObject( SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE 
 
 
 
-BOOLEAN IsItemInfoSpecial( SPECIAL_ITEM_INFO *pSpclItemInfo )
+BOOLEAN IsItemInfoSpecial( SPECIAL_ITEM_INFO *pSpclItemInfo, UINT16 usItemIndex )
 {
 	UINT8 ubCnt;
-
 
 	// being damaged / in repairs makes an item special
 	if ( pSpclItemInfo->bItemCondition != 100 )
@@ -2463,11 +2484,18 @@ BOOLEAN IsItemInfoSpecial( SPECIAL_ITEM_INFO *pSpclItemInfo )
 	}
 
 	// having an attachment makes an item special
+	// ...unless it is a default attachment (WDS fix 07/24/2007)
+	BOOLEAN firstAttachmentIsDefault = 
+		((pSpclItemInfo->usAttachment[ 0 ] == Item [ usItemIndex ].defaultattachment) &&
+		 (pSpclItemInfo->bAttachmentStatus[0] == 100));
+
 	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
 	{
-		if ( pSpclItemInfo->usAttachment[ ubCnt ] != NONE )
-		{
-			return(TRUE);
+		if ((ubCnt != 0) || (!firstAttachmentIsDefault)) {
+			if ( (pSpclItemInfo->usAttachment[ ubCnt ] != NONE) )
+			{
+				return(TRUE);
+			}
 		}
 	}
 

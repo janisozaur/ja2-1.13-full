@@ -153,16 +153,24 @@ extern void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce );
 UINT32 MainGameScreenInit(void)
 {  
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
+	UINT32			uiDestPitchBYTES;
+	UINT8				*pDestBuf=NULL;
 
 /*  If any 1 have time please calculate how big this buffer should be
  *  any questions? joker
  */
-	gpZBuffer=InitZBuffer( 2048, SCREEN_HEIGHT);
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
+	gpZBuffer=InitZBuffer( uiDestPitchBYTES, SCREEN_HEIGHT);
+	UnLockVideoSurface( FRAME_BUFFER);
+
 	InitializeBackgroundRects();
 
 	//EnvSetTimeInHours(ENV_TIME_12);
 
 	SetRenderFlags(RENDER_FLAG_FULL);
+
+	// WDS - bug fix: VideoOverlayDesc must be initialized! - 07/16/2007
+	memset( &VideoOverlayDesc, 0, sizeof( VIDEO_OVERLAY_DESC ) );
 
 	// Init Video Overlays
 	// FIRST, FRAMERATE
@@ -575,7 +583,7 @@ UINT32  MainGameScreenHandle(void)
 		// Check timer that could have been set to do anything
 		CheckCustomizableTimer();
 
-		// HAndle physics engine
+		// Handle physics engine
 		SimulateWorld( );
 
 		// Handle strategic engine
@@ -840,6 +848,7 @@ UINT32  MainGameScreenHandle(void)
 
 	if ( gfScrollPending  )
 	{
+		DeleteVideoOverlaysArea( );
 		AllocateVideoOverlaysArea( );
 		SaveVideoOverlaysArea( FRAME_BUFFER );
 		ExecuteVideoOverlays( );

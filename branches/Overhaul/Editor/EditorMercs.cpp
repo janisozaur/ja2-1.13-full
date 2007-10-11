@@ -1,4 +1,3 @@
-// WANNE: EDITOR: done
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -529,7 +528,7 @@ void AddMercToWorld( INT32 iMapIndex )
 		gTempBasicPlacement.bAttitude = gbDefaultAttitude;
 		gTempBasicPlacement.bRelativeAttributeLevel = gbDefaultRelativeAttributeLevel; 
 		gTempBasicPlacement.bRelativeEquipmentLevel = gbDefaultRelativeEquipmentLevel; 
-		gTempBasicPlacement.bDirection = gbDefaultDirection;
+		gTempBasicPlacement.ubDirection = gbDefaultDirection;
 
 		//Generate detailed placement information given the temp placement information.
 		CreateDetailedPlacementGivenBasicPlacementInfo( &gTempDetailedPlacement, &gTempBasicPlacement );
@@ -646,7 +645,7 @@ void ResetAllMercPositions()
 		//	EVENT_SetSoldierPosition( gpSelected->pSoldier, (FLOAT)(sCellX + 5), (FLOAT)(sCellY + 5) );
 		//	if( gpSelected->pBasicPlacement->fOnRoof )
 		//		SetSoldierHeight( gpSelected->pSoldier, 58.0 );
-		//	SetMercDirection( gpSelected->pBasicPlacement->bDirection );
+		//	SetMercDirection( gpSelected->pBasicPlacement->ubDirection );
 		//}
 		curr = curr->next;
 	}
@@ -794,7 +793,6 @@ void DisplayEditMercWindow( void )
 	usFillColorLight = Get16BPPColor(FROMRGB(136, 138, 135));
 	usFillColorTextBk = Get16BPPColor(FROMRGB(250, 240, 188));
 
-	// WANNE: EDITOR?????????
 	iWidth = 266;
 	iHeight = 360;
 	iYPos = iScreenHeightOffset + 0;
@@ -1184,9 +1182,7 @@ void EditMercIncDifficultyCallback(GUI_BUTTON *btn,INT32 reason)
 //
 void ShowEditMercPalettes( SOLDIERTYPE *pSoldier )
 {
-	UINT8  ubPaletteRep;
-	if( !pSoldier )
-		ubPaletteRep = 0xff;
+	UINT8  ubPaletteRep = 0xff;
 
 	if( pSoldier )
 	{
@@ -1246,7 +1242,6 @@ void ShowEditMercColorSet( UINT8 ubPaletteRep, INT16 sSet )
 
 	sUnitSize = 128 / (INT16)(ubSize);
 
-	// WANNE: EDITOR?
 	sTop = 2 * iScreenHeightOffset + 364 + (sSet * 24);
 	sBottom = sTop + 20;
 	sLeft = iScreenWidthOffset + 230;
@@ -1334,7 +1329,6 @@ void DisplayWayPoints(void)
 		// Bring it down a touch
 		sScreenY += 5;
 
-		// WANNE: EDITOR?
 		if( sScreenY <= (2 * iScreenHeightOffset + 355 ))
 		{
 			// Shown it on screen!
@@ -1360,7 +1354,6 @@ void CreateEditMercWindow( void )
 	INT32 x;
 	SOLDIERTYPE *pSoldier;
 
-	// WANNE: EDITOR?
 	iWidth = 266;
 	iHeight = 360;
 	iYPos = iScreenHeightOffset + 0;
@@ -1458,7 +1451,7 @@ void SetMercDirection( INT8 bDirection )
 	ClickEditorButton( FIRST_MERCS_DIRECTION_BUTTON + bDirection );
 
 	gbDefaultDirection = bDirection;
-	gpSelected->pBasicPlacement->bDirection = bDirection;
+	gpSelected->pBasicPlacement->ubDirection = bDirection;
 
 	// ATE: Changed these to call functions....
 	EVENT_SetSoldierDirection( gpSelected->pSoldier, bDirection );
@@ -1683,7 +1676,7 @@ void IndicateSelectedMerc( INT16 sID )
 	//assigns the soldier with the same orders/attitude.
 	SetMercOrders( gpSelected->pSoldier->bOrders );
 	SetMercAttitude( gpSelected->pSoldier->bAttitude );
-	SetMercDirection( gpSelected->pSoldier->bDirection );
+	SetMercDirection( gpSelected->pSoldier->ubDirection );
 	if( gpSelected->pBasicPlacement->fPriorityExistance )
 		ClickEditorButton( MERCS_PRIORITYEXISTANCE_CHECKBOX );
 	else
@@ -2025,7 +2018,13 @@ void ChangeBodyType( INT8 bOffset )  //+1 or -1 only
 			pbArray = bCivArray;
 			iMax = MAX_CIVTYPES;
 			break;
+		default:
+			AssertMsg( 0, "Unknown team");
+			return;
 	}
+
+	iIndex = -1;
+
 	//find the matching bodytype index within the array.
 	for( x = 0; x < iMax; x++ )
 	{
@@ -2076,6 +2075,7 @@ void ChangeBodyType( INT8 bOffset )  //+1 or -1 only
 				break;
 		}
 		SetSoldierAnimationSurface( gpSelected->pSoldier, gpSelected->pSoldier->usAnimState );
+		ConvertAniCodeToAniFrame( gpSelected->pSoldier, 0 );
 	}
 	//Update the placement's info as well.
 	gpSelected->pBasicPlacement->bBodyType = (INT8)iIndex;
@@ -2768,7 +2768,7 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 
 		//randomize the status on non-ammo items.
 		if( !(Item[ gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ].usItem ].usItemClass & IC_AMMO) )
-			gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ].bStatus[0] = (INT8)(80 + Random( 21 ));
+			gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ].ItemData.Generic.bStatus[0] = (INT8)(80 + Random( 21 ));
 
 		if( gusMercsNewItemIndex )
 		{
@@ -2795,7 +2795,6 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 	uiSrcID = guiMercTempBuffer;
 	uiDstID = guiMercInvPanelBuffers[ gbCurrSelect ];
 
-	// WANNE: EDITOR?
 	//build the rects
 	iDstWidth = gbCurrSelect < 3 ? MERCINV_SMSLOT_WIDTH : MERCINV_LGSLOT_WIDTH;
 	iDstHeight = MERCINV_SLOT_HEIGHT;
@@ -2975,7 +2974,9 @@ void UpdateMercItemSlots()
 	{
 		if( gpSelected->pDetailedPlacement->ubProfile != NO_PROFILE )
 		{
-			memcpy( gpSelected->pDetailedPlacement->Inv, gpSelected->pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
+			// 0verhaul:  Inventory is now a C++ class.  Bad memcpy!  No biscuit!
+			//memcpy( &gpSelected->pDetailedPlacement->Inv, &gpSelected->pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
+			gpSelected->pDetailedPlacement->Inv = gpSelected->pSoldier->inv;
 		}
 		for( x = 0; x < 9; x++ )
 		{
@@ -3429,7 +3430,7 @@ void UpdateScheduleAction( UINT8 ubNewAction )
 // 0:1A, 1:1B, 2:2A, 3:2B, ...
 void FindScheduleGridNo( UINT8 ubScheduleData )
 {
-	INT32 iMapIndex;
+	INT32 iMapIndex = 0xffff;
 	switch( ubScheduleData )
 	{
 		case 0: //1a
@@ -3458,6 +3459,7 @@ void FindScheduleGridNo( UINT8 ubScheduleData )
 			break;
 		default:
 			AssertMsg( 0, "FindScheduleGridNo passed incorrect dataID." );
+			return;
 	}
 	if( iMapIndex != 0xffff )
 	{
@@ -3669,7 +3671,8 @@ void PasteMercPlacement( INT32 iMapIndex )
 		if( gTempBasicPlacement.fDetailedPlacement )
 		{
                         // WDS - Clean up inventory handling
-			gTempDetailedPlacement = *gSaveBufferDetailedPlacement
+			// WANNE: Removed the following line, didn't compile
+			//gTempDetailedPlacement = *gSaveBufferDetailedPlacement;
 		}
 		else
 		{

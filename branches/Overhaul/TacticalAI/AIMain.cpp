@@ -130,7 +130,7 @@ BOOLEAN InitAI( void )
 #ifdef _DEBUG
 	if (gfDisplayCoverValues)
 	{
-		memset( gsCoverValue, 0x7F, sizeof( INT16 ) * WORLD_MAX );
+		//memset( gsCoverValue, 0x7F, sizeof( INT16 ) * WORLD_MAX );
 	}
 #endif
 
@@ -411,6 +411,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 		if ( gTacticalStatus.ubAttackBusyCount > 0 )
 		{
 			fProcessNewSituation = FALSE;
+#if 0
 			// HACK!!
 			if ( pSoldier->bAction == AI_ACTION_FIRE_GUN )
 			{
@@ -432,6 +433,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 					fProcessNewSituation = TRUE;
 				}
 			}
+#endif
 		}		
 		else
 		{
@@ -778,7 +780,6 @@ void EndAIDeadlock(void)
 
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Setting attack busy count to 0 from deadlock break" ) );
 				gTacticalStatus.ubAttackBusyCount = 0;
-				OutputDebugString( "Attack busy reset due to deadlock break.\n");
 
 				EndAIGuysTurn(pSoldier);
 				bFound = TRUE;
@@ -937,7 +938,7 @@ UINT8 GetMostThreateningOpponent( SOLDIERTYPE *pSoldier )
 	UINT32				uiLoop;
 	INT32					iThreatVal,iMinThreat = 30000;
 	SOLDIERTYPE		*pTargetSoldier;
-	UINT8					ubTargetSoldier = NO_SOLDIER;
+	UINT8					ubTargetSoldier = NOBODY;
 
 	// Loop through all mercs 
 
@@ -1102,7 +1103,7 @@ void FreeUpNPCFromTurning(SOLDIERTYPE *pSoldier, INT8 bLook)
 	{
 #ifdef TESTAI
 		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3, 
-			String("FREEUPNPCFROMTURNING: our action %d, desdir %d dir %d",pSoldier->bAction,pSoldier->bDesiredDirection,pSoldier->bDirection) );
+			String("FREEUPNPCFROMTURNING: our action %d, desdir %d dir %d",pSoldier->bAction,pSoldier->bDesiredDirection,pSoldier->ubDirection) );
 #endif
 
 
@@ -1161,7 +1162,7 @@ void ActionDone(SOLDIERTYPE *pSoldier)
 		{
 #ifdef TESTAI
 			DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3, 
-				String("Cancelling actiondone: our action %d, desdir %d dir %d",pSoldier->bAction,pSoldier->bDesiredDirection,pSoldier->bDirection) );
+				String("Cancelling actiondone: our action %d, desdir %d dir %d",pSoldier->bAction,pSoldier->bDesiredDirection,pSoldier->ubDirection) );
 #endif
 		}
 
@@ -1178,7 +1179,7 @@ void ActionDone(SOLDIERTYPE *pSoldier)
 
 		if ( !pSoldier->fNoAPToFinishMove )
 		{
-			EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+			EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 			AdjustNoAPToFinishMove( pSoldier, FALSE );
 		}
 
@@ -1213,6 +1214,12 @@ void ActionDone(SOLDIERTYPE *pSoldier)
 		// (but which set pathStored).  The action is retained until next turn,
 		// although NewDest isn't called.  A newSit. could cancel it before then!
 		pSoldier->bPathStored = FALSE;
+	}
+
+	if (pSoldier->uiStatusFlags & SOLDIER_DEAD)
+	{
+		// The last action killed the soldier (stepped on a mine, detonated a LAW too close, etc)
+		EndAIGuysTurn( pSoldier);
 	}
 }
 
@@ -1271,9 +1278,9 @@ void NPCDoesAct(SOLDIERTYPE *pSoldier)
 
 	// CJC Feb 18 99: make sure that soldier is not in the middle of a turn due to visual crap to make enemies
 	// face and point their guns at us
-	if ( pSoldier->bDesiredDirection != pSoldier->bDirection )
+	if ( pSoldier->bDesiredDirection != pSoldier->ubDirection )
 	{
-		pSoldier->bDesiredDirection = pSoldier->bDirection;
+		pSoldier->bDesiredDirection = pSoldier->ubDirection;
 	}
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"NPCDoesAct done");
@@ -1416,16 +1423,16 @@ NameMessage(pSoldier,"will now be freed up from turning...",2000);
 
 // force him to face in the right direction (as long as it's legal)
 if ((pSoldier->bDesiredDirection >= 1) && (pSoldier->bDesiredDirection <= 8))
-pSoldier->bDirection = pSoldier->bDesiredDirection;
+pSoldier->ubDirection = pSoldier->bDesiredDirection;
 else
-pSoldier->bDesiredDirection = pSoldier->bDirection;
+pSoldier->bDesiredDirection = pSoldier->ubDirection;
 
 // free up ONLY players from whom we haven't received an AI_ACTION_DONE yet
 // we can all agree the action is DONE and we can continue...
 // (otherwise they'll be calling FreeUp... twice and get REAL screwed up)
 NetSend.msgType    = NET_FREE_UP_TURN;
 NetSend.ubID     = pSoldier->ubID;
-NetSend.misc_UCHAR = pSoldier->bDirection;
+NetSend.misc_UCHAR = pSoldier->ubDirection;
 NetSend.answer     = pSoldier->bDesiredDirection;
 
 for (cnt = 0; cnt < MAXPLAYERS; cnt++)
@@ -2071,6 +2078,8 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 	case AI_ACTION_CHANGE_FACING:         // turn this way & that to look
 		// as long as we don't see anyone new, cover won't have changed
 		// if we see someone new, it will cause a new situation & remove this
+		// 0verhaul:  If turning and not moving, set the final destination to the current position
+		pSoldier->sFinalDestination = pSoldier->sGridNo;
 		SkipCoverCheck = TRUE;
 
 #ifdef DEBUGDECISIONS
@@ -2411,7 +2420,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 	case AI_ACTION_PULL_TRIGGER:          // activate an adjacent panic trigger
 
 		// turn to face trigger first
-		if ( FindStructure( (INT16)(pSoldier->sGridNo + DirectionInc( NORTH )), STRUCTURE_SWITCH ) )
+		if ( FindStructure( pSoldier->sGridNo + DirectionInc( NORTH ), STRUCTURE_SWITCH ) )
 		{
 			SendSoldierSetDesiredDirectionEvent( pSoldier, NORTH );
 		}
@@ -2548,17 +2557,17 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 	case AI_ACTION_LOCK_DOOR:
 		{
 			STRUCTURE *		pStructure;
-			INT8					bDirection;
+			UINT8					ubDirection;
 			INT16					sDoorGridNo;
 
-			bDirection = (INT8) GetDirectionFromGridNo( pSoldier->usActionData, pSoldier );
-			if (bDirection == EAST || bDirection == SOUTH)
+			ubDirection = GetDirectionFromGridNo( (INT16)pSoldier->usActionData, pSoldier );
+			if (ubDirection == EAST || ubDirection == SOUTH)
 			{
 				sDoorGridNo = pSoldier->sGridNo;
 			}
 			else
 			{
-				sDoorGridNo = pSoldier->sGridNo + DirectionInc( bDirection );
+				sDoorGridNo = pSoldier->sGridNo + DirectionInc( ubDirection );
 			}
 
 			pStructure = FindStructure( sDoorGridNo, STRUCTURE_ANYDOOR );
@@ -2577,14 +2586,14 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				EndAIGuysTurn( pSoldier );				
 			}
 
-			StartInteractiveObject( sDoorGridNo, pStructure->usStructureID, pSoldier, bDirection );
-			InteractWithInteractiveObject( pSoldier, pStructure, bDirection );
+			StartInteractiveObject( sDoorGridNo, pStructure->usStructureID, pSoldier, ubDirection );
+			InteractWithInteractiveObject( pSoldier, pStructure, ubDirection );
 		}
 		break;
 
 	case AI_ACTION_LOWER_GUN:
 		// for now, just do "action done"
-		InternalSoldierReadyWeapon(pSoldier,pSoldier->bDirection,TRUE);
+		InternalSoldierReadyWeapon(pSoldier,pSoldier->ubDirection,TRUE);
 		HandleSight(pSoldier, SIGHT_LOOK );
 		ActionDone( pSoldier );
 		break;
@@ -2776,7 +2785,6 @@ void ManChecksOnFriends(SOLDIERTYPE *pSoldier)
 {
 	UINT32 uiLoop;
 	SOLDIERTYPE *pFriend;
-	INT16 sDistVisible;
 
 	// THIS ROUTINE SHOULD ONLY BE CALLED FOR SOLDIERS ON STATUS GREEN or YELLOW
 
@@ -2798,45 +2806,40 @@ void ManChecksOnFriends(SOLDIERTYPE *pSoldier)
 		if (pFriend->ubID == pSoldier->ubID)
 			continue;  // next merc
 
-		sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, pFriend->sGridNo, pFriend->bLevel, pFriend );
 		// if we can see far enough to see this friend
-		if (PythSpacesAway(pSoldier->sGridNo,pFriend->sGridNo) <= sDistVisible)
+		// and can trace a line of sight to his x,y coordinates
+		if (SoldierToSoldierLineOfSightTest(pSoldier, pFriend, TRUE, CALC_FROM_ALL_DIRS))
 		{
-			// and can trace a line of sight to his x,y coordinates
-			//if (1) //*** SoldierToSoldierLineOfSightTest(pSoldier,pFriend,STRAIGHT,TRUE))
-			if (SoldierToSoldierLineOfSightTest(pSoldier, pFriend, (UINT8)sDistVisible, TRUE))
+			// if my friend is in battle or something is clearly happening there
+			if ((pFriend->bAlertStatus >= STATUS_RED) || pFriend->bUnderFire || (pFriend->bLife < OKLIFE))
 			{
-				// if my friend is in battle or something is clearly happening there
-				if ((pFriend->bAlertStatus >= STATUS_RED) || pFriend->bUnderFire || (pFriend->bLife < OKLIFE))
-				{
 #ifdef DEBUGDECISIONS
-					STR16 tempstr;
-					sprintf(tempstr,"%s sees %s on alert, goes to RED ALERT!",pSoldier->name,pFriend->name );
-					AIPopMessage(tempstr);
+				STR16 tempstr;
+				sprintf(tempstr,"%s sees %s on alert, goes to RED ALERT!",pSoldier->name,pFriend->name );
+				AIPopMessage(tempstr);
 #endif
 
-					pSoldier->bAlertStatus = STATUS_RED;
-					CheckForChangingOrders(pSoldier);
-					SetNewSituation( pSoldier );
-					break;         // don't bother checking on any other friends
-				}
-				else
+				pSoldier->bAlertStatus = STATUS_RED;
+				CheckForChangingOrders(pSoldier);
+				SetNewSituation( pSoldier );
+				break;         // don't bother checking on any other friends
+			}
+			else
+			{
+				// if he seems suspicious or acts like he thought he heard something
+				// and I'm still on status GREEN
+				if ((pFriend->bAlertStatus == STATUS_YELLOW) &&
+					(pSoldier->bAlertStatus < STATUS_YELLOW))
 				{
-					// if he seems suspicious or acts like he thought he heard something
-					// and I'm still on status GREEN
-					if ((pFriend->bAlertStatus == STATUS_YELLOW) &&
-						(pSoldier->bAlertStatus < STATUS_YELLOW))
-					{
 #ifdef TESTVERSION
-						sprintf(tempstr,"TEST MSG: %s sees %s listening, goes to YELLOW ALERT!",pSoldier->name,ExtMen[pFriend->ubID].name);
-						PopMessage(tempstr);
+					sprintf(tempstr,"TEST MSG: %s sees %s listening, goes to YELLOW ALERT!",pSoldier->name,ExtMen[pFriend->ubID].name);
+					PopMessage(tempstr);
 #endif
-						pSoldier->bAlertStatus = STATUS_YELLOW;    // also get suspicious
-						SetNewSituation( pSoldier );
-						pSoldier->sNoiseGridno = pFriend->sGridNo;  // pretend FRIEND made noise
-						pSoldier->ubNoiseVolume = 3;                // remember this for 3 turns
-						// keep check other friends, too, in case any are already on RED
-					}
+					pSoldier->bAlertStatus = STATUS_YELLOW;    // also get suspicious
+					SetNewSituation( pSoldier );
+					pSoldier->sNoiseGridno = pFriend->sGridNo;  // pretend FRIEND made noise
+					pSoldier->ubNoiseVolume = 3;                // remember this for 3 turns
+					// keep check other friends, too, in case any are already on RED
 				}
 			}
 		}
@@ -2851,14 +2854,14 @@ void SetNewSituation( SOLDIERTYPE * pSoldier )
 		if ( pSoldier->ubQuoteRecord == 0 && !gTacticalStatus.fAutoBandageMode && !(pSoldier->bNeutral && gTacticalStatus.uiFlags & ENGAGED_IN_CONV) )
 		{
 			// allow new situation to be set
-			if (gTacticalStatus.ubAttackBusyCount > 0)
-			{
-				DebugAttackBusy( "@#!%  NOT setting NewSituation because still busy attacking.\n" );
-			}
-			else
+			//if (gTacticalStatus.ubAttackBusyCount > 0)
+			//{
+			//	DebugAttackBusy( "@#!%  NOT setting NewSituation because still busy attacking.\n" );
+			//}
+			//else
 			{
 				// 0verhaul:  Let's see if we can do without this.
-				// pSoldier->bNewSituation = IS_NEW_SITUATION;
+				pSoldier->bNewSituation = IS_NEW_SITUATION;
 			}
 
 			if ( gTacticalStatus.ubAttackBusyCount != 0 )

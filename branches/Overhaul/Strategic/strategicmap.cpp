@@ -1,6 +1,5 @@
 #include "builddefines.h"
 
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 	#include "Loading Screen.h"
@@ -1232,7 +1231,7 @@ UINT32 UndergroundTacticalTraversalTime( INT8 bExitDirection )
 	return 0xffffffff;
 }
 
-// WANNE 2 <zooming>
+// WANNE: Zooming Animation of the laptop in strategic screen
 void BeginLoadScreen( void )
 {
 	SGPRect SrcRect, DstRect;
@@ -1730,15 +1729,23 @@ BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		// is the sector already loaded?
 		if( ( gWorldSectorX == sMapX ) && ( sMapY == gWorldSectorY) && ( bMapZ == gbWorldSectorZ) )
 		{
-			//Inserts the enemies into the newly loaded map based on the strategic information.
+			//Inserts the enemies into the already loaded map based on the strategic information.
 			//Note, the flag will return TRUE only if enemies were added.  The game may wish to
 			//do something else in a case where no enemies are present.
+
+			PrepareMilitiaForTactical( FALSE);
 
 			SetPendingNewScreen(GAME_SCREEN);
 			if( !NumEnemyInSector( ) )
 			{
 				PrepareEnemyForSectorBattle();
 			}
+
+			for (int i=0; i<TOTAL_SOLDIERS; i++)
+			{
+				Assert( !MercPtrs[i]->bActive || !MercPtrs[i]->bInSector || MercPtrs[i]->sGridNo != NOWHERE);
+			}
+
 			if( gubNumCreaturesAttackingTown && !gbWorldSectorZ && 
 				gubSectorIDOfCreatureAttack == SECTOR( gWorldSectorX, gWorldSectorY ) )
 			{
@@ -1753,10 +1760,23 @@ BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 			// Check for helicopter being on the ground in this sector...
 			HandleHelicopterOnGroundGraphic( );
 
-			// Move above enemy in sector placement!  If there are already enemies in the sector, militia cannot
-			// be moved in.  
-			ResetMilitia();
+			// 0verhaul:  Okay, it is apparent that the enemies are not reset correctly.  So I will now try to add symmetry
+			// between enemy placement and militia placement.  The enemies do have one advantage here, though:  If a sector
+			// is in enemy hands, then their sector is not actually loaded.  At least not normally.  Perhaps it would be useful
+			// to lose a battle with one group of mercs, then bring in another group without changing to another sector to see
+			// if enemy integrity holds.  But this would require the enemies to come up with reinforcements inbetween the battles
+			// to really test out.
+			//
+			// Anyway, for now I will remove this call from here.  The objective is to add militia any time we could add enemies
+			// except for the case of training new militia.  But that case can be handled each time militia training finishes.
+//			ResetMilitia();
 			AllTeamsLookForAll( TRUE );
+
+			for (int i=0; i<TOTAL_SOLDIERS; i++)
+			{
+				Assert( !MercPtrs[i]->bActive || !MercPtrs[i]->bInSector || MercPtrs[i]->sGridNo != NOWHERE);
+			}
+
 			return( TRUE );
 		}
 
@@ -2065,7 +2085,7 @@ void PrepareLoadedSector()
 
 		PrepareCreaturesForBattle();
 
-		PrepareMilitiaForTactical();
+		PrepareMilitiaForTactical(TRUE);
 
 		// OK, set varibles for entring this new sector...
 		gTacticalStatus.fVirginSector = TRUE;
@@ -2454,7 +2474,7 @@ void UpdateMercsInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
 		//DONT set these values
-		gusSelectedSoldier = NO_SOLDIER;	
+		gusSelectedSoldier = NOBODY;	
 		gfGameScreenLocateToSoldier = TRUE;
 	}
 
@@ -3066,7 +3086,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	SOLDIERTYPE *pValidSoldier = NULL;
 	GROUP *pGroup;
 	UINT32 uiTraverseTime=0;
-	UINT8 ubDirection;
+	UINT8 ubDirection = 0xff;
 	EXITGRID ExitGrid;
 	INT8 bPrevAssignment;
 	UINT8 ubPrevGroupID;
@@ -3369,7 +3389,7 @@ void AllMercsWalkedToExitGrid()
 			pPlayer = pPlayer->next;
 		}
 
-		SetGroupSectorValue( (UINT8)gsAdjacentSectorX, (UINT8)gsAdjacentSectorY, gbAdjacentSectorZ, gpAdjacentGroup->ubGroupID );
+		SetGroupSectorValue( gsAdjacentSectorX, gsAdjacentSectorY, (INT16) gbAdjacentSectorZ, gpAdjacentGroup->ubGroupID );
 		AttemptToMergeSeparatedGroups( gpAdjacentGroup, FALSE );
 
 		SetDefaultSquadOnSectorEntry( TRUE );
@@ -3414,7 +3434,7 @@ void AllMercsWalkedToExitGrid()
 
 			pPlayer = pPlayer->next;
 		}
-		SetGroupSectorValue( gsAdjacentSectorX, gsAdjacentSectorY, gbAdjacentSectorZ, gpAdjacentGroup->ubGroupID );
+		SetGroupSectorValue( gsAdjacentSectorX, gsAdjacentSectorY, (INT16) gbAdjacentSectorZ, gpAdjacentGroup->ubGroupID );
 		AttemptToMergeSeparatedGroups( gpAdjacentGroup, FALSE );
 
 		gFadeOutDoneCallback = DoneFadeOutExitGridSector;
@@ -4448,6 +4468,7 @@ BOOLEAN IsThereAFunctionalSAMSiteInSector( INT16 sSectorX, INT16 sSectorY, INT8 
 
 BOOLEAN IsThisSectorASAMSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
+	INT32	cnt;
 
 	// is the sector above ground?
 	if( bSectorZ != 0 )
@@ -4455,21 +4476,10 @@ BOOLEAN IsThisSectorASAMSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 		return( FALSE );
 	}
 
-	if( ( SAM_1_X == sSectorX ) && ( SAM_1_Y == sSectorY ) )
+	for ( cnt = 0; cnt < NUMBER_OF_SAMS; cnt++ )
 	{
-		return( TRUE );
-	}
-	else 	if( ( SAM_2_X == sSectorX ) && ( SAM_2_Y == sSectorY ) )
-	{
-		return( TRUE );
-	}
-	else 	if( ( SAM_3_X == sSectorX ) && ( SAM_3_Y == sSectorY ) )
-	{
-		return( TRUE );
-	}
-	else 	if( ( SAM_4_X == sSectorX ) && ( SAM_4_Y == sSectorY ) )
-	{
-		return( TRUE );
+		if( ( sSectorX == gpSamSectorX[cnt] ) && ( sSectorY == gpSamSectorY[cnt] ) )
+			return( TRUE );
 	}
 
 	return ( FALSE );
@@ -4861,7 +4871,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 
 		for (iLoop = 0; iLoop < pSoldier->usPathDataSize; iLoop++)
 		{
-			sTempGridNo += (INT16)DirectionInc( pSoldier->usPathingData[ iLoop ] );
+			sTempGridNo += DirectionInc( (UINT8) pSoldier->usPathingData[ iLoop ] );
 		}
 
 		if (sTempGridNo == sEndGridNo)

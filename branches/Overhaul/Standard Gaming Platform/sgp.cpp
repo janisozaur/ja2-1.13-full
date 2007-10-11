@@ -38,11 +38,14 @@
 	#include "zmouse.h"
 
 
+#include <iostream>
+
 #include "ExceptionHandling.h"
 
 #include "dbt.h"
 #include "INIReader.h"
 #include "Console.h"
+#include "Lua Interpreter.h"
 
 #ifdef JA2
 	#include "BuildDefines.h"
@@ -130,7 +133,8 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 		FreeConsole();
 		return 0L;
 	}
-	
+	BOOL visible = IsWindowVisible(hWindow);
+
 	if(gfIgnoreMessages)
 		return(DefWindowProc(hWindow, Message, wParam, lParam));
 
@@ -156,11 +160,32 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 #ifdef JA2
     case WM_MOVE:
 //        if( 1==iScreenMode )
-//          {
+          {
           GetClientRect(hWindow, &rcWindow);
+		  // Go ahead and clamp the client width and height
+		  rcWindow.right = SCREEN_WIDTH;
+		  rcWindow.bottom = SCREEN_HEIGHT;
           ClientToScreen(hWindow, (LPPOINT)&rcWindow);
           ClientToScreen(hWindow, (LPPOINT)&rcWindow+1);
-//          }
+			int xPos = (int)(short) LOWORD(lParam); 
+			int yPos = (int)(short) HIWORD(lParam);
+			BOOL needchange = FALSE;
+			if (xPos < 0)
+			{
+				xPos = 0;
+				needchange = TRUE;
+			}
+			if (yPos < 0)
+			{
+				yPos = 0;
+				needchange = TRUE;
+			}
+			if (needchange)
+			{
+				SetWindowPos( hWindow, NULL, xPos, yPos, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_SHOWWINDOW);
+			}
+
+          }
         break;
 	case WM_GETMINMAXINFO:
 		{
@@ -454,7 +479,25 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 			if (wParam == '\\' &&
 				lParam && KF_ALTDOWN)
 			{
-				g_Console.Create(NULL);
+				g_Console.Create(ghWindow);
+				cout << "LUA console ready" << endl;
+				cout << "> ";
+			}
+			break;
+
+		case WM_INPUTREADY:
+			{
+				wstring *tstr = (wstring*) lParam;
+				if (EvalLua( tstr->c_str()))
+				{
+					tstr->erase();
+				}
+				else
+				{
+					cout << ">";
+				}
+
+				cout << "> ";
 			}
 			break;
     default
@@ -770,6 +813,12 @@ int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR p
 	//EmergencyExitButtonInit();
 	//end rain
 
+#ifdef _DEBUG
+	// Use this one ONLY if you're having memory corruption issues that can be repeated in a short time
+	// Otherwise it will just run out of memory.
+	//_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_DELAY_FREE_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF);
+	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_EVERY_1024_DF);
+#endif
 
 	ghInstance = hInstance;
 
@@ -827,11 +876,13 @@ int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR p
 
   FastDebugMsg("Running Game");
 
-  // 0verhaul:  Roughly 60 frames per second.  The original "low cpu" code did 30, but that is really slow
-  SetTimer( ghWindow, uiTimer, 16, NULL);
+  // 0verhaul:  Use the smallest available timer to make sure all animation updates happen at the speed they're supposed to
+  SetTimer( ghWindow, uiTimer, 1, NULL);
 
   // At this point the SGP is set up, which means all I/O, Memory, tools, etc... are available. All we need to do is 
   // attend to the gaming mechanics themselves
+  Message.wParam = 0;
+
   while (gfProgramIsRunning)
   {
 //    if (PeekMessage(&Message, NULL, 0, 0, PM_NOREMOVE))

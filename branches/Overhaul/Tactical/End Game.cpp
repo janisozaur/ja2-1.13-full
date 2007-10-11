@@ -183,16 +183,13 @@ void HandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLev
 		{
 			if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
 			{
-					if ( QuoteExp_WitnessDeidrannaDeath[ pTeamSoldier->ubProfile ] )
+				if ( QuoteExp_WitnessDeidrannaDeath[ pTeamSoldier->ubProfile ] )
+				{
+					if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
 					{
-						// Can we see location?
-						sDistVisible = DistanceVisible( pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel, pTeamSoldier );
-
-						if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, (UINT8) sDistVisible, TRUE ) )
-						{
-							TacticalCharacterDialogue( pTeamSoldier, QUOTE_KILLING_DEIDRANNA );	
-						}
+						TacticalCharacterDialogue( pTeamSoldier, QUOTE_KILLING_DEIDRANNA );	
 					}
+				}
 			}
 		}
 	}
@@ -440,7 +437,7 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 			{
 //	    		gTacticalStatus.ubAttackBusyCount++;
 				DebugAttackBusy( "Killing off a queen ally.\n");
-				EVENT_SoldierGotHit( pTeamSoldier, 0, 10000, 0, pTeamSoldier->bDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, pTeamSoldier->bAimShotLocation, 0, NOWHERE );
+				EVENT_SoldierGotHit( pTeamSoldier, 0, 10000, 0, pTeamSoldier->ubDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, pTeamSoldier->bAimShotLocation, 0, NOWHERE );
 			}
 		}
 	}
@@ -475,16 +472,13 @@ void HandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLe
 		{
 			if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
 			{
-					if ( QuoteExp_WitnessQueenBugDeath[ pTeamSoldier->ubProfile ] )
+				if ( QuoteExp_WitnessQueenBugDeath[ pTeamSoldier->ubProfile ] )
+				{
+					if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
 					{
-						// Can we see location?
-						sDistVisible = DistanceVisible( pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel, pTeamSoldier );
-
-						if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, (UINT8) sDistVisible, TRUE ) )
-						{
-							TacticalCharacterDialogue( pTeamSoldier, QUOTE_KILLING_QUEEN );	
-						}
+						TacticalCharacterDialogue( pTeamSoldier, QUOTE_KILLING_QUEEN );	
 					}
+				}
 			}
 		}
 	}

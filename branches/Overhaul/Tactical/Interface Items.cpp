@@ -610,7 +610,7 @@ void GenerateProsString( STR16 zItemPros, OBJECTTYPE * pObject, UINT32 uiPixLimi
 	ubWeight = Item[ usItem ].ubWeight;
 	if (Item[ usItem ].usItemClass == IC_GUN)
 	{
-		ubWeight += Item[ pObject->usGunAmmoItem ].ubWeight;
+		ubWeight += Item[ pObject->ItemData.Gun.usGunAmmoItem ].ubWeight;
 	}
 
 	if (Weapon[usItem].bAccuracy >= EXCEPTIONAL_ACCURACY )
@@ -753,7 +753,7 @@ void GenerateConsString( STR16 zItemCons, OBJECTTYPE * pObject, UINT32 uiPixLimi
 	ubWeight = Item[ usItem ].ubWeight;
 	if (Item[ usItem ].usItemClass == IC_GUN)
 	{
-		ubWeight += Item[ pObject->usGunAmmoItem ].ubWeight;
+		ubWeight += Item[ pObject->ItemData.Gun.usGunAmmoItem ].ubWeight;
 	}
 
 	if (ubWeight >= BAD_WEIGHT)
@@ -1066,7 +1066,7 @@ void RenderInvBodyPanel( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY )
 void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel )
 {
 	INT32									cnt;
-	static CHAR16					pStr[ 150 ]; 
+	static CHAR16					pStr[ 512 ]; 
 
 	if ( InItemDescriptionBox( ) || InItemStackPopup( ) || InKeyRingPopup( ) )
 	{
@@ -1078,6 +1078,16 @@ void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel )
 		{
 			if ( fDirtyLevel == DIRTYLEVEL2 )
 			{
+#       if defined( _DEBUG ) /* Sergeant_Kolja, to be removed later again */
+        if( pSoldier->inv[ cnt ].ItemData.Gun.ubGunAmmoType >= MAXITEMS )
+        {
+         	DebugMsg(TOPIC_JA2, DBG_LEVEL_1, String("pObject (%s) corrupted! GetHelpTextForItem() can crash.", (pSoldier->inv[ cnt ].usItem<MAXITEMS) ? Item[pSoldier->inv[ cnt ].usItem].szItemName : "???" ));
+    	    ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"pObject (%S) corrupted! GetHelpTextForItem() can crash.",    (pSoldier->inv[ cnt ].usItem<MAXITEMS) ? Item[pSoldier->inv[ cnt ].usItem].szItemName : "???" );
+          DebugBreak();
+          AssertMsg( 0, "pObject corrupted! GetHelpTextForItem() can crash." );
+        }
+#       endif
+
 				GetHelpTextForItem( pStr, &( pSoldier->inv[ cnt ] ), pSoldier );
 
 				SetRegionFastHelpText( &(gSMInvRegion[ cnt ]), pStr );
@@ -1999,7 +2009,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 {
 	UINT16								uiStringLength;
 	INVTYPE								*pItem;
-  ETRLEObject						*pTrav;
+	ETRLEObject						*pTrav;
 	UINT32								usHeight, usWidth;
 	INT16									sCenX, sCenY, sNewY, sNewX;
 	HVOBJECT							hVObject;
@@ -2040,7 +2050,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 
 		// Shadow area
 		if(gGameSettings.fOptions[ TOPTION_SHOW_ITEM_SHADOW ]) BltVideoObjectOutlineShadowFromIndex( uiBuffer, GetInterfaceGraphicForItem( pItem ), pItem->ubGraphicNum, sCenX - 2, sCenY + 2 );
-		
+
 		BltVideoObjectOutlineFromIndex( uiBuffer, GetInterfaceGraphicForItem( pItem ), pItem->ubGraphicNum, sCenX, sCenY, sOutlineColor, fOutline );
 
 
@@ -2072,7 +2082,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				sNewY = sY + sHeight - 10;
 				sNewX = sX + 1;
 
-				SetFontForeground ( AmmoTypes[pObject->ubGunAmmoType].fontColour );
+				SetFontForeground ( AmmoTypes[pObject->ItemData.Gun.ubGunAmmoType].fontColour );
 				//switch (pObject->ubGunAmmoType)
 				//{
 				//	case AMMO_AP:
@@ -2096,9 +2106,9 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				//		SetFontForeground( FONT_MCOLOR_DKGRAY );
 				//		break;
 				//}
-	
 
-				swprintf( pStr, L"%d", pObject->ubGunShotsLeft );
+
+				swprintf( pStr, L"%d", pObject->ItemData.Gun.ubGunShotsLeft );
 				if ( uiBuffer == guiSAVEBUFFER )
 				{
 					RestoreExternBackgroundRect( sNewX, sNewY, 20, 15 );
@@ -2109,7 +2119,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				SetFontForeground( FONT_MCOLOR_DKGRAY );
 
 				// Display 'JAMMED' if we are jammed
-				if ( pObject->bGunAmmoStatus < 0 )
+				if ( pObject->ItemData.Gun.bGunAmmoStatus < 0 )
 				{
 					SetFontForeground( FONT_MCOLOR_RED );
 
@@ -2224,7 +2234,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				}
 				mprintf( sNewX, sNewY, pStr );
 				gprintfinvalidate( sNewX, sNewY, pStr );
-				
+
 			}
 
 
@@ -2256,6 +2266,10 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 			sFontY = sY + 1;
 			gprintfinvalidate( sFontX, sFontY, pStr );
 
+			// Squelch the compiler warnings
+			sFontX2 = sX;
+			sFontY2 = sY;
+
 			if ( fLineSplit )
 			{
 				VarFindFontCenterCoordinates( sX, sY, sWidth, sHeight , ITEM_FONT, &sFontX2, &sFontY2, pStr2 );
@@ -2263,25 +2277,24 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				gprintfinvalidate( sFontX2, sFontY2, pStr2 );
 			}
 
-		}
-
-		if ( *pubHighlightCounter == 2 )
-		{
-			mprintf( sFontX, sFontY, pStr );
-
-			if ( fLineSplit )
+			if ( *pubHighlightCounter == 2 )
 			{
-				mprintf( sFontX2, sFontY2, pStr2 );
+				mprintf( sFontX, sFontY, pStr );
+
+				if ( fLineSplit )
+				{
+					mprintf( sFontX2, sFontY2, pStr2 );
+				}
 			}
-		}
-		else if ( *pubHighlightCounter == 1 )
-		{
-			*pubHighlightCounter = 0;
-			gprintfRestore( sFontX, sFontY, pStr );
-
-			if ( fLineSplit )
+			else if ( *pubHighlightCounter == 1 )
 			{
-				gprintfRestore( sFontX2, sFontY2, pStr2 );
+				*pubHighlightCounter = 0;
+				gprintfRestore( sFontX, sFontY, pStr );
+
+				if ( fLineSplit )
+				{
+					gprintfRestore( sFontX2, sFontY2, pStr2 );
+				}
 			}
 		}
 	}
@@ -2423,16 +2436,14 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 //    if( guiCurrentScreen != MAP_SCREEN )
 		//if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 		if ( GetMagSize(gpItemDescObject) <= 99 )
-			swprintf( pStr, L"%d/%d", gpItemDescObject->ubGunShotsLeft, GetMagSize(gpItemDescObject));
+			swprintf( pStr, L"%d/%d", gpItemDescObject->ItemData.Gun.ubGunShotsLeft, GetMagSize(gpItemDescObject));
 		else
-			swprintf( pStr, L"%d", gpItemDescObject->ubGunShotsLeft );
+			swprintf( pStr, L"%d", gpItemDescObject->ItemData.Gun.ubGunShotsLeft );
 
 		FilenameForBPP("INTERFACE\\infobox.sti", ubString);
 		 sForeColour = ITEMDESC_AMMO_FORE;
 
-		// TODO: WANNE: Make own sti for the ammo types and an own for the interface
-		// For now, they are together in interface\infobox.sti
-		giItemDescAmmoButtonImages	= LoadButtonImage(ubString,AmmoTypes[pObject->ubGunAmmoType].grayed,AmmoTypes[pObject->ubGunAmmoType].offNormal,-1,AmmoTypes[pObject->ubGunAmmoType].onNormal,-1 );
+		giItemDescAmmoButtonImages	= LoadButtonImage(ubString,AmmoTypes[pObject->ItemData.Gun.ubGunAmmoType].grayed,AmmoTypes[pObject->ItemData.Gun.ubGunAmmoType].offNormal,-1,AmmoTypes[pObject->ItemData.Gun.ubGunAmmoType].onNormal,-1 );
 
 		//switch( pObject->ubGunAmmoType )
 		//{
@@ -2619,8 +2630,8 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	else
 	{
 		memset( &gRemoveMoney, 0, sizeof( REMOVE_MONEY ) );
-		gRemoveMoney.uiTotalAmount = gpItemDescObject->uiMoneyAmount;
-		gRemoveMoney.uiMoneyRemaining = gpItemDescObject->uiMoneyAmount;
+		gRemoveMoney.uiTotalAmount = gpItemDescObject->ItemData.Money.uiMoneyAmount;
+		gRemoveMoney.uiMoneyRemaining = gpItemDescObject->ItemData.Money.uiMoneyAmount;
 		gRemoveMoney.uiMoneyRemoving = 0;
 
 		// Load graphic
@@ -3270,12 +3281,12 @@ void RenderItemDescriptionBox( )
 		if( Item[gpItemDescObject->usItem].usItemClass == IC_AMMO && gpItemDescObject->ubNumberOfObjects > 1 && gubItemDescStatusIndex < gpItemDescObject->ubNumberOfObjects)
 		{
 			//Get weight of one item in stack.
-			UINT8 ubShotsLeftFirst = gpItemDescObject->ubShotsLeft[0];
+			UINT8 ubShotsLeftFirst = gpItemDescObject->ItemData.Ammo.ubShotsLeft[0];
 			UINT8 ubNumberOfObjects = gpItemDescObject->ubNumberOfObjects;
 			gpItemDescObject->ubNumberOfObjects = 1;
-			gpItemDescObject->ubShotsLeft[0] = gpItemDescObject->ubShotsLeft[gubItemDescStatusIndex];
+			gpItemDescObject->ItemData.Ammo.ubShotsLeft[0] = gpItemDescObject->ItemData.Ammo.ubShotsLeft[gubItemDescStatusIndex];
 			fWeight = (float)(CalculateObjectWeight( gpItemDescObject )) / 10;
-			gpItemDescObject->ubShotsLeft[0] = ubShotsLeftFirst;
+			gpItemDescObject->ItemData.Ammo.ubShotsLeft[0] = ubShotsLeftFirst;
 			gpItemDescObject->ubNumberOfObjects = ubNumberOfObjects;
 		}
 		//Item does not exist
@@ -3338,7 +3349,7 @@ void RenderItemDescriptionBox( )
 			SetFontForeground( 5 );
 			//Status
 			// This is gross, but to get the % to work out right...
-			swprintf( pStr, L"%2d%%", gpItemDescObject->bStatus[ gubItemDescStatusIndex ] );
+			swprintf( pStr, L"%2d%%", gpItemDescObject->ItemData.Generic.bStatus[ gubItemDescStatusIndex ] );
 			FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 1 ].sX + gsInvDescX + gMapWeaponStats[ 1 ].sValDx + 6), (INT16)(gMapWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 			wcscat( pStr, L"%%" );
 			mprintf( usX, usY, pStr );
@@ -3510,7 +3521,7 @@ void RenderItemDescriptionBox( )
 		{
 			SetFontForeground( FONT_FCOLOR_WHITE );
 			SetFontShadow( DEFAULT_SHADOW );
-			swprintf( pStr, L"%ld", gpItemDescObject->uiMoneyAmount );
+			swprintf( pStr, L"%ld", gpItemDescObject->ItemData.Money.uiMoneyAmount );
 			InsertCommasForDollarFigure( pStr );
 			InsertDollarSignInToString( pStr );
 			uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
@@ -3543,7 +3554,7 @@ void RenderItemDescriptionBox( )
 			if ( Item[ gpItemDescObject->usItem ].usItemClass & IC_AMMO )
 			{
 				// Ammo
-					swprintf( pStr, L"%d/%d", gpItemDescObject->ubShotsLeft[gubItemDescStatusIndex], Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize ); //Pulmu: Correct # of rounds for stacked ammo.
+					swprintf( pStr, L"%d/%d", gpItemDescObject->ItemData.Ammo.ubShotsLeft[gubItemDescStatusIndex], Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize ); //Pulmu: Correct # of rounds for stacked ammo.
 					uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
 		//			sStrX =  gMapWeaponStats[ 0 ].sX + gsInvDescX + gMapWeaponStats[ 0 ].sValDx + ( uiRightLength - uiStringLength );
 					FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 2 ].sX + gsInvDescX + gMapWeaponStats[ 2 ].sValDx+6), (INT16)(gMapWeaponStats[ 2 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &sStrX, &usY);
@@ -3552,7 +3563,7 @@ void RenderItemDescriptionBox( )
 			else
 			{
 				//Status
-				swprintf( pStr, L"%2d%%", gpItemDescObject->bStatus[ gubItemDescStatusIndex ] );
+				swprintf( pStr, L"%2d%%", gpItemDescObject->ItemData.Generic.bStatus[ gubItemDescStatusIndex ] );
 				uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
 	//			sStrX =  gMapWeaponStats[ 1 ].sX + gsInvDescX + gMapWeaponStats[ 1 ].sValDx + ( uiRightLength - uiStringLength );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 1 ].sX + gsInvDescX + gMapWeaponStats[ 1 ].sValDx + 6), (INT16)(gMapWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &sStrX, &usY);
@@ -3579,12 +3590,12 @@ void RenderItemDescriptionBox( )
 
 				
 				SetFontForeground( 5 );
-				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), sTempString  ); 
+				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ gpItemDescObject->ItemData.Key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ gpItemDescObject->ItemData.Key.ubKeyID ].usSectorFound ), sTempString  ); 
 				swprintf( pStr, L"%s", sTempString );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gMapWeaponStats[ 4 ].sY + gsInvDescY ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 
-				swprintf( pStr, L"%d", KeyTable[ gpItemDescObject->ubKeyID ].usDateFound );
+				swprintf( pStr, L"%d", KeyTable[ gpItemDescObject->ItemData.Key.ubKeyID ].usDateFound );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gMapWeaponStats[ 4 ].sY + gsInvDescY + GetFontHeight( BLOCKFONT ) + 2 ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
@@ -3764,12 +3775,12 @@ void RenderItemDescriptionBox( )
 		if( Item[gpItemDescObject->usItem].usItemClass == IC_AMMO && gpItemDescObject->ubNumberOfObjects > 1 && gubItemDescStatusIndex < gpItemDescObject->ubNumberOfObjects)
 		{
 			//Get weight of one ammo clip in stack.
-			UINT8 ubShotsLeftFirst = gpItemDescObject->ubShotsLeft[0];
+			UINT8 ubShotsLeftFirst = gpItemDescObject->ItemData.Ammo.ubShotsLeft[0];
 			UINT8 ubNumberOfObjects = gpItemDescObject->ubNumberOfObjects;
 			gpItemDescObject->ubNumberOfObjects = 1;
-			gpItemDescObject->ubShotsLeft[0] = gpItemDescObject->ubShotsLeft[gubItemDescStatusIndex];
+			gpItemDescObject->ItemData.Ammo.ubShotsLeft[0] = gpItemDescObject->ItemData.Ammo.ubShotsLeft[gubItemDescStatusIndex];
 			fWeight = (float)(CalculateObjectWeight( gpItemDescObject )) / 10;
-			gpItemDescObject->ubShotsLeft[0] = ubShotsLeftFirst;
+			gpItemDescObject->ItemData.Ammo.ubShotsLeft[0] = ubShotsLeftFirst;
 			gpItemDescObject->ubNumberOfObjects = ubNumberOfObjects;
 		}
 		//Item does not exist
@@ -3839,7 +3850,7 @@ void RenderItemDescriptionBox( )
 			}
 
 			//Status
-			swprintf( pStr, L"%2d%%", gpItemDescObject->bGunStatus );
+			swprintf( pStr, L"%2d%%", gpItemDescObject->ItemData.Gun.bGunStatus );
 			FindFontRightCoordinates( (INT16)(gWeaponStats[ 1 ].sX + gsInvDescX + gWeaponStats[ 1 ].sValDx), (INT16)(gWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 			wcscat( pStr, L"%%" );
 			mprintf( usX, usY, pStr );
@@ -4007,7 +4018,7 @@ void RenderItemDescriptionBox( )
 		{
 			SetFontForeground( FONT_FCOLOR_WHITE );
 			SetFontShadow( DEFAULT_SHADOW );
-			swprintf( pStr, L"%ld", gpItemDescObject->uiMoneyAmount );
+			swprintf( pStr, L"%ld", gpItemDescObject->ItemData.Money.uiMoneyAmount );
 			InsertCommasForDollarFigure( pStr );
 			InsertDollarSignInToString( pStr );
 
@@ -4043,14 +4054,14 @@ void RenderItemDescriptionBox( )
 			{
 				// Ammo - print amount
 				//Status
-				swprintf( pStr, L"%d/%d", gpItemDescObject->ubShotsLeft[gubItemDescStatusIndex], Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize );		  //Pulmu: Correct # of rounds for stacked ammo
+				swprintf( pStr, L"%d/%d", gpItemDescObject->ItemData.Ammo.ubShotsLeft[gubItemDescStatusIndex], Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize );		  //Pulmu: Correct # of rounds for stacked ammo
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 2 ].sX + gsInvDescX + gWeaponStats[ 2 ].sValDx), (INT16)(gWeaponStats[ 2 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
 			else
 			{
 				//Status
-				swprintf( pStr, L"%2d%%", gpItemDescObject->bStatus[ gubItemDescStatusIndex ] );
+				swprintf( pStr, L"%2d%%", gpItemDescObject->ItemData.Generic.bStatus[ gubItemDescStatusIndex ] );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 1 ].sX + gsInvDescX + gWeaponStats[ 1 ].sValDx), (INT16)(gWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				wcscat( pStr, L"%%" );
 				mprintf( usX, usY, pStr );
@@ -4068,12 +4079,12 @@ void RenderItemDescriptionBox( )
 
 				
 				SetFontForeground( 5 );
-				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), sTempString  ); 
+				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ gpItemDescObject->ItemData.Key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ gpItemDescObject->ItemData.Key.ubKeyID ].usSectorFound ), sTempString  ); 
 				swprintf( pStr, L"%s", sTempString );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gWeaponStats[ 4 ].sY + gsInvDescY ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 
-				swprintf( pStr, L"%d", KeyTable[ gpItemDescObject->ubKeyID ].usDateFound );
+				swprintf( pStr, L"%d", KeyTable[ gpItemDescObject->ItemData.Key.ubKeyID ].usDateFound );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gWeaponStats[ 4 ].sY + gsInvDescY + GetFontHeight( BLOCKFONT ) + 2 ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
@@ -4109,7 +4120,7 @@ void DeleteItemDescriptionBox( )
 {
 	INT32 cnt, cnt2;
 	BOOLEAN	fFound, fAllFound;
-	UINT8 ubAPCost;
+	UINT8 ubAPCost = 0;
 
 	if( gfInItemDescBox == FALSE )
 	{
@@ -4444,7 +4455,7 @@ BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo )
 	bTargetDirection = (INT8)GetDirectionToGridNoFromGridNo( pSoldier->sGridNo, sSrcGridNo );
 
 	// Look 3 directions Clockwise from what we are facing....
-	bDirection = pSoldier->bDirection;
+	bDirection = pSoldier->ubDirection;
 
 	for ( cnt = 0; cnt < 3; cnt++ )
 	{
@@ -4457,7 +4468,7 @@ BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo )
 	}
 
 	// Look 3 directions CounterClockwise from what we are facing....
-	bDirection = pSoldier->bDirection;
+	bDirection = pSoldier->ubDirection;
 
 	for ( cnt = 0; cnt < 3; cnt++ )
 	{
@@ -4801,7 +4812,6 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	OBJECTTYPE TempObject;
 	INT16			sGridNo;
 	INT16			sDist;
-	INT16			sDistVisible;
 
 
 	if ( SelectedGuyInBusyAnimation( ) )
@@ -4816,7 +4826,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	}
 
 	// Don't allow if our soldier is a # of things...
-	if ( AM_AN_EPC( gpItemPointerSoldier ) || gpItemPointerSoldier->bLife < OKLIFE || gpItemPointerSoldier->bOverTerrainType == DEEP_WATER )
+	if ( AM_AN_EPC( gpItemPointerSoldier ) || gpItemPointerSoldier->bLife < OKLIFE || MercInDeepWater( gpItemPointerSoldier) )
 	{
 		return( FALSE );
 	}
@@ -5089,10 +5099,8 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 						return( FALSE );
 					}
 
-					sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gpItemPointerSoldier->sGridNo, gpItemPointerSoldier->bLevel, gpItemPointerSoldier );
-
 					// Check LOS....
-					if ( !SoldierTo3DLocationLineOfSightTest( pSoldier, gpItemPointerSoldier->sGridNo,  gpItemPointerSoldier->bLevel, 3, (UINT8) sDistVisible, TRUE ) )
+					if ( !SoldierTo3DLocationLineOfSightTest( pSoldier, gpItemPointerSoldier->sGridNo,  gpItemPointerSoldier->bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
 					{
 						return( FALSE );
 					}
@@ -5122,7 +5130,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 						  ubFacingDirection = (UINT8)GetDirectionFromGridNo( gpItemPointerSoldier->sGridNo, pSoldier );
 
 						  // Stop merc first....
-						  EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+						  EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->ubDirection );
 
 						  // WANNE: Also turn merc if he is crouched and he passes an item
 						  if ( !MercInWater( pSoldier ) )
@@ -5662,7 +5670,7 @@ void RenderKeyRingPopup( BOOLEAN fFullRender )
 	memset( &pObject, 0, sizeof( OBJECTTYPE ) );
 
 	pObject.usItem = KEY_1;
-	pObject.bStatus[ 0 ] = 100;
+	pObject.ItemData.Generic.bStatus[ 0 ] = 100;
 
 	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
 	GetVideoObject( &hVObject, guiItemPopupBoxes );
@@ -6506,7 +6514,7 @@ void SetupPickupPage( INT8 bPage )
 			pObject = (gfStealing)? &gpOpponent->inv[pTempItemPool->iItemIndex]
 				:&(gWorldItems[ pTempItemPool->iItemIndex ].o );
 
-		  sValue = pObject->bStatus[ 0 ];
+		  sValue = pObject->ItemData.Generic.bStatus[ 0 ];
 
 	    // Adjust for ammo, other thingys..
 	    if( Item[ pObject->usItem ].usItemClass & IC_AMMO || Item[ pObject->usItem ].usItemClass & IC_KEY )
@@ -6778,7 +6786,7 @@ void RenderItemPickupMenu( )
 				if ( Item[ pObject->usItem ].usItemClass == IC_MONEY )
 				{
 					CHAR16		pStr2[20];
-					swprintf( pStr2, L"%ld", pObject->uiMoneyAmount );
+					swprintf( pStr2, L"%ld", pObject->ItemData.Money.uiMoneyAmount );
 					InsertCommasForDollarFigure( pStr2 );
 					InsertDollarSignInToString( pStr2 );
 
@@ -7326,22 +7334,22 @@ void RemoveMoney()
 			InvSlot.bSlotIdInOtherLocation = -1;
 
 			//Remove the money from the money in the pocket
-			gpItemDescObject->uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
+			gpItemDescObject->ItemData.Money.uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
 
 				//Create an item to get the money that is being removed
 			CreateItem( MONEY, 0, &InvSlot.ItemObject );
 
 			//Set the amount thast is being removed
-			InvSlot.ItemObject.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
+			InvSlot.ItemObject.ItemData.Money.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
 			InvSlot.ubIdOfMercWhoOwnsTheItem = gpItemDescSoldier->ubProfile;
 
 			//if we are removing money from the players account
 			if( gfAddingMoneyToMercFromPlayersAccount )
 			{
-				gpItemDescObject->uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
+				gpItemDescObject->ItemData.Money.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
 
 				//take the money from the player
-				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( gpItemDescObject->uiMoneyAmount ) );
+				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( gpItemDescObject->ItemData.Money.uiMoneyAmount ) );
 			}
 
 			memcpy( &gMoveingItem, &InvSlot, sizeof( INVENTORY_IN_SLOT ) );
@@ -7367,13 +7375,13 @@ void RemoveMoney()
 			//if we are removing money from the players account
 			if( gfAddingMoneyToMercFromPlayersAccount )
 			{
-				gpItemDescObject->uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
+				gpItemDescObject->ItemData.Money.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
 
 				//take the money from the player
-				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( gpItemDescObject->uiMoneyAmount ) );
+				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( gpItemDescObject->ItemData.Money.uiMoneyAmount ) );
 			}
 			else
-				gpItemDescObject->uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
+				gpItemDescObject->ItemData.Money.uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
 
 
 
@@ -7422,17 +7430,33 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 		}
 	}
 
+/* 2007-05-27, Sergeant_Kolja: code temporarily added for tracking the 
+   SKI Tony inventory crash.
+   Remove when fixed!
+ */
+# if defined( _DEBUG )
+  if ( (pObject->ItemData.Gun.ubGunAmmoType >= MAXITEMS) 
+     )
+  {
+    DebugMsg(TOPIC_JA2, DBG_LEVEL_1, String( "corrupted pObject (%s) found in GetHelpTextForItem()", (usItem<MAXITEMS) ? Item[usItem].szItemName : "???" ));
+  	ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"corrupted pObject (%S) found in GetHelpTextForItem()"    , (usItem<MAXITEMS) ? Item[usItem].szItemName : "???" );
+    DebugBreak();
+    AssertMsg( 0, "GetHelpTextForItem() would crash" );
+  }
+#endif
+    
+
 	if ( usItem != NOTHING )
 	{
 		// Retrieve the status of the items
 		// Find the minimum status value - not just the first one
-		INT16 sValue = pObject->bStatus[ 0 ];
+		INT16 sValue = pObject->ItemData.Generic.bStatus[ 0 ];
 
 		for(INT16 i = 1; i < pObject->ubNumberOfObjects; i++)
 		{
-			if(pObject->bStatus[ i ] < sValue)
+			if(pObject->ItemData.Generic.bStatus[ i ] < sValue)
 			{
-				sValue = pObject->bStatus[ i ];
+				sValue = pObject->ItemData.Generic.bStatus[ i ];
 			}
 		}
 
@@ -7458,7 +7482,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 		case MONEY:
 			//Money
 			{	
-				swprintf( pStr, L"%ld", pObject->uiMoneyAmount );
+				swprintf( pStr, L"%ld", pObject->ItemData.Money.uiMoneyAmount );
 				InsertCommasForDollarFigure( pStr );
 				InsertDollarSignInToString( pStr );
 			}
@@ -7469,7 +7493,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 			//if ( Item[ usItem ].usItemClass == IC_MONEY )
 			{ 
 				CHAR16		pStr2[20];
-				swprintf( pStr2, L"%ld", pObject->uiMoneyAmount );
+				swprintf( pStr2, L"%ld", pObject->ItemData.Money.uiMoneyAmount );
 				InsertCommasForDollarFigure( pStr2 );
 				InsertDollarSignInToString( pStr2 );
 
@@ -7606,7 +7630,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 				// The next is for ammunition which gets the measurement 'rnds'		
 				swprintf( pStr, L"%s [%d rnds]\n%s %1.1f %s", 				
 					ItemNames[ usItem ],		//Item long name
-					pObject->ubShotsLeft[0],	//Shots left
+					pObject->ItemData.Ammo.ubShotsLeft[0],	//Shots left
 					gWeaponStatsDesc[ 12 ],		//Weight String
 					fWeight,					//Weight
 					GetWeightUnitString()		//Weight units
@@ -8015,7 +8039,6 @@ BOOLEAN InitializeStealItemPickupMenu( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOppo
 		}
 
 		// CHECK FOR LEFT/RIGHT
-		// WANNE 2
 		if ( ( sX + gItemPickupMenu.sWidth ) > SCREEN_WIDTH )
 		{
 			sX = SCREEN_WIDTH - gItemPickupMenu.sWidth - ITEMPICK_START_X_OFFSET;
@@ -8037,7 +8060,6 @@ BOOLEAN InitializeStealItemPickupMenu( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOppo
 		}
 
 		// Check for bottom
-		// WANNE 2
 		if ( ( sY + gItemPickupMenu.sHeight ) > (SCREEN_HEIGHT - INV_INTERFACE_HEIGHT) )
 		{
 			sY = (SCREEN_HEIGHT - INV_INTERFACE_HEIGHT) - gItemPickupMenu.sHeight;
@@ -8069,7 +8091,6 @@ BOOLEAN InitializeStealItemPickupMenu( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOppo
 	/*MSYS_DefineRegion( &(gItemPickupMenu.BackRegion ), (INT16)( 532 ), (INT16)( 367 ), (INT16)( 640 ),(INT16)( 480 ), MSYS_PRIORITY_HIGHEST,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK ); */
 
-	// WANNE 2
 	// Build a mouse region here that is over any others.....
 	MSYS_DefineRegion( &(gItemPickupMenu.BackRegion ), (INT16)( iScreenWidthOffset + 532 ), (INT16)( iScreenHeightOffset + 367 ), (INT16)( SCREEN_WIDTH ),(INT16)( SCREEN_HEIGHT ), MSYS_PRIORITY_HIGHEST,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK ); 

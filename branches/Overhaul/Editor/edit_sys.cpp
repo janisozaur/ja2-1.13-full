@@ -1,4 +1,3 @@
-// WANNE: EDTIOR: no changes
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -542,7 +541,7 @@ void PasteStructure2( UINT32 iMapIndex )
 //
 void PasteStructureCommon( UINT32 iMapIndex )
 {
-	BOOLEAN				fDoPaste = FALSE;
+//	BOOLEAN				fDoPaste = FALSE;
 	UINT32				fHeadType;
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
@@ -1171,17 +1170,24 @@ void RaiseWorldLand( )
 
 		while( pStruct )
 		{
+			// Skip cached tiles
+			if (pStruct->usIndex >= NUMBEROFTILES)
+			{
+				pStruct = pStruct->pNext;
+				continue;
+			}
+
 			pTileElement = &(gTileDatabase[ pStruct->usIndex ]);
 			if (pTileElement->fType==FIRSTCLIFF)
 			{	
 				fSomethingRaised = TRUE;
+				usIndex=pStruct->usIndex;
 				// DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("Cliff found at count=%d",cnt)); 						     
 				if( pTileElement->ubNumberOfTiles > 1 )
 				{
 					// DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("Cliff has %d children", pTileElement->ubNumberOfTiles));
 					for (ubLoop = 0; ubLoop < pTileElement->ubNumberOfTiles; ubLoop++)
 					{
-						usIndex=pStruct->usIndex;
 						// need means to turn land raising on and off based on the tile ID and the offset in the
 						// tile database when reading into the mapsystem
 						// turning off of land raising can only be done

@@ -1,4 +1,3 @@
-// WANNE: EDITOR: done
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -282,7 +281,7 @@ UINT32 ProcessLoadSaveScreenMessageBoxResult()
 		RemoveFileDialog();
 		return EDIT_SCREEN ;
 	}
-	Assert( 0 );
+//	Assert( 0 );
 	return LOADSAVE_SCREEN;
 }
 
@@ -458,7 +457,6 @@ void CreateFileDialog( STR16 zTitle )
 
 	//File list window
 
-	// WANNE: EDITOR?
 	iFileDlgButtons[4] = CreateHotSpot( (iScreenWidthOffset + 179+4), (iScreenHeightOffset + 69+3), (179+4+240), (69+120+3), MSYS_PRIORITY_HIGH-1, BUTTON_NO_CALLBACK, FDlgNamesCallback);	
 	//Title button
 	iFileDlgButtons[5] = CreateTextButton(zTitle, HUGEFONT, FONT_LTKHAKI, FONT_DKKHAKI,
@@ -1069,31 +1067,13 @@ BOOLEAN ExtractFilenameFromFields()
 
 BOOLEAN ValidCoordinate()
 {
-	if( gzFilename[0] >= 'A' && gzFilename[0] <= 'P' ||
-		gzFilename[0] >= 'a' && gzFilename[0] <='p' )
-	{
-		UINT16 usTotal;
-		if( gzFilename[1] == '1' && gzFilename[2] >= '0' && gzFilename[2] <= '6' )
-		{
-			usTotal = ( gzFilename[1] - 0x30 ) * 10 + ( gzFilename[2] - 0x30 );
-		}
-		else if( gzFilename[1] >= '1' && gzFilename[1] <= '9')
-		{
-			if( gzFilename[2] < '0' || gzFilename[2] > '9' )
-			{
-				usTotal = ( gzFilename[1] - 0x30 );
-			}
-			else
-			{
-				return FALSE;
-			}
-		}
-		if( usTotal >= 1 && usTotal <= 16 )
-		{
-			return TRUE;
-		}
-	}
-	return FALSE;
+    CHAR16 sectorY = 0; 
+	UINT16 sectorX = 0;
+	swscanf( gzFilename, L"%c%2hd", &sectorY, &sectorX);
+
+	sectorY = towupper( sectorY);
+	return ( sectorY >= 'A' && sectorY <= 'P' &&
+		sectorX >= 1 && sectorX <= 16);
 }
 
 BOOLEAN ValidFilename()

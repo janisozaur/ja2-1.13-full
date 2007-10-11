@@ -35,8 +35,8 @@
 //*******  Local Defines **************************************************
 
 
-#define		DC_MAX_COVER_RANGE					42 //31
-#define		DC__SOLDIER_VISIBLE_RANGE			42 //31
+#define		DC_MAX_COVER_RANGE					43 //31
+#define		DC__SOLDIER_VISIBLE_RANGE			43 //31
 
 #define		DC__MIN_SIZE						4
 #define		DC__MAX_SIZE						21 //11
@@ -338,15 +338,15 @@ void CalculateCoverInRadiusAroundGridno( INT16 sTargetGridNo, INT8	bSearchRange 
 
 	pSoldier = GetCurrentMercForDisplayCover();
 
-	sCounterX = sCounterY = 0;
+//	sCounterX = sCounterY = 0;
 
 	//Determine the stance to use
 	bStance = GetCurrentMercForDisplayCoverStance();
 
 	//loop through all the gridnos that we are interested in
-	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
+	for (sCounterY = 0, sCounterX = 0, sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++, sCounterY++, sCounterX = 0)
 	{
-		for (sXOffset = -sMaxLeft; sXOffset <= sMaxRight; sXOffset++)
+		for (sXOffset = -sMaxLeft; sXOffset <= sMaxRight; sXOffset++, sCounterX++)
 		{
 			sGridNo = sTargetGridNo + sXOffset + (MAXCOL * sYOffset);
 
@@ -381,7 +381,7 @@ void CalculateCoverInRadiusAroundGridno( INT16 sTargetGridNo, INT8	bSearchRange 
 			if ( !(gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REACHABLE) )
 			{
 				//skip to the next gridno
-				sCounterX++;
+//				sCounterX++;
 				continue;
 			}
 
@@ -403,10 +403,10 @@ void CalculateCoverInRadiusAroundGridno( INT16 sTargetGridNo, INT8	bSearchRange 
 //			gCoverRadius[ sCounterX ][ sCounterY ].fRoof = fRoof;
 
 
-			sCounterX++;
+//			sCounterX++;
 		}
-		sCounterY++;
-		sCounterX = 0;
+//		sCounterY++;
+//		sCounterX = 0;
 	}
 }
 
@@ -427,7 +427,6 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 	INT32		iCover=0;
 	UINT16	usMaxRange;
 	UINT16	usRange;
-	UINT16	usSightLimit;
 
 	//loop through all the enemies and determine the cover 
 	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
@@ -458,18 +457,8 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 			continue;          // next merc
 		}
 
-		usRange = (UINT16)GetRangeInCellCoordsFromGridNoDiff( pOpponent->sGridNo, sTargetGridNo );
-        // Lesh: changed 2-nd parameter in DistanceVisible function call
-		usSightLimit = DistanceVisible( pOpponent, (SoldierHasLimitedVision(pOpponent) ? pOpponent->bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sTargetGridNo, pSoldier->bLevel, pSoldier );
-
-
-		if( usRange > ( usSightLimit * CELL_X_SIZE ) )
-		{
-			continue;
-		}
-
 		// if actual LOS check fails, then chance to hit is 0, ignore this guy
-		if( SoldierToVirtualSoldierLineOfSightTest( pOpponent, sTargetGridNo, pSoldier->bLevel, bStance, (UINT8)usSightLimit, TRUE ) == 0 )
+		if( SoldierToVirtualSoldierLineOfSightTest( pOpponent, sTargetGridNo, pSoldier->bLevel, bStance, TRUE, CALC_FROM_WANTED_DIR ) == 0 )
 		{
 			continue;
 		}
@@ -486,6 +475,7 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 			usMaxRange = Weapon[ GLOCK_18 ].usRange;
 		}
 
+		usRange = (UINT16)GetRangeInCellCoordsFromGridNoDiff( pOpponent->sGridNo, sTargetGridNo );
 		iBulletGetThrough = __min( __max( (INT32)( ( ( ( ( usMaxRange - usRange ) / (FLOAT)( usMaxRange ) ) + .3 ) * 100 ) ), 0 ), 100 );
 
 		if( iBulletGetThrough > 5 && iGetThrough > 0 )
@@ -964,13 +954,13 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOL
 	}
 
     // Lesh: changed 2-nd parameter in DistanceVisible function call
-	usSightLimit = DistanceVisible( pSoldier, (SoldierHasLimitedVision(pSoldier) ? pSoldier->bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sTargetGridNo, fRoof, pSoldier );
+	usSightLimit = pSoldier->GetMaxDistanceVisible(sTargetGridNo, fRoof, CALC_FROM_WANTED_DIR);
 
 
 	//
 	// Prone
 	//
-	iLosForGridNo = SoldierToVirtualSoldierLineOfSightTest( pSoldier, sTargetGridNo, fRoof, ANIM_PRONE, (UINT8)usSightLimit, bAware );
+	iLosForGridNo = SoldierToVirtualSoldierLineOfSightTest( pSoldier, sTargetGridNo, fRoof, ANIM_PRONE, bAware, usSightLimit );
 	if( iLosForGridNo != 0 )
 	{
 		bRetVal++;
@@ -979,7 +969,7 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOL
 	//
 	// Crouch
 	//
-	iLosForGridNo = SoldierToVirtualSoldierLineOfSightTest( pSoldier, sTargetGridNo, fRoof, ANIM_CROUCH, (UINT8)usSightLimit, bAware );
+	iLosForGridNo = SoldierToVirtualSoldierLineOfSightTest( pSoldier, sTargetGridNo, fRoof, ANIM_CROUCH, bAware, usSightLimit );
 	if( iLosForGridNo != 0 )
 	{
 		bRetVal++;
@@ -988,7 +978,7 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOL
 	//
 	// Standing
 	//
-	iLosForGridNo = SoldierToVirtualSoldierLineOfSightTest( pSoldier, sTargetGridNo, fRoof, ANIM_STAND, (UINT8)usSightLimit, bAware );
+	iLosForGridNo = SoldierToVirtualSoldierLineOfSightTest( pSoldier, sTargetGridNo, fRoof, ANIM_STAND, bAware, usSightLimit );
 	if( iLosForGridNo != 0 )
 	{
 		bRetVal++;

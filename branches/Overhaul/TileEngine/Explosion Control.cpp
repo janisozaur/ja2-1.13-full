@@ -247,7 +247,7 @@ void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16
 	// Let's check for the attacker first.
 	if (  ubOwner != NOBODY )
 	{
-		if ( !( Item[ usItem ].usItemClass & IC_EXPLOSV ) &&  AmmoTypes[MercPtrs[ubOwner]->inv[MercPtrs[ubOwner]->ubAttackingHand ].ubGunAmmoType].explosionSize < 2 )
+		if ( !( Item[ usItem ].usItemClass & IC_EXPLOSV ) &&  AmmoTypes[MercPtrs[ubOwner]->inv[MercPtrs[ubOwner]->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].explosionSize < 2 )
 		{
 			return; // no explosive and attackers gun is not fireing HE
 		}
@@ -274,7 +274,7 @@ void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16
 	// No explosive but an attacker with HE ammo.
 	if ( !( Item[ usItem ].usItemClass & IC_EXPLOSV ) && ubOwner != NOBODY)
 	{
-		ExpParams.ubTypeID = (INT8)Explosive[AmmoTypes[MercPtrs[ubOwner]->inv[MercPtrs[ubOwner]->ubAttackingHand ].ubGunAmmoType].highExplosive].ubAnimationID;
+		ExpParams.ubTypeID = (INT8)Explosive[AmmoTypes[MercPtrs[ubOwner]->inv[MercPtrs[ubOwner]->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].highExplosive].ubAnimationID;
 		// return;
 	}
 	else // just normal explosives should get here
@@ -406,7 +406,7 @@ void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion )
 	AniParams.sStartFrame = pExplosion->sCurrentFrame;
 	AniParams.uiFlags  = ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_EXPLOSION;
 
-	if ( ubTerrainType == LOW_WATER || ubTerrainType == MED_WATER || ubTerrainType == DEEP_WATER )
+	if ( TERRAIN_IS_WATER(ubTerrainType) )
 	{
 		// Change type to water explosion...
 		ubTypeID = WATER_BLAST;
@@ -500,8 +500,8 @@ void UpdateExplosionFrame( INT32 iIndex, INT16 sCurrentFrame )
 		if ( gExplosionData[iIndex].iLightID != -1 )
 		{
 			INT16 iX, iY;
-			iX = gExplosionData[iIndex].Params.sX/CELL_X_SIZE + Random(3) - 1;
-			iY = gExplosionData[iIndex].Params.sY/CELL_Y_SIZE + Random(3) - 1;
+			iX = (INT16) (gExplosionData[iIndex].Params.sX/CELL_X_SIZE + Random(3) - 1);
+			iY = (INT16) (gExplosionData[iIndex].Params.sY/CELL_Y_SIZE + Random(3) - 1);
 			LightSpritePosition( gExplosionData[iIndex].iLightID, iX, iY);
 		}
 	}
@@ -1209,18 +1209,17 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 
 STRUCTURE *gStruct;
 
-// Lesh: somewhere here once I got CTD when militia stepped on mine in cambria sam
 void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLEAN *pfRecompileMovementCosts, BOOLEAN fOnlyWalls, INT8 bMultiStructSpecialFlag, BOOLEAN fSubSequentMultiTilesTransitionDamage, UINT8 ubOwner, INT8 bLevel )
 {
 	STRUCTURE   * pCurrent, *pNextCurrent, *pStructure;
 	STRUCTURE *   pBaseStructure;
 	INT16    sDesiredLevel;
-	DB_STRUCTURE_TILE **ppTile;
+	DB_STRUCTURE_TILE **ppTile = NULL;
 	UINT8    ubLoop, ubLoop2;
-	INT16    sNewGridNo, sNewGridNo2, sBaseGridNo;
+	INT16    sNewGridNo, sNewGridNo2, sBaseGridNo = NOWHERE;
 	BOOLEAN    fToBreak = FALSE;
 	BOOLEAN    fMultiStructure = FALSE;
-	UINT8    ubNumberOfTiles;
+	UINT8    ubNumberOfTiles = 0xff;
 	BOOLEAN    fMultiStructSpecialFlag = FALSE;
 	BOOLEAN    fExplodeDamageReturn = FALSE;
 
@@ -1233,7 +1232,7 @@ void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 	// (1) we might need to destroy the currently-examined structure
 	while (pCurrent != NULL)
 	{
-		// ATE: These are for the chacks below for multi-structs....
+		// ATE: These are for the checks below for multi-structs....
 		pBaseStructure = FindBaseStructure( pCurrent );
 
 		if ( pBaseStructure )
@@ -1243,7 +1242,6 @@ void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 			fMultiStructure = ( ( pBaseStructure->fFlags & STRUCTURE_MULTI ) != 0 );
 			ppTile = (DB_STRUCTURE_TILE **) MemAlloc( sizeof( DB_STRUCTURE_TILE* ) * ubNumberOfTiles );
 
-			// Lesh: CTD was in next line once
 			memcpy( ppTile, pBaseStructure->pDBStructureRef->ppTile, sizeof( DB_STRUCTURE_TILE* ) * ubNumberOfTiles );
 
 			if ( bMultiStructSpecialFlag == -1 )
@@ -1271,7 +1269,7 @@ void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 		{
 			fExplodeDamageReturn = ExplosiveDamageStructureAtGridNo( pCurrent, &pNextCurrent,  sGridNo, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, 0, ubOwner, bLevel );
 
-			// Are we overwritting damage due to multi-tile...?
+			// Are we overwriting damage due to multi-tile...?
 			if ( fExplodeDamageReturn )
 			{
 				if ( fSubSequentMultiTilesTransitionDamage == 2)
@@ -1288,65 +1286,74 @@ void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 			{
 				fToBreak = TRUE;
 			}
-		}
+			//}
 
-		// OK, for multi-structs...
-		// AND we took damage...
-		if ( fMultiStructure && !fOnlyWalls && fExplodeDamageReturn == 0 )
-		{
-			// ATE: Don't after first attack...
-			if ( uiDist > 1 )
+			// 0verhaul:  The following was combined with the previous code block.  I don't think they intended to execute this
+			// part unless fExplodeDamageReturn was actually set.  When it was being executed, tossing a grenade just behind the
+			// plane in Drassen, for instance, would cause an infinite recursion in this code.  The reason is that the plane's
+			// armor is (amazingly enough) stronger than a grenade blast can even damage.  This code here seems to rely on the
+			// structure in question being destroyed by the blast since it indiscriminently recurses on neighbors, creating a 
+			// ping pong on two adjacent parts of the plane.  Probably the reason this was not found before is that fExplodeDamageReturn
+			// was uninitialized before and usually was non-zero.  Now it is initialized to false.
+
+			// OK, for multi-structs...
+			// AND we took damage...
+			if ( fMultiStructure && !fOnlyWalls && fExplodeDamageReturn == 0 )
 			{
-				if ( pBaseStructure )
+				// ATE: Don't after first attack...
+				if ( uiDist > 1 )
 				{
-					MemFree( ppTile );
-				}
-				return;
-			}
-
-			{
-
-				for ( ubLoop = BASE_TILE; ubLoop < ubNumberOfTiles; ubLoop++)
-				{
-					sNewGridNo = sBaseGridNo + ppTile[ubLoop]->sPosRelToBase;
-
-					// look in adjacent tiles
-					for ( ubLoop2 = 0; ubLoop2 < NUM_WORLD_DIRECTIONS; ubLoop2++ )
+					if ( pBaseStructure )
 					{
-						sNewGridNo2 = NewGridNo( sNewGridNo, DirectionInc( ubLoop2 ) );
-						if ( sNewGridNo2 != sNewGridNo && sNewGridNo2 != sGridNo )
+						MemFree( ppTile );
+					}
+					return;
+				}
+
+				{
+
+					for ( ubLoop = BASE_TILE; ubLoop < ubNumberOfTiles; ubLoop++)
+					{
+						sNewGridNo = sBaseGridNo + ppTile[ubLoop]->sPosRelToBase;
+
+						// look in adjacent tiles
+						for ( ubLoop2 = 0; ubLoop2 < NUM_WORLD_DIRECTIONS; ubLoop2++ )
 						{
-							pStructure = FindStructure( sNewGridNo2, STRUCTURE_MULTI );
-							if ( pStructure ) 
+							sNewGridNo2 = NewGridNo( sNewGridNo, DirectionInc( ubLoop2 ) );
+							if ( sNewGridNo2 != sNewGridNo && sNewGridNo2 != sGridNo )
 							{
-								fMultiStructSpecialFlag = ( ( pStructure->fFlags & STRUCTURE_SPECIAL ) != 0 );
-
-								if ( ( bMultiStructSpecialFlag == fMultiStructSpecialFlag ) )
+								pStructure = FindStructure( sNewGridNo2, STRUCTURE_MULTI );
+								if ( pStructure ) 
 								{
-									// If we just damaged it, use same damage value....
-									if ( fMultiStructSpecialFlag )
-									{
-										ExplosiveDamageGridNo( sNewGridNo2, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, bMultiStructSpecialFlag, 1, ubOwner, bLevel );
-									}
-									else
-									{
-										ExplosiveDamageGridNo( sNewGridNo2, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, bMultiStructSpecialFlag, 2, ubOwner, bLevel );
-									}
+									fMultiStructSpecialFlag = ( ( pStructure->fFlags & STRUCTURE_SPECIAL ) != 0 );
 
+									if ( ( bMultiStructSpecialFlag == fMultiStructSpecialFlag ) )
 									{
-										InternalIgniteExplosion( ubOwner, CenterX( sNewGridNo2 ), CenterY( sNewGridNo2 ), 0, sNewGridNo2, RDX, FALSE, bLevel );
-									}
+										// If we just damaged it, use same damage value....
+										if ( fMultiStructSpecialFlag )
+										{
+											ExplosiveDamageGridNo( sNewGridNo2, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, bMultiStructSpecialFlag, 1, ubOwner, bLevel );
+										}
+										else
+										{
+											ExplosiveDamageGridNo( sNewGridNo2, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, bMultiStructSpecialFlag, 2, ubOwner, bLevel );
+										}
 
-									fToBreak = TRUE;
+										{
+											InternalIgniteExplosion( ubOwner, CenterX( sNewGridNo2 ), CenterY( sNewGridNo2 ), 0, sNewGridNo2, RDX, FALSE, bLevel );
+										}
+
+										fToBreak = TRUE;
+									}
 								}
 							}
 						}
 					}
 				}
-			}
-			if ( fToBreak )
-			{
-				break;
+				if ( fToBreak )
+				{
+					break;
+				}
 			}
 		}
 
@@ -1484,7 +1491,7 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 		}
 
 		bPosOfMask = FindGasMask(pSoldier);
-		if (  bPosOfMask == NO_SLOT || pSoldier->inv[ bPosOfMask ].bStatus[0] < USABLE )
+		if (  bPosOfMask == NO_SLOT || pSoldier->inv[ bPosOfMask ].ItemData.Generic.bStatus[0] < USABLE )
 		{
 			bPosOfMask = NO_SLOT;
 		}
@@ -1499,10 +1506,10 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 
 		if ( bPosOfMask != NO_SLOT  )
 		{
-			if ( pSoldier->inv[ bPosOfMask ].bStatus[0] < GASMASK_MIN_STATUS )
+			if ( pSoldier->inv[ bPosOfMask ].ItemData.Generic.bStatus[0] < GASMASK_MIN_STATUS )
 			{
 				// GAS MASK reduces breath loss by its work% (it leaks if not at least 70%)
-				sBreathAmt = ( sBreathAmt * ( 100 - pSoldier->inv[ bPosOfMask ].bStatus[0] ) ) / 100;
+				sBreathAmt = ( sBreathAmt * ( 100 - pSoldier->inv[ bPosOfMask ].ItemData.Generic.bStatus[0] ) ) / 100;
 				if ( sBreathAmt > 500 )
 				{
 					// if at least 500 of breath damage got through
@@ -1516,12 +1523,14 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 
 					if ( sWoundAmt > 1 )
 					{
-						pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 4 );
-						sWoundAmt = ( sWoundAmt * ( 100 -  pSoldier->inv[ bPosOfMask ].bStatus[0] ) ) / 100;
+						pSoldier->inv[ bPosOfMask ].ItemData.Generic.bStatus[0] =
+							pSoldier->inv[ bPosOfMask ].ItemData.Generic.bStatus[0] - (INT8) Random( 4 );
+						sWoundAmt = ( sWoundAmt * ( 100 -  pSoldier->inv[ bPosOfMask ].ItemData.Generic.bStatus[0] ) ) / 100;
 					}
 					else if ( sWoundAmt == 1 )
 					{
-						pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 2 );
+						pSoldier->inv[ bPosOfMask ].ItemData.Generic.bStatus[0] =
+							pSoldier->inv[ bPosOfMask ].ItemData.Generic.bStatus[0] - (INT8) Random( 2 );
 					}
 				}
 			}
@@ -1532,12 +1541,14 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 				{
 					if ( sWoundAmt == 1 )
 					{
-						pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 2 );
+						pSoldier->inv[ bPosOfMask ].ItemData.Generic.bStatus[0] =
+							pSoldier->inv[ bPosOfMask ].ItemData.Generic.bStatus[0] - (INT8) Random( 2 );
 					}
 					else
 					{
 						// use up gas mask
-						pSoldier->inv[ bPosOfMask ].bStatus[0] -= (INT8) Random( 4 );
+						pSoldier->inv[ bPosOfMask ].ItemData.Generic.bStatus[0] =
+							pSoldier->inv[ bPosOfMask ].ItemData.Generic.bStatus[0] - (INT8) Random( 4 );
 					}
 				}
 				sWoundAmt = 0;     
@@ -1586,7 +1597,7 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 
 BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner,  INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID )
 {
-	INT16 sWoundAmt = 0,sBreathAmt = 0, sNewWoundAmt = 0, sNewBreathAmt = 0, sStructDmgAmt;
+	INT16 sWoundAmt = 0,sBreathAmt = 0, /* sNewWoundAmt = 0, sNewBreathAmt = 0, */ sStructDmgAmt;
 	UINT8 ubPerson;
 	SOLDIERTYPE *pSoldier;
 	EXPLOSIVETYPE *pExplosive;
@@ -1694,8 +1705,8 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 		else if (uiDist < pExplosive->ubRadius)
 		{
 			// if radius is 5, go down by 5ths ~ 20%
-			sWoundAmt -= (INT16)  (sWoundAmt * uiDist / pExplosive->ubRadius );
-			sBreathAmt -= (INT16) (sBreathAmt * uiDist / pExplosive->ubRadius );
+			sWoundAmt = sWoundAmt - (INT16)  (sWoundAmt * uiDist / pExplosive->ubRadius );
+			sBreathAmt = sBreathAmt - (INT16) (sBreathAmt * uiDist / pExplosive->ubRadius );
 		}
 		else
 		{
@@ -1853,7 +1864,7 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 		}
 		else
 		{
-			if ( ( ubPerson = WhoIsThere2(sGridNo, bLevel ) ) >= NOBODY )
+			if ( ( ubPerson = WhoIsThere2(sGridNo, bLevel ) ) >= TOTAL_SOLDIERS )
 			{
 				return( fRecompileMovementCosts );
 			}
@@ -2468,10 +2479,10 @@ void ToggleActionItemsByFrequency( INT8 bFrequency )
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-			if ( pObj->bDetonatorType == BOMB_REMOTE )
+			if ( pObj->ItemData.Trigger.bDetonatorType == BOMB_REMOTE )
 			{
 				// Found a remote bomb, so check to see if it has the same frequency
-				if (pObj->bFrequency == bFrequency)
+				if (pObj->ItemData.Trigger.BombTrigger.bFrequency == bFrequency)
 				{
 					// toggle its active flag
 					if (pObj->fFlags & OBJECT_DISABLED_BOMB)
@@ -2499,7 +2510,7 @@ void TogglePressureActionItemsInGridNo( INT16 sGridNo )
 		if ( gWorldBombs[uiWorldBombIndex].fExists && gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].sGridNo == sGridNo )
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-			if ( pObj->bDetonatorType == BOMB_PRESSURE )
+			if ( pObj->ItemData.Trigger.bDetonatorType == BOMB_PRESSURE )
 			{
 				// Found a pressure item
 				// toggle its active flag
@@ -2560,7 +2571,7 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 {
 	STRUCTURE * pStructure;
 
-	switch( pObj->bActionValue )
+	switch( pObj->ItemData.Trigger.bActionValue )
 	{
 	case ACTION_ITEM_OPEN_DOOR:
 		pStructure = FindStructure( sGridNo, STRUCTURE_ANYDOOR );
@@ -2862,7 +2873,7 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 					{
 
 						// stop the merc...
-						EVENT_StopMerc( MercPtrs[ ubID ], MercPtrs[ ubID ]->sGridNo, MercPtrs[ ubID ]->bDirection );
+						EVENT_StopMerc( MercPtrs[ ubID ], MercPtrs[ ubID ]->sGridNo, MercPtrs[ ubID ]->ubDirection );
 
 						switch( sGridNo )
 						{
@@ -2890,7 +2901,7 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 						if ( sDoorSpot != NOWHERE && sTeleportSpot != NOWHERE )
 						{
 							// close the door... 
-							DoorCloser.bActionValue = ACTION_ITEM_CLOSE_DOOR;
+							DoorCloser.ItemData.Trigger.bActionValue = ACTION_ITEM_CLOSE_DOOR;
 							PerformItemAction( sDoorSpot, &DoorCloser );
 
 							// have sex
@@ -2999,17 +3010,17 @@ void HandleExplosionQueue( void )
 			sGridNo = gWorldItems[ gWorldBombs[ uiWorldBombIndex ].iItemIndex ].sGridNo;
 			ubLevel = gWorldItems[ gWorldBombs[ uiWorldBombIndex ].iItemIndex ].ubLevel;
 
-			if (pObj->usItem == ACTION_ITEM && pObj->bActionValue != ACTION_ITEM_BLOW_UP)
+			if (pObj->usItem == ACTION_ITEM && pObj->ItemData.Trigger.bActionValue != ACTION_ITEM_BLOW_UP)
 			{
 				PerformItemAction( sGridNo, pObj );
 			}
-			else if ( pObj->usBombItem == TRIP_KLAXON )
+			else if ( pObj->ItemData.Trigger.usBombItem == TRIP_KLAXON )
 			{
 				PlayJA2Sample( KLAXON_ALARM, RATE_11025, SoundVolume( MIDVOLUME, sGridNo ), 5, SoundDir( sGridNo ) );
 				CallAvailableEnemiesTo( sGridNo );
 				//RemoveItemFromPool( sGridNo, gWorldBombs[ uiWorldBombIndex ].iItemIndex, 0 );
 			}
-			else if ( pObj->usBombItem == TRIP_FLARE )
+			else if ( pObj->ItemData.Trigger.usBombItem == TRIP_FLARE )
 			{
 				NewLightEffect( sGridNo, (UINT8)Explosive[pObj->usItem].ubDuration, (UINT8)Explosive[pObj->usItem].ubStartRadius );
 				RemoveItemFromPool( sGridNo, gWorldBombs[ uiWorldBombIndex ].iItemIndex, ubLevel );
@@ -3032,14 +3043,14 @@ void HandleExplosionQueue( void )
 				// BOOM!
 
 				// bomb objects only store the SIDE who placed the bomb! :-(
-				if ( pObj->ubBombOwner > 1 )
+				if ( pObj->ItemData.Trigger.ubBombOwner > 1 )
 				{
-					IgniteExplosion( (UINT8) (pObj->ubBombOwner - 2), CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, pObj->usBombItem, ubLevel );
+					IgniteExplosion( (UINT8) (pObj->ItemData.Trigger.ubBombOwner - 2), CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, pObj->ItemData.Trigger.usBombItem, ubLevel );
 				}
 				else
 				{
 					// pre-placed
-					IgniteExplosion( NOBODY, CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, pObj->usBombItem, ubLevel );
+					IgniteExplosion( NOBODY, CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, pObj->ItemData.Trigger.usBombItem, ubLevel );
 				}
 			}
 
@@ -3117,25 +3128,25 @@ void DecayBombTimers( void )
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-			if ( pObj->bDetonatorType == BOMB_TIMED && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
+			if ( pObj->ItemData.Trigger.bDetonatorType == BOMB_TIMED && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
 			{
 				// Found a timed bomb, so decay its delay value and see if it goes off
-				pObj->bDelay--;
-				if (pObj->bDelay == 0)
+				pObj->ItemData.Trigger.BombTrigger.bDelay--;
+				if (pObj->ItemData.Trigger.BombTrigger.bDelay == 0)
 				{
 					// put this bomb on the queue
 					AddBombToQueue( uiWorldBombIndex, uiTimeStamp );
 					// ATE: CC black magic....
-					if ( pObj->ubBombOwner > 1 )
+					if ( pObj->ItemData.Trigger.ubBombOwner > 1 )
 					{
-						gubPersonToSetOffExplosions = (UINT8) (pObj->ubBombOwner - 2);
+						gubPersonToSetOffExplosions = (UINT8) (pObj->ItemData.Trigger.ubBombOwner - 2);
 					}
 					else
 					{
 						gubPersonToSetOffExplosions = NOBODY;
 					}
 
-					if (pObj->usItem != ACTION_ITEM || pObj->bActionValue == ACTION_ITEM_BLOW_UP)
+					if (pObj->usItem != ACTION_ITEM || pObj->ItemData.Trigger.bActionValue == ACTION_ITEM_BLOW_UP)
 					{
 						uiTimeStamp += BOMB_QUEUE_DELAY;
 					}
@@ -3159,17 +3170,17 @@ void SetOffBombsByFrequency( UINT8 ubID, INT8 bFrequency )
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-			if ( pObj->bDetonatorType == BOMB_REMOTE && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
+			if ( pObj->ItemData.Trigger.bDetonatorType == BOMB_REMOTE && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
 			{
 				// Found a remote bomb, so check to see if it has the same frequency
-				if (pObj->bFrequency == bFrequency)
+				if (pObj->ItemData.Trigger.BombTrigger.bFrequency == bFrequency)
 				{
 
 					gubPersonToSetOffExplosions = ubID;
 
 					// put this bomb on the queue
 					AddBombToQueue( uiWorldBombIndex, uiTimeStamp );
-					if (pObj->usItem != ACTION_ITEM || pObj->bActionValue == ACTION_ITEM_BLOW_UP)
+					if (pObj->usItem != ACTION_ITEM || pObj->ItemData.Trigger.bActionValue == ACTION_ITEM_BLOW_UP)
 					{
 						uiTimeStamp += BOMB_QUEUE_DELAY;
 					}
@@ -3234,7 +3245,7 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
 			if (!(pObj->fFlags & OBJECT_DISABLED_BOMB))
 			{
-				if (fAllBombs || pObj->bDetonatorType == BOMB_PRESSURE)
+				if (fAllBombs || pObj->ItemData.Trigger.bDetonatorType == BOMB_PRESSURE)
 				{
 					// Snap: if we do set off our own trap (e.g. by trying to disarm it), we pay!
 					/*if (!fAllBombs && MercPtrs[ ubID ]->bTeam != gbPlayerNum )
@@ -3258,7 +3269,7 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 					{
 						// send out a signal to detonate other bombs, rather than this which
 						// isn't a bomb but a trigger
-						SetOffBombsByFrequency( ubID, pObj->bFrequency );
+						SetOffBombsByFrequency( ubID, pObj->ItemData.Trigger.BombTrigger.bFrequency );
 					}
 					else
 					{
@@ -3266,12 +3277,12 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 
 						// put this bomb on the queue
 						AddBombToQueue( uiWorldBombIndex, uiTimeStamp );
-						if (pObj->usItem != ACTION_ITEM || pObj->bActionValue == ACTION_ITEM_BLOW_UP)
+						if (pObj->usItem != ACTION_ITEM || pObj->ItemData.Trigger.bActionValue == ACTION_ITEM_BLOW_UP)
 						{
 							uiTimeStamp += BOMB_QUEUE_DELAY;
 						}
 
-						if ( pObj->usBombItem != NOTHING && Item[ pObj->usBombItem ].usItemClass & IC_EXPLOSV )
+						if ( pObj->ItemData.Trigger.usBombItem != NOTHING && Item[ pObj->ItemData.Trigger.usBombItem ].usItemClass & IC_EXPLOSV )
 						{
 							fFoundMine = TRUE;
 						}
@@ -3296,7 +3307,7 @@ void ActivateSwitchInGridNo( UINT8 ubID, INT16 sGridNo )
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
 
-			if ( pObj->usItem == SWITCH && ( !(pObj->fFlags & OBJECT_DISABLED_BOMB) ) && pObj->bDetonatorType == BOMB_SWITCH)
+			if ( pObj->usItem == SWITCH && ( !(pObj->fFlags & OBJECT_DISABLED_BOMB) ) && pObj->ItemData.Trigger.bDetonatorType == BOMB_SWITCH)
 			{
 				// send out a signal to detonate other bombs, rather than this which
 				// isn't a bomb but a trigger
@@ -3305,7 +3316,7 @@ void ActivateSwitchInGridNo( UINT8 ubID, INT16 sGridNo )
 				// No, not a good idea.
 				// gTacticalStatus.ubAttackBusyCount = 0;
 
-				SetOffBombsByFrequency( ubID, pObj->bFrequency );
+				SetOffBombsByFrequency( ubID, pObj->ItemData.Trigger.BombTrigger.bFrequency );
 			}
 		}
 	}
@@ -3393,7 +3404,7 @@ BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
 BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile )
 {
 	UINT32 uiNumBytesRead;
-	UINT32 uiExplosionCount=0;
+	//UINT32 uiExplosionCount=0;
 	UINT32 uiCnt;
 
 
@@ -3501,7 +3512,8 @@ void UpdateAndDamageSAMIfFound( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 
 	if ( StrategicMap[ sSectorNo ].bSAMCondition >= ubDamage )
 	{
-		StrategicMap[ sSectorNo ].bSAMCondition -= ubDamage;
+		StrategicMap[ sSectorNo ].bSAMCondition =
+			StrategicMap[ sSectorNo ].bSAMCondition - ubDamage;
 	}
 	else
 	{
@@ -3631,7 +3643,7 @@ INT32 FindActiveTimedBomb( void )
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-			if ( pObj->bDetonatorType == BOMB_TIMED && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
+			if ( pObj->ItemData.Trigger.bDetonatorType == BOMB_TIMED && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
 			{
 				return( gWorldBombs[uiWorldBombIndex].iItemIndex );  
 			}
@@ -3673,7 +3685,7 @@ UINT8 DetermineFlashbangEffect( SOLDIERTYPE *pSoldier, INT8 ubExplosionDir, BOOL
 	INT8 bNumTurns;
 	UINT16 usHeadItem1, usHeadItem2;
 
-	bNumTurns   = FindNumTurnsBetweenDirs(pSoldier->bDirection, ubExplosionDir);
+	bNumTurns   = FindNumTurnsBetweenDirs(pSoldier->ubDirection, ubExplosionDir);
 	usHeadItem1 = pSoldier->inv[ HEAD1POS ].usItem;
 	usHeadItem2 = pSoldier->inv[ HEAD2POS ].usItem;
 

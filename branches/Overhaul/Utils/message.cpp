@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "Utils All.h"
 	#include "Game Clock.h"
@@ -38,7 +37,7 @@ typedef struct
 } StringSaveStruct;
 
 
-// WANNE These lines defines the message position in tactical screen.
+// WANNE: These lines defines the message position in tactical screen.
 #define MAX_LINE_COUNT 6
 #define X_START 2
 #define MAX_AGE 10000
@@ -226,6 +225,9 @@ BOOLEAN CreateStringVideoOverlay( ScrollStringStPtr pStringSt, UINT16 usX, UINT1
 {
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 
+	// WDS - bug fix: VideoOverlayDesc must be initialized! - 07/16/2007
+	memset( &VideoOverlayDesc, 0, sizeof( VIDEO_OVERLAY_DESC ) );
+
 	// SET VIDEO OVERLAY
 	VideoOverlayDesc.sLeft			 = usX;
 	VideoOverlayDesc.sTop				 = usY;
@@ -350,7 +352,7 @@ void ClearDisplayedListOfTacticalStrings( void )
 
 void ScrollString( )
 {
-	ScrollStringStPtr pStringSt = pStringS;
+	//ScrollStringStPtr pStringSt = pStringS;
 	UINT32 suiTimer=0;
 	UINT32 cnt;
   INT32 iNumberOfNewStrings = 0; // the count of new strings, so we can update position by WIDTH_BETWEEN_NEW_STRINGS pixels in the y
@@ -358,7 +360,7 @@ void ScrollString( )
 	INT32 iMaxAge = 0;
 	BOOLEAN fDitchLastMessage = FALSE;
 
-	INT32 iMsgYStart = SCREEN_HEIGHT - 150;
+	INT16 iMsgYStart = SCREEN_HEIGHT - 150;
 
 	// UPDATE TIMER
 	suiTimer=GetJA2Clock();
@@ -702,18 +704,18 @@ void TacticalScreenMsg( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 	
 	ScrollStringStPtr pStringSt;
 	UINT32 uiFont = TINYFONT1;
-	UINT16 usPosition=0;
-	UINT16 usCount=0;
-	UINT16 usStringLength=0;
-	UINT16 usCurrentSPosition=0;
-	UINT16 usCurrentLookup=0;
+	//UINT16 usPosition=0;
+	//UINT16 usCount=0;
+	//UINT16 usStringLength=0;
+	//UINT16 usCurrentSPosition=0;
+	//UINT16 usCurrentLookup=0;
 	//STR16pString;
-	BOOLEAN fLastLine=FALSE;
+	//BOOLEAN fLastLine=FALSE;
   va_list argptr;
 
   CHAR16	DestString[512];//, DestStringA[ 512 ];
 	//STR16pStringBuffer;
-  BOOLEAN fMultiLine=FALSE;
+  //BOOLEAN fMultiLine=FALSE;
   ScrollStringStPtr pTempStringSt=NULL;
   WRAPPED_STRING *pStringWrapper=NULL;
   WRAPPED_STRING *pStringWrapperHead=NULL;
@@ -855,17 +857,17 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 	 
 	ScrollStringStPtr pStringSt;
 	UINT32 uiFont = MAP_SCREEN_MESSAGE_FONT;
-	UINT16 usPosition=0;
-	UINT16 usCount=0;
-	UINT16 usStringLength=0;
-	UINT16 usCurrentSPosition=0;
-	UINT16 usCurrentLookup=0;
+	//UINT16 usPosition=0;
+	//UINT16 usCount=0;
+	//UINT16 usStringLength=0;
+	//UINT16 usCurrentSPosition=0;
+	//UINT16 usCurrentLookup=0;
 	//STR16pString;
-	BOOLEAN fLastLine=FALSE;
+	//BOOLEAN fLastLine=FALSE;
   va_list argptr;
   CHAR16	DestString[512], DestStringA[ 512 ];
 	//STR16pStringBuffer;
-  BOOLEAN fMultiLine=FALSE;
+  //BOOLEAN fMultiLine=FALSE;
   WRAPPED_STRING *pStringWrapper=NULL;
   WRAPPED_STRING *pStringWrapperHead=NULL;
   BOOLEAN fNewString = FALSE;
@@ -1031,7 +1033,7 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 // add string to the map screen message list
 void AddStringToMapScreenMessageList( STR16 pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString, UINT8 ubPriority )
 {
-	UINT8 ubSlotIndex = 0;
+	//UINT8 ubSlotIndex = 0;
   ScrollStringStPtr pStringSt = NULL;
 
 
@@ -1085,8 +1087,6 @@ void DisplayStringsInMapScreenMessageList( void )
 	INT16 sY;
 	UINT16 usSpacing;
 
-
-	// WANNE 2
 	//SetFontDestBuffer( FRAME_BUFFER, 17, 360 + 6, 407, 360 + 101, FALSE );
 
 	SetFontDestBuffer( FRAME_BUFFER, 17, (SCREEN_HEIGHT - 114), 407, (SCREEN_HEIGHT - 114) + 101, FALSE );
@@ -1097,7 +1097,6 @@ void DisplayStringsInMapScreenMessageList( void )
 
 	ubCurrentStringIndex = gubCurrentMapMessageString;
 
-	// WANNE 2
 	//sY = 377;
 	sY = (SCREEN_HEIGHT - 103);
 
@@ -1123,7 +1122,7 @@ void DisplayStringsInMapScreenMessageList( void )
 		// print this line
 		mprintf_coded( 20, sY, gMapScreenMessageList[ ubCurrentStringIndex ]->pString16 );
 
-		sY += usSpacing;
+		sY = sY + usSpacing;
 
 		// next message index to print (may wrap around)
 		ubCurrentStringIndex = ( ubCurrentStringIndex + 1 ) % 256;

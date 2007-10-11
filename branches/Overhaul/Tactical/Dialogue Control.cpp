@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 	#include "PreBattle Interface.h"
@@ -533,7 +532,7 @@ void HandleDialogue( )
 		}
 	}
 
-	// OK, check if we are still taking
+	// OK, check if we are still talking
 	if ( gpCurrentTalkingFace != NULL )
 	{
 		if ( gpCurrentTalkingFace->fTalking )
@@ -2011,7 +2010,6 @@ void ExecuteTacticalTextBox( INT16 sLeftPosition, STR16 pString )
 
 	// check if mouse region created, if so, do not recreate
 	
-	// WANNE 2
 	if( fTextBoxMouseRegionCreated == TRUE )
 	{
 		return;
@@ -2038,12 +2036,6 @@ void ExecuteTacticalTextBox( INT16 sLeftPosition, STR16 pString )
 
 	gsTopPosition = 20;
 
-	// WANNE 2
-	//if( fTextBoxMouseRegionCreated == TRUE )
-	//{
-	//	return;
-	//}
-
 	//Define main region
 	MSYS_DefineRegion( &gTextBoxMouseRegion,  VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,  VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, TextOverlayClickCallback ); 
@@ -2069,6 +2061,9 @@ void HandleExternNPCSpeechFace( INT32 iIndex )
 
 	// Set flag to say WE control when to set inactive!
 	gFacesData[ iFaceIndex ].uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
+
+	// WDS - bug fix: VideoOverlayDesc must be initialized! - 07/16/2007
+	memset( &VideoOverlayDesc, 0, sizeof( VIDEO_OVERLAY_DESC ) );
 
 	if ( guiCurrentScreen != MAP_SCREEN )
 	{
@@ -2564,7 +2559,7 @@ void SayQuoteFromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQuo
 	{
 		// Add guy if he's a candidate...
 		if ( OK_INSECTOR_MERC( pTeamSoldier ) && PythSpacesAway( sGridNo, pTeamSoldier->sGridNo ) < bDistance && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->fMercAsleep && 
-			SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo, 0, 0, (UINT8)MaxDistanceVisible(), TRUE ) )
+			SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo, 0, 0, TRUE ) )
 		{
 			if ( usQuoteNum == 66 && (INT8) Random( 100 ) > EffectiveWisdom( pTeamSoldier ) )
 			{
@@ -2608,7 +2603,7 @@ void SayQuote58FromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQ
 	{
 		// Add guy if he's a candidate...
 		if ( OK_INSECTOR_MERC( pTeamSoldier ) && PythSpacesAway( sGridNo, pTeamSoldier->sGridNo ) < bDistance && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->fMercAsleep &&
-			SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo, 0, 0, (UINT8)MaxDistanceVisible(), TRUE ) )
+			SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo, 0, 0, TRUE ) )
 		{
 			// ATE: This is to check gedner for this quote...
 			if ( QuoteExp_GenderCode[ pTeamSoldier->ubProfile ] == 0 && bSex == FEMALE )

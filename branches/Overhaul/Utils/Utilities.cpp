@@ -23,8 +23,8 @@ extern BOOLEAN GetCDromDriveLetter( STR8	pString );
 
 BOOLEAN PerformTimeLimitedCheck();
 
-// WANNE:
-/* Given a string, replaces all instances of "oldpiece" with "newpiece".
+// WANNE: Given a string, replaces all instances of "oldpiece" with "newpiece"
+/* 
  *
  * Modified this routine to eliminate recursion and to avoid infinite
  * expansion of string when newpiece contains oldpiece.  --Byron
@@ -499,9 +499,8 @@ BOOLEAN HandleJA2CDCheckTwo( )
 		return( TRUE );
 	}
 
-#endif
-
 	return( FALSE );
+#endif
 }
 
 

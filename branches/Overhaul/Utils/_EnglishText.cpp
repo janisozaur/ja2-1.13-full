@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "Utils All.h"
 #else
@@ -311,8 +310,8 @@ CHAR16 Message[][STRING_LENGTH] =
 	L"accurate",
 	L"inaccurate",
 	L"no semi auto",
-	L"The enemy has no more items to steal!",	// WANNE
-	L"The enemy has no item in its hand!", //WANNE
+	L"The enemy has no more items to steal!",
+	L"The enemy has no item in its hand!",
 };
 
 
@@ -642,6 +641,7 @@ STR16 pMilitiaControlMenuStrings[] =
 	L"All: Hold Position",
 	L"All: Retreat",
 	L"All: Come to me",
+	L"All: Spread out",
 	L"All: Get down",
 	L"All: Take cover",
 	//L"All: Find items",
@@ -1964,7 +1964,7 @@ STR16 pMapErrorString[] =
 	L"needs an escort to move. Place her on a squad with one.", // for a female
 	L"Merc hasn't yet arrived in Arulco!",
 	L"Looks like there's some contract negotiations to settle first.",
-	L"Cannot give a movement order. Air raid is going on.",		// WANNE 2
+	L"Cannot give a movement order. Air raid is going on.",
 //11-15
 	L"Movement orders? There's a battle going on!",
 	L"You have been ambushed by bloodcats in sector %s!",
@@ -2602,7 +2602,6 @@ STR16			MercAccountText[] =
 	L"Are you sure you want to authorize the payment of %s?",		//the %s is a string that contains the dollar amount ( ex. "$150" )
 };
 
-// WANNE:
 // Merc Account Page buttons
 STR16			MercAccountPageText[] = 
 {
@@ -2819,7 +2818,6 @@ STR16			BobbyROrderFormText[] =
 	L"Shipments",	
 };
 
-// WANNE
 STR16			BobbyRFilter[] =
 {
 	// Guns
@@ -3422,7 +3420,6 @@ STR16		zMarksMapScreenText[] =
 	L"%s is full of militia.",
 	L"Merc has a finite contract.", 
   L"Merc's contract is not insured",
-	// WANNE 2
 	L"Map Overview",		// 24
 };
 

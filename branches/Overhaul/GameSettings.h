@@ -347,10 +347,8 @@ typedef struct
 	BOOLEAN gfInvestigateSector;
 	BOOLEAN gfReassignPendingReinforcements;
 
-	// WANNE
 	INT32 ubEnemiesItemDrop;
 
-	// WANNE: External sector loadscreens [2007-05-19]
 	BOOLEAN	gfUseExternalLoadscreens;
 
 	BOOLEAN gfUseAutoSave;
@@ -440,6 +438,7 @@ BOOLEAN	SaveGameSettings();
 BOOLEAN LoadGameSettings();
 // Snap: Read options from an INI file in the default of custom Data directory
 void LoadGameExternalOptions();
+void FreeGameExternalOptions();
 
 void InitGameOptions();
 

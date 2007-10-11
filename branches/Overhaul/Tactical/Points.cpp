@@ -1,37 +1,38 @@
 #ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
+#include "Tactical All.h"
 #else
-	#include "sgp.h"
-	#include "worlddef.h"
-	#include "points.h"
-	#include "overhead.h"
-	#include "Font control.h"
-	#include "interface.h"
-	#include "Isometric utils.h"
-	#include "pathai.h"
-	#include "interface.h"
-	#include "message.h"
-	#include "Animation Control.h"
-	#include "Weapons.h"
+#include "sgp.h"
+#include "worlddef.h"
+#include "points.h"
+#include "overhead.h"
+#include "Font control.h"
+#include "interface.h"
+#include "Isometric utils.h"
+#include "pathai.h"
+#include "interface.h"
+#include "message.h"
+#include "Animation Control.h"
+#include "Weapons.h"
 
-	#include "structure wrap.h"
-	#include "dialogue control.h"
-	#include "items.h"
-	#include "rt time defines.h"
-	#include "ai.h"
-	#include "handle ui.h"
-	#include "text.h"
-	#include "SkillCheck.h"
-	#include "wcheck.h"
-	#include "Soldier Profile.h"
-	#include "Soldier macros.h"
-	#include "Random.h"
-	#include "Campaign.h"
-	#include "drugs and alcohol.h"
-	#include "GameSettings.h"
-	#include "worldman.h"
-	#include "math.h"
-	#include "Interface Items.h"
+#include "structure wrap.h"
+#include "dialogue control.h"
+#include "items.h"
+#include "rt time defines.h"
+#include "ai.h"
+#include "handle ui.h"
+#include "text.h"
+#include "SkillCheck.h"
+#include "wcheck.h"
+#include "Soldier Profile.h"
+#include "Soldier macros.h"
+#include "Random.h"
+#include "Campaign.h"
+#include "drugs and alcohol.h"
+#include "GameSettings.h"
+#include "worldman.h"
+#include "math.h"
+#include "Map Information.h"
+#include "Interface Items.h"
 #endif
 
 //rain
@@ -45,21 +46,21 @@ INT16 GetBreathPerAP( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
 
 INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8 bLevel )
 {
-		INT16	sAPCost = 0;
-	  INT16  sSwitchValue;
-		BOOLEAN		fHiddenStructVisible;				// Used for hidden struct visiblity
+	INT16	sAPCost = 0;
+	INT16  sSwitchValue;
+	BOOLEAN		fHiddenStructVisible;				// Used for hidden struct visiblity
 
- if ( pSoldier->bStealthMode )
-     sAPCost += AP_STEALTH_MODIFIER;
- 
- if ( pSoldier->bReverse || gUIUseReverse )
-     sAPCost += AP_REVERSE_MODIFIER;
+	if ( pSoldier->bStealthMode )
+		sAPCost += AP_STEALTH_MODIFIER;
 
- //if (GridCost[gridno] == NPCMINECOST)
- //   switchValue = BackupGridCost[gridno];
- //else
+	if ( pSoldier->bReverse || gUIUseReverse )
+		sAPCost += AP_REVERSE_MODIFIER;
 
-  sSwitchValue = gubWorldMovementCosts[sGridno][bDir][ bLevel ];
+	//if (GridCost[gridno] == NPCMINECOST)
+	//   switchValue = BackupGridCost[gridno];
+	//else
+
+	sSwitchValue = gubWorldMovementCosts[sGridno][bDir][ bLevel ];
 
 	// Check reality vs what the player knows....
 	if ( pSoldier->bTeam == gbPlayerNum )
@@ -82,53 +83,62 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 	}
 	else if (IS_TRAVELCOST_DOOR( sSwitchValue ))
 	{
+		// Can't travel diagonally through a door
+		if (bDir & 1)
+		{
+			return -1;
+		}
 		sSwitchValue = DoorTravelCost( pSoldier, sGridno, (UINT8) sSwitchValue, (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), NULL );
 	}
-
-	if (sSwitchValue >= TRAVELCOST_BLOCKED && sSwitchValue != TRAVELCOST_DOOR )
+	else if (gfPlotPathToExitGrid && sSwitchValue == TRAVELCOST_EXITGRID)
 	{
-	   return(100);	// Cost too much to be considered!
+		sSwitchValue = gTileTypeMovementCost[ gpWorldLevelData[ sGridno ].ubTerrainID ];
 	}
- 
-  switch( sSwitchValue )
-  {
-	 case TRAVELCOST_DIRTROAD :
-   case TRAVELCOST_FLAT			: sAPCost += AP_MOVEMENT_FLAT; 
-															break;
-    //case TRAVELCOST_BUMPY		:		
-   case TRAVELCOST_GRASS		: sAPCost += AP_MOVEMENT_GRASS;
-															break;
-	 case TRAVELCOST_THICK		:	sAPCost += AP_MOVEMENT_BUSH;
-															break;
-   case TRAVELCOST_DEBRIS		: sAPCost += AP_MOVEMENT_RUBBLE;
-															break;
-   case TRAVELCOST_SHORE		: sAPCost += AP_MOVEMENT_SHORE; // wading shallow water
-															break;
-   case TRAVELCOST_KNEEDEEP	:	sAPCost += AP_MOVEMENT_LAKE; // wading waist/chest deep - very slow
-															break;
-   
-	 case TRAVELCOST_DEEPWATER: sAPCost += AP_MOVEMENT_OCEAN; // can swim, so it's faster than wading
-															break;
-/*
-   case TRAVELCOST_VEINEND	:
-   case TRAVELCOST_VEINMID	: sAPCost += AP_MOVEMENT_FLAT;
-															break;
-*/
-   case TRAVELCOST_DOOR			: sAPCost += AP_MOVEMENT_FLAT;
-															break;
+
+	if (sSwitchValue >= TRAVELCOST_BLOCKED && sSwitchValue != TRAVELCOST_DOOR)
+	{
+		return(-1);	// Cost too much to be considered!
+	}
+
+	switch( sSwitchValue )
+	{
+	case TRAVELCOST_DIRTROAD :
+	case TRAVELCOST_FLAT			: sAPCost += AP_MOVEMENT_FLAT; 
+		break;
+		//case TRAVELCOST_BUMPY		:		
+	case TRAVELCOST_GRASS		: sAPCost += AP_MOVEMENT_GRASS;
+		break;
+	case TRAVELCOST_THICK		:	sAPCost += AP_MOVEMENT_BUSH;
+		break;
+	case TRAVELCOST_DEBRIS		: sAPCost += AP_MOVEMENT_RUBBLE;
+		break;
+	case TRAVELCOST_SHORE		: sAPCost += AP_MOVEMENT_SHORE; // wading shallow water
+		break;
+	case TRAVELCOST_KNEEDEEP	:	sAPCost += AP_MOVEMENT_LAKE; // wading waist/chest deep - very slow
+		break;
+
+	case TRAVELCOST_DEEPWATER: sAPCost += AP_MOVEMENT_OCEAN; // can swim, so it's faster than wading
+		break;
+		/*
+		case TRAVELCOST_VEINEND	:
+		case TRAVELCOST_VEINMID	: sAPCost += AP_MOVEMENT_FLAT;
+		break;
+		*/
+	case TRAVELCOST_DOOR			: sAPCost += AP_MOVEMENT_FLAT + AP_OPEN_DOOR + AP_OPEN_DOOR; // Include open and close costs!
+		break;
 
 		// cost for jumping a fence REPLACES all other AP costs!
-	 case TRAVELCOST_FENCE		: return( AP_JUMPFENCE );
+	case TRAVELCOST_FENCE		: return( AP_JUMPFENCE );
 
-	 case TRAVELCOST_NONE			: return( 0 );
+	case TRAVELCOST_NONE			: return( 0 );
 
-   default:		
+	default:		
 
-		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Calc AP: Unrecongnized MP type %d in %d, direction %d", sSwitchValue, sGridno, bDir ) );
-			break;
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Calc AP: Unrecongnized MP type %d in %d, direction %d", sSwitchValue, sGridno, bDir ) );
+		break;
 
 
-  }
+	}
 
 	if (bDir & 1)
 	{
@@ -179,77 +189,77 @@ INT16 BreathPointAdjustmentForCarriedWeight( SOLDIERTYPE * pSoldier )
 
 INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT16 sGridno,INT8 bDir, UINT16 usMovementMode)
 {
- INT32 iPoints=0;
- UINT8 ubMovementCost;
-	
+	INT32 iPoints=0;
+	UINT8 ubMovementCost;
+
 	ubMovementCost = gubWorldMovementCosts[sGridno][bDir][0];
 
- switch( ubMovementCost )
- {
+	switch( ubMovementCost )
+	{
 	case TRAVELCOST_DIRTROAD  :
 	case TRAVELCOST_FLAT			: iPoints = BP_MOVEMENT_FLAT;		break;
-	//case TRAVELCOST_BUMPY			:	
-  case TRAVELCOST_GRASS			: iPoints = BP_MOVEMENT_GRASS;	break;
-  case TRAVELCOST_THICK			: iPoints = BP_MOVEMENT_BUSH;		break;
-  case TRAVELCOST_DEBRIS		: iPoints = BP_MOVEMENT_RUBBLE;	break;
-  case TRAVELCOST_SHORE			: iPoints = BP_MOVEMENT_SHORE;	break;	// wading shallow water
-  case TRAVELCOST_KNEEDEEP	: iPoints = BP_MOVEMENT_LAKE;		break;	// wading waist/chest deep - very slow
-  case TRAVELCOST_DEEPWATER	: iPoints = BP_MOVEMENT_OCEAN;	break;	// can swim, so it's faster than wading
-//  case TRAVELCOST_VEINEND		:
-//  case TRAVELCOST_VEINMID		: iPoints = BP_MOVEMENT_FLAT;		break;
+		//case TRAVELCOST_BUMPY			:	
+	case TRAVELCOST_GRASS			: iPoints = BP_MOVEMENT_GRASS;	break;
+	case TRAVELCOST_THICK			: iPoints = BP_MOVEMENT_BUSH;		break;
+	case TRAVELCOST_DEBRIS		: iPoints = BP_MOVEMENT_RUBBLE;	break;
+	case TRAVELCOST_SHORE			: iPoints = BP_MOVEMENT_SHORE;	break;	// wading shallow water
+	case TRAVELCOST_KNEEDEEP	: iPoints = BP_MOVEMENT_LAKE;		break;	// wading waist/chest deep - very slow
+	case TRAVELCOST_DEEPWATER	: iPoints = BP_MOVEMENT_OCEAN;	break;	// can swim, so it's faster than wading
+		//  case TRAVELCOST_VEINEND		:
+		//  case TRAVELCOST_VEINMID		: iPoints = BP_MOVEMENT_FLAT;		break;
 	default:
 		if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 		{
 			iPoints = BP_MOVEMENT_FLAT;
 			break;
 		}
-/*
-#ifdef TESTVERSION
-     NumMessage("ERROR: TerrainBreathPoints: Unrecognized grid cost = ",
-	     						GridCost[gridno]);
-#endif
-*/
-			return(0);
-  }
+		/*
+		#ifdef TESTVERSION
+		NumMessage("ERROR: TerrainBreathPoints: Unrecognized grid cost = ",
+		GridCost[gridno]);
+		#endif
+		*/
+		return(0);
+	}
 
 	iPoints = iPoints * BreathPointAdjustmentForCarriedWeight( pSoldier ) / 100;
 
-  // ATE - MAKE MOVEMENT ALWAYS WALK IF IN WATER
-	if ( gpWorldLevelData[ sGridno ].ubTerrainID == DEEP_WATER || gpWorldLevelData[ sGridno ].ubTerrainID == MED_WATER || gpWorldLevelData[ sGridno ].ubTerrainID == LOW_WATER )
-  {
-    usMovementMode = WALKING;
-  }
+	// ATE - MAKE MOVEMENT ALWAYS WALK IF IN WATER
+	if ( TERRAIN_IS_WATER( gpWorldLevelData[ sGridno ].ubTerrainID) )
+	{
+		usMovementMode = WALKING;
+	}
 
 	// so, then we must modify it for other movement styles and accumulate
 	switch(usMovementMode)
 	{
-		case RUNNING:	
-		case ADULTMONSTER_WALKING:	
-		case BLOODCAT_RUN:
-			
-			iPoints *= BP_RUN_ENERGYCOSTFACTOR;		break;
+	case RUNNING:	
+	case ADULTMONSTER_WALKING:	
+	case BLOODCAT_RUN:
 
-		case SIDE_STEP:
-		case WALK_BACKWARDS:
-		case BLOODCAT_WALK_BACKWARDS:
-		case MONSTER_WALK_BACKWARDS:
-		case WALKING :	iPoints *= BP_WALK_ENERGYCOSTFACTOR;	break;
+		iPoints *= BP_RUN_ENERGYCOSTFACTOR;		break;
 
-		case START_SWAT:
-		case SWATTING:	
-		case SWAT_BACKWARDS:
-			iPoints *= BP_SWAT_ENERGYCOSTFACTOR;	break;
-		case CRAWLING:	iPoints *= BP_CRAWL_ENERGYCOSTFACTOR;	break;
+	case SIDE_STEP:
+	case WALK_BACKWARDS:
+	case BLOODCAT_WALK_BACKWARDS:
+	case MONSTER_WALK_BACKWARDS:
+	case WALKING :	iPoints *= BP_WALK_ENERGYCOSTFACTOR;	break;
+
+	case START_SWAT:
+	case SWATTING:	
+	case SWAT_BACKWARDS:
+		iPoints *= BP_SWAT_ENERGYCOSTFACTOR;	break;
+	case CRAWLING:	iPoints *= BP_CRAWL_ENERGYCOSTFACTOR;	break;
 
 
 	}
 
 	// ATE: Adjust these by realtime movement
- if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
- {
+	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
+	{
 		// ATE: ADJUST FOR RT - MAKE BREATH GO A LITTLE FASTER!
 		iPoints	= (INT32)( iPoints * TB_BREATH_DEDUCT_MODIFIER );
- }
+	}
 
 
 	return( (INT16) iPoints);
@@ -264,51 +274,55 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 
 	// get the tile cost for that tile based on WALKING
 	sTileCost = TerrainActionPoints( pSoldier, sGridNo, bDir, pSoldier->bLevel );
+	if (sTileCost == -1)
+	{
+		return 100;
+	}
 
 	// Get switch value...
 	sSwitchValue = gubWorldMovementCosts[ sGridNo ][ bDir ][ pSoldier->bLevel ];
 
-  // Tile cost should not be reduced based on movement mode...
-  if ( sSwitchValue == TRAVELCOST_FENCE )
-  {
-    return( sTileCost );
-  }
+	// Tile cost should not be reduced based on movement mode...
+	if ( sSwitchValue == TRAVELCOST_FENCE )
+	{
+		return( sTileCost );
+	}
 
-  // ATE - MAKE MOVEMENT ALWAYS WALK IF IN WATER
-	if ( gpWorldLevelData[ sGridNo ].ubTerrainID == DEEP_WATER || gpWorldLevelData[ sGridNo ].ubTerrainID == MED_WATER || gpWorldLevelData[ sGridNo ].ubTerrainID == LOW_WATER )
-  {
-    usMovementMode = WALKING;
-  }
+	// ATE - MAKE MOVEMENT ALWAYS WALK IF IN WATER
+	if ( TERRAIN_IS_WATER( gpWorldLevelData[ sGridNo ].ubTerrainID) )
+	{
+		usMovementMode = WALKING;
+	}
 
 	// so, then we must modify it for other movement styles and accumulate
 	if (sTileCost > 0)
 	{
 		switch(usMovementMode)
 		{
-			case RUNNING:	
-			case ADULTMONSTER_WALKING:	
-			case BLOODCAT_RUN:
-				sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );	break;
+		case RUNNING:	
+		case ADULTMONSTER_WALKING:	
+		case BLOODCAT_RUN:
+			sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );	break;
 
-			case CROW_FLY:
-			case SIDE_STEP:
-			case WALK_BACKWARDS:
-			case ROBOT_WALK:
-			case BLOODCAT_WALK_BACKWARDS:
-			case MONSTER_WALK_BACKWARDS:
-      case LARVAE_WALK:
-			case WALKING :	sPoints = (sTileCost + WALKCOST);		break;
+		case CROW_FLY:
+		case SIDE_STEP:
+		case WALK_BACKWARDS:
+		case ROBOT_WALK:
+		case BLOODCAT_WALK_BACKWARDS:
+		case MONSTER_WALK_BACKWARDS:
+		case LARVAE_WALK:
+		case WALKING :	sPoints = (sTileCost + WALKCOST);		break;
 
-			case START_SWAT:
-			case SWAT_BACKWARDS:
-			case SWATTING:	sPoints = (sTileCost + SWATCOST);		break;
-			case CRAWLING:	sPoints = (sTileCost + CRAWLCOST);		break;
+		case START_SWAT:
+		case SWAT_BACKWARDS:
+		case SWATTING:	sPoints = (sTileCost + SWATCOST);		break;
+		case CRAWLING:	sPoints = (sTileCost + CRAWLCOST);		break;
 
-			default:
+		default:
 
-				// Invalid movement mode
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Invalid movement mode %d used in ActionPointCost", usMovementMode  ) );
-				sPoints = 1;
+			// Invalid movement mode
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Invalid movement mode %d used in ActionPointCost", usMovementMode  ) );
+			sPoints = 1;
 		}
 	}
 
@@ -316,17 +330,17 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 	{
 		switch(usMovementMode)
 		{
-			case RUNNING:	
-			case WALKING :
-      case LARVAE_WALK:
-			case SIDE_STEP:
-			case WALK_BACKWARDS:
-				// charge crouch APs for ducking head!
-				sPoints += AP_CROUCH;
-				break;
+		case RUNNING:	
+		case WALKING :
+		case LARVAE_WALK:
+		case SIDE_STEP:
+		case WALK_BACKWARDS:
+			// charge crouch APs for ducking head!
+			sPoints += AP_CROUCH;
+			break;
 
-			default:				
-				break;
+		default:				
+			break;
 		}
 	}
 
@@ -342,36 +356,40 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 
 	// get the tile cost for that tile based on WALKING
 	sTileCost = TerrainActionPoints( pSoldier, sGridNo, bDir, pSoldier->bLevel );
+	if (sTileCost == -1)
+	{
+		return 100;
+	}
 
 	// so, then we must modify it for other movement styles and accumulate
 	if (sTileCost > 0)
 	{
 		switch(usMovementMode)
 		{
-			case RUNNING:	
-			case ADULTMONSTER_WALKING:	
-			case BLOODCAT_RUN:
-				sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );	break;
+		case RUNNING:	
+		case ADULTMONSTER_WALKING:	
+		case BLOODCAT_RUN:
+			sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );	break;
 
-			case CROW_FLY:
-			case SIDE_STEP:
-			case ROBOT_WALK:
-			case WALK_BACKWARDS:
-			case BLOODCAT_WALK_BACKWARDS:
-			case MONSTER_WALK_BACKWARDS:
-      case LARVAE_WALK:
-			case WALKING :	sPoints = (sTileCost + WALKCOST);		break;
+		case CROW_FLY:
+		case SIDE_STEP:
+		case ROBOT_WALK:
+		case WALK_BACKWARDS:
+		case BLOODCAT_WALK_BACKWARDS:
+		case MONSTER_WALK_BACKWARDS:
+		case LARVAE_WALK:
+		case WALKING :	sPoints = (sTileCost + WALKCOST);		break;
 
-			case START_SWAT:
-			case SWAT_BACKWARDS:
-			case SWATTING:	sPoints = (sTileCost + SWATCOST);		break;
-			case CRAWLING:	sPoints = (sTileCost + CRAWLCOST);		break;
+		case START_SWAT:
+		case SWAT_BACKWARDS:
+		case SWATTING:	sPoints = (sTileCost + SWATCOST);		break;
+		case CRAWLING:	sPoints = (sTileCost + CRAWLCOST);		break;
 
-			default:
+		default:
 
-				// Invalid movement mode
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Invalid movement mode %d used in ActionPointCost", usMovementMode  ) );
-				sPoints = 1;
+			// Invalid movement mode
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Invalid movement mode %d used in ActionPointCost", usMovementMode  ) );
+			sPoints = 1;
 		}
 	}
 
@@ -385,54 +403,54 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 		// We need to reflect that...
 		switch(usMovementMode)
 		{
-			case SIDE_STEP:
-			case WALK_BACKWARDS:
-			case RUNNING:	
-			case WALKING :
+		case SIDE_STEP:
+		case WALK_BACKWARDS:
+		case RUNNING:	
+		case WALKING :
 
-				// Add here cost to go from crouch to stand AFTER fence hop....
-				// Since it's AFTER.. make sure we will be moving after jump...
-				if ( ( bPathIndex + 2 ) < bPathLength )
-				{
-					sPoints += AP_CROUCH;
-				}
-				break;
-
-			case SWATTING:	
-			case START_SWAT:
-			case SWAT_BACKWARDS:
-
-				// Add cost to stand once there BEFORE....
+			// Add here cost to go from crouch to stand AFTER fence hop....
+			// Since it's AFTER.. make sure we will be moving after jump...
+			if ( ( bPathIndex + 2 ) < bPathLength )
+			{
 				sPoints += AP_CROUCH;
-				break;
+			}
+			break;
 
-			case CRAWLING:	
+		case SWATTING:	
+		case START_SWAT:
+		case SWAT_BACKWARDS:
 
-				// Can't do it here.....
-				break;
+			// Add cost to stand once there BEFORE....
+			sPoints += AP_CROUCH;
+			break;
+
+		case CRAWLING:	
+
+			// Can't do it here.....
+			break;
 		}
 	}
 	else if (sSwitchValue == TRAVELCOST_NOT_STANDING)
 	{
 		switch(usMovementMode)
 		{
-			case RUNNING:	
-			case WALKING :
-			case SIDE_STEP:
-			case WALK_BACKWARDS:
-				// charge crouch APs for ducking head!
-				sPoints += AP_CROUCH;
-				break;
+		case RUNNING:	
+		case WALKING :
+		case SIDE_STEP:
+		case WALK_BACKWARDS:
+			// charge crouch APs for ducking head!
+			sPoints += AP_CROUCH;
+			break;
 
-			default:				
-				break;
+		default:				
+			break;
 		}
 	}
 
 	return( sPoints );
 }
 
-  
+
 
 BOOLEAN EnoughPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost, BOOLEAN fDisplayMsg )
 {
@@ -456,12 +474,12 @@ BOOLEAN EnoughPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost, BOOLE
 		sAPCost = 0;
 	}
 
-	#ifdef NETWORKED
+#ifdef NETWORKED
 	if( !IsTheSolderUnderMyControl( pSoldier->ubID)  )
 	{
 		return( TRUE );
 	}
-	#endif
+#endif
 
 	// Get New points
 	sNewAP = pSoldier->bActionPoints - sAPCost;
@@ -513,7 +531,7 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost,BOOLEAN f
 
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Deduct Points (%d at %d) %d %d", pSoldier->ubID, pSoldier->sGridNo, sAPCost, iBPCost  ) );
 
-  if ( AM_A_ROBOT( pSoldier ) )
+	if ( AM_A_ROBOT( pSoldier ) )
 	{
 		// zap all breath costs for robot
 		iBPCost = 0;
@@ -550,7 +568,7 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost,BOOLEAN f
 			// Snap: moved this up, because it had no effect below
 			// Take off 1 AP per 5 (negative) breath...
 			pSoldier->bActionPoints -= ( pSoldier->sBreathRed + iBPCost - BREATH_RED_MAX )
-				                       / ( 5 * BP_RATIO_RED_PTS_TO_NORMAL );
+				/ ( 5 * BP_RATIO_RED_PTS_TO_NORMAL );
 			if ( pSoldier->bActionPoints < 0 )
 			{
 				pSoldier->bActionPoints = 0;
@@ -565,7 +583,7 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost,BOOLEAN f
 
 		// Get new breath
 		bNewBreath = ( pSoldier->bBreathMax * BP_RATIO_RED_PTS_TO_NORMAL - pSoldier->sBreathRed )
-			         / BP_RATIO_RED_PTS_TO_NORMAL;
+			/ BP_RATIO_RED_PTS_TO_NORMAL;
 
 		// Snap: This should never happen...
 		if ( bNewBreath > pSoldier->bBreathMax )
@@ -590,49 +608,49 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost,BOOLEAN f
 
 INT32 AdjustBreathPts(SOLDIERTYPE *pSold, INT32 iBPCost)
 {
- INT16 sBreathFactor = 100;
- UINT8 ubBandaged;
+	INT16 sBreathFactor = 100;
+	UINT8 ubBandaged;
 
 
- //NumMessage("BEFORE adjustments, BREATH PTS = ",breathPts);
+	//NumMessage("BEFORE adjustments, BREATH PTS = ",breathPts);
 
- // in real time, there IS no AP cost, (only breath cost)
- /*
- if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
- {
-	 // ATE: ADJUST FOR RT - MAKE BREATH GO A LITTLE FASTER!
-	 iBPCost	*= TB_BREATH_DEDUCT_MODIFIER;
- }
- */
-
-
- // adjust breath factor for current breath deficiency
- sBreathFactor += (100 - pSold->bBreath);
-
- // adjust breath factor for current life deficiency (but add 1/2 bandaging)
- ubBandaged = pSold->bLifeMax - pSold->bLife - pSold->bBleeding;
- //sBreathFactor += (pSold->bLifeMax - (pSold->bLife + (ubBandaged / 2)));
- sBreathFactor += 100 * (pSold->bLifeMax - (pSold->bLife + (ubBandaged / 2))) / pSold->bLifeMax;
-
- if ( pSold->bStrength > 80 )
- {
-	 // give % reduction to breath costs for high strength mercs
-	 sBreathFactor -= (pSold->bStrength - 80) / 2;
- }
- 
-/*	THIS IS OLD JAGGED ALLIANCE STUFF (left for possible future reference)
-
- // apply penalty due to high temperature, heat, and hot Metaviran sun
- // if INDOORS, in DEEP WATER, or possessing HEAT TOLERANCE trait
- if ((ptr->terrtype == FLOORTYPE) || (ptr->terr >= OCEAN21) ||
-				       (ptr->trait == HEAT_TOLERANT))
-   breathFactor += (Status.heatFactor / 5);	// 20% of normal heat penalty
- else
-   breathFactor += Status.heatFactor;		// not used to this!
-*/
+	// in real time, there IS no AP cost, (only breath cost)
+	/*
+	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
+	{
+	// ATE: ADJUST FOR RT - MAKE BREATH GO A LITTLE FASTER!
+	iBPCost	*= TB_BREATH_DEDUCT_MODIFIER;
+	}
+	*/
 
 
- // if a non-swimmer type is thrashing around in deep water
+	// adjust breath factor for current breath deficiency
+	sBreathFactor += (100 - pSold->bBreath);
+
+	// adjust breath factor for current life deficiency (but add 1/2 bandaging)
+	ubBandaged = pSold->bLifeMax - pSold->bLife - pSold->bBleeding;
+	//sBreathFactor += (pSold->bLifeMax - (pSold->bLife + (ubBandaged / 2)));
+	sBreathFactor += 100 * (pSold->bLifeMax - (pSold->bLife + (ubBandaged / 2))) / pSold->bLifeMax;
+
+	if ( pSold->bStrength > 80 )
+	{
+		// give % reduction to breath costs for high strength mercs
+		sBreathFactor -= (pSold->bStrength - 80) / 2;
+	}
+
+	/*	THIS IS OLD JAGGED ALLIANCE STUFF (left for possible future reference)
+
+	// apply penalty due to high temperature, heat, and hot Metaviran sun
+	// if INDOORS, in DEEP WATER, or possessing HEAT TOLERANCE trait
+	if ((ptr->terrtype == FLOORTYPE) || (ptr->terr >= OCEAN21) ||
+	(ptr->trait == HEAT_TOLERANT))
+	breathFactor += (Status.heatFactor / 5);	// 20% of normal heat penalty
+	else
+	breathFactor += Status.heatFactor;		// not used to this!
+	*/
+
+
+	// if a non-swimmer type is thrashing around in deep water
 	if ( (pSold->ubProfile != NO_PROFILE ) && (gMercProfiles[ pSold->ubProfile ].bPersonalityTrait == NONSWIMMER) )
 	{
 		if ( pSold->usAnimState == DEEP_WATER_TRED || pSold->usAnimState == DEEP_WATER_SWIM)
@@ -641,19 +659,19 @@ INT32 AdjustBreathPts(SOLDIERTYPE *pSold, INT32 iBPCost)
 		}
 	}
 
- if ( sBreathFactor == 0 )
- {
+	if ( sBreathFactor == 0 )
+	{
 		iBPCost = 0;
- }
- else if (iBPCost > 0)		// breath DECREASE
-   // increase breath COST by breathFactor
-   iBPCost = ((iBPCost * sBreathFactor) / 100);
- else				// breath INCREASE
-   // decrease breath GAIN by breathFactor
-   iBPCost = ((iBPCost * 100) / sBreathFactor);
+	}
+	else if (iBPCost > 0)		// breath DECREASE
+		// increase breath COST by breathFactor
+		iBPCost = ((iBPCost * sBreathFactor) / 100);
+	else				// breath INCREASE
+		// decrease breath GAIN by breathFactor
+		iBPCost = ((iBPCost * 100) / sBreathFactor);
 
- 
- return(iBPCost);
+
+	return(iBPCost);
 }
 
 
@@ -697,7 +715,7 @@ void UnusedAPsToBreath(SOLDIERTYPE *pSold)
 		// If this value is -ve, we have a gain, else we have a loos which we should not really do
 		// We just want to limit this to no gain if we were doing stuff...
 		sBreathChange = 3 * sBreathPerAP;
-		
+
 		// Adjust for on drugs
 		HandleBPEffectDueToDrugs( pSold, &sBreathChange );
 
@@ -716,7 +734,7 @@ void UnusedAPsToBreath(SOLDIERTYPE *pSold)
 				sBreathPerAP = GetBreathPerAP( pSold, pSold->usLastMovementAnimPerRTBreathUpdate );
 
 				sRTBreathMod = sBreathPerAP * pSold->ubTilesMovedPerRTBreathUpdate;
-		
+
 				// Deduct some if we were exerting ourselves
 				// We add here because to gain breath, sBreathChange needs to be -ve
 				if ( sRTBreathMod > 0 )
@@ -765,8 +783,35 @@ void UnusedAPsToBreath(SOLDIERTYPE *pSold)
 
 			// adjust for carried weight
 			sBreathPerAP = sBreathPerAP * 100 / BreathPointAdjustmentForCarriedWeight( pSold );
-		
-			sBreathChange = (AP_MAXIMUM - sUnusedAPs) * sBreathPerAP;
+
+			if ( pSold->bTeam != CIV_TEAM && pSold->bTeam != gbPlayerNum)
+			{
+				switch( gGameOptions.ubDifficultyLevel )
+				{
+				case DIF_LEVEL_EASY:
+					sBreathChange = ((AP_MAXIMUM + gGameExternalOptions.iEasyAPBonus)- sUnusedAPs) * sBreathPerAP;
+					break;
+
+				case DIF_LEVEL_MEDIUM:
+					sBreathChange = ((AP_MAXIMUM + gGameExternalOptions.iExperiencedAPBonus)-sUnusedAPs) * sBreathPerAP;
+					break;
+
+				case DIF_LEVEL_HARD:
+					sBreathChange = ((AP_MAXIMUM + gGameExternalOptions.iExpertAPBonus)- sUnusedAPs) * sBreathPerAP;
+					break;
+
+				case DIF_LEVEL_INSANE:
+					sBreathChange = ((AP_MAXIMUM + gGameExternalOptions.iInsaneAPBonus)- sUnusedAPs) * sBreathPerAP;
+					break;
+
+				default:
+					sBreathChange = (AP_MAXIMUM - sUnusedAPs) * sBreathPerAP;
+				}
+			}
+			else
+			{
+				sBreathChange = ((AP_MAXIMUM + gGameExternalOptions.iPlayerAPBonus)- sUnusedAPs) * sBreathPerAP;
+			}
 		}
 		else
 		{
@@ -801,15 +846,15 @@ INT16 GetBreathPerAP( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 		{
 			switch( usAnimState )
 			{
-				case STANDING:
+			case STANDING:
 
-					sBreathPerAP = BP_PER_AP_LT_EFFORT;
-					break;
+				sBreathPerAP = BP_PER_AP_LT_EFFORT;
+				break;
 
-				case WALKING:
+			case WALKING:
 
-					sBreathPerAP = BP_PER_AP_MOD_EFFORT;
-					break;
+				sBreathPerAP = BP_PER_AP_MOD_EFFORT;
+				break;
 			}
 		}
 		else
@@ -817,15 +862,15 @@ INT16 GetBreathPerAP( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 
 			switch( usAnimState )
 			{
-				case STANDING:
+			case STANDING:
 
-					sBreathPerAP = BP_PER_AP_NO_EFFORT;
-					break;
+				sBreathPerAP = BP_PER_AP_NO_EFFORT;
+				break;
 
-				case WALKING:
+			case WALKING:
 
-					sBreathPerAP = BP_PER_AP_LT_EFFORT;
-					break;
+				sBreathPerAP = BP_PER_AP_LT_EFFORT;
+				break;
 			}
 		}
 		fAnimTypeFound = TRUE;
@@ -857,9 +902,13 @@ INT16 GetBreathPerAP( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 
 	//rain
 	// Reduce breath gain on 25%/rain intensity
-	if( sBreathPerAP < 0 && ( pSoldier->bLevel  ||!FindStructure( pSoldier->sGridNo, STRUCTURE_ROOF )  )  && pSoldier->bBreath > 1)
+	// Lalien: only for soldiers that are in loaded sector, 
+	if ( gfWorldLoaded &&  pSoldier->bInSector)
 	{
-		sBreathPerAP -= (INT16)( sBreathPerAP * gbCurrentRainIntensity * gGameExternalOptions.ubBreathGainReductionPerRainIntensity  / 100 );	
+		if( sBreathPerAP < 0 && ( pSoldier->bLevel  || !FindStructure( pSoldier->sGridNo, STRUCTURE_ROOF )  )  && pSoldier->bBreath > 1)
+		{
+			sBreathPerAP -= (INT16)( sBreathPerAP * gbCurrentRainIntensity * gGameExternalOptions.ubBreathGainReductionPerRainIntensity  / 100 );	
+		}
 	}
 	//end rain
 
@@ -871,33 +920,33 @@ UINT8 CalcAPsToBurst( INT8 bBaseActionPoints, OBJECTTYPE * pObj )
 {
 	INT32 aps;
 
-  // base APs is what you'd get from CalcActionPoints();
+	// base APs is what you'd get from CalcActionPoints();
 	// NB round UP, so 21-25 APs pay full
 	aps =  ( Weapon[ pObj->usItem ].bBurstAP * bBaseActionPoints + (AP_MAXIMUM - 1) ) / AP_MAXIMUM;
 
 	/*if ( GetPercentBurstFireAPReduction(pObj)>0 )
 	{
-		aps = (aps * 100) / (100 + GetBurstFireAPReductionStatus(pObj) / (100/GetPercentBurstFireAPReduction(pObj)));
+	aps = (aps * 100) / (100 + GetBurstFireAPReductionStatus(pObj) / (100/GetPercentBurstFireAPReduction(pObj)));
 	}
 
 	if ( GetPercentAPReduction(pObj)>0 )
 	{
-		aps = (aps * 100) / (100 + GetAPReductionStatus(pObj) / (100/GetPercentAPReduction(pObj)));
+	aps = (aps * 100) / (100 + GetAPReductionStatus(pObj) / (100/GetPercentAPReduction(pObj)));
 	}*/
-	
+
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToBurst: before bonus aps = %d, std bonus = %d, burst bonus = %d", aps,GetPercentAPReduction(pObj),GetPercentBurstFireAPReduction(pObj)));
 	// Snap: do this a little differently: % reduction means
 	// aps <- aps * ( 100 - red ) / 100
 	aps = ( aps	* ( 100 - GetPercentAPReduction(pObj) ) ) / 100;
-	
+
 	// Snap: moved this up to allow burst AP reduction up to 100%
 	aps = __max( aps, ( Weapon[ pObj->usItem ].bBurstAP + 1 ) / 2 );
 
 	aps = ( aps * ( 100 - GetPercentBurstFireAPReduction(pObj) ) ) / 100;
-	
+
 	if ( aps < 0 ) aps = 0;
 	else if ( aps > AP_MAXIMUM ) aps = AP_MAXIMUM;
-	
+
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToBurst: return aps = %d", aps));
 	return (UINT8) aps;
 }
@@ -905,14 +954,14 @@ UINT8 CalcAPsToBurst( INT8 bBaseActionPoints, OBJECTTYPE * pObj )
 
 UINT8 CalcAPsToAutofire( INT8 bBaseActionPoints, OBJECTTYPE * pObj, UINT8 bDoAutofire )
 {
-//	INT8 bAttachPos;
+	//	INT8 bAttachPos;
 	INT32 aps=AP_MAXIMUM + 1;
 	if ( GetAutofireShotsPerFiveAPs (pObj) )
 	{
 		// Snap: Do this just like in CalcAPsToBurst
 
 		const INT32 autofireaps = 
-		aps = ( ( 5 * bDoAutofire * bBaseActionPoints ) / GetAutofireShotsPerFiveAPs(pObj) + (AP_MAXIMUM - 1) ) / AP_MAXIMUM;
+			aps = ( ( 5 * bDoAutofire * bBaseActionPoints ) / GetAutofireShotsPerFiveAPs(pObj) + (AP_MAXIMUM - 1) ) / AP_MAXIMUM;
 
 		//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: base aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//check for spring and bolt
@@ -934,15 +983,15 @@ UINT8 CalcAPsToAutofire( INT8 bBaseActionPoints, OBJECTTYPE * pObj, UINT8 bDoAut
 		//	aps = ( aps * 100 ) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found reflex sight, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//}
-		
+
 		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutoFire: before bonus aps = %d, std bonus = %d, auto bonus = %d", aps,GetPercentAPReduction(pObj),GetPercentAutofireAPReduction(pObj)));
 		aps = ( aps	* ( 100 - GetPercentAPReduction(pObj) ) ) / 100;
-		
+
 		aps = __max( aps, ( autofireaps + 1 ) / 2 );
 
 		// Snap: extend the burst bonus to autofire as well?
 		aps = ( aps * ( 100 - GetPercentAutofireAPReduction(pObj) ) ) / 100;
-		
+
 		if ( aps < 0 ) aps = 0;
 		else if ( aps > AP_MAXIMUM ) aps = AP_MAXIMUM;
 	}
@@ -960,7 +1009,7 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 	UINT8							ubDirection;
 	INT16							sAdjustedGridNo;
 	UINT32						uiItemClass;
-	
+
 	// LOOK IN BUDDY'S HAND TO DETERMINE WHAT TO DO HERE
 	usItemNum = pSoldier->inv[HANDPOS].usItem;
 	uiItemClass = Item[ usItemNum ].usItemClass;
@@ -985,9 +1034,9 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 	//ATE: HERE, need to calculate APs!
 	if ( uiItemClass & IC_EXPLOSV )	
 	{
-		 sAPCost = MinAPsToAttack( pSoldier, sGridNo, ubAddTurningCost );
+		sAPCost = MinAPsToAttack( pSoldier, sGridNo, ubAddTurningCost );
 
-		 //sAPCost = 5;
+		//sAPCost = 5;
 	}
 
 	if ( uiItemClass == IC_PUNCH || ( uiItemClass == IC_BLADE && uiItemClass != IC_THROWING_KNIFE ) )
@@ -995,6 +1044,8 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 		// IF we are at this gridno, calc min APs but if not, calc cost to goto this lication
 		if ( pSoldier->sGridNo != sGridNo )
 		{
+			sAdjustedGridNo = NOWHERE;
+
 			// OK, in order to avoid path calculations here all the time... save and check if it's changed!
 			if ( pSoldier->sWalkToAttackGridNo == sGridNo )
 			{
@@ -1119,7 +1170,7 @@ UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCos
 		// LOOK IN BUDDY'S HAND TO DETERMINE WHAT TO DO HERE
 		uiItemClass = Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass;
 	}
-	
+
 	if ( uiItemClass == IC_BLADE || uiItemClass == IC_GUN || uiItemClass == IC_LAUNCHER || uiItemClass == IC_TENTACLES || uiItemClass == IC_THROWING_KNIFE )
 	{
 		sAPCost = MinAPsToShootOrStab( pSoldier, sGridno, ubAddTurningCost, ubForceRaiseGunCost );
@@ -1132,7 +1183,7 @@ UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCos
 	{
 		sAPCost = MinAPsToPunch( pSoldier, sGridno, ubAddTurningCost );
 	}
-	
+
 	return( (UINT8)sAPCost );
 }
 
@@ -1146,8 +1197,8 @@ INT8 CalcAimSkill( SOLDIERTYPE * pSoldier, UINT16 usWeapon )
 		bAimSkill = EffectiveMarksmanship( pSoldier );
 	}
 	else
-	// for now use this for all other weapons
-	//if ( Item[ usInHand ].usItemClass == IC_BLADE )	
+		// for now use this for all other weapons
+		//if ( Item[ usInHand ].usItemClass == IC_BLADE )	
 	{
 		// KNIVES: modify aiming cost by avg of attacker's DEXTERITY & AGILITY
 		bAimSkill = ( EffectiveDexterity( pSoldier ) + EffectiveAgility( pSoldier ) ) / 2;
@@ -1159,7 +1210,7 @@ INT8 CalcAimSkill( SOLDIERTYPE * pSoldier, UINT16 usWeapon )
 UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 {
 	INT32	Top, Bottom, rof;
-//	INT8	bAttachPos;
+	//	INT8	bAttachPos;
 
 	// Calculate default top & bottom of the magic "aiming" formula!
 
@@ -1170,8 +1221,15 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 	// Shots per turn rating is for max. aimSkill(100), drops down to 1/2 at = 0
 	// DIVIDE BY 4 AT THE END HERE BECAUSE THE SHOTS PER TURN IS NOW QUADRUPLED!
 	// NB need to define shots per turn for ALL Weapons then.
-	rof = Weapon[ pObj->usItem ].ubShotsPer4Turns + GetRateOfFireBonus(pObj);
-	
+	// 0verhaul:  Do not calculate rate of fire bonus for stackable items (knives)
+	// Their info is an array of item status, not weapon info, and they don't repeat
+	// fire anyway.
+	rof = Weapon[ pObj->usItem ].ubShotsPer4Turns;
+	if (Item[ pObj->usItem ].ubPerPocket <= 1)
+	{
+		rof += GetRateOfFireBonus(pObj);
+	}
+
 	//Bottom = ( ( 50 + (bAimSkill / 2) ) * rof ) / 4;
 
 	// add minimum aiming time to the overall minimum AP_cost
@@ -1180,7 +1238,15 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 	//return( ( ( ( 100 * Top ) / Bottom ) + 1) / 2);
 
 	// Snap: Refactored the formula to reduce the number of integer divisions
-	Top = 8 * bAPs * ( 100 - GetPercentAPReduction(pObj) );
+	Top = 8 * bAPs;
+	if (Item[ pObj->usItem ].ubPerPocket <= 1)
+	{
+		Top *= ( 100 - GetPercentAPReduction(pObj) );
+	}
+	else
+	{
+		Top *= 100;
+	}
 	Bottom = ( 100 + bAimSkill ) * rof;
 	// (this will round to the nearest integer)
 	return ( Top + Bottom / 2 ) / Bottom;
@@ -1188,53 +1254,53 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 
 void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost, BOOLEAN *pfChargeTurning, BOOLEAN *pfChargeRaise )
 {
-	 UINT8 ubDirection;
-   UINT32	uiMercFlags;
-   UINT16	usTargID;
-   BOOLEAN	fAddingTurningCost = FALSE;
-   BOOLEAN	fAddingRaiseGunCost = FALSE;
-	
-	 if ( sGridNo != NOWHERE )
-	 {
-		 // OK, get a direction and see if we need to turn...
-		 if (ubAddTurningCost)
-		 {
-			 // Given a gridno here, check if we are on a guy - if so - get his gridno
-			 if ( FindSoldier( sGridNo, &usTargID, &uiMercFlags, FIND_SOLDIER_GRIDNO ) )
-			 {
-					sGridNo = MercPtrs[ usTargID ]->sGridNo;
-			 }
+	UINT8 ubDirection;
+	UINT32	uiMercFlags;
+	UINT16	usTargID;
+	BOOLEAN	fAddingTurningCost = FALSE;
+	BOOLEAN	fAddingRaiseGunCost = FALSE;
 
-			 ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
+	if ( sGridNo != NOWHERE )
+	{
+		// OK, get a direction and see if we need to turn...
+		if (ubAddTurningCost)
+		{
+			// Given a gridno here, check if we are on a guy - if so - get his gridno
+			if ( FindSoldier( sGridNo, &usTargID, &uiMercFlags, FIND_SOLDIER_GRIDNO ) )
+			{
+				sGridNo = MercPtrs[ usTargID ]->sGridNo;
+			}
 
-			 // Is it the same as he's facing?
-			 if ( ubDirection != pSoldier->bDirection )
-			 {
-					fAddingTurningCost = TRUE;
-			 }
-		 }
-	 }
-	 else
-	 {
-		 if (ubAddTurningCost)
-		 {
-				// Assume we need to add cost!
+			ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
+
+			// Is it the same as he's facing?
+			if ( ubDirection != pSoldier->ubDirection )
+			{
 				fAddingTurningCost = TRUE;
-		 }
-	 }
+			}
+		}
+	}
+	else
+	{
+		if (ubAddTurningCost)
+		{
+			// Assume we need to add cost!
+			fAddingTurningCost = TRUE;
+		}
+	}
 
 
-	 if ( Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_THROWING_KNIFE )
-	 {
-	 }
-	 else
-	 {
-		 // Do we need to ready weapon?
-		 if ( !( gAnimControl[ pSoldier->usAnimState ].uiFlags &( ANIM_FIREREADY | ANIM_FIRE ) ) )
-		 { 
-			 fAddingRaiseGunCost = TRUE;
-		 }
-	 }
+	if ( Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_THROWING_KNIFE )
+	{
+	}
+	else
+	{
+		// Do we need to ready weapon?
+		if ( !( gAnimControl[ pSoldier->usAnimState ].uiFlags &( ANIM_FIREREADY | ANIM_FIRE ) ) )
+		{ 
+			fAddingRaiseGunCost = TRUE;
+		}
+	}
 
 	(*pfChargeTurning) = fAddingTurningCost;
 	(*pfChargeRaise )  = fAddingRaiseGunCost;
@@ -1273,8 +1339,8 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurni
 
 	if ( Item[ usItem ].usItemClass == IC_THROWING_KNIFE )
 	{
-		 // Do we need to stand up?
-		 bAPCost += GetAPsToChangeStance( pSoldier, ANIM_STAND );
+		// Do we need to stand up?
+		bAPCost += GetAPsToChangeStance( pSoldier, ANIM_STAND );
 	}
 
 	if ( AM_A_ROBOT( pSoldier ) )
@@ -1305,11 +1371,11 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurni
 
 	if ( sGridNo != NOWHERE )
 	{
-		 // Given a gridno here, check if we are on a guy - if so - get his gridno
-		 if ( FindSoldier( sGridNo, &usTargID, &uiMercFlags, FIND_SOLDIER_GRIDNO ) )
-		 {
-				sGridNo = MercPtrs[ usTargID ]->sGridNo;
-		 }
+		// Given a gridno here, check if we are on a guy - if so - get his gridno
+		if ( FindSoldier( sGridNo, &usTargID, &uiMercFlags, FIND_SOLDIER_GRIDNO ) )
+		{
+			sGridNo = MercPtrs[ usTargID ]->sGridNo;
+		}
 	}
 
 	// if attacking a new target (or if the specific target is uncertain)
@@ -1332,7 +1398,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurni
 
 		// look for an attached grenade launcher
 		glItem = GetAttachedGrenadeLauncher( &(pSoldier->inv[ HANDPOS ]));
-		
+
 		// create temporary grenade launcher and use that
 		if ( glItem != NONE )
 		{
@@ -1344,19 +1410,19 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurni
 			CreateItem( UNDER_GLAUNCHER, 100, &GrenadeLauncher );
 		}
 
-	  bAPCost += BaseAPsToShootOrStab( bFullAPs, bAimSkill, &GrenadeLauncher );
-		
+		bAPCost += BaseAPsToShootOrStab( bFullAPs, bAimSkill, &GrenadeLauncher );
+
 	}
 	else if ( IsValidSecondHandShot( pSoldier ) )
 	{
-	  // charge the maximum of the two
-	  bAPCost += __max( 
-			 BaseAPsToShootOrStab( bFullAPs, bAimSkill, &(pSoldier->inv[HANDPOS]) ),
-			 BaseAPsToShootOrStab( bFullAPs, bAimSkill, &(pSoldier->inv[SECONDHANDPOS]) ) );
+		// charge the maximum of the two
+		bAPCost += __max( 
+			BaseAPsToShootOrStab( bFullAPs, bAimSkill, &(pSoldier->inv[HANDPOS]) ),
+			BaseAPsToShootOrStab( bFullAPs, bAimSkill, &(pSoldier->inv[SECONDHANDPOS]) ) );
 	}
 	else
 	{
-	  bAPCost += BaseAPsToShootOrStab( bFullAPs, bAimSkill, &(pSoldier->inv[HANDPOS]) );
+		bAPCost += BaseAPsToShootOrStab( bFullAPs, bAimSkill, &(pSoldier->inv[HANDPOS]) );
 	}
 
 	// the minimum AP cost of ANY shot can NEVER be more than merc's maximum APs!
@@ -1379,83 +1445,83 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurni
 
 UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost)
 {
- UINT8	bAPCost = 0;
- UINT16 usTargID;
- UINT8	ubDirection;
+	UINT8	bAPCost = 0;
+	UINT16 usTargID;
+	UINT8	ubDirection;
 
- //  bAimSkill = ( pSoldier->bDexterity + pSoldier->bAgility) / 2;
- if ( sGridNo != NOWHERE )
- {
-	 usTargID = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
+	//  bAimSkill = ( pSoldier->bDexterity + pSoldier->bAgility) / 2;
+	if ( sGridNo != NOWHERE )
+	{
+		usTargID = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
 
-	 // Given a gridno here, check if we are on a guy - if so - get his gridno
-	 if ( usTargID != NOBODY  )
-	 {
+		// Given a gridno here, check if we are on a guy - if so - get his gridno
+		if ( usTargID != NOBODY  )
+		{
 			sGridNo = MercPtrs[ usTargID ]->sGridNo;
 
-		 // Check if target is prone, if so, calc cost...
-		 if ( gAnimControl[ MercPtrs[ usTargID ]->usAnimState ].ubEndHeight == ANIM_PRONE )
+			// Check if target is prone, if so, calc cost...
+			if ( gAnimControl[ MercPtrs[ usTargID ]->usAnimState ].ubEndHeight == ANIM_PRONE )
 		 {
 			 bAPCost += GetAPsToChangeStance( pSoldier, ANIM_CROUCH );
 		 }
-		 else
+			else
 		 {
-       if ( pSoldier->sGridNo == sGridNo )
-       {
-			    bAPCost += GetAPsToChangeStance( pSoldier, ANIM_STAND );
-       }
+			 if ( pSoldier->sGridNo == sGridNo )
+			 {
+				 bAPCost += GetAPsToChangeStance( pSoldier, ANIM_STAND );
+			 }
 		 }
 
-	 }
+		}
 
-	 if (ubAddTurningCost)
-	 {
-     if ( pSoldier->sGridNo == sGridNo )
-     {
-       // ATE: Use standing turn cost....
-		   ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
+		if (ubAddTurningCost)
+		{
+			if ( pSoldier->sGridNo == sGridNo )
+			{
+				// ATE: Use standing turn cost....
+				ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
 
-		   // Is it the same as he's facing?
-		   if ( ubDirection != pSoldier->bDirection )
-		   {
-				  bAPCost += AP_LOOK_STANDING;
-		   }
-     }
-	 }
+				// Is it the same as he's facing?
+				if ( ubDirection != pSoldier->ubDirection )
+				{
+					bAPCost += AP_LOOK_STANDING;
+				}
+			}
+		}
 
- }
+	}
 
- bAPCost += 4;
+	bAPCost += 4;
 
- return ( bAPCost );
+	return ( bAPCost );
 }
 
 
 
 INT8 MinPtsToMove(SOLDIERTYPE *pSoldier)
 {
- // look around all 8 directions and return lowest terrain cost
- INT32	cnt;
- INT16	sLowest=127;
- INT16	sGridno,sCost;
+	// look around all 8 directions and return lowest terrain cost
+	UINT8	cnt;
+	INT16	sLowest=127;
+	INT16	sGridno,sCost;
 
- if ( TANK( pSoldier ) )
- {
-	 return( (INT8)sLowest);
- }
+	if ( TANK( pSoldier ) )
+	{
+		return( (INT8)sLowest);
+	}
 
- for (cnt=0; cnt <= 7; cnt++)
-  {
-    sGridno = NewGridNo(pSoldier->sGridNo,DirectionInc((INT16) cnt));
-    if (sGridno != pSoldier->sGridNo)
+	for (cnt=0; cnt < 8; cnt++)
+	{
+		sGridno = NewGridNo(pSoldier->sGridNo,DirectionInc(cnt));
+		if (sGridno != pSoldier->sGridNo)
 		{
-       if ( (sCost=ActionPointCost( pSoldier, sGridno, (UINT8)cnt , pSoldier->usUIMovementMode ) ) < sLowest )
-			 {
-					sLowest = sCost;
-			 }
+			if ( (sCost=ActionPointCost( pSoldier, sGridno, cnt , pSoldier->usUIMovementMode ) ) < sLowest )
+			{
+				sLowest = sCost;
+			}
 		}
-  }									
-  return( (INT8)sLowest);
+	}									
+	return( (INT8)sLowest);
 }
 
 INT8  PtsToMoveDirection(SOLDIERTYPE *pSoldier, INT8 bDirection )
@@ -1464,28 +1530,28 @@ INT8  PtsToMoveDirection(SOLDIERTYPE *pSoldier, INT8 bDirection )
 	INT8	bOverTerrainType;
 	UINT16	usMoveModeToUse;
 
-  sGridno = NewGridNo( pSoldier->sGridNo, DirectionInc((INT16) bDirection ) );
+	sGridno = NewGridNo( pSoldier->sGridNo, DirectionInc(bDirection ) );
 
 	usMoveModeToUse = pSoldier->usUIMovementMode;
 
 	// ATE: Check if the new place is watter and we were tying to run....
 	bOverTerrainType = GetTerrainType( sGridno );
 
-	if ( bOverTerrainType == MED_WATER || bOverTerrainType == DEEP_WATER || bOverTerrainType == LOW_WATER )
+	if ( TERRAIN_IS_WATER( bOverTerrainType) )
 	{
 		usMoveModeToUse = WALKING;
 	}
 
-  sCost = ActionPointCost( pSoldier, sGridno, bDirection , usMoveModeToUse );
+	sCost = ActionPointCost( pSoldier, sGridno, bDirection , usMoveModeToUse );
 
-  if ( gubWorldMovementCosts[ sGridno ][ bDirection ][ pSoldier->bLevel ] != TRAVELCOST_FENCE )
-  {
-	  if ( usMoveModeToUse == RUNNING && pSoldier->usAnimState != RUNNING )
-	  {
-		  sCost += AP_START_RUN_COST;
-	  }
-  }
-  
+	if ( gubWorldMovementCosts[ sGridno ][ bDirection ][ pSoldier->bLevel ] != TRAVELCOST_FENCE )
+	{
+		if ( usMoveModeToUse == RUNNING && pSoldier->usAnimState != RUNNING )
+		{
+			sCost += AP_START_RUN_COST;
+		}
+	}
+
 	return( (INT8)sCost );
 }
 
@@ -1495,39 +1561,39 @@ INT8 MinAPsToStartMovement( SOLDIERTYPE * pSoldier, UINT16 usMovementMode )
 
 	switch( usMovementMode )
 	{
-		case RUNNING:
-		case WALKING:
-			if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE)
-			{
-				bAPs += AP_CROUCH + AP_PRONE;
-			}
-			else if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_CROUCH)
-			{
-				bAPs += AP_CROUCH;
-			}
-			break;
-		case SWATTING:
-			if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE)
-			{
-				bAPs += AP_PRONE;
-			}
-			else if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_STAND)
-			{
-				bAPs += AP_CROUCH;
-			}
-			break;
-		case CRAWLING:
-			if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_STAND)
-			{
-				bAPs += AP_CROUCH + AP_PRONE;
-			}
-			else if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_CROUCH)
-			{
-				bAPs += AP_CROUCH;
-			}
-			break;
-		default:
-			break;
+	case RUNNING:
+	case WALKING:
+		if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE)
+		{
+			bAPs += AP_CROUCH + AP_PRONE;
+		}
+		else if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_CROUCH)
+		{
+			bAPs += AP_CROUCH;
+		}
+		break;
+	case SWATTING:
+		if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE)
+		{
+			bAPs += AP_PRONE;
+		}
+		else if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_STAND)
+		{
+			bAPs += AP_CROUCH;
+		}
+		break;
+	case CRAWLING:
+		if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_STAND)
+		{
+			bAPs += AP_CROUCH + AP_PRONE;
+		}
+		else if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_CROUCH)
+		{
+			bAPs += AP_CROUCH;
+		}
+		break;
+	default:
+		break;
 	}
 
 	if (usMovementMode == RUNNING && pSoldier->usAnimState != RUNNING )
@@ -1582,7 +1648,7 @@ BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos )
 			}
 			else if (Item[ pSoldier->inv[ bInvPos ].usItem ].usItemClass == IC_GUN)
 			{
-				if ( pSoldier->inv[ bInvPos ].ubGunShotsLeft == 0 )
+				if ( pSoldier->inv[ bInvPos ].ItemData.Gun.ubGunShotsLeft == 0 )
 				{
 					if ( fDisplay )
 					{
@@ -1594,7 +1660,7 @@ BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos )
 				//<SB> manual recharge
 				if( pSoldier->bTeam == OUR_TEAM )
 				{
-					if ( !(	pSoldier->inv[ bInvPos ].ubGunState & GS_CARTRIDGE_IN_CHAMBER ) )
+					if ( !(	pSoldier->inv[ bInvPos ].ItemData.Gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER ) )
 					{
 						return( FALSE );
 					}
@@ -1633,11 +1699,11 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 			if ( pSoldier->usAttackingWeapon == pObj->usItem)
 			{
 				// OK, let's see, don't overrun...
-				if ( pObj->ubGunShotsLeft != 0 )
+				if ( pObj->ItemData.Gun.ubGunShotsLeft != 0 )
 				{
-					pObj->ubGunShotsLeft--;
+					pObj->ItemData.Gun.ubGunShotsLeft--;
 					//Pulmu: Update weight after firing gun to account for bullets fired
-					if( gGameExternalOptions.fAmmoDynamicWeight == TRUE && pObj->ubGunShotsLeft > 0)
+					if( gGameExternalOptions.fAmmoDynamicWeight == TRUE && pObj->ItemData.Gun.ubGunShotsLeft > 0)
 					{
 						pSoldier->inv[HANDPOS].ubWeight = CalculateObjectWeight( &(pSoldier->inv[HANDPOS]));
 					}
@@ -1657,7 +1723,7 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 			{
 				bAttachPos = FindAttachmentByClass( pObj, IC_BOMB );
 			}
-			 
+
 			if (bAttachPos != ITEM_NOT_FOUND)
 			{
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for GL: found attachment, about to decide whether to remove it"));
@@ -1712,7 +1778,7 @@ UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 		if ( pSoldier->sGridNo != sActionGridNo )
 		{
 			sAPCost = PlotPath( pSoldier, sActionGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
-		
+
 			// If point cost is zero, return 0
 			if ( sAPCost != 0 )
 			{
@@ -1722,7 +1788,7 @@ UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 		}
 		else
 		{
-				sAPCost += AP_PICKUP_ITEM;
+			sAPCost += AP_PICKUP_ITEM;
 		}
 	}
 
@@ -1758,14 +1824,14 @@ INT8 GetAPsToReloadGunWithAmmo( OBJECTTYPE * pGun, OBJECTTYPE * pAmmo )
 	if ( GetMagSize(pGun) == Magazine[Item[pAmmo->usItem].ubClassIndex].ubMagSize )
 	{
 		// normal situation
-//		return( AP_RELOAD_GUN );
+		//		return( AP_RELOAD_GUN );
 		return GetAPsToReload(pGun) ;
 	}
 	else
 	{
 		// trying to reload with wrong size of magazine
 		return (GetAPsToReload(pGun) * 2);
-//		return( AP_RELOAD_GUN + AP_RELOAD_GUN );
+		//		return( AP_RELOAD_GUN + AP_RELOAD_GUN );
 	}
 }
 
@@ -1778,12 +1844,12 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 	CHECKF( pSoldier );
 	pObj = &(pSoldier->inv[HANDPOS]);
 
-//<SB> manual recharge
-	if (pObj->ubGunShotsLeft && !(pObj->ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
+	//<SB> manual recharge
+	if (pObj->ItemData.Gun.ubGunShotsLeft && !(pObj->ItemData.Gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
 	{
 		return Weapon[Item[(pObj)->usItem].ubClassIndex].APsToReloadManually;
 	}
-//</SB>
+	//</SB>
 
 	if (Item[pObj->usItem].usItemClass == IC_GUN || Item[pObj->usItem].usItemClass == IC_LAUNCHER) 
 	{
@@ -1814,7 +1880,7 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 					bSlot2 = bSlot;
 				}
 			}
-			
+
 			if (bSlot2 == NO_SLOT)
 			{
 				bSlot2 = FindAmmoToReload( pSoldier, SECONDHANDPOS, bExcludeSlot );
@@ -1841,9 +1907,9 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 UINT16 GetAPsToReloadRobot( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pRobot )
 {
 	UINT16						sAPCost = 0;
-  INT16             sActionGridNo;
-  UINT8             ubDirection;
-  INT16             sAdjustedGridNo;
+	INT16             sActionGridNo;
+	UINT8             ubDirection;
+	INT16             sAdjustedGridNo;
 
 	sActionGridNo = FindAdjacentGridEx( pSoldier, pRobot->sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 
@@ -1949,25 +2015,25 @@ UINT16 GetAPsToLook( SOLDIERTYPE *pSoldier )
 	switch( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
 	{
 		// Now change to appropriate animation
-		case ANIM_STAND:
-			return( AP_LOOK_STANDING );
-			break;
+	case ANIM_STAND:
+		return( AP_LOOK_STANDING );
+		break;
 
-		case ANIM_CROUCH:
-			return( AP_LOOK_CROUCHED );
-			break;
+	case ANIM_CROUCH:
+		return( AP_LOOK_CROUCHED );
+		break;
 
-		case ANIM_PRONE:
-			// AP_PRONE is the AP cost to go to or from the prone stance.  To turn while prone, your merc has to get up to
-			// crouched, turn, and then go back down.  Hence you go up (AP_PRONE), turn (AP_LOOK_PRONE) and down (AP_PRONE).
-			return( AP_LOOK_PRONE + AP_PRONE + AP_PRONE );
-			break;
+	case ANIM_PRONE:
+		// AP_PRONE is the AP cost to go to or from the prone stance.  To turn while prone, your merc has to get up to
+		// crouched, turn, and then go back down.  Hence you go up (AP_PRONE), turn (AP_LOOK_PRONE) and down (AP_PRONE).
+		return( AP_LOOK_PRONE + AP_PRONE + AP_PRONE );
+		break;
 
 		// no other values should be possible
-		default:
-			Assert( FALSE );
-			return(0);
-			break;
+	default:
+		Assert( FALSE );
+		return(0);
+		break;
 	}
 }
 
@@ -2037,7 +2103,7 @@ INT16 GetAPsToReadyWeapon( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 	// ATE: What was I thinking, hooking into animations like this....
 	//if ( usAnimState == READY_DUAL_STAND || usAnimState == READY_DUAL_CROUCH )
 	//{
-		//return( AP_READY_DUAL );
+	//return( AP_READY_DUAL );
 	//}
 	if ( IsValidSecondHandShot( pSoldier ) )
 	{
@@ -2173,7 +2239,7 @@ INT16 MinAPsToThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCos
 			ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
 
 			// Is it the same as he's facing?
-			if ( ubDirection != pSoldier->bDirection )
+			if ( ubDirection != pSoldier->ubDirection )
 			{
 				//Lalien: disabled it again 
 				//AXP 25.03.2007: Reenabled look cost

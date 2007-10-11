@@ -95,7 +95,7 @@ SOLDIERCREATE_STRUCT::~SOLDIERCREATE_STRUCT() {
 //  Note that the constructor does this automatically.
 void SOLDIERCREATE_STRUCT::initialize() {
 	memset( this, 0, SIZEOF_SOLDIERCREATE_STRUCT_POD);	
-	Inv.clear();
+	Inv.initialize();
 }
 
 
@@ -354,7 +354,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 			}
 		}
 
-		// Copy the items over for thew soldier, only if we have a valid profile id!
+		// Copy the items over for the soldier, only if we have a valid profile id!
 		if ( pCreateStruct->ubProfile != NO_PROFILE )
 			CopyProfileItems( &Soldier, pCreateStruct );
 
@@ -414,10 +414,10 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		Soldier.sSectorX							= pCreateStruct->sSectorX;
 		Soldier.sSectorY							= pCreateStruct->sSectorY;
 		Soldier.bSectorZ							= pCreateStruct->bSectorZ;
-		Soldier.ubInsertionDirection	= pCreateStruct->bDirection;
-		Soldier.bDesiredDirection			= pCreateStruct->bDirection;
-		Soldier.bDominantDir					= pCreateStruct->bDirection;
-		Soldier.bDirection						= pCreateStruct->bDirection;
+		Soldier.ubInsertionDirection	= pCreateStruct->ubDirection;
+		Soldier.bDesiredDirection			= pCreateStruct->ubDirection;
+		Soldier.bDominantDir					= pCreateStruct->ubDirection;
+		Soldier.ubDirection						= pCreateStruct->ubDirection;
 
 		Soldier.sInsertionGridNo			= pCreateStruct->sInsertionGridNo;
 		Soldier.bOldLife							= Soldier.bLifeMax;
@@ -540,7 +540,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 			if( guiCurrentScreen != AUTORESOLVE_SCREEN )
 			{
 				// also, if an army guy has camouflage, roll to determine whether they start camouflaged
-				if ( Soldier.bTeam == ENEMY_TEAM )
+				if ( ( Soldier.bTeam == ENEMY_TEAM ) || ( Soldier.bTeam == MILITIA_TEAM ) )
 				{
 					i = FindCamoKit ( &Soldier );
 
@@ -812,7 +812,7 @@ BOOLEAN TacticalCopySoldierFromProfile( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STR
 
 	pSoldier->bOrders								= pCreateStruct->bOrders;
 	pSoldier->bAttitude							= pCreateStruct->bAttitude;
-	pSoldier->bDirection						= pCreateStruct->bDirection;
+	pSoldier->ubDirection						= pCreateStruct->ubDirection;
 	pSoldier->bPatrolCnt						= pCreateStruct->bPatrolCnt;
 	memcpy( pSoldier->usPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
 	
@@ -1305,7 +1305,7 @@ void InitSoldierStruct( SOLDIERTYPE *pSoldier )
 	pSoldier->ubDesiredHeight				= NO_DESIRED_HEIGHT;
 	pSoldier->bViewRange						= NORMAL_VIEW_RANGE;
 	pSoldier->bInSector							= FALSE;
-	pSoldier->sGridNo								= NO_MAP_POS;
+	pSoldier->sGridNo								= NOWHERE;
 	pSoldier->iMuzFlash							= -1;
 	pSoldier->usPendingAnimation		= NO_PENDING_ANIMATION;
 	pSoldier->usPendingAnimation2		= NO_PENDING_ANIMATION;
@@ -1430,6 +1430,7 @@ BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehi
 		{
 			DeleteSoldier( pSoldier );
 		}
+
 		MemFree( pSoldier );
 	}
 
@@ -1641,7 +1642,7 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 	//Pass over mandatory information specified from the basic placement
 	pp->bOrders = bp->bOrders;
 	pp->bAttitude = bp->bAttitude;
-	pp->bDirection = bp->bDirection;
+	pp->ubDirection = bp->ubDirection;
 
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateDetailedPlacementGivenBasicPlacementInfo: determine soldier's class"));
@@ -1860,7 +1861,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	//Pass over mandatory information specified from the basic placement
 	spp->bOrders = bp->bOrders;
 	spp->bAttitude = bp->bAttitude;
-	spp->bDirection = bp->bDirection;
+	spp->ubDirection = bp->ubDirection;
 
 	//Only creatures have mandatory body types specified.
 	if( spp->bTeam == CREATURE_TEAM )
@@ -1928,7 +1929,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 		// Copy over team
 		pp->bTeam = bp->bTeam;
 
-		pp->bDirection						= bp->bDirection;
+		pp->ubDirection						= bp->ubDirection;
 		pp->sInsertionGridNo			= bp->usStartingGridNo;
 
 		//ATE: Copy over sector coordinates from profile to create struct
@@ -1940,7 +1941,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 
 		pp->bOrders								= bp->bOrders;
 		pp->bAttitude							= bp->bAttitude;
-		pp->bDirection						= bp->bDirection;
+		pp->ubDirection						= bp->ubDirection;
 		pp->bPatrolCnt						= bp->bPatrolCnt;
 		memcpy( pp->sPatrolGrid, bp->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
 		pp->fHasKeys							= bp->fHasKeys;
@@ -2382,7 +2383,11 @@ SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 	UINT8 ubID;
 	SOLDIERTYPE * pSoldier;
 
-	if( guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
+	if (gpBattleGroup &&
+		gpBattleGroup->ubSectorZ == gbWorldSectorZ &&
+		gpBattleGroup->ubSectorX == gWorldSectorX &&
+		gpBattleGroup->ubSectorY == gWorldSectorY &&
+		guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
 	{
 		pSoldier = ReserveTacticalMilitiaSoldierForAutoresolve( ubMilitiaClass );
 		if( pSoldier ) return pSoldier;		
@@ -2711,12 +2716,12 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 					if ( uiMoneyLeft > uiMoneyLimitInSlot )
 					{
 						// fill pocket with money
-						pSoldier->inv[ bSlot ].uiMoneyAmount = uiMoneyLimitInSlot;			
+						pSoldier->inv[ bSlot ].ItemData.Money.uiMoneyAmount = uiMoneyLimitInSlot;			
 						uiMoneyLeft -= uiMoneyLimitInSlot;			
 					}
 					else
 					{
-						pSoldier->inv[ bSlot ].uiMoneyAmount = uiMoneyLeft;
+						pSoldier->inv[ bSlot ].ItemData.Money.uiMoneyAmount = uiMoneyLeft;
 						// done!
 						break;
 					}

@@ -13,7 +13,7 @@ void luaWS_newlstr (lua_State *L, const CHAR16 *str, size_t l)
   int size = sizewstring( l);
   ts = (TWString*) lua_newuserdata( L, size );
   ts->len = l;
-  memcpy( ts->data, str, size);
+  memcpy( ts->data, str, l*sizeof(CHAR16)+sizeof(CHAR16));
 
   // Make this data a wstring
   luaL_getmetatable(L, "wstring");
@@ -83,7 +83,7 @@ static int LuaWStringChar( lua_State *L )
 	len--;
 	for( idx=0; idx<len; idx++)
 	{
-		str[ idx ] = luaL_checkint( L, idx + 1 );
+		str[ idx ] = (CHAR16) luaL_checkint( L, idx + 1 );
 	}
 	str[ idx ] = 0;
 
@@ -213,7 +213,6 @@ static int LuaWStringUpper( lua_State *L )
 static int LuaWStringToString( lua_State *L )
 {
 	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
-	int len = tw->len;
 	int newlen;
 	STR8 newstr = NULL;
 
@@ -227,7 +226,7 @@ static int LuaWStringToString( lua_State *L )
 
 static int LuaWStringIndex( lua_State *L )
 {
-	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
+	luaL_checkudata( L, 1, "wstring" );
 	const CHAR8 *idx = luaL_checkstring( L, 2 );
 	
 	// Disqualify metafunctions

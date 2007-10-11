@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "JA2 All.h"
 #else
@@ -20,13 +19,12 @@ int iScreenMode = 0;	/* 0 for Fullscreen */
 #endif
 BOOL bScreenModeCmdLine = FALSE;
 
-int SCREEN_WIDTH;
-int SCREEN_HEIGHT;
+UINT16 SCREEN_WIDTH;
+UINT16 SCREEN_HEIGHT;
 
-int iScreenWidthOffset;
-int iScreenHeightOffset;
+INT16 iScreenWidthOffset;
+INT16 iScreenHeightOffset;
 
-// WANNE 2
 BOOLEAN fDisplayOverheadMap;
 
 Screens GameScreens[MAX_SCREENS] =

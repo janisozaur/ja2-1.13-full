@@ -1198,7 +1198,7 @@ BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile()
 	}
 
 
-	//if the save is an older version, use theold way of oading it up
+	//if the save is an older version, use the old way of loading it up
 	if( guiSavedGameVersion < 57 )
 	{
 		if( DoesTempFileExistsForMap( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
@@ -2742,10 +2742,10 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 
 					if ( Item[pSoldier->inv[i].usItem].damageable ) // Madd: drop crappier items on higher difficulty levels
 					{
-						pSoldier->inv[i].bStatus[0] -= (gGameOptions.ubDifficultyLevel - 1) * Random(20);
-						pSoldier->inv[i].bStatus[0] = max(pSoldier->inv[i].bStatus[0],1); // never below 1%
+						pSoldier->inv[i].ItemData.Generic.bStatus[0] -= (gGameOptions.ubDifficultyLevel - 1) * Random(20);
+						pSoldier->inv[i].ItemData.Generic.bStatus[0] = max(pSoldier->inv[i].ItemData.Generic.bStatus[0],1); // never below 1%
 					}
-					memcpy( &(pWorldItems[ bCount ].o), &pSoldier->inv[i], sizeof( OBJECTTYPE ) );
+					pWorldItems[ bCount ].o = pSoldier->inv[i];
 					bCount++;
 				}
 			}
@@ -2779,7 +2779,7 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 	SET_PALETTEREP_ID ( Corpse.SkinPal,		pSoldier->SkinPal );
 	SET_PALETTEREP_ID ( Corpse.PantsPal,   pSoldier->PantsPal );
 
-	Corpse.bDirection	= pSoldier->bDirection;
+	Corpse.ubDirection	= pSoldier->ubDirection;
 
 	// Set time of death
 	Corpse.uiTimeOfDeath = GetWorldTotalMin( );

@@ -34,7 +34,6 @@
 #include "Dialogue Control.h"
 #endif
 
-extern BOOLEAN InternalIsValidStance( SOLDIERTYPE *pSoldier, INT8 bDirection, INT8 bNewStance );
 extern BOOLEAN gfHiddenInterrupt;
 extern BOOLEAN gfUseAlternateQueenPosition;
 
@@ -551,7 +550,7 @@ INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE *pSoldier)
 				ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sDesiredMercLoc),CenterY(sDesiredMercLoc));
 
 				// if not already facing in that direction,
-				if ( pSoldier->bDirection != ubDesiredMercDir && InternalIsValidStance( pSoldier, ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
+				if ( pSoldier->ubDirection != ubDesiredMercDir && InternalIsValidStance( pSoldier, ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 				{
 
 					pSoldier->usActionData = ubDesiredMercDir;
@@ -611,7 +610,7 @@ INT8 DecideActionNamedNPC( SOLDIERTYPE * pSoldier )
 			ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sDesiredMercLoc),CenterY(sDesiredMercLoc));
 
 			// if not already facing in that direction,
-			if (pSoldier->bDirection != ubDesiredMercDir && InternalIsValidStance( pSoldier, ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
+			if (pSoldier->ubDirection != ubDesiredMercDir && InternalIsValidStance( pSoldier, ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 			{
 
 				pSoldier->usActionData = ubDesiredMercDir;
@@ -747,7 +746,7 @@ INT8 DecideActionGreen(SOLDIERTYPE *pSoldier)
 			}
 		}
 		//else if ( (gTacticalStatus.bBoxingState == PRE_BOXING || gTacticalStatus.bBoxingState == BOXING) && ( PythSpacesAway( pSoldier->sGridNo, CENTER_OF_RING ) <= MaxDistanceVisible() ) )
-		else if ( PythSpacesAway( pSoldier->sGridNo, CENTER_OF_RING ) <= MaxDistanceVisible() )
+		else if ( PythSpacesAway( pSoldier->sGridNo, CENTER_OF_RING ) <= MaxNormalDistanceVisible() )
 		{
 			UINT8 ubRingDir;
 			// face ring!
@@ -755,7 +754,7 @@ INT8 DecideActionGreen(SOLDIERTYPE *pSoldier)
 			ubRingDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(CENTER_OF_RING),CenterY(CENTER_OF_RING));
 			if ( gfTurnBasedAI || GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints )
 			{
-				if ( pSoldier->bDirection != ubRingDir )
+				if ( pSoldier->ubDirection != ubRingDir )
 				{
 					pSoldier->usActionData = ubRingDir;
 					return( AI_ACTION_CHANGE_FACING );
@@ -984,7 +983,7 @@ INT8 DecideActionGreen(SOLDIERTYPE *pSoldier)
 					pSoldier->usActionData = FindClosestClimbPoint(pSoldier, fUp );
 					// Added the check here because sniper militia who are locked inside of a building without keys
 					// will still have a >100% chance to want to climb, which means an infinite loop.  In fact, any
-					// time a move is desired, there is also probably be a need to check for a path.
+					// time a move is desired, there probably also will be a need to check for a path.
 					if ( pSoldier->usActionData != NOWHERE &&
 						LegalNPCDestination(pSoldier,pSoldier->usActionData,ENSURE_PATH,WATEROK, 0 ))
 					{
@@ -1221,7 +1220,7 @@ INT8 DecideActionGreen(SOLDIERTYPE *pSoldier)
 					// if man has a LEGAL dominant facing, and isn't facing it, he will turn
 					// back towards that facing 50% of the time here (normally just enemies)
 					if ((pSoldier->bDominantDir >= 0) && (pSoldier->bDominantDir <= 8) &&
-						(pSoldier->bDirection != pSoldier->bDominantDir) && PreRandom(2) && pSoldier->bOrders != SNIPER )
+						(pSoldier->ubDirection != pSoldier->bDominantDir) && PreRandom(2) && pSoldier->bOrders != SNIPER )
 					{
 						pSoldier->usActionData = pSoldier->bDominantDir;
 					}
@@ -1233,15 +1232,19 @@ INT8 DecideActionGreen(SOLDIERTYPE *pSoldier)
 						INT16 sNoiseGridNo = MostImportantNoiseHeard(pSoldier,&iNoiseValue, &fClimb, &fReachable);
 						UINT8 ubNoiseDir;
 
-						if (sNoiseGridNo != NOWHERE)
-							ubNoiseDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sNoiseGridNo),CenterY(sNoiseGridNo));
-
-						if ( sNoiseGridNo != NOWHERE && pSoldier->bDirection != ubNoiseDir )
-							pSoldier->usActionData = ubNoiseDir;
-						else
+						if (sNoiseGridNo == NOWHERE || 
+							(ubNoiseDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sNoiseGridNo),CenterY(sNoiseGridNo))
+							) == pSoldier->ubDirection )
+						
+						{
 							pSoldier->usActionData = (UINT16)PreRandom(8);
+						}
+						else
+						{
+							pSoldier->usActionData = ubNoiseDir;
+						}
 					}
-				} while (pSoldier->usActionData == pSoldier->bDirection);
+				} while (pSoldier->usActionData == pSoldier->ubDirection);
 
 
 #ifdef DEBUGDECISIONS
@@ -1352,7 +1355,7 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 	// and the noise source is close enough that it could possibly be seen
 	if ( !gfTurnBasedAI || GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints )
 	{
-		if ((pSoldier->bDirection != ubNoiseDir) && PythSpacesAway(pSoldier->sGridNo,sNoiseGridNo) <= MaxDistanceVisible() )
+		if ((pSoldier->ubDirection != ubNoiseDir) && PythSpacesAway(pSoldier->sGridNo,sNoiseGridNo) <= pSoldier->GetMaxDistanceVisible(sNoiseGridNo) )
 		{
 			// set base chance according to orders
 			if ((pSoldier->bOrders == STATIONARY) || (pSoldier->bOrders == ONGUARD) )
@@ -1521,13 +1524,16 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 		return AI_ACTION_SEEK_NOISE ;
 	}
 
-
-	if ( !( pSoldier->bTeam == CIV_TEAM && pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != ELDIN ) )
+	// Hmmm, I don't think this check is doing what is intended.  But then I see no comment about what is intended.
+	// However, civilians with no profile (and likely no weapons) do not need to be seeking out noises.  Most don't
+	// even have the body type for it (can't climb or jump).
+	//if ( !( pSoldier->bTeam == CIV_TEAM && pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != ELDIN ) )
+	if ( pSoldier->bTeam != CIV_TEAM || ( pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != ELDIN ) )
 	{
 		// IF WE ARE MILITIA/CIV IN REALTIME, CLOSE TO NOISE, AND CAN SEE THE SPOT WHERE THE NOISE CAME FROM, FORGET IT
 		if ( fReachable && !fClimb && !gfTurnBasedAI && (pSoldier->bTeam == MILITIA_TEAM || pSoldier->bTeam == CIV_TEAM )&& PythSpacesAway( pSoldier->sGridNo, sNoiseGridNo ) < 5 )
 		{
-			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sNoiseGridNo, pSoldier->bLevel, 0, 6, TRUE )	)
+			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sNoiseGridNo, pSoldier->bLevel, 0, TRUE, 6 )	)
 			{
 				// set reachable to false so we don't investigate
 				fReachable = FALSE;
@@ -1615,7 +1621,7 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 						}
 						else
 						{
-							pSoldier->usActionData = FindClosestClimbPoint(pSoldier->sGridNo , sNoiseGridNo , fUp );
+							pSoldier->usActionData = FindClosestClimbPoint(pSoldier, pSoldier->sGridNo , sNoiseGridNo , fUp );
 							if ( pSoldier->usActionData != NOWHERE )
 							{
 								return( AI_ACTION_MOVE_TO_CLIMB  );
@@ -1755,7 +1761,7 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 						}
 						else
 						{
-							pSoldier->usActionData = FindClosestClimbPoint(pSoldier->sGridNo , sClosestFriend , fUp );
+							pSoldier->usActionData = FindClosestClimbPoint(pSoldier, pSoldier->sGridNo , sClosestFriend , fUp );
 							if ( pSoldier->usActionData != NOWHERE )
 							{
 								return( AI_ACTION_MOVE_TO_CLIMB  );
@@ -1997,7 +2003,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 		}
 	}
 
-	if ( fCivilian && !( pSoldier->ubBodyType == COW || pSoldier->ubBodyType == CRIPPLECIV ) )
+	if ( fCivilian && !( pSoldier->ubBodyType == COW || pSoldier->ubBodyType == CRIPPLECIV ) &&
+		gTacticalStatus.bBoxingState == NOT_BOXING)
 	{
 		if ( FindAIUsableObjClass( pSoldier, IC_WEAPON ) == ITEM_NOT_FOUND )
 		{
@@ -2147,10 +2154,10 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			// if firing mortar make sure we have room
 			if ( Item[pSoldier->inv[ BestThrow.bWeaponIn ].usItem].mortar )
 			{
-				ubOpponentDir = (UINT8)GetDirectionFromGridNo( BestThrow.sTarget, pSoldier );
+				ubOpponentDir = GetDirectionFromGridNo( BestThrow.sTarget, pSoldier );
 
 				// Get new gridno!
-				sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubOpponentDir ) );
+				sCheckGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( ubOpponentDir ) );
 
 				if ( OKFallDirection( pSoldier, sCheckGridNo, pSoldier->bLevel, ubOpponentDir, pSoldier->usAnimState ) )
 				{
@@ -2174,10 +2181,10 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 					BestThrow.ubPossible = FALSE;
 
 					// try behind us, see if there's room to move back
-					sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( gOppositeDirection[ ubOpponentDir ] ) );
+					sCheckGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( gOppositeDirection[ ubOpponentDir ] ) );
 					if ( OKFallDirection( pSoldier, sCheckGridNo, pSoldier->bLevel, gOppositeDirection[ ubOpponentDir ], pSoldier->usAnimState ) )
 					{
-						pSoldier->usActionData = sCheckGridNo;
+						pSoldier->usActionData = (UINT16) sCheckGridNo;
 
 						return( AI_ACTION_GET_CLOSER );
 					}
@@ -2192,7 +2199,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			// spotters haven't already been called for, then DO SO!
 
      if ( (BestThrow.bWeaponIn != NO_SLOT) &&
-		  (CalcMaxTossRange( pSoldier, pSoldier->inv[BestThrow.bWeaponIn].usItem, TRUE ) > MaxDistanceVisible() ) &&
+		  (CalcMaxTossRange( pSoldier, pSoldier->inv[BestThrow.bWeaponIn].usItem, TRUE ) > MaxNormalDistanceVisible() ) &&
 				(gTacticalStatus.Team[pSoldier->bTeam].bMenInSector > 1) &&
 				(gTacticalStatus.ubSpottersCalledForBy == NOBODY))
 			{
@@ -2244,7 +2251,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 		if (BestShot.bWeaponIn != NO_SLOT) {
 			OBJECTTYPE * gun = &pSoldier->inv[BestShot.bWeaponIn];
 			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("decideactionred: men in sector %d, ubspotters called by %d, nobody %d",gTacticalStatus.Team[pSoldier->bTeam].bMenInSector,gTacticalStatus.ubSpottersCalledForBy,NOBODY ));
-			if ( ( ( IsScoped(gun) && GunRange(gun) > MaxDistanceVisible() ) || pSoldier->bOrders == SNIPER ) &&
+			//if ( ( ( IsScoped(gun) && GunRange(gun) > pSoldier->GetMaxDistanceVisible(BestShot.sTarget, BestShot.bTargetLevel) ) || pSoldier->bOrders == SNIPER ) &&
+			if ( ( ( IsScoped(gun) && GunRange(gun) > MaxNormalDistanceVisible() ) || pSoldier->bOrders == SNIPER ) &&
 				(gTacticalStatus.Team[pSoldier->bTeam].bMenInSector > 1) &&
 				(gTacticalStatus.ubSpottersCalledForBy == NOBODY))
 
@@ -2288,7 +2296,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				ubBurstAPs = CalcAPsToAutofire( CalcActionPoints( pSoldier ), &(pSoldier->inv[BestShot.bWeaponIn]), pSoldier->bDoAutofire );
 			}
 			while(	pSoldier->bActionPoints >= BestShot.ubAPCost + ubBurstAPs &&
-				pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft >= pSoldier->bDoAutofire &&
+				pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Gun.ubGunShotsLeft >= pSoldier->bDoAutofire &&
 				GetAutoPenalty(&pSoldier->inv[ pSoldier->ubAttackingHand ], gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE)*pSoldier->bDoAutofire <= 80 );
 
 
@@ -2605,7 +2613,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			{
 				pSoldier->usActionData = InternalGoAsFarAsPossibleTowards(pSoldier,tempGridNo,AP_PRONE,AI_ACTION_SEEK_OPPONENT,0);
 
-				if ( LocationToLocationLineOfSightTest( pSoldier->usActionData, pSoldier->bLevel, tempGridNo, pSoldier->bLevel, (UINT8) MaxDistanceVisible(), TRUE ) )
+				if ( LocationToLocationLineOfSightTest( pSoldier->usActionData, pSoldier->bLevel, tempGridNo, pSoldier->bLevel, TRUE) )
 				{
 					// reserve APs for a possible crouch plus a shot
 					pSoldier->usActionData = InternalGoAsFarAsPossibleTowards(pSoldier, tempGridNo, (INT8) (MinAPsToAttack( pSoldier, tempGridNo, ADDTURNCOST) + AP_CROUCH), AI_ACTION_SEEK_OPPONENT, FLAG_CAUTIOUS );
@@ -2774,9 +2782,12 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 								}
 								else
 								{
-									pSoldier->usActionData = FindClosestClimbPoint(pSoldier->sGridNo , sClosestDisturbance , fUp );
-									if ( pSoldier->usActionData != NOWHERE )
+									// Do not overwrite the usActionData here.  If there's no nearby climb point, the action data
+									// would become NOWHERE, and then the SEEK_ENEMY fallback would also fail.
+									INT16 usClimbPoint = FindClosestClimbPoint(pSoldier, pSoldier->sGridNo , sClosestDisturbance , fUp );
+									if ( usClimbPoint != NOWHERE )
 									{
+										pSoldier->usActionData = usClimbPoint;
 										return( AI_ACTION_MOVE_TO_CLIMB  );
 									}
 								}
@@ -2822,7 +2833,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 								{
 									pSoldier->usActionData = InternalGoAsFarAsPossibleTowards(pSoldier,sClosestDisturbance,AP_CROUCH, AI_ACTION_SEEK_OPPONENT,0);
 									//pSoldier->numFlanks = 0;
-									if ( PythSpacesAway( pSoldier->usActionData, sClosestDisturbance ) < 5 || LocationToLocationLineOfSightTest( pSoldier->usActionData, pSoldier->bLevel, sClosestDisturbance, pSoldier->bLevel, (UINT8) MaxDistanceVisible(), TRUE ) )
+									if ( PythSpacesAway( pSoldier->usActionData, sClosestDisturbance ) < 5 || LocationToLocationLineOfSightTest( pSoldier->usActionData, pSoldier->bLevel, sClosestDisturbance, pSoldier->bLevel, TRUE ) )
 									{
 										// reserve APs for a possible crouch plus a shot
 										pSoldier->usActionData = InternalGoAsFarAsPossibleTowards(pSoldier, sClosestDisturbance, (INT8) (MinAPsToAttack( pSoldier, sClosestDisturbance, ADDTURNCOST) + AP_CROUCH), AI_ACTION_SEEK_OPPONENT, FLAG_CAUTIOUS );
@@ -2859,7 +2870,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 							else
 							{
 								// let's be a bit cautious about going right up to a location without enough APs to shoot
-								if ( PythSpacesAway( pSoldier->usActionData, sClosestDisturbance ) < 5 || LocationToLocationLineOfSightTest( pSoldier->usActionData, pSoldier->bLevel, sClosestDisturbance, pSoldier->bLevel, (UINT8) MaxDistanceVisible(), TRUE ) )
+								if ( PythSpacesAway( pSoldier->usActionData, sClosestDisturbance ) < 5 || LocationToLocationLineOfSightTest( pSoldier->usActionData, pSoldier->bLevel, sClosestDisturbance, pSoldier->bLevel, TRUE ) )
 								{
 									// reserve APs for a possible crouch plus a shot
 									pSoldier->usActionData = InternalGoAsFarAsPossibleTowards(pSoldier, sClosestDisturbance, (INT8) (MinAPsToAttack( pSoldier, sClosestDisturbance, ADDTURNCOST) + AP_CROUCH), AI_ACTION_SEEK_OPPONENT, FLAG_CAUTIOUS );
@@ -2893,7 +2904,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				{
 					// take a look at our highest watch point... if it's still visible, turn to face it and then wait
 					bHighestWatchLoc = GetHighestVisibleWatchedLoc( pSoldier->ubID );
-					//sDistVisible =  DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gsWatchedLoc[ pSoldier->ubID ][ bHighestWatchLoc ], gbWatchedLocLevel[ pSoldier->ubID ][ bHighestWatchLoc ] );
+					//sDistVisible =  DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gsWatchedLoc[ pSoldier->ubID ][ bHighestWatchLoc ] );
 					if ( bHighestWatchLoc != -1 )
 					{
 						// see if we need turn to face that location
@@ -2901,7 +2912,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
 						// if soldier is not already facing in that direction,
 						// and the opponent is close enough that he could possibly be seen
-						if ( pSoldier->bDirection != ubOpponentDir && InternalIsValidStance( pSoldier, ubOpponentDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
+						if ( pSoldier->ubDirection != ubOpponentDir && InternalIsValidStance( pSoldier, ubOpponentDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 						{
 							// turn
 							pSoldier->usActionData = ubOpponentDir;
@@ -2988,9 +2999,10 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 								}
 								else
 								{
-									pSoldier->usActionData = FindClosestClimbPoint(pSoldier->sGridNo , sClosestFriend , fUp );
-									if ( pSoldier->usActionData != NOWHERE )
+									INT16 sClimbPoint = FindClosestClimbPoint(pSoldier, pSoldier->sGridNo , sClosestFriend , fUp );
+									if ( sClimbPoint != NOWHERE )
 									{
+										pSoldier->usActionData = sClimbPoint;
 										return( AI_ACTION_MOVE_TO_CLIMB  );
 									}
 								}
@@ -3152,9 +3164,9 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			// if soldier is not already facing in that direction,
 			// and the opponent is close enough that he could possibly be seen
 			// note, have to change this to use the level returned from ClosestKnownOpponent
-			sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sClosestOpponent, 0, pSoldier );
+			sDistVisible = pSoldier->GetMaxDistanceVisible(sClosestOpponent, 0, CALC_FROM_ALL_DIRS );
 
-			if ((pSoldier->bDirection != ubOpponentDir) && (PythSpacesAway(pSoldier->sGridNo,sClosestOpponent) <= sDistVisible))
+			if ((pSoldier->ubDirection != ubOpponentDir) && (PythSpacesAway(pSoldier->sGridNo,sClosestOpponent) <= sDistVisible))
 			{
 				// set base chance according to orders
 				if ((pSoldier->bOrders == STATIONARY) || (pSoldier->bOrders == ONGUARD))
@@ -3189,7 +3201,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 					return(AI_ACTION_CHANGE_FACING);
 				}
 			}
-			else if ( pSoldier->bDirection == ubOpponentDir && pSoldier->bOrders == SNIPER )
+			else if ( pSoldier->ubDirection == ubOpponentDir && pSoldier->bOrders == SNIPER )
 			{
 				if (!gfTurnBasedAI || GetAPsToReadyWeapon( pSoldier, READY_RIFLE_CROUCH ) <= pSoldier->bActionPoints)
 				{
@@ -3208,7 +3220,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			if ( sClosestDisturbance != NOWHERE )
 			{
 				ubOpponentDir = atan8( CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), CenterX( sClosestDisturbance ), CenterY( sClosestDisturbance ) );
-				if ( pSoldier->bDirection == ubOpponentDir )
+				if ( pSoldier->ubDirection == ubOpponentDir )
 				{
 					ubOpponentDir = (UINT8) PreRandom( NUM_WORLD_DIRECTIONS );
 				}
@@ -3218,7 +3230,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				ubOpponentDir = (UINT8) PreRandom( NUM_WORLD_DIRECTIONS );
 			}
 
-			if ( (pSoldier->bDirection != ubOpponentDir) )
+			if ( (pSoldier->ubDirection != ubOpponentDir) )
 			{
 				if ( (pSoldier->bActionPoints == pSoldier->bInitialActionPoints || (INT16)PreRandom(100) < 60) && InternalIsValidStance( pSoldier, ubOpponentDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 				{
@@ -3330,7 +3342,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 	{
 		sClosestOpponent = ClosestKnownOpponent(pSoldier, NULL, NULL);
 
-		if ( (sClosestOpponent != NOWHERE && PythSpacesAway( pSoldier->sGridNo, sClosestOpponent ) < (MaxDistanceVisible() * 3) / 2 ) || PreRandom( 4 ) == 0 )
+		//if ( (sClosestOpponent != NOWHERE && PythSpacesAway( pSoldier->sGridNo, sClosestOpponent ) < (MaxNormalDistanceVisible() * 3) / 2 ) || PreRandom( 4 ) == 0 )
+		if ( (sClosestOpponent != NOWHERE && PythSpacesAway( pSoldier->sGridNo, sClosestOpponent ) < (pSoldier->GetMaxDistanceVisible(sClosestOpponent) * 3) / 2 ) || PreRandom( 4 ) == 0 )
 		{
 			if (!gfTurnBasedAI || GetAPsToChangeStance( pSoldier, ANIM_CROUCH ) <= pSoldier->bActionPoints)
 			{
@@ -3356,7 +3369,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 		if ( sClosestDisturbance != NOWHERE )
 		{
 			ubOpponentDir = atan8( CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), CenterX( sClosestDisturbance ), CenterY( sClosestDisturbance ) );
-			if ( pSoldier->bDirection != ubOpponentDir )
+			if ( pSoldier->ubDirection != ubOpponentDir )
 			{
 				if ( !gfTurnBasedAI || GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints )
 				{
@@ -3425,9 +3438,9 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 #endif
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DecideActionBlack: soldier = %d, orders = %d, attitude = %d",pSoldier->ubID,pSoldier->bOrders,pSoldier->bAttitude));
 
-	ATTACKTYPE BestShot,BestThrow,BestStab,BestAttack;
+	ATTACKTYPE BestShot = {},BestThrow = {},BestStab = {},BestAttack = {};
 	BOOLEAN fCivilian = (PTR_CIVILIAN && (pSoldier->ubCivilianGroup == NON_CIV_GROUP || pSoldier->bNeutral || (pSoldier->ubBodyType >= FATCIV && pSoldier->ubBodyType <= CRIPPLECIV) ) );
-	UINT8	ubBestStance, ubStanceCost;
+	UINT8	ubBestStance = 1, ubStanceCost;
 	BOOLEAN fChangeStanceFirst; // before firing
 	BOOLEAN fClimb;
 	UINT8	ubBurstAPs;
@@ -3791,7 +3804,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 			}
 
 			// now it better be a gun, or the guy can't shoot (but has other attack(s))
-			if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass == IC_GUN && pSoldier->inv[HANDPOS].bGunStatus >= USABLE)
+			if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass == IC_GUN && pSoldier->inv[HANDPOS].ItemData.Gun.bGunStatus >= USABLE)
 			{
 				// get the minimum cost to attack the same target with this gun
 				ubMinAPCost = MinAPsToAttack(pSoldier,pSoldier->sLastTarget,ADDTURNCOST);
@@ -4128,6 +4141,8 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 
 	// if soldier has enough APs left to move at least 1 square's worth,
 	// and either he can't attack any more, or his attack did wound someone
+	iCoverPercentBetter = 0;
+
 	if ( (ubCanMove && !SkipCoverCheck && !gfHiddenInterrupt &&
 		((ubBestAttackAction == AI_ACTION_NONE) || pSoldier->bLastAttackHit) &&
 		(pSoldier->bTeam != gbPlayerNum || pSoldier->fAIFlags & AI_RTP_OPTION_CAN_SEEK_COVER) &&
@@ -4266,7 +4281,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 					if (ubBestStance != 0)
 					{
 						// change stance first!
-						if ( pSoldier->bDirection != bDirection && InternalIsValidStance( pSoldier, bDirection, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
+						if ( pSoldier->ubDirection != bDirection && InternalIsValidStance( pSoldier, bDirection, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 						{
 							// we're not facing towards him, so turn first!
 							pSoldier->usActionData = bDirection;
@@ -4312,7 +4327,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 
 			if (IsGunBurstCapable( pSoldier, BestAttack.bWeaponIn, FALSE ) &&
 				!(Menptr[BestShot.ubOpponent].bLife < OKLIFE) && // don't burst at downed targets
-				pSoldier->inv[BestAttack.bWeaponIn].ubGunShotsLeft > 1 &&
+				pSoldier->inv[BestAttack.bWeaponIn].ItemData.Gun.ubGunShotsLeft > 1 &&
 				(pSoldier->bTeam != gbPlayerNum || pSoldier->bRTPCombat == RTP_COMBAT_AGGRESSIVE) )
 			{
 				DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"DecideActionBlack: ENOUGH APs TO BURST, RANDOM CHANCE OF DOING SO");
@@ -4340,7 +4355,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 						case ATTACKSLAYONLY:iChance += 30; break;
 						}
 
-						if ( pSoldier->inv[BestAttack.bWeaponIn].ubGunShotsLeft > 50 )
+						if ( pSoldier->inv[BestAttack.bWeaponIn].ItemData.Gun.ubGunShotsLeft > 50 )
 							iChance += 20;
 
 						// increase chance based on proximity and difficulty of enemy
@@ -4375,7 +4390,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 
 			if (IsGunAutofireCapable( pSoldier, BestAttack.bWeaponIn ) &&
 				!(Menptr[BestShot.ubOpponent].bLife < OKLIFE) && // don't burst at downed targets
-				(( pSoldier->inv[BestAttack.bWeaponIn].ubGunShotsLeft > 1 &&
+				(( pSoldier->inv[BestAttack.bWeaponIn].ItemData.Gun.ubGunShotsLeft > 1 &&
 				BestAttack.ubAimTime != BURSTING ) || Weapon[pSoldier->inv[BestAttack.bWeaponIn].usItem].NoSemiAuto) )
 			{
 				DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"DecideActionBlack: ENOUGH APs TO AUTOFIRE, RANDOM CHANCE OF DOING SO");
@@ -4386,7 +4401,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 					ubBurstAPs = CalcAPsToAutofire( CalcActionPoints( pSoldier ), &(pSoldier->inv[BestAttack.bWeaponIn]), pSoldier->bDoAutofire );
 				}
 				while(	pSoldier->bActionPoints >= BestAttack.ubAPCost + ubBurstAPs &&
-					pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft >= pSoldier->bDoAutofire &&
+					pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Gun.ubGunShotsLeft >= pSoldier->bDoAutofire &&
 					GetAutoPenalty(&pSoldier->inv[ BestAttack.bWeaponIn ], gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE)*pSoldier->bDoAutofire <= 80);
 
 
@@ -4418,7 +4433,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 							}
 
 
-							if ( pSoldier->inv[BestAttack.bWeaponIn].ubGunShotsLeft > 50 )
+							if ( pSoldier->inv[BestAttack.bWeaponIn].ItemData.Gun.ubGunShotsLeft > 50 )
 								iChance += 30;
 
 							if ( bInGas )
@@ -4621,7 +4636,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 				if ( pSoldier->usActionData != NOWHERE )
 				{
 					// truncate path to 1 step
-					pSoldier->usActionData = pSoldier->sGridNo + DirectionInc( pSoldier->usPathingData[0] );
+					pSoldier->usActionData = pSoldier->sGridNo + DirectionInc( (UINT8) pSoldier->usPathingData[0] );
 					pSoldier->sFinalDestination = pSoldier->usActionData;
 					pSoldier->bNextAction = AI_ACTION_END_TURN;
 					return( AI_ACTION_GET_CLOSER );
@@ -4738,7 +4753,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 							bDirection = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sClosestOpponent),CenterY(sClosestOpponent));
 
 							// if we're not facing towards him
-							if (pSoldier->bDirection != bDirection)
+							if (pSoldier->ubDirection != bDirection)
 							{
 								if ( InternalIsValidStance( pSoldier, bDirection, (INT8) pSoldier->usActionData) )
 								{
@@ -4796,7 +4811,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 				bDirection = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sClosestOpponent),CenterY(sClosestOpponent));
 
 				// if we're not facing towards him
-				if ( pSoldier->bDirection != bDirection && InternalIsValidStance( pSoldier, bDirection, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
+				if ( pSoldier->ubDirection != bDirection && InternalIsValidStance( pSoldier, bDirection, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 				{
 					pSoldier->usActionData = bDirection;
 
@@ -5085,9 +5100,7 @@ void DecideAlertStatus( SOLDIERTYPE *pSoldier )
 	// BLACK - Currently has one or more opponents in sight
 
 	// save the man's previous status
-//pSoldier->bAlertStatus = STATUS_RED;
-//CheckForChangingOrders(pSoldier);
-//return;
+
 	if (pSoldier->uiStatusFlags & SOLDIER_MONSTER)
 	{
 		CreatureDecideAlertStatus( pSoldier );
@@ -5255,6 +5268,12 @@ void DecideAlertStatus( SOLDIERTYPE *pSoldier )
 				}
 			}
 		}
+	}
+	else if (gTacticalStatus.bBoxingState == DISQUALIFIED ||
+		gTacticalStatus.bBoxingState == WON_ROUND ||
+		gTacticalStatus.bBoxingState == LOST_ROUND)
+	{
+		pSoldier->bAlertStatus = STATUS_GREEN;
 	}
 
 }

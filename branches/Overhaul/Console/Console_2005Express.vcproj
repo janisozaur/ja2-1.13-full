@@ -61,9 +61,10 @@
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
-				WarningLevel="3"
+				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
+				DisableSpecificWarnings="4100"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -312,31 +313,7 @@
 				RelativePath="Console.ico"
 				>
 			</File>
-			<File
-				RelativePath="icon.ico"
-				>
-			</File>
 		</Filter>
-		<File
-			RelativePath="console.inf"
-			>
-		</File>
-		<File
-			RelativePath="console.xml"
-			>
-		</File>
-		<File
-			RelativePath="devel-changes.txt"
-			>
-		</File>
-		<File
-			RelativePath="ReadMe.txt"
-			>
-		</File>
-		<File
-			RelativePath="ToDo.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

@@ -189,7 +189,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 		{
 			// Empty out the bullets put in by CreateItem().  We now sell all guns empty of bullets.  This is done for BobbyR
 			// simply to be consistent with the dealers in Arulco, who must sell guns empty to prevent ammo cheats by players.
-			Object.ubGunShotsLeft = 0;
+			Object.ItemData.Gun.ubGunShotsLeft = 0;
 		}
 
 		ubItemsDelivered = 0;
@@ -220,11 +220,11 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
-						Object.bStatus[0] = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.bStatus[0] ) / 100 );
+						Object.ItemData.Generic.bStatus[0] = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.ItemData.Generic.bStatus[0] ) / 100 );
 						// make damn sure it can't hit 0
-						if (Object.bStatus[0] == 0)
+						if (Object.ItemData.Generic.bStatus[0] == 0)
 						{
-							Object.bStatus[0] = 1;
+							Object.ItemData.Generic.bStatus[0] = 1;
 						}
 						AddItemToPool( usMapPos, &Object, -1, 0, 0, 0 );
 					}
@@ -254,11 +254,11 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
-						Object.bStatus[0] = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.bStatus[0] ) / 100 );
+						Object.ItemData.Generic.bStatus[0] = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.ItemData.Generic.bStatus[0] ) / 100 );
 						// make damn sure it can't hit 0
-						if (Object.bStatus[0] == 0)
+						if (Object.ItemData.Generic.bStatus[0] == 0)
 						{
-							Object.bStatus[0] = 1;
+							Object.ItemData.Generic.bStatus[0] = 1;
 						}
 						memcpy( &pObject[ uiCount ], &Object, sizeof( OBJECTTYPE ) );
 						uiCount++;
@@ -341,6 +341,8 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	{
 		SetFactFalse( FACT_PABLOS_STOLE_FROM_LATEST_SHIPMENT );
 	}
+
+	SetFactFalse( FACT_PLAYER_FOUND_ITEMS_MISSING );
 
 	SetFactFalse( FACT_LARGE_SIZED_OLD_SHIPMENT_WAITING );
 
@@ -474,7 +476,7 @@ void HandleDelayedItemsArrival( UINT32 uiReason )
 	{
 		// sector is loaded!
 		// just move the hidden item pool
-		MoveItemPools( sStartGridNo, BOBBYR_SHIPPING_DEST_GRIDNO );
+		MoveItemPools( sStartGridNo, BOBBYR_SHIPPING_DEST_GRIDNO, 0, 0 );
 	}
 	else
 	{
@@ -557,7 +559,7 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 		// loop through all items, look for ownership
 		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == MONEY )
 		{
-			uiTotalCash += gWorldItems[uiLoop].o.uiMoneyAmount;
+			uiTotalCash += gWorldItems[uiLoop].o.ItemData.Money.uiMoneyAmount;
 		}
 	}
 
@@ -1041,14 +1043,14 @@ void CheckForMissingHospitalSupplies( void )
 	for ( uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )
 	{
 		// loop through all items, look for ownership
-		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == OWNERSHIP && gWorldItems[ uiLoop ].o.ubOwnerCivGroup == DOCTORS_CIV_GROUP )
+		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == OWNERSHIP && gWorldItems[ uiLoop ].o.ItemData.Owner.ubOwnerCivGroup == DOCTORS_CIV_GROUP )
 		{
 			GetItemPool( gWorldItems[ uiLoop ].sGridNo, &pItemPool, 0 ) ;
 			while( pItemPool ) 
 			{
 				pObj = &( gWorldItems[ pItemPool->iItemIndex ].o );
 
-				if ( pObj->bStatus[ 0 ] > 60 )
+				if ( pObj->ItemData.Generic.bStatus[ 0 ] > 60 )
 				{
 					if ( Item[pObj->usItem].firstaidkit || Item[pObj->usItem].medicalkit || pObj->usItem == REGEN_BOOSTER || pObj->usItem == ADRENALINE_BOOSTER )
 					{

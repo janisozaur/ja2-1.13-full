@@ -53,6 +53,7 @@
 	#include "personnel.h"
 	#include "environment.h"
 	#include "Player Command.h"
+	#include "strategic.h"
 #endif
 
 #ifdef JA2EDITOR
@@ -611,7 +612,7 @@ void MakeRemainingTerroristsTougher( void )
 
 	DeleteObj( &Object );
 	Object.usItem = usNewItem;
-	Object.bStatus[ 0 ] = 100;
+	Object.ItemData.Generic.bStatus[ 0 ] = 100;
 
 	for ( ubLoop = 0; ubLoop < NUM_TERRORISTS; ubLoop++ )
 	{
@@ -745,7 +746,7 @@ void MakeRemainingAssassinsTougher( void )
 
 	DeleteObj( &Object );
 	Object.usItem = usNewItem;
-	Object.bStatus[ 0 ] = 100;
+	Object.ItemData.Generic.bStatus[ 0 ] = 100;
 
 	for ( ubLoop = 0; ubLoop < NUM_ASSASSINS; ubLoop++ )
 	{
@@ -915,7 +916,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 	MercCreateStruct.sSectorY						= pSoldier->sSectorY;
 	MercCreateStruct.bSectorZ						= pSoldier->bSectorZ;
 	MercCreateStruct.sInsertionGridNo		= pSoldier->sGridNo;
-	MercCreateStruct.bDirection					= pSoldier->bDirection;
+	MercCreateStruct.ubDirection					= pSoldier->ubDirection;
 
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
@@ -1211,8 +1212,10 @@ BOOLEAN UnRecruitEPC( UINT8 ubCharNum )
 	}
 
 	// how do we decide whether or not to set this?
-	gMercProfiles[ ubCharNum ].fUseProfileInsertionInfo = TRUE;
 	gMercProfiles[ ubCharNum ].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
+	gMercProfiles[ ubCharNum ].usStrategicInsertionData = pSoldier->sGridNo;
+	gMercProfiles[ ubCharNum ].fUseProfileInsertionInfo = TRUE;
+	gMercProfiles[ ubCharNum ].ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 
 	// Add this guy to CIV team!
 	pNewSoldier = ChangeSoldierTeam( pSoldier, CIV_TEAM );

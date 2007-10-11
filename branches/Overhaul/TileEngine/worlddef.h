@@ -19,7 +19,8 @@
 
 #define WORLD_BASE_HEIGHT			0
 #define WORLD_CLIFF_HEIGHT		80
- 
+
+
 //A macro that actually memcpy's over data and increments the pointer automatically
 //based on the size.  Works like a FileRead except with a buffer instead of a file pointer.
 //Used by LoadWorld() and child functions.
@@ -95,7 +96,8 @@
 #define MAPELEMENT_EXT_NOBURN_STRUCT				0x0020 //0x20
 #define MAPELEMENT_EXT_ROOFCODE_VISITED				0x0040 //0x40
 #define MAPELEMENT_EXT_CREATUREGAS     				0x0080 //0x80
-#define MAPELEMENT_EXT_BURNABLEGAS					0x0100 //0x60
+#define MAPELEMENT_EXT_BURNABLEGAS					0x0100 //0x100
+#define MAPELEMENT_EXT_CLIMBPOINT					0x0200 //0x200
 
 #define FIRST_LEVEL 0
 #define SECOND_LEVEL 1
@@ -144,27 +146,27 @@ struct LEVELNODE
 		};
 
 		// Some can contains index values into dead corpses
-		struct
-		{
+		//struct
+		//{
 			INT32											iCorpseID;							// Index into corpse ID
-		};
+		//};
 
-		struct
-		{
+		//struct
+		//{
 			UINT32										uiAnimHitLocationFlags;	// Animation profile flags for soldier placeholders ( prone merc hit location values )
-		};
+		//};
 
 		// Some can contains index values into animated tile data
-		struct
-		{
+		//struct
+		//{
 			struct TAG_anitile				*pAniTile;
-		};
+		//};
 
 		// Can be an item pool as well...
-		struct
-		{
+		//struct
+		//{
 			ITEM_POOL										*pItemPool;					// ITEM POOLS
-		};
+		//};
 
 
 	};
@@ -186,33 +188,42 @@ struct LEVELNODE
 #define		ONROOF_START_INDEX								7
 #define		TOPMOST_START_INDEX								8
 
+#define pLandHead pLevelNodes[ 0 ]
+#define pLandStart pLevelNodes[ 1 ]
+#define pObjectHead pLevelNodes[ 2 ]
+#define pStructHead pLevelNodes[ 3 ]
+#define pShadowHead pLevelNodes[ 4 ]
+#define pMercHead pLevelNodes[ 5 ]
+#define pRoofHead pLevelNodes[ 6 ]
+#define pOnRoofHead pLevelNodes[ 7 ]
+#define pTopmostHead pLevelNodes[ 8 ]
 
 typedef struct
 {
-	union 
-	{
-		struct
-		{
-			LEVELNODE								*pLandHead;							//0
-			LEVELNODE								*pLandStart;						//1
+	//union 
+	//{
+		//struct
+		//{
+			//LEVELNODE								*pLandHead;							//0
+			//LEVELNODE								*pLandStart;						//1
 
-			LEVELNODE								*pObjectHead;						//2
+			//LEVELNODE								*pObjectHead;						//2
 
-			LEVELNODE								*pStructHead;						//3
+			//LEVELNODE								*pStructHead;						//3
 
-			LEVELNODE								*pShadowHead;						//4
+			//LEVELNODE								*pShadowHead;						//4
 
-			LEVELNODE								*pMercHead;							//5
+			//LEVELNODE								*pMercHead;							//5
 
-			LEVELNODE								*pRoofHead;							//6
+			//LEVELNODE								*pRoofHead;							//6
 
-			LEVELNODE								*pOnRoofHead;						//7
+			//LEVELNODE								*pOnRoofHead;						//7
 
-			LEVELNODE								*pTopmostHead;					//8
-		};
+			//LEVELNODE								*pTopmostHead;					//8
+		//};
 
 		LEVELNODE									*pLevelNodes[ 9 ];
-	};
+	//};
 
 	STRUCTURE								*pStructureHead;				
 	STRUCTURE								*pStructureTail;

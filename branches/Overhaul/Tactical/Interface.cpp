@@ -124,7 +124,7 @@ MOUSE_REGION	gMenuOverlayRegion;
 
 MOUSE_REGION    gBottomPanalRegion;
 
-UINT16				gusOldSelectedSoldier		= NO_SOLDIER;
+UINT16				gusOldSelectedSoldier		= NOBODY;
 
 // OVerlay ID
 INT32					giPopupSlideMessageOverlay = -1;
@@ -1284,7 +1284,7 @@ void GetArrowsBackground( )
 		return;
 	}
 
-	if ( gusSelectedSoldier != NO_SOLDIER )
+	if ( gusSelectedSoldier != NOBODY )
 	{
 		// Get selected soldier
 		GetSoldier( &pSoldier, gusSelectedSoldier );
@@ -1863,7 +1863,10 @@ void BeginOverlayMessage( UINT32 uiFont, STR16 pFontString, ... )
 
 	if ( giPopupSlideMessageOverlay == -1  )
 	{
-		// Set Overlay
+		// WDS - bug fix: VideoOverlayDesc must be initialized! - 07/16/2007
+		memset( &VideoOverlayDesc, 0, sizeof( VIDEO_OVERLAY_DESC ) );
+
+	    // Set Overlay
 		VideoOverlayDesc.sLeft			 = ( SCREEN_WIDTH - gusOverlayPopupBoxWidth ) / 2;
 		VideoOverlayDesc.sTop				 = 100;
 		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + gusOverlayPopupBoxWidth;
@@ -2602,7 +2605,7 @@ void BtnDoorMenuCallback(GUI_BUTTON *btn,INT32 reason)
 			}
 			else
 			{
-				// OK, set cancle code!
+				// OK, set cancel code!
 				gOpenDoorMenu.fMenuHandled = 2;
 			}
 		}
@@ -2856,6 +2859,9 @@ void BeginMapUIMessage( UINT8 ubPosition, STR16 pFontString, ... )
 
 	if ( giUIMessageOverlay == -1  )
 	{
+		// WDS - bug fix: VideoOverlayDesc must be initialized! - 07/16/2007
+		memset( &VideoOverlayDesc, 0, sizeof( VIDEO_OVERLAY_DESC ) );
+
 		// Set Overlay
 		VideoOverlayDesc.sLeft	 = 20 + MAP_VIEW_START_X + ( MAP_VIEW_WIDTH - gusUIMessageWidth ) / 2;
 
@@ -2962,7 +2968,7 @@ BOOLEAN AddTopMessage( UINT8 ubType, STR16 pzString )
 void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, STR16 psString )
 {
 	UINT32	uiBAR, uiPLAYERBAR, uiINTBAR;
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC    VObjectDesc;
 	INT16		sX, sY;
 	INT32		cnt2;
 	INT16		sBarX = 0;
@@ -2977,7 +2983,7 @@ void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, STR16 psString )
 
 	if (iResolution == 0)
 	{
-	FilenameForBPP("INTERFACE\\rect.sti", VObjectDesc.ImageFile);
+		FilenameForBPP("INTERFACE\\rect.sti", VObjectDesc.ImageFile);
 	}
 	else if (iResolution == 1)
 	{
@@ -2986,6 +2992,11 @@ void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, STR16 psString )
 	else if (iResolution == 2)
 	{
 		FilenameForBPP("INTERFACE\\rect_1024x768.sti", VObjectDesc.ImageFile);
+	}
+	else
+	{
+		AssertMsg( 0, "Invalid resolution");
+		return;
 	}
 
 	if( !AddVideoObject( &VObjectDesc, &uiBAR ) )
@@ -2997,40 +3008,44 @@ void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, STR16 psString )
 	if (iResolution == 0)
 	{
 		FilenameForBPP("INTERFACE\\timebargreen.sti", VObjectDesc.ImageFile);
-		if( !AddVideoObject( &VObjectDesc, &uiPLAYERBAR ) )
-			AssertMsg(0, "Missing INTERFACE\\timebargreen.sti" );
 	}
 	else if (iResolution == 1)
 	{
 		FilenameForBPP("INTERFACE\\timebargreen_800x600.sti", VObjectDesc.ImageFile);
-		if( !AddVideoObject( &VObjectDesc, &uiPLAYERBAR ) )
-			AssertMsg(0, "Missing INTERFACE\\timebargreen_800x600.sti" );
 	}
 	else if (iResolution == 2)
 	{
 		FilenameForBPP("INTERFACE\\timebargreen_1024x768.sti", VObjectDesc.ImageFile);
-		if( !AddVideoObject( &VObjectDesc, &uiPLAYERBAR ) )
-			AssertMsg(0, "Missing INTERFACE\\timebargreen_1024x768.sti" );
 	}
+	else
+	{
+		AssertMsg( 0, "Invalid resolution");
+		return;
+	}
+
+	if( !AddVideoObject( &VObjectDesc, &uiPLAYERBAR ) )
+		AssertMsg(0, String( "Missing %s", VObjectDesc.ImageFile) );
 
 	if (iResolution == 0)
 	{
-	FilenameForBPP("INTERFACE\\timebaryellow.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &uiINTBAR ) )
-		AssertMsg(0, "Missing INTERFACE\\timebaryellow.sti" );
+		FilenameForBPP("INTERFACE\\timebaryellow.sti", VObjectDesc.ImageFile);
 	}
 	else if (iResolution == 1)
 	{
 		FilenameForBPP("INTERFACE\\timebaryellow_800x600.sti", VObjectDesc.ImageFile);
-		if( !AddVideoObject( &VObjectDesc, &uiINTBAR ) )
-			AssertMsg(0, "Missing INTERFACE\\timebaryellow_800x600.sti" );
 	}
 	else if (iResolution == 2)
 	{
 		FilenameForBPP("INTERFACE\\timebaryellow_1024x768.sti", VObjectDesc.ImageFile);
-		if( !AddVideoObject( &VObjectDesc, &uiINTBAR ) )
-			AssertMsg(0, "Missing INTERFACE\\timebaryellow_1024x768.sti" );
 	}
+	else
+	{
+		AssertMsg( 0, "Invalid resolution");
+		return;
+	}
+
+	if( !AddVideoObject( &VObjectDesc, &uiINTBAR ) )
+		AssertMsg(0, String( "Missing %s", VObjectDesc.ImageFile) );
 
 	// Change dest buffer
 	SetFontDestBuffer( uiSurface , 0, 0, SCREEN_WIDTH , 20, FALSE );
@@ -3831,13 +3846,12 @@ void RenderAimCubeUI( )
 
 	if ( gfInAimCubeUI )
 	{
+		// Determine screen location....
+		GetGridNoScreenPos( gCubeUIData.sGridNo, gCubeUIData.ubLevel, &sScreenX, &sScreenY );
 
 		// OK, given height
 		if ( gCubeUIData.fShowHeight )
 		{
-			// Determine screen location....
-			GetGridNoScreenPos( gCubeUIData.sGridNo, gCubeUIData.ubLevel, &sScreenX, &sScreenY );
-	
 			// Save background
 			iBack = RegisterBackgroundRect( BGND_FLAG_SINGLE, NULL, sScreenX, (INT16)(sScreenY - 70 ), (INT16)(sScreenX + 40 ), (INT16)(sScreenY + 50 ) ); 
 			if ( iBack != -1 )

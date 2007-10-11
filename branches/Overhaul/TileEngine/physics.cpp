@@ -727,9 +727,9 @@ BOOLEAN	PhysicsCheckForCollisions( REAL_OBJECT *pObject, INT32 *piCollisionID )
 	INT32					iCollisionCode = COLLISION_NONE;
 	BOOLEAN				fDoCollision = FALSE;
 	FLOAT					dElasity = 1;
-	UINT16				usStructureID;
-	FLOAT					dNormalX, dNormalY, dNormalZ;
-	INT16					sGridNo;
+	UINT16				usStructureID = -1;
+	FLOAT					dNormalX = 0.0, dNormalY = 0.0, dNormalZ = 1.0;
+	INT16					sGridNo = NOWHERE;
 
 	// Checkf for collisions
 	dX = pObject->Position.x;
@@ -1712,7 +1712,6 @@ FLOAT CalculateObjectTrajectory( INT16 sTargetZ, OBJECTTYPE *pItem, vector_3 *vP
 	pObject->fTestPositionNotSet = TRUE;
 	pObject->fVisible		 = FALSE;
 
-	// WANNE 2
 	// Alrighty, move this beast until it dies....
 	while( pObject->fAlive )
 	{
@@ -1978,7 +1977,7 @@ void CalculateLaunchItemBasicParams( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, I
 		if ( ubLevel == 1 && !fThroughIntermediateGridNo )
 		{
 			// Is there a guy here...?
-			if ( WhoIsThere2( sGridNo, ubLevel ) != NO_SOLDIER )
+			if ( WhoIsThere2( sGridNo, ubLevel ) != NOBODY )
 			{
 				dMagForce		=	(float)( dMagForce * 0.85 );
 
@@ -2011,6 +2010,12 @@ BOOLEAN CalculateLaunchItemChanceToGetThrough( SOLDIERTYPE *pSoldier, OBJECTTYPE
 	vector_3		vForce, vPosition, vDirNormal;
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"CalculateLaunchItemChanceToGetThrough");
+
+	if ( pSoldier->sGridNo == sGridNo )
+	{
+		printf("Warning! Soldier #%d attempted to launch item at himself\n", pSoldier->ubID);
+		return FALSE;
+	}
 	// Ge7t basic launch params...
 	CalculateLaunchItemBasicParams( pSoldier, pItem, sGridNo, ubLevel, sEndZ, &dForce, &dDegrees, psFinalGridNo, fArmed );
 
@@ -2292,7 +2297,7 @@ void CheckForObjectHittingMerc( REAL_OBJECT *pObject, UINT16 usStructureID )
 				sDamage = 1;
 				sBreath = 0;
 
-				EVENT_SoldierGotHit( pSoldier, NOTHING, sDamage, sBreath, pSoldier->bDirection, 0, pObject->ubOwner, FIRE_WEAPON_TOSSED_OBJECT_SPECIAL, 0, 0, NOWHERE );
+				EVENT_SoldierGotHit( pSoldier, NOTHING, sDamage, sBreath, pSoldier->ubDirection, 0, pObject->ubOwner, FIRE_WEAPON_TOSSED_OBJECT_SPECIAL, 0, 0, NOWHERE );
 
 				pObject->ubLastTargetTakenDamage = (UINT8)( usStructureID );
 			}
@@ -2479,7 +2484,7 @@ void HandleArmedObjectImpact( REAL_OBJECT *pObject )
 #ifdef TESTDUDEXPLOSIVES 
 		if ( sZ != 0 || pObject->fInWater )
 #else
-		if ( sZ != 0 || pObject->fInWater || ( pObj->bStatus[0] >= USABLE && ( PreRandom( 100 ) < (UINT32) pObj->bStatus[0] + PreRandom( 50 ) ) ) )
+		if ( sZ != 0 || pObject->fInWater || ( pObj->ItemData.Generic.bStatus[0] >= USABLE && ( PreRandom( 100 ) < (UINT32) pObj->ItemData.Generic.bStatus[0] + PreRandom( 50 ) ) ) )
 #endif
 		{
 			fDoImpact = TRUE;
@@ -2489,7 +2494,7 @@ void HandleArmedObjectImpact( REAL_OBJECT *pObject )
 #ifdef TESTDUDEXPLOSIVES 
 			if ( 1 )		
 #else
-			if ( pObj->bStatus[0] >= USABLE && PreRandom(100) < (UINT32) pObj->bStatus[0] + PreRandom( 50 ) )
+			if ( pObj->ItemData.Generic.bStatus[0] >= USABLE && PreRandom(100) < (UINT32) pObj->ItemData.Generic.bStatus[0] + PreRandom( 50 ) )
 #endif
 			{
 				iTrapped = PreRandom( 4 ) + 2;
@@ -2500,8 +2505,8 @@ void HandleArmedObjectImpact( REAL_OBJECT *pObject )
 				// Start timed bomb...
 				usFlags |= WORLD_ITEM_ARMED_BOMB;
 
-				pObj->bDetonatorType = BOMB_TIMED;
-				pObj->bDelay = (INT8)( 1 + PreRandom( 2 ) );
+				pObj->ItemData.Trigger.bDetonatorType = BOMB_TIMED;
+				pObj->ItemData.Trigger.BombTrigger.bDelay = (INT8)( 1 + PreRandom( 2 ) );
 			}
 
 			// ATE: If we have collided with roof last...
@@ -2653,7 +2658,7 @@ BOOLEAN	LoadPhysicsTableFromSavedGameFile( HWFILE hFile )
 UINT16 RandomGridFromRadius( INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius )
 {
 	INT16		sX, sY;
-	INT16		sGridNo;
+	INT16		sGridNo = NOWHERE;
 	INT32					leftmost;
 	BOOLEAN	fFound = FALSE;
 	UINT32		cnt = 0;
