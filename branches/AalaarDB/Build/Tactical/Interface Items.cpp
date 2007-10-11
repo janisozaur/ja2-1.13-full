@@ -3177,8 +3177,8 @@ void RenderItemDescriptionBox( )
 				sCenX = (INT16)( gsInvDescX + gMapItemDescAttachmentsXY[cnt].sX + 5 );
 				sCenY = (INT16)( gsInvDescY + gMapItemDescAttachmentsXY[cnt].sY - 1 );
 				INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gMapItemDescAttachmentsXY[cnt].sWidth, gMapItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0 );
-				sCenX = sCenX - gItemDescAttachmentsXY[cnt].sBarDx;
-				sCenY = sCenY + gItemDescAttachmentsXY[cnt].sBarDy;
+				sCenX = sCenX - gMapItemDescAttachmentsXY[cnt].sBarDx;
+				sCenY = sCenY + gMapItemDescAttachmentsXY[cnt].sBarDy;
 				DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER );
 			}
 		}

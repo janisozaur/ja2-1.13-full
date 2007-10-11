@@ -16,14 +16,14 @@
 //#pragma warning (disable : 4189)//disables local variable is initialized but not referenced
 
 // Remove comment to build Beta version (with lot of debug infos) including the Editor
-#define JA2BETAVERSION
+//#define JA2BETAVERSION
 
 // Normal test version
-#define JA2TESTVERSION
+//#define JA2TESTVERSION
 
 //#define JA2EDITOR
 
-#define SGP_DEBUG
+//#define SGP_DEBUG
 
 //#define PROFILER_ENABLED
 
@@ -31,7 +31,7 @@
 
 //#define DEBUGDECISIONS
 
-//#define ROBOT_ALWAYS_READY
+#define ROBOT_ALWAYS_READY
 
 //#ifdef _DEBUG
 //	#ifndef JA2TESTVERSION

@@ -6015,7 +6015,11 @@ void SOLDIERTYPE::ChangeSoldierStance( UINT8 ubDesiredStance )
 
 	if (!IsValidStance( thisSoldier, ubDesiredStance))
 	{
-		AssertMsg( 0, "Attempted to set soldier to an invalid stance.");
+		//ADB this was recently put in as an assert, but that would make the game crash in certain circumstances, including the example below
+		//you can comment out the breakpoint if it annoys you, but the return should remain for the indefinate future
+		//if it's removed you'll have stuff happen like when out of breath and lying collapsed on the ground
+		//and trying to climb onto a roof you'll crouch, stand, reach for the roof, and then collapse again, which looks really weird.
+		DebugBreakpoint();
 		return;
 	}
 
