@@ -33,7 +33,7 @@ void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT16 *pubNumA
 BOOLEAN PrepareEnemyForSectorBattle();
 BOOLEAN PrepareEnemyForUndergroundBattle();
 
-void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT16 ubNumAdmins, UINT16 ubNumTroops, UINT16 ubNumElites, BOOLEAN fMagicallyAppeared );
+void AddEnemiesToBattle( GROUP *pGroup, UINT16 ubStrategicInsertionCode, UINT16 ubNumAdmins, UINT16 ubNumTroops, UINT16 ubNumElites, BOOLEAN fMagicallyAppeared );
 void AddPossiblePendingEnemiesToBattle();
 void EndTacticalBattleForEnemy();
 

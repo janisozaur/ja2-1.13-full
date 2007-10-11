@@ -1266,7 +1266,7 @@ BOOLEAN ExecuteOverhead( )
 											{
 												// ATE wanted this line here...
 												pSoldier->usPathIndex--;
-												AdjustSoldierPathToGoOffEdge( pSoldier, pSoldier->sGridNo, (UINT8)pSoldier->uiPendingActionData1 );
+												AdjustSoldierPathToGoOffEdge( pSoldier, pSoldier->sGridNo, (INT8)pSoldier->uiPendingActionData1 );
 												continue;
 											}
 										}

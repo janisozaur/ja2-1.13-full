@@ -47,7 +47,7 @@ typedef struct SCHEDULENODE
 	UINT32 usData1[MAX_SCHEDULE_ACTIONS]; //typically the gridno, but depends on the action
 	UINT32 usData2[MAX_SCHEDULE_ACTIONS]; //secondary information, not used by most actions
 	UINT8 ubAction[MAX_SCHEDULE_ACTIONS];
-	UINT16 ubScheduleID;
+	INT8 ubScheduleID;
 	INT16 ubSoldierID;
 	UINT16 usFlags;
 }SCHEDULENODE;
@@ -59,26 +59,26 @@ typedef struct _OLD_SCHEDULENODE
 	UINT16 usData1[MAX_SCHEDULE_ACTIONS]; //typically the gridno, but depends on the action
 	UINT16 usData2[MAX_SCHEDULE_ACTIONS]; //secondary information, not used by most actions
 	UINT8 ubAction[MAX_SCHEDULE_ACTIONS];
-	UINT8 ubScheduleID;
-	UINT8 ubSoldierID;
+	INT8 ubScheduleID;
+	INT16 ubSoldierID;
 	UINT16 usFlags;
 }_OLD_SCHEDULENODE;
 
 
-extern UINT8				gubScheduleID;
+extern INT8 gubScheduleID;
 extern SCHEDULENODE *gpScheduleList;
 
 //Access functions
-SCHEDULENODE* GetSchedule( UINT16 ubScheduleID );
+SCHEDULENODE* GetSchedule( INT16 ubScheduleID );
 
 //Removes all schedules from the event list, and cleans out the list.
 void DestroyAllSchedules();
 void DestroyAllSchedulesWithoutDestroyingEvents();
 
 //This is the callback whenever a schedule is processed
-void ProcessTacticalSchedule( UINT8 ubScheduleID );
+void ProcessTacticalSchedule( INT16 ubScheduleID );
 
-void DeleteSchedule( UINT16 ubScheduleID );
+void DeleteSchedule( INT16 ubScheduleID );
 
 void LoadSchedules( INT16 **hBuffer, FLOAT dMajorMapVersion );
 BOOLEAN LoadSchedulesFromSave( HWFILE hFile );

@@ -233,7 +233,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			break;
 		//When a merc is supposed to leave
 		case EVENT_MERC_CONTRACT_OVER:
-			MercsContractIsFinished( (UINT8) pEvent->uiParam );
+			MercsContractIsFinished( (INT16) pEvent->uiParam );
 			break;
 		case EVENT_ADDSOLDIER_TO_UPDATE_BOX:
 			// if the grunt is currently active, add to update box
@@ -252,7 +252,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			//ValidateGameEvents();
 			break;
 		case EVENT_MERC_COMPLAIN_EQUIPMENT:
-			MercComplainAboutEquipment( (UINT8) pEvent->uiParam );
+			MercComplainAboutEquipment( (INT16) pEvent->uiParam );
 			break;
 		case EVENT_HOURLY_UPDATE:
 			HandleHourlyUpdate();
@@ -301,7 +301,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			HandleGroupAboutToArrive();
 			break;
 		case EVENT_PROCESS_TACTICAL_SCHEDULE:
-			ProcessTacticalSchedule( (UINT8)pEvent->uiParam );
+			ProcessTacticalSchedule( (INT16)pEvent->uiParam );
 			break;
 		case EVENT_BEGINRAINSTORM:
 			//EnvBeginRainStorm( (UINT8)pEvent->uiParam );
@@ -406,13 +406,13 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			HourlyMinesUpdate();		// not-so hourly, in this case!
 			break;
 		case EVENT_REMOVE_ASSASSIN:
-			RemoveAssassin( (UINT8) pEvent->uiParam );
+			RemoveAssassin( (INT16) pEvent->uiParam );
 			break;
 		case EVENT_BEGIN_CONTRACT_RENEWAL_SEQUENCE:
 			BeginContractRenewalSequence( );
 			break;
 		case EVENT_RPC_WHINE_ABOUT_PAY:
-			RPCWhineAboutNoPay( (UINT8) pEvent->uiParam );
+			RPCWhineAboutNoPay( (INT16) pEvent->uiParam );
 			break;
 
 		case EVENT_HAVENT_MADE_IMP_CHARACTER_EMAIL:

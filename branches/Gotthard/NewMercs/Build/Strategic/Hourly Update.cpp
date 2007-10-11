@@ -82,7 +82,7 @@ void HandleHourlyUpdate()
 
 void UpdateRegenCounters( void )
 {
-	UINT16	ubID;
+	INT16 ubID;
 		
 	for ( ubID = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; ubID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubID++ )
 	{
@@ -120,7 +120,7 @@ void HourlyQuestUpdate( void )
 	// bar/nightclub
 	if ( uiHour == 15 )
 	{
-		UINT8 ubLoop;
+		INT16 ubLoop;
 
 		SetFactTrue( FACT_CLUB_OPEN );
 		SetFactFalse( FACT_PAST_CLUB_CLOSING_AND_PLAYER_WARNED );

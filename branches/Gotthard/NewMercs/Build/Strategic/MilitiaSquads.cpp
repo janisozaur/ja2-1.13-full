@@ -82,7 +82,7 @@ BOOLEAN PlayerMercsInSector_MSE( UINT8 ubSectorX, UINT8 ubSectorY, BOOLEAN fDont
 {
 	GROUP *pGroup;
 	PLAYERGROUP *pPlayer;
-	UINT8 ubNumMercs = 0;
+	INT16 ubNumMercs = 0;
 	pGroup = gpGroupList;
 	while( pGroup )
 	{
@@ -130,7 +130,7 @@ UINT8 GetEnemyGroupIdInSector( INT16 sMapX, INT16 sMapY )
 
 
 // Count all militia in the sector
-UINT8 CountMilitia(SECTORINFO *pSectorInfo)
+UINT16 CountMilitia(SECTORINFO *pSectorInfo)
 {
 	return pSectorInfo->ubNumberOfCivsAtLevel[GREEN_MILITIA]+
 	pSectorInfo->ubNumberOfCivsAtLevel[REGULAR_MILITIA]+
@@ -216,7 +216,7 @@ BOOLEAN MoveOneBestMilitiaMan(INT16 sMapX, INT16 sMapY, INT16 sTMapX, INT16 sTMa
 }
 
 // Generate rating for a direction
-UINT16 CountDirectionEnemyRating( INT16 sMapX, INT16 sMapY, UINT8 uiDir )
+UINT16 CountDirectionEnemyRating( INT16 sMapX, INT16 sMapY, INT8 uiDir )
 {
 	DOUBLE ddMinAngle, ddMaxAngle;
 	DOUBLE ddRes = 0;
@@ -278,7 +278,7 @@ UINT16 CountDirectionEnemyRating( INT16 sMapX, INT16 sMapY, UINT8 uiDir )
 	return (UINT16) ddRes;
 }
 
-UINT16 CountDirectionRating( INT16 sMapX, INT16 sMapY, UINT8 uiDir )
+UINT16 CountDirectionRating( INT16 sMapX, INT16 sMapY, INT8 uiDir )
 {
 	INT32 iRes = BASE_DIR_PRIORITY + CountDirectionEnemyRating( sMapX, sMapY, uiDir );
 
@@ -350,7 +350,7 @@ BOOLEAN CheckStandardConditionsForDirection( INT16 sSMapX, INT16 sSMapY, INT16 s
 //		( fForBattle || CountAllMilitiaInSector( sMapX, sMapY ) < gGameExternalOptions.guiMaxMilitiaSquadSize || PlayerMercsInSector( sMapX, sMapY, 0 ) )
 }
 
-void GenerateDirectionInfos( INT16 sMapX, INT16 sMapY, UINT8* uiDirNumber, UINT16 pMoveDir[4][3], BOOLEAN fWithCities, BOOLEAN fForBattle, BOOLEAN fOnlyCitySectors )
+void GenerateDirectionInfos( INT16 sMapX, INT16 sMapY, INT8* uiDirNumber, UINT16 pMoveDir[4][3], BOOLEAN fWithCities, BOOLEAN fForBattle, BOOLEAN fOnlyCitySectors )
 {
 	*uiDirNumber = 0;
 
@@ -454,11 +454,11 @@ BOOLEAN CheckInBlockMoveList(INT16 sMapX, INT16 sMapY)
 void UpdateMilitiaSquads(INT16 sMapX, INT16 sMapY )
 {
 	UINT16 pMoveDir[4][3];
-	UINT8 uiDirNumber = 0;
-	UINT32 iRandomRes = 0, iRandom = 0;
+	INT8 uiDirNumber = 0;
+	INT32 iRandomRes = 0, iRandom = 0;
 	UINT8 x;//,y;
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
-	UINT8 uiMilitiaCount;
+	UINT16 uiMilitiaCount;
 
 
 	// If we don't want roaming militia
@@ -594,11 +594,11 @@ void UpdateMilitiaSquads(INT16 sMapX, INT16 sMapY )
 void CreateMilitiaSquads(INT16 sMapX, INT16 sMapY )
 {
 	UINT16 pMoveDir[4][3];
-	UINT8 uiDirNumber = 0;
-	UINT32 iRandomRes = 0, iRandom = 0;
+	INT8 uiDirNumber = 0;
+	INT32 iRandomRes = 0, iRandom = 0;
 	UINT8 x;//,y;
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
-	UINT8 uiMilitiaCount;
+	UINT16 uiMilitiaCount;
 
 
 	// If we're not allowing roaming groups, 
@@ -693,7 +693,7 @@ extern BOOLEAN gfMSResetMilitia;
 void DoMilitiaHelpFromAdjacentSectors( INT16 sMapX, INT16 sMapY )
 {
 	UINT16 pMoveDir[4][3];
-	UINT8 uiDirNumber = 0;
+	INT8 uiDirNumber = 0;
 	UINT8 x;
 	UINT16 uiNumGreen = 0, uiNumReg = 0, uiNumElite = 0;
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
@@ -760,7 +760,7 @@ void MSCallBack( UINT8 ubResult )
 BOOLEAN IsThereMilitiaInAdjacentSector( INT16 sMapX, INT16 sMapY )
 {
 	UINT16 pMoveDir[4][3];
-	UINT8 uiDirNumber = 0;
+	INT8 uiDirNumber = 0;
 	UINT8 x;
 	BOOLEAN fResult = FALSE;
 

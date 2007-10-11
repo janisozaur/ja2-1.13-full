@@ -619,7 +619,7 @@ void HandleMercsAboutToLeave( SOLDIERTYPE *pMercList )
 
 // ATE: This function deals with MERC MERC and NPC's leaving because of not getting paid...
 // NOT AIM renewals....
-void MercsContractIsFinished( UINT16	ubID )
+void MercsContractIsFinished( INT16 ubID )
 {
 	SOLDIERTYPE *pSoldier;
 
@@ -673,7 +673,7 @@ void MercsContractIsFinished( UINT16	ubID )
 }
 
 // ATE: Called for RPCs who should now complain about no pay...
-void RPCWhineAboutNoPay( UINT16	ubID )
+void RPCWhineAboutNoPay( INT16 ubID )
 {
 	SOLDIERTYPE *pSoldier;
 
@@ -754,7 +754,7 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 }
 
 
-void MercComplainAboutEquipment( UINT16 ubProfile )
+void MercComplainAboutEquipment( INT16 ubProfile )
 {
 	SOLDIERTYPE *pSoldier;
 
@@ -797,7 +797,7 @@ void UpdateBuddyAndHatedCounters( void )
 	INT32									iLoop;
 	INT16									bOtherID;
 	INT16									bLastTeamID;
-	UINT16									ubOtherProfileID;
+	INT16									ubOtherProfileID;
 	SOLDIERTYPE						*pSoldier;
 	SOLDIERTYPE						*pOtherSoldier;
 	MERCPROFILESTRUCT			*pProfile;

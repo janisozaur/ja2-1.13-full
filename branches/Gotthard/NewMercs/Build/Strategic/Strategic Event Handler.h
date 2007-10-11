@@ -28,6 +28,6 @@ void HandleEarlyMorningEvents( void );
 
 void MakeCivGroupHostileOnNextSectorEntrance( UINT8 ubCivGroup );
 
-void RemoveAssassin( UINT8 ubProfile );
+void RemoveAssassin( INT16 ubProfile );
 
 #endif

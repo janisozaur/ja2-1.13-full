@@ -789,7 +789,7 @@ void SetClockHour(STR16 pStringA, ...);
 void SetHourAlternate(STR16 pStringA, ...);
 void SetDayAlternate(STR16 pStringA, ...);
 
-void RenderIconsForUpperLeftCornerPiece( INT8 bCharNumber );
+void RenderIconsForUpperLeftCornerPiece( INT16 bCharNumber );
 void RenderAttributeStringsForUpperLeftHandCorner( UINT32 uiBufferToRenderTo );
 
 void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInterface( INT16 sMapX, INT16 sMapY );
@@ -858,7 +858,7 @@ void RebuildWayPointsForAllSelectedCharsGroups( void );
 
 extern BOOLEAN HandleNailsVestFetish( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, UINT16 usReplaceItem );
 
-BOOLEAN CharacterIsInTransitAndHasItemPickedUp( INT8 bCharacterNumber );
+BOOLEAN CharacterIsInTransitAndHasItemPickedUp( INT16 bCharacterNumber );
 
 void InterruptTimeForMenus( void );
 
@@ -1008,7 +1008,7 @@ BOOLEAN HandleCtrlOrShiftInTeamPanel( INT8 bCharNumber );
 INT32 GetContractExpiryTime( SOLDIERTYPE *pSoldier );
 
 void ConvertMinTimeToETADayHourMinString( UINT32 uiTimeInMin, STR16 sString );
-INT32 GetGroundTravelTimeOfCharacter( INT8 bCharNumber );
+INT32 GetGroundTravelTimeOfCharacter( INT16 bCharNumber );
 
 INT16 CalcLocationValueForChar( INT32 iCounter );
 
@@ -1084,7 +1084,7 @@ BOOLEAN SetInfoChar( INT16 ubID )
 		// skip invalid characters
 		if ( gCharactersList[ bCounter ].fValid == TRUE )
 		{
-			if ( gCharactersList[ bCounter ].usSolID == (UINT16)ubID )
+			if ( gCharactersList[ bCounter ].usSolID == ubID )
 			{
 				ChangeSelectedInfoChar( bCounter, TRUE );
 				return( TRUE );
@@ -1513,7 +1513,7 @@ void RenderHandPosItem( void )
 
 
 
-void RenderIconsForUpperLeftCornerPiece( INT8 bCharNumber )
+void RenderIconsForUpperLeftCornerPiece( INT16 bCharNumber )
 {
 	HVOBJECT hHandle;
 
@@ -2317,7 +2317,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 
 
 // this character is in transit has an item picked up
-BOOLEAN CharacterIsInTransitAndHasItemPickedUp( INT8 bCharacterNumber )
+BOOLEAN CharacterIsInTransitAndHasItemPickedUp( INT16 bCharacterNumber )
 {
 
 	// valid character?
@@ -2546,7 +2546,7 @@ void HighLightAssignLine()
 	static INT32 iColorNum = STARTING_COLOR_NUM;
 	static BOOLEAN fDelta=FALSE;
 	static INT32 uiOldHighlight = MAX_CHARACTER_COUNT + 1;
-	INT16 usCount = 0;
+	INT8 usCount = 0;
 	UINT16 usX;
 	UINT16 usY;
 	INT16 usVehicleCount = 0;
@@ -2604,12 +2604,12 @@ void HighLightAssignLine()
 			
 			LineDraw(TRUE, usX, usY, usX, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
 			LineDraw(TRUE, usX+ASSIGN_WIDTH, usY, usX+ASSIGN_WIDTH, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
-			if( ( usCount == 0 ) || ( usCount != 0 ? !( IsCharacterSelectedForAssignment( ( UINT16 )( usCount - 1 ) ) ) : 0 ) || ( usCount == FIRST_VEHICLE ) )
+			if( ( usCount == 0 ) || ( usCount != 0 ? !( IsCharacterSelectedForAssignment( ( INT8 )( usCount - 1 ) ) ) : 0 ) || ( usCount == FIRST_VEHICLE ) )
 			{
 				LineDraw( TRUE, usX, usY, usX+ASSIGN_WIDTH, usY, usColor,pDestBuf);
 			}
 
-			if( ( ( usCount == MAX_CHARACTER_COUNT - 1 ) ) || ( usCount != ( MAX_CHARACTER_COUNT - 1 ) ? !( IsCharacterSelectedForAssignment( ( UINT16 )( usCount + 1 ) ) ) : 0) || ( usCount == FIRST_VEHICLE - 1 ) )
+			if( ( ( usCount == MAX_CHARACTER_COUNT - 1 ) ) || ( usCount != ( MAX_CHARACTER_COUNT - 1 ) ? !( IsCharacterSelectedForAssignment( ( INT8 )( usCount + 1 ) ) ) : 0) || ( usCount == FIRST_VEHICLE - 1 ) )
 			{
 				LineDraw(TRUE, usX, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usX+ASSIGN_WIDTH, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
 			}
@@ -2672,7 +2672,7 @@ void HighLightDestLine()
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
 	{
-		if( CharacterIsGettingPathPlotted( usCount ) == TRUE )
+		if( CharacterIsGettingPathPlotted( (INT8)usCount ) == TRUE )
 		{
 			usX=DEST_ETA_X-4;
 			usY=(Y_OFFSET*usCount-1)+(Y_START+(usCount*Y_SIZE));
@@ -2685,11 +2685,11 @@ void HighLightDestLine()
 		
 			usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
 			
-			if( ( usCount == 0 ) || ( usCount != 0 ? !( CharacterIsGettingPathPlotted( ( UINT16 )( usCount - 1 ) ) ) : 0 ) || ( usCount == FIRST_VEHICLE ) )
+			if( ( usCount == 0 ) || ( usCount != 0 ? !( CharacterIsGettingPathPlotted( ( INT8 )( usCount - 1 ) ) ) : 0 ) || ( usCount == FIRST_VEHICLE ) )
 			{
 				LineDraw( TRUE, usX+4, usY, usX+DEST_ETA_WIDTH+4, usY, usColor,pDestBuf);
 			}
-			if( ( ( usCount == MAX_CHARACTER_COUNT - 1 ) ) || ( usCount != ( MAX_CHARACTER_COUNT - 1 ) ? !( CharacterIsGettingPathPlotted( ( UINT16 )( usCount + 1 ) ) ) : 0) || ( usCount == FIRST_VEHICLE - 1 ) )
+			if( ( ( usCount == MAX_CHARACTER_COUNT - 1 ) ) || ( usCount != ( MAX_CHARACTER_COUNT - 1 ) ? !( CharacterIsGettingPathPlotted( ( INT8 )( usCount + 1 ) ) ) : 0) || ( usCount == FIRST_VEHICLE - 1 ) )
 			{
 				LineDraw(TRUE, usX+4, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usX+DEST_ETA_WIDTH+4, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
 			}
@@ -2716,7 +2716,7 @@ void HighLightSleepLine()
 	static INT32 iColorNum = STARTING_COLOR_NUM;
 	static BOOLEAN fDelta=FALSE;
 	static INT32 uiOldHighlight = MAX_CHARACTER_COUNT + 1;
-	UINT16 usCount = 0;
+	INT8 usCount = 0;
 	UINT16 usX, usX2;
 	UINT16 usY;
 	UINT16 usVehicleCount = 0;
@@ -2774,11 +2774,11 @@ void HighLightSleepLine()
 		
 			usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
 			
-			if( ( usCount == 0 ) || ( usCount != 0 ? !( IsCharacterSelectedForSleep( ( UINT16 )( usCount - 1 ) ) ) : 0 ) || ( usCount == FIRST_VEHICLE ) )
+			if( ( usCount == 0 ) || ( usCount != 0 ? !( IsCharacterSelectedForSleep( ( INT8 )( usCount - 1 ) ) ) : 0 ) || ( usCount == FIRST_VEHICLE ) )
 			{
 				LineDraw( TRUE, usX+4, usY, usX2, usY, usColor,pDestBuf);
 			}
-			if( ( ( usCount == MAX_CHARACTER_COUNT - 1 ) ) || ( usCount != ( MAX_CHARACTER_COUNT - 1 ) ? !( IsCharacterSelectedForSleep( ( UINT16 )( usCount + 1 ) ) ) : 0) || ( usCount == FIRST_VEHICLE - 1 ) )
+			if( ( ( usCount == MAX_CHARACTER_COUNT - 1 ) ) || ( usCount != ( MAX_CHARACTER_COUNT - 1 ) ? !( IsCharacterSelectedForSleep( ( INT8 )( usCount + 1 ) ) ) : 0) || ( usCount == FIRST_VEHICLE - 1 ) )
 			{
 				LineDraw(TRUE, usX+4, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usX2, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
 			}
@@ -2923,7 +2923,7 @@ void LoadCharacters( void )
 
 void DisplayCharacterList()
 {
-	INT16 sCount=0;
+	INT8 sCount=0;
 	UINT8 ubForegroundColor = 0;
 
 	if( ( fShowAssignmentMenu == TRUE ) && ( fTeamPanelDirty == FALSE ) )
@@ -7326,7 +7326,7 @@ void RenderAttributeStringsForUpperLeftHandCorner( UINT32 uiBufferToRenderTo )
 void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInterface(INT16 sMapX, INT16 sMapY )
 {
 	// simply check if we want to refresh the screen to display path
-	static INT8 bOldDestChar = -1;
+	static INT16 bOldDestChar = -1;
   static INT16  sPrevMapX, sPrevMapY;
 	INT32 iDifference = 0;
 
@@ -8953,7 +8953,7 @@ void ContractRegionMvtCallback( MOUSE_REGION *pRegion, INT32 iReason )
 					// glow region
 					fGlowContractRegion = TRUE;
 
-					giContractHighLine = bSelectedInfoChar;
+					giContractHighLine = (INT32)bSelectedInfoChar;
 
 					PlayGlowRegionSound( );
 				}
@@ -9099,7 +9099,7 @@ void ReBuildCharactersList( void )
 
 void HandleChangeOfInfoChar( void )
 {
-	static UINT16 bOldInfoChar = -1;
+	static INT8 bOldInfoChar = -1;
 
 	if( bSelectedInfoChar != bOldInfoChar )
 	{
@@ -10554,7 +10554,7 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 
 BOOLEAN CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed( INT8 bCharId )
 {
-	UINT16 usSoldierId = 0;
+	INT16 usSoldierId = 0;
 
 	// invalid char id
 	if( bCharId == -1 )
@@ -12012,7 +12012,7 @@ void ConvertMinTimeToETADayHourMinString( UINT32 uiTimeInMin, STR16 sString )
 
 
 
-INT32 GetGroundTravelTimeOfCharacter( INT8 bCharNumber )
+INT32 GetGroundTravelTimeOfCharacter( INT16 bCharNumber )
 {
 	INT32 iTravelTime = 0;
 
@@ -12335,10 +12335,10 @@ void RandomAwakeSelectedMercConfirmsStrategicMove( void )
 {
 	SOLDIERTYPE *pSoldier = NULL;
 	INT32 iCounter;
-	UINT16	ubSelectedMercID[ 20 ];
-	UINT8	ubSelectedMercIndex[ 20 ];
-	UINT8	ubNumMercs = 0;
-	UINT8	ubChosenMerc;
+	INT16	ubSelectedMercID[ 20 ];
+	INT8	ubSelectedMercIndex[ 20 ];
+	UINT16	ubNumMercs = 0;
+	INT16	ubChosenMerc;
 
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
@@ -12351,7 +12351,7 @@ void RandomAwakeSelectedMercConfirmsStrategicMove( void )
 						!AM_A_ROBOT( pSoldier ) && !AM_AN_EPC( pSoldier ) && !pSoldier->fMercAsleep )
 			{
 				ubSelectedMercID[ ubNumMercs ] = pSoldier->ubID;
-				ubSelectedMercIndex[ ubNumMercs ] = (UINT8)iCounter;
+				ubSelectedMercIndex[ ubNumMercs ] = (INT8)iCounter;
 
 				ubNumMercs++;
 			}
@@ -12360,9 +12360,10 @@ void RandomAwakeSelectedMercConfirmsStrategicMove( void )
 
 	if ( ubNumMercs > 0 )
 	{
-		ubChosenMerc = (UINT8)Random( ubNumMercs );
+		ubChosenMerc = (INT16)Random( ubNumMercs );
 
 		// select that merc so that when he speaks we're showing his portrait and not someone else
+		//not sure exactly what to do here... indexes should probably be INT8?  But need to check if they are referenced in tactical as an ID.  We'd have problems then.  Gotthard 10/11/07
 		ChangeSelectedInfoChar( ubSelectedMercIndex[ ubChosenMerc ], FALSE );
 
 		DoMercBattleSound( MercPtrs[ ubSelectedMercID[ ubChosenMerc ] ], ( UINT8 ) ( Random(2) ? BATTLE_SOUND_OK1 : BATTLE_SOUND_OK2 ) );

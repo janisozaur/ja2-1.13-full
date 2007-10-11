@@ -84,7 +84,7 @@
 INT32 giMaxEnemiesToRender = 40;
 INT32 giMaxMilitiaToRender = 20;//Changes depending on merc amount
 
-extern UINT8 gubReinforcementMinEnemyStaticGroupSize;
+extern UINT16 gubReinforcementMinEnemyStaticGroupSize;
 extern BOOLEAN gfStrategicMilitiaChangesMade;
 
 extern void ResetMilitia();
@@ -344,7 +344,7 @@ void RenderSoldierCellBars( SOLDIERCELL *pCell );
 	extern void GetRandomCalls( UINT32 *puiRandoms, UINT32 *puiPreRandoms );
 #endif
 
-void GenerateDirectionInfos( INT16 sMapX, INT16 sMapY, UINT8* uiDirNumber, UINT16 pMoveDir[4][3], BOOLEAN fWithCities, BOOLEAN fForBattle, BOOLEAN fOnlyCitySectors );
+void GenerateDirectionInfos( INT16 sMapX, INT16 sMapY, INT8* uiDirNumber, UINT16 pMoveDir[4][3], BOOLEAN fWithCities, BOOLEAN fForBattle, BOOLEAN fOnlyCitySectors );
 
 
 //Dynamic globals -- to conserve memory, all global variables are allocated upon entry
@@ -2042,7 +2042,7 @@ void CreateAutoResolveInterface()
 	HVOBJECT hVObject;
 	UINT16 ubGreenMilitia, ubRegMilitia, ubEliteMilitia;
 	UINT16 pMoveDir[4][3];
-	UINT8 uiDirNumber = 0;
+	INT8 uiDirNumber = 0;
 	UINT16 cnt;
 
 	//Setup new autoresolve blanket interface.
@@ -3472,14 +3472,14 @@ void RenderSoldierCellHealth( SOLDIERCELL *pCell )
 	mprintf( xp, yp, pStr );
 }
 
-UINT8 GetUnusedMercProfileID()
+INT16 GetUnusedMercProfileID()
 {
-	UINT8 ubRandom=0;
+	INT16 ubRandom=0;
 	INT32 i;
 	BOOLEAN fUnique = FALSE;
 	while( !fUnique )
 	{
-		ubRandom = (UINT8)PreRandom( 40 );
+		ubRandom = (INT16)PreRandom( 40 );
 		for( i = 0; i < 19; i++ )
 		{
 			fUnique = TRUE;

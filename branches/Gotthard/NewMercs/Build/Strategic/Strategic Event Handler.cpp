@@ -1026,7 +1026,7 @@ void MakeCivGroupHostileOnNextSectorEntrance( UINT8 ubCivGroup )
 	gTacticalStatus.fCivGroupHostile[ ubCivGroup ] = CIV_GROUP_WILL_BECOME_HOSTILE;
 }
 
-void RemoveAssassin( UINT8 ubProfile )
+void RemoveAssassin( INT16 ubProfile )
 {
 	gMercProfiles[ ubProfile ].sSectorX = 0;
 	gMercProfiles[ ubProfile ].sSectorY = 0;

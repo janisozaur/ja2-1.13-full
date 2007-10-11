@@ -94,7 +94,7 @@ typedef struct MINE_STATUS_TYPE
 
 typedef struct HEAD_MINER_TYPE
 {
-	UINT16	usProfileId;
+	INT16	usProfileId;
 	INT8		bQuoteNum[NUM_HEAD_MINER_STRATEGIC_QUOTES];
 	UINT8		ubExternalFace;
 } HEAD_MINER_TYPE;
@@ -161,33 +161,33 @@ void MineShutdownIsPermanent( INT8 bMineIndex );
 
 BOOLEAN IsMineShutDown( INT8 bMineIndex );
 
-UINT8 GetHeadMinerIndexForMine( INT8 bMineIndex );
-UINT16 GetHeadMinerProfileIdForMine( INT8 bMineIndex );
+INT16 GetHeadMinerIndexForMine( INT8 bMineIndex );
+INT16 GetHeadMinerProfileIdForMine( INT8 bMineIndex );
 
 // Find the sector location of a mine
 void GetMineSector( UINT8 ubMineIndex, INT16 * psX, INT16 * psY );
 
 void IssueHeadMinerQuote( INT8 bMineIndex, UINT8 ubQuoteType );
 
-UINT8 GetHeadMinersMineIndex(UINT16 ubMinerProfileId);
+UINT8 GetHeadMinersMineIndex(INT16 ubMinerProfileId);
 
-void PlayerSpokeToHeadMiner(UINT16 ubMinerProfile );
+void PlayerSpokeToHeadMiner(INT16 ubMinerProfile );
 
-BOOLEAN IsHisMineRunningOut(UINT16 ubMinerProfileId );
-BOOLEAN IsHisMineEmpty(UINT16 ubMinerProfileId );
-BOOLEAN IsHisMineDisloyal(UINT16 ubMinerProfileId );
-BOOLEAN IsHisMineInfested(UINT16 ubMinerProfileId );
-BOOLEAN IsHisMineLostAndRegained(UINT16 ubMinerProfileId );
-BOOLEAN IsHisMineAtMaxProduction(UINT16 ubMinerProfileId );
-void ResetQueenRetookMine( UINT16 ubMinerProfileId );
+BOOLEAN IsHisMineRunningOut(INT16 ubMinerProfileId );
+BOOLEAN IsHisMineEmpty(INT16 ubMinerProfileId );
+BOOLEAN IsHisMineDisloyal(INT16 ubMinerProfileId );
+BOOLEAN IsHisMineInfested(INT16 ubMinerProfileId );
+BOOLEAN IsHisMineLostAndRegained(INT16 ubMinerProfileId );
+BOOLEAN IsHisMineAtMaxProduction(INT16 ubMinerProfileId );
+void ResetQueenRetookMine( INT16 ubMinerProfileId );
 
 void QueenHasRegainedMineSector(INT8 bMineIndex);
 
 BOOLEAN HasAnyMineBeenAttackedByMonsters(void);
 
-void PlayerAttackedHeadMiner( UINT16 ubMinerProfileId );
+void PlayerAttackedHeadMiner( INT16 ubMinerProfileId );
 
-BOOLEAN HasHisMineBeenProducingForPlayerForSomeTime( UINT16 ubMinerProfileId );
+BOOLEAN HasHisMineBeenProducingForPlayerForSomeTime( INT16 ubMinerProfileId );
 
 // given sector value, get mine id value
 INT8 GetIdOfMineForSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );

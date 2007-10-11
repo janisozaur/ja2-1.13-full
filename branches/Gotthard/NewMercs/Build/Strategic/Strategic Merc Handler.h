@@ -4,9 +4,9 @@
 
 void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier );
 void MercDailyUpdate();
-void MercsContractIsFinished( UINT16	ubID );
-void RPCWhineAboutNoPay( UINT16	ubID );
-void MercComplainAboutEquipment( UINT16 ubProfileID );
+void MercsContractIsFinished( INT16 ubID );
+void RPCWhineAboutNoPay( INT16	ubID );
+void MercComplainAboutEquipment( INT16 ubProfileID );
 BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier );
 void UpdateBuddyAndHatedCounters( void );
 void HourlyCamouflageUpdate( void );

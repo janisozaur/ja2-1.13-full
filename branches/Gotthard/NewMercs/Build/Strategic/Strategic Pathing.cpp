@@ -335,7 +335,7 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 			{
 				if( iHelicopterVehicleId != -1 )
 				{
-					nextCost = GetTravelTimeForGroup( ( UINT8 ) ( SECTOR( ( curLoc%MAP_WORLD_X ), ( curLoc / MAP_WORLD_X ) ) ), ( UINT8 )( iCnt / 2 ), ( UINT8 )sMvtGroupNumber );
+					nextCost = GetTravelTimeForGroup( ( UINT8 ) ( SECTOR( ( curLoc%MAP_WORLD_X ), ( curLoc / MAP_WORLD_X ) ) ), ( INT8 )( iCnt / 2 ), ( UINT8 )sMvtGroupNumber );
 					if ( nextCost != 0xffffffff && sMvtGroupNumber == pVehicleList[ iHelicopterVehicleId].ubMovementGroup )
 					{
 						// is a heli, its pathing is determined not by time (it's always the same) but by total cost
@@ -352,12 +352,12 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 				}
 				else
 				{
-					nextCost = GetTravelTimeForGroup( ( UINT8 ) ( SECTOR( ( curLoc%MAP_WORLD_X ), ( curLoc / MAP_WORLD_X ) ) ), ( UINT8 )( iCnt / 2 ), ( UINT8 )sMvtGroupNumber );
+					nextCost = GetTravelTimeForGroup( ( UINT8 ) ( SECTOR( ( curLoc%MAP_WORLD_X ), (INT8)( curLoc / MAP_WORLD_X ) ) ), ( UINT8 )( iCnt / 2 ), ( UINT8 )sMvtGroupNumber );
 				}
 			}
 			else
 			{
-				nextCost = GetTravelTimeForFootTeam( ( UINT8 ) ( SECTOR( curLoc%MAP_WORLD_X, curLoc/MAP_WORLD_X  ) ), ( UINT8 )( iCnt / 2 ));
+				nextCost = GetTravelTimeForFootTeam( ( UINT8 ) ( SECTOR( curLoc%MAP_WORLD_X, curLoc/MAP_WORLD_X  ) ), ( INT8 )( iCnt / 2 ));
 			}
 
 			if( nextCost == 0xffffffff )

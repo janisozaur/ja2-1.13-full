@@ -62,8 +62,8 @@ typedef struct ENEMYGROUP
 	UINT16 ubNumTroops;						//number of regular troops in the group
 	UINT16 ubNumElites;						//number of elite troops in the group
 	UINT16 ubNumAdmins;						//number of administrators in the group
-	UINT8 ubLeaderProfileID;			//could be Mike, maybe the warden... someone new, but likely nobody.
-	UINT8 ubPendingReinforcements;//This group is waiting for reinforcements before attacking or attempting to fortify newly aquired sector.
+	INT16 ubLeaderProfileID;			//could be Mike, maybe the warden... someone new, but likely nobody.
+	UINT16 ubPendingReinforcements;//This group is waiting for reinforcements before attacking or attempting to fortify newly aquired sector.
 	UINT16 ubAdminsInBattle;				//number of administrators in currently in battle.
 	UINT8 ubIntention;						//the type of group this is:  patrol, assault, spies, etc.
 	UINT16 ubTroopsInBattle;				//number of soldiers currently in battle.
@@ -214,10 +214,10 @@ BOOLEAN PlayerIDGroupInMotion( INT8 ubID );
 BOOLEAN PlayerGroupInMotion( GROUP *pGroup );
 
 // find if a path exists?
-INT32 GetTravelTimeForFootTeam( UINT8 ubSector, UINT8 ubDirection );
+INT32 GetTravelTimeForFootTeam( UINT8 ubSector, INT8 ubDirection );
 
 // get travel time for this group?
-INT32 GetTravelTimeForGroup( UINT8 ubSector, UINT8 ubDirection, INT8 ubGroup );
+INT32 GetTravelTimeForGroup( UINT8 ubSector, INT8 ubDirection, INT8 ubGroup );
 
 // get number of mercs between sectors
 BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnter, INT32 *iCountExit, BOOLEAN *fAboutToArriveEnter );

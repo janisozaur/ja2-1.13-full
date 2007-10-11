@@ -901,10 +901,10 @@ BOOLEAN IsMineShutDown( INT8 bMineIndex )
 }
 
 
-UINT8 GetHeadMinerIndexForMine( INT8 bMineIndex )
+INT16 GetHeadMinerIndexForMine( INT8 bMineIndex )
 {
-	UINT8 ubMinerIndex = 0;
-	UINT16 usProfileId = 0;
+	INT16 ubMinerIndex = 0;
+	INT16 usProfileId = 0;
 
 
 	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < MAX_NUMBER_OF_MINES ) );
@@ -926,7 +926,7 @@ UINT8 GetHeadMinerIndexForMine( INT8 bMineIndex )
 }
 
 
-UINT16 GetHeadMinerProfileIdForMine( INT8 bMineIndex )
+INT16 GetHeadMinerProfileIdForMine( INT8 bMineIndex )
 {
 	return(gHeadMinerData[ GetHeadMinerIndexForMine( bMineIndex ) ].usProfileId);
 }
@@ -934,8 +934,8 @@ UINT16 GetHeadMinerProfileIdForMine( INT8 bMineIndex )
 
 void IssueHeadMinerQuote( INT8 bMineIndex, UINT8 ubQuoteType )
 {
-	UINT8 ubHeadMinerIndex = 0;
-	UINT16 usHeadMinerProfileId = 0;
+	INT16 ubHeadMinerIndex = 0;
+	INT16 usHeadMinerProfileId = 0;
 	INT8 bQuoteNum = 0;
 	UINT8 ubFaceIndex = 0;
 	BOOLEAN fForceMapscreen = FALSE;
@@ -1006,7 +1006,7 @@ void IssueHeadMinerQuote( INT8 bMineIndex, UINT8 ubQuoteType )
 }
 
 
-UINT8 GetHeadMinersMineIndex( UINT16 ubMinerProfileId)
+UINT8 GetHeadMinersMineIndex( INT16 ubMinerProfileId)
 {
 	UINT8 ubMineIndex;
 
@@ -1025,7 +1025,7 @@ UINT8 GetHeadMinersMineIndex( UINT16 ubMinerProfileId)
 }
 
 
-void PlayerSpokeToHeadMiner( UINT16 ubMinerProfileId )
+void PlayerSpokeToHeadMiner( INT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1040,7 +1040,7 @@ void PlayerSpokeToHeadMiner( UINT16 ubMinerProfileId )
 }
 
 
-BOOLEAN IsHisMineRunningOut( UINT16 ubMinerProfileId )
+BOOLEAN IsHisMineRunningOut( INT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1048,7 +1048,7 @@ BOOLEAN IsHisMineRunningOut( UINT16 ubMinerProfileId )
 	return(gMineStatus[ ubMineIndex ].fRunningOut);
 }
 
-BOOLEAN IsHisMineEmpty( UINT16 ubMinerProfileId )
+BOOLEAN IsHisMineEmpty( INT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1056,7 +1056,7 @@ BOOLEAN IsHisMineEmpty( UINT16 ubMinerProfileId )
 	return(gMineStatus[ ubMineIndex ].fEmpty);
 }
 
-BOOLEAN IsHisMineDisloyal( UINT16 ubMinerProfileId )
+BOOLEAN IsHisMineDisloyal( INT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1074,7 +1074,7 @@ BOOLEAN IsHisMineDisloyal( UINT16 ubMinerProfileId )
 	}
 }
 
-BOOLEAN IsHisMineInfested( UINT16 ubMinerProfileId )
+BOOLEAN IsHisMineInfested( INT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1082,7 +1082,7 @@ BOOLEAN IsHisMineInfested( UINT16 ubMinerProfileId )
 	return(!MineClearOfMonsters( ubMineIndex ));
 }
 
-BOOLEAN IsHisMineLostAndRegained( UINT16 ubMinerProfileId )
+BOOLEAN IsHisMineLostAndRegained( INT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1098,7 +1098,7 @@ BOOLEAN IsHisMineLostAndRegained( UINT16 ubMinerProfileId )
 	}
 }
 
-void ResetQueenRetookMine( UINT16 ubMinerProfileId )
+void ResetQueenRetookMine( INT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1107,7 +1107,7 @@ void ResetQueenRetookMine( UINT16 ubMinerProfileId )
 	gMineStatus[ ubMineIndex ].fQueenRetookProducingMine = FALSE;
 }
 
-BOOLEAN IsHisMineAtMaxProduction( UINT16 ubMinerProfileId )
+BOOLEAN IsHisMineAtMaxProduction( INT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 
@@ -1154,7 +1154,7 @@ BOOLEAN HasAnyMineBeenAttackedByMonsters(void)
 }
 
 
-void PlayerAttackedHeadMiner( UINT16 ubMinerProfileId )
+void PlayerAttackedHeadMiner( INT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 	INT8 bTownId;
@@ -1181,7 +1181,7 @@ void PlayerAttackedHeadMiner( UINT16 ubMinerProfileId )
 }
 
 
-BOOLEAN HasHisMineBeenProducingForPlayerForSomeTime( UINT16 ubMinerProfileId )
+BOOLEAN HasHisMineBeenProducingForPlayerForSomeTime( INT16 ubMinerProfileId )
 {
 	UINT8 ubMineIndex;
 

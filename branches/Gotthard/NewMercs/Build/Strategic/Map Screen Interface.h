@@ -251,7 +251,7 @@ extern BOOLEAN fLockOutMapScreenInterface;
 // The character data structure
 typedef struct {
 
-	UINT16 usSolID;// soldier ID in MenPtrs 
+	INT16 usSolID;// soldier ID in MenPtrs 
 	BOOLEAN fValid;// is the current soldier a valid soldier
 
 } MapScreenCharacterSt;
@@ -380,7 +380,7 @@ void RestoreBackgroundForSleepGlowRegionList( void );
 void PlayGlowRegionSound( void );
 
 // is this character in the action of plotting a path?
-INT16 CharacterIsGettingPathPlotted( INT16 sCharNumber );
+INT16 CharacterIsGettingPathPlotted( INT8 sCharNumber );
 
 // disable team info panels
 void DisableTeamInfoPanels( void );
@@ -559,8 +559,8 @@ void AddSoldierToMovingLists( SOLDIERTYPE *pSoldier );
 void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
 void SetUpMovingListsForSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
 void ReBuildMoveBox( void );
-BOOLEAN IsCharacterSelectedForAssignment( INT16 sCharNumber );
-BOOLEAN IsCharacterSelectedForSleep( INT16 sCharNumber );
+BOOLEAN IsCharacterSelectedForAssignment( INT8 sCharNumber );
+BOOLEAN IsCharacterSelectedForSleep( INT8 sCharNumber );
 
 // the update box
 void CreateDestroyTheUpdateBox( void );

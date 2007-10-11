@@ -824,7 +824,7 @@ void HandleDialogue( )
 	}
 	else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_NOGO_TO_RENEW )
 	{
-		HandleMercIsNotWillingToRenew( (UINT8)QItem->uiSpecialEventData );		
+		HandleMercIsNotWillingToRenew( (INT16)QItem->uiSpecialEventData );		
 	}
 	else
 	{	

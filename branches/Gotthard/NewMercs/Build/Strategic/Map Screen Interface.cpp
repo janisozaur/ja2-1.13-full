@@ -955,7 +955,7 @@ void PlayGlowRegionSound( void )
 
 
 
-INT16 CharacterIsGettingPathPlotted( INT16 sCharNumber )
+INT16 CharacterIsGettingPathPlotted( INT8 sCharNumber )
 {
 	// valid character number?
 	if( ( sCharNumber < 0 ) || ( sCharNumber >= MAX_CHARACTER_COUNT ) )
@@ -997,7 +997,7 @@ INT16 CharacterIsGettingPathPlotted( INT16 sCharNumber )
 	return ( FALSE );
 }
 
-BOOLEAN IsCharacterSelectedForAssignment( INT16 sCharNumber )
+BOOLEAN IsCharacterSelectedForAssignment( INT8 sCharNumber )
 {
 	// valid character number?
 	if( ( sCharNumber < 0 ) || ( sCharNumber >= MAX_CHARACTER_COUNT ) )
@@ -1015,7 +1015,7 @@ BOOLEAN IsCharacterSelectedForAssignment( INT16 sCharNumber )
 	if ( ( giAssignHighLine != -1 ) && IsEntryInSelectedListSet ( ( INT8 ) giAssignHighLine ) )
 	{
 		// then ALL selected lines will be affected
-		if( IsEntryInSelectedListSet( ( INT8 ) sCharNumber ) )
+		if( IsEntryInSelectedListSet( sCharNumber ) )
 		{
 			return( TRUE );
 		}
@@ -1034,7 +1034,7 @@ BOOLEAN IsCharacterSelectedForAssignment( INT16 sCharNumber )
 
 
 
-BOOLEAN IsCharacterSelectedForSleep( INT16 sCharNumber )
+BOOLEAN IsCharacterSelectedForSleep( INT8 sCharNumber )
 {
 	// valid character number?
 	if( ( sCharNumber < 0 ) || ( sCharNumber >= MAX_CHARACTER_COUNT ) )
@@ -1052,7 +1052,7 @@ BOOLEAN IsCharacterSelectedForSleep( INT16 sCharNumber )
 	if ( ( giSleepHighLine != -1 ) && IsEntryInSelectedListSet ( ( INT8 ) giSleepHighLine ) )
 	{
 		// then ALL selected lines will be affected
-		if( IsEntryInSelectedListSet( ( INT8 ) sCharNumber ) )
+		if( IsEntryInSelectedListSet( sCharNumber ) )
 		{
 			return( TRUE );
 		}
@@ -1301,7 +1301,7 @@ void HandleDisplayOfSelectedMercArrows( void )
 {
 	INT16 sYPosition = 0;
 	HVOBJECT hHandle;
-	UINT8 ubCount = 0;
+	INT8 ubCount = 0;
 	INT16 usVehicleCount = 0;
 
 	// blit an arrow by the name of each merc in a selected list

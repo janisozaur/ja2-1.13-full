@@ -454,7 +454,7 @@ void RecalculatePatrolWeight( INT32 iPatrolID );
 void RecalculateGarrisonWeight( INT32 iGarrisonID );
 
 
-INT32 GarrisonReinforcementsRequested( INT32 iGarrisonID, UINT8 *pubExtraReinforcements );
+INT32 GarrisonReinforcementsRequested( INT32 iGarrisonID, UINT16 *pubExtraReinforcements );
 INT32 PatrolReinforcementsRequested( INT32 iPatrolID );
 INT32 ReinforcementsAvailable( INT32 iGarrisonID );
 BOOLEAN ReinforcementsApproved( INT32 iGarrisonID, UINT16 *pusDefencePoints );
@@ -545,7 +545,7 @@ void Ensure_RepairedGarrisonGroup( GARRISON_GROUP **ppGarrison, INT32 *pGarraySi
 
 
 //returns the number of reinforcements permitted to be sent.  Will increased if the denied counter is non-zero.
-INT32 GarrisonReinforcementsRequested( INT32 iGarrisonID, UINT8 *pubExtraReinforcements )
+INT32 GarrisonReinforcementsRequested( INT32 iGarrisonID, UINT16 *pubExtraReinforcements )
 {
 	INT32 iReinforcementsRequested;
 	INT32 iExistingForces;
@@ -2784,8 +2784,8 @@ void SendReinforcementsForGarrison( INT32 iDstGarrisonID, UINT16 usDefencePoints
 	INT32 iMaxReinforcementsAllowed, iReinforcementsAvailable, iReinforcementsRequested, iReinforcementsApproved;
 	GROUP *pGroup;
 	UINT8 ubSrcSectorX, ubSrcSectorY, ubDstSectorX, ubDstSectorY;
-	UINT8 ubNumExtraReinforcements;
-	UINT8 ubGroupSize;
+	UINT16 ubNumExtraReinforcements;
+	UINT16 ubGroupSize;
 	BOOLEAN fLimitMaxTroopsAllowable = FALSE;
 
  Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */

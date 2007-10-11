@@ -152,13 +152,13 @@ BOOLEAN		fUsingEdgePointsForStrategicEntry = FALSE;
 BOOLEAN		gfInvalidTraversal = FALSE;
 BOOLEAN		gfLoneEPCAttemptingTraversal = FALSE;
 BOOLEAN		gfRobotWithoutControllerAttemptingTraversal = FALSE;
-BOOLEAN   gubLoneMercAttemptingToAbandonEPCs = 0;
+INT16   gubLoneMercAttemptingToAbandonEPCs = 0;
 INT8			gbPotentiallyAbandonedEPCSlotID = -1;
 
-INT8 gbGreenToElitePromotions = 0;
-INT8 gbGreenToRegPromotions = 0;
-INT8 gbRegToElitePromotions = 0;
-INT8 gbMilitiaPromotions = 0;
+UINT16 gbGreenToElitePromotions = 0;
+UINT16 gbGreenToRegPromotions = 0;
+UINT16 gbRegToElitePromotions = 0;
+UINT16 gbMilitiaPromotions = 0;
 
 
 extern BOOLEAN gfUsePersistantPBI;
@@ -219,7 +219,7 @@ UINT8 ubSAMControlledSectors[ MAP_WORLD_Y ][ MAP_WORLD_X ];// = {
 //    0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   0,
 //};
 
-INT16 DirXIncrementer[8] =
+INT8 DirXIncrementer[8] =
  {
   0,        //N
 	1,        //NE
@@ -231,7 +231,7 @@ INT16 DirXIncrementer[8] =
 	-1       //NW
  };
 
-INT16 DirYIncrementer[8] =
+INT8 DirYIncrementer[8] =
  {
   -1,        //N
 	-1,        //NE
@@ -292,8 +292,8 @@ BOOLEAN ReadInStrategicMapSectorTownNames(STR fileName);
 void DoneFadeOutAdjacentSector( void );
 void DoneFadeOutExitGridSector( void );
 
-INT32 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection );
-INT32 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UINT32 *puiNumAttempts );
+INT32 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, INT8 ubTacticalDirection );
+INT32 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, INT8 ubInsertionDirection, UINT32 *puiNumAttempts );
 
 void HandleQuestCodeOnSectorExit( INT16 sOldSectorX, INT16 sOldSectorY, INT8 bOldSectorZ );
 void HandlePotentialMoraleHitForSkimmingSectors( GROUP *pGroup );
@@ -1479,10 +1479,10 @@ UINT8 GetTownSectorSize( INT8 bTownId )
 	return( ubSectorSize );
 }
 
-UINT8 GetMilitiaCountAtLevelAnywhereInTown( UINT8 ubTownValue, UINT8 ubLevelValue )
+UINT16 GetMilitiaCountAtLevelAnywhereInTown( UINT8 ubTownValue, UINT8 ubLevelValue )
 {
 	INT32 iCounter = 0;
-	UINT8 ubCount =0;
+	UINT16 ubCount =0;
 
 	while( pTownNamesList[ iCounter ] != 0 )
 	{
@@ -2946,7 +2946,7 @@ void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , STR16 zS
 }
 
 
-UINT8 SetInsertionDataFromAdjacentMoveDirection( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection, INT16 sAdditionalData  )
+UINT8 SetInsertionDataFromAdjacentMoveDirection( SOLDIERTYPE *pSoldier, INT8 ubTacticalDirection, INT16 sAdditionalData  )
 {
 	UINT8				ubDirection;
 	EXITGRID		ExitGrid;
@@ -2998,7 +2998,7 @@ UINT8 SetInsertionDataFromAdjacentMoveDirection( SOLDIERTYPE *pSoldier, UINT8 ub
 
 }
 
-UINT8 GetInsertionDataFromAdjacentMoveDirection( UINT8 ubTacticalDirection, INT16 sAdditionalData  )
+UINT8 GetInsertionDataFromAdjacentMoveDirection( INT8 ubTacticalDirection, INT16 sAdditionalData  )
 {
 	UINT8				ubDirection;
 
@@ -3038,7 +3038,7 @@ UINT8 GetInsertionDataFromAdjacentMoveDirection( UINT8 ubTacticalDirection, INT1
 
 }
 
-UINT8 GetStrategicInsertionDataFromAdjacentMoveDirection( UINT8 ubTacticalDirection, INT16 sAdditionalData  )
+UINT8 GetStrategicInsertionDataFromAdjacentMoveDirection( INT8 ubTacticalDirection, INT16 sAdditionalData  )
 {
 	UINT8				ubDirection;
 
@@ -3079,7 +3079,7 @@ UINT8 GetStrategicInsertionDataFromAdjacentMoveDirection( UINT8 ubTacticalDirect
 }
 
 
-void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 sAdditionalData )
+void JumpIntoAdjacentSector( INT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 sAdditionalData )
 {
 	INT32 cnt;
 	SOLDIERTYPE		*pSoldier;
@@ -3825,7 +3825,7 @@ void DoneFadeOutExitGridSector( )
 
 void DoneFadeOutAdjacentSector( )
 {
-	UINT8 ubDirection;
+	INT8 ubDirection;
 	SetCurrentWorldSector( gsAdjacentSectorX, gsAdjacentSectorY, gbAdjacentSectorZ );
 
 	ubDirection = GetStrategicInsertionDataFromAdjacentMoveDirection( gubTacticalDirection, gsAdditionalData );
@@ -4603,7 +4603,7 @@ BOOLEAN LoadStrategicInfoFromSavedFile( HWFILE hFile )
 }
 
 
-INT32 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
+INT32 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, INT8 ubTacticalDirection )
 {
 	INT32 sGridNo, sStartGridNo, sOldGridNo;
 	INT8			bOdd = 1, bOdd2 = 1;
@@ -4871,7 +4871,7 @@ INT32 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 }
 
 
-void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT32 sEndGridNo, UINT8 ubTacticalDirection )
+void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT32 sEndGridNo, INT8 ubTacticalDirection )
 {
 	INT32 sNewGridNo, sTempGridNo;
 	INT32	iLoop;
@@ -5021,7 +5021,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT32 sEndGridNo, UINT
 	}
 }
 
-INT32 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UINT32 *puiNumAttempts )
+INT32 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, INT8 ubInsertionDirection, UINT32 *puiNumAttempts )
 {
 	INT32 sGridNo, sStartGridNo, sOldGridNo;
 	INT8			bOdd = 1, bOdd2 = 1;

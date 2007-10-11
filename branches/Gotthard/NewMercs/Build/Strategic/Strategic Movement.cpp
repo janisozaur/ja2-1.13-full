@@ -3179,7 +3179,7 @@ BOOLEAN PlayerGroupInMotion( GROUP *pGroup )
 
 
 // get travel time for this group
-INT32 GetTravelTimeForGroup( UINT8 ubSector, UINT8 ubDirection, INT8 ubGroup )
+INT32 GetTravelTimeForGroup( UINT8 ubSector, INT8 ubDirection, INT8 ubGroup )
 {	
 	GROUP *pGroup;
 	
@@ -3192,7 +3192,7 @@ INT32 GetTravelTimeForGroup( UINT8 ubSector, UINT8 ubDirection, INT8 ubGroup )
 	return( GetSectorMvtTimeForGroup( ubSector, ubDirection, pGroup ) );
 }
 
-INT32 GetTravelTimeForFootTeam( UINT8 ubSector, UINT8 ubDirection )
+INT32 GetTravelTimeForFootTeam( UINT8 ubSector, INT8 ubDirection )
 {
 	GROUP Group;
 

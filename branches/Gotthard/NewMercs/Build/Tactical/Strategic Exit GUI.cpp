@@ -77,7 +77,7 @@ typedef struct
 	UINT8							ubFlags;
 	UINT8							ubLeaveSectorType;
 	UINT8							ubLeaveSectorCode;
-	UINT8							ubDirection;
+	INT8							ubDirection;
 	UINT16							ubNumPeopleOnSquad;
 	INT8							bSingleMoveWillIsolateEPC; //if not -1, then that means the slot number is an EPC
 	INT8							bHandled;

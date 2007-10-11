@@ -29,13 +29,14 @@
 #include "Reinforcement.h"
 #include "MilitiaSquads.h"
 
-UINT8 gubReinforcementMinEnemyStaticGroupSize = 12;
+UINT16 gubReinforcementMinEnemyStaticGroupSize = 12;
 
 void GetNumberOfEnemiesInFiveSectors( INT16 sSectorX, INT16 sSectorY, UINT16 *pubNumAdmins, UINT16 *pubNumTroops, UINT16 *pubNumElites )
 {
 	UINT16 ubNumAdmins, ubNumTroops, ubNumElites;
 	UINT16 pusMoveDir[4][3];
-	UINT8 ubDirNumber, ubIndex;
+	INT8 ubDirNumber;
+	UINT8 ubIndex;
 	
 	GetNumberOfStationaryEnemiesInSector( sSectorX, sSectorY, pubNumAdmins, pubNumTroops, pubNumElites );
 
@@ -96,7 +97,8 @@ UINT16 NumEnemiesInFiveSectors( INT16 sMapX, INT16 sMapY )
 BOOLEAN IsGroupInARightSectorToReinforce( GROUP *pGroup, INT16 sSectorX, INT16 sSectorY )
 {
 	UINT16 pusMoveDir[4][3];
-	UINT8 ubDirNumber = 0, ubIndex;
+	INT8 ubDirNumber = 0;
+	UINT8 ubIndex;
 
 	if( pGroup->ubSectorX == sSectorX && pGroup->ubSectorY == sSectorY )
 		return TRUE;  //Well, it's in the same sector, so allow to reinforce
@@ -117,7 +119,7 @@ BOOLEAN IsGroupInARightSectorToReinforce( GROUP *pGroup, INT16 sSectorX, INT16 s
 UINT8 GetAdjacentSectors( UINT8 pSectors[4], INT16 sSectorX, INT16 sSectorY )
 {
 	UINT16 pusMoveDir[4][3];
-	UINT8 ubDirNumber = 0, ubIndex;
+	INT8 ubDirNumber = 0, ubIndex;
 	UINT8 ubCounter = 0;
 
 	GenerateDirectionInfos( sSectorX, sSectorY, &ubDirNumber, pusMoveDir, 
@@ -133,7 +135,7 @@ UINT16 CountAllMilitiaInFiveSectors(INT16 sMapX, INT16 sMapY)
 {
 	UINT16 ubResult = 0;
 	UINT16 pusMoveDir[4][3];
-	UINT8 ubDirNumber, ubIndex;
+	INT8 ubDirNumber, ubIndex;
 	
 	ubResult = CountAllMilitiaInSector( sMapX, sMapY );
 
@@ -154,7 +156,7 @@ UINT16 MilitiaInFiveSectorsOfRank( INT16 sMapX, INT16 sMapY, UINT8 ubRank )
 {
 	UINT16 ubResult = 0;
 	UINT16 pusMoveDir[4][3];
-	UINT8 ubDirNumber, ubIndex;
+	INT8 ubDirNumber, ubIndex;
 	
 	ubResult = MilitiaInSectorOfRank( sMapX, sMapY, ubRank );
 
@@ -173,9 +175,9 @@ UINT16 MilitiaInFiveSectorsOfRank( INT16 sMapX, INT16 sMapY, UINT8 ubRank )
 
 BOOLEAN ARMoveBestMilitiaManFromAdjacentSector(INT16 sMapX, INT16 sMapY)
 {
-	UINT8 ubResult = 0;
+	//UINT8 ubResult = 0;Doesn't seem to be used... Gotthad 10/9/07
 	UINT16 pusMoveDir[4][3];
-	UINT8 ubDirNumber;
+	INT8 ubDirNumber;
 	UINT8 ubRandom;
 	
 	if( !gGameExternalOptions.gfAllowReinforcements )
@@ -199,7 +201,7 @@ BOOLEAN ARMoveBestMilitiaManFromAdjacentSector(INT16 sMapX, INT16 sMapY)
 BOOLEAN ARRemoveMilitiaMan( INT16 sMapX, INT16 sMapY, UINT8 ubRank )
 {
 	UINT16 pusMoveDir[4][3];
-	UINT8 ubDirNumber, ubRandom;
+	INT8 ubDirNumber, ubRandom;
 	
 	if( MilitiaInSectorOfRank( sMapX, sMapY, ubRank ) )
 	{
@@ -216,7 +218,7 @@ BOOLEAN ARRemoveMilitiaMan( INT16 sMapX, INT16 sMapY, UINT8 ubRank )
 
 	for( ; ;  )
 	{
-		ubRandom = Random( ubDirNumber );
+		ubRandom = (INT8)Random( ubDirNumber );
 		if( MilitiaInSectorOfRank( SECTORX( pusMoveDir[ ubRandom ][ 0 ] ), SECTORY( pusMoveDir[ ubRandom ][ 0 ] ), ubRank ) )
 		{
 			StrategicRemoveMilitiaFromSector( SECTORX( pusMoveDir[ ubRandom ][ 0 ] ), SECTORY( pusMoveDir[ ubRandom ][ 0 ] ), ubRank, 1 );
@@ -242,10 +244,12 @@ GROUP* GetEnemyGroupInSector( INT16 sMapX, INT16 sMapY )
 }
 
 
-UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
+//This might need to be changed to allow more than 255 reinforcements, but I'm not doing that quite yet.  Gotthard 10/9/07
+UINT16 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
 {
 	UINT16 pusMoveDir[4][3];
-	UINT8 ubDirNumber = 0, ubIndex;
+	INT8 ubDirNumber = 0;
+	UINT8 ubIndex;
 	GROUP *pGroup;
 	//ENEMYGROUP *pEnemyGroup;
 	SECTORINFO *pThisSector, *pSector;
@@ -298,7 +302,7 @@ UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
 				(pSector->ubNumAdmins)--;
 			}
 
-			AddEnemiesToBattle( NULL, (UINT8)pusMoveDir[ ubIndex ][ 2 ], 
+			AddEnemiesToBattle( NULL, pusMoveDir[ ubIndex ][ 2 ], 
 				pThisSector->ubNumAdmins - pThisSector->ubAdminsInBattle, 
 				pThisSector->ubNumTroops - pThisSector->ubTroopsInBattle,
 				pThisSector->ubNumElites - pThisSector->ubElitesInBattle, 
@@ -308,7 +312,7 @@ UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
 			pThisSector->ubTroopsInBattle = pThisSector->ubNumTroops;
 			pThisSector->ubElitesInBattle = pThisSector->ubNumElites;
 
-			return (UINT8)pusMoveDir[ ubIndex ][ 2 ];
+			return pusMoveDir[ ubIndex ][ 2 ];
 		}
 		else
 		{
@@ -320,6 +324,7 @@ UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
 	// No reinforcements from other sectors are available
 	return 255;
 }
+
 
 
 UINT16 NumFreeMilitiaSlots()
@@ -337,10 +342,13 @@ UINT16 NumFreeMilitiaSlots()
 	return max( 0 , ubNumFreeSlots - ( 32 - gGameExternalOptions.guiMaxMilitiaSquadSize ) );
 }
 
+
+//This might need to be changed to allow more than 255 reinforcements, but I'm not doing that quite yet.  Gotthard 10/9/07
 UINT8 DoReinforcementAsPendingMilitia( INT16 sMapX, INT16 sMapY, UINT8 *pubRank )
 {
 	UINT16 pusMoveDir[4][3];
-	UINT8 ubDirNumber = 0, ubIndex;
+	INT8 ubDirNumber = 0;
+	UINT8 ubIndex;
 	SECTORINFO *pSector;//*pThisSector,
 
 	if( !gGameExternalOptions.gfAllowReinforcements )

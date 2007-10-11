@@ -101,7 +101,7 @@ void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , STR16 zS
 void GetMapFileName(INT16 sMapX,INT16 sMapY, INT8 bSectorZ, STR8 bString, BOOLEAN fUsePlaceholder, BOOLEAN fAddAlternateMapLetter );
 
 // Called from within tactical.....
-void JumpIntoAdjacentSector( UINT8 ubDirection, UINT8 ubJumpCode, INT16 sAdditionalData );
+void JumpIntoAdjacentSector( INT8 ubDirection, UINT8 ubJumpCode, INT16 sAdditionalData );
 
 
 
@@ -135,10 +135,10 @@ BOOLEAN SaveStrategicInfoToSavedFile( HWFILE hFile );
 
 void AllMercsHaveWalkedOffSector( );
 
-void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT32 sEndGridNo, UINT8 ubTacticalDirection );
+void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT32 sEndGridNo, INT8 ubTacticalDirection );
 
 void AllMercsWalkedToExitGrid();
-UINT8 GetMilitiaCountAtLevelAnywhereInTown( UINT8 ubTownValue, UINT8 ubLevelValue );
+UINT16 GetMilitiaCountAtLevelAnywhereInTown( UINT8 ubTownValue, UINT8 ubLevelValue );
 
 void PrepareLoadedSector();
 
@@ -175,12 +175,12 @@ BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( );
 extern BOOLEAN	gfInvalidTraversal;
 extern BOOLEAN	gfLoneEPCAttemptingTraversal;
 extern BOOLEAN	gfRobotWithoutControllerAttemptingTraversal;
-extern UINT8		gubLoneMercAttemptingToAbandonEPCs;
+extern INT16		gubLoneMercAttemptingToAbandonEPCs;
 extern INT8			gbPotentiallyAbandonedEPCSlotID;
 
-extern INT8 gbGreenToElitePromotions;
-extern INT8 gbGreenToRegPromotions;
-extern INT8 gbRegToElitePromotions;
-extern INT8 gbMilitiaPromotions;
+extern UINT16 gbGreenToElitePromotions;
+extern UINT16 gbGreenToRegPromotions;
+extern UINT16 gbRegToElitePromotions;
+extern UINT16 gbMilitiaPromotions;
 
 #endif

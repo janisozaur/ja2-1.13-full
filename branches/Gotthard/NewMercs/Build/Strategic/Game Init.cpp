@@ -63,8 +63,8 @@
 #endif
 
 // Temp function
-void QuickSetupOfMercProfileItems( UINT32 uiCount, UINT8 ubProfileIndex );
-BOOLEAN QuickGameMemberHireMerc( UINT8 ubCurrentSoldier );
+void QuickSetupOfMercProfileItems( UINT32 uiCount, INT16 ubProfileIndex );
+BOOLEAN QuickGameMemberHireMerc( INT16 ubCurrentSoldier );
 extern UINT32 guiExitScreen;
 extern UINT32 uiMeanWhileFlags;
 extern BOOLEAN gfGamePaused;
@@ -576,39 +576,39 @@ BOOLEAN AnyMercsHired( )
 void QuickStartGame( )
 {
 	INT32		cnt;
-	UINT16	usVal;
+	INT16	usVal;
 	UINT8 ub1 = 0, ub2 = 0;
 
 	for ( cnt = 0; cnt < 3; cnt++ )
 	{
 		if ( cnt == 0 )
 		{
-			usVal = (UINT16)Random( 40 );
+			usVal = (INT16)Random( 40 );
 
-			QuickSetupOfMercProfileItems( cnt, (UINT8)usVal );
-			QuickGameMemberHireMerc( (UINT8)usVal );
+			QuickSetupOfMercProfileItems( cnt, usVal );
+			QuickGameMemberHireMerc( usVal );
 		}
 		else if ( cnt == 1 )
 		{
 			do
 			{
-				usVal = (UINT16)Random( 40 );
+				usVal = (INT16)Random( 40 );
 			}
 			while( usVal != ub1 );
 
-			QuickSetupOfMercProfileItems( cnt, (UINT8)usVal );
-			QuickGameMemberHireMerc( (UINT8)usVal );
+			QuickSetupOfMercProfileItems( cnt, usVal );
+			QuickGameMemberHireMerc( usVal );
 		}
 		else if ( cnt == 2 )
 		{
 			do
 			{
-				usVal = (UINT16)Random( 40 );
+				usVal = (INT16)Random( 40 );
 			} 
 			while( usVal != ub1 && usVal != ub2 );
 
-			QuickSetupOfMercProfileItems( cnt, (UINT8)usVal );
-			QuickGameMemberHireMerc( (UINT8)usVal );
+			QuickSetupOfMercProfileItems( cnt, usVal );
+			QuickGameMemberHireMerc(usVal );
 		}
 
 	}
@@ -616,7 +616,7 @@ void QuickStartGame( )
 
 
 // TEMP FUNCTION!
-void QuickSetupOfMercProfileItems( UINT32 uiCount, UINT8 ubProfileIndex )
+void QuickSetupOfMercProfileItems( UINT32 uiCount, INT16 ubProfileIndex )
 {
 	// Quickly give some guys we hire some items
  
@@ -734,7 +734,7 @@ void QuickSetupOfMercProfileItems( UINT32 uiCount, UINT8 ubProfileIndex )
 }
 
 
-BOOLEAN QuickGameMemberHireMerc( UINT8 ubCurrentSoldier )
+BOOLEAN QuickGameMemberHireMerc( INT16 ubCurrentSoldier )
 {
 	MERC_HIRE_STRUCT HireMercStruct;
 

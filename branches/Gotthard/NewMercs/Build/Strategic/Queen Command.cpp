@@ -449,7 +449,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 		gpBattleGroup && !gpBattleGroup->fPlayer )
 	{
 		UINT16 pusMoveDir[4][3];
-		UINT8 ubDirNumber = 0, ubIndex;
+		INT8 ubDirNumber = 0, ubIndex;
 		GROUP *pGroup;
 		SECTORINFO *pThisSector;
 
@@ -1205,7 +1205,7 @@ void AddPossiblePendingEnemiesToBattle()
 
 		while (ubSlots)
 		{
-			UINT8 ubInsertionCode = 255;
+			UINT16 ubInsertionCode = 255;
 
 			if( gTacticalStatus.Team[ ENEMY_TEAM ].bAwareOfOpposition == TRUE )
 				ubInsertionCode = DoReinforcementAsPendingEnemy( gWorldSectorX, gWorldSectorY );
@@ -1458,7 +1458,7 @@ void NotifyPlayersOfNewEnemies()
 	}
 }
 
-void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT16 ubNumAdmins, UINT16 ubNumTroops, UINT16 ubNumElites, BOOLEAN fMagicallyAppeared )
+void AddEnemiesToBattle( GROUP *pGroup, UINT16 ubStrategicInsertionCode, UINT16 ubNumAdmins, UINT16 ubNumTroops, UINT16 ubNumElites, BOOLEAN fMagicallyAppeared )
 {
 	SOLDIERTYPE *pSoldier;
 	MAPEDGEPOINTINFO MapEdgepointInfo;

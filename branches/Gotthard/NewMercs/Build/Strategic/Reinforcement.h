@@ -15,7 +15,7 @@ BOOLEAN ARRemoveMilitiaMan( INT16 sMapX, INT16 sMapY, UINT8 ubRank );
 UINT16 NumEnemiesInFiveSectors( INT16 sMapX, INT16 sMapY );
 
 //For Tactical
-UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY );
+UINT16 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY );
 void AddPossiblePendingMilitiaToBattle();
 GROUP* GetEnemyGroupInSector( INT16 sMapX, INT16 sMapY );
 

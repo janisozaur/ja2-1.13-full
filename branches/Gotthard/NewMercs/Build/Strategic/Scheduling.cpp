@@ -46,7 +46,7 @@ BOOLEAN ScheduleHasMorningNonSleepEntries( SCHEDULENODE *pSchedule );
 //#define DISABLESCHEDULES
 
 SCHEDULENODE *gpScheduleList = NULL;
-UINT8				gubScheduleID = 0;
+INT8 gubScheduleID = 0;
 void ReverseSchedules();
 
 void PrepareScheduleForAutoProcessing( SCHEDULENODE *pSchedule, UINT32 uiStartTime, UINT32 uiEndTime );
@@ -78,7 +78,7 @@ void CopyScheduleToList( SCHEDULENODE *pSchedule, SOLDIERINITNODE *pNode )
 	}
 }
 
-SCHEDULENODE* GetSchedule( UINT16 ubScheduleID )
+SCHEDULENODE* GetSchedule( INT16 ubScheduleID )
 {
 	SCHEDULENODE *curr;
 	curr = gpScheduleList;
@@ -124,7 +124,7 @@ void DestroyAllSchedulesWithoutDestroyingEvents()
 	gubScheduleID = 0;
 }
 
-void DeleteSchedule( UINT16 ubScheduleID )
+void DeleteSchedule( INT16 ubScheduleID )
 {
 	SCHEDULENODE *curr, *temp = NULL;
 
@@ -158,7 +158,7 @@ void DeleteSchedule( UINT16 ubScheduleID )
 	}
 }
 
-void ProcessTacticalSchedule( UINT8 ubScheduleID )
+void ProcessTacticalSchedule( INT16 ubScheduleID )
 {
 	SCHEDULENODE *pSchedule;
 	SOLDIERTYPE *pSoldier;
@@ -265,7 +265,7 @@ void OptimizeSchedules()
 {
 	SCHEDULENODE *pSchedule;
 	SOLDIERINITNODE *pNode;
-	UINT16 ubOldScheduleID;
+	INT16 ubOldScheduleID;
 	gubScheduleID = 0;
 	pSchedule = gpScheduleList;
 	while( pSchedule )
@@ -481,7 +481,7 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 void ReverseSchedules()
 {
 	SCHEDULENODE *pReverseHead, *pPrevReverseHead, *pPrevScheduleHead;
-	UINT8	ubOppositeID = gubScheduleID;
+	INT8 ubOppositeID = gubScheduleID;
 	//First, remove any gaps which would mess up the reverse ID assignment by optimizing
 	//the schedules.
 	OptimizeSchedules();
@@ -1253,7 +1253,7 @@ BOOLEAN GetEarliestMorningScheduleEvent( SCHEDULENODE *pSchedule, UINT32 * puiTi
 
 BOOLEAN ScheduleHasMorningNonSleepEntries( SCHEDULENODE *pSchedule )
 {
-	INT8			bLoop;
+	INT8 bLoop;
 
 	for ( bLoop = 0; bLoop < MAX_SCHEDULE_ACTIONS; bLoop++ )
 	{
@@ -1314,7 +1314,7 @@ void ReconnectSchedules( void )
 
 UINT32 FindSleepSpot( SCHEDULENODE * pSchedule )
 {
-	INT8			bLoop;
+	INT8 bLoop;
 
 	for ( bLoop = 0; bLoop < MAX_SCHEDULE_ACTIONS; bLoop++ )
 	{

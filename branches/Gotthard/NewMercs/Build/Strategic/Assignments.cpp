@@ -425,7 +425,7 @@ INT8 CountMilitiaTrainersInSoldiersSector( SOLDIERTYPE * pSoldier );
 
 
 // notify player of assignment attempt failure
-void NotifyPlayerOfAssignmentAttemptFailure( INT8 bAssignment );
+void NotifyPlayerOfAssignmentAttemptFailure( INT16 bAssignment );
 
 BOOLEAN PlayerSoldierTooTiredToTravel( SOLDIERTYPE *pSoldier );
 
@@ -10475,7 +10475,7 @@ BOOLEAN AssignMercToAMovementGroup( SOLDIERTYPE *pSoldier )
 }
 
 
-void NotifyPlayerOfAssignmentAttemptFailure( INT8 bAssignment )
+void NotifyPlayerOfAssignmentAttemptFailure( INT16 bAssignment )
 {
 	// notify player
 	if ( guiCurrentScreen != MSG_BOX_SCREEN )
