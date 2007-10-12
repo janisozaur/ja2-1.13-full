@@ -4279,6 +4279,13 @@ bool TryToPlaceInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, in
 bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int bExcludeSlot)
 {
 	//first, try to STACK the item
+	//try to STACK in any slot
+	for(int bSlot = BODYPOSSTART; bSlot < BODYPOSFINAL; bSlot++) {
+		if (bSlot != bExcludeSlot && TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
+			return true;
+		}
+	}
+
 	if (FitsInSmallPocket(pObj) == true) {
 		//try to STACK in small pockets
 		for(int bSlot = SMALLPOCKSTART; bSlot < SMALLPOCKFINAL; bSlot++) {
@@ -4296,14 +4303,14 @@ bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int 
 		}
 	}
 
-	//try to STACK in any slot
+	//now try to PLACE
+	//try to PLACE in any slot
 	for(int bSlot = BODYPOSSTART; bSlot < BODYPOSFINAL; bSlot++) {
-		if (bSlot != bExcludeSlot && TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
+		if (bSlot != bExcludeSlot && TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, BODYPOSFINAL) == true) {
 			return true;
 		}
 	}
 
-	//now try to PLACE
 	if (FitsInSmallPocket(pObj) == true) {
 		//try to PLACE in small pockets
 		for(int bSlot = SMALLPOCKSTART; bSlot < SMALLPOCKFINAL; bSlot++) {
@@ -4316,13 +4323,6 @@ bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int 
 	//try to PLACE in big pockets, and possibly medium pockets
 	for(int bSlot = BIGPOCKSTART; bSlot < bigPocketEnd; bSlot++) {
 		if (bSlot != bExcludeSlot && TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, bigPocketEnd) == true) {
-			return true;
-		}
-	}
-
-	//try to PLACE in any slot
-	for(int bSlot = BODYPOSSTART; bSlot < BODYPOSFINAL; bSlot++) {
-		if (bSlot != bExcludeSlot && TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, BODYPOSFINAL) == true) {
 			return true;
 		}
 	}

@@ -3428,10 +3428,10 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 		// Item successfully added to world
 		if(worldKey != ITEM_NOT_FOUND)
 		{
-			gpSMCurrentMerc->DropPackKey = worldKey;
+			pSoldier->DropPackKey = worldKey;
 			NotifySoldiersToLookforItems( );
 			DeleteObj(&pSoldier->inv[BPACKPOCKPOS]);
-			gpSMCurrentMerc->flags.DropPackFlag = newStatus;
+			pSoldier->flags.DropPackFlag = newStatus;
 			gfUIStanceDifferent = TRUE;
 		}
 	}
@@ -3448,8 +3448,8 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 					if(AutoPlaceObject(pSoldier, &(gWorldItems[ pSoldier->DropPackKey ].object ), TRUE ))
 					{
 						RemoveItemFromPool(gWorldItems[pSoldier->DropPackKey].sGridNo, pSoldier->DropPackKey, gWorldItems[pSoldier->DropPackKey].ubLevel);
-						gpSMCurrentMerc->DropPackKey = -1;
-						gpSMCurrentMerc->flags.DropPackFlag = newStatus;
+						pSoldier->DropPackKey = -1;
+						pSoldier->flags.DropPackFlag = newStatus;
 						gfUIStanceDifferent = TRUE;
 						return TRUE;
 					}
