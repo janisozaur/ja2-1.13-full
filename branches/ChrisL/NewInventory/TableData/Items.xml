@@ -4888,7 +4888,10 @@
 		<MinRangeForAimBonus>70</MinRangeForAimBonus>
 		<PercentAPReduction>-9</PercentAPReduction>
 		<DamageBonus>2</DamageBonus>
-		<VisionRangeBonus>90</VisionRangeBonus>
+		<NightVisionRangeBonus>45</NightVisionRangeBonus>
+		<DayVisionRangeBonus>90</DayVisionRangeBonus>
+		<CaveVisionRangeBonus>15</CaveVisionRangeBonus>
+		<BrightLightVisionRangeBonus>90</BrightLightVisionRangeBonus>
 		<PercentTunnelVision>90</PercentTunnelVision>
 	</ITEM>
 	<ITEM>
@@ -6231,7 +6234,7 @@
 		<ubClassIndex>38</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>210</ubGraphicNum>
-		<ubWeight>3</ubWeight>
+		<ubWeight>1</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
 		<ItemSize>15</ItemSize>
 		<usPrice>10</usPrice>
@@ -6336,7 +6339,7 @@
 		<ubClassIndex>42</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>208</ubGraphicNum>
-		<ubWeight>3</ubWeight>
+		<ubWeight>1</ubWeight>
 		<ItemSize>18</ItemSize>
 		<usPrice>20</usPrice>
 		<ubCoolness>4</ubCoolness>
@@ -15237,11 +15240,11 @@
 	</ITEM>
 	<ITEM>
 		<uiIndex>665</uiIndex>
-		<szItemName>G36 Tac</szItemName>
-		<szLongItemName>HK G36 Tactical</szLongItemName>
-		<szItemDesc>The G36 Tactical is a conventional gas operated, selective fire rifle, made from mostly modern materials and using mostly modern technologies.</szItemDesc>
-		<szBRName>HK G36 Tactical</szBRName>
-		<szBRDesc>The G36 Tactical is a conventional gas operated, selective fire rifle, using mostly modern materials and technologies. Unlike the 'E'-version, the 'Tactical' is outfitted with the Picatinny-sightrail of the G36C.</szBRDesc>
+		<szItemName>G36 RAS</szItemName>
+		<szLongItemName>HK G36 RAS</szLongItemName>
+		<szItemDesc>The G36 RAS is a conventional gas operated, selective fire rifle, made from mostly modern materials and using mostly modern technologies.</szItemDesc>
+		<szBRName>HK G36 RAS</szBRName>
+		<szBRDesc>The G36 RAS is a conventional gas operated, selective fire rifle, using mostly modern materials and technologies. Unlike the 'E'-version, the 'RAS' is outfitted with Picatinny rails.</szBRDesc>
 		<usItemClass>2</usItemClass>
 		<ubClassIndex>665</ubClassIndex>
 		<ubCursor>3</ubCursor>
@@ -15268,11 +15271,11 @@
 	</ITEM>
 	<ITEM>
 		<uiIndex>666</uiIndex>
-		<szItemName>G36K Tac</szItemName>
-		<szLongItemName>HK G36K Tactical</szLongItemName>
-		<szItemDesc>The G36 Tactical is a conventional gas operated, selective fire rifle, using mostly modern materials and technologies.  The G36K Tactical is the carbine version.</szItemDesc>
-		<szBRName>HK G36K Tactical</szBRName>
-		<szBRDesc>The G36 Tactical is a conventional gas operated, selective fire rifle, using mostly modern materials and technologies.  The G36K Tactical is the carbine version.</szBRDesc>
+		<szItemName>G36K RAS</szItemName>
+		<szLongItemName>HK G36K RAS</szLongItemName>
+		<szItemDesc>The G36 RAS is a conventional gas operated, selective fire rifle, using mostly modern materials and technologies.  The G36K RAS is the carbine version.</szItemDesc>
+		<szBRName>HK G36K RAS</szBRName>
+		<szBRDesc>The G36 RAS is a conventional gas operated, selective fire rifle, using mostly modern materials and technologies.  The G36K RAS is the carbine version.</szBRDesc>
 		<usItemClass>2</usItemClass>
 		<ubClassIndex>666</ubClassIndex>
 		<ubCursor>3</ubCursor>
@@ -15329,15 +15332,15 @@
 	</ITEM>
 	<ITEM>
 		<uiIndex>668</uiIndex>
-		<szItemName>MG36E</szItemName>
-		<szLongItemName>HK MG36E</szLongItemName>
+		<szItemName>MG36 RAS</szItemName>
+		<szLongItemName>HK MG36 RAS</szLongItemName>
 		<szItemDesc>Not as bulky or heavy as other LMG's, this gun still has a rate of fire that will frappe an enemy in no time.</szItemDesc>
-		<szBRName>HK MG36E</szBRName>
-		<szBRDesc>HK has blessed us with their new versatile, multi-role squad machine gun. Great for cutting down men and trees alike.</szBRDesc>
+		<szBRName>HK MG36 RAS</szBRName>
+		<szBRDesc>HK has blessed us with their new versatile, multi-role squad machine gun. This version is outfitted with Picatinny rails.</szBRDesc>
 		<usItemClass>2</usItemClass>
 		<ubClassIndex>668</ubClassIndex>
 		<ubCursor>3</ubCursor>
-		<ubGraphicNum>156</ubGraphicNum>
+		<ubGraphicNum>334</ubGraphicNum>
 		<ubWeight>35</ubWeight>
 		<ItemSize>7</ItemSize>
 		<usPrice>4080</usPrice>
@@ -15357,7 +15360,6 @@
 		<BR_ROF>750</BR_ROF>
 		<ToHitBonus>-1</ToHitBonus>
 		<PercentReadyTimeAPReduction>30</PercentReadyTimeAPReduction>
-		<DefaultAttachment>1029</DefaultAttachment>
 	</ITEM>
 	<ITEM>
 		<uiIndex>669</uiIndex>
@@ -15389,7 +15391,6 @@
 		<Bipod>10</Bipod>
 		<ToHitBonus>-1</ToHitBonus>
 		<PercentReadyTimeAPReduction>30</PercentReadyTimeAPReduction>
-		<DefaultAttachment>209</DefaultAttachment>
 	</ITEM>
 	<ITEM>
 		<uiIndex>670</uiIndex>
@@ -22434,7 +22435,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>693</ubGraphicNum>
-		<ubWeight>3</ubWeight>
+		<ubWeight>2</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>16</ItemSize>
 		<usPrice>500</usPrice>
@@ -23605,7 +23606,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>556</ubGraphicNum>
-		<ubWeight>2</ubWeight>
+		<ubWeight>4</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>14</ItemSize>
 		<usPrice>900</usPrice>
@@ -23632,7 +23633,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>554</ubGraphicNum>
-		<ubWeight>4</ubWeight>
+		<ubWeight>6</ubWeight>
 		<ubPerPocket>3</ubPerPocket>
 		<ItemSize>21</ItemSize>
 		<usPrice>500</usPrice>
@@ -23649,7 +23650,10 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<AimBonus>12</AimBonus>
 		<MinRangeForAimBonus>45</MinRangeForAimBonus>
-		<VisionRangeBonus>40</VisionRangeBonus>
+		<NightVisionRangeBonus>20</NightVisionRangeBonus>
+		<DayVisionRangeBonus>40</DayVisionRangeBonus>
+		<CaveVisionRangeBonus>10</CaveVisionRangeBonus>
+		<BrightLightVisionRangeBonus>40</BrightLightVisionRangeBonus>
 		<PercentTunnelVision>30</PercentTunnelVision>
 	</ITEM>
 	<ITEM>
@@ -23662,7 +23666,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>555</ubGraphicNum>
-		<ubWeight>6</ubWeight>
+		<ubWeight>10</ubWeight>
 		<ubPerPocket>3</ubPerPocket>
 		<ItemSize>21</ItemSize>
 		<usPrice>800</usPrice>
@@ -23680,7 +23684,10 @@
 		<AimBonus>17</AimBonus>
 		<MinRangeForAimBonus>70</MinRangeForAimBonus>
 		<DamageBonus>1</DamageBonus>
-		<VisionRangeBonus>70</VisionRangeBonus>
+		<NightVisionRangeBonus>35</NightVisionRangeBonus>
+		<DayVisionRangeBonus>70</DayVisionRangeBonus>
+		<CaveVisionRangeBonus>10</CaveVisionRangeBonus>
+		<BrightLightVisionRangeBonus>70</BrightLightVisionRangeBonus>
 		<PercentTunnelVision>80</PercentTunnelVision>
 	</ITEM>
 	<ITEM>
@@ -23773,7 +23780,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>155</ubGraphicNum>
-		<ubWeight>3</ubWeight>
+		<ubWeight>5</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>18</ItemSize>
 		<usPrice>1600</usPrice>
@@ -23791,7 +23798,9 @@
 		<AimBonus>10</AimBonus>
 		<MinRangeForAimBonus>20</MinRangeForAimBonus>
 		<PercentAPReduction>20</PercentAPReduction>
-		<VisionRangeBonus>20</VisionRangeBonus>
+		<NightVisionRangeBonus>10</NightVisionRangeBonus>
+		<DayVisionRangeBonus>20</DayVisionRangeBonus>
+		<BrightLightVisionRangeBonus>20</BrightLightVisionRangeBonus>
 		<PercentTunnelVision>20</PercentTunnelVision>
 	</ITEM>
 	<ITEM>
@@ -23834,7 +23843,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>156</ubGraphicNum>
-		<ubWeight>1</ubWeight>
+		<ubWeight>0</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>10</ItemSize>
 		<usPrice>1400</usPrice>
@@ -23877,7 +23886,10 @@
 		<AimBonus>15</AimBonus>
 		<MinRangeForAimBonus>45</MinRangeForAimBonus>
 		<DamageBonus>1</DamageBonus>
-		<VisionRangeBonus>50</VisionRangeBonus>
+		<NightVisionRangeBonus>25</NightVisionRangeBonus>
+		<DayVisionRangeBonus>50</DayVisionRangeBonus>
+		<CaveVisionRangeBonus>10</CaveVisionRangeBonus>
+		<BrightLightVisionRangeBonus>50</BrightLightVisionRangeBonus>
 		<PercentTunnelVision>70</PercentTunnelVision>
 	</ITEM>
 	<ITEM>
@@ -24283,7 +24295,7 @@
 		<szBRDesc>For the unhappy trigger-happy folks out there, we are proud to present the ACME Trigger Group!  Marksmanship skill too low?  Tired of firing too many bullets in autofire?  Simply attach the ACME Trigger Group to your favourite assault rifle and enjoy simple and effective 3-round burst fire.</szBRDesc>
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicNum>160</ubGraphicNum>
-		<ubWeight>2</ubWeight>
+		<ubWeight>0</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>21</ItemSize>
 		<usPrice>850</usPrice>
@@ -24375,7 +24387,9 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<AimBonus>5</AimBonus>
 		<MinRangeForAimBonus>10</MinRangeForAimBonus>
-		<VisionRangeBonus>10</VisionRangeBonus>
+		<NightVisionRangeBonus>5</NightVisionRangeBonus>
+		<DayVisionRangeBonus>10</DayVisionRangeBonus>
+		<BrightLightVisionRangeBonus>10</BrightLightVisionRangeBonus>
 		<PercentTunnelVision>10</PercentTunnelVision>
 	</ITEM>
 	<ITEM>
@@ -24388,7 +24402,7 @@
 		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>545</ubGraphicNum>
-		<ubWeight>3</ubWeight>
+		<ubWeight>4</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>18</ItemSize>
 		<usPrice>500</usPrice>
@@ -24405,7 +24419,9 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<AimBonus>10</AimBonus>
 		<MinRangeForAimBonus>20</MinRangeForAimBonus>
-		<VisionRangeBonus>20</VisionRangeBonus>
+		<NightVisionRangeBonus>10</NightVisionRangeBonus>
+		<DayVisionRangeBonus>20</DayVisionRangeBonus>
+		<BrightLightVisionRangeBonus>20</BrightLightVisionRangeBonus>
 		<PercentTunnelVision>20</PercentTunnelVision>
 	</ITEM>
 	<ITEM>
@@ -28040,11 +28056,11 @@
 	</ITEM>
 	<ITEM>
 		<uiIndex>1179</uiIndex>
-		<szItemName>SIG MP41</szItemName>
-		<szLongItemName>SIG MP41</szLongItemName>
-		<szItemDesc>Old but sturdy Swiss craftsmanship.</szItemDesc>
-		<szBRName>SIG MP41</szBRName>
-		<szBRDesc>This old Swiss SMG is fullauto-only and quite heavy, but its range is up to par with modern SMGs.</szBRDesc>
+		<szItemName>SIG MP41/44</szItemName>
+		<szLongItemName>SIG MP41/44</szLongItemName>
+		<szItemDesc>This old Swiss SMG is fullauto-only and quite heavy, but its range is up to par with modern SMGs.</szItemDesc>
+		<szBRName>SIG MP41/44</szBRName>
+		<szBRDesc>This old Swiss SMG is fullauto-only and quite heavy, but its range is up to par with modern SMGs. It was developed in the 1930s by Adolf Furrer, manager of SIG Armory at Bern, Switzerland.</szBRDesc>
 		<usItemClass>2</usItemClass>
 		<ubClassIndex>1179</ubClassIndex>
 		<ubCursor>3</ubCursor>
@@ -28066,5 +28082,261 @@
 		<BR_NewInventory>2</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<BR_ROF>850</BR_ROF>
+	</ITEM>
+	<ITEM>
+		<uiIndex>1180</uiIndex>
+		<szItemName>ZF-42</szItemName>
+		<szLongItemName>ZF-42 Scope</szLongItemName>
+		<szItemDesc>German scope for the Gewehr 98 and the Karabiner 98k.</szItemDesc>
+		<szBRName>ZF-42 Scope</szBRName>
+		<szBRDesc>This vintage scope will fit the German Mauser WW-II rifles.</szBRDesc>
+		<usItemClass>268435456</usItemClass>
+		<ubGraphicType>1</ubGraphicType>
+		<ubGraphicNum>721</ubGraphicNum>
+		<ubWeight>3</ubWeight>
+		<ubPerPocket>4</ubPerPocket>
+		<ItemSize>18</ItemSize>
+		<usPrice>450</usPrice>
+		<ubCoolness>4</ubCoolness>
+		<bRepairEase>-2</bRepairEase>
+		<Damageable>1</Damageable>
+		<Repairable>1</Repairable>
+		<Metal>1</Metal>
+		<Sinks>1</Sinks>
+		<Attachment>1</Attachment>
+		<BigGunList>1</BigGunList>
+		<Electronic>0</Electronic>
+		<BR_NewInventory>1</BR_NewInventory>
+		<BR_UsedInventory>1</BR_UsedInventory>
+		<AimBonus>10</AimBonus>
+		<MinRangeForAimBonus>20</MinRangeForAimBonus>
+		<DayVisionRangeBonus>20</DayVisionRangeBonus>
+		<BrightLightVisionRangeBonus>20</BrightLightVisionRangeBonus>
+		<PercentTunnelVision>20</PercentTunnelVision>
+	</ITEM>
+	<ITEM>
+		<uiIndex>1181</uiIndex>
+		<szItemName>No.32 Scope</szItemName>
+		<szLongItemName>No.32 Scope</szLongItemName>
+		<szItemDesc>British scope used during WW-II.</szItemDesc>
+		<szBRName>No.32 Scope</szBRName>
+		<szBRDesc>A WW-II era scope of British manufacture, this was also used by other allied forces during that war.</szBRDesc>
+		<usItemClass>268435456</usItemClass>
+		<ubGraphicType>1</ubGraphicType>
+		<ubGraphicNum>722</ubGraphicNum>
+		<ubWeight>11</ubWeight>
+		<ubPerPocket>4</ubPerPocket>
+		<ItemSize>20</ItemSize>
+		<usPrice>520</usPrice>
+		<ubCoolness>4</ubCoolness>
+		<bRepairEase>-2</bRepairEase>
+		<Damageable>1</Damageable>
+		<Repairable>1</Repairable>
+		<Metal>1</Metal>
+		<Sinks>1</Sinks>
+		<Attachment>1</Attachment>
+		<BigGunList>1</BigGunList>
+		<Electronic>0</Electronic>
+		<BR_NewInventory>1</BR_NewInventory>
+		<BR_UsedInventory>1</BR_UsedInventory>
+		<AimBonus>11</AimBonus>
+		<MinRangeForAimBonus>20</MinRangeForAimBonus>
+		<DayVisionRangeBonus>20</DayVisionRangeBonus>
+		<BrightLightVisionRangeBonus>20</BrightLightVisionRangeBonus>
+		<PercentTunnelVision>20</PercentTunnelVision>
+	</ITEM>
+	<ITEM>
+		<uiIndex>1182</uiIndex>
+		<szItemName>PEM</szItemName>
+		<szLongItemName>PEM Scope</szLongItemName>
+		<szItemDesc>Russian WW-II era scope.</szItemDesc>
+		<szBRName>PEM Scope</szBRName>
+		<szBRDesc>Simply THE scope to mount onto the Mosin-Nagant rifle.</szBRDesc>
+		<usItemClass>268435456</usItemClass>
+		<ubGraphicType>1</ubGraphicType>
+		<ubGraphicNum>723</ubGraphicNum>
+		<ubWeight>3</ubWeight>
+		<ubPerPocket>4</ubPerPocket>
+		<ItemSize>18</ItemSize>
+		<usPrice>400</usPrice>
+		<ubCoolness>4</ubCoolness>
+		<bRepairEase>-2</bRepairEase>
+		<Damageable>1</Damageable>
+		<Repairable>1</Repairable>
+		<Metal>1</Metal>
+		<Sinks>1</Sinks>
+		<Attachment>1</Attachment>
+		<BigGunList>1</BigGunList>
+		<Electronic>0</Electronic>
+		<BR_NewInventory>1</BR_NewInventory>
+		<BR_UsedInventory>1</BR_UsedInventory>
+		<AimBonus>9</AimBonus>
+		<MinRangeForAimBonus>20</MinRangeForAimBonus>
+		<DayVisionRangeBonus>20</DayVisionRangeBonus>
+		<BrightLightVisionRangeBonus>20</BrightLightVisionRangeBonus>
+		<PercentTunnelVision>20</PercentTunnelVision>
+	</ITEM>
+	<ITEM>
+		<uiIndex>1183</uiIndex>
+		<szItemName>Match Sights</szItemName>
+		<szLongItemName>Match Sights</szLongItemName>
+		<szItemDesc>These match sights have been made for precision during competition shooting.</szItemDesc>
+		<szBRName>Match Sights</szBRName>
+		<szBRDesc>Fully adjustable iron sights to go with a Colt 1911, Glock, HK USP, or SIG pistol.</szBRDesc>
+		<usItemClass>268435456</usItemClass>
+		<ubGraphicType>1</ubGraphicType>
+		<ubGraphicNum>724</ubGraphicNum>
+		<ubWeight>0</ubWeight>
+		<ubPerPocket>4</ubPerPocket>
+		<ItemSize>10</ItemSize>
+		<usPrice>300</usPrice>
+		<ubCoolness>5</ubCoolness>
+		<bRepairEase>0</bRepairEase>
+		<Damageable>1</Damageable>
+		<Repairable>1</Repairable>
+		<Metal>1</Metal>
+		<Attachment>1</Attachment>
+		<Electronic>0</Electronic>
+		<BR_NewInventory>2</BR_NewInventory>
+		<BR_UsedInventory>1</BR_UsedInventory>
+		<RangeBonus>10</RangeBonus>
+		<ToHitBonus>2</ToHitBonus>
+	</ITEM>
+	<ITEM>
+		<uiIndex>1184</uiIndex>
+		<szItemName>Camo Shirt</szItemName>
+		<szLongItemName>Underarmor Shirt</szLongItemName>
+		<szItemDesc>This shirt is designed to go under a ballistic vest, therefore DPM is only on the visible parts.</szItemDesc>
+		<szBRName>Underarmor Shirt</szBRName>
+		<szBRDesc>There's no need to have a fully camoed shirt when you wear a ballistic vest over it anyway, so this shirt was designed for use with those vests.</szBRDesc>
+		<usItemClass>268435456</usItemClass>
+		<ubGraphicType>1</ubGraphicType>
+		<ubGraphicNum>720</ubGraphicNum>
+		<ubWeight>3</ubWeight>
+		<ubPerPocket>1</ubPerPocket>
+		<ItemSize>23</ItemSize>
+		<usPrice>70</usPrice>
+		<ubCoolness>5</ubCoolness>
+		<bReliability>0</bReliability>
+		<bRepairEase>0</bRepairEase>
+		<Damageable>1</Damageable>
+		<Repairable>1</Repairable>
+		<Attachment>1</Attachment>
+		<BigGunList>1</BigGunList>
+		<BR_NewInventory>3</BR_NewInventory>
+		<BR_UsedInventory>1</BR_UsedInventory>
+		<CamoBonus>5</CamoBonus>
+	</ITEM>
+	<ITEM>
+		<uiIndex>1185</uiIndex>
+		<szItemName>Rails</szItemName>
+		<szLongItemName>G36 Rail-Kit</szLongItemName>
+		<szItemDesc>A set of forward Picatinny Rails and a rail to replace the carrying grip</szItemDesc>
+		<szBRName>G36 Rail-Kit</szBRName>
+		<szBRDesc>Change your G36/G36K/MG36 to a more versatile gun with this set of Picatinny Rails.</szBRDesc>
+		<usItemClass>268435456</usItemClass>
+		<ubGraphicType>0</ubGraphicType>
+		<ubGraphicNum>335</ubGraphicNum>
+		<ubWeight>8</ubWeight>
+		<ItemSize>24</ItemSize>
+		<usPrice>750</usPrice>
+		<ubCoolness>6</ubCoolness>
+		<Damageable>1</Damageable>
+		<Repairable>1</Repairable>
+		<WaterDamages>1</WaterDamages>
+		<Metal>1</Metal>
+		<Sinks>1</Sinks>
+		<ShowStatus>1</ShowStatus>
+		<BigGunList>1</BigGunList>
+		<BR_NewInventory>1</BR_NewInventory>
+	</ITEM>
+	<ITEM>
+		<uiIndex>1186</uiIndex>
+		<szItemName>Carry Grip</szItemName>
+		<szLongItemName>G36 Grip/Optics</szLongItemName>
+		<szItemDesc>A carrying grip with integrated optics and a standard handguard.</szItemDesc>
+		<szBRName>G36 Grip/Optics</szBRName>
+		<szBRDesc>The G36 standard equipment: Handguard and Carry Grip with mounted dual optics.</szBRDesc>
+		<usItemClass>268435456</usItemClass>
+		<ubGraphicType>0</ubGraphicType>
+		<ubGraphicNum>336</ubGraphicNum>
+		<ubWeight>8</ubWeight>
+		<ItemSize>24</ItemSize>
+		<usPrice>1500</usPrice>
+		<ubCoolness>6</ubCoolness>
+		<Damageable>1</Damageable>
+		<Repairable>1</Repairable>
+		<WaterDamages>1</WaterDamages>
+		<Metal>1</Metal>
+		<Sinks>1</Sinks>
+		<ShowStatus>1</ShowStatus>
+		<BigGunList>1</BigGunList>
+		<BR_NewInventory>1</BR_NewInventory>
+	</ITEM>
+	<ITEM>
+		<uiIndex>1187</uiIndex>
+		<szItemName>MG36</szItemName>
+		<szLongItemName>HK MG36</szLongItemName>
+		<szItemDesc>Not as bulky or heavy as other LMG's, this gun still has a rate of fire that will frappe an enemy in no time.</szItemDesc>
+		<szBRName>HK MG36</szBRName>
+		<szBRDesc>HK has blessed us with their new versatile, multi-role squad machine gun. This version has the Bundeswehr grip with integrated optics.</szBRDesc>
+		<usItemClass>2</usItemClass>
+		<ubClassIndex>1187</ubClassIndex>
+		<ubCursor>3</ubCursor>
+		<ubGraphicNum>333</ubGraphicNum>
+		<ubWeight>35</ubWeight>
+		<ItemSize>7</ItemSize>
+		<usPrice>6080</usPrice>
+		<ubCoolness>7</ubCoolness>
+		<bReliability>3</bReliability>
+		<bRepairEase>-1</bRepairEase>
+		<Damageable>1</Damageable>
+		<Repairable>1</Repairable>
+		<WaterDamages>1</WaterDamages>
+		<Metal>1</Metal>
+		<Sinks>1</Sinks>
+		<ShowStatus>1</ShowStatus>
+		<TwoHanded>1</TwoHanded>
+		<BigGunList>1</BigGunList>
+		<BR_NewInventory>2</BR_NewInventory>
+		<BR_UsedInventory>1</BR_UsedInventory>
+		<BR_ROF>750</BR_ROF>
+		<ToHitBonus>-1</ToHitBonus>
+		<AimBonus>10</AimBonus>
+		<MinRangeForAimBonus>20</MinRangeForAimBonus>
+		<PercentReadyTimeAPReduction>30</PercentReadyTimeAPReduction>
+		<PercentAPReduction>20</PercentAPReduction>
+		<VisionRangeBonus>25</VisionRangeBonus>
+		<PercentTunnelVision>20</PercentTunnelVision>
+	</ITEM>
+	<ITEM>
+		<uiIndex>1188</uiIndex>
+		<szItemName>Ameli</szItemName>
+		<szLongItemName>CETME Ameli</szLongItemName>
+		<szItemDesc>Designed by the Compania de Estudios Tecnicus de Materiales Especiales, the Ameli looks as if it was derived from the MG42, but its mechanism is quite different.</szItemDesc>
+		<szBRName>CETME Ameli</szBRName>
+		<szBRDesc>The Ameli we have in stock are the 'light-bolt'-versions with a higher rate of fire than the 'heavy-bolt'-model. Comes with bipod.</szBRDesc>
+		<usItemClass>2</usItemClass>
+		<ubClassIndex>1188</ubClassIndex>
+		<ubCursor>3</ubCursor>
+		<ubGraphicNum>326</ubGraphicNum>
+		<ubWeight>63</ubWeight>
+		<ItemSize>7</ItemSize>
+		<usPrice>5370</usPrice>
+		<ubCoolness>6</ubCoolness>
+		<bReliability>1</bReliability>
+		<bRepairEase>0</bRepairEase>
+		<Damageable>1</Damageable>
+		<Repairable>1</Repairable>
+		<WaterDamages>1</WaterDamages>
+		<Metal>1</Metal>
+		<Sinks>1</Sinks>
+		<ShowStatus>1</ShowStatus>
+		<TwoHanded>1</TwoHanded>
+		<BigGunList>1</BigGunList>
+		<BR_NewInventory>2</BR_NewInventory>
+		<BR_UsedInventory>1</BR_UsedInventory>
+		<BR_ROF>1200</BR_ROF>
+		<DefaultAttachment>209</DefaultAttachment>
 	</ITEM>
 </ITEMLIST>
