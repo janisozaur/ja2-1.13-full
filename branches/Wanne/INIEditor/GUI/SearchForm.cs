@@ -61,7 +61,7 @@ namespace INIEditor.GUI
         #region Events
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            SearchParams searchParams = new SearchParams(txtFindWhat.Text, chkSectionDescriptions.Checked, chkPropertyDescriptions.Checked,
+            SearchParams searchParams = new SearchParams(txtFindWhat.Text.Trim(), chkSectionDescriptions.Checked, chkPropertyDescriptions.Checked,
                 chkPropertyValues.Checked, chkProperties.Checked);
 
             _mainForm.Search(searchParams);

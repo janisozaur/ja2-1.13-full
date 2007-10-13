@@ -46,6 +46,7 @@ namespace INIEditor.GUI
             this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuToolsGenerateXML = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
@@ -103,7 +104,6 @@ namespace INIEditor.GUI
             this.colSearchResultsPropertyDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSearchResultsPropertyCurrentValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSearchResultsPropertyNewValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMain.SuspendLayout();
             this.tbrMain.SuspendLayout();
             this.stsMain.SuspendLayout();
@@ -141,28 +141,28 @@ namespace INIEditor.GUI
             this.mnuFileExit});
             this.mnuFile.Name = "mnuFile";
             this.mnuFile.Size = new System.Drawing.Size(35, 20);
-            this.mnuFile.Text = "File";
+            this.mnuFile.Text = "&File";
             // 
             // mnuFileSave
             // 
             this.mnuFileSave.Image = ((System.Drawing.Image)(resources.GetObject("mnuFileSave.Image")));
             this.mnuFileSave.Name = "mnuFileSave";
             this.mnuFileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.mnuFileSave.Size = new System.Drawing.Size(147, 22);
-            this.mnuFileSave.Text = "Save";
+            this.mnuFileSave.Size = new System.Drawing.Size(152, 22);
+            this.mnuFileSave.Text = "&Save";
             this.mnuFileSave.ToolTipText = "Save File";
             this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(144, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // mnuFileExit
             // 
             this.mnuFileExit.Name = "mnuFileExit";
-            this.mnuFileExit.Size = new System.Drawing.Size(147, 22);
-            this.mnuFileExit.Text = "Exit";
+            this.mnuFileExit.Size = new System.Drawing.Size(152, 22);
+            this.mnuFileExit.Text = "E&xit";
             this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
             // 
             // viewToolStripMenuItem
@@ -173,7 +173,7 @@ namespace INIEditor.GUI
             this.mnuViewClearSearchResults});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
-            this.viewToolStripMenuItem.Text = "View";
+            this.viewToolStripMenuItem.Text = "&View";
             // 
             // mnuViewDescLanguage
             // 
@@ -182,22 +182,22 @@ namespace INIEditor.GUI
             this.mnuViewDescLanguageGerman});
             this.mnuViewDescLanguage.Name = "mnuViewDescLanguage";
             this.mnuViewDescLanguage.Size = new System.Drawing.Size(188, 22);
-            this.mnuViewDescLanguage.Text = "Description Language";
+            this.mnuViewDescLanguage.Text = "Description &Language";
             // 
             // mnuViewDescLanguageEnglish
             // 
             this.mnuViewDescLanguageEnglish.Image = ((System.Drawing.Image)(resources.GetObject("mnuViewDescLanguageEnglish.Image")));
             this.mnuViewDescLanguageEnglish.Name = "mnuViewDescLanguageEnglish";
-            this.mnuViewDescLanguageEnglish.Size = new System.Drawing.Size(122, 22);
-            this.mnuViewDescLanguageEnglish.Text = "English";
+            this.mnuViewDescLanguageEnglish.Size = new System.Drawing.Size(152, 22);
+            this.mnuViewDescLanguageEnglish.Text = "&English";
             this.mnuViewDescLanguageEnglish.Click += new System.EventHandler(this.mnuViewDescLanguageEnglish_Click);
             // 
             // mnuViewDescLanguageGerman
             // 
             this.mnuViewDescLanguageGerman.Image = ((System.Drawing.Image)(resources.GetObject("mnuViewDescLanguageGerman.Image")));
             this.mnuViewDescLanguageGerman.Name = "mnuViewDescLanguageGerman";
-            this.mnuViewDescLanguageGerman.Size = new System.Drawing.Size(122, 22);
-            this.mnuViewDescLanguageGerman.Text = "German";
+            this.mnuViewDescLanguageGerman.Size = new System.Drawing.Size(152, 22);
+            this.mnuViewDescLanguageGerman.Text = "&German";
             this.mnuViewDescLanguageGerman.Click += new System.EventHandler(this.mnuViewDescLanguageGerman_Click);
             // 
             // mnuViewSearch
@@ -215,7 +215,7 @@ namespace INIEditor.GUI
             this.mnuViewClearSearchResults.Image = ((System.Drawing.Image)(resources.GetObject("mnuViewClearSearchResults.Image")));
             this.mnuViewClearSearchResults.Name = "mnuViewClearSearchResults";
             this.mnuViewClearSearchResults.Size = new System.Drawing.Size(188, 22);
-            this.mnuViewClearSearchResults.Text = "Clear Search Results";
+            this.mnuViewClearSearchResults.Text = "&Clear Search Results";
             this.mnuViewClearSearchResults.Click += new System.EventHandler(this.mnuViewClearSearchResults_Click);
             // 
             // mnuTools
@@ -224,7 +224,7 @@ namespace INIEditor.GUI
             this.mnuToolsGenerateXML});
             this.mnuTools.Name = "mnuTools";
             this.mnuTools.Size = new System.Drawing.Size(88, 20);
-            this.mnuTools.Text = "Tools [ADMIN]";
+            this.mnuTools.Text = "&Tools [ADMIN]";
             // 
             // mnuToolsGenerateXML
             // 
@@ -240,7 +240,14 @@ namespace INIEditor.GUI
             this.mnuHelpAbout});
             this.mnuHelp.Name = "mnuHelp";
             this.mnuHelp.Size = new System.Drawing.Size(40, 20);
-            this.mnuHelp.Text = "Help";
+            this.mnuHelp.Text = "&Help";
+            // 
+            // mnuHelpAbout
+            // 
+            this.mnuHelpAbout.Name = "mnuHelpAbout";
+            this.mnuHelpAbout.Size = new System.Drawing.Size(152, 22);
+            this.mnuHelpAbout.Text = "&About...";
+            this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
             // 
             // saveToolStripMenuItem
             // 
@@ -783,13 +790,6 @@ namespace INIEditor.GUI
             // 
             this.colSearchResultsPropertyNewValue.HeaderText = "New Value";
             this.colSearchResultsPropertyNewValue.Name = "colSearchResultsPropertyNewValue";
-            // 
-            // mnuHelpAbout
-            // 
-            this.mnuHelpAbout.Name = "mnuHelpAbout";
-            this.mnuHelpAbout.Size = new System.Drawing.Size(152, 22);
-            this.mnuHelpAbout.Text = "About...";
-            this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
             // 
             // MainForm
             // 

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("INIEditor")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("JA2 1.13 - INI Editor")]
+[assembly: AssemblyDescription("Jagged Alliance 2 1.13 - INI Editor")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("INIEditor")]
+[assembly: AssemblyCompany("RoWa21 aka Wanne")]
+[assembly: AssemblyProduct("JA2 1.13 - INI Editor")]
 [assembly: AssemblyCopyright("Copyright ©  2007")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      RevisionS
 //
-[assembly: AssemblyVersion("0.3.0.0")]
-[assembly: AssemblyFileVersion("0.3.0.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
