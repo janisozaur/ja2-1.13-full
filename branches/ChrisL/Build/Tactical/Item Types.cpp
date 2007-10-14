@@ -96,27 +96,7 @@ bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
 	}
 	return false;
 }
-/*
-void DestroyLBE(OBJECTTYPE* pObj)
-{
-	PERFORMANCE_MARKER
-	for (int x = 0; x < pObj->ubNumberOfObjects; ++x) {
-		if (pObj->IsActiveLBE(x) == true) {
-			LBENODE* pLBE = pObj->GetLBEPointer(x);
-			if (pLBE) {
-				for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
-					if (iter->uniqueID == pLBE->uniqueID) {
-						LBEArray.erase(iter);
-						break;
-					}
-				}
-				(*pObj)[x]->data.lbe.uniqueID = 0;
-				(*pObj)[x]->data.lbe.bLBE = 0;
-			}
-		}
-	}
-}
-*/
+
 void MoveItemsInSlotsToLBE( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, LBENODE* pLBE, OBJECTTYPE* pObj)
 {
 	PERFORMANCE_MARKER

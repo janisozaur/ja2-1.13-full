@@ -2719,6 +2719,7 @@ STR16			BobbyRFilter[] =
 	L"Verbandsk.",
 	L"Taschen",
 	L"Gesicht G.",
+	L"LBE Gear",
 	L"Sonstiges",
 };
 
