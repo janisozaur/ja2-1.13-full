@@ -17,16 +17,15 @@ struct
 	EXPLOSIVETYPE		curExplosive;
 	EXPLOSIVETYPE *	curArray;
 	UINT32			maxArraySize;
-	
+
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
 typedef explosiveParseData;
 
-static void XMLCALL 
+static void XMLCALL
 explosiveStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	explosiveParseData * pData = (explosiveParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -74,10 +73,9 @@ explosiveStartElementHandle(void *userData, const XML_Char *name, const XML_Char
 static void XMLCALL
 explosiveCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	explosiveParseData * pData = (explosiveParseData *)userData;
 
-	if( (pData->currentDepth <= pData->maxReadDepth) && 
+	if( (pData->currentDepth <= pData->maxReadDepth) &&
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
 	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
@@ -88,7 +86,6 @@ explosiveCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 explosiveEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	explosiveParseData * pData = (explosiveParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -168,13 +165,12 @@ explosiveEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInExplosiveStats(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	explosiveParseData pData;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading Explosives.xml" );
@@ -183,7 +179,7 @@ BOOLEAN ReadInExplosiveStats(STR fileName)
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -198,15 +194,15 @@ BOOLEAN ReadInExplosiveStats(STR fileName)
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, explosiveStartElementHandle, explosiveEndElementHandle);
 	XML_SetCharacterDataHandler(parser, explosiveCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
 	pData.curArray = Explosive;
-	pData.maxArraySize = MAXITEMS; 
-	
+	pData.maxArraySize = MAXITEMS;
+
 	XML_SetUserData(parser, &pData);
 
 
@@ -231,7 +227,6 @@ BOOLEAN ReadInExplosiveStats(STR fileName)
 }
 BOOLEAN WriteExplosiveStats()
 {
-	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeexplosivestats");
 	HWFILE		hFile;
 
@@ -240,7 +235,7 @@ BOOLEAN WriteExplosiveStats()
 	hFile = FileOpen( "TABLEDATA\\Explosives out.xml", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	{
 		UINT32 cnt;
 

@@ -58,7 +58,7 @@
 #define		MERC_FACE_HEIGHT									122
 
 #define		MERC_FILES_STATS_BOX_X						LAPTOP_SCREEN_UL_X + 164
-#define		MERC_FILES_STATS_BOX_Y						MERC_FILES_PORTRAIT_BOX_Y		
+#define		MERC_FILES_STATS_BOX_Y						MERC_FILES_PORTRAIT_BOX_Y
 
 
 #define		MERC_FILES_BIO_BOX_X							MERC_FILES_PORTRAIT_BOX_X
@@ -87,7 +87,7 @@
 #define		MERC_ADD_BIO_TITLE_X							MERC_BIO_TEXT_X
 #define		MERC_ADD_BIO_TITLE_Y							MERC_BIO_TEXT_Y + 100
 
-#define		MERC_ADD_BIO_TEXT_X								MERC_BIO_TEXT_X 
+#define		MERC_ADD_BIO_TEXT_X								MERC_BIO_TEXT_X
 #define		MERC_ADD_BIO_TEXT_Y								MERC_ADD_BIO_TITLE_Y + 20
 
 #define		MERC_BIO_WIDTH										460 - 10
@@ -152,13 +152,11 @@ void EnableDisableMercFilesNextPreviousButton( );
 
 void GameInitMercsFiles()
 {
-	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterMercsFiles()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	InitMercBackGround();
@@ -183,10 +181,10 @@ BOOLEAN EnterMercsFiles()
 	guiButtonImage	= LoadButtonImage("LAPTOP\\BigButtons.sti", -1,0,-1,1,-1 );
 
 	guiPrevButton = CreateIconAndTextButton( guiButtonImage, MercInfo[MERC_FILES_PREVIOUS],
-													FONT12ARIAL, 
-													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
-													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
-													TEXT_CJUSTIFIED, 
+													FONT12ARIAL,
+													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
+													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
+													TEXT_CJUSTIFIED,
 													MERC_FILES_PREV_BUTTON_X, MERC_FILES_PREV_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnMercPrevButtonCallback);
 
@@ -195,10 +193,10 @@ BOOLEAN EnterMercsFiles()
 
 	//Next Button
 	guiNextButton = CreateIconAndTextButton( guiButtonImage, MercInfo[MERC_FILES_NEXT],
-													FONT12ARIAL, 
-													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
-													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
-													TEXT_CJUSTIFIED, 
+													FONT12ARIAL,
+													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
+													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
+													TEXT_CJUSTIFIED,
 													MERC_FILES_NEXT_BUTTON_X, MERC_FILES_NEXT_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnMercNextButtonCallback);
 
@@ -207,10 +205,10 @@ BOOLEAN EnterMercsFiles()
 
 	//Hire button
 	guiHireButton = CreateIconAndTextButton( guiButtonImage, MercInfo[MERC_FILES_HIRE],
-													FONT12ARIAL, 
-													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
-													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
-													TEXT_CJUSTIFIED, 
+													FONT12ARIAL,
+													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
+													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
+													TEXT_CJUSTIFIED,
 													MERC_FILES_HIRE_BUTTON_X, MERC_FILES_HIRE_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnMercHireButtonCallback);
 	SetButtonCursor(guiHireButton, CURSOR_LAPTOP_SCREEN);
@@ -218,10 +216,10 @@ BOOLEAN EnterMercsFiles()
 
 	//Back button
 	guiMercBackButton = CreateIconAndTextButton( guiButtonImage, MercInfo[MERC_FILES_HOME],
-													FONT12ARIAL, 
-													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
-													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
-													TEXT_CJUSTIFIED, 
+													FONT12ARIAL,
+													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
+													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
+													TEXT_CJUSTIFIED,
 													MERC_FILES_BACK_BUTTON_X, MERC_FILES_BACK_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnMercFilesBackButtonCallback);
 	SetButtonCursor(guiMercBackButton, CURSOR_LAPTOP_SCREEN);
@@ -233,7 +231,6 @@ BOOLEAN EnterMercsFiles()
 
 void ExitMercsFiles()
 {
-	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiPortraitBox);
 	DeleteVideoObjectFromIndex(guiStatsBox);
 	DeleteVideoObjectFromIndex(guiBioBox);
@@ -249,13 +246,11 @@ void ExitMercsFiles()
 
 void HandleMercsFiles()
 {
-	PERFORMANCE_MARKER
 
 }
 
 void RenderMercsFiles()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	DrawMecBackGround();
@@ -314,7 +309,6 @@ void RenderMercsFiles()
 
 void BtnMercPrevButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -346,12 +340,11 @@ void BtnMercPrevButtonCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 
 
 void BtnMercNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -384,12 +377,11 @@ void BtnMercNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 
 
 void BtnMercHireButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -434,12 +426,11 @@ void BtnMercHireButtonCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 
 
 BOOLEAN DisplayMercFace( UINT8 ubMercID)
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hFaceHandle;
 	HVOBJECT hPortraitHandle;
 	STR							sFaceLoc = "FACES\\BIGFACES\\";
@@ -463,7 +454,7 @@ BOOLEAN DisplayMercFace( UINT8 ubMercID)
 	FilenameForBPP(sTemp, VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiMercFace));
 
-	//Blt face to screen 
+	//Blt face to screen
 	GetVideoObject(&hFaceHandle, guiMercFace);
 	BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,MERC_FACE_X, MERC_FACE_Y, VO_BLT_SRCTRANSPARENCY,NULL);
 
@@ -479,7 +470,7 @@ BOOLEAN DisplayMercFace( UINT8 ubMercID)
 		//set the red pallete to the face
 		SetObjectHandleShade( guiMercFace, 0 );
 
-		//Blt face to screen 
+		//Blt face to screen
 	BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,MERC_FACE_X, MERC_FACE_Y, VO_BLT_SRCTRANSPARENCY,NULL);
 
 		DisplayWrappedString(MERC_FACE_X, MERC_FACE_Y+MERC_PORTRAIT_TEXT_OFFSET_Y, MERC_FACE_WIDTH, 2, FONT14ARIAL, 145, MercInfo[MERC_FILES_MERC_IS_DEAD], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
@@ -520,7 +511,6 @@ BOOLEAN DisplayMercFace( UINT8 ubMercID)
 
 void LoadAndDisplayMercBio( UINT8 ubMercID )
 {
-	PERFORMANCE_MARKER
 	CHAR16	sText[400];
 	UINT32	uiStartLoc = 0;
 
@@ -528,7 +518,7 @@ void LoadAndDisplayMercBio( UINT8 ubMercID )
 	uiStartLoc = MERC_BIO_SIZE * ubMercID;
 	LoadEncryptedDataFromFile(MERCBIOFILE, sText, uiStartLoc, MERC_BIO_INFO_TEXT_SIZE);
 	DisplayWrappedString(MERC_BIO_TEXT_X, MERC_BIO_TEXT_Y, MERC_BIO_WIDTH, 2, MERC_BIO_FONT, MERC_BIO_COLOR, sText, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
-	
+
 	//load and display the merc's additioanl info (if any)
 	uiStartLoc = MERC_BIO_SIZE * ubMercID + MERC_BIO_INFO_TEXT_SIZE;
 	LoadEncryptedDataFromFile(MERCBIOFILE, sText, uiStartLoc, MERC_BIO_ADD_INFO_TEXT_SIZE);
@@ -536,13 +526,12 @@ void LoadAndDisplayMercBio( UINT8 ubMercID )
 	{
 		DrawTextToScreen( MercInfo[ MERC_FILES_ADDITIONAL_INFO ], MERC_ADD_BIO_TITLE_X, MERC_ADD_BIO_TITLE_Y, 0, MERC_TITLE_FONT, MERC_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 		DisplayWrappedString( MERC_ADD_BIO_TEXT_X, MERC_ADD_BIO_TEXT_Y, MERC_BIO_WIDTH, 2, MERC_BIO_FONT, MERC_BIO_COLOR, sText, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
-	}	
+	}
 }
 
 
 void DisplayMercsStats( UINT8 ubMercID )
 {
-	PERFORMANCE_MARKER
 	UINT16 usPosY, usPosX;
 	CHAR16 sString[128];
 
@@ -616,7 +605,6 @@ void DisplayMercsStats( UINT8 ubMercID )
 
 BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 {
-	PERFORMANCE_MARKER
 	MERC_HIRE_STRUCT HireMercStruct;
 	INT8	bReturnCode;
 
@@ -639,7 +627,7 @@ BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 			gusMercVideoSpeckSpeech = SPECK_QUOTE_PLAYER_TRIES_TO_HIRE_ALREADY_HIRED_MERC;
 			gubArrivedFromMercSubSite = MERC_CAME_FROM_HIRE_PAGE;
 		}
-		
+
 		return(FALSE);
 	}
 
@@ -688,7 +676,6 @@ BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 
 void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -711,15 +698,14 @@ void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 
 void EnableDisableMercFilesNextPreviousButton( )
 {
-	PERFORMANCE_MARKER
 	if( gubCurMercIndex <= LaptopSaveInfo.gubLastMercIndex-1 )
-		EnableButton( guiNextButton );		
+		EnableButton( guiNextButton );
 	else
-		DisableButton( guiNextButton );		
+		DisableButton( guiNextButton );
 
 	if( gubCurMercIndex > 0 )
 		EnableButton( guiPrevButton );

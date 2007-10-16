@@ -18,16 +18,15 @@ struct
 	AMMOTYPE		curAmmoType;
 	AMMOTYPE *	curArray;
 	UINT32			maxArraySize;
-	
+
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
 typedef ammotypeParseData;
 
-static void XMLCALL 
+static void XMLCALL
 ammotypeStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	ammotypeParseData * pData = (ammotypeParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -94,10 +93,9 @@ ammotypeStartElementHandle(void *userData, const XML_Char *name, const XML_Char 
 static void XMLCALL
 ammotypeCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	ammotypeParseData * pData = (ammotypeParseData *)userData;
 
-	if( (pData->currentDepth <= pData->maxReadDepth) && 
+	if( (pData->currentDepth <= pData->maxReadDepth) &&
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
 	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
@@ -108,7 +106,6 @@ ammotypeCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 ammotypeEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	ammotypeParseData * pData = (ammotypeParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -283,13 +280,12 @@ ammotypeEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInAmmoTypeStats(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	ammotypeParseData pData;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading AmmoTypes.xml" );
@@ -298,7 +294,7 @@ BOOLEAN ReadInAmmoTypeStats(STR fileName)
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -313,15 +309,15 @@ BOOLEAN ReadInAmmoTypeStats(STR fileName)
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, ammotypeStartElementHandle, ammotypeEndElementHandle);
 	XML_SetCharacterDataHandler(parser, ammotypeCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
 	pData.curArray = AmmoTypes;
-	pData.maxArraySize = MAXITEMS; 
-	
+	pData.maxArraySize = MAXITEMS;
+
 	XML_SetUserData(parser, &pData);
 
 
@@ -346,7 +342,6 @@ BOOLEAN ReadInAmmoTypeStats(STR fileName)
 }
 BOOLEAN WriteAmmoTypeStats()
 {
-	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeammotypestats");
 	HWFILE		hFile;
 
@@ -355,7 +350,7 @@ BOOLEAN WriteAmmoTypeStats()
 	hFile = FileOpen( "TABLEDATA\\AmmoType out.xml", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	{
 		UINT32 cnt;
 

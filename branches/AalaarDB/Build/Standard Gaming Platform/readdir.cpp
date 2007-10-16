@@ -3,7 +3,6 @@
 // This class reads the contents of a directory file-by-file
 //
 #include "readdir.h"
-#include "profiler.h"
 
 TReadDir::TReadDir(char const* searchPattern) 
 {

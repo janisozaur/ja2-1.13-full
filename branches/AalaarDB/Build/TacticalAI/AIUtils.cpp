@@ -68,7 +68,7 @@ UINT16 MovementMode[LAST_MOVEMENT_ACTION + 1][NUM_URGENCY_STATES] =
 	{RUNNING,	RUNNING,	RUNNING }, // AI_ACTION_KNIFE_MOVE
 	{WALKING,	WALKING,	WALKING }, // AI_ACTION_APPROACH_MERC
 	{RUNNING,	RUNNING,	RUNNING }, // AI_ACTION_TRACK
-	{RUNNING,	RUNNING,	RUNNING },	// AI_ACTION_EAT 
+	{RUNNING,	RUNNING,	RUNNING },	// AI_ACTION_EAT
 	{WALKING,	RUNNING,	RUNNING},	// AI_ACTION_PICKUP_ITEM
 
 	{WALKING,	WALKING,	WALKING},	// AI_ACTION_SCHEDULE_MOVE
@@ -81,7 +81,6 @@ UINT16 MovementMode[LAST_MOVEMENT_ACTION + 1][NUM_URGENCY_STATES] =
 
 INT8 OKToAttack(SOLDIERTYPE * pSoldier, int target)
 {
-	PERFORMANCE_MARKER
 	// can't shoot yourself
 	if (target == pSoldier->sGridNo)
 		return(NOSHOOT_MYSELF);
@@ -108,7 +107,7 @@ INT8 OKToAttack(SOLDIERTYPE * pSoldier, int target)
 				return(NOSHOOT_NOLOAD);
 			}
 		}
-		else if (pSoldier->inv[HANDPOS][0]->data.gun.ubGunShotsLeft == 0 /*SB*/ || !(pSoldier->inv[HANDPOS][0]->data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER))		
+		else if (pSoldier->inv[HANDPOS][0]->data.gun.ubGunShotsLeft == 0 /*SB*/ || !(pSoldier->inv[HANDPOS][0]->data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER))
 		{
 			return(NOSHOOT_NOAMMO);
 		}
@@ -127,7 +126,6 @@ INT8 OKToAttack(SOLDIERTYPE * pSoldier, int target)
 
 BOOLEAN ConsiderProne( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT16		sOpponentGridNo;
 	INT8		bOpponentLevel;
 	INT32		iRange;
@@ -151,7 +149,6 @@ BOOLEAN ConsiderProne( SOLDIERTYPE * pSoldier )
 
 UINT8 StanceChange( SOLDIERTYPE * pSoldier, UINT8 ubAttackAPCost )
 {
-	PERFORMANCE_MARKER
 	// consider crouching or going prone
 
 	if (PTR_STANDING)
@@ -165,7 +162,7 @@ UINT8 StanceChange( SOLDIERTYPE * pSoldier, UINT8 ubAttackAPCost )
 			else if ( IsValidStance( pSoldier, ANIM_CROUCH ) )
 			{
 				return( ANIM_CROUCH );
-			}	
+			}
 		}
 	}
 	else if (PTR_CROUCHED)
@@ -180,13 +177,12 @@ UINT8 StanceChange( SOLDIERTYPE * pSoldier, UINT8 ubAttackAPCost )
 
 UINT8 ShootingStanceChange( SOLDIERTYPE * pSoldier, ATTACKTYPE * pAttack, INT8 bDesiredDirection )
 {
-	PERFORMANCE_MARKER
 	// Figure out the best stance for this attack
-		
+
 	// We don't want to go through a lot of complex calculations here,
-	// just compare the chance of the bullet hitting if we are 
+	// just compare the chance of the bullet hitting if we are
 	// standing, crouched, or prone
-	
+
 	UINT16	usRealAnimState, usBestAnimState;
 	INT8		bBestStanceDiff=-1;
 	INT8		bLoop, bStanceNum, bStanceDiff, bAPsAfterAttack, bCurAimTime;
@@ -240,7 +236,7 @@ UINT8 ShootingStanceChange( SOLDIERTYPE * pSoldier, ATTACKTYPE * pAttack, INT8 b
 					continue;
 				}
 				pSoldier->usAnimState = STANDING;
-				break;			
+				break;
 			case 1:
 				if ( !pSoldier->InternalSoldierReadyWeapon( bDesiredDirection, ANIM_CROUCH ) )
 				{
@@ -272,7 +268,7 @@ UINT8 ShootingStanceChange( SOLDIERTYPE * pSoldier, ATTACKTYPE * pAttack, INT8 b
 			// artificially augment "chance of damage" to reflect penalty to be shot at various stances
 			switch( pSoldier->usAnimState )
 			{
-				case CROUCHING:					
+				case CROUCHING:
 					if (iRange > POINT_BLANK_RANGE + 10 * (AIM_PENALTY_TARGET_CROUCHED / 3))
 					{
 						uiStanceBonus = AIM_BONUS_CROUCHING;
@@ -332,7 +328,6 @@ UINT8 ShootingStanceChange( SOLDIERTYPE * pSoldier, ATTACKTYPE * pAttack, INT8 b
 
 UINT16 DetermineMovementMode( SOLDIERTYPE * pSoldier, INT8 bAction )
 {
-	PERFORMANCE_MARKER
 	if ( pSoldier->flags.fUIMovementFast )
 	{
 		return( RUNNING );
@@ -375,11 +370,10 @@ UINT16 DetermineMovementMode( SOLDIERTYPE * pSoldier, INT8 bAction )
 
 void NewDest(SOLDIERTYPE *pSoldier, INT16 sGridNo)
 {
-	PERFORMANCE_MARKER
 	// ATE: Setting sDestination? Tis does not make sense...
 	//pSoldier->pathing.sDestination = sGridNo;
 	BOOLEAN fSet = FALSE;
-	
+
 	if ( IS_MERC_BODY_TYPE( pSoldier ) && pSoldier->aiData.bAction == AI_ACTION_TAKE_COVER && (pSoldier->aiData.bOrders == DEFENSIVE || pSoldier->aiData.bOrders == CUNNINGSOLO || pSoldier->aiData.bOrders == CUNNINGAID ) && (SoldierDifficultyLevel( pSoldier ) >= 2) )
 	{
 		UINT16 usMovementMode;
@@ -410,14 +404,14 @@ void NewDest(SOLDIERTYPE *pSoldier, INT16 sGridNo)
 		{
 			switch( pSoldier->aiData.bAction )
 			{
-				
+
 				case AI_ACTION_MOVE_TO_CLIMB:
 				case AI_ACTION_RUN_AWAY:
 					pSoldier->usUIMovementMode = DetermineMovementMode( pSoldier, pSoldier->aiData.bAction );
 					fSet = TRUE;
 					break;
 				default:
-/*					if ( PreRandom( 5 - SoldierDifficultyLevel( pSoldier ) ) == 0 )	
+/*					if ( PreRandom( 5 - SoldierDifficultyLevel( pSoldier ) ) == 0 )
 					{
 						INT16 sClosestNoise = (INT16) MostImportantNoiseHeard( pSoldier, NULL, NULL, NULL );
 						if ( sClosestNoise != NOWHERE && PythSpacesAway( pSoldier->sGridNo, sClosestNoise ) < MaxDistanceVisible() + 10 )
@@ -458,7 +452,6 @@ void NewDest(SOLDIERTYPE *pSoldier, INT16 sGridNo)
 
 BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 	INT8	bMinPointsNeeded = 0;
 	INT8 bAPForStandUp = 0;
 	INT8 bAPToLookAtWall = ( FindDirectionForClimbing( pSoldier->sGridNo ) == pSoldier->ubDirection ) ? 0 : 1;
@@ -504,7 +497,7 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 		case AI_ACTION_LOCK_DOOR:
 			bMinPointsNeeded = MinPtsToMove(pSoldier);
 			break;
-	
+
 		case AI_ACTION_DROP_ITEM:
 			bMinPointsNeeded = AP_PICKUP_ITEM;
 			break;
@@ -557,12 +550,12 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 				if( PTR_PRONE ) bAPForStandUp = 4;
 				bMinPointsNeeded = AP_CLIMBROOF + bAPForStandUp + bAPToLookAtWall;
 			}
-			else 
+			else
 			{
 				if( !PTR_CROUCHED ) bAPForStandUp = 2;
 				bMinPointsNeeded = AP_CLIMBOFFROOF + bAPForStandUp + bAPToLookAtWall;
 			}
-			break;			
+			break;
 
 		case AI_ACTION_COWER:
 		case AI_ACTION_STOP_COWERING:
@@ -572,7 +565,7 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 		case AI_ACTION_OFFER_SURRENDER:
 			bMinPointsNeeded = 0;
 			break;
-			
+
 		default:
 #ifdef BETAVERSION
 			//NumMessage("AffordableAction - Illegal action type = ",pSoldier->aiData.bAction);
@@ -593,7 +586,6 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 
 INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 	UINT32				uiLoop;
 	UINT16				usMaxDist;
 	UINT8					ubFriendCount, ubFriendIDs[MAXMERCS], ubFriendID;
@@ -738,7 +730,6 @@ INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier)
 
 INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 	INT16 sRandDest = NOWHERE;
 	UINT16 usOrigin, usMaxDist;
 	UINT8	ubTriesLeft;
@@ -881,7 +872,6 @@ INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 
 INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, BOOLEAN * pfChangeLevel )
 {
-	PERFORMANCE_MARKER
 	INT16		*psLastLoc, *pusNoiseGridNo;
 	INT8		*pbLastLevel;
 	INT16		sGridNo=-1;
@@ -1002,7 +992,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 			}
 			iShortestPath = iPathCost;
 			fClosestClimbingNecessary = fClimbingNecessary;
-		}	
+		}
 	}
 
 	// if any "misc. noise" was also heard recently
@@ -1035,7 +1025,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 				}
 				iShortestPath = iPathCost;
 				fClosestClimbingNecessary = fClimbingNecessary;
-			}	
+			}
 		}
 	}
 
@@ -1067,7 +1057,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 				}
 				iShortestPath = iPathCost;
 				fClosestClimbingNecessary = fClimbingNecessary;
-			}	
+			}
 		}
 		else
 		{
@@ -1090,7 +1080,6 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 
 INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLevel)
 {
-	PERFORMANCE_MARKER
 	INT16 *psLastLoc,sGridNo, sClosestOpponent = NOWHERE;
 	UINT32 uiLoop;
 	INT32 iRange, iClosestRange = 1500;
@@ -1163,7 +1152,7 @@ INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLev
 		}
 
 		// this function is used only for turning towards closest opponent or changing stance
-		// as such, if they AI is in a building, 
+		// as such, if they AI is in a building,
 		// we should ignore people who are on the roof of the same building as the AI
 		if ( (bLevel != pSoldier->pathing.bLevel) && SameBuilding( pSoldier->sGridNo, sGridNo ) )
 		{
@@ -1202,7 +1191,6 @@ INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLev
 
 INT16 ClosestSeenOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLevel)
 {
-	PERFORMANCE_MARKER
 	INT16 sGridNo, sClosestOpponent = NOWHERE;
 	UINT32 uiLoop;
 	INT32 iRange, iClosestRange = 1500;
@@ -1254,7 +1242,7 @@ INT16 ClosestSeenOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLeve
 		}
 
 		// this function is used only for turning towards closest opponent or changing stance
-		// as such, if they AI is in a building, 
+		// as such, if they AI is in a building,
 		// we should ignore people who are on the roof of the same building as the AI
 		if ( (bLevel != pSoldier->pathing.bLevel) && SameBuilding( pSoldier->sGridNo, sGridNo ) )
 		{
@@ -1294,7 +1282,6 @@ INT16 ClosestSeenOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLeve
 
 INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance )
 {
-	PERFORMANCE_MARKER
 	// used by NPCs... find the closest PC
 
 	// NOTE: skips EPCs!
@@ -1309,14 +1296,14 @@ INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance )
 	ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
 	for ( ; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++)
-	{ 
+	{
 		pTargetSoldier = Menptr + ubLoop;
 
 		if (!pTargetSoldier->bActive || !pTargetSoldier->bInSector)
 		{
 			continue;
 		}
-		
+
 		// if not conscious, skip him
 		if (pTargetSoldier->stats.bLife < OKLIFE)
 		{
@@ -1329,7 +1316,7 @@ INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance )
 		}
 
 		sDist = PythSpacesAway(pSoldier->sGridNo,pTargetSoldier->sGridNo);
-		
+
 		// if this PC is not visible to the soldier, then add a penalty to the distance
 		// so that we weight in favour of visible mercs
 		if ( pTargetSoldier->bTeam != pSoldier->bTeam && pSoldier->aiData.bOppList[ ubLoop ] != SEEN_CURRENTLY )
@@ -1341,7 +1328,7 @@ INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance )
 		{
 			sMinDist = sDist;
 			sGridNo = pTargetSoldier->sGridNo;
-		}		
+		}
 	}
 
 	if ( psDistance )
@@ -1354,7 +1341,6 @@ INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance )
 
 INT16 FindClosestClimbPointAvailableToAI( SOLDIERTYPE * pSoldier, INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN fClimbUp )
 {
-	PERFORMANCE_MARKER
 	INT16	sGridNo;
 	INT16	sRoamingOrigin;
 	INT16	sRoamingRange;
@@ -1369,7 +1355,7 @@ INT16 FindClosestClimbPointAvailableToAI( SOLDIERTYPE * pSoldier, INT16 sStartGr
 		sRoamingRange = RoamingRange( pSoldier, &sRoamingOrigin );
 	}
 
-	// since climbing necessary involves going an extra tile, we compare against 1 less than the roam range... 
+	// since climbing necessary involves going an extra tile, we compare against 1 less than the roam range...
 	// or add 1 to the distance to the climb point
 
 	sGridNo = FindClosestClimbPoint( pSoldier, sStartGridNo, sDesiredGridNo, fClimbUp );
@@ -1387,7 +1373,6 @@ INT16 FindClosestClimbPointAvailableToAI( SOLDIERTYPE * pSoldier, INT16 sStartGr
 
 BOOLEAN ClimbingNecessary( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDestLevel )
 {
-	PERFORMANCE_MARKER
 	if (pSoldier->pathing.bLevel == bDestLevel)
 	{
 		if ( (pSoldier->pathing.bLevel == 0) || ( gubBuildingInfo[ pSoldier->sGridNo ] == gubBuildingInfo[ sDestGridNo ] ) )
@@ -1407,7 +1392,6 @@ BOOLEAN ClimbingNecessary( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDest
 
 INT16 GetInterveningClimbingLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDestLevel, BOOLEAN * pfClimbingNecessary )
 {
-	PERFORMANCE_MARKER
 	if (pSoldier->pathing.bLevel == bDestLevel)
 	{
 		if ( (pSoldier->pathing.bLevel == 0) || ( gubBuildingInfo[ pSoldier->sGridNo ] == gubBuildingInfo[ sDestGridNo ] ) )
@@ -1443,7 +1427,6 @@ INT16 GetInterveningClimbingLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo,
 
 INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDestLevel, BOOLEAN fAddCostAfterClimbingUp, BOOLEAN * pfClimbingNecessary, INT16 * psClimbGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16	sPathCost;
 	INT16 sClimbGridNo;
 
@@ -1544,7 +1527,6 @@ INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT
 
 BOOLEAN GuySawEnemyThisTurnOrBefore( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT8		ubTeamLoop;
 	UINT8		ubIDLoop;
 
@@ -1561,7 +1543,7 @@ BOOLEAN GuySawEnemyThisTurnOrBefore( SOLDIERTYPE * pSoldier )
 					return( TRUE );
 				}
 			}
-		}			
+		}
 	}
 
 	return( FALSE );
@@ -1569,7 +1551,6 @@ BOOLEAN GuySawEnemyThisTurnOrBefore( SOLDIERTYPE * pSoldier )
 
 INT16 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbingNecessary)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiLoop;
 	INT16 sPathCost, sClosestFriend = NOWHERE, sShortestPath = 1000, sClimbGridNo;
 	BOOLEAN fClimbingNecessary, fClosestClimbingNecessary = FALSE;
@@ -1658,7 +1639,6 @@ INT16 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbin
 
 INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	// find the distance to the closest person on the same team
 	UINT8					ubLoop;
 	SOLDIERTYPE		*pTargetSoldier;
@@ -1669,7 +1649,7 @@ INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier )
 	ubLoop = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
 
 	for ( ; ubLoop <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; ubLoop++ )
-	{ 
+	{
 		if (ubLoop == pSoldier->ubID)
 		{
 			// same guy - continue!
@@ -1709,13 +1689,13 @@ INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier )
 				return( 1 );
 			}
 		}
-		
+
 		sDist = SpacesAway(pSoldier->sGridNo,pTargetSoldier->sGridNo);
-		
+
 		if (sDist < sMinDist)
 		{
 			sMinDist = sDist;
-		}		
+		}
 	}
 
 	return( sMinDist );
@@ -1723,7 +1703,6 @@ INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier )
 
 BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	if (WaterTooDeepForAttacks( sGridNo ))
 	{
 		return(TRUE);
@@ -1739,11 +1718,11 @@ BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	//if ( (gpWorldLevelData[sGridNo].ubExtFlags[ pSoldier->pathing.bLevel ] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) &&
 	//			(pSoldier->inv[HEAD1POS].usItem != GASMASK && pSoldier->inv[HEAD2POS].usItem != GASMASK) )
 	if ( (gpWorldLevelData[sGridNo].ubExtFlags[ pSoldier->pathing.bLevel ] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) &&
-				FindGasMask(pSoldier) == NO_SLOT ) 
+				FindGasMask(pSoldier) == NO_SLOT )
 	{
 		return( TRUE );
 	}
-	if ( gpWorldLevelData[sGridNo].ubExtFlags[ pSoldier->pathing.bLevel ] & MAPELEMENT_EXT_BURNABLEGAS ) 
+	if ( gpWorldLevelData[sGridNo].ubExtFlags[ pSoldier->pathing.bLevel ] & MAPELEMENT_EXT_BURNABLEGAS )
 	{
 		return( TRUE );
 	}
@@ -1753,7 +1732,6 @@ BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 BOOLEAN InGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	// smoke
 	if (gpWorldLevelData[sGridNo].ubExtFlags[pSoldier->pathing.bLevel] & MAPELEMENT_EXT_SMOKE)
 	{
@@ -1779,7 +1757,6 @@ BOOLEAN InGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 INT16 InWaterOrGas(SOLDIERTYPE *pSoldier, INT16 sGridNo)
 {
-	PERFORMANCE_MARKER
 	if (WaterTooDeepForAttacks( sGridNo ))
 	{
 		return(TRUE);
@@ -1801,7 +1778,6 @@ INT16 InWaterOrGas(SOLDIERTYPE *pSoldier, INT16 sGridNo)
 
 BOOLEAN InGas( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	// tear/mustard gas
 	if ( (gpWorldLevelData[sGridNo].ubExtFlags[pSoldier->pathing.bLevel] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) &&
 				FindGasMask(pSoldier) == NO_SLOT )
@@ -1818,7 +1794,6 @@ BOOLEAN InGas( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 BOOLEAN WearGasMaskIfAvailable( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT8		bSlot, bNewSlot;
 
 	bSlot = FindGasMask( pSoldier );
@@ -1850,9 +1825,8 @@ BOOLEAN WearGasMaskIfAvailable( SOLDIERTYPE * pSoldier )
 
 BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubBackgroundLightLevel;
-	
+
 	// do not consider us to be "in light" if we're in an underground sector
 	if ( gbWorldSectorZ > 0 )
 	{
@@ -1873,7 +1847,7 @@ BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel )
 		return( FALSE );
 	}
 
-	// NB light levels are backwards, so a lower light level means the 
+	// NB light levels are backwards, so a lower light level means the
 	// spot in question is BRIGHTER
 
 	if ( LightTrueLevel( sGridNo, bLevel ) < ubBackgroundLightLevel )
@@ -1886,7 +1860,6 @@ BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel )
 
 INT8 CalcMorale(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
  UINT32 uiLoop, uiLoop2;
  INT32 iOurTotalThreat = 0, iTheirTotalThreat = 0;
  INT16 sOppThreatValue, sFrndThreatValue, sMorale;
@@ -1985,7 +1958,7 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
 		{
 			continue;		// next merc
 		}
-		
+
 		if ( pSoldier->bSide != pFriend->bSide )
 		continue;		// next merc
 
@@ -2141,7 +2114,6 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
 
 INT32 CalcManThreatValue( SOLDIERTYPE *pEnemy, INT16 sMyGrid, UINT8 ubReduceForCover, SOLDIERTYPE * pMe )
 {
-	PERFORMANCE_MARKER
 	INT32	iThreatValue = 0;
 	BOOLEAN fForCreature = CREATURE_OR_BLOODCAT( pMe );
 
@@ -2280,7 +2252,6 @@ INT32 CalcManThreatValue( SOLDIERTYPE *pEnemy, INT16 sMyGrid, UINT8 ubReduceForC
 
 INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT16 * pusFromGridNo)
 {
-	PERFORMANCE_MARKER
 	if ( CREATURE_OR_BLOODCAT( pSoldier ) )
 	{
 		if ( pSoldier->aiData.bAlertStatus == STATUS_BLACK )
@@ -2330,7 +2301,7 @@ INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT16 * pusFromGridNo)
 													else
 													{
 														return( 30 );
-													}						
+													}
 		case SEEKENEMY:				*pusFromGridNo = pSoldier->sGridNo; // from current position!
 													return(MAX_ROAMING_RANGE);
 		default:
@@ -2345,7 +2316,6 @@ INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT16 * pusFromGridNo)
 
 void RearrangePocket(SOLDIERTYPE *pSoldier, INT8 bPocket1, INT8 bPocket2, UINT8 bPermanent)
 {
-	PERFORMANCE_MARKER
 	// NB there's no such thing as a temporary swap for now...
 	//SwapObjs( &(pSoldier->inv[bPocket1]), &(pSoldier->inv[bPocket2]) );
 	SwapObjs( pSoldier, bPocket1, bPocket2 );
@@ -2353,7 +2323,6 @@ void RearrangePocket(SOLDIERTYPE *pSoldier, INT8 bPocket1, INT8 bPocket2, UINT8 
 
 void Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 bPocketIndex, UINT8 bPermanent, INT32 lineNumber, STR8 szFunctionName, STR8 szFilename)
 {
-	PERFORMANCE_MARKER
 	if (bPermanent == false) {
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("RearrangePocket: Making sure item is temporarily swapped into hand, called at line %d in %s in %s", lineNumber, szFunctionName, szFilename));
 	}
@@ -2380,7 +2349,6 @@ void Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 bPocke
 
 void Undo_Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 bPocketIndex, UINT8 bPermanent, INT32 lineNumber, STR8 szFunctionName, STR8 szFilename)
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("RearrangePocket: Making sure item is swapped back to its original inv slot, called at line %d in %s in %s", lineNumber, szFunctionName, szFilename));
 	if (bPocketIndex != HANDPOS) {
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("RearrangePocket: Moving item %d from hand back to inv slot %d",
@@ -2400,7 +2368,6 @@ void Undo_Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 b
 
 UINT8 GetTraversalQuoteActionID( INT8 bDirection )
 {
-	PERFORMANCE_MARKER
 	switch( bDirection )
 	{
 		case NORTHEAST: // east
@@ -2422,7 +2389,6 @@ UINT8 GetTraversalQuoteActionID( INT8 bDirection )
 
 UINT8 SoldierDifficultyLevel( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT8 bDifficultyBase;
 	INT8 bDifficulty;
 
@@ -2461,7 +2427,7 @@ UINT8 SoldierDifficultyLevel( SOLDIERTYPE * pSoldier )
 
 		default:
 			if (pSoldier->bTeam == CREATURE_TEAM)
-			{			
+			{
 				bDifficulty = bDifficultyBase + pSoldier->pathing.bLevel / 4;
 			}
 			else // civ...
@@ -2480,7 +2446,6 @@ UINT8 SoldierDifficultyLevel( SOLDIERTYPE * pSoldier )
 
 BOOLEAN ValidCreatureTurn( SOLDIERTYPE * pCreature, INT8 bNewDirection )
 {
-	PERFORMANCE_MARKER
 	INT8	bDirChange;
 	INT8	bTempDir;
 	INT8	bLoop;
@@ -2491,7 +2456,7 @@ BOOLEAN ValidCreatureTurn( SOLDIERTYPE * pCreature, INT8 bNewDirection )
 	for( bLoop = 0; bLoop < 2; bLoop++ )
 	{
 		fFound = TRUE;
-		
+
 		bTempDir = pCreature->ubDirection;
 
 		do
@@ -2535,7 +2500,6 @@ BOOLEAN ValidCreatureTurn( SOLDIERTYPE * pCreature, INT8 bNewDirection )
 
 INT32 RangeChangeDesire( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32 iRangeFactorMultiplier;
 
 	iRangeFactorMultiplier = pSoldier->aiData.bAIMorale - 1;
@@ -2558,7 +2522,6 @@ INT32 RangeChangeDesire( SOLDIERTYPE * pSoldier )
 
 BOOLEAN ArmySeesOpponents( void )
 {
-	PERFORMANCE_MARKER
 	INT32				cnt;
 	SOLDIERTYPE *		pSoldier;
 
@@ -2578,28 +2541,24 @@ BOOLEAN ArmySeesOpponents( void )
 #ifdef DEBUGDECISIONS
 void AIPopMessage ( STR16 str )
 {
-	PERFORMANCE_MARKER
 	std::string tempstr = String ("%s", str);
 	DebugAI(tempstr);
 }
 
 void AIPopMessage ( const STR8	str )
 {
-	PERFORMANCE_MARKER
 	std::string tempstr = String ("%s", str);
 	DebugAI(tempstr);
 }
 
 void AINumMessage(const STR8	str, INT32 num)
 {
-	PERFORMANCE_MARKER
 	std::string tempstr = String ("%s %d", str, num);
 	DebugAI(tempstr);
 }
 
 void AINameMessage(SOLDIERTYPE * pSoldier,const STR8	str,INT32 num)
 {
-	PERFORMANCE_MARKER
 	std::string tempstr = String ("%d %s %d",pSoldier->name , str, num);
 	DebugAI( tempstr );
 }

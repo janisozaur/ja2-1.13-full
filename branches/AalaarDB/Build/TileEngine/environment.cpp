@@ -82,7 +82,7 @@ UINT8 ubLightningTable[3][10][2]=
 																		{7, 6},
 																		{8, 0},
 																		{9, 0}	},
-																	
+
 																	{	{0,	15},
 																		{1, 0},
 																		{2, 15},
@@ -94,8 +94,8 @@ UINT8 ubLightningTable[3][10][2]=
 																		{8, 0},
 																		{9, 0}	}	};
 
-// CJC: I don't think these are used anywhere!															
-UINT8			guiTODFlags[ENV_NUM_TIMES] = {		
+// CJC: I don't think these are used anywhere!
+UINT8			guiTODFlags[ENV_NUM_TIMES] = {
 																			ENV_TOD_FLAGS_NIGHT,		// 00
 																			ENV_TOD_FLAGS_NIGHT,		// 01
 																			ENV_TOD_FLAGS_NIGHT,		// 02
@@ -119,7 +119,7 @@ UINT8			guiTODFlags[ENV_NUM_TIMES] = {
 																			ENV_TOD_FLAGS_DUSK,			// 20
 																			ENV_TOD_FLAGS_DUSK,			// 21
 																			ENV_TOD_FLAGS_NIGHT,		// 22
-																			ENV_TOD_FLAGS_NIGHT};		// 23 
+																			ENV_TOD_FLAGS_NIGHT};		// 23
 
 typedef enum
 {
@@ -131,7 +131,7 @@ typedef enum
 typedef enum
 {
 	TEMPERATURE_DESERT_COOL,
-	TEMPERATURE_DESERT_WARM,	
+	TEMPERATURE_DESERT_WARM,
 	TEMPERATURE_DESERT_HOT,
 	TEMPERATURE_GLOBAL_COOL,
 	TEMPERATURE_GLOBAL_WARM,
@@ -170,7 +170,6 @@ void EnvDoLightning(void);
 // polled by the game to handle time/atmosphere changes from gamescreen
 void EnvironmentController( BOOLEAN fCheckForLights )
 {
-	PERFORMANCE_MARKER
 	UINT32			uiOldWorldHour;
 	UINT8				ubLightAdjustFromWeather = 0;
 
@@ -200,7 +199,7 @@ void EnvironmentController( BOOLEAN fCheckForLights )
 		if ( uiOldWorldHour != guiEnvTime )
 		{
 			// Hour change....
-	
+
 			guiEnvTime=uiOldWorldHour;
 		}
 
@@ -283,12 +282,11 @@ void EnvironmentController( BOOLEAN fCheckForLights )
 		}
 
 	}
-	
+
 }
 
 void BuildDayLightLevels()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiLoop, uiHour;
 
 	/*
@@ -318,11 +316,11 @@ void BuildDayLightLevels()
 	AddEveryDayStrategicEvent( EVENT_TEMPERATURE_UPDATE, GLOBAL_HOT_START, TEMPERATURE_GLOBAL_HOT );
 	AddEveryDayStrategicEvent( EVENT_TEMPERATURE_UPDATE, GLOBAL_HOT_END, TEMPERATURE_GLOBAL_WARM );
 	AddEveryDayStrategicEvent( EVENT_TEMPERATURE_UPDATE, GLOBAL_WARM_END, TEMPERATURE_GLOBAL_COOL );
-	
+
 /*
 	// Twilight; light 5
 	AddEveryDayStrategicEvent( EVENT_CHANGELIGHTVAL, TWILLIGHT_START, NORMAL_LIGHTLEVEL_DAY + 1 );
-	
+
 	// Dusk; loop from light 5 up to 12
 	for (uiLoop = 1; uiLoop < 8; uiLoop++)
 	{
@@ -349,7 +347,6 @@ void BuildDayLightLevels()
 
 void BuildDayAmbientSounds( )
 {
-	PERFORMANCE_MARKER
 	INT32									cnt;
 
 	// Add events!
@@ -392,7 +389,6 @@ void BuildDayAmbientSounds( )
 
 void ForecastDayEvents( )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiOldDay;
 	UINT32 uiStartTime, uiEndTime;
 	UINT8	ubStormIntensity;
@@ -411,11 +407,11 @@ void ForecastDayEvents( )
 		BuildDayAmbientSounds( );
 
 		// Build weather....
-		
+
 		// ATE: Don't forecast if start of game...
 		if ( guiEnvDay > 1 )
 		{
-			//rain			
+			//rain
 			if ( Random( 100 ) < gGameExternalOptions.gusRainChancePerDay )
 			{
 				// Add rain!
@@ -426,7 +422,7 @@ void ForecastDayEvents( )
 
 				ubStormIntensity = 0;
 
-				
+
 				//Kaiden: making thunderstorms optional
 				if (gGameExternalOptions.gfAllowLightning)
 				{
@@ -437,14 +433,14 @@ void ForecastDayEvents( )
 					}
 				}
 
-	
+
 				if( gGameExternalOptions.gfAllowRain ) AddSameDayRangedStrategicEvent( EVENT_RAINSTORM, uiStartTime, uiEndTime - uiStartTime, ubStormIntensity );
 
 				//AddSameDayStrategicEvent( EVENT_BEGINRAINSTORM, uiStartTime, ubStormIntensity );
 				//AddSameDayStrategicEvent( EVENT_ENDRAINSTORM,		uiEndTime, 0 );
 			}
 			//end rain
-			
+
 
 			/*
 			// Should it rain...?
@@ -463,7 +459,7 @@ void ForecastDayEvents( )
 				{
 					ubStormIntensity = 1;
 				}
-		
+
 	// ATE: Disable RAIN!
 	//			AddSameDayRangedStrategicEvent( EVENT_RAINSTORM, uiStartTime, uiEndTime - uiStartTime, ubStormIntensity );
 
@@ -471,20 +467,18 @@ void ForecastDayEvents( )
 				//AddSameDayStrategicEvent( EVENT_ENDRAINSTORM,		uiEndTime, 0 );
 			}
 			*/
-		}	
+		}
 	}
 
 }
 
 void EnvEnableTOD(void)
 {
-	PERFORMANCE_MARKER
 	fTimeOfDayControls=TRUE;
 }
 
 void EnvDisableTOD(void)
 {
-	PERFORMANCE_MARKER
 	fTimeOfDayControls=FALSE;
 }
 
@@ -507,7 +501,7 @@ UINT32 guiChanceToDoLightningBetweenTurns = 20;
 
 #define MAX_DELAYED_SOUNDS 10
 #define NO_DL_SOUND 0xFFFFFFFF
- 
+
 // 1000 = 1 second
 #define MIN_DL_INTERVAL ( 1000 * guiMinDLInterval )
 #define MAX_DL_INTERVAL ( 1000 * guiMaxDLInterval )
@@ -535,7 +529,6 @@ void BeginTeamTurn( UINT8 ubTeam );
 
 void EnvDoLightning(void)
 {
-	PERFORMANCE_MARKER
 	static UINT32 uiCount=10, uiIndex=0, uiStrike=0, uiFrameNext=0;
 	static UINT8 ubLevel=0, ubLastLevel=0;
 	static UINT32 uiLastUpdate = 0xFFFFFFFF;
@@ -603,7 +596,7 @@ void EnvDoLightning(void)
 
 		gfLightningInProgress = FALSE;
 		gfHaveSeenSomeone = FALSE;
-		
+
 		uiCount=0;
 		uiIndex=0;
 		ubLevel=0;
@@ -641,7 +634,7 @@ void EnvDoLightning(void)
 
 /*	// ATE: Don't modify if scrolling!
 	if ( gfScrollPending || gfScrollInertia )
-	{ 
+	{
 	}
 	else*/
 	{
@@ -669,7 +662,6 @@ void EnvDoLightning(void)
 
 BOOLEAN LightningEndOfTurn( UINT8 ubTeam )
 {
-	PERFORMANCE_MARKER
 	if( !(guiEnvWeather & WEATHER_FORECAST_THUNDERSHOWERS) )return TRUE;
 	if( Random(100) >= CHANCE_TO_DO_LIGHTNING_BETWEEN_TURNS ) return TRUE;
 
@@ -688,7 +680,6 @@ BOOLEAN LightningEndOfTurn( UINT8 ubTeam )
 
 UINT8 GetTimeOfDayAmbientLightLevel()
 {
-	PERFORMANCE_MARKER
 	if ( SectorTemperature( GetWorldMinutesInDay(), gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) == HOT )
 	{
 		return( HOT_DAY_LIGHTLEVEL );
@@ -702,7 +693,6 @@ UINT8 GetTimeOfDayAmbientLightLevel()
 
 void EnvBeginRainStorm( UINT8 ubIntensity )
 {
-	PERFORMANCE_MARKER
 	if( !gfBasement && !gfCaves )
 	{
 		gfDoLighting = TRUE;
@@ -728,7 +718,6 @@ void EnvBeginRainStorm( UINT8 ubIntensity )
 
 void EnvEndRainStorm( )
 {
-	PERFORMANCE_MARKER
 	gfDoLighting = TRUE;
 
 #ifdef JA2TESTVERSION
@@ -762,7 +751,6 @@ void EnvEndRainStorm( )
 /*
 void EnvDoLightning(void)
 {
-	PERFORMANCE_MARKER
 static UINT32 uiCount=0, uiIndex=0, uiStrike=0, uiFrameNext=1000;
 static UINT8 ubLevel=0, ubLastLevel=0;
 
@@ -798,7 +786,7 @@ static UINT8 ubLevel=0, ubLastLevel=0;
 
 	// ATE: Don't modify if scrolling!
 	if ( gfScrollPending || gfScrollInertia )
-	{ 
+	{
 	}
 	else
 	{
@@ -825,7 +813,6 @@ static UINT8 ubLevel=0, ubLastLevel=0;
 
 UINT8 GetTimeOfDayAmbientLightLevel()
 {
-	PERFORMANCE_MARKER
 	if ( SectorTemperature( GetWorldMinutesInDay(), gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) == HOT )
 	{
 		return( HOT_DAY_LIGHTLEVEL );
@@ -839,7 +826,6 @@ UINT8 GetTimeOfDayAmbientLightLevel()
 
 void EnvBeginRainStorm( UINT8 ubIntensity )
 {
-	PERFORMANCE_MARKER
 	if( !gfBasement && !gfCaves )
 	{
 		gfDoLighting = TRUE;
@@ -863,7 +849,6 @@ void EnvBeginRainStorm( UINT8 ubIntensity )
 
 void EnvEndRainStorm( )
 {
-	PERFORMANCE_MARKER
 	gfDoLighting = TRUE;
 
 #ifdef JA2TESTVERSION
@@ -878,12 +863,11 @@ void EnvEndRainStorm( )
 
 void TurnOnNightLights()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
 		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE &&
-			LightSprites[ i ].uiFlags & LIGHT_NIGHTTIME && 
+			LightSprites[ i ].uiFlags & LIGHT_NIGHTTIME &&
 				!(LightSprites[ i ].uiFlags & (LIGHT_SPR_ON|MERC_LIGHT) ) )
 		{
 			LightSpritePower( i, TRUE );
@@ -893,14 +877,13 @@ void TurnOnNightLights()
 
 void TurnOffNightLights()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
 		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE &&
-			LightSprites[ i ].uiFlags & LIGHT_NIGHTTIME && 
-				LightSprites[ i ].uiFlags & LIGHT_SPR_ON && 
-				!(LightSprites[ i ].uiFlags & MERC_LIGHT) ) 
+			LightSprites[ i ].uiFlags & LIGHT_NIGHTTIME &&
+				LightSprites[ i ].uiFlags & LIGHT_SPR_ON &&
+				!(LightSprites[ i ].uiFlags & MERC_LIGHT) )
 		{
 			LightSpritePower( i, FALSE );
 		}
@@ -909,12 +892,11 @@ void TurnOffNightLights()
 
 void TurnOnPrimeLights()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
 		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE &&
-			LightSprites[ i ].uiFlags & LIGHT_PRIMETIME && 
+			LightSprites[ i ].uiFlags & LIGHT_PRIMETIME &&
 				!(LightSprites[ i ].uiFlags & (LIGHT_SPR_ON|MERC_LIGHT) ) )
 		{
 			LightSpritePower( i, TRUE );
@@ -924,14 +906,13 @@ void TurnOnPrimeLights()
 
 void TurnOffPrimeLights()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
 		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE &&
-			LightSprites[ i ].uiFlags & LIGHT_PRIMETIME && 
-				LightSprites[ i ].uiFlags & LIGHT_SPR_ON && 
-				!(LightSprites[ i ].uiFlags & MERC_LIGHT) ) 
+			LightSprites[ i ].uiFlags & LIGHT_PRIMETIME &&
+				LightSprites[ i ].uiFlags & LIGHT_SPR_ON &&
+				!(LightSprites[ i ].uiFlags & MERC_LIGHT) )
 		{
 			LightSpritePower( i, FALSE );
 		}
@@ -940,13 +921,12 @@ void TurnOffPrimeLights()
 
 void UpdateTemperature( UINT8 ubTemperatureCode )
 {
-	PERFORMANCE_MARKER
 	switch( ubTemperatureCode )
 	{
 		case TEMPERATURE_DESERT_COOL:
 			gubDesertTemperature = 0;
 			break;
-		case TEMPERATURE_DESERT_WARM:	
+		case TEMPERATURE_DESERT_WARM:
 			gubDesertTemperature = 1;
 			break;
 		case TEMPERATURE_DESERT_HOT:
@@ -962,12 +942,11 @@ void UpdateTemperature( UINT8 ubTemperatureCode )
 			gubGlobalTemperature = 2;
 			break;
 	}
-	gfDoLighting = TRUE;	
+	gfDoLighting = TRUE;
 }
 
 INT8 SectorTemperature( UINT32 uiTime, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	PERFORMANCE_MARKER
 	if (bSectorZ > 0)
 	{
 		// cool underground
@@ -975,7 +954,7 @@ INT8 SectorTemperature( UINT32 uiTime, INT16 sSectorX, INT16 sSectorY, INT8 bSec
 	}
 	else if ( IsSectorDesert( sSectorX, sSectorY ) ) // is desert
 	{
-		return( gubDesertTemperature );	
+		return( gubDesertTemperature );
 	}
 	else
 	{

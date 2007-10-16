@@ -64,7 +64,6 @@ void BuildMercQuitList( SOLDIERTYPE *pMercList );
 
 void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pKiller = NULL;
 	INT16 sSectorX, sSectorY;
 
@@ -111,7 +110,7 @@ void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
 		// keep track of how many mercs have died under player's command (for death rate, can't wait until removed from team)
 		gStrategicStatus.ubMercDeaths++;
 	}
- 
+
 
 	pSoldier->flags.uiStatusFlags |= SOLDIER_DEAD;
 
@@ -178,7 +177,6 @@ void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
 // MercDailyUpdate() gets called every day at midnight.	If something is to happen to a merc that day, add an event for it.
 void MercDailyUpdate()
 {
-	PERFORMANCE_MARKER
 	INT32		cnt;
 	INT8		bLastTeamID;
 	SOLDIERTYPE		*pSoldier;
@@ -216,8 +214,8 @@ void MercDailyUpdate()
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 
-	
-	
+
+
 	//loop though all the mercs
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
 	{
@@ -271,13 +269,13 @@ void MercDailyUpdate()
 
 			// player has hired him, so he'll eligible to get killed off on another job
 			gMercProfiles[pSoldier->ubProfile].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
-			
-			
+
+
 			//if the character is an RPC
 			if( pSoldier->ubProfile >= FIRST_RPC && pSoldier->ubProfile < FIRST_NPC )
 			{
 				INT16	sSalary = gMercProfiles[ pSoldier->ubProfile ].sSalary;
-				INT32	iMoneyOwedToMerc = 0;	
+				INT32	iMoneyOwedToMerc = 0;
 
 				//increment the number of days the mercs has been on the team
 				pSoldier->iTotalContractLength++;
@@ -443,7 +441,7 @@ void MercDailyUpdate()
 				//if the merc CAN become ready
 				if( pProfile->bMercStatus != MERC_FIRED_AS_A_POW )
 				{
-					pProfile->bMercStatus = MERC_OK;			
+					pProfile->bMercStatus = MERC_OK;
 
 					// if the player has left a message for this merc
 					if ( pProfile->ubMiscFlags3 & PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM )
@@ -507,13 +505,12 @@ void MercDailyUpdate()
 	HandleSlayDailyEvent( );
 
 	// rebuild list for mapscreen
-	ReBuildCharactersList( );	
+	ReBuildCharactersList( );
 }
 
 /*
 void BuildMercQuitList( SOLDIERTYPE *pMercList )
 {
-	PERFORMANCE_MARKER
 	// go through list of mercs on players team, fill pMercList sorted from most recent leave time, to furthest leave time
 
 	INT32		cnt;
@@ -580,7 +577,6 @@ void BuildMercQuitList( SOLDIERTYPE *pMercList )
 /*
 void HandleMercsAboutToLeave( SOLDIERTYPE *pMercList )
 {
-	PERFORMANCE_MARKER
 	// run from top of list to bottom..if merc is gonna leave within a defined time frame of the previous guy and they are leaving the same day (today)
 	// then post then with the quote at the same time
 
@@ -593,7 +589,7 @@ void HandleMercsAboutToLeave( SOLDIERTYPE *pMercList )
 			{
 				return;
 			}
-			else 
+			else
 			{
 				if( ( pSoldier->iEndofContractTime / 1440 ) > (INT32)GetWorldDay( ) )
 				{
@@ -628,7 +624,6 @@ void HandleMercsAboutToLeave( SOLDIERTYPE *pMercList )
 // NOT AIM renewals....
 void MercsContractIsFinished( UINT8	ubID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
 	pSoldier = &Menptr[ ubID ];
@@ -641,7 +636,7 @@ void MercsContractIsFinished( UINT8	ubID )
 	{
 		fShowContractMenu = FALSE;
 	}
-	
+
 	// go to mapscreen
 	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN,0,0,0,0,0 );
 
@@ -683,7 +678,6 @@ void MercsContractIsFinished( UINT8	ubID )
 // ATE: Called for RPCs who should now complain about no pay...
 void RPCWhineAboutNoPay( UINT8	ubID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
 	pSoldier = &Menptr[ ubID ];
@@ -703,7 +697,6 @@ void RPCWhineAboutNoPay( UINT8	ubID )
 // OK loop through and check!
 BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT16	usItem;
 	INT32		bBestArmour = -1;
 	INT32		bBestArmourIndex = -1;
@@ -765,7 +758,6 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 
 void MercComplainAboutEquipment( UINT8 ubProfile )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
 	if ( ubProfile == LARRY_NORMAL	)
@@ -803,7 +795,6 @@ void MercComplainAboutEquipment( UINT8 ubProfile )
 
 void UpdateBuddyAndHatedCounters( void )
 {
-	PERFORMANCE_MARKER
 	INT8									bMercID;
 	INT32									iLoop;
 	INT8									bOtherID;
@@ -821,7 +812,7 @@ void UpdateBuddyAndHatedCounters( void )
 
 	//loop though all the mercs
 	for ( pSoldier = MercPtrs[ bMercID ]; bMercID <= bLastTeamID; bMercID++,pSoldier++)
-	{	
+	{
 		fSameGroupOnly = FALSE;
 
 		//if the merc is active and on a combat assignment
@@ -840,7 +831,7 @@ void UpdateBuddyAndHatedCounters( void )
 			bOtherID = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
 			for ( pOtherSoldier = MercPtrs[ bOtherID ]; bOtherID <= bLastTeamID; bOtherID++, pOtherSoldier++)
-			{	
+			{
 				// is this guy in the same sector and on active duty (or in the same moving group)
 
 				if (bOtherID != bMercID && pOtherSoldier->bActive && pOtherSoldier->bAssignment < ON_DUTY )
@@ -862,7 +853,7 @@ void UpdateBuddyAndHatedCounters( void )
 						{
 							continue;
 						}
-						
+
 						// if the OTHER soldier is in motion then we don't do anything!
 						if (pOtherSoldier->ubGroupID != 0 && PlayerIDGroupInMotion( pOtherSoldier->ubGroupID ))
 						{
@@ -886,7 +877,7 @@ void UpdateBuddyAndHatedCounters( void )
 										pProfile->bHatedCount[iLoop]--;
 										if ( pProfile->bHatedCount[iLoop] == 0 && pSoldier->bInSector && gTacticalStatus.fEnemyInSector )
 										{
-											// just reduced count to 0 but we have enemy in sector... 
+											// just reduced count to 0 but we have enemy in sector...
 											pProfile->bHatedCount[iLoop] = 1;
 										}
 										else if (pProfile->bHatedCount[iLoop] > 0 && (pProfile->bHatedCount[iLoop] == pProfile->bHatedTime[iLoop] / 2 || ( pProfile->bHatedCount[iLoop] < pProfile->bHatedTime[iLoop] / 2 && pProfile->bHatedCount[iLoop] % TIME_BETWEEN_HATED_COMPLAINTS == 0 ) ) )
@@ -965,7 +956,7 @@ void UpdateBuddyAndHatedCounters( void )
 											{
 												TacticalCharacterDialogue( pSoldier, QUOTE_HATED_MERC_TWO );
 											}
-										}									
+										}
 									}
 								}
 								break;
@@ -977,7 +968,7 @@ void UpdateBuddyAndHatedCounters( void )
 										pProfile->bLearnToHateCount--;
 										if ( pProfile->bLearnToHateCount == 0 && pSoldier->bInSector && gTacticalStatus.fEnemyInSector )
 										{
-											// just reduced count to 0 but we have enemy in sector... 
+											// just reduced count to 0 but we have enemy in sector...
 											pProfile->bLearnToHateCount = 1;
 										}
 										else if (pProfile->bLearnToHateCount > 0 && (pProfile->bLearnToHateCount == pProfile->bLearnToHateTime / 2 || pProfile->bLearnToHateCount < pProfile->bLearnToHateTime / 2 && pProfile->bLearnToHateCount % TIME_BETWEEN_HATED_COMPLAINTS == 0 ) )
@@ -1006,7 +997,7 @@ void UpdateBuddyAndHatedCounters( void )
 												TacticalCharacterDialogue( pSoldier, QUOTE_LEARNED_TO_HATE_MERC );
 											}
 
-										}									
+										}
 										if (pProfile->bLearnToHateCount < pProfile->bLearnToHateTime / 2)
 										{
 											// gradual opinion drop
@@ -1031,10 +1022,10 @@ void UpdateBuddyAndHatedCounters( void )
 										if ( pProfile->ubTimeTillNextHatedComplaint == 0 )
 										{
 											// complain!
-											TacticalCharacterDialogue( pSoldier, QUOTE_LEARNED_TO_HATE_MERC );										
+											TacticalCharacterDialogue( pSoldier, QUOTE_LEARNED_TO_HATE_MERC );
 										}
 									}
-								}							
+								}
 								break;
 							case 3:
 								if (pProfile->bLearnToLikeCount > 0	&& pProfile->bLearnToLike == ubOtherProfileID)
@@ -1047,14 +1038,14 @@ void UpdateBuddyAndHatedCounters( void )
 										pProfile->bMercOpinion[ubOtherProfileID] = BUDDY_OPINION;
 									}
 									else if (pProfile->bLearnToLikeCount < pProfile->bLearnToLikeTime / 2)
-									{								
+									{
 										// increase opinion of them!
 										pProfile->bMercOpinion[ubOtherProfileID] += (BUDDY_OPINION - pProfile->bMercOpinion[ubOtherProfileID]) / (pProfile->bLearnToLikeCount + 1);
 										break;
 									}
 								}
 								break;
-						}																	
+						}
 					}
 				}
 			}
@@ -1064,7 +1055,6 @@ void UpdateBuddyAndHatedCounters( void )
 
 void HourlyCamouflageUpdate( void )
 {
-	PERFORMANCE_MARKER
 	INT8 bMercID, bLastTeamID;
 	SOLDIERTYPE * pSoldier;
 	BOOLEAN camoWoreOff = FALSE;
@@ -1073,7 +1063,7 @@ void HourlyCamouflageUpdate( void )
 
 	// loop through all mercs
 	for ( pSoldier = MercPtrs[ bMercID ]; bMercID <= bLastTeamID; bMercID++,pSoldier++)
-	{	
+	{
 		if ( pSoldier->bActive )
 		{
 			// if the merc has non-zero camo, degrade it by 1%
@@ -1118,7 +1108,7 @@ void HourlyCamouflageUpdate( void )
 			{
 				// Reload palettes....
 				if ( pSoldier->bInSector )
-				{	
+				{
 					pSoldier->CreateSoldierPalettes( );
 				}
 
@@ -1138,12 +1128,12 @@ void HourlyCamouflageUpdate( void )
 					// Reload palettes....
 
 					if ( pSoldier->bInSector )
-					{	
+					{
 						pSoldier->CreateSoldierPalettes( );
 					}
 
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMMO_WORN_OFF], pSoldier->name );
-					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );				
+					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 				}
 				*/
 			}

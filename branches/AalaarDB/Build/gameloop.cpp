@@ -9,7 +9,7 @@
 	#include "Gameloop.h"
 	#include "Screens.h"
 	#include "Wcheck.h"
-	#include "cursors.h"	
+	#include "cursors.h"
 	#include "init.h"
 	#include "music control.h"
 	#include "sys globals.h"
@@ -34,7 +34,7 @@
 #include "Lua Interpreter.h"
 
 // rain
-#include "Rain.h" 
+#include "Rain.h"
 // end rain
 
 
@@ -52,7 +52,7 @@ extern	BOOLEAN	DoSkiMessageBox( UINT8 ubStyle, STR16 zString, UINT32 uiExitScree
 extern void NotEnoughHardDriveSpaceForQuickSaveMessageBoxCallBack( UINT8 bExitValue );
 extern BOOLEAN gfTacticalPlacementGUIActive;
 extern BOOLEAN gfTacticalPlacementGUIDirty;
-extern BOOLEAN gfValidLocationsChanged; 
+extern BOOLEAN gfValidLocationsChanged;
 extern BOOLEAN	gfInMsgBox;
 extern void InitSightRange(); //lal
 
@@ -68,7 +68,6 @@ void HandleNewScreenChange( UINT32 uiNewScreen, UINT32 uiOldScreen );
 BOOLEAN gubReportMapscreenLock = 0;
 void ReportMapscreenErrorLock()
 {
-	PERFORMANCE_MARKER
 	switch( gubReportMapscreenLock )
 	{
 		case 1:
@@ -89,7 +88,6 @@ void ReportMapscreenErrorLock()
 
 BOOLEAN InitializeGame(void)
 {
-	PERFORMANCE_MARKER 
 	UINT32				uiIndex;
 
 	giStartingMemValue = MemGetFree( );
@@ -124,9 +122,9 @@ BOOLEAN InitializeGame(void)
 
 	// Initialize Game Screens.
 	for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
-	{ 
+	{
 		if ((*(GameScreens[uiIndex].InitializeScreen))() == FALSE)
-		{ // Failed to initialize one of the screens. 
+		{ // Failed to initialize one of the screens.
 			return FALSE;
 		}
 	}
@@ -153,7 +151,6 @@ BOOLEAN InitializeGame(void)
 
 void ShutdownGame(void)
 {
-	PERFORMANCE_MARKER 
 	// handle shutdown of game with respect to preloaded mapscreen graphics
 	HandleRemovalOfPreLoadedMapGraphics( );
 
@@ -175,7 +172,7 @@ void ShutdownGame(void)
 	FreeGameExternalOptions();
 }
 
- 
+
 // This is the main Gameloop. This should eventually be one big switch statement which represents
 // the state of the game (i.e. Main Menu, PC Generation, Combat loop, etc....)
 // This function exits constantly and reenters constantly
@@ -185,7 +182,6 @@ static BOOLEAN gfSkipFrame = FALSE;
 
 void GameLoop(void)
 {
-	PERFORMANCE_MARKER
 	//	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop");
 
 	InputAtom	InputEvent;
@@ -196,7 +192,7 @@ void GameLoop(void)
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: get mouse position");
 	GetCursorPos(&MousePos);
 	ScreenToClient(ghWindow, &MousePos); // In window coords!
-	
+
 	// Hook into mouse stuff for MOVEMENT MESSAGES
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: get mouse hook");
 	MouseSystemHook(MOUSE_POS, (UINT16)MousePos.x ,(UINT16)MousePos.y ,_LeftButtonDown, _RightButtonDown);
@@ -219,13 +215,13 @@ void GameLoop(void)
 			case RIGHT_BUTTON_DOWN:
 				MouseSystemHook(RIGHT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
-			case RIGHT_BUTTON_UP: 
+			case RIGHT_BUTTON_UP:
 				MouseSystemHook(RIGHT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
-			case LEFT_BUTTON_REPEAT: 
+			case LEFT_BUTTON_REPEAT:
 				MouseSystemHook(LEFT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
-			case RIGHT_BUTTON_REPEAT: 
+			case RIGHT_BUTTON_REPEAT:
 				MouseSystemHook(RIGHT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
 	}
@@ -326,7 +322,7 @@ void GameLoop(void)
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: screen changed");
 
 
-	uiOldScreen = (*(GameScreens[guiCurrentScreen].HandleScreen))(); 
+	uiOldScreen = (*(GameScreens[guiCurrentScreen].HandleScreen))();
 
 	// if the screen has chnaged
 	if( uiOldScreen != guiCurrentScreen )
@@ -377,19 +373,17 @@ void GameLoop(void)
 #endif
 
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop done");
-} 
+}
 
 void SetCurrentScreen( UINT32 uiNewScreen )
 {
-	PERFORMANCE_MARKER
 	guiCurrentScreen = uiNewScreen;
- (*(GameScreens[guiCurrentScreen].HandleScreen))(); 
+ (*(GameScreens[guiCurrentScreen].HandleScreen))();
 
 }
 
 void SetPendingNewScreen( UINT32 uiNewScreen )
 {
-	PERFORMANCE_MARKER
 	guiPendingScreen = uiNewScreen;
 }
 
@@ -400,7 +394,6 @@ extern UINT32 guiRainLoop;
 // Gets called when the screen changes, place any needed in code in here
 void HandleNewScreenChange( UINT32 uiNewScreen, UINT32 uiOldScreen )
 {
-	PERFORMANCE_MARKER	
 	//if we are not going into the message box screen, and we didnt just come from it
 	if( ( uiNewScreen != MSG_BOX_SCREEN && uiOldScreen != MSG_BOX_SCREEN ) )
 	{
@@ -422,7 +415,6 @@ void HandleNewScreenChange( UINT32 uiNewScreen, UINT32 uiOldScreen )
 
 void HandleShortCutExitState( void )
 {
-	PERFORMANCE_MARKER
 	// look at the state of fGameIsRunning, if set false, then prompt user for confirmation
 
 	// use YES/NO Pop up box, settup for particular screen
@@ -484,7 +476,6 @@ void HandleShortCutExitState( void )
 
 void EndGameMessageBoxCallBack( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	// yes, so start over, else stay here and do nothing for now
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -495,7 +486,7 @@ void EndGameMessageBoxCallBack( UINT8 bExitValue )
 	if( gfTacticalPlacementGUIActive )
 	{
 		gfTacticalPlacementGUIDirty = TRUE;
-		gfValidLocationsChanged = TRUE; 
+		gfValidLocationsChanged = TRUE;
 	}
 
 	return;
@@ -504,6 +495,5 @@ void EndGameMessageBoxCallBack( UINT8 bExitValue )
 
 void NextLoopCheckForEnoughFreeHardDriveSpace()
 {
-	PERFORMANCE_MARKER
 	gubCheckForFreeSpaceOnHardDriveCount = 0;
 }

@@ -20,7 +20,7 @@
 
 UINT8			AimMercArray[ MAX_NUMBER_MERCS ];
 
-UINT8			gCurrentAimPage[ NUM_AIM_SCREENS ] = 
+UINT8			gCurrentAimPage[ NUM_AIM_SCREENS ] =
 {
 	LAPTOP_MODE_AIM,
 	LAPTOP_MODE_AIM_MEMBERS_SORTED_FILES,
@@ -31,7 +31,7 @@ UINT8			gCurrentAimPage[ NUM_AIM_SCREENS ] =
 };
 
 
-// 
+//
 //***	Defines **
 //
 
@@ -48,7 +48,7 @@ UINT8			gCurrentAimPage[ NUM_AIM_SCREENS ] =
 #define			MEMBERCARD_Y						IMAGE_OFFSET_Y + 190
 
 #define			POLICIES_X							IMAGE_OFFSET_X + 284
-#define			POLICIES_Y							MEMBERCARD_Y 
+#define			POLICIES_Y							MEMBERCARD_Y
 
 #define			HISTORY_X								MEMBERCARD_X
 #define			HISTORY_Y								IMAGE_OFFSET_Y + 279
@@ -114,7 +114,7 @@ UINT8			gCurrentAimPage[ NUM_AIM_SCREENS ] =
 #define			AIM_AD_BOBBYR_AD_NUM_DUCK_SUBIMAGES		6
 
 
-//#define			
+//#define
 
 enum
 {
@@ -204,7 +204,6 @@ BOOLEAN		fFirstTimeIn=TRUE;
 
 void GameInitAIM()
 {
-	PERFORMANCE_MARKER
 	LaptopInitAim();
 }
 
@@ -212,7 +211,6 @@ void GameInitAIM()
 
 BOOLEAN EnterAIM()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	gubWarningTimer = 0;
@@ -271,37 +269,37 @@ BOOLEAN EnterAIM()
 	GetMLGFilename( VObjectDesc.ImageFile, MLG_BOBBYRAYAD21 );
 	CHECKF(AddVideoObject(&VObjectDesc, &guiBobbyRAdImages ));
 
-	
+
 
 	//** Mouse Regions **
 
 	//Mouse region for the MebershipCard
 	MSYS_DefineRegion( &gSelectedMemberCardRegion, MEMBERCARD_X, MEMBERCARD_Y , (MEMBERCARD_X + LINK_SIZE_X), (MEMBERCARD_Y + LINK_SIZE_Y), MSYS_PRIORITY_HIGH,
-							CURSOR_WWW, MSYS_NO_CALLBACK, SelectMemberCardRegionCallBack ); 
-	MSYS_AddRegion(&gSelectedMemberCardRegion); 
+							CURSOR_WWW, MSYS_NO_CALLBACK, SelectMemberCardRegionCallBack );
+	MSYS_AddRegion(&gSelectedMemberCardRegion);
 
 	//Mouse region for the Policies
 	MSYS_DefineRegion( &gSelectedPoliciesRegion, POLICIES_X, POLICIES_Y , (POLICIES_X + LINK_SIZE_X), (POLICIES_Y + LINK_SIZE_Y), MSYS_PRIORITY_HIGH,
-							CURSOR_WWW, MSYS_NO_CALLBACK, SelectPoliciesRegionCallBack ); 
-	MSYS_AddRegion(&gSelectedPoliciesRegion); 
+							CURSOR_WWW, MSYS_NO_CALLBACK, SelectPoliciesRegionCallBack );
+	MSYS_AddRegion(&gSelectedPoliciesRegion);
 
 	//Mouse region for the History
 	MSYS_DefineRegion( &gSelectedHistoryRegion, HISTORY_X, HISTORY_Y , (HISTORY_X + LINK_SIZE_X), (HISTORY_Y + LINK_SIZE_Y), MSYS_PRIORITY_HIGH,
-							CURSOR_WWW, MSYS_NO_CALLBACK, SelectHistoryRegionCallBack ); 
-	MSYS_AddRegion(&gSelectedHistoryRegion); 
+							CURSOR_WWW, MSYS_NO_CALLBACK, SelectHistoryRegionCallBack );
+	MSYS_AddRegion(&gSelectedHistoryRegion);
 
 	//Mouse region for the Links
 	MSYS_DefineRegion( &gSelectedLinksRegion, LINKS_X, LINKS_Y , (LINKS_X + LINK_SIZE_X), (LINKS_Y + LINK_SIZE_Y), MSYS_PRIORITY_HIGH,
-							CURSOR_WWW, MSYS_NO_CALLBACK, SelectLinksRegionCallBack ); 
-	MSYS_AddRegion(&gSelectedLinksRegion); 
+							CURSOR_WWW, MSYS_NO_CALLBACK, SelectLinksRegionCallBack );
+	MSYS_AddRegion(&gSelectedLinksRegion);
 
 	//Mouse region for the Links
 	MSYS_DefineRegion( &gSelectedBannerRegion, AIM_AD_TOP_LEFT_X, AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X, AIM_AD_BOTTOM_RIGHT_Y, MSYS_PRIORITY_HIGH,
-							CURSOR_WWW, MSYS_NO_CALLBACK, SelectBannerRegionCallBack); 
-	MSYS_AddRegion(&gSelectedBannerRegion); 
+							CURSOR_WWW, MSYS_NO_CALLBACK, SelectBannerRegionCallBack);
+	MSYS_AddRegion(&gSelectedBannerRegion);
 
 	// disable the region because only certain banners will be 'clickable'
-	MSYS_DisableRegion(&gSelectedBannerRegion); 
+	MSYS_DisableRegion(&gSelectedBannerRegion);
 
 	gubAimMenuButtonDown=255;
 
@@ -313,13 +311,11 @@ BOOLEAN EnterAIM()
 
 void LaptopInitAim()
 {
-	PERFORMANCE_MARKER
 	gfInitAdArea = TRUE;
 }
 
 void ExitAIM()
 {
-	PERFORMANCE_MARKER
 	RemoveAimDefaults();
 
 	DeleteVideoObjectFromIndex(guiMemberCard);
@@ -344,14 +340,12 @@ void ExitAIM()
 
 void HandleAIM()
 {
-	PERFORMANCE_MARKER
 	HandleAdAndWarningArea( gfInitAdArea, FALSE );
 	gfInitAdArea = FALSE;
 }
 
 void RenderAIM()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hMemberCardHandle;
 	HVOBJECT hPoliciesHandle;
 	HVOBJECT hLinksHandle;
@@ -402,7 +396,6 @@ void RenderAIM()
 
 void SelectMemberCardRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -414,13 +407,12 @@ void SelectMemberCardRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 
 void SelectPoliciesRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -431,13 +423,12 @@ void SelectPoliciesRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 
 void SelectHistoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -448,14 +439,13 @@ void SelectHistoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 
 
 void SelectLinksRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -465,14 +455,13 @@ void SelectLinksRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 
 
 BOOLEAN InitAimDefaults()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	// load the Rust bacground graphic and add it
@@ -487,8 +476,8 @@ BOOLEAN InitAimDefaults()
 
 	//Mouse region for the Links
 	MSYS_DefineRegion( &gSelectedAimLogo, AIM_SYMBOL_X, AIM_SYMBOL_Y, AIM_SYMBOL_X+AIM_SYMBOL_WIDTH, AIM_SYMBOL_Y+AIM_SYMBOL_HEIGHT, MSYS_PRIORITY_HIGH,
-							CURSOR_WWW, MSYS_NO_CALLBACK, SelectAimLogoRegionCallBack); 
-	MSYS_AddRegion(&gSelectedAimLogo); 
+							CURSOR_WWW, MSYS_NO_CALLBACK, SelectAimLogoRegionCallBack);
+	MSYS_AddRegion(&gSelectedAimLogo);
 
 
 	return(TRUE);
@@ -496,7 +485,6 @@ BOOLEAN InitAimDefaults()
 
 BOOLEAN RemoveAimDefaults()
 {
-	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiRustBackGround);
 	DeleteVideoObjectFromIndex(guiAimSymbol);
 	MSYS_RemoveRegion( &gSelectedAimLogo);
@@ -506,7 +494,6 @@ BOOLEAN RemoveAimDefaults()
 
 BOOLEAN DrawAimDefaults()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hRustBackGroundHandle;
 	HVOBJECT hAimSymbolHandle;
 	UINT16	x,y, uiPosX, uiPosY;
@@ -536,7 +523,6 @@ BOOLEAN DrawAimDefaults()
 
 void SelectAimLogoRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -546,7 +532,7 @@ void SelectAimLogoRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 
@@ -554,7 +540,6 @@ void SelectAimLogoRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN DisplayAimSlogan()
 {
-	PERFORMANCE_MARKER
 	CHAR16	sSlogan[400];
 
 	LoadEncryptedDataFromFile(AIMHISTORYFILE, sSlogan, 0, AIM_HISTORY_LINE_SIZE);
@@ -568,16 +553,15 @@ BOOLEAN DisplayAimSlogan()
 
 BOOLEAN DisplayAimCopyright()
 {
-	PERFORMANCE_MARKER
 	CHAR16	sSlogan[400];
 	UINT32	uiStartLoc=0;
 
-	//Load and Display the copyright notice 
+	//Load and Display the copyright notice
 
 	uiStartLoc = AIM_HISTORY_LINE_SIZE * AIM_COPYRIGHT_1;
 	LoadEncryptedDataFromFile(AIMHISTORYFILE, sSlogan, uiStartLoc, AIM_HISTORY_LINE_SIZE);
 	DrawTextToScreen(sSlogan, AIM_COPYRIGHT_X, AIM_COPYRIGHT_Y, AIM_COPYRIGHT_WIDTH, AIM_COPYRIGHT_FONT, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
-	
+
 	uiStartLoc = AIM_HISTORY_LINE_SIZE * AIM_COPYRIGHT_2;
 	LoadEncryptedDataFromFile(AIMHISTORYFILE, sSlogan, uiStartLoc, AIM_HISTORY_LINE_SIZE);
 	DrawTextToScreen(sSlogan, AIM_COPYRIGHT_X, AIM_COPYRIGHT_Y + AIM_COPYRIGHT_GAP, AIM_COPYRIGHT_WIDTH, AIM_COPYRIGHT_FONT, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
@@ -593,7 +577,6 @@ BOOLEAN DisplayAimCopyright()
 // Buttons
 BOOLEAN InitAimMenuBar(void)
 {
-	PERFORMANCE_MARKER
 	UINT8	i;
 	UINT16	usPosX;
 
@@ -602,10 +585,10 @@ BOOLEAN InitAimMenuBar(void)
 	usPosX = BOTTOM_BUTTON_START_X;
 	for(i=0; i<BOTTOM_BUTTON_AMOUNT; i++)
 	{
-		guiBottomButtons[i] = CreateIconAndTextButton( guiBottomButtonImage, AimBottomMenuText[i], FONT10ARIAL, 
-														AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
-														AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+		guiBottomButtons[i] = CreateIconAndTextButton( guiBottomButtonImage, AimBottomMenuText[i], FONT10ARIAL,
+														AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW,
+														AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														usPosX, BOTTOM_BUTTON_START_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														DEFAULT_MOVE_CALLBACK, BtnAimBottomButtonsCallback);
 		SetButtonCursor(guiBottomButtons[i], CURSOR_LAPTOP_SCREEN);
@@ -620,7 +603,6 @@ BOOLEAN InitAimMenuBar(void)
 }
 BOOLEAN ExitAimMenuBar(void)
 {
-	PERFORMANCE_MARKER
 	UINT8	i;
 
 	UnloadButtonImage( guiBottomButtonImage );
@@ -635,7 +617,6 @@ BOOLEAN ExitAimMenuBar(void)
 
 void BtnAimBottomButtonsCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	UINT32		bNewValue;
 
 	bNewValue = MSYS_GetBtnUserData( btn, 0 );
@@ -664,35 +645,32 @@ void BtnAimBottomButtonsCallback(GUI_BUTTON *btn,INT32 reason)
 		InvalidateRegion(BOTTOM_BUTTON_START_X,BOTTOM_BUTTON_START_Y,BOTTOM_BUTTON_END_X,BOTTOM_BUTTON_END_Y);
 	}
 	DisableAimButton();
-} 
+}
 
 
 void ResetAimButtons(UINT32 *Buttons, UINT16 uNumberOfButtons)
 {
-	PERFORMANCE_MARKER
 	UINT32 cnt;
 
 	for ( cnt = 0; cnt < uNumberOfButtons; cnt++ )
 	{
-		ButtonList[ Buttons[ cnt ] ]->uiFlags &= ~(BUTTON_CLICKED_ON); 
+		ButtonList[ Buttons[ cnt ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);
 	}
 }
 
 void DisableAimButton()
 {
-	PERFORMANCE_MARKER
 	int i=0;
 
 	for(i=0; i<NUM_AIM_BOTTOMBUTTONS; i++)
 	{
 		if( gCurrentAimPage[i] == guiCurrentLaptopMode)
-			ButtonList[ guiBottomButtons[i] ]->uiFlags |= BUTTON_CLICKED_ON; 
+			ButtonList[ guiBottomButtons[i] ]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 }
 
 void HandleAdAndWarningArea( BOOLEAN fInit, BOOLEAN fRedraw )
 {
-	PERFORMANCE_MARKER
 	static UINT8 ubPreviousAdvertisment;
 
 	if( fInit )
@@ -763,7 +741,7 @@ void HandleAdAndWarningArea( BOOLEAN fInit, BOOLEAN fRedraw )
 	switch( gubCurrentAdvertisment )
 	{
 		case 	AIM_AD_WARNING_BOX:
-			MSYS_DisableRegion(&gSelectedBannerRegion); 
+			MSYS_DisableRegion(&gSelectedBannerRegion);
 			ubPreviousAdvertisment = DrawWarningBox( fInit, fRedraw );
 			break;
 
@@ -773,7 +751,7 @@ void HandleAdAndWarningArea( BOOLEAN fInit, BOOLEAN fRedraw )
 
 		case AIM_AD_FOR_ADS:
 			// disable the region because only certain banners will be 'clickable'
-			MSYS_DisableRegion(&gSelectedBannerRegion); 
+			MSYS_DisableRegion(&gSelectedBannerRegion);
 			ubPreviousAdvertisment = DisplayAd( fInit, fRedraw, AIM_AD_FOR_ADS_DELAY, AIM_AD_FOR_ADS__NUM_SUBIMAGES, guiAdForAdsImages );
 			break;
 
@@ -799,7 +777,6 @@ void HandleAdAndWarningArea( BOOLEAN fInit, BOOLEAN fRedraw )
 
 BOOLEAN DisplayFlowerAd( BOOLEAN fInit, BOOLEAN fRedraw )
 {
-	PERFORMANCE_MARKER
 	static UINT32 uiLastTime;
 	static UINT8	ubSubImage=0;
 	static UINT8	ubCount=0;
@@ -824,14 +801,14 @@ BOOLEAN DisplayFlowerAd( BOOLEAN fInit, BOOLEAN fRedraw )
 				//Blit the blue sky frame with text on top
 				GetVideoObject(&hAdHandle, guiFlowerAdvertisement);
 				BltVideoObject(FRAME_BUFFER, hAdHandle, 0,WARNING_X, WARNING_Y, VO_BLT_SRCTRANSPARENCY,NULL);
-				
+
 				// redraw new mail warning, and create new mail button, if nessacary
 				fReDrawNewMailFlag = TRUE;
-		
-				//Display Aim Warning Text 
+
+				//Display Aim Warning Text
 				DisplayWrappedString(AIM_WARNING_TEXT_X, AIM_WARNING_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, FONT14ARIAL, FONT_GREEN, AimScreenText[AIM_INFO_6], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
-				//Display Aim Warning Text 
+				//Display Aim Warning Text
 				SetFontShadow( FONT_MCOLOR_WHITE );
 				DisplayWrappedString(AIM_WARNING_TEXT_X, AIM_FLOWER_LINK_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, FONT12ARIAL, 2, AimScreenText[AIM_INFO_7], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 				SetFontShadow( DEFAULT_SHADOW );
@@ -854,10 +831,10 @@ BOOLEAN DisplayFlowerAd( BOOLEAN fInit, BOOLEAN fRedraw )
 		{
 			GetVideoObject(&hAdHandle, guiFlowerAdvertisement);
 			BltVideoObject(FRAME_BUFFER, hAdHandle, ubSubImage,WARNING_X, WARNING_Y, VO_BLT_SRCTRANSPARENCY,NULL);
-			
+
 			// redraw new mail warning, and create new mail button, if nessacary
 			fReDrawNewMailFlag = TRUE;
-		
+
 			ubSubImage++;
 		}
 
@@ -870,7 +847,6 @@ BOOLEAN DisplayFlowerAd( BOOLEAN fInit, BOOLEAN fRedraw )
 
 BOOLEAN	DrawWarningBox( BOOLEAN fInit, BOOLEAN fRedraw )
 {
-	PERFORMANCE_MARKER
 	static UINT32 uiLastTime;
 	static UINT8	ubSubImage=0;
 	UINT32 uiCurTime = GetJA2Clock();
@@ -891,7 +867,7 @@ BOOLEAN	DrawWarningBox( BOOLEAN fInit, BOOLEAN fRedraw )
 		uiStartLoc = AIM_HISTORY_LINE_SIZE * AIM_WARNING_1;
 		LoadEncryptedDataFromFile(AIMHISTORYFILE, sText, uiStartLoc, AIM_HISTORY_LINE_SIZE);
 
-		//Display Aim Warning Text 
+		//Display Aim Warning Text
 		DisplayWrappedString(AIM_WARNING_TEXT_X, AIM_WARNING_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, AIM_WARNING_FONT, FONT_RED, sText, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
 		InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
@@ -913,7 +889,6 @@ BOOLEAN	DrawWarningBox( BOOLEAN fInit, BOOLEAN fRedraw )
 
 void SelectBannerRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -932,7 +907,7 @@ void SelectBannerRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 
@@ -940,7 +915,6 @@ void SelectBannerRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN DisplayAd( BOOLEAN fInit, BOOLEAN fRedraw, UINT16 usDelay, UINT16 usNumberOfSubImages, UINT32 uiAdImageIdentifier )
 {
-	PERFORMANCE_MARKER
 	static UINT32 uiLastTime;
 	static UINT8	ubSubImage=0;
 	static UINT8	ubCount=0;
@@ -965,10 +939,10 @@ BOOLEAN DisplayAd( BOOLEAN fInit, BOOLEAN fRedraw, UINT16 usDelay, UINT16 usNumb
 				//Blit the ad
 				GetVideoObject(&hAdHandle, uiAdImageIdentifier);
 				BltVideoObject(FRAME_BUFFER, hAdHandle, 0,WARNING_X, WARNING_Y, VO_BLT_SRCTRANSPARENCY,NULL);
-				
+
 				// redraw new mail warning, and create new mail button, if nessacary
 				fReDrawNewMailFlag = TRUE;
-		
+
 				InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
 			}
 
@@ -992,10 +966,10 @@ BOOLEAN DisplayAd( BOOLEAN fInit, BOOLEAN fRedraw, UINT16 usDelay, UINT16 usNumb
 				//Blit the ad
 				GetVideoObject(&hAdHandle, uiAdImageIdentifier);
 				BltVideoObject(FRAME_BUFFER, hAdHandle, ubSubImage,WARNING_X, WARNING_Y, VO_BLT_SRCTRANSPARENCY,NULL);
-				
+
 				// redraw new mail warning, and create new mail button, if nessacary
 				fReDrawNewMailFlag = TRUE;
-		
+
 				InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
 			}
 
@@ -1012,10 +986,10 @@ BOOLEAN DisplayAd( BOOLEAN fInit, BOOLEAN fRedraw, UINT16 usDelay, UINT16 usNumb
 		{
 			GetVideoObject(&hAdHandle, uiAdImageIdentifier);
 			BltVideoObject(FRAME_BUFFER, hAdHandle, ubSubImage,WARNING_X, WARNING_Y, VO_BLT_SRCTRANSPARENCY,NULL);
-			
+
 			// redraw new mail warning, and create new mail button, if nessacary
 			fReDrawNewMailFlag = TRUE;
-		
+
 			ubSubImage++;
 		}
 
@@ -1030,7 +1004,6 @@ BOOLEAN DisplayAd( BOOLEAN fInit, BOOLEAN fRedraw, UINT16 usDelay, UINT16 usNumb
 
 void HandleTextOnAimAdd( UINT8 ubCurSubImage )
 {
-	PERFORMANCE_MARKER
 	switch( gubCurrentAdvertisment )
 	{
 		case 	AIM_AD_WARNING_BOX:
@@ -1053,7 +1026,7 @@ void HandleTextOnAimAdd( UINT8 ubCurSubImage )
 			//if the subimage is the first couple
 			if( ubCurSubImage <= AIM_AD_BOBBYR_AD_NUM_DUCK_SUBIMAGES )
 			{
-				//Display Aim Warning Text 
+				//Display Aim Warning Text
 				SetFontShadow( 2 );
 				DisplayWrappedString(AIM_BOBBYR1_LINK_TEXT_X, AIM_BOBBYR1_LINK_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, BOBBYR_UNDER_CONSTRUCTION_AD_FONT, BOBBYR_UNDER_CONSTRUCTION_AD_COLOR, AimScreenText[AIM_BOBBYR_ADD1], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED | INVALIDATE_TEXT );
 				SetFontShadow( DEFAULT_SHADOW );
@@ -1062,7 +1035,7 @@ void HandleTextOnAimAdd( UINT8 ubCurSubImage )
 
 			else if( ubCurSubImage >= AIM_AD_BOBBYR_AD__NUM_SUBIMAGES-5 )
 			{
-				//Display Aim Warning Text 
+				//Display Aim Warning Text
 				SetFontShadow( 2 );
 				DisplayWrappedString(AIM_BOBBYR2_LINK_TEXT_X, AIM_BOBBYR2_LINK_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, BOBBYR_UNDER_CONSTRUCTION_AD_FONT, BOBBYR_UNDER_CONSTRUCTION_AD_COLOR, AimScreenText[AIM_BOBBYR_ADD2], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED | INVALIDATE_TEXT ) ;
 				SetFontShadow( DEFAULT_SHADOW );
@@ -1070,7 +1043,7 @@ void HandleTextOnAimAdd( UINT8 ubCurSubImage )
 /*
 			else
 			{
-				//Display Aim Warning Text 
+				//Display Aim Warning Text
 				SetFontShadow( 2 );
 //				DisplayWrappedString( AIM_BOBBYR3_LINK_TEXT_X, AIM_BOBBYR3_LINK_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, BOBBYR_UNDER_CONSTRUCTION_AD_FONT, FONT_MCOLOR_WHITE, AimScreenText[AIM_BOBBYR_ADD3], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED | INVALIDATE_TEXT );
 				SetFontShadow( DEFAULT_SHADOW );
@@ -1084,7 +1057,6 @@ void HandleTextOnAimAdd( UINT8 ubCurSubImage )
 
 BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
 {
-	PERFORMANCE_MARKER
 	static UINT32 uiLastTime;
 	static UINT8	ubSubImage=0;
 	static UINT8	ubDuckCount=0;
@@ -1149,10 +1121,10 @@ BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
 
 				ubSubImage = AIM_AD_BOBBYR_AD__NUM_SUBIMAGES - 1;
 			}
-			
+
 			// redraw new mail warning, and create new mail button, if nessacary
 			fReDrawNewMailFlag = TRUE;
-			
+
 			InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
 		}
 
@@ -1192,10 +1164,10 @@ BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
 			{
 				//Blit the ad
 				BltVideoObject(FRAME_BUFFER, hAdHandle, ubSubImage,WARNING_X, WARNING_Y, VO_BLT_SRCTRANSPARENCY,NULL);
-				
+
 				// redraw new mail warning, and create new mail button, if nessacary
 				fReDrawNewMailFlag = TRUE;
-		
+
 				InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
 			}
 
@@ -1212,10 +1184,10 @@ BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
 				//Blit the ad
 				GetVideoObject(&hAdHandle, guiBobbyRAdImages);
 				BltVideoObject(FRAME_BUFFER, hAdHandle, ubSubImage,WARNING_X, WARNING_Y, VO_BLT_SRCTRANSPARENCY,NULL);
-				
+
 				// redraw new mail warning, and create new mail button, if nessacary
 				fReDrawNewMailFlag = TRUE;
-		
+
 				InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
 			}
 
@@ -1232,10 +1204,10 @@ BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
 		{
 			GetVideoObject(&hAdHandle, guiBobbyRAdImages);
 			BltVideoObject(FRAME_BUFFER, hAdHandle, ubSubImage,WARNING_X, WARNING_Y, VO_BLT_SRCTRANSPARENCY,NULL);
-			
+
 			// redraw new mail warning, and create new mail button, if nessacary
 			fReDrawNewMailFlag = TRUE;
-		
+
 			ubSubImage++;
 		}
 */
@@ -1246,7 +1218,6 @@ BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
 
 UINT8 GetNextAimAd( UINT8 ubCurrentAd )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNextAd;
 	UINT32	uiDay = GetWorldDay();
 	if( ubCurrentAd == AIM_AD_WARNING_BOX )
@@ -1284,6 +1255,6 @@ UINT8 GetNextAimAd( UINT8 ubCurrentAd )
 
 
 
- 
+
 
 

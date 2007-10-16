@@ -83,7 +83,7 @@ enum
 
 INT32	giCurrentIntroBeingPlayed = SMKINTRO_NO_VIDEO;
 
-CHAR		*gpzSmackerFileNames[] = 
+CHAR		*gpzSmackerFileNames[] =
 {
 	//begining of the game
 	"INTRO\\Rebel_cr.smk",
@@ -126,7 +126,6 @@ void	DisplaySirtechSplashScreen();
 
 UINT32	IntroScreenInit( void )
 {
-	PERFORMANCE_MARKER
 	//Set so next time we come in, we can set up
 	gfIntroScreenEntry = TRUE;
 
@@ -136,14 +135,12 @@ UINT32	IntroScreenInit( void )
 
 UINT32	IntroScreenShutdown( void )
 {
-	PERFORMANCE_MARKER
 	return( 1 );
 }
 
 
 UINT32	IntroScreenHandle( void )
 {
-	PERFORMANCE_MARKER
 	if( gfIntroScreenEntry )
 	{
 		EnterIntroScreen();
@@ -177,7 +174,6 @@ UINT32	IntroScreenHandle( void )
 
 BOOLEAN EnterIntroScreen()
 {
-	PERFORMANCE_MARKER
 	INT32 iFirstVideoID = -1;
 
 	ClearMainMenu();
@@ -222,19 +218,17 @@ BOOLEAN EnterIntroScreen()
 	{
 		PrepareToExitIntroScreen();
 	}
-	
+
 
 	return( TRUE );
 }
 
 void RenderIntroScreen()
 {
-	PERFORMANCE_MARKER
 }
 
 void ExitIntroScreen()
 {
-	PERFORMANCE_MARKER
 
 	//shutdown smaker
 	SmkShutdown();
@@ -242,7 +236,6 @@ void ExitIntroScreen()
 
 void HandleIntroScreen()
 {
-	PERFORMANCE_MARKER
 	BOOLEAN	fFlicStillPlaying = FALSE;
 
 	//if we are exiting this screen, this frame, dont update the screen
@@ -278,7 +271,6 @@ void HandleIntroScreen()
 
 void		GetIntroScreenUserInput()
 {
-	PERFORMANCE_MARKER
 	InputAtom Event;
 	POINT	MousePos;
 
@@ -295,19 +287,19 @@ void		GetIntroScreenUserInput()
 				MouseSystemHook(LEFT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
 			case LEFT_BUTTON_UP:
-				MouseSystemHook(LEFT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y ,_LeftButtonDown, _RightButtonDown);			
+				MouseSystemHook(LEFT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y ,_LeftButtonDown, _RightButtonDown);
 				break;
 			case RIGHT_BUTTON_DOWN:
 				MouseSystemHook(RIGHT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
-			case RIGHT_BUTTON_UP: 
-				MouseSystemHook(RIGHT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);	
+			case RIGHT_BUTTON_UP:
+				MouseSystemHook(RIGHT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
-			case RIGHT_BUTTON_REPEAT: 
-				MouseSystemHook(RIGHT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);			
+			case RIGHT_BUTTON_REPEAT:
+				MouseSystemHook(RIGHT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
-			case LEFT_BUTTON_REPEAT: 
-				MouseSystemHook(LEFT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);				
+			case LEFT_BUTTON_REPEAT:
+				MouseSystemHook(LEFT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
 		}
 
@@ -348,7 +340,6 @@ void		GetIntroScreenUserInput()
 
 void PrepareToExitIntroScreen()
 {
-	PERFORMANCE_MARKER
 	//if its the intro at the begining of the game
 	if( gbIntroScreenMode == INTRO_BEGINING )
 	{
@@ -378,7 +369,6 @@ void PrepareToExitIntroScreen()
 
 INT32 GetNextIntroVideo( UINT32 uiCurrentVideo )
 {
-	PERFORMANCE_MARKER
 	INT32 iStringToUse = -1;
 
 	//switch on whether it is the beginging or the end game video
@@ -459,7 +449,6 @@ INT32 GetNextIntroVideo( UINT32 uiCurrentVideo )
 
 void StartPlayingIntroFlic( INT32 iIndexOfFlicToPlay )
 {
-	PERFORMANCE_MARKER
 
 	if( iIndexOfFlicToPlay != -1 )
 	{
@@ -486,7 +475,6 @@ void StartPlayingIntroFlic( INT32 iIndexOfFlicToPlay )
 
 void SetIntroType( INT8 bIntroType )
 {
-	PERFORMANCE_MARKER
 	if( bIntroType == INTRO_BEGINING )
 	{
 		gbIntroScreenMode = INTRO_BEGINING;
@@ -504,7 +492,6 @@ void SetIntroType( INT8 bIntroType )
 
 void DisplaySirtechSplashScreen()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 	VOBJECT_DESC	VObjectDesc;
 	UINT32 uiLogoID;
@@ -525,13 +512,13 @@ void DisplaySirtechSplashScreen()
 
 //	FilenameForBPP("INTERFACE\\TShold.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject(&VObjectDesc, &uiLogoID) )
-	{	
+	{
 		FilenameForBPP("GERMAN\\SPLASH_GERMAN.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject(&VObjectDesc, &uiLogoID) )
-	{	
-		/* 
+	{
+		/*
 		* This is the place, where most non english coders stranding.
-		* Don't hesitate, don't give up! 
+		* Don't hesitate, don't give up!
 		* I'll now tell You what You made wrong
 		*								(2006-10-10, Sergeant_Kolja)
 		*/

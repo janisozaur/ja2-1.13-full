@@ -22,7 +22,6 @@
 
 INT8 RTPlayerDecideAction( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT8 bAction=AI_ACTION_NONE;
 
 	if (gTacticalStatus.fAutoBandageMode)
@@ -45,7 +44,6 @@ INT8 RTPlayerDecideAction( SOLDIERTYPE * pSoldier )
 
 INT8 RTDecideAction(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 	if (CREATURE_OR_BLOODCAT( pSoldier ) )
 	{
 		return( CreatureDecideAction( pSoldier ) );
@@ -77,8 +75,7 @@ INT8 RTDecideAction(SOLDIERTYPE *pSoldier)
 
 UINT16 RealtimeDelay( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
-	if ( PTR_CIV_OR_MILITIA && !(pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP ) )			
+	if ( PTR_CIV_OR_MILITIA && !(pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP ) )
 	{
 		return( (UINT16) REALTIME_CIV_AI_DELAY );
 	}
@@ -88,7 +85,7 @@ UINT16 RealtimeDelay( SOLDIERTYPE * pSoldier )
 	}
 	else
 	{
-		
+
 		if ( pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP )
 		{
 			UINT8		ubRoom;
@@ -107,7 +104,6 @@ UINT16 RealtimeDelay( SOLDIERTYPE * pSoldier )
 
 void RTHandleAI( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 #ifdef AI_PROFILING
 	INT32 iLoop;
 #endif
@@ -186,7 +182,7 @@ void RTHandleAI( SOLDIERTYPE * pSoldier )
 					}
 					else
 					{
-						pSoldier->aiData.bNextAction = AI_ACTION_WALK;				
+						pSoldier->aiData.bNextAction = AI_ACTION_WALK;
 						// leave next-action-data as is since that's where we want to go
 					}
 				}
@@ -236,7 +232,7 @@ void RTHandleAI( SOLDIERTYPE * pSoldier )
 			// do a standard wait before doing anything else!
 			pSoldier->aiData.bAction = AI_ACTION_WAIT;
 			//if (PTR_CIVILIAN && pSoldier->aiData.bAlertStatus != STATUS_BLACK)
-			if ( PTR_CIV_OR_MILITIA && !(pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP ) )			
+			if ( PTR_CIV_OR_MILITIA && !(pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP ) )
 			{
 				pSoldier->aiData.usActionData = (UINT16) REALTIME_CIV_AI_DELAY;
 			}

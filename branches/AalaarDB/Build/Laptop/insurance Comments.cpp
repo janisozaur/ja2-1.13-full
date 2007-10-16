@@ -48,13 +48,11 @@ BOOLEAN DisplayComment( UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY )
 
 void GameInitInsuranceComments()
 {
-	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterInsuranceComments()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT8 i;
 	UINT16 usPosX;
@@ -70,9 +68,9 @@ BOOLEAN EnterInsuranceComments()
 	for( i=0; i<3; i++)
 	{
 		MSYS_DefineRegion( &gSelectedInsuranceCommentLinkRegion[i], usPosX, INS_CMNT_LINK_Y-1, (UINT16)(usPosX + INS_CMNT_LINK_WIDTH), INS_CMNT_LINK_Y+INS_CMNT_LINK_HEIGHT+1, MSYS_PRIORITY_HIGH,
-					CURSOR_WWW, MSYS_NO_CALLBACK, SelectInsuranceCommentLinkRegionCallBack); 
-		MSYS_AddRegion(&gSelectedInsuranceCommentLinkRegion[i]); 
-		MSYS_SetRegionUserData( &gSelectedInsuranceCommentLinkRegion[i], 0, i );	
+					CURSOR_WWW, MSYS_NO_CALLBACK, SelectInsuranceCommentLinkRegionCallBack);
+		MSYS_AddRegion(&gSelectedInsuranceCommentLinkRegion[i]);
+		MSYS_SetRegionUserData( &gSelectedInsuranceCommentLinkRegion[i], 0, i );
 
 		usPosX += INS_CMNT_LINK_OFFSET_X;
 	}
@@ -87,7 +85,6 @@ BOOLEAN EnterInsuranceComments()
 
 void ExitInsuranceComments()
 {
-	PERFORMANCE_MARKER
 	UINT8 i;
 	RemoveInsuranceDefaults();
 	DeleteVideoObjectFromIndex( guiInsCmntBulletImage );
@@ -98,13 +95,11 @@ void ExitInsuranceComments()
 
 void HandleInsuranceComments()
 {
-	PERFORMANCE_MARKER
 
 }
 
 void RenderInsuranceComments()
 {
-	PERFORMANCE_MARKER
 //	HVOBJECT hPixHandle;
 	CHAR16		sText[800];
 	UINT16	usPosX, usPosY;
@@ -173,7 +168,6 @@ void RenderInsuranceComments()
 
 void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -190,13 +184,12 @@ void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iRea
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 
 BOOLEAN DisplayComment( UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY )
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	HVOBJECT	hPixHandle;
 	UINT16		sNumPixels=0;

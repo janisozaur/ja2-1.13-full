@@ -21,7 +21,7 @@ extern HVSURFACE ghFrameBuffer;
 
 STR8 szSectorMap[MAP_WORLD_Y][MAP_WORLD_X] =	{
 	{"N",	"N" ,"N" ,"N" ,"N" ,"N" ,"N" ,"N" ,"N" ,"N" ,"N"	,"N"	,"N"	,"N"	,"N"	,"N"	,"N"	 ,"N"},
-	
+
 	{"N",	"A1","A2","A3","A4","A5","A6","A7","A8","A9","A10","A11","A12","A13","A14","A15","A16"	,"N"},
 	{"N",	"B1","B2","B3","B4","B5","B6","B7","B8","B9","B10","B11","B12","B13","B14","B15","B16"	,"N"},
 	{"N",	"C1","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12","C13","C14","C15","C16"	,"N"},
@@ -38,10 +38,10 @@ STR8 szSectorMap[MAP_WORLD_Y][MAP_WORLD_X] =	{
 	{"N",	"N1","N2","N3","N4","N5","N6","N7","N8","N9","N10","N11","N12","N13","N14","N15","N16"	,"N"},
 	{"N",	"O1","O2","O3","O4","O5","O6","O7","O8","O9","O10","O11","O12","O13","O14","O15","O16"	,"N"},
 	{"N",	"P1","P2","P3","P4","P5","P6","P7","P8","P9","P10","P11","P12","P13","P14","P15","P16"	,"N"},
-	
+
 	{"N","N" ,"N" ,"N" ,"N" ,"N" ,"N" ,"N" ,"N" ,"N" ,"N"	,"N"	,"N"	,"N"	,"N"	,"N"	,"N"	,"N"}
 	};
-	
+
 UINT8 gubLastLoadingScreenID = LOADINGSCREEN_NOTHING;
 STR8 szSector;
 BOOLEAN bShowSmallImage = FALSE;
@@ -51,7 +51,6 @@ SECTOR_LOADSCREENS gSectorLoadscreens[MAX_SECTOR_LOADSCREENS];
 //returns the UINT8 ID for the specified sector.
 UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	UINT8 ubSectorID;
 	BOOLEAN fNight = FALSE;
@@ -330,7 +329,7 @@ UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 					case SEC_P15:
 					case SEC_P16:
 						szSector = szSectorMap [sSectorY][sSectorX];
-						
+
 						if( fNight )
 						{
 							return NIGHT;
@@ -339,12 +338,12 @@ UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 						{
 							return DAY;
 						}
-						
+
 					case SEC_A9:
 						szSector = "A9";
-								
+
 						if( !DidGameJustStart() )
-						{		
+						{
 							if( fNight )
 							{
 								return NIGHT;
@@ -352,15 +351,15 @@ UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 							else
 							{
 								return DAY;
-							}												
+							}
 						}
 						else
 						{
 							return HELI;
 						}
-				}	
+				}
 			} /* WANNE: User made System - END */
-			
+
 			/* WANNE: Sir-Tech System - BEGIN */
 			else
 			{
@@ -394,7 +393,7 @@ UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 						if( fNight )
 							return LOADINGSCREEN_NIGHTMILITARY;
 						return LOADINGSCREEN_DAYMILITARY;
-					case SEC_K4: 
+					case SEC_K4:
 						if( fNight )
 							return LOADINGSCREEN_NIGHTLAB;
 						return LOADINGSCREEN_DAYLAB;
@@ -457,7 +456,7 @@ UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 								return LOADINGSCREEN_DAYTOWN1;
 							}
 						}
-					case SAND:	
+					case SAND:
 					case SAND_ROAD:
 						if( fNight )
 						{
@@ -469,7 +468,7 @@ UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 						}
 					case FARMLAND:
 					case FARMLAND_ROAD:
-					case ROAD:					
+					case ROAD:
 						if( fNight )
 						{
 							return LOADINGSCREEN_NIGHTGENERIC;
@@ -542,15 +541,15 @@ UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 				case SEC_I13:	//Alma prison dungeon
 				case SEC_J9:	//Tixa prison dungeon
 				case SEC_K4:	//Orta weapons plant
-				case SEC_O3:	//Meduna 
-				case SEC_P3:	//Meduna 
+				case SEC_O3:	//Meduna
+				case SEC_P3:	//Meduna
 					return LOADINGSCREEN_BASEMENT;
 				default:			//rest are mines
 					return LOADINGSCREEN_MINE;
 			}
 			break;
 		// Basement Level 2 and 3
-		case 2:	
+		case 2:
 		case 3:
 			//all level 2 and 3 maps are caves!
 			return LOADINGSCREEN_CAVE;
@@ -571,11 +570,10 @@ UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 
 extern BOOLEAN gfSchedulesHosed;
 
-//sets up the loadscreen with specified ID, and draws it to the FRAME_BUFFER, 
+//sets up the loadscreen with specified ID, and draws it to the FRAME_BUFFER,
 //and refreshing the screen with it.
 void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 {
-	PERFORMANCE_MARKER
 	VSURFACE_DESC		vs_desc;
 	HVSURFACE			hVSurface;
 	UINT32				uiLoadScreen;
@@ -792,7 +790,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayWild_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_DAYTROPICAL:
 				strcpy(smallImage, "LOADSCREENS\\LS_DayTropical.sti");
@@ -808,7 +806,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayTropical_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_DAYFOREST:
 				strcpy(smallImage, "LOADSCREENS\\LS_DayForest.sti");
@@ -824,7 +822,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayForest_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_DAYDESERT:
 				strcpy(smallImage, "LOADSCREENS\\LS_DayDesert.sti");
@@ -840,7 +838,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayDesert_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_DAYPALACE:
 				strcpy(smallImage, "LOADSCREENS\\LS_DayPalace.sti");
@@ -856,7 +854,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayPalace_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTGENERIC:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightGeneric.sti");
@@ -872,7 +870,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightGeneric_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTWILD:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightWild.sti");
@@ -888,7 +886,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightWild_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTTOWN1:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightTown1.sti");
@@ -904,7 +902,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightTown1_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTTOWN2:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightTown2.sti");
@@ -920,7 +918,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightTown2_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTFOREST:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightForest.sti");
@@ -936,7 +934,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightForest_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTTROPICAL:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightTropical.sti");
@@ -952,7 +950,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightTropical_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTDESERT:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightDesert.sti");
@@ -968,7 +966,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightDesert_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTPALACE:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightPalace.sti");
@@ -984,7 +982,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightPalace_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_HELI:
 				strcpy(smallImage, "LOADSCREENS\\LS_Heli.sti");
@@ -1000,7 +998,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_Heli_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_BASEMENT:
 				strcpy(smallImage, "LOADSCREENS\\LS_Basement.sti");
@@ -1016,7 +1014,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_Basement_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_MINE:
 				strcpy(smallImage, "LOADSCREENS\\LS_Mine.sti");
@@ -1048,7 +1046,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_Cave_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_DAYPINE:
 				strcpy(smallImage, "LOADSCREENS\\LS_DayPine.sti");
@@ -1064,7 +1062,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayPine_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTPINE:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightPine.sti");
@@ -1080,7 +1078,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightPine_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_DAYMILITARY:
 				strcpy(smallImage, "LOADSCREENS\\LS_DayMilitary.sti");
@@ -1096,7 +1094,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayMilitary_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTMILITARY:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightMilitary.sti");
@@ -1112,7 +1110,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightMilitary_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_DAYSAM:
 				strcpy(smallImage, "LOADSCREENS\\LS_DaySAM.sti");
@@ -1128,7 +1126,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DaySAM_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTSAM:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightSAM.sti");
@@ -1144,7 +1142,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightSAM_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_DAYPRISON:
 				strcpy(smallImage, "LOADSCREENS\\LS_DayPrison.sti");
@@ -1160,7 +1158,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayPrison_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTPRISON:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightPrison.sti");
@@ -1176,7 +1174,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightPrison_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_DAYHOSPITAL:
 				strcpy(smallImage, "LOADSCREENS\\LS_DayHospital.sti");
@@ -1192,7 +1190,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayHospital_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTHOSPITAL:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightHospital.sti");
@@ -1208,7 +1206,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightHospital_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_DAYAIRPORT:
 				strcpy(smallImage, "LOADSCREENS\\LS_DayAirport.sti");
@@ -1224,7 +1222,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayAirport_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTAIRPORT:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightAirport.sti");
@@ -1240,7 +1238,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightAirport_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_DAYLAB:
 				strcpy(smallImage, "LOADSCREENS\\LS_DayLab.sti");
@@ -1256,7 +1254,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayLab_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTLAB:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightLab.sti");
@@ -1272,7 +1270,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightLab_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_DAYOMERTA:
 				strcpy(smallImage, "LOADSCREENS\\LS_DayOmerta.sti");
@@ -1281,11 +1279,11 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayOmerta.sti");
 				}
 				else if (iResolution == 1)
-				{	
+				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayOmerta_800x600.sti");
 				}
 				else if (iResolution == 2)
-				{	
+				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayOmerta_1024x768.sti");
 				}
 				break;
@@ -1303,7 +1301,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightOmerta_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_DAYCHITZENA:
 				strcpy(smallImage, "LOADSCREENS\\LS_DayChitzena.sti");
@@ -1319,7 +1317,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayChitzena_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTCHITZENA:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightChitzena.sti");
@@ -1335,7 +1333,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightChitzena_1024x768.sti");
 				}
-				
+
 				break;
 			case LOADINGSCREEN_DAYMINE:
 				strcpy(smallImage, "LOADSCREENS\\LS_DayMine.sti");
@@ -1351,7 +1349,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayMine_1024x768.sti" );
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTMINE:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightMine.sti");
@@ -1367,7 +1365,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightMine_1024x768.sti" );
 				}
-				
+
 				break;
 			case LOADINGSCREEN_DAYBALIME:
 				strcpy(smallImage, "LOADSCREENS\\LS_DayBalime.sti");
@@ -1383,7 +1381,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_DayBalime_1024x768.sti" );
 				}
-				
+
 				break;
 			case LOADINGSCREEN_NIGHTBALIME:
 				strcpy(smallImage, "LOADSCREENS\\LS_NightBalime.sti");
@@ -1399,7 +1397,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				{
 					strcpy(vs_desc.ImageFile, "LOADSCREENS\\LS_NightBalime_1024x768.sti" );
 				}
-				
+
 				break;
 			default:
 				strcpy(smallImage, "LOADSCREENS\\LS_Heli.sti");
@@ -1417,7 +1415,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 				}
 				break;
 		}	// Switch - END
-	}	
+	}
 
 	// Sti loadscreen (big image) is not available
 	if ( AddVideoSurface( &vs_desc, &uiLoadScreen ) == FALSE && iResolution > 0)

@@ -224,7 +224,6 @@ extern BOOLEAN	gfRerenderInterfaceFromHelpText;
 
 BOOLEAN LoadMercProfiles(void)
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"LoadMercProfiles");
 //	FILE *fptr;
 	HWFILE fptr;
@@ -282,7 +281,7 @@ BOOLEAN LoadMercProfiles(void)
 	MERCPROFILESTRUCT tempProfile;
 	for(int profileNum=0; profileNum< NUM_PROFILES; profileNum++)
 	{
-		if( !tempProfile.Load(fptr, true))
+		if( !tempProfile.Load(fptr, true, true, true))
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s",profileNum, pFileName) );
 			FileClose( fptr );
@@ -433,7 +432,6 @@ BOOLEAN LoadMercProfiles(void)
 
 void DecideActiveTerrorists( void )
 {
-	PERFORMANCE_MARKER
 	UINT8		ubLoop, ubLoop2;
 	UINT8		ubTerrorist;
 	UINT8		ubNumAdditionalTerrorists, ubNumTerroristsAdded = 0;
@@ -543,7 +541,6 @@ void DecideActiveTerrorists( void )
 
 void MakeRemainingTerroristsTougher( void )
 {
-	PERFORMANCE_MARKER
 	UINT8					ubRemainingTerrorists = 0, ubLoop;
 	UINT16				usNewItem, usOldItem;
 	UINT8					ubRemainingDifficulty;
@@ -643,7 +640,6 @@ void MakeRemainingTerroristsTougher( void )
 
 void DecideOnAssassin( void )
 {
-	PERFORMANCE_MARKER
 	UINT8		ubAssassinPossibility[NUM_ASSASSINS] = { NO_PROFILE, NO_PROFILE, NO_PROFILE, NO_PROFILE, NO_PROFILE, NO_PROFILE };
 	UINT8		ubAssassinsPossible = 0;
 	UINT8		ubLoop, ubLoop2;
@@ -684,7 +680,6 @@ void DecideOnAssassin( void )
 
 void MakeRemainingAssassinsTougher( void )
 {
-	PERFORMANCE_MARKER
 	UINT8					ubRemainingAssassins = 0, ubLoop;
 	UINT16				usNewItem, usOldItem;
 	UINT8					ubRemainingDifficulty;
@@ -766,7 +761,6 @@ void MakeRemainingAssassinsTougher( void )
 
 void StartSomeMercsOnAssignment(void)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 	MERCPROFILESTRUCT *pProfile;
 	UINT32 uiChance;
@@ -803,7 +797,6 @@ void StartSomeMercsOnAssignment(void)
 
 void SetProfileFaceData( UINT8 ubCharNum, UINT8 ubFaceIndex, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY )
 {
-	PERFORMANCE_MARKER
 	gMercProfiles[ ubCharNum ].ubFaceIndex = ubFaceIndex;
 	gMercProfiles[ ubCharNum ].usEyesX			= usEyesX;
 	gMercProfiles[ ubCharNum ].usEyesY			= usEyesY;
@@ -813,7 +806,6 @@ void SetProfileFaceData( UINT8 ubCharNum, UINT8 ubFaceIndex, UINT16 usEyesX, UIN
 
 UINT16 CalcCompetence( MERCPROFILESTRUCT * pProfile )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiStats, uiSkills, uiActionPoints, uiSpecialSkills;
 	UINT16 usCompetence;
 
@@ -846,7 +838,6 @@ UINT16 CalcCompetence( MERCPROFILESTRUCT * pProfile )
 
 INT16 CalcMedicalDeposit( MERCPROFILESTRUCT * pProfile )
 {
-	PERFORMANCE_MARKER
 	UINT16 usDeposit;
 
 	// this rounds off to the nearest hundred
@@ -857,7 +848,6 @@ INT16 CalcMedicalDeposit( MERCPROFILESTRUCT * pProfile )
 
 SOLDIERTYPE * FindSoldierByProfileID( UINT8 ubProfileID, BOOLEAN fPlayerMercsOnly )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubLoop, ubLoopLimit;
 	SOLDIERTYPE * pSoldier;
 
@@ -884,7 +874,6 @@ SOLDIERTYPE * FindSoldierByProfileID( UINT8 ubProfileID, BOOLEAN fPlayerMercsOnl
 
 SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 {
-	PERFORMANCE_MARKER
 	UINT8										ubID;
 	SOLDIERTYPE							*pNewSoldier = NULL;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
@@ -1032,7 +1021,6 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 
 BOOLEAN RecruitRPC( UINT8 ubCharNum )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pNewSoldier;
 
 	// Get soldier pointer
@@ -1122,7 +1110,6 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 
 BOOLEAN RecruitEPC( UINT8 ubCharNum )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pNewSoldier;
 
 	// Get soldier pointer
@@ -1173,7 +1160,6 @@ BOOLEAN RecruitEPC( UINT8 ubCharNum )
 
 BOOLEAN UnRecruitEPC( UINT8 ubCharNum )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pNewSoldier;
 
 	// Get soldier pointer
@@ -1238,7 +1224,6 @@ BOOLEAN UnRecruitEPC( UINT8 ubCharNum )
 
 INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy )
 {
-	PERFORMANCE_MARKER
 	MERCPROFILESTRUCT *	pProfile;
 	INT8								bLoop;
 
@@ -1256,7 +1241,6 @@ INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy )
 
 INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated )
 {
-	PERFORMANCE_MARKER
 	MERCPROFILESTRUCT *	pProfile;
 	INT8								bLoop;
 
@@ -1275,7 +1259,6 @@ INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated )
 
 BOOLEAN IsProfileATerrorist( UINT8 ubProfile )
 {
-	PERFORMANCE_MARKER
 	if ( ubProfile == 83 || ubProfile == 111 ||
 			ubProfile == 64 || ubProfile == 112 ||
 			ubProfile == 82 || ubProfile == 110 )
@@ -1290,7 +1273,6 @@ BOOLEAN IsProfileATerrorist( UINT8 ubProfile )
 
 BOOLEAN IsProfileAHeadMiner( UINT8 ubProfile )
 {
-	PERFORMANCE_MARKER
 	if ( ubProfile == 106 || ubProfile == 148 ||
 			ubProfile == 156 || ubProfile == 157 ||
 			ubProfile == 158 )
@@ -1306,7 +1288,6 @@ BOOLEAN IsProfileAHeadMiner( UINT8 ubProfile )
 
 void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 	SOLDIERTYPE *pSoldier = NULL;
 	MERCPROFILESTRUCT * pProfile;
@@ -1367,7 +1348,6 @@ void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs )
 
 BOOLEAN DoesMercHaveABuddyOnTheTeam( UINT8 ubMercID )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubCnt;
 	INT8	bBuddyID;
 
@@ -1395,7 +1375,6 @@ BOOLEAN DoesMercHaveABuddyOnTheTeam( UINT8 ubMercID )
 
 BOOLEAN MercIsHot( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	if ( pSoldier->ubProfile != NO_PROFILE && gMercProfiles[ pSoldier->ubProfile ].bPersonalityTrait == HEAT_INTOLERANT )
 	{
 		if ( SectorTemperature( GetWorldMinutesInDay(), pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) > 0 )
@@ -1408,7 +1387,6 @@ BOOLEAN MercIsHot( SOLDIERTYPE * pSoldier )
 
 SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubSrcProfile;
 	UINT8	ubDestProfile;
 	MERCPROFILESTRUCT * pNewProfile;
@@ -1530,7 +1508,6 @@ SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier )
 
 BOOLEAN DoesNPCOwnBuilding( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubRoomInfo;
 
 	// Get room info
@@ -1565,7 +1542,6 @@ BOOLEAN DoesNPCOwnBuilding( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 BOOLEAN IsProfileIdAnAimOrMERCMerc( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 
 	if( ubProfileID < BIFF ||
 			( ubProfileID >= BIFF && ubProfileID <= BUBBA ) ||

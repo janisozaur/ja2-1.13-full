@@ -49,7 +49,7 @@ class SOLDIERTYPE;
 typedef struct
 {
 	INT16	sGridNo;
-	INT8	bCover;				//% chance that the gridno is fully covered.	ie 100 if safe, 0	is has no cover		
+	INT8	bCover;				//% chance that the gridno is fully covered.	ie 100 if safe, 0	is has no cover
 //	BOOLEAN fRoof;
 } BEST_COVER_STRUCT;
 
@@ -64,7 +64,7 @@ typedef struct
 
 /*
 #define	DC__PRONE				(INT8)( 0x01 )
-#define DC__CROUCH			(INT8)( 0x02 )	
+#define DC__CROUCH			(INT8)( 0x02 )
 #define DC__STAND				(INT8)( 0x04 )
 */
 enum
@@ -109,7 +109,6 @@ BOOLEAN IsTheRoofVisible( INT16 sGridNo );
 
 void DisplayCoverOfSelectedGridNo( )
 {
-	PERFORMANCE_MARKER
 	INT16 sGridNo;
 	INT8	bStance;
 
@@ -127,8 +126,8 @@ void DisplayCoverOfSelectedGridNo( )
 		bStance = GetCurrentMercForDisplayCoverStance();
 
 		//if the gridno is different then the last one that was displayed
-		if( sGridNo != gsLastCoverGridNo || 
-				gbLastStance != bStance || 
+		if( sGridNo != gsLastCoverGridNo ||
+				gbLastStance != bStance ||
 				MercPtrs[ gusSelectedSoldier ]->sGridNo != gsLastSoldierGridNo )
 		{
 			//if the cover is currently being displayed
@@ -174,7 +173,6 @@ void DisplayCoverOfSelectedGridNo( )
 
 void AddCoverTileToEachGridNo()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCntX, uiCntY;
 	BOOLEAN fRoof = ( gsInterfaceLevel != I_GROUND_LEVEL );
 
@@ -188,35 +186,35 @@ void AddCoverTileToEachGridNo()
 			if( gCoverRadius[ uiCntX ][ uiCntY ].bCover != -1 )
 			{
 				//if the tile provides 80-100% cover
-				if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 100 && 
+				if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 100 &&
 						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 80 )
 				{
 					AddCoverObjectToWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_5, fRoof );
 				}
 
 				//else if the tile provides 60-80% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 80 && 
+				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 80 &&
 						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 60 )
 				{
 					AddCoverObjectToWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_4, fRoof );
 				}
 
 				//else if the tile provides 40-60% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 60 && 
+				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 60 &&
 						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 40 )
 				{
 					AddCoverObjectToWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_3, fRoof );
 				}
 
 				//else if the tile provides 20-40% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 40 && 
+				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 40 &&
 						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 20 )
 				{
 					AddCoverObjectToWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_2, fRoof );
 				}
 
 				//else if the tile provides 0-20% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 20 && 
+				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 20 &&
 						gCoverRadius[ uiCntX ][ uiCntY ].bCover >= 0 )
 				{
 					AddCoverObjectToWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_1, fRoof );
@@ -234,7 +232,6 @@ void AddCoverTileToEachGridNo()
 
 void RemoveCoverOfSelectedGridNo()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCntX, uiCntY;
 	BOOLEAN fRoof = ( gsInterfaceLevel != I_GROUND_LEVEL );
 
@@ -255,35 +252,35 @@ void RemoveCoverOfSelectedGridNo()
 //				fRoof = gCoverRadius[ uiCntX ][ uiCntY ].fRoof;
 
 				//if the tile provides 80-100% cover
-				if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 100 && 
+				if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 100 &&
 						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 80 )
 				{
 					RemoveCoverObjectFromWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_5, fRoof );
 				}
 
 				//else if the tile provides 60-80% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 80 && 
+				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 80 &&
 						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 60 )
 				{
 					RemoveCoverObjectFromWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_4, fRoof );
 				}
 
 				//else if the tile provides 40-60% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 60 && 
+				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 60 &&
 						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 40 )
 				{
 					RemoveCoverObjectFromWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_3, fRoof );
 				}
 
 				//else if the tile provides 20-40% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 40 && 
+				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 40 &&
 						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 20 )
 				{
 					RemoveCoverObjectFromWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_2, fRoof );
 				}
 
 				//else if the tile provides 0-20% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 20 && 
+				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 20 &&
 						gCoverRadius[ uiCntX ][ uiCntY ].bCover >= 0 )
 				{
 					RemoveCoverObjectFromWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_1, fRoof );
@@ -300,8 +297,8 @@ void RemoveCoverOfSelectedGridNo()
 
 	// Re-render the scene!
 	SetRenderFlags( RENDER_FLAG_FULL );
-		
-	gsLastCoverGridNo = NOWHERE;			
+
+	gsLastCoverGridNo = NOWHERE;
 	gbLastStance = -1;
 	gsLastSoldierGridNo = NOWHERE;
 }
@@ -309,7 +306,6 @@ void RemoveCoverOfSelectedGridNo()
 
 void CalculateCoverInRadiusAroundGridno( INT16 sTargetGridNo, INT8	bSearchRange )
 {
-	PERFORMANCE_MARKER
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	SOLDIERTYPE *pSoldier=NULL;
 	INT16	sGridNo;
@@ -423,7 +419,6 @@ void CalculateCoverInRadiusAroundGridno( INT16 sTargetGridNo, INT8	bSearchRange 
 
 INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, INT8 bStance )
 {
-	PERFORMANCE_MARKER
 	INT32		iTotalCoverPoints=0;
 	INT8		bNumEnemies=0;
 	INT8		bPercentCoverForGridno=0;
@@ -438,7 +433,7 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 	UINT16	usMaxRange;
 	UINT16	usRange;
 
-	//loop through all the enemies and determine the cover 
+	//loop through all the enemies and determine the cover
 	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
 	{
 		pOpponent = MercSlots[ uiLoop ];
@@ -459,9 +454,9 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 		pbPublOL = gbPublicOpplist[ OUR_TEAM ] + pOpponent->ubID;
 
 		// if this opponent is unknown personally and publicly
-		if( *pbPersOL != SEEN_CURRENTLY && 
-				*pbPersOL != SEEN_THIS_TURN && 
-				*pbPublOL != SEEN_CURRENTLY && 
+		if( *pbPersOL != SEEN_CURRENTLY &&
+				*pbPersOL != SEEN_THIS_TURN &&
+				*pbPublOL != SEEN_CURRENTLY &&
 				*pbPublOL != SEEN_THIS_TURN )
 		{
 			continue;			// next merc
@@ -524,7 +519,6 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 
 void AddCoverObjectToWorld( INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
 
 	if( fRoof )
@@ -534,7 +528,7 @@ void AddCoverObjectToWorld( INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof )
 	}
 	else
 	{
-		AddObjectToHead( sGridNo, usGraphic ); 
+		AddObjectToHead( sGridNo, usGraphic );
 		pNode = gpWorldLevelData[ sGridNo ].pObjectHead;
 	}
 
@@ -550,20 +544,18 @@ void AddCoverObjectToWorld( INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof )
 
 void RemoveCoverObjectFromWorld( INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof )
 {
-	PERFORMANCE_MARKER
 	if( fRoof )
 	{
 		RemoveOnRoof( sGridNo, usGraphic );
 	}
 	else
 	{
-		RemoveObject( sGridNo, usGraphic ); 
+		RemoveObject( sGridNo, usGraphic );
 	}
 }
 
 SOLDIERTYPE *GetCurrentMercForDisplayCover()
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier=NULL;
 	//Get a soldier that is on the player team
 	if( gusSelectedSoldier != NOBODY )
@@ -579,7 +571,6 @@ SOLDIERTYPE *GetCurrentMercForDisplayCover()
 
 INT8 GetCurrentMercForDisplayCoverStance()
 {
-	PERFORMANCE_MARKER
 	INT8	bStance;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -615,7 +606,6 @@ INT8 GetCurrentMercForDisplayCoverStance()
 
 void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 {
-	PERFORMANCE_MARKER
 	UINT16 usRange=0;
 	CHAR16	zOutputString[512];
 
@@ -656,7 +646,7 @@ void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 
 
 	//if the target is out of the mercs gun range or knife
-	if( !InRange( pSoldier, sTargetGridNo ) && 
+	if( !InRange( pSoldier, sTargetGridNo ) &&
 		( Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass == IC_GUN || Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass == IC_THROWING_KNIFE	) )
 	{
 		// Display a warning saying so
@@ -671,7 +661,6 @@ void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 
 void DisplayGridNoVisibleToSoldierGrid( )
 {
-	PERFORMANCE_MARKER
 	INT16 sGridNo;
 //	INT8	bStance;
 
@@ -730,7 +719,6 @@ void DisplayGridNoVisibleToSoldierGrid( )
 
 void CalculateVisibleToSoldierAroundGridno( INT16 sTargetGridNo, INT8 bSearchRange )
 {
-	PERFORMANCE_MARKER
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	SOLDIERTYPE *pSoldier=NULL;
 	INT16	sGridNo;
@@ -767,7 +755,7 @@ void CalculateVisibleToSoldierAroundGridno( INT16 sTargetGridNo, INT8 bSearchRan
 			fRoof = FALSE;
 
 			//record the gridno
-			gVisibleToSoldierStruct[ sCounterX ][ sCounterY ].sGridNo = sGridNo;	
+			gVisibleToSoldierStruct[ sCounterX ][ sCounterY ].sGridNo = sGridNo;
 
 			//if the gridno is NOT on screen
 			if( !GridNoOnScreen( sGridNo ) )
@@ -790,7 +778,7 @@ void CalculateVisibleToSoldierAroundGridno( INT16 sTargetGridNo, INT8 bSearchRan
 				}
 			}
 
-/*			
+/*
 			//if we are to display cover for the roofs, and there is a roof above us
 			if( gsInterfaceLevel == I_ROOF_LEVEL && !FlatRoofAboveGridNo( sGridNo ) )
 			{
@@ -827,7 +815,6 @@ void CalculateVisibleToSoldierAroundGridno( INT16 sTargetGridNo, INT8 bSearchRan
 
 void AddVisibleToSoldierToEachGridNo()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCntX, uiCntY;
 	INT8	bVisibleToSoldier=0;
 	BOOLEAN fRoof;
@@ -882,7 +869,6 @@ void AddVisibleToSoldierToEachGridNo()
 
 void RemoveVisibleGridNoAtSelectedGridNo()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCntX, uiCntY;
 	INT8	bVisibleToSoldier;
 	INT16 sGridNo;
@@ -936,15 +922,14 @@ void RemoveVisibleGridNoAtSelectedGridNo()
 
 	// Re-render the scene!
 	SetRenderFlags( RENDER_FLAG_FULL );
-		
-	gsLastVisibleToSoldierGridNo = NOWHERE;			
+
+	gsLastVisibleToSoldierGridNo = NOWHERE;
 	gsLastSoldierGridNo = NOWHERE;
 }
 
 
 INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fRoof )
 {
-	PERFORMANCE_MARKER
 	INT8	bRetVal=0;
 	INT32 iLosForGridNo=0;
 	UINT16	usSightLimit=0;
@@ -1009,7 +994,6 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOL
 
 BOOLEAN IsTheRoofVisible( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubRoom;
 
 	if( InARoom( sGridNo, &ubRoom ) )
@@ -1034,7 +1018,6 @@ BOOLEAN IsTheRoofVisible( INT16 sGridNo )
 /*
 void DisplayLosAndDisplayCoverUsageScreenMsg()
 {
-	PERFORMANCE_MARKER
 	CHAR16	zString[512];
 
 	swprintf( zString, L"Display Cover: %d", gJa25SaveStruct.uiDisplayCoverCounter );
@@ -1051,7 +1034,6 @@ void DisplayLosAndDisplayCoverUsageScreenMsg()
 
 void ChangeSizeOfDisplayCover( INT32 iNewSize )
 {
-	PERFORMANCE_MARKER
 	//if the new size is smaller or greater, scale it
 	if( iNewSize < DC__MIN_SIZE )
 	{
@@ -1072,7 +1054,6 @@ void ChangeSizeOfDisplayCover( INT32 iNewSize )
 
 void ChangeSizeOfLOS( INT32 iNewSize )
 {
-	PERFORMANCE_MARKER
 	//if the new size is smaller or greater, scale it
 	if( iNewSize < DC__MIN_SIZE )
 	{

@@ -115,7 +115,7 @@ BOOLEAN CheckCharacterInputForEgg( void );
 
 // mouse region callbacks
 void SelectFullNameRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void SelectNickNameRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason ); 
+void SelectNickNameRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 void SelectMaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 void SelectFemaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 void MvtOnMaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
@@ -126,13 +126,12 @@ void MvtOnFemaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 void EnterIMPBeginScreen( void )
 {
-	PERFORMANCE_MARKER
 
 	// reset all variables
-	
+
 	memset( pFullNameString, 0, sizeof( pFullNameString ) );
 	memset( pNickNameString, 0, sizeof( pNickNameString ) );
-	
+
 	// if we are not restarting...then copy over name, set cursor and array positions
 	if( iCurrentProfileMode != IMP__REGISTRY )
 	{
@@ -142,10 +141,10 @@ void EnterIMPBeginScreen( void )
 	uiNickNameCharacterPosition = wcslen( pNickNameString );
 	uiFullNameCursorPosition = 196 + LAPTOP_SCREEN_UL_X + StringPixLength( pFullNameString, FONT14ARIAL );
 	uiNickNameCursorPosition = 196 + LAPTOP_SCREEN_UL_X + StringPixLength( pNickNameString, FONT14ARIAL );
-	
+
 		// set gender too
 		bGenderFlag = fCharacterIsMale;
-	
+
 	}
 	else
 	{
@@ -157,14 +156,14 @@ void EnterIMPBeginScreen( void )
 	}
 
 
-	
-	
+
+
 	ubTextEnterMode =0;
 
 	// draw name if any
 	fNewCharInString = TRUE;
-	
-	
+
+
 	// render the screen on entry
 	RenderIMPBeginScreen( );
 
@@ -188,12 +187,11 @@ void EnterIMPBeginScreen( void )
 
 void RenderIMPBeginScreen( void )
 {
-	PERFORMANCE_MARKER
 	// the background
 	RenderProfileBackGround( );
 
-	// fourth button image 3X	
-	RenderButton4Image( 64, 118 );	
+	// fourth button image 3X
+	RenderButton4Image( 64, 118 );
 	RenderButton4Image( 64, 178 );
 	RenderButton4Image( 64, 238 );
 
@@ -210,10 +208,10 @@ void RenderIMPBeginScreen( void )
 	// gender indents
 	RenderGenderIndent( 192, 252 );
 	RenderGenderIndent( 302, 252 );
-	
+
 	// render warning string
 	Print8CharacterOnlyString( );
-	
+
 
 
 	// display player name
@@ -221,17 +219,16 @@ void RenderIMPBeginScreen( void )
 	DisplayPlayerNickNameString( );
 	RenderMaleGenderIcon( );
 	RenderFemaleGenderIcon( );
-		
+
 	// the gender itself
 	RenderGender( );
-	
+
 	return;
 }
 
 void ExitIMPBeginScreen( void )
 {
-	PERFORMANCE_MARKER
-	
+
 	// remove buttons
 	RemoveIMPBeginScreenButtons( );
 
@@ -239,7 +236,7 @@ void ExitIMPBeginScreen( void )
 	DestroyIMPBeginScreenMouseRegions( );
 
 	wcscpy( pFullName, pFullNameString );
-	
+
 	// is nick name too long?..shorten
 	if( wcslen( pNickNameString ) > 8 )
 	{
@@ -249,7 +246,7 @@ void ExitIMPBeginScreen( void )
 
 
 	wcscpy( pNickName, pNickNameString );
-	
+
 	// set gender
 	fCharacterIsMale = bGenderFlag;
 
@@ -259,12 +256,11 @@ void ExitIMPBeginScreen( void )
 
 void HandleIMPBeginScreen( void )
 {
-	PERFORMANCE_MARKER
 
 	GetPlayerKeyBoardInputForIMPBeginScreen( );
 
 		// has a new char been added to activation string
-	
+
 
 
 	// render the cursor
@@ -280,18 +276,18 @@ void HandleIMPBeginScreen( void )
 		DisplayMaleGlowCursor( );
 		break;
 		case( FEMALE_GENDER_SELECT ):
-		DisplayFemaleGlowCursor( ); 
+		DisplayFemaleGlowCursor( );
 		break;
 	}
-	
+
 	if( fNewCharInString )
-	{	
-		// display strings 
-	DisplayPlayerFullNameString( );				
+	{
+		// display strings
+	DisplayPlayerFullNameString( );
 	DisplayPlayerNickNameString( );
 		RenderMaleGenderIcon( );
 		RenderFemaleGenderIcon( );
-		
+
 		// the gender itself
 	RenderGender( );
 	}
@@ -302,7 +298,6 @@ void HandleIMPBeginScreen( void )
 
 void CreateIMPBeginScreenButtons( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will create the buttons needed for the IMP BeginScreen
 
 	// ths done button
@@ -312,10 +307,10 @@ void CreateIMPBeginScreenButtons( void )
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPBeginScreenDoneCallback);
 	*/
 
-	giIMPBeginScreenButton[0] = CreateIconAndTextButton( giIMPBeginScreenButtonImage[ 0 ], pImpButtonText[ 6 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPBeginScreenButton[0] = CreateIconAndTextButton( giIMPBeginScreenButtonImage[ 0 ], pImpButtonText[ 6 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X +	( 134 ), LAPTOP_SCREEN_WEB_UL_Y + ( 314 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPBeginScreenDoneCallback);
 
@@ -328,13 +323,12 @@ void CreateIMPBeginScreenButtons( void )
 
 void RemoveIMPBeginScreenButtons( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will destroy the already created buttosn for the IMP BeginScreen
 
 	// the done button
 	RemoveButton(giIMPBeginScreenButton[0] );
 	UnloadButtonImage(giIMPBeginScreenButtonImage[0] );
-	
+
 	return;
 }
 
@@ -342,7 +336,6 @@ void RemoveIMPBeginScreenButtons( void )
 
 void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// easter egg check
 	BOOLEAN fEggOnYouFace = FALSE;
@@ -441,8 +434,8 @@ void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn,INT32 reason)
 				}
 			}
 		}
-	}	
-} 
+	}
+}
 
 
 
@@ -452,22 +445,21 @@ void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn,INT32 reason)
 
 void GetPlayerKeyBoardInputForIMPBeginScreen( void )
 {
-	PERFORMANCE_MARKER
 	InputAtom					InputEvent;
 	POINT	MousePos;
 
 	// get the current curosr position, might just need it.
-	GetCursorPos(&MousePos);	
+	GetCursorPos(&MousePos);
 	ScreenToClient(ghWindow, &MousePos); // In window coords!
-	
+
 	// handle input events
 	while( DequeueEvent(&InputEvent) )
-	{ 
+	{
 	/*
 		// HOOK INTO MOUSE HOOKS
 	switch(InputEvent.usEvent)
 		{
-		
+
 		case LEFT_BUTTON_DOWN:
 			MouseSystemHook(LEFT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 		break;
@@ -477,7 +469,7 @@ void GetPlayerKeyBoardInputForIMPBeginScreen( void )
 		case RIGHT_BUTTON_DOWN:
 			MouseSystemHook(RIGHT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 		break;
-		case RIGHT_BUTTON_UP: 
+		case RIGHT_BUTTON_UP:
 			MouseSystemHook(RIGHT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 		break;
 		}
@@ -544,33 +536,32 @@ void GetPlayerKeyBoardInputForIMPBeginScreen( void )
 
 void HandleBeginScreenTextEvent( UINT32 uiKey )
 {
-	PERFORMANCE_MARKER
 	// this function checks to see if a letter or a backspace was pressed, if so, either put char to screen
 	// or delete it
 
 	switch( uiKey )
 	{
-	case ( BACKSPACE ): 
-		
+	case ( BACKSPACE ):
+
 			switch( ubTextEnterMode )
 			{
 			case( FULL_NAME_MODE ):
 			 if( uiFullNameCharacterPosition >= 0 )
 					{
-			
-						 
+
+
 						// decrement StringPosition
 				 if( uiFullNameCharacterPosition > 0)
 						{
 						uiFullNameCharacterPosition-=1;
 			}
-						
 
-						
+
+
 
 				 // null out char
 			pFullNameString[uiFullNameCharacterPosition] = 0;
-		
+
 				// move cursor back by sizeof char
 						uiFullNameCursorPosition = 196 + LAPTOP_SCREEN_UL_X + StringPixLength( pFullNameString, FONT14ARIAL );
 
@@ -582,32 +573,32 @@ void HandleBeginScreenTextEvent( UINT32 uiKey )
 			 if( uiNickNameCharacterPosition >= 0 )
 					{
 
-					
+
 			// decrement StringPosition
 						if( uiNickNameCharacterPosition > 0 )
 					uiNickNameCharacterPosition-=1;
-	
+
 				 // null out char
 			pNickNameString[uiNickNameCharacterPosition] = 0;
-		
+
 				// move cursor back by sizeof char
 						uiNickNameCursorPosition = 196 + LAPTOP_SCREEN_UL_X + StringPixLength( pNickNameString, FONT14ARIAL );
-			
+
 				 // string has been altered, redisplay
 			fNewCharInString = TRUE;
 					}
-				
+
 			break;
 			}
 		break;
 
 	default:
-	 if( uiKey >= 'A' && uiKey <= 'Z' || 
+	 if( uiKey >= 'A' && uiKey <= 'Z' ||
 					uiKey >= 'a' && uiKey <= 'z' ||
 					uiKey >= '0' && uiKey <= '9' ||
 					uiKey == '_' || uiKey == '.' ||
 					uiKey == ' ' )
-			{ 
+			{
 				// if the current string position is at max or great, do nothing
 			switch( ubTextEnterMode )
 					{
@@ -631,17 +622,17 @@ void HandleBeginScreenTextEvent( UINT32 uiKey )
 								}
 				 // valid char, capture and convert to CHAR16
 				 pFullNameString[uiFullNameCharacterPosition] = ( CHAR16 )uiKey;
-					
+
 
 						// null out next char position
 						pFullNameString[uiFullNameCharacterPosition + 1] = 0;
-			
+
 						// move cursor position ahead
 				 uiFullNameCursorPosition = 196 + LAPTOP_SCREEN_UL_X + StringPixLength( pFullNameString, FONT14ARIAL );
-			
+
 						// increment string position
 						uiFullNameCharacterPosition +=1;
-				
+
 						// string has been altered, redisplay
 				 fNewCharInString = TRUE;
 							}
@@ -668,25 +659,25 @@ void HandleBeginScreenTextEvent( UINT32 uiKey )
 
 				 // valid char, capture and convert to CHAR16
 				 pNickNameString[uiNickNameCharacterPosition] = ( CHAR16 )uiKey;
-					
+
 						// null out next char position
 						pNickNameString[uiNickNameCharacterPosition + 1] = 0;
-			
+
 						// move cursor position ahead
 				 uiNickNameCursorPosition = 196 + LAPTOP_SCREEN_UL_X + StringPixLength( pNickNameString, FONT14ARIAL );
-			
+
 						// increment string position
 						uiNickNameCharacterPosition +=1;
-				
+
 						// string has been altered, redisplay
 				 fNewCharInString = TRUE;
 							}
-				
+
 				break;
 					}
 			}
 		break;
-	}			
+	}
 	return;
 }
 
@@ -694,7 +685,6 @@ void HandleBeginScreenTextEvent( UINT32 uiKey )
 
 void DisplayFullNameStringCursor( void )
 {
-	PERFORMANCE_MARKER
 	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
 	UINT32 uiDestPitchBYTES;
 	static UINT32 uiBaseTime = 0;
@@ -707,7 +697,7 @@ void DisplayFullNameStringCursor( void )
 	{
 		uiBaseTime = GetJA2Clock();
 	}
-	
+
 	// get difference
 	uiDeltaTime = GetJA2Clock() - uiBaseTime;
 
@@ -739,15 +729,15 @@ void DisplayFullNameStringCursor( void )
 	}
 
 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 
 	// draw line in current state
-	LineDraw(TRUE, (UINT16) uiFullNameCursorPosition, FULL_NAME_CURSOR_Y - 3, (UINT16)uiFullNameCursorPosition, FULL_NAME_CURSOR_Y + CURSOR_HEIGHT - 2, Get16BPPColor( FROMRGB( GlowColorsList[ iCurrentState ][ 0 ], GlowColorsList[ iCurrentState ][ 1 ], GlowColorsList[ iCurrentState ][ 2 ] ) ), 
+	LineDraw(TRUE, (UINT16) uiFullNameCursorPosition, FULL_NAME_CURSOR_Y - 3, (UINT16)uiFullNameCursorPosition, FULL_NAME_CURSOR_Y + CURSOR_HEIGHT - 2, Get16BPPColor( FROMRGB( GlowColorsList[ iCurrentState ][ 0 ], GlowColorsList[ iCurrentState ][ 1 ], GlowColorsList[ iCurrentState ][ 2 ] ) ),
 			pDestBuf);
-	
+
 	InvalidateRegion((UINT16) uiFullNameCursorPosition, FULL_NAME_CURSOR_Y - 3 , (UINT16)uiFullNameCursorPosition + 1, FULL_NAME_CURSOR_Y + CURSOR_HEIGHT + 1 - 2);
- 
+
 	// unlock frame buffer
 	UnLockVideoSurface( FRAME_BUFFER );
 	return;
@@ -756,7 +746,6 @@ void DisplayFullNameStringCursor( void )
 
 void DisplayNickNameStringCursor( void )
 {
-	PERFORMANCE_MARKER
 	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
 	UINT32 uiDestPitchBYTES;
 	static UINT32 uiBaseTime = 0;
@@ -769,7 +758,7 @@ void DisplayNickNameStringCursor( void )
 	{
 		uiBaseTime = GetJA2Clock();
 	}
-	
+
 	// get difference
 	uiDeltaTime = GetJA2Clock() - uiBaseTime;
 
@@ -801,15 +790,15 @@ void DisplayNickNameStringCursor( void )
 	}
 
 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 
 	// draw line in current state
-	LineDraw(TRUE, (UINT16) uiNickNameCursorPosition, NICK_NAME_CURSOR_Y, (UINT16)uiNickNameCursorPosition, NICK_NAME_CURSOR_Y + CURSOR_HEIGHT, Get16BPPColor( FROMRGB( GlowColorsList[ iCurrentState ][ 0 ], GlowColorsList[ iCurrentState ][ 1 ], GlowColorsList[ iCurrentState ][ 2 ] ) ), 
+	LineDraw(TRUE, (UINT16) uiNickNameCursorPosition, NICK_NAME_CURSOR_Y, (UINT16)uiNickNameCursorPosition, NICK_NAME_CURSOR_Y + CURSOR_HEIGHT, Get16BPPColor( FROMRGB( GlowColorsList[ iCurrentState ][ 0 ], GlowColorsList[ iCurrentState ][ 1 ], GlowColorsList[ iCurrentState ][ 2 ] ) ),
 			pDestBuf );
-	
+
 	InvalidateRegion((UINT16) uiNickNameCursorPosition, NICK_NAME_CURSOR_Y, (UINT16)uiNickNameCursorPosition + 1, NICK_NAME_CURSOR_Y + CURSOR_HEIGHT + 1);
- 
+
 	// unlock frame buffer
 	UnLockVideoSurface( FRAME_BUFFER );
 	return;
@@ -818,7 +807,6 @@ void DisplayNickNameStringCursor( void )
 
 void DisplayPlayerFullNameString( void )
 {
-	PERFORMANCE_MARKER
 
 	// this function will grab the string that the player will enter for activation
 
@@ -838,10 +826,10 @@ void DisplayPlayerFullNameString( void )
 
 
 	// reset shadow
-	SetFontShadow(DEFAULT_SHADOW);	
-	mprintf(LAPTOP_SCREEN_UL_X + 196, FULL_NAME_CURSOR_Y + 1, pFullNameString); 
-	
-	
+	SetFontShadow(DEFAULT_SHADOW);
+	mprintf(LAPTOP_SCREEN_UL_X + 196, FULL_NAME_CURSOR_Y + 1, pFullNameString);
+
+
 	fNewCharInString = FALSE;
 	fReDrawScreenFlag = TRUE;
 	return;
@@ -850,7 +838,6 @@ void DisplayPlayerFullNameString( void )
 
 void DisplayPlayerNickNameString( void )
 {
-	PERFORMANCE_MARKER
 
 	// this function will grab the string that the player will enter for activation
 
@@ -870,10 +857,10 @@ void DisplayPlayerNickNameString( void )
 
 
 	// reset shadow
-	SetFontShadow(DEFAULT_SHADOW);	
-	mprintf( LAPTOP_SCREEN_UL_X + 196, NICK_NAME_CURSOR_Y + 4, pNickNameString); 
-	
-	
+	SetFontShadow(DEFAULT_SHADOW);
+	mprintf( LAPTOP_SCREEN_UL_X + 196, NICK_NAME_CURSOR_Y + 4, pNickNameString);
+
+
 	fNewCharInString = FALSE;
 	fReDrawScreenFlag = TRUE;
 	return;
@@ -882,7 +869,6 @@ void DisplayPlayerNickNameString( void )
 
 void DisplayMaleGlowCursor( void )
 {
-	PERFORMANCE_MARKER
 	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
 	UINT32 uiDestPitchBYTES;
 	static UINT32 uiBaseTime = 0;
@@ -895,7 +881,7 @@ void DisplayMaleGlowCursor( void )
 	{
 		uiBaseTime = GetJA2Clock();
 	}
-	
+
 	// get difference
 	uiDeltaTime = GetJA2Clock() - uiBaseTime;
 
@@ -926,15 +912,15 @@ void DisplayMaleGlowCursor( void )
 		uiBaseTime = GetJA2Clock( );
 	}
 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 
 	// draw rectangle
 	RectangleDraw( TRUE, MALE_BOX_X, MALE_BOX_Y, MALE_BOX_X + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, Get16BPPColor( FROMRGB( GlowColorsList[ iCurrentState ][ 0 ], GlowColorsList[ iCurrentState ][ 1 ], GlowColorsList[ iCurrentState ][ 2 ] ) ),	pDestBuf );
-	
-	
+
+
 	InvalidateRegion((UINT16) MALE_BOX_X, MALE_BOX_Y,	MALE_BOX_X + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
- 
+
 	// unlock frame buffer
 	UnLockVideoSurface( FRAME_BUFFER );
 	return;
@@ -944,7 +930,6 @@ void DisplayMaleGlowCursor( void )
 
 void DisplayFemaleGlowCursor( void )
 {
-	PERFORMANCE_MARKER
 	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
 	UINT32 uiDestPitchBYTES;
 	static UINT32 uiBaseTime = 0;
@@ -957,7 +942,7 @@ void DisplayFemaleGlowCursor( void )
 	{
 		uiBaseTime = GetJA2Clock();
 	}
-	
+
 	// get difference
 	uiDeltaTime = GetJA2Clock() - uiBaseTime;
 
@@ -988,15 +973,15 @@ void DisplayFemaleGlowCursor( void )
 		uiBaseTime = GetJA2Clock( );
 	}
 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 
 	// draw rectangle
 	RectangleDraw( TRUE, FEMALE_BOX_X, MALE_BOX_Y, FEMALE_BOX_X + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, Get16BPPColor( FROMRGB( GlowColorsList[ iCurrentState ][ 0 ], GlowColorsList[ iCurrentState ][ 1 ], GlowColorsList[ iCurrentState ][ 2 ] ) ),	pDestBuf );
-	
-	
+
+
 	InvalidateRegion((UINT16) FEMALE_BOX_X, MALE_BOX_Y,	FEMALE_BOX_X + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
- 
+
 	// unlock frame buffer
 	UnLockVideoSurface( FRAME_BUFFER );
 	return;
@@ -1005,7 +990,6 @@ void DisplayFemaleGlowCursor( void )
 
 void CopyFirstNameIntoNickName( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will copy the characters first name in to the nickname for the character
 	UINT32 iCounter=0;
 	while( ( pFullNameString[ iCounter ] != L' ' ) && ( iCounter < 20) && ( pFullNameString[ iCounter ] != 0 ) )
@@ -1021,9 +1005,8 @@ void CopyFirstNameIntoNickName( void )
 
 void IncrementTextEnterMode( void )
 {
-	PERFORMANCE_MARKER
 	// this function will incrment which text enter mode we are in, FULLname, NICKname, IMP_MALE or IMP_FEMALE
-	
+
 	// if at IMP_FEMALE gender selection, reset to full name
 	if( FEMALE_GENDER_SELECT	== ubTextEnterMode)
 	{
@@ -1039,9 +1022,8 @@ void IncrementTextEnterMode( void )
 
 void DecrementTextEnterMode( void )
 {
-	PERFORMANCE_MARKER
 	// this function will incrment which text enter mode we are in, FULLname, NICKname, IMP_MALE or IMP_FEMALE
-	
+
 	// if at IMP_FEMALE gender selection, reset to full name
 	if(	FULL_NAME_MODE == ubTextEnterMode)
 	{
@@ -1057,9 +1039,8 @@ void DecrementTextEnterMode( void )
 
 void RenderMaleGenderIcon( void )
 {
-	PERFORMANCE_MARKER
 	// this function displays a filled box in the IMP_MALE gender box if IMP_MALE has been selected
-	
+
 	// re render indent
 	RenderGenderIndent( 192, 252 );
 
@@ -1074,12 +1055,11 @@ void RenderMaleGenderIcon( void )
 
 void RenderFemaleGenderIcon( void )
 {
-	PERFORMANCE_MARKER
 	// this function displays a filled box in the IMP_MALE gender box if IMP_MALE has been selected
-	
+
 	// re render indent
 	RenderGenderIndent( 302, 252 );
-	
+
 	// IMP_FEMALE selected draw box
 	if( bGenderFlag == IMP_FEMALE )
 	{
@@ -1094,28 +1074,27 @@ void RenderFemaleGenderIcon( void )
 
 void CreateIMPBeginScreenMouseRegions( void )
 {
-	PERFORMANCE_MARKER
 	// this function creates the IMP mouse regions
-	
+
 	// are we only reviewing text?.. if so, do not create regions
 	if( ubTextEnterMode == 5 )
 		return;
 
 	// full name region
-	MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 0 ] , LAPTOP_SCREEN_UL_X + 196, LAPTOP_SCREEN_WEB_UL_Y + 135,	LAPTOP_SCREEN_UL_X + 196 + FULL_NAME_REGION_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + 135 + 24, MSYS_PRIORITY_HIGH, CURSOR_WWW, 
+	MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 0 ] , LAPTOP_SCREEN_UL_X + 196, LAPTOP_SCREEN_WEB_UL_Y + 135,	LAPTOP_SCREEN_UL_X + 196 + FULL_NAME_REGION_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + 135 + 24, MSYS_PRIORITY_HIGH, CURSOR_WWW,
 		MSYS_NO_CALLBACK, (MOUSE_CALLBACK)SelectFullNameRegionCallBack );
-	
+
 
 	// nick name region
-	MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 1 ] , LAPTOP_SCREEN_UL_X + 196, LAPTOP_SCREEN_WEB_UL_Y + 195,	LAPTOP_SCREEN_UL_X + 196 + NICK_NAME_REGION_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + 195 + 24, MSYS_PRIORITY_HIGH, CURSOR_WWW, 
+	MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 1 ] , LAPTOP_SCREEN_UL_X + 196, LAPTOP_SCREEN_WEB_UL_Y + 195,	LAPTOP_SCREEN_UL_X + 196 + NICK_NAME_REGION_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + 195 + 24, MSYS_PRIORITY_HIGH, CURSOR_WWW,
 		MSYS_NO_CALLBACK, (MOUSE_CALLBACK)SelectNickNameRegionCallBack );
 
 	// IMP_MALE gender area
-	MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 2 ] , MALE_BOX_X, MALE_BOX_Y,	MALE_BOX_X + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_WWW, 
+	MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 2 ] , MALE_BOX_X, MALE_BOX_Y,	MALE_BOX_X + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_WWW,
 		(MOUSE_CALLBACK)MvtOnMaleRegionCallBack, (MOUSE_CALLBACK)SelectMaleRegionCallBack );
 
 	// IMP_FEMALE gender region
-	MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 3 ] , FEMALE_BOX_X, MALE_BOX_Y,	FEMALE_BOX_X + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_WWW, 
+	MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 3 ] , FEMALE_BOX_X, MALE_BOX_Y,	FEMALE_BOX_X + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_WWW,
 		(MOUSE_CALLBACK)MvtOnFemaleRegionCallBack, (MOUSE_CALLBACK)SelectFemaleRegionCallBack );
 
 
@@ -1130,7 +1109,6 @@ void CreateIMPBeginScreenMouseRegions( void )
 
 void DestroyIMPBeginScreenMouseRegions( void )
 {
-	PERFORMANCE_MARKER
 	// this function destroys the IMP mouse regions
 
 	// are we only reviewing text?.. if so, do not remove regions
@@ -1142,7 +1120,7 @@ void DestroyIMPBeginScreenMouseRegions( void )
 	MSYS_RemoveRegion(&gIMPBeginScreenMouseRegions[ 1 ]);
 	MSYS_RemoveRegion(&gIMPBeginScreenMouseRegions[ 2 ]);
 	MSYS_RemoveRegion(&gIMPBeginScreenMouseRegions[ 3 ]);
- 
+
 
 	return;
 }
@@ -1150,7 +1128,6 @@ void DestroyIMPBeginScreenMouseRegions( void )
 
 void SelectFullNameRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -1164,13 +1141,12 @@ void SelectFullNameRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 
 void SelectNickNameRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -1184,12 +1160,11 @@ void SelectNickNameRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 void SelectMaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -1203,13 +1178,12 @@ void SelectMaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 
 void SelectFemaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -1223,13 +1197,12 @@ void SelectFemaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 
 void MvtOnFemaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if ( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		//fNewCharInString = TRUE;
@@ -1244,9 +1217,8 @@ void MvtOnFemaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void MvtOnMaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if ( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{	
+	{
 		//fNewCharInString = TRUE;
 	}
 	else if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
@@ -1258,7 +1230,6 @@ void MvtOnMaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void RenderGender( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will render the gender of the character int he appropriate box
 
 	// check to see if gender has been in fact set
@@ -1284,24 +1255,22 @@ void RenderGender( void )
 
 void Print8CharacterOnlyString( void )
 {
-	PERFORMANCE_MARKER
 
 	SetFontBackground( FONT_BLACK );
 	SetFontForeground( FONT_BLACK );
 	SetFont( FONT12ARIAL );
-	SetFontShadow(NO_SHADOW);	
+	SetFontShadow(NO_SHADOW);
 
 	mprintf(iScreenWidthOffset + 430, iScreenHeightOffset + LAPTOP_SCREEN_WEB_DELTA_Y + 228,pIMPBeginScreenStrings[ 0 ]);
 
 	// reset shadow
-	SetFontShadow(DEFAULT_SHADOW);	
+	SetFontShadow(DEFAULT_SHADOW);
 
 
 }
 
 BOOLEAN CheckCharacterInputForEgg( void )
 {
-	PERFORMANCE_MARKER
 #ifndef JA2BETAVERSION
 	return( FALSE );
 #else
@@ -1394,15 +1363,15 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iDexterity = 90;
 		iWisdom = 70;
 		iLeadership = 35;
-	
+
 		iMarksmanship = 70;
 	iMechanical = 65;
 		iExplosives = 99;
 		iMedical = 75;
-		
+
 		iSkillA = STEALTHY;
 		iSkillB = MARTIALARTS;
-	
+
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_AGGRESSIVE;
 		iCurrentImpPage = IMP_FINISH;
@@ -1422,15 +1391,15 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iDexterity = 80;
 		iWisdom = 99;
 		iLeadership = 99;
-	
+
 		iMarksmanship = 99;
 	iMechanical = 0;
 		iExplosives = 0;
 		iMedical = 99;
-		
+
 		iSkillA = AUTO_WEAPS;
 		iSkillB = AMBIDEXT;
-	
+
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_ARROGANT;
 		iCurrentImpPage = IMP_FINISH;
@@ -1450,15 +1419,15 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iDexterity = 99;
 		iWisdom = 70;
 		iLeadership = 80;
-	
+
 		iMarksmanship = 99;
 	iMechanical = 35;
 		iExplosives = 99;
 		iMedical = 35;
-		
+
 		iSkillA = AUTO_WEAPS;
 		iSkillB = MARTIALARTS;
-	
+
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_AGGRESSIVE;
 		iCurrentImpPage = IMP_FINISH;
@@ -1478,15 +1447,15 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iDexterity = 99;
 		iWisdom = 99;
 		iLeadership = 70;
-	
+
 		iMarksmanship = 99;
 	iMechanical = 50;
 		iExplosives = 99;
 		iMedical = 0;
-		
+
 		iSkillA = AUTO_WEAPS;
 		iSkillB = MARTIALARTS;
-	
+
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_LONER;
 		iCurrentImpPage = IMP_FINISH;
@@ -1560,15 +1529,15 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iDexterity = 99;
 		iWisdom = 70;
 		iLeadership = 70;
-	
+
 		iMarksmanship = 99;
 	iMechanical = 99;
 		iExplosives = 99;
 		iMedical = 60;
-		
+
 		iSkillA = ELECTRONICS;
 		iSkillB = LOCKPICKING;
-	
+
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_LONER;
 		iCurrentImpPage = IMP_FINISH;
@@ -1590,15 +1559,15 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iDexterity = 55;
 		iWisdom = 55;
 		iLeadership = 55;
-	
+
 		iMarksmanship = 55;
 	iMechanical = 55;
 		iExplosives = 55;
 		iMedical = 55;
-		
+
 		iSkillA = 0;
 		iSkillB = 0;
-	
+
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_LONER;
 		iCurrentImpPage = IMP_FINISH;

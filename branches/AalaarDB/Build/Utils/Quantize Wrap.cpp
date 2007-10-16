@@ -20,7 +20,6 @@ typedef struct
 
 BOOLEAN	QuantizeImage( UINT8 *pDest, UINT8 *pSrc, INT16 sWidth, INT16 sHeight, SGPPaletteEntry *pPalette )
 {
-	PERFORMANCE_MARKER
 	INT16		sNumColors;
 
 	// FIRST CREATE PALETTE
@@ -44,7 +43,6 @@ BOOLEAN	QuantizeImage( UINT8 *pDest, UINT8 *pSrc, INT16 sWidth, INT16 sHeight, S
 
 void MapPalette( UINT8 *pDest, UINT8 *pSrc, INT16 sWidth, INT16 sHeight, INT16 sNumColors, SGPPaletteEntry *pTable )
 {
-	PERFORMANCE_MARKER
 	INT32 cX, cY, cnt, bBest;
 	real					dLowestDist;
 	real					dCubeDist;
@@ -83,7 +81,7 @@ void MapPalette( UINT8 *pDest, UINT8 *pSrc, INT16 sWidth, INT16 sHeight, INT16 s
 					{
 						dLowestDist = dCubeDist;
 						bBest = cnt;
-					}					
+					}
 				}
 
 				// Now we have the lowest value

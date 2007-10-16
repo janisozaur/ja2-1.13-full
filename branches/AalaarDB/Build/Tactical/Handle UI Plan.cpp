@@ -26,7 +26,6 @@ void SelectPausedFireAnimation( SOLDIERTYPE *pSoldier );
 
 BOOLEAN BeginUIPlan( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	gubNumUIPlannedMoves = 0;
 	gpUIPlannedSoldier				= pSoldier;
 	gpUIStartPlannedSoldier		= pSoldier;
@@ -41,7 +40,6 @@ BOOLEAN BeginUIPlan( SOLDIERTYPE *pSoldier )
 
 BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pPlanSoldier;
 	INT16							sXPos, sYPos;
 	INT16							sAPCost = 0;
@@ -51,7 +49,7 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 	UINT8							ubNewIndex;
 
 	// Depeding on stance and direction facing, add guy!
-	
+
 	// If we have a planned action here, ignore!
 
 
@@ -83,7 +81,7 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 
 			// Get Grid Corrdinates of mouse
 			if ( TacticalCreateSoldier( &MercCreateStruct, &ubNewIndex ) )
-			{			
+			{
 				// Get pointer to soldier
 				GetSoldier( &pPlanSoldier, (UINT16)ubNewIndex );
 
@@ -121,8 +119,8 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 				pPlanSoldier->pathing.bDesiredDirection = bDirection;
 
 				// Set walking animation
-				pPlanSoldier->ChangeSoldierState( pPlanSoldier->usUIMovementMode, 0, FALSE );	
-				
+				pPlanSoldier->ChangeSoldierState( pPlanSoldier->usUIMovementMode, 0, FALSE );
+
 				// Change selected soldier
 				gusSelectedSoldier = (UINT16)pPlanSoldier->ubID;
 
@@ -165,7 +163,7 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 
 				// Get Grid Corrdinates of mouse
 				if ( TacticalCreateSoldier( &MercCreateStruct, &ubNewIndex ) )
-				{			
+				{
 					// Get pointer to soldier
 					GetSoldier( &pPlanSoldier, (UINT16)ubNewIndex );
 
@@ -200,8 +198,8 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 					pPlanSoldier->pathing.bDesiredDirection = bDirection;
 
 					// Set walking animation
-					pPlanSoldier->ChangeSoldierState( pPlanSoldier->usUIMovementMode, 0, FALSE );	
-					
+					pPlanSoldier->ChangeSoldierState( pPlanSoldier->usUIMovementMode, 0, FALSE );
+
 					// Change selected soldier
 					gusSelectedSoldier = (UINT16)pPlanSoldier->ubID;
 
@@ -245,7 +243,6 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 
 void EndUIPlan(	)
 {
-	PERFORMANCE_MARKER
 	int				cnt;
 	SOLDIERTYPE *pSoldier;
 
@@ -276,14 +273,12 @@ void EndUIPlan(	)
 
 BOOLEAN InUIPlanMode( )
 {
-	PERFORMANCE_MARKER
 	return( gfInUIPlanMode );
 }
 
 
 void SelectPausedFireAnimation( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// Determine which animation to do...depending on stance and gun in hand...
 
 	switch ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )

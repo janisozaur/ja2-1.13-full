@@ -17,16 +17,15 @@ struct
 
 	UINT16			curCompatibleFaceItem[2];
 	UINT32			maxArraySize;
-	UINT32			curIndex;	
+	UINT32			curIndex;
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
 typedef compatiblefaceitemParseData;
 
-static void XMLCALL 
+static void XMLCALL
 compatiblefaceitemStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	compatiblefaceitemParseData * pData = (compatiblefaceitemParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -67,10 +66,9 @@ compatiblefaceitemStartElementHandle(void *userData, const XML_Char *name, const
 static void XMLCALL
 compatiblefaceitemCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	compatiblefaceitemParseData * pData = (compatiblefaceitemParseData *)userData;
 
-	if( (pData->currentDepth <= pData->maxReadDepth) && 
+	if( (pData->currentDepth <= pData->maxReadDepth) &&
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
 	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
@@ -81,7 +79,6 @@ compatiblefaceitemCharacterDataHandle(void *userData, const XML_Char *str, int l
 static void XMLCALL
 compatiblefaceitemEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	compatiblefaceitemParseData * pData = (compatiblefaceitemParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -123,13 +120,12 @@ compatiblefaceitemEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInCompatibleFaceItemStats(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	compatiblefaceitemParseData pData;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading CompatibleFaceItems.xml" );
@@ -138,7 +134,7 @@ BOOLEAN ReadInCompatibleFaceItemStats(STR fileName)
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -153,15 +149,15 @@ BOOLEAN ReadInCompatibleFaceItemStats(STR fileName)
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, compatiblefaceitemStartElementHandle, compatiblefaceitemEndElementHandle);
 	XML_SetCharacterDataHandler(parser, compatiblefaceitemCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
-	pData.maxArraySize = MAXITEMS; 
+	pData.maxArraySize = MAXITEMS;
 	pData.curIndex = -1;
-	
+
 	XML_SetUserData(parser, &pData);
 
 
@@ -185,7 +181,6 @@ BOOLEAN ReadInCompatibleFaceItemStats(STR fileName)
 }
 BOOLEAN WriteCompatibleFaceItemStats()
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there
@@ -193,7 +188,7 @@ BOOLEAN WriteCompatibleFaceItemStats()
 	hFile = FileOpen( "TABLEDATA\\CompatibleFaceItems out.xml", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	{
 		UINT32 cnt;
 

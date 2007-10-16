@@ -74,7 +74,7 @@ INT32 iCurrentMarkmanship = 0;
 INT32 iCurrentMechanical	= 0;
 INT32 iCurrentMedical	 = 0;
 INT32 iCurrentExplosives	= 0;
- 
+
 // which stat is message about stat at zero about
 INT32 iCurrentStatAtZero = 0;
 
@@ -151,15 +151,14 @@ void StatAtZeroBoxCallBack( UINT8 bExitValue );
 
 void EnterIMPAttributeSelection( void )
 {
-	PERFORMANCE_MARKER
-	
+
 
 	// set attributes and skills
 	if( ( fReturnStatus == FALSE ) && ( fFirstIMPAttribTime == TRUE ) )
 	{
 		// re starting
 	SetAttributes( );
-	
+
 		gpCurrentScrollBox = NULL;
 		giCurrentlySelectedStat = -1;
 
@@ -170,7 +169,7 @@ void EnterIMPAttributeSelection( void )
 		iCurrentBonusPoints+= 10;
 		}
 	if( DoesCharacterHaveAPersoanlity( ) )
-		{	
+		{
 		iCurrentBonusPoints += 10;
 		}
 		*/
@@ -179,7 +178,7 @@ void EnterIMPAttributeSelection( void )
 	fFirstIMPAttribTime = FALSE;
 
 	// create done button
-	CreateIMPAttributeSelectionButtons( ); 
+	CreateIMPAttributeSelectionButtons( );
 	// create clider buttons
 	CreateAttributeSliderButtons( );
 
@@ -189,20 +188,18 @@ void EnterIMPAttributeSelection( void )
 
 	// render background
 	RenderIMPAttributeSelection( );
-	
-	
+
+
 
 	return;
 }
 
 void RenderIMPAlteredAttribute( void )
 {
-	PERFORMANCE_MARKER
 
 }
 void RenderIMPAttributeSelection( void )
 {
-	PERFORMANCE_MARKER
 	// the background
 	RenderProfileBackGround( );
 
@@ -212,9 +209,9 @@ void RenderIMPAttributeSelection( void )
 
 	// render attribute boxes
 	RenderAttributeBoxes( );
-	
+
 	RenderAttrib1IndentFrame(51, 30 );
-	
+
 	if( fReviewStats != TRUE )
 	{
 	RenderAttrib2IndentFrame(350, 42 );
@@ -225,7 +222,7 @@ void RenderIMPAttributeSelection( void )
 
 	// print text for screen
 	PrintImpText( );
-	
+
 	// amt of bonus pts
 	DrawBonusPointsRemaining( );
 
@@ -234,7 +231,6 @@ void RenderIMPAttributeSelection( void )
 
 void ExitIMPAttributeSelection( void )
 {
-	PERFORMANCE_MARKER
 	// get rid of slider buttons
 	DestroyAttributeSliderButtons( );
 
@@ -253,7 +249,6 @@ void ExitIMPAttributeSelection( void )
 
 void HandleIMPAttributeSelection( void )
 {
-	PERFORMANCE_MARKER
 
 	// review mode, do not allow changes
 	if( fReviewStats )
@@ -326,7 +321,7 @@ void HandleIMPAttributeSelection( void )
 
 	// prcoess current state of attributes
 	ProcessAttributes( );
-	
+
 	// has any bar moved?
 	if( fHasAnySlidingBarMoved )
 	{
@@ -337,20 +332,20 @@ void HandleIMPAttributeSelection( void )
 		}
 		else
 		{
-			
+
 			RenderAttributeFrameForIndex( 51, 87, uiBarToReRender );
 			/*
 			// print text for screen
 			PrintImpText( );
-	
+
 			// amt of bonus pts
 			DrawBonusPointsRemaining( );
 
 			RenderAttributeFrame( 51, 87 );
-			
+
 			// render attribute boxes
 			RenderAttributeBoxes( );
-			
+
 			PrintImpText( );
 
 			InvalidateRegion( LAPTOP_SCREEN_UL_X + 51, LAPTOP_SCREEN_WEB_UL_Y + 87, LAPTOP_SCREEN_UL_X + 51 + 400, LAPTOP_SCREEN_WEB_UL_Y + 87 + 220 );
@@ -375,7 +370,6 @@ void HandleIMPAttributeSelection( void )
 
 void ProcessAttributes( void )
 {
-	PERFORMANCE_MARKER
 
 	//Kaiden: Ignore the values in the below comment, this is now controlled by
 	// Values externalized in the Ja2_Options.ini file.
@@ -502,10 +496,9 @@ void ProcessAttributes( void )
 
 UINT8 IncrementStat( INT32 iStatToIncrement )
 {
-	PERFORMANCE_MARKER
 	// this function is responsable for incrementing a stat
 
-	
+
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 	INT32 iMaxAttribute = gGameExternalOptions.iMaxAttribute;
 	INT32 iMaxZeroBonus = gGameExternalOptions.iMaxZeroBonus;
@@ -735,7 +728,6 @@ UINT8 IncrementStat( INT32 iStatToIncrement )
 
 UINT8 DecrementStat( INT32 iStatToDecrement	)
 {
-	PERFORMANCE_MARKER
 
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 	INT32 iMaxZeroBonus = gGameExternalOptions.iMaxZeroBonus;
@@ -888,9 +880,9 @@ UINT8 DecrementStat( INT32 iStatToDecrement	)
 			}
 		break;
 
-		
+
 	}
-	
+
 	if( fSkillAtZeroWarning == TRUE )
 	{
 		// current stat at zero
@@ -902,7 +894,6 @@ UINT8 DecrementStat( INT32 iStatToDecrement	)
 
 BOOLEAN DoWeHaveThisManyBonusPoints( INT32 iBonusPoints )
 {
-	PERFORMANCE_MARKER
 
 	// returns if player has at least this many bonus points
 	if( iCurrentBonusPoints >= iBonusPoints )
@@ -921,7 +912,6 @@ BOOLEAN DoWeHaveThisManyBonusPoints( INT32 iBonusPoints )
 
 void CreateIMPAttributeSelectionButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	// the finished button
 	giIMPAttributeSelectionButtonImage[0]=	LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
@@ -929,24 +919,23 @@ void CreateIMPAttributeSelectionButtons( void )
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAttributeFinishCallback );
 	*/
-	giIMPAttributeSelectionButton[0] = CreateIconAndTextButton( giIMPAttributeSelectionButtonImage[0], pImpButtonText[ 11 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPAttributeSelectionButton[0] = CreateIconAndTextButton( giIMPAttributeSelectionButtonImage[0], pImpButtonText[ 11 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X +	( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 314 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAttributeFinishCallback);
 
-	
-	
+
+
 	SetButtonCursor(giIMPAttributeSelectionButton[0], CURSOR_WWW);
 	return;
 }
 
 void DestroyIMPAttributeSelectionButtons( void )
 {
-	PERFORMANCE_MARKER
 	// this function will destroy the buttons needed for the IMP attrib enter page
-	
+
 	// the begin	button
 	RemoveButton(giIMPAttributeSelectionButton[ 0 ] );
 	UnloadButtonImage(giIMPAttributeSelectionButtonImage[ 0 ] );
@@ -958,7 +947,6 @@ void DestroyIMPAttributeSelectionButtons( void )
 
 void BtnIMPAttributeFinishCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP attrbite begin button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -973,7 +961,7 @@ void BtnIMPAttributeFinishCallback(GUI_BUTTON *btn,INT32 reason)
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
 		btn->uiFlags&=~(BUTTON_CLICKED_ON);
-			
+
 			//are we done diting, or just reviewing the stats?
 			if( fReviewStats == TRUE )
 			{
@@ -985,14 +973,13 @@ void BtnIMPAttributeFinishCallback(GUI_BUTTON *btn,INT32 reason)
 			}
 			fButtonPendingFlag = TRUE;
 		}
-	}	
-} 
+	}
+}
 
 
 
 void RenderAttributeBoxes( void )
 {
-	PERFORMANCE_MARKER
 
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 
@@ -1000,7 +987,7 @@ void RenderAttributeBoxes( void )
 	// this function will render the boxes in the sliding attribute bar, based on position
 	INT32 iCnt=STRENGTH_ATTRIBUTE;
 	INT16 sX = 0;
-	INT16 sY = 0; 
+	INT16 sY = 0;
 	CHAR16 sString[3];
 
 	// set last char to null
@@ -1017,7 +1004,7 @@ void RenderAttributeBoxes( void )
 	{
 		// position is	( width *	( stat - 35 ) ) /50]
 		// unless 0, then it is 0 - for skills
-		
+
 		// get y position
 		sY = SKILL_SLIDE_START_Y + SKILL_SLIDE_HEIGHT * ( ( INT16 )iCnt ) ;
 
@@ -1027,7 +1014,7 @@ void RenderAttributeBoxes( void )
 		 // blt in strength slider
 				sX =	DetermineNewPosition( iCurrentStrength - iMinAttribute );
 				RenderSliderBar( sX, sY );
-		
+
 				// set sliderbar mouse region
 				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
@@ -1089,7 +1076,7 @@ void RenderAttributeBoxes( void )
 				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
 				// the text
-				swprintf( sString, L"%d", iCurrentLeaderShip );	
+				swprintf( sString, L"%d", iCurrentLeaderShip );
 				sX += LAPTOP_SCREEN_UL_X;
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
 				mprintf(sX + 13 , sY + 3, sString);
@@ -1110,7 +1097,7 @@ void RenderAttributeBoxes( void )
 		break;
 		case (MARKSMANSHIP_SKILL):
 		 // blt in marksmanship slider
-				
+
 				sX =	DetermineNewPosition( iCurrentMarkmanship - iMinAttribute );
 				RenderSliderBar( sX, sY );
 		// set sliderbar mouse region
@@ -1125,7 +1112,7 @@ void RenderAttributeBoxes( void )
 		break;
 		case (MEDICAL_SKILL):
 		 // blt in medical slider
-				
+
 				sX =	DetermineNewPosition( iCurrentMedical - iMinAttribute );
 				RenderSliderBar( sX, sY );
 
@@ -1140,7 +1127,7 @@ void RenderAttributeBoxes( void )
 		break;
 		case (MECHANICAL_SKILL):
 		 // blt in mech slider
-				
+
 				sX =	DetermineNewPosition( iCurrentMechanical - iMinAttribute );
 				RenderSliderBar( sX, sY );
 
@@ -1156,7 +1143,7 @@ void RenderAttributeBoxes( void )
 		break;
 			case (EXPLOSIVE_SKILL):
 		 // blt in explosive slider
-				
+
 				sX =	DetermineNewPosition( iCurrentExplosives - iMinAttribute );
 				RenderSliderBar( sX, sY );
 
@@ -1183,11 +1170,10 @@ void RenderAttributeBoxes( void )
 
 void CreateAttributeSliderButtons( void )
 {
-	PERFORMANCE_MARKER
 	// this function will create the buttons for the attribute slider
 	// the finished button
 	INT32 iCounter =0;
-	
+
 	giIMPAttributeSelectionSliderButtonImage[ 0 ]=	LoadButtonImage( "LAPTOP\\AttributeArrows.sti" ,-1,0,-1,1,-1 );
 	giIMPAttributeSelectionSliderButtonImage[ 1 ]=	LoadButtonImage( "LAPTOP\\AttributeArrows.sti" ,-1,3,-1,4,-1 );
 
@@ -1197,12 +1183,12 @@ void CreateAttributeSliderButtons( void )
 	giIMPAttributeSelectionSliderButton[ iCounter ] = QuickCreateButton( giIMPAttributeSelectionSliderButtonImage[ 0 ], LAPTOP_SCREEN_UL_X +	( 163 ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + ( 99 + iCounter / 2 * 20 ) ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAttributeSliderLeftCallback );
-	
-	// right button - increment stat 
+
+	// right button - increment stat
 	giIMPAttributeSelectionSliderButton[ iCounter + 1 ] = QuickCreateButton( giIMPAttributeSelectionSliderButtonImage[ 1 ], LAPTOP_SCREEN_UL_X +	( 419 ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + ( 99 + iCounter / 2 * 20 ) ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAttributeSliderRightCallback );
-	
+
 		SetButtonCursor(giIMPAttributeSelectionSliderButton[iCounter], CURSOR_WWW);
 		SetButtonCursor(giIMPAttributeSelectionSliderButton[iCounter + 1 ], CURSOR_WWW);
 		// set user data
@@ -1217,7 +1203,6 @@ void CreateAttributeSliderButtons( void )
 
 void DestroyAttributeSliderButtons( void )
 {
-	PERFORMANCE_MARKER
 	// this function will destroy the buttons used for attribute manipulation
 	INT32 iCounter =0;
 
@@ -1229,7 +1214,7 @@ void DestroyAttributeSliderButtons( void )
 	{
 		// get rid of button
 	 RemoveButton(giIMPAttributeSelectionSliderButton[ iCounter ] );
-	 
+
 	}
 
 	return;
@@ -1238,28 +1223,27 @@ void DestroyAttributeSliderButtons( void )
 
 void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = -1;
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
-	
-	
+
+
 	iValue = (INT32)MSYS_GetBtnUserData( btn, 0 );
 
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
-	{ 
+	{
 		DecrementStat( iValue );
 			// stat has changed, rerender
 		fHasAnySlidingBarMoved = TRUE;
-			uiBarToReRender = iValue;		
+			uiBarToReRender = iValue;
 	}
 	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		
+
 	DecrementStat( iValue );
-		fHasAnySlidingBarMoved = TRUE;	
+		fHasAnySlidingBarMoved = TRUE;
 		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	uiBarToReRender = iValue;
 	}
@@ -1269,7 +1253,7 @@ void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON *btn,INT32 reason)
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
 		btn->uiFlags&=~(BUTTON_CLICKED_ON);
-			
+
 		}
 	}
 }
@@ -1277,7 +1261,6 @@ void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPAttributeSliderRightCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = -1;
 
 	// btn callback for IMP personality quiz answer button
@@ -1287,20 +1270,20 @@ void BtnIMPAttributeSliderRightCallback(GUI_BUTTON *btn,INT32 reason)
 	iValue = (INT32)MSYS_GetBtnUserData( btn, 0 );
 
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
-	{ 
+	{
 		IncrementStat( iValue	);
 			// stat has changed, rerender
 		fHasAnySlidingBarMoved = TRUE;
-			uiBarToReRender = iValue;		
+			uiBarToReRender = iValue;
 	}
 	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		
+
 	IncrementStat( iValue );
 		fHasAnySlidingBarMoved = TRUE;
-		uiBarToReRender = iValue;		
+		uiBarToReRender = iValue;
 		btn->uiFlags|=(BUTTON_CLICKED_ON);
-		
+
 	}
 
 	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
@@ -1308,7 +1291,7 @@ void BtnIMPAttributeSliderRightCallback(GUI_BUTTON *btn,INT32 reason)
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
 		btn->uiFlags&=~(BUTTON_CLICKED_ON);
-			
+
 		}
 	}
 }
@@ -1317,16 +1300,15 @@ void BtnIMPAttributeSliderRightCallback(GUI_BUTTON *btn,INT32 reason)
 
 void CreateSlideRegionMouseRegions( void )
 {
-	PERFORMANCE_MARKER
 	// this function will create that mouse regions on the sliding area, that, if the player clicks on, the bar will automatically jump to
 	INT32 iCounter = 0;
-	
+
 	for( iCounter = 0; iCounter < 10; iCounter++ )
 	{
 		// define the region
 		MSYS_DefineRegion( &pSliderRegions[ iCounter ], ( INT16 ) ( SKILL_SLIDE_START_X + LAPTOP_SCREEN_UL_X), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT ) , ( INT16 ) ( LAPTOP_SCREEN_UL_X + SKILL_SLIDE_START_X + BAR_WIDTH ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT + 15 ),
 			MSYS_PRIORITY_HIGH + 2, CURSOR_WWW, MSYS_NO_CALLBACK, SliderRegionButtonCallback);
-	
+
 		// define user data
 			MSYS_SetRegionUserData(&pSliderRegions[iCounter],0,iCounter);
 		// now add it
@@ -1338,7 +1320,6 @@ void CreateSlideRegionMouseRegions( void )
 
 void CreateSliderBarMouseRegions( void )
 {
-	PERFORMANCE_MARKER
 
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 
@@ -1354,7 +1335,7 @@ void CreateSliderBarMouseRegions( void )
 		// define the region
 		MSYS_DefineRegion( &pSliderBarRegions[ iCounter ], ( INT16 ) ( sX ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT ) , ( INT16 ) (sX + SLIDER_BAR_WIDTH ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT + 15 ),
 			MSYS_PRIORITY_HIGH + 2, CURSOR_WWW, MSYS_NO_CALLBACK, SliderBarRegionButtonCallback);
-	
+
 		// define user data
 			MSYS_SetRegionUserData(&pSliderBarRegions[iCounter],0,iCounter);
 		// now add it
@@ -1367,10 +1348,9 @@ void CreateSliderBarMouseRegions( void )
 
 void DestroySlideRegionMouseRegions( void )
 {
-	PERFORMANCE_MARKER
-	// this function will destroy the regions user for the slider ' jumping' 
+	// this function will destroy the regions user for the slider ' jumping'
 	INT32 iCounter=0;
-	
+
 	// delete the regions
 	for( iCounter=0; iCounter < 10; iCounter++ )
 	{
@@ -1383,10 +1363,9 @@ void DestroySlideRegionMouseRegions( void )
 
 void DestroySlideBarMouseRegions( void )
 {
-	PERFORMANCE_MARKER
-	// this function will destroy the regions user for the slider ' jumping' 
+	// this function will destroy the regions user for the slider ' jumping'
 	INT32 iCounter=0;
-	
+
 	// delete the regions
 	for( iCounter=0; iCounter < 10; iCounter++ )
 	{
@@ -1399,15 +1378,14 @@ void DestroySlideBarMouseRegions( void )
 
 void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
- 	
+
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 	INT32 iMaxAttribute = gGameExternalOptions.iMaxAttribute;
 
 	INT32 iCurrentAttributeValue = 0;
-	INT32 iNewAttributeValue = 0; 
+	INT32 iNewAttributeValue = 0;
 	INT32 iAttributeDelta = 0;
-	INT32 iCounter =0; 
+	INT32 iCounter =0;
 	INT16 sX =0;
 	INT16 sY = 0;
 	static INT16 sOldX = -1;
@@ -1415,7 +1393,7 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	static INT32 iAttribute = -1;
 	INT32 iNewValue = 0;
 	INT16 sNewX = -1;
-	
+
 
 	//if we already have an anchored slider bar
 	if( gpCurrentScrollBox != pRegion && gpCurrentScrollBox != NULL )
@@ -1429,13 +1407,13 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
 		if( fSlideIsActive == FALSE)
-		{ 
+		{
 			// not active leave
-		return;	
+		return;
 		}
 
 
-	// check to see if we have moved	
+	// check to see if we have moved
 	if( MSYS_GetRegionUserData(pRegion, 0) != iAttribute )
 		{
 			// different regions
@@ -1452,7 +1430,7 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 	// get new attribute value x
 		sNewX = pRegion->MouseXPos;
-	
+
 		// sOldX has been reset, set to sNewX
 		if( sOldX == -1)
 		{
@@ -1492,35 +1470,35 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					DecrementStat( iAttribute );
 				}
 			}
-				
-			sOldX = sNewX;		
+
+			sOldX = sNewX;
 		}
 	}
 	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-	
+
 		if( fSlideIsActive )
 		{
 		// reset slide is active flag
 		fSlideIsActive = FALSE;
 			return;
 		}
-		
+
 
 		// get mouse XY
-		
+
 		sX = pRegion->MouseXPos;
 		sY = pRegion->MouseYPos;
 
 	// which region are we in?
-	
+
 		// get attribute
 		iAttribute = MSYS_GetRegionUserData(pRegion, 0);
 	uiBarToReRender = iAttribute;
 
 		// get value of attribute
 		iCurrentAttributeValue = GetCurrentAttributeValue( iAttribute );
-	
+
 		// set the new attribute value based on position of mouse click
 		iNewAttributeValue = DetermineNewValue( sX );
 
@@ -1529,10 +1507,10 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	{
 			iNewAttributeValue = iMaxAttribute;
 		}
-			
+
 		// get the delta
 		iAttributeDelta = iCurrentAttributeValue - iNewAttributeValue;
-	
+
 		// set Counter
 		iCounter = iAttributeDelta;
 
@@ -1565,7 +1543,7 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if ( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP )
 	{
-	
+
 
 	}
 	else if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -1581,7 +1559,7 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 		// get value of attribute
 		iCurrentAttributeValue = GetCurrentAttributeValue( iAttribute );
-	
+
 		// get the boxes bounding x
 		sNewX = DetermineNewPosition( iCurrentAttributeValue - iMinAttribute );
 		sNewX += LAPTOP_SCREEN_UL_X;
@@ -1603,13 +1581,12 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			fSlideIsActive =FALSE;
 		}
 	}
- 
+
 }
 
 void SliderBarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
-	
+
 
 	if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -1620,12 +1597,11 @@ void SliderBarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	{
 		fSlideIsActive = FALSE;
 	}
-	
+
 }
 
 INT32 GetCurrentAttributeValue( INT32 iAttribute )
 {
-	PERFORMANCE_MARKER
 	// this function will get the value of the attribute that was passed to this fucntion via iAttribute
 	INT32 iValue =0;
 
@@ -1662,7 +1638,7 @@ INT32 GetCurrentAttributeValue( INT32 iAttribute )
 			iValue = iCurrentExplosives;
 		break;
 
-	
+
 	}
 
 	return iValue;
@@ -1671,11 +1647,10 @@ INT32 GetCurrentAttributeValue( INT32 iAttribute )
 
 void SetAttributes( void )
 {
-	PERFORMANCE_MARKER
 	INT8	bExtraPoints;
 /*
 	// set attributes and skills based on what is in charprofile.c
-	
+
 	// attributes
 	iCurrentStrength = iStrength + iAddStrength;
 		iCurrentDexterity = iDexterity + iAddDexterity;
@@ -1689,7 +1664,7 @@ void SetAttributes( void )
 		iCurrentMechanical = iMechanical + iAddMechanical;
 		iCurrentMedical = iMedical + iAddMedical;
 		iCurrentExplosives = iExplosives + iAddExplosives;
- 
+
 		// reset bonus pts
 	iCurrentBonusPoints = 40;
 */
@@ -1713,14 +1688,14 @@ void SetAttributes( void )
 	iCurrentBonusPoints = gGameExternalOptions.iImpAttributePoints;
 
 
-	//Determine if the player has any extra points 
+	//Determine if the player has any extra points
 	bExtraPoints = DoesPlayerHaveExtraAttibutePointsToDistributeBasedOnSkillSelection();
 
 	if( bExtraPoints > 0 )
 	{
 		iCurrentBonusPoints += bExtraPoints;
 	}
-	
+
 
 	ResetIncrementCharacterAttributes( );
 
@@ -1730,7 +1705,6 @@ void SetAttributes( void )
 
 void DrawBonusPointsRemaining( void )
 {
-	PERFORMANCE_MARKER
 	// draws the amount of points remaining player has
 	CHAR16 sString[64];
 
@@ -1756,7 +1730,6 @@ void DrawBonusPointsRemaining( void )
 
 void SetGeneratedCharacterAttributes( void )
 {
-	PERFORMANCE_MARKER
 	// copies over the attributes of the player generated character
 	iStrength = iCurrentStrength	;
 		iDexterity = iCurrentDexterity;
@@ -1770,7 +1743,7 @@ void SetGeneratedCharacterAttributes( void )
 		iMechanical = iCurrentMechanical;
 		iMedical = iCurrentMedical;
 		iExplosives = iCurrentExplosives;
- 
+
 
 	return;
 }
@@ -1778,7 +1751,6 @@ void SetGeneratedCharacterAttributes( void )
 
 void StatAtZeroBoxCallBack( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	// yes, so start over, else stay here and do nothing for now
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -1796,7 +1768,6 @@ void StatAtZeroBoxCallBack( UINT8 bExitValue )
 
 INT32 DetermineNewValue( INT32 iNewX )
 {
-	PERFORMANCE_MARKER
 
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 	INT32 iMaxAttribute = gGameExternalOptions.iMaxAttribute;
@@ -1805,7 +1776,7 @@ INT32 DetermineNewValue( INT32 iNewX )
 	INT32	iStartLoc = SKILL_SLIDE_START_X + LAPTOP_SCREEN_UL_X;
 	INT32 iPositionX = iNewX - iStartLoc;
 	FLOAT fPercentOfBar=0.0f;
-		
+
 
 	fPercentOfBar = iPositionX / ( FLOAT)( BAR_WIDTH - SLIDER_BAR_WIDTH );
 
@@ -1825,7 +1796,6 @@ INT32 DetermineNewValue( INT32 iNewX )
 
 INT32 DetermineNewPosition( INT32 iAttribute )
 {
-	PERFORMANCE_MARKER
 
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 	INT32 iMaxAttribute = gGameExternalOptions.iMaxAttribute;
@@ -1833,7 +1803,7 @@ INT32 DetermineNewPosition( INT32 iAttribute )
 	INT32 iNewLoc=0;
 	INT32	iStartLoc = SKILL_SLIDE_START_X;
 	FLOAT	fBasePixelScaleWidth = ( ( BAR_WIDTH - SLIDER_BAR_WIDTH ) / (FLOAT)( iMaxAttribute - iMinAttribute ) );
-		
+
 	iNewLoc = (INT32)(iAttribute * fBasePixelScaleWidth);
 
 	if( iNewLoc < 0 )

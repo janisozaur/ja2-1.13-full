@@ -80,10 +80,9 @@ UINT16 CountSurfaceSectorsVisited( void );
 // give pSoldier usNumChances to improve ubStat.  If it's from training, it doesn't count towards experience level gain
 void StatChange(SOLDIERTYPE *pSoldier, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason)
 {
-	PERFORMANCE_MARKER
 	if (pSoldier == NULL || pSoldier->bActive == FALSE)
 		return;	// THIS SHOULD NEVER HAPPEN
-	
+
 	Assert(pSoldier != NULL);
 	Assert(pSoldier->bActive);
 
@@ -128,7 +127,6 @@ void StatChange(SOLDIERTYPE *pSoldier, UINT8 ubStat, UINT16 usNumChances, UINT8 
 // give pProfile usNumChances to improve ubStat.  If it's from training, it doesn't count towards experience level gain
 void ProfileStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason)
 {
-	PERFORMANCE_MARKER
 	// dead guys don't do nuthin' !
 	if ( pProfile->bMercStatus == MERC_IS_DEAD )
 		return;
@@ -145,7 +143,6 @@ void ProfileStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumCh
 
 void ProcessStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason)
 {
-	PERFORMANCE_MARKER
   UINT32 uiCnt,uiEffLevel;
   INT16 sSubPointChange = 0;
 	UINT16 usChance=0;
@@ -398,7 +395,7 @@ void ProcessStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumCh
             // all other stat changes count towards experience level changes (1 for 1 basis)
             pProfile->sExpLevelGain--;
 					}
-				}			
+				}
       }
     }
   }
@@ -425,7 +422,6 @@ void ProcessStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumCh
 // convert hired mercs' stats subpoint changes into actual point changes where warranted
 void UpdateStats( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	ProcessUpdateStats( &( gMercProfiles[ pSoldier->ubProfile ] ), pSoldier );
 }
 
@@ -433,16 +429,14 @@ void UpdateStats( SOLDIERTYPE *pSoldier )
 // UpdateStats version for mercs not currently on player's team
 void ProfileUpdateStats( MERCPROFILESTRUCT *pProfile )
 {
-	PERFORMANCE_MARKER
 	ProcessUpdateStats( pProfile, NULL );
 }
 
 
 void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubStat, INT16 sPtsChanged )
 {
-	PERFORMANCE_MARKER
 	// this function changes the stat a given amount...
-	INT16 *psStatGainPtr = NULL; 
+	INT16 *psStatGainPtr = NULL;
 	INT8 *pbStatPtr = NULL;
 	INT8 *pbSoldierStatPtr = NULL;
 	INT8 *pbStatDeltaPtr = NULL;
@@ -733,7 +727,7 @@ void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubSta
 						//
 
 //	DEF: 03/06/99 Now sets an event that will be processed later in the day
-//						ubEmailOffset = MERC_UP_LEVEL_BIFF + MERC_UP_LEVEL_LENGTH_BIFF * ( ubMercMercIdValue ); 
+//						ubEmailOffset = MERC_UP_LEVEL_BIFF + MERC_UP_LEVEL_LENGTH_BIFF * ( ubMercMercIdValue );
 //						AddEmail( ubEmailOffset, MERC_UP_LEVEL_LENGTH_BIFF, SPECK_FROM_MERC, GetWorldTotalMin() );
 						AddStrategicEvent( EVENT_MERC_MERC_WENT_UP_LEVEL_EMAIL_DELAY, GetWorldTotalMin( ) + 60 + Random( 60 ), ubMercMercIdValue );
 
@@ -779,10 +773,9 @@ void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubSta
 // pSoldier may be NULL!
 void ProcessUpdateStats( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// this function will run through the soldier's profile and update their stats based on any accumulated gain pts.
 	UINT8 ubStat = 0;
-	INT16 *psStatGainPtr = NULL; 
+	INT16 *psStatGainPtr = NULL;
 	INT8 *pbStatPtr = NULL;
 	INT8 *pbSoldierStatPtr = NULL;
 	INT8 bMinStatValue;
@@ -1002,7 +995,6 @@ void ProcessUpdateStats( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier )
 
 void HandleAnyStatChangesAfterAttack( void )
 {
-	PERFORMANCE_MARKER
   INT32 cnt;
 	SOLDIERTYPE *pSoldier;
 
@@ -1019,7 +1011,6 @@ void HandleAnyStatChangesAfterAttack( void )
 
 UINT32 CalcNewSalary(UINT32 uiOldSalary, BOOLEAN fIncrease, UINT32 uiMaxLimit)
 {
-	PERFORMANCE_MARKER
   UINT32 uiNewSalary;
 
 	// if he was working for free, it's still free!
@@ -1054,7 +1045,6 @@ UINT32 CalcNewSalary(UINT32 uiOldSalary, BOOLEAN fIncrease, UINT32 uiMaxLimit)
 
 UINT32 RoundOffSalary(UINT32 uiSalary)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiMultiple;
 
 
@@ -1084,7 +1074,6 @@ UINT32 RoundOffSalary(UINT32 uiSalary)
 
 UINT16 SubpointsPerPoint(UINT8 ubStat, INT8 bExpLevel)
 {
-	PERFORMANCE_MARKER
 	UINT16 usSubpointsPerPoint;
 
 	// figure out how many subpoints this type of stat needs to change
@@ -1125,7 +1114,6 @@ UINT16 SubpointsPerPoint(UINT8 ubStat, INT8 bExpLevel)
 // handles stat changes for mercs not currently working for the player
 void HandleUnhiredMercImprovement( MERCPROFILESTRUCT *pProfile )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNumStats;
 	UINT8 ubStat;
 	UINT16 usNumChances;
@@ -1184,7 +1172,6 @@ void HandleUnhiredMercImprovement( MERCPROFILESTRUCT *pProfile )
 // handles possible death of mercs not currently working for the player
 void HandleUnhiredMercDeaths( INT32 iProfileID )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubMaxDeaths;
 	INT16 sChance;
 	MERCPROFILESTRUCT *pProfile = &(gMercProfiles[ iProfileID ]);
@@ -1278,7 +1265,6 @@ void HandleUnhiredMercDeaths( INT32 iProfileID )
 // returns a number between 0-100, this is an estimate of how far a player has progressed through the game
 UINT8 CurrentPlayerProgressPercentage(void)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCurrentIncome;
 	UINT32 uiPossibleIncome;
 	UINT8 ubCurrentProgress;
@@ -1368,7 +1354,6 @@ UINT8 CurrentPlayerProgressPercentage(void)
 
 UINT8 HighestPlayerProgressPercentage(void)
 {
-	PERFORMANCE_MARKER
 	if( gfEditMode )
 		return 0;
 
@@ -1380,7 +1365,6 @@ UINT8 HighestPlayerProgressPercentage(void)
 // as opposed to his immediate situation (which may be worse if he's suffered a setback).
 void HourlyProgressUpdate(void)
 {
-	PERFORMANCE_MARKER
 	UINT8 ubCurrentProgress;
 
 	ubCurrentProgress = CurrentPlayerProgressPercentage();
@@ -1421,7 +1405,6 @@ void HourlyProgressUpdate(void)
 #ifdef JA2TESTVERSION
 void TestDumpStatChanges(void)
 {
-	PERFORMANCE_MARKER
   UINT32 uiProfileId;
 	UINT8 ubStat;
   CHAR8 zPrintFileName[60];
@@ -1520,7 +1503,6 @@ void TestDumpStatChanges(void)
 
 void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 {
-	PERFORMANCE_MARKER
 	UINT16 usXPs = 0;
 	UINT8 ubGuynum;
 	SOLDIERTYPE *pSoldier;
@@ -1541,7 +1523,7 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 	for ( ubGuynum = gTacticalStatus.Team[ gbPlayerNum ].bFirstID, pSoldier = MercPtrs[ ubGuynum ];
 				ubGuynum <= gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 				ubGuynum++, pSoldier++ )
-	{	
+	{
 		if ( pSoldier->bActive && pSoldier->bInSector && IsMercOnCurrentSquad( pSoldier ) && ( pSoldier->stats.bLife >= CONSCIOUSNESS ) &&
 				 !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) )
 		{
@@ -1554,7 +1536,6 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 
 void BuildStatChangeString( STR16 wString, STR16 wName, BOOLEAN fIncrease, INT16 sPtsChanged, UINT8 ubStat )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubStringIndex;
 
 
@@ -1580,7 +1561,7 @@ void BuildStatChangeString( STR16 wString, STR16 wName, BOOLEAN fIncrease, INT16
 		ubStringIndex += 2;
 	}
 
-	swprintf( wString, L"%s %s %d %s %s", wName, sPreStatBuildString[ fIncrease ? 1 : 0 ], abs( sPtsChanged ), 
+	swprintf( wString, L"%s %s %d %s %s", wName, sPreStatBuildString[ fIncrease ? 1 : 0 ], abs( sPtsChanged ),
 					sPreStatBuildString[ ubStringIndex ], sStatGainStrings[ ubStat - FIRST_CHANGEABLE_STAT ] );
 }
 
@@ -1588,7 +1569,6 @@ void BuildStatChangeString( STR16 wString, STR16 wName, BOOLEAN fIncrease, INT16
 
 UINT8 CalcImportantSectorControl( void )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubMapX, ubMapY;
 	UINT8	ubSectorControlPts = 0;
 
@@ -1623,7 +1603,6 @@ UINT8 CalcImportantSectorControl( void )
 // Count how many surface sectors the player has visited
 UINT16 CountSurfaceSectorsVisited( void )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubMapX, ubMapY;
 	UINT16	ubSectorsVisited = 0;
 
@@ -1642,9 +1621,8 @@ UINT16 CountSurfaceSectorsVisited( void )
 
 void MERCMercWentUpALevelSendEmail( UINT8 ubMercMercIdValue )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubEmailOffset = 0;
 
-	ubEmailOffset = MERC_UP_LEVEL_BIFF + MERC_UP_LEVEL_LENGTH_BIFF * ( ubMercMercIdValue ); 
+	ubEmailOffset = MERC_UP_LEVEL_BIFF + MERC_UP_LEVEL_LENGTH_BIFF * ( ubMercMercIdValue );
 	AddEmail( ubEmailOffset, MERC_UP_LEVEL_LENGTH_BIFF, SPECK_FROM_MERC, GetWorldTotalMin(), -1);
 }

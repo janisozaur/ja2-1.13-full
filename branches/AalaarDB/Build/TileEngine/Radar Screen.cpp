@@ -49,7 +49,7 @@ void TacticalSquadListBtnCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 // the squad list font
 #define SQUAD_FONT COMPFONT
 
-#define SQUAD_REGION_HEIGHT 2 * RADAR_WINDOW_HEIGHT 
+#define SQUAD_REGION_HEIGHT 2 * RADAR_WINDOW_HEIGHT
 #define SQUAD_WINDOW_TM_Y RADAR_WINDOW_TM_Y + GetFontHeight( SQUAD_FONT )
 
 // subtractor for squad list from size of radar view region height
@@ -65,7 +65,7 @@ INT16			sSelectedSquadLine = -1;
 
 BOOLEAN		gfRadarCurrentGuyFlash = FALSE;
 
-// WANNE: Are we allowed to scroll in radar map? 
+// WANNE: Are we allowed to scroll in radar map?
 // (E.g: It is not allowed to scroll, if the whole tactical map fits in the radar map) [2007-05-14]
 BOOLEAN		fAllowRadarMovementHor = TRUE;
 BOOLEAN		fAllowRadarMovementVer = TRUE;
@@ -75,12 +75,11 @@ MOUSE_REGION gRadarRegionSquadList[ NUMBER_OF_SQUADS ];
 
 BOOLEAN InitRadarScreen( )
 {
-	PERFORMANCE_MARKER
 		// Add region for radar
-		MSYS_DefineRegion( &gRadarRegion, RADAR_WINDOW_X, RADAR_WINDOW_TM_Y, 
+		MSYS_DefineRegion( &gRadarRegion, RADAR_WINDOW_X, RADAR_WINDOW_TM_Y,
 											RADAR_WINDOW_X + RADAR_WINDOW_WIDTH,
 											RADAR_WINDOW_TM_Y + RADAR_WINDOW_HEIGHT,
-											MSYS_PRIORITY_HIGHEST, 0, 
+											MSYS_PRIORITY_HIGHEST, 0,
 											RadarRegionMoveCallback,
 											RadarRegionButtonCallback );
 
@@ -98,7 +97,6 @@ BOOLEAN InitRadarScreen( )
 
 BOOLEAN LoadRadarScreenBitmap(CHAR8 * aFilename )
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	CHAR8			zFilename[ 260 ];
 	INT32			cnt;
@@ -108,9 +106,9 @@ BOOLEAN LoadRadarScreenBitmap(CHAR8 * aFilename )
 
 	// If we have loaded, remove old one
 	if ( fImageLoaded )
-	{	
+	{
 		DeleteVideoObjectFromIndex( gusRadarImage );
-			
+
 		fImageLoaded = FALSE;
 	}
 
@@ -152,10 +150,9 @@ BOOLEAN LoadRadarScreenBitmap(CHAR8 * aFilename )
 
 void ClearOutRadarMapImage( void )
 {
-	PERFORMANCE_MARKER
 	// If we have loaded, remove old one
 	if ( fImageLoaded )
-	{	
+	{
 	DeleteVideoObjectFromIndex( gusRadarImage );
 	fImageLoaded = FALSE;
 	}
@@ -164,7 +161,6 @@ void ClearOutRadarMapImage( void )
 
 void MoveRadarScreen()
 {
-	PERFORMANCE_MARKER
 
 	// check if we are allowed to do anything?
 	if( fRenderRadarScreen == FALSE )
@@ -192,10 +188,10 @@ void MoveRadarScreen()
 	}
 
 	// Add region for radar
-	MSYS_DefineRegion( &gRadarRegion, RADAR_WINDOW_X, (UINT16)(gsRadarY), 
+	MSYS_DefineRegion( &gRadarRegion, RADAR_WINDOW_X, (UINT16)(gsRadarY),
 										RADAR_WINDOW_X + RADAR_WINDOW_WIDTH,
 										(UINT16)(gsRadarY + RADAR_WINDOW_HEIGHT),
-										MSYS_PRIORITY_HIGHEST, 0, 
+										MSYS_PRIORITY_HIGHEST, 0,
 										RadarRegionMoveCallback,
 										RadarRegionButtonCallback );
 
@@ -207,7 +203,6 @@ void MoveRadarScreen()
 
 void RadarRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	INT16 sRadarX, sRadarY;
 
 	// check if we are allowed to do anything?
@@ -223,7 +218,7 @@ void RadarRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			// WANNE: If the tactical map fits in the whole radar map, disable scrolling in radar map. [2007-05-14]
 			if (fAllowRadarMovementHor)
 				// Use relative coordinates to set center of viewport
-				sRadarX = pRegion->RelativeXPos - ( RADAR_WINDOW_WIDTH / 2 );	
+				sRadarX = pRegion->RelativeXPos - ( RADAR_WINDOW_WIDTH / 2 );
 			else
 				sRadarX = 0;
 
@@ -243,7 +238,6 @@ void RadarRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void RadarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	INT16 sRadarX, sRadarY;
 
 	// check if we are allowed to do anything?
@@ -259,7 +253,7 @@ void RadarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			// WANNE: If the tactical map fits in the whole radar map, disable scrolling in radar map. [2007-05-14]
 			if (fAllowRadarMovementHor)
 				// Use relative coordinates to set center of viewport
-				sRadarX = pRegion->RelativeXPos - ( RADAR_WINDOW_WIDTH / 2 );	
+				sRadarX = pRegion->RelativeXPos - ( RADAR_WINDOW_WIDTH / 2 );
 			else
 				sRadarX = 0;
 
@@ -271,7 +265,7 @@ void RadarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			if (fAllowRadarMovementHor || fAllowRadarMovementVer)
 			{
 				AdjustWorldCenterFromRadarCoords( sRadarX, sRadarY );
-				
+
 				SetRenderFlags(RENDER_FLAG_FULL);
 			}
 		}
@@ -299,7 +293,6 @@ void RadarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void RenderRadarScreen( )
 {
-	PERFORMANCE_MARKER
 	INT16 sRadarTLX, sRadarTLY;
 	INT16 sRadarBRX, sRadarBRY;
 	INT16 sRadarCX, sRadarCY;
@@ -368,7 +361,7 @@ void RenderRadarScreen( )
 	// Find the diustance from render center to true world center
 	sDistToCenterX = gsRenderCenterX - gCenterWorldX;
 	sDistToCenterY = gsRenderCenterY - gCenterWorldY;
-	
+
 	// From render center in world coords, convert to render center in "screen" coords
 	FromCellToScreenCoordinates( sDistToCenterX , sDistToCenterY, &sScreenCenterX, &sScreenCenterY );
 
@@ -386,7 +379,7 @@ void RenderRadarScreen( )
 
 	sTopRightWorldX = sScreenCenterX	+ sX_S;
 	sTopRightWorldY = sScreenCenterY	- sY_S;
-	
+
 	sBottomLeftWorldX = sScreenCenterX	- sX_S;
 	sBottomLeftWorldY = sScreenCenterY	+ sY_S;
 
@@ -406,7 +399,7 @@ void RenderRadarScreen( )
 
 
 	sRadarTLX = (INT16)( ( sTopLeftWorldX * gdScaleX ) - sRadarCX	+ sX + ( sWidth /2 ) );
-	sRadarTLY = (INT16)( ( sTopLeftWorldY * gdScaleY ) - sRadarCY + gsRadarY + ( sHeight /2 ) ); 
+	sRadarTLY = (INT16)( ( sTopLeftWorldY * gdScaleY ) - sRadarCY + gsRadarY + ( sHeight /2 ) );
 	sRadarBRX = (INT16)( ( sBottomRightWorldX * gdScaleX ) - sRadarCX + sX + ( sWidth /2 ) );
 	sRadarBRY = (INT16)( ( sBottomRightWorldY * gdScaleY ) - sRadarCY + gsRadarY + ( sHeight /2 ) );
 
@@ -425,7 +418,7 @@ void RenderRadarScreen( )
 
 
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	
+
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, RADAR_WINDOW_X, gsRadarY, ( RADAR_WINDOW_X + RADAR_WINDOW_WIDTH - 1 ), ( gsRadarY + RADAR_WINDOW_HEIGHT - 1 ) );
 
 	if( !( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
@@ -514,7 +507,7 @@ void RenderRadarScreen( )
 			}
 		}
 	}
-	
+
 	if( !( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
 		// RE-RENDER RADAR
@@ -523,7 +516,7 @@ void RenderRadarScreen( )
 			pSoldier = MercSlots[ cnt ];
 
 			if ( pSoldier != NULL )
-			{	
+			{
 				// Don't place guys in radar until visible!
 				if ( pSoldier->bVisible == -1 && !(gTacticalStatus.uiFlags&SHOW_ALL_MERCS) && !(pSoldier->ubMiscSoldierFlags & SOLDIER_MISC_XRAYED) )
 				{
@@ -562,7 +555,7 @@ void RenderRadarScreen( )
 
 				if(gbPixelDepth==16)
 				{
-					// DB Need to add a radar color for 8-bit 
+					// DB Need to add a radar color for 8-bit
 
 					// Are we a selected guy?
 					if ( pSoldier->ubID == gusSelectedSoldier )
@@ -582,7 +575,7 @@ void RenderRadarScreen( )
 				{
 							usLineColor = Get16BPPColor( gTacticalStatus.Team[ pSoldier->bTeam ].RadarColor );
 				}
-						}					
+						}
 					}
 					else
 					{
@@ -607,13 +600,13 @@ void RenderRadarScreen( )
 			}
 					}
 
-					RectangleDraw( TRUE, sXSoldRadar, sYSoldRadar, sXSoldRadar+1, sYSoldRadar+1, usLineColor, pDestBuf );	
+					RectangleDraw( TRUE, sXSoldRadar, sYSoldRadar, sXSoldRadar+1, sYSoldRadar+1, usLineColor, pDestBuf );
 				}
 				else if(gbPixelDepth==8)
 				{
 					// DB Need to change this to a color from the 8-but standard palette
 					usLineColor = COLOR_BLUE;
-					RectangleDraw8( TRUE, sXSoldRadar, sYSoldRadar, sXSoldRadar+1, sYSoldRadar+1, usLineColor, pDestBuf );	
+					RectangleDraw8( TRUE, sXSoldRadar, sYSoldRadar, sXSoldRadar+1, sYSoldRadar+1, usLineColor, pDestBuf );
 				}
 			}
 		}
@@ -636,7 +629,6 @@ void RenderRadarScreen( )
 
 void AdjustWorldCenterFromRadarCoords( INT16 sRadarX, INT16 sRadarY )
 {
-	PERFORMANCE_MARKER
 	INT16 sScreenX, sScreenY;
 	INT16	sTempX_W, sTempY_W;
 	INT16 sNewCenterWorldX, sNewCenterWorldY;
@@ -678,32 +670,28 @@ void AdjustWorldCenterFromRadarCoords( INT16 sRadarX, INT16 sRadarY )
 
 void DisableRadarScreenRender( void )
 {
-	PERFORMANCE_MARKER
 	fRenderRadarScreen = FALSE;
 	return;
 }
 
 void EnableRadarScreenRender( void )
 {
-	PERFORMANCE_MARKER
 	fRenderRadarScreen = TRUE;
 	return;
 }
 
 void ToggleRadarScreenRender( void )
 {
-	PERFORMANCE_MARKER
 	fRenderRadarScreen = ! fRenderRadarScreen;
 	return;
 }
 
 BOOLEAN CreateDestroyMouseRegionsForSquadList( void )
 {
-	PERFORMANCE_MARKER
-	// will check the state of renderradarscreen flag and decide if we need to create mouse regions for 
+	// will check the state of renderradarscreen flag and decide if we need to create mouse regions for
 	static BOOLEAN fCreated = FALSE;
 	INT16 sCounter = 0;
-	VOBJECT_DESC	VObjectDesc; 
+	VOBJECT_DESC	VObjectDesc;
 	HVOBJECT hHandle;
 	UINT32 uiHandle;
 
@@ -716,11 +704,11 @@ BOOLEAN CreateDestroyMouseRegionsForSquadList( void )
 	CHECKF(AddVideoObject(&VObjectDesc, &uiHandle));
 
 	GetVideoObject(&hHandle, uiHandle);
-		
-	
+
+
 		BltVideoObject( guiSAVEBUFFER , hHandle, 0,(SCREEN_WIDTH - 102 - 1), gsVIEWPORT_END_Y, VO_BLT_SRCTRANSPARENCY,NULL );
 		RestoreExternBackgroundRect ((SCREEN_WIDTH - 102 - 1), gsVIEWPORT_END_Y, 102,( INT16 ) ( SCREEN_HEIGHT - gsVIEWPORT_END_Y ) );
-		
+
 		for( sCounter = 0; sCounter < NUMBER_OF_SQUADS; sCounter++ )
 		{
 			// run through list of squads and place appropriatly
@@ -763,15 +751,15 @@ BOOLEAN CreateDestroyMouseRegionsForSquadList( void )
 
 		// set fact regions are destroyed
 		fCreated = FALSE;
-		
+
 
 		if ( guiCurrentScreen == GAME_SCREEN )
 		{
 			// dirty region
 			fInterfacePanelDirty = DIRTYLEVEL2;
-				
+
 			MarkButtonsDirty( );
-				
+
 			// re render region
 			RenderTacticalInterface( );
 
@@ -789,7 +777,6 @@ BOOLEAN CreateDestroyMouseRegionsForSquadList( void )
 
 void RenderSquadList( void )
 {
-	PERFORMANCE_MARKER
 	// show list of squads
 	INT16 sCounter = 0;
 	INT16 sX, sY;
@@ -843,7 +830,7 @@ void RenderSquadList( void )
 
 			if( sCounter < NUMBER_OF_SQUADS / 2 )
 			{
-				sX = RADAR_WINDOW_X + 2; 
+				sX = RADAR_WINDOW_X + 2;
 			}
 			else
 			{
@@ -855,7 +842,6 @@ void RenderSquadList( void )
 
 void TacticalSquadListMvtCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = -1;
 
 	iValue = MSYS_GetRegionUserData( pRegion, 0 );
@@ -864,7 +850,7 @@ void TacticalSquadListMvtCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	{
 		if( IsSquadOnCurrentTacticalMap( iValue ) == TRUE )
 		{
-			sSelectedSquadLine = ( INT16 )iValue; 
+			sSelectedSquadLine = ( INT16 )iValue;
 		}
 	}
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
@@ -879,7 +865,6 @@ void TacticalSquadListMvtCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void TacticalSquadListBtnCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	// btn callback handler for team list info region
 	INT32 iValue = 0;
 

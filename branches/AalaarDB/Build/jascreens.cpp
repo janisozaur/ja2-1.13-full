@@ -18,7 +18,7 @@
 	#include "mousesystem.h"
 	#include "screenids.h"
 	#include "screens.h"
-	#include "Font Control.h" 
+	#include "Font Control.h"
 	#include "sysutil.h"
 	#include "renderworld.h"
 	#include "tiledef.h"
@@ -26,7 +26,7 @@
 	#include "editscreen.h"
 	#include <wchar.h>
 	#include <tchar.h>
-	#include "Timer Control.h"	 
+	#include "Timer Control.h"
 	#include "Sys Globals.h"
 	#include "interface.h"
 	#include "overhead.h"
@@ -75,7 +75,7 @@ extern BOOLEAN			gfAmINetworked;
 #define MAX_DEBUG_PAGES 4
 
 
-// GLOBAL FOR PAL EDITOR 
+// GLOBAL FOR PAL EDITOR
 UINT8	CurrentPalette = 0;
 UINT32	guiBackgroundRect;
 BOOLEAN	gfExitPalEditScreen = FALSE;
@@ -106,17 +106,16 @@ void DefaultDebugPage1( );
 void DefaultDebugPage2( );
 void DefaultDebugPage3( );
 void DefaultDebugPage4( );
-RENDER_HOOK				gDebugRenderOverride[ MAX_DEBUG_PAGES ] = 
-{ (RENDER_HOOK)DefaultDebugPage1, (RENDER_HOOK)DefaultDebugPage2, 
+RENDER_HOOK				gDebugRenderOverride[ MAX_DEBUG_PAGES ] =
+{ (RENDER_HOOK)DefaultDebugPage1, (RENDER_HOOK)DefaultDebugPage2,
 	(RENDER_HOOK)DefaultDebugPage3, (RENDER_HOOK)DefaultDebugPage4 };
 
 extern HVSURFACE ghFrameBuffer;
 
 void DisplayFrameRate( )
 {
-	PERFORMANCE_MARKER
 	static UINT32		uiFPS = 0;
-	static UINT32		uiFrameCount = 0;	
+	static UINT32		uiFrameCount = 0;
 	INT16 sMapPos;
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 
@@ -128,7 +127,7 @@ void DisplayFrameRate( )
 		// Reset counter
 		RESETCOUNTER( FPSCOUNTER );
 
-		uiFPS = uiFrameCount;		
+		uiFPS = uiFrameCount;
 		uiFrameCount = 0;
 	}
 
@@ -136,16 +135,16 @@ void DisplayFrameRate( )
 	SetFont( SMALLFONT1 );
 
 	//DebugMsg(TOPIC_JA2, DBG_LEVEL_0, String( "FPS: %d ", __min( uiFPS, 1000 ) ) );
-	
+
 	if ( uiFPS < 20 )
 	{
 		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontForeground( FONT_MCOLOR_LTRED );		
+		SetFontForeground( FONT_MCOLOR_LTRED );
 	}
 	else
 	{
 		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontForeground( FONT_MCOLOR_DKGRAY );				
+		SetFontForeground( FONT_MCOLOR_DKGRAY );
 	}
 
 	if ( gbFPSDisplay == SHOW_FULL_FPS )
@@ -156,21 +155,21 @@ void DisplayFrameRate( )
 		VideoOverlayDesc.uiFlags	= VOVERLAY_DESC_TEXT;
 		UpdateVideoOverlay( &VideoOverlayDesc, giFPSOverlay, FALSE );
 
-		// TIMER COUNTER		
+		// TIMER COUNTER
 		swprintf( VideoOverlayDesc.pzText, L"%ld", __min( giTimerDiag, 1000 ) );
 		VideoOverlayDesc.uiFlags	= VOVERLAY_DESC_TEXT;
 		UpdateVideoOverlay( &VideoOverlayDesc, giCounterPeriodOverlay, FALSE );
-		
+
 
 		if( GetMouseMapPos( &sMapPos) )
 		{
-			//gprintfdirty( 0, 315, L"(%d)",sMapPos);		
-			//mprintf( 0,315,L"(%d)",sMapPos);		
+			//gprintfdirty( 0, 315, L"(%d)",sMapPos);
+			//mprintf( 0,315,L"(%d)",sMapPos);
 		}
 		else
 		{
-			//gprintfdirty( 0, 315, L"(%d %d)",gusMouseXPos, gusMouseYPos - INTERFACE_START_Y );		
-			//mprintf( 0,315,L"(%d %d)",gusMouseXPos, gusMouseYPos - INTERFACE_START_Y );		
+			//gprintfdirty( 0, 315, L"(%d %d)",gusMouseXPos, gusMouseYPos - INTERFACE_START_Y );
+			//mprintf( 0,315,L"(%d %d)",gusMouseXPos, gusMouseYPos - INTERFACE_START_Y );
 		}
 	}
 
@@ -178,7 +177,7 @@ void DisplayFrameRate( )
 	{
 		SetFont( SMALLFONT1 );
 		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontForeground( FONT_MCOLOR_DKRED );				
+		SetFontForeground( FONT_MCOLOR_DKRED );
 		//gprintfdirty( 0, 0, L"GOD MODE" );
 		//mprintf( 0, 0, L"GOD MODE" );
 	}
@@ -187,7 +186,7 @@ void DisplayFrameRate( )
 	{
 		SetFont( SMALLFONT1 );
 		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontForeground( FONT_MCOLOR_DKGRAY );				
+		SetFontForeground( FONT_MCOLOR_DKGRAY );
 		//gprintfdirty( 0, 0, L"DEMO MODE" );
 		//mprintf( 0, 0, L"DEMO MODE" );
 	}
@@ -196,11 +195,11 @@ void DisplayFrameRate( )
 
 	SetFont( SMALLFONT1 );
 	SetFontBackground( FONT_MCOLOR_BLACK );
-	SetFontForeground( FONT_MCOLOR_DKGRAY );				
+	SetFontForeground( FONT_MCOLOR_DKGRAY );
 
 	if ( gbFPSDisplay == SHOW_FULL_FPS )
 	{
-		// Debug	
+		// Debug
 		if (gDebugStr[0] != '\0')
 		{
 			//gprintfdirty( 0, 345, L"DEBUG: %S",gDebugStr);
@@ -231,33 +230,27 @@ void DisplayFrameRate( )
 //USELESS!!!!!!!!!!!!!!!!!!
 UINT32 SavingScreenInitialize(void)
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 UINT32 SavingScreenHandle( void )
 {
-	PERFORMANCE_MARKER
 	return SAVING_SCREEN;
 }
 UINT32 SavingScreenShutdown( void )
 {
-	PERFORMANCE_MARKER
 	return TRUE;
 }
 
 UINT32 LoadingScreenInitialize(void)
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 UINT32 LoadingScreenHandle(void)
 {
-	PERFORMANCE_MARKER
 	return LOADING_SCREEN;
 }
 UINT32 LoadingScreenShutdown(void)
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
@@ -265,13 +258,11 @@ UINT32 LoadingScreenShutdown(void)
 
 UINT32 ErrorScreenInitialize(void)
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
-} 
+}
 
 UINT32 ErrorScreenHandle(void)
 {
-	PERFORMANCE_MARKER
 	InputAtom	InputEvent;
 	static BOOLEAN	fFirstTime = FALSE;
 #ifdef JA2BETAVERSION
@@ -290,14 +281,14 @@ UINT32 ErrorScreenHandle(void)
 	mprintf( 50, 225, L"PRESS <ESC> TO EXIT" );
 
 	SetFont( FONT12ARIAL );
-	SetFontForeground( FONT_YELLOW ); 
+	SetFontForeground( FONT_YELLOW );
 	SetFontShadow( 60 );		//60 is near black
 	mprintf( 50, 255, L"%S", gubErrorText );
-	SetFontForeground( FONT_LTRED ); 
+	SetFontForeground( FONT_LTRED );
 
 
 #ifdef JA2BETAVERSION
-	
+
 	if( gubAssertString[0] )
 	{
 		swprintf( str, L"%S", gubAssertString );
@@ -315,7 +306,7 @@ UINT32 ErrorScreenHandle(void)
 	InvalidateScreen( );
 	EndFrameBufferRender( );
 
-	// Check for esc 
+	// Check for esc
 	while (DequeueEvent(&InputEvent) == TRUE)
 	{
 		if( InputEvent.usEvent == KEY_DOWN )
@@ -323,9 +314,9 @@ UINT32 ErrorScreenHandle(void)
 				if( InputEvent.usParam == ESC || InputEvent.usParam == 'x' && InputEvent.usKeyState & ALT_DOWN )
 				{ // Exit the program
 					DebugMsg(TOPIC_GAME, DBG_LEVEL_0, "GameLoop: User pressed ESCape, TERMINATING");
-					
+
 					// handle shortcut exit
-					HandleShortCutExitState( );				
+					HandleShortCutExitState( );
 				}
 			}
 	}
@@ -335,7 +326,6 @@ UINT32 ErrorScreenHandle(void)
 
 UINT32 ErrorScreenShutdown(void)
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
@@ -343,13 +333,11 @@ UINT32 ErrorScreenShutdown(void)
 
 UINT32 InitScreenInitialize(void)
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
-} 
+}
 
 UINT32 InitScreenHandle(void)
 {
-	PERFORMANCE_MARKER
 	VSURFACE_DESC					vs_desc;
 	static HVSURFACE			hVSurface;
 	static UINT8					ubCurrentScreen = 255;
@@ -412,19 +400,19 @@ UINT32 InitScreenHandle(void)
 
 		mprintf( 10, 0, L"(LIMITED PRESS PREVIEW VERSION)" );
 
-#elif defined JA2BETAVERSION 
+#elif defined JA2BETAVERSION
 
 		mprintf( 10, 0, L"(Beta version error reporting enabled)" );
 
 #endif
 
-#ifdef _DEBUG 
+#ifdef _DEBUG
 		mprintf( 10, 20, L"SOLDIERTYPE: %d bytes", sizeof( SOLDIERTYPE ) );
 #endif
 
 		if ( gfDontUseDDBlits )
 		{
-			#ifdef _DEBUG 
+			#ifdef _DEBUG
 				mprintf( 10, 10, L"SOLDIERTYPE: %d bytes", sizeof( SOLDIERTYPE ) );
 			#else
 				mprintf( 10, 20, L"Using software blitters" );
@@ -474,7 +462,6 @@ UINT32 InitScreenHandle(void)
 
 UINT32 InitScreenShutdown(void)
 {
-	PERFORMANCE_MARKER
 
 	return( TRUE );
 }
@@ -483,13 +470,11 @@ UINT32 InitScreenShutdown(void)
 
 UINT32 PalEditScreenInit(void)
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
 UINT32 PalEditScreenHandle(void)
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN FirstTime = TRUE;
 
 	if ( gfExitPalEditScreen )
@@ -501,7 +486,7 @@ UINT32 PalEditScreenHandle(void)
 		SetUIKeyboardHook( (UIKEYBOARD_HOOK)NULL );
 		return( GAME_SCREEN );
 	}
-	
+
 	if ( FirstTime )
 	{
 		FirstTime = FALSE;
@@ -525,7 +510,6 @@ UINT32 PalEditScreenHandle(void)
 
 UINT32 PalEditScreenShutdown(void)
 {
-	PERFORMANCE_MARKER
 
 	return( TRUE );
 }
@@ -533,7 +517,6 @@ UINT32 PalEditScreenShutdown(void)
 
 void PalEditRenderHook(	)
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE		*pSoldier;
 
 	if ( gusSelectedSoldier != NOBODY )
@@ -551,7 +534,6 @@ void PalEditRenderHook(	)
 
 BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 {
-	PERFORMANCE_MARKER
 	UINT8					ubType;
 	SOLDIERTYPE		*pSoldier;
 	UINT8					ubPaletteRep;
@@ -565,13 +547,13 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 	}
 
 	if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == ESC ))
-	{ 
+	{
 		gfExitPalEditScreen = TRUE;
 		return( TRUE );
 	}
 
 	if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 'h' ))
-	{ 
+	{
 			// Get Soldier
 			GetSoldier( &pSoldier, gusSelectedSoldier );
 
@@ -602,7 +584,7 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 
 
 	if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 'v' ))
-	{ 
+	{
 			// Get Soldier
 			GetSoldier( &pSoldier, gusSelectedSoldier );
 
@@ -632,7 +614,7 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 	}
 
 	if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 'p' ))
-	{ 
+	{
 			// Get Soldier
 			GetSoldier( &pSoldier, gusSelectedSoldier );
 
@@ -662,7 +644,7 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 	}
 
 	if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 's' ))
-	{ 
+	{
 			// Get Soldier
 			GetSoldier( &pSoldier, gusSelectedSoldier );
 
@@ -696,14 +678,12 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 
 UINT32 DebugScreenInit(void)
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
 
 BOOLEAN CheckForAndExitTacticalDebug( )
 {
-	PERFORMANCE_MARKER
 	if ( gfExitDebugScreen )
 	{
 		FirstTime = TRUE;
@@ -721,7 +701,6 @@ BOOLEAN CheckForAndExitTacticalDebug( )
 
 void ExitDebugScreen( )
 {
-	PERFORMANCE_MARKER
 	if ( guiCurrentScreen == DEBUG_SCREEN )
 	{
 		gfExitDebugScreen = TRUE;
@@ -733,12 +712,11 @@ void ExitDebugScreen( )
 
 UINT32 DebugScreenHandle(void)
 {
-	PERFORMANCE_MARKER
 	if ( CheckForAndExitTacticalDebug() )
 	{
 		return( GAME_SCREEN );
 	}
-	
+
 	if ( gfInitRect )
 	{
 		guiBackgroundRect = RegisterBackgroundRect( BGND_FLAG_PERMANENT, NULL, 0, 0, 600 , 360);
@@ -767,7 +745,6 @@ UINT32 DebugScreenHandle(void)
 
 UINT32 DebugScreenShutdown(void)
 {
-	PERFORMANCE_MARKER
 
 	return( TRUE );
 }
@@ -775,21 +752,19 @@ UINT32 DebugScreenShutdown(void)
 
 void DebugRenderHook(	)
 {
-	PERFORMANCE_MARKER
 	gDebugRenderOverride[ gCurDebugPage ]( );
 }
 
 BOOLEAN DebugKeyboardHook( InputAtom *pInputEvent )
 {
-	PERFORMANCE_MARKER
 	if ((pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == 'q' ))
-	{ 
+	{
 		gfExitDebugScreen = TRUE;
 		return( TRUE );
 	}
 
 	if ((pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == PGUP ))
-	{ 
+	{
 		// Page down
 		gCurDebugPage++;
 
@@ -804,7 +779,7 @@ BOOLEAN DebugKeyboardHook( InputAtom *pInputEvent )
 	}
 
 	if ((pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == PGDN ))
-	{ 
+	{
 		// Page down
 		gCurDebugPage--;
 
@@ -824,34 +799,29 @@ BOOLEAN DebugKeyboardHook( InputAtom *pInputEvent )
 
 void SetDebugRenderHook( RENDER_HOOK pDebugRenderOverride, INT8 ubPage )
 {
-	PERFORMANCE_MARKER
 	gDebugRenderOverride[ ubPage ] = pDebugRenderOverride;
 }
 
 void DefaultDebugPage1( )
 {
-	PERFORMANCE_MARKER
 	SetFont( LARGEFONT1 );
 	gprintf( 0,0,L"DEBUG PAGE ONE" );
 }
 
 void DefaultDebugPage2( )
 {
-	PERFORMANCE_MARKER
 	SetFont( LARGEFONT1 );
 	gprintf( 0,0,L"DEBUG PAGE TWO" );
 }
 
 void DefaultDebugPage3( )
 {
-	PERFORMANCE_MARKER
 	SetFont( LARGEFONT1 );
 	gprintf( 0,0,L"DEBUG PAGE THREE" );
 }
 
 void DefaultDebugPage4( )
 {
-	PERFORMANCE_MARKER
 	SetFont( LARGEFONT1 );
 	gprintf( 0,0,L"DEBUG PAGE FOUR" );
 }
@@ -859,16 +829,14 @@ void DefaultDebugPage4( )
 
 UINT32 SexScreenInit(void)
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
-} 
+}
 
 #define SMILY_DELAY						100
 #define SMILY_END_DELAY				1000
 
 UINT32 SexScreenHandle(void)
 {
-	PERFORMANCE_MARKER
 	static UINT8					ubCurrentScreen = 0;
 	VOBJECT_DESC					VObjectDesc;
 	static UINT32					guiSMILY;
@@ -968,7 +936,6 @@ UINT32 SexScreenHandle(void)
 
 UINT32 SexScreenShutdown(void)
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
@@ -976,15 +943,13 @@ UINT32 SexScreenShutdown(void)
 
 UINT32 DemoExitScreenInit(void)
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
-} 
+}
 
 
 void DoneFadeOutForDemoExitScreen( void )
 {
-	PERFORMANCE_MARKER
-	gfProgramIsRunning = FALSE;	
+	gfProgramIsRunning = FALSE;
 }
 
 extern INT8 gbFadeSpeed;
@@ -992,18 +957,17 @@ extern INT8 gbFadeSpeed;
 #ifdef GERMAN
 void DisplayTopwareGermanyAddress()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC		vo_desc;
 	UINT32					uiTempID;
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	SGPRect ClipRect;
-	
+
 	//bring up the Topware address screen
 	vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 	sprintf( vo_desc.ImageFile, "German\\topware_germany.sti" );
 	if( !AddVideoObject( &vo_desc, &uiTempID ) )
-	{	
+	{
 		AssertMsg( 0, "Failed to load German\\topware_germany.sti" );
 		return;
 	}
@@ -1029,7 +993,6 @@ void DisplayTopwareGermanyAddress()
 
 UINT32 DemoExitScreenHandle(void)
 {
-	PERFORMANCE_MARKER
 	gfProgramIsRunning = FALSE;
 	return( DEMO_EXIT_SCREEN );
 }
@@ -1037,7 +1000,6 @@ UINT32 DemoExitScreenHandle(void)
 
 UINT32 DemoExitScreenShutdown(void)
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
@@ -1045,37 +1007,31 @@ UINT32 DemoExitScreenShutdown(void)
 
 UINT32 LoadSaveScreenInit()
 {
-	PERFORMANCE_MARKER
 	return TRUE;
 }
 
 UINT32 LoadSaveScreenHandle()
 {
-	PERFORMANCE_MARKER
 	return TRUE;
 }
 
 UINT32 LoadSaveScreenShutdown()
 {
-	PERFORMANCE_MARKER
 	return TRUE;
 }
 
 UINT32 EditScreenInit()
 {
-	PERFORMANCE_MARKER
 	return TRUE;
 }
 
 UINT32 EditScreenHandle()
 {
-	PERFORMANCE_MARKER
 	return TRUE;
 }
 
 UINT32 EditScreenShutdown()
 {
-	PERFORMANCE_MARKER
 	return TRUE;
 }
 

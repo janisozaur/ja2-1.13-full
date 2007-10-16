@@ -6,7 +6,7 @@
 	#include "mapscreen.h"
 	#include <stdio.h>
 	#include <stdarg.h>
-	#include <time.h> 
+	#include <time.h>
 	#include "gameloop.h"
 	#include "sgp.h"
 	#include "vobject.h"
@@ -201,7 +201,7 @@
 #define	 INV_BODY_X 71
 #define	 INV_BODY_Y 116
 
-#define	 NAME_X						4	
+#define	 NAME_X						4
 #define	 NAME_WIDTH					55 - NAME_X
 
 #define	 ASSIGN_X					60
@@ -241,7 +241,7 @@
 #define TRAIN_Y_OFFSET	 53
 #define TRAIN_X_OFF		65
 #define TRAIN_WID			80
-#define TRAIN_HEIG		 47 
+#define TRAIN_HEIG		 47
 #define STRING_X_OFFSET	10
 #define STRING_Y_OFFSET	 5
 #define POP_UP_BOX_X		120
@@ -258,7 +258,7 @@
 #define STR_Y 42
 #define DEX_X STR_X
 #define DEX_Y 32
-#define AGL_X STR_X 
+#define AGL_X STR_X
 #define AGL_Y 22
 #define LDR_X STR_X
 #define LDR_Y 52
@@ -287,7 +287,7 @@
 #define CHAR_NAME_WID 164 - CHAR_NAME_X
 #define CHAR_NAME_HEI 11 - CHAR_NAME_Y
 #define CHAR_LOC_X	76
-#define CHAR_LOC_Y	84 
+#define CHAR_LOC_Y	84
 #define CHAR_LOC_WID	16
 #define CHAR_LOC_HEI	9
 #define CHAR_TIME_REMAINING_X		207
@@ -464,7 +464,7 @@ SGPPoint gMapSortButtons[ MAX_SORT_METHODS ]={
 
 
 // map screen's inventory panel pockets - top right corner coordinates
-INV_REGION_DESC gMapScreenInvPocketXY[] = 
+INV_REGION_DESC gMapScreenInvPocketXY[] =
 {
 	204,116,			// HELMETPOS
 	204,145,			// VESTPOS
@@ -487,7 +487,7 @@ INV_REGION_DESC gMapScreenInvPocketXY[] =
 	60,	323				// SMALLPOCK8
 };
 
-INV_REGION_DESC gSCamoXY = 
+INV_REGION_DESC gSCamoXY =
 {
 	INV_BODY_X, INV_BODY_Y		// X, Y Location of Map screen's Camouflage region
 };
@@ -618,7 +618,7 @@ INT32 giCommonGlowBaseTime = 0;
 INT32 giFlashAssignBaseTime = 0;
 INT32 giFlashContractBaseTime = 0;
 UINT32 guiFlashCursorBaseTime = 0;
-INT32 giPotCharPathBaseTime = 0; 
+INT32 giPotCharPathBaseTime = 0;
 
 /*
 // next and prev
@@ -717,7 +717,7 @@ extern void HandlePreBattleInterfaceStates();
 extern STR16 pContractButtonString[];
 extern STR16 pBullseyeStrings[];
 
-extern OBJECTTYPE	*gpItemDescObject; 
+extern OBJECTTYPE	*gpItemDescObject;
 
 extern SOLDIERTYPE *pProcessingSoldier;
 
@@ -727,7 +727,7 @@ extern FACETYPE	*gpCurrentTalkingFace;
 //extern BOOLEAN	gfFacePanelActive;
 
 // externs for highlighting of ammo/weapons
-extern UINT32 guiMouseOverItemTime; 
+extern UINT32 guiMouseOverItemTime;
 extern BOOLEAN gfCheckForMouseOverItem;
 extern INT8 gbCheckForMouseOverItemPos;
 
@@ -939,7 +939,7 @@ void TrashCanBtnCallback( MOUSE_REGION *pRegion, INT32 iReason);
 
 extern void KeyRingItemPanelButtonCallback( MOUSE_REGION *pRegion, INT32 iReason );
 
-// handle talking 
+// handle talking
 void HandleSpontanousTalking( void );
 BOOLEAN ContinueDialogue(SOLDIERTYPE *pSoldier, BOOLEAN fDone );
 extern void CreateDestroyMilitiaSectorButtons( void );
@@ -1078,7 +1078,6 @@ void DumpItemsList( void );
 // the tries to select a mapscreen character by his soldier ID
 BOOLEAN SetInfoChar( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	INT8 bCounter;
 
 	for ( bCounter = 0; bCounter < MAX_CHARACTER_COUNT; bCounter++)
@@ -1101,7 +1100,6 @@ BOOLEAN SetInfoChar( UINT8 ubID )
 
 void DisplayDestinationOfCurrentDestMerc( void )
 {
-	PERFORMANCE_MARKER
 	// will display the dest of the current dest merc
 	CHAR16 sString[ 32 ];
 	INT16 sX, sY;
@@ -1125,7 +1123,6 @@ void DisplayDestinationOfCurrentDestMerc( void )
 
 void ContractBoxGlow( void )
 {
-	PERFORMANCE_MARKER
 /* Why not?
  static INT32 iColorNum=10;
  static BOOLEAN fDelta=FALSE;
@@ -1140,7 +1137,7 @@ void ContractBoxGlow( void )
 	{
 		// restore background
 		// RestoreExternBackgroundRect( CONTRACT_X, CONTRACT_Y, CONTRACT_WIDTH+1, CONTRACT_HEIGHT+1 );
- 
+
 		// reset old
 		fOldContractGlow = FALSE;
 	}
@@ -1175,9 +1172,9 @@ void ContractBoxGlow( void )
 		iColorNum--;
 
 	usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
-	RectangleDraw( TRUE, CONTRACT_X, CONTRACT_Y, CONTRACT_X+CONTRACT_WIDTH, CONTRACT_Y+CONTRACT_HEIGHT, usColor, pDestBuf );	
+	RectangleDraw( TRUE, CONTRACT_X, CONTRACT_Y, CONTRACT_X+CONTRACT_WIDTH, CONTRACT_Y+CONTRACT_HEIGHT, usColor, pDestBuf );
 	InvalidateRegion(CONTRACT_X, CONTRACT_Y, CONTRACT_X+CONTRACT_WIDTH+1, CONTRACT_Y+CONTRACT_HEIGHT+1);
 	UnLockVideoSurface( FRAME_BUFFER );
 
@@ -1190,7 +1187,6 @@ void ContractBoxGlow( void )
 
 void ContractListRegionBoxGlow( UINT16 usCount )
 {
-	PERFORMANCE_MARKER
  static INT32 iColorNum =10;
  static BOOLEAN fDelta=FALSE;
  UINT16 usColor;
@@ -1231,24 +1227,24 @@ void ContractListRegionBoxGlow( UINT16 usCount )
 	{
 		usVehicleCount = usCount - FIRST_VEHICLE;
 		sYStart = usVehicleY;
-		usY=(Y_OFFSET*usVehicleCount-1)+(sYStart+(usVehicleCount*Y_SIZE));	
+		usY=(Y_OFFSET*usVehicleCount-1)+(sYStart+(usVehicleCount*Y_SIZE));
 	}
 	else
 	{
 		sYStart = Y_START;
-		usY=(Y_OFFSET*usCount-1)+(sYStart+(usCount*Y_SIZE));	
+		usY=(Y_OFFSET*usCount-1)+(sYStart+(usCount*Y_SIZE));
 	}
 
 	// y start position of box
-	//usY=(Y_OFFSET*usCount-1)+(Y_START+(usCount*Y_SIZE) + sYAdd );	
+	//usY=(Y_OFFSET*usCount-1)+(Y_START+(usCount*Y_SIZE) + sYAdd );
 
-	//usY=(Y_OFFSET*usCount-1)+(sYStart+(usCount*Y_SIZE));	
+	//usY=(Y_OFFSET*usCount-1)+(sYStart+(usCount*Y_SIZE));
 
 	// glow contract box
 	usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw( TRUE, TIME_REMAINING_X, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH, usY + GetFontHeight( MAP_SCREEN_FONT ) + 2, usColor, pDestBuf );	
+	RectangleDraw( TRUE, TIME_REMAINING_X, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH, usY + GetFontHeight( MAP_SCREEN_FONT ) + 2, usColor, pDestBuf );
 	InvalidateRegion(TIME_REMAINING_X - 1, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH + 1, usY + GetFontHeight( MAP_SCREEN_FONT ) + 3 );
 	UnLockVideoSurface( FRAME_BUFFER );
 
@@ -1262,7 +1258,6 @@ void ContractListRegionBoxGlow( UINT16 usCount )
 
 void GlowFace( void )
 {
-	PERFORMANCE_MARKER
  static INT32 iColorNum =10;
  static BOOLEAN fDelta=FALSE;
  static BOOLEAN fOldFaceGlow = FALSE;
@@ -1307,9 +1302,9 @@ void GlowFace( void )
 
 	// glow contract box
 	usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw( TRUE, 9, 18, 60, 63 , usColor, pDestBuf );	
+	RectangleDraw( TRUE, 9, 18, 60, 63 , usColor, pDestBuf );
 	InvalidateRegion( 9, 18, 61, 64 );
 	UnLockVideoSurface( FRAME_BUFFER );
 
@@ -1321,7 +1316,6 @@ void GlowFace( void )
 
 void GlowItem( void )
 {
-	PERFORMANCE_MARKER
  static INT32 iColorNum =10;
  static BOOLEAN fDelta=FALSE;
  static BOOLEAN fOldItemGlow = FALSE;
@@ -1373,9 +1367,9 @@ void GlowItem( void )
 
 	// glow contract box
 	usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw( TRUE, 3, 80, 64, 104 , usColor, pDestBuf );	
+	RectangleDraw( TRUE, 3, 80, 64, 104 , usColor, pDestBuf );
 	InvalidateRegion( 3, 80, 65, 105 );
 	UnLockVideoSurface( FRAME_BUFFER );
 }
@@ -1383,7 +1377,6 @@ void GlowItem( void )
 
 void GlowTrashCan( void )
 {
-	PERFORMANCE_MARKER
  static INT32 iColorNum =10;
  static BOOLEAN fDelta=FALSE;
  static BOOLEAN fOldTrashCanGlow = FALSE;
@@ -1421,9 +1414,9 @@ void GlowTrashCan( void )
 
 	// glow contract box
 	usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw( TRUE, TRASH_CAN_X, TRASH_CAN_Y , TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT , usColor, pDestBuf );	
+	RectangleDraw( TRUE, TRASH_CAN_X, TRASH_CAN_Y , TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT , usColor, pDestBuf );
 	InvalidateRegion( TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH + 1, TRASH_CAN_Y + TRASH_CAN_HEIGHT + 1 );
 	UnLockVideoSurface( FRAME_BUFFER );
 
@@ -1436,10 +1429,9 @@ void GlowTrashCan( void )
 
 void DrawFace( INT16 sCharNumber )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE	*pSoldier = NULL;
 	static INT16 sOldId = -1;
-	
+
 	// draws the face of the currently selected merc, being displayed int he upper left hand corner
 
 	// grab the soldier
@@ -1471,7 +1463,7 @@ void DrawFace( INT16 sCharNumber )
 
 	// render their face
 	RenderSoldierFace( pSoldier, SOLDIER_PIC_X, SOLDIER_PIC_Y, TRUE );
-	
+
 	return;
 }
 
@@ -1479,7 +1471,6 @@ void DrawFace( INT16 sCharNumber )
 
 void RenderHandPosItem( void )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE	*pSoldier = NULL;
 	// renders the inventory item in char's right hand
 
@@ -1521,7 +1512,6 @@ void RenderHandPosItem( void )
 
 void RenderIconsForUpperLeftCornerPiece( INT8 bCharNumber )
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 
 	GetVideoObject(&hHandle, guiULICONS);
@@ -1544,14 +1534,13 @@ void RenderIconsForUpperLeftCornerPiece( INT8 bCharNumber )
 	if( Menptr[ gCharactersList[ bCharNumber ].usSolID ].usMedicalDeposit > 0 )
 	{
 		// draw medical deposit icon
-		BltVideoObject( guiSAVEBUFFER, hHandle, 1, CHAR_ICON_X, CHAR_ICON_CONTRACT_Y + ( 2 * CHAR_ICON_SPACING ), VO_BLT_SRCTRANSPARENCY, NULL );	
+		BltVideoObject( guiSAVEBUFFER, hHandle, 1, CHAR_ICON_X, CHAR_ICON_CONTRACT_Y + ( 2 * CHAR_ICON_SPACING ), VO_BLT_SRCTRANSPARENCY, NULL );
 	}
 }
 
 
 void DrawPay(INT16 sCharNumber)
 {
-	PERFORMANCE_MARKER
 	// will draw the pay
 	INT32 uiSalary;
 	CHAR16 sString[7];
@@ -1561,32 +1550,31 @@ void DrawPay(INT16 sCharNumber)
 
 	// get merc id
 	usMercProfileID = MercPtrs[ gCharactersList[ sCharNumber ].usSolID ]->ubProfile;
-	
+
 	// grab salary
 	uiSalary=( ( UINT32 ) gMercProfiles[ usMercProfileID ].sSalary );
-	
-	
+
+
 	// font stuff
 	SetFontForeground( CHAR_TITLE_FONT_COLOR );
 	SetFontBackground( FONT_BLACK );
-	
-	// parse salary 
+
+	// parse salary
 	swprintf( sString, L"%d", uiSalary );
-	
+
 	// right justify salary
 	FindFontRightCoordinates(CHAR_PAY_X,CHAR_PAY_Y , CHAR_PAY_WID,CHAR_PAY_HEI ,sString , CHAR_FONT, &usX, &usY);
-	
+
 	// draw salary
 	DrawString(sString,usX, usY, CHAR_FONT);
 }
 
 void DrawCharBars( void )
 {
-	PERFORMANCE_MARKER
 	UINT16 usSoldierID;
 	SOLDIERTYPE	*pSoldier;
 
-	// will draw the heath, morale and breath bars for a character being displayed in the upper left hand corner 
+	// will draw the heath, morale and breath bars for a character being displayed in the upper left hand corner
 
 	if( ( bSelectedInfoChar == -1 )&&( bSelectedDestChar == -1 ) )
 	{
@@ -1646,7 +1634,6 @@ void DrawCharBars( void )
 
 void DrawCharStats( INT16 sCharNum )
 {
-	PERFORMANCE_MARKER
 	// will draw the characters stats, max life, strength, dex, and skills
 	CHAR16 sString[9];
 	INT16 usX, usY;
@@ -1659,7 +1646,7 @@ void DrawCharStats( INT16 sCharNum )
 	SetFont(CHAR_FONT);
 	SetFontForeground(CHAR_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
-	
+
 
 	// strength
 	swprintf( sString, L"%d", pSoldier->stats.bStrength);
@@ -1684,7 +1671,7 @@ void DrawCharStats( INT16 sCharNum )
 	FindFontRightCoordinates(STR_X, STR_Y ,STAT_WID ,STAT_HEI ,sString, CHAR_FONT, &usX, &usY);
 	DrawString(sString,usX, STR_Y,CHAR_FONT );
 
-	// dexterity 
+	// dexterity
 	swprintf( sString, L"%d", pSoldier->stats.bDexterity );
 
 	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->timeChanges.uiChangeDexterityTime ) && ( pSoldier->timeChanges.uiChangeDexterityTime != 0 ) )
@@ -1704,7 +1691,7 @@ void DrawCharStats( INT16 sCharNum )
 	}
 
 	// right justify
-	FindFontRightCoordinates(DEX_X,DEX_Y ,STAT_WID ,STAT_HEI ,sString , CHAR_FONT, &usX, &usY);	
+	FindFontRightCoordinates(DEX_X,DEX_Y ,STAT_WID ,STAT_HEI ,sString , CHAR_FONT, &usX, &usY);
 	DrawString(sString,usX, DEX_Y,CHAR_FONT );
 
 	// agility
@@ -1755,7 +1742,7 @@ void DrawCharStats( INT16 sCharNum )
 
 	// leadership
 	swprintf( sString, L"%d", pSoldier->stats.bLeadership );
-	
+
 	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->timeChanges.uiChangeLeadershipTime ) && ( pSoldier->timeChanges.uiChangeLeadershipTime != 0 ) )
 	{
 		if( pSoldier->usValueGoneUp & LDR_INCREASE )
@@ -1797,7 +1784,7 @@ void DrawCharStats( INT16 sCharNum )
 
 	// right justify
 	FindFontRightCoordinates(LVL_X,LVL_Y,STAT_WID ,STAT_HEI,sString , CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX, LVL_Y,CHAR_FONT ); 
+	DrawString(sString,usX, LVL_Y,CHAR_FONT );
 
 	// marksmanship
 	swprintf( sString, L"%d", pSoldier->stats.bMarksmanship );
@@ -1818,9 +1805,9 @@ void DrawCharStats( INT16 sCharNum )
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
 	}
 
-	// right justify 
+	// right justify
 	FindFontRightCoordinates(MRK_X,MRK_Y,STAT_WID ,STAT_HEI,sString , CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX, MRK_Y,CHAR_FONT ); 
+	DrawString(sString,usX, MRK_Y,CHAR_FONT );
 
 	// explosives
 	swprintf( sString, L"%d", pSoldier->stats.bExplosive );
@@ -1843,8 +1830,8 @@ void DrawCharStats( INT16 sCharNum )
 
 	// right justify
 	FindFontRightCoordinates(EXP_X,EXP_Y,STAT_WID ,STAT_HEI,sString , CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX, EXP_Y,CHAR_FONT ); 
-	
+	DrawString(sString,usX, EXP_Y,CHAR_FONT );
+
 	// mechanical
 	swprintf( sString, L"%d", pSoldier->stats.bMechanical );
 
@@ -1866,8 +1853,8 @@ void DrawCharStats( INT16 sCharNum )
 
 	// right justify
 	FindFontRightCoordinates(MEC_X,MEC_Y,STAT_WID ,STAT_HEI,sString , CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX, MEC_Y,CHAR_FONT ); 
-	
+	DrawString(sString,usX, MEC_Y,CHAR_FONT );
+
 	// medical
 	swprintf( sString, L"%d", pSoldier->stats.bMedical );
 
@@ -1900,7 +1887,6 @@ void DrawCharStats( INT16 sCharNum )
 
 void DrawCharHealth( INT16 sCharNum )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiHealthPercent = 0;
 	CHAR16 sString[9];
 	INT16 usX, usY;
@@ -1996,7 +1982,6 @@ void DrawCharHealth( INT16 sCharNum )
 // "character" refers to hired people AND vehicles
 void DrawCharacterInfo(INT16 sCharNumber)
 {
-	PERFORMANCE_MARKER
 	CHAR16 sString[80];
 	INT16 usX, usY;
 	INT16 usMercProfileID;
@@ -2020,7 +2005,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 
 
 	// draw particular info about a character that are neither attributes nor skills
-	
+
 
 	// get profile information
 	usMercProfileID = pSoldier->ubProfile;
@@ -2155,7 +2140,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 	}
 
 
-	// draw attributes & skills for currently displayed character 
+	// draw attributes & skills for currently displayed character
 	DrawCharStats(sCharNumber);
 
 	// remaining contract length
@@ -2196,7 +2181,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 				SetFontForeground(FONT_LTGREEN);
 			}
 
-			swprintf(sString, L"%.1f%s/%d%s", dTimeLeft, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ], pSoldier->iTotalContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ]); 
+			swprintf(sString, L"%.1f%s/%d%s", dTimeLeft, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ], pSoldier->iTotalContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ]);
 		}
 		else
 		{
@@ -2230,7 +2215,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 	{
 		INT32 iBeenHiredFor = ( GetWorldTotalMin( ) / NUM_MIN_IN_DAY ) - pSoldier->iStartContractTime;
 
-		swprintf(sString, L"%d%s/%d%s",gMercProfiles[ pSoldier->ubProfile ].iMercMercContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ], iBeenHiredFor, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] ); 
+		swprintf(sString, L"%d%s/%d%s",gMercProfiles[ pSoldier->ubProfile ].iMercMercContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ], iBeenHiredFor, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] );
 	}
 	else
 	{
@@ -2273,8 +2258,8 @@ void DrawCharacterInfo(INT16 sCharNumber)
 
 	// insert commas and dollar sign
 	InsertCommasForDollarFigure( sString );
-	InsertDollarSignInToString( sString );	
-	
+	InsertDollarSignInToString( sString );
+
 	FindFontRightCoordinates(CHAR_SALARY_X, CHAR_SALARY_Y, CHAR_SALARY_WID, CHAR_SALARY_HEI, sString, CHAR_FONT, &usX, &usY);
 	DrawString(sString,usX,usY, CHAR_FONT);
 
@@ -2288,7 +2273,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 		InsertCommasForDollarFigure( sString );
 		InsertDollarSignInToString( sString );
 
-		FindFontRightCoordinates(CHAR_MEDICAL_X, CHAR_MEDICAL_Y, CHAR_MEDICAL_WID, CHAR_MEDICAL_HEI, sString, CHAR_FONT, &usX, &usY); 
+		FindFontRightCoordinates(CHAR_MEDICAL_X, CHAR_MEDICAL_Y, CHAR_MEDICAL_WID, CHAR_MEDICAL_HEI, sString, CHAR_FONT, &usX, &usY);
 		DrawString(sString,usX,CHAR_MEDICAL_Y, CHAR_FONT);
 	}
 
@@ -2319,10 +2304,10 @@ void DrawCharacterInfo(INT16 sCharNumber)
 		swprintf( sString, pPOWStrings[ 1 ] );
 	}
 
-	FindFontCenterCoordinates(CHAR_MORALE_X, CHAR_MORALE_Y, CHAR_MORALE_WID, CHAR_MORALE_HEI, sString, CHAR_FONT, &usX, &usY); 
+	FindFontCenterCoordinates(CHAR_MORALE_X, CHAR_MORALE_Y, CHAR_MORALE_WID, CHAR_MORALE_HEI, sString, CHAR_FONT, &usX, &usY);
 	DrawString(sString,usX,CHAR_MORALE_Y, CHAR_FONT);
 
-	
+
 	return;
 }
 
@@ -2330,7 +2315,6 @@ void DrawCharacterInfo(INT16 sCharNumber)
 // this character is in transit has an item picked up
 BOOLEAN CharacterIsInTransitAndHasItemPickedUp( INT8 bCharacterNumber )
 {
-	PERFORMANCE_MARKER
 
 	// valid character?
 	if( bCharacterNumber == -1 )
@@ -2366,7 +2350,6 @@ BOOLEAN CharacterIsInTransitAndHasItemPickedUp( INT8 bCharacterNumber )
 
 void DisplayCharacterInfo( void )
 {
-	PERFORMANCE_MARKER
 	Assert( bSelectedInfoChar < MAX_CHARACTER_COUNT );
 	Assert( gCharactersList[ bSelectedInfoChar ].fValid );
 
@@ -2390,7 +2373,6 @@ void DisplayCharacterInfo( void )
 
 INT32 GetPathTravelTimeDuringPlotting( PathStPtr pPath )
 {
-	PERFORMANCE_MARKER
 	INT32 iTravelTime = 0;
 	WAYPOINT pCurrent;
 	WAYPOINT pNext;
@@ -2428,7 +2410,7 @@ INT32 GetPathTravelTimeDuringPlotting( PathStPtr pPath )
 			if( pGroup == NULL )
 			{
 				SetUpMvtGroupForVehicle( &( Menptr[gCharactersList[bSelectedDestChar].usSolID] ) );
-				
+
 				// get vehicle id
 				ubGroupId = pVehicleList[ Menptr[gCharactersList[bSelectedDestChar].usSolID].iVehicleId ].ubMovementGroup;
 				pGroup = GetGroup( ubGroupId );
@@ -2499,7 +2481,7 @@ INT32 GetPathTravelTimeDuringPlotting( PathStPtr pPath )
 
 		pPath = pPath->pNext;
 	}
-	
+
 	return( iTravelTime );
 }
 
@@ -2507,7 +2489,6 @@ INT32 GetPathTravelTimeDuringPlotting( PathStPtr pPath )
 
 void DisplayGroundEta( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 iTotalTime = 0;
 
 
@@ -2516,7 +2497,7 @@ void DisplayGroundEta( void )
 		return;
 	}
 
-	if( bSelectedDestChar == -1 ) 
+	if( bSelectedDestChar == -1 )
 	{
 		return;
 	}
@@ -2534,7 +2515,7 @@ void DisplayGroundEta( void )
 	SetFontForeground( FONT_LTGREEN );
 	SetFontBackground( FONT_BLACK );
 
-	mprintf( CLOCK_ETA_X, CLOCK_Y_START, pEtaString[ 0 ] ); 
+	mprintf( CLOCK_ETA_X, CLOCK_Y_START, pEtaString[ 0 ] );
 
 	// if less than one day
 	if( ( iTotalTime / ( 60 * 24 ) ) < 1 )
@@ -2555,7 +2536,6 @@ void DisplayGroundEta( void )
 
 void HighLightAssignLine()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES;
 	UINT8	*pDestBuf;
 	UINT16 usColor;
@@ -2598,8 +2578,8 @@ void HighLightAssignLine()
 		iColorNum++;
 	else
 		iColorNum--;
-	
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
+
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
@@ -2609,15 +2589,15 @@ void HighLightAssignLine()
 			usX=ASSIGN_X;
 			//usY=Y_START+(giHighLine*GetFontHeight((MAP_SCREEN_FONT)));
 			usY=(Y_OFFSET*usCount-1)+(Y_START+(usCount*Y_SIZE));
-			
+
 			if( usCount >= FIRST_VEHICLE )
 			{
 				usVehicleCount = usCount - FIRST_VEHICLE;
 				usY = (Y_OFFSET*usVehicleCount-1)+(usVehicleY+(usVehicleCount*Y_SIZE));
 			}
-		
+
 			usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
-			
+
 			LineDraw(TRUE, usX, usY, usX, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
 			LineDraw(TRUE, usX+ASSIGN_WIDTH, usY, usX+ASSIGN_WIDTH, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
 			if( ( usCount == 0 ) || ( usCount != 0 ? !( IsCharacterSelectedForAssignment( ( UINT16 )( usCount - 1 ) ) ) : 0 ) || ( usCount == FIRST_VEHICLE ) )
@@ -2633,14 +2613,13 @@ void HighLightAssignLine()
 			InvalidateRegion( usX, usY, usX+ASSIGN_WIDTH+1, usY+GetFontHeight(MAP_SCREEN_FONT)+3);
 		}
 	}
-	
+
 	UnLockVideoSurface( FRAME_BUFFER );
 }
 
 
 void HighLightDestLine()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES;
 	UINT8	*pDestBuf;
 	UINT16 usColor;
@@ -2658,13 +2637,13 @@ void HighLightDestLine()
 		uiOldHighlight = MAX_CHARACTER_COUNT + 1;
 		return;
 	}
-	
+
 	// if not ready to change glow phase yet, leave
 	if ( !gfGlowTimerExpired )
 		return;
 
 
-	// check if we have moved lines, if so, reset 
+	// check if we have moved lines, if so, reset
 	if( uiOldHighlight != giDestHighLine )
 	{
 		iColorNum = STARTING_COLOR_NUM;
@@ -2682,9 +2661,9 @@ void HighLightDestLine()
 		iColorNum++;
 	else
 		iColorNum--;
- 
 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
+
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
@@ -2693,15 +2672,15 @@ void HighLightDestLine()
 		{
 			usX=DEST_ETA_X-4;
 			usY=(Y_OFFSET*usCount-1)+(Y_START+(usCount*Y_SIZE));
-			
+
 			if( usCount >= FIRST_VEHICLE )
 			{
 				usVehicleCont = usCount - FIRST_VEHICLE;
 				usY=(Y_OFFSET*usVehicleCont-1)+(usVehicleY+(usVehicleCont*Y_SIZE));
 			}
-		
+
 			usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
-			
+
 			if( ( usCount == 0 ) || ( usCount != 0 ? !( CharacterIsGettingPathPlotted( ( UINT16 )( usCount - 1 ) ) ) : 0 ) || ( usCount == FIRST_VEHICLE ) )
 			{
 				LineDraw( TRUE, usX+4, usY, usX+DEST_ETA_WIDTH+4, usY, usColor,pDestBuf);
@@ -2727,7 +2706,6 @@ void HighLightDestLine()
 
 void HighLightSleepLine()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES;
 	UINT8	*pDestBuf;
 	UINT16 usColor;
@@ -2771,8 +2749,8 @@ void HighLightSleepLine()
 	else
 		iColorNum--;
 
- 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
+
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
@@ -2783,15 +2761,15 @@ void HighLightSleepLine()
 			usX2 = SLEEP_X + SLEEP_WIDTH;
 
 			usY=(Y_OFFSET*usCount-1)+(Y_START+(usCount*Y_SIZE));
-			
+
 			if( usCount >= FIRST_VEHICLE )
 			{
 				usVehicleCount = usCount - FIRST_VEHICLE;
 				usY=(Y_OFFSET*usVehicleCount-1)+(usVehicleY+(usVehicleCount*Y_SIZE));
 			}
-		
+
 			usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
-			
+
 			if( ( usCount == 0 ) || ( usCount != 0 ? !( IsCharacterSelectedForSleep( ( UINT16 )( usCount - 1 ) ) ) : 0 ) || ( usCount == FIRST_VEHICLE ) )
 			{
 				LineDraw( TRUE, usX+4, usY, usX2, usY, usColor,pDestBuf);
@@ -2814,7 +2792,6 @@ void HighLightSleepLine()
 
 void AddCharacter( SOLDIERTYPE *pCharacter )
 {
-	PERFORMANCE_MARKER
 	UINT16 usCount=0;
 	UINT16 usVehicleCount = 0, usVehicleLoop = 0;
 
@@ -2865,8 +2842,8 @@ void AddCharacter( SOLDIERTYPE *pCharacter )
 	}
 
 	// copy over soldier id value
-	gCharactersList[usCount].usSolID = ( UINT16 )pCharacter->ubID;	
-	
+	gCharactersList[usCount].usSolID = ( UINT16 )pCharacter->ubID;
+
 	// valid character
 	gCharactersList[usCount].fValid = TRUE;
 
@@ -2877,17 +2854,15 @@ void AddCharacter( SOLDIERTYPE *pCharacter )
 /*
 void MoveCharacter(UINT16 uiInitialPosition, UINT16 uiFinalPosition)
 {
-	PERFORMANCE_MARKER
 	if (!gCharactersList[uiInitialPosition].fValid)
 		return;
 	else
-		memcpy(&gCharactersList[uiFinalPosition], &gCharactersList[uiInitialPosition], sizeof(MapScreenCharacterSt)); 
+		memcpy(&gCharactersList[uiFinalPosition], &gCharactersList[uiInitialPosition], sizeof(MapScreenCharacterSt));
 }
 
 
 void SwapCharacters(UINT16 uiInitialPosition, UINT16 uiFinalPosition)
 {
-	PERFORMANCE_MARKER
 	MapScreenCharacterSt pTempChar;
 	memcpy(&pTempChar, &gCharactersList[uiInitialPosition], sizeof(MapScreenCharacterSt));
 	memcpy(&gCharactersList[uiInitialPosition], &gCharactersList[uiFinalPosition], sizeof(MapScreenCharacterSt));
@@ -2897,7 +2872,6 @@ void SwapCharacters(UINT16 uiInitialPosition, UINT16 uiFinalPosition)
 
 void RemoveCharacter(UINT16 uiCharPosition)
 {
-	PERFORMANCE_MARKER
  memset(&gCharactersList[uiCharPosition], 0, sizeof( MapScreenCharacterSt ));
 }
 */
@@ -2905,7 +2879,6 @@ void RemoveCharacter(UINT16 uiCharPosition)
 
 void LoadCharacters( void )
 {
-	PERFORMANCE_MARKER
 	UINT16 uiCount=0;
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
 	INT32 cnt=0;
@@ -2946,7 +2919,6 @@ void LoadCharacters( void )
 
 void DisplayCharacterList()
 {
-	PERFORMANCE_MARKER
 	INT16 sCount=0;
 	UINT8 ubForegroundColor = 0;
 
@@ -2971,7 +2943,7 @@ void DisplayCharacterList()
 			if( sCount == ( INT16 ) giHighLine )
 			{
 				ubForegroundColor = FONT_WHITE;
-			} 
+			}
 			// check to see if character is still alive
 			else if( Menptr[gCharactersList[sCount].usSolID].stats.bLife == 0 )
 			{
@@ -3005,7 +2977,7 @@ void DisplayCharacterList()
 			DrawLocation(sCount, sCount, MAP_SCREEN_FONT);
 			DrawDestination(sCount, sCount, MAP_SCREEN_FONT);
 			DrawAssignment(sCount, sCount, MAP_SCREEN_FONT);
-			DrawTimeRemaining(sCount, MAP_SCREEN_FONT, ubForegroundColor ); 
+			DrawTimeRemaining(sCount, MAP_SCREEN_FONT, ubForegroundColor );
 		}
 	}
 
@@ -3025,7 +2997,6 @@ void DisplayCharacterList()
 // THIS IS STUFF THAT RUNS *ONCE* DURING APPLICATION EXECUTION, AT INITIAL STARTUP
 UINT32 MapScreenInit(void)
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC VObjectDesc;
 
 	SetUpBadSectorsList( );
@@ -3057,7 +3028,6 @@ UINT32 MapScreenInit(void)
 
 UINT32 MapScreenShutdown(void)
 {
-	PERFORMANCE_MARKER
 	// destroy some popup boxes
 	fShowAssignmentMenu = FALSE;
 	CreateDestroyAssignmentPopUpBoxes( );
@@ -3092,10 +3062,9 @@ UINT32 MapScreenShutdown(void)
 
 UINT32 MapScreenHandle(void)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiNewScreen;
 	VSURFACE_DESC	vs_desc;
-	VOBJECT_DESC VObjectDesc; 
+	VOBJECT_DESC VObjectDesc;
 //	static BOOLEAN fSecondFrame = FALSE;
 	INT32 iCounter = 0;
 
@@ -3107,7 +3076,7 @@ UINT32 MapScreenHandle(void)
 	{
 		// handle the help screen
 		HelpScreenHandler();
-		return( MAP_SCREEN ); 
+		return( MAP_SCREEN );
 	}
 
 	MoveRadarScreen();
@@ -3214,7 +3183,7 @@ UINT32 MapScreenHandle(void)
 		//RenderTacticalInterface();
 		vs_desc.fCreateFlags = VSURFACE_CREATE_FROMFILE | VSURFACE_SYSTEM_MEM_USAGE;
 		// Grab the Map image
- 		
+
 		strcpy(vs_desc.ImageFile, "INTERFACE\\b_map.pcx");
 		CHECKF(AddVideoSurface(&vs_desc, &guiBIGMAP));
 
@@ -3224,7 +3193,7 @@ UINT32 MapScreenHandle(void)
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("INTERFACE\\SAM.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &guiSAMICON));
-		
+
 		// VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 		// FilenameForBPP("INTERFACE\\s_map.sti", VObjectDesc.ImageFile);
 		// CHECKF( AddVideoObject( &VObjectDesc, &guiMAP ) );
@@ -3235,11 +3204,11 @@ UINT32 MapScreenHandle(void)
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("INTERFACE\\Mine_1.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &guiSubLevel1));
- 
+
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("INTERFACE\\Mine_2.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &guiSubLevel2));
- 
+
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("INTERFACE\\Mine_3.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &guiSubLevel3));
@@ -3247,7 +3216,7 @@ UINT32 MapScreenHandle(void)
 		//VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		//FilenameForBPP("INTERFACE\\addonslcp.sti", VObjectDesc.ImageFile);
 		//CHECKF(AddVideoObject(&VObjectDesc, &guiCORNERADDONS));
- 
+
 		//VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		//FilenameForBPP("INTERFACE\\mapborder.sti", VObjectDesc.ImageFile);
 		//CHECKF(AddVideoObject(&VObjectDesc, &guiMAPBORDER));
@@ -3261,7 +3230,7 @@ UINT32 MapScreenHandle(void)
 		CHECKF(AddVideoObject(&VObjectDesc, &guiCHARINFO));
 		/*strcpy(vs_desc.ImageFile, "INTERFACE\\playlist3.pcx");
 		CHECKF(AddVideoSurface( &vs_desc, &guiCHARLIST ));*/
-		
+
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		if (iResolution == 0)
 		{
@@ -3284,15 +3253,15 @@ UINT32 MapScreenHandle(void)
 		// VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		// FilenameForBPP("INTERFACE\\popup.sti", VObjectDesc.ImageFile);
 		// CHECKF(AddVideoObject(&VObjectDesc, &guiPOPUPBORDERS));
- 
+
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("INTERFACE\\boxes.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &guiCHARICONS));
- 
+
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("INTERFACE\\incross.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &guiCROSS));
- 
+
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("INTERFACE\\mapinv.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &guiMAPINV));
@@ -3326,20 +3295,20 @@ UINT32 MapScreenHandle(void)
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("INTERFACE\\GreenArr.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &guiLEVELMARKER));
-		
+
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("INTERFACE\\Helicop.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &guiHelicopterIcon));
-		
+
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("INTERFACE\\eta_pop_up.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &guiMapBorderEtaPopUp));
-		
+
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("INTERFACE\\pos2.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &guiMapBorderHeliSectors));
 
-		
+
 
 			VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 			FilenameForBPP("INTERFACE\\secondary_gun_hidden.sti", VObjectDesc.ImageFile);
@@ -3348,8 +3317,8 @@ UINT32 MapScreenHandle(void)
 			VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 			FilenameForBPP("INTERFACE\\selectedchararrow.sti", VObjectDesc.ImageFile);
 			CHECKF( AddVideoObject( &VObjectDesc, &guiSelectedCharArrow ) );
-			
-		
+
+
 			VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 			FilenameForBPP("INTERFACE\\mine.sti", VObjectDesc.ImageFile);
 			CHECKF( AddVideoObject( &VObjectDesc, &guiMINEICON ) );
@@ -3431,7 +3400,7 @@ UINT32 MapScreenHandle(void)
 
 		// reset show aircraft flag
 		//fShowAircraftFlag = FALSE;
-		
+
 		// reset fact we are showing white bounding box around face
 		fShowFaceHightLight = FALSE;
 		fShowItemHighLight = FALSE;
@@ -3462,8 +3431,8 @@ UINT32 MapScreenHandle(void)
 		MSYS_DefineRegion( &gCharInfoHandRegion, ((INT16)( 4 )), ((INT16)( 81 )) ,((INT16)(62)), ((INT16)(103)), MSYS_PRIORITY_HIGH,
 							MSYS_NO_CURSOR, ItemRegionMvtCallback , ItemRegionBtnCallback );
 		MSYS_DefineRegion( &gCharInfoFaceRegion, (INT16) PLAYER_INFO_FACE_START_X, (INT16) PLAYER_INFO_FACE_START_Y, (INT16) PLAYER_INFO_FACE_END_X, (INT16) PLAYER_INFO_FACE_END_Y, MSYS_PRIORITY_HIGH,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, FaceRegionBtnCallback ); 
-		
+							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, FaceRegionBtnCallback );
+
 		MSYS_DefineRegion(&gMPanelRegion, INV_REGION_X, INV_REGION_Y, INV_REGION_X+INV_REGION_WIDTH, INV_REGION_Y+INV_REGION_HEIGHT, MSYS_PRIORITY_HIGH,
 							MSYS_NO_CURSOR, MSYS_NO_CALLBACK,InvmaskRegionBtnCallBack);
 		// screen mask for animated cursors
@@ -3487,7 +3456,7 @@ UINT32 MapScreenHandle(void)
 		SpecifyButtonFont( giMapContractButton, MAP_SCREEN_FONT );
 		SpecifyButtonUpTextColors( giMapContractButton, CHAR_TEXT_FONT_COLOR, FONT_BLACK );
 		SpecifyButtonDownTextColors( giMapContractButton, CHAR_TEXT_FONT_COLOR, FONT_BLACK );
-		
+
 		// create mouse region for pause clock
 		CreateMouseRegionForPauseOfClock( CLOCK_REGION_START_X, CLOCK_REGION_START_Y );
 
@@ -3538,7 +3507,7 @@ UINT32 MapScreenHandle(void)
 		// test message
 	// TestMessageSystem( );
 
-		// fill in 
+		// fill in
 		ColorFillVideoSurfaceArea( guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor( RGB_NEAR_BLACK ) );
 		ColorFillVideoSurfaceArea(	FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor( RGB_NEAR_BLACK ) );
 
@@ -3570,7 +3539,7 @@ UINT32 MapScreenHandle(void)
 			ContinueDialogue( MercPtrs[ gpCurrentTalkingFace->ubSoldierID ], FALSE );
 
 			// reset diabled flag
-			//gpCurrentTalkingFace->fDisabled = FALSE; 
+			//gpCurrentTalkingFace->fDisabled = FALSE;
 
 			// Continue his talking!
 
@@ -3705,7 +3674,7 @@ UINT32 MapScreenHandle(void)
 	{
 		HandleFlashForHighLightedItem( );
 	}
-	
+
 
 //	CreateDestroyMovementBox( 0,0,0 );
 
@@ -3754,7 +3723,7 @@ UINT32 MapScreenHandle(void)
 
 	// restore background rects
 	RestoreBackgroundRects( );
-	
+
 	InterruptTimeForMenus( );
 
 	// place down background
@@ -3768,7 +3737,7 @@ UINT32 MapScreenHandle(void)
 	if( fDisableDueToBattleRoster == FALSE )
 	{
 /*
-		// ATE: OK mark is rendering the item every frame - which isn't good 
+		// ATE: OK mark is rendering the item every frame - which isn't good
 	// however, don't want to break the world here..
 	// this line was added so that when the ItemGlow() is on,
 	// we're not rendering also, else glow looks bad
@@ -3801,11 +3770,11 @@ UINT32 MapScreenHandle(void)
 
 	if( fDisableDueToBattleRoster == FALSE )
 	{
-		
+
 		// render status bar
 		HandleCharBarRender( );
 	}
-	
+
 	if( fShowInventoryFlag || fDisableDueToBattleRoster )
 	{
 		for( iCounter = 0; iCounter < MAX_SORT_METHODS; iCounter++ )
@@ -3829,7 +3798,7 @@ UINT32 MapScreenHandle(void)
 	{
 		// remove the move box once user leaves it
 		CreateDestroyMovementBox( 0,0,0 );
-		
+
 		// this updates the move box contents when changes took place
 		ReBuildMoveBox( );
 	}
@@ -3846,7 +3815,7 @@ UINT32 MapScreenHandle(void)
 		// handle changing of highlighted lines
 		HandleChangeOfHighLightedLine( );
 	}
-	
+
 	if( fDisableDueToBattleRoster == FALSE )
 	{
 		// render face of current info char, for animation
@@ -3859,7 +3828,7 @@ UINT32 MapScreenHandle(void)
 		GlowFace( );
 		GlowItem( );
 */
-	
+
 	}
 
 
@@ -3922,10 +3891,10 @@ UINT32 MapScreenHandle(void)
 
 	// handle display of inventory pop up
 	HandleDisplayOfItemPopUpForSector( 9, 1, 0 );
-	
+
 	// Display Framerate
 	DisplayFrameRate( );
-	
+
 	// update paused states
 	UpdatePausedStatesDueToTimeCompression( );
 
@@ -3958,7 +3927,7 @@ UINT32 MapScreenHandle(void)
 	{
 		if( InKeyRingPopup( ) == TRUE )
 		{
-			DeleteKeyRingPopup( );	
+			DeleteKeyRingPopup( );
 		}
 		else
 		{
@@ -3967,9 +3936,9 @@ UINT32 MapScreenHandle(void)
 			SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
 		}
 
-		
-		
-		
+
+
+
 		fTeamPanelDirty = TRUE;
 		fEndShowInventoryFlag = FALSE;
 	}
@@ -3983,7 +3952,7 @@ UINT32 MapScreenHandle(void)
 	// if inventory is being manipulated, update cursor
 	HandleMapInventoryCursor();
 
-	
+
 
 	if( fShowDescriptionFlag == TRUE )
 	{
@@ -4058,9 +4027,9 @@ UINT32 MapScreenHandle(void)
 	{
 		RenderKeyRingPopup( FALSE );
 	}
-	
+
 	CheckForMeanwhileOKStart( );
-	
+
 	// save background rects
 	// ATE: DO this BEFORE rendering help text....
 	SaveBackgroundRects( );
@@ -4109,7 +4078,7 @@ UINT32 MapScreenHandle(void)
 
 	// update cursor
 	UpdateCursorIfInLastSector( );
-	
+
 
 	// about to leave for new map
 	if ( gfLoadPending == 1 )
@@ -4121,10 +4090,10 @@ UINT32 MapScreenHandle(void)
 		SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 
 		//Shadow area
-		ShadowVideoSurfaceRect( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );		
+		ShadowVideoSurfaceRect( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 		InvalidateScreen( );
 	}
-	
+
 	//InvalidateRegion( 0,0, 640, 480);
 	EndFrameBufferRender( );
 
@@ -4146,7 +4115,7 @@ UINT32 MapScreenHandle(void)
 	HandlePreBattleInterfaceStates();
 
 	if( gfHotKeyEnterSector )
-	{	
+	{
 		gfHotKeyEnterSector = FALSE;
 		ActivatePreBattleEnterSectorAction();
 	}
@@ -4181,22 +4150,20 @@ UINT32 MapScreenHandle(void)
 
 void DrawString(STR16 pString, UINT16 uiX, UINT16 uiY, UINT32 uiFont)
 {
-	PERFORMANCE_MARKER
 	// draw monochrome string
 	SetFont(uiFont);
 	gprintfdirty(uiX,uiY,pString);
-	mprintf(uiX,uiY,pString); 
+	mprintf(uiX,uiY,pString);
 }
 
 
 
 void SetDayAlternate(STR16 pStringA, ...)
 {
-	PERFORMANCE_MARKER
  // this sets the clock counter, unwind loop
  UINT16 uiX=0;
  UINT16 uiY=0;
- CHAR16 String[80]; 
+ CHAR16 String[80];
  va_list argptr;
 
 	va_start(argptr, pStringA);						// Set up variable argument pointer
@@ -4210,10 +4177,10 @@ void SetDayAlternate(STR16 pStringA, ...)
 	}
 	String[2]=gsTimeStrings[ 3 ][ 0 ];
 	String[3]=L' ';
-	String[4]=0; 
+	String[4]=0;
 
 	uiX=CLOCK_HOUR_X_START-9;
-	uiY=CLOCK_Y_START; 
+	uiY=CLOCK_Y_START;
 
 	SetFont( ETA_FONT );
 	SetFontForeground( FONT_LTGREEN );
@@ -4227,11 +4194,10 @@ void SetDayAlternate(STR16 pStringA, ...)
 
 void SetHourAlternate(STR16 pStringA, ...)
 {
-	PERFORMANCE_MARKER
  // this sets the clock counter, unwind loop
  UINT16 uiX=0;
  UINT16 uiY=0;
- CHAR16 String[80]; 
+ CHAR16 String[80];
  va_list argptr;
 
 	va_start(argptr, pStringA);						// Set up variable argument pointer
@@ -4248,9 +4214,9 @@ void SetHourAlternate(STR16 pStringA, ...)
 	String[3]=L' ';
 	String[4]= 0;
 	uiX=CLOCK_MIN_X_START-5;
-	uiY=CLOCK_Y_START; 
+	uiY=CLOCK_Y_START;
 	DrawString(String, uiX, uiY, ETA_FONT);
-	
+
 	SetFont( ETA_FONT );
 	SetFontForeground( FONT_LTGREEN );
 	SetFontBackground( FONT_BLACK );
@@ -4264,11 +4230,10 @@ void SetHourAlternate(STR16 pStringA, ...)
 
 void SetClockHour(STR16 pStringA, ...)
 {
-	PERFORMANCE_MARKER
  // this sets the clock counter, unwind loop
  UINT16 uiX=0;
  UINT16 uiY=0;
- CHAR16 String[80]; 
+ CHAR16 String[80];
  va_list argptr;
 
 	va_start(argptr, pStringA);						// Set up variable argument pointer
@@ -4283,9 +4248,9 @@ void SetClockHour(STR16 pStringA, ...)
 	String[3]=L' ';
 	String[4]=0;
 	uiX=CLOCK_HOUR_X_START-8;
-	uiY=CLOCK_Y_START; 
+	uiY=CLOCK_Y_START;
 
-	
+
 	SetFont( ETA_FONT );
 	SetFontForeground( FONT_LTGREEN );
 	SetFontBackground( FONT_BLACK );
@@ -4296,7 +4261,6 @@ void SetClockHour(STR16 pStringA, ...)
 
 void SetClockMin(STR16 pStringA, ...)
 {
-	PERFORMANCE_MARKER
  // this sets the clock counter, unwind loop
  CHAR16 String[10];
  va_list argptr;
@@ -4304,7 +4268,7 @@ void SetClockMin(STR16 pStringA, ...)
  va_start(argptr, pStringA);					// Set up variable argument pointer
  vswprintf(String, pStringA, argptr);	// process gprintf string (get output str)
  va_end(argptr);
- 
+
 	if (String[1]==0)
 	{
 		String[1]=String[0];
@@ -4313,7 +4277,7 @@ void SetClockMin(STR16 pStringA, ...)
 	String[2]=gsTimeStrings[ 1 ][ 0 ];
 	String[3]=L' ';
 	String[4]=0;
- 
+
 	SetFont( ETA_FONT );
 	SetFontForeground( FONT_LTGREEN );
 	SetFontBackground( FONT_BLACK );
@@ -4324,7 +4288,6 @@ void SetClockMin(STR16 pStringA, ...)
 
 void DrawName(STR16 pName, INT16 sRowIndex, INT32 iFont)
 {
-	PERFORMANCE_MARKER
 	INT16 usX=0;
 	INT16 usY=0;
 
@@ -4342,13 +4305,12 @@ void DrawName(STR16 pName, INT16 sRowIndex, INT32 iFont)
 	}
 
 	//RestoreExternBackgroundRect(NAME_X, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), NAME_WIDTH, Y_SIZE);
-	DrawString( pName, (UINT16)usX, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), iFont); 
+	DrawString( pName, (UINT16)usX, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), iFont);
 }
 
 
 void DrawAssignment(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 {
-	PERFORMANCE_MARKER
 	INT16 usX=0;
 	INT16 usY=0;
 	CHAR16 sString[32];
@@ -4382,7 +4344,6 @@ void DrawAssignment(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 
 void DrawLocation(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 {
-	PERFORMANCE_MARKER
 	INT16 usX=0;
 	INT16 usY=0;
 	CHAR16 sString[32];
@@ -4402,7 +4363,7 @@ void DrawLocation(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 	}
 	// restore background
 	//RestoreExternBackgroundRect(LOC_X, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), LOC_WIDTH, Y_SIZE);
-	
+
 	// draw string
 	DrawString( sString,((UINT16)(usX)), ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), ((UINT32)iFont));
 }
@@ -4410,7 +4371,6 @@ void DrawLocation(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 
 void DrawDestination(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 {
-	PERFORMANCE_MARKER
 	INT16 usX=0;
 	INT16 usY=0;
 	CHAR16 sString[32];
@@ -4441,7 +4401,6 @@ void DrawDestination(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 
 void DrawTimeRemaining( INT16 sCharNumber, INT32 iFont, UINT8 ubFontColor )
 {
-	PERFORMANCE_MARKER
 	INT16 usX=0;
 	INT16 usY=0;
 	CHAR16 sString[32];
@@ -4477,7 +4436,6 @@ void DrawTimeRemaining( INT16 sCharNumber, INT32 iFont, UINT8 ubFontColor )
 
 void RenderMapCursorsIndexesAnims( )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fSelectedSectorHighlighted = FALSE;
 	BOOLEAN fSelectedCursorIsYellow = TRUE;
 	UINT16 usCursorColor;
@@ -4612,7 +4570,6 @@ void RenderMapCursorsIndexesAnims( )
 
 UINT32 HandleMapUI( )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiNewEvent = MAP_EVENT_NONE;
 	INT16 sMapX = 0, sMapY = 0;
 	INT16 sX, sY;
@@ -4641,7 +4598,7 @@ UINT32 HandleMapUI( )
 				GetMouseMapXY(&sMapX, &sMapY);
 
 /*
-						// translate screen values to map grid values for zoomed in 
+						// translate screen values to map grid values for zoomed in
 						if(fZoomFlag)
 						{
 								sMapX=(UINT16)iZoomX/MAP_GRID_X+sMapX;
@@ -4713,7 +4670,7 @@ UINT32 HandleMapUI( )
 									MapScreenMessage( FONT_MCOLOR_LTYELLOW, MSG_MAP_UI_POSITION_MIDDLE, pMapErrorString[ 40 ] );
 								}
 							}
-						}		
+						}
 			break;
 
 
@@ -4730,7 +4687,7 @@ UINT32 HandleMapUI( )
 			sMapY=Menptr[gCharactersList[bSelectedInfoChar].usSolID].sSectorY;
 			bMapZ=Menptr[gCharactersList[bSelectedInfoChar].usSolID].bSectorZ;
 
-			if( ( sSelMapX != sMapX || sSelMapY != sMapY || iCurrentMapSectorZ != bMapZ ) && 
+			if( ( sSelMapX != sMapX || sSelMapY != sMapY || iCurrentMapSectorZ != bMapZ ) &&
 					( gTacticalStatus.fDidGameJustStart == FALSE ) && ( gfPreBattleInterfaceActive == FALSE ) )
 			{
 				ChangeSelectedMapSector( sMapX, sMapY, bMapZ );
@@ -4739,7 +4696,7 @@ UINT32 HandleMapUI( )
 
 				fMapScreenBottomDirty = TRUE;
 		bSelectedDestChar=-1;
-			} 
+			}
 
 			break;
 */
@@ -4896,7 +4853,7 @@ UINT32 HandleMapUI( )
 
 				if( gfBlitBattleSectorLocator &&
 						sMapX == gubPBSectorX && sMapY == gubPBSectorY && iCurrentMapSectorZ == gubPBSectorZ )
-				{ //Bring up a non-persistant version of mapscreen if the user clicks on the sector where a 
+				{ //Bring up a non-persistant version of mapscreen if the user clicks on the sector where a
 					//battle is taking place.
 					InitPreBattleInterface( NULL, FALSE );
 					return( MAP_SCREEN );
@@ -4953,7 +4910,7 @@ UINT32 HandleMapUI( )
 
 //Kris -- added hook so I can access AIView in non-release mode.
 #ifdef JA2BETAVERSION
-		case MAP_EVENT_VIEWAI: 
+		case MAP_EVENT_VIEWAI:
 			SetPendingNewScreen( AIVIEWER_SCREEN );
 			CreateDestroyMapInvButton();
 			break;
@@ -4973,7 +4930,6 @@ UINT32 HandleMapUI( )
 
 void GetMapKeyboardInput( UINT32 *puiNewEvent )
 {
-	PERFORMANCE_MARKER
 	InputAtom					InputEvent;
 	POINT	MousePos;
 	INT8 bSquadNumber;
@@ -4998,19 +4954,19 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 				MouseSystemHook(LEFT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
 			case LEFT_BUTTON_UP:
-				MouseSystemHook(LEFT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y ,_LeftButtonDown, _RightButtonDown);			
+				MouseSystemHook(LEFT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y ,_LeftButtonDown, _RightButtonDown);
 				break;
 			case RIGHT_BUTTON_DOWN:
 				MouseSystemHook(RIGHT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
-			case RIGHT_BUTTON_UP: 
-				MouseSystemHook(RIGHT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);	
+			case RIGHT_BUTTON_UP:
+				MouseSystemHook(RIGHT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
-			case RIGHT_BUTTON_REPEAT: 
-				MouseSystemHook(RIGHT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);			
+			case RIGHT_BUTTON_REPEAT:
+				MouseSystemHook(RIGHT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
-			case LEFT_BUTTON_REPEAT: 
-				MouseSystemHook(LEFT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);				
+			case LEFT_BUTTON_REPEAT:
+				MouseSystemHook(LEFT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
 	}
 
@@ -5077,7 +5033,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 							EndUpdateBox( FALSE );	// stop time compression
 						}
 					}
-					else if(fShowDescriptionFlag) 
+					else if(fShowDescriptionFlag)
 					{
 						DeleteItemDescriptionBox( );
 					}
@@ -5516,7 +5472,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 							}
 						}
 					break;
-					
+
 
 				case 'b':
 /*
@@ -5784,7 +5740,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 					// Teleport: CTRL-T
 					if( ( fCtrl )&&( CHEATER_CHEAT_LEVEL( ) ) )
 					{
-						// check if selected dest char, 
+						// check if selected dest char,
 						if( ( bSelectedDestChar != -1 ) && ( fPlotForHelicopter == FALSE ) && ( iCurrentMapSectorZ == 0 ) && ( GetMouseMapXY( &sMapX, &sMapY ) ) )
 						{
 							INT16 sDeltaX, sDeltaY;
@@ -5821,7 +5777,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 							{
 								ubGroupId = CreateNewPlayerGroupDepartingFromSector( ( INT8 ) ( pSoldier->sSectorX ) , ( INT8 ) ( pSoldier->sSectorY ) );
 								// assign to a group
-								AddPlayerToGroup( ubGroupId, pSoldier );			
+								AddPlayerToGroup( ubGroupId, pSoldier );
 							}
 
 							// figure out where they would've come from
@@ -5838,7 +5794,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 									sPrevY = sMapY;
 								}
 								else
-								{	
+								{
 									// came in from the East
 									sPrevX = sMapX + 1;
 									sPrevY = sMapY;
@@ -5854,7 +5810,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 									sPrevY = sMapY - 1;
 								}
 								else
-								{	
+								{
 									// came in from the South
 									sPrevX = sMapX;
 									sPrevY = sMapY + 1;
@@ -5868,8 +5824,8 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 							CheckAndHandleUnloadingOfCurrentWorld();
 						}
 					}
-					else 
-					{	
+					else
+					{
 						// only handle border button keyboard equivalents if the button is visible!
 						if ( !fShowMapInventoryPool )
 						{
@@ -5996,7 +5952,6 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 
 void EndMapScreen( BOOLEAN fDuringFade )
 {
-	PERFORMANCE_MARKER
 	if ( fInMapMode == FALSE )
 	{
 		// shouldn't be here
@@ -6027,8 +5982,8 @@ void EndMapScreen( BOOLEAN fDuringFade )
 
 		return;
 	}
-	
-	
+
+
 	// still plotting movement?
 	if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
 	{
@@ -6036,7 +5991,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	}
 
 	DestroyMouseRegionsForTeamList( );
-	
+
 	MSYS_RemoveRegion( &gMapViewRegion );
 	MSYS_RemoveRegion( &gCharInfoFaceRegion);
 	MSYS_RemoveRegion( &gCharInfoHandRegion );
@@ -6055,7 +6010,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 
 	UnloadButtonImage( giMapContractButtonImage );
 	RemoveButton( giMapContractButton );
-	
+
 	HandleShutDownOfMapScreenWhileExternfaceIsTalking( );
 
 	fShowInventoryFlag = FALSE;
@@ -6105,7 +6060,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	CreateDestroyTownInfoBox( );
 
 	// build squad list
-	RebuildCurrentSquad( ); 
+	RebuildCurrentSquad( );
 
 	DeleteMouseRegionsForLevelMarkers( );
 
@@ -6117,7 +6072,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 		// delete buttons
 		DeleteMapBorderButtons( );
 	}
-	
+
 	if(fShowDescriptionFlag)
 	{
 	DeleteItemDescriptionBox( );
@@ -6161,7 +6116,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 		DeleteVideoObjectFromIndex( guiCHARBETWEENSECTORICONSCLOSE );
 		DeleteVideoObjectFromIndex( guiLEVELMARKER );
 		DeleteVideoObjectFromIndex( guiMapBorderEtaPopUp );
-		
+
 		DeleteVideoObjectFromIndex( guiSecItemHiddenVO );
 		DeleteVideoObjectFromIndex( guiSelectedCharArrow );
 		DeleteVideoObjectFromIndex( guiMapBorderHeliSectors );
@@ -6170,7 +6125,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 		DeleteVideoObjectFromIndex( guiSectorLocatorGraphicID );
 
 		DeleteVideoObjectFromIndex( guiBULLSEYE );
-	
+
 		// remove the militia pop up box
 		RemoveMilitiaPopUpBox( );
 
@@ -6187,7 +6142,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	DeleteVideoObjectFromIndex( guiBrownBackgroundForTeamPanel );
 
 	RemoveMapStatusBarsRegion( );
-	
+
 	fShowUpdateBox = FALSE;
 	CreateDestroyTheUpdateBox( );
 
@@ -6263,7 +6218,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 		DeleteVideoObjectFromIndex( uiLaptopOn );
 		RefreshScreen( NULL );
 	}
-	
+
 
 	//Kris:	Removes the pre battle interface, but only if it exists.
 	//		It is internally considered.
@@ -6272,11 +6227,10 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	// cancel request if we somehow leave first
 	gfRequestGiveSkyriderNewDestination = FALSE;
 }
- 
+
 
 BOOLEAN GetMouseMapXY( INT16 *psMapWorldX, INT16 *psMapWorldY )
 {
-	PERFORMANCE_MARKER
 	POINT	MousePos;
 
 	if( IsMapScreenHelpTextUp( ) )
@@ -6298,7 +6252,7 @@ BOOLEAN GetMouseMapXY( INT16 *psMapWorldX, INT16 *psMapWorldY )
 	if(MousePos.y > MAP_GRID_Y+MAP_VIEW_START_Y)
 	MousePos.y-=MAP_GRID_Y;
 	if(MousePos.y >MAP_VIEW_START_Y+MAP_VIEW_HEIGHT-11)
-		MousePos.y=-11; 
+		MousePos.y=-11;
 	if(MousePos.y < MAP_VIEW_START_Y)
 		MousePos.y=-1;
 	}
@@ -6311,7 +6265,6 @@ BOOLEAN GetMouseMapXY( INT16 *psMapWorldX, INT16 *psMapWorldY )
 
 BOOLEAN GetMapXY( INT16 sX, INT16 sY, INT16 *psMapWorldX, INT16 *psMapWorldY )
 {
-	PERFORMANCE_MARKER
 	INT16 sMapX, sMapY;
 
 	// Subtract start of map view
@@ -6338,10 +6291,10 @@ BOOLEAN GetMapXY( INT16 sX, INT16 sY, INT16 *psMapWorldX, INT16 *psMapWorldY )
 	{
 		return (FALSE);
 	}
-	
+
 	*psMapWorldX = ( sMapX / MAP_GRID_X );
  	*psMapWorldY = ( sMapY / MAP_GRID_Y );
-	
+
 	return( TRUE );
 }
 
@@ -6349,7 +6302,6 @@ BOOLEAN GetMapXY( INT16 sX, INT16 sY, INT16 *psMapWorldX, INT16 *psMapWorldY )
 
 void RenderMapHighlight( INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOOLEAN fStationary )
 {
-	PERFORMANCE_MARKER
 	INT16												sScreenX, sScreenY;
 	UINT32										uiDestPitchBYTES;
 	UINT8											*pDestBuf;
@@ -6392,26 +6344,26 @@ void RenderMapHighlight( INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOOLEAN f
 */
 
 	// blit in the highlighted sector
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 
 	// clip to view region
 	ClipBlitsToMapViewRegionForRectangleAndABit( uiDestPitchBYTES );
 
 	if(gbPixelDepth==16)
 	{
-		// DB Need to add a radar color for 8-bit 
+		// DB Need to add a radar color for 8-bit
 /*
 		if (fZoomFlag)
 		{
 			// draw rectangle for zoom in
-		RectangleDraw( TRUE, sScreenX-MAP_GRID_X,	 sScreenY-MAP_GRID_Y - 1, sScreenX +	MAP_GRID_ZOOM_X - MAP_GRID_X, sScreenY +	MAP_GRID_ZOOM_Y - MAP_GRID_Y - 1, usLineColor, pDestBuf );	
+		RectangleDraw( TRUE, sScreenX-MAP_GRID_X,	 sScreenY-MAP_GRID_Y - 1, sScreenX +	MAP_GRID_ZOOM_X - MAP_GRID_X, sScreenY +	MAP_GRID_ZOOM_Y - MAP_GRID_Y - 1, usLineColor, pDestBuf );
 		InvalidateRegion(	sScreenX-MAP_GRID_X - 3, sScreenY-MAP_GRID_Y - 4, sScreenX + DMAP_GRID_ZOOM_X - MAP_GRID_X, sScreenY + DMAP_GRID_ZOOM_Y - MAP_GRID_Y - 1 );
 		}
 	else
 */
 		{
 			// draw rectangle for zoom out
-		RectangleDraw( TRUE, sScreenX, sScreenY - 1, sScreenX +	MAP_GRID_X, sScreenY +	MAP_GRID_Y - 1, usLineColor, pDestBuf );	
+		RectangleDraw( TRUE, sScreenX, sScreenY - 1, sScreenX +	MAP_GRID_X, sScreenY +	MAP_GRID_Y - 1, usLineColor, pDestBuf );
 		InvalidateRegion(	sScreenX, sScreenY - 2, sScreenX + DMAP_GRID_X + 1, sScreenY + DMAP_GRID_Y - 1 );
 		}
 	}
@@ -6424,7 +6376,6 @@ void RenderMapHighlight( INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOOLEAN f
 
 void PollLeftButtonInMapView( UINT32 *puiNewEvent )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN	fLBBeenPressedInMapView = FALSE;
 	INT16 sMapX, sMapY;
 
@@ -6487,14 +6438,14 @@ void PollLeftButtonInMapView( UINT32 *puiNewEvent )
 
 
 				// if in "plot route" mode
-				if ( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) ) 
+				if ( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
 				{
 					fEndPlotting = FALSE;
 
 					GetMouseMapXY(&sMapX, &sMapY);
 
 /*
-					// translate screen values to map grid values for zoomed in 
+					// translate screen values to map grid values for zoomed in
 					if(fZoomFlag)
 					{
 						sMapX=(UINT16)iZoomX/MAP_GRID_X+sMapX;
@@ -6541,7 +6492,6 @@ void PollLeftButtonInMapView( UINT32 *puiNewEvent )
 
 void PollRightButtonInMapView( UINT32 *puiNewEvent )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN	fRBBeenPressedInMapView = FALSE;
 	INT16 sMapX, sMapY;
 
@@ -6668,7 +6618,6 @@ void PollRightButtonInMapView( UINT32 *puiNewEvent )
 
 void PopupText( STR16 pFontString, ...	)
 {
-	PERFORMANCE_MARKER
 	UINT8	*pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	va_list argptr;
@@ -6688,7 +6637,7 @@ void PopupText( STR16 pFontString, ...	)
 
 	SetFont( LARGEFONT1 );
 	SetFontBackground( FONT_MCOLOR_BLACK );
-	SetFontForeground( FONT_MCOLOR_DKGRAY );				
+	SetFontForeground( FONT_MCOLOR_DKGRAY );
 
 	mprintf_buffer( pDestBuf, uiDestPitchBYTES, LARGEFONT1, sX, sY, PopupString );
 
@@ -6702,7 +6651,6 @@ void PopupText( STR16 pFontString, ...	)
 /*
 void BtnINVCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -6714,7 +6662,7 @@ void BtnINVCallback(GUI_BUTTON *btn,INT32 reason)
 		{
 		fCharacterInfoPanelDirty = TRUE;
 		}
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -6746,8 +6694,7 @@ void BtnINVCallback(GUI_BUTTON *btn,INT32 reason)
 
 void CreateDestroyMapInvButton()
 {
-	PERFORMANCE_MARKER
- static BOOLEAN fOldShowInventoryFlag=FALSE; 
+ static BOOLEAN fOldShowInventoryFlag=FALSE;
 
  if( fShowInventoryFlag && !fOldShowInventoryFlag )
  {
@@ -6794,7 +6741,6 @@ void CreateDestroyMapInvButton()
 
 void BltCharInvPanel()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES;
 	UINT16	*pDestBuf;
 	HVOBJECT hCharListHandle;
@@ -6805,15 +6751,15 @@ void BltCharInvPanel()
 
 	// make sure we're here legally
 	Assert( MapCharacterHasAccessibleInventory( bSelectedInfoChar ) );
-	
+
 	GetSoldier( &pSoldier, gCharactersList[bSelectedInfoChar].usSolID );
 
-	
+
 	pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
 	GetVideoObject(&hCharListHandle, guiMAPINV);
 	Blt8BPPDataTo16BPPBufferTransparent( pDestBuf, uiDestPitchBYTES, hCharListHandle, PLAYER_INFO_X, PLAYER_INFO_Y, 0);
-	UnLockVideoSurface( guiSAVEBUFFER ); 
-	
+	UnLockVideoSurface( guiSAVEBUFFER );
+
 	Assert( pSoldier );
 	CreateDestroyMapInvButton();
 
@@ -6834,13 +6780,13 @@ void BltCharInvPanel()
 	}
 
 	RenderInvBodyPanel(pSoldier, INV_BODY_X, INV_BODY_Y );
-	
+
 	// reset font destination buffer to the save buffer
 	SetFontDestBuffer( guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, FALSE );
-	
+
 	// render items in each of chars slots
 	HandleRenderInvSlots( pSoldier, DIRTYLEVEL2 );
-	
+
 	// reset font destination buffer
 	SetFontDestBuffer( FRAME_BUFFER, 0,0, SCREEN_WIDTH, SCREEN_HEIGHT, FALSE );
 
@@ -6859,24 +6805,24 @@ void BltCharInvPanel()
 
 	mprintf( MAP_WEIGHT_LABEL_X, MAP_WEIGHT_LABEL_Y, pInvPanelTitleStrings[ 1 ]	);
 	mprintf( MAP_WEIGHT_PERCENT_X, MAP_WEIGHT_PERCENT_Y, L"%%" );
- 
+
 	mprintf( MAP_CAMMO_LABEL_X, MAP_CAMMO_LABEL_Y, pInvPanelTitleStrings[ 2 ]	);
 	mprintf( MAP_CAMMO_PERCENT_X, MAP_CAMMO_PERCENT_Y, L"%%" );
 
 	// display armor value
 	swprintf( sString, L"%3d", ArmourPercent( pSoldier ) );
 	FindFontRightCoordinates(MAP_ARMOR_X, MAP_ARMOR_Y, MAP_PERCENT_WIDTH, MAP_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
-	mprintf( usX, usY, sString ); 
+	mprintf( usX, usY, sString );
 
 	// Display weight value
 	swprintf( sString, L"%3d", CalculateCarriedWeight( pSoldier ) );
 	FindFontRightCoordinates(MAP_WEIGHT_X, MAP_WEIGHT_Y, MAP_PERCENT_WIDTH, MAP_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
-	mprintf( usX, usY, sString ); 
+	mprintf( usX, usY, sString );
 
 	// Display camo value
 	swprintf( sString, L"%3d", max(0, min ((pSoldier->bCamo + pSoldier->wornCamo + pSoldier->urbanCamo+pSoldier->wornUrbanCamo+pSoldier->desertCamo+pSoldier->wornDesertCamo+pSoldier->snowCamo+pSoldier->wornSnowCamo ),100 )) );
 	FindFontRightCoordinates(MAP_CAMMO_X, MAP_CAMMO_Y, MAP_PERCENT_WIDTH, MAP_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
-	mprintf( usX, usY, sString ); 
+	mprintf( usX, usY, sString );
 
 	if( InKeyRingPopup( ) )
 	{
@@ -6891,10 +6837,9 @@ void BltCharInvPanel()
 	SetFontDestBuffer( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, FALSE );
 }
 
-// check for and highlight any ammo 
+// check for and highlight any ammo
 void HandleCursorOverRifleAmmo( )
 {
-	PERFORMANCE_MARKER
 	if( fShowInventoryFlag == FALSE )
 	{
 		return;
@@ -6906,7 +6851,7 @@ void HandleCursorOverRifleAmmo( )
 	}
 
 	if ( gfCheckForMouseOverItem )
-	{	
+	{
 		if ( HandleCompatibleAmmoUI( &Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ], (INT8)gbCheckForMouseOverItemPos, TRUE ) )
 		{
 			if ( ( GetJA2Clock( ) - guiMouseOverItemTime ) > 100 )
@@ -6919,14 +6864,12 @@ void HandleCursorOverRifleAmmo( )
 
 void MAPInvClickCamoCallback( MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 
 
 }
 
 void MAPInvMoveCamoCallback( MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 
 
 }
@@ -6935,7 +6878,6 @@ void MAPInvMoveCamoCallback( MOUSE_REGION *pRegion, INT32 iReason )
 // this is Map Screen's version of SMInvMoveCallback()
 void MAPInvMoveCallback( MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE	*pSoldier;
 	UINT32 uiHandPos;
 
@@ -6976,13 +6918,12 @@ void MAPInvMoveCallback( MOUSE_REGION *pRegion, INT32 iReason )
 		gfCheckForMouseOverItem = FALSE;
 		fTeamPanelDirty = TRUE;
 	gbCheckForMouseOverItemPos = -1;
-	}	
+	}
 }
 
 // mapscreen wrapper to init the item description box
 BOOLEAN MAPInternalInitItemDescriptionBox( OBJECTTYPE *pObject, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fRet;
 
 	fRet = InternalInitItemDescriptionBox( pObject, MAP_ITEMDESC_START_X, MAP_ITEMDESC_START_Y, ubStatusIndex, pSoldier );
@@ -6997,7 +6938,6 @@ BOOLEAN MAPInternalInitItemDescriptionBox( OBJECTTYPE *pObject, UINT8 ubStatusIn
 // this is Map Screen's version of SMInvClickCallback()
 void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE	*pSoldier;
 	UINT32 uiHandPos;
 	UINT16	usOldItemIndex, usNewItemIndex;
@@ -7136,7 +7076,7 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 					guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
 					gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
 
-					MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );	
+					MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );
 					MSYS_SetCurrentCursor( EXTERN_CURSOR );
 					fMapInventoryItem=TRUE;
 					fTeamPanelDirty=TRUE;
@@ -7215,7 +7155,6 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 
 void InternalMAPBeginItemPointer( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// If not null return
 	if ( gpItemPointer != NULL )
 	{
@@ -7230,7 +7169,7 @@ void InternalMAPBeginItemPointer( SOLDIERTYPE *pSoldier )
 	guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
 	gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
 
-	MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );	
+	MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );
 	MSYS_SetCurrentCursor( EXTERN_CURSOR );
 	fMapInventoryItem=TRUE;
 	fTeamPanelDirty=TRUE;
@@ -7245,7 +7184,6 @@ void InternalMAPBeginItemPointer( SOLDIERTYPE *pSoldier )
 
 void MAPBeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 {
-	PERFORMANCE_MARKER
 
 	// If not null return
 	if ( gpItemPointer != NULL )
@@ -7274,7 +7212,6 @@ void MAPBeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 
 void MAPBeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 uiKeySlot )
 {
-	PERFORMANCE_MARKER
 	// If not null return
 	if ( gpItemPointer != NULL )
 	{
@@ -7285,7 +7222,7 @@ void MAPBeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 uiKeySlot )
 	guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
 	gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
 
-	MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );	
+	MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );
 	MSYS_SetCurrentCursor( EXTERN_CURSOR );
 	fMapInventoryItem=TRUE;
 	fTeamPanelDirty=TRUE;
@@ -7293,11 +7230,10 @@ void MAPBeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 uiKeySlot )
 
 void MAPEndItemPointer( )
 {
-	PERFORMANCE_MARKER
 	if ( gpItemPointer != NULL )
 	{
 		gpItemPointer = NULL;
-		MSYS_ChangeRegionCursor( &gMPanelRegion , CURSOR_NORMAL );	
+		MSYS_ChangeRegionCursor( &gMPanelRegion , CURSOR_NORMAL );
 		MSYS_SetCurrentCursor( CURSOR_NORMAL );
 		fMapInventoryItem=FALSE;
 		fTeamPanelDirty=TRUE;
@@ -7317,7 +7253,6 @@ void MAPEndItemPointer( )
 
 void HandleMapInventoryCursor()
 {
-	PERFORMANCE_MARKER
 	if(fMapInventoryItem)
 	MSYS_SetCurrentCursor( EXTERN_CURSOR );
 	return;
@@ -7327,11 +7262,10 @@ void HandleMapInventoryCursor()
 // will place down the upper left hand corner attribute strings
 void RenderAttributeStringsForUpperLeftHandCorner( UINT32 uiBufferToRenderTo )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 
-	
+
 	if ( ( bSelectedInfoChar != - 1) && ( gCharactersList[ bSelectedInfoChar ].fValid ) )
 	{
 		pSoldier = MercPtrs[ gCharactersList[ bSelectedInfoChar ].usSolID ];
@@ -7340,7 +7274,7 @@ void RenderAttributeStringsForUpperLeftHandCorner( UINT32 uiBufferToRenderTo )
 	SetFont( CHAR_FONT );
 	SetFontForeground( CHAR_TITLE_FONT_COLOR );
 	SetFontBackground( FONT_BLACK );
-	SetFontDestBuffer( uiBufferToRenderTo, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, FALSE ); 
+	SetFontDestBuffer( uiBufferToRenderTo, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, FALSE );
 
 
 	// assignment strings
@@ -7358,7 +7292,7 @@ void RenderAttributeStringsForUpperLeftHandCorner( UINT32 uiBufferToRenderTo )
 			DrawString(pShortAttributeStrings[ iCounter + 5 ] ,133, ( INT16 )( 22 + iCounter * 10 ), CHAR_FONT );
 		}
 
-		// contract 
+		// contract
 		//DrawString(pUpperLeftMapScreenStrings[ 1 ], 194, 52,	CHAR_FONT);
 
 		// morale
@@ -7372,13 +7306,12 @@ void RenderAttributeStringsForUpperLeftHandCorner( UINT32 uiBufferToRenderTo )
 
 
 	// restore buffer
-	SetFontDestBuffer( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, FALSE ); 
+	SetFontDestBuffer( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, FALSE );
 }
 
 
 void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInterface(INT16 sMapX, INT16 sMapY )
 {
-	PERFORMANCE_MARKER
 	// simply check if we want to refresh the screen to display path
 	static INT8 bOldDestChar = -1;
 	static INT16	sPrevMapX, sPrevMapY;
@@ -7389,7 +7322,7 @@ void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInterface(
 	{
 		bOldDestChar = bSelectedDestChar;
 	giPotCharPathBaseTime = GetJA2Clock( );
-		
+
 		sPrevMapX = sMapX;
 		sPrevMapY = sMapY;
 		fTempPathAlreadyDrawn = FALSE;
@@ -7400,10 +7333,10 @@ void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInterface(
 	if( ( sMapX != sPrevMapX) || ( sMapY != sPrevMapY ) )
 	{
 		giPotCharPathBaseTime = GetJA2Clock( );
-		
+
 		sPrevMapX = sMapX;
 		sPrevMapY = sMapY;
-		
+
 		// path was plotted and we moved, re draw map..to clean up mess
 		if( fTempPathAlreadyDrawn == TRUE )
 		{
@@ -7415,7 +7348,7 @@ void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInterface(
 	}
 
 	iDifference = GetJA2Clock( ) - giPotCharPathBaseTime ;
-	
+
 	if( fTempPathAlreadyDrawn == TRUE )
 	{
 		return;
@@ -7424,7 +7357,7 @@ void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInterface(
 	if( iDifference > MIN_WAIT_TIME_FOR_TEMP_PATH )
 	{
 		fDrawTempPath = TRUE;
-		giPotCharPathBaseTime = GetJA2Clock( );	
+		giPotCharPathBaseTime = GetJA2Clock( );
 		fTempPathAlreadyDrawn = TRUE;
 	}
 
@@ -7435,7 +7368,6 @@ void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInterface(
 
 void SetUpCursorForStrategicMap( void )
 {
-	PERFORMANCE_MARKER
 	if ( gfInChangeArrivalSectorMode == FALSE )
 	{
 		// check if character is in destination plotting mode
@@ -7476,11 +7408,10 @@ void SetUpCursorForStrategicMap( void )
 
 void HandleAnimatedCursorsForMapScreen( )
 {
-	PERFORMANCE_MARKER
 
 	if ( COUNTERDONE( CURSORCOUNTER ) )
 	{
-		RESETCOUNTER( CURSORCOUNTER );	
+		RESETCOUNTER( CURSORCOUNTER );
 	UpdateAnimatedCursorFrames( gMapScreenMaskRegion.Cursor );
 		SetCurrentCursorFromDatabase(	gMapScreenMaskRegion.Cursor	);
 	}
@@ -7490,7 +7421,6 @@ void HandleAnimatedCursorsForMapScreen( )
 
 void AbortMovementPlottingMode( void )
 {
-	PERFORMANCE_MARKER
 	// invalid if we're not plotting movement
 	Assert( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) );
 
@@ -7548,16 +7478,15 @@ void AbortMovementPlottingMode( void )
 
 void CheckToSeeIfMouseHasLeftMapRegionDuringPathPlotting(	)
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fInArea = FALSE;
-	
+
 	if ( ( gMapViewRegion.uiFlags & MSYS_MOUSE_IN_AREA ) == 0 )
 	{
-		
+
 		if( fInArea == TRUE )
 		{
 			fInArea = FALSE;
-			
+
 			// plotting path, clean up
 			if( ( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) || ( fDrawTempHeliPath == TRUE ) ) && ( fTempPathAlreadyDrawn == TRUE ) )
 			{
@@ -7591,11 +7520,10 @@ void CheckToSeeIfMouseHasLeftMapRegionDuringPathPlotting(	)
 
 void BlitBackgroundToSaveBuffer( void )
 {
-	PERFORMANCE_MARKER
 
 	// render map
 	RenderMapRegionBackground( );
-	
+
 	if( fDisableDueToBattleRoster == FALSE )
 	{
 	// render team
@@ -7621,7 +7549,6 @@ void BlitBackgroundToSaveBuffer( void )
 
 void CreateMouseRegionsForTeamList( void )
 {
-	PERFORMANCE_MARKER
 	// will create mouse regions for assignments, path plotting, character info selection
 	INT16 sCounter = 0;
 	//INT16 sYAdd = 0;
@@ -7648,53 +7575,53 @@ void CreateMouseRegionsForTeamList( void )
 
 		// name region
 		MSYS_DefineRegion( &gTeamListNameRegion[ sCounter ] , NAME_X, ( INT16 )( sYStart + ( sOffsetCounter ) * ( Y_SIZE + 2 )), NAME_X + NAME_WIDTH, ( INT16 )( (sYStart + 10) + ( sOffsetCounter + 1 ) * ( Y_SIZE + 2 )), MSYS_PRIORITY_NORMAL,
-							MSYS_NO_CURSOR, TeamListInfoRegionMvtCallBack, TeamListInfoRegionBtnCallBack ); 
+							MSYS_NO_CURSOR, TeamListInfoRegionMvtCallBack, TeamListInfoRegionBtnCallBack );
 
 		// assignment region
 		MSYS_DefineRegion( &gTeamListAssignmentRegion[ sCounter ] ,ASSIGN_X , ( INT16 )( sYStart + ( sOffsetCounter ) * ( Y_SIZE + 2 )), ASSIGN_X + ASSIGN_WIDTH, ( INT16 )( (sYStart + 10) + ( sOffsetCounter + 1 ) * ( Y_SIZE + 2 )), MSYS_PRIORITY_NORMAL + 1,
-							MSYS_NO_CURSOR, TeamListAssignmentRegionMvtCallBack, TeamListAssignmentRegionBtnCallBack ); 
+							MSYS_NO_CURSOR, TeamListAssignmentRegionMvtCallBack, TeamListAssignmentRegionBtnCallBack );
 
 		// location region (same function as name regions, so uses the same callbacks)
 		MSYS_DefineRegion( &gTeamListLocationRegion[ sCounter ] , LOC_X, ( INT16 )( sYStart + ( sOffsetCounter ) * ( Y_SIZE + 2 )), LOC_X + LOC_WIDTH, ( INT16 )( (sYStart + 10) + ( sOffsetCounter + 1 ) * ( Y_SIZE + 2 )), MSYS_PRIORITY_NORMAL + 1,
-							MSYS_NO_CURSOR, TeamListInfoRegionMvtCallBack, TeamListInfoRegionBtnCallBack ); 
+							MSYS_NO_CURSOR, TeamListInfoRegionMvtCallBack, TeamListInfoRegionBtnCallBack );
 
 		// destination region
 		MSYS_DefineRegion( &gTeamListDestinationRegion[ sCounter ] ,DEST_ETA_X , ( INT16 )( sYStart + ( sOffsetCounter ) * ( Y_SIZE + 2 )), DEST_ETA_X + DEST_ETA_WIDTH, ( INT16 )( (sYStart + 10) + ( sOffsetCounter + 1 ) * ( Y_SIZE + 2 )), MSYS_PRIORITY_NORMAL + 1,
-							MSYS_NO_CURSOR, TeamListDestinationRegionMvtCallBack, TeamListDestinationRegionBtnCallBack ); 
+							MSYS_NO_CURSOR, TeamListDestinationRegionMvtCallBack, TeamListDestinationRegionBtnCallBack );
 
 		// contract region
 		MSYS_DefineRegion( &gTeamListContractRegion[ sCounter ] ,TIME_REMAINING_X , ( INT16 )( sYStart + ( sOffsetCounter ) * ( Y_SIZE + 2 )), TIME_REMAINING_X + TIME_REMAINING_WIDTH, ( INT16 )( (sYStart + 10) + ( sOffsetCounter + 1 ) * ( Y_SIZE + 2 )), MSYS_PRIORITY_NORMAL + 1,
-							MSYS_NO_CURSOR, TeamListContractRegionMvtCallBack, TeamListContractRegionBtnCallBack ); 
+							MSYS_NO_CURSOR, TeamListContractRegionMvtCallBack, TeamListContractRegionBtnCallBack );
 
 		// contract region
 		MSYS_DefineRegion( &gTeamListSleepRegion[ sCounter ] ,SLEEP_X, ( INT16 )( sYStart + ( sOffsetCounter ) * ( Y_SIZE + 2 )), SLEEP_X + SLEEP_WIDTH, ( INT16 )( (sYStart + 10) + ( sOffsetCounter + 1 ) * ( Y_SIZE + 2 )), MSYS_PRIORITY_NORMAL + 1,
-							MSYS_NO_CURSOR, TeamListSleepRegionMvtCallBack, TeamListSleepRegionBtnCallBack ); 
+							MSYS_NO_CURSOR, TeamListSleepRegionMvtCallBack, TeamListSleepRegionBtnCallBack );
 
-		
-		
+
+
 		//// name region
 		//MSYS_DefineRegion( &gTeamListNameRegion[ sCounter ] , NAME_X, ( INT16 )( Y_START + ( sCounter ) * ( Y_SIZE + 2 ) + sYAdd ), NAME_X + NAME_WIDTH, ( INT16 )( 145 + ( sCounter + 1 ) * ( Y_SIZE + 2 ) + sYAdd ), MSYS_PRIORITY_NORMAL,
-		//					MSYS_NO_CURSOR, TeamListInfoRegionMvtCallBack, TeamListInfoRegionBtnCallBack ); 
+		//					MSYS_NO_CURSOR, TeamListInfoRegionMvtCallBack, TeamListInfoRegionBtnCallBack );
 
 		//// assignment region
 		//MSYS_DefineRegion( &gTeamListAssignmentRegion[ sCounter ] ,ASSIGN_X , ( INT16 )( Y_START + ( sCounter ) * ( Y_SIZE + 2 ) + sYAdd), ASSIGN_X + ASSIGN_WIDTH, ( INT16 )( 145 + ( sCounter + 1 ) * ( Y_SIZE + 2 ) + sYAdd ), MSYS_PRIORITY_NORMAL + 1,
-		//					MSYS_NO_CURSOR, TeamListAssignmentRegionMvtCallBack, TeamListAssignmentRegionBtnCallBack ); 
+		//					MSYS_NO_CURSOR, TeamListAssignmentRegionMvtCallBack, TeamListAssignmentRegionBtnCallBack );
 
 		//// location region (same function as name regions, so uses the same callbacks)
 		//MSYS_DefineRegion( &gTeamListLocationRegion[ sCounter ] , LOC_X, ( INT16 )( Y_START + ( sCounter ) * ( Y_SIZE + 2 ) + sYAdd ), LOC_X + LOC_WIDTH, ( INT16 )( 145 + ( sCounter + 1 ) * ( Y_SIZE + 2 ) + sYAdd ), MSYS_PRIORITY_NORMAL + 1,
-		//					MSYS_NO_CURSOR, TeamListInfoRegionMvtCallBack, TeamListInfoRegionBtnCallBack ); 
+		//					MSYS_NO_CURSOR, TeamListInfoRegionMvtCallBack, TeamListInfoRegionBtnCallBack );
 
 		//// destination region
 		//MSYS_DefineRegion( &gTeamListDestinationRegion[ sCounter ] ,DEST_ETA_X , ( INT16 )( Y_START + ( sCounter ) * ( Y_SIZE + 2 ) + sYAdd ), DEST_ETA_X + DEST_ETA_WIDTH, ( INT16 )( 145 + ( sCounter + 1 ) * ( Y_SIZE + 2 ) + sYAdd ), MSYS_PRIORITY_NORMAL + 1,
-		//					MSYS_NO_CURSOR, TeamListDestinationRegionMvtCallBack, TeamListDestinationRegionBtnCallBack ); 
+		//					MSYS_NO_CURSOR, TeamListDestinationRegionMvtCallBack, TeamListDestinationRegionBtnCallBack );
 
 		//// contract region
 		//MSYS_DefineRegion( &gTeamListContractRegion[ sCounter ] ,TIME_REMAINING_X , ( INT16 )( Y_START + ( sCounter ) * ( Y_SIZE + 2 ) + sYAdd), TIME_REMAINING_X + TIME_REMAINING_WIDTH, ( INT16 )( 145 + ( sCounter + 1 ) * ( Y_SIZE + 2 ) + sYAdd ), MSYS_PRIORITY_NORMAL + 1,
-		//					MSYS_NO_CURSOR, TeamListContractRegionMvtCallBack, TeamListContractRegionBtnCallBack ); 
+		//					MSYS_NO_CURSOR, TeamListContractRegionMvtCallBack, TeamListContractRegionBtnCallBack );
 
 		//// contract region
 		//MSYS_DefineRegion( &gTeamListSleepRegion[ sCounter ] ,SLEEP_X, ( INT16 )( Y_START + ( sCounter ) * ( Y_SIZE + 2 ) + sYAdd), SLEEP_X + SLEEP_WIDTH, ( INT16 )( 145 + ( sCounter + 1 ) * ( Y_SIZE + 2 ) + sYAdd ), MSYS_PRIORITY_NORMAL + 1,
-		//					MSYS_NO_CURSOR, TeamListSleepRegionMvtCallBack, TeamListSleepRegionBtnCallBack ); 
+		//					MSYS_NO_CURSOR, TeamListSleepRegionMvtCallBack, TeamListSleepRegionBtnCallBack );
 
 
 		MSYS_SetRegionUserData(&gTeamListNameRegion[sCounter],0,sCounter);
@@ -7720,7 +7647,6 @@ void CreateMouseRegionsForTeamList( void )
 
 void DestroyMouseRegionsForTeamList( void )
 {
-	PERFORMANCE_MARKER
 	// will destroy mouse regions overlaying the team list area
 	INT32 sCounter = 0;
 
@@ -7739,7 +7665,6 @@ void DestroyMouseRegionsForTeamList( void )
 // mask for mapscreen region
 void MapScreenMarkRegionBtnCallback(MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// reset selected characters
@@ -7756,7 +7681,6 @@ void MapScreenMarkRegionBtnCallback(MOUSE_REGION *pRegion, INT32 iReason )
 
 void ContractButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if( ( iDialogueBox != -1 ) )
 	{
 		return;
@@ -7784,7 +7708,7 @@ void ContractButtonCallback(GUI_BUTTON *btn,INT32 reason)
 			fCharacterInfoPanelDirty = TRUE;
 		}
 
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -7815,7 +7739,6 @@ void ContractButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void TeamListInfoRegionBtnCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -7851,7 +7774,7 @@ void TeamListInfoRegionBtnCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 			// highlight
 			giDestHighLine = -1;
 
-			// reset character 
+			// reset character
 			bSelectedAssignChar = -1;
 			bSelectedDestChar = -1;
 			bSelectedContractChar = -1;
@@ -7897,7 +7820,7 @@ void TeamListInfoRegionBtnCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 
 			// select this character
 			ChangeSelectedInfoChar( ( INT8 ) iValue, TRUE );
-			
+
 
 			RequestToggleMercInventoryPanel();
 
@@ -7905,7 +7828,7 @@ void TeamListInfoRegionBtnCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 			// highlight
 			giDestHighLine = -1;
 
-			// reset character 
+			// reset character
 			bSelectedAssignChar = -1;
 			bSelectedDestChar = -1;
 			bSelectedContractChar = -1;
@@ -7935,7 +7858,6 @@ void TeamListInfoRegionBtnCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 
 void TeamListInfoRegionMvtCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = 0;
 
 
@@ -7967,7 +7889,6 @@ void TeamListInfoRegionMvtCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 
 void TeamListAssignmentRegionBtnCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -8067,7 +7988,6 @@ void TeamListAssignmentRegionBtnCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 
 void TeamListAssignmentRegionMvtCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = 0;
 
 
@@ -8114,7 +8034,7 @@ void TeamListAssignmentRegionMvtCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 	}
 	else if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
-		if( ( gCharactersList[ iValue ].fValid == TRUE ) && 
+		if( ( gCharactersList[ iValue ].fValid == TRUE ) &&
 		!( Menptr[ gCharactersList[ iValue ].usSolID ].flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
 			// play click
@@ -8127,7 +8047,6 @@ void TeamListAssignmentRegionMvtCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 
 void TeamListDestinationRegionBtnCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = 0;
 
 
@@ -8248,7 +8167,6 @@ void TeamListDestinationRegionBtnCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 
 void TeamListDestinationRegionMvtCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = -1;
 
 
@@ -8280,7 +8198,7 @@ void TeamListDestinationRegionMvtCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 		if( bSelectedDestChar == -1 )
 		{
 		giDestHighLine = -1;
-		}	
+		}
 
 		// restore background
 		RestoreBackgroundForDestinationGlowRegionList( );
@@ -8299,7 +8217,6 @@ void TeamListDestinationRegionMvtCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 
 void TeamListSleepRegionBtnCallBack( MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -8384,7 +8301,6 @@ void TeamListSleepRegionBtnCallBack( MOUSE_REGION *pRegion, INT32 iReason )
 
 void TeamListSleepRegionMvtCallBack( MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = -1;
 
 
@@ -8439,7 +8355,6 @@ void TeamListSleepRegionMvtCallBack( MOUSE_REGION *pRegion, INT32 iReason )
 
 void TeamListContractRegionBtnCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = 0;
 
 
@@ -8480,7 +8395,6 @@ void TeamListContractRegionBtnCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 
 void TeamListContractRegionMvtCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = -1;
 
 
@@ -8540,7 +8454,6 @@ void TeamListContractRegionMvtCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 
 INT32 GetIndexForThisSoldier( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32 iLastGuy;
 	INT32 iIndex = 0;
 	INT32 iCounter = 0;
@@ -8566,7 +8479,6 @@ INT32 GetIndexForThisSoldier( SOLDIERTYPE *pSoldier )
 
 BOOLEAN IsCursorWithInRegion(INT16 sLeft, INT16 sRight, INT16 sTop, INT16 sBottom )
 {
-	PERFORMANCE_MARKER
 	POINT MousePos;
 
 	// get cursor position
@@ -8588,7 +8500,6 @@ BOOLEAN IsCursorWithInRegion(INT16 sLeft, INT16 sRight, INT16 sTop, INT16 sBotto
 
 void HandleHighLightingOfLinesInTeamPanel( void )
 {
-	PERFORMANCE_MARKER
 	if ( fShowInventoryFlag )
 	{
 		return;
@@ -8616,7 +8527,6 @@ void HandleHighLightingOfLinesInTeamPanel( void )
 
 void PlotPermanentPaths( void )
 {
-	PERFORMANCE_MARKER
 	if( fPlotForHelicopter == TRUE )
 	{
 		DisplayHelicopterPath( );
@@ -8630,7 +8540,6 @@ void PlotPermanentPaths( void )
 
 void PlotTemporaryPaths( void )
 {
-	PERFORMANCE_MARKER
 	INT16 sMapX, sMapY;
 
 
@@ -8668,7 +8577,7 @@ void PlotTemporaryPaths( void )
 			}
 		}
 		else
-		// dest char has been selected, 
+		// dest char has been selected,
 		if( bSelectedDestChar != -1 )
 		{
 /*
@@ -8705,7 +8614,6 @@ void PlotTemporaryPaths( void )
 
 void RenderMapRegionBackground( void )
 {
-	PERFORMANCE_MARKER
 	// renders to save buffer when dirty flag set
 
 	if( fMapPanelDirty == FALSE )
@@ -8767,7 +8675,6 @@ void RenderMapRegionBackground( void )
 
 void RenderTeamRegionBackground( void )
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 
 
@@ -8776,8 +8683,8 @@ void RenderTeamRegionBackground( void )
 	{
 		// not dirty, leave
 		return;
-	}		
-		
+	}
+
 	// show inventory or the team list?
 	if(fShowInventoryFlag == FALSE )
 	{
@@ -8788,7 +8695,7 @@ void RenderTeamRegionBackground( void )
 	{
 		BltCharInvPanel();
 	}
-	
+
 
 	if ( !fShowInventoryFlag )
 	{
@@ -8800,7 +8707,7 @@ void RenderTeamRegionBackground( void )
 
 	fDrawCharacterList = FALSE;
 
-	
+
 	// display arrows by selected people
 	HandleDisplayOfSelectedMercArrows( );
 	DisplayIconsForMercsAsleep(	);
@@ -8812,9 +8719,9 @@ void RenderTeamRegionBackground( void )
 
 	// mark all pop ups as dirty
 	MarkAllBoxesAsAltered( );
-	
+
 	// restore background for area
-	
+
 	RestoreExternBackgroundRect( 0, 107, 261, SCREEN_HEIGHT - 106 - 121 );
 
 	MapscreenMarkButtonsDirty();
@@ -8825,7 +8732,6 @@ void RenderTeamRegionBackground( void )
 
 void RenderCharacterInfoBackground( void )
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 
 
@@ -8841,10 +8747,10 @@ void RenderCharacterInfoBackground( void )
 	// the upleft hand corner character info panel
 	GetVideoObject(&hHandle, guiCHARINFO);
 	BltVideoObject( guiSAVEBUFFER , hHandle, 0,TOWN_INFO_X, TOWN_INFO_Y , VO_BLT_SRCTRANSPARENCY,NULL );
-	
+
 	UpdateHelpTextForMapScreenMercIcons( );
 
-	if( ( bSelectedInfoChar != -1) && ( fDisableDueToBattleRoster == FALSE ) ) 
+	if( ( bSelectedInfoChar != -1) && ( fDisableDueToBattleRoster == FALSE ) )
 	{
 		// valid char to display
 		DisplayCharacterInfo();
@@ -8866,7 +8772,7 @@ void RenderCharacterInfoBackground( void )
 
 	// mark all pop ups as dirty
 	MarkAllBoxesAsAltered( );
-	
+
 	// restore background for area
 	RestoreExternBackgroundRect( 0, 0, 261, 107 );
 
@@ -8874,7 +8780,6 @@ void RenderCharacterInfoBackground( void )
 
 void DetermineIfContractMenuCanBeShown( void )
 {
-	PERFORMANCE_MARKER
 	if( fShowContractMenu == FALSE )
 	{
 
@@ -8890,7 +8795,7 @@ void DetermineIfContractMenuCanBeShown( void )
 			HideBox( ghRemoveMercAssignBox );
 		}
 
-		
+
 		return;
 	}
 
@@ -8918,7 +8823,6 @@ void DetermineIfContractMenuCanBeShown( void )
 
 void CheckIfPlottingForCharacterWhileAirCraft( void )
 {
-	PERFORMANCE_MARKER
 	// if we are in aircraft mode and plotting for character, reset plotting character
 
 	if( fShowAircraftFlag == TRUE )
@@ -8943,7 +8847,6 @@ void CheckIfPlottingForCharacterWhileAirCraft( void )
 
 void ContractRegionBtnCallback( MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
 
 
@@ -8970,7 +8873,7 @@ void ContractRegionBtnCallback( MOUSE_REGION *pRegion, INT32 iReason )
 
 			// create
 			RebuildContractBoxForMerc( pSoldier );
-			
+
 			// reset selected characters
 			ResetAllSelectedCharacterModes( );
 
@@ -9007,7 +8910,6 @@ void ContractRegionBtnCallback( MOUSE_REGION *pRegion, INT32 iReason )
 
 void ContractRegionMvtCallback( MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	// mvt callback handler for contract region
 	if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -9019,7 +8921,7 @@ void ContractRegionMvtCallback( MOUSE_REGION *pRegion, INT32 iReason )
 		 fGlowContractRegion = FALSE;
 			fCharacterInfoPanelDirty = TRUE;
 			giContractHighLine = -1;
-			
+
 			// reset glow
 			fResetContractGlow = TRUE;
 			}
@@ -9050,7 +8952,6 @@ void ContractRegionMvtCallback( MOUSE_REGION *pRegion, INT32 iReason )
 
 void HandleShadingOfLinesForContractMenu( void )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	MERCPROFILESTRUCT *pProfile;
 
@@ -9136,7 +9037,6 @@ void HandleShadingOfLinesForContractMenu( void )
 
 void ReBuildCharactersList( void )
 {
-	PERFORMANCE_MARKER
 	// rebuild character's list
 	INT16 sCount = 0;
 
@@ -9185,7 +9085,6 @@ void ReBuildCharactersList( void )
 
 void HandleChangeOfInfoChar( void )
 {
-	PERFORMANCE_MARKER
 	static INT8 bOldInfoChar = -1;
 
 	if( bSelectedInfoChar != bOldInfoChar )
@@ -9213,7 +9112,6 @@ void HandleChangeOfInfoChar( void )
 
 void RebuildContractBoxForMerc( SOLDIERTYPE *pCharacter )
 {
-	PERFORMANCE_MARKER
 	// rebuild contractbox for this merc
 	RemoveBox( ghContractBox );
 	ghContractBox = -1;
@@ -9227,7 +9125,6 @@ void RebuildContractBoxForMerc( SOLDIERTYPE *pCharacter )
 
 void TestMessageSystem( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	for( iCounter = 0; iCounter < 300; iCounter++ )
@@ -9243,7 +9140,6 @@ void TestMessageSystem( void )
 
 void EnableDisableTeamListRegionsAndHelpText( void )
 {
-	PERFORMANCE_MARKER
 	// check if valid character here, if so, then do nothing..other wise set help text timer to a gazillion
 	INT8 bCharNum;
 
@@ -9324,7 +9220,6 @@ void EnableDisableTeamListRegionsAndHelpText( void )
 
 void ResetAllSelectedCharacterModes( void )
 {
-	PERFORMANCE_MARKER
 	if( IsMapScreenHelpTextUp() )
 	{
 		// stop mapscreen text
@@ -9355,7 +9250,7 @@ void ResetAllSelectedCharacterModes( void )
 		AbortMovementPlottingMode();
 	}
 
-	// reset assign character 
+	// reset assign character
 	bSelectedAssignChar = -1;
 
 	// reset contract character
@@ -9375,7 +9270,6 @@ void ResetAllSelectedCharacterModes( void )
 
 void UpdatePausedStatesDueToTimeCompression( void )
 {
-	PERFORMANCE_MARKER
 	// this executes every frame, so keep it optimized for speed!
 
 	// if time is being compressed
@@ -9408,14 +9302,13 @@ void UpdatePausedStatesDueToTimeCompression( void )
 
 BOOLEAN ContinueDialogue(SOLDIERTYPE *pSoldier, BOOLEAN fDone )
 {
-	PERFORMANCE_MARKER
 	// continue this grunts dialogue, restore when done
 	static INT8 bOldSelectedInfoChar = -1;
 	static BOOLEAN fTalkingingGuy = FALSE;
 
 	INT8 bCounter = 0;
 
-	
+
 
 
 	if( fDone == TRUE )
@@ -9469,7 +9362,6 @@ BOOLEAN ContinueDialogue(SOLDIERTYPE *pSoldier, BOOLEAN fDone )
 
 void HandleSpontanousTalking(	)
 {
-	PERFORMANCE_MARKER
 	// simply polls if the talking guy is done, if so...send an end command to continue dialogue
 
 	if( DialogueActive() == FALSE )
@@ -9486,7 +9378,6 @@ void HandleSpontanousTalking(	)
 
 BOOLEAN CheckIfClickOnLastSectorInPath( INT16 sX, INT16 sY )
 {
-	PERFORMANCE_MARKER
 	PathStPtr *ppMovePath = NULL;
 	BOOLEAN fLastSectorInPath = FALSE;
 	INT32 iVehicleId = -1;
@@ -9600,7 +9491,6 @@ BOOLEAN CheckIfClickOnLastSectorInPath( INT16 sX, INT16 sY )
 
 void RebuildWayPointsForAllSelectedCharsGroups( void )
 {
-	PERFORMANCE_MARKER
 	// rebuild the waypoints for everyone in the selected character list
 	INT32 iCounter = 0;
 	BOOLEAN fGroupIDRebuilt[ 256 ];
@@ -9660,16 +9550,15 @@ void RebuildWayPointsForAllSelectedCharsGroups( void )
 
 void UpdateCursorIfInLastSector( void )
 {
-	PERFORMANCE_MARKER
 
 	INT16 sMapX = 0, sMapY = 0;
 
 	// check to see if we are plotting a path, if so, see if we are highlighting the last sector int he path, if so, change the cursor
-	if ( ( bSelectedDestChar != -1) || ( fPlotForHelicopter == TRUE ) ) 
-	{					
+	if ( ( bSelectedDestChar != -1) || ( fPlotForHelicopter == TRUE ) )
+	{
 		GetMouseMapXY(&sMapX, &sMapY);
 
-		// translate screen values to map grid values for zoomed in 
+		// translate screen values to map grid values for zoomed in
 		if(fZoomFlag)
 		{
 			sMapX=(UINT16)iZoomX/MAP_GRID_X+sMapX;
@@ -9727,10 +9616,9 @@ void UpdateCursorIfInLastSector( void )
 
 void FaceRegionBtnCallback( MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	// error checking, make sure someone is there
 	if( bSelectedInfoChar == -1 )
-	{		
+	{
 		return;
 	}
 	else if( gCharactersList[ bSelectedInfoChar ].fValid == FALSE )
@@ -9765,7 +9653,6 @@ void FaceRegionBtnCallback( MOUSE_REGION *pRegion, INT32 iReason )
 
 void FaceRegionMvtCallback( MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if( bSelectedInfoChar == -1 )
 	{
 		fShowFaceHightLight = FALSE;
@@ -9781,7 +9668,7 @@ void FaceRegionMvtCallback( MOUSE_REGION *pRegion, INT32 iReason )
 	{
 		fShowFaceHightLight = TRUE;
 	}
-	else if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE ) 
+	else if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		fShowFaceHightLight = FALSE;
 	}
@@ -9791,7 +9678,6 @@ void FaceRegionMvtCallback( MOUSE_REGION *pRegion, INT32 iReason )
 
 void ItemRegionBtnCallback( MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	// left AND right button are handled the same way
 	if (iReason & ( MSYS_CALLBACK_REASON_RBUTTON_UP | MSYS_CALLBACK_REASON_LBUTTON_UP ) )
 	{
@@ -9802,9 +9688,8 @@ void ItemRegionBtnCallback( MOUSE_REGION *pRegion, INT32 iReason )
 
 void ItemRegionMvtCallback( MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if ( !CanToggleSelectedCharInventory() )
-	{		
+	{
 		fShowItemHighLight = FALSE;
 		return;
 	}
@@ -9813,7 +9698,7 @@ void ItemRegionMvtCallback( MOUSE_REGION *pRegion, INT32 iReason )
 	{
 		fShowItemHighLight = TRUE;
 	}
-	else if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE ) 
+	else if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		fShowItemHighLight = FALSE;
 	}
@@ -9823,7 +9708,6 @@ void ItemRegionMvtCallback( MOUSE_REGION *pRegion, INT32 iReason )
 
 void HandleChangeOfHighLightedLine( void )
 {
-	PERFORMANCE_MARKER
 	static INT32 iOldHighLine;
 
 	if ( fShowInventoryFlag )
@@ -9857,7 +9741,6 @@ void HandleChangeOfHighLightedLine( void )
 
 void UpdateTownMinePopUpDisplay( void )
 {
-	PERFORMANCE_MARKER
 	if ( gMapViewRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
 		ForceUpDateOfBox( ghTownMineBox );
@@ -9868,7 +9751,6 @@ void UpdateTownMinePopUpDisplay( void )
 
 void HandleCharBarRender( void )
 {
-	PERFORMANCE_MARKER
 	// check if the panel is disbled, if so, do not render
 	if( ( bSelectedInfoChar !=-1) && ( fDisableDueToBattleRoster == FALSE ) )
 	{
@@ -9891,7 +9773,6 @@ void HandleCharBarRender( void )
 // update the status of the contract box
 void UpDateStatusOfContractBox( void )
 {
-	PERFORMANCE_MARKER
 	if( fShowContractMenu == TRUE )
 	{
 		ForceUpDateOfBox( ghContractBox );
@@ -9901,7 +9782,7 @@ void UpDateStatusOfContractBox( void )
 			ForceUpDateOfBox( ghRemoveMercAssignBox );
 		}
 	}
-	
+
 	return;
 }
 
@@ -9909,17 +9790,15 @@ void UpDateStatusOfContractBox( void )
 
 void DestroyTheItemInCursor( )
 {
-	PERFORMANCE_MARKER
 	// actually destroy this item
 	// End Item pickup
-	MAPEndItemPointer( );		
+	MAPEndItemPointer( );
 	gpItemPointer = NULL;
 }
 
 
 void TrashItemMessageBoxCallBack( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		// find the item and get rid of it
@@ -9927,7 +9806,7 @@ void TrashItemMessageBoxCallBack( UINT8 bExitValue )
 		DestroyTheItemInCursor( );
 
 		// reset cursor
-		MSYS_ChangeRegionCursor( &gSMPanelRegion , CURSOR_NORMAL );	
+		MSYS_ChangeRegionCursor( &gSMPanelRegion , CURSOR_NORMAL );
 		SetCurrentCursorFromDatabase( CURSOR_NORMAL );
 
 		HandleButtonStatesWhileMapInventoryActive( );
@@ -9937,8 +9816,7 @@ void TrashItemMessageBoxCallBack( UINT8 bExitValue )
 
 void TrashCanBtnCallback( MOUSE_REGION *pRegion, INT32 iReason)
 {
-	PERFORMANCE_MARKER
-	
+
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if( IsMapScreenHelpTextUp() )
@@ -9967,32 +9845,29 @@ void TrashCanBtnCallback( MOUSE_REGION *pRegion, INT32 iReason)
 
 void TrashCanMoveCallback( MOUSE_REGION *pRegion, INT32 iReason)
 {
-	PERFORMANCE_MARKER
-	
+
 	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
 		if( gMPanelRegion.Cursor == EXTERN_CURSOR )
 		{
-			fShowTrashCanHighLight = TRUE; 
+			fShowTrashCanHighLight = TRUE;
 		}
 	}
 	else if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		fShowTrashCanHighLight = FALSE; 
+		fShowTrashCanHighLight = FALSE;
 	}
 }
 
 
 void MapInvDoneButtonfastHelpCall( )
 {
-	PERFORMANCE_MARKER
 	SetPendingNewScreen( LAPTOP_SCREEN );
 }
 
 
 void UpdateStatusOfMapSortButtons( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	static BOOLEAN fShownLastTime = FALSE;
 
@@ -10005,7 +9880,7 @@ void UpdateStatusOfMapSortButtons( void )
 			{
 				HideButton( giMapSortButton[ iCounter ] );
 			}
-			if ( gfPreBattleInterfaceActive ) 
+			if ( gfPreBattleInterfaceActive )
 			{
 				HideButton( giCharInfoButton[ 0 ] );
 				HideButton( giCharInfoButton[ 1 ] );
@@ -10035,7 +9910,6 @@ void UpdateStatusOfMapSortButtons( void )
 
 INT8 GetLastValidCharacterInTeamPanelList( void )
 {
-	PERFORMANCE_MARKER
 	INT8 iCounter = 0, iValue = 0;
 
 	// run through the list and find the last valid guy in the list
@@ -10084,7 +9958,6 @@ INT8 GetLastValidCharacterInTeamPanelList( void )
 // NB These functions weren't being called anywhere!	Use GoToNextCharacterInList etc instead
 INT8 GetPrevValidCharacterInTeamPanelList( INT8 bCurrentIndex )
 {
-	PERFORMANCE_MARKER
 	INT8 iCounter = bCurrentIndex, iValue = 0;
 
 	// run through the list and find the last valid guy in the list
@@ -10132,7 +10005,6 @@ INT8 GetPrevValidCharacterInTeamPanelList( INT8 bCurrentIndex )
 
 INT8 GetNextValidCharacterInTeamPanelList( INT8 bCurrentIndex )
 {
-	PERFORMANCE_MARKER
 	INT8 iCounter = bCurrentIndex, iValue = 0;
 
 	// run through the list and find the last valid guy in the list
@@ -10186,7 +10058,6 @@ INT8 GetNextValidCharacterInTeamPanelList( INT8 bCurrentIndex )
 
 void CreateDestroyTrashCanRegion( void )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fCreated = FALSE;
 
 	if( fShowInventoryFlag && ( fCreated == FALSE ) )
@@ -10194,16 +10065,16 @@ void CreateDestroyTrashCanRegion( void )
 
 		fCreated = TRUE;
 
-		// trash can 
+		// trash can
 		MSYS_DefineRegion( &gTrashCanRegion, 	TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT , MSYS_PRIORITY_HIGHEST - 4 ,
 							MSYS_NO_CURSOR, TrashCanMoveCallback, TrashCanBtnCallback );
-	
+
 		// done inventory button define
 		giMapInvButtonDoneImage = LoadButtonImage( "INTERFACE\\done_button2.sti" ,-1,0,-1,1,-1 );
 	giMapInvDoneButton = QuickCreateButton( giMapInvButtonDoneImage, INV_BTN_X, INV_BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										( GUI_CALLBACK )BtnGenericMouseMoveButtonCallback, ( GUI_CALLBACK)DoneInventoryMapBtnCallback );
-		
+
 		SetButtonFastHelpText( giMapInvDoneButton ,pMiscMapScreenMouseRegionHelpText[ 2 ] );
 		SetRegionFastHelpText( &gTrashCanRegion, pMiscMapScreenMouseRegionHelpText[ 1 ] );
 
@@ -10213,13 +10084,13 @@ void CreateDestroyTrashCanRegion( void )
 	giMapInvNext= QuickCreateButton( giMapInvNextImage, ( 2 ), ( 79 ) ,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										( GUI_CALLBACK )BtnGenericMouseMoveButtonCallback, ( GUI_CALLBACK)NextInventoryMapBtnCallback );
-		
-	
+
+
 		giMapInvPrevImage=	LoadButtonImage( "INTERFACE\\inventory_buttons.sti" ,-1,21,-1,23,-1 );
 	giMapInvPrev= QuickCreateButton( giMapInvPrevImage, ( 30 ) , ( 79 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										( GUI_CALLBACK )BtnGenericMouseMoveButtonCallback, ( GUI_CALLBACK)PrevInventoryMapBtnCallback );
-		
+
 	*/
 
 			// reset the compatable item array at this point
@@ -10234,7 +10105,7 @@ void CreateDestroyTrashCanRegion( void )
 
 		// map inv done button
 		RemoveButton( giMapInvDoneButton );
-	
+
 		// get rid of button image
 		UnloadButtonImage( giMapInvButtonDoneImage );
 
@@ -10251,18 +10122,16 @@ void CreateDestroyTrashCanRegion( void )
 
 void InvmaskRegionBtnCallBack( MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	// CJC, December 15 1998: do NOTHING for clicks here
 }
 
 
 void DoneInventoryMapBtnCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	// prevent inventory from being closed while stack popup up!
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		btn->uiFlags|=(BUTTON_CLICKED_ON);	
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -10275,14 +10144,13 @@ void DoneInventoryMapBtnCallback( GUI_BUTTON *btn, INT32 reason )
 				fEndShowInventoryFlag = TRUE;
 			}
 		}
-	}	
+	}
 }
 
 
 
 void StartConfirmMapMoveMode( INT16 sMapY )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubPosition = ( sMapY < 8 ) ? MSG_MAP_UI_POSITION_LOWER : MSG_MAP_UI_POSITION_UPPER;
 
 
@@ -10295,7 +10163,6 @@ void StartConfirmMapMoveMode( INT16 sMapY )
 
 void EndConfirmMapMoveMode( void )
 {
-	PERFORMANCE_MARKER
 	CancelMapUIMessage( );
 
 	gfInConfirmMapMoveMode = FALSE;
@@ -10305,7 +10172,6 @@ void EndConfirmMapMoveMode( void )
 
 void CancelMapUIMessage( void )
 {
-	PERFORMANCE_MARKER
 	// and kill the message overlay
 	EndUIMessage( );
 
@@ -10316,7 +10182,6 @@ void CancelMapUIMessage( void )
 // automatically turns off mapscreen ui overlay messages when appropriate
 void MonitorMapUIMessage( void )
 {
-	PERFORMANCE_MARKER
 	// if there is a map UI message being displayed
 	if( giUIMessageOverlay != -1 )
 	{
@@ -10336,7 +10201,6 @@ void MonitorMapUIMessage( void )
 
 void HandlePreBattleInterfaceWithInventoryPanelUp( void )
 {
-	PERFORMANCE_MARKER
 	if( ( gfPreBattleInterfaceActive == TRUE ) && ( fShowInventoryFlag == TRUE ) )
 	{
 		if( fShowDescriptionFlag == TRUE )
@@ -10355,7 +10219,6 @@ void HandlePreBattleInterfaceWithInventoryPanelUp( void )
 // this puts anyone who is on NO_ASSIGNMENT onto a free squad
 void UpdateBadAssignments( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 iCounter;
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
@@ -10371,7 +10234,6 @@ void UpdateBadAssignments( void )
 
 void InterruptTimeForMenus( void )
 {
-	PERFORMANCE_MARKER
 	if( ( fShowAssignmentMenu == TRUE )||( fShowContractMenu == TRUE ) )
 	{
 		InterruptTime( );
@@ -10389,7 +10251,6 @@ void InterruptTimeForMenus( void )
 
 void HandleContractTimeFlashForMercThatIsAboutLeave( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCurrentTime;
 
 	// grab the current time
@@ -10414,7 +10275,6 @@ void HandleContractTimeFlashForMercThatIsAboutLeave( void )
 
 BOOLEAN AnyMercsLeavingRealSoon()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCounter = 0;
 	UINT32 uiTimeInMin = GetWorldTotalMin();
 	BOOLEAN fFoundOne = FALSE;
@@ -10438,7 +10298,6 @@ BOOLEAN AnyMercsLeavingRealSoon()
 
 BOOLEAN HandlePreloadOfMapGraphics( void )
 {
-	PERFORMANCE_MARKER
 	// check amt of memory, if above required amt...use it
 	VSURFACE_DESC		vs_desc;
 	VOBJECT_DESC	 VObjectDesc;
@@ -10621,14 +10480,13 @@ BOOLEAN HandlePreloadOfMapGraphics( void )
 
 void HandleRemovalOfPreLoadedMapGraphics( void )
 {
-	PERFORMANCE_MARKER
 
 	if( fPreLoadedMapGraphics == TRUE )
 	{
 		DeleteMapBottomGraphics( );
 		DeleteVideoObjectFromIndex( guiMAPCURSORS );
 		DeleteVideoObjectFromIndex( guiSleepIcon );
-		
+
 		//DeleteVideoObjectFromIndex(guiMAPBORDER);
 		DeleteVideoObjectFromIndex(guiCHARLIST);
 		//DeleteVideoObjectFromIndex(guiCORNERADDONS);
@@ -10666,7 +10524,7 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 		DeleteVideoObjectFromIndex( guiBULLSEYE );
 
 
-		// remove the graphic for the militia pop up box 
+		// remove the graphic for the militia pop up box
 		RemoveMilitiaPopUpBox( );
 
 		// remove inventory pool graphic
@@ -10682,7 +10540,6 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 
 BOOLEAN CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed( INT8 bCharId )
 {
-	PERFORMANCE_MARKER
 	UINT16 usSoldierId = 0;
 
 	// invalid char id
@@ -10733,7 +10590,6 @@ BOOLEAN CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed( INT8 bC
 
 void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons( void )
 {
-	PERFORMANCE_MARKER
 	if( gfPreBattleInterfaceActive )
 	{
 		if( IsMapScreenHelpTextUp() )
@@ -10776,10 +10632,9 @@ void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons( void )
 
 void PrevInventoryMapBtnCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -10789,16 +10644,15 @@ void PrevInventoryMapBtnCallback( GUI_BUTTON *btn, INT32 reason )
 
 			GoToPrevCharacterInList( );
 		}
-	}	
+	}
 }
 
 
 void NextInventoryMapBtnCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -10808,7 +10662,7 @@ void NextInventoryMapBtnCallback( GUI_BUTTON *btn, INT32 reason )
 
 			GoToNextCharacterInList( );
 		}
-	}	
+	}
 }
 
 // WANNE: <scroll>
@@ -10913,7 +10767,6 @@ void NextInventoryMapBtnCallback( GUI_BUTTON *btn, INT32 reason )
 
 void CreateDestroyMapCharacterScrollButtons( void )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fCreated = FALSE;
 
 	if( ( fInMapMode == TRUE ) && ( fCreated == FALSE ) )
@@ -10934,7 +10787,7 @@ void CreateDestroyMapCharacterScrollButtons( void )
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 5,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)NextInventoryMapBtnCallback );
 
-		
+
 		SetButtonFastHelpText( giCharInfoButton[ 0 ], pMapScreenPrevNextCharButtonHelpText[ 0 ] );
 		SetButtonFastHelpText( giCharInfoButton[ 1 ], pMapScreenPrevNextCharButtonHelpText[ 1 ] );
 
@@ -10956,7 +10809,6 @@ void CreateDestroyMapCharacterScrollButtons( void )
 
 void TellPlayerWhyHeCantCompressTime( void )
 {
-	PERFORMANCE_MARKER
 	// if we're locked into paused time compression by some event that enforces that
 	if ( PauseStateLocked() )
 	{
@@ -10976,7 +10828,7 @@ void TellPlayerWhyHeCantCompressTime( void )
 		DoMapMessageBox( MSG_BOX_BASIC_STYLE, pMapErrorString[ 39 ], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
 	}
 	else if ( ActiveTimedBombExists() )
-	{	
+	{
 		// can't time compress when a bomb is about to go off!
 		DoMapMessageBox( MSG_BOX_BASIC_STYLE, gzLateLocalizedString[ 2 ], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
 	}
@@ -11036,7 +10888,6 @@ void TellPlayerWhyHeCantCompressTime( void )
 
 void MapScreenDefaultOkBoxCallback( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	// yes, load the game
 	if( bExitValue == MSG_BOX_RETURN_OK )
 	{
@@ -11051,7 +10902,6 @@ void MapScreenDefaultOkBoxCallback( UINT8 bExitValue )
 
 void MapSortBtnCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = 0;
 
 	// grab the button index value for the sort buttons
@@ -11067,7 +10917,7 @@ void MapSortBtnCallback( GUI_BUTTON *btn, INT32 reason )
 			return;
 		}
 
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -11077,14 +10927,13 @@ void MapSortBtnCallback( GUI_BUTTON *btn, INT32 reason )
 
 			ChangeCharacterListSortMethod( iValue );
 		}
-	}	
+	}
 }
 
 
 
 void AddTeamPanelSortButtonsForMapScreen( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	SGPFILENAME filename;
 	INT32 iImageIndex[ MAX_SORT_METHODS ] = { 0, 1, 5, 2, 3, 4 };		// sleep image is out or order (last)
@@ -11112,7 +10961,6 @@ void AddTeamPanelSortButtonsForMapScreen( void )
 
 void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0, iCounterA = 0;
 	INT16 sEndSectorA, sEndSectorB;
 	INT32 iExpiryTime, iExpiryTimeA;
@@ -11155,7 +11003,7 @@ void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs )
 			if( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE )
 			{
 				// yes, store pointer to them
-				pSelectedSoldier[ iCounter ] = pCurrentSoldier; 
+				pSelectedSoldier[ iCounter ] = pCurrentSoldier;
 			}
 		}
 	}
@@ -11314,7 +11162,7 @@ void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs )
 				return;
 		}
 	}
-	
+
 
 	if ( fRetainSelectedMercs )
 	{
@@ -11366,7 +11214,7 @@ void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs )
 	}
 
 
-	// reset blinking animations 
+	// reset blinking animations
 	SetAllAutoFacesInactive( );
 
 	// dirty the screen parts affected
@@ -11378,7 +11226,6 @@ void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs )
 
 void SwapCharactersInList( INT32 iCharA, INT32 iCharB )
 {
-	PERFORMANCE_MARKER
 	UINT16 usTempSoldID;
 
 	// swap
@@ -11391,7 +11238,6 @@ void SwapCharactersInList( INT32 iCharA, INT32 iCharB )
 
 void RemoveTeamPanelSortButtonsForMapScreen( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	for( iCounter = 0; iCounter < MAX_SORT_METHODS; iCounter++ )
@@ -11408,7 +11254,6 @@ void RemoveTeamPanelSortButtonsForMapScreen( void )
 
 void HandleCommonGlowTimer( )
 {
-	PERFORMANCE_MARKER
 	INT32 iCurrentTime = 0;
 
 	// grab the current time
@@ -11432,7 +11277,6 @@ void HandleCommonGlowTimer( )
 
 void HandleAssignmentsDoneAndAwaitingFurtherOrders( void )
 {
-	PERFORMANCE_MARKER
 	// run through list of grunts and handle awating further orders
 	INT32 iCounter = 0, iCurrentTime = 0;
 	SOLDIERTYPE *pSoldier = NULL;
@@ -11459,7 +11303,7 @@ void HandleAssignmentsDoneAndAwaitingFurtherOrders( void )
 			{
 				break;
 			}
-			
+
 			pSoldier = &( Menptr[ gCharactersList[ iCounter ].usSolID ] );
 
 			// toggle and redraw if flash was left ON even though the flag is OFF
@@ -11478,7 +11322,6 @@ void HandleAssignmentsDoneAndAwaitingFurtherOrders( void )
 
 void DisplayIconsForMercsAsleep( void )
 {
-	PERFORMANCE_MARKER
 	// run throught he list of grunts to see who is asleep and who isn't
 	HVOBJECT hHandle;
 	INT32 iCounter;
@@ -11512,7 +11355,6 @@ void DisplayIconsForMercsAsleep( void )
 //		mapscreen and we have new email to read.
 void CheckForAndRenderNewMailOverlay()
 {
-	PERFORMANCE_MARKER
 	if( fNewMailFlag )
 	{
 		if( GetJA2Clock() % 1000 < 667 )
@@ -11553,7 +11395,6 @@ void CheckForAndRenderNewMailOverlay()
 
 BOOLEAN CanToggleSelectedCharInventory( void )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
 
 
@@ -11584,7 +11425,7 @@ BOOLEAN CanToggleSelectedCharInventory( void )
 	pSoldier = MercPtrs[ gCharactersList[ bSelectedInfoChar ].usSolID ];
 
 	// if not in inventory, and holding an item from sector inventory
-	if( !fShowInventoryFlag && 
+	if( !fShowInventoryFlag &&
 			( ( gMPanelRegion.Cursor == EXTERN_CURSOR ) || gpItemPointer || fMapInventoryItem ) &&
 			( gpItemPointerSoldier == NULL ) )
 	{
@@ -11607,7 +11448,6 @@ BOOLEAN CanToggleSelectedCharInventory( void )
 
 BOOLEAN MapCharacterHasAccessibleInventory( INT8 bCharNumber )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
 
 
@@ -11643,7 +11483,6 @@ BOOLEAN MapCharacterHasAccessibleInventory( INT8 bCharNumber )
 
 void CheckForInventoryModeCancellation()
 {
-	PERFORMANCE_MARKER
 	if ( fShowInventoryFlag || fShowDescriptionFlag )
 	{
 		// can't bail while player has an item in hand...
@@ -11674,7 +11513,6 @@ void CheckForInventoryModeCancellation()
 
 void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	PERFORMANCE_MARKER
 	// ignore while map inventory pool is showing, or else items can be replicated, since sector inventory always applies
 	// only to the currently selected sector!!!
 	if( fShowMapInventoryPool )
@@ -11713,7 +11551,6 @@ void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 BOOLEAN CanChangeDestinationForCharSlot( INT8 bCharNumber, BOOLEAN fShowErrorMessage )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
 	INT8 bErrorNumber = -1;
 
@@ -11753,7 +11590,6 @@ BOOLEAN CanChangeDestinationForCharSlot( INT8 bCharNumber, BOOLEAN fShowErrorMes
 
 BOOLEAN CanExtendContractForCharSlot( INT8 bCharNumber )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
 
 
@@ -11795,7 +11631,6 @@ BOOLEAN CanExtendContractForCharSlot( INT8 bCharNumber )
 
 BOOLEAN CanChangeSleepStatusForCharSlot( INT8 bCharNumber )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
 
 	if ( bCharNumber == -1 )
@@ -11813,7 +11648,6 @@ BOOLEAN CanChangeSleepStatusForCharSlot( INT8 bCharNumber )
 
 BOOLEAN CanChangeSleepStatusForSoldier( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// valid soldier?
 	Assert( pSoldier );
 	Assert( pSoldier->bActive );
@@ -11839,7 +11673,6 @@ BOOLEAN CanChangeSleepStatusForSoldier( SOLDIERTYPE *pSoldier )
 
 void ChangeMapScreenMaskCursor( UINT16 usCursor )
 {
-	PERFORMANCE_MARKER
 	MSYS_SetCurrentCursor( usCursor );
 	MSYS_ChangeRegionCursor( &gMapScreenMaskRegion, usCursor );
 
@@ -11867,7 +11700,6 @@ void ChangeMapScreenMaskCursor( UINT16 usCursor )
 
 void CancelOrShortenPlottedPath( void )
 {
-	PERFORMANCE_MARKER
 	INT16 sMapX, sMapY;
 	UINT32 uiReturnValue;
 
@@ -11948,7 +11780,6 @@ void CancelOrShortenPlottedPath( void )
 
 BOOLEAN HandleCtrlOrShiftInTeamPanel( INT8 bCharNumber )
 {
-	PERFORMANCE_MARKER
 	// check if shift or ctrl held down, if so, set values in list
 	if (_KeyDown(CTRL))
 	{
@@ -11980,7 +11811,6 @@ BOOLEAN HandleCtrlOrShiftInTeamPanel( INT8 bCharNumber )
 
 INT32 GetContractExpiryTime( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	if( ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) || ( pSoldier->ubProfile == SLAY ) )
 	{
 		return ( pSoldier->iEndofContractTime );
@@ -11996,7 +11826,6 @@ INT32 GetContractExpiryTime( SOLDIERTYPE *pSoldier )
 
 void ChangeSelectedInfoChar( INT8 bCharNumber, BOOLEAN fResetSelectedList )
 {
-	PERFORMANCE_MARKER
 	Assert( ( bCharNumber >= -1 ) && ( bCharNumber < MAX_CHARACTER_COUNT ) );
 
 	if( ( bCharNumber != -1 ) && ( gCharactersList[ bCharNumber ].fValid == FALSE ) )
@@ -12068,7 +11897,6 @@ void ChangeSelectedInfoChar( INT8 bCharNumber, BOOLEAN fResetSelectedList )
 
 void CopyPathToAllSelectedCharacters( PathStPtr pPath )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -12106,7 +11934,6 @@ void CopyPathToAllSelectedCharacters( PathStPtr pPath )
 
 void CancelPathsOfAllSelectedCharacters()
 {
-	PERFORMANCE_MARKER
 	INT8 bCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 	BOOLEAN fSkyriderMsgShown = FALSE;
@@ -12156,7 +11983,6 @@ void CancelPathsOfAllSelectedCharacters()
 
 void ConvertMinTimeToETADayHourMinString( UINT32 uiTimeInMin, STR16 sString )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDay, uiHour, uiMin;
 
 	uiDay	= ( uiTimeInMin / NUM_MIN_IN_DAY );
@@ -12173,7 +11999,6 @@ void ConvertMinTimeToETADayHourMinString( UINT32 uiTimeInMin, STR16 sString )
 
 INT32 GetGroundTravelTimeOfCharacter( INT8 bCharNumber )
 {
-	PERFORMANCE_MARKER
 	INT32 iTravelTime = 0;
 
 	if( bCharNumber == -1 )
@@ -12195,7 +12020,6 @@ INT32 GetGroundTravelTimeOfCharacter( INT8 bCharNumber )
 
 INT16 CalcLocationValueForChar( INT32 iCounter )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
 	INT16 sLocValue = 0;
 
@@ -12221,7 +12045,6 @@ INT16 CalcLocationValueForChar( INT32 iCounter )
 
 void CancelChangeArrivalSectorMode( )
 {
-	PERFORMANCE_MARKER							
 	// "put him in change arrival sector" mode
 	gfInChangeArrivalSectorMode = FALSE;
 
@@ -12236,7 +12059,6 @@ void CancelChangeArrivalSectorMode( )
 
 void MakeMapModesSuitableForDestPlotting( INT8 bCharNumber )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
 
 
@@ -12278,7 +12100,6 @@ void MakeMapModesSuitableForDestPlotting( INT8 bCharNumber )
 
 BOOLEAN AnyMovableCharsInOrBetweenThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	PERFORMANCE_MARKER
 	INT32 iFirstId = 0, iLastId = 0;
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
@@ -12338,7 +12159,6 @@ BOOLEAN AnyMovableCharsInOrBetweenThisSector( INT16 sSectorX, INT16 sSectorY, IN
 
 BOOLEAN RequestGiveSkyriderNewDestination( void )
 {
-	PERFORMANCE_MARKER
 	// should we allow it?
 	if( CanHelicopterFly( ) == TRUE )
 	{
@@ -12382,7 +12202,6 @@ BOOLEAN RequestGiveSkyriderNewDestination( void )
 
 void ExplainWhySkyriderCantFly( void )
 {
-	PERFORMANCE_MARKER
 	// do we owe him money?
 	if( gMercProfiles[ SKYRIDER ].iBalance < 0 )
 	{
@@ -12420,7 +12239,6 @@ void ExplainWhySkyriderCantFly( void )
 
 UINT8 PlayerMercsInHelicopterSector( void )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup = NULL;
 
 	Assert( iHelicopterVehicleId != -1);
@@ -12438,7 +12256,6 @@ UINT8 PlayerMercsInHelicopterSector( void )
 
 void HandleNewDestConfirmation( INT16 sMapX, INT16 sMapY )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubCurrentProgress;
 
 
@@ -12450,7 +12267,7 @@ void HandleNewDestConfirmation( INT16 sMapX, INT16 sMapY )
 				(	WhatPlayerKnowsAboutEnemiesInSector( sMapX, sMapY ) == KNOWS_NOTHING ) )
 		{
 			// no problem
-			
+
 			// get current player progress
 			ubCurrentProgress = CurrentPlayerProgressPercentage();
 
@@ -12501,7 +12318,6 @@ void HandleNewDestConfirmation( INT16 sMapX, INT16 sMapY )
 
 void RandomAwakeSelectedMercConfirmsStrategicMove( void )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
 	INT32 iCounter;
 	UINT8	ubSelectedMercID[ 20 ];
@@ -12542,7 +12358,6 @@ void RandomAwakeSelectedMercConfirmsStrategicMove( void )
 
 void DestinationPlottingCompleted( void )
 {
-	PERFORMANCE_MARKER
 	// clear previous paths for selected characters and helicopter
 	ClearPreviousPaths();
 
@@ -12563,7 +12378,6 @@ void DestinationPlottingCompleted( void )
 
 void HandleMilitiaRedistributionClick( void )
 {
-	PERFORMANCE_MARKER
 	INT8 bTownId;
 	BOOLEAN fTownStillHidden;
 	CHAR16 sString[ 128 ];
@@ -12617,7 +12431,6 @@ void HandleMilitiaRedistributionClick( void )
 #ifdef JA2TESTVERSION
 void DumpSectorDifficultyInfo( void )
 {
-	PERFORMANCE_MARKER
 	// NOTE: This operates on the selected map sector!
 	CHAR16 wSectorName[ 128 ];
 
@@ -12646,7 +12459,6 @@ void DumpSectorDifficultyInfo( void )
 
 void StartChangeSectorArrivalMode( void )
 {
-	PERFORMANCE_MARKER
 	// "put him in change arrival sector" mode
 	gfInChangeArrivalSectorMode = TRUE;
 
@@ -12664,7 +12476,6 @@ void StartChangeSectorArrivalMode( void )
 
 BOOLEAN CanMoveBullseyeAndClickedOnIt( INT16 sMapX, INT16 sMapY )
 {
-	PERFORMANCE_MARKER
 	// if in airspace mode, and not plotting paths
 	if( ( fShowAircraftFlag == TRUE ) && ( bSelectedDestChar == -1 ) && ( fPlotForHelicopter == FALSE ) )
 	{
@@ -12686,7 +12497,6 @@ BOOLEAN CanMoveBullseyeAndClickedOnIt( INT16 sMapX, INT16 sMapY )
 
 void CreateBullsEyeOrChopperSelectionPopup( void )
 {
-	PERFORMANCE_MARKER
 	wcscpy( gzUserDefinedButton1, pHelicopterEtaStrings[ 8 ] );
 	wcscpy( gzUserDefinedButton2, pHelicopterEtaStrings[ 9 ] );
 
@@ -12697,7 +12507,6 @@ void CreateBullsEyeOrChopperSelectionPopup( void )
 
 void BullsEyeOrChopperSelectionPopupCallback( UINT8 ubExitValue )
 {
-	PERFORMANCE_MARKER
 	// button 1 pressed?
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -12717,7 +12526,6 @@ void BullsEyeOrChopperSelectionPopupCallback( UINT8 ubExitValue )
 // wake up anybody who needs to be awake to travel
 void WakeUpAnySleepingSelectedMercsOnFootOrDriving( void )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
 	INT32 iCounter;
 	BOOLEAN fSuccess = FALSE;
@@ -12747,17 +12555,16 @@ void WakeUpAnySleepingSelectedMercsOnFootOrDriving( void )
 
 void HandlePostAutoresolveMessages()
 {
-	PERFORMANCE_MARKER
-	//KM: Autoresolve sets up this global sector value whenever the enemy gains control of a sector.	As soon as 
+	//KM: Autoresolve sets up this global sector value whenever the enemy gains control of a sector.	As soon as
 	//we leave autoresolve and enter mapscreen, then this gets called and handles ownership change for the sector.
 	//It also brings up a dialog stating to the player what happened, however, the internals of those functions
 	//breaks autoresolve and the game crashes after autoresolve is finished.	The value doesn't need to be saved.
 	//
-	//An additional case is when creatures kill all opposition in the sector.	For each surviving monster, civilians 
+	//An additional case is when creatures kill all opposition in the sector.	For each surviving monster, civilians
 	//are "virtually" murdered and loyalty hits will be processed.
 	if( gsCiviliansEatenByMonsters >= 1 )
 	{
-		AdjustLoyaltyForCivsEatenByMonsters( (UINT8)SECTORX( gsEnemyGainedControlOfSectorID ), 
+		AdjustLoyaltyForCivsEatenByMonsters( (UINT8)SECTORX( gsEnemyGainedControlOfSectorID ),
 																				(UINT8)SECTORY( gsEnemyGainedControlOfSectorID ),
 																				(UINT8)gsCiviliansEatenByMonsters );
 		gsCiviliansEatenByMonsters = -2;
@@ -12774,7 +12581,7 @@ void HandlePostAutoresolveMessages()
 		gsEnemyGainedControlOfSectorID = -2;
 	}
 	else if( gsEnemyGainedControlOfSectorID == -2 )
-	{ //dirty the mapscreen after the dialog box goes away.	
+	{ //dirty the mapscreen after the dialog box goes away.
 		fMapPanelDirty = TRUE;
 		gsEnemyGainedControlOfSectorID = -1;
 	}
@@ -12789,7 +12596,6 @@ void HandlePostAutoresolveMessages()
 
 void GetMapscreenMercAssignmentString( SOLDIERTYPE *pSoldier, CHAR16 sString[] )
 {
-	PERFORMANCE_MARKER
 	if( pSoldier->bAssignment != VEHICLE )
 	{
 		wcscpy(sString, pAssignmentStrings[ pSoldier->bAssignment ] );
@@ -12803,7 +12609,6 @@ void GetMapscreenMercAssignmentString( SOLDIERTYPE *pSoldier, CHAR16 sString[] )
 
 void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, CHAR16 sString[] )
 {
-	PERFORMANCE_MARKER
 	CHAR16 pTempString[32];
 
 
@@ -12826,7 +12631,7 @@ void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, CHAR16 sString[] )
 
 			if ( pSoldier->flags.fBetweenSectors )
 			{
-				// put brackets around it when he's between sectors!		
+				// put brackets around it when he's between sectors!
 				swprintf( sString, L"(%s)", pTempString );
 			}
 			else
@@ -12840,7 +12645,6 @@ void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, CHAR16 sString[] )
 
 void GetMapscreenMercDestinationString( SOLDIERTYPE *pSoldier, CHAR16 sString[] )
 {
-	PERFORMANCE_MARKER
 	INT32 iSectorX, iSectorY;
 	INT16 sSector=0;
 	GROUP *pGroup = NULL;
@@ -12899,7 +12703,6 @@ void GetMapscreenMercDestinationString( SOLDIERTYPE *pSoldier, CHAR16 sString[] 
 
 void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, CHAR16 sString[], UINT8 *pubFontColor )
 {
-	PERFORMANCE_MARKER
 	INT32 iMinsRemaining = 0;
 	INT32 iDaysRemaining = 0;
 	INT32 iHoursRemaining = 0;
@@ -12930,7 +12733,7 @@ void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, CHAR16 sString[], U
 
 			*pubFontColor = FONT_LTGREEN;
 
-			swprintf(sString, L"%d%s", iDaysRemaining, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] ); 
+			swprintf(sString, L"%d%s", iDaysRemaining, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] );
 		}
 		else	// less than 3 days
 		{
@@ -12962,7 +12765,6 @@ void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, CHAR16 sString[], U
 
 void InitPreviousPaths( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	// init character previous paths
@@ -12978,7 +12780,6 @@ void InitPreviousPaths( void )
 
 void RememberPreviousPathForAllSelectedChars( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -12997,7 +12798,6 @@ void RememberPreviousPathForAllSelectedChars( void )
 
 void RestorePreviousPaths( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 	PathStPtr *ppMovePath = NULL;
@@ -13121,7 +12921,6 @@ void RestorePreviousPaths( void )
 
 void ClearPreviousPaths( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
@@ -13137,7 +12936,6 @@ void ClearPreviousPaths( void )
 
 void SelectAllCharactersInSquad( INT8 bSquadNumber )
 {
-	PERFORMANCE_MARKER
 	INT8 bCounter;
 	BOOLEAN fFirstOne = TRUE;
 	SOLDIERTYPE *pSoldier;
@@ -13184,7 +12982,6 @@ void SelectAllCharactersInSquad( INT8 bSquadNumber )
 
 BOOLEAN CanDrawSectorCursor( void )
 {
-	PERFORMANCE_MARKER
 	if( /*( fCursorIsOnMapScrollButtons == FALSE ) && */
 			( fShowTownInfo == FALSE ) && ( ghTownMineBox == -1 ) &&
 			( fShowUpdateBox == FALSE ) && ( GetNumberOfMercsInUpdateList() == 0 ) &&
@@ -13204,7 +13001,6 @@ BOOLEAN CanDrawSectorCursor( void )
 
 void RestoreMapSectorCursor( INT16 sMapX, INT16 sMapY )
 {
-	PERFORMANCE_MARKER
 	INT16 sScreenX, sScreenY;
 
 
@@ -13227,7 +13023,6 @@ void RestoreMapSectorCursor( INT16 sMapX, INT16 sMapY )
 
 void RequestToggleMercInventoryPanel( void )
 {
-	PERFORMANCE_MARKER
 	if( IsMapScreenHelpTextUp() )
 	{
 		// stop mapscreen text
@@ -13242,7 +13037,7 @@ void RequestToggleMercInventoryPanel( void )
 
 
 	if ( !CanToggleSelectedCharInventory() )
-	{		
+	{
 		return;
 	}
 
@@ -13274,7 +13069,6 @@ void RequestToggleMercInventoryPanel( void )
 
 void RequestContractMenu( void )
 {
-	PERFORMANCE_MARKER
 	if( IsMapScreenHelpTextUp() )
 	{
 		// stop mapscreen text
@@ -13330,7 +13124,6 @@ void RequestContractMenu( void )
 
 void ChangeCharacterListSortMethod( INT32 iValue )
 {
-	PERFORMANCE_MARKER
 	Assert( iValue >= 0 );
 	Assert( iValue < MAX_SORT_METHODS );
 
@@ -13360,12 +13153,11 @@ void ChangeCharacterListSortMethod( INT32 iValue )
 
 void MapscreenMarkButtonsDirty()
 {
-	PERFORMANCE_MARKER
 	// redraw buttons
 	MarkButtonsDirty( );
 
 	// if border buttons are created
-	if( !fShowMapInventoryPool ) 
+	if( !fShowMapInventoryPool )
 	{
 		// if the attribute assignment menu is showing
 		if ( fShowAttributeMenu )

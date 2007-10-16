@@ -19,7 +19,7 @@
 #include "Isometric Utils.h"
 #include "Event Pump.h"
 #include "Timer Control.h"
-#include "Render Fun.h" 
+#include "Render Fun.h"
 #include "Render Dirty.h"
 #include "mousesystem.h"
 #include "interface.h"
@@ -59,7 +59,7 @@
 #include "structure wrap.h"
 #include "tile animation.h"
 #include "Strategic Merc Handler.h"
-#include "strategic turns.h"	
+#include "strategic turns.h"
 #include "Squads.h"
 #include "Morale.h"
 #include "Campaign.h"
@@ -149,7 +149,7 @@ extern void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC
 
 extern BOOLEAN NPCInRoom( UINT8 ubProfileID, UINT8 ubRoomID );
 
-extern	INT8		gbInvalidPlacementSlot[ NUM_INV_SLOTS ]; 
+extern	INT8		gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
 
 
 void ResetAllMercSpeeds( );
@@ -245,7 +245,7 @@ CHAR8					gzAlertStr[][ 30 ] =
 	"BLACK"
 };
 
-CHAR8					gzActionStr[][ 30 ] = 
+CHAR8					gzActionStr[][ 30 ] =
 {
 	"NONE",
 
@@ -309,7 +309,7 @@ CHAR8					gzActionStr[][ 30 ] =
 	"RAISE GUN",
 };
 
-CHAR8					gzDirectionStr[][ 30 ] = 
+CHAR8					gzDirectionStr[][ 30 ] =
 {
 	"NORTHEAST",
 	"EAST",
@@ -322,7 +322,7 @@ CHAR8					gzDirectionStr[][ 30 ] =
 };
 
 // TEMP VALUES FOR TEAM DEAFULT POSITIONS
-UINT8 bDefaultTeamRanges[ MAXTEAMS ][ 2 ] = 
+UINT8 bDefaultTeamRanges[ MAXTEAMS ][ 2 ] =
 {
 	0,				19,																							 //20	US
 	20,			 51,																							 //32	ENEMY
@@ -332,7 +332,7 @@ UINT8 bDefaultTeamRanges[ MAXTEAMS ][ 2 ] =
 	MAX_NUM_SOLDIERS, TOTAL_SOLDIERS - 1			// PLANNING SOLDIERS
 };
 
-COLORVAL bDefaultTeamColors[ MAXTEAMS ] = 
+COLORVAL bDefaultTeamColors[ MAXTEAMS ] =
 {
 	FROMRGB( 255, 255, 0 ),
 	FROMRGB( 255, 0, 0 ),
@@ -364,7 +364,6 @@ BOOLEAN	gfKillingGuysForLosingBattle = FALSE;
 
 INT32 GetFreeMercSlot(void)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumMercSlots; uiCount++)
@@ -382,7 +381,6 @@ INT32 GetFreeMercSlot(void)
 
 void RecountMercSlots(void)
 {
-	PERFORMANCE_MARKER
 	INT32 iCount;
 
 	if ( guiNumMercSlots > 0 )
@@ -404,7 +402,6 @@ void RecountMercSlots(void)
 
 INT32	AddMercSlot( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32					iMercIndex;
 
 	if( ( iMercIndex = GetFreeMercSlot() )==(-1) )
@@ -418,7 +415,6 @@ INT32	AddMercSlot( SOLDIERTYPE *pSoldier )
 
 BOOLEAN RemoveMercSlot( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	CHECKF( pSoldier != NULL );
@@ -439,7 +435,6 @@ BOOLEAN RemoveMercSlot( SOLDIERTYPE *pSoldier )
 
 INT32 GetFreeAwaySlot(void)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumAwaySlots; uiCount++)
@@ -457,7 +452,6 @@ INT32 GetFreeAwaySlot(void)
 
 void RecountAwaySlots(void)
 {
-	PERFORMANCE_MARKER
 	INT32 iCount;
 
 	if ( guiNumAwaySlots > 0 )
@@ -478,7 +472,6 @@ void RecountAwaySlots(void)
 
 INT32	AddAwaySlot( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32					iAwayIndex;
 
 	if( ( iAwayIndex = GetFreeAwaySlot() )==(-1) )
@@ -492,7 +485,6 @@ INT32	AddAwaySlot( SOLDIERTYPE *pSoldier )
 
 BOOLEAN RemoveAwaySlot( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	CHECKF( pSoldier != NULL );
@@ -513,7 +505,6 @@ BOOLEAN RemoveAwaySlot( SOLDIERTYPE *pSoldier )
 
 INT32 MoveSoldierFromMercToAwaySlot( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fRet;
 
 	fRet = RemoveMercSlot( pSoldier );
@@ -535,7 +526,6 @@ INT32 MoveSoldierFromMercToAwaySlot( SOLDIERTYPE * pSoldier )
 
 INT32 MoveSoldierFromAwayToMercSlot( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fRet;
 
 	fRet = RemoveAwaySlot( pSoldier );
@@ -556,7 +546,6 @@ INT32 MoveSoldierFromAwayToMercSlot( SOLDIERTYPE * pSoldier )
 
 BOOLEAN InitTacticalEngine( )
 {
-	PERFORMANCE_MARKER
 	// Init renderer
 	InitRenderParams( 0 );
 
@@ -591,7 +580,7 @@ BOOLEAN InitTacticalEngine( )
 
 	// Init Overhead
 	if ( !InitOverhead( ) )
-	{				
+	{
 		return( FALSE );
 	}
 
@@ -605,7 +594,6 @@ BOOLEAN InitTacticalEngine( )
 
 void ShutdownTacticalEngine( )
 {
-	PERFORMANCE_MARKER
 	DeletePaletteData( );
 
 	ShutdownStaticExternalNPCFaces( );
@@ -620,7 +608,6 @@ void ShutdownTacticalEngine( )
 
 BOOLEAN InitOverhead( )
 {
-	PERFORMANCE_MARKER
 	UINT32	cnt;
 	UINT8		cnt2;
 
@@ -651,7 +638,7 @@ BOOLEAN InitOverhead( )
 		}
 		else
 		{
-			if (cnt == MILITIA_TEAM )			
+			if (cnt == MILITIA_TEAM )
 			{
 				// militia guys on our side!
 				gTacticalStatus.Team[ cnt ].bSide = 0;
@@ -664,7 +651,7 @@ BOOLEAN InitOverhead( )
 			}
 			else
 			{
-				// hostile (enemies, or civilians; civs are potentially hostile but neutral)	
+				// hostile (enemies, or civilians; civs are potentially hostile but neutral)
 				gTacticalStatus.Team[ cnt ].bSide = 1;
 			}
 			gTacticalStatus.Team[ cnt ].bHuman = FALSE;
@@ -682,13 +669,13 @@ BOOLEAN InitOverhead( )
 	}
 
 	// Zero out merc slots!
-	for ( cnt = 0; cnt < TOTAL_SOLDIERS; cnt++ ) 
+	for ( cnt = 0; cnt < TOTAL_SOLDIERS; cnt++ )
 	{
 		MercSlots[ cnt ] = NULL;
 	}
 
 	// Set other tactical flags
-	gTacticalStatus.uiFlags = TURNBASED | TRANSLUCENCY_TYPE; 
+	gTacticalStatus.uiFlags = TURNBASED | TRANSLUCENCY_TYPE;
 	gTacticalStatus.sSlideTarget = NOWHERE;
 	gTacticalStatus.uiTimeOfLastInput = GetJA2Clock();
 	gTacticalStatus.uiTimeSinceDemoOn = GetJA2Clock();
@@ -702,7 +689,7 @@ BOOLEAN InitOverhead( )
 	{
 		gTacticalStatus.sPanicTriggerGridNo[ cnt ] = NOWHERE;
 	}
-	/*	for ( cnt = 0; cnt < NUM_TOPTIONS; cnt++ ) 
+	/*	for ( cnt = 0; cnt < NUM_TOPTIONS; cnt++ )
 	{
 	gGameSettings.fOptions[ cnt ] = 1;
 	}
@@ -729,7 +716,6 @@ BOOLEAN InitOverhead( )
 
 BOOLEAN ShutdownOverhead( )
 {
-	PERFORMANCE_MARKER
 	UINT32 cnt;
 
 	// Delete any soldiers which have been created!
@@ -750,7 +736,6 @@ BOOLEAN ShutdownOverhead( )
 
 BOOLEAN GetSoldier( SOLDIERTYPE **ppSoldier, UINT16 usSoldierIndex )
 {
-	PERFORMANCE_MARKER
 	// Check range of index given
 	*ppSoldier = NULL;
 
@@ -777,7 +762,6 @@ BOOLEAN GetSoldier( SOLDIERTYPE **ppSoldier, UINT16 usSoldierIndex )
 
 BOOLEAN	NextAIToHandle( UINT32 uiCurrAISlot )
 {
-	PERFORMANCE_MARKER
 	UINT32	cnt;
 
 	if (uiCurrAISlot >= guiNumMercSlots)
@@ -804,7 +788,7 @@ BOOLEAN	NextAIToHandle( UINT32 uiCurrAISlot )
 
 	// set so that even if there are no off-screen mercs to handle, we will loop back to
 	// the start of the array
-	guiAISlotToHandle = HANDLE_OFF_MAP_MERC; 
+	guiAISlotToHandle = HANDLE_OFF_MAP_MERC;
 
 	// didn't find an AI guy to handle after the last one handled and the # of slots
 	// it's time to check for an off-map merc... maybe
@@ -840,21 +824,18 @@ BOOLEAN	NextAIToHandle( UINT32 uiCurrAISlot )
 
 void PauseAITemporarily( void )
 {
-	PERFORMANCE_MARKER
 	gfPauseAllAI = TRUE;
 	giPauseAllAITimer = GetJA2Clock();
 }
 
 void PauseAIUntilManuallyUnpaused( void )
 {
-	PERFORMANCE_MARKER
 	gfPauseAllAI = TRUE;
 	giPauseAllAITimer = 0;
 }
 
 void UnPauseAI( void )
 {
-	PERFORMANCE_MARKER
 	// overrides any timer too
 	gfPauseAllAI = FALSE;
 	giPauseAllAITimer = 0;
@@ -862,12 +843,12 @@ void UnPauseAI( void )
 
 FLOAT gdRadiansForAngle[ ] =
 {
-	(FLOAT)PI, 
+	(FLOAT)PI,
 	(FLOAT)( 3 * PI / 4 ),
 	(FLOAT)( PI / 2 ),
 	(FLOAT)( ( PI ) / 4 ),
 
-	(FLOAT)0, 
+	(FLOAT)0,
 	(FLOAT)( ( -PI ) / 4 ),
 	(FLOAT)( -PI / 2 ),
 	(FLOAT)( -3 * PI / 4 ),
@@ -877,7 +858,6 @@ FLOAT gdRadiansForAngle[ ] =
 
 BOOLEAN ExecuteOverhead( )
 {
-	PERFORMANCE_MARKER
 
 	UINT32							cnt;
 	SOLDIERTYPE			 *pSoldier;
@@ -1120,7 +1100,7 @@ BOOLEAN ExecuteOverhead( )
 						{
 							pSoldier->DeleteSoldierLight( );
 
-							pSoldier->SetCheckSoldierLightFlag( );		
+							pSoldier->SetCheckSoldierLightFlag( );
 						}
 					}
 				}
@@ -1228,7 +1208,7 @@ BOOLEAN ExecuteOverhead( )
 
 								// Are we at our final destination?
 								if ( pSoldier->pathing.sFinalDestination == pSoldier->sGridNo )
-								{		
+								{
 									// Cancel path....
 									pSoldier->pathing.usPathIndex = pSoldier->pathing.usPathDataSize = 0;
 
@@ -1250,7 +1230,7 @@ BOOLEAN ExecuteOverhead( )
 									// If we are a robot, play stop sound...
 									if ( pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT )
 									{
-										PlaySoldierJA2Sample( pSoldier->ubID, ROBOT_STOP, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ), TRUE );								
+										PlaySoldierJA2Sample( pSoldier->ubID, ROBOT_STOP, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ), TRUE );
 									}
 
 									// Update to middle if we're on destination
@@ -1309,7 +1289,7 @@ BOOLEAN ExecuteOverhead( )
 												RemoveSoldierFromTacticalSector( pSoldier, TRUE );
 											}
 										}
-									}											
+									}
 									else if ( pSoldier->aiData.ubPendingAction != NO_PENDING_ACTION )
 									{
 										DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("We are inside the IF PENDING Animation with soldier #%d", pSoldier->ubID) );
@@ -1317,7 +1297,7 @@ BOOLEAN ExecuteOverhead( )
 										if ( pSoldier->aiData.ubPendingAction == MERC_OPENDOOR ||	pSoldier->aiData.ubPendingAction == MERC_OPENSTRUCT )
 										{
 											sGridNo								 = pSoldier->aiData.sPendingActionData2;
-											//usStructureID			= (UINT16)pSoldier->aiData.uiPendingActionData1;													
+											//usStructureID			= (UINT16)pSoldier->aiData.uiPendingActionData1;
 											//pStructure = FindStructureByID( sGridNo, usStructureID );
 
 											// LOOK FOR STRUCT OPENABLE
@@ -1335,7 +1315,7 @@ BOOLEAN ExecuteOverhead( )
 												CalcInteractiveObjectAPs( sGridNo, pStructure, &sAPCost, &sBPCost );
 
 												if ( EnoughPoints( pSoldier, sAPCost, sBPCost , TRUE ) )
-												{																										
+												{
 													InteractWithInteractiveObject( pSoldier, pStructure, pSoldier->aiData.bPendingActionData3 );
 												}
 												else
@@ -1461,7 +1441,7 @@ BOOLEAN ExecuteOverhead( )
 										}
 										else if ( pSoldier->aiData.ubPendingAction == MERC_GIVEITEM	)
 										{
-											pSoldier->EVENT_SoldierBeginGiveItem( );						 
+											pSoldier->EVENT_SoldierBeginGiveItem( );
 											pSoldier->aiData.ubPendingAction = NO_PENDING_ACTION;
 										}
 
@@ -1615,7 +1595,7 @@ BOOLEAN ExecuteOverhead( )
 								fKeepMoving = FALSE;
 							}
 
-							// DO WALKING 
+							// DO WALKING
 							if ( !pSoldier->flags.fPausedMove && fKeepMoving )
 							{
 								// Determine deltas
@@ -1658,7 +1638,7 @@ BOOLEAN ExecuteOverhead( )
 #endif
 				}
 
-				if ( !gfPauseAllAI && 
+				if ( !gfPauseAllAI &&
 					( ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT)) || (fHandleAI && guiAISlotToHandle == cnt) || (pSoldier->aiData.fAIFlags & AI_HANDLE_EVERY_FRAME) || gTacticalStatus.fAutoBandageMode ) )
 				{
 					HandleSoldierAI( pSoldier );
@@ -1714,7 +1694,7 @@ BOOLEAN ExecuteOverhead( )
 			// Check if we have gone past our time...
 			if ( ( GetJA2Clock( ) - guiWaitingForAllMercsToExitTimer ) > 2500 )
 			{
-				// OK, set num waiting to 0 
+				// OK, set num waiting to 0
 #ifdef JA2BETAVERSION
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_DEBUG, L"Waiting too long for Mercs to exit...forcing entry." );
 #endif
@@ -1793,7 +1773,6 @@ BOOLEAN ExecuteOverhead( )
 
 void HaltGuyFromNewGridNoBecauseOfNoAPs( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	HaltMoveForSoldierOutOfPoints( pSoldier );
 	pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 	pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
@@ -1802,7 +1781,7 @@ void HaltGuyFromNewGridNoBecauseOfNoAPs( SOLDIERTYPE *pSoldier )
 	UnMarkMovementReserved( pSoldier );
 
 	// Display message if our merc...
-	if ( pSoldier->bTeam == gbPlayerNum && ( gTacticalStatus.uiFlags & INCOMBAT ) ) 
+	if ( pSoldier->bTeam == gbPlayerNum && ( gTacticalStatus.uiFlags & INCOMBAT ) )
 	{
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ GUY_HAS_RUN_OUT_OF_APS_STR ], pSoldier->name );
 	}
@@ -1817,7 +1796,6 @@ void HaltGuyFromNewGridNoBecauseOfNoAPs( SOLDIERTYPE *pSoldier )
 
 void HandleLocateToGuyAsHeWalks( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// Our guys if option set,
 	if ( pSoldier->bTeam == gbPlayerNum )
 	{
@@ -1850,7 +1828,6 @@ void HandleLocateToGuyAsHeWalks( SOLDIERTYPE *pSoldier )
 
 BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLEAN fInitialMove, UINT16 usAnimState )
 {
-	PERFORMANCE_MARKER
 	INT16							sAPCost;
 	INT16							sBPCost;
 	INT16							sNewGridNo, sOverFenceGridNo, sMineGridNo;
@@ -1918,7 +1895,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 			{
 				// We do, adjust path data....
 				pSoldier->pathing.usPathIndex++;
-				// We go two, because we really want to start moving towards the NEXT gridno, 
+				// We go two, because we really want to start moving towards the NEXT gridno,
 				// if we have any...
 
 				// LOCK PENDING ACTION COUNTER
@@ -1939,7 +1916,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 			(*pfKeepMoving ) = FALSE;
 		}
 
-		return( FALSE ); 
+		return( FALSE );
 	}
 	else if ( InternalDoorTravelCost( pSoldier, sNewGridNo, gubWorldMovementCosts[ sNewGridNo ][ (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ] ][ pSoldier->pathing.bLevel ], (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), NULL, TRUE ) == TRAVELCOST_DOOR )
 	{
@@ -1968,7 +1945,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 		else
 		{
 #ifdef JA2TESTVERSION
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"ERROR: Invalid Direction to approach door. (Soldier loc: %d, dir: %d).", pSoldier->sGridNo, bDirection );			
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"ERROR: Invalid Direction to approach door. (Soldier loc: %d, dir: %d).", pSoldier->sGridNo, bDirection );
 #endif
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("HandleGotoNewGridNo() Failed: Open door - invalid approach direction") );
 
@@ -1984,7 +1961,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 		if ( pStructure == NULL )
 		{
 #ifdef JA2TESTVERSION
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"ERROR: Told to open door that does not exist at %d.", sDoorGridNo );			
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"ERROR: Told to open door that does not exist at %d.", sDoorGridNo );
 #endif
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("HandleGotoNewGridNo() Failed: Door does not exist") );
 			HaltGuyFromNewGridNoBecauseOfNoAPs( pSoldier );
@@ -2009,7 +1986,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 
 
 	// Find out how much it takes to move here!
-	sAPCost = ActionPointCost( pSoldier, sNewGridNo, (INT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], usAnimState );				
+	sAPCost = ActionPointCost( pSoldier, sNewGridNo, (INT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], usAnimState );
 	sBPCost = TerrainBreathPoints( pSoldier, sNewGridNo, (INT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], usAnimState );
 
 	// CHECK IF THIS TILE IS A GOOD ONE!
@@ -2046,12 +2023,12 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 
 				cnt2 = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 
-				// look for all mercs on the same team, 
+				// look for all mercs on the same team,
 				for ( pSoldier2 = MercPtrs[ cnt2 ]; cnt2 >= gTacticalStatus.Team[ gbPlayerNum ].bFirstID; cnt2-- ,pSoldier2-- )
-				{		
+				{
 					if ( pSoldier2->bActive )
 					{
-						pSoldier2->EVENT_StopMerc( pSoldier2->sGridNo, pSoldier2->ubDirection );				
+						pSoldier2->EVENT_StopMerc( pSoldier2->sGridNo, pSoldier2->ubDirection );
 					}
 				}
 			}
@@ -2148,7 +2125,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 
 				// TODO: Madd: This next section is pretty lame because it can't figure out which explosive was used to actually cause a gas effect
 				// so for now, the first explosive to use a gas effect decides the health and breath damage for all of the gasses of that type
-				// (this was hard coded before by the developers - i guess they figured they didn't need to look for the actual explosion item, 
+				// (this was hard coded before by the developers - i guess they figured they didn't need to look for the actual explosion item,
 				// since they only had one of each gas item?!?)
 				// anyway, it means that we can only have one set of health/breath damage values for each gas type, until someone has time
 				// to dig into this further and actually make it find the original item that caused the gas
@@ -2200,8 +2177,8 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 					}
 				}
 
-				//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Overhead pSoldier->flags.fHitByGasFlags: %d", pSoldier->flags.fHitByGasFlags );	
-				//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Overhead pExplosive: %d", pExplosive->ubType );	
+				//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Overhead pSoldier->flags.fHitByGasFlags: %d", pSoldier->flags.fHitByGasFlags );
+				//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Overhead pExplosive: %d", pExplosive->ubType );
 
 				if ( !(gpWorldLevelData[ pSoldier->sGridNo ].ubExtFlags[pSoldier->pathing.bLevel] & MAPELEMENT_EXT_SMOKE ))
 				{
@@ -2210,7 +2187,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 						pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->ubDirection );
 						fDontContinue = TRUE;
 
-						DishOutGasDamage( pSoldier, pExplosive, TRUE, FALSE, 
+						DishOutGasDamage( pSoldier, pExplosive, TRUE, FALSE,
 							(INT16) (pExplosive->ubDamage + (UINT8)PreRandom( pExplosive->ubDamage ) ),
 							(INT16) (100 * ( pExplosive->ubStunDamage + (INT16)PreRandom( ( pExplosive->ubStunDamage / 2 ) ) ) ), NOBODY );
 					}
@@ -2231,7 +2208,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 						if ( pSoldier->bTeam == gbPlayerNum )
 						{
 							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[ STR_SLIPPED_MARBLES ], pSoldier->name );
-						}				
+						}
 						RemoveItemFromPool( pSoldier->sGridNo, iMarblesIndex, 0 );
 						SoldierCollapse( pSoldier );
 						if (pSoldier->bActionPoints > 0)
@@ -2242,7 +2219,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 					}
 				}
 
-				if ( (pSoldier->bBlindedCounter > 0) && (pSoldier->usAnimState == RUNNING) && (Random( 5 ) == 0) && 
+				if ( (pSoldier->bBlindedCounter > 0) && (pSoldier->usAnimState == RUNNING) && (Random( 5 ) == 0) &&
 					OKFallDirection( pSoldier, (INT16) (pSoldier->sGridNo + DirectionInc( pSoldier->ubDirection ) ), pSoldier->pathing.bLevel, pSoldier->ubDirection, pSoldier->usAnimState ) )
 				{
 					// 20% chance of falling over!
@@ -2255,7 +2232,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 					}
 					return( FALSE );
 				}
-				else if ( ( GetDrunkLevel( pSoldier ) == DRUNK ) && (Random( 5 ) == 0) && 
+				else if ( ( GetDrunkLevel( pSoldier ) == DRUNK ) && (Random( 5 ) == 0) &&
 					OKFallDirection( pSoldier, (INT16) (pSoldier->sGridNo + DirectionInc( pSoldier->ubDirection ) ), pSoldier->pathing.bLevel, pSoldier->ubDirection, pSoldier->usAnimState ) )
 				{
 					// 20% chance of falling over!
@@ -2296,7 +2273,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 					}
 
 			}
-		}	
+		}
 
 		if ( !fDontContinue )
 		{
@@ -2353,7 +2330,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 			}
 
 			// Change desired direction
-			pSoldier->EVENT_InternalSetSoldierDestination( pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], fInitialMove, usAnimState );		
+			pSoldier->EVENT_InternalSetSoldierDestination( pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], fInitialMove, usAnimState );
 
 			// CONTINUE
 			// IT'S SAVE TO GO AGAIN, REFRESH flag
@@ -2374,7 +2351,6 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 
 void HandleMaryArrival( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT16 sDist;
 
 	if ( !pSoldier )
@@ -2411,7 +2387,6 @@ void HandleMaryArrival( SOLDIERTYPE * pSoldier )
 
 void HandleJohnArrival( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE * pSoldier2 = NULL;
 	INT16 sDist;
 
@@ -2465,7 +2440,6 @@ void HandleJohnArrival( SOLDIERTYPE * pSoldier )
 
 BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 {
-	PERFORMANCE_MARKER
 	INT16														sMineGridNo;
 	UINT8							 ubVolume;
 
@@ -2555,7 +2529,7 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 	}
 
 
-	// Set "interrupt occurred" flag to false so that we will know whether *this 
+	// Set "interrupt occurred" flag to false so that we will know whether *this
 	// particular call* to HandleSight caused an interrupt
 	gTacticalStatus.fInterruptOccurred = FALSE;
 
@@ -2593,7 +2567,7 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 		// ATE: Cancel only if our final destination
 		if ( pSoldier->sGridNo == pSoldier->pathing.sFinalDestination )
 		{
-			pSoldier->aiData.ubPendingAction				= NO_PENDING_ACTION;																							
+			pSoldier->aiData.ubPendingAction				= NO_PENDING_ACTION;
 		}
 
 		// this flag is set only to halt the currently moving guy; reset it now
@@ -2641,12 +2615,12 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 
 				cnt2 = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 
-				// look for all mercs on the same team, 
+				// look for all mercs on the same team,
 				for ( pSoldier2 = MercPtrs[ cnt2 ]; cnt2 >= gTacticalStatus.Team[ gbPlayerNum ].bFirstID; cnt2-- ,pSoldier2-- )
-				{		
+				{
 					if ( pSoldier2->bActive )
 					{
-						pSoldier2->EVENT_StopMerc( pSoldier2->sGridNo, pSoldier2->ubDirection );				
+						pSoldier2->EVENT_StopMerc( pSoldier2->sGridNo, pSoldier2->ubDirection );
 					}
 				}
 			}
@@ -2751,7 +2725,7 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 	}
 	else if ( pSoldier->bTeam == CIV_TEAM && pSoldier->ubProfile != NO_PROFILE && pSoldier->aiData.bNeutral )
 	{
-		switch( pSoldier->ubProfile ) 
+		switch( pSoldier->ubProfile )
 		{
 		case JIM:
 		case JACK:
@@ -2786,7 +2760,6 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 
 void SelectNextAvailSoldier( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32							cnt;
 	SOLDIERTYPE			 *pTeamSoldier;
 	BOOLEAN				 fSoldierFound = FALSE;
@@ -2795,9 +2768,9 @@ void SelectNextAvailSoldier( SOLDIERTYPE *pSoldier )
 	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
 	cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
 
-	// look for all mercs on the same team, 
+	// look for all mercs on the same team,
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
-	{		
+	{
 		if ( OK_CONTROLLABLE_MERC( pTeamSoldier )	)
 		{
 			fSoldierFound = TRUE;
@@ -2825,7 +2798,6 @@ void SelectNextAvailSoldier( SOLDIERTYPE *pSoldier )
 
 void InternalSelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect, BOOLEAN fFromUI )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE			 *pSoldier, *pOldSoldier;
 
 	// ARM: can't call SelectSoldier() in mapscreen, that will initialize interface panels!!!
@@ -2973,14 +2945,12 @@ void InternalSelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fF
 
 void SelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect )
 {
-	PERFORMANCE_MARKER
 	InternalSelectSoldier( usSoldierID, fAcknowledge, fForceReselect, FALSE );
 }
 
 
 BOOLEAN ResetAllAnimationCache(	)
 {
-	PERFORMANCE_MARKER
 	UINT32							cnt;
 	SOLDIERTYPE			 *pSoldier;
 
@@ -3003,7 +2973,6 @@ BOOLEAN ResetAllAnimationCache(	)
 
 void LocateSoldier( UINT16 usID, BOOLEAN fSetLocator)
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	INT16 sNewCenterWorldX, sNewCenterWorldY;
 
@@ -3045,7 +3014,6 @@ void LocateSoldier( UINT16 usID, BOOLEAN fSetLocator)
 
 void InternalLocateGridNo( INT16 sGridNo, BOOLEAN fForce )
 {
-	PERFORMANCE_MARKER
 	INT16 sNewCenterWorldX, sNewCenterWorldY;
 
 	ConvertGridNoToCenterCellXY( sGridNo, &sNewCenterWorldX, &sNewCenterWorldY );
@@ -3061,7 +3029,6 @@ void InternalLocateGridNo( INT16 sGridNo, BOOLEAN fForce )
 
 void LocateGridNo( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	InternalLocateGridNo( sGridNo, FALSE );
 }
 
@@ -3069,7 +3036,6 @@ void LocateGridNo( INT16 sGridNo )
 
 void SlideTo(INT16 sGridno, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSetLocator)
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 
 
@@ -3111,7 +3077,6 @@ void SlideTo(INT16 sGridno, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSet
 
 void SlideToLocation( UINT16 usReasonID, INT16 sDestGridNo )
 {
-	PERFORMANCE_MARKER
 	if ( sDestGridNo == NOWHERE )
 	{
 		return;
@@ -3134,7 +3099,6 @@ void SlideToLocation( UINT16 usReasonID, INT16 sDestGridNo )
 
 void RebuildAllSoldierShadeTables( )
 {
-	PERFORMANCE_MARKER
 	UINT32							cnt;
 	SOLDIERTYPE			 *pSoldier;
 
@@ -3151,7 +3115,6 @@ void RebuildAllSoldierShadeTables( )
 
 void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32					cnt;
 	INT32					iNewSelectedSoldier = 0;
 	SOLDIERTYPE			 *pTeamSoldier;
@@ -3166,9 +3129,9 @@ void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier )
 	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
 	cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
 
-	// look for all mercs on the same team, 
+	// look for all mercs on the same team,
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
-	{		
+	{
 		if ( pTeamSoldier->stats.bLife >= OKLIFE && pTeamSoldier->bActive && pTeamSoldier->bInSector )
 		{
 			iNewSelectedSoldier = cnt;
@@ -3191,7 +3154,7 @@ void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier )
 		// see if this was the friend of a living merc
 		cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
 		for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
-		{		
+		{
 			if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->stats.bLife >= OKLIFE )
 			{
 				bBuddyIndex = WhichBuddy( pTeamSoldier->ubProfile, pSoldier->ubProfile );
@@ -3267,7 +3230,6 @@ void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier )
 
 void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldierOld )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pKiller = NULL;
 	BOOLEAN bVisible;
 
@@ -3280,7 +3242,7 @@ void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldierOld )
 	{
 		// mark as dead!
 		gMercProfiles[ pSoldierOld->ubProfile ].bMercStatus = MERC_IS_DEAD;
-		// 
+		//
 		gMercProfiles[ pSoldierOld->ubProfile ].bLife				= 0;
 
 		if ( !(pSoldierOld->flags.uiStatusFlags & SOLDIER_VEHICLE) && !TANK( pSoldierOld) )
@@ -3378,7 +3340,7 @@ void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldierOld )
 		case JOEY:
 			// check to see if Martha can see this
 			pOther = FindSoldierByProfileID( MARTHA, FALSE );
-			if ( pOther && (PythSpacesAway( pOther->sGridNo, pSoldierOld->sGridNo ) < 10 || SoldierToSoldierLineOfSightTest( pOther, pSoldierOld, TRUE ) != 0 ) ) 
+			if ( pOther && (PythSpacesAway( pOther->sGridNo, pSoldierOld->sGridNo ) < 10 || SoldierToSoldierLineOfSightTest( pOther, pSoldierOld, TRUE ) != 0 ) )
 			{
 				// Martha has a heart attack and croaks
 				TriggerNPCRecord( MARTHA, 17 );
@@ -3581,15 +3543,14 @@ void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldierOld )
 
 UINT8 LastActiveTeamMember( UINT8 ubTeam )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 	SOLDIERTYPE			 *pSoldier;
 
 	cnt = gTacticalStatus.Team[ ubTeam ].bLastID;
 
-	// look for all mercs on the same team, 
+	// look for all mercs on the same team,
 	for ( pSoldier = MercPtrs[ cnt ]; cnt >= gTacticalStatus.Team[ ubTeam ].bFirstID; cnt-- ,pSoldier--)
-	{		
+	{
 		if ( pSoldier->bActive )
 		{
 			return( (INT8)cnt );
@@ -3601,7 +3562,6 @@ UINT8 LastActiveTeamMember( UINT8 ubTeam )
 
 void CheckForPotentialAddToBattleIncrement( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// Check if we are a threat!
 	if ( !pSoldier->aiData.bNeutral && (pSoldier->bSide != gbPlayerNum ) )
 	{
@@ -3617,7 +3577,7 @@ void CheckForPotentialAddToBattleIncrement( SOLDIERTYPE *pSoldier )
 			case HICKS_CIV_GROUP:
 				if ( FindObjClass( pSoldier, IC_WEAPON ) != NO_SLOT )
 				{
-					gTacticalStatus.bNumFoughtInBattle[ pSoldier->bTeam ]++;		
+					gTacticalStatus.bNumFoughtInBattle[ pSoldier->bTeam ]++;
 				}
 				break;
 			default:
@@ -3636,7 +3596,6 @@ void CheckForPotentialAddToBattleIncrement( SOLDIERTYPE *pSoldier )
 // internal function for turning neutral to FALSE
 void SetSoldierNonNeutral( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	pSoldier->aiData.bNeutral = FALSE;
 
 	if ( gTacticalStatus.bBoxingState == NOT_BOXING )
@@ -3649,7 +3608,6 @@ void SetSoldierNonNeutral( SOLDIERTYPE * pSoldier )
 // internal function for turning neutral to TRUE
 void SetSoldierNeutral( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	pSoldier->aiData.bNeutral = TRUE;
 
 	if ( gTacticalStatus.bBoxingState == NOT_BOXING )
@@ -3664,10 +3622,9 @@ void SetSoldierNeutral( SOLDIERTYPE * pSoldier )
 }
 void MakeCivHostile( SOLDIERTYPE *pSoldier, INT8 bNewSide )
 {
-	PERFORMANCE_MARKER
 	if ( pSoldier->ubBodyType == COW )
 	{
-		return;	
+		return;
 	}
 
 	// override passed-in value; default is hostile to player, allied to army
@@ -3724,13 +3681,13 @@ void MakeCivHostile( SOLDIERTYPE *pSoldier, INT8 bNewSide )
 			// if Maria is in the sector and escorted, set fact that the escape has
 			// been noticed
 			if ( gubQuest[ QUEST_RESCUE_MARIA ] == QUESTINPROGRESS && gTacticalStatus.bBoxingState == NOT_BOXING )
-			{				
+			{
 				SOLDIERTYPE * pMaria = FindSoldierByProfileID( MARIA, FALSE );
 				if ( pMaria && pMaria->bActive && pMaria->bInSector )
 				{
 					SetFactTrue( FACT_MARIA_ESCAPE_NOTICED );
 				}
-			}	
+			}
 		}
 		if (pSoldier->ubProfile == BILLY)
 		{
@@ -3758,7 +3715,6 @@ void MakeCivHostile( SOLDIERTYPE *pSoldier, INT8 bNewSide )
 
 UINT8 CivilianGroupMembersChangeSidesWithinProximity( SOLDIERTYPE * pAttacked )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *		pSoldier;
 	UINT8						ubFirstProfile = NO_PROFILE;
 	UINT8						cnt;
@@ -3777,7 +3733,7 @@ UINT8 CivilianGroupMembersChangeSidesWithinProximity( SOLDIERTYPE * pAttacked )
 			{
 				// if in LOS of this guy's attacker
 				if ( (pAttacked->ubAttackerID != NOBODY && pSoldier->aiData.bOppList[pAttacked->ubAttackerID] == SEEN_CURRENTLY)
-					|| ( PythSpacesAway( pSoldier->sGridNo, pAttacked->sGridNo ) < pAttacked->GetMaxDistanceVisible(pSoldier->sGridNo, pSoldier->pathing.bLevel) ) 
+					|| ( PythSpacesAway( pSoldier->sGridNo, pAttacked->sGridNo ) < pAttacked->GetMaxDistanceVisible(pSoldier->sGridNo, pSoldier->pathing.bLevel) )
 					|| ( pAttacked->ubAttackerID != NOBODY && PythSpacesAway( pSoldier->sGridNo, MercPtrs[ pAttacked->ubAttackerID ]->sGridNo ) < pAttacked->GetMaxDistanceVisible(MercPtrs[ pAttacked->ubAttackerID ]->sGridNo, MercPtrs[ pAttacked->ubAttackerID ]->pathing.bLevel) ) )
 				{
 					MakeCivHostile( pSoldier, 2 );
@@ -3801,7 +3757,6 @@ UINT8 CivilianGroupMembersChangeSidesWithinProximity( SOLDIERTYPE * pAttacked )
 
 SOLDIERTYPE * CivilianGroupMemberChangesSides( SOLDIERTYPE * pAttacked )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *		pNew;
 	SOLDIERTYPE *		pNewAttacked = pAttacked;
 	SOLDIERTYPE *		pSoldier;
@@ -3875,7 +3830,6 @@ SOLDIERTYPE * CivilianGroupMemberChangesSides( SOLDIERTYPE * pAttacked )
 
 void CivilianGroupChangesSides( UINT8 ubCivilianGroup )
 {
-	PERFORMANCE_MARKER
 	// change civ group side due to external event (wall blowing up)
 	INT32										cnt;
 	SOLDIERTYPE	*						pSoldier;
@@ -3889,7 +3843,7 @@ void CivilianGroupChangesSides( UINT8 ubCivilianGroup )
 		if (pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife && pSoldier->aiData.bNeutral)
 		{
 			if ( pSoldier->ubCivilianGroup == ubCivilianGroup && pSoldier->ubBodyType != COW )
-			{			
+			{
 				MakeCivHostile( pSoldier, 2 );
 				if ( pSoldier->aiData.bOppCnt > 0 )
 				{
@@ -3915,7 +3869,6 @@ void CivilianGroupChangesSides( UINT8 ubCivilianGroup )
 
 void HickCowAttacked( SOLDIERTYPE * pNastyGuy, SOLDIERTYPE * pTarget )
 {
-	PERFORMANCE_MARKER
 	INT32										cnt;
 	SOLDIERTYPE *						pSoldier;
 
@@ -3936,7 +3889,6 @@ void HickCowAttacked( SOLDIERTYPE * pNastyGuy, SOLDIERTYPE * pTarget )
 
 void MilitiaChangesSides( void )
 {
-	PERFORMANCE_MARKER
 	// make all the militia change sides
 
 	INT32						cnt;
@@ -3963,17 +3915,14 @@ void MilitiaChangesSides( void )
 /*
 void MakePotentiallyHostileCivGroupsHostile( void )
 {
-	PERFORMANCE_MARKER
 UINT8		ubLoop;
 
 // loop through all civ groups that might become hostile and set them
 // to hostile
 for ( ubLoop = REBEL_CIV_GROUP; ubLoop < NUM_CIV_GROUPS; ubLoop++ )
 {
-	PERFORMANCE_MARKER
 if (gTacticalStatus.fCivGroupHostile[ ubLoop ] == CIV_GROUP_WILL_BECOME_HOSTILE)
 {
-	PERFORMANCE_MARKER
 gTacticalStatus.fCivGroupHostile[ ubLoop ] = CIV_GROUP_HOSTILE;
 }
 }
@@ -3982,16 +3931,15 @@ gTacticalStatus.fCivGroupHostile[ ubLoop ] = CIV_GROUP_HOSTILE;
 
 INT8 NumActiveAndConsciousTeamMembers( UINT8 ubTeam )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 	SOLDIERTYPE			 *pSoldier;
 	UINT8									ubCount = 0;
 
 	cnt = gTacticalStatus.Team[ ubTeam ].bFirstID;
 
-	// look for all mercs on the same team, 
+	// look for all mercs on the same team,
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ ubTeam ].bLastID; cnt++,pSoldier++)
-	{		
+	{
 		if ( OK_CONTROLLABLE_MERC( pSoldier) )
 		{
 			ubCount++;
@@ -4004,7 +3952,6 @@ INT8 NumActiveAndConsciousTeamMembers( UINT8 ubTeam )
 
 UINT8 FindNextActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs )
 {
-	PERFORMANCE_MARKER
 	UINT8	bLastTeamID;
 	INT32 cnt;
 	SOLDIERTYPE			 *pTeamSoldier;
@@ -4012,9 +3959,9 @@ UINT8 FindNextActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKL
 	cnt = pSoldier->ubID + 1;
 	bLastTeamID = gTacticalStatus.Team[ pSoldier->bTeam ].bLastID;
 
-	// look for all mercs on the same team, 
+	// look for all mercs on the same team,
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pTeamSoldier++)
-	{ 
+	{
 		if ( fOnlyRegularMercs )
 		{
 			if ( pTeamSoldier->bActive && ( AM_AN_EPC( pTeamSoldier ) || AM_A_ROBOT( pTeamSoldier ) ) )
@@ -4045,7 +3992,7 @@ UINT8 FindNextActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKL
 	bLastTeamID = pSoldier->ubID;
 
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pTeamSoldier++)
-	{		
+	{
 		if ( fOnlyRegularMercs )
 		{
 			if ( pTeamSoldier->bActive && ( AM_AN_EPC( pTeamSoldier ) || AM_A_ROBOT( pTeamSoldier ) ) )
@@ -4078,7 +4025,6 @@ UINT8 FindNextActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKL
 
 SOLDIERTYPE *FindNextActiveSquad( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt, cnt2;
 
 
@@ -4114,7 +4060,6 @@ SOLDIERTYPE *FindNextActiveSquad( SOLDIERTYPE *pSoldier )
 
 UINT8 FindPrevActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife,	BOOLEAN fOnlyRegularMercs )
 {
-	PERFORMANCE_MARKER
 	UINT8	bLastTeamID;
 	INT32 cnt;
 	SOLDIERTYPE			 *pTeamSoldier;
@@ -4125,7 +4070,7 @@ UINT8 FindPrevActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKL
 	cnt = pSoldier->ubID - 1;
 
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt >= bLastTeamID; cnt--,pTeamSoldier-- )
-	{		
+	{
 		if ( fOnlyRegularMercs )
 		{
 			if ( AM_AN_EPC( pTeamSoldier ) || AM_A_ROBOT( pTeamSoldier ) )
@@ -4154,9 +4099,9 @@ UINT8 FindPrevActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKL
 	bLastTeamID = pSoldier->ubID;
 	cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bLastID;
 
-	// look for all mercs on the same team, 
+	// look for all mercs on the same team,
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt >= bLastTeamID; cnt--,pTeamSoldier-- )
-	{		
+	{
 		if ( fOnlyRegularMercs )
 		{
 			if ( AM_AN_EPC( pTeamSoldier ) || AM_A_ROBOT( pTeamSoldier ) )
@@ -4189,7 +4134,6 @@ UINT8 FindPrevActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKL
 
 BOOLEAN CheckForPlayerTeamInMissionExit( )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 	SOLDIERTYPE			 *pSoldier;
 	UINT8									bGuysIn = 0;
@@ -4197,9 +4141,9 @@ BOOLEAN CheckForPlayerTeamInMissionExit( )
 	// End the turn of player charactors
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
-	// look for all mercs on the same team, 
+	// look for all mercs on the same team,
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
-	{		
+	{
 		if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE )
 		{
 			if ( pSoldier->flags.fInMissionExitNode )
@@ -4229,14 +4173,12 @@ BOOLEAN CheckForPlayerTeamInMissionExit( )
 
 void EndTacticalDemo( )
 {
-	PERFORMANCE_MARKER
 	gTacticalStatus.uiFlags &= (~DEMOMODE );
 	gTacticalStatus.fGoingToEnterDemo = FALSE;
 }
 
 UINT32 EnterTacticalDemoMode()
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNewScene = gubCurrentScene;
 	UINT8	ubNumScenes = NUM_RANDOM_SCENES;
 
@@ -4282,7 +4224,6 @@ UINT32 EnterTacticalDemoMode()
 
 CHAR8 *GetSceneFilename(	)
 {
-	PERFORMANCE_MARKER
 	return( gzLevelFilenames[ gubCurrentScene ] );
 }
 
@@ -4291,7 +4232,6 @@ extern BOOLEAN InternalOkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel
 // NB if making changes don't forget to update NewOKDestinationAndDirection
 INT16 NewOKDestination( SOLDIERTYPE * pCurrSoldier, INT16 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	UINT8					bPerson;
 	STRUCTURE *		pStructure;
 	INT16		 sDesiredLevel;
@@ -4421,7 +4361,6 @@ INT16 NewOKDestination( SOLDIERTYPE * pCurrSoldier, INT16 sGridNo, BOOLEAN fPeop
 // NB if making changes don't forget to update NewOKDestination
 INT16 NewOKDestinationAndDirection( SOLDIERTYPE * pCurrSoldier, INT16 sGridNo, INT8 bDirection, BOOLEAN fPeopleToo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	UINT8					bPerson;
 	STRUCTURE *		pStructure;
 	INT16		 sDesiredLevel;
@@ -4546,7 +4485,6 @@ INT16 NewOKDestinationAndDirection( SOLDIERTYPE * pCurrSoldier, INT16 sGridNo, I
 //Kris:
 BOOLEAN FlatRoofAboveGridNo( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pRoof;
 	UINT32 uiTileType;
 	pRoof = gpWorldLevelData[ iMapIndex ].pRoofHead;
@@ -4569,11 +4507,10 @@ BOOLEAN FlatRoofAboveGridNo( INT32 iMapIndex )
 //						should not be used for checking on behalf of multi-tiled "things".
 //I wrote this function for editor use.	I don't personally care about multi-tiled stuff.	All I want
 //to know is whether or not I can put a merc here.	In most cases, I won't be dealing with multi-tiled
-//mercs, and the rarity doesn't justify the needs.	I just wrote this to be quick and dirty, and I don't 
+//mercs, and the rarity doesn't justify the needs.	I just wrote this to be quick and dirty, and I don't
 //expect it to perform perfectly in all situations.
 BOOLEAN IsLocationSittable( INT32 iMapIndex, BOOLEAN fOnRoof )
 {
-	PERFORMANCE_MARKER
 	STRUCTURE *pStructure;
 	INT16 sDesiredLevel;
 	if( WhoIsThere2( (INT16)iMapIndex, 0 ) != NOBODY )
@@ -4601,7 +4538,6 @@ BOOLEAN IsLocationSittable( INT32 iMapIndex, BOOLEAN fOnRoof )
 
 BOOLEAN IsLocationSittableExcludingPeople( INT32 iMapIndex, BOOLEAN fOnRoof )
 {
-	PERFORMANCE_MARKER
 	STRUCTURE *pStructure;
 	INT16 sDesiredLevel;
 
@@ -4628,7 +4564,6 @@ BOOLEAN IsLocationSittableExcludingPeople( INT32 iMapIndex, BOOLEAN fOnRoof )
 
 BOOLEAN TeamMemberNear(INT8 bTeam, INT16 sGridNo, INT32 iRange)
 {
-	PERFORMANCE_MARKER
 	UINT8 bLoop;
 	SOLDIERTYPE * pSoldier;
 
@@ -4648,7 +4583,6 @@ BOOLEAN TeamMemberNear(INT8 bTeam, INT16 sGridNo, INT32 iRange)
 
 INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirection, INT16 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor )
 {
-	PERFORMANCE_MARKER
 	// psAdjustedGridNo gets the original gridno or the new one if updated
 	// It will ONLY be updated IF we were over a merc, ( it's updated to their gridno )
 	// pubDirection gets the direction to the final gridno
@@ -4711,7 +4645,7 @@ INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirect
 					if (pubDirection)
 					{
 						(*pubDirection) = (UINT8)GetDirectionFromGridNo( sSpot, pSoldier );
-					}			
+					}
 				}
 
 				if ( ubWallOrientation == OUTSIDE_TOP_RIGHT || ubWallOrientation == INSIDE_TOP_RIGHT )
@@ -4755,8 +4689,8 @@ INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirect
 					(*pubDirection) = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
 				}
 			}
-		}		
-	} 
+		}
+	}
 
 
 	if ( ( sOkTest = NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->pathing.bLevel ) ) > 0)	// no problem going there! nobody on it!
@@ -4837,14 +4771,14 @@ INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirect
 			if ( ubWallOrientation == OUTSIDE_TOP_RIGHT || ubWallOrientation == INSIDE_TOP_RIGHT )
 			{
 				if ( sDirs[ cnt ] == NORTH || sDirs[ cnt ] == WEST || sDirs[ cnt ] == SOUTH )
-					continue;								
+					continue;
 			}
 
 			// Refuse the north and west and east directions if our orientation is top-right
 			if ( ubWallOrientation == OUTSIDE_TOP_LEFT || ubWallOrientation == INSIDE_TOP_LEFT )
 			{
 				if ( sDirs[ cnt ] == NORTH || sDirs[ cnt ] == WEST || sDirs[ cnt ] == EAST )
-					continue;								
+					continue;
 			}
 		}
 
@@ -4867,7 +4801,7 @@ INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirect
 		}
 
 		// don't store path, just measure it
-		ubDir = (UINT8)GetDirectionToGridNoFromGridNo( sSpot, sGridNo );	
+		ubDir = (UINT8)GetDirectionToGridNoFromGridNo( sSpot, sGridNo );
 
 		if ( ( NewOKDestinationAndDirection( pSoldier, sSpot, ubDir, TRUE, pSoldier->pathing.bLevel ) > 0 ) &&
 			( ( sDistance = PlotPath( pSoldier, sSpot,	NO_COPYROUTE, NO_PLOT, TEMPORARY, (INT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints ) ) > 0 ) )
@@ -4936,7 +4870,6 @@ INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirect
 
 INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirection, INT16 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor )
 {
-	PERFORMANCE_MARKER
 	// This function works in a similar way as FindAdjacentGridEx, but looks for a location 2 tiles away
 
 	// psAdjustedGridNo gets the original gridno or the new one if updated
@@ -4991,8 +4924,8 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 			{
 				*psAdjustedGridNo = sGridNo;
 			}
-		}		
-	} 
+		}
+	}
 
 
 	if ( ( sOkTest = NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->pathing.bLevel ) ) > 0)	// no problem going there! nobody on it!
@@ -5059,14 +4992,14 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 			if ( ubWallOrientation == OUTSIDE_TOP_RIGHT || ubWallOrientation == INSIDE_TOP_RIGHT )
 			{
 				if ( sDirs[ cnt ] == NORTH || sDirs[ cnt ] == WEST || sDirs[ cnt ] == SOUTH )
-					continue;								
+					continue;
 			}
 
 			// Refuse the north and west and east directions if our orientation is top-right
 			if ( ubWallOrientation == OUTSIDE_TOP_LEFT || ubWallOrientation == INSIDE_TOP_LEFT )
 			{
 				if ( sDirs[ cnt ] == NORTH || sDirs[ cnt ] == WEST || sDirs[ cnt ] == EAST )
-					continue;								
+					continue;
 			}
 		}
 
@@ -5099,7 +5032,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 			return( sSpot );
 		}
 
-		ubDir = (UINT8)GetDirectionToGridNoFromGridNo( sSpot, sGridNo );	
+		ubDir = (UINT8)GetDirectionToGridNoFromGridNo( sSpot, sGridNo );
 
 		// don't store path, just measure it
 		if ( ( NewOKDestinationAndDirection( pSoldier, sSpot, ubDir, TRUE , pSoldier->pathing.bLevel ) > 0 ) &&
@@ -5203,8 +5136,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 
 INT16 FindAdjacentPunchTarget( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier, INT16 * psAdjustedTargetGridNo, UINT8 * pubDirection )
 {
-	PERFORMANCE_MARKER
-	INT16	sSpot;	
+	INT16	sSpot;
 	UINT8	ubGuyThere;
 
 	for ( INT8 cnt = 0; cnt < NUM_WORLD_DIRECTIONS; cnt++ )
@@ -5236,7 +5168,6 @@ INT16 FindAdjacentPunchTarget( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSold
 
 BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fVisible;
 
 	// Check if a hidden tile exists but is not revealed
@@ -5278,7 +5209,6 @@ BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 
 void HandleTeamServices( UINT8 ubTeamNum )
 {
-	PERFORMANCE_MARKER
 	INT32							cnt;
 	SOLDIERTYPE			 *pTeamSoldier, *pTargetSoldier;
 	UINT32					uiPointsUsed;
@@ -5290,9 +5220,9 @@ void HandleTeamServices( UINT8 ubTeamNum )
 	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
 	cnt = gTacticalStatus.Team[ ubTeamNum ].bFirstID;
 
-	// look for all mercs on the same team, 
+	// look for all mercs on the same team,
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ ubTeamNum ].bLastID; cnt++,pTeamSoldier++)
-	{		
+	{
 		if ( pTeamSoldier->stats.bLife >= OKLIFE && pTeamSoldier->bActive && pTeamSoldier->bInSector )
 		{
 			fDone = FALSE;
@@ -5373,7 +5303,6 @@ void HandleTeamServices( UINT8 ubTeamNum )
 
 void HandlePlayerServices( SOLDIERTYPE *pTeamSoldier )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE	 *pTargetSoldier;
 	UINT32					uiPointsUsed;
 	UINT16					usSoldierIndex, usInHand;
@@ -5459,7 +5388,6 @@ void HandlePlayerServices( SOLDIERTYPE *pTeamSoldier )
 
 void CommonEnterCombatModeCode( )
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"CommonEnterCombatMode");
 	UINT32					cnt;
 	SOLDIERTYPE			 *pSoldier;
@@ -5567,7 +5495,6 @@ void CommonEnterCombatModeCode( )
 
 void EnterCombatMode( UINT8 ubStartingTeam )
 {
-	PERFORMANCE_MARKER
 	UINT32				cnt;
 	SOLDIERTYPE		*pTeamSoldier;
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"EnterCombatMode");
@@ -5641,7 +5568,6 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 
 void ExitCombatMode( )
 {
-	PERFORMANCE_MARKER
 	UINT32							cnt;
 	SOLDIERTYPE			 *pSoldier;
 
@@ -5709,7 +5635,7 @@ void ExitCombatMode( )
 	DirtyMercPanelInterface( MercPtrs[ 0 ], DIRTYLEVEL2 );
 
 	// ATE: If we are IN_CONV - DONT'T DO THIS!
-	if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) ) 
+	if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
 	{
 		HandleStrategicTurnImplicationsOfExitingCombatMode();
 	}
@@ -5723,7 +5649,6 @@ void ExitCombatMode( )
 
 void SetEnemyPresence( )
 {
-	PERFORMANCE_MARKER
 	// We have an ememy present....
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("SetEnemyPresence"));
 
@@ -5766,7 +5691,6 @@ extern BOOLEAN gfLastMercTalkedAboutKillingID;
 
 BOOLEAN SoldierHasSeenEnemiesLastFewTurns( SOLDIERTYPE *pTeamSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32					cnt2;
 	SOLDIERTYPE		*pSoldier;
 	INT32					cnt;
@@ -5780,7 +5704,7 @@ BOOLEAN SoldierHasSeenEnemiesLastFewTurns( SOLDIERTYPE *pTeamSoldier )
 			// check this team for possible enemies
 			cnt2 = gTacticalStatus.Team[ cnt ].bFirstID;
 			for ( pSoldier = MercPtrs[ cnt2 ]; cnt2 <= gTacticalStatus.Team[ cnt ].bLastID; cnt2++, pSoldier++ )
-			{				
+			{
 				if ( pSoldier->bActive && pSoldier->bInSector && ( pSoldier->bTeam == gbPlayerNum || pSoldier->stats.bLife >= OKLIFE ) )
 				{
 					if ( !CONSIDERED_NEUTRAL( pTeamSoldier, pSoldier ) && ( pTeamSoldier->bSide != pSoldier->bSide ) )
@@ -5803,7 +5727,6 @@ BOOLEAN SoldierHasSeenEnemiesLastFewTurns( SOLDIERTYPE *pTeamSoldier )
 
 BOOLEAN WeSeeNoOne( void )
 {
-	PERFORMANCE_MARKER
 	UINT32		uiLoop;
 	SOLDIERTYPE * pSoldier;
 
@@ -5812,7 +5735,7 @@ BOOLEAN WeSeeNoOne( void )
 		pSoldier = MercSlots[ uiLoop ];
 		if ( pSoldier != NULL )
 		{
-			if ( pSoldier->bTeam == gbPlayerNum ) 
+			if ( pSoldier->bTeam == gbPlayerNum )
 			{
 				if ( pSoldier->aiData.bOppCnt > 0 )
 				{
@@ -5827,7 +5750,6 @@ BOOLEAN WeSeeNoOne( void )
 
 BOOLEAN NobodyAlerted( void )
 {
-	PERFORMANCE_MARKER
 	UINT32		uiLoop;
 	SOLDIERTYPE * pSoldier;
 
@@ -5849,7 +5771,6 @@ BOOLEAN NobodyAlerted( void )
 
 BOOLEAN WeSawSomeoneThisTurn( void )
 {
-	PERFORMANCE_MARKER
 	UINT32		uiLoop, uiLoop2;
 	SOLDIERTYPE * pSoldier;
 
@@ -5858,7 +5779,7 @@ BOOLEAN WeSawSomeoneThisTurn( void )
 		pSoldier = MercSlots[ uiLoop ];
 		if ( pSoldier != NULL )
 		{
-			if ( pSoldier->bTeam == gbPlayerNum ) 
+			if ( pSoldier->bTeam == gbPlayerNum )
 			{
 				for ( uiLoop2 = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; uiLoop2 < TOTAL_SOLDIERS; uiLoop2++ )
 				{
@@ -5876,7 +5797,6 @@ BOOLEAN WeSawSomeoneThisTurn( void )
 
 void SayBattleSoundFromAnyBodyInSector( INT32 iBattleSnd )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
 	UINT8	ubChosenMerc;
@@ -5886,7 +5806,7 @@ void SayBattleSoundFromAnyBodyInSector( INT32 iBattleSnd )
 	// Loop through all our guys and randomly say one from someone in our sector
 
 	// set up soldier ptr as first element in mercptrs list
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;	
+	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
 	// run through list
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
@@ -5912,7 +5832,6 @@ void SayBattleSoundFromAnyBodyInSector( INT32 iBattleSnd )
 
 BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	UINT32 cnt = 0;
 	BOOLEAN	fWeSeeNoOne, fNobodyAlerted;
@@ -5966,7 +5885,7 @@ BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 						break;
 					}
 				}
-			}				
+			}
 		}
 
 		if ( fSomeoneSawSomeoneRecently )
@@ -6061,13 +5980,11 @@ BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 
 void DeathNoMessageTimerCallback( void )
 {
-	PERFORMANCE_MARKER
 	CheckAndHandleUnloadingOfCurrentWorld();
 }
 
 void RemoveStaticEnemiesFromSectorInfo( INT16 sMapX, INT16 sMapY )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 
 	pSectorInfo->ubNumAdmins = pSectorInfo->ubNumTroops = pSectorInfo->ubNumElites = 0;
@@ -6079,7 +5996,6 @@ void RemoveStaticEnemiesFromSectorInfo( INT16 sMapX, INT16 sMapY )
 //Whenever returning TRUE, make sure you clear gfBlitBattleSectorLocator;
 BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	BOOLEAN			fBattleWon = TRUE;
 	BOOLEAN			fBattleLost = FALSE;
@@ -6092,7 +6008,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		return( FALSE );
 	}
 
-	// We can only check for end of battle if in combat mode or there are enemies 
+	// We can only check for end of battle if in combat mode or there are enemies
 	// present (they might bleed to death or run off the map!)
 	if ( ! ( gTacticalStatus.uiFlags & INCOMBAT ) )
 	{
@@ -6128,7 +6044,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 
 	//NEW (Nov 24, 98)	by Kris
 	if( !gbWorldSectorZ && fBattleWon )
-	{ //Check to see if more enemy soldiers exist in the strategic layer 
+	{ //Check to see if more enemy soldiers exist in the strategic layer
 		//It is possible to have more than 20 enemies in a sector.	By failing here,
 		//it gives the engine a chance to add these soldiers as reinforcements.	This
 		//is naturally handled.
@@ -6151,7 +6067,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 
 	if ( fBattleLost )
 	{
-		// CJC: End AI's turn here.... first... so that UnSetUIBusy will succeed if militia win 
+		// CJC: End AI's turn here.... first... so that UnSetUIBusy will succeed if militia win
 		// battle for us
 		EndAllAITurns( );
 
@@ -6210,7 +6126,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 			// OK, KILL any enemies that are incompacitated
 			if ( KillIncompacitatedEnemyInSector( ) )
 			{
-				return( FALSE );				
+				return( FALSE );
 			}
 		}
 
@@ -6224,13 +6140,13 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		// Set enemy presence to false
 		gTacticalStatus.fEnemyInSector = FALSE;
 
-		// CJC: End AI's turn here.... first... so that UnSetUIBusy will succeed if militia win 
+		// CJC: End AI's turn here.... first... so that UnSetUIBusy will succeed if militia win
 		// battle for us
 		EndAllAITurns( );
 
 		UnSetUIBusy( (UINT8)gusSelectedSoldier );
 
-		// ATE: 
+		// ATE:
 		// If we ended battle in any team other than the player's
 		// we need to end the UI lock using this method....
 		guiPendingOverrideEvent = LU_ENDUILOCK;
@@ -6286,7 +6202,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 
 											if ( usAnimState != INVALID_ANIMATION )
 											{
-												pTeamSoldier->EVENT_InitNewSoldierAnim( usAnimState, 0, FALSE );	
+												pTeamSoldier->EVENT_InitNewSoldierAnim( usAnimState, 0, FALSE );
 											}
 										}
 									}
@@ -6308,19 +6224,19 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 				}
 				else if ( gfLastMercTalkedAboutKillingID != NOBODY && ( MercPtrs[ gfLastMercTalkedAboutKillingID ]->flags.uiStatusFlags & SOLDIER_MONSTER ) )
 				{
-					ShouldBeginAutoBandage( );			
+					ShouldBeginAutoBandage( );
 				}
 
 				// Say battle end quote....
 
 				if (fAnEnemyRetreated)
-				{			
+				{
 					SayQuoteFromAnyBodyInSector( QUOTE_ENEMY_RETREATED );
 				}
 				else
 				{
 					// OK, If we have just finished a battle with creatures........ play killed creature quote...
-					// 
+					//
 					if ( gfLastMercTalkedAboutKillingID != NOBODY && ( MercPtrs[ gfLastMercTalkedAboutKillingID ]->flags.uiStatusFlags & SOLDIER_MONSTER ) )
 					{
 
@@ -6425,7 +6341,6 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 
 void CycleThroughKnownEnemies( )
 {
-	PERFORMANCE_MARKER
 	// static to indicate last position we were at:
 	SOLDIERTYPE		*pSoldier;
 	static BOOLEAN fFirstTime = TRUE;
@@ -6488,7 +6403,6 @@ void CycleThroughKnownEnemies( )
 
 void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 {
-	PERFORMANCE_MARKER
 	// static to indicate last position we were at:
 	SOLDIERTYPE		*pSoldier;
 	UINT16	usStartToLook;
@@ -6552,7 +6466,6 @@ void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 
 INT8 CountNonVehiclesOnPlayerTeam( void )
 {
-	PERFORMANCE_MARKER
 	UINT32				cnt;
 	SOLDIERTYPE		*pSoldier;
 	INT8					bNumber = 0;
@@ -6572,7 +6485,6 @@ INT8 CountNonVehiclesOnPlayerTeam( void )
 
 BOOLEAN PlayerTeamFull( )
 {
-	PERFORMANCE_MARKER
 	// last ID for the player team is 19, so long as we have at most 17 non-vehicles...
 	if ( CountNonVehiclesOnPlayerTeam() <= gTacticalStatus.Team[ gbPlayerNum ].bLastID - 2 )
 	{
@@ -6584,7 +6496,6 @@ BOOLEAN PlayerTeamFull( )
 
 UINT8 NumPCsInSector( void )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	UINT32				cnt = 0;
 	UINT8				ubNumPlayers = 0;
@@ -6593,7 +6504,7 @@ UINT8 NumPCsInSector( void )
 	// Loop through all mercs and make go
 	for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
 	{
-		if ( MercSlots[ cnt ] ) 
+		if ( MercSlots[ cnt ] )
 		{
 			pTeamSoldier = MercSlots[ cnt ];
 			if ( pTeamSoldier->bTeam == gbPlayerNum && pTeamSoldier->stats.bLife > 0 )
@@ -6610,7 +6521,6 @@ UINT8 NumPCsInSector( void )
 
 UINT8 NumEnemyInSector( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
 	UINT8				ubNumEnemies = 0;
@@ -6635,7 +6545,6 @@ UINT8 NumEnemyInSector( )
 
 UINT8 NumEnemyInSectorExceptCreatures()
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
 	UINT8				ubNumEnemies = 0;
@@ -6661,7 +6570,6 @@ UINT8 NumEnemyInSectorExceptCreatures()
 
 UINT8 NumEnemyInSectorNotDeadOrDying( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
 	UINT8				ubNumEnemies = 0;
@@ -6697,7 +6605,6 @@ UINT8 NumEnemyInSectorNotDeadOrDying( )
 
 UINT8 NumBloodcatsInSectorNotDeadOrDying( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
 	UINT8				ubNumEnemies = 0;
@@ -6737,7 +6644,6 @@ UINT8 NumBloodcatsInSectorNotDeadOrDying( )
 
 UINT8 NumCapableEnemyInSector( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
 	UINT8				ubNumEnemies = 0;
@@ -6778,7 +6684,6 @@ UINT8 NumCapableEnemyInSector( )
 
 BOOLEAN CheckForLosingEndOfBattle( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
 	INT8				bNumDead = 0, bNumNotOK = 0, bNumInBattle = 0, bNumNotOKRealMercs = 0;
@@ -6807,9 +6712,9 @@ BOOLEAN CheckForLosingEndOfBattle( )
 	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
-	// look for all mercs on the same team, 
+	// look for all mercs on the same team,
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++)
-	{		
+	{
 		// Are we active and in sector.....
 		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
@@ -6946,7 +6851,6 @@ BOOLEAN CheckForLosingEndOfBattle( )
 
 BOOLEAN KillIncompacitatedEnemyInSector( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
 	BOOLEAN			fReturnVal = FALSE;
@@ -6973,7 +6877,6 @@ BOOLEAN KillIncompacitatedEnemyInSector( )
 
 BOOLEAN AttackOnGroupWitnessed( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget )
 {
-	PERFORMANCE_MARKER
 	UINT32					uiSlot;
 	SOLDIERTYPE *		pGroupMember;
 
@@ -6999,7 +6902,6 @@ BOOLEAN AttackOnGroupWitnessed( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget )
 
 INT8 CalcSuppressionTolerance( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT8		bTolerance;
 
 	// Calculate basic tolerance value
@@ -7011,7 +6913,7 @@ INT8 CalcSuppressionTolerance( SOLDIERTYPE * pSoldier )
 	}
 	else
 	{
-		// give +2 for every morale category from normal, for a max change of 4 
+		// give +2 for every morale category from normal, for a max change of 4
 		bTolerance += ( pSoldier->aiData.bAIMorale - MORALE_NORMAL ) * 2;
 	}
 
@@ -7061,7 +6963,6 @@ INT8 CalcSuppressionTolerance( SOLDIERTYPE * pSoldier )
 #define MAX_APS_SUPPRESSED 8
 void HandleSuppressionFire( UINT8 ubTargetedMerc, UINT8 ubCausedAttacker )
 {
-	PERFORMANCE_MARKER
 	INT8									bTolerance;
 	INT16									sClosestOpponent, sClosestOppLoc;
 	UINT8									ubPointsLost, ubTotalPointsLost, ubNewStance;
@@ -7231,7 +7132,7 @@ void HandleSuppressionFire( UINT8 ubTargetedMerc, UINT8 ubCausedAttacker )
 				}
 
 				// AI people will have to have their actions cancelled
-				if (!(pSoldier->flags.uiStatusFlags & SOLDIER_PC))				
+				if (!(pSoldier->flags.uiStatusFlags & SOLDIER_PC))
 				{
 					CancelAIAction( pSoldier, TRUE );
 #if 0
@@ -7265,7 +7166,6 @@ void HandleSuppressionFire( UINT8 ubTargetedMerc, UINT8 ubCausedAttacker )
 
 BOOLEAN ProcessImplicationsOfPCAttack( SOLDIERTYPE * pSoldier, SOLDIERTYPE ** ppTarget, INT8 bReason )
 {
-	PERFORMANCE_MARKER
 	INT16		sTargetXPos, sTargetYPos;
 	BOOLEAN	fEnterCombat = TRUE;
 	SOLDIERTYPE * pTarget = *ppTarget;
@@ -7406,7 +7306,7 @@ BOOLEAN ProcessImplicationsOfPCAttack( SOLDIERTYPE * pSoldier, SOLDIERTYPE ** pp
 					// Toggle burst capable...
 					if ( !pTarget->bDoBurst )
 					{
-						if ( IsGunBurstCapable( pTarget, HANDPOS , FALSE ) )
+						if ( IsGunBurstCapable( &pTarget->inv[HANDPOS], FALSE, pTarget ) )
 						{
 							ChangeWeaponMode( pTarget );
 						}
@@ -7436,7 +7336,6 @@ BOOLEAN ProcessImplicationsOfPCAttack( SOLDIERTYPE * pSoldier, SOLDIERTYPE ** pp
 
 SOLDIERTYPE *InternalReduceAttackBusyCount( )
 {
-	PERFORMANCE_MARKER
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
@@ -7619,7 +7518,7 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 
 			// global
 
-			// ATE: If we are an animal, etc, don't change to hostile... 
+			// ATE: If we are an animal, etc, don't change to hostile...
 			// ( and don't go into combat )
 			if ( pTarget->ubBodyType == CROW )
 			{
@@ -7639,7 +7538,7 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 							{
 								if ( pTeamSoldier->aiData.bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY )
 								{
-									//ZEROTIMECOUNTER( pTeamSoldier->timeCounters.AICounter );		
+									//ZEROTIMECOUNTER( pTeamSoldier->timeCounters.AICounter );
 
 									//MakeCivHostile( pTeamSoldier, 2 );
 
@@ -7702,7 +7601,7 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 		}
 
 		if (pSoldier->flags.uiStatusFlags & SOLDIER_PC)
-		{	
+		{
 			UnSetUIBusy( ubID );
 		}
 		else
@@ -7728,7 +7627,7 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 			// If we are in a meanwhile... don't enter combat here...
 			if ( !AreInMeanwhile( ) )
 			{
-				EnterCombatMode( pSoldier->bTeam );					
+				EnterCombatMode( pSoldier->bTeam );
 			}
 		}
 
@@ -7779,7 +7678,7 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 			{
 				RevealRoofsAndItems( pSightSoldier, TRUE, FALSE, pSightSoldier->pathing.bLevel, FALSE );
 			}
-		}	
+		}
 		gTacticalStatus.uiFlags &= ~CHECK_SIGHT_AT_END_OF_ATTACK;
 	}
 
@@ -7851,9 +7750,8 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 
 SOLDIERTYPE * ReduceAttackBusyCount( )
 {
-	PERFORMANCE_MARKER
 #if 0
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ReduceAttackBusyCount") );	
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ReduceAttackBusyCount") );
 	if ( ubID == NOBODY )
 	{
 		return( InternalReduceAttackBusyCount( ubID, fCalledByAttacker, NOBODY ) );
@@ -7869,12 +7767,11 @@ SOLDIERTYPE * ReduceAttackBusyCount( )
 
 SOLDIERTYPE * FreeUpAttacker( )
 {
-	PERFORMANCE_MARKER
 	// Okay, so the objective here is not to simply decrease the ABC, but to twiddle it and see what
 	// falls out.	So there's an increase followed immediately by a decrease.
 	// If the ABC is 0 at this point, such as an aborted action might give, this will finalize the
 	// action and allow the soldier to try something else.
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FreeUpAttacker") );	
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FreeUpAttacker") );
 	DebugAttackBusy( "Freeing up attacker\n");
 	gTacticalStatus.ubAttackBusyCount++;
 	return( ReduceAttackBusyCount( ) );
@@ -7884,21 +7781,19 @@ SOLDIERTYPE * FreeUpAttacker( )
 // 0verhaul:	These routines are declared obsolete.	Call ReduceAttackBusyCount instead.
 SOLDIERTYPE * FreeUpAttackerGivenTarget( UINT8 ubID, UINT8 ubTargetID )
 {
-	PERFORMANCE_MARKER
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FreeUpAttackerGivenTarget") );	
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FreeUpAttackerGivenTarget") );
 	return( InternalReduceAttackBusyCount( ubID, TRUE, ubTargetID ) );
 }
 
 SOLDIERTYPE * ReduceAttackBusyGivenTarget( UINT8 ubID, UINT8 ubTargetID )
 {
-	PERFORMANCE_MARKER
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ReduceAttackBusyGivenTarget") );	
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ReduceAttackBusyGivenTarget") );
 	return( InternalReduceAttackBusyCount( ubID, FALSE, ubTargetID ) );
 }
 #endif
@@ -7906,7 +7801,6 @@ SOLDIERTYPE * ReduceAttackBusyGivenTarget( UINT8 ubID, UINT8 ubTargetID )
 
 void StopMercAnimation( BOOLEAN fStop )
 {
-	PERFORMANCE_MARKER
 	static INT8 bOldRealtimeSpeed;
 
 	if ( fStop )
@@ -7940,7 +7834,6 @@ void StopMercAnimation( BOOLEAN fStop )
 
 void ResetAllMercSpeeds( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	UINT32			cnt;
 
@@ -7959,7 +7852,6 @@ void ResetAllMercSpeeds( )
 
 void SetActionToDoOnceMercsGetToLocation( UINT8 ubActionCode,	INT8 bNumMercsWaiting, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3 )
 {
-	PERFORMANCE_MARKER
 	gubWaitingForAllMercsToExitCode				= ubActionCode;
 	gbNumMercsUntilWaitingOver						= bNumMercsWaiting;
 	guiWaitingForAllMercsToExitData[ 0 ]	= uiData1;
@@ -7976,7 +7868,6 @@ void SetActionToDoOnceMercsGetToLocation( UINT8 ubActionCode,	INT8 bNumMercsWait
 
 void HandleBloodForNewGridNo( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// Handle bleeding...
 	if ( ( pSoldier->bBleeding > MIN_BLEEDING_THRESHOLD ) )
 	{
@@ -8003,7 +7894,6 @@ void HandleBloodForNewGridNo( SOLDIERTYPE *pSoldier )
 
 void CencelAllActionsForTimeCompression( void )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	INT32 cnt;
 
@@ -8025,7 +7915,6 @@ void CencelAllActionsForTimeCompression( void )
 
 void AddManToTeam( INT8 bTeam )
 {
-	PERFORMANCE_MARKER
 	// ATE: If not loading game!
 	if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
@@ -8044,7 +7933,6 @@ void AddManToTeam( INT8 bTeam )
 
 void RemoveManFromTeam( INT8 bTeam )
 {
-	PERFORMANCE_MARKER
 	// ATE; if not loading game!
 	if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
@@ -8067,7 +7955,6 @@ void RemoveManFromTeam( INT8 bTeam )
 
 void RemoveSoldierFromTacticalSector( SOLDIERTYPE *pSoldier, BOOLEAN fAdjustSelected )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubID;
 	SOLDIERTYPE *pNewSoldier;
 
@@ -8088,7 +7975,7 @@ void RemoveSoldierFromTacticalSector( SOLDIERTYPE *pSoldier, BOOLEAN fAdjustSele
 		{
 			if ( gusSelectedSoldier == pSoldier->ubID	)
 			{
-				ubID = FindNextActiveAndAliveMerc( pSoldier, FALSE, FALSE ); 
+				ubID = FindNextActiveAndAliveMerc( pSoldier, FALSE, FALSE );
 
 				if ( ubID != NOBODY && ubID != gusSelectedSoldier )
 				{
@@ -8131,7 +8018,6 @@ void RemoveSoldierFromTacticalSector( SOLDIERTYPE *pSoldier, BOOLEAN fAdjustSele
 
 void	DoneFadeOutDueToDeath( void )
 {
-	PERFORMANCE_MARKER
 	// Quit game....
 	InternalLeaveTacticalScreen( MAINMENU_SCREEN );
 	//SetPendingNewScreen( MAINMENU_SCREEN );
@@ -8139,7 +8025,6 @@ void	DoneFadeOutDueToDeath( void )
 
 void EndBattleWithUnconsciousGuysCallback( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	// Enter mapscreen.....
 	CheckAndHandleUnloadingOfCurrentWorld();
 }
@@ -8147,7 +8032,6 @@ void EndBattleWithUnconsciousGuysCallback( UINT8 bExitValue )
 
 void InitializeTacticalStatusAtBattleStart( void )
 {
-	PERFORMANCE_MARKER
 	INT8							bLoop;
 	INT32							cnt;
 	SOLDIERTYPE *			pSoldier;
@@ -8172,7 +8056,7 @@ void InitializeTacticalStatusAtBattleStart( void )
 
 	gTacticalStatus.ubTheChosenOne	= NOBODY;
 
-	ClearIntList();	
+	ClearIntList();
 
 	// make sure none of our guys have leftover shock values etc
 	for ( cnt = gTacticalStatus.Team[ 0 ].bFirstID; cnt <= gTacticalStatus.Team[ 0 ].bLastID; cnt++ )
@@ -8193,7 +8077,6 @@ void InitializeTacticalStatusAtBattleStart( void )
 
 void	DoneFadeOutDemoCreatureLevel( void )
 {
-	PERFORMANCE_MARKER
 	// OK, insertion data found, enter sector!
 	SetCurrentWorldSector( 1, 16, 0 );
 
@@ -8203,18 +8086,15 @@ void	DoneFadeOutDemoCreatureLevel( void )
 
 void DemoEndOKCallback( INT8 bExitCode )
 {
-	PERFORMANCE_MARKER
 }
 
 void HandleEndDemoInCreatureLevel( )
 {
-	PERFORMANCE_MARKER
 }
 
 
 void DeathTimerCallback( void )
 {
-	PERFORMANCE_MARKER
 	if (gTacticalStatus.Team[ CREATURE_TEAM ].bMenInSector > gTacticalStatus.Team[ ENEMY_TEAM ].bMenInSector )
 	{
 		DoMessageBox( MSG_BOX_BASIC_STYLE, LargeTacticalStr[ LARGESTR_NOONE_LEFT_CAPABLE_OF_BATTLE_AGAINST_CREATURES_STR ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, EndBattleWithUnconsciousGuysCallback, NULL );
@@ -8227,7 +8107,6 @@ void DeathTimerCallback( void )
 
 void CaptureTimerCallback( void )
 {
-	PERFORMANCE_MARKER
 	if( gfSurrendered )
 	{
 		DoMessageBox( MSG_BOX_BASIC_STYLE, LargeTacticalStr[ 3 ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, EndBattleWithUnconsciousGuysCallback, NULL );
@@ -8241,7 +8120,6 @@ void CaptureTimerCallback( void )
 
 void DoPOWPathChecks( void )
 {
-	PERFORMANCE_MARKER
 	INT32						iLoop;
 	SOLDIERTYPE *		pSoldier;
 
@@ -8283,7 +8161,6 @@ void DoPOWPathChecks( void )
 
 BOOLEAN HostileCiviliansPresent( void )
 {
-	PERFORMANCE_MARKER
 	INT32						iLoop;
 	SOLDIERTYPE *		pSoldier;
 
@@ -8307,7 +8184,6 @@ BOOLEAN HostileCiviliansPresent( void )
 
 BOOLEAN HostileCiviliansWithGunsPresent( void )
 {
-	PERFORMANCE_MARKER
 	INT32						iLoop;
 	SOLDIERTYPE *		pSoldier;
 
@@ -8335,7 +8211,6 @@ BOOLEAN HostileCiviliansWithGunsPresent( void )
 
 BOOLEAN HostileBloodcatsPresent( void )
 {
-	PERFORMANCE_MARKER
 	INT32						iLoop;
 	SOLDIERTYPE *		pSoldier;
 
@@ -8349,7 +8224,7 @@ BOOLEAN HostileBloodcatsPresent( void )
 		pSoldier = MercPtrs[ iLoop ];
 
 		//KM : Aug 11, 1999 -- Patch fix:	Removed the check for bNeutral.	Bloodcats automatically become hostile
-		//		on site.	Because the check used to be there, it was possible to get into a 2nd battle elsewhere 
+		//		on site.	Because the check used to be there, it was possible to get into a 2nd battle elsewhere
 		//	 which is BAD BAD BAD!
 		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife > 0 && pSoldier->ubBodyType == BLOODCAT )
 		{
@@ -8363,7 +8238,6 @@ BOOLEAN HostileBloodcatsPresent( void )
 
 void HandleCreatureTenseQuote( )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
 	UINT8	ubChosenMerc;
@@ -8386,7 +8260,7 @@ void HandleCreatureTenseQuote( )
 					gTacticalStatus.uiCreatureTenseQuoteLastUpdate = uiTime;
 
 					// set up soldier ptr as first element in mercptrs list
-					cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;	
+					cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
 					// run through list
 					for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
@@ -8419,7 +8293,6 @@ void HandleCreatureTenseQuote( )
 
 void DoCreatureTensionQuote( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32	iRandomQuote;
 	BOOLEAN fCanDoQuote = TRUE;
 	INT32	iQuoteToUse;
@@ -8473,7 +8346,7 @@ void DoCreatureTensionQuote( SOLDIERTYPE *pSoldier )
 	}
 
 	if ( fCanDoQuote )
-	{ 
+	{
 		TacticalCharacterDialogue( pSoldier, (INT16)iQuoteToUse );
 	}
 }
@@ -8481,7 +8354,6 @@ void DoCreatureTensionQuote( SOLDIERTYPE *pSoldier )
 // Kaiden: Taken from UB to reveal all items after combat.
 void RevealAllDroppedEnemyItems()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCnt=0;
 
 	//loop through all the items

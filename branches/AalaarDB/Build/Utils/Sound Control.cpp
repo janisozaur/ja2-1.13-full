@@ -103,7 +103,7 @@ char szSoundEffects[MAX_SAMPLES][255];// =
 //	"SOUNDS\\BULLET IMPACT 02.WAV",
 //
 //	"STSOUNDS\\BLAH.WAV",									// CREATURE ATTACK
-//	
+//
 //	"SOUNDS\\STEP INTO WATER.WAV",
 //	"SOUNDS\\SPLASH FROM SHALLOW TO DEEP.WAV",
 //
@@ -142,14 +142,14 @@ char szSoundEffects[MAX_SAMPLES][255];// =
 //	"SOUNDS\\STONE IMPACT 01.WAV",
 //	"SOUNDS\\WATER IMPACT 01.WAV",
 //	"SOUNDS\\VEG IMPACT 01.WAV",
-//	"SOUNDS\\METAL HIT 01.WAV",								// S_METAL_HIT1	
-//	"SOUNDS\\METAL HIT 01.WAV",															
-//	"SOUNDS\\METAL HIT 01.WAV",															
+//	"SOUNDS\\METAL HIT 01.WAV",								// S_METAL_HIT1
+//	"SOUNDS\\METAL HIT 01.WAV",
+//	"SOUNDS\\METAL HIT 01.WAV",
 //
 //	"SOUNDS\\SLAP_IMPACT.WAV",
 //
 //	// FIREARM RELOAD
-//	"SOUNDS\\WEAPONS\\REVOLVER RELOAD.WAV",					// REVOLVER 
+//	"SOUNDS\\WEAPONS\\REVOLVER RELOAD.WAV",					// REVOLVER
 //	"SOUNDS\\WEAPONS\\PISTOL RELOAD.WAV",					// PISTOL
 //	"SOUNDS\\WEAPONS\\SMG RELOAD.WAV",						// SMG
 //	"SOUNDS\\WEAPONS\\RIFLE RELOAD.WAV",					// RIFLE
@@ -157,7 +157,7 @@ char szSoundEffects[MAX_SAMPLES][255];// =
 //	"SOUNDS\\WEAPONS\\LMG RELOAD.WAV",						// LMG
 //
 //	// FIREARM LOCKNLOAD
-//	"SOUNDS\\WEAPONS\\REVOLVER LNL.WAV",					// REVOLVER 
+//	"SOUNDS\\WEAPONS\\REVOLVER LNL.WAV",					// REVOLVER
 //	"SOUNDS\\WEAPONS\\PISTOL LNL.WAV",						// PISTOL
 //	"SOUNDS\\WEAPONS\\SMG LNL.WAV",							// SMG
 //	"SOUNDS\\WEAPONS\\RIFLE LNL.WAV",						// RIFLE
@@ -168,7 +168,7 @@ char szSoundEffects[MAX_SAMPLES][255];// =
 //	"SOUNDS\\WEAPONS\\SMALL ROCKET LAUNCHER.WAV",			// SMALL ROCKET LUANCHER
 //	"SOUNDS\\WEAPONS\\MORTAR FIRE 01.WAV",					// GRENADE LAUNCHER
 //	"SOUNDS\\WEAPONS\\MORTAR FIRE 01.WAV",					// UNDERSLUNG GRENADE LAUNCHER
-//	"SOUNDS\\WEAPONS\\ROCKET LAUNCHER.WAV",										
+//	"SOUNDS\\WEAPONS\\ROCKET LAUNCHER.WAV",
 //	"SOUNDS\\WEAPONS\\MORTAR FIRE 01.WAV",
 //
 //	// FIREARMS
@@ -373,8 +373,8 @@ char szSoundEffects[MAX_SAMPLES][255];// =
 
 char szAmbientEffects[NUM_AMBIENTS][255] =
 {
-	"SOUNDS\\storm1.wav", 
-	"SOUNDS\\storm2.wav", 
+	"SOUNDS\\storm1.wav",
+	"SOUNDS\\storm2.wav",
 	"SOUNDS\\rain_loop_22k.wav",
 	"SOUNDS\\bird1-22k.wav",
 	"SOUNDS\\bird3-22k.wav",
@@ -414,7 +414,6 @@ void DelayedSoundTimerCallback( void );
 
 BOOLEAN InitJA2Sound( )
 {
-	PERFORMANCE_MARKER
 //UINT32 uiCount;
 
 	//for(uiCount=0; uiCount < NUM_SAMPLES; uiCount++)
@@ -427,7 +426,6 @@ BOOLEAN InitJA2Sound( )
 
 BOOLEAN ShutdownJA2Sound( )
 {
-	PERFORMANCE_MARKER
 //UINT32 uiCount;
 
 	SoundStopAll();
@@ -439,11 +437,10 @@ BOOLEAN ShutdownJA2Sound( )
 	//}
 
 	return( TRUE );
-} 
+}
 
 UINT32 PlayJA2Sample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
 {
-	PERFORMANCE_MARKER
 	//SoundLog((CHAR8 *)String(" Play sound %s on volume %d", szSoundEffects[usNum], ubVolume));
 
 	SOUNDPARMS spParms;
@@ -451,10 +448,10 @@ UINT32 PlayJA2Sample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoo
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
 
 	spParms.uiSpeed = usRate;
-	
+
 	if ( strstr( szSoundEffects[usNum], "WEAPONS" ) == NULL )
 	{
-		spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );		
+		spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
 	}
 	else
 	{
@@ -474,7 +471,6 @@ UINT32 PlayJA2Sample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoo
 
 UINT32 PlayJA2StreamingSample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
 {
-	PERFORMANCE_MARKER
 	SOUNDPARMS spParms;
 
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
@@ -492,7 +488,6 @@ UINT32 PlayJA2StreamingSample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UIN
 
 UINT32 PlayJA2SampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
 {
-	PERFORMANCE_MARKER
 	//SoundLog((CHAR8 *)String(" Play sound %s on volume %d", szFileName, ubVolume));
 	// does the same thing as PlayJA2Sound, but one only has to pass the filename, not the index of the sound array
 
@@ -510,7 +505,7 @@ UINT32 PlayJA2SampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, U
 	{
 		spParms.uiVolume = (UINT32)( ( ubVolume / (FLOAT) HIGHVOLUME ) * guiSoundEffectsVolume +.5 ) * (1 + gGameExternalOptions.guiWeaponSoundEffectsVolume / 100);
 	}
-	
+
 	spParms.uiLoop = ubLoops;
 	spParms.uiPan = uiPan;
 	spParms.uiPriority=GROUP_PLAYER;
@@ -522,7 +517,6 @@ UINT32 PlayJA2SampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, U
 
 UINT32 PlayJA2StreamingSampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, SOUND_STOP_CALLBACK EndsCallback )
 {
-	PERFORMANCE_MARKER
 
 	// does the same thing as PlayJA2Sound, but one only has to pass the filename, not the index of the sound array
 
@@ -543,7 +537,6 @@ UINT32 PlayJA2StreamingSampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ub
 
 UINT32 PlayJA2Ambient( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops)
 {
-	PERFORMANCE_MARKER
 	SOUNDPARMS spParms;
 
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
@@ -557,7 +550,6 @@ UINT32 PlayJA2Ambient( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops)
 
 UINT32 PlayJA2AmbientRandom( UINT32 usNum, UINT32 uiTimeMin, UINT32 uiTimeMax)
 {
-	PERFORMANCE_MARKER
 	RANDOMPARMS rpParms;
 
 	memset(&rpParms, 0xff, sizeof(RANDOMPARMS));
@@ -575,7 +567,6 @@ UINT32 PlayJA2AmbientRandom( UINT32 usNum, UINT32 uiTimeMin, UINT32 uiTimeMax)
 
 UINT32 PlaySoldierJA2Sample( UINT16 usID, UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, BOOLEAN fCheck )
 {
-	PERFORMANCE_MARKER
 
 	if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
@@ -596,7 +587,6 @@ UINT32 PlaySoldierJA2Sample( UINT16 usID, UINT32 usNum, UINT32 usRate, UINT32 ub
 
 void SetSpeechVolume( UINT32 uiNewVolume )
 {
-	PERFORMANCE_MARKER
 	guiSpeechVolume = __min( uiNewVolume, 127);
 }
 
@@ -604,34 +594,29 @@ void SetSpeechVolume( UINT32 uiNewVolume )
 
 UINT32 GetSpeechVolume( )
 {
-	PERFORMANCE_MARKER
 	return( guiSpeechVolume );
 }
 
 
 void SetSoundEffectsVolume( UINT32 uiNewVolume )
 {
-	PERFORMANCE_MARKER
 	guiSoundEffectsVolume = __min( uiNewVolume, 127);
 }
 
 
 UINT32 GetSoundEffectsVolume( )
 {
-	PERFORMANCE_MARKER
 	return( guiSoundEffectsVolume );
 }
 
 
 UINT32 CalculateSpeechVolume( UINT32 uiVolume )
 {
-	PERFORMANCE_MARKER
 	return( (UINT32) ( ( uiVolume / (FLOAT) HIGHVOLUME ) * guiSpeechVolume +.5 ) );
 }
 
 UINT32 CalculateSoundEffectsVolume( UINT32 uiVolume )
 {
-	PERFORMANCE_MARKER
 	return( (UINT32) ( ( uiVolume / (FLOAT) HIGHVOLUME ) * guiSoundEffectsVolume +.5 ) );
 }
 
@@ -674,7 +659,6 @@ int x,dif,absDif;
 // == Lesh slightly changed this function ============
 INT32 SoundDir( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
 	INT16 sMiddleX;
@@ -727,7 +711,6 @@ INT32 SoundDir( INT16 sGridNo )
 
 INT32 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
 	INT16	sMiddleX, sMiddleY;
@@ -759,7 +742,7 @@ INT32 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 	{
 		// OK, NOT the middle.
 		// Is it outside the screen?
-		if ( sAbsDifX > ( ( gsBottomRightWorldX - gsTopLeftWorldX ) / 2 ) || 
+		if ( sAbsDifX > ( ( gsBottomRightWorldX - gsTopLeftWorldX ) / 2 ) ||
 				sAbsDifY > ( ( gsBottomRightWorldY - gsTopLeftWorldY ) / 2 ) )
 		{
 			return( __max( LOWVOLUME, ( bInitialVolume - SOUND_FAR_VOLUME_MOD ) ) );
@@ -771,7 +754,6 @@ INT32 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 
 void PlayDelayedJA2Sample( UINT32 uiDelay, UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
 {
-	PERFORMANCE_MARKER
 
 	memset(&gDelayedSoundParms, 0xff, sizeof(SOUNDPARMS));
 
@@ -792,7 +774,6 @@ void PlayDelayedJA2Sample( UINT32 uiDelay, UINT32 usNum, UINT32 usRate, UINT32 u
 
 void DelayedSoundTimerCallback( void )
 {
-	PERFORMANCE_MARKER
 	SoundPlay( szSoundEffects[ guiDelayedSoundNum ], &gDelayedSoundParms );
 }
 
@@ -834,7 +815,6 @@ void RecountPositionSnds( void );
 
 INT32 GetFreePositionSnd( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumPositionSnds; uiCount++)
@@ -851,7 +831,6 @@ INT32 GetFreePositionSnd( void )
 
 void RecountPositionSnds( void )
 {
-	PERFORMANCE_MARKER
 	INT32 uiCount;
 
 	for(uiCount=guiNumPositionSnds-1; (uiCount >=0) ; uiCount--)
@@ -867,7 +846,6 @@ void RecountPositionSnds( void )
 
 INT32 NewPositionSnd( INT16 sGridNo, UINT32 uiFlags, UINT32 uiData, UINT32 iSoundToPlay )
 {
-	PERFORMANCE_MARKER
 	POSITIONSND *pPositionSnd;
 	INT32				iPositionSndIndex;
 
@@ -889,7 +867,7 @@ INT32 NewPositionSnd( INT16 sGridNo, UINT32 uiFlags, UINT32 uiData, UINT32 iSoun
 	{
 	pPositionSnd->fInActive	= TRUE;
 	}
-	
+
 	pPositionSnd->sGridNo	 = sGridNo;
 	pPositionSnd->uiData		= uiData;
 	pPositionSnd->uiFlags	 = uiFlags;
@@ -903,7 +881,6 @@ INT32 NewPositionSnd( INT16 sGridNo, UINT32 uiFlags, UINT32 uiData, UINT32 iSoun
 
 void DeletePositionSnd( INT32 iPositionSndIndex )
 {
-	PERFORMANCE_MARKER
 	POSITIONSND *pPositionSnd;
 
 	pPositionSnd = &gPositionSndData[ iPositionSndIndex ];
@@ -917,7 +894,7 @@ void DeletePositionSnd( INT32 iPositionSndIndex )
 	 if ( pPositionSnd->iSoundSampleID != NO_SAMPLE )
 	 {
 		SoundStop( pPositionSnd->iSoundSampleID );
-	 }	
+	 }
 
 	 pPositionSnd->fAllocated = FALSE;
 
@@ -927,7 +904,6 @@ void DeletePositionSnd( INT32 iPositionSndIndex )
 
 void SetPositionSndGridNo( INT32 iPositionSndIndex, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	POSITIONSND *pPositionSnd;
 
 	pPositionSnd = &gPositionSndData[ iPositionSndIndex ];
@@ -942,7 +918,6 @@ void SetPositionSndGridNo( INT32 iPositionSndIndex, INT16 sGridNo )
 
 void SetPositionSndsActive( )
 {
-	PERFORMANCE_MARKER
 	UINT32 cnt;
 	POSITIONSND *pPositionSnd;
 
@@ -969,7 +944,6 @@ void SetPositionSndsActive( )
 
 void SetPositionSndsInActive( )
 {
-	PERFORMANCE_MARKER
 	UINT32 cnt;
 	POSITIONSND *pPositionSnd;
 
@@ -996,7 +970,6 @@ void SetPositionSndsInActive( )
 // == Lesh slightly changed this function ============
 INT32 PositionSoundDir( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
 	INT16	sMiddleX;
@@ -1021,7 +994,7 @@ INT32 PositionSoundDir( INT16 sGridNo )
 	if ( ( sAbsDif = abs( sDif ) ) > 64 )
 	{
 		// OK, NOT the middle.
-		
+
 		// Is it outside the screen?
 		if ( sAbsDif > ( ( gsBottomRightWorldX - gsTopLeftWorldX ) / 2 ) )
 	{
@@ -1051,7 +1024,6 @@ INT32 PositionSoundDir( INT16 sGridNo )
 
 INT32 PositionSoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
 	INT16	sMiddleX, sMiddleY;
@@ -1104,7 +1076,6 @@ INT32 PositionSoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 
 void SetPositionSndsVolumeAndPanning( )
 {
-	PERFORMANCE_MARKER
 	UINT32 cnt;
 	POSITIONSND *pPositionSnd;
 	INT8		bVolume, bPan;

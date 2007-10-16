@@ -27,7 +27,7 @@
 	#include "Overhead.h"
 	#include "Handle UI.h"
 	#include "Event Pump.h"
-	#include "world items.h" 
+	#include "world items.h"
 	#include "loadscreen.h"
 	#include "render dirty.h"
 	#include "isometric utils.h"
@@ -183,7 +183,7 @@ BOOLEAN				gfEditorDirty = TRUE;
 BOOLEAN fRaiseHeight = FALSE;
 
 INT32 iDrawMode = DRAW_MODE_NOTHING;
-INT32 iCurrentAction,iActionParam;	
+INT32 iCurrentAction,iActionParam;
 INT32 iEditAction = ACTION_NULL;
 
 INT32 iEditorButton[NUMBER_EDITOR_BUTTONS];
@@ -217,7 +217,7 @@ UINT16 gusEditorTaskbarLoColor;
 
 void CreateGotoGridNoUI();
 void RemoveGotoGridNoUI();
-BOOLEAN gfGotoGridNoUI = FALSE;		
+BOOLEAN gfGotoGridNoUI = FALSE;
 INT32 guiGotoGridNoUIButtonID;
 MOUSE_REGION GotoGridNoUIRegion;
 
@@ -228,7 +228,6 @@ MOUSE_REGION GotoGridNoUIRegion;
 //
 UINT32 EditScreenInit(void)
 {
-	PERFORMANCE_MARKER	
 	gfFakeLights = FALSE;
 
 	eInfo.fGameInit = TRUE;
@@ -240,7 +239,7 @@ UINT32 EditScreenInit(void)
 	//gusEditorTaskbarColor =		Get16BPPColor( FROMRGB(	72,	88, 104 ) );
 	//gusEditorTaskbarHiColor = Get16BPPColor( FROMRGB( 136, 138, 135 ) );
 	//gusEditorTaskbarLoColor = Get16BPPColor( FROMRGB(	24,	61,	81 ) );
-	
+
 	gusEditorTaskbarColor	= Get16BPPColor( FROMRGB(	65,	79,	94 ) );
 	gusEditorTaskbarHiColor = Get16BPPColor( FROMRGB( 122, 124, 121 ) );
 	gusEditorTaskbarLoColor = Get16BPPColor( FROMRGB(	22,	55,	73 ) );
@@ -262,7 +261,6 @@ UINT32 EditScreenInit(void)
 //
 UINT32 EditScreenShutdown(void)
 {
-	PERFORMANCE_MARKER 
 	GameShutdownEditorMercsInfo();
 	RemoveAllFromUndoList();
 	KillClipboard();
@@ -281,7 +279,6 @@ UINT32 EditScreenShutdown(void)
 //
 BOOLEAN EditModeInit( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 x;
 	INT32 i;
 	SGPPaletteEntry	LColors[2];
@@ -302,7 +299,7 @@ BOOLEAN EditModeInit( void )
 	fEditModeFirstTime = FALSE;
 
 	DisableButtonHelpTextRestore();
-	
+
 	if( fFirstTimeInEditModeInit )
 	{
 		if( gfWorldLoaded )
@@ -332,8 +329,8 @@ BOOLEAN EditModeInit( void )
 	MSYS_DisableRegion(&gRadarRegion);
 
 	CreateEditorTaskbar();
-	
-	//Hide all of the buttons here.	DoTaskbar() will handle the 
+
+	//Hide all of the buttons here.	DoTaskbar() will handle the
 	//showing and hiding of the buttons.
 	for( x = LAST_EDITORTAB_BUTTON+1; x < NUMBER_EDITOR_BUTTONS; x++ )
 		HideButton( iEditorButton[x] );
@@ -366,17 +363,17 @@ BOOLEAN EditModeInit( void )
 		gusLightLevel =	12;//EDITOR_LIGHT_MAX - (UINT16)LightGetAmbient();
 	else
 		gusLightLevel = EDITOR_LIGHT_MAX - (UINT16)LightGetAmbient();
-	
+
 	if( gfFakeLights )
 	{
 		gusSavedLightLevel = gusLightLevel;
 		gusLightLevel = EDITOR_LIGHT_FAKE;
-		ClickEditorButton( MAPINFO_TOGGLE_FAKE_LIGHTS );				
+		ClickEditorButton( MAPINFO_TOGGLE_FAKE_LIGHTS );
 	}
 
 	gfRenderWorld = TRUE;
 	gfRenderTaskbar = TRUE;
-	
+
 	//Reset the corruption detection flags.
 	gfCorruptMap = FALSE;
 	gfCorruptSchedules = FALSE;
@@ -389,7 +386,7 @@ BOOLEAN EditModeInit( void )
 	gfRoofPlacement = FALSE;
 
 	EnableUndo();
-	
+
 	RemoveMercsInSector( );
 	if( gfWorldLoaded )
 	{
@@ -453,7 +450,6 @@ BOOLEAN EditModeInit( void )
 //	The above function's counterpart. Called when exiting the editor back to the game.
 BOOLEAN EditModeShutdown( void )
 {
-	PERFORMANCE_MARKER
 	if( gfConfirmExitFirst )
 	{
 		gfConfirmExitPending = TRUE;
@@ -465,7 +461,7 @@ BOOLEAN EditModeShutdown( void )
 	fEditModeFirstTime = TRUE;
 
 	UpdateLastActionBeforeLeaving();
-	
+
 	DeleteEditorTaskbar();
 
 	// create clock mouse region for clock pause
@@ -473,13 +469,13 @@ BOOLEAN EditModeShutdown( void )
 
 	iOldTaskMode = iCurrentTaskbar;
 	gTacticalStatus.uiFlags = guiSaveTacticalStatusFlags;
-	
+
 	RemoveLightPositionHandles( );
-	
+
 	MapOptimize();
-	
+
 	RemoveCursors();
-	
+
 	fHelpScreen = FALSE;
 	// Set render back to normal mode
 	gTacticalStatus.uiFlags &= ~(NOHIDE_REDUNDENCY | SHOW_ALL_ITEMS);
@@ -543,7 +539,7 @@ BOOLEAN EditModeShutdown( void )
 	}
 
 	EnableButtonHelpTextRestore();
-	
+
 	if( gfNeedToInitGame )
 	{
 		InitStrategicLayer();
@@ -575,7 +571,6 @@ BOOLEAN EditModeShutdown( void )
 //
 void SetBackgroundTexture( )
 {
-	PERFORMANCE_MARKER
 	int						cnt;
 	UINT16				usIndex, Dummy;
 
@@ -583,7 +578,7 @@ void SetBackgroundTexture( )
 	{
 		// Erase old layers
 		RemoveAllLandsOfTypeRange( cnt, FIRSTTEXTURE, DEEPWATERTEXTURE );
-	
+
 		// Add level
 		usIndex = (UINT16)(rand( ) % 10 );
 
@@ -595,7 +590,7 @@ void SetBackgroundTexture( )
 			AddLandToTail( cnt, usIndex ); //show the land below the floor.
 		else
 			AddLandToHead( cnt, usIndex ); //no floor so no worries.
-	}	
+	}
 }
 
 
@@ -606,7 +601,6 @@ void SetBackgroundTexture( )
 //
 BOOLEAN DoWindowSelection( void )
 {
-	PERFORMANCE_MARKER
 	RenderSelectionWindow( );
 	RenderButtonsFastHelp( );
 	if ( fAllDone )
@@ -646,7 +640,6 @@ BOOLEAN DoWindowSelection( void )
 //in the world.
 void RemoveTempMouseCursorObject( void )
 {
-	PERFORMANCE_MARKER
 	if ( iCurBankMapIndex < 0x8000 )
 	{
 		ForceRemoveStructFromTail( iCurBankMapIndex );
@@ -659,7 +652,6 @@ void RemoveTempMouseCursorObject( void )
 //the mouse cursor, to indicate what is about to be drawn.
 BOOLEAN DrawTempMouseCursorObject(void)
 {
-	PERFORMANCE_MARKER
 	INT16		sMouseX_M, sMouseY_M;
 	UINT16	usUseIndex;
 	UINT16	usUseObjIndex;
@@ -790,12 +782,11 @@ BOOLEAN DrawTempMouseCursorObject(void)
 
 	return( FALSE );
 }
-			
+
 
 //Displays the current drawing object in the small, lower left window of the editor's toolbar.
 void ShowCurrentDrawingMode( void )
 {
-	PERFORMANCE_MARKER
 	SGPRect			ClipRect, NewRect;
 	INT32				iShowMode;
 	UINT16			usUseIndex;
@@ -810,7 +801,7 @@ void ShowCurrentDrawingMode( void )
 	UINT8				*pDestBuf;
 	UINT16			usFillColor;
 	INT32				iIndexToUse;
-	
+
 	// Set up a clipping rectangle for the display window.
 	NewRect.iLeft = iScreenWidthOffset + 0;
 	NewRect.iTop = 2 * iScreenHeightOffset + 400;
@@ -858,7 +849,7 @@ void ShowCurrentDrawingMode( void )
 				usObjIndex = (UINT16)SelOStructs[ iIndexToUse ].uiObject;
 			}
 			break;
-		
+
 		case DRAW_MODE_OSTRUCTS1:
 			if ( iNumOStructs1Selected > 0 )
 			{
@@ -918,7 +909,7 @@ void ShowCurrentDrawingMode( void )
 			{
 				usUseIndex = SelSingleWindow[ iCurBank ].usIndex;
 				usObjIndex = (UINT16)SelSingleWindow[ iCurBank ].uiObject;
-			}	
+			}
 			break;
 		case DRAW_MODE_ROOFS:
 			if ( iNumRoofsSelected > 0 )
@@ -1010,7 +1001,7 @@ void ShowCurrentDrawingMode( void )
 			DisplayItemStatistics();
 			break;
 	}
- 
+
 	// If we actually have something to draw, draw it
 	if ( (usUseIndex != 0xffff) && (usObjIndex != 0xffff) )
 	{
@@ -1032,8 +1023,8 @@ void ShowCurrentDrawingMode( void )
 		pETRLEObject->sOffsetY = 0;
 
 		SetObjectShade( gTileDatabase[gTileTypeStartIndex[usObjIndex]].hTileSurface, DEFAULT_SHADE_LEVEL );
-		BltVideoObject( FRAME_BUFFER, gTileDatabase[gTileTypeStartIndex[usObjIndex]].hTileSurface, 
-									usUseIndex, (iScreenWidthOffset + 0 + iStartX), (2 * iScreenHeightOffset + 400 + iStartY), 
+		BltVideoObject( FRAME_BUFFER, gTileDatabase[gTileTypeStartIndex[usObjIndex]].hTileSurface,
+									usUseIndex, (iScreenWidthOffset + 0 + iStartX), (2 * iScreenHeightOffset + 400 + iStartY),
 									VO_BLT_SRCTRANSPARENCY, NULL);
 
 		pETRLEObject->sOffsetX = sTempOffsetX;
@@ -1063,7 +1054,6 @@ void ShowCurrentDrawingMode( void )
 //
 void HandleJA2ToolbarSelection( void )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fPrevState;
 
 	fPrevState = gfRenderTaskbar;
@@ -1075,7 +1065,7 @@ void HandleJA2ToolbarSelection( void )
 		case TBAR_MODE_SET_BGRND:
 			iCurrentAction = ACTION_SET_NEW_BACKGROUND;
 			break;
-	
+
 		case TBAR_MODE_DENS_DWN:
 			iCurrentAction = ACTION_DENSITY_DOWN;
 			break;
@@ -1193,7 +1183,7 @@ void HandleJA2ToolbarSelection( void )
 			iCurrentAction = ACTION_NULL;
 			iDrawMode = DRAW_MODE_BANKS;
 			break;
-		
+
 		case TBAR_MODE_GET_DEBRIS:
 			iCurrentAction = ACTION_NEXT_DEBRIS;
 			iDrawMode = DRAW_MODE_DEBRIS;
@@ -1203,7 +1193,7 @@ void HandleJA2ToolbarSelection( void )
 			iCurrentAction = ACTION_NULL;
 			iDrawMode = DRAW_MODE_DEBRIS;
 			break;
-		
+
 		case TBAR_MODE_GET_OSTRUCTS:
 			iCurrentAction = ACTION_NEXT_STRUCT;
 			iDrawMode = DRAW_MODE_OSTRUCTS;
@@ -1223,7 +1213,7 @@ void HandleJA2ToolbarSelection( void )
 			iCurrentAction = ACTION_NULL;
 			iDrawMode = DRAW_MODE_OSTRUCTS1;
 			break;
-		
+
 		case TBAR_MODE_GET_OSTRUCTS2:
 			iCurrentAction = ACTION_NEXT_STRUCT2;
 			iDrawMode = DRAW_MODE_OSTRUCTS2;
@@ -1257,7 +1247,7 @@ void HandleJA2ToolbarSelection( void )
 		case TBAR_MODE_CHANGE_BRUSH:
 			iCurrentAction = ACTION_NEXT_SELECTIONTYPE;
 			break;
-		
+
 		case TBAR_MODE_ERASE:
 			switch ( iDrawMode )
 			{
@@ -1335,7 +1325,6 @@ extern INT8 gbCurrSelect;
 extern void DeleteSelectedMercsItem();
 void HandleKeyboardShortcuts( )
 {
-	PERFORMANCE_MARKER
 	static INT32 iSavedMode;
 	static BOOLEAN fShowTrees = TRUE;
 	while( DequeueEvent( &EditorInputEvent ) )
@@ -1520,7 +1509,7 @@ void HandleKeyboardShortcuts( )
 					gfRenderWorld = TRUE;
 					gfRenderTaskbar = TRUE;
 					break;
-	
+
 				case F2:
 					if (EditorInputEvent.usKeyState & ALT_DOWN )
 					{
@@ -1546,7 +1535,7 @@ void HandleKeyboardShortcuts( )
 
 				case F5:
 					UpdateLastActionBeforeLeaving();
-					CreateSummaryWindow(); 
+					CreateSummaryWindow();
 					break;
 
 				case F6:
@@ -1567,7 +1556,7 @@ void HandleKeyboardShortcuts( )
 							if( gubWorldRoomInfo[ i ] )
 							{
 								AddToUndoList( i );
-								RemoveAllRoofsOfTypeRange( i, FIRSTTEXTURE, LASTITEM );	
+								RemoveAllRoofsOfTypeRange( i, FIRSTTEXTURE, LASTITEM );
 								RemoveAllOnRoofsOfTypeRange( i, FIRSTTEXTURE, LASTITEM );
 								RemoveAllShadowsOfTypeRange( i, FIRSTROOF, LASTSLANTROOF );
 								usRoofIndex = 9 + ( rand() % 3 );
@@ -1605,7 +1594,7 @@ void HandleKeyboardShortcuts( )
 				case ']':
 					iCurrentAction = ACTION_DENSITY_UP;
 					break;
-			
+
 				case '+':
 					//if ( iDrawMode == DRAW_MODE_SHOW_TILESET )
 					//	iCurrentAction = ACTION_MLIST_DWN;
@@ -1683,7 +1672,7 @@ void HandleKeyboardShortcuts( )
 
 					iCurrentAction = ACTION_NULL;
 					iDrawMode = DRAW_MODE_DEBRIS;
-					ClickEditorButton( TERRAIN_PLACE_DEBRIS );				
+					ClickEditorButton( TERRAIN_PLACE_DEBRIS );
 					iEditorToolbarState = TBAR_MODE_DRAW_DEBRIS;
 					TerrainTileDrawMode = TERRAIN_TILES_NODRAW;
 					break;
@@ -1737,7 +1726,7 @@ void HandleKeyboardShortcuts( )
 					{
 						CreateGotoGridNoUI();
 					}
-					else 
+					else
 					{
 						if ( iCurrentTaskbar != TASK_TERRAIN )
 						{
@@ -1770,7 +1759,7 @@ void HandleKeyboardShortcuts( )
 						UpdateLastActionBeforeLeaving();
 						iCurrentAction = ACTION_LOAD_MAP;
 						break;
-					}	
+					}
 					if ( iCurrentTaskbar != TASK_TERRAIN )
 					{
 						iTaskMode = TASK_TERRAIN;
@@ -1785,11 +1774,11 @@ void HandleKeyboardShortcuts( )
 					}
 					else
 					{
-						ClearRenderFlags( RENDER_FLAG_ROOMIDS );		
+						ClearRenderFlags( RENDER_FLAG_ROOMIDS );
 						UnclickEditorButton( BUILDING_TOGGLE_INFO_VIEW );
 					}
 					break;
-				case 'o': 
+				case 'o':
 					if ( iCurrentTaskbar != TASK_TERRAIN )
 					{
 						iTaskMode = TASK_TERRAIN;
@@ -1797,7 +1786,7 @@ void HandleKeyboardShortcuts( )
 					}
 					iCurrentAction = ACTION_NULL;
 					iDrawMode = DRAW_MODE_OSTRUCTS2;
-					ClickEditorButton( TERRAIN_PLACE_MISC );				
+					ClickEditorButton( TERRAIN_PLACE_MISC );
 					iEditorToolbarState = TBAR_MODE_DRAW_OSTRUCTS2;
 					break;
 				case 'r': // rocks
@@ -1808,7 +1797,7 @@ void HandleKeyboardShortcuts( )
 					}
 					iCurrentAction = ACTION_NULL;
 					iDrawMode = DRAW_MODE_OSTRUCTS1;
-					ClickEditorButton( TERRAIN_PLACE_ROCKS );				
+					ClickEditorButton( TERRAIN_PLACE_ROCKS );
 					iEditorToolbarState = TBAR_MODE_DRAW_OSTRUCTS1;
 					break;
 				case 's':
@@ -1825,7 +1814,7 @@ void HandleKeyboardShortcuts( )
 					}
 					iCurrentAction = ACTION_NULL;
 					iDrawMode = DRAW_MODE_OSTRUCTS;
-					ClickEditorButton( TERRAIN_PLACE_TREES );				
+					ClickEditorButton( TERRAIN_PLACE_TREES );
 					iEditorToolbarState = TBAR_MODE_DRAW_OSTRUCTS;
 					break;
 				case 'T':
@@ -1859,9 +1848,9 @@ void HandleKeyboardShortcuts( )
 					}
 					break;
 
-				case 'x': 
+				case 'x':
 					if (EditorInputEvent.usKeyState & ALT_DOWN )
-					{ 
+					{
 						if( InOverheadMap() )
 							KillOverheadMap();
 						if( gfEditingDoor )
@@ -1903,7 +1892,6 @@ void HandleKeyboardShortcuts( )
 //
 UINT32 PerformSelectedAction( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiRetVal;
 
 	uiRetVal = EDIT_SCREEN;
@@ -1920,9 +1908,9 @@ UINT32 PerformSelectedAction( void )
 		case ACTION_ERASE_WAYPOINT:
 			EraseMercWaypoint();
 			break;
-	
+
 		case ACTION_SET_WAYPOINT:
-			iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );			
+			iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
 			AddMercWaypoint( iMapIndex );
 			break;
 
@@ -1935,10 +1923,10 @@ UINT32 PerformSelectedAction( void )
 			fHelpScreen = TRUE;
 			fAllDone = FALSE;
 			break;
-	
+
 		case ACTION_QUICK_ERASE:
 			if ( (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA) && GetMouseXY( &sGridX, &sGridY ) )
-			{		
+			{
 				iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
 
 				if ( iMapIndex < 0x8000 )
@@ -1947,7 +1935,7 @@ UINT32 PerformSelectedAction( void )
 				}
 			}
 			break;
-	
+
 		case ACTION_QUIT_GAME:
 			gfProgramIsRunning = FALSE;
 		case ACTION_EXIT_EDITOR:
@@ -2006,7 +1994,7 @@ UINT32 PerformSelectedAction( void )
 			else
 			{
 				gCurrentBackground = TerrainBackgroundTile;
-				SetBackgroundTexture( );		
+				SetBackgroundTexture( );
 				fBeenWarned = FALSE;
 			}
 			break;
@@ -2016,23 +2004,23 @@ UINT32 PerformSelectedAction( void )
 			switch ( iDrawMode )
 			{
 				case DRAW_MODE_BANKS:
-					if ( iNumBanksSelected > 0 )	
+					if ( iNumBanksSelected > 0 )
 						iCurBank = (iCurBank + 1) % iNumBanksSelected;
 					break;
 				case DRAW_MODE_ROADS:
-					if ( iNumRoadsSelected > 0 )	
+					if ( iNumRoadsSelected > 0 )
 						iCurBank = (iCurBank + 1) % iNumRoadsSelected;
 					break;
 				case DRAW_MODE_WALLS:
-					if ( iNumWallsSelected > 0 )	
+					if ( iNumWallsSelected > 0 )
 						iCurBank = (iCurBank + 1) % iNumWallsSelected;
 					break;
 				case DRAW_MODE_DOORS:
-					if ( iNumDoorsSelected > 0 )	
+					if ( iNumDoorsSelected > 0 )
 						iCurBank = (iCurBank + 1) % iNumDoorsSelected;
 					break;
 				case DRAW_MODE_WINDOWS:
-					if ( iNumWindowsSelected > 0 )	
+					if ( iNumWindowsSelected > 0 )
 						iCurBank = (iCurBank + 1) % iNumWindowsSelected;
 					break;
 				case DRAW_MODE_ROOFS:
@@ -2044,11 +2032,11 @@ UINT32 PerformSelectedAction( void )
 						iCurBank = (iCurBank + 1) % iNumBrokenWallsSelected;
 					break;
 				case DRAW_MODE_DECOR:
-					if ( iNumDecorSelected > 0 )	
+					if ( iNumDecorSelected > 0 )
 						iCurBank = (iCurBank + 1) % iNumDecorSelected;
 					break;
 				case DRAW_MODE_DECALS:
-					if ( iNumDecalsSelected > 0 )	
+					if ( iNumDecalsSelected > 0 )
 						iCurBank = (iCurBank + 1) % iNumDecalsSelected;
 					break;
 				case DRAW_MODE_FLOORS:
@@ -2094,23 +2082,23 @@ UINT32 PerformSelectedAction( void )
 			switch ( iDrawMode )
 			{
 				case DRAW_MODE_BANKS:
-					if ( iNumBanksSelected > 0 )	
+					if ( iNumBanksSelected > 0 )
 						iCurBank = (iCurBank + (iNumBanksSelected - 1)) % iNumBanksSelected;
 					break;
 				case DRAW_MODE_ROADS:
-					if ( iNumRoadsSelected > 0 )	
+					if ( iNumRoadsSelected > 0 )
 						iCurBank = (iCurBank + (iNumRoadsSelected - 1)) % iNumRoadsSelected;
 					break;
 				case DRAW_MODE_WALLS:
-					if ( iNumWallsSelected > 0 )	
+					if ( iNumWallsSelected > 0 )
 						iCurBank = (iCurBank + (iNumWallsSelected - 1)) % iNumWallsSelected;
 					break;
 				case DRAW_MODE_DOORS:
-					if ( iNumDoorsSelected > 0 )	
+					if ( iNumDoorsSelected > 0 )
 						iCurBank = (iCurBank + (iNumDoorsSelected - 1)) % iNumDoorsSelected;
 					break;
 				case DRAW_MODE_WINDOWS:
-					if ( iNumWindowsSelected > 0 )	
+					if ( iNumWindowsSelected > 0 )
 						iCurBank = (iCurBank + (iNumWindowsSelected - 1)) % iNumWindowsSelected;
 					break;
 				case DRAW_MODE_ROOFS:
@@ -2118,15 +2106,15 @@ UINT32 PerformSelectedAction( void )
 						iCurBank = (iCurBank + (iNumRoofsSelected - 1)) % iNumRoofsSelected;
 					break;
 				case DRAW_MODE_BROKEN_WALLS:
-					if ( iNumBrokenWallsSelected > 0 )	
+					if ( iNumBrokenWallsSelected > 0 )
 						iCurBank = (iCurBank + (iNumBrokenWallsSelected - 1)) % iNumBrokenWallsSelected;
 					break;
 				case DRAW_MODE_DECOR:
-					if ( iNumDecorSelected > 0 )	
+					if ( iNumDecorSelected > 0 )
 						iCurBank = (iCurBank + (iNumDecorSelected - 1)) % iNumDecorSelected;
 					break;
 				case DRAW_MODE_DECALS:
-					if ( iNumDecalsSelected > 0 )	
+					if ( iNumDecalsSelected > 0 )
 						iCurBank = (iCurBank + (iNumDecalsSelected - 1)) % iNumDecalsSelected;
 					break;
 				case DRAW_MODE_FLOORS:
@@ -2203,7 +2191,7 @@ UINT32 PerformSelectedAction( void )
 			UpdateLastActionBeforeLeaving();
 			return LOADSAVE_SCREEN;
 
-		case ACTION_LOAD_MAP:	
+		case ACTION_LOAD_MAP:
 			UpdateLastActionBeforeLeaving();
 			return LOADSAVE_SCREEN;
 
@@ -2224,7 +2212,7 @@ UINT32 PerformSelectedAction( void )
 			fAllDone = FALSE;
 			break;
 
-		case ACTION_SHADE_UP:	
+		case ACTION_SHADE_UP:
 			if ( EditorInputEvent.usKeyState & SHIFT_DOWN )
 			{
 				gShadePercent+= (FLOAT).05;
@@ -2241,7 +2229,7 @@ UINT32 PerformSelectedAction( void )
 			SetShadeTablePercent( gShadePercent );
 			break;
 
-		case ACTION_SHADE_DWN:	
+		case ACTION_SHADE_DWN:
 			if ( EditorInputEvent.usKeyState & SHIFT_DOWN )
 			{
 				gShadePercent-= (FLOAT).05;
@@ -2272,19 +2260,19 @@ UINT32 PerformSelectedAction( void )
 			AddWallToStructLayer( iMapIndex, FIRSTWALL19, TRUE );
 			break;
 
-		case ACTION_NEXT_STRUCT:	
+		case ACTION_NEXT_STRUCT:
 			CreateJA2SelectionWindow( SELWIN_OSTRUCTS );
 			fSelectionWindow = TRUE;
 			fAllDone = FALSE;
 			break;
-		
-		case ACTION_NEXT_STRUCT1:	
+
+		case ACTION_NEXT_STRUCT1:
 			CreateJA2SelectionWindow( SELWIN_OSTRUCTS1 );
 			fSelectionWindow = TRUE;
 			fAllDone = FALSE;
 			break;
 
-		case ACTION_NEXT_STRUCT2:	
+		case ACTION_NEXT_STRUCT2:
 			CreateJA2SelectionWindow( SELWIN_OSTRUCTS2 );
 			fSelectionWindow = TRUE;
 			fAllDone = FALSE;
@@ -2299,7 +2287,6 @@ UINT32 PerformSelectedAction( void )
 
 void CreateNewMap()
 {
-	PERFORMANCE_MARKER
 	if( gfSummaryWindowActive )
 		DestroySummaryWindow();
 
@@ -2350,7 +2337,6 @@ void CreateNewMap()
 
 UINT32 ProcessEditscreenMessageBoxResponse()
 {
-	PERFORMANCE_MARKER
 	RemoveMessageBox();
 	gfRenderWorld = TRUE;
 	if( gfConfirmExitPending )
@@ -2397,7 +2383,7 @@ UINT32 ProcessEditscreenMessageBoxResponse()
 	else if( iDrawMode == DRAW_MODE_NEW_GROUND )
 	{
 		gCurrentBackground = TerrainBackgroundTile;
-		SetBackgroundTexture( );		
+		SetBackgroundTexture( );
 		SetEditorTerrainTaskbarMode( TERRAIN_FGROUND_TEXTURES );
 		return EDIT_SCREEN;
 	}
@@ -2412,7 +2398,6 @@ UINT32 ProcessEditscreenMessageBoxResponse()
 //
 UINT32 WaitForHelpScreenResponse( void )
 {
-	PERFORMANCE_MARKER
 	InputAtom DummyEvent;
 	BOOLEAN fLeaveScreen;
 
@@ -2460,10 +2445,10 @@ UINT32 WaitForHelpScreenResponse( void )
 
 	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 187, L"0 - 9" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 187, L"Change map/tileset filename" );
-	
+
 	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 199, L"b" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 199, L"Change brush size" );
-	
+
 	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 211, L"d" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 211, L"Draw debris" );
 
@@ -2511,7 +2496,7 @@ UINT32 WaitForHelpScreenResponse( void )
 	if ( (_LeftButtonDown) || (_RightButtonDown) || fLeaveScreen )
 	{
 		fHelpScreen = FALSE;
-		
+
 		while( DequeueEvent( &DummyEvent ) )
 			continue;
 
@@ -2534,7 +2519,6 @@ UINT32 WaitForHelpScreenResponse( void )
 //
 UINT32 WaitForSelectionWindowResponse( void )
 {
-	PERFORMANCE_MARKER
 	InputAtom DummyEvent;
 
 	while (DequeueEvent(&DummyEvent) == TRUE)
@@ -2563,7 +2547,7 @@ UINT32 WaitForSelectionWindowResponse( void )
 			}
 		}
 	}
-	
+
 	if ( DoWindowSelection( ) )
 	{
 		fSelectionWindow = FALSE;
@@ -2603,7 +2587,6 @@ UINT32 WaitForSelectionWindowResponse( void )
 //
 void FindTilesetComments(void)
 {
-	PERFORMANCE_MARKER
 }
 
 
@@ -2614,7 +2597,6 @@ void FindTilesetComments(void)
 //
 void GetMasterList(void)
 {
-	PERFORMANCE_MARKER
 }
 
 
@@ -2626,7 +2608,6 @@ void GetMasterList(void)
 //
 void ShowCurrentSlotSurface( UINT32 vSurface, INT32 iWindow )
 {
-	PERFORMANCE_MARKER
 	SGPRect			ClipRect, WinRect;
 	INT32				iStartX;
 	INT32				iStartY;
@@ -2640,8 +2621,8 @@ void ShowCurrentSlotSurface( UINT32 vSurface, INT32 iWindow )
 	WinRect.iRight = (iWindow == 0) ? (iScreenWidthOffset + 485) : (iScreenWidthOffset + 637);
 	WinRect.iBottom = 2 * iScreenHeightOffset + 399;
 
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, WinRect.iLeft - 1, WinRect.iTop - 1, 
-																					WinRect.iRight + 1, WinRect.iBottom + 1, 
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, WinRect.iLeft - 1, WinRect.iTop - 1,
+																					WinRect.iRight + 1, WinRect.iBottom + 1,
 																					Get16BPPColor(FROMRGB(128, 0, 0)) );
 
 	iWinWidth = WinRect.iRight - WinRect.iLeft;
@@ -2679,8 +2660,8 @@ void ShowCurrentSlotSurface( UINT32 vSurface, INT32 iWindow )
 	}
 
 	vSfx.SrcRect = ClipRect;
-	BltVideoSurface( FRAME_BUFFER, vSurface, 0, 
-																iStartX, iStartY, 
+	BltVideoSurface( FRAME_BUFFER, vSurface, 0,
+																iStartX, iStartY,
 																VS_BLT_SRCSUBRECT, &vSfx );
 }
 
@@ -2688,12 +2669,11 @@ void ShowCurrentSlotSurface( UINT32 vSurface, INT32 iWindow )
 //----------------------------------------------------------------------------------------------
 //	ShowCurrentSlotImage
 //
-//	Displays the image of the currently highlighted tileset slot image. Usually this is for 
+//	Displays the image of the currently highlighted tileset slot image. Usually this is for
 //	8 bit image (.STI) files
 //
 void ShowCurrentSlotImage( HVOBJECT hVObj, INT32 iWindow )
 {
-	PERFORMANCE_MARKER
 	SGPRect			ClipRect, NewRect;
 	INT32				iStartX;
 	INT32				iStartY;
@@ -2731,7 +2711,7 @@ void ShowCurrentSlotImage( HVOBJECT hVObj, INT32 iWindow )
 	pETRLEObject->sOffsetY = 0;
 
 	SetObjectShade( hVObj, DEFAULT_SHADE_LEVEL );
-	BltVideoObject( FRAME_BUFFER, hVObj, 0, (iStartX), (iStartY), 
+	BltVideoObject( FRAME_BUFFER, hVObj, 0, (iStartX), (iStartY),
 								VO_BLT_SRCTRANSPARENCY, NULL);
 
 	pETRLEObject->sOffsetX = sTempOffsetX;
@@ -2747,7 +2727,6 @@ void ShowCurrentSlotImage( HVOBJECT hVObj, INT32 iWindow )
 //
 BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 {
-	PERFORMANCE_MARKER
 	INT32 iLightHandle;
 	UINT8 ubIntensity;
 	STRING512 Filename;
@@ -2763,21 +2742,21 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 		ubIntensity = (UINT8)((float)sRadius / LIGHT_DECAY);
 		if ( (iLightHandle = LightCreateOmni( ubIntensity, sRadius )) == (-1) )
 		{
-			// Can't create light template		
+			// Can't create light template
 			DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't create light template for radius %d",sRadius) );
 			return( FALSE );
 		}
 
 		if ( !LightSave( iLightHandle, Filename ) )
 		{
-			// Can't save light template		
+			// Can't save light template
 			DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't save light template for radius %d",sRadius) );
 			return( FALSE );
-		}		
+		}
 
 		if ( (iLightHandle = LightSpriteCreate( Filename, sType )) == (-1) )
 		{
-			// Can't create sprite	
+			// Can't create sprite
 			DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't create light sprite of radius %d",sRadius) );
 			return( FALSE );
 		}
@@ -2785,7 +2764,7 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 
 	if ( !LightSpritePower( iLightHandle, TRUE ) )
 	{
-		// Can't turn this light on		
+		// Can't turn this light on
 		DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't turn on light %d",iLightHandle) );
 		return( FALSE );
 	}
@@ -2823,15 +2802,14 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 //----------------------------------------------------------------------------------------------
 //	RemoveLight
 //
-//	Removes (erases) all lights at a given map tile location. Lights that are attached to a merc 
+//	Removes (erases) all lights at a given map tile location. Lights that are attached to a merc
 //	are not deleted.
 //
-//	Returns TRUE if deleted the light, otherwise, returns FALSE. 
+//	Returns TRUE if deleted the light, otherwise, returns FALSE.
 //	i.e. FALSE is not an error condition!
 //
 BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 {
-	PERFORMANCE_MARKER
 	INT32 iCount;
 	UINT16 cnt;
 	SOLDIERTYPE *pSoldier;
@@ -2847,7 +2825,7 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
 	{
 		if(LightSprites[iCount].uiFlags & LIGHT_SPR_ACTIVE)
-		{		
+		{
 			if ( LightSprites[iCount].iX == iMapX && LightSprites[iCount].iY == iMapY )
 			{
 				// Found a light, so let's see if it belong to a merc!
@@ -2876,9 +2854,9 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 		}
 	}
 	if( fRemovedLight )
-	{ 
+	{
 		UINT16 usRadius;
-		//Assuming that the light naming convention doesn't change, then this following conversion 
+		//Assuming that the light naming convention doesn't change, then this following conversion
 		//should work.	Basically, the radius values aren't stored in the lights, so I have pull
 		//the radius out of the filename.	Ex:	L-RO5.LHT
 		usRadius = pLastLightName[4] - 0x30;
@@ -2893,11 +2871,10 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 //	ShowLightPositionHandles
 //
 //	For all lights that are in the world (except lights attached to mercs), this function places
-//	a marker at it's location for editing purposes.	
+//	a marker at it's location for editing purposes.
 //
 void ShowLightPositionHandles( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCount;
 	INT32 iMapIndex;
 	UINT16 cnt;
@@ -2909,7 +2886,7 @@ void ShowLightPositionHandles( void )
 	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
 	{
 		if(LightSprites[iCount].uiFlags & LIGHT_SPR_ACTIVE)
-		{		
+		{
 			// Found a light, so let's see if it belong to a merc!
 			fSoldierLight = FALSE;
 			for ( cnt = 0; cnt < MAX_NUM_SOLDIERS && !fSoldierLight; cnt++ )
@@ -2942,7 +2919,6 @@ void ShowLightPositionHandles( void )
 //
 void RemoveLightPositionHandles( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCount;
 	INT32 iMapIndex;
 	UINT16 cnt;
@@ -2953,7 +2929,7 @@ void RemoveLightPositionHandles( void )
 	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
 	{
 		if(LightSprites[iCount].uiFlags & LIGHT_SPR_ACTIVE)
-		{		
+		{
 			// Found a light, so let's see if it belong to a merc!
 			fSoldierLight = FALSE;
 			for ( cnt = 0; cnt < MAX_NUM_SOLDIERS && !fSoldierLight; cnt++ )
@@ -2993,9 +2969,8 @@ void RemoveLightPositionHandles( void )
 //
 BOOLEAN CheckForSlantRoofs( void )
 {
-	PERFORMANCE_MARKER
 	UINT16 usCheck;
-	
+
 	pSelList = SelRoom;
 	pNumSelList = &iNumRoomsSelected;
 
@@ -3013,17 +2988,16 @@ BOOLEAN CheckForSlantRoofs( void )
 //	MapOptimize
 //
 //	Runs through all map locations, and if it's outside the visible world, then we remove
-//	EVERYTHING from it since it will never be seen!	
+//	EVERYTHING from it since it will never be seen!
 //
 //	If it can be seen, then we remove all extraneous land tiles. We find the tile that has the first
 //	FULL TILE indicator, and delete anything that may come after it (it'll never be seen anyway)
 //
 //	Doing the above has shown to free up about 1.1 Megs on the default map. Deletion of non-viewable
 //	land pieces alone gained us about 600 K of memory.
-// 
+//
 void MapOptimize(void)
 {
-	PERFORMANCE_MARKER
 #if 0
 	INT16 gridno;
 	LEVELNODE *start, *head, *end, *node, *temp;
@@ -3041,7 +3015,7 @@ void MapOptimize(void)
 		{
 			// Tile is in viewable area so try to optimize any extra land pieces
 			pMapTile = &gpWorldLevelData[ gridno ];
-			
+
 			node = start = pMapTile->pLandStart;
 			head = pMapTile->pLandHead;
 
@@ -3049,7 +3023,7 @@ void MapOptimize(void)
 				node = start = head;
 
 			end = pMapTile->pLandTail;
-			
+
 			fChangedHead = fChangedTail = fFound = FALSE;
 			while ( !fFound && node != NULL )
 			{
@@ -3077,7 +3051,7 @@ void MapOptimize(void)
 */
 
 				// Now delete from the end to "node"
-				while( end != node && end != NULL ) 
+				while( end != node && end != NULL )
 				{
 					fChangedTail = TRUE;
 					temp = end->pPrev;
@@ -3112,7 +3086,6 @@ void MapOptimize(void)
 //
 BOOLEAN CheckForFences( void )
 {
-	PERFORMANCE_MARKER
 	UINT16 usCheck;
 	BOOLEAN fFence;
 	TILE_ELEMENT *T;
@@ -3134,7 +3107,7 @@ BOOLEAN CheckForFences( void )
 	return( fFence );
 }
 
-void EnsureStatusOfEditorButtons()	
+void EnsureStatusOfEditorButtons()
 {
 	if ( iDrawMode >= DRAW_MODE_ERASE )
 	{
@@ -3170,7 +3143,6 @@ void EnsureStatusOfEditorButtons()
 
 void HandleMouseClicksInGameScreen()
 {
-	PERFORMANCE_MARKER
 	INT16 sX, sY;
 	BOOLEAN fPrevState;
 	if( !GetMouseXY( &sGridX, &sGridY ) )
@@ -3183,7 +3155,7 @@ void HandleMouseClicksInGameScreen()
 	{	//if mouse cursor not in the game screen.
 		return;
 	}
-	
+
 	iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
 
 	fPrevState = gfRenderWorld;
@@ -3212,7 +3184,7 @@ void HandleMouseClicksInGameScreen()
 				LightSpriteRenderAll();	// To adjust building's lighting
 			return;
 		}
-		
+
 		switch ( iDrawMode )
 		{
 			case DRAW_MODE_SCHEDULEACTION:
@@ -3242,7 +3214,7 @@ void HandleMouseClicksInGameScreen()
 					gfFirstPlacement = FALSE;
 				}
 				break;
-			
+
 			case DRAW_MODE_LIGHT:
 				// Add a normal light to the world
 				if( gfFirstPlacement )
@@ -3278,7 +3250,7 @@ void HandleMouseClicksInGameScreen()
 			case DRAW_MODE_SMART_WINDOWS:				PasteSmartWindow( iMapIndex );				break;
 			case DRAW_MODE_SMART_BROKEN_WALLS:	PasteSmartBrokenWall( iMapIndex );		break;
 			case DRAW_MODE_EXITGRID:
-			case DRAW_MODE_FLOORS:							
+			case DRAW_MODE_FLOORS:
 			case DRAW_MODE_GROUND:
 			case DRAW_MODE_OSTRUCTS:
 			case DRAW_MODE_OSTRUCTS1:
@@ -3370,7 +3342,7 @@ void HandleMouseClicksInGameScreen()
 					ProcessAreaSelection( FALSE );
 				break;
 
-			case DRAW_MODE_SMART_WALLS:	
+			case DRAW_MODE_SMART_WALLS:
 				EraseWalls( iMapIndex );
 				break;
 			case DRAW_MODE_SMART_BROKEN_WALLS:
@@ -3409,7 +3381,6 @@ void HandleMouseClicksInGameScreen()
 
 BOOLEAN DoIRenderASpecialMouseCursor()
 {
-	PERFORMANCE_MARKER
 	INT16 sMouseX_M, sMouseY_M;
 
 	// Draw basic mouse
@@ -3433,7 +3404,7 @@ BOOLEAN DoIRenderASpecialMouseCursor()
 			case DRAW_MODE_OSTRUCTS:
 			case DRAW_MODE_OSTRUCTS1:
 				if(!fDontUseRandom)
-					break;		
+					break;
 			case DRAW_MODE_BANKS:
 			case DRAW_MODE_ROADS:
 			case DRAW_MODE_WALLS:
@@ -3452,7 +3423,7 @@ BOOLEAN DoIRenderASpecialMouseCursor()
 			case DRAW_MODE_SMART_BROKEN_WALLS:
 			case DRAW_MODE_ROOM:
 			case DRAW_MODE_NEWROOF:
-				return DrawTempMouseCursorObject( );	
+				return DrawTempMouseCursorObject( );
 
 			default:
 				break;
@@ -3467,7 +3438,6 @@ extern INT32 iEditorToolbarLastWallState;
 
 void ShowEntryPoints()
 {
-	PERFORMANCE_MARKER
 	//make entry points visible
 	if( gMapInformation.sNorthGridNo != -1 )
 	AddTopmostToTail( gMapInformation.sNorthGridNo, FIRSTPOINTERS2 );
@@ -3481,7 +3451,6 @@ void ShowEntryPoints()
 
 void HideEntryPoints()
 {
-	PERFORMANCE_MARKER
 	//remove entry point indicators
 	if( gMapInformation.sNorthGridNo != -1 )
 		RemoveAllTopmostsOfTypeRange( gMapInformation.sNorthGridNo, FIRSTPOINTERS, FIRSTPOINTERS );
@@ -3495,7 +3464,6 @@ void HideEntryPoints()
 
 void TaskOptionsCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		iTaskMode = TASK_OPTIONS;
@@ -3504,7 +3472,6 @@ void TaskOptionsCallback(GUI_BUTTON *btn,INT32 reason)
 
 void TaskTerrainCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		iTaskMode = TASK_TERRAIN;
@@ -3513,7 +3480,6 @@ void TaskTerrainCallback(GUI_BUTTON *btn,INT32 reason)
 
 void TaskBuildingCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		iTaskMode = TASK_BUILDINGS;
@@ -3522,7 +3488,6 @@ void TaskBuildingCallback(GUI_BUTTON *btn,INT32 reason)
 
 void TaskItemsCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		iTaskMode = TASK_ITEMS;
@@ -3531,7 +3496,6 @@ void TaskItemsCallback(GUI_BUTTON *btn,INT32 reason)
 
 void TaskMercsCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		iTaskMode = TASK_MERCS;
@@ -3540,7 +3504,6 @@ void TaskMercsCallback(GUI_BUTTON *btn,INT32 reason)
 
 void TaskMapInfoCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		iTaskMode = TASK_MAPINFO;
@@ -3549,7 +3512,6 @@ void TaskMapInfoCallback(GUI_BUTTON *btn,INT32 reason)
 
 void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fPrevState = gfRenderWorld;
 	gfRenderWorld = TRUE;
 	switch( iDrawMode )
@@ -3558,8 +3520,8 @@ void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 		case DRAW_MODE_SLANTED_ROOF:
 			AddBuildingSectionToWorld( &gSelectRegion );
 			break;
-		case DRAW_MODE_SAW_ROOM:	
-			RemoveBuildingSectionFromWorld( &gSelectRegion );	
+		case DRAW_MODE_SAW_ROOM:
+			RemoveBuildingSectionFromWorld( &gSelectRegion );
 			break;
 		case DRAW_MODE_CAVES:
 			if( fWithLeftButton )
@@ -3599,12 +3561,11 @@ void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 	}
 }
 
-//For any drawing modes that support large cursors, or even area selection, this function calls the 
+//For any drawing modes that support large cursors, or even area selection, this function calls the
 //appropriate paste function for every gridno within the cursor.	This is not used for functions that
 //rely completely on selection areas, such as buildings.
 void DrawObjectsBasedOnSelectionRegion()
 {
-	PERFORMANCE_MARKER
 	INT32 x, y, iMapIndex;
 	BOOLEAN fSkipTest;
 
@@ -3612,8 +3573,8 @@ void DrawObjectsBasedOnSelectionRegion()
 	//so the density test can be skipped.
 	fSkipTest = FALSE;
 	if( gusSelectionType == SMALLSELECTION ||
-		iDrawMode == DRAW_MODE_GROUND || 
-			iDrawMode == DRAW_MODE_FLOORS || 
+		iDrawMode == DRAW_MODE_GROUND ||
+			iDrawMode == DRAW_MODE_FLOORS ||
 		iDrawMode == DRAW_MODE_ROOMNUM ||
 			iDrawMode == DRAW_MODE_EXITGRID )
 		fSkipTest = TRUE;
@@ -3625,7 +3586,7 @@ void DrawObjectsBasedOnSelectionRegion()
 	//Process the cursor area
 	for ( x = gSelectRegion.iLeft; x <= gSelectRegion.iRight; x++ )
 	{
-		//process the region from 
+		//process the region from
 		for ( y = gSelectRegion.iTop; y <= (INT16)gSelectRegion.iBottom; y++ )
 		{
 			if( fSkipTest || PerformDensityTest() )
@@ -3633,9 +3594,9 @@ void DrawObjectsBasedOnSelectionRegion()
 				iMapIndex = MAPROWCOLTOPOS( y, x );
 				switch( iDrawMode )
 				{
-					case DRAW_MODE_EXITGRID:	
+					case DRAW_MODE_EXITGRID:
 						AddToUndoList( iMapIndex );
-						AddExitGridToWorld( iMapIndex, &gExitGrid );			
+						AddExitGridToWorld( iMapIndex, &gExitGrid );
 						AddTopmostToTail( (INT16)iMapIndex, FIRSTPOINTERS8 );
 						break;
 					case DRAW_MODE_DEBRIS:		PasteDebris( iMapIndex );													break;
@@ -3657,7 +3618,6 @@ extern void AutoLoadMap();
 //The main loop of the editor.
 UINT32	EditScreenHandle( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiRetVal;
 	BOOLEAN fShowingCursor;
 	StartFrameBufferRender();
@@ -3679,7 +3639,7 @@ UINT32	EditScreenHandle( void )
 
 	if( gfAutoLoadA9 == 2 )
 		AutoLoadMap();
-	
+
 	if ( fEditModeFirstTime )
 	{
 		EditModeInit( );
@@ -3703,8 +3663,8 @@ UINT32	EditScreenHandle( void )
 	// Handle the bottom task bar menu.
 	DoTaskbar();
 
-	//Process the variety of popup menus, dialogs, etc. 
-	
+	//Process the variety of popup menus, dialogs, etc.
+
 	if( gubMessageBoxStatus )
 	{
 		if( MessageBoxHandled( ) )
@@ -3725,12 +3685,12 @@ UINT32	EditScreenHandle( void )
 	EnsureStatusOfEditorButtons();
 
 	// Handle scrolling of the map if needed
-	if( !gfGotoGridNoUI && iDrawMode != DRAW_MODE_SHOW_TILESET && !gfSummaryWindowActive && 
+	if( !gfGotoGridNoUI && iDrawMode != DRAW_MODE_SHOW_TILESET && !gfSummaryWindowActive &&
 			!gfEditingDoor && !gfNoScroll && !InOverheadMap() )
 		ScrollWorld();
 
 	iCurrentAction = ACTION_NULL;
- 
+
 	UpdateCursorAreas();
 
 	HandleMouseClicksInGameScreen();
@@ -3750,14 +3710,14 @@ UINT32	EditScreenHandle( void )
 
 	if ( fBuildingShowRoomInfo )
 	{
-		SetRenderFlags( RENDER_FLAG_ROOMIDS );		
-	}	
+		SetRenderFlags( RENDER_FLAG_ROOMIDS );
+	}
 
 	if ( gfRenderWorld )
 	{
 		if( gCursorNode )
 			gCursorNode->uiFlags &= (~LEVELNODE_REVEAL);
-		
+
 		// This flag is the beast that makes the renderer do everything
 		MarkWorldDirty();
 
@@ -3806,7 +3766,6 @@ UINT32	EditScreenHandle( void )
 
 void CreateGotoGridNoUI()
 {
-	PERFORMANCE_MARKER
 	gfGotoGridNoUI = TRUE;
 	//Disable the rest of the editor
 	DisableEditorTaskbar();
@@ -3826,7 +3785,6 @@ void CreateGotoGridNoUI()
 
 void RemoveGotoGridNoUI()
 {
-	PERFORMANCE_MARKER
 	INT32 iMapIndex;
 	gfGotoGridNoUI = FALSE;
 	//Enable the rest of the editor
@@ -3847,7 +3805,6 @@ void RemoveGotoGridNoUI()
 
 void UpdateLastActionBeforeLeaving()
 {
-	PERFORMANCE_MARKER
 	if( iCurrentTaskbar == TASK_MERCS )
 		IndicateSelectedMerc( SELECT_NO_MERC );
 	SpecifyItemToEdit( NULL, -1 );
@@ -3855,7 +3812,6 @@ void UpdateLastActionBeforeLeaving()
 
 void ReloadMap()
 {
-	PERFORMANCE_MARKER
 	CHAR16 szFilename[30];
 	swprintf( szFilename, L"%S", gubFilename );
 	ExternalLoadMap( szFilename );
@@ -3887,6 +3843,6 @@ UINT32 EditScreenShutdown( )
 
 
 
- 
+
 
 

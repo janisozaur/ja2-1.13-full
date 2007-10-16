@@ -50,7 +50,7 @@ INT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAni
 //			Now we have an allocated soldier, we just need to set him in the world!
 // 3) When we want them in the world, call AddSoldierToSector().
 //			This function sets the graphic in the world, lighting effects, etc
-//			It also formally adds it to the TacticalSoldier slot and interface panel slot.			
+//			It also formally adds it to the TacticalSoldier slot and interface panel slot.
 
 
 
@@ -58,7 +58,6 @@ INT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAni
 //destination was sittable (though it was possible that that location would be trapped.
 INT16 FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
-	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2;
@@ -71,7 +70,7 @@ INT16 FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 u
 	UINT8 ubSaveNPCAPBudget;
 	UINT8 ubSaveNPCDistLimit;
 
-	//Save AI pathing vars.	changing the distlimit restricts how 
+	//Save AI pathing vars.	changing the distlimit restricts how
 	//far away the pathing will consider.
 	ubSaveNPCAPBudget = gubNPCAPBudget;
 	ubSaveNPCDistLimit = gubNPCDistLimit;
@@ -83,7 +82,7 @@ INT16 FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 u
 	soldier.pathing.bLevel = 0;
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
- 
+
 	sTop		= ubRadius;
 	sBottom = -ubRadius;
 	sLeft	= - ubRadius;
@@ -106,11 +105,11 @@ INT16 FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 u
 		}
 	}
 
-	//Now, find out which of these gridnos are reachable 
+	//Now, find out which of these gridnos are reachable
 	//(use the fake soldier and the pathing settings)
 	FindBestPath( &soldier, NOWHERE, 0, WALKING, COPYREACHABLE, ( PATH_IGNORE_PERSON_AT_DEST | PATH_THROUGH_PEOPLE ) );
-	
-	uiLowestRange = 999999;	
+
+	uiLowestRange = 999999;
 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
@@ -119,7 +118,7 @@ INT16 FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 u
 		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
 		{
 			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) 
+			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS )
 				&& gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
 			{
 				// Go on sweet stop
@@ -128,7 +127,7 @@ INT16 FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 u
 					// ATE: INstead of using absolute range, use the path cost!
 				//uiRange = PlotPath( &soldier, sGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, WALKING, NOT_STEALTH, FORWARD, 50 );
 					uiRange = CardinalSpacesAway( sSweetGridNo, sGridNo );
-					
+
 				//	if ( uiRange == 0 )
 				//	{
 				//		uiRange = 999999;
@@ -160,7 +159,6 @@ INT16 FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 u
 
 INT16 FindGridNoFromSweetSpotThroughPeople( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
-	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2;
@@ -173,7 +171,7 @@ INT16 FindGridNoFromSweetSpotThroughPeople( SOLDIERTYPE *pSoldier, INT16 sSweetG
 	UINT8 ubSaveNPCAPBudget;
 	UINT8 ubSaveNPCDistLimit;
 
-	//Save AI pathing vars.	changing the distlimit restricts how 
+	//Save AI pathing vars.	changing the distlimit restricts how
 	//far away the pathing will consider.
 	ubSaveNPCAPBudget = gubNPCAPBudget;
 	ubSaveNPCDistLimit = gubNPCDistLimit;
@@ -185,7 +183,7 @@ INT16 FindGridNoFromSweetSpotThroughPeople( SOLDIERTYPE *pSoldier, INT16 sSweetG
 	soldier.pathing.bLevel = 0;
 	soldier.bTeam = pSoldier->bTeam;
 	soldier.sGridNo = sSweetGridNo;
- 
+
 	sTop		= ubRadius;
 	sBottom = -ubRadius;
 	sLeft	= - ubRadius;
@@ -208,11 +206,11 @@ INT16 FindGridNoFromSweetSpotThroughPeople( SOLDIERTYPE *pSoldier, INT16 sSweetG
 		}
 	}
 
-	//Now, find out which of these gridnos are reachable 
+	//Now, find out which of these gridnos are reachable
 	//(use the fake soldier and the pathing settings)
 	FindBestPath( &soldier, NOWHERE, 0, WALKING, COPYREACHABLE, ( PATH_IGNORE_PERSON_AT_DEST | PATH_THROUGH_PEOPLE ) );
-	
-	uiLowestRange = 999999;	
+
+	uiLowestRange = 999999;
 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
@@ -221,7 +219,7 @@ INT16 FindGridNoFromSweetSpotThroughPeople( SOLDIERTYPE *pSoldier, INT16 sSweetG
 		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
 		{
 			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) 
+			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS )
 				&& gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
 			{
 				// Go on sweet stop
@@ -260,7 +258,6 @@ INT16 FindGridNoFromSweetSpotThroughPeople( SOLDIERTYPE *pSoldier, INT16 sSweetG
 //destination was sittable (though it was possible that that location would be trapped.
 INT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc )
 {
-	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2, cnt3;
@@ -274,7 +271,7 @@ INT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAni
 	UINT8 ubSaveNPCDistLimit;
 	UINT8	ubBestDirection=0;
 
-	//Save AI pathing vars.	changing the distlimit restricts how 
+	//Save AI pathing vars.	changing the distlimit restricts how
 	//far away the pathing will consider.
 	ubSaveNPCAPBudget = gubNPCAPBudget;
 	ubSaveNPCDistLimit = gubNPCDistLimit;
@@ -316,11 +313,11 @@ INT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAni
 		}
 	}
 
-	//Now, find out which of these gridnos are reachable 
+	//Now, find out which of these gridnos are reachable
 	//(use the fake soldier and the pathing settings)
 	FindBestPath( &soldier, NOWHERE, 0, WALKING, COPYREACHABLE, ( PATH_IGNORE_PERSON_AT_DEST | PATH_THROUGH_PEOPLE ) );
-	
-	uiLowestRange = 999999;	
+
+	uiLowestRange = 999999;
 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
@@ -329,7 +326,7 @@ INT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAni
 		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
 		{
 			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) 
+			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS )
 				&& gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
 			{
 				// Go on sweet stop
@@ -423,7 +420,6 @@ INT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAni
 
 INT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc, INT8 bGivenDirection )
 {
-	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2, cnt3;
@@ -437,7 +433,7 @@ INT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( SOLDIERTYPE
 	UINT8 ubSaveNPCDistLimit;
 	UINT8	ubBestDirection=0;
 
-	//Save AI pathing vars.	changing the distlimit restricts how 
+	//Save AI pathing vars.	changing the distlimit restricts how
 	//far away the pathing will consider.
 	ubSaveNPCAPBudget = gubNPCAPBudget;
 	ubSaveNPCDistLimit = gubNPCDistLimit;
@@ -480,11 +476,11 @@ INT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( SOLDIERTYPE
 		}
 	}
 
-	//Now, find out which of these gridnos are reachable 
+	//Now, find out which of these gridnos are reachable
 	//(use the fake soldier and the pathing settings)
 	FindBestPath( &soldier, NOWHERE, 0, WALKING, COPYREACHABLE, ( PATH_IGNORE_PERSON_AT_DEST | PATH_THROUGH_PEOPLE ) );
-	
-	uiLowestRange = 999999;	
+
+	uiLowestRange = 999999;
 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
@@ -493,7 +489,7 @@ INT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( SOLDIERTYPE
 		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
 		{
 			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) 
+			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS )
 				&& gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
 			{
 				// Go on sweet stop
@@ -598,7 +594,6 @@ INT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( SOLDIERTYPE
 
 INT16 FindGridNoFromSweetSpotWithStructDataFromSoldier( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc, SOLDIERTYPE *pSrcSoldier )
 {
-	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2, cnt3;
@@ -612,11 +607,11 @@ INT16 FindGridNoFromSweetSpotWithStructDataFromSoldier( SOLDIERTYPE *pSoldier, U
 	UINT8	ubBestDirection=0;
 	INT16 sSweetGridNo;
 	SOLDIERTYPE soldier;
-	
+
 	sSweetGridNo = pSrcSoldier->sGridNo;
 
 
-	//Save AI pathing vars.	changing the distlimit restricts how 
+	//Save AI pathing vars.	changing the distlimit restricts how
 	//far away the pathing will consider.
 	ubSaveNPCAPBudget = gubNPCAPBudget;
 	ubSaveNPCDistLimit = gubNPCDistLimit;
@@ -651,10 +646,10 @@ INT16 FindGridNoFromSweetSpotWithStructDataFromSoldier( SOLDIERTYPE *pSoldier, U
 		}
 	}
 
-	//Now, find out which of these gridnos are reachable 
+	//Now, find out which of these gridnos are reachable
 	FindBestPath( &soldier, NOWHERE, 0, WALKING, COPYREACHABLE, ( PATH_IGNORE_PERSON_AT_DEST | PATH_THROUGH_PEOPLE ) );
-	
-	uiLowestRange = 999999;	
+
+	uiLowestRange = 999999;
 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
@@ -663,7 +658,7 @@ INT16 FindGridNoFromSweetSpotWithStructDataFromSoldier( SOLDIERTYPE *pSoldier, U
 		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
 		{
 			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) 
+			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS )
 				&& gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
 			{
 				// Go on sweet stop
@@ -754,7 +749,6 @@ INT16 FindGridNoFromSweetSpotWithStructDataFromSoldier( SOLDIERTYPE *pSoldier, U
 
 INT16 FindGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
-	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2;
@@ -770,7 +764,7 @@ INT16 FindGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, INT16 sS
 	sLeft	= - ubRadius;
 	sRight	= ubRadius;
 
-	uiLowestRange = 999999;	
+	uiLowestRange = 999999;
 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
@@ -785,7 +779,7 @@ INT16 FindGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, INT16 sS
 				continue;
 			}
 
-			if ( sGridNo >=0 && sGridNo < WORLD_MAX && 
+			if ( sGridNo >=0 && sGridNo < WORLD_MAX &&
 					sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) )
 			{
 
@@ -817,13 +811,12 @@ INT16 FindGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, INT16 sS
 	else
 	{
 		return( NOWHERE );
-	}	
+	}
 }
 
 
 INT16 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection, INT8 ubQuardentDir )
 {
-	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2;
@@ -846,7 +839,7 @@ INT16 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( SOLDIERTYPE *pSoldier
 		sLeft = 0;
 	}
 
-	uiLowestRange = 999999;	
+	uiLowestRange = 999999;
 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
@@ -861,7 +854,7 @@ INT16 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( SOLDIERTYPE *pSoldier
 				continue;
 			}
 
-			if ( sGridNo >=0 && sGridNo < WORLD_MAX && 
+			if ( sGridNo >=0 && sGridNo < WORLD_MAX &&
 					sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) )
 			{
 
@@ -898,7 +891,6 @@ INT16 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( SOLDIERTYPE *pSoldier
 
 BOOLEAN CanSoldierReachGridNoInGivenTileLimit( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT16 sMaxTiles, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	INT32 iNumTiles;
 	INT16	sActionGridNo;
 	UINT8	ubDirection;
@@ -912,7 +904,7 @@ BOOLEAN CanSoldierReachGridNoInGivenTileLimit( SOLDIERTYPE *pSoldier, INT16 sGri
 
 	if ( sActionGridNo == -1 )
 	{
-		sActionGridNo = sGridNo;		
+		sActionGridNo = sGridNo;
 	}
 
 	if ( sActionGridNo == pSoldier->sGridNo )
@@ -935,7 +927,6 @@ BOOLEAN CanSoldierReachGridNoInGivenTileLimit( SOLDIERTYPE *pSoldier, INT16 sGri
 
 INT16 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
-	PERFORMANCE_MARKER
 	INT16		sX, sY;
 	INT16		sGridNo;
 	INT32					leftmost;
@@ -949,7 +940,7 @@ INT16 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, 
 	INT16	cnt1, cnt2;
 	UINT8	ubRoomNum;
 
-	//Save AI pathing vars.	changing the distlimit restricts how 
+	//Save AI pathing vars.	changing the distlimit restricts how
 	//far away the pathing will consider.
 	ubSaveNPCAPBudget = gubNPCAPBudget;
 	ubSaveNPCDistLimit = gubNPCDistLimit;
@@ -982,7 +973,7 @@ INT16 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, 
 		}
 	}
 
-	//Now, find out which of these gridnos are reachable 
+	//Now, find out which of these gridnos are reachable
 	//(use the fake soldier and the pathing settings)
 	FindBestPath( &soldier, NOWHERE, 0, WALKING, COPYREACHABLE, ( PATH_IGNORE_PERSON_AT_DEST | PATH_THROUGH_PEOPLE ) );
 
@@ -995,8 +986,8 @@ INT16 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, 
 
 		sGridNo = sSweetGridNo + ( WORLD_COLS * sY ) + sX;
 
-		if ( sGridNo >=0 && sGridNo < WORLD_MAX && 
-				sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) 
+		if ( sGridNo >=0 && sGridNo < WORLD_MAX &&
+				sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS )
 				&& gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
 		{
 			// Go on sweet stop
@@ -1038,7 +1029,6 @@ INT16 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, 
 
 INT16 FindRandomGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
-	PERFORMANCE_MARKER
 	INT16		sX, sY;
 	INT16		sGridNo;
 	INT32					leftmost;
@@ -1059,7 +1049,7 @@ INT16 FindRandomGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, IN
 			continue;
 		}
 
-		if ( sGridNo >=0 && sGridNo < WORLD_MAX && 
+		if ( sGridNo >=0 && sGridNo < WORLD_MAX &&
 				sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) )
 		{
 			// Go on sweet stop
@@ -1088,7 +1078,6 @@ INT16 FindRandomGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, IN
 
 BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode )
 {
-	PERFORMANCE_MARKER
 	UINT8					ubDirection, ubCalculatedDirection;
 	SOLDIERTYPE		*pSoldier;
 	INT16					sGridNo;
@@ -1097,7 +1086,7 @@ BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOO
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("InternalAddSoldierToSector"));
 
 	pSoldier = MercPtrs[ ubID ];
-	
+
 	if ( pSoldier->bActive	)
 	{
 	// ATE: Make sure life of elliot is OK if from a meanwhile
@@ -1120,7 +1109,7 @@ BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOO
 		}
 		else
 		{
-			AddMercSlot( pSoldier );		
+			AddMercSlot( pSoldier );
 
 			// Add guy to sector flag
 			pSoldier->bInSector = TRUE;
@@ -1133,7 +1122,7 @@ BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOO
 			return( FALSE );
 		}
 
-		// Add to panel 
+		// Add to panel
 		CheckForAndAddMercToTeamPanel( pSoldier );
 
 		pSoldier->usQuoteSaidFlags &= (~SOLDIER_QUOTE_SAID_SPOTTING_CREATURE_ATTACK);
@@ -1204,7 +1193,7 @@ BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOO
 					{
 						// We found one
 						// Calculate direction...
-						ubDirection = (UINT8)GetDirectionToGridNoFromGridNo( sExitGridNo, sGridNo );						
+						ubDirection = (UINT8)GetDirectionToGridNoFromGridNo( sExitGridNo, sGridNo );
 					}
 				}
 			}
@@ -1231,21 +1220,18 @@ BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOO
 
 BOOLEAN AddSoldierToSector( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("AddSoldierToSector"));
 	return( InternalAddSoldierToSector( ubID, TRUE, FALSE, 0 , 0) );
 }
 
 BOOLEAN AddSoldierToSectorNoCalculateDirection( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("AddSoldierToSectorNoCalculateDirection"));
 	return( InternalAddSoldierToSector( ubID, FALSE, FALSE, 0, 0 ) );
 }
 
 BOOLEAN AddSoldierToSectorNoCalculateDirectionUseAnimation( UINT8 ubID, UINT16 usAnimState, UINT16 usAnimCode )
 {
-	PERFORMANCE_MARKER
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("AddSoldierToSectorNoCalculateDirectionUseAnimation"));
 	return( InternalAddSoldierToSector( ubID, FALSE, TRUE, usAnimState, usAnimCode ) );
 }
@@ -1253,7 +1239,6 @@ BOOLEAN AddSoldierToSectorNoCalculateDirectionUseAnimation( UINT8 ubID, UINT16 u
 
 void InternalSoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fDoTransition )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
 	INT16 sGoodGridNo;
@@ -1301,7 +1286,6 @@ void InternalSoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN
 
 void SoldierInSectorIncompaciated( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
 	INT16 sGoodGridNo;
@@ -1331,7 +1315,6 @@ void SoldierInSectorIncompaciated( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 /*
 void SoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	InternalSoldierInSectorSleep( pSoldier, sGridNo, TRUE );
 }
 */
@@ -1339,7 +1322,6 @@ void SoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
 	INT16 sGoodGridNo;
@@ -1375,7 +1357,6 @@ void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
 	INT16 sGoodGridNo;
@@ -1411,7 +1392,6 @@ void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
 	INT16 sGoodGridNo;
@@ -1448,7 +1428,6 @@ extern void EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( SOL
 
 void AddSoldierToSectorGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	INT16 sNewGridNo;
 	UINT8	ubNewDirection;
@@ -1529,7 +1508,7 @@ void AddSoldierToSectorGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDir
 		{
 			// Find a sweetspot near...
 			sNewGridNo = FindGridNoFromSweetSpot( pSoldier, gMapInformation.sNorthGridNo, 4, &ubNewDirection );
-			pSoldier->EVENT_GetNewSoldierPath( sNewGridNo, WALKING );		
+			pSoldier->EVENT_GetNewSoldierPath( sNewGridNo, WALKING );
 		}
 
 		// If he's an enemy... set presence
@@ -1596,7 +1575,7 @@ void AddSoldierToSectorGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDir
 				}
 
 		// ATE: Make sure movement mode is up to date!
-				pSoldier->usUIMovementMode =	pSoldier->GetMoveStateBasedOnStance( gAnimControl[ pSoldier->usAnimState ].ubEndHeight );	
+				pSoldier->usUIMovementMode =	pSoldier->GetMoveStateBasedOnStance( gAnimControl[ pSoldier->usAnimState ].ubEndHeight );
 
 			}
 		}
@@ -1621,7 +1600,6 @@ void AddSoldierToSectorGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDir
 // IsMercOnTeam() checks to see if the passed in Merc Profile ID is currently on the player's team
 BOOLEAN IsMercOnTeam(UINT8 ubMercID)
 {
-	PERFORMANCE_MARKER
 	UINT16 cnt;
 	UINT8		ubLastTeamID;
 	SOLDIERTYPE		*pTeamSoldier;
@@ -1630,9 +1608,9 @@ BOOLEAN IsMercOnTeam(UINT8 ubMercID)
 
 	ubLastTeamID = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
 
-	// look for all mercs on the same team, 
+	// look for all mercs on the same team,
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= ubLastTeamID; cnt++,pTeamSoldier++)
-	{	
+	{
 		if ( pTeamSoldier->ubProfile == ubMercID )
 		{
 			if( pTeamSoldier->bActive )
@@ -1646,7 +1624,6 @@ BOOLEAN IsMercOnTeam(UINT8 ubMercID)
 // ATE: Added this new function for contract renewals
 BOOLEAN IsMercOnTeamAndAlive(UINT8 ubMercID)
 {
-	PERFORMANCE_MARKER
 	UINT16 cnt;
 	UINT8		ubLastTeamID;
 	SOLDIERTYPE		*pTeamSoldier;
@@ -1655,9 +1632,9 @@ BOOLEAN IsMercOnTeamAndAlive(UINT8 ubMercID)
 
 	ubLastTeamID = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
 
-	// look for all mercs on the same team, 
+	// look for all mercs on the same team,
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= ubLastTeamID; cnt++,pTeamSoldier++)
-	{	
+	{
 		if ( pTeamSoldier->ubProfile == ubMercID )
 		{
 			if( pTeamSoldier->bActive )
@@ -1675,7 +1652,6 @@ BOOLEAN IsMercOnTeamAndAlive(UINT8 ubMercID)
 
 BOOLEAN IsMercOnTeamAndInOmertaAlready(UINT8 ubMercID)
 {
-	PERFORMANCE_MARKER
 	UINT16 cnt;
 	UINT8		ubLastTeamID;
 	SOLDIERTYPE		*pTeamSoldier;
@@ -1684,9 +1660,9 @@ BOOLEAN IsMercOnTeamAndInOmertaAlready(UINT8 ubMercID)
 
 	ubLastTeamID = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
 
-	// look for all mercs on the same team, 
+	// look for all mercs on the same team,
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= ubLastTeamID; cnt++,pTeamSoldier++)
-	{	
+	{
 		if ( pTeamSoldier->ubProfile == ubMercID )
 		{
 			if ( pTeamSoldier->bActive && pTeamSoldier->bAssignment != IN_TRANSIT )
@@ -1699,7 +1675,6 @@ BOOLEAN IsMercOnTeamAndInOmertaAlready(UINT8 ubMercID)
 
 BOOLEAN IsMercOnTeamAndInOmertaAlreadyAndAlive(UINT8 ubMercID)
 {
-	PERFORMANCE_MARKER
 	UINT16 cnt;
 	UINT8		ubLastTeamID;
 	SOLDIERTYPE		*pTeamSoldier;
@@ -1708,9 +1683,9 @@ BOOLEAN IsMercOnTeamAndInOmertaAlreadyAndAlive(UINT8 ubMercID)
 
 	ubLastTeamID = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
 
-	// look for all mercs on the same team, 
+	// look for all mercs on the same team,
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= ubLastTeamID; cnt++,pTeamSoldier++)
-	{	
+	{
 		if ( pTeamSoldier->ubProfile == ubMercID )
 		{
 			if ( pTeamSoldier->bActive && pTeamSoldier->bAssignment != IN_TRANSIT )
@@ -1730,7 +1705,6 @@ BOOLEAN IsMercOnTeamAndInOmertaAlreadyAndAlive(UINT8 ubMercID)
 // GetSoldierIDFromMercID() Gets the Soldier ID from the Merc Profile ID, else returns -1
 INT16 GetSoldierIDFromMercID(UINT8 ubMercID)
 {
-	PERFORMANCE_MARKER
 	UINT16 cnt;
 	UINT8		ubLastTeamID;
 	SOLDIERTYPE		*pTeamSoldier;
@@ -1739,9 +1713,9 @@ INT16 GetSoldierIDFromMercID(UINT8 ubMercID)
 
 	ubLastTeamID = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
 
-	// look for all mercs on the same team, 
+	// look for all mercs on the same team,
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= ubLastTeamID; cnt++,pTeamSoldier++)
-	{	
+	{
 		if ( pTeamSoldier->ubProfile == ubMercID )
 		{
 			if( pTeamSoldier->bActive )

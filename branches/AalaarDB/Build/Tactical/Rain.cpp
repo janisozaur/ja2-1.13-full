@@ -87,12 +87,12 @@ class SOLDIERTYPE;
 
 UINT32 guiMaxRainDrops = 79;
 
-#define RESOLUTION_FACTOR_ON_MAXIMUM_DROPS			((FLOAT) ( SCREEN_WIDTH * SCREEN_HEIGHT ) / ((FLOAT) 640 * 480 ) ) 
+#define RESOLUTION_FACTOR_ON_MAXIMUM_DROPS			((FLOAT) ( SCREEN_WIDTH * SCREEN_HEIGHT ) / ((FLOAT) 640 * 480 ) )
 #define BASE_MAXIMUM_DROPS													guiMaxRainDrops * RESOLUTION_FACTOR_ON_MAXIMUM_DROPS
 
 #define DEGREE(a) ( 3.14159 / 180 * a )
 
-typedef struct 
+typedef struct
 {
 	BOOLEAN fAlive;
 
@@ -100,7 +100,7 @@ typedef struct
 	FLOAT fpY;
 	FLOAT fpIncrX;
 	FLOAT fpIncrY;
-	
+
 	FLOAT fpEndRelX;
 	FLOAT fpEndRelY;
 
@@ -135,7 +135,7 @@ FLOAT fpMinDropSpeed = 0;
 extern UINT32 guiCurrentScreen;
 //extern BOOLEAN gfAllowRain;
 
-extern INT16 gsVIEWPORT_WINDOW_END_Y;			
+extern INT16 gsVIEWPORT_WINDOW_END_Y;
 extern INT16 gsVIEWPORT_WINDOW_START_Y;
 
 #define VIDEO_OVERLAYS 100
@@ -146,7 +146,6 @@ extern MercPopUpBox *gPopUpTextBox;
 
 INT8 GetRainIntensityFromEnvWeather()
 {
-	PERFORMANCE_MARKER
 	INT8 bRes = 0;
 
 	// Debug!!!
@@ -160,7 +159,6 @@ INT8 GetRainIntensityFromEnvWeather()
 
 BOOLEAN IsItAllowedToRenderRain()
 {
-	PERFORMANCE_MARKER
 	if( !gGameExternalOptions.gfAllowRain )return FALSE;
 
 	if( !( guiEnvWeather & (WEATHER_FORECAST_THUNDERSHOWERS | WEATHER_FORECAST_SHOWERS) ) )return FALSE;
@@ -172,12 +170,11 @@ BOOLEAN IsItAllowedToRenderRain()
 
 void InitializeRainVideoObject( )
 {
-	PERFORMANCE_MARKER
 	VSURFACE_DESC		vs_desc;
 	UINT16					usWidth;
 	UINT16					usHeight;
 	UINT8						ubBitDepth;
-		
+
 	// Create render buffer
 	GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
 	vs_desc.fCreateFlags = VSURFACE_CREATE_DEFAULT | VSURFACE_SYSTEM_MEM_USAGE;
@@ -190,7 +187,6 @@ void InitializeRainVideoObject( )
 
 void InitializeRainData()
 {
-	PERFORMANCE_MARKER
 	InitializeRainVideoObject();
 
 	gRainRegion.left = 0;
@@ -201,7 +197,6 @@ void InitializeRainData()
 
 void ResetRain()
 {
-	PERFORMANCE_MARKER
 	if( pRainDrops )
 	{
 		MemFree( pRainDrops );
@@ -213,7 +208,6 @@ void ResetRain()
 
 void GenerateRainDropsList()
 {
-	PERFORMANCE_MARKER
 	guiCurrMaxAmountOfRainDrops = (UINT32)(BASE_MAXIMUM_DROPS) * gbCurrentRainIntensity;
 
 	pRainDrops = (TRainDrop *)MemAlloc( sizeof( TRainDrop ) * guiCurrMaxAmountOfRainDrops );
@@ -222,7 +216,6 @@ void GenerateRainDropsList()
 
 void KillOutOfRegionRainDrops()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiIndex;
 
 	for( uiIndex = 0; uiIndex < guiCurrMaxAmountOfRainDrops; ++uiIndex )
@@ -230,7 +223,7 @@ void KillOutOfRegionRainDrops()
 		TRainDrop *pCurr = &pRainDrops[ uiIndex ];
 
 		if( ( pCurr->fpX < gRainRegion.left || pCurr->fpX >= gRainRegion.right ||
-			pCurr->fpY < gRainRegion.top || pCurr->fpY >= gRainRegion.bottom ) && 
+			pCurr->fpY < gRainRegion.top || pCurr->fpY >= gRainRegion.bottom ) &&
 			( pCurr->fpX + pCurr->fpEndRelX < gRainRegion.left || pCurr->fpX + pCurr->fpEndRelX >= gRainRegion.right ||
 			pCurr->fpY + pCurr->fpEndRelY < gRainRegion.top || pCurr->fpY + pCurr->fpEndRelY >= gRainRegion.bottom ) )
 		{
@@ -243,7 +236,6 @@ void KillOutOfRegionRainDrops()
 
 void CreateRainDrops()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiIndex;
 	UINT32 uiCreatedDrops = 0;
 	FLOAT fpCos, fpSin, fpAbsTg;
@@ -284,7 +276,7 @@ void CreateRainDrops()
 
 		if( uiIndex < guiCurrMaxAmountOfRainDrops * PERCENT_OF_DROPS_GOING_TO_THE_EDGE_OF_SCREEN )
 		{
-			if( !fpCos ) 
+			if( !fpCos )
 				fpNumDropsToXBorder = 0;
 			else
 			{
@@ -362,7 +354,6 @@ void CreateRainDrops()
 
 void UpdateRainDrops()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiIndex;
 
 	for( uiIndex = 0; uiIndex < guiCurrMaxAmountOfRainDrops; ++uiIndex )
@@ -379,7 +370,7 @@ void UpdateRainDrops()
 		}else{
 			pCurr->fpEndRelX += pCurr->fpIncrX;
 			pCurr->fpEndRelY += pCurr->fpIncrY;
-			
+
 			if( ( pCurr->fpEndRelX > 0 && pCurr->fpIncrX > 0 ) ||
 				( pCurr->fpEndRelX < 0 && pCurr->fpIncrX < 0 ) ||
 				( pCurr->fpEndRelY > 0 && pCurr->fpIncrY > 0 ) ||
@@ -395,13 +386,11 @@ void UpdateRainDrops()
 
 void BlankRainRenderSurface()
 {
-	PERFORMANCE_MARKER
 	ColorFillVideoSurfaceArea( guiRainRenderSurface, gRainRegion.left, gRainRegion.top, gRainRegion.right, gRainRegion.bottom, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 }
 
 UINT16 GetDropColor()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiRGBPart = 32 + ( 15 - GetTimeOfDayAmbientLightLevel() ) * 8;
 
 	uiRGBPart = max( 0, uiRGBPart );
@@ -412,7 +401,6 @@ UINT16 GetDropColor()
 
 void RenderRainOnSurface()
 {
-	PERFORMANCE_MARKER
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	UINT32 uiIndex;
@@ -426,7 +414,7 @@ void RenderRainOnSurface()
 		TRainDrop *pCurr = &pRainDrops[ uiIndex ];
 
 		if( !pCurr->fAlive )continue;
-		
+
 		LineDraw( TRUE, (int)pCurr->fpX, (int)pCurr->fpY, (int)pCurr->fpX + (int)pCurr->fpEndRelX, (int)(pCurr->fpY + pCurr->fpEndRelY),	sDropsColor, pDestBuf );
 	}
 
@@ -435,7 +423,6 @@ void RenderRainOnSurface()
 
 void GenerateRainMaximums()
 {
-	PERFORMANCE_MARKER
 	if( gbCurrentRainIntensity == 1 )
 	{
 		fpMinDropAngleOfFalling = 45;
@@ -451,7 +438,7 @@ void GenerateRainMaximums()
 	}
 
 	fpCurrDropAngleOfFalling = fpMinDropAngleOfFalling + Random( (UINT32)(fpMaxDropAngleOfFalling - fpMinDropAngleOfFalling) );
-	
+
 	fpMinDropLength = MIN_DROP_LENGTH + ADD_DROP_LENGTH_IF_STORM * ( gbCurrentRainIntensity - 1 );
 	fpMaxDropLength = fpMinDropLength + DROP_LENGTH_RANGE;
 
@@ -466,7 +453,6 @@ void GenerateRainMaximums()
 
 void UpdateRainDropsProperities()
 {
-	PERFORMANCE_MARKER
 	fpCurrDropAngleOfFalling += Random( (UINT32)(1000 * DROP_ANGLE_CHANGE_RATE * gbCurrentRainIntensity * 2 )) / 1000.0f - DROP_ANGLE_CHANGE_RATE * gbCurrentRainIntensity;
 
 	fpCurrDropAngleOfFalling = max( fpMinDropAngleOfFalling, fpCurrDropAngleOfFalling );
@@ -489,7 +475,6 @@ void UpdateRainDropsProperities()
 
 void RandomizeRainDropsPosition()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiIndex;
 	UINT32 ubMoveTo;
 
@@ -516,7 +501,6 @@ void RandomizeRainDropsPosition()
 
 void RainClipVideoOverlay()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiIndex;
 	BACKGROUND_SAVE *pCurr;
 
@@ -534,7 +518,6 @@ void RainClipVideoOverlay()
 
 void RenderRain()
 {
-	PERFORMANCE_MARKER
 	if( !GetRainIntensityFromEnvWeather() && gbCurrentRainIntensity )
 	{
 		gbCurrentRainIntensity = GetRainIntensityFromEnvWeather();
@@ -578,7 +561,7 @@ void RenderRain()
 
 
 		guiCurrAmountOfDeadRainDrops = guiCurrMaxAmountOfRainDrops;
-		
+
 		CreateRainDrops();
 		RandomizeRainDropsPosition();
 	}

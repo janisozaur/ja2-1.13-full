@@ -134,7 +134,6 @@ UINT16	gusCivQuoteBoxHeight;
 
 void CopyNumEntriesIntoQuoteStruct( )
 {
-	PERFORMANCE_MARKER
 	INT32	cnt;
 
 	for ( cnt = 0; cnt < NUM_CIV_QUOTES; cnt++ )
@@ -147,7 +146,6 @@ void CopyNumEntriesIntoQuoteStruct( )
 
 BOOLEAN GetCivQuoteText( UINT8 ubCivQuoteID, UINT8 ubEntryID, STR16 zQuote )
 {
-	PERFORMANCE_MARKER
 	CHAR8 zFileName[164];
 
 	// Build filename....
@@ -173,7 +171,7 @@ BOOLEAN GetCivQuoteText( UINT8 ubCivQuoteID, UINT8 ubEntryID, STR16 zQuote )
 	// Get data...
 	LoadEncryptedDataFromFile( zFileName, zQuote, ubEntryID * 320, 320 );
 
-	if( zQuote[0] == 0 ) 
+	if( zQuote[0] == 0 )
 	{
 		return( FALSE );
 	}
@@ -183,7 +181,6 @@ BOOLEAN GetCivQuoteText( UINT8 ubCivQuoteID, UINT8 ubEntryID, STR16 zQuote )
 
 void SurrenderMessageBoxCallBack( UINT8 ubExitValue )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
 
@@ -224,12 +221,11 @@ void SurrenderMessageBoxCallBack( UINT8 ubExitValue )
 
 void ShutDownQuoteBox( BOOLEAN fForce )
 {
-	PERFORMANCE_MARKER
 	if ( !gCivQuoteData.bActive )
 	{
 		return;
 	}
-	
+
 	// Check for min time....
 	if ( ( GetJA2Clock( ) - gCivQuoteData.uiTimeOfCreation ) > 300 || fForce )
 	{
@@ -253,7 +249,6 @@ void ShutDownQuoteBox( BOOLEAN fForce )
 
 BOOLEAN ShutDownQuoteBoxIfActive( )
 {
-	PERFORMANCE_MARKER
 	if ( gCivQuoteData.bActive )
 	{
 		ShutDownQuoteBox( TRUE );
@@ -267,7 +262,6 @@ BOOLEAN ShutDownQuoteBoxIfActive( )
 
 INT8 GetCivType( SOLDIERTYPE *pCiv )
 {
-	PERFORMANCE_MARKER
 	if ( pCiv->ubProfile != NO_PROFILE )
 	{
 		return( CIV_TYPE_NA );
@@ -337,7 +331,6 @@ INT8 GetCivType( SOLDIERTYPE *pCiv )
 
 void RenderCivQuoteBoxOverlay( VIDEO_OVERLAY *pBlitter )
 {
-	PERFORMANCE_MARKER
 	if ( gCivQuoteData.iVideoOverlay != -1 )
 	{
 		RenderMercPopUpBoxFromIndex( gCivQuoteData.iDialogueBox, pBlitter->sX, pBlitter->sY,	pBlitter->uiDestBuff );
@@ -349,7 +342,6 @@ void RenderCivQuoteBoxOverlay( VIDEO_OVERLAY *pBlitter )
 
 void QuoteOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fLButtonDown = FALSE;
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -371,7 +363,6 @@ void QuoteOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT16 sX, INT16 sY )
 {
-	PERFORMANCE_MARKER
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 	CHAR16									zQuote[ 320 ];
 
@@ -402,10 +393,10 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 
 	// Create video oeverlay....
 	memset( &VideoOverlayDesc, 0, sizeof( VIDEO_OVERLAY_DESC ) );
-	
+
 	// Prepare text box
 	SET_USE_WINFONTS( TRUE );
-	SET_WINFONT( giSubTitleWinFont ); 	
+	SET_WINFONT( giSubTitleWinFont );
 	gCivQuoteData.iDialogueBox = PrepareMercPopupBox( gCivQuoteData.iDialogueBox , BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, gzCivQuote, DIALOGUE_DEFAULT_WIDTH, 0, 0, 0, &gusCivQuoteBoxWidth, &gusCivQuoteBoxHeight );
 	SET_USE_WINFONTS( FALSE );
 
@@ -452,7 +443,7 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 
 	//Define main region
 	MSYS_DefineRegion( &(gCivQuoteData.MouseRegion), VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,	VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
-						CURSOR_NORMAL, MSYS_NO_CALLBACK, QuoteOverlayClickCallback ); 
+						CURSOR_NORMAL, MSYS_NO_CALLBACK, QuoteOverlayClickCallback );
 	// Add region
 	MSYS_AddRegion( &(gCivQuoteData.MouseRegion) );
 
@@ -462,14 +453,13 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 	gCivQuoteData.uiTimeOfCreation = GetJA2Clock( );
 
 	gCivQuoteData.uiDelayTime = FindDelayForString( gzCivQuote ) + 500;
-	
+
 	gCivQuoteData.pCiv = pCiv;
 
 }
 
 UINT8 DetermineCivQuoteEntry( SOLDIERTYPE *pCiv, UINT8 *pubCivHintToUse, BOOLEAN fCanUseHints )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubCivType;
 	INT8	bTownId;
 	BOOLEAN	bCivLowLoyalty = FALSE;
@@ -688,11 +678,11 @@ UINT8 DetermineCivQuoteEntry( SOLDIERTYPE *pCiv, UINT8 *pubCivHintToUse, BOOLEAN
 
 		if ( PlayerControlsMine( bMineId ) )
 		{
-		return( CIV_QUOTE_MINERS_FOR_PLAYER ); 
+		return( CIV_QUOTE_MINERS_FOR_PLAYER );
 		}
 		else
 		{
-		return( CIV_QUOTE_MINERS_NOT_FOR_PLAYER ); 
+		return( CIV_QUOTE_MINERS_NOT_FOR_PLAYER );
 		}
 	}
 	}
@@ -764,7 +754,6 @@ UINT8 DetermineCivQuoteEntry( SOLDIERTYPE *pCiv, UINT8 *pubCivHintToUse, BOOLEAN
 
 void HandleCivQuote( )
 {
-	PERFORMANCE_MARKER
 	if ( gCivQuoteData.bActive )
 	{
 		// Check for min time....
@@ -778,7 +767,6 @@ void HandleCivQuote( )
 
 void StartCivQuote( SOLDIERTYPE *pCiv )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubCivQuoteID;
 	INT16	sX, sY;
 	UINT8	ubEntryID = 0;
@@ -848,7 +836,6 @@ void StartCivQuote( SOLDIERTYPE *pCiv )
 
 void InitCivQuoteSystem( )
 {
-	PERFORMANCE_MARKER
 	memset( &gCivQuotes, 0, sizeof( gCivQuotes ) );
 	CopyNumEntriesIntoQuoteStruct( );
 
@@ -861,7 +848,6 @@ void InitCivQuoteSystem( )
 
 BOOLEAN SaveCivQuotesToSaveGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten;
 
 	FileWrite( hFile, &gCivQuotes, sizeof( gCivQuotes ), &uiNumBytesWritten );
@@ -876,7 +862,6 @@ BOOLEAN SaveCivQuotesToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadCivQuotesFromLoadGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 
 	FileRead( hFile, &gCivQuotes, sizeof( gCivQuotes ), &uiNumBytesRead );

@@ -54,7 +54,6 @@ extern void	GuaranteeAtLeastXItemsOfIndex( UINT8 ubArmsDealer, UINT16 usItemInde
 
 void SetFactTrue( UINT16 usFact )
 {
-	PERFORMANCE_MARKER
 	// This function is here just for control flow purposes (debug breakpoints)
 	// and code is more readable that way
 
@@ -70,16 +69,14 @@ void SetFactTrue( UINT16 usFact )
 
 void SetFactFalse( UINT16 usFact )
 {
-	PERFORMANCE_MARKER
 	gubFact[usFact] = FALSE;
 }
 
 BOOLEAN CheckForNewShipment( void )
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL *			pItemPool;
 
-	if ( ( gWorldSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X ) && ( gWorldSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y ) && ( gbWorldSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z ) )	
+	if ( ( gWorldSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X ) && ( gWorldSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y ) && ( gbWorldSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z ) )
 	{
 		if ( GetItemPoolFromGround( BOBBYR_SHIPPING_DEST_GRIDNO, &pItemPool ) )
 		{
@@ -91,7 +88,6 @@ BOOLEAN CheckForNewShipment( void )
 
 BOOLEAN CheckNPCWounded( UINT8 ubProfileID, BOOLEAN fByPlayerOnly )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE * pSoldier;
 
 	// is the NPC is wounded at all?
@@ -108,7 +104,7 @@ BOOLEAN CheckNPCWounded( UINT8 ubProfileID, BOOLEAN fByPlayerOnly )
 			{
 				return( FALSE );
 			}
-		}			
+		}
 		else
 		{
 			return( TRUE );
@@ -117,13 +113,12 @@ BOOLEAN CheckNPCWounded( UINT8 ubProfileID, BOOLEAN fByPlayerOnly )
 	else
 	{
 		return( FALSE );
-		
+
 	}
 }
 
 BOOLEAN CheckNPCInOkayHealth( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE * pSoldier;
 
 	// is the NPC at better than half health?
@@ -140,7 +135,6 @@ BOOLEAN CheckNPCInOkayHealth( UINT8 ubProfileID )
 
 BOOLEAN CheckNPCBleeding( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE * pSoldier;
 
 	// the NPC is wounded...
@@ -158,7 +152,6 @@ BOOLEAN CheckNPCBleeding( UINT8 ubProfileID )
 
 BOOLEAN CheckNPCWithin( UINT8 ubFirstNPC, UINT8 ubSecondNPC, UINT8 ubMaxDistance )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE * pFirstNPC, * pSecondNPC;
 
 	pFirstNPC = FindSoldierByProfileID( ubFirstNPC, FALSE );
@@ -172,7 +165,6 @@ BOOLEAN CheckNPCWithin( UINT8 ubFirstNPC, UINT8 ubSecondNPC, UINT8 ubMaxDistance
 
 BOOLEAN CheckGuyVisible( UINT8 ubNPC, UINT8 ubGuy )
 {
-	PERFORMANCE_MARKER
 	// NB ONLY WORKS IF ON DIFFERENT TEAMS
 	SOLDIERTYPE * pNPC, * pGuy;
 
@@ -194,7 +186,6 @@ BOOLEAN CheckGuyVisible( UINT8 ubNPC, UINT8 ubGuy )
 
 BOOLEAN CheckNPCAt( UINT8 ubNPC, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE * pNPC;
 
 	pNPC = FindSoldierByProfileID( ubNPC, FALSE );
@@ -207,7 +198,6 @@ BOOLEAN CheckNPCAt( UINT8 ubNPC, INT16 sGridNo )
 
 BOOLEAN CheckNPCIsEnemy( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE * pNPC;
 
 	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
@@ -235,7 +225,6 @@ BOOLEAN CheckNPCIsEnemy( UINT8 ubProfileID )
 
 BOOLEAN CheckIfMercIsNearNPC( SOLDIERTYPE *pMerc, UINT8 ubProfileId )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *		pNPC;
 	INT16						sGridNo;
 
@@ -264,7 +253,6 @@ BOOLEAN CheckIfMercIsNearNPC( SOLDIERTYPE *pMerc, UINT8 ubProfileId )
 
 INT8 NumWoundedMercsNearby( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	INT8						bNumber = 0;
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pNPC;
@@ -296,7 +284,6 @@ INT8 NumWoundedMercsNearby( UINT8 ubProfileID )
 
 INT8 NumMercsNear( UINT8 ubProfileID, UINT8 ubMaxDist )
 {
-	PERFORMANCE_MARKER
 	INT8						bNumber = 0;
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pNPC;
@@ -328,7 +315,6 @@ INT8 NumMercsNear( UINT8 ubProfileID, UINT8 ubMaxDist )
 
 BOOLEAN CheckNPCIsEPC( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *		pNPC;
 
 	if ( gMercProfiles[ ubProfileID ].bMercStatus == MERC_IS_DEAD )
@@ -346,7 +332,6 @@ BOOLEAN CheckNPCIsEPC( UINT8 ubProfileID )
 
 BOOLEAN NPCInRoom( UINT8 ubProfileID, UINT8 ubRoomID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *		pNPC;
 
 	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
@@ -359,7 +344,6 @@ BOOLEAN NPCInRoom( UINT8 ubProfileID, UINT8 ubRoomID )
 
 BOOLEAN NPCInRoomRange( UINT8 ubProfileID, UINT8 ubRoomID1, UINT8 ubRoomID2 )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *		pNPC;
 
 	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
@@ -372,7 +356,6 @@ BOOLEAN NPCInRoomRange( UINT8 ubProfileID, UINT8 ubRoomID1, UINT8 ubRoomID2 )
 
 BOOLEAN PCInSameRoom( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *		pNPC;
 	UINT8						ubRoom;
 	INT8		bLoop;
@@ -396,14 +379,13 @@ BOOLEAN PCInSameRoom( UINT8 ubProfileID )
 			}
 		}
 	}
-	
+
 	return( FALSE );
 }
 
 
 BOOLEAN CheckTalkerStrong( void )
 {
-	PERFORMANCE_MARKER
 	if (gpSrcSoldier && gpSrcSoldier->bTeam == gbPlayerNum)
 	{
 		return( gpSrcSoldier->stats.bStrength >= 84 );
@@ -417,7 +399,6 @@ BOOLEAN CheckTalkerStrong( void )
 
 BOOLEAN CheckTalkerFemale( void )
 {
-	PERFORMANCE_MARKER
 	if (gpSrcSoldier && gpSrcSoldier->bTeam == gbPlayerNum && gpSrcSoldier->ubProfile != NO_PROFILE)
 	{
 		return( gMercProfiles[ gpSrcSoldier->ubProfile ].bSex == FEMALE );
@@ -431,7 +412,6 @@ BOOLEAN CheckTalkerFemale( void )
 
 BOOLEAN CheckTalkerUnpropositionedFemale( void )
 {
-	PERFORMANCE_MARKER
 	if (gpSrcSoldier && gpSrcSoldier->bTeam == gbPlayerNum && gpSrcSoldier->ubProfile != NO_PROFILE)
 	{
 		if ( !(gMercProfiles[ gpSrcSoldier->ubProfile ].ubMiscFlags2 & PROFILE_MISC_FLAG2_ASKED_BY_HICKS) )
@@ -451,7 +431,6 @@ BOOLEAN CheckTalkerUnpropositionedFemale( void )
 
 INT8 NumMalesPresent( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	INT8						bNumber = 0;
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pNPC;
@@ -487,7 +466,6 @@ INT8 NumMalesPresent( UINT8 ubProfileID )
 
 BOOLEAN FemalePresent( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pNPC;
 	SOLDIERTYPE *		pSoldier;
@@ -522,7 +500,6 @@ BOOLEAN FemalePresent( UINT8 ubProfileID )
 
 BOOLEAN CheckPlayerHasHead( void )
 {
-	PERFORMANCE_MARKER
 	INT8						bLoop;
 	SOLDIERTYPE *		pSoldier;
 
@@ -533,19 +510,18 @@ BOOLEAN CheckPlayerHasHead( void )
 		if ( pSoldier->bActive && pSoldier->stats.bLife > 0 )
 		{
 			if ( FindObjInObjRange( pSoldier, HEAD_2, HEAD_7 ) != NO_SLOT )
-			{			
+			{
 				return( TRUE );
 			}
 		}
 	}
 
 	return( FALSE );
-	
+
 }
 
 BOOLEAN CheckNPCSector( UINT8 ubProfileID, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE * pSoldier;
 
 	pSoldier = FindSoldierByProfileID( ubProfileID, TRUE );
@@ -572,7 +548,6 @@ BOOLEAN CheckNPCSector( UINT8 ubProfileID, INT16 sSectorX, INT16 sSectorY, INT8 
 
 BOOLEAN AIMMercWithin( INT16 sGridNo, INT16 sDistance )
 {
-	PERFORMANCE_MARKER
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pSoldier;
 
@@ -594,7 +569,6 @@ BOOLEAN AIMMercWithin( INT16 sGridNo, INT16 sDistance )
 
 BOOLEAN CheckNPCCowering( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *		pNPC;
 
 	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
@@ -607,7 +581,6 @@ BOOLEAN CheckNPCCowering( UINT8 ubProfileID )
 
 UINT8 CountBartenders( void )
 {
-	PERFORMANCE_MARKER
 	UINT8		ubLoop;
 	UINT8		ubBartenders = 0;
 
@@ -623,7 +596,6 @@ UINT8 CountBartenders( void )
 
 BOOLEAN CheckNPCIsUnderFire( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *		pNPC;
 
 	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
@@ -636,7 +608,6 @@ BOOLEAN CheckNPCIsUnderFire( UINT8 ubProfileID )
 
 BOOLEAN NPCHeardShot( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *		pNPC;
 
 	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
@@ -649,7 +620,6 @@ BOOLEAN NPCHeardShot( UINT8 ubProfileID )
 
 BOOLEAN InTownSectorWithTrainingLoyalty( INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubTown;
 	INT32 iMinLoyaltyToTrain = gGameExternalOptions.iMinLoyaltyToTrain;
 DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Quests");
@@ -667,7 +637,6 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Quests");
 
 BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	INT8 bTown = -1;
 
 
@@ -676,7 +645,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 		case FACT_DIMITRI_DEAD:
 			gubFact[ usFact ] = (gMercProfiles[ DIMITRI ].bMercStatus == MERC_IS_DEAD );
 			break;
-		case FACT_CURRENT_SECTOR_IS_SAFE:	
+		case FACT_CURRENT_SECTOR_IS_SAFE:
 			gubFact[FACT_CURRENT_SECTOR_IS_SAFE] = !( ( (gTacticalStatus.fEnemyInSector && NPCHeardShot( ubProfileID ) ) || gTacticalStatus.uiFlags & INCOMBAT ) );
 			break;
 		case FACT_BOBBYRAY_SHIPMENT_IN_TRANSIT:
@@ -747,7 +716,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 				gubFact[FACT_NPC_BLEEDING_BUT_OKAY] = FALSE;
 			}
 			break;
-		
+
 		case FACT_PLAYER_HAS_HEAD_AND_CARMEN_IN_SAN_MONA:
 			gubFact[usFact] = (CheckNPCSector( CARMEN, 5, MAP_ROW_C, 0 ) && CheckPlayerHasHead() );
 			break;
@@ -777,7 +746,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			if ( gMercProfiles[ 85 ].bMercStatus == MERC_IS_DEAD)
 			{
 				gubFact[FACT_BRENDA_IN_STORE_AND_ALIVE] = FALSE;
-			}	
+			}
 			// ensure in a building and nearby
 			else if ( !(NPCInRoom( 85, 47 ) )	)
 			{
@@ -906,12 +875,12 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			break;
 		case FACT_DYNAMO_IN_J9:
 			gubFact[usFact] = CheckNPCSector( DYNAMO, 9, MAP_ROW_J, 0 ) && NumEnemiesInAnySector( 9, 10, 0 );
-			break;			
+			break;
 		case FACT_DYNAMO_ALIVE:
 			gubFact[usFact] = ( gMercProfiles[ DYNAMO ].bMercStatus != MERC_IS_DEAD );
 			break;
 		case FACT_DYNAMO_SPEAKING_OR_NEARBY:
-			gubFact[usFact] = ( gpSrcSoldier != NULL && (gpSrcSoldier->ubProfile == DYNAMO || ( CheckNPCWithin( gpSrcSoldier->ubProfile, DYNAMO, 10 ) && CheckGuyVisible( gpSrcSoldier->ubProfile, DYNAMO ) ) ) ); 
+			gubFact[usFact] = ( gpSrcSoldier != NULL && (gpSrcSoldier->ubProfile == DYNAMO || ( CheckNPCWithin( gpSrcSoldier->ubProfile, DYNAMO, 10 ) && CheckGuyVisible( gpSrcSoldier->ubProfile, DYNAMO ) ) ) );
 			break;
 		case FACT_JOHN_EPC:
 			gubFact[usFact] = CheckNPCIsEPC( JOHN );
@@ -940,10 +909,10 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 
 		case FACT_ANOTHER_FIGHT_POSSIBLE:
 			gubFact[usFact] = AnotherFightPossible();
-			break;		
+			break;
 
 		case FACT_RECEIVING_INCOME_FROM_DCAC:
-			gubFact[usFact] = ( 
+			gubFact[usFact] = (
 				( PredictDailyIncomeFromAMine( MINE_DRASSEN ) > 0 ) &&
 				( PredictDailyIncomeFromAMine( MINE_ALMA ) > 0 ) &&
 				( PredictDailyIncomeFromAMine( MINE_CAMBRIA ) > 0 ) &&
@@ -970,7 +939,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			bTown = gMercProfiles[ ubProfileID ].bTown;
 			if( ( bTown != BLANK_SECTOR ) && gTownLoyalty[ bTown ].fStarted && gfTownUsesLoyalty[ bTown ])
 			{
-				gubFact[usFact] = ( (gTownLoyalty[ bTown ].ubRating >= LOYALTY_LOW_THRESHOLD ) && (gTownLoyalty[ bTown ].ubRating < LOYALTY_OK_THRESHOLD ) ); 
+				gubFact[usFact] = ( (gTownLoyalty[ bTown ].ubRating >= LOYALTY_LOW_THRESHOLD ) && (gTownLoyalty[ bTown ].ubRating < LOYALTY_OK_THRESHOLD ) );
 			}
 			else
 			{
@@ -1118,7 +1087,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 
 		case FACT_TONY_IN_BUILDING:
 			gubFact[usFact] = CheckNPCSector( TONY, 5, MAP_ROW_C, 0 ) && NPCInRoom( TONY, 50 );
-			break;			
+			break;
 
 		case FACT_SHANK_SPEAKING:
 			gubFact[usFact] = ( gpSrcSoldier && gpSrcSoldier->ubProfile == SHANK );
@@ -1151,7 +1120,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 		case FACT_JENNY_ALIVE:
 			gubFact[usFact] = gMercProfiles[ JENNY ].bMercStatus != MERC_IS_DEAD;
 			break;
-	
+
 		case FACT_ARNOLD_ALIVE:
 			gubFact[usFact] = gMercProfiles[ ARNIE ].bMercStatus != MERC_IS_DEAD;
 			break;
@@ -1224,7 +1193,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			break;
 
 		case FACT_SKYRIDER_IN_C16:
-			gubFact[ usFact ] = CheckNPCSector( SKYRIDER, 16, MAP_ROW_C, 0 );			
+			gubFact[ usFact ] = CheckNPCSector( SKYRIDER, 16, MAP_ROW_C, 0 );
 			break;
 		case FACT_SKYRIDER_IN_E14:
 			gubFact[ usFact ] = CheckNPCSector( SKYRIDER, 14, MAP_ROW_E, 0 );
@@ -1237,8 +1206,8 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			gubFact[usFact] = (gTacticalStatus.fCivGroupHostile[ KINGPIN_CIV_GROUP ] >= CIV_GROUP_WILL_BECOME_HOSTILE);
 			break;
 
-		case FACT_DYNAMO_NOT_SPEAKER:			
-			gubFact[usFact] = !( gpSrcSoldier != NULL && (gpSrcSoldier->ubProfile == DYNAMO ) ); 
+		case FACT_DYNAMO_NOT_SPEAKER:
+			gubFact[usFact] = !( gpSrcSoldier != NULL && (gpSrcSoldier->ubProfile == DYNAMO ) );
 			break;
 
 		case FACT_PABLO_BRIBED:
@@ -1269,14 +1238,12 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 
 void StartQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
 	InternalStartQuest( ubQuest, sSectorX, sSectorY, TRUE );
 }
 
 
 void InternalStartQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN fUpdateHistory )
 {
-	PERFORMANCE_MARKER
 	if ( gubQuest[ubQuest ] == QUESTNOTSTARTED )
 	{
 		gubQuest[ubQuest] = QUESTINPROGRESS;
@@ -1294,13 +1261,11 @@ void InternalStartQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN 
 
 void EndQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
 	InternalEndQuest( ubQuest, sSectorX, sSectorY, TRUE );
 }
 
 void InternalEndQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN fUpdateHistory )
 {
-	PERFORMANCE_MARKER
 	if ( gubQuest[ubQuest ] == QUESTINPROGRESS )
 	{
 		gubQuest[ubQuest] = QUESTDONE;
@@ -1322,12 +1287,11 @@ void InternalEndQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN fU
 		gMercProfiles[ MADAME ].bNPCData = 0;
 		gMercProfiles[ MADAME ].bNPCData2 = 0;
 	}
-	
+
 };
 
 void InitQuestEngine()
 {
-	PERFORMANCE_MARKER
 	memset(gubQuest, 0, sizeof(gubQuest));
 	memset(gubFact,	0, sizeof(gubFact));
 
@@ -1353,7 +1317,6 @@ void InitQuestEngine()
 
 void CheckForQuests( UINT32 uiDay )
 {
-	PERFORMANCE_MARKER
 	// This function gets called at 8:00 AM time of the day
 
 #ifdef TESTQUESTS
@@ -1372,7 +1335,7 @@ void CheckForQuests( UINT32 uiDay )
 		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Started DELIVER LETTER quest");
 #endif
 	}
-	
+
 	// This quest gets turned OFF through conversation with Miguel - when user hands
 	// Miguel the letter
 }
@@ -1380,7 +1343,6 @@ void CheckForQuests( UINT32 uiDay )
 
 BOOLEAN SaveQuestInfoToSavedGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten;
 
 	//Save all the states if the Quests
@@ -1404,7 +1366,6 @@ BOOLEAN SaveQuestInfoToSavedGameFile( HWFILE hFile )
 
 BOOLEAN LoadQuestInfoFromSavedGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 
 	//Save all the states if the Quests
@@ -1428,6 +1389,6 @@ BOOLEAN LoadQuestInfoFromSavedGameFile( HWFILE hFile )
 
 
 
- 
+
 
 

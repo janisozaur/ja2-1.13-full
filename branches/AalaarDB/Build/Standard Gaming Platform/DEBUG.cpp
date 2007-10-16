@@ -505,7 +505,6 @@ extern HVOBJECT FontObjs[25];
 #ifdef JA2 //JAGGED ALLIANCE 2 VERSION ONLY
 void _FailMessage( STR8 pString, UINT32 uiLineNum, STR8 pSourceFile )
 {
-	PERFORMANCE_MARKER 
 	DebugBreakpoint();
 	CHAR8 ubOutputString[512];
 #ifndef _NO_DEBUG_TXT

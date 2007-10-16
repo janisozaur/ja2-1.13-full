@@ -9,11 +9,9 @@
 #endif
 
 #include "Language Defines.h"
-#include "profiler.h"
 
 BOOLEAN GetMLGFilename( SGPFILENAME filename, UINT16 usMLGGraphicID )
 {
-	PERFORMANCE_MARKER
 	#if defined( ENGLISH ) || defined( TAIWANESE ) || defined( FRENCH )
 		switch( usMLGGraphicID )
 		{
@@ -234,7 +232,7 @@ BOOLEAN GetMLGFilename( SGPFILENAME filename, UINT16 usMLGGraphicID )
 		//The foreign language defined determines the name of the directory and filename.
 		//For example, the German version of:
 		//
-		//		"LAPTOP\\IMPSymbol.sti" 
+		//		"LAPTOP\\IMPSymbol.sti"
 		//
 		//	would become:
 		//

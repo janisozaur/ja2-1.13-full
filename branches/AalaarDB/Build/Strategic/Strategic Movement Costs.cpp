@@ -39,7 +39,7 @@ typedef struct
 	UINT32					travSouth;
 	UINT32					travWest;
 	UINT32					travHere;
-	
+
 } smctableParseData;
 
 /** Process the opening tag in this expat callback.
@@ -47,7 +47,6 @@ typedef struct
 static void XMLCALL
 smctableStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	smctableParseData * pData = (smctableParseData *) userData;
 	//FILE *outfile = fopen("smc.log", "at");
 
@@ -55,7 +54,7 @@ smctableStartElementHandle(void *userData, const XML_Char *name, const XML_Char 
 	{
 		if(strcmp(name, "StrategicMovementCosts") == 0 && pData->curElement == SMCTABLE_ELEMENT_NONE)
 		{
-			// Enter 
+			// Enter
 			pData->curElement = SMCTABLE_ELEMENT_STRATEGICMOVEMENTCOSTS;
 			pData->maxReadDepth++; //we are not skipping this element
 			//fprintf (outfile, "Entering Strategic Movement Costs\n");
@@ -127,7 +126,6 @@ smctableStartElementHandle(void *userData, const XML_Char *name, const XML_Char 
 static void XMLCALL
 smctableCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	smctableParseData * pData = (smctableParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth && strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
@@ -139,7 +137,6 @@ smctableCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 smctableEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	smctableParseData * pData = (smctableParseData *) userData;
 
 	//FILE *outfile = fopen("C:/JA2/debug.log", "a");
@@ -171,12 +168,12 @@ smctableEndElementHandle(void *userData, const XML_Char *name)
 			pSector->ubTraversability[ WEST_STRATEGIC_MOVE ] = pData->travWest;
 			pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = pData->travHere;
 			//strncpy(pSector->szCustomShortname, pData->szCustomShortname, MAX_SECTORNAME_LENGTH);
-			//fprintf (outfile, "Added SectorInfo #%d: y %d, x %d, name: %s, tr %d, n %d, e %d, s %d, w %d, h %d\n", 
+			//fprintf (outfile, "Added SectorInfo #%d: y %d, x %d, name: %s, tr %d, n %d, e %d, s %d, w %d, h %d\n",
 			//	sec_index, pData->uiRowNumber, pData->uiColNumber, pData->szCustomShortname,
-			//	pSector->ubTravelRating, pSector->ubTraversability[ NORTH_STRATEGIC_MOVE ], 
-			//	pSector->ubTraversability[ EAST_STRATEGIC_MOVE ], 
-			//	pSector->ubTraversability[ SOUTH_STRATEGIC_MOVE ], 
-			//	pSector->ubTraversability[ WEST_STRATEGIC_MOVE ], 
+			//	pSector->ubTravelRating, pSector->ubTraversability[ NORTH_STRATEGIC_MOVE ],
+			//	pSector->ubTraversability[ EAST_STRATEGIC_MOVE ],
+			//	pSector->ubTraversability[ SOUTH_STRATEGIC_MOVE ],
+			//	pSector->ubTraversability[ WEST_STRATEGIC_MOVE ],
 			//	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ]);
 
 			// And finish the sector.
@@ -294,7 +291,7 @@ smctableEndElementHandle(void *userData, const XML_Char *name)
 			{
 				trav_type = SWAMP_ROAD;
 			}
-			else 
+			else
 			{
 				trav_type = GROUNDBARRIER;
 			}
@@ -348,13 +345,12 @@ smctableEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInStrategicMovementCosts(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	smctableParseData pData;
 
 	// Open weapons file
@@ -405,7 +401,6 @@ BOOLEAN ReadInStrategicMovementCosts(STR fileName)
 
 BOOLEAN WriteInStrategicMovementCosts(STR fileName)
 {
-	PERFORMANCE_MARKER
 	// Lets output the current Strategic map format using the XML structure I've devised.
 	FILE *outfile = fopen(fileName, "wt");
 
@@ -471,7 +466,7 @@ BOOLEAN WriteInStrategicMovementCosts(STR fileName)
 				case SPARSE:
 					fprintf (outfile, "SPARSE");
 					break;
-				case DENSE: 
+				case DENSE:
 					fprintf (outfile, "DENSE");
 					break;
 				case SWAMP:
@@ -560,7 +555,7 @@ BOOLEAN WriteInStrategicMovementCosts(STR fileName)
 	fprintf (outfile, "</StrategicMovementCosts>\n");
 
 	fclose(outfile);
-		
+
 	return (TRUE);
 }
 
@@ -590,7 +585,7 @@ BOOLEAN WriteInStrategicMovementCosts(STR fileName)
 //					//fprintf(outfile, "STRATEGIC MOVE COSTS:	South should be EDGEOFWORLD for sector %c%d\n", y+'A'-1, x );
 //				}
 //			}
-//			else 
+//			else
 //			{
 //				if( SectorInfo[ SECTOR(x,y) ].ubTraversability[ SOUTH_STRATEGIC_MOVE ] !=
 //				 SectorInfo[ SECTOR(x,y+1) ].ubTraversability[ NORTH_STRATEGIC_MOVE ] )
@@ -612,7 +607,7 @@ BOOLEAN WriteInStrategicMovementCosts(STR fileName)
 //				if( x == 1 && SectorInfo[ SECTOR(x,y) ].ubTraversability[ WEST_STRATEGIC_MOVE ] != EDGEOFWORLD )
 //					OutputDebugString( (LPCSTR)String( "STRATEGIC MOVE COSTS:	West should be EDGEOFWORLD for sector %c%d\n", y+'A'-1, x ) );
 //			}
-//			else 
+//			else
 //			{
 //				if( SectorInfo[ SECTOR(x,y) ].ubTraversability[ WEST_STRATEGIC_MOVE ] !=
 //				 SectorInfo[ SECTOR(x-1,y) ].ubTraversability[ EAST_STRATEGIC_MOVE ] )
@@ -631,7 +626,6 @@ BOOLEAN WriteInStrategicMovementCosts(STR fileName)
 //
 UINT8 GetTraversability( INT16 sStartSector, INT16 sEndSector )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubDirection = 0;
 	INT16 sDifference = 0;
 
@@ -662,7 +656,6 @@ UINT8 GetTraversability( INT16 sStartSector, INT16 sEndSector )
 
 BOOLEAN SectorIsImpassable( INT16 sSector )
 {
-	PERFORMANCE_MARKER
 	// returns true if the sector is impassable in all directions
 	return( SectorInfo[ sSector ].ubTraversability[ THROUGH_STRATEGIC_MOVE ] == GROUNDBARRIER ||
 		SectorInfo[ sSector ].ubTraversability[ THROUGH_STRATEGIC_MOVE ] == EDGEOFWORLD );
@@ -679,7 +672,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	65,177,242,226,81,255,139,
 	70,150,95,124,203,83,248
 	},
-	
+
 	{
 	234,33,49,205,144,43,212,
 	44,249,86,116,150,112,80,
@@ -689,7 +682,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	103,30,238,119,10,242,187,
 	99,99,210,197,153,71,176
 	},
-	
+
 	{
 	137,180,252,121,200,124,8,
 	111,186,110,245,102,71,247,
@@ -699,7 +692,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	183,175,155,66,76,150,34,
 	114,38,225,8,126,236,96
 	},
-	
+
 	{
 	16,220,169,218,40,146,208,
 	171,96,114,57,235,189,141,
@@ -709,7 +702,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	114,52,93,90,126,142,222,
 	243,157,223,56,7,82,175
 	},
-	
+
 	{
 	214,11,122,112,113,118,195,
 	111,55,4,85,186,203,217,
@@ -719,7 +712,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	123,188,1,212,1,94,239,
 	40,89,169,57,55,203,169
 	},
-	
+
 	{
 	107,224,17,213,57,56,188,
 	177,120,49,183,211,64,230,
@@ -729,7 +722,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	19,97,87,140,177,42,4,
 	192,72,174,177,138,11,166
 	},
-	
+
 	{
 	9,11,33,144,120,134,56,
 	4,91,241,26,37,93,204,
@@ -739,7 +732,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	3,187,36,59,41,166,150,
 	104,162,205,29,72,186,83
 	},
-	
+
 	{
 	196,130,182,208,71,167,231,
 	133,59,210,10,82,151,243,
@@ -749,7 +742,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	84,179,166,10,22,174,219,
 	127,163,226,226,243,31,38
 	},
-	
+
 	{
 	151,198,6,214,2,99,210,
 	26,142,255,31,154,133,47,
@@ -759,7 +752,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	70,135,166,142,83,146,1,
 	243,133,54,3,113,189,13
 	},
-	
+
 	{
 	218,245,135,17,201,119,232,
 	222,199,170,217,219,28,16,
@@ -769,7 +762,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	243,172,26,99,60,84,204,
 	28,18,35,143,222,62,46
 	},
-	
+
 	{
 	60,75,3,168,92,248,239,
 	242,4,39,47,181,156,203,
@@ -779,7 +772,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	197,57,111,229,53,35,75,
 	91,56,162,191,210,60,204
 	},
-	
+
 	{
 	204,16,230,187,172,49,5,
 	6,62,173,174,199,231,242,
@@ -789,7 +782,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	124,223,155,19,121,99,175,
 	236,86,157,100,225,151,149
 	},
-	
+
 	{
 	20,225,193,156,236,144,244,
 	233,27,222,169,213,53,207,
@@ -799,7 +792,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	15,9,41,122,128,4,213,
 	119,214,25,121,36,43,50
 	},
-	
+
 	{
 	145,47,181,236,88,31,32,
 	115,104,90,150,49,168,172,
@@ -809,7 +802,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	23,168,157,173,64,144,150,
 	18,68,3,56,48,116,165
 	},
-	
+
 	{
 	244,90,27,112,128,36,134,
 	214,150,207,139,84,223,171,
@@ -819,7 +812,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	205,195,253,229,225,165,86,
 	11,58,114,131,107,165,215
 	},
-	
+
 	{
 	127,30,93,91,165,158,58,
 	91,236,151,103,207,65,207,
@@ -829,7 +822,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	214,182,171,214,154,51,253,
 	189,234,95,204,17,14,207
 	},
-	
+
 	{
 	251,51,223,223,24,80,138,
 	60,244,179,168,186,1,21,
@@ -839,7 +832,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	100,31,230,13,217,190,45,
 	212,123,22,131,225,202,182
 	},
-	
+
 	{
 	185,198,186,9,155,133,18,
 	53,111,146,55,105,127,17,
@@ -849,7 +842,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	69,15,214,66,155,70,31,
 	44,43,203,79,226,242,132
 	},
-	
+
 	{
 	243,234,219,137,211,230,117,
 	77,78,213,164,239,148,89,
@@ -859,7 +852,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	248,181,69,49,9,19,129,
 	246,21,163,160,145,26,21
 	},
-	
+
 	{
 	19,244,140,188,119,3,162,
 	214,207,50,237,66,223,44,
@@ -869,7 +862,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	230,196,12,213,241,104,9,
 	2,33,192,82,18,67,223
 	},
-	
+
 	{
 	74,68,234,227,249,134,5,
 	155,29,216,149,124,210,253,
@@ -879,7 +872,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	195,70,140,154,203,57,204,
 	154,84,113,52,162,44,11
 	},
-	
+
 	{
 	149,12,210,227,237,40,13,
 	145,9,125,242,172,155,114,
@@ -889,7 +882,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	41,175,36,176,69,106,21,
 	222,78,151,1,31,62,206
 	},
-	
+
 	{
 	111,142,87,207,172,114,135,
 	240,251,218,183,28,227,230,
@@ -899,7 +892,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	128,129,90,113,165,107,124,
 	2,196,116,74,95,198,166
 	},
-	
+
 	{
 	36,157,67,183,185,88,56,
 	196,189,140,108,182,108,4,
@@ -909,7 +902,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	32,102,40,67,229,250,6,
 	212,3,207,255,251,39,137
 	},
-	
+
 	{
 	75,159,202,137,103,226,221,
 	61,6,107,208,82,34,206,
@@ -919,7 +912,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	241,155,33,226,253,211,145,
 	55,122,105,182,231,179,227
 	},
-	
+
 	{
 	157,96,103,188,105,64,44,
 	218,9,130,220,208,31,209,
@@ -929,7 +922,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	97,83,114,27,129,147,201,
 	227,59,40,2,192,121,117
 	},
-	
+
 	{
 	141,213,168,224,119,181,65,
 	98,40,127,183,126,248,200,
@@ -939,7 +932,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	72,247,255,100,102,62,145,
 	12,135,83,17,77,255,163
 	},
-	
+
 	{
 	114,95,19,65,117,142,233,
 	198,248,84,19,166,59,238,
@@ -949,7 +942,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	198,139,174,164,127,20,8,
 	55,25,105,110,215,204,24
 	},
-	
+
 	{
 	158,164,46,157,212,125,174,
 	116,154,138,38,34,169,58,
@@ -959,7 +952,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	244,21,25,133,42,145,223,
 	147,19,91,117,172,252,72
 	},
-	
+
 	{
 	49,66,21,133,143,27,168,
 	148,62,162,138,247,194,151,
@@ -969,7 +962,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	101,224,241,223,225,148,168,
 	252,160,86,4,213,6,111
 	},
-	
+
 	{
 	144,151,17,65,208,251,3,
 	77,204,130,87,4,157,7,
@@ -979,7 +972,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	134,177,171,170,239,125,216,
 	120,18,77,240,230,76,226
 	},
-	
+
 	{
 	210,134,132,192,156,253,190,
 	117,63,210,141,138,131,45,
@@ -989,7 +982,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	155,144,176,54,26,63,107,
 	135,92,92,2,13,83,139
 	},
-	
+
 	{
 	51,60,163,170,147,164,49,
 	58,161,146,230,89,121,242,
@@ -999,7 +992,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	64,113,112,11,203,242,240,
 	255,1,19,113,237,186,66
 	},
-	
+
 	{
 	89,159,78,103,56,246,78,
 	204,4,21,252,53,204,162,
@@ -1009,7 +1002,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	192,149,251,61,20,11,162,
 	196,30,206,82,172,93,1
 	},
-	
+
 	{
 	226,222,85,249,190,223,200,
 	178,240,60,187,187,232,97,
@@ -1019,7 +1012,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	161,95,153,5,51,231,168,
 	13,54,84,34,77,166,72
 	},
-	
+
 	{
 	252,15,213,37,242,26,114,
 	115,99,46,77,163,196,100,
@@ -1029,7 +1022,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	7,73,199,135,77,234,79,
 	143,149,114,153,47,242,186
 	},
-	
+
 	{
 	187,60,9,83,243,54,78,
 	90,20,70,81,255,107,243,
@@ -1039,7 +1032,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	59,206,5,205,40,123,185,
 	46,167,40,14,241,178,153
 	},
-	
+
 	{
 	75,41,175,215,50,141,196,
 	250,196,198,238,44,224,253,
@@ -1049,7 +1042,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	154,171,123,119,239,174,72,
 	160,219,106,222,45,158,228
 	},
-	
+
 	{
 	201,188,54,248,57,37,25,
 	96,199,162,200,176,46,20,
@@ -1059,7 +1052,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	154,37,140,111,160,190,49,
 	56,56,126,62,22,213,80
 	},
-	
+
 	{
 	81,12,160,241,248,231,70,
 	171,127,226,220,168,223,151,
@@ -1069,7 +1062,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	242,216,196,25,192,64,253,
 	95,93,232,65,242,229,139
 	},
-	
+
 	{
 	134,221,148,217,202,95,252,
 	95,61,51,127,170,99,97,
@@ -1079,7 +1072,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	167,96,27,110,234,204,213,
 	117,58,248,57,20,234,161
 	},
-	
+
 	{
 	38,213,157,169,107,23,175,
 	84,238,15,28,30,134,243,
@@ -1089,7 +1082,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	249,64,123,162,195,195,200,
 	107,77,238,103,118,198,207
 	},
-	
+
 	{
 	232,120,145,34,201,147,8,
 	220,158,104,126,144,240,77,
@@ -1099,7 +1092,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	220,205,75,29,161,7,5,
 	34,193,17,215,109,50,25
 	},
-	
+
 	{
 	25,89,86,245,1,51,123,
 	253,111,240,58,28,252,69,
@@ -1109,7 +1102,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	30,96,214,85,38,248,211,
 	231,131,125,190,194,106,204
 	},
-	
+
 	{
 	61,15,48,227,80,24,43,
 	221,58,41,146,86,89,88,
@@ -1119,7 +1112,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	15,72,90,11,200,212,66,
 	17,187,46,58,64,154,125
 	},
-	
+
 	{
 	176,94,60,25,239,233,78,
 	19,10,51,143,104,187,179,
@@ -1129,7 +1122,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	202,216,34,158,78,119,147,
 	232,32,175,242,105,5,20
 	},
-	
+
 	{
 	88,62,37,83,109,101,204,
 	176,66,65,101,138,12,229,
@@ -1139,7 +1132,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	202,3,116,192,24,3,129,
 	135,189,122,24,1,172,139
 	},
-	
+
 	{
 	115,137,193,238,244,237,60,
 	4,136,178,113,108,224,44,
@@ -1149,7 +1142,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	17,48,159,188,27,71,132,
 	155,5,167,136,166,149,216
 	},
-	
+
 	{
 	124,10,86,29,212,50,96,
 	40,191,32,87,212,177,122,
@@ -1159,7 +1152,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	194,249,39,252,94,6,68,
 	157,81,56,5,229,1,239
 	},
-	
+
 	{
 	109,209,104,83,161,130,167,
 	172,101,12,168,226,109,80,
@@ -1169,7 +1162,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	18,96,198,112,106,145,201,
 	171,208,196,95,49,54,187
 	},
-	
+
 	{
 	125,238,86,66,116,112,229,
 	80,35,251,120,41,196,128,
@@ -1179,7 +1172,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	218,62,204,31,93,41,202,
 	220,250,247,133,158,120,253
 	},
-	
+
 	{
 	117,124,147,199,242,198,81,
 	46,74,212,97,166,187,160,
@@ -1189,7 +1182,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	105,132,61,162,21,95,76,
 	244,88,13,24,242,35,139
 	},
-	
+
 	{
 	191,252,45,196,59,89,93,
 	15,158,95,25,209,189,162,
@@ -1199,7 +1192,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	143,46,158,66,212,21,89,
 	120,234,207,110,136,175,12
 	},
-	
+
 	{
 	239,25,187,91,249,22,224,
 	99,40,115,213,19,41,56,
@@ -1209,7 +1202,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	75,235,96,117,211,69,72,
 	120,209,63,49,107,230,5
 	},
-	
+
 	{
 	98,24,14,131,155,143,55,
 	150,221,114,139,140,10,153,
@@ -1219,7 +1212,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	168,183,133,108,113,69,98,
 	167,230,45,116,11,32,225
 	},
-	
+
 	{
 	153,169,41,171,77,85,127,
 	241,6,111,247,245,26,2,
@@ -1229,7 +1222,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	205,104,166,75,33,202,249,
 	58,54,206,10,136,19,166
 	},
-	
+
 	{
 	146,29,30,194,190,208,94,
 	195,8,67,217,18,255,127,
@@ -1238,13 +1231,12 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	221,5,133,140,46,33,255,
 	187,212,29,98,102,47,125,
 	80,232,235,19,180,106,219
-	},	
+	},
 };
 
 /*
 void InitStrategicRowA()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_A1 ];
@@ -1378,7 +1370,6 @@ void InitStrategicRowA()
 
 void InitStrategicRowB()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_B1 ];
@@ -1512,7 +1503,6 @@ void InitStrategicRowB()
 
 void InitStrategicRowC()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_C1 ];
@@ -1646,7 +1636,6 @@ void InitStrategicRowC()
 
 void InitStrategicRowD()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_D1 ];
@@ -1767,7 +1756,7 @@ void InitStrategicRowD()
 	pSector->ubTraversability[ EAST_STRATEGIC_MOVE ]		= PLAINS;
 	pSector->ubTraversability[ SOUTH_STRATEGIC_MOVE ]		= PLAINS;
 	pSector->ubTraversability[ WEST_STRATEGIC_MOVE ]		= DENSE;
-	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = TOWN;	
+	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = TOWN;
 
 	pSector = &SectorInfo[ SEC_D16 ];
 	pSector->ubTravelRating = 5;
@@ -1780,7 +1769,6 @@ void InitStrategicRowD()
 
 void InitStrategicRowE()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_E1 ];
@@ -1914,7 +1902,6 @@ void InitStrategicRowE()
 
 void InitStrategicRowF()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_F1 ];
@@ -2048,7 +2035,6 @@ void InitStrategicRowF()
 
 void InitStrategicRowG()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_G1 ];
@@ -2182,7 +2168,6 @@ void InitStrategicRowG()
 
 void InitStrategicRowH()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_H1 ];
@@ -2316,7 +2301,6 @@ void InitStrategicRowH()
 
 void InitStrategicRowI()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_I1 ];
@@ -2450,7 +2434,6 @@ void InitStrategicRowI()
 
 void InitStrategicRowJ()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_J1 ];
@@ -2584,7 +2567,6 @@ void InitStrategicRowJ()
 
 void InitStrategicRowK()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_K1 ];
@@ -2718,7 +2700,6 @@ void InitStrategicRowK()
 
 void InitStrategicRowL()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_L1 ];
@@ -2852,7 +2833,6 @@ void InitStrategicRowL()
 
 void InitStrategicRowM()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_M1 ];
@@ -2986,7 +2966,6 @@ void InitStrategicRowM()
 
 void InitStrategicRowN()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_N1 ];
@@ -3120,7 +3099,6 @@ void InitStrategicRowN()
 
 void InitStrategicRowO()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_O1 ];
@@ -3254,7 +3232,6 @@ void InitStrategicRowO()
 
 void InitStrategicRowP()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_P1 ];
@@ -3389,7 +3366,6 @@ void InitStrategicRowP()
 */
 BOOLEAN InitStrategicMovementCosts()
 {
-	PERFORMANCE_MARKER
 	char fileName[MAX_PATH];
 
 	// need to be here
@@ -3434,7 +3410,7 @@ BOOLEAN InitStrategicMovementCosts()
 				if( y == 16 && SectorInfo[ SECTOR(x,y) ].ubTraversability[ SOUTH_STRATEGIC_MOVE ] != EDGEOFWORLD )
 					OutputDebugString( (LPCSTR)String( "STRATEGIC MOVE COSTS:	South should be EDGEOFWORLD for sector %c%d\n", y+'A'-1, x ) );
 			}
-			else 
+			else
 			{
 				if( SectorInfo[ SECTOR(x,y) ].ubTraversability[ SOUTH_STRATEGIC_MOVE ] !=
 				 SectorInfo[ SECTOR(x,y+1) ].ubTraversability[ NORTH_STRATEGIC_MOVE ] )
@@ -3454,7 +3430,7 @@ BOOLEAN InitStrategicMovementCosts()
 				if( x == 1 && SectorInfo[ SECTOR(x,y) ].ubTraversability[ WEST_STRATEGIC_MOVE ] != EDGEOFWORLD )
 					OutputDebugString( (LPCSTR)String( "STRATEGIC MOVE COSTS:	West should be EDGEOFWORLD for sector %c%d\n", y+'A'-1, x ) );
 			}
-			else 
+			else
 			{
 				if( SectorInfo[ SECTOR(x,y) ].ubTraversability[ WEST_STRATEGIC_MOVE ] !=
 				 SectorInfo[ SECTOR(x-1,y) ].ubTraversability[ EAST_STRATEGIC_MOVE ] )

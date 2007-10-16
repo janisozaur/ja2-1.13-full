@@ -76,7 +76,6 @@ extern UINT8 gubTacticalDirection;
 
 void TrashMapEdgepoints()
 {
-	PERFORMANCE_MARKER
 	//Primary edgepoints
 	if( gps1stNorthEdgepointArray )
 		MemFree( gps1stNorthEdgepointArray );
@@ -126,7 +125,6 @@ void TrashMapEdgepoints()
 //of the map.
 void ValidateEdgepoints()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	UINT16 usValidEdgepoints;
 	SOLDIERTYPE Soldier;
@@ -292,7 +290,6 @@ void ValidateEdgepoints()
 
 void CompactEdgepointArray( INT16 **psArray, UINT16 *pusMiddleIndex, UINT16 *pusArraySize )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	UINT16 usArraySize, usValidIndex = 0;
 
@@ -321,11 +318,10 @@ void CompactEdgepointArray( INT16 **psArray, UINT16 *pusMiddleIndex, UINT16 *pus
 	Assert( *psArray );
 }
 
-void InternallyClassifyEdgepoints( SOLDIERTYPE *pSoldier, INT16 sGridNo, 
+void InternallyClassifyEdgepoints( SOLDIERTYPE *pSoldier, INT16 sGridNo,
 																	INT16 **psArray1, UINT16 *pusMiddleIndex1, UINT16 *pusArraySize1,
 																	INT16 **psArray2, UINT16 *pusMiddleIndex2, UINT16 *pusArraySize2 )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	UINT16 us1stBenchmarkID, us2ndBenchmarkID;
 	us1stBenchmarkID = us2ndBenchmarkID = 0xffff;
@@ -366,8 +362,8 @@ void InternallyClassifyEdgepoints( SOLDIERTYPE *pSoldier, INT16 sGridNo,
 			break;
 		}
 	}
-	//Now we have found the two benchmarks, so go in both directions for each one to determine which entrypoints 
-	//are going to be used in the primary array.	All rejections will be positioned in the secondary array for 
+	//Now we have found the two benchmarks, so go in both directions for each one to determine which entrypoints
+	//are going to be used in the primary array.	All rejections will be positioned in the secondary array for
 	//use for isolated entry when tactically traversing.
 	if( us1stBenchmarkID != 0xffff )
 	{
@@ -440,7 +436,6 @@ void InternallyClassifyEdgepoints( SOLDIERTYPE *pSoldier, INT16 sGridNo,
 
 void ClassifyEdgepoints()
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE Soldier;
 	INT16 sGridNo = -1;
 
@@ -451,8 +446,8 @@ void ClassifyEdgepoints()
 	{
 		sGridNo = FindNearestEdgepointOnSpecifiedEdge( gMapInformation.sNorthGridNo, NORTH_EDGEPOINT_SEARCH );
 		if( sGridNo != NOWHERE )
-		{ 
-			InternallyClassifyEdgepoints( &Soldier, sGridNo, 
+		{
+			InternallyClassifyEdgepoints( &Soldier, sGridNo,
 				&gps1stNorthEdgepointArray, &gus1stNorthEdgepointMiddleIndex, &gus1stNorthEdgepointArraySize,
 				&gps2ndNorthEdgepointArray, &gus2ndNorthEdgepointMiddleIndex, &gus2ndNorthEdgepointArraySize );
 		}
@@ -462,8 +457,8 @@ void ClassifyEdgepoints()
 	{
 		sGridNo = FindNearestEdgepointOnSpecifiedEdge( gMapInformation.sEastGridNo, EAST_EDGEPOINT_SEARCH );
 		if( sGridNo != NOWHERE )
-		{ 
-			InternallyClassifyEdgepoints( &Soldier, sGridNo, 
+		{
+			InternallyClassifyEdgepoints( &Soldier, sGridNo,
 				&gps1stEastEdgepointArray, &gus1stEastEdgepointMiddleIndex, &gus1stEastEdgepointArraySize,
 				&gps2ndEastEdgepointArray, &gus2ndEastEdgepointMiddleIndex, &gus2ndEastEdgepointArraySize );
 		}
@@ -473,8 +468,8 @@ void ClassifyEdgepoints()
 	{
 		sGridNo = FindNearestEdgepointOnSpecifiedEdge( gMapInformation.sSouthGridNo, SOUTH_EDGEPOINT_SEARCH );
 		if( sGridNo != NOWHERE )
-		{ 
-			InternallyClassifyEdgepoints( &Soldier, sGridNo, 
+		{
+			InternallyClassifyEdgepoints( &Soldier, sGridNo,
 				&gps1stSouthEdgepointArray, &gus1stSouthEdgepointMiddleIndex, &gus1stSouthEdgepointArraySize,
 				&gps2ndSouthEdgepointArray, &gus2ndSouthEdgepointMiddleIndex, &gus2ndSouthEdgepointArraySize );
 		}
@@ -484,8 +479,8 @@ void ClassifyEdgepoints()
 	{
 		sGridNo = FindNearestEdgepointOnSpecifiedEdge( gMapInformation.sWestGridNo, WEST_EDGEPOINT_SEARCH );
 		if( sGridNo != NOWHERE )
-		{ 
-			InternallyClassifyEdgepoints( &Soldier, sGridNo, 
+		{
+			InternallyClassifyEdgepoints( &Soldier, sGridNo,
 				&gps1stWestEdgepointArray, &gus1stWestEdgepointMiddleIndex, &gus1stWestEdgepointArraySize,
 				&gps2ndWestEdgepointArray, &gus2ndWestEdgepointMiddleIndex, &gus2ndWestEdgepointArraySize );
 		}
@@ -494,7 +489,6 @@ void ClassifyEdgepoints()
 
 void GenerateMapEdgepoints()
 {
-	PERFORMANCE_MARKER
 	INT32 i=-1;
 	INT16 sGridNo=-1;
 	INT16 sVGridNo[400];
@@ -524,39 +518,39 @@ void GenerateMapEdgepoints()
 	{
 		//1st row
 		sGridNo = gsTLGridNo;
-		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 			(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 			sVGridNo[ gus1stNorthEdgepointArraySize++ ] = sGridNo;
 		while( sGridNo > gsTRGridNo )
 		{
 			sGridNo++;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stNorthEdgepointArraySize++ ] = sGridNo;
 			sGridNo -= 160;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stNorthEdgepointArraySize++ ] = sGridNo;
 		}
 		//2nd row
 		gus1stNorthEdgepointMiddleIndex = gus1stNorthEdgepointArraySize;
 		sGridNo = gsTLGridNo + 161;
-		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 			(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 			sVGridNo[ gus1stNorthEdgepointArraySize++ ] = sGridNo;
 		while( sGridNo > gsTRGridNo + 161 )
 		{
 			sGridNo++;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stNorthEdgepointArraySize++ ] = sGridNo;
 			sGridNo -= 160;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stNorthEdgepointArraySize++ ] = sGridNo;
 		}
 		if( gus1stNorthEdgepointArraySize )
-		{ 
+		{
 			//Allocate and copy over the valid gridnos.
 			gps1stNorthEdgepointArray = (INT16*)MemAlloc( gus1stNorthEdgepointArraySize * sizeof( INT16) );
 			for( i = 0; i < gus1stNorthEdgepointArraySize; i++ )
@@ -568,34 +562,34 @@ void GenerateMapEdgepoints()
 	{
 		//1st row
 		sGridNo = gsTRGridNo;
-		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 			(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 			sVGridNo[ gus1stEastEdgepointArraySize++ ] = sGridNo;
 		while( sGridNo < gsBRGridNo )
 		{
 			sGridNo += 160;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stEastEdgepointArraySize++ ] = sGridNo;
 			sGridNo++;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stEastEdgepointArraySize++ ] = sGridNo;
 		}
 		//2nd row
 		gus1stEastEdgepointMiddleIndex = gus1stEastEdgepointArraySize;
 		sGridNo = gsTRGridNo + 159;
-		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 			(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 			sVGridNo[ gus1stEastEdgepointArraySize++ ] = sGridNo;
 		while( sGridNo < gsBRGridNo + 159 )
 		{
 			sGridNo += 160;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stEastEdgepointArraySize++ ] = sGridNo;
 			sGridNo++;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stEastEdgepointArraySize++ ] = sGridNo;
 		}
@@ -611,34 +605,34 @@ void GenerateMapEdgepoints()
 	{
 		//1st row
 		sGridNo = gsBLGridNo;
-		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 			(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 			sVGridNo[ gus1stSouthEdgepointArraySize++ ] = sGridNo;
 		while( sGridNo > gsBRGridNo )
 		{
 			sGridNo++;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stSouthEdgepointArraySize++ ] = sGridNo;
 			sGridNo -= 160;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stSouthEdgepointArraySize++ ] = sGridNo;
 		}
 		//2nd row
 		gus1stSouthEdgepointMiddleIndex = gus1stSouthEdgepointArraySize;
 		sGridNo = gsBLGridNo - 161;
-		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 			(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 			sVGridNo[ gus1stSouthEdgepointArraySize++ ] = sGridNo;
 		while( sGridNo > gsBRGridNo - 161 )
 		{
 			sGridNo++;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stSouthEdgepointArraySize++ ] = sGridNo;
 			sGridNo -= 160;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stSouthEdgepointArraySize++ ] = sGridNo;
 		}
@@ -654,34 +648,34 @@ void GenerateMapEdgepoints()
 	{
 		//1st row
 		sGridNo = gsTLGridNo;
-		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 			(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 			sVGridNo[ gus1stWestEdgepointArraySize++ ] = sGridNo;
 		while( sGridNo < gsBLGridNo )
 		{
 			sGridNo++;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stWestEdgepointArraySize++ ] = sGridNo;
 			sGridNo += 160;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stWestEdgepointArraySize++ ] = sGridNo;
 		}
 		//2nd row
 		gus1stWestEdgepointMiddleIndex = gus1stWestEdgepointArraySize;
 		sGridNo = gsTLGridNo - 159;
-		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 			(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 			sVGridNo[ gus1stWestEdgepointArraySize++ ] = sGridNo;
 		while( sGridNo < gsBLGridNo - 159 )
 		{
 			sGridNo++;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stWestEdgepointArraySize++ ] = sGridNo;
 			sGridNo += 160;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus1stWestEdgepointArraySize++ ] = sGridNo;
 		}
@@ -701,39 +695,39 @@ void GenerateMapEdgepoints()
 		{
 			//1st row
 			sGridNo = gsTLGridNo;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus2ndNorthEdgepointArraySize++ ] = sGridNo;
 			while( sGridNo > gsTRGridNo )
 			{
 				sGridNo++;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndNorthEdgepointArraySize++ ] = sGridNo;
 				sGridNo -= 160;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndNorthEdgepointArraySize++ ] = sGridNo;
 			}
 			//2nd row
 			gus2ndNorthEdgepointMiddleIndex = gus2ndNorthEdgepointArraySize;
 			sGridNo = gsTLGridNo + 161;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus2ndNorthEdgepointArraySize++ ] = sGridNo;
 			while( sGridNo > gsTRGridNo + 161 )
 			{
 				sGridNo++;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndNorthEdgepointArraySize++ ] = sGridNo;
 				sGridNo -= 160;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndNorthEdgepointArraySize++ ] = sGridNo;
 			}
 			if( gus2ndNorthEdgepointArraySize )
-			{ 
+			{
 				//Allocate and copy over the valid gridnos.
 				gps2ndNorthEdgepointArray = (INT16*)MemAlloc( gus2ndNorthEdgepointArraySize * sizeof( INT16) );
 				for( i = 0; i < gus2ndNorthEdgepointArraySize; i++ )
@@ -745,34 +739,34 @@ void GenerateMapEdgepoints()
 		{
 			//1st row
 			sGridNo = gsTRGridNo;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus2ndEastEdgepointArraySize++ ] = sGridNo;
 			while( sGridNo < gsBRGridNo )
 			{
 				sGridNo += 160;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndEastEdgepointArraySize++ ] = sGridNo;
 				sGridNo++;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndEastEdgepointArraySize++ ] = sGridNo;
 			}
 			//2nd row
 			gus2ndEastEdgepointMiddleIndex = gus2ndEastEdgepointArraySize;
 			sGridNo = gsTRGridNo + 159;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus2ndEastEdgepointArraySize++ ] = sGridNo;
 			while( sGridNo < gsBRGridNo + 159 )
 			{
 				sGridNo += 160;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndEastEdgepointArraySize++ ] = sGridNo;
 				sGridNo++;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndEastEdgepointArraySize++ ] = sGridNo;
 			}
@@ -788,34 +782,34 @@ void GenerateMapEdgepoints()
 		{
 			//1st row
 			sGridNo = gsBLGridNo;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus2ndSouthEdgepointArraySize++ ] = sGridNo;
 			while( sGridNo > gsBRGridNo )
 			{
 				sGridNo++;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndSouthEdgepointArraySize++ ] = sGridNo;
 				sGridNo -= 160;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndSouthEdgepointArraySize++ ] = sGridNo;
 			}
 			//2nd row
 			gus2ndSouthEdgepointMiddleIndex = gus2ndSouthEdgepointArraySize;
 			sGridNo = gsBLGridNo - 161;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus2ndSouthEdgepointArraySize++ ] = sGridNo;
 			while( sGridNo > gsBRGridNo - 161 )
 			{
 				sGridNo++;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndSouthEdgepointArraySize++ ] = sGridNo;
 				sGridNo -= 160;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndSouthEdgepointArraySize++ ] = sGridNo;
 			}
@@ -831,34 +825,34 @@ void GenerateMapEdgepoints()
 		{
 			//1st row
 			sGridNo = gsTLGridNo;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus2ndWestEdgepointArraySize++ ] = sGridNo;
 			while( sGridNo < gsBLGridNo )
 			{
 				sGridNo++;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndWestEdgepointArraySize++ ] = sGridNo;
 				sGridNo += 160;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndWestEdgepointArraySize++ ] = sGridNo;
 			}
 			//2nd row
 			gus2ndWestEdgepointMiddleIndex = gus2ndWestEdgepointArraySize;
 			sGridNo = gsTLGridNo - 159;
-			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+			if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 				(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 				sVGridNo[ gus2ndWestEdgepointArraySize++ ] = sGridNo;
 			while( sGridNo < gsBLGridNo - 159 )
 			{
 				sGridNo++;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndWestEdgepointArraySize++ ] = sGridNo;
 				sGridNo += 160;
-				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && 
+				if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE &&
 					(!gubWorldRoomInfo[ sGridNo ] || gfBasement) )
 					sVGridNo[ gus2ndWestEdgepointArraySize++ ] = sGridNo;
 			}
@@ -870,7 +864,7 @@ void GenerateMapEdgepoints()
 			}
 		}
 	}
-	
+
 	//Eliminates any edgepoints not accessible to the edge of the world.	This is done to the primary edgepoints
 	ValidateEdgepoints();
 	//Second step is to process the primary edgepoints and determine if any of the edgepoints aren't accessible from
@@ -890,7 +884,6 @@ void GenerateMapEdgepoints()
 
 void SaveMapEdgepoints( HWFILE fp )
 {
-	PERFORMANCE_MARKER
 	//1st priority edgepoints -- for common entry -- tactical placement gui uses only these points.
 	FileWrite( fp, &gus1stNorthEdgepointArraySize, 2, NULL );
 	FileWrite( fp, &gus1stNorthEdgepointMiddleIndex, 2, NULL );
@@ -929,7 +922,6 @@ void SaveMapEdgepoints( HWFILE fp )
 
 void OldLoadMapEdgepoints( INT8 **hBuffer )
 {
-	PERFORMANCE_MARKER
 	LOADDATA( &gus1stNorthEdgepointArraySize, *hBuffer, 2 );
 	LOADDATA( &gus1stNorthEdgepointMiddleIndex, *hBuffer, 2 );
 	if( gus1stNorthEdgepointArraySize )
@@ -966,11 +958,10 @@ void OldLoadMapEdgepoints( INT8 **hBuffer )
 
 BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 {
-	PERFORMANCE_MARKER
 	TrashMapEdgepoints();
 	if( gMapInformation.ubMapVersion < 17 )
-	{	//To prevent invalidation of older maps, which only used one layer of edgepoints, and a UINT8 for 
-		//containing the size, we will preserve that paradigm, then kill the loaded edgepoints and 
+	{	//To prevent invalidation of older maps, which only used one layer of edgepoints, and a UINT8 for
+		//containing the size, we will preserve that paradigm, then kill the loaded edgepoints and
 		//regenerate them.
 		OldLoadMapEdgepoints( hBuffer );
 		TrashMapEdgepoints();
@@ -1052,7 +1043,6 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 
 UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
 {
-	PERFORMANCE_MARKER
 	INT16 *psArray=NULL;
 	UINT16 usArraySize=0;
 	static INT32 randomVal=0;
@@ -1090,7 +1080,6 @@ UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
 
 void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategicInsertionCode, UINT8 ubNumDesiredPoints )
 {
-	PERFORMANCE_MARKER
 	INT16 *psArray=NULL;
 	UINT16 usArraySize=0;
 	INT32 i=-1;
@@ -1133,13 +1122,13 @@ void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategic
 			{
 				if( gbWorldSectorZ )
 				{
-					AssertMsg( 0, 
+					AssertMsg( 0,
 						String( "Map %c%d_b%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints. (LC : 1)",
 						gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
 				}
 				else
 				{
-					AssertMsg( 0, 
+					AssertMsg( 0,
 						String( "Map %c%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints. (LC : 1)",
 						gWorldSectorY + 'A' - 1, gWorldSectorX ) );
 				}
@@ -1229,7 +1218,6 @@ INT16 gsReservedIndex	= 0;
 
 void BeginMapEdgepointSearch()
 {
-	PERFORMANCE_MARKER
 	INT16 sGridNo;
 
 	//Create the reserved list
@@ -1246,7 +1234,7 @@ void BeginMapEdgepointSearch()
 		sGridNo = gMapInformation.sSouthGridNo;
 	else if( gMapInformation.sWestGridNo != -1 )
 		sGridNo = gMapInformation.sWestGridNo;
-	else 
+	else
 		return;
 
 	GlobalReachableTest( sGridNo );
@@ -1256,7 +1244,6 @@ void BeginMapEdgepointSearch()
 
 void EndMapEdgepointSearch()
 {
-	PERFORMANCE_MARKER
 	AssertMsg( gpReservedGridNos, "Attempting to EndMapEdgepointSearch that has already been removed." );
 	MemFree( gpReservedGridNos );
 	gpReservedGridNos = NULL;
@@ -1267,7 +1254,6 @@ void EndMapEdgepointSearch()
 //THIS CODE ISN'T RECOMMENDED FOR TIME CRITICAL AREAS.
 INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode )
 {
-	PERFORMANCE_MARKER
 	INT32 i, iDirectionLoop;
 	INT16 *psArray=NULL;
 	INT16 sRadius, sDistance, sDirection, sOriginalGridNo;
@@ -1275,7 +1261,7 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 	BOOLEAN fReserved;
 
 	if( gsReservedIndex >= 20 )
-	{ //Everything is reserved.	
+	{ //Everything is reserved.
 		AssertMsg( 0, "All closest map edgepoints have been reserved.	We should only have 20 soldiers maximum...");
 	}
 	switch( ubInsertionCode )
@@ -1284,28 +1270,28 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 			psArray = gps1stNorthEdgepointArray;
 			usArraySize = gus1stNorthEdgepointArraySize;
 			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any north mapedgepoints. LC:1", 
+				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any north mapedgepoints. LC:1",
 									gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
 			break;
 		case INSERTION_CODE_EAST:
 			psArray = gps1stEastEdgepointArray;
 			usArraySize = gus1stEastEdgepointArraySize;
 			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any east mapedgepoints. LC:1", 
+				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any east mapedgepoints. LC:1",
 									gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
 			break;
 		case INSERTION_CODE_SOUTH:
 			psArray = gps1stSouthEdgepointArray;
 			usArraySize = gus1stSouthEdgepointArraySize;
 			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any south mapedgepoints. LC:1", 
+				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any south mapedgepoints. LC:1",
 									gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
 			break;
 		case INSERTION_CODE_WEST:
 			psArray = gps1stWestEdgepointArray;
 			usArraySize = gus1stWestEdgepointArraySize;
 			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any west mapedgepoints. LC:1", 
+				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any west mapedgepoints. LC:1",
 									gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
 			break;
 	}
@@ -1363,7 +1349,7 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 			{
 				sGridNo += sDirection;
 				if( sGridNo < 0 || sGridNo >= WORLD_MAX )
-					continue; 
+					continue;
 				//Check the gridno, to see if it is available and an edgepoint.
 				fReserved = FALSE;
 				for( i = 0; i < gsReservedIndex; i++ )
@@ -1395,7 +1381,6 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 
 INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode )
 {
-	PERFORMANCE_MARKER
 	INT32 i, iDirectionLoop;
 	INT16 *psArray=NULL;
 	INT16 sRadius, sDistance, sDirection, sOriginalGridNo;
@@ -1403,7 +1388,7 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 	BOOLEAN fReserved;
 
 	if( gsReservedIndex >= 20 )
-	{ //Everything is reserved.	
+	{ //Everything is reserved.
 		AssertMsg( 0, "All closest map edgepoints have been reserved.	We should only have 20 soldiers maximum...");
 	}
 	switch( ubInsertionCode )
@@ -1412,28 +1397,28 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 			psArray = gps2ndNorthEdgepointArray;
 			usArraySize = gus2ndNorthEdgepointArraySize;
 			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any isolated north mapedgepoints. KM:1", 
+				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any isolated north mapedgepoints. KM:1",
 									gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
 			break;
 		case INSERTION_CODE_EAST:
 			psArray = gps2ndEastEdgepointArray;
 			usArraySize = gus2ndEastEdgepointArraySize;
 			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any isolated east mapedgepoints. KM:1", 
+				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any isolated east mapedgepoints. KM:1",
 									gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
 			break;
 		case INSERTION_CODE_SOUTH:
 			psArray = gps2ndSouthEdgepointArray;
 			usArraySize = gus2ndSouthEdgepointArraySize;
 			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any isolated south mapedgepoints. KM:1", 
+				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any isolated south mapedgepoints. KM:1",
 									gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
 			break;
 		case INSERTION_CODE_WEST:
 			psArray = gps2ndWestEdgepointArray;
 			usArraySize = gus2ndWestEdgepointArraySize;
 			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any isolated west mapedgepoints. KM:1", 
+				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any isolated west mapedgepoints. KM:1",
 									gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
 			break;
 	}
@@ -1491,7 +1476,7 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 			{
 				sGridNo += sDirection;
 				if( sGridNo < 0 || sGridNo >= WORLD_MAX )
-					continue; 
+					continue;
 				//Check the gridno, to see if it is available and an edgepoint.
 				fReserved = FALSE;
 				for( i = 0; i < gsReservedIndex; i++ )
@@ -1524,7 +1509,6 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 #define EDGE_OF_MAP_SEARCH 5
 BOOLEAN VerifyEdgepoint( SOLDIERTYPE * pSoldier, INT16 sEdgepoint )
 {
-	PERFORMANCE_MARKER
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	INT16		sGridNo;
@@ -1594,7 +1578,6 @@ BOOLEAN VerifyEdgepoint( SOLDIERTYPE * pSoldier, INT16 sEdgepoint )
 
 BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT16 sEdgepoint1, INT16 sEdgepoint2 )
 {
-	PERFORMANCE_MARKER
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	INT16		sGridNo;
@@ -1646,7 +1629,6 @@ BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT16 sEdgepoint1, INT16 sEdgepo
 
 UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE Soldier;
 	INT32			iLoop;
 	INT16			*psEdgepointArray1, *psEdgepointArray2;
@@ -1694,7 +1676,7 @@ UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 			return INSERTION_CODE_PRIMARY_EDGEINDEX;
 	}
 
-	// Do a 2D search to find the closest map edgepoint and 
+	// Do a 2D search to find the closest map edgepoint and
 	// try to create a path there
 	for ( iLoop = 0; iLoop < iEdgepointArraySize1; iLoop++ )
 	{
@@ -1747,7 +1729,6 @@ UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 #include "message.h"
 void ShowMapEdgepoints()
 {
-	PERFORMANCE_MARKER
 	INT32 i, usIllegal1 = 0, usIllegal2 = 0;
 	for( i = 0 ; i < gus1stNorthEdgepointArraySize; i++ )
 	{
@@ -1846,16 +1827,15 @@ void ShowMapEdgepoints()
 	{
 		ScreenMsg( 0, MSG_TESTVERSION, L"Showing display of map edgepoints (%d illegal primary, %d illegal secondary)" );
 	}
-	ScreenMsg( 0, MSG_TESTVERSION, L"N:%d:%d E:%d:%d S:%d:%d W:%d:%d", 
-		gus1stNorthEdgepointArraySize, gus2ndNorthEdgepointArraySize, 
-		gus1stEastEdgepointArraySize,	gus2ndEastEdgepointArraySize, 
-		gus1stSouthEdgepointArraySize, gus2ndSouthEdgepointArraySize, 
+	ScreenMsg( 0, MSG_TESTVERSION, L"N:%d:%d E:%d:%d S:%d:%d W:%d:%d",
+		gus1stNorthEdgepointArraySize, gus2ndNorthEdgepointArraySize,
+		gus1stEastEdgepointArraySize,	gus2ndEastEdgepointArraySize,
+		gus1stSouthEdgepointArraySize, gus2ndSouthEdgepointArraySize,
 		gus1stWestEdgepointArraySize,	gus2ndWestEdgepointArraySize );
 }
 
 void HideMapEdgepoints()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	ScreenMsg( 0, MSG_TESTVERSION, L"Removing display of map edgepoints" );
 	for( i = 0 ; i < gus1stNorthEdgepointArraySize; i++ )
@@ -1886,7 +1866,7 @@ void HideMapEdgepoints()
 			RemoveAllTopmostsOfTypeRange( gps1stWestEdgepointArray[ i ], FIRSTPOINTERS, FIRSTPOINTERS );
 		}
 	}
-	
+
 	for( i = 0 ; i < gus2ndNorthEdgepointArraySize; i++ )
 	{
 		if( gps2ndNorthEdgepointArray[ i ] != -1 )

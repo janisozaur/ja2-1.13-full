@@ -17,16 +17,15 @@ struct
 	MAGTYPE		curMagazine;
 	MAGTYPE *	curArray;
 	UINT32			maxArraySize;
-	
+
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
 typedef magazineParseData;
 
-static void XMLCALL 
+static void XMLCALL
 magazineStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	magazineParseData * pData = (magazineParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -68,10 +67,9 @@ magazineStartElementHandle(void *userData, const XML_Char *name, const XML_Char 
 static void XMLCALL
 magazineCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	magazineParseData * pData = (magazineParseData *)userData;
 
-	if( (pData->currentDepth <= pData->maxReadDepth) && 
+	if( (pData->currentDepth <= pData->maxReadDepth) &&
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
 	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
@@ -82,7 +80,6 @@ magazineCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 magazineEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	magazineParseData * pData = (magazineParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -132,13 +129,12 @@ magazineEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInMagazineStats(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	magazineParseData pData;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading Magazines.xml" );
@@ -147,7 +143,7 @@ BOOLEAN ReadInMagazineStats(STR fileName)
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -162,15 +158,15 @@ BOOLEAN ReadInMagazineStats(STR fileName)
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, magazineStartElementHandle, magazineEndElementHandle);
 	XML_SetCharacterDataHandler(parser, magazineCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
 	pData.curArray = Magazine;
-	pData.maxArraySize = MAXITEMS; 
-	
+	pData.maxArraySize = MAXITEMS;
+
 	XML_SetUserData(parser, &pData);
 
 
@@ -195,7 +191,6 @@ BOOLEAN ReadInMagazineStats(STR fileName)
 }
 BOOLEAN WriteMagazineStats()
 {
-	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writemagazinestats");
 	HWFILE		hFile;
 
@@ -204,7 +199,7 @@ BOOLEAN WriteMagazineStats()
 	hFile = FileOpen( "TABLEDATA\\Magazine out.xml", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	{
 		UINT32 cnt;
 

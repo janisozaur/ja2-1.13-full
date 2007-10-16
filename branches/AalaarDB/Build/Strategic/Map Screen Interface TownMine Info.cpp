@@ -18,7 +18,7 @@
 	#include "Strategic Town Loyalty.h"
 	#include "Strategic Mines.h"
 	#include "finances.h"
-	#include "Map Screen Interface Map Inventory.h" 
+	#include "Map Screen Interface Map Inventory.h"
 	#include "Strategic.h"
 	#include "Utilities.h"
 	#include "video.h"
@@ -78,7 +78,7 @@ void AddItemsInSectorToBox(void);
 // position town/mine info box on the screen
 void PositionTownMineInfoBox( void );
 
-// add the pop up button for the map inventory pop up activation 
+// add the pop up button for the map inventory pop up activation
 void AddInventoryButtonForMapPopUpBox( void );
 
 // now remove the above button
@@ -93,7 +93,6 @@ void MinWidthOfTownMineInfoBox( void );
 
 void DisplayTownInfo( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	PERFORMANCE_MARKER
 	// will display town info for a particular town
 
 	// set current sector
@@ -106,12 +105,11 @@ void DisplayTownInfo( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 	//create destroy the box
 	CreateDestroyTownInfoBox( );
-	
+
 }
 
 void CreateDestroyTownInfoBox( void )
 {
-	PERFORMANCE_MARKER
 	// create destroy pop up box for town/mine info
 	static BOOLEAN fCreated = FALSE;
 	SGPRect pDimensions;
@@ -199,7 +197,7 @@ void CreateDestroyTownInfoBox( void )
 		}
 
 		pDimensions.iBottom += BOX_BUTTON_HEIGHT;
-		
+
 		SetBoxSize( ghTownMineBox, pDimensions );
 
 		ShowBox( ghTownMineBox );
@@ -238,17 +236,16 @@ void CreateDestroyTownInfoBox( void )
 		fCreated = FALSE;
 	}
 
-	
+
 	return;
 }
 
 
 void CreateTownInfoBox( void )
 {
-	PERFORMANCE_MARKER
 	// create basic box
  CreatePopUpBox(&ghTownMineBox, TownMineDimensions, TownMinePosition, (POPUP_BOX_FLAG_CLIP_TEXT ));
- 
+
  // which buffer will box render to
  SetBoxBuffer(ghTownMineBox, FRAME_BUFFER);
 
@@ -274,7 +271,6 @@ void CreateTownInfoBox( void )
 // adds text to town info box
 void AddTextToTownBox( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 hStringHandle = 0;
 	CHAR16 wString[ 64 ];
 	UINT8 ubTownId = 0;
@@ -378,7 +374,6 @@ void AddTextToTownBox( void )
 // adds text to mine info box
 void AddTextToMineBox( void )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubMineIndex;
 	UINT8 ubTown;
 	UINT32 hStringHandle;
@@ -509,7 +504,6 @@ void AddTextToMineBox( void )
 
 void AddTextToBlankSectorBox( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 hStringHandle;
 	UINT16 usSectorValue = 0;
 
@@ -554,7 +548,6 @@ void AddTextToBlankSectorBox( void )
 
 void AddSectorToBox(void)
 {
-	PERFORMANCE_MARKER
 	CHAR16 wString[ 64 ];
 	CHAR16 wString2[ 10 ];
 	UINT32 hStringHandle = 0;
@@ -577,7 +570,6 @@ void AddSectorToBox(void)
 
 void AddCommonInfoToBox(void)
 {
-	PERFORMANCE_MARKER
 	CHAR16 wString[ 64 ];
 	UINT32 hStringHandle = 0;
 	BOOLEAN fUnknownSAMSite = FALSE;
@@ -654,7 +646,7 @@ void AddCommonInfoToBox(void)
 
 	// how many are there, really?
 	ubNumEnemies = NumEnemiesInSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY );
-	
+
 	switch ( WhatPlayerKnowsAboutEnemiesInSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY ) )
 	{
 		case KNOWS_NOTHING:
@@ -688,7 +680,6 @@ void AddCommonInfoToBox(void)
 
 void AddItemsInSectorToBox(void)
 {
-	PERFORMANCE_MARKER
 	CHAR16 wString[ 64 ];
 	UINT32 hStringHandle = 0;
 
@@ -705,7 +696,6 @@ void AddItemsInSectorToBox(void)
 
 void PositionTownMineInfoBox( void )
 {
-	PERFORMANCE_MARKER
 	// position town mine info box
 	SGPRect pDimensions;
 	SGPPoint pPosition;
@@ -741,7 +731,7 @@ void PositionTownMineInfoBox( void )
 
 	if( pPosition.iX + pDimensions.iRight > MapScreenRect.iRight )
 	{
-		pPosition.iX = MapScreenRect.iRight - pDimensions.iRight - 5; 
+		pPosition.iX = MapScreenRect.iRight - pDimensions.iRight - 5;
 	}
 
 
@@ -753,10 +743,10 @@ void PositionTownMineInfoBox( void )
 
 	if(	pPosition.iY + pDimensions.iBottom > MapScreenRect.iBottom )
 	{
-		pPosition.iY = MapScreenRect.iBottom - pDimensions.iBottom - 8; 
+		pPosition.iY = MapScreenRect.iBottom - pDimensions.iBottom - 8;
 	}
 
-	
+
 
 	// reset position
 	SetBoxPosition( ghTownMineBox, pPosition );
@@ -767,7 +757,6 @@ void PositionTownMineInfoBox( void )
 
 void AddInventoryButtonForMapPopUpBox( void )
 {
-	PERFORMANCE_MARKER
 	INT16 sX, sY;
 	SGPRect pDimensions;
 	SGPPoint pPosition;
@@ -777,21 +766,21 @@ void AddInventoryButtonForMapPopUpBox( void )
 	INT16 sWidthA = 0, sWidthB = 0, sTotalBoxWidth = 0;
 	HVOBJECT hHandle;
 
-	
+
 	// load the button
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("INTERFACE\\mapinvbtns.sti", VObjectDesc.ImageFile);
-	AddVideoObject( &VObjectDesc, &uiObject ); 
+	AddVideoObject( &VObjectDesc, &uiObject );
 
 	// Calculate smily face positions...
 	GetVideoObject( &hHandle, uiObject );
 	pTrav = &(hHandle->pETRLEObject[ 0 ] );
 
 	sWidthA = pTrav->usWidth;
-	
+
 	pTrav = &(hHandle->pETRLEObject[ 1 ] );
 	sWidthB = pTrav->usWidth;
-	
+
 	sTotalBoxWidth = sTotalButtonWidth;
 
 	GetBoxSize( ghTownMineBox , &pDimensions );
@@ -802,23 +791,23 @@ void AddInventoryButtonForMapPopUpBox( void )
 
 	guiMapButtonInventoryImage[0] =	LoadButtonImage( "INTERFACE\\mapinvbtns.sti" ,-1,0,-1,2,-1 );
 
-	guiMapButtonInventory[0] = CreateIconAndTextButton( guiMapButtonInventoryImage[0], pMapPopUpInventoryText[ 0 ], BLOCKFONT2, 
-														FONT_WHITE, FONT_BLACK, 
-														FONT_WHITE, FONT_BLACK, 
-														TEXT_CJUSTIFIED, 
+	guiMapButtonInventory[0] = CreateIconAndTextButton( guiMapButtonInventoryImage[0], pMapPopUpInventoryText[ 0 ], BLOCKFONT2,
+														FONT_WHITE, FONT_BLACK,
+														FONT_WHITE, FONT_BLACK,
+														TEXT_CJUSTIFIED,
 														(INT16)(sX ), (INT16)( sY ), BUTTON_TOGGLE , MSYS_PRIORITY_HIGHEST - 1,
 														DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)MapTownMineInventoryButtonCallBack );
 
-	
+
 	sX = sX + sWidthA + ( pDimensions.iRight - sTotalBoxWidth ) / 3;
 	sY = pPosition.iY + pDimensions.iBottom - ( ( BOX_BUTTON_HEIGHT + 5) );
 
 	guiMapButtonInventoryImage[1] =	LoadButtonImage( "INTERFACE\\mapinvbtns.sti" ,-1,1,-1,3,-1 );
 
-	guiMapButtonInventory[1] = CreateIconAndTextButton( guiMapButtonInventoryImage[1], pMapPopUpInventoryText[ 1 ], BLOCKFONT2, 
-														FONT_WHITE, FONT_BLACK, 
-														FONT_WHITE, FONT_BLACK, 
-														TEXT_CJUSTIFIED, 
+	guiMapButtonInventory[1] = CreateIconAndTextButton( guiMapButtonInventoryImage[1], pMapPopUpInventoryText[ 1 ], BLOCKFONT2,
+														FONT_WHITE, FONT_BLACK,
+														FONT_WHITE, FONT_BLACK,
+														TEXT_CJUSTIFIED,
 														(INT16)(sX ), (INT16)( sY ), BUTTON_TOGGLE , MSYS_PRIORITY_HIGHEST - 1,
 														DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)MapTownMineExitButtonCallBack );
 
@@ -838,7 +827,6 @@ void AddInventoryButtonForMapPopUpBox( void )
 
 void RemoveInventoryButtonForMapPopUpBox( void )
 {
-	PERFORMANCE_MARKER
 
 	// get rid of button
 	RemoveButton( guiMapButtonInventory[0] );
@@ -846,17 +834,16 @@ void RemoveInventoryButtonForMapPopUpBox( void )
 
 	RemoveButton( guiMapButtonInventory[1] );
 	UnloadButtonImage( guiMapButtonInventoryImage[1] );
-	
+
 	return;
 }
 
 
 void MapTownMineInventoryButtonCallBack( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -877,16 +864,15 @@ void MapTownMineInventoryButtonCallBack( GUI_BUTTON *btn, INT32 reason )
 				ShouldTheHelpScreenComeUp( HELP_SCREEN_MAPSCREEN_SECTOR_INVENTORY, TRUE );
 			}
 		}
-	}	
+	}
 }
 
 
 void MapTownMineExitButtonCallBack( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -900,14 +886,13 @@ void MapTownMineExitButtonCallBack( GUI_BUTTON *btn, INT32 reason )
 			fShowTownInfo = FALSE;
 
 		}
-	}	
+	}
 }
 
 
 // get the min width of the town mine info pop up box
 void MinWidthOfTownMineInfoBox( void )
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 	VOBJECT_DESC VObjectDesc;
 	INT16 sWidthA = 0, sWidthB = 0, sTotalBoxWidth = 0;
@@ -916,17 +901,17 @@ void MinWidthOfTownMineInfoBox( void )
 
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("INTERFACE\\mapinvbtns.sti", VObjectDesc.ImageFile);
-	AddVideoObject( &VObjectDesc, &uiObject ); 
+	AddVideoObject( &VObjectDesc, &uiObject );
 
 	// Calculate smily face positions...
 	GetVideoObject( &hHandle, uiObject );
 	pTrav = &(hHandle->pETRLEObject[ 0 ] );
 
 	sWidthA = pTrav->usWidth;
-	
+
 	pTrav = &(hHandle->pETRLEObject[ 1 ] );
 	sWidthB = pTrav->usWidth;
-	
+
 	sTotalBoxWidth = sWidthA + sWidthB;
 	sTotalButtonWidth = sTotalBoxWidth;
 

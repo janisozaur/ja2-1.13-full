@@ -36,9 +36,8 @@ extern INT16 DirYIncrementer[8];
 
 int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags)
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fSkipTilesWithMercs;
- 
+
 	if ((sGridno < 0) || (sGridno >= GRIDSIZE))
 	{
 #ifdef RECORDNET
@@ -85,7 +84,7 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 				( sGridno != pSoldier->pathing.sBlackList ) )
 				*/
 	{
-	
+
 	// if water's a problem, and gridno is in a water tile (bridges are OK)
 		if (!ubWaterOK && Water(sGridno))
 		return(FALSE);
@@ -137,7 +136,6 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 
 int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 {
-	PERFORMANCE_MARKER
 	UINT8 ubGottaCancel = FALSE;
 	UINT8 ubSuccess = FALSE;
 
@@ -158,7 +156,7 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 		NewDest(pSoldier,sGridno);
 
 		ubSuccess = TRUE;
-	
+
 		// make sure that it worked (check that pSoldier->pathing.sDestination == pSoldier->sGridNo)
 		if (pSoldier->pathing.sDestination == sGridno)
 		{
@@ -252,7 +250,6 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 
 INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
  // patrol slot 0 is UNUSED, so max patrolCnt is actually only 9
  if ((pSoldier->aiData.bPatrolCnt < 1) || (pSoldier->aiData.bPatrolCnt >= MAXPATROLGRIDS))
 	{
@@ -264,10 +261,10 @@ INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier)
 	return(NOWHERE);
 	}
 
- 
+
  pSoldier->aiData.bNextPatrolPnt++;
 
- 
+
  // if there are no more patrol points, return back to the first one
  if (pSoldier->aiData.bNextPatrolPnt > pSoldier->aiData.bPatrolCnt)
 	pSoldier->aiData.bNextPatrolPnt = 1;	// ZERO is not used!
@@ -279,7 +276,6 @@ INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier)
 
 INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
  INT16 sPatrolPoint;
  INT8	bOldOrders;
 #ifdef DEBUGDECISIONS
@@ -357,7 +353,6 @@ INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
 
 INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 #ifdef DEBUGDECISIONS
  std::string tempstr;
 #endif
@@ -381,7 +376,7 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 			sPatrolPoint = pSoldier->aiData.sPatrolGrid[ bPatrolIndex];
 			bCnt++;
 		}
-		while ( (sPatrolPoint == pSoldier->sGridNo) || ( (sPatrolPoint != NOWHERE) && (bCnt < pSoldier->aiData.bPatrolCnt) && (NewOKDestination(pSoldier,sPatrolPoint,IGNOREPEOPLE, pSoldier->pathing.bLevel ) < 1)) ); 
+		while ( (sPatrolPoint == pSoldier->sGridNo) || ( (sPatrolPoint != NOWHERE) && (bCnt < pSoldier->aiData.bPatrolCnt) && (NewOKDestination(pSoldier,sPatrolPoint,IGNOREPEOPLE, pSoldier->pathing.bLevel ) < 1)) );
 
 		if (bCnt == pSoldier->aiData.bPatrolCnt)
 		{
@@ -393,7 +388,7 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 			}
 			while ((sPatrolPoint != NOWHERE) && (NewOKDestination(pSoldier,sPatrolPoint,IGNOREPEOPLE, pSoldier->pathing.bLevel) < 1));
 		}
-		
+
 		// do nothing this time around
 		if (pSoldier->sGridNo == sPatrolPoint)
 		{
@@ -450,7 +445,6 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 
 INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bReserveAPs, INT8 bAction, INT8 fFlags )
 {
-	PERFORMANCE_MARKER
 #ifdef DEBUGDECISIONS
  std::string tempstr;
 #endif
@@ -744,7 +738,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 		// if exactly 5 APs left, don't bother checking any further
 		if ( gfTurnBasedAI && (bAPsLeft == bReserveAPs) )
 			break;
-		}		
+		}
 	}
 
 
@@ -770,7 +764,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	else if ( pSoldier->pathing.usPathIndex == 0 )
 	{
 		// we can hack this surely! -- CJC
-	 pSoldier->pathing.bPathStored = TRUE; 
+	 pSoldier->pathing.bPathStored = TRUE;
 		pSoldier->pathing.sFinalDestination = sGoToGrid;
 		pSoldier->pathing.usPathDataSize = sLoop + 1;
 	}
@@ -783,16 +777,14 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 		return( sGoToGrid );
 	}
 }
-										
+
 INT16 GoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bAction)
 {
-	PERFORMANCE_MARKER
 	return( InternalGoAsFarAsPossibleTowards( pSoldier, sDesGrid, -1, bAction, 0 ) );
 }
-	
+
 void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 	INT16 sNewGridNo,bAPCost;
 
 
@@ -808,7 +800,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 
 	if (pSoldier->aiData.usActionData >= NOWHERE)
 	{
-		CancelAIAction(pSoldier,DONTFORCE);	
+		CancelAIAction(pSoldier,DONTFORCE);
 		return;
 	}
 
@@ -838,7 +830,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 	{
 		CancelAIAction(pSoldier,DONTFORCE);
 #ifdef TESTAI
-		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3, 
+		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3,
 						String("Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID) );
 #endif
 	}
@@ -855,7 +847,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 		// maybe we didn't actually start the action last turn...
 		pSoldier->aiData.bActionInProgress = TRUE;
 #ifdef TESTAI
-		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3, 
+		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3,
 						String("Soldier (%d) continues along path",pSoldier->ubID) );
 #endif
 	}
@@ -863,15 +855,14 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 	{
 		CancelAIAction(pSoldier,DONTFORCE);
 #ifdef TESTAI
-		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3, 
+		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3,
 						String("Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID) );
 #endif
 	}
-}											
-												
+}
+
 void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 	// If a special move, ignore this!
 	if ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_SPECIALMOVE ) )
 	{
@@ -897,7 +888,6 @@ void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier)
 
 void SetCivilianDestination(UINT8 ubWho, INT16 sGridno)
 {
-	PERFORMANCE_MARKER
  SOLDIERTYPE *pSoldier;
 
 
@@ -949,7 +939,6 @@ void SetCivilianDestination(UINT8 ubWho, INT16 sGridno)
 
 INT16 TrackScent( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	// This function returns the best gridno to go to based on the scent being followed,
 	// and the soldier (creature/animal)'s current direction (which is used to resolve
 	// ties.
@@ -969,7 +958,7 @@ INT16 TrackScent( SOLDIERTYPE * pSoldier )
 
 	if (CREATURE_OR_BLOODCAT( pSoldier ) ) // or bloodcats
 	{
-		// tracking humans; search the edges of a 7x7 square for the 
+		// tracking humans; search the edges of a 7x7 square for the
 		// most promising tile
 		ubSoughtSmell = HUMAN;
 		for (iYDiff = -RADIUS; iYDiff < (RADIUS + 1); iYDiff++)
@@ -1047,7 +1036,7 @@ INT16 TrackScent( SOLDIERTYPE * pSoldier )
 
 								}
 							}
-						}	
+						}
 					}
 				}
 			}
@@ -1057,7 +1046,7 @@ INT16 TrackScent( SOLDIERTYPE * pSoldier )
 	}
 	else
 	{
-		// who else can track? 
+		// who else can track?
 	}
 	if (iBestGridNo != NOWHERE )
 	{
@@ -1070,7 +1059,6 @@ INT16 TrackScent( SOLDIERTYPE * pSoldier )
 /*
 UINT16 RunAway( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	// "Run away! Run away!!!"
 	// This code should figure out which directions are safe for the enemy
 	// to run in.	They shouldn't try to run off in directions which will
@@ -1087,7 +1075,7 @@ UINT16 RunAway( SOLDIERTYPE * pSoldier )
 	INT32 iNewSectorX, iNewSectorY, iNewSector;
 	INT32	iRunX, iRunY, iRunGridNo;
 	SOLDIERTYPE * pOpponent;
-	
+
 	iSector = pSoldier->sSectorX + pSoldier->sSectorY * MAP_WORLD_X;
 
 	// first start by scanning through opposing mercs and find out what directions are blocked.
@@ -1104,7 +1092,7 @@ UINT16 RunAway( SOLDIERTYPE * pSoldier )
 		{
 			continue;			// next merc
 		}
-		
+
 		// we don't want to run in that direction!
 		bOkayDir[ atan8( pSoldier->sX, pSoldier->sY, pOpponent->sX, pOpponent->sY ) ] = FALSE;
 	}
@@ -1146,7 +1134,7 @@ UINT16 RunAway( SOLDIERTYPE * pSoldier )
 		}
 	}
 	if (ubBestDistToEdge < WORLD_COLS)
-	{	
+	{
 		switch( ubBestDir )
 		{
 			case 0:

@@ -86,13 +86,11 @@ void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReaso
 
 void GameInitInsurance()
 {
-	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterInsurance()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT16					usPosX, i;
 
@@ -114,9 +112,9 @@ BOOLEAN EnterInsurance()
 	for(i=0; i<3; i++)
 	{
 		MSYS_DefineRegion( &gSelectedInsuranceLinkRegion[i], usPosX, INSURANCE_BOTTOM_LINK_RED_BAR_Y-37, (UINT16)(usPosX + INSURANCE_BOTTOM_LINK_RED_BAR_WIDTH), INSURANCE_BOTTOM_LINK_RED_BAR_Y+2, MSYS_PRIORITY_HIGH,
-						CURSOR_WWW, MSYS_NO_CALLBACK, SelectInsuranceRegionCallBack); 
-		MSYS_AddRegion(&gSelectedInsuranceLinkRegion[i]); 
-		MSYS_SetRegionUserData( &gSelectedInsuranceLinkRegion[i], 0, i );	
+						CURSOR_WWW, MSYS_NO_CALLBACK, SelectInsuranceRegionCallBack);
+		MSYS_AddRegion(&gSelectedInsuranceLinkRegion[i]);
+		MSYS_SetRegionUserData( &gSelectedInsuranceLinkRegion[i], 0, i );
 
 		usPosX += INSURANCE_BOTTOM_LINK_RED_BAR_OFFSET;
 	}
@@ -131,7 +129,6 @@ BOOLEAN EnterInsurance()
 
 void ExitInsurance()
 {
-	PERFORMANCE_MARKER
 	UINT8 i;
 
 	RemoveInsuranceDefaults();
@@ -146,13 +143,11 @@ void ExitInsurance()
 
 void HandleInsurance()
 {
-	PERFORMANCE_MARKER
 
 }
 
 void RenderInsurance()
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	HVOBJECT hPixHandle;
 
@@ -199,7 +194,7 @@ void RenderInsurance()
 
 	GetInsuranceText( INS_SNGL_COMMENTSFROM_CLIENTS, sText );
 	DisplayWrappedString( INSURANCE_LINK_TEXT_1_X, INSURANCE_LINK_TEXT_1_Y, INSURANCE_LINK_TEXT_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR,	sText, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
-	
+
 
 	//Display the red bar under the link at the bottom
 	DisplaySmallRedLineWithShadow( INSURANCE_BOTTOM_LINK_RED_BAR_X_2, INSURANCE_BOTTOM_LINK_RED_BAR_Y, INSURANCE_BOTTOM_LINK_RED_BAR_X_2+INSURANCE_BOTTOM_LINK_RED_BAR_WIDTH, INSURANCE_BOTTOM_LINK_RED_BAR_Y);
@@ -226,7 +221,6 @@ void RenderInsurance()
 
 BOOLEAN InitInsuranceDefaults()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	// load the Flower Account Box graphic and add it
@@ -254,8 +248,8 @@ BOOLEAN InitInsuranceDefaults()
 
 		//create the link to the home page on the small titles
 		MSYS_DefineRegion( &gSelectedInsuranceTitleLinkRegion, INSURANCE_SMALL_TITLE_X+85, INSURANCE_SMALL_TITLE_Y, (UINT16)(INSURANCE_SMALL_TITLE_X + INSURANCE_SMALL_TITLE_WIDTH), (UINT16)(INSURANCE_SMALL_TITLE_Y+INSURANCE_SMALL_TITLE_HEIGHT), MSYS_PRIORITY_HIGH,
-						CURSOR_WWW, MSYS_NO_CALLBACK, SelectInsuranceTitleLinkRegionCallBack); 
-		MSYS_AddRegion(&gSelectedInsuranceTitleLinkRegion); 
+						CURSOR_WWW, MSYS_NO_CALLBACK, SelectInsuranceTitleLinkRegionCallBack);
+		MSYS_AddRegion(&gSelectedInsuranceTitleLinkRegion);
 	}
 
 	return( TRUE );
@@ -263,7 +257,6 @@ BOOLEAN InitInsuranceDefaults()
 
 void DisplayInsuranceDefaults()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 	UINT8	i;
 	UINT16	usPosY;
@@ -312,7 +305,6 @@ void DisplayInsuranceDefaults()
 
 void RemoveInsuranceDefaults()
 {
-	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex( guiInsuranceBackGround );
 	DeleteVideoObjectFromIndex( guiInsuranceRedBarImage );
 	DeleteVideoObjectFromIndex( guiInsuranceBigRedLineImage );
@@ -328,27 +320,25 @@ void RemoveInsuranceDefaults()
 
 void DisplaySmallRedLineWithShadow( UINT16 usStartX, UINT16 usStartY, UINT16 EndX, UINT16 EndY)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES;
 	UINT8 *pDestBuf;
 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	// draw the red line 
+	// draw the red line
 	LineDraw(FALSE, usStartX, usStartY, EndX, EndY, Get16BPPColor( FROMRGB( 255, 0, 0 ) ), pDestBuf);
 
-	// draw the black shadow line 
+	// draw the black shadow line
 	LineDraw(FALSE, usStartX+1, usStartY+1, EndX+1, EndY+1, Get16BPPColor( FROMRGB( 0, 0, 0 ) ), pDestBuf);
-	
+
 	// unlock frame buffer
 	UnLockVideoSurface( FRAME_BUFFER );
 }
 
 void GetInsuranceText( UINT8 ubNumber, STR16 pString )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiStartLoc=0;
 
 	if( ubNumber < INS_MULTI_LINE_BEGINS )
@@ -368,7 +358,6 @@ void GetInsuranceText( UINT8 ubNumber, STR16 pString )
 
 void SelectInsuranceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -385,12 +374,11 @@ void SelectInsuranceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -400,12 +388,12 @@ void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReaso
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 
 
 
- 
+
 
 

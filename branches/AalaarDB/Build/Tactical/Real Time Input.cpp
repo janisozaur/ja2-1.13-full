@@ -17,7 +17,7 @@
 #include "cursors.h"
 #include "Handle UI.h"
 #include "Isometric Utils.h"
-#include "input.h"	
+#include "input.h"
 #include "overhead.h"
 #include "Sys Globals.h"
 #include "screenids.h"
@@ -102,14 +102,12 @@ extern BOOLEAN ValidQuickExchangePosition( );
 
 void	GetRTMouseButtonInput( UINT32 *puiNewEvent )
 {
-	PERFORMANCE_MARKER
 	QueryRTLeftButton( puiNewEvent );
 	QueryRTRightButton( puiNewEvent );
 }
 
 void	QueryRTLeftButton( UINT32 *puiNewEvent )
 {
-	PERFORMANCE_MARKER
 	UINT16	usSoldierIndex;
 	SOLDIERTYPE *pSoldier;
 	UINT32	uiMercFlags;
@@ -343,7 +341,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 									}
 								}
 							}
-						}	
+						}
 						break;
 					}
 				}
@@ -377,7 +375,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 										MercPtrs[ gusSelectedSoldier ]->flags.fUIMovementFast = TRUE;
 										*puiNewEvent = C_MOVE_MERC;
 									}
-								}	
+								}
 							}
 						}
 
@@ -402,7 +400,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 
 						// CHECK IF WE CLICKED-HELD
 						if ( COUNTERDONE( LMOUSECLICK_DELAY_COUNTER ) && gpItemPointer != NULL )
-						{			
+						{
 							// LEFT CLICK-HOLD EVENT
 							// Switch on UI mode
 							switch( gCurrentUIMode )
@@ -518,11 +516,11 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 														if ( MercPtrs[ gusSelectedSoldier ]->usAnimState != RUNNING )
 														{
 															*puiNewEvent = C_MOVE_MERC;
-														}			
+														}
 														else
 														{
 															MercPtrs[ gusSelectedSoldier ]->flags.fUIMovementFast = 2;
-															*puiNewEvent = C_MOVE_MERC;																	
+															*puiNewEvent = C_MOVE_MERC;
 														}
 													}
 
@@ -542,7 +540,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 													//	if ( gusSelectedSoldier != NOBODY )
 													//	{
 													//		if ( !( gAnimControl[ MercPtrs[ gusSelectedSoldier ]->usAnimState ].uiFlags & ANIM_STATIONARY ) )
-													//		{				
+													//		{
 
 													//gUITargetShotWaiting	= TRUE;
 													//gsUITargetShotGridNo	= sMapPos;
@@ -567,7 +565,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 															{
 																// Select guy
 																if(	GetSoldier( &pSoldier, gusUIFullTargetID ) && gpItemPointer == NULL )
-																{ 
+																{
 																	if( pSoldier->bAssignment >= ON_DUTY && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 																	{
 																		PopupAssignmentMenuInTactical( pSoldier );
@@ -669,8 +667,8 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 																		if ( pSoldier->usAnimState != RUNNING )
 																		{
 																			*puiNewEvent = C_MOVE_MERC;
-																		}												
-																		else 
+																		}
+																		else
 																		{
 																			if ( GetCurInteractiveTileGridNo( &sIntTileGridNo ) != NULL )
 																			{
@@ -758,7 +756,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 																						}
 																					}
 																				}
-																				else 
+																				else
 																				{
 																					if ( fResult == 2 )
 																					{
@@ -779,7 +777,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 																						//	else
 																						//	{
 																						//		sMoveClickGridNo = 0;
-																						//		*puiNewEvent = M_CHANGE_TO_HANDMODE;																
+																						//		*puiNewEvent = M_CHANGE_TO_HANDMODE;
 																						//	}
 																					}
 																					//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"Invalid move destination." );
@@ -934,7 +932,6 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 
 void	QueryRTRightButton( UINT32 *puiNewEvent )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
 	static BOOLEAN	fClickIntercepted = FALSE;
 	static UINT32		uiSingleClickTime;
@@ -963,7 +960,7 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 			// CHECK COMBINATIONS
 			if ( fLeftButtonDown )
 			{
-				//fIgnoreLeftUp = TRUE;	
+				//fIgnoreLeftUp = TRUE;
 				gfRTHaveClickedRightWhileLeftDown = TRUE;
 
 				if ( gpItemPointer == NULL )
@@ -974,8 +971,8 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 					{
 						switch( gCurrentUIMode )
 						{
-						case CONFIRM_MOVE_MODE:	
-						case MOVE_MODE:	
+						case CONFIRM_MOVE_MODE:
+						case MOVE_MODE:
 
 							if ( !gfUIAllMoveOn )
 							{
@@ -995,7 +992,7 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 									//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
 									//	gfRTClickLeftHoldIntercepted = TRUE;
 									//}
-									else 
+									else
 									{
 										*puiNewEvent = M_CYCLE_MOVE_ALL;
 									}
@@ -1052,7 +1049,7 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 									CreateDestroyAssignmentPopUpBoxes( );
 									DetermineWhichAssignmentMenusCanBeShown( );
 
-									fShowMilitiaControlMenu = FALSE;											
+									fShowMilitiaControlMenu = FALSE;
 									CreateDestroyMilitiaControlPopUpBoxes( );
 									DetermineWhichMilitiaControlMenusCanBeShown( );
 								}
@@ -1100,11 +1097,11 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 									// ATE:
 									if ( gusSelectedSoldier != NOBODY )
 									{
-										//fIgnoreLeftUp = TRUE;	
+										//fIgnoreLeftUp = TRUE;
 										switch( gCurrentUIMode )
 										{
-										case CONFIRM_MOVE_MODE:	
-										case MOVE_MODE:	
+										case CONFIRM_MOVE_MODE:
+										case MOVE_MODE:
 
 											if ( gfUIAllMoveOn )
 											{
@@ -1137,11 +1134,11 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 								// ATE:
 								if ( gusSelectedSoldier != NOBODY )
 								{
-									//fIgnoreLeftUp = TRUE;	
+									//fIgnoreLeftUp = TRUE;
 									switch( gCurrentUIMode )
 									{
-									case CONFIRM_MOVE_MODE:	
-									case MOVE_MODE:	
+									case CONFIRM_MOVE_MODE:
+									case MOVE_MODE:
 
 										if ( gfUIAllMoveOn )
 										{
@@ -1170,8 +1167,8 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 
 										break;
 
-									case CONFIRM_MOVE_MODE:	
-									case MOVE_MODE:	
+									case CONFIRM_MOVE_MODE:
+									case MOVE_MODE:
 									case TALKCURSOR_MODE:
 
 										{
@@ -1224,7 +1221,7 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 								{
 									gfItemPointerDifferentThanDefault = !gfItemPointerDifferentThanDefault;
 								}
-							}	
+							}
 						}
 					}
 				}
@@ -1254,7 +1251,6 @@ extern BOOLEAN	gUIActionModeChangeDueToMouseOver;
 
 void GetRTMousePositionInput( UINT32 *puiNewEvent )
 {
-	PERFORMANCE_MARKER
 	INT16						sMapPos;
 	static UINT16			usOldMapPos = 0;
 	static UINT32			uiMoveTargetSoldierId = NOBODY;
@@ -1400,14 +1396,14 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 				// get cursor for item
 				ubItemCursor	=	GetActionModeCursor( pSoldier );
 
-				// 
+				//
 				if ( IsValidJumpLocation( pSoldier, sMapPos, TRUE ) )
 				{
 					*puiNewEvent = JP_ON_TERRAIN;
 					gsJumpOverGridNo = sMapPos;
 					return;
 				}
-				else 
+				else
 				{
 					if( gfUIFullTargetFound )
 					{
@@ -1471,7 +1467,7 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 						}
 					}
 				}
-			} 
+			}
 			else
 			{
 				if ( gUIActionModeChangeDueToMouseOver )
@@ -1528,7 +1524,7 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 				if ( guiUITargetSoldierId != gusUIFullTargetID )
 				{
 					// Switch event out of confirm mode
-					*puiNewEvent = CA_END_CONFIRM_ACTION;		
+					*puiNewEvent = CA_END_CONFIRM_ACTION;
 				}
 				else
 				{
@@ -1540,7 +1536,7 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 				if ( ConfirmActionCancel( sMapPos, usOldMapPos ) )
 				{
 					// Switch event out of confirm mode
-					*puiNewEvent = CA_END_CONFIRM_ACTION;		
+					*puiNewEvent = CA_END_CONFIRM_ACTION;
 
 				}
 				else

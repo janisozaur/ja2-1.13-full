@@ -20,7 +20,7 @@
 	#include "strategic.h"
 	#include "strategicmap.h"
 	#include "Quests.h"
-	#include "worlddef.h"	
+	#include "worlddef.h"
 	#include "rotting corpses.h"
 	#include "Animation Control.h"
 	#include "Tactical Save.h"
@@ -82,18 +82,17 @@ UINT8											ubNumContractRenewals = 0;
 // end
 UINT8											ubCurrentContractRenewal = 0;
 UINT8											ubCurrentContractRenewalInProgress = FALSE;
-BOOLEAN										gfContractRenewalSquenceOn = FALSE;		
+BOOLEAN										gfContractRenewalSquenceOn = FALSE;
 BOOLEAN										gfInContractMenuFromRenewSequence = FALSE;
- 
+
 
 // the airport sector
-#define AIRPORT_X 13 
+#define AIRPORT_X 13
 #define AIRPORT_Y 2
 
 
 BOOLEAN SaveContractRenewalDataToSaveGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten;
 
 	FileWrite( hFile, ContractRenewalList, sizeof( ContractRenewalList ), &uiNumBytesWritten );
@@ -115,7 +114,6 @@ BOOLEAN SaveContractRenewalDataToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadContractRenewalDataFromSaveGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 
 	FileRead( hFile, ContractRenewalList, sizeof( ContractRenewalList ), &uiNumBytesRead );
@@ -135,7 +133,6 @@ BOOLEAN LoadContractRenewalDataFromSaveGameFile( HWFILE hFile )
 
 void BeginContractRenewalSequence( )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 	SOLDIERTYPE *pSoldier;
 	BOOLEAN			fFoundAtLeastOne = FALSE;
@@ -186,7 +183,6 @@ void BeginContractRenewalSequence( )
 
 void HandleContractRenewalSequence( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
 	if ( gfContractRenewalSquenceOn )
@@ -230,7 +226,7 @@ void HandleContractRenewalSequence( )
 					SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_CONTRACT_NOGO_TO_RENEW , pSoldier->ubID,0 ,0 ,0 ,0 );
 				}
 				else
-				{		
+				{
 					// OK check what dialogue to play
 					// If we have not used this one before....
 					if ( pSoldier->ubContractRenewalQuoteCode == SOLDIER_CONTRACT_RENEW_QUOTE_NOT_USED )
@@ -246,7 +242,7 @@ void HandleContractRenewalSequence( )
 						HandleImportantMercQuote( pSoldier, QUOTE_MERC_LEAVING_ALSUCO_SOON );
 						SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
 					}
-					
+
 					// Do special dialogue event...
 					SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_CONTRACT_WANTS_TO_RENEW , pSoldier->ubID,0 ,0 ,0 ,0 );
 				}
@@ -262,7 +258,6 @@ void HandleContractRenewalSequence( )
 
 void EndCurrentContractRenewal( )
 {
-	PERFORMANCE_MARKER
 	// Are we in the requence?
 	if ( gfContractRenewalSquenceOn )
 	{
@@ -277,7 +272,6 @@ void EndCurrentContractRenewal( )
 
 void HandleMercIsWillingToRenew( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = MercPtrs[ ubID ];
 
 	// We wish to lock interface
@@ -298,12 +292,11 @@ void HandleMercIsWillingToRenew( UINT8 ubID )
 
 void HandleMercIsNotWillingToRenew( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = MercPtrs[ ubID ];
 
 	// We wish to lock interface
 	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1,MAP_SCREEN,0,0,0 );
-	
+
 	// Setup variable for this....
 	gfInContractMenuFromRenewSequence = TRUE;
 
@@ -319,7 +312,6 @@ void HandleMercIsNotWillingToRenew( UINT8 ubID )
 // This is used only to EXTEND the contract of an AIM merc already on the team
 BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction )
 {
-	PERFORMANCE_MARKER
 	INT32	iContractCharge=0;
 	INT32	iContractLength=0;
 	UINT8	ubHistoryContractType=0;
@@ -386,7 +378,7 @@ BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction )
 		return(FALSE);
 	}
 
-	
+
 	fPausedTimeDuringQuote = TRUE;
 
 	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1 ,MAP_SCREEN ,0 ,0 ,0 );
@@ -471,7 +463,6 @@ BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction )
 
 BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 {
-	PERFORMANCE_MARKER
 	UINT8	i;
 	INT8	bMercID;
 	BOOLEAN fBuddyAround = FALSE;
@@ -578,7 +569,7 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 		if ( bMercID >= 0 )
 		{
 			if ( IsMercOnTeamAndInOmertaAlreadyAndAlive( (UINT8) bMercID ) )
-			{				
+			{
 				if ( gMercProfiles[ pSoldier->ubProfile ].bLearnToHateCount == 0 )
 				{
 					// our tolerance has run out!
@@ -691,7 +682,7 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 				if( ( SoldierWantsToDelayRenewalOfContract( pSoldier ) ) )
 				{
 					// has a new job lined up
-					HandleImportantMercQuote( pSoldier, QUOTE_DELAY_CONTRACT_RENEWAL );	
+					HandleImportantMercQuote( pSoldier, QUOTE_DELAY_CONTRACT_RENEWAL );
 				}
 				else
 */
@@ -715,7 +706,6 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 
 void HandleSoldierLeavingWithLowMorale( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	if( MercThinksHisMoraleIsTooLow( pSoldier ) )
 	{
 		// this will cause him give us lame excuses for a while until he gets over it
@@ -727,7 +717,6 @@ void HandleSoldierLeavingWithLowMorale( SOLDIERTYPE *pSoldier )
 
 void HandleSoldierLeavingForAnotherContract( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	if (pSoldier->flags.fSignedAnotherContract)
 	{
 		// merc goes to work elsewhere
@@ -741,7 +730,6 @@ void HandleSoldierLeavingForAnotherContract( SOLDIERTYPE *pSoldier )
 /*
 BOOLEAN SoldierWantsToDelayRenewalOfContract( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 
 	INT8 bTypeOfCurrentContract = 0; // what kind of contract the merc has..1 day, week or 2 week
 	INT32 iLeftTimeOnContract = 0; // how much time til contract expires..in minutes
@@ -750,11 +738,11 @@ BOOLEAN SoldierWantsToDelayRenewalOfContract( SOLDIERTYPE *pSoldier )
 	// does the soldier want to delay renew of contract, possibly due to poor performance by player
 	if( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
 		return( FALSE );
-	
+
 	// type of contract the merc had
 	bTypeOfCurrentContract = pSoldier->bTypeOfLastContract;
 	iLeftTimeOnContract = pSoldier->iEndofContractTime - GetWorldTotalMin();
-	
+
 	// grab tolerance
 	switch( bTypeOfCurrentContract )
 	{
@@ -788,7 +776,6 @@ BOOLEAN SoldierWantsToDelayRenewalOfContract( SOLDIERTYPE *pSoldier )
 // this is called once a day (daily update) for every merc working for the player
 void CheckIfMercGetsAnotherContract( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiFullDaysRemaining = 0;
 	INT32 iChance = 0;
 
@@ -847,13 +834,12 @@ void CheckIfMercGetsAnotherContract( SOLDIERTYPE *pSoldier )
 //for ubRemoveType pass in the enum from the .h, 	( MERC_QUIT, MERC_FIRED	)
 BOOLEAN BeginStrategicRemoveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fAddRehireButton )
 {
-	PERFORMANCE_MARKER
 	InterruptTime( );
 	PauseGame();
 	LockPauseState( 8 );
-	
+
 	//if the soldier may have some special action when he/she leaves the party, handle it
-	HandleUniqueEventWhenPlayerLeavesTeam( pSoldier );		
+	HandleUniqueEventWhenPlayerLeavesTeam( pSoldier );
 
 	// IF the soldier is an EPC, don't ask about equipment
 	if ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
@@ -870,7 +856,6 @@ BOOLEAN BeginStrategicRemoveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fAddRehireButto
 
 BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubHistoryCode=0;
 
 
@@ -878,7 +863,7 @@ BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
 	{
 		EndCurrentContractRenewal( );
 	}
-	
+
 	// ATE: Determine which HISTORY ENTRY to use...
 	if ( pSoldier->ubLeaveHistoryCode == 0 )
 	{
@@ -909,7 +894,7 @@ BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
 
 	if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC )
 	{
-		SetupProfileInsertionDataForSoldier( pSoldier ); 
+		SetupProfileInsertionDataForSoldier( pSoldier );
 	}
 
 	//remove him from the soldier structure
@@ -970,7 +955,7 @@ BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
 		CalculateMedicalDepositRefund( pSoldier );
 	}
 
-	//remove the merc from the tactical 
+	//remove the merc from the tactical
 	TacticalRemoveSoldier( pSoldier->ubID );
 
 	// Check if we should remove loaded world...
@@ -1004,7 +989,6 @@ BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
 
 void CalculateMedicalDepositRefund( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32		iRefundAmount=0;
 
 	//if the merc didnt have any medical deposit, exit
@@ -1049,7 +1033,6 @@ void CalculateMedicalDepositRefund( SOLDIERTYPE *pSoldier )
 
 void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldier, BOOLEAN fAddRehireButton )
 {
-	PERFORMANCE_MARKER
 	// will tell player this character is leaving and ask where they want the equipment left
 	CHAR16 sString[ 1024 ];
 	BOOLEAN fInSector = FALSE;
@@ -1101,7 +1084,7 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 	// check if drassen controlled
 	else if( StrategicMap[	( AIRPORT_X + ( MAP_WORLD_X * AIRPORT_Y ) ) ].fEnemyControlled == FALSE )
 	{
-		
+
 		if( ( pSoldier->sSectorX == AIRPORT_X ) && ( pSoldier->sSectorY == AIRPORT_Y ) && ( pSoldier->bSectorZ == 0 ) )
 		{
 			if( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
@@ -1127,7 +1110,7 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 			{
 				swprintf( sString, pMercSheLeaveString[ 0 ], pSoldier->name, zShortTownIDString );
 			}
-			
+
 		}
 	}
 	else
@@ -1164,7 +1147,7 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
 		if( fInSector == FALSE )
-		{			
+		{
 			// set up for mapscreen
 			DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, ( UINT16 )( ( fAddRehireButton ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC ) ), MercDepartEquipmentBoxCallBack );
 		}
@@ -1186,7 +1169,7 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 			DoMessageBox(	MSG_BOX_BASIC_STYLE, sString,	guiCurrentScreen, ( UINT16 ) ( MSG_BOX_FLAG_USE_CENTERING_RECT | ( fAddRehireButton ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK	) ) ,	MercDepartEquipmentBoxCallBack,	&pCenteringRect );
 		}
 	}
-	
+
 	if( pSoldier->flags.fSignedAnotherContract == TRUE )
 	{
 		//fCurrentMercFired = FALSE;
@@ -1196,7 +1179,6 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 
 void MercDepartEquipmentBoxCallBack( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	// gear left in current sector?
 	if( pLeaveSoldier == NULL )
 	{
@@ -1207,7 +1189,7 @@ void MercDepartEquipmentBoxCallBack( UINT8 bExitValue )
 	{
 		// yep (NOTE that this passes the SOLDIER index, not the PROFILE index as the others do)
 		HandleLeavingOfEquipmentInCurrentSector( pLeaveSoldier->ubID );
-		
+
 		// aim merc will say goodbye when leaving
 		if( ( pLeaveSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) && ( ubQuitType != HISTORY_MERC_FIRED ) )
 		{
@@ -1255,7 +1237,6 @@ void MercDepartEquipmentBoxCallBack( UINT8 bExitValue )
 
 BOOLEAN HandleFiredDeadMerc( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	AddCharacterToDeadList( pSoldier );
 
 #if 0
@@ -1301,7 +1282,6 @@ BOOLEAN HandleFiredDeadMerc( SOLDIERTYPE *pSoldier )
 
 void HandleExtendMercsContract( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
 		gfEnteringMapScreen = TRUE;
@@ -1317,12 +1297,12 @@ void HandleExtendMercsContract( SOLDIERTYPE *pSoldier )
 		pContractReHireSoldier = pSoldier;
 		uiContractTimeMode = giTimeCompressMode;
 	}
-	
+
 	fTeamPanelDirty = TRUE;
 	fCharacterInfoPanelDirty = TRUE;
 
 	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, 0, 0 );
-	
+
 	CheckIfSalaryIncreasedAndSayQuote( pSoldier, TRUE );
 
 	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0 ,MAP_SCREEN, 0, 0, 0 );
@@ -1334,7 +1314,6 @@ void HandleExtendMercsContract( SOLDIERTYPE *pSoldier )
 
 void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 {
-	PERFORMANCE_MARKER
 	// find out is something was said
 	SOLDIERTYPE *pSoldier = NULL, *pSoldierWhoWillQuit = NULL;
 	INT32				iCounter= 0, iNumberOnTeam = 0;
@@ -1356,7 +1335,7 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 	for( iCounter = 0; iCounter < iNumberOnTeam; iCounter++ )
 	{
 		pSoldier = &Menptr[ iCounter ];
-		
+
 		// valid soldier?
 		if( ( pSoldier->bActive == FALSE ) || ( pSoldier->stats.bLife == 0 ) || ( pSoldier->bAssignment == IN_TRANSIT ) ||( pSoldier->bAssignment == ASSIGNMENT_POW ) )
 		{
@@ -1409,7 +1388,7 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 		// OK, he does not want to renew.......
 		HandleImportantMercQuote( pSoldierWhoWillQuit, QUOTE_MERC_LEAVING_ALSUCO_SOON );
 
-		AddReasonToWaitingListQueue( CONTRACT_EXPIRE_WARNING_REASON );		
+		AddReasonToWaitingListQueue( CONTRACT_EXPIRE_WARNING_REASON );
 		TacticalCharacterDialogueWithSpecialEvent( pSoldierWhoWillQuit, 0, DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU, 0,0 );
 
 		pSoldierWhoWillQuit->ubContractRenewalQuoteCode = SOLDIER_CONTRACT_RENEW_QUOTE_115_USED;
@@ -1426,7 +1405,7 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 			HandleImportantMercQuote( MercPtrs[ ubPotentialMercs[ ubChosenMerc ] ], QUOTE_CONTRACTS_OVER );
 			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
 
-			AddReasonToWaitingListQueue( CONTRACT_EXPIRE_WARNING_REASON );		
+			AddReasonToWaitingListQueue( CONTRACT_EXPIRE_WARNING_REASON );
 			TacticalCharacterDialogueWithSpecialEvent( MercPtrs[ ubPotentialMercs[ ubChosenMerc ] ], 0, DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU, 0,0 );
 
 			MercPtrs[ ubPotentialMercs[ ubChosenMerc ] ]->ubContractRenewalQuoteCode = SOLDIER_CONTRACT_RENEW_QUOTE_89_USED;
@@ -1436,14 +1415,12 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 
 void HandleNotifyPlayerCantAffordInsurance( void )
 {
-	PERFORMANCE_MARKER
 	DoScreenIndependantMessageBox( zMarksMapScreenText[ 9 ], MSG_BOX_FLAG_OK, NULL );
 }
 
 
 void HandleNotifyPlayerCanAffordInsurance( SOLDIERTYPE *pSoldier, UINT8 ubLength, INT32 iCost )
 {
-	PERFORMANCE_MARKER
 	CHAR16 sString[ 128 ];
 	CHAR16 sStringA[ 32 ];
 
@@ -1465,13 +1442,12 @@ void HandleNotifyPlayerCanAffordInsurance( SOLDIERTYPE *pSoldier, UINT8 ubLength
 
 	// now pop up the message box
 	DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_YESNO, ExtendMercInsuranceContractCallBack );
-	
+
 	return;
 }
 
 void ExtendMercInsuranceContractCallBack( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		PurchaseOrExtendInsuranceForSoldier( gpInsuranceSoldier, gubContractLength );
@@ -1488,7 +1464,6 @@ void ExtendMercInsuranceContractCallBack( UINT8 bExitValue )
 
 void HandleUniqueEventWhenPlayerLeavesTeam( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	switch( pSoldier->ubProfile )
 	{
 		//When iggy leaves the players team,
@@ -1506,7 +1481,6 @@ void HandleUniqueEventWhenPlayerLeavesTeam( SOLDIERTYPE *pSoldier )
 
 UINT32 GetHourWhenContractDone( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiArriveHour;
 
 	// Get the arrival hour - that will give us when they arrived....
@@ -1518,7 +1492,6 @@ UINT32 GetHourWhenContractDone( SOLDIERTYPE *pSoldier )
 
 BOOLEAN ContractIsExpiring( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiCheckHour;
 
 	// First at least make sure same day....
@@ -1530,7 +1503,7 @@ BOOLEAN ContractIsExpiring( SOLDIERTYPE *pSoldier )
 		if ( GetWorldHour( ) == uiCheckHour )
 		{
 			// All's good for go!
-			return( TRUE );			
+			return( TRUE );
 		}
 	}
 
@@ -1540,7 +1513,6 @@ BOOLEAN ContractIsExpiring( SOLDIERTYPE *pSoldier )
 
 BOOLEAN ContractIsGoingToExpireSoon( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// get hour contract is going to expire....
 	UINT32 uiCheckHour;
 
@@ -1553,7 +1525,7 @@ BOOLEAN ContractIsGoingToExpireSoon( SOLDIERTYPE *pSoldier )
 		if ( GetWorldHour( ) >= ( uiCheckHour - 2 ) )
 		{
 			// All's good for go!
-			return( TRUE );			
+			return( TRUE );
 		}
 	}
 

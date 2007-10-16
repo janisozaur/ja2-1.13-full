@@ -21,14 +21,12 @@ UINT32 guiCacheSize		= MIN_CACHE_SIZE;
 
 void DetermineOptimumAnimationCacheSize( )
 {
-	PERFORMANCE_MARKER
 	// If we have lots-a memory, adjust accordingly!
 	guiCacheSize = MIN_CACHE_SIZE;
 }
 
 BOOLEAN InitAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
 {
-	PERFORMANCE_MARKER
 	UINT32 cnt;
 
 	// Allocate entries
@@ -56,7 +54,6 @@ BOOLEAN InitAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnim
 
 void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
 {
-	PERFORMANCE_MARKER
 	// Allocate entries
 	if ( pAnimCache->usCachedSurfaces!= NULL )
 	{
@@ -74,7 +71,6 @@ void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimC
 
 BOOLEAN GetCachedAnimationSurface( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache, UINT16 usSurfaceIndex, UINT16 usCurrentAnimation )
 {
-	PERFORMANCE_MARKER
 	UINT8			cnt;
 	UINT8			ubLowestIndex = 0;
 	INT16		sMostHits = (INT16)32000;
@@ -157,7 +153,6 @@ BOOLEAN GetCachedAnimationSurface( UINT16 usSoldierID, AnimationSurfaceCacheType
 
 void UnLoadCachedAnimationSurfaces( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
 {
-	PERFORMANCE_MARKER
 	UINT8			cnt;
 
 	// Check to see if surface exists already

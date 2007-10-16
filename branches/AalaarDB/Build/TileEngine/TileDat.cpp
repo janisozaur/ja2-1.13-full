@@ -109,7 +109,7 @@ INT16 gReverseShadowBuddys[] =
 	SECONDFULLSHADOW,			SECONDFULLSHADOW1,			SECONDFULLSTRUCT1,
 	THIRDFULLSHADOW,			THIRDFULLSHADOW1,				THIRDFULLSTRUCT1,
 	FOURTHFULLSHADOW,			FOURTHFULLSHADOW1,			FOURTHFULLSTRUCT1,
-	
+
 	FIRSTDOORSHADOW,			FIRSTDOORSH1,						FIRSTDOOR1,
 	SECONDDOORSHADOW,			SECONDDOORSH1,					SECONDDOOR1,
 	THIRDDOORSHADOW,			THIRDDOORSH1,						THIRDDOOR1,
@@ -154,7 +154,7 @@ INT16 gForwardShadowBuddys[] =
 	SECONDFULLSTRUCT,			SECONDFULLSTRUCT1,			SECONDFULLSHADOW1,
 	THIRDFULLSTRUCT,			THIRDFULLSTRUCT1,				THIRDFULLSHADOW1,
 	FOURTHFULLSTRUCT,			FOURTHFULLSTRUCT1,			FOURTHFULLSHADOW1,
-	
+
 	FIRSTDOOR,						FIRSTDOOR1,								FIRSTDOORSH1,
 	SECONDDOOR,						SECONDDOOR1,							SECONDDOORSH1,
 	THIRDDOOR,						THIRDDOOR1,								THIRDDOORSH1,
@@ -181,45 +181,45 @@ INT16 gForwardShadowBuddys[] =
 };
 
 // Global variable used to initialize tile database with full tile spec
-UINT8	gFullBaseTileValues[] = 
+UINT8	gFullBaseTileValues[] =
 
-{	
+{
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // First Texture
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0,
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // Second Texture
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0,
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // Third Texture
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0,
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // Forth Texture
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0,
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // Fifth Texture
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0,
 
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // Sixth Texture
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 1,
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // Seventh Texture
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0,
 
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // Water1 Texture
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1 // Water2 Texture
 
@@ -421,7 +421,7 @@ UINT16	gNumTilesPerType[ NUMBEROFTILETYPES ] =
 	SECONDOSTRUCT12		- SECONDOSTRUCT1 + 1,
 	THIRDOSTRUCT12		- THIRDOSTRUCT1 + 1,
 	FOURTHOSTRUCT12	- FOURTHOSTRUCT1 + 1,	 // Fourth OSTRUCT
-	FIFTHOSTRUCT12		- FIFTHOSTRUCT1 + 1,		// Fifth OSTRUCT	
+	FIFTHOSTRUCT12		- FIFTHOSTRUCT1 + 1,		// Fifth OSTRUCT
 	SIXTHOSTRUCT12		- SIXTHOSTRUCT1 + 1,		// Sixth OSTRUCT
 	SEVENTHOSTRUCT12	- SEVENTHOSTRUCT1 + 1,	// Seventh OSTRUCT
 	EIGHTOSTRUCT12		- EIGHTOSTRUCT1 + 1,	 // Eigth OSTRUCT
@@ -605,7 +605,6 @@ UINT8	gTileTypeLogicalHeight[ NUMBEROFTILETYPES ] =
 
 void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEMENT *TileElement, BOOLEAN fUseRaisedObjectType )
 {
-	PERFORMANCE_MARKER
 	UINT8						ubLoop;
 	INT16						sIndexDiff;
 	UINT32					cnt;
@@ -640,9 +639,9 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 		cnt+=3;
 	};
 
-	
 
-	if ( uiDatabaseElem >= FIRSTDOOR1 && 
+
+	if ( uiDatabaseElem >= FIRSTDOOR1 &&
 			uiDatabaseElem <= FOURTHDOORSH20 )
 	{
 		// Door anims
@@ -721,7 +720,7 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 		};
 	}
 
-	if ( uiDatabaseElem == FIRSTMISS1 ) 
+	if ( uiDatabaseElem == FIRSTMISS1 )
 	{
 		// Allocate Animated tile data
 		AllocateAnimTileData( TileElement, 5 );
@@ -733,14 +732,14 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 		}
 	}
 
-	if ( uiDatabaseElem >= FIRSTMISS1 && 
+	if ( uiDatabaseElem >= FIRSTMISS1 &&
 			uiDatabaseElem <= FIRSTMISS5 )
-	{ 
+	{
 		TileElement->uiFlags |= DYNAMIC_TILE;
 	}
 
 
-	if ( uiDatabaseElem == WINDOWSHATTER1 || uiDatabaseElem == WINDOWSHATTER6 || uiDatabaseElem == WINDOWSHATTER11 || uiDatabaseElem == WINDOWSHATTER16 ) 
+	if ( uiDatabaseElem == WINDOWSHATTER1 || uiDatabaseElem == WINDOWSHATTER6 || uiDatabaseElem == WINDOWSHATTER11 || uiDatabaseElem == WINDOWSHATTER16 )
 	{
 		// Allocate Animated tile data
 		AllocateAnimTileData( TileElement, 5 );
@@ -752,19 +751,19 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 		}
 	}
 
-	if ( uiDatabaseElem >= WINDOWSHATTER1 && 
+	if ( uiDatabaseElem >= WINDOWSHATTER1 &&
 			uiDatabaseElem <= WINDOWSHATTER20 )
-	{ 
+	{
 		TileElement->uiFlags |= DYNAMIC_TILE;
 	}
 
 //	if ( usType == FIRSTEXPLOSION )
-//	{ 
+//	{
 //		TileElement->uiFlags |= DYNAMIC_TILE;
 //	}
 
 	if ( usType == BODYEXPLOSION )
-	{ 
+	{
 		TileElement->uiFlags |= DYNAMIC_TILE;
 	}
 
@@ -775,22 +774,22 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 
 	// SET FLAGS FOR OBJECTS PEICES WHICH USE PROPER Z
 	if ( fUseRaisedObjectType )
-	{ 
+	{
 		TileElement->uiFlags |= OBJECTLAYER_USEZHEIGHT;
 	}
 
-	
+
 	// OFFSET SLANTED ROOFS TO HEIGHT OF WALLS
-	if ( uiDatabaseElem >= FIRSTROOF1 && 
+	if ( uiDatabaseElem >= FIRSTROOF1 &&
 			uiDatabaseElem <= SECONDSLANTROOF20 )
-	{ 
+	{
 		//TileElement->sOffsetHeight = WALL_HEIGHT;
 	}
 
 	// Set flag for full 3d tiles, as well as the dynamic flag for the folliage
-	if ( uiDatabaseElem >= FIRSTFULLSTRUCT1 && 
+	if ( uiDatabaseElem >= FIRSTFULLSTRUCT1 &&
 			uiDatabaseElem <= SECONDFULLSTRUCT12 )
-	{ 
+	{
 		//TileElement->uiFlags |= FULL3D_TILE;
 		sIndexDiff = uiDatabaseElem - gTileTypeStartIndex[ usType ];
 
@@ -809,9 +808,9 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 	}
 
 	//Ignore height for cliffs ie: if we rasie the land, do not offset the cliff
-	if ( uiDatabaseElem >= FIRSTCLIFFHANG1 && 
+	if ( uiDatabaseElem >= FIRSTCLIFFHANG1 &&
 			uiDatabaseElem <= FIRSTCLIFFSHADOW17 )
-	{ 
+	{
 		if ( usType == FIRSTCLIFFHANG )
 		{
 			TileElement->uiFlags |= CLIFFHANG_TILE;
@@ -820,19 +819,19 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 
 	}
 
-	if ( uiDatabaseElem >= FIRSTWALL1 && 
+	if ( uiDatabaseElem >= FIRSTWALL1 &&
 			uiDatabaseElem <= FOURTHWALL65 )
-	{ 
+	{
 		TileElement->uiFlags |= WALL_TILE;
 	}
 
 	// Set a-frames heigher!
-	if ( uiDatabaseElem >= FIRSTWALL1 && 
+	if ( uiDatabaseElem >= FIRSTWALL1 &&
 			uiDatabaseElem <= FOURTHWALL47 )
-	{ 
+	{
 
 		// Set these ones higher ( for roof pieces )
-		if ( uiDatabaseElem	>= ( gTileTypeStartIndex[ usType ] + WALL_AFRAME_START ) && 
+		if ( uiDatabaseElem	>= ( gTileTypeStartIndex[ usType ] + WALL_AFRAME_START ) &&
 				uiDatabaseElem	<= ( gTileTypeStartIndex[ usType ] + WALL_AFRAME_END ) )
 		{
 			//TileElement->sOffsetHeight = WALL_HEIGHT;
@@ -843,32 +842,32 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 	}
 
 	// Set UI Elements to be dynamic
-	if ( uiDatabaseElem >= FOOTPRINTS1 && 
+	if ( uiDatabaseElem >= FOOTPRINTS1 &&
 			uiDatabaseElem <= THIRDPOINTERS2 )
-	{ 
+	{
 		TileElement->uiFlags |= DYNAMIC_TILE;
 		TileElement->uiFlags |= OBJECTLAYER_USEZHEIGHT;
 	}
 
 	// Set UI Elements to use object z level
-	if ( usType >= FOOTPRINTS && 
+	if ( usType >= FOOTPRINTS &&
 			usType <= LASTUIELEM )
-	{ 
+	{
 		TileElement->uiFlags |= OBJECTLAYER_USEZHEIGHT;
 	}
 
 	// Set UI Elements to use object z level
-	if ( usType >= HUMANBLOOD && 
+	if ( usType >= HUMANBLOOD &&
 			usType <= CREATUREBLOOD )
-	{ 
+	{
 		TileElement->uiFlags |= OBJECTLAYER_USEZHEIGHT;
 	}
 
 
 	// Set UI Elements to use object z level
-	if ( usType >= GUNS && 
+	if ( usType >= GUNS &&
 			usType <= P2ITEMS )
-	{ 
+	{
 		TileElement->uiFlags |= OBJECTLAYER_USEZHEIGHT;
 	}
 	if ( usType == P3ITEMS )
@@ -881,34 +880,34 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 		TileElement->uiFlags |= OBJECTLAYER_USEZHEIGHT;
 	}
 
-	if ( uiDatabaseElem >= FIRSTDOOR1 && 
+	if ( uiDatabaseElem >= FIRSTDOOR1 &&
 			uiDatabaseElem <= FOURTHDOORSH20 )
-	{ 
+	{
 		//TileElement->uiFlags |= DYNAMIC_TILE;
 	}
 
 	// Set UI Elements to be dynamic
-	if ( uiDatabaseElem == MOCKFLOOR1 ) 
-	{ 
+	if ( uiDatabaseElem == MOCKFLOOR1 )
+	{
 		TileElement->uiFlags |= DYNAMIC_TILE;
 
 	}
 
 
-	if ( usType == BULLETTILE ) 
-	{ 
+	if ( usType == BULLETTILE )
+	{
 		TileElement->uiFlags |= DYNAMIC_TILE;
 	}
 
-	if ( usType == WIREFRAMES ) 
-	{ 
+	if ( usType == WIREFRAMES )
+	{
 		//TileElement->uiFlags |= DYNAMIC_TILE;
 	}
 
 	// Set full tile flag for floors
-	if ( uiDatabaseElem >= FIRSTFLOOR1 && 
+	if ( uiDatabaseElem >= FIRSTFLOOR1 &&
 			uiDatabaseElem <= FOURTHFLOOR8 )
-	{ 
+	{
 		TileElement->ubFullTile = 1;
 	}
 

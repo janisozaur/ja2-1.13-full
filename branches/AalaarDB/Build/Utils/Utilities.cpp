@@ -24,22 +24,22 @@ extern BOOLEAN GetCDromDriveLetter( STR8	pString );
 BOOLEAN PerformTimeLimitedCheck();
 
 // WANNE: Given a string, replaces all instances of "oldpiece" with "newpiece"
-/* 
+/*
  *
  * Modified this routine to eliminate recursion and to avoid infinite
  * expansion of string when newpiece contains oldpiece.	--Byron
-*/ 
-//STR8 Replace(STR8 string, STR8 oldpiece, STR8 newpiece) 
-//{ 
-//	int str_index, newstr_index, oldpiece_index, end, 
+*/
+//STR8 Replace(STR8 string, STR8 oldpiece, STR8 newpiece)
+//{
+//	int str_index, newstr_index, oldpiece_index, end,
 //
-//		new_len, old_len, cpy_len; 
-//	STR8 c; 
-//	static char newstring[MAXLINE]; 
+//		new_len, old_len, cpy_len;
+//	STR8 c;
+//	static char newstring[MAXLINE];
 //
-//	if ((c =	strstr(string, oldpiece)) == NULL) 
+//	if ((c =	strstr(string, oldpiece)) == NULL)
 //
-//		return string; 
+//		return string;
 //
 //	new_len		= strlen(newpiece);
 //	old_len		= strlen(oldpiece);
@@ -47,10 +47,10 @@ BOOLEAN PerformTimeLimitedCheck();
 //	oldpiece_index = c - string;
 //
 //
-//	newstr_index = 0; 
-//	str_index = 0; 
-//	while(str_index <= end && c != NULL) 
-//	{ 
+//	newstr_index = 0;
+//	str_index = 0;
+//	while(str_index <= end && c != NULL)
+//	{
 //
 //		//Copy characters from the left of matched pattern occurence
 //		cpy_len = oldpiece_index-str_index;
@@ -58,7 +58,7 @@ BOOLEAN PerformTimeLimitedCheck();
 //		newstr_index += cpy_len;
 //		str_index	+= cpy_len;
 //
-//		//Copy replacement characters instead of matched pattern 
+//		//Copy replacement characters instead of matched pattern
 //		strcpy(newstring+newstr_index, newpiece);
 //		newstr_index += new_len;
 //		str_index	+= old_len;
@@ -68,12 +68,12 @@ BOOLEAN PerformTimeLimitedCheck();
 //		 oldpiece_index = c - string;
 //
 //
-//	} 
-//	// Copy remaining characters from the right of last matched pattern	 
-//	strcpy(newstring+newstr_index, string+str_index); 
+//	}
+//	// Copy remaining characters from the right of last matched pattern
+//	strcpy(newstring+newstr_index, string+str_index);
 //
-//	return newstring; 
-//} 
+//	return newstring;
+//}
 
 // WANNE: Replaces german	specific characters
 //STR8 ReplaceGermanSpecialCharacters(STR8 text)
@@ -83,15 +83,15 @@ BOOLEAN PerformTimeLimitedCheck();
 //	// Ä
 //	text = Replace(text, "Ã„", "Ä");
 //	// ö
-//	text = Replace(text, "Ã¶", "ö"); 
+//	text = Replace(text, "Ã¶", "ö");
 //	// Ö
-//	text = Replace(text, "Ã–", "Ö"); 
+//	text = Replace(text, "Ã–", "Ö");
 //	// ü
 //	text = Replace(text, "Ã¼", "ü");
 //	// Ü
 //	text = Replace(text, "Ãœ", "Ü");
 //	// ß
-//	text = Replace(text, "ÃŸ", "ß"); 
+//	text = Replace(text, "ÃŸ", "ß");
 //
 //	return text;
 //}
@@ -101,7 +101,6 @@ BOOLEAN PerformTimeLimitedCheck();
 //#define	TIME_LIMITED_VERSION
 void FilenameForBPP(STR pFilename, STR pDestination)
 {
-	PERFORMANCE_MARKER
 CHAR8 Drive[128], Dir[128], Name[128], Ext[128];
 
 	if(GETPIXELDEPTH()==16)
@@ -112,7 +111,7 @@ CHAR8 Drive[128], Dir[128], Name[128], Ext[128];
 	else
 	{
 		_splitpath(pFilename, Drive, Dir, Name, Ext);
-	
+
 		strcat(Name, "_8");
 
 		strcpy(pDestination, Drive);
@@ -126,7 +125,6 @@ CHAR8 Drive[128], Dir[128], Name[128], Ext[128];
 
 BOOLEAN CreateSGPPaletteFromCOLFile( SGPPaletteEntry *pPalette, SGPFILENAME ColFile )
 {
-	PERFORMANCE_MARKER
 	HWFILE	 hFileHandle;
 	BYTE			bColHeader[ 8 ];
 	UINT32		cnt;
@@ -166,7 +164,6 @@ BOOLEAN CreateSGPPaletteFromCOLFile( SGPPaletteEntry *pPalette, SGPFILENAME ColF
 
 BOOLEAN DisplayPaletteRep( PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos, UINT32 uiDestSurface )
 {
-	PERFORMANCE_MARKER
 	UINT16										us16BPPColor;
 	UINT32										cnt1;
 	UINT8											ubSize, ubType;
@@ -202,14 +199,13 @@ BOOLEAN DisplayPaletteRep( PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos, UIN
 
 BOOLEAN	WrapString( STR16 pStr, STR16 pStr2, UINT16 usWidth, INT32 uiFont )
 {
-	PERFORMANCE_MARKER
 	UINT32 Cur, uiLet, uiNewLet, uiHyphenLet;
 	STR16 curletter;
 	INT16 transletter;
 	BOOLEAN	fLineSplit = FALSE;
 	HVOBJECT	hFont;
 
-	// CHECK FOR WRAP					
+	// CHECK FOR WRAP
 	Cur=0;
 	uiLet = 0;
 	curletter = pStr;
@@ -246,7 +242,7 @@ BOOLEAN	WrapString( STR16 pStr, STR16 pStr2, UINT16 usWidth, INT32 uiFont )
 
 				uiNewLet--;
 				curletter--;
-						
+
 			}
 			if( !fLineSplit)
 			{
@@ -272,7 +268,6 @@ BOOLEAN	WrapString( STR16 pStr, STR16 pStr2, UINT16 usWidth, INT32 uiFont )
 
 BOOLEAN IfWinNT(void)
 {
-	PERFORMANCE_MARKER
 	OSVERSIONINFO OsVerInfo;
 
 	OsVerInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
@@ -287,7 +282,6 @@ BOOLEAN IfWinNT(void)
 
 BOOLEAN IfWin95(void)
 {
-	PERFORMANCE_MARKER
 	OSVERSIONINFO OsVerInfo;
 
 	OsVerInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
@@ -303,7 +297,6 @@ BOOLEAN IfWin95(void)
 
 void HandleLimitedNumExecutions( )
 {
-	PERFORMANCE_MARKER
 	// Get system directory
 	HWFILE	 hFileHandle;
 	CHAR8	ubSysDir[ 512 ];
@@ -335,7 +328,7 @@ void HandleLimitedNumExecutions( )
 			SET_ERROR( "Error 1054: Cannot execute - contact Sir-Tech Software." );
 			return;
 		}
-		
+
 	}
 	else
 	{
@@ -391,7 +384,6 @@ UINT32 gCheckFileMinSizes[] =
 
 BOOLEAN HandleJA2CDCheck( )
 {
-	PERFORMANCE_MARKER
 #ifdef	TIME_LIMITED_VERSION
 	if( !PerformTimeLimitedCheck() )
 	{
@@ -415,7 +407,7 @@ BOOLEAN HandleJA2CDCheck( )
 	if( GetCDromDriveLetter( zCdLocation ) )
 	{
 	for ( cnt = 0; cnt < 5; cnt++ )
-	{	 
+	{
 		// OK, build filename
 		sprintf( zCdFile, "%s%s", zCdLocation, gCheckFilenames[ cnt ] );
 
@@ -435,7 +427,7 @@ BOOLEAN HandleJA2CDCheck( )
 //		{
 //			fFailed = TRUE;
 //				FileClose( hFile );
-//		break;	
+//		break;
 //		}
 //#endif
 
@@ -445,9 +437,9 @@ BOOLEAN HandleJA2CDCheck( )
 	}
 	else
 	{
-		fFailed = TRUE;	
+		fFailed = TRUE;
 	}
-	
+
 	if ( fFailed )
 	{
 		CHAR8	zErrorMessage[256];
@@ -461,7 +453,7 @@ BOOLEAN HandleJA2CDCheck( )
 	}
 
 	return( TRUE );
-	
+
 #endif
 
 }
@@ -469,7 +461,6 @@ BOOLEAN HandleJA2CDCheck( )
 
 BOOLEAN HandleJA2CDCheckTwo( )
 {
-	PERFORMANCE_MARKER
 #ifdef NOCDCHECK
 
 	return( TRUE );
@@ -491,7 +482,7 @@ BOOLEAN HandleJA2CDCheckTwo( )
 			fFailed = FALSE;
 		}
 	}
-	
+
 	if ( fFailed )
 	{
 		CHAR8	zErrorMessage[256];
@@ -516,7 +507,6 @@ BOOLEAN HandleJA2CDCheckTwo( )
 
 BOOLEAN PerformTimeLimitedCheck()
 {
-	PERFORMANCE_MARKER
 #ifndef TIME_LIMITED_VERSION
 		return( TRUE );
 
@@ -540,14 +530,13 @@ BOOLEAN PerformTimeLimitedCheck()
 
 BOOLEAN DoJA2FilesExistsOnDrive( CHAR8 *zCdLocation )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fFailed = FALSE;
 	CHAR8		zCdFile[ SGPFILENAME_LEN ];
 	INT32	cnt;
 	HWFILE	hFile;
 
 	for ( cnt = 0; cnt < 4; cnt++ )
-	{	 
+	{
 		// OK, build filename
 		sprintf( zCdFile, "%s%s", zCdLocation, gCheckFilenames[ cnt ] );
 

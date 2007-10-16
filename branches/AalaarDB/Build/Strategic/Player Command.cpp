@@ -32,7 +32,6 @@ extern BOOLEAN fMapScreenBottomDirty;
 
 void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString )
 {
-	PERFORMANCE_MARKER
 	// will build a string stating current facilities present in sector
 
 	if( SectorInfo[ SECTOR( sMapX, sMapY ) ].uiFacilitiesFlags == 0 )
@@ -104,7 +103,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 			wcscat( sFacilitiesString, sFacilitiesStrings[ 6 ]);
 		}
 	}
-	
+
 	sFacilitiesString[ wcslen( sFacilitiesString ) ] = 0;
 
 	return;
@@ -114,7 +113,6 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 // ALL changes of control to player must be funneled through here!
 BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BOOLEAN fContested )
 {
-	PERFORMANCE_MARKER
 	// NOTE: MapSector must be 16-bit, cause MAX_WORLD_X is actually 18, so the sector numbers exceed 256 although we use only 16x16
 	UINT16 usMapSector = 0;
 	BOOLEAN fWasEnemyControlled = FALSE;
@@ -208,7 +206,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 			{
 				if ( 1 /*!GetSectorFlagStatus( sMapX, sMapY, bMapZ, SF_SECTOR_HAS_BEEN_LIBERATED_ONCE ) */)
 				{
-					// SAM site liberated for first time, schedule meanwhile					
+					// SAM site liberated for first time, schedule meanwhile
 					HandleMeanWhileEventPostingForSAMLiberation( GetSAMIdFromSector( sMapX, sMapY, bMapZ ) );
 				}
 
@@ -272,11 +270,11 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 
 	//KM : Aug 11, 1999 -- Patch fix:	Relocated this check so it gets called everytime a sector changes hands,
 	//	 even if the sector isn't a SAM site.	There is a bug _somewhere_ that fails to update the airspace,
-	//	 even though the player controls it.	
+	//	 even though the player controls it.
 	UpdateAirspaceControl( );
 
 	// redraw map/income if in mapscreen
-	fMapPanelDirty = TRUE; 
+	fMapPanelDirty = TRUE;
 	fMapScreenBottomDirty = TRUE;
 
 	return fWasEnemyControlled;
@@ -286,7 +284,6 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 // ALL changes of control to enemy must be funneled through here!
 BOOLEAN SetThisSectorAsEnemyControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BOOLEAN fContested )
 {
-	PERFORMANCE_MARKER
 	UINT16 usMapSector = 0;
 	BOOLEAN fWasPlayerControlled = FALSE;
 	INT8 bTownId = 0;
@@ -391,11 +388,11 @@ BOOLEAN SetThisSectorAsEnemyControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BO
 
 	//KM : Aug 11, 1999 -- Patch fix:	Relocated this check so it gets called everytime a sector changes hands,
 	//	 even if the sector isn't a SAM site.	There is a bug _somewhere_ that fails to update the airspace,
-	//	 even though the player controls it.	
+	//	 even though the player controls it.
 	UpdateAirspaceControl( );
 
 	// redraw map/income if in mapscreen
-	fMapPanelDirty = TRUE; 
+	fMapPanelDirty = TRUE;
 	fMapScreenBottomDirty = TRUE;
 
 	return fWasPlayerControlled;
@@ -405,7 +402,6 @@ BOOLEAN SetThisSectorAsEnemyControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BO
 #ifdef JA2TESTVERSION
 void ClearMapControlledFlags( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounterA = 0, iCounterB = 0;
 	UINT16 usMapSector = 0;
 
@@ -426,7 +422,6 @@ void ClearMapControlledFlags( void )
 /*
 BOOLEAN IsTheSectorPerceivedToBeUnderEnemyControl( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	PERFORMANCE_MARKER
 
 	// are we in battle in this sector?
 	if( ( sMapX == gWorldSectorX ) && ( sMapY == gWorldSectorY ) && ( bMapZ == gbWorldSectorZ ) && ( gTacticalStatus.uiFlags & INCOMBAT ) )
@@ -442,10 +437,9 @@ BOOLEAN IsTheSectorPerceivedToBeUnderEnemyControl( INT16 sMapX, INT16 sMapY, INT
 
 void MakePlayerPerceptionOfSectorControlCorrect( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	PERFORMANCE_MARKER
 	if (bMapZ == 0)
 	{
-		SectorInfo[ SECTOR( sMapX, sMapY ) ].fPlayer[ bMapZ ] = !( StrategicMap[ CALCULATE_STRATEGIC_INDEX( sMapX, sMapY ) ].fEnemyControlled ); 
+		SectorInfo[ SECTOR( sMapX, sMapY ) ].fPlayer[ bMapZ ] = !( StrategicMap[ CALCULATE_STRATEGIC_INDEX( sMapX, sMapY ) ].fEnemyControlled );
 	}
 	// else nothing, underground sector control is always up to date, because we don't track control down there
 
@@ -455,7 +449,6 @@ void MakePlayerPerceptionOfSectorControlCorrect( INT16 sMapX, INT16 sMapY, INT8 
 
 void ReplaceSoldierProfileInPlayerGroup( UINT8 ubGroupID, UINT8 ubOldProfile, UINT8 ubNewProfile )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	PLAYERGROUP *curr;
 
@@ -478,5 +471,5 @@ void ReplaceSoldierProfileInPlayerGroup( UINT8 ubGroupID, UINT8 ubOldProfile, UI
 		}
 		curr = curr->next;
 	}
-	
+
 }

@@ -30,7 +30,7 @@ UNDERGROUND_SECTORINFO* gpUndergroundSectorInfoTail = NULL;
 //		weapon caches: E11, H5, H10, J12, M9
 //		Madlab quest: H7, H16, I11, E4
 // Do not enable randomization of this sectors until you are know what you're doing
-BOOLEAN RandomSector[256] = 
+BOOLEAN RandomSector[256] =
 {
 	//		1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16
 	/* A */	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,
@@ -62,7 +62,7 @@ typedef struct
 	ALTSECTORS_PARSE_STAGE	curElement;
 	CHAR8					szCharData[MAX_CHAR_DATA_LENGTH+1];
 	UINT32					uiRowNumber;
-	
+
 	UINT32					currentDepth;
 	UINT32					maxReadDepth;
 } altSectorsParseData;
@@ -70,7 +70,6 @@ typedef struct
 static void XMLCALL
 altSectorsStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	altSectorsParseData * pData = (altSectorsParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -102,7 +101,6 @@ altSectorsStartElementHandle(void *userData, const XML_Char *name, const XML_Cha
 static void XMLCALL
 altSectorsCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	altSectorsParseData * pData = (altSectorsParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth && strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
@@ -113,7 +111,6 @@ altSectorsCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 altSectorsEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	altSectorsParseData * pData = (altSectorsParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -150,20 +147,19 @@ altSectorsEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInAltSectors(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	altSectorsParseData pData;
 
 	// Open xml file
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -178,11 +174,11 @@ BOOLEAN ReadInAltSectors(STR fileName)
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, altSectorsStartElementHandle, altSectorsEndElementHandle);
 	XML_SetCharacterDataHandler(parser, altSectorsCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
 	XML_SetUserData(parser, &pData);
 
@@ -207,7 +203,6 @@ BOOLEAN ReadInAltSectors(STR fileName)
 
 BOOLEAN WriteInAltSectors(STR fileName)
 {
-	PERFORMANCE_MARKER
 	// Lets output the current Strategic map format using the XML structure I've devised.
 	FILE *outfile = fopen(fileName, "wt");
 
@@ -226,15 +221,14 @@ BOOLEAN WriteInAltSectors(STR fileName)
 	fprintf (outfile, "</ALT_SECTORS_LIST>\n");
 
 	fclose(outfile);
-		
+
 	return (TRUE);
 }
 
 UNDERGROUND_SECTORINFO* NewUndergroundNode( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 {
-	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO *curr;
-	curr = (UNDERGROUND_SECTORINFO*)MemAlloc( sizeof( UNDERGROUND_SECTORINFO ) );	
+	curr = (UNDERGROUND_SECTORINFO*)MemAlloc( sizeof( UNDERGROUND_SECTORINFO ) );
 	AssertMsg( curr, "Failed to create an underground sector info node." );
 	memset( curr, 0, sizeof( UNDERGROUND_SECTORINFO ) );
 
@@ -258,7 +252,6 @@ UNDERGROUND_SECTORINFO* NewUndergroundNode( UINT8 ubSectorX, UINT8 ubSectorY, UI
 // setup which know facilities are in which cities
 void InitKnowFacilitiesFlags( )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	// Cambria hospital
@@ -297,40 +290,38 @@ void InitKnowFacilitiesFlags( )
 
 void InitMiningLocations()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	//Set up mining sites
-	
+
 	pSector = &SectorInfo[SEC_D4];
 	pSector->uiFlags |= SF_MINING_SITE;
-//	pSector->ubIncomeValue = 33;		
+//	pSector->ubIncomeValue = 33;
 
 	pSector = &SectorInfo[SEC_D13];
 	pSector->uiFlags |= SF_MINING_SITE;
 //	pSector->ubIncomeValue = 41;
-	
+
 	pSector = &SectorInfo[SEC_B2];
 	pSector->uiFlags |= SF_MINING_SITE;
 //	pSector->ubIncomeValue = 20;
-	
+
 	pSector = &SectorInfo[SEC_H8];
 	pSector->uiFlags |= SF_MINING_SITE;
 //	pSector->ubIncomeValue = 64;
-	
+
 	pSector = &SectorInfo[SEC_I14];
 	pSector->uiFlags |= SF_MINING_SITE;
 //	pSector->ubIncomeValue = 80;
-	
+
 	//Grumm
 	pSector = &SectorInfo[SEC_H3];
 	pSector->uiFlags |= SF_MINING_SITE;
 //	pSector->ubIncomeValue = 100;
 }
 
-//Mobile groups are handled separately from sectors, because they are on the move.	
+//Mobile groups are handled separately from sectors, because they are on the move.
 void GeneratePatrolGroups()
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	UINT8 ubNumTroops;
 	ubNumTroops = (UINT8)(3 + gGameOptions.ubDifficultyLevel + Random( 3 ));
@@ -377,7 +368,6 @@ void GeneratePatrolGroups()
 
 void TrashUndergroundSectorInfo()
 {
-	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO *curr;
 	while( gpUndergroundSectorInfoHead )
 	{
@@ -391,11 +381,10 @@ void TrashUndergroundSectorInfo()
 
 //Defines the sectors that can be occupied by enemies, creatures, etc.	It also
 //contains the network of cave connections critical for strategic creature spreading, as we can't
-//know how the levels connect without loading the maps.	This is completely hardcoded, and any 
+//know how the levels connect without loading the maps.	This is completely hardcoded, and any
 //changes to the maps, require changes accordingly.
 void BuildUndergroundSectorInfoList()
 {
-	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO *curr;
 
 	TrashUndergroundSectorInfo();
@@ -406,7 +395,7 @@ void BuildUndergroundSectorInfoList()
 
 	//Miguel's basement.	Nothing here.
 	curr = NewUndergroundNode( 10, 1, 1 );
-	
+
 	//Chitzena mine.	Nothing here.
 	curr = NewUndergroundNode( 2, 2, 1 );
 
@@ -439,13 +428,13 @@ void BuildUndergroundSectorInfoList()
 	curr = NewUndergroundNode( 4, 11, 1 );
 	curr->ubNumTroops = (UINT8)(6 + gGameOptions.ubDifficultyLevel*2 + Random( 3 ));
 	curr->ubNumElites = (UINT8)(4 + gGameOptions.ubDifficultyLevel + Random( 2 ));
-	
+
 	//O3
 	curr = NewUndergroundNode( 3, 15, 1 );
 	curr->ubNumTroops = (UINT8)(6 + gGameOptions.ubDifficultyLevel*2 + Random( 3 ));
 	curr->ubNumElites = (UINT8)(4 + gGameOptions.ubDifficultyLevel + Random( 2 ));
 	curr->ubAdjacentSectors |= SOUTH_ADJACENT_SECTOR;
-	
+
 	//P3
 	curr = NewUndergroundNode( 3, 16, 1 );
 	switch( gGameOptions.ubDifficultyLevel )
@@ -466,7 +455,7 @@ void BuildUndergroundSectorInfoList()
 	curr->ubAdjacentSectors |= NORTH_ADJACENT_SECTOR;
 
 	//Do all of the mandatory underground mine sectors
-	
+
 	//Drassen's mine
 	//D13_B1
 	curr = NewUndergroundNode( 13, 4, 1 );
@@ -563,7 +552,6 @@ void BuildUndergroundSectorInfoList()
 //		randomization of individual sectors can be switched off via array RandomSector[]
 void InitWorld()
 {
-	PERFORMANCE_MARKER
 	INT16	sSectorCounter;
 
 	for (sSectorCounter = 0; sSectorCounter < 256; sSectorCounter++)
@@ -581,7 +569,6 @@ void InitWorld()
 //This is also highly effected by the game's difficulty setting.
 void InitNewCampaign()
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewCampaign");
 	//First clear all the sector information of all enemy existance.	Conveniently, the
 	//ubGroupType is also cleared, which is perceived to be an empty group.
@@ -594,7 +581,7 @@ void InitNewCampaign()
 	InitKnowFacilitiesFlags( );
 
 	BuildUndergroundSectorInfoList();
-	
+
 	// allow overhead view of omerta A9 on game onset
 	SetSectorFlag( 9, 1, 0, SF_ALREADY_VISITED );
 

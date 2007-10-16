@@ -45,7 +45,6 @@ extern UINT8 GetDealerItemCategoryNumber( UINT16 usItemIndex );
 
 bool WORLDITEM::operator<(WORLDITEM& compare)
 {
-	PERFORMANCE_MARKER
 	if ( this->fExists == false || this->object.exists() == false) {
 		return false;
 	}
@@ -65,7 +64,7 @@ bool WORLDITEM::operator<(WORLDITEM& compare)
 	}
 
 
-	// the same category 
+	// the same category
 	//Madd: sort by name (for now at least):
 	int retVal = _stricmp(Item[this->object.usItem].szBRName,Item[compare.object.usItem].szBRName);
 	if ( retVal < 0 ) {
@@ -105,7 +104,6 @@ bool WORLDITEM::operator<(WORLDITEM& compare)
 
 void WORLDITEM::initialize()
 {
-	PERFORMANCE_MARKER
 	this->fExists = 0;
 	this->sGridNo = 0;
 	this->ubLevel = 0;
@@ -118,7 +116,6 @@ void WORLDITEM::initialize()
 
 WORLDITEM& WORLDITEM::operator=(OLD_WORLDITEM_101& src)
 {
-	PERFORMANCE_MARKER
 	//the first conversion is simple enough that it can be done here
 	this->fExists = src.fExists;
 	this->sGridNo = src.sGridNo;
@@ -135,7 +132,6 @@ WORLDITEM& WORLDITEM::operator=(OLD_WORLDITEM_101& src)
 
 WORLDITEM& WORLDITEM::operator=(const WORLDITEM& src)
 {
-	PERFORMANCE_MARKER
 	this->fExists = src.fExists;
 	this->sGridNo = src.sGridNo;
 	this->ubLevel = src.ubLevel;
@@ -150,7 +146,6 @@ WORLDITEM& WORLDITEM::operator=(const WORLDITEM& src)
 
 INT32 GetFreeWorldBombIndex( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 	WORLDBOMB *newWorldBombs;
 	UINT32	uiOldNumWorldBombs;
@@ -171,7 +166,7 @@ INT32 GetFreeWorldBombIndex( void )
 	}
 
 	//Clear the rest of the new array
-	memset( &newWorldBombs[ uiOldNumWorldBombs ], 0, 
+	memset( &newWorldBombs[ uiOldNumWorldBombs ], 0,
 		sizeof( WORLDBOMB ) * ( guiNumWorldBombs - uiOldNumWorldBombs ) );
 	gWorldBombs = newWorldBombs;
 
@@ -182,7 +177,6 @@ INT32 GetFreeWorldBombIndex( void )
 
 UINT32 GetNumUsedWorldBombs( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount, uiNumItems;
 	uiNumItems = 0;
 
@@ -206,7 +200,6 @@ UINT32 GetNumUsedWorldBombs( void )
 
 INT32 AddBombToWorld( INT32 iItemIndex )
 {
-	PERFORMANCE_MARKER
 	UINT32	iBombIndex;
 
 	iBombIndex = GetFreeWorldBombIndex( );
@@ -220,14 +213,12 @@ INT32 AddBombToWorld( INT32 iItemIndex )
 
 void RemoveBombFromWorld( INT32 iBombIndex )
 {
-	PERFORMANCE_MARKER
 	//Remove the world bomb from the table.
 	gWorldBombs[ iBombIndex ].fExists										= FALSE;
 }
 
 void RemoveBombFromWorldByItemIndex( INT32 iItemIndex )
 {
-	PERFORMANCE_MARKER
 	// Find the world bomb which corresponds with a particular world item, then
 	// remove the world bomb from the table.
 	UINT32	uiBombIndex;
@@ -244,7 +235,6 @@ void RemoveBombFromWorldByItemIndex( INT32 iItemIndex )
 
 INT32 FindWorldItemForBombInGridNo( INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	UINT32					uiBombIndex;
 
 	for (uiBombIndex = 0; uiBombIndex < guiNumWorldBombs; uiBombIndex++)
@@ -260,7 +250,6 @@ INT32 FindWorldItemForBombInGridNo( INT16 sGridNo, INT8 bLevel )
 
 void FindPanicBombsAndTriggers( void )
 {
-	PERFORMANCE_MARKER
 	// This function searches the bomb table to find panic-trigger-tuned bombs and triggers
 
 	UINT32			uiBombIndex;
@@ -291,7 +280,7 @@ void FindPanicBombsAndTriggers( void )
 						case PANIC_FREQUENCY_3:
 							bPanicIndex = 2;
 							break;
-						
+
 						default:
 							// augh!!!
 							continue;
@@ -300,10 +289,10 @@ void FindPanicBombsAndTriggers( void )
 					pSwitch = FindStructure( sGridNo, STRUCTURE_SWITCH );
 					if (pSwitch)
 					{
-						switch( pSwitch->ubWallOrientation ) 
+						switch( pSwitch->ubWallOrientation )
 						{
 							case INSIDE_TOP_LEFT:
-							case OUTSIDE_TOP_LEFT:					
+							case OUTSIDE_TOP_LEFT:
 								sGridNo += DirectionInc( SOUTH );
 								break;
 							case INSIDE_TOP_RIGHT:
@@ -339,7 +328,6 @@ void FindPanicBombsAndTriggers( void )
 
 INT32 GetFreeWorldItemIndex( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 	WORLDITEM *newWorldItems;
 	UINT32	uiOldNumWorldItems;
@@ -376,7 +364,6 @@ INT32 GetFreeWorldItemIndex( void )
 
 UINT32 GetNumUsedWorldItems( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount, uiNumItems;
 	uiNumItems = 0;
 
@@ -395,7 +382,6 @@ UINT32 GetNumUsedWorldItems( void )
 
 INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible )
 {
-	PERFORMANCE_MARKER
 	UINT32	iItemIndex;
 	INT32		iReturn;
 
@@ -436,7 +422,6 @@ INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 
 
 void RemoveItemFromWorld( INT32 iItemIndex )
 {
-	PERFORMANCE_MARKER
 	// Ensure the item still exists, then if it's a bomb,
 	// remove the appropriate entry from the bomb table
 	if (gWorldItems[ iItemIndex ].fExists)
@@ -451,7 +436,6 @@ void RemoveItemFromWorld( INT32 iItemIndex )
 
 void TrashWorldItems()
 {
-	PERFORMANCE_MARKER
 	UINT32 i;
 	if( gWorldItems )
 	{
@@ -477,7 +461,6 @@ void TrashWorldItems()
 
 void SaveWorldItemsToMap( HWFILE fp )
 {
-	PERFORMANCE_MARKER
 	UINT32 i, uiBytesWritten;
 	UINT32		uiActualNumWorldItems;
 
@@ -496,9 +479,8 @@ void SaveWorldItemsToMap( HWFILE fp )
 
 void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorMapVersion )
 {
-	PERFORMANCE_MARKER
 	// Start loading itmes...
-	
+
 	UINT32			i;
 	WORLDITEM		dummyItem;
 	INT32				iItemIndex;
@@ -510,7 +492,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 	LOADDATA( &uiNumWorldItems, *hBuffer, 4 );
 
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME && !gfEditMode )
-	{ //The sector has already been visited.	The items are saved in a different format that will be 
+	{ //The sector has already been visited.	The items are saved in a different format that will be
 		//loaded later on.	So, all we need to do is skip the data entirely.
 		if (dMajorMapVersion >= 6.0 && ubMinorMapVersion > 26 ) {
 			for (unsigned int x = 0; x < uiNumWorldItems; ++x)
@@ -535,7 +517,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 		if( gfEditMode || dummyItem.ubNonExistChance <= PreRandom( 100 ) )
 		{
 			if( !gfEditMode )
-			{ 
+			{
 				//check for matching item existance modes and only add if there is a match!
 				//if we are in platinum mode, REALISTIC items are allowed, but not SCIFI items
 				if( dummyItem.usFlags & WORLD_ITEM_SCIFI_ONLY && !(gGameOptions.ubGameStyle == STYLE_SCIFI) ||
@@ -578,7 +560,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 							// go through status values and scale up/down
 							for ( ubLoop = 0; ubLoop < dummyItem.object.ubNumberOfObjects; ubLoop++ )
 							{
-								dummyItem.object.status.bStatus[ ubLoop ] = dummyItem.object.status.bStatus[ ubLoop ] * Magazine[ Item[ usReplacement ].ubClassIndex ].ubMagSize / Magazine[ Item[ dummyItem.object.usItem ].ubClassIndex ].ubMagSize; 
+								dummyItem.object.status.bStatus[ ubLoop ] = dummyItem.object.status.bStatus[ ubLoop ] * Magazine[ Item[ usReplacement ].ubClassIndex ].ubMagSize / Magazine[ Item[ dummyItem.object.usItem ].ubClassIndex ].ubMagSize;
 							}
 
 							// then replace item #
@@ -598,7 +580,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 					dummyItem.object[0]->data.misc.bDetonatorType = 0;
 				}
 			}
-			
+
 			else if ( dummyItem.bVisible == HIDDEN_ITEM && dummyItem.object[0]->data.bTrap > 0 && ( Item[dummyItem.object.usItem].mine || dummyItem.object.usItem == TRIP_FLARE || dummyItem.object.usItem == TRIP_KLAXON) )
 			{
 				ArmBomb( &dummyItem.object, BOMB_PRESSURE );
@@ -618,7 +600,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 	}
 
 	if ( !gfEditMode )
-	{	
+	{
 		DeleteWorldItemsBelongingToTerroristsWhoAreNotThere();
 		if ( gWorldSectorX == 3 && gWorldSectorY == MAP_ROW_P && gbWorldSectorZ == 1 )
 		{
@@ -629,7 +611,6 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 
 void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere( void )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiLoop;
 	UINT32	uiLoop2;
 	INT16		sGridNo;
@@ -672,7 +653,6 @@ void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere( void )
 
 void DeleteWorldItemsBelongingToQueenIfThere( void )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiLoop;
 	UINT32	uiLoop2;
 	INT16		sGridNo;
@@ -680,7 +660,7 @@ void DeleteWorldItemsBelongingToQueenIfThere( void )
 	INT8		bSlot;
 
 	if ( gMercProfiles[ QUEEN ].sSectorX == gWorldSectorX &&
-		gMercProfiles[ QUEEN ].sSectorY == gWorldSectorY && 
+		gMercProfiles[ QUEEN ].sSectorY == gWorldSectorY &&
 		gMercProfiles[ QUEEN ].bSectorZ == gbWorldSectorZ )
 	{
 
@@ -736,11 +716,10 @@ void DeleteWorldItemsBelongingToQueenIfThere( void )
 // Refresh item pools
 void RefreshWorldItemsIntoItemPools( WORLDITEM * pItemList, INT32 iNumberOfItems )
 {
-	PERFORMANCE_MARKER
 	INT32			i;
 
 	for ( i = 0; i < iNumberOfItems; i++ )
-	{	
+	{
 		if( pItemList[ i ].fExists )
 		{
 			WORLDITEM& dummyItem = pItemList[ i ];

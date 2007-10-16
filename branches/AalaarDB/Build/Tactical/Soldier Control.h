@@ -324,21 +324,6 @@ struct LEVELNODE;
 //forward declarations for versioning, it's so long I want it at the end
 class OLDSOLDIERTYPE_101;
 
-#ifdef NO_LONGER_USED
-//atm only used for saving and loading
-//many changes needed if inventory is going to use a vector of these
-class InventoryItem
-{
-public:
-	OBJECTTYPE	object;
-	int			bNewItemCount;
-	int			bNewItemCycleCount;
-	BOOLEAN	Load( HWFILE hFile );
-	BOOLEAN	Load( INT8 ** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
-	BOOLEAN	Save( HWFILE hFile, bool fSavingMap );
-};
-#endif
-
 //ADB inventory needs a little work, for instance, how to get objects and counts to agree on sizes?
 //also makes things more bloated when saving
 class Inventory {
@@ -1230,17 +1215,6 @@ public:
 
 
 
-
-enum WeaponModes
-{
-	WM_NORMAL = 0,
-	WM_BURST,
-	WM_AUTOFIRE,
-	WM_ATTACHED_GL,
-	WM_ATTACHED_GL_BURST,
-	WM_ATTACHED_GL_AUTO,
-	NUM_WEAPON_MODES
-} ;
 
 // TYPEDEFS FOR ANIMATION PROFILES
 typedef struct

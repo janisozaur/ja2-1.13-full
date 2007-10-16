@@ -4,8 +4,8 @@
 	#include "builddefines.h"
 	#include <stdio.h>
 	#include <stdarg.h>
-	#include <time.h> 
-	#include "sgp.h" 
+	#include <time.h>
+	#include "sgp.h"
 	#include "gameloop.h"
 	#include "himage.h"
 	#include "vobject.h"
@@ -34,7 +34,7 @@
 	#include "weapons.h"
 	#include "lighting.h"
 	#include "faces.h"
-	#include "mapscreen.h" 
+	#include "mapscreen.h"
 	#include "message.h"
 	#include "text.h"
 	#include "Interface Items.h"
@@ -74,26 +74,26 @@
 	#include "Boxing.h"
 #endif
 
-/* 
+/*
  *
  *								SINGLE MERC BAR COORDS
  *
  *
  *	My opinion about this bars and GUI
  *	i would be very happy if we had c++ classes then we could made somethis like modules
- *	and peoples could very easly make their ow panels, button, labels and other 
+ *	and peoples could very easly make their ow panels, button, labels and other
  *	i have got some ideas but it will tak some time to implement then.
- *	it will be hard and time consuming but maby i will show ya all direction how i would 
+ *	it will be hard and time consuming but maby i will show ya all direction how i would
  *	do it and peoples will continue that path :) joker
  */
 
 /*	Ok so this array values had a constant initializer INV_INTERFACE_START_Y wich was constant
- *	we need do load SCREEN_WIDTH _HEIGHT from file to make JA more customizable so if we 
+ *	we need do load SCREEN_WIDTH _HEIGHT from file to make JA more customizable so if we
  *	will make SCREEN_xxx viariable then xxx_INTERFACE_xxx will be also variable.
- *	When we declare static array like here (below) we need constant initializer but we need dynamic 
+ *	When we declare static array like here (below) we need constant initializer but we need dynamic
  *	array so i declare only array and i will initielize it in run-time.
  *	any questions?
- *	joker 
+ *	joker
  */
 
 INV_REGION_DESC gSMInvPocketXY[19];	// ARRAY FOR INV PANEL INTERFACE ITEM POSITIONS
@@ -112,7 +112,7 @@ int SM_SELMERC_AP_X;
 int SM_SELMERC_AP_Y;
 int SM_SELMERC_AP_HEIGHT;
 int SM_SELMERC_AP_WIDTH;
- 
+
 int SM_SELMERC_HEALTH_X;
 int SM_SELMERC_HEALTH_Y;
 int SM_SELMERC_HEALTH_WIDTH;
@@ -241,22 +241,22 @@ int MONEY_Y;
 int MONEY_WIDTH;
 int MONEY_HEIGHT;
 
-/* 
+/*
  *
  *								TEAM BAR COORDS
- * 
+ *
  */
 
 /*
  *	Now we have only 6 mercs in team but maby we will make it CUSTOMIZABLE hehe i like that word
- *	why we declare array with 12 items? coz we got 2 valuse x and y maby we can work it out 
+ *	why we declare array with 12 items? coz we got 2 valuse x and y maby we can work it out
  *	and change INT16 to INV_REGION_DESC for ex.
  */
 INT16 sTEAMAPPanelXY[12];
 INT16 sTEAMFacesXY[12];
 INT16 sTEAMNamesXY[12];
 INT16 sTEAMFaceHighlXY[12];
-INT16 sTEAMLifeXY[12]; 
+INT16 sTEAMLifeXY[12];
 INT16 sTEAMBreathXY[12];
 INT16 sTEAMMoraleXY[12];
 INT16 sTEAMApXY[12];
@@ -302,12 +302,12 @@ int INDICATOR_BOX_HEIGHT;
 MOUSE_REGION	gSMPanelRegion;
 INT8		gbNewItem[ NUM_INV_SLOTS ];
 TEAM_PANEL_SLOTS_TYPE	gTeamPanel[ NUM_TEAM_SLOTS ];
-/*	
+/*
  *
  *							VARIOUS PANELS COORDS
  *
- *	now its only clock and location name we will also make them ??? 
- *	yes yes yes MORE CUSTOMIZABLE :P for moders 
+ *	now its only clock and location name we will also make them ???
+ *	yes yes yes MORE CUSTOMIZABLE :P for moders
  *	i will work with radar screen to allow moving it. or maby someone else will do it
  *	any questions? joker
  */
@@ -435,7 +435,7 @@ void HelpTextDoneCallback( void );
 INT8				gbSMCurStanceObj;
 UINT16				gusSMCurrentMerc = 0;
 SOLDIERTYPE			*gpSMCurrentMerc = NULL;
-extern	INT8		gbCompatibleApplyItem; 
+extern	INT8		gbCompatibleApplyItem;
 extern	SOLDIERTYPE *gpItemPopupSoldier;
 
 INT8		gbStanceButPos[2][3][3] =
@@ -446,7 +446,7 @@ INT8		gbStanceButPos[2][3][3] =
 	22,		20,		21,
 	// STEALTH MODE
 	13,		11,		12,
-	7,		5,		6,	
+	7,		5,		6,
 	19,		17,		18
 };
 
@@ -513,7 +513,6 @@ extern SOLDIERTYPE *FindNextActiveSquad( SOLDIERTYPE *pSoldier );
 // Wraps up check for AP-s get from a different soldier for in a vehicle...
 INT8 GetUIApsToDisplay( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pVehicle;
 
 	if ( pSoldier->flags.uiStatusFlags & SOLDIER_DRIVER )
@@ -537,7 +536,6 @@ INT8 GetUIApsToDisplay( SOLDIERTYPE *pSoldier )
 
 void CheckForDisabledForGiveItem( )
 {
-	PERFORMANCE_MARKER
 	INT16			sDist;
 	INT16			sDestGridNo;
 	INT8			bDestLevel;
@@ -562,7 +560,7 @@ void CheckForDisabledForGiveItem( )
 		// Go through each merc and see if there is one closeby....
 		cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
-		{	
+		{
 			if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) && pSoldier->bInSector && IsMercOnCurrentSquad( pSoldier ) )
 			{
 				sDist = PythSpacesAway( gpSMCurrentMerc->sGridNo, pSoldier->sGridNo );
@@ -630,7 +628,6 @@ void CheckForDisabledForGiveItem( )
 
 void SetSMPanelCurrentMerc( UINT8 ubNewID )
 {
-	PERFORMANCE_MARKER
 	gubSelectSMPanelToMerc = NOBODY;
 
 	gusSMCurrentMerc = ubNewID;
@@ -702,7 +699,6 @@ void SetSMPanelCurrentMerc( UINT8 ubNewID )
 
 void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	if ( gsCurInterfacePanel == SM_PANEL )
@@ -734,7 +730,6 @@ void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 
 void UpdateSMPanel( )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN						fNearHeigherLevel;
 	BOOLEAN						fNearLowerLevel;
 	INT8							bDirection;
@@ -765,7 +760,7 @@ void UpdateSMPanel( )
 			// Disable if we cannot do this!
 			if ( !IsValidStance( gpSMCurrentMerc, ANIM_CROUCH ) )
 			{
-				DisableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );				
+				DisableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
 			}
 			break;
 
@@ -783,11 +778,11 @@ void UpdateSMPanel( )
 			// Disable if we cannot do this!
 			if ( !IsValidStance( gpSMCurrentMerc, ANIM_PRONE ) )
 			{
-				DisableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );				
+				DisableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
 			}
 			break;
 	}
-	
+
 	// Stance button done wether we're disabled or not...
 	if ( gfUIStanceDifferent )
 	{
@@ -841,8 +836,10 @@ void UpdateSMPanel( )
 
 
 	// Set Disable /Enable UI based on buddy's stats
+	//if (ButtonList[ iSMPanelButtons[ BURSTMODE_BUTTON ] ]->ImageNum != (UINT32) iBurstButtonImages[ GetWeaponMode(&gpSMCurrentMerc->inv[HANDPOS]) ] )
 	if (ButtonList[ iSMPanelButtons[ BURSTMODE_BUTTON ] ]->ImageNum != (UINT32) iBurstButtonImages[ gpSMCurrentMerc->bWeaponMode ] )
 	{
+		//ButtonList[ iSMPanelButtons[ BURSTMODE_BUTTON ] ]->ImageNum = iBurstButtonImages[ GetWeaponMode(&gpSMCurrentMerc->inv[HANDPOS]) ];
 		ButtonList[ iSMPanelButtons[ BURSTMODE_BUTTON ] ]->ImageNum = iBurstButtonImages[ gpSMCurrentMerc->bWeaponMode ];
 		ButtonList[ iSMPanelButtons[ BURSTMODE_BUTTON ] ]->uiFlags |= BUTTON_DIRTY;
 	}
@@ -882,7 +879,7 @@ void UpdateSMPanel( )
 	}
 
 
-	DisableButton( iSMPanelButtons[ CLIMB_BUTTON ] );		
+	DisableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
 
 	GetMercClimbDirection( gpSMCurrentMerc->ubID, &fNearLowerLevel, &fNearHeigherLevel );
 
@@ -892,7 +889,7 @@ void UpdateSMPanel( )
 		{
 			if ( EnoughPoints( gpSMCurrentMerc, GetAPsToClimbRoof( gpSMCurrentMerc, TRUE ), 0, FALSE ) )
 			{
-				EnableButton( iSMPanelButtons[ CLIMB_BUTTON ] );		
+				EnableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
 			}
 		}
 
@@ -900,14 +897,14 @@ void UpdateSMPanel( )
 		{
 			if ( EnoughPoints( gpSMCurrentMerc, GetAPsToClimbRoof( gpSMCurrentMerc, FALSE ), 0, FALSE ) )
 			{
-				EnableButton( iSMPanelButtons[ CLIMB_BUTTON ] );		
+				EnableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
 			}
 		}
 	}
-	
+
 	if ( FindFenceJumpDirection( gpSMCurrentMerc, gpSMCurrentMerc->sGridNo, gpSMCurrentMerc->ubDirection, &bDirection ) )
 	{
-		EnableButton( iSMPanelButtons[ CLIMB_BUTTON ] );		
+		EnableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
 	}
 
 	if ( (gTacticalStatus.ubCurrentTeam != gbPlayerNum) || (gTacticalStatus.uiFlags & REALTIME ) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
@@ -983,8 +980,8 @@ void UpdateSMPanel( )
 	// If not selected ( or dead ), disable/gray some buttons
 	if ( gusSelectedSoldier != gpSMCurrentMerc->ubID || ( gpSMCurrentMerc->stats.bLife < OKLIFE ) || (gTacticalStatus.ubCurrentTeam != gbPlayerNum) || gfSMDisableForItems )
 	{
-		DisableButton( iSMPanelButtons[ CLIMB_BUTTON ] );		
-		DisableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );		
+		DisableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
+		DisableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );
 		DisableButton( iSMPanelButtons[ STANCEUP_BUTTON ] );
 		DisableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
 		DisableButton( iSMPanelButtons[ LOOK_BUTTON ] );
@@ -998,13 +995,13 @@ void UpdateSMPanel( )
 	else
 	{
 		// Enable some buttons!
-		if ( ((IsGunAutofireCapable( gpSMCurrentMerc, HANDPOS ) || IsGunBurstCapable( gpSMCurrentMerc, HANDPOS , FALSE )) && !Weapon[gpSMCurrentMerc->inv[HANDPOS].usItem].NoSemiAuto ) || IsGrenadeLauncherAttached ( &(gpSMCurrentMerc->inv[HANDPOS]) ) )
+		if ( ((IsGunAutofireCapable( &gpSMCurrentMerc->inv[HANDPOS] ) || IsGunBurstCapable( &gpSMCurrentMerc->inv[HANDPOS], FALSE, gpSMCurrentMerc )) && !Weapon[gpSMCurrentMerc->inv[HANDPOS].usItem].NoSemiAuto ) || IsGrenadeLauncherAttached ( &(gpSMCurrentMerc->inv[HANDPOS]) ) )
 		{
-			EnableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );		
+			EnableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );
 		}
 		else
 		{
-			DisableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );		
+			DisableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );
 		}
 		EnableButton( iSMPanelButtons[ LOOK_BUTTON ] );
 		EnableButton( iSMPanelButtons[ UPDOWN_BUTTON ] );
@@ -1029,18 +1026,17 @@ void UpdateSMPanel( )
 }
 
 extern BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement );
-extern INT8		gbInvalidPlacementSlot[ NUM_INV_SLOTS ]; 
+extern INT8		gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
 
 
 void ReevaluateItemHatches( SOLDIERTYPE *pSoldier, BOOLEAN fAllValid )
 {
-	PERFORMANCE_MARKER
 	UINT32	cnt;
 
 	// if there's an item in the cursor and we're not supposed to just make them all valid
 	if ( ( gpItemPointer != NULL ) && !fAllValid )
 	{
-		// check all inventory positions and mark the ones where cursor item won't fit as invalid 
+		// check all inventory positions and mark the ones where cursor item won't fit as invalid
 		for ( cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 		{
 			gbInvalidPlacementSlot[ cnt ] = !CanItemFitInPosition( pSoldier, gpItemPointer, (INT8)cnt, FALSE );
@@ -1077,7 +1073,6 @@ void ReevaluateItemHatches( SOLDIERTYPE *pSoldier, BOOLEAN fAllValid )
 
 void EnableSMPanelButtons( BOOLEAN fEnable , BOOLEAN fFromItemPickup )
 {
-	PERFORMANCE_MARKER
 	if ( fFromItemPickup )
 	{
 		// If we have the item pointer up...
@@ -1136,8 +1131,8 @@ void EnableSMPanelButtons( BOOLEAN fEnable , BOOLEAN fFromItemPickup )
 			// only enable the following if NOT in shopkeeper's interface
 			if ( !(guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE ) )
 			{
-				EnableButton( iSMPanelButtons[ CLIMB_BUTTON ] );		
-				EnableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );		
+				EnableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
+				EnableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );
 				EnableButton( iSMPanelButtons[ STANCEUP_BUTTON ] );
 				EnableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
 				EnableButton( iSMPanelButtons[ LOOK_BUTTON ] );
@@ -1178,8 +1173,8 @@ void EnableSMPanelButtons( BOOLEAN fEnable , BOOLEAN fFromItemPickup )
 		}
 		else
 		{
-			DisableButton( iSMPanelButtons[ CLIMB_BUTTON ] );		
-			DisableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );		
+			DisableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
+			DisableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );
 			DisableButton( iSMPanelButtons[ STANCEUP_BUTTON ] );
 			DisableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
 			DisableButton( iSMPanelButtons[ LOOK_BUTTON ] );
@@ -1211,17 +1206,15 @@ void EnableSMPanelButtons( BOOLEAN fEnable , BOOLEAN fFromItemPickup )
 
 UINT16 GetSMPanelCurrentMerc( )
 {
-	PERFORMANCE_MARKER
 	return( gusSMCurrentMerc );
 }
 
 
 BOOLEAN InitializeSMPanelCoords( )
 {
-	PERFORMANCE_MARKER
 	// int i; // unused (jonathanl)
-	/* 
-	* now i use standard positions and i add to them starting coords of panel but 
+	/*
+	* now i use standard positions and i add to them starting coords of panel but
 	* we can add here function that will read coord in panel from file
 	* that will be phase2 of making GUI more customizable
 	* any questions? joker
@@ -1246,7 +1239,7 @@ BOOLEAN InitializeSMPanelCoords( )
 	gSMInvPocketXY[16].sX = INTERFACE_START_X + 432;	gSMInvPocketXY[16].sY = INV_INTERFACE_START_Y + 30;	// SMALLPOCK6
 	gSMInvPocketXY[17].sX = INTERFACE_START_X + 432;	gSMInvPocketXY[17].sY = INV_INTERFACE_START_Y + 54;	// SMALLPOCK7
 	gSMInvPocketXY[18].sX = INTERFACE_START_X + 432;	gSMInvPocketXY[18].sY = INV_INTERFACE_START_Y + 78;	// SMALLPOCK8
-	
+
 	SM_ITEMDESC_START_X		= ( 214 + INTERFACE_START_X );
 	SM_ITEMDESC_START_Y		= ( 1 +	INV_INTERFACE_START_Y );
 	SM_ITEMDESC_HEIGHT		= 128;
@@ -1256,7 +1249,7 @@ BOOLEAN InitializeSMPanelCoords( )
 	SM_SELMERC_AP_Y			= ( 53 + INV_INTERFACE_START_Y );
 	SM_SELMERC_AP_HEIGHT	= 12;
 	SM_SELMERC_AP_WIDTH		= 11;
- 
+
 	SM_SELMERC_HEALTH_X		= ( 69 + INTERFACE_START_X );
 	SM_SELMERC_HEALTH_Y		= ( 47 + INV_INTERFACE_START_Y );
 	SM_SELMERC_HEALTH_WIDTH = 3;
@@ -1385,12 +1378,12 @@ BOOLEAN InitializeSMPanelCoords( )
 	MONEY_Y					= ( 105 + INV_INTERFACE_START_Y );
 	MONEY_WIDTH				= 30;
 	MONEY_HEIGHT			= 22;
-	
+
 	// ow ye font color they can also be customizable :P
 	STATS_TITLE_FONT_COLOR	= 6;
 	STATS_TEXT_FONT_COLOR	= 5;
 
-	// ow and te clock and location i will put it here 
+	// ow and te clock and location i will put it here
 	INTERFACE_CLOCK_X	=		(SCREEN_WIDTH - 86);				//( 554	+ INTERFACE_START_X		);
 	INTERFACE_CLOCK_Y	= ( 119	+ INV_INTERFACE_START_Y );
 	LOCATION_NAME_X		=	(SCREEN_WIDTH - 92);				//( 548	+ INTERFACE_START_X		);
@@ -1401,7 +1394,6 @@ BOOLEAN InitializeSMPanelCoords( )
 }
 BOOLEAN InitializeSMPanel(	)
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
  /*	OK i need to initialize coords here
@@ -1411,7 +1403,7 @@ BOOLEAN InitializeSMPanel(	)
 //	InitializeSMPanelCoords( );
 
   fDisplayOverheadMap = TRUE;
-	
+
 	// failing the CHECKF after this will cause you to lose your mouse
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 
@@ -1447,7 +1439,7 @@ BOOLEAN InitializeSMPanel(	)
 	FilenameForBPP("INTERFACE\\Bars.sti", VObjectDesc.ImageFile);
 	CHECKF( AddVideoObject( &VObjectDesc, &guiBrownBackgroundForTeamPanel ) );
 
-	
+
 	// Clear inv display stuff
 	memset( gfSM_HandInvDispText, 0, sizeof( gfSM_HandInvDispText ) );
 
@@ -1463,13 +1455,13 @@ BOOLEAN InitializeSMPanel(	)
 	// Set viewports
 	// Define region for panel
 	MSYS_DefineRegion( &gSMPanelRegion, 0, INV_INTERFACE_START_Y ,SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL,
-						CURSOR_NORMAL, MSYS_NO_CALLBACK, InvPanelButtonClickCallback ); 
+						CURSOR_NORMAL, MSYS_NO_CALLBACK, InvPanelButtonClickCallback );
 	// Add region
 	MSYS_AddRegion( &gSMPanelRegion);
 
 	//DEfine region for selected guy panel
 	MSYS_DefineRegion( &gSM_SELMERCPanelRegion, SM_SELMERC_FACE_X, SM_SELMERC_FACE_Y, SM_SELMERC_FACE_X + SM_SELMERC_FACE_WIDTH, SM_SELMERC_FACE_Y + SM_SELMERC_FACE_HEIGHT, MSYS_PRIORITY_NORMAL,
-						MSYS_NO_CURSOR, SelectedMercButtonMoveCallback, SelectedMercButtonCallback ); 
+						MSYS_NO_CURSOR, SelectedMercButtonMoveCallback, SelectedMercButtonCallback );
 	// Add region
 	MSYS_AddRegion( &gSM_SELMERCPanelRegion );
 
@@ -1477,14 +1469,14 @@ BOOLEAN InitializeSMPanel(	)
 
 	//DEfine region for selected guy panel
 	MSYS_DefineRegion( &gSM_SELMERCEnemyIndicatorRegion, SM_SELMERC_FACE_X + 1, SM_SELMERC_FACE_Y + 1, SM_SELMERC_FACE_X + INDICATOR_BOX_WIDTH, SM_SELMERC_FACE_Y + INDICATOR_BOX_HEIGHT, MSYS_PRIORITY_NORMAL,
-						MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SelectedMercEnemyIndicatorCallback ); 
+						MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SelectedMercEnemyIndicatorCallback );
 	// Add region
 	MSYS_AddRegion( &gSM_SELMERCEnemyIndicatorRegion );
 
 
 	//DEfine region for money button
 	MSYS_DefineRegion( &gSM_SELMERCMoneyRegion, MONEY_X, MONEY_Y, MONEY_X + MONEY_WIDTH, MONEY_Y + MONEY_HEIGHT, MSYS_PRIORITY_HIGH,
-						MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SMInvMoneyButtonCallback ); 
+						MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SMInvMoneyButtonCallback );
 	// Add region
 	MSYS_AddRegion( &gSM_SELMERCMoneyRegion );
 
@@ -1501,12 +1493,12 @@ BOOLEAN InitializeSMPanel(	)
 
 	//DEfine region for selected guy panel
 	// THIS IS A REGION OF BAR TIPS
-	MSYS_DefineRegion( &gSM_SELMERCBarsRegion, SM_SELMERC_BARS_TIP_X, SM_SELMERC_BARS_TIP_Y, 
+	MSYS_DefineRegion( &gSM_SELMERCBarsRegion, SM_SELMERC_BARS_TIP_X, SM_SELMERC_BARS_TIP_Y,
 					SM_SELMERC_BARS_TIP_X + SM_SELMERC_BARS_TIP_WIDTH, SM_SELMERC_BARS_TIP_Y + SM_SELMERC_BARS_TIP_HEIGHT, MSYS_PRIORITY_NORMAL,
-						MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SelectedMercButtonCallback ); 
+						MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SelectedMercButtonCallback );
 	MSYS_AddRegion( &gSM_SELMERCBarsRegion );
 
-	
+
 	InitInvSlotInterface( gSMInvPocketXY, &gSMCamoXY, SMInvMoveCallback, SMInvClickCallback, SMInvMoveCammoCallback, SMInvClickCamoCallback, FALSE );
 
 	InitKeyRingInterface( KeyRingItemPanelButtonCallback );
@@ -1531,7 +1523,6 @@ BOOLEAN InitializeSMPanel(	)
 
 BOOLEAN CreateSMPanelButtons( )
 {
-	PERFORMANCE_MARKER
 CHAR8 ubString[48];
 
 	giSMStealthImages = -1;
@@ -1561,7 +1552,7 @@ CHAR8 ubString[48];
 	iBurstButtonImages[ WM_ATTACHED_GL ]				= UseLoadedButtonImage( iSMPanelImages[ STANCEUP_IMAGES	], -1, 26, -1, -1, -1 );
 	iBurstButtonImages[ WM_ATTACHED_GL_BURST ]					= UseLoadedButtonImage( iSMPanelImages[ STANCEUP_IMAGES	], -1, 17, -1, -1, -1 );
 	iBurstButtonImages[ WM_ATTACHED_GL_AUTO ]				= UseLoadedButtonImage( iSMPanelImages[ STANCEUP_IMAGES	], -1, 17, -1, -1, -1 );
-	
+
 
 	FilenameForBPP("INTERFACE\\invadd-ons.sti", ubString);
 	// Load button Graphics
@@ -1587,7 +1578,7 @@ CHAR8 ubString[48];
 	iSMPanelButtons[ SM_DONE_BUTTON ] = CreateIconAndTextButton( iSMPanelImages[ DONE_IMAGES ], L"", FONT12ARIAL,
 													FONT_MCOLOR_WHITE, DEFAULT_SHADOW ,
 													FONT_MCOLOR_WHITE, DEFAULT_SHADOW ,
-													TEXT_CJUSTIFIED, 
+													TEXT_CJUSTIFIED,
 													SM_DONE_X, SM_DONE_Y, BUTTON_TOGGLE ,MSYS_PRIORITY_HIGH-1,
 													DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnSMDoneCallback );
 	SetButtonFastHelpText( iSMPanelButtons[ SM_DONE_BUTTON ], TacticalStr[ END_TURN_POPUPTEXT ] );
@@ -1745,7 +1736,6 @@ CHAR8 ubString[48];
 
 void	RemoveSMPanelButtons( )
 {
-	PERFORMANCE_MARKER
 	UINT32 cnt;
 
 	for ( cnt = 0; cnt < NUM_SM_BUTTONS; cnt++ )
@@ -1770,7 +1760,7 @@ void	RemoveSMPanelButtons( )
 	{
 		UnloadButtonImage( giSMStealthImages );
 	}
-	
+
 	UnloadButtonImage( iBurstButtonImages[ WM_NORMAL ] );
 	UnloadButtonImage( iBurstButtonImages[ WM_BURST ] );
 	UnloadButtonImage( iBurstButtonImages[ WM_ATTACHED_GL ] );
@@ -1784,7 +1774,6 @@ void	RemoveSMPanelButtons( )
 
 BOOLEAN ShutdownSMPanel( )
 {
-	PERFORMANCE_MARKER
 
 	// All buttons and regions and video objects and video surfaces will be deleted at shutddown of SGM
 	// We may want to delete them at the interm as well, to free up room for other panels
@@ -1811,7 +1800,7 @@ BOOLEAN ShutdownSMPanel( )
 
 	// shutdown keyring interface
 	ShutdownKeyRingInterface( );
-	
+
 	MSYS_RemoveRegion( &gSMPanelRegion );
 	MSYS_RemoveRegion( &gSM_SELMERCPanelRegion );
 	MSYS_RemoveRegion( &gSM_SELMERCBarsRegion );
@@ -1831,7 +1820,6 @@ BOOLEAN ShutdownSMPanel( )
 
 void RenderSMPanel( BOOLEAN *pfDirty )
 {
-	PERFORMANCE_MARKER
 	INT16 sFontX, sFontY;
 	INT16	usX, usY;
 	CHAR16 sString[9];
@@ -1852,7 +1840,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 	}
 
 	if ( gfCheckForMouseOverItem )
-	{	
+	{
 		if ( ( GetJA2Clock( ) - guiMouseOverItemTime ) > 100 )
 		{
 			if ( HandleCompatibleAmmoUI( gpSMCurrentMerc, (INT8)gbCheckForMouseOverItemPos, TRUE ) )
@@ -1906,7 +1894,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 
 			BltVideoObjectFromIndex( guiSAVEBUFFER, guiSMPanel, 0, INTERFACE_START_X, INV_INTERFACE_START_Y, VO_BLT_SRCTRANSPARENCY, NULL );
 
-			RenderInvBodyPanel( gpSMCurrentMerc, SM_BODYINV_X, SM_BODYINV_Y );		
+			RenderInvBodyPanel( gpSMCurrentMerc, SM_BODYINV_X, SM_BODYINV_Y );
 
 			// CHECK FOR PANEL STUFF / DEATHS / CLOSURES
 			CheckForFacePanelStartAnims( gpSMCurrentMerc, SM_SELMERC_FACE_X, SM_SELMERC_FACE_Y );
@@ -1959,7 +1947,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 
 			mprintf( SM_WEIGHT_LABEL_X - StringPixLength( pInvPanelTitleStrings[1], BLOCKFONT2 ), SM_WEIGHT_LABEL_Y, pInvPanelTitleStrings[ 1 ] );
 			mprintf( SM_WEIGHT_PERCENT_X, SM_WEIGHT_PERCENT_Y, L"%%" );
-			
+
 			mprintf( SM_CAMMO_LABEL_X - StringPixLength( pInvPanelTitleStrings[2], BLOCKFONT2 ), SM_CAMMO_LABEL_Y, pInvPanelTitleStrings[ 2 ] );
 			mprintf( SM_CAMMO_PERCENT_X, SM_CAMMO_PERCENT_Y, L"%%" );
 
@@ -1967,61 +1955,61 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 
 			swprintf( sString, L"%2d", gpSMCurrentMerc->stats.bAgility );
 			FindFontRightCoordinates(SM_AGI_X, SM_AGI_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString ); 
+			mprintf( usX, usY , sString );
 
 			UpdateStatColor( gpSMCurrentMerc->timeChanges.uiChangeDexterityTime,( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & DEX_INCREASE? TRUE: FALSE )	);
 
 			swprintf( sString, L"%2d", gpSMCurrentMerc->stats.bDexterity );
 			FindFontRightCoordinates(SM_DEX_X, SM_DEX_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString ); 
+			mprintf( usX, usY , sString );
 
 			UpdateStatColor( gpSMCurrentMerc->timeChanges.uiChangeStrengthTime, ( BOOLEAN )( gpSMCurrentMerc->usValueGoneUp & STRENGTH_INCREASE?TRUE: FALSE ) );
 
 			swprintf( sString, L"%2d", gpSMCurrentMerc->stats.bStrength );
 			FindFontRightCoordinates(SM_STR_X, SM_STR_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString ); 
+			mprintf( usX, usY , sString );
 
 			UpdateStatColor( gpSMCurrentMerc->timeChanges.uiChangeLeadershipTime, ( BOOLEAN )( gpSMCurrentMerc->usValueGoneUp & LDR_INCREASE? TRUE: FALSE )	);
 
 			swprintf( sString, L"%2d", gpSMCurrentMerc->stats.bLeadership );
 			FindFontRightCoordinates(SM_CHAR_X, SM_CHAR_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString ); 
+			mprintf( usX, usY , sString );
 
 			UpdateStatColor( gpSMCurrentMerc->timeChanges.uiChangeWisdomTime,( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & WIS_INCREASE? TRUE: FALSE )	);
 
 			swprintf( sString, L"%2d", gpSMCurrentMerc->stats.bWisdom );
 			FindFontRightCoordinates(SM_WIS_X, SM_WIS_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString ); 
+			mprintf( usX, usY , sString );
 
 			UpdateStatColor( gpSMCurrentMerc->timeChanges.uiChangeLevelTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & LVL_INCREASE? TRUE: FALSE )	);
 
 			swprintf( sString, L"%2d", gpSMCurrentMerc->stats.bExpLevel );
 			FindFontRightCoordinates(SM_EXPLVL_X, SM_EXPLVL_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString ); 
+			mprintf( usX, usY , sString );
 
 			UpdateStatColor( gpSMCurrentMerc->timeChanges.uiChangeMarksmanshipTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & MRK_INCREASE? TRUE: FALSE )	);
 
 			swprintf( sString, L"%2d", gpSMCurrentMerc->stats.bMarksmanship );
 			FindFontRightCoordinates(SM_MRKM_X, SM_MRKM_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString ); 
+			mprintf( usX, usY , sString );
 
 			UpdateStatColor( gpSMCurrentMerc->timeChanges.uiChangeExplosivesTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & EXP_INCREASE? TRUE: FALSE )	);
 
 			swprintf( sString, L"%2d", gpSMCurrentMerc->stats.bExplosive );
 			FindFontRightCoordinates(SM_EXPL_X, SM_EXPL_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString ); 
+			mprintf( usX, usY , sString );
 
 			UpdateStatColor( gpSMCurrentMerc->timeChanges.uiChangeMechanicalTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & MECH_INCREASE ? TRUE: FALSE )	);
 
 			swprintf( sString, L"%2d", gpSMCurrentMerc->stats.bMechanical );
 			FindFontRightCoordinates(SM_MECH_X, SM_MECH_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString ); 
+			mprintf( usX, usY , sString );
 
 			UpdateStatColor( gpSMCurrentMerc->timeChanges.uiChangeMedicalTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & MED_INCREASE? TRUE: FALSE )	);
 
 			swprintf( sString, L"%2d", gpSMCurrentMerc->stats.bMedical );
 			FindFontRightCoordinates(SM_MED_X, SM_MED_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString ); 
+			mprintf( usX, usY , sString );
 
 			if ( gpSMCurrentMerc->stats.bLife >= OKLIFE )
 			{
@@ -2037,19 +2025,19 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 			// Display armour value!
 			swprintf( sString, L"%3d", ArmourPercent( gpSMCurrentMerc ) );
 			FindFontRightCoordinates(SM_ARMOR_X, SM_ARMOR_Y ,SM_PERCENT_WIDTH ,SM_PERCENT_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString ); 
+			mprintf( usX, usY , sString );
 
 			// Display wieght value!
 			swprintf( sString, L"%3d", CalculateCarriedWeight( gpSMCurrentMerc ) );
 			FindFontRightCoordinates(SM_WEIGHT_X, SM_WEIGHT_Y ,SM_PERCENT_WIDTH ,SM_PERCENT_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString ); 
+			mprintf( usX, usY , sString );
 
 			ApplyEquipmentBonuses(gpSMCurrentMerc);
 
 			// Display cammo value!
 			swprintf( sString, L"%3d", max(0, min( (gpSMCurrentMerc->bCamo + gpSMCurrentMerc->wornCamo+gpSMCurrentMerc->urbanCamo+gpSMCurrentMerc->wornUrbanCamo+gpSMCurrentMerc->desertCamo+gpSMCurrentMerc->wornDesertCamo+gpSMCurrentMerc->snowCamo+gpSMCurrentMerc->wornSnowCamo),100 )) );
 			FindFontRightCoordinates(SM_CAMMO_X, SM_CAMMO_Y ,SM_PERCENT_WIDTH ,SM_PERCENT_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString ); 
+			mprintf( usX, usY , sString );
 
 
 			// reset to frame buffer!
@@ -2068,7 +2056,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 		if ( gpSMCurrentMerc->bStealthMode )
 		{
 			SetFontBackground( FONT_MCOLOR_BLACK );
-			SetFontForeground( FONT_MCOLOR_LTYELLOW );								
+			SetFontForeground( FONT_MCOLOR_LTYELLOW );
 		}
 		else
 		{
@@ -2119,8 +2107,8 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 			if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT ) && gpSMCurrentMerc->stats.bLife >= OKLIFE )
 			{
 				SetFont( TINYFONT1 );
-				//if ( gpSMCurrentMerc->sLastTarget != NOWHERE && !EnoughPoints( gpSMCurrentMerc, MinAPsToAttack( gpSMCurrentMerc, gpSMCurrentMerc->sLastTarget, FALSE ), 0, FALSE ) || GetUIApsToDisplay( gpSMCurrentMerc ) < 0 ) 
-				if ( !EnoughPoints( gpSMCurrentMerc, MinAPsToAttack( gpSMCurrentMerc, gpSMCurrentMerc->sLastTarget, FALSE ), 0, FALSE ) || GetUIApsToDisplay( gpSMCurrentMerc ) < 0 ) 
+				//if ( gpSMCurrentMerc->sLastTarget != NOWHERE && !EnoughPoints( gpSMCurrentMerc, MinAPsToAttack( gpSMCurrentMerc, gpSMCurrentMerc->sLastTarget, FALSE ), 0, FALSE ) || GetUIApsToDisplay( gpSMCurrentMerc ) < 0 )
+				if ( !EnoughPoints( gpSMCurrentMerc, MinAPsToAttack( gpSMCurrentMerc, gpSMCurrentMerc->sLastTarget, FALSE ), 0, FALSE ) || GetUIApsToDisplay( gpSMCurrentMerc ) < 0 )
 				{
 					SetFontBackground( FONT_MCOLOR_BLACK );
 					SetFontForeground( FONT_MCOLOR_DKRED );
@@ -2135,7 +2123,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 					else if ( gpSMCurrentMerc->bStealthMode )
 					{
 						SetFontBackground( FONT_MCOLOR_BLACK );
-						SetFontForeground( FONT_MCOLOR_LTYELLOW );								
+						SetFontForeground( FONT_MCOLOR_LTYELLOW );
 					}
 					else
 					{
@@ -2178,7 +2166,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 
 	UpdateSMPanel( );
 
-	
+
 	//HandlePanelFaceAnimations( gpSMCurrentMerc );
 
 	HandleSoldierFaceFlash( gpSMCurrentMerc, SM_SELMERC_FACE_X, SM_SELMERC_FACE_Y );
@@ -2205,7 +2193,6 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 
 void UpdateStatColor( UINT32 uiTimer, BOOLEAN fIncrease )
 {
-	PERFORMANCE_MARKER
 	if ( gpSMCurrentMerc->stats.bLife >= OKLIFE )
 	{
 		if( ( GetJA2Clock()	< CHANGE_STAT_RECENTLY_DURATION + uiTimer) && ( uiTimer != 0 ) )
@@ -2236,7 +2223,6 @@ void UpdateStatColor( UINT32 uiTimer, BOOLEAN fIncrease )
 
 void SMInvMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiHandPos;
 
 	uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
@@ -2271,12 +2257,11 @@ void SMInvMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			gfCheckForMouseOverItem = FALSE;
 			fInterfacePanelDirty		= DIRTYLEVEL2;
 		}
-	}	
+	}
 }
 
 void InvPanelButtonClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 		return;
@@ -2293,7 +2278,6 @@ void InvPanelButtonClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void SMInvMoveCammoCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -2311,13 +2295,12 @@ void SMInvMoveCammoCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		//gfSM_HandInvDispText[ uiHandPos ] = 1;
 		HandleCompatibleAmmoUI( gpSMCurrentMerc, (INT8)NO_SLOT, FALSE );
 		gfCheckForMouseOverItem = FALSE;
-	}	
+	}
 }
 
 
 void SMInvClickCamoCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	//UINT16 usNewItemIndex;
 	UINT8	ubSrcID, ubDestID;
 	BOOLEAN fGoodAPs;
@@ -2350,7 +2333,7 @@ void SMInvClickCamoCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					{
 						if ( fGoodAPs )
 						{
-						// Dirty 
+						// Dirty
 						fInterfacePanelDirty = DIRTYLEVEL2;
 
 						// Check if it's the same now!
@@ -2366,7 +2349,7 @@ void SMInvClickCamoCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					}
 					else if ( ApplyCanteen( gpSMCurrentMerc, gpItemPointer, &fGoodAPs ) )
 					{
-						// Dirty 
+						// Dirty
 			if ( fGoodAPs )
 			{
 						fInterfacePanelDirty = DIRTYLEVEL2;
@@ -2383,7 +2366,7 @@ void SMInvClickCamoCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					{
 			if ( fGoodAPs )
 			{
-							// Dirty 
+							// Dirty
 						fInterfacePanelDirty = DIRTYLEVEL2;
 
 						// Check if it's the same now!
@@ -2399,7 +2382,7 @@ void SMInvClickCamoCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					}
 					else if ( ApplyDrugs( gpSMCurrentMerc, gpItemPointer ) )
 					{
-						// Dirty 
+						// Dirty
 						fInterfacePanelDirty = DIRTYLEVEL2;
 
 						// Check if it's the same now!
@@ -2430,7 +2413,7 @@ void SMInvClickCamoCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANNOT_DO_INV_STUFF_STR ] );
 					}
 				}
-			} 
+			}
 		}
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
@@ -2442,7 +2425,6 @@ void SMInvClickCamoCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN HandleNailsVestFetish( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, UINT16 usReplaceItem )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fRefuse = FALSE;
 
 	// OK are we nails?
@@ -2468,7 +2450,7 @@ BOOLEAN HandleNailsVestFetish( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, UINT16 u
 				}
 				else
 				{
-					fRefuse = TRUE;			
+					fRefuse = TRUE;
 				}
 			}
 
@@ -2486,7 +2468,6 @@ BOOLEAN HandleNailsVestFetish( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, UINT16 u
 
 BOOLEAN UIHandleItemPlacement( UINT8 ubHandPos, UINT16 usOldItemIndex, UINT16 usNewItemIndex, BOOLEAN fDeductPoints )
 {
-	PERFORMANCE_MARKER
 	if ( _KeyDown(CTRL) )
 	{
 		CleanUpStack( &( gpSMCurrentMerc->inv[ ubHandPos ] ), gpItemPointer );
@@ -2497,7 +2478,7 @@ BOOLEAN UIHandleItemPlacement( UINT8 ubHandPos, UINT16 usOldItemIndex, UINT16 us
 		return( TRUE );
 	}
 
-	// Try to place here			
+	// Try to place here
 	if ( PlaceObject( gpSMCurrentMerc, ubHandPos, gpItemPointer ) )
 	{
 		if ( fDeductPoints )
@@ -2515,7 +2496,7 @@ BOOLEAN UIHandleItemPlacement( UINT8 ubHandPos, UINT16 usOldItemIndex, UINT16 us
 
 		HandleTacticalEffectsOfEquipmentChange( gpSMCurrentMerc, ubHandPos, usOldItemIndex, usNewItemIndex );
 
-		// Dirty 
+		// Dirty
 		fInterfacePanelDirty = DIRTYLEVEL2;
 
 		// Check if cursor is empty now
@@ -2526,7 +2507,7 @@ BOOLEAN UIHandleItemPlacement( UINT8 ubHandPos, UINT16 usOldItemIndex, UINT16 us
 
 		if ( gpItemPointerSoldier != gpSMCurrentMerc )
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], ShortItemNames[ usNewItemIndex ], gpSMCurrentMerc->name );		
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], ShortItemNames[ usNewItemIndex ], gpSMCurrentMerc->name );
 		}
 
 		// UPDATE ITEM POINTER.....
@@ -2538,7 +2519,7 @@ BOOLEAN UIHandleItemPlacement( UINT8 ubHandPos, UINT16 usOldItemIndex, UINT16 us
 		}
 
 		// Set cursor back to normal mode...
-		guiPendingOverrideEvent = A_CHANGE_TO_MOVE;	
+		guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
 
 		return( TRUE );
 
@@ -2547,12 +2528,11 @@ BOOLEAN UIHandleItemPlacement( UINT8 ubHandPos, UINT16 usOldItemIndex, UINT16 us
 	{
 		return( FALSE );
 	}
-	
+
 }
 
 void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiHandPos;
 	// Copyies of values
 	UINT16 usOldItemIndex, usNewItemIndex;
@@ -2620,7 +2600,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				CleanUpStack( &( gpSMCurrentMerc->inv[ uiHandPos ] ), NULL );
 				return;
 			}
-			
+
 			// Turn off new item glow!
 			gpSMCurrentMerc->inv.bNewItemCount[ uiHandPos ] = 0;
 
@@ -2654,7 +2634,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			{
 				// We are doing this ourselve, continue
 				fOKToGo = TRUE;
-			} 
+			}
 			else
 			{
 				// These guys are different....
@@ -2784,10 +2764,10 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				}
 
 				/*
-				// Try to place here			
+				// Try to place here
 				if ( PlaceObject( gpSMCurrentMerc, (UINT8)uiHandPos, gpItemPointer ) )
 				{
-				
+
 					if ( fDeductPoints )
 					{
 						// Deduct points
@@ -2803,7 +2783,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 					HandleTacticalEffectsOfEquipmentChange( gpSMCurrentMerc, uiHandPos, usOldItemIndex, usNewItemIndex );
 
-					// Dirty 
+					// Dirty
 					fInterfacePanelDirty = DIRTYLEVEL2;
 
 					// Check if it's the same now!
@@ -2876,7 +2856,6 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void MergeMessageBoxCallBack( UINT8 ubExitValue )
 {
-	PERFORMANCE_MARKER
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
 		//ADB see what happens here
@@ -2901,7 +2880,6 @@ void MergeMessageBoxCallBack( UINT8 ubExitValue )
 
 void HandleMouseOverSoldierFaceForContMove( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 {
-	PERFORMANCE_MARKER
 	FACETYPE *pFace;
 	INT16			sGridNo;
 
@@ -2918,7 +2896,7 @@ void HandleMouseOverSoldierFaceForContMove( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 			// Display 'cont' on face....
 			// Get face
 			pFace = &gFacesData[ pSoldier->iFaceIndex ];
-			
+
 			pFace->fDisplayTextOver = FACE_DRAW_TEXT_OVER;
 			wcscpy( pFace->zDisplayText, TacticalStr[ CONTINUE_OVER_FACE_STR ] );
 
@@ -2938,7 +2916,7 @@ void HandleMouseOverSoldierFaceForContMove( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 		// Remove 'cont' on face....
 		// Get face
 		pFace = &gFacesData[ pSoldier->iFaceIndex ];
-		
+
 		pFace->fDisplayTextOver = FACE_ERASE_TEXT_OVER;
 
 		// Erase path!
@@ -2950,7 +2928,6 @@ void HandleMouseOverSoldierFaceForContMove( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 
 void SelectedMercButtonMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if ( gpSMCurrentMerc == NULL )
 	{
 		return;
@@ -2972,7 +2949,6 @@ void SelectedMercButtonMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void SelectedMercButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pVehicle;
 
 	if ( gpSMCurrentMerc == NULL )
@@ -3007,7 +2983,7 @@ void SelectedMercButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					ContinueMercMovement( gpSMCurrentMerc );
 					ErasePath( TRUE );
 				}
-				else	
+				else
 				{
 					HandleLocateSelectMerc( gpSMCurrentMerc->ubID, 0 );
 				}
@@ -3026,7 +3002,7 @@ void SelectedMercButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				{
 					DeleteItemDescriptionBox( );
 				}
-			
+
 				gfSwitchPanel = TRUE;
 				gbNewPanel		= TEAM_PANEL;
 			}
@@ -3037,7 +3013,6 @@ void SelectedMercButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void SelectedMercEnemyIndicatorCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if ( gpSMCurrentMerc == NULL )
 	{
 		return;
@@ -3078,7 +3053,6 @@ void SelectedMercEnemyIndicatorCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void BtnStanceUpCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	INT8 bNewStance;
 
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -3111,13 +3085,12 @@ void BtnStanceUpCallback(GUI_BUTTON *btn,INT32 reason)
 
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
-	
+
 }
 
 
 void BtnUpdownCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -3143,10 +3116,9 @@ void BtnUpdownCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 
 }
-	
+
 void BtnClimbCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	BOOLEAN						fNearHeigherLevel;
 	BOOLEAN						fNearLowerLevel;
 	INT8							bDirection;
@@ -3183,12 +3155,11 @@ void BtnClimbCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
-	
+
 }
 
 void BtnStanceDownCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	INT8 bNewStance;
 
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -3220,12 +3191,11 @@ void BtnStanceDownCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
-	
+
 }
 
 void BtnStealthModeCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -3252,7 +3222,6 @@ void BtnStealthModeCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnHandCursorCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -3265,7 +3234,6 @@ void BtnHandCursorCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnTalkCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -3278,7 +3246,6 @@ void BtnTalkCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnMuteCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -3301,7 +3268,6 @@ void BtnMuteCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnPrevMercCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	INT16 sID;
 
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -3345,14 +3311,13 @@ void BtnPrevMercCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
-	
+
 }
 
 void BtnNextMercCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	INT16 sID;
-	
+
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -3395,13 +3360,12 @@ void BtnNextMercCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
-	
+
 }
 
 
 void BtnOptionsCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -3421,12 +3385,11 @@ void BtnOptionsCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
-	
+
 }
 
 void BtnSMDoneCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
@@ -3445,13 +3408,12 @@ void BtnSMDoneCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
-	
+
 }
 
 
 void BtnMapScreenCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -3471,7 +3433,7 @@ void BtnMapScreenCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
-	
+
 }
 
 /*
@@ -3482,7 +3444,6 @@ iButtonID = QuickCreateButton( uiTempVObject[0], 0, 0, BUTTON_NO_TOGGLE, MSYS_PR
 
 void CycleCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	static INT32 buttonValue = 0;
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -3495,7 +3456,6 @@ void CycleCallback( GUI_BUTTON *btn, INT32 reason )
 
 void BtnBurstModeCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -3506,12 +3466,11 @@ void BtnBurstModeCallback(GUI_BUTTON *btn,INT32 reason)
 //		btn->uiFlags |= BUTTON_DIRTY;
 
 	}
-	
+
 }
 
 void BtnLookCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -3522,24 +3481,22 @@ void BtnLookCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 
 		ToggleLookCursorMode( NULL );
-		
+
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
-	
+
 }
 
 void BtnPositionShowCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN InitializeTEAMPanelCoords( )
 {
-	PERFORMANCE_MARKER
 
 	TM_FACE_WIDTH		= 48;
 	TM_FACE_HEIGHT		= 43;
@@ -3631,14 +3588,14 @@ BOOLEAN InitializeTEAMPanelCoords( )
 	sTEAMApXY[4] = ( 233 + INTERFACE_START_X );	sTEAMApXY[5] = ( 52 + INTERFACE_START_Y );
 	sTEAMApXY[6] = ( 317 + INTERFACE_START_X );	sTEAMApXY[7] = ( 52 + INTERFACE_START_Y );
 	sTEAMApXY[8] = ( 400 + INTERFACE_START_X );	sTEAMApXY[9] = ( 52 + INTERFACE_START_Y );
-	sTEAMApXY[10] = ( 483 + INTERFACE_START_X );sTEAMApXY[11] = ( 52 + INTERFACE_START_Y ); 
+	sTEAMApXY[10] = ( 483 + INTERFACE_START_X );sTEAMApXY[11] = ( 52 + INTERFACE_START_Y );
 
 	sTEAMBarsXY[0] = ( 61 + INTERFACE_START_X );	sTEAMBarsXY[1] = ( 3 + INTERFACE_START_Y );
 	sTEAMBarsXY[2] = ( 145 + INTERFACE_START_X );	sTEAMBarsXY[3] = ( 3 + INTERFACE_START_Y );
 	sTEAMBarsXY[4] = ( 228 + INTERFACE_START_X );	sTEAMBarsXY[5] = ( 3 + INTERFACE_START_Y );
 	sTEAMBarsXY[6] = ( 311 + INTERFACE_START_X );	sTEAMBarsXY[7] = ( 3 + INTERFACE_START_Y );
 	sTEAMBarsXY[8] = ( 394 + INTERFACE_START_X );	sTEAMBarsXY[9] = ( 3 + INTERFACE_START_Y );
-	sTEAMBarsXY[10] = ( 477 + INTERFACE_START_X );	sTEAMBarsXY[11] = ( 3 + INTERFACE_START_Y ); 
+	sTEAMBarsXY[10] = ( 477 + INTERFACE_START_X );	sTEAMBarsXY[11] = ( 3 + INTERFACE_START_Y );
 
 	sTEAMHandInvXY[0] = ( TM_INV_HAND1STARTX + ( 0 * TM_INV_HAND_SEP ));	sTEAMHandInvXY[1] = TM_INV_HAND1STARTY;
 	sTEAMHandInvXY[2] = ( TM_INV_HAND1STARTX + ( 1 * TM_INV_HAND_SEP ));	sTEAMHandInvXY[3] = TM_INV_HAND1STARTY;
@@ -3653,7 +3610,6 @@ BOOLEAN InitializeTEAMPanelCoords( )
 // TEAM PANEL!!!!!!!!!!!!!!
 BOOLEAN InitializeTEAMPanel(	)
 {
-	PERFORMANCE_MARKER
 	VSURFACE_DESC		vs_desc;
 	VOBJECT_DESC	VObjectDesc;
 	UINT32					cnt, posIndex;
@@ -3672,7 +3628,7 @@ BOOLEAN InitializeTEAMPanel(	)
 	// Define region for viewport
 	MSYS_DefineRegion( &gViewportRegion, 0, 0 ,gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
 	MSYS_AddRegion( &gViewportRegion );
-	
+
 	// Load interface panels
 	vs_desc.fCreateFlags = VSURFACE_CREATE_FROMFILE | VSURFACE_SYSTEM_MEM_USAGE;
 
@@ -3711,21 +3667,21 @@ BOOLEAN InitializeTEAMPanel(	)
 	// Set viewports
 	// Define region for panel
 	MSYS_DefineRegion( &gTEAM_PanelRegion, 0, gsVIEWPORT_END_Y ,SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL,
-						CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK ); 
+						CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
 	// Add region
 	MSYS_AddRegion( &gTEAM_PanelRegion);
 
 	for ( posIndex = 0, cnt = 0; cnt < 6; cnt++, posIndex +=2 )
 	{
 		MSYS_DefineRegion( &gTEAM_FaceRegions[ cnt ], sTEAMFacesXY[ posIndex ], sTEAMFacesXY[ posIndex + 1 ] ,(INT16)(sTEAMFacesXY[ posIndex ] + TM_FACE_WIDTH ), (INT16)(sTEAMFacesXY[ posIndex + 1 ] + TM_FACE_HEIGHT), MSYS_PRIORITY_NORMAL,
-							MSYS_NO_CURSOR, MercFacePanelMoveCallback, MercFacePanelCallback ); 
+							MSYS_NO_CURSOR, MercFacePanelMoveCallback, MercFacePanelCallback );
 		// Add region
 		MSYS_AddRegion( &gTEAM_FaceRegions[ cnt ] );
 		MSYS_SetRegionUserData( &gTEAM_FaceRegions[ cnt ], 0, cnt );
 
 
 		MSYS_DefineRegion( &gTEAM_EnemyIndicator[ cnt ], (INT16)(sTEAMFacesXY[ posIndex ] + 1), (INT16)(sTEAMFacesXY[ posIndex + 1 ] + 1 ) ,(INT16)(sTEAMFacesXY[ posIndex ] + INDICATOR_BOX_WIDTH ), (INT16)(sTEAMFacesXY[ posIndex + 1 ] + INDICATOR_BOX_HEIGHT), MSYS_PRIORITY_NORMAL,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, EnemyIndicatorClickCallback ); 
+							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, EnemyIndicatorClickCallback );
 		// Add region
 		MSYS_AddRegion( &gTEAM_EnemyIndicator[ cnt ] );
 		MSYS_SetRegionUserData( &gTEAM_EnemyIndicator[ cnt ], 0, cnt );
@@ -3742,20 +3698,20 @@ BOOLEAN InitializeTEAMPanel(	)
 
 
 		MSYS_DefineRegion( &gTEAM_BarsRegions[ cnt ], sTEAMBarsXY[ posIndex ], sTEAMBarsXY[ posIndex + 1 ] ,(INT16)(sTEAMBarsXY[ posIndex ] + TM_BARS_REGION_WIDTH ), (INT16)(sTEAMBarsXY[ posIndex + 1 ] + TM_BARS_REGION_HEIGHT ), MSYS_PRIORITY_NORMAL,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback ); 
+							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback );
 		// Add region
 		MSYS_AddRegion( &gTEAM_BarsRegions[ cnt ] );
 		MSYS_SetRegionUserData( &gTEAM_BarsRegions[ cnt ], 0, cnt );
 
 		MSYS_DefineRegion( &gTEAM_LeftBarsRegions[ cnt ], (INT16)(sTEAMFacesXY[ posIndex ] - 8 ), sTEAMFacesXY[ posIndex + 1 ] ,(INT16)(sTEAMFacesXY[ posIndex ] ), (INT16)(sTEAMFacesXY[ posIndex + 1 ] + TM_BARS_REGION_HEIGHT ), MSYS_PRIORITY_NORMAL,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback ); 
+							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback );
 		// Add region
 		MSYS_AddRegion( &gTEAM_LeftBarsRegions[ cnt ] );
 		MSYS_SetRegionUserData( &gTEAM_LeftBarsRegions[ cnt ], 0, cnt );
 
 
 		MSYS_DefineRegion( &gTEAM_FirstHandInv[ cnt ], sTEAMHandInvXY[ posIndex ], sTEAMHandInvXY[ posIndex + 1 ], (INT16)(sTEAMHandInvXY[ posIndex ] + TM_INV_WIDTH ) ,(INT16)(sTEAMHandInvXY[ posIndex + 1 ] + TM_INV_HEIGHT ), MSYS_PRIORITY_NORMAL,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, TMClickFirstHandInvCallback ); 
+							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, TMClickFirstHandInvCallback );
 		// Add region
 		MSYS_AddRegion( &gTEAM_FirstHandInv[ cnt ] );
 
@@ -3765,19 +3721,19 @@ BOOLEAN InitializeTEAMPanel(	)
 
 
 		MSYS_DefineRegion( &gTEAM_SecondHandInv[ cnt ], sTEAMHandInvXY[ posIndex ], (INT16)( sTEAMHandInvXY[ posIndex + 1 ] + 24 ), (INT16)(sTEAMHandInvXY[ posIndex ] + TM_INV_WIDTH) ,(INT16)(sTEAMHandInvXY[ posIndex + 1 ] + TM_INV_HEIGHT + 24 ), MSYS_PRIORITY_NORMAL,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, TMClickSecondHandInvCallback ); 
+							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, TMClickSecondHandInvCallback );
 		// Add region
 		MSYS_AddRegion( &gTEAM_SecondHandInv[ cnt ] );
 
 		// Add user data
 		MSYS_SetRegionUserData( &gTEAM_SecondHandInv[ cnt ], 0, cnt );
-		
+
 	}
 
 
 	//DEfine region for selected guy panel
 	//MSYS_DefineRegion( &gSM_SELMERCPanalRegion, SM_SELMERC_FACE_X, SM_SELMERC_FACE_Y, SM_SELMERC_FACE_X + SM_SELMERC_FACE_WIDTH, SM_SELMERC_FACE_Y + SM_SELMERC_FACE_HEIGHT, MSYS_PRIORITY_NORMAL,
-	//					CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectedMercButtonCallback ); 
+	//					CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectedMercButtonCallback );
 	// Add region
 	//MSYS_AddRegion( &gSM_SELMERCPanalRegion );
 
@@ -3786,7 +3742,6 @@ BOOLEAN InitializeTEAMPanel(	)
 
 BOOLEAN ShutdownTEAMPanel( )
 {
-	PERFORMANCE_MARKER
 	UINT32					cnt;
 
 	// All buttons and regions and video objects and video surfaces will be deleted at shutddown of SGM
@@ -3824,7 +3779,7 @@ BOOLEAN ShutdownTEAMPanel( )
 	// turn off the display of the squad list
 	if( fRenderRadarScreen == FALSE )
 	{
-		// start rendering radar region again, 
+		// start rendering radar region again,
 	fRenderRadarScreen = TRUE;
 
 		// remove squad panel
@@ -3836,7 +3791,6 @@ BOOLEAN ShutdownTEAMPanel( )
 
 void RenderTEAMPanel( BOOLEAN fDirty )
 {
-	PERFORMANCE_MARKER
 	INT16 sFontX, sFontY;
 	UINT32				cnt, posIndex;
 	SOLDIERTYPE		*pSoldier;
@@ -3844,15 +3798,15 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 
 	if ( fDirty == DIRTYLEVEL2 )
 	{
-		MarkAButtonDirty( iTEAMPanelButtons[ TEAM_DONE_BUTTON ] );	
-		MarkAButtonDirty( iTEAMPanelButtons[ TEAM_MAP_SCREEN_BUTTON ] );	
-		MarkAButtonDirty( iTEAMPanelButtons[ CHANGE_SQUAD_BUTTON ] );	
+		MarkAButtonDirty( iTEAMPanelButtons[ TEAM_DONE_BUTTON ] );
+		MarkAButtonDirty( iTEAMPanelButtons[ TEAM_MAP_SCREEN_BUTTON ] );
+		MarkAButtonDirty( iTEAMPanelButtons[ CHANGE_SQUAD_BUTTON ] );
 
 
 		// Blit video surface
 		BltVideoObjectFromIndex( guiSAVEBUFFER, guiTEAMPanel, 0, INTERFACE_START_X, INTERFACE_START_Y, VO_BLT_SRCTRANSPARENCY, NULL );
 		RestoreExternBackgroundRect( INTERFACE_START_X, INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X , INTERFACE_HEIGHT );
-		
+
 		// LOOP THROUGH ALL MERCS ON TEAM PANEL
 		for ( cnt = 0, posIndex = 0; cnt < NUM_TEAM_SLOTS; cnt++, posIndex+= 2 )
 		{
@@ -3872,7 +3826,7 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 				{
 					// Hatch out...
 					BltVideoObjectFromIndex( guiSAVEBUFFER, guiTEAMObjects, 1, sTEAMFaceHighlXY[ posIndex ], sTEAMFaceHighlXY[ posIndex + 1 ], VO_BLT_SRCTRANSPARENCY, NULL );
-					RestoreExternBackgroundRect( sTEAMFaceHighlXY[ posIndex ], sTEAMFaceHighlXY[ posIndex + 1 ], TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT );						
+					RestoreExternBackgroundRect( sTEAMFaceHighlXY[ posIndex ], sTEAMFaceHighlXY[ posIndex + 1 ], TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT );
 				}
 
 			}
@@ -3889,7 +3843,7 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 
 					//OK, for each item, set dirty text if applicable!
 					swprintf( pStr, TacticalStr[ DRIVER_POPUPTEXT ], pVehicle->stats.bLife, pVehicle->stats.bLifeMax, pVehicle->bBreath, pVehicle->bBreathMax );
-					SetRegionFastHelpText( &(gTEAM_FirstHandInv[ cnt ]), pStr );					
+					SetRegionFastHelpText( &(gTEAM_FirstHandInv[ cnt ]), pStr );
 				}
 				// Add text for first hand popup
 				else
@@ -3904,7 +3858,7 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 				if ( pSoldier->flags.uiStatusFlags & ( SOLDIER_PASSENGER | SOLDIER_DRIVER ) )
 				{
 					//OK, for each item, set dirty text if applicable!
-					SetRegionFastHelpText( &(gTEAM_SecondHandInv[ cnt ]), TacticalStr[ EXIT_VEHICLE_POPUPTEXT ] );					
+					SetRegionFastHelpText( &(gTEAM_SecondHandInv[ cnt ]), TacticalStr[ EXIT_VEHICLE_POPUPTEXT ] );
 				}
 				else
 				{
@@ -3921,7 +3875,7 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 					//if(gbPixelDepth==16)
 					//{
 						BltVideoObjectFromIndex( guiSAVEBUFFER, guiTEAMObjects, 0, sTEAMFaceHighlXY[ posIndex ], sTEAMFaceHighlXY[ posIndex + 1 ], VO_BLT_SRCTRANSPARENCY, NULL );
-						RestoreExternBackgroundRect( sTEAMFaceHighlXY[ posIndex ], sTEAMFaceHighlXY[ posIndex + 1 ], TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT );						
+						RestoreExternBackgroundRect( sTEAMFaceHighlXY[ posIndex ], sTEAMFaceHighlXY[ posIndex + 1 ], TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT );
 
 						// Render faceplate
 						//BltVideoObjectFromIndex( guiSAVEBUFFER, guiTEAMObjects, 1, sTEAMFacesXY[ posIndex ] + TM_FACEPLATE_OFFSET_X, sTEAMFacesXY[ posIndex + 1 ] + TM_FACEPLATE_OFFSET_Y, VO_BLT_SRCTRANSPARENCY, NULL );
@@ -3931,10 +3885,10 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 				else if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM || !OK_INTERRUPT_MERC( pSoldier ) )
 				{
 					BltVideoObjectFromIndex( guiSAVEBUFFER, guiTEAMObjects, 1, sTEAMFaceHighlXY[ posIndex ], sTEAMFaceHighlXY[ posIndex + 1 ], VO_BLT_SRCTRANSPARENCY, NULL );
-					RestoreExternBackgroundRect( sTEAMFaceHighlXY[ posIndex ], sTEAMFaceHighlXY[ posIndex + 1 ], TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT );						
+					RestoreExternBackgroundRect( sTEAMFaceHighlXY[ posIndex ], sTEAMFaceHighlXY[ posIndex + 1 ], TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT );
 						// Render non-selection
 						//BltVideoObjectFromIndex( guiSAVEBUFFER, guiTEAMObjects, 4, sTEAMFaceHighlXY[ posIndex ], sTEAMFaceHighlXY[ posIndex + 1 ], VO_BLT_SRCTRANSPARENCY, NULL );
-						//RestoreExternBackgroundRect( sTEAMFaceHighlXY[ posIndex ], sTEAMFaceHighlXY[ posIndex + 1 ], TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT );						
+						//RestoreExternBackgroundRect( sTEAMFaceHighlXY[ posIndex ], sTEAMFaceHighlXY[ posIndex + 1 ], TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT );
 
 						// Render faceplate
 						//BltVideoObjectFromIndex( guiSAVEBUFFER, guiTEAMObjects, 1, sTEAMFacesXY[ posIndex ] + TM_FACEPLATE_OFFSET_X, sTEAMFacesXY[ posIndex + 1 ] + TM_FACEPLATE_OFFSET_Y, VO_BLT_SRCTRANSPARENCY, NULL );
@@ -3955,7 +3909,7 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 				if ( pSoldier->bStealthMode )
 				{
 					SetFontBackground( FONT_MCOLOR_BLACK );
-					SetFontForeground( FONT_MCOLOR_LTYELLOW );								
+					SetFontForeground( FONT_MCOLOR_LTYELLOW );
 				}
 				else
 				{
@@ -4053,7 +4007,7 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 							else if ( pSoldier->bStealthMode )
 							{
 								SetFontBackground( FONT_MCOLOR_BLACK );
-								SetFontForeground( FONT_MCOLOR_LTYELLOW );								
+								SetFontForeground( FONT_MCOLOR_LTYELLOW );
 							}
 							else
 							{
@@ -4095,9 +4049,9 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 
 		}
 	}
-	
+
 	UpdateTEAMPanel( );
-	
+
 	if( fRenderRadarScreen == TRUE )
 	{
 		// Render clock
@@ -4113,7 +4067,6 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 
 BOOLEAN CreateTEAMPanelButtons( )
 {
-	PERFORMANCE_MARKER
 CHAR8	ubString[48];
 
 	FilenameForBPP("INTERFACE\\bottom_bar_buttons.sti", ubString);
@@ -4122,7 +4075,7 @@ CHAR8	ubString[48];
 	iTEAMPanelImages[ ENDTURN_IMAGES	]			= LoadButtonImage(ubString,-1,0,-1, 3,-1 );
 	iTEAMPanelImages[ ROSTERMODE_IMAGES	]	= UseLoadedButtonImage( iTEAMPanelImages[ ENDTURN_IMAGES	] ,-1, 1,-1, 4,-1 );
 	iTEAMPanelImages[ DISK_IMAGES	]				= UseLoadedButtonImage( iTEAMPanelImages[ ENDTURN_IMAGES	] ,-1, 2,-1, 5, -1 );
-	
+
 	// Create buttons
 	iTEAMPanelButtons[ TEAM_DONE_BUTTON ] = QuickCreateButton( iTEAMPanelImages[ ENDTURN_IMAGES ], TM_ENDTURN_X, TM_ENDTURN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH - 1,
@@ -4161,7 +4114,6 @@ CHAR8	ubString[48];
 
 void	RemoveTEAMPanelButtons( )
 {
-	PERFORMANCE_MARKER
 	UINT32 cnt;
 
 	for ( cnt = 0; cnt < NUM_TEAM_BUTTONS; cnt++ )
@@ -4178,7 +4130,6 @@ void	RemoveTEAMPanelButtons( )
 
 void BtnEndTurnCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -4195,12 +4146,11 @@ void BtnEndTurnCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
-	
+
 }
 
 void BtnRostermodeCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -4216,14 +4166,13 @@ void BtnRostermodeCallback(GUI_BUTTON *btn,INT32 reason)
 		}
 
 	}
-	
+
 }
 
 
 // callback to handle squad switching callback
 void BtnSquadCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -4240,12 +4189,11 @@ void BtnSquadCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
-	
+
 }
 
 void SetTEAMPanelCurrentMerc( UINT8 ubNewID )
 {
-	PERFORMANCE_MARKER
 	// Ignore ther ID given!
 	// ALWYAS USE CURRENT MERC!
 
@@ -4257,7 +4205,6 @@ void SetTEAMPanelCurrentMerc( UINT8 ubNewID )
 
 void UpdateTEAMPanel( )
 {
-	PERFORMANCE_MARKER
 	INT32		cnt;
 
 	if ( (gTacticalStatus.ubCurrentTeam != gbPlayerNum) || (gTacticalStatus.uiFlags & REALTIME ) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
@@ -4292,7 +4239,7 @@ void UpdateTEAMPanel( )
 
 			MSYS_DisableRegion( &gTEAM_FirstHandInv[ cnt ] );
 
-			MSYS_DisableRegion( &gTEAM_SecondHandInv[ cnt ] );			
+			MSYS_DisableRegion( &gTEAM_SecondHandInv[ cnt ] );
 		}
 
 		//disable the radar map region
@@ -4313,7 +4260,7 @@ void UpdateTEAMPanel( )
 
 			MSYS_EnableRegion( &gTEAM_FirstHandInv[ cnt ] );
 
-			MSYS_EnableRegion( &gTEAM_SecondHandInv[ cnt ] );			
+			MSYS_EnableRegion( &gTEAM_SecondHandInv[ cnt ] );
 		}
 
 		//Enable the radar map region
@@ -4327,7 +4274,6 @@ void UpdateTEAMPanel( )
 
 void HandleMouseOverTeamFaceForContMove( BOOLEAN fOn )
 {
-	PERFORMANCE_MARKER
 	FACETYPE *pFace;
 
 	if ( fOn )
@@ -4338,7 +4284,7 @@ void HandleMouseOverTeamFaceForContMove( BOOLEAN fOn )
 			// Display 'cont' on face....
 			// Get face
 			pFace = &gFacesData[ gpSMCurrentMerc->iFaceIndex ];
-			
+
 			pFace->fDisplayTextOver = FACE_DRAW_TEXT_OVER;
 			wcscpy( pFace->zDisplayText, TacticalStr[ CONTINUE_OVER_FACE_STR ] );
 
@@ -4351,7 +4297,7 @@ void HandleMouseOverTeamFaceForContMove( BOOLEAN fOn )
 		// Remove 'cont' on face....
 		// Get face
 		pFace = &gFacesData[ gpSMCurrentMerc->iFaceIndex ];
-		
+
 		pFace->fDisplayTextOver = FACE_ERASE_TEXT_OVER;
 
 		// Erase path!
@@ -4362,7 +4308,6 @@ void HandleMouseOverTeamFaceForContMove( BOOLEAN fOn )
 
 void MercFacePanelMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubID, ubSoldierID;
 	SOLDIERTYPE	*pSoldier;
 
@@ -4409,7 +4354,6 @@ void MercFacePanelMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void EnemyIndicatorClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubID, ubSoldierID;
 
 	ubID = (UINT8) MSYS_GetRegionUserData( pRegion, 0 );
@@ -4465,7 +4409,6 @@ void EnemyIndicatorClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void MercFacePanelCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubID, ubSoldierID;
 	SOLDIERTYPE *pVehicle;
 
@@ -4560,7 +4503,6 @@ extern void InternalSelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOO
 
 void HandleLocateSelectMerc( UINT8 ubID, INT8 bFlag	)
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fSelect = FALSE;
 
 	if( !MercPtrs[ ubID ]->bActive )
@@ -4626,7 +4568,7 @@ void HandleLocateSelectMerc( UINT8 ubID, INT8 bFlag	)
 				}
 			}
 		}
-		else 
+		else
 		{
 			if ( gGameSettings.fOptions[ TOPTION_OLD_SELECTION_METHOD ] )
 			{
@@ -4681,7 +4623,6 @@ void HandleLocateSelectMerc( UINT8 ubID, INT8 bFlag	)
 
 void ShowRadioLocator( UINT8 ubID, UINT8 ubLocatorSpeed )
 {
-	PERFORMANCE_MARKER
 	RESETTIMECOUNTER( MercPtrs[ ubID ]->timeCounters.FlashSelCounter, FLASH_SELECTOR_DELAY );
 
 	//LocateSoldier( ubID, FALSE );	// IC - this is already being done outside of this function :)
@@ -4709,16 +4650,14 @@ void ShowRadioLocator( UINT8 ubID, UINT8 ubLocatorSpeed )
 
 void EndRadioLocator( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	MercPtrs[ ubID ]->flags.fFlashLocator = FALSE;
-	MercPtrs[ ubID ]->flags.fShowLocator = FALSE;	
+	MercPtrs[ ubID ]->flags.fShowLocator = FALSE;
 }
 
 
 
 void CheckForFacePanelStartAnims( SOLDIERTYPE *pSoldier, INT16 sPanelX, INT16 sPanelY )
 {
-	PERFORMANCE_MARKER
 
 	if ( !pSoldier->bActive )
 	{
@@ -4738,11 +4677,10 @@ void CheckForFacePanelStartAnims( SOLDIERTYPE *pSoldier, INT16 sPanelX, INT16 sP
 
 void FinishAnySkullPanelAnimations( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32		cnt2;
 
-	cnt2 = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;	
+	cnt2 = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
 	// run through list
 	for ( pTeamSoldier = MercPtrs[ cnt2 ]; cnt2 <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt2++,pTeamSoldier++ )
@@ -4752,7 +4690,7 @@ void FinishAnySkullPanelAnimations( )
 			if ( pTeamSoldier->flags.fUIdeadMerc || pTeamSoldier->flags.fClosePanelToDie )
 			{
 				HandlePlayerTeamMemberDeathAfterSkullAnimation( pTeamSoldier );
-				
+
 				pTeamSoldier->flags.fUIdeadMerc = FALSE;
 				pTeamSoldier->flags.fClosePanelToDie = FALSE;
 			}
@@ -4763,7 +4701,6 @@ void FinishAnySkullPanelAnimations( )
 
 void HandlePanelFaceAnimations( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	if ( pSoldier->bTeam != gbPlayerNum )
 	{
 		return;
@@ -4797,7 +4734,7 @@ void HandlePanelFaceAnimations( SOLDIERTYPE *pSoldier )
 		pSoldier->sPanelFaceX = gFacesData[ pSoldier->iFaceIndex ].usFaceX;
 		pSoldier->sPanelFaceY = gFacesData[ pSoldier->iFaceIndex ].usFaceY;
 
-		pSoldier->flags.fUIdeadMerc = FALSE;		
+		pSoldier->flags.fUIdeadMerc = FALSE;
 		pSoldier->flags.fClosePanel		= TRUE;
 		pSoldier->flags.fClosePanelToDie = TRUE;
 		pSoldier->ubClosePanelFrame = 0;
@@ -4842,7 +4779,7 @@ void HandlePanelFaceAnimations( SOLDIERTYPE *pSoldier )
 			{
 				RestoreExternBackgroundRect( pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, TM_FACE_WIDTH, TM_FACE_HEIGHT );
 				BltVideoObjectFromIndex( FRAME_BUFFER, guiCLOSE, pSoldier->ubClosePanelFrame, pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, VO_BLT_SRCTRANSPARENCY, NULL );
-				InvalidateRegion( pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, pSoldier->sPanelFaceX + TM_FACE_WIDTH, pSoldier->sPanelFaceY + TM_FACE_HEIGHT );			
+				InvalidateRegion( pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, pSoldier->sPanelFaceX + TM_FACE_WIDTH, pSoldier->sPanelFaceY + TM_FACE_HEIGHT );
 			}
 		//}
 	}
@@ -4897,7 +4834,7 @@ void HandlePanelFaceAnimations( SOLDIERTYPE *pSoldier )
 					// Blit hatch!
 					BltVideoObjectFromIndex( guiSAVEBUFFER, guiHATCH, 0, pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, VO_BLT_SRCTRANSPARENCY, NULL );
 
-					InvalidateRegion( pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, pSoldier->sPanelFaceX + TM_FACE_WIDTH, pSoldier->sPanelFaceY + TM_FACE_HEIGHT );			
+					InvalidateRegion( pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, pSoldier->sPanelFaceX + TM_FACE_WIDTH, pSoldier->sPanelFaceY + TM_FACE_HEIGHT );
 				}
 		//}
 	}
@@ -4932,18 +4869,17 @@ void HandlePanelFaceAnimations( SOLDIERTYPE *pSoldier )
 				{
 					RestoreExternBackgroundRect( pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, TM_FACE_WIDTH, TM_FACE_HEIGHT );
 					BltVideoObjectFromIndex( FRAME_BUFFER, guiCLOSE, pSoldier->bOpenPanelFrame, pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, VO_BLT_SRCTRANSPARENCY, NULL );
-					//InvalidateRegion( sTEAMFacesXY[ ubOpenPanelID ], sTEAMFacesXY[ ubOpenPanelID + 1 ], sTEAMFacesXY[ ubOpenPanelID ] + TM_FACE_WIDTH, sTEAMFacesXY[ ubOpenPanelID + 1 ] + TM_FACE_HEIGHT );			
+					//InvalidateRegion( sTEAMFacesXY[ ubOpenPanelID ], sTEAMFacesXY[ ubOpenPanelID + 1 ], sTEAMFacesXY[ ubOpenPanelID ] + TM_FACE_WIDTH, sTEAMFacesXY[ ubOpenPanelID + 1 ] + TM_FACE_HEIGHT );
 				}
 		//}
 	}
-	
+
 }
 
 
 
 void HandleSoldierFaceFlash( SOLDIERTYPE *pSoldier, INT16 sFaceX, INT16 sFaceY )
 {
-	PERFORMANCE_MARKER
 
 }
 
@@ -4951,7 +4887,6 @@ void HandleSoldierFaceFlash( SOLDIERTYPE *pSoldier, INT16 sFaceX, INT16 sFaceY )
 
 void RenderSoldierTeamInv( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY, UINT8 ubPanelNum, BOOLEAN fDirty )
 {
-	PERFORMANCE_MARKER
 	if ( pSoldier->bActive && !(pSoldier->flags.uiStatusFlags & SOLDIER_DEAD ) )
 	{
 		if ( pSoldier->flags.uiStatusFlags & SOLDIER_DRIVER )
@@ -4982,7 +4917,6 @@ void RenderSoldierTeamInv( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY, UINT8 ubPa
 
 void TMFirstHandInvCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubID, ubSoldierID;
 
 	ubID = (UINT8) MSYS_GetRegionUserData( pRegion, 0 );
@@ -5004,7 +4938,7 @@ void TMFirstHandInvCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 	// Now use soldier ID values
 	ubSoldierID = gTeamPanel[ ubID ].ubID;
-	
+
 
 	if ( !MercPtrs[ ubSoldierID ]->bActive )
 	{
@@ -5033,7 +4967,6 @@ void TMFirstHandInvCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void TMClickFirstHandInvCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	UINT8		ubID, ubSoldierID;
 	UINT16	usOldHandItem;
 
@@ -5042,7 +4975,7 @@ void TMClickFirstHandInvCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 	if ( ubID == NOBODY )
 		return;
-	
+
 	// Now use soldier ID values
 	ubSoldierID = gTeamPanel[ ubID ].ubID;
 
@@ -5071,7 +5004,6 @@ void TMClickFirstHandInvCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void TMClickSecondHandInvCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubID, ubSoldierID;
 	UINT16	usOldHandItem;
 
@@ -5079,7 +5011,7 @@ void TMClickSecondHandInvCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 	if ( ubID == NOBODY )
 		return;
-	
+
 	// Now use soldier ID values
 	ubSoldierID = gTeamPanel[ ubID ].ubID;
 
@@ -5115,7 +5047,6 @@ void TMClickSecondHandInvCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN PlayerExistsInSlot( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
@@ -5135,7 +5066,6 @@ BOOLEAN PlayerExistsInSlot( UINT8 ubID )
 
 INT8 GetTeamSlotFromPlayerID( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	INT8 cnt;
 
 	for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
@@ -5155,7 +5085,6 @@ INT8 GetTeamSlotFromPlayerID( UINT8 ubID )
 
 BOOLEAN RemovePlayerFromTeamSlotGivenMercID( UINT8 ubMercID )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
@@ -5176,7 +5105,6 @@ BOOLEAN RemovePlayerFromTeamSlotGivenMercID( UINT8 ubMercID )
 
 void AddPlayerToInterfaceTeamSlot( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	INT32	cnt;
 
 	// If we are a vehicle don't ever add.....
@@ -5212,7 +5140,6 @@ void AddPlayerToInterfaceTeamSlot( UINT8 ubID )
 
 BOOLEAN InitTEAMSlots( )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
@@ -5228,7 +5155,6 @@ BOOLEAN InitTEAMSlots( )
 
 BOOLEAN GetPlayerIDFromInterfaceTeamSlot( UINT8 ubPanelSlot, UINT8 *pubID )
 {
-	PERFORMANCE_MARKER
 	if ( ubPanelSlot >= NUM_TEAM_SLOTS )
 	{
 		return( FALSE );
@@ -5247,9 +5173,8 @@ BOOLEAN GetPlayerIDFromInterfaceTeamSlot( UINT8 ubPanelSlot, UINT8 *pubID )
 
 void RemoveAllPlayersFromSlot( )
 {
-	PERFORMANCE_MARKER
 	int cnt;
-	
+
 	for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
 	{
 		RemovePlayerFromInterfaceTeamSlot( (UINT8)cnt );
@@ -5259,7 +5184,6 @@ void RemoveAllPlayersFromSlot( )
 
 BOOLEAN RemovePlayerFromInterfaceTeamSlot( UINT8 ubPanelSlot )
 {
-	PERFORMANCE_MARKER
 	if ( ubPanelSlot >= NUM_TEAM_SLOTS )
 	{
 		return( FALSE );
@@ -5297,7 +5221,6 @@ BOOLEAN RemovePlayerFromInterfaceTeamSlot( UINT8 ubPanelSlot )
 
 void RenderTownIDString( )
 {
-	PERFORMANCE_MARKER
 	CHAR16	zTownIDString[80];
 	INT16 sFontX, sFontY;
 
@@ -5315,7 +5238,6 @@ void RenderTownIDString( )
 
 void CheckForAndAddMercToTeamPanel( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 
 	if ( pSoldier->bActive	)
 	{
@@ -5345,7 +5267,7 @@ void CheckForAndAddMercToTeamPanel( SOLDIERTYPE *pSoldier )
 					{
 						AddPassangersToTeamPanel( pSoldier->bVehicleID );
 					}
-				}	
+				}
 			}
 			else
 			{
@@ -5364,7 +5286,6 @@ void CheckForAndAddMercToTeamPanel( SOLDIERTYPE *pSoldier )
 
 UINT8 FindNextMercInTeamPanel( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 	INT32 bFirstID;
 	SOLDIERTYPE *pTeamSoldier;
@@ -5411,7 +5332,7 @@ UINT8 FindNextMercInTeamPanel( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife
 
 
 	if ( ( gusSelectedSoldier != NOBODY ) && ( gGameSettings.fOptions[ TOPTION_SPACE_SELECTS_NEXT_SQUAD ] ) )
-	{ 
+	{
 		// only allow if nothing in hand and if in SM panel, the Change Squad button must be enabled
 		if ( ( ( gsCurInterfacePanel != TEAM_PANEL ) || ( ButtonList[ iTEAMPanelButtons[ CHANGE_SQUAD_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) ) )
 		{
@@ -5472,7 +5393,6 @@ UINT8 FindNextMercInTeamPanel( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife
 
 void HelpTextDoneCallback( void )
 {
-	PERFORMANCE_MARKER
 	gfRerenderInterfaceFromHelpText = TRUE;
 
 	//To redraw the Store Keeper Interface
@@ -5482,14 +5402,12 @@ void HelpTextDoneCallback( void )
 
 void DisableTacticalTeamPanelButtons( BOOLEAN fDisable )
 {
-	PERFORMANCE_MARKER
 	gfDisableTacticalPanelButtons = fDisable;
 }
 
 
 void BeginKeyPanelFromKeyShortcut( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
 	INT16 sStartYPosition = 0;
 	INT16 sWidth = 0, sHeight = 0;
@@ -5519,13 +5437,12 @@ void BeginKeyPanelFromKeyShortcut( )
 	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
 		return;
 
-	InitKeyRingPopup( pSoldier, 0, sStartYPosition, sWidth, sHeight ); 
+	InitKeyRingPopup( pSoldier, 0, sStartYPosition, sWidth, sHeight );
 }
 
 
 void KeyRingItemPanelButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
 	INT16 sStartYPosition = 0;
 	INT16 sWidth = 0, sHeight = 0;
@@ -5542,8 +5459,8 @@ void KeyRingItemPanelButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			return;
 		}
 
-		
-		
+
+
 
 		pSoldier = &( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ] );
 		sStartYPosition = MAP_START_KEYRING_Y;
@@ -5583,13 +5500,12 @@ void KeyRingItemPanelButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			InvalidateRegion( 0, 107, 261, 359 );
 		}
 
-		InitKeyRingPopup( pSoldier, 0, sStartYPosition, sWidth, sHeight ); 
+		InitKeyRingPopup( pSoldier, 0, sStartYPosition, sWidth, sHeight );
 	}
 }
 
 void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiKeyRing;
 	// Copyies of values
 	UINT16	usOldItemIndex;
@@ -5599,7 +5515,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 	uiKeyRing = MSYS_GetRegionUserData( pRegion, 0 );
 
-	
+
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 		return;
@@ -5644,7 +5560,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				//Add the item to the Players Offer Area
 				//AddItemToPlayersOfferArea( gpSMCurrentMerc->ubProfile, &InvSlot, (UINT8)uiHandPos );
 
-				// Dirty 
+				// Dirty
 				fInterfacePanelDirty = DIRTYLEVEL2;
 			}
 			return;
@@ -5701,7 +5617,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			{
 				// We are doing this ourselve, continue
 				fOKToGo = TRUE;
-			} 
+			}
 			else
 			{
 				// These guys are different....
@@ -5747,7 +5663,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					// Try to place here
 					if ( ( iNumberOfKeysTaken = AddKeysToSlot( gpItemPopupSoldier, ( INT8 )uiKeyRing, gpItemPointer ) ) )
 					{
-					
+
 						if ( fDeductPoints )
 						{
 							// Deduct points
@@ -5760,8 +5676,8 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 								DeductPoints( gpItemPopupSoldier,	2, 0 );
 							}
 						}
-						
-						// Dirty 
+
+						// Dirty
 						fInterfacePanelDirty = DIRTYLEVEL2;
 
 						gpItemPointer->ubNumberOfObjects -= ( UINT8 )iNumberOfKeysTaken;
@@ -5803,8 +5719,8 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 							DeductPoints( gpSMCurrentMerc,	2, 0 );
 						}
 					}
-					
-					// Dirty 
+
+					// Dirty
 					fInterfacePanelDirty = DIRTYLEVEL2;
 
 				}
@@ -5834,11 +5750,11 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		{
 			if ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
 			{
-				//InitKeyItemDescriptionBox( gpItemPopupSoldier, (UINT8)uiKeyRing, MAP_ITEMDESC_START_X, MAP_ITEMDESC_START_Y, 0 );			
+				//InitKeyItemDescriptionBox( gpItemPopupSoldier, (UINT8)uiKeyRing, MAP_ITEMDESC_START_X, MAP_ITEMDESC_START_Y, 0 );
 		}
 		else
 		{
-				InitKeyItemDescriptionBox( gpItemPopupSoldier, (UINT8)uiKeyRing, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, 0 );			
+				InitKeyItemDescriptionBox( gpItemPopupSoldier, (UINT8)uiKeyRing, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, 0 );
 		}
 		}
 	}
@@ -5854,7 +5770,6 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void DisableSMPpanelButtonsWhenInShopKeeperInterface( BOOLEAN fDontDrawButtons )
 {
-	PERFORMANCE_MARKER
 	//Go through the buttons that will be under the ShopKeepers ATM panel and disable them
 	DisableButton( iSMPanelButtons[ STANCEUP_BUTTON ] );
 	DisableButton( iSMPanelButtons[ UPDOWN_BUTTON ] );
@@ -5929,7 +5844,6 @@ void DisableSMPpanelButtonsWhenInShopKeeperInterface( BOOLEAN fDontDrawButtons )
 
 BOOLEAN IsMouseInRegion( MOUSE_REGION *pRegion )
 {
-	PERFORMANCE_MARKER
 	if ( (gusMouseXPos >= pRegion->RegionTopLeftX ) && (gusMouseXPos <= pRegion->RegionBottomRightX ) && (gusMouseYPos >= pRegion->RegionTopLeftY ) && (gusMouseYPos <= pRegion->RegionBottomRightY ) )
 	{
 		return( TRUE );
@@ -5943,7 +5857,6 @@ BOOLEAN IsMouseInRegion( MOUSE_REGION *pRegion )
 
 void EnableButtonsForInItemBox( BOOLEAN fEnable )
 {
-	PERFORMANCE_MARKER
 	if ( !fEnable )
 	{
 		DisableButton( iSMPanelButtons[ NEXTMERC_BUTTON ] );
@@ -5960,12 +5873,11 @@ void EnableButtonsForInItemBox( BOOLEAN fEnable )
 			EnableButton( iSMPanelButtons[ SM_MAP_SCREEN_BUTTON ] );
 		}
 	}
-}	
+}
 
 
 void SMInvMoneyButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 		return;
@@ -5976,7 +5888,7 @@ void SMInvMoneyButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		if( gfSMDisableForItems )
 			return;
 
-		//if the player has an item in his hand, 
+		//if the player has an item in his hand,
 		if( gpItemPointer != NULL )
 		{
 			//and the item is money
@@ -6031,7 +5943,6 @@ void SMInvMoneyButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void ConfirmationToDepositMoneyToPlayersAccount( UINT8 ubExitValue )
 {
-	PERFORMANCE_MARKER
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
 		//add the money to the players account
@@ -6047,13 +5958,11 @@ void ConfirmationToDepositMoneyToPlayersAccount( UINT8 ubExitValue )
 
 void ReEvaluateDisabledINVPanelButtons( )
 {
-	PERFORMANCE_MARKER
 	gfReEvaluateDisabledINVPanelButtons = TRUE;
 }
 
 void CheckForReEvaluateDisabledINVPanelButtons( )
 {
-	PERFORMANCE_MARKER
 	// OK, if we currently have an item pointer up....
 	if ( gfReEvaluateDisabledINVPanelButtons )
 	{
@@ -6073,7 +5982,6 @@ void CheckForReEvaluateDisabledINVPanelButtons( )
 
 void AbandonBoxingCallback( UINT8 ubExitValue )
 {
-	PERFORMANCE_MARKER
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
 		// ok, proceed!
@@ -6085,73 +5993,12 @@ void AbandonBoxingCallback( UINT8 ubExitValue )
 
 void GoToMapScreenFromTactical( void )
 {
-	PERFORMANCE_MARKER
 	if ( gTacticalStatus.bBoxingState != NOT_BOXING )
 	{
 		// pop up dialogue asking whether the player wants to abandon the fight
-		DoMessageBox( MSG_BOX_BASIC_STYLE, Message[ STR_ABANDON_FIGHT ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, AbandonBoxingCallback, NULL );		
+		DoMessageBox( MSG_BOX_BASIC_STYLE, Message[ STR_ABANDON_FIGHT ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, AbandonBoxingCallback, NULL );
 		return;
 	}
 	// ok, proceed!
 	gfEnteringMapScreen = TRUE;
-}
-
-
-void HandleTacticalEffectsOfEquipmentChange( SOLDIERTYPE *pSoldier, UINT32 uiInvPos, UINT16 usOldItem, UINT16 usNewItem )
-{
-	PERFORMANCE_MARKER
-	// if in attached weapon mode and don't have weapon with GL attached in hand, reset weapon mode
-	if ( (pSoldier->bWeaponMode == WM_ATTACHED_GL || pSoldier->bWeaponMode == WM_ATTACHED_GL_BURST || pSoldier->bWeaponMode == WM_ATTACHED_GL_AUTO )&& !IsGrenadeLauncherAttached( &(pSoldier->inv[ HANDPOS ]) ) )
-	{
-		if ( !Weapon[pSoldier->inv[ HANDPOS ].usItem].NoSemiAuto )
-		{
-			pSoldier->bWeaponMode = WM_NORMAL;
-			pSoldier->bDoBurst = FALSE;
-			pSoldier->bDoAutofire = 0;
-		}
-		else
-		{
-			pSoldier->bWeaponMode = WM_AUTOFIRE;
-			pSoldier->bDoBurst = TRUE;
-			pSoldier->bDoAutofire = 1;
-		}
-	}
-
-	// if he is loaded tactically
-	if ( pSoldier->bInSector )
-	{
-		// If this is our main hand
-		if ( uiInvPos == HANDPOS || uiInvPos == SECONDHANDPOS )
-		{
-			// check if we need to change animation!
-			pSoldier->ReLoadSoldierAnimationDueToHandItemChange( usOldItem, usNewItem );
-		}
-
-		// if this is head gear
-		if ( uiInvPos == HEAD1POS || uiInvPos == HEAD2POS )
-		{
-			// Could be because of GOGGLES change...	Re-create light...
-			pSoldier->DeleteSoldierLight( );
-			pSoldier->PositionSoldierLight( );
-		}
-	}
-	else
-	{
-		// as a minimum
-		if ( (Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass & IC_WEAPON) && GetShotsPerBurst(&pSoldier->inv[ HANDPOS ]) == 0 )
-		{
-			if ( !Weapon[pSoldier->inv[ HANDPOS ].usItem].NoSemiAuto )
-			{
-				pSoldier->bWeaponMode = WM_NORMAL;
-				pSoldier->bDoBurst = FALSE;
-				pSoldier->bDoAutofire = 0;
-			}
-			else
-			{
-				pSoldier->bWeaponMode = WM_AUTOFIRE;
-				pSoldier->bDoAutofire = 1;
-				pSoldier->bDoBurst = TRUE;
-			}
-		}
-	}
 }

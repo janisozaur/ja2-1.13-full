@@ -17,7 +17,7 @@
 	#include "Isometric Utils.h"
 	#include "Event Pump.h"
 	#include "Timer Control.h"
-	#include "Render Fun.h" 
+	#include "Render Fun.h"
 	#include "Render Dirty.h"
 	#include "mousesystem.h"
 	#include "interface.h"
@@ -64,7 +64,7 @@ void GetSoldierScreenRect( SOLDIERTYPE *pSoldier, SGPRect *pRect );
 #define				MAX_STACKED_MERCS		10
 
 
-UINT32							gScrollSlideInertiaDirection[ NUM_WORLD_DIRECTIONS ] = 
+UINT32							gScrollSlideInertiaDirection[ NUM_WORLD_DIRECTIONS ] =
 {
 	3,
 	0,
@@ -96,15 +96,14 @@ extern								UINT32	guiUITargetSoldierId;
 
 BOOLEAN FindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags )
 {
-	PERFORMANCE_MARKER
 	INT16							sMapPos;
-	
+
 	*pMercFlags = 0;
 
 	if ( GetMouseMapPos( &sMapPos ) )
 	{
 			if ( FindSoldier( sMapPos, pusSoldierIndex, pMercFlags ,FINDSOLDIERSAMELEVEL( gsInterfaceLevel ) ) )
-			{					
+			{
 				return( TRUE );
 			}
 	}
@@ -114,15 +113,14 @@ BOOLEAN FindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags )
 
 BOOLEAN SelectiveFindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags )
 {
-	PERFORMANCE_MARKER
 	INT16							sMapPos;
-	
+
 	*pMercFlags = 0;
 
 	if ( GetMouseMapPos( &sMapPos ) )
 	{
 			if ( FindSoldier( sMapPos, pusSoldierIndex, pMercFlags , FINDSOLDIERSAMELEVEL( gsInterfaceLevel ) ) )
-			{					
+			{
 				return( TRUE );
 			}
 	}
@@ -133,7 +131,6 @@ BOOLEAN SelectiveFindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFla
 
 UINT32 GetSoldierFindFlags( UINT16 ubID )
 {
-	PERFORMANCE_MARKER
 	UINT32 MercFlags = 0;
 	SOLDIERTYPE *pSoldier;
 
@@ -207,7 +204,6 @@ extern BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UIN
 // THIS FUNCTION IS CALLED FAIRLY REGULARLY
 BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags, UINT32 uiFlags )
 {
-	PERFORMANCE_MARKER
 	UINT32				cnt;
 	SOLDIERTYPE		*pSoldier;
 	SGPRect				aRect;
@@ -246,7 +242,7 @@ BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags,
 		fInGridNo			= FALSE;
 
 		if ( pSoldier != NULL )
-		{			
+		{
 
 			if ( pSoldier->bActive && !( pSoldier->flags.uiStatusFlags & SOLDIER_DEAD ) && ( pSoldier->bVisible != -1 || (gTacticalStatus.uiFlags&SHOW_ALL_MERCS) ) )
 			{
@@ -313,7 +309,7 @@ BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags,
 					{
 						fInGridNo			= TRUE;
 					}
-					
+
 					// ATE: If we are an enemy....
 					if ( !gGameSettings.fOptions[ TOPTION_SMART_CURSOR ] )
 					{
@@ -355,7 +351,7 @@ BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags,
 							{
 								iMercScreenX = (INT32)( sScreenX - aRect.iLeft );
 				iMercScreenY = (INT32)( -1 * ( sScreenY - aRect.iBottom ) );
-									
+
 								if ( !CheckVideoObjectScreenCoordinateInData( gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject, pSoldier->usAniFrame, iMercScreenX, iMercScreenY ) )
 								{
 									continue;
@@ -394,7 +390,7 @@ BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags,
 								if ( gSoldierStack.fUseGridNo )
 								{
 									fSoldierFound = FALSE;
-									break;		
+									break;
 								}
 								else if ( gSoldierStack.ubIDs[ gSoldierStack.bCur ] == pSoldier->ubID )
 								{
@@ -402,7 +398,7 @@ BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags,
 									ubBestMerc = pSoldier->ubID;
 
 									fSoldierFound = TRUE;
-									break;		
+									break;
 								}
 						}
 						else
@@ -422,13 +418,13 @@ BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags,
 
 						}
 					}
-				
+
 				}
 				else
 				{
 					//Otherwise, look for a bad guy by way of gridno]
 					// Selective means don't give out enemy mercs if they are not visible
-					
+
 					///&& !NewOKDestination( pSoldier, sGridNo, TRUE, (INT8)gsInterfaceLevel )
 					if ( pSoldier->sGridNo == sGridNo && !NewOKDestination( pSoldier, sGridNo, TRUE, (INT8)gsInterfaceLevel ) )
 					{
@@ -475,7 +471,6 @@ BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags,
 
 BOOLEAN CycleSoldierFindStack( INT16 sMapPos )
 {
-	PERFORMANCE_MARKER
 	UINT16	usSoldierIndex;
 	UINT32	uiMercFlags;
 
@@ -537,7 +532,6 @@ BOOLEAN CycleSoldierFindStack( INT16 sMapPos )
 
 SOLDIERTYPE * SimpleFindSoldier( INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubID;
 
 	ubID = WhoIsThere2( sGridNo, bLevel );
@@ -553,7 +547,6 @@ SOLDIERTYPE * SimpleFindSoldier( INT16 sGridNo, INT8 bLevel )
 
 BOOLEAN IsValidTargetMerc( UINT8 ubSoldierID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = MercPtrs[ ubSoldierID ];
 
 
@@ -584,7 +577,6 @@ BOOLEAN IsValidTargetMerc( UINT8 ubSoldierID )
 
 BOOLEAN IsGridNoInScreenRect( INT16 sGridNo, SGPRect *pRect )
 {
-	PERFORMANCE_MARKER
 	INT32 iXTrav, iYTrav;
 	INT16	sMapPos;
 
@@ -597,7 +589,7 @@ BOOLEAN IsGridNoInScreenRect( INT16 sGridNo, SGPRect *pRect )
 		do
 		{
 			GetScreenXYGridNo( (INT16)iXTrav, (INT16)iYTrav, &sMapPos );
-			
+
 			if ( sMapPos == sGridNo )
 			{
 				return( TRUE );
@@ -618,7 +610,6 @@ BOOLEAN IsGridNoInScreenRect( INT16 sGridNo, SGPRect *pRect )
 
 void GetSoldierScreenRect( SOLDIERTYPE *pSoldier, SGPRect *pRect )
 {
-	PERFORMANCE_MARKER
 		INT16 sMercScreenX, sMercScreenY;
 		UINT16	usAnimSurface;
 //		ETRLEObject *pTrav;
@@ -649,7 +640,6 @@ void GetSoldierScreenRect( SOLDIERTYPE *pSoldier, SGPRect *pRect )
 
 void GetSoldierAnimDims( SOLDIERTYPE *pSoldier, INT16 *psHeight, INT16 *psWidth )
 {
-	PERFORMANCE_MARKER
 	UINT16											usAnimSurface;
 
 	usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
@@ -658,7 +648,7 @@ void GetSoldierAnimDims( SOLDIERTYPE *pSoldier, INT16 *psHeight, INT16 *psWidth 
 	{
 		*psHeight					= (INT16)5;
 		*psWidth					= (INT16)5;
-		
+
 		return;
 	}
 
@@ -672,7 +662,6 @@ void GetSoldierAnimDims( SOLDIERTYPE *pSoldier, INT16 *psHeight, INT16 *psWidth 
 
 void GetSoldierAnimOffsets( SOLDIERTYPE *pSoldier, INT16 *sOffsetX, INT16 *sOffsetY )
 {
-	PERFORMANCE_MARKER
 	UINT16											usAnimSurface;
 
 	usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
@@ -691,7 +680,6 @@ void GetSoldierAnimOffsets( SOLDIERTYPE *pSoldier, INT16 *sOffsetX, INT16 *sOffs
 
 void GetSoldierScreenPos( SOLDIERTYPE *pSoldier, INT16 *psScreenX, INT16 *psScreenY )
 {
-	PERFORMANCE_MARKER
 		INT16 sMercScreenX, sMercScreenY;
 		FLOAT dOffsetX, dOffsetY;
 		FLOAT dTempX_S, dTempY_S;
@@ -719,8 +707,8 @@ void GetSoldierScreenPos( SOLDIERTYPE *pSoldier, INT16 *psScreenX, INT16 *psScre
 		sMercScreenY = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + (INT16)dTempY_S;
 
 		// Adjust starting screen coordinates
-		sMercScreenX	-= gsRenderWorldOffsetX; 
-		sMercScreenY	-= gsRenderWorldOffsetY; 
+		sMercScreenX	-= gsRenderWorldOffsetX;
+		sMercScreenY	-= gsRenderWorldOffsetY;
 		sMercScreenY	-= gpWorldLevelData[ pSoldier->sGridNo ].sHeight;
 
 		// Adjust for render height
@@ -742,7 +730,6 @@ void GetSoldierScreenPos( SOLDIERTYPE *pSoldier, INT16 *psScreenX, INT16 *psScre
 // THE TRUE SCREN RECT DOES NOT TAKE THE OFFSETS OF BUDDY INTO ACCOUNT!
 void GetSoldierTRUEScreenPos( SOLDIERTYPE *pSoldier, INT16 *psScreenX, INT16 *psScreenY )
 {
-	PERFORMANCE_MARKER
 		INT16 sMercScreenX, sMercScreenY;
 		FLOAT dOffsetX, dOffsetY;
 		FLOAT dTempX_S, dTempY_S;
@@ -767,8 +754,8 @@ void GetSoldierTRUEScreenPos( SOLDIERTYPE *pSoldier, INT16 *psScreenX, INT16 *ps
 		sMercScreenY = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + (INT16)dTempY_S;
 
 		// Adjust starting screen coordinates
-		sMercScreenX	-= gsRenderWorldOffsetX; 
-		sMercScreenY	-= gsRenderWorldOffsetY; 
+		sMercScreenX	-= gsRenderWorldOffsetX;
+		sMercScreenY	-= gsRenderWorldOffsetY;
 
 		// Adjust for render height
 		sMercScreenY += gsRenderHeight;
@@ -784,12 +771,11 @@ void GetSoldierTRUEScreenPos( SOLDIERTYPE *pSoldier, INT16 *psScreenX, INT16 *ps
 
 BOOLEAN GridNoOnScreen( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16 sNewCenterWorldX, sNewCenterWorldY;
 	INT16 sWorldX;
 	INT16 sWorldY;
 	INT16 sAllowance = 20;
-	
+
 	if ( gsVIEWPORT_WINDOW_START_Y == 20 )
 	{
 	sAllowance = 40;
@@ -812,7 +798,6 @@ BOOLEAN GridNoOnScreen( INT16 sGridNo )
 
 BOOLEAN SoldierOnScreen( UINT16 usID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
 	// Get pointer of soldier
@@ -824,15 +809,13 @@ BOOLEAN SoldierOnScreen( UINT16 usID )
 
 BOOLEAN SoldierOnVisibleWorldTile( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	return( GridNoOnVisibleWorldTile( pSoldier->sGridNo ) );
 }
-		
+
 
 
 BOOLEAN SoldierLocationRelativeToScreen( INT16 sGridNo, UINT16 usReasonID, INT8 *pbDirection, UINT32 *puiScrollFlags )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX;
 	INT16 sWorldY;
 	INT16 sY, sX;
@@ -851,7 +834,7 @@ BOOLEAN SoldierLocationRelativeToScreen( INT16 sGridNo, UINT16 usReasonID, INT8 
 	// Find the diustance from render center to true world center
 	sDistToCenterX = gsRenderCenterX - gCenterWorldX;
 	sDistToCenterY = gsRenderCenterY - gCenterWorldY;
-	
+
 	// From render center in world coords, convert to render center in "screen" coords
 	FromCellToScreenCoordinates( sDistToCenterX , sDistToCenterY, &sScreenCenterX, &sScreenCenterY );
 
@@ -868,11 +851,11 @@ BOOLEAN SoldierLocationRelativeToScreen( INT16 sGridNo, UINT16 usReasonID, INT8 
 	*pbDirection = atan8( gsRenderCenterX, gsRenderCenterY, (INT16)(sX), (INT16)(sY) );
 
 	// Check values!
-	if ( sWorldX > ( sScreenCenterX + 20 ) ) 
+	if ( sWorldX > ( sScreenCenterX + 20 ) )
 	{
 		(*puiScrollFlags) |= SCROLL_RIGHT;
 	}
-	if ( sWorldX < ( sScreenCenterX - 20 ) ) 
+	if ( sWorldX < ( sScreenCenterX - 20 ) )
 	{
 		(*puiScrollFlags) |= SCROLL_LEFT;
 	}
@@ -907,7 +890,6 @@ BOOLEAN SoldierLocationRelativeToScreen( INT16 sGridNo, UINT16 usReasonID, INT8 
 
 BOOLEAN IsPointInSoldierBoundingBox( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY )
 {
-	PERFORMANCE_MARKER
 	SGPRect				aRect;
 
 	// Get Rect contained in the soldier
@@ -924,7 +906,6 @@ BOOLEAN IsPointInSoldierBoundingBox( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY )
 
 BOOLEAN FindRelativeSoldierPosition( SOLDIERTYPE *pSoldier, UINT16 *usFlags, INT16 sX, INT16 sY )
 {
-	PERFORMANCE_MARKER
 	SGPRect				aRect;
 	INT16					sRelX, sRelY;
 	FLOAT					dRelPer;
@@ -987,7 +968,6 @@ BOOLEAN FindRelativeSoldierPosition( SOLDIERTYPE *pSoldier, UINT16 *usFlags, INT
 // VERY quickly finds a soldier at gridno , ( that is visible )
 UINT8 QuickFindSoldier( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	UINT32 cnt;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -997,7 +977,7 @@ UINT8 QuickFindSoldier( INT16 sGridNo )
 		pSoldier = MercSlots[ cnt ];
 
 		if ( pSoldier != NULL )
-		{			
+		{
 			if ( pSoldier->sGridNo == sGridNo && pSoldier->bVisible != -1 )
 			{
 				return( (UINT8)cnt );
@@ -1012,7 +992,6 @@ UINT8 QuickFindSoldier( INT16 sGridNo )
 
 void GetGridNoScreenPos( INT16 sGridNo, UINT8 ubLevel, INT16 *psScreenX, INT16 *psScreenY )
 {
-	PERFORMANCE_MARKER
 		INT16 sScreenX, sScreenY;
 		FLOAT dOffsetX, dOffsetY;
 		FLOAT dTempX_S, dTempY_S;
@@ -1030,8 +1009,8 @@ void GetGridNoScreenPos( INT16 sGridNo, UINT8 ubLevel, INT16 *psScreenX, INT16 *
 		sScreenY = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + (INT16)dTempY_S;
 
 		// Adjust starting screen coordinates
-		sScreenX	-= gsRenderWorldOffsetX; 
-		sScreenY	-= gsRenderWorldOffsetY; 
+		sScreenX	-= gsRenderWorldOffsetX;
+		sScreenY	-= gsRenderWorldOffsetY;
 
 		sScreenY += gsRenderHeight;
 

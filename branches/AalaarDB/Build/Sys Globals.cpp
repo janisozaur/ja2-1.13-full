@@ -9,7 +9,6 @@
 	#include "screenids.h"
 	#include "Sys Globals.h"
 	#include "gameloop.h"
-	#include "profiler.h"
 #endif
 
 
@@ -27,7 +26,6 @@ CHAR8	gubErrorText[ 512 ];//for long filenames
 
 BOOLEAN	SET_ERROR( const STR8 String, ...)
 {
-	PERFORMANCE_MARKER
 	va_list	ArgPtr;
 
 	va_start(ArgPtr, String);
@@ -36,9 +34,9 @@ BOOLEAN	SET_ERROR( const STR8 String, ...)
 
 	SetPendingNewScreen( ERROR_SCREEN );
 
-	gfGlobalError = TRUE; 
-	
-	return( FALSE );	
+	gfGlobalError = TRUE;
+
+	return( FALSE );
 }
 
 

@@ -68,7 +68,7 @@ typedef struct
 
 } INTERACTIVE_TILE_STACK_TYPE;
 
-	
+
 INTERACTIVE_TILE_STACK_TYPE		gCurIntTileStack;
 BOOLEAN												gfCycleIntTile = FALSE;
 
@@ -90,24 +90,20 @@ BOOLEAN RefineLogicOnStruct( INT16 sGridNo, LEVELNODE *pNode );
 
 BOOLEAN InitInteractiveTileManagement( )
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
 void ShutdownInteractiveTileManagement( )
 {
-	PERFORMANCE_MARKER
 }
 
 BOOLEAN AddInteractiveTile( INT16 sGridNo, LEVELNODE *pLevelNode, UINT32 uiFlags, UINT16 usType )
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
 BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE *pSoldier, UINT8 ubDirection )
 {
-	PERFORMANCE_MARKER
 	STRUCTURE * pStructure;
 
 	// ATE: Patch fix: Don't allow if alreay in animation
@@ -132,7 +128,7 @@ BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE
 		pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 
-	}	
+	}
 	else
 	{
 		// Add soldier event for opening door....
@@ -150,7 +146,6 @@ BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE
 
 BOOLEAN CalcInteractiveObjectAPs( INT16 sGridNo, STRUCTURE * pStructure, INT16 *psAPCost, INT16 *psBPCost )
 {
-	PERFORMANCE_MARKER
 	if (pStructure == NULL)
 	{
 		return( FALSE );
@@ -169,7 +164,7 @@ BOOLEAN CalcInteractiveObjectAPs( INT16 sGridNo, STRUCTURE * pStructure, INT16 *
 		//	*psAPCost = 0;
 		//	*psBPCost = 0;
 		//}
-	}	
+	}
 	else
 	{
 		*psAPCost = AP_OPEN_DOOR;
@@ -182,7 +177,6 @@ BOOLEAN CalcInteractiveObjectAPs( INT16 sGridNo, STRUCTURE * pStructure, INT16 *
 
 BOOLEAN InteractWithInteractiveObject( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN	fDoor = FALSE;
 
 	if (pStructure == NULL)
@@ -193,7 +187,7 @@ BOOLEAN InteractWithInteractiveObject( SOLDIERTYPE *pSoldier, STRUCTURE *pStruct
 	if (pStructure->fFlags & STRUCTURE_ANYDOOR)
 	{
 		fDoor = TRUE;
-	}	
+	}
 
 	InteractWithOpenableStruct( pSoldier, pStructure, ubDirection, fDoor );
 
@@ -203,11 +197,10 @@ BOOLEAN InteractWithInteractiveObject( SOLDIERTYPE *pSoldier, STRUCTURE *pStruct
 
 BOOLEAN SoldierHandleInteractiveObject( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	STRUCTURE			*pStructure;
 	UINT16				usStructureID;
 	INT16					sGridNo;
-		
+
 
 	sGridNo					= pSoldier->aiData.sPendingActionData2;
 	usStructureID		= (UINT16)pSoldier->aiData.uiPendingActionData1;
@@ -219,13 +212,12 @@ BOOLEAN SoldierHandleInteractiveObject( SOLDIERTYPE *pSoldier )
 		//DEBUG MSG!
 		return( FALSE );
 	}
-	
+
 	return( HandleOpenableStruct( pSoldier, sGridNo, pStructure ) );
 }
 
 void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	STRUCTURE			*pStructure, *pNewStructure;
 	ITEM_POOL			*pItemPool;
 	BOOLEAN		fDidMissingQuote = FALSE;
@@ -235,7 +227,7 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	if ( pStructure == NULL )
 	{
 #ifdef JA2TESTVERSION
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"ERROR: Told to handle struct that does not exist at %d.", sGridNo );			
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"ERROR: Told to handle struct that does not exist at %d.", sGridNo );
 #endif
 		return;
 	}
@@ -244,12 +236,12 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	if ( !( pStructure->fFlags & STRUCTURE_OPEN ) )
 	{
 		// Play Opening sound...
-		PlayJA2Sample( GetStructureOpenSound( pStructure, FALSE ), RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );			
+		PlayJA2Sample( GetStructureOpenSound( pStructure, FALSE ), RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );
 	}
 	else
 	{
 		// Play Opening sound...
-		PlayJA2Sample( ( GetStructureOpenSound( pStructure, TRUE ) ), RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );			
+		PlayJA2Sample( ( GetStructureOpenSound( pStructure, TRUE ) ), RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );
 	}
 
 	// ATE: Don't handle switches!
@@ -360,7 +352,6 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 UINT32 GetInteractiveTileCursor( UINT32 uiOldCursor, BOOLEAN fConfirm )
 {
-	PERFORMANCE_MARKER 
 	LEVELNODE	*pIntNode;
 	STRUCTURE	*pStructure;
 	INT16			sGridNo;
@@ -407,10 +398,9 @@ UINT32 GetInteractiveTileCursor( UINT32 uiOldCursor, BOOLEAN fConfirm )
 
 	return( uiOldCursor );
 }
- 
+
 void SetActionModeDoorCursorText( )
 {
-	PERFORMANCE_MARKER 
 	LEVELNODE	*pIntNode;
 	STRUCTURE	*pStructure;
 	INT16			sGridNo;
@@ -436,14 +426,13 @@ void SetActionModeDoorCursorText( )
 
 void GetLevelNodeScreenRect( LEVELNODE *pNode, SGPRect *pRect, INT16 sXPos, INT16 sYPos, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 		INT16 sScreenX, sScreenY;
 		INT16 sOffsetX, sOffsetY;
 		INT16 sTempX_S, sTempY_S;
 		ETRLEObject *pTrav;
 		UINT32 usHeight, usWidth;
 		TILE_ELEMENT *TileElem;
-				
+
 
 
 		// Get 'TRUE' merc position
@@ -459,7 +448,7 @@ void GetLevelNodeScreenRect( LEVELNODE *pNode, SGPRect *pRect, INT16 sXPos, INT1
 		else
 		{
 			TileElem = &(gTileDatabase[pNode->usIndex]);
-			
+
 			//Adjust for current frames and animations....
 			if ( TileElem->uiFlags & ANIMATED_TILE)
 			{
@@ -518,14 +507,12 @@ void GetLevelNodeScreenRect( LEVELNODE *pNode, SGPRect *pRect, INT16 sXPos, INT1
 
 void CompileInteractiveTiles( )
 {
-	PERFORMANCE_MARKER
 
 }
 
 
 void LogMouseOverInteractiveTile( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	SGPRect				aRect;
 	INT16					sXMapPos, sYMapPos, sScreenX, sScreenY;
 	LEVELNODE			*pNode;
@@ -604,7 +591,6 @@ void LogMouseOverInteractiveTile( INT16 sGridNo )
 
 LEVELNODE *InternalGetCurInteractiveTile( BOOLEAN fRejectItemsOnTop )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pNode = NULL;
 	STRUCTURE	*pStructure = NULL;
 
@@ -659,16 +645,14 @@ LEVELNODE *InternalGetCurInteractiveTile( BOOLEAN fRejectItemsOnTop )
 
 LEVELNODE *GetCurInteractiveTile( )
 {
-	PERFORMANCE_MARKER
 	return( InternalGetCurInteractiveTile( TRUE ) );
 }
 
 
 LEVELNODE *GetCurInteractiveTileGridNo( INT16 *psGridNo )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
-	
+
 	pNode = GetCurInteractiveTile( );
 
 	if ( pNode != NULL )
@@ -687,12 +671,11 @@ LEVELNODE *GetCurInteractiveTileGridNo( INT16 *psGridNo )
 
 LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure, BOOLEAN fRejectOnTopItems )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
 	STRUCTURE	*pStructure;
 
 	*ppStructure = NULL;
-	
+
 	pNode = InternalGetCurInteractiveTile( fRejectOnTopItems );
 
 	if ( pNode != NULL )
@@ -727,14 +710,12 @@ LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, 
 
 LEVELNODE *GetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure )
 {
-	PERFORMANCE_MARKER
 	return( ConditionalGetCurInteractiveTileGridNoAndStructure( psGridNo, ppStructure, TRUE ) );
 }
 
 
 void BeginCurInteractiveTileCheck( UINT8 bCheckFlags )
 {
-	PERFORMANCE_MARKER
 	gfOverIntTile = FALSE;
 
 	// OK, release our stack, stuff could be different!
@@ -752,7 +733,6 @@ void BeginCurInteractiveTileCheck( UINT8 bCheckFlags )
 
 void EndCurInteractiveTileCheck( )
 {
-	PERFORMANCE_MARKER
 	CUR_INTERACTIVE_TILE		*pCurIntTile;
 
 	if ( gCurIntTile.fFound )
@@ -775,11 +755,11 @@ void EndCurInteractiveTileCheck( )
 		if ( pCurIntTile->pFoundNode->pStructureData != NULL )
 		{
 			gCurIntTile.usStructureID			= pCurIntTile->pFoundNode->pStructureData->usStructureID;
-			gCurIntTile.fStructure				= TRUE;	
+			gCurIntTile.fStructure				= TRUE;
 		}
 		else
 		{
-			gCurIntTile.fStructure				= FALSE;	
+			gCurIntTile.fStructure				= FALSE;
 		}
 
 
@@ -799,10 +779,9 @@ void EndCurInteractiveTileCheck( )
 
 BOOLEAN RefineLogicOnStruct( INT16 sGridNo, LEVELNODE *pNode )
 {
-	PERFORMANCE_MARKER
 	TILE_ELEMENT *TileElem;
 	STRUCTURE		*pStructure;
-				
+
 
 	if ( pNode->uiFlags & LEVELNODE_CACHEDANITILE )
 	{
@@ -859,7 +838,7 @@ BOOLEAN RefineLogicOnStruct( INT16 sGridNo, LEVELNODE *pNode )
 				{
 					return( FALSE );
 				}
-			}			
+			}
 		}
 		else
 		{
@@ -905,7 +884,7 @@ BOOLEAN RefineLogicOnStruct( INT16 sGridNo, LEVELNODE *pNode )
 				}
 			}
 		}
- 
+
 		// Check if it's a hidden struct and we have not revealed anything!
 		if ( TileElem->uiFlags & HIDDEN_TILE )
 		{
@@ -923,7 +902,6 @@ BOOLEAN RefineLogicOnStruct( INT16 sGridNo, LEVELNODE *pNode )
 
 BOOLEAN RefinePointCollisionOnStruct( INT16 sGridNo, INT16 sTestX, INT16 sTestY, INT16 sSrcX, INT16 sSrcY, LEVELNODE *pNode )
 {
-	PERFORMANCE_MARKER
 	TILE_ELEMENT *TileElem;
 
 	if ( pNode->uiFlags & LEVELNODE_CACHEDANITILE )
@@ -961,15 +939,14 @@ BOOLEAN RefinePointCollisionOnStruct( INT16 sGridNo, INT16 sTestX, INT16 sTestY,
 // will return true if data found, else false
 BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTestX, INT32 iTestY )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth;
 	UINT8	*SrcPtr;
 	UINT32 LineSkip;
 	ETRLEObject *pTrav;
-	BOOLEAN	fDataFound = FALSE;	
-	INT32	iTestPos, iStartPos;	
-	
+	BOOLEAN	fDataFound = FALSE;
+	INT32	iTestPos, iStartPos;
+
 	// Assertions
 	Assert( hSrcVObject != NULL );
 
@@ -1011,7 +988,7 @@ BlitDispatch:
 		jnc		BlitNTL2
 
 		inc		esi
-		
+
 		// Check
 		cmp		edi, iTestPos
 		je		BlitFound
@@ -1051,7 +1028,7 @@ BlitNTL4:
 		cmp		edi, iTestPos
 		je		BlitFound
 		add		edi, 1
-		
+
 		// Check
 		cmp		edi, iTestPos
 		je		BlitFound
@@ -1081,7 +1058,7 @@ BlitTransparent:
 
 
 BlitDoneLine:
-				
+
 // Here check if we have passed!
 		cmp		edi, iTestPos
 		jge		BlitDone
@@ -1101,17 +1078,16 @@ BlitDone:
 
 	return(fDataFound);
 
-}	
+}
 
 
 BOOLEAN ShouldCheckForMouseDetections( )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fOK = FALSE;
 
 	if ( gsINTOldRenderCenterX != gsRenderCenterX || gsINTOldRenderCenterY != gsRenderCenterY ||
 			gusINTOldMousePosX	!= gusMouseXPos	|| gusINTOldMousePosY	!= gusMouseYPos	)
-	{	
+	{
 		fOK = TRUE;
 	}
 
@@ -1128,7 +1104,6 @@ BOOLEAN ShouldCheckForMouseDetections( )
 
 void CycleIntTileFindStack( INT16 sMapPos )
 {
-	PERFORMANCE_MARKER
 	gfCycleIntTile = TRUE;
 
 	// Cycle around!
@@ -1141,4 +1116,4 @@ void CycleIntTileFindStack( INT16 sMapPos )
 	{
 		gCurIntTileStack.bCur = 0;
 	}
-}	
+}

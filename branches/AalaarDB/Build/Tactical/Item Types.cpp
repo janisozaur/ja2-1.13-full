@@ -10,7 +10,6 @@ OBJECTTYPE gStackTempObject;
 
 bool IsSlotASmallPocket(unsigned int slot)
 {
-	PERFORMANCE_MARKER
 	if (slot >= SMALLPOCKSTART && slot < SMALLPOCKFINAL) {
 		return true;
 	}
@@ -19,13 +18,11 @@ bool IsSlotASmallPocket(unsigned int slot)
 
 bool OBJECTTYPE::exists()
 {
-	PERFORMANCE_MARKER
 	return (ubNumberOfObjects > 0 && usItem != NOTHING);
 }
 
 void OBJECTTYPE::SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, StackedObjects::iterator beginIter)
 {
-	PERFORMANCE_MARKER
 	if (numToSplice == 0) {
 		return;
 	}
@@ -54,7 +51,6 @@ void OBJECTTYPE::SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, 
 
 int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 {
-	PERFORMANCE_MARKER
 	//This function is never called from a soldier, so get the max size
 	int numToAdd = max(0, ItemSlotLimit( this, STACK_SIZE_LIMIT ) - ubNumberOfObjects);
 
@@ -119,7 +115,6 @@ bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
 
 int OBJECTTYPE::ForceAddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 {
-	PERFORMANCE_MARKER
 	if (exists() == false) {
 		//we are adding to an empty object, it can happen
 		Assert(sourceObject.exists() == true);
@@ -149,7 +144,6 @@ int OBJECTTYPE::ForceAddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 
 int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany, SOLDIERTYPE* pSoldier, int slot)
 {
-	PERFORMANCE_MARKER
 	if (exists() == false) {
 		//we are adding to an empty object, it can happen
 		Assert(sourceObject.exists() == true);
@@ -197,7 +191,6 @@ int OBJECTTYPE::RemoveObjectsFromStack(int howMany)
 
 int OBJECTTYPE::PrivateRemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject, SOLDIERTYPE* pSoldier, int slot)
 {
-	PERFORMANCE_MARKER
 	//ADB this function only needs to know soldier and slot
 	//if there is a dest object we are putting the removed objects into
 	//in this case it is acting as a move and has probably been called by MoveThisObjectTo
@@ -238,7 +231,6 @@ int OBJECTTYPE::PrivateRemoveObjectsFromStack(int howMany, OBJECTTYPE* destObjec
 
 bool OBJECTTYPE::RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject)
 {
-	PERFORMANCE_MARKER
 	//Note, this function does NOT care what the stack size of destObject will be
 	//because destObject will never be an object in a soldier's inventory!
 	if (index >= ubNumberOfObjects || exists() == false) {
@@ -285,7 +277,6 @@ bool OBJECTTYPE::RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject)
 
 StackedObjectData* OBJECTTYPE::operator [](const unsigned int index)
 {
-	PERFORMANCE_MARKER
 	Assert(index < objectStack.size());
 	StackedObjects::iterator iter = objectStack.begin();
 	for (unsigned int x = 0; x < index; ++x) {
@@ -306,7 +297,6 @@ StackedObjectData* OBJECTTYPE::operator [](const unsigned int index)
 //OR write OBJECTTYPE::DeleteMe(&pSoldier->pTempObject) if there is no memcpy
 void OBJECTTYPE::CopyToOrCreateAt(OBJECTTYPE** ppTarget, OBJECTTYPE* pSource)
 {
-	PERFORMANCE_MARKER
 	//this is necessary because memcpy is no longer good enough for OBJECTTYPE
 	if (*ppTarget == NULL) {
 		*ppTarget = new OBJECTTYPE(*pSource);
@@ -323,7 +313,6 @@ void OBJECTTYPE::CopyToOrCreateAt(OBJECTTYPE** ppTarget, OBJECTTYPE* pSource)
 //OR write OBJECTTYPE::DeleteMe(&pSoldier->pTempObject) if there is no memcpy
 void OBJECTTYPE::DeleteMe(OBJECTTYPE** ppObject)
 {
-	PERFORMANCE_MARKER
 	if (*ppObject != NULL) {
 		delete *ppObject;
 		*ppObject = NULL;
@@ -343,7 +332,6 @@ StackedObjectData::~StackedObjectData()
 
 OBJECTTYPE* StackedObjectData::GetAttachmentAtIndex(UINT8 index)
 {
-	PERFORMANCE_MARKER
 	attachmentList::iterator iter = attachments.begin();
 	for (int x = 0; x < index && iter != attachments.end(); ++x) {
 		++iter;
@@ -385,12 +373,10 @@ OBJECTTYPE::~OBJECTTYPE()
 // Constructor
 OBJECTTYPE::OBJECTTYPE()
 {
-	PERFORMANCE_MARKER
 	initialize();
 }
 void OBJECTTYPE::initialize()
 {
-	PERFORMANCE_MARKER
 
 	memset(this, 0, SIZEOF_OBJECTTYPE_POD);
 
@@ -404,7 +390,6 @@ void OBJECTTYPE::initialize()
 
 bool OBJECTTYPE::operator==(const OBJECTTYPE& compare)const
 {
-	PERFORMANCE_MARKER
 	if ( memcmp(this, &compare, SIZEOF_OBJECTTYPE_POD) == 0) {
 		if (this->objectStack == compare.objectStack) {
 			return true;
@@ -415,7 +400,6 @@ bool OBJECTTYPE::operator==(const OBJECTTYPE& compare)const
 
 bool OBJECTTYPE::operator==(OBJECTTYPE& compare)
 {
-	PERFORMANCE_MARKER
 	if ( memcmp(this, &compare, SIZEOF_OBJECTTYPE_POD) == 0) {
 		if (this->objectStack == compare.objectStack) {
 			return true;
@@ -427,7 +411,6 @@ bool OBJECTTYPE::operator==(OBJECTTYPE& compare)
 //Copy Ctor
 OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 {
-	PERFORMANCE_MARKER
 	if ((void*)this != (void*)&src) {
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
@@ -441,7 +424,6 @@ OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 // Assignment operator
 OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 {
-	PERFORMANCE_MARKER
 	if ((void*)this != (void*)&src) {
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
@@ -457,7 +439,6 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 // Conversion operator
 OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 {
-	PERFORMANCE_MARKER
 	if ((void*)this != (void*)&src) {
 		//makes changes to size easier as we don't have to init new arrays with 0 by hand
 		this->initialize();

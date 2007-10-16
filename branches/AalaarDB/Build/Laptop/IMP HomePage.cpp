@@ -80,10 +80,9 @@ BOOLEAN fNewCharInActivationString = FALSE;
 
 void EnterImpHomePage( void )
 {
-	PERFORMANCE_MARKER
 	// upon entry to Imp home page
 	memset(pPlayerActivationString, 0, sizeof(pPlayerActivationString));
-	
+
 	// reset string position
 	iStringPos =0;
 
@@ -95,7 +94,7 @@ void EnterImpHomePage( void )
 
 	// we have now vsisited IMP, reset fact we haven't
 	fNotVistedImpYet = FALSE;
-	
+
 	// render screen once
 	RenderImpHomePage( );
 	return;
@@ -103,18 +102,17 @@ void EnterImpHomePage( void )
 
 void RenderImpHomePage( void )
 {
-	PERFORMANCE_MARKER
 	// the background
 	RenderProfileBackGround( );
-	
+
 	// the IMP symbol
 	RenderIMPSymbol( 107, 45 );
-	
+
 	// the second button image
 	RenderButton2Image( 134, 314);
 
 	// render the indents
-	
+
 	//activation indents
 	RenderActivationIndent( 257, 328 );
 
@@ -122,18 +120,17 @@ void RenderImpHomePage( void )
 	RenderFrontPageIndent( 3, 64 );
 	RenderFrontPageIndent( 396,64 );
 
-	
+
 	// render the	activation string
 	DisplayPlayerActivationString( );
 
-	
+
 	return;
 }
 
 void ExitImpHomePage( void )
 {
-	PERFORMANCE_MARKER
-	
+
 	// remove buttons
 	RemoveIMPHomePageButtons( );
 
@@ -143,7 +140,6 @@ void ExitImpHomePage( void )
 
 void HandleImpHomePage( void )
 {
-	PERFORMANCE_MARKER
 
 	// handle keyboard input for this screen
 	GetPlayerKeyBoardInputForIMPHomePage( );
@@ -151,8 +147,8 @@ void HandleImpHomePage( void )
 	// has a new char been added to activation string
 	if( fNewCharInActivationString )
 	{
-		// display string 
-	DisplayPlayerActivationString( );				
+		// display string
+	DisplayPlayerActivationString( );
 	}
 
 	// render the cursor
@@ -163,7 +159,6 @@ void HandleImpHomePage( void )
 
 void DisplayPlayerActivationString( void )
 {
-	PERFORMANCE_MARKER
 
 	// this function will grab the string that the player will enter for activation
 
@@ -183,10 +178,10 @@ void DisplayPlayerActivationString( void )
 
 
 	// reset shadow
-	SetFontShadow(DEFAULT_SHADOW);	
-	mprintf(IMP_PLAYER_ACTIVATION_STRING_X, IMP_PLAYER_ACTIVATION_STRING_Y, pPlayerActivationString); 
-	
-	
+	SetFontShadow(DEFAULT_SHADOW);
+	mprintf(IMP_PLAYER_ACTIVATION_STRING_X, IMP_PLAYER_ACTIVATION_STRING_Y, pPlayerActivationString);
+
+
 	fNewCharInActivationString = FALSE;
 	fReDrawScreenFlag = TRUE;
 	return;
@@ -195,7 +190,6 @@ void DisplayPlayerActivationString( void )
 
 void DisplayActivationStringCursor( void )
 {
-	PERFORMANCE_MARKER
 	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
 	UINT32 uiDestPitchBYTES;
 	static UINT32 uiBaseTime = 0;
@@ -208,7 +202,7 @@ void DisplayActivationStringCursor( void )
 	{
 		uiBaseTime = GetJA2Clock();
 	}
-	
+
 	// get difference
 	uiDeltaTime = GetJA2Clock() - uiBaseTime;
 
@@ -239,20 +233,20 @@ void DisplayActivationStringCursor( void )
 		uiBaseTime = GetJA2Clock( );
 	}
 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 
 
 	// draw line in current state
-	LineDraw(TRUE, (UINT16) uiCursorPosition, CURSOR_Y, (UINT16)uiCursorPosition, CURSOR_Y + CURSOR_HEIGHT, Get16BPPColor( FROMRGB( GlowColorsList[ iCurrentState ][ 0 ], GlowColorsList[ iCurrentState ][ 1 ], GlowColorsList[ iCurrentState ][ 2 ] ) ), 
+	LineDraw(TRUE, (UINT16) uiCursorPosition, CURSOR_Y, (UINT16)uiCursorPosition, CURSOR_Y + CURSOR_HEIGHT, Get16BPPColor( FROMRGB( GlowColorsList[ iCurrentState ][ 0 ], GlowColorsList[ iCurrentState ][ 1 ], GlowColorsList[ iCurrentState ][ 2 ] ) ),
 			pDestBuf );
-	
+
 	// unlock frame buffer
 	UnLockVideoSurface( FRAME_BUFFER );
 
 	InvalidateRegion((UINT16) uiCursorPosition , CURSOR_Y , (UINT16)uiCursorPosition + 1, CURSOR_Y + CURSOR_HEIGHT + 1);
- 
-	
+
+
 	return;
 }
 
@@ -260,7 +254,6 @@ void DisplayActivationStringCursor( void )
 
 void GetPlayerKeyBoardInputForIMPHomePage( void )
 {
-	PERFORMANCE_MARKER
 	InputAtom					InputEvent;
 	POINT	MousePos;
 
@@ -282,7 +275,7 @@ void GetPlayerKeyBoardInputForIMPHomePage( void )
 			case RIGHT_BUTTON_DOWN:
 				MouseSystemHook(RIGHT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
-			case RIGHT_BUTTON_UP: 
+			case RIGHT_BUTTON_UP:
 				MouseSystemHook(RIGHT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
 	}
@@ -294,9 +287,9 @@ void GetPlayerKeyBoardInputForIMPHomePage( void )
 			case (( ENTER ) ):
 					if(( InputEvent.usEvent == KEY_UP ) )
 					{
-						// return hit, check to see if current player activation string is a valid one 
+						// return hit, check to see if current player activation string is a valid one
 						ProcessPlayerInputActivationString( );
-		
+
 					fNewCharInActivationString = TRUE;
 					}
 				break;
@@ -319,13 +312,12 @@ void GetPlayerKeyBoardInputForIMPHomePage( void )
 
 void HandleTextEvent( UINT32 uiKey )
 {
-	PERFORMANCE_MARKER
 	// this function checks to see if a letter or a backspace was pressed, if so, either put char to screen
 	// or delete it
 	switch( uiKey )
 	{
-	case ( BACKSPACE ): 
-		
+	case ( BACKSPACE ):
+
 			if( iStringPos >= 0 )
 			{
 
@@ -334,28 +326,28 @@ void HandleTextEvent( UINT32 uiKey )
 					// decrement iStringPosition
 					iStringPos-=1;
 				}
-				
+
 				// null out char
 		pPlayerActivationString[iStringPos ] = 0;
-		
+
 				// move back cursor
 		uiCursorPosition = StringPixLength( pPlayerActivationString, FONT14ARIAL ) + IMP_PLAYER_ACTIVATION_STRING_X;
-			
-			
+
+
 
 				// string has been altered, redisplay
 		fNewCharInActivationString = TRUE;
-				
+
 		}
 
 		break;
 
 	default:
-	 if( uiKey >= 'A' && uiKey <= 'Z' || 
+	 if( uiKey >= 'A' && uiKey <= 'Z' ||
 					uiKey >= 'a' && uiKey <= 'z' ||
 					uiKey >= '0' && uiKey <= '9' ||
 					uiKey == '_' || uiKey == '.' || uiKey ==' ')
-			{ 
+			{
 				// if the current string position is at max or great, do nothing
 		if( iStringPos >= 8 )
 		{
@@ -369,16 +361,16 @@ void HandleTextEvent( UINT32 uiKey )
 					}
 			// valid char, capture and convert to CHAR16
 			pPlayerActivationString[iStringPos] = ( CHAR16 )uiKey;
-					
+
 					// null out next char position
 					pPlayerActivationString[iStringPos + 1] = 0;
-			
+
 					// move cursor position ahead
 			uiCursorPosition = StringPixLength( pPlayerActivationString, FONT14ARIAL ) + IMP_PLAYER_ACTIVATION_STRING_X;
-			
+
 					// increment string position
 					iStringPos +=1;
-				
+
 				// string has been altered, redisplay
 			fNewCharInActivationString = TRUE;
 
@@ -387,7 +379,7 @@ void HandleTextEvent( UINT32 uiKey )
 			}
 
 		break;
-		
+
 	}
 
 
@@ -397,7 +389,6 @@ void HandleTextEvent( UINT32 uiKey )
 
 void ProcessPlayerInputActivationString( void )
 {
-	PERFORMANCE_MARKER
 	// prcess string to see if it matches activation string
 	char charPlayerActivationString[32];
 	wcstombs(charPlayerActivationString,pPlayerActivationString,32);
@@ -405,7 +396,7 @@ void ProcessPlayerInputActivationString( void )
 	BOOLEAN freeMercSlot = TRUE;
 
 	// WANNE: Check total number of hired mercs
-	if( NumberOfMercsOnPlayerTeam() >= 18 )	
+	if( NumberOfMercsOnPlayerTeam() >= 18 )
 	{
 		freeMercSlot = FALSE;
 	}
@@ -414,7 +405,7 @@ void ProcessPlayerInputActivationString( void )
 	if( ( ( wcscmp(pPlayerActivationString, L"XEP624") == 0 ) || ( wcscmp(pPlayerActivationString, L"xep624") == 0 ) ) &&( LaptopSaveInfo.gfNewGameLaptop < 2 ) )
 	{
 		// WANNE: Check total number of hired mercs
-		if( freeMercSlot == FALSE )	
+		if( freeMercSlot == FALSE )
 		{
 			DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, AimPopUpText[ AIM_MEMBER_ALREADY_HAVE_18_MERCS ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 			return;
@@ -436,7 +427,7 @@ void ProcessPlayerInputActivationString( void )
 	else if( wcscmp(pPlayerActivationString, L"90210") == 0 )
 	{
 		// WANNE: Check total number of hired mercs
-		if( freeMercSlot == FALSE )	
+		if( freeMercSlot == FALSE )
 		{
 			DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, AimPopUpText[ AIM_MEMBER_ALREADY_HAVE_18_MERCS ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 			return;
@@ -462,7 +453,7 @@ void ProcessPlayerInputActivationString( void )
 	else if ( ImpExists( charPlayerActivationString ) )
 	{
 		// WANNE: Check total number of hired mercs
-		if( freeMercSlot == FALSE )	
+		if( freeMercSlot == FALSE )
 		{
 			DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, AimPopUpText[ AIM_MEMBER_ALREADY_HAVE_18_MERCS ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 			return;
@@ -474,7 +465,7 @@ void ProcessPlayerInputActivationString( void )
 			{
 				// Reset activation text box
 				ResetActivationStringTextBox();
-				
+
 				//DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 11 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 				AddEmail(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin( ), LaptopSaveInfo.iIMPIndex );
 			}
@@ -501,7 +492,6 @@ void ProcessPlayerInputActivationString( void )
 
 void ResetActivationStringTextBox(void)
 {
-	PERFORMANCE_MARKER
 	// Reset activation text box
 	for (int i = 0; i < iStringPos; i++)
 	{
@@ -509,7 +499,7 @@ void ResetActivationStringTextBox(void)
 	}
 
 	iStringPos = 0;
-	
+
 	uiCursorPosition = StringPixLength( pPlayerActivationString, FONT14ARIAL ) + IMP_PLAYER_ACTIVATION_STRING_X;
 	DisplayPlayerActivationString();
 	DisplayActivationStringCursor();
@@ -517,7 +507,6 @@ void ResetActivationStringTextBox(void)
 
 void CreateIMPHomePageButtons( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will create the buttons needed for the IMP homepage
 
 	// ths about us button
@@ -526,17 +515,17 @@ void CreateIMPHomePageButtons( void )
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAboutUsCallback);
 	*/
-	
-	giIMPHomePageButton[0] = CreateIconAndTextButton( giIMPHomePageButtonImage[0], pImpButtonText[ 0 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+
+	giIMPHomePageButton[0] = CreateIconAndTextButton( giIMPHomePageButtonImage[0], pImpButtonText[ 0 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X +	( 286 - 106 ), LAPTOP_SCREEN_WEB_UL_Y + ( 248 - 48), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAboutUsCallback);
 
 
 	SetButtonCursor(giIMPHomePageButton[ 0 ], CURSOR_WWW);
-	
+
 	return;
 
 }
@@ -545,13 +534,12 @@ void CreateIMPHomePageButtons( void )
 
 void RemoveIMPHomePageButtons( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will destroy the already created buttosn for the IMP homepage
 
 	// the about us button
 	RemoveButton(giIMPHomePageButton[0] );
 	UnloadButtonImage(giIMPHomePageButtonImage[0] );
-	
+
 	return;
 }
 
@@ -559,7 +547,6 @@ void RemoveIMPHomePageButtons( void )
 
 void BtnIMPAboutUsCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP Homepage About US button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -577,5 +564,5 @@ void BtnIMPAboutUsCallback(GUI_BUTTON *btn,INT32 reason)
 		iCurrentImpPage = IMP_ABOUT_US;
 			fButtonPendingFlag = TRUE;
 		}
-	}	
-} 
+	}
+}

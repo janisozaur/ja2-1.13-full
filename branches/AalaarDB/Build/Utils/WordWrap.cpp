@@ -19,14 +19,12 @@ BOOLEAN	gfUseSingleCharWordsForWordWrap = FALSE;
 
 void UseSingleCharWordsForWordWrap( BOOLEAN fUseSingleCharWords )
 {
-	PERFORMANCE_MARKER
 	gfUseSingleCharWordsForWordWrap = fUseSingleCharWords;
 }
 
 
 WRAPPED_STRING *LineWrapForSingleCharWords(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLineWidthIfWordIsWiderThenWidth, STR16 pString, ...)
 {
-	PERFORMANCE_MARKER
 	WRAPPED_STRING FirstWrappedString;
 	WRAPPED_STRING *pWrappedString = NULL;
 	CHAR16					TempString[1024];
@@ -74,7 +72,7 @@ WRAPPED_STRING *LineWrapForSingleCharWords(UINT32 ulFont, UINT16 usLineWidthPixe
 
 		//Get the next char
 		OneChar[0] = TempString[ usCurIndex ];
-	
+
 		usCurrentWidthPixels += WFStringPixLength( OneChar, ulFont);
 
 		//If we are at the end of the string
@@ -144,7 +142,6 @@ WRAPPED_STRING *LineWrapForSingleCharWords(UINT32 ulFont, UINT16 usLineWidthPixe
 
 WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLineWidthIfWordIsWiderThenWidth, STR16 pString, ...)
 {
-	PERFORMANCE_MARKER
 	WRAPPED_STRING FirstWrappedString;
 	WRAPPED_STRING *pWrappedString = NULL;
 	CHAR16					TempString[1024];
@@ -183,8 +180,8 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 
 	while(!fDone)
 	{
-		//Kris:	
-		//This is TEMPORARY!!!	Dave, I've added this to get out of the infinite loop by slowing increasing the 
+		//Kris:
+		//This is TEMPORARY!!!	Dave, I've added this to get out of the infinite loop by slowing increasing the
 		//line width!
 		iErrorCount++;
 		if( iErrorCount > 300 )
@@ -194,7 +191,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 		}
 
 	fNewLine=FALSE;
-		
+
 		DestString[ usDestIndex ] = TempString[ usCurIndex ];
 	if(DestString[usDestIndex]==NEWLINE_CHAR)
 		{
@@ -202,7 +199,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 			fNewLine=TRUE;
 		}
 		OneChar[0] = TempString[ usCurIndex ];
-	
+
 		usCurrentWidthPixels += WFStringPixLength( OneChar, ulFont);
 
 		//If we are at the end of the string
@@ -230,17 +227,17 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 			return(FirstWrappedString.pNextWrappedString);
 
 		}
-	
+
 
 		if((usCurrentWidthPixels > usLineWidthPixels))//||(DestString[ usDestIndex ]==NEWLINE_CHAR )||(fNewLine))
 		{
-		
+
 			//if an error has occured, and the string is too long
 			if( fTheStringIsToLong )
 				DestString[ usDestIndex ] = L' ';
 
 			//Go back to begining of word
-			while(	(DestString[ usDestIndex ] != L' ') && (usCurIndex > 0) ) 
+			while(	(DestString[ usDestIndex ] != L' ') && (usCurIndex > 0) )
 			{
 				OneChar[0] = DestString[ usDestIndex ];
 
@@ -299,7 +296,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 						}
 						iCounter++;
 					}
-			
+
 					//get to next WrappedString structure
 					pWrappedString = &FirstWrappedString;
 					while(pWrappedString->pNextWrappedString != NULL)
@@ -325,7 +322,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 					wcscpy(pWrappedString->pNextWrappedString->sString, pNullString);
 					pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
 					}
-					
+
 					fDone = TRUE;
 				}
 				usCurIndex--;
@@ -374,7 +371,6 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 //
 UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, STR16 pString, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags)
 {
-	PERFORMANCE_MARKER
 	WRAPPED_STRING *pFirstWrappedString, *pTempWrappedString;
 	UINT16	uiCounter=0;
 	UINT16	usLineWidthIfWordIsWiderThenWidth=0;
@@ -397,9 +393,9 @@ UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 
 		usWidth = usLineWidthIfWordIsWiderThenWidth;
 
 	while(pFirstWrappedString != NULL)
-	{		
-		DrawTextToScreen(pFirstWrappedString->sString, usPosX, usPosY, usWidth, uiFont, ubColor, ubBackGroundColor, fDirty, uiFlags );	
-		
+	{
+		DrawTextToScreen(pFirstWrappedString->sString, usPosX, usPosY, usWidth, uiFont, ubColor, ubBackGroundColor, fDirty, uiFlags );
+
 		pTempWrappedString = pFirstWrappedString;
 		pFirstWrappedString = pTempWrappedString->pNextWrappedString;
 		MemFree( pTempWrappedString->sString );
@@ -418,12 +414,11 @@ UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 
 
 UINT16 DeleteWrappedString(WRAPPED_STRING *pWrappedString)
 {
-	PERFORMANCE_MARKER
 	WRAPPED_STRING *pTempWrappedString;
 	UINT16	uiCounter=0;
 
 	while(pWrappedString != NULL)
-	{				
+	{
 		pTempWrappedString = pWrappedString;
 		pWrappedString = pTempWrappedString->pNextWrappedString;
 		MemFree( pTempWrappedString->sString );
@@ -445,12 +440,11 @@ UINT16 DeleteWrappedString(WRAPPED_STRING *pWrappedString)
 //			The font
 //			the color you want the font
 //			the color of the background
-//			do you want to display it using dirty rects, TRUE or FALSE 
+//			do you want to display it using dirty rects, TRUE or FALSE
 //			flags for either LEFT_JUSTIFIED, CENTER_JUSTIFIED, RIGHT_JUSTIFIED
 
 BOOLEAN DrawTextToScreen(STR16 pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidth, UINT32 ulFont, UINT8 ubColor, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 ulFlags)
 {
-	PERFORMANCE_MARKER
 	UINT16	usPosX = 0, usPosY = 0;
 	UINT16	usFontHeight=0;
 	UINT16	usStringWidth=0;
@@ -460,7 +454,7 @@ BOOLEAN DrawTextToScreen(STR16 pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidt
 
 	if( ulFlags == 0 )
 		ulFlags = LEFT_JUSTIFIED;
- 
+
 	// FONT_MCOLOR_BLACK, FALSE
 	if( ulFlags & LEFT_JUSTIFIED )
 	{
@@ -477,7 +471,7 @@ BOOLEAN DrawTextToScreen(STR16 pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidt
 	}
 
 	SetFont(ulFont);
-	
+
 	if ( USE_WINFONTS( ) )
 	{
 	COLORVAL Color = FROMRGB( 255, 255, 255 );
@@ -488,7 +482,7 @@ BOOLEAN DrawTextToScreen(STR16 pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidt
 	SetFontForeground(ubColor);
 	SetFontBackground( ubBackGroundColor );
 	}
-	
+
 	if( ulFlags & TEXT_SHADOWED )
 		ShadowText( FRAME_BUFFER, pStr, ulFont, (UINT16)(usPosX-1), (UINT16)(usPosY-1 ) );
 
@@ -497,11 +491,11 @@ BOOLEAN DrawTextToScreen(STR16 pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidt
 	if( fDirty )
 	{
 		gprintfdirty( usPosX, usPosY, pStr);
-		WinFont_mprintf( GET_WINFONT( ), usPosX,usPosY,pStr); 
+		WinFont_mprintf( GET_WINFONT( ), usPosX,usPosY,pStr);
 	}
 	else
 	{
-		WinFont_mprintf( GET_WINFONT( ), usPosX,usPosY,pStr); 
+		WinFont_mprintf( GET_WINFONT( ), usPosX,usPosY,pStr);
 	}
 	}
 	else
@@ -509,11 +503,11 @@ BOOLEAN DrawTextToScreen(STR16 pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidt
 	if( fDirty )
 	{
 		gprintfdirty( usPosX, usPosY, pStr);
-		mprintf(usPosX,usPosY,pStr); 
+		mprintf(usPosX,usPosY,pStr);
 	}
 	else
 	{
-		mprintf(usPosX,usPosY,pStr); 
+		mprintf(usPosX,usPosY,pStr);
 	}
 	}
 
@@ -541,11 +535,10 @@ BOOLEAN DrawTextToScreen(STR16 pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidt
 //					the gap in between the lines
 //
 
-UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, 
-															UINT32 uiFont, UINT8 ubColor, STR16 pString, 
+UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap,
+															UINT32 uiFont, UINT8 ubColor, STR16 pString,
 															UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags)
 {
-	PERFORMANCE_MARKER
 
 	UINT16	usHeight;
 	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0,usPhraseLengthPixels=0;
@@ -556,17 +549,17 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 	BOOLEAN fBoldOn=FALSE;
 
 	CHAR16	zLineString[128] = L"",zWordString[64]= L"";
-	
+
 	usHeight = WFGetFontHeight( uiFont );
-	
-	do 
+
+	do
 	{
 		// each character goes towards building a new word
 		if (pString[usSourceCounter] != TEXT_SPACE && pString[usSourceCounter] != 0)
 		{
 			zWordString[usDestCounter++] = pString[usSourceCounter];
 		}
-		else 
+		else
 		{
 			// we hit a space (or end of record), so this is the END of a word!
 
@@ -576,7 +569,7 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 				switch(zWordString[0])
 				{
 					case TEXT_CODE_CENTER:
-				
+
 						if (usJustification != CENTER_JUSTIFIED)
 						{
 							usJustification = CENTER_JUSTIFIED;
@@ -595,18 +588,18 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 						}
 						else	// turn OFF centering...
 						{
-							
+
 							// shadow control
 							if( IAN_WRAP_NO_SHADOW & uiFlags )
 							{
 				 // turn off shadow
 				 SetFontShadow( NO_SHADOW );
 							}
-							
-							
+
+
 							// time to draw this line of text (centered)!
-							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification);	
-				
+							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification);
+
 				// shadow control
 							if( IAN_WRAP_NO_SHADOW & uiFlags )
 							{
@@ -633,18 +626,18 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 							usLineLengthPixels = 0;
 
 							// reset dest char counter
-							usDestCounter = 0;					
+							usDestCounter = 0;
 
 							// turn off centering...
 							usJustification = LEFT_JUSTIFIED;
 						}
-						
+
 						break;
 
 
 
 					case TEXT_CODE_NEWLINE:
-				
+
 						// NEWLINE character!
 
 						// shadow control
@@ -653,9 +646,9 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 				// turn off shadow
 				SetFontShadow( NO_SHADOW );
 						}
-						
+
 						// Display what we have up to now
-						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );	
+						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );
 
 			// shadow control
 						if( IAN_WRAP_NO_SHADOW & uiFlags )
@@ -683,17 +676,17 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 						// reset the line length
 						usLineLengthPixels = 0;
 
-						// reset width 
+						// reset width
 						usLocalWidth = usWidth;
 
 						// reset dest char counter
-						usDestCounter = 0;				
-					
+						usDestCounter = 0;
+
 						break;
 
 
 					case TEXT_CODE_BOLD:
-					
+
 						if (!fBoldOn)
 						{
 
@@ -705,7 +698,7 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 							}
 
 							// turn bold ON.... but first, write whatever we have in normal now...
-							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubColor, ubBackGroundColor, fDirty, usJustification );	
+							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubColor, ubBackGroundColor, fDirty, usJustification );
 
 							// shadow control
 						if( IAN_WRAP_NO_SHADOW & uiFlags )
@@ -749,7 +742,7 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 							}
 
 							// turn bold OFF - write whatever we have in bold now...
-							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubColor, ubBackGroundColor, fDirty, usJustification );	
+							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubColor, ubBackGroundColor, fDirty, usJustification );
 
 							// shadow control
 						if( IAN_WRAP_NO_SHADOW & uiFlags )
@@ -781,8 +774,8 @@ DEF: commented out for Beta.	Nov 30
 								// need to reduce the usSourceCounter by the true word length (not counting the code char)
 								usSourceCounter -= (wcslen(zWordString) - 1);
 							}
-							
-*/							
+
+*/
 							// erase word string
 							memset(zWordString,0,sizeof(zWordString));
 
@@ -793,7 +786,7 @@ DEF: commented out for Beta.	Nov 30
 							// reset dest char counter
 							usDestCounter = 0;
 						}
-						
+
 						break;
 
 
@@ -801,7 +794,7 @@ DEF: commented out for Beta.	Nov 30
 
 					case TEXT_CODE_NEWCOLOR:
 
-						
+
 					// shadow control
 						if( IAN_WRAP_NO_SHADOW & uiFlags )
 						{
@@ -810,7 +803,7 @@ DEF: commented out for Beta.	Nov 30
 						}
 
 						// change to new color.... but first, write whatever we have in normal now...
-						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );	
+						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );
 
 						// shadow control
 						if( IAN_WRAP_NO_SHADOW & uiFlags )
@@ -848,8 +841,8 @@ DEF: commented out for Beta.	Nov 30
 
 
 
-					case TEXT_CODE_DEFCOLOR:	
-						
+					case TEXT_CODE_DEFCOLOR:
+
 						// shadow control
 						if( IAN_WRAP_NO_SHADOW & uiFlags )
 						{
@@ -858,7 +851,7 @@ DEF: commented out for Beta.	Nov 30
 						}
 
 						// turn color back to default - write whatever we have in bold now...
-						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );	
+						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );
 
 						// shadow control
 						if( IAN_WRAP_NO_SHADOW & uiFlags )
@@ -888,10 +881,10 @@ DEF: commented out for Beta.	Nov 30
 						// reset dest char counter
 						usDestCounter = 0;
 						break;
-						
+
 
 				}		// end of switch of CODES
-				
+
 			}
 			else // not a special character
 			{
@@ -911,7 +904,7 @@ DEF: commented out for Beta.	Nov 30
 				if ((usLineLengthPixels + usWordLengthPixels) < usWidth)
 				{
 					// yes we can fit this word.
-					
+
 					// get the length AGAIN (in pixels with the SPACE) for this word
 				usWordLengthPixels = WFStringPixLength(zWordString,uiLocalFont);
 
@@ -927,7 +920,7 @@ DEF: commented out for Beta.	Nov 30
 				else
 				{
 					// can't fit this word!
-				
+
 					// shadow control
 					if( IAN_WRAP_NO_SHADOW & uiFlags )
 					{
@@ -937,7 +930,7 @@ DEF: commented out for Beta.	Nov 30
 
 
 					// Display what we have up to now
-					DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );	
+					DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );
 
 			// shadow control
 					if( IAN_WRAP_NO_SHADOW & uiFlags )
@@ -965,18 +958,18 @@ DEF: commented out for Beta.	Nov 30
 					// reset dest char counter
 					usDestCounter = 0;
 
-					// reset width 
+					// reset width
 					usLocalWidth = usWidth;
 				}
 			}		// end of this word was NOT a special code
 
 		}
 
-		
-		
+
+
 	} while (pString[usSourceCounter++] != 0);
-	
-	
+
+
 	// terminate the entire paragraph with a null string (null character guaranteed)
 	wcscat(zLineString, L"");
 
@@ -988,8 +981,8 @@ DEF: commented out for Beta.	Nov 30
 	}
 
 	// draw the paragraph
-	DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification	);	
-	
+	DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification	);
+
 
 	// shadow control
 	if( IAN_WRAP_NO_SHADOW & uiFlags )
@@ -1006,7 +999,6 @@ DEF: commented out for Beta.	Nov 30
 
 void CleanOutControlCodesFromString(STR16 pSourceString, STR16 pDestString)
 {
-	PERFORMANCE_MARKER
 	INT32		iSourceCounter=0;
 	INT32		iDestCounter=0;
 
@@ -1014,11 +1006,11 @@ void CleanOutControlCodesFromString(STR16 pSourceString, STR16 pDestString)
 	BOOLEAN fRemoveCurrentCharAndNextChar;
 
 	// this procedure will run through a STR16 and strip out all control characters. This is a nessacary as wcscmp and the like tend not to like control chars in thier strings
-	
+
 	fRemoveCurrentChar = FALSE;
 	fRemoveCurrentCharAndNextChar = FALSE;
 
-	// while not end of source string, 
+	// while not end of source string,
 	while( pSourceString[ iSourceCounter ] != 0 )
 	{
 		if( pSourceString[ iSourceCounter + 1 ] == 0 )
@@ -1028,7 +1020,7 @@ void CleanOutControlCodesFromString(STR16 pSourceString, STR16 pDestString)
 		}
 		else
 		{
-			switch ( pSourceString[iSourceCounter] )	
+			switch ( pSourceString[iSourceCounter] )
 			{
 				case TEXT_CODE_CENTER:
 				case TEXT_CODE_NEWCOLOR:
@@ -1095,11 +1087,10 @@ void CleanOutControlCodesFromString(STR16 pSourceString, STR16 pDestString)
 //					the gap in between the lines, the height of buffer and which page you want the text displayed for, and the total height to date
 //
 
-INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usPageHeight, UINT16 usTotalHeight, UINT16 usPageNumber,UINT8 ubGap, 
-															UINT32 uiFont, UINT8 ubColor, STR16 pString, 
+INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usPageHeight, UINT16 usTotalHeight, UINT16 usPageNumber,UINT8 ubGap,
+															UINT32 uiFont, UINT8 ubColor, STR16 pString,
 															UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags, BOOLEAN *fOnLastPageFlag)
 {
-	PERFORMANCE_MARKER
 	UINT16	usHeight;
 	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0,usPhraseLengthPixels=0;
 	UINT16	usLinesUsed=1,usLocalWidth=usWidth;
@@ -1108,23 +1099,23 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 	UINT8		ubLocalColor = ubColor;
 	BOOLEAN fBoldOn=FALSE;
 	CHAR16	zLineString[640] = L"",zWordString[640]= L"";
-	
+
 	usHeight = WFGetFontHeight(uiFont);
 
 	// identical to ianwordwrap, but this one lets the user to specify the page they want to display, if the text takes more than one page
 	// multiple calls to this function will allow one to work out how many pages there are
- 
- do 
+
+ do
  {
 
 	// last page is not true, YET!
-	*fOnLastPageFlag = FALSE;	
+	*fOnLastPageFlag = FALSE;
 		// each character goes towards building a new word
 		if (pString[usSourceCounter] != TEXT_SPACE && pString[usSourceCounter] != 0)
 		{
 			zWordString[usDestCounter++] = pString[usSourceCounter];
 		}
-		else 
+		else
 		{
 			// we hit a space (or end of record), so this is the END of a word!
 
@@ -1134,7 +1125,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 				switch(zWordString[0])
 				{
 					case TEXT_CODE_CENTER:
-				
+
 						if (usJustification != CENTER_JUSTIFIED)
 						{
 							usJustification = CENTER_JUSTIFIED;
@@ -1153,10 +1144,10 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 						}
 						else	// turn OFF centering...
 						{
-							
+
 							// time to draw this line of text (centered)!
-							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification);	
-			 
+							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification);
+
 							// increment Y position for next time
 							usPosY += (WFGetFontHeight(uiLocalFont)) +ubGap;
 
@@ -1176,24 +1167,24 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 							usLineLengthPixels = 0;
 
 							// reset dest char counter
-							usDestCounter = 0;					
+							usDestCounter = 0;
 
 							// turn off centering...
 							usJustification = LEFT_JUSTIFIED;
 						}
-						
+
 						break;
 
 
 
 					case TEXT_CODE_NEWLINE:
-				
+
 						// NEWLINE character!
-			
+
 						// Display what we have up to now
-						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );	
-		 
-						
+						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );
+
+
 						// increment Y position for next time
 						usPosY += (WFGetFontHeight(uiLocalFont)) +ubGap;
 
@@ -1212,24 +1203,24 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 						// reset the line length
 						usLineLengthPixels = 0;
 
-						// reset width 
+						// reset width
 						usLocalWidth = usWidth;
 
 						// reset dest char counter
-						usDestCounter = 0;				
-					
+						usDestCounter = 0;
+
 						break;
 
 
 					case TEXT_CODE_BOLD:
-					
+
 						if (!fBoldOn)
 						{
-							
-						
+
+
 							// turn bold ON.... but first, write whatever we have in normal now...
-							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubColor, ubBackGroundColor, fDirty, usJustification );	
-			
+							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubColor, ubBackGroundColor, fDirty, usJustification );
+
 							// calc length of what we just wrote
 							usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 
@@ -1255,11 +1246,11 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 						}
 						else
 						{
-							
-						
+
+
 							// turn bold OFF - write whatever we have in bold now...
-							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubColor, ubBackGroundColor, fDirty, usJustification );	
-			 
+							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubColor, ubBackGroundColor, fDirty, usJustification );
+
 							// calc length of what we just wrote
 							usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 
@@ -1282,7 +1273,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 							// reset dest char counter
 							usDestCounter = 0;
 						}
-						
+
 						break;
 
 
@@ -1290,11 +1281,11 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 
 					case TEXT_CODE_NEWCOLOR:
 
-						
-						
+
+
 						// change to new color.... but first, write whatever we have in normal now...
-						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );	
-			
+						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );
+
 						// the new color value is the next character in the word
 						if (zWordString[1] != TEXT_SPACE && zWordString[1] < 256)
 							ubLocalColor = (UINT8) zWordString[1];
@@ -1323,12 +1314,12 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 
 
 
-					case TEXT_CODE_DEFCOLOR:	
-						
-						
+					case TEXT_CODE_DEFCOLOR:
+
+
 						// turn color back to default - write whatever we have in bold now...
-						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );	
-			
+						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );
+
 						// calc length of what we just wrote
 						usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 
@@ -1350,10 +1341,10 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 						// reset dest char counter
 						usDestCounter = 0;
 						break;
-						
+
 
 				}		// end of switch of CODES
-				
+
 			}
 			else // not a special character
 			{
@@ -1373,7 +1364,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 				if ((usLineLengthPixels + usWordLengthPixels) < usWidth)
 				{
 					// yes we can fit this word.
-					
+
 					// get the length AGAIN (in pixels with the SPACE) for this word
 					usWordLengthPixels = WFStringPixLength(zWordString,uiLocalFont);
 
@@ -1388,17 +1379,17 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 				}
 				else
 				{
-					
+
 					// Display what we have up to now
-					DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );	
-			
-						
+					DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );
+
+
 					// reset x position
 					usLocalPosX = usPosX;
 
 					// increment Y position for next time
 					usPosY += (WFGetFontHeight(uiLocalFont)) +ubGap;
-					
+
 					// we just used a line, so note that
 					usLinesUsed++;
 
@@ -1411,34 +1402,33 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 					// reset dest char counter
 					usDestCounter = 0;
 
-					// reset width 
+					// reset width
 					usLocalWidth = usWidth;
 				}
 			}		// end of this word was NOT a special code
 
 		}
-		
+
 		} while (pString[usSourceCounter++] != 0);
-	
-	
+
+
 	// terminate the entire paragraph with a null string (null character guaranteed)
 	wcscat(zLineString, L"");
-	
-	
+
+
 	// draw the paragraph
-	DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );	
-	
+	DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );
+
 	// return how many Y pixels we used
 	return(usLinesUsed * ( WFGetFontHeight(uiFont) + ( UINT16 )ubGap )	); // +ubGap
 }
 
 
 // now variant for grabbing height
-UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, 
-															UINT32 uiFont, UINT8 ubColor, STR16 pString, 
+UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap,
+															UINT32 uiFont, UINT8 ubColor, STR16 pString,
 															UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags)
 {
-	PERFORMANCE_MARKER
 	UINT16	usHeight;
 	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0,usPhraseLengthPixels=0;
 	UINT16	usLinesUsed=1,usLocalWidth=usWidth;
@@ -1447,20 +1437,20 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 	UINT8		ubLocalColor = ubColor;
 	BOOLEAN fBoldOn=FALSE;
 	CHAR16	zLineString[640] = L"",zWordString[640]= L"";
-	
+
 	usHeight = WFGetFontHeight(uiFont);
 
 	// simply a cut and paste operation on Ian Display Wrapped, but will not write string to screen
 	// since this all we want to do, everything IanWrapped will do but without displaying string
 
-	do 
+	do
 	{
 		// each character goes towards building a new word
 		if (pString[usSourceCounter] != TEXT_SPACE && pString[usSourceCounter] != 0)
 		{
 			zWordString[usDestCounter++] = pString[usSourceCounter];
 		}
-		else 
+		else
 		{
 			// we hit a space (or end of record), so this is the END of a word!
 
@@ -1470,7 +1460,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 				switch(zWordString[0])
 				{
 					case TEXT_CODE_CENTER:
-				
+
 						if (usJustification != CENTER_JUSTIFIED)
 						{
 							usJustification = CENTER_JUSTIFIED;
@@ -1489,7 +1479,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 						}
 						else	// turn OFF centering...
 						{
-						
+
 							// increment Y position for next time
 							usPosY += (WFGetFontHeight(uiLocalFont)) + ubGap;
 
@@ -1509,21 +1499,21 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 							usLineLengthPixels = 0;
 
 							// reset dest char counter
-							usDestCounter = 0;					
+							usDestCounter = 0;
 
 							// turn off centering...
 							usJustification = LEFT_JUSTIFIED;
 						}
-						
+
 						break;
 
 
 
 					case TEXT_CODE_NEWLINE:
-				
+
 						// NEWLINE character!
 
-					
+
 						// increment Y position for next time
 						usPosY += (WFGetFontHeight(uiLocalFont)) +ubGap;
 
@@ -1542,20 +1532,20 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 						// reset the line length
 						usLineLengthPixels = 0;
 
-						// reset width 
+						// reset width
 						usLocalWidth = usWidth;
 
 						// reset dest char counter
-						usDestCounter = 0;				
-					
+						usDestCounter = 0;
+
 						break;
 
 
 					case TEXT_CODE_BOLD:
-					
+
 						if (!fBoldOn)
 						{
-						
+
 							// calc length of what we just wrote
 							usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 							// calculate new x position for next time
@@ -1580,7 +1570,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 						}
 						else
 						{
-							
+
 							// calc length of what we just wrote
 							usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 
@@ -1603,7 +1593,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 							// reset dest char counter
 							usDestCounter = 0;
 						}
-						
+
 						break;
 
 
@@ -1638,12 +1628,12 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 
 
 
-					case TEXT_CODE_DEFCOLOR:	
-						
-					
+					case TEXT_CODE_DEFCOLOR:
+
+
 						// calc length of what we just wrote
 						usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
-			
+
 						// calculate new x position for next time
 						usLocalPosX += usPhraseLengthPixels;
 
@@ -1662,10 +1652,10 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 						// reset dest char counter
 						usDestCounter = 0;
 						break;
-						
+
 
 				}		// end of switch of CODES
-				
+
 			}
 			else // not a special character
 			{
@@ -1685,7 +1675,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 				if ((usLineLengthPixels + usWordLengthPixels) <= usWidth)
 				{
 					// yes we can fit this word.
-					
+
 					// get the length AGAIN (in pixels with the SPACE) for this word
 					usWordLengthPixels = WFStringPixLength(zWordString,uiLocalFont);
 
@@ -1701,8 +1691,8 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 				else
 				{
 					// can't fit this word!
-				
-				
+
+
 					// increment Y position for next time
 					usPosY += (WFGetFontHeight(uiLocalFont)) +ubGap;
 
@@ -1721,20 +1711,20 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 					// reset dest char counter
 					usDestCounter = 0;
 
-					// reset width 
+					// reset width
 					usLocalWidth = usWidth;
 				}
 			}		// end of this word was NOT a special code
 
 		}
 
-		
-		
+
+
 	} while (pString[usSourceCounter++] != 0);
-	
+
 	SetFontShadow(DEFAULT_SHADOW);
 
-	
+
 	// return how many Y pixels we used
 	return( usLinesUsed * ( WFGetFontHeight(uiFont) + ( UINT16 )ubGap) ); // +ubGap
 }
@@ -1742,14 +1732,13 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 
 BOOLEAN WillThisStringGetCutOff( INT32 iTotalYPosition, INT32 iBottomOfPage, INT32 iWrapWidth, UINT32 uiFont, STR16 pString, INT32 iGap, INT32 iPage )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fGetCutOff = FALSE;
 	INT32 iHeight;
 	// Will return if this string will get cut off
-	
 
-	iHeight = IanWrappedStringHeight(0, 0,	( INT16 )iWrapWidth, ( UINT8 ) ( iGap ), 
-															uiFont, 0, pString, 
+
+	iHeight = IanWrappedStringHeight(0, 0,	( INT16 )iWrapWidth, ( UINT8 ) ( iGap ),
+															uiFont, 0, pString,
 															0, FALSE , 0);
 
 	if( iHeight + iTotalYPosition >= ((iPage + 1) * iBottomOfPage ) )
@@ -1762,12 +1751,11 @@ BOOLEAN WillThisStringGetCutOff( INT32 iTotalYPosition, INT32 iBottomOfPage, INT
 
 BOOLEAN IsThisStringBeforeTheCurrentPage( INT32 iTotalYPosition, INT32 iPageSize, INT32 iCurrentPage ,INT32 iWrapWidth, UINT32 uiFont, STR16 pString, INT32 iGap )
 {
-	PERFORMANCE_MARKER
 	// check to see if the current string will appear on the current page
 	BOOLEAN fBeforeCurrentPage = FALSE;
-	
-	if( iTotalYPosition + IanWrappedStringHeight(0, 0,	( INT16 )iWrapWidth, ( UINT8 ) ( iGap ), 
-															uiFont, 0, pString, 
+
+	if( iTotalYPosition + IanWrappedStringHeight(0, 0,	( INT16 )iWrapWidth, ( UINT8 ) ( iGap ),
+															uiFont, 0, pString,
 															0, FALSE , 0)	>	( iPageSize * iCurrentPage ) )
 	{
 		fBeforeCurrentPage = FALSE;
@@ -1782,12 +1770,11 @@ BOOLEAN IsThisStringBeforeTheCurrentPage( INT32 iTotalYPosition, INT32 iPageSize
 
 INT32 GetNewTotalYPositionOfThisString( INT32 iTotalYPosition, INT32 iPageSize, INT32 iCurrentPage ,INT32 iWrapWidth, UINT32 uiFont, STR16 pString, INT32 iGap )
 {
-	PERFORMANCE_MARKER
 	INT32 iNewYPosition = 0;
 	// will returnt he new total y value of this string
 
-	iNewYPosition = iTotalYPosition + IanWrappedStringHeight(0, 0,	( INT16 )iWrapWidth, ( UINT8 ) ( iGap ), 
-															uiFont, 0, pString, 
+	iNewYPosition = iTotalYPosition + IanWrappedStringHeight(0, 0,	( INT16 )iWrapWidth, ( UINT8 ) ( iGap ),
+															uiFont, 0, pString,
 															0, FALSE , 0);
 
 	return( iNewYPosition );
@@ -1795,7 +1782,6 @@ INT32 GetNewTotalYPositionOfThisString( INT32 iTotalYPosition, INT32 iPageSize, 
 
 void ShadowText(UINT32 uiDestVSurface, STR16 pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiLength = StringPixLength( pString, uiFont);
 	UINT16 usFontHeight = WFGetFontHeight( uiFont );
 
@@ -1806,7 +1792,6 @@ void ShadowText(UINT32 uiDestVSurface, STR16 pString, UINT32 uiFont, UINT16 usPo
 // for email
 RecordPtr GetFirstRecordOnThisPage( RecordPtr RecordList, UINT32 uiFont, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize )
 {
-	PERFORMANCE_MARKER
 	// get the first record on this page - build pages up until this point
 
 	RecordPtr CurrentRecord = NULL;
@@ -1830,14 +1815,14 @@ RecordPtr GetFirstRecordOnThisPage( RecordPtr RecordList, UINT32 uiFont, UINT16 
 	while( iCurrentPage < iPage )
 	{
 		// build record list to this point
-		while( ( iCurrentPositionOnThisPage + IanWrappedStringHeight(0, 0, usWidth, ubGap, 
-															uiFont, 0, CurrentRecord->pRecord, 
+		while( ( iCurrentPositionOnThisPage + IanWrappedStringHeight(0, 0, usWidth, ubGap,
+															uiFont, 0, CurrentRecord->pRecord,
 															0, 0, 0 ) )	<= iPageSize )
 		{
-		
+
 			// still room on this page
-			iCurrentPositionOnThisPage += IanWrappedStringHeight(0, 0, usWidth, ubGap, 
-															uiFont, 0, CurrentRecord->pRecord, 
+			iCurrentPositionOnThisPage += IanWrappedStringHeight(0, 0, usWidth, ubGap,
+															uiFont, 0, CurrentRecord->pRecord,
 															0, 0, 0 ) ;
 
 			// next record
@@ -1865,7 +1850,6 @@ RecordPtr GetFirstRecordOnThisPage( RecordPtr RecordList, UINT32 uiFont, UINT16 
 // for file viewer
 FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize, FileRecordWidthPtr WidthList )
 {
-	PERFORMANCE_MARKER
 	// get the first record on this page - build pages up until this point
 
 	FileStringPtr CurrentRecord = NULL;
@@ -1893,13 +1877,13 @@ FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont,
 	while( iCurrentPage < iPage )
 	{
 
-		
+
 		usCurrentWidth = usWidth;
 		pWidthList = WidthList;
 
 		while( pWidthList )
 		{
-		
+
 			if( iCounter == pWidthList->iRecordNumber )
 			{
 				usCurrentWidth = ( INT16 ) pWidthList->iRecordWidth;
@@ -1920,19 +1904,19 @@ FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont,
 		}
 
 		// build record list to this point
-		while( ( iCurrentPositionOnThisPage + IanWrappedStringHeight(0, 0, usCurrentWidth, ubGap, 
-															uiFont, 0, CurrentRecord->pString, 
+		while( ( iCurrentPositionOnThisPage + IanWrappedStringHeight(0, 0, usCurrentWidth, ubGap,
+															uiFont, 0, CurrentRecord->pString,
 															0, 0, 0 ) )	< iPageSize )
 		{
-		
-			
 
 
-			
+
+
+
 
 			// still room on this page
-			iCurrentPositionOnThisPage += IanWrappedStringHeight(0, 0, usCurrentWidth, ubGap, 
-															uiFont, 0, CurrentRecord->pString, 
+			iCurrentPositionOnThisPage += IanWrappedStringHeight(0, 0, usCurrentWidth, ubGap,
+															uiFont, 0, CurrentRecord->pString,
 															0, 0, 0 ) ;
 
 			// next record
@@ -1943,7 +1927,7 @@ FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont,
 			pWidthList = WidthList;
 			while( pWidthList )
 			{
-			
+
 				if( iCounter == pWidthList->iRecordNumber )
 				{
 					usCurrentWidth = ( INT16 ) pWidthList->iRecordWidth;
@@ -1965,7 +1949,7 @@ FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont,
 		// reset position
 		iCurrentPositionOnThisPage = 0;
 
-		
+
 		// next page
 		iCurrentPage++;
 //		iCounter++;
@@ -1977,7 +1961,6 @@ FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont,
 
 BOOLEAN ReduceStringLength( STR16 pString, UINT32 uiWidthToFitIn, UINT32 uiFont )
 {
-	PERFORMANCE_MARKER
 	CHAR16			OneChar[2];
 	CHAR16			zTemp[ 1024 ];
 	CHAR16			zStrDots[16];

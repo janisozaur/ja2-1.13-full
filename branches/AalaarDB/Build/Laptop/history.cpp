@@ -30,7 +30,7 @@
 #define MID_DIVLINE_Y									iScreenHeightOffset + 155
 #define BOT_DIVLINE_Y									iScreenHeightOffset + 204
 #define TITLE_X											iScreenWidthOffset + 140
-#define TITLE_Y											iScreenHeightOffset + 33 
+#define TITLE_Y											iScreenHeightOffset + 33
 #define TEXT_X											iScreenWidthOffset + 140
 #define PAGE_SIZE									22
 #define RECORD_Y									TOP_DIVLINE_Y
@@ -49,7 +49,7 @@
 
 
 #define NUM_RECORDS_PER_PAGE PAGE_SIZE
-#define SIZE_OF_HISTORY_FILE_RECORD ( sizeof( UINT8 ) + sizeof( UINT8 ) + sizeof( UINT32 ) + sizeof( UINT16 ) + sizeof( UINT16 ) + sizeof( UINT8 ) + sizeof( UINT8 ) ) 
+#define SIZE_OF_HISTORY_FILE_RECORD ( sizeof( UINT8 ) + sizeof( UINT8 ) + sizeof( UINT32 ) + sizeof( UINT16 ) + sizeof( UINT16 ) + sizeof( UINT8 ) + sizeof( UINT8 ) )
 
 // button positions
 #define NEXT_BTN_X										iScreenWidthOffset + 577
@@ -138,13 +138,12 @@ void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON *btn,INT32 reason);
 
 UINT32 SetHistoryFact( UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
 	// adds History item to player's log(History List), returns unique id number of it
 	// outside of the History system(the code in this .c file), this is the only function you'll ever need
 	UINT32 uiId=0;
 	UINT8 ubColor = 0;
 	HistoryUnitPtr pHistory = pHistoryListHead;
-	
+
 	// clear the list
 	ClearHistoryList( );
 
@@ -159,23 +158,23 @@ UINT32 SetHistoryFact( UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sS
 	}
 	uiId = ProcessAndEnterAHistoryRecord(ubCode, uiDate,	ubSecondCode, sSectorX, sSectorY, 0, ubColor);
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_HISTORY_UPDATED ] );
-	
+
 	// history list head
 	pHistory = pHistoryListHead;
-	
+
 	// append to end of file
 	AppendHistoryToEndOfFile( pHistory );
-	
-	
+
+
 	// if in history mode, reload current page
 	if( fInHistoryMode )
 	{
 	iCurrentHistoryPage--;
-	
+
 		// load in first page
 	LoadNextHistoryPage( );
 	}
- 
+
 
 	// return unique id of this transaction
 	return uiId;
@@ -184,35 +183,34 @@ UINT32 SetHistoryFact( UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sS
 
 UINT32 AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY)
 {
-	PERFORMANCE_MARKER
 	// adds History item to player's log(History List), returns unique id number of it
 	// outside of the History system(the code in this .c file), this is the only function you'll ever need
 	UINT32 uiId=0;
 	HistoryUnitPtr pHistory = pHistoryListHead;
-	
+
 	// clear the list
 	ClearHistoryList( );
 
 	// process the actual data
 	uiId = ProcessAndEnterAHistoryRecord(ubCode, uiDate,	ubSecondCode, sSectorX, sSectorY, 0, 0);
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_HISTORY_UPDATED ] );
-	
+
 	// history list head
 	pHistory = pHistoryListHead;
-	
+
 	// append to end of file
 	AppendHistoryToEndOfFile( pHistory );
-	
-	
+
+
 	// if in history mode, reload current page
 	if( fInHistoryMode )
 	{
 	iCurrentHistoryPage--;
-	
+
 		// load in first page
 	LoadNextHistoryPage( );
 	}
- 
+
 
 	// return unique id of this transaction
 	return uiId;
@@ -221,7 +219,6 @@ UINT32 AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, I
 
 void GameInitHistory()
 {
-	PERFORMANCE_MARKER
 	if( ( FileExists( HISTORY_DATA_FILE ) ) )
 	{
 	// unlink history file
@@ -230,16 +227,15 @@ void GameInitHistory()
 	}
 
 	AddHistoryToPlayersLog(HISTORY_ACCEPTED_ASSIGNMENT_FROM_ENRICO, 0, GetWorldTotalMin( ), -1, -1);
-	
+
 }
 
 void EnterHistory()
 {
-	PERFORMANCE_MARKER
 
 	// load the graphics
 	LoadHistory( );
-	
+
 	// create History buttons
 	CreateHistoryButtons( );
 
@@ -257,15 +253,15 @@ void EnterHistory()
 	RenderHistory( );
 
 
-	// set the fact we are in the history viewer 
+	// set the fact we are in the history viewer
 	fInHistoryMode=TRUE;
-	
+
 	// build Historys list
 	//OpenAndReadHistoryFile( );
- 
+
 	// force redraw of the entire screen
 	//fReDrawScreenFlag=TRUE;
-	
+
 	// set inital states
 	SetHistoryButtonStates( );
 
@@ -274,13 +270,12 @@ void EnterHistory()
 
 void ExitHistory()
 {
-	PERFORMANCE_MARKER
 	LaptopSaveInfo.iCurrentHistoryPage = iCurrentHistoryPage;
 
 	// not in History system anymore
 	fInHistoryMode=FALSE;
-	
-	
+
+
 	// write out history list to file
 	//OpenAndWriteHistoryFile( );
 
@@ -298,21 +293,19 @@ void ExitHistory()
 
 void HandleHistory()
 {
-	PERFORMANCE_MARKER	
 	// DEF 2/5/99 Dont need to update EVERY FRAME!!!!
-	// check and update status of buttons	
+	// check and update status of buttons
 //	SetHistoryButtonStates( );
 }
 
 void RenderHistory( void )
 {
-	PERFORMANCE_MARKER
 	//render the background to the display
 	RenderHistoryBackGround( );
-	
+
 	// the title bar text
 	DrawHistoryTitleText( );
-	
+
 	// the actual lists background
 	DisplayHistoryListBackground( );
 
@@ -321,8 +314,8 @@ void RenderHistory( void )
 
 	// render the currentpage of records
 	DrawAPageofHistoryRecords( );
-	
-	// stuff at top of page, the date range and page numbers 
+
+	// stuff at top of page, the date range and page numbers
 	DisplayPageNumberAndDateRange( );
 
 	// title bar icon
@@ -334,7 +327,6 @@ void RenderHistory( void )
 
 BOOLEAN LoadHistory( void )
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	// load History video objects into memory
 
@@ -342,20 +334,20 @@ BOOLEAN LoadHistory( void )
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\programtitlebar.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiTITLE));
-	
+
 	// top portion of the screen background
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\historywindow.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiTOP));
-	
-	
+
+
 	// shaded line
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\historylines.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiSHADELINE));
 
 /*
-Not being used???	DF commented out	
+Not being used???	DF commented out
 	// vert	line
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\historyvertline.sti", VObjectDesc.ImageFile);
@@ -365,16 +357,15 @@ Not being used???	DF commented out
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\divisionline480.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiLONGLINE));
-	
+
 	return (TRUE);
 }
 
 void RemoveHistory( void )
 {
-	PERFORMANCE_MARKER
 
 	// delete history video objects from memory
-	DeleteVideoObjectFromIndex(guiLONGLINE); 
+	DeleteVideoObjectFromIndex(guiLONGLINE);
 	DeleteVideoObjectFromIndex(guiTOP);
 	DeleteVideoObjectFromIndex(guiTITLE);
 	DeleteVideoObjectFromIndex(guiSHADELINE);
@@ -385,21 +376,20 @@ void RemoveHistory( void )
 
 void RenderHistoryBackGround( void )
 {
-	PERFORMANCE_MARKER
 	// render generic background for history system
 	HVOBJECT hHandle;
-	
+
 	// get title bar object
-	GetVideoObject(&hHandle, guiTITLE); 
-	
+	GetVideoObject(&hHandle, guiTITLE);
+
 	// blt title bar to screen
 	BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y -2 , VO_BLT_SRCTRANSPARENCY,NULL);
-	
+
 
 	// get and blt the top part of the screen, video object and blt to screen
 	GetVideoObject(&hHandle, guiTOP);
 	BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y + 22, VO_BLT_SRCTRANSPARENCY,NULL);
-	
+
 	// display background for history list
 	DisplayHistoryListBackground( );
 		return;
@@ -407,68 +397,64 @@ void RenderHistoryBackGround( void )
 
 void DrawHistoryTitleText( void )
 {
-	PERFORMANCE_MARKER
 	// setup the font stuff
 	SetFont(HISTORY_HEADER_FONT);
 	SetFontForeground(FONT_WHITE);
 	SetFontBackground(FONT_BLACK);
 	SetFontShadow(DEFAULT_SHADOW);
-	
+
 	// draw the pages title
 	mprintf(TITLE_X,TITLE_Y,pHistoryTitle[0]);
-		
+
 	return;
 }
 
 void CreateHistoryButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	// the prev page button
 	giHistoryButtonImage[PREV_PAGE_BUTTON]=	LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,0,-1,1,-1 );
 	giHistoryButton[PREV_PAGE_BUTTON] = QuickCreateButton( giHistoryButtonImage[PREV_PAGE_BUTTON], PREV_BTN_X, BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnHistoryDisplayPrevPageCallBack);
-	
+
 	// the next page button
 	giHistoryButtonImage[NEXT_PAGE_BUTTON]=	LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,6,-1,7,-1 );
 	giHistoryButton[NEXT_PAGE_BUTTON] = QuickCreateButton( giHistoryButtonImage[NEXT_PAGE_BUTTON], NEXT_BTN_X, BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 											(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnHistoryDisplayNextPageCallBack);
-	
+
 
 	// set buttons
 	SetButtonCursor(giHistoryButton[0], CURSOR_LAPTOP_SCREEN);
 	SetButtonCursor(giHistoryButton[1], CURSOR_LAPTOP_SCREEN);
-	
+
 	return;
 }
 
 
 void DestroyHistoryButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	// remove History buttons and images from memory
-	
+
 	// next page button
 	RemoveButton(giHistoryButton[1] );
 	UnloadButtonImage(giHistoryButtonImage[1] );
-	
+
 	// prev page button
 	RemoveButton(giHistoryButton[0] );
 	UnloadButtonImage(giHistoryButtonImage[0] );
-	
+
 	return;
 }
 
 void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	// force redraw
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		fReDrawScreenFlag=TRUE; 
+		fReDrawScreenFlag=TRUE;
 	}
 
 
@@ -490,16 +476,15 @@ void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON *btn,INT32 reason)
 		SetHistoryButtonStates( );
 	}
 
-	
+
 }
 
 void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		fReDrawScreenFlag=TRUE;	
+		fReDrawScreenFlag=TRUE;
 	}
 
 
@@ -511,21 +496,20 @@ void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON *btn,INT32 reason)
 		LoadNextHistoryPage( );
 		// set new state
 		SetHistoryButtonStates( );
-		fReDrawScreenFlag=TRUE; 		
+		fReDrawScreenFlag=TRUE;
 	}
 
-	
+
 
 }
 
 BOOLEAN IncrementCurrentPageHistoryDisplay( void )
 {
-	PERFORMANCE_MARKER
 	// run through list, from pCurrentHistory, to NUM_RECORDS_PER_PAGE +1 HistoryUnits
 	HWFILE hFileHandle;
 	UINT32	uiFileSize=0;
 	UINT32	uiSizeOfRecordsOnEachPage = 0;
-	
+
 	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
 		return( FALSE );
 
@@ -580,7 +564,7 @@ BOOLEAN IncrementCurrentPageHistoryDisplay( void )
 	}
 */
 	// if ok to increment, increment
- 
+
 
 	return( TRUE );
 }
@@ -588,7 +572,6 @@ BOOLEAN IncrementCurrentPageHistoryDisplay( void )
 
 UINT32 ProcessAndEnterAHistoryRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , UINT8 ubColor )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiId=0;
 	HistoryUnitPtr pHistory=pHistoryListHead;
 
@@ -598,13 +581,13 @@ UINT32 ProcessAndEnterAHistoryRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubSecon
 		// go to end of list
 		while(pHistory->Next)
 			pHistory=pHistory->Next;
-		
+
 		// alloc space
 		pHistory->Next = (history *) MemAlloc(sizeof(HistoryUnit));
-		
+
 		// increment id number
 		uiId = pHistory->uiIdNumber + 1;
-		
+
 		// set up information passed
 		pHistory = pHistory->Next;
 		pHistory->Next = NULL;
@@ -616,13 +599,13 @@ UINT32 ProcessAndEnterAHistoryRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubSecon
 		pHistory->sSectorY = sSectorY;
 		pHistory->bSectorZ = bSectorZ;
 		pHistory->ubColor = ubColor;
-	
+
 	}
 	else
 	{
 		// alloc space
 		pHistory = (HistoryUnitPtr) MemAlloc(sizeof(HistoryUnit));
-	
+
 		// setup info passed
 		pHistory->Next = NULL;
 		pHistory->ubCode = ubCode;
@@ -643,9 +626,8 @@ UINT32 ProcessAndEnterAHistoryRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubSecon
 
 void OpenAndReadHistoryFile( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will open and read in data to the History list
-	
+
 	HWFILE hFileHandle;
 	UINT8 ubCode, ubSecondCode;
 	UINT32 uiDate;
@@ -677,7 +659,7 @@ void OpenAndReadHistoryFile( void )
 	FileClose( hFileHandle );
 		return;
 	}
- 
+
 	// file exists, read in data, continue until file end
 	while( FileGetSize( hFileHandle ) > uiByteCount)
 	{
@@ -700,23 +682,22 @@ void OpenAndReadHistoryFile( void )
 
 		// increment byte counter
 	uiByteCount +=	SIZE_OF_HISTORY_FILE_RECORD;
-	} 
-	
-	// close file 
+	}
+
+	// close file
 	FileClose( hFileHandle );
-	
+
 	return;
 }
 
 BOOLEAN OpenAndWriteHistoryFile( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will open and write out data from the History list
- 
+
 	HWFILE hFileHandle;
 	HistoryUnitPtr pHistoryList=pHistoryListHead;
-	
-	
+
+
 	// open file
  	hFileHandle=FileOpen( HISTORY_DATA_FILE, FILE_ACCESS_WRITE|FILE_CREATE_ALWAYS, FALSE);
 
@@ -745,7 +726,7 @@ BOOLEAN OpenAndWriteHistoryFile( void )
 
 		// next element in list
 		pHistoryList = pHistoryList->Next;
-	
+
 	}
 
 	// close file
@@ -759,9 +740,8 @@ BOOLEAN OpenAndWriteHistoryFile( void )
 
 void ClearHistoryList( void )
 {
-	PERFORMANCE_MARKER
 	// remove each element from list of transactions
-	
+
 	HistoryUnitPtr pHistoryList=pHistoryListHead;
 	HistoryUnitPtr pHistoryNode=pHistoryList;
 
@@ -770,21 +750,20 @@ void ClearHistoryList( void )
 	{
 	// set node to list head
 		pHistoryNode=pHistoryList;
-		
+
 		// set list head to next node
 		pHistoryList=pHistoryList->Next;
-	
+
 		// delete current node
 		MemFree(pHistoryNode);
 	}
 	pHistoryListHead=NULL;
-	
+
 	return;
 }
 
 void DisplayHistoryListHeaders( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will display the headers to each column in History
 	INT16 usX, usY;
 
@@ -792,12 +771,12 @@ void DisplayHistoryListHeaders( void )
 	SetFont(HISTORY_TEXT_FONT);
 	SetFontForeground(FONT_BLACK);
 	SetFontBackground(FONT_BLACK);
-	SetFontShadow(NO_SHADOW); 
-	
+	SetFontShadow(NO_SHADOW);
+
 	// the date header
 	FindFontCenterCoordinates(RECORD_DATE_X + 5,0,RECORD_DATE_WIDTH,0, pHistoryHeaders[0], HISTORY_TEXT_FONT,&usX, &usY);
 	mprintf(usX, RECORD_HEADER_Y, pHistoryHeaders[0]);
-	
+
 	// the date header
 	FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH + 5,0,RECORD_LOCATION_WIDTH,0, pHistoryHeaders[ 3 ], HISTORY_TEXT_FONT,&usX, &usY);
 	mprintf(usX, RECORD_HEADER_Y, pHistoryHeaders[3]);
@@ -809,17 +788,16 @@ void DisplayHistoryListHeaders( void )
 	SetFontShadow(DEFAULT_SHADOW);
 	return;
 }
- 
+
 
 void DisplayHistoryListBackground( void )
 {
-	PERFORMANCE_MARKER
 	// this function will display the History list display background
 	HVOBJECT hHandle;
 	INT32 iCounter=0;
-	
 
-	
+
+
 	// get shaded line object
 	GetVideoObject(&hHandle, guiSHADELINE);
 	for(iCounter=0; iCounter <11; iCounter++)
@@ -827,7 +805,7 @@ void DisplayHistoryListBackground( void )
 	// blt title bar to screen
 	BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 15, (TOP_DIVLINE_Y + BOX_HEIGHT * 2 * iCounter), VO_BLT_SRCTRANSPARENCY,NULL);
 	}
-	
+
 	// the long hortizontal line int he records list display region
 	GetVideoObject(&hHandle, guiLONGLINE);
 	BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 9, (TOP_DIVLINE_Y ), VO_BLT_SRCTRANSPARENCY,NULL);
@@ -839,7 +817,6 @@ void DisplayHistoryListBackground( void )
 
 void DrawHistoryRecordsText( void )
 {
-	PERFORMANCE_MARKER
 	// draws the text of the records
 	HistoryUnitPtr pCurHistory=pHistoryListHead;
 	CHAR16 sString[512];
@@ -873,14 +850,14 @@ void DrawHistoryRecordsText( void )
 		swprintf(sString, L"%d", ( pCurHistory->uiDate / ( 24 * 60 ) ) );
 		FindFontCenterCoordinates(RECORD_DATE_X + 5, 0, RECORD_DATE_WIDTH,0, sString, HISTORY_TEXT_FONT,&usX, &usY);
 		mprintf(usX, RECORD_Y + ( iCounter * ( BOX_HEIGHT ) ) + 3, sString);
-	
+
 		// now the actual history text
 	//FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH,0,RECORD_HISTORY_WIDTH,0,	pHistoryStrings[pCurHistory->ubCode], HISTORY_TEXT_FONT,&usX, &usY);
 		ProcessHistoryTransactionString(sString, pCurHistory);
 //	mprintf(RECORD_DATE_X + RECORD_DATE_WIDTH + 25, RECORD_Y + ( iCounter * ( BOX_HEIGHT ) ) + 3, pHistoryStrings[pCurHistory->ubCode] );
 		mprintf(RECORD_DATE_X + RECORD_LOCATION_WIDTH +RECORD_DATE_WIDTH + 15, RECORD_Y + ( iCounter * ( BOX_HEIGHT ) ) + 3, sString );
-	
-		
+
+
 		// no location
 		if( ( pCurHistory->sSectorX == -1 )||( pCurHistory->sSectorY == -1 ) )
 		{
@@ -891,9 +868,9 @@ void DrawHistoryRecordsText( void )
 		{
 			GetSectorIDString( pCurHistory->sSectorX, pCurHistory->sSectorY, pCurHistory->bSectorZ, sString, TRUE );
 			FindFontCenterCoordinates( RECORD_DATE_X + RECORD_DATE_WIDTH, 0, RECORD_LOCATION_WIDTH + 10, 0,	sString ,HISTORY_TEXT_FONT, &sX, &sY );
-	
+
 			ReduceStringLength( sString, RECORD_LOCATION_WIDTH + 10, HISTORY_TEXT_FONT );
-			
+
 			mprintf(sX, RECORD_Y + ( iCounter * ( BOX_HEIGHT ) ) + 3, sString );
 		}
 
@@ -902,49 +879,48 @@ void DrawHistoryRecordsText( void )
 
 		// next History
 		pCurHistory = pCurHistory->Next;
-		
+
 		// last page, no Historys left, return
 		if( ! pCurHistory )
 		{
 
 			// restore shadow
-		SetFontShadow(DEFAULT_SHADOW);	
+		SetFontShadow(DEFAULT_SHADOW);
 			return;
 		}
 
 	}
 
 	// restore shadow
-	SetFontShadow(DEFAULT_SHADOW);	
+	SetFontShadow(DEFAULT_SHADOW);
 	return;
 }
 
 
 void DrawAPageofHistoryRecords( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will draw a series of history records to the screen
 	pCurrentHistory=pHistoryListHead;
 
 	// (re-)render background
-	
+
 	// the title bar text
 	DrawHistoryTitleText( );
-	
+
 	// the actual lists background
 	DisplayHistoryListBackground( );
 
 	// the headers to each column
 	DisplayHistoryListHeaders( );
 
-	
+
 	// error check
 	if(iCurrentHistoryPage==-1)
 	{
 		iCurrentHistoryPage=0;
 	}
-	
-	
+
+
 	// current page is found, render	from here
 	DrawHistoryRecordsText( );
 
@@ -956,8 +932,7 @@ void DrawAPageofHistoryRecords( void )
 
 void DisplayPageNumberAndDateRange( void )
 {
-	PERFORMANCE_MARKER
-	// this function will go through the list of 'histories' starting at current until end or 
+	// this function will go through the list of 'histories' starting at current until end or
 	// MAX_PER_PAGE...it will get the date range and the page number
 	INT32 iLastPage=0;
 	INT32 iCounter=0;
@@ -980,13 +955,13 @@ void DisplayPageNumberAndDateRange( void )
 
 	swprintf( sString, L"%s %d - %d",pHistoryHeaders[2], 1 , 1 );
 	mprintf( HISTORY_DATE_X, HISTORY_DATE_Y, sString );
- 
+
 	// reset shadow
-	SetFontShadow(DEFAULT_SHADOW);	
-	
+	SetFontShadow(DEFAULT_SHADOW);
+
 		return;
 	}
- 
+
 	uiLastDate=pCurrentHistory->uiDate;
 
 /*
@@ -1005,7 +980,7 @@ void DisplayPageNumberAndDateRange( void )
 
 	// set temp to current, to get last date
 	pTempHistory=pCurrentHistory;
-	
+
 	// reset counter
 	iCounter=0;
 
@@ -1018,27 +993,26 @@ void DisplayPageNumberAndDateRange( void )
 		pTempHistory = pTempHistory->Next;
 	}
 
-	
+
 
 	// get the last page
-	
+
 	swprintf( sString, L"%s	%d / %d",pHistoryHeaders[1], iCurrentHistoryPage , iLastPage +1 );
 	mprintf( PAGE_NUMBER_X, PAGE_NUMBER_Y, sString );
 
 	swprintf( sString, L"%s %d - %d",pHistoryHeaders[2], pCurrentHistory->uiDate / ( 24 * 60 ) , uiLastDate/( 24 * 60 ) );
 	mprintf( HISTORY_DATE_X, HISTORY_DATE_Y, sString );
 
-	
+
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
-	
+
 	return;
 }
 
 
 void ProcessHistoryTransactionString(STR16 pString, HistoryUnitPtr pHistory)
 {
-	PERFORMANCE_MARKER
 	CHAR16 sString[ 128 ];
 
 	switch( pHistory->ubCode)
@@ -1096,7 +1070,7 @@ void ProcessHistoryTransactionString(STR16 pString, HistoryUnitPtr pHistory)
 		case HISTORY_EXTENDED_CONTRACT_2_WEEK:
 			swprintf(pString, pHistoryStrings[ HISTORY_EXTENDED_CONTRACT_2_WEEK ], gMercProfiles[pHistory->ubSecondCode].zNickname );
 			break;
-		
+
 		case( HISTORY_MERC_FIRED ):
 			swprintf(pString, pHistoryStrings[ HISTORY_MERC_FIRED ], gMercProfiles[pHistory->ubSecondCode].zNickname );
 		break;
@@ -1208,30 +1182,28 @@ void ProcessHistoryTransactionString(STR16 pString, HistoryUnitPtr pHistory)
 
 void DrawHistoryLocation( INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
-	// will draw the location of the history event 
+	// will draw the location of the history event
 
-	
+
 	return;
 }
 
 
 void SetHistoryButtonStates( void )
 {
-	PERFORMANCE_MARKER
 	// this function will look at what page we are viewing, enable and disable buttons as needed
-	
+
 	if( iCurrentHistoryPage == 1 )
 	{
 		// first page, disable left buttons
 		DisableButton( 	giHistoryButton[PREV_PAGE_BUTTON] );
-	
+
 	}
 	else
 	{
 		// enable buttons
 		EnableButton( giHistoryButton[PREV_PAGE_BUTTON] );
-	
+
 	}
 
 	if( IncrementCurrentPageHistoryDisplay( ) )
@@ -1239,7 +1211,7 @@ void SetHistoryButtonStates( void )
 		// decrement page
 	iCurrentHistoryPage--;
 		DrawAPageofHistoryRecords( );
-	
+
 		// enable buttons
 		EnableButton( giHistoryButton[ NEXT_PAGE_BUTTON ] );
 
@@ -1253,7 +1225,6 @@ void SetHistoryButtonStates( void )
 
 BOOLEAN LoadInHistoryRecords( UINT32 uiPage )
 {
-	PERFORMANCE_MARKER
 	// loads in records belogning, to page uiPage
 	// no file, return
 	BOOLEAN fOkToContinue=TRUE;
@@ -1266,7 +1237,7 @@ BOOLEAN LoadInHistoryRecords( UINT32 uiPage )
 	UINT8 ubColor;
 	INT32 iBytesRead=0;
 	UINT32 uiByteCount=0;
- 
+
 	// check if bad page
 	if( uiPage == 0 )
 	{
@@ -1302,12 +1273,12 @@ BOOLEAN LoadInHistoryRecords( UINT32 uiPage )
 	}
 
 	FileSeek( hFileHandle, ( uiPage - 1 ) * NUM_RECORDS_PER_PAGE * ( SIZE_OF_HISTORY_FILE_RECORD), FILE_SEEK_FROM_START );
-	
+
 	uiByteCount = ( uiPage	- 1 ) * NUM_RECORDS_PER_PAGE * (SIZE_OF_HISTORY_FILE_RECORD );
 	// file exists, read in data, continue until end of page
 	while( ( iCount < NUM_RECORDS_PER_PAGE )&&( fOkToContinue ) )
 	{
-	
+
 		// read in other data
 	FileRead( hFileHandle, &ubCode, sizeof(UINT8), (UINT32 *)&iBytesRead );
 		FileRead( hFileHandle, &ubSecondCode, sizeof(UINT8), (UINT32 *)&iBytesRead );
@@ -1327,7 +1298,7 @@ BOOLEAN LoadInHistoryRecords( UINT32 uiPage )
 
 		// increment byte counter
 	uiByteCount += SIZE_OF_HISTORY_FILE_RECORD;
-	
+
 		// we've overextended our welcome, and bypassed end of file, get out
 		if( uiByteCount >=	FileGetSize( hFileHandle ) )
 		{
@@ -1336,9 +1307,9 @@ BOOLEAN LoadInHistoryRecords( UINT32 uiPage )
 		}
 
 		iCount++;
-	} 
-	
-	// close file 
+	}
+
+	// close file
 	FileClose( hFileHandle );
 
 	// check to see if we in fact have a list to display
@@ -1357,7 +1328,6 @@ BOOLEAN LoadInHistoryRecords( UINT32 uiPage )
 
 BOOLEAN WriteOutHistoryRecords( UINT32 uiPage )
 {
-	PERFORMANCE_MARKER
 	// loads in records belogning, to page uiPage
 	// no file, return
 	BOOLEAN fOkToContinue=TRUE;
@@ -1365,7 +1335,7 @@ BOOLEAN WriteOutHistoryRecords( UINT32 uiPage )
 	HWFILE hFileHandle;
 	HistoryUnitPtr pList;
 	UINT32 uiByteCount=0;
- 
+
 	// check if bad page
 	if( uiPage == 0 )
 	{
@@ -1401,14 +1371,14 @@ BOOLEAN WriteOutHistoryRecords( UINT32 uiPage )
 	}
 
 	pList = pHistoryListHead;
-	
+
 	if( pList == NULL )
 	{
 		return( FALSE );
 	}
-	
+
 	FileSeek( hFileHandle, sizeof( INT32 ) + ( uiPage - 1 ) * NUM_RECORDS_PER_PAGE * SIZE_OF_HISTORY_FILE_RECORD, FILE_SEEK_FROM_START );
-	
+
 	uiByteCount = /*sizeof( INT32 )+ */( uiPage - 1 ) * NUM_RECORDS_PER_PAGE * SIZE_OF_HISTORY_FILE_RECORD;
 	// file exists, read in data, continue until end of page
 	while( ( iCount < NUM_RECORDS_PER_PAGE )&&( fOkToContinue ) )
@@ -1418,7 +1388,7 @@ BOOLEAN WriteOutHistoryRecords( UINT32 uiPage )
 		//perform a check on the data to see if it is pooched
 		PerformCheckOnHistoryRecord( 4, pList->sSectorX, pList->sSectorY, pList->bSectorZ );
 		#endif
-	
+
 		FileWrite( hFileHandle, &(pList->ubCode ),	sizeof ( UINT8 ), NULL );
 	FileWrite( hFileHandle, &(pList->ubSecondCode ),	sizeof ( UINT8 ), NULL );
 		FileWrite( hFileHandle, &(pList->uiDate ),	sizeof ( UINT32 ), NULL );
@@ -1437,9 +1407,9 @@ BOOLEAN WriteOutHistoryRecords( UINT32 uiPage )
 		}
 
 		iCount++;
-	} 
-	
-	// close file 
+	}
+
+	// close file
 	FileClose( hFileHandle );
 
 	ClearHistoryList( );
@@ -1449,13 +1419,12 @@ BOOLEAN WriteOutHistoryRecords( UINT32 uiPage )
 
 BOOLEAN LoadNextHistoryPage( void )
 {
-	PERFORMANCE_MARKER
-	
+
 	// clear out old list of records, and load in previous page worth of records
 	ClearHistoryList( );
 
-	
-	
+
+
 	// now load in previous page's records, if we can
 	if ( LoadInHistoryRecords( iCurrentHistoryPage + 1 ) )
 	{
@@ -1473,8 +1442,7 @@ BOOLEAN LoadNextHistoryPage( void )
 
 BOOLEAN LoadPreviousHistoryPage( void )
 {
-	PERFORMANCE_MARKER
-	
+
 	// clear out old list of records, and load in previous page worth of records
 	ClearHistoryList( );
 
@@ -1483,7 +1451,7 @@ BOOLEAN LoadPreviousHistoryPage( void )
 	{
 		return ( FALSE );
 	}
-	
+
 	// now load in previous page's records, if we can
 	if ( LoadInHistoryRecords( iCurrentHistoryPage - 1 ) )
 	{
@@ -1500,7 +1468,6 @@ BOOLEAN LoadPreviousHistoryPage( void )
 
 void SetLastPageInHistoryRecords( void )
 {
-	PERFORMANCE_MARKER
 	// grabs the size of the file and interprets number of pages it will take up
 	HWFILE hFileHandle;
 
@@ -1525,24 +1492,23 @@ void SetLastPageInHistoryRecords( void )
 	guiLastPageInHistoryRecordsList = 1;
 		return;
 	}
- 
-	
+
+
 	// done with file, close it
 	FileClose( hFileHandle );
 
 	guiLastPageInHistoryRecordsList = ReadInLastElementOfHistoryListAndReturnIdNumber( ) / NUM_RECORDS_PER_PAGE;
-	
+
 	return;
 }
 
 UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber( void )
 {
-	PERFORMANCE_MARKER
 	// this function will read in the last unit in the history list, to grab it's id number
 
-	
+
 	HWFILE hFileHandle;
-	INT32 iFileSize = 0; 
+	INT32 iFileSize = 0;
 
 	// no file, return
 	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
@@ -1563,7 +1529,7 @@ UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber( void )
 	FileClose( hFileHandle );
 	return 0;
 	}
- 
+
 	// size is?
 	iFileSize = FileGetSize( hFileHandle );
 
@@ -1572,18 +1538,17 @@ UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber( void )
 
 	// file size	/ sizeof record in bytes is id
 	return ( (	iFileSize	) / ( SIZE_OF_HISTORY_FILE_RECORD ) );
-	
+
 }
 
 
 BOOLEAN AppendHistoryToEndOfFile( HistoryUnitPtr pHistory )
 {
-	PERFORMANCE_MARKER
 		// will write the current finance to disk
 	HWFILE hFileHandle;
 	HistoryUnitPtr pHistoryList=pHistoryListHead;
-	
-	
+
+
 	// open file
  	hFileHandle=FileOpen( HISTORY_DATA_FILE, FILE_ACCESS_WRITE|FILE_OPEN_ALWAYS, FALSE);
 
@@ -1592,7 +1557,7 @@ BOOLEAN AppendHistoryToEndOfFile( HistoryUnitPtr pHistory )
 	{
 	return ( FALSE );
 	}
-	
+
 	// go to the end
 	if( FileSeek( hFileHandle,0,FILE_SEEK_FROM_END ) == FALSE )
 	{
@@ -1606,15 +1571,15 @@ BOOLEAN AppendHistoryToEndOfFile( HistoryUnitPtr pHistory )
 		PerformCheckOnHistoryRecord( 5, pHistoryList->sSectorX, pHistoryList->sSectorY, pHistoryList->bSectorZ );
 		#endif
 
-	
+
 		// now write date and amount, and code
 	FileWrite( hFileHandle, &(pHistoryList->ubCode ),	sizeof ( UINT8 ), NULL );
 	FileWrite( hFileHandle, &(pHistoryList->ubSecondCode ),	sizeof ( UINT8 ), NULL );
 		FileWrite( hFileHandle, &(pHistoryList->uiDate ),	sizeof ( UINT32 ), NULL );
 	FileWrite( hFileHandle, &(pHistoryList->sSectorX ),	sizeof ( INT16 ), NULL );
-		FileWrite( hFileHandle, &(pHistoryList->sSectorY ),	sizeof ( INT16 ), NULL ); 
-		FileWrite( hFileHandle, &(pHistoryList->bSectorZ ),	sizeof ( INT8 ), NULL ); 
-		FileWrite( hFileHandle, &(pHistoryList->ubColor ),	sizeof ( UINT8 ), NULL ); 
+		FileWrite( hFileHandle, &(pHistoryList->sSectorY ),	sizeof ( INT16 ), NULL );
+		FileWrite( hFileHandle, &(pHistoryList->bSectorZ ),	sizeof ( INT8 ), NULL );
+		FileWrite( hFileHandle, &(pHistoryList->ubColor ),	sizeof ( UINT8 ), NULL );
 
 
 		// close file
@@ -1625,12 +1590,11 @@ BOOLEAN AppendHistoryToEndOfFile( HistoryUnitPtr pHistory )
 
 void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
 	// run through history list
 	HistoryUnitPtr pList = pHistoryListHead;
 	BOOLEAN fFound = FALSE;
 
-	// set current page to before list	
+	// set current page to before list
 	iCurrentHistoryPage = 0;
 
 	SetLastPageInHistoryRecords( );
@@ -1646,22 +1610,22 @@ void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY )
 			// reset color
 			pList->ubColor = 0;
 			fFound = TRUE;
-				
+
 			// save
 			OpenAndWriteHistoryFile( );
 			pList = NULL;
 		}
-			
+
 		if( fFound != TRUE )
 		{
 			pList = pList->Next;
 		}
 	}
-	
+
 	if( fInHistoryMode )
 	{
 	iCurrentHistoryPage--;
-	
+
 		// load in first page
 	LoadNextHistoryPage( );
 	}
@@ -1673,13 +1637,12 @@ void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY )
 
 UINT32 GetTimeQuestWasStarted( UINT8 ubCode )
 {
-	PERFORMANCE_MARKER
 	// run through history list
 	HistoryUnitPtr pList = pHistoryListHead;
 	BOOLEAN fFound = FALSE;
 	UINT32 uiTime = 0;
 
-	// set current page to before list	
+	// set current page to before list
 	iCurrentHistoryPage = 0;
 
 	SetLastPageInHistoryRecords( );
@@ -1694,20 +1657,20 @@ UINT32 GetTimeQuestWasStarted( UINT8 ubCode )
 		{
 			uiTime = pList->uiDate;
 			fFound = TRUE;
-				
+
 			pList = NULL;
 		}
-			
+
 		if( fFound != TRUE )
 		{
 			pList = pList->Next;
 		}
 	}
-	
+
 	if( fInHistoryMode )
 	{
 	iCurrentHistoryPage--;
-	
+
 		// load in first page
 	LoadNextHistoryPage( );
 	}
@@ -1717,7 +1680,6 @@ UINT32 GetTimeQuestWasStarted( UINT8 ubCode )
 
 void GetQuestStartedString( UINT8 ubQuestValue, STR16 sQuestString )
 {
-	PERFORMANCE_MARKER
 	// open the file and copy the string
 	LoadEncryptedDataFromFile( "BINARYDATA\\quests.edt", sQuestString, 160 * ( ubQuestValue * 2	), 160 );
 }
@@ -1725,7 +1687,6 @@ void GetQuestStartedString( UINT8 ubQuestValue, STR16 sQuestString )
 
 void GetQuestEndedString( UINT8 ubQuestValue, STR16 sQuestString )
 {
-	PERFORMANCE_MARKER
 	// open the file and copy the string
 	LoadEncryptedDataFromFile( "BINARYDATA\\quests.edt", sQuestString, 160 * ( ( ubQuestValue	* 2 ) + 1), 160 );
 }
@@ -1734,7 +1695,6 @@ void GetQuestEndedString( UINT8 ubQuestValue, STR16 sQuestString )
 #ifdef JA2TESTVERSION
 void PerformCheckOnHistoryRecord( UINT32 uiErrorCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	PERFORMANCE_MARKER
 	CHAR	zString[512];
 
 	if( sSectorX > 16 || sSectorY > 16 || bSectorZ > 3 || sSectorX < -1 || sSectorY < -1 || bSectorZ < 0 )
@@ -1747,12 +1707,11 @@ void PerformCheckOnHistoryRecord( UINT32 uiErrorCode, INT16 sSectorX, INT16 sSec
 
 INT32 GetNumberOfHistoryPages()
 {
-	PERFORMANCE_MARKER
 	HWFILE hFileHandle;
 	UINT32	uiFileSize=0;
 	UINT32	uiSizeOfRecordsOnEachPage = 0;
 	INT32		iNumberOfHistoryPages = 0;
-	
+
 	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
 		return( 0 );
 
@@ -1784,6 +1743,6 @@ INT32 GetNumberOfHistoryPages()
 
 
 
- 
+
 
 

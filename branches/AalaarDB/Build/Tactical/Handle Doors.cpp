@@ -19,7 +19,7 @@
 	#include "Interactive Tiles.h"
 	#include "handle doors.h"
 	#include "Sound Control.h"
-	#include "interface.h" 
+	#include "interface.h"
 	#include "keys.h"
 	#include "message.h"
 	#include "text.h"
@@ -43,7 +43,6 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 
 void HandleDoorChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fNoAnimations )
 {
-	PERFORMANCE_MARKER
 	STRUCTURE *			pStructure;
 	DOOR_STATUS *		pDoorStatus;
 	BOOLEAN					fDoorsAnimated = FALSE;
@@ -53,7 +52,7 @@ void HandleDoorChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN f
 	if ( pStructure == NULL )
 	{
 #ifdef JA2TESTVERSION
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"ERROR: Told to handle door that does not exist at %d.", sGridNo );			
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"ERROR: Told to handle door that does not exist at %d.", sGridNo );
 #endif
 		return;
 	}
@@ -84,7 +83,6 @@ void HandleDoorChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN f
 
 UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, UINT16 usAnimState )
 {
-	PERFORMANCE_MARKER
 	switch( usAnimState )
 	{
 		case OPEN_DOOR:
@@ -243,7 +241,6 @@ UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, UINT16 
 
 void InteractWithClosedDoor( SOLDIERTYPE *pSoldier, UINT8 ubHandleCode )
 {
-	PERFORMANCE_MARKER
 	pSoldier->aiData.ubDoorHandleCode = ubHandleCode;
 
 	switch( ubHandleCode )
@@ -274,7 +271,6 @@ void InteractWithClosedDoor( SOLDIERTYPE *pSoldier, UINT8 ubHandleCode )
 
 BOOLEAN DoTrapCheckOnStartingMenu( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 {
-	PERFORMANCE_MARKER
 	INT8	bDetectLevel;
 
 	if ( pDoor && pDoor->fLocked && pDoor->ubTrapID != NO_TRAP && pDoor->bPerceivedTrapped == DOOR_PERCEIVED_UNKNOWN )
@@ -296,7 +292,6 @@ BOOLEAN DoTrapCheckOnStartingMenu( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection, BOOLEAN fDoor )
 {
-	PERFORMANCE_MARKER
 	STRUCTURE *			pBaseStructure;
 	BOOLEAN					fDoMenu = FALSE;
 	DOOR		*				pDoor = NULL;
@@ -410,7 +405,6 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 
 void ProcessImplicationsOfPCMessingWithDoor( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT8						ubRoom;
 	SOLDIERTYPE *		pGoon;
 	// if player is hacking at a door in the brothel and a kingpin guy can see him
@@ -450,7 +444,6 @@ void ProcessImplicationsOfPCMessingWithDoor( SOLDIERTYPE * pSoldier )
 
 BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *pStructure )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fHandleDoor = FALSE;
 	INT16		sAPCost = 0, sBPCost = 0;
 	DOOR		*pDoor;
@@ -499,7 +492,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 						// Set AP costs to that of opening a door
 						sAPCost = AP_OPEN_DOOR;
 						sBPCost = BP_OPEN_DOOR;
-	
+
 						pSoldier->ChangeSoldierState( GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
 
 						// Did we inadvertently set it off?
@@ -600,7 +593,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 								// Now just show on message bar
 								if ( !AM_AN_EPC( pSoldier ) )
 								{
-									pSoldier->DoMercBattleSound( BATTLE_SOUND_LOCKED );				
+									pSoldier->DoMercBattleSound( BATTLE_SOUND_LOCKED );
 								}
 								else
 								{
@@ -616,7 +609,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							break;
 						}
 						break;
-			
+
 					case HANDLE_DOOR_FORCE:
 
 						// Set costs for these
@@ -861,7 +854,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 									//fHandleDoor = TRUE;
 								}
 								else
-								{									
+								{
 									pSoldier->ChangeSoldierState( GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_LOCKED_DOOR ), 0, FALSE );
 									// Now just show on message bar
 									HandleDoorTrap( pSoldier, pDoor );
@@ -961,7 +954,6 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 
 BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * pStructure, BOOLEAN fNoAnimations	)
 {
-	PERFORMANCE_MARKER
 	LEVELNODE	* pShadowNode;
 	LEVELNODE * pNode;
 	INT32				cnt;
@@ -1016,7 +1008,7 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 					SetRenderFlags(RENDER_FLAG_FULL);
 				}
 			}
-		}	
+		}
 	}
 
 
@@ -1083,7 +1075,7 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 			fDoAnimation = FALSE;
 		}
 
-		if ( fDoAnimation	)	
+		if ( fDoAnimation	)
 		{
 			// Update perceived value
 			ModifyDoorStatus( sGridNo, DONTSETDOORSTATUS, TRUE );
@@ -1099,7 +1091,7 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 				AniParams.sStartFrame					= pNode->sCurrentFrame;
 				AniParams.uiFlags							= ANITILE_DOOR | ANITILE_FORWARD | ANITILE_EXISTINGTILE;
 				AniParams.pGivenLevelNode			= pNode;
-				
+
 				CreateAnimationTile( &AniParams );
 			}
 			else
@@ -1158,7 +1150,7 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 			}
 
 			// OK, We must know what sound to play, for now use same sound for all doors...
-			PlayJA2Sample( uiSoundID, RATE_11025, SoundVolume( MIDVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );			
+			PlayJA2Sample( uiSoundID, RATE_11025, SoundVolume( MIDVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );
 		}
 
 	}
@@ -1209,7 +1201,7 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 			ModifyDoorStatus( sGridNo, DONTSETDOORSTATUS, FALSE );
 
 			memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
-		
+
 			// ATE; Default to normal door...
 			uiSoundID = ( DRCLOSE_1 + Random( 2 ) );
 
@@ -1253,11 +1245,11 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 				AniParams.pGivenLevelNode			= pNode;
 
 		 AniParams.ubKeyFrame1					= pNode->sCurrentFrame - 2;
-		
+
 				CreateAnimationTile( &AniParams );
 			}
 			else
-			{			
+			{
 				AniParams.sGridNo							= sGridNo;
 				AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
 				AniParams.usTileType				= (UINT16)gTileDatabase[ pNode->usIndex ].fType;
@@ -1266,9 +1258,9 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 				AniParams.sStartFrame					= pNode->sCurrentFrame;
 				AniParams.uiFlags							= ANITILE_DOOR | ANITILE_FORWARD | ANITILE_EXISTINGTILE;
 				AniParams.pGivenLevelNode			= pNode;
-	
+
 		AniParams.ubKeyFrame1					= pNode->sCurrentFrame + 2;
-			
+
 				CreateAnimationTile( &AniParams );
 			}
 		}
@@ -1302,7 +1294,6 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 
 void SetDoorString( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	DOOR		*pDoor;
 	DOOR_STATUS *		pDoorStatus;
 	STRUCTURE *			pStructure;
@@ -1328,7 +1319,7 @@ void SetDoorString( INT16 sGridNo )
 			switch( pDoor->bPerceivedTrapped )
 			{
 				case DOOR_PERCEIVED_TRAPPED:
-				
+
 					wcscpy( gzIntTileLocation2, TacticalStr[ DOOR_TRAPPED_MOUSE_DESCRIPTION ] );
 					gfUIIntTileLocation2 = TRUE;
 					fTrapped = TRUE;
@@ -1341,23 +1332,23 @@ void SetDoorString( INT16 sGridNo )
 				switch( pDoor->bPerceivedLocked )
 				{
 					case DOOR_PERCEIVED_UNKNOWN:
-					
+
 						break;
 
 					case DOOR_PERCEIVED_LOCKED:
-					
+
 						wcscpy( gzIntTileLocation2, TacticalStr[ DOOR_LOCKED_MOUSE_DESCRIPTION ] );
 						gfUIIntTileLocation2 = TRUE;
 						break;
 
 					case DOOR_PERCEIVED_UNLOCKED:
-					
+
 						wcscpy( gzIntTileLocation2, TacticalStr[ DOOR_UNLOCKED_MOUSE_DESCRIPTION ] );
 						gfUIIntTileLocation2 = TRUE;
 						break;
 
 					case DOOR_PERCEIVED_BROKEN:
-					
+
 						wcscpy( gzIntTileLocation2, TacticalStr[ DOOR_BROKEN_MOUSE_DESCRIPTION ] );
 						gfUIIntTileLocation2 = TRUE;
 						break;
@@ -1365,7 +1356,7 @@ void SetDoorString( INT16 sGridNo )
 				}
 			}
 
-		}	
+		}
 	}
 
 	// ATE: If here, we try to say, opened or closed...

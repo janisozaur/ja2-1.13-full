@@ -385,7 +385,7 @@ public:
 	~MERCPROFILESTRUCT();
 
 	void	CopyOldInventoryToNew(const OLD_MERCPROFILESTRUCT_101& src);
-	BOOLEAN Load(HWFILE hFile, bool forceLoadOldVersion);
+	BOOLEAN Load(HWFILE hFile, bool forceLoadOldVersion, bool forceLoadOldEncryption, bool wasSavedWithEncryption);
 	BOOLEAN Save(HWFILE hFile);
 	UINT32	GetChecksum();
 

@@ -129,8 +129,6 @@ void HandlePanelFaceAnimations( SOLDIERTYPE *pSoldier );
 
 void GoToMapScreenFromTactical( void );
 
-void HandleTacticalEffectsOfEquipmentChange( SOLDIERTYPE *pSoldier, UINT32 uiInvPos, UINT16 usOldItem, UINT16 usNewItem );
-
 void FinishAnySkullPanelAnimations( );
 
 UINT8 FindNextMercInTeamPanel( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs );

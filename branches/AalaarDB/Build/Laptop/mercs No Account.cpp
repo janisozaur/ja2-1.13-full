@@ -51,13 +51,11 @@ UINT32	guiCancelBoxButton;
 
 void GameInitMercsNoAccount()
 {
-	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterMercsNoAccount()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	InitMercBackGround();
@@ -72,10 +70,10 @@ BOOLEAN EnterMercsNoAccount()
 	guiOpenAccountBoxButtonImage = LoadButtonImage("LAPTOP\\BigButtons.sti", -1,0,-1,1,-1 );
 
 	guiOpenAccountBoxButton = CreateIconAndTextButton( guiOpenAccountBoxButtonImage, MercNoAccountText[MERC_NO_ACC_OPEN_ACCOUNT],
-													FONT12ARIAL, 
-													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
-													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
-													TEXT_CJUSTIFIED, 
+													FONT12ARIAL,
+													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
+													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
+													TEXT_CJUSTIFIED,
 													MERC_OPEN_BUTTON_X, MERC_OPEN_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnOpenAccountBoxButtonCallback);
 	SetButtonCursor(guiOpenAccountBoxButton, CURSOR_LAPTOP_SCREEN);
@@ -83,10 +81,10 @@ BOOLEAN EnterMercsNoAccount()
 
 
 	guiCancelBoxButton = CreateIconAndTextButton( guiOpenAccountBoxButtonImage, MercNoAccountText[MERC_NO_ACC_CANCEL],
-													FONT12ARIAL, 
-													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
-													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
-													TEXT_CJUSTIFIED, 
+													FONT12ARIAL,
+													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
+													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
+													TEXT_CJUSTIFIED,
 													MERC_CANCEL_BUTTON_X, MERC_CANCEL_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnCancelBoxButtonCallback);
 	SetButtonCursor(guiCancelBoxButton, CURSOR_LAPTOP_SCREEN);
@@ -99,7 +97,6 @@ BOOLEAN EnterMercsNoAccount()
 
 void ExitMercsNoAccount()
 {
-	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiNoAccountImage);
 
 	UnloadButtonImage( guiOpenAccountBoxButtonImage );
@@ -111,13 +108,11 @@ void ExitMercsNoAccount()
 
 void HandleMercsNoAccount()
 {
-	PERFORMANCE_MARKER
 
 }
 
 void RenderMercsNoAccount()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	DrawMecBackGround();
@@ -137,7 +132,6 @@ void RenderMercsNoAccount()
 
 void BtnOpenAccountBoxButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -169,12 +163,11 @@ void BtnOpenAccountBoxButtonCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 
 
 void BtnCancelBoxButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -197,5 +190,5 @@ void BtnCancelBoxButtonCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 

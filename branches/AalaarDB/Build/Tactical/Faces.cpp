@@ -31,7 +31,7 @@
 	#include	"GameSettings.h"
 	#include "squads.h"
 	#include "interface.h"
-	#include "Quests.h" 
+	#include "Quests.h"
 	#include "animation control.h"
 	#include "drugs and alcohol.h"
 	#include "Interface Items.h"
@@ -88,13 +88,13 @@ RPC_SMALL_FACE_VALUES gRPCSmallFaceValues[ ] =
 	4,	7,	5,	25,		// CONRAD		( 70 )
 	9,	7,	8,	22,		// CARL			( 71 )
 	9,	7,	9,	25,		// MADDOG		( 72 )
-	0,	0,	0,	0,		//					( 73 )	
+	0,	0,	0,	0,		//					( 73 )
 	0,	0,	0,	0,		//					( 74 )
-	
+
 	9,	3,	8,	23,		// MARIA		( 88 )
 
 	9,	3,	8,	25,		// JOEY			( 90 )
-	
+
 	11,	7,	9,	24,		// SKYRIDER	( 97 )
 	9,	5,	7,	23,		// Miner	( 106 )
 
@@ -134,10 +134,10 @@ UINT8	gubRPCSmallFaceProfileNum[] =
 	118,
 	119,
 	148, // entry 24
-	156, 
+	156,
 	157,
 	158,
-	
+
 };
 
 UINT8	ubRPCNumSmallFaceValues = 28;
@@ -148,14 +148,13 @@ extern INT16		gsCurInterfacePanel;
 extern UINT16		gusSMCurrentMerc;
 extern BOOLEAN	gfRerenderInterfaceFromHelpText;
 extern	BOOLEAN	gfInItemPickupMenu;
-	
+
 BOOLEAN FaceRestoreSavedBackgroundRect( INT32 iFaceIndex, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight );
 void SetupFinalTalkingDelay( FACETYPE *pFace );
 
 
 INT32 GetFreeFace(void)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumFaces; uiCount++)
@@ -172,7 +171,6 @@ INT32 GetFreeFace(void)
 
 void RecountFaces(void)
 {
-	PERFORMANCE_MARKER
 INT32 uiCount;
 
 	for(uiCount=guiNumFaces-1; (uiCount >=0) ; uiCount--)
@@ -188,12 +186,11 @@ INT32 uiCount;
 
 INT32	InitSoldierFace( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32							iFaceIndex;
 
 	// Check if we have a face init already
 	iFaceIndex = pSoldier->iFaceIndex;
-	
+
 	if ( iFaceIndex != -1 )
 	{
 		return( iFaceIndex );
@@ -205,7 +202,6 @@ INT32	InitSoldierFace( SOLDIERTYPE *pSoldier )
 
 INT32	InitFace( UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitFlags )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiBlinkFrequency;
 	UINT32	uiExpressionFrequency;
 
@@ -233,7 +229,6 @@ INT32	InitFace( UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitFlags )
 
 INT32	InternalInitFace( UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitFlags, INT32 iFaceFileID, UINT32 uiBlinkFrequency, UINT32 uiExpressionFrequency )
 {
-	PERFORMANCE_MARKER
 	FACETYPE					*pFace;
 	VOBJECT_DESC			VObjectDesc;
 	UINT32						uiVideoObject;
@@ -346,7 +341,7 @@ INT32	InternalInitFace( UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitF
 	pFace->fAllocated			= TRUE;
 
 	//Default to off!
-	pFace->fDisabled			= TRUE;	
+	pFace->fDisabled			= TRUE;
 	pFace->iVideoOverlay	= -1;
 	//pFace->uiEyeDelay			=	gMercProfiles[ usMercProfileID ].uiEyeDelay;
 	//pFace->uiMouthDelay		= gMercProfiles[ usMercProfileID ].uiMouthDelay;
@@ -437,7 +432,6 @@ INT32	InternalInitFace( UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitF
 
 void DeleteSoldierFace( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	DeleteFace( pSoldier->iFaceIndex );
 
 	pSoldier->iFaceIndex = -1;
@@ -446,7 +440,6 @@ void DeleteSoldierFace( SOLDIERTYPE *pSoldier )
 
 void DeleteFace( INT32 iFaceIndex )
 {
-	PERFORMANCE_MARKER
 	FACETYPE				*pFace;
 
 	// Check face index
@@ -473,9 +466,9 @@ void DeleteFace( INT32 iFaceIndex )
 		HandleDialogueEnd( pFace );
 	}
 
-	// Delete vo	
+	// Delete vo
 	DeleteVideoObjectFromIndex( pFace->uiVideoObject );
-	
+
 	// Set uncallocated
 	pFace->fAllocated = FALSE;
 
@@ -485,7 +478,6 @@ void DeleteFace( INT32 iFaceIndex )
 
 void	SetAutoFaceActiveFromSoldier( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, UINT8 ubSoldierID , UINT16 usFaceX, UINT16 usFaceY )
 {
-	PERFORMANCE_MARKER
 	if( ubSoldierID == NOBODY )
 	{
 		return;
@@ -497,7 +489,6 @@ void	SetAutoFaceActiveFromSoldier( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffe
 
 void GetFaceRelativeCoordinates( FACETYPE *pFace, UINT16 *pusEyesX, UINT16 *pusEyesY, UINT16 *pusMouthX, UINT16 *pusMouthY )
 {
-	PERFORMANCE_MARKER
 	UINT16						usMercProfileID;
 	UINT16						usEyesX;
 	UINT16						usEyesY;
@@ -570,7 +561,6 @@ void GetFaceRelativeCoordinates( FACETYPE *pFace, UINT16 *pusEyesX, UINT16 *pusE
 
 void SetAutoFaceActive( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, INT32 iFaceIndex , UINT16 usFaceX, UINT16 usFaceY )
 {
-	PERFORMANCE_MARKER
 	UINT16						usEyesX;
 	UINT16						usEyesY;
 	UINT16						usMouthX;
@@ -591,7 +581,6 @@ void SetAutoFaceActive( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, INT32 iF
 
 void InternalSetAutoFaceActive( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, INT32 iFaceIndex , UINT16 usFaceX, UINT16 usFaceY, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY )
 {
-	PERFORMANCE_MARKER
 	UINT16						usMercProfileID;
 	FACETYPE					*pFace;
 	VSURFACE_DESC			vs_desc;
@@ -622,7 +611,7 @@ void InternalSetAutoFaceActive( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, 
 	{
 		// BUILD A BUFFER
 		GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
-		// OK, ignore screen widths, height, only use BPP 
+		// OK, ignore screen widths, height, only use BPP
 		vs_desc.fCreateFlags = VSURFACE_CREATE_DEFAULT | VSURFACE_SYSTEM_MEM_USAGE;
 		vs_desc.usWidth = pFace->usFaceWidth;
 		vs_desc.usHeight = pFace->usFaceHeight;
@@ -642,7 +631,7 @@ void InternalSetAutoFaceActive( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, 
 	{
 		// BUILD A BUFFER
 		GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
-		// OK, ignore screen widths, height, only use BPP 
+		// OK, ignore screen widths, height, only use BPP
 		vs_desc.fCreateFlags = VSURFACE_CREATE_DEFAULT | VSURFACE_SYSTEM_MEM_USAGE;
 		vs_desc.usWidth = pFace->usFaceWidth;
 		vs_desc.usHeight = pFace->usFaceHeight;
@@ -677,7 +666,7 @@ void InternalSetAutoFaceActive( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, 
 	pFace->usEyesOffsetY				= usEyesY;
 	pFace->usMouthOffsetY				=	usMouthY;
 	pFace->usMouthOffsetX				= usMouthX;
-	
+
 
 	if ( pFace->usEyesY == usFaceY || pFace->usMouthY == usFaceY )
 	{
@@ -700,7 +689,6 @@ void InternalSetAutoFaceActive( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, 
 
 void SetAutoFaceInActiveFromSoldier( UINT8 ubSoldierID )
 {
-	PERFORMANCE_MARKER
 	// Check for valid soldier
 	CHECKV( ubSoldierID != NOBODY );
 
@@ -710,7 +698,6 @@ void SetAutoFaceInActiveFromSoldier( UINT8 ubSoldierID )
 
 void SetAutoFaceInActive(INT32 iFaceIndex )
 {
-	PERFORMANCE_MARKER
 	FACETYPE				*pFace;
 	SOLDIERTYPE			*pSoldier;
 
@@ -734,7 +721,7 @@ void SetAutoFaceInActive(INT32 iFaceIndex )
 
 	if ( pFace->uiFlags & FACE_MAKEACTIVE_ONCE_DONE )
 	{
-		// 
+		//
 		if ( pFace->ubSoldierID != NOBODY )
 		{
 			pSoldier = MercPtrs[ pFace->ubSoldierID ];
@@ -769,16 +756,15 @@ void SetAutoFaceInActive(INT32 iFaceIndex )
 
 	// Turn off some flags
 	pFace->uiFlags &= ( ~FACE_INACTIVE_HANDLED_ELSEWHERE );
-	
+
 	// Disable!
 	pFace->fDisabled = TRUE;
-	
+
 }
 
 
 void SetAllAutoFacesInactive(	)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 	FACETYPE				*pFace;
 
@@ -797,7 +783,6 @@ void SetAllAutoFacesInactive(	)
 
 void BlinkAutoFace( INT32 iFaceIndex )
 {
-	PERFORMANCE_MARKER
 	FACETYPE				*pFace;
 	INT16						sFrame;
 	BOOLEAN					fDoBlink = FALSE;
@@ -872,7 +857,7 @@ void BlinkAutoFace( INT32 iFaceIndex )
 
 				// Adjust
 				NewEye( pFace );
-			
+
 				sFrame = pFace->sEyeFrame;
 
 				if ( sFrame >= 5 )
@@ -895,7 +880,7 @@ void BlinkAutoFace( INT32 iFaceIndex )
 					//RenderFace( uiDestBuffer , uiCount );
 					pFace->ubExpression = NO_EXPRESSION;
 					// Update rects just for eyes
-					
+
 					if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )
 					{
 						FaceRestoreSavedBackgroundRect( iFaceIndex, pFace->usEyesX, pFace->usEyesY, pFace->usEyesX, pFace->usEyesY, pFace->usEyesWidth, pFace->usEyesHeight );
@@ -919,7 +904,6 @@ void BlinkAutoFace( INT32 iFaceIndex )
 
 void HandleFaceHilights( FACETYPE *pFace, UINT32 uiBuffer, INT16 sFaceX, INT16 sFaceY )
 {
-	PERFORMANCE_MARKER
 	UINT32					uiDestPitchBYTES;
 	UINT8						*pDestBuf;
 	UINT16					usLineColor;
@@ -943,7 +927,7 @@ void HandleFaceHilights( FACETYPE *pFace, UINT32 uiBuffer, INT16 sFaceX, INT16 s
 
 		 SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 
-		 UnLockVideoSurface( uiBuffer );				
+		 UnLockVideoSurface( uiBuffer );
 	 }
 	 else if ( ( pFace->uiFlags & FACE_SHOW_MOVING_HILIGHT	) )
 	 {
@@ -954,7 +938,7 @@ void HandleFaceHilights( FACETYPE *pFace, UINT32 uiBuffer, INT16 sFaceX, INT16 s
 				 // Lock buffer
 				 pDestBuf = LockVideoSurface( uiBuffer, &uiDestPitchBYTES );
 				 SetClippingRegionAndImageWidth( uiDestPitchBYTES, sFaceX-2, sFaceY-1, sFaceX + pFace->usFaceWidth + 4, sFaceY + pFace->usFaceHeight + 4 );
-				 
+
 				 if ( MercPtrs[ pFace->ubSoldierID ]->bStealthMode )
 				 {
 					 usLineColor = Get16BPPColor( FROMRGB( 158, 158, 12 ) );
@@ -967,7 +951,7 @@ void HandleFaceHilights( FACETYPE *pFace, UINT32 uiBuffer, INT16 sFaceX, INT16 s
 
 				 SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 
-				 UnLockVideoSurface( uiBuffer );				
+				 UnLockVideoSurface( uiBuffer );
 			 }
 		 }
 	 }
@@ -983,7 +967,7 @@ void HandleFaceHilights( FACETYPE *pFace, UINT32 uiBuffer, INT16 sFaceX, INT16 s
 
 		 SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 
-		 UnLockVideoSurface( pFace->uiAutoDisplayBuffer );				
+		 UnLockVideoSurface( pFace->uiAutoDisplayBuffer );
 		}
 	}
 	}
@@ -1000,7 +984,7 @@ void HandleFaceHilights( FACETYPE *pFace, UINT32 uiBuffer, INT16 sFaceX, INT16 s
 
 		SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 
-		UnLockVideoSurface( uiBuffer );				
+		UnLockVideoSurface( uiBuffer );
 	}
 
 }
@@ -1008,7 +992,6 @@ void HandleFaceHilights( FACETYPE *pFace, UINT32 uiBuffer, INT16 sFaceX, INT16 s
 
 void MouthAutoFace( INT32 iFaceIndex )
 {
-	PERFORMANCE_MARKER
 	FACETYPE				*pFace;
 	INT16						sFrame;
 
@@ -1064,7 +1047,7 @@ void MouthAutoFace( INT32 iFaceIndex )
 
 							// Adjust
 							NewMouth( pFace );
-						
+
 							sFrame = pFace->sMouthFrame;
 
 							if ( sFrame > 0 )
@@ -1112,7 +1095,6 @@ void MouthAutoFace( INT32 iFaceIndex )
 
 void HandleTalkingAutoFace( INT32 iFaceIndex )
 {
-	PERFORMANCE_MARKER
 	FACETYPE				*pFace;
 
 	if ( gFacesData[ iFaceIndex ].fAllocated	)
@@ -1151,7 +1133,7 @@ void HandleTalkingAutoFace( INT32 iFaceIndex )
 					{
 						pFace->fTalking	= FALSE;
 						pFace->fAnimatingTalking = FALSE;
-					
+
 						// Remove gap info
 						AudioGapListDone( &(pFace->GapList) );
 
@@ -1176,7 +1158,6 @@ void HandleTalkingAutoFace( INT32 iFaceIndex )
 // Local function - uses these variables because they have already been validated
 void SetFaceShade( SOLDIERTYPE *pSoldier, FACETYPE *pFace, BOOLEAN fExternBlit )
 {
-	PERFORMANCE_MARKER
 	// Set to default
 	SetObjectHandleShade( pFace->uiVideoObject, FLASH_PORTRAIT_NOSHADE );
 
@@ -1205,7 +1186,6 @@ void SetFaceShade( SOLDIERTYPE *pSoldier, FACETYPE *pFace, BOOLEAN fExternBlit )
 
 BOOLEAN RenderAutoFaceFromSoldier( UINT8 ubSoldierID )
 {
-	PERFORMANCE_MARKER
 	// Check for valid soldier
 	CHECKF( ubSoldierID != NOBODY );
 
@@ -1214,7 +1194,6 @@ BOOLEAN RenderAutoFaceFromSoldier( UINT8 ubSoldierID )
 
 void GetXYForIconPlacement( FACETYPE *pFace, UINT16 ubIndex, INT16 sFaceX, INT16 sFaceY, INT16 *psX, INT16 *psY )
 {
-	PERFORMANCE_MARKER
 	INT16 sX, sY;
 	UINT16 usWidth, usHeight;
 	ETRLEObject						*pTrav;
@@ -1236,7 +1215,6 @@ void GetXYForIconPlacement( FACETYPE *pFace, UINT16 ubIndex, INT16 sFaceX, INT16
 
 void GetXYForRightIconPlacement( FACETYPE *pFace, UINT16 ubIndex, INT16 sFaceX, INT16 sFaceY, INT16 *psX, INT16 *psY, INT8 bNumIcons )
 {
-	PERFORMANCE_MARKER
 	INT16 sX, sY;
 	UINT16 usWidth, usHeight;
 	ETRLEObject						*pTrav;
@@ -1260,7 +1238,6 @@ void GetXYForRightIconPlacement( FACETYPE *pFace, UINT16 ubIndex, INT16 sFaceX, 
 
 void DoRightIcon( UINT32 uiRenderBuffer, FACETYPE *pFace, INT16 sFaceX, INT16 sFaceY, INT8 bNumIcons, INT8 sIconIndex )
 {
-	PERFORMANCE_MARKER
 	INT16						sIconX, sIconY;
 
 	// Find X, y for placement
@@ -1271,7 +1248,6 @@ void DoRightIcon( UINT32 uiRenderBuffer, FACETYPE *pFace, INT16 sFaceX, INT16 sF
 
 void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLEAN fUseExternBuffer, UINT32 uiBuffer, INT16 sFaceX, INT16 sFaceY, UINT16 usEyesX, UINT16 usEyesY )
 {
-	PERFORMANCE_MARKER
 	INT16						sIconX, sIconY;
 	INT16						sIconIndex=-1;
 	BOOLEAN					fDoIcon = FALSE;
@@ -1285,7 +1261,7 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 	BOOLEAN					fShowMaximum = FALSE;
 	SOLDIERTYPE			*pSoldier;
 	INT16						sFontX, sFontY;
-	INT16						sX1, sY1, sY2, sX2; 
+	INT16						sX1, sY1, sY2, sX2;
 	UINT32					uiDestPitchBYTES;
 	UINT8						*pDestBuf;
 	UINT16					usLineColor;
@@ -1296,7 +1272,7 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 	{
 		uiRenderBuffer = uiBuffer;
 	}
-	else 
+	else
 	{
 		if ( fDisplayBuffer )
 		{
@@ -1376,7 +1352,7 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 				SetFontBackground( FONT_NEARBLACK );
 
 				sX1 = (INT16)( sFaceX );
-				sY1 = (INT16)( sFaceY ); 
+				sY1 = (INT16)( sFaceY );
 
 				sX2 = sX1 + StringPixLength( sString, TINYFONT1 ) + 1;
 				sY2 = sY1 + GetFontHeight( TINYFONT1 ) - 1;
@@ -1391,7 +1367,7 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 				usLineColor = Get16BPPColor( FROMRGB( 105, 8, 9 ) );
 				RectangleDraw( TRUE, sX1, sY1, sX2, sY2, usLineColor, pDestBuf );
 
-				UnLockVideoSurface( uiRenderBuffer );				
+				UnLockVideoSurface( uiRenderBuffer );
 
 			}
 
@@ -1416,12 +1392,12 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 
 					if ( pFace->fDisplayTextOver == FACE_DRAW_TEXT_OVER )
 					{
-						gprintfinvalidate( sFontX, sFontY, pFace->zDisplayText );			
+						gprintfinvalidate( sFontX, sFontY, pFace->zDisplayText );
 						mprintf( sFontX, sFontY, pFace->zDisplayText );
 					}
 					else if ( pFace->fDisplayTextOver == FACE_ERASE_TEXT_OVER )
 					{
-						gprintfRestore( sFontX, sFontY, pFace->zDisplayText );			
+						gprintfRestore( sFontX, sFontY, pFace->zDisplayText );
 						pFace->fDisplayTextOver = FACE_NO_TEXT_OVER;
 					}
 
@@ -1564,7 +1540,7 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 			fDoIcon		= TRUE;
 		}
 
-		
+
 		if ( fDoIcon )
 		{
 			// Find X, y for placement
@@ -1612,7 +1588,6 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 
 BOOLEAN RenderAutoFace( INT32 iFaceIndex )
 {
-	PERFORMANCE_MARKER
 	FACETYPE				*pFace;
 
 	// Check face index
@@ -1663,7 +1638,6 @@ BOOLEAN RenderAutoFace( INT32 iFaceIndex )
 
 BOOLEAN ExternRenderFaceFromSoldier( UINT32 uiBuffer, UINT8 ubSoldierID, INT16 sX, INT16 sY )
 {
-	PERFORMANCE_MARKER
 	// Check for valid soldier
 	CHECKF( ubSoldierID != NOBODY );
 
@@ -1673,7 +1647,6 @@ BOOLEAN ExternRenderFaceFromSoldier( UINT32 uiBuffer, UINT8 ubSoldierID, INT16 s
 
 BOOLEAN ExternRenderFace( UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT16 sY )
 {
-	PERFORMANCE_MARKER
 	UINT16						usEyesX;
 	UINT16						usEyesY;
 	UINT16						usMouthX;
@@ -1692,7 +1665,7 @@ BOOLEAN ExternRenderFace( UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT16 sY 
 
 	// Set shade
 	if ( pFace->ubSoldierID != NOBODY )
-	{	
+	{
 		SetFaceShade( MercPtrs[ pFace->ubSoldierID ], pFace , TRUE );
 	}
 
@@ -1716,7 +1689,6 @@ BOOLEAN ExternRenderFace( UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT16 sY 
 
 void NewEye( FACETYPE *pFace )
 {
-	PERFORMANCE_MARKER
 
  switch(pFace->sEyeFrame)
  {
@@ -1763,7 +1735,7 @@ void NewEye( FACETYPE *pFace )
 			}
 			break;
 
-	case 4 : 
+	case 4 :
 
 			pFace->ubEyeWait++;
 
@@ -1777,7 +1749,7 @@ void NewEye( FACETYPE *pFace )
 
 		pFace->sEyeFrame = 0;
 	break;
-			
+
 	case 6 : pFace->sEyeFrame = 7; break;
 	case 7 : pFace->sEyeFrame = (INT16)Random(2);	// can stop frowning or continue
 	//if (pFace->sEyeFrame && Talk.expression != DYING)
@@ -1796,7 +1768,6 @@ void NewEye( FACETYPE *pFace )
 
 void NewMouth( FACETYPE *pFace )
 {
-	PERFORMANCE_MARKER
  BOOLEAN OK		= FALSE;
  UINT16 sOld	= pFace->sMouthFrame;
 
@@ -1817,7 +1788,7 @@ void NewMouth( FACETYPE *pFace )
 	pFace->sMouthFrame = 0;
 	}
 
-	switch( sOld) 
+	switch( sOld)
 	{
 	case 0 : if ( pFace->sMouthFrame != 0 )
 		OK = TRUE;
@@ -1840,7 +1811,6 @@ void NewMouth( FACETYPE *pFace )
 
 void HandleAutoFaces( )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 	FACETYPE				*pFace;
 	INT8	bLife;
@@ -1911,7 +1881,7 @@ void HandleAutoFaces( )
 				{
 					fRerender = TRUE;
 				}
-				
+
 				if ( bLife >= CONSCIOUSNESS && pFace->bOldSoldierLife < CONSCIOUSNESS )
 				{
 					fRerender = TRUE;
@@ -1934,7 +1904,7 @@ void HandleAutoFaces( )
 				{
 					fRerender = TRUE;
 				}
-				
+
 				if ( bAPs > 0	&& pFace->bOldActionPoints == 0 )
 				{
 					fRerender = TRUE;
@@ -1942,22 +1912,22 @@ void HandleAutoFaces( )
 
 				if ( !( pFace->uiFlags & FACE_SHOW_WHITE_HILIGHT ) && pFace->fOldShowHighlight )
 				{
-					fRerender = TRUE;						
+					fRerender = TRUE;
 				}
 
 				if ( ( pFace->uiFlags & FACE_SHOW_WHITE_HILIGHT ) && !( pFace->fOldShowHighlight ) )
 				{
-					fRerender = TRUE;						
+					fRerender = TRUE;
 				}
 
 				if ( !( pFace->uiFlags & FACE_SHOW_MOVING_HILIGHT ) && pFace->fOldShowMoveHilight )
 				{
-					fRerender = TRUE;						
+					fRerender = TRUE;
 				}
 
 				if ( ( pFace->uiFlags & FACE_SHOW_MOVING_HILIGHT ) && !( pFace->fOldShowMoveHilight ) )
 				{
-					fRerender = TRUE;						
+					fRerender = TRUE;
 				}
 
 				if ( pFace->ubOldServiceCount != pSoldier->ubServiceCount )
@@ -1994,13 +1964,13 @@ void HandleAutoFaces( )
 						pFace->fOldShowHighlight = FALSE;
 				}
 
-				if ( pFace->uiFlags & FACE_SHOW_MOVING_HILIGHT ) 
+				if ( pFace->uiFlags & FACE_SHOW_MOVING_HILIGHT )
 				{
-						pFace->fOldShowMoveHilight = TRUE;					
+						pFace->fOldShowMoveHilight = TRUE;
 				}
 				else
 				{
-						pFace->fOldShowMoveHilight = FALSE;					
+						pFace->fOldShowMoveHilight = FALSE;
 				}
 
 
@@ -2009,13 +1979,13 @@ void HandleAutoFaces( )
 						pSoldier->flags.fFlashPortrait = TRUE;
 						pSoldier->bFlashPortraitFrame = FLASH_PORTRAIT_STARTSHADE;
 						RESETTIMECOUNTER( pSoldier->timeCounters.PortraitFlashCounter, FLASH_PORTRAIT_DELAY );
-						fRerender = TRUE;					
+						fRerender = TRUE;
 					}
 					if ( pSoldier->flags.fFlashPortrait == FLASH_PORTRAIT_START )
 					{
 						// Loop through flash values
 						if ( TIMECOUNTERDONE( pSoldier->timeCounters.PortraitFlashCounter, FLASH_PORTRAIT_DELAY ) )
-						{					
+						{
 							RESETTIMECOUNTER( pSoldier->timeCounters.PortraitFlashCounter, FLASH_PORTRAIT_DELAY );
 							pSoldier->bFlashPortraitFrame++;
 
@@ -2033,7 +2003,7 @@ void HandleAutoFaces( )
 									pSoldier->flags.fFlashPortrait = FLASH_PORTRAIT_STOP;
 								}
 
-								fRerender = TRUE;					
+								fRerender = TRUE;
 							}
 						}
 					}
@@ -2041,12 +2011,12 @@ void HandleAutoFaces( )
 					if ( !pSoldier->flags.fGettingHit && pSoldier->flags.fFlashPortrait == FLASH_PORTRAIT_WAITING )
 					{
 						pSoldier->flags.fFlashPortrait = FALSE;
-						fRerender = TRUE;					
+						fRerender = TRUE;
 					}
 
 					if ( pSoldier->flags.fFlashPortrait == FLASH_PORTRAIT_START )
 					{
-						fRerender = TRUE;					
+						fRerender = TRUE;
 					}
 
 				if( pFace->uiFlags & FACE_REDRAW_WHOLE_FACE_NEXT_FRAME )
@@ -2082,12 +2052,11 @@ void HandleAutoFaces( )
 		}
 
 	}
-	
+
 }
 
 void HandleTalkingAutoFaces( )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 	FACETYPE				*pFace;
 
@@ -2101,14 +2070,13 @@ void HandleTalkingAutoFaces( )
 			HandleTalkingAutoFace( uiCount );
 
 		}
-	}	
+	}
 }
 
 
 
 BOOLEAN FaceRestoreSavedBackgroundRect( INT32 iFaceIndex, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight )
 {
-	PERFORMANCE_MARKER
 	FACETYPE					*pFace;
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8	*pDestBuf, *pSrcBuf;
@@ -2127,10 +2095,10 @@ BOOLEAN FaceRestoreSavedBackgroundRect( INT32 iFaceIndex, INT16 sDestLeft, INT16
 	pDestBuf = LockVideoSurface(pFace->uiAutoDisplayBuffer, &uiDestPitchBYTES);
 	pSrcBuf = LockVideoSurface( pFace->uiAutoRestoreBuffer, &uiSrcPitchBYTES);
 
-	Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES, 
-				(UINT16 *)pSrcBuf, uiSrcPitchBYTES,	
-				sDestLeft , sDestTop, 
-				sSrcLeft , sSrcTop, 
+	Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
+				(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
+				sDestLeft , sDestTop,
+				sSrcLeft , sSrcTop,
 				sWidth, sHeight);
 
 	UnLockVideoSurface(pFace->uiAutoDisplayBuffer);
@@ -2144,12 +2112,11 @@ BOOLEAN FaceRestoreSavedBackgroundRect( INT32 iFaceIndex, INT16 sDestLeft, INT16
 	return(TRUE);
 }
 
-BOOLEAN SetFaceTalking( INT32 iFaceIndex, CHAR8 *zSoundFile, STR16 zTextString, 
+BOOLEAN SetFaceTalking( INT32 iFaceIndex, CHAR8 *zSoundFile, STR16 zTextString,
 						UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
 {
-	PERFORMANCE_MARKER
 	FACETYPE			*pFace;
-	
+
 	pFace = &gFacesData[ iFaceIndex ];
 
 	// Set face to talking
@@ -2171,7 +2138,7 @@ BOOLEAN SetFaceTalking( INT32 iFaceIndex, CHAR8 *zSoundFile, STR16 zTextString,
 	if ( pFace->uiSoundID != SOUND_ERROR )
 	{
 		pFace->fValidSpeech	= TRUE;
-		
+
 		pFace->uiTalkingFromVeryBeginningTimer = GetJA2Clock( );
 	}
 	else
@@ -2190,9 +2157,8 @@ BOOLEAN SetFaceTalking( INT32 iFaceIndex, CHAR8 *zSoundFile, STR16 zTextString,
 
 BOOLEAN ExternSetFaceTalking( INT32 iFaceIndex, UINT32 uiSoundID )
 {
-	PERFORMANCE_MARKER
 	FACETYPE			*pFace;
-	
+
 	pFace = &gFacesData[ iFaceIndex ];
 
 	// Set face to talki	ng
@@ -2210,12 +2176,11 @@ BOOLEAN ExternSetFaceTalking( INT32 iFaceIndex, UINT32 uiSoundID )
 
 void InternalShutupaYoFace( INT32 iFaceIndex, BOOLEAN fForce )
 {
-	PERFORMANCE_MARKER
 	FACETYPE			*pFace;
 
 	// Check face index
 	CHECKV( iFaceIndex != -1 );
-	
+
 	pFace = &gFacesData[ iFaceIndex ];
 
 	if ( pFace->fTalking )
@@ -2267,13 +2232,11 @@ void InternalShutupaYoFace( INT32 iFaceIndex, BOOLEAN fForce )
 
 void ShutupaYoFace( INT32 iFaceIndex )
 {
-	PERFORMANCE_MARKER
 	InternalShutupaYoFace( iFaceIndex, TRUE );
 }
 
 void SetupFinalTalkingDelay( FACETYPE *pFace )
 {
-	PERFORMANCE_MARKER
 	pFace->fFinishTalking = TRUE;
 
 	pFace->fAnimatingTalking = FALSE;

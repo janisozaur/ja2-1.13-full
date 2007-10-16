@@ -42,7 +42,7 @@
 	#include "Campaign Init.h"
 	#include "meanwhile.h"
 	#include "Soldier macros.h"
-	#include "Morale.h"	
+	#include "Morale.h"
 #endif
 
 #ifdef JA2BETAVERSION
@@ -77,7 +77,6 @@ extern void Ensure_RepairedGarrisonGroup( GARRISON_GROUP **ppGarrison, INT32 *pG
 
 void ValidateEnemiesHaveWeapons()
 {
-	PERFORMANCE_MARKER
 	#ifdef JA2BETAVERSION
 		SGPRect CenteringRect= {0, 0, 639, 479 };
 		INT32 i, iErrorDialog;
@@ -110,7 +109,6 @@ void ValidateEnemiesHaveWeapons()
 //Counts enemies and crepitus, but not bloodcats.
 UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNumHostiles = 0;
 
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
@@ -134,7 +132,7 @@ UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 		//Count stationary hostiles
 		pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
 		ubNumHostiles = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumCreatures);
-		
+
 		//Count mobile enemies
 		pGroup = gpGroupList;
 		while( pGroup )
@@ -152,7 +150,6 @@ UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 
 UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNumEnemies = 0;
 
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
@@ -176,7 +173,7 @@ UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 		//Count stationary enemies
 		pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
 		ubNumEnemies = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
-		
+
 		//Count mobile enemies
 		pGroup = gpGroupList;
 		while( pGroup )
@@ -194,7 +191,6 @@ UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 
 UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	GROUP *pGroup;
 	UINT8 ubNumTroops;
@@ -219,7 +215,6 @@ UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 
 UINT8 NumStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
 	Assert( sSectorY >= 1 && sSectorY <= 16 );
@@ -229,7 +224,7 @@ UINT8 NumStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 	{ //If no garrison, no stationary.
 		return( 0 );
 	}
-	
+
  Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
   // don't count roadblocks as stationary garrison, we want to see how many enemies are in them, not question marks
@@ -244,7 +239,6 @@ UINT8 NumStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 
 UINT8 NumMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	SECTORINFO *pSector;
 	UINT8 ubNumTroops;
@@ -273,7 +267,6 @@ UINT8 NumMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 
 void GetNumberOfMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	SECTORINFO *pSector;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
@@ -305,7 +298,6 @@ void GetNumberOfMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pu
 
 void GetNumberOfMobileEnemiesInSectorWithoutRoadBlock( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
 	Assert( sSectorY >= 1 && sSectorY <= 16 );
@@ -328,7 +320,6 @@ void GetNumberOfMobileEnemiesInSectorWithoutRoadBlock( INT16 sSectorX, INT16 sSe
 
 void GetNumberOfStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
 	Assert( sSectorY >= 1 && sSectorY <= 16 );
@@ -342,9 +333,8 @@ void GetNumberOfStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8
 
 void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
-	
+
 	GetNumberOfStationaryEnemiesInSector( sSectorX, sSectorY, pubNumAdmins, pubNumTroops, pubNumElites );
 
 	GetNumberOfMobileEnemiesInSector( sSectorX, sSectorY, &ubNumAdmins, &ubNumTroops, &ubNumElites );
@@ -356,7 +346,6 @@ void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAd
 
 void EndTacticalBattleForEnemy()
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	INT32 i;
 
@@ -422,7 +411,6 @@ void EndTacticalBattleForEnemy()
 
 UINT8 NumFreeEnemySlots()
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNumFreeSlots = 0;
 	INT32 i;
 	SOLDIERTYPE *pSoldier;
@@ -441,7 +429,6 @@ UINT8 NumFreeEnemySlots()
 //in global focus (gWorldSectorX/Y)
 BOOLEAN PrepareEnemyForSectorBattle()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	GROUP *pGroup;
 	SOLDIERTYPE *pSoldier;
@@ -475,7 +462,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 			// They arrived in multiple groups, so here they come
 			pThisSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
 
-			GenerateDirectionInfos( gWorldSectorX, gWorldSectorY, &ubDirNumber, pusMoveDir, 
+			GenerateDirectionInfos( gWorldSectorX, gWorldSectorY, &ubDirNumber, pusMoveDir,
 				( GetTownIdForSector( gWorldSectorX, gWorldSectorY ) != BLANK_SECTOR ? TRUE : FALSE ), TRUE, IS_ONLY_IN_CITIES );
 
 			for( ubIndex = 0; ubIndex < ubDirNumber; ubIndex++ )
@@ -537,7 +524,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 					case SOLDIER_CLASS_ADMINISTRATOR:		ubTotalAdmins++;	break;
 					case SOLDIER_CLASS_ARMY:						ubTotalTroops++;	break;
 					case SOLDIER_CLASS_ELITE:						ubTotalElites++;	break;
-				}	
+				}
 			}
 			curr = curr->next;
 		}
@@ -560,7 +547,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 	if( ubStationaryEnemies > 32 )
 	{
 		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_RED, MSG_ERROR, L"The total stationary enemy forces in sector %c%d is %d. (max %d)", 
+			ScreenMsg( FONT_RED, MSG_ERROR, L"The total stationary enemy forces in sector %c%d is %d. (max %d)",
 				gWorldSectorY + 'A' - 1, gWorldSectorX, ubTotalAdmins + ubTotalTroops + ubTotalElites, 32 );
 		#endif
 
@@ -573,7 +560,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 	pSector->ubTroopsInBattle += ubTotalTroops;
 	pSector->ubElitesInBattle += ubTotalElites;
 
-	#ifdef JA2TESTVERSION 
+	#ifdef JA2TESTVERSION
 	if( gfOverrideSector )
 	{
 		//if there are no troops in the current groups, then we're done.
@@ -603,14 +590,14 @@ BOOLEAN PrepareEnemyForSectorBattle()
 	sNumSlots -= ubTotalAdmins + ubTotalTroops + ubTotalElites;
 
 	//Now, process all of the groups and search for both enemy and player groups in the sector.
-	//For enemy groups, we fill up the slots until we have none left or all of the groups have been 
+	//For enemy groups, we fill up the slots until we have none left or all of the groups have been
 	//processed.
 
 	for( pGroup = gpGroupList;
 		 pGroup;
 		 pGroup = pGroup->next)
 	{
-		if( !pGroup->fPlayer && !pGroup->fVehicle &&  
+		if( !pGroup->fPlayer && !pGroup->fVehicle &&
 				 pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ )
 		{ //Process enemy group in sector.
 			if( sNumSlots > 0 )
@@ -632,7 +619,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 				sNumSlots -= ubNumTroops;
 				if( sNumSlots < 0 )
 				{ //adjust the value to zero
-					ubNumTroops += sNumSlots; 
+					ubNumTroops += sNumSlots;
 					sNumSlots = 0;
 					gfPendingEnemies = TRUE;
 				}
@@ -681,13 +668,13 @@ BOOLEAN PrepareEnemyForSectorBattle()
 	AddSoldierInitListEnemyDefenceSoldiers( ubTotalAdmins, ubTotalTroops, ubTotalElites );
 
 	//Now, we have to go through all of the enemies in the new map, and assign their respective groups if
-	//in a mobile group, but only for the ones that were assigned from the 
+	//in a mobile group, but only for the ones that were assigned from the
 	sNumSlots = 32 - ubStationaryEnemies;
 
 	pGroup = gpGroupList;
 	while( pGroup && sNumSlots )
 	{
-		if( !pGroup->fPlayer && !pGroup->fVehicle &&  
+		if( !pGroup->fPlayer && !pGroup->fVehicle &&
 				 pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ )
 		{
 			ubNumAdmins = pGroup->pEnemyGroup->ubAdminsInBattle;
@@ -695,7 +682,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 			ubNumElites = pGroup->pEnemyGroup->ubElitesInBattle;
 			num = ubNumAdmins + ubNumTroops + ubNumElites;
 
-			for (i= gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; 
+			for (i= gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID;
 				i<= gTacticalStatus.Team[ ENEMY_TEAM ].bLastID && num;
 				i++)
 			{
@@ -703,7 +690,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 				Assert( sNumSlots);
 
 				pSoldier = &Menptr[ i ];
-				
+
 				// Skip inactive and already grouped soldiers
 				if (!pSoldier->bActive || pSoldier->ubGroupID)
 				{
@@ -754,13 +741,12 @@ BOOLEAN PrepareEnemyForSectorBattle()
 
 BOOLEAN PrepareEnemyForUndergroundBattle()
 {
-	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO *pUnderground;
 	UINT8 ubTotalAdmins, ubTotalTroops, ubTotalElites;
 	pUnderground = gpUndergroundSectorInfoHead;
 	while( pUnderground )
 	{
-		if( pUnderground->ubSectorX == gWorldSectorX && 
+		if( pUnderground->ubSectorX == gWorldSectorX &&
 			  pUnderground->ubSectorY == gWorldSectorY &&
 				pUnderground->ubSectorZ == gbWorldSectorZ )
 		{ //This is the sector we are going to be fighting in.
@@ -788,7 +774,6 @@ BOOLEAN PrepareEnemyForUndergroundBattle()
 //The queen AI layer must process the event by subtracting forces, etc.
 void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32 iNumEnemiesInSector;
 	SECTORINFO *pSector;
 //	CHAR16 str[128];
@@ -956,7 +941,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 			#ifdef JA2BETAVERSION
 			UINT32 ubTotalEnemies;
 			#endif
-			
+
 //			if( !IsAutoResolveActive() )
 //			{
 				pSector = &SectorInfo[ SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) ];
@@ -966,7 +951,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 //				pSector = &SectorInfo[ GetAutoResolveSectorID() ];
 //			}
 
-			#ifdef JA2BETAVERSION	
+			#ifdef JA2BETAVERSION
 				ubTotalEnemies = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
 			#endif
 
@@ -1163,7 +1148,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 
 						if( pSoldier->ubBodyType == QUEENMONSTER )
 						{
-							//Need to call this, as the queen is really big, and killing her leaves a bunch 
+							//Need to call this, as the queen is really big, and killing her leaves a bunch
 							//of bad tiles in behind her.  Calling this function cleans it up.
 							InvalidateWorldRedundency();
 							//Now that the queen is dead, turn off the creature quest.
@@ -1201,7 +1186,6 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 //identical, though it is highly likely that they will all be successfully added on the first call.
 void AddPossiblePendingEnemiesToBattle()
 {
-	PERFORMANCE_MARKER
 	UINT8 ubSlots, ubNumAvailable;
 	UINT8 ubNumElites, ubNumTroops, ubNumAdmins;
 	UINT8 ubNumGroupsInSector;
@@ -1247,7 +1231,7 @@ void AddPossiblePendingEnemiesToBattle()
 
 		// It's probable that the "pending enemies" flag isn't working right.  So we'll go ahead and continue into
 		// the group insertion code from here.
-		//return;		
+		//return;
 	}
 
 	if( pSector->ubNumElites + pSector->ubNumTroops + pSector->ubNumAdmins )
@@ -1317,7 +1301,7 @@ void AddPossiblePendingEnemiesToBattle()
 				else if( !CountAllMilitiaInSector( gWorldSectorX, gWorldSectorY - 1 ) )
 					ubStrategicInsertionCode = INSERTION_CODE_NORTH;
 			}
-			
+
 			if( ubStrategicInsertionCode < INSERTION_CODE_NORTH ||ubStrategicInsertionCode > INSERTION_CODE_WEST )
 				ubStrategicInsertionCode = INSERTION_CODE_NORTH + Random( 4 );
 
@@ -1429,7 +1413,6 @@ void AddPossiblePendingEnemiesToBattle()
 
 void NotifyPlayersOfNewEnemies()
 {
-	PERFORMANCE_MARKER
 	INT32 iSoldiers, iChosenSoldier, i;
 	SOLDIERTYPE *pSoldier;
 	BOOLEAN fIgnoreBreath = FALSE;
@@ -1486,7 +1469,6 @@ void NotifyPlayersOfNewEnemies()
 
 void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites, BOOLEAN fMagicallyAppeared )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	MAPEDGEPOINTINFO MapEdgepointInfo;
 	UINT8 ubCurrSlot;
@@ -1505,7 +1487,7 @@ void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT8 ub
 	#endif
 
 	if( fMagicallyAppeared )
-	{ //update the strategic counters 
+	{ //update the strategic counters
 		if( !gbWorldSectorZ )
 		{
 			SECTORINFO *pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
@@ -1556,7 +1538,7 @@ void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT8 ub
 				pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 				pSoldier->usStrategicInsertionData = MapEdgepointInfo.sGridNo[ ubCurrSlot++ ];
 			}
-			else 
+			else
 			{ //no edgepoints left, so put him at the entrypoint.
 				pSoldier->ubStrategicInsertionCode = ubStrategicInsertionCode;
 			}
@@ -1579,7 +1561,7 @@ void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT8 ub
 				pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 				pSoldier->usStrategicInsertionData = MapEdgepointInfo.sGridNo[ ubCurrSlot++ ];
 			}
-			else 
+			else
 			{ //no edgepoints left, so put him at the entrypoint.
 				pSoldier->ubStrategicInsertionCode = ubStrategicInsertionCode;
 			}
@@ -1602,7 +1584,7 @@ void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT8 ub
 				pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 				pSoldier->usStrategicInsertionData = MapEdgepointInfo.sGridNo[ ubCurrSlot++ ];
 			}
-			else 
+			else
 			{ //no edgepoints left, so put him at the entrypoint.
 				pSoldier->ubStrategicInsertionCode = ubStrategicInsertionCode;
 			}
@@ -1616,7 +1598,6 @@ void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT8 ub
 
 BOOLEAN SaveUnderGroundSectorInfoToSaveGame( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten;
 	UINT32	uiNumOfRecords=0;
 	UNDERGROUND_SECTORINFO *TempNode = gpUndergroundSectorInfoHead;
@@ -1646,7 +1627,7 @@ BOOLEAN SaveUnderGroundSectorInfoToSaveGame( HWFILE hFile )
 		{
 			return(FALSE);
 		}
-		
+
 		TempNode = TempNode->next;
 	}
 
@@ -1655,7 +1636,6 @@ BOOLEAN SaveUnderGroundSectorInfoToSaveGame( HWFILE hFile )
 
 BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 	UINT32	uiNumOfRecords=0;
 	UINT32	cnt=0;
@@ -1722,7 +1702,6 @@ BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile )
 
 UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ )
 {
-	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO *pUnderground;
 	pUnderground = gpUndergroundSectorInfoHead;
 
@@ -1730,10 +1709,10 @@ UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 b
 	while( pUnderground )
 	{
 		//If the sector is the right one
-		if( pUnderground->ubSectorX == sMapX && 
+		if( pUnderground->ubSectorX == sMapX &&
 			  pUnderground->ubSectorY == sMapY &&
 				pUnderground->ubSectorZ == bMapZ )
-		{ 
+		{
 			return( pUnderground );
 		}
 		pUnderground = pUnderground->next;
@@ -1748,7 +1727,6 @@ UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 b
 
 void BeginCaptureSquence( )
 {
-	PERFORMANCE_MARKER
 	if( !( gStrategicStatus.uiFlags & STRATEGIC_PLAYER_CAPTURED_FOR_RESCUE ) || !( gStrategicStatus.uiFlags & STRATEGIC_PLAYER_CAPTURED_FOR_ESCAPE ) )
 	{
 		gStrategicStatus.ubNumCapturedForRescue = 0;
@@ -1757,7 +1735,6 @@ void BeginCaptureSquence( )
 
 void EndCaptureSequence( )
 {
-	PERFORMANCE_MARKER
 
 	// Set flag...
 	if( !( gStrategicStatus.uiFlags & STRATEGIC_PLAYER_CAPTURED_FOR_RESCUE ) || !(gStrategicStatus.uiFlags & STRATEGIC_PLAYER_CAPTURED_FOR_ESCAPE) )
@@ -1793,7 +1770,7 @@ void EndCaptureSequence( )
 			}
 		}
 		// CJC Dec 1 2002: fixing multiple captures
-		else 
+		else
 		{
 			// !?!? set both flags
 			gStrategicStatus.uiFlags |= STRATEGIC_PLAYER_CAPTURED_FOR_RESCUE;
@@ -1805,7 +1782,6 @@ void EndCaptureSequence( )
 
 void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT32					i;
   BOOLEAN       fMadeCorpse;
   INT32         iNumEnemiesInSector;
@@ -1815,7 +1791,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 	static INT16 sAlmaCaptureItemsGridNo[] = { 12246, 12406, 13046 };
 
 	static INT16 sInterrogationItemGridNo[] = { 12089, 12089, 12089 };
-	
+
 
   // ATE: Check first if ! in player captured sequence already
 	// CJC Dec 1 2002: fixing multiple captures
@@ -1845,7 +1821,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
   }
 
   // ATE: Patch fix If in a vehicle, remove from vehicle...
-  TakeSoldierOutOfVehicle( pSoldier ); 
+  TakeSoldierOutOfVehicle( pSoldier );
 
 
   // Are there anemies in ALMA? ( I13 )
@@ -1862,7 +1838,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 
 	// Change to POW....
 	//-add him to a POW assignment/group
-	if( ( pSoldier->bAssignment != ASSIGNMENT_POW )  ) 
+	if( ( pSoldier->bAssignment != ASSIGNMENT_POW )  )
 	{
 		SetTimeOfAssignmentChangeForMerc( pSoldier );
 	}
@@ -1873,7 +1849,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 	{
 		pSoldier->aiData.bNeutral = TRUE;
 	}
-	
+
 	RemoveCharacterFromSquads( pSoldier );
 
 	WORLDITEM			WorldItem;
@@ -1891,7 +1867,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 
 		// OK, drop all items!
 		for ( i = 0; i < pSoldier->inv.size(); i++ )
-		{ 
+		{
 			if( pSoldier->inv[ i ].exists() == true )
 			{
 				WorldItem.fExists = TRUE;
@@ -1923,7 +1899,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 
 		// OK, drop all items!
 		for ( i = 0; i < pSoldier->inv.size(); i++ )
-		{ 
+		{
 			if( pSoldier->inv[ i ].exists() == true )
 			{
 				WorldItem.fExists = TRUE;
@@ -1974,7 +1950,6 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 
 void HandleEnemyStatusInCurrentMapBeforeLoadingNewMap()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	BOOLEAN fMadeCorpse;
 	INT8 bKilledEnemies = 0, bKilledCreatures = 0, bKilledRebels = 0, bKilledCivilians = 0;
@@ -2029,7 +2004,7 @@ void HandleEnemyStatusInCurrentMapBeforeLoadingNewMap()
 		ScreenMsg( FONT_BLUE, MSG_TESTVERSION, L"%d enemies died after you left the sector.", bKilledEnemies );
 	if( bKilledCreatures )
 		ScreenMsg( FONT_BLUE, MSG_TESTVERSION, L"%d creatures died after you left the sector.", bKilledCreatures );
-	
+
 	if( !gbWorldSectorZ )
 	{
 		SECTORINFO *pSector;
@@ -2038,7 +2013,7 @@ void HandleEnemyStatusInCurrentMapBeforeLoadingNewMap()
 		pSector->ubTroopsInBattle = 0;
 		pSector->ubElitesInBattle = 0;
 		pSector->ubCreaturesInBattle = 0;
-		//RecalculateSectorWeight( 
+		//RecalculateSectorWeight(
 	}
 	else if( gbWorldSectorZ > 0 )
 	{
@@ -2055,7 +2030,6 @@ void HandleEnemyStatusInCurrentMapBeforeLoadingNewMap()
 
 BOOLEAN PlayerSectorDefended( UINT8 ubSectorID )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	pSector = &SectorInfo[ ubSectorID ];
 	if( pSector->ubNumberOfCivsAtLevel[ GREEN_MILITIA ] +
@@ -2074,7 +2048,6 @@ BOOLEAN PlayerSectorDefended( UINT8 ubSectorID )
 //Assumes gTacticalStatus.fEnemyInSector
 BOOLEAN OnlyHostileCivsInSector()
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	INT32 i;
 	BOOLEAN fHostileCivs = FALSE;

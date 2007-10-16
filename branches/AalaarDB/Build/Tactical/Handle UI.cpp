@@ -21,7 +21,7 @@
 #include "cursors.h"
 #include "Handle UI.h"
 #include "Isometric Utils.h"
-#include "input.h"	
+#include "input.h"
 #include "overhead.h"
 #include "Sys Globals.h"
 #include "screenids.h"
@@ -35,7 +35,7 @@
 #include "weapons.h"
 #include "Sound Control.h"
 #include "renderworld.h"
-#include "structure.h" 
+#include "structure.h"
 #include "interface panels.h"
 #include "weapons.h"
 #include "Handle items.h"
@@ -99,19 +99,19 @@ extern UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndRead
 #define MAX_ON_DUTY_SOLDIERS 6
 
 /////////////////////////////////////////////////////////////////////////////////////
-//											UI SYSTEM DESCRIPTION																			
+//											UI SYSTEM DESCRIPTION
 //
 //	The UI system here decouples event determination from event execution. IN other words,
 //	first any user input is gathered and analysed for an event to happen. Once the event is determined,
-//	it is then executed. For example, if the left mouse button is used to select a guy, it does not 
+//	it is then executed. For example, if the left mouse button is used to select a guy, it does not
 //	execute the code to selected the guy, rather it sets a flag to a particular event, in this case
-//	the I_SELECT_MERC event is set. The code then executes this event after all input is analysed. In 
+//	the I_SELECT_MERC event is set. The code then executes this event after all input is analysed. In
 //	this way, more than one input method from the user will cause the came event to occur and hence no
 //	duplication of code. Also, events have cetain charactoristics. The select merc event is executed just
 //	once and then returns to the previous event. Most events are set to run continuously until new
 //	input changes to another event. Other events have a 'SNAP-BACK' feature which snap the mouse back to
 //	it's position before the event was executed.	Another issue is UI modes. In order to filter out input
-//	depending on other flags, for example we do not want to cancel the confirm when a user moves to another 
+//	depending on other flags, for example we do not want to cancel the confirm when a user moves to another
 //	tile unless we are in the 'confirm' mode.	This could be done by flags ( and in effect it is ) where
 //	if staements are used, but here at input collection time, we can switch on our current mode to handle
 //	input differently based on the mode. Doing it this way also allows us to group certain commands togther
@@ -262,7 +262,7 @@ UINT16	gusUISelectiveTargetID;
 
 SOLDIERTYPE			*gpRequesterMerc = NULL;
 SOLDIERTYPE			*gpRequesterTargetMerc = NULL;
-INT16						gsRequesterGridNo;	
+INT16						gsRequesterGridNo;
 INT16						gsOverItemsGridNo = NOWHERE;
 INT16						gsOverItemsLevel	= 0;
 BOOLEAN					gfUIInterfaceSetBusy = FALSE;
@@ -281,7 +281,7 @@ INT16						gsJumpOverGridNo = 0;
 
 
 UI_EVENT gEvents[ NUM_UI_EVENTS ] =
-{	
+{
 	0,						IDLE_MODE,				UIHandleIDoNothing, FALSE, FALSE, 0, 0, 0, 0,
 	0,						IDLE_MODE,				UIHandleExit, FALSE, FALSE, 0,	0, 0,	0,
 	UIEVENT_SINGLEEVENT,	DONT_CHANGEMODE,		UIHandleNewMerc, FALSE, FALSE, 0, 0, 0,	0,
@@ -309,15 +309,15 @@ UI_EVENT gEvents[ NUM_UI_EVENTS ] =
 	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleIETEndTurn, FALSE, FALSE, 0, 0, 0, 0,
 
 
-	0,						MOVE_MODE,				UIHandleMOnTerrain, FALSE, FALSE, 0, 0, 0, 0, 
+	0,						MOVE_MODE,				UIHandleMOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,	ACTION_MODE,			UIHandleMChangeToAction, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,	HANDCURSOR_MODE,		UIHandleMChangeToHandMode, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleMCycleMovement, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,	CONFIRM_MOVE_MODE,		UIHandleMCycleMoveAll, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SNAPMOUSE,		ADJUST_STANCE_MODE,		UIHandleMAdjustStanceMode, FALSE, FALSE, 0, 0, 0, 0, 
-	0,						POPUP_MODE,				UIHandlePOPUPMSG, FALSE, FALSE, 0, 0, 0, 0, 
+	UIEVENT_SNAPMOUSE,		ADJUST_STANCE_MODE,		UIHandleMAdjustStanceMode, FALSE, FALSE, 0, 0, 0, 0,
+	0,						POPUP_MODE,				UIHandlePOPUPMSG, FALSE, FALSE, 0, 0, 0, 0,
 	0,						ACTION_MODE,			UIHandleAOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleAChangeToMove, FALSE, FALSE, 0, 0, 0, 0, 
+	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleAChangeToMove, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,	CONFIRM_ACTION_MODE,	UIHandleAChangeToConfirmAction, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleAEndAction, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SNAPMOUSE,		MENU_MODE,				UIHandleMovementMenu, FALSE, FALSE, 0, 0, 0, 0,
@@ -405,7 +405,7 @@ INT16				guiCreateGuyIndex = 0;
 INT16				guiCreateBadGuyIndex = 8;
 
 // FLAGS
-// These flags are set for a single frame execution and then are reset for the next iteration. 
+// These flags are set for a single frame execution and then are reset for the next iteration.
 BOOLEAN		gfUIDisplayActionPoints					= FALSE;
 BOOLEAN		gfUIDisplayActionPointsInvalid	= FALSE;
 BOOLEAN		gfUIDisplayActionPointsBlack		= FALSE;
@@ -472,7 +472,6 @@ UINT8 GetAdjustedAnimHeight( UINT8 ubAnimHeight, INT8 bChange );
 
 void PreventFromTheFreezingBug(SOLDIERTYPE* pSoldier)
 {
-	PERFORMANCE_MARKER
 	gfUIInterfaceSetBusy = FALSE;
 	UnSetUIBusy( pSoldier->ubID );
 	//	gTacticalStatus.ubAttackBusyCount = 0; // 0verhaul:	I know commenting this may not be a good idea, but then neither is this kludgy routine.
@@ -483,9 +482,8 @@ void PreventFromTheFreezingBug(SOLDIERTYPE* pSoldier)
 // MAIN TACTICAL UI HANDLER
 UINT32	HandleTacticalUI( void )
 {
-	PERFORMANCE_MARKER
 		UINT32 ReturnVal	= GAME_SCREEN;
-		UINT32 uiNewEvent;	
+		UINT32 uiNewEvent;
 		INT16				sMapPos;
 		LEVELNODE					*pIntTile;
 		static LEVELNODE *pOldIntTile = NULL;
@@ -574,7 +572,7 @@ UINT32	HandleTacticalUI( void )
 			// FROM KEYBOARD POLLING
 			GetPolledKeyboardInput( &uiNewEvent );
 			// FROM MOUSE CLICKS
-			GetRTMouseButtonInput( &uiNewEvent );			
+			GetRTMouseButtonInput( &uiNewEvent );
 			// FROM KEYBOARD
 			GetKeyboardInput( &uiNewEvent );
 
@@ -586,7 +584,7 @@ UINT32	HandleTacticalUI( void )
 			// FROM KEYBOARD POLLING
 			GetPolledKeyboardInput( &uiNewEvent );
 			// FROM MOUSE CLICKS
-			GetTBMouseButtonInput( &uiNewEvent );			
+			GetTBMouseButtonInput( &uiNewEvent );
 			// FROM KEYBOARD
 			GetKeyboardInput( &uiNewEvent );
 		}
@@ -668,7 +666,7 @@ UINT32	HandleTacticalUI( void )
 
 	// Check if UI mode has changed from previous event
 	if ( gEvents[ uiNewEvent ].ChangeToUIMode != gCurrentUIMode && ( gEvents[ uiNewEvent ].ChangeToUIMode != DONT_CHANGEMODE ) )
-	{			
+	{
 		gEvents[ uiNewEvent ].uiMenuPreviousMode = gCurrentUIMode;
 
 		gOldUIMode = gCurrentUIMode;
@@ -740,7 +738,6 @@ UINT32	HandleTacticalUI( void )
 
 void SetUIMouseCursor( )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCursorFlags;
 	UINT32 uiTraverseTimeInMinutes;
 	BOOLEAN	fForceUpdateNewCursor = FALSE;
@@ -932,7 +929,7 @@ void SetUIMouseCursor( )
 			ErasePath( TRUE );
 
 			if( GetMouseMapPos( &sMapPos) )
-			{	
+			{
 				if ( gusSelectedSoldier != NOBODY && MercPtrs[ gusSelectedSoldier ]->pathing.bLevel == 0 )
 				{
 					// ATE: Is this place revealed?
@@ -1006,14 +1003,12 @@ void SetUIMouseCursor( )
 
 void SetUIKeyboardHook( UIKEYBOARD_HOOK KeyboardHookFnc )
 {
-	PERFORMANCE_MARKER
 	gUIKeyboardHook = KeyboardHookFnc;
 }
 
 
 void ClearEvent( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	memset( pUIEvent->uiParams, 0, sizeof( pUIEvent->uiParams ) );
 	pUIEvent->fDoneMenu					= FALSE;
 	pUIEvent->fFirstTime					= TRUE;
@@ -1023,7 +1018,6 @@ void ClearEvent( UI_EVENT *pUIEvent )
 
 void EndMenuEvent( UINT32	uiEvent )
 {
-	PERFORMANCE_MARKER
 	gEvents[ uiEvent ].fDoneMenu = TRUE;
 
 }
@@ -1032,7 +1026,6 @@ void EndMenuEvent( UINT32	uiEvent )
 
 UINT32 UIHandleIDoNothing( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	guiNewUICursor = NORMAL_SNAPUICURSOR;
 
 	return( GAME_SCREEN );
@@ -1040,17 +1033,15 @@ UINT32 UIHandleIDoNothing( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleExit( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	gfProgramIsRunning = FALSE;
 	return( GAME_SCREEN );
 }
 
 UINT32 UIHandleNewMerc( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	static UINT8				ubTemp = 3;
 	INT16							sMapPos;
-	static INT32		iSoldierCount=0;	 
+	static INT32		iSoldierCount=0;
 	MERC_HIRE_STRUCT HireMercStruct;
 	INT8		bReturnCode;
 	SOLDIERTYPE *pSoldier;
@@ -1058,7 +1049,7 @@ UINT32 UIHandleNewMerc( UI_EVENT *pUIEvent )
 
 	// Get Grid Corrdinates of mouse
 	if( GetMouseMapPos( &sMapPos) )
-	{		
+	{
 		ubTemp+= 2;
 
 		memset( &HireMercStruct, 0, sizeof(MERC_HIRE_STRUCT));
@@ -1103,14 +1094,13 @@ UINT32 UIHandleNewMerc( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleNewBadMerc( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	INT16 sMapPos;
 	UINT16 usRandom;
 
 	//Get map postion and place the enemy there.
 	if( GetMouseMapPos( &sMapPos) )
-	{ 
+	{
 		// Are we an OK dest?
 		if ( !IsLocationSittable( sMapPos, 0 ) )
 		{
@@ -1164,13 +1154,11 @@ UINT32 UIHandleNewBadMerc( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleEnterEditMode( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 		return( EDIT_SCREEN );
 }
 
 UINT32 UIHandleEnterPalEditMode( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 		return( PALEDIT_SCREEN );
 }
 
@@ -1179,7 +1167,6 @@ UINT32 UIHandleEnterPalEditMode( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleEndTurn( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	// CANCEL FROM PLANNING MODE!
 	if ( InUIPlanMode( ) )
 	{
@@ -1218,7 +1205,6 @@ UINT32 UIHandleEndTurn( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleTestHit( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier;
 	INT8							bDamage;
 
@@ -1259,7 +1245,6 @@ UINT32 UIHandleTestHit( UI_EVENT *pUIEvent )
 
 void ChangeInterfaceLevel( INT16 sLevel )
 {
-	PERFORMANCE_MARKER
 	// Only if different!
 	if ( sLevel == gsInterfaceLevel )
 	{
@@ -1291,7 +1276,6 @@ void ChangeInterfaceLevel( INT16 sLevel )
 
 UINT32 UIHandleChangeLevel( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	if ( gsInterfaceLevel == 0 )
 	{
 		ChangeInterfaceLevel( 1 );
@@ -1309,7 +1293,6 @@ extern void InternalSelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOO
 
 UINT32 UIHandleSelectMerc( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	INT32	iCurrentSquad;
 
 	// Get merc index at mouse and set current selection
@@ -1333,7 +1316,6 @@ UINT32 UIHandleSelectMerc( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleMOnTerrain( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier;
 	INT16						sMapPos;
 	BOOLEAN						fSetCursor = FALSE;
@@ -1362,7 +1344,7 @@ UINT32 UIHandleMOnTerrain( UI_EVENT *pUIEvent )
 		{
 			if ( !UIHandleOnMerc( TRUE ) )
 			{
-				guiNewUICursor = FLOATING_X_UICURSOR;				
+				guiNewUICursor = FLOATING_X_UICURSOR;
 				return( GAME_SCREEN );
 			}
 		}
@@ -1425,7 +1407,7 @@ UINT32 UIHandleMOnTerrain( UI_EVENT *pUIEvent )
 				// ERASE PATH
 				ErasePath( TRUE );
 
-				guiNewUICursor = FLOATING_X_UICURSOR;				
+				guiNewUICursor = FLOATING_X_UICURSOR;
 
 				return( GAME_SCREEN );
 			}
@@ -1451,8 +1433,8 @@ UINT32 UIHandleMOnTerrain( UI_EVENT *pUIEvent )
 				// Show reg. cursor
 				// GO INTO IDLE MODE
 				// guiPendingOverrideEvent = I_CHANGE_TO_IDLE;
-				// gusSelectedSoldier = NOBODY;	
-				ubID = FindNextActiveAndAliveMerc( pSoldier, FALSE, FALSE ); 
+				// gusSelectedSoldier = NOBODY;
+				ubID = FindNextActiveAndAliveMerc( pSoldier, FALSE, FALSE );
 
 				if ( ubID != NOBODY )
 				{
@@ -1470,7 +1452,7 @@ UINT32 UIHandleMOnTerrain( UI_EVENT *pUIEvent )
 				// ERASE PATH
 				ErasePath( TRUE );
 
-				guiNewUICursor = CANNOT_MOVE_UICURSOR;				
+				guiNewUICursor = CANNOT_MOVE_UICURSOR;
 
 			}
 			else
@@ -1531,7 +1513,6 @@ UINT32 UIHandleMOnTerrain( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleMovementMenu( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier;
 
 
@@ -1627,7 +1608,6 @@ UINT32 UIHandleMovementMenu( UI_EVENT *pUIEvent )
 
 UINT32 UIHandlePositionMenu( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 
 	return( GAME_SCREEN );
 }
@@ -1635,7 +1615,6 @@ UINT32 UIHandlePositionMenu( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleAOnTerrain( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	UINT16						sMapPos;
 	SOLDIERTYPE				*pSoldier;
 	//	INT16							sTargetXPos, sTargetYPos;
@@ -1648,7 +1627,7 @@ UINT32 UIHandleAOnTerrain( UI_EVENT *pUIEvent )
 
 	if ( gpItemPointer != NULL )
 	{
-		return( GAME_SCREEN );		
+		return( GAME_SCREEN );
 	}
 
 	// Get soldier to determine range
@@ -1674,7 +1653,7 @@ UINT32 UIHandleAOnTerrain( UI_EVENT *pUIEvent )
 						// Display
 						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ OUT_OF_RANGE_STRING ] );
 
-						//PlayJA2Sample( TARGET_OUT_OF_RANGE, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );						
+						//PlayJA2Sample( TARGET_OUT_OF_RANGE, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
 
 						// Set
 						gsOutOfRangeGridNo = MercPtrs[ gusUIFullTargetID ]->sGridNo;
@@ -1694,7 +1673,7 @@ UINT32 UIHandleAOnTerrain( UI_EVENT *pUIEvent )
 		if ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) )
 		{
 			if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_STATIONARY && pSoldier->aiData.ubPendingAction == NO_PENDING_ACTION )
-			{				
+			{
 				// Check if we have a shot waiting!
 				if ( gUITargetShotWaiting )
 				{
@@ -1702,7 +1681,7 @@ UINT32 UIHandleAOnTerrain( UI_EVENT *pUIEvent )
 				}
 
 				if ( !gUITargetReady )
-				{				
+				{
 					// Move to proper stance + direction!
 					// Convert our grid-not into an XY
 					//	ConvertGridNoToXY( sMapPos, &sTargetXPos, &sTargetYPos );
@@ -1732,7 +1711,6 @@ UINT32 UIHandleAOnTerrain( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleMChangeToAction( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	gUITargetShotWaiting = FALSE;
 
 	EndPhysicsTrajectoryUI( );
@@ -1744,7 +1722,6 @@ UINT32 UIHandleMChangeToAction( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleMChangeToHandMode( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	ErasePath( FALSE );
 
 	return( GAME_SCREEN );
@@ -1752,7 +1729,6 @@ UINT32 UIHandleMChangeToHandMode( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleAChangeToMove( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	// Set merc glow back to normal
 	// ( could have been set when in target cursor )
 	SetMercGlowNormal( );
@@ -1766,7 +1742,6 @@ UINT32 UIHandleAChangeToMove( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleCWait( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	INT16						sMapPos;
 	SOLDIERTYPE				*pSoldier;
 	BOOLEAN						fSetCursor;
@@ -1814,7 +1789,7 @@ UINT32 UIHandleCWait( UI_EVENT *pUIEvent )
 
 		// Determine if we can afford!
 		if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0, FALSE ) )
-		{	
+		{
 			gfUIDisplayActionPointsInvalid = TRUE;
 		}
 
@@ -1837,7 +1812,6 @@ UINT32 UIHandleCWait( UI_EVENT *pUIEvent )
 // SelectedMercCanAffordMove
 UINT32 UIHandleCMoveMerc( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	INT16						sMapPos;
 	SOLDIERTYPE				*pSoldier;
 	INT16							sDestGridNo;
@@ -1872,7 +1846,7 @@ UINT32 UIHandleCMoveMerc( UI_EVENT *pUIEvent )
 			for (bLoop=gTacticalStatus.Team[gbPlayerNum].bFirstID, pSoldier=MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[gbPlayerNum].bLastID; bLoop++, pSoldier++)
 			{
 				if ( OK_CONTROLLABLE_MERC( pSoldier ) && pSoldier->bAssignment == CurrentSquad( ) && !pSoldier->flags.fMercAsleep )
-				{	
+				{
 		 // If we can't be controlled, returninvalid...
 		 if ( pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT )
 		 {
@@ -1906,7 +1880,7 @@ UINT32 UIHandleCMoveMerc( UI_EVENT *pUIEvent )
 					//	pSoldier->sRTPendingMovementGridNo = sMapPos;
 					//	pSoldier->usRTPendingMovementAnim	= pSoldier->usUIMovementMode;
 					//}
-					//else					
+					//else
 					if ( pSoldier->EVENT_InternalGetNewSoldierPath( sMapPos, pSoldier->usUIMovementMode, TRUE, FALSE ) )
 					{
 						pSoldier->InternalSoldierReadyWeapon( BATTLE_SOUND_OK1, BATTLE_SND_LOWER_VOLUME );
@@ -1914,7 +1888,7 @@ UINT32 UIHandleCMoveMerc( UI_EVENT *pUIEvent )
 					else
 					{
 						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NO_PATH_FOR_MERC ], pSoldier->name );
-					}					
+					}
 
 					pSoldier->flags.fUIMovementFast = fOldFastMove;
 
@@ -2029,7 +2003,6 @@ UINT32 UIHandleCMoveMerc( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleMCycleMoveAll( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
 	if ( !GetSoldier( &pSoldier, gusSelectedSoldier ) )
@@ -2048,7 +2021,6 @@ UINT32 UIHandleMCycleMoveAll( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleMCycleMovement( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	BOOLEAN			fGoodMode = FALSE;
 
@@ -2061,7 +2033,7 @@ UINT32 UIHandleMCycleMovement( UI_EVENT *pUIEvent )
 
 	if ( pSoldier->ubBodyType == ROBOTNOWEAPON )
 	{
-		pSoldier->usUIMovementMode = WALKING;	 
+		pSoldier->usUIMovementMode = WALKING;
 		gfPlotNewMovement = TRUE;
 		return( GAME_SCREEN );
 	}
@@ -2113,7 +2085,6 @@ UINT32 UIHandleMCycleMovement( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleCOnTerrain( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 
 	return( GAME_SCREEN );
 }
@@ -2121,7 +2092,6 @@ UINT32 UIHandleCOnTerrain( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleMAdjustStanceMode( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier;
 	INT32							iPosDiff;
 	static UINT16			gusAnchorMouseY;
@@ -2227,7 +2197,7 @@ UINT32 UIHandleMAdjustStanceMode( UI_EVENT *pUIEvent )
 					ubDownDepth = 0;
 				}
 				break;
-			}			
+			}
 
 
 		}
@@ -2253,7 +2223,7 @@ UINT32 UIHandleMAdjustStanceMode( UI_EVENT *pUIEvent )
 					guiShowUPDownArrows = ARROWS_SHOW_DOWN_BESIDE | ARROWS_SHOW_UP_BESIDE;
 					gbAdjustStanceDiff = 0;
 					gbClimbID					= 0;
-				}	
+				}
 				else if ( iPosDiff > GO_MOVE_ONE && iPosDiff < GO_MOVE_TWO && ubUpHeight >= 1 )
 				{
 					//guiShowUPDownArrows = ARROWS_SHOW_UP_ABOVE_G;
@@ -2309,7 +2279,7 @@ UINT32 UIHandleMAdjustStanceMode( UI_EVENT *pUIEvent )
 					gbAdjustStanceDiff = 0;
 					gbClimbID					= 0;
 
-				}	
+				}
 				else if ( iPosDiff >= GO_MOVE_ONE && iPosDiff < GO_MOVE_TWO && ubDownDepth >= 1 )
 				{
 					//						guiShowUPDownArrows = ARROWS_SHOW_DOWN_BELOW_G;
@@ -2363,7 +2333,6 @@ UINT32 UIHandleMAdjustStanceMode( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleAChangeToConfirmAction( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE		*pSoldier;
 
 	if ( GetSoldier( &pSoldier, gusSelectedSoldier ) )
@@ -2380,7 +2349,6 @@ UINT32 UIHandleAChangeToConfirmAction( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleCAOnTerrain( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier;
 	INT16						sMapPos;
 
@@ -2404,7 +2372,6 @@ UINT32 UIHandleCAOnTerrain( UI_EVENT *pUIEvent )
 
 void UIHandleMercAttack( SOLDIERTYPE *pSoldier , SOLDIERTYPE *pTargetSoldier, INT16 sMapPos )
 {
-	PERFORMANCE_MARKER
 	INT32							iHandleReturn;
 	INT16							sTargetGridNo;
 	INT8							bTargetLevel;
@@ -2422,7 +2389,7 @@ void UIHandleMercAttack( SOLDIERTYPE *pSoldier , SOLDIERTYPE *pTargetSoldier, IN
 		if ( NPCFirstDraw( pSoldier, pTargetSoldier ) )
 		{
 			// go into turnbased for that person
-			CancelAIAction( pTargetSoldier, TRUE );			
+			CancelAIAction( pTargetSoldier, TRUE );
 			AddToShouldBecomeHostileOrSayQuoteList( pTargetSoldier->ubID );
 			//MakeCivHostile( pTargetSoldier, 2 );
 			//TriggerNPCWithIHateYouQuote( pTargetSoldier->ubProfile );
@@ -2514,7 +2481,7 @@ void UIHandleMercAttack( SOLDIERTYPE *pSoldier , SOLDIERTYPE *pTargetSoldier, IN
 		pSoldier->pathing.sFinalDestination = pSoldier->sGridNo;
 		pSoldier->bGoodContPath			= FALSE;
 		//	guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-	}	
+	}
 
 
 	if (pSoldier->bWeaponMode == WM_ATTACHED_GL || pSoldier->bWeaponMode == WM_ATTACHED_GL_BURST || pSoldier->bWeaponMode == WM_ATTACHED_GL_AUTO )
@@ -2545,14 +2512,13 @@ void UIHandleMercAttack( SOLDIERTYPE *pSoldier , SOLDIERTYPE *pTargetSoldier, IN
 	if ( gTacticalStatus.uiFlags & TURNBASED && !( gTacticalStatus.uiFlags & INCOMBAT ) )
 	{
 		HandleUICursorRTFeedback( pSoldier );
-	}	
+	}
 
 	gfUIForceReExamineCursorData = TRUE;
 }
 
 void AttackRequesterCallback( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		gTacticalStatus.ubLastRequesterTargetID = gpRequesterTargetMerc->ubProfile;
@@ -2564,7 +2530,6 @@ void AttackRequesterCallback( UINT8 bExitValue )
 
 UINT32 UIHandleCAMercShoot( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	INT16						sMapPos;
 	SOLDIERTYPE				*pSoldier, *pTSoldier = NULL;
 	BOOLEAN						fDidRequester = FALSE;
@@ -2621,7 +2586,6 @@ UINT32 UIHandleCAMercShoot( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleAEndAction( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE		*pSoldier;
 	INT16 sTargetXPos, sTargetYPos;
 	INT16						sMapPos;
@@ -2657,7 +2621,6 @@ UINT32 UIHandleAEndAction( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleCAEndConfirmAction( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE		*pSoldier;
 
 	if ( GetSoldier( &pSoldier, gusSelectedSoldier ) )
@@ -2671,7 +2634,6 @@ UINT32 UIHandleCAEndConfirmAction( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleIOnTerrain( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	INT16						sMapPos;
 
 	// Get gridno at this location
@@ -2686,7 +2648,7 @@ UINT32 UIHandleIOnTerrain( UI_EVENT *pUIEvent )
 		// Check if dest is OK
 		//if ( !NewOKDestination( sMapPos, FALSE ) || IsRoofVisible( sMapPos ) )
 		////{
-		//	guiNewUICursor = CANNOT_MOVE_UICURSOR;				
+		//	guiNewUICursor = CANNOT_MOVE_UICURSOR;
 		//}
 		//else
 		{
@@ -2699,13 +2661,11 @@ UINT32 UIHandleIOnTerrain( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleIChangeToIdle( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	return( GAME_SCREEN );
 }
 
 UINT32 UIHandlePADJAdjustStance( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier;
 	UINT8							ubNewStance;
 
@@ -2747,7 +2707,6 @@ UINT32 UIHandlePADJAdjustStance( UI_EVENT *pUIEvent )
 
 UINT8 GetAdjustedAnimHeight( UINT8 ubAnimHeight, INT8 bChange )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNewAnimHeight = ubAnimHeight;
 
 	if ( ubAnimHeight == ANIM_STAND )
@@ -2762,7 +2721,7 @@ UINT8 GetAdjustedAnimHeight( UINT8 ubAnimHeight, INT8 bChange )
 		}
 		if ( bChange == 1 )
 		{
-			ubNewAnimHeight = 50;	
+			ubNewAnimHeight = 50;
 		}
 	}
 	else if ( ubAnimHeight == ANIM_CROUCH )
@@ -2784,7 +2743,7 @@ UINT8 GetAdjustedAnimHeight( UINT8 ubAnimHeight, INT8 bChange )
 	{
 		if ( bChange == -1 )
 		{
-			ubNewAnimHeight = 55;	
+			ubNewAnimHeight = 55;
 		}
 		if ( bChange == 1 )
 		{
@@ -2801,7 +2760,6 @@ UINT8 GetAdjustedAnimHeight( UINT8 ubAnimHeight, INT8 bChange )
 
 void HandleObjectHighlighting( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier;
 	INT16						sMapPos;
 
@@ -2849,7 +2807,6 @@ void HandleObjectHighlighting( )
 
 void AdjustSoldierCreationStartValues( )
 {
-	PERFORMANCE_MARKER
 	INT32				cnt;
 	SOLDIERTYPE		*pSoldier;
 
@@ -2858,12 +2815,12 @@ void AdjustSoldierCreationStartValues( )
 	guiCreateGuyIndex = (INT16)cnt;
 
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; pSoldier++, cnt++ )
-	{	
+	{
 		if ( !pSoldier->bActive )
 		{
 			guiCreateGuyIndex = (INT16)cnt;
 			break;
-		}	
+		}
 	}
 
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bLastID + 1;
@@ -2875,14 +2832,13 @@ void AdjustSoldierCreationStartValues( )
 		{
 			guiCreateBadGuyIndex = (INT16)cnt;
 			break;
-		}	
+		}
 	}
 
 }
 
 BOOLEAN SelectedMercCanAffordAttack( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE						*pSoldier;
 	SOLDIERTYPE				*pTargetSoldier;
 	INT16						sMapPos;
@@ -2965,7 +2921,6 @@ BOOLEAN SelectedMercCanAffordAttack( )
 
 BOOLEAN SelectedMercCanAffordMove(	)
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier;
 	UINT16						sAPCost = 0;
 	INT16						sMapPos;
@@ -3004,7 +2959,7 @@ BOOLEAN SelectedMercCanAffordMove(	)
 		if ( EnoughPoints( pSoldier, sAPCost, 0 , TRUE ) )
 		{
 			return( TRUE );
-		}	
+		}
 		else
 		{
 			// OK, remember where we were trying to get to.....
@@ -3018,7 +2973,6 @@ BOOLEAN SelectedMercCanAffordMove(	)
 
 void GetMercClimbDirection( UINT8 ubSoldierID, BOOLEAN *pfGoDown, BOOLEAN *pfGoUp )
 {
-	PERFORMANCE_MARKER
 	INT8							bNewDirection;
 	SOLDIERTYPE				*pSoldier;
 
@@ -3055,21 +3009,18 @@ void GetMercClimbDirection( UINT8 ubSoldierID, BOOLEAN *pfGoDown, BOOLEAN *pfGoU
 
 void RemoveTacticalCursor( )
 {
-	PERFORMANCE_MARKER
 	guiNewUICursor = NO_UICURSOR;
 	ErasePath( TRUE );
 }
 
 UINT32 UIHandlePOPUPMSG( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	return( GAME_SCREEN );
 }
 
 
 UINT32 UIHandleHCOnTerrain( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	INT16						sMapPos;
 	SOLDIERTYPE				*pSoldier;
 
@@ -3108,7 +3059,6 @@ UINT32 UIHandleHCOnTerrain( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleHCGettingItem( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	guiNewUICursor = NORMAL_FREEUICURSOR;
 
 	return( GAME_SCREEN );
@@ -3117,7 +3067,6 @@ UINT32 UIHandleHCGettingItem( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleTATalkingMenu( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	guiNewUICursor = NORMAL_FREEUICURSOR;
 
 	return( GAME_SCREEN );
@@ -3126,7 +3075,6 @@ UINT32 UIHandleTATalkingMenu( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleEXExitSectorMenu( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	guiNewUICursor = NORMAL_FREEUICURSOR;
 
 	return( GAME_SCREEN );
@@ -3135,7 +3083,6 @@ UINT32 UIHandleEXExitSectorMenu( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleOpenDoorMenu( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	guiNewUICursor = NORMAL_FREEUICURSOR;
 
 	return( GAME_SCREEN );
@@ -3143,8 +3090,7 @@ UINT32 UIHandleOpenDoorMenu( UI_EVENT *pUIEvent )
 
 void ToggleHandCursorMode( UINT32 *puiNewEvent	)
 {
-	PERFORMANCE_MARKER
-	// Toggle modes			
+	// Toggle modes
 	if ( gCurrentUIMode == HANDCURSOR_MODE )
 	{
 		*puiNewEvent = A_CHANGE_TO_MOVE;
@@ -3158,8 +3104,7 @@ void ToggleHandCursorMode( UINT32 *puiNewEvent	)
 
 void ToggleTalkCursorMode( UINT32 *puiNewEvent	)
 {
-	PERFORMANCE_MARKER
-	// Toggle modes			
+	// Toggle modes
 	if ( gCurrentUIMode == TALKCURSOR_MODE )
 	{
 		*puiNewEvent	= A_CHANGE_TO_MOVE;
@@ -3172,8 +3117,7 @@ void ToggleTalkCursorMode( UINT32 *puiNewEvent	)
 
 void ToggleLookCursorMode( UINT32 *puiNewEvent	)
 {
-	PERFORMANCE_MARKER
-	// Toggle modes			
+	// Toggle modes
 	if ( gCurrentUIMode == LOOKCURSOR_MODE )
 	{
 		guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
@@ -3189,7 +3133,6 @@ void ToggleLookCursorMode( UINT32 *puiNewEvent	)
 
 BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier;
 	UINT16						usSoldierIndex;
 	UINT32						uiMercFlags;
@@ -3246,7 +3189,7 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 						gfUIHandleSelection							= SELECTED_GUY_SELECTION;
 
 						if ( gpItemPointer == NULL )
-						{							
+						{
 							// Don't do this unless we want to
 
 							// Check if buddy is stationary!
@@ -3346,20 +3289,18 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 		gfIgnoreOnSelectedGuy = FALSE;
 
 		return( FALSE );
-	}				
+	}
 
 	return( TRUE );
 }
 
 UINT32 UIHandleILoadLevel( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	return( INIT_SCREEN );
 }
 
 UINT32 UIHandleISoldierDebug( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	// Use soldier display pages
 	SetDebugRenderHook( (RENDER_HOOK)DebugSoldierPage1, 0 );
 	SetDebugRenderHook( (RENDER_HOOK)DebugSoldierPage2, 1 );
@@ -3372,21 +3313,18 @@ UINT32 UIHandleISoldierDebug( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleILOSDebug( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SetDebugRenderHook( (RENDER_HOOK)DebugStructurePage1, 0 );
 	return( DEBUG_SCREEN );
 }
 
 UINT32 UIHandleILevelNodeDebug( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SetDebugRenderHook( (RENDER_HOOK)DebugLevelNodePage, 0 );
 	return( DEBUG_SCREEN );
 }
 
 UINT32 UIHandleIETOnTerrain( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	//guiNewUICursor = CANNOT_MOVE_UICURSOR;
 	guiNewUICursor = NO_UICURSOR;
 
@@ -3398,7 +3336,6 @@ UINT32 UIHandleIETOnTerrain( UI_EVENT *pUIEvent )
 
 void UIHandleSoldierStanceChange( UINT8 ubSoldierID, INT8	bNewStance )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
 	pSoldier = MercPtrs[ ubSoldierID ];
@@ -3503,49 +3440,42 @@ void UIHandleSoldierStanceChange( UINT8 ubSoldierID, INT8	bNewStance )
 
 UINT32 UIHandleIETEndTurn( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	return( GAME_SCREEN );
 }
 
 
 UINT32 UIHandleIGotoDemoMode( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	return( EnterTacticalDemoMode() );
 }
 
 
 UINT32 UIHandleILoadFirstLevel( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	gubCurrentScene = 0;
 	return( INIT_SCREEN );
 }
 
 UINT32 UIHandleILoadSecondLevel( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	gubCurrentScene = 1;
 	return( INIT_SCREEN );
 }
 
 UINT32 UIHandleILoadThirdLevel( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	gubCurrentScene = 2;
 	return( INIT_SCREEN );
 }
 
 UINT32 UIHandleILoadFourthLevel( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	gubCurrentScene = 3;
 	return( INIT_SCREEN );
 }
 
 UINT32 UIHandleILoadFifthLevel( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	gubCurrentScene = 4;
 	return( INIT_SCREEN );
 }
@@ -3553,7 +3483,6 @@ UINT32 UIHandleILoadFifthLevel( UI_EVENT *pUIEvent )
 
 void GetCursorMovementFlags( UINT32 *puiCursorFlags )
 {
-	PERFORMANCE_MARKER
 	INT16	sMapPos;
 	INT16		sXPos, sYPos;
 
@@ -3584,18 +3513,18 @@ void GetCursorMovementFlags( UINT32 *puiCursorFlags )
 		// IF CURSOR WAS PREVIOUSLY STATIONARY, MAKE THE ADDITIONAL CHECK OF GRID POS CHANGE
 		if ( fStationary && usOldMapPos == sMapPos )
 		{
-			(*puiCursorFlags) |= MOUSE_MOVING_IN_TILE;			
+			(*puiCursorFlags) |= MOUSE_MOVING_IN_TILE;
 		}
 		else
 		{
 			fStationary = FALSE;
-			(*puiCursorFlags) |= MOUSE_MOVING_NEW_TILE;			
+			(*puiCursorFlags) |= MOUSE_MOVING_NEW_TILE;
 		}
 
 	}
 	else
 	{
-		(*puiCursorFlags) |= MOUSE_STATIONARY;			
+		(*puiCursorFlags) |= MOUSE_STATIONARY;
 		fStationary = TRUE;
 	}
 
@@ -3609,7 +3538,6 @@ void GetCursorMovementFlags( UINT32 *puiCursorFlags )
 
 BOOLEAN HandleUIMovementCursor( SOLDIERTYPE *pSoldier, UINT32 uiCursorFlags, INT16 sMapPos, UINT32 uiFlags )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN						fSetCursor = FALSE;
 	static						UINT16 usTargetID = NOBODY;
 	static						BOOLEAN	fTargetFound = FALSE;
@@ -3649,7 +3577,7 @@ BOOLEAN HandleUIMovementCursor( SOLDIERTYPE *pSoldier, UINT32 uiCursorFlags, INT
 		}
 
 		if ( uiFlags == MOVEUI_TARGET_ITEMS )
-		{											
+		{
 			gfUIOverItemPool = TRUE;
 			gfUIOverItemPoolGridNo = sMapPos;
 		}
@@ -3746,7 +3674,7 @@ BOOLEAN HandleUIMovementCursor( SOLDIERTYPE *pSoldier, UINT32 uiCursorFlags, INT
 						gUIDisplayActionPointsOffX = 22;
 						gUIDisplayActionPointsOffY = 15;
 					}
-					else 
+					else
 					{
 						switch ( pSoldier->usUIMovementMode )
 						{
@@ -3780,7 +3708,7 @@ BOOLEAN HandleUIMovementCursor( SOLDIERTYPE *pSoldier, UINT32 uiCursorFlags, INT
 	if(pSoldier->bDoAutofire) //reset the autofire bullet count
 	{
 		pSoldier->flags.autofireLastStep = FALSE;
-		pSoldier->bDoAutofire = 1;	
+		pSoldier->bDoAutofire = 1;
 	}
 
 	return( fSetCursor );
@@ -3790,7 +3718,6 @@ BOOLEAN HandleUIMovementCursor( SOLDIERTYPE *pSoldier, UINT32 uiCursorFlags, INT
 
 INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, INT16 sMapPos, UINT32 uiFlags )
 {
-	PERFORMANCE_MARKER
 	INT16							sAPCost, sBPCost;
 	INT16							sActionGridNo;
 	STRUCTURE					*pStructure;
@@ -3805,7 +3732,7 @@ INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, INT16 sMapPos, UINT32 uiFlags )
 
 	if ( (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) || _KeyDown( SHIFT ) )
 	{
-		fPlot = PLOT;			
+		fPlot = PLOT;
 	}
 	else
 	{
@@ -3987,7 +3914,7 @@ INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, INT16 sMapPos, UINT32 uiFlags )
 		if ( gfUIFullTargetFound )
 		{
 			INT32		cnt;
-			INT16		sSpot;	
+			INT16		sSpot;
 			UINT8		ubGuyThere;
 
 			for ( cnt = 0; cnt < NUM_WORLD_DIRECTIONS; cnt++ )
@@ -4161,7 +4088,6 @@ INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, INT16 sMapPos, UINT32 uiFlags )
 // WANNE: Calculate the APs to turn around
 INT16 APsToTurnAround(SOLDIERTYPE *pSoldier, INT16 sAdjustedGridNo)
 {
-	PERFORMANCE_MARKER
 	INT16 sAPCost = 0;
 	BOOLEAN fInitalMove = FALSE;
 
@@ -4195,7 +4121,6 @@ INT16 APsToTurnAround(SOLDIERTYPE *pSoldier, INT16 sAdjustedGridNo)
 
 BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT16 usInHand;
 	BOOLEAN						fGuyHere = FALSE;
 	SOLDIERTYPE				*pTSoldier;
@@ -4285,7 +4210,7 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 
 		if ( guiUIFullTargetFlags & SELECTED_MERC && Item[ usInHand ].usItemClass != IC_MEDKIT )
 		{
-			return( FALSE );			
+			return( FALSE );
 		}
 	}
 
@@ -4294,7 +4219,7 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 		return( FALSE );
 	}
 
-	//if ( Item[ usInHand ].usItemClass == IC_BLADE && usInHand != THROWING_KNIFE )	
+	//if ( Item[ usInHand ].usItemClass == IC_BLADE && usInHand != THROWING_KNIFE )
 	//{
 	//	if ( !fGuyHere )
 	//	{
@@ -4302,7 +4227,7 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 	//	}
 	//}
 
-	if ( Item[ usInHand ].usItemClass == IC_PUNCH )	
+	if ( Item[ usInHand ].usItemClass == IC_PUNCH )
 	{
 		if ( !fGuyHere )
 		{
@@ -4310,7 +4235,7 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 		}
 	}
 
-	//if ( Item[ usInHand ].usItemClass == IC_BLADE )	
+	//if ( Item[ usInHand ].usItemClass == IC_BLADE )
 	//{
 	//	if ( !fGuyHere )
 	//	{
@@ -4318,7 +4243,7 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 	//	}
 	//}
 
-	if ( Item[ usInHand ].usItemClass == IC_MEDKIT )	
+	if ( Item[ usInHand ].usItemClass == IC_MEDKIT )
 	{
 		if ( !fGuyHere )
 		{
@@ -4361,7 +4286,6 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 
 BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16							sAPCost;
 	ITEM_POOL					*pItemPool;
 
@@ -4393,7 +4317,6 @@ BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 BOOLEAN SoldierCanAffordNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance )
 {
-	PERFORMANCE_MARKER
 	INT8		bCurrentHeight;
 	UINT8		bAP = 0, bBP = 0;
 
@@ -4431,7 +4354,6 @@ BOOLEAN SoldierCanAffordNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance 
 
 void SetUIbasedOnStance( SOLDIERTYPE *pSoldier, INT8 bNewStance )
 {
-	PERFORMANCE_MARKER
 	// Set UI based on our stance!
 	switch ( bNewStance )
 	{
@@ -4455,7 +4377,6 @@ void SetUIbasedOnStance( SOLDIERTYPE *pSoldier, INT8 bNewStance )
 
 void SetMovementModeCursor( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	if ( gTacticalStatus.uiFlags & TURNBASED && ( gTacticalStatus.uiFlags & INCOMBAT ) )
 	{
 		if ( ( OK_ENTERABLE_VEHICLE( pSoldier ) ) )
@@ -4511,7 +4432,6 @@ void SetMovementModeCursor( SOLDIERTYPE *pSoldier )
 
 void SetConfirmMovementModeCursor( SOLDIERTYPE *pSoldier, BOOLEAN fFromMove )
 {
-	PERFORMANCE_MARKER
 	if ( gTacticalStatus.uiFlags & TURNBASED && ( gTacticalStatus.uiFlags & INCOMBAT ) )
 	{
 		if ( gfUIAllMoveOn )
@@ -4606,12 +4526,11 @@ UINT8 gubShowActionPointsInRed = 0;
 
 UINT32 UIHandleLCOnTerrain( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier;
 	INT16							sFacingDir, sXPos, sYPos;
 	UINT16					usAnimState;
 
-	guiNewUICursor = LOOK_UICURSOR;				
+	guiNewUICursor = LOOK_UICURSOR;
 
 	// Get soldier
 	if ( !GetSoldier( &pSoldier, gusSelectedSoldier )	)
@@ -4666,11 +4585,11 @@ UINT32 UIHandleLCOnTerrain( UI_EVENT *pUIEvent )
 
 	// Determine if we can afford!
 	if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0, FALSE ) )
-	{	
+	{
 		gfUIDisplayActionPointsInvalid = TRUE;
 	}
 
-	//HandleSight( pSoldier, SIGHT_LOOK ); 
+	//HandleSight( pSoldier, SIGHT_LOOK );
 
 	return( GAME_SCREEN );
 
@@ -4679,7 +4598,6 @@ UINT32 UIHandleLCOnTerrain( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleLCChangeToLook( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	ErasePath( TRUE );
 
 	return( GAME_SCREEN );
@@ -4688,7 +4606,6 @@ UINT32 UIHandleLCChangeToLook( UI_EVENT *pUIEvent )
 
 BOOLEAN MakeSoldierTurn( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos )
 {
-	PERFORMANCE_MARKER
 	INT16							sFacingDir, sAPCost, sAPCostToReady;
 	UINT16							usAnimState;
 
@@ -4760,7 +4677,6 @@ BOOLEAN MakeSoldierTurn( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos )
 
 UINT32 UIHandleLCLook( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	INT16							sXPos, sYPos;
 	SOLDIERTYPE				*pSoldier;
 	INT32						cnt;
@@ -4779,7 +4695,7 @@ UINT32 UIHandleLCLook( UI_EVENT *pUIEvent )
 			{
 				if ( pSoldier->flags.uiStatusFlags & SOLDIER_MULTI_SELECTED )
 				{
-					MakeSoldierTurn( pSoldier, sXPos, sYPos );					
+					MakeSoldierTurn( pSoldier, sXPos, sYPos );
 				}
 			}
 		}
@@ -4794,7 +4710,7 @@ UINT32 UIHandleLCLook( UI_EVENT *pUIEvent )
 
 		if ( MakeSoldierTurn( pSoldier, sXPos, sYPos ) )
 		{
-			SetUIBusy( pSoldier->ubID );		
+			SetUIBusy( pSoldier->ubID );
 		}
 	}
 	return( GAME_SCREEN );
@@ -4804,7 +4720,6 @@ UINT32 UIHandleLCLook( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleTOnTerrain( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier;
 	UINT8							ubTargID;
 	UINT32						uiRange;
@@ -4827,7 +4742,7 @@ UINT32 UIHandleTOnTerrain( UI_EVENT *pUIEvent )
 	{
 		// Do new cursor!
 		guiPendingOverrideEvent = M_ON_TERRAIN;
-		return( UIHandleMOnTerrain( pUIEvent ) );		
+		return( UIHandleMOnTerrain( pUIEvent ) );
 	}
 
 	sTargetGridNo = sMapPos;
@@ -4853,23 +4768,23 @@ UINT32 UIHandleTOnTerrain( UI_EVENT *pUIEvent )
 	{
 		if ( fValidTalkableGuy )
 		{
-			guiNewUICursor = TALK_A_UICURSOR;				
+			guiNewUICursor = TALK_A_UICURSOR;
 		}
 		else
 		{
-			guiNewUICursor = TALK_NA_UICURSOR;				
+			guiNewUICursor = TALK_NA_UICURSOR;
 		}
 	}
 	else
 	{
 		if ( fValidTalkableGuy )
 		{
-			//guiNewUICursor = TALK_OUT_RANGE_A_UICURSOR;		
-			guiNewUICursor = TALK_A_UICURSOR;							
+			//guiNewUICursor = TALK_OUT_RANGE_A_UICURSOR;
+			guiNewUICursor = TALK_A_UICURSOR;
 		}
 		else
 		{
-			guiNewUICursor = TALK_OUT_RANGE_NA_UICURSOR;				
+			guiNewUICursor = TALK_OUT_RANGE_NA_UICURSOR;
 		}
 	}
 
@@ -4878,7 +4793,7 @@ UINT32 UIHandleTOnTerrain( UI_EVENT *pUIEvent )
 		if ( !SoldierTo3DLocationLineOfSightTest( pSoldier, sTargetGridNo,  pSoldier->pathing.bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
 		{
 			//. ATE: Make range far, so we alternate cursors...
-			guiNewUICursor = TALK_OUT_RANGE_A_UICURSOR;		
+			guiNewUICursor = TALK_OUT_RANGE_A_UICURSOR;
 		}
 	}
 
@@ -4892,7 +4807,7 @@ UINT32 UIHandleTOnTerrain( UI_EVENT *pUIEvent )
 
 	// Determine if we can afford!
 	if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0, FALSE ) )
-	{	
+	{
 		gfUIDisplayActionPointsInvalid = TRUE;
 	}
 
@@ -4915,7 +4830,6 @@ UINT32 UIHandleTOnTerrain( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleTChangeToTalking( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	ErasePath( TRUE );
 
 	return( GAME_SCREEN );
@@ -4924,7 +4838,6 @@ UINT32 UIHandleTChangeToTalking( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleLUIOnTerrain( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	//guiNewUICursor = NO_UICURSOR;
 	//	SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 
@@ -4934,7 +4847,6 @@ UINT32 UIHandleLUIOnTerrain( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleLUIBeginLock( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	// Don't let both versions of the locks to happen at the same time!
 	// ( They are mutually exclusive )!
 	UIHandleLAEndLockOurTurn( NULL );
@@ -4964,13 +4876,12 @@ UINT32 UIHandleLUIBeginLock( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleLUIEndLock( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	if ( gfDisableRegionActive )
 	{
 		gfDisableRegionActive = FALSE;
 
 		// Add region
-		MSYS_RemoveRegion( &gDisableRegion );		
+		MSYS_RemoveRegion( &gDisableRegion );
 		RefreshMouseRegions( );
 
 		//SetCurrentCursorFromDatabase( guiCurrentUICursor );
@@ -5001,13 +4912,12 @@ UINT32 UIHandleLUIEndLock( UI_EVENT *pUIEvent )
 
 void CheckForDisabledRegionRemove( )
 {
-	PERFORMANCE_MARKER
 	if ( gfDisableRegionActive )
 	{
 		gfDisableRegionActive = FALSE;
 
 		// Remove region
-		MSYS_RemoveRegion( &gDisableRegion );	
+		MSYS_RemoveRegion( &gDisableRegion );
 
 		UnLockPauseState();
 		UnPauseGame();
@@ -5021,7 +4931,7 @@ void CheckForDisabledRegionRemove( )
 		gfUIInterfaceSetBusy = FALSE;
 
 		// Remove region
-		MSYS_RemoveRegion( &gUserTurnRegion );		
+		MSYS_RemoveRegion( &gUserTurnRegion );
 
 		UnLockPauseState();
 		UnPauseGame();
@@ -5030,7 +4940,6 @@ void CheckForDisabledRegionRemove( )
 
 UINT32 UIHandleLAOnTerrain( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	//guiNewUICursor = NO_UICURSOR;
 	//SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 
@@ -5040,7 +4949,6 @@ UINT32 UIHandleLAOnTerrain( UI_EVENT *pUIEvent )
 
 void GetGridNoScreenXY( INT16 sGridNo, INT16 *pScreenX, INT16 *pScreenY )
 {
-	PERFORMANCE_MARKER
 	INT16	sScreenX, sScreenY;
 	INT16 sOffsetX, sOffsetY;
 	INT16 sTempX_S, sTempY_S;
@@ -5077,7 +4985,6 @@ void GetGridNoScreenXY( INT16 sGridNo, INT16 *pScreenX, INT16 *pScreenY )
 
 void EndMultiSoldierSelection( BOOLEAN fAcknowledge )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *		pSoldier;
 	INT32						cnt;
 	SOLDIERTYPE			*pFirstSoldier = NULL;
@@ -5131,7 +5038,6 @@ void EndMultiSoldierSelection( BOOLEAN fAcknowledge )
 
 void StopRubberBandedMercFromMoving( )
 {
-	PERFORMANCE_MARKER
 	if ( !gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 	{
 		return;
@@ -5161,7 +5067,6 @@ void StopRubberBandedMercFromMoving( )
 
 void EndRubberBanding( )
 {
-	PERFORMANCE_MARKER
 	if ( gRubberBandActive	)
 	{
 		FreeMouseCursor( );
@@ -5176,7 +5081,6 @@ void EndRubberBanding( )
 
 BOOLEAN HandleMultiSelectionMove( INT16 sDestGridNo )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *		pSoldier;
 	INT32						cnt;
 	BOOLEAN					fAtLeastOneMultiSelect = FALSE;
@@ -5259,7 +5163,6 @@ BOOLEAN HandleMultiSelectionMove( INT16 sDestGridNo )
 
 void ResetMultiSelection( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *		pSoldier;
 	INT32						cnt;
 
@@ -5285,7 +5188,6 @@ void ResetMultiSelection( )
 
 UINT32 UIHandleRubberBandOnTerrain( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *		pSoldier;
 	INT32						cnt;
 	INT16						sScreenX, sScreenY;
@@ -5382,7 +5284,6 @@ UINT32 UIHandleRubberBandOnTerrain( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleJumpOverOnTerrain( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	INT16			sMapPos;
 
@@ -5417,7 +5318,6 @@ UINT32 UIHandleJumpOverOnTerrain( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleJumpOver( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	INT16			sMapPos;
 	UINT8				ubDirection;
@@ -5461,7 +5361,6 @@ UINT32 UIHandleJumpOver( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleLABeginLockOurTurn( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	// Don't let both versions of the locks to happen at the same time!
 	// ( They are mutually exclusive )!
 	UIHandleLUIEndLock( NULL );
@@ -5495,7 +5394,6 @@ UINT32 UIHandleLABeginLockOurTurn( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleLAEndLockOurTurn( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	if ( gfUserTurnRegionActive )
 	{
 		gfUserTurnRegionActive = FALSE;
@@ -5503,7 +5401,7 @@ UINT32 UIHandleLAEndLockOurTurn( UI_EVENT *pUIEvent )
 		gfUIInterfaceSetBusy = FALSE;
 
 		// Add region
-		MSYS_RemoveRegion( &gUserTurnRegion );		
+		MSYS_RemoveRegion( &gUserTurnRegion );
 		RefreshMouseRegions( );
 		//SetCurrentCursorFromDatabase( guiCurrentUICursor );
 
@@ -5533,7 +5431,6 @@ UINT32 UIHandleLAEndLockOurTurn( UI_EVENT *pUIEvent )
 
 BOOLEAN IsValidTalkableNPCFromMouse( UINT8 *pubSoldierID , BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed )
 {
-	PERFORMANCE_MARKER
 	// Check if there is a guy here to talk to!
 	if ( gfUIFullTargetFound )
 	{
@@ -5547,7 +5444,6 @@ BOOLEAN IsValidTalkableNPCFromMouse( UINT8 *pubSoldierID , BOOLEAN fGive, BOOLEA
 
 BOOLEAN IsValidTalkableNPC( UINT8 ubSoldierID, BOOLEAN fGive , BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = MercPtrs[ ubSoldierID ];
 	BOOLEAN			fValidGuy = FALSE;
 
@@ -5642,7 +5538,6 @@ BOOLEAN IsValidTalkableNPC( UINT8 ubSoldierID, BOOLEAN fGive , BOOLEAN fAllowMer
 
 BOOLEAN HandleTalkInit(	)
 {
-	PERFORMANCE_MARKER
 	INT16						sAPCost;
 	SOLDIERTYPE				*pSoldier, *pTSoldier;
 	UINT32						uiRange;
@@ -5676,7 +5571,7 @@ BOOLEAN HandleTalkInit(	)
 
 			if ( pTSoldier->ubID != pSoldier->ubID )
 			{
-				if ( !(( pTSoldier->bTeam == MILITIA_TEAM ) && ( CheckIfRadioIsEquipped() )) ) //lal 
+				if ( !(( pTSoldier->bTeam == MILITIA_TEAM ) && ( CheckIfRadioIsEquipped() )) ) //lal
 				{
 					// Check LOS!
 					if ( !SoldierTo3DLocationLineOfSightTest( pSoldier, pTSoldier->sGridNo,  pTSoldier->pathing.bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
@@ -5702,7 +5597,7 @@ BOOLEAN HandleTalkInit(	)
 
 			// If Q on, turn off.....
 			if ( guiCurrentScreen == DEBUG_SCREEN )
-			{		
+			{
 				gfExitDebugScreen = TRUE;
 			}
 
@@ -5799,7 +5694,7 @@ BOOLEAN HandleTalkInit(	)
 
 			if ( ( uiRange > commandRange ) && ( !CheckIfRadioIsEquipped() ) ) //lal
 			{
-				if( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )				
+				if( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
 				{
 					return( FALSE );
 				}
@@ -5826,7 +5721,7 @@ BOOLEAN HandleTalkInit(	)
 					gfNPCCircularDistLimit = FALSE;
 
 					// First calculate APs and validate...
-					sAPCost = AP_TALK;				
+					sAPCost = AP_TALK;
 					//sAPCost += UIPlotPath( pSoldier, sGoodGridNo, NO_COPYROUTE, FALSE, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
 
 					// Check AP cost...
@@ -5841,7 +5736,7 @@ BOOLEAN HandleTalkInit(	)
 					pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 					// WALK UP TO DEST FIRST
-					pSoldier->EVENT_InternalGetNewSoldierPath( sGoodGridNo, pSoldier->usUIMovementMode , TRUE , pSoldier->flags.fNoAPToFinishMove );					
+					pSoldier->EVENT_InternalGetNewSoldierPath( sGoodGridNo, pSoldier->usUIMovementMode , TRUE , pSoldier->flags.fNoAPToFinishMove );
 
 					return( FALSE );
 				}
@@ -5878,7 +5773,6 @@ BOOLEAN HandleTalkInit(	)
 
 void SetUIBusy( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	if ( (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) && ( gTacticalStatus.ubCurrentTeam == gbPlayerNum ) )
 	{
 		if ( gusSelectedSoldier == ubID )
@@ -5891,7 +5785,6 @@ void SetUIBusy( UINT8 ubID )
 
 void UnSetUIBusy( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	if ( gfUserTurnRegionActive && (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) && ( gTacticalStatus.ubCurrentTeam == gbPlayerNum ) )
 	{
 		if ( !gTacticalStatus.fUnLockUIAfterHiddenInterrupt )
@@ -5912,7 +5805,6 @@ void UnSetUIBusy( UINT8 ubID )
 
 void BeginDisplayTimedCursor( UINT32 uiCursorID, UINT32 uiDelay )
 {
-	PERFORMANCE_MARKER
 	gfDisplayTimerCursor = TRUE;
 	guiTimerCursorID		= uiCursorID;
 	guiTimerLastUpdate	= GetJA2Clock( );
@@ -5923,7 +5815,6 @@ void BeginDisplayTimedCursor( UINT32 uiCursorID, UINT32 uiDelay )
 
 INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 sMapPos, BOOLEAN fUseOKCursor, BOOLEAN fItemsOnlyIfOnIntTiles )
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL					*pItemPool;
 	BOOLEAN						fSetCursor;
 	UINT32						uiCursorFlags;
@@ -5968,7 +5859,7 @@ INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 sMa
 				if ( !OKUseVehicle( pTSoldier->ubProfile ) )
 				{
 					// Set UI CURSOR....
-					guiNewUICursor = CANNOT_MOVE_UICURSOR;	
+					guiNewUICursor = CANNOT_MOVE_UICURSOR;
 
 					gfBeginVehicleCursor = TRUE;
 					return( 1 );
@@ -5978,7 +5869,7 @@ INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 sMa
 					if ( GetNumberInVehicle( pTSoldier->bVehicleID ) == 0 )
 					{
 						// Set UI CURSOR....
-						guiNewUICursor = ENTER_VEHICLE_UICURSOR;	
+						guiNewUICursor = ENTER_VEHICLE_UICURSOR;
 
 						gfBeginVehicleCursor = TRUE;
 						return( 1 );
@@ -5988,7 +5879,7 @@ INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 sMa
 			else
 			{
 				// Set UI CURSOR....
-				guiNewUICursor = ENTER_VEHICLE_UICURSOR;	
+				guiNewUICursor = ENTER_VEHICLE_UICURSOR;
 				return( 1 );
 			}
 		}
@@ -6006,11 +5897,11 @@ INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 sMa
 				//Set UI CURSOR
 				if ( fUseOKCursor || ( ( gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) ) )
 				{
-					guiNewUICursor = OKHANDCURSOR_UICURSOR;	
+					guiNewUICursor = OKHANDCURSOR_UICURSOR;
 				}
 				else
 				{
-					guiNewUICursor = NORMALHANDCURSOR_UICURSOR;	
+					guiNewUICursor = NORMALHANDCURSOR_UICURSOR;
 				}
 
 				fSetCursor =	HandleUIMovementCursor( pSoldier, uiCursorFlags, sActionGridNo, MOVEUI_TARGET_STEAL );
@@ -6020,7 +5911,7 @@ INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 sMa
 
 				// Determine if we can afford!
 				if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0, FALSE ) )
-				{	
+				{
 					gfUIDisplayActionPointsInvalid = TRUE;
 				}
 
@@ -6049,7 +5940,7 @@ INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 sMa
 	if ( GetItemPool( sActionGridNo, &pItemPool, pSoldier->pathing.bLevel ) )
 	{
 		// If we want only on int tiles, and we have no int tiles.. ignore items!
-		if ( fItemsOnlyIfOnIntTiles && pIntTile == NULL	) 
+		if ( fItemsOnlyIfOnIntTiles && pIntTile == NULL	)
 		{
 
 		}
@@ -6066,7 +5957,7 @@ INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 sMa
 		{
 			// Next we look for if we are over a door and if the mouse position is != base door position, ignore items!
 		}
-		else 
+		else
 		{
 			fPoolContainsHiddenItems = DoesItemPoolContainAnyHiddenItems( pItemPool );
 
@@ -6091,11 +5982,11 @@ INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 sMa
 				//Set UI CURSOR
 				if ( fUseOKCursor || ( ( gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) ) )
 				{
-					guiNewUICursor = OKHANDCURSOR_UICURSOR;	
+					guiNewUICursor = OKHANDCURSOR_UICURSOR;
 				}
 				else
 				{
-					guiNewUICursor = NORMALHANDCURSOR_UICURSOR;	
+					guiNewUICursor = NORMALHANDCURSOR_UICURSOR;
 				}
 
 				fSetCursor =	HandleUIMovementCursor( pSoldier, uiCursorFlags, sActionGridNo, MOVEUI_TARGET_ITEMS );
@@ -6110,7 +6001,7 @@ INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 sMa
 
 				// Determine if we can afford!
 				if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0, FALSE ) )
-				{	
+				{
 					gfUIDisplayActionPointsInvalid = TRUE;
 				}
 
@@ -6154,10 +6045,10 @@ INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 sMa
 
 				// Determine if we can afford!
 				if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0, FALSE ) )
-				{	
+				{
 					gfUIDisplayActionPointsInvalid = TRUE;
 				}
-			}			
+			}
 		}
 
 	}
@@ -6175,7 +6066,6 @@ INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 sMa
 
 void	HandleTacticalUILoseCursorFromOtherScreen( )
 {
-	PERFORMANCE_MARKER
 	SetUICursor( 0 );
 
 	gfTacticalForceNoCursor = TRUE;
@@ -6192,14 +6082,13 @@ void	HandleTacticalUILoseCursorFromOtherScreen( )
 
 BOOLEAN SelectedGuyInBusyAnimation( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
 	if ( gusSelectedSoldier != NOBODY )
 	{
 		pSoldier = MercPtrs[ gusSelectedSoldier ];
 
-		if ( pSoldier->usAnimState == LOB_ITEM || 
+		if ( pSoldier->usAnimState == LOB_ITEM ||
 			pSoldier->usAnimState == THROW_ITEM ||
 			//<SB> crouch throwing
 			pSoldier->usAnimState == THROW_ITEM_CROUCHED ||
@@ -6234,7 +6123,6 @@ BOOLEAN SelectedGuyInBusyAnimation( )
 
 void GotoHeigherStance( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN						fNearHeigherLevel;
 	BOOLEAN						fNearLowerLevel;
 
@@ -6267,7 +6155,6 @@ void GotoHeigherStance( SOLDIERTYPE *pSoldier )
 
 void GotoLowerStance( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN						fNearHeigherLevel;
 	BOOLEAN						fNearLowerLevel;
 
@@ -6300,7 +6187,6 @@ void GotoLowerStance( SOLDIERTYPE *pSoldier )
 
 void SetInterfaceHeightLevel( )
 {
-	PERFORMANCE_MARKER
 	INT16 sHeight;
 	static INT16 sOldHeight = 0;
 	INT16	sGridNo;
@@ -6350,7 +6236,6 @@ void SetInterfaceHeightLevel( )
 
 BOOLEAN ValidQuickExchangePosition( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier, *pOverSoldier;
 	BOOLEAN						fOnValidGuy = FALSE;
 	static BOOLEAN		fOldOnValidGuy = FALSE;
@@ -6413,7 +6298,6 @@ BOOLEAN ValidQuickExchangePosition( )
 // to jump over people.
 BOOLEAN IsValidJumpLocation( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fCheckForPath )
 {
-	PERFORMANCE_MARKER
 	INT16 sFourGrids[4], sSpot, sIntSpot;
 	INT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
 	//INT32 cnt;
@@ -6465,8 +6349,8 @@ BOOLEAN IsValidJumpLocation( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fChec
 				if ( !pSoldier->flags.fTurningUntilDone )
 				{
 					// OK, NOW check if there is a guy in between us
-					// 
-					// 
+					//
+					//
 					ubGuyThere = WhoIsThere2( sIntSpot, pSoldier->pathing.bLevel );
 
 					// Is there a guy and is he prone?

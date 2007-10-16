@@ -33,14 +33,12 @@ extern BOOLEAN gfBeginBurstSpreadTracking;
 
 void ResetBurstLocations( )
 {
-	PERFORMANCE_MARKER
 	gbNumBurstLocations = 0;
 }
 
 
 void InternalAccumulateBurstLocation( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 	if ( gbNumBurstLocations < MAX_BURST_LOCATIONS )
 	{
@@ -62,11 +60,10 @@ void InternalAccumulateBurstLocation( INT16 sGridNo )
 	}
 }
 
-//Madd: to add a bit more usefulness to spread fire, I'm making it so that 
+//Madd: to add a bit more usefulness to spread fire, I'm making it so that
 //it will automatically latch onto enemies within iSearchRange tiles of the mouse drag.
 void AccumulateBurstLocation( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE* pTarget;
 	int iSearchRange = 2; // number of tiles beside the mouse drag to look at
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset, sAdjacentGridNo;
@@ -79,8 +76,8 @@ void AccumulateBurstLocation( INT16 sGridNo )
 
 		if (pTarget)
 		{
-			InternalAccumulateBurstLocation(sGridNo);			
-			foundTarget = TRUE;	
+			InternalAccumulateBurstLocation(sGridNo);
+			foundTarget = TRUE;
 		}
 		//let's now look around this square - maybe there are some adjacent enemies we can latch onto
 
@@ -111,9 +108,9 @@ void AccumulateBurstLocation( INT16 sGridNo )
 					pTarget = SimpleFindSoldier(sAdjacentGridNo, 1); //try on a roof
 
 				if (pTarget)
-				{		
+				{
 					InternalAccumulateBurstLocation(sAdjacentGridNo); //there's somebody there! let's latch onto him
-					foundTarget = TRUE;	
+					foundTarget = TRUE;
 				}
 			}
 		}
@@ -129,7 +126,6 @@ void AccumulateBurstLocation( INT16 sGridNo )
 
 void PickBurstLocations( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT8		ubShotsPerBurst = 0;
 	FLOAT		dAccumulator = 0;
 	FLOAT		dStep = 0;
@@ -198,7 +194,6 @@ void PickBurstLocations( SOLDIERTYPE *pSoldier )
 
 void AIPickBurstLocations( SOLDIERTYPE *pSoldier, INT8 bTargets, SOLDIERTYPE *pTargets[5] )
 {
-	PERFORMANCE_MARKER
 	UINT8		ubShotsPerBurst;
 	FLOAT		dAccululator = 0;
 	FLOAT		dStep = 0;
@@ -249,7 +244,6 @@ extern HVOBJECT GetCursorFileVideoObject( UINT32 uiCursorFile );
 
 void RenderAccumulatedBurstLocations( )
 {
-	PERFORMANCE_MARKER
 	INT32			cnt;
 	INT16			sGridNo;
 	HVOBJECT	hVObject;
@@ -303,7 +297,7 @@ void RenderAccumulatedBurstLocations( )
 			//sXPos -= 10;
 			//sYPos -= 10;
 
-			iBack = RegisterBackgroundRect( BGND_FLAG_SINGLE, NULL, sXPos, sYPos, (INT16)(sXPos +40 ), (INT16)(sYPos + 40 ) ); 
+			iBack = RegisterBackgroundRect( BGND_FLAG_SINGLE, NULL, sXPos, sYPos, (INT16)(sXPos +40 ), (INT16)(sYPos + 40 ) );
 			if ( iBack != -1 )
 			{
 				SetBackgroundRectFilled( iBack );

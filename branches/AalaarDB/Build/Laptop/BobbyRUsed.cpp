@@ -19,13 +19,11 @@ UINT32		guiUsedGrid;
 
 void GameInitBobbyRUsed()
 {
-	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterBobbyRUsed()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	//gfBigImageMouseRegionCreated = FALSE;
@@ -58,7 +56,6 @@ BOOLEAN EnterBobbyRUsed()
 
 void ExitBobbyRUsed()
 {
-	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiUsedBackground);
 	DeleteVideoObjectFromIndex(guiUsedGrid);
 	DeleteBobbyMenuBar();
@@ -74,12 +71,10 @@ void ExitBobbyRUsed()
 
 void HandleBobbyRUsed()
 {
-	PERFORMANCE_MARKER
 }
 
 void RenderBobbyRUsed()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	WebPageTileBackground(BOBBYR_NUM_HORIZONTAL_TILES, BOBBYR_NUM_VERTICAL_TILES, BOBBYR_BACKGROUND_WIDTH, BOBBYR_BACKGROUND_HEIGHT, guiUsedBackground);
@@ -100,7 +95,7 @@ void RenderBobbyRUsed()
 	RenderWWWProgramTitleBar( );
 	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 		fReDrawScreenFlag = TRUE;
-	fPausedReDrawScreenFlag = TRUE;	
+	fPausedReDrawScreenFlag = TRUE;
 }
 
 
@@ -108,6 +103,6 @@ void RenderBobbyRUsed()
 
 
 
- 
+
 
 

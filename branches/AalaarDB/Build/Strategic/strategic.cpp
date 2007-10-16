@@ -26,7 +26,6 @@ extern BOOLEAN fReDrawFace;
 
 BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// add the guy to the dead list
 	//AddCharacterToDeadList( pSoldier );
 
@@ -51,7 +50,7 @@ BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 	else if( ( pSoldier->stats.bLife == 0 )&&( pSoldier->bAssignment != ASSIGNMENT_DEAD ) )
 	{
 		// died in mapscreen
-		
+
 		fReDrawFace = TRUE;
 
 		// dead
@@ -70,15 +69,15 @@ BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 
 		// ste merc as dead
 		// pSoldier->flags.fUIdeadMerc = TRUE;
-	
+
 		// attempt to remove character from squad
 		RemoveCharacterFromSquads( pSoldier );
-		
+
 		// handle any passign comments by grunts
 		HandleSoldierDeadComments( pSoldier );
-		
+
 		// put the dead guys down
-		AddDeadSoldierToUnLoadedSector( ( UINT8 ) ( pSoldier->sSectorX ), ( UINT8 )( pSoldier->sSectorY ), pSoldier->bSectorZ, pSoldier, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT );			
+		AddDeadSoldierToUnLoadedSector( ( UINT8 ) ( pSoldier->sSectorX ), ( UINT8 )( pSoldier->sSectorY ), pSoldier->bSectorZ, pSoldier, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT );
 
 		fTeamPanelDirty = TRUE;
 		fMapPanelDirty = TRUE;
@@ -93,7 +92,6 @@ BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 
 void HandleSoldierDeadComments( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt = 0;
 	SOLDIERTYPE *pTeamSoldier;
 	INT8 bBuddyIndex;
@@ -101,10 +99,10 @@ void HandleSoldierDeadComments( SOLDIERTYPE *pSoldier )
 	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
 	cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
 
-	
+
 	// see if this was the friend of a living merc
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
-	{		
+	{
 		if ( pTeamSoldier->stats.bLife >= OKLIFE && pTeamSoldier->bActive )
 		{
 			bBuddyIndex = WhichBuddy( pTeamSoldier->ubProfile, pSoldier->ubProfile );

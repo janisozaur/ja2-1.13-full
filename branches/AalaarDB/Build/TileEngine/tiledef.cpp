@@ -42,7 +42,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	190,86,19,207,133,25,190,
 	187,131,66,196,253,227,163
 	},
-	
+
 	{
 	236,81,128,26,96,137,92,
 	120,243,71,33,141,55,2,
@@ -52,7 +52,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	34,223,227,29,202,119,86,
 	172,219,8,121,183,148,142
 	},
-	
+
 	{
 	73,81,249,189,120,220,96,
 	79,28,37,30,199,170,56,
@@ -62,7 +62,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	116,36,97,40,119,204,194,
 	55,9,193,18,143,76,209
 	},
-	
+
 	{
 	143,200,80,50,154,231,247,
 	140,225,72,226,136,2,99,
@@ -72,7 +72,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	101,128,157,238,229,205,178,
 	49,161,141,101,175,48,2
 	},
-	
+
 	{
 	171,145,70,2,204,252,166,
 	194,2,182,182,189,17,205,
@@ -82,7 +82,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	64,237,140,153,224,215,31,
 	48,198,108,180,139,233,39
 	},
-	
+
 	{
 	31,60,240,131,203,6,32,
 	206,137,249,244,36,8,39,
@@ -92,7 +92,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	77,28,47,186,126,72,234,
 	254,158,97,10,162,58,93
 	},
-	
+
 	{
 	181,91,80,208,248,218,224,
 	90,219,176,181,120,63,35,
@@ -102,7 +102,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	40,95,98,232,153,217,182,
 	186,109,241,66,128,26,140
 	},
-	
+
 	{
 	225,112,22,157,253,52,123,
 	209,31,7,165,18,48,83,
@@ -112,7 +112,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	115,203,231,20,170,83,100,
 	222,204,57,83,39,241,126
 	},
-	
+
 	{
 	51,228,1,96,176,54,89,
 	49,157,66,125,113,124,187,
@@ -122,7 +122,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	115,246,113,213,187,66,169,
 	129,241,230,251,145,23,29
 	},
-	
+
 	{
 	101,67,67,78,108,22,58,
 	97,212,30,230,190,142,195,
@@ -132,7 +132,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	94,192,187,249,33,79,120,
 	115,109,88,173,40,7,61
 	},
-	
+
 	{
 	178,239,46,52,245,141,192,
 	77,114,7,54,78,179,195,
@@ -142,7 +142,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	8,196,217,18,128,187,251,
 	52,225,65,96,62,49,239
 	},
-	
+
 	{
 	94,190,122,81,36,204,171,
 	249,104,120,214,89,133,203,
@@ -152,7 +152,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	130,138,137,188,21,167,198,
 	197,34,63,165,195,11,206
 	},
-	
+
 	{
 	220,164,4,55,94,159,83,
 	86,186,109,101,150,60,4,
@@ -162,7 +162,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	61,129,242,45,11,12,85,
 	27,184,210,214,165,106,238
 	},
-	
+
 	{
 	44,151,227,47,39,93,122,
 	237,91,225,164,198,235,53,
@@ -172,7 +172,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	151,30,175,212,103,170,17,
 	208,48,75,16,231,10,66
 	},
-	
+
 	{
 	90,201,253,44,89,120,222,
 	145,82,80,6,63,114,22,
@@ -182,7 +182,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	233,103,112,216,69,34,63,
 	31,159,108,38,14,111,132
 	},
-	
+
 	{
 	170,177,43,7,140,86,71,
 	207,205,235,155,239,88,129,
@@ -192,7 +192,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	96,161,29,171,196,16,17,
 	143,205,207,201,47,88,10
 	},
-	
+
 	{
 	112,203,199,48,59,153,46,
 	130,221,189,166,213,63,67,
@@ -202,7 +202,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	39,204,11,231,64,176,183,
 	86,248,21,152,62,205,200
 	},
-	
+
 	{
 	133,189,180,176,46,27,167,
 	213,33,253,7,209,112,92,
@@ -212,7 +212,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	126,212,16,93,248,50,89,
 	194,248,244,230,224,203,62
 	},
-	
+
 	{
 	234,231,52,206,57,230,130,
 	158,240,79,58,175,226,31,
@@ -222,7 +222,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	100,127,42,93,55,123,245,
 	197,102,110,206,48,234,81
 	},
-	
+
 	{
 	176,193,13,70,253,101,15,
 	39,156,34,168,239,92,185,
@@ -232,7 +232,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	77,59,225,190,208,165,59,
 	133,118,100,111,45,20,177
 	},
-	
+
 	{
 	242,224,56,94,247,232,26,
 	5,5,92,145,57,226,205,
@@ -242,7 +242,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	151,66,29,253,210,166,255,
 	75,82,234,246,152,230,26
 	},
-	
+
 	{
 	71,92,199,196,224,54,108,
 	71,191,224,240,145,231,54,
@@ -252,7 +252,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	14,166,88,5,254,58,254,
 	204,5,41,160,72,105,230
 	},
-	
+
 	{
 	122,240,140,138,243,30,90,
 	95,32,36,108,168,91,94,
@@ -262,7 +262,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	79,6,240,9,240,142,41,
 	69,48,113,102,15,168,239
 	},
-	
+
 	{
 	33,100,248,1,115,220,254,
 	216,113,156,238,175,27,36,
@@ -272,7 +272,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	30,20,119,212,255,127,121,
 	170,240,13,84,96,212,210
 	},
-	
+
 	{
 	213,91,87,107,184,54,252,
 	30,240,165,139,29,230,205,
@@ -282,7 +282,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	88,7,48,126,75,210,2,
 	196,228,191,100,25,80,254
 	},
-	
+
 	{
 	161,100,85,71,23,7,176,
 	250,104,108,62,88,195,110,
@@ -292,7 +292,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	161,128,129,8,6,18,114,
 	12,53,53,165,90,177,26
 	},
-	
+
 	{
 	36,101,106,199,26,144,50,
 	33,13,177,101,149,6,56,
@@ -302,7 +302,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	27,229,214,110,194,128,191,
 	19,24,123,193,148,15,69
 	},
-	
+
 	{
 	94,179,36,34,168,18,167,
 	136,168,214,94,144,245,66,
@@ -312,7 +312,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	19,24,42,169,150,246,86,
 	182,211,11,68,108,69,44
 	},
-	
+
 	{
 	127,97,243,9,60,97,125,
 	234,114,130,69,83,11,157,
@@ -322,7 +322,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	19,60,173,155,255,182,196,
 	64,12,112,91,145,131,23
 	},
-	
+
 	{
 	166,108,127,147,227,40,125,
 	27,76,18,129,108,39,24,
@@ -332,7 +332,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	172,161,216,38,201,154,203,
 	141,252,226,169,135,208,183
 	},
-	
+
 	{
 	143,63,98,145,133,62,237,
 	139,191,134,154,119,47,128,
@@ -342,7 +342,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	231,22,81,34,216,26,234,
 	36,136,62,97,46,137,172
 	},
-	
+
 	{
 	125,118,61,116,135,101,54,
 	15,215,129,210,84,238,226,
@@ -352,7 +352,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	188,158,107,3,133,177,144,
 	242,76,231,253,233,120,19
 	},
-	
+
 	{
 	65,199,211,202,123,9,216,
 	255,223,125,141,168,222,211,
@@ -362,7 +362,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	11,146,38,66,68,135,130,
 	71,59,123,29,51,25,249
 	},
-	
+
 	{
 	190,161,56,194,42,46,58,
 	104,89,177,209,173,64,141,
@@ -372,7 +372,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	221,117,125,115,252,250,46,
 	101,111,125,194,139,186,255
 	},
-	
+
 	{
 	31,86,139,193,121,21,227,
 	136,133,87,49,18,190,230,
@@ -382,7 +382,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	233,124,37,188,28,178,253,
 	78,27,215,234,165,87,234
 	},
-	
+
 	{
 	170,4,161,157,18,78,11,
 	223,148,86,130,184,244,199,
@@ -392,7 +392,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	186,241,135,67,86,193,87,
 	95,11,215,251,31,39,80
 	},
-	
+
 	{
 	85,223,21,67,248,93,201,
 	234,55,255,161,143,221,252,
@@ -402,7 +402,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	195,47,15,140,61,184,167,
 	251,182,72,224,147,159,196
 	},
-	
+
 	{
 	123,19,239,168,30,154,104,
 	60,207,7,69,172,234,176,
@@ -412,7 +412,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	188,250,215,100,172,230,115,
 	79,119,241,177,204,213,247
 	},
-	
+
 	{
 	164,47,183,166,25,101,55,
 	173,255,232,132,251,73,117,
@@ -422,7 +422,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	254,235,54,153,73,133,105,
 	251,27,228,131,103,255,205
 	},
-	
+
 	{
 	141,53,177,160,37,136,109,
 	76,46,150,5,207,226,32,
@@ -432,7 +432,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	203,93,49,208,170,113,233,
 	46,143,140,211,5,170,166
 	},
-	
+
 	{
 	2,245,56,116,61,150,114,
 	76,28,201,61,29,126,115,
@@ -442,7 +442,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	204,147,244,229,21,29,175,
 	52,103,21,222,146,203,247
 	},
-	
+
 	{
 	203,187,75,44,10,228,157,
 	113,156,9,120,202,29,117,
@@ -452,7 +452,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	108,67,226,228,85,112,150,
 	243,222,107,49,158,2,199
 	},
-	
+
 	{
 	243,107,29,155,25,62,54,
 	254,77,132,226,20,121,227,
@@ -462,7 +462,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	2,21,244,85,47,218,7,
 	194,47,175,180,65,92,188
 	},
-	
+
 	{
 	3,223,186,179,171,112,64,
 	226,172,223,83,208,235,215,
@@ -472,7 +472,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	216,121,7,60,166,18,77,
 	246,202,53,41,124,33,72
 	},
-	
+
 	{
 	115,8,155,105,168,30,132,
 	213,57,253,89,18,62,83,
@@ -482,7 +482,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	108,148,19,61,193,41,114,
 	250,121,164,57,125,29,35
 	},
-	
+
 	{
 	252,37,152,15,100,236,254,
 	226,253,7,172,123,6,10,
@@ -492,7 +492,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	144,254,165,157,60,218,144,
 	173,48,97,157,173,165,139
 	},
-	
+
 	{
 	43,160,148,141,246,225,109,
 	162,9,196,127,84,62,238,
@@ -502,7 +502,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	186,197,164,203,143,211,114,
 	255,34,222,17,63,184,47
 	},
-	
+
 	{
 	202,17,101,190,148,37,65,
 	227,178,78,200,202,174,105,
@@ -512,7 +512,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	131,243,148,179,37,120,26,
 	168,77,232,223,65,125,224
 	},
-	
+
 	{
 	95,160,190,37,50,215,151,
 	196,31,209,227,48,62,1,
@@ -522,7 +522,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	97,243,213,31,34,121,189,
 	200,255,68,57,75,208,129
 	},
-	
+
 	{
 	135,244,60,186,169,184,217,
 	128,88,234,225,59,98,108,
@@ -532,7 +532,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	3,133,178,40,47,107,31,
 	237,22,170,212,75,186,142
 	},
-	
+
 	{
 	254,191,1,222,153,4,115,
 	100,149,222,68,112,139,102,
@@ -542,7 +542,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	252,75,50,126,154,46,177,
 	11,53,126,99,180,248,57
 	},
-	
+
 	{
 	109,132,42,96,40,141,189,
 	8,138,168,147,13,172,54,
@@ -552,7 +552,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	234,123,1,174,6,88,6,
 	177,247,45,156,120,226,125
 	},
-	
+
 	{
 	30,95,46,155,25,137,245,
 	52,68,72,74,137,152,60,
@@ -562,7 +562,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	114,195,46,6,151,52,203,
 	85,96,69,205,58,68,39
 	},
-	
+
 	{
 	30,59,201,53,236,197,180,
 	160,196,103,128,88,254,209,
@@ -572,7 +572,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	105,92,255,110,51,167,55,
 	248,69,103,157,208,146,105
 	},
-	
+
 	{
 	249,205,245,168,172,15,16,
 	148,112,53,141,74,5,64,
@@ -582,7 +582,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	217,83,199,41,128,227,208,
 	24,3,173,137,18,75,53
 	},
-	
+
 	{
 	21,130,191,209,19,213,58,
 	123,18,147,139,147,81,14,
@@ -592,7 +592,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	17,26,234,71,106,73,60,
 	76,106,210,50,115,45,2
 	},
-	
+
 	{
 	55,17,107,248,62,204,196,
 	224,45,253,50,10,2,51,
@@ -601,7 +601,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	3,3,88,146,80,226,29,
 	5,25,66,196,226,87,125,
 	83,169,124,218,190,135,197
-	},  
+	},
 };
 
 // These values coorespond to TerrainTypeDefines order
@@ -623,7 +623,6 @@ UINT8		gTileTypeMovementCost[ NUM_TERRAIN_TYPES ] =
 
 void CreateTileDatabase( )
 {
-	PERFORMANCE_MARKER
 	UINT32					cnt1, cnt2;
 	UINT8						ubLoop;
 	UINT32					NumRegions;
@@ -643,7 +642,7 @@ void CreateTileDatabase( )
 	 gTileTypeStartIndex[ cnt1 ] = (UINT16)gTileDatabaseSize;
 
 			NumRegions = TileSurf->vo->usNumberOfObjects;
-			
+
 			// Check for overflow
 			if ( NumRegions > gNumTilesPerType[ cnt1 ] )
 			{
@@ -671,7 +670,7 @@ void CreateTileDatabase( )
 				{
 					// Only do this if we are within the # of video objects
 					if ( cnt2 < TileSurf->vo->usNumberOfObjects )
-					{	
+					{
 						if ( TileSurf->vo->ppZStripInfo[ cnt2 ] != NULL )
 						{
 							TileElement.uiFlags |= MULTI_Z_TILE;
@@ -689,15 +688,15 @@ void CreateTileDatabase( )
 						if ( TileElement.pDBStructureRef->pDBStructure->fFlags & STRUCTURE_HIDDEN )
 						{
 							// ATE: These are ignored!
-							//TileElement.uiFlags |= HIDDEN_TILE;						
+							//TileElement.uiFlags |= HIDDEN_TILE;
 						}
 					}
-				} 
+				}
 
 				TileElement.fType							= (UINT16)TileSurf->fType;
 				TileElement.ubTerrainID				= TileSurf->ubTerrainID;
 				TileElement.usWallOrientation = NO_ORIENTATION;
-				
+
 				if (TileSurf->pAuxData != NULL)
 				{
 					if (TileSurf->pAuxData[cnt2].fFlags & AUX_FULL_TILE)
@@ -727,14 +726,14 @@ void CreateTileDatabase( )
 						}
 
 */
-						
+
 						// set into animation controller array
 						gusAnimatedTiles[ gusNumAnimatedTiles ] = gTileDatabaseSize;
 						gusNumAnimatedTiles++;
 
 						Assert( gusNumAnimatedTiles <= MAX_ANIMATED_TILES );
 
-						TileElement.uiFlags				|= ANIMATED_TILE;	
+						TileElement.uiFlags				|= ANIMATED_TILE;
 					}
 					TileElement.usWallOrientation = TileSurf->pAuxData[cnt2].ubWallOrientation;
 					if (TileSurf->pAuxData[cnt2].ubNumberOfTiles > 0)
@@ -790,8 +789,7 @@ void CreateTileDatabase( )
 
 void DeallocateTileDatabase( )
 {
-	PERFORMANCE_MARKER
-	INT32 cnt; 
+	INT32 cnt;
 
 	for( cnt = 0; cnt < NUMBEROFTILES; cnt++ )
 	{
@@ -799,7 +797,7 @@ void DeallocateTileDatabase( )
 		if ( gTileDatabase[ cnt ].pAnimData != NULL )
 		{
 			FreeAnimTileData( &gTileDatabase[ cnt ] );
-		}		
+		}
 	}
 
 	gTileDatabaseSize = 0;
@@ -811,7 +809,6 @@ void DeallocateTileDatabase( )
 
 BOOLEAN GetLandHeadType( INT32 iMapIndex, UINT32 *puiType )
 {
-	PERFORMANCE_MARKER
  UINT16					usIndex;
 
  Assert( puiType != NULL );
@@ -828,7 +825,6 @@ BOOLEAN GetLandHeadType( INT32 iMapIndex, UINT32 *puiType )
 
 BOOLEAN SetLandIndex( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType, BOOLEAN fDelete )
 {
-	PERFORMANCE_MARKER
 	UINT16	usTempIndex;
 	UINT8		ubLastHighLevel=0;
 
@@ -873,7 +869,6 @@ BOOLEAN SetLandIndex( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType, BOOLEAN
 
 BOOLEAN SetLandIndexWithRadius( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace )
 {
-	PERFORMANCE_MARKER
 	UINT16				usTempIndex;
 	INT16					sTop, sBottom;
 	INT16					sLeft, sRight;
@@ -901,7 +896,7 @@ BOOLEAN SetLandIndexWithRadius( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewTyp
 		{
 			iNewIndex = iMapIndex + ( WORLD_COLS * cnt1 ) + cnt2;
 
-			if ( iNewIndex >=0 && iNewIndex < WORLD_MAX && 
+			if ( iNewIndex >=0 && iNewIndex < WORLD_MAX &&
 				iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
 			{
 
@@ -916,9 +911,9 @@ BOOLEAN SetLandIndexWithRadius( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewTyp
 						fDoPaste = TRUE;
 					}
 				}
-				
-				if ( fDoPaste && ((uiNewType >= FIRSTFLOOR && uiNewType <= LASTFLOOR) || 
-												((uiNewType < FIRSTFLOOR || uiNewType > LASTFLOOR) && 
+
+				if ( fDoPaste && ((uiNewType >= FIRSTFLOOR && uiNewType <= LASTFLOOR) ||
+												((uiNewType < FIRSTFLOOR || uiNewType > LASTFLOOR) &&
 												!TypeRangeExistsInLandLayer( iNewIndex, FIRSTFLOOR, LASTFLOOR, &Dummy ))) )
 				{
 					SetLandIndex( iNewIndex, usIndex, uiNewType, FALSE );
@@ -933,7 +928,6 @@ BOOLEAN SetLandIndexWithRadius( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewTyp
 
 BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
 {
-	PERFORMANCE_MARKER
 	UINT8					level = 0;
 	LEVELNODE			*pLand;
 	UINT32				fTileType=0;
@@ -950,11 +944,11 @@ BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
 			if ( fTileType == uiNewType )
 			{
 				*pubLevel = level;
-				return( TRUE );	
+				return( TRUE );
 			}
 
 		}
-		
+
 		level++;
 		pLand = pLand->pNext;
 	}
@@ -966,7 +960,6 @@ BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
 
 UINT8		GetLandLevelDepth( UINT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	UINT8					level = 0;
 	LEVELNODE		*pLand;
 
@@ -984,7 +977,6 @@ UINT8		GetLandLevelDepth( UINT32 iMapIndex )
 
 BOOLEAN GetSubIndexFromTileIndex( UINT16 usTileIndex, UINT16 *pusSubIndex )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiType=0;
 	*pusSubIndex = 0xffff;
 
@@ -998,7 +990,6 @@ BOOLEAN GetSubIndexFromTileIndex( UINT16 usTileIndex, UINT16 *pusSubIndex )
 
 BOOLEAN GetTypeSubIndexFromTileIndex( UINT32 uiCheckType, UINT16 usIndex, UINT16 *pusSubIndex )
 {
-	PERFORMANCE_MARKER
 
 	// Tile database is zero-based, Type indecies are 1-based!
 
@@ -1013,7 +1004,6 @@ BOOLEAN GetTypeSubIndexFromTileIndex( UINT32 uiCheckType, UINT16 usIndex, UINT16
 
 BOOLEAN GetTypeSubIndexFromTileIndexChar( UINT32 uiCheckType, UINT16 usIndex, UINT8 *pubSubIndex )
 {
-	PERFORMANCE_MARKER
    *pubSubIndex = 0xff;
 
 	// Tile database is zero-based, Type indecies are 1-based!
@@ -1024,10 +1014,9 @@ BOOLEAN GetTypeSubIndexFromTileIndexChar( UINT32 uiCheckType, UINT16 usIndex, UI
 
 	return( TRUE );
 }
-	
+
 BOOLEAN	GetTileIndexFromTypeSubIndex( UINT32 uiCheckType, UINT16 usSubIndex, UINT16 *pusTileIndex )
 {
-	PERFORMANCE_MARKER
 	// Tile database is zero-based, Type indecies are 1-based!
 
 	*pusTileIndex = 0xffff;
@@ -1044,7 +1033,6 @@ BOOLEAN	GetTileIndexFromTypeSubIndex( UINT32 uiCheckType, UINT16 usSubIndex, UIN
 
 BOOLEAN MoveLandIndexToTop( UINT32 iMapIndex, UINT16 usIndex )
 {
-	PERFORMANCE_MARKER
 
 	// Remove, then add again
 	RemoveLand( iMapIndex, usIndex );
@@ -1058,7 +1046,6 @@ BOOLEAN MoveLandIndexToTop( UINT32 iMapIndex, UINT16 usIndex )
 // Database access functions
 BOOLEAN	GetTileType( UINT16 usIndex, UINT32 *puiType )
 {
-	PERFORMANCE_MARKER
   TILE_ELEMENT		TileElem;
 
 	*puiType = 0xffffffff;
@@ -1076,7 +1063,6 @@ BOOLEAN	GetTileType( UINT16 usIndex, UINT32 *puiType )
 
 BOOLEAN	GetTileFlags( UINT16 usIndex, UINT32 *puiFlags )
 {
-	PERFORMANCE_MARKER
   TILE_ELEMENT		TileElem;
 
   *puiFlags = 0;
@@ -1094,7 +1080,6 @@ BOOLEAN	GetTileFlags( UINT16 usIndex, UINT32 *puiFlags )
 
 BOOLEAN	GetTileTypeLogicalHeight( UINT32 fType, UINT8 *pubLogHeight )
 {
-	PERFORMANCE_MARKER
 	*pubLogHeight = gTileTypeLogicalHeight[ fType ];
 
 	return( TRUE );
@@ -1104,7 +1089,6 @@ BOOLEAN	GetTileTypeLogicalHeight( UINT32 fType, UINT8 *pubLogHeight )
 
 BOOLEAN LandTypeHeigher( UINT32 uiDestType, UINT32 uiSrcType  )
 {
-	PERFORMANCE_MARKER
   UINT8					ubDestLogHeight;
   UINT8					ubSrcLogHeight;
 
@@ -1119,7 +1103,6 @@ BOOLEAN LandTypeHeigher( UINT32 uiDestType, UINT32 uiSrcType  )
 
 BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE		*pLand		= NULL;
   UINT8					ubSrcLogHeight=0;
 	UINT32				fTileType=0;
@@ -1149,7 +1132,7 @@ BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel 
 		GetTileType( pLand->usIndex, &fTileType );
 
 		if ( gTileTypeLogicalHeight[ fTileType ] > ubSrcLogHeight )
-		{	
+		{
 			*pubLastLevel = level;
 			fFound = TRUE;
 		}
@@ -1168,7 +1151,6 @@ BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel 
 
 BOOLEAN AnyLowerLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE		*pLand		= NULL;
   UINT8					ubSrcLogHeight;
 	UINT32				fTileType=0;
@@ -1190,7 +1172,7 @@ BOOLEAN AnyLowerLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
 		GetTileType( pLand->usIndex, &fTileType );
 
 		if ( gTileTypeLogicalHeight[ fTileType ] < ubSrcLogHeight )
-		{	
+		{
 			*pubLastLevel = level;
 			return( TRUE );
 		}
@@ -1220,11 +1202,10 @@ BOOLEAN AnyLowerLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
 
 BOOLEAN GetWallOrientation( UINT16 usIndex, UINT16 *pusWallOrientation )
 {
-	PERFORMANCE_MARKER
   TILE_ELEMENT		TileElem;
 
   	*pusWallOrientation = 0xffff;
-  
+
   CHECKF( usIndex != NO_TILE );
 	CHECKF( usIndex < NUMBEROFTILES ); //lal bugfix
 
@@ -1238,7 +1219,6 @@ BOOLEAN GetWallOrientation( UINT16 usIndex, UINT16 *pusWallOrientation )
 
 BOOLEAN ContainsWallOrientation( INT32 iMapIndex, UINT32 uiType, UINT16 usWallOrientation, UINT8 *pubLevel )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE	*pStruct = NULL;
 	UINT8					level = 0;
 	UINT16				usCheckWallOrient=0;
@@ -1271,12 +1251,11 @@ BOOLEAN ContainsWallOrientation( INT32 iMapIndex, UINT32 uiType, UINT16 usWallOr
 }
 
 //Kris:  This function returns two special types if there are two walls
-//sharing the same tile.  This case only happens with the exterior and 
-//interior bottom corners.  Otherwise, it returns the orientation of the 
+//sharing the same tile.  This case only happens with the exterior and
+//interior bottom corners.  Otherwise, it returns the orientation of the
 //first wall encountered -- not that there should be duplicate walls...
 UINT8 CalculateWallOrientationsAtGridNo( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	UINT16 usCheckWallOrientation=0;
 	LEVELNODE *pStruct = NULL;
 	UINT8 ubFinalWallOrientation = NO_ORIENTATION;
@@ -1319,7 +1298,6 @@ UINT8 CalculateWallOrientationsAtGridNo( INT32 iMapIndex )
 
 BOOLEAN AllocateAnimTileData( TILE_ELEMENT *pTileElem, UINT8 ubNumFrames )
 {
-	PERFORMANCE_MARKER
 	pTileElem->pAnimData = (TILE_ANIMATION_DATA *)MemAlloc( sizeof( TILE_ANIMATION_DATA ) );
 
 	CHECKF( pTileElem->pAnimData != NULL );
@@ -1336,12 +1314,11 @@ BOOLEAN AllocateAnimTileData( TILE_ELEMENT *pTileElem, UINT8 ubNumFrames )
 
 void FreeAnimTileData( TILE_ELEMENT *pTileElem )
 {
-	PERFORMANCE_MARKER
 	if ( pTileElem->pAnimData != NULL )
 	{
 		// Free frames list
 		MemFree( pTileElem->pAnimData->pusFrames );
-		
+
 		// Free frames
 		MemFree( pTileElem->pAnimData );
 	}

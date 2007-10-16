@@ -27,8 +27,8 @@ class OBJECTTYPE;
 class SOLDIERTYPE;
 
 
-struct MOUSETT 
-{	
+struct MOUSETT
+{
 	CHAR16 FastHelpText[ 1024 ];
 	INT32 iX;
 	INT32 iY;
@@ -50,7 +50,6 @@ void DrawMouseTooltip(void);
 
 void SoldierTooltip( SOLDIERTYPE* pSoldier )
 {
-	PERFORMANCE_MARKER			
 	SGPRect		aRect;
 	extern void GetSoldierScreenRect(SOLDIERTYPE*,SGPRect*);
 	GetSoldierScreenRect( pSoldier,	&aRect );
@@ -78,7 +77,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 
 		// get the distance to enemy's tile from the selected merc
 		if ( gusSelectedSoldier != NOBODY )
-		{		
+		{
 			iRangeToTarget = GetRangeInCellCoordsFromGridNoDiff( MercPtrs[ gusSelectedSoldier ]->sGridNo, sSoldierGridNo ) / 10;
 		}
 		// WANNE: If we want to show the tooltip of milita and no merc is present in the sector
@@ -144,7 +143,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		{
 			// Get the current selected merc
 			SOLDIERTYPE* pMerc = MercPtrs[ gusSelectedSoldier ];
-			
+
 			if ( pMerc->aiData.bOppList[pSoldier->ubID] != SEEN_CURRENTLY )
 			{
 				// We do not see the enemy. Return and do not display the tooltip.
@@ -331,7 +330,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		// large objects in big inventory slots info code block end
 
 		pRegion->iX = gusMouseXPos;
-		pRegion->iY = gusMouseYPos;				
+		pRegion->iY = gusMouseYPos;
 
 //		if ( gGameExternalOptions.ubSoldierTooltipDetailLevel == DL_Debug )
 //			swprintf( pRegion->FastHelpText, L"%s\n|String |Length|: %d", pStrInfo, wcslen(pStrInfo) );
@@ -349,7 +348,6 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 
 void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, UINT8 ubSlot, UINT8 ubTooltipDetailLevel )
 {
-	PERFORMANCE_MARKER
 	INT32		iNumAttachments		= 0;
 	BOOLEAN		fDisplayAttachment	= FALSE;
 
@@ -435,11 +433,10 @@ BOOL mouseTTrender, mouseTTdone;
 
 void DrawMouseTooltip()
 {
-	PERFORMANCE_MARKER
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	static INT32 iX, iY, iW, iH;
-	
+
 	extern INT16 GetWidthOfString(const STR16);
 	extern INT16 GetNumberOfLinesInHeight(const STR16);
 	extern void DisplayHelpTokenizedString(const STR16,INT16,INT16);
@@ -458,7 +455,7 @@ void DrawMouseTooltip()
 		iY -= (iH / 2);
 		if (gusMouseXPos > (SCREEN_WIDTH / 2))
 			iX = gusMouseXPos - iW - 24;
-		else 
+		else
 			iX = gusMouseXPos + 24;
 		//if (gusMouseYPos > (SCREEN_HEIGHT / 2))
 		//	iY -= 32;

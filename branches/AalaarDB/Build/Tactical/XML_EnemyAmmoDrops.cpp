@@ -18,16 +18,15 @@ struct
 	AMMO_DROPS *	curArray;
 
 	UINT32			maxArraySize;
-	UINT32			curIndex;	
+	UINT32			curIndex;
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
 typedef ammoDropParseData;
 
-static void XMLCALL 
+static void XMLCALL
 ammoDropStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	ammoDropParseData * pData = (ammoDropParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -49,7 +48,7 @@ ammoDropStartElementHandle(void *userData, const XML_Char *name, const XML_Char 
 			pData->maxReadDepth++; //we are not skipping this element
 		}
 		else if(pData->curElement == ELEMENT &&
-				(strcmp(name, "uiIndex") == 0 || 
+				(strcmp(name, "uiIndex") == 0 ||
 				strcmp(name, "uiType") == 0 ||
 				strcmp(name, "ubEnemyDropRate") == 0 ||
 				strcmp(name, "ubMilitiaDropRate") == 0))
@@ -69,10 +68,9 @@ ammoDropStartElementHandle(void *userData, const XML_Char *name, const XML_Char 
 static void XMLCALL
 ammoDropCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	ammoDropParseData * pData = (ammoDropParseData *)userData;
 
-	if( (pData->currentDepth <= pData->maxReadDepth) && 
+	if( (pData->currentDepth <= pData->maxReadDepth) &&
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
 	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
@@ -83,7 +81,6 @@ ammoDropCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 ammoDropEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER	
 	ammoDropParseData * pData = (ammoDropParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -133,13 +130,12 @@ ammoDropEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInEnemyAmmoDropsStats(AMMO_DROPS *pEnemyAmmoDrops, STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	ammoDropParseData pData;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading EnemyAmmoDrops.xml" );
@@ -148,7 +144,7 @@ BOOLEAN ReadInEnemyAmmoDropsStats(AMMO_DROPS *pEnemyAmmoDrops, STR fileName)
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -163,15 +159,15 @@ BOOLEAN ReadInEnemyAmmoDropsStats(AMMO_DROPS *pEnemyAmmoDrops, STR fileName)
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, ammoDropStartElementHandle, ammoDropEndElementHandle);
 	XML_SetCharacterDataHandler(parser, ammoDropCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
 	pData.curArray = pEnemyAmmoDrops;
-	pData.maxArraySize = MAX_DROP_ITEMS; 
-	
+	pData.maxArraySize = MAX_DROP_ITEMS;
+
 	XML_SetUserData(parser, &pData);
 
 
@@ -197,7 +193,6 @@ BOOLEAN ReadInEnemyAmmoDropsStats(AMMO_DROPS *pEnemyAmmoDrops, STR fileName)
 
 BOOLEAN WriteEnemyAmmoDropsStats(AMMO_DROPS *pEnemyAmmoDrops, STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there
@@ -205,7 +200,7 @@ BOOLEAN WriteEnemyAmmoDropsStats(AMMO_DROPS *pEnemyAmmoDrops, STR fileName)
 	hFile = FileOpen( fileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	{
 		UINT32 cnt;
 

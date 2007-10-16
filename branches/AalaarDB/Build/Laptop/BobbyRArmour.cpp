@@ -20,13 +20,11 @@ UINT32		guiArmourGrid;
 
 void GameInitBobbyRArmour()
 {
-	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterBobbyRArmour()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	// load the background graphic and add it
@@ -58,7 +56,6 @@ BOOLEAN EnterBobbyRArmour()
 
 void ExitBobbyRArmour()
 {
-	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiArmourBackground);
 	DeleteVideoObjectFromIndex(guiArmourGrid);
 	DeleteBobbyMenuBar();
@@ -74,12 +71,10 @@ void ExitBobbyRArmour()
 
 void HandleBobbyRArmour()
 {
-	PERFORMANCE_MARKER
 }
 
 void RenderBobbyRArmour()
 {
-	PERFORMANCE_MARKER
 
 	HVOBJECT hPixHandle;
 
@@ -103,7 +98,7 @@ void RenderBobbyRArmour()
 	RenderWWWProgramTitleBar( );
 	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 		fReDrawScreenFlag = TRUE;
-	fPausedReDrawScreenFlag = TRUE;	
+	fPausedReDrawScreenFlag = TRUE;
 }
 
 
@@ -112,6 +107,6 @@ void RenderBobbyRArmour()
 
 
 
- 
+
 
 

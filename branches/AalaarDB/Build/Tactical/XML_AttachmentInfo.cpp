@@ -17,16 +17,15 @@ struct
 	AttachmentInfoStruct		curAttachmentInfo;
 	AttachmentInfoStruct *	curArray;
 	UINT32			maxArraySize;
-	
+
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
 typedef attachmentinfoParseData;
 
-static void XMLCALL 
+static void XMLCALL
 attachmentinfoStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	attachmentinfoParseData * pData = (attachmentinfoParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -69,10 +68,9 @@ attachmentinfoStartElementHandle(void *userData, const XML_Char *name, const XML
 static void XMLCALL
 attachmentinfoCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	attachmentinfoParseData * pData = (attachmentinfoParseData *)userData;
 
-	if( (pData->currentDepth <= pData->maxReadDepth) && 
+	if( (pData->currentDepth <= pData->maxReadDepth) &&
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
 	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
@@ -83,7 +81,6 @@ attachmentinfoCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 attachmentinfoEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	attachmentinfoParseData * pData = (attachmentinfoParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -138,13 +135,12 @@ attachmentinfoEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInAttachmentInfoStats(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	attachmentinfoParseData pData;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading AttachmentInfo.xml" );
@@ -153,7 +149,7 @@ BOOLEAN ReadInAttachmentInfoStats(STR fileName)
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -168,15 +164,15 @@ BOOLEAN ReadInAttachmentInfoStats(STR fileName)
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, attachmentinfoStartElementHandle, attachmentinfoEndElementHandle);
 	XML_SetCharacterDataHandler(parser, attachmentinfoCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
 	pData.curArray = AttachmentInfo;
-	pData.maxArraySize = MAXITEMS; 
-	
+	pData.maxArraySize = MAXITEMS;
+
 	XML_SetUserData(parser, &pData);
 
 
@@ -201,7 +197,6 @@ BOOLEAN ReadInAttachmentInfoStats(STR fileName)
 }
 BOOLEAN WriteAttachmentInfoStats()
 {
-	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeattachmentinfostats");
 	HWFILE		hFile;
 
@@ -210,7 +205,7 @@ BOOLEAN WriteAttachmentInfoStats()
 	hFile = FileOpen( "TABLEDATA\\AttachmentInfo out.xml", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	{
 		UINT32 cnt;
 

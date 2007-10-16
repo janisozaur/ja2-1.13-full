@@ -17,9 +17,9 @@
 
 /*
  * Smell & Blood system
- * 
- * Smell and blood trails decay as time passes.	
- * 
+ *
+ * Smell and blood trails decay as time passes.
+ *
  *			 Decay Rate		Maximum Strength	Decay Time: Min Max (for biggest volume)
  *
  * Smell		1 per turn				31						 31	31
@@ -45,7 +45,7 @@
  * O \
  * O	> Blood quantity on roof
  * O /
- * O \ 
+ * O \
  * O	> Blood quantity on ground
  * O /
  * O \	Blood decay
@@ -142,7 +142,6 @@ UINT8 ubBloodGraphicLUT [ ] = {	3, 3,	2,	2,	1,	1,	0, 0 };
 
 void RemoveBlood( INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	gpWorldLevelData[ sGridNo ].ubBloodInfo = 0;
 
 	gpWorldLevelData[ sGridNo ].uiFlags |= MAPELEMENT_REEVALUATEBLOOD;
@@ -153,7 +152,6 @@ void RemoveBlood( INT16 sGridNo, INT8 bLevel )
 
 void DecaySmells( void )
 {
-	PERFORMANCE_MARKER	
 	UINT32					uiLoop;
 	MAP_ELEMENT *		pMapElement;
 
@@ -178,7 +176,6 @@ void DecaySmells( void )
 
 void DecayBlood()
 {
-	PERFORMANCE_MARKER
 	UINT32					uiLoop;
 	MAP_ELEMENT *		pMapElement;
 
@@ -218,7 +215,7 @@ void DecayBlood()
 						if (NO_BLOOD_STRENGTH( pMapElement->ubBloodInfo ))
 						{
 							// wipe the whole byte to zero
-							pMapElement->ubBloodInfo = 0;							
+							pMapElement->ubBloodInfo = 0;
 						}
 					}
 				}
@@ -238,14 +235,13 @@ void DecayBlood()
 
 void DecayBloodAndSmells( UINT32 uiTime )
 {
-	PERFORMANCE_MARKER
 	UINT32					uiCheckTime;
 
 	if ( !gfWorldLoaded )
 	{
 		return;
 	}
-	
+
 	// period between checks, in game seconds
 	switch( giTimeCompressMode )
 	{
@@ -276,7 +272,6 @@ void DecayBloodAndSmells( UINT32 uiTime )
 
 void DropSmell( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	MAP_ELEMENT *		pMapElement;
 	UINT8						ubOldSmell;
 	UINT8						ubOldStrength;
@@ -361,12 +356,11 @@ void DropSmell( SOLDIERTYPE * pSoldier )
 
 void InternalDropBlood( INT16 sGridNo, INT8 bLevel, UINT8 ubType, UINT8 ubStrength, INT8 bVisible )
 {
-	PERFORMANCE_MARKER
 	MAP_ELEMENT *		pMapElement;
 	UINT8						ubOldStrength=0;
 	UINT8						ubNewStrength=0;
 	UINT8	bOverTerrainType;
-		
+
 	/*
 	* Dropping some blood;
 	* We can check the type of blood by consulting the type in the smell byte
@@ -402,7 +396,7 @@ void InternalDropBlood( INT16 sGridNo, INT8 bLevel, UINT8 ubType, UINT8 ubStreng
 			if (BLOOD_FLOOR_TYPE( pMapElement->ubBloodInfo ) == ubType)
 			{
 				// combine blood strengths!
-				ubNewStrength = __min( ( ubOldStrength + ubStrength ), BLOOD_STRENGTH_MAX ); 
+				ubNewStrength = __min( ( ubOldStrength + ubStrength ), BLOOD_STRENGTH_MAX );
 
 				SET_BLOOD_FLOOR_STRENGTH( pMapElement->ubBloodInfo, ubNewStrength );
 			}
@@ -420,7 +414,7 @@ void InternalDropBlood( INT16 sGridNo, INT8 bLevel, UINT8 ubType, UINT8 ubStreng
 		else
 		{
 			// no blood on the ground yet, so drop this amount!
-			// set decay time 
+			// set decay time
 			SET_BLOOD_DELAY_TIME( pMapElement->ubBloodInfo );
 			SET_BLOOD_FLOOR_STRENGTH( pMapElement->ubBloodInfo, ubStrength );
 			// NB blood floor type stored in smell byte!
@@ -437,8 +431,8 @@ void InternalDropBlood( INT16 sGridNo, INT8 bLevel, UINT8 ubType, UINT8 ubStreng
 			if (BLOOD_ROOF_TYPE( pMapElement->ubSmellInfo ) == ubType)
 			{
 				// combine blood strengths!
-				ubNewStrength = __max( ubOldStrength, ubStrength ) + 1;		
-				// make sure the strength is legal		
+				ubNewStrength = __max( ubOldStrength, ubStrength ) + 1;
+				// make sure the strength is legal
 				ubNewStrength = __max( ubNewStrength, BLOOD_STRENGTH_MAX );
 				SET_BLOOD_ROOF_STRENGTH( pMapElement->ubBloodInfo, ubNewStrength );
 			}
@@ -456,7 +450,7 @@ void InternalDropBlood( INT16 sGridNo, INT8 bLevel, UINT8 ubType, UINT8 ubStreng
 		else
 		{
 			// no blood on the roof yet, so drop this amount!
-			// set decay time 
+			// set decay time
 			SET_BLOOD_DELAY_TIME( pMapElement->ubBloodInfo );
 			SET_BLOOD_ROOF_STRENGTH( pMapElement->ubBloodInfo, ubNewStrength );
 			SET_BLOOD_ROOF_TYPE( pMapElement->ubSmellInfo, ubType );
@@ -476,7 +470,6 @@ void InternalDropBlood( INT16 sGridNo, INT8 bLevel, UINT8 ubType, UINT8 ubStreng
 
 void DropBlood( SOLDIERTYPE * pSoldier, UINT8 ubStrength, INT8 bVisible )
 {
-	PERFORMANCE_MARKER
 	UINT8						ubType;
 	/*
 	* Dropping some blood;
@@ -508,11 +501,10 @@ void DropBlood( SOLDIERTYPE * pSoldier, UINT8 ubStrength, INT8 bVisible )
 
 void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	MAP_ELEMENT *		pMapElement;
 	INT8						bValue;
 	UINT16					usIndex, usNewIndex;
-	
+
 	// OK, based on level, type, display graphics for blood
 	pMapElement = &(gpWorldLevelData[ sGridNo ]);
 
@@ -532,7 +524,7 @@ void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel )
 		if ( bLevel == 0 )
 		{
 			bValue = BLOOD_FLOOR_STRENGTH( pMapElement->ubBloodInfo );
-		
+
 			// OK, remove tile graphic if one exists....
 			if ( TypeRangeExistsInObjectLayer( sGridNo, HUMANBLOOD, CREATUREBLOOD, &usIndex ) )
 			{

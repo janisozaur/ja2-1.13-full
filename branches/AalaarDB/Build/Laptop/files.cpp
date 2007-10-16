@@ -22,7 +22,7 @@
 #define BLOCK_FILE_HEIGHT								10
 #define BOX_HEIGHT											14
 #define TITLE_X														iScreenWidthOffset + 140
-#define TITLE_Y														iScreenHeightOffset + 33 
+#define TITLE_Y														iScreenHeightOffset + 33
 #define TEXT_X														iScreenWidthOffset + 140
 #define PAGE_SIZE												22
 #define FILES_TITLE_FONT								FONT14ARIAL
@@ -37,9 +37,9 @@
 #define FILE_GAP												2
 #define FILE_TEXT_COLOR									FONT_BLACK
 #define FILE_STRING_SIZE								400
-#define MAX_FILES_PAGE									MAX_FILES_LIST_LENGTH 
+#define MAX_FILES_PAGE									MAX_FILES_LIST_LENGTH
 #define FILES_LIST_X										FILES_SENDER_TEXT_X
-#define FILES_LIST_Y										( 9 * BLOCK_HEIGHT ) 
+#define FILES_LIST_Y										( 9 * BLOCK_HEIGHT )
 #define FILES_LIST_WIDTH								100
 #define LENGTH_OF_ENRICO_FILE						68
 #define MAX_FILE_MESSAGE_PAGE_SIZE			325
@@ -82,7 +82,7 @@ extern UINT32 guiTOP; // symbol already defined in finances.cpp (jonathanl)
 UINT32 guiHIGHLIGHT;
 
 
-// currewnt page of multipage files we are on 
+// currewnt page of multipage files we are on
 INT32 giFilesPage = 0;
 // strings
 
@@ -188,7 +188,6 @@ FileRecordWidthPtr CreateRecordWidth( 	INT32 iRecordNumber, INT32 iRecordWidth, 
 
 UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, STR8 pFirstPicFile, STR8 pSecondPicFile )
 {
-	PERFORMANCE_MARKER
 	// adds Files item to player's log(Files List), returns unique id number of it
 	// outside of the Files system(the code in this .c file), this is the only function you'll ever need
 	UINT32 uiId=0;
@@ -196,10 +195,10 @@ UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, STR8 pF
 	// if not in Files mode, read in from file
 	if(!fInFilesMode)
 	OpenAndReadFilesFile( );
-	
+
 	// process the actual data
 	uiId = ProcessAndEnterAFilesRecord(ubCode, uiDate, ubFormat ,pFirstPicFile, pSecondPicFile, FALSE );
-	
+
 	// set unread flag, if nessacary
 	CheckForUnreadFiles( );
 
@@ -212,7 +211,6 @@ UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, STR8 pF
 }
 void GameInitFiles( )
 {
-	PERFORMANCE_MARKER
 
 	if (	(FileExists( FILES_DAT_FILE ) == TRUE ) )
 	{
@@ -229,17 +227,16 @@ void GameInitFiles( )
 
 void EnterFiles()
 {
-	PERFORMANCE_MARKER
-	
+
 	// load grpahics for files system
 	LoadFiles( );
-	
+
 	//AddFilesToPlayersLog(1, 0, 0,"LAPTOP\\portrait.sti", "LAPTOP\\portrait.sti");
 	//AddFilesToPlayersLog(0, 0, 3,"LAPTOP\\portrait.sti", "LAPTOP\\portrait.sti");
 	//AddFilesToPlayersLog(2, 0, 1,"LAPTOP\\portrait.sti", "LAPTOP\\portrait.sti");
 	// in files mode now, set the fact
 	fInFilesMode=TRUE;
-	
+
 	// initialize mouse regions
 	InitializeFilesMouseRegions( );
 
@@ -248,7 +245,7 @@ void EnterFiles()
 
 	// now set start states
 	HandleFileViewerButtonStates( );
-	
+
 	// build files list
 	OpenAndReadFilesFile( );
 
@@ -267,11 +264,10 @@ void EnterFiles()
 
 void ExitFiles()
 {
-	PERFORMANCE_MARKER
 
 	// write files list out to disk
 	OpenAndWriteFilesFile( );
-	
+
 	// remove mouse regions
 	RemoveFilesMouseRegions( );
 
@@ -280,19 +276,17 @@ void ExitFiles()
 
 	fInFilesMode = FALSE;
 
-	// remove files 
+	// remove files
 	RemoveFiles( );
 }
 
 void HandleFiles()
 {
-	PERFORMANCE_MARKER
 	CheckForUnreadFiles( );
 }
 
 void RenderFiles()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 
 
@@ -304,7 +298,7 @@ void RenderFiles()
 
 	// the columns
 	DrawFilesListBackGround( );
-	
+
 	// display the list of senders
 	DisplayFilesList( );
 
@@ -314,7 +308,7 @@ void RenderFiles()
 	// title bar icon
 	BlitTitleBarIcons(	);
 
-	
+
 	// display border
 	GetVideoObject(&hHandle, guiLaptopBACKGROUND);
 	BltVideoObject(FRAME_BUFFER, hHandle, 0,iScreenWidthOffset + 108, iScreenHeightOffset + 23, VO_BLT_SRCTRANSPARENCY,NULL);
@@ -324,46 +318,43 @@ void RenderFiles()
 
 void RenderFilesBackGround( void )
 {
-	PERFORMANCE_MARKER
 	// render generic background for file system
 	HVOBJECT hHandle;
-	
+
 	// get title bar object
 	GetVideoObject(&hHandle, guiTITLE);
-	
+
 	// blt title bar to screen
 	BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y - 2, VO_BLT_SRCTRANSPARENCY,NULL);
-	
+
 	// get and blt the top part of the screen, video object and blt to screen
 	GetVideoObject( &hHandle, guiTOP );
 	BltVideoObject( FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y + 22, VO_BLT_SRCTRANSPARENCY, NULL );
-	
-	
+
+
 
 		return;
 }
 
 void DrawFilesTitleText( void )
 {
-	PERFORMANCE_MARKER
 	// setup the font stuff
 	SetFont(FILES_TITLE_FONT);
 	SetFontForeground(FONT_WHITE);
 	SetFontBackground(FONT_BLACK);
 	// reset shadow
-	SetFontShadow(DEFAULT_SHADOW);	
-	
+	SetFontShadow(DEFAULT_SHADOW);
+
 	// draw the pages title
 	mprintf(TITLE_X,TITLE_Y,pFilesTitle[0]);
-	
-	
+
+
 	return;
 }
 
 
 BOOLEAN LoadFiles( void )
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	// load files video objects into memory
 
@@ -371,12 +362,12 @@ BOOLEAN LoadFiles( void )
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\programtitlebar.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiTITLE));
-	
+
 	// top portion of the screen background
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\fileviewer.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiTOP));
-	
+
 
 	// the highlight
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
@@ -393,11 +384,10 @@ BOOLEAN LoadFiles( void )
 
 void RemoveFiles( void )
 {
-	PERFORMANCE_MARKER
 
 	// delete files video objects from memory
- 
-	
+
+
 	DeleteVideoObjectFromIndex(guiTOP);
 	DeleteVideoObjectFromIndex(guiTITLE);
 	DeleteVideoObjectFromIndex(guiHIGHLIGHT);
@@ -409,10 +399,9 @@ void RemoveFiles( void )
 
 UINT32 ProcessAndEnterAFilesRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat ,STR8 pFirstPicFile, STR8 pSecondPicFile, BOOLEAN fRead )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiId=0;
 	FilesUnitPtr pFiles=pFilesListHead;
-	
+
  	// add to Files list
 	if(pFiles)
 	{
@@ -428,21 +417,21 @@ UINT32 ProcessAndEnterAFilesRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat 
 			// next in the list
 			pFiles = pFiles->Next;
 		}
-	
+
 		// reset pointer
 		pFiles=pFilesListHead;
 
 		// go to end of list
 		while(pFiles->Next)
-		{		
+		{
 			pFiles = pFiles->Next;
 		}
 		// alloc space
 		pFiles->Next = (files *) MemAlloc(sizeof(FilesUnit));
-		
+
 		// increment id number
 		uiId = pFiles->uiIdNumber + 1;
-		
+
 		// set up information passed
 		pFiles = pFiles->Next;
 		pFiles->Next = NULL;
@@ -456,7 +445,7 @@ UINT32 ProcessAndEnterAFilesRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat 
 	{
 		// alloc space
 		pFiles = (FilesUnitPtr) MemAlloc(sizeof(FilesUnit));
-	
+
 		// setup info passed
 		pFiles->Next = NULL;
 		pFiles->ubCode = ubCode;
@@ -484,11 +473,11 @@ UINT32 ProcessAndEnterAFilesRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat 
 		}
 	}
 
-	// second file	
-	
+	// second file
+
 	if(pSecondPicFile)
 	{
-	if((pSecondPicFile[0]) != 0) 
+	if((pSecondPicFile[0]) != 0)
 		{
 	 pFiles->pPicFileNameList[1] = (STR8) MemAlloc(strlen(pSecondPicFile) + 1 );
 	 strcpy( pFiles->pPicFileNameList[1], pSecondPicFile);
@@ -502,7 +491,6 @@ UINT32 ProcessAndEnterAFilesRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat 
 
 void OpenAndReadFilesFile( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will open and read in data to the finance list
 	HWFILE hFileHandle;
 	UINT8 ubCode;
@@ -536,18 +524,18 @@ void OpenAndReadFilesFile( void )
 	FileClose( hFileHandle );
 		return;
 	}
- 
+
 	// file exists, read in data, continue until file end
 	while( FileGetSize( hFileHandle ) > uiByteCount)
 	{
-	
+
 		// read in data
 	FileRead( hFileHandle, &ubCode, sizeof(UINT8), (UINT32 *)&iBytesRead );
-		
+
 		FileRead( hFileHandle, &uiDate, sizeof(UINT32), (UINT32 *)&iBytesRead );
-	
+
 	FileRead( hFileHandle, &pFirstFilePath,	128, (UINT32 *)&iBytesRead );
-	
+
 	FileRead( hFileHandle, &pSecondFilePath,	128, (UINT32 *)&iBytesRead );
 
 		FileRead( hFileHandle, &ubFormat,	sizeof(UINT8), (UINT32 *)&iBytesRead );
@@ -558,24 +546,23 @@ void OpenAndReadFilesFile( void )
 
 		// increment byte counter
 	uiByteCount += sizeof( UINT32 ) + sizeof( UINT8 )+ 128 + 128 + sizeof(UINT8) + sizeof( BOOLEAN );
-	} 
-	
-	// close file 
+	}
+
+	// close file
 	FileClose( hFileHandle );
-	
+
 	return;
 }
 
 
 BOOLEAN OpenAndWriteFilesFile( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will open and write out data from the finance list
 	HWFILE hFileHandle;
 	FilesUnitPtr pFilesList=pFilesListHead;
 	CHAR8 pFirstFilePath[128];
 	CHAR8 pSecondFilePath[128];
-	
+
 	memset(&pFirstFilePath, 0, sizeof( pFirstFilePath ) );
 	memset(&pSecondFilePath, 0, sizeof( pSecondFilePath ) );
 
@@ -590,7 +577,7 @@ BOOLEAN OpenAndWriteFilesFile( void )
 			strcpy(pSecondFilePath, pFilesList->pPicFileNameList[1]);
 		}
 	}
-		
+
 	// open file
  	hFileHandle=FileOpen( FILES_DAT_FILE, FILE_ACCESS_WRITE|FILE_CREATE_ALWAYS, FALSE);
 
@@ -603,7 +590,7 @@ BOOLEAN OpenAndWriteFilesFile( void )
 	while(pFilesList)
 	{
 		// now write date and amount, and code
-	FileWrite( hFileHandle, &(pFilesList->ubCode),	sizeof ( UINT8 ), NULL );	
+	FileWrite( hFileHandle, &(pFilesList->ubCode),	sizeof ( UINT8 ), NULL );
 		FileWrite( hFileHandle, &(pFilesList->uiDate),	sizeof ( UINT32 ), NULL );
 	FileWrite( hFileHandle, &(pFirstFilePath),	128, NULL );
 	FileWrite( hFileHandle, &(pSecondFilePath),	128, NULL );
@@ -612,7 +599,7 @@ BOOLEAN OpenAndWriteFilesFile( void )
 
 		// next element in list
 		pFilesList = pFilesList->Next;
-	
+
 	}
 
 	// close file
@@ -625,7 +612,6 @@ BOOLEAN OpenAndWriteFilesFile( void )
 
 void ClearFilesList( void )
 {
-	PERFORMANCE_MARKER
 	// remove each element from list of transactions
 	FilesUnitPtr pFilesList=pFilesListHead;
 	FilesUnitPtr pFilesNode=pFilesList;
@@ -635,10 +621,10 @@ void ClearFilesList( void )
 	{
 	// set node to list head
 		pFilesNode=pFilesList;
-		
+
 		// set list head to next node
 		pFilesList=pFilesList->Next;
-	
+
 		// if present, dealloc string
 	if(pFilesNode->pPicFileNameList[0])
 		{
@@ -658,7 +644,6 @@ void ClearFilesList( void )
 
 void DrawFilesListBackGround( void )
 {
-	PERFORMANCE_MARKER
 	// proceudre will draw the background for the list of files
 	 // HVOBJECT hHandle;
 
@@ -673,13 +658,12 @@ void DrawFilesListBackGround( void )
 
 void DisplayFilesList( void )
 {
-	PERFORMANCE_MARKER
-	// this function will run through the list of files of files and display the 'sender' 
-	FilesUnitPtr pFilesList=pFilesListHead; 
+	// this function will run through the list of files of files and display the 'sender'
+	FilesUnitPtr pFilesList=pFilesListHead;
 	INT32 iCounter=0;
 	HVOBJECT hHandle;
- 
-	
+
+
 	// font stuff
 	SetFont(FILES_TEXT_FONT);
 	SetFontForeground(FONT_BLACK);
@@ -694,14 +678,14 @@ void DisplayFilesList( void )
 		// render highlight
 		GetVideoObject(&hHandle, guiHIGHLIGHT);
 		BltVideoObject(FRAME_BUFFER, hHandle, 0, FILES_SENDER_TEXT_X - 5, iScreenHeightOffset + ( ( iCounter + 9 ) * BLOCK_HEIGHT) + ( iCounter * 2 ) - 4 , VO_BLT_SRCTRANSPARENCY,NULL);
-		
+
 		}
-	
+
 		mprintf(FILES_SENDER_TEXT_X, iScreenHeightOffset + (( iCounter + 9 ) * BLOCK_HEIGHT) + ( iCounter * 2 ) - 2 ,pFilesSenderList[pFilesList->ubCode]);
 		iCounter++;
 		pFilesList=pFilesList->Next;
 	}
- 
+
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
 
@@ -713,13 +697,12 @@ void DisplayFilesList( void )
 
 void DisplayFileMessage( void )
 {
-	PERFORMANCE_MARKER
-	
-	
-	
-	
 
-	// get the currently selected message 
+
+
+
+
+	// get the currently selected message
 	if(iHighLightFileLine!=-1)
 	{
 		// display text
@@ -729,7 +712,7 @@ void DisplayFileMessage( void )
 	{
 		HandleFileViewerButtonStates( );
 	}
-	
+
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
 
@@ -739,7 +722,6 @@ void DisplayFileMessage( void )
 
 void InitializeFilesMouseRegions( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter=0;
 	// init mouseregions
 	for(iCounter=0; iCounter <MAX_FILES_PAGE; iCounter++)
@@ -749,14 +731,13 @@ void InitializeFilesMouseRegions( void )
 	MSYS_AddRegion(&pFilesRegions[iCounter]);
 		MSYS_SetRegionUserData(&pFilesRegions[iCounter],0,iCounter);
 	}
-	
-	
+
+
 	return;
 }
 
 void RemoveFilesMouseRegions( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter=0;
 	for(iCounter=0; iCounter <MAX_FILES_PAGE; iCounter++)
 	{
@@ -766,24 +747,23 @@ void RemoveFilesMouseRegions( void )
 
 void FilesBtnCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	INT32 iFileId = -1;
 	INT32 iCounter = 0;
-	FilesUnitPtr pFilesList=pFilesListHead; 
-	
-	
+	FilesUnitPtr pFilesList=pFilesListHead;
+
+
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	return;
 	}
-	
-	
+
+
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 
-		// left button 
+		// left button
 	iFileId = MSYS_GetRegionUserData(pRegion, 0);
-	
+
 	// reset iHighLightListLine
 	iHighLightFileLine = -1;
 
@@ -793,7 +773,7 @@ void FilesBtnCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 
 
-	// make sure is a valid 
+	// make sure is a valid
 	while( pFilesList )
 	{
 
@@ -810,10 +790,10 @@ void FilesBtnCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 		// increment counter
 		iCounter++;
 	}
-	
+
 	fReDrawScreenFlag=TRUE;
 
-	
+
 	return;
 	}
 
@@ -822,9 +802,8 @@ void FilesBtnCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN DisplayFormattedText( void )
 {
-	PERFORMANCE_MARKER
-	FilesUnitPtr pFilesList=pFilesListHead; 
-	
+	FilesUnitPtr pFilesList=pFilesListHead;
+
 	UINT16 usFirstWidth = 0;
 	UINT16 usFirstHeight = 0;
 	UINT16 usSecondWidth;
@@ -851,17 +830,17 @@ BOOLEAN DisplayFormattedText( void )
 		pFilesList=pFilesList->Next;
 	}
 
-	// message code found, reset counter 
+	// message code found, reset counter
 	iMessageCode = pFilesList->ubCode;
 	iCounter=0;
-	
+
 	// set file as read
 	pFilesList->fRead = TRUE;
 
 	// clear the file string structure list
 	// get file background object
 	GetVideoObject(&hHandle, guiFileBack);
-	
+
 	// blt background to screen
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, FILE_VIEWER_X, FILE_VIEWER_Y - 4, VO_BLT_SRCTRANSPARENCY,NULL);
 
@@ -871,7 +850,7 @@ BOOLEAN DisplayFormattedText( void )
 	// increment increment offset
 	iOffSet+=ubFileRecordsLength[iCounter];
 
-		// increment counter 
+		// increment counter
 		iCounter++;
 	}
 
@@ -879,35 +858,35 @@ BOOLEAN DisplayFormattedText( void )
 
 	if( pFilesList->ubFormat < ENRICO_BACKGROUND )
 	{
-	
+
 	LoadEncryptedDataFromFile("BINARYDATA\\Files.edt", sString, FILE_STRING_SIZE * (iOffSet) * 2, FILE_STRING_SIZE * iLength * 2);
 	}
 
 	// reset counter
 	iCounter=0;
-	
+
 	// no shadow
 	SetFontShadow(NO_SHADOW);
 
 	switch( pFilesList->ubFormat )
 	{
 	case 0:
-		
+
 			// no format, all text
 
 			while(iLength > iCounter)
 			{
 		 // read one record from file manager file
 			LoadEncryptedDataFromFile( "BINARYDATA\\Files.edt", sString, FILE_STRING_SIZE * ( iOffSet + iCounter ) * 2, FILE_STRING_SIZE * 2 );
-		
+
 			// display string and get height
 		iHeight += IanDisplayWrappedString(FILE_VIEWER_X + 4, ( UINT16 )( FILE_VIEWER_Y + iHeight ), FILE_VIEWER_WIDTH, FILE_GAP, FILES_TEXT_FONT, FILE_TEXT_COLOR, sString,0,FALSE,0);
-				
+
 			// increment file record counter
 			iCounter++;
 			}
 	 break;
-	
+
 	 case 1:
 
 			// second format, one picture, all text below
@@ -916,16 +895,16 @@ BOOLEAN DisplayFormattedText( void )
 			VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP( pFilesList->pPicFileNameList[ 0 ], VObjectDesc.ImageFile );
 		CHECKF(AddVideoObject( &VObjectDesc, &uiFirstTempPicture ) );
-		
+
 		GetVideoObjectETRLESubregionProperties( uiFirstTempPicture, 0, &usFirstWidth,	&usFirstHeight );
-		
+
 
 			// get file background object
 		GetVideoObject(&hHandle, uiFirstTempPicture);
-	
+
 		// blt background to screen
 		BltVideoObject(FRAME_BUFFER, hHandle, 0, FILE_VIEWER_X + 4 + ( FILE_VIEWER_WIDTH - usFirstWidth ) / 2, FILE_VIEWER_Y + 10, VO_BLT_SRCTRANSPARENCY,NULL);
-		
+
 			iHeight = usFirstHeight + 20;
 
 
@@ -934,32 +913,32 @@ BOOLEAN DisplayFormattedText( void )
 
 		 // read one record from file manager file
 			LoadEncryptedDataFromFile( "BINARYDATA\\Files.edt", sString, FILE_STRING_SIZE * ( iOffSet + iCounter ) * 2, FILE_STRING_SIZE * 2 );
-		
+
 			// display string and get height
 		iHeight += IanDisplayWrappedString(FILE_VIEWER_X + 4, ( UINT16 )( FILE_VIEWER_Y + iHeight ), FILE_VIEWER_WIDTH, FILE_GAP, FILES_TEXT_FONT, FILE_TEXT_COLOR, sString,0,FALSE,0);
-				
+
 			// increment file record counter
 			iCounter++;
 			}
 
 		// delete video object
 			DeleteVideoObjectFromIndex( uiFirstTempPicture );
-			
+
 		break;
 		case 2:
-	
+
 			// third format, two pictures, side by side with all text below
-		
+
 			// load first graphic
 			VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP( pFilesList->pPicFileNameList[ 0 ], VObjectDesc.ImageFile );
 		CHECKF(AddVideoObject( &VObjectDesc, &uiFirstTempPicture));
-		
-			// load second graphic 
+
+			// load second graphic
 			VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP( pFilesList->pPicFileNameList[ 1 ] , VObjectDesc.ImageFile );
 		CHECKF(AddVideoObject( &VObjectDesc, &uiSecondTempPicture ) );
-	
+
 		GetVideoObjectETRLESubregionProperties( uiFirstTempPicture, 0, &usFirstWidth,	&usFirstHeight );
 			GetVideoObjectETRLESubregionProperties( uiSecondTempPicture, 0, &usSecondWidth,	&usSecondHeight );
 
@@ -969,26 +948,26 @@ BOOLEAN DisplayFormattedText( void )
 			usFreeSpace /= 3;
 		// get file background object
 		GetVideoObject(&hHandle, uiFirstTempPicture);
-	
+
 
 		// blt background to screen
 		BltVideoObject(FRAME_BUFFER, hHandle, 0, FILE_VIEWER_X + usFreeSpace, FILE_VIEWER_Y + 10, VO_BLT_SRCTRANSPARENCY,NULL);
-		
+
 		// get file background object
 		GetVideoObject(&hHandle, uiSecondTempPicture);
-		
+
 			// get position for second picture
 			usFreeSpace *= 2;
 			usFreeSpace += usFirstWidth;
-		
+
 			// blt background to screen
 		BltVideoObject(FRAME_BUFFER, hHandle, 0, FILE_VIEWER_X + usFreeSpace, FILE_VIEWER_Y + 10, VO_BLT_SRCTRANSPARENCY,NULL);
-		
+
 
 
 		// delete video object
 			DeleteVideoObjectFromIndex(uiFirstTempPicture);
-			DeleteVideoObjectFromIndex(uiSecondTempPicture); 
+			DeleteVideoObjectFromIndex(uiSecondTempPicture);
 
 			// put in text
 			iHeight = usFirstHeight + 20;
@@ -999,17 +978,17 @@ BOOLEAN DisplayFormattedText( void )
 
 		 // read one record from file manager file
 			LoadEncryptedDataFromFile( "BINARYDATA\\Files.edt", sString, FILE_STRING_SIZE * ( iOffSet + iCounter ) * 2, FILE_STRING_SIZE * 2 );
-		
+
 			// display string and get height
 		iHeight += IanDisplayWrappedString(FILE_VIEWER_X + 4, ( UINT16 )( FILE_VIEWER_Y + iHeight ), FILE_VIEWER_WIDTH, FILE_GAP, FILES_TEXT_FONT, FILE_TEXT_COLOR, sString,0,FALSE,0);
-				
+
 			// increment file record counter
 			iCounter++;
 			}
 
 
 		break;
-	 
+
 		case 3:
 		// picture on the left, with text on right and below
 		// load first graphic
@@ -1023,14 +1002,13 @@ BOOLEAN DisplayFormattedText( void )
 
 	HandleFileViewerButtonStates( );
 	SetFontShadow(DEFAULT_SHADOW);
-	
+
 	return ( TRUE );
 }
 
 
 BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	CHAR16 sString[2048];
 	FileStringPtr pTempString = NULL ;
@@ -1047,7 +1025,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 	UINT32 uiPicture;
 	HVOBJECT hHandle;
 	VOBJECT_DESC VObjectDesc;
-	
+
 
 	ClearFileStringList( );
 
@@ -1067,7 +1045,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 
 			pTempString = pFileStringList;
 
-		
+
 		iYPositionOnPage = 0;
 			iCounter = 0;
 			pLocatorString = pTempString;
@@ -1086,16 +1064,16 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 			while( pTempString )
 			{
 				uiFlags = IAN_WRAP_NO_SHADOW;
-						// copy over string 
+						// copy over string
 				wcscpy( sString, pTempString->pString );
-				
+
 				if( sString[ 0 ] == 0 )
 				{
 					// on last page
 					fOnLastFilesPageFlag = TRUE;
 				}
-				
-				
+
+
 				// set up font
 				uiFont = FILES_TEXT_FONT;
 				if( giFilesPage == 0 )
@@ -1105,7 +1083,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 				 case( 0 ):
 						uiFont = FILES_TITLE_FONT;
 					break;
-					
+
 					}
 				}
 
@@ -1120,20 +1098,20 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 					// title
 					iFileLineWidth = 350;
 					iFileStartX = (UINT16) ( FILE_VIEWER_X	+	10 );
-				
+
 				}
 				else if( iCounter == 1 )
 				{
 					// opening on first page
 					iFileLineWidth = 350;
 					iFileStartX = (UINT16) ( FILE_VIEWER_X	+	10 );
-					
+
 				}
 				else if( ( iCounter > 1) &&( iCounter < FILES_COUNTER_1_WIDTH ) )
 				{
 					iFileLineWidth = 350;
 					iFileStartX = (UINT16) ( FILE_VIEWER_X	+	10 );
-				
+
 				}
 				else if( iCounter == FILES_COUNTER_1_WIDTH )
 				{
@@ -1144,7 +1122,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 					iFileLineWidth = 350;
 					iFileStartX = (UINT16) ( FILE_VIEWER_X	+	10 );
 				}
-				
+
 				else if( iCounter == FILES_COUNTER_2_WIDTH )
 				{
 					iFileLineWidth = 200;
@@ -1155,16 +1133,16 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 					iFileLineWidth = 200;
 					iFileStartX = (UINT16) ( FILE_VIEWER_X	+	150 );
 				}
-				
+
 				else
 				{
 					iFileLineWidth = 350;
 					iFileStartX = (UINT16) ( FILE_VIEWER_X +	10 );
 				}
 				// not far enough, advance
-				
-				if( ( iYPositionOnPage + IanWrappedStringHeight(0, 0, ( UINT16 )iFileLineWidth, FILE_GAP, 
-															uiFont, 0, sString, 
+
+				if( ( iYPositionOnPage + IanWrappedStringHeight(0, 0, ( UINT16 )iFileLineWidth, FILE_GAP,
+															uiFont, 0, sString,
 															0, 0, 0 ) )	< MAX_FILE_MESSAGE_PAGE_SIZE	)
 				{
 	 		// now print it
@@ -1179,7 +1157,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 				}
 
 				pTempString = pTempString->Next;
-							
+
 				if( pTempString == NULL )
 				{
 					// on last page
@@ -1196,7 +1174,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 					pTempString = NULL;
 				}
 				iCounter++;
-			}	
+			}
 			ClearOutWidthRecordsList( WidthList );
 			ClearFileStringList( );
 		break;
@@ -1213,10 +1191,10 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 
 		// get title bar object
 	GetVideoObject(&hHandle, uiPicture);
-	
+
 	// blt title bar to screen
 	BltVideoObject(FRAME_BUFFER, hHandle, 0,iScreenWidthOffset + 300, iScreenHeightOffset + 270, VO_BLT_SRCTRANSPARENCY,NULL);
-	
+
 		DeleteVideoObjectFromIndex( uiPicture );
 
 	}
@@ -1229,17 +1207,17 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 
 		// get title bar object
 	GetVideoObject(&hHandle, uiPicture);
-	
+
 	// blt title bar to screen
 	BltVideoObject(FRAME_BUFFER, hHandle, 0,iScreenWidthOffset + 260, iScreenHeightOffset + 225, VO_BLT_SRCTRANSPARENCY,NULL);
-	
+
 		DeleteVideoObjectFromIndex( uiPicture );
 
 	}
 	else if( giFilesPage == 5 )
 	{
 
-		
+
 			// wedding pic
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("LAPTOP\\Enrico_W.sti", VObjectDesc.ImageFile);
@@ -1247,28 +1225,27 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 
 		// get title bar object
 	GetVideoObject(&hHandle, uiPicture);
-	
+
 	// blt title bar to screen
 	BltVideoObject(FRAME_BUFFER, hHandle, 0,iScreenWidthOffset + 260, iScreenHeightOffset + 85, VO_BLT_SRCTRANSPARENCY,NULL);
-	
+
 		DeleteVideoObjectFromIndex( uiPicture );
 	}
-	
+
 	return ( TRUE );
 }
 
 
 void AddStringToFilesList( STR16 pString )
 {
-	PERFORMANCE_MARKER
 
 	FileStringPtr pFileString;
 	FileStringPtr pTempString = pFileStringList;
 
 	// create string structure
 	pFileString = (FileStringPtr) MemAlloc( sizeof( FileString ) );
-	
-	
+
+
 	// alloc string and copy
 	pFileString->pString = (STR16) MemAlloc( ( wcslen( pString ) * sizeof(CHAR16) ) + 2 );
 	wcscpy( pFileString->pString, pString );
@@ -1297,7 +1274,6 @@ void AddStringToFilesList( STR16 pString )
 
 void ClearFileStringList( void )
 {
-	PERFORMANCE_MARKER
 	FileStringPtr pFileString;
 	FileStringPtr pDeleteFileString;
 
@@ -1326,7 +1302,6 @@ void ClearFileStringList( void )
 
 void CreateButtonsForFilesPage( void )
 {
-	PERFORMANCE_MARKER
 	// will create buttons for the files page
 	giFilesPageButtonsImage[0]=	LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,0,-1,1,-1 );
 	giFilesPageButtons[0] = QuickCreateButton( giFilesPageButtonsImage[0], PREVIOUS_FILE_PAGE_BUTTON_X,	PREVIOUS_FILE_PAGE_BUTTON_Y,
@@ -1348,13 +1323,12 @@ void CreateButtonsForFilesPage( void )
 
 void DeleteButtonsForFilesPage( void )
 {
-	PERFORMANCE_MARKER
 
 	// destroy buttons for the files page
 
 	RemoveButton(giFilesPageButtons[ 0 ] );
 	UnloadButtonImage( giFilesPageButtonsImage[ 0 ] );
-	
+
 	RemoveButton(giFilesPageButtons[ 1 ] );
 	UnloadButtonImage( giFilesPageButtonsImage[ 1 ] );
 
@@ -1365,7 +1339,6 @@ void DeleteButtonsForFilesPage( void )
 // callbacks
 void BtnPreviousFilePageCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -1378,10 +1351,10 @@ void BtnPreviousFilePageCallback(GUI_BUTTON *btn,INT32 reason)
 		}
 
 		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
-		{ 
-			btn->uiFlags|=(BUTTON_CLICKED_ON);	
+		{
+			btn->uiFlags|=(BUTTON_CLICKED_ON);
 		}
-	
+
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1392,7 +1365,7 @@ void BtnPreviousFilePageCallback(GUI_BUTTON *btn,INT32 reason)
 		}
 
 		if((btn->uiFlags & BUTTON_CLICKED_ON))
-		{ 
+		{
 
 			if( giFilesPage > 0 )
 			{
@@ -1412,7 +1385,6 @@ void BtnPreviousFilePageCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnNextFilePageCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -1424,10 +1396,10 @@ void BtnNextFilePageCallback(GUI_BUTTON *btn,INT32 reason)
 		}
 
 		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
-		{ 
-			btn->uiFlags|=(BUTTON_CLICKED_ON);	
+		{
+			btn->uiFlags|=(BUTTON_CLICKED_ON);
 		}
-	
+
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1437,7 +1409,7 @@ void BtnNextFilePageCallback(GUI_BUTTON *btn,INT32 reason)
 		}
 
 		if((btn->uiFlags & BUTTON_CLICKED_ON))
-		{ 
+		{
 
 			if(	( fOnLastFilesPageFlag ) == FALSE )
 			{
@@ -1456,7 +1428,6 @@ void BtnNextFilePageCallback(GUI_BUTTON *btn,INT32 reason)
 
 void HandleFileViewerButtonStates( void )
 {
-	PERFORMANCE_MARKER
 	// handle state of email viewer buttons
 
 	if( iHighLightFileLine == -1 )
@@ -1502,7 +1473,6 @@ void HandleFileViewerButtonStates( void )
 
 FileRecordWidthPtr CreateRecordWidth( 	INT32 iRecordNumber, INT32 iRecordWidth, INT32 iRecordHeightAdjustment, UINT8 ubFlags)
 {
-	PERFORMANCE_MARKER
 	FileRecordWidthPtr pTempRecord = NULL;
 
 	// allocs and inits a width info record for the multipage file viewer...this will tell the procedure that does inital computation on which record is the start of the current page
@@ -1520,19 +1490,18 @@ FileRecordWidthPtr CreateRecordWidth( 	INT32 iRecordNumber, INT32 iRecordWidth, 
 
 FileRecordWidthPtr CreateWidthRecordsForAruloIntelFile( void )
 {
-	PERFORMANCE_MARKER
 	// this fucntion will create the width list for the Arulco intelligence file
 	FileRecordWidthPtr pTempRecord = NULL;
 	FileRecordWidthPtr pRecordListHead = NULL;
 
-	
+
 		// first record width
 //	pTempRecord = CreateRecordWidth( 7, 350, 200,0 );
 	pTempRecord = CreateRecordWidth( FILES_COUNTER_1_WIDTH, 350, MAX_FILE_MESSAGE_PAGE_SIZE,0 );
 
 	// set up head of list now
 	pRecordListHead = pTempRecord;
-	
+
 	// next record
 //	pTempRecord->Next = CreateRecordWidth( 43, 200,0, 0 );
 	pTempRecord->Next = CreateRecordWidth( FILES_COUNTER_2_WIDTH, 200,0, 0 );
@@ -1549,26 +1518,25 @@ FileRecordWidthPtr CreateWidthRecordsForAruloIntelFile( void )
 
 FileRecordWidthPtr CreateWidthRecordsForTerroristFile( void )
 {
-	PERFORMANCE_MARKER
 	// this fucntion will create the width list for the Arulco intelligence file
 	FileRecordWidthPtr pTempRecord = NULL;
 	FileRecordWidthPtr pRecordListHead = NULL;
 
-	
+
 		// first record width
 	pTempRecord = CreateRecordWidth( 4, 170, 0,0 );
 
 	// set up head of list now
 	pRecordListHead = pTempRecord;
-	
+
 	// next record
 	pTempRecord->Next = CreateRecordWidth( 5, 170,0, 0 );
 	pTempRecord = pTempRecord->Next;
 
 	pTempRecord->Next = CreateRecordWidth( 6, 170,0, 0 );
 	pTempRecord = pTempRecord->Next;
-	
-	
+
+
 	return( pRecordListHead );
 
 }
@@ -1576,7 +1544,6 @@ FileRecordWidthPtr CreateWidthRecordsForTerroristFile( void )
 
 void ClearOutWidthRecordsList( FileRecordWidthPtr pFileRecordWidthList )
 {
-	PERFORMANCE_MARKER
 	FileRecordWidthPtr pTempRecord = NULL;
 	FileRecordWidthPtr pDeleteRecord = NULL;
 
@@ -1613,12 +1580,11 @@ void ClearOutWidthRecordsList( FileRecordWidthPtr pFileRecordWidthList )
 
 void OpenFirstUnreadFile( void )
 {
-	PERFORMANCE_MARKER
 	// open the first unread file in the list
 	INT32 iCounter = 0;
-	FilesUnitPtr pFilesList=pFilesListHead; 
+	FilesUnitPtr pFilesList=pFilesListHead;
 
-	// make sure is a valid 
+	// make sure is a valid
 	while( pFilesList )
 	{
 
@@ -1634,19 +1600,18 @@ void OpenFirstUnreadFile( void )
 		// increment counter
 		iCounter++;
 	}
-	
+
 	return;
 }
 
 
 void CheckForUnreadFiles( void )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN	fStatusOfNewFileFlag = fNewFilesInFileViewer;
 
 	// willc heck for any unread files and set flag if any
 	FilesUnitPtr pFilesList=pFilesListHead;
-	
+
 	fNewFilesInFileViewer = FALSE;
 
 
@@ -1670,7 +1635,6 @@ void CheckForUnreadFiles( void )
 
 BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 {
-	PERFORMANCE_MARKER
 
 	INT32 iCounter = 0;
 	CHAR16 sString[2048];
@@ -1693,8 +1657,8 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 
 	// grab width list
 	WidthList = CreateWidthRecordsForTerroristFile( );
-	
-	
+
+
 	while( iCounter < ubFileRecordsLength[ iFileNumber ] )
 	{
 		LoadEncryptedDataFromFile( "BINARYDATA\\files.EDT", sString, FILE_STRING_SIZE * ( iOffset + iCounter ) * 2, FILE_STRING_SIZE * 2 );
@@ -1704,7 +1668,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 
 	pTempString = pFileStringList;
 
-	
+
 	iYPositionOnPage = 0;
 	iCounter = 0;
 	pLocatorString = pTempString;
@@ -1723,16 +1687,16 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 		while( pTempString )
 		{
 			uiFlags = IAN_WRAP_NO_SHADOW;
-					// copy over string 
+					// copy over string
 			wcscpy( sString, pTempString->pString );
-			
+
 			if( sString[ 0 ] == 0 )
 			{
 				// on last page
 				fOnLastFilesPageFlag = TRUE;
 			}
-			
-			
+
+
 			// set up font
 			uiFont = FILES_TEXT_FONT;
 			if( giFilesPage == 0 )
@@ -1742,7 +1706,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 				case( 0 ):
 						uiFont = FILES_TITLE_FONT;
 				break;
-				
+
 				}
 			}
 
@@ -1759,8 +1723,8 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 			}
 
 			// based on the record we are at, selected X start position and the width to wrap the line, to fit around pictures
-			if( ( iYPositionOnPage + IanWrappedStringHeight(0, 0, ( UINT16 )iFileLineWidth, FILE_GAP, 
-															uiFont, 0, sString, 
+			if( ( iYPositionOnPage + IanWrappedStringHeight(0, 0, ( UINT16 )iFileLineWidth, FILE_GAP,
+															uiFont, 0, sString,
 														0, 0, 0 ) )	< MAX_FILE_MESSAGE_PAGE_SIZE	)
 			{
 	 	// now print it
@@ -1775,7 +1739,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 			}
 
 			pTempString = pTempString->Next;
-						
+
 			if( ( pTempString == NULL ) && ( fGoingOffCurrentPage == FALSE ) )
 			{
 				// on last page
@@ -1803,38 +1767,38 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 				{
 					sprintf(sTemp, "%s%03d.sti", "FACES\\BIGFACES\\",	usProfileIdsForTerroristFiles[ iFileNumber + 1 ]);
 				}
-				
-		
+
+
 				VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 				FilenameForBPP(sTemp, VObjectDesc.ImageFile);
 				CHECKF(AddVideoObject(&VObjectDesc, &uiPicture));
 
-				//Blt face to screen to 
+				//Blt face to screen to
 				GetVideoObject(&hHandle, uiPicture);
 
 //def: 3/24/99
 //				BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) (	FILE_VIEWER_X +	30 ), ( INT16 ) ( iYPositionOnPage + 5), VO_BLT_SRCTRANSPARENCY,NULL);
 				BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) (	FILE_VIEWER_X +	30 ), ( INT16 ) ( iScreenHeightOffset + iYPositionOnPage + 21), VO_BLT_SRCTRANSPARENCY,NULL);
 
-				DeleteVideoObjectFromIndex( uiPicture ); 
+				DeleteVideoObjectFromIndex( uiPicture );
 
 				VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 				FilenameForBPP("LAPTOP\\InterceptBorder.sti", VObjectDesc.ImageFile);
 				CHECKF(AddVideoObject(&VObjectDesc, &uiPicture));
 
-				//Blt face to screen to 
+				//Blt face to screen to
 				GetVideoObject(&hHandle, uiPicture);
 
 				BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) (	FILE_VIEWER_X +	25 ), ( INT16 ) ( iScreenHeightOffset + iYPositionOnPage + 16 ), VO_BLT_SRCTRANSPARENCY,NULL);
 
-				DeleteVideoObjectFromIndex( uiPicture ); 
+				DeleteVideoObjectFromIndex( uiPicture );
 			}
 
 			iCounter++;
-		}	
-		
-		
-		
+		}
+
+
+
 		ClearOutWidthRecordsList( WidthList );
 		ClearFileStringList( );
 
@@ -1844,7 +1808,6 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 // add a file about this terrorist
 BOOLEAN AddFileAboutTerrorist( INT32 iProfileId )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	for( iCounter = 1; iCounter < 7; iCounter++ )
@@ -1862,6 +1825,6 @@ BOOLEAN AddFileAboutTerrorist( INT32 iProfileId )
 
 
 
- 
+
 
 

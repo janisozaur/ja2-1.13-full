@@ -26,7 +26,6 @@ BOOLEAN gfLoadPitsWithoutArming = FALSE;
 
 void Add3X3Pit( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	EXITGRID ExitGrid;
 	if( !gfEditMode )
 		ApplyMapChangesToMapTempFile( TRUE );
@@ -64,7 +63,6 @@ void Add3X3Pit( INT32 iMapIndex )
 
 void Add5X5Pit( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	EXITGRID ExitGrid;
 	if( !gfEditMode )
 		ApplyMapChangesToMapTempFile( TRUE );
@@ -133,7 +131,6 @@ void Add5X5Pit( INT32 iMapIndex )
 
 void Remove3X3Pit( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	RemoveAllObjectsOfTypeRange( iMapIndex + 159, REGWATERTEXTURE, REGWATERTEXTURE );
 	RemoveAllObjectsOfTypeRange( iMapIndex -	1,	REGWATERTEXTURE, REGWATERTEXTURE );
 	RemoveAllObjectsOfTypeRange( iMapIndex - 161, REGWATERTEXTURE, REGWATERTEXTURE );
@@ -148,7 +145,6 @@ void Remove3X3Pit( INT32 iMapIndex )
 
 void Remove5X5Pit( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	RemoveAllObjectsOfTypeRange( iMapIndex + 318, REGWATERTEXTURE, REGWATERTEXTURE );
 	RemoveAllObjectsOfTypeRange( iMapIndex + 158, REGWATERTEXTURE, REGWATERTEXTURE );
 	RemoveAllObjectsOfTypeRange( iMapIndex -	2, REGWATERTEXTURE, REGWATERTEXTURE );
@@ -179,39 +175,36 @@ void Remove5X5Pit( INT32 iMapIndex )
 
 void AddAllPits()
 {
-	PERFORMANCE_MARKER
 	UINT32 i;
 	for( i = 0; i < guiNumWorldItems; i++ )
 	{
 		if( gWorldItems[ i ].object.usItem == ACTION_ITEM )
 		{
 			if( gWorldItems[ i ].object[0]->data.misc.bActionValue == ACTION_ITEM_SMALL_PIT )
-				Add3X3Pit( gWorldItems[ i ].sGridNo );		
+				Add3X3Pit( gWorldItems[ i ].sGridNo );
 			else if( gWorldItems[ i ].object[0]->data.misc.bActionValue == ACTION_ITEM_LARGE_PIT )
 				Add5X5Pit( gWorldItems[ i ].sGridNo );
-		}	
+		}
 	}
 }
 
 void RemoveAllPits()
 {
-	PERFORMANCE_MARKER
 	UINT32 i;
 	for( i = 0; i < guiNumWorldItems; i++ )
 	{
 		if( gWorldItems[ i ].object.usItem == ACTION_ITEM )
 		{
 			if( gWorldItems[ i ].object[0]->data.misc.bActionValue == ACTION_ITEM_SMALL_PIT )
-				Remove3X3Pit( gWorldItems[ i ].sGridNo );		
+				Remove3X3Pit( gWorldItems[ i ].sGridNo );
 			else if( gWorldItems[ i ].object[0]->data.misc.bActionValue == ACTION_ITEM_LARGE_PIT )
 				Remove5X5Pit( gWorldItems[ i ].sGridNo );
-		}	
+		}
 	}
 }
 
 void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT16 sGridNo, INT16 sRadius )
 {
-	PERFORMANCE_MARKER
 	INT16 x, y, sNewGridNo;
 	UINT8	ubID;
 	SOLDIERTYPE *pSoldier;
@@ -238,19 +231,18 @@ void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT16 sGridNo, INT16 s
 				pSoldier->aiData.uiPendingActionData4 = sNewGridNo;
 
 				pSoldier->EVENT_InitNewSoldierAnim( FALL_INTO_PIT, 0 , FALSE );
-			}			
+			}
 		}
 	}
 }
 
 void HandleFallIntoPitFromAnimation( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = MercPtrs[ ubID ];
 	EXITGRID ExitGrid;
 	INT16 sPitGridNo;
 	// OK, get exit grid...
-	
+
 	sPitGridNo = (INT16)pSoldier->aiData.uiPendingActionData4;
 
 	GetExitGrid( sPitGridNo, &ExitGrid );
@@ -270,4 +262,4 @@ void HandleFallIntoPitFromAnimation( UINT8 ubID )
 
 	pSoldier->SetSoldierHeight( 0 );
 
-}	
+}

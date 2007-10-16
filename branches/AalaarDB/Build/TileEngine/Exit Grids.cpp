@@ -32,7 +32,6 @@ BOOLEAN gfOverrideInsertionWithExitGrid = FALSE;
 
 INT32 ConvertExitGridToINT32( EXITGRID *pExitGrid )
 {
-	PERFORMANCE_MARKER
 	INT32 iExitGridInfo;
 	iExitGridInfo	= (pExitGrid->ubGotoSectorX-1)<< 28;
 	iExitGridInfo += (pExitGrid->ubGotoSectorY-1)<< 24;
@@ -43,7 +42,6 @@ INT32 ConvertExitGridToINT32( EXITGRID *pExitGrid )
 
 void ConvertINT32ToExitGrid( INT32 iExitGridInfo, EXITGRID *pExitGrid )
 {
-	PERFORMANCE_MARKER
 	//convert the int into 4 unsigned bytes.
 	pExitGrid->ubGotoSectorX		= (UINT8)(((iExitGridInfo & 0xf0000000)>>28)+1);
 	pExitGrid->ubGotoSectorY		= (UINT8)(((iExitGridInfo & 0x0f000000)>>24)+1);
@@ -53,7 +51,6 @@ void ConvertINT32ToExitGrid( INT32 iExitGridInfo, EXITGRID *pExitGrid )
 
 BOOLEAN	GetExitGrid( INT16 sMapIndex, EXITGRID *pExitGrid )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pShadow;
 	pShadow = gpWorldLevelData[ sMapIndex ].pShadowHead;
 	//Search through object layer for an exitgrid
@@ -70,12 +67,11 @@ BOOLEAN	GetExitGrid( INT16 sMapIndex, EXITGRID *pExitGrid )
 	pExitGrid->ubGotoSectorY = 0;
 	pExitGrid->ubGotoSectorZ = 0;
 	pExitGrid->sGridNo = 0;
-	return FALSE;	
+	return FALSE;
 }
 
 BOOLEAN	ExitGridAtGridNo( INT16 sMapIndex )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pShadow;
 	pShadow = gpWorldLevelData[ sMapIndex ].pShadowHead;
 	//Search through object layer for an exitgrid
@@ -87,12 +83,11 @@ BOOLEAN	ExitGridAtGridNo( INT16 sMapIndex )
 		}
 		pShadow = pShadow->pNext;
 	}
-	return FALSE;	
+	return FALSE;
 }
 
 BOOLEAN	GetExitGridLevelNode( INT16 sMapIndex, LEVELNODE **ppLevelNode )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pShadow;
 	pShadow = gpWorldLevelData[ sMapIndex ].pShadowHead;
 	//Search through object layer for an exitgrid
@@ -105,13 +100,12 @@ BOOLEAN	GetExitGridLevelNode( INT16 sMapIndex, LEVELNODE **ppLevelNode )
 		}
 		pShadow = pShadow->pNext;
 	}
-	return FALSE;	
+	return FALSE;
 }
 
 
 void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pShadow, *tail;
 	pShadow = gpWorldLevelData[ iMapIndex ].pShadowHead;
 
@@ -146,7 +140,6 @@ void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid )
 
 void RemoveExitGridFromWorld( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	UINT16 usDummy;
 	if( TypeExistsInShadowLayer( iMapIndex, MOCKFLOOR, &usDummy ) )
 	{
@@ -156,7 +149,6 @@ void RemoveExitGridFromWorld( INT32 iMapIndex )
 
 void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
 {
-	PERFORMANCE_MARKER
 	EXITGRID exitGrid;
 	UINT16 usNumSaved = 0;
 	UINT16 x;
@@ -177,7 +169,6 @@ void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
 
 void LoadExitGrids( INT8 **hBuffer )
 {
-	PERFORMANCE_MARKER
 	EXITGRID exitGrid;
 	UINT16 x;
 	UINT16 usNumSaved;
@@ -198,7 +189,6 @@ void LoadExitGrids( INT8 **hBuffer )
 
 void AttemptToChangeFloorLevel( INT8 bRelativeZLevel )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubLookForLevel=0;
 	UINT16 i;
 	if( bRelativeZLevel != 1 && bRelativeZLevel != -1 )
@@ -242,7 +232,6 @@ void AttemptToChangeFloorLevel( INT8 bRelativeZLevel )
 
 INT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
-	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2;
@@ -260,7 +249,7 @@ INT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwee
 	// Turn off at end of function...
 	gfPlotPathToExitGrid = TRUE;
 
-	//Save AI pathing vars.	changing the distlimit restricts how 
+	//Save AI pathing vars.	changing the distlimit restricts how
 	//far away the pathing will consider.
 	ubSaveNPCAPBudget = gubNPCAPBudget;
 	ubSaveNPCDistLimit = gubNPCDistLimit;
@@ -304,11 +293,11 @@ INT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwee
 		}
 	}
 
-	//Now, find out which of these gridnos are reachable 
+	//Now, find out which of these gridnos are reachable
 	//(use the fake soldier and the pathing settings)
 	FindBestPath( &soldier, NOWHERE, 0, WALKING, COPYREACHABLE, PATH_THROUGH_PEOPLE );
-	
-	uiLowestRange = 999999;	
+
+	uiLowestRange = 999999;
 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
@@ -317,7 +306,7 @@ INT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwee
 		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
 		{
 			sGridNo = pSoldier->sGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if ( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) && 
+			if ( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) &&
 				gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
 			{
 				// Go on sweet stop
@@ -364,7 +353,6 @@ INT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwee
 
 INT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadius )
 {
-	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2;
@@ -382,7 +370,7 @@ INT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadiu
 	sRight	= ubRadius;
 
 	//clear the mapelements of potential residue MAPELEMENT_REACHABLE flags
-	uiLowestRange = 999999;	
+	uiLowestRange = 999999;
 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{

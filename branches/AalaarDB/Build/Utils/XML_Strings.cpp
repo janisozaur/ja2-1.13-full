@@ -15,18 +15,17 @@ struct
 	PARSE_STAGE	curElement;
 
 	CHAR8		szCharData[MAX_CHAR_DATA_LENGTH+1];
-	
+
 	UINT32			maxArraySize;
-	UINT32			curIndex;	
+	UINT32			curIndex;
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
 typedef stringParseData;
 
-static void XMLCALL 
+static void XMLCALL
 stringStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	stringParseData * pData = (stringParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -55,10 +54,9 @@ stringStartElementHandle(void *userData, const XML_Char *name, const XML_Char **
 static void XMLCALL
 stringCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	stringParseData * pData = (stringParseData *)userData;
 
-	if( (pData->currentDepth <= pData->maxReadDepth) && 
+	if( (pData->currentDepth <= pData->maxReadDepth) &&
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
 	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
@@ -69,7 +67,6 @@ stringCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 stringEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	stringParseData * pData = (stringParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -99,13 +96,12 @@ stringEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInStringArray()
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	stringParseData pData;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Loading %s",AMMOCALIBERSTRINGSFILENAME ) );
@@ -114,7 +110,7 @@ BOOLEAN ReadInStringArray()
 	hFile = FileOpen( AMMOCALIBERSTRINGSFILENAME, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -129,13 +125,13 @@ BOOLEAN ReadInStringArray()
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, stringStartElementHandle, stringEndElementHandle);
 	XML_SetCharacterDataHandler(parser, stringCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
-	pData.maxArraySize = MAXITEMS; 
+	pData.maxArraySize = MAXITEMS;
 	pData.curIndex = -1;
 
 	XML_SetUserData(parser, &pData);
@@ -161,7 +157,6 @@ BOOLEAN ReadInStringArray()
 }
 BOOLEAN WriteStringArray()
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("WriteStringArray"));
 	//Debug code; make sure that what we got from the file is the same as what's there
@@ -169,7 +164,7 @@ BOOLEAN WriteStringArray()
 	hFile = FileOpen( "TABLEDATA\\AmmoCaliberStrings out.xml", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	{
 		UINT32 cnt;
 
@@ -184,7 +179,7 @@ BOOLEAN WriteStringArray()
 			{
 				UINT32 uiCharLoc = wcscspn(szRemainder,L"&<>\'\"\0");
 				CHAR16 invChar = szRemainder[uiCharLoc];
-				
+
 				if(uiCharLoc)
 				{
 					szRemainder[uiCharLoc] = '\0';

@@ -252,14 +252,12 @@ void			ConfirmGioIronManMessageBoxCallBack( UINT8 bExitValue );
 
 UINT32	GameInitOptionsScreenInit( void )
 {
-	PERFORMANCE_MARKER
 	return( 1 );
 }
 
 
 UINT32	GameInitOptionsScreenHandle( void )
 {
-	PERFORMANCE_MARKER
 	StartFrameBufferRender();
 
 	if( gfGIOScreenEntry )
@@ -273,13 +271,13 @@ UINT32	GameInitOptionsScreenHandle( void )
 	}
 
 	GetGIOScreenUserInput();
-	
+
 
 	HandleGIOScreen();
 
-	// render buttons marked dirty	
+	// render buttons marked dirty
 	MarkButtonsDirty( );
-	RenderButtons( ); 
+	RenderButtons( );
 
 	// render help
 //	RenderFastHelp( );
@@ -321,14 +319,12 @@ UINT32	GameInitOptionsScreenHandle( void )
 
 UINT32	GameInitOptionsScreenShutdown( void )
 {
-	PERFORMANCE_MARKER
 	return( 1 );
 }
 
 
 BOOLEAN		EnterGIOScreen()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT16					cnt;
 	UINT16					usPosY;
@@ -358,10 +354,10 @@ BOOLEAN		EnterGIOScreen()
 
 	//Ok button
 	giGIODoneBtnImage = LoadButtonImage("INTERFACE\\PreferencesButtons.sti", -1,0,-1,2,-1 );
-	guiGIODoneButton = CreateIconAndTextButton( giGIODoneBtnImage, gzGIOScreenText[GIO_OK_TEXT], OPT_BUTTON_FONT, 
-													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
-													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
-													TEXT_CJUSTIFIED, 
+	guiGIODoneButton = CreateIconAndTextButton( giGIODoneBtnImage, gzGIOScreenText[GIO_OK_TEXT], OPT_BUTTON_FONT,
+													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
+													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
+													TEXT_CJUSTIFIED,
 													GIO_BTN_OK_X, GIO_BTN_OK_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnGIODoneCallback);
 
@@ -370,10 +366,10 @@ BOOLEAN		EnterGIOScreen()
 
 	//Cancel button
 	giGIOCancelBtnImage = UseLoadedButtonImage( giGIODoneBtnImage, -1,1,-1,3,-1 );
-	guiGIOCancelButton = CreateIconAndTextButton( giGIOCancelBtnImage, gzGIOScreenText[GIO_CANCEL_TEXT], OPT_BUTTON_FONT, 
-													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
-													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
-													TEXT_CJUSTIFIED, 
+	guiGIOCancelButton = CreateIconAndTextButton( giGIOCancelBtnImage, gzGIOScreenText[GIO_CANCEL_TEXT], OPT_BUTTON_FONT,
+													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
+													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
+													TEXT_CJUSTIFIED,
 													GIO_CANCEL_X, GIO_BTN_OK_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnGIOCancelCallback );
 	SpecifyButtonSoundScheme( guiGIOCancelButton, BUTTON_SOUND_SCHEME_BIGSWITCH3 );
@@ -386,8 +382,8 @@ BOOLEAN		EnterGIOScreen()
 
 	for( cnt=0; cnt<NUM_DIFF_SETTINGS; cnt++)
 	{
-		guiDifficultySettingsToggles[ cnt ] = CreateCheckBoxButton(	GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 
-																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10, 
+		guiDifficultySettingsToggles[ cnt ] = CreateCheckBoxButton(	GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
+																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnDifficultyTogglesCallback );
 		MSYS_SetBtnUserData( guiDifficultySettingsToggles[ cnt ], 0, cnt );
 
@@ -416,8 +412,8 @@ BOOLEAN		EnterGIOScreen()
 	usPosY = GIO_GAME_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
 	for( cnt=0; cnt<NUM_GAME_STYLES; cnt++)
 	{
-		guiGameStyleToggles[ cnt ] = CreateCheckBoxButton(	GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 
-																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10, 
+		guiGameStyleToggles[ cnt ] = CreateCheckBoxButton(	GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
+																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnGameStyleTogglesCallback );
 		MSYS_SetBtnUserData( guiGameStyleToggles[ cnt ], 0, cnt );
 
@@ -429,15 +425,15 @@ BOOLEAN		EnterGIOScreen()
 	else // if(gGameOptions.ubGameStyle == STYLE_REALISTIC)
 		ButtonList[ guiGameStyleToggles[ GIO_REALISTIC ] ]->uiFlags |= BUTTON_CLICKED_ON;
 //	else
-//		ButtonList[ guiGameStyleToggles[ GIO_PLATINUM ] ]->uiFlags |= BUTTON_CLICKED_ON;		
+//		ButtonList[ guiGameStyleToggles[ GIO_PLATINUM ] ]->uiFlags |= BUTTON_CLICKED_ON;
 
 
 	// Madd
 	usPosY = GIO_BR_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
 	for( cnt=0; cnt<NUM_BR_OPTIONS; cnt++)
 	{
-		guiBROptionToggles[ cnt ] = CreateCheckBoxButton(	GIO_BR_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 
-																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10, 
+		guiBROptionToggles[ cnt ] = CreateCheckBoxButton(	GIO_BR_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
+																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnBROptionTogglesCallback );
 		MSYS_SetBtnUserData( guiBROptionToggles[ cnt ], 0, cnt );
 
@@ -463,8 +459,8 @@ BOOLEAN		EnterGIOScreen()
 	usPosY = GIO_IRON_MAN_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
 	for( cnt=0; cnt<NUM_SAVE_OPTIONS; cnt++)
 	{
-		guiGameSaveToggles[ cnt ] = CreateCheckBoxButton(	GIO_IRON_MAN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 
-																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10, 
+		guiGameSaveToggles[ cnt ] = CreateCheckBoxButton(	GIO_IRON_MAN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
+																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnGameSaveTogglesCallback );
 		MSYS_SetBtnUserData( guiGameSaveToggles[ cnt ], 0, cnt );
 
@@ -484,8 +480,8 @@ BOOLEAN		EnterGIOScreen()
 	usPosY = GIO_GUN_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
 	for( cnt=0; cnt<NUM_GUN_OPTIONS; cnt++)
 	{
-		guiGunOptionToggles[ cnt ] = CreateCheckBoxButton(	GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 
-																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10, 
+		guiGunOptionToggles[ cnt ] = CreateCheckBoxButton(	GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
+																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnGunOptionsTogglesCallback);
 		MSYS_SetBtnUserData( guiGunOptionToggles[ cnt ], 0, cnt );
 
@@ -505,8 +501,8 @@ BOOLEAN		EnterGIOScreen()
 	usPosY = GIO_TIMED_TURN_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
 	for( cnt=0; cnt<GIO_NUM_TIMED_TURN_OPTIONS; cnt++)
 	{
-		guiTimedTurnToggles[ cnt ] = CreateCheckBoxButton(	GIO_TIMED_TURN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 
-																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10, 
+		guiTimedTurnToggles[ cnt ] = CreateCheckBoxButton(	GIO_TIMED_TURN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
+																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnTimedTurnsTogglesCallback );
 		MSYS_SetBtnUserData( guiTimedTurnToggles[ cnt ], 0, cnt );
 
@@ -536,7 +532,6 @@ BOOLEAN		EnterGIOScreen()
 
 BOOLEAN		ExitGIOScreen()
 {
-	PERFORMANCE_MARKER
 	UINT16	cnt;
 
 	if( !gfGIOButtonsAllocated )
@@ -594,7 +589,6 @@ BOOLEAN		ExitGIOScreen()
 
 void			HandleGIOScreen()
 {
-	PERFORMANCE_MARKER
 	if( gubGameOptionScreenHandler != GIO_NOTHING )
 	{
 		switch( gubGameOptionScreenHandler )
@@ -640,7 +634,6 @@ void			HandleGIOScreen()
 
 BOOLEAN		RenderGIOScreen()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT	hPixHandle;
 	UINT16		usPosY;
 
@@ -652,58 +645,58 @@ BOOLEAN		RenderGIOScreen()
 	ShadowVideoSurfaceRect( FRAME_BUFFER, iScreenWidthOffset, iScreenHeightOffset, iScreenWidthOffset + 640, iScreenHeightOffset + 480 );
 
 	//Display the title
-	DrawTextToScreen( gzGIOScreenText[ GIO_INITIAL_GAME_SETTINGS ], GIO_MAIN_TITLE_X, GIO_MAIN_TITLE_Y, GIO_MAIN_TITLE_WIDTH, GIO_TITLE_FONT, GIO_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );	
+	DrawTextToScreen( gzGIOScreenText[ GIO_INITIAL_GAME_SETTINGS ], GIO_MAIN_TITLE_X, GIO_MAIN_TITLE_Y, GIO_MAIN_TITLE_WIDTH, GIO_TITLE_FONT, GIO_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 
 	//Display the Dif Settings Title Text
-	//DrawTextToScreen( gzGIOScreenText[ GIO_DIF_LEVEL_TEXT ], GIO_DIF_SETTINGS_X, (UINT16)(GIO_DIF_SETTINGS_Y-GIO_GAP_BN_SETTINGS), GIO_DIF_SETTINGS_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
+	//DrawTextToScreen( gzGIOScreenText[ GIO_DIF_LEVEL_TEXT ], GIO_DIF_SETTINGS_X, (UINT16)(GIO_DIF_SETTINGS_Y-GIO_GAP_BN_SETTINGS), GIO_DIF_SETTINGS_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	DisplayWrappedString( GIO_DIF_SETTINGS_X, (UINT16)(GIO_DIF_SETTINGS_Y-GIO_GAP_BN_SETTINGS), GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_DIF_LEVEL_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 
 	usPosY = GIO_DIF_SETTINGS_Y+2;
-	//DrawTextToScreen( gzGIOScreenText[ GIO_EASY_TEXT ], (UINT16)(GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
+	//DrawTextToScreen( gzGIOScreenText[ GIO_EASY_TEXT ], (UINT16)(GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	DisplayWrappedString( (UINT16)(GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_EASY_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 	usPosY += GIO_GAP_BN_SETTINGS-5;
-	//DrawTextToScreen( gzGIOScreenText[ GIO_MEDIUM_TEXT ], (UINT16)(GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
+	//DrawTextToScreen( gzGIOScreenText[ GIO_MEDIUM_TEXT ], (UINT16)(GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	DisplayWrappedString( (UINT16)(GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_MEDIUM_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 	usPosY += GIO_GAP_BN_SETTINGS-5;
-	//DrawTextToScreen( gzGIOScreenText[ GIO_HARD_TEXT ], (UINT16)(GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
+	//DrawTextToScreen( gzGIOScreenText[ GIO_HARD_TEXT ], (UINT16)(GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	DisplayWrappedString( (UINT16)(GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_HARD_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 	// Madd
 	usPosY += GIO_GAP_BN_SETTINGS-5;
-	//DrawTextToScreen( gzGIOScreenText[ GIO_HARD_TEXT ], (UINT16)(GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
+	//DrawTextToScreen( gzGIOScreenText[ GIO_HARD_TEXT ], (UINT16)(GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	DisplayWrappedString( (UINT16)(GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_INSANE_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 
 	//Display the Game Settings Title Text
-//	DrawTextToScreen( gzGIOScreenText[ GIO_GAME_STYLE_TEXT ], GIO_GAME_SETTINGS_X, (UINT16)(GIO_GAME_SETTINGS_Y-GIO_GAP_BN_SETTINGS), GIO_GAME_SETTINGS_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
+//	DrawTextToScreen( gzGIOScreenText[ GIO_GAME_STYLE_TEXT ], GIO_GAME_SETTINGS_X, (UINT16)(GIO_GAME_SETTINGS_Y-GIO_GAP_BN_SETTINGS), GIO_GAME_SETTINGS_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	DisplayWrappedString( GIO_GAME_SETTINGS_X, (UINT16)(GIO_GAME_SETTINGS_Y-GIO_GAP_BN_SETTINGS), GIO_GAME_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_GAME_STYLE_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 	usPosY = GIO_GAME_SETTINGS_Y+2;
-	//DrawTextToScreen( gzGIOScreenText[ GIO_REALISTIC_TEXT ], (UINT16)(GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
+	//DrawTextToScreen( gzGIOScreenText[ GIO_REALISTIC_TEXT ], (UINT16)(GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	DisplayWrappedString( (UINT16)(GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_GAME_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_REALISTIC_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 	usPosY += GIO_GAP_BN_SETTINGS;
-	//DrawTextToScreen( gzGIOScreenText[ GIO_SCI_FI_TEXT ], (UINT16)(GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
+	//DrawTextToScreen( gzGIOScreenText[ GIO_SCI_FI_TEXT ], (UINT16)(GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	DisplayWrappedString( (UINT16)(GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_GAME_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_SCI_FI_TEXT ],	FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 	//usPosY += GIO_GAP_BN_SETTINGS;
-	//DrawTextToScreen( gzGIOScreenText[ GIO_SCI_FI_TEXT ], (UINT16)(GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
+	//DrawTextToScreen( gzGIOScreenText[ GIO_SCI_FI_TEXT ], (UINT16)(GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	//DisplayWrappedString( (UINT16)(GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_GAME_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_PLATINUM_TEXT ],	FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 
 	//Display the Gun Settings Title Text
-//	DrawTextToScreen( gzGIOScreenText[ GIO_GUN_OPTIONS_TEXT ], GIO_GUN_SETTINGS_X, (UINT16)(GIO_GUN_SETTINGS_Y-GIO_GAP_BN_SETTINGS), GIO_GUN_SETTINGS_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
+//	DrawTextToScreen( gzGIOScreenText[ GIO_GUN_OPTIONS_TEXT ], GIO_GUN_SETTINGS_X, (UINT16)(GIO_GUN_SETTINGS_Y-GIO_GAP_BN_SETTINGS), GIO_GUN_SETTINGS_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	DisplayWrappedString( GIO_GUN_SETTINGS_X, (UINT16)(GIO_GUN_SETTINGS_Y-GIO_GAP_BN_SETTINGS), GIO_GUN_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_GUN_OPTIONS_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 	usPosY = GIO_GUN_SETTINGS_Y+2;
-	//DrawTextToScreen( gzGIOScreenText[ GIO_REDUCED_GUNS_TEXT ], (UINT16)(GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
+	//DrawTextToScreen( gzGIOScreenText[ GIO_REDUCED_GUNS_TEXT ], (UINT16)(GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	DisplayWrappedString( (UINT16)(GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_GUN_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_REDUCED_GUNS_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 	usPosY += GIO_GAP_BN_SETTINGS;
-	//DrawTextToScreen( gzGIOScreenText[ GIO_GUN_NUT_TEXT ], (UINT16)(GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
+	//DrawTextToScreen( gzGIOScreenText[ GIO_GUN_NUT_TEXT ], (UINT16)(GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_MAIN_TITLE_WIDTH, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	DisplayWrappedString( (UINT16)(GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_GUN_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_GUN_NUT_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 
@@ -754,7 +747,6 @@ BOOLEAN		RenderGIOScreen()
 
 void			GetGIOScreenUserInput()
 {
-	PERFORMANCE_MARKER
 	InputAtom Event;
 //	POINT	MousePos;
 
@@ -793,7 +785,6 @@ void			GetGIOScreenUserInput()
 
 void BtnDifficultyTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		/*UINT8	ubButton = (UINT8)*/MSYS_GetBtnUserData( btn, 0 );
@@ -834,7 +825,6 @@ void BtnDifficultyTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 //Madd
 void BtnBROptionTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		/*UINT8	ubButton = (UINT8)*/MSYS_GetBtnUserData( btn, 0 );
@@ -873,7 +863,6 @@ void BtnBROptionTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 
 void BtnGameStyleTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		/*UINT8	ubButton = (UINT8)*/MSYS_GetBtnUserData( btn, 0 );
@@ -912,7 +901,6 @@ void BtnGameStyleTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 
 void BtnGameSaveTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 //		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
@@ -951,7 +939,6 @@ void BtnGameSaveTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 
 void BtnGunOptionsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		/*UINT8	ubButton = (UINT8)*/MSYS_GetBtnUserData( btn, 0 );
@@ -992,7 +979,6 @@ void BtnGunOptionsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 /*
 void BtnTimedTurnsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
@@ -1035,7 +1021,6 @@ void BtnTimedTurnsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 
 void BtnGIODoneCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1055,12 +1040,11 @@ void BtnGIODoneCallback(GUI_BUTTON *btn,INT32 reason)
 
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 
 
 void BtnGIOCancelCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1074,12 +1058,11 @@ void BtnGIOCancelCallback(GUI_BUTTON *btn,INT32 reason)
 
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 
 
 UINT8	GetCurrentDifficultyButtonSetting()
 {
-	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<NUM_DIFF_SETTINGS; cnt++)
@@ -1098,7 +1081,6 @@ UINT8	GetCurrentDifficultyButtonSetting()
 //Madd
 UINT8	GetCurrentBROptionButtonSetting()
 {
-	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<NUM_BR_OPTIONS; cnt++)
@@ -1113,7 +1095,6 @@ UINT8	GetCurrentBROptionButtonSetting()
 
 UINT8	GetCurrentGameStyleButtonSetting()
 {
-	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<NUM_GAME_STYLES; cnt++)
@@ -1130,7 +1111,6 @@ UINT8	GetCurrentGameStyleButtonSetting()
 
 UINT8	GetCurrentGunButtonSetting()
 {
-	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<NUM_GUN_OPTIONS; cnt++)
@@ -1147,7 +1127,6 @@ UINT8	GetCurrentGunButtonSetting()
 /*
 UINT8	GetCurrentTimedTurnsButtonSetting()
 {
-	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<GIO_NUM_TIMED_TURN_OPTIONS; cnt++)
@@ -1163,7 +1142,6 @@ UINT8	GetCurrentTimedTurnsButtonSetting()
 
 UINT8	GetCurrentGameSaveButtonSetting()
 {
-	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<NUM_SAVE_OPTIONS; cnt++)
@@ -1180,7 +1158,6 @@ UINT8	GetCurrentGameSaveButtonSetting()
 
 void RestoreGIOButtonBackGrounds()
 {
-	PERFORMANCE_MARKER
 	UINT8	cnt;
 	UINT16 usPosY;
 
@@ -1189,7 +1166,7 @@ void RestoreGIOButtonBackGrounds()
 	//Check box to toggle Difficulty settings
 	for( cnt=0; cnt<NUM_DIFF_SETTINGS; cnt++)
 	{
-		RestoreExternBackgroundRect( GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 ); 
+		RestoreExternBackgroundRect( GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 );
 		usPosY += GIO_GAP_BN_SETTINGS-5;
 	}
 
@@ -1197,7 +1174,7 @@ void RestoreGIOButtonBackGrounds()
 	//Check box to toggle Game settings ( realistic, sci fi )
 	for( cnt=0; cnt<NUM_GAME_STYLES; cnt++)
 	{
-		RestoreExternBackgroundRect( GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 ); 
+		RestoreExternBackgroundRect( GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 );
 
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
@@ -1207,7 +1184,7 @@ void RestoreGIOButtonBackGrounds()
 	//Check box to toggle Gun options
 	for( cnt=0; cnt<NUM_GUN_OPTIONS; cnt++)
 	{
-		RestoreExternBackgroundRect( GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 ); 
+		RestoreExternBackgroundRect( GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 );
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
 
@@ -1217,7 +1194,7 @@ void RestoreGIOButtonBackGrounds()
 	usPosY = GIO_TIMED_TURN_SETTING_Y-GIO_OFFSET_TO_TOGGLE_BOX_Y;
 	for( cnt=0; cnt<GIO_NUM_TIMED_TURN_OPTIONS; cnt++)
 	{
-		RestoreExternBackgroundRect( GIO_TIMED_TURN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 ); 
+		RestoreExternBackgroundRect( GIO_TIMED_TURN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 );
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
 	*/
@@ -1226,7 +1203,7 @@ void RestoreGIOButtonBackGrounds()
 	usPosY = GIO_IRON_MAN_SETTING_Y-GIO_OFFSET_TO_TOGGLE_BOX_Y;
 	for( cnt=0; cnt<NUM_SAVE_OPTIONS; cnt++)
 	{
-		RestoreExternBackgroundRect( GIO_IRON_MAN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 ); 
+		RestoreExternBackgroundRect( GIO_IRON_MAN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 );
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
 
@@ -1235,7 +1212,7 @@ void RestoreGIOButtonBackGrounds()
 	usPosY = GIO_BR_SETTING_Y-GIO_OFFSET_TO_TOGGLE_BOX_Y;
 	for( cnt=0; cnt<NUM_BR_OPTIONS; cnt++)
 	{
-		RestoreExternBackgroundRect( GIO_BR_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 ); 
+		RestoreExternBackgroundRect( GIO_BR_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 );
 		usPosY += GIO_GAP_BN_SETTINGS-5;
 	}
 }
@@ -1243,17 +1220,16 @@ void RestoreGIOButtonBackGrounds()
 
 void DoneFadeOutForExitGameInitOptionScreen( void )
 {
-	PERFORMANCE_MARKER
 	// loop through and get the status of all the buttons
 	// Madd
 	gGameOptions.fGunNut = GetCurrentGunButtonSetting();
 	gGameOptions.ubGameStyle = GetCurrentGameStyleButtonSetting();
-	gGameOptions.ubDifficultyLevel = GetCurrentDifficultyButtonSetting() + 1; 
+	gGameOptions.ubDifficultyLevel = GetCurrentDifficultyButtonSetting() + 1;
 	// JA2Gold: no more timed turns setting
 	//gGameOptions.fTurnTimeLimit = GetCurrentTimedTurnsButtonSetting();
 	// JA2Gold: iron man
 	gGameOptions.fIronManMode = GetCurrentGameSaveButtonSetting();
-	
+
 	switch ( GetCurrentBROptionButtonSetting() )
 	{
 		case GIO_BR_GOOD:
@@ -1299,16 +1275,14 @@ void DoneFadeOutForExitGameInitOptionScreen( void )
 
 void DoneFadeInForExitGameInitOptionScreen( void )
 {
-	PERFORMANCE_MARKER
 	SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 }
 
 
 BOOLEAN DoGioMessageBox( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	PERFORMANCE_MARKER
 	SGPRect CenteringRect= {0, 0, SCREEN_WIDTH-1, SCREEN_HEIGHT-1 };
-	
+
 	// reset exit mode
 //	gfExitGioDueToMessageBox = TRUE;
 
@@ -1323,7 +1297,6 @@ BOOLEAN DoGioMessageBox( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen
 
 void DisplayMessageToUserAboutGameDifficulty()
 {
-	PERFORMANCE_MARKER
 	UINT8 ubDiffLevel = GetCurrentDifficultyButtonSetting();
 
 	switch( ubDiffLevel )
@@ -1346,7 +1319,6 @@ void DisplayMessageToUserAboutGameDifficulty()
 
 void	ConfirmGioDifSettingMessageBoxCallBack( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		gubGameOptionScreenHandler = GIO_EXIT;
@@ -1355,9 +1327,8 @@ void	ConfirmGioDifSettingMessageBoxCallBack( UINT8 bExitValue )
 
 BOOLEAN DisplayMessageToUserAboutIronManMode()
 {
-	PERFORMANCE_MARKER
 	// Madd
-	UINT8 ubIronManMode = GetCurrentGameSaveButtonSetting(); //FALSE; 
+	UINT8 ubIronManMode = GetCurrentGameSaveButtonSetting(); //FALSE;
 
 	//if the user has selected IRON MAN mode
 	if( ubIronManMode )
@@ -1372,7 +1343,6 @@ BOOLEAN DisplayMessageToUserAboutIronManMode()
 
 void			ConfirmGioIronManMessageBoxCallBack( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		gubGameOptionScreenHandler = GIO_IRON_MAN_MODE;

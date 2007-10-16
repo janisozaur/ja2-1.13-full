@@ -1,6 +1,6 @@
 /*
  *
- * This file contains code for the AI linked list which 
+ * This file contains code for the AI linked list which
  * (in TURNBASED COMBAT) keeps track of which AI guy should
  * be handled next.
  *
@@ -33,7 +33,6 @@ BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount,
 
 void ClearAIList( void )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubLoop;
 
 	for ( ubLoop = 0; ubLoop < AI_LIST_SIZE; ubLoop++ )
@@ -47,7 +46,6 @@ void ClearAIList( void )
 
 void DeleteAIListEntry( AILIST *	pEntry )
 {
-	PERFORMANCE_MARKER
 	pEntry->ubID = NOBODY;
 	pEntry->bPriority = 0;
 	pEntry->pNext = NULL;
@@ -55,7 +53,6 @@ void DeleteAIListEntry( AILIST *	pEntry )
 
 UINT8	FindEmptyAIListEntry( void )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubLoop;
 
 	for ( ubLoop = 0; ubLoop < AI_LIST_SIZE; ubLoop++ )
@@ -71,7 +68,6 @@ UINT8	FindEmptyAIListEntry( void )
 
 AILIST * CreateNewAIListEntry( UINT8 ubNewEntry, UINT8 ubID, INT8 bPriority )
 {
-	PERFORMANCE_MARKER
 	gAIList[ ubNewEntry ].ubID = ubID;
 	gAIList[ ubNewEntry ].bPriority = bPriority;
 	gAIList[ ubNewEntry ].pNext = NULL;
@@ -80,7 +76,6 @@ AILIST * CreateNewAIListEntry( UINT8 ubNewEntry, UINT8 ubID, INT8 bPriority )
 
 UINT8 RemoveFirstAIListEntry( void )
 {
-	PERFORMANCE_MARKER
 	AILIST *	pOldFirstEntry;
 	UINT8			ubID;
 
@@ -106,7 +101,6 @@ UINT8 RemoveFirstAIListEntry( void )
 
 void RemoveAIListEntryForID( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	AILIST *	pEntry;
 	AILIST *	pPrevEntry;
 
@@ -136,12 +130,11 @@ void RemoveAIListEntryForID( UINT8 ubID )
 
 BOOLEAN InsertIntoAIList( UINT8 ubID, INT8 bPriority )
 {
-	PERFORMANCE_MARKER
 	UINT8			ubNewEntry;
 	AILIST *	pEntry, * pNewEntry, * pPrevEntry = NULL;
 
 	ubNewEntry = FindEmptyAIListEntry();
-		
+
 	pNewEntry = CreateNewAIListEntry( ubNewEntry, ubID, bPriority );
 
 	// look through the list now to see where to insert the entry
@@ -155,7 +148,7 @@ BOOLEAN InsertIntoAIList( UINT8 ubID, INT8 bPriority )
 	else
 	{
 		pEntry = gpFirstAIListEntry;
-		do 
+		do
 		{
 			if ( bPriority > pEntry->bPriority )
 			{
@@ -190,16 +183,16 @@ BOOLEAN InsertIntoAIList( UINT8 ubID, INT8 bPriority )
 	return( FALSE );
 }
 
-BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount, BOOLEAN fDoRandomChecks ) 
+BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount, BOOLEAN fDoRandomChecks )
 {
 	if ( (gTacticalStatus.bBoxingState == BOXING) && !(pSoldier->flags.uiStatusFlags & SOLDIER_BOXER) )
 	{
 		return( FALSE );
 	}
 
-	if ( ! ( pSoldier->bActive && pSoldier->bInSector ) ) 
+	if ( ! ( pSoldier->bActive && pSoldier->bInSector ) )
 	{
-		// the check for 
+		// the check for
 		return( FALSE );
 	}
 
@@ -244,7 +237,7 @@ BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount,
 			else
 			{
 				// heard gunshots
-				if ( pSoldier->flags.uiStatusFlags & SOLDIER_COWERING ) 
+				if ( pSoldier->flags.uiStatusFlags & SOLDIER_COWERING )
 				{
 					if ( pSoldier->bVisible )
 					{
@@ -278,7 +271,7 @@ BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount,
 		// non-neutral civs should be handled all the time, right?
 		// reset last action if cowering
 
-		if ( pSoldier->flags.uiStatusFlags & SOLDIER_COWERING ) 
+		if ( pSoldier->flags.uiStatusFlags & SOLDIER_COWERING )
 		{
 			pSoldier->aiData.bLastAction = AI_ACTION_NONE;
 		}
@@ -290,7 +283,6 @@ BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount,
 
 BOOLEAN MoveToFrontOfAIList( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	// we'll have to fake this guy's alert status (in the list) to be the same as the current
 	// front of the list
 	INT8			bPriority;
@@ -307,12 +299,12 @@ BOOLEAN MoveToFrontOfAIList( UINT8 ubID )
 
 	if (gpFirstAIListEntry == NULL)
 	{
-		return( InsertIntoAIList( ubID, MAX_AI_PRIORITY ) ); 
+		return( InsertIntoAIList( ubID, MAX_AI_PRIORITY ) );
 	}
 	else
 	{
 		bPriority = gpFirstAIListEntry->bPriority;
-		ubNewEntry = FindEmptyAIListEntry();	
+		ubNewEntry = FindEmptyAIListEntry();
 		pNewEntry = CreateNewAIListEntry( ubNewEntry, ubID, bPriority );
 
 		// insert at front
@@ -324,7 +316,6 @@ BOOLEAN MoveToFrontOfAIList( UINT8 ubID )
 
 BOOLEAN BuildAIListForTeam( INT8 bTeam )
 {
-	PERFORMANCE_MARKER
 	// loop through all non-player-team guys and add to list
 	UINT32					uiLoop;
 	BOOLEAN					fInsertRet;
@@ -339,11 +330,11 @@ BOOLEAN BuildAIListForTeam( INT8 bTeam )
 
 	// clear the AI list
 	ClearAIList();
-		
+
 	// create a new list
 	for( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++ )
 	{
-		// non-null merc slot ensures active 
+		// non-null merc slot ensures active
 		pSoldier = MercSlots[ uiLoop ];
 		if ( pSoldier && pSoldier->bTeam == bTeam )
 		{
@@ -390,7 +381,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	48,218,176,116,87,91,156,
 	166,224,215,100,237,71,157
 	},
-	
+
 	{
 	99,93,179,25,113,109,38,
 	135,144,248,17,108,178,84,
@@ -400,7 +391,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	146,111,103,48,161,25,196,
 	84,201,179,208,220,189,113
 	},
-	
+
 	{
 	217,122,77,162,22,25,203,
 	190,115,43,235,154,27,227,
@@ -410,7 +401,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	113,185,171,252,214,115,41,
 	65,49,3,174,27,220,206
 	},
-	
+
 	{
 	180,29,63,146,101,192,164,
 	128,7,28,111,172,125,203,
@@ -420,7 +411,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	114,156,45,253,198,179,207,
 	35,235,225,20,205,34,14
 	},
-	
+
 	{
 	144,113,83,76,208,239,2,
 	236,97,66,38,195,185,52,
@@ -430,7 +421,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	125,209,159,31,135,99,143,
 	250,243,90,127,249,32,121
 	},
-	
+
 	{
 	76,189,22,40,143,9,197,
 	91,66,142,145,3,138,202,
@@ -440,7 +431,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	14,206,204,152,226,86,66,
 	219,148,100,89,148,22,243
 	},
-	
+
 	{
 	206,52,86,217,117,60,134,
 	215,114,154,137,4,37,66,
@@ -450,7 +441,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	195,173,91,205,85,32,40,
 	248,63,194,73,172,181,184
 	},
-	
+
 	{
 	95,234,168,147,217,213,204,
 	132,140,158,22,201,182,222,
@@ -460,7 +451,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	206,228,226,135,211,33,241,
 	74,214,104,47,44,132,187
 	},
-	
+
 	{
 	26,121,193,40,90,98,61,
 	42,168,13,248,146,203,80,
@@ -470,7 +461,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	12,182,35,39,229,187,83,
 	243,142,218,94,179,241,90
 	},
-	
+
 	{
 	142,9,212,220,121,125,115,
 	191,40,144,216,56,6,76,
@@ -480,7 +471,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	91,185,8,143,5,221,216,
 	232,211,225,219,86,5,16
 	},
-	
+
 	{
 	195,200,131,175,42,189,78,
 	186,174,122,45,142,55,106,
@@ -490,7 +481,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	93,44,79,143,63,64,84,
 	205,244,74,6,242,42,58
 	},
-	
+
 	{
 	82,107,124,208,214,175,77,
 	77,123,32,162,220,87,3,
@@ -500,7 +491,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	174,142,207,195,133,127,164,
 	165,161,2,37,44,65,60
 	},
-	
+
 	{
 	79,86,68,37,213,189,232,
 	15,143,41,230,136,191,222,
@@ -510,7 +501,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	15,139,203,66,8,252,236,
 	125,90,88,169,222,244,35
 	},
-	
+
 	{
 	206,62,201,224,92,24,183,
 	166,85,215,246,29,100,157,
@@ -520,7 +511,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	123,233,236,157,232,207,13,
 	66,177,158,229,169,180,180
 	},
-	
+
 	{
 	254,188,196,16,50,108,215,
 	198,166,37,72,138,227,191,
@@ -530,7 +521,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	10,124,31,130,130,182,56,
 	85,134,152,104,78,51,237
 	},
-	
+
 	{
 	236,233,113,237,175,131,167,
 	99,63,81,142,139,103,199,
@@ -540,7 +531,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	5,188,144,130,185,34,11,
 	131,71,64,82,241,56,101
 	},
-	
+
 	{
 	201,241,254,183,146,209,209,
 	56,204,180,211,122,211,146,
@@ -550,7 +541,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	22,36,186,200,111,220,126,
 	240,96,223,53,112,101,142
 	},
-	
+
 	{
 	243,182,138,24,233,13,236,
 	111,101,139,30,233,72,14,
@@ -560,7 +551,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	54,164,174,55,183,64,226,
 	55,110,252,49,136,184,237
 	},
-	
+
 	{
 	168,31,242,128,40,66,176,
 	76,175,24,54,137,56,123,
@@ -570,7 +561,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	98,236,88,11,153,87,150,
 	113,38,187,224,182,142,66
 	},
-	
+
 	{
 	122,108,52,202,69,109,124,
 	11,236,192,188,209,141,143,
@@ -580,7 +571,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	90,155,103,126,27,205,246,
 	138,151,25,142,214,114,214
 	},
-	
+
 	{
 	213,206,212,75,128,138,215,
 	3,9,165,183,182,42,136,
@@ -590,7 +581,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	210,34,39,38,205,70,33,
 	49,149,117,58,69,184,47
 	},
-	
+
 	{
 	103,250,19,106,176,94,193,
 	170,129,145,215,119,136,99,
@@ -600,7 +591,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	241,50,63,74,129,28,126,
 	145,114,195,134,27,192,129
 	},
-	
+
 	{
 	105,226,237,237,149,175,252,
 	47,105,12,92,232,88,227,
@@ -610,7 +601,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	191,156,210,71,9,152,66,
 	2,50,96,134,186,44,99
 	},
-	
+
 	{
 	170,175,37,193,148,175,69,
 	82,195,14,57,200,212,237,
@@ -620,7 +611,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	130,251,78,244,97,242,176,
 	24,248,51,221,36,223,33
 	},
-	
+
 	{
 	213,62,25,152,108,57,4,
 	234,182,62,27,201,109,115,
@@ -630,7 +621,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	119,8,136,33,43,190,251,
 	25,44,15,242,48,231,170
 	},
-	
+
 	{
 	69,91,100,123,125,126,3,
 	16,15,53,81,162,184,255,
@@ -640,7 +631,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	65,38,37,200,190,124,195,
 	106,2,12,153,166,58,138
 	},
-	
+
 	{
 	123,65,90,159,168,71,9,
 	59,29,75,192,44,243,30,
@@ -650,7 +641,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	17,99,33,53,103,222,249,
 	211,243,248,47,243,195,56
 	},
-	
+
 	{
 	56,101,106,235,205,98,227,
 	149,9,73,232,235,35,111,
@@ -660,7 +651,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	21,35,57,225,202,22,171,
 	86,96,154,71,43,190,51
 	},
-	
+
 	{
 	113,4,220,161,78,222,190,
 	105,166,150,161,29,113,135,
@@ -670,7 +661,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	119,22,135,8,75,90,48,
 	186,108,73,157,75,30,108
 	},
-	
+
 	{
 	17,212,231,18,216,185,255,
 	206,139,136,155,69,129,54,
@@ -680,7 +671,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	229,131,214,148,251,230,103,
 	174,80,190,201,4,2,208
 	},
-	
+
 	{
 	146,254,166,111,69,45,224,
 	229,101,23,235,77,130,235,
@@ -690,7 +681,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	186,211,127,152,111,219,20,
 	147,21,114,47,54,65,221
 	},
-	
+
 	{
 	155,85,87,94,68,199,179,
 	247,16,43,80,193,182,242,
@@ -700,7 +691,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	156,73,193,106,70,25,207,
 	45,110,76,9,57,33,236
 	},
-	
+
 	{
 	92,120,224,167,215,16,147,
 	48,40,91,171,186,7,158,
@@ -710,7 +701,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	255,50,68,41,33,225,183,
 	114,136,18,144,18,185,137
 	},
-	
+
 	{
 	17,38,234,111,64,195,105,
 	13,188,100,59,18,103,53,
@@ -720,7 +711,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	111,85,255,154,106,166,101,
 	176,38,55,72,130,223,209
 	},
-	
+
 	{
 	167,241,154,215,233,21,164,
 	109,34,121,61,150,197,43,
@@ -730,7 +721,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	5,217,25,106,86,248,82,
 	244,93,228,157,51,255,155
 	},
-	
+
 	{
 	17,171,212,222,22,253,38,
 	199,218,104,6,108,146,77,
@@ -740,7 +731,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	253,123,233,162,79,218,165,
 	141,47,92,202,150,152,45
 	},
-	
+
 	{
 	225,196,143,248,9,135,132,
 	255,208,73,103,33,197,201,
@@ -750,7 +741,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	7,141,14,153,186,125,207,
 	52,40,255,101,49,219,7
 	},
-	
+
 	{
 	221,161,17,57,52,123,239,
 	174,209,155,220,246,5,150,
@@ -760,7 +751,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	66,223,181,127,121,199,102,
 	162,222,47,153,130,15,38
 	},
-	
+
 	{
 	17,153,36,244,88,45,209,
 	13,52,102,102,28,128,115,
@@ -770,7 +761,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	67,208,249,241,212,65,196,
 	197,202,67,119,183,143,207
 	},
-	
+
 	{
 	215,34,213,248,221,72,132,
 	67,21,208,217,15,31,125,
@@ -780,7 +771,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	8,89,59,54,229,1,5,
 	70,123,34,41,23,101,57
 	},
-	
+
 	{
 	237,73,8,231,245,255,96,
 	23,192,156,114,102,247,212,
@@ -790,7 +781,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	78,65,36,186,99,128,2,
 	18,25,152,230,144,115,68
 	},
-	
+
 	{
 	67,160,17,62,161,74,151,
 	54,117,56,133,66,108,253,
@@ -800,7 +791,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	46,244,13,175,78,210,242,
 	70,225,118,232,164,133,95
 	},
-	
+
 	{
 	234,31,155,10,134,212,66,
 	76,236,106,93,102,226,169,
@@ -810,7 +801,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	60,177,128,86,36,201,254,
 	46,168,120,115,83,251,187
 	},
-	
+
 	{
 	250,68,115,1,74,167,252,
 	185,210,119,96,136,228,20,
@@ -820,7 +811,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	162,107,243,19,160,47,144,
 	237,98,48,50,92,59,202
 	},
-	
+
 	{
 	200,215,171,200,126,118,10,
 	108,131,226,88,154,98,215,
@@ -830,7 +821,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	28,148,147,126,109,164,97,
 	127,240,42,199,123,23,180
 	},
-	
+
 	{
 	12,31,155,207,220,35,247,
 	228,132,83,16,83,176,193,
@@ -840,7 +831,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	88,139,10,38,53,235,254,
 	183,99,170,32,231,44,224
 	},
-	
+
 	{
 	58,165,53,170,203,99,6,
 	7,176,212,91,123,166,220,
@@ -850,7 +841,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	248,40,177,209,100,8,139,
 	202,181,248,231,144,70,195
 	},
-	
+
 	{
 	130,125,204,233,239,251,121,
 	125,221,146,233,122,172,27,
@@ -860,7 +851,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	157,124,120,171,85,158,175,
 	253,165,128,27,100,7,165
 	},
-	
+
 	{
 	73,196,31,75,40,86,63,
 	169,84,115,12,176,43,123,
@@ -870,7 +861,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	32,48,207,219,106,99,30,
 	51,249,130,195,120,123,171
 	},
-	
+
 	{
 	200,109,185,213,166,141,95,
 	219,114,120,103,244,57,23,
@@ -880,7 +871,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	170,44,99,209,215,82,191,
 	160,149,104,78,138,201,227
 	},
-	
+
 	{
 	213,42,215,30,187,239,231,
 	72,204,179,60,193,67,75,
@@ -890,7 +881,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	135,44,63,68,159,20,222,
 	221,240,43,142,123,23,244
 	},
-	
+
 	{
 	94,48,61,112,51,92,118,
 	161,242,95,128,16,237,38,
@@ -900,7 +891,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	141,197,193,234,76,97,64,
 	186,179,158,235,115,169,11
 	},
-	
+
 	{
 	168,114,74,10,218,199,193,
 	41,245,250,186,205,131,243,
@@ -910,7 +901,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	64,234,33,109,51,156,254,
 	53,72,55,68,174,240,117
 	},
-	
+
 	{
 	55,124,124,107,105,194,22,
 	114,242,8,53,46,244,181,
@@ -920,7 +911,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	125,83,15,224,107,242,66,
 	178,12,37,63,4,213,48
 	},
-	
+
 	{
 	115,221,24,12,172,92,193,
 	137,224,105,238,239,70,221,
@@ -930,7 +921,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	212,245,152,96,232,85,190,
 	77,39,177,136,180,82,111
 	},
-	
+
 	{
 	231,138,6,145,159,235,88,
 	248,198,164,9,130,209,202,
@@ -940,7 +931,7 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	181,71,11,111,109,35,175,
 	240,32,51,69,251,41,220
 	},
-	
+
 	{
 	177,114,53,161,177,151,101,
 	226,222,87,255,85,102,86,
@@ -949,6 +940,6 @@ UINT8 gubEncryptionArray1[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 	74,31,24,83,60,48,80,
 	186,116,113,179,144,90,220,
 	252,71,167,25,110,167,94
-	},	
+	},
 
 };

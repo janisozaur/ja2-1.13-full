@@ -31,7 +31,6 @@ void UpdateRegenCounters( void );
 
 void HandleMinuteUpdate()
 {
-	PERFORMANCE_MARKER
 }
 
 // This function gets called every hour, on the hour.
@@ -40,12 +39,11 @@ void HandleMinuteUpdate()
 
 void HandleHourlyUpdate()
 {
-	PERFORMANCE_MARKER
 	//if the game hasnt even started yet ( we havent arrived in the sector ) dont process this
 	if ( DidGameJustStart() )
 		return;
 
-	// hourly update of town loyalty	
+	// hourly update of town loyalty
 	HandleTownLoyalty();
 
 	// hourly update of team assignments
@@ -84,9 +82,8 @@ void HandleHourlyUpdate()
 
 void UpdateRegenCounters( void )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubID;
-		
+
 	for ( ubID = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; ubID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubID++ )
 	{
 		if ( MercPtrs[ ubID ]->bRegenBoostersUsedToday > 0 )
@@ -98,7 +95,6 @@ void UpdateRegenCounters( void )
 
 void HandleQuarterHourUpdate()
 {
-	PERFORMANCE_MARKER
 	//if the game hasnt even started yet ( we havent arrived in the sector ) dont process this
 	if ( DidGameJustStart() )
 		return;
@@ -109,10 +105,9 @@ void HandleQuarterHourUpdate()
 
 void HourlyQuestUpdate( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiHour = GetWorldHour();
 
-	// brothel 
+	// brothel
 	if ( uiHour == 4 )
 	{
 		SetFactFalse( FACT_BROTHEL_OPEN );
@@ -129,7 +124,7 @@ void HourlyQuestUpdate( void )
 
 		SetFactTrue( FACT_CLUB_OPEN );
 		SetFactFalse( FACT_PAST_CLUB_CLOSING_AND_PLAYER_WARNED );
-		
+
 		// reset boxes fought
 		for ( ubLoop = 0; ubLoop < NUM_BOXERS; ubLoop++ )
 		{
@@ -184,7 +179,6 @@ UINT16	LarryItems[ NUM_LARRY_ITEMS ][ 3 ] =
 
 void HourlyLarryUpdate( void )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *			pSoldier;
 	INT8							bSlot = NO_SLOT, bBoozeSlot;
 	INT8							bLarryItemLoop;
@@ -223,17 +217,17 @@ void HourlyLarryUpdate( void )
 			}
 		}
 
-		// check to see if we're in a bar sector, if we are, we have access to alcohol 
+		// check to see if we're in a bar sector, if we are, we have access to alcohol
 		// which may be better than anything we've got...
 		if ( usTemptation < BAR_TEMPTATION && GetCurrentBalance() >= Item[ ALCOHOL ].usPrice )
 		{
-			if ( pSoldier->bSectorZ == 0 && 
+			if ( pSoldier->bSectorZ == 0 &&
 						( ( pSoldier->sSectorX == 13 && pSoldier->sSectorY == MAP_ROW_B) ||
 							( pSoldier->sSectorX == 13 && pSoldier->sSectorY == MAP_ROW_C) ||
 							( pSoldier->sSectorX == 5 && pSoldier->sSectorY == MAP_ROW_C) ||
 							( pSoldier->sSectorX == 6 && pSoldier->sSectorY == MAP_ROW_C) ||
 							( pSoldier->sSectorX == 5 && pSoldier->sSectorY == MAP_ROW_D) ||
-							( pSoldier->sSectorX == 2 && pSoldier->sSectorY == MAP_ROW_H) 
+							( pSoldier->sSectorX == 2 && pSoldier->sSectorY == MAP_ROW_H)
 						)
 				)
 			{
@@ -241,10 +235,10 @@ void HourlyLarryUpdate( void )
 				fBar = TRUE;
 				usTemptation = BAR_TEMPTATION;
 			}
-		}			
+		}
 
 		if ( usTemptation > 0 )
-		{	
+		{
 			if ( pSoldier->ubProfile == LARRY_NORMAL )
 			{
 				gMercProfiles[ LARRY_NORMAL ].bNPCData += (INT8) Random( usTemptation );
@@ -314,12 +308,11 @@ void HourlyLarryUpdate( void )
 		}
 
 	}
-	
+
 }
 
 void HourlyCheckIfSlayAloneSoHeCanLeave()
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	pSoldier = FindSoldierByProfileID( SLAY, TRUE );
 	if( !pSoldier )

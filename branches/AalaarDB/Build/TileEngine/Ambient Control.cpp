@@ -22,7 +22,7 @@ INT16									gsNumAmbData = 0;
 UINT8					gubCurrentSteadyStateAmbience = SSA_NONE;
 UINT8					gubCurrentSteadyStateSound	= 0;
 UINT32					guiCurrentSteadyStateSoundHandle = NO_SAMPLE;
-STEADY_STATE_AMBIENCE	gSteadyStateAmbientTable[ NUM_STEADY_STATE_AMBIENCES ] = 
+STEADY_STATE_AMBIENCE	gSteadyStateAmbientTable[ NUM_STEADY_STATE_AMBIENCES ] =
 {
 	// NONE
 	"",
@@ -149,7 +149,6 @@ STEADY_STATE_AMBIENCE	gSteadyStateAmbientTable[ NUM_STEADY_STATE_AMBIENCES ] =
 
 BOOLEAN LoadAmbientControlFile( UINT8 ubAmbientID )
 {
-	PERFORMANCE_MARKER
 	SGPFILENAME						zFilename;
 	HWFILE								hFile;
 	INT32								cnt;
@@ -191,7 +190,6 @@ BOOLEAN LoadAmbientControlFile( UINT8 ubAmbientID )
 
 void GetAmbientDataPtr( AMBIENTDATA_STRUCT **ppAmbData, UINT16 *pusNumData )
 {
-	PERFORMANCE_MARKER
 	*ppAmbData		= gAmbData;
 	*pusNumData		= gsNumAmbData;
 }
@@ -199,13 +197,11 @@ void GetAmbientDataPtr( AMBIENTDATA_STRUCT **ppAmbData, UINT16 *pusNumData )
 
 void StopAmbients( )
 {
-	PERFORMANCE_MARKER
 	SoundStopAllRandom( );
 }
 
 void HandleNewSectorAmbience( UINT8 ubAmbientID )
 {
-	PERFORMANCE_MARKER
 	// OK, we could have just loaded a sector, erase all ambient sounds from queue, shutdown all ambient groupings
 	SoundStopAllRandom( );
 
@@ -220,14 +216,13 @@ void HandleNewSectorAmbience( UINT8 ubAmbientID )
 		}
 		else
 		{
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_0, String("Cannot load Ambient data for tileset" ) ); 
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_0, String("Cannot load Ambient data for tileset" ) );
 		}
 	}
 }
 
 void DeleteAllAmbients()
 {
-	PERFORMANCE_MARKER
 	// JA2Gold: it seems that ambient sounds don't get unloaded when we exit a sector!?
 	SoundStopAllRandom();
 	DeleteAllStrategicEventsOfType( EVENT_AMBIENT );
@@ -235,11 +230,10 @@ void DeleteAllAmbients()
 
 UINT32 SetupNewAmbientSound( UINT32 uiAmbientID )
 {
-	PERFORMANCE_MARKER
 	RANDOMPARMS rpParms;
 
 	//SoundLog((CHAR8 *)String("	SetupNewAmbientSound()1:	uiAmbientID: '%d'", uiAmbientID ) );
-	
+
 	memset(&rpParms, 0xff, sizeof(RANDOMPARMS));
 
 	rpParms.uiTimeMin		=	gAmbData[ uiAmbientID ].uiMinTime;
@@ -249,14 +243,13 @@ UINT32 SetupNewAmbientSound( UINT32 uiAmbientID )
 	rpParms.uiPriority	=	GROUP_AMBIENT;
 
 	//SoundLog((CHAR8 *)String("	SetupNewAmbientSound()2:	gAmbData[ uiAmbientID ].zFilename: '%s',	Params: '%s'", gAmbData[ uiAmbientID ].zFilename, &rpParms ) );
-	
+
 	return SoundPlayRandom( gAmbData[ uiAmbientID ].zFilename, &rpParms );	//bug Nr14
 }
 
 
 UINT32 StartSteadyStateAmbient( UINT32 ubVolume, UINT32 ubLoops)
 {
-	PERFORMANCE_MARKER
 SOUNDPARMS spParms;
 
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
@@ -272,7 +265,6 @@ SOUNDPARMS spParms;
 
 BOOLEAN SetSteadyStateAmbience( UINT8 ubAmbience )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fInNight = FALSE;
 	INT32	 cnt;
 	UINT8	 ubNumSounds = 0;
@@ -295,10 +287,10 @@ BOOLEAN SetSteadyStateAmbience( UINT8 ubAmbience )
 	for ( cnt = ( fInNight * 4 ); cnt < ( NUM_SOUNDS_PER_TIMEFRAME / 2 ); cnt++ )
 	{
 	if ( gSteadyStateAmbientTable[ ubAmbience ].zSoundNames[ cnt ][ 0 ] == 0 )
-	{ 
+	{
 		break;
-	}	
-	
+	}
+
 	ubNumSounds++;
 	}
 

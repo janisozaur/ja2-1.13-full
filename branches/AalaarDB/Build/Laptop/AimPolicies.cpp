@@ -192,20 +192,17 @@ UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumbe
 
 void GameInitAimPolicies()
 {
-	PERFORMANCE_MARKER
 
 }
 
 void EnterInitAimPolicies()
 {
-	PERFORMANCE_MARKER
 	memset( &AimPoliciesSubPagesVisitedFlag, 0, NUM_AIM_POLICY_PAGES);
 }
 
 
 BOOLEAN EnterAimPolicies()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	InitAimDefaults();
@@ -243,7 +240,6 @@ BOOLEAN EnterAimPolicies()
 
 void ExitAimPolicies()
 {
-	PERFORMANCE_MARKER
 	gfExitingAimPolicy = TRUE;
 
 	DeleteVideoObjectFromIndex(guiBottomButton);
@@ -255,9 +251,9 @@ void ExitAimPolicies()
 
 	if(gfInPolicyToc)
 		ExitAimPolicyTocMenu();
-	
+
 	if( gfInAgreementPage )
-		ExitAgreementButton();		
+		ExitAgreementButton();
 	RemoveAimDefaults();
 
 	giCurrentSubPage = gubCurPageNum;
@@ -266,7 +262,6 @@ void ExitAimPolicies()
 
 void HandleAimPolicies()
 {
-	PERFORMANCE_MARKER
 	if( (gfAimPolicyMenuBarLoaded != TRUE) && gubCurPageNum != 0)
 	{
 		InitAimPolicyMenuBar();
@@ -278,7 +273,6 @@ void HandleAimPolicies()
 
 void RenderAimPolicies()
 {
-	PERFORMANCE_MARKER
 	UINT16	usNumPixles;
 
 	DrawAimDefaults();
@@ -286,7 +280,7 @@ void RenderAimPolicies()
 	DisplayAimPolicyTitleText();
 
 	if( gfInAgreementPage )
-		ExitAgreementButton();		
+		ExitAgreementButton();
 
 	switch( gubCurPageNum )
 	{
@@ -401,7 +395,6 @@ void RenderAimPolicies()
 
 BOOLEAN InitAimPolicyMenuBar(void)
 {
-	PERFORMANCE_MARKER
 	UINT16					i, usPosX;
 
 	if(gfAimPolicyMenuBarLoaded)
@@ -420,15 +413,15 @@ BOOLEAN InitAimPolicyMenuBar(void)
 //		SetButtonCursor(guiPoliciesMenuButton[i], CURSOR_WWW);
 //		MSYS_SetBtnUserData( guiPoliciesMenuButton[i], 0, i);
 
-		guiPoliciesMenuButton[i] = CreateIconAndTextButton( guiPoliciesMenuButtonImage, AimPolicyText[i], FONT10ARIAL, 
-														AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
-														AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+		guiPoliciesMenuButton[i] = CreateIconAndTextButton( guiPoliciesMenuButtonImage, AimPolicyText[i], FONT10ARIAL,
+														AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW,
+														AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														usPosX, AIM_POLICY_MENU_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														DEFAULT_MOVE_CALLBACK, BtnPoliciesMenuButtonCallback);
 		SetButtonCursor(guiPoliciesMenuButton[i], CURSOR_WWW);
 		MSYS_SetBtnUserData( guiPoliciesMenuButton[i], 0, i);
-		
+
 
 
 		usPosX += AIM_POLICY_GAP_X;
@@ -444,10 +437,9 @@ BOOLEAN InitAimPolicyMenuBar(void)
 
 BOOLEAN ExitAimPolicyMenuBar(void)
 {
-	PERFORMANCE_MARKER
 	int i;
 
-	if( !gfAimPolicyMenuBarLoaded ) 
+	if( !gfAimPolicyMenuBarLoaded )
 		return( FALSE );
 
 	for(i=0; i<AIM_POLICY_MENU_BUTTON_AMOUNT; i++)
@@ -464,13 +456,12 @@ BOOLEAN ExitAimPolicyMenuBar(void)
 
 BOOLEAN DrawAimPolicyMenu()
 {
-	PERFORMANCE_MARKER
 	UINT16			i, usPosY;
 	UINT16			usHeight;
 	UINT32			uiStartLoc=0;
 	CHAR16			sText[400];
 	HVOBJECT		hContentButtonHandle;
-	UINT8				ubLocInFile[]=		
+	UINT8				ubLocInFile[]=
 								{	DEFINITIONS,
 									LENGTH_OF_ENGAGEMENT,
 									LOCATION_0F_ENGAGEMENT,
@@ -502,7 +493,6 @@ BOOLEAN DrawAimPolicyMenu()
 
 BOOLEAN InitAimPolicyTocMenu(void)
 {
-	PERFORMANCE_MARKER
 	UINT16			i, usPosY;
 	UINT16			usHeight;
 	if(gfInPolicyToc)
@@ -514,8 +504,8 @@ BOOLEAN InitAimPolicyTocMenu(void)
 	{
 		//Mouse region for the toc buttons
 		MSYS_DefineRegion( &gSelectedPolicyTocMenuRegion[i], AIM_POLICY_TOC_X, usPosY, (UINT16)(AIM_POLICY_TOC_X + AIM_CONTENTBUTTON_WIDTH), (UINT16)(usPosY + AIM_CONTENTBUTTON_HEIGHT), MSYS_PRIORITY_HIGH,
-								CURSOR_WWW, MSYS_NO_CALLBACK, SelectPolicyTocMenuRegionCallBack); 
-		MSYS_AddRegion(&gSelectedPolicyTocMenuRegion[i]); 
+								CURSOR_WWW, MSYS_NO_CALLBACK, SelectPolicyTocMenuRegionCallBack);
+		MSYS_AddRegion(&gSelectedPolicyTocMenuRegion[i]);
 		MSYS_SetRegionUserData( &gSelectedPolicyTocMenuRegion[i], 0, i+2);
 
 		usPosY += AIM_POLICY_TOC_GAP_Y;
@@ -529,7 +519,6 @@ BOOLEAN InitAimPolicyTocMenu(void)
 
 BOOLEAN ExitAimPolicyTocMenu()
 {
-	PERFORMANCE_MARKER
 	UINT16 i;
 
 	gfInPolicyToc = FALSE;
@@ -543,7 +532,6 @@ BOOLEAN ExitAimPolicyTocMenu()
 
 void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if(gfInPolicyToc)
 	{
 		if (iReason & MSYS_CALLBACK_REASON_INIT)
@@ -568,7 +556,6 @@ void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN	DisplayAimPolicyTitleText(void)
 {
-	PERFORMANCE_MARKER
 	CHAR16	sText[400];
 	UINT32	uiStartLoc = 0;
 
@@ -587,7 +574,6 @@ BOOLEAN	DisplayAimPolicyTitleText(void)
 
 BOOLEAN	DisplayAimPolicyStatement(void)
 {
-	PERFORMANCE_MARKER
 	CHAR16	sText[400];
 	UINT32	uiStartLoc = 0;
 	UINT16	usNumPixels;
@@ -610,7 +596,6 @@ BOOLEAN	DisplayAimPolicyStatement(void)
 
 BOOLEAN InitAgreementRegion(void)
 {
-	PERFORMANCE_MARKER
 	UINT16	usPosX,i;
 
 	gfExitingPolicesAgreeButton = FALSE;
@@ -627,15 +612,15 @@ BOOLEAN InitAgreementRegion(void)
 //		SetButtonCursor(guiPoliciesAgreeButton[i], CURSOR_WWW);
 //		MSYS_SetBtnUserData( guiPoliciesAgreeButton[i], 0, i);
 
-		guiPoliciesAgreeButton[i] = CreateIconAndTextButton( guiPoliciesButtonImage, AimPolicyText[i+AIM_POLICIES_DISAGREE], AIM_POLICY_TOC_FONT, 
-														AIM_POLICY_AGREE_TOC_COLOR_ON, DEFAULT_SHADOW, 
-														AIM_POLICY_AGREE_TOC_COLOR_OFF, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+		guiPoliciesAgreeButton[i] = CreateIconAndTextButton( guiPoliciesButtonImage, AimPolicyText[i+AIM_POLICIES_DISAGREE], AIM_POLICY_TOC_FONT,
+														AIM_POLICY_AGREE_TOC_COLOR_ON, DEFAULT_SHADOW,
+														AIM_POLICY_AGREE_TOC_COLOR_OFF, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														usPosX, AIM_POLICY_AGREEMENT_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														DEFAULT_MOVE_CALLBACK, BtnPoliciesAgreeButtonCallback);
 		SetButtonCursor(guiPoliciesAgreeButton[i], CURSOR_WWW);
 		MSYS_SetBtnUserData( guiPoliciesAgreeButton[i], 0, i);
-		
+
 
 
 		usPosX += 125;
@@ -646,7 +631,6 @@ BOOLEAN InitAgreementRegion(void)
 
 BOOLEAN ExitAgreementButton(void)
 {
-	PERFORMANCE_MARKER
 	UINT8 i;
 
 	gfExitingPolicesAgreeButton = TRUE;
@@ -665,7 +649,6 @@ BOOLEAN ExitAgreementButton(void)
 
 BOOLEAN	DisplayAimPolicyTitle(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
 {
-	PERFORMANCE_MARKER
 	CHAR16	sText[400];
 	UINT32	uiStartLoc = 0;
 
@@ -680,7 +663,6 @@ BOOLEAN	DisplayAimPolicyTitle(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
 
 UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
 {
-	PERFORMANCE_MARKER
 	CHAR16	sText[400];
 	CHAR16	sTemp[20];
 	UINT32	uiStartLoc=0;
@@ -704,7 +686,6 @@ UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
 
 UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
 {
-	PERFORMANCE_MARKER
 	CHAR16	sText[400];
 	CHAR16	sTemp[20];
 	UINT32	uiStartLoc=0;
@@ -728,7 +709,6 @@ UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumbe
 
 void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	UINT8	ubRetValue;
 	static BOOLEAN fOnPage=TRUE;
 	if(fOnPage)
@@ -771,12 +751,11 @@ void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn,INT32 reason)
 			gubPoliciesAgreeButtonDown = 255;
 			InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 		}
-	} 
+	}
 }
 
 void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	UINT8	ubRetValue;
 	static BOOLEAN fOnPage=TRUE;
 	if(fOnPage)
@@ -851,25 +830,23 @@ void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn,INT32 reason)
 			DisableAimPolicyButton();
 			InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 		}
-	} 
+	}
 }
 
 
 void ResetAimPolicyButtons()
 {
-	PERFORMANCE_MARKER
 	int i=0;
 
 	for(i=0; i<AIM_POLICY_MENU_BUTTON_AMOUNT; i++)
 	{
-		ButtonList[ guiPoliciesMenuButton[i] ]->uiFlags &= ~BUTTON_CLICKED_ON; 
+		ButtonList[ guiPoliciesMenuButton[i] ]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 }
 
 
 void DisableAimPolicyButton()
 {
-	PERFORMANCE_MARKER
 	if( gfExitingAimPolicy == TRUE || gfAimPolicyMenuBarLoaded == FALSE )
 		return;
 
@@ -878,7 +855,7 @@ void DisableAimPolicyButton()
 		ButtonList[ guiPoliciesMenuButton[ 0 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
 		ButtonList[ guiPoliciesMenuButton[ 2 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
 	}
-	else if(	( gubCurPageNum == AIM_POLICY_LAST_PAGE ) ) 
+	else if(	( gubCurPageNum == AIM_POLICY_LAST_PAGE ) )
 	{
 		ButtonList[ guiPoliciesMenuButton[ 3 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
 	}
@@ -887,7 +864,6 @@ void DisableAimPolicyButton()
 
 void ChangingAimPoliciesSubPage( UINT8 ubSubPageNumber )
 {
-	PERFORMANCE_MARKER
 	fLoadPendingFlag = TRUE;
 
 	if( AimPoliciesSubPagesVisitedFlag[ ubSubPageNumber ] == FALSE )
@@ -908,6 +884,6 @@ void ChangingAimPoliciesSubPage( UINT8 ubSubPageNumber )
 
 
 
- 
+
 
 

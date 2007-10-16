@@ -58,7 +58,7 @@ Version 7 -- Kris -- obsolete April 14, 1998
 					The first is Detailed placements, and the second is priority existance.	So, all
 					current detailed placements will also have priority existance.
 Version 8 -- Kris -- obsolete April 16, 1998
-	MAJOR CONFLICT RESULTING IN A MAJOR VERSION UPDATE 2.00!	
+	MAJOR CONFLICT RESULTING IN A MAJOR VERSION UPDATE 2.00!
 	Bug 10) Padding on detailed placements is uninitialized.	Clear all data starting at
 					fKillSlotIfOwnerDies.
 Version 9 -- Kris -- obsolete April 26, 1998
@@ -79,7 +79,6 @@ Version 11 -- Kris -- obsolete May 2, 1998
 //is return the closest gridno.	Returns TRUE if the mapindex changes.
 BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16 sXMapPos, sYMapPos;
 	INT16 sWorldX, sWorldY;
 	INT32 iNewMapX, iNewMapY;
@@ -116,7 +115,6 @@ BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
 
 void SaveMapInformation( HWFILE fp )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiBytesWritten;
 
 	gMapInformation.ubMapVersion = MINOR_MAP_VERSION;
@@ -125,7 +123,6 @@ void SaveMapInformation( HWFILE fp )
 
 void LoadMapInformation( INT8 **hBuffer )
 {
-	PERFORMANCE_MARKER
 	LOADDATA( &gMapInformation, *hBuffer, sizeof( MAPCREATE_STRUCT ) );
 	//FileRead( hfile, &gMapInformation, sizeof( MAPCREATE_STRUCT ), &uiBytesRead);
 
@@ -135,12 +132,11 @@ void LoadMapInformation( INT8 **hBuffer )
 }
 
 //This will automatically update obsolete map versions to the new ones.	This will even
-//work in the game itself, but would require conversion to happen every time.	This is completely 
-//transparent to the rest of the game, but in the editor, obsolete versions will be updated upon 
+//work in the game itself, but would require conversion to happen every time.	This is completely
+//transparent to the rest of the game, but in the editor, obsolete versions will be updated upon
 //loading and won't be permanently updated until the map is saved, regardless of changes.
 void UpdateOldVersionMap()
 {
-	PERFORMANCE_MARKER
 #if 0 //This code is no longer needed since the major version update from 1.0 to 4.0
 			//However, I am keeping it in for reference.
 	SOLDIERINITNODE *curr;
@@ -167,7 +163,7 @@ void UpdateOldVersionMap()
 	}
 	//VERSION 1 -- obsolete January 7, 1998
 	if( gMapInformation.ubMapVersion == 1 )
-	{	
+	{
 		gMapInformation.ubMapVersion++;
 		//Bug #03)	Removing all wall decals from map, because of new changes to the slots
 		//					as well as certain decals found commonly in illegal places.
@@ -233,7 +229,7 @@ void UpdateOldVersionMap()
 					break;
 				}
 				else if( pStruct->usIndex == 936 || pStruct->usIndex == 956 || pStruct->usIndex == 976 )
-				{	
+				{
 					ReplaceStructIndex( i, pStruct->usIndex, 916 );
 					break;
 				}
@@ -293,7 +289,7 @@ void UpdateOldVersionMap()
 			if( curr->pDetailedPlacement )
 			{
 				for( i = 0; i < curr->pDetailedPlacement->Inv.size(); i++ )
-				{ //make all items undroppable, even if it is empty.	This will allow for 
+				{ //make all items undroppable, even if it is empty.	This will allow for
 					//random item generation, while empty, droppable slots are locked as empty
 					//during random item generation.
 					curr->pDetailedPlacement->Inv[ i ].fFlags |= OBJECT_UNDROPPABLE;
@@ -356,7 +352,7 @@ void UpdateOldVersionMap()
 			{
 				RemoveObject( i, pStruct->usIndex );
 			}
-		}		
+		}
 	}
 
 	if( gMapInformation.ubMapVersion <= 7 )
@@ -461,7 +457,7 @@ void UpdateOldVersionMap()
 	}
 #endif //end of MAJOR VERSION 3.0 obsolete code
 	if( gMapInformation.ubMapVersion < 15 )
-	{ 
+	{
 		AssertMsg( 0, "Map is less than minimum supported version." );
 	}
 	if( gMapInformation.ubMapVersion < 16 )
@@ -540,7 +536,7 @@ void UpdateOldVersionMap()
 	{ //Allow map edgepoints to be regenerated as new system has been reenabled.
 		SOLDIERINITNODE *curr;
 		gMapInformation.ubMapVersion = 23;
-		if( giCurrentTilesetID == 1 ) //cave/mine tileset only 
+		if( giCurrentTilesetID == 1 ) //cave/mine tileset only
 		{ //convert all civilians to miners which use uniforms and more masculine body types.
 			curr = gSoldierInitHead;
 			while( curr )
@@ -555,7 +551,7 @@ void UpdateOldVersionMap()
 		}
 	}
 	if( gMapInformation.ubMapVersion < 25 )
-	{ 
+	{
 		gMapInformation.ubMapVersion = 25;
 		if( gfCaves )
 		{
@@ -564,7 +560,7 @@ void UpdateOldVersionMap()
 	}
 }
 
-void AutoCalculateItemNoOverwriteStatus() 
+void AutoCalculateItemNoOverwriteStatus()
 {
 	SOLDIERINITNODE *curr;
 	OBJECTTYPE *pItem;
@@ -596,7 +592,6 @@ void AutoCalculateItemNoOverwriteStatus()
 
 void ValidateAndUpdateMapVersionIfNecessary()
 {
-	PERFORMANCE_MARKER
 	//Older versions of mercs may require updating due to past bug fixes, new changes, etc.
 	if( gMapInformation.ubMapVersion < MINOR_MAP_VERSION )
 	{
@@ -620,7 +615,6 @@ void ValidateAndUpdateMapVersionIfNecessary()
 //and really prevent major map updates.
 void UpdateSummaryInfo( SUMMARYFILE *pSummary )
 {
-	PERFORMANCE_MARKER
 	if( pSummary->MapInfo.ubMapVersion == MINOR_MAP_VERSION )
 		return;
 	if( pSummary->MapInfo.ubMapVersion < 9 )

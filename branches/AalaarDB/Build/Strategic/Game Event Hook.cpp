@@ -22,7 +22,7 @@
 	#include "Assignments.h"
 	#include "Strategic Mines.h"
 	#include "Strategic Town Loyalty.h"
-	#include "Message.h" 
+	#include "Message.h"
 	#include "Map Screen Interface.h"
 	#include "Map Screen Helicopter.h"
 	#include "Scheduling.h"
@@ -68,7 +68,6 @@ void CrippledVersionEndGameCheck();
 
 BOOLEAN DelayEventIfBattleInProgress( STRATEGICEVENT *pEvent )
 {
-	PERFORMANCE_MARKER
 	STRATEGICEVENT *pNewEvent;
 	if( gTacticalStatus.fEnemyInSector )
 	{
@@ -82,7 +81,6 @@ BOOLEAN DelayEventIfBattleInProgress( STRATEGICEVENT *pEvent )
 
 BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 {
-	PERFORMANCE_MARKER
 
 	BOOLEAN bMercDayOne = FALSE;
 	// Kaiden: Opening the INI File
@@ -91,7 +89,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 
 	//Kaiden: Getting Value for MERC Available on Day one?
 	// for some reason, this can't be in gamesettings.cpp
-	// or it won't work. 
+	// or it won't work.
 	bMercDayOne = iniReader.ReadBoolean("Options","MERC_DAY_ONE",FALSE);
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ExecuteStrategicEvent");
@@ -101,7 +99,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Strategic event skipped!" );
 		return TRUE;
 	}
-	
+
 	BOOLEAN fOrigPreventFlag;
 
 	fOrigPreventFlag = gfPreventDeletionOfAnyEvent;
@@ -182,7 +180,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		case EVENT_BOBBYRAY_PURCHASE:
 			BobbyRayPurchaseEventCallback( (UINT8) pEvent->uiParam);
 			break;
-		//Gets called once a day ( at BOBBYRAY_UPDATE_TIME).	To simulate the items being bought and sold at bobby rays 
+		//Gets called once a day ( at BOBBYRAY_UPDATE_TIME).	To simulate the items being bought and sold at bobby rays
 		case EVENT_DAILY_UPDATE_BOBBY_RAY_INVENTORY:
 			DailyUpdateOfBobbyRaysNewInventory();
 			DailyUpdateOfBobbyRaysUsedInventory();
@@ -298,7 +296,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			break;
 		case EVENT_DAILY_EARLY_MORNING_EVENTS:
 			HandleEarlyMorningEvents();
-			break; 
+			break;
 		case EVENT_GROUP_ABOUT_TO_ARRIVE:
 			HandleGroupAboutToArrive();
 			break;
@@ -447,7 +445,6 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 #ifdef CRIPPLED_VERSION
 void CrippledVersionEndGameCheck()
 {
-	PERFORMANCE_MARKER
 	CHAR16	zString[512];
 
 	//Dont want this to appear before we arrive
@@ -463,12 +460,11 @@ void CrippledVersionEndGameCheck()
 		swprintf( zString, L"You have %d game days left in this limited version of Jagged Alliance 2.",	( 8 - guiDay ) );
 	}
 
-	DoScreenIndependantMessageBox( zString, MSG_BOX_FLAG_OK, CrippledVersionEndGameCheckCallBack );	
+	DoScreenIndependantMessageBox( zString, MSG_BOX_FLAG_OK, CrippledVersionEndGameCheckCallBack );
 }
 
 void CrippledVersionEndGameCheckCallBack( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	//if we should restart the game
 	if( guiDay >= 8 )
 	{

@@ -29,7 +29,6 @@ TILESET	gTilesets[ MAX_TILESETS ];
 
 void InitEngineTilesets( )
 {
-	PERFORMANCE_MARKER
 	UINT32		cnt, cnt2, uiNumFiles;
 //	FILE					*hfile;
 	HWFILE			hfile;
@@ -45,7 +44,7 @@ void InitEngineTilesets( )
 		return;
 	}
 
-		
+
 	// READ # TILESETS and compare
 //	fread( &gubNumSets, sizeof( gubNumSets ), 1, hfile );
 	FileRead( hfile, &gubNumSets, sizeof( gubNumSets ), &uiNumBytesRead );
@@ -81,7 +80,7 @@ void InitEngineTilesets( )
 //		fread( &(gTilesets[ cnt ].ubAmbientID), sizeof( UINT8), 1, hfile );
 		FileRead( hfile, &(gTilesets[ cnt ].ubAmbientID), sizeof( UINT8 ), &uiNumBytesRead );
 
-		// Set into tileset 
+		// Set into tileset
 		swprintf( gTilesets[ cnt ].zName, L"%S", zName );
 
 		// Loop for files
@@ -123,7 +122,6 @@ void InitEngineTilesets( )
 
 void SetTilesetOneTerrainValues( )
 {
-	PERFORMANCE_MARKER
 		// FIRST TEXUTRES
 		gTileSurfaceArray[ FIRSTTEXTURE ]->ubTerrainID = FLAT_GROUND;
 		gTileSurfaceArray[ SECONDTEXTURE ]->ubTerrainID = FLAT_GROUND;
@@ -152,7 +150,6 @@ void SetTilesetOneTerrainValues( )
 
 void SetTilesetTwoTerrainValues( )
 {
-	PERFORMANCE_MARKER
 		// FIRST TEXUTRES
 		gTileSurfaceArray[ FIRSTTEXTURE ]->ubTerrainID = FLAT_GROUND;
 		gTileSurfaceArray[ SECONDTEXTURE ]->ubTerrainID = FLAT_GROUND;
@@ -180,7 +177,6 @@ void SetTilesetTwoTerrainValues( )
 
 void SetTilesetThreeTerrainValues( )
 {
-	PERFORMANCE_MARKER
 		// DIFFERENCE FROM #1 IS THAT ROADS ARE PAVED
 
 		// FIRST TEXUTRES
@@ -211,7 +207,6 @@ void SetTilesetThreeTerrainValues( )
 
 void SetTilesetFourTerrainValues( )
 {
-	PERFORMANCE_MARKER
 		// DIFFERENCE FROM #1 IS THAT FLOOR2 IS NOT FLAT_FLOOR BUT FLAT_GROUND
 
 		// FIRST TEXUTRES
