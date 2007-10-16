@@ -861,6 +861,7 @@ void ObjectData::DeleteLBE()
 	/*CHRISL: We still need to resolve the incrementing uniqueID issue, but ADB has a valid concern for
 	leaving this code in place. We just need to update things so that the uniqueID only increments when we
 	actually have to create a new LBENODE. */
+	return;
 	if (LBEArray.empty() == false) {
 		if (this->lbe.bLBE == -1) {
 			int uniqueID = this->lbe.uniqueID;
@@ -879,6 +880,7 @@ void ObjectData::DuplicateLBE()
 	/*CHRISL: We still need to resolve the incrementing uniqueID issue, but ADB has a valid concern for
 	leaving this code in place. We just need to update things so that the uniqueID only increments when we
 	actually have to create a new LBENODE. */
+	return;
 	if (this->lbe.bLBE == -1) {
 		LBENODE* pLBE = NULL;
 		int uniqueID = this->lbe.uniqueID;

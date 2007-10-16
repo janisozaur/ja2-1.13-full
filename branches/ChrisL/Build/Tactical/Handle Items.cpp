@@ -1467,8 +1467,18 @@ void SoldierHandleDropItem( SOLDIERTYPE *pSoldier )
 			PlayJA2Sample( THROW_IMPACT_2, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );			
 		}
 
-		AddItemToPool( pSoldier->sGridNo, pSoldier->pTempObject, 1, pSoldier->pathing.bLevel, 0 , -1 );
-		NotifySoldiersToLookforItems( );
+		/*CHRISL: Sector inventory uses OldInv stack limits regardless of the inventory system we're using.  Because of this
+			we need to adjust stack sizes and possibly create additional world items if a NewInv stack is larger then OldInv
+			can support.*/
+		// work with a temporary object rather then the primary
+		OBJECTTYPE pObject = OBJECTTYPE(*pSoldier->pTempObject);
+		UINT8 ubSlotLimit = ItemSlotLimit(&pObject, STACK_SIZE_LIMIT);
+		while(pObject.ubNumberOfObjects>0){
+			pObject.MoveThisObjectTo(gTempObject,ubSlotLimit);
+
+			AddItemToPool( pSoldier->sGridNo, &gTempObject, 1, pSoldier->pathing.bLevel, 0 , -1 );
+			NotifySoldiersToLookforItems( );
+		}
 
 		OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 	}
