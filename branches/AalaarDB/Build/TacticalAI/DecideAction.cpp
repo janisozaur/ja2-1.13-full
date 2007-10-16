@@ -1979,11 +1979,27 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 		return(bActionReturned);
 
 
+#ifdef ORIGINAL_CODE
+	//if ( !( pSoldier->bTeam == CIV_TEAM && pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != ELDIN ) )
+#endif
+#ifdef BUGGY_CODE
 	// Hmmm, I don't think this check is doing what is intended.  But then I see no comment about what is intended.
 	// However, civilians with no profile (and likely no weapons) do not need to be seeking out noises.  Most don't
 	// even have the body type for it (can't climb or jump).
-	//if ( !( pSoldier->bTeam == CIV_TEAM && pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != ELDIN ) )
 	if ( pSoldier->bTeam != CIV_TEAM || ( pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != ELDIN ) )
+#endif
+
+	//original code says if not (on civ team and named someone other than eldin)
+	//civ team but named == false
+	//civ team but no name == true
+	//civ team and named eldin == true
+	//military == true
+	bool onCivTeam = (pSoldier->bTeam == CIV_TEAM);
+	bool hasAProfile = (pSoldier->ubProfile != NO_PROFILE);
+	bool isEldin = (pSoldier->ubProfile == ELDIN);
+	if (onCivTeam == false ||
+		(onCivTeam == true && hasAProfile == false) ||
+		(onCivTeam == true && hasAProfile == true && isEldin == true))
 	{
 		// IF WE ARE MILITIA/CIV IN REALTIME, CLOSE TO NOISE, AND CAN SEE THE SPOT WHERE THE NOISE CAME FROM, FORGET IT
 		if ( flags.fReachable && !flags.fClimb && !gfTurnBasedAI && (pSoldier->bTeam == MILITIA_TEAM || pSoldier->bTeam == CIV_TEAM )&& PythSpacesAway( pSoldier->sGridNo, flags.sNoiseGridNo ) < 5 )
