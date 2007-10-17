@@ -1733,10 +1733,8 @@ INT8 YellowAlert_TryToSeekNoise(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 	return AI_ACTION_NOT_AN_ACTION;
 }
 
-INT8 YellowAlert_TryToSeekFriend(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
+INT8 YellowAlert_TryToSeekFriend(SOLDIERTYPE* pSoldier, INT16 sClosestFriend, YellowAlertFlags& flags)
 {
-	INT16 sClosestFriend = ClosestReachableFriendInTrouble(pSoldier, &flags.fClimb);
-
 	// if there is a friend alive & reachable who last radioed in
 	if (sClosestFriend != NOWHERE)
 	{
@@ -1991,7 +1989,7 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 
 	//original code says if not (((on civ team and named someone other than Eldin)))
 	//so the condition is true if any 1 of the 3 is false
-	//civ team but named (all 3 true) == condition false
+	//false#1 civ team but named (all 3 true)
 	//true #1 military //duh, military needs to investigate noises
 	//true #2 civ team but no name //makes regular civilians wander around to make them look like they are doing something
 	//true #3 civ team and named Eldin //Eldin is probably a special case because he will fight you?
@@ -2018,24 +2016,40 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 			}
 		}
 
-		////////////////////////////////////////////////////////////////////////////
-		// SEEK NOISE
-		////////////////////////////////////////////////////////////////////////////
 
-		if ( flags.fReachable )
-		{
-			bActionReturned = YellowAlert_TryToSeekNoise(pSoldier, flags);
-			if (bActionReturned != AI_ACTION_NOT_AN_ACTION)
-				return(bActionReturned);
+		//if we are NOT a regular civilian that intends to climb
+		//similar to true #2 - but flags.fClimb == true is a new condition,
+		//we do not want them to seek if they need to climb, but we want them to do everything else
+		if ( ! (onCivTeam == true && isNamedCiv == false && flags.fClimb == TRUE) ) {
+
+			////////////////////////////////////////////////////////////////////////////
+			// SEEK NOISE
+			////////////////////////////////////////////////////////////////////////////
+
+			if ( flags.fReachable )
+			{
+				bActionReturned = YellowAlert_TryToSeekNoise(pSoldier, flags);
+				if (bActionReturned != AI_ACTION_NOT_AN_ACTION)
+					return(bActionReturned);
+			}
 		}
 
 
-		////////////////////////////////////////////////////////////////////////////
-		// SEEK FRIEND WHO LAST RADIOED IN TO REPORT NOISE
-		////////////////////////////////////////////////////////////////////////////
-		bActionReturned = YellowAlert_TryToSeekFriend(pSoldier, flags);
-		if (bActionReturned != AI_ACTION_NOT_AN_ACTION)
-			return(bActionReturned);
+		INT16 sClosestFriend = ClosestReachableFriendInTrouble(pSoldier, &flags.fClimb);
+		if (sClosestFriend != NOWHERE) {
+			//if we are NOT a regular civilian that intends to climb
+			//similar to true #2 - but flags.fClimb == true is a new condition,
+			//we do not want them to seek if they need to climb, but we want them to do everything else
+			if ( ! (onCivTeam == true && isNamedCiv == false && flags.fClimb == TRUE) ) {
+
+				////////////////////////////////////////////////////////////////////////////
+				// SEEK FRIEND WHO LAST RADIOED IN TO REPORT NOISE
+				////////////////////////////////////////////////////////////////////////////
+				bActionReturned = YellowAlert_TryToSeekFriend(pSoldier, sClosestFriend, flags);
+				if (bActionReturned != AI_ACTION_NOT_AN_ACTION)
+					return(bActionReturned);
+			}
+		}
 
 
 
