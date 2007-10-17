@@ -1989,17 +1989,20 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 	if ( pSoldier->bTeam != CIV_TEAM || ( pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != ELDIN ) )
 #endif
 
-	//original code says if not (on civ team and named someone other than eldin)
-	//civ team but named == false
-	//civ team but no name == true
-	//civ team and named eldin == true
-	//military == true
+	//original code says if not (((on civ team and named someone other than Eldin)))
+	//so the condition is true if any 1 of the 3 is false
+	//civ team but named (all 3 true) == condition false
+	//true #1 military //duh, military needs to investigate noises
+	//true #2 civ team but no name //makes regular civilians wander around to make them look like they are doing something
+	//true #3 civ team and named Eldin //Eldin is probably a special case because he will fight you?
 	bool onCivTeam = (pSoldier->bTeam == CIV_TEAM);
-	bool hasAProfile = (pSoldier->ubProfile != NO_PROFILE);
-	bool isEldin = (pSoldier->ubProfile == ELDIN);
-	if (onCivTeam == false ||
-		(onCivTeam == true && hasAProfile == false) ||
-		(onCivTeam == true && hasAProfile == true && isEldin == true))
+	bool isNamedCiv = (pSoldier->ubProfile != NO_PROFILE);
+	bool isEldin = (pSoldier->ubProfile == ELDIN);//logically flipped from the original, isNotEldin == false is confusing
+	if (
+		(onCivTeam == false) || //true #1
+		(onCivTeam == true && isNamedCiv == false) || //true #2
+		(onCivTeam == true && isNamedCiv == true && isEldin == true)//true #3
+		)
 	{
 		// IF WE ARE MILITIA/CIV IN REALTIME, CLOSE TO NOISE, AND CAN SEE THE SPOT WHERE THE NOISE CAME FROM, FORGET IT
 		if ( flags.fReachable && !flags.fClimb && !gfTurnBasedAI && (pSoldier->bTeam == MILITIA_TEAM || pSoldier->bTeam == CIV_TEAM )&& PythSpacesAway( pSoldier->sGridNo, flags.sNoiseGridNo ) < 5 )
