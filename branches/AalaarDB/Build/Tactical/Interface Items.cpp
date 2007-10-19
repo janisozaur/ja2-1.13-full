@@ -7371,7 +7371,14 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 		}
 
 		//get item weight
-		FLOAT fWeight = (float)(CalculateObjectWeight( pObject )) / 10;
+		FLOAT fWeight;
+		if(subObject == -1){
+			fWeight = (float)(CalculateObjectWeight( pObject )) / 10;
+			subObject = 0;
+		}
+		else {
+			fWeight = (float)(pObject->GetWeightOfObjectInStack( subObject )) / 10;
+		}
 
 		if ( !gGameSettings.fOptions[ TOPTION_USE_METRIC_SYSTEM ] ) // metric units not enabled
 		{
@@ -7383,10 +7390,6 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 			fWeight = 0.1f;
 		}
 
-
-		if(subObject == -1){
-			subObject = 0;
-		}
 
 		switch( Item[ usItem ].usItemClass )
 		{
