@@ -37,7 +37,8 @@ void OBJECTTYPE::SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, 
 	objectStack.splice(objectStack.end(), sourceObject.objectStack, beginIter, stopIter);
 
 	ubNumberOfObjects += numToSplice;
-	ubWeight = CalculateObjectWeight(this);
+	//ADB ubWeight has been removed, see comments in OBJECTTYPE
+	//ubWeight = CalculateObjectWeight(this);
 
 	if (sourceObject.objectStack.empty() == true) {
 		//init it so it is not empty, even though it no longer exists
@@ -45,7 +46,8 @@ void OBJECTTYPE::SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, 
 	}
 	else {
 		sourceObject.ubNumberOfObjects -= numToSplice;
-		sourceObject.ubWeight = CalculateObjectWeight(&sourceObject);
+		//ADB ubWeight has been removed, see comments in OBJECTTYPE
+		//sourceObject.ubWeight = CalculateObjectWeight(&sourceObject);
 	}
 }
 
@@ -221,7 +223,8 @@ int OBJECTTYPE::PrivateRemoveObjectsFromStack(int howMany, OBJECTTYPE* destObjec
 		}
 		else {
 			ubNumberOfObjects -= numToRemove;
-			ubWeight = CalculateObjectWeight(this);
+			//ADB ubWeight has been removed, see comments in OBJECTTYPE
+			//ubWeight = CalculateObjectWeight(this);
 		}
 	}
 
@@ -268,7 +271,8 @@ bool OBJECTTYPE::RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject)
 		}
 		else {
 			ubNumberOfObjects -= 1;
-			ubWeight = CalculateObjectWeight(this);
+			//ADB ubWeight has been removed, see comments in OBJECTTYPE
+			//ubWeight = CalculateObjectWeight(this);
 		}
 	}
 
@@ -414,7 +418,8 @@ OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 	if ((void*)this != (void*)&src) {
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
-		this->ubWeight = src.ubWeight;
+		//ADB ubWeight has been removed, see comments in OBJECTTYPE
+		//this->ubWeight = src.ubWeight;
 		this->fFlags = src.fFlags;
 		this->ubMission = src.ubMission;
 		this->objectStack = src.objectStack;
@@ -427,7 +432,8 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 	if ((void*)this != (void*)&src) {
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
-		this->ubWeight = src.ubWeight;
+		//ADB ubWeight has been removed, see comments in OBJECTTYPE
+		//this->ubWeight = src.ubWeight;
 		this->fFlags = src.fFlags;
 		this->ubMission = src.ubMission;
 		this->objectStack = src.objectStack;
@@ -445,7 +451,8 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
-		this->ubWeight = src.ubWeight;
+		//ADB ubWeight has been removed, see comments in OBJECTTYPE
+		//this->ubWeight = src.ubWeight;
 		this->fFlags = src.fFlags;
 
 		this->ubMission = src.ubMission;
@@ -493,7 +500,8 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 		}
 
 		//just a precaution
-		this->ubWeight = CalculateObjectWeight(this);
+		//ADB ubWeight has been removed, see comments in OBJECTTYPE
+		//this->ubWeight = CalculateObjectWeight(this);
 	}
 	return *this;
 }

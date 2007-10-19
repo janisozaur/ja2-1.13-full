@@ -752,7 +752,8 @@ void GenerateConsString( STR16 zItemCons, OBJECTTYPE * pObject, UINT32 uiPixLimi
 	ubWeight = Item[ usItem ].ubWeight;
 	if (Item[ usItem ].usItemClass == IC_GUN)
 	{
-		ubWeight += Item[ (*pObject)[0]->data.gun.usGunAmmoItem ].ubWeight;
+		ubWeight += CalculateAmmoWeight((*pObject)[0]->data.gun.usGunAmmoItem, (*pObject)[0]->data.gun.ubGunShotsLeft);
+		//ubWeight += Item[ (*pObject)[0]->data.gun.usGunAmmoItem ].ubWeight;
 	}
 
 	if (ubWeight >= BAD_WEIGHT)
@@ -7384,9 +7385,6 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 
 
 		if(subObject == -1){
-			if ( Item[usItem].usItemClass != IC_AMMO || !gGameExternalOptions.fAmmoDynamicWeight ){ //Madd: quick fix to display total stack weight
-				fWeight *= pObject->ubNumberOfObjects;
-			}
 			subObject = 0;
 		}
 

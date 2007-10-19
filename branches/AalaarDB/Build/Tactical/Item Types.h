@@ -391,7 +391,10 @@ public:
 	UINT16		usItem;
 	UINT8		ubNumberOfObjects;
 	UINT8		ubMission;		//EDIT THIS OUT WHEN THERE ARE NO ASSERTS!
-	UINT16		ubWeight;		//used to be UINT8
+
+	//ADB ubWeight has been removed because it is always recalculated at every object change but only used in 1 place!!!
+	//much better to recalculate it only where it is used once!!!
+	//UINT16		ubWeight;		//used to be UINT8
 	INT8		fFlags;
 
 	char		endOfPOD;
