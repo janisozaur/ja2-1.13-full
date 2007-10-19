@@ -27,9 +27,8 @@ UINT8								gbSameAsDefaultSurfaceUsed[ NUMBEROFTILETYPES ];
 
 TILE_IMAGERY *LoadTileSurface(	STR8	cFilename )
 {
-	PERFORMANCE_MARKER
 	// Add tile surface
-	PTILE_IMAGERY	pTileSurf = NULL;	
+	PTILE_IMAGERY	pTileSurf = NULL;
 	VOBJECT_DESC	VObjectDesc;
 	HVOBJECT		hVObject;
 	HIMAGE				hImage;
@@ -85,9 +84,9 @@ TILE_IMAGERY *LoadTileSurface(	STR8	cFilename )
 			SET_ERROR(	"Structure file error: %s", cStructureFilename );
 			return( NULL );
 		}
-		
+
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, cStructureFilename );
-	
+
 		fOk = AddZStripInfoToVObject( hVObject, pStructureFileRef, FALSE, 0 );
 		if (fOk == FALSE)
 		{
@@ -96,7 +95,7 @@ TILE_IMAGERY *LoadTileSurface(	STR8	cFilename )
 			SET_ERROR(	"ZStrip creation error: %s", cStructureFilename );
 			return( NULL );
 		}
-		
+
 	}
 	else
 	{
@@ -141,7 +140,6 @@ TILE_IMAGERY *LoadTileSurface(	STR8	cFilename )
 
 void DeleteTileSurface( PTILE_IMAGERY	pTileSurf )
 {
-	PERFORMANCE_MARKER
 	if ( pTileSurf->pStructureFileRef != NULL )
 	{
 		FreeStructureFile( pTileSurf->pStructureFileRef );
@@ -167,7 +165,6 @@ extern void GetRootName( STR8 pDestStr, const STR8 pSrcStr );
 
 void SetRaisedObjectFlag( STR8 cFilename, TILE_IMAGERY *pTileSurf )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt = 0;
 	CHAR8	cRootFile[ 128 ];
 	CHAR8 ubRaisedObjectFiles[][80] =
@@ -194,7 +191,7 @@ void SetRaisedObjectFlag( STR8 cFilename, TILE_IMAGERY *pTileSurf )
 		while( ubRaisedObjectFiles[ cnt ][ 0 ] != '1' )
 		{
 			if ( _stricmp( ubRaisedObjectFiles[ cnt ], cRootFile ) == 0 )
-			{		
+			{
 				pTileSurf->bRaisedObjectType = TRUE;
 			}
 

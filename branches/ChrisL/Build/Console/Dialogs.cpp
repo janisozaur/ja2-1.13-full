@@ -52,13 +52,11 @@ extern HINSTANCE ghInstance;
 CAboutDlg::CAboutDlg(HWND hwndParent)
 	: m_hWndParent(hwndParent)
 {
-	PERFORMANCE_MARKER
 }
 
 
 CAboutDlg::~CAboutDlg()
 {
-	PERFORMANCE_MARKER
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -72,11 +70,10 @@ CAboutDlg::~CAboutDlg()
 
 BOOL CAboutDlg::DoModal()
 {
-	PERFORMANCE_MARKER
 	::DialogBox(
 		ghInstance,
-		MAKEINTRESOURCE(IDD_ABOUT), 
-		m_hWndParent, 
+		MAKEINTRESOURCE(IDD_ABOUT),
+		m_hWndParent,
 		CAboutDlg::DialogProc);
 
 	return TRUE;
@@ -109,7 +106,7 @@ int CALLBACK CAboutDlg::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARA
 					break;
 			}
 	}
-			
+
 	return 0;
 }
 
@@ -119,6 +116,7 @@ int CALLBACK CAboutDlg::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARA
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
+
 
 
 

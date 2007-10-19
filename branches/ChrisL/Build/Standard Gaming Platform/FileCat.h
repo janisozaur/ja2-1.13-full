@@ -9,7 +9,6 @@
 #include "stringicmp.h"
 #include <string>
 #include <set>
-#include "profiler.h"
 
 
 class TFileCat {

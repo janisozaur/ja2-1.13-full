@@ -26,7 +26,7 @@ typedef struct MACROSTRUCT
 //These define the macros for the 32 road pieces.	The column contains the macro ID and
 //the second contains the gridno offset from the anchor position (where the user clicks in the world to
 //place the road).	The actual index of the array refers to the offset from ROADPIECE001.
-MACROSTRUCT gRoadMacros[] = 
+MACROSTRUCT gRoadMacros[] =
 {
 	//left 1
 	{L1, -2		},
@@ -376,11 +376,10 @@ MACROSTRUCT gRoadMacros[] =
 
 INT16 gsRoadMacroStartIndex[ NUM_ROAD_MACROS ];
 
-//A simple optimization function that calculates the first index in the large database for 
+//A simple optimization function that calculates the first index in the large database for
 //the particular macro ID.
 void InitializeRoadMacros()
 {
-	PERFORMANCE_MARKER
 	INT16 i, end;
 	INT16 sMacro = 0;
 	end = sizeof( gRoadMacros ) / 4;
@@ -404,7 +403,6 @@ void InitializeRoadMacros()
 //gridnos).
 void PlaceRoadMacroAtGridNo( INT32 iMapIndex, INT32 iMacroID )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	UINT16 usTileIndex;
 	i = gsRoadMacroStartIndex[ iMacroID ];
@@ -419,13 +417,12 @@ void PlaceRoadMacroAtGridNo( INT32 iMapIndex, INT32 iMacroID )
 }
 
 //The old road system used multi-tiled roads as a single image.	The new road system has taken these large
-//pieces and chopped them up into single tiled images (to mitigate lighting problems).	Some of the larger 
-//road pieces turned into 18 smaller pieces.	So this function will go analyse the world, and replaces any 
-//locations containing the original road tile information, delete it, and replace it by inserting it's 
+//pieces and chopped them up into single tiled images (to mitigate lighting problems).	Some of the larger
+//road pieces turned into 18 smaller pieces.	So this function will go analyse the world, and replaces any
+//locations containing the original road tile information, delete it, and replace it by inserting it's
 //equivalent macro.
 void ReplaceObsoleteRoads()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	INT32 iMacro;
 	LEVELNODE *pObject;

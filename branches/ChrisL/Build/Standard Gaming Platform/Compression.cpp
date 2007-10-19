@@ -13,22 +13,19 @@
 
 voidpf ZAlloc( voidpf opaque, uInt items, uInt size )
 {
-	PERFORMANCE_MARKER
 	return( MemAlloc( items * size ) );
 }
 
 void ZFree( voidpf opaque, voidpf address )
 {
-	PERFORMANCE_MARKER
 	MemFree( address );
 }
 
 PTR DecompressInit( BYTE * pCompressedData, UINT32 uiDataSize )
 {
-	PERFORMANCE_MARKER
 	z_stream *	pZStream;
 	int					iZRetCode;
-	
+
 	// allocate memory for the z_stream struct
 	pZStream = (z_stream *)MemAlloc( sizeof( z_stream ) );
 	if( pZStream == NULL )
@@ -40,7 +37,7 @@ PTR DecompressInit( BYTE * pCompressedData, UINT32 uiDataSize )
 	pZStream->zalloc = ZAlloc;
 	pZStream->zfree = ZFree;
 	pZStream->opaque = NULL;
-	
+
 	// call the ZLIB init routine
 	iZRetCode = inflateInit( pZStream );
 	if( iZRetCode != Z_OK )
@@ -48,7 +45,7 @@ PTR DecompressInit( BYTE * pCompressedData, UINT32 uiDataSize )
 		MemFree( pZStream );
 		return( NULL );
 	}
-	
+
 	// set up our parameters
 	pZStream->next_in = pCompressedData;
 	pZStream->avail_in = uiDataSize;
@@ -57,7 +54,6 @@ PTR DecompressInit( BYTE * pCompressedData, UINT32 uiDataSize )
 
 UINT32 Decompress( PTR pDecompPtr, BYTE * pBuffer, UINT32 uiBufferLen )
 {
-	PERFORMANCE_MARKER
 	int					iZRetCode;
 	z_stream *	pZStream = (z_stream *) pDecompPtr;
 
@@ -77,13 +73,12 @@ UINT32 Decompress( PTR pDecompPtr, BYTE * pBuffer, UINT32 uiBufferLen )
 	// decompress!
 	iZRetCode = inflate( pZStream, Z_PARTIAL_FLUSH );
 	Assert( iZRetCode == Z_OK || iZRetCode == Z_STREAM_END );
-	
+
 	return( uiBufferLen - pZStream->avail_out );
 }
 
 void DecompressFini( PTR pDecompPtr )
 {
-	PERFORMANCE_MARKER
 	z_stream *	pZStream = (z_stream *) pDecompPtr;
 
 	// these assertions is in here to ensure that we get passed a proper z_stream pointer
@@ -103,10 +98,9 @@ UINT32 CompressedBufferSize( UINT32 uiDataSize )
 
 PTR CompressInit( BYTE * pUncompressedData, UINT32 uiDataSize )
 {
-	PERFORMANCE_MARKER
 	z_stream *	pZStream;
 	int					iZRetCode;
-	
+
 	// allocate memory for the z_stream struct
 	pZStream = (z_stream *)MemAlloc( sizeof( z_stream ) );
 	if( pZStream == NULL )
@@ -118,7 +112,7 @@ PTR CompressInit( BYTE * pUncompressedData, UINT32 uiDataSize )
 	pZStream->zalloc = ZAlloc;
 	pZStream->zfree = ZFree;
 	pZStream->opaque = NULL;
-	
+
 	// call the ZLIB init routine
 	iZRetCode = deflateInit( pZStream, Z_BEST_COMPRESSION );
 	if( iZRetCode != Z_OK )
@@ -126,7 +120,7 @@ PTR CompressInit( BYTE * pUncompressedData, UINT32 uiDataSize )
 		MemFree( pZStream );
 		return( NULL );
 	}
-	
+
 	// set up our parameters
 	pZStream->next_in = pUncompressedData;
 	pZStream->avail_in = uiDataSize;
@@ -135,7 +129,6 @@ PTR CompressInit( BYTE * pUncompressedData, UINT32 uiDataSize )
 
 UINT32 Compress( PTR pCompPtr, BYTE * pBuffer, UINT32 uiBufferLen )
 {
-	PERFORMANCE_MARKER
 	int					iZRetCode;
 	z_stream *	pZStream = (z_stream *) pCompPtr;
 
@@ -155,13 +148,12 @@ UINT32 Compress( PTR pCompPtr, BYTE * pBuffer, UINT32 uiBufferLen )
 	// decompress!
 	iZRetCode = deflate( pZStream, Z_FINISH );
 	Assert( iZRetCode == Z_STREAM_END );
-	
+
 	return( uiBufferLen - pZStream->avail_out );
 }
 
 void CompressFini( PTR pCompPtr )
 {
-	PERFORMANCE_MARKER
 	z_stream *	pZStream = (z_stream *) pCompPtr;
 
 	// these assertions is in here to ensure that we get passed a proper z_stream pointer

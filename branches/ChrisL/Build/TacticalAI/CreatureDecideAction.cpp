@@ -65,7 +65,6 @@ INT8 gbHuntCallPriority[NUM_CREATURE_CALLS] =
 
 void CreatureCall( SOLDIERTYPE * pCaller )
 {
-	PERFORMANCE_MARKER
 	UINT8		ubCallerType=0;
 	UINT8		ubReceiver;
 	INT8		bFullPriority;
@@ -152,7 +151,6 @@ void CreatureCall( SOLDIERTYPE * pCaller )
 
 INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER	
 	INT32		iChance, iSneaky = 10;
 	//INT8		bInWater;
 	INT8		bInGas;
@@ -403,7 +401,7 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 					}
 					else
 					{
-						pSoldier->aiData.usActionData = (UINT16)PreRandom(8); 
+						pSoldier->aiData.usActionData = (UINT16)PreRandom(8);
 					}
 				} while (pSoldier->aiData.usActionData == pSoldier->ubDirection);
 
@@ -441,8 +439,7 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 
 INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
-	// monster AI - heard something 
+	// monster AI - heard something
 	UINT8 ubNoiseDir;
 	INT16 sNoiseGridNo;
 	INT32 iNoiseValue;
@@ -584,7 +581,7 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 		}
 	}
 
-	
+
 
 	////////////////////////////////////////////////////////////////////////////
 	// DO NOTHING: Not enough points left to move, so save them for next turn
@@ -601,7 +598,6 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 
 INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 {
-	PERFORMANCE_MARKER
  // monster AI - hostile mammals somewhere around!
  INT16 iChance, sClosestOpponent /*,sClosestOpponent,sClosestFriend*/;
  INT16 sClosestDisturbance;
@@ -668,14 +664,14 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				{
 					// hurt for first time!
 					pSoldier->aiData.usActionData = CALL_CRIPPLED;
-					pSoldier->bOldLife = pSoldier->stats.bLife;	// don't want to call more than once	
+					pSoldier->bOldLife = pSoldier->stats.bLife;	// don't want to call more than once
 					return(AI_ACTION_CREATURE_CALL);
 				}
 				else if (pSoldier->stats.bLifeMax / pSoldier->stats.bLife > 2)
 				{
 					// crippled, 1/3 or less health!
 					pSoldier->aiData.usActionData = CALL_ATTACKED;
-					pSoldier->bOldLife = pSoldier->stats.bLife;	// don't want to call more than once	
+					pSoldier->bOldLife = pSoldier->stats.bLife;	// don't want to call more than once
 					return(AI_ACTION_CREATURE_CALL);
 				}
 			}
@@ -711,9 +707,9 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 		{
 			// if there hasn't been a general sighting call sent yet
 
-			// might want to check the specifics of who we see 
+			// might want to check the specifics of who we see
 			iChance = 20;
-			
+
 			if (iChance)
 			{
 				#ifdef DEBUGDECISIONS
@@ -726,7 +722,7 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 						AINameMessage(pSoldier,"decides to call an alert!",1000);
 					#endif
 					pSoldier->aiData.usActionData = CALL_1_PREY;
-					return(AI_ACTION_CREATURE_CALL);			
+					return(AI_ACTION_CREATURE_CALL);
 				}
 			}
 		}
@@ -807,7 +803,7 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
 	////////////////////////////////////////////////////////////////////////////
 	// TAKE A BITE, PERHAPS
-	////////////////////////////////////////////////////////////////////////////		
+	////////////////////////////////////////////////////////////////////////////
 	if (pSoldier->aiData.bHunting)
 	{
 	pSoldier->aiData.usActionData = FindNearestRottingCorpse( pSoldier );
@@ -815,9 +811,9 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 		if (PythSpacesAway( pSoldier->sGridNo, pSoldier->aiData.usActionData) < MAX_EAT_DIST )
 		{
 			INT16 sGridNo;
-			
+
 			sGridNo = FindAdjacentGridEx( pSoldier, pSoldier->aiData.usActionData, &ubOpponentDir, &sAdjustedGridNo, FALSE, FALSE );
-			
+
 			if ( sGridNo != -1 )
 			{
 					pSoldier->aiData.usActionData = sGridNo;
@@ -828,7 +824,7 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
 	////////////////////////////////////////////////////////////////////////////
 	// TRACK A SCENT, IF ONE IS PRESENT
-	////////////////////////////////////////////////////////////////////////////		
+	////////////////////////////////////////////////////////////////////////////
 	if (TrackScent( pSoldier ))
 		{
 			return( AI_ACTION_TRACK );
@@ -904,7 +900,6 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
 INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	// monster AI - hostile mammals in sense range
  INT16		sClosestOpponent;
  INT16		sClosestDisturbance;
@@ -947,16 +942,16 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 				{
 					// hurt for first time!
 					pSoldier->aiData.usActionData = CALL_CRIPPLED;
-					pSoldier->bOldLife = pSoldier->stats.bLife;	// don't want to call more than once	
+					pSoldier->bOldLife = pSoldier->stats.bLife;	// don't want to call more than once
 					return(AI_ACTION_CREATURE_CALL);
 				}
-				else 
+				else
 				*/
 				if (pSoldier->stats.bLifeMax / pSoldier->stats.bLife > 2)
 				{
 					// crippled, 1/3 or less health!
 					pSoldier->aiData.usActionData = CALL_ATTACKED;
-					pSoldier->bOldLife = pSoldier->stats.bLife;	// don't want to call more than once	
+					pSoldier->bOldLife = pSoldier->stats.bLife;	// don't want to call more than once
 					return(AI_ACTION_CREATURE_CALL);
 				}
 			}
@@ -983,7 +978,7 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 						{
 							pSoldier->aiData.usActionData = CALL_1_PREY;
 						}
-						return(AI_ACTION_CREATURE_CALL);			
+						return(AI_ACTION_CREATURE_CALL);
 					}
 				}
 			}
@@ -1242,7 +1237,7 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 		if (pSoldier->bActionPoints >= ubMinAPCost)
 		{
 			// then look around for a worthy target (which sets BestStab.ubPossible)
-			
+
 			if (pSoldier->ubBodyType == QUEENMONSTER)
 			{
 				CalcTentacleAttack( pSoldier, &CurrStab );
@@ -1339,7 +1334,7 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 		*/
 
 		return(ubBestAttackAction);
-	
+
 	}
  }
 
@@ -1354,7 +1349,7 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 	if ( (GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints) )
 	{
 		// determine the location of the known closest opponent
-		// (don't care if he's conscious, don't care if he's reachable at all)	
+		// (don't care if he's conscious, don't care if he's reachable at all)
 		sClosestOpponent = ClosestKnownOpponent(pSoldier, NULL, NULL);
 		// if we have a closest reachable opponent
 		if (sClosestOpponent != NOWHERE)
@@ -1401,7 +1396,7 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 				}
 				}
 		}
-	}	
+	}
  }
  else
  {
@@ -1438,7 +1433,6 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 
 INT8 CreatureDecideAction( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT8 bAction = AI_ACTION_NONE;
 
 	switch (pSoldier->aiData.bAlertStatus)
@@ -1482,7 +1476,6 @@ INT8 CreatureDecideAction( SOLDIERTYPE *pSoldier )
 
 void CreatureDecideAlertStatus( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT8	bOldStatus;
 	INT32	iDummy;
 	BOOLEAN	fClimbDummy, fReachableDummy;
@@ -1537,7 +1530,7 @@ void CreatureDecideAlertStatus( SOLDIERTYPE *pSoldier )
 			case STATUS_BLACK:
 				pSoldier->aiData.bAlertStatus = STATUS_BLACK;
 		}
-		
+
 	}
 	else // no opponents are in sight
 	{
@@ -1650,7 +1643,6 @@ void CreatureDecideAlertStatus( SOLDIERTYPE *pSoldier )
 
 INT8 CrowDecideActionRed( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	// OK, Fly away!
 	//HandleCrowFlyAway( pSoldier );
 	if (!gfTurnBasedAI)
@@ -1667,7 +1659,6 @@ INT8 CrowDecideActionRed( SOLDIERTYPE * pSoldier )
 
 INT8 CrowDecideActionGreen( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT16 sCorpseGridNo;
 	UINT8 ubDirection;
 	INT16 sFacingDir;
@@ -1704,7 +1695,7 @@ INT8 CrowDecideActionGreen( SOLDIERTYPE * pSoldier )
 			pSoldier->aiData.usActionData = FindGridNoFromSweetSpot( pSoldier, sCorpseGridNo, 4, &ubDirection );
 			if ( pSoldier->aiData.usActionData != NOWHERE )
 			{
-				return( AI_ACTION_GET_CLOSER );			
+				return( AI_ACTION_GET_CLOSER );
 			}
 		}
 	}
@@ -1714,7 +1705,6 @@ INT8 CrowDecideActionGreen( SOLDIERTYPE * pSoldier )
 
 INT8 CrowDecideAction( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	if ( pSoldier->usAnimState == CROW_FLY )
 	{
 		return( AI_ACTION_NONE );

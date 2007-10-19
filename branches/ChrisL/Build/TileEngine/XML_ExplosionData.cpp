@@ -25,16 +25,15 @@ struct
 
 	EXPLOSION_DATA	expData;
 	UINT32			maxArraySize;
-	UINT32			curIndex;	
+	UINT32			curIndex;
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
 typedef explosionDataParseData;
 
-static void XMLCALL 
+static void XMLCALL
 explosionDataStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	explosionDataParseData * pData = (explosionDataParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -79,10 +78,9 @@ explosionDataStartElementHandle(void *userData, const XML_Char *name, const XML_
 static void XMLCALL
 explosionDataCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	explosionDataParseData * pData = (explosionDataParseData *)userData;
 
-	if( (pData->currentDepth <= pData->maxReadDepth) && 
+	if( (pData->currentDepth <= pData->maxReadDepth) &&
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
 	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
@@ -93,7 +91,6 @@ explosionDataCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 explosionDataEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	explosionDataParseData * pData = (explosionDataParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -135,7 +132,7 @@ explosionDataEndElementHandle(void *userData, const XML_Char *name)
 		{
 			pData->curElement = ELEMENT;
 			// Lesh: maybe it is needed to check lenght of the pData->szCharData string
-			// and warn user, otherwise game behavior is unexpected when trying to 
+			// and warn user, otherwise game behavior is unexpected when trying to
 			// play animation from clipped filename (runtime error, crash ???)
 			strncpy(pData->expData.zBlastFilename, pData->szCharData, MAX_BLAST_FILENAME_LEN);
 		}
@@ -156,13 +153,12 @@ explosionDataEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInExplosionDataStats(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	explosionDataParseData pData;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading ExplosionData.xml" );
@@ -171,7 +167,7 @@ BOOLEAN ReadInExplosionDataStats(STR fileName)
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -186,15 +182,15 @@ BOOLEAN ReadInExplosionDataStats(STR fileName)
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, explosionDataStartElementHandle, explosionDataEndElementHandle);
 	XML_SetCharacterDataHandler(parser, explosionDataCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
-	pData.maxArraySize = NUM_EXP_TYPES; 
+	pData.maxArraySize = NUM_EXP_TYPES;
 	pData.curIndex = -1;
-	
+
 	XML_SetUserData(parser, &pData);
 
 
@@ -218,7 +214,6 @@ BOOLEAN ReadInExplosionDataStats(STR fileName)
 }
 BOOLEAN WriteExplosionDataStats()
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there
@@ -226,7 +221,7 @@ BOOLEAN WriteExplosionDataStats()
 	hFile = FileOpen( "TABLEDATA\\ExplosionData out.xml", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	{
 		UINT32 cnt;
 

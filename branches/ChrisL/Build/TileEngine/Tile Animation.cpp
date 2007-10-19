@@ -37,7 +37,6 @@ ANITILE					*pAniTileHead = NULL;
 
 ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 {
-	PERFORMANCE_MARKER
 	ANITILE		*pAniNode;
 	ANITILE		*pNewAniNode;
 	LEVELNODE	*pNode;
@@ -160,7 +159,7 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 
 		if ( ( uiFlags & ANITILE_CACHEDTILE ) )
 		{
-			pNewAniNode->pLevelNode->uiFlags |=	( LEVELNODE_CACHEDANITILE );	
+			pNewAniNode->pLevelNode->uiFlags |=	( LEVELNODE_CACHEDANITILE );
 			pNewAniNode->sCachedTileID = (INT16)iCachedTile;
 			pNewAniNode->usCachedTileSubIndex = usTileType;
 			pNewAniNode->pLevelNode->pAniTile = pNewAniNode;
@@ -300,14 +299,13 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 	//Set head
 	pAniTileHead = pNewAniNode;
 
-	// Set some special stuff 
+	// Set some special stuff
 	return( pNewAniNode );
 }
 
 // Loop throug all ani tiles and remove...
 void DeleteAniTiles( )
 {
-	PERFORMANCE_MARKER
 	ANITILE *pAniNode			= NULL;
 	ANITILE *pNode				= NULL;
 
@@ -328,7 +326,6 @@ void DeleteAniTiles( )
 
 void DeleteAniTile( ANITILE *pAniTile )
 {
-	PERFORMANCE_MARKER
 	ANITILE				*pAniNode				= NULL;
 	ANITILE				*pOldAniNode		= NULL;
 	TILE_ELEMENT	*TileElem;
@@ -424,10 +421,10 @@ void DeleteAniTile( ANITILE *pAniTile )
 				{
 					// First delete the bullet!
 					RemoveBullet( pAniNode->uiUserData3 );
-					
+
 					// 0verhaul:	Removed because it's handled by RemoveBullet.
 					// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - miss finished animation") );
-					// FreeUpAttacker( (UINT8) pAniNode->ubAttackerMissed );					
+					// FreeUpAttacker( (UINT8) pAniNode->ubAttackerMissed );
 				}
 			}
 			else
@@ -482,7 +479,6 @@ void DeleteAniTile( ANITILE *pAniTile )
 
 void UpdateAniTiles( )
 {
-	PERFORMANCE_MARKER
 	ANITILE *pAniNode			= NULL;
 	ANITILE *pNode				= NULL;
 	UINT32	uiClock				= GetJA2Clock( );
@@ -560,11 +556,11 @@ void UpdateAniTiles( )
 
 						case ANI_KEYFRAME_DO_SOUND:
 
-							PlayJA2Sample( pNode->uiUserData, RATE_11025, SoundVolume( MIDVOLUME, (INT16)pNode->uiUserData3 ), 1, SoundDir( (INT16)pNode->uiUserData3 ) );			
+							PlayJA2Sample( pNode->uiUserData, RATE_11025, SoundVolume( MIDVOLUME, (INT16)pNode->uiUserData3 ), 1, SoundDir( (INT16)pNode->uiUserData3 ) );
 							break;
 						}
 
-					} 
+					}
 
 					// CHECK IF WE SHOULD BE DISPLAYING TRANSLUCENTLY!
 					if ( pNode->sCurrentFrame == pNode->ubKeyFrame2 )
@@ -577,13 +573,13 @@ void UpdateAniTiles( )
 
 							ubExpType = Explosive[ Item[ (UINT16)pNode->uiUserData ].ubClassIndex ].ubType;
 
-							//				if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS || 
+							//				if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS ||
 							//					ubExpType == EXPLOSV_SMOKE )
-							if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS || 
+							if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS ||
 								ubExpType == EXPLOSV_SMOKE || ubExpType == EXPLOSV_BURNABLEGAS )
 							{
 								// Do sound....
-								// PlayJA2Sample( AIR_ESCAPING_1, RATE_11025, SoundVolume( HIGHVOLUME, pNode->sGridNo ), 1, SoundDir( pNode->sGridNo ) );			
+								// PlayJA2Sample( AIR_ESCAPING_1, RATE_11025, SoundVolume( HIGHVOLUME, pNode->sGridNo ), 1, SoundDir( pNode->sGridNo ) );
 								NewSmokeEffect( pNode->sGridNo, (UINT16)pNode->uiUserData, gExplosionData[ pNode->uiUserData3 ].Params.bLevel, (UINT8)pNode->ubUserData2 );
 							}
 							else
@@ -628,7 +624,7 @@ void UpdateAniTiles( )
 						pNode->uiFlags |= ANITILE_BACKWARD;
 					}
 					else
-					{		
+					{
 
 						// Delete from world!
 						DeleteAniTile( pNode );
@@ -645,7 +641,7 @@ void UpdateAniTiles( )
 			if ( pNode->uiFlags & ANITILE_BACKWARD )
 			{
 				if ( pNode->uiFlags & ANITILE_ERASEITEMFROMSAVEBUFFFER )
-				{	
+				{
 					// ATE: Check if bounding box is on the screen...
 					if ( pNode->bFrameCountAfterStart == 0 )
 					{
@@ -733,7 +729,7 @@ void UpdateAniTiles( )
 					}
 
 					if ( pNode->uiFlags & ANITILE_ERASEITEMFROMSAVEBUFFFER )
-					{	
+					{
 						// ATE: Check if bounding box is on the screen...
 						pNode->bFrameCountAfterStart = 0;
 						//pNode->pLevelNode->uiFlags |= LEVELNODE_UPDATESAVEBUFFERONCE;
@@ -754,7 +750,7 @@ void UpdateAniTiles( )
 			{
 				// ONLY TURN OFF IF PAUSED...
 				if ( ( pNode->uiFlags & ANITILE_ERASEITEMFROMSAVEBUFFFER ) )
-				{	
+				{
 					if ( pNode->uiFlags & ANITILE_PAUSED )
 					{
 						if ( pNode->pLevelNode->uiFlags & LEVELNODE_DYNAMIC )
@@ -785,7 +781,6 @@ void UpdateAniTiles( )
 
 void SetAniTileFrame( ANITILE *pAniTile, INT16 sFrame )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubTempDir;
 	INT16	sStartFrame = 0;
 
@@ -810,7 +805,6 @@ void SetAniTileFrame( ANITILE *pAniTile, INT16 sFrame )
 
 ANITILE *GetCachedAniTileOfType( INT16 sGridNo, UINT8 ubLevelID, UINT32 uiFlags )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pNode = NULL;
 
 	switch( ubLevelID )
@@ -870,7 +864,6 @@ ANITILE *GetCachedAniTileOfType( INT16 sGridNo, UINT8 ubLevelID, UINT32 uiFlags 
 
 void HideAniTile( ANITILE *pAniTile, BOOLEAN fHide )
 {
-	PERFORMANCE_MARKER
 	if ( fHide )
 	{
 		pAniTile->pLevelNode->uiFlags |= LEVELNODE_HIDDEN;
@@ -883,7 +876,6 @@ void HideAniTile( ANITILE *pAniTile, BOOLEAN fHide )
 
 void PauseAniTile( ANITILE *pAniTile, BOOLEAN fPause )
 {
-	PERFORMANCE_MARKER
 	if ( fPause )
 	{
 		pAniTile->uiFlags |= ANITILE_PAUSED;
@@ -897,7 +889,6 @@ void PauseAniTile( ANITILE *pAniTile, BOOLEAN fPause )
 
 void PauseAllAniTilesOfType( UINT32 uiType, BOOLEAN fPause )
 {
-	PERFORMANCE_MARKER
 	ANITILE *pAniNode			= NULL;
 	ANITILE *pNode				= NULL;
 

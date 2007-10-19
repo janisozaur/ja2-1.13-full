@@ -87,7 +87,6 @@ UINT32	guiSkullIcons;
 
 BOOLEAN SetCurrentPopUpBox( UINT32 uiId )
 {
-	PERFORMANCE_MARKER
 	// given id of the box, find it in the list and set to current
 
 	//make sure the box id is valid
@@ -99,7 +98,7 @@ BOOLEAN SetCurrentPopUpBox( UINT32 uiId )
 
 	// see if box inited
 	if( gpPopUpBoxList[ uiId ] != NULL )
-	{ 
+	{
 		gPopUpTextBox = gpPopUpBoxList[ uiId ];
 		return( TRUE );
 	}
@@ -108,7 +107,6 @@ BOOLEAN SetCurrentPopUpBox( UINT32 uiId )
 
 BOOLEAN OverrideMercPopupBox( MercPopUpBox *pMercBox )
 {
-	PERFORMANCE_MARKER
 
 	// store old box and set current this passed one
 	gOldPopUpTextBox = gPopUpTextBox;
@@ -120,7 +118,6 @@ BOOLEAN OverrideMercPopupBox( MercPopUpBox *pMercBox )
 
 BOOLEAN ResetOverrideMercPopupBox( )
 {
-	PERFORMANCE_MARKER
 	gPopUpTextBox = gOldPopUpTextBox;
 
 	return( TRUE );
@@ -129,7 +126,6 @@ BOOLEAN ResetOverrideMercPopupBox( )
 
 BOOLEAN InitMercPopupBox( )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	VOBJECT_DESC	VObjectDesc;
 
@@ -159,7 +155,6 @@ BOOLEAN InitMercPopupBox( )
 
 BOOLEAN ShutDownPopUpBoxes( )
 {
-	PERFORMANCE_MARKER
 
 	INT32 iCounter = 0;
 	for( iCounter = 0; iCounter < MAX_NUMBER_OF_POPUP_BOXES ; iCounter++ )
@@ -178,17 +173,16 @@ void	GetMercPopupBoxFontColor( UINT8 ubBackgroundIndex, UINT8 *pubFontColor, UIN
 // Tactical Popup
 BOOLEAN LoadTextMercPopupImages( UINT8 ubBackgroundIndex, UINT8 ubBorderIndex)
 {
-	PERFORMANCE_MARKER
 	VSURFACE_DESC		vs_desc;
 	VOBJECT_DESC	VObjectDesc;
 
 	// this function will load the graphics associated with the background and border index values
-	
+
 	// the background
 	vs_desc.fCreateFlags = VSURFACE_CREATE_FROMFILE | VSURFACE_SYSTEM_MEM_USAGE;
 	strcpy(vs_desc.ImageFile,	zMercBackgroundPopupFilenames [ ubBackgroundIndex ]);
 	CHECKF(AddVideoSurface(&vs_desc, &gPopUpTextBox->uiMercTextPopUpBackground));
- 
+
 	// border
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP( zMercBorderPopupFilenames[ ubBorderIndex ], VObjectDesc.ImageFile );
@@ -205,7 +199,6 @@ BOOLEAN LoadTextMercPopupImages( UINT8 ubBackgroundIndex, UINT8 ubBorderIndex)
 
 void RemoveTextMercPopupImages( )
 {
-	PERFORMANCE_MARKER
 	//this procedure will remove the background and border video surface/object from the indecies
 	if( gPopUpTextBox )
 	{
@@ -213,7 +206,7 @@ void RemoveTextMercPopupImages( )
 		{
 			// the background
 			DeleteVideoSurfaceFromIndex( gPopUpTextBox->uiMercTextPopUpBackground );
-	
+
 			// the border
 			DeleteVideoObjectFromIndex( gPopUpTextBox->uiMercTextPopUpBorder );
 
@@ -227,7 +220,6 @@ void RemoveTextMercPopupImages( )
 
 BOOLEAN RenderMercPopUpBoxFromIndex( INT32 iBoxId, INT16 sDestX, INT16 sDestY, UINT32 uiBuffer )
 {
-	PERFORMANCE_MARKER
 
 	// set the current box
 	if( SetCurrentPopUpBox( iBoxId ) == FALSE )
@@ -241,7 +233,6 @@ BOOLEAN RenderMercPopUpBoxFromIndex( INT32 iBoxId, INT16 sDestX, INT16 sDestY, U
 
 BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, UINT32 uiBuffer )
 {
-	PERFORMANCE_MARKER
 //	UINT32	uiDestPitchBYTES;
 //	UINT32	uiSrcPitchBYTES;
 //	UINT16	*pDestBuf;
@@ -250,10 +241,10 @@ BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, UINT32 uiBuffer )
 
 	// will render/transfer the image from the buffer in the data structure to the buffer specified by user
 	BOOLEAN fReturnValue = TRUE;
-	
+
 	// grab the destination buffer
 //	pDestBuf = ( UINT16* )LockVideoSurface( uiBuffer, &uiDestPitchBYTES );
-	
+
 	// now lock it
 //	pSrcBuf = ( UINT16* )LockVideoSurface( gPopUpTextBox->uiSourceBufferIndex, &uiSrcPitchBYTES);
 
@@ -266,8 +257,8 @@ BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, UINT32 uiBuffer )
 
 
 	// blt, and grab return value
-//	fReturnValue = Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, pSrcBuf, uiSrcPitchBYTES, sDestX, sDestY, 0, 0, gPopUpTextBox->sWidth, gPopUpTextBox->sHeight);	
-	
+//	fReturnValue = Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, pSrcBuf, uiSrcPitchBYTES, sDestX, sDestY, 0, 0, gPopUpTextBox->sWidth, gPopUpTextBox->sHeight);
+
 	//Invalidate!
 	if ( uiBuffer == FRAME_BUFFER )
 	{
@@ -278,10 +269,10 @@ BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, UINT32 uiBuffer )
 
 	// source
 //	UnLockVideoSurface( gPopUpTextBox->uiSourceBufferIndex );
-	
+
 	// destination
 //	UnLockVideoSurface( uiBuffer );
-	
+
 	// return success or failure
 	return fReturnValue;
 }
@@ -290,7 +281,6 @@ BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, UINT32 uiBuffer )
 
 INT32 AddPopUpBoxToList( MercPopUpBox *pPopUpTextBox )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	// make sure is a valid box
@@ -306,7 +296,7 @@ INT32 AddPopUpBoxToList( MercPopUpBox *pPopUpTextBox )
 		{
 			// found a spot, inset
 			gpPopUpBoxList[ iCounter ] = pPopUpTextBox;
-			
+
 			// set as current
 			SetCurrentPopUpBox( iCounter );
 
@@ -322,15 +312,13 @@ INT32 AddPopUpBoxToList( MercPopUpBox *pPopUpTextBox )
 // get box with this id
 MercPopUpBox * GetPopUpBoxIndex( INT32 iId )
 {
-	PERFORMANCE_MARKER
 	return( gpPopUpBoxList[ iId ] );
 }
 
-INT32 PrepareMercPopupBox(	INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorderIndex, STR16 pString, 
-							UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, 
+INT32 PrepareMercPopupBox(	INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorderIndex, STR16 pString,
+							UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY,
 							UINT16 *pActualWidth, UINT16 *pActualHeight)
 {
-	PERFORMANCE_MARKER
 	UINT16 usNumberVerticalPixels, usNumberOfLines;
 	UINT16 usTextWidth, usHeight;
 	UINT16 i;
@@ -360,7 +348,7 @@ INT32 PrepareMercPopupBox(	INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	if( iBoxId == -1 )
 	{
 		// no box yet
-		
+
 		// create box
 		pPopUpTextBox = (MercPopUpBox *) MemAlloc( sizeof( MercPopUpBox ) );
 
@@ -377,7 +365,7 @@ INT32 PrepareMercPopupBox(	INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	}
 	else
 	{
-		// has been created already, 
+		// has been created already,
 		// Check if these images are different
 
 		// grab box
@@ -385,7 +373,7 @@ INT32 PrepareMercPopupBox(	INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 
 		// box has valid id and no instance?..error
 		Assert( pPopUpTextBox );
-		
+
 			// copy over ptr
 		gPopUpTextBox = pPopUpTextBox;
 
@@ -495,7 +483,7 @@ INT32 PrepareMercPopupBox(	INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	{
 		if( !GetVideoSurface( &hSrcVSurface, pPopUpTextBox->uiMercTextPopUpBackground) )
 		{
-			AssertMsg( 0, String( "Failed to GetVideoSurface for PrepareMercPopupBox.	VSurfaceID:	%d", 
+			AssertMsg( 0, String( "Failed to GetVideoSurface for PrepareMercPopupBox.	VSurfaceID:	%d",
 				pPopUpTextBox->uiMercTextPopUpBackground ) );
 		}
 
@@ -559,7 +547,7 @@ INT32 PrepareMercPopupBox(	INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 
 	if ( pPopUpTextBox->uiFlags & ( MERC_POPUP_PREPARE_FLAGS_STOPICON | MERC_POPUP_PREPARE_FLAGS_SKULLICON ) )
 	{
-		sDispTextXPos += 30;	
+		sDispTextXPos += 30;
 	}
 
 
@@ -606,7 +594,6 @@ INT32 PrepareMercPopupBox(	INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 //Deletes the surface thats contains the border, background and the text.
 BOOLEAN RemoveMercPopupBox()
 {
-	PERFORMANCE_MARKER
 
 	INT32 iCounter = 0;
 
@@ -652,7 +639,6 @@ BOOLEAN RemoveMercPopupBox()
 
 BOOLEAN RemoveMercPopupBoxFromIndex( UINT32 uiId )
 {
-	PERFORMANCE_MARKER
 	// find this box, set it to current, and delete it
 	if( SetCurrentPopUpBox( uiId ) == FALSE )
 	{
@@ -668,7 +654,6 @@ BOOLEAN RemoveMercPopupBoxFromIndex( UINT32 uiId )
 //Pass in the background index, and pointers to the font and shadow color
 void	GetMercPopupBoxFontColor( UINT8 ubBackgroundIndex, UINT8 *pubFontColor, UINT8 *pubFontShadowColor)
 {
-	PERFORMANCE_MARKER
 	switch( ubBackgroundIndex )
 	{
 		case BASIC_MERC_POPUP_BACKGROUND:
@@ -700,7 +685,6 @@ void	GetMercPopupBoxFontColor( UINT8 ubBackgroundIndex, UINT8 *pubFontColor, UIN
 
 BOOLEAN	SetPrepareMercPopupFlags( UINT32 uiFlags )
 {
-	PERFORMANCE_MARKER
 	guiFlags |= uiFlags;
 	return( TRUE );
 }
@@ -709,7 +693,6 @@ BOOLEAN	SetPrepareMercPopupFlags( UINT32 uiFlags )
 
 BOOLEAN SetPrepareMercPopUpFlagsFromIndex( UINT32 uiFlags, UINT32 uiId )
 {
-	PERFORMANCE_MARKER
 	// find this box, set it to current, and delete it
 	if( SetCurrentPopUpBox( uiId ) == FALSE )
 	{

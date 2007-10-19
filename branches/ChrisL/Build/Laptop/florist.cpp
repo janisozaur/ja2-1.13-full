@@ -80,17 +80,15 @@ void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iRea
 
 void GameInitFlorist()
 {
-	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterFlorist()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	SetBookMark( FLORIST_BOOKMARK );
-	
+
 	InitFloristDefaults();
 
 	// load the handbullet graphic and add it
@@ -100,10 +98,10 @@ BOOLEAN EnterFlorist()
 
 	guiGalleryButtonImage	= LoadButtonImage("LAPTOP\\FloristButtons.sti", -1,0,-1,1,-1 );
 
-	guiGalleryButton = CreateIconAndTextButton( guiGalleryButtonImage, sFloristText[FLORIST_GALLERY], FLORIST_BUTTON_TEXT_FONT, 
-													FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR, 
-													FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR, 
-													TEXT_CJUSTIFIED, 
+	guiGalleryButton = CreateIconAndTextButton( guiGalleryButtonImage, sFloristText[FLORIST_GALLERY], FLORIST_BUTTON_TEXT_FONT,
+													FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
+													FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
+													TEXT_CJUSTIFIED,
 													FLORIST_GALLERY_BUTTON_X, FLORIST_GALLERY_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnGalleryButtonCallback);
 	SetButtonCursor(guiGalleryButton, CURSOR_WWW );
@@ -129,8 +127,7 @@ BOOLEAN EnterFlorist()
 
 void ExitFlorist()
 {
-	PERFORMANCE_MARKER
-	
+
 	DeleteVideoObjectFromIndex(guiHandBullet);
 
 	RemoveFloristDefaults();
@@ -142,12 +139,10 @@ void ExitFlorist()
 
 void HandleFlorist()
 {
-	PERFORMANCE_MARKER
 }
 
 void RenderFlorist()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 	UINT16 i, usPosY;
 	UINT8 ubTextCounter;
@@ -186,7 +181,6 @@ void RenderFlorist()
 
 BOOLEAN InitFloristDefaults()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	// load the Florist background graphic and add it
@@ -212,8 +206,8 @@ BOOLEAN InitFloristDefaults()
 
 		//flower title homepage link
 		MSYS_DefineRegion( &gSelectedFloristTitleHomeLinkRegion, FLORIST_SMALL_TITLE_X, FLORIST_SMALL_TITLE_Y, (UINT16)(FLORIST_SMALL_TITLE_X + FLORIST_SMALL_TITLE_WIDTH), (UINT16)(FLORIST_SMALL_TITLE_Y + FLORIST_SMALL_TITLE_HEIGHT), MSYS_PRIORITY_HIGH,
-						CURSOR_WWW, MSYS_NO_CALLBACK, SelectFloristTitleHomeLinkRegionCallBack ); 
-		MSYS_AddRegion(&gSelectedFloristTitleHomeLinkRegion); 
+						CURSOR_WWW, MSYS_NO_CALLBACK, SelectFloristTitleHomeLinkRegionCallBack );
+		MSYS_AddRegion(&gSelectedFloristTitleHomeLinkRegion);
 	}
 
 	return(TRUE);
@@ -221,7 +215,6 @@ BOOLEAN InitFloristDefaults()
 
 void DisplayFloristDefaults()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	WebPageTileBackground(4, 4, FLORIST_BACKGROUND_WIDTH, FLORIST_BACKGROUND_HEIGHT, guiFloristBackground);
@@ -229,13 +222,13 @@ void DisplayFloristDefaults()
 	//if its the first page
 	if( guiCurrentLaptopMode == LAPTOP_MODE_FLORIST )
 	{
-		gfHomePageActive = TRUE;		
+		gfHomePageActive = TRUE;
 		GetVideoObject(&hPixHandle, guiLargeTitleSymbol);
 		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FLORIST_BIG_TITLE_X, FLORIST_BIG_TITLE_Y, VO_BLT_SRCTRANSPARENCY,NULL);
 	}
 	else
 	{
-		gfHomePageActive = FALSE;		
+		gfHomePageActive = FALSE;
 		GetVideoObject(&hPixHandle, guiSmallTitleSymbol);
 		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FLORIST_SMALL_TITLE_X, FLORIST_SMALL_TITLE_Y, VO_BLT_SRCTRANSPARENCY,NULL);
 	}
@@ -243,7 +236,6 @@ void DisplayFloristDefaults()
 
 void RemoveFloristDefaults()
 {
-	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex( guiFloristBackground );
 
 	//if its the first page
@@ -265,7 +257,6 @@ void RemoveFloristDefaults()
 
 void BtnGalleryButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -287,11 +278,10 @@ void BtnGalleryButtonCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 
 void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -301,12 +291,13 @@ void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iRea
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 
 
 
- 
+
+
 
 

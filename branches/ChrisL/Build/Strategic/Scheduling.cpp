@@ -63,7 +63,6 @@ void PrepareScheduleForAutoProcessing( SCHEDULENODE *pSchedule, UINT32 uiStartTi
 //uses a single static node to copy data from, hence this method.
 void CopyScheduleToList( SCHEDULENODE *pSchedule, SOLDIERINITNODE *pNode )
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE *curr;
 	curr = gpScheduleList;
 	gpScheduleList = (SCHEDULENODE*)MemAlloc( sizeof( SCHEDULENODE ) );
@@ -87,7 +86,6 @@ void CopyScheduleToList( SCHEDULENODE *pSchedule, SOLDIERINITNODE *pNode )
 
 SCHEDULENODE* GetSchedule( UINT8 ubScheduleID )
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE *curr;
 	curr = gpScheduleList;
 	while( curr )
@@ -102,7 +100,6 @@ SCHEDULENODE* GetSchedule( UINT8 ubScheduleID )
 //Removes all schedules from the event list, and cleans out the list.
 void DestroyAllSchedules()
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE *curr;
 	//First remove all of the events.
 	DeleteAllStrategicEventsOfType( EVENT_PROCESS_TACTICAL_SCHEDULE );
@@ -120,7 +117,6 @@ void DestroyAllSchedules()
 // cleans out the schedule list without touching events, for saving & loading games
 void DestroyAllSchedulesWithoutDestroyingEvents()
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE *curr;
 
 	//delete all of the schedules.
@@ -136,7 +132,6 @@ void DestroyAllSchedulesWithoutDestroyingEvents()
 
 void DeleteSchedule( UINT8 ubScheduleID )
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE *curr, *temp = NULL;
 
 	if (!gpScheduleList)
@@ -171,7 +166,6 @@ void DeleteSchedule( UINT8 ubScheduleID )
 
 void ProcessTacticalSchedule( UINT8 ubScheduleID )
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE *pSchedule;
 	SOLDIERTYPE *pSoldier;
 	INT32 iScheduleIndex=0;
@@ -182,7 +176,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 	if( !pSchedule )
 	{
 		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Schedule callback:	Schedule ID of %d not found.", ubScheduleID ); 
+			ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Schedule callback:	Schedule ID of %d not found.", ubScheduleID );
 		#endif
 		return;
 	}
@@ -190,7 +184,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 	if( pSchedule->ubSoldierID >= TOTAL_SOLDIERS )
 	{
 		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Schedule callback:	Illegal soldier ID of %d.", pSchedule->ubSoldierID ); 
+			ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Schedule callback:	Illegal soldier ID of %d.", pSchedule->ubSoldierID );
 		#endif
 		return;
 	}
@@ -254,7 +248,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 	}
 	else
 	{
-		// turn off all active-schedule flags before setting 
+		// turn off all active-schedule flags before setting
 		// the one that should be active!
 		pSchedule->usFlags &= ~SCHEDULE_FLAGS_ACTIVE_ALL;
 
@@ -275,7 +269,6 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 //all of the schedule IDs from scratch and adjusts the effected structures accordingly.
 void OptimizeSchedules()
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE *pSchedule;
 	SOLDIERINITNODE *pNode;
 	UINT8 ubOldScheduleID;
@@ -319,12 +312,11 @@ void OptimizeSchedules()
 	}
 }
 
-//Called when transferring from the game to the editor.	
+//Called when transferring from the game to the editor.
 void PrepareSchedulesForEditorEntry()
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE *curr, *prev, *temp;
-	
+
 	//Delete all schedule events.	The editor will automatically warp all civilians to their starting locations.
 	DeleteAllStrategicEventsOfType( EVENT_PROCESS_TACTICAL_SCHEDULE );
 
@@ -345,14 +337,14 @@ void PrepareSchedulesForEditorEntry()
 			MemFree( temp );
 			gubScheduleID--;
 		}
-		else 
+		else
 		{
 			if( curr->usFlags & SCHEDULE_FLAGS_SLEEP_CONVERTED )
 			{ //uncovert it!
 				INT32 i;
 				for( i = 0 ; i < MAX_SCHEDULE_ACTIONS; i++ )
 				{
-					//if( i 
+					//if( i
 				}
 			}
 			prev = curr;
@@ -364,13 +356,11 @@ void PrepareSchedulesForEditorEntry()
 //Called when leaving the editor to enter the game.	This posts all of the events that apply.
 void PrepareSchedulesForEditorExit()
 {
-	PERFORMANCE_MARKER
 	PostSchedules();
 }
 
 void LoadSchedules( INT8 **hBuffer )
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE *pSchedule = NULL;
 	SCHEDULENODE temp;
 	UINT8 ubNum;
@@ -413,7 +403,6 @@ void LoadSchedules( INT8 **hBuffer )
 extern BOOLEAN gfSchedulesHosed;
 BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE *pSchedule = NULL;
 	SCHEDULENODE temp;
 	UINT8 ubNum;
@@ -479,7 +468,6 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 //some maps were effected, this feature was required.
 void ReverseSchedules()
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE *pReverseHead, *pPrevReverseHead, *pPrevScheduleHead;
 	UINT8	ubOppositeID = gubScheduleID;
 	//First, remove any gaps which would mess up the reverse ID assignment by optimizing
@@ -508,7 +496,6 @@ void ReverseSchedules()
 //Another debug feature.
 void ClearAllSchedules()
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *pNode;
 	DestroyAllSchedules();
 	pNode = gSoldierInitHead;
@@ -528,7 +515,6 @@ void ClearAllSchedules()
 
 BOOLEAN SaveSchedules( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE *curr;
 	UINT32 uiBytesWritten;
 	UINT8 ubNum, ubNumFucker;
@@ -582,7 +568,6 @@ BOOLEAN SaveSchedules( HWFILE hFile )
 //Happily, the fields with no times actually are the highest.
 BOOLEAN SortSchedule( SCHEDULENODE *pSchedule )
 {
-	PERFORMANCE_MARKER 
 	INT32 index, i, iBestIndex;
 	UINT16 usTime;
 	UINT16 usData1;
@@ -625,7 +610,7 @@ BOOLEAN SortSchedule( SCHEDULENODE *pSchedule )
 	return fSorted;
 }
 
-BOOLEAN BumpAnyExistingMerc( INT16 sGridNo ) 
+BOOLEAN BumpAnyExistingMerc( INT16 sGridNo )
 {
 	UINT8						ubID;
 	SOLDIERTYPE *		pSoldier; // NB this is the person already in the location,
@@ -668,7 +653,6 @@ BOOLEAN BumpAnyExistingMerc( INT16 sGridNo )
 
 void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 {
-	PERFORMANCE_MARKER
 	INT16						sCellX, sCellY, sGridNo;
 	INT8						bDirection;
 	SOLDIERTYPE *		pSoldier;
@@ -680,13 +664,13 @@ void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 		// I thought it easier to screen them out here.
 		return;
 	}
-		
+
 	pSoldier = MercPtrs[ pSchedule->ubSoldierID ];
 
 	#ifdef JA2EDITOR
 		if ( pSoldier->ubProfile != NO_PROFILE )
 		{
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Autoprocessing schedule action %S for %S (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d", 
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Autoprocessing schedule action %S for %S (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
 				gszScheduleActions[ pSchedule->ubAction[ index ] ],
 				pSoldier->name,
 				pSoldier->ubID,
@@ -698,8 +682,8 @@ void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 		}
 		else
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Autoprocessing schedule action %S for civ (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d", 
-				gszScheduleActions[ pSchedule->ubAction[ index ] ],			
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Autoprocessing schedule action %S for civ (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
+				gszScheduleActions[ pSchedule->ubAction[ index ] ],
 				pSoldier->ubID,
 				GetWorldHour(),
 				guiMin,
@@ -793,20 +777,19 @@ void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 
 void PostSchedule( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiStartTime, uiEndTime;
 	INT32 i;
 	INT8	bEmpty;
 	SCHEDULENODE *pSchedule;
 	UINT8	ubTempAction;
 	UINT16	usTemp;
-	
+
 	if ( (pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP) && ( gTacticalStatus.fCivGroupHostile[ KINGPIN_CIV_GROUP ] || ( (gubQuest[ QUEST_KINGPIN_MONEY ] == QUESTINPROGRESS) && (CheckFact( FACT_KINGPIN_CAN_SEND_ASSASSINS, KINGPIN )) ) ) && (gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C) && (pSoldier->ubProfile == NO_PROFILE) )
 	{
 		// no schedules for people guarding Tony's!
 		return;
 	}
-	
+
 	pSchedule = GetSchedule( pSoldier->ubScheduleID );
 	if( !pSchedule )
 		return;
@@ -853,7 +836,7 @@ void PostSchedule( SOLDIERTYPE *pSoldier )
 						usTemp = pSchedule->usTime[ bEmpty ];
 						pSchedule->usTime[ bEmpty ] = pSchedule->usTime[ i ];
 						pSchedule->usTime[ i ] = usTemp;
-						
+
 						usTemp = pSchedule->usData1[ bEmpty ];
 						pSchedule->usData1[ bEmpty ] = pSchedule->usData1[ i ];
 						pSchedule->usData1[ i ] = usTemp;
@@ -867,10 +850,10 @@ void PostSchedule( SOLDIERTYPE *pSoldier )
 						// no morning entries but no space for a wakeup either, will sleep till
 						// next non-sleep event
 					}
-					
+
 				}
 				break; //The break is here because nobody should have more than one sleep schedule with no time specified.
-			}	
+			}
 		}
 	}
 
@@ -879,10 +862,10 @@ void PostSchedule( SOLDIERTYPE *pSoldier )
 	// always process previous 24 hours
 	uiEndTime = GetWorldTotalMin();
 	uiStartTime = uiEndTime - (NUM_MIN_IN_DAY - 1);
-	
+
 	/*
 	//First thing we need is to get the time that the map was last loaded.	If more than 24 hours,
-	//then process only 24 hours.	If less, then process all the schedules that would have happened within 
+	//then process only 24 hours.	If less, then process all the schedules that would have happened within
 	//that period of time.
 	uiEndTime = GetWorldTotalMin();
 	if( GetWorldTotalMin() - guiTimeCurrentSectorWasLastLoaded > NUM_MIN_IN_DAY )
@@ -894,7 +877,7 @@ void PostSchedule( SOLDIERTYPE *pSoldier )
 		uiStartTime = guiTimeCurrentSectorWasLastLoaded;
 	}
 	*/
-	
+
 	//Need a way to determine if the player has actually modified doors since this civilian was last loaded
 	uiEndTime %= NUM_MIN_IN_DAY;
 	uiStartTime %= NUM_MIN_IN_DAY;
@@ -903,12 +886,11 @@ void PostSchedule( SOLDIERTYPE *pSoldier )
 
 void PrepareScheduleForAutoProcessing( SCHEDULENODE *pSchedule, UINT32 uiStartTime, UINT32 uiEndTime )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	BOOLEAN	fPostedNextEvent = FALSE;
 
 	if ( uiStartTime > uiEndTime )
-	{ //The start time is later in the day than the end time, which means we'll be wrapping 
+	{ //The start time is later in the day than the end time, which means we'll be wrapping
 		//through midnight and continuing to the end time.
 		for( i = 0; i < MAX_SCHEDULE_ACTIONS; i++ )
 		{
@@ -973,7 +955,6 @@ void PrepareScheduleForAutoProcessing( SCHEDULENODE *pSchedule, UINT32 uiStartTi
 //the town doesn't turn into a ghost town in 5 minutes.
 void PostDefaultSchedule( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	SCHEDULENODE *curr;
 
@@ -1008,7 +989,7 @@ void PostDefaultSchedule( SOLDIERTYPE *pSoldier )
 	gpScheduleList->ubAction[1] = SCHEDULE_ACTION_LEAVESECTOR;
 	gpScheduleList->usTime[1] = (UINT16)(1080 + Random( 121 ));
 	gpScheduleList->usFlags |= SCHEDULE_FLAGS_TEMPORARY;
-	
+
 	if( gubScheduleID == 255 )
 	{ //Too much fragmentation, clean it up...
 		OptimizeSchedules();
@@ -1024,7 +1005,6 @@ void PostDefaultSchedule( SOLDIERTYPE *pSoldier )
 
 void PostSchedules()
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	BOOLEAN fDefaultSchedulesPossible = FALSE;
 
@@ -1051,11 +1031,11 @@ void PostSchedules()
 			else if( fDefaultSchedulesPossible )
 			{
 				// ATE: There should be a better way here...
-				if( curr->pSoldier->ubBodyType != COW && 
-						curr->pSoldier->ubBodyType != BLOODCAT && 
+				if( curr->pSoldier->ubBodyType != COW &&
+						curr->pSoldier->ubBodyType != BLOODCAT &&
 						curr->pSoldier->ubBodyType != HUMVEE &&
-					curr->pSoldier->ubBodyType != ELDORADO && 
-					curr->pSoldier->ubBodyType != ICECREAMTRUCK && 
+					curr->pSoldier->ubBodyType != ELDORADO &&
+					curr->pSoldier->ubBodyType != ICECREAMTRUCK &&
 					curr->pSoldier->ubBodyType != JEEP )
 				{
 					PostDefaultSchedule( curr->pSoldier );
@@ -1068,7 +1048,6 @@ void PostSchedules()
 
 void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16			sDoorGridNo;
 	DOOR *		pDoor;
 
@@ -1107,7 +1086,6 @@ void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, INT16 sGridNo 
 //schedule, and looks for the next schedule action that would get processed and posts it.
 void PostNextSchedule( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE *pSchedule;
 	INT32 i, iBestIndex;
 	UINT16 usTime, usBestTime;
@@ -1148,7 +1126,6 @@ void PostNextSchedule( SOLDIERTYPE *pSoldier )
 
 BOOLEAN ExtractScheduleEntryAndExitInfo( SOLDIERTYPE * pSoldier, UINT32 * puiEntryTime, UINT32 * puiExitTime )
 {
-	PERFORMANCE_MARKER
 	INT32			iLoop;
 	BOOLEAN		fFoundEntryTime = FALSE, fFoundExitTime = FALSE;
 	SCHEDULENODE *pSchedule;
@@ -1159,7 +1136,7 @@ BOOLEAN ExtractScheduleEntryAndExitInfo( SOLDIERTYPE * pSoldier, UINT32 * puiEnt
 	pSchedule = GetSchedule( pSoldier->ubScheduleID );
 	if ( !pSchedule )
 	{
-		// If person had default schedule then would have been assigned and this would 
+		// If person had default schedule then would have been assigned and this would
 		// have succeeded.
 		// Hence this is an error.
 		return( FALSE );
@@ -1172,7 +1149,7 @@ BOOLEAN ExtractScheduleEntryAndExitInfo( SOLDIERTYPE * pSoldier, UINT32 * puiEnt
 			fFoundEntryTime = TRUE;
 			*puiEntryTime = pSchedule->usTime[ iLoop ];
 		}
-		else if ( pSchedule->ubAction[ iLoop ] == SCHEDULE_ACTION_LEAVESECTOR )			
+		else if ( pSchedule->ubAction[ iLoop ] == SCHEDULE_ACTION_LEAVESECTOR )
 		{
 			fFoundExitTime = TRUE;
 			*puiExitTime = pSchedule->usTime[ iLoop ];
@@ -1194,7 +1171,6 @@ BOOLEAN ExtractScheduleEntryAndExitInfo( SOLDIERTYPE * pSoldier, UINT32 * puiEnt
 // This is for determining shopkeeper's opening/closing hours
 BOOLEAN ExtractScheduleDoorLockAndUnlockInfo( SOLDIERTYPE * pSoldier, UINT32 * puiOpeningTime, UINT32 * puiClosingTime )
 {
-	PERFORMANCE_MARKER
 	INT32			iLoop;
 	BOOLEAN		fFoundOpeningTime = FALSE, fFoundClosingTime = FALSE;
 	SCHEDULENODE *pSchedule;
@@ -1205,7 +1181,7 @@ BOOLEAN ExtractScheduleDoorLockAndUnlockInfo( SOLDIERTYPE * pSoldier, UINT32 * p
 	pSchedule = GetSchedule( pSoldier->ubScheduleID );
 	if ( !pSchedule )
 	{
-		// If person had default schedule then would have been assigned and this would 
+		// If person had default schedule then would have been assigned and this would
 		// have succeeded.
 		// Hence this is an error.
 		return( FALSE );
@@ -1239,7 +1215,6 @@ BOOLEAN ExtractScheduleDoorLockAndUnlockInfo( SOLDIERTYPE * pSoldier, UINT32 * p
 
 BOOLEAN GetEarliestMorningScheduleEvent( SCHEDULENODE *pSchedule, UINT32 * puiTime )
 {
-	PERFORMANCE_MARKER
 	INT32			iLoop;
 	*puiTime = 100000;
 
@@ -1263,7 +1238,6 @@ BOOLEAN GetEarliestMorningScheduleEvent( SCHEDULENODE *pSchedule, UINT32 * puiTi
 
 BOOLEAN ScheduleHasMorningNonSleepEntries( SCHEDULENODE *pSchedule )
 {
-	PERFORMANCE_MARKER
 	INT8			bLoop;
 
 	for ( bLoop = 0; bLoop < MAX_SCHEDULE_ACTIONS; bLoop++ )
@@ -1281,7 +1255,6 @@ BOOLEAN ScheduleHasMorningNonSleepEntries( SCHEDULENODE *pSchedule )
 
 INT8 GetEmptyScheduleEntry( SCHEDULENODE *pSchedule )
 {
-	PERFORMANCE_MARKER
 	INT8			bLoop;
 
 	for ( bLoop = 0; bLoop < MAX_SCHEDULE_ACTIONS; bLoop++ )
@@ -1299,7 +1272,6 @@ INT8 GetEmptyScheduleEntry( SCHEDULENODE *pSchedule )
 /*
 void ReconnectSchedules( void )
 {
-	PERFORMANCE_MARKER
 	UINT32						uiLoop;
 	SOLDIERTYPE *			pSoldier;
 	SCHEDULENODE *		pSchedule;
@@ -1318,7 +1290,7 @@ void ReconnectSchedules( void )
 			else
 			{
 				// need default schedule!
-				//PostDefaultSchedule( pSoldier );							
+				//PostDefaultSchedule( pSoldier );
 			}
 		}
 	}
@@ -1327,7 +1299,6 @@ void ReconnectSchedules( void )
 
 UINT16 FindSleepSpot( SCHEDULENODE * pSchedule )
 {
-	PERFORMANCE_MARKER
 	INT8			bLoop;
 
 	for ( bLoop = 0; bLoop < MAX_SCHEDULE_ACTIONS; bLoop++ )
@@ -1342,7 +1313,6 @@ UINT16 FindSleepSpot( SCHEDULENODE * pSchedule )
 
 void ReplaceSleepSpot( SCHEDULENODE * pSchedule, UINT16 usNewSpot )
 {
-	PERFORMANCE_MARKER
 	INT8			bLoop;
 
 	for ( bLoop = 0; bLoop < MAX_SCHEDULE_ACTIONS; bLoop++ )
@@ -1359,7 +1329,6 @@ void ReplaceSleepSpot( SCHEDULENODE * pSchedule, UINT16 usNewSpot )
 
 void SecureSleepSpot( SOLDIERTYPE * pSoldier, UINT16 usSleepSpot )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *			pSoldier2;
 	UINT16						usSleepSpot2, usNewSleepSpot;
 	UINT32						uiLoop;
@@ -1395,7 +1364,6 @@ void SecureSleepSpot( SOLDIERTYPE * pSoldier, UINT16 usSleepSpot )
 /*
 void SecureSleepSpots( void )
 {
-	PERFORMANCE_MARKER
 	// make sure no one else has the same sleep dest as another merc, and if they do
 	// move extras away!
 	UINT32						uiLoop;
@@ -1426,6 +1394,7 @@ void SecureSleepSpots( void )
 
 
 
- 
+
+
 
 

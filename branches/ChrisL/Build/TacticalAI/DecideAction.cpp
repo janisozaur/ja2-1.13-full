@@ -60,7 +60,6 @@ UINT32 guiRedSeekCounter = 0, guiRedHelpCounter = 0; guiRedHideCounter = 0;
 
 void DoneScheduleAction( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	pSoldier->aiData.fAIFlags &= (~AI_CHECK_SCHEDULE);
 	pSoldier->bAIScheduleProgress = 0;
 	PostNextSchedule( pSoldier );
@@ -68,7 +67,6 @@ void DoneScheduleAction( SOLDIERTYPE * pSoldier )
 
 INT8 DO_ACTION_LOCKDOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE * pSchedule = GetSchedule( pSoldier->ubScheduleID );
 	INT16						sGridNo1, sGridNo2;
 	INT8							bDirection;
@@ -195,7 +193,6 @@ INT8 DO_ACTION_LOCKDOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 
 INT8 DO_ACTION_DOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex, UINT8 ubScheduleAction)
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE * pSchedule = GetSchedule( pSoldier->ubScheduleID );
 	INT16						sGridNo1, sGridNo2;
 	INT8							bDirection;
@@ -348,7 +345,6 @@ INT8 DO_ACTION_DOOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex, UINT8 ubSche
 
 INT8 DO_ACTION_GRIDNO ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE * pSchedule = GetSchedule( pSoldier->ubScheduleID );
 	INT16						sGridNo1;
 
@@ -376,7 +372,6 @@ INT8 DO_ACTION_GRIDNO ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 
 INT8 DO_ACTION_LEAVESECTOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 {
-	PERFORMANCE_MARKER
 	INT8							bDirection;
 	//Doesn't use any gridno flags
 	switch( pSoldier->bAIScheduleProgress )
@@ -439,7 +434,6 @@ INT8 DO_ACTION_LEAVESECTOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 }
 INT8 DO_ACTION_ENTERSECTOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE * pSchedule = GetSchedule( pSoldier->ubScheduleID );
 	INT16						sGridNo1;
 	INT16							sX, sY;
@@ -486,7 +480,6 @@ INT8 DO_ACTION_ENTERSECTOR ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 }
 INT8 DO_ACTION_WAKE ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 {
-	PERFORMANCE_MARKER
 	// Go to this position
 	if (pSoldier->sGridNo == pSoldier->sInitialGridNo)
 	{
@@ -506,7 +499,6 @@ INT8 DO_ACTION_WAKE ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 }
 INT8 DO_ACTION_SLEEP ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE * pSchedule = GetSchedule( pSoldier->ubScheduleID );
 	INT16						sGridNo1;
 	sGridNo1 = pSchedule->usData1[ iScheduleIndex ];
@@ -535,7 +527,6 @@ INT8 DO_ACTION_SLEEP ( SOLDIERTYPE * pSoldier, INT32 iScheduleIndex )
 
 INT8 DecideActionSchedule( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	SCHEDULENODE * pSchedule = GetSchedule( pSoldier->ubScheduleID );
 	if (!pSchedule)
 	{
@@ -599,7 +590,6 @@ INT8 DecideActionSchedule( SOLDIERTYPE * pSoldier )
 
 INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 	UINT8 ubRoom;
 	INT16	sDesiredMercLoc;
 	UINT8 ubDesiredMercDir;
@@ -647,7 +637,6 @@ INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE *pSoldier)
 
 INT8 DecideActionNamedNPC( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT16 sDesiredMercLoc;
 	UINT8	ubDesiredMercDir;
 	UINT8	ubDesiredMerc;
@@ -754,7 +743,6 @@ struct GreenAlertFlags
 
 INT8 GreenAlert_TryToDoBoxing(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	if (pSoldier->flags.uiStatusFlags & SOLDIER_BOXER)
 	{
 		if ( gTacticalStatus.bBoxingState == PRE_BOXING )
@@ -831,7 +819,6 @@ INT8 GreenAlert_TryToDoBoxing(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 
 INT8 GreenAlert_TryToDoCivStuff(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	// special stuff for civs
 
 	if (pSoldier->flags.uiStatusFlags & SOLDIER_COWERING)
@@ -887,7 +874,6 @@ INT8 GreenAlert_TryToDoCivStuff(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 
 INT8 GreenAlert_TryToClimbABuilding(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	INT32 iChance = 10 + pSoldier->aiData.bBypassToGreen;
 
 	// set base chance and maximum seeking distance according to orders
@@ -971,7 +957,6 @@ INT8 GreenAlert_TryToClimbABuilding(SOLDIERTYPE* pSoldier, GreenAlertFlags& flag
 
 INT8 GreenAlert_TryToDoRandomPatrol(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	INT32 iChance = 25 + pSoldier->aiData.bBypassToGreen;
 
 	// set base chance according to orders
@@ -1053,7 +1038,6 @@ INT8 GreenAlert_TryToDoRandomPatrol(SOLDIERTYPE* pSoldier, GreenAlertFlags& flag
 
 INT8 GreenAlert_TryToSeekFriend(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	INT32 iChance = 25 + pSoldier->aiData.bBypassToGreen;
 
 	// set base chance and maximum seeking distance according to orders
@@ -1117,7 +1101,6 @@ INT8 GreenAlert_TryToSeekFriend(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 
 INT8 GreenAlert_TryToDoSniperStuff(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	////////////////////////////////////////////////////////////////////////////
 	// SNIPERS LIKE TO CROUCH (on roofs)
 	////////////////////////////////////////////////////////////////////////////
@@ -1162,7 +1145,6 @@ INT8 GreenAlert_TryToDoSniperStuff(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags
 
 INT8 GreenAlert_TryToLookAround(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DecideActionGreen: Soldier deciding to turn"));
 	// avoid 2 consecutive random turns in a row
 	if (pSoldier->aiData.bLastAction != AI_ACTION_CHANGE_FACING)
@@ -1239,7 +1221,6 @@ INT8 GreenAlert_TryToLookAround(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 
 INT8 DecideActionGreen(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DecideActionGreen, orders = %d",pSoldier->aiData.bOrders));
 	GreenAlertFlags flags;
 #ifdef DEBUGDECISIONS
@@ -1444,7 +1425,6 @@ struct YellowAlertFlags
 
 INT8 YellowAlert_TryToLookAround(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	// determine direction from this soldier in which the noise lies
 	UINT8 ubNoiseDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(flags.sNoiseGridNo),CenterY(flags.sNoiseGridNo));
 
@@ -1488,7 +1468,6 @@ INT8 YellowAlert_TryToLookAround(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 
 INT8 YellowAlert_TryToFlank(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	//continue flanking
 	INT16 tempGridNo;
 	if ( flags.sNoiseGridNo == NOWHERE )
@@ -1551,7 +1530,6 @@ INT8 YellowAlert_TryToFlank(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 
 INT8 YellowAlert_TryToRadioYellowAlert(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	INT32 iChance;
 	// if we have the action points remaining to RADIO
 	// (we never want NPCs to choose to radio if they would have to wait a turn)
@@ -1616,7 +1594,6 @@ INT8 YellowAlert_TryToRadioYellowAlert(SOLDIERTYPE* pSoldier, YellowAlertFlags& 
 
 INT8 YellowAlert_TryToSeekNoise(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	// remember that noise value is negative, and closer to 0 => more important!
 	INT32 iChance = 95 + (flags.iNoiseValue / 3);
 	INT32 iSneaky = 30;
@@ -1758,7 +1735,6 @@ INT8 YellowAlert_TryToSeekNoise(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 
 INT8 YellowAlert_TryToSeekFriend(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	INT16 sClosestFriend = ClosestReachableFriendInTrouble(pSoldier, &flags.fClimb);
 
 	// if there is a friend alive & reachable who last radioed in
@@ -1855,7 +1831,6 @@ INT8 YellowAlert_TryToSeekFriend(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 
 INT8 YellowAlert_TryToTakeCover(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	// remember that noise value is negative, and closer to 0 => more important!
 	INT32 iChance = 25;
 	INT32 iSneaky = 30;
@@ -1914,7 +1889,6 @@ INT8 YellowAlert_TryToTakeCover(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 
 INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 	YellowAlertFlags flags;
 	flags.fCivilian = (PTR_CIVILIAN && (pSoldier->ubCivilianGroup == NON_CIV_GROUP || pSoldier->aiData.bNeutral || (pSoldier->ubBodyType >= FATCIV && pSoldier->ubBodyType <= CRIPPLECIV) ) );
 	INT8	bActionReturned;
@@ -2119,7 +2093,6 @@ struct RedAlertFlags
 
 INT8 RedAlert_TryToCower(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	if ( FindAIUsableObjClass( pSoldier, IC_WEAPON ) == ITEM_NOT_FOUND )
 	{
 		// cower in fear!!
@@ -2187,7 +2160,6 @@ INT8 RedAlert_TryToCower(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 
 INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	ATTACKTYPE BestThrow, BestShot;
 	UINT8 ubOpponentDir;
 	INT16 sCheckGridNo;
@@ -2370,7 +2342,6 @@ INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 
 INT8 RedAlert_TryToRest(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	// if not already crouched, try to crouch down first
 	if (!flags.fCivilian && !PTR_CROUCHED && IsValidStance( pSoldier, ANIM_CROUCH ) && gAnimControl[ pSoldier->usAnimState ].ubHeight != ANIM_PRONE)
 	{
@@ -2398,7 +2369,6 @@ INT8 RedAlert_TryToRest(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 
 INT8 RedAlert_TryToRadioRedAlert(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"decideactionred: checking to radio red alert");
 	INT16 iChance;
 
@@ -2475,7 +2445,6 @@ INT8 RedAlert_TryToRadioRedAlert(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 
 INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"decideactionred: main red ai");
 	////////////////////////////////////////////////////////////////////////////
 	// MAIN RED AI: Decide soldier's preference between SEEKING,HELPING & HIDING
@@ -3086,7 +3055,6 @@ INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 
 INT8 RedAlert_TryToLookAround(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	UINT8 ubOpponentDir;
 	INT16 sDistVisible;
 	INT16 iChance;
@@ -3155,7 +3123,6 @@ INT8 RedAlert_TryToLookAround(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 
 INT8 RedAlert_TryTankAI(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	// try turning in a random direction as we still can't see anyone.
 	if (!gfTurnBasedAI || GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints)
 	{
@@ -3210,7 +3177,6 @@ INT8 RedAlert_TryTankAI(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 
 INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("DecideActionRed: soldier orders = %d",pSoldier->aiData.bOrders));
 	// if we have absolutely no action points, we can't do a thing under RED!
 	if (!pSoldier->bActionPoints)
@@ -3660,7 +3626,6 @@ struct BlackAlertFlags
 
 INT8 BlackAlert_SetSomeFlags(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	if ( pSoldier->flags.uiStatusFlags & SOLDIER_BOXER )
 	{
 		if ( gTacticalStatus.bBoxingState == PRE_BOXING )
@@ -3748,7 +3713,6 @@ INT8 BlackAlert_SetSomeFlags(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 
 INT8 BlackAlert_TryToLeaveGas(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	pSoldier->aiData.usActionData = FindNearestUngassedLand(pSoldier);
 
 	if (pSoldier->aiData.usActionData != NOWHERE)
@@ -3791,7 +3755,6 @@ INT8 BlackAlert_TryToLeaveGas(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 
 INT8 BlackAlert_EvaluateCanAttack(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	////////////////////////////////////////////////////////////////////////////
 	// SOLDIER CAN ATTACK IF NOT IN WATER/GAS AND NOT DOING SOMETHING TOO FUNKY
 	////////////////////////////////////////////////////////////////////////////
@@ -3909,7 +3872,6 @@ INT8 BlackAlert_EvaluateCanAttack(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 
 INT8 BlackAlert_EvaluateFiringAGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"FIRE A GUN AT AN OPPONENT");
 
 	INT8 bWeaponIn = FindAIUsableObjClass( pSoldier, IC_GUN );
@@ -3992,7 +3954,6 @@ INT8 BlackAlert_EvaluateFiringAGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags
 
 INT8 BlackAlert_EvaluateThrowingSomething(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	// this looks for throwables, and sets flags.BestThrow.ubPossible if it can be done
 	//if ( !gfHiddenInterrupt )
 	// {
@@ -4036,7 +3997,6 @@ INT8 BlackAlert_EvaluateThrowingSomething(SOLDIERTYPE* pSoldier, BlackAlertFlags
 
 INT8 BlackAlert_EvaluateStabbing(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GO STAB AN OPPONENT WITH A KNIFE");
 	// if soldier has a knife in his hand
 	INT8 bWeaponIn = FindAIUsableObjClass( pSoldier, (IC_BLADE | IC_THROWING_KNIFE) );
@@ -4105,7 +4065,6 @@ INT8 BlackAlert_EvaluateStabbing(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 
 void BlackAlert_DecideBestAction(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	flags.ubBestAttackAction = AI_ACTION_NONE;
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"CHOOSE THE BEST TYPE OF ATTACK OUT OF THOSE FOUND TO BE POSSIBLE");
 	if (flags.BestShot.ubPossible)
@@ -4206,7 +4165,6 @@ void BlackAlert_DecideBestAction(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 
 void BlackAlert_DecideOffenseDefense(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags, INT32 iDefense)
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"DecideActionBlack: DECIDE BETWEEN ATTACKING AND DEFENDING (TAKING COVER)");
 	// gotta compare their merits and select the more desirable option
 	INT32 iOffense = flags.BestAttack.ubChanceToReallyHit;
@@ -4273,7 +4231,6 @@ void BlackAlert_DecideOffenseDefense(SOLDIERTYPE* pSoldier, BlackAlertFlags& fla
 
 INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	INT32 iChance;
 	INT8 bDirection;
 	UINT8 ubStanceCost;
@@ -4535,7 +4492,6 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 
 INT8 BlackAlert_ChangeStance(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	if (pSoldier->aiData.usActionData == ANIM_PRONE)
 	{
 		// we might want to turn before lying down!
@@ -4588,7 +4544,6 @@ INT8 BlackAlert_ChangeStance(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 
 INT8 BlackAlert_TryToRadioRedAlert(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	INT32 iChance;
 	// if there hasn't been an initial RED ALERT yet in this sector
 	if ( !(gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition) || NeedToRadioAboutPanicTrigger() )
@@ -4667,7 +4622,6 @@ INT8 BlackAlert_TryToRadioRedAlert(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags
 
 void BlackAlert_ShootGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	pSoldier->aiData.usActionData = flags.BestAttack.sTarget;
 	pSoldier->bTargetLevel = flags.BestAttack.bTargetLevel;
 
@@ -4736,7 +4690,6 @@ void BlackAlert_ShootGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 
 INT8 BlackAlert_TryToFaceEnemy(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	// hopeless guys shouldn't waste their time this way, UNLESS they CAN move
 	// but chose not to to get this far (which probably means they're cornered)
 	// ALSO, don't bother turning if we're already aiming a gun
@@ -4771,7 +4724,6 @@ INT8 BlackAlert_TryToFaceEnemy(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 
 INT8 BlackAlert_HandleSpecialCases(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 {
-	PERFORMANCE_MARKER
 	INT8 bActionReturned;
 	if ( (pSoldier->bTeam == ENEMY_TEAM || pSoldier->ubProfile == WARDEN) && (gTacticalStatus.fPanicFlags & PANIC_TRIGGERS_HERE) && (gTacticalStatus.ubTheChosenOne == NOBODY) )
 	{
@@ -4816,7 +4768,6 @@ INT8 BlackAlert_HandleSpecialCases(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags
 
 INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DecideActionBlack: soldier = %d, orders = %d, attitude = %d",pSoldier->ubID,pSoldier->aiData.bOrders,pSoldier->aiData.bAttitude));
 	// if we have absolutely no action points, we can't do a thing under BLACK!
 	if (!pSoldier->bActionPoints)
@@ -5248,7 +5199,6 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 
 INT8 DecideAction(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 	INT8 bAction=AI_ACTION_NONE;
 #ifdef DEBUGDECISIONS
 	std::string tempstr;
@@ -5382,7 +5332,6 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 
 INT8 DecideActionEscort(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 #ifdef DEBUGDECISIONS
 	std::string tempstr;
 #endif
@@ -5404,7 +5353,6 @@ INT8 DecideActionEscort(SOLDIERTYPE *pSoldier)
 
 void DecideAlertStatus( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 #ifdef DEBUGDECISIONS
 	std::string tempstr;
 #endif

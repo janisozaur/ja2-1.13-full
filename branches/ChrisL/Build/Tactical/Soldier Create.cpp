@@ -78,7 +78,6 @@ OLD_SOLDIERCREATE_STRUCT_101::OLD_SOLDIERCREATE_STRUCT_101(const OLD_SOLDIERCREA
 // Assignment operator
 OLD_SOLDIERCREATE_STRUCT_101& OLD_SOLDIERCREATE_STRUCT_101::operator=(const OLD_SOLDIERCREATE_STRUCT_101& src)
 {
-	PERFORMANCE_MARKER
 	if (this != &src) {
 		memcpy(this, &src, SIZEOF_OLD_SOLDIERCREATE_STRUCT_101_POD);
 		this->Inv = src.Inv;
@@ -90,11 +89,11 @@ OLD_SOLDIERCREATE_STRUCT_101& OLD_SOLDIERCREATE_STRUCT_101::operator=(const OLD_
 OLD_SOLDIERCREATE_STRUCT_101::~OLD_SOLDIERCREATE_STRUCT_101() {
 }
 
-// Initialize the soldier.	
+// Initialize the soldier.
 //	Use this instead of the old method of calling memset!
 //	Note that the constructor does this automatically.
 void OLD_SOLDIERCREATE_STRUCT_101::initialize() {
-	memset( this, 0, SIZEOF_OLD_SOLDIERCREATE_STRUCT_101_POD);	
+	memset( this, 0, SIZEOF_OLD_SOLDIERCREATE_STRUCT_101_POD);
 	Inv.clear();
 }
 
@@ -105,12 +104,11 @@ void OLD_SOLDIERCREATE_STRUCT_101::initialize() {
 // Conversion operator from old to new
 SOLDIERCREATE_STRUCT& SOLDIERCREATE_STRUCT::operator=(const OLD_SOLDIERCREATE_STRUCT_101& src)
 {
-	PERFORMANCE_MARKER
 	if ((void*)this != (void*)&src) {
 		this->Inv = src.Inv;
 
 		memcpy( &(this->name), &(src.name), sizeof(CHAR16) * 10 );
-		memcpy( &(this->HeadPal), &(src.HeadPal), sizeof(PaletteRepID) );	// 30 
+		memcpy( &(this->HeadPal), &(src.HeadPal), sizeof(PaletteRepID) );	// 30
 		memcpy( &(this->PantsPal), &(src.PantsPal), sizeof(PaletteRepID) );	// 30
 		memcpy( &(this->VestPal), &(src.VestPal), sizeof(PaletteRepID) );	// 30
 		memcpy( &(this->SkinPal), &(src.SkinPal), sizeof(PaletteRepID) );	// 30
@@ -164,7 +162,6 @@ SOLDIERCREATE_STRUCT& SOLDIERCREATE_STRUCT::operator=(const OLD_SOLDIERCREATE_ST
 // Conversion operator from SOLDIERTYPE to SOLDIERCREATE_STRUCT
 SOLDIERCREATE_STRUCT& SOLDIERCREATE_STRUCT::operator=(const SOLDIERTYPE& Soldier)
 {
-	PERFORMANCE_MARKER
 	//WARNING, this may not copy all data you expect over, I'm not sure
 	//but it does copy all the data from the previous function
 	//Copy over the data of the soldier.
@@ -204,7 +201,7 @@ SOLDIERCREATE_STRUCT& SOLDIERCREATE_STRUCT::operator=(const SOLDIERTYPE& Soldier
 	//Copy patrol points
 	this->bPatrolCnt						= Soldier.aiData.bPatrolCnt;
 	memcpy( this->sPatrolGrid, Soldier.aiData.sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
-			
+
 	//copy colors for soldier based on the body type.
 	sprintf( this->HeadPal,		Soldier.HeadPal );
 	sprintf( this->VestPal,		Soldier.VestPal );
@@ -219,9 +216,8 @@ SOLDIERCREATE_STRUCT& SOLDIERCREATE_STRUCT::operator=(const SOLDIERTYPE& Soldier
 
 UINT16 SOLDIERCREATE_STRUCT::GetChecksum()
 {
-	PERFORMANCE_MARKER
 	return (
-	this->bLife								* 7		+	
+	this->bLife								* 7		+
 	this->bLifeMax							* 8		-
 	this->bAgility							* 2		+
 	this->bDexterity						* 1		+
@@ -241,8 +237,8 @@ UINT16 SOLDIERCREATE_STRUCT::GetChecksum()
 	this->ubSoldierClass					* 4		+
 	this->bTeam								* 7		+
 	this->ubDirection						* 5		+
-	this->fOnRoof							* 17	+ 
-	this->sInsertionGridNo					* 1		+ 
+	this->fOnRoof							* 17	+
+	this->sInsertionGridNo					* 1		+
 	3);
 }
 
@@ -260,7 +256,6 @@ SOLDIERCREATE_STRUCT::SOLDIERCREATE_STRUCT(const SOLDIERCREATE_STRUCT& src) {
 // Assignment operator
 SOLDIERCREATE_STRUCT& SOLDIERCREATE_STRUCT::operator=(const SOLDIERCREATE_STRUCT& src)
 {
-	PERFORMANCE_MARKER
 	if (this != &src) {
 		memcpy(this, &src, SIZEOF_SOLDIERCREATE_STRUCT_POD);
 		this->Inv = src.Inv;
@@ -272,11 +267,11 @@ SOLDIERCREATE_STRUCT& SOLDIERCREATE_STRUCT::operator=(const SOLDIERCREATE_STRUCT
 SOLDIERCREATE_STRUCT::~SOLDIERCREATE_STRUCT() {
 }
 
-// Initialize the soldier.	
+// Initialize the soldier.
 //	Use this instead of the old method of calling memset!
 //	Note that the constructor does this automatically.
 void SOLDIERCREATE_STRUCT::initialize() {
-	memset( this, 0, SIZEOF_SOLDIERCREATE_STRUCT_POD);	
+	memset( this, 0, SIZEOF_SOLDIERCREATE_STRUCT_POD);
 	Inv.clear();
 }
 
@@ -385,7 +380,6 @@ UINT8 gubItemDroppableFlag[NUM_INV_SLOTS] =
 
 void RandomizeNewSoldierStats( SOLDIERCREATE_STRUCT *pCreateStruct )
 {
-	PERFORMANCE_MARKER
 	pCreateStruct->bLifeMax								= (UINT8)Random(50)+50;
 	pCreateStruct->bLife								= pCreateStruct->bLifeMax;
 	pCreateStruct->bAgility								= (UINT8)Random(50)+50;
@@ -408,7 +402,6 @@ void RandomizeNewSoldierStats( SOLDIERCREATE_STRUCT *pCreateStruct )
 
 void DecideToAssignSniperOrders( SOLDIERCREATE_STRUCT * pp )
 {
-	PERFORMANCE_MARKER
 	//Madd: decide if soldier should be a sniper
 
 	if ( pp->bOrders == STATIONARY || pp->bOrders == ONGUARD )
@@ -425,7 +418,6 @@ void DecideToAssignSniperOrders( SOLDIERCREATE_STRUCT * pp )
 
 SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *pubID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE			Soldier;
 	INT32						cnt;
 	SOLDIERTYPE			*pTeamSoldier;
@@ -441,10 +433,10 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 	//If this expression ever evaluates to true, then it will expose serious problems.
 	//Simply returning won't help.
 	if( pCreateStruct->fStatic )
-	{ 
+	{
 		Assert( 0 );
 	}
-	
+
 	// Some values initialized here but could be changed before going to the common one
 	InitSoldierStruct( &Soldier );
 
@@ -493,7 +485,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 			// OK, if this is our guy, set team as ours!
 			if ( pCreateStruct->fPlayerMerc )
 			{
-				Soldier.bTeam = OUR_TEAM;		
+				Soldier.bTeam = OUR_TEAM;
 				Soldier.aiData.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
 			}
 			else if ( pCreateStruct->fPlayerPlan )
@@ -509,7 +501,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 					case BIGMALE:
 					case STOCKYMALE:
 					case REGFEMALE:
-		
+
 						Soldier.bTeam = ENEMY_TEAM;
 						break;
 
@@ -574,9 +566,9 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 
 			bLastTeamID = gTacticalStatus.Team[ Soldier.bTeam ].bLastID;
 
-			// look for all mercs on the same team, 
+			// look for all mercs on the same team,
 			for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pTeamSoldier++)
-			{	
+			{
 				if ( !pTeamSoldier->bActive )
 				{
 					fGuyAvail = TRUE;
@@ -619,7 +611,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		Soldier.bOldLife							= Soldier.stats.bLifeMax;
 
 		// If a civvy, set neutral
-		if ( Soldier.bTeam == CIV_TEAM )		
+		if ( Soldier.bTeam == CIV_TEAM )
 		{
 			if (Soldier.ubProfile == WARDEN )
 			{
@@ -640,12 +632,12 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 			{
 				Soldier.aiData.bNeutral = TRUE;
 			}
-			
+
 			//Weaken stats based on the bodytype of the civilian.
 			if( Soldier.ubProfile == NO_PROFILE )
 			{
 				switch( Soldier.ubBodyType )
-				{	
+				{
 					case REGMALE:
 					case BIGMALE:
 					case STOCKYMALE:
@@ -692,7 +684,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 
 		// Lesh: disable this - yeah! its feminism! :)
 		// ATE: TEMP : No enemy women mercs (unless elite)!
-		//if( Soldier.ubProfile == NO_PROFILE && Soldier.bTeam == ENEMY_TEAM && 
+		//if( Soldier.ubProfile == NO_PROFILE && Soldier.bTeam == ENEMY_TEAM &&
 		//		Soldier.ubBodyType == REGFEMALE && Soldier.ubSoldierClass != SOLDIER_CLASS_ELITE )
 		//{
 		//	Soldier.ubBodyType = (UINT8)( REGMALE + Random( 3 ) );
@@ -702,10 +694,10 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		// Set some values for variation in anims...
 		if ( Soldier.ubBodyType == BIGMALE )
 		{
-			Soldier.uiAnimSubFlags |= SUB_ANIM_BIGGUYTHREATENSTANCE;	
+			Soldier.uiAnimSubFlags |= SUB_ANIM_BIGGUYTHREATENSTANCE;
 		}
 
-		//For inventory, look for any face class items that may be located in the big pockets and if found, move 
+		//For inventory, look for any face class items that may be located in the big pockets and if found, move
 		//that item to a face slot and clear the pocket!
 		if( Soldier.bTeam != OUR_TEAM )
 		{
@@ -863,7 +855,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 				}
 				SetVehicleValuesIntoSoldierType( &Soldier );
 				break;
-			
+
 			default:
 				Soldier.aiData.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
 				break;
@@ -936,7 +928,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 
 		return MercPtrs[ Soldier.ubID ];
 	}
-	else 
+	else
 	{ //We are creating a dynamically allocated soldier for autoresolve.
 		SOLDIERTYPE *pSoldier;
 		UINT8 ubSectorID;
@@ -955,7 +947,6 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 
 BOOLEAN TacticalCopySoldierFromProfile( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruct )
 {
-	PERFORMANCE_MARKER
 	UINT8						ubProfileIndex;
 	MERCPROFILESTRUCT * pProfile;
 
@@ -1004,7 +995,7 @@ BOOLEAN TacticalCopySoldierFromProfile( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STR
 	pSoldier->ubDirection						= pCreateStruct->ubDirection;
 	pSoldier->aiData.bPatrolCnt						= pCreateStruct->bPatrolCnt;
 	memcpy( pSoldier->aiData.sPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
-	
+
 	if ( HAS_SKILL_TRAIT( pSoldier, CAMOUFLAGED ) )
 	{
 		// set camouflaged to 100 automatically
@@ -1029,16 +1020,15 @@ BOOLEAN TacticalCopySoldierFromProfile( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STR
 }
 
 enum { PINKSKIN, TANSKIN, DARKSKIN, BLACKSKIN, NUMSKINS };
-enum { 
+enum {
 	WHITEHEAD, BLACKHEAD, //black skin (only this line )
 	BROWNHEAD,						//dark skin (this line plus all above)
 	BLONDEHEAD, REDHEAD,	//pink/tan skin (this line plus all above )
-	NUMHEADS	
+	NUMHEADS
 };
 
 INT32 ChooseHairColor( SOLDIERTYPE *pSoldier, INT32 skin )
 {
-	PERFORMANCE_MARKER
 	INT32 iRandom;
 	INT32 hair = 0;
 	iRandom = Random( 100 );
@@ -1132,7 +1122,6 @@ INT32 ChooseHairColor( SOLDIERTYPE *pSoldier, INT32 skin )
 
 void GeneratePaletteForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubSoldierClass )
 {
-	PERFORMANCE_MARKER
 	INT32 skin, hair;
 	BOOLEAN fMercClothingScheme;
 	hair = -1;
@@ -1217,7 +1206,7 @@ void GeneratePaletteForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubSoldierClass )
 	if( !pSoldier->PantsPal[0] || !pSoldier->VestPal[0] )
 	{
 		fMercClothingScheme = TRUE;
-		if( pSoldier->bTeam == CIV_TEAM && Random( 100 ) < 40 ) 
+		if( pSoldier->bTeam == CIV_TEAM && Random( 100 ) < 40 )
 		{ //40% chance of using cheezy civilian colors
 			fMercClothingScheme = FALSE;
 		}
@@ -1235,7 +1224,7 @@ void GeneratePaletteForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubSoldierClass )
 			}
 			else
 			{ //70% chance that the civilian will choose jeans with a shirt.
-				SET_PALETTEREP_ID( pSoldier->PantsPal, "JEANPANTS" );	
+				SET_PALETTEREP_ID( pSoldier->PantsPal, "JEANPANTS" );
 				switch( Random( 7 ) )
 				{
 					case 0:	SET_PALETTEREP_ID( pSoldier->VestPal, "WHITEVEST"	); break;
@@ -1292,7 +1281,6 @@ void GeneratePaletteForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubSoldierClass )
 
 BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruct )
 {
-	PERFORMANCE_MARKER
 	pSoldier->ubProfile							= NO_PROFILE;
 
 	// Randomize attributes
@@ -1349,7 +1337,7 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 		{
 			iChance = 80;
 		}
-	
+
 		if ( Chance( iChance ) )
 		{
 			pSoldier->stats.ubSkillTrait1 = NIGHTOPS;
@@ -1428,24 +1416,24 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 	//CAUTION:	CONVERTING SIGNED TO UNSIGNED though the values should never be negative.
 	pSoldier->aiData.bPatrolCnt						= pCreateStruct->bPatrolCnt;
 	memcpy( pSoldier->aiData.sPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
-			
+
 	//Kris:	November 10, 1997
 	//Expanded the default names based on team.
 	switch( pCreateStruct->bTeam )
 	{
 		case ENEMY_TEAM:		swprintf( pSoldier->name, TacticalStr[ ENEMY_TEAM_MERC_NAME ] );		break;
 		case MILITIA_TEAM:	swprintf( pSoldier->name, TacticalStr[ MILITIA_TEAM_MERC_NAME ] );	break;
-		case CIV_TEAM:			
+		case CIV_TEAM:
 			if( pSoldier->ubSoldierClass == SOLDIER_CLASS_MINER )
 			{
 				swprintf( pSoldier->name, TacticalStr[ CIV_TEAM_MINER_NAME ] );
 			}
 			else
 			{
-				swprintf( pSoldier->name, TacticalStr[ CIV_TEAM_MERC_NAME ] );	
+				swprintf( pSoldier->name, TacticalStr[ CIV_TEAM_MERC_NAME ] );
 			}
 			break;
-		case CREATURE_TEAM:	
+		case CREATURE_TEAM:
 			if( pSoldier->ubBodyType == BLOODCAT )
 			{
 				swprintf( pSoldier->name, gzLateLocalizedString[ 36 ] );
@@ -1469,7 +1457,6 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 
 void InitSoldierStruct( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// Memset values
 	pSoldier->initialize();
 
@@ -1530,7 +1517,6 @@ void InitSoldierStruct( SOLDIERTYPE *pSoldier )
 
 BOOLEAN InternalTacticalRemoveSoldier( UINT16 usSoldierIndex, BOOLEAN fRemoveVehicle )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *		pSoldier;
 
 	// Check range of index given
@@ -1560,7 +1546,6 @@ BOOLEAN InternalTacticalRemoveSoldier( UINT16 usSoldierIndex, BOOLEAN fRemoveVeh
 
 BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehicle )
 {
-	PERFORMANCE_MARKER
 	if( !pSoldier->bActive )
 		return FALSE;
 
@@ -1630,7 +1615,6 @@ BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehi
 
 BOOLEAN TacticalRemoveSoldier( UINT16 usSoldierIndex )
 {
-	PERFORMANCE_MARKER
 	return( InternalTacticalRemoveSoldier( usSoldierIndex, TRUE ) );
 }
 
@@ -1639,7 +1623,6 @@ BOOLEAN TacticalRemoveSoldier( UINT16 usSoldierIndex )
 // playing difficulty level.	Used for generating soldier stats, equipment, and AI skill level.
 INT8 CalcDifficultyModifier( UINT8 ubSoldierClass )
 {
-	PERFORMANCE_MARKER
 	INT8 bDiffModifier = 0;
 	UINT8 ubProgress;
 	UINT8 ubProgressModifier;
@@ -1681,7 +1664,7 @@ INT8 CalcDifficultyModifier( UINT8 ubSoldierClass )
 		case DIF_LEVEL_INSANE:
 			// equally stronger enemies/creatures/bloodcats (+40)
 			if ( SOLDIER_CLASS_MILITIA( ubSoldierClass ) )
-			{	
+			{
 				// militia only +20
 				bDiffModifier += DIFF_FACTOR_GAME_DIFFICULTY;
 			}
@@ -1738,11 +1721,10 @@ INT8 CalcDifficultyModifier( UINT8 ubSoldierClass )
 //When the editor modifies the soldier's relative attribute level,
 //this function is called to update that information.
 //Used to generate a detailed placement from a basic placement.	This assumes that the detailed placement
-//doesn't exist, meaning there are no static attributes.	This is called when you wish to convert a basic 
+//doesn't exist, meaning there are no static attributes.	This is called when you wish to convert a basic
 //placement into a detailed placement just before creating a soldier.
 void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, BASIC_SOLDIERCREATE_STRUCT *bp )
 {
-	PERFORMANCE_MARKER
 	INT8 bBaseAttribute;
 	UINT8 ubSoldierClass;
 	UINT8 ubDiffFactor;
@@ -1820,7 +1802,7 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 					{ //12% chance HATKIDCIV
 						pp->bBodyType = HATKIDCIV;
 					}
-					else 
+					else
 					{ //12% chance KIDCIV
 						pp->bBodyType = KIDCIV;
 					}
@@ -2001,7 +1983,7 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 		ReduceHighExpLevels( &( pp->bExpLevel ) );
 
 	pp->fVisible			= 0;
-	
+
 	pp->fOnRoof				= bp->fOnRoof;
 
 	pp->ubSoldierClass = ubSoldierClass;
@@ -2026,10 +2008,9 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 //Because the intention is to make some of the attributes static, all of the information that can be generated
 //are defaulted to -1.	When an attribute is made to be static, that value in replaced by the new static value.
 //This information is NOT compatible with TacticalCreateSoldier.	Before doing so, you must first convert the
-//static detailed placement to a regular detailed placement.	
+//static detailed placement to a regular detailed placement.
 void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *spp, BASIC_SOLDIERCREATE_STRUCT *bp )
 {
-	PERFORMANCE_MARKER
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateStaticDetailedPlacementGivenBasicPlacementInfo"));
 
 	UINT32 i;
@@ -2062,7 +2043,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	else
 		spp->bBodyType = -1;
 
-	//Set up all possible static values.	
+	//Set up all possible static values.
 	//By setting them all to -1, that signifies that the attribute isn't static.
 	//The static placement needs to be later *regenerated* in order to create a valid soldier.
 	spp->bExpLevel			= -1;
@@ -2101,10 +2082,9 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 //When you are ready to generate a soldier with a static detailed placement slot, this function will generate
 //the proper detailed placement slot given the static detailed placement and it's accompanying basic placement.
 //For the purposes of merc editing, the static detailed placement is preserved.
-void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo( 
+void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 		SOLDIERCREATE_STRUCT *pp, SOLDIERCREATE_STRUCT *spp, BASIC_SOLDIERCREATE_STRUCT *bp )
 {
-	PERFORMANCE_MARKER
 	UINT32 i;
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo"));
@@ -2113,7 +2093,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 	pp->fOnRoof = spp->fOnRoof = bp->fOnRoof;
 	pp->fStatic = FALSE;
 	pp->ubSoldierClass = bp->ubSoldierClass;
-	//Generate the new placement 
+	//Generate the new placement
 	pp->ubProfile = spp->ubProfile;
 	if( pp->ubProfile != NO_PROFILE )
 	{
@@ -2137,7 +2117,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 		memcpy( pp->sPatrolGrid, bp->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
 		pp->fHasKeys							= bp->fHasKeys;
 		pp->ubCivilianGroup				= bp->ubCivilianGroup;
-		
+
 		return; //done
 	}
 	CreateDetailedPlacementGivenBasicPlacementInfo( pp, bp );
@@ -2166,8 +2146,8 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 		sprintf( pp->SkinPal, spp->SkinPal );
 	}
 
-	//This isn't perfect, however, it blindly brings over the items from the static 
-	//detailed placement.	Due to the order of things, other items would 
+	//This isn't perfect, however, it blindly brings over the items from the static
+	//detailed placement.	Due to the order of things, other items would
 	for( i = 0; i < spp->Inv.size(); i++ )
 	{
 		//copy over static items and empty slots that are droppable (signifies a forced empty slot)
@@ -2177,7 +2157,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 			//return;
 		}
 	}
-	//if ( !gGameOptions.fGunNut ) 
+	//if ( !gGameOptions.fGunNut )
 	//{
 	//	ReplaceExtendedGuns( pp, bp->ubSoldierClass );
 	//}
@@ -2192,11 +2172,10 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 
 //Used to update a existing soldier's attributes with the new static detailed placement info.	This is used
 //by the editor upon exiting the editor into the game, to update the existing soldiers with new information.
-//This gives flexibility of testing mercs.	Upon entering the editor again, this call will reset all the 
+//This gives flexibility of testing mercs.	Upon entering the editor again, this call will reset all the
 //mercs to their original states.
 void UpdateSoldierWithStaticDetailedInformation( SOLDIERTYPE *s, SOLDIERCREATE_STRUCT *spp )
 {
-	PERFORMANCE_MARKER
 	//First, check to see if the soldier has a profile.	If so, then it'll extract the information
 	//and update the soldier with the profile information instead.	This has complete override
 	//authority.
@@ -2210,11 +2189,11 @@ void UpdateSoldierWithStaticDetailedInformation( SOLDIERTYPE *s, SOLDIERCREATE_S
 	}
 
 	switch( spp->ubSoldierClass )
-	{ //If the soldier is an administrator, then 
+	{ //If the soldier is an administrator, then
 		case SOLDIER_CLASS_ADMINISTRATOR:
 		case SOLDIER_CLASS_ARMY:
 		case SOLDIER_CLASS_ELITE:
-			GeneratePaletteForSoldier( s, spp->ubSoldierClass );			
+			GeneratePaletteForSoldier( s, spp->ubSoldierClass );
 			break;
 	}
 
@@ -2268,7 +2247,6 @@ void UpdateSoldierWithStaticDetailedInformation( SOLDIERTYPE *s, SOLDIERCREATE_S
 //also want to copy that information to the static detailed placement, for editor viewing purposes.
 void UpdateStaticDetailedPlacementWithProfileInformation( SOLDIERCREATE_STRUCT *spp, UINT8 ubProfile )
 {
-	PERFORMANCE_MARKER
 	UINT32					cnt;
 	MERCPROFILESTRUCT * pProfile;
 
@@ -2309,7 +2287,6 @@ void UpdateStaticDetailedPlacementWithProfileInformation( SOLDIERCREATE_STRUCT *
 //this function is called to update that information.
 void ModifySoldierAttributesWithNewRelativeLevel( SOLDIERTYPE *s, INT8 bRelativeAttributeLevel )
 {
-	PERFORMANCE_MARKER
 	INT8 bBaseAttribute;
 	//Set the experience level based on the relative attribute level
 	// NOTE OF WARNING: THIS CURRENTLY IGNORES THE ENEMY CLASS (ADMIN/REG/ELITE) FOR CALCULATING LEVEL & ATTRIBUTES
@@ -2342,7 +2319,6 @@ void ModifySoldierAttributesWithNewRelativeLevel( SOLDIERTYPE *s, INT8 bRelative
 
 void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERCREATE_STRUCT CreateStruct;
 	CreateStruct.ubProfile = ubProfileID;
 
@@ -2360,7 +2336,7 @@ void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID )
 
 	// Re-Create palettes
 	pSoldier->CreateSoldierPalettes( );
-	
+
 }
 
 #define CENTRAL_GRIDNO 13202
@@ -2368,7 +2344,6 @@ void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID )
 
 SOLDIERTYPE* ReserveTacticalSoldierForAutoresolve( UINT8 ubSoldierClass )
 {
-	PERFORMANCE_MARKER
 	INT32 i, iStart, iEnd;
 	SOLDIERTYPE *pSoldier;
 	//This code looks for a soldier of specified type that currently exists in tactical and
@@ -2411,7 +2386,6 @@ SOLDIERTYPE* ReserveTacticalSoldierForAutoresolve( UINT8 ubSoldierClass )
 //USED BY STRATEGIC AI and AUTORESOLVE
 SOLDIERTYPE* TacticalCreateAdministrator()
 {
-	PERFORMANCE_MARKER
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
 	UINT8 ubID;
@@ -2445,7 +2419,6 @@ SOLDIERTYPE* TacticalCreateAdministrator()
 //USED BY STRATEGIC AI and AUTORESOLVE
 SOLDIERTYPE* TacticalCreateArmyTroop()
 {
-	PERFORMANCE_MARKER
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
 	UINT8 ubID;
@@ -2480,7 +2453,6 @@ SOLDIERTYPE* TacticalCreateArmyTroop()
 //USED BY STRATEGIC AI and AUTORESOLVE
 SOLDIERTYPE* TacticalCreateEliteEnemy()
 {
-	PERFORMANCE_MARKER
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
 	UINT8 ubID;
@@ -2489,7 +2461,7 @@ SOLDIERTYPE* TacticalCreateEliteEnemy()
 	if( guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
 	{
 		pSoldier = ReserveTacticalSoldierForAutoresolve( SOLDIER_CLASS_ELITE );
-		if( pSoldier ) return pSoldier;		
+		if( pSoldier ) return pSoldier;
 	}
 
 	memset( &bp, 0, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
@@ -2502,13 +2474,13 @@ SOLDIERTYPE* TacticalCreateEliteEnemy()
 	bp.ubSoldierClass = SOLDIER_CLASS_ELITE;
 	CreateDetailedPlacementGivenBasicPlacementInfo( &pp, &bp );
 
-	//SPECIAL!	Certain events in the game can cause profiled NPCs to become enemies.	The two cases are 
+	//SPECIAL!	Certain events in the game can cause profiled NPCs to become enemies.	The two cases are
 	//adding Mike and Iggy.	We will only add one NPC in any given combat and the conditions for setting
 	//the associated facts are done elsewhere.	There is also another place where NPCs can get added, which
 	//is in AddPlacementToWorld() used for inserting defensive enemies.
 	//NOTE:	We don't want to add Mike or Iggy if this is being called from autoresolve!
 	OkayToUpgradeEliteToSpecialProfiledEnemy( &pp );
-	
+
 	pSoldier = TacticalCreateSoldier( &pp, &ubID );
 	if ( pSoldier )
 	{
@@ -2522,7 +2494,6 @@ SOLDIERTYPE* TacticalCreateEliteEnemy()
 
 SOLDIERTYPE* ReserveTacticalMilitiaSoldierForAutoresolve( UINT8 ubSoldierClass )
 {
-	PERFORMANCE_MARKER
 	INT32 i, iStart, iEnd;
 	SOLDIERTYPE *pSoldier;
 
@@ -2557,7 +2528,6 @@ SOLDIERTYPE* ReserveTacticalMilitiaSoldierForAutoresolve( UINT8 ubSoldierClass )
 
 SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 {
-	PERFORMANCE_MARKER
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
 	UINT8 ubID;
@@ -2570,7 +2540,7 @@ SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 		guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
 	{
 		pSoldier = ReserveTacticalMilitiaSoldierForAutoresolve( ubMilitiaClass );
-		if( pSoldier ) return pSoldier;		
+		if( pSoldier ) return pSoldier;
 	}
 
 	memset( &bp, 0, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
@@ -2590,7 +2560,6 @@ SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 
 SOLDIERTYPE* TacticalCreateCreature( INT8 bCreatureBodyType )
 {
-	PERFORMANCE_MARKER
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
 	UINT8 ubID;
@@ -2617,7 +2586,6 @@ SOLDIERTYPE* TacticalCreateCreature( INT8 bCreatureBodyType )
 
 void RandomizeRelativeLevel( INT8 *pbRelLevel, UINT8 ubSoldierClass )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubLocationModifier;
 	INT8 bRollModifier;
 	INT8 bRoll, bAdjustedRoll;
@@ -2716,7 +2684,6 @@ void RandomizeRelativeLevel( INT8 *pbRelLevel, UINT8 ubSoldierClass )
 //This function shouldn't be called outside of tactical
 void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	// Create guy # X
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT16										sWorldX, sWorldY, sSectorX, sSectorY, sGridX, sGridY;
@@ -2728,7 +2695,7 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 		sMapPos = MAPROWCOLTOPOS( sGridY, sGridX );
 		// Get Grid Coordinates of mouse
 		if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) )
-		{		
+		{
 			GetCurrentWorldSector( &sSectorX, &sSectorY );
 
 
@@ -2758,7 +2725,6 @@ extern void DistributeInitialGear(MERCPROFILESTRUCT *pProfile);
 
 void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruct )
 {
-	PERFORMANCE_MARKER
 	UINT32								cnt, cnt2;
 	MERCPROFILESTRUCT *		pProfile;
 
@@ -2897,14 +2863,13 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 	}
 }
 
-//SPECIAL!	Certain events in the game can cause profiled NPCs to become enemies.	The two cases are 
+//SPECIAL!	Certain events in the game can cause profiled NPCs to become enemies.	The two cases are
 //adding Mike and Iggy.	We will only add one NPC in any given combat and the conditions for setting
 //the associated facts are done elsewhere.	The function will set the profile for the SOLDIERCREATE_STRUCT
 //and the rest will be handled automatically so long the ubProfile field doesn't get changed.
 //NOTE:	We don't want to add Mike or Iggy if this is being called from autoresolve!
 void OkayToUpgradeEliteToSpecialProfiledEnemy( SOLDIERCREATE_STRUCT *pp )
 {
-	PERFORMANCE_MARKER
 	if( !gfProfiledEnemyAdded && gubEnemyEncounterCode != ENEMY_ENCOUNTER_CODE && gubEnemyEncounterCode != ENEMY_INVASION_CODE )
 	{
 		if( gubFact[ FACT_MIKE_AVAILABLE_TO_ARMY ] == 1 && !pp->fOnRoof )
@@ -2925,7 +2890,6 @@ void OkayToUpgradeEliteToSpecialProfiledEnemy( SOLDIERCREATE_STRUCT *pp )
 
 void TrashAllSoldiers( )
 {
-	PERFORMANCE_MARKER
 	INT32		cnt;
 	SOLDIERTYPE *pSoldier;
 
@@ -2945,7 +2909,6 @@ void TrashAllSoldiers( )
 
 UINT8 GetLocationModifier( UINT8 ubSoldierClass )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubLocationModifier;
 	UINT8 ubPalaceDistance;
 	INT16 sSectorX, sSectorY, sSectorZ;
@@ -2995,7 +2958,6 @@ UINT8 GetLocationModifier( UINT8 ubSoldierClass )
 // grab the distance from the palace
 UINT8 GetPythDistanceFromPalace( INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubDistance = 0;
 	INT16 sRows = 0, sCols = 0;
 	float fValue = 0.0;
@@ -3004,7 +2966,7 @@ UINT8 GetPythDistanceFromPalace( INT16 sSectorX, INT16 sSectorY )
 	sRows = (INT16)(abs((sSectorX) - ( PALACE_SECTOR_X )));
 	sCols = (INT16)(abs((sSectorY) - ( PALACE_SECTOR_Y )));
 
- 
+
 	// apply Pythagoras's theorem for right-handed triangle:
 	// dist^2 = rows^2 + cols^2, so use the square root to get the distance
 	fValue = ( float )sqrt(( float )(sRows * sRows) + ( float )(sCols * sCols));
@@ -3025,7 +2987,6 @@ UINT8 GetPythDistanceFromPalace( INT16 sSectorX, INT16 sSectorY )
 
 void ReduceHighExpLevels( INT8 *pbExpLevel )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubRoll;
 	// important: must reset these to 0 by default for logic to work!
 	UINT8 ubChanceLvl8 = 0;

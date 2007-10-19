@@ -14,7 +14,6 @@
 	#include <mmsystem.h>
 	#include <dsound.h>
 #endif
-#include "profiler.h"
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -41,7 +40,6 @@ static const char c_szWAV[] = "WAVE";
 
 IDirectSoundBuffer *DSLoadSoundBuffer(IDirectSound *pDS, LPCTSTR lpName)
 {
-	PERFORMANCE_MARKER
 	IDirectSoundBuffer *pDSB = NULL;
 	DSBUFFERDESC dsBD = {0};
 	BYTE *pbWaveData;
@@ -76,7 +74,6 @@ IDirectSoundBuffer *DSLoadSoundBuffer(IDirectSound *pDS, LPCTSTR lpName)
 
 BOOL DSReloadSoundBuffer(IDirectSoundBuffer *pDSB, LPCTSTR lpName)
 {
-	PERFORMANCE_MARKER
 	BOOL result=FALSE;
 	BYTE *pbWaveData;
 	DWORD cbWaveSize;
@@ -102,7 +99,6 @@ BOOL DSReloadSoundBuffer(IDirectSoundBuffer *pDSB, LPCTSTR lpName)
 BOOL DSGetWaveResource(HMODULE hModule, LPCTSTR lpName,
 	WAVEFORMATEX **ppWaveHeader, BYTE **ppbWaveData, DWORD *pcbWaveSize)
 {
-	PERFORMANCE_MARKER
 	HRSRC hResInfo;
 	HGLOBAL hResData;
 	void *pvRes;
@@ -124,7 +120,6 @@ BOOL DSGetWaveResource(HMODULE hModule, LPCTSTR lpName,
 
 SNDOBJ *SndObjCreate(IDirectSound *pDS, LPCTSTR lpName, int iConcurrent)
 {
-	PERFORMANCE_MARKER
 	SNDOBJ *pSO = NULL;
 	LPWAVEFORMATEX pWaveHeader;
 	BYTE *pbData;
@@ -169,7 +164,6 @@ SNDOBJ *SndObjCreate(IDirectSound *pDS, LPCTSTR lpName, int iConcurrent)
 
 void SndObjDestroy(SNDOBJ *pSO)
 {
-	PERFORMANCE_MARKER
 	if (pSO)
 	{
 		int i;
@@ -191,7 +185,6 @@ void SndObjDestroy(SNDOBJ *pSO)
 
 IDirectSoundBuffer *SndObjGetFreeBuffer(SNDOBJ *pSO)
 {
-	PERFORMANCE_MARKER
 
 	if (pSO == NULL)
 		return NULL;
@@ -248,7 +241,6 @@ IDirectSoundBuffer *SndObjGetFreeBuffer(SNDOBJ *pSO)
 
 BOOL SndObjPlay(SNDOBJ *pSO, DWORD dwPlayFlags)
 {
-	PERFORMANCE_MARKER
 	BOOL result = FALSE;
 
 	if (pSO == NULL)
@@ -270,7 +262,6 @@ BOOL SndObjPlay(SNDOBJ *pSO, DWORD dwPlayFlags)
 
 BOOL SndObjStop(SNDOBJ *pSO)
 {
-	PERFORMANCE_MARKER
 	int i;
 
 	if (pSO == NULL)
@@ -290,7 +281,6 @@ BOOL SndObjStop(SNDOBJ *pSO)
 
 BOOL DSFillSoundBuffer(IDirectSoundBuffer *pDSB, BYTE *pbWaveData, DWORD cbWaveSize)
 {
-	PERFORMANCE_MARKER
 	if (pDSB && pbWaveData && cbWaveSize)
 	{
 		LPVOID pMem1, pMem2;
@@ -317,7 +307,6 @@ BOOL DSFillSoundBuffer(IDirectSoundBuffer *pDSB, BYTE *pbWaveData, DWORD cbWaveS
 
 BOOL DSParseWaveResource(void *pvRes, WAVEFORMATEX **ppWaveHeader, BYTE **ppbWaveData,DWORD *pcbWaveSize)
 {
-	PERFORMANCE_MARKER
 	DWORD *pdw;
 	DWORD *pdwEnd;
 	DWORD dwRiff;

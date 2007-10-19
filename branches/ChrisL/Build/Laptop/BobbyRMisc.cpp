@@ -20,13 +20,11 @@ UINT32		guiMiscGrid;
 
 void GameInitBobbyRMisc()
 {
-	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterBobbyRMisc()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	// load the background graphic and add it
@@ -48,7 +46,7 @@ BOOLEAN EnterBobbyRMisc()
 
 	//Draw menu bar
 	InitBobbyMenuBar( );
-	
+
 	InitBobbyRMiscFilterBar();
 
 //	CalculateFirstAndLastIndexs();
@@ -60,7 +58,6 @@ BOOLEAN EnterBobbyRMisc()
 
 void ExitBobbyRMisc()
 {
-	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiMiscBackground);
 	DeleteVideoObjectFromIndex(guiMiscGrid);
 	DeleteBobbyBrTitle();
@@ -76,12 +73,10 @@ void ExitBobbyRMisc()
 
 void HandleBobbyRMisc()
 {
-	PERFORMANCE_MARKER
 }
 
 void RenderBobbyRMisc()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	WebPageTileBackground(BOBBYR_NUM_HORIZONTAL_TILES, BOBBYR_NUM_VERTICAL_TILES, BOBBYR_BACKGROUND_WIDTH, BOBBYR_BACKGROUND_HEIGHT, guiMiscBackground);
@@ -101,7 +96,7 @@ void RenderBobbyRMisc()
 	RenderWWWProgramTitleBar( );
 	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 		fReDrawScreenFlag = TRUE;
-	fPausedReDrawScreenFlag = TRUE;	
+	fPausedReDrawScreenFlag = TRUE;
 }
 
 
@@ -110,6 +105,7 @@ void RenderBobbyRMisc()
 
 
 
- 
+
+
 
 

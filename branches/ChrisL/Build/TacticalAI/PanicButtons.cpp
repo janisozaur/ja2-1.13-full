@@ -16,7 +16,6 @@
 
 void MakeClosestEnemyChosenOne()
 {
-	PERFORMANCE_MARKER
 	UINT32				cnt;
 	INT16					sPathCost, sShortestPath = 1000;
 	UINT8					ubClosestEnemy = NOBODY;
@@ -116,7 +115,7 @@ void MakeClosestEnemyChosenOne()
 
 		// we now path directly to the panic trigger
 
-		
+
 			// if he can't get to a spot where he could get at the panic trigger
 			/*
 			if ( FindAdjacentGridEx( pSoldier, gTacticalStatus.sPanicTriggerGridno, &ubDirection, &sAdjSpot, FALSE, FALSE ) == -1 )
@@ -173,7 +172,7 @@ void MakeClosestEnemyChosenOne()
 		}
 		SetNewSituation( pSoldier );	// set new situation for the chosen one
 		pSoldier->flags.bHasKeys = (pSoldier->flags.bHasKeys << 1) | 1; // cheat and give him keys to every door
-		//pSoldier->flags.bHasKeys = TRUE;		 
+		//pSoldier->flags.bHasKeys = TRUE;
 	}
 #ifdef TESTVERSION
 	else
@@ -183,7 +182,6 @@ void MakeClosestEnemyChosenOne()
 
 void PossiblyMakeThisEnemyChosenOne( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32		iAPCost, iPathCost;
 	//INT8		bOldKeys;
 	INT8		bPanicTrigger;
@@ -217,7 +215,7 @@ void PossiblyMakeThisEnemyChosenOne( SOLDIERTYPE * pSoldier )
 		return;
 	}
 
-	//bOldKeys = pSoldier->flags.bHasKeys;	
+	//bOldKeys = pSoldier->flags.bHasKeys;
 	pSoldier->flags.bHasKeys = (pSoldier->flags.bHasKeys << 1) | 1;
 
 	// if he can't get to a spot where he could get at the panic trigger
@@ -249,7 +247,6 @@ void PossiblyMakeThisEnemyChosenOne( SOLDIERTYPE * pSoldier )
 
 INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 {
-	PERFORMANCE_MARKER
 	BOOLEAN		fFoundRoute = FALSE;
 	INT8			bSlot;
 	INT32			iPathCost;
@@ -307,12 +304,12 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 			// if not standing on the panic trigger
 			if (pSoldier->sGridNo != sPanicTriggerGridNo)
 			{
-				// determine whether we can still get there 
+				// determine whether we can still get there
 				iPathCost = PlotPath( pSoldier, sPanicTriggerGridNo, FALSE, FALSE, FALSE, RUNNING, FALSE, FALSE, 0);
 				if (iPathCost != 0)
 				{
 					fFoundRoute = TRUE;
-				}			
+				}
 			}
 			else
 			{
@@ -417,7 +414,6 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 
 void InitPanicSystem( void )
 {
-	PERFORMANCE_MARKER
 	// start by assuming there is no panic bombs or triggers here
 	gTacticalStatus.ubTheChosenOne				= NOBODY;
 	FindPanicBombsAndTriggers();
@@ -425,20 +421,19 @@ void InitPanicSystem( void )
 
 INT8 ClosestPanicTrigger( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT8		bLoop;
 	INT16		sDistance;
 	INT16		sClosestDistance = 1000;
 	INT8		bClosestTrigger = -1;
 	UINT32	uiPercentEnemiesKilled;
 
-	uiPercentEnemiesKilled = (UINT32)( 100 * (UINT32)(gTacticalStatus.ubArmyGuysKilled) / (UINT32)( gTacticalStatus.Team[ ENEMY_TEAM ].bMenInSector + gTacticalStatus.ubArmyGuysKilled ) );	
+	uiPercentEnemiesKilled = (UINT32)( 100 * (UINT32)(gTacticalStatus.ubArmyGuysKilled) / (UINT32)( gTacticalStatus.Team[ ENEMY_TEAM ].bMenInSector + gTacticalStatus.ubArmyGuysKilled ) );
 
 	for ( bLoop = 0; bLoop < NUM_PANIC_TRIGGERS; bLoop++ )
 	{
 		if ( gTacticalStatus.sPanicTriggerGridNo[ bLoop ] != NOWHERE )
 		{
-		
+
 			if ( gTacticalStatus.ubPanicTolerance[ bLoop ] > uiPercentEnemiesKilled )
 			{
 				// not yet... not yet...
@@ -475,7 +470,6 @@ INT8 ClosestPanicTrigger( SOLDIERTYPE * pSoldier )
 
 BOOLEAN NeedToRadioAboutPanicTrigger( void )
 {
-	PERFORMANCE_MARKER
 	UINT32		uiPercentEnemiesKilled;
 	INT8			bLoop;
 
@@ -501,7 +495,7 @@ BOOLEAN NeedToRadioAboutPanicTrigger( void )
 	}
 
 
-	uiPercentEnemiesKilled = (UINT32)( 100 * (UINT32)(gTacticalStatus.ubArmyGuysKilled) / (UINT32)( gTacticalStatus.Team[ ENEMY_TEAM ].bMenInSector + gTacticalStatus.ubArmyGuysKilled ) );	
+	uiPercentEnemiesKilled = (UINT32)( 100 * (UINT32)(gTacticalStatus.ubArmyGuysKilled) / (UINT32)( gTacticalStatus.Team[ ENEMY_TEAM ].bMenInSector + gTacticalStatus.ubArmyGuysKilled ) );
 
 	for ( bLoop = 0; bLoop < NUM_PANIC_TRIGGERS; bLoop++ )
 	{
@@ -521,9 +515,8 @@ BOOLEAN NeedToRadioAboutPanicTrigger( void )
 
 INT8 HeadForTheStairCase( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO * pBasementInfo;
-	
+
 	pBasementInfo = FindUnderGroundSector( 3, MAP_ROW_P, 1 );
 	if ( pBasementInfo && pBasementInfo->uiTimeCurrentSectorWasLastLoaded != 0 && ( pBasementInfo->ubNumElites + pBasementInfo->ubNumTroops + pBasementInfo->ubNumAdmins ) < 5 )
 	{

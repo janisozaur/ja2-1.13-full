@@ -10,7 +10,7 @@
 	#include "fileman.h"
 #endif
 
-// Local typedefs 
+// Local typedefs
 
 #define PCX_NORMAL		 1
 #define PCX_RLE			2
@@ -35,7 +35,6 @@ PcxObject *LoadPcx(STR8 pFilename);
 
 BOOLEAN LoadPCXFileToImage( HIMAGE hImage, UINT16 fContents )
 {
-	PERFORMANCE_MARKER
 	PcxObject *pPcxObject;
 
 	// First Load a PCX Image
@@ -69,7 +68,7 @@ BOOLEAN LoadPCXFileToImage( HIMAGE hImage, UINT16 fContents )
 	{
 		SetPcxPalette( pPcxObject, hImage );
 
-		// Create 16 BPP palette if flags and BPP justify 
+		// Create 16 BPP palette if flags and BPP justify
 		hImage->pui16BPPPalette = Create16BPPPalette( hImage->pPalette );
 
 	}
@@ -84,13 +83,12 @@ BOOLEAN LoadPCXFileToImage( HIMAGE hImage, UINT16 fContents )
 
 PcxObject *LoadPcx(STR8 pFilename)
 {
-	PERFORMANCE_MARKER
 	PcxHeader	Header;
 	PcxObject *pCurrentPcxObject;
 	HWFILE	 hFileHandle;
 	UINT32	 uiFileSize;
 	UINT8	 *pPcxBuffer;
-	
+
 	// Open and read in the file
 	if ((hFileHandle = FileOpen(pFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE)) == 0)
 	{ // damn we failed to open the file
@@ -117,7 +115,7 @@ PcxObject *LoadPcx(STR8 pFilename)
 	{
 		return( NULL );
 	}
-	
+
 	// Ok we now have a file handle, so let's read in the data
 	FileRead(hFileHandle, &Header, sizeof(PcxHeader), NULL);
 	if ((Header.ubManufacturer != 10)||(Header.ubEncoding != 1))
@@ -129,10 +127,10 @@ PcxObject *LoadPcx(STR8 pFilename)
 	}
 
 	if (Header.ubBitsPerPixel == 8)
-	{ 
+	{
 	pCurrentPcxObject->usPcxFlags = PCX_256COLOR;
 	} else
-	{ 
+	{
 	pCurrentPcxObject->usPcxFlags	= 0;
 	}
 
@@ -147,7 +145,7 @@ PcxObject *LoadPcx(STR8 pFilename)
 
 	// Read in the palette
 	FileRead(hFileHandle, &(pCurrentPcxObject->ubPalette[0]), 768, NULL);
-	
+
 	// Close file
 	FileClose( hFileHandle );
 
@@ -156,7 +154,6 @@ PcxObject *LoadPcx(STR8 pFilename)
 
 BOOLEAN BlitPcxToBuffer( PcxObject *pCurrentPcxObject, UINT8 *pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp)
 {
-	PERFORMANCE_MARKER
 	UINT8	 *pPcxBuffer;
 	UINT8		ubRepCount;
 	UINT16	 usMaxX, usMaxY;
@@ -170,7 +167,7 @@ BOOLEAN BlitPcxToBuffer( PcxObject *pCurrentPcxObject, UINT8 *pBuffer, UINT16 us
 	pPcxBuffer = pCurrentPcxObject->pPcxBuffer;
 
 	if (((pCurrentPcxObject->usWidth + usX) == usBufferWidth)&&((pCurrentPcxObject->usHeight + usY)== usBufferHeight))
-	{ // Pre-compute PCX blitting aspects.									
+	{ // Pre-compute PCX blitting aspects.
 	uiImageSize = usBufferWidth * usBufferHeight;
 	ubMode		= PCX_NORMAL;
 	uiOffset	= 0;
@@ -178,54 +175,54 @@ BOOLEAN BlitPcxToBuffer( PcxObject *pCurrentPcxObject, UINT8 *pBuffer, UINT16 us
 
 	// Blit Pcx object. Two main cases, one for transparency (0's are skipped and for without transparency.
 	if (fTransp == TRUE)
-	{ 
+	{
 		for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
-		{ 
+		{
 		if (ubMode == PCX_NORMAL)
-		{ 
+		{
 			ubCurrentByte = *(pPcxBuffer + uiOffset++);
 			if (ubCurrentByte > 0x0BF)
-			{ 
+			{
 			ubRepCount = ubCurrentByte & 0x03F;
 			ubCurrentByte = *(pPcxBuffer + uiOffset++);
 			if (--ubRepCount > 0)
-			{ 
+			{
 				ubMode = PCX_RLE;
 			}
 			}
-		} 
+		}
 		else
-		{ 
+		{
 			if (--ubRepCount == 0)
-			{ 
+			{
 			ubMode = PCX_NORMAL;
 			}
 		}
 		if (ubCurrentByte != 0)
-		{ 
+		{
 			*(pBuffer + uiIndex) = ubCurrentByte;
 		}
 		}
-	} 
+	}
 	else
-	{ 
+	{
 		for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
-		{ 
+		{
 		if (ubMode == PCX_NORMAL)
-		{ 
+		{
 			ubCurrentByte = *(pPcxBuffer + uiOffset++);
 			if (ubCurrentByte > 0x0BF)
-			{ 
+			{
 			ubRepCount = ubCurrentByte & 0x03F;
 			ubCurrentByte = *(pPcxBuffer + uiOffset++);
 			if (--ubRepCount > 0)
-			{ 
+			{
 				ubMode = PCX_RLE;
 			}
 			}
-		} 
+		}
 		else
-		{ 
+		{
 			if (--ubRepCount == 0)
 			{ ubMode = PCX_NORMAL;
 			}
@@ -236,21 +233,21 @@ BOOLEAN BlitPcxToBuffer( PcxObject *pCurrentPcxObject, UINT8 *pBuffer, UINT16 us
 	} else
 	{ // Pre-compute PCX blitting aspects.
 	if ((pCurrentPcxObject->usWidth + usX) >= usBufferWidth)
-	{ 
+	{
 		pCurrentPcxObject->usPcxFlags |= PCX_X_CLIPPING;
 		usMaxX = usBufferWidth - 1;
-	} 
+	}
 	else
-	{ 
+	{
 		usMaxX = pCurrentPcxObject->usWidth + usX;
 	}
 
 	if ((pCurrentPcxObject->usHeight + usY) >= usBufferHeight)
-	{ 
+	{
 		pCurrentPcxObject->usPcxFlags |= PCX_Y_CLIPPING;
 		uiImageSize = pCurrentPcxObject->usWidth * (usBufferHeight - usY);
 		usMaxY = usBufferHeight - 1;
-	} 
+	}
 	else
 	{ uiImageSize = pCurrentPcxObject->usWidth * pCurrentPcxObject->usHeight;
 		usMaxY = pCurrentPcxObject->usHeight + usY;
@@ -264,24 +261,24 @@ BOOLEAN BlitPcxToBuffer( PcxObject *pCurrentPcxObject, UINT8 *pBuffer, UINT16 us
 
 	// Blit Pcx object. Two main cases, one for transparency (0's are skipped and for without transparency.
 	if (fTransp == TRUE)
-	{ 
+	{
 		for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
-		{ 
+		{
 		if (ubMode == PCX_NORMAL)
-		{ 
+		{
 			ubCurrentByte = *(pPcxBuffer + uiOffset++);
 			if (ubCurrentByte > 0x0BF)
-			{	
+			{
 			ubRepCount = ubCurrentByte & 0x03F;
 			ubCurrentByte = *(pPcxBuffer + uiOffset++);
 			if (--ubRepCount > 0)
-			{ 
+			{
 				ubMode = PCX_RLE;
 			}
 			}
-		} 
+		}
 		else
-		{ 
+		{
 			if (--ubRepCount == 0)
 			{ ubMode = PCX_NORMAL;
 			}
@@ -291,37 +288,37 @@ BOOLEAN BlitPcxToBuffer( PcxObject *pCurrentPcxObject, UINT8 *pBuffer, UINT16 us
 		}
 		usCurrentX++;
 		if (usCurrentX > usMaxX)
-		{ 
+		{
 			usCurrentX = usX;
 			usCurrentY++;
 		}
 		}
 	} else
-	{ 
+	{
 		uiStartOffset = (usCurrentY*usBufferWidth) + usCurrentX;
 		uiNextLineOffset = uiStartOffset + usBufferWidth;
 		uiCurrentOffset = uiStartOffset;
 
 		for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
-		{ 
-		
+		{
+
 		if (ubMode == PCX_NORMAL)
-		{ 
+		{
 			ubCurrentByte = *(pPcxBuffer + uiOffset++);
 			if (ubCurrentByte > 0x0BF)
-			{ 
+			{
 			ubRepCount = ubCurrentByte & 0x03F;
 			ubCurrentByte = *(pPcxBuffer + uiOffset++);
 			if (--ubRepCount > 0)
-			{ 
+			{
 				ubMode = PCX_RLE;
 			}
 			}
-		} 
+		}
 		else
-		{ 
+		{
 			if (--ubRepCount == 0)
-			{ 
+			{
 			ubMode = PCX_NORMAL;
 			}
 		}
@@ -359,7 +356,6 @@ BOOLEAN BlitPcxToBuffer( PcxObject *pCurrentPcxObject, UINT8 *pBuffer, UINT16 us
 
 BOOLEAN SetPcxPalette( PcxObject *pCurrentPcxObject, HIMAGE hImage )
 {
-	PERFORMANCE_MARKER
 	UINT16 Index;
 	UINT8	*pubPalette;
 
@@ -375,7 +371,7 @@ BOOLEAN SetPcxPalette( PcxObject *pCurrentPcxObject, HIMAGE hImage )
 
 	// Initialize the proper palette entries
 	for (Index = 0; Index < 256; Index++)
-	{ 
+	{
 		hImage->pPalette[ Index ].peRed	= *(pubPalette+(Index*3));
 	hImage->pPalette[ Index ].peGreen = *(pubPalette+(Index*3)+1);
 	hImage->pPalette[ Index ].peBlue	= *(pubPalette+(Index*3)+2);

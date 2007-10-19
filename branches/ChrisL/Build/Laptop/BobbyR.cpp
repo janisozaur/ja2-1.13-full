@@ -86,26 +86,26 @@
 
 #define BOBBIES_MISC_SIGN_X						BOBBYS_PLAQUES_X + 238
 #define BOBBIES_MISC_SIGN_Y						BOBBYS_PLAQUES_Y + 27
-#define BOBBIES_MISC_SIGN_WIDTH				103	
-#define BOBBIES_MISC_SIGN_HEIGHT			57		
+#define BOBBIES_MISC_SIGN_WIDTH				103
+#define BOBBIES_MISC_SIGN_HEIGHT			57
 #define BOBBIES_MISC_SIGN_TEXT_OFFSET	BOBBIES_MISC_SIGN_Y + BOBBIES_CENTER_SIGN_OFFSET_Y
 
 #define BOBBIES_GUNS_SIGN_X						BOBBYS_PLAQUES_X + 3
 #define BOBBIES_GUNS_SIGN_Y						BOBBYS_PLAQUES_Y + 102
-#define BOBBIES_GUNS_SIGN_WIDTH				116	
-#define BOBBIES_GUNS_SIGN_HEIGHT			75	
+#define BOBBIES_GUNS_SIGN_WIDTH				116
+#define BOBBIES_GUNS_SIGN_HEIGHT			75
 #define BOBBIES_GUNS_SIGN_TEXT_OFFSET BOBBIES_GUNS_SIGN_Y + BOBBIES_CENTER_SIGN_OFFSET_Y
 
 #define BOBBIES_AMMO_SIGN_X						BOBBYS_PLAQUES_X + 150
 #define BOBBIES_AMMO_SIGN_Y						BOBBYS_PLAQUES_Y + 105
-#define BOBBIES_AMMO_SIGN_WIDTH				112	
+#define BOBBIES_AMMO_SIGN_WIDTH				112
 #define BOBBIES_AMMO_SIGN_HEIGHT			71
 #define BOBBIES_AMMO_SIGN_TEXT_OFFSET	BOBBIES_AMMO_SIGN_Y + BOBBIES_CENTER_SIGN_OFFSET_Y
-							
+
 #define BOBBIES_ARMOUR_SIGN_X					BOBBYS_PLAQUES_X + 290
 #define BOBBIES_ARMOUR_SIGN_Y					BOBBYS_PLAQUES_Y + 108
-#define BOBBIES_ARMOUR_SIGN_WIDTH			114		
-#define BOBBIES_ARMOUR_SIGN_HEIGHT		70		
+#define BOBBIES_ARMOUR_SIGN_WIDTH			114
+#define BOBBIES_ARMOUR_SIGN_HEIGHT		70
 #define BOBBIES_ARMOUR_SIGN_TEXT_OFFSET BOBBIES_ARMOUR_SIGN_Y + BOBBIES_CENTER_SIGN_OFFSET_Y
 
 #define BOBBIES_3RD_SENTENCE_X				LAPTOP_SCREEN_UL_X
@@ -114,7 +114,7 @@
 
 #define BOBBY_R_NEW_PURCHASE_ARRIVAL_TIME		(1 * 60 * 24) // minutes in 1 day
 
-#define	BOBBY_R_USED_PURCHASE_OFFSET		MAXITEMS 
+#define	BOBBY_R_USED_PURCHASE_OFFSET		MAXITEMS
 
 #define	BOBBYR_UNDERCONSTRUCTION_ANI_DELAY		150
 #define	BOBBYR_UNDERCONSTRUCTION_NUM_FRAMES		5
@@ -189,13 +189,11 @@ void SimulateBobbyRayCustomer(STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed);
 
 void GameInitBobbyR()
 {
-	PERFORMANCE_MARKER
 }
 
 
 BOOLEAN EnterBobbyR()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT8 i;
 
@@ -268,7 +266,6 @@ BOOLEAN EnterBobbyR()
 
 void ExitBobbyR()
 {
-	PERFORMANCE_MARKER
 
 	DeleteVideoObjectFromIndex(guiBobbyName);
 	DeleteVideoObjectFromIndex(guiPlaque);
@@ -281,7 +278,7 @@ void ExitBobbyR()
 	{
 		DeleteVideoObjectFromIndex(guiUnderConstructionImage);
 	}
-	
+
 
 	DeleteBobbyRWoodBackground();
 
@@ -292,16 +289,14 @@ void ExitBobbyR()
 
 void HandleBobbyR()
 {
-	PERFORMANCE_MARKER
 	HandleBobbyRUnderConstructionAni( FALSE );
 }
 
 void RenderBobbyR()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 	HVOBJECT hStorePlaqueHandle;
-	
+
 	DrawBobbyRWoodBackground();
 
 	// Bobby's Name
@@ -319,11 +314,11 @@ void RenderBobbyR()
 	// Bottom Hinge
 	GetVideoObject(&hPixHandle, guiBottomHinge);
 	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_BOTTOMHINGE_X, BOBBIES_BOTTOMHINGE_Y, VO_BLT_SRCTRANSPARENCY,NULL);
-	
+
 	// StorePlaque
 	GetVideoObject(&hStorePlaqueHandle, guiStorePlaque);
 	BltVideoObject(FRAME_BUFFER, hStorePlaqueHandle, 0,BOBBIES_STORE_PLAQUE_X, BOBBIES_STORE_PLAQUE_Y, VO_BLT_SRCTRANSPARENCY,NULL);
-	
+
 	// Handle
 	GetVideoObject(&hPixHandle, guiHandle);
 	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_HANDLE_X, BOBBIES_HANDLE_Y, VO_BLT_SRCTRANSPARENCY,NULL);
@@ -331,7 +326,7 @@ void RenderBobbyR()
 /*
 	if( !LaptopSaveInfo.fBobbyRSiteCanBeAccessed )
 	{
-		// The undercontsruction graphic 
+		// The undercontsruction graphic
 		GetVideoObject(&hPixHandle, guiUnderConstructionImage );
 		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_FIRST_SENTENCE_X, BOBBIES_FIRST_SENTENCE_Y, VO_BLT_SRCTRANSPARENCY,NULL);
 		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_3RD_SENTENCE_X, BOBBIES_3RD_SENTENCE_Y, VO_BLT_SRCTRANSPARENCY,NULL);
@@ -390,7 +385,6 @@ void RenderBobbyR()
 
 BOOLEAN InitBobbyRWoodBackground()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	// load the Wood bacground graphic and add it
@@ -403,7 +397,6 @@ BOOLEAN InitBobbyRWoodBackground()
 
 BOOLEAN DeleteBobbyRWoodBackground()
 {
-	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiWoodBackground);
 	return(TRUE);
 }
@@ -411,7 +404,6 @@ BOOLEAN DeleteBobbyRWoodBackground()
 
 BOOLEAN DrawBobbyRWoodBackground()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hWoodBackGroundHandle;
 	UINT16	x,y, uiPosX, uiPosY;
 
@@ -436,16 +428,15 @@ BOOLEAN DrawBobbyRWoodBackground()
 
 BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16 *usMouseRegionPosArray, MOUSE_REGION *MouseRegion)
 {
-	PERFORMANCE_MARKER
 	UINT8 i,ubCount=0;
 
 	for(i=0; i<ubNumerRegions; i++)
 	{
 		//Mouse region for the toc buttons
 		MSYS_DefineRegion( &MouseRegion[i], usMouseRegionPosArray[ubCount], usMouseRegionPosArray[ubCount+1], usMouseRegionPosArray[ubCount+2], usMouseRegionPosArray[ubCount+3], MSYS_PRIORITY_HIGH,
-								CURSOR_WWW, MSYS_NO_CALLBACK, SelectBobbiesSignMenuRegionCallBack); 
-		MSYS_AddRegion(&MouseRegion[i]); 
-		MSYS_SetRegionUserData( &MouseRegion[i], 0, gubBobbyRPages[i]);		
+								CURSOR_WWW, MSYS_NO_CALLBACK, SelectBobbiesSignMenuRegionCallBack);
+		MSYS_AddRegion(&MouseRegion[i]);
+		MSYS_SetRegionUserData( &MouseRegion[i], 0, gubBobbyRPages[i]);
 
 		ubCount +=4;
 	}
@@ -457,7 +448,6 @@ BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16 *usMouseRegionPosArr
 
 BOOLEAN RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION *Mouse_Region)
 {
-	PERFORMANCE_MARKER
 	UINT8 i;
 
 	for(i=0; i<ubNumberRegions; i++)
@@ -471,7 +461,6 @@ BOOLEAN RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION *Mouse_Regi
 
 void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -485,14 +474,13 @@ void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 
 /*
 BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, UINT32 uiBackground)
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hBackGroundHandle;
 	UINT16	x,y, uiPosX, uiPosY;
 
@@ -517,7 +505,6 @@ BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16
 
 void HandleBobbyRUnderConstructionAni( BOOLEAN fReset )
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 	static UINT32	uiLastTime=1;
 	static UINT16	usCount=0;
@@ -537,7 +524,7 @@ void HandleBobbyRUnderConstructionAni( BOOLEAN fReset )
 
 	if( ( ( uiCurTime - uiLastTime ) > BOBBYR_UNDERCONSTRUCTION_ANI_DELAY )||( fReDrawScreenFlag ) )
 	{
-		// The undercontsruction graphic 
+		// The undercontsruction graphic
 		GetVideoObject(&hPixHandle, guiUnderConstructionImage );
 		BltVideoObject(FRAME_BUFFER, hPixHandle, usCount, BOBBYR_UNDERCONSTRUCTION_X, BOBBYR_UNDERCONSTRUCTION_Y, VO_BLT_SRCTRANSPARENCY,NULL);
 
@@ -561,7 +548,6 @@ void HandleBobbyRUnderConstructionAni( BOOLEAN fReset )
 
 void InitBobbyRayInventory()
 {
-	PERFORMANCE_MARKER
 	//Initializes which NEW items can be bought at Bobby Rays
 	InitBobbyRayNewInventory();
 
@@ -578,7 +564,6 @@ void InitBobbyRayInventory()
 
 BOOLEAN InitBobbyRayNewInventory()
 {
-	PERFORMANCE_MARKER
 	UINT16	i;
 	UINT16	usBobbyrIndex = 0;
 
@@ -612,7 +597,6 @@ BOOLEAN InitBobbyRayNewInventory()
 
 BOOLEAN InitBobbyRayUsedInventory()
 {
-	PERFORMANCE_MARKER
 	UINT16	i;
 	UINT16	usBobbyrIndex = 0;
 
@@ -650,7 +634,6 @@ BOOLEAN InitBobbyRayUsedInventory()
 
 void DailyUpdateOfBobbyRaysNewInventory()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	UINT16 usItemIndex;
 	BOOLEAN fPrevElig;
@@ -718,7 +701,6 @@ void DailyUpdateOfBobbyRaysNewInventory()
 
 void DailyUpdateOfBobbyRaysUsedInventory()
 {
-	PERFORMANCE_MARKER
 	INT16 i;
 	UINT16 usItemIndex;
 	BOOLEAN fPrevElig;
@@ -774,7 +756,6 @@ void DailyUpdateOfBobbyRaysUsedInventory()
 //returns the number of items to order
 UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, UINT8 ubBobbyRayNewUsed )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubItemsOrdered = 0;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3,String("HowManyBRItemsToOrder: item = %d",usItemIndex));
@@ -811,7 +792,6 @@ UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, UINT8 u
 
 void OrderBobbyRItem(UINT16 usItemIndex)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiArrivalTime;
 
 	//add the new item to the queue.	The new item will arrive in 'uiArrivalTime' minutes.
@@ -823,7 +803,6 @@ void OrderBobbyRItem(UINT16 usItemIndex)
 
 void AddFreshBobbyRayInventory( UINT16 usItemIndex )
 {
-	PERFORMANCE_MARKER
 	INT16 sInventorySlot;
 	STORE_INVENTORY *pInventoryArray;
 	BOOLEAN fUsed;
@@ -872,7 +851,6 @@ void AddFreshBobbyRayInventory( UINT16 usItemIndex )
 
 INT16 GetInventorySlotForItem(STORE_INVENTORY *pInventoryArray, UINT16 usItemIndex, BOOLEAN fUsed)
 {
-	PERFORMANCE_MARKER
 	INT16 i;
 
 	for(i = 0; i < LaptopSaveInfo.usInventoryListLength[fUsed]; i++)
@@ -891,7 +869,6 @@ INT16 GetInventorySlotForItem(STORE_INVENTORY *pInventoryArray, UINT16 usItemInd
 
 void SimulateBobbyRayCustomer(STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed)
 {
-	PERFORMANCE_MARKER
 	INT16 i;
 	UINT8 ubItemsSold;
 
@@ -918,7 +895,6 @@ void SimulateBobbyRayCustomer(STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed)
 
 void CancelAllPendingBRPurchaseOrders(void)
 {
-	PERFORMANCE_MARKER
 	INT16 i;
 
 	// remove all the BR-Order events off the event queue
@@ -939,6 +915,7 @@ void CancelAllPendingBRPurchaseOrders(void)
 
 
 
- 
+
+
 
 

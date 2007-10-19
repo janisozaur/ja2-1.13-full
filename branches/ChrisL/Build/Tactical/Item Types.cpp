@@ -19,7 +19,6 @@ int gLastLBEUniqueID = 0;
 
 bool IsSlotAnLBESlot(int slot)
 {
-	PERFORMANCE_MARKER
 	switch(slot) {
 	case VESTPOCKPOS:
 	case LTHIGHPOCKPOS:
@@ -33,7 +32,6 @@ bool IsSlotAnLBESlot(int slot)
 
 bool IsSlotASmallPocket(int slot)
 {
-	PERFORMANCE_MARKER
 	if (slot >= SMALLPOCKSTART && slot < SMALLPOCKFINAL) {
 		return true;
 	}
@@ -42,7 +40,6 @@ bool IsSlotASmallPocket(int slot)
 
 void CreateLBE (OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets)
 {
-	PERFORMANCE_MARKER
 	int uniqueID;
 	LBENODE* pLBE = NULL;
 	if (pObj->IsActiveLBE(0) == true) {
@@ -74,7 +71,6 @@ void CreateLBE (OBJECTTYPE* pObj, UINT8 ubID, int numSubPockets)
 
 bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
 {
-	PERFORMANCE_MARKER
 	if (pObj->IsActiveLBE(0) == true) {
 		LBENODE* pLBE = pObj->GetLBEPointer(0);
 		if (pLBE) {
@@ -99,7 +95,6 @@ bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
 
 void MoveItemsInSlotsToLBE( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, LBENODE* pLBE, OBJECTTYPE* pObj)
 {
-	PERFORMANCE_MARKER
 	for(unsigned int i=0; i<LBESlots.size(); i++)	// Go through default pockets one by one
 	{
 		if(pSoldier->inv[LBESlots[i]].exists() == false)	// No item in this pocket
@@ -138,7 +133,6 @@ extern BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, IN
 // CHRISL: New function to move items from default pockets to usable pockets
 BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, UINT32 uiHandPos, OBJECTTYPE *pObj )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN	flag=FALSE;
 
 	if(pObj->IsActiveLBE(0) == false) {
@@ -193,7 +187,6 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBES
 
 void GetLBESlots(UINT32 LBEType, std::vector<INT8>& LBESlots)
 {
-	PERFORMANCE_MARKER
 	switch (LBEType)
 	{
 		case VESTPOCKPOS:
@@ -259,7 +252,6 @@ void GetLBESlots(UINT32 LBEType, std::vector<INT8>& LBESlots)
 // CHRISL: New function to handle moving soldier items to lbe items
 BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos )
 {
-	PERFORMANCE_MARKER
 	std::vector<INT8> LBESlots;
 	// Determine which LBE item we're removing so we can associate the correct pockets with it.
 	GetLBESlots(uiHandPos, LBESlots);
@@ -286,7 +278,6 @@ BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos )
 // CHRISL: New function to handle moving lbe items to soldier items
 BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj )
 {
-	PERFORMANCE_MARKER
 	std::vector<INT8> LBESlots;
 
 	// Determine which LBE item we're adding so we can associate the correct pockets with it.
@@ -317,18 +308,15 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 }
 
 LBETYPE::LBETYPE(){
-	PERFORMANCE_MARKER
 	memset(this, 0, SIZEOF_LBETYPE);
 	lbePocketIndex.clear();
 	lbePocketIndex.resize(MAX_ITEMS_IN_LBE);
 }
 LBETYPE::LBETYPE(const LBETYPE& src) {
-	PERFORMANCE_MARKER
 	memcpy(this, &src, SIZEOF_LBETYPE);
 	lbePocketIndex = src.lbePocketIndex;
 }
 LBETYPE& LBETYPE::operator=(const LBETYPE& src){
-	PERFORMANCE_MARKER
     if (this != &src) {
 		memcpy(this, &src, SIZEOF_LBETYPE);
 		lbePocketIndex = src.lbePocketIndex;
@@ -338,18 +326,15 @@ LBETYPE& LBETYPE::operator=(const LBETYPE& src){
 LBETYPE::~LBETYPE(){
 }
 POCKETTYPE::POCKETTYPE(){
-	PERFORMANCE_MARKER
 	memset(this, 0, SIZEOF_POCKETTYPE);
 	ItemCapacityPerSize.resize(35);
 }
 POCKETTYPE::POCKETTYPE(const POCKETTYPE& src){
-	PERFORMANCE_MARKER
 	memcpy(this, &src, SIZEOF_POCKETTYPE);
 	ItemCapacityPerSize.resize(35);
 	ItemCapacityPerSize = src.ItemCapacityPerSize;
 }
 POCKETTYPE& POCKETTYPE::operator=(const POCKETTYPE& src){
-	PERFORMANCE_MARKER
     if (this != &src) {
 		memcpy(this, &src, SIZEOF_POCKETTYPE);
 		ItemCapacityPerSize = src.ItemCapacityPerSize;
@@ -361,7 +346,6 @@ POCKETTYPE::~POCKETTYPE(){
 
 bool OBJECTTYPE::IsActiveLBE(unsigned int index)
 {
-	PERFORMANCE_MARKER
 	if (exists() == true) {
 		return ((*this)[index]->data.lbe.bLBE == -1);
 	}
@@ -370,7 +354,6 @@ bool OBJECTTYPE::IsActiveLBE(unsigned int index)
 
 bool OBJECTTYPE::HasAnyActiveLBEs(SOLDIERTYPE * pSoldier, UINT8 iter)
 {
-	PERFORMANCE_MARKER
 	if (exists() == true) {
 		if(pSoldier != NULL){
 			for (int x = 0; x < ubNumberOfObjects; ++x) {
@@ -390,7 +373,6 @@ bool OBJECTTYPE::HasAnyActiveLBEs(SOLDIERTYPE * pSoldier, UINT8 iter)
 
 LBENODE* OBJECTTYPE::GetLBEPointer(unsigned int index)
 {
-	PERFORMANCE_MARKER
 	if (LBEArray.empty() == false) {
 		int uniqueID = (*this)[index]->data.lbe.uniqueID;
 		for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
@@ -404,13 +386,11 @@ LBENODE* OBJECTTYPE::GetLBEPointer(unsigned int index)
 
 bool OBJECTTYPE::exists()
 {
-	PERFORMANCE_MARKER
 	return (ubNumberOfObjects > 0 && usItem != NOTHING);
 }
 
 void OBJECTTYPE::SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, StackedObjects::iterator beginIter)
 {
-	PERFORMANCE_MARKER
 	if (numToSplice == 0) {
 		return;
 	}
@@ -439,7 +419,6 @@ void OBJECTTYPE::SpliceData(OBJECTTYPE& sourceObject, unsigned int numToSplice, 
 
 int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 {
-	PERFORMANCE_MARKER
 	//This function is never called from a soldier, so get the max size
 	int numToAdd = max(0, ItemSlotLimit( this, STACK_SIZE_LIMIT ) - ubNumberOfObjects);
 
@@ -459,18 +438,17 @@ int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 
 bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
 {
-	PERFORMANCE_MARKER
 	//stacking control, restrict certain things here
 	if (numToStack > 0) {
 		if (exists() == true) {
-		if (Item[usItem].usItemClass == IC_MONEY) {
-			//money doesn't stack, it merges
-			// average out the status values using a weighted average...
-			int thisStatus = (*this)[0]->data.money.bMoneyStatus * (*this)[0]->data.money.uiMoneyAmount;
-			int sourceStatus = sourceObject[0]->data.money.bMoneyStatus * sourceObject[0]->data.money.uiMoneyAmount;
-			int average = (*this)[0]->data.money.uiMoneyAmount + sourceObject[0]->data.money.uiMoneyAmount;
+			if (Item[usItem].usItemClass == IC_MONEY) {
+				//money doesn't stack, it merges
+				// average out the status values using a weighted average...
+				int thisStatus = (*this)[0]->data.money.bMoneyStatus * (*this)[0]->data.money.uiMoneyAmount;
+				int sourceStatus = sourceObject[0]->data.money.bMoneyStatus * sourceObject[0]->data.money.uiMoneyAmount;
+				int average = (*this)[0]->data.money.uiMoneyAmount + sourceObject[0]->data.money.uiMoneyAmount;
 
-			(*this)[0]->data.objectStatus = ( (thisStatus + sourceStatus) / average);
+				(*this)[0]->data.objectStatus = ( (thisStatus + sourceStatus) / average);
 				(*this)[0]->data.money.uiMoneyAmount += sourceObject[0]->data.money.uiMoneyAmount;
 				//CHRISL: We need to delete sourceObject at this point since we've just merged the two items
 				sourceObject.initialize();
@@ -480,7 +458,7 @@ bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
 			//keys can stack if the same key
 			if (Item[usItem].usItemClass == IC_KEY) {
 				if ((*this)[0]->data.key.ubKeyID != sourceObject[0]->data.key.ubKeyID) {
-				return false;
+					return false;
 				}
 			}
 
@@ -506,7 +484,6 @@ bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
 
 int OBJECTTYPE::ForceAddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 {
-	PERFORMANCE_MARKER
 	if (exists() == false) {
 		//we are adding to an empty object, it can happen
 		Assert(sourceObject.exists() == true);
@@ -536,7 +513,6 @@ int OBJECTTYPE::ForceAddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 
 int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany, SOLDIERTYPE* pSoldier, int slot, int cap, bool allowLBETransfer)
 {
-	PERFORMANCE_MARKER
 	int freeObjectsInStack;
 	if (exists() == false) {
 		//we are adding to an empty object, it can happen
@@ -604,7 +580,6 @@ int OBJECTTYPE::RemoveObjectsFromStack(int howMany)
 
 int OBJECTTYPE::PrivateRemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject, SOLDIERTYPE* pSoldier, int slot)
 {
-	PERFORMANCE_MARKER
 	//ADB this function only needs to know soldier and slot
 	//if there is a dest object we are putting the removed objects into
 	//in this case it is acting as a move and has probably been called by MoveThisObjectTo
@@ -670,7 +645,6 @@ int OBJECTTYPE::PrivateRemoveObjectsFromStack(int howMany, OBJECTTYPE* destObjec
 
 bool OBJECTTYPE::RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject)
 {
-	PERFORMANCE_MARKER
 	//Note, this function does NOT care what the stack size of destObject will be
 	//because destObject will never be an object in a soldier's inventory!
 	if (index >= ubNumberOfObjects || exists() == false) {
@@ -717,7 +691,6 @@ bool OBJECTTYPE::RemoveObjectAtIndex(unsigned int index, OBJECTTYPE* destObject)
 
 StackedObjectData* OBJECTTYPE::operator [](const unsigned int index)
 {
-	PERFORMANCE_MARKER
 	StackedObjects::iterator iter = objectStack.begin();
 	if(index >= objectStack.size()){
 		return &(*iter);
@@ -741,7 +714,6 @@ StackedObjectData* OBJECTTYPE::operator [](const unsigned int index)
 //OR write OBJECTTYPE::DeleteMe(&pSoldier->pTempObject) if there is no memcpy
 void OBJECTTYPE::CopyToOrCreateAt(OBJECTTYPE** ppTarget, OBJECTTYPE* pSource)
 {
-	PERFORMANCE_MARKER
 	//this is necessary because memcpy is no longer good enough for OBJECTTYPE
 	if (*ppTarget == NULL) {
 		*ppTarget = new OBJECTTYPE(*pSource);
@@ -758,7 +730,6 @@ void OBJECTTYPE::CopyToOrCreateAt(OBJECTTYPE** ppTarget, OBJECTTYPE* pSource)
 //OR write OBJECTTYPE::DeleteMe(&pSoldier->pTempObject) if there is no memcpy
 void OBJECTTYPE::DeleteMe(OBJECTTYPE** ppObject)
 {
-	PERFORMANCE_MARKER
 	if (*ppObject != NULL) {
 		delete *ppObject;
 		*ppObject = NULL;
@@ -778,7 +749,6 @@ StackedObjectData::~StackedObjectData()
 
 OBJECTTYPE* StackedObjectData::GetAttachmentAtIndex(UINT8 index)
 {
-	PERFORMANCE_MARKER
 	attachmentList::iterator iter = attachments.begin();
 	for (int x = 0; x < index && iter != attachments.end(); ++x) {
 		++iter;
@@ -814,7 +784,6 @@ bool ObjectData::operator==(const ObjectData& compare)const
 
 ObjectData::ObjectData(const ObjectData& src)
 {
-	PERFORMANCE_MARKER
 	if ((void*)this != (void*)&src) {
 		//first get rid of any LBE this might have
 		DeleteLBE();
@@ -833,7 +802,6 @@ ObjectData::ObjectData(const ObjectData& src)
 
 ObjectData& ObjectData::operator =(const ObjectData& src)
 {
-	PERFORMANCE_MARKER
 	if ((void*)this != (void*)&src) {
 		//first get rid of any LBE this might have
 		DeleteLBE();
@@ -902,12 +870,10 @@ void ObjectData::DuplicateLBE()
 // Constructor
 OBJECTTYPE::OBJECTTYPE()
 {
-	PERFORMANCE_MARKER
 	initialize();
 }
 void OBJECTTYPE::initialize()
 {
-	PERFORMANCE_MARKER
 
 	memset(this, 0, SIZEOF_OBJECTTYPE_POD);
 
@@ -921,7 +887,6 @@ void OBJECTTYPE::initialize()
 
 bool OBJECTTYPE::operator==(const OBJECTTYPE& compare)const
 {
-	PERFORMANCE_MARKER
 	if ( memcmp(this, &compare, SIZEOF_OBJECTTYPE_POD) == 0) {
 		if (this->objectStack == compare.objectStack) {
 			return true;
@@ -932,7 +897,6 @@ bool OBJECTTYPE::operator==(const OBJECTTYPE& compare)const
 
 bool OBJECTTYPE::operator==(OBJECTTYPE& compare)
 {
-	PERFORMANCE_MARKER
 	if ( memcmp(this, &compare, SIZEOF_OBJECTTYPE_POD) == 0) {
 		if (this->objectStack == compare.objectStack) {
 			return true;
@@ -944,7 +908,6 @@ bool OBJECTTYPE::operator==(OBJECTTYPE& compare)
 //Copy Ctor
 OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 {
-	PERFORMANCE_MARKER
 	if ((void*)this != (void*)&src) {
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
@@ -958,7 +921,6 @@ OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 // Assignment operator
 OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 {
-	PERFORMANCE_MARKER
 	if ((void*)this != (void*)&src) {
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
@@ -974,7 +936,6 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 // Conversion operator
 OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 {
-	PERFORMANCE_MARKER
 	if ((void*)this != (void*)&src) {
 		//makes changes to size easier as we don't have to init new arrays with 0 by hand
 		this->initialize();

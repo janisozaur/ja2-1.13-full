@@ -51,11 +51,10 @@ void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn,INT32 reason);
 
 void EnterIMPPortraits( void )
 {
-	PERFORMANCE_MARKER
-	
+
 		// create buttons
 	CreateIMPPortraitButtons( );
-	
+
 	// render background
 	RenderIMPPortraits( );
 
@@ -66,8 +65,7 @@ void EnterIMPPortraits( void )
 
 void RenderIMPPortraits( void )
 {
-	PERFORMANCE_MARKER
-	
+
 
 	// render background
 	RenderProfileBackGround( );
@@ -79,8 +77,8 @@ void RenderIMPPortraits( void )
 	RenderPortrait( 200, 176 );
 
 	// indent for the text
-	RenderAttrib1IndentFrame( 128, 65); 
-	
+	RenderAttrib1IndentFrame( 128, 65);
+
 	// text
 	PrintImpText( );
 
@@ -90,22 +88,20 @@ void RenderIMPPortraits( void )
 
 void ExitIMPPortraits( void )
 {
-	PERFORMANCE_MARKER
 	// destroy buttons for IMP portrait page
-	DestroyIMPPortraitButtons( ); 
+	DestroyIMPPortraitButtons( );
 
 	return;
 }
 
 void HandleIMPPortraits( void )
 {
-	PERFORMANCE_MARKER
 
 	// do we need to re write screen
-	if ( fReDrawPortraitScreenFlag == TRUE ) 
+	if ( fReDrawPortraitScreenFlag == TRUE )
 	{
 	RenderIMPPortraits( );
-		
+
 		// reset redraw flag
 		fReDrawPortraitScreenFlag = FALSE;
 	}
@@ -115,7 +111,6 @@ void HandleIMPPortraits( void )
 
 BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
 {
-	PERFORMANCE_MARKER
 	// render the portrait of the current picture
 	VOBJECT_DESC	VObjectDesc;
 	HVOBJECT hHandle;
@@ -128,7 +123,7 @@ BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP( pPlayerSelectedBigFaceFileNames[ iCurrentPortrait ] , VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &uiGraphicHandle));
-		
+
 	// show it
 	GetVideoObject(&hHandle, uiGraphicHandle);
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
@@ -137,7 +132,7 @@ BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
 	// and kick it's sorry ..umm never mind, outta here
 	DeleteVideoObjectFromIndex( uiGraphicHandle );
 
-	
+
 	}
 	else
 	{
@@ -145,7 +140,7 @@ BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP( pPlayerSelectedBigFaceFileNames[ iCurrentPortrait + 8 ] , VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &uiGraphicHandle));
-		
+
 	// show it
 	GetVideoObject(&hHandle, uiGraphicHandle);
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
@@ -163,9 +158,8 @@ BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
 
 void IncrementPictureIndex( void )
 {
-	PERFORMANCE_MARKER
 	// cycle to next picture
-	
+
 	iCurrentPortrait++;
 
 	// gone too far?
@@ -175,15 +169,14 @@ void IncrementPictureIndex( void )
 	}
 
 
-	return; 
+	return;
 }
 
 
 void DecrementPicture( void )
 {
-	PERFORMANCE_MARKER
 	// cycle to previous picture
-	
+
 	iCurrentPortrait--;
 
 	// gone too far?
@@ -198,7 +191,6 @@ void DecrementPicture( void )
 
 void CreateIMPPortraitButtons( void )
 {
-	PERFORMANCE_MARKER
 	// will create buttons need for the IMP portrait screen
 
 	// next button
@@ -207,10 +199,10 @@ void CreateIMPPortraitButtons( void )
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPortraitNextCallback );
 	*/
-	giIMPPortraitButton[0] = CreateIconAndTextButton( giIMPPortraitButtonImage[0], pImpButtonText[ 13 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPPortraitButton[0] = CreateIconAndTextButton( giIMPPortraitButtonImage[0], pImpButtonText[ 13 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X +	( 343 ), LAPTOP_SCREEN_WEB_UL_Y + ( 205 ),BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPortraitNextCallback);
 
@@ -221,10 +213,10 @@ void CreateIMPPortraitButtons( void )
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPortraitPreviousCallback );
 	*/
-	giIMPPortraitButton[ 1 ] = CreateIconAndTextButton( giIMPPortraitButtonImage[ 1 ], pImpButtonText[ 12 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPPortraitButton[ 1 ] = CreateIconAndTextButton( giIMPPortraitButtonImage[ 1 ], pImpButtonText[ 12 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X +	( 93), LAPTOP_SCREEN_WEB_UL_Y + ( 205 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPortraitPreviousCallback);
 
@@ -235,10 +227,10 @@ void CreateIMPPortraitButtons( void )
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPortraitDoneCallback );
 	*/
-	giIMPPortraitButton[ 2 ] = CreateIconAndTextButton( giIMPPortraitButtonImage[ 2 ], pImpButtonText[ 11 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPPortraitButton[ 2 ] = CreateIconAndTextButton( giIMPPortraitButtonImage[ 2 ], pImpButtonText[ 11 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X +	( 187 ), LAPTOP_SCREEN_WEB_UL_Y + ( 330 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPortraitDoneCallback);
 
@@ -253,18 +245,17 @@ void CreateIMPPortraitButtons( void )
 
 void DestroyIMPPortraitButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	// will destroy buttons created for IMP Portrait screen
-	
+
 	// the next button
 	RemoveButton(giIMPPortraitButton[ 0 ] );
 	UnloadButtonImage(giIMPPortraitButtonImage[ 0 ] );
-	
+
 	// the previous button
 	RemoveButton(giIMPPortraitButton[ 1 ] );
 	UnloadButtonImage(giIMPPortraitButtonImage[ 1 ] );
-	
+
 	// the done button
 	RemoveButton(giIMPPortraitButton[ 2 ] );
 	UnloadButtonImage(giIMPPortraitButtonImage[ 2 ] );
@@ -275,7 +266,6 @@ void DestroyIMPPortraitButtons( void )
 
 void BtnIMPPortraitNextCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP attrbite begin button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -290,18 +280,17 @@ void BtnIMPPortraitNextCallback(GUI_BUTTON *btn,INT32 reason)
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
 		btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		
+
 			// next picture!!
 			IncrementPictureIndex( );
 
 			fReDrawPortraitScreenFlag = TRUE;
 		}
-	}	
-} 
+	}
+}
 
 void BtnIMPPortraitPreviousCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP attrbite begin button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -316,18 +305,17 @@ void BtnIMPPortraitPreviousCallback(GUI_BUTTON *btn,INT32 reason)
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
 		btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		
+
 			// previous picture, please!!!
 			DecrementPicture( );
 
 			fReDrawPortraitScreenFlag = TRUE;
 		}
-	}	
-} 
+	}
+}
 
 void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP attrbite begin button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -342,7 +330,7 @@ void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn,INT32 reason)
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
 		btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		
+
 			// go to main page
 			iCurrentImpPage = IMP_MAIN_PAGE;
 /*
@@ -351,12 +339,12 @@ void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn,INT32 reason)
 			{
 		iCurrentProfileMode = IMP__VOICE;
 			}
-*/			
+*/
 			// if we are already done, leave
 	 if( iCurrentProfileMode == IMP__FINISH )
 			{
 		iCurrentImpPage = IMP_FINISH;
-			} 
+			}
 			else
 			{
 				if( CameBackToPortraitsPageButNotFinished() )
@@ -367,7 +355,7 @@ void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn,INT32 reason)
 				else
 				{
 					iCurrentProfileMode = IMP__VOICE;
-				} 
+				}
 			}
 
 			// grab picture number
@@ -382,16 +370,15 @@ void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn,INT32 reason)
 				iPortraitNumber = iCurrentPortrait + ( 8 );
 
 			}
-			
+
 			fButtonPendingFlag = TRUE;
 		}
-	}	
-} 
+	}
+}
 
 
 BOOLEAN CameBackToPortraitsPageButNotFinished()
 {
-	PERFORMANCE_MARKER
 	//if we are in a page that comes after this one
 	if( iCurrentProfileMode == IMP__PERSONALITY ||
 			iCurrentProfileMode == IMP__ATTRIBUTES ||

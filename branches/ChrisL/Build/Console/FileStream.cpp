@@ -24,7 +24,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// FileStream.cpp	- implementation of IStream interface on any file 
+// FileStream.cpp	- implementation of IStream interface on any file
 //					(not strictly COM, I'm faking it here a bit :-)
 //
 
@@ -37,7 +37,6 @@
 #include <objidl.h>
 #include "FileStream.h"
 
-#include "profiler.h"
 //#ifdef _DEBUG
 //#define new DEBUG_NEW
 #undef THIS_FILE
@@ -58,11 +57,10 @@ HRESULT CreateFileStream(
 	IStream** ppStream							// pointer to IStream interface
 )
 {
-	PERFORMANCE_MARKER
 
 	HANDLE hFile = ::CreateFile(
 						lpFileName,
-						dwDesiredAccess, 
+						dwDesiredAccess,
 						dwShareMode,
 						lpSecurityAttributes,
 						dwCreationDisposition,
@@ -99,12 +97,10 @@ FileStream::FileStream(HANDLE hFile)
 	: m_lRefCount(0)
 	, m_hFile(hFile)
 {
-	PERFORMANCE_MARKER
 }
 
 FileStream::~FileStream()
 {
-	PERFORMANCE_MARKER
 	if (m_hFile) ::CloseHandle(m_hFile);
 }
 
@@ -115,12 +111,11 @@ FileStream::~FileStream()
 // IStream methods
 
 /////////////////////////////////////////////////////////////////////////////
-// Read	- reads a specified number of bytes from the stream object into memory 
+// Read	- reads a specified number of bytes from the stream object into memory
 //		starting at the current seek pointer
 
 STDMETHODIMP FileStream::Read(void *pv, ULONG cb, ULONG *pcbRead)
 {
-	PERFORMANCE_MARKER
 	if (!::ReadFile(m_hFile, pv, cb, pcbRead, NULL)) return S_FALSE;
 
 	return S_OK;
@@ -130,12 +125,11 @@ STDMETHODIMP FileStream::Read(void *pv, ULONG cb, ULONG *pcbRead)
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Write	- writes a specified number of bytes into the stream object starting 
+// Write	- writes a specified number of bytes into the stream object starting
 //			at the current seek pointer
 
 STDMETHODIMP FileStream::Write(void const *pv, ULONG cb, ULONG *pcbWritten)
 {
-	PERFORMANCE_MARKER
 	if (!::WriteFile(m_hFile, pv, cb, pcbWritten, NULL)) return S_FALSE;
 
 	return S_OK;
@@ -145,17 +139,16 @@ STDMETHODIMP FileStream::Write(void const *pv, ULONG cb, ULONG *pcbWritten)
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Seek	- changes the seek pointer to a new location relative to the beginning 
+// Seek	- changes the seek pointer to a new location relative to the beginning
 //		of the stream, to the end of the stream, or to the current seek pointer
 
 STDMETHODIMP FileStream::Seek(LARGE_INTEGER dlibMove, DWORD dwOrigin, ULARGE_INTEGER *plibNewPosition)
 {
-	PERFORMANCE_MARKER
 	DWORD dwFileOrigin;
 
 	DWORD dwMoveLow = dlibMove.LowPart;
 	LONG lMoveHigh = dlibMove.HighPart;
-	
+
 	switch (dwOrigin) {
 		case STREAM_SEEK_SET : dwFileOrigin = FILE_BEGIN; break;
 		case STREAM_SEEK_CUR : dwFileOrigin = FILE_CURRENT; break;
@@ -181,7 +174,6 @@ STDMETHODIMP FileStream::Seek(LARGE_INTEGER dlibMove, DWORD dwOrigin, ULARGE_INT
 
 STDMETHODIMP FileStream::SetSize(ULARGE_INTEGER libNewSize)
 {
-	PERFORMANCE_MARKER
 	return S_OK;
 }
 
@@ -189,12 +181,11 @@ STDMETHODIMP FileStream::SetSize(ULARGE_INTEGER libNewSize)
 
 
 /////////////////////////////////////////////////////////////////////////////
-// CopyTo	- copies a specified number of bytes from the current seek pointer 
+// CopyTo	- copies a specified number of bytes from the current seek pointer
 //			in the stream to the current seek pointer in another stream
 
 STDMETHODIMP FileStream::CopyTo(IStream *pstm, ULARGE_INTEGER cb, ULARGE_INTEGER *pcbRead, ULARGE_INTEGER *pcbWritten)
 {
-	PERFORMANCE_MARKER
 	// later...
 	return E_NOTIMPL;
 }
@@ -207,7 +198,6 @@ STDMETHODIMP FileStream::CopyTo(IStream *pstm, ULARGE_INTEGER cb, ULARGE_INTEGER
 
 STDMETHODIMP FileStream::Commit(DWORD grfCommitFlags)
 {
-	PERFORMANCE_MARKER
 	return S_OK;
 }
 
@@ -219,7 +209,6 @@ STDMETHODIMP FileStream::Commit(DWORD grfCommitFlags)
 
 STDMETHODIMP FileStream::Revert(void)
 {
-	PERFORMANCE_MARKER
 	return S_OK;
 }
 
@@ -231,7 +220,6 @@ STDMETHODIMP FileStream::Revert(void)
 
 STDMETHODIMP FileStream::LockRegion(ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, DWORD dwLockType)
 {
-	PERFORMANCE_MARKER
 	return E_NOTIMPL;
 }
 
@@ -243,7 +231,6 @@ STDMETHODIMP FileStream::LockRegion(ULARGE_INTEGER libOffset, ULARGE_INTEGER cb,
 
 STDMETHODIMP FileStream::UnlockRegion(ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, DWORD dwLockType)
 {
-	PERFORMANCE_MARKER
 	return E_NOTIMPL;
 }
 
@@ -255,7 +242,6 @@ STDMETHODIMP FileStream::UnlockRegion(ULARGE_INTEGER libOffset, ULARGE_INTEGER c
 
 STDMETHODIMP FileStream::Stat(STATSTG *pstatstg, DWORD grfStatFlag)
 {
-	PERFORMANCE_MARKER
 	return E_NOTIMPL;
 }
 
@@ -267,7 +253,6 @@ STDMETHODIMP FileStream::Stat(STATSTG *pstatstg, DWORD grfStatFlag)
 
 STDMETHODIMP FileStream::Clone(IStream **ppstm)
 {
-	PERFORMANCE_MARKER
 	return E_NOTIMPL;
 }
 

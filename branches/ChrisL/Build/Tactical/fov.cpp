@@ -113,7 +113,6 @@ UINT8	ViewPath2[MAXVIEWPATHS][VIEWPATHLENGTH]= {
 
 void BuildSightDir(UINT32 dir, UINT32 *One, UINT32 *Two, UINT32 *Three, UINT32 *Four, UINT32 *Five)
 {
-	PERFORMANCE_MARKER
  switch(dir)
  {
 	case NORTH	: *One	= NORTHWEST;
@@ -189,7 +188,6 @@ UINT32								guiNumSlantRoofs = 0;
 
 INT32 GetFreeSlantRoof( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumSlantRoofs; uiCount++)
@@ -206,7 +204,6 @@ INT32 GetFreeSlantRoof( void )
 
 void RecountSlantRoofs( void )
 {
-	PERFORMANCE_MARKER
 	INT32 uiCount;
 
 	for(uiCount=guiNumSlantRoofs-1; (uiCount >=0) ; uiCount--)
@@ -221,7 +218,6 @@ void RecountSlantRoofs( void )
 
 void ClearSlantRoofs( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for( uiCount = 0; uiCount < guiNumSlantRoofs; uiCount++ )
@@ -237,7 +233,6 @@ void ClearSlantRoofs( void )
 
 BOOLEAN FindSlantRoofSlot( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for( uiCount = 0; uiCount < guiNumSlantRoofs; uiCount++ )
@@ -247,7 +242,7 @@ BOOLEAN FindSlantRoofSlot( INT16 sGridNo )
 			if ( gSlantRoofData[uiCount].sGridNo == sGridNo )
 			{
 				return( TRUE );
-			}	
+			}
 		}
 	}
 
@@ -256,7 +251,6 @@ BOOLEAN FindSlantRoofSlot( INT16 sGridNo )
 
 void AddSlantRoofFOVSlot( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT32									iSlantRoofSlot;
 	SLANT_ROOF_FOV_TYPE		*pSlantRoof;
 
@@ -278,7 +272,6 @@ void AddSlantRoofFOVSlot( INT16 sGridNo )
 
 void ExamineSlantRoofFOVSlots( )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for( uiCount = 0; uiCount < guiNumSlantRoofs; uiCount++ )
@@ -295,7 +288,6 @@ void ExamineSlantRoofFOVSlots( )
 
 void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLocators, UINT8 ubLevel, BOOLEAN fForce )
 {
-	PERFORMANCE_MARKER
  UINT32 maincnt,markercnt,marker,tilesLeftToSee,cnt,prevmarker;
  INT32 Inc[6],Dir[6];
  INT8	itemVisible = FALSE;
@@ -391,7 +383,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 	else
 	 Path2 = FALSE;
 
-	
+
 	// ATE: if in this special cercumstance... our guys are moving on their own...
 	// Stop sighting items
 	// IN the future, we may want to do something else here...
@@ -526,7 +518,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 			{
 
 			} while( ( GetJA2Clock( ) - cnt ) < 250 );
-	
+
 		}
 #endif
 
@@ -557,9 +549,9 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 
 				// If it is bigger than a breadbox... err... taller than a man...
 				// Then stop path altogether
-				// otherwise just stop revealing items		
-				
-				// CJC:	only do this when the direction is horizontal; easier and faster to check 
+				// otherwise just stop revealing items
+
+				// CJC:	only do this when the direction is horizontal; easier and faster to check
 				// and the effect should still be good enough
 
 				if ( ubMovementCost == TRAVELCOST_WALL || ubMovementCost == TRAVELCOST_DOOR || ubMovementCost == TRAVELCOST_EXITGRID )
@@ -575,7 +567,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 					{
 						fTravelCostObs = TRUE;
 						fStopRevealingItemsAfterThisTile = TRUE;
-					}			
+					}
 					else if ( bTallestStructureHeight != 0 )
 					{
 						// stop revealing items after this tile but keep going
@@ -596,14 +588,14 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 					fRevealItems = FALSE;
 				}
 				else
-				{			
+				{
 
 					bTallestStructureHeight = GetTallestStructureHeight( (INT16) marker, FALSE );
 					if (bTallestStructureHeight >= 3)
 					{
 						fTravelCostObs = TRUE;
 						fStopRevealingItemsAfterThisTile = TRUE;
-					}			
+					}
 					else if ( bTallestStructureHeight != 0 )
 					{
 						// stop revealing items after this tile but keep going
@@ -620,16 +612,16 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 
 			// Mark gridno
 			gubGridNoMarkers[ marker ] = gubGridNoValue;
-			
+
 			// check and see if the gridno changed
 			// if the gridno is the same, avoid redundancy and break
 			if (marker==prevmarker && markercnt != 0 )
 			{
-				
+
 			}
 			else	// it changed
 			{
-				
+
 				// Skip others if we have gone through a door but are too far away....
 				if ( fGoneThroughDoor )
 				{
@@ -637,7 +629,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 					{
 						break;
 					}
-				}				
+				}
 				// DO MINE FINDING STUFF
 				// GET INDEX FOR ITEM HERE
 				// if there IS a direction after this one, nextdir WILL NOT be 99
@@ -871,7 +863,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 				}
 				else
 				{
-					gpWorldLevelData[ marker ].uiFlags |= MAPELEMENT_REVEALED_ROOF;						
+					gpWorldLevelData[ marker ].uiFlags |= MAPELEMENT_REVEALED_ROOF;
 				}
 
 				// Check for blood....

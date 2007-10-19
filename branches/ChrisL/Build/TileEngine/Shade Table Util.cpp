@@ -28,7 +28,6 @@ BOOLEAN gfForceBuildShadeTables = FALSE;
 
 void DetermineRGBDistributionSettings()
 {
-	PERFORMANCE_MARKER
 	STRING512			DataDir;
 	STRING512			ExecDir;
 	STRING512			ShadeTableDir;
@@ -49,7 +48,7 @@ void DetermineRGBDistributionSettings()
 	GetExecutableDirectory( ExecDir );
 	sprintf( ShadeTableDir, "%s\\%s", DataDir, SHADE_TABLE_DIR );
 
-	
+
 	//Check to make sure we have a ShadeTable directory.	If we don't create one!
 	if( !SetFileManCurrentDirectory( ShadeTableDir ) )
 	{
@@ -63,7 +62,7 @@ void DetermineRGBDistributionSettings()
 		}
 		fSaveRGBDist = TRUE;
 	}
-	
+
 	if( !fSaveRGBDist )
 	{ //Load the previous RGBDist and determine if it is the same one
 		if( !FileExists( "RGBDist.dat" ) || FileExists( "ResetShadeTables.txt" ) )
@@ -105,13 +104,13 @@ void DetermineRGBDistributionSettings()
 	}
 	if( fCleanShadeTable )
 	{ //This means that we are going to remove all of the current shade tables, if any exist, and
-		//start fresh.	
+		//start fresh.
 		EraseDirectory( ShadeTableDir );
 	}
 	if( fSaveRGBDist )
 	{ //The RGB distribution is going to be saved in a tiny file for future reference.	As long as the
 		//RGB distribution never changes, the shade table will grow until eventually, all tilesets are loaded,
-		//shadetables generated and saved in this directory.	
+		//shadetables generated and saved in this directory.
 		hfile = FileOpen( "RGBDist.dat", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 		if( !hfile )
 		{
@@ -132,7 +131,6 @@ void DetermineRGBDistributionSettings()
 
 BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 {
-	PERFORMANCE_MARKER
 	HWFILE hfile;
 	INT32 i;
 	UINT32 uiNumBytesRead;
@@ -167,7 +165,7 @@ BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 		FileRead( hfile, pObj->pShades[ i ], 512, &uiNumBytesRead );
 	}
 
-	//The file exists, now make sure the 
+	//The file exists, now make sure the
 	FileClose( hfile );
 	#ifdef JA2TESTVERSION
 		uiNumTablesLoaded++;
@@ -177,7 +175,6 @@ BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 
 BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 {
-	PERFORMANCE_MARKER
 	HWFILE hfile;
 	INT32 i;
 	UINT32 uiNumBytesWritten;
@@ -201,7 +198,7 @@ BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 
 	hfile = FileOpen( ShadeFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if( !hfile )
-	{ 
+	{
 		FileClose( hfile );
 		AssertMsg( 0, String( "Can't create %s", ShadeFileName ) );
 		return FALSE;
@@ -219,6 +216,5 @@ BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 
 BOOLEAN DeleteShadeTableDir( )
 {
-	PERFORMANCE_MARKER	
 	return( RemoveFileManDirectory( SHADE_TABLE_DIR, TRUE ) );
 }

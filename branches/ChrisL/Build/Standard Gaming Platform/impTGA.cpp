@@ -68,7 +68,6 @@ BOOLEAN ReadRLERGBImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiCol
 
 BOOLEAN LoadTGAFileToImage( HIMAGE hImage, UINT16 fContents )
 {
-	PERFORMANCE_MARKER
 	HWFILE	hFile;
 	UINT8		uiImgID, uiColMap, uiType;
 	UINT32	uiBytesRead;
@@ -129,7 +128,6 @@ end:
 
 BOOLEAN ReadUncompColMapImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents )
 {
-	PERFORMANCE_MARKER
 	return( FALSE );
 }
 
@@ -149,7 +147,6 @@ BOOLEAN ReadUncompColMapImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8
 
 BOOLEAN ReadUncompRGBImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents )
 {
-	PERFORMANCE_MARKER
 	UINT8		*pBMData;
 	UINT8		*pBMPtr;
 
@@ -333,7 +330,6 @@ freeEnd:
 
 BOOLEAN ReadRLEColMapImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents )
 {
-	PERFORMANCE_MARKER
 	return( FALSE );
 }
 
@@ -353,14 +349,12 @@ BOOLEAN ReadRLEColMapImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 ui
 
 BOOLEAN ReadRLERGBImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents )
 {
-	PERFORMANCE_MARKER
 	return( FALSE );
 }
 
 /*
 BOOLEAN	ConvertTGAToSystemBPPFormat( HIMAGE hImage )
 {
-	PERFORMANCE_MARKER
 	UINT16		usX, usY;
 	UINT16		Old16BPPValue;
 	UINT16		*pData;

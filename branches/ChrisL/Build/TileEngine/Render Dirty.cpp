@@ -53,19 +53,16 @@ BOOLEAN		gfViewportDirty=FALSE;
 
 BOOLEAN InitializeBaseDirtyRectQueue( )
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
 void ShutdownBaseDirtyRectQueue( )
 {
-	PERFORMANCE_MARKER
 
 }
 
 void AddBaseDirtyRect( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom )
 {
-	PERFORMANCE_MARKER
 	SGPRect aRect;
 
 	if ( iLeft < 0 )
@@ -131,10 +128,9 @@ void AddBaseDirtyRect( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom )
 	InvalidateRegionEx( aRect.iLeft, aRect.iTop, aRect.iRight, aRect.iBottom, 0 );
 
 }
- 
+
 BOOLEAN ExecuteBaseDirtyRectQueue( )
 {
-	PERFORMANCE_MARKER
 	if(gfViewportDirty)
 	{
 		//InvalidateRegion(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y);
@@ -151,7 +147,6 @@ BOOLEAN ExecuteBaseDirtyRectQueue( )
 
 BOOLEAN EmptyDirtyRectQueue( )
 {
-	PERFORMANCE_MARKER
 
 	return( TRUE );
 }
@@ -159,7 +154,6 @@ BOOLEAN EmptyDirtyRectQueue( )
 
 INT32 GetFreeBackgroundBuffer(void)
 {
-	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumBackSaves; uiCount++)
@@ -184,7 +178,6 @@ UINT32 uiCount;
 
 void RecountBackgrounds(void)
 {
-	PERFORMANCE_MARKER
 INT32 uiCount;
 
 	for(uiCount=guiNumBackSaves-1; (uiCount >=0) ; uiCount--)
@@ -202,7 +195,6 @@ INT32 uiCount;
 
 INT32 RegisterBackgroundRect(UINT32 uiFlags, INT16 *pSaveArea, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom)
 {
-	PERFORMANCE_MARKER
 UINT32 uiBufSize;
 INT32 iBackIndex;
 INT32	ClipX1, ClipY1, ClipX2, ClipY2;
@@ -237,11 +229,11 @@ INT32	iTempX, iTempY;
 	uiBottomSkip=__min(__max(ClipY2, (iTempY+(INT32)usHeight)) - ClipY2, (INT32)usHeight);
 
 	// check if whole thing is clipped
-	if((uiLeftSkip >=(INT32)usWidth) || (uiRightSkip >=(INT32)usWidth))	
+	if((uiLeftSkip >=(INT32)usWidth) || (uiRightSkip >=(INT32)usWidth))
 		return(-1 );
 
 	// check if whole thing is clipped
-	if((uiTopSkip >=(INT32)usHeight) || (uiBottomSkip >=(INT32)usHeight))	
+	if((uiTopSkip >=(INT32)usHeight) || (uiBottomSkip >=(INT32)usHeight))
 		return(-1 );
 
 	// Set re-set values given based on clipping
@@ -261,10 +253,10 @@ INT32	iTempX, iTempY;
 	if(pSaveArea==NULL)
 	{
 		uiBufSize=((sRight-sLeft)*2)*(sBottom-sTop);
-		
+
 		if(uiBufSize==0)
 			return(-1);
-		
+
 		if ( uiFlags & BGND_FLAG_SAVERECT )
 		{
 			if((gBackSaves[iBackIndex].pSaveArea = (INT16 *) MemAlloc(uiBufSize))==NULL)
@@ -292,7 +284,7 @@ INT32	iTempX, iTempY;
 	gBackSaves[iBackIndex].sBottom=sBottom;
 	gBackSaves[iBackIndex].sWidth=(sRight-sLeft);
 	gBackSaves[iBackIndex].sHeight=(sBottom-sTop);
-	
+
 	gBackSaves[iBackIndex].fFilled=FALSE;
 
 	return(iBackIndex);
@@ -300,7 +292,6 @@ INT32	iTempX, iTempY;
 
 void SetBackgroundRectFilled( UINT32 uiBackgroundID )
 {
-	PERFORMANCE_MARKER
 	gBackSaves[uiBackgroundID].fFilled=TRUE;
 
 	AddBaseDirtyRect(gBackSaves[uiBackgroundID].sLeft, gBackSaves[uiBackgroundID].sTop,
@@ -310,7 +301,6 @@ void SetBackgroundRectFilled( UINT32 uiBackgroundID )
 
 BOOLEAN RestoreBackgroundRects(void)
 {
-	PERFORMANCE_MARKER
 UINT32 uiCount, uiDestPitchBYTES, uiSrcPitchBYTES;
 UINT8	*pDestBuf, *pSrcBuf;
 
@@ -327,8 +317,8 @@ UINT8	*pDestBuf, *pSrcBuf;
 				if ( gBackSaves[uiCount].pSaveArea != NULL )
 				{
 					Blt16BPPTo16BPP( (UINT16*)pDestBuf, uiDestPitchBYTES, (UINT16 *)gBackSaves[uiCount].pSaveArea, gBackSaves[uiCount].sWidth*2,
-								gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop, 
-								0, 0, 
+								gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop,
+								0, 0,
 								gBackSaves[uiCount].sWidth, gBackSaves[uiCount].sHeight);
 
 					AddBaseDirtyRect(gBackSaves[uiCount].sLeft, gBackSaves[uiCount].sTop,
@@ -341,17 +331,17 @@ UINT8	*pDestBuf, *pSrcBuf;
 				if ( gBackSaves[uiCount].fZBuffer )
 				{
 					Blt16BPPTo16BPP( (UINT16*)gpZBuffer, uiDestPitchBYTES, (UINT16 *)gBackSaves[uiCount].pZSaveArea, gBackSaves[uiCount].sWidth*2,
-								gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop, 
+								gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop,
 								0, 0,
 								gBackSaves[uiCount].sWidth, gBackSaves[uiCount].sHeight);
 				}
 			}
 			else
 			{
-				Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES, 
-							(UINT16 *)pSrcBuf, uiSrcPitchBYTES,	
-							gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop, 
-							gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop, 
+				Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
+							(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
+							gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop,
+							gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop,
 							gBackSaves[uiCount].sWidth, gBackSaves[uiCount].sHeight);
 
 				AddBaseDirtyRect(gBackSaves[uiCount].sLeft, gBackSaves[uiCount].sTop,
@@ -372,7 +362,6 @@ UINT8	*pDestBuf, *pSrcBuf;
 
 BOOLEAN EmptyBackgroundRects(void)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumBackSaves; uiCount++)
@@ -411,7 +400,7 @@ BOOLEAN EmptyBackgroundRects(void)
 				{
 					if ( gBackSaves[uiCount].pSaveArea != NULL )
 					{
-						MemFree(gBackSaves[uiCount].pSaveArea);					
+						MemFree(gBackSaves[uiCount].pSaveArea);
 					}
 				}
 
@@ -436,7 +425,6 @@ BOOLEAN EmptyBackgroundRects(void)
 
 BOOLEAN SaveBackgroundRects(void)
 {
-	PERFORMANCE_MARKER
 UINT32 uiCount, uiDestPitchBYTES, uiSrcPitchBYTES;
 UINT8	*pDestBuf, *pSrcBuf;
 
@@ -453,19 +441,19 @@ UINT8	*pDestBuf, *pSrcBuf;
 					{
 						Blt16BPPTo16BPP((UINT16 *)gBackSaves[uiCount].pSaveArea, gBackSaves[uiCount].sWidth*2,
 									(UINT16 *)pSrcBuf, uiDestPitchBYTES,
-									0, 0, 
-									gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop, 
+									0, 0,
+									gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop,
 									gBackSaves[uiCount].sWidth, gBackSaves[uiCount].sHeight);
 
 					}
 
-				}			
+				}
 				else if(gBackSaves[uiCount].fZBuffer)
 				{
-					Blt16BPPTo16BPP((UINT16 *)gBackSaves[uiCount].pZSaveArea, gBackSaves[uiCount].sWidth*2, 
-							(UINT16 *)gpZBuffer, uiDestPitchBYTES, 
-							0, 0, 
-							gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop, 
+					Blt16BPPTo16BPP((UINT16 *)gBackSaves[uiCount].pZSaveArea, gBackSaves[uiCount].sWidth*2,
+							(UINT16 *)gpZBuffer, uiDestPitchBYTES,
+							0, 0,
+							gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop,
 							gBackSaves[uiCount].sWidth, gBackSaves[uiCount].sHeight);
 				}
 				else
@@ -486,32 +474,29 @@ UINT8	*pDestBuf, *pSrcBuf;
 	return(TRUE);
 }
 
-		
+
 BOOLEAN FreeBackgroundRect(INT32 iIndex)
 {
-	PERFORMANCE_MARKER
 	if ( iIndex != -1 )
 	{
 		gBackSaves[iIndex].fAllocated=FALSE;
 
 		RecountBackgrounds();
 	}
-	
+
 	return(TRUE);
 }
 
 BOOLEAN FreeBackgroundRectPending(INT32 iIndex)
 {
-	PERFORMANCE_MARKER
 	gBackSaves[iIndex].fPendingDelete = TRUE;
-	
+
 	return(TRUE);
 }
 
 
 BOOLEAN FreeBackgroundRectNow(INT32 uiCount)
 {
-	PERFORMANCE_MARKER
 	if(gBackSaves[uiCount].fFreeMemory==TRUE)
 	{
 		//MemFree(gBackSaves[uiCount].pSaveArea);
@@ -531,7 +516,6 @@ BOOLEAN FreeBackgroundRectNow(INT32 uiCount)
 
 BOOLEAN FreeBackgroundRectType(UINT32 uiFlags)
 {
-	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumBackSaves; uiCount++)
@@ -554,21 +538,19 @@ UINT32 uiCount;
 	}
 
 	RecountBackgrounds();
-	
+
 	return(TRUE);
 }
 
 
 BOOLEAN InitializeBackgroundRects(void)
 {
-	PERFORMANCE_MARKER
 	guiNumBackSaves=0;
 	return( TRUE );
 }
 
 BOOLEAN InvalidateBackgroundRects(void)
 {
-	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumBackSaves; uiCount++)
@@ -580,7 +562,6 @@ UINT32 uiCount;
 
 BOOLEAN ShutdownBackgroundRects(void)
 {
-	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumBackSaves; uiCount++)
@@ -594,19 +575,17 @@ UINT32 uiCount;
 
 void DisableBackgroundRect( INT32 iIndex, BOOLEAN fDisabled )
 {
-	PERFORMANCE_MARKER
 	gBackSaves[iIndex].fDisabled = fDisabled;
 }
 
 BOOLEAN UpdateSaveBuffer(void)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8	*pDestBuf, *pSrcBuf;
 	UINT16 usWidth, usHeight;
 	UINT8	ubBitDepth;
 
-	
+
 	// Update saved buffer - do for the viewport size ony!
 	GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
 
@@ -616,15 +595,15 @@ BOOLEAN UpdateSaveBuffer(void)
 	if(gbPixelDepth==16)
 	{
 		// BLIT HERE
-		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES, 
-					(UINT16 *)pSrcBuf, uiSrcPitchBYTES,	
+		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
+					(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
 					0, gsVIEWPORT_WINDOW_START_Y, 0, gsVIEWPORT_WINDOW_START_Y, usWidth, ( gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y )	);
 	}
 	else if(gbPixelDepth==8)
 	{
 		// BLIT HERE
-		Blt8BPPTo8BPP(pDestBuf, uiDestPitchBYTES, 
-					pSrcBuf, uiSrcPitchBYTES,	
+		Blt8BPPTo8BPP(pDestBuf, uiDestPitchBYTES,
+					pSrcBuf, uiSrcPitchBYTES,
 					0, gsVIEWPORT_WINDOW_START_Y, 0, gsVIEWPORT_WINDOW_START_Y, usWidth, gsVIEWPORT_WINDOW_END_Y );
 	}
 
@@ -638,7 +617,6 @@ BOOLEAN UpdateSaveBuffer(void)
 
 BOOLEAN RestoreExternBackgroundRect( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight )
 {
-	PERFORMANCE_MARKER
 
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8	*pDestBuf, *pSrcBuf;
@@ -651,18 +629,18 @@ BOOLEAN RestoreExternBackgroundRect( INT16 sLeft, INT16 sTop, INT16 sWidth, INT1
 
 	if(gbPixelDepth==16)
 	{
-		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES, 
-					(UINT16 *)pSrcBuf, uiSrcPitchBYTES,	
-					sLeft , sTop, 
-					sLeft , sTop, 
+		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
+					(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
+					sLeft , sTop,
+					sLeft , sTop,
 					sWidth, sHeight);
 	}
 	else if(gbPixelDepth==8)
 	{
-		Blt8BPPTo8BPP(pDestBuf, uiDestPitchBYTES, 
-					pSrcBuf, uiSrcPitchBYTES,	
-					sLeft , sTop, 
-					sLeft , sTop, 
+		Blt8BPPTo8BPP(pDestBuf, uiDestPitchBYTES,
+					pSrcBuf, uiSrcPitchBYTES,
+					sLeft , sTop,
+					sLeft , sTop,
 					sWidth, sHeight);
 	}
 	UnLockVideoSurface(guiRENDERBUFFER);
@@ -677,7 +655,6 @@ BOOLEAN RestoreExternBackgroundRect( INT16 sLeft, INT16 sTop, INT16 sWidth, INT1
 
 BOOLEAN RestoreExternBackgroundRectGivenID( INT32 iBack )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	INT16 sLeft, sTop, sWidth, sHeight;
 	UINT8	*pDestBuf, *pSrcBuf;
@@ -700,18 +677,18 @@ BOOLEAN RestoreExternBackgroundRectGivenID( INT32 iBack )
 
 	if(gbPixelDepth==16)
 	{
-		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES, 
-					(UINT16 *)pSrcBuf, uiSrcPitchBYTES,	
-					sLeft , sTop, 
-					sLeft , sTop, 
+		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
+					(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
+					sLeft , sTop,
+					sLeft , sTop,
 					sWidth, sHeight);
 	}
 	else if(gbPixelDepth==8)
 	{
-		Blt8BPPTo8BPP(pDestBuf, uiDestPitchBYTES, 
-					pSrcBuf, uiSrcPitchBYTES,	
-					sLeft , sTop, 
-					sLeft , sTop, 
+		Blt8BPPTo8BPP(pDestBuf, uiDestPitchBYTES,
+					pSrcBuf, uiSrcPitchBYTES,
+					sLeft , sTop,
+					sLeft , sTop,
 					sWidth, sHeight);
 	}
 	UnLockVideoSurface(guiRENDERBUFFER);
@@ -726,7 +703,6 @@ BOOLEAN RestoreExternBackgroundRectGivenID( INT32 iBack )
 
 BOOLEAN CopyExternBackgroundRect( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight )
 {
-	PERFORMANCE_MARKER
 
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8	*pDestBuf, *pSrcBuf;
@@ -739,18 +715,18 @@ BOOLEAN CopyExternBackgroundRect( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 s
 
 	if(gbPixelDepth==16)
 	{
-		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES, 
-					(UINT16 *)pSrcBuf, uiSrcPitchBYTES,	
-					sLeft , sTop, 
-					sLeft , sTop, 
+		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
+					(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
+					sLeft , sTop,
+					sLeft , sTop,
 					sWidth, sHeight);
 	}
 	else if(gbPixelDepth==8)
 	{
-		Blt8BPPTo8BPP(pDestBuf, uiDestPitchBYTES, 
-					pSrcBuf, uiSrcPitchBYTES,	
-					sLeft , sTop, 
-					sLeft , sTop, 
+		Blt8BPPTo8BPP(pDestBuf, uiDestPitchBYTES,
+					pSrcBuf, uiSrcPitchBYTES,
+					sLeft , sTop,
+					sLeft , sTop,
 					sWidth, sHeight);
 	}
 	UnLockVideoSurface(guiSAVEBUFFER);
@@ -767,11 +743,10 @@ BOOLEAN CopyExternBackgroundRect( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 s
 // background for a given call to gprintf. Note that this must be called before
 // the backgrounds are saved, and before the actual call to gprintf that writes
 // to the video buffer.
-//	
+//
 //*****************************************************************************
 UINT16 gprintfdirty(INT16 x, INT16 y, STR16 pFontString, ...)
 {
-	PERFORMANCE_MARKER
 va_list argptr;
 CHAR16	string[512];
 UINT16 uiStringLength, uiStringHeight;
@@ -796,7 +771,7 @@ INT32 iBack;
 
 	if ( uiStringLength > 0 )
 	{
-		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, NULL, x, y, (INT16)(x + uiStringLength), (INT16)(y + uiStringHeight)); 
+		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, NULL, x, y, (INT16)(x + uiStringLength), (INT16)(y + uiStringHeight));
 
 		if ( iBack != -1 )
 		{
@@ -809,7 +784,6 @@ INT32 iBack;
 
 UINT16 gprintfinvalidate(INT16 x, INT16 y, STR16 pFontString, ...)
 {
-	PERFORMANCE_MARKER
 va_list argptr;
 CHAR16	string[512];
 UINT16 uiStringLength, uiStringHeight;
@@ -825,14 +799,13 @@ UINT16 uiStringLength, uiStringHeight;
 
 	if ( uiStringLength > 0 )
 	{
-		InvalidateRegionEx( x, y, (INT16)(x + uiStringLength), (INT16)(y + uiStringHeight), 0 ); 
+		InvalidateRegionEx( x, y, (INT16)(x + uiStringLength), (INT16)(y + uiStringHeight), 0 );
 	}
 	return(uiStringLength);
 }
 
 UINT16 gprintfRestore(INT16 x, INT16 y, STR16 pFontString, ...)
 {
-	PERFORMANCE_MARKER
 va_list argptr;
 CHAR16	string[512];
 UINT16 uiStringLength, uiStringHeight;
@@ -848,7 +821,7 @@ UINT16 uiStringLength, uiStringHeight;
 
 	if ( uiStringLength > 0 )
 	{
-		RestoreExternBackgroundRect( x, y, uiStringLength, uiStringHeight ); 
+		RestoreExternBackgroundRect( x, y, uiStringLength, uiStringHeight );
 	}
 
 	return(uiStringLength);
@@ -858,7 +831,6 @@ UINT16 uiStringLength, uiStringHeight;
 // OVERLAY STUFF
 INT32 GetFreeVideoOverlay(void)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumVideoOverlays; uiCount++)
@@ -876,7 +848,6 @@ INT32 GetFreeVideoOverlay(void)
 
 void RecountVideoOverlays(void)
 {
-	PERFORMANCE_MARKER
 	INT32 uiCount;
 
 	for(uiCount=guiNumVideoOverlays-1; (uiCount >=0) ; uiCount--)
@@ -891,7 +862,6 @@ void RecountVideoOverlays(void)
 
 INT32 RegisterVideoOverlay( UINT32 uiFlags, VIDEO_OVERLAY_DESC *pTopmostDesc )
 {
-	PERFORMANCE_MARKER
 	UINT32 iBlitterIndex;
 	UINT32 iBackIndex;
 	UINT16 uiStringLength, uiStringHeight;
@@ -942,7 +912,7 @@ INT32 RegisterVideoOverlay( UINT32 uiFlags, VIDEO_OVERLAY_DESC *pTopmostDesc )
 	pTopmostDesc->uiFlags = 0;
 	UpdateVideoOverlay( pTopmostDesc, iBlitterIndex , TRUE );
 
-	// Set disabled flag to true 
+	// Set disabled flag to true
 	if ( uiFlags & VOVERLAY_STARTDISABLED )
 	{
 		gVideoOverlays[ iBlitterIndex ].fDisabled		= TRUE;
@@ -957,10 +927,9 @@ INT32 RegisterVideoOverlay( UINT32 uiFlags, VIDEO_OVERLAY_DESC *pTopmostDesc )
 
 }
 
- 
+
 void SetVideoOverlayPendingDelete( INT32 iVideoOverlay )
 {
-	PERFORMANCE_MARKER
 	if ( iVideoOverlay != -1 )
 	{
 		gVideoOverlays[ iVideoOverlay ].fDeletionPending = TRUE;
@@ -969,7 +938,6 @@ void SetVideoOverlayPendingDelete( INT32 iVideoOverlay )
 
 void RemoveVideoOverlay( INT32 iVideoOverlay )
 {
-	PERFORMANCE_MARKER
 
 	if ( iVideoOverlay != -1 && gVideoOverlays[ iVideoOverlay ].fAllocated )
 	{
@@ -987,7 +955,7 @@ void RemoveVideoOverlay( INT32 iVideoOverlay )
 
 			// Remove background
 			FreeBackgroundRect( gVideoOverlays[ iVideoOverlay ].uiBackground );
-		
+
 			//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Delete Overlay %d %S", iVideoOverlay, gVideoOverlays[ iVideoOverlay ].zText ) );
 
 
@@ -1008,7 +976,6 @@ void RemoveVideoOverlay( INT32 iVideoOverlay )
 
 BOOLEAN UpdateVideoOverlay( VIDEO_OVERLAY_DESC *pTopmostDesc, UINT32 iBlitterIndex, BOOLEAN fForceAll )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiFlags;
 	UINT16 uiStringLength, uiStringHeight;
 
@@ -1089,7 +1056,6 @@ BOOLEAN UpdateVideoOverlay( VIDEO_OVERLAY_DESC *pTopmostDesc, UINT32 iBlitterInd
 // FUnctions for entrie array of blitters
 void ExecuteVideoOverlays( )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumVideoOverlays; uiCount++)
@@ -1129,7 +1095,6 @@ void ExecuteVideoOverlays( )
 
 void ExecuteVideoOverlaysToAlternateBuffer( UINT32 uiNewDestBuffer )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiCount;
 	UINT32	uiOldDestBuffer;
 
@@ -1155,7 +1120,6 @@ void ExecuteVideoOverlaysToAlternateBuffer( UINT32 uiNewDestBuffer )
 
 void AllocateVideoOverlaysArea( )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 	UINT32 uiBufSize;
 	UINT32 iBackIndex;
@@ -1176,7 +1140,7 @@ void AllocateVideoOverlaysArea( )
 			// Allocate
 			if( ( gVideoOverlays[ uiCount ].pSaveArea = (INT16 *) MemAlloc( uiBufSize ) ) == NULL )
 			{
-				continue;	
+				continue;
 			}
 		}
 	}
@@ -1186,7 +1150,6 @@ void AllocateVideoOverlaysArea( )
 
 void AllocateVideoOverlayArea( UINT32 uiCount )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiBufSize;
 	UINT32 iBackIndex;
 
@@ -1212,7 +1175,6 @@ void AllocateVideoOverlayArea( UINT32 uiCount )
 
 void SaveVideoOverlaysArea( UINT32 uiSrcBuffer )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 	UINT32 iBackIndex;
 	UINT32 uiSrcPitchBYTES;
@@ -1237,8 +1199,8 @@ void SaveVideoOverlaysArea( UINT32 uiSrcBuffer )
 					// Save data from frame buffer!
 					Blt16BPPTo16BPP((UINT16 *)gVideoOverlays[uiCount].pSaveArea, gBackSaves[ iBackIndex ].sWidth*2,
 								(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
-								0, 0, 
-								gBackSaves[ iBackIndex ].sLeft , gBackSaves[ iBackIndex ].sTop, 
+								0, 0,
+								gBackSaves[ iBackIndex ].sLeft , gBackSaves[ iBackIndex ].sTop,
 								gBackSaves[ iBackIndex ].sWidth, gBackSaves[ iBackIndex ].sHeight );
 			}
 		}
@@ -1251,7 +1213,6 @@ void SaveVideoOverlaysArea( UINT32 uiSrcBuffer )
 
 void SaveVideoOverlayArea( UINT32 uiSrcBuffer, UINT32 uiCount )
 {
-	PERFORMANCE_MARKER
 	UINT32 iBackIndex;
 	UINT32 uiSrcPitchBYTES;
 	UINT8	*pSrcBuf;
@@ -1274,8 +1235,8 @@ void SaveVideoOverlayArea( UINT32 uiSrcBuffer, UINT32 uiCount )
 				// Save data from frame buffer!
 				Blt16BPPTo16BPP((UINT16 *)gVideoOverlays[uiCount].pSaveArea, gBackSaves[ iBackIndex ].sWidth*2,
 							(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
-							0, 0, 
-							gBackSaves[ iBackIndex ].sLeft , gBackSaves[ iBackIndex ].sTop, 
+							0, 0,
+							gBackSaves[ iBackIndex ].sLeft , gBackSaves[ iBackIndex ].sTop,
 							gBackSaves[ iBackIndex ].sWidth, gBackSaves[ iBackIndex ].sHeight );
 		}
 	}
@@ -1287,7 +1248,6 @@ void SaveVideoOverlayArea( UINT32 uiSrcBuffer, UINT32 uiCount )
 
 void DeleteVideoOverlaysArea( )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumVideoOverlays; uiCount++)
@@ -1317,7 +1277,7 @@ void DeleteVideoOverlaysArea( )
 }
 
 
-BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY ) 
+BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY )
 {
 	UINT32 uiCount, uiDestPitchBYTES;
 	UINT8	*pDestBuf;
@@ -1366,11 +1326,11 @@ BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY )
 					uiBottomSkip=__min(__max(ClipY2, (iTempY+(INT32)usHeight)) - ClipY2, (INT32)usHeight);
 
 					// check if whole thing is clipped
-					if((uiLeftSkip >=(INT32)usWidth) || (uiRightSkip >=(INT32)usWidth))	
+					if((uiLeftSkip >=(INT32)usWidth) || (uiRightSkip >=(INT32)usWidth))
 						continue;
 
 					// check if whole thing is clipped
-					if((uiTopSkip >=(INT32)usHeight) || (uiBottomSkip >=(INT32)usHeight))	
+					if((uiTopSkip >=(INT32)usHeight) || (uiBottomSkip >=(INT32)usHeight))
 						continue;
 
 					// Set re-set values given based on clipping
@@ -1387,8 +1347,8 @@ BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY )
 
 						Blt16BPPTo16BPP((UINT16 *)(UINT16 *)pDestBuf, uiDestPitchBYTES,
 									(UINT16 *)gVideoOverlays[uiCount].pSaveArea, gBackSaves[ iBackIndex ].sWidth*2,
-									sLeft, sTop, 							
-									uiLeftSkip, uiTopSkip, 
+									sLeft, sTop,
+									uiLeftSkip, uiTopSkip,
 									usWidth, usHeight );
 
 					}
@@ -1409,13 +1369,12 @@ BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY )
 	}
 
 	UnLockVideoSurface( BACKBUFFER );
-	
+
 	return(TRUE);
 }
 
 BOOLEAN SetOverlayUserData( INT32 iVideoOverlay, UINT8 ubNum, UINT32 uiData )
 {
-	PERFORMANCE_MARKER
 	if ( !gVideoOverlays[ iVideoOverlay ].fAllocated )
 	{
 		return( FALSE );
@@ -1435,7 +1394,6 @@ BOOLEAN SetOverlayUserData( INT32 iVideoOverlay, UINT8 ubNum, UINT32 uiData )
 // Common callbacks for topmost blitters
 void BlitMFont( VIDEO_OVERLAY *pBlitter )
 {
-	PERFORMANCE_MARKER
 	UINT8	*pDestBuf;
 	UINT32 uiDestPitchBYTES;
 
@@ -1454,7 +1412,6 @@ void BlitMFont( VIDEO_OVERLAY *pBlitter )
 
 BOOLEAN BlitBufferToBuffer(UINT32 uiSrcBuffer, UINT32 uiDestBuffer, UINT16 usSrcX, UINT16 usSrcY, UINT16 usWidth, UINT16 usHeight)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8	*pDestBuf, *pSrcBuf;
 	BOOLEAN fRetVal;
@@ -1463,8 +1420,8 @@ BOOLEAN BlitBufferToBuffer(UINT32 uiSrcBuffer, UINT32 uiDestBuffer, UINT16 usSrc
 	pSrcBuf = LockVideoSurface(uiSrcBuffer, &uiSrcPitchBYTES);
 
 	fRetVal = Blt16BPPTo16BPP( (UINT16*)pDestBuf, uiDestPitchBYTES, (UINT16*)pSrcBuf, uiSrcPitchBYTES,
-			usSrcX, usSrcY, 
-			usSrcX, usSrcY, 
+			usSrcX, usSrcY,
+			usSrcX, usSrcY,
 			usWidth, usHeight);
 
 	UnLockVideoSurface(uiDestBuffer);
@@ -1476,7 +1433,6 @@ BOOLEAN BlitBufferToBuffer(UINT32 uiSrcBuffer, UINT32 uiDestBuffer, UINT16 usSrc
 
 void EnableVideoOverlay( BOOLEAN fEnable, INT32 iOverlayIndex )
 {
-	PERFORMANCE_MARKER
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 
 	memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
@@ -1484,10 +1440,10 @@ void EnableVideoOverlay( BOOLEAN fEnable, INT32 iOverlayIndex )
 
 	// enable or disable
 	VideoOverlayDesc.fDisabled	= !fEnable;
-	
+
 	// go play with enable/disable state
 	VideoOverlayDesc.uiFlags	= VOVERLAY_DESC_DISABLED;
-	
+
 	UpdateVideoOverlay( &VideoOverlayDesc, iOverlayIndex, FALSE );
 
 }

@@ -35,10 +35,9 @@ BOOLEAN CameBackToAttributesPageButNotFinished();
 void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn,INT32 reason);
 void BtnIMPAttributeFinishNoCallback(GUI_BUTTON *btn,INT32 reason);
 
- 
+
 void EnterIMPAttributeFinish( void )
 {
-	PERFORMANCE_MARKER
 	// create the needed buttons
 	CreateAttributeFinishButtons( );
 
@@ -52,10 +51,9 @@ void EnterIMPAttributeFinish( void )
 
 void RenderIMPAttributeFinish( void )
 {
-	PERFORMANCE_MARKER
 	// render background
 		RenderProfileBackGround( );
- 
+
 	// indent for text
 	RenderBeginIndent( 110, 93 );
 
@@ -65,7 +63,6 @@ void RenderIMPAttributeFinish( void )
 
 void ExitIMPAttributeFinish( void )
 {
-	PERFORMANCE_MARKER
 	// destroy the buttons for this screen
 	DestroyAttributeFinishButtons( );
 
@@ -74,7 +71,6 @@ void ExitIMPAttributeFinish( void )
 
 void HandleIMPAttributeFinish( void )
 {
-	PERFORMANCE_MARKER
 
 	return;
 }
@@ -83,10 +79,9 @@ void HandleIMPAttributeFinish( void )
 
 void CreateAttributeFinishButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	// this procedure will create the buttons needed for the attribute finish screen
-		
+
 	// the yes button
 	giIMPAttributeFinishButtonImage[0]=	LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
 /*	giIMPAttributeFinishButton[0] = QuickCreateButton( giIMPAttributeFinishButtonImage[0], LAPTOP_SCREEN_UL_X +	( 90 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ),
@@ -94,10 +89,10 @@ void CreateAttributeFinishButtons( void )
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAttributeFinishYesCallback );
 
 */
-	giIMPAttributeFinishButton[0] = CreateIconAndTextButton(	giIMPAttributeFinishButtonImage[0], pImpButtonText[ 20 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPAttributeFinishButton[0] = CreateIconAndTextButton(	giIMPAttributeFinishButtonImage[0], pImpButtonText[ 20 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X +	( 130 ), LAPTOP_SCREEN_WEB_UL_Y + ( 180 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAttributeFinishYesCallback );
 
@@ -107,16 +102,16 @@ void CreateAttributeFinishButtons( void )
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAttributeFinishNoCallback );
 */
-	giIMPAttributeFinishButton[1] = CreateIconAndTextButton(	giIMPAttributeFinishButtonImage[1], pImpButtonText[ 21 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPAttributeFinishButton[1] = CreateIconAndTextButton(	giIMPAttributeFinishButtonImage[1], pImpButtonText[ 21 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X +	( 130 ), LAPTOP_SCREEN_WEB_UL_Y + ( 264 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAttributeFinishNoCallback);
 
 	SetButtonCursor(giIMPAttributeFinishButton[0], CURSOR_WWW);
 	SetButtonCursor(giIMPAttributeFinishButton[1], CURSOR_WWW);
-	
+
 
 
 	return;
@@ -126,7 +121,6 @@ void CreateAttributeFinishButtons( void )
 
 void DestroyAttributeFinishButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	// this procedure will destroy the buttons for the attribute finish screen
 
@@ -144,7 +138,6 @@ void DestroyAttributeFinishButtons( void )
 
 void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -171,7 +164,7 @@ void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn,INT32 reason)
 			{
 		iCurrentImpPage = IMP_FINISH;
 			}
-			
+
 			// SET ATTRIBUTES NOW
 			SetGeneratedCharacterAttributes( );
 			fButtonPendingFlag = TRUE;
@@ -181,7 +174,6 @@ void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN CameBackToAttributesPageButNotFinished()
 {
-	PERFORMANCE_MARKER
 	//if we are in a page that comes after this one
 	if( iCurrentProfileMode == IMP__PERSONALITY ||
 			iCurrentProfileMode == IMP__VOICE )
@@ -196,7 +188,6 @@ BOOLEAN CameBackToAttributesPageButNotFinished()
 
 void BtnIMPAttributeFinishNoCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))

@@ -17,16 +17,15 @@ struct
 	IMP_ITEM_CHOICE_TYPE		curIMPItemChoices;
 	IMP_ITEM_CHOICE_TYPE *	curArray;
 	UINT32			maxArraySize;
-	
+
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
 typedef IMPitemchoicesParseData;
 
-static void XMLCALL 
+static void XMLCALL
 IMPitemchoicesStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	IMPitemchoicesParseData * pData = (IMPitemchoicesParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -117,10 +116,9 @@ IMPitemchoicesStartElementHandle(void *userData, const XML_Char *name, const XML
 static void XMLCALL
 IMPitemchoicesCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	IMPitemchoicesParseData * pData = (IMPitemchoicesParseData *)userData;
 
-	if( (pData->currentDepth <= pData->maxReadDepth) && 
+	if( (pData->currentDepth <= pData->maxReadDepth) &&
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
 	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
@@ -131,7 +129,6 @@ IMPitemchoicesCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 IMPitemchoicesEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	IMPitemchoicesParseData * pData = (IMPitemchoicesParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -426,13 +423,12 @@ IMPitemchoicesEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInIMPItemChoicesStats(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	IMPitemchoicesParseData pData;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading IMPItemChoicess.xml" );
@@ -441,7 +437,7 @@ BOOLEAN ReadInIMPItemChoicesStats(STR fileName)
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -456,15 +452,15 @@ BOOLEAN ReadInIMPItemChoicesStats(STR fileName)
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, IMPitemchoicesStartElementHandle, IMPitemchoicesEndElementHandle);
 	XML_SetCharacterDataHandler(parser, IMPitemchoicesCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
 	pData.curArray = gIMPItemChoices;
-	pData.maxArraySize = MAX_IMP_ITEM_TYPES; 
-	
+	pData.maxArraySize = MAX_IMP_ITEM_TYPES;
+
 	XML_SetUserData(parser, &pData);
 
 
@@ -489,7 +485,6 @@ BOOLEAN ReadInIMPItemChoicesStats(STR fileName)
 }
 BOOLEAN WriteIMPItemChoicesStats()
 {
-	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeIMPitemchoicesstats");
 	HWFILE		hFile;
 
@@ -498,7 +493,7 @@ BOOLEAN WriteIMPItemChoicesStats()
 	hFile = FileOpen( "TABLEDATA\\IMPItemChoices out.xml", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	{
 		UINT32 cnt;
 
@@ -523,4 +518,5 @@ BOOLEAN WriteIMPItemChoicesStats()
 
 	return( TRUE );
 }
+
 

@@ -88,7 +88,7 @@ INT32 iCurrentProfileMode = IMP__REGISTRY;
 extern INT32 iCurrentVoice;
 
 // Return a count of how many IMP slots there are in total
-INT32 CountIMPSlots() 
+INT32 CountIMPSlots()
 {
 	INT32 idx;
 	// Keep a static count so we only count once
@@ -113,7 +113,6 @@ INT32 CountIMPSlots()
 
 INT32 GetFirstSlot(INT8 iSex)
 {
-	PERFORMANCE_MARKER
 	if (iSex == MALE)
 		return GetFirstMaleSlot();
 	else if (iSex == FEMALE)
@@ -125,7 +124,6 @@ INT32 GetFirstSlot(INT8 iSex)
 
 INT32 GetLastSlot(INT8 iSex)
 {
-	PERFORMANCE_MARKER
 	if (iSex == MALE)
 		return GetLastMaleSlot();
 	else if (iSex == FEMALE)
@@ -178,7 +176,7 @@ INT32 GetLastMaleSlot() {
 
 	idx = 0;
 	// Skip the males
-	while (gGameExternalOptions.iaIMPSlots[idx] != -1) 
+	while (gGameExternalOptions.iaIMPSlots[idx] != -1)
 	{
 		++idx;
 	}
@@ -213,7 +211,7 @@ INT32 GetFirstFemaleSlot() {
 
 	idx = 0;
 	// Skip the males
-	while (gGameExternalOptions.iaIMPSlots[idx] != -1) 
+	while (gGameExternalOptions.iaIMPSlots[idx] != -1)
 	{
 		++idx;
 	}
@@ -230,13 +228,13 @@ INT32 GetLastFemaleSlot() {
 
 	idx = 0;
 	// Skip the males
-	while (gGameExternalOptions.iaIMPSlots[idx] != -1) 
+	while (gGameExternalOptions.iaIMPSlots[idx] != -1)
 	{
 		++idx;
 	}
 	++idx;
 	// Skip the females
-	while (gGameExternalOptions.iaIMPSlots[idx] != -1) 
+	while (gGameExternalOptions.iaIMPSlots[idx] != -1)
 	{
 		++idx;
 	}
@@ -256,7 +254,6 @@ INT32 GetVoiceCountFromVoiceSlot(INT32 iSlot) {
 
 BOOLEAN IsIMPSlotFree(INT32 iIMPId)
 {
-	PERFORMANCE_MARKER
 	if ((iIMPId >= 0) && (iIMPId < NUM_PROFILES) &&
 		((wcscmp(gMercProfiles[iIMPId].zName, L"") == 0) ||
 		(gMercProfiles[iIMPId].bMercStatus == MERC_IS_DEAD)))
@@ -272,12 +269,11 @@ BOOLEAN IsIMPSlotFree(INT32 iIMPId)
 
 void EnterIMPMainPage( void )
 {
-	PERFORMANCE_MARKER
-	
+
 	// turn off review mode
 	fReviewStats = FALSE;
 
-	
+
 	// create buttons
 	CreateIMPMainPageButtons( );
 
@@ -290,20 +286,19 @@ void EnterIMPMainPage( void )
 	// alter states
 	UpDateIMPMainPageButtons( );
 
-	// entry into IMP about us page 
+	// entry into IMP about us page
 	RenderIMPMainPage( );
-	
+
 	return;
 }
 
 
 void ExitIMPMainPage( void )
 {
-	PERFORMANCE_MARKER
 	// exit from IMP About us page
-	
+
 	// delete Buttons
-	DeleteIMPMainPageButtons( ); 
+	DeleteIMPMainPageButtons( );
 	DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus( );
 
 	return;
@@ -312,24 +307,22 @@ void ExitIMPMainPage( void )
 
 void RenderIMPMainPage( void )
 {
-	PERFORMANCE_MARKER
 	// rneders the IMP about us page
-	
+
 	// the background
 	RenderProfileBackGround( );
-	
+
 	// the IMP symbol
 	//RenderIMPSymbol( 106, 1 );
 	// indent
 	RenderMainIndentFrame( 164, 74 );
-	
+
 	return;
 }
 
 
 void HandleIMPMainPage( void )
 {
-	PERFORMANCE_MARKER
 	// handles the IMP about main page
 
 	if ( CheckIfFinishedCharacterGeneration( ) )
@@ -346,25 +339,24 @@ void HandleIMPMainPage( void )
 //
 void CreateIMPMainPageButtons( void )
 {
-	PERFORMANCE_MARKER
 	CHAR16 sString[ 128 ];
 
-	
+
 	// the back button button
 	giIMPMainPageButtonImage[0]=	LoadButtonImage( "LAPTOP\\button_3.sti" ,-1,0,-1,1,-1 );
-	
-	
+
+
 	/* giIMPMainPageButton[0] = QuickCreateButton( giIMPMainPageButtonImage[0], LAPTOP_SCREEN_UL_X + 10 , LAPTOP_SCREEN_WEB_UL_Y + ( 360 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPageBackCallback);
-	
+
 		*/
 
 		//Cancel/back button
-		giIMPMainPageButton[0] = CreateIconAndTextButton( giIMPMainPageButtonImage[0], pImpButtonText[ 19 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+		giIMPMainPageButton[0] = CreateIconAndTextButton( giIMPMainPageButtonImage[0], pImpButtonText[ 19 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X + 15, LAPTOP_SCREEN_WEB_UL_Y + ( 360 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPageBackCallback);
 
@@ -381,19 +373,19 @@ void CreateIMPMainPageButtons( void )
 	//Registry/Begin button
 	if(( iCurrentProfileMode == IMP__REGISTRY )||( iCurrentProfileMode > IMP__ATTRIBUTES) )
 	{
-	giIMPMainPageButton[1] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 1 ], pImpButtonText[ 1 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPMainPageButton[1] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 1 ], pImpButtonText[ 1 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + ( 174 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPageBeginCallback);
 	}
 	else
 	{
-	giIMPMainPageButton[1] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 1 ], pImpButtonText[ 22 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPMainPageButton[1] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 1 ], pImpButtonText[ 22 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + ( 174 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPageBeginCallback);
 	}
@@ -402,17 +394,17 @@ void CreateIMPMainPageButtons( void )
 
 	// the personality button
 	giIMPMainPageButtonImage[2]=	LoadButtonImage( "LAPTOP\\button_8.sti" ,-1,0,-1,1,-1 );
-	
+
 	/*
 	giIMPMainPageButton[2] = QuickCreateButton( giIMPMainPageButtonImage[2], LAPTOP_SCREEN_UL_X + 13 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPagePersonalityCallback);
 */
 	//Personality
-	giIMPMainPageButton[2] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 2 ], pImpButtonText[ 2 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPMainPageButton[2] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 2 ], pImpButtonText[ 2 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														MAIN_PAGE__THIRD_BUTTON_POS_X, LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPagePersonalityCallback);
 
@@ -426,17 +418,17 @@ void CreateIMPMainPageButtons( void )
 
 	// the attribs button
 	giIMPMainPageButtonImage[3]=	LoadButtonImage( "LAPTOP\\button_8.sti" ,-1,0,-1,1,-1 );
-	
+
 	/*
 	giIMPMainPageButton[3] = QuickCreateButton( giIMPMainPageButtonImage[3], LAPTOP_SCREEN_UL_X + 133 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPageAttributesCallback);
 */
 	//Attributes
-	giIMPMainPageButton[3] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 3 ], pImpButtonText[ 3 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPMainPageButton[3] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 3 ], pImpButtonText[ 3 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														MAIN_PAGE__FOURTH_BUTTON_POS_X, LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPageAttributesCallback);
 
@@ -448,17 +440,17 @@ void CreateIMPMainPageButtons( void )
 
 	// the portrait button
 	giIMPMainPageButtonImage[4]=	LoadButtonImage( "LAPTOP\\button_8.sti" ,-1,0,-1,1,-1 );
-	
+
 	/*giIMPMainPageButton[4] = QuickCreateButton( giIMPMainPageButtonImage[4], LAPTOP_SCREEN_UL_X + 253 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPagePortraitCallback);
 	*/
 
 	//Portrait
-	giIMPMainPageButton[4] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 4 ], pImpButtonText[ 4 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPMainPageButton[4] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 4 ], pImpButtonText[ 4 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														MAIN_PAGE__FIRST_BUTTON_POS_X, LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPagePortraitCallback);
 
@@ -481,10 +473,10 @@ void CreateIMPMainPageButtons( void )
 	}
 
 	//Voice
-	giIMPMainPageButton[5] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 5 ], sString, FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPMainPageButton[5] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 5 ], sString, FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														MAIN_PAGE__SECOND_BUTTON_POS_X, LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPageVoiceCallback);
 
@@ -493,7 +485,7 @@ void CreateIMPMainPageButtons( void )
 		SpecifyButtonIcon(	giIMPMainPageButton[5], guiSMALLSILHOUETTE, 0, 33, 23, FALSE );
 	}
 
-	
+
 
 
 
@@ -503,7 +495,7 @@ void CreateIMPMainPageButtons( void )
 	SetButtonCursor(giIMPMainPageButton[ 3 ], CURSOR_WWW);
 	SetButtonCursor(giIMPMainPageButton[ 4 ], CURSOR_WWW);
 	SetButtonCursor(giIMPMainPageButton[ 5 ], CURSOR_WWW);
- 
+
 	SpecifyButtonTextOffsets( giIMPMainPageButton[ 2 ], 10, 40, TRUE );
 	SpecifyButtonTextOffsets( giIMPMainPageButton[ 3 ], 10, 40, TRUE );
 	SpecifyButtonTextOffsets( giIMPMainPageButton[ 4 ], 10, 40, TRUE );
@@ -520,13 +512,12 @@ void CreateIMPMainPageButtons( void )
 
 void DeleteIMPMainPageButtons( void )
 {
-	PERFORMANCE_MARKER
 	// this function destroys the buttons needed for the IMP about Us Page
 
 	// the back	button
 	RemoveButton(giIMPMainPageButton[0] );
 	UnloadButtonImage(giIMPMainPageButtonImage[0] );
-	
+
 	// begin profiling button
 	RemoveButton(giIMPMainPageButton[1] );
 	UnloadButtonImage(giIMPMainPageButtonImage[1] );
@@ -534,11 +525,11 @@ void DeleteIMPMainPageButtons( void )
 	// begin personna button
 	RemoveButton(giIMPMainPageButton[2] );
 	UnloadButtonImage(giIMPMainPageButtonImage[2] );
-	
+
 	// begin attribs button
 	RemoveButton(giIMPMainPageButton[3] );
 	UnloadButtonImage(giIMPMainPageButtonImage[3] );
-	
+
 	// begin portrait button
 	RemoveButton(giIMPMainPageButton[4] );
 	UnloadButtonImage(giIMPMainPageButtonImage[4] );
@@ -553,7 +544,6 @@ void DeleteIMPMainPageButtons( void )
 
 void BtnIMPMainPageBackCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP Homepage About US button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -574,21 +564,20 @@ void BtnIMPMainPageBackCallback(GUI_BUTTON *btn,INT32 reason)
 			fFinishedCharGeneration = FALSE;
 		ResetCharacterStats( );
 		}
-	}	
-} 
+	}
+}
 
 void BtnIMPMainPageBeginCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
-	
+
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
 	// too far along to change gender
- 
+
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags|=(BUTTON_CLICKED_ON);
@@ -598,20 +587,20 @@ void BtnIMPMainPageBeginCallback(GUI_BUTTON *btn,INT32 reason)
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
 		btn->uiFlags&=~(BUTTON_CLICKED_ON);
-			
+
 			// are we going to change name, or do we have to start over from scratch
 			if( iCurrentProfileMode > IMP__ATTRIBUTES )
 			{
 				// too far along, restart
 		DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 1 ], LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, BeginMessageBoxCallBack);
-				
+
 			}
 			else
 			{
 				if( LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE )
 				{
 					DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 3 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, BeginMessageBoxCallBack);
-				
+
 				}
 				else if( NumberOfMercsOnPlayerTeam() >= 18 )
 				{
@@ -624,22 +613,21 @@ void BtnIMPMainPageBeginCallback(GUI_BUTTON *btn,INT32 reason)
 				fButtonPendingFlag = TRUE;
 		}
 			}
-			
+
 		}
-	}	
-} 
+	}
+}
 
 
 void BtnIMPMainPagePersonalityCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
-/*	
+/*
 	// if not this far in char generation, don't alot ANY action
 	if( iCurrentProfileMode != IMP__PERSONALITY )
 	{
@@ -660,12 +648,11 @@ void BtnIMPMainPagePersonalityCallback(GUI_BUTTON *btn,INT32 reason)
 		iCurrentImpPage = IMP_PERSONALITY;
 			fButtonPendingFlag = TRUE;
 		}
-	}	
-} 
+	}
+}
 
 void BtnIMPMainPageAttributesCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
@@ -692,12 +679,11 @@ void BtnIMPMainPageAttributesCallback(GUI_BUTTON *btn,INT32 reason)
 		iCurrentImpPage = IMP_ATTRIBUTE_ENTRANCE;
 			fButtonPendingFlag = TRUE;
 		}
-	}	
-} 
+	}
+}
 
 void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
@@ -724,13 +710,12 @@ void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn,INT32 reason)
 		iCurrentImpPage = IMP_PORTRAIT;
 			fButtonPendingFlag = TRUE;
 		}
-	}	
-} 
+	}
+}
 
 
 void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
@@ -757,27 +742,25 @@ void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn,INT32 reason)
 		iCurrentImpPage = IMP_VOICE;
 			fButtonPendingFlag = TRUE;
 		}
-	}	
-} 
+	}
+}
 
 
 void NextProfilingMode( void )
 {
-	PERFORMANCE_MARKER
 	// this function will change to mode the player is in for profiling
-	
+
 	// if less than done
 	if(iCurrentProfileMode < IMP__VOICE)
 	iCurrentProfileMode++;
-	
+
 	return;
 }
 
 BOOLEAN CheckIfFinishedCharacterGeneration( void )
 {
-	PERFORMANCE_MARKER
 	// this function checks to see if character is done character generation
-	
+
 	// are we done character generation
 	if( iCurrentProfileMode == IMP__FINISH )
 	{
@@ -790,21 +773,20 @@ BOOLEAN CheckIfFinishedCharacterGeneration( void )
 		return ( FALSE );
 	}
 }
- 
+
 void ShadeUnSelectableButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	INT32 iCounter =0;
-	// this function looks at the status ofiCurrentProfileMode and decides which buttons 
+	// this function looks at the status ofiCurrentProfileMode and decides which buttons
 	// should be shaded ( unselectable )
-	
+
 	for( iCounter = iCurrentProfileMode; iCounter < 5; iCounter++ )
 	{
 	ShadowVideoSurfaceRect( FRAME_BUFFER, 13 + (iCounter ) * 120 + 114, 245,	13 + ( iCounter + 1 ) * 120 + 90, 245 + 92 );
 	InvalidateRegion(13 + (iCounter	) * 120 + 114, 245,	13 + (iCounter ) * 120 + 114, 245 + 92	);
 	}
-	
+
 	fMarkButtonsDirtyFlag = FALSE;
 	return;
 }
@@ -812,7 +794,6 @@ void ShadeUnSelectableButtons( void )
 
 void UpDateIMPMainPageButtons( void )
 {
-	PERFORMANCE_MARKER
 	// update mainpage button states
 	INT32 iCount = 0;
 
@@ -826,7 +807,7 @@ void UpDateIMPMainPageButtons( void )
 	{
 		MSYS_DisableRegion( &pIMPMainPageMouseRegions[ iCount ]);
 	}
-	// enable 
+	// enable
 	switch(	iCurrentProfileMode )
 	{
 		//begin
@@ -911,14 +892,13 @@ void UpDateIMPMainPageButtons( void )
 
 void BeginMessageBoxCallBack( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	// yes, so start over, else stay here and do nothing for now
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		iCurrentImpPage = IMP_BEGIN;
 	iCurrentProfileMode = IMP__REGISTRY;
 	}
-	
+
 	else if( bExitValue == MSG_BOX_RETURN_OK )
 	{
 		// if ok, then we are coming from financial warning, allow continue
@@ -929,30 +909,29 @@ void BeginMessageBoxCallBack( UINT8 bExitValue )
 
 void CreateMouseRegionsForIMPMainPageBasedOnCharGenStatus( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will create masks for the char generation main page
 
-	
+
 	// mask for personality page button
 	MSYS_DefineRegion( &pIMPMainPageMouseRegions[ 0 ],LAPTOP_SCREEN_UL_X + 13 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),	LAPTOP_SCREEN_UL_X + 13 + 115 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ) + 93 , MSYS_PRIORITY_HIGH+5,
-						CURSOR_WWW, MSYS_NO_CALLBACK, IMPMainPageNotSelectableBtnCallback ); 
+						CURSOR_WWW, MSYS_NO_CALLBACK, IMPMainPageNotSelectableBtnCallback );
 
 	// mask for attrib page button
 	MSYS_DefineRegion( &pIMPMainPageMouseRegions[ 1 ],LAPTOP_SCREEN_UL_X + 133 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),	LAPTOP_SCREEN_UL_X + 133 + 115 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ) + 93 , MSYS_PRIORITY_HIGH+5,
-						CURSOR_WWW, MSYS_NO_CALLBACK, IMPMainPageNotSelectableBtnCallback ); 
+						CURSOR_WWW, MSYS_NO_CALLBACK, IMPMainPageNotSelectableBtnCallback );
 
 
 
 	// mask for portrait page button
 	MSYS_DefineRegion( &pIMPMainPageMouseRegions[ 2 ],LAPTOP_SCREEN_UL_X + 253 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),	LAPTOP_SCREEN_UL_X + 253 + 115 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ) + 93 , MSYS_PRIORITY_HIGH+5,
-						CURSOR_WWW, MSYS_NO_CALLBACK, IMPMainPageNotSelectableBtnCallback ); 
+						CURSOR_WWW, MSYS_NO_CALLBACK, IMPMainPageNotSelectableBtnCallback );
 
 
 
 
 	// mask for voice page button
 	MSYS_DefineRegion( &pIMPMainPageMouseRegions[ 3 ],LAPTOP_SCREEN_UL_X + 373 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),	LAPTOP_SCREEN_UL_X + 373	+ 115 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ) + 93 , MSYS_PRIORITY_HIGH+5,
-						CURSOR_WWW, MSYS_NO_CALLBACK, IMPMainPageNotSelectableBtnCallback ); 
+						CURSOR_WWW, MSYS_NO_CALLBACK, IMPMainPageNotSelectableBtnCallback );
 
 
 
@@ -966,7 +945,6 @@ void CreateMouseRegionsForIMPMainPageBasedOnCharGenStatus( void )
 
 void DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus( void )
 {
-	PERFORMANCE_MARKER
 	// will destroy button masks for the char gen pages
 
 
@@ -977,7 +955,7 @@ void DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus( void )
 	MSYS_RemoveRegion( &pIMPMainPageMouseRegions[ 2 ]);
 
 	MSYS_RemoveRegion( &pIMPMainPageMouseRegions[ 3 ]);
-		
+
 
 
 	return;
@@ -985,14 +963,13 @@ void DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus( void )
 
 void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
- 
+
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
 	return;
 	}
- 
+
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 4 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, BeginMessageBoxCallBack);
@@ -1004,7 +981,6 @@ void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
 // WDS: Allow flexible numbers of IMPs of each sex
 INT32 CountFilledIMPSlots( INT8 iSex )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	INT32 iCount = 0;
 	INT32 iStart;
@@ -1017,7 +993,7 @@ INT32 CountFilledIMPSlots( INT8 iSex )
 	for (i = iStart; i <= iEnd; ++i)
 	{
 		if ((gGameExternalOptions.iaIMPSlots[i] != -1) &&
-			(!IsIMPSlotFree(gGameExternalOptions.iaIMPSlots[i]))) 
+			(!IsIMPSlotFree(gGameExternalOptions.iaIMPSlots[i])))
 		{
 			++iCount;
 		}
@@ -1030,7 +1006,6 @@ INT32 CountFilledIMPSlots( INT8 iSex )
 
 INT32 CountEmptyIMPSlots( INT8 iSex )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	INT32 iCount = 0;
 	INT32 iStart;
@@ -1042,7 +1017,7 @@ INT32 CountEmptyIMPSlots( INT8 iSex )
 	// Count the free slots
 	for (i = iStart; i <= iEnd; ++i)
 	{
-		if (IsIMPSlotFree(gGameExternalOptions.iaIMPSlots[i])) 
+		if (IsIMPSlotFree(gGameExternalOptions.iaIMPSlots[i]))
 		{
 			++iCount;
 		}
@@ -1055,7 +1030,6 @@ INT32 CountEmptyIMPSlots( INT8 iSex )
 
 INT32 GetSexOfIMP(INT32 iIMPId)
 {
-	PERFORMANCE_MARKER
 	INT32 ui;
 	for (ui = 0; ui < CountIMPSlots(); ++ui)
 	{
@@ -1074,7 +1048,6 @@ INT32 GetSexOfIMP(INT32 iIMPId)
 
 INT32 GetFreeIMPSlot(INT32 iIMPId, INT32 iDefaultIMPId)
 {
-	PERFORMANCE_MARKER
 	INT32 iStart;
 	INT32 iEnd;
 	INT32 i;
@@ -1086,7 +1059,7 @@ INT32 GetFreeIMPSlot(INT32 iIMPId, INT32 iDefaultIMPId)
 		// We have a default imp id (90210 or nickname)
 		if (iDefaultIMPId != -1)
 		{
-			if (IsIMPSlotFree(iDefaultIMPId)) 
+			if (IsIMPSlotFree(iDefaultIMPId))
 			{
 				return iDefaultIMPId;
 			}
@@ -1114,7 +1087,7 @@ INT32 GetFreeIMPSlot(INT32 iIMPId, INT32 iDefaultIMPId)
 		for (i = iStart; i <= iEnd; ++i)
 		{
 			// Found a free imp slot
-			if (IsIMPSlotFree(gGameExternalOptions.iaIMPSlots[i])) 
+			if (IsIMPSlotFree(gGameExternalOptions.iaIMPSlots[i]))
 			{
 				return gGameExternalOptions.iaIMPSlots[i];
 			}
@@ -1128,7 +1101,6 @@ INT32 GetFreeIMPSlot(INT32 iIMPId, INT32 iDefaultIMPId)
 
 BOOLEAN LoadCharacterPortraitForMainPage( void )
 {
-	PERFORMANCE_MARKER
 	// this function will load the character's portrait, to be used on portrait button
 	VOBJECT_DESC	VObjectDesc;
 
@@ -1139,9 +1111,9 @@ BOOLEAN LoadCharacterPortraitForMainPage( void )
 		FilenameForBPP( pPlayerSelectedFaceFileNames[ iPortraitNumber ] , VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &guiCHARACTERPORTRAITFORMAINPAGE));
 
-	
+
 		// now specify
-		SpecifyButtonIcon(	giIMPMainPageButton[4], guiCHARACTERPORTRAITFORMAINPAGE, 0, 
+		SpecifyButtonIcon(	giIMPMainPageButton[4], guiCHARACTERPORTRAITFORMAINPAGE, 0,
 														33, 23, FALSE );
 	}
 
@@ -1152,10 +1124,9 @@ BOOLEAN LoadCharacterPortraitForMainPage( void )
 
 BOOLEAN IMP_CanWeDisplayPortrait( )
 {
-	PERFORMANCE_MARKER
-	if( iCurrentProfileMode == IMP__VOICE || 
-			iCurrentProfileMode == IMP__ATTRIBUTES || 
-			iCurrentProfileMode == IMP__PERSONALITY || 
+	if( iCurrentProfileMode == IMP__VOICE ||
+			iCurrentProfileMode == IMP__ATTRIBUTES ||
+			iCurrentProfileMode == IMP__PERSONALITY ||
 			iCurrentProfileMode == IMP__FINISH )
 	{
 		return( TRUE );
@@ -1168,7 +1139,6 @@ BOOLEAN IMP_CanWeDisplayPortrait( )
 
 BOOLEAN IMP_CanWeDisplayAttributeGraph( )
 {
-	PERFORMANCE_MARKER
 	if(	iCurrentProfileMode == IMP__FINISH )
 	{
 		return( TRUE );
@@ -1183,8 +1153,7 @@ BOOLEAN IMP_CanWeDisplayAttributeGraph( )
 
 BOOLEAN IMP_CanWeDisplaySpecialtiesGraph( )
 {
-	PERFORMANCE_MARKER
-	if( iCurrentProfileMode == IMP__ATTRIBUTES || 
+	if( iCurrentProfileMode == IMP__ATTRIBUTES ||
 			iCurrentProfileMode == IMP__FINISH )
 	{
 		return( TRUE );
@@ -1198,10 +1167,9 @@ BOOLEAN IMP_CanWeDisplaySpecialtiesGraph( )
 
 BOOLEAN IMP_CanWeDisplayVoiceGraph( )
 {
-	PERFORMANCE_MARKER
-	if( iCurrentProfileMode == IMP__ATTRIBUTES || 
-//			iCurrentProfileMode == IMP__VOICE || 
-			iCurrentProfileMode == IMP__PERSONALITY || 
+	if( iCurrentProfileMode == IMP__ATTRIBUTES ||
+//			iCurrentProfileMode == IMP__VOICE ||
+			iCurrentProfileMode == IMP__PERSONALITY ||
 			iCurrentProfileMode == IMP__FINISH )
 	{
 		return( TRUE );

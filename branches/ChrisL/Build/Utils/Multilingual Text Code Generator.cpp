@@ -1,11 +1,11 @@
 /*
-MULTILINGUAL TEXT CODE GENERATOR 
-This code generator is used to conveniently compare the english master text file with another foreign language 
-such as German and verify that the appropriate language file is in perfect synch with the English.	Verifying 
-that all of the strings have the correct order of printf format specifiers and the precise number.	If 
-different, the errors are recorded via comments proceeding the string in question in the new file.	For 
+MULTILINGUAL TEXT CODE GENERATOR
+This code generator is used to conveniently compare the english master text file with another foreign language
+such as German and verify that the appropriate language file is in perfect synch with the English.	Verifying
+that all of the strings have the correct order of printf format specifiers and the precise number.	If
+different, the errors are recorded via comments proceeding the string in question in the new file.	For
 simplicity, the German language will be used in examples throughout this documention.	The comments will be
-specially marked with "CONFLICT#xxx:	error message" which can be searched for.	The comment will report 
+specially marked with "CONFLICT#xxx:	error message" which can be searched for.	The comment will report
 the format specifiers used in the english version.
 
 ASSUMPTIONS
@@ -13,14 +13,14 @@ ASSUMPTIONS
 - Users don't use single strings using:
 		STR16 str[] = L"Single String";
 	Instead use:
-		STR16 str[] = 
+		STR16 str[] =
 		{
 			L"Single String";
 		}
-- Users don't use comments containing the { character later followed by the L" token.	The code generator 
+- Users don't use comments containing the { character later followed by the L" token.	The code generator
 	will mistaken that for a string.
 - Users don't use nested braces (2D text arrays)
-		
+
 
 
 AUTHOR:	Kris Morness
@@ -53,11 +53,11 @@ UINT8 SupportedTokens[] =
 enum
 {
 	//look for { character followed by L" before } to upgrade to INSIDE_STRING
-	OUTSIDE_STRING_ARRAY, 
+	OUTSIDE_STRING_ARRAY,
 
 	//look for } character to downgrade to OUTSIDE_STRING_ARRAY
 	//look for L" characters to upgrade to INSIDE_STRING
-	INSIDE_STRING_ARRAY,	
+	INSIDE_STRING_ARRAY,
 
 	//look for " character to downgrade to INSIDE_STRING_ARRAY
 	INSIDE_STRING,
@@ -67,7 +67,7 @@ enum
 #define LCG_WORKINGDIRECTORY				"build\\utils"
 #define LCG_ENGLISHMASTERFILE				"_EnglishText.c"
 
-//The commandline argument (add different one for each language supported 
+//The commandline argument (add different one for each language supported
 //***Only one can exist at a time and it is controlled by Language Defines.h )
 #define LCG_COMMANDLINEARGUMENT			"-GERMAN"
 #define LCG_FOREIGNMASTERFILE				"_GermanText.c"
@@ -81,7 +81,6 @@ UINT32 CountDoubleByteStringsInFile( STR8 filename );
 //the above define, searches for the files, and processes them automatically.
 BOOLEAN ProcessIfMultilingualCmdLineArgDetected( STR8 str )
 {
-	PERFORMANCE_MARKER
 	STRING512			ExecDir;
 	STRING512			CurrDir;
 	STRING512			Dir;
@@ -100,7 +99,7 @@ BOOLEAN ProcessIfMultilingualCmdLineArgDetected( STR8 str )
 
 	//Build the working directory name
 	sprintf( Dir, "%s\\%s", ExecDir, LCG_WORKINGDIRECTORY );
-	
+
 	//Set the working directory
 	if( !SetFileManCurrentDirectory( Dir ) )
 	{ //We failed meaning the directory name is incorrect or non-existant
@@ -120,7 +119,7 @@ BOOLEAN ProcessIfMultilingualCmdLineArgDetected( STR8 str )
 		return FALSE;
 	}
 
-	//ALL PRELIMINARY CHECKS HAVE SUCCEEDED.	
+	//ALL PRELIMINARY CHECKS HAVE SUCCEEDED.
 	//Begin file preparation checks...
 
 	//STEP1:	Read the English master file and count the number of DB strings that exist
@@ -144,7 +143,6 @@ BOOLEAN ProcessIfMultilingualCmdLineArgDetected( STR8 str )
 
 UINT32 CountDoubleByteStringsInFile( STR8 filename )
 {
-	PERFORMANCE_MARKER
 	FILE *fp = NULL;
 	UINT32 uiNumStrings = 0;
 

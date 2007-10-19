@@ -30,7 +30,6 @@ void MsgBoxCnclClkCallback( GUI_BUTTON *butn, INT32 reason );
 
 void CreateMessageBox( STR16 wzString )
 {
-	PERFORMANCE_MARKER
 	INT16 sPixLen;
 	INT16 sStartX, sStartY;
 
@@ -50,7 +49,7 @@ void CreateMessageBox( STR16 wzString )
 									BUTTON_NO_CALLBACK, BUTTON_NO_CALLBACK);
 	DisableButton( iMsgBoxBgrnd );
 	SpecifyDisabledButtonStyle( iMsgBoxBgrnd, DISABLED_STYLE_NONE );
-	
+
 	iMsgBoxOkImg = LoadButtonImage("EDITOR//ok.sti",0,1,2,3,4);
 	iMsgBoxCancelImg = LoadButtonImage("EDITOR//cancel.sti",0,1,2,3,4);
 
@@ -75,7 +74,6 @@ void CreateMessageBox( STR16 wzString )
 
 BOOLEAN MessageBoxHandled()
 {
-	PERFORMANCE_MARKER
 	InputAtom DummyEvent;
 
 	while( DequeueEvent( &DummyEvent ) )
@@ -115,7 +113,6 @@ BOOLEAN MessageBoxHandled()
 
 void RemoveMessageBox( )
 {
-	PERFORMANCE_MARKER
 	FreeMouseCursor( );
 	RemoveButton( iMsgBoxCancel );
 	RemoveButton( iMsgBoxOk );
@@ -132,13 +129,12 @@ void RemoveMessageBox( )
 
 void MsgBoxOkClkCallback( GUI_BUTTON *butn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if ( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		butn->uiFlags |= BUTTON_CLICKED_ON;
 	}
 	else if ( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{		
+	{
 		gubMessageBoxStatus = MESSAGEBOX_DONE;
 		gfMessageBoxResult = TRUE;
 	}
@@ -146,13 +142,12 @@ void MsgBoxOkClkCallback( GUI_BUTTON *butn, INT32 reason )
 
 void MsgBoxCnclClkCallback( GUI_BUTTON *butn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		butn->uiFlags |= BUTTON_CLICKED_ON;
 	}
 	else if ( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{		
+	{
 		gubMessageBoxStatus = MESSAGEBOX_DONE;
 		gfMessageBoxResult = FALSE;
 	}
@@ -167,6 +162,7 @@ void MsgBoxCnclClkCallback( GUI_BUTTON *butn, INT32 reason )
 
 
 
- 
+
+
 
 

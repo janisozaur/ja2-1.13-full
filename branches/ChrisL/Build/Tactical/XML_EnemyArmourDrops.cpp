@@ -18,16 +18,15 @@ struct
 	ARMOUR_DROPS *	curArray;
 
 	UINT32			maxArraySize;
-	UINT32			curIndex;	
+	UINT32			curIndex;
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
 typedef armourDropParseData;
 
-static void XMLCALL 
+static void XMLCALL
 armourDropStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	armourDropParseData * pData = (armourDropParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -49,7 +48,7 @@ armourDropStartElementHandle(void *userData, const XML_Char *name, const XML_Cha
 			pData->maxReadDepth++; //we are not skipping this element
 		}
 		else if(pData->curElement == ELEMENT &&
-				(strcmp(name, "uiIndex") == 0 || 
+				(strcmp(name, "uiIndex") == 0 ||
 				strcmp(name, "ubArmourClass") == 0 ||
 				strcmp(name, "ubEnemyDropRate") == 0 ||
 				strcmp(name, "ubMilitiaDropRate") == 0 ))
@@ -69,10 +68,9 @@ armourDropStartElementHandle(void *userData, const XML_Char *name, const XML_Cha
 static void XMLCALL
 armourDropCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	armourDropParseData * pData = (armourDropParseData *)userData;
 
-	if( (pData->currentDepth <= pData->maxReadDepth) && 
+	if( (pData->currentDepth <= pData->maxReadDepth) &&
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
 	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
@@ -83,7 +81,6 @@ armourDropCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 armourDropEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER	
 	armourDropParseData * pData = (armourDropParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -133,13 +130,12 @@ armourDropEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInEnemyArmourDropsStats(ARMOUR_DROPS *pEnemyArmourDrops, STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	armourDropParseData pData;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading EnemyArmourDrops.xml" );
@@ -148,7 +144,7 @@ BOOLEAN ReadInEnemyArmourDropsStats(ARMOUR_DROPS *pEnemyArmourDrops, STR fileNam
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -163,15 +159,15 @@ BOOLEAN ReadInEnemyArmourDropsStats(ARMOUR_DROPS *pEnemyArmourDrops, STR fileNam
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, armourDropStartElementHandle, armourDropEndElementHandle);
 	XML_SetCharacterDataHandler(parser, armourDropCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
 	pData.curArray = pEnemyArmourDrops;
-	pData.maxArraySize = MAX_DROP_ITEMS; 
-	
+	pData.maxArraySize = MAX_DROP_ITEMS;
+
 	XML_SetUserData(parser, &pData);
 
 
@@ -197,7 +193,6 @@ BOOLEAN ReadInEnemyArmourDropsStats(ARMOUR_DROPS *pEnemyArmourDrops, STR fileNam
 
 BOOLEAN WriteEnemyArmourDropsStats(ARMOUR_DROPS *pEnemyArmourDrops, STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there
@@ -205,7 +200,7 @@ BOOLEAN WriteEnemyArmourDropsStats(ARMOUR_DROPS *pEnemyArmourDrops, STR fileName
 	hFile = FileOpen( fileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	{
 		UINT32 cnt;
 

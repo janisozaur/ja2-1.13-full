@@ -48,7 +48,7 @@ INT32 iHealth = 55;
 
 // skills
 INT32 iMarksmanship = 55;
-INT32 iMedical = 55; 
+INT32 iMedical = 55;
 INT32 iExplosives = 55;
 INT32 iMechanical = 55;
 
@@ -74,7 +74,7 @@ INT32 iAttitude = 0;
 INT32 iAddStrength = 0;
 INT32 iAddDexterity = 0;
 INT32 iAddAgility= 0;
-INT32 iAddWisdom= 0; 
+INT32 iAddWisdom= 0;
 INT32 iAddHealth = 0;
 INT32 iAddLeadership = 0;
 
@@ -99,7 +99,7 @@ void ExitOldIMPMode( void );
 void EnterNewIMPMode( void );
 void LoadImpGraphics( void );
 void RemoveImpGraphics( void );
-void CreateIMPButtons( void ); 
+void CreateIMPButtons( void );
 void DestroyIMPButtons( void );
 void BtnIMPCancelCallback(GUI_BUTTON *btn,INT32 reason);
 BOOLEAN HasTheCurrentIMPPageBeenVisited( void );
@@ -108,7 +108,6 @@ extern void SetAttributes( void );
 
 void GameInitCharProfile()
 {
-	PERFORMANCE_MARKER
 	LaptopSaveInfo.iIMPIndex = 0;
 	iCurrentPortrait = 0;
 //	iCurrentVoice = 0;
@@ -119,7 +118,6 @@ void GameInitCharProfile()
 
 void EnterCharProfile()
 {
-	PERFORMANCE_MARKER
 	// reset previous page
 	iPreviousImpPage = -1;
 
@@ -129,7 +127,6 @@ void EnterCharProfile()
 
 void ExitCharProfile()
 {
-	PERFORMANCE_MARKER
 	// get rid of graphics
 	RemoveImpGraphics( );
 
@@ -139,7 +136,6 @@ void ExitCharProfile()
 
 void HandleCharProfile()
 {
-	PERFORMANCE_MARKER 
 	if( fReDrawCharProfile )
 	{
 		// re draw
@@ -162,7 +158,7 @@ void HandleCharProfile()
 			//make sure we are not hosing memory
 			Assert( iCurrentImpPage <= IMP_NUM_PAGES );
 
-			
+
 			fFastLoadFlag = HasTheCurrentIMPPageBeenVisited( );
 			fVisitedIMPSubPages[ iCurrentImpPage ] = TRUE;
 			fConnectingToSubPage = TRUE;
@@ -178,7 +174,7 @@ void HandleCharProfile()
 				fDoneLoadPending = TRUE;
 			}
 
-			
+
 		}
 
 		fVisitedIMPSubPages[ iCurrentImpPage ] = TRUE;
@@ -199,14 +195,14 @@ void HandleCharProfile()
 		// enter new
 	EnterNewIMPMode( );
 
-		
+
 		// render screen
 	RenderCharProfile( );
-	
+
 		// render title bar
 
-		
-	
+
+
 	}
 
 	// handle
@@ -261,11 +257,10 @@ void HandleCharProfile()
 
 void RenderCharProfile()
 {
-	PERFORMANCE_MARKER
-	// button is waiting to go up?...do nothing, 
+	// button is waiting to go up?...do nothing,
 
 	if( fButtonPendingFlag )
-	{	
+	{
 		fPausedReDrawScreenFlag = TRUE;
 		fButtonPendingFlag = FALSE;
 		return;
@@ -322,7 +317,7 @@ void RenderCharProfile()
 
 	// render the text
 	PrintImpText( );
-	
+
 	RenderWWWProgramTitleBar( );
 
 	DisplayProgramBoundingBox( TRUE );
@@ -335,9 +330,8 @@ void RenderCharProfile()
 
 void ExitOldIMPMode( void )
 {
-	PERFORMANCE_MARKER
 	// exit old mode
-	
+
 	if( iPreviousImpPage == -1 )
 	{
 		// don't both, leave
@@ -409,9 +403,8 @@ void ExitOldIMPMode( void )
 
 void EnterNewIMPMode( void )
 {
-	PERFORMANCE_MARKER
 	// enter new mode
-	
+
 	switch( iCurrentImpPage )
 	{
 		case( IMP_HOME_PAGE ):
@@ -469,7 +462,7 @@ void EnterNewIMPMode( void )
 		break;
 	}
 
-	
+
 
 	return;
 }
@@ -477,7 +470,6 @@ void EnterNewIMPMode( void )
 
 void ResetCharacterStats( void )
 {
-	PERFORMANCE_MARKER
 	// attributes
 	iStrength = 55;
 	iDexterity = 55;
@@ -488,7 +480,7 @@ void ResetCharacterStats( void )
 
 	// skills
 	iMarksmanship = 55;
-	iMedical = 55; 
+	iMedical = 55;
 	iExplosives = 55;
 	iMechanical = 55;
 
@@ -513,9 +505,8 @@ void ResetCharacterStats( void )
 
 void LoadImpGraphics( void )
 {
-	PERFORMANCE_MARKER
 	// load all graphics needed for IMP
-	
+
 	LoadProfileBackGround( );
 	LoadIMPSymbol( );
 	LoadBeginIndent( );
@@ -529,29 +520,29 @@ void LoadImpGraphics( void )
 	LoadNameIndent( );
 	LoadGenderIndent( );
 	LoadNickNameIndent( );
-	
+
 	//LoadSmallFrame( );
-	
+
 	LoadSmallSilhouette( );
 	LoadLargeSilhouette( );
-	
+
 	LoadAttributeFrame( );
 	LoadSliderBar( );
-	
+
 	LoadButton2Image( );
 	LoadButton4Image( );
 	LoadButton1Image( );
 
 	LoadPortraitFrame( );
 	LoadMainIndentFrame( );
-	
+
 	LoadQtnLongIndentFrame( );
 	LoadQtnShortIndentFrame( );
 	LoadQtnLongIndentHighFrame( );
 	LoadQtnShortIndentHighFrame( );
 	LoadQtnShort2IndentFrame( );
 	LoadQtnShort2IndentHighFrame( );
-	
+
 	LoadQtnIndentFrame( );
 	LoadAttrib1IndentFrame( );
 	LoadAttrib2IndentFrame( );
@@ -559,13 +550,12 @@ void LoadImpGraphics( void )
 	LoadAboutUsIndentFrame( );
 
 
-	return; 
+	return;
 
 }
 
 void RemoveImpGraphics( void )
 {
-	PERFORMANCE_MARKER
 	// remove all graphics needed for IMP
 
 	RemoveProfileBackGround( );
@@ -581,29 +571,29 @@ void RemoveImpGraphics( void )
 	DeleteNameIndent( );
 	DeleteGenderIndent( );
 	DeleteNickNameIndent( );
-	
+
 	//DeleteSmallFrame( );
-	
+
 	DeleteSmallSilhouette( );
 	DeleteLargeSilhouette( );
-	
+
 	DeleteAttributeFrame( );
 	DeleteSliderBar( );
-	
+
 	DeleteButton2Image( );
 	DeleteButton4Image( );
 	DeleteButton1Image( );
 
 	DeletePortraitFrame( );
 	DeleteMainIndentFrame( );
-	
+
 	DeleteQtnLongIndentFrame( );
 	DeleteQtnShortIndentFrame( );
 	DeleteQtnLongIndentHighFrame( );
 	DeleteQtnShortIndentHighFrame( );
 	DeleteQtnShort2IndentFrame( );
 	DeleteQtnShort2IndentHighFrame( );
-	
+
 	DeleteQtnIndentFrame( );
 	DeleteAttrib1IndentFrame( );
 	DeleteAttrib2IndentFrame( );
@@ -614,22 +604,21 @@ void RemoveImpGraphics( void )
 
 void CreateIMPButtons( void )
 {
-	PERFORMANCE_MARKER
 	// create all the buttons global to the IMP system
 
 	giIMPButtonImage[ 0 ] = LoadButtonImage( "LAPTOP\\button_3.sti" ,-1,0,-1,1,-1 );
-	
+
 
 	// cancel
-	giIMPButton[0] = CreateIconAndTextButton( giIMPButtonImage[0], pImpButtonText[ 19 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPButton[0] = CreateIconAndTextButton( giIMPButtonImage[0], pImpButtonText[ 19 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X + 15, LAPTOP_SCREEN_WEB_UL_Y + ( 360 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPCancelCallback);
-	
+
 	SpecifyButtonTextSubOffsets( giIMPButton[0], 0, -1, FALSE );
-	
+
 	// set up generic www cursor
 	SetButtonCursor(giIMPButton[ 0 ], CURSOR_WWW);
 
@@ -638,7 +627,6 @@ void CreateIMPButtons( void )
 
 void DestroyIMPButtons( void )
 {
-	PERFORMANCE_MARKER
 	// destroy the buttons we created
 	RemoveButton(giIMPButton[0] );
 	UnloadButtonImage(giIMPButtonImage[0] );
@@ -648,7 +636,6 @@ void DestroyIMPButtons( void )
 
 void BtnIMPCancelCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	// btn callback for IMP cancel button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
@@ -657,12 +644,12 @@ void BtnIMPCancelCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
-	
+
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-	
+
 			btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
 			// back to the main page, otherwise, back to home page
@@ -675,7 +662,7 @@ void BtnIMPCancelCallback(GUI_BUTTON *btn,INT32 reason)
 			ResetCharacterStats( );
 			}
 			else if( iCurrentImpPage == IMP_FINISH )
-			{	 
+			{
 				iCurrentImpPage = IMP_MAIN_PAGE;
 				iCurrentProfileMode = 4;
 				fFinishedCharGeneration = FALSE;
@@ -695,7 +682,7 @@ void BtnIMPCancelCallback(GUI_BUTTON *btn,INT32 reason)
 				fButtonPendingFlag = TRUE;
 			}
 
-			else 
+			else
 			{
 				if( iCurrentImpPage == IMP_ATTRIBUTE_PAGE )
 				{
@@ -715,7 +702,6 @@ void BtnIMPCancelCallback(GUI_BUTTON *btn,INT32 reason)
 
 void InitIMPSubPageList( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	for(iCounter = 0; iCounter < IMP_CONFIRM; iCounter++ )
@@ -728,7 +714,6 @@ void InitIMPSubPageList( void )
 
 BOOLEAN HasTheCurrentIMPPageBeenVisited( void )
 {
-	PERFORMANCE_MARKER
 	// returns if we have vsisted the current IMP PageAlready
 
 	//make sure we are not hosing memory
@@ -740,6 +725,7 @@ BOOLEAN HasTheCurrentIMPPageBeenVisited( void )
 
 
 
- 
+
+
 
 

@@ -324,21 +324,6 @@ struct LEVELNODE;
 //forward declarations for versioning, it's so long I want it at the end
 class OLDSOLDIERTYPE_101;
 
-#ifdef NO_LONGER_USED
-//atm only used for saving and loading
-//many changes needed if inventory is going to use a vector of these
-class InventoryItem
-{
-public:
-	OBJECTTYPE	object;
-	int			bNewItemCount;
-	int			bNewItemCycleCount;
-	BOOLEAN	Load( HWFILE hFile );
-	BOOLEAN	Load( INT8 ** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
-	BOOLEAN	Save( HWFILE hFile, bool fSavingMap );
-};
-#endif
-
 //ADB inventory needs a little work, for instance, how to get objects and counts to agree on sizes?
 //also makes things more bloated when saving
 class Inventory {
@@ -380,11 +365,6 @@ class STRUCT_AIData//last edited at version 102
 {
 public:
 	void				ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
-
-	//not yet used
-	//cached value for which ai profile this soldier should use, ie regular, sniper,	civilian, etc
-	//BOOLEAN				eSoldierProfileType;
-
 public:
 	// AI STUFF from before the changes to the memory structure
 	INT8												bOppList[MAX_NUM_SOLDIERS]; // AI knowledge database

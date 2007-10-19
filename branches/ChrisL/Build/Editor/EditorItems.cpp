@@ -63,7 +63,7 @@ void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency );
 void SelectNextItemOfType( UINT16 usItem );
 void SelectNextPressureAction();
 void SelectNextKeyOfType( UINT8 ubKeyID );
-	
+
 INT32 giDefaultExistChance = 100;
 
 typedef struct IPListNode
@@ -79,7 +79,6 @@ ITEM_POOL *gpItemPool = NULL;
 
 void BuildItemPoolList()
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL *temp;
 	IPListNode *tail = NULL;
 	UINT16 i;
@@ -111,7 +110,6 @@ void BuildItemPoolList()
 
 void KillItemPoolList()
 {
-	PERFORMANCE_MARKER
 	IPListNode *pIPCurr;
 	pIPCurr = pIPHead;
 	while( pIPCurr )
@@ -132,7 +130,6 @@ EditorItemsInfo eInfo;
 //isn't calculated every time a player changes categories.
 void EntryInitEditorItemsInfo()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	INVTYPE *item;
 	eInfo.uiBuffer = 0;
@@ -212,7 +209,6 @@ void EntryInitEditorItemsInfo()
 
 void InitEditorItemsInfo(UINT32 uiItemType)
 {
-	PERFORMANCE_MARKER
 	VSURFACE_DESC		vs_desc;
 	UINT8	*pDestBuf, *pSrcBuf;
 	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
@@ -240,16 +236,16 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 		else
 		{	//User selected a different item classification -- delete it first.
 			ClearEditorItemsInfo();
-			ClearTaskbarRegion( iScreenWidthOffset + 100, 2 * iScreenHeightOffset + 360, iScreenWidthOffset + 480, 2 * iScreenHeightOffset + 440 ); 
+			ClearTaskbarRegion( iScreenWidthOffset + 100, 2 * iScreenHeightOffset + 360, iScreenWidthOffset + 480, 2 * iScreenHeightOffset + 440 );
 		}
 	}
 	else
 	{
 		//Clear the menu area, so that the buffer doesn't get corrupted.
-		ClearTaskbarRegion( iScreenWidthOffset + 100, 2 * iScreenHeightOffset + 360, iScreenWidthOffset + 480, 2 * iScreenHeightOffset + 440 ); 
+		ClearTaskbarRegion( iScreenWidthOffset + 100, 2 * iScreenHeightOffset + 360, iScreenWidthOffset + 480, 2 * iScreenHeightOffset + 440 );
 	}
 	EnableEditorRegion( ITEM_REGION_ID );
-	
+
 	eInfo.uiItemType = uiItemType;
 	eInfo.fActive = TRUE;
 	//Begin initialization of data.
@@ -337,10 +333,10 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	//copy a blank chunk of the editor interface to the new buffer.
 	for( i=0; i<eInfo.sWidth; i+=60 )
 	{
-		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES, 
+		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
 			(UINT16 *)pSrcBuf, uiSrcPitchBYTES, 0+i, 0, iScreenWidthOffset + 100, 2 * iScreenHeightOffset + 360, 60, 80 );
 	}
-	
+
 	UnLockVideoSurface(eInfo.uiBuffer);
 	UnLockVideoSurface(FRAME_BUFFER);
 
@@ -378,7 +374,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 
 			BltVideoObjectOutlineFromIndex( eInfo.uiBuffer, uiVideoObjectIndex, item->ubGraphicNum, sStart, y+2, 0, FALSE );
 			//cycle through the various slot positions (0,0), (0,40), (60,0), (60,40), (120,0)...
-			
+
 			if( y == 0 )
 			{
 				y = 40;
@@ -547,7 +543,6 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 
 void DetermineItemsScrolling()
 {
-	PERFORMANCE_MARKER
 	if( !eInfo.sScrollIndex )
 		DisableEditorButton( ITEMS_LEFTSCROLL );
 	else
@@ -563,7 +558,6 @@ void DetermineItemsScrolling()
 
 void RenderEditorItemsInfo()
 {
-	PERFORMANCE_MARKER
 	UINT8	*pDestBuf, *pSrcBuf;
 	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
 	INVTYPE *item;
@@ -587,7 +581,7 @@ void RenderEditorItemsInfo()
 	pDestBuf = LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
 	pSrcBuf = LockVideoSurface(eInfo.uiBuffer, &uiSrcPitchBYTES);
 
-	Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES, 
+	Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
 				(UINT16 *)pSrcBuf, uiSrcPitchBYTES, iScreenWidthOffset + 110, 2 * iScreenHeightOffset + 360, 60*eInfo.sScrollIndex, 0, 360, 80 );
 
 	UnLockVideoSurface(eInfo.uiBuffer);
@@ -606,7 +600,7 @@ void RenderEditorItemsInfo()
 			item = &Item[eInfo.pusItemIndex[eInfo.sHilitedItemIndex]];
 			uiVideoObjectIndex = GetInterfaceGraphicForItem( item );
 			GetVideoObject( &hVObject, uiVideoObjectIndex );
-			
+
 			x = iScreenWidthOffset + (eInfo.sHilitedItemIndex/2 - eInfo.sScrollIndex)*60 + 110;
 			y = 2 * iScreenHeightOffset + 360 + (eInfo.sHilitedItemIndex % 2) * 40;
 			sWidth = hVObject->pETRLEObject[item->ubGraphicNum].usWidth;
@@ -626,7 +620,7 @@ void RenderEditorItemsInfo()
 			item = &Item[eInfo.pusItemIndex[eInfo.sSelItemIndex]];
 			uiVideoObjectIndex = GetInterfaceGraphicForItem( item );
 			GetVideoObject( &hVObject, uiVideoObjectIndex );
-			
+
 			x = iScreenWidthOffset + (eInfo.sSelItemIndex/2 - eInfo.sScrollIndex)*60 + 110;
 			y = 2 * iScreenHeightOffset + 360 + (eInfo.sSelItemIndex % 2) * 40;
 			sWidth = hVObject->pETRLEObject[item->ubGraphicNum].usWidth;
@@ -660,7 +654,6 @@ void RenderEditorItemsInfo()
 
 void ClearEditorItemsInfo()
 {
-	PERFORMANCE_MARKER
 	if( eInfo.uiBuffer )
 	{
 		DeleteVideoSurfaceFromIndex( eInfo.uiBuffer );
@@ -717,11 +710,10 @@ void ClearEditorItemsInfo()
 			eInfo.sSaveKeysScrollIndex = eInfo.sScrollIndex;
 			break;
 	}
-}	
+}
 
 void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent )
 {
-	PERFORMANCE_MARKER
 	INT16 sIndex;
 	UINT16 usQuantity;
 	//Calc base index from scrolling index
@@ -731,12 +723,12 @@ void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent )
 		sIndex++;
 	//Add the converted mouse's XPos into a relative index;
 	//Calc:	starting from 110, for every 60 pixels, add 2 to the index
-	
+
 	sIndex += ((usScreenX-110-iScreenWidthOffset)/60) * 2;
 	switch( bEvent )
 	{
 		case GUI_MOVE_EVENT:
-			if( sIndex < eInfo.sNumItems ) 
+			if( sIndex < eInfo.sNumItems )
 			{
 				if( eInfo.sHilitedItemIndex != sIndex )
 					gfRenderTaskbar = TRUE;
@@ -783,7 +775,6 @@ void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent )
 
 void ShowItemCursor( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
 	pNode = gpWorldLevelData[ iMapIndex ].pTopmostHead;
 	while( pNode )
@@ -797,13 +788,11 @@ void ShowItemCursor( INT32 iMapIndex )
 
 void HideItemCursor( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	RemoveTopmost( iMapIndex, SELRING1 );
 }
 
 BOOLEAN TriggerAtGridNo( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL *pItemPool;
 	if( !GetItemPoolFromGround( sGridNo, &pItemPool ) )
 	{
@@ -823,7 +812,6 @@ BOOLEAN TriggerAtGridNo( INT16 sGridNo )
 
 void AddSelectedItemToWorld( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	OBJECTTYPE *pObject;
 	INVTYPE		*pItem;
 	ITEM_POOL *pItemPool;
@@ -922,7 +910,7 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 	{
 		gWorldItems[ iItemIndex ].ubNonExistChance = 0;
 	}
-	
+
 	pItem = &( Item[ pObject->usItem ] );
 	if( pItem->usItemClass == IC_AMMO )
 	{
@@ -964,7 +952,7 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 		pItemPool = pItemPool->pNext;
 	}
 	Assert( fFound );
-	
+
 	gpItemPool = pItemPool;
 
 	SpecifyItemToEdit( pObject, sGridNo );
@@ -1007,7 +995,6 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 
 void HandleRightClickOnItem( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL *pItemPool;
 	IPListNode *pIPCurr;
 
@@ -1023,7 +1010,7 @@ void HandleRightClickOnItem( INT16 sGridNo )
 	else if( !GetItemPoolFromGround( sGridNo, &pItemPool ) )
 	{
 		//possibly relocate selected item to this gridno?
-		return; 
+		return;
 	}
 
 	gpItemPool = pItemPool;
@@ -1048,7 +1035,6 @@ extern void DeleteSelectedMercsItem();
 
 void DeleteSelectedItem()
 {
-	PERFORMANCE_MARKER
 	SpecifyItemToEdit( NULL, -1 );
 	//First, check to see if there even is a currently selected item.
 	if( iCurrentTaskbar == TASK_MERCS )
@@ -1086,7 +1072,7 @@ void DeleteSelectedItem()
 			while( pIPCurr )
 			{
 				if( pIPCurr->sGridNo == sGridNo )
-				{	
+				{
 					if( pIPPrev ) //middle of list
 						pIPPrev->next = pIPCurr->next;
 					else //head of list
@@ -1116,9 +1102,8 @@ void DeleteSelectedItem()
 
 void ShowSelectedItem()
 {
-	PERFORMANCE_MARKER
 	if( gpItemPool )
-	{ 
+	{
 		gpItemPool->bVisible = INVISIBLE;
 		gWorldItems[ gpItemPool->iItemIndex ].bVisible = INVISIBLE;
 	}
@@ -1126,7 +1111,6 @@ void ShowSelectedItem()
 
 void HideSelectedItem()
 {
-	PERFORMANCE_MARKER
 	if( gpItemPool )
 	{
 		gpItemPool->bVisible = HIDDEN_ITEM;
@@ -1136,7 +1120,6 @@ void HideSelectedItem()
 
 void SelectNextItemPool()
 {
-	PERFORMANCE_MARKER
 	if( !gpCurrItemPoolNode )
 		return;
 //remove the current hilight.
@@ -1144,11 +1127,11 @@ void SelectNextItemPool()
 	{
 		MarkMapIndexDirty( gpItemPool->sGridNo );
 	}
-	
+
 	//go to the next node.	If at end of list, choose pIPHead
 	if( gpCurrItemPoolNode->next )
 		gpCurrItemPoolNode = gpCurrItemPoolNode->next;
-	else 
+	else
 		gpCurrItemPoolNode = pIPHead;
 	//get the item pool at this node's gridno.
 	GetItemPoolFromGround( gpCurrItemPoolNode->sGridNo, &gpItemPool );
@@ -1162,7 +1145,6 @@ void SelectNextItemPool()
 
 void SelectNextItemInPool()
 {
-	PERFORMANCE_MARKER
 	if( gpItemPool )
 	{
 		if( gpItemPool->pNext )
@@ -1180,7 +1162,6 @@ void SelectNextItemInPool()
 
 void SelectPrevItemInPool()
 {
-	PERFORMANCE_MARKER
 	if( gpItemPool )
 	{
 		if( gpItemPool->pPrev )
@@ -1203,13 +1184,12 @@ void SelectPrevItemInPool()
 
 void FindNextItemOfSelectedType()
 {
-	PERFORMANCE_MARKER
 	UINT16 usItem;
 	usItem = eInfo.pusItemIndex[ eInfo.sSelItemIndex ];
 	if( usItem == ACTION_ITEM || usItem == SWITCH )
 	{
 		if( eInfo.sSelItemIndex < PRESSURE_ACTION_ID )
-		{	
+		{
 			INT8 bFrequency;
 			if( eInfo.sSelItemIndex < 2 )
 				bFrequency = PANIC_FREQUENCY;
@@ -1222,7 +1202,7 @@ void FindNextItemOfSelectedType()
 			SelectNextTriggerWithFrequency( usItem, bFrequency );
 		}
 		else
-		{ 
+		{
 			SelectNextPressureAction();
 		}
 	}
@@ -1238,7 +1218,6 @@ void FindNextItemOfSelectedType()
 
 void SelectNextItemOfType( UINT16 usItem )
 {
-	PERFORMANCE_MARKER
 	IPListNode *curr;
 	OBJECTTYPE *pObject;
 	if( gpItemPool )
@@ -1303,7 +1282,6 @@ void SelectNextItemOfType( UINT16 usItem )
 
 void SelectNextKeyOfType( UINT8 ubKeyID )
 {
-	PERFORMANCE_MARKER
 	IPListNode *curr;
 	OBJECTTYPE *pObject;
 	if( gpItemPool )
@@ -1368,7 +1346,6 @@ void SelectNextKeyOfType( UINT8 ubKeyID )
 
 void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency )
 {
-	PERFORMANCE_MARKER
 	IPListNode *curr;
 	OBJECTTYPE *pObject;
 	if( gpItemPool )
@@ -1433,7 +1410,6 @@ void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency )
 
 void SelectNextPressureAction()
 {
-	PERFORMANCE_MARKER
 	IPListNode *curr;
 	OBJECTTYPE *pObject;
 	if( gpItemPool )
@@ -1498,7 +1474,6 @@ void SelectNextPressureAction()
 
 UINT16 CountNumberOfItemPlacementsInWorld( UINT16 usItem, UINT16 *pusQuantity )
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL *pItemPool;
 	IPListNode *pIPCurr;
 	INT16 num = 0;
@@ -1523,7 +1498,6 @@ UINT16 CountNumberOfItemPlacementsInWorld( UINT16 usItem, UINT16 *pusQuantity )
 
 UINT16 CountNumberOfItemsWithFrequency( UINT16 usItem, INT8 bFrequency )
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL *pItemPool;
 	IPListNode *pIPCurr;
 	UINT16 num = 0;
@@ -1547,7 +1521,6 @@ UINT16 CountNumberOfItemsWithFrequency( UINT16 usItem, INT8 bFrequency )
 
 UINT16 CountNumberOfPressureActionsInWorld()
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL *pItemPool;
 	IPListNode *pIPCurr;
 	UINT16 num = 0;
@@ -1571,10 +1544,9 @@ UINT16 CountNumberOfPressureActionsInWorld()
 
 UINT16 CountNumberOfEditorPlacementsInWorld( UINT16 usEInfoIndex, UINT16 *pusQuantity )
 {
-	PERFORMANCE_MARKER
 	UINT16 usNumPlacements;
 	if( eInfo.uiItemType == TBAR_MODE_ITEM_TRIGGERS )
-	{	//find identical items with same frequency 
+	{	//find identical items with same frequency
 		INT8 bFrequency;
 		if( usEInfoIndex < PRESSURE_ACTION_ID )
 		{
@@ -1601,7 +1573,7 @@ UINT16 CountNumberOfEditorPlacementsInWorld( UINT16 usEInfoIndex, UINT16 *pusQua
 		*pusQuantity = usNumPlacements;
 	}
 	else
-	{ 
+	{
 		usNumPlacements = CountNumberOfItemPlacementsInWorld( eInfo.pusItemIndex[ usEInfoIndex], pusQuantity );
 	}
 	return usNumPlacements;
@@ -1609,7 +1581,6 @@ UINT16 CountNumberOfEditorPlacementsInWorld( UINT16 usEInfoIndex, UINT16 *pusQua
 
 UINT16 CountNumberOfKeysOfTypeInWorld( UINT8 ubKeyID )
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL *pItemPool;
 	IPListNode *pIPCurr;
 	INT16 num = 0;
@@ -1635,20 +1606,19 @@ UINT16 CountNumberOfKeysOfTypeInWorld( UINT8 ubKeyID )
 
 void DisplayItemStatistics()
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fUseSelectedItem;
 	INT16 usItemIndex;
 	CHAR16 pItemName[SIZE_ITEM_NAME];
 	INVTYPE *pItem;
-	
+
 	if( !eInfo.fActive )
 	{
 		return;
 	}
-	
+
 	//If there is nothing else currently highlited by the mouse, use the selected item.
 	fUseSelectedItem = eInfo.sHilitedItemIndex == -1 || eInfo.sHilitedItemIndex == eInfo.sSelItemIndex;
-	
+
 	SetFont( SMALLCOMPFONT );
 	SetFontForeground( (UINT8)(fUseSelectedItem ? FONT_LTRED : FONT_YELLOW) );
 
@@ -1673,6 +1643,6 @@ void DisplayItemStatistics()
 
 
 
- 
+
 
 

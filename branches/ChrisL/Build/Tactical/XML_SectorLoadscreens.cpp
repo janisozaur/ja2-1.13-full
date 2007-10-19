@@ -19,16 +19,15 @@ struct
 	SECTOR_LOADSCREENS *	curArray;
 
 	UINT32			maxArraySize;
-	UINT32			curIndex;	
+	UINT32			curIndex;
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
 typedef sectorLoadscreensParseData;
 
-static void XMLCALL 
+static void XMLCALL
 sectorLoadscreensStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	sectorLoadscreensParseData * pData = (sectorLoadscreensParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -51,7 +50,7 @@ sectorLoadscreensStartElementHandle(void *userData, const XML_Char *name, const 
 		}
 		else if (pData->curElement == ELEMENT &&
 				(strcmp(name, "uiIndex") == 0 ||
-				strcmp(name, "szLocation") == 0 || 
+				strcmp(name, "szLocation") == 0 ||
 				strcmp(name, "RandomAltSector") == 0 ||
 				strcmp(name, "szImageFormat") == 0 ||
 				strcmp(name, "szDay") == 0 ||
@@ -74,10 +73,9 @@ sectorLoadscreensStartElementHandle(void *userData, const XML_Char *name, const 
 static void XMLCALL
 sectorLoadscreensCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	sectorLoadscreensParseData * pData = (sectorLoadscreensParseData *)userData;
 
-	if( (pData->currentDepth <= pData->maxReadDepth) && 
+	if( (pData->currentDepth <= pData->maxReadDepth) &&
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
 	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
@@ -88,7 +86,6 @@ sectorLoadscreensCharacterDataHandle(void *userData, const XML_Char *str, int le
 static void XMLCALL
 sectorLoadscreensEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER	
 	char temp;
 	sectorLoadscreensParseData * pData = (sectorLoadscreensParseData *)userData;
 
@@ -158,7 +155,7 @@ sectorLoadscreensEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "szDay") == 0)
 		{
 			pData->curElement = ELEMENT;
-			
+
 			if(MAX_IMAGE_PATH_CHARS >= strlen(pData->szCharData))
 				strcpy(pData->curSectorLoadscreens.szDay,pData->szCharData);
 			else
@@ -177,7 +174,7 @@ sectorLoadscreensEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "szNight") == 0)
 		{
 			pData->curElement = ELEMENT;
-			
+
 			if(MAX_IMAGE_PATH_CHARS >= strlen(pData->szCharData))
 				strcpy(pData->curSectorLoadscreens.szNight,pData->szCharData);
 			else
@@ -196,7 +193,7 @@ sectorLoadscreensEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "szDayAlt") == 0)
 		{
 			pData->curElement = ELEMENT;
-			
+
 			if(MAX_IMAGE_PATH_CHARS >= strlen(pData->szCharData))
 				strcpy(pData->curSectorLoadscreens.szDayAlt,pData->szCharData);
 			else
@@ -215,7 +212,7 @@ sectorLoadscreensEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "szNightAlt") == 0)
 		{
 			pData->curElement = ELEMENT;
-			
+
 			if(MAX_IMAGE_PATH_CHARS >= strlen(pData->szCharData))
 				strcpy(pData->curSectorLoadscreens.szNightAlt,pData->szCharData);
 			else
@@ -243,13 +240,12 @@ sectorLoadscreensEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInSectorLoadscreensStats(SECTOR_LOADSCREENS *pSectorLoadscreens, STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	sectorLoadscreensParseData pData;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading SectorLoadscreens.xml" );
@@ -258,7 +254,7 @@ BOOLEAN ReadInSectorLoadscreensStats(SECTOR_LOADSCREENS *pSectorLoadscreens, STR
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -273,15 +269,15 @@ BOOLEAN ReadInSectorLoadscreensStats(SECTOR_LOADSCREENS *pSectorLoadscreens, STR
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, sectorLoadscreensStartElementHandle, sectorLoadscreensEndElementHandle);
 	XML_SetCharacterDataHandler(parser, sectorLoadscreensCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
 	pData.curArray = pSectorLoadscreens;
-	pData.maxArraySize = MAX_SECTOR_LOADSCREENS; 
-	
+	pData.maxArraySize = MAX_SECTOR_LOADSCREENS;
+
 	XML_SetUserData(parser, &pData);
 
 
@@ -307,7 +303,6 @@ BOOLEAN ReadInSectorLoadscreensStats(SECTOR_LOADSCREENS *pSectorLoadscreens, STR
 
 BOOLEAN WriteSectorLoadscreensStats(SECTOR_LOADSCREENS *pSectorLoadscreens, STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there
@@ -315,7 +310,7 @@ BOOLEAN WriteSectorLoadscreensStats(SECTOR_LOADSCREENS *pSectorLoadscreens, STR 
 	hFile = FileOpen( fileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	{
 		UINT32 cnt;
 

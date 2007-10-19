@@ -3,8 +3,8 @@
 #else
 	#include <stdio.h>
 	#include <stdarg.h>
-	#include <time.h> 
-	#include "sgp.h" 
+	#include <time.h>
+	#include "sgp.h"
 	#include "mousesystem.h"
 	#include "vsurface.h"
 	#include "wcheck.h"
@@ -78,10 +78,10 @@ UICursor	gUICursors[ NUM_UI_CURSORS ] =
 	ACTION_NOCHANCE_BURST_UICURSOR,			UICURSOR_FREEFLOWING,													CURSOR_TARGETBURSTDKBLACK,	0,
 
 	ACTION_FLASH_TOSS_UICURSOR,					UICURSOR_FREEFLOWING,													CURSOR_TARGET,							0,
-	ACTION_TOSS_UICURSOR,								UICURSOR_FREEFLOWING,													CURSOR_TARGET,							0,		
+	ACTION_TOSS_UICURSOR,								UICURSOR_FREEFLOWING,													CURSOR_TARGET,							0,
 	ACTION_RED_TOSS_UICURSOR,						UICURSOR_FREEFLOWING,													CURSOR_TARGETRED,						0,
 
-	ACTION_FLASH_SHOOT_UICURSOR,				UICURSOR_FREEFLOWING,													CURSOR_FLASH_TARGET,							0,	
+	ACTION_FLASH_SHOOT_UICURSOR,				UICURSOR_FREEFLOWING,													CURSOR_FLASH_TARGET,							0,
 	ACTION_FLASH_BURST_UICURSOR,				UICURSOR_FREEFLOWING,													CURSOR_FLASH_TARGETBURST,					0,
 	ACTION_TARGETAIM1_UICURSOR,					UICURSOR_FREEFLOWING,													CURSOR_TARGETON1,						0,
 	ACTION_TARGETAIM2_UICURSOR,					UICURSOR_FREEFLOWING,													CURSOR_TARGETON2,						0,
@@ -212,8 +212,8 @@ UICursor	gUICursors[ NUM_UI_CURSORS ] =
 	REFUEL_GREY_UICURSOR,						UICURSOR_FREEFLOWING,													CURSOR_FUEL,	 						0,
 	REFUEL_RED_UICURSOR,						UICURSOR_FREEFLOWING,													CURSOR_FUEL_RED,							0,
 
-}; 
- 
+};
+
 
 UINT32 guiCurUICursor = NO_UICURSOR;
 UINT32 guiOldUICursor = NO_UICURSOR;
@@ -228,7 +228,6 @@ void DrawSnappingCursor( );
 
 BOOLEAN SetUICursor( UINT32 uiNewCursor )
 {
-	PERFORMANCE_MARKER
 	guiOldUICursor = guiCurUICursor;
 	guiCurUICursor = uiNewCursor;
 
@@ -237,7 +236,6 @@ BOOLEAN SetUICursor( UINT32 uiNewCursor )
 
 BOOLEAN DrawUICursor( )
 {
-	PERFORMANCE_MARKER
 	INT16						sMapPos;
 	static BOOLEAN						fHideCursor = FALSE;
 	LEVELNODE					*pNode;
@@ -251,7 +249,7 @@ BOOLEAN DrawUICursor( )
 	// OK, WE OVERRIDE HERE CURSOR DRAWING FOR THINGS LIKE
 	if ( gpItemPointer != NULL )
 	{
-		MSYS_ChangeRegionCursor( &gViewportRegion , VIDEO_NO_CURSOR );	
+		MSYS_ChangeRegionCursor( &gViewportRegion , VIDEO_NO_CURSOR );
 
 		// Check if we are in the viewport region...
 		if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
@@ -271,7 +269,7 @@ BOOLEAN DrawUICursor( )
 
 		if ( guiCurUICursor == NO_UICURSOR )
 		{
-			MSYS_ChangeRegionCursor( &gViewportRegion , VIDEO_NO_CURSOR );	
+			MSYS_ChangeRegionCursor( &gViewportRegion , VIDEO_NO_CURSOR );
 			return( TRUE );
 		}
 
@@ -319,7 +317,7 @@ BOOLEAN DrawUICursor( )
 
 			}
 		}
-		
+
 		if ( gUICursors[ guiCurUICursor ].uiFlags & UICURSOR_SHOWTILEAPDEPENDENT )
 		{
 			// Add depending on AP status
@@ -369,12 +367,12 @@ BOOLEAN DrawUICursor( )
 			}
 		}
 
-	
+
 		// If snapping - remove from main viewport
 		if ( gUICursors[ guiCurUICursor ].uiFlags & UICURSOR_SNAPPING )
 		{
 			// Hide mouse region cursor
-			MSYS_ChangeRegionCursor( &gViewportRegion , VIDEO_NO_CURSOR );	
+			MSYS_ChangeRegionCursor( &gViewportRegion , VIDEO_NO_CURSOR );
 
 			// Set Snapping Cursor
 			DrawSnappingCursor( );
@@ -425,13 +423,13 @@ BOOLEAN DrawUICursor( )
 
 			if ( !fHideCursor )
 			{
-				MSYS_ChangeRegionCursor( &gViewportRegion , gUICursors[ guiCurUICursor ].usFreeCursorName );	
+				MSYS_ChangeRegionCursor( &gViewportRegion , gUICursors[ guiCurUICursor ].usFreeCursorName );
 
 			}
 			else
 			{
 				// Hide
-				MSYS_ChangeRegionCursor( &gViewportRegion , VIDEO_NO_CURSOR );	
+				MSYS_ChangeRegionCursor( &gViewportRegion , VIDEO_NO_CURSOR );
 			}
 
 		}
@@ -446,7 +444,6 @@ BOOLEAN DrawUICursor( )
 
 BOOLEAN HideUICursor( )
 {
-	PERFORMANCE_MARKER
 	HandleLooseCursorHide( );
 
 	// OK, WE OVERRIDE HERE CURSOR DRAWING FOR THINGS LIKE
@@ -502,13 +499,12 @@ BOOLEAN HideUICursor( )
 		// Nothing special here...
 	}
 
-	return( TRUE ); 
+	return( TRUE );
 }
 
 
 void DrawSnappingCursor( )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE					*pNewUIElem;
 	SOLDIERTYPE								*pSoldier;
 	static BOOLEAN		fShowAP = TRUE;
@@ -651,7 +647,7 @@ void DrawSnappingCursor( )
 			if ( COUNTERDONE( CURSORFLASH ) )
 			{
 				RESETCOUNTER( CURSORFLASH );
-				
+
 				fShowAP = !fShowAP;
 			}
 		}
@@ -684,7 +680,6 @@ void DrawSnappingCursor( )
 
 void EraseSnappingCursor( )
 {
-	PERFORMANCE_MARKER
 	RemoveAllTopmostsOfTypeRange( gusCurMousePos, MOCKFLOOR, MOCKFLOOR );
 	RemoveAllTopmostsOfTypeRange( gusCurMousePos, FIRSTPOINTERS, LASTPOINTERS );
 	RemoveAllObjectsOfTypeRange( gusCurMousePos, FIRSTPOINTERS, LASTPOINTERS );
@@ -698,7 +693,6 @@ void EraseSnappingCursor( )
 
 void StartLooseCursor( INT16 sGridNo, UINT32 uiCursorID )
 {
-	PERFORMANCE_MARKER
 	gfLooseCursorOn		= TRUE;
 
 	guiLooseCursorID	= uiCursorID;
@@ -711,7 +705,6 @@ void StartLooseCursor( INT16 sGridNo, UINT32 uiCursorID )
 
 void HandleLooseCursorDraw( )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE					*pNewUIElem;
 
 	if ( ( GetJA2Clock( ) - guiLooseCursorTimeOfLastUpdate ) > LOOSE_CURSOR_DELAY )
@@ -730,7 +723,6 @@ void HandleLooseCursorDraw( )
 
 void HandleLooseCursorHide( )
 {
-	PERFORMANCE_MARKER
 	if ( gfLooseCursorOn )
 	{
 		RemoveTopmost( gsLooseCursorGridNo, FIRSTPOINTERS4 );
@@ -740,7 +732,6 @@ void HandleLooseCursorHide( )
 
 UINT16 GetSnapCursorIndex( UINT16 usAdditionalData )
 {
-	PERFORMANCE_MARKER
 	// OK, this function will get the 'true' index for drawing the cursor....
 	if ( gGameSettings.fOptions[ TOPTION_3D_CURSOR ] )
 	{

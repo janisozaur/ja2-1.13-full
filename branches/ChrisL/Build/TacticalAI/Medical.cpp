@@ -40,7 +40,6 @@ BOOLEAN CanCharacterAutoBandageTeammate( SOLDIERTYPE *pSoldier );
 
 BOOLEAN FindAutobandageClimbPoint( INT16 sDesiredGridNo, BOOLEAN fClimbUp )
 {
-	PERFORMANCE_MARKER
 	// checks for existance of location to climb up to building, not occupied by a medic
 	BUILDING *	pBuilding;
 	UINT8				ubNumClimbSpots;
@@ -75,7 +74,6 @@ BOOLEAN FindAutobandageClimbPoint( INT16 sDesiredGridNo, BOOLEAN fClimbUp )
 
 BOOLEAN FullPatientCheck( SOLDIERTYPE * pPatient )
 {
-	PERFORMANCE_MARKER
 	UINT8						cnt;
 	SOLDIERTYPE *		pSoldier;
 
@@ -86,7 +84,7 @@ BOOLEAN FullPatientCheck( SOLDIERTYPE * pPatient )
 	}
 
 	if ( pPatient->pathing.bLevel != 0 )
-	{	// look for a clear spot for jumping up 
+	{	// look for a clear spot for jumping up
 
 		// special "closest" search that ignores climb spots IF they are occupied by non-medics
 		return( FindAutobandageClimbPoint( pPatient->sGridNo, TRUE ) );
@@ -108,7 +106,7 @@ BOOLEAN FullPatientCheck( SOLDIERTYPE * pPatient )
 					{
 						return( TRUE );
 					}
-				}			
+				}
 				else
 				{
 					// if on different levels, assume okay
@@ -122,7 +120,6 @@ BOOLEAN FullPatientCheck( SOLDIERTYPE * pPatient )
 
 BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck )
 {
-	PERFORMANCE_MARKER
 	// returns false if we should stop being in auto-bandage mode
 	UINT8					cnt;
 	UINT8					ubMedics = 0, ubPatients = 0;
@@ -215,7 +212,6 @@ BOOLEAN CanCharacterAutoBandageTeammate( SOLDIERTYPE *pSoldier )
 // can this soldier autobandage others in sector
 BOOLEAN CanCharacterBeAutoBandagedByTeammate( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// if the soldier isn't active or in sector, we have problems..leave
 	if ( !(pSoldier->bActive) || !(pSoldier->bInSector) || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || (pSoldier->bAssignment == VEHICLE ) )
 	{
@@ -233,7 +229,6 @@ BOOLEAN CanCharacterBeAutoBandagedByTeammate( SOLDIERTYPE *pSoldier )
 
 INT8 FindBestPatient( SOLDIERTYPE * pSoldier, BOOLEAN * pfDoClimb )
 {
-	PERFORMANCE_MARKER
 	UINT8						cnt, cnt2;
 	INT16						bBestPriority = 0, sBestAdjGridNo = NOWHERE;
 	INT16						sPatientGridNo = NOWHERE, sBestPatientGridNo = NOWHERE;
@@ -414,7 +409,6 @@ INT8 FindBestPatient( SOLDIERTYPE * pSoldier, BOOLEAN * pfDoClimb )
 
 INT8 DecideAutoBandage( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT8					bSlot;
 	BOOLEAN				fDoClimb;
 
@@ -462,5 +456,5 @@ INT8 DecideAutoBandage( SOLDIERTYPE * pSoldier )
 	}
 
 	// do nothing
-	return( AI_ACTION_NONE );	
+	return( AI_ACTION_NONE );
 }

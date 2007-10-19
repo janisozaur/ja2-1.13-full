@@ -76,7 +76,7 @@ extern void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT1
 //	SANMONA_ARMS_GROUP,
 //	ANGELS_GROUP,
 //	NUM_CIV_GROUPS
-CHAR16 gszCivGroupNames[ NUM_CIV_GROUPS ][ 20 ] = 
+CHAR16 gszCivGroupNames[ NUM_CIV_GROUPS ][ 20 ] =
 {
 	L"NONE",
 	L"REBEL",
@@ -114,7 +114,7 @@ CHAR16 gszCivGroupNames[ NUM_CIV_GROUPS ][ 20 ] =
 //	SCHEDULE_ACTION_ENTERSECTOR,
 //	SCHEDULE_ACTION_STAYINSECTOR,
 //	SCHEDULE_ACTION_SLEEP,
-CHAR16 gszScheduleActions[ NUM_SCHEDULE_ACTIONS ][20] = 
+CHAR16 gszScheduleActions[ NUM_SCHEDULE_ACTIONS ][20] =
 {
 	L"No action",
 	L"Lock door",
@@ -163,12 +163,12 @@ void SetDroppableCheckboxesBasedOnMercsInventory();
 extern BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode );
 
 //array which keeps track of which item is in which slot.	This is dependant on the selected merc, so
-//these temp values must be updated when different mercs are selected, and reset when a merc detailed 
-//placement is created.	
+//these temp values must be updated when different mercs are selected, and reset when a merc detailed
+//placement is created.
 OBJECTTYPE *gpMercSlotItem[9] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 //Because we only support these nine slots, they aren't continuous values, so this array helps
 //processing functions by referring to this array to get the appropriate slot.
-INT8 gbMercSlotTypes[9] = { HELMETPOS, VESTPOS, LEGPOS, HANDPOS, SECONDHANDPOS, 
+INT8 gbMercSlotTypes[9] = { HELMETPOS, VESTPOS, LEGPOS, HANDPOS, SECONDHANDPOS,
 														BIGPOCK1POS, BIGPOCK2POS, BIGPOCK3POS, BIGPOCK4POS };
 //returns the usItem index of specified slot in the currently selected merc.
 #define GetSelectedMercSlotItemIndex( x )	(gpSelected->pDetailedPlacement->Inv[gbMercSlotTypes[x]].usItem)
@@ -176,7 +176,7 @@ INT8 gbMercSlotTypes[9] = { HELMETPOS, VESTPOS, LEGPOS, HANDPOS, SECONDHANDPOS,
 //values indicating which merc inventory slot is hilited and which slot is selected.
 INT8 gbCurrHilite = -1;
 INT8 gbCurrSelect = -1;
-//when a new merc is selected, this function sets up all of the information for the slots, 
+//when a new merc is selected, this function sets up all of the information for the slots,
 //selections, and hilites.
 void UpdateMercItemSlots();
 
@@ -298,7 +298,7 @@ STR16 EditMercAttitudes[6] = { L"Defensive",L"Brave Loner",L"Brave Buddy",
 INT8 bEnemyArray[MAX_ENEMYTYPES]={ RANDOM, REGMALE, BIGMALE, STOCKYMALE, REGFEMALE, TANK_NW, TANK_NE };
 INT8 bCreatureArray[MAX_CREATURETYPES]={ BLOODCAT, LARVAE_MONSTER, INFANT_MONSTER, YAF_MONSTER, YAM_MONSTER, ADULTFEMALEMONSTER, AM_MONSTER, QUEENMONSTER };
 INT8 bRebelArray[MAX_REBELTYPES]={ RANDOM, FATCIV, MANCIV, REGMALE, BIGMALE, STOCKYMALE, REGFEMALE };
-INT8 bCivArray[MAX_CIVTYPES]={ RANDOM, FATCIV, MANCIV, MINICIV, DRESSCIV, HATKIDCIV, KIDCIV, REGMALE, BIGMALE, STOCKYMALE, REGFEMALE, 
+INT8 bCivArray[MAX_CIVTYPES]={ RANDOM, FATCIV, MANCIV, MINICIV, DRESSCIV, HATKIDCIV, KIDCIV, REGMALE, BIGMALE, STOCKYMALE, REGFEMALE,
 															HUMVEE, ELDORADO, ICECREAMTRUCK, JEEP, CRIPPLECIV, ROBOTNOWEAPON, COW };
 INT8 gbCurrCreature = BLOODCAT;
 
@@ -312,7 +312,6 @@ extern SOLDIERCREATE_STRUCT gSaveBufferDetailedPlacement;
 
 void GameInitEditorMercsInfo()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	//Initialize the placement list
 	InitSoldierInitList();
@@ -328,7 +327,6 @@ void GameInitEditorMercsInfo()
 
 void GameShutdownEditorMercsInfo()
 {
-	PERFORMANCE_MARKER
 	UseEditorAlternateList();
 	KillSoldierInitList();
 	UseEditorOriginalList();
@@ -337,7 +335,6 @@ void GameShutdownEditorMercsInfo()
 
 void EntryInitEditorMercsInfo()
 {
-	PERFORMANCE_MARKER
 	INT32 x, iCurStart = 0;
 	iEditColorStart[0] = 0;
 	for ( x = 1; x < EDIT_NUM_COLORS; x++ )
@@ -345,9 +342,9 @@ void EntryInitEditorMercsInfo()
 		iCurStart += gubpNumReplacementsPerRange[ x - 1 ];
 		iEditColorStart[x] = iCurStart;
 	}
-	gsSelectedMercID = -1; 
+	gsSelectedMercID = -1;
 	gsSelectedMercGridNo = 0;
-	
+
 	gfCanEditMercs = TRUE;
 }
 
@@ -361,7 +358,6 @@ enum
 
 void ProcessMercEditing()
 {
-	PERFORMANCE_MARKER
 	UINT8 ubType, ubPaletteRep;
 	SOLDIERTYPE *pSoldier;
 	if ( iEditMercMode == EDIT_MERC_NONE )
@@ -484,7 +480,6 @@ void ProcessMercEditing()
 
 void AddMercToWorld( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	INT32 i;
 
@@ -505,9 +500,9 @@ void AddMercToWorld( INT32 iMapIndex )
 			gTempBasicPlacement.bBodyType = gbCurrCreature;
 			break;
 		case DRAW_MODE_REBEL:
-			gTempBasicPlacement.bTeam = MILITIA_TEAM; 
+			gTempBasicPlacement.bTeam = MILITIA_TEAM;
 			gTempBasicPlacement.bBodyType = RANDOM;
-			break;	
+			break;
 		case DRAW_MODE_CIVILIAN:
 			gTempBasicPlacement.bTeam = CIV_TEAM;
 			gTempBasicPlacement.bBodyType = RANDOM;
@@ -524,17 +519,17 @@ void AddMercToWorld( INT32 iMapIndex )
 		UINT8	ubID;
 		INT16 sSectorX, sSectorY;
 		SOLDIERINITNODE *pNode;
-		
+
  		GetCurrentWorldSector( &sSectorX, &sSectorY );
 
 		//Set up some general information.
 		gTempBasicPlacement.fDetailedPlacement = FALSE;
 		gTempBasicPlacement.fPriorityExistance = FALSE;
 		gTempBasicPlacement.sStartingGridNo = (INT16)iMapIndex;
-		gTempBasicPlacement.bOrders = gbDefaultOrders;	
+		gTempBasicPlacement.bOrders = gbDefaultOrders;
 		gTempBasicPlacement.bAttitude = gbDefaultAttitude;
-		gTempBasicPlacement.bRelativeAttributeLevel = gbDefaultRelativeAttributeLevel; 
-		gTempBasicPlacement.bRelativeEquipmentLevel = gbDefaultRelativeEquipmentLevel; 
+		gTempBasicPlacement.bRelativeAttributeLevel = gbDefaultRelativeAttributeLevel;
+		gTempBasicPlacement.bRelativeEquipmentLevel = gbDefaultRelativeEquipmentLevel;
 		gTempBasicPlacement.ubDirection = gbDefaultDirection;
 
 		//Generate detailed placement information given the temp placement information.
@@ -549,12 +544,12 @@ void AddMercToWorld( INT32 iMapIndex )
 		{
 			pSoldier->bVisible = 1;
 			pSoldier->bLastRenderVisibleValue = 1;
-			//Set up the soldier in the list, so we can track the soldier in the 
+			//Set up the soldier in the list, so we can track the soldier in the
 			//future (saving, loading, strategic AI)
 			pNode = AddBasicPlacementToSoldierInitList( &gTempBasicPlacement );
 			Assert( pNode );
 			pNode->pSoldier = pSoldier;
-			
+
 			//Add the soldier to physically appear on the map now.
 			InternalAddSoldierToSector( ubID, FALSE, FALSE, 0, 0 );
 			IndicateSelectedMerc( ubID );
@@ -578,7 +573,6 @@ void AddMercToWorld( INT32 iMapIndex )
 
 void HandleRightClickOnMerc( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *pNode;
 	INT16 sThisMercID;
 	INT16 sCellX, sCellY;
@@ -587,8 +581,8 @@ void HandleRightClickOnMerc( INT32 iMapIndex )
 
 	sThisMercID = (INT16)IsMercHere( iMapIndex );
 
-	if ( sThisMercID != -1) 
-	{ 
+	if ( sThisMercID != -1)
+	{
 		if ( gsSelectedMercID != sThisMercID )
 		{ // We want to edit a new merc (or different merc)
 			//We need to avoid the editing of player mercs.
@@ -599,7 +593,7 @@ void HandleRightClickOnMerc( INT32 iMapIndex )
 		}
 	}
 	else if( gsSelectedMercID != -1 && IsLocationSittable( iMapIndex, gfRoofPlacement ) )// We want to move the selected merc to this new location.
-	{							
+	{
 		RemoveAllObjectsOfTypeRange( gsSelectedMercGridNo, CONFIRMMOVE, CONFIRMMOVE );
 		gpSelected->pSoldier->EVENT_SetSoldierPosition( (FLOAT)(sCellX + 5), (FLOAT)(sCellY + 5) );
 		if( gfRoofPlacement && FlatRoofAboveGridNo( iMapIndex ) )
@@ -626,7 +620,6 @@ void HandleRightClickOnMerc( INT32 iMapIndex )
 
 void ResetAllMercPositions()
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	//Remove all of the alternate placements (editor takes precedence)
 	UseEditorAlternateList();
@@ -668,7 +661,6 @@ void ResetAllMercPositions()
 
 void AddMercWaypoint( UINT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	INT32 iNum;
 	// index 0 isn't used
 	if ( iActionParam == 0 )
@@ -676,7 +668,7 @@ void AddMercWaypoint( UINT32 iMapIndex )
 
 	if ( gsSelectedMercID == -1 || (gsSelectedMercID <= (INT32)gTacticalStatus.Team[ OUR_TEAM ].bLastID) || gsSelectedMercID >= MAXMERCS )
 		return;
-	
+
 	if ( iActionParam > gpSelected->pSoldier->aiData.bPatrolCnt )
 	{
 		// Fill up missing waypoints with same value as new one
@@ -687,12 +679,12 @@ void AddMercWaypoint( UINT32 iMapIndex )
 				gpSelected->pDetailedPlacement->sPatrolGrid[iNum] = (INT16)iMapIndex;
 			gpSelected->pSoldier->aiData.sPatrolGrid[iNum] = (INT16)iMapIndex;
 		}
-		
+
 		gpSelected->pBasicPlacement->bPatrolCnt = (INT8)iActionParam;
 		if( gpSelected->pDetailedPlacement )
 			gpSelected->pDetailedPlacement->bPatrolCnt = (INT8)iActionParam;
 		gpSelected->pSoldier->aiData.bPatrolCnt = (INT8) iActionParam;
-		gpSelected->pSoldier->aiData.bNextPatrolPnt = 1;	
+		gpSelected->pSoldier->aiData.bNextPatrolPnt = 1;
 	}
 	else
 	{
@@ -707,7 +699,6 @@ void AddMercWaypoint( UINT32 iMapIndex )
 
 void EraseMercWaypoint()
 {
-	PERFORMANCE_MARKER
 	INT32 iNum;
 	// index 0 isn't used
 	if ( iActionParam == 0 )
@@ -739,12 +730,11 @@ void EraseMercWaypoint()
 //----------------------------------------------------------------------------------------------
 //	ChangeBaseSoldierStats
 //
-//	This functions changes the stats of a given merc (PC or NPC, though should only be used 
+//	This functions changes the stats of a given merc (PC or NPC, though should only be used
 //	for NPC mercs) to reflect the base difficulty level selected.
 //
 void ChangeBaseSoldierStats( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	if ( pSoldier == NULL )
 		return;
 
@@ -776,12 +766,11 @@ void ChangeBaseSoldierStats( SOLDIERTYPE *pSoldier )
 //----------------------------------------------------------------------------------------------
 //	DisplayEditMercWindow
 //
-//	Displays the edit merc stat page while editing mercs. If the merc color editing page is 
+//	Displays the edit merc stat page while editing mercs. If the merc color editing page is
 //	to be displayed, this function will dispatch it instead.
 //
 void DisplayEditMercWindow( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iXPos, iYPos, iHeight, iWidth;
 	UINT16 usFillColorBack, usFillColorDark, usFillColorLight, usFillColorTextBk;
 	INT32 x, iXOff;
@@ -815,7 +804,7 @@ void DisplayEditMercWindow( void )
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos, iYPos, iXPos + iWidth, iYPos + iHeight, usFillColorLight );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 1, iYPos + 1, iXPos + iWidth, iYPos + iHeight, usFillColorDark );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 1, iYPos + 1, iXPos + iWidth - 1, iYPos + iHeight - 1, usFillColorBack );
-	
+
 	SetFont( FONT12POINT1 );
 
 	// Name window
@@ -825,7 +814,7 @@ void DisplayEditMercWindow( void )
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 17, iXPos + 128 + 103, iYPos + 17 + 18, usFillColorTextBk );
 	iXOff = (105 - StringPixLength( pSoldier->name, FONT12POINT1 )) / 2;
 	gprintf( iXPos + 130 + iXOff, iYPos + 20, L"%s", pSoldier->name );
-		
+
 	// Orders window
 	gprintf( iXPos + 128, iYPos + 38, L"Orders:" );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 128, iYPos + 51, iXPos + 128 + 104, iYPos + 51 + 19, usFillColorDark );
@@ -863,7 +852,7 @@ void DisplayEditMercWindow( void )
 		ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 116, iYPos + 110 + (20 * x), iXPos + 116 + 30, iYPos + 110 + (20 * x) + 19, usFillColorDark );
 		ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 117, iYPos + 111 + (20 * x), iXPos + 116 + 30, iYPos + 111 + (20 * x) + 19, usFillColorLight );
 		ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 117, iYPos + 111 + (20 * x), iXPos + 116 + 29, iYPos + 111 + (20 * x) + 18, usFillColorTextBk );
-		
+
 		swprintf( TempString, L"%d", iEditStat[x] );
 		iXOff = (30 - StringPixLength( TempString, FONT12POINT1 )) / 2;
 		gprintf( iXPos + 118 + iXOff, iYPos + 114 + (20 * x), L"%s", TempString );
@@ -881,7 +870,6 @@ void DisplayEditMercWindow( void )
 //
 INT32 IsMercHere( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	INT32 IDNumber;
 	INT32 RetIDNumber;
 	SOLDIERTYPE *pSoldier;
@@ -913,7 +901,6 @@ INT32 IsMercHere( INT32 iMapIndex )
 
 void EditMercChangeToStatsPageCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		iEditStatTimer = 0;
@@ -924,7 +911,6 @@ void EditMercChangeToStatsPageCallback(GUI_BUTTON *btn,INT32 reason)
 
 void EditMercChangeToColorPageCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		iEditStatTimer = 0;
@@ -934,7 +920,6 @@ void EditMercChangeToColorPageCallback(GUI_BUTTON *btn,INT32 reason)
 
 void EditMercDoneEditCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		iEditStatTimer = 0;
@@ -945,7 +930,6 @@ void EditMercDoneEditCallback(GUI_BUTTON *btn,INT32 reason)
 
 void EditMercBkgrndCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
 		iEditStatTimer = 0;
@@ -956,7 +940,6 @@ void EditMercBkgrndCallback(GUI_BUTTON *btn,INT32 reason)
 
 void EditMercPrevOrderCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -968,7 +951,6 @@ void EditMercPrevOrderCallback(GUI_BUTTON *btn,INT32 reason)
 
 void EditMercNextOrderCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -979,7 +961,6 @@ void EditMercNextOrderCallback(GUI_BUTTON *btn,INT32 reason)
 
 void EditMercPrevAttCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -990,7 +971,6 @@ void EditMercPrevAttCallback(GUI_BUTTON *btn,INT32 reason)
 
 void EditMercNextAttCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1001,11 +981,10 @@ void EditMercNextAttCallback(GUI_BUTTON *btn,INT32 reason)
 
 void EditMercStatUpCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	INT32 iBtn;
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{	
+	{
 		iEditWhichStat = -1;
 		for ( iBtn = 0; iBtn < 36 && iEditWhichStat == -1; iBtn++ )
 		{
@@ -1031,11 +1010,10 @@ void EditMercStatUpCallback(GUI_BUTTON *btn,INT32 reason)
 
 void EditMercStatDwnCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	INT32 iBtn;
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{	
+	{
 		iEditWhichStat = -1;
 		for ( iBtn = 0; iBtn < 36 && iEditWhichStat == -1; iBtn++ )
 		{
@@ -1062,11 +1040,10 @@ void EditMercStatDwnCallback(GUI_BUTTON *btn,INT32 reason)
 
 void EditMercSetDirCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	INT32 iBtn;
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{	
+	{
 		iEditWhichStat = -1;
 		for ( iBtn = 0; iBtn < 36 && iEditWhichStat == -1; iBtn++ )
 		{
@@ -1087,9 +1064,8 @@ void EditMercSetDirCallback(GUI_BUTTON *btn,INT32 reason)
 
 void EditMercCenterCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{	
+	{
 		iEditStatTimer = 0;
 		iEditMercMode = EDIT_MERC_FIND;
 
@@ -1100,11 +1076,10 @@ void EditMercCenterCallback(GUI_BUTTON *btn,INT32 reason)
 
 void EditMercColorDwnCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	INT32 iBtn;
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{	
+	{
 		iEditWhichStat = -1;
 		for ( iBtn = 0; iBtn < 8 && iEditWhichStat == -1; iBtn++ )
 		{
@@ -1124,7 +1099,6 @@ void EditMercColorDwnCallback(GUI_BUTTON *btn,INT32 reason)
 
 void MercsToggleColorModeCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if( btn->uiFlags & BUTTON_CLICKED_ON ) //button is checked
@@ -1148,10 +1122,9 @@ void MercsToggleColorModeCallback( GUI_BUTTON *btn, INT32 reason )
 
 void MercsSetColorsCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	INT32 iBtn;
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{	
+	{
 		iEditWhichStat = -1;
 		for ( iBtn = FIRST_MERCS_COLOR_BUTTON; iBtn <= LAST_MERCS_COLOR_BUTTON; iBtn++ )
 		{
@@ -1169,7 +1142,6 @@ void MercsSetColorsCallback( GUI_BUTTON *btn, INT32 reason )
 
 void MercsSetBodyTypeCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfRenderMercInfo = TRUE;
@@ -1182,11 +1154,10 @@ void MercsSetBodyTypeCallback( GUI_BUTTON *btn, INT32 reason )
 
 void EditMercDecDifficultyCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
-	
+
 		iEditorToolbarState = TBAR_MODE_DEC_DIFF;
 	}
 }
@@ -1194,11 +1165,10 @@ void EditMercDecDifficultyCallback(GUI_BUTTON *btn,INT32 reason)
 
 void EditMercIncDifficultyCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
-	
+
 		iEditorToolbarState = TBAR_MODE_INC_DIFF;
 	}
 }
@@ -1214,7 +1184,6 @@ void EditMercIncDifficultyCallback(GUI_BUTTON *btn,INT32 reason)
 //
 void ShowEditMercPalettes( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubPaletteRep;
 	if( !pSoldier )
 		ubPaletteRep = 0xff;
@@ -1223,11 +1192,11 @@ void ShowEditMercPalettes( SOLDIERTYPE *pSoldier )
 	{
 		if( !strlen( pSoldier->HeadPal ) )
 			ubPaletteRep = 0xff;
-		else		
+		else
 			GetPaletteRepIndexFromID( pSoldier->HeadPal, &ubPaletteRep );
 	}
 	ShowEditMercColorSet( ubPaletteRep, 0 );
-	
+
 	if( pSoldier )
 	{
 		if( !strlen( pSoldier->SkinPal ) )
@@ -1236,7 +1205,7 @@ void ShowEditMercPalettes( SOLDIERTYPE *pSoldier )
 			GetPaletteRepIndexFromID( pSoldier->SkinPal, &ubPaletteRep );
 	}
 	ShowEditMercColorSet( ubPaletteRep, 1 );
-	
+
 	if( pSoldier )
 	{
 		if( !strlen( pSoldier->VestPal ) )
@@ -1264,7 +1233,6 @@ void ShowEditMercPalettes( SOLDIERTYPE *pSoldier )
 //
 void ShowEditMercColorSet( UINT8 ubPaletteRep, INT16 sSet )
 {
-	PERFORMANCE_MARKER
 	UINT16 us16BPPColor, usFillColorDark, usFillColorLight;
 	UINT8 cnt1;
 	UINT8	ubSize;
@@ -1281,7 +1249,7 @@ void ShowEditMercColorSet( UINT8 ubPaletteRep, INT16 sSet )
 	sTop = 2 * iScreenHeightOffset + 364 + (sSet * 24);
 	sBottom = sTop + 20;
 	sLeft = iScreenWidthOffset + 230;
-	sRight = iScreenWidthOffset + 359; 
+	sRight = iScreenWidthOffset + 359;
 
 	usFillColorDark = Get16BPPColor(FROMRGB(24, 61, 81));
 	usFillColorLight = Get16BPPColor(FROMRGB(136, 138, 135));
@@ -1320,7 +1288,6 @@ void ShowEditMercColorSet( UINT8 ubPaletteRep, INT16 sSet )
 //
 void DisplayWayPoints(void)
 {
-	PERFORMANCE_MARKER
 	INT16 sX,sY;
 	INT16	sXMapPos,sYMapPos;
 	INT16 sScreenX,sScreenY;
@@ -1328,7 +1295,7 @@ void DisplayWayPoints(void)
 	INT8	bPoint;
 	SOLDIERTYPE *pSoldier;
 	INT16 sGridNo;
-	
+
 
 	if ( gsSelectedMercID == -1 || (gsSelectedMercID <= (INT32)gTacticalStatus.Team[ OUR_TEAM ].bLastID) || gsSelectedMercID >= MAXMERCS )
 		return;
@@ -1357,7 +1324,7 @@ void DisplayWayPoints(void)
 		dOffsetY = (FLOAT)(sYMapPos * CELL_Y_SIZE) - gsRenderCenterY;
 
 		FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &ScrnX, &ScrnY);
-		
+
 		sScreenX = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)ScrnX;
 		sScreenY = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + (INT16)ScrnY;
 
@@ -1387,7 +1354,6 @@ void DisplayWayPoints(void)
 
 void CreateEditMercWindow( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iXPos, iYPos, iHeight, iWidth;
 	INT32 x;
 	SOLDIERTYPE *pSoldier;
@@ -1428,16 +1394,16 @@ void CreateEditMercWindow( void )
 
 	iEditorButton[14] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 130), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
 	iEditorButton[15] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 130), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
-	
+
 	iEditorButton[16] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 150), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
 	iEditorButton[17] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 150), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
-	
+
 	iEditorButton[18] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 170), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
 	iEditorButton[19] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 170), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
-	
+
 	iEditorButton[20] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 190), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
 	iEditorButton[21] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 190), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
-	
+
 	iEditorButton[22] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 210), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
 	iEditorButton[23] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 210), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
 
@@ -1467,7 +1433,6 @@ void CreateEditMercWindow( void )
 }
 void SetMercOrders( INT8 bOrders )
 {
-	PERFORMANCE_MARKER
 	gpSelected->pSoldier->aiData.bOrders = bOrders;
 	gpSelected->pBasicPlacement->bOrders = bOrders;
 	UnclickEditorButtons( FIRST_MERCS_ORDERS_BUTTON, LAST_MERCS_ORDERS_BUTTON );
@@ -1477,7 +1442,6 @@ void SetMercOrders( INT8 bOrders )
 
 void SetMercAttitude( INT8 bAttitude )
 {
-	PERFORMANCE_MARKER
 	gpSelected->pSoldier->aiData.bAttitude = bAttitude;
 	gpSelected->pBasicPlacement->bAttitude = bAttitude;
 	UnclickEditorButtons( FIRST_MERCS_ATTITUDE_BUTTON, LAST_MERCS_ATTITUDE_BUTTON );
@@ -1487,7 +1451,6 @@ void SetMercAttitude( INT8 bAttitude )
 
 void SetMercDirection( INT8 bDirection )
 {
-	PERFORMANCE_MARKER
 	UnclickEditorButtons( FIRST_MERCS_DIRECTION_BUTTON, LAST_MERCS_DIRECTION_BUTTON );
 	ClickEditorButton( FIRST_MERCS_DIRECTION_BUTTON + bDirection );
 
@@ -1503,7 +1466,6 @@ void SetMercDirection( INT8 bDirection )
 
 void SetMercRelativeEquipment( INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	gpSelected->pBasicPlacement->bRelativeEquipmentLevel = bLevel;
 
 	UnclickEditorButtons( FIRST_MERCS_REL_EQUIPMENT_BUTTON, LAST_MERCS_REL_EQUIPMENT_BUTTON );
@@ -1513,7 +1475,6 @@ void SetMercRelativeEquipment( INT8 bLevel )
 
 void SetMercRelativeAttributes( INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	gpSelected->pBasicPlacement->bRelativeAttributeLevel = bLevel;
 	//We also have to modify the existing soldier incase the user wishes to enter game.
 	ModifySoldierAttributesWithNewRelativeLevel( gpSelected->pSoldier, bLevel );
@@ -1525,9 +1486,8 @@ void SetMercRelativeAttributes( INT8 bLevel )
 
 void IndicateSelectedMerc( INT16 sID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *prev;
-	INT8 bTeam; 
+	INT8 bTeam;
 
 	//If we are trying to select a merc that is already selected, ignore.
 	if( sID >= 0 && sID == gsSelectedMercGridNo )
@@ -1542,7 +1502,7 @@ void IndicateSelectedMerc( INT16 sID )
 	//updates the edited merc.	If this call isn't here, it is possible to update the
 	//newly selected merc with the wrong information.
 	SetMercEditingMode( MERC_NOMODE );
-	
+
 	bTeam = -1;
 
 	//determine selection method
@@ -1562,7 +1522,7 @@ void IndicateSelectedMerc( INT16 sID )
 				}
 				else
 				{ //we are at the end of the list, so select the first merc in the list.
-					gpSelected = gSoldierInitHead; 
+					gpSelected = gSoldierInitHead;
 				}
 			}
 			if( !gpSelected ) //list is empty
@@ -1633,7 +1593,7 @@ void IndicateSelectedMerc( INT16 sID )
 			}
 			else
 			{ //we are at the end of the list, so select the first merc in the list.
-				gpSelected = gSoldierInitHead; 
+				gpSelected = gSoldierInitHead;
 			}
 		}
 		if( !gpSelected ) //list is empty
@@ -1694,8 +1654,8 @@ void IndicateSelectedMerc( INT16 sID )
 
 	//update the merc item slots to reflect what the merc currently has.
 	UpdateMercItemSlots();
-	
-	//Whatever the case, we want to update the gui to press the appropriate buttons 
+
+	//Whatever the case, we want to update the gui to press the appropriate buttons
 	//depending on the merc's attributes.
 	//Click the appropriate team button
 	UnclickEditorButton( MERCS_ENEMY );
@@ -1743,7 +1703,6 @@ void IndicateSelectedMerc( INT16 sID )
 
 void DeleteSelectedMerc()
 {
-	PERFORMANCE_MARKER
 	if( gsSelectedMercID != -1 )
 	{
 		RemoveSoldierNodeFromInitList( gpSelected );
@@ -1758,7 +1717,6 @@ void DeleteSelectedMerc()
 
 void SetupTextInputForMercProfile()
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[4];
 	INT16 sNum;
 
@@ -1775,7 +1733,6 @@ void SetupTextInputForMercProfile()
 
 void SetupTextInputForMercAttributes()
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[4];
 
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
@@ -1811,12 +1768,11 @@ void SetupTextInputForMercAttributes()
 		DisableAllTextFields();
 }
 
-//In the merc editing, all detailed placement values for generated attributes are set to -1.	
+//In the merc editing, all detailed placement values for generated attributes are set to -1.
 //When making a generated attribute static, we then set the value to its applicable value.
 //This function is similar to the itoa function except that -1 is converted to a null string.
 void CalcStringForValue( STR16 str, INT32 iValue, UINT32 uiMax )
 {
-	PERFORMANCE_MARKER
 	if( iValue < 0 )			//a blank string is determined by a negative value.
 		str[0] = '\0';
 	else if( (UINT32)iValue > uiMax )	//higher than max attribute value, so convert it to the max.
@@ -1827,7 +1783,6 @@ void CalcStringForValue( STR16 str, INT32 iValue, UINT32 uiMax )
 
 void ExtractAndUpdateMercAttributes()
 {
-	PERFORMANCE_MARKER
 	//If we have just deleted the merc's detailed placement in the editor, we don't
 	//need to extract the information
 	if( !gpSelected->pDetailedPlacement )
@@ -1870,7 +1825,6 @@ void ExtractAndUpdateMercAttributes()
 
 void ExtractAndUpdateMercProfile()
 {
-	PERFORMANCE_MARKER
 	INT16 sNum;
 	static INT16 sPrev = NO_PROFILE;
 
@@ -1908,7 +1862,6 @@ void ExtractAndUpdateMercProfile()
 
 void SetupTextInputForMercSchedule()
 {
-	PERFORMANCE_MARKER
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 	AddUserInputField( NULL );
 	AddTextInputField( iScreenWidthOffset + 268, 2 * iScreenHeightOffset + 373, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_EXCLUSIVE_24HOURCLOCK );
@@ -1923,7 +1876,6 @@ void SetupTextInputForMercSchedule()
 
 void ExtractAndUpdateMercSchedule()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	BOOLEAN fValidSchedule = FALSE;
 	BOOLEAN fScheduleNeedsUpdate = FALSE;
@@ -1990,7 +1942,6 @@ void ExtractAndUpdateMercSchedule()
 
 void ExtractCurrentMercModeInfo( BOOLEAN fKillTextInputMode )
 {
-	PERFORMANCE_MARKER
 	//This happens if we deleted a merc
 	if( gsSelectedMercID == -1 )
 		return;
@@ -2006,7 +1957,7 @@ void ExtractCurrentMercModeInfo( BOOLEAN fKillTextInputMode )
 		case MERC_SCHEDULEMODE:
 			ExtractAndUpdateMercSchedule();
 			break;
-		default: 
+		default:
 			fKillTextInputMode = FALSE;
 			break;
 	}
@@ -2016,16 +1967,15 @@ void ExtractCurrentMercModeInfo( BOOLEAN fKillTextInputMode )
 
 void InitDetailedPlacementForMerc()
 {
-	PERFORMANCE_MARKER
 	Assert( !gpSelected->pDetailedPlacement );
 
 	gpSelected->pDetailedPlacement = new SOLDIERCREATE_STRUCT;
 	Assert( gpSelected->pDetailedPlacement );
-	
+
 	gpSelected->pBasicPlacement->fDetailedPlacement = TRUE;
 	gpSelected->pBasicPlacement->fPriorityExistance = FALSE;
 	CreateStaticDetailedPlacementGivenBasicPlacementInfo( gpSelected->pDetailedPlacement, gpSelected->pBasicPlacement );
-	
+
 	ClearCurrentSchedule();
 
 	//update the soldier
@@ -2034,7 +1984,6 @@ void InitDetailedPlacementForMerc()
 
 void KillDetailedPlacementForMerc()
 {
-	PERFORMANCE_MARKER
 	Assert( gpSelected->pDetailedPlacement );
 	MemFree( gpSelected->pDetailedPlacement );
 	gpSelected->pDetailedPlacement = NULL;
@@ -2141,7 +2090,6 @@ void ChangeBodyType( INT8 bOffset )	//+1 or -1 only
 
 void SetMercEditability( BOOLEAN fEditable )
 {
-	PERFORMANCE_MARKER
 	gfRenderMercInfo = TRUE;
 	if( fEditable == gfCanEditMercs )
 		return;
@@ -2162,18 +2110,17 @@ void SetMercEditability( BOOLEAN fEditable )
 		ClickEditorButton( MERCS_TOGGLECOLOR_BUTTON );
 		DisableEditorButton( MERCS_PRIORITYEXISTANCE_CHECKBOX );
 		DisableEditorButton( MERCS_CIVILIAN_GROUP );
-	}	
+	}
 }
 
 
-//There are 4 exclusive entry points in a map.	Only one of each type can exist on a 
+//There are 4 exclusive entry points in a map.	Only one of each type can exist on a
 //map, and these points are used to validate the map by attempting to connect the four
 //points together.	If one of the points is isolated, then the map will be rejected.	It
 //isn't necessary to specify all four points.	You wouldn't want to specify a north point if
 //there isn't going to be any traversing to adjacent maps from that side.
 void SpecifyEntryPoint( UINT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	INT16 *psEntryGridNo;
 	BOOLEAN fErasing = FALSE;
 	if( iDrawMode >= DRAW_MODE_ERASE )
@@ -2219,7 +2166,6 @@ void SpecifyEntryPoint( UINT32 iMapIndex )
 
 void SetMercEditingMode( UINT8 ubNewMode )
 {
-	PERFORMANCE_MARKER
 	//We need to update the taskbar for the buttons that were erased.
 	gfRenderTaskbar = TRUE;
 
@@ -2230,7 +2176,7 @@ void SetMercEditingMode( UINT8 ubNewMode )
 	//Depending on the mode we were just in, we may want to extract and update the
 	//merc first.	Then we change modes...
 	ExtractCurrentMercModeInfo( TRUE );
-	
+
 	//Change modes now.
 	gubPrevMercMode = gubCurrMercMode;
 	gubCurrMercMode = ubNewMode;
@@ -2256,7 +2202,7 @@ void SetMercEditingMode( UINT8 ubNewMode )
 			//ClearCurrentSchedule();
 			break;
 	}
-	
+
 	//If we leave the merc tab, then we want to update editable fields such as
 	//attributes, which was just handled above, then turn everything off, and exit.
 	if( ubNewMode == MERC_NOMODE )
@@ -2269,7 +2215,7 @@ void SetMercEditingMode( UINT8 ubNewMode )
 	{
 		ShowEditorButtons( FIRST_MERCS_BUTTON, LAST_MERCS_TEAMMODE_BUTTON );
 	}
-	
+
 	//Release the currently selected merc if you just selected a new team.
 	if( gsSelectedMercID != -1 && ubNewMode == MERC_TEAMMODE )
 	{
@@ -2310,9 +2256,9 @@ void SetMercEditingMode( UINT8 ubNewMode )
 	}
 	else
 		UnclickEditorButton( MERCS_DETAILEDCHECKBOX );
-	//Now we are setting up the button states for the new mode, as well as show the 
+	//Now we are setting up the button states for the new mode, as well as show the
 	//applicable buttons for the detailed placement modes.
-	if( gubCurrMercMode == MERC_APPEARANCEMODE && iDrawMode == DRAW_MODE_CREATURE || 
+	if( gubCurrMercMode == MERC_APPEARANCEMODE && iDrawMode == DRAW_MODE_CREATURE ||
 			gubCurrMercMode == MERC_SCHEDULEMODE && iDrawMode != DRAW_MODE_CIVILIAN )
 	{
 		gubCurrMercMode = MERC_GENERALMODE;
@@ -2404,7 +2350,7 @@ void SetMercEditingMode( UINT8 ubNewMode )
 			UnclickEditorButtons( FIRST_MERCS_PRIORITYMODE_BUTTON, LAST_MERCS_PRIORITYMODE_BUTTON );
 			ClickEditorButton( MERCS_SCHEDULE );
 			SetupTextInputForMercSchedule();
-			UpdateScheduleInfo();			
+			UpdateScheduleInfo();
 			DetermineScheduleEditability();
 	}
 	//Show or hide the schedule buttons
@@ -2440,7 +2386,6 @@ void SetMercEditingMode( UINT8 ubNewMode )
 
 void DisplayBodyTypeInfo()
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[20];
 	switch( gpSelected->pBasicPlacement->bBodyType )
 	{
@@ -2478,7 +2423,6 @@ void DisplayBodyTypeInfo()
 
 void UpdateMercsInfo()
 {
-	PERFORMANCE_MARKER
 	if( !gfRenderMercInfo )
 		return;
 
@@ -2511,17 +2455,17 @@ void UpdateMercsInfo()
 				DisplayBodyTypeInfo();
 				SetFont( SMALLCOMPFONT );
 				SetFontForeground( FONT_LTBLUE );
-				mprintf( iScreenWidthOffset + 493, 2 * iScreenHeightOffset + 416, L"RELATIVE"); 
-				mprintf( iScreenWidthOffset + 480, 2 * iScreenHeightOffset + 422, L"ATTRIBUTES"); 
+				mprintf( iScreenWidthOffset + 493, 2 * iScreenHeightOffset + 416, L"RELATIVE");
+				mprintf( iScreenWidthOffset + 480, 2 * iScreenHeightOffset + 422, L"ATTRIBUTES");
 			}
 			else
 			{
 				SetFontForeground( FONT_LTGREEN );
-				mprintf( iScreenWidthOffset + 480, 2 * iScreenHeightOffset + 363, L"RELATIVE"); 
-				mprintf( iScreenWidthOffset + 480, 2 * iScreenHeightOffset + 371, L"EQUIPMENT"); 
+				mprintf( iScreenWidthOffset + 480, 2 * iScreenHeightOffset + 363, L"RELATIVE");
+				mprintf( iScreenWidthOffset + 480, 2 * iScreenHeightOffset + 371, L"EQUIPMENT");
 				SetFontForeground( FONT_LTBLUE );
-				mprintf( iScreenWidthOffset + 530, 2 * iScreenHeightOffset + 363, L"RELATIVE"); 
-				mprintf( iScreenWidthOffset + 530, 2 * iScreenHeightOffset + 371, L"ATTRIBUTES"); 
+				mprintf( iScreenWidthOffset + 530, 2 * iScreenHeightOffset + 363, L"RELATIVE");
+				mprintf( iScreenWidthOffset + 530, 2 * iScreenHeightOffset + 371, L"ATTRIBUTES");
 			}
 			if( iDrawMode == DRAW_MODE_ENEMY )
 			{
@@ -2560,7 +2504,7 @@ void UpdateMercsInfo()
 
 			mprintf( iScreenWidthOffset + 396, 2 * iScreenHeightOffset + 364, L"Hair color:");
 			mprintf( iScreenWidthOffset + 396, 2 * iScreenHeightOffset + 388, L"Skin color:");
-			mprintf( iScreenWidthOffset + 396, 2 * iScreenHeightOffset + 412, L"Vest color:"); 
+			mprintf( iScreenWidthOffset + 396, 2 * iScreenHeightOffset + 412, L"Vest color:");
 			mprintf( iScreenWidthOffset + 396, 2 * iScreenHeightOffset + 436, L"Pant color:");
 
 			SetFont( SMALLCOMPFONT );
@@ -2591,7 +2535,7 @@ void UpdateMercsInfo()
 				CHAR16 tempStr[500];
 				swprintf( tempStr, L"%s%s%s%s%s%d.",
 					L"By specifying a profile index, all of the information will be extracted from the profile ",
-					L"and override any values that you have edited.  It will also disable the editing features ", 
+					L"and override any values that you have edited.  It will also disable the editing features ",
 					L"though, you will still be able to view stats, etc.  Pressing ENTER will automatically ",
 					L"extract the number you have typed.  A blank field will clear the profile.  The current ",
 					L"number of profiles range from 0 to ", NUM_PROFILES );
@@ -2671,11 +2615,11 @@ void UpdateMercsInfo()
 }
 
 //When a detailed placement merc is in the inventory panel, there is a overall region
-//blanketing this panel.	As the user moves the mouse around and clicks, etc., this function 
+//blanketing this panel.	As the user moves the mouse around and clicks, etc., this function
 //is called by the region callback functions to handle these cases.	The event types are defined
 //in Editor Taskbar Utils.h.	Here are the internal functions...
 
-SGPRect mercRects[9] = 
+SGPRect mercRects[9] =
 {
 	{	75,	0, 104, 19 }, //head
 	{	75, 22, 104, 41 }, //body
@@ -2691,13 +2635,11 @@ SGPRect mercRects[9] =
 
 BOOLEAN PointInRect( SGPRect *pRect, INT32 x, INT32 y )
 {
-	PERFORMANCE_MARKER
 	return( x >= pRect->iLeft && x <= pRect->iRight && y >= pRect->iTop && y <= pRect->iBottom );
 }
 
 void DrawRect( SGPRect *pRect, INT16 color )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiDestPitchBYTES;
 	UINT8		*pDestBuf;
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
@@ -2709,7 +2651,6 @@ void DrawRect( SGPRect *pRect, INT16 color )
 
 void RenderSelectedMercsInventory()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	UINT8 *pSrc, *pDst;
 	INT32 xp, yp;
@@ -2726,7 +2667,7 @@ void RenderSelectedMercsInventory()
 			yp = mercRects[ i ].iTop + MERCPANEL_Y;
 			pDst = LockVideoSurface( FRAME_BUFFER,							&uiDstPitchBYTES );
 			pSrc = LockVideoSurface( guiMercInvPanelBuffers[i], &uiSrcPitchBYTES );
-			Blt16BPPTo16BPPTrans( (UINT16*)pDst, uiDstPitchBYTES, 
+			Blt16BPPTo16BPPTrans( (UINT16*)pDst, uiDstPitchBYTES,
 				(UINT16 *)pSrc, uiSrcPitchBYTES, xp, yp, 0, 0, i<3 ? 22 : 44, 15, 0 );
 			UnLockVideoSurface( FRAME_BUFFER );
 			UnLockVideoSurface( guiMercInvPanelBuffers[i] );
@@ -2767,7 +2708,6 @@ void RenderSelectedMercsInventory()
 
 void DeleteSelectedMercsItem()
 {
-	PERFORMANCE_MARKER
 	if( gbCurrSelect != -1 )
 	{
 		gusMercsNewItemIndex = 0;
@@ -2780,10 +2720,9 @@ void DeleteSelectedMercsItem()
 // 2)	Converts the image from interface size to the smaller panel used by the editor.	The slots
 //		in the editor are approximately 80% of that size.	This involves scaling calculations.	These
 //		images are saved in individual slots are are blitted to the screen during rendering, not here.
-// NOTE:	Step one can be skipped (when selecting an existing merc).	By setting the 
+// NOTE:	Step one can be skipped (when selecting an existing merc).	By setting the
 void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiVideoObjectIndex;
 	UINT32 uiSrcID, uiDstID;
 	HVOBJECT hVObject;
@@ -2848,7 +2787,7 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 	//the buffer and scale it down to fit into it's associated slot in the panel (which on average will
 	//require scaling the item by 80%).	We have to do a bunch of calculations to override the offsets, etc.
 	//Each slot has it's own smaller version buffer, and this is what gets drawn when the rendering happens.
-	
+
 	//assign the buffers
 	uiSrcID = guiMercTempBuffer;
 	uiDstID = guiMercInvPanelBuffers[ gbCurrSelect ];
@@ -2896,7 +2835,7 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 
 	//compare the sizes of the cropped image to the destination buffer size, and calculate the
 	//scalar value.	It is possible to have scalars > 1.0, in which case, we change it to 1.0 and
-	//use the other value.	
+	//use the other value.
 	rWidthScalar =	(float)iDstWidth/(float)iSrcWidth;
 	if( rWidthScalar > 1.0 )
 		rWidthScalar = 1.0;
@@ -2911,7 +2850,7 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 		rScalar = rWidthScalar ;
 	else
 		rScalar = max( rWidthScalar, rHeightScalar );
-	
+
 	//apply the scalar to the destination width and height
 	iDstWidth = (INT32)( iSrcWidth * rScalar );
 	iDstHeight = (INT32)( iSrcHeight * rScalar );
@@ -2923,7 +2862,7 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 		iDstWidth = MERCINV_SMSLOT_WIDTH;
 	if( iDstHeight > MERCINV_SLOT_HEIGHT )
 		iDstHeight = MERCINV_SLOT_HEIGHT;
-	
+
 	//use the new width and height values to calculate the new dest rect (center the item)
 	DstRect.iLeft		= (DstRect.iRight - DstRect.iLeft - iDstWidth) / 2;
 	DstRect.iRight	= DstRect.iLeft + iDstWidth;
@@ -2939,7 +2878,6 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 
 void RenderMercInventoryPanel()
 {
-	PERFORMANCE_MARKER
 	INT32 x;
 	//Draw the graphical panel
 	BltVideoObjectFromIndex( FRAME_BUFFER, guiMercInventoryPanel, 0, MERCPANEL_X, MERCPANEL_Y, VO_BLT_SRCTRANSPARENCY, NULL );
@@ -2965,11 +2903,10 @@ void RenderMercInventoryPanel()
 //will set the rendering flag, and getitem flag if the user wishes to choose an item.
 void HandleMercInventoryPanel( INT16 sX, INT16 sY, INT8 bEvent )
 {
-	PERFORMANCE_MARKER
 	INT8 x;
 	if( !gfCanEditMercs && bEvent == GUI_RCLICK_EVENT )
 	{ //if we are dealing with a profile merc, we can't allow editing
-		//of items, but we can look at them.	So, treat all right clicks 
+		//of items, but we can look at them.	So, treat all right clicks
 		//as if they were left clicks.
 		bEvent = GUI_LCLICK_EVENT;
 	}
@@ -2989,7 +2926,7 @@ void HandleMercInventoryPanel( INT16 sX, INT16 sY, INT8 bEvent )
 				}
 			}
 			//if we don't find a valid slot, then we need to turn it off.
-			if( gbCurrHilite != -1 ) 
+			if( gbCurrHilite != -1 )
 			{ //only turn off if it isn't already off.	This avoids unecessary rendering.
 				gbCurrHilite = -1;
 				gfRenderMercInfo = TRUE;
@@ -3022,7 +2959,6 @@ void HandleMercInventoryPanel( INT16 sX, INT16 sY, INT8 bEvent )
 
 void UpdateMercItemSlots()
 {
-	PERFORMANCE_MARKER
 	INT8 x;
 	if( !gpSelected->pDetailedPlacement )
 	{
@@ -3031,7 +2967,7 @@ void UpdateMercItemSlots()
 			gpMercSlotItem[ x ] = NULL;
 		}
 	}
-	else 
+	else
 	{
 		if( gpSelected->pDetailedPlacement->ubProfile != NO_PROFILE )
 		{
@@ -3041,7 +2977,7 @@ void UpdateMercItemSlots()
 		{
 			//Set the curr select and the addnewitem function will handle the rest, including rebuilding
 			//the nine slot buffers, etc.
-			gbCurrSelect = x; 
+			gbCurrSelect = x;
 			AddNewItemToSelectedMercsInventory( FALSE );
 		}
 	}
@@ -3053,7 +2989,6 @@ void UpdateMercItemSlots()
 
 void SetDroppableCheckboxesBasedOnMercsInventory()
 {
-	PERFORMANCE_MARKER
 	OBJECTTYPE *pItem;
 	INT32 i;
 	if( gpSelected && gpSelected->pDetailedPlacement )
@@ -3075,7 +3010,6 @@ void SetDroppableCheckboxesBasedOnMercsInventory()
 
 void SetEnemyColorCode( UINT8 ubColorCode )
 {
-	PERFORMANCE_MARKER
 	if( gpSelected->pDetailedPlacement && gpSelected->pDetailedPlacement->ubProfile != NO_PROFILE )
 		return;
 
@@ -3127,8 +3061,7 @@ void SetEnemyColorCode( UINT8 ubColorCode )
 
 void SetEnemyDroppableStatus( UINT32 uiSlot, BOOLEAN fDroppable )
 {
-	PERFORMANCE_MARKER
-	if( gpSelected ) 
+	if( gpSelected )
 	{
 		if( fDroppable )
 		{
@@ -3154,7 +3087,6 @@ void SetEnemyDroppableStatus( UINT32 uiSlot, BOOLEAN fDroppable )
 
 void ChangeCivGroup( UINT8 ubNewCivGroup )
 {
-	PERFORMANCE_MARKER
 	Assert( ubNewCivGroup < NUM_CIV_GROUPS );
 	if( gubCivGroup == ubNewCivGroup )
 		return;
@@ -3172,7 +3104,6 @@ void ChangeCivGroup( UINT8 ubNewCivGroup )
 
 void RenderMercStrings()
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE								*pSoldier;
 	INT16 sXPos, sYPos;
 	INT16 sX, sY;
@@ -3257,7 +3188,7 @@ void RenderMercStrings()
 				{
 					if( GetJA2Clock() % 1000 < 500 )
 						SetFontForeground( FONT_DKRED );
-					else 
+					else
 						SetFontForeground( FONT_RED );
 					swprintf( str, L"Patrol orders with no waypoints" );
 					FindFontCenterCoordinates( sXPos, sYPos, 80, 1, str, TINYFONT1, &sX, &sY );
@@ -3273,7 +3204,7 @@ void RenderMercStrings()
 			{
 				if( GetJA2Clock() % 1000 < 500 )
 					SetFontForeground( FONT_DKRED );
-				else 
+				else
 					SetFontForeground( FONT_RED );
 				swprintf( str, L"Waypoints with no patrol orders" );
 				FindFontCenterCoordinates( sXPos, sYPos, 80, 1, str, TINYFONT1, &sX, &sY );
@@ -3295,12 +3226,11 @@ void RenderMercStrings()
 
 void SetMercTeamVisibility( INT8 bTeam, BOOLEAN fVisible )
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	INT8 bVisible;
 	curr = gSoldierInitHead;
 	bVisible = fVisible ? 1 : -1;
-	while( curr ) 
+	while( curr )
 	{
 		if( curr->pBasicPlacement->bTeam == bTeam )
 		{
@@ -3320,7 +3250,6 @@ void SetMercTeamVisibility( INT8 bTeam, BOOLEAN fVisible )
 
 void DetermineScheduleEditability()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	EnableEditorButtons( MERCS_SCHEDULE_ACTION1, MERCS_SCHEDULE_DATA4B );
 	EnableTextFields( 1, 4 );
@@ -3368,14 +3297,12 @@ void DetermineScheduleEditability()
 
 void CancelCurrentScheduleAction()
 {
-	PERFORMANCE_MARKER
 	UpdateScheduleAction( SCHEDULE_ACTION_NONE );
 	DetermineScheduleEditability();
 }
 
 void RegisterCurrentScheduleAction( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[6];
 	MarkWorldDirty();
 	swprintf( str, L"%d", iMapIndex );
@@ -3434,7 +3361,6 @@ void RegisterCurrentScheduleAction( INT32 iMapIndex )
 
 void StartScheduleAction()
 {
-	PERFORMANCE_MARKER
 	switch( gCurrSchedule.ubAction[ gubCurrentScheduleActionIndex ] )
 	{
 		case SCHEDULE_ACTION_NONE:
@@ -3487,9 +3413,8 @@ void StartScheduleAction()
 
 void UpdateScheduleAction( UINT8 ubNewAction )
 {
-	PERFORMANCE_MARKER
 	gCurrSchedule.ubAction[ gubCurrentScheduleActionIndex ] = ubNewAction;
-	SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_ACTION1 + gubCurrentScheduleActionIndex ], 
+	SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_ACTION1 + gubCurrentScheduleActionIndex ],
 		gszScheduleActions[ ubNewAction ] );
 	MSYS_SetBtnUserData( iEditorButton[ MERCS_SCHEDULE_ACTION1 + gubCurrentScheduleActionIndex ], 0, ubNewAction );
 	//Now, based on this action, disable the other buttons
@@ -3500,7 +3425,6 @@ void UpdateScheduleAction( UINT8 ubNewAction )
 // 0:1A, 1:1B, 2:2A, 3:2B, ...
 void FindScheduleGridNo( UINT8 ubScheduleData )
 {
-	PERFORMANCE_MARKER
 	INT32 iMapIndex;
 	switch( ubScheduleData )
 	{
@@ -3539,7 +3463,6 @@ void FindScheduleGridNo( UINT8 ubScheduleData )
 
 void ClearCurrentSchedule()
 {
-	PERFORMANCE_MARKER
 	UINT8 i;
 	memset( &gCurrSchedule, 0, sizeof( SCHEDULENODE ) );
 	for( i = 0; i < 4; i++ )
@@ -3565,7 +3488,6 @@ void ClearCurrentSchedule()
 
 void RenderCurrentSchedule()
 {
-	PERFORMANCE_MARKER
 	FLOAT dOffsetX, dOffsetY;
 	FLOAT ScrnX, ScrnY;
 	INT32 i;
@@ -3591,7 +3513,7 @@ void RenderCurrentSchedule()
 		dOffsetY = (FLOAT)(sYMapPos * CELL_Y_SIZE) - gsRenderCenterY;
 
 		FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &ScrnX, &ScrnY);
-		
+
 		sScreenX = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)ScrnX;
 		sScreenY = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + (INT16)ScrnY;
 
@@ -3615,7 +3537,6 @@ void RenderCurrentSchedule()
 
 void UpdateScheduleInfo()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	SCHEDULENODE *pSchedule;
 	CHAR16 str[6];
@@ -3643,7 +3564,7 @@ void UpdateScheduleInfo()
 				SetExclusive24HourTimeValue( (UINT8)(i+1), pSchedule->usTime[i] );
 			}
 		}
-		
+
 		//Check or uncheck the checkbox buttons based on the schedule's status.
 		UnclickEditorButtons( MERCS_SCHEDULE_VARIANCE1, MERCS_SCHEDULE_VARIANCE4 );
 		if( pSchedule->usFlags & SCHEDULE_FLAGS_VARIANCE1 )
@@ -3670,7 +3591,6 @@ SOLDIERCREATE_STRUCT gSaveBufferDetailedPlacement;
 
 void CopyMercPlacement( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	if( gsSelectedMercID == -1 )
 	{
 		ScreenMsg( FONT_MCOLOR_LTRED, MSG_INTERFACE, L"Placement not copied because no placement selected." );
@@ -3687,7 +3607,6 @@ void CopyMercPlacement( INT32 iMapIndex )
 
 void PasteMercPlacement( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
@@ -3715,9 +3634,9 @@ void PasteMercPlacement( INT32 iMapIndex )
 			gTempBasicPlacement.bBodyType = gbCurrCreature;
 			break;
 		case DRAW_MODE_REBEL:
-			gTempBasicPlacement.bTeam = MILITIA_TEAM; 
+			gTempBasicPlacement.bTeam = MILITIA_TEAM;
 			gTempBasicPlacement.bBodyType = RANDOM;
-			break;	
+			break;
 		case DRAW_MODE_CIVILIAN:
 			gTempBasicPlacement.bTeam = CIV_TEAM;
 			gTempBasicPlacement.bBodyType = RANDOM;
@@ -3734,7 +3653,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 		UINT8	ubID;
 		INT16 sSectorX, sSectorY;
 		SOLDIERINITNODE *pNode;
-		
+
  		GetCurrentWorldSector( &sSectorX, &sSectorY );
 
 		//Set up some general information.
@@ -3769,7 +3688,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 		{
 			pSoldier->bVisible = 1;
 			pSoldier->bLastRenderVisibleValue = 1;
-			//Set up the soldier in the list, so we can track the soldier in the 
+			//Set up the soldier in the list, so we can track the soldier in the
 			//future (saving, loading, strategic AI)
 			pNode = AddBasicPlacementToSoldierInitList( &gTempBasicPlacement );
 			Assert( pNode );
@@ -3788,7 +3707,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 					return;
 				}
 			}
-			
+
 			//Add the soldier to physically appear on the map now.
 			InternalAddSoldierToSector( ubID, FALSE, FALSE, 0, 0 );
 			IndicateSelectedMerc( ubID );
@@ -3820,6 +3739,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 
 
 
- 
+
+
 
 

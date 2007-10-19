@@ -11,7 +11,7 @@
 	//#include "soldier control.h"
 	#include "weapons.h"
 	#include "handle items.h"
-	#include "worlddef.h"	
+	#include "worlddef.h"
 	#include "worldman.h"
 	#include "animation control.h"
 	#include "tile animation.h"
@@ -56,7 +56,6 @@ void RecountSmokeEffects( void );
 
 INT32 GetFreeSmokeEffect( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumSmokeEffects; uiCount++)
@@ -73,7 +72,6 @@ INT32 GetFreeSmokeEffect( void )
 
 void RecountSmokeEffects( void )
 {
-	PERFORMANCE_MARKER
 	INT32 uiCount;
 
 	for(uiCount=guiNumSmokeEffects-1; (uiCount >=0) ; uiCount--)
@@ -92,7 +90,6 @@ void RecountSmokeEffects( void )
 // Returns NO_SMOKE_EFFECT if none there...
 INT8 GetSmokeEffectOnTile( INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	UINT16		ubExtFlags;
 
 	ubExtFlags = gpWorldLevelData[ sGridNo ].ubExtFlags[ bLevel ];
@@ -110,7 +107,6 @@ INT8 GetSmokeEffectOnTile( INT16 sGridNo, INT8 bLevel )
 
 INT8 FromWorldFlagsToSmokeType( UINT16 ubWorldFlags )
 {
-	PERFORMANCE_MARKER
 	if ( ubWorldFlags & MAPELEMENT_EXT_SMOKE )
 	{
 		return( NORMAL_SMOKE_EFFECT );
@@ -140,7 +136,6 @@ INT8 FromWorldFlagsToSmokeType( UINT16 ubWorldFlags )
 
 UINT16 FromSmokeTypeToWorldFlags( INT8 bType )
 {
-	PERFORMANCE_MARKER
 	switch( bType )
 	{
 		case NORMAL_SMOKE_EFFECT:
@@ -164,7 +159,7 @@ UINT16 FromSmokeTypeToWorldFlags( INT8 bType )
 			break;
 
 	case CREATURE_SMOKE_EFFECT:
-		
+
 		return( MAPELEMENT_EXT_CREATUREGAS );
 		break;
 
@@ -178,7 +173,6 @@ UINT16 FromSmokeTypeToWorldFlags( INT8 bType )
 
 INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
 {
-	PERFORMANCE_MARKER
 	SMOKEEFFECT *pSmoke;
 	INT32				iSmokeIndex;
 	INT8				bSmokeEffectType=0;
@@ -216,27 +210,27 @@ INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
 			break;
 
 		case EXPLOSV_TEARGAS:
-			bSmokeEffectType	=	TEARGAS_SMOKE_EFFECT; 
+			bSmokeEffectType	=	TEARGAS_SMOKE_EFFECT;
 			break;
 
 		case EXPLOSV_SMOKE:
 
-			bSmokeEffectType	=	NORMAL_SMOKE_EFFECT; 
+			bSmokeEffectType	=	NORMAL_SMOKE_EFFECT;
 			break;
 
 	// case SMALL_CREATURE_GAS:
-			//bSmokeEffectType	=	CREATURE_SMOKE_EFFECT; 
+			//bSmokeEffectType	=	CREATURE_SMOKE_EFFECT;
 			//ubDuration				= 3;
 			//ubStartRadius			= 1;
 			//break;
 
 	case EXPLOSV_CREATUREGAS:
-			bSmokeEffectType	=	CREATURE_SMOKE_EFFECT; 
+			bSmokeEffectType	=	CREATURE_SMOKE_EFFECT;
 			break;
 
 	// case VERY_SMALL_CREATURE_GAS:
 
-			//bSmokeEffectType	=	CREATURE_SMOKE_EFFECT; 
+			//bSmokeEffectType	=	CREATURE_SMOKE_EFFECT;
 			//ubDuration				= 2;
 			//ubStartRadius			= 0;
 		break;
@@ -252,7 +246,7 @@ INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
 	pSmoke->ubOwner	 = ubOwner;
 
 	if ( pSmoke->bFlags & SMOKE_EFFECT_INDOORS )
-	{	
+	{
 		// Duration is increased by 2 turns...indoors
 		pSmoke->ubDuration += 3;
 	}
@@ -273,7 +267,6 @@ INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
 // ( Replacement algorithm uses distance away )
 void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	ANITILE_PARAMS	AniParams;
 	ANITILE					*pAniTile;
 	SMOKEEFFECT	 *pSmoke;
@@ -294,7 +287,7 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 	{
 		return;
 	}
-		
+
 	// OK,	Create anitile....
 	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 	AniParams.sGridNo							= sGridNo;
@@ -346,17 +339,17 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 
 		if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
 		{
-			strcpy( AniParams.zCachedFile, "TILECACHE\\smkechze.STI" );			
+			strcpy( AniParams.zCachedFile, "TILECACHE\\smkechze.STI" );
 		}
 		else
 		{
 		if ( fDissipating )
 		{
-			 strcpy( AniParams.zCachedFile, "TILECACHE\\smalsmke.STI" );			
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\smalsmke.STI" );
 		}
 		else
 		{
-			 strcpy( AniParams.zCachedFile, "TILECACHE\\SMOKE.STI" );			
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\SMOKE.STI" );
 		}
 		}
 			break;
@@ -365,17 +358,17 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 
 		if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
 		{
-			strcpy( AniParams.zCachedFile, "TILECACHE\\tearchze.STI" );			
+			strcpy( AniParams.zCachedFile, "TILECACHE\\tearchze.STI" );
 		}
 		else
 		{
 		if ( fDissipating )
 		{
-			 strcpy( AniParams.zCachedFile, "TILECACHE\\smaltear.STI" );			
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\smaltear.STI" );
 		}
 		else
 		{
-			 strcpy( AniParams.zCachedFile, "TILECACHE\\TEARGAS.STI" );			
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\TEARGAS.STI" );
 		}
 		}
 			break;
@@ -384,17 +377,17 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 
 		if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
 		{
-			strcpy( AniParams.zCachedFile, "TILECACHE\\mustchze.STI" );			
+			strcpy( AniParams.zCachedFile, "TILECACHE\\mustchze.STI" );
 		}
 		else
 		{
 		if ( fDissipating )
 		{
-			 strcpy( AniParams.zCachedFile, "TILECACHE\\smalmust.STI" );			
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\smalmust.STI" );
 		}
 		else
 		{
-			 strcpy( AniParams.zCachedFile, "TILECACHE\\MUSTARD2.STI" );			
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\MUSTARD2.STI" );
 		}
 		}
 			break;
@@ -403,17 +396,17 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 
 		if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
 		{
-			strcpy( AniParams.zCachedFile, "TILECACHE\\FLAMCHZE.STI" );			
+			strcpy( AniParams.zCachedFile, "TILECACHE\\FLAMCHZE.STI" );
 		}
 		else
 		{
 		if ( fDissipating )
 		{
-			 strcpy( AniParams.zCachedFile, "TILECACHE\\smalflam.STI" );			
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\smalflam.STI" );
 		}
 		else
 		{
-			 strcpy( AniParams.zCachedFile, "TILECACHE\\FLAMETH2.STI" );			
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\FLAMETH2.STI" );
 		}
 		}
 			break;
@@ -422,17 +415,17 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 
 		if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
 		{
-			strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.STI" );			
+			strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.STI" );
 		}
 		else
 		{
 		if ( fDissipating )
 		{
-			 strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.STI" );			
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.STI" );
 		}
 		else
 		{
-			 strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.STI" );			
+			 strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.STI" );
 		}
 		}
 			break;
@@ -453,7 +446,6 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 
 void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	ANITILE *pAniTile;
 	UINT8		ubLevelID;
 
@@ -468,7 +460,7 @@ void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel )
 	}
 
 	pAniTile = GetCachedAniTileOfType( sGridNo, ubLevelID, ANITILE_SMOKE_EFFECT );
-	
+
 	if ( pAniTile != NULL )
 	{
 		DeleteAniTile( pAniTile );
@@ -487,7 +479,6 @@ void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel )
 
 void DecaySmokeEffects( UINT32 uiTime )
 {
-	PERFORMANCE_MARKER
 	SMOKEEFFECT *pSmoke;
 	UINT32	cnt, cnt2;
 	BOOLEAN fUpdate = FALSE;
@@ -513,7 +504,7 @@ void DecaySmokeEffects( UINT32 uiTime )
 		fSpreadEffect = TRUE;
 
 		pSmoke = &gSmokeEffectData[ cnt ];
-		
+
 		if ( pSmoke->fAllocated )
 		{
 		if ( pSmoke->bFlags & SMOKE_EFFECT_ON_ROOF )
@@ -602,7 +593,7 @@ void DecaySmokeEffects( UINT32 uiTime )
 	for ( cnt = 0; cnt < guiNumSmokeEffects; cnt++ )
 	{
 		pSmoke = &gSmokeEffectData[ cnt ];
-		
+
 		if ( pSmoke->fAllocated )
 		{
 		if ( pSmoke->bFlags & SMOKE_EFFECT_ON_ROOF )
@@ -630,7 +621,6 @@ void DecaySmokeEffects( UINT32 uiTime )
 
 BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 /*
 	UINT32	uiNumBytesWritten;
 	UINT32	uiCnt=0;
@@ -677,7 +667,6 @@ BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 	UINT32	uiCnt=0;
@@ -749,7 +738,6 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 
 BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumSmokeEffects=0;
 	HWFILE	hFile;
 	UINT32	uiNumBytesWritten=0;
@@ -828,7 +816,6 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 	UINT32	uiCnt=0;
@@ -898,7 +885,6 @@ BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 void ResetSmokeEffects()
 {
-	PERFORMANCE_MARKER
 	//Clear out the old list
 	memset( gSmokeEffectData, 0, sizeof( SMOKEEFFECT ) * NUM_SMOKE_EFFECT_SLOTS );
 	guiNumSmokeEffects = 0;
@@ -907,7 +893,6 @@ void ResetSmokeEffects()
 
 void UpdateSmokeEffectGraphics( )
 {
-	PERFORMANCE_MARKER
 	UINT32		uiCnt;
 	SMOKEEFFECT *pSmoke;
 	INT8		bLevel;

@@ -18,16 +18,15 @@ struct
 	ARMY_GUN_CHOICE_TYPE		curArmyItemChoices;
 	ARMY_GUN_CHOICE_TYPE *	curArray;
 	UINT32			maxArraySize;
-	
+
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
 typedef armyitemchoicesParseData;
 
-static void XMLCALL 
+static void XMLCALL
 armyitemchoicesStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	armyitemchoicesParseData * pData = (armyitemchoicesParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -117,10 +116,9 @@ armyitemchoicesStartElementHandle(void *userData, const XML_Char *name, const XM
 static void XMLCALL
 armyitemchoicesCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	armyitemchoicesParseData * pData = (armyitemchoicesParseData *)userData;
 
-	if( (pData->currentDepth <= pData->maxReadDepth) && 
+	if( (pData->currentDepth <= pData->maxReadDepth) &&
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
 	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
@@ -131,7 +129,6 @@ armyitemchoicesCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 armyitemchoicesEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	armyitemchoicesParseData * pData = (armyitemchoicesParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -421,13 +418,12 @@ armyitemchoicesEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInArmyItemChoicesStats(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	armyitemchoicesParseData pData;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading EnemyItemChoicess.xml" );
@@ -436,7 +432,7 @@ BOOLEAN ReadInArmyItemChoicesStats(STR fileName)
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -451,15 +447,15 @@ BOOLEAN ReadInArmyItemChoicesStats(STR fileName)
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, armyitemchoicesStartElementHandle, armyitemchoicesEndElementHandle);
 	XML_SetCharacterDataHandler(parser, armyitemchoicesCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
 	pData.curArray = gArmyItemChoices;
-	pData.maxArraySize = MAX_ITEM_TYPES; 
-	
+	pData.maxArraySize = MAX_ITEM_TYPES;
+
 	XML_SetUserData(parser, &pData);
 
 
@@ -484,7 +480,6 @@ BOOLEAN ReadInArmyItemChoicesStats(STR fileName)
 }
 BOOLEAN WriteArmyItemChoicesStats()
 {
-	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writearmyitemchoicesstats");
 	HWFILE		hFile;
 
@@ -493,7 +488,7 @@ BOOLEAN WriteArmyItemChoicesStats()
 	hFile = FileOpen( "TABLEDATA\\EnemyItemChoices out.xml", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	{
 		UINT32 cnt;
 

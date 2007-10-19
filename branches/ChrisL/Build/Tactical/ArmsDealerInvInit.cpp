@@ -69,7 +69,7 @@ ITEM_SORT_ENTRY DealerItemSortInfo[ ] =
 // Tony ( Weapons only )
 //
 
-DEALER_POSSIBLE_INV gTonyInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gTonyInventory[MAXITEMS+1];// =
 //{
 //	//Rare guns/ammo that Tony will buy although he won't ever sell them
 //	{	ROCKET_RIFLE,					0 },
@@ -79,43 +79,43 @@ DEALER_POSSIBLE_INV gTonyInventory[MAXITEMS+1];// =
 //
 //
 //	//Weapons
-//	{ GLOCK_17,							1 },		/* Glock 17        */	
-//	{ GLOCK_18,							1 },		/* Glock 18        */	
-//	{ BERETTA_92F,					1 },		/* Beretta 92F     */	
-//	{ BERETTA_93R,					1 },		/* Beretta 93R     */	
-//	{ SW38,									1 },		/* .38 S&W Special */	
-//	{ BARRACUDA,						1 },		/* .357 Barracuda  */	
-//	{ DESERTEAGLE,					1 },		/* .357 DesertEagle*/ 
-//	{ M1911,								1 },		/* .45 M1911			 */ 
-//	{ MP5K,									1 },		/* H&K MP5K      	 */	
+//	{ GLOCK_17,							1 },		/* Glock 17        */
+//	{ GLOCK_18,							1 },		/* Glock 18        */
+//	{ BERETTA_92F,					1 },		/* Beretta 92F     */
+//	{ BERETTA_93R,					1 },		/* Beretta 93R     */
+//	{ SW38,									1 },		/* .38 S&W Special */
+//	{ BARRACUDA,						1 },		/* .357 Barracuda  */
+//	{ DESERTEAGLE,					1 },		/* .357 DesertEagle*/
+//	{ M1911,								1 },		/* .45 M1911			 */
+//	{ MP5K,									1 },		/* H&K MP5K      	 */
 //	{ MAC10,								1 },		/* .45 MAC-10	     */
 //
-//	{ THOMPSON,							1 },		/* Thompson M1A1   */	
-//	{ COMMANDO,							1 },		/* Colt Commando   */	
-//	{ MP53,									1 },		/* H&K MP53		 		 */	
-//	{ AKSU74,								1 },		/* AKSU-74         */ 
-//	{ TYPE85,								1 },		/* Type-85         */ 
-//	{ SKS,									1 },		/* SKS             */ 
-//	{ DRAGUNOV,							1 },		/* Dragunov        */ 
-//	{ M24,									1 },		/* M24             */ 
+//	{ THOMPSON,							1 },		/* Thompson M1A1   */
+//	{ COMMANDO,							1 },		/* Colt Commando   */
+//	{ MP53,									1 },		/* H&K MP53		 		 */
+//	{ AKSU74,								1 },		/* AKSU-74         */
+//	{ TYPE85,								1 },		/* Type-85         */
+//	{ SKS,									1 },		/* SKS             */
+//	{ DRAGUNOV,							1 },		/* Dragunov        */
+//	{ M24,									1 },		/* M24             */
 //	{ AUG,									1 },		/* Steyr AUG       */
 //
-//	{ G41,									1 },		/* H&K G41         */ 
-//	{ MINI14,								1 },		/* Ruger Mini-14   */ 
-//	{ C7,										1 },		/* C-7             */ 
-//	{ FAMAS,								1 },		/* FA-MAS          */ 
-//	{ AK74,									1 },		/* AK-74           */ 
-//	{ AKM,									1 },		/* AKM             */ 
-//	{ M14,									1 },		/* M-14            */ 
-//	{ G3A3,									1 },		/* H&K G3A3        */ 
+//	{ G41,									1 },		/* H&K G41         */
+//	{ MINI14,								1 },		/* Ruger Mini-14   */
+//	{ C7,										1 },		/* C-7             */
+//	{ FAMAS,								1 },		/* FA-MAS          */
+//	{ AK74,									1 },		/* AK-74           */
+//	{ AKM,									1 },		/* AKM             */
+//	{ M14,									1 },		/* M-14            */
+//	{ G3A3,									1 },		/* H&K G3A3        */
 //	{ FNFAL,								1 },		/* FN-FAL          */
 //
 //	{ MINIMI,								1 },
 //	{ RPK74,								1 },
 //	{ HK21E,								1 },
 //
-//	{ M870,									1 },		/* Remington M870  */	
-//	{ SPAS15,								1 },		/* SPAS-15         */ 
+//	{ M870,									1 },		/* Remington M870  */
+//	{ SPAS15,								1 },		/* SPAS-15         */
 //
 //	{ GLAUNCHER,						1 },		/* grenade launcher*/
 //	{ UNDER_GLAUNCHER,			1 },		/* underslung g.l. */
@@ -154,10 +154,10 @@ DEALER_POSSIBLE_INV gTonyInventory[MAXITEMS+1];// =
 //	//Ammo
 //	{ CLIP9_15,							8 },
 //	{ CLIP9_30,							6 },
-//	{ CLIP9_15_AP,					3 },		/* CLIP9_15_AP */			
-//	{ CLIP9_30_AP,				  3 },		/* CLIP9_30_AP */	
-//	{ CLIP9_15_HP,				  3 },		/* CLIP9_15_HP */	
-//	{ CLIP9_30_HP,				  3 },		/* CLIP9_30_HP */	
+//	{ CLIP9_15_AP,					3 },		/* CLIP9_15_AP */
+//	{ CLIP9_30_AP,				  3 },		/* CLIP9_30_AP */
+//	{ CLIP9_15_HP,				  3 },		/* CLIP9_15_HP */
+//	{ CLIP9_30_HP,				  3 },		/* CLIP9_30_HP */
 //
 //	{ CLIP38_6,							10},		/* CLIP38_6 */
 //	{ CLIP38_6_AP,				  5 },		/* CLIP38_6_AP */
@@ -166,23 +166,23 @@ DEALER_POSSIBLE_INV gTonyInventory[MAXITEMS+1];// =
 //	{ CLIP45_7,							6 },		/* CLIP45_7 */				// 70
 //
 //	{ CLIP45_30,					  8 },		/* CLIP45_30 */
-//	{ CLIP45_7_AP,					3 },		/* CLIP45_7_AP */		
-//	{ CLIP45_30_AP,					3 },		/* CLIP45_30_AP */	
-//	{ CLIP45_7_HP,					3 },		/* CLIP45_7_HP */		
-//	{ CLIP45_30_HP,					3 },		/* CLIP45_30_HP */	
+//	{ CLIP45_7_AP,					3 },		/* CLIP45_7_AP */
+//	{ CLIP45_30_AP,					3 },		/* CLIP45_30_AP */
+//	{ CLIP45_7_HP,					3 },		/* CLIP45_7_HP */
+//	{ CLIP45_30_HP,					3 },		/* CLIP45_30_HP */
 //
-//	{ CLIP357_6,					  6 },		/* CLIP357_6 */			
-//	{ CLIP357_9,					  5 },		/* CLIP357_9 */			
-//	{ CLIP357_6_AP,				  3 },		/* CLIP357_6_AP */	
-//	{ CLIP357_9_AP,					3 },		/* CLIP357_9_AP */	
-//	{ CLIP357_6_HP,					3 },		/* CLIP357_6_HP */			//80 
-//	{ CLIP357_9_HP,					3 },		/* CLIP357_9_HP */	
+//	{ CLIP357_6,					  6 },		/* CLIP357_6 */
+//	{ CLIP357_9,					  5 },		/* CLIP357_9 */
+//	{ CLIP357_6_AP,				  3 },		/* CLIP357_6_AP */
+//	{ CLIP357_9_AP,					3 },		/* CLIP357_9_AP */
+//	{ CLIP357_6_HP,					3 },		/* CLIP357_6_HP */			//80
+//	{ CLIP357_9_HP,					3 },		/* CLIP357_9_HP */
 //
-//	{ CLIP545_30_AP,				6 },		/* CLIP545_30_AP */	
-//	{ CLIP545_30_HP,				3 },		/* CLIP545_30_HP */	
+//	{ CLIP545_30_AP,				6 },		/* CLIP545_30_AP */
+//	{ CLIP545_30_HP,				3 },		/* CLIP545_30_HP */
 //
-//	{ CLIP556_30_AP,				6 },		/* CLIP556_30_AP */	
-//	{ CLIP556_30_HP,				3 },		/* CLIP556_30_HP */	
+//	{ CLIP556_30_AP,				6 },		/* CLIP556_30_AP */
+//	{ CLIP556_30_HP,				3 },		/* CLIP556_30_HP */
 //
 //	{ CLIP762W_10_AP,				6 },		/* CLIP762W_10_AP */
 //	{ CLIP762W_30_AP,				5 },		/* CLIP762W_30_AP */
@@ -191,18 +191,18 @@ DEALER_POSSIBLE_INV gTonyInventory[MAXITEMS+1];// =
 //
 //	{ CLIP762N_5_AP,				8 },		/* CLIP762N_5_AP */			//90
 //	{ CLIP762N_20_AP,				5 },		/* CLIP762N_20_AP */
-//	{ CLIP762N_5_HP,				3 },		/* CLIP762N_5_HP */	
-//	{ CLIP762N_20_HP,				3 },		/* CLIP762N_20_HP */	
+//	{ CLIP762N_5_HP,				3 },		/* CLIP762N_5_HP */
+//	{ CLIP762N_20_HP,				3 },		/* CLIP762N_20_HP */
 //
-//	{ CLIP47_50_SAP,				5 },		/* CLIP47_50_SAP */		
+//	{ CLIP47_50_SAP,				5 },		/* CLIP47_50_SAP */
 //
-//	{ CLIP57_50_AP,					6 },		/* CLIP57_50_AP */		
-//	{ CLIP57_50_HP,					3 },		/* CLIP57_50_HP */		
+//	{ CLIP57_50_AP,					6 },		/* CLIP57_50_AP */
+//	{ CLIP57_50_HP,					3 },		/* CLIP57_50_HP */
 //
-//	{ CLIP12G_7,						9 },		/* CLIP12G_7 */				
+//	{ CLIP12G_7,						9 },		/* CLIP12G_7 */
 //	{ CLIP12G_7_BUCKSHOT,   9 },		/* CLIP12G_7_BUCKSHOT */
 //
-//	{ CLIPCAWS_10_SAP,			5 },		/* CLIPCAWS_10_SAP */			
+//	{ CLIPCAWS_10_SAP,			5 },		/* CLIPCAWS_10_SAP */
 //	{ CLIPCAWS_10_FLECH,		3 },		/* CLIPCAWS_10_FLECH */			//100
 //
 //	{ CLIPROCKET_AP,				3 },
@@ -266,7 +266,7 @@ DEALER_POSSIBLE_INV gTonyInventory[MAXITEMS+1];// =
 //
 // Devin		( Explosives )
 //
-DEALER_POSSIBLE_INV gDevinInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gDevinInventory[MAXITEMS+1];// =
 //{
 //	{	STUN_GRENADE,							3 },
 //	{	TEARGAS_GRENADE,					3 },
@@ -321,7 +321,7 @@ DEALER_POSSIBLE_INV gDevinInventory[MAXITEMS+1];// =
 //
 // Franz	(Expensive pawn shop )
 //
-DEALER_POSSIBLE_INV gFranzInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gFranzInventory[MAXITEMS+1];// =
 //{
 //	{ NIGHTGOGGLES,							3 },
 //
@@ -358,7 +358,7 @@ DEALER_POSSIBLE_INV gFranzInventory[MAXITEMS+1];// =
 //
 // Keith		( Cheap Pawn Shop )
 //
-DEALER_POSSIBLE_INV gKeithInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gKeithInventory[MAXITEMS+1];// =
 //{
 //	{ FIRSTAIDKIT,			5 },
 //
@@ -393,7 +393,7 @@ DEALER_POSSIBLE_INV gKeithInventory[MAXITEMS+1];// =
 //
 // Sam		( Hardware )
 //
-DEALER_POSSIBLE_INV gSamInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gSamInventory[MAXITEMS+1];// =
 //{
 //	{ FIRSTAIDKIT,			3 },
 //
@@ -434,7 +434,7 @@ DEALER_POSSIBLE_INV gSamInventory[MAXITEMS+1];// =
 //
 // Jake			( Junk )
 //
-DEALER_POSSIBLE_INV gJakeInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gJakeInventory[MAXITEMS+1];// =
 //{
 //	{ FIRSTAIDKIT,			4 },
 //	{ MEDICKIT,					3 },
@@ -469,13 +469,13 @@ DEALER_POSSIBLE_INV gJakeInventory[MAXITEMS+1];// =
 //	{	XRAY_BULB,				1 },
 //
 //	// additional stuff possible in real game
-//	{ GLOCK_17,					1 },		/* Glock 17        */	
-//	{ GLOCK_18,					1 },		/* Glock 18        */	
-//	{ BERETTA_92F,			1 },		/* Beretta 92F     */	
-//	{ BERETTA_93R,			1 },		/* Beretta 93R     */	
-//	{ BARRACUDA,				1 },		/* .357 Barracuda  */	
-//	{ DESERTEAGLE,			1 },		/* .357 DesertEagle*/ 
-//	{ M1911,						1 },		/* .45 M1911			 */ 
+//	{ GLOCK_17,					1 },		/* Glock 17        */
+//	{ GLOCK_18,					1 },		/* Glock 18        */
+//	{ BERETTA_92F,			1 },		/* Beretta 92F     */
+//	{ BERETTA_93R,			1 },		/* Beretta 93R     */
+//	{ BARRACUDA,				1 },		/* .357 Barracuda  */
+//	{ DESERTEAGLE,			1 },		/* .357 DesertEagle*/
+//	{ M1911,						1 },		/* .45 M1911			 */
 //
 //	{ DISCARDED_LAW,		1 },
 //
@@ -502,7 +502,7 @@ DEALER_POSSIBLE_INV gJakeInventory[MAXITEMS+1];// =
 //
 // Howard		( Pharmaceuticals )
 //
-DEALER_POSSIBLE_INV gHowardInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gHowardInventory[MAXITEMS+1];// =
 //{
 //	{ FIRSTAIDKIT,				10},
 //	{ MEDICKIT,						5 },
@@ -523,7 +523,7 @@ DEALER_POSSIBLE_INV gHowardInventory[MAXITEMS+1];// =
 //
 // Gabby			( Creature parts and Blood )
 //
-DEALER_POSSIBLE_INV gGabbyInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gGabbyInventory[MAXITEMS+1];// =
 //{
 //	{ JAR,											12 },
 //	{ JAR_ELIXIR,								3 },
@@ -544,11 +544,11 @@ DEALER_POSSIBLE_INV gGabbyInventory[MAXITEMS+1];// =
 //
 // Frank  ( Alcohol )
 //
-DEALER_POSSIBLE_INV gFrankInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gFrankInventory[MAXITEMS+1];// =
 //{
-//	{ BEER,							12 },		
-//	{ WINE,							6 },		
-//	{ ALCOHOL,					9 },		
+//	{ BEER,							12 },
+//	{ WINE,							6 },
+//	{ ALCOHOL,					9 },
 //
 //	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
 //};
@@ -557,11 +557,11 @@ DEALER_POSSIBLE_INV gFrankInventory[MAXITEMS+1];// =
 //
 // Elgin  ( Alcohol )
 //
-DEALER_POSSIBLE_INV gElginInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gElginInventory[MAXITEMS+1];// =
 //{
-//	{ BEER,							12 },		
-//	{ WINE,							6 },		
-//	{ ALCOHOL,					9 },		
+//	{ BEER,							12 },
+//	{ WINE,							6 },
+//	{ ALCOHOL,					9 },
 //
 //	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
 //};
@@ -570,11 +570,11 @@ DEALER_POSSIBLE_INV gElginInventory[MAXITEMS+1];// =
 //
 // Manny  ( Alcohol )
 //
-DEALER_POSSIBLE_INV gMannyInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gMannyInventory[MAXITEMS+1];// =
 //{
-//	{ BEER,							12 },		
-//	{ WINE,							6 },		
-//	{ ALCOHOL,					9 },		
+//	{ BEER,							12 },
+//	{ WINE,							6 },
+//	{ ALCOHOL,					9 },
 //
 //	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
 //};
@@ -583,11 +583,11 @@ DEALER_POSSIBLE_INV gMannyInventory[MAXITEMS+1];// =
 //
 // Herve Santos		( Alcohol )
 //
-DEALER_POSSIBLE_INV gHerveInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gHerveInventory[MAXITEMS+1];// =
 //{
-//	{ BEER,							12 },		
-//	{ WINE,							6 },		
-//	{ ALCOHOL,					9 },		
+//	{ BEER,							12 },
+//	{ WINE,							6 },
+//	{ ALCOHOL,					9 },
 //
 //	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
 //};
@@ -596,11 +596,11 @@ DEALER_POSSIBLE_INV gHerveInventory[MAXITEMS+1];// =
 //
 // Peter Santos ( Alcohol )
 //
-DEALER_POSSIBLE_INV gPeterInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gPeterInventory[MAXITEMS+1];// =
 //{
-//	{ BEER,							12 },		
-//	{ WINE,							6 },		
-//	{ ALCOHOL,					9 },		
+//	{ BEER,							12 },
+//	{ WINE,							6 },
+//	{ ALCOHOL,					9 },
 //
 //	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
 //};
@@ -609,11 +609,11 @@ DEALER_POSSIBLE_INV gPeterInventory[MAXITEMS+1];// =
 //
 // Alberto Santos		( Alcohol )
 //
-DEALER_POSSIBLE_INV gAlbertoInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gAlbertoInventory[MAXITEMS+1];// =
 //{
-//	{ BEER,							12 },		
-//	{ WINE,							6 },		
-//	{ ALCOHOL,					9 },		
+//	{ BEER,							12 },
+//	{ WINE,							6 },
+//	{ ALCOHOL,					9 },
 //
 //	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
 //};
@@ -622,11 +622,11 @@ DEALER_POSSIBLE_INV gAlbertoInventory[MAXITEMS+1];// =
 //
 // Carlo Santos		( Alcohol )
 //
-DEALER_POSSIBLE_INV gCarloInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gCarloInventory[MAXITEMS+1];// =
 //{
-//	{ BEER,							12 },		
-//	{ WINE,							6 },		
-//	{ ALCOHOL,					9 },		
+//	{ BEER,							12 },
+//	{ WINE,							6 },
+//	{ ALCOHOL,					9 },
 //
 //	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
 //};
@@ -636,7 +636,7 @@ DEALER_POSSIBLE_INV gCarloInventory[MAXITEMS+1];// =
 // Micky	( BUYS Animal / Creature parts )
 //
 
-DEALER_POSSIBLE_INV gMickyInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gMickyInventory[MAXITEMS+1];// =
 //{
 //	// ONLY BUYS THIS STUFF, DOESN'T SELL IT
 //	{ BLOODCAT_CLAWS,	0 },
@@ -654,7 +654,7 @@ DEALER_POSSIBLE_INV gMickyInventory[MAXITEMS+1];// =
 //
 // Arnie		( Weapons REPAIR )
 //
-DEALER_POSSIBLE_INV gArnieInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gArnieInventory[MAXITEMS+1];// =
 //{
 //	// NO INVENTORY
 //
@@ -664,7 +664,7 @@ DEALER_POSSIBLE_INV gArnieInventory[MAXITEMS+1];// =
 //
 // Perko			( REPAIR)
 //
-DEALER_POSSIBLE_INV gPerkoInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gPerkoInventory[MAXITEMS+1];// =
 //{
 //	// NO INVENTORY
 //
@@ -674,7 +674,7 @@ DEALER_POSSIBLE_INV gPerkoInventory[MAXITEMS+1];// =
 //
 // Fredo			( Electronics REPAIR)
 //
-DEALER_POSSIBLE_INV gFredoInventory[MAXITEMS+1];// = 
+DEALER_POSSIBLE_INV gFredoInventory[MAXITEMS+1];// =
 //{
 //	// NO INVENTORY
 //
@@ -691,7 +691,6 @@ INT8	GetMaxItemAmount( DEALER_POSSIBLE_INV *pInv, UINT16 usItemIndex );
 
 INT8 GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex )
 {
-	PERFORMANCE_MARKER
 	switch( ubDealerID )
 	{
 		case ARMS_DEALER_TONY:
@@ -737,11 +736,11 @@ INT8 GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex )
 		case ARMS_DEALER_JAKE:
 			return( GetMaxItemAmount( gJakeInventory, usItemIndex ) );
 			break;
-		
+
 		case ARMS_DEALER_FRANZ:
 			return( GetMaxItemAmount( gFranzInventory, usItemIndex ) );
 			break;
-		
+
 		case ARMS_DEALER_HOWARD:
 			return( GetMaxItemAmount( gHowardInventory, usItemIndex ) );
 			break;
@@ -749,11 +748,11 @@ INT8 GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex )
 		case ARMS_DEALER_SAM:
 			return( GetMaxItemAmount( gSamInventory, usItemIndex ) );
 			break;
-		
+
 		case ARMS_DEALER_FREDO:
 			return( GetMaxItemAmount( gFredoInventory, usItemIndex ) );
 			break;
-		
+
 		case ARMS_DEALER_GABBY:
 			return( GetMaxItemAmount( gGabbyInventory, usItemIndex ) );
 			break;
@@ -780,7 +779,6 @@ INT8 GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex )
 
 INT8 GetMaxItemAmount( DEALER_POSSIBLE_INV *pInv, UINT16 usItemIndex )
 {
-	PERFORMANCE_MARKER
 	UINT16	usCnt=0;
 
 	//loop through the array until a the LAST_DEALER_ITEM is hit
@@ -800,7 +798,6 @@ INT8 GetMaxItemAmount( DEALER_POSSIBLE_INV *pInv, UINT16 usItemIndex )
 
 DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID )
 {
-	PERFORMANCE_MARKER
 	switch( ubArmsDealerID )
 	{
 		case ARMS_DEALER_TONY:
@@ -846,11 +843,11 @@ DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID 
 		case ARMS_DEALER_JAKE:
 			return( gJakeInventory );
 			break;
-		
+
 		case ARMS_DEALER_FRANZ:
 			return( gFranzInventory );
 			break;
-		
+
 		case ARMS_DEALER_HOWARD:
 			return( gHowardInventory );
 			break;
@@ -858,11 +855,11 @@ DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID 
 		case ARMS_DEALER_SAM:
 			return( gSamInventory );
 			break;
-		
+
 		case ARMS_DEALER_FREDO:
 			return( gFredoInventory );
 			break;
-		
+
 		case ARMS_DEALER_GABBY:
 			return( gGabbyInventory );
 			break;
@@ -888,7 +885,6 @@ DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID 
 //Madd: added boolean fUsed
 UINT8 GetCurrentSuitabilityForItem( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fUsed )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubItemCoolness;
 	UINT8 ubMinCoolness, ubMaxCoolness;
 
@@ -931,7 +927,7 @@ UINT8 GetCurrentSuitabilityForItem( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEA
 	//	case JAR:
 	//	case JAR_ELIXIR:
 	//	case JAR_CREATURE_BLOOD:
-		if ( Item[usItemIndex].medical || Item[usItemIndex].canteen || Item[usItemIndex].medicalkit || Item[usItemIndex].locksmithkit || Item[usItemIndex].toolkit || Item[usItemIndex].crowbar || Item[usItemIndex].jar ) 
+		if ( Item[usItemIndex].medical || Item[usItemIndex].canteen || Item[usItemIndex].medicalkit || Item[usItemIndex].locksmithkit || Item[usItemIndex].toolkit || Item[usItemIndex].crowbar || Item[usItemIndex].jar )
 			return(ITEM_SUITABILITY_ALWAYS);
 	//}
 
@@ -955,10 +951,10 @@ UINT8 GetCurrentSuitabilityForItem( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEA
 	//Madd:  Bobby Ray's will sell higher coolness stuff if it's used, and may also have a better selection at the start of the game, depending on selection
 	if ( bArmsDealer == -1 && gGameOptions.ubBobbyRay > BR_GOOD )
 	{
-		ubMaxCoolness += gGameOptions.ubBobbyRay - 1;		
+		ubMaxCoolness += gGameOptions.ubBobbyRay - 1;
 		if (fUsed )
 		{
-			ubMaxCoolness += 1;		
+			ubMaxCoolness += 1;
 		}
 	}
 
@@ -1017,7 +1013,6 @@ UINT8 GetCurrentSuitabilityForItem( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEA
 
 UINT8 ChanceOfItemTransaction( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerIsSelling, BOOLEAN fUsed )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubItemCoolness;
 	UINT8 ubChance = 0;
 	BOOLEAN fBobbyRay = FALSE;
@@ -1115,7 +1110,6 @@ UINT8 ChanceOfItemTransaction( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDe
 
 BOOLEAN ItemTransactionOccurs( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerIsSelling, BOOLEAN fUsed )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubChance;
 	INT16 sInventorySlot;
 
@@ -1160,7 +1154,6 @@ BOOLEAN ItemTransactionOccurs( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDe
 
 UINT8 DetermineInitialInvItems( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubChances, BOOLEAN fUsed)
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNumBought;
 	UINT8 ubCnt;
 
@@ -1181,7 +1174,6 @@ UINT8 DetermineInitialInvItems( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ub
 
 UINT8 HowManyItemsAreSold( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubNumInStock, BOOLEAN fUsed)
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNumSold;
 	UINT8 ubCnt;
 
@@ -1203,7 +1195,6 @@ UINT8 HowManyItemsAreSold( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubNumIn
 
 UINT8 HowManyItemsToReorder(UINT8 ubWanted, UINT8 ubStillHave)
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNumReordered;
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3,String("HowManyItemsToReorder: wanted = %d, still have = %d",ubWanted, ubStillHave));
 
@@ -1230,7 +1221,6 @@ UINT8 HowManyItemsToReorder(UINT8 ubWanted, UINT8 ubStillHave)
 
 int BobbyRayItemQsortCompare(const void *pArg1, const void *pArg2)
 {
-	PERFORMANCE_MARKER
 	UINT16	usItem1Index;
 	UINT16	usItem2Index;
 	UINT8		ubItem1Quality;
@@ -1248,7 +1238,6 @@ int BobbyRayItemQsortCompare(const void *pArg1, const void *pArg2)
 
 int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT8 ubItem1Quality, UINT8 ubItem2Quality )
 {
-	PERFORMANCE_MARKER
 	UINT8		ubItem1Category;
 	UINT8		ubItem2Category;
 	//UINT16	usItem1Price;
@@ -1269,7 +1258,7 @@ int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT8 ubIt
 		return( 1 );
 	}
 
-	// the same category 
+	// the same category
 	//if ( Item[ usItem1Index ].usItemClass == IC_AMMO && Item[ usItem2Index ].usItemClass == IC_AMMO )
 	//{
 		//UINT8		ubItem1Calibre;
@@ -1375,7 +1364,6 @@ int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT8 ubIt
 
 UINT8 GetDealerItemCategoryNumber( UINT16 usItemIndex )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiItemClass;
 	UINT8		ubWeaponClass;
 	UINT8		ubCategory = 0;
@@ -1383,7 +1371,7 @@ UINT8 GetDealerItemCategoryNumber( UINT16 usItemIndex )
 
 	uiItemClass  = Item[ usItemIndex ].usItemClass;
 
-	if ( usItemIndex < MAXITEMS && IsWeapon(usItemIndex) ) 
+	if ( usItemIndex < MAXITEMS && IsWeapon(usItemIndex) )
 	{
 		ubWeaponClass = 0;// Madd: commented out so we can sort guns by name instead ... Weapon[ usItemIndex ].ubWeaponClass;
 	}
@@ -1432,7 +1420,6 @@ UINT8 GetDealerItemCategoryNumber( UINT16 usItemIndex )
 
 BOOLEAN CanDealerItemBeSoldUsed( UINT16 usItemIndex )
 {
-	PERFORMANCE_MARKER
 //	if ( !( Item[ usItemIndex ].fFlags & ITEM_DAMAGEABLE ) )
 	if ( !( Item[ usItemIndex ].damageable  ) )
 		return(FALSE);

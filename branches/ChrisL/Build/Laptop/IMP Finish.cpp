@@ -79,7 +79,6 @@ extern void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn,INT32 reason);
 
 void EnterIMPFinish( void )
 {
-	PERFORMANCE_MARKER
 
 
 	// load graphic for portrait
@@ -87,7 +86,7 @@ void EnterIMPFinish( void )
 
 	//	CREATE buttons for IMP finish screen
 	CreateIMPFinishButtons( );
-	
+
 	// set review mode
 	fReviewStats = TRUE;
 	iCurrentProfileMode = IMP__FINISH;
@@ -101,10 +100,9 @@ void EnterIMPFinish( void )
 
 void RenderIMPFinish( void )
 {
-	PERFORMANCE_MARKER
 	// the background
 	RenderProfileBackGround( );
-	
+
 	// render merc fullname
 	RenderCharFullName( );
 
@@ -116,7 +114,6 @@ void RenderIMPFinish( void )
 
 void ExitIMPFinish( void )
 {
-	PERFORMANCE_MARKER
 
 	// remove buttons for IMP finish screen
 	DeleteIMPFinishButtons( );
@@ -130,9 +127,8 @@ void ExitIMPFinish( void )
 
 void HandleIMPFinish( void )
 {
-	PERFORMANCE_MARKER
-	
-	
+
+
 	return;
 }
 
@@ -140,7 +136,6 @@ void HandleIMPFinish( void )
 
 void CreateIMPFinishButtons( void )
 {
-	PERFORMANCE_MARKER
 	CHAR16 sString[ 128 ];
 
 	// this function will create the buttons needed for th IMP about us page
@@ -150,10 +145,10 @@ void CreateIMPFinishButtons( void )
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishStartOverCallback);
 	*/
-	giIMPFinishButton[ 0 ] = CreateIconAndTextButton(	giIMPFinishButtonImage[ 0 ], pImpButtonText[ 7 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPFinishButton[ 0 ] = CreateIconAndTextButton(	giIMPFinishButtonImage[ 0 ], pImpButtonText[ 7 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + ( 174 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishStartOverCallback);
 
@@ -163,10 +158,10 @@ void CreateIMPFinishButtons( void )
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishDoneCallback);
 */
-	giIMPFinishButton[ 1 ] = CreateIconAndTextButton(	giIMPFinishButtonImage[ 1 ], pImpButtonText[ 6 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPFinishButton[ 1 ] = CreateIconAndTextButton(	giIMPFinishButtonImage[ 1 ], pImpButtonText[ 6 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + ( 114 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishDoneCallback);
 
@@ -176,14 +171,14 @@ void CreateIMPFinishButtons( void )
 /*	giIMPFinishButton[2] = QuickCreateButton( giIMPFinishButtonImage[2], LAPTOP_SCREEN_UL_X + 13 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishPersonalityCallback);
- 
-*/	giIMPFinishButton[ 2 ] = CreateIconAndTextButton(	giIMPFinishButtonImage[ 2 ], pImpButtonText[ 2 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+
+*/	giIMPFinishButton[ 2 ] = CreateIconAndTextButton(	giIMPFinishButtonImage[ 2 ], pImpButtonText[ 2 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														MAIN_PAGE__THIRD_BUTTON_POS_X, LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishPersonalityCallback);
-															
+
 	SpecifyButtonIcon( giIMPFinishButton[2] , guiANALYSE, 0, 33, 23, FALSE );
 
 
@@ -194,14 +189,14 @@ void CreateIMPFinishButtons( void )
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishAttributesCallback);
 */
-	giIMPFinishButton[ 3 ] = CreateIconAndTextButton(	giIMPFinishButtonImage[ 3 ], pImpButtonText[ 3 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPFinishButton[ 3 ] = CreateIconAndTextButton(	giIMPFinishButtonImage[ 3 ], pImpButtonText[ 3 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														MAIN_PAGE__FOURTH_BUTTON_POS_X, LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishAttributesCallback);
 
-	SpecifyButtonIcon(	giIMPFinishButton[ 3 ], guiATTRIBUTEGRAPH, 0, 
+	SpecifyButtonIcon(	giIMPFinishButton[ 3 ], guiATTRIBUTEGRAPH, 0,
 													25, 25, FALSE );
 
 	// the portrait button
@@ -210,14 +205,14 @@ void CreateIMPFinishButtons( void )
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishPortraitCallback);
  */
-	giIMPFinishButton[ 4 ] = CreateIconAndTextButton(	giIMPFinishButtonImage[ 4 ], pImpButtonText[ 4 ], FONT12ARIAL, 
-													FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPFinishButton[ 4 ] = CreateIconAndTextButton(	giIMPFinishButtonImage[ 4 ], pImpButtonText[ 4 ], FONT12ARIAL,
+													FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														MAIN_PAGE__FIRST_BUTTON_POS_X, LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPagePortraitCallback);
 
-	SpecifyButtonIcon(	giIMPFinishButton[ 4 ], guiCHARACTERPORTRAIT, 0, 
+	SpecifyButtonIcon(	giIMPFinishButton[ 4 ], guiCHARACTERPORTRAIT, 0,
 													33, 23, FALSE );
 
 	swprintf( sString, pImpButtonText[ 5 ], GetVoiceCountFromVoiceSlot(iCurrentVoice));
@@ -228,14 +223,14 @@ void CreateIMPFinishButtons( void )
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishVoiceCallback);
 	*/
-	giIMPFinishButton[ 5 ] = CreateIconAndTextButton(	giIMPFinishButtonImage[ 5 ], sString, FONT12ARIAL, 
-													FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPFinishButton[ 5 ] = CreateIconAndTextButton(	giIMPFinishButtonImage[ 5 ], sString, FONT12ARIAL,
+													FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														MAIN_PAGE__SECOND_BUTTON_POS_X, LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPageVoiceCallback);
-	
-	SpecifyButtonIcon(	giIMPFinishButton[ 5 ], guiSMALLSILHOUETTE, 0, 
+
+	SpecifyButtonIcon(	giIMPFinishButton[ 5 ], guiSMALLSILHOUETTE, 0,
 													33, 23, FALSE );
 
 
@@ -256,13 +251,12 @@ void CreateIMPFinishButtons( void )
 
 void DeleteIMPFinishButtons( void )
 {
-	PERFORMANCE_MARKER
 	// this function destroys the buttons needed for the IMP about Us Page
 
 	// the back	button
 	RemoveButton(giIMPFinishButton[0] );
 	UnloadButtonImage(giIMPFinishButtonImage[0] );
-	
+
 	// begin profiling button
 	RemoveButton(giIMPFinishButton[1] );
 	UnloadButtonImage(giIMPFinishButtonImage[1] );
@@ -270,11 +264,11 @@ void DeleteIMPFinishButtons( void )
 	// begin personna button
 	RemoveButton(giIMPFinishButton[2] );
 	UnloadButtonImage(giIMPFinishButtonImage[2] );
-	
+
 	// begin attribs button
 	RemoveButton(giIMPFinishButton[3] );
 	UnloadButtonImage(giIMPFinishButtonImage[3] );
-	
+
 	// begin portrait button
 	RemoveButton(giIMPFinishButton[4] );
 	UnloadButtonImage(giIMPFinishButtonImage[4] );
@@ -290,7 +284,6 @@ void DeleteIMPFinishButtons( void )
 
 void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP Homepage About US button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -306,20 +299,19 @@ void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn,INT32 reason)
 		{
 		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 1 ], LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, FinishMessageBoxCallBack);
-		
+
 		}
-	}	
-} 
+	}
+}
 
 void BtnIMPFinishDoneCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
-	
+
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags|=(BUTTON_CLICKED_ON);
@@ -332,24 +324,23 @@ void BtnIMPFinishDoneCallback(GUI_BUTTON *btn,INT32 reason)
 		iCurrentImpPage = IMP_CONFIRM;
 			CreateACharacterFromPlayerEnteredStats( );
 			fButtonPendingFlag = TRUE;
-			iCurrentProfileMode = IMP__REGISTRY;		
+			iCurrentProfileMode = IMP__REGISTRY;
 			fFinishedCharGeneration = FALSE;
 			//ResetCharacterStats( );
 		}
-	}	
-} 
+	}
+}
 
 
 void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 	static BOOLEAN fAnimateFlag = FALSE;
 	static UINT32 uiBaseTime = 0;
 	static BOOLEAN fState = 0;
 	INT32 iDifference = 0;
-	
+
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -372,15 +363,15 @@ void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn,INT32 reason)
 			SpecifyButtonText( giIMPFinishButton[2], pImpButtonText[ 2 ] );
 		}
 	}
-	
+
 	// get amount of time between callbacks
 	iDifference = GetJA2Clock() - uiBaseTime;
-	
+
 	if( fAnimateFlag )
 	{
 	if( iDifference > ANIMATE_MIN_TIME )
 		{
-			
+
 			uiBaseTime = GetJA2Clock();
 			if( fState )
 			{
@@ -399,11 +390,10 @@ void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 
 
-} 
+}
 
 void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
@@ -430,12 +420,11 @@ void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn,INT32 reason)
 			fButtonPendingFlag = TRUE;
 			SpecifyButtonText( giIMPFinishButton[2], pImpButtonText[ 2 ] );
 		}
-	}	
-} 
+	}
+}
 
 void BtnIMPFinishPortraitCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
@@ -445,7 +434,7 @@ void BtnIMPFinishPortraitCallback(GUI_BUTTON *btn,INT32 reason)
 	if( iCurrentProfileMode < IMP__PORTRAIT )
 	{
 		btn->uiFlags&=~(BUTTON_CLICKED_ON);
-	
+
 		return;
 	}
 
@@ -464,13 +453,12 @@ void BtnIMPFinishPortraitCallback(GUI_BUTTON *btn,INT32 reason)
 		sFaceX = 253;
 			sFaceY = 245;
 		}
-	}	
-} 
+	}
+}
 
 
 void BtnIMPFinishVoiceCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
@@ -488,7 +476,7 @@ void BtnIMPFinishVoiceCallback(GUI_BUTTON *btn,INT32 reason)
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags|=(BUTTON_CLICKED_ON);
-		
+
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -498,18 +486,17 @@ void BtnIMPFinishVoiceCallback(GUI_BUTTON *btn,INT32 reason)
 			if( ! SoundIsPlaying( uiVoiceSound ) )
 			{
 		uiVoiceSound = PlayVoice( );
-			}	
+			}
 			btn->uiFlags&=~(BUTTON_CLICKED_ON);
 			fButtonPendingFlag = TRUE;
 		}
-	}	
-} 
+	}
+}
 
 /*
 WDS - Unused?
 BOOLEAN RenderCharProfileFinishFace( void )
 {
-	PERFORMANCE_MARKER
 	// render the portrait of the current picture
 	VOBJECT_DESC	VObjectDesc;
 	HVOBJECT hHandle;
@@ -526,7 +513,7 @@ BOOLEAN RenderCharProfileFinishFace( void )
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("Faces\\SmallFaces\\00.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &uiGraphicHandle));
-		
+
 			// show it
 		GetVideoObject(&hHandle, uiGraphicHandle);
 		BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY , VO_BLT_SRCTRANSPARENCY,NULL);
@@ -543,7 +530,7 @@ BOOLEAN RenderCharProfileFinishFace( void )
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("Faces\\SmallFaces\\01.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &uiGraphicHandle));
-		
+
 			// show it
 		GetVideoObject(&hHandle, uiGraphicHandle);
 		BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY , VO_BLT_SRCTRANSPARENCY,NULL);
@@ -560,7 +547,7 @@ BOOLEAN RenderCharProfileFinishFace( void )
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("Faces\\SmallFaces\\02.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &uiGraphicHandle));
-		
+
 			// show it
 		GetVideoObject(&hHandle, uiGraphicHandle);
 		BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY , VO_BLT_SRCTRANSPARENCY,NULL);
@@ -568,11 +555,11 @@ BOOLEAN RenderCharProfileFinishFace( void )
 
 			// and kick it's sorry ..umm never mind, outta here
 		DeleteVideoObjectFromIndex( uiGraphicHandle );
-		
+
 
 		break;
 		}
-	
+
 	}
 	else
 	{
@@ -585,7 +572,7 @@ BOOLEAN RenderCharProfileFinishFace( void )
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("Faces\\SmallFaces\\03.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &uiGraphicHandle));
-		
+
 			// show it
 		GetVideoObject(&hHandle, uiGraphicHandle);
 		BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY , VO_BLT_SRCTRANSPARENCY,NULL);
@@ -602,7 +589,7 @@ BOOLEAN RenderCharProfileFinishFace( void )
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("Faces\\SmallFaces\\04.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &uiGraphicHandle));
-		
+
 			// show it
 		GetVideoObject(&hHandle, uiGraphicHandle);
 		BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY , VO_BLT_SRCTRANSPARENCY,NULL);
@@ -619,7 +606,7 @@ BOOLEAN RenderCharProfileFinishFace( void )
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 		FilenameForBPP("Faces\\SmallFaces\\05.sti", VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &uiGraphicHandle));
-		
+
 			// show it
 		GetVideoObject(&hHandle, uiGraphicHandle);
 		BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY , VO_BLT_SRCTRANSPARENCY,NULL);
@@ -645,7 +632,6 @@ BOOLEAN RenderCharProfileFinishFace( void )
 */
 void RenderCharFullName( void )
 {
-	PERFORMANCE_MARKER
 
 	CHAR16 sString[ 64 ];
 	INT16 sX, sY;
@@ -666,7 +652,6 @@ void RenderCharFullName( void )
 
 BOOLEAN LoadCharacterPortrait( void )
 {
-	PERFORMANCE_MARKER
 	// this function will load the character's portrait, to be used on portrait button
 	VOBJECT_DESC	VObjectDesc;
 
@@ -674,14 +659,13 @@ BOOLEAN LoadCharacterPortrait( void )
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP( pPlayerSelectedFaceFileNames[ iPortraitNumber ] , VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiCHARACTERPORTRAIT));
-		
+
 	return( TRUE );
 }
 
 
 void DestroyCharacterPortrait( void )
 {
-	PERFORMANCE_MARKER
 	// remove the portrait that was loaded by loadcharacterportrait
 	DeleteVideoObjectFromIndex( guiCHARACTERPORTRAIT );
 
@@ -692,7 +676,6 @@ void DestroyCharacterPortrait( void )
 
 void FinishMessageBoxCallBack( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	// yes, so start over, else stay here and do nothing for now
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{

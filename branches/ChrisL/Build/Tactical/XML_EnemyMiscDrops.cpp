@@ -19,16 +19,15 @@ struct
 	MISC_DROPS *	curArray;
 
 	UINT32			maxArraySize;
-	UINT32			curIndex;	
+	UINT32			curIndex;
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
 typedef miscDropParseData;
 
-static void XMLCALL 
+static void XMLCALL
 miscDropStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	miscDropParseData * pData = (miscDropParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -50,9 +49,9 @@ miscDropStartElementHandle(void *userData, const XML_Char *name, const XML_Char 
 			pData->maxReadDepth++; //we are not skipping this element
 		}
 		else if(pData->curElement == ELEMENT &&
-				(strcmp(name, "uiIndex") == 0 || 
+				(strcmp(name, "uiIndex") == 0 ||
 				strcmp(name, "usItemClass") == 0 ||
-				strcmp(name, "ubEnemyDropRate") == 0 || 
+				strcmp(name, "ubEnemyDropRate") == 0 ||
 				strcmp(name, "ubMilitiaDropRate") == 0 ))
 		{
 			pData->curElement = ELEMENT_PROPERTY;
@@ -70,10 +69,9 @@ miscDropStartElementHandle(void *userData, const XML_Char *name, const XML_Char 
 static void XMLCALL
 miscDropCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	miscDropParseData * pData = (miscDropParseData *)userData;
 
-	if( (pData->currentDepth <= pData->maxReadDepth) && 
+	if( (pData->currentDepth <= pData->maxReadDepth) &&
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
 	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
@@ -84,7 +82,6 @@ miscDropCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 miscDropEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER	
 	miscDropParseData * pData = (miscDropParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -134,13 +131,12 @@ miscDropEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInEnemyMiscDropsStats(MISC_DROPS *pEnemyMiscDrops, STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	miscDropParseData pData;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading EnemyMiscDrops.xml" );
@@ -149,7 +145,7 @@ BOOLEAN ReadInEnemyMiscDropsStats(MISC_DROPS *pEnemyMiscDrops, STR fileName)
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -164,15 +160,15 @@ BOOLEAN ReadInEnemyMiscDropsStats(MISC_DROPS *pEnemyMiscDrops, STR fileName)
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, miscDropStartElementHandle, miscDropEndElementHandle);
 	XML_SetCharacterDataHandler(parser, miscDropCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
 	pData.curArray = pEnemyMiscDrops;
-	pData.maxArraySize = MAX_DROP_ITEMS; 
-	
+	pData.maxArraySize = MAX_DROP_ITEMS;
+
 	XML_SetUserData(parser, &pData);
 
 
@@ -198,7 +194,6 @@ BOOLEAN ReadInEnemyMiscDropsStats(MISC_DROPS *pEnemyMiscDrops, STR fileName)
 
 BOOLEAN WriteEnemyMiscDropsStats(MISC_DROPS *pEnemyMiscDrops, STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there
@@ -206,7 +201,7 @@ BOOLEAN WriteEnemyMiscDropsStats(MISC_DROPS *pEnemyMiscDrops, STR fileName)
 	hFile = FileOpen( fileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	{
 		UINT32 cnt;
 

@@ -41,7 +41,6 @@ INT32	giDrunkModifier[] =
 
 UINT8 GetDrugType( UINT16 usItem )
 {
-	PERFORMANCE_MARKER
 	if ( usItem == ADRENALINE_BOOSTER )
 	{
 		return( DRUG_TYPE_ADRENALINE );
@@ -61,10 +60,9 @@ UINT8 GetDrugType( UINT16 usItem )
 	return( NO_DRUG );
 }
 
-		
+
 BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubDrugType;
 	UINT8	ubKitPoints;
 	INT8	bRegenPointsGained;
@@ -123,7 +121,7 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 		// Stop side effects until were done....
 		pSoldier->drugs.bDrugSideEffectRate[ ubDrugType ]						= 0;
 
-		
+
 		if ( ubDrugType == DRUG_TYPE_ALCOHOL )
 		{
 			// ATE: use kit points...
@@ -195,7 +193,7 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 					bRegenPointsGained++;
 				}
 			}
-			
+
 			bRegenPointsGained -= pSoldier->bRegenBoostersUsedToday;
 			if (bRegenPointsGained > 0)
 			{
@@ -215,18 +213,17 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 	}
 	else
 	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_MERC_TOOK_DRUG ], pSoldier->name );		
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_MERC_TOOK_DRUG ], pSoldier->name );
 	}
 
 	// Dirty panel
 	fInterfacePanelDirty = DIRTYLEVEL2;
-	
+
 	return( TRUE );
 }
 
 void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt, cnt2;
 	INT32	iNumLoops;
 //	INT8 bBandaged;
@@ -235,7 +232,7 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 	{
 		// If side effect aret is non-zero....
 		if ( pSoldier->drugs.bDrugSideEffectRate[ cnt ] > 0 )
-		{	
+		{
 			// Subtract some...
 			pSoldier->drugs.bDrugSideEffect[ cnt ] -= pSoldier->drugs.bDrugSideEffectRate[ cnt ];
 
@@ -251,7 +248,7 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 		if ( pSoldier->drugs.bDrugEffectRate[ cnt ] < 0 )
 		{
 			pSoldier->drugs.bDrugEffect[ cnt ]				-= ( -1 * pSoldier->drugs.bDrugEffectRate[ cnt ] );
-		
+
 			// Have we run out?
 			if ( pSoldier->drugs.bDrugEffect[ cnt ] <= 0 )
 			{
@@ -286,7 +283,7 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 
 		// Add increase ineffect....
 		if ( pSoldier->drugs.bDrugEffectRate[ cnt ] > 0 )
-		{	
+		{
 			// Seap some in....
 			pSoldier->drugs.bFutureDrugEffect[ cnt ] -= pSoldier->drugs.bDrugEffectRate[ cnt ];
 			pSoldier->drugs.bDrugEffect[ cnt ]				+= pSoldier->drugs.bDrugEffectRate[ cnt ];
@@ -328,14 +325,12 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 
 INT8 GetDrugEffect( SOLDIERTYPE *pSoldier, UINT8 ubDrugType	)
 {
-	PERFORMANCE_MARKER
 	return( pSoldier->drugs.bDrugEffect[ ubDrugType ] );
 }
 
 
 INT8 GetDrugSideEffect( SOLDIERTYPE *pSoldier, UINT8 ubDrugType )
 {
-	PERFORMANCE_MARKER
 	// If we have a o-positive effect
 	if ( pSoldier->drugs.bDrugEffect[ ubDrugType ] > 0 )
 	{
@@ -349,7 +344,6 @@ INT8 GetDrugSideEffect( SOLDIERTYPE *pSoldier, UINT8 ubDrugType )
 
 void HandleAPEffectDueToDrugs( SOLDIERTYPE *pSoldier, UINT8 *pubPoints )
 {
-	PERFORMANCE_MARKER
 	INT8	bDrunkLevel;
 	INT16	sPoints = (*pubPoints);
 
@@ -389,7 +383,6 @@ void HandleAPEffectDueToDrugs( SOLDIERTYPE *pSoldier, UINT8 *pubPoints )
 
 void HandleBPEffectDueToDrugs( SOLDIERTYPE *pSoldier, INT16 *psPointReduction )
 {
-	PERFORMANCE_MARKER
 	INT8 bDrunkLevel;
 
 	// Are we in a side effect or good effect?
@@ -416,7 +409,6 @@ void HandleBPEffectDueToDrugs( SOLDIERTYPE *pSoldier, INT16 *psPointReduction )
 
 INT8 GetDrunkLevel( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT8 bNumDrinks;
 
 	// If we have a -ve effect ...
@@ -450,14 +442,12 @@ INT8 GetDrunkLevel( SOLDIERTYPE *pSoldier )
 
 INT32 EffectStatForBeingDrunk( SOLDIERTYPE *pSoldier, INT32 iStat )
 {
-	PERFORMANCE_MARKER
 	return( ( iStat * giDrunkModifier[ GetDrunkLevel( pSoldier ) ] / 100 ) );
 }
 
 
 BOOLEAN MercUnderTheInfluence( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// Are we in a side effect or good effect?
 	if ( pSoldier->drugs.bDrugEffect[ DRUG_TYPE_ADRENALINE ] )
 	{

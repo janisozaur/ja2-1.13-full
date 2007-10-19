@@ -48,7 +48,7 @@
 GAME_SETTINGS		gGameSettings;
 GAME_OPTIONS		gGameOptions;
 // Snap: Options read from an INI file in the default of custom Data directory
-GAME_EXTERNAL_OPTIONS gGameExternalOptions; 
+GAME_EXTERNAL_OPTIONS gGameExternalOptions;
 
 extern	SGPFILENAME	gCheckFilenames[];
 extern	CHAR8		gzErrorMsg[256];
@@ -74,7 +74,6 @@ bool UsingNewInventorySystem()
 
 BOOLEAN LoadGameSettings()
 {
-	PERFORMANCE_MARKER
 	HWFILE	hFile;
 	UINT32	uiNumBytesRead;
 	char gameSettingsFilePath[MAX_PATH];
@@ -128,12 +127,12 @@ BOOLEAN LoadGameSettings()
 	//
 	//Do checking to make sure the settings are valid
 	//
-	if( gGameSettings.bLastSavedGameSlot < 0 || gGameSettings.bLastSavedGameSlot >= NUM_SAVE_GAMES ) 
+	if( gGameSettings.bLastSavedGameSlot < 0 || gGameSettings.bLastSavedGameSlot >= NUM_SAVE_GAMES )
 		gGameSettings.bLastSavedGameSlot = -1;
 
 	if( gGameSettings.ubMusicVolumeSetting > HIGHVOLUME )
 		gGameSettings.ubMusicVolumeSetting = MIDVOLUME;
-	
+
 	if( gGameSettings.ubSoundEffectsVolume > HIGHVOLUME )
 		gGameSettings.ubSoundEffectsVolume = MIDVOLUME;
 
@@ -147,7 +146,7 @@ BOOLEAN LoadGameSettings()
 		gGameSettings.fOptions[ TOPTION_SUBTITLES ]						= TRUE;
 		gGameSettings.fOptions[ TOPTION_SPEECH ]							= TRUE;
 	}
-		
+
 
 	//
 	//	Set the settings
@@ -155,7 +154,7 @@ BOOLEAN LoadGameSettings()
 
 	SetSoundEffectsVolume( gGameSettings.ubSoundEffectsVolume );
 	SetSpeechVolume( gGameSettings.ubSpeechVolume );
-	MusicSetVolume( gGameSettings.ubMusicVolumeSetting );	
+	MusicSetVolume( gGameSettings.ubMusicVolumeSetting );
 
 #ifndef BLOOD_N_GORE_ENABLED
 	gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ]				= FALSE;
@@ -178,7 +177,6 @@ BOOLEAN LoadGameSettings()
 
 BOOLEAN	SaveGameSettings()
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32	uiNumBytesWritten;
 	char gameSettingsFilePath[MAX_PATH];
@@ -200,7 +198,7 @@ BOOLEAN	SaveGameSettings()
 
 	gGameSettings.ubSoundEffectsVolume = (UINT8)GetSoundEffectsVolume( );
 	gGameSettings.ubSpeechVolume = (UINT8)GetSpeechVolume( );
-	gGameSettings.ubMusicVolumeSetting = (UINT8)MusicGetVolume( );	
+	gGameSettings.ubMusicVolumeSetting = (UINT8)MusicGetVolume( );
 
 	strcpy( gGameSettings.zVersionNumber, czVersionNumber );
 
@@ -221,7 +219,6 @@ BOOLEAN	SaveGameSettings()
 
 void InitGameSettings()
 {
-	PERFORMANCE_MARKER
 	memset( &gGameSettings, 0, sizeof( GAME_SETTINGS ) );
 
 	//Init the Game Settings
@@ -233,7 +230,7 @@ void InitGameSettings()
 	//Set the settings
 	SetSoundEffectsVolume( gGameSettings.ubSoundEffectsVolume );
 	SetSpeechVolume( gGameSettings.ubSpeechVolume );
-	MusicSetVolume( gGameSettings.ubMusicVolumeSetting );	
+	MusicSetVolume( gGameSettings.ubMusicVolumeSetting );
 
 	gGameSettings.fOptions[ TOPTION_SUBTITLES ]							= TRUE;
 	gGameSettings.fOptions[ TOPTION_SPEECH ]							= TRUE;
@@ -294,7 +291,6 @@ void InitGameSettings()
 
 void InitGameOptions()
 {
-	PERFORMANCE_MARKER
 	memset( &gGameOptions, 0, sizeof( GAME_OPTIONS ) );
 
 	//Init the game options
@@ -329,7 +325,6 @@ extern INT32 CountEmptyIMPSlots( INT8 iSex );
 // Snap: Read options from an INI file in the default of custom Data directory
 void LoadGameExternalOptions()
 {
-	PERFORMANCE_MARKER
 	//Kaiden: Setting Ja2_Options.ini file to be read
 	CIniReader iniReader(GAME_EXTERNAL_OPTIONS_FILE);
 
@@ -341,7 +336,7 @@ void LoadGameExternalOptions()
 
 	gGameExternalOptions.iIMPMaleCharacterCount	= iniReader.ReadInteger("JA2 Laptop Settings","IMP_MALE_CHARACTER_COUNT", COUNT_STANDARD_MALE_SLOTS, 1, NUM_PROFILES);
 	gGameExternalOptions.iIMPFemaleCharacterCount = iniReader.ReadInteger("JA2 Laptop Settings","IMP_FEMALE_CHARACTER_COUNT", COUNT_STANDARD_FEMALE_SLOTS, 1, NUM_PROFILES);
-	if (gGameExternalOptions.iIMPMaleCharacterCount + gGameExternalOptions.iIMPFemaleCharacterCount > NUM_PROFILES) 
+	if (gGameExternalOptions.iIMPMaleCharacterCount + gGameExternalOptions.iIMPFemaleCharacterCount > NUM_PROFILES)
 	{
 		gGameExternalOptions.iIMPMaleCharacterCount	= COUNT_STANDARD_MALE_SLOTS;
 		gGameExternalOptions.iIMPFemaleCharacterCount = COUNT_STANDARD_FEMALE_SLOTS;
@@ -416,10 +411,10 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.gubDeadLockDelay = iniReader.ReadInteger("JA2 System Settings","DEAD_LOCK_DELAY",15);
 	gGameExternalOptions.gfEnableEmergencyButton_SkipStrategicEvents = iniReader.ReadBoolean("JA2 System Settings","ENABLE_EMERGENCY_BUTTON_NUMLOCK_TO_SKIP_STRATEGIC_EVENTS",0);
 
-	
+
 	//################# Video Settings #################
 	gGameExternalOptions.gfVSync = iniReader.ReadBoolean("JA2 Video Settings","VERTICAL_SYNC",0);
-	
+
 
 	//################# Animation Settings #################
 	gGameExternalOptions.gubPlayerTurnSpeedUpFactor		= iniReader.ReadInteger("JA2 Turnbased Animation Speed Settings","PLAYER_TURN_SPEED_UP_FACTOR",1);
@@ -428,7 +423,7 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.gubMilitiaTurnSpeedUpFactor	= iniReader.ReadInteger("JA2 Turnbased Animation Speed Settings","MILITIA_TURN_SPEED_UP_FACTOR",1);
 	gGameExternalOptions.gubCivilianTurnSpeedUpFactor	= iniReader.ReadInteger("JA2 Turnbased Animation Speed Settings","CIVILIAN_TURN_SPEED_UP_FACTOR",1);
 
-	
+
 	//################# Sound Settings #################
 	gGameExternalOptions.guiWeaponSoundEffectsVolume = iniReader.ReadInteger("JA2 Sound Settings","WEAPON_SOUND_EFFECTS_VOLUME",0);
 
@@ -491,7 +486,7 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.fEnableArmorCoverage				= iniReader.ReadBoolean("JA2 Tactical Settings", "ENABLE_ARMOR_COVERAGE", FALSE); // ShadoWarrior for Captain J's armor coverage
 
 	//################# Rain Settings ##################
-	
+
 	// Rain settings
 	gGameExternalOptions.gfAllowRain									= iniReader.ReadBoolean("JA2 Rain Settings","ALLOW_RAIN",0);
 	gGameExternalOptions.gusRainChancePerDay							= iniReader.ReadInteger("JA2 Rain Settings","RAIN_CHANCE_PER_DAY",100);
@@ -524,7 +519,7 @@ void LoadGameExternalOptions()
 	//Lalien: Game starting time
 	gGameExternalOptions.iGameStartingTime			= iniReader.ReadInteger("JA2 Gameplay Settings", "GAME_STARTING_TIME", NUM_SEC_IN_HOUR);
 
-	
+
 	// WANNE: Check for invalid starting time
 	if (gGameExternalOptions.iGameStartingTime < 0 || gGameExternalOptions.iGameStartingTime >= NUM_SEC_IN_DAY)
 	{
@@ -536,7 +531,7 @@ void LoadGameExternalOptions()
 	}
 
 	gGameExternalOptions.iFirstArrivalDelay			= iniReader.ReadInteger("JA2 Gameplay Settings", "FIRST_ARRIVAL_DELAY", 6 * NUM_SEC_IN_HOUR);
-		
+
 	//################# Settings valid on game start only end ##################
 
 
@@ -552,7 +547,7 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.ubGameProgressPortionControl	= iniReader.ReadInteger("JA2 Gameplay Settings","GAME_PROGRESS_CONTROL",25);
 	gGameExternalOptions.ubGameProgressPortionIncome	= iniReader.ReadInteger("JA2 Gameplay Settings","GAME_PROGRESS_INCOME",50);
 	gGameExternalOptions.ubGameProgressPortionVisited	= iniReader.ReadInteger("JA2 Gameplay Settings","GAME_PROGRESS_VISITED",0);
-	
+
 	// Any way to warn on this?
 	if (gGameExternalOptions.ubGameProgressPortionKills + gGameExternalOptions.ubGameProgressPortionControl + gGameExternalOptions.ubGameProgressPortionIncome + gGameExternalOptions.ubGameProgressPortionVisited != 100) 
 	{
@@ -567,7 +562,7 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.ubGameProgressMikeAvailable	= iniReader.ReadInteger("JA2 Gameplay Settings","GAME_PROGRESS_MIKE_AVAILABLE",50);
 	gGameExternalOptions.ubGameProgressIggyAvaliable	= iniReader.ReadInteger("JA2 Gameplay Settings","GAME_PROGRESS_IGGY_AVAILABLE",70);
 	gGameExternalOptions.ubSendTroopsToDrassen			= iniReader.ReadBoolean("JA2 Gameplay Settings","STRATEGIC_EVENT_SEND_TROOPS_TO_DRASSEN",TRUE);
-	
+
 
 	//Weapons modification
 	gGameExternalOptions.ubExplosivesDamageMultiplier	= iniReader.ReadInteger("JA2 Gameplay Settings","EXPLOSIVES_DAMAGE_MULTIPLIER",0);
@@ -659,7 +654,7 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.gfAllowReinforcements				= iniReader.ReadBoolean("JA2 Gameplay Settings","ALLOW_REINFORCEMENTS",FALSE);
 	gGameExternalOptions.gfAllowReinforcementsOnlyInCity	= iniReader.ReadBoolean("JA2 Gameplay Settings","ALLOW_REINFORCEMENTS_ONLY_IN_CITIES",FALSE);
 	gGameExternalOptions.guiBaseQueenPoolIncrement			= iniReader.ReadInteger("JA2 Gameplay Settings","QUEEN_POOL_INCREMENT_PER_DIFFICULTY_LEVEL",60);
-	
+
 	gGameExternalOptions.guiCreateEachNHours				= iniReader.ReadInteger("JA2 Gameplay Settings","CREATE_EACH_N_HOURS",24);
 	gGameExternalOptions.guiDivOfOriginalMilitia			= iniReader.ReadInteger("JA2 Gameplay Settings","DIV_OF_ORIGINAL_MILITIA",4);
 	gGameExternalOptions.guiMinMilitiaSquadSize				= iniReader.ReadInteger("JA2 Gameplay Settings","MINIMUM_MILITIA_SQUAD_SIZE",5);
@@ -701,14 +696,14 @@ void LoadGameExternalOptions()
 
 	gGameExternalOptions.ubRepairCostPerJam					= iniReader.ReadInteger("JA2 Gameplay Settings","REPAIR_COST_PER_JAM",2);
 	gGameExternalOptions.ubRepairRateDivisor				= iniReader.ReadInteger("JA2 Gameplay Settings","REPAIR_RATE_DIVISOR",2500);
-	
+
 
 	//Misc
 	gGameExternalOptions.fAmmoDynamicWeight					= iniReader.ReadBoolean("JA2 Gameplay Settings", "DYNAMIC_AMMO_WEIGHT", TRUE); //Pulmu
-	gGameExternalOptions.fEnableCrepitus					= iniReader.ReadBoolean("JA2 Gameplay Settings", "ENABLE_CREPITUS", TRUE); 
+	gGameExternalOptions.fEnableCrepitus					= iniReader.ReadBoolean("JA2 Gameplay Settings", "ENABLE_CREPITUS", TRUE);
 
-	gGameExternalOptions.fEnableAllTerrorists				= iniReader.ReadBoolean("JA2 Gameplay Settings", "ENABLE_ALL_TERRORISTS", FALSE); 
-	gGameExternalOptions.fEnableAllWeaponCaches				= iniReader.ReadBoolean("JA2 Gameplay Settings", "ENABLE_ALL_WEAPON_CACHES", FALSE); 
+	gGameExternalOptions.fEnableAllTerrorists				= iniReader.ReadBoolean("JA2 Gameplay Settings", "ENABLE_ALL_TERRORISTS", FALSE);
+	gGameExternalOptions.fEnableAllWeaponCaches				= iniReader.ReadBoolean("JA2 Gameplay Settings", "ENABLE_ALL_WEAPON_CACHES", FALSE);
 
 	gGameExternalOptions.fSlowProgressForEnemyItemsChoice	= iniReader.ReadBoolean("JA2 Gameplay Settings", "SLOW_PROGRESS_FOR_ENEMY_ITEMS_CHOICE", TRUE);
 
@@ -720,13 +715,11 @@ void LoadGameExternalOptions()
 
 void FreeGameExternalOptions()
 {
-	PERFORMANCE_MARKER
 	MemFree( gGameExternalOptions.iaIMPSlots);
 }
 
 BOOLEAN GetCDLocation( )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiStrngLength = 0;
 	CHAR8		zCdLocation[ SGPFILENAME_LEN ];
 	UINT32	uiRetVal=0;
@@ -738,7 +731,7 @@ BOOLEAN GetCDLocation( )
 	{
 		// the user most likely doesnt have the file, or the user has messed with the file
 		// build a new one
-		
+
 		//First delete the old file
 		// Snap: don't clobber the INI file!
 		//FileDelete( GAME_INI_FILE );
@@ -790,7 +783,6 @@ BOOLEAN GetCDLocation( )
 
 BOOLEAN GetCDromDriveLetter( STR8	pString )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiSize=0;
 	UINT8		ubCnt=0;
 	CHAR8		zDriveLetters[512];
@@ -892,7 +884,6 @@ BOOLEAN GetCDromDriveLetter( STR8	pString )
 
 BOOLEAN CheckIfGameCdromIsInCDromDrive()
 {
-	PERFORMANCE_MARKER
 	CHAR8		zVolumeNameBuffer[512];
 	UINT32	uiVolumeSerialNumber=0;
 	UINT32	uiMaxComponentLength=0;
@@ -948,13 +939,12 @@ BOOLEAN CheckIfGameCdromIsInCDromDrive()
 			return( FALSE );
 	}
 
-	return( TRUE );	
+	return( TRUE );
 }
 
 
 BOOLEAN GetCdromLocationFromIniFile( STR pRootOfCdromDrive )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiRetVal=0;
 
 	//Do a crude check to make sure the Ja2.ini file is the right on
@@ -976,7 +966,6 @@ BOOLEAN GetCdromLocationFromIniFile( STR pRootOfCdromDrive )
 
 void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	if( bExitValue == MSG_BOX_RETURN_OK )
 	{
 		guiPreviousOptionScreen = GAME_SCREEN;
@@ -995,7 +984,6 @@ void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
 
 BOOLEAN IsDriveLetterACDromDrive( STR pDriveLetter )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiDriveType;
 	CHAR8		zRootName[512];
 
@@ -1020,7 +1008,6 @@ BOOLEAN IsDriveLetterACDromDrive( STR pDriveLetter )
 
 void DisplayGameSettings( )
 {
-	PERFORMANCE_MARKER
 	//Display the version number
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%s: %s (%S)", pMessageStrings[ MSG_VERSION ], zVersionLabel, czVersionNumber );
 
@@ -1069,7 +1056,6 @@ void DisplayGameSettings( )
 
 BOOLEAN MeanwhileSceneSeen( UINT8 ubMeanwhile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiCheckFlag;
 
 	if ( ubMeanwhile > 32 || ubMeanwhile > NUM_MEANWHILES )
@@ -1091,7 +1077,6 @@ BOOLEAN MeanwhileSceneSeen( UINT8 ubMeanwhile )
 
 BOOLEAN SetMeanwhileSceneSeen( UINT8 ubMeanwhile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiCheckFlag;
 
 	if ( ubMeanwhile > 32 || ubMeanwhile > NUM_MEANWHILES )
@@ -1106,7 +1091,6 @@ BOOLEAN SetMeanwhileSceneSeen( UINT8 ubMeanwhile )
 
 BOOLEAN	CanGameBeSaved()
 {
-	PERFORMANCE_MARKER
 	//if the iron man mode is on
 	if( gGameOptions.fIronManMode )
 	{
@@ -1118,8 +1102,8 @@ BOOLEAN	CanGameBeSaved()
 		}
 
 		//if there are enemies in the current sector
-		if( gWorldSectorX != -1 && gWorldSectorY != -1 && 
-				gWorldSectorX != 0 && gWorldSectorY != 0 && 
+		if( gWorldSectorX != -1 && gWorldSectorY != -1 &&
+				gWorldSectorX != 0 && gWorldSectorY != 0 &&
 				NumEnemiesInAnySector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) > 0 )
 		{
 			//no save for you

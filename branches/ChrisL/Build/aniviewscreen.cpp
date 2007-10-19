@@ -4,24 +4,24 @@
 	#include "builddefines.h"
 	#include <stdio.h>
 	#include <stdarg.h>
-	#include <time.h> 
-	#include "sgp.h" 
+	#include <time.h>
+	#include "sgp.h"
 	#include "gameloop.h"
 	#include "himage.h"
 	#include "vobject.h"
 	#include "vobject_private.h"
 	#include "vobject_blitters.h"
 	#include "wcheck.h"
-	#include "worlddef.h" 
+	#include "worlddef.h"
 	#include "renderworld.h"
 	#include "input.h"
-	#include "font.h"  
+	#include "font.h"
 	#include "screenids.h"
-	#include "container.h" 
+	#include "container.h"
 	#include "overhead.h"
 	#include "Isometric Utils.h"
 	#include "sysutil.h"
-	#include "Font Control.h"  
+	#include "Font Control.h"
 	#include "Radar Screen.h"
 	#include "Animation Control.h"
 	#include "Animation Data.h"
@@ -58,7 +58,6 @@ static INT8   ubCurLoadedState = 0;
 
 void CycleAnimations( )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	// FInd the next animation with start height the same...
@@ -79,17 +78,15 @@ void CycleAnimations( )
 
 UINT32 AniEditScreenInit(void)
 {
-	PERFORMANCE_MARKER  
 
   return TRUE;
 }
-   
+
 // The ShutdownGame function will free up/undo all things that were started in InitializeGame()
 // It will also be responsible to making sure that all Gaming Engine tasks exit properly
 
 UINT32 AniEditScreenShutdown(void)
 {
-	PERFORMANCE_MARKER 
 
 	return TRUE;
 }
@@ -98,7 +95,6 @@ UINT32 AniEditScreenShutdown(void)
 
 UINT32  AniEditScreenHandle(void)
 {
-	PERFORMANCE_MARKER
   InputAtom					InputEvent;
 	static BOOLEAN		fFirstTime = TRUE;
 	static UINT16			usOldState;
@@ -123,16 +119,16 @@ UINT32  AniEditScreenHandle(void)
 		pSoldier = MercPtrs[ gusSelectedSoldier ];
 
 		gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
-	
+
 		pSoldier->EVENT_InitNewSoldierAnim( usStartAnim, 0 , TRUE );
 
 		BuildListFile( );
 
 	}
 
-	
 
-	/////////////////////////////////////////////////////					
+
+	/////////////////////////////////////////////////////
 	StartFrameBufferRender( );
 
 	RenderWorld( );
@@ -192,7 +188,7 @@ UINT32  AniEditScreenHandle(void)
   if (DequeueEvent(&InputEvent) == TRUE)
   {
     if ((InputEvent.usEvent == KEY_DOWN)&&(InputEvent.usParam == ESC))
-    { 
+    {
 			 fFirstTime = TRUE;
 
 			 gfAniEditMode = FALSE;
@@ -208,7 +204,7 @@ UINT32  AniEditScreenHandle(void)
 
 			 fOKFiles = FALSE;
 
-			 return( GAME_SCREEN );			
+			 return( GAME_SCREEN );
     }
 
 		if ((InputEvent.usEvent == KEY_UP) && (InputEvent.usParam == SPACE ))
@@ -243,7 +239,7 @@ UINT32  AniEditScreenHandle(void)
 						usAnim = PRONE;
 						break;
 				}
-				
+
 				pSoldier->EVENT_InitNewSoldierAnim( usAnim, 0 , TRUE );
 			}
 			else
@@ -320,7 +316,7 @@ UINT32  AniEditScreenHandle(void)
 			{
 				ubStartHeight = ANIM_PRONE;
 			}
-			else 
+			else
 			{
 				ubStartHeight = ANIM_STAND;
 			}
@@ -328,7 +324,7 @@ UINT32  AniEditScreenHandle(void)
 
   }
 
-	
+
   return( ANIEDIT_SCREEN );
 
 }
@@ -336,7 +332,6 @@ UINT32  AniEditScreenHandle(void)
 
 UINT16 GetAnimStateFromName( STR8 zName )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	// FInd the next animation with start height the same...
@@ -354,14 +349,13 @@ UINT16 GetAnimStateFromName( STR8 zName )
 
 void BuildListFile( )
 {
-	PERFORMANCE_MARKER
 	FILE *infoFile;
 	CHAR8 currFilename[128];
 	int numEntries = 0;
 	int	cnt;
 	UINT16 usState;
 	CHAR16 zError[128];
-	
+
 
 	//Verify the existance of the header text file.
 	infoFile = fopen( "ANITEST.DAT", "rb");
@@ -377,7 +371,7 @@ void BuildListFile( )
 
 		numEntries++;
 	}
-	fseek( infoFile, 0, SEEK_SET ); //reset header file 
+	fseek( infoFile, 0, SEEK_SET ); //reset header file
 
 	// Allocate array
 	pusStates = (UINT16 *) MemAlloc( sizeof( UINT16 ) * numEntries );

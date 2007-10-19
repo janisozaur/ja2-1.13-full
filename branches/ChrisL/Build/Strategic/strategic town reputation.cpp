@@ -36,7 +36,6 @@
 
 void InitializeProfilesForTownReputation( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiProfileId = 0;
 
 	// initialize the town opinion values in each recruitable merc's profile structure
@@ -49,7 +48,6 @@ void InitializeProfilesForTownReputation( void )
 
 void PostEventsForSpreadOfTownOpinion( void )
 {
-	PERFORMANCE_MARKER
 /* ARM - Do nothing, this system has been scrapped because it is so marginal and it's too late to bother with it now
 
 	INT32 iCounter = 0;
@@ -64,7 +62,6 @@ void PostEventsForSpreadOfTownOpinion( void )
 
 UINT8 GetTownOpinionOfMerc( UINT8 ubProfileId, UINT8 ubTownId )
 {
-	PERFORMANCE_MARKER
 	Assert(ubProfileId < FIRST_NPC);
 	Assert(ubTownId < NUM_TOWNS);
 
@@ -75,7 +72,6 @@ UINT8 GetTownOpinionOfMerc( UINT8 ubProfileId, UINT8 ubTownId )
 
 UINT8 GetTownOpinionOfMercForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubTownId )
 {
-	PERFORMANCE_MARKER
 	// error check
 	if( pSoldier == NULL )
 	{
@@ -84,14 +80,13 @@ UINT8 GetTownOpinionOfMercForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubTownId )
 
 	Assert(ubTownId < NUM_TOWNS);
 
-	// pass on to 
+	// pass on to
 	return( GetTownOpinionOfMerc( pSoldier->ubProfile, ubTownId ) );
 }
 
 
 void UpdateTownOpinionOfThisMerc( UINT8 ubProfileId, UINT8 ubTownId, INT8 bAmount )
 {
-	PERFORMANCE_MARKER
 	Assert(ubProfileId < FIRST_NPC);
 	Assert(ubTownId < NUM_TOWNS);
 
@@ -109,14 +104,13 @@ void UpdateTownOpinionOfThisMerc( UINT8 ubProfileId, UINT8 ubTownId, INT8 bAmoun
 	else
 	{
 		// update amount
-		gMercProfiles[ ubProfileId ].bMercTownReputation[ ubTownId ] += bAmount; 
+		gMercProfiles[ ubProfileId ].bMercTownReputation[ ubTownId ] += bAmount;
 	}
 }
 
 
 void UpdateTownOpinionOfThisMercForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubTownId, INT8 bAmount )
 {
-	PERFORMANCE_MARKER
 	// error check
 	if( pSoldier == NULL )
 	{
@@ -132,7 +126,6 @@ void UpdateTownOpinionOfThisMercForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubTownI
 
 void HandleSpreadOfAllTownsOpinion( void )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubProfileId;
 
 	// debug message
@@ -142,13 +135,12 @@ void HandleSpreadOfAllTownsOpinion( void )
 	for( ubProfileId = 0; ubProfileId < FIRST_NPC; ubProfileId++ )
 	{
 		HandleSpreadOfTownOpinionForMerc( ubProfileId );
-	}	
+	}
 }
 
 
 void HandleSpreadOfTownOpinionForMerc( UINT8 ubProfileId )
 {
-	PERFORMANCE_MARKER
 	// handle opinion spread for this grunt
 	INT32 iDistanceBetweenTowns;
 	INT8 iCounterA, iCounterB;
@@ -177,7 +169,6 @@ void HandleSpreadOfTownOpinionForMerc( UINT8 ubProfileId )
 
 void HandleOpinionOfTownsAboutSoldier( INT8 bTownA, INT8 bTownB, INT32 iDistanceBetweenThem, UINT8 ubProfile )
 {
-	PERFORMANCE_MARKER
 	// ARM: System has been scrapped
 }
 
@@ -185,7 +176,6 @@ void HandleOpinionOfTownsAboutSoldier( INT8 bTownA, INT8 bTownB, INT32 iDistance
 /*
 void HandleSpreadOfTownOpinionForMercForSoldier( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// error check
 	if( pSoldier == NULL )
 	{
@@ -199,7 +189,6 @@ void HandleSpreadOfTownOpinionForMercForSoldier( SOLDIERTYPE *pSoldier )
 
 void HandleSpreadOfTownsOpinionForCurrentMercs( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0, iNumberOnPlayersTeam = 0;
 
 	// get the number on players team

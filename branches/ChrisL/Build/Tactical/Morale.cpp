@@ -82,7 +82,6 @@ BOOLEAN gfSomeoneSaidMoraleQuote = FALSE;
 
 INT8 GetMoraleModifier( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	if (pSoldier->flags.uiStatusFlags & SOLDIER_PC)
 	{
 		if (pSoldier->aiData.bMorale > 50)
@@ -118,7 +117,6 @@ INT8 GetMoraleModifier( SOLDIERTYPE * pSoldier )
 
 void DecayTacticalMorale( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	// decay the tactical morale modifier
 	if (pSoldier->aiData.bTacticalMoraleMod != 0)
 	{
@@ -136,7 +134,6 @@ void DecayTacticalMorale( SOLDIERTYPE * pSoldier )
 
 void DecayStrategicMorale( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	// decay the modifier!
 	if (pSoldier->aiData.bStrategicMoraleMod > 0)
 	{
@@ -150,17 +147,16 @@ void DecayStrategicMorale( SOLDIERTYPE * pSoldier )
 
 void DecayTacticalMoraleModifiers( void )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE * pSoldier;
 	UINT8					ubLoop, ubLoop2;
 	BOOLEAN				fHandleNervous;
 
 	ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 	for ( pSoldier = MercPtrs[ ubLoop ]; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++, pSoldier++ )
-	{	
+	{
 		//if the merc is active, in Arulco
 		// CJC: decay modifiers while asleep! or POW!
-		if ( pSoldier->bActive && pSoldier->ubProfile != NO_PROFILE && 
+		if ( pSoldier->bActive && pSoldier->ubProfile != NO_PROFILE &&
 															!(pSoldier->bAssignment == IN_TRANSIT ||
 																	pSoldier->bAssignment == ASSIGNMENT_DEAD ) )
 		{
@@ -174,7 +170,7 @@ void DecayTacticalMoraleModifiers( void )
 			{
 				case CLAUSTROPHOBIC:
 					if ( pSoldier->bSectorZ > 0 )
-					{						
+					{
 						// underground, no recovery... in fact, if tact morale is high, decay
 						if ( pSoldier->aiData.bTacticalMoraleMod > PHOBIC_LIMIT )
 						{
@@ -208,7 +204,7 @@ void DecayTacticalMoraleModifiers( void )
 								fHandleNervous = FALSE;
 							}
 						}
-						else 
+						else
 						{
 							// look for anyone else in same sector
 							fHandleNervous = TRUE;
@@ -220,7 +216,7 @@ void DecayTacticalMoraleModifiers( void )
 									fHandleNervous = FALSE;
 									break;
 								}
-							}														
+							}
 						}
 
 						if ( fHandleNervous )
@@ -251,16 +247,15 @@ void DecayTacticalMoraleModifiers( void )
 
 void DecayStrategicMoraleModifiers( void )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE * pSoldier;
 	UINT8					ubLoop;
 
 	ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 	for ( pSoldier = MercPtrs[ ubLoop ]; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++, pSoldier++ )
-	{	
+	{
 		//if the merc is active, in Arulco
 		// CJC: decay modifiers while asleep! or POW!
-		if ( pSoldier->bActive && pSoldier->ubProfile != NO_PROFILE && 
+		if ( pSoldier->bActive && pSoldier->ubProfile != NO_PROFILE &&
 															!(pSoldier->bAssignment == IN_TRANSIT ||
 																pSoldier->bAssignment == ASSIGNMENT_DEAD ) )
 		{
@@ -280,7 +275,6 @@ void DecayStrategicMoraleModifiers( void )
 
 void RefreshSoldierMorale( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32		iActualMorale;
 
 	if ( pSoldier->flags.fMercAsleep )
@@ -301,13 +295,12 @@ void RefreshSoldierMorale( SOLDIERTYPE * pSoldier )
 	pSoldier->aiData.bMorale = (INT8) iActualMorale;
 
 	// update mapscreen as needed
-	fCharacterInfoPanelDirty = TRUE; 
+	fCharacterInfoPanelDirty = TRUE;
 }
 
 
 void UpdateSoldierMorale( SOLDIERTYPE * pSoldier, UINT8 ubType, INT8 bMoraleMod )
 {
-	PERFORMANCE_MARKER
 	MERCPROFILESTRUCT *		pProfile;
 	INT32									iMoraleModTotal;
 
@@ -397,7 +390,7 @@ void UpdateSoldierMorale( SOLDIERTYPE * pSoldier, UINT8 ubType, INT8 bMoraleMod 
 		pSoldier->bDelayedStrategicMoraleMod = (INT8) iMoraleModTotal;
 	}
 	else // strategic
-	{		
+	{
 		iMoraleModTotal = (INT32) pSoldier->aiData.bStrategicMoraleMod + (INT32) bMoraleMod;
 		iMoraleModTotal = __min( iMoraleModTotal, MORALE_MOD_MAX );
 		iMoraleModTotal = __max( iMoraleModTotal, -MORALE_MOD_MAX );
@@ -419,7 +412,7 @@ void UpdateSoldierMorale( SOLDIERTYPE * pSoldier, UINT8 ubType, INT8 bMoraleMod 
 					gfSomeoneSaidMoraleQuote = TRUE;
 
 					// ATE: Amde it a DELAYED QUOTE - will be delayed by the dialogue Q until it's our turn...
-					DelayedTacticalCharacterDialogue( pSoldier, QUOTE_STARTING_TO_WHINE );			
+					DelayedTacticalCharacterDialogue( pSoldier, QUOTE_STARTING_TO_WHINE );
 					pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_LOW_MORAL;
 				}
 			}
@@ -437,14 +430,12 @@ void UpdateSoldierMorale( SOLDIERTYPE * pSoldier, UINT8 ubType, INT8 bMoraleMod 
 
 void HandleMoraleEventForSoldier( SOLDIERTYPE * pSoldier, INT8 bMoraleEvent )
 {
-	PERFORMANCE_MARKER
 	UpdateSoldierMorale( pSoldier, gbMoraleEvent[bMoraleEvent].ubType, gbMoraleEvent[bMoraleEvent].bChange );
 }
 
 
 void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	PERFORMANCE_MARKER
 	UINT8									ubLoop;
 	SOLDIERTYPE *					pTeamSoldier;
 	MERCPROFILESTRUCT *		pProfile;
@@ -604,7 +595,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 			for ( pTeamSoldier = MercPtrs[ ubLoop ]; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++, pTeamSoldier++ )
 			{
 				if ( pTeamSoldier->bActive && pTeamSoldier->ubProfile != NO_PROFILE)
-				{				
+				{
 					pProfile = &(gMercProfiles[ pTeamSoldier->ubProfile ]);
 
 					if (HATED_MERC( pProfile, pSoldier->ubProfile ))
@@ -636,7 +627,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 		case MORALE_MERC_MARRIED:
 			// female mercs get unhappy based on how sexist they are (=hate men)
 			// gentlemen males get unhappy too
-			
+
 			ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 			for ( pTeamSoldier = MercPtrs[ ubLoop ]; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++, pTeamSoldier++ )
 			{
@@ -675,9 +666,9 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 								break;
 						}
 					}
-					
+
 				}
-			}			
+			}
 			break;
 
 		default:
@@ -742,7 +733,6 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 
 void HourlyMoraleUpdate( void )
 {
-	PERFORMANCE_MARKER
 	INT8									bMercID, bOtherID;
 	INT8									bActualTeamOpinion;
 	INT8									bTeamMoraleModChange, bTeamMoraleModDiff;
@@ -764,9 +754,9 @@ void HourlyMoraleUpdate( void )
 
 	// loop through all mercs to calculate their morale
 	for ( pSoldier = MercPtrs[ bMercID ]; bMercID <= bLastTeamID; bMercID++,pSoldier++)
-	{	
+	{
 		//if the merc is active, in Arulco, and conscious, not POW
-		if ( pSoldier->bActive && pSoldier->ubProfile != NO_PROFILE && 
+		if ( pSoldier->bActive && pSoldier->ubProfile != NO_PROFILE &&
 																!(pSoldier->bAssignment == IN_TRANSIT ||
 																pSoldier->flags.fMercAsleep == TRUE ||
 																pSoldier->bAssignment == ASSIGNMENT_DEAD ||
@@ -822,7 +812,7 @@ void HourlyMoraleUpdate( void )
 						{
 							continue;
 						}
-						
+
 						// if the OTHER soldier is in motion then we don't do anything!
 						if (pOtherSoldier->ubGroupID != 0 && PlayerIDGroupInMotion( pOtherSoldier->ubGroupID ))
 						{
@@ -840,7 +830,7 @@ void HourlyMoraleUpdate( void )
 							fFoundHated = TRUE;
 							break;
 						}
-						else 
+						else
 						{
 							// scale according to how close to we are to snapping
 							//KM : Divide by 0 error found.	Wrapped into an if statement.
@@ -851,11 +841,11 @@ void HourlyMoraleUpdate( void )
 
 							if ( pProfile->bHatedCount[ bHated ] <= pProfile->bHatedTime[ bHated ] / 2 )
 							{
-								// Augh, we're teamed with someone we hate!	We HATE this!!	Ignore everyone else!		
+								// Augh, we're teamed with someone we hate!	We HATE this!!	Ignore everyone else!
 								fFoundHated = TRUE;
 								break;
 							}
-							// otherwise just mix this opinion in with everyone else... 
+							// otherwise just mix this opinion in with everyone else...
 						}
 					}
 					iTotalOpinions += bOpinion;
@@ -912,7 +902,7 @@ void HourlyMoraleUpdate( void )
 			pSoldier->aiData.bTeamMoraleMod += bTeamMoraleModChange;
 			pSoldier->aiData.bTeamMoraleMod = __min( pSoldier->aiData.bTeamMoraleMod, MORALE_MOD_MAX );
 			pSoldier->aiData.bTeamMoraleMod = __max( pSoldier->aiData.bTeamMoraleMod, -MORALE_MOD_MAX );
-			
+
 			// New, December 3rd, 1998, by CJC --
 			// If delayed strategic modifier exists then incorporate it in strategic mod
 			if ( pSoldier->bDelayedStrategicMoraleMod )
@@ -941,7 +931,6 @@ void HourlyMoraleUpdate( void )
 
 void DailyMoraleUpdate(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 	if ( pSoldier->ubProfile == NO_PROFILE )
 	{
 		return;

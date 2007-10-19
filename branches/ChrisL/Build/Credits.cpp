@@ -2,11 +2,11 @@
 	#include "JA2 All.h"
 	#include "Credits.h"
 	#include "Encrypted File.h"
-	#include "Language Defines.h" 
+	#include "Language Defines.h"
 #else
 	#include "Types.h"
 	#include "Credits.h"
-	#include "Language Defines.h" 
+	#include "Language Defines.h"
 	#include "vsurface.h"
 	#include "mousesystem.h"
 	#include "Text.h"
@@ -184,9 +184,9 @@ typedef struct
 
 } CDRT_FACE;
 
-CDRT_FACE		gCreditFaces[] = 
+CDRT_FACE		gCreditFaces[] =
 {
-//	x		y				w		h			
+//	x		y				w		h
 	298, 137,			37, 49, 310, 157,		304, 170,	2500, 0, 0,											//Camfield
 	348, 137,			43, 47, 354, 153,		354, 153,	3700, 0, 0,											//Shawn
 	407, 132,			30, 50, 408, 151,		410, 164,	3000, 0, 0,											//Kris
@@ -319,7 +319,7 @@ UINT32		guiCreditScreenActiveFont;				// the font that is used
 UINT32		guiCreditScreenTitleFont;				// the font that is used
 UINT8			gubCreditScreenActiveColor;				// color of the font
 UINT8			gubCreditScreenTitleColor;				// color of a Title node
-//UINT32		guiCreditScreenActiveDisplayFlags;	// 	
+//UINT32		guiCreditScreenActiveDisplayFlags;	//
 
 UINT32		guiCrdtNodeScrollSpeed = CRDT_NODE_DELAY_AMOUNT;	//speed credits go up at
 //UINT32		guiCrdtTimeTillReadNextCredit = CRDT_DELAY_BN_SECTIONS;		//the delay before reading the next credit ( normall = guiCrdtDelayBetweenCreditSection or guiCrdtDelayBetweenNodes )
@@ -390,7 +390,6 @@ void			InitCreditEyeBlinking();
 
 UINT32	CreditScreenInit( void )
 {
-	PERFORMANCE_MARKER
 	gfCreditsScreenEntry = TRUE;
 	return( 1 );
 }
@@ -399,7 +398,6 @@ UINT32	CreditScreenInit( void )
 
 UINT32	CreditScreenHandle( void )
 {
-	PERFORMANCE_MARKER
 	StartFrameBufferRender();
 
 	if( gfCreditsScreenEntry )
@@ -418,13 +416,13 @@ UINT32	CreditScreenHandle( void )
 	}
 
 	GetCreditScreenUserInput();
-	
+
 
 	HandleCreditScreen();
 
-	// render buttons marked dirty	
+	// render buttons marked dirty
 //	MarkButtonsDirty( );
-//	RenderButtons( ); 
+//	RenderButtons( );
 
 	// render help
 //	RenderFastHelp( );
@@ -449,7 +447,6 @@ UINT32	CreditScreenHandle( void )
 
 UINT32	CreditScreenShutdown( void )
 {
-	PERFORMANCE_MARKER
 	return( 1 );
 }
 
@@ -465,7 +462,6 @@ UINT32	CreditScreenShutdown( void )
 //eee
 BOOLEAN		EnterCreditsScreen()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 	VOBJECT_DESC	VObjectDesc;
 /*
@@ -477,7 +473,7 @@ BOOLEAN		EnterCreditsScreen()
 	strcpy(vs_desc.ImageFile, "INTERFACE\\Credits.sti");
 
 	if( !AddVideoSurface( &vs_desc, &guiCreditBackGroundImage ) )
-	{ 
+	{
 		return( FALSE );
 	}
 */
@@ -551,7 +547,7 @@ BOOLEAN		EnterCreditsScreen()
 	//open the credit text file
 	ghFile = FileOpen( CRDT_NAME_OF_CREDIT_FILE, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
 	if( !ghFile )
-	{ 
+	{
 		return( FALSE );
 	}
 */
@@ -569,14 +565,13 @@ BOOLEAN		EnterCreditsScreen()
 
 BOOLEAN		ExitCreditScreen()
 {
-	PERFORMANCE_MARKER
 	UINT32	uiCnt;
 
 
 	//Blit the background image
 //	DeleteVideoSurfaceFromIndex( guiCreditBackGroundImage );
 	DeleteVideoObjectFromIndex( guiCreditBackGroundImage );
-	
+
 	DeleteVideoObjectFromIndex( guiCreditFaces );
 
 
@@ -601,7 +596,6 @@ BOOLEAN		ExitCreditScreen()
 //hhh
 void			HandleCreditScreen()
 {
-	PERFORMANCE_MARKER
 //	UINT32	uiTime = GetJA2Clock();
 
 	if( gubCreditScreenRenderFlags == CRDT_RENDER_ALL )
@@ -644,7 +638,6 @@ void			HandleCreditScreen()
 //rrr
 BOOLEAN		RenderCreditScreen()
 {
-	PERFORMANCE_MARKER
 
 	HVOBJECT hPixHandle;
 
@@ -673,7 +666,6 @@ BOOLEAN		RenderCreditScreen()
 
 void			GetCreditScreenUserInput()
 {
-	PERFORMANCE_MARKER
 	InputAtom Event;
 
 	while( DequeueEvent( &Event ) )
@@ -720,7 +712,6 @@ void			GetCreditScreenUserInput()
 
 void SetCreditsExitScreen( UINT32 uiScreenToGoTo )
 {
-	PERFORMANCE_MARKER
 	gfCreditsScreenExit = TRUE;
 
 	guiCreditsExitScreen = uiScreenToGoTo;
@@ -730,7 +721,6 @@ void SetCreditsExitScreen( UINT32 uiScreenToGoTo )
 
 BOOLEAN	InitCreditNode( )
 {
-	PERFORMANCE_MARKER
 	if( gCrdtRootNode != NULL )
 		Assert( 0 );
 
@@ -742,7 +732,6 @@ BOOLEAN	InitCreditNode( )
 
 BOOLEAN ShutDownCreditList()
 {
-	PERFORMANCE_MARKER
 	CRDT_NODE	*pNodeToDelete=NULL;
 	CRDT_NODE	*pTemp=NULL;
 
@@ -764,7 +753,6 @@ BOOLEAN ShutDownCreditList()
 
 BOOLEAN	DeleteNode( CRDT_NODE	*pNodeToDelete )
 {
-	PERFORMANCE_MARKER
 	CRDT_NODE	*pTempNode;
 
 	pTempNode = pNodeToDelete;
@@ -821,7 +809,6 @@ BOOLEAN	DeleteNode( CRDT_NODE	*pNodeToDelete )
 //aaa
 BOOLEAN	AddCreditNode( UINT32 uiType, UINT32 uiFlags, STR16 pString )
 {
-	PERFORMANCE_MARKER
 	CRDT_NODE	*pNodeToAdd=NULL;
 	CRDT_NODE	*pTemp=NULL;
 	UINT32	uiSizeOfString = ( wcslen( pString ) + 2 ) * 2;
@@ -869,7 +856,7 @@ BOOLEAN	AddCreditNode( UINT32 uiType, UINT32 uiFlags, STR16 pString )
 
 	//
 	// Set some default data
-	// 
+	//
 
 	//the type of the node
 	pNodeToAdd->uiType = uiType;
@@ -968,7 +955,6 @@ BOOLEAN	AddCreditNode( UINT32 uiType, UINT32 uiFlags, STR16 pString )
 
 void HandleCreditNodes()
 {
-	PERFORMANCE_MARKER
 	CRDT_NODE	*pCurrent=NULL;
 	CRDT_NODE	*pTemp=NULL;
 
@@ -1010,7 +996,6 @@ void HandleCreditNodes()
 
 void HandleCurrentCreditNode( CRDT_NODE	*pCurrent )
 {
-	PERFORMANCE_MARKER
 	//switch on the type of node
 	switch( pCurrent->uiType )
 	{
@@ -1027,7 +1012,6 @@ void HandleCurrentCreditNode( CRDT_NODE	*pCurrent )
 
 void HandleNode_Default( CRDT_NODE	*pCurrent )
 {
-	PERFORMANCE_MARKER
 	//if it is time to update the current node
 //	if( ( uiCurrentTime - pCurrent->uiLastTime ) > guiCrdtNodeScrollSpeed )
 	{
@@ -1061,7 +1045,6 @@ void HandleNode_Default( CRDT_NODE	*pCurrent )
 
 BOOLEAN DisplayCreditNode( CRDT_NODE	*pCurrent )
 {
-	PERFORMANCE_MARKER
 	HVSURFACE hVSurface;
 
 	//Currently, we have no need to display a node that doesnt have a string
@@ -1089,7 +1072,7 @@ BOOLEAN DisplayCreditNode( CRDT_NODE	*pCurrent )
 			//INT16	sHeight = 480 - pCurrent->sOldPosY;
 			RestoreExternBackgroundRect( pCurrent->sOldPosX, pCurrent->sOldPosY, CRDT_WIDTH_OF_TEXT_AREA, sHeight );
 		}
-		else if( pCurrent->sOldPosY > CRDT_LINE_NODE_DISAPPEARS_AT ) 
+		else if( pCurrent->sOldPosY > CRDT_LINE_NODE_DISAPPEARS_AT )
 		{
 			RestoreExternBackgroundRect( pCurrent->sOldPosX, pCurrent->sOldPosY, CRDT_WIDTH_OF_TEXT_AREA, pCurrent->sHeightOfString );
 		}
@@ -1107,14 +1090,13 @@ BOOLEAN DisplayCreditNode( CRDT_NODE	*pCurrent )
 
 
 	BltVideoSurfaceToVideoSurface( ghFrameBuffer, hVSurface, 0, pCurrent->sPosX, pCurrent->sPosY, VS_BLT_CLIPPED | VS_BLT_USECOLORKEY, NULL );
-	
+
 	return( TRUE );
 }
 
 //return false from this function when there are no more items in the text file
 BOOLEAN	GetNextCreditFromTextFile()
 {
-	PERFORMANCE_MARKER
 	CHAR16	zOriginalString[512];
 	CHAR16	zString[512];
 	CHAR16	zCodes[512];
@@ -1366,7 +1348,7 @@ BOOLEAN	GetNextCreditFromTextFile()
 			case 48:
 				wcscpy(zOriginalString, L"@}; ");
 			break;
-			
+
 			// 3.)	Sir-Tech Credits
 			default:
 				//Get the current Credit record
@@ -1472,7 +1454,6 @@ BOOLEAN	GetNextCreditFromTextFile()
 //return any flags that need to be set in the node
 UINT32	GetAndHandleCreditCodeFromCodeString( STR16 pzCode )
 {
-	PERFORMANCE_MARKER
 //new codes:
 
 
@@ -1589,7 +1570,6 @@ UINT32	GetAndHandleCreditCodeFromCodeString( STR16 pzCode )
 
 UINT32 CountNumberOfCreditNodes()
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumNodes = 0;
 	CRDT_NODE	*pTempNode = gCrdtRootNode;
 
@@ -1605,7 +1585,6 @@ UINT32 CountNumberOfCreditNodes()
 
 STR16	GetNextCreditCode( STR16 pString, UINT32 *pSizeOfCode )
 {
-	PERFORMANCE_MARKER
 	STR16	pzNewCode=NULL;
 	UINT32 uiSizeOfCode = 0;
 
@@ -1638,7 +1617,6 @@ STR16	GetNextCreditCode( STR16 pString, UINT32 *pSizeOfCode )
 //Flags:
 void HandleCreditFlags( UINT32 uiFlags )
 {
-	PERFORMANCE_MARKER
 	if( uiFlags & CRDT_FLAG__TITLE )
 	{
 	}
@@ -1660,7 +1638,6 @@ void HandleCreditFlags( UINT32 uiFlags )
 
 void SelectCreditFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -1669,12 +1646,11 @@ void SelectCreditFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		giCurrentlySelectedFace = -1;
@@ -1690,7 +1666,6 @@ void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION * pRegion, INT32 iReaso
 
 void InitCreditEyeBlinking()
 {
-	PERFORMANCE_MARKER
 	UINT8 ubCnt;
 
 	for( ubCnt=0; ubCnt<NUM_PEOPLE_IN_CREDITS; ubCnt++ )
@@ -1701,7 +1676,6 @@ void InitCreditEyeBlinking()
 
 void HandleCreditEyeBlinking()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 	UINT8 ubCnt;
 
@@ -1713,7 +1687,7 @@ void HandleCreditEyeBlinking()
 		{
 			// EXCEPTION IS THROWN HERE!
 			BltVideoObject( FRAME_BUFFER, hPixHandle, (UINT8)(ubCnt*3), gCreditFaces[ubCnt].sEyeX, gCreditFaces[ubCnt].sEyeY, VO_BLT_SRCTRANSPARENCY, NULL);
-			
+
 			InvalidateRegion( gCreditFaces[ubCnt].sEyeX, gCreditFaces[ubCnt].sEyeY, gCreditFaces[ubCnt].sEyeX + CRDT_EYE_WIDTH, gCreditFaces[ubCnt].sEyeY + CRDT_EYE_HEIGHT );
 
 			gCreditFaces[ubCnt].uiLastBlinkTime = GetJA2Clock();
@@ -1728,4 +1702,5 @@ void HandleCreditEyeBlinking()
 		}
 	}
 }
+
 

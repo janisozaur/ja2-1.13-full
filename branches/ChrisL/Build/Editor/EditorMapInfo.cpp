@@ -70,9 +70,8 @@ BOOLEAN gfEditorForceShadeTableRebuild = FALSE;
 
 void SetupTextInputForMapInfo()
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[10];
-	
+
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 
 	AddUserInputField( NULL );	//just so we can use short cut keys while not typing.
@@ -108,7 +107,6 @@ void SetupTextInputForMapInfo()
 
 void UpdateMapInfo()
 {
-	PERFORMANCE_MARKER
 	SetFont( FONT10ARIAL );
 	SetFontShadow( FONT_NEARBLACK );
 
@@ -153,7 +151,6 @@ void UpdateMapInfo()
 
 void UpdateMapInfoFields()
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[10];
 	//Update the text fields to reflect the validated values.
 	//light rgb fields
@@ -180,7 +177,6 @@ void UpdateMapInfoFields()
 
 void ExtractAndUpdateMapInfo()
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[10];
 	INT32 temp;
 	BOOLEAN fUpdateLight1 = FALSE;
@@ -229,12 +225,12 @@ void ExtractAndUpdateMapInfo()
 		gMapInformation.ubRestrictedScrollID = 0;
 	else
 		gMapInformation.ubRestrictedScrollID = (UINT8)temp;
-	
-	//set up fields for exitgrid information 
+
+	//set up fields for exitgrid information
 	Get16BitStringFromField( 7, str );
 	if( str[0] >= 'a' && str[0] <= 'z' )
 		str[0] -= 32; //uppercase it!
-	if( str[0] >= 'A' && str[0] <= 'Z' && 
+	if( str[0] >= 'A' && str[0] <= 'Z' &&
 		str[1] >= '0' && str[1] <= '9' )
 	{ //only update, if coordinate is valid.
 		gExitGrid.ubGotoSectorY = (UINT8)(str[0] - 'A' + 1);
@@ -252,7 +248,6 @@ void ExtractAndUpdateMapInfo()
 
 BOOLEAN ApplyNewExitGridValuesToTextFields()
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[10];
 	//exit grid input fields
 	if( iCurrentTaskbar != TASK_MAPINFO )
@@ -270,7 +265,6 @@ BOOLEAN ApplyNewExitGridValuesToTextFields()
 INT16 usCurrentExitGridNo = 0;
 void LocateNextExitGrid()
 {
-	PERFORMANCE_MARKER
 	EXITGRID ExitGrid;
 	UINT16 i;
 	for( i = usCurrentExitGridNo + 1; i < WORLD_MAX; i++ )
@@ -295,7 +289,6 @@ void LocateNextExitGrid()
 
 void ChangeLightDefault( INT8 bLightType )
 {
-	PERFORMANCE_MARKER
 	UnclickEditorButton( MAPINFO_PRIMETIME_LIGHT + gbDefaultLightType );
 	gbDefaultLightType = bLightType;
 	ClickEditorButton( MAPINFO_PRIMETIME_LIGHT + gbDefaultLightType );
@@ -305,6 +298,7 @@ void ChangeLightDefault( INT8 bLightType )
 
 
 
- 
+
+
 
 

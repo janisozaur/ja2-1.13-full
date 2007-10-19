@@ -17,16 +17,15 @@ struct
 
 	UINT16			curLaunchable[2];
 	UINT32			maxArraySize;
-	UINT32			curIndex;	
+	UINT32			curIndex;
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
 typedef launchableParseData;
 
-static void XMLCALL 
+static void XMLCALL
 launchableStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	launchableParseData * pData = (launchableParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -67,10 +66,9 @@ launchableStartElementHandle(void *userData, const XML_Char *name, const XML_Cha
 static void XMLCALL
 launchableCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	launchableParseData * pData = (launchableParseData *)userData;
 
-	if( (pData->currentDepth <= pData->maxReadDepth) && 
+	if( (pData->currentDepth <= pData->maxReadDepth) &&
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
 	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
@@ -81,7 +79,6 @@ launchableCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 launchableEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	launchableParseData * pData = (launchableParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -123,13 +120,12 @@ launchableEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInLaunchableStats(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	launchableParseData pData;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading Launchables.xml" );
@@ -138,7 +134,7 @@ BOOLEAN ReadInLaunchableStats(STR fileName)
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -153,15 +149,15 @@ BOOLEAN ReadInLaunchableStats(STR fileName)
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, launchableStartElementHandle, launchableEndElementHandle);
 	XML_SetCharacterDataHandler(parser, launchableCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
-	pData.maxArraySize = MAXITEMS; 
+	pData.maxArraySize = MAXITEMS;
 	pData.curIndex = -1;
-	
+
 	XML_SetUserData(parser, &pData);
 
 
@@ -185,7 +181,6 @@ BOOLEAN ReadInLaunchableStats(STR fileName)
 }
 BOOLEAN WriteLaunchableStats()
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there
@@ -193,7 +188,7 @@ BOOLEAN WriteLaunchableStats()
 	hFile = FileOpen( "TABLEDATA\\Launchables out.xml", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	{
 		UINT32 cnt;
 

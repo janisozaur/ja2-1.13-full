@@ -27,12 +27,12 @@ Kris -- Notes on how the undo code works:
 At the bottom of the hierarchy, we need to determine the state of the undo command.	The idea
 is that we want to separate undo commands by separating them by new mouse clicks.	By holding a mouse
 down and painting various objects in the world would all constitute a single undo command.	As soon as
-the mouse is release, then a new undo command is setup.	So, to automate this, there is a call every 
+the mouse is release, then a new undo command is setup.	So, to automate this, there is a call every
 frame to DetermineUndoState().
 
-At the next level, there is a binary tree that keeps track of what map indices have been backup up in 
+At the next level, there is a binary tree that keeps track of what map indices have been backup up in
 the current undo command.	The whole reason to maintain this list, is to avoid multiple map elements of
-the same map index from being saved.	In the outer code, everytime something is changed, a call to 
+the same map index from being saved.	In the outer code, everytime something is changed, a call to
 AddToUndoList() is called, so there are many cases (especially with building/terrain smoothing) that the
 same mapindex is added to the undo list.	This is also completely transparent, and doesn't need to be
 maintained.
@@ -45,8 +45,8 @@ light is saved, along with internal maintanance of several flags.
 
 The actual mapelement copy code, is very complex.	The mapelement is copied in parallel with a new one which
 has to allocate several nodes of several types because a mapelement contains over a dozen separate lists, and
-all of them need to be saved.	The structure information of certain mapelements may be multitiled and must 
-also save the affected gridno's as well.	This is also done internally.	Basically, your call to 
+all of them need to be saved.	The structure information of certain mapelements may be multitiled and must
+also save the affected gridno's as well.	This is also done internally.	Basically, your call to
 AddToUndoList() for any particular gridno, may actually save several entries (like for a car which could be 6+
 tiles)
 
@@ -62,18 +62,16 @@ BOOLEAN gfUndoEnabled = FALSE;
 
 void EnableUndo()
 {
-	PERFORMANCE_MARKER
 	gfUndoEnabled = TRUE;
 }
 
 void DisableUndo()
 {
-	PERFORMANCE_MARKER
 	gfUndoEnabled = FALSE;
 }
 
 // undo node data element
-typedef struct 
+typedef struct
 {
 	INT32						iMapIndex;
 	MAP_ELEMENT		*pMapTile;
@@ -128,10 +126,9 @@ void CheckForMultiTilesInTreeAndAddToUndoList( MapIndexBinaryTree *node );
 //Recursively deletes all nodes below the node passed including itself.
 void DeleteTreeNode( MapIndexBinaryTree **node )
 {
-	PERFORMANCE_MARKER
-	if( (*node)->left ) 
+	if( (*node)->left )
 		DeleteTreeNode( &((*node)->left) );
-	if( (*node)->right ) 
+	if( (*node)->right )
 		DeleteTreeNode( &((*node)->right) );
 	MemFree( *node );
 	*node = NULL;
@@ -140,14 +137,12 @@ void DeleteTreeNode( MapIndexBinaryTree **node )
 //Recursively delete all nodes (from the top down).
 void ClearUndoMapIndexTree()
 {
-	PERFORMANCE_MARKER
 	if( top )
 		DeleteTreeNode( &top );
 }
 
 BOOLEAN AddMapIndexToTree( INT16 sMapIndex )
 {
-	PERFORMANCE_MARKER
 	MapIndexBinaryTree *curr, *parent;
 	if( !top )
 	{
@@ -185,7 +180,7 @@ BOOLEAN AddMapIndexToTree( INT16 sMapIndex )
 	else
 		parent->right = curr;
 	return TRUE;
-}	
+}
 //*************************************************************************
 //
 //	Start of Undo code
@@ -194,7 +189,6 @@ BOOLEAN AddMapIndexToTree( INT16 sMapIndex )
 
 BOOLEAN DeleteTopStackNode( void )
 {
-	PERFORMANCE_MARKER
 	undo_stack		*pCurrent;
 
 	pCurrent = gpTileUndoStack;
@@ -211,7 +205,6 @@ BOOLEAN DeleteTopStackNode( void )
 
 undo_stack *DeleteThisStackNode( undo_stack *pThisNode )
 {
-	PERFORMANCE_MARKER
 	undo_stack		*pCurrent;
 	undo_stack		*pNextNode;
 
@@ -228,7 +221,6 @@ undo_stack *DeleteThisStackNode( undo_stack *pThisNode )
 
 BOOLEAN DeleteStackNodeContents( undo_stack *pCurrent )
 {
-	PERFORMANCE_MARKER
 	undo_struct		*pData;
 	MAP_ELEMENT		*pMapTile;
 	LEVELNODE			*pLandNode;
@@ -244,7 +236,7 @@ BOOLEAN DeleteStackNodeContents( undo_stack *pCurrent )
 	pData = pCurrent->pData;
 	pMapTile = pData->pMapTile;
 
-	if( !pMapTile ) 
+	if( !pMapTile )
 		return TRUE;		//light was saved -- mapelement wasn't saved.
 
 	// Free the memory associated with the map tile liked lists
@@ -317,14 +309,14 @@ BOOLEAN DeleteStackNodeContents( undo_stack *pCurrent )
 	{
 		pMapTile->pStructureHead = pStructureNode->pNext;
 		if( pStructureNode->usStructureID > INVALID_STRUCTURE_ID )
-		{ //Okay to delete the structure data -- otherwise, this would be 
+		{ //Okay to delete the structure data -- otherwise, this would be
 			//merc structure data that we DON'T want to delete, because the merc node
 			//that hasn't been modified will still use this structure data!
 			MemFree( pStructureNode );
 		}
 		pStructureNode = pMapTile->pStructureHead;
 	}
-	
+
 	// Free the map tile structure itself
 	MemFree( pMapTile );
 
@@ -337,7 +329,6 @@ BOOLEAN DeleteStackNodeContents( undo_stack *pCurrent )
 
 void CropStackToMaxLength( INT32 iMaxCmds )
 {
-	PERFORMANCE_MARKER
 	INT32				iCmdCount;
 	undo_stack	*pCurrent;
 
@@ -366,17 +357,16 @@ void CropStackToMaxLength( INT32 iMaxCmds )
 
 
 //We are adding a light to the undo list.	We won't save the mapelement, nor will
-//we validate the gridno in the binary tree.	This works differently than a mapelement, 
+//we validate the gridno in the binary tree.	This works differently than a mapelement,
 //because lights work on a different system.	By setting the fLightSaved flag to TRUE,
 //this will handle the way the undo command is handled.	If there is no lightradius in
 //our saved light, then we intend on erasing the light upon undo execution, otherwise, we
 //save the light radius and light ID, so that we place it during undo execution.
 void AddLightToUndoList( INT32 iMapIndex, INT32 iLightRadius, UINT8 ubLightID )
 {
-	PERFORMANCE_MARKER
 	undo_stack		*pNode;
 	undo_struct		*pUndoInfo;
-	
+
 	if(	!gfUndoEnabled )
 		return;
 	//When executing an undo command (by adding a light or removing one), that command
@@ -399,7 +389,7 @@ void AddLightToUndoList( INT32 iMapIndex, INT32 iLightRadius, UINT8 ubLightID )
 	}
 
 	pUndoInfo->fLightSaved = TRUE;
-	//if ubLightRadius is 0, then we don't need to save the light information because we 
+	//if ubLightRadius is 0, then we don't need to save the light information because we
 	//will erase it when it comes time to execute the undo command.
 	pUndoInfo->ubLightRadius = (UINT8)iLightRadius;
 	pUndoInfo->ubLightID = ubLightID;
@@ -417,7 +407,6 @@ void AddLightToUndoList( INT32 iMapIndex, INT32 iLightRadius, UINT8 ubLightID )
 
 BOOLEAN AddToUndoList( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	static INT32 iCount = 1;
 
 	if(	!gfUndoEnabled )
@@ -444,14 +433,13 @@ BOOLEAN AddToUndoList( INT32 iMapIndex )
 
 BOOLEAN AddToUndoListCmd( INT32 iMapIndex, INT32 iCmdCount )
 {
-	PERFORMANCE_MARKER
 	undo_stack		*pNode;
 	undo_struct		*pUndoInfo;
 	MAP_ELEMENT		*pData;
 	STRUCTURE			*pStructure;
 	INT32					iCoveredMapIndex;
 	UINT8					ubLoop;
-	
+
 	if ( (pNode = (undo_stack *)MemAlloc(sizeof( undo_stack )) ) == NULL )
 	{
 		return( FALSE );
@@ -494,7 +482,7 @@ BOOLEAN AddToUndoListCmd( INT32 iMapIndex, INT32 iCmdCount )
 
 	// copy the room number information (it's not in the mapelement structure)
 	pUndoInfo->ubRoomNum = gubWorldRoomInfo[ iMapIndex ];
-	
+
 	pUndoInfo->fLightSaved = FALSE;
 	pUndoInfo->ubLightRadius = 0;
 	pUndoInfo->ubLightID = 0;
@@ -533,7 +521,6 @@ BOOLEAN AddToUndoListCmd( INT32 iMapIndex, INT32 iCmdCount )
 
 void CheckMapIndexForMultiTileStructures( INT16 sMapIndex )
 {
-	PERFORMANCE_MARKER
 	STRUCTURE *		pStructure;
 	UINT8					ubLoop;
 	INT32					iCoveredMapIndex;
@@ -563,17 +550,15 @@ void CheckMapIndexForMultiTileStructures( INT16 sMapIndex )
 
 void CheckForMultiTilesInTreeAndAddToUndoList( MapIndexBinaryTree *node )
 {
-	PERFORMANCE_MARKER
 	CheckMapIndexForMultiTileStructures( node->sMapIndex );
-	if( node->left ) 
+	if( node->left )
 		CheckForMultiTilesInTreeAndAddToUndoList( node->left );
-	if( node->right ) 
+	if( node->right )
 		CheckForMultiTilesInTreeAndAddToUndoList( node->right );
 }
 
 BOOLEAN RemoveAllFromUndoList( void )
 {
-	PERFORMANCE_MARKER
 	ClearUndoMapIndexTree();
 
 	while ( gpTileUndoStack != NULL )
@@ -585,7 +570,6 @@ BOOLEAN RemoveAllFromUndoList( void )
 
 BOOLEAN ExecuteUndoList( void )
 {
-	PERFORMANCE_MARKER
 	INT32				iCmdCount, iCurCount;
 	INT32				iUndoMapIndex;
 	BOOLEAN			fExitGrid;
@@ -628,7 +612,7 @@ BOOLEAN ExecuteUndoList( void )
 			// of the undo's MAP_ELEMENT with the world's element.
 			SwapMapElementWithWorld( iUndoMapIndex, gpTileUndoStack->pData->pMapTile );
 
-			// copy the room number information back 
+			// copy the room number information back
 			gubWorldRoomInfo[ iUndoMapIndex ] = gpTileUndoStack->pData->ubRoomNum;
 
 			// Now we smooth out the changes...
@@ -664,7 +648,6 @@ BOOLEAN ExecuteUndoList( void )
 
 void SmoothUndoMapTileTerrain( INT32 iWorldTile, MAP_ELEMENT *pUndoTile )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE	*pWorldLand;
 	LEVELNODE *pUndoLand;
 	LEVELNODE *pLand;
@@ -686,7 +669,7 @@ void SmoothUndoMapTileTerrain( INT32 iWorldTile, MAP_ELEMENT *pUndoTile )
 			pLand = pLand->pNext;
 		}
 	}
-	else if ( gpWorldLevelData[ iWorldTile ].pLandHead == NULL ) 
+	else if ( gpWorldLevelData[ iWorldTile ].pLandHead == NULL )
 	{
 		// Nothing in world's tile, so smooth out the land in the old tile.
 		pLand = pUndoLand;
@@ -709,7 +692,7 @@ void SmoothUndoMapTileTerrain( INT32 iWorldTile, MAP_ELEMENT *pUndoTile )
 			while( pWLand != NULL && !fFound )
 			{
 				GetTileType( pWLand->usIndex, &uiWCheckType);
-				
+
 				if ( uiCheckType == uiWCheckType )
 					fFound = TRUE;
 
@@ -732,7 +715,7 @@ void SmoothUndoMapTileTerrain( INT32 iWorldTile, MAP_ELEMENT *pUndoTile )
 			while( pLand != NULL && !fFound )
 			{
 				GetTileType( pLand->usIndex, &uiCheckType);
-				
+
 				if ( uiCheckType == uiWCheckType )
 					fFound = TRUE;
 
@@ -752,7 +735,6 @@ void SmoothUndoMapTileTerrain( INT32 iWorldTile, MAP_ELEMENT *pUndoTile )
 //terminate the program, destroy the memory allocated thusfar.
 void DeleteMapElementContentsAfterCreationFail( MAP_ELEMENT *pNewMapElement )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pLevelNode;
 	STRUCTURE *pStructure;
 	INT32 x;
@@ -780,7 +762,7 @@ void DeleteMapElementContentsAfterCreationFail( MAP_ELEMENT *pNewMapElement )
 }
 
 /*
-	union 
+	union
 	{
 		struct TAG_level_node				*pPrevNode;					// FOR LAND, GOING BACKWARDS POINTER
 		ITEM_POOL										*pItemPool;					// ITEM POOLS
@@ -788,7 +770,7 @@ void DeleteMapElementContentsAfterCreationFail( MAP_ELEMENT *pNewMapElement )
 		INT32												iPhysicsObjectID;		// ID FOR PHYSICS ITEM
 		INT32												uiAPCost;						// FOR AP DISPLAY
 	}; // ( 4 byte union )
-	union 
+	union
 	{
 		struct
 		{
@@ -803,7 +785,6 @@ void DeleteMapElementContentsAfterCreationFail( MAP_ELEMENT *pNewMapElement )
 */
 BOOLEAN CopyMapElementFromWorld( MAP_ELEMENT *pNewMapElement, INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	MAP_ELEMENT			*pOldMapElement;
 	LEVELNODE				*pOldLevelNode;
 	LEVELNODE			*pLevelNode;
@@ -952,7 +933,7 @@ BOOLEAN CopyMapElementFromWorld( MAP_ELEMENT *pNewMapElement, INT32 iMapIndex )
 						}
 						//Kris:
 						//If this assert should fail, that means there is something wrong with
-						//the preservation of the structure data within the mapelement.	
+						//the preservation of the structure data within the mapelement.
 						if( pOld != pOldLevelNode->pStructureData )
 						{
 							//OUCH!!! THIS IS HAPPENING.	DISABLED IT FOR LINDA'S SAKE
@@ -981,7 +962,6 @@ BOOLEAN CopyMapElementFromWorld( MAP_ELEMENT *pNewMapElement, INT32 iMapIndex )
 
 BOOLEAN SwapMapElementWithWorld( INT32 iMapIndex, MAP_ELEMENT *pUndoMapElement )
 {
-	PERFORMANCE_MARKER
 	MAP_ELEMENT			*pCurrentMapElement;
 	MAP_ELEMENT			TempMapElement;
 
@@ -992,7 +972,7 @@ BOOLEAN SwapMapElementWithWorld( INT32 iMapIndex, MAP_ELEMENT *pUndoMapElement )
 	//undo commands.
 	pUndoMapElement->pMercHead = gpWorldLevelData[ iMapIndex ].pMercHead;
 	gpWorldLevelData[ iMapIndex ].pMercHead = NULL;
-	
+
 	//Swap the mapelements
 	TempMapElement = *pCurrentMapElement;
 	*pCurrentMapElement = *pUndoMapElement;
@@ -1003,11 +983,10 @@ BOOLEAN SwapMapElementWithWorld( INT32 iMapIndex, MAP_ELEMENT *pUndoMapElement )
 
 void DetermineUndoState()
 {
-	PERFORMANCE_MARKER
 	// Reset the undo command mode if we released the left button.
 	if( !fNewUndoCmd )
 	{
-		if( !gfLeftButtonState	&& !gfCurrentSelectionWithRightButton || 
+		if( !gfLeftButtonState	&& !gfCurrentSelectionWithRightButton ||
 			!gfRightButtonState &&	gfCurrentSelectionWithRightButton )
 		{
 			//Clear the mapindex binary tree list, and set up flag for new undo command.

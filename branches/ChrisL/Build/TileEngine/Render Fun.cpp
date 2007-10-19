@@ -7,7 +7,7 @@
 
 	#include "Render Fun.h"
 	#include "worlddef.h"
-	#include "input.h"	
+	#include "input.h"
 	#include "sysutil.h"
 	#include "debug.h"
 	#include "wcheck.h"
@@ -30,7 +30,6 @@ UINT8						gubWorldRoomHidden[ MAX_ROOMS ];
 
 BOOLEAN InitRoomDatabase( )
 {
-	PERFORMANCE_MARKER
 	memset( gubWorldRoomInfo, NO_ROOM, sizeof( gubWorldRoomInfo ) );
 	memset( gubWorldRoomHidden, TRUE, sizeof( gubWorldRoomHidden ) );
 	return( TRUE );
@@ -38,20 +37,17 @@ BOOLEAN InitRoomDatabase( )
 
 void ShutdownRoomDatabase( )
 {
-	PERFORMANCE_MARKER
 
 }
 
 void SetTileRoomNum( INT16 sGridNo, UINT8 ubRoomNum )
 {
-	PERFORMANCE_MARKER
 	// Add to global room list
 	gubWorldRoomInfo[ sGridNo ] = ubRoomNum;
 }
 
 void SetTileRangeRoomNum( SGPRect *pSelectRegion, UINT8 ubRoomNum )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt1, cnt2;
 
 	for ( cnt1 = pSelectRegion->iTop; cnt1 <= pSelectRegion->iBottom; cnt1++ )
@@ -66,7 +62,6 @@ void SetTileRangeRoomNum( SGPRect *pSelectRegion, UINT8 ubRoomNum )
 
 BOOLEAN InARoom( INT16 sGridNo, UINT8 *pubRoomNo )
 {
-	PERFORMANCE_MARKER
 	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
 	{
 		if ( pubRoomNo )
@@ -82,7 +77,6 @@ BOOLEAN InARoom( INT16 sGridNo, UINT8 *pubRoomNo )
 
 BOOLEAN InAHiddenRoom( INT16 sGridNo, UINT8 *pubRoomNo )
 {
-	PERFORMANCE_MARKER
 	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
 	{
 		if ( (gubWorldRoomHidden[ gubWorldRoomInfo[ sGridNo ] ] ) )
@@ -99,7 +93,6 @@ BOOLEAN InAHiddenRoom( INT16 sGridNo, UINT8 *pubRoomNo )
 // @@ATECLIP TO WORLD!
 void SetRecalculateWireFrameFlagRadius(INT16 sX, INT16 sY, INT16 sRadius)
 {
-	PERFORMANCE_MARKER
 	INT16 sCountX, sCountY;
 	UINT32 uiTile;
 
@@ -118,7 +111,6 @@ void SetRecalculateWireFrameFlagRadius(INT16 sX, INT16 sY, INT16 sRadius)
 
 void SetGridNoRevealedFlag( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 //	UINT32 cnt;
 //	ITEM_POOL					*pItemPool;
 //	INT16							sX, sY;
@@ -170,7 +162,7 @@ void SetGridNoRevealedFlag( INT16 sGridNo )
 					Assert( 0 );
 					continue;
 				}
-				
+
 				// Get LEVELNODE for struct and remove!
 				pNode = FindLevelNodeBasedOnStructure( pBase->sGridNo, pBase );
 
@@ -198,7 +190,6 @@ void SetGridNoRevealedFlag( INT16 sGridNo )
 
 void ExamineGridNoForSlantRoofExtraGraphic( INT16 sCheckGridNo )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE					*pNode = NULL;
 	STRUCTURE					*pStructure, *pBase;
 	UINT8							ubLoop;
@@ -214,7 +205,7 @@ void ExamineGridNoForSlantRoofExtraGraphic( INT16 sCheckGridNo )
 	{
 		// We have a slanted roof here ... find base and remove...
 		pBase = FindBaseStructure( pStructure );
-		
+
 		// Get LEVELNODE for struct and remove!
 		pNode = FindLevelNodeBasedOnStructure( pBase->sGridNo, pBase );
 
@@ -229,7 +220,7 @@ void ExamineGridNoForSlantRoofExtraGraphic( INT16 sCheckGridNo )
 				continue;
 			}
 
-			// Given gridno, 
+			// Given gridno,
 			// IF NOT REVEALED AND HIDDEN....
 			if ( !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) && pNode->uiFlags & LEVELNODE_HIDDEN )
 			{
@@ -241,7 +232,7 @@ void ExamineGridNoForSlantRoofExtraGraphic( INT16 sCheckGridNo )
 					fChanged = TRUE;
 				}
 			}
- 
+
 			// Revealed?
 			if ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED )
 			{
@@ -252,7 +243,7 @@ void ExamineGridNoForSlantRoofExtraGraphic( INT16 sCheckGridNo )
 					fChanged = TRUE;
 				}
 			}
-	
+
 		}
 	}
 
@@ -268,7 +259,6 @@ void ExamineGridNoForSlantRoofExtraGraphic( INT16 sCheckGridNo )
 
 void RemoveRoomRoof( INT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT32 cnt;
 	ITEM_POOL					*pItemPool;
 	INT16							sX, sY;
@@ -333,34 +323,32 @@ void RemoveRoomRoof( INT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 
 BOOLEAN AddSpecialTileRange( SGPRect *pSelectRegion	)
 {
-	PERFORMANCE_MARKER
 	INT32 cnt1, cnt2;
 
 	for ( cnt1 = pSelectRegion->iTop; cnt1 <= pSelectRegion->iBottom; cnt1++ )
 	{
 		for ( cnt2 = pSelectRegion->iLeft; cnt2 <= pSelectRegion->iRight; cnt2++ )
 		{
-			AddObjectToHead( (INT16)MAPROWCOLTOPOS( cnt1, cnt2 ), SPECIALTILE_MAPEXIT ); 
+			AddObjectToHead( (INT16)MAPROWCOLTOPOS( cnt1, cnt2 ), SPECIALTILE_MAPEXIT );
 		}
 	}
 
 	return( TRUE );
 }
 
-			
+
 BOOLEAN RemoveSpecialTileRange( SGPRect *pSelectRegion	)
 {
-	PERFORMANCE_MARKER
 	INT32 cnt1, cnt2;
 
 	for ( cnt1 = pSelectRegion->iTop; cnt1 <= pSelectRegion->iBottom; cnt1++ )
 	{
 		for ( cnt2 = pSelectRegion->iLeft; cnt2 <= pSelectRegion->iRight; cnt2++ )
 		{
-			RemoveObject( (INT16)MAPROWCOLTOPOS( cnt1, cnt2 ), SPECIALTILE_MAPEXIT ); 
+			RemoveObject( (INT16)MAPROWCOLTOPOS( cnt1, cnt2 ), SPECIALTILE_MAPEXIT );
 		}
 	}
 
 	return( TRUE );
 }
-			
+

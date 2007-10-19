@@ -245,18 +245,16 @@ extern	void ToggleItemGlow( BOOLEAN fOn );
 
 UINT32	OptionsScreenInit()
 {
-	PERFORMANCE_MARKER
 
 	//Set so next time we come in, we can set up
 	gfOptionsScreenEntry = TRUE;
 
-	
+
 	return( TRUE );
 }
 
 UINT32	OptionsScreenHandle()
 {
-	PERFORMANCE_MARKER
 	StartFrameBufferRender();
 
 	if( gfOptionsScreenEntry )
@@ -290,9 +288,9 @@ UINT32	OptionsScreenHandle()
 	//Render the active slider bars
 	RenderAllSliderBars();
 
-	// render buttons marked dirty	
+	// render buttons marked dirty
 	MarkButtonsDirty( );
-	RenderButtons( ); 
+	RenderButtons( );
 
 	// ATE: Put here to save RECTS before any fast help being drawn...
 	SaveBackgroundRects( );
@@ -319,7 +317,6 @@ UINT32	OptionsScreenHandle()
 
 UINT32	OptionsScreenShutdown()
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
@@ -331,7 +328,6 @@ UINT32	OptionsScreenShutdown()
 
 BOOLEAN		EnterOptionsScreen()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT16 usPosY;
 	UINT8	cnt;
@@ -339,7 +335,7 @@ BOOLEAN		EnterOptionsScreen()
 
 	// WANNE: Do not draw the blackground back
 	//ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0 );
-	
+
 	//Default this to off
 	gfHideBloodAndGoreOption=FALSE;
 
@@ -395,13 +391,13 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	GetMLGFilename( VObjectDesc.ImageFile, MLG_OPTIONHEADER );
 	CHECKF(AddVideoObject(&VObjectDesc, &guiOptionsAddOnImages));
-	
+
 	//Save game button
 	giOptionsButtonImages = LoadButtonImage("INTERFACE\\OptionScreenAddons.sti", -1,2,-1,3,-1 );
-	guiOptGotoSaveGameBtn = CreateIconAndTextButton( giOptionsButtonImages, zOptionsText[OPT_SAVE_GAME], OPT_BUTTON_FONT, 
-													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
-													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
-													TEXT_CJUSTIFIED, 
+	guiOptGotoSaveGameBtn = CreateIconAndTextButton( giOptionsButtonImages, zOptionsText[OPT_SAVE_GAME], OPT_BUTTON_FONT,
+													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
+													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
+													TEXT_CJUSTIFIED,
 													OPT_SAVE_BTN_X, OPT_SAVE_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnOptGotoSaveGameCallback);
 	SpecifyDisabledButtonStyle( guiOptGotoSaveGameBtn, DISABLED_STYLE_HATCHED );
@@ -412,10 +408,10 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 
 	//Load game button
 	giGotoLoadBtnImage = UseLoadedButtonImage( giOptionsButtonImages, -1,2,-1,3,-1 );
-	guiOptGotoLoadGameBtn = CreateIconAndTextButton( giGotoLoadBtnImage, zOptionsText[OPT_LOAD_GAME], OPT_BUTTON_FONT, 
-													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
-													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
-													TEXT_CJUSTIFIED, 
+	guiOptGotoLoadGameBtn = CreateIconAndTextButton( giGotoLoadBtnImage, zOptionsText[OPT_LOAD_GAME], OPT_BUTTON_FONT,
+													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
+													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
+													TEXT_CJUSTIFIED,
 													OPT_LOAD_BTN_X, OPT_LOAD_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnOptGotoLoadGameCallback);
 //	SpecifyDisabledButtonStyle( guiBobbyRAcceptOrder, DISABLED_STYLE_SHADED );
@@ -423,10 +419,10 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 
 	//Quit to main menu button
 	giQuitBtnImage = UseLoadedButtonImage( giOptionsButtonImages, -1,2,-1,3,-1 );
-	guiQuitButton = CreateIconAndTextButton( giQuitBtnImage, zOptionsText[OPT_MAIN_MENU], OPT_BUTTON_FONT, 
-													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
-													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
-													TEXT_CJUSTIFIED, 
+	guiQuitButton = CreateIconAndTextButton( giQuitBtnImage, zOptionsText[OPT_MAIN_MENU], OPT_BUTTON_FONT,
+													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
+													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
+													TEXT_CJUSTIFIED,
 													OPT_QUIT_BTN_X, OPT_QUIT_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnOptQuitCallback);
 	SpecifyDisabledButtonStyle( guiQuitButton, DISABLED_STYLE_HATCHED );
@@ -434,10 +430,10 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 
 	//Done button
 	giDoneBtnImage = UseLoadedButtonImage( giOptionsButtonImages, -1,2,-1,3,-1 );
-	guiDoneButton = CreateIconAndTextButton( giDoneBtnImage, zOptionsText[OPT_DONE], OPT_BUTTON_FONT, 
-													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
-													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
-													TEXT_CJUSTIFIED, 
+	guiDoneButton = CreateIconAndTextButton( giDoneBtnImage, zOptionsText[OPT_DONE], OPT_BUTTON_FONT,
+													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
+													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
+													TEXT_CJUSTIFIED,
 													OPT_DONE_BTN_X, OPT_DONE_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnDoneCallback);
 //	SpecifyDisabledButtonStyle( guiBobbyRAcceptOrder, DISABLED_STYLE_SHADED );
@@ -463,8 +459,8 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 			continue;
 		}
 		//Check box to toggle tracking mode
-		guiOptionsToggles[ cnt ] = CreateCheckBoxButton( OPT_TOGGLE_BOX_FIRST_COLUMN_X, usPosY, 
-																		"INTERFACE\\OptionsCheckBoxes_12x12.sti", MSYS_PRIORITY_HIGH+10, 
+		guiOptionsToggles[ cnt ] = CreateCheckBoxButton( OPT_TOGGLE_BOX_FIRST_COLUMN_X, usPosY,
+																		"INTERFACE\\OptionsCheckBoxes_12x12.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnOptionsTogglesCallback );
 		MSYS_SetBtnUserData( guiOptionsToggles[ cnt ], 0, cnt );
 
@@ -480,16 +476,16 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 
 			//Create mouse regions for the option toggle text
 			MSYS_DefineRegion( &gSelectedOptionTextRegion[cnt], OPT_TOGGLE_BOX_FIRST_COLUMN_X+13, usPosY, (UINT16)(OPT_TOGGLE_BOX_FIRST_COL_TEXT_X+usTextWidth), (UINT16)(usPosY+usTextHeight*ubNumLines), MSYS_PRIORITY_HIGH,
-									CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack ); 
-			MSYS_AddRegion( &gSelectedOptionTextRegion[cnt]); 
+									CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack );
+			MSYS_AddRegion( &gSelectedOptionTextRegion[cnt]);
 			MSYS_SetRegionUserData( &gSelectedOptionTextRegion[ cnt ], 0, cnt);
 		}
 		else
 		{
 			//Create mouse regions for the option toggle text
 			MSYS_DefineRegion( &gSelectedOptionTextRegion[cnt], OPT_TOGGLE_BOX_FIRST_COLUMN_X+13, usPosY, (UINT16)(OPT_TOGGLE_BOX_FIRST_COL_TEXT_X+usTextWidth), (UINT16)(usPosY+usTextHeight), MSYS_PRIORITY_HIGH,
-									CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack ); 
-			MSYS_AddRegion( &gSelectedOptionTextRegion[cnt]); 
+									CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack );
+			MSYS_AddRegion( &gSelectedOptionTextRegion[cnt]);
 			MSYS_SetRegionUserData( &gSelectedOptionTextRegion[ cnt ], 0, cnt);
 		}
 
@@ -506,8 +502,8 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 	for( cnt=gubFirstColOfOptions; cnt<NUM_GAME_OPTIONS; cnt++)
 	{
 		//Check box to toggle tracking mode
-		guiOptionsToggles[ cnt ] = CreateCheckBoxButton( OPT_TOGGLE_BOX_SECOND_COLUMN_X, usPosY, 
-																		"INTERFACE\\OptionsCheckBoxes_12x12.sti", MSYS_PRIORITY_HIGH+10, 
+		guiOptionsToggles[ cnt ] = CreateCheckBoxButton( OPT_TOGGLE_BOX_SECOND_COLUMN_X, usPosY,
+																		"INTERFACE\\OptionsCheckBoxes_12x12.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnOptionsTogglesCallback );
 		MSYS_SetBtnUserData( guiOptionsToggles[ cnt ], 0, cnt );
 
@@ -527,15 +523,15 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 			usTextWidth = OPT_TOGGLE_BOX_TEXT_WIDTH;
 
 			MSYS_DefineRegion( &gSelectedOptionTextRegion[cnt], OPT_TOGGLE_BOX_SECOND_COLUMN_X+13, usPosY, (UINT16)(OPT_TOGGLE_BOX_SECOND_TEXT_X+usTextWidth), (UINT16)(usPosY+usTextHeight*ubNumLines), MSYS_PRIORITY_HIGH,
-									CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack ); 
-			MSYS_AddRegion( &gSelectedOptionTextRegion[cnt]); 
+									CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack );
+			MSYS_AddRegion( &gSelectedOptionTextRegion[cnt]);
 			MSYS_SetRegionUserData( &gSelectedOptionTextRegion[ cnt ], 0, cnt );
 		}
 		else
 		{
 			MSYS_DefineRegion( &gSelectedOptionTextRegion[cnt], OPT_TOGGLE_BOX_SECOND_COLUMN_X+13, usPosY, (UINT16)(OPT_TOGGLE_BOX_SECOND_TEXT_X+usTextWidth), (UINT16)(usPosY+usTextHeight), MSYS_PRIORITY_HIGH,
-									CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack ); 
-			MSYS_AddRegion( &gSelectedOptionTextRegion[cnt]); 
+									CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack );
+			MSYS_AddRegion( &gSelectedOptionTextRegion[cnt]);
 			MSYS_SetRegionUserData( &gSelectedOptionTextRegion[ cnt ], 0, cnt );
 		}
 
@@ -548,14 +544,14 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 
 	//Create a mouse region so when the user leaves a togglebox text region we can detect it then unselect the region
 	MSYS_DefineRegion( &gSelectedToggleBoxAreaRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL,
-							CURSOR_NORMAL, SelectedToggleBoxAreaRegionMovementCallBack, MSYS_NO_CALLBACK ); 
-	MSYS_AddRegion( &gSelectedToggleBoxAreaRegion ); 
+							CURSOR_NORMAL, SelectedToggleBoxAreaRegionMovementCallBack, MSYS_NO_CALLBACK );
+	MSYS_AddRegion( &gSelectedToggleBoxAreaRegion );
 
 
 	//Render the scene before adding the slider boxes
 	RenderOptionsScreen();
 
-	//Add a slider bar for the Sound Effects 
+	//Add a slider bar for the Sound Effects
 	guiSoundEffectsSliderID = AddSlider( SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_SOUND_EFFECTS_SLIDER_X, OPT_SOUND_EFFECTS_SLIDER_Y, OPT_SLIDER_BAR_SIZE, 127, MSYS_PRIORITY_HIGH, SoundFXSliderChangeCallBack, 0 );
 	AssertMsg( guiSoundEffectsSliderID, "Failed to AddSlider" );
 	SetSliderValue( guiSoundEffectsSliderID, GetSoundEffectsVolume() );
@@ -599,7 +595,6 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 
 void			ExitOptionsScreen()
 {
-	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	if( gfExitOptionsDueToMessageBox )
@@ -670,7 +665,7 @@ void			ExitOptionsScreen()
 		guiTacticalInterfaceFlags |= INTERFACE_MAPSCREEN;
 	}
 
-	//if the user changed the	TREE TOP option, AND a world is loaded 
+	//if the user changed the	TREE TOP option, AND a world is loaded
 	if( gfSettingOfTreeTopStatusOnEnterOfOptionScreen != gGameSettings.fOptions[ TOPTION_TOGGLE_TREE_TOPS ] && gfWorldLoaded )
 	{
 		SetTreeTopStateForMap();
@@ -693,7 +688,6 @@ void			ExitOptionsScreen()
 
 void			HandleOptionsScreen()
 {
-	PERFORMANCE_MARKER
 	HandleSliderBarMovementSounds();
 
 	HandleHighLightedText( TRUE );
@@ -704,7 +698,6 @@ void			HandleOptionsScreen()
 
 void			RenderOptionsScreen()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 	UINT16	usPosY;
 	UINT8	cnt;
@@ -743,7 +736,7 @@ void			RenderOptionsScreen()
 		if( usWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
 			DisplayWrappedString( OPT_TOGGLE_BOX_FIRST_COL_TEXT_X, usPosY, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsToggleText[ cnt ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 		else
-			DrawTextToScreen( zOptionsToggleText[ cnt ], OPT_TOGGLE_BOX_FIRST_COL_TEXT_X, usPosY, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);	
+			DrawTextToScreen( zOptionsToggleText[ cnt ], OPT_TOGGLE_BOX_FIRST_COL_TEXT_X, usPosY, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
 		usPosY += OPT_GAP_BETWEEN_TOGGLE_BOXES;
 	}
@@ -759,27 +752,27 @@ void			RenderOptionsScreen()
 		if( usWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
 			DisplayWrappedString( OPT_TOGGLE_BOX_SECOND_TEXT_X, usPosY, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsToggleText[ cnt ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 		else
-			DrawTextToScreen( zOptionsToggleText[ cnt ], OPT_TOGGLE_BOX_SECOND_TEXT_X, usPosY, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);	
+			DrawTextToScreen( zOptionsToggleText[ cnt ], OPT_TOGGLE_BOX_SECOND_TEXT_X, usPosY, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
 		usPosY += OPT_GAP_BETWEEN_TOGGLE_BOXES;
 	}
 
 
 
-	
+
 	//
 	// Text for the Slider Bars
 	//
 
 	//Display the Sound Fx text
-	DisplayWrappedString( OPT_SOUND_FX_TEXT_X, OPT_SOUND_FX_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_SLIDER_FONT, OPT_MAIN_COLOR, zOptionsText[ OPT_SOUND_FX ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);	
+	DisplayWrappedString( OPT_SOUND_FX_TEXT_X, OPT_SOUND_FX_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_SLIDER_FONT, OPT_MAIN_COLOR, zOptionsText[ OPT_SOUND_FX ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
 
 	//Display the Speech text
-	DisplayWrappedString( OPT_SPEECH_TEXT_X, OPT_SPEECH_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_SLIDER_FONT, OPT_MAIN_COLOR, zOptionsText[ OPT_SPEECH ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);	
+	DisplayWrappedString( OPT_SPEECH_TEXT_X, OPT_SPEECH_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_SLIDER_FONT, OPT_MAIN_COLOR, zOptionsText[ OPT_SPEECH ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
 
 	//Display the Music text
-	DisplayWrappedString( OPT_MUSIC_TEXT_X, OPT_MUSIC_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_SLIDER_FONT, OPT_MAIN_COLOR, zOptionsText[ OPT_MUSIC ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );	
-	
+	DisplayWrappedString( OPT_MUSIC_TEXT_X, OPT_MUSIC_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_SLIDER_FONT, OPT_MAIN_COLOR, zOptionsText[ OPT_MUSIC ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
+
 	InvalidateRegion( OPTIONS__TOP_LEFT_X, OPTIONS__TOP_LEFT_Y, OPTIONS__BOTTOM_RIGHT_X, OPTIONS__BOTTOM_RIGHT_Y);
 }
 
@@ -793,7 +786,6 @@ void			RenderOptionsScreen()
 
 void		GetOptionsScreenUserInput()
 {
-	PERFORMANCE_MARKER
 	InputAtom Event;
 	POINT	MousePos;
 
@@ -809,19 +801,19 @@ void		GetOptionsScreenUserInput()
 				MouseSystemHook(LEFT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
 			case LEFT_BUTTON_UP:
-				MouseSystemHook(LEFT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y ,_LeftButtonDown, _RightButtonDown);			
+				MouseSystemHook(LEFT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y ,_LeftButtonDown, _RightButtonDown);
 				break;
 			case RIGHT_BUTTON_DOWN:
 				MouseSystemHook(RIGHT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
-			case RIGHT_BUTTON_UP: 
-				MouseSystemHook(RIGHT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);	
+			case RIGHT_BUTTON_UP:
+				MouseSystemHook(RIGHT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
-			case RIGHT_BUTTON_REPEAT: 
-				MouseSystemHook(RIGHT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);			
+			case RIGHT_BUTTON_REPEAT:
+				MouseSystemHook(RIGHT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
-			case LEFT_BUTTON_REPEAT: 
-				MouseSystemHook(LEFT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);				
+			case LEFT_BUTTON_REPEAT:
+				MouseSystemHook(LEFT_BUTTON_REPEAT, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
 				break;
 		}
 
@@ -918,7 +910,6 @@ void		GetOptionsScreenUserInput()
 
 void SetOptionsExitScreen( UINT32 uiExitScreen )
 {
-	PERFORMANCE_MARKER
 	guiOptionsScreen = uiExitScreen;
 	gfOptionsScreenExit	= TRUE;
 }
@@ -926,7 +917,6 @@ void SetOptionsExitScreen( UINT32 uiExitScreen )
 
 void BtnOptGotoSaveGameCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -946,11 +936,10 @@ void BtnOptGotoSaveGameCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 
 void BtnOptGotoLoadGameCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -970,12 +959,11 @@ void BtnOptGotoLoadGameCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 
 
 void BtnOptQuitCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -997,11 +985,10 @@ void BtnOptQuitCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 
 void BtnDoneCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1020,12 +1007,11 @@ void BtnDoneCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 
 
 void BtnOptionsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
 
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
@@ -1065,7 +1051,6 @@ void BtnOptionsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 
 void HandleOptionToggle( UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN fPlaySound )
 {
-	PERFORMANCE_MARKER
 	static UINT32	uiOptionToggleSound = NO_SAMPLE;
 //	static	BOOLEAN	fCheckBoxDrawnDownLastTime = FALSE;
 
@@ -1083,7 +1068,7 @@ void HandleOptionToggle( UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN 
 		gGameSettings.fOptions[ ubButton ] = FALSE;
 
 		ButtonList[ guiOptionsToggles[ ubButton ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-	
+
 		if( fDown )
 			DrawCheckBoxButtonOff( guiOptionsToggles[ ubButton ] );
 
@@ -1120,19 +1105,18 @@ void HandleOptionToggle( UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN 
 		if( fDown )
 		{
 		//				case BTN_SND_CLICK_OFF:
-			PlayJA2Sample( BIG_SWITCH3_IN, RATE_11025, BTNVOLUME, 1, MIDDLEPAN );			
+			PlayJA2Sample( BIG_SWITCH3_IN, RATE_11025, BTNVOLUME, 1, MIDDLEPAN );
 		}
 		else
 		{
 		//		case BTN_SND_CLICK_ON:
-			PlayJA2Sample( BIG_SWITCH3_OUT, RATE_11025, BTNVOLUME, 1, MIDDLEPAN );			
+			PlayJA2Sample( BIG_SWITCH3_OUT, RATE_11025, BTNVOLUME, 1, MIDDLEPAN );
 		}
 	}
 }
 
 void SoundFXSliderChangeCallBack( INT32 iNewValue )
 {
-	PERFORMANCE_MARKER
 	SetSoundEffectsVolume( iNewValue );
 
 	guiSoundFxSliderMoving = GetJA2Clock();
@@ -1141,7 +1125,6 @@ void SoundFXSliderChangeCallBack( INT32 iNewValue )
 
 void SpeechSliderChangeCallBack( INT32 iNewValue )
 {
-	PERFORMANCE_MARKER
 	SetSpeechVolume( iNewValue );
 
 	guiSpeechSliderMoving = GetJA2Clock();
@@ -1150,13 +1133,11 @@ void SpeechSliderChangeCallBack( INT32 iNewValue )
 
 void MusicSliderChangeCallBack( INT32 iNewValue )
 {
-	PERFORMANCE_MARKER
-	MusicSetVolume( iNewValue );	
+	MusicSetVolume( iNewValue );
 }
 
 BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {
-	PERFORMANCE_MARKER	
 	// reset exit mode
 	gfExitOptionsDueToMessageBox = TRUE;
 
@@ -1169,9 +1150,8 @@ BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, const STR16 zString, UINT32 
 
 BOOLEAN DoOptionsMessageBox( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	PERFORMANCE_MARKER
 	SGPRect CenteringRect= {0, 0, SCREEN_WIDTH-1, SCREEN_HEIGHT-1 };
-	
+
 	// reset exit mode
 	gfExitOptionsDueToMessageBox = TRUE;
 
@@ -1186,7 +1166,6 @@ BOOLEAN DoOptionsMessageBox( UINT8 ubStyle, const STR16 zString, UINT32 uiExitSc
 
 void			ConfirmQuitToMainMenuMessageBoxCallBack( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	// yes, Quit to main menu
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -1207,7 +1186,6 @@ void			ConfirmQuitToMainMenuMessageBoxCallBack( UINT8 bExitValue )
 
 void SetOptionsScreenToggleBoxes()
 {
-	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<NUM_GAME_OPTIONS; cnt++)
@@ -1224,7 +1202,6 @@ void SetOptionsScreenToggleBoxes()
 
 void GetOptionsScreenToggleBoxes()
 {
-	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<NUM_GAME_OPTIONS; cnt++)
@@ -1238,7 +1215,6 @@ void GetOptionsScreenToggleBoxes()
 
 void HandleSliderBarMovementSounds()
 {
-	PERFORMANCE_MARKER
 	static UINT32	uiLastSoundFxTime=0;
 	static UINT32	uiLastSpeechTime=0;
 	static UINT32	uiLastPlayingSoundID = NO_SAMPLE;
@@ -1276,7 +1252,6 @@ void HandleSliderBarMovementSounds()
 
 void SelectedOptionTextRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubButton = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -1287,7 +1262,7 @@ void SelectedOptionTextRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 
 
-	else if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )//iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT || 
+	else if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )//iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT ||
 	{
 		if( gGameSettings.fOptions[ ubButton ] )
 		{
@@ -1303,7 +1278,6 @@ void SelectedOptionTextRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void SelectedOptionTextRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	INT8	bButton = (INT8)MSYS_GetRegionUserData( pRegion, 0 );
 
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
@@ -1326,7 +1300,6 @@ void SelectedOptionTextRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reas
 
 void HandleHighLightedText( BOOLEAN fHighLight )
 {
-	PERFORMANCE_MARKER
 	UINT16		usPosX=0;
 	UINT16		usPosY=0;
 	UINT8			ubCnt;
@@ -1405,17 +1378,17 @@ void HandleHighLightedText( BOOLEAN fHighLight )
 		{
 			if( fHighLight )
 				DisplayWrappedString( usPosX, usPosY, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[ bHighLight ], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED );
-//				DrawTextToScreen( zOptionsToggleText[ bHighLight ], usPosX, usPosY, 0, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);	
+//				DrawTextToScreen( zOptionsToggleText[ bHighLight ], usPosX, usPosY, 0, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);
 			else
 				DisplayWrappedString( usPosX, usPosY, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsToggleText[ bHighLight ], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED );
-//				DrawTextToScreen( zOptionsToggleText[ bHighLight ], usPosX, usPosY, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);	
+//				DrawTextToScreen( zOptionsToggleText[ bHighLight ], usPosX, usPosY, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);
 		}
 		else
 		{
 			if( fHighLight )
-				DrawTextToScreen( zOptionsToggleText[ bHighLight ], usPosX, usPosY, 0, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);	
+				DrawTextToScreen( zOptionsToggleText[ bHighLight ], usPosX, usPosY, 0, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);
 			else
-				DrawTextToScreen( zOptionsToggleText[ bHighLight ], usPosX, usPosY, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);	
+				DrawTextToScreen( zOptionsToggleText[ bHighLight ], usPosX, usPosY, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);
 		}
 	}
 }
@@ -1424,14 +1397,13 @@ void HandleHighLightedText( BOOLEAN fHighLight )
 
 void SelectedToggleBoxAreaRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 	}
 	else if( reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
 		UINT8	ubCnt;
-	
+
 		//loop through all the toggle box's and remove the in area flag
 		for( ubCnt=0;ubCnt<NUM_GAME_OPTIONS;ubCnt++)
 		{

@@ -4,18 +4,16 @@
 #include "MemMan.h"
 
 #include "lwstring.h"
-#include "profiler.h"
 
 void luaWS_newlstr (lua_State *L, const CHAR16 *str, size_t l)
 {
-	PERFORMANCE_MARKER
 	TWString *ts;
 
-	// Create and initialize this data
-	int size = sizewstring( l);
-	ts = (TWString*) lua_newuserdata( L, size );
-	ts->len = l;
-	memcpy( ts->data, str, l*sizeof(CHAR16)+sizeof(CHAR16));
+  // Create and initialize this data
+  int size = sizewstring( l);
+  ts = (TWString*) lua_newuserdata( L, size );
+  ts->len = l;
+  memcpy( ts->data, str, l*sizeof(CHAR16)+sizeof(CHAR16));
 
 	// Make this data a wstring
 	luaL_getmetatable(L, "wstring");
@@ -26,7 +24,6 @@ void luaWS_newlstr (lua_State *L, const CHAR16 *str, size_t l)
 // Called from LUA code
 int LuaWStringFromUTF8( lua_State *L )
 {
-	PERFORMANCE_MARKER
 	const CHAR8 *utf8 = luaL_checkstring( L, 1 );
 	STR16 str = NULL;
 	int len;
@@ -46,7 +43,6 @@ int LuaWStringFromUTF8( lua_State *L )
 
 int LuaWStringByte( lua_State* L )
 {
-	PERFORMANCE_MARKER
 	int start;
 	int stop;
 	int idx;
@@ -55,7 +51,7 @@ int LuaWStringByte( lua_State* L )
 	tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
 	start = luaL_optint( L, 2, 1 );
 	stop = luaL_optint( L, 3, 1 );
-	
+
 	// This function in the char strings will return nothing if the params are out of bounds.
 	if (start < 1 || start >= tw->len ||
 		stop < start)
@@ -80,11 +76,10 @@ int LuaWStringByte( lua_State* L )
 
 static int LuaWStringChar( lua_State *L )
 {
-	PERFORMANCE_MARKER
 	int len = lua_gettop( L) + 1;
 	STR16 str = (STR16) MemAlloc( len * sizeof( CHAR16) );
 	int idx;
-	
+
 	len--;
 	for( idx=0; idx<len; idx++)
 	{
@@ -100,31 +95,26 @@ static int LuaWStringChar( lua_State *L )
 
 static int LuaWStringFind( lua_State *L )
 {
-	PERFORMANCE_MARKER
 	return 0;
 }
 
 static int LuaWStringFormat( lua_State *L )
 {
-	PERFORMANCE_MARKER
 	return 0;
 }
 
 static int LuaWStringGMatch( lua_State *L )
 {
-	PERFORMANCE_MARKER
 	return 0;
 }
 
 static int LuaWStringGSub( lua_State *L )
 {
-	PERFORMANCE_MARKER
 	return 0;
 }
 
 static int LuaWStringLen( lua_State *L )
 {
-	PERFORMANCE_MARKER
 	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
 	lua_pushinteger( L, tw->len );
 	return 1;
@@ -132,12 +122,11 @@ static int LuaWStringLen( lua_State *L )
 
 static int LuaWStringLower( lua_State *L )
 {
-	PERFORMANCE_MARKER
 	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
 	int len = tw->len + 1;
 	STR16 str = (STR16) MemAlloc( len * sizeof( CHAR16) );
 	int idx;
-	
+
 	for( idx=0; idx<len-1; idx++)
 	{
 		str[ idx ] = (CHAR16) towlower( tw->data[ idx ] );
@@ -152,13 +141,11 @@ static int LuaWStringLower( lua_State *L )
 
 static int LuaWStringMatch( lua_State *L )
 {
-	PERFORMANCE_MARKER
 	return 0;
 }
 
 static int LuaWStringRep( lua_State *L )
 {
-	PERFORMANCE_MARKER
 	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
 	int num = (luaL_checkint( L, 2) >= 0) ? lua_tointeger( L, 2) : 0;
 	int len = tw->len * num + 1;
@@ -182,12 +169,11 @@ static int LuaWStringRep( lua_State *L )
 
 static int LuaWStringReverse( lua_State *L )
 {
-	PERFORMANCE_MARKER
 	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
 	int len = tw->len + 1;
 	STR16 str = (STR16) MemAlloc( len * sizeof( CHAR16) );
 	int idx;
-	
+
 	for( idx=0; idx<len-1; idx++)
 	{
 		str[ idx ] = tw->data[ tw->len - idx - 1 ];
@@ -202,18 +188,16 @@ static int LuaWStringReverse( lua_State *L )
 
 static int LuaWStringSub( lua_State *L )
 {
-	PERFORMANCE_MARKER
 	return 0;
 }
 
 static int LuaWStringUpper( lua_State *L )
 {
-	PERFORMANCE_MARKER
 	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
 	int len = tw->len + 1;
 	STR16 str = (STR16) MemAlloc( len * sizeof( CHAR16) );
 	int idx;
-	
+
 	for( idx=0; idx<len-1; idx++)
 	{
 		str[ idx ] = (CHAR16) towupper( tw->data[ idx ] );
@@ -228,7 +212,6 @@ static int LuaWStringUpper( lua_State *L )
 
 static int LuaWStringToString( lua_State *L )
 {
-	PERFORMANCE_MARKER
 	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
 	int newlen;
 	STR8 newstr = NULL;
@@ -243,10 +226,9 @@ static int LuaWStringToString( lua_State *L )
 
 static int LuaWStringIndex( lua_State *L )
 {
-	PERFORMANCE_MARKER
 	//TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
 	const CHAR8 *idx = luaL_checkstring( L, 2 );
-	
+
 	// Disqualify metafunctions
 	if ( idx[0] == '_' && idx[1] == '_' )
 	{

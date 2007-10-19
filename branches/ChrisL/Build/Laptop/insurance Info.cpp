@@ -92,20 +92,17 @@ void DisplayInfoTocPage();
 
 void GameInitInsuranceInfo()
 {
-	PERFORMANCE_MARKER
 
 }
 
 void EnterInitInsuranceInfo()
 {
-	PERFORMANCE_MARKER
 	memset( &InsuranceInfoSubPagesVisitedFlag, 0, INS_INFO_LAST_PAGE-1);
 
 }
 
 BOOLEAN EnterInsuranceInfo()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT16					usPosX;
 
@@ -119,10 +116,10 @@ BOOLEAN EnterInsuranceInfo()
 
 	//left arrow
 	guiInsPrevButtonImage	= LoadButtonImage("LAPTOP\\InsLeftButton.sti", 2,0,-1,1,-1 );
-	guiInsPrevBackButton = CreateIconAndTextButton( guiInsPrevButtonImage, InsInfoText[INS_INFO_PREVIOUS], INS_FONT_BIG, 
-													INS_FONT_COLOR, INS_FONT_SHADOW, 
-													INS_FONT_COLOR, INS_FONT_SHADOW, 
-													TEXT_CJUSTIFIED, 
+	guiInsPrevBackButton = CreateIconAndTextButton( guiInsPrevButtonImage, InsInfoText[INS_INFO_PREVIOUS], INS_FONT_BIG,
+													INS_FONT_COLOR, INS_FONT_SHADOW,
+													INS_FONT_COLOR, INS_FONT_SHADOW,
+													TEXT_CJUSTIFIED,
 													INS_INFO_LEFT_ARROW_BUTTON_X, INS_INFO_LEFT_ARROW_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnInsPrevButtonCallback);
 	SetButtonCursor( guiInsPrevBackButton, CURSOR_WWW );
@@ -131,10 +128,10 @@ BOOLEAN EnterInsuranceInfo()
 
 	//Right arrow
 	guiInsNextButtonImage	= LoadButtonImage("LAPTOP\\InsRightButton.sti", 2,0,-1,1,-1 );
-	guiInsNextBackButton = CreateIconAndTextButton( guiInsNextButtonImage, InsInfoText[INS_INFO_NEXT], INS_FONT_BIG, 
-													INS_FONT_COLOR, INS_FONT_SHADOW, 
-													INS_FONT_COLOR, INS_FONT_SHADOW, 
-													TEXT_CJUSTIFIED, 
+	guiInsNextBackButton = CreateIconAndTextButton( guiInsNextButtonImage, InsInfoText[INS_INFO_NEXT], INS_FONT_BIG,
+													INS_FONT_COLOR, INS_FONT_SHADOW,
+													INS_FONT_COLOR, INS_FONT_SHADOW,
+													TEXT_CJUSTIFIED,
 													INS_INFO_RIGHT_ARROW_BUTTON_X, INS_INFO_RIGHT_ARROW_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													DEFAULT_MOVE_CALLBACK, BtnInsNextButtonCallback);
 	SetButtonCursor( guiInsNextBackButton, CURSOR_WWW );
@@ -145,13 +142,13 @@ BOOLEAN EnterInsuranceInfo()
 	//link to go to the contract page
 	//link to go to the home page
 	MSYS_DefineRegion( &gSelectedInsuranceInfoHomeLinkRegion, usPosX, INS_INFO_LINK_TO_CONTRACT_Y-37, (UINT16)(usPosX + INS_INFO_LINK_TO_CONTRACT_WIDTH), INS_INFO_LINK_TO_CONTRACT_Y+2, MSYS_PRIORITY_HIGH,
-					CURSOR_WWW, MSYS_NO_CALLBACK, SelectInsuranceInfoHomeLinkRegionCallBack); 
-	MSYS_AddRegion(&gSelectedInsuranceInfoHomeLinkRegion); 
+					CURSOR_WWW, MSYS_NO_CALLBACK, SelectInsuranceInfoHomeLinkRegionCallBack);
+	MSYS_AddRegion(&gSelectedInsuranceInfoHomeLinkRegion);
 
 	usPosX += INS_INFO_LINK_START_OFFSET + INS_INFO_LINK_TO_CONTRACT_WIDTH;
 	MSYS_DefineRegion( &gSelectedInsuranceInfoLinkRegion, usPosX, INS_INFO_LINK_TO_CONTRACT_Y-37, (UINT16)(usPosX + INS_INFO_LINK_TO_CONTRACT_WIDTH), INS_INFO_LINK_TO_CONTRACT_Y+2, MSYS_PRIORITY_HIGH,
-					CURSOR_WWW, MSYS_NO_CALLBACK, SelectInsuranceLinkRegionCallBack); 
-	MSYS_AddRegion(&gSelectedInsuranceInfoLinkRegion); 
+					CURSOR_WWW, MSYS_NO_CALLBACK, SelectInsuranceLinkRegionCallBack);
+	MSYS_AddRegion(&gSelectedInsuranceInfoLinkRegion);
 
 
 	gubCurrentInsInfoSubPage = INS_INFO_INFO_TOC;
@@ -163,7 +160,6 @@ BOOLEAN EnterInsuranceInfo()
 
 void ExitInsuranceInfo()
 {
-	PERFORMANCE_MARKER
 	RemoveInsuranceDefaults();
 
 
@@ -181,13 +177,11 @@ void ExitInsuranceInfo()
 
 void HandleInsuranceInfo()
 {
-	PERFORMANCE_MARKER
 
 }
 
 void RenderInsuranceInfo()
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	UINT16		usPosX;
 
@@ -228,7 +222,7 @@ void RenderInsuranceInfo()
 
 	//Display the red bar under the link at the bottom.	and the text
 	DisplaySmallRedLineWithShadow( usPosX, INS_INFO_LINK_TO_CONTRACT_Y, (UINT16)(usPosX+INS_INFO_LINK_TO_CONTRACT_WIDTH), INS_INFO_LINK_TO_CONTRACT_Y);
-	swprintf( sText, L"%s", pMessageStrings[ MSG_HOMEPAGE ] ); 
+	swprintf( sText, L"%s", pMessageStrings[ MSG_HOMEPAGE ] );
 	DisplayWrappedString( usPosX, INS_INFO_LINK_TO_CONTRACT_TEXT_Y+14, INS_INFO_LINK_TO_CONTRACT_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR,	sText, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 	usPosX += INS_INFO_LINK_START_OFFSET + INS_INFO_LINK_TO_CONTRACT_WIDTH;
 
@@ -249,7 +243,6 @@ void RenderInsuranceInfo()
 
 void BtnInsPrevButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -265,7 +258,7 @@ void BtnInsPrevButtonCallback(GUI_BUTTON *btn,INT32 reason)
 				gubCurrentInsInfoSubPage --;
 
 			ChangingInsuranceInfoSubPage( gubCurrentInsInfoSubPage );
-//			fPausedReDrawScreenFlag = TRUE;		
+//			fPausedReDrawScreenFlag = TRUE;
 
 			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 		}
@@ -275,11 +268,10 @@ void BtnInsPrevButtonCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 
 void BtnInsNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -296,7 +288,7 @@ void BtnInsNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 			ChangingInsuranceInfoSubPage( gubCurrentInsInfoSubPage );
 
-//			fPausedReDrawScreenFlag = TRUE;		
+//			fPausedReDrawScreenFlag = TRUE;
 
 			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 		}
@@ -306,11 +298,10 @@ void BtnInsNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 
 void SelectInsuranceLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -320,12 +311,11 @@ void SelectInsuranceLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -335,13 +325,12 @@ void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iRe
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-	} 
+	}
 }
 
 
 void DisplaySubmitClaimPage()
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
 	UINT16	usPosX;
@@ -361,7 +350,7 @@ void DisplaySubmitClaimPage()
 	usNewLineOffset += DisplayWrappedString( INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR,	sText, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
-	//display the BIG FRAUD 
+	//display the BIG FRAUD
 	GetInsuranceText( INS_SNGL_FRAUD, sText );
 	DisplayWrappedString( INS_INFO_FIRST_PARAGRAPH_X, (UINT16)(usNewLineOffset-1), INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_BIG, INS_INFO_FRAUD_TEXT_COLOR,	sText, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
@@ -381,7 +370,6 @@ void DisplaySubmitClaimPage()
 
 void DisplayPremiumPage()
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
 	HVOBJECT hPixHandle;
@@ -428,7 +416,6 @@ void DisplayPremiumPage()
 
 void DisplayRenewingPremiumPage()
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
 //	HVOBJECT hPixHandle;
@@ -468,7 +455,6 @@ void DisplayRenewingPremiumPage()
 
 void DisplayCancelationPagePage()
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
 
@@ -493,13 +479,12 @@ void DisplayCancelationPagePage()
 
 void DisableArrowButtonsIfOnLastOrFirstPage()
 {
-	PERFORMANCE_MARKER
-	if( gubCurrentInsInfoSubPage == INS_INFO_INFO_TOC) 
+	if( gubCurrentInsInfoSubPage == INS_INFO_INFO_TOC)
 		DisableButton( guiInsPrevBackButton);
 	else
 		EnableButton( guiInsPrevBackButton );
 
-	if( gubCurrentInsInfoSubPage == INS_INFO_LAST_PAGE - 1 ) 
+	if( gubCurrentInsInfoSubPage == INS_INFO_LAST_PAGE - 1 )
 		DisableButton( guiInsNextBackButton);
 	else
 		EnableButton( guiInsNextBackButton );
@@ -509,7 +494,6 @@ void DisableArrowButtonsIfOnLastOrFirstPage()
 
 void ChangingInsuranceInfoSubPage( UINT8 ubSubPageNumber )
 {
-	PERFORMANCE_MARKER
 	fLoadPendingFlag = TRUE;
 
 	if( InsuranceInfoSubPagesVisitedFlag[ ubSubPageNumber ] == FALSE )
@@ -528,7 +512,6 @@ void ChangingInsuranceInfoSubPage( UINT8 ubSubPageNumber )
 
 void DisplayInfoTocPage()
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
 	HVOBJECT hPixHandle;
@@ -550,8 +533,8 @@ void DisplayInfoTocPage()
 	usNewLineOffset += DisplayWrappedString( INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR,	sText, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
-	
-	//Display the sub title 
+
+	//Display the sub title
 	GetInsuranceText( INS_SNGL_WE_CAN_OFFER_U, sText );
 	DrawTextToScreen( sText, INS_INFO_TOC_SUBTITLE_X, usNewLineOffset, 640-INS_INFO_INFO_TOC_TITLE_X, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	usPosY = usNewLineOffset + 12;
@@ -587,4 +570,5 @@ void DisplayInfoTocPage()
 	usNewLineOffset += DisplayWrappedString( INS_INFO_FIRST_PARAGRAPH_X+INSURANCE_BULLET_TEXT_OFFSET_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR,	sText, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 }
+
 

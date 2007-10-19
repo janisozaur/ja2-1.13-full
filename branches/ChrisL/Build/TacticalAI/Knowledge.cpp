@@ -14,7 +14,6 @@
 
 void CallAvailableEnemiesTo( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT32	iLoop;
 	INT32	iLoop2;
 	SOLDIERTYPE * pSoldier;
@@ -42,7 +41,7 @@ void CallAvailableEnemiesTo( INT16 sGridNo )
 						WearGasMaskIfAvailable( pSoldier );
 					}
 				}
- 
+
 			}
 
 		}
@@ -52,7 +51,6 @@ void CallAvailableEnemiesTo( INT16 sGridNo )
 
 void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam )
 {
-	PERFORMANCE_MARKER
 	INT32	iLoop2;
 	SOLDIERTYPE * pSoldier;
 
@@ -84,8 +82,7 @@ void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam )
 
 void CallAvailableKingpinMenTo( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
-	// like call all enemies, but only affects civgroup KINGPIN guys with 
+	// like call all enemies, but only affects civgroup KINGPIN guys with
 	// NO PROFILE
 
 	INT32	iLoop2;
@@ -114,7 +111,6 @@ void CallAvailableKingpinMenTo( INT16 sGridNo )
 
 void CallEldinTo( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	// like call all enemies, but only affects Eldin
 	SOLDIERTYPE * pSoldier;
 
@@ -156,7 +152,6 @@ void CallEldinTo( INT16 sGridNo )
 
 INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN * pfClimbingNecessary, BOOLEAN * pfReachable )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiLoop;
 	INT8 * pbPersOL, * pbPublOL;
 	INT16 *psLastLoc,*psNoiseGridNo;
@@ -169,7 +164,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 	INT8	bBestLevel = 0;
 	INT16 sClimbingGridNo;
 	BOOLEAN fClimbingNecessary = FALSE;
-	SOLDIERTYPE * pTemp;	
+	SOLDIERTYPE * pTemp;
 
 	pubNoiseVolume = &gubPublicNoiseVolume[pSoldier->bTeam];
 	psNoiseGridNo = &gsPublicNoiseGridno[pSoldier->bTeam];
@@ -259,7 +254,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 	// if any recent PUBLIC "misc. noise" is also known
 	if ( (pSoldier->bTeam != CIV_TEAM) || ( pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP ) )
 	{
-	
+
 		if (*psNoiseGridNo != NOWHERE)
 		{
 			// if we are NOT there (at the noise gridno)
@@ -301,7 +296,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 
 		if ( *pfReachable )
 		{
-			// if there is a climb involved then we should store the location 
+			// if there is a climb involved then we should store the location
 			// of where we have to climb to instead
 			sClimbingGridNo = GetInterveningClimbingLocation( pSoldier, sBestGridNo, bBestLevel, &fClimbingNecessary );
 			if ( fClimbingNecessary )
@@ -320,7 +315,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 			else
 			{
 				fClimbingNecessary = FALSE;
-			} 
+			}
 		}
 	}
 
@@ -345,7 +340,6 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 
 INT16 WhatIKnowThatPublicDont(SOLDIERTYPE *pSoldier, UINT8 ubInSightOnly)
 {
-	PERFORMANCE_MARKER
 	UINT8 ubTotal = 0;
 	UINT32 uiLoop;
 	INT8 *pbPersOL,*pbPublOL;
@@ -371,7 +365,7 @@ INT16 WhatIKnowThatPublicDont(SOLDIERTYPE *pSoldier, UINT8 ubInSightOnly)
 	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
 	{
 		pTemp = MercSlots[ uiLoop ];
-	
+
 		// if this merc is inactive, at base, on assignment, or dead
 		if (!pTemp)
 		{

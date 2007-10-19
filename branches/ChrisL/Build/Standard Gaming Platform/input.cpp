@@ -297,12 +297,12 @@ LRESULT Result;
 		gfSGPInputReceived =	TRUE;
 	 break;
 	}
- 
+
 	if ( wParam == WM_MOUSEWHEEL )
 	{
 		return( FALSE );
 	}
- 
+
 	switch (wParam)
 	{
 	case WM_LBUTTONDOWN:
@@ -376,7 +376,6 @@ BOOLEAN InitializeInputManager(void)
 
 void ShutdownInputManager(void)
 {
-	PERFORMANCE_MARKER
 	// There's very little to do when shutting down the input manager. In the future, this is where the keyboard and
 	// mouse hooks will be destroyed
 	UnRegisterDebugTopic(TOPIC_INPUT, "Input Manager");
@@ -985,14 +984,14 @@ void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
 		gfKeyState[ ALT ] = FALSE;
 			gfAltState = FALSE;
 			// therefore minimize the application
-			ShowWindow( ghWindow, SW_MINIMIZE ); 
+			ShowWindow( ghWindow, SW_MINIMIZE );
 		}
 	}
 }
 
 void KeyDown(UINT32 usParam, UINT32 uiParam)
 {
-	PERFORMANCE_MARKER // Are we PRESSING down one of SHIFT, ALT or CTRL ???
+	// Are we PRESSING down one of SHIFT, ALT or CTRL ???
 	if (usParam == SHIFT)
 	{ // SHIFT key is PRESSED
 	gfShiftState = SHIFT_DOWN;
@@ -1034,7 +1033,7 @@ void KeyDown(UINT32 usParam, UINT32 uiParam)
 
 void KeyUp(UINT32 usParam, UINT32 uiParam)
 {
-	PERFORMANCE_MARKER // Are we RELEASING one of SHIFT, ALT or CTRL ???
+	// Are we RELEASING one of SHIFT, ALT or CTRL ???
 	if (usParam == SHIFT)
 	{ // SHIFT key is RELEASED
 	gfShiftState = FALSE;
@@ -1508,7 +1507,7 @@ void RestoreString(StringInput *pStringDescriptor)
 
 void EndStringInput(StringInput *pStringDescriptor)
 {
-	PERFORMANCE_MARKER // Make sure we have a valid pStringDescriptor
+	// Make sure we have a valid pStringDescriptor
 	if (pStringDescriptor != NULL)
 	{ // make sure the gpCurrentStringDescriptor is NULL if necessary
 	if (pStringDescriptor == gpCurrentStringDescriptor)

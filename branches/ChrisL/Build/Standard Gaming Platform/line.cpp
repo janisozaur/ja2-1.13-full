@@ -50,7 +50,6 @@ void SetClippingRegionAndImageWidth(
 	int iClipHeight
 	)
 {
-	PERFORMANCE_MARKER
 	giImageWidth = iImageWidth;
 	giClipXMin = iClipStartX;
 	giClipXMax = iClipStartX + iClipWidth-1;
@@ -60,7 +59,6 @@ void SetClippingRegionAndImageWidth(
 
 BOOL Clipt( FLOAT denom, FLOAT num, FLOAT *tE, FLOAT *tL )
 {
-	PERFORMANCE_MARKER
 	FLOAT	t;
 	BOOL	accept;
 
@@ -90,14 +88,12 @@ BOOL Clipt( FLOAT denom, FLOAT num, FLOAT *tE, FLOAT *tL )
 
 BOOL ClipPoint( int x, int y )
 {
-	PERFORMANCE_MARKER
-	return( x <= giClipXMax && x >= giClipXMin && 
+	return( x <= giClipXMax && x >= giClipXMin &&
 			y <= giClipYMax && y >= giClipYMin );
 }
 
 BOOL Clip2D( int *ix0, int *iy0, int *ix1, int *iy1 )
 {
-	PERFORMANCE_MARKER
 	BOOL	visible;
 	FLOAT	te, tl;
 	FLOAT	dx, dy;
@@ -153,7 +149,6 @@ BOOL Clip2D( int *ix0, int *iy0, int *ix1, int *iy1 )
 
 void LineDraw( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT8 *ScreenPtr)
 {
-	PERFORMANCE_MARKER
 	int Temp, AdjUp, AdjDown, ErrorTerm, XAdvance, XDelta, YDelta;
 	int WholeStep, InitialPixelCount, FinalPixelCount, i, RunLength;
 	int ScreenWidth=giImageWidth/2;
@@ -357,7 +352,6 @@ void LineDraw( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Col
 //Draws a pixel in the specified color
 void PixelDraw( BOOLEAN fClip, INT32 xp, INT32 yp, INT16 sColor, UINT8 *pScreen )
 {
-	PERFORMANCE_MARKER
 	INT8 col2 = sColor >> 8;
 	INT8 col1 = sColor & 0x00ff;
 
@@ -379,7 +373,6 @@ void PixelDraw( BOOLEAN fClip, INT32 xp, INT32 yp, INT16 sColor, UINT8 *pScreen 
 void DrawHorizontalRun(UINT8 **ScreenPtr, int XAdvance,
 	int RunLength, int Color, int ScreenWidth)
 {
-	PERFORMANCE_MARKER
 	int i;
 	UINT8 *WorkingScreenPtr = *ScreenPtr;
 	UINT8 col2 = Color>>8;
@@ -401,7 +394,6 @@ void DrawHorizontalRun(UINT8 **ScreenPtr, int XAdvance,
 void DrawVerticalRun(UINT8 **ScreenPtr, int XAdvance,
 	int RunLength, int Color, int ScreenWidth)
 {
-	PERFORMANCE_MARKER
 	int i;
 	UINT8 *WorkingScreenPtr = *ScreenPtr;
 	UINT8 col2 = Color>>8;
@@ -422,7 +414,6 @@ void DrawVerticalRun(UINT8 **ScreenPtr, int XAdvance,
 /* Draws a rectangle between the specified endpoints in color Color. */
 void RectangleDraw( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT8 *ScreenPtr)
 {
-	PERFORMANCE_MARKER
 	LineDraw( fClip, XStart, YStart, XEnd,	YStart, Color, ScreenPtr);
 	LineDraw( fClip, XStart, YEnd,	XEnd,	YEnd,	Color, ScreenPtr);
 	LineDraw( fClip, XStart, YStart, XStart, YEnd,	Color, ScreenPtr);
@@ -440,7 +431,6 @@ void RectangleDraw( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, shor
 /* Draws a rectangle between the specified endpoints in color Color. */
 void RectangleDraw8( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT8 *ScreenPtr)
 {
-	PERFORMANCE_MARKER
 	LineDraw8( fClip, XStart, YStart, XEnd,	YStart, Color, ScreenPtr);
 	LineDraw8( fClip, XStart, YEnd,	XEnd,	YEnd,	Color, ScreenPtr);
 	LineDraw8( fClip, XStart, YStart, XStart, YEnd,	Color, ScreenPtr);
@@ -450,7 +440,6 @@ void RectangleDraw8( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, sho
 /* Draws a line between the specified endpoints in color Color. */
 void LineDraw8( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT8 *ScreenPtr)
 {
-	PERFORMANCE_MARKER
 	int Temp, AdjUp, AdjDown, ErrorTerm, XAdvance, XDelta, YDelta;
 	int WholeStep, InitialPixelCount, FinalPixelCount, i, RunLength;
 	int ScreenWidth = giImageWidth;
@@ -653,7 +642,6 @@ void LineDraw8( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Co
 void DrawHorizontalRun8(UINT8 **ScreenPtr, int XAdvance,
 	int RunLength, int Color, int ScreenWidth)
 {
-	PERFORMANCE_MARKER
 	int i;
 	UINT8 *WorkingScreenPtr = *ScreenPtr;
 	UINT8 col1 = Color & 0x00FF;
@@ -673,7 +661,6 @@ void DrawHorizontalRun8(UINT8 **ScreenPtr, int XAdvance,
 void DrawVerticalRun8(UINT8 **ScreenPtr, int XAdvance,
 	int RunLength, int Color, int ScreenWidth)
 {
-	PERFORMANCE_MARKER
 	int i;
 	UINT8 *WorkingScreenPtr = *ScreenPtr;
 	UINT8 col1 = Color & 0x00FF;

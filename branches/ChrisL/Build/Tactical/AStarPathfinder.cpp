@@ -7,7 +7,6 @@ using namespace std;
 
 void AStarPathfinder::ResetAStarList()
 {
-	PERFORMANCE_MARKER
 	for each (CSmallPoint node in ClosedList) {
 		SetAStarStatus(node, AStar_Init);
 		SetAStarGCost(node, 0.0f);
@@ -29,7 +28,6 @@ AStarHeap AStarPathfinder::AStar(const CSmallPoint& StartCity,
 								 const ePlayer player,
 								 const unsigned int maxNodes)
 {
-	PERFORMANCE_MARKER
 	AStarHeap TopHeap(StartCity, 0);
 	CSmallPoint BestNode = StartCity;
 	for (;;) {

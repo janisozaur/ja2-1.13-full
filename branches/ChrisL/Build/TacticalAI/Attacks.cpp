@@ -40,7 +40,6 @@ extern INT16 DirIncrementer[8];
 
 void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 	UINT16 usInHand;
 	INT8 bPayloadPocket;
 
@@ -118,7 +117,6 @@ void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier)
 
 void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN shootUnseen)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiLoop;
 	INT32 iAttackValue;
 	INT32 iThreatValue;
@@ -391,7 +389,6 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN shootUns
 // JA2Gold: added
 BOOLEAN CloseEnoughForGrenadeToss( INT16 sGridNo, INT16 sGridNo2 )
 {
-	PERFORMANCE_MARKER
 	INT16	sTempGridNo;
 	UINT8	ubDirection;
 	INT16	sXPos, sYPos, sXPos2, sYPos2;
@@ -455,7 +452,6 @@ BOOLEAN CloseEnoughForGrenadeToss( INT16 sGridNo, INT16 sGridNo2 )
 
 void CalcBestThrow(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"calcbestthrow");
 	// September 9, 1998: added code for LAWs (CJC)
 	UINT8 ubLoop, ubLoop2;
@@ -1174,7 +1170,6 @@ void CalcBestThrow(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
 
 void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAttack )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiLoop;
 	INT32 iAttackValue;
 	INT32 iThreatValue,iHitRate,iBestHitRate,iPercentBetter, iEstDamage;
@@ -1390,7 +1385,6 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 
 void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiLoop;
 	INT32 iAttackValue;
 	INT32 iThreatValue,iHitRate,iBestHitRate, iEstDamage;
@@ -1545,7 +1539,6 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 
 UINT8 NumMercsCloseTo( INT16 sGridNo, UINT8 ubMaxDist )
 {
-	PERFORMANCE_MARKER
 	INT8						bNumber = 0;
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pSoldier;
@@ -1568,7 +1561,6 @@ UINT8 NumMercsCloseTo( INT16 sGridNo, UINT8 ubMaxDist )
 
 INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubChanceToHit)
 {
-	PERFORMANCE_MARKER
 	INT32 iRange,iMaxRange,iPowerLost;
 	INT32 iDamage;
 	UINT8 ubBonus;
@@ -1707,7 +1699,6 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 
 INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *pOpponent, INT16 sGridno )
 {
-	PERFORMANCE_MARKER
 	UINT16	ubExplosiveIndex;
 	INT32	iExplosDamage, iBreathDamage, iArmourAmount, iDamage = 0;
 	INT8	bSlot;
@@ -1823,7 +1814,6 @@ INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *
 INT32 EstimateStabDamage( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent,
 						UINT8 ubChanceToHit, BOOLEAN fBladeAttack )
 {
-	PERFORMANCE_MARKER
 	INT32 iImpact, iFluke, iBonus;
 
 	UINT16	usItem;
@@ -1884,7 +1874,6 @@ INT32 EstimateStabDamage( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent,
 
 INT8 TryToReload( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT8		bSlot;
 	WEAPONTYPE *pWeapon;
 	OBJECTTYPE *pObj, *pObj2;
@@ -1956,7 +1945,6 @@ INT8 TryToReload( SOLDIERTYPE * pSoldier )
 /*
 INT8 TryToReloadLauncher( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 UINT16	usWeapon;
 INT8		bSlot;
 
@@ -1964,7 +1952,6 @@ usWeapon = pSoldier->inv[HANDPOS].usItem;
 
 if ( usWeapon == TANK_CANNON )
 {
-	PERFORMANCE_MARKER
 bSlot = FindObj( pSoldier, TANK_SHELL );
 }
 else
@@ -1974,7 +1961,6 @@ bSlot = FindLaunchable( pSoldier, usWeapon );
 
 if (bSlot != NO_SLOT)
 {
-	PERFORMANCE_MARKER
 }
 return( NOSHOOT_NOAMMO );
 }
@@ -1982,7 +1968,6 @@ return( NOSHOOT_NOAMMO );
 
 INT8 CanNPCAttack(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 	INT8		bCanAttack;
 	INT8		bWeaponIn;
 
@@ -2043,7 +2028,6 @@ INT8 CanNPCAttack(SOLDIERTYPE *pSoldier)
 
 void CheckIfTossPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"CheckIfTossPossible");
 	UINT8 ubMinAPcost;
 
@@ -2116,7 +2100,6 @@ void CheckIfTossPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
 
 INT8 CountAdjacentSpreadTargets( SOLDIERTYPE * pSoldier, INT16 sFirstTarget, INT8 bTargetLevel )
 {
-	PERFORMANCE_MARKER
 	// return the number of people next to this guy for burst-spread purposes
 
 	INT8	bDirLoop, bDir, bCheckDir, bTargetIndex, bTargets;
@@ -2246,7 +2229,6 @@ INT8 CountAdjacentSpreadTargets( SOLDIERTYPE * pSoldier, INT16 sFirstTarget, INT
 
 INT16 CalcSpreadBurst( SOLDIERTYPE * pSoldier, INT16 sFirstTarget, INT8 bTargetLevel )
 {
-	PERFORMANCE_MARKER
 	INT8	bDirLoop, bDir, bCheckDir, bTargetIndex = 0, bLoop, bTargets;
 	INT16	sTarget;
 	SOLDIERTYPE * pTarget, * pTargets[5] = {NULL};
@@ -2418,7 +2400,6 @@ INT16 CalcSpreadBurst( SOLDIERTYPE * pSoldier, INT16 sFirstTarget, INT8 bTargetL
 
 INT16 AdvanceToFiringRange( SOLDIERTYPE * pSoldier, INT16 sClosestOpponent )
 {
-	PERFORMANCE_MARKER
 	// see how far we can go down a path and still shoot
 
 	INT8		bAttackCost, bTrueActionPoints;
@@ -2449,7 +2430,6 @@ INT16 AdvanceToFiringRange( SOLDIERTYPE * pSoldier, INT16 sClosestOpponent )
 
 void CheckIfShotPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN suppressionFire)
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"CheckIfShotPossible");
 	UINT8 ubMinAPcost;
 	pBestShot->ubPossible = FALSE;

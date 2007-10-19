@@ -49,7 +49,7 @@
 #ifdef JA2
 #include "mousesystem.h"
 #include "MessageBoxScreen.h"
-STR16 gzJA2ScreenNames[] = 
+STR16 gzJA2ScreenNames[] =
 {
 	L"EDIT_SCREEN",
 	L"SAVING_SCREEN",
@@ -124,7 +124,7 @@ void			DebugPrint( void );
 //
 // MemInit
 //
-//		
+//
 //
 // Parameter List :
 // Return Value :
@@ -136,7 +136,6 @@ void			DebugPrint( void );
 
 BOOLEAN InitializeMemoryManager( void )
 {
-	PERFORMANCE_MARKER
 	// Register the memory manager with the debugger
 	RegisterDebugTopic(TOPIC_MEMORY_MANAGER, "Memory Manager");
 	MemDebugCounter = 0;
@@ -171,7 +170,6 @@ BOOLEAN InitializeMemoryManager( void )
 
 void MemDebug( BOOLEAN f )
 {
-	PERFORMANCE_MARKER
 	gfMemDebug = f;
 }
 
@@ -191,7 +189,6 @@ void MemDebug( BOOLEAN f )
 
 void ShutdownMemoryManager( void )
 {
-	PERFORMANCE_MARKER
 	if ( MemDebugCounter != 0 )
 	{
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String(" "));
@@ -240,12 +237,11 @@ void ShutdownMemoryManager( void )
 	fMemManagerInit = FALSE;
 }
 
- 
+
 #ifdef _DEBUG
 
 PTR MemAllocReal( UINT32 uiSize, const STR8 pcFile, INT32 iLine )
 {
-	PERFORMANCE_MARKER
 	PTR	ptr;
 
 	if( !uiSize )
@@ -279,7 +275,6 @@ PTR MemAllocReal( UINT32 uiSize, const STR8 pcFile, INT32 iLine )
 
 void MemFreeReal( PTR ptr, const STR8 pcFile, INT32 iLine )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiSize;
 
 	if ( !fMemManagerInit )
@@ -310,7 +305,6 @@ void MemFreeReal( PTR ptr, const STR8 pcFile, INT32 iLine )
 
 PTR MemReallocReal( PTR ptr, UINT32 uiSize, const STR8 pcFile, INT32 iLine )
 {
-	PERFORMANCE_MARKER
 	PTR	ptrNew;
 	UINT32 uiOldSize = 0;
 
@@ -358,13 +352,12 @@ PTR MemReallocReal( PTR ptr, UINT32 uiSize, const STR8 pcFile, INT32 iLine )
 
 PTR MemAllocLocked( UINT32 uiSize )
 {
-	PERFORMANCE_MARKER
 	PTR	ptr;
 
 	if ( !fMemManagerInit )
 	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAllocLocked: Warning -- Memory manager not initialized!!! ") );
 
-	
+
 	ptr = VirtualAlloc( NULL, uiSize, MEM_COMMIT, PAGE_READWRITE );
 
 	if ( ptr )
@@ -390,7 +383,6 @@ PTR MemAllocLocked( UINT32 uiSize )
 
 void MemFreeLocked( PTR ptr, UINT32 uiSize )
 {
-	PERFORMANCE_MARKER
 	if ( !fMemManagerInit )
 	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFreeLocked: Warning -- Memory manager not initialized!!! ") );
 
@@ -423,7 +415,7 @@ void MemFreeLocked( PTR ptr, UINT32 uiSize )
 //
 // MemGetFree
 //
-//		
+//
 //
 // Parameter List :
 // Return Value :
@@ -435,7 +427,6 @@ void MemFreeLocked( PTR ptr, UINT32 uiSize )
 
 UINT32 MemGetFree( void )
 {
-	PERFORMANCE_MARKER
 	MEMORYSTATUS ms;
 
 	ms.dwLength = sizeof(MEMORYSTATUS);
@@ -449,7 +440,7 @@ UINT32 MemGetFree( void )
 //
 // MemGetTotalSystem
 //
-//		
+//
 //
 // Parameter List :
 // Return Value :
@@ -461,7 +452,6 @@ UINT32 MemGetFree( void )
 
 UINT32 MemGetTotalSystem( void )
 {
-	PERFORMANCE_MARKER
 	MEMORYSTATUS ms;
 
 	ms.dwLength = sizeof(MEMORYSTATUS);
@@ -475,7 +465,7 @@ UINT32 MemGetTotalSystem( void )
 //
 // MemCheckPool
 //
-//		
+//
 //
 // Parameter List :
 // Return Value :
@@ -487,7 +477,6 @@ UINT32 MemGetTotalSystem( void )
 
 BOOLEAN MemCheckPool( void )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fRet = TRUE;
 
 #ifdef _DEBUG
@@ -504,7 +493,6 @@ BOOLEAN MemCheckPool( void )
 
 PTR MemAllocXDebug( UINT32 size, const STR8 szCodeString, INT32 iLineNum, void *pSpecial )
 {
-	PERFORMANCE_MARKER
 	PTR	ptr;
 	UINT16 usLength;
 	UINT8 str[70];
@@ -566,7 +554,6 @@ PTR MemAllocXDebug( UINT32 size, const STR8 szCodeString, INT32 iLineNum, void *
 
 void MemFreeXDebug( PTR ptr, const STR8 szCodeString, INT32 iLineNum, void *pSpecial )
 {
-	PERFORMANCE_MARKER
 	MEMORY_NODE *curr;
 
 	if( ptr )
@@ -612,7 +599,6 @@ void MemFreeXDebug( PTR ptr, const STR8 szCodeString, INT32 iLineNum, void *pSpe
 
 PTR	MemReallocXDebug( PTR ptr, UINT32 size, const STR8 szCodeString, INT32 iLineNum, void *pSpecial )
 {
-	PERFORMANCE_MARKER
 	MEMORY_NODE *curr;
 	PTR	ptrNew;
 	UINT16 usLength;
@@ -673,7 +659,6 @@ typedef struct DUMPFILENAME
 
 void DumpMemoryInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
 {
-	PERFORMANCE_MARKER
 	MEMORY_NODE *curr;
 	FILE *fp;
 	DUMPFILENAME *pCode;
@@ -762,7 +747,6 @@ void DumpMemoryInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
 
 BOOLEAN _AddAndRecordMemAlloc( UINT32 size, UINT32 uiLineNum, UINT8 *pSourceFile )
 {
-	PERFORMANCE_MARKER
 	return 0;
 }
 

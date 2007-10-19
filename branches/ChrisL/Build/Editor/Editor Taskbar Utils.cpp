@@ -51,7 +51,7 @@ void RenderEditorInfo();
 
 extern ITEM_POOL *gpItemPool;
 
-//editor icon storage vars 
+//editor icon storage vars
 INT32	giEditMercDirectionIcons[2];
 UINT32 guiMercInventoryPanel;
 UINT32 guiOmertaMap;
@@ -69,7 +69,6 @@ MOUSE_REGION EditorRegion;
 
 void EnableEditorRegion( INT8 bRegionID )
 {
-	PERFORMANCE_MARKER
 	switch( bRegionID )
 	{
 		case BASE_TERRAIN_TILE_REGION_ID:
@@ -87,7 +86,6 @@ void EnableEditorRegion( INT8 bRegionID )
 
 void DisableEditorRegion( INT8	bRegionID )
 {
-	PERFORMANCE_MARKER
 	switch( bRegionID )
 	{
 		case BASE_TERRAIN_TILE_REGION_ID:
@@ -105,7 +103,6 @@ void DisableEditorRegion( INT8	bRegionID )
 
 void RemoveEditorRegions()
 {
-	PERFORMANCE_MARKER
 	INT32 x;
 	MSYS_RemoveRegion( &EditorRegion );
 	for(x = BASE_TERRAIN_TILE_REGION_ID; x < NUM_TERRAIN_TILE_REGIONS; x++ )
@@ -118,7 +115,6 @@ void RemoveEditorRegions()
 
 void InitEditorRegions()
 {
-	PERFORMANCE_MARKER
 	INT32 x;
 
 	//By doing this, all of the buttons underneath are blanketed and can't be used anymore.
@@ -137,19 +133,18 @@ void InitEditorRegions()
 	gfShowTerrainTileButtons=FALSE;
 
 	//Create the region for the items selection window.
-	MSYS_DefineRegion( &ItemsRegion, iScreenWidthOffset + 100, 2 * iScreenHeightOffset + 360, iScreenWidthOffset + 540, 2 * iScreenHeightOffset + 440, MSYS_PRIORITY_NORMAL, 0, 
+	MSYS_DefineRegion( &ItemsRegion, iScreenWidthOffset + 100, 2 * iScreenHeightOffset + 360, iScreenWidthOffset + 540, 2 * iScreenHeightOffset + 440, MSYS_PRIORITY_NORMAL, 0,
 		(MOUSE_CALLBACK)MouseMovedInItemsRegion, (MOUSE_CALLBACK)MouseClickedInItemsRegion );
 	MSYS_DisableRegion( &ItemsRegion );
 
 	//Create the region for the merc inventory panel.
-	MSYS_DefineRegion( &MercRegion, iScreenWidthOffset + 175, 2 * iScreenHeightOffset + 361, iScreenWidthOffset + 450, 2 * iScreenHeightOffset + 460, MSYS_PRIORITY_NORMAL, 0, 
+	MSYS_DefineRegion( &MercRegion, iScreenWidthOffset + 175, 2 * iScreenHeightOffset + 361, iScreenWidthOffset + 450, 2 * iScreenHeightOffset + 460, MSYS_PRIORITY_NORMAL, 0,
 		MouseMovedInMercRegion, MouseClickedInMercRegion );
 	MSYS_DisableRegion( &MercRegion );
 }
 
 void LoadEditorImages()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	//Set up the merc inventory panel
@@ -178,7 +173,6 @@ void LoadEditorImages()
 
 void DeleteEditorImages()
 {
-	PERFORMANCE_MARKER
 	//The merc inventory panel
 	DeleteVideoObjectFromIndex( guiMercInventoryPanel );
 	DeleteVideoObjectFromIndex( guiOmertaMap );
@@ -192,7 +186,6 @@ void DeleteEditorImages()
 
 void CreateEditorBuffers()
 {
-	PERFORMANCE_MARKER
 
 	INT32						i;
 	VSURFACE_DESC		vs_desc;
@@ -222,7 +215,6 @@ void CreateEditorBuffers()
 
 void DeleteEditorBuffers()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	DeleteVideoSurfaceFromIndex( guiMercTempBuffer );
 	for( i = 0; i < 9; i++ )
@@ -233,7 +225,6 @@ void DeleteEditorBuffers()
 
 void ShowEditorToolbar( INT32 iNewTaskMode )
 {
-	PERFORMANCE_MARKER
 	switch( iNewTaskMode )
 	{
 		case TASK_TERRAIN:		ShowEditorButtons( FIRST_TERRAIN_BUTTON, LAST_TERRAIN_BUTTON );								break;
@@ -248,7 +239,6 @@ void ShowEditorToolbar( INT32 iNewTaskMode )
 
 void HideEditorToolbar( INT32 iOldTaskMode )
 {
-	PERFORMANCE_MARKER
 	INT32 i, iStart, iEnd;
 	switch( iOldTaskMode )
 	{
@@ -269,7 +259,6 @@ void HideEditorToolbar( INT32 iOldTaskMode )
 
 void CreateEditorTaskbar()
 {
-	PERFORMANCE_MARKER
 	InitEditorRegions();
 	LoadEditorImages();
 	CreateEditorBuffers();
@@ -279,7 +268,6 @@ void CreateEditorTaskbar()
 
 void DeleteEditorTaskbar()
 {
-	PERFORMANCE_MARKER
 	INT32 x;
 
 	iOldTaskMode = iCurrentTaskbar;
@@ -295,14 +283,13 @@ void DeleteEditorTaskbar()
 
 void DoTaskbar(void)
 {
-	PERFORMANCE_MARKER
 	if(!iTaskMode || iTaskMode == iCurrentTaskbar )
 	{
 		return;
 	}
 
 	gfRenderTaskbar = TRUE;
-	
+
 	HideEditorToolbar( iCurrentTaskbar );
 
 	//Special code when exiting previous editor tab
@@ -363,7 +350,7 @@ void DoTaskbar(void)
 			break;
 		case TASK_BUILDINGS:
 			ClickEditorButton( TAB_BUILDINGS );
-			if(fBuildingShowRoofs) 
+			if(fBuildingShowRoofs)
 				ClickEditorButton( BUILDING_TOGGLE_ROOF_VIEW );
 			if(fBuildingShowWalls)
 				ClickEditorButton( BUILDING_TOGGLE_WALL_VIEW );
@@ -414,7 +401,6 @@ void DoTaskbar(void)
 //Disables the task bar, but leaves it on screen. Used when a selection window is up.
 void DisableEditorTaskbar(void)
 {
-	PERFORMANCE_MARKER
 	INT32 x;
 	for(x = 0; x < NUMBER_EDITOR_BUTTONS; x++ )
 		DisableButton( iEditorButton[ x ] );
@@ -423,9 +409,8 @@ void DisableEditorTaskbar(void)
 
 void EnableEditorTaskbar(void)
 {
-	PERFORMANCE_MARKER
 	INT32 x;
-	
+
 	for(x = 0; x < NUMBER_EDITOR_BUTTONS; x++ )
 		EnableButton( iEditorButton[ x ] );
 	//Keep permanent buttons disabled.
@@ -444,7 +429,6 @@ void EnableEditorTaskbar(void)
 //in the editor taskbar.
 void mprintfEditor(INT16 x, INT16 y, STR16 pFontString, ...)
 {
-	PERFORMANCE_MARKER
 	va_list argptr;
 	CHAR16	string[512];
 	UINT16 uiStringLength, uiStringHeight;
@@ -464,7 +448,6 @@ void mprintfEditor(INT16 x, INT16 y, STR16 pFontString, ...)
 
 void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 {
-	PERFORMANCE_MARKER
 	ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, sTop, sRight, sBottom, gusEditorTaskbarColor );
 
 	if( !sLeft )
@@ -492,7 +475,6 @@ void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 //look.
 void DrawEditorInfoBox( STR16 str, UINT32 uiFont, UINT16 x, UINT16 y, UINT16 w, UINT16 h )
 {
-	PERFORMANCE_MARKER
 	UINT16 usFillColorDark, usFillColorLight, usFillColorBack;
 	UINT16 x2, y2;
 	UINT16 usStrWidth;
@@ -527,7 +509,6 @@ void DrawEditorInfoBox( STR16 str, UINT32 uiFont, UINT16 x, UINT16 y, UINT16 w, 
 
 void ClickEditorButton( INT32 iEditorButtonID )
 {
-	PERFORMANCE_MARKER
 	GUI_BUTTON *butn;
 	if ( iEditorButtonID < 0 || iEditorButtonID >= NUMBER_EDITOR_BUTTONS )
 		return;
@@ -541,7 +522,6 @@ void ClickEditorButton( INT32 iEditorButtonID )
 
 void UnclickEditorButton( INT32 iEditorButtonID )
 {
-	PERFORMANCE_MARKER
 	GUI_BUTTON *butn;
 	if ( iEditorButtonID < 0 || iEditorButtonID >= NUMBER_EDITOR_BUTTONS )
 		return;
@@ -555,31 +535,26 @@ void UnclickEditorButton( INT32 iEditorButtonID )
 
 void HideEditorButton( INT32 iEditorButtonID )
 {
-	PERFORMANCE_MARKER
 	HideButton( iEditorButton[ iEditorButtonID ] );
 }
 
 void ShowEditorButton( INT32 iEditorButtonID )
 {
-	PERFORMANCE_MARKER
 	ShowButton( iEditorButton[ iEditorButtonID ] );
 }
 
 void DisableEditorButton( INT32 iEditorButtonID )
 {
-	PERFORMANCE_MARKER
 	DisableButton( iEditorButton[ iEditorButtonID ] );
 }
 
 void EnableEditorButton( INT32 iEditorButtonID )
 {
-	PERFORMANCE_MARKER
 	EnableButton( iEditorButton[ iEditorButtonID ] );
 }
 
 void ClickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	GUI_BUTTON *b;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
@@ -593,7 +568,6 @@ void ClickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 
 void UnclickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	GUI_BUTTON *b;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
@@ -607,7 +581,6 @@ void UnclickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID
 
 void HideEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
 		HideButton( iEditorButton[ i ] );
@@ -615,7 +588,6 @@ void HideEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 
 void ShowEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
 		ShowButton( iEditorButton[ i ] );
@@ -623,7 +595,6 @@ void ShowEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 
 void DisableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
 		DisableButton( iEditorButton[ i ] );
@@ -631,7 +602,6 @@ void DisableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID
 
 void EnableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
 		EnableButton( iEditorButton[ i ] );
@@ -639,7 +609,6 @@ void EnableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID 
 
 void RenderMapEntryPointsAndLights()
 {
-	PERFORMANCE_MARKER
 	INT16 sGridNo;
 	INT16 sScreenX, sScreenY;
 	INT32 i;
@@ -733,7 +702,6 @@ void RenderMapEntryPointsAndLights()
 
 void BuildTriggerName( OBJECTTYPE *pItem, STR16 szItemName )
 {
-	PERFORMANCE_MARKER
 	if( pItem->usItem == SWITCH )
 	{
 		if( (*pItem)[0]->data.misc.bFrequency == PANIC_FREQUENCY )
@@ -762,7 +730,6 @@ void BuildTriggerName( OBJECTTYPE *pItem, STR16 szItemName )
 
 void RenderDoorLockInfo()
 {
-	PERFORMANCE_MARKER
 	INT16 i, xp, yp;
 	INT16 sScreenX, sScreenY;
 	CHAR16 str[ 50 ];
@@ -814,7 +781,6 @@ void RenderDoorLockInfo()
 
 void RenderSelectedItemBlownUp()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiVideoObjectIndex;
 	HVOBJECT hVObject;
 	INT16 sScreenX, sScreenY, xp, yp;
@@ -831,11 +797,11 @@ void RenderSelectedItemBlownUp()
 	//Display the enlarged item graphic
 	uiVideoObjectIndex = GetInterfaceGraphicForItem( &Item[ gpItem->usItem ] );
 	GetVideoObject( &hVObject, uiVideoObjectIndex );
-	
+
 	sWidth = hVObject->pETRLEObject[ Item[ gpItem->usItem ].ubGraphicNum ].usWidth;
 	sOffsetX = hVObject->pETRLEObject[ Item[ gpItem->usItem ].ubGraphicNum ].sOffsetX;
 	xp = sScreenX + (40 - sWidth - sOffsetX*2) / 2;
-	
+
 	sHeight = hVObject->pETRLEObject[ Item[ gpItem->usItem ].ubGraphicNum ].usHeight;
 	sOffsetY = hVObject->pETRLEObject[ Item[ gpItem->usItem ].ubGraphicNum ].sOffsetY;
 	yp = sScreenY + (20 - sHeight - sOffsetY*2) / 2;
@@ -886,9 +852,9 @@ void RenderSelectedItemBlownUp()
 	xp = sScreenX;
 	yp = sScreenY + 10;
 	mprintf( xp, yp, L"%d", i );
-	
+
 	//If the item is hidden, render a blinking H (just like DG)
-	if( gWorldItems[ gpItemPool->iItemIndex ].bVisible == HIDDEN_ITEM || 
+	if( gWorldItems[ gpItemPool->iItemIndex ].bVisible == HIDDEN_ITEM ||
 			gWorldItems[ gpItemPool->iItemIndex ].bVisible == BURIED )
 	{
 		SetFont( FONT10ARIALBOLD );
@@ -903,7 +869,6 @@ void RenderSelectedItemBlownUp()
 
 void RenderEditorInfo( )
 {
-	PERFORMANCE_MARKER
 	CHAR16					FPSText[ 50 ];
 	static INT32		iSpewWarning = 0;
 	INT16						iMapIndex;
@@ -925,7 +890,7 @@ void RenderEditorInfo( )
 			if( !gfWorldLoaded || giCurrentTilesetID < 0 )
 				mprintf( iScreenWidthOffset + 260, 2 * iScreenHeightOffset + 445, L"No map currently loaded." );
 			else
-				mprintf( iScreenWidthOffset + 260, 2 * iScreenHeightOffset + 445, L"File:  %S, Current Tileset:  %s", 
+				mprintf( iScreenWidthOffset + 260, 2 * iScreenHeightOffset + 445, L"File:  %S, Current Tileset:  %s",
 					gubFilename, gTilesets[ giCurrentTilesetID ].zName );
 			break;
 		case TASK_TERRAIN:
@@ -933,7 +898,7 @@ void RenderEditorInfo( )
 			// WANNE: Comment this two lines, because we always get an exception here.
 			//if( gusSelectionType == LINESELECTION )
 			//	swprintf( wszSelType[LINESELECTION], L"Width: %d", gusSelectionWidth );
-			
+
 			DrawEditorInfoBox( wszSelType[gusSelectionType], FONT12POINT1, iScreenWidthOffset + 220, 2 * iScreenHeightOffset + 430, 60, 30 );
 			swprintf( FPSText, L"%d%%", gusSelectionDensity );
 			DrawEditorInfoBox( FPSText, FONT12POINT1, iScreenWidthOffset + 310, 2 * iScreenHeightOffset + 430, 40, 30 );
@@ -949,7 +914,7 @@ void RenderEditorInfo( )
 			// WANNE: Comment this two lines, because we always get an exception here.
 			//if( gusSelectionType == LINESELECTION )
 			//	swprintf( wszSelType[LINESELECTION], L"%d", gusSelectionWidth );
-			
+
 			DrawEditorInfoBox( wszSelType[gusSelectionType], FONT12POINT1, iScreenWidthOffset + 530, 2 * iScreenHeightOffset + 430, 60, 30 );
 			break;
 		case TASK_MERCS:
@@ -960,7 +925,7 @@ void RenderEditorInfo( )
 			// WANNE: EDITOR: Comment this two lines, because we always get an exception here!
 			//if( gusSelectionType == LINESELECTION )
 			//	swprintf( wszSelType[LINESELECTION], L"Width: %d", gusSelectionWidth );
-			
+
 			DrawEditorInfoBox( wszSelType[gusSelectionType], FONT12POINT1, iScreenWidthOffset + 440, 2 * iScreenHeightOffset + 430, 60, 30 );
 			break;
 	}
@@ -973,7 +938,6 @@ extern BOOLEAN gfGotoGridNoUI;
 
 void ProcessEditorRendering()
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fSaveBuffer = FALSE;
 	if( gfRenderTaskbar ) //do a full taskbar render.
 	{
@@ -988,13 +952,13 @@ void ProcessEditorRendering()
 	}
 	if( gfRenderDrawingMode )
 	{
-	if( iCurrentTaskbar == TASK_BUILDINGS || iCurrentTaskbar == TASK_TERRAIN || iCurrentTaskbar == TASK_ITEMS ) 
+	if( iCurrentTaskbar == TASK_BUILDINGS || iCurrentTaskbar == TASK_TERRAIN || iCurrentTaskbar == TASK_ITEMS )
 		{
 			ShowCurrentDrawingMode();
 			gfRenderDrawingMode = FALSE;
 		}
 	}
-	//render dynamically changed buttons only	
+	//render dynamically changed buttons only
 	RenderButtons( );
 
 	if( gfSummaryWindowActive )
@@ -1015,7 +979,7 @@ void ProcessEditorRendering()
 			RenderSelectedItemBlownUp();
 		if( iCurrentTaskbar == TASK_MAPINFO )
 			RenderMapEntryPointsAndLights();
-		if( iDrawMode == DRAW_MODE_PLACE_ITEM && eInfo.uiItemType == TBAR_MODE_ITEM_KEYS || 
+		if( iDrawMode == DRAW_MODE_PLACE_ITEM && eInfo.uiItemType == TBAR_MODE_ITEM_KEYS ||
 			iDrawMode == DRAW_MODE_DOORKEYS )
 			RenderDoorLockInfo();
 	}
@@ -1026,8 +990,8 @@ void ProcessEditorRendering()
 		BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 2 * iScreenHeightOffset + 360, SCREEN_WIDTH, 120 );
 
 	//Make sure this is TRUE at all times.
-	//It is set to false when before we save the buffer, so the buttons don't get 
-	//rendered with hilites, in case the mouse is over one.	
+	//It is set to false when before we save the buffer, so the buttons don't get
+	//rendered with hilites, in case the mouse is over one.
 	gfRenderHilights = TRUE;
 
 	RenderButtonsFastHelp();

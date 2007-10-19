@@ -55,7 +55,6 @@ void DropOffItemsInMeduna( UINT8 ubOrderNum );
 
 void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 {
-	PERFORMANCE_MARKER
 	UINT8	i,j;
 	UINT16	usItem;
 	INT16 sMapPos, sStandardMapPos;
@@ -99,7 +98,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	{
 		// shipment went to wrong airport... reroute all items to a temporary
 		// gridno to represent the other airport (and damage them)
-		SetFactTrue( FACT_LAST_SHIPMENT_WENT_TO_WRONG_AIRPORT );	
+		SetFactTrue( FACT_LAST_SHIPMENT_WENT_TO_WRONG_AIRPORT );
 		sStandardMapPos = LOST_SHIPMENT_GRIDNO;
 		SetFactFalse( FACT_NEXT_PACKAGE_CAN_BE_DELAYED );
 	}
@@ -165,7 +164,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	}
 	else if (CheckFact( FACT_PABLOS_BRIBED, 0 ))
 	{
-		// Since Pacos has some money, reduce record of # of shipments since last bribed... 
+		// Since Pacos has some money, reduce record of # of shipments since last bribed...
 		ubShipmentsSinceNoBribes /= 2;
 		uiChanceOfTheft = 0;
 	}
@@ -403,9 +402,8 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 
 void HandleDelayedItemsArrival( UINT32 uiReason )
 {
-	PERFORMANCE_MARKER
-	// This function moves all the items that Pablos has stolen 
-	// (or items that were delayed) to the arrival location for new shipments, 
+	// This function moves all the items that Pablos has stolen
+	// (or items that were delayed) to the arrival location for new shipments,
 	INT16			sStartGridNo;
 	UINT32		uiNumWorldItems, uiLoop;
 	BOOLEAN		fOk;
@@ -491,7 +489,7 @@ void HandleDelayedItemsArrival( UINT32 uiReason )
 		{
 			return;
 		}
-		fOk = LoadWorldItemsFromTempItemFile( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, pTemp );	
+		fOk = LoadWorldItemsFromTempItemFile( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, pTemp );
 		if (fOk)
 		{
 			for (uiLoop = 0; uiLoop < uiNumWorldItems; uiLoop++)
@@ -513,16 +511,14 @@ void HandleDelayedItemsArrival( UINT32 uiReason )
 
 void AddSecondAirportAttendant( void )
 {
-	PERFORMANCE_MARKER
 	// add the second airport attendant to the Drassen airport...
 	gMercProfiles[99].sSectorX = BOBBYR_SHIPPING_DEST_SECTOR_X;
 	gMercProfiles[99].sSectorY = BOBBYR_SHIPPING_DEST_SECTOR_Y;
-	gMercProfiles[99].bSectorZ = BOBBYR_SHIPPING_DEST_SECTOR_Z;	
+	gMercProfiles[99].bSectorZ = BOBBYR_SHIPPING_DEST_SECTOR_Z;
 }
 
 void SetPabloToUnbribed( void )
 {
-	PERFORMANCE_MARKER
 	if (guiPabloExtraDaysBribed > 0)
 	{
 		// set new event for later on, because the player gave Pablo more money!
@@ -537,7 +533,6 @@ void SetPabloToUnbribed( void )
 
 void HandlePossiblyDamagedPackage( void )
 {
-	PERFORMANCE_MARKER
 	if (Random( 100 ) < 70)
 	{
 		SetFactTrue( FACT_PACKAGE_DAMAGED );
@@ -554,7 +549,6 @@ void HandlePossiblyDamagedPackage( void )
 
 void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 {
-	PERFORMANCE_MARKER
 	UINT32				uiLoop;
 	UINT32				uiTotalCash = 0;
 	BOOLEAN				fKingpinWillDiscover = FALSE, fKingpinDiscovers = FALSE;
@@ -584,7 +578,7 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 			// add history log here
 			AddHistoryToPlayersLog( HISTORY_FOUND_MONEY, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 
-			SetFactTrue( FACT_KINGPIN_WILL_LEARN_OF_MONEY_GONE ); 
+			SetFactTrue( FACT_KINGPIN_WILL_LEARN_OF_MONEY_GONE );
 		}
 	}
 
@@ -598,17 +592,17 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 		if ( fFirstCheck )
 		{
 			// add event to make Kingpin aware, two days from now
-			fKingpinWillDiscover = TRUE;			
+			fKingpinWillDiscover = TRUE;
 		}
 		else
 		{
 			fKingpinDiscovers = TRUE;
 		}
 	}
-		
+
 	if ( fKingpinWillDiscover )
 	{
-		// set event for next day to check for real			
+		// set event for next day to check for real
 		AddFutureDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, Random( 120 ), FACT_KINGPIN_KNOWS_MONEY_GONE, 1 );
 
 		// the sector is unloaded NOW so set Kingpin's balance and remove the cash
@@ -638,7 +632,6 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 
 void HandleNPCSystemEvent( UINT32 uiEvent )
 {
-	PERFORMANCE_MARKER
 	if (uiEvent < NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS)
 	{
 		switch( uiEvent )
@@ -655,7 +648,7 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 				{
 					// set "really heavy old shipment" fact
 					SetFactTrue( FACT_LARGE_SIZED_OLD_SHIPMENT_WAITING );
-				}				
+				}
 				break;
 
 			case FACT_SHIPMENT_DELAYED_24_HOURS:
@@ -716,7 +709,7 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 				}
 				break;
 			case NPC_ACTION_DELAYED_MAKE_BRENDA_LEAVE:
-				//IC:	
+				//IC:
 				//TriggerNPCRecord( 85, 9 );
 				SetFactTrue( FACT_BRENDA_PATIENCE_TIMER_EXPIRED );
 				break;
@@ -750,7 +743,7 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 
 			case NPC_ACTION_ADD_JOEY_TO_WORLD:
 				// If Joey is not dead, escorted, or already delivered
-				if ( gMercProfiles[ JOEY ].bMercStatus != MERC_IS_DEAD && !CheckFact( FACT_JOEY_ESCORTED, 0 ) && 
+				if ( gMercProfiles[ JOEY ].bMercStatus != MERC_IS_DEAD && !CheckFact( FACT_JOEY_ESCORTED, 0 ) &&
 					gMercProfiles[ JOEY ].sSectorX == 4 &&
 					gMercProfiles[ JOEY ].sSectorY == MAP_ROW_D &&
 					gMercProfiles[ JOEY ].bSectorZ == 1 )
@@ -793,7 +786,6 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 
 void HandleEarlyMorningEvents( void )
 {
-	PERFORMANCE_MARKER
 	UINT32					cnt;
 	UINT32					uiAmount;
 
@@ -825,7 +817,7 @@ void HandleEarlyMorningEvents( void )
 			}
 		}
 	}
-	
+
 
 	if( gMercProfiles[ TONY ].ubLastDateSpokenTo > 0 && !( gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0 ) )
 	{
@@ -878,7 +870,7 @@ void HandleEarlyMorningEvents( void )
 					case 4:
 						gMercProfiles[ DEVIN ].sSectorX = 6;
 						gMercProfiles[ DEVIN ].sSectorY = MAP_ROW_C;
-						break;				
+						break;
 				}
 			}
 		}
@@ -923,7 +915,7 @@ void HandleEarlyMorningEvents( void )
 				gMercProfiles[ HAMOUS ].sSectorY = MAP_ROW_D;
 				gMercProfiles[ PROF_ICECREAM ].sSectorX = 9;
 				gMercProfiles[ PROF_ICECREAM ].sSectorY = MAP_ROW_D;
-				break;				
+				break;
 		}
 	}
 
@@ -957,7 +949,7 @@ void HandleEarlyMorningEvents( void )
 		gMercProfiles[ CARMEN ].sSectorY = MAP_ROW_C;
 		gMercProfiles[ CARMEN ].bSectorZ = 0;
 
-		// we should also reset # of terrorist heads and give him cash 
+		// we should also reset # of terrorist heads and give him cash
 		if (gMercProfiles[ CARMEN ].bNPCData2 > 0)
 		{
 			if (gMercProfiles[ CARMEN ].uiMoney < 10000)
@@ -1000,7 +992,7 @@ void HandleEarlyMorningEvents( void )
 					gMercProfiles[ CARMEN ].sSectorY = MAP_ROW_G;
 					break;
 			}
-			// he should have $5000... unless the player forgot to meet him 
+			// he should have $5000... unless the player forgot to meet him
 			if (gMercProfiles[ CARMEN ].uiMoney < 5000)
 			{
 				SetMoneyInSoldierProfile( CARMEN, 5000 );
@@ -1026,7 +1018,6 @@ void HandleEarlyMorningEvents( void )
 
 void MakeCivGroupHostileOnNextSectorEntrance( UINT8 ubCivGroup )
 {
-	PERFORMANCE_MARKER
 	// if it's the rebels that will become hostile, reduce town loyalties NOW, not later
 	if ( ubCivGroup == REBEL_CIV_GROUP && gTacticalStatus.fCivGroupHostile[ ubCivGroup ] == CIV_GROUP_NEUTRAL )
 	{
@@ -1038,7 +1029,6 @@ void MakeCivGroupHostileOnNextSectorEntrance( UINT8 ubCivGroup )
 
 void RemoveAssassin( UINT8 ubProfile )
 {
-	PERFORMANCE_MARKER
 	gMercProfiles[ ubProfile ].sSectorX = 0;
 	gMercProfiles[ ubProfile ].sSectorY = 0;
 	gMercProfiles[ ubProfile ].bLife = gMercProfiles[ ubProfile ].bLifeMax;
@@ -1046,7 +1036,6 @@ void RemoveAssassin( UINT8 ubProfile )
 
 void CheckForMissingHospitalSupplies( void )
 {
-	PERFORMANCE_MARKER
 	UINT32				uiLoop;
 	ITEM_POOL *		pItemPool;
 	OBJECTTYPE *	pObj;
@@ -1058,7 +1047,7 @@ void CheckForMissingHospitalSupplies( void )
 		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].object.usItem == OWNERSHIP && gWorldItems[ uiLoop ].object[0]->data.owner.ubOwnerCivGroup == DOCTORS_CIV_GROUP )
 		{
 			GetItemPoolFromGround( gWorldItems[ uiLoop ].sGridNo, &pItemPool ) ;
-			while( pItemPool ) 
+			while( pItemPool )
 			{
 				pObj = &( gWorldItems[ pItemPool->iItemIndex ].object );
 
@@ -1096,7 +1085,7 @@ void CheckForMissingHospitalSupplies( void )
 			return;
 		}
 	}
-	
+
 	if ( ubMedicalObjects < gubCambriaMedicalObjects )
 	{
 		// player's stolen something!
@@ -1112,13 +1101,12 @@ void CheckForMissingHospitalSupplies( void )
 			SetFactTrue( FACT_PLAYER_STOLE_MEDICAL_SUPPLIES_AGAIN );
 		}
 	}
-	
+
 }
 
 
 void DropOffItemsInMeduna( UINT8 ubOrderNum )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN	fSectorLoaded = FALSE;
 	UINT32	uiCount = 0;
 	OBJECTTYPE	*pObject=NULL;
@@ -1150,7 +1138,7 @@ void DropOffItemsInMeduna( UINT8 ubOrderNum )
 		ChangeStatusOfOpenableStructInUnloadedSector( MEDUNA_ITEM_DROP_OFF_SECTOR_X, MEDUNA_ITEM_DROP_OFF_SECTOR_Y, MEDUNA_ITEM_DROP_OFF_SECTOR_Z, MEDUNA_ITEM_DROP_OFF_GRIDNO, FALSE );
 	}
 
-	
+
 	for(i=0; i<gpNewBobbyrShipments[ ubOrderNum ].ubNumberPurchases; i++)
 	{
 		// Count how many items were purchased

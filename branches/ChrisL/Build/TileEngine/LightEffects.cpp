@@ -11,7 +11,7 @@
 	//#include "soldier control.h"
 	#include "weapons.h"
 	#include "handle items.h"
-	#include "worlddef.h"	
+	#include "worlddef.h"
 	#include "worldman.h"
 	#include "animation control.h"
 	#include "tile animation.h"
@@ -51,7 +51,6 @@ void RecountLightEffects( void );
 
 INT32 GetFreeLightEffect( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumLightEffects; uiCount++)
@@ -68,7 +67,6 @@ INT32 GetFreeLightEffect( void )
 
 void RecountLightEffects( void )
 {
-	PERFORMANCE_MARKER
 	INT32 uiCount;
 
 	for(uiCount=guiNumLightEffects-1; (uiCount >=0) ; uiCount--)
@@ -84,7 +82,6 @@ void RecountLightEffects( void )
 
 void UpdateLightingSprite( LIGHTEFFECT *pLight )
 {
-	PERFORMANCE_MARKER
 	CHAR8 LightName[20];
 	// Build light....
 
@@ -93,7 +90,7 @@ void UpdateLightingSprite( LIGHTEFFECT *pLight )
 	// Delete old one if one exists...
 	if( pLight->iLight!=(-1) )
 	{
-		LightSpriteDestroy( pLight->iLight );	
+		LightSpriteDestroy( pLight->iLight );
 		pLight->iLight = -1;
 	}
 
@@ -112,7 +109,6 @@ void UpdateLightingSprite( LIGHTEFFECT *pLight )
 
 INT32 NewLightEffect( INT16 sGridNo, UINT8 ubDuration, UINT8 ubStartRadius )
 {
-	PERFORMANCE_MARKER		
 	LIGHTEFFECT *pLight;
 	INT32				iLightIndex;
 
@@ -148,7 +144,6 @@ INT32 NewLightEffect( INT16 sGridNo, UINT8 ubDuration, UINT8 ubStartRadius )
 
 void RemoveLightEffectFromTile( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	LIGHTEFFECT *pLight;
 	UINT32 cnt;
 
@@ -156,7 +151,7 @@ void RemoveLightEffectFromTile( INT16 sGridNo )
 	for ( cnt = 0; cnt < guiNumLightEffects; cnt++ )
 	{
 		pLight = &gLightEffectData[ cnt ];
-		
+
 		if ( pLight->fAllocated )
 		{
 			if ( pLight->sGridNo == sGridNo )
@@ -166,7 +161,7 @@ void RemoveLightEffectFromTile( INT16 sGridNo )
 				// Remove light....
 				if( pLight->iLight != (-1) )
 				{
-					LightSpriteDestroy( pLight->iLight );	
+					LightSpriteDestroy( pLight->iLight );
 				}
 				break;
 			}
@@ -177,7 +172,6 @@ void RemoveLightEffectFromTile( INT16 sGridNo )
 
 BOOLEAN IsLightEffectAtTile( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	LIGHTEFFECT *pLight;
 	UINT32 cnt;
 
@@ -185,7 +179,7 @@ BOOLEAN IsLightEffectAtTile( INT16 sGridNo )
 	for ( cnt = 0; cnt < guiNumLightEffects; cnt++ )
 	{
 		pLight = &gLightEffectData[ cnt ];
-		
+
 		if ( pLight->fAllocated )
 		{
 			if ( pLight->sGridNo == sGridNo )
@@ -200,7 +194,6 @@ BOOLEAN IsLightEffectAtTile( INT16 sGridNo )
 
 void DecayLightEffects( UINT32 uiTime )
 {
-	PERFORMANCE_MARKER
 	LIGHTEFFECT *pLight;
 	UINT32 cnt, cnt2;
 	BOOLEAN	fDelete = FALSE;
@@ -210,13 +203,13 @@ void DecayLightEffects( UINT32 uiTime )
 	for ( cnt = 0; cnt < guiNumLightEffects; cnt++ )
 	{
 		pLight = &gLightEffectData[ cnt ];
-		
+
 		fDelete = FALSE;
 
 		if ( pLight->fAllocated )
 		{
 			// ATE: Do this every so ofte, to acheive the effect we want...
-			if ( ( uiTime - pLight->uiTimeOfLastUpdate ) > 10 ) 
+			if ( ( uiTime - pLight->uiTimeOfLastUpdate ) > 10 )
 			{
 				usNumUpdates = ( UINT16 ) ( ( uiTime - pLight->uiTimeOfLastUpdate ) / 10 );
 
@@ -258,15 +251,15 @@ void DecayLightEffects( UINT32 uiTime )
 
 				if ( fDelete )
 				{
-					pLight->fAllocated = FALSE;				
+					pLight->fAllocated = FALSE;
 
 					if( pLight->iLight != (-1) )
 					{
-						LightSpriteDestroy( pLight->iLight );	
+						LightSpriteDestroy( pLight->iLight );
 					}
 				}
 
-				
+
 				// Handle sight here....
 				AllTeamsLookForAll( FALSE );
 			}
@@ -278,7 +271,6 @@ void DecayLightEffects( UINT32 uiTime )
 
 BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	/*
 	UINT32	uiNumBytesWritten;
 	UINT32	uiNumberOfLights=0;
@@ -325,7 +317,6 @@ BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 
@@ -361,7 +352,7 @@ BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 		for(uiCount=0; uiCount < guiNumLightEffects; uiCount++)
 		{
 			if( gLightEffectData[uiCount].fAllocated )
-				UpdateLightingSprite( &( gLightEffectData[uiCount] ) );			
+				UpdateLightingSprite( &( gLightEffectData[uiCount] ) );
 		}
 	}
 
@@ -372,7 +363,6 @@ BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 
 BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumLightEffects=0;
 	HWFILE	hFile;
 	UINT32	uiNumBytesWritten=0;
@@ -451,7 +441,6 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 	UINT32	uiCnt=0;
@@ -497,7 +486,7 @@ BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	for(uiCount=0; uiCount < guiNumLightEffects; uiCount++)
 	{
 		if( gLightEffectData[uiCount].fAllocated )
-			UpdateLightingSprite( &( gLightEffectData[uiCount] ) );			
+			UpdateLightingSprite( &( gLightEffectData[uiCount] ) );
 	}
 
 	FileClose( hFile );
@@ -508,7 +497,6 @@ BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 void ResetLightEffects()
 {
-	PERFORMANCE_MARKER
 	//Clear out the old list
 	memset( gLightEffectData, 0, sizeof( LIGHTEFFECT ) * NUM_LIGHT_EFFECT_SLOTS );
 	guiNumLightEffects = 0;

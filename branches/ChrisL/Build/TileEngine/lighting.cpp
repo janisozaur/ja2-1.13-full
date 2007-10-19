@@ -26,7 +26,7 @@
 	#include "worlddef.h"
 	#include "renderworld.h"
 	#include "vsurface.h"
-	#include "input.h"	
+	#include "input.h"
 	#include "sysutil.h"
 	#include "wchar.h"
 	#include "video.h"
@@ -64,7 +64,7 @@
 #define LVL2_L2_PER			(70)
 
 
-#define LIGHT_TREE_REVEAL		5						// width of rect 
+#define LIGHT_TREE_REVEAL		5						// width of rect
 
 
 // Local-use only prototypes
@@ -165,8 +165,8 @@ UINT16 gusShadeLevels[16][3]={{500, 500, 500},				// green table
 /*
 //Linda's final version
 
-UINT16 gusShadeLevels[16][3] =	
-{ 
+UINT16 gusShadeLevels[16][3] =
+{
 	500, 500, 500,
 	450, 450, 450,	//bright
 	350, 350, 350,
@@ -187,8 +187,8 @@ UINT16 gusShadeLevels[16][3] =
 */
 
 // JA2 Gold:
-UINT16 gusShadeLevels[16][3] =	
-{ 
+UINT16 gusShadeLevels[16][3] =
+{
 	500, 500, 500,
 	450, 450, 450,	//bright
 	350, 350, 350,
@@ -212,7 +212,6 @@ BOOLEAN gfLoadShadeTablesFromTextFile =		FALSE;
 
 void LoadShadeTablesFromTextFile()
 {
-	PERFORMANCE_MARKER
 	FILE *fp;
 	INT32 i, j;
 	INT32 num;
@@ -248,7 +247,6 @@ UINT32	gNodesAdded=0;
 ***************************************************************************************/
 BOOLEAN InitLightingSystem(void)
 {
-	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	LoadShadeTablesFromTextFile();
@@ -279,7 +277,6 @@ UINT32 uiCount;
 // THIS MUST BE CALLED ONCE ALL SURFACE VIDEO OBJECTS HAVE BEEN LOADED!
 BOOLEAN SetDefaultWorldLightingColors(void)
 {
-	PERFORMANCE_MARKER
 	SGPPaletteEntry pPal[2];
 
 	pPal[0].peRed=0;
@@ -303,7 +300,6 @@ BOOLEAN SetDefaultWorldLightingColors(void)
 ***************************************************************************************/
 BOOLEAN ShutdownLightingSystem(void)
 {
-	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	// free up all allocated light nodes
@@ -322,7 +318,6 @@ UINT32 uiCount;
 ***************************************************************************************/
 BOOLEAN LightReset(void)
 {
-	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	// reset all light lists
@@ -359,7 +354,6 @@ UINT32 uiCount;
 ***************************************************************************************/
 UINT16 LightCreateTemplateNode(INT32 iLight, INT16 iX, INT16 iY, UINT8 ubLight)
 {
-	PERFORMANCE_MARKER
 UINT16 usNumNodes;
 
 
@@ -368,12 +362,12 @@ UINT16 usNumNodes;
 	{
 		if((pLightList[iLight]= (LIGHT_NODE *) MemAlloc(sizeof(LIGHT_NODE)))==NULL)
 			return(65535);
-				
+
 		pLightList[iLight]->iDX=iX;
 		pLightList[iLight]->iDY=iY;
 		pLightList[iLight]->ubLight=ubLight;
 		pLightList[iLight]->uiFlags=0;
-		
+
 		usTemplateSize[iLight]=1;
 		return(0);
 	}
@@ -400,7 +394,6 @@ UINT16 usNumNodes;
 ***************************************************************************************/
 UINT16 LightAddTemplateNode(INT32 iLight, INT16 iX, INT16 iY, UINT8 ubLight)
 {
-	PERFORMANCE_MARKER
 UINT16 usCount;
 
 		for(usCount=0; usCount < usTemplateSize[iLight]; usCount++)
@@ -411,7 +404,7 @@ UINT16 usCount;
 				return(usCount);
 			}
 		}
-		
+
 		return(LightCreateTemplateNode(iLight, iX, iY, ubLight));
 }
 
@@ -424,7 +417,6 @@ UINT16 usCount;
 ***************************************************************************************/
 UINT16 LightAddRayNode(INT32 iLight, INT16 iX, INT16 iY, UINT8 ubLight, UINT16 usFlags)
 {
-	PERFORMANCE_MARKER
 UINT16 usNumNodes;
 
 
@@ -433,9 +425,9 @@ UINT16 usNumNodes;
 	{
 		if((pLightRayList[iLight]= (UINT16 *) MemAlloc(sizeof(UINT16)))==NULL)
 			return(65535);
-				
+
 		*pLightRayList[iLight]=(LightAddTemplateNode(iLight, iX, iY, ubLight) | usFlags);
-		
+
 		usRaySize[iLight]=1;
 		return(0);
 	}
@@ -457,7 +449,6 @@ UINT16 usNumNodes;
 ***************************************************************************************/
 UINT16 LightInsertRayNode(INT32 iLight, UINT16 usIndex, INT16 iX, INT16 iY, UINT8 ubLight, UINT16 usFlags)
 {
-	PERFORMANCE_MARKER
 UINT16 usNumNodes;
 
 	// create a new list
@@ -465,9 +456,9 @@ UINT16 usNumNodes;
 	{
 		if((pLightRayList[iLight]= (UINT16 *) MemAlloc(sizeof(UINT16)))==NULL)
 			return(65535);
-				
+
 		*pLightRayList[iLight]=(LightAddTemplateNode(iLight, iX, iY, ubLight) | usFlags);
-		
+
 		usRaySize[iLight]=1;
 		return(0);
 	}
@@ -478,8 +469,8 @@ UINT16 usNumNodes;
 
 		if(usIndex < usRaySize[iLight])
 		{
-			memmove(pLightRayList[iLight]+usIndex+1, 
-							pLightRayList[iLight]+usIndex, 
+			memmove(pLightRayList[iLight]+usIndex+1,
+							pLightRayList[iLight]+usIndex,
 							(usRaySize[iLight]-usIndex)*sizeof(UINT16));
 		}
 
@@ -497,7 +488,6 @@ UINT16 usNumNodes;
 ***************************************************************************************/
 BOOLEAN LightTileBlocked(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 {
-	PERFORMANCE_MARKER
 UINT16 usTileNo, usSrcTileNo;
 
 	Assert(gpWorldLevelData!=NULL);
@@ -520,7 +510,7 @@ UINT16 usTileNo, usSrcTileNo;
 	{
 		UINT16 usTileNo;
 		LEVELNODE *pStruct;
- 
+
 		usTileNo=MAPROWCOLTOPOS(iY, iX);
 
 		pStruct = gpWorldLevelData[ usTileNo ].pStructHead;
@@ -545,7 +535,6 @@ UINT16 usTileNo, usSrcTileNo;
 ***************************************************************************************/
 BOOLEAN LightTileHasWall( INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 {
-	PERFORMANCE_MARKER
 //LEVELNODE *pStruct;
 //UINT32 uiType;
 UINT16 usTileNo;
@@ -554,7 +543,7 @@ INT8		bDirection;
 UINT8		ubTravelCost;
 //INT8		bWallCount = 0;
 //UINT16	usWallOrientation;
- 
+
 	Assert(gpWorldLevelData!=NULL);
 
 	usTileNo=MAPROWCOLTOPOS(iY, iX);
@@ -609,7 +598,7 @@ UINT8		ubTravelCost;
 		if ( pStruct->usIndex < NUMBEROFTILES )
 		{
 			GetTileType( pStruct->usIndex, &uiType );
-	
+
 			// ATE: Changed to use last decordations rather than last decal
 			// Could maybe check orientation value? Depends on our
 			// use of the orientation value flags..
@@ -622,7 +611,7 @@ UINT8		ubTravelCost;
 		}
 
 		pStruct=pStruct->pNext;
-	} 
+	}
 
 	if ( bWallCount )
 	{
@@ -658,7 +647,6 @@ UINT8		ubTravelCost;
 ***************************************************************************************/
 BOOLEAN LightDelete(INT32 iLight)
 {
-	PERFORMANCE_MARKER
 		if(pLightList[iLight]!=NULL)
 		{
 			if(pLightList[iLight]!=NULL)
@@ -697,7 +685,6 @@ BOOLEAN LightDelete(INT32 iLight)
 ***************************************************************************************/
 INT32 LightGetFree(void)
 {
-	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	for(uiCount=0; uiCount < MAX_LIGHT_TEMPLATES; uiCount++)
@@ -716,7 +703,6 @@ UINT32 uiCount;
 ***************************************************************************************/
 INT32 LinearDistance(INT16 iX1, INT16 iY1, INT16 iX2, INT16 iY2)
 {
-	PERFORMANCE_MARKER
 INT32 iDx, iDy;
 
 	iDx=abs(iX1-iX2);
@@ -736,7 +722,6 @@ INT32 iDx, iDy;
 ***************************************************************************************/
 DOUBLE LinearDistanceDouble(INT16 iX1, INT16 iY1, INT16 iX2, INT16 iY2)
 {
-	PERFORMANCE_MARKER
 INT32 iDx, iDy;
 
 	iDx=abs(iX1-iX2);
@@ -755,7 +740,6 @@ INT32 iDx, iDy;
 ***************************************************************************************/
 UINT8 LightTrueLevel( INT16 sGridNo, INT16 bLevel )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE * pNode;
 	INT32 iSum;
 
@@ -780,7 +764,7 @@ UINT8 LightTrueLevel( INT16 sGridNo, INT16 bLevel )
 		iSum=__max(SHADE_MAX, iSum);
 		return( (UINT8) iSum );
 	}
-}	
+}
 
 /****************************************************************************************
 	LightAddNodeTile
@@ -790,7 +774,6 @@ UINT8 LightTrueLevel( INT16 sGridNo, INT16 bLevel )
 ***************************************************************************************/
 void LightAddTileNode(LEVELNODE *pNode, UINT32 uiLightType, UINT8 ubShadeAdd, BOOLEAN fFake)
 {
-	PERFORMANCE_MARKER
 INT16 sSum;
 
 	pNode->ubSumLights += ubShadeAdd;
@@ -819,9 +802,8 @@ INT16 sSum;
 ***************************************************************************************/
 void LightSubtractTileNode(LEVELNODE *pNode, UINT32 uiLightType, UINT8 ubShadeSubtract, BOOLEAN fFake)
 {
-	PERFORMANCE_MARKER
 INT16 sSum;
-	
+
 	if (ubShadeSubtract > pNode->ubSumLights )
 	{
 		pNode->ubSumLights = 0;
@@ -831,7 +813,7 @@ INT16 sSum;
 		pNode->ubSumLights -= ubShadeSubtract;
 	}
 	if (fFake)
-	{	
+	{
 		if (ubShadeSubtract > pNode->ubFakeShadeLevel)
 		{
 			pNode->ubFakeShadeLevel = 0;
@@ -858,16 +840,15 @@ INT16 sSum;
 /****************************************************************************************
 	LightAddTile
 
-		Adds a specified amount of light to all objects on a given tile.	
+		Adds a specified amount of light to all objects on a given tile.
 
 ***************************************************************************************/
 BOOLEAN	LightAddTile(UINT32 uiLightType, INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY, UINT8 ubShade, UINT32 uiFlags, BOOLEAN fOnlyWalls )
 {
-	PERFORMANCE_MARKER
 LEVELNODE *pLand, *pStruct, *pObject, *pMerc, *pRoof, *pOnRoof;
 UINT8 ubShadeAdd;
 UINT32 uiTile;
-BOOLEAN fLitWall=FALSE;		
+BOOLEAN fLitWall=FALSE;
 BOOLEAN fFake;
 
 	Assert(gpWorldLevelData!=NULL);
@@ -886,10 +867,10 @@ BOOLEAN fFake;
 	//else
 		ubShadeAdd=ubShade;
 
-		// Lesh: it is not recomended due to problems with roof lighting 
+		// Lesh: it is not recomended due to problems with roof lighting
 		//if ( uiLightType == LIGHT_TYPE_BRIGHT )
 		//	ubShadeAdd += -6;
- 
+
 	if (uiFlags&LIGHT_FAKE)
 	{
 		fFake = TRUE;
@@ -901,7 +882,7 @@ BOOLEAN fFake;
 
 	if(!(uiFlags&LIGHT_ROOF_ONLY) || (uiFlags&LIGHT_EVERYTHING))
 	{
-		pStruct = gpWorldLevelData[uiTile].pStructHead;		
+		pStruct = gpWorldLevelData[uiTile].pStructHead;
 		while(pStruct!=NULL)
 		{
 			if ( pStruct->usIndex < NUMBEROFTILES )
@@ -942,7 +923,7 @@ BOOLEAN fFake;
 
 	if ( !fOnlyWalls )
 	{
-		pLand = gpWorldLevelData[uiTile].pLandHead;		
+		pLand = gpWorldLevelData[uiTile].pLandHead;
 
 		while( pLand )
 		{
@@ -953,7 +934,7 @@ BOOLEAN fFake;
 			pLand=pLand->pNext;
 		}
 
-		pObject = gpWorldLevelData[uiTile].pObjectHead;		
+		pObject = gpWorldLevelData[uiTile].pObjectHead;
 		while(pObject!=NULL)
 		{
 			if ( pObject->usIndex < NUMBEROFTILES )
@@ -966,7 +947,7 @@ BOOLEAN fFake;
 		if(uiFlags&LIGHT_BACKLIGHT)
 			ubShadeAdd=(INT16)ubShade*7/10;
 
-		pMerc = gpWorldLevelData[uiTile].pMercHead;	
+		pMerc = gpWorldLevelData[uiTile].pMercHead;
 		while(pMerc!=NULL)
 		{
 			LightAddTileNode(pMerc, uiLightType, ubShadeAdd, FALSE);
@@ -974,10 +955,10 @@ BOOLEAN fFake;
 		}
 	}
 	}
-	
+
 	if((uiFlags&LIGHT_ROOF_ONLY) || (uiFlags&LIGHT_EVERYTHING))
 	{
-		pRoof = gpWorldLevelData[uiTile].pRoofHead;		
+		pRoof = gpWorldLevelData[uiTile].pRoofHead;
 		while(pRoof!=NULL)
 		{
 			if ( pRoof->usIndex < NUMBEROFTILES )
@@ -987,7 +968,7 @@ BOOLEAN fFake;
 			pRoof=pRoof->pNext;
 		}
 
-		pOnRoof = gpWorldLevelData[uiTile].pOnRoofHead;		
+		pOnRoof = gpWorldLevelData[uiTile].pOnRoofHead;
 		while(pOnRoof!=NULL)
 		{
 			LightAddTileNode(pOnRoof, uiLightType, ubShadeAdd, FALSE);
@@ -996,7 +977,7 @@ BOOLEAN fFake;
 		}
 	}
 	return(TRUE);
-}	
+}
 
 /****************************************************************************************
 	LightSubtractTile
@@ -1006,7 +987,6 @@ BOOLEAN fFake;
 ***************************************************************************************/
 BOOLEAN	LightSubtractTile(UINT32 uiLightType, INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY, UINT8 ubShade, UINT32 uiFlags, BOOLEAN fOnlyWalls )
 {
-	PERFORMANCE_MARKER
 LEVELNODE *pLand, *pStruct, *pObject, *pMerc, *pRoof, *pOnRoof;
 UINT8 ubShadeSubtract;
 UINT32 uiTile;
@@ -1030,7 +1010,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 //	else
 		ubShadeSubtract=ubShade;
 
-		// Lesh: it is not recomended due to problems with roof lighting 
+		// Lesh: it is not recomended due to problems with roof lighting
 		//if ( uiLightType == LIGHT_TYPE_BRIGHT )
 		//	ubShadeSubtract += -6;
 
@@ -1045,7 +1025,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 
 	if(!(uiFlags&LIGHT_ROOF_ONLY) || (uiFlags&LIGHT_EVERYTHING))
 	{
-		pStruct = gpWorldLevelData[uiTile].pStructHead;		
+		pStruct = gpWorldLevelData[uiTile].pStructHead;
 		while(pStruct!=NULL)
 		{
 			if ( pStruct->usIndex < NUMBEROFTILES )
@@ -1086,7 +1066,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 
 	if ( !fOnlyWalls )
 	{
-		pLand = gpWorldLevelData[uiTile].pLandHead;		
+		pLand = gpWorldLevelData[uiTile].pLandHead;
 
 		while( pLand )
 		{
@@ -1097,7 +1077,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 			pLand=pLand->pNext;
 		}
 
-		pObject = gpWorldLevelData[uiTile].pObjectHead;		
+		pObject = gpWorldLevelData[uiTile].pObjectHead;
 		while(pObject!=NULL)
 		{
 			if ( pObject->usIndex < NUMBEROFTILES )
@@ -1110,7 +1090,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 		if(uiFlags&LIGHT_BACKLIGHT)
 			ubShadeSubtract=(INT16)ubShade*7/10;
 
-		pMerc = gpWorldLevelData[uiTile].pMercHead;		
+		pMerc = gpWorldLevelData[uiTile].pMercHead;
 		while(pMerc!=NULL)
 		{
 			LightSubtractTileNode(pMerc, uiLightType, ubShadeSubtract, FALSE);
@@ -1121,7 +1101,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 
 	if((uiFlags&LIGHT_ROOF_ONLY) || (uiFlags&LIGHT_EVERYTHING))
 	{
-		pRoof = gpWorldLevelData[uiTile].pRoofHead;		
+		pRoof = gpWorldLevelData[uiTile].pRoofHead;
 		while(pRoof!=NULL)
 		{
 			if ( pRoof->usIndex < NUMBEROFTILES )
@@ -1131,7 +1111,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 			pRoof=pRoof->pNext;
 		}
 
-		pOnRoof = gpWorldLevelData[uiTile].pOnRoofHead;		
+		pOnRoof = gpWorldLevelData[uiTile].pOnRoofHead;
 		while(pOnRoof!=NULL)
 		{
 			if ( pOnRoof->usIndex < NUMBEROFTILES )
@@ -1141,19 +1121,18 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 			pOnRoof=pOnRoof->pNext;
 		}
 	}
-	
+
 	return(TRUE);
-}	
+}
 
 /****************************************************************************************
 	LightSetNaturalTileNode
 
-		Sets the natural light level (as well as the current) on individual LEVELNODEs.	
+		Sets the natural light level (as well as the current) on individual LEVELNODEs.
 
 ***************************************************************************************/
 void LightSetNaturalTileNode(LEVELNODE *pNode, UINT8 ubShade)
 {
-	PERFORMANCE_MARKER
 		Assert(pNode!=NULL);
 
 		pNode->ubSumLights=0;
@@ -1172,7 +1151,6 @@ void LightSetNaturalTileNode(LEVELNODE *pNode, UINT8 ubShade)
 ***************************************************************************************/
 BOOLEAN LightSetNaturalTile(INT16 iX, INT16 iY, UINT8 ubShade)
 {
-	PERFORMANCE_MARKER
 LEVELNODE *pLand, *pStruct, *pObject, *pRoof, *pOnRoof, *pTopmost, *pMerc;
 UINT32 uiIndex;
 
@@ -1185,7 +1163,7 @@ UINT32 uiIndex;
 	ubShade=__max(SHADE_MAX, ubShade);
 	ubShade=__min(SHADE_MIN, ubShade);
 
-	pLand = gpWorldLevelData[ uiIndex ].pLandHead;		
+	pLand = gpWorldLevelData[ uiIndex ].pLandHead;
 
 	while(pLand!=NULL)
 	{
@@ -1193,7 +1171,7 @@ UINT32 uiIndex;
 		pLand=pLand->pNext;
 	}
 
-	pStruct = gpWorldLevelData[ uiIndex ].pStructHead;		
+	pStruct = gpWorldLevelData[ uiIndex ].pStructHead;
 
 	while(pStruct!=NULL)
 	{
@@ -1201,42 +1179,42 @@ UINT32 uiIndex;
 		pStruct=pStruct->pNext;
 	}
 
-	pObject = gpWorldLevelData[ uiIndex ].pObjectHead;		
+	pObject = gpWorldLevelData[ uiIndex ].pObjectHead;
 	while(pObject!=NULL)
 	{
 		LightSetNaturalTileNode(pObject, ubShade);
 		pObject=pObject->pNext;
 	}
 
-	pRoof = gpWorldLevelData[ uiIndex ].pRoofHead;		
+	pRoof = gpWorldLevelData[ uiIndex ].pRoofHead;
 	while(pRoof!=NULL)
 	{
 		LightSetNaturalTileNode(pRoof, ubShade);
 		pRoof=pRoof->pNext;
 	}
 
-	pOnRoof = gpWorldLevelData[ uiIndex ].pOnRoofHead;		
+	pOnRoof = gpWorldLevelData[ uiIndex ].pOnRoofHead;
 	while(pOnRoof!=NULL)
 	{
 		LightSetNaturalTileNode(pOnRoof, ubShade);
 		pOnRoof=pOnRoof->pNext;
 	}
 
-	pTopmost = gpWorldLevelData[ uiIndex ].pTopmostHead;		
+	pTopmost = gpWorldLevelData[ uiIndex ].pTopmostHead;
 	while(pTopmost!=NULL)
 	{
 		LightSetNaturalTileNode(pTopmost, ubShade);
 		pTopmost=pTopmost->pNext;
 	}
 
-	pMerc = gpWorldLevelData[ uiIndex ].pMercHead;		
+	pMerc = gpWorldLevelData[ uiIndex ].pMercHead;
 	while(pMerc!=NULL)
 	{
 		LightSetNaturalTileNode(pMerc, ubShade);
 		pMerc=pMerc->pNext;
 	}
 	return(TRUE);
-}	
+}
 
 /****************************************************************************************
 	LightResetTileNode
@@ -1247,7 +1225,6 @@ UINT32 uiIndex;
 ***************************************************************************************/
 void LightResetTileNode(LEVELNODE *pNode)
 {
-	PERFORMANCE_MARKER
 	pNode->ubSumLights=0;
 	pNode->ubMaxLights=0;
 	pNode->ubShadeLevel = pNode->ubNaturalShadeLevel;
@@ -1263,17 +1240,16 @@ void LightResetTileNode(LEVELNODE *pNode)
 ***************************************************************************************/
 BOOLEAN LightResetTile(INT16 iX, INT16 iY)
 {
-	PERFORMANCE_MARKER
 LEVELNODE *pLand, *pStruct, *pObject, *pRoof, *pOnRoof, *pTopmost, *pMerc;
 UINT32 uiTile;
 
 	CHECKF(gpWorldLevelData!=NULL);
 
 	uiTile = MAPROWCOLTOPOS( iY, iX );
-	
+
 	CHECKF(uiTile!=0xffff);
 
-	pLand = gpWorldLevelData[uiTile].pLandHead;		
+	pLand = gpWorldLevelData[uiTile].pLandHead;
 
 	while(pLand!=NULL)
 	{
@@ -1281,7 +1257,7 @@ UINT32 uiTile;
 		pLand=pLand->pNext;
 	}
 
-	pStruct = gpWorldLevelData[ uiTile ].pStructHead;		
+	pStruct = gpWorldLevelData[ uiTile ].pStructHead;
 
 	while(pStruct!=NULL)
 	{
@@ -1289,35 +1265,35 @@ UINT32 uiTile;
 		pStruct=pStruct->pNext;
 	}
 
-	pObject = gpWorldLevelData[ uiTile ].pObjectHead;		
+	pObject = gpWorldLevelData[ uiTile ].pObjectHead;
 	while(pObject!=NULL)
 	{
 		LightResetTileNode(pObject);
 		pObject=pObject->pNext;
 	}
 
-	pRoof = gpWorldLevelData[ uiTile ].pRoofHead;		
+	pRoof = gpWorldLevelData[ uiTile ].pRoofHead;
 	while(pRoof!=NULL)
 	{
 		LightResetTileNode(pRoof);
 		pRoof=pRoof->pNext;
 	}
 
-	pOnRoof = gpWorldLevelData[ uiTile ].pOnRoofHead;		
+	pOnRoof = gpWorldLevelData[ uiTile ].pOnRoofHead;
 	while(pOnRoof!=NULL)
 	{
 		LightResetTileNode(pOnRoof);
 		pOnRoof=pOnRoof->pNext;
 	}
 
-	pTopmost = gpWorldLevelData[ uiTile ].pTopmostHead;		
+	pTopmost = gpWorldLevelData[ uiTile ].pTopmostHead;
 	while(pTopmost!=NULL)
 	{
 		LightResetTileNode(pTopmost);
 		pTopmost=pTopmost->pNext;
 	}
 
-	pMerc = gpWorldLevelData[ uiTile ].pMercHead;		
+	pMerc = gpWorldLevelData[ uiTile ].pMercHead;
 	while(pMerc!=NULL)
 	{
 		LightResetTileNode(pMerc);
@@ -1325,7 +1301,7 @@ UINT32 uiTile;
 	}
 
 	return(TRUE);
-}	
+}
 
 /****************************************************************************************
 	LightResetAllTiles
@@ -1335,7 +1311,6 @@ UINT32 uiTile;
 ***************************************************************************************/
 BOOLEAN LightResetAllTiles(void)
 {
-	PERFORMANCE_MARKER
 INT16 iCountY, iCountX;
 
 	for(iCountY=0; iCountY < WORLD_ROWS; iCountY++)
@@ -1355,7 +1330,6 @@ INT16 iCountY, iCountX;
 ***************************************************************************************/
 BOOLEAN LightSetTile(INT16 iX, INT16 iY, UINT8 ubShade, UINT32 uiLightType)
 {
-	PERFORMANCE_MARKER
 /*LEVELNODE *pLand, *pStruct, *pObject, *pRoof, *pOnRoof, *pTopmost, *pFog;
 UINT32 uiIndex;
 
@@ -1363,7 +1337,7 @@ UINT32 uiIndex;
 	ubShade=__min(SHADE_MIN, ubShade);
 
 	uiIndex = MAPROWCOLTOPOS( iY, iX );
-	pLand = gpWorldLevelData[ uiIndex ].pLandHead;		
+	pLand = gpWorldLevelData[ uiIndex ].pLandHead;
 
 	while(pLand!=NULL)
 	{
@@ -1372,7 +1346,7 @@ UINT32 uiIndex;
 		pLand=pLand->pNext;
 	}
 
-	pStruct = gpWorldLevelData[ uiIndex ].pStructHead;		
+	pStruct = gpWorldLevelData[ uiIndex ].pStructHead;
 
 	while(pStruct!=NULL)
 	{
@@ -1381,7 +1355,7 @@ UINT32 uiIndex;
 		pStruct=pStruct->pNext;
 	}
 
-	pObject = gpWorldLevelData[ uiIndex ].pObjectHead;		
+	pObject = gpWorldLevelData[ uiIndex ].pObjectHead;
 	while(pObject!=NULL)
 	{
 		pObject->sSumLights[uiLightType]= ubShade-SHADE_MAX;
@@ -1389,7 +1363,7 @@ UINT32 uiIndex;
 		pObject=pObject->pNext;
 	}
 
-	pRoof = gpWorldLevelData[ uiIndex ].pRoofHead;		
+	pRoof = gpWorldLevelData[ uiIndex ].pRoofHead;
 	while(pRoof!=NULL)
 	{
 		pRoof->sSumLights[uiLightType]= ubShade-SHADE_MAX;
@@ -1397,7 +1371,7 @@ UINT32 uiIndex;
 		pRoof=pRoof->pNext;
 	}
 
-	pOnRoof = gpWorldLevelData[ uiIndex ].pOnRoofHead;		
+	pOnRoof = gpWorldLevelData[ uiIndex ].pOnRoofHead;
 	while(pOnRoof!=NULL)
 	{
 		pOnRoof->sSumLights[uiLightType]= ubShade-SHADE_MAX;
@@ -1405,7 +1379,7 @@ UINT32 uiIndex;
 		pOnRoof=pOnRoof->pNext;
 	}
 
-	pFog = gpWorldLevelData[ uiIndex ].pFogHead;		
+	pFog = gpWorldLevelData[ uiIndex ].pFogHead;
 	while(pFog!=NULL)
 	{
 		pFog->sSumLights[uiLightType]= ubShade-SHADE_MAX;
@@ -1413,7 +1387,7 @@ UINT32 uiIndex;
 		pFog=pFog->pNext;
 	}
 
-	pTopmost = gpWorldLevelData[ uiIndex ].pTopmostHead;		
+	pTopmost = gpWorldLevelData[ uiIndex ].pTopmostHead;
 	while(pTopmost!=NULL)
 	{
 		pTopmost->sSumLights[uiLightType]= ubShade-SHADE_MAX;
@@ -1421,7 +1395,7 @@ UINT32 uiIndex;
 		pTopmost=pTopmost->pNext;
 	} */
 	return(TRUE);
-}	
+}
 
 /****************************************************************************************
 	LightGetLastNode
@@ -1432,9 +1406,8 @@ UINT32 uiIndex;
 ***************************************************************************************/
 UINT16 LightGetLastNode(INT32 iLight)
 {
-	PERFORMANCE_MARKER
 		return(usRaySize[iLight]);
-}	
+}
 
 
 /****************************************************************************************
@@ -1445,7 +1418,6 @@ UINT16 LightGetLastNode(INT32 iLight)
 ***************************************************************************************/
 BOOLEAN LightAddNode(INT32 iLight, INT16 iHotSpotX, INT16 iHotSpotY, INT16 iX, INT16 iY, UINT8 ubIntensity, UINT16 uiFlags)
 {
-	PERFORMANCE_MARKER
 	DOUBLE dDistance;
 	UINT8 ubShade;
 	INT32 iLightDecay;
@@ -1462,10 +1434,10 @@ BOOLEAN LightAddNode(INT32 iLight, INT16 iHotSpotX, INT16 iHotSpotY, INT16 iX, I
 
 	iX/=DISTANCE_SCALE;
 	iY/=DISTANCE_SCALE;
-	
+
 	LightAddRayNode(iLight, iX, iY, ubShade, uiFlags);
 	return(TRUE);
-}	
+}
 
 
 /****************************************************************************************
@@ -1476,7 +1448,6 @@ BOOLEAN LightAddNode(INT32 iLight, INT16 iHotSpotX, INT16 iHotSpotY, INT16 iX, I
 ***************************************************************************************/
 BOOLEAN LightInsertNode(INT32 iLight, UINT16 usLightIns, INT16 iHotSpotX, INT16 iHotSpotY, INT16 iX, INT16 iY, UINT8 ubIntensity, UINT16 uiFlags)
 {
-	PERFORMANCE_MARKER
 DOUBLE dDistance;
 UINT8 ubShade;
 INT32 iLightDecay;
@@ -1493,11 +1464,11 @@ INT32 iLightDecay;
 
 	iX/=DISTANCE_SCALE;
 	iY/=DISTANCE_SCALE;
-	
+
 	LightInsertRayNode(iLight, usLightIns, iX, iY, ubShade, uiFlags);
 
 	return(TRUE);
-}	
+}
 
 /****************************************************************************************
 	LightFindNextRay
@@ -1508,7 +1479,6 @@ INT32 iLightDecay;
 ***************************************************************************************/
 UINT16 LightFindNextRay(INT32 iLight, UINT16 usIndex)
 {
-	PERFORMANCE_MARKER
 UINT16 usNodeIndex;
 
 	usNodeIndex=usIndex;
@@ -1527,7 +1497,6 @@ UINT16 usNodeIndex;
 ***************************************************************************************/
 BOOLEAN LightCastRay(INT32 iLight, INT16 iStartX, INT16 iStartY, INT16 iEndPointX, INT16 iEndPointY, UINT8 ubStartIntens, UINT8 ubEndIntens)
 {
-	PERFORMANCE_MARKER
 INT16 AdjUp, AdjDown, ErrorTerm, XAdvance, XDelta, YDelta;
 INT32 WholeStep, InitialPixelCount, FinalPixelCount, i, j, RunLength;
 INT16 iXPos, iYPos, iEndY, iEndX;
@@ -1539,7 +1508,7 @@ BOOLEAN fInsertNodes=FALSE;
 
 	/* We'll always draw top to bottom, to reduce the number of cases we have to
 	handle, and to make lines between the same endpoints draw the same pixels */
-		if (iStartY > iEndPointY) 
+		if (iStartY > iEndPointY)
 		{
 			iXPos=iEndPointX;
 			iEndX=iStartX;
@@ -1869,19 +1838,18 @@ BOOLEAN fInsertNodes=FALSE;
 				}
 			}
 			iXPos+=XAdvance;
-	} 
+	}
 	return(TRUE);
 }
 
 /****************************************************************************************
 	LightGenerateElliptical
 
-		Creates an elliptical light, taking two radii.	
+		Creates an elliptical light, taking two radii.
 
 ***************************************************************************************/
 BOOLEAN LightGenerateElliptical(INT32 iLight, UINT8 iIntensity, INT16 iA, INT16 iB)
 {
-	PERFORMANCE_MARKER
 INT16 iX, iY;
 INT32 WorkingX, WorkingY;
 DOUBLE ASquared;
@@ -1900,7 +1868,7 @@ DOUBLE Temp;
 	LightCastRay(iLight, iX, iY, (INT16)iX, (INT16)(iY-iB), iIntensity, 1);
 
 	/* Draw the four arcs */
-	for (WorkingX = 0; ; ) 
+	for (WorkingX = 0; ; )
 	{
 		/* Advance one pixel along the X axis */
 		WorkingX++;
@@ -1934,7 +1902,7 @@ DOUBLE Temp;
 	LightCastRay(iLight, iX, iY, (INT16)(iX-iA), iY, iIntensity, 1);
 
 	/* Draw the four arcs */
-	for (WorkingY = 0; ; ) 
+	for (WorkingY = 0; ; )
 	{
 		/* Advance one pixel along the Y axis */
 		WorkingY++;
@@ -1960,19 +1928,18 @@ DOUBLE Temp;
 		LightCastRay(iLight, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
 		LightCastRay(iLight, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
 	}
- 
+
 	return(TRUE);
 }
 
 /****************************************************************************************
 	LightGenerateSquare
 
-		Creates an square light, taking two radii.	
+		Creates an square light, taking two radii.
 
 ***************************************************************************************/
 BOOLEAN LightGenerateSquare(INT32 iLight, UINT8 iIntensity, INT16 iA, INT16 iB)
 {
-	PERFORMANCE_MARKER
 INT16 iX, iY;
 
 	for(iX=0-iA; iX <= 0+iA; iX++)
@@ -1985,7 +1952,7 @@ INT16 iX, iY;
 		LightCastRay(iLight, 0, 0, (INT16)(0-iA), iY, iIntensity, 1);
 
 	for(iY=0-iB; iY <= 0+iB; iY++)
-		LightCastRay(iLight, 0, 0, (INT16)(0+iA), iY, iIntensity, 1); 
+		LightCastRay(iLight, 0, 0, (INT16)(0+iA), iY, iIntensity, 1);
 
 
 	/*for(iY=0-iB; iY <= 0+iB; iY++)
@@ -2011,7 +1978,6 @@ INT16 iX, iY;
 ***************************************************************************************/
 BOOLEAN LightGenerateBeam(INT32 iLight, UINT8 iIntensity, INT16 iLength, INT16 iRadius, INT16 iDirection)
 {
-	PERFORMANCE_MARKER
 	return(FALSE);
 }
 
@@ -2023,7 +1989,6 @@ BOOLEAN LightGenerateBeam(INT32 iLight, UINT8 iIntensity, INT16 iLength, INT16 i
 ***************************************************************************************/
 BOOLEAN LightSetBaseLevel(UINT8 iIntensity)
 {
-	PERFORMANCE_MARKER
 	INT16 iCountY, iCountX;
 	UINT32	cnt;
 	SOLDIERTYPE *pSoldier;
@@ -2071,7 +2036,6 @@ BOOLEAN LightSetBaseLevel(UINT8 iIntensity)
 ***************************************************************************************/
 BOOLEAN LightAddBaseLevel(UINT32 uiLightType, UINT8 iIntensity)
 {
-	PERFORMANCE_MARKER
 INT16 iCountY, iCountX;
 
 	ubAmbientLightLevel=__max(SHADE_MAX, ubAmbientLightLevel-iIntensity);
@@ -2096,7 +2060,6 @@ INT16 iCountY, iCountX;
 ***************************************************************************************/
 BOOLEAN LightSubtractBaseLevel(UINT32 uiLightType, UINT8 iIntensity)
 {
-	PERFORMANCE_MARKER
 INT16 iCountY, iCountX;
 
 	ubAmbientLightLevel=__min(SHADE_MIN, ubAmbientLightLevel+iIntensity);
@@ -2121,7 +2084,6 @@ INT16 iCountY, iCountX;
 ***************************************************************************************/
 INT32 LightCreateOmni(UINT8 ubIntensity, INT16 iRadius)
 {
-	PERFORMANCE_MARKER
 INT32 iLight;
 CHAR8 usName[14];
 
@@ -2146,7 +2108,6 @@ CHAR8 usName[14];
 ***************************************************************************************/
 INT32 LightCreateSquare(UINT8 ubIntensity, INT16 iRadius1, INT16 iRadius2)
 {
-	PERFORMANCE_MARKER
 INT32 iLight;
 CHAR8 usName[14];
 
@@ -2171,7 +2132,6 @@ CHAR8 usName[14];
 ***************************************************************************************/
 INT32 LightCreateElliptical(UINT8 ubIntensity, INT16 iRadius1, INT16 iRadius2)
 {
-	PERFORMANCE_MARKER
 INT32 iLight;
 CHAR8 usName[14];
 
@@ -2194,7 +2154,6 @@ CHAR8 usName[14];
 ***************************************************************************************/
 BOOLEAN LightIlluminateWall(INT16 iSourceX, INT16 iSourceY, INT16 iTileX, INT16 iTileY, LEVELNODE *pStruct)
 {
-	PERFORMANCE_MARKER
 
 //	return( LightTileHasWall( iSourceX, iSourceY, iTileX, iTileY ) );
 
@@ -2232,7 +2191,6 @@ UINT16 usWallOrientation;
 ***************************************************************************************/
 BOOLEAN LightDraw(UINT32 uiLightType, INT32 iLight, INT16 iX, INT16 iY, UINT32 uiSprite)
 {
-	PERFORMANCE_MARKER
 LIGHT_NODE *pLight;
 UINT16 uiCount;
 UINT16 usNodeIndex;
@@ -2271,9 +2229,9 @@ BOOLEAN fOnlyWalls;
 			sSum=__max(SHADE_MAX, sSum);
 
 			gpWorldLevelData[ ].ubRealShadeLevel = (UINT8) sSum;
-			
+
 		}
-		
+
 	}
 */
 
@@ -2326,7 +2284,7 @@ BOOLEAN fOnlyWalls;
 				iOldX = iX+pLight->iDX;
 				iOldY = iY+pLight->iDY;
 			}
-			
+
 		}
 		else
 		{
@@ -2340,7 +2298,6 @@ BOOLEAN fOnlyWalls;
 
 BOOLEAN LightRevealWall(INT16 sX, INT16 sY, INT16 sSrcX, INT16 sSrcY)
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pStruct;
 	UINT32 uiTile;
 	BOOLEAN fRerender=FALSE, fHitWall=FALSE, fDoRightWalls=TRUE, fDoLeftWalls=TRUE;
@@ -2352,7 +2309,7 @@ BOOLEAN LightRevealWall(INT16 sX, INT16 sY, INT16 sSrcX, INT16 sSrcY)
 
 	if(sX < sSrcX)
 		fDoRightWalls=FALSE;
-		
+
 	if(sY < sSrcY)
 		fDoLeftWalls=FALSE;
 
@@ -2363,7 +2320,7 @@ BOOLEAN LightRevealWall(INT16 sX, INT16 sY, INT16 sSrcX, INT16 sSrcY)
 	}
 
 	pStruct=gpWorldLevelData[uiTile].pStructHead;
-	
+
 	//while(pStruct!=NULL)
 	while(pStruct!=NULL && pStruct->usIndex<NUMBEROFTILES) //lal bugfix
 	{
@@ -2384,9 +2341,9 @@ BOOLEAN LightRevealWall(INT16 sX, INT16 sY, INT16 sSrcX, INT16 sSrcY)
 		}
 		pStruct=pStruct->pNext;
 	}
-	
+
 	pStruct=gpWorldLevelData[uiTile].pStructHead;
-	
+
 	//while(pStruct!=NULL)
 	while(pStruct!=NULL && pStruct->usIndex<NUMBEROFTILES) //lal bugfix
 	{
@@ -2421,13 +2378,12 @@ BOOLEAN LightRevealWall(INT16 sX, INT16 sY, INT16 sSrcX, INT16 sSrcY)
 
 	if(fRerender)
 		SetRenderFlags(RENDER_FLAG_FULL);
-	
+
 	return(fHitWall);
 }
 
 BOOLEAN LightHideWall(INT16 sX, INT16 sY, INT16 sSrcX, INT16 sSrcY)
 {
-	PERFORMANCE_MARKER
 LEVELNODE *pStruct;
 UINT32 uiTile;
 BOOLEAN fRerender=FALSE, fHitWall=FALSE, fDoRightWalls=TRUE, fDoLeftWalls=TRUE;
@@ -2439,12 +2395,12 @@ TILE_ELEMENT *TileElem;
 
 	if(sX < sSrcX)
 		fDoRightWalls=FALSE;
-		
+
 	if(sY < sSrcY)
 		fDoLeftWalls=FALSE;
 
 	pStruct=gpWorldLevelData[uiTile].pStructHead;
-	
+
 	//while(pStruct!=NULL)
 	while(pStruct!=NULL && pStruct->usIndex<NUMBEROFTILES) // lal bugfix
 	{
@@ -2469,7 +2425,7 @@ TILE_ELEMENT *TileElem;
 	pStruct=gpWorldLevelData[uiTile].pStructHead;
 
 	//while(pStruct!=NULL)
-	while(pStruct!=NULL && pStruct->usIndex<NUMBEROFTILES) //lal bugfix 
+	while(pStruct!=NULL && pStruct->usIndex<NUMBEROFTILES) //lal bugfix
 	{
 		TileElem = &(gTileDatabase[pStruct->usIndex]);
 		switch(TileElem->usWallOrientation)
@@ -2502,7 +2458,7 @@ TILE_ELEMENT *TileElem;
 
 	if(fRerender)
 		SetRenderFlags(RENDER_FLAG_FULL);
-	
+
 	return(fHitWall);
 }
 
@@ -2514,7 +2470,6 @@ TILE_ELEMENT *TileElem;
 ***************************************************************************************/
 BOOLEAN CalcTranslucentWalls(INT16 iX, INT16 iY)
 {
-	PERFORMANCE_MARKER
 	LIGHT_NODE *pLight;
 	UINT16 uiCount;
 	UINT16 usNodeIndex;
@@ -2531,8 +2486,8 @@ BOOLEAN CalcTranslucentWalls(INT16 iX, INT16 iY)
 			//Kris:	added map boundary checking!!!
 			if(LightRevealWall(
 				(INT16)min(max((iX+pLight->iDX),0),WORLD_COLS-1),
-				(INT16)min(max((iY+pLight->iDY),0),WORLD_ROWS-1), 
-				(INT16)min(max(iX,0),WORLD_COLS-1), 
+				(INT16)min(max((iY+pLight->iDY),0),WORLD_ROWS-1),
+				(INT16)min(max(iX,0),WORLD_COLS-1),
 				(INT16)min(max(iY,0),WORLD_ROWS-1)
 				))
 			{
@@ -2547,7 +2502,6 @@ BOOLEAN CalcTranslucentWalls(INT16 iX, INT16 iY)
 
 BOOLEAN LightGreenTile(INT16 sX, INT16 sY, INT16 sSrcX, INT16 sSrcY)
 {
-	PERFORMANCE_MARKER
 LEVELNODE *pStruct, *pLand;
 UINT32 uiTile;
 BOOLEAN fRerender=FALSE, fHitWall=FALSE, fThroughWall=FALSE;
@@ -2604,7 +2558,7 @@ TILE_ELEMENT *TileElem;
 		gpWorldLevelData[uiTile].uiFlags|=MAPELEMENT_REDRAW;
 		SetRenderFlags(RENDER_FLAG_MARKED);
 	//}
-	
+
 	return(fHitWall);
 }
 
@@ -2617,7 +2571,6 @@ each tile drawn to facilitate animating the drawing process for debugging.
 ***************************************************************************************/
 BOOLEAN LightShowRays(INT16 iX, INT16 iY, BOOLEAN fReset)
 {
-	PERFORMANCE_MARKER
 LIGHT_NODE *pLight;
 static UINT16 uiCount=0;
 UINT16 usNodeIndex;
@@ -2658,7 +2611,6 @@ UINT16 usNodeIndex;
 ***************************************************************************************/
 BOOLEAN LightHideGreen(INT16 sX, INT16 sY, INT16 sSrcX, INT16 sSrcY)
 {
-	PERFORMANCE_MARKER
 LEVELNODE *pStruct, *pLand;
 UINT32 uiTile;
 BOOLEAN fRerender=FALSE, fHitWall=FALSE;
@@ -2712,7 +2664,7 @@ TILE_ELEMENT *TileElem;
 		gpWorldLevelData[uiTile].uiFlags|=MAPELEMENT_REDRAW;
 		SetRenderFlags(RENDER_FLAG_MARKED);
 	//}
-	
+
 	return(fHitWall);
 }
 
@@ -2724,7 +2676,6 @@ TILE_ELEMENT *TileElem;
 ***************************************************************************************/
 BOOLEAN LightHideRays(INT16 iX, INT16 iY)
 {
-	PERFORMANCE_MARKER
 LIGHT_NODE *pLight;
 UINT16 uiCount;
 UINT16 usNodeIndex;
@@ -2759,7 +2710,6 @@ UINT16 usNodeIndex;
 ***************************************************************************************/
 BOOLEAN ApplyTranslucencyToWalls(INT16 iX, INT16 iY)
 {
-	PERFORMANCE_MARKER
 LIGHT_NODE *pLight;
 UINT16 uiCount;
 UINT16 usNodeIndex;
@@ -2777,8 +2727,8 @@ UINT16 usNodeIndex;
 			//Kris:	added map boundary checking!!!
 			if(LightHideWall(
 				(INT16)min(max((iX+pLight->iDX),0),WORLD_COLS-1),
-				(INT16)min(max((iY+pLight->iDY),0),WORLD_ROWS-1), 
-				(INT16)min(max(iX,0),WORLD_COLS-1), 
+				(INT16)min(max((iY+pLight->iDY),0),WORLD_ROWS-1),
+				(INT16)min(max(iX,0),WORLD_COLS-1),
 				(INT16)min(max(iY,0),WORLD_ROWS-1)
 				))
 			{
@@ -2799,7 +2749,6 @@ UINT16 usNodeIndex;
 ***************************************************************************************/
 BOOLEAN LightTranslucentTrees(INT16 iX, INT16 iY)
 {
-	PERFORMANCE_MARKER
 INT32 iCountX, iCountY;
 UINT32 uiTile;
 LEVELNODE *pNode;
@@ -2847,7 +2796,6 @@ UINT32	fTileFlags;
 ***************************************************************************************/
 BOOLEAN LightHideTrees(INT16 iX, INT16 iY)
 {
-	PERFORMANCE_MARKER
 INT32 iCountX, iCountY;
 UINT32 uiTile;
 LEVELNODE *pNode;
@@ -2866,7 +2814,7 @@ UINT32	fTileFlags;
 
 				if ( fTileFlags & FULL3D_TILE )
 				{
-	
+
 					if ( ( pNode->uiFlags & LEVELNODE_REVEALTREES ) )
 					{
 						//pNode->uiFlags	&=(~( LEVELNODE_REVEALTREES | LEVELNODE_ERASEZ ) );
@@ -2900,7 +2848,6 @@ UINT32	fTileFlags;
 ***************************************************************************************/
 BOOLEAN LightErase(UINT32 uiLightType, INT32 iLight, INT16 iX, INT16 iY, UINT32 uiSprite)
 {
-	PERFORMANCE_MARKER
 LIGHT_NODE *pLight;
 UINT16 uiCount;
 UINT16 usNodeIndex;
@@ -2932,7 +2879,7 @@ BOOLEAN fOnlyWalls;
 		fOnlyWalls = FALSE;
 
 			pLight=pLightList[iLight]+(usNodeIndex&(~LIGHT_BACKLIGHT));
-		
+
 			if(!(LightSprites[uiSprite].uiFlags&LIGHT_SPR_ONROOF))
 			{
 				if(LightTileBlocked( (INT16)iOldX, (INT16)iOldY, (INT16)(iX+pLight->iDX), (INT16)(iY+pLight->iDY)))
@@ -2965,7 +2912,7 @@ BOOLEAN fOnlyWalls;
 			{
 				iOldX = iX+pLight->iDX;
 				iOldY = iY+pLight->iDY;
-			}		
+			}
 		}
 		else
 		{
@@ -2986,7 +2933,6 @@ BOOLEAN fOnlyWalls;
 ***************************************************************************************/
 BOOLEAN LightCalcRect(INT32 iLight)
 {
-	PERFORMANCE_MARKER
 SGPRect MaxRect;
 INT16 sXValue, sYValue, sDummy;
 UINT32 uiCount;
@@ -3014,10 +2960,10 @@ LIGHT_NODE *pLight;
 		}
 	}
 
-	FromCellToScreenCoordinates((INT16)(MaxRect.iLeft*CELL_X_SIZE), 
-																	(INT16)(MaxRect.iTop*CELL_Y_SIZE), 
+	FromCellToScreenCoordinates((INT16)(MaxRect.iLeft*CELL_X_SIZE),
+																	(INT16)(MaxRect.iTop*CELL_Y_SIZE),
 																	&sDummy, &sYValue);
-	
+
 	LightMapLeft[iLight]=(INT16)MaxRect.iLeft;
 	LightMapTop[iLight]=(INT16)MaxRect.iTop;
 	LightMapRight[iLight]=(INT16)MaxRect.iRight;
@@ -3026,19 +2972,19 @@ LIGHT_NODE *pLight;
 	LightHeight[iLight]=-sYValue;
 	LightYOffset[iLight]=sYValue;
 
-	FromCellToScreenCoordinates((INT16)(MaxRect.iRight*CELL_X_SIZE), 
+	FromCellToScreenCoordinates((INT16)(MaxRect.iRight*CELL_X_SIZE),
 																	(INT16)(MaxRect.iBottom*CELL_Y_SIZE),
 																	&sDummy, &sYValue);
 	LightHeight[iLight]+=sYValue;
 
-	FromCellToScreenCoordinates((INT16)(MaxRect.iLeft*CELL_X_SIZE), 
-																	(INT16)(MaxRect.iBottom*CELL_Y_SIZE), 
+	FromCellToScreenCoordinates((INT16)(MaxRect.iLeft*CELL_X_SIZE),
+																	(INT16)(MaxRect.iBottom*CELL_Y_SIZE),
 																	&sXValue, &sDummy);
 	LightWidth[iLight]=-sXValue;
 	LightXOffset[iLight]=sXValue;
 
-	FromCellToScreenCoordinates((INT16)(MaxRect.iRight*CELL_X_SIZE),	
-																	(INT16)(MaxRect.iTop*CELL_Y_SIZE), 
+	FromCellToScreenCoordinates((INT16)(MaxRect.iRight*CELL_X_SIZE),
+																	(INT16)(MaxRect.iTop*CELL_Y_SIZE),
 																	&sXValue, &sDummy);
 	LightWidth[iLight]+=sXValue;
 
@@ -3060,13 +3006,12 @@ LIGHT_NODE *pLight;
 ***************************************************************************************/
 BOOLEAN LightSave(INT32 iLight, STR pFilename)
 {
-	PERFORMANCE_MARKER
 	HWFILE hFile;
 	STR pName;
 
 	if(pLightList[iLight]==NULL)
 		return(FALSE);
-	else 
+	else
 	{
 		if(pFilename==NULL)
 			pName=pLightNames[iLight];
@@ -3097,13 +3042,12 @@ BOOLEAN LightSave(INT32 iLight, STR pFilename)
 ***************************************************************************************/
 INT32 LightLoad(STR pFilename)
 {
-	PERFORMANCE_MARKER
 	HWFILE hFile;
 	INT32 iLight;
 
 	if((iLight=LightGetFree())==(-1))
 		return(-1);
-	else 
+	else
 	{
 		if((hFile=FileOpen(pFilename, FILE_ACCESS_READ, FALSE))!=0)
 		{
@@ -3146,7 +3090,6 @@ INT32 LightLoad(STR pFilename)
 ***************************************************************************************/
 INT32 LightLoadCachedTemplate(STR pFilename)
 {
-	PERFORMANCE_MARKER
 INT32 iCount;
 
 	for(iCount=0; iCount < MAX_LIGHT_TEMPLATES; iCount++)
@@ -3160,7 +3103,6 @@ INT32 iCount;
 
 UINT8 LightGetColors(SGPPaletteEntry *pPal)
 {
-	PERFORMANCE_MARKER
 	if(pPal!=NULL)
 		memcpy(pPal, &gpOrigLights[0], sizeof(SGPPaletteEntry)*gubNumLightColors);
 
@@ -3181,7 +3123,6 @@ extern void SetAllNewTileSurfacesLoaded( BOOLEAN fNew );
 
 BOOLEAN LightSetColors(SGPPaletteEntry *pPal, UINT8 ubNumColors)
 {
-	PERFORMANCE_MARKER
 	INT16 sRed, sGreen, sBlue;
 
 	Assert( ubNumColors >=1 && ubNumColors <=2 );
@@ -3210,7 +3151,7 @@ BOOLEAN LightSetColors(SGPPaletteEntry *pPal, UINT8 ubNumColors)
 		sRed=__min((((INT16)pPal[0].peRed)*LVL1_L1_PER/100 + ((INT16)pPal[1].peRed)*LVL1_L2_PER/100), 255);
 		sGreen=__min((((INT16)pPal[0].peGreen)*LVL1_L1_PER/100 + ((INT16)pPal[1].peGreen)*LVL1_L2_PER/100), 255);
 		sBlue=__min((((INT16)pPal[0].peBlue)*LVL1_L1_PER/100 + ((INT16)pPal[1].peBlue)*LVL1_L2_PER/100), 255);
-		
+
 		gpLightColors[1].peRed=(UINT8)(sRed);
 		gpLightColors[1].peGreen=(UINT8)(sGreen);
 		gpLightColors[1].peBlue=(UINT8)(sBlue);
@@ -3227,7 +3168,7 @@ BOOLEAN LightSetColors(SGPPaletteEntry *pPal, UINT8 ubNumColors)
 
 	BuildTileShadeTables( );
 
-	// Build all palettes for all soldiers in the world 
+	// Build all palettes for all soldiers in the world
 	// ( THIS FUNCTION WILL ERASE THEM IF THEY EXIST )
 	RebuildAllSoldierShadeTables( );
 
@@ -3250,7 +3191,6 @@ BOOLEAN LightSetColors(SGPPaletteEntry *pPal, UINT8 ubNumColors)
 ********************************************************************************/
 INT32 LightSpriteGetFree(void)
 {
-	PERFORMANCE_MARKER
 INT32 iCount;
 
 	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
@@ -3258,7 +3198,7 @@ INT32 iCount;
 		if(!(LightSprites[iCount].uiFlags&LIGHT_SPR_ACTIVE))
 			return(iCount);
 	}
-	
+
 	return(-1);
 }
 
@@ -3271,7 +3211,6 @@ INT32 iCount;
 ********************************************************************************/
 INT32 LightSpriteCreate(STR pName, UINT32 uiLightType)
 {
-	PERFORMANCE_MARKER
 INT32 iSprite;
 
 	if((iSprite=LightSpriteGetFree())!=(-1))
@@ -3288,7 +3227,7 @@ INT32 iSprite;
 			return(-1);
 
 		LightSprites[iSprite].uiFlags|=LIGHT_SPR_ACTIVE;
-	}		
+	}
 
 	return(iSprite);
 }
@@ -3302,7 +3241,6 @@ INT32 iSprite;
 ********************************************************************************/
 BOOLEAN LightSpriteFake(INT32 iSprite)
 {
-	PERFORMANCE_MARKER
 	if ( (iSprite >= MAX_LIGHT_SPRITES ) || (iSprite < 0) )
 	{
 		return FALSE;
@@ -3322,12 +3260,11 @@ BOOLEAN LightSpriteFake(INT32 iSprite)
 /********************************************************************************
 * LightSpriteDestroy
 *
-*		Removes an instance of a light. If it was on, it is erased from the scene.	
+*		Removes an instance of a light. If it was on, it is erased from the scene.
 *
 ********************************************************************************/
 BOOLEAN LightSpriteDestroy(INT32 iSprite)
 {
-	PERFORMANCE_MARKER
 	if ( (iSprite >= MAX_LIGHT_SPRITES ) || (iSprite < 0) )
 	{
 		return FALSE;
@@ -3339,7 +3276,7 @@ BOOLEAN LightSpriteDestroy(INT32 iSprite)
 		{
 			if((LightSprites[iSprite].iX < WORLD_COLS) && (LightSprites[iSprite].iY < WORLD_ROWS))
 			{
-				LightErase(LightSprites[iSprite].uiLightType, LightSprites[iSprite].iTemplate, LightSprites[iSprite].iX, LightSprites[iSprite].iY, iSprite); 
+				LightErase(LightSprites[iSprite].uiLightType, LightSprites[iSprite].iTemplate, LightSprites[iSprite].iX, LightSprites[iSprite].iY, iSprite);
 				LightSpriteDirty(iSprite);
 			}
 			LightSprites[iSprite].uiFlags&=(~LIGHT_SPR_ERASE);
@@ -3360,7 +3297,6 @@ BOOLEAN LightSpriteDestroy(INT32 iSprite)
 ********************************************************************************/
 BOOLEAN LightSpriteRender(void)
 {
-	PERFORMANCE_MARKER
 //INT32 iCount;
 //BOOLEAN fRenderLights=FALSE;
 
@@ -3371,7 +3307,7 @@ BOOLEAN LightSpriteRender(void)
 		if(LightSprites[iCount].uiFlags&LIGHT_SPR_ACTIVE)
 		{
 			if((LightSprites[iCount].iX!=LightSprites[iCount].iOldX)
-				|| (LightSprites[iCount].iY!=LightSprites[iCount].iOldY) 
+				|| (LightSprites[iCount].iY!=LightSprites[iCount].iOldY)
 				|| (LightSprites[iCount].uiFlags&LIGHT_SPR_REDRAW))
 			{
 				if(LightSprites[iCount].iOldX < WORLD_COLS)
@@ -3415,7 +3351,6 @@ BOOLEAN LightSpriteRender(void)
 ********************************************************************************/
 BOOLEAN LightSpriteRenderAll(void)
 {
-	PERFORMANCE_MARKER
 	INT32 iCount;
 
 	LightResetAllTiles();
@@ -3432,7 +3367,7 @@ BOOLEAN LightSpriteRenderAll(void)
 
 		LightSprites[iCount].iOldX=LightSprites[iCount].iX;
 		LightSprites[iCount].iOldY=LightSprites[iCount].iY;
-	} 
+	}
 
 	return(TRUE);
 }
@@ -3445,7 +3380,6 @@ BOOLEAN LightSpriteRenderAll(void)
 ********************************************************************************/
 BOOLEAN LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY)
 {
-	PERFORMANCE_MARKER
 	if ( (iSprite >= MAX_LIGHT_SPRITES ) || (iSprite < 0) )
 	{
 		return FALSE;
@@ -3464,7 +3398,7 @@ BOOLEAN LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY)
 				LightSpriteDirty(iSprite);
 			}
 		}
-		
+
 		//LightSprites[iSprite].iOldX=LightSprites[iSprite].iX;
 		//LightSprites[iSprite].iOldY=LightSprites[iSprite].iY;
 
@@ -3483,7 +3417,7 @@ BOOLEAN LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY)
 	}
 	else
 		return(FALSE);
-	
+
 	return(TRUE);
 }
 
@@ -3495,7 +3429,6 @@ BOOLEAN LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY)
 ********************************************************************************/
 BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 {
-	PERFORMANCE_MARKER
 	if ( (iSprite >= MAX_LIGHT_SPRITES ) || (iSprite < 0) )
 	{
 		return FALSE;
@@ -3503,10 +3436,10 @@ BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 
 	if(fOnRoof && (LightSprites[iSprite].uiFlags&LIGHT_SPR_ONROOF))
 		return(FALSE);
-	
+
 	if(!fOnRoof && !(LightSprites[iSprite].uiFlags&LIGHT_SPR_ONROOF))
 		return(FALSE);
-	
+
 	if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ACTIVE)
 	{
 		if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ERASE)
@@ -3536,7 +3469,7 @@ BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 	}
 	else
 		return(FALSE);
-	
+
 	return(TRUE);
 }
 
@@ -3548,7 +3481,6 @@ BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 ********************************************************************************/
 BOOLEAN LightSpritePower(INT32 iSprite, BOOLEAN fOn)
 {
-	PERFORMANCE_MARKER
 	if ( (iSprite >= MAX_LIGHT_SPRITES ) || (iSprite < 0) )
 	{
 		return FALSE;
@@ -3602,11 +3534,10 @@ BOOLEAN LightSpritePower(INT32 iSprite, BOOLEAN fOn)
 ********************************************************************************/
 BOOLEAN LightSpriteDirty(INT32 iSprite)
 {
-	PERFORMANCE_MARKER
 //INT16 iLeft_s, iTop_s;
 //INT16 iMapLeft, iMapTop, iMapRight, iMapBottom;
 
-	//CellXYToScreenXY((INT16)(LightSprites[iSprite].iX*CELL_X_SIZE), 
+	//CellXYToScreenXY((INT16)(LightSprites[iSprite].iX*CELL_X_SIZE),
 	//								(INT16)(LightSprites[iSprite].iY*CELL_Y_SIZE),	&iLeft_s, &iTop_s);
 
 	//iLeft_s+=LightXOffset[LightSprites[iSprite].iTemplate];
@@ -3620,10 +3551,10 @@ BOOLEAN LightSpriteDirty(INT32 iSprite)
 	//ReRenderWorld(iMapLeft, iMapTop, iMapRight, iMapBottom);
 	//UpdateSaveBuffer();
 	//AddBaseDirtyRect(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y );
-	//AddBaseDirtyRect(iLeft_s, iTop_s, 
-	//								(INT16)(iLeft_s+LightWidth[LightSprites[iSprite].iTemplate]), 
+	//AddBaseDirtyRect(iLeft_s, iTop_s,
+	//								(INT16)(iLeft_s+LightWidth[LightSprites[iSprite].iTemplate]),
 	//								(INT16)(iTop_s+LightHeight[LightSprites[iSprite].iTemplate]));
-	
+
 	SetRenderFlags(RENDER_FLAG_MARKED);
 
 	return(TRUE);
@@ -3632,18 +3563,17 @@ BOOLEAN LightSpriteDirty(INT32 iSprite)
 
 BOOLEAN CreateObjectPalette(HVOBJECT pObj, UINT32 uiBase, SGPPaletteEntry *pShadePal)
 {
-	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	pObj->pShades[uiBase]=Create16BPPPaletteShaded( pShadePal, gusShadeLevels[0][0],
 																															gusShadeLevels[0][1],
-																															gusShadeLevels[0][2], TRUE);	
-	
+																															gusShadeLevels[0][2], TRUE);
+
 	for(uiCount=1; uiCount < 16; uiCount++)
 	{
 		pObj->pShades[uiBase+uiCount]=Create16BPPPaletteShaded( pShadePal, gusShadeLevels[uiCount][0],
 																																				gusShadeLevels[uiCount][1],
-																																				gusShadeLevels[uiCount][2], FALSE);	
+																																				gusShadeLevels[uiCount][2], FALSE);
 	}
 
 	return(TRUE);
@@ -3651,18 +3581,17 @@ UINT32 uiCount;
 
 BOOLEAN CreateSoldierShadedPalette( SOLDIERTYPE *pSoldier, UINT32 uiBase, SGPPaletteEntry *pShadePal)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	pSoldier->pShades[uiBase]=Create16BPPPaletteShaded( pShadePal, gusShadeLevels[0][0],
 																															gusShadeLevels[0][1],
-																															gusShadeLevels[0][2], TRUE);	
-	
+																															gusShadeLevels[0][2], TRUE);
+
 	for(uiCount=1; uiCount < 16; uiCount++)
 	{
 		pSoldier->pShades[uiBase+uiCount]=Create16BPPPaletteShaded( pShadePal, gusShadeLevels[uiCount][0],
 																																				gusShadeLevels[uiCount][1],
-																																				gusShadeLevels[uiCount][2], FALSE);	
+																																				gusShadeLevels[uiCount][2], FALSE);
 	}
 
 	return(TRUE);
@@ -3672,7 +3601,7 @@ BOOLEAN CreateSoldierShadedPalette( SOLDIERTYPE *pSoldier, UINT32 uiBase, SGPPal
 /**********************************************************************************************
  CreateObjectPaletteTables
 
-		Creates the shading tables for 8-bit brushes. One highlight table is created, based on 
+		Creates the shading tables for 8-bit brushes. One highlight table is created, based on
 	the object-type, 3 brightening tables, 1 normal, and 11 darkening tables. The entries are
 	created iteratively, rather than in a loop to allow hand-tweaking of the values. If you
 	change the HVOBJECT_SHADE_TABLES symbol, remember to add/delete entries here, it won't
@@ -3685,7 +3614,6 @@ BOOLEAN CreateSoldierShadedPalette( SOLDIERTYPE *pSoldier, UINT32 uiBase, SGPPal
 
 UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce )
 {
-	PERFORMANCE_MARKER
 		UINT32 uiCount;
 		SGPPaletteEntry LightPal[256];
 		BOOLEAN fLoaded = FALSE;
@@ -3737,7 +3665,7 @@ UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce
 				LightPal[uiCount].peBlue=(UINT8)(__min((UINT16)pObj->pPaletteEntry[uiCount].peBlue+(UINT16)gpLightColors[1].peBlue, 255));
 			}
 			CreateObjectPalette(pObj, 16, LightPal);
-			
+
 			// build a table that is a mix of the first two
 			for(uiCount=0; uiCount < 256; uiCount++)
 			{
@@ -3747,7 +3675,7 @@ UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce
 			}
 			CreateObjectPalette(pObj, 32, LightPal);
 		}
-		
+
 		// build neutral palette as well!
 		// Set current shade table to neutral color
 		pObj->pShadeCurrent=pObj->pShades[4];
@@ -3759,7 +3687,6 @@ UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce
 
 UINT16 CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier, UINT32 uiType)
 {
-	PERFORMANCE_MARKER
 	SGPPaletteEntry LightPal[256];
 	UINT32 uiCount;
 
@@ -3785,7 +3712,7 @@ UINT16 CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier, UINT32 uiType)
 			LightPal[uiCount].peBlue=(UINT8)(__min((UINT16)pSoldier->p8BPPPalette[uiCount].peBlue+(UINT16)gpLightColors[1].peBlue, 255));
 		}
 		CreateSoldierShadedPalette(pSoldier, 16, LightPal);
-		
+
 		// build a table that is a mix of the first two
 		for(uiCount=0; uiCount < 256; uiCount++)
 		{
@@ -3795,7 +3722,7 @@ UINT16 CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier, UINT32 uiType)
 		}
 		CreateSoldierShadedPalette(pSoldier, 32, LightPal);
 	}
-	
+
 	// build neutral palette as well!
 	// Set current shade table to neutral color
 	pSoldier->pCurrentShade=pSoldier->pShades[4];
@@ -3804,5 +3731,6 @@ UINT16 CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier, UINT32 uiType)
 	return(TRUE);
 
 }
+
 
 

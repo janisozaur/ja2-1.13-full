@@ -241,7 +241,7 @@ ANIMCONTROLTYPE		gAnimControl[ NUMANIMATIONSTATES ] =
 
 	{"FALLFORWARD HIT STOP", 0,					650,	(FLOAT)0,			ANIM_STATIONARY | ANIM_HITSTOP | ANIM_NO_EFFORT | ANIM_NOCHANGE_WEAPON,																				 ANIM_PRONE, ANIM_PRONE, -1},
 
-	{"PRONE_LAYFROMHIT STOP"		, 0,			70,	(FLOAT)0,	ANIM_STATIONARY | ANIM_HITSTOP | ANIM_NO_EFFORT | ANIM_NOCHANGE_WEAPON,																				 ANIM_PRONE, ANIM_PRONE, -1}, 
+	{"PRONE_LAYFROMHIT STOP"		, 0,			70,	(FLOAT)0,	ANIM_STATIONARY | ANIM_HITSTOP | ANIM_NO_EFFORT | ANIM_NOCHANGE_WEAPON,																				 ANIM_PRONE, ANIM_PRONE, -1},
 
 	{"HOP FENCE"								, 0,			50,	(FLOAT)0,		ANIM_NOCHANGE_PENDINGCOUNT | ANIM_NORESTART | ANIM_STATIONARY | ANIM_NOSHOW_MARKER | ANIM_MODERATE_EFFORT | ANIM_LOWER_WEAPON | ANIM_NONINTERRUPT,																	ANIM_STAND, ANIM_CROUCH,	-1},
 
@@ -931,29 +931,29 @@ ANIMCONTROLTYPE		gAnimControl[ NUMANIMATIONSTATES ] =
 
 ANI_SPEED_DEF gubAnimWalkSpeeds[ TOTALBODYTYPES ] =
 {
-	-5,(FLOAT)1.6,				//REGMALE								
-	-10,(FLOAT)1.6,				//BIGMALE								
-	-5,(FLOAT)1.6,				//STOCKYMALE						
-	-15,(FLOAT)1.6,				//REGFEMALE							
-	0,	(FLOAT)1.6,				//ADULTMONSTER					
-	0,	(FLOAT)1.6,				//ADULTMONSTER					
-	0,	(FLOAT)1.6,				//ADULTMONSTER					
-	0,	(FLOAT)1.6,				//ADULTMONSTER					
-	0,	(FLOAT)1.6,				//ADULTMONSTER					
-	0,	(FLOAT)2.2,				//INFANT								
-	0,	(FLOAT)1.6,				//QUEEN MONSTER					
-	40, (FLOAT)1.3,				//FATCIV								
-	10, (FLOAT)1.3,				//MANCIV								
-	-10,(FLOAT)1.3,				//MINICIV								
-	-10,(FLOAT)1.3,				//DRESSCIV							
-	-20,(FLOAT)1.6,				//HAT KID								
-	-20,(FLOAT)1.6,				//NOHAT KID							
-	-20,(FLOAT)1.6,				//CRIPPLE								
-	60, (FLOAT)0.9,				//COW										
-	20, (FLOAT)1.6,				//CROW									
-	0, (FLOAT)1.2,				//BLOOD CAT							
-	20, (FLOAT)1.1,				//ROBOT1								
-	-10, (FLOAT)4.0,			//HUMVEE								
+	-5,(FLOAT)1.6,				//REGMALE
+	-10,(FLOAT)1.6,				//BIGMALE
+	-5,(FLOAT)1.6,				//STOCKYMALE
+	-15,(FLOAT)1.6,				//REGFEMALE
+	0,	(FLOAT)1.6,				//ADULTMONSTER
+	0,	(FLOAT)1.6,				//ADULTMONSTER
+	0,	(FLOAT)1.6,				//ADULTMONSTER
+	0,	(FLOAT)1.6,				//ADULTMONSTER
+	0,	(FLOAT)1.6,				//ADULTMONSTER
+	0,	(FLOAT)2.2,				//INFANT
+	0,	(FLOAT)1.6,				//QUEEN MONSTER
+	40, (FLOAT)1.3,				//FATCIV
+	10, (FLOAT)1.3,				//MANCIV
+	-10,(FLOAT)1.3,				//MINICIV
+	-10,(FLOAT)1.3,				//DRESSCIV
+	-20,(FLOAT)1.6,				//HAT KID
+	-20,(FLOAT)1.6,				//NOHAT KID
+	-20,(FLOAT)1.6,				//CRIPPLE
+	60, (FLOAT)0.9,				//COW
+	20, (FLOAT)1.6,				//CROW
+	0, (FLOAT)1.2,				//BLOOD CAT
+	20, (FLOAT)1.1,				//ROBOT1
+	-10, (FLOAT)4.0,			//HUMVEE
 
 	-10, (FLOAT)4.0,			//TANK_NW
 	-10, (FLOAT)4.0,			//TANK_NE
@@ -1070,7 +1070,6 @@ ANIMSUBTYPE gDoubleHandledSub =
 
 void	InitAnimationSurfacesPerBodytype( )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt1, cnt2;
 
 	// Should be set to a non-init values
@@ -3032,7 +3031,6 @@ void	InitAnimationSurfacesPerBodytype( )
 
 BOOLEAN LoadAnimationStateInstructions( )
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 
@@ -3053,7 +3051,7 @@ BOOLEAN LoadAnimationStateInstructions( )
 	FileClose( hFile );
 
 		//<SB> crouch throwing
-		memcpy(gusAnimInst[ THROW_ITEM_CROUCHED ],CrouchedThrowAnimationScript,sizeof(CrouchedThrowAnimationScript)); 
+		memcpy(gusAnimInst[ THROW_ITEM_CROUCHED ],CrouchedThrowAnimationScript,sizeof(CrouchedThrowAnimationScript));
 		//<SB> crouch throwing
 
 	return( TRUE );
@@ -3061,7 +3059,6 @@ BOOLEAN LoadAnimationStateInstructions( )
 
 BOOLEAN IsAnimationValidForBodyType( SOLDIERTYPE *pSoldier, UINT16 usNewState )
 {
-	PERFORMANCE_MARKER
 	UINT16		usAnimSurface;
 
 	// From animation control, get surface
@@ -3079,7 +3076,6 @@ BOOLEAN IsAnimationValidForBodyType( SOLDIERTYPE *pSoldier, UINT16 usNewState )
 
 BOOLEAN SubstituteBodyTypeAnimation( SOLDIERTYPE *pSoldier, UINT16 usTestState, UINT16 *pusSubState )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fSubFound = FALSE;
 
 	*pusSubState = usTestState;
@@ -3225,7 +3221,6 @@ BOOLEAN SubstituteBodyTypeAnimation( SOLDIERTYPE *pSoldier, UINT16 usTestState, 
 
 INT8	GetBodyTypePaletteSubstitutionCode( SOLDIERTYPE *pSoldier, UINT8 ubBodyType, CHAR8 *zColFilename )
 {
-	PERFORMANCE_MARKER
 	switch( ubBodyType )
 	{
 	case REGMALE:
@@ -3317,7 +3312,6 @@ INT8	GetBodyTypePaletteSubstitutionCode( SOLDIERTYPE *pSoldier, UINT8 ubBodyType
 
 BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 {
-	PERFORMANCE_MARKER
 	UINT16 usAnimSurface;
 
 	// Delete any structure info!
@@ -3350,7 +3344,6 @@ BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 
 UINT16 LoadSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 {
-	PERFORMANCE_MARKER
 	UINT16 usAnimSurface;
 
 	usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usAnimState );
@@ -3374,7 +3367,7 @@ UINT16	gusQueenMonsterSpitAnimPerDir[] =
 	QUEENMONSTERSPIT_NE,			//NORTH
 	QUEENMONSTERSPIT_E,
 	QUEENMONSTERSPIT_SE,			// EAST
-	QUEENMONSTERSPIT_S,				
+	QUEENMONSTERSPIT_S,
 	QUEENMONSTERSPIT_SW,			// SOUTH
 	QUEENMONSTERSPIT_SW,
 	QUEENMONSTERSPIT_SW,			// WEST
@@ -3384,7 +3377,6 @@ UINT16	gusQueenMonsterSpitAnimPerDir[] =
 
 UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 {
-	PERFORMANCE_MARKER
 	UINT16 usAnimSurface;
 	UINT16 usAltAnimSurface;
 	UINT8 ubBodyType;
@@ -3560,7 +3552,7 @@ UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimSta
 						if ( Item[ pSoldier->inv[ SECONDHANDPOS ].usItem ].usItemClass == IC_GUN )
 						{
 							usAnimSurface = gDoubleHandledSub.usAnimationSurfaces[ pSoldier->ubBodyType ];
-							fAdjustedForItem	= TRUE;							
+							fAdjustedForItem	= TRUE;
 						}
 					}
 
@@ -3581,7 +3573,7 @@ UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimSta
 		// Based on if we have adjusted for item or not... check for injured status...
 		if ( fAdjustedForItem )
 		{
-			// If life below thresthold for being injured 
+			// If life below thresthold for being injured
 			if ( pSoldier->stats.bLife < INJURED_CHANGE_THREASHOLD )
 			{
 				// ADJUST FOR INJURED....
@@ -3596,7 +3588,7 @@ UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimSta
 		}
 		else
 		{
-			// If life below thresthold for being injured 
+			// If life below thresthold for being injured
 			if ( pSoldier->stats.bLife < INJURED_CHANGE_THREASHOLD )
 			{
 				// ADJUST FOR INJURED....
@@ -3620,7 +3612,6 @@ UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimSta
 
 UINT16 GetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 {
-	PERFORMANCE_MARKER
 	UINT16 usAnimSurface;
 
 	usAnimSurface = pSoldier->usAnimSurface;
@@ -3630,7 +3621,7 @@ UINT16 GetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 		// Ensure that it's loaded!
 		if ( gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject == NULL )
 		{
-			ScreenMsg( FONT_MCOLOR_RED, MSG_BETAVERSION, L"IAnimation Surface for Body %d, animation %S, surface %d not loaded.", pSoldier->ubBodyType, gAnimControl[ usAnimState ].zAnimStr, usAnimSurface );		
+			ScreenMsg( FONT_MCOLOR_RED, MSG_BETAVERSION, L"IAnimation Surface for Body %d, animation %S, surface %d not loaded.", pSoldier->ubBodyType, gAnimControl[ usAnimState ].zAnimStr, usAnimSurface );
 			AnimDebugMsg( String( "Surface Database: PROBLEMS!!!!!!" ) );
 			usAnimSurface = INVALID_ANIMATION_SURFACE;
 		}

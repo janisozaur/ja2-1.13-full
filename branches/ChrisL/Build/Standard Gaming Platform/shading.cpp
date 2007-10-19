@@ -36,7 +36,6 @@ FLOAT	guiBrightPercent = (FLOAT)1.1;
 
 BOOLEAN ShadesCalculateTables(SGPPaletteEntry *p8BPPPalette)
 {
-	PERFORMANCE_MARKER
 UINT32	uiCount;
 
 		// Green palette
@@ -82,7 +81,6 @@ UINT32	uiCount;
 
 BOOLEAN ShadesCalculatePalette(SGPPaletteEntry *pSrcPalette, SGPPaletteEntry *pDestPalette, UINT16 usRed, UINT16 usGreen, UINT16 usBlue, BOOLEAN fMono)
 {
-	PERFORMANCE_MARKER
 UINT32 cnt, lumin;
 UINT32 rmod, gmod, bmod;
 
@@ -118,7 +116,6 @@ UINT32 rmod, gmod, bmod;
 
 void FindIndecies(SGPPaletteEntry *pSrcPalette, SGPPaletteEntry *pMapPalette, UINT8 *pTable)
 {
-	PERFORMANCE_MARKER
 UINT16 usCurIndex, usCurDelta, usCurCount;
 UINT32 *pSavedPtr;
 
@@ -213,7 +210,6 @@ NotThisCol:
 **********************************************************************************************/
 void BuildShadeTable(void)
 {
-	PERFORMANCE_MARKER
 	UINT16 red, green, blue;
 	UINT16 index;
 
@@ -242,7 +238,6 @@ void BuildShadeTable(void)
 **********************************************************************************************/
 void BuildIntensityTable(void)
 {
-	PERFORMANCE_MARKER
 	UINT16 red, green, blue;
 	UINT16 index;
 	FLOAT	dShadedPercent = (FLOAT)0.80;
@@ -288,7 +283,6 @@ void BuildIntensityTable(void)
 
 void SetShadeTablePercent( FLOAT uiShadePercent )
 {
-	PERFORMANCE_MARKER
 	guiShadePercent = uiShadePercent;
 	BuildShadeTable( );
 }
@@ -297,7 +291,6 @@ void SetShadeTablePercent( FLOAT uiShadePercent )
 #ifdef JA2	// Jul. 23 '97 - ALEX - because Wizardry isn't using it & no longer has a version of Set8BPPPalette() available
 void Init8BitTables(void)
 {
-	PERFORMANCE_MARKER
 SGPPaletteEntry Pal[256];
 UINT32 uiCount;
 
@@ -318,7 +311,6 @@ UINT32 uiCount;
 
 BOOLEAN Set8BitModePalette(SGPPaletteEntry *pPal)
 {
-	PERFORMANCE_MARKER
 	ShadesCalculateTables(pPal);
 	Set8BPPPalette(pPal);
 	return(TRUE);

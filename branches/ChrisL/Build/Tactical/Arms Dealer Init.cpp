@@ -34,11 +34,11 @@ UINT8 gubLastSpecialItemAddedAtElement = 255;
 
 
 // THIS STRUCTURE HAS UNCHANGING INFO THAT DOESN'T GET SAVED/RESTORED/RESET
-// TODO: externalize 
-ARMS_DEALER_INFO	ArmsDealerInfo[ NUM_ARMS_DEALERS ] = 
+// TODO: externalize
+ARMS_DEALER_INFO	ArmsDealerInfo[ NUM_ARMS_DEALERS ] =
 {
-									//Buying		Selling	Merc ID#	Type									Initial						Flags	
-									//Price			Price							Of											Cash	
+									//Buying		Selling	Merc ID#	Type									Initial						Flags
+									//Price			Price							Of											Cash
 									//Modifier	Modifier					Dealer
 
 /* Tony	*/					{ 0.75f,	1.25f,	TONY,			ARMS_DEALER_BUYS_SELLS, 15000,	ARMS_DEALER_SOME_USED_ITEMS | ARMS_DEALER_GIVES_CHANGE	},
@@ -124,7 +124,6 @@ void DEALER_SPECIAL_ITEM::initialize()
 {
 	memset(this, 0, SIZEOF_DEALER_SPECIAL_ITEM_POD);
 	object.initialize();
-	PERFORMANCE_MARKER
 }
 
 bool DEALER_SPECIAL_ITEM::operator ==(const DEALER_SPECIAL_ITEM& compare)
@@ -144,7 +143,6 @@ bool DEALER_SPECIAL_ITEM::operator ==(const DEALER_SPECIAL_ITEM& compare)
 
 void InitAllArmsDealers()
 {
-	PERFORMANCE_MARKER
 	UINT8		ubArmsDealer;
 
 	ShutDownArmsDealers();
@@ -161,7 +159,6 @@ void InitAllArmsDealers()
 
 void InitializeOneArmsDealer( UINT8 ubArmsDealer )
 {
-	PERFORMANCE_MARKER
 	UINT16	usItemIndex;
 	UINT8		ubNumItems=0;
 
@@ -202,7 +199,6 @@ void InitializeOneArmsDealer( UINT8 ubArmsDealer )
 
 void ShutDownArmsDealers()
 {
-	PERFORMANCE_MARKER
 	gArmsDealersInventory.clear();
 }
 
@@ -210,7 +206,6 @@ void ShutDownArmsDealers()
 
 BOOLEAN SaveArmsDealerInventoryToSaveGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten;
 	UINT8		ubArmsDealer;
 
@@ -253,6 +248,10 @@ void DEALER_SPECIAL_ITEM::ConvertFrom101(OLD_DEALER_ITEM_HEADER_101& header, OLD
 	if (this->bItemCondition == 0) {
 		return;
 	}
+
+	this->uiRepairDoneTime = special.uiRepairDoneTime;
+	this->ubOwnerProfileId = special.ubOwnerProfileId;
+
 	this->uiOrderArrivalTime = 0;
 	this->ubQtyOnOrder = 0;
 
@@ -275,7 +274,6 @@ void DEALER_SPECIAL_ITEM::ConvertFrom101(OLD_DEALER_ITEM_HEADER_101& header, OLD
 
 void DailyUpdateOfArmsDealersInventory()
 {
-	PERFORMANCE_MARKER
 	// if Gabby has creature blood, start turning it into extra elixir
 	ConvertCreatureBloodToElixir();
 
@@ -293,7 +291,6 @@ void DailyUpdateOfArmsDealersInventory()
 // Once a day, loop through each dealer's inventory items and possibly sell some
 void SimulateArmsDealerCustomer()
 {
-	PERFORMANCE_MARKER
 	UINT8		ubArmsDealer=0;
 	UINT16	usItemIndex;
 	UINT8	ubItemsSold=0;
@@ -367,7 +364,6 @@ void SimulateArmsDealerCustomer()
 
 void DailyCheckOnItemQuantities()
 {
-	PERFORMANCE_MARKER
 	UINT8		ubArmsDealer;
 	UINT16	usItemIndex;
 	UINT8		ubMaxSupply;
@@ -502,7 +498,6 @@ void OrderDealerItems(int armsDealer, int usItem, int numItems, int arrivalDay)
 
 void ConvertCreatureBloodToElixir( void )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubBloodAvailable = 0;
 	UINT8 ubAmountToConvert;
 
@@ -526,7 +521,6 @@ void ConvertCreatureBloodToElixir( void )
 
 BOOLEAN AdjustCertainDealersInventory( )
 {
-	PERFORMANCE_MARKER
 	//Adjust Tony's items (this restocks *instantly* 1/day, doesn't use the reorder system)
 	GuaranteeAtLeastOneItemOfType( ARMS_DEALER_TONY, ARMS_DEALER_BIG_GUNS );
 	LimitArmsDealersInventory( ARMS_DEALER_TONY, ARMS_DEALER_BIG_GUNS, 2 );
@@ -564,7 +558,6 @@ BOOLEAN AdjustCertainDealersInventory( )
 
 void LimitArmsDealersInventory( UINT8 ubArmsDealer, UINT32 uiDealerItemType, UINT8 ubMaxNumberOfItemType )
 {
-	PERFORMANCE_MARKER
 	if( gArmsDealerStatus[ ubArmsDealer ].fOutOfBusiness )
 		return;
 
@@ -701,12 +694,11 @@ void LimitArmsDealersInventory( UINT8 ubArmsDealer, UINT32 uiDealerItemType, UIN
 
 void GuaranteeAtLeastOneItemOfType( UINT8 ubArmsDealer, UINT32 uiDealerItemType )
 {
-	PERFORMANCE_MARKER
 	UINT16 usItemIndex;
 	UINT8 ubChance;
 	UINT32	uiTotalChances = 0;
 	UINT32	uiIndex, uiRandomChoice;
-	
+
 	if( gArmsDealerStatus[ ubArmsDealer ].fOutOfBusiness )
 		return;
 
@@ -747,7 +739,7 @@ void GuaranteeAtLeastOneItemOfType( UINT8 ubArmsDealer, UINT32 uiDealerItemType 
 				{
 					usAvailableItems.push_back(usItemIndex);
 					ubChanceForAvailableItem.push_back(ubChance);
-					uiTotalChances += ubChance; 
+					uiTotalChances += ubChance;
 				}
 			}
 		}
@@ -786,7 +778,6 @@ void GuaranteeAtLeastOneItemOfType( UINT8 ubArmsDealer, UINT32 uiDealerItemType 
 
 void GuaranteeAtLeastXItemsOfIndex( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany )
 {
-	PERFORMANCE_MARKER
 	if( gArmsDealerStatus[ ubArmsDealer ].fOutOfBusiness )
 		return;
 
@@ -823,7 +814,6 @@ void GuaranteeAtLeastXItemsOfIndex( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT
 
 UINT32 GetArmsDealerItemTypeFromItemNumber( UINT16 usItem )
 {
-	PERFORMANCE_MARKER
 	switch( Item[ usItem ].usItemClass )
 	{
 		case IC_NONE:
@@ -971,7 +961,7 @@ UINT32 GetArmsDealerItemTypeFromItemNumber( UINT16 usItem )
 		case IC_THROWN:
 			return( 0 );
 //			return( ARMS_DEALER_THROWN );
-			
+
 			break;
 		case IC_KEY:
 			return( 0 );
@@ -1009,7 +999,6 @@ UINT32 GetArmsDealerItemTypeFromItemNumber( UINT16 usItem )
 
 BOOLEAN IsMercADealer( UINT8 ubMercID )
 {
-	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	// Manny is not actually a valid dealer unless a particular event sets that fact
@@ -1031,7 +1020,6 @@ BOOLEAN IsMercADealer( UINT8 ubMercID )
 
 INT8 GetArmsDealerIDFromMercID( UINT8 ubMercID )
 {
-	PERFORMANCE_MARKER
 	INT8	cnt;
 
 	//loop through the list of arms dealers
@@ -1048,14 +1036,12 @@ INT8 GetArmsDealerIDFromMercID( UINT8 ubMercID )
 
 UINT8 GetTypeOfArmsDealer( UINT8	ubDealerID )
 {
-	PERFORMANCE_MARKER
 	return( ArmsDealerInfo[ ubDealerID ].ubTypeOfArmsDealer );
 }
 
 
 BOOLEAN	DoesDealerDoRepairs( UINT8 ubArmsDealer )
 {
-	PERFORMANCE_MARKER
 	if( ArmsDealerInfo[ ubArmsDealer ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 		return( TRUE );
 	else
@@ -1065,7 +1051,6 @@ BOOLEAN	DoesDealerDoRepairs( UINT8 ubArmsDealer )
 
 BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	INT8		bArmsDealer;
 	BOOLEAN fHaveOnlyUnRepairedItems=FALSE;
 
@@ -1106,7 +1091,6 @@ BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 
 BOOLEAN CanDealerTransactItem( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer )
 {
-	PERFORMANCE_MARKER
 	switch ( ArmsDealerInfo[ ubArmsDealer ].ubTypeOfArmsDealer )
 	{
 		case ARMS_DEALER_SELLS_ONLY:
@@ -1161,7 +1145,6 @@ BOOLEAN CanDealerTransactItem( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN f
 
 BOOLEAN CanDealerRepairItem( UINT8 ubArmsDealer, UINT16 usItemIndex )
 {
-	PERFORMANCE_MARKER
 //	UINT32 uiFlags;
 
 //	uiFlags = Item[ usItemIndex ].fFlags;
@@ -1205,7 +1188,6 @@ BOOLEAN CanDealerRepairItem( UINT8 ubArmsDealer, UINT16 usItemIndex )
 
 void ArmsDealerGetsFreshStock( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubNumItems )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubCnt;
 	UINT8 ubItemCondition = 0;
 	UINT8 ubPerfectOnes = 0;
@@ -1240,7 +1222,6 @@ void ArmsDealerGetsFreshStock( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubN
 
 UINT8 DetermineDealerItemCondition( UINT8 ubArmsDealer, UINT16 usItemIndex )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubCondition = 100;
 
 	// if it's a damagable item, and not a liquid (those are always sold full)
@@ -1261,7 +1242,6 @@ UINT8 DetermineDealerItemCondition( UINT8 ubArmsDealer, UINT16 usItemIndex )
 
 BOOLEAN ItemContainsLiquid( UINT16 usItemIndex )
 {
-	PERFORMANCE_MARKER
 	if(Item[usItemIndex].containsliquid)
 		return TRUE;
 	else
@@ -1304,7 +1284,6 @@ bool ItemIsSpecial(DEALER_SPECIAL_ITEM& item)
 
 UINT16 CountTotalItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer )
 {
-	PERFORMANCE_MARKER
 	UINT16	usItemIndex;
 	UINT16	usHowManyInForRepairs = 0;
 
@@ -1326,7 +1305,6 @@ UINT16 CountTotalItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer )
 
 UINT8 CountSpecificItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer, UINT16 usItemIndex )
 {
-	PERFORMANCE_MARKER
 	UINT8		ubHowManyInForRepairs = 0;
 
 	//if the dealer is not a repair dealer, no need to count, return 0
@@ -1350,7 +1328,6 @@ UINT8 CountSpecificItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer, UINT16 
 
 void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 {
-	PERFORMANCE_MARKER
 
 	// split up all the components of an objecttype and add them as seperate items into the dealer's inventory
 	OBJECTTYPE seperateObject;
@@ -1462,7 +1439,6 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 
 void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubShotsLeft )
 {
-	PERFORMANCE_MARKER
 	// Ammo only, please!!!
 	if (Item [ usItemIndex ].usItemClass != IC_AMMO )
 	{
@@ -1480,7 +1456,7 @@ void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8
 	int numFullMags = 0;
 	if ( ubShotsLeft >= ubMagCapacity )
 	{
-		// add however many FULL magazines the #shot left represents	
+		// add however many FULL magazines the #shot left represents
 		numFullMags = ubShotsLeft / ubMagCapacity;
 		ubShotsLeft %= ubMagCapacity;
 	}
@@ -1511,7 +1487,6 @@ void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8
 //Use AddObjectToArmsDealerInventory() instead of this when converting a complex item in OBJECTTYPE format.
 void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE& object )
 {
-	PERFORMANCE_MARKER
 	//we can only add items to a stack if the item has no attachments (not even default)
 	//and if it is either perfect or ammo (and same amount of ammo)
 	if (object[0]->attachments.empty() == true &&
@@ -1521,7 +1496,7 @@ void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE& object )
 		for (DealerItemList::iterator iter = gArmsDealersInventory[ubArmsDealer].begin();
 			iter != gArmsDealersInventory[ubArmsDealer].end(); ++iter) {
 
-			if (iter->ItemIsInInventory() == true && 
+			if (iter->ItemIsInInventory() == true &&
 				iter->object.usItem == object.usItem &&
 				iter->bItemCondition == object[0]->data.objectStatus) {
 				//won't find objects in for repair
@@ -1548,7 +1523,6 @@ void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE& object )
 // removes ubHowMany items of usItemIndex with the matching Info from dealer ubArmsDealer
 void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany )
 {
-	PERFORMANCE_MARKER
 	if ( ubHowMany == 0)
 	{
 		return;
@@ -1575,7 +1549,6 @@ void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, 
 
 void RemoveRandomItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany )
 {
-	PERFORMANCE_MARKER
 
 	//ADB, ya, a whole 1 line of extra code!
 	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
@@ -1619,7 +1592,6 @@ void RemoveRandomItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemI
 
 BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 {
-	PERFORMANCE_MARKER
 	INT8	bArmsDealer;
 	//Get Dealer ID from from merc Id
 	bArmsDealer = GetArmsDealerIDFromMercID( ubMercID );
@@ -1687,7 +1659,6 @@ void CreateObjectForDealer( int usItem, int status, int numObjects, OBJECTTYPE *
 
 void MakeObjectOutOfDealerItems( DEALER_SPECIAL_ITEM *pSpclItemInfo, OBJECTTYPE *pObject )
 {
-	PERFORMANCE_MARKER
 	INT8 bItemCondition;
 	if (pSpclItemInfo != NULL) {
 		bItemCondition = pSpclItemInfo->bItemCondition;
@@ -1700,6 +1671,7 @@ void MakeObjectOutOfDealerItems( DEALER_SPECIAL_ITEM *pSpclItemInfo, OBJECTTYPE 
 		bItemCondition = (*pObject)[0]->data.objectStatus;
 	}
 
+
 	//if the item condition is below 0, the item is in for repairs, so flip the sign
 	if( bItemCondition < 0 )
 	{
@@ -1708,25 +1680,23 @@ void MakeObjectOutOfDealerItems( DEALER_SPECIAL_ITEM *pSpclItemInfo, OBJECTTYPE 
 
 	for (int subObject = 0; subObject < pObject->ubNumberOfObjects; ++subObject) {
 		(*pObject)[subObject]->data.objectStatus = bItemCondition;
+
 		// if it's a gun
 		if (Item [ pObject->usItem ].usItemClass == IC_GUN )
 		{
-			// Empty out the bullets put in by CreateItem().	We now sell all guns empty of bullets.	This is so that we don't 
+			// Empty out the bullets put in by CreateItem().	We now sell all guns empty of bullets.	This is so that we don't
 			// have to keep track of #bullets in a gun throughout dealer inventory.	Without this, players could "reload" guns
 			// they don't have ammo for by selling them to Tony & buying them right back fully loaded!	One could repeat this
 			// ad nauseum (empty the gun between visits) as a (really expensive) way to get unlimited special ammo like rockets.
 			(*pObject)[subObject]->data.gun.ubGunShotsLeft = 0;
 		}
 	}
-
-
 }
 
 
 
 void GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, UINT8 ubOwnerProfileId )
 {
-	PERFORMANCE_MARKER
 
 
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
@@ -1766,7 +1736,6 @@ void GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, U
 //PLEASE: Use GiveObjectToArmsDealerForRepair() instead of this when repairing a item in OBJECTTYPE format.
 void GiveItemToArmsDealerforRepair( UINT8 ubArmsDealer, OBJECTTYPE* pObject, UINT8 ubOwnerProfileId )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiTimeWhenFreeToStartIt;
 	UINT32	uiMinutesToFix;
 	UINT32	uiMinutesShopClosedBeforeItsDone;
@@ -1804,7 +1773,6 @@ void GiveItemToArmsDealerforRepair( UINT8 ubArmsDealer, OBJECTTYPE* pObject, UIN
 
 UINT32 WhenWillRepairmanBeAllDoneRepairing( UINT8 ubArmsDealer )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiWhenFree;
 
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
@@ -1834,7 +1802,6 @@ UINT32 WhenWillRepairmanBeAllDoneRepairing( UINT8 ubArmsDealer )
 
 UINT32 CalculateObjectItemRepairTime( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiRepairTime = 0;
 
 	for (int x = 0; x < pItemObject->ubNumberOfObjects; ++x) {
@@ -1857,7 +1824,6 @@ UINT32 CalculateObjectItemRepairTime( UINT8 ubArmsDealer, OBJECTTYPE *pItemObjec
 
 UINT32 CalculateSimpleItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 bItemCondition )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiTimeToRepair = 0;
 	UINT32	uiRepairCost = 0;
 
@@ -1894,7 +1860,6 @@ UINT32 CalculateSimpleItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, IN
 
 UINT32 CalculateObjectItemRepairCost( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiRepairCost = 0;
 
 	for (int x = 0; x < pItemObject->ubNumberOfObjects; ++x) {
@@ -1916,7 +1881,6 @@ UINT32 CalculateObjectItemRepairCost( UINT8 ubArmsDealer, OBJECTTYPE *pItemObjec
 
 UINT32 CalculateSimpleItemRepairCost( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 bItemCondition )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiItemCost = 0;
 	UINT32	uiRepairCost = 0;
 	INT16		sRepairCostAdj = 0;
@@ -1966,7 +1930,6 @@ UINT32 CalculateSimpleItemRepairCost( UINT8 ubArmsDealer, UINT16 usItemIndex, IN
 
 BOOLEAN DoesItemAppearInDealerInventoryList( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer )
 {
-	PERFORMANCE_MARKER
 	DEALER_POSSIBLE_INV *pDealerInv=NULL;
 	UINT16 usCnt;
 
@@ -1999,7 +1962,6 @@ BOOLEAN DoesItemAppearInDealerInventoryList( UINT8 ubArmsDealer, UINT16 usItemIn
 
 UINT16 CalcValueOfItemToDealer( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerSelling )
 {
-	PERFORMANCE_MARKER
 	UINT16 usBasePrice;
 	UINT8 ubItemPriceClass;
 	UINT8 ubDealerPriceClass;
@@ -2120,7 +2082,6 @@ UINT16 CalcValueOfItemToDealer( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN 
 
 void GuaranteeMinimumAlcohol( UINT8 ubArmsDealer )
 {
-	PERFORMANCE_MARKER
 	GuaranteeAtLeastXItemsOfIndex( ubArmsDealer, BEER,		( UINT8 ) ( GetDealersMaxItemAmount( ubArmsDealer, BEER ) / 3 ) );
 	GuaranteeAtLeastXItemsOfIndex( ubArmsDealer, WINE,		( UINT8 ) ( GetDealersMaxItemAmount( ubArmsDealer, WINE ) / 3 ) );
 	GuaranteeAtLeastXItemsOfIndex( ubArmsDealer, ALCOHOL, ( UINT8 ) ( GetDealersMaxItemAmount( ubArmsDealer, ALCOHOL ) / 3 ) );
@@ -2130,7 +2091,6 @@ void GuaranteeMinimumAlcohol( UINT8 ubArmsDealer )
 
 BOOLEAN ItemIsARocketRifle( INT16 sItemIndex )
 {
-	PERFORMANCE_MARKER
 	if ( Item[sItemIndex].fingerprintid	)
 	{
 		return( TRUE );
@@ -2145,7 +2105,6 @@ BOOLEAN ItemIsARocketRifle( INT16 sItemIndex )
 
 BOOLEAN GetArmsDealerShopHours( UINT8 ubArmsDealer, UINT32 *puiOpeningTime, UINT32 *puiClosingTime )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
 	pSoldier = FindSoldierByProfileID( ArmsDealerInfo[ ubArmsDealer ].ubShopKeeperID, FALSE );
@@ -2168,7 +2127,6 @@ BOOLEAN GetArmsDealerShopHours( UINT8 ubArmsDealer, UINT32 *puiOpeningTime, UINT
 
 UINT32 CalculateOvernightRepairDelay( UINT8 ubArmsDealer, UINT32 uiTimeWhenFreeToStartIt, UINT32 uiMinutesToFix )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiOpeningTime, uiClosingTime;
 	UINT32 uiMinutesClosedOvernight;
 	UINT32 uiDelayInDays = 0;
@@ -2212,7 +2170,6 @@ UINT32 CalculateOvernightRepairDelay( UINT8 ubArmsDealer, UINT32 uiTimeWhenFreeT
 
 UINT32 CalculateMinutesClosedBetween( UINT8 ubArmsDealer, UINT32 uiStartTime, UINT32 uiEndTime )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiOpeningTime, uiClosingTime;
 	UINT32 uiMinutesClosedOvernight;
 	UINT32 uiDaysDifference = 0;

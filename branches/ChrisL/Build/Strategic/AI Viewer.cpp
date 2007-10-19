@@ -42,7 +42,7 @@
 #endif
 
 #ifdef JA2BETAVERSION
-	
+
 #define VIEWER_LEFT			15
 #define VIEWER_TOP			15
 #define VIEWER_WIDTH		417
@@ -183,9 +183,9 @@ BOOLEAN gfRenderMap;
 BOOLEAN gfViewEnemies = TRUE;
 INT8		gbViewLevel = 0;
 
-UINT16 gusBlue;	
-UINT16 gusLtBlue; 
-UINT16 gusDkBlue; 
+UINT16 gusBlue;
+UINT16 gusLtBlue;
+UINT16 gusDkBlue;
 
 INT16 gsAINumAdmins = -1;
 INT16 gsAINumTroops = -1;
@@ -231,7 +231,6 @@ CHAR16 gwGroupTypeString[ NUM_ENEMY_INTENTIONS ][ 20 ] =
 
 void StringFromValue( STR16 str, INT32 iValue, UINT32 uiMax )
 {
-	PERFORMANCE_MARKER
 	if( iValue < 0 )			//a blank string is determined by a negative value.
 		str[0] = '\0';
 	else if( (UINT32)iValue > uiMax )	//higher than max attribute value, so convert it to the max.
@@ -242,7 +241,6 @@ void StringFromValue( STR16 str, INT32 iValue, UINT32 uiMax )
 
 BOOLEAN CreateAIViewer()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	CHAR16 str[6];
 
@@ -253,7 +251,7 @@ BOOLEAN CreateAIViewer()
 	//INT32 iMaxEnemyGroupSize = iniReader.ReadInteger("Options","MAX_STRATEGIC_TEAM_SIZE",20);
 
 	//Check to see if data exists.
-	if( !FileExists( "DevTools\\arulco.sti" )			|| 
+	if( !FileExists( "DevTools\\arulco.sti" )			||
 			!FileExists( "DevTools\\icons.sti" )			||
 			!FileExists( "DevTools\\SmCheckbox.sti" ) )
 	{
@@ -277,106 +275,106 @@ BOOLEAN CreateAIViewer()
 	gfRenderViewer = TRUE;
 
 	//Create all of the buttons here
-	iViewerButton[ VIEWER_EXIT ] = 
+	iViewerButton[ VIEWER_EXIT ] =
 		CreateTextButton(L"Exit", BLOCKFONT2, FONT_RED, FONT_BLACK, BUTTON_USE_DEFAULT,
-		585, 425, 50, 30, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, 
+		585, 425, 50, 30, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		ViewerExitCallback );
 
-	iViewerButton[ VIEWER_TIMEPANEL ] = 
+	iViewerButton[ VIEWER_TIMEPANEL ] =
 		CreateTextButton( WORLDTIMESTR, FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		VIEWER_RIGHT + 3, 0, 88, 20, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, BUTTON_NO_CALLBACK,
 		BUTTON_NO_CALLBACK );
 	DisableButton( iViewerButton[ VIEWER_TIMEPANEL ] );
 	SpecifyDisabledButtonStyle( iViewerButton[ VIEWER_TIMEPANEL ], DISABLED_STYLE_NONE );
-	iViewerButton[ COMPRESSION0 ] = 
+	iViewerButton[ COMPRESSION0 ] =
 		CreateTextButton( L"0", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		VIEWER_RIGHT + 3, 20, 17, 16, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		Compression0Callback );
-	iViewerButton[ COMPRESSION5 ] = 
+	iViewerButton[ COMPRESSION5 ] =
 		CreateTextButton( L"5", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		VIEWER_RIGHT + 20, 20, 17, 16, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		Compression5Callback );
-	iViewerButton[ COMPRESSION15 ] = 
+	iViewerButton[ COMPRESSION15 ] =
 		CreateTextButton( L"15", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		VIEWER_RIGHT + 37, 20, 18, 16, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		Compression15Callback );
-	iViewerButton[ COMPRESSION60 ] = 
+	iViewerButton[ COMPRESSION60 ] =
 		CreateTextButton( L"60", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		VIEWER_RIGHT + 55, 20, 18, 16, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		Compression60Callback );
 /*
-	iViewerButton[ COMPRESSION6H ] = 
+	iViewerButton[ COMPRESSION6H ] =
 		CreateTextButton( L"6H", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		VIEWER_RIGHT + 73, 20, 18, 16, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		Compression6HCallback );
 */
 
-	iViewerButton[ VIEWER_RESET ] = 
+	iViewerButton[ VIEWER_RESET ] =
 		CreateTextButton( L"Reset Enemies", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		526, 0, 114, 20, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, BUTTON_NO_CALLBACK,
 		BUTTON_NO_CALLBACK );
 	DisableButton( iViewerButton[ VIEWER_RESET ] );
 	SpecifyDisabledButtonStyle( iViewerButton[ VIEWER_RESET ], DISABLED_STYLE_NONE );
-	iViewerButton[ RESET_EASY ] = 
+	iViewerButton[ RESET_EASY ] =
 		CreateTextButton( L"Easy", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		526, 20, 35, 16, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		EasyCallback );
-	iViewerButton[ RESET_NORMAL ] = 
+	iViewerButton[ RESET_NORMAL ] =
 		CreateTextButton( L"Normal", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		561, 20, 44, 16, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		NormalCallback );
-	iViewerButton[ RESET_HARD ] = 
+	iViewerButton[ RESET_HARD ] =
 		CreateTextButton( L"Hard", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		605, 20, 35, 16, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		HardCallback );
 
-	iViewerButton[ TEST_INCOMING_4SIDES ] = 
+	iViewerButton[ TEST_INCOMING_4SIDES ] =
 		CreateTextButton( L"Incoming 4 Sides", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		VIEWER_RIGHT + 20, 100, 120, 18, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		TestIncoming4SidesCallback );
-	iViewerButton[ START_CREATURE_QUEST ] = 
+	iViewerButton[ START_CREATURE_QUEST ] =
 		CreateTextButton( L"Start Creature Quest", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		VIEWER_RIGHT + 20, 125, 120, 18, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		StartCreatureQuestCallback );
-	iViewerButton[ SPREAD_CREATURES ] = 
+	iViewerButton[ SPREAD_CREATURES ] =
 		CreateTextButton( L"Spread Creatures", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		VIEWER_RIGHT + 20, 150, 120, 18, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		SpreadCreaturesCallback );
-	iViewerButton[ CREATURE_ATTACK ] = 
+	iViewerButton[ CREATURE_ATTACK ] =
 		CreateTextButton( L"Creature Attack", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		VIEWER_RIGHT + 20, 175, 120, 18, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		CreatureAttackCallback );
 
-	iViewerButton[ QUEEN_AWAKE_TOGGLE ] = 
+	iViewerButton[ QUEEN_AWAKE_TOGGLE ] =
 		CreateCheckBoxButton(	104, VIEWER_BOTTOM + 22, "DevTools//SmCheckbox.sti", MSYS_PRIORITY_HIGH, ToggleQueenAwake );
 	if( gfQueenAIAwake )
 	{
 		ButtonList[ iViewerButton[ QUEEN_AWAKE_TOGGLE ] ]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 
-	iViewerButton[ RELOAD_SECTOR ] = 
+	iViewerButton[ RELOAD_SECTOR ] =
 		CreateTextButton( L"Override Sector", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		10, VIEWER_BOTTOM + 5, 90, 18, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		ReloadSectorCallback );
 
-	iViewerButton[ VIEW_ENEMIES ] = 
+	iViewerButton[ VIEW_ENEMIES ] =
 		CreateTextButton( L"View Enemies", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		VIEWER_RIGHT + 13, 40, 90, 20, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		ViewEnemiesCallback );
-	iViewerButton[ VIEW_CREATURES ] = 
+	iViewerButton[ VIEW_CREATURES ] =
 		CreateTextButton( L"View Creatures", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		VIEWER_RIGHT + 103, 40, 90, 20, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		ViewCreaturesCallback );
 
-	iViewerButton[ BASEMENT1_BTN ] = 
+	iViewerButton[ BASEMENT1_BTN ] =
 		CreateTextButton( L"B1", FONT16ARIAL, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		VIEWER_RIGHT + 58, 60, 30, 24, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		B1Callback );
-	iViewerButton[ BASEMENT2_BTN ] = 
+	iViewerButton[ BASEMENT2_BTN ] =
 		CreateTextButton( L"B2", FONT16ARIAL, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		VIEWER_RIGHT + 88, 60, 30, 24, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		B2Callback );
-	iViewerButton[ BASEMENT3_BTN ] = 
+	iViewerButton[ BASEMENT3_BTN ] =
 		CreateTextButton( L"B3", FONT16ARIAL, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
 		VIEWER_RIGHT + 118, 60, 30, 24, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		B3Callback );
@@ -404,7 +402,7 @@ BOOLEAN CreateAIViewer()
 	ButtonList[ iViewerButton[ RESET_EASY + gGameOptions.ubDifficultyLevel - DIF_LEVEL_EASY ] ]->uiFlags |= BUTTON_CLICKED_ON;
 	ButtonList[ iViewerButton[ COMPRESSION0 ] ]->uiFlags |= BUTTON_CLICKED_ON;
 	if( !GamePaused() )
-		SetGameMinutesPerSecond( 0 );	
+		SetGameMinutesPerSecond( 0 );
 	ClearViewerRegion( 0, 0, 640, 480 );
 
 	return TRUE;
@@ -412,7 +410,6 @@ BOOLEAN CreateAIViewer()
 
 void DestroyAIViewer()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	gfExitViewer = FALSE;
 	gfViewerEntry = TRUE;
@@ -432,7 +429,6 @@ void DestroyAIViewer()
 
 void ClearViewerRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 {
-	PERFORMANCE_MARKER
 	ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, sTop, sRight, sBottom, gusBlue );
 	InvalidateRegion( sLeft, sTop, sRight, sBottom );
 
@@ -454,7 +450,6 @@ void ClearViewerRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 
 void RenderStationaryGroups()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hVObject;
 	SECTORINFO *pSector;
 	INT32 x, y, xp, yp;
@@ -539,7 +534,6 @@ void RenderStationaryGroups()
 
 void RenderMovingGroupsAndMercs()
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	HVOBJECT hVObject;
 	INT32 x, y;
@@ -638,7 +632,7 @@ void RenderMovingGroupsAndMercs()
 				if( !pGroup->pWaypoints )
 				{
 					if( GetJA2Clock() % 1000 < 750 )
-					{	
+					{
 						SetFontForeground( FONT_WHITE );
 					}
 				}
@@ -653,7 +647,6 @@ void RenderMovingGroupsAndMercs()
 
 void RenderInfoInSector()
 {
-	PERFORMANCE_MARKER
 	UINT8 ubSectorX, ubSectorY;
 	UINT8 ubMercs=0, ubActive=0, ubUnconcious=0, ubCollapsed=0;
 	INT32 i, yp;
@@ -692,7 +685,7 @@ void RenderInfoInSector()
 		ubSectorY = (UINT8)gsSelSectorY;
 	}
 	else
-	{ 
+	{
 		return;
 	}
 
@@ -712,7 +705,7 @@ void RenderInfoInSector()
 				{
 					if( pSoldier->bBreath < OKBREATH )
 						ubCollapsed++;
-					else							
+					else
 						ubActive++;
 				}
 				else
@@ -754,18 +747,18 @@ void RenderInfoInSector()
 			ubMercs, ubActive, ubUnconcious, ubCollapsed );
 		yp += 10;
 		SetFontForeground( FONT_LTBLUE );
-		mprintf( 280, yp, L"Militia:	(%d Green, %d Regular, %d Elite)", 
+		mprintf( 280, yp, L"Militia:	(%d Green, %d Regular, %d Elite)",
 			pSector->ubNumberOfCivsAtLevel[0], pSector->ubNumberOfCivsAtLevel[1], pSector->ubNumberOfCivsAtLevel[2] );
 		yp += 10;
 		SetFontForeground( FONT_ORANGE );
-		mprintf( 280, yp, L"Garrison:	(%d:%d Admins, %d:%d Troops, %d:%d Elites)", 
-			pSector->ubAdminsInBattle, pSector->ubNumAdmins, 
-			pSector->ubTroopsInBattle, pSector->ubNumTroops, 
+		mprintf( 280, yp, L"Garrison:	(%d:%d Admins, %d:%d Troops, %d:%d Elites)",
+			pSector->ubAdminsInBattle, pSector->ubNumAdmins,
+			pSector->ubTroopsInBattle, pSector->ubNumTroops,
 			pSector->ubElitesInBattle, pSector->ubNumElites );
 		yp += 10;
 		mprintf( 280, yp, L"%d Groups:	(%d:%d Admins, %d:%d Troops, %d:%d Elites)", ubNumGroups,
-			ubAdminsInBattle, ubNumAdmins, 
-			ubTroopsInBattle, ubNumTroops, 
+			ubAdminsInBattle, ubNumAdmins,
+			ubTroopsInBattle, ubNumTroops,
 			ubElitesInBattle, ubNumElites );
 		yp += 10;
 		SetFontForeground( FONT_WHITE );
@@ -811,12 +804,11 @@ void RenderInfoInSector()
 			yp += 10;
 		}
 	}
-	
+
 }
 
 void RenderViewer()
 {
-	PERFORMANCE_MARKER
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	SGPRect ClipRect;
@@ -929,7 +921,6 @@ void RenderViewer()
 
 void ViewerExitCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfExitViewer = TRUE;
@@ -938,7 +929,6 @@ void ViewerExitCallback( GUI_BUTTON *btn, INT32 reason )
 
 void HandleViewerInput()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	InputAtom Event;
 	while( DequeueEvent( &Event ) )
@@ -1038,7 +1028,6 @@ void HandleViewerInput()
 
 void EasyCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iViewerButton[ RESET_EASY ] ]->uiFlags |= BUTTON_CLICKED_ON;
@@ -1057,7 +1046,6 @@ void EasyCallback( GUI_BUTTON *btn, INT32 reason )
 
 void NormalCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iViewerButton[ RESET_EASY ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
@@ -1076,7 +1064,6 @@ void NormalCallback( GUI_BUTTON *btn, INT32 reason )
 
 void HardCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iViewerButton[ RESET_EASY ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
@@ -1095,7 +1082,6 @@ void HardCallback( GUI_BUTTON *btn, INT32 reason )
 
 void ViewerMapMoveCallback( MOUSE_REGION *reg, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	static INT16 gsPrevX = 0, gsPrevY = 0;
 	//calc current sector highlighted.
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
@@ -1117,7 +1103,6 @@ void ViewerMapMoveCallback( MOUSE_REGION *reg, INT32 reason )
 
 void ViewerMapClickCallback( MOUSE_REGION *reg, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	static INT16 sLastX = -1, sLastY = -1;
 	//calc current sector selected.
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
@@ -1137,7 +1122,6 @@ void ViewerMapClickCallback( MOUSE_REGION *reg, INT32 reason )
 
 UINT32	AIViewerScreenInit()
 {
-	PERFORMANCE_MARKER
 	gfViewerEntry = TRUE;
 	gusBlue		= Get16BPPColor( FROMRGB(	65,	79,	94 ) );
 	gusLtBlue = Get16BPPColor( FROMRGB( 122, 124, 121 ) );
@@ -1147,7 +1131,6 @@ UINT32	AIViewerScreenInit()
 
 UINT32	AIViewerScreenHandle()
 {
-	PERFORMANCE_MARKER
 	StartFrameBufferRender();
 
 	RestoreBackgroundRects();
@@ -1167,7 +1150,7 @@ UINT32	AIViewerScreenHandle()
 		gfRenderViewer = TRUE;
 		SpecifyButtonText( iViewerButton[ VIEWER_TIMEPANEL ], WORLDTIMESTR );
 	}
-	
+
 	HandleViewerInput();
 	RenderViewer();
 
@@ -1191,13 +1174,11 @@ UINT32	AIViewerScreenHandle()
 
 UINT32	AIViewerScreenShutdown()
 {
-	PERFORMANCE_MARKER
 	return TRUE;
 }
 
 void Compression0Callback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iViewerButton[ COMPRESSION0 ] ]->uiFlags |= BUTTON_CLICKED_ON;
@@ -1211,7 +1192,6 @@ void Compression0Callback( GUI_BUTTON *btn, INT32 reason )
 
 void Compression5Callback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iViewerButton[ COMPRESSION0 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
@@ -1226,7 +1206,6 @@ void Compression5Callback( GUI_BUTTON *btn, INT32 reason )
 
 void Compression15Callback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iViewerButton[ COMPRESSION0 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
@@ -1241,7 +1220,6 @@ void Compression15Callback( GUI_BUTTON *btn, INT32 reason )
 
 void Compression60Callback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iViewerButton[ COMPRESSION0 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
@@ -1256,7 +1234,6 @@ void Compression60Callback( GUI_BUTTON *btn, INT32 reason )
 
 void Compression6HCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iViewerButton[ COMPRESSION0 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
@@ -1271,7 +1248,6 @@ void Compression6HCallback( GUI_BUTTON *btn, INT32 reason )
 
 void TestIncoming4SidesCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		GROUP *pGroup;
@@ -1337,7 +1313,6 @@ void TestIncoming4SidesCallback( GUI_BUTTON *btn, INT32 reason )
 
 void StartCreatureQuestCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		//Madd: wtf?	gGameOptions.ubGameStyle == STYLE_PLATINUM;
@@ -1349,7 +1324,6 @@ void StartCreatureQuestCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SpreadCreaturesCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfRenderMap = TRUE;
@@ -1368,7 +1342,6 @@ void SpreadCreaturesCallback( GUI_BUTTON *btn, INT32 reason )
 
 void CreatureAttackCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if( ( gsSelSectorX != 0 ) && ( gsSelSectorX != 0 ) )
@@ -1387,7 +1360,6 @@ void CreatureAttackCallback( GUI_BUTTON *btn, INT32 reason )
 
 void ViewEnemiesCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfViewEnemies = TRUE;
@@ -1402,7 +1374,6 @@ void ViewEnemiesCallback( GUI_BUTTON *btn, INT32 reason )
 
 void ViewCreaturesCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfViewEnemies = FALSE;
@@ -1420,7 +1391,6 @@ void ViewCreaturesCallback( GUI_BUTTON *btn, INT32 reason )
 
 void B1Callback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfRenderMap = TRUE;
@@ -1432,7 +1402,6 @@ void B1Callback( GUI_BUTTON *btn, INT32 reason )
 
 void B2Callback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfRenderMap = TRUE;
@@ -1444,7 +1413,6 @@ void B2Callback( GUI_BUTTON *btn, INT32 reason )
 
 void B3Callback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfRenderMap = TRUE;
@@ -1456,7 +1424,6 @@ void B3Callback( GUI_BUTTON *btn, INT32 reason )
 
 void ReloadSectorCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfOverrideSector = TRUE;
@@ -1469,11 +1436,10 @@ void ReloadSectorCallback( GUI_BUTTON *btn, INT32 reason )
 
 void ExtractAndUpdatePopulations()
 {
-	PERFORMANCE_MARKER
 
 
 	//Kaiden: Loading INI file to read Values...
-	//Tag for later - this is one of the reasons the 
+	//Tag for later - this is one of the reasons the
 	// Map Editor won't compile. And I feel stupid about it.
 	// Pointing to a static location for the INI file.
 	// Not only bad, the file is no longer there.
@@ -1495,7 +1461,6 @@ void ExtractAndUpdatePopulations()
 
 void ToggleQueenAwake( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if( btn->uiFlags & BUTTON_CLICKED_ON )
@@ -1562,7 +1527,6 @@ CHAR16 EnemyTypeString[ POP_TABLE_ENEMY_TYPES ][ 10 ] =
 
 void PrintEnemyPopTable()
 {
-	PERFORMANCE_MARKER
 	UINT16 usX, usY;
 	UINT16 usEnemyPopTable[ TABLE_ENEMY_RANKS ][ POP_TABLE_ENEMY_TYPES ];
 	UINT32 uiSector = 0;
@@ -1740,7 +1704,6 @@ CHAR16 EnemiesKilledString[ KILLED_TABLE_ROWS ][ 10 ] =
 
 void PrintEnemiesKilledTable()
 {
-	PERFORMANCE_MARKER
 	UINT16 usX, usY;
 	UINT16 usEnemiesKilledTable[ TABLE_ENEMY_RANKS ][ KILLED_TABLE_ROWS ];
 	UINT8	ubEnemyRank;
@@ -1858,7 +1821,6 @@ void PrintEnemiesKilledTable()
 
 UINT8 ChooseEnemyIconColor( UINT8 ubAdmins, UINT8 ubTroops, UINT8 ubElites )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubIconColor;
 
 	// The colors are:
@@ -1898,7 +1860,6 @@ UINT8 ChooseEnemyIconColor( UINT8 ubAdmins, UINT8 ubTroops, UINT8 ubElites )
 
 void BlitGroupIcon( UINT8 ubIconType, UINT8 ubIconColor, UINT32 uiX, UINT32 uiY, HVOBJECT hVObject )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubObjectIndex;
 
 	Assert( ubIconType < NUM_ICON_TYPES );
@@ -1912,7 +1873,6 @@ void BlitGroupIcon( UINT8 ubIconType, UINT8 ubIconColor, UINT32 uiX, UINT32 uiY,
 
 void PrintDetailedEnemiesInSectorInfo( INT32 iScreenX, INT32 iScreenY, UINT8 ubSectorX, UINT8 ubSectorY )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	GROUP *pGroup;
 	INT32 iDesired, iSurplus;
@@ -2078,7 +2038,7 @@ void PrintDetailedEnemiesInSectorInfo( INT32 iScreenX, INT32 iScreenY, UINT8 ubS
 
 				mprintf( iScreenX, iScreenY, wString );
 				iScreenY += 10;
-			
+
 				ubGroupCnt++;
 
 				// no room on screen to display info for more than 3 groups in one sector!

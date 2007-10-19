@@ -151,7 +151,6 @@ UINT8 CountAllMilitiaInFiveSectors(INT16 sMapX, INT16 sMapY)
 
 UINT8 MilitiaInFiveSectorsOfRank( INT16 sMapX, INT16 sMapY, UINT8 ubRank )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubResult = 0;
 	UINT16 pusMoveDir[4][3];
 	UINT8 ubDirNumber, ubIndex;

@@ -3,7 +3,7 @@
 	#include "HelpScreen.h"
 	#include "Multilingual Text Code Generator.h"
 	#include "INIReader.h"
-	
+
 #else
 	#include "builddefines.h"
 	#include <stdio.h>
@@ -48,7 +48,7 @@
 	#include "laptop.h"
 	#include "Shade Table Util.h"
 	#include "Exit Grids.h"
-	#include "Summary Info.h" 
+	#include "Summary Info.h"
 	#include "GameSettings.h"
 	#include "Game Init.h"
 	#include "Init.h"
@@ -100,7 +100,6 @@ extern OBJECTTYPE GLOCK_17_ForUseWithLOS;
 
 BOOLEAN LoadExternalGameplayData(STR directoryName)
 {
-	PERFORMANCE_MARKER
 	char fileName[MAX_PATH];
 
 	// WANNE: Enemy drops - begin
@@ -134,7 +133,7 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	if(!ReadInEnemyArmourDropsStats(gEnemyArmourDrops, fileName))
 		return FALSE;
 	// WANNE: Enemy drops - end
-	
+
 	// WANNE: Sector Loadscreens [2007-05-18]
 	strcpy(fileName, directoryName);
 	strcat(fileName, SECTORLOADSCREENSFILENAME);
@@ -195,8 +194,8 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 // since I tweaked the xml_items.cpp to make it work :p
 // So for instance, the german file would be called German.Items.xml and would only contain
 // the uiIndex (for reference), szItemName, szLongItemName, szItemDesc, szBRName, and szBRDesc tags
- 
-#ifdef GERMAN 
+
+#ifdef GERMAN
 	strcpy(fileName, directoryName);
 	strcat(fileName, GERMAN_PREFIX);
 	strcat(fileName, ITEMSFILENAME);
@@ -207,7 +206,7 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 			return FALSE;
 	}
 #endif
-#ifdef RUSSIAN 
+#ifdef RUSSIAN
 	strcpy(fileName, directoryName);
 	strcat(fileName, RUSSIAN_PREFIX);
 	strcat(fileName, ITEMSFILENAME);
@@ -246,7 +245,7 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	strcat(fileName, LAUNCHABLESFILENAME);
 	if(!ReadInLaunchableStats(fileName))
 		return FALSE;
-	
+
 	strcpy(fileName, directoryName);
 	strcat(fileName, COMPATIBLEFACEITEMSFILENAME);
 	if(!ReadInCompatibleFaceItemStats(fileName))
@@ -269,7 +268,7 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	strcat(fileName, EXPLOSIVESFILENAME);
 	if(!ReadInExplosiveStats(fileName))
 		return FALSE;
-	
+
 	strcpy(fileName, directoryName);
 	strcat(fileName, ARMOURSFILENAME);
 	if(!ReadInArmourStats(fileName))
@@ -406,7 +405,7 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	strcat(fileName, CITYTABLEFILENAME);
 	if(!ReadInMapStructure(fileName))
 		return FALSE;
-		
+
 	// Lesh: Strategic movement costs will be read in Strategic\Strategic Movement Costs.cpp,
 	//		function BOOLEAN InitStrategicMovementCosts();
 	//		It is called several times from various places and acts after clearing SectorInfo array
@@ -422,7 +421,7 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	strcat(fileName, SAMSITESFILENAME);
 	if ( !ReadInSAMInfo(fileName) )
 		return FALSE;
-	
+
 	// Lesh: army externalization
 	strcpy(fileName, directoryName);
 	strcat(fileName, GARRISONFILENAME);
@@ -457,7 +456,6 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 
 UINT32 InitializeJA2(void)
 {
-	PERFORMANCE_MARKER 
 
 #ifdef LASERLOCK_ENABLED
 	HandleLaserLockResult( PrepareLaserLockSystem() );
@@ -472,7 +470,7 @@ UINT32 InitializeJA2(void)
 	{
 		return( ERROR_SCREEN );
 	}
-	
+
 	// Load external text
 	LoadAllExternalText();
 
@@ -481,7 +479,7 @@ UINT32 InitializeJA2(void)
 
 	gsRenderCenterX = 805;
 	gsRenderCenterY = 805;
- 
+
 
 	// Init data
 	InitializeSystemVideoObjects( );
@@ -502,7 +500,7 @@ UINT32 InitializeJA2(void)
 	{
 		return( ERROR_SCREEN );
 	}
-	
+
 	//needs to be called here to init the SectorInfo struct
 	if ( !InitStrategicMovementCosts( ) )
 	{
@@ -524,7 +522,7 @@ UINT32 InitializeJA2(void)
 
 	// INit intensity tables
 	BuildIntensityTable( );
-	
+
 	// Init Event Manager
 	if ( !InitializeEventManager( ) )
 	{
@@ -555,6 +553,7 @@ UINT32 InitializeJA2(void)
 	//ADB When a merc calcs CTGT for a thrown item he uses a GLOCK temp item
 	//but we don't want to recreate it every single time CTGT is called, so init the GLOCK here
 	CreateItem(GLOCK_17, 100, &GLOCK_17_ForUseWithLOS);
+
 
 #ifdef JA2BETAVERSION
 	#ifdef JA2EDITOR
@@ -649,7 +648,6 @@ UINT32 InitializeJA2(void)
 
 void ShutdownJA2(void)
 {
-	PERFORMANCE_MARKER 
 	UINT32 uiIndex;
 
 	// Clear screen....
@@ -659,7 +657,7 @@ void ShutdownJA2(void)
 	SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 
 	RefreshScreen( NULL );
-		
+
 	ShutdownStrategicLayer();
 
 	// remove temp files built by laptop
@@ -670,7 +668,7 @@ void ShutdownJA2(void)
 
 	// Shutdown Screens
 	for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
-	{ 
+	{
 	(*(GameScreens[uiIndex].ShutdownScreen))();
 	}
 
@@ -712,7 +710,6 @@ void ShutdownJA2(void)
 
 BOOLEAN PrepareLaserLockSystem()
 {
-	PERFORMANCE_MARKER
 	INT32	iInitRetVal=0;
 	INT32	iRunRetVal=0;
 	INT32	iCheckRetVal=0;
@@ -750,7 +747,7 @@ BOOLEAN PrepareLaserLockSystem()
 	iCheckRetVal = LASERLOK_Check();
 	if( iCheckRetVal != 0 )
 		goto FAILED_LASERLOK;
-	
+
 	//Restore back to the proper directory
 	SetFileManCurrentDirectory( zDirectory );
 	return( TRUE );
@@ -763,7 +760,6 @@ FAILED_LASERLOK:
 
 void HandleLaserLockResult( BOOLEAN fSuccess )
 {
-	PERFORMANCE_MARKER
 	if( !fSuccess )
 	{
 		CHAR8	zString[512];

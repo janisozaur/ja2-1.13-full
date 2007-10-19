@@ -56,7 +56,7 @@ void GiveIMPItems( MERCPROFILESTRUCT *pProfile, INT8 abilityValue, UINT8 typeInd
 UINT32 giIMPConfirmButton[ 2 ];
 UINT32 giIMPConfirmButtonImage[ 2 ];
 BOOLEAN fNoAlreadySelected = FALSE;
-UINT16 uiEyeXPositions[ ]={ 
+UINT16 uiEyeXPositions[ ]={
 	8,
 	9,
 	8,
@@ -76,7 +76,7 @@ UINT16 uiEyeXPositions[ ]={
 };
 
 UINT16 uiEyeYPositions[ ]=
-{ 
+{
 	5,
 	4,
 	5,
@@ -158,7 +158,6 @@ void BtnIMPConfirmYes( GUI_BUTTON *btn,INT32 reason );
 
 void EnterIMPConfirm( void )
 {
-	PERFORMANCE_MARKER
 	// create buttons
 	CreateConfirmButtons( );
 	return;
@@ -166,13 +165,12 @@ void EnterIMPConfirm( void )
 
 void RenderIMPConfirm( void )
 {
-	PERFORMANCE_MARKER
 
 	// the background
 	RenderProfileBackGround( );
-	
+
 		// indent
-	RenderAvgMercIndentFrame(90, 40 ); 
+	RenderAvgMercIndentFrame(90, 40 );
 
 	// highlight answer
 	PrintImpText( );
@@ -182,7 +180,6 @@ void RenderIMPConfirm( void )
 
 void ExitIMPConfirm( void )
 {
-	PERFORMANCE_MARKER
 
 	// destroy buttons
 	DestroyConfirmButtons( );
@@ -191,47 +188,44 @@ void ExitIMPConfirm( void )
 
 void HandleIMPConfirm( void )
 {
-	PERFORMANCE_MARKER
 	return;
 }
 
 void CreateConfirmButtons( void )
 {
-	PERFORMANCE_MARKER
 	// create buttons for confirm screen
-	
+
 	giIMPConfirmButtonImage[0]=	LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
-	giIMPConfirmButton[0] = CreateIconAndTextButton( giIMPConfirmButtonImage[0], pImpButtonText[ 16 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPConfirmButton[0] = CreateIconAndTextButton( giIMPConfirmButtonImage[0], pImpButtonText[ 16 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X +	( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 254 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPConfirmYes);
-	
+
 	giIMPConfirmButtonImage[1]=	LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
-	giIMPConfirmButton[1] = CreateIconAndTextButton( giIMPConfirmButtonImage[ 1 ], pImpButtonText[ 17 ], FONT12ARIAL, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														FONT_WHITE, DEFAULT_SHADOW, 
-														TEXT_CJUSTIFIED, 
+	giIMPConfirmButton[1] = CreateIconAndTextButton( giIMPConfirmButtonImage[ 1 ], pImpButtonText[ 17 ], FONT12ARIAL,
+														FONT_WHITE, DEFAULT_SHADOW,
+														FONT_WHITE, DEFAULT_SHADOW,
+														TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X +	( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 314 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPConfirmNo);
- 
+
  SetButtonCursor(giIMPConfirmButton[ 0 ], CURSOR_WWW);
  SetButtonCursor(giIMPConfirmButton[ 1 ], CURSOR_WWW);
-	
+
 	return;
 }
 
 
 void DestroyConfirmButtons( void )
 {
-	PERFORMANCE_MARKER
 	// destroy buttons for confirm screen
-	
+
 	RemoveButton(giIMPConfirmButton[ 0 ] );
 	UnloadButtonImage(giIMPConfirmButtonImage[ 0 ] );
 
-	
+
 	RemoveButton(giIMPConfirmButton[ 1 ] );
 	UnloadButtonImage(giIMPConfirmButtonImage[ 1 ] );
 	return;
@@ -241,7 +235,6 @@ void DestroyConfirmButtons( void )
 
 BOOLEAN AddCharacterToPlayersTeam( void )
 {
-	PERFORMANCE_MARKER
 
 	MERC_HIRE_STRUCT HireMercStruct;
 
@@ -290,7 +283,6 @@ BOOLEAN AddCharacterToPlayersTeam( void )
 
 void	BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP Homepage About US button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -327,10 +319,10 @@ void	BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
 			AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(LaptopSaveInfo.iIMPIndex), GetWorldTotalMin( ), - ( COST_OF_PROFILE ) );
 		AddHistoryToPlayersLog( HISTORY_CHARACTER_GENERATED, 0,GetWorldTotalMin( ), -1, -1 );
 			AddCharacterToPlayersTeam( );
-			
+
 			// write the created imp merc
 			WriteOutCurrentImpCharacter( ( UINT8 )( LaptopSaveInfo.iIMPIndex ) );
-		
+
 			fButtonPendingFlag = TRUE;
 			iCurrentImpPage = IMP_HOME_PAGE;
 
@@ -351,18 +343,17 @@ void	BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
 
 			//Display a popup msg box telling the user when and where the merc will arrive
 			//DisplayPopUpBoxExplainingMercArrivalLocationAndTime( LaptopSaveInfo.iIMPIndex );
-		
+
 			//reset the id of the last merc so we dont get the DisplayPopUpBoxExplainingMercArrivalLocationAndTime() pop up box in another screen by accident
 			LaptopSaveInfo.sLastHiredMerc.iIdOfMerc = -1;
 		}
 	}
-	
+
 }
 
 // fixed? by CJC Nov 28 2002
 void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
 {
-	PERFORMANCE_MARKER
 		// btn callback for IMP Homepage About US button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
@@ -403,7 +394,6 @@ void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
 /*
 void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
 {
-	PERFORMANCE_MARKER
 	
 
 		// btn callback for IMP Homepage About US button
@@ -553,7 +543,6 @@ void DistributeInitialGear(MERCPROFILESTRUCT *pProfile)
 
 void GiveItemsToPC( UINT8 ubProfileId )
 {
-	PERFORMANCE_MARKER
 	MERCPROFILESTRUCT *pProfile;
 
 
@@ -567,7 +556,7 @@ void GiveItemsToPC( UINT8 ubProfileId )
 
 	GiveIMPItems(pProfile, 100, IMP_DEFAULT);
 	GiveIMPRandomItems(pProfile, IMP_RANDOMDEFAULT);
-	
+
 
 	// kevlar vest, leggings, & helmet
 //	MakeProfileInvItemThisSlot(pProfile, VESTPOS, FLAK_JACKET, 100, 1);
@@ -585,7 +574,7 @@ void GiveItemsToPC( UINT8 ubProfileId )
 
 	GiveIMPItems (pProfile,pProfile->bMarksmanship,IMP_MARKSMANSHIP);
 
-	
+
 	//Give ANY imp the calico
 //	MakeProfileInvItemThisSlot( pProfile, HANDPOS, M950, 100, 1);
 
@@ -688,7 +677,7 @@ void GiveItemsToPC( UINT8 ubProfileId )
 //		MakeProfileInvItemAnySlot(pProfile, SILENCER, 100, 1);
 		GiveIMPRandomItems(pProfile,IMP_STEALTHY);
 	}
-	
+
 	if (PROFILE_HAS_SKILL_TRAIT(pProfile, KNIFING))
 	{
 //		MakeProfileInvItemAnySlot(pProfile, COMBAT_KNIFE, 100, 1);
@@ -744,7 +733,6 @@ void GiveItemsToPC( UINT8 ubProfileId )
 
 void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany)
 {
-	PERFORMANCE_MARKER
 	INT32 iSlot = -1;
 
 	if((UsingNewInventorySystem() == false))
@@ -946,7 +934,6 @@ INT32 SpecificFreePocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHow
 
 void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany)
 {
-	PERFORMANCE_MARKER
 	pProfile->inv[uiPos]				= usItem;
 	pProfile->bInvStatus[uiPos] = ubStatus;
 	pProfile->bInvNumber[uiPos] = ubHowMany;
@@ -1025,7 +1012,6 @@ INT32 PickPocket(MERCPROFILESTRUCT *pProfile, UINT8 ppStart, UINT8 ppStop, UINT1
 
 INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHowMany)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiPos;
 
 	if (ubHowMany == 1)
@@ -1114,7 +1100,6 @@ INT32 AnyFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, INVNODE *tInv)
 
 void WriteOutCurrentImpCharacter( INT32 iProfileId )
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("WriteOutCurrentImpCharacter: IMP.dat"));
 	char zImpFileName[13];
 	strcpy(zImpFileName,IMP_MERC_FILENAME);
@@ -1123,7 +1108,7 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId )
 
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("WriteOutCurrentImpCharacter: Nickname.dat"));
-	
+
 	char zFileName[13];
 	char temp;
 
@@ -1141,7 +1126,6 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId )
 
 void WriteOutCurrentImpCharacter( INT32 iProfileId, STR fileName )
 {
-	PERFORMANCE_MARKER
 	// grab the profile number and write out what is contained there in 
 	HWFILE hFile;
 	UINT32 uiBytesWritten = 0;
@@ -1183,7 +1167,6 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId, STR fileName )
 
 BOOLEAN ImpExists ( STR nickName )
 {
-	PERFORMANCE_MARKER
 	char zFileName[13];
 
 	strcpy(zFileName,nickName);
@@ -1197,7 +1180,6 @@ BOOLEAN ImpExists ( STR nickName )
 
 BOOLEAN LoadImpCharacter( STR nickName )
 {
-	PERFORMANCE_MARKER
 	INT32 iProfileId = 0;
 	HWFILE hFile;
 	UINT32 uiBytesRead = 0;
@@ -1218,7 +1200,6 @@ BOOLEAN LoadImpCharacter( STR nickName )
 	}
 
 	// read in the profile
-
 	if (!FileRead(hFile, &iProfileId, sizeof( INT32 ), &uiBytesRead))
 	{
 		DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
@@ -1249,7 +1230,7 @@ BOOLEAN LoadImpCharacter( STR nickName )
 
 		// close file
 		FileClose(hFile);
-		
+
 		if( LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE )
 		{
 			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 3 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
@@ -1257,7 +1238,7 @@ BOOLEAN LoadImpCharacter( STR nickName )
 			// not enough
 			return FALSE;
 		}
-		
+
 
 		// charge the player
 		// is the character male?
@@ -1293,7 +1274,6 @@ BOOLEAN LoadImpCharacter( STR nickName )
 
 void ResetIMPCharactersEyesAndMouthOffsets( UINT8 ubMercProfileID )
 {
-	PERFORMANCE_MARKER
 	// ATE: Check boundary conditions!
 	if( ( ( gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200 ) > 16 ) || ( ubMercProfileID >= PROF_HUMMER ) )
 	{
@@ -1311,7 +1291,6 @@ void ResetIMPCharactersEyesAndMouthOffsets( UINT8 ubMercProfileID )
 
 void GiveIMPRandomItems( MERCPROFILESTRUCT *pProfile, UINT8 typeIndex )
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("GiveIMPRandomItems: typeIndex = %d",typeIndex ));
 
 	UINT16 usItem = 0;
@@ -1354,7 +1333,6 @@ void GiveIMPRandomItems( MERCPROFILESTRUCT *pProfile, UINT8 typeIndex )
 
 void GiveIMPItems( MERCPROFILESTRUCT *pProfile, INT8 abilityValue, UINT8 typeIndex )
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("GiveIMPItems: typeIndex = %d, abilityValue = %d",typeIndex,abilityValue ));
 
 	UINT16 usItem = 0;

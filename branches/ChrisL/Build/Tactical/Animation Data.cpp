@@ -41,7 +41,7 @@ INT8				gbAnimUsageHistory[ NUMANIMATIONSURFACETYPES ][ MAX_NUM_SOLDIERS ];
 
 AnimationSurfaceType	gAnimSurfaceDatabase[ NUMANIMATIONSURFACETYPES ] =
 {
-	RGMBASICWALKING,		"ANIMS\\S_MERC\\S_R_WALK.STI",	S_STRUCT,		0,			8, TO_INIT, NULL, NULL, 0, -1, 
+	RGMBASICWALKING,		"ANIMS\\S_MERC\\S_R_WALK.STI",	S_STRUCT,		0,			8, TO_INIT, NULL, NULL, 0, -1,
 	RGMSTANDING,				"ANIMS\\S_MERC\\S_R_STD.STI",		S_STRUCT,		0,			8, TO_INIT, NULL, NULL, 0, -1,
 	RGMCROUCHING,				"ANIMS\\S_MERC\\S_R_C.STI",			C_STRUCT,		0,		8, TO_INIT, NULL, NULL, 0, -1,
 	RGMSNEAKING,				"ANIMS\\S_MERC\\S_R_SWAT.STI",	C_STRUCT,		0,			8, TO_INIT, NULL, NULL, 0, -1,
@@ -314,7 +314,7 @@ AnimationSurfaceType	gAnimSurfaceDatabase[ NUMANIMATIONSURFACETYPES ] =
 	RGFCROWBAR,					"ANIMS\\F_MERC\\F_CROBAR.STI",	S_STRUCT,		0,			8, TO_INIT, NULL, NULL, 0, -1,
 	RGFJUMPOVER,				"ANIMS\\F_MERC\\F_N_RUN.STI",		NO_STRUCT,	0,			8, TO_INIT, NULL, NULL, 0, -1,
 
-	
+
 	AFMONSTERSTANDING,			"ANIMS\\MONSTERS\\MN_BREAT.STI",	S_STRUCT,	0,			8, TO_INIT, NULL, NULL, 0, -1,
 	AFMONSTERWALKING,				"ANIMS\\MONSTERS\\MN_WALK.STI",		S_STRUCT,	0,			8, TO_INIT, NULL, NULL, 0, -1,
 	AFMONSTERATTACK,				"ANIMS\\MONSTERS\\MN_ATTAK.STI",	S_STRUCT,	0,			8, TO_INIT, NULL, NULL, 0, -1,
@@ -325,7 +325,7 @@ AnimationSurfaceType	gAnimSurfaceDatabase[ NUMANIMATIONSURFACETYPES ] =
 	AFMUP,									"ANIMS\\MONSTERS\\MN_UP.STI",			S_STRUCT,	0,			8, TO_INIT, NULL, NULL, 0, -1,
 	AFMJUMP,								"ANIMS\\MONSTERS\\MN_JUMP.STI",		S_STRUCT,	0,			8, TO_INIT, NULL, NULL, 0, -1,
 	AFMMELT,								"ANIMS\\MONSTERS\\MN_MELT.STI",		S_STRUCT,	0,			8, TO_INIT, NULL, NULL, 0, -1,
-	
+
 
 	LVBREATH,								"ANIMS\\MONSTERS\\L_BREATH.STI",	S_STRUCT,	0,			8, TO_INIT, NULL, NULL, 0, -1,
 	LVDIE,									"ANIMS\\MONSTERS\\L_DIE.STI",			S_STRUCT,	0,			8, TO_INIT, NULL, NULL, 0, -1,
@@ -454,7 +454,7 @@ AnimationSurfaceType	gAnimSurfaceDatabase[ NUMANIMATIONSURFACETYPES ] =
 	TANKNE_READY,				"ANIMS\\VEHICLES\\TNK2_ROT.STI",	S_STRUCT,	ANIM_DATA_FLAG_NOFRAMES,	32, TO_INIT, NULL, NULL, 0, -1,
 	TANKNE_SHOOT,				"ANIMS\\VEHICLES\\TNK2_SHT.STI",	S_STRUCT,	0,												8,	TO_INIT, NULL, NULL, 0, -1,
 	TANKNE_DIE,					"ANIMS\\VEHICLES\\TK2_WREK.STI",	S_STRUCT,	0,												1,	TO_INIT, NULL, NULL, 0, -1,
-	//Kaiden: Below, I have replaced HUMMER2.STI with 
+	//Kaiden: Below, I have replaced HUMMER2.STI with
 	// ELDORADO.STI and JEEP.STI respectively,
 	// This has not been tested for effect, however,
 	// It should not result in anything worse than
@@ -642,7 +642,7 @@ AnimationStructureType	gAnimStructureDatabase[ TOTALBODYTYPES ][ NUM_STRUCT_IDS 
 	"ANIMS\\STRUCTDATA\\CR_PRONE.JSD",		NULL,
 	"ANIMS\\STRUCTDATA\\CR_PRONE.JSD",		NULL,
 	"ANIMS\\STRUCTDATA\\M_CROUCH.JSD",		NULL, // default
-	
+
 	// CAT
 	"ANIMS\\STRUCTDATA\\CT_BREATH.JSD",		NULL,
 	"ANIMS\\STRUCTDATA\\CT_BREATH.JSD",		NULL,
@@ -714,7 +714,6 @@ AnimationStructureType	gAnimStructureDatabase[ TOTALBODYTYPES ][ NUM_STRUCT_IDS 
 
 BOOLEAN InitAnimationSystem( )
 {
-	PERFORMANCE_MARKER
 	INT32									cnt1, cnt2;
 	CHAR8									sFilename[50];
 	STRUCTURE_FILE_REF		*pStructureFileRef;
@@ -743,7 +742,7 @@ BOOLEAN InitAnimationSystem( )
 					SET_ERROR(	"Animation structure file load failed - %s", sFilename );
 				}
 				gAnimStructureDatabase[ cnt1 ][ cnt2 ].pStructureFileRef = pStructureFileRef;
-			}	
+			}
 		}
 	}
 
@@ -752,7 +751,6 @@ BOOLEAN InitAnimationSystem( )
 
 BOOLEAN DeInitAnimationSystem( )
 {
-	PERFORMANCE_MARKER
 	INT32									cnt1, cnt2;
 
 	for ( cnt1 = 0; cnt1 < NUMANIMATIONSURFACETYPES; cnt1++ )
@@ -787,14 +785,13 @@ BOOLEAN DeInitAnimationSystem( )
 
 STRUCTURE_FILE_REF	*InternalGetAnimationStructureRef( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState, BOOLEAN fUseAbsolute )
 {
-	PERFORMANCE_MARKER
 	INT8	bStructDataType;
 
 	if ( usSurfaceIndex == INVALID_ANIMATION_SURFACE )
 	{
 		return( NULL );
 	}
-	
+
 	bStructDataType = gAnimSurfaceDatabase[ usSurfaceIndex ].bStructDataType;
 
 	if ( bStructDataType == NO_STRUCT )
@@ -805,33 +802,30 @@ STRUCTURE_FILE_REF	*InternalGetAnimationStructureRef( UINT16 usSoldierID, UINT16
 	// ATE: Alright - we all hate exception coding but ness here...
 	// return STANDING struct for these - which start standing but end prone
 	// CJC August 14 2002: added standing burst hit to this list
-	if ( ( usAnimState == FALLFORWARD_FROMHIT_STAND || usAnimState == GENERIC_HIT_STAND || 
+	if ( ( usAnimState == FALLFORWARD_FROMHIT_STAND || usAnimState == GENERIC_HIT_STAND ||
 			usAnimState == FALLFORWARD_FROMHIT_CROUCH || usAnimState == STANDING_BURST_HIT ) && !fUseAbsolute )
 	{
 		return( gAnimStructureDatabase[ MercPtrs[ usSoldierID ]->ubBodyType ][ S_STRUCT ].pStructureFileRef );
 	}
-	
+
 	return( gAnimStructureDatabase[ MercPtrs[ usSoldierID ]->ubBodyType ][ bStructDataType ].pStructureFileRef );
 }
 
 
 STRUCTURE_FILE_REF	*GetAnimationStructureRef( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState )
 {
-	PERFORMANCE_MARKER
 	return( InternalGetAnimationStructureRef( usSoldierID, usSurfaceIndex, usAnimState, FALSE ) );
 }
 
 
 STRUCTURE_FILE_REF	*GetDefaultStructureRef( UINT16 usSoldierID )
 {
-	PERFORMANCE_MARKER
 	return( gAnimStructureDatabase[ MercPtrs[ usSoldierID ]->ubBodyType ][ DEFAULT_STRUCT ].pStructureFileRef );
 }
 
 // Surface mamagement functions
 BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState )
 {
-	PERFORMANCE_MARKER
 	AuxObjectData *pAuxData;
 
 	if (usSurfaceIndex == 251)
@@ -892,7 +886,7 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 			// Valid auxiliary data, so get # od frames from data
 			pAuxData = ( AuxObjectData* ) hImage->pAppData;
 
-			gAnimSurfaceDatabase[ usSurfaceIndex ].uiNumFramesPerDir = pAuxData->ubNumberOfFrames;			
+			gAnimSurfaceDatabase[ usSurfaceIndex ].uiNumFramesPerDir = pAuxData->ubNumberOfFrames;
 
 		}
 		else
@@ -926,7 +920,7 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 				SET_ERROR(	"Animation structure ZStrip creation error: %s", sFilename );
 				return( FALSE );
 			}
-			
+
 		}
 
 	// the hImage is no longer needed
@@ -947,7 +941,7 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 	{
 		AnimDebugMsg( String( "Surface Database: Incrementing Usage %d ( Soldier %d )", usSurfaceIndex, usSoldierID ) );
 		// Increment usage count
-		gAnimSurfaceDatabase[ usSurfaceIndex ].bUsageCount++;	
+		gAnimSurfaceDatabase[ usSurfaceIndex ].bUsageCount++;
 		// Set history for particular sodlier
 		gbAnimUsageHistory[ usSurfaceIndex ][ usSoldierID ]++;
 
@@ -959,7 +953,6 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 
 BOOLEAN UnLoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex )
 {
-	PERFORMANCE_MARKER
 
 	if (usSurfaceIndex == 251)
 	{
@@ -972,7 +965,7 @@ BOOLEAN UnLoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex )
 	{
 		// Decrement usage count
 		AnimDebugMsg( String( "Surface Database: Decrementing Usage %d ( Soldier %d )", usSurfaceIndex, usSoldierID ) );
-		gAnimSurfaceDatabase[ usSurfaceIndex ].bUsageCount--;	
+		gAnimSurfaceDatabase[ usSurfaceIndex ].bUsageCount--;
 		// Set history for particular sodlier
 		gbAnimUsageHistory[ usSurfaceIndex ][ usSoldierID ] = 0;
 
@@ -992,7 +985,7 @@ BOOLEAN UnLoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex )
 		gAnimSurfaceDatabase[ usSurfaceIndex ].bUsageCount = 0;
 	}
 
-	
+
 
 
 	// Check if count has reached zero and delet if so
@@ -1012,7 +1005,6 @@ BOOLEAN UnLoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex )
 
 void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID )
 {
-	PERFORMANCE_MARKER
 	UINT32 cnt;
 
 	for( cnt = 0; cnt < NUMANIMATIONSURFACETYPES; cnt++ )
@@ -1024,7 +1016,6 @@ void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID )
 
 BOOLEAN LoadAnimationProfiles( )
 {
-	PERFORMANCE_MARKER
 //	FILE *			pInput;
 	HWFILE			pInput;
 	INT32				iProfileCount, iDirectionCount, iTileCount;
@@ -1107,7 +1098,6 @@ BOOLEAN LoadAnimationProfiles( )
 
 void DeleteAnimationProfiles( )
 {
-	PERFORMANCE_MARKER
 	INT32				iProfileCount, iDirectionCount;
 	ANIM_PROF					*pProfile;
 	ANIM_PROF_DIR			*pProfileDir;
@@ -1138,13 +1128,12 @@ void DeleteAnimationProfiles( )
 
 void ZeroAnimSurfaceCounts( )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	for ( cnt = 0; cnt < NUMANIMATIONSURFACETYPES; cnt++ )
 	{
 	gAnimSurfaceDatabase[ cnt ].bUsageCount	= 0;
-	gAnimSurfaceDatabase[ cnt ].hVideoObject	= NULL;	
+	gAnimSurfaceDatabase[ cnt ].hVideoObject	= NULL;
 	}
 
 	memset( gbAnimUsageHistory, 0, sizeof( gbAnimUsageHistory ) );

@@ -53,10 +53,9 @@ void RemoveCivilianTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
 void RemoveEnemySoldierTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	PERFORMANCE_MARKER
 	CHAR8		zMapName[ 128 ];
 	if( GetSectorFlagStatus( sSectorX, sSectorY, bSectorZ, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS ) )
-	{ 
+	{
 		//Delete any temp file that is here and toast the flag that say's one exists.
 		ReSetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS );
 
@@ -73,11 +72,10 @@ void RemoveEnemySoldierTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 
 void RemoveCivilianTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	PERFORMANCE_MARKER
 	//CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
 	if( GetSectorFlagStatus( sSectorX, sSectorY, bSectorZ, SF_CIV_PRESERVED_TEMP_FILE_EXISTS ) )
-	{ 
+	{
 		//Delete any temp file that is here and toast the flag that say's one exists.
 		ReSetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_CIV_PRESERVED_TEMP_FILE_EXISTS );
 		//GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
@@ -90,10 +88,9 @@ void RemoveCivilianTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 }
 
 
-//OLD SAVE METHOD:	This is the old way of loading the enemies and civilians 
+//OLD SAVE METHOD:	This is the old way of loading the enemies and civilians
 BOOLEAN LoadEnemySoldiersFromTempFile()
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
@@ -110,7 +107,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	UINT8 ubSectorID;
 	UINT8 ubNumElites = 0, ubNumTroops = 0, ubNumAdmins = 0, ubNumCreatures = 0;
 	UINT8 ubStrategicElites, ubStrategicTroops, ubStrategicAdmins, ubStrategicCreatures;
-	
+
 	gfRestoringEnemySoldiersFromTempFile = TRUE;
 
 	//STEP ONE:	Set up the temp file to read from.
@@ -148,9 +145,9 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 		#endif
 		goto FAIL_LOAD;
 	}
-	
+
 	LoadSoldierInitListLinks( hfile );
-	
+
 	//STEP THREE:	read the data
 
 	FileRead( hfile, &sSectorX, 2, &uiNumBytesRead );
@@ -203,7 +200,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
 		return TRUE;
 	}
-	
+
 	if( gbWorldSectorZ != bSectorZ )
 	{
 		#ifdef JA2TESTVERSION
@@ -278,7 +275,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 
 		curr = gSoldierInitHead;
 		while( curr )
-		{	
+		{
 			if( !curr->pBasicPlacement->fPriorityExistance )
 			{
 				if( !curr->pDetailedPlacement || curr->pDetailedPlacement && curr->pDetailedPlacement->ubProfile == NO_PROFILE )
@@ -296,7 +293,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 							//now replace the map pristine placement info with the temp map file version..
 							*curr->pDetailedPlacement = tempDetailedPlacement;
 						}
-						
+
 						curr->pBasicPlacement->fPriorityExistance	=	TRUE;
 						curr->pBasicPlacement->ubDirection					= curr->pDetailedPlacement->ubDirection;
 						curr->pBasicPlacement->bOrders						= curr->pDetailedPlacement->bOrders;
@@ -306,10 +303,10 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 						curr->pBasicPlacement->ubSoldierClass			= curr->pDetailedPlacement->ubSoldierClass;
 						curr->pBasicPlacement->ubCivilianGroup		= curr->pDetailedPlacement->ubCivilianGroup;
 						curr->pBasicPlacement->fHasKeys						= curr->pDetailedPlacement->fHasKeys;
-						curr->pBasicPlacement->sStartingGridNo		= curr->pDetailedPlacement->sInsertionGridNo;				
+						curr->pBasicPlacement->sStartingGridNo		= curr->pDetailedPlacement->sInsertionGridNo;
 
 						curr->pBasicPlacement->bPatrolCnt			= curr->pDetailedPlacement->bPatrolCnt;
-						memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid, 
+						memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid,
 							sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
 
 						if( curr->pBasicPlacement->bTeam == CIV_TEAM )
@@ -323,28 +320,28 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 							switch( curr->pBasicPlacement->ubSoldierClass )
 							{
 								case SOLDIER_CLASS_ELITE:
-									ubNumElites++;							
+									ubNumElites++;
 									if( ubNumElites < ubStrategicElites )
 									{
 										AddPlacementToWorld( curr );
 									}
 									break;
-								case SOLDIER_CLASS_ARMY:						
-									ubNumTroops++;							
+								case SOLDIER_CLASS_ARMY:
+									ubNumTroops++;
 									if( ubNumTroops < ubStrategicTroops )
 									{
 										AddPlacementToWorld( curr );
 									}
 									break;
-								case SOLDIER_CLASS_ADMINISTRATOR:		
-									ubNumAdmins++;							
+								case SOLDIER_CLASS_ADMINISTRATOR:
+									ubNumAdmins++;
 									if( ubNumAdmins < ubStrategicAdmins )
 									{
 										AddPlacementToWorld( curr );
 									}
 									break;
-								case SOLDIER_CLASS_CREATURE:				
-									ubNumCreatures++;						
+								case SOLDIER_CLASS_CREATURE:
+									ubNumCreatures++;
 									if( ubNumCreatures < ubStrategicCreatures )
 									{
 										AddPlacementToWorld( curr );
@@ -359,7 +356,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 			curr = curr->next;
 		}
 	}
-	
+
 	FileRead( hfile, &ubSectorID, 1, &uiNumBytesRead );
 	if( uiNumBytesRead != 1 )
 	{
@@ -394,7 +391,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	return TRUE;
 
 	FAIL_LOAD:
-		//The temp file load failed either because of IO problems related to hacking/logic, or 
+		//The temp file load failed either because of IO problems related to hacking/logic, or
 		//various checks failed for hacker validation.	If we reach this point, the "error: exit game"
 		//dialog would appear in a non-testversion.
 		FileClose( hfile );
@@ -408,7 +405,6 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 //OLD SAVE METHOD:	This is the older way of saving the civilian and the enemies placement into a temp file
 BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8	ubFirstIdTeam, UINT8 ubLastIdTeam, BOOLEAN fAppendToFile )
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	SOLDIERTYPE *pSoldier;
 	INT32 i;
@@ -436,7 +432,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 				curr = curr->next;
 			}
 			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
-			{ //found a match.	
+			{ //found a match.
 
 				if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME) )
 				{
@@ -459,7 +455,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 						}
 					}
 
-					//we don't want the player to think that all the enemies start in the exact position when we 
+					//we don't want the player to think that all the enemies start in the exact position when we
 					//left the map, so randomize the start locations either current position or original position.
 					if( PreRandom( 2 ) )
 					{ //use current position
@@ -540,7 +536,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 		{
 			goto FAIL_SAVE;
 		}
-		
+
 		FileSeek( hfile, 0, FILE_SEEK_FROM_END );
 	}
 	else
@@ -571,11 +567,11 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 			goto FAIL_SAVE;
 		}
 
-		//This check may appear confusing.	It is intended to abort if the player is saving the game.	It is only 
+		//This check may appear confusing.	It is intended to abort if the player is saving the game.	It is only
 		//supposed to preserve the links to the placement list, so when we finally do leave the level with enemies remaining,
 		//we will need the links that are only added when the map is loaded, and are normally lost when restoring a save.
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
-		{	
+		{
 			slots = 0;
 		}
 
@@ -591,7 +587,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 		{
 			goto FAIL_SAVE;
 		}
-		
+
 		FileWrite( hfile, &bSectorZ, 1, &uiNumBytesWritten );
 		if( uiNumBytesWritten != 1 )
 		{
@@ -601,7 +597,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 	{
-		//if we are saving the game, we don't need to preserve the soldier information, just 
+		//if we are saving the game, we don't need to preserve the soldier information, just
 		//preserve the links to the placement list.
 		slots = 0;
 		FileClose( hfile );
@@ -620,7 +616,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 				curr = curr->next;
 			}
 			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
-			{ //found a match.	
+			{ //found a match.
 				if ( !curr->pDetailedPlacement->Save(hfile, FALSE) )
 				{
 					goto FAIL_SAVE;
@@ -652,7 +648,6 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 
 BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
@@ -669,7 +664,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	UINT8 ubSectorID;
 	UINT8 ubNumElites = 0, ubNumTroops = 0, ubNumAdmins = 0, ubNumCreatures = 0;
 	UINT8 ubStrategicElites, ubStrategicTroops, ubStrategicAdmins, ubStrategicCreatures;
-	
+
 	gfRestoringEnemySoldiersFromTempFile = TRUE;
 
 	//STEP ONE:	Set up the temp file to read from.
@@ -709,7 +704,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 		ubNumAdmins = pSector->ubNumAdmins;
 		ubNumCreatures = pSector->ubNumCreatures;
 	}
-	
+
 	if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
 		// Get the number of enemies form the temp file
@@ -753,10 +748,10 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 		#endif
 		goto FAIL_LOAD;
 	}
-	
+
 //	LoadSoldierInitListLinks( hfile );
 	NewWayOfLoadingEnemySoldierInitListLinks( hfile );
-	
+
 	//STEP THREE:	read the data
 
 	FileRead( hfile, &sSectorX, 2, &uiNumBytesRead );
@@ -884,7 +879,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 		}
 		curr = gSoldierInitHead;
 		while( curr )
-		{	
+		{
 			if( !curr->pBasicPlacement->fPriorityExistance )
 			{
 				if( curr->pBasicPlacement->bTeam == tempDetailedPlacement.bTeam )
@@ -899,7 +894,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 					{
 						*curr->pDetailedPlacement = tempDetailedPlacement;
 					}
-					
+
 					curr->pBasicPlacement->fPriorityExistance	=	TRUE;
 					curr->pBasicPlacement->ubDirection					= curr->pDetailedPlacement->ubDirection;
 					curr->pBasicPlacement->bOrders						= curr->pDetailedPlacement->bOrders;
@@ -909,10 +904,10 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 					curr->pBasicPlacement->ubSoldierClass			= curr->pDetailedPlacement->ubSoldierClass;
 					curr->pBasicPlacement->ubCivilianGroup		= curr->pDetailedPlacement->ubCivilianGroup;
 					curr->pBasicPlacement->fHasKeys						= curr->pDetailedPlacement->fHasKeys;
-					curr->pBasicPlacement->sStartingGridNo		= curr->pDetailedPlacement->sInsertionGridNo;				
+					curr->pBasicPlacement->sStartingGridNo		= curr->pDetailedPlacement->sInsertionGridNo;
 
 					curr->pBasicPlacement->bPatrolCnt			= curr->pDetailedPlacement->bPatrolCnt;
-					memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid, 
+					memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid,
 						sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
 
 
@@ -920,28 +915,28 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 					switch( curr->pBasicPlacement->ubSoldierClass )
 					{
 						case SOLDIER_CLASS_ELITE:
-							ubNumElites++;							
+							ubNumElites++;
 							if( ubNumElites <= ubStrategicElites )
 							{
 //def:								AddPlacementToWorld( curr );
 							}
 							break;
-						case SOLDIER_CLASS_ARMY:						
-							ubNumTroops++;							
+						case SOLDIER_CLASS_ARMY:
+							ubNumTroops++;
 							if( ubNumTroops <= ubStrategicTroops )
 							{
 //def:								AddPlacementToWorld( curr );
 							}
 							break;
-						case SOLDIER_CLASS_ADMINISTRATOR:		
-							ubNumAdmins++;							
+						case SOLDIER_CLASS_ADMINISTRATOR:
+							ubNumAdmins++;
 							if( ubNumAdmins <= ubStrategicAdmins )
 							{
 //def:								AddPlacementToWorld( curr );
 							}
 							break;
-						case SOLDIER_CLASS_CREATURE:				
-							ubNumCreatures++;						
+						case SOLDIER_CLASS_CREATURE:
+							ubNumCreatures++;
 							if( ubNumCreatures <= ubStrategicCreatures )
 							{
 //def:								AddPlacementToWorld( curr );
@@ -954,7 +949,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 			curr = curr->next;
 		}
 	}
-	
+
 	FileRead( hfile, &ubSectorID, 1, &uiNumBytesRead );
 	if( uiNumBytesRead != 1 )
 	{
@@ -1026,7 +1021,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	return TRUE;
 
 	FAIL_LOAD:
-		//The temp file load failed either because of IO problems related to hacking/logic, or 
+		//The temp file load failed either because of IO problems related to hacking/logic, or
 		//various checks failed for hacker validation.	If we reach this point, the "error: exit game"
 		//dialog would appear in a non-testversion.
 		FileClose( hfile );
@@ -1041,7 +1036,6 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr, *temp;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
@@ -1060,7 +1054,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	UINT8 ubSectorID;
 	BOOLEAN fDeleted;
 //	UINT8 ubStrategicElites, ubStrategicTroops, ubStrategicAdmins, ubStrategicCreatures;
-	
+
 	gfRestoringCiviliansFromTempFile = TRUE;
 
 	//STEP ONE:	Set up the temp file to read from.
@@ -1097,7 +1091,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 		#endif
 		goto FAIL_LOAD;
 	}
-	
+
 	//LoadSoldierInitListLinks( hfile );
 	NewWayOfLoadingCivilianInitListLinks( hfile );
 
@@ -1136,7 +1130,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 		#endif
 		goto FAIL_LOAD;
 	}
-	
+
 	uiTimeSinceLastLoaded = GetWorldTotalMin() - uiTimeStamp;
 
 	FileRead( hfile, &bSectorZ, 1, &uiNumBytesRead );
@@ -1197,7 +1191,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 		}
 		curr = gSoldierInitHead;
 		while( curr )
-		{	
+		{
 			if( !curr->pBasicPlacement->fPriorityExistance )
 			{
 				if( !curr->pDetailedPlacement || curr->pDetailedPlacement && curr->pDetailedPlacement->ubProfile == NO_PROFILE )
@@ -1213,7 +1207,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 						}
 						//now replace the map pristine placement info with the temp map file version..
 						*curr->pDetailedPlacement = tempDetailedPlacement;
-						
+
 						curr->pBasicPlacement->fPriorityExistance	=	TRUE;
 						curr->pBasicPlacement->ubDirection					= curr->pDetailedPlacement->ubDirection;
 						curr->pBasicPlacement->bOrders						= curr->pDetailedPlacement->bOrders;
@@ -1223,13 +1217,13 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 						curr->pBasicPlacement->ubSoldierClass			= curr->pDetailedPlacement->ubSoldierClass;
 						curr->pBasicPlacement->ubCivilianGroup		= curr->pDetailedPlacement->ubCivilianGroup;
 						curr->pBasicPlacement->fHasKeys						= curr->pDetailedPlacement->fHasKeys;
-						curr->pBasicPlacement->sStartingGridNo		= curr->pDetailedPlacement->sInsertionGridNo;				
+						curr->pBasicPlacement->sStartingGridNo		= curr->pDetailedPlacement->sInsertionGridNo;
 
 						curr->pBasicPlacement->bPatrolCnt			= curr->pDetailedPlacement->bPatrolCnt;
-						memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid, 
+						memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid,
 							sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
 
-						
+
 						if( curr->pDetailedPlacement->bLife < curr->pDetailedPlacement->bLifeMax )
 						{ //Add 4 life for every hour that passes.
 							INT32 iNewLife;
@@ -1255,7 +1249,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	curr = gSoldierInitHead;
 	fDeleted = FALSE;
 	while( curr )
-	{		
+	{
 		if( !curr->pBasicPlacement->fPriorityExistance )
 		{
 			if( !curr->pDetailedPlacement || curr->pDetailedPlacement && curr->pDetailedPlacement->ubProfile == NO_PROFILE )
@@ -1306,7 +1300,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	return TRUE;
 
 	FAIL_LOAD:
-		//The temp file load failed either because of IO problems related to hacking/logic, or 
+		//The temp file load failed either because of IO problems related to hacking/logic, or
 		//various checks failed for hacker validation.	If we reach this point, the "error: exit game"
 		//dialog would appear in a non-testversion.
 		FileClose( hfile );
@@ -1317,11 +1311,10 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 }
 
 
-//If we are saving a game and we are in the sector, we will need to preserve the links between the 
+//If we are saving a game and we are in the sector, we will need to preserve the links between the
 //soldiers and the soldier init list.	Otherwise, the temp file will be deleted.
 BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, BOOLEAN fEnemy, BOOLEAN fValidateOnly )
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	SOLDIERTYPE *pSoldier;
 	INT32 i;
@@ -1370,7 +1363,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 				curr = curr->next;
 			}
 			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
-			{ //found a match.	
+			{ //found a match.
 
 				if( !fValidateOnly )
 				{
@@ -1383,7 +1376,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 						}
 						*curr->pDetailedPlacement = *pSoldier;
 
-						//we don't want the player to think that all the enemies start in the exact position when we 
+						//we don't want the player to think that all the enemies start in the exact position when we
 						//left the map, so randomize the start locations either current position or original position.
 						if( PreRandom( 2 ) )
 						{
@@ -1468,11 +1461,11 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 		goto FAIL_SAVE;
 	}
 
-	//This check may appear confusing.	It is intended to abort if the player is saving the game.	It is only 
+	//This check may appear confusing.	It is intended to abort if the player is saving the game.	It is only
 	//supposed to preserve the links to the placement list, so when we finally do leave the level with enemies remaining,
 	//we will need the links that are only added when the map is loaded, and are normally lost when restoring a save.
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
-	{	
+	{
 		slots = 0;
 	}
 
@@ -1488,7 +1481,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 	{
 		goto FAIL_SAVE;
 	}
-	
+
 	FileWrite( hfile, &bSectorZ, 1, &uiNumBytesWritten );
 	if( uiNumBytesWritten != 1 )
 	{
@@ -1496,8 +1489,8 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 	}
 
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
-	{	
-		//if we are saving the game, we don't need to preserve the soldier information, just 
+	{
+		//if we are saving the game, we don't need to preserve the soldier information, just
 		//preserve the links to the placement list.
 		slots = 0;
 		FileClose( hfile );
@@ -1518,7 +1511,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 		pSoldier = MercPtrs[ i ];
 		// CJC: note that bInSector is not required; the civ could be offmap!
 		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->stats.bLife )
-		{ 
+		{
 			//soldier is valid, so find the matching soldier init list entry for modification.
 			curr = gSoldierInitHead;
 			while( curr && curr->pSoldier != pSoldier )
@@ -1527,7 +1520,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 			}
 			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
 			{
-				//found a match.	
+				//found a match.
 				if ( !curr->pDetailedPlacement->Save(hfile, FALSE) )
 				{
 					goto FAIL_SAVE;
@@ -1569,7 +1562,6 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 
 BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( UINT8 *pubNumElites, UINT8 *pubNumRegulars, UINT8 *pubNumAdmins, UINT8 *pubNumCreatures )
 {
-	PERFORMANCE_MARKER
 //	SOLDIERINITNODE *curr;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
@@ -1586,8 +1578,8 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	UINT8 ubSectorID;
 //	UINT8 ubNumElites = 0, ubNumTroops = 0, ubNumAdmins = 0, ubNumCreatures = 0;
 //	UINT8 ubStrategicElites, ubStrategicTroops, ubStrategicAdmins, ubStrategicCreatures;
-	
-	
+
+
 
 	//make sure the variables are initialized
 	*pubNumElites = 0;
@@ -1632,10 +1624,10 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 		#endif
 		goto FAIL_LOAD;
 	}
-	
+
 //	LoadSoldierInitListLinks( hfile );
 	LookAtButDontProcessEnemySoldierInitListLinks( hfile );
-	
+
 	//STEP THREE:	read the data
 
 	FileRead( hfile, &sSectorX, 2, &uiNumBytesRead );
@@ -1749,19 +1741,19 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 			case SOLDIER_CLASS_ELITE:
 				(*pubNumElites)++;
 				break;
-			case SOLDIER_CLASS_ARMY:						
+			case SOLDIER_CLASS_ARMY:
 				(*pubNumRegulars)++;
 				break;
-			case SOLDIER_CLASS_ADMINISTRATOR:		
+			case SOLDIER_CLASS_ADMINISTRATOR:
 				(*pubNumAdmins)++;
 				break;
-			case SOLDIER_CLASS_CREATURE:				
+			case SOLDIER_CLASS_CREATURE:
 				(*pubNumCreatures)++;
 				break;
 		}
 /*
 		while( curr )
-		{	
+		{
 			if( !curr->pBasicPlacement->fPriorityExistance )
 			{
 				if( curr->pBasicPlacement->bTeam == tempDetailedPlacement.bTeam )
@@ -1773,7 +1765,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 					}
 					//now replace the map pristine placement info with the temp map file version..
 					*curr->pDetailedPlacement = tempDetailedPlacement;
-					
+
 					curr->pBasicPlacement->fPriorityExistance	=	TRUE;
 					curr->pBasicPlacement->ubDirection					= curr->pDetailedPlacement->ubDirection;
 					curr->pBasicPlacement->bOrders						= curr->pDetailedPlacement->bOrders;
@@ -1783,10 +1775,10 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 					curr->pBasicPlacement->ubSoldierClass			= curr->pDetailedPlacement->ubSoldierClass;
 					curr->pBasicPlacement->ubCivilianGroup		= curr->pDetailedPlacement->ubCivilianGroup;
 					curr->pBasicPlacement->fHasKeys						= curr->pDetailedPlacement->fHasKeys;
-					curr->pBasicPlacement->usStartingGridNo		= curr->pDetailedPlacement->sInsertionGridNo;				
+					curr->pBasicPlacement->usStartingGridNo		= curr->pDetailedPlacement->sInsertionGridNo;
 
 					curr->pBasicPlacement->bPatrolCnt			= curr->pDetailedPlacement->bPatrolCnt;
-					memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid, 
+					memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid,
 						sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
 
 
@@ -1794,28 +1786,28 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 					switch( curr->pBasicPlacement->ubSoldierClass )
 					{
 						case SOLDIER_CLASS_ELITE:
-							ubNumElites++;							
+							ubNumElites++;
 							if( ubNumElites <= ubStrategicElites )
 							{
 								AddPlacementToWorld( curr );
 							}
 							break;
-						case SOLDIER_CLASS_ARMY:						
-							ubNumTroops++;							
+						case SOLDIER_CLASS_ARMY:
+							ubNumTroops++;
 							if( ubNumTroops <= ubStrategicTroops )
 							{
 								AddPlacementToWorld( curr );
 							}
 							break;
-						case SOLDIER_CLASS_ADMINISTRATOR:		
-							ubNumAdmins++;							
+						case SOLDIER_CLASS_ADMINISTRATOR:
+							ubNumAdmins++;
 							if( ubNumAdmins <= ubStrategicAdmins )
 							{
 								AddPlacementToWorld( curr );
 							}
 							break;
-						case SOLDIER_CLASS_CREATURE:				
-							ubNumCreatures++;						
+						case SOLDIER_CLASS_CREATURE:
+							ubNumCreatures++;
 							if( ubNumCreatures <= ubStrategicCreatures )
 							{
 								AddPlacementToWorld( curr );
@@ -1829,7 +1821,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 		}
 */
 	}
-	
+
 	FileRead( hfile, &ubSectorID, 1, &uiNumBytesRead );
 	if( uiNumBytesRead != 1 )
 	{
@@ -1852,7 +1844,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	return TRUE;
 
 	FAIL_LOAD:
-		//The temp file load failed either because of IO problems related to hacking/logic, or 
+		//The temp file load failed either because of IO problems related to hacking/logic, or
 		//various checks failed for hacker validation.	If we reach this point, the "error: exit game"
 		//dialog would appear in a non-testversion.
 		FileClose( hfile );
@@ -1861,6 +1853,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 		#endif
 		return FALSE;
 }
+
 
 
 

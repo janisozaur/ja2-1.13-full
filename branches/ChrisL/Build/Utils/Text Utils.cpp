@@ -9,7 +9,6 @@
 
 BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 {
-	PERFORMANCE_MARKER
 	int j = 0;
 
 	if (pNameString != NULL)
@@ -30,39 +29,39 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 					switch (Item[ubIndex].szLongItemName [j + 1])
 					{
 						// ü
-						case -68:	
+						case -68:
 							pNameString[i] = 252;
 							// Skip next character, because "umlaute" have 2 chars
 							j++;
 							break;
 						// Ü
-						case -100:	
+						case -100:
 							pNameString[i] = 220;
 							j++;
 							break;
 						// ä
-						case -92:	
-							pNameString[i] = 228; 
+						case -92:
+							pNameString[i] = 228;
 							j++;
 							break;
 						// Ä
-						case -124:	
-							pNameString[i] = 196; 
+						case -124:
+							pNameString[i] = 196;
 							j++;
 							break;
 						// ö
-						case -74:	
-							pNameString[i] = 246; 
+						case -74:
+							pNameString[i] = 246;
 							j++;
 							break;
 						// Ö
-						case -106:	
-							pNameString[i] = 214; 
+						case -106:
+							pNameString[i] = 214;
 							j++;
 							break;
 						// ß
-						case -97:	
-							pNameString[i] = 223; 
+						case -97:
+							pNameString[i] = 223;
 							j++;
 							break;
 					}
@@ -100,7 +99,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 				{
 					// This character determines the special character
 					switch ( (unsigned char)Item[ubIndex].szLongItemName [j + 1] )
-					{										
+					{
 						//capital letters
 						case 129:		pNameString[ i ] = 197; j++; break; //U+0401	d0 81	CYRILLIC CAPITAL LETTER IO
 
@@ -134,7 +133,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 						case 171:		pNameString[ i ] = 219; j++; break;
 						case 172:		pNameString[ i ] = 220; j++; break;
 						case 173:		pNameString[ i ] = 221; j++; break;
-						case 174:		pNameString[ i ] = 222; j++; break;	
+						case 174:		pNameString[ i ] = 222; j++; break;
 						case 175:		pNameString[ i ] = 223; j++; break; //U+042F		d0 af	CYRILLIC CAPITAL LETTER YA
 
 						//small letters
@@ -152,7 +151,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 						case 187:		pNameString[ i ] = 235; j++; break;
 						case 188:		pNameString[ i ] = 236; j++; break;
 						case 189:		pNameString[ i ] = 237; j++; break;
-						case 190:		pNameString[ i ] = 238; j++; break;		
+						case 190:		pNameString[ i ] = 238; j++; break;
 						case 191:		pNameString[ i ] = 239; j++; break; //U+043F		d0 bf	CYRILLIC SMALL LETTER PE
 					}
 				}
@@ -161,7 +160,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 				{
 					// This character determines the special character
 					switch ( (unsigned char)Item[ubIndex].szLongItemName [j + 1] )
-					{			
+					{
 						case 128:		pNameString[ i ] = 240; j++; break; //U+0440	p	d1 80	CYRILLIC SMALL LETTER ER
 						case 129:		pNameString[ i ] = 241; j++; break;
 						case 130:		pNameString[ i ] = 242; j++; break;
@@ -210,39 +209,39 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 					switch (Item[ubIndex].szItemDesc [j + 1])
 					{
 						// ü
-						case -68:	
+						case -68:
 							pInfoString[i] = 252;
 							// Skip next character, because "umlaute" have 2 chars
 							j++;
 							break;
 						// Ü
-						case -100:	
+						case -100:
 							pInfoString[i] = 220;
 							j++;
 							break;
 						// ä
-						case -92:	
-							pInfoString[i] = 228; 
+						case -92:
+							pInfoString[i] = 228;
 							j++;
 							break;
 						// Ä
-						case -124:	
-							pInfoString[i] = 196; 
+						case -124:
+							pInfoString[i] = 196;
 							j++;
 							break;
 						// ö
-						case -74:	
-							pInfoString[i] = 246; 
+						case -74:
+							pInfoString[i] = 246;
 							j++;
 							break;
 						// Ö
-						case -106:	
-							pInfoString[i] = 214; 
+						case -106:
+							pInfoString[i] = 214;
 							j++;
 							break;
 						// ß
-						case -97:	
-							pInfoString[i] = 223; 
+						case -97:
+							pInfoString[i] = 223;
 							j++;
 							break;
 					}
@@ -281,7 +280,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 				{
 					// This character determines the special character
 					switch ( (unsigned char)Item[ubIndex].szItemDesc [j + 1] )
-					{										
+					{
 						//capital letters
 						case 129:		pInfoString[ i ] = 197; j++; break; //U+0401	d0 81	CYRILLIC CAPITAL LETTER IO
 
@@ -315,7 +314,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 						case 171:		pInfoString[ i ] = 219; j++; break;
 						case 172:		pInfoString[ i ] = 220; j++; break;
 						case 173:		pInfoString[ i ] = 221; j++; break;
-						case 174:		pInfoString[ i ] = 222; j++; break;	
+						case 174:		pInfoString[ i ] = 222; j++; break;
 						case 175:		pInfoString[ i ] = 223; j++; break; //U+042F		d0 af	CYRILLIC CAPITAL LETTER YA
 
 						//small letters
@@ -333,7 +332,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 						case 187:		pInfoString[ i ] = 235; j++; break;
 						case 188:		pInfoString[ i ] = 236; j++; break;
 						case 189:		pInfoString[ i ] = 237; j++; break;
-						case 190:		pInfoString[ i ] = 238; j++; break;		
+						case 190:		pInfoString[ i ] = 238; j++; break;
 						case 191:		pInfoString[ i ] = 239; j++; break; //U+043F		d0 bf	CYRILLIC SMALL LETTER PE
 					}
 				}
@@ -342,7 +341,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 				{
 					// This character determines the special character
 					switch ( (unsigned char)Item[ubIndex].szItemDesc [j + 1] )
-					{			
+					{
 						case 128:		pInfoString[ i ] = 240; j++; break; //U+0440	p	d1 80	CYRILLIC SMALL LETTER ER
 						case 129:		pInfoString[ i ] = 241; j++; break;
 						case 130:		pInfoString[ i ] = 242; j++; break;
@@ -363,12 +362,12 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 						case 145:		pInfoString[ i ] = 229; j++; break;	//U+0451		d1 91	CYRILLIC SMALL LETTER IO
 					}
 				}
-				
+
 				//if ( ((unsigned char)Item[ubIndex].szItemDesc [j] == 211) ) //d3
 				//{
 				//	// This character determines the special character
 				//	switch ( (unsigned char)Item[ubIndex].szItemDesc [j + 1] )
-				//	{			
+				//	{
 				//		case 162:		pInfoString[ i ] = 20; j++; break;//U+04E2	d3a2	CYRILLIC CAPITAL LETTER I WITH MACRON
 				//		case 163:		pInfoString[ i ] = 20; j++; break;//U+04E3	d3a3	CYRILLIC SMALL LETTER I WITH MACRON
 				//	}
@@ -387,7 +386,6 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 
 BOOLEAN LoadBRName(UINT16 ubIndex, STR16 pNameString )
 {
-	PERFORMANCE_MARKER
 	if (pNameString != NULL)
 	{
 		int j = -1;
@@ -407,39 +405,39 @@ BOOLEAN LoadBRName(UINT16 ubIndex, STR16 pNameString )
 					switch (Item[ubIndex].szBRName [j + 1])
 					{
 						// ü
-						case -68:	
+						case -68:
 							pNameString[i] = 252;
 							// Skip next character, because "umlaute" have 2 chars
 							j++;
 							break;
 						// Ü
-						case -100:	
+						case -100:
 							pNameString[i] = 220;
 							j++;
 							break;
 						// ä
-						case -92:	
-							pNameString[i] = 228; 
+						case -92:
+							pNameString[i] = 228;
 							j++;
 							break;
 						// Ä
-						case -124:	
-							pNameString[i] = 196; 
+						case -124:
+							pNameString[i] = 196;
 							j++;
 							break;
 						// ö
-						case -74:	
-							pNameString[i] = 246; 
+						case -74:
+							pNameString[i] = 246;
 							j++;
 							break;
 						// Ö
-						case -106:	
-							pNameString[i] = 214; 
+						case -106:
+							pNameString[i] = 214;
 							j++;
 							break;
 						// ß
-						case -97:	
-							pNameString[i] = 223; 
+						case -97:
+							pNameString[i] = 223;
 							j++;
 							break;
 					}
@@ -477,7 +475,7 @@ BOOLEAN LoadBRName(UINT16 ubIndex, STR16 pNameString )
 				{
 					// This character determines the special character
 					switch ( (unsigned char)Item[ubIndex].szBRName [j + 1] )
-					{										
+					{
 						//capital letters
 						case 129:		pNameString[ i ] = 197; j++; break; //U+0401	d0 81	CYRILLIC CAPITAL LETTER IO
 
@@ -511,7 +509,7 @@ BOOLEAN LoadBRName(UINT16 ubIndex, STR16 pNameString )
 						case 171:		pNameString[ i ] = 219; j++; break;
 						case 172:		pNameString[ i ] = 220; j++; break;
 						case 173:		pNameString[ i ] = 221; j++; break;
-						case 174:		pNameString[ i ] = 222; j++; break;	
+						case 174:		pNameString[ i ] = 222; j++; break;
 						case 175:		pNameString[ i ] = 223; j++; break; //U+042F		d0 af	CYRILLIC CAPITAL LETTER YA
 
 						//small letters
@@ -529,7 +527,7 @@ BOOLEAN LoadBRName(UINT16 ubIndex, STR16 pNameString )
 						case 187:		pNameString[ i ] = 235; j++; break;
 						case 188:		pNameString[ i ] = 236; j++; break;
 						case 189:		pNameString[ i ] = 237; j++; break;
-						case 190:		pNameString[ i ] = 238; j++; break;		
+						case 190:		pNameString[ i ] = 238; j++; break;
 						case 191:		pNameString[ i ] = 239; j++; break; //U+043F		d0 bf	CYRILLIC SMALL LETTER PE
 					}
 				}
@@ -538,7 +536,7 @@ BOOLEAN LoadBRName(UINT16 ubIndex, STR16 pNameString )
 				{
 					// This character determines the special character
 					switch ( (unsigned char)Item[ubIndex].szBRName [j + 1] )
-					{			
+					{
 						case 128:		pNameString[ i ] = 240; j++; break; //U+0440	p	d1 80	CYRILLIC SMALL LETTER ER
 						case 129:		pNameString[ i ] = 241; j++; break;
 						case 130:		pNameString[ i ] = 242; j++; break;
@@ -572,7 +570,6 @@ BOOLEAN LoadBRName(UINT16 ubIndex, STR16 pNameString )
 
 BOOLEAN LoadBRDesc(UINT16 ubIndex, STR16 pDescString )
 {
-	PERFORMANCE_MARKER
 	if (pDescString != NULL)
 	{
 		int j = -1;
@@ -593,39 +590,39 @@ BOOLEAN LoadBRDesc(UINT16 ubIndex, STR16 pDescString )
 					switch (Item[ubIndex].szBRDesc [j + 1])
 					{
 						// ü
-						case -68:	
+						case -68:
 							pDescString[i] = 252;
 							// Skip next character, because "umlaute" have 2 chars
 							j++;
 							break;
 						// Ü
-						case -100:	
+						case -100:
 							pDescString[i] = 220;
 							j++;
 							break;
 						// ä
-						case -92:	
-							pDescString[i] = 228; 
+						case -92:
+							pDescString[i] = 228;
 							j++;
 							break;
 						// Ä
-						case -124:	
-							pDescString[i] = 196; 
+						case -124:
+							pDescString[i] = 196;
 							j++;
 							break;
 						// ö
-						case -74:	
-							pDescString[i] = 246; 
+						case -74:
+							pDescString[i] = 246;
 							j++;
 							break;
 						// Ö
-						case -106:	
-							pDescString[i] = 214; 
+						case -106:
+							pDescString[i] = 214;
 							j++;
 							break;
 						// ß
-						case -97:	
-							pDescString[i] = 223; 
+						case -97:
+							pDescString[i] = 223;
 							j++;
 							break;
 					}
@@ -663,7 +660,7 @@ BOOLEAN LoadBRDesc(UINT16 ubIndex, STR16 pDescString )
 				{
 					// This character determines the special character
 					switch ( (unsigned char)Item[ubIndex].szBRDesc [j + 1] )
-					{										
+					{
 						//capital letters
 						case 129:		pDescString[ i ] = 197; j++; break; //U+0401	d0 81	CYRILLIC CAPITAL LETTER IO
 
@@ -697,7 +694,7 @@ BOOLEAN LoadBRDesc(UINT16 ubIndex, STR16 pDescString )
 						case 171:		pDescString[ i ] = 219; j++; break;
 						case 172:		pDescString[ i ] = 220; j++; break;
 						case 173:		pDescString[ i ] = 221; j++; break;
-						case 174:		pDescString[ i ] = 222; j++; break;	
+						case 174:		pDescString[ i ] = 222; j++; break;
 						case 175:		pDescString[ i ] = 223; j++; break; //U+042F		d0 af	CYRILLIC CAPITAL LETTER YA
 
 						//small letters
@@ -715,7 +712,7 @@ BOOLEAN LoadBRDesc(UINT16 ubIndex, STR16 pDescString )
 						case 187:		pDescString[ i ] = 235; j++; break;
 						case 188:		pDescString[ i ] = 236; j++; break;
 						case 189:		pDescString[ i ] = 237; j++; break;
-						case 190:		pDescString[ i ] = 238; j++; break;		
+						case 190:		pDescString[ i ] = 238; j++; break;
 						case 191:		pDescString[ i ] = 239; j++; break; //U+043F		d0 bf	CYRILLIC SMALL LETTER PE
 					}
 				}
@@ -724,7 +721,7 @@ BOOLEAN LoadBRDesc(UINT16 ubIndex, STR16 pDescString )
 				{
 					// This character determines the special character
 					switch ( (unsigned char)Item[ubIndex].szBRDesc [j + 1] )
-					{			
+					{
 						case 128:		pDescString[ i ] = 240; j++; break; //U+0440	p	d1 80	CYRILLIC SMALL LETTER ER
 						case 129:		pDescString[ i ] = 241; j++; break;
 						case 130:		pDescString[ i ] = 242; j++; break;
@@ -759,7 +756,6 @@ BOOLEAN LoadBRDesc(UINT16 ubIndex, STR16 pDescString )
 
 BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 {
-	PERFORMANCE_MARKER
 	if(pNameString != NULL)
 	{
 		int j = -1;
@@ -767,7 +763,7 @@ BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 		for (int i=0;i<80;i++)
 		{
 			j++;
-			
+
 			if ( i<(int)strlen(Item[ubIndex].szItemName))
 			{
 				pNameString[i] = Item[ubIndex].szItemName [j];
@@ -781,39 +777,39 @@ BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 					switch (Item[ubIndex].szItemName [j + 1])
 					{
 						// ü
-						case -68:	
+						case -68:
 							pNameString[i] = 252;
 							// Skip next character, because "umlaute" have 2 chars
 							j++;
 							break;
 						// Ü
-						case -100:	
+						case -100:
 							pNameString[i] = 220;
 							j++;
 							break;
 						// ä
-						case -92:	
-							pNameString[i] = 228; 
+						case -92:
+							pNameString[i] = 228;
 							j++;
 							break;
 						// Ä
-						case -124:	
-							pNameString[i] = 196; 
+						case -124:
+							pNameString[i] = 196;
 							j++;
 							break;
 						// ö
-						case -74:	
-							pNameString[i] = 246; 
+						case -74:
+							pNameString[i] = 246;
 							j++;
 							break;
 						// Ö
-						case -106:	
-							pNameString[i] = 214; 
+						case -106:
+							pNameString[i] = 214;
 							j++;
 							break;
 						// ß
-						case -97:	
-							pNameString[i] = 223; 
+						case -97:
+							pNameString[i] = 223;
 							j++;
 							break;
 					}
@@ -853,7 +849,7 @@ BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 				{
 					// This character determines the special character
 					switch ( (unsigned char)Item[ubIndex].szItemName [j + 1] )
-					{										
+					{
 						//capital letters
 						case 129:		pNameString[ i ] = 197; j++; break; //U+0401	d0 81	CYRILLIC CAPITAL LETTER IO
 
@@ -887,7 +883,7 @@ BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 						case 171:		pNameString[ i ] = 219; j++; break;
 						case 172:		pNameString[ i ] = 220; j++; break;
 						case 173:		pNameString[ i ] = 221; j++; break;
-						case 174:		pNameString[ i ] = 222; j++; break;	
+						case 174:		pNameString[ i ] = 222; j++; break;
 						case 175:		pNameString[ i ] = 223; j++; break; //U+042F		d0 af	CYRILLIC CAPITAL LETTER YA
 
 						//small letters
@@ -905,7 +901,7 @@ BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 						case 187:		pNameString[ i ] = 235; j++; break;
 						case 188:		pNameString[ i ] = 236; j++; break;
 						case 189:		pNameString[ i ] = 237; j++; break;
-						case 190:		pNameString[ i ] = 238; j++; break;		
+						case 190:		pNameString[ i ] = 238; j++; break;
 						case 191:		pNameString[ i ] = 239; j++; break; //U+043F		d0 bf	CYRILLIC SMALL LETTER PE
 					}
 				}
@@ -914,7 +910,7 @@ BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 				{
 					// This character determines the special character
 					switch ( (unsigned char)Item[ubIndex].szItemName [j + 1] )
-					{			
+					{
 						case 128:		pNameString[ i ] = 240; j++; break; //U+0440	p	d1 80	CYRILLIC SMALL LETTER ER
 						case 129:		pNameString[ i ] = 241; j++; break;
 						case 130:		pNameString[ i ] = 242; j++; break;
@@ -951,7 +947,6 @@ BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 
 void LoadAllItemNames( void )
 {
-	PERFORMANCE_MARKER
 	UINT16 usLoop;
 
 	for (usLoop = 0; usLoop < MAXITEMS; usLoop++)
@@ -966,13 +961,11 @@ void LoadAllItemNames( void )
 
 void LoadAllExternalText( void )
 {
-	PERFORMANCE_MARKER
 	LoadAllItemNames();
 }
 
 STR16 GetWeightUnitString( void )
 {
-	PERFORMANCE_MARKER
 	if ( gGameSettings.fOptions[ TOPTION_USE_METRIC_SYSTEM ] ) // metric
 	{
 		return( pMessageStrings[ MSG_KILOGRAM_ABBREVIATION ] );
@@ -985,7 +978,6 @@ STR16 GetWeightUnitString( void )
 
 FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight )
 {
-	PERFORMANCE_MARKER
 	FLOAT fWeight = 0.0f;
 
 	//if the user is smart and wants things displayed in 'metric'
@@ -1002,5 +994,6 @@ FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight )
 
 	return( fWeight );
 }
+
 
 

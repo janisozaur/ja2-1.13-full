@@ -122,7 +122,6 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason);
 
 void DrawTextOnMapBorder( void )
 {
-	PERFORMANCE_MARKER
 	INT16 sX = 0, sY = 0;
 	CHAR16 sString[ 64 ];
 
@@ -148,11 +147,10 @@ void DrawTextOnMapBorder( void )
 
 BOOLEAN LoadMapBorderGraphics( void )
 {
-	PERFORMANCE_MARKER
-	// this procedure will load the graphics needed for the map border 
-	VOBJECT_DESC	VObjectDesc; 
+	// this procedure will load the graphics needed for the map border
+	VOBJECT_DESC	VObjectDesc;
 
-	// will load map border 
+	// will load map border
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 
 	if (iResolution == 0)
@@ -178,7 +176,7 @@ BOOLEAN LoadMapBorderGraphics( void )
 
 	fCursorIsOnMapScrollButtons = FALSE;
 */
-	
+
 
 	return ( TRUE );
 }
@@ -186,8 +184,7 @@ BOOLEAN LoadMapBorderGraphics( void )
 
 void DeleteMapBorderGraphics( void )
 {
-	PERFORMANCE_MARKER
-	// procedure will delete graphics loaded for map border 
+	// procedure will delete graphics loaded for map border
 
 	DeleteVideoObjectFromIndex( guiMapBorder );
 //	DeleteVideoObjectFromIndex( guiMapBorderCorner );
@@ -199,11 +196,10 @@ void DeleteMapBorderGraphics( void )
 
 void RenderMapBorder( void )
 {
-	PERFORMANCE_MARKER
 	// renders the actual border to the guiSAVEBUFFER
 	HVOBJECT hHandle;
 
-/*	
+/*
 	if( fDisabledMapBorder )
 	{
 		return;
@@ -218,7 +214,7 @@ void RenderMapBorder( void )
 	}
 
 	// get and blt border
-	GetVideoObject(&hHandle, guiMapBorder ); 
+	GetVideoObject(&hHandle, guiMapBorder );
 	BltVideoObject( guiSAVEBUFFER , hHandle, 0, MAP_BORDER_X, MAP_BORDER_Y, VO_BLT_SRCTRANSPARENCY,NULL );
 
 	if (iResolution == 1 || iResolution == 2)
@@ -227,11 +223,11 @@ void RenderMapBorder( void )
 	}
 
 	RestoreExternBackgroundRect( MAP_BORDER_X, MAP_BORDER_Y, SCREEN_WIDTH - MAP_BORDER_X, SCREEN_HEIGHT );
-		
+
 	// show the level marker
 	DisplayCurrentLevelMarker( );
-	
-	
+
+
 	return;
 }
 
@@ -239,15 +235,14 @@ void RenderMapBorder( void )
 /*
 void RenderMapBorderCorner( void )
 {
-	PERFORMANCE_MARKER
 	// renders map border corner to the FRAME_BUFFER
 	HVOBJECT hHandle;
-		
+
 	if( fDisabledMapBorder )
 	{
 		return;
 	}
-	
+
 	if( fShowMapInventoryPool )
 	{
 		return;
@@ -255,9 +250,9 @@ void RenderMapBorderCorner( void )
 
 
 	// get and blt corner
-	GetVideoObject(&hHandle, guiMapBorderCorner ); 
+	GetVideoObject(&hHandle, guiMapBorderCorner );
 	BltVideoObject( FRAME_BUFFER , hHandle, 0,MAP_BORDER_CORNER_X, MAP_BORDER_CORNER_Y, VO_BLT_SRCTRANSPARENCY,NULL );
-		
+
 	InvalidateRegion( MAP_BORDER_CORNER_X, MAP_BORDER_CORNER_Y, 635, 315);
 
 	return;
@@ -267,7 +262,6 @@ void RenderMapBorderCorner( void )
 
 void RenderMapBorderEtaPopUp( void )
 {
-	PERFORMANCE_MARKER
 	// renders map border corner to the FRAME_BUFFER
 	HVOBJECT hHandle;
 
@@ -290,14 +284,14 @@ void RenderMapBorderEtaPopUp( void )
 	}
 
 	// get and blt ETA box
-	GetVideoObject(&hHandle, guiMapBorderEtaPopUp ); 
+	GetVideoObject(&hHandle, guiMapBorderEtaPopUp );
 
 	/*BltVideoObject( FRAME_BUFFER , hHandle, 0, MAP_BORDER_X + 215, 291, VO_BLT_SRCTRANSPARENCY,NULL );
-		
+
 	InvalidateRegion( MAP_BORDER_X + 215, 291, MAP_BORDER_X + 215 + 100 , 310);*/
 
 	BltVideoObject( FRAME_BUFFER , hHandle, 0, MAP_BORDER_X + MAP_BORDER_X_OFFSET + 215, MAP_BORDER_Y_OFFSET + 291, VO_BLT_SRCTRANSPARENCY,NULL );
-		
+
 	InvalidateRegion( MAP_BORDER_X + MAP_BORDER_X_OFFSET + 215, MAP_BORDER_Y_OFFSET + 291, MAP_BORDER_X + MAP_BORDER_X_OFFSET + 215 + 100 , MAP_BORDER_Y_OFFSET + 310);
 
 	return;
@@ -305,7 +299,6 @@ void RenderMapBorderEtaPopUp( void )
 
 BOOLEAN CreateButtonsForMapBorder( void )
 {
-	PERFORMANCE_MARKER
 	// will create the buttons needed for the map screen border region
 
 /*
@@ -320,13 +313,13 @@ BOOLEAN CreateButtonsForMapBorder( void )
 	guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_DWN ] = QuickCreateButton( guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_DWN ], 602, 338,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnScrollSouthMapScreenCallback);
- 
+
 	// left button
 	guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_LEFT ] = LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" ,9,0,-1,2,-1 );
 	guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_LEFT ] = QuickCreateButton( guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_LEFT ], 584, 322,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnScrollWestMapScreenCallback);
- 
+
 	// right button
 	guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_RIGHT ] = LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" ,10,1,-1,3,-1 );
 	guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_RIGHT ] = QuickCreateButton( guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_RIGHT ], 619, 322,
@@ -345,32 +338,32 @@ BOOLEAN CreateButtonsForMapBorder( void )
 	giMapBorderButtons[ MAP_BORDER_TOWN_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_TOWN_BTN ], MAP_BORDER_X + ((SCREEN_WIDTH - MAP_BORDER_X) / 2 - 152), (SCREEN_HEIGHT - 160),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
 										(GUI_CALLBACK)MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnTownCallback);
- 
+
 
 	// mines
 	giMapBorderButtonsImage[ MAP_BORDER_MINE_BTN ] = LoadButtonImage( "INTERFACE\\map_border_buttons.sti" ,-1,4,-1,13,-1 );
 	giMapBorderButtons[ MAP_BORDER_MINE_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_MINE_BTN ], MAP_BORDER_X + ((SCREEN_WIDTH - MAP_BORDER_X) / 2 - 109), (SCREEN_HEIGHT - 160),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
 										(GUI_CALLBACK)MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnMineCallback);
- 
+
 	// people
 	giMapBorderButtonsImage[ MAP_BORDER_TEAMS_BTN ] = LoadButtonImage( "INTERFACE\\map_border_buttons.sti" ,-1,3,-1,12,-1 );
 	giMapBorderButtons[ MAP_BORDER_TEAMS_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_TEAMS_BTN ], MAP_BORDER_X + ((SCREEN_WIDTH - MAP_BORDER_X) / 2 - 66), (SCREEN_HEIGHT - 160),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
 										(GUI_CALLBACK)MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnTeamCallback);
- 
+
 	// militia
 	giMapBorderButtonsImage[ MAP_BORDER_MILITIA_BTN ] = LoadButtonImage( "INTERFACE\\map_border_buttons.sti" ,-1,8,-1,17,-1 );
 	giMapBorderButtons[ MAP_BORDER_MILITIA_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_MILITIA_BTN ], MAP_BORDER_X + ((SCREEN_WIDTH - MAP_BORDER_X) / 2 - 23), (SCREEN_HEIGHT - 160),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
 										(GUI_CALLBACK)MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnMilitiaCallback);
- 
+
 	// airspace
 	giMapBorderButtonsImage[ MAP_BORDER_AIRSPACE_BTN ] = LoadButtonImage( "INTERFACE\\map_border_buttons.sti" ,-1,2,-1,11,-1 );
 	giMapBorderButtons[ MAP_BORDER_AIRSPACE_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_AIRSPACE_BTN ], MAP_BORDER_X + ((SCREEN_WIDTH - MAP_BORDER_X) / 2 + 20), (SCREEN_HEIGHT - 160),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
 										(GUI_CALLBACK)MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnAircraftCallback);
- 
+
 	// items
 	giMapBorderButtonsImage[ MAP_BORDER_ITEM_BTN ] = LoadButtonImage( "INTERFACE\\map_border_buttons.sti" ,-1,1,-1,10,-1 );
 	giMapBorderButtons[ MAP_BORDER_ITEM_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_ITEM_BTN ], MAP_BORDER_X + ((SCREEN_WIDTH - MAP_BORDER_X) / 2 + 63), (SCREEN_HEIGHT - 160),
@@ -423,7 +416,6 @@ BOOLEAN CreateButtonsForMapBorder( void )
 
 void DeleteMapBorderButtons( void )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubCnt;
 
 /*
@@ -476,8 +468,7 @@ void DeleteMapBorderButtons( void )
 /*
 void BtnLowerLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
-	
+
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -489,7 +480,7 @@ void BtnLowerLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 
 		MarkButtonsDirty( );
 
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -498,15 +489,14 @@ void BtnLowerLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
 		// go down one level
-		GoDownOneLevelInMap( ); 
+		GoDownOneLevelInMap( );
 		}
-	}	
-} 
+	}
+}
 
 
 void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		// are help messages being displayed?..redraw
@@ -515,10 +505,10 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 			fMapPanelDirty = TRUE;
 		}
 
-		
+
 		MarkButtonsDirty( );
 
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -528,14 +518,13 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 			// go up one level
 		GoUpOneLevelInMap( );
 		}
-	}	
-} 
+	}
+}
 */
 
 
 void BtnMilitiaCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
@@ -550,7 +539,6 @@ void BtnMilitiaCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnTeamCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
@@ -560,27 +548,25 @@ void BtnTeamCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		CommonBtnCallbackBtnDownChecks();
 	}
-} 
+}
 
 
 void BtnTownCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 		ToggleShowTownsMode();
-	}	
+	}
 	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 	}
-} 
+}
 
 
 void BtnMineCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
@@ -590,18 +576,17 @@ void BtnMineCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		CommonBtnCallbackBtnDownChecks();
 	}
-} 
+}
 
 
 void BtnAircraftCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )	
+	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 
 		ToggleAirspaceMode();
-	} 
+	}
 	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
@@ -611,24 +596,22 @@ void BtnAircraftCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnItemCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )	
+	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 
 		ToggleItemsFilter();
-	} 
+	}
 	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 	}
-} 
+}
 
 
 /*
 void BtnZoomCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	UINT16 sTempXOff=0;
 	UINT16 sTempYOff=0;
 
@@ -660,25 +643,24 @@ void BtnZoomCallback(GUI_BUTTON *btn,INT32 reason)
 			iZoomY = ( ( sSelMapY + 2 ) / 2 ) * ( MAP_GRID_Y * 2 );
 		}
 		else
-		{ 
-			iZoomY=sSelMapY/2*MAP_GRID_Y*2;	
+		{
+			iZoomY=sSelMapY/2*MAP_GRID_Y*2;
 		}
-	
+
 		}
 
 		fMapPanelDirty=TRUE;
-	}	
+	}
 	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
 	}
-} 
+}
 */
 
 
 void ToggleShowTownsMode( void )
 {
-	PERFORMANCE_MARKER
 	if( fShowTownFlag == TRUE )
 	{
 		fShowTownFlag = FALSE;
@@ -714,7 +696,6 @@ void ToggleShowTownsMode( void )
 
 void ToggleShowMinesMode( void )
 {
-	PERFORMANCE_MARKER
 	if( fShowMineFlag == TRUE )
 	{
 		fShowMineFlag = FALSE;
@@ -750,7 +731,6 @@ void ToggleShowMinesMode( void )
 
 void ToggleShowMilitiaMode( void )
 {
-	PERFORMANCE_MARKER
 	if( fShowMilitia == TRUE )
 	{
 		fShowMilitia = FALSE;
@@ -814,7 +794,6 @@ void ToggleShowMilitiaMode( void )
 
 void ToggleShowTeamsMode( void )
 {
-	PERFORMANCE_MARKER
 	if( fShowTeamFlag == TRUE )
 	{
 		// turn show teams OFF
@@ -835,7 +814,6 @@ void ToggleShowTeamsMode( void )
 
 void ToggleAirspaceMode( void )
 {
-	PERFORMANCE_MARKER
 	if( fShowAircraftFlag == TRUE )
 	{
 		// turn airspace OFF
@@ -861,7 +839,6 @@ void ToggleAirspaceMode( void )
 
 void ToggleItemsFilter( void )
 {
-	PERFORMANCE_MARKER
 	if( fShowItemsFlag == TRUE )
 	{
 		// turn items OFF
@@ -884,11 +861,10 @@ void ToggleItemsFilter( void )
 /*
 void ShowDestinationOfPlottedPath( STR16 pLoc )
 {
-	PERFORMANCE_MARKER
 	INT16 sFontX, sFontY;
 
 	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
-	
+
 	SetFont( COMPFONT );
 	SetFontForeground( 183 );
 	SetFontBackground( FONT_BLACK );
@@ -896,7 +872,7 @@ void ShowDestinationOfPlottedPath( STR16 pLoc )
 	VarFindFontCenterCoordinates( 461, 344,	70, 12,	COMPFONT, &sFontX, &sFontY, pLoc );
 	gprintfdirty(sFontX, sFontY, pLoc );
 	mprintf(sFontX, sFontY, pLoc	);
-	
+
 	return;
 }
 */
@@ -904,10 +880,9 @@ void ShowDestinationOfPlottedPath( STR16 pLoc )
 /*
 void BtnScrollNorthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		
+
 		// not zoomed in?...don't push down
 	if( fZoomFlag == FALSE )
 		{
@@ -920,7 +895,7 @@ void BtnScrollNorthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 			fMapPanelDirty = TRUE;
 		}
 
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -930,21 +905,20 @@ void BtnScrollNorthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 		giScrollButtonState = NORTH_DIR;
 		fMapScrollDueToPanelButton = TRUE;
 	}
-	}	
+	}
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
 	{
 		giScrollButtonState = NORTH_DIR;
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 }
 
 void BtnScrollSouthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 {
-	PERFORMANCE_MARKER
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-	
+
 		// not zoomed in?...don't push down
 	if( fZoomFlag == FALSE )
 		{
@@ -957,28 +931,27 @@ void BtnScrollSouthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 			fMapPanelDirty = TRUE;
 		}
 
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 	if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
 		btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		giScrollButtonState = SOUTH_DIR;	
+		giScrollButtonState = SOUTH_DIR;
 		fMapScrollDueToPanelButton = TRUE;
 
 	}
-	}	
+	}
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
 	{
 		giScrollButtonState = SOUTH_DIR;
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 }
 
 void BtnScrollEastMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 {
-	PERFORMANCE_MARKER
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -994,28 +967,27 @@ void BtnScrollEastMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 			fMapPanelDirty = TRUE;
 		}
 
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 	if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
 		btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		giScrollButtonState = EAST_DIR;		
+		giScrollButtonState = EAST_DIR;
 		fMapScrollDueToPanelButton = TRUE;
 
 	}
-	}	
+	}
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
 	{
 		giScrollButtonState = EAST_DIR;
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 }
 
 void BtnScrollWestMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 {
-	PERFORMANCE_MARKER
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -1032,7 +1004,7 @@ void BtnScrollWestMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 			fMapPanelDirty = TRUE;
 		}
 
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1043,18 +1015,17 @@ void BtnScrollWestMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 		fMapScrollDueToPanelButton = TRUE;
 
 	}
-	}	
+	}
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
 	{
 		giScrollButtonState = WEST_DIR;
-	btn->uiFlags|=(BUTTON_CLICKED_ON);	
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 }
 
 
 void MapScrollButtonMvtCheck( void	)
 {
-	PERFORMANCE_MARKER
 	// run through each button's mouse region, if mouse cursor there...don't show map white sector highlight
 	fCursorIsOnMapScrollButtons = FALSE;
 
@@ -1084,7 +1055,6 @@ void MapScrollButtonMvtCheck( void	)
 /*
 void HandleMapScrollButtonStates( void )
 {
-	PERFORMANCE_MARKER
 	// will enable/disable map scroll buttons based on zoom mode
 
 	if( fDisabledMapBorder || fShowMapInventoryPool )
@@ -1115,7 +1085,7 @@ void HandleMapScrollButtonStates( void )
 	EnableButton( guiMapBorderScrollButtons[ 1 ]);
 	EnableButton( guiMapBorderScrollButtons[ 2 ]);
 	EnableButton( guiMapBorderScrollButtons[ 3 ]);
-	
+
 		UpdateScrollButtonStatesWhileScrolling(	);
 
 	}
@@ -1126,7 +1096,7 @@ void HandleMapScrollButtonStates( void )
 	DisableButton( guiMapBorderScrollButtons[ 1 ]);
 	DisableButton( guiMapBorderScrollButtons[ 2 ]);
 	DisableButton( guiMapBorderScrollButtons[ 3 ]);
-	
+
 	}
 
 	// check mvt too
@@ -1141,15 +1111,14 @@ void HandleMapScrollButtonStates( void )
 // generic button mvt callback for mapscreen map border
 void BtnGenericMouseMoveButtonCallbackForMapBorder(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	//If the button isn't the anchored button, then we don't want to modify the button state.
-	
+
 	if( btn != gpAnchoredButton )
 	{
 		if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 		{
 			if( btn->Area.uiFlags & MSYS_FASTHELP )
-			{ 
+			{
 			// redraw area
 			fMapPanelDirty = TRUE;
 			}
@@ -1160,21 +1129,20 @@ void BtnGenericMouseMoveButtonCallbackForMapBorder(GUI_BUTTON *btn,INT32 reason)
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		if( !gfAnchoredState )
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );		
+			btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
 	else if( reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON ;		
+		btn->uiFlags |= BUTTON_CLICKED_ON ;
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-} 
+}
 
 
 /*
 BOOLEAN ScrollButtonsDisplayingHelpMessage( void )
 {
-	PERFORMANCE_MARKER
 	// return if any help messages are being displayed for the scroll buttons
 
 	if( ( ButtonList[ guiMapBorderScrollButtons[ 0 ] ]->Area.uiFlags & MSYS_HAS_BACKRECT )||
@@ -1192,10 +1160,9 @@ BOOLEAN ScrollButtonsDisplayingHelpMessage( void )
 
 void DisplayCurrentLevelMarker( void )
 {
-	PERFORMANCE_MARKER
 	// display the current level marker on the map border
 	HVOBJECT hHandle;
-	
+
 /*
 	if( fDisabledMapBorder )
 	{
@@ -1204,7 +1171,7 @@ void DisplayCurrentLevelMarker( void )
 */
 
 	// it's actually a white rectangle, not a green arrow!
-	GetVideoObject(&hHandle, guiLEVELMARKER ); 
+	GetVideoObject(&hHandle, guiLEVELMARKER );
 	BltVideoObject( guiSAVEBUFFER , hHandle, 0,	MAP_LEVEL_MARKER_X + 1, MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * ( INT16 )iCurrentMapSectorZ ), VO_BLT_SRCTRANSPARENCY,NULL );
 
 	RestoreExternBackgroundRect(MAP_LEVEL_MARKER_X + 1, MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * ( INT16 )iCurrentMapSectorZ ), 55, 9);
@@ -1216,13 +1183,12 @@ void DisplayCurrentLevelMarker( void )
 
 void CreateMouseRegionsForLevelMarkers( void )
 {
-	PERFORMANCE_MARKER
 	INT16 sCounter = 0;
 	CHAR16 sString[ 64 ];
-	
+
 	for( sCounter = 0; sCounter	< 4 ; sCounter++ )
 	{
-		MSYS_DefineRegion(&LevelMouseRegions[ sCounter ], MAP_LEVEL_MARKER_X, ( INT16 )( MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * sCounter ) ),	MAP_LEVEL_MARKER_X + MAP_LEVEL_MARKER_WIDTH, ( INT16 )( MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * ( sCounter + 1 ) ) ), MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, 
+		MSYS_DefineRegion(&LevelMouseRegions[ sCounter ], MAP_LEVEL_MARKER_X, ( INT16 )( MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * sCounter ) ),	MAP_LEVEL_MARKER_X + MAP_LEVEL_MARKER_WIDTH, ( INT16 )( MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * ( sCounter + 1 ) ) ), MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR,
 			MSYS_NO_CALLBACK, LevelMarkerBtnCallback );
 
 		MSYS_SetRegionUserData(&LevelMouseRegions[sCounter],0,sCounter);
@@ -1237,7 +1203,6 @@ void CreateMouseRegionsForLevelMarkers( void )
 
 void DeleteMouseRegionsForLevelMarkers( void )
 {
-	PERFORMANCE_MARKER
 	INT16 sCounter = 0;
 
 
@@ -1249,10 +1214,9 @@ void DeleteMouseRegionsForLevelMarkers( void )
 
 void LevelMarkerBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	// btn callback handler for assignment screen mask region
 	INT32 iCounter = 0;
-	
+
 	iCounter = MSYS_GetRegionUserData( pRegion, 0 );
 
 	if( ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP ) )
@@ -1265,7 +1229,6 @@ void LevelMarkerBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
 /*
 void DisableMapBorderRegion( void )
 {
-	PERFORMANCE_MARKER
 	// will shutdown map border region
 
 	if( fDisabledMapBorder )
@@ -1283,7 +1246,6 @@ void DisableMapBorderRegion( void )
 
 void EnableMapBorderRegion( void )
 {
-	PERFORMANCE_MARKER
 	// will re-enable mapborder region
 
 	if( fDisabledMapBorder == FALSE )
@@ -1303,7 +1265,6 @@ void EnableMapBorderRegion( void )
 
 void TurnOnShowTeamsMode( void )
 {
-	PERFORMANCE_MARKER
 	// if mode already on, leave, else set and redraw
 
 	if( fShowTeamFlag == FALSE )
@@ -1342,7 +1303,6 @@ void TurnOnShowTeamsMode( void )
 
 void TurnOnAirSpaceMode( void )
 {
-	PERFORMANCE_MARKER
 	// if mode already on, leave, else set and redraw
 
 	if( fShowAircraftFlag == FALSE )
@@ -1392,7 +1352,7 @@ void TurnOnAirSpaceMode( void )
 		}
 
 
-		// if showing underground		
+		// if showing underground
 		if ( iCurrentMapSectorZ != 0 )
 		{
 			// switch to the surface
@@ -1409,7 +1369,6 @@ void TurnOnAirSpaceMode( void )
 
 void TurnOnItemFilterMode( void )
 {
-	PERFORMANCE_MARKER
 	// if mode already on, leave, else set and redraw
 
 	if( fShowItemsFlag == FALSE )
@@ -1465,7 +1424,6 @@ void TurnOnItemFilterMode( void )
 /*
 void UpdateLevelButtonStates( void )
 {
-	PERFORMANCE_MARKER
 
 	if( iCurrentMapSectorZ == 0 )
 	{
@@ -1493,7 +1451,6 @@ void UpdateLevelButtonStates( void )
 /*
 void UpdateScrollButtonStatesWhileScrolling( void )
 {
-	PERFORMANCE_MARKER
 	// too far west, disable
 	if ( iZoomY == NORTH_ZOOM_BOUND )
 	{
@@ -1524,7 +1481,6 @@ void UpdateScrollButtonStatesWhileScrolling( void )
 
 void InitializeMapBorderButtonStates( void )
 {
-	PERFORMANCE_MARKER
 	if( fShowItemsFlag )
 	{
 		MapBorderButtonOn( MAP_BORDER_ITEM_BTN );
@@ -1551,7 +1507,7 @@ void InitializeMapBorderButtonStates( void )
 	{
 		MapBorderButtonOff( MAP_BORDER_MINE_BTN );
 	}
-	
+
 	if( fShowTeamFlag )
 	{
 		MapBorderButtonOn( MAP_BORDER_TEAMS_BTN );
@@ -1560,7 +1516,7 @@ void InitializeMapBorderButtonStates( void )
 	{
 		MapBorderButtonOff( MAP_BORDER_TEAMS_BTN );
 	}
-	
+
 	if( fShowAircraftFlag )
 	{
 		MapBorderButtonOn( MAP_BORDER_AIRSPACE_BTN );
@@ -1584,7 +1540,6 @@ void InitializeMapBorderButtonStates( void )
 
 BOOLEAN DoesPlayerHaveAnyMilitia( void )
 {
-	PERFORMANCE_MARKER
 	INT16 sX, sY;
 
 	// run through list of towns that might have militia..if any return TRUE..else return FALSE
@@ -1609,7 +1564,6 @@ BOOLEAN DoesPlayerHaveAnyMilitia( void )
 
 void CommonBtnCallbackBtnDownChecks( void )
 {
-	PERFORMANCE_MARKER
 	if( IsMapScreenHelpTextUp() )
 	{
 		// stop mapscreen text
@@ -1627,7 +1581,6 @@ void CommonBtnCallbackBtnDownChecks( void )
 
 void InitMapScreenFlags( void )
 {
-	PERFORMANCE_MARKER
 	fShowTownFlag = TRUE;
 	fShowMineFlag = FALSE;
 
@@ -1642,7 +1595,6 @@ void InitMapScreenFlags( void )
 
 void MapBorderButtonOff( UINT8 ubBorderButtonIndex )
 {
-	PERFORMANCE_MARKER
 	Assert( ubBorderButtonIndex < 6 );
 
 	if( fShowMapInventoryPool )
@@ -1664,7 +1616,6 @@ void MapBorderButtonOff( UINT8 ubBorderButtonIndex )
 
 void MapBorderButtonOn( UINT8 ubBorderButtonIndex )
 {
-	PERFORMANCE_MARKER
 	Assert( ubBorderButtonIndex < 6 );
 
 	if( fShowMapInventoryPool )

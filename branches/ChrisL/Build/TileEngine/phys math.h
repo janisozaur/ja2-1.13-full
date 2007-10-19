@@ -5,7 +5,6 @@
 // explicit dependencies
 #include <math.h>		// for sqrt
 #include <float.h>
-#include "profiler.h"
 
 typedef float real;
 
@@ -59,6 +58,7 @@ vector_3	VCrossProduct( vector_3 *a, vector_3 *b );
 
 
 #endif
+
 
 
 

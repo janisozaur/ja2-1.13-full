@@ -17,16 +17,15 @@ struct
 	DEALER_POSSIBLE_INV		curInventory;
 	DEALER_POSSIBLE_INV *	curArray;
 	UINT32			maxArraySize;
-	
+
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
 typedef inventoryParseData;
 
-static void XMLCALL 
+static void XMLCALL
 inventoryStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	inventoryParseData * pData = (inventoryParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -67,10 +66,9 @@ inventoryStartElementHandle(void *userData, const XML_Char *name, const XML_Char
 static void XMLCALL
 inventoryCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	inventoryParseData * pData = (inventoryParseData *)userData;
 
-	if( (pData->currentDepth <= pData->maxReadDepth) && 
+	if( (pData->currentDepth <= pData->maxReadDepth) &&
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
 	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
@@ -81,7 +79,6 @@ inventoryCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 inventoryEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	inventoryParseData * pData = (inventoryParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -126,13 +123,12 @@ inventoryEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInInventoryStats(DEALER_POSSIBLE_INV *pInv, STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
-	
+
 	inventoryParseData pData;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading Inventory.xml" );
@@ -141,7 +137,7 @@ BOOLEAN ReadInInventoryStats(DEALER_POSSIBLE_INV *pInv, STR fileName)
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -156,15 +152,15 @@ BOOLEAN ReadInInventoryStats(DEALER_POSSIBLE_INV *pInv, STR fileName)
 
 	FileClose( hFile );
 
-	
+
 	XML_SetElementHandler(parser, inventoryStartElementHandle, inventoryEndElementHandle);
 	XML_SetCharacterDataHandler(parser, inventoryCharacterDataHandle);
 
-	
+
 	memset(&pData,0,sizeof(pData));
 	pData.curArray = pInv;
-	pData.maxArraySize = MAXITEMS; 
-	
+	pData.maxArraySize = MAXITEMS;
+
 	XML_SetUserData(parser, &pData);
 
 
@@ -189,7 +185,6 @@ BOOLEAN ReadInInventoryStats(DEALER_POSSIBLE_INV *pInv, STR fileName)
 }
 BOOLEAN WriteInventoryStats(DEALER_POSSIBLE_INV *pInv, STR fileName)
 {
-	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeinventorystats");
 	HWFILE		hFile;
 
@@ -198,7 +193,7 @@ BOOLEAN WriteInventoryStats(DEALER_POSSIBLE_INV *pInv, STR fileName)
 	hFile = FileOpen( fileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	{
 		UINT32 cnt;
 
