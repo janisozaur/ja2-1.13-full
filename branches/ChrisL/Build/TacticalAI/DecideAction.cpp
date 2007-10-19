@@ -1733,10 +1733,8 @@ INT8 YellowAlert_TryToSeekNoise(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 	return AI_ACTION_NOT_AN_ACTION;
 }
 
-INT8 YellowAlert_TryToSeekFriend(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
+INT8 YellowAlert_TryToSeekFriend(SOLDIERTYPE* pSoldier, INT16 sClosestFriend, YellowAlertFlags& flags)
 {
-	INT16 sClosestFriend = ClosestReachableFriendInTrouble(pSoldier, &flags.fClimb);
-
 	// if there is a friend alive & reachable who last radioed in
 	if (sClosestFriend != NOWHERE)
 	{
@@ -1979,11 +1977,30 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 		return(bActionReturned);
 
 
+#ifdef ORIGINAL_CODE
+	//if ( !( pSoldier->bTeam == CIV_TEAM && pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != ELDIN ) )
+#endif
+#ifdef BUGGY_CODE
 	// Hmmm, I don't think this check is doing what is intended.  But then I see no comment about what is intended.
 	// However, civilians with no profile (and likely no weapons) do not need to be seeking out noises.  Most don't
 	// even have the body type for it (can't climb or jump).
-	//if ( !( pSoldier->bTeam == CIV_TEAM && pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != ELDIN ) )
 	if ( pSoldier->bTeam != CIV_TEAM || ( pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != ELDIN ) )
+#endif
+
+	//original code says if not (((on civ team and named someone other than Eldin)))
+	//so the condition is true if any 1 of the 3 is false
+	//false#1 civ team but named (all 3 true)
+	//true #1 military //duh, military needs to investigate noises
+	//true #2 civ team but no name //makes regular civilians wander around to make them look like they are doing something
+	//true #3 civ team and named Eldin //Eldin is probably a special case because he will fight you?
+	bool onCivTeam = (pSoldier->bTeam == CIV_TEAM);
+	bool isNamedCiv = (pSoldier->ubProfile != NO_PROFILE);
+	bool isEldin = (pSoldier->ubProfile == ELDIN);//logically flipped from the original, isNotEldin == false is confusing
+	if (
+		(onCivTeam == false) || //true #1
+		(onCivTeam == true && isNamedCiv == false) || //true #2
+		(onCivTeam == true && isNamedCiv == true && isEldin == true)//true #3
+		)
 	{
 		// IF WE ARE MILITIA/CIV IN REALTIME, CLOSE TO NOISE, AND CAN SEE THE SPOT WHERE THE NOISE CAME FROM, FORGET IT
 		if ( flags.fReachable && !flags.fClimb && !gfTurnBasedAI && (pSoldier->bTeam == MILITIA_TEAM || pSoldier->bTeam == CIV_TEAM )&& PythSpacesAway( pSoldier->sGridNo, flags.sNoiseGridNo ) < 5 )
@@ -1999,25 +2016,39 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 			}
 		}
 
-		////////////////////////////////////////////////////////////////////////////
-		// SEEK NOISE
-		////////////////////////////////////////////////////////////////////////////
 
-		if ( flags.fReachable )
-		{
-			bActionReturned = YellowAlert_TryToSeekNoise(pSoldier, flags);
-			if (bActionReturned != AI_ACTION_NOT_AN_ACTION)
-				return(bActionReturned);
+		//if we are NOT a regular civilian that intends to climb
+		//similar to true #2 - but flags.fClimb == true is a new condition,
+		//we do not want them to seek if they need to climb, but we want them to do everything else
+		if ( ! (onCivTeam == true && isNamedCiv == false && flags.fClimb == TRUE) ) {
+
+			////////////////////////////////////////////////////////////////////////////
+			// SEEK NOISE
+			////////////////////////////////////////////////////////////////////////////
+
+			if ( flags.fReachable )
+			{
+				bActionReturned = YellowAlert_TryToSeekNoise(pSoldier, flags);
+				if (bActionReturned != AI_ACTION_NOT_AN_ACTION)
+					return(bActionReturned);
+			}
 		}
 
 
-		////////////////////////////////////////////////////////////////////////////
-		// SEEK FRIEND WHO LAST RADIOED IN TO REPORT NOISE
-		////////////////////////////////////////////////////////////////////////////
-		bActionReturned = YellowAlert_TryToSeekFriend(pSoldier, flags);
-		if (bActionReturned != AI_ACTION_NOT_AN_ACTION)
-			return(bActionReturned);
-
+		INT16 sClosestFriend = ClosestReachableFriendInTrouble(pSoldier, &flags.fClimb);
+		if (sClosestFriend != NOWHERE) {
+			//if we are NOT a regular civilian that intends to climb
+			//similar to true #2 - but flags.fClimb == true is a new condition,
+			//we do not want them to seek if they need to climb, but we want them to do everything else
+			if ( ! (onCivTeam == true && isNamedCiv == false && flags.fClimb == TRUE) ) {
+				////////////////////////////////////////////////////////////////////////////
+				// SEEK FRIEND WHO LAST RADIOED IN TO REPORT NOISE
+				////////////////////////////////////////////////////////////////////////////
+				bActionReturned = YellowAlert_TryToSeekFriend(pSoldier, sClosestFriend, flags);
+				if (bActionReturned != AI_ACTION_NOT_AN_ACTION)
+					return(bActionReturned);
+			}
+		}
 
 
 		////////////////////////////////////////////////////////////////////////////
@@ -4314,7 +4345,9 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 	// IF ENOUGH APs TO BURST, RANDOM CHANCE OF DOING SO
 	//////////////////////////////////////////////////////////////////////////
 
-	if (IsGunBurstCapable( pSoldier, flags.BestAttack.bWeaponIn, FALSE ) &&
+	// Changed by ADB, rev 1513
+	//if (IsGunBurstCapable( pSoldier, flags.BestAttack.bWeaponIn, FALSE ) &&
+	if (IsGunBurstCapable( &pSoldier->inv[flags.BestAttack.bWeaponIn], FALSE, pSoldier ) &&
 		!(Menptr[flags.BestShot.ubOpponent].stats.bLife < OKLIFE) && // don't burst at downed targets
 		pSoldier->inv[flags.BestAttack.bWeaponIn][0]->data.gun.ubGunShotsLeft > 1 &&
 		(pSoldier->bTeam != gbPlayerNum || pSoldier->aiData.bRTPCombat == RTP_COMBAT_AGGRESSIVE) )
@@ -4377,7 +4410,9 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 		}
 	}
 
-	if (IsGunAutofireCapable( pSoldier, flags.BestAttack.bWeaponIn ) &&
+	// Changed by ADB, rev 1513
+	//if (IsGunAutofireCapable( pSoldier, flags.BestAttack.bWeaponIn ) &&
+	if (IsGunAutofireCapable( &pSoldier->inv[flags.BestAttack.bWeaponIn] ) &&
 		!(Menptr[flags.BestShot.ubOpponent].stats.bLife < OKLIFE) && // don't burst at downed targets
 		(( pSoldier->inv[flags.BestAttack.bWeaponIn][0]->data.gun.ubGunShotsLeft > 1 &&
 		flags.BestAttack.ubAimTime != BURSTING ) || Weapon[pSoldier->inv[flags.BestAttack.bWeaponIn].usItem].NoSemiAuto) )
@@ -4635,8 +4670,12 @@ void BlackAlert_ShootGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 #endif
 
 
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("DecideActionBlack: Check for GL Bursts, is launcher capable? = %d, rtpcombat? = %d, bestattackaction = %d",IsGunBurstCapable( pSoldier, flags.BestAttack.bWeaponIn, FALSE ),pSoldier->aiData.bRTPCombat,flags.ubBestAttackAction ));
-	if (flags.ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE && (Item[pSoldier->inv[flags.BestAttack.bWeaponIn].usItem].usItemClass == IC_LAUNCHER && IsGunBurstCapable( pSoldier, flags.BestAttack.bWeaponIn, FALSE )) &&
+	// Changed by ADB, rev 1513
+	//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("DecideActionBlack: Check for GL Bursts, is launcher capable? = %d, rtpcombat? = %d, bestattackaction = %d",IsGunBurstCapable( pSoldier, flags.BestAttack.bWeaponIn, FALSE ),pSoldier->aiData.bRTPCombat,flags.ubBestAttackAction ));
+	//if (flags.ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE && (Item[pSoldier->inv[flags.BestAttack.bWeaponIn].usItem].usItemClass == IC_LAUNCHER && IsGunBurstCapable( pSoldier, flags.BestAttack.bWeaponIn, FALSE )) &&
+	BOOLEAN burstCapable = IsGunBurstCapable( &pSoldier->inv[flags.BestAttack.bWeaponIn], FALSE, pSoldier );
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("DecideActionBlack: Check for GL Bursts, is launcher capable? = %d, rtpcombat? = %d, bestattackaction = %d",burstCapable,pSoldier->aiData.bRTPCombat,flags.ubBestAttackAction ));
+	if (flags.ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE && (Item[pSoldier->inv[flags.BestAttack.bWeaponIn].usItem].usItemClass == IC_LAUNCHER && burstCapable) &&
 		(pSoldier->bTeam != gbPlayerNum || pSoldier->aiData.bRTPCombat == RTP_COMBAT_AGGRESSIVE) )
 	{
 

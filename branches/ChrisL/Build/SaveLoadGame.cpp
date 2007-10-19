@@ -1102,7 +1102,9 @@ BOOLEAN SOLDIERCREATE_STRUCT::Load(HWFILE hFile, int versionToLoad, bool loadChe
 	return TRUE;
 }
 
-BOOLEAN MERCPROFILESTRUCT::Load(HWFILE hFile, bool forceLoadOldVersion)
+// Changed by ADB, rev 1513
+//BOOLEAN MERCPROFILESTRUCT::Load(HWFILE hFile, bool forceLoadOldVersion)
+BOOLEAN MERCPROFILESTRUCT::Load(HWFILE hFile, bool forceLoadOldVersion, bool forceLoadOldEncryption, bool wasSavedWithEncryption)
 {
 	UINT32 uiNumBytesRead;
 	this->initialize();
@@ -1156,7 +1158,12 @@ BOOLEAN MERCPROFILESTRUCT::Load(HWFILE hFile, bool forceLoadOldVersion)
 			OLD_MERCPROFILESTRUCT_101 old;
 			typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
 			functionPtr pLoadingFunction;
-			if ( guiCurrentSaveGameVersion < 87 || forceLoadOldVersion == true)
+			// Changed by ADB, rev 1513
+			//if ( guiCurrentSaveGameVersion < 87 || forceLoadOldVersion == true)
+			if (wasSavedWithEncryption == false) {
+				pLoadingFunction = &FileRead;
+			}
+			else if ( guiCurrentSaveGameVersion < 87 || forceLoadOldEncryption == true)
 			{
 				pLoadingFunction = &JA2EncryptedFileRead;
 			}
@@ -4263,7 +4270,9 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 	//Loop through all the profiles to Load
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
-		if ( !gMercProfiles[cnt].Load(hFile, false) )
+		// Changed by ADB, rev 1513
+		//if ( !gMercProfiles[cnt].Load(hFile, false) )
+		if ( !gMercProfiles[cnt].Load(hFile, false, false, true) )
 		{
 			return(FALSE);
 		}

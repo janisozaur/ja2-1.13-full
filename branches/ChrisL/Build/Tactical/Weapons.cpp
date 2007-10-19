@@ -5219,28 +5219,35 @@ void ReloadWeapon( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 	}
 }
 
-BOOLEAN IsGunWeaponModeCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , UINT8 bWpnMode)
+// Changed by ADB, rev 1513
+//BOOLEAN IsGunWeaponModeCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , UINT8 bWpnMode)
+BOOLEAN IsGunWeaponModeCapable( OBJECTTYPE* pObject, WeaponMode bWpnMode, SOLDIERTYPE *pSoldier )
 {
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("IsGunWeaponModeCapable: weapon mode=%d",bWpnMode));
 
 	switch(bWpnMode)
 	{
 		case WM_NORMAL:
-		return (pSoldier->inv[ ubHandPos ].exists() == true && Item[ pSoldier->inv[ ubHandPos ].usItem ].usItemClass & IC_WEAPON && !Weapon[ pSoldier->inv[ ubHandPos ].usItem ].NoSemiAuto );  // Check for being a weapon....
+		//return (pSoldier->inv[ ubHandPos ].exists() == true && Item[ pSoldier->inv[ ubHandPos ].usItem ].usItemClass & IC_WEAPON && !Weapon[ pSoldier->inv[ ubHandPos ].usItem ].NoSemiAuto );  // Check for being a weapon....
+		return (pObject->exists() == true && Item[ pObject->usItem ].usItemClass & IC_WEAPON && !Weapon[ pObject->usItem ].NoSemiAuto );  // Check for being a weapon....
 
 		case WM_BURST:
-		return IsGunBurstCapable(pSoldier, ubHandPos, FALSE);
+		//return IsGunBurstCapable(pSoldier, ubHandPos, FALSE);
+		return IsGunBurstCapable(pObject, FALSE, pSoldier);
 
 		case WM_AUTOFIRE:
-		return ((IsGunAutofireCapable(pSoldier, ubHandPos) || Weapon[ pSoldier->inv[ ubHandPos ].usItem ].NoSemiAuto )&& !Item[pSoldier->inv[ubHandPos].usItem].grenadelauncher );
+		//return ((IsGunAutofireCapable(pSoldier, ubHandPos) || Weapon[ pSoldier->inv[ ubHandPos ].usItem ].NoSemiAuto )&& !Item[pSoldier->inv[ubHandPos].usItem].grenadelauncher );
+		return ((IsGunAutofireCapable(pObject) || Weapon[ pObject->usItem ].NoSemiAuto )&& !Item[pObject->usItem].grenadelauncher );
 
 		case WM_ATTACHED_GL:
 //		return (FindAttachment( &(pSoldier->inv[ubHandPos]), UNDER_GLAUNCHER ) != 0 && FindLaunchableAttachment( &(pSoldier->inv[ubHandPos]), UNDER_GLAUNCHER ) != 0 );
-		
-		return (!Item[pSoldier->inv[ubHandPos].usItem].grenadelauncher &&  IsGrenadeLauncherAttached( &(pSoldier->inv[ubHandPos]) ) && FindLaunchableAttachment( &(pSoldier->inv[ubHandPos]), GetAttachedGrenadeLauncher( &(pSoldier->inv[ubHandPos]) )) != 0 );
-	
+
+		//return (!Item[pSoldier->inv[ubHandPos].usItem].grenadelauncher &&  IsGrenadeLauncherAttached( &(pSoldier->inv[ubHandPos]) ) && FindLaunchableAttachment( &(pSoldier->inv[ubHandPos]), GetAttachedGrenadeLauncher( &(pSoldier->inv[ubHandPos]) )) != 0 );
+		return (!Item[pObject->usItem].grenadelauncher &&  IsGrenadeLauncherAttached( pObject ) && FindLaunchableAttachment( pObject, GetAttachedGrenadeLauncher( pObject )) != 0 );
+
 		case WM_ATTACHED_GL_BURST:
-			return (!Item[pSoldier->inv[ubHandPos].usItem].grenadelauncher && IsGrenadeLauncherAttached( &(pSoldier->inv[ubHandPos]) ) && Weapon[GetAttachedGrenadeLauncher(&pSoldier->inv[ubHandPos])].ubShotsPerBurst > 0 && FindLaunchableAttachment( &(pSoldier->inv[ubHandPos]), GetAttachedGrenadeLauncher( &(pSoldier->inv[ubHandPos]))) != 0 );
+			//return (!Item[pSoldier->inv[ubHandPos].usItem].grenadelauncher && IsGrenadeLauncherAttached( &(pSoldier->inv[ubHandPos]) ) && Weapon[GetAttachedGrenadeLauncher(&pSoldier->inv[ubHandPos])].ubShotsPerBurst > 0 && FindLaunchableAttachment( &(pSoldier->inv[ubHandPos]), GetAttachedGrenadeLauncher( &(pSoldier->inv[ubHandPos]))) != 0 );
+			return (!Item[pObject->usItem].grenadelauncher && IsGrenadeLauncherAttached( pObject ) && Weapon[GetAttachedGrenadeLauncher(pObject)].ubShotsPerBurst > 0 && FindLaunchableAttachment( pObject, GetAttachedGrenadeLauncher( pObject)) != 0 );
 
 		case WM_ATTACHED_GL_AUTO:
 			return FALSE;
@@ -5251,16 +5258,21 @@ BOOLEAN IsGunWeaponModeCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , UINT8 b
 	}
 }
 
-BOOLEAN IsGunAutofireCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
+// Changed by ADB, rev 1513
+//BOOLEAN IsGunAutofireCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
+BOOLEAN IsGunAutofireCapable( OBJECTTYPE* pObject )
 {
 	BOOLEAN fCapable = FALSE;
 
-	if ( pSoldier->inv[ ubHandPos ].exists() == true )
+	//if ( pSoldier->inv[ ubHandPos ].exists() == true )
+	if ( pObject->exists() == true )
 	{
 		// ATE: Check for being a weapon....
-		if ( Item[ pSoldier->inv[ ubHandPos ].usItem ].usItemClass & IC_WEAPON )
+		//if ( Item[ pSoldier->inv[ ubHandPos ].usItem ].usItemClass & IC_WEAPON )
+		if ( Item[ pObject->usItem ].usItemClass & IC_WEAPON )
 		{
-			if ( GetAutofireShotsPerFiveAPs(&pSoldier->inv[ ubHandPos ]) > 0 )
+			//if ( GetAutofireShotsPerFiveAPs(&pSoldier->inv[ ubHandPos ]) > 0 )
+			if ( GetAutofireShotsPerFiveAPs(pObject) > 0 )
 			{
 				fCapable = TRUE;
 			}
@@ -5270,28 +5282,96 @@ BOOLEAN IsGunAutofireCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 	return( fCapable );
 }
 
-BOOLEAN IsGunBurstCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , BOOLEAN fNotify )
+// Changed by ADB, rev 1513
+//BOOLEAN IsGunBurstCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , BOOLEAN fNotify )
+BOOLEAN IsGunBurstCapable(OBJECTTYPE* pObject, BOOLEAN fNotify, SOLDIERTYPE* pSoldier )
 {
 	BOOLEAN fCapable = FALSE;
 
-	if ( pSoldier->inv[ ubHandPos ].exists() == true )
+	//if ( pSoldier->inv[ ubHandPos ].exists() == true )
+	if ( pObject->exists() == true )
 	{
 		// ATE: Check for being a weapon....
-		if ( Item[ pSoldier->inv[ ubHandPos ].usItem ].usItemClass & IC_WEAPON )
+		//if ( Item[ pSoldier->inv[ ubHandPos ].usItem ].usItemClass & IC_WEAPON )
+		if ( Item[ pObject->usItem ].usItemClass & IC_WEAPON )
 		{
-			if ( GetShotsPerBurst(&pSoldier->inv[ ubHandPos ]) > 0 )
+			//if ( GetShotsPerBurst(&pSoldier->inv[ ubHandPos ]) > 0 )
+			if ( GetShotsPerBurst(pObject) > 0 )
 			{
 				fCapable = TRUE;
 			}
 		}
 	}
 
-	if ( fNotify && !fCapable )
+	//ADB fNotify is always false, so notify and pSoldier are not necessary parameters
+	if ( fNotify && !fCapable && pSoldier != NULL )
 	{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[ STR_NOT_BURST_CAPABLE ], pSoldier->name );
+			//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[ STR_NOT_BURST_CAPABLE ], pSoldier->name );
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[ STR_NOT_BURST_CAPABLE ], pSoldier->name );
 	}
 
 	return( fCapable );
+}
+
+void HandleTacticalEffectsOfEquipmentChange( SOLDIERTYPE *pSoldier, UINT32 uiInvPos, UINT16 usOldItem, UINT16 usNewItem )
+{
+#ifdef ADB_TODO
+	SetBurstAndAutoFireMode(pSoldier, GetWeaponMode(&pSoldier->inv[uiInvPos]));
+#endif
+	// if in attached weapon mode and don't have weapon with GL attached in hand, reset weapon mode
+	if ( (pSoldier->bWeaponMode == WM_ATTACHED_GL || pSoldier->bWeaponMode == WM_ATTACHED_GL_BURST || pSoldier->bWeaponMode == WM_ATTACHED_GL_AUTO )&& !IsGrenadeLauncherAttached( &(pSoldier->inv[ HANDPOS ]) ) )
+	{
+		if ( !Weapon[pSoldier->inv[ HANDPOS ].usItem].NoSemiAuto )
+		{
+			pSoldier->bWeaponMode = WM_NORMAL;
+			pSoldier->bDoBurst = FALSE;
+			pSoldier->bDoAutofire = 0;
+		}
+		else
+		{
+			pSoldier->bWeaponMode = WM_AUTOFIRE;
+			pSoldier->bDoBurst = TRUE;
+			pSoldier->bDoAutofire = 1;
+		}
+	}
+
+	// if he is loaded tactically
+	if ( pSoldier->bInSector )
+	{
+		// If this is our main hand
+		if ( uiInvPos == HANDPOS || uiInvPos == SECONDHANDPOS )
+		{
+			// check if we need to change animation!
+			pSoldier->ReLoadSoldierAnimationDueToHandItemChange( usOldItem, usNewItem );
+		}
+
+		// if this is head gear
+		if ( uiInvPos == HEAD1POS || uiInvPos == HEAD2POS )
+		{
+			// Could be because of GOGGLES change...	Re-create light...
+			pSoldier->DeleteSoldierLight( );
+			pSoldier->PositionSoldierLight( );
+		}
+	}
+	else
+	{
+		// as a minimum
+		if ( (Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass & IC_WEAPON) && GetShotsPerBurst(&pSoldier->inv[ HANDPOS ]) == 0 )
+		{
+			if ( !Weapon[pSoldier->inv[ HANDPOS ].usItem].NoSemiAuto )
+			{
+				pSoldier->bWeaponMode = WM_NORMAL;
+				pSoldier->bDoBurst = FALSE;
+				pSoldier->bDoAutofire = 0;
+			}
+			else
+			{
+				pSoldier->bWeaponMode = WM_AUTOFIRE;
+				pSoldier->bDoAutofire = 1;
+				pSoldier->bDoBurst = TRUE;
+			}
+		}
+	}
 }
 
 
@@ -5593,7 +5673,9 @@ void ChangeWeaponMode( SOLDIERTYPE * pSoldier )
 				pSoldier->bWeaponMode = WM_NORMAL;
 		}
 	}
-	while(IsGunWeaponModeCapable( pSoldier, HANDPOS, pSoldier->bWeaponMode ) == FALSE && pSoldier->bWeaponMode != WM_NORMAL);
+	// Changed by ADB, rev 1513
+	//while(IsGunWeaponModeCapable( pSoldier, HANDPOS, pSoldier->bWeaponMode ) == FALSE && pSoldier->bWeaponMode != WM_NORMAL);
+	while(IsGunWeaponModeCapable( &pSoldier->inv[HANDPOS], static_cast<WeaponMode>(pSoldier->bWeaponMode), pSoldier ) == FALSE && pSoldier->bWeaponMode != WM_NORMAL);
 	
 	if (pSoldier->bWeaponMode == WM_AUTOFIRE || pSoldier->bWeaponMode == WM_ATTACHED_GL_AUTO )
 	{
@@ -5611,7 +5693,8 @@ void ChangeWeaponMode( SOLDIERTYPE * pSoldier )
 		pSoldier->bDoAutofire = 0;	
 	}
 
-	pSoldier->flags.fDoSpread = 0;
+	// Changed by ADB, rev 1513
+	//pSoldier->flags.fDoSpread = 0;
 	
 	DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 	gfUIForceReExamineCursorData = TRUE;

@@ -416,7 +416,9 @@ public:
 	~MERCPROFILESTRUCT();
 
 	void	CopyOldInventoryToNew(const OLD_MERCPROFILESTRUCT_101& src);
-	BOOLEAN Load(HWFILE hFile, bool forceLoadOldVersion);
+	// Changed by ADB, rev 1513
+	//BOOLEAN Load(HWFILE hFile, bool forceLoadOldVersion);
+	BOOLEAN Load(HWFILE hFile, bool forceLoadOldVersion, bool forceLoadOldEncryption, bool wasSavedWithEncryption);
 	BOOLEAN Save(HWFILE hFile);
 	UINT32	GetChecksum();
 

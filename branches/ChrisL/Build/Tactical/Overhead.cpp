@@ -7316,7 +7316,9 @@ BOOLEAN ProcessImplicationsOfPCAttack( SOLDIERTYPE * pSoldier, SOLDIERTYPE ** pp
 					// Toggle burst capable...
 					if ( !pTarget->bDoBurst )
 					{
-						if ( IsGunBurstCapable( pTarget, HANDPOS , FALSE ) )
+						// Changed by ADB, 1513
+						//if ( IsGunBurstCapable( pTarget, HANDPOS , FALSE ) )
+						if ( IsGunBurstCapable( &pTarget->inv[HANDPOS], FALSE, pTarget ) )
 						{
 							ChangeWeaponMode( pTarget );
 						}

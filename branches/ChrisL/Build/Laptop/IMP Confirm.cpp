@@ -33,10 +33,14 @@
 	#include "strategic.h"
 	#include "weapons.h"
 	#include "Random.h"
+	#include "GameVersion.h"
 	#include "GameSettings.h"
 #endif
 
-#define IMP_FILENAME_SUFFIX ".dat"
+// Changed by ADB (rev 1513) to resolve IMPs created prior to structural changes
+//#define IMP_FILENAME_SUFFIX ".dat"
+#define OLD_IMP_FILENAME_SUFFIX ".dat"
+#define NEW_IMP_FILENAME_SUFFIX ".dat2"
 
 //CHRISL: structure needed to store temporary inventory information during IMP creation
 typedef struct
@@ -1103,7 +1107,9 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId )
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("WriteOutCurrentImpCharacter: IMP.dat"));
 	char zImpFileName[13];
 	strcpy(zImpFileName,IMP_MERC_FILENAME);
-	strcat(zImpFileName,IMP_FILENAME_SUFFIX);
+	// Changed by ADB, rev 1513, to resolve IMPs created prior to structural changes
+	//strcat(zImpFileName,IMP_FILENAME_SUFFIX);
+	strcat(zImpFileName,NEW_IMP_FILENAME_SUFFIX);
 	WriteOutCurrentImpCharacter ( iProfileId, zImpFileName);
 
 
@@ -1118,7 +1124,9 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId )
 		zFileName[i] = temp;
 	}
 
-	strcat(zFileName,IMP_FILENAME_SUFFIX);
+	// Changed by ADB, rev 1513
+	//strcat(zFileName,IMP_FILENAME_SUFFIX);
+	strcat(zFileName,NEW_IMP_FILENAME_SUFFIX);
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("WriteOutCurrentImpCharacter: %s", zFileName));
 	WriteOutCurrentImpCharacter ( iProfileId, zFileName);
@@ -1133,6 +1141,23 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId, STR fileName )
 	// open the file for writing
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("WriteOutCurrentImpCharacter: %s", fileName));
 	hFile = FileOpen(fileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE);
+
+	// ADB we need to indicate that we have saved under the new format
+	int nine = 9999;
+	if (!FileWrite(hFile, &nine, sizeof( INT32 ), &uiBytesWritten))
+	{
+		if (hFile)
+			FileClose(hFile);
+		return;
+	}
+
+	int version = SAVE_GAME_VERSION;
+	if (!FileWrite(hFile, &version, sizeof( INT32 ), &uiBytesWritten))
+	{
+		if (hFile)
+			FileClose(hFile);
+		return;
+	}
 
 	// write out the profile id
 	if (!FileWrite(hFile, &iProfileId, sizeof( INT32 ), &uiBytesWritten))
@@ -1167,15 +1192,28 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId, STR fileName )
 
 BOOLEAN ImpExists ( STR nickName )
 {
+	// Changed by ADB, rev 1513, to resolve IMPs created prior to structural changes
 	char zFileName[13];
 
 	strcpy(zFileName,nickName);
-	strcat(zFileName,IMP_FILENAME_SUFFIX);
+	//strcat(zFileName,IMP_FILENAME_SUFFIX);
+	strcat(zFileName,OLD_IMP_FILENAME_SUFFIX);
 
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ImpExists: %s",	zFileName));
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ImpExists: %d", FileExistsNoDB(zFileName) ));
+	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ImpExists: %s",	zFileName));
+	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ImpExists: %d", FileExistsNoDB(zFileName) ));
+	BOOLEAN oldExists = FileExistsNoDB(zFileName);
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("OLD ImpExists: %s",	zFileName));
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("OLD ImpExists: %d", oldExists ));
 
-	return FileExistsNoDB(zFileName);
+	//return FileExistsNoDB(zFileName);
+	strcpy(zFileName,nickName);
+	strcat(zFileName,NEW_IMP_FILENAME_SUFFIX);
+
+	BOOLEAN newExists = FileExistsNoDB(zFileName);
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("NEW ImpExists: %s",	zFileName));
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("NEW ImpExists: %d", newExists ));
+
+	return (oldExists || newExists);
 }
 
 BOOLEAN LoadImpCharacter( STR nickName )
@@ -1186,17 +1224,32 @@ BOOLEAN LoadImpCharacter( STR nickName )
 
 	char zFileName[13];
 
+	//ADB first try to load the new kind
 	strcpy(zFileName,nickName);
-	strcat(zFileName,IMP_FILENAME_SUFFIX);
+	//strcat(zFileName,IMP_FILENAME_SUFFIX);
+	strcat(zFileName,NEW_IMP_FILENAME_SUFFIX);
 
-	// open the file for writing
+	// open the file for reading
 	hFile = FileOpen(zFileName, FILE_ACCESS_READ, FALSE);
 
 	// valid file?
-	if( hFile == -1 )
+	if( !hFile )
 	{
-		DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-		return FALSE;
+		//DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		//return FALSE;
+		//if the new kind doesn't exist, load the old kind
+		strcpy(zFileName,nickName);
+		strcat(zFileName,OLD_IMP_FILENAME_SUFFIX);
+
+		// open the file for reading
+		hFile = FileOpen(zFileName, FILE_ACCESS_READ, FALSE);
+
+		// valid file?
+		if( !hFile )
+		{
+			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			return FALSE;
+		}
 	}
 
 	// read in the profile
@@ -1204,6 +1257,28 @@ BOOLEAN LoadImpCharacter( STR nickName )
 	{
 		DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 		return FALSE;
+	}
+
+	int version = SAVE_GAME_VERSION;
+	bool isOldVersion = true;
+	if (iProfileId == 9999) {
+		//ADB if we saved under the original version, then iProfileId is some low number
+		//if we saved under the new version, then it's 9999, and we need to know what version it was saved under
+		isOldVersion = false;
+
+		//load the version, atm not used
+		if (!FileRead(hFile, &version, sizeof( INT32 ), &uiBytesRead))
+		{
+			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			return FALSE;
+		}
+
+		//load the REAL iProfileId
+		if (!FileRead(hFile, &iProfileId, sizeof( INT32 ), &uiBytesRead))
+		{
+			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			return FALSE;
+		}
 	}
 
 	// read in the portrait
@@ -1222,7 +1297,8 @@ BOOLEAN LoadImpCharacter( STR nickName )
 		LaptopSaveInfo.iIMPIndex = iProfileId;
 
 		// read in the profile
-		if ( !gMercProfiles[ iProfileId ].Load(hFile, false) )
+		//if ( !gMercProfiles[ iProfileId ].Load(hFile, false) )
+		if ( !gMercProfiles[ iProfileId ].Load(hFile, isOldVersion, false, false) )
 		{
 			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 			return FALSE;

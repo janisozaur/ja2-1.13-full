@@ -1226,7 +1226,8 @@ public:
 
 
 
-enum WeaponModes
+// Moved to weapons.h by ADB, rev 1513
+/*enum WeaponModes
 {
 	WM_NORMAL = 0,
 	WM_BURST,
@@ -1236,7 +1237,7 @@ enum WeaponModes
 	WM_ATTACHED_GL_AUTO,
 	NUM_WEAPON_MODES
 } ;
-
+*/
 // TYPEDEFS FOR ANIMATION PROFILES
 typedef struct
 {

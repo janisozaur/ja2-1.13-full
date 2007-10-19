@@ -3,6 +3,22 @@
 
 #include "Soldier Control.h"
 
+//ADB moved from Soldier Control.h
+enum WeaponMode
+{
+	WM_NORMAL = 0,
+	WM_BURST,
+	WM_AUTOFIRE,
+	WM_ATTACHED_GL,
+	WM_ATTACHED_GL_BURST,
+	WM_ATTACHED_GL_AUTO,
+	NUM_WEAPON_MODES
+} ;
+
+//ADB moved from Interface Panels.h
+void HandleTacticalEffectsOfEquipmentChange( SOLDIERTYPE *pSoldier, UINT32 uiInvPos, UINT16 usOldItem, UINT16 usNewItem );
+
+
 #define MAXCHANCETOHIT 99
 #define BAD_DODGE_POSITION_PENALTY 20
 
@@ -332,9 +348,13 @@ extern UINT32 CalcChanceToPunch(SOLDIERTYPE *pAttacker, SOLDIERTYPE * pDefender,
 extern UINT32 CalcChanceToStab(SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ubAimTime);
 UINT32 CalcChanceToSteal(SOLDIERTYPE *pAttacker, SOLDIERTYPE * pDefender, UINT8 ubAimTime);
 extern void ReloadWeapon( SOLDIERTYPE *pSoldier, UINT8 ubHandPos );
-extern BOOLEAN IsGunWeaponModeCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , UINT8 bWpnMode );
-extern BOOLEAN IsGunBurstCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , BOOLEAN fNotify );
-extern BOOLEAN IsGunAutofireCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos );
+// Changed by ADB, rev 1513
+//extern BOOLEAN IsGunWeaponModeCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , UINT8 bWpnMode );
+//extern BOOLEAN IsGunBurstCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , BOOLEAN fNotify );
+//extern BOOLEAN IsGunAutofireCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos );
+extern BOOLEAN IsGunWeaponModeCapable( OBJECTTYPE* pObject, WeaponMode weaponMode, SOLDIERTYPE *pSoldier = NULL );
+extern BOOLEAN IsGunBurstCapable( OBJECTTYPE* pObject, BOOLEAN fNotify, SOLDIERTYPE *pSoldier = NULL );
+extern BOOLEAN IsGunAutofireCapable( OBJECTTYPE* pObject );
 extern INT32 CalcBodyImpactReduction( UINT8 ubAmmoType, UINT8 ubHitLocation );
 extern INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocation, INT32 iImpact, UINT8 ubAmmoType );
 extern INT32 ArmourPercent( SOLDIERTYPE * pSoldier );

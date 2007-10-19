@@ -281,7 +281,9 @@ BOOLEAN LoadMercProfiles(void)
 
 	for(uiLoop=0; uiLoop< NUM_PROFILES; uiLoop++)
 	{
-		if( !gMercProfiles[uiLoop].Load(fptr, true))
+		// Changed by ADB, rev 1513
+		//if( !gMercProfiles[uiLoop].Load(fptr, true))
+		if( !gMercProfiles[uiLoop].Load(fptr, true, true, true))
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s",uiLoop, pFileName) );
 			FileClose( fptr );

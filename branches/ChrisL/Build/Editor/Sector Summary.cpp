@@ -2506,6 +2506,13 @@ void WriteSectorSummaryUpdate( STR8 puiFilename, UINT8 ubLevel, SUMMARYFILE *pSu
 	else
 		x = (puiFilename[ 1 ] - '0') * 10 + puiFilename[ 2 ] - '0' - 1;
 
+	// Added by ADB, rev 1513
+	if (gpSectorSummary[x][y][ubLevel]) {
+		//ADB this is what we want to free, since we are about to memalloc again
+		MemFree( gpSectorSummary[x][y][ubLevel] );
+		gpSectorSummary[x][y][ubLevel] = NULL;
+	}
+
 	gpSectorSummary[x][y][ubLevel] = pSummaryFileInfo;
 
 	// Snap: Restore the data directory once we are finished.
@@ -2739,7 +2746,8 @@ void SummaryUpdateCallback( GUI_BUTTON *btn, INT32 reason )
 
 		if( gpCurrentSectorSummary )
 		{
-			MemFree( gpCurrentSectorSummary );
+			//ADB we shouldn't be freeing this, there's still a pointer to it in the array and we don't know where!!!
+			//MemFree( gpCurrentSectorSummary );
 			gpCurrentSectorSummary = NULL;
 		}
 

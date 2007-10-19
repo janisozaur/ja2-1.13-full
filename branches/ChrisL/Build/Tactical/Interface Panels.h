@@ -139,7 +139,8 @@ void HandlePanelFaceAnimations( SOLDIERTYPE *pSoldier );
 
 void GoToMapScreenFromTactical( void );
 
-void HandleTacticalEffectsOfEquipmentChange( SOLDIERTYPE *pSoldier, UINT32 uiInvPos, UINT16 usOldItem, UINT16 usNewItem );
+// Moved to weapons.h by ADB, rev 1513
+//void HandleTacticalEffectsOfEquipmentChange( SOLDIERTYPE *pSoldier, UINT32 uiInvPos, UINT16 usOldItem, UINT16 usNewItem );
 
 void FinishAnySkullPanelAnimations( );
 
