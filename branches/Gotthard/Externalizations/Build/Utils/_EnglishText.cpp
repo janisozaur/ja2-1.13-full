@@ -876,8 +876,9 @@ STR16 pDirectionStr[] =
 };
 
 // These are the different terrain types. 
-
-STR16 pLandTypeStrings[] =
+//Commented out to allow it to read in from the SectorNames.xml for externalization.  Gotthard 10-20-07
+//Although I just realized, wouldn't it just overwrite everything from the .xml?  Could cut out some code though and decrease size of exucutable maybe... 
+STR16 pLandTypeStrings[40] /*=
 {
 	L"Urban",
 	L"Road",
@@ -923,7 +924,7 @@ STR16 pLandTypeStrings[] =
 										//leading to the secret shelter underneath the palace
 	L"Shelter",				//The shelter underneath the queen's palace
 	L"",							//Unused
-};
+}*/;
 
 STR16 gpStrategicString[] =
 {

@@ -93,6 +93,9 @@ typedef PARSE_STAGE;
 #define LAPTOPFUNERALTEXTFILENAME				"Laptop\\Funeral.xml"
 #define LAPTOPBOBBYRAYSTEXTFILENAME				"Laptop\\BobbyRays.xml"
 
+// Gotthard: Strategic Text Files [2007-10-19]
+#define STRATEGICSECTORNAMETEXTFILENAME			"Map\\SectorNames.xml"
+
 extern BOOLEAN ReadInItemStats(STR fileName, BOOLEAN localizedVersion);
 extern BOOLEAN WriteItemStats();
 
@@ -201,4 +204,7 @@ extern BOOLEAN ReadInFuneralText(STR fileName);
 
 //Gotthard: Delivery Locations Text (For Florist, Bobby Ray's)
 extern BOOLEAN ReadInBobbyRaysText(STR fileName);
+
+//Gotthard: Special Sector Names Test (Cambria Hospital, etc.)
+extern BOOLEAN ReadInSectorNamesText(STR fileName);
 #endif

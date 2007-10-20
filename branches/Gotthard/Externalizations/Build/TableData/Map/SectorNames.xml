@@ -1,0 +1,169 @@
+<!-- The values between <TEXT></TEXT> can be changed, but there CANNOT BE ADDITIONS OR SUBTRACTIONS! -->
+<!-- NO WAY OR NO HOW DON'T EVEN THINK ABOUT IT.  -->
+<!-- Also, until the laptop drawing values are in here, if a text line is longer than the original, it might not draw correctly. -->
+
+<SectorNames>
+
+<!-- STR16 pLandTypeStrings[] Starts here  -->
+
+<SectorName>
+<TEXT>Urban</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Road</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Plains</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Desert</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Woods</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Forest</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Swamp</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Water</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Hills</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Impassable</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>River</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>River</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Foreign Country</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Tropical</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Farmland</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Plains, road</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Woods, road</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Farm, road</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Tropical, road</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Forest, road</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Coastline</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Mountain, road</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Coastal, road</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Desert, road</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Swamp, road</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Woods, SAM site</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Desert, SAM site</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Tropical, SAM site</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Meduna, SAM site</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Cambria Hospital</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Drassen Airport</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Meduna Airport</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>SAM site</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Rebel Hideout</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Tixa Dungeon</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Creature Lair</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Orta Basement</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Tunnel</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT>Shelter</TEXT>
+</SectorName>
+
+<SectorName>
+<TEXT></TEXT>
+</SectorName>
+
+</SectorNames>

@@ -499,6 +499,10 @@
 				RelativePath=".\XML_Roaming.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\XML_SectorNames.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

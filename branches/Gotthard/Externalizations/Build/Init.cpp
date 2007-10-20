@@ -153,6 +153,15 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 
 //Gotthard: External Delivery Locations Text - End
 
+//Gotthard: External Sector Names [2007-10-19]
+	strcpy(fileName, directoryName);
+	strcat(fileName, STRATEGICSECTORNAMETEXTFILENAME);
+	DebugMsg( TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
+	if(!ReadInSectorNamesText(fileName))
+		return FALSE;
+
+// Gotthard: External Sector Names - End
+
 	// WANNE: Sector Loadscreens [2007-05-18]
 	strcpy(fileName, directoryName);
 	strcat(fileName, SECTORLOADSCREENSFILENAME);
