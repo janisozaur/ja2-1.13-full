@@ -1,0 +1,189 @@
+<!-- The values between <TEXT></TEXT> can be changed, but there CANNOT BE ADDITIONS OR SUBTRACTIONS! -->
+<!-- NO WAY OR NO HOW DON'T EVEN THINK ABOUT IT.  -->
+<!-- Also, until the laptop drawing values are in here, if a text line is longer than the original, it might not draw correctly. -->
+
+<?xml version="1.0" encoding="utf-8" ?>
+
+<FloristData>
+
+<!-- This begins sFloristText -->
+
+<FloristText>
+<TEXT>Gallery</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>\"We air-drop anywhere\"</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>1-555-SCENT-ME</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>333 NoseGay Dr, Seedy City, CA USA 90210</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>http://www.scent-me.com</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>We're fast and efficient!</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Next day delivery to most areas worldwide, guaranteed.  Some restrictions apply.</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Lowest prices in the world, guaranteed!</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Show us a lower advertised price for any arrangements, and receive a dozen roses, absolutely free.</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Flying Flora, Fauna &amp; Flowers Since 1981.</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Our decorated ex-bomber aviators will air-drop your bouquet within a ten mile radius of the requested location.  Anytime - Everytime!</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Let us satisfy your floral fantasy.</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Let Bruce, our world-renowned floral designer, hand-pick the freshest, highest quality flowers from our very own greenhouse.</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>And remember, if we don't have it, we can grow it - Fast!</TEXT>
+</FloristText>
+
+<!-- This begins sOrderFormText -->
+
+<FloristText>
+<TEXT>Back</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Send</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Clear</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Gallery</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Name of Bouquet:</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Price:</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Order Number:</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Delivery Date</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>next day</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>gets there when it gets there</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Delivery Location</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Additional Services</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Crushed Bouquet($10)</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Black Roses($20)</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Wilted Bouquet($10)</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Fruit Cake (if available)($10)</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Personal Sentiments:</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Due to the size of gift cards, your message can be no longer than 75 characters.</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>...or select from one of our</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>STANDARDIZED CARDS</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Billing Information</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Name:</TEXT>
+</FloristText>
+
+<!-- This begins sFloristGalleryText  -->
+
+<FloristText>
+<TEXT>Prev</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Next</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Click on the selection you want to order.</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Please Note: there is an additional $10 fee for all wilted or crushed bouquets.</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Home</TEXT>
+</FloristText>
+
+<!-- This begins sFloristCards  -->
+
+<FloristText>
+<TEXT>Click on your selection</TEXT>
+</FloristText>
+
+<FloristText>
+<TEXT>Back</TEXT>
+</FloristText>
+
+</FloristData>

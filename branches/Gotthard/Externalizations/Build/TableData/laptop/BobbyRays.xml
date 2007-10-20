@@ -1,0 +1,77 @@
+<!-- The values between <TEXT></TEXT> can be changed, but there CANNOT BE ADDITIONS OR SUBTRACTIONS! -->
+<!-- NO WAY OR NO HOW DON'T EVEN THINK ABOUT IT.  -->
+<!-- Also, until the laptop drawing values are in here, if a text line is longer than the original, it might not draw correctly. -->
+
+<BobbyRaysData>
+
+<!-- pDeliveryLocationStrings[] Starts here -->
+
+<DeliveryLocationText>
+<TEXT>Austin</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>Baghdad</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>Drassen</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>Hong Kong</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>Beirut</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>London</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>Los Angeles</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>Meduna</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>Metavira</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>Miami</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>Moscow</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>New York</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>Ottawa</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>Paris</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>Tripoli</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>Tokyo</TEXT>
+</DeliveryLocationText>
+
+<DeliveryLocationText>
+<TEXT>Vancouver</TEXT>
+</DeliveryLocationText>
+
+</BobbyRaysData>
