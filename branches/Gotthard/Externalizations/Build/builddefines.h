@@ -48,5 +48,5 @@
 // but for now, just tell the compiler to shut up so I can see the real errors.
 #define _CRT_SECURE_NO_WARNINGS
 #define _CRT_NON_CONFORMING_SWPRINTFS
-
+#define _CRT_SECURE_NO_DEPRECATE
 #endif

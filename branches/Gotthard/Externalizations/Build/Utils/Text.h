@@ -709,6 +709,8 @@ enum
 	FLORIST_ADVERTISEMENT_6,
 	FLORIST_ADVERTISEMENT_7,
 	FLORIST_ADVERTISEMENT_8,
+	//There are actually 9 advertisements, but the 5-8 were not explicitly used.  Gotthard 10/16/07
+	FLORIST_ADVERTISEMENT_9,
 };
 extern		STR16			sFloristText[];
 

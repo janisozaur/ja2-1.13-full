@@ -2670,8 +2670,8 @@ STR16			MercHomePageText[] =
 };
 
 // For use at MiGillicutty's Web Page.
-
-STR16			sFuneralString[] =
+//Commented out so the new data in the Funeral.xml file is used.  Gotthard 10/18/07
+STR16			sFuneralString[12]/* =
 {
 	L"McGillicutty's Mortuary: Helping families grieve since 1983.",
 	L"Funeral Director and former A.I.M. mercenary Murray \"Pops\" McGillicutty is a highly skilled and experienced mortician.",
@@ -2689,11 +2689,11 @@ STR16			sFuneralString[] =
 	// The text that comes up when you click on any of the links ( except for send flowers ).
 	L"Regretably, the remainder of this site has not been completed due to a death in the family. Pending reading of the will and disbursement of assets, the site will be completed as soon as possible.",
 	L"Our sympathies do, however, go out to you at this trying time.  Please come again.",
-};
+}*/;
 
 // Text for the florist Home page
-
-STR16			sFloristText[] = 
+//Commented out so the new data in the Florist.xml file is used.  Gotthard 10/18/07
+STR16			sFloristText[14]/* = 
 {
 	//Text on the button on the bottom of the page
 
@@ -2717,13 +2717,13 @@ STR16			sFloristText[] =
 	L"Let us satisfy your floral fantasy.",
 	L"Let Bruce, our world-renowned floral designer, hand-pick the freshest, highest quality flowers from our very own greenhouse.",
 	L"And remember, if we don't have it, we can grow it - Fast!",
-};
+}*/;
 
 
 
 //Florist OrderForm
-
-STR16			sOrderFormText[] = 
+//Commented out so the new data in the Florist.xml file is used.  Gotthard 10/18/07
+STR16			sOrderFormText[21]/* = 
 {
 	//Text on the buttons
 
@@ -2754,14 +2754,14 @@ STR16			sOrderFormText[] =
 	//The text that goes beside the area where the user can enter their name
 
 	L"Name:",
-};
+}*/;
 
 
 
 
 //Florist Gallery.c
-
-STR16		sFloristGalleryText[] =
+//Commented out so the new data in the Florist.xml file is used.  Gotthard 10/18/07
+STR16		sFloristGalleryText[5]/* =
 {
 	//text on the buttons
 
@@ -2774,15 +2774,15 @@ STR16		sFloristGalleryText[] =
 	//text on the button
 
 	L"Home",
-};
+}*/;
 
 //Florist Cards
 
-STR16			sFloristCards[] =
+STR16			sFloristCards[2]/* =
 {
 	L"Click on your selection",
 	L"Back",
-};
+}*/;
 
 
 
@@ -3606,8 +3606,8 @@ STR16	gzGIOScreenText[] =
 	L"Excellent",
 	L"Awesome",
 };
-
-STR16 pDeliveryLocationStrings[] =
+//Commented out so the new data in the BobbyRays.xml file is used.  Gotthard 10/18/07
+STR16 pDeliveryLocationStrings[17]/* =
 {
 	L"Austin",			//Austin, Texas, USA	
 	L"Baghdad",			//Baghdad, Iraq (Suddam Hussein's home)
@@ -3626,7 +3626,7 @@ STR16 pDeliveryLocationStrings[] =
 	L"Tripoli",			//Tripoli, Libya (eastern Mediterranean)
 	L"Tokyo",				//Tokyo, Japan
 	L"Vancouver",		//Vancouver, British Columbia, Canada (west coast near US border)
-};
+}*/;
 
 STR16 pSkillAtZeroWarning[] =
 { //This string is used in the IMP character generation.  It is possible to select 0 ability

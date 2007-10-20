@@ -125,6 +125,34 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 		return FALSE;
 	// WANNE: Enemy drops - end
 	
+	// Gotthard: Loading external Florist Data Text [2007-10-16]
+
+	strcpy(fileName, directoryName);
+	strcat(fileName, LAPTOPFLORISTTEXTFILENAME);
+	DebugMsg( TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
+	if(!ReadInFloristText(fileName))
+		return FALSE;
+
+	// Gotthard: Florist Text - End
+
+	// Gotthard: Loading external Funeral Data Text [2007-10-18]
+	strcpy(fileName, directoryName);
+	strcat(fileName, LAPTOPFUNERALTEXTFILENAME);
+	DebugMsg( TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
+	if(!ReadInFuneralText(fileName))
+		return FALSE;
+
+	//Gotthard: Funeral Data - End
+
+	//Gotthard: Loading External Delivery Locations Text [2007-10-18]
+	strcpy(fileName, directoryName);
+	strcat(fileName, LAPTOPBOBBYRAYSTEXTFILENAME);
+	DebugMsg( TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
+	if(!ReadInBobbyRaysText(fileName))
+		return FALSE;
+
+//Gotthard: External Delivery Locations Text - End
+
 	// WANNE: Sector Loadscreens [2007-05-18]
 	strcpy(fileName, directoryName);
 	strcat(fileName, SECTORLOADSCREENSFILENAME);

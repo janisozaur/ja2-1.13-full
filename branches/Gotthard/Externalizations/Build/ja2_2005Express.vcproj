@@ -142,8 +142,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Winmm.lib"
-				OutputFile="$(OutDir)\ja2_rel_1202.exe"
+				AdditionalDependencies="Winmm.lib user32.lib gdi32.lib advapi32.lib"
+				OutputFile="ja2_extern.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				GenerateMapFile="true"

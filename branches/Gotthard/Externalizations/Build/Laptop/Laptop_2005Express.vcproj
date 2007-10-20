@@ -103,7 +103,6 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;"
-				RuntimeLibrary="0"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -626,6 +625,18 @@
 			</File>
 			<File
 				RelativePath=".\Store Inventory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\XML_BobbyRays.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\XML_FloristText.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\XML_Funeral.cpp"
 				>
 			</File>
 		</Filter>
