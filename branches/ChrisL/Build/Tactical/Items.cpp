@@ -51,6 +51,7 @@
 	#include "Smell.h"
 	#include "lighting.h"
 	#include "utilities.h"
+	#include "english.h"
 #endif
 
 //forward declarations of common classes to eliminate includes
@@ -1775,10 +1776,10 @@ INT8 FindThrowableGrenade( SOLDIERTYPE * pSoldier )
 	return( NO_SLOT );
 }
 
-OBJECTTYPE* FindAttachment( OBJECTTYPE * pObj, UINT16 usItem )
+OBJECTTYPE* FindAttachment( OBJECTTYPE * pObj, UINT16 usItem, UINT8 subObject )
 {
 	if (pObj->exists() == true) {
-		for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = (*pObj)[subObject]->attachments.begin(); iter != (*pObj)[subObject]->attachments.end(); ++iter) {
 			if (iter->usItem == usItem)
 			{
 				return &(*iter);
@@ -1788,10 +1789,10 @@ OBJECTTYPE* FindAttachment( OBJECTTYPE * pObj, UINT16 usItem )
 	return( 0 );
 }
 
-OBJECTTYPE* FindAttachmentByClass( OBJECTTYPE * pObj, UINT32 uiItemClass )
+OBJECTTYPE* FindAttachmentByClass( OBJECTTYPE * pObj, UINT32 uiItemClass, UINT8 subObject )
 {
 	if (pObj->exists() == true) {
-		for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = (*pObj)[subObject]->attachments.begin(); iter != (*pObj)[subObject]->attachments.end(); ++iter) {
 			if (Item[iter->usItem].usItemClass == uiItemClass)
 			{
 				return &(*iter);
@@ -2638,17 +2639,17 @@ void SwapObjs(SOLDIERTYPE* pSoldier, int slot, OBJECTTYPE* pObject)
 	HandleTacticalEffectsOfEquipmentChange(pSoldier, slot, pObject->usItem, pSoldier->inv[ slot ].usItem);
 }
 
-void DamageObj( OBJECTTYPE * pObj, INT8 bAmount )
+void DamageObj( OBJECTTYPE * pObj, INT8 bAmount, UINT8 subObject )
 {
 	//usually called from AttachObject, where the attachment is known to be a single item,
 	//and the attachment is only being attached to the top of the stack
-	if (bAmount >= (*pObj)[0]->data.objectStatus)
+	if (bAmount >= (*pObj)[subObject]->data.objectStatus)
 	{
-		(*pObj)[0]->data.objectStatus = 1;
+		(*pObj)[subObject]->data.objectStatus = 1;
 	}
 	else
 	{
-		(*pObj)[0]->data.objectStatus -= bAmount;
+		(*pObj)[subObject]->data.objectStatus -= bAmount;
 	}
 }
 
@@ -3314,12 +3315,13 @@ void PerformAttachmentComboMerge( OBJECTTYPE * pObj, INT8 bAttachmentComboMerge 
 	(*pObj)[0]->data.objectStatus = (INT8) (uiStatusTotal / bNumStatusContributors );
 }
 
-BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachment, BOOLEAN playSound )
+BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachment, BOOLEAN playSound, UINT8 subObject )
 {
-	if ( this->ubNumberOfObjects > 1 )
-	{
-		return( FALSE );
-	}
+	//CHRISL: This makes it impossible to add attachments to objects in a stack.  Let's remove this and make this possible.
+	//if ( this->ubNumberOfObjects > 1 )
+	//{
+	//	return( FALSE );
+	//}
 	if (pAttachment->exists() == false) {
 		return FALSE;
 	}
@@ -3344,16 +3346,16 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 
 		// find an attachment position...
 		// second half of this 'if' is for attaching GL grenades to a gun w/attached GL
-		if ( fValidLaunchable || (Item[pAttachment->usItem].glgrenade && FindAttachmentByClass(this, IC_LAUNCHER) != 0 ) )
+		if ( fValidLaunchable || (Item[pAttachment->usItem].glgrenade && FindAttachmentByClass(this, IC_LAUNCHER, subObject) != 0 ) )
 		{
 			canOnlyAttach1 = true;
 			// try replacing if possible
-			pAttachmentPosition = FindAttachmentByClass( this, Item[ pAttachment->usItem ].usItemClass );
+			pAttachmentPosition = FindAttachmentByClass( this, Item[ pAttachment->usItem ].usItemClass, subObject );
 		}
 		else
 		{
 			// try replacing if possible
-			pAttachmentPosition = FindAttachment( this, pAttachment->usItem );
+			pAttachmentPosition = FindAttachment( this, pAttachment->usItem, subObject );
 		}
 
 		if (pAttachmentPosition) {
@@ -3374,8 +3376,8 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 				if (iCheckResult < 0)
 				{
 					// the attach failure damages both items
-					DamageObj( this, (INT8) -iCheckResult );
-					DamageObj( pAttachment, (INT8) -iCheckResult );
+					DamageObj( this, (INT8) -iCheckResult, subObject );
+					DamageObj( pAttachment, (INT8) -iCheckResult, subObject );
 
 					// there should be a quote here!
 					pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
@@ -3414,7 +3416,7 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 			{
 				if ( fValidLaunchable )
 				{
-					(*this)[0]->data.gun.usGunAmmoItem = pAttachment->usItem;
+					(*this)[subObject]->data.gun.usGunAmmoItem = pAttachment->usItem;
 					//we have reloaded a launchable, so the ammo is gone from the original object
 				}
 			}
@@ -3424,8 +3426,8 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 		if (Item[pAttachment->usItem].grenadelauncher )
 		{
 			// transfer any attachments from the grenade launcher to the gun
-			(*this)[0]->attachments.splice((*this)[0]->attachments.begin(), (*pAttachment)[0]->attachments,
-				(*pAttachment)[0]->attachments.begin(), (*pAttachment)[0]->attachments.end());
+			(*this)[subObject]->attachments.splice((*this)[subObject]->attachments.begin(), (*pAttachment)[subObject]->attachments,
+				(*pAttachment)[subObject]->attachments.begin(), (*pAttachment)[subObject]->attachments.end());
 		}
 
 		if (pAttachmentPosition) {
@@ -3444,26 +3446,29 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 			if (canOnlyAttach1 == true) {
 				//we only placed one of the stack, pAttachment could have any number of objects
 				if (pAttachment->MoveThisObjectTo(attachmentObject, 1) == 0) {
-					(*this)[0]->attachments.push_back(attachmentObject);
+					(*this)[subObject]->attachments.push_back(attachmentObject);
 				}
 			}
 			else {
 				//pAttachment could have any number of objects, they have all been moved over
-				(*this)[0]->attachments.push_back(*pAttachment);
+				(*this)[subObject]->attachments.push_back(*pAttachment);
 				DeleteObj(pAttachment);
 			}
 		}
 
 
 		// Check for attachment merge combos here
-		bAttachComboMerge = GetAttachmentComboMerge( this );
-		if ( bAttachComboMerge != -1 )
-		{
-			PerformAttachmentComboMerge( this, bAttachComboMerge );
-			if ( bAttachInfoIndex != -1 && AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod < 20 )
+		//CHRISL: Only do this if we're looking at a single item.  Don't try a combo merge when dealing with a stack
+		if(this->ubNumberOfObjects == 1){
+			bAttachComboMerge = GetAttachmentComboMerge( this );
+			if ( bAttachComboMerge != -1 )
 			{
-				StatChange( pSoldier, MECHANAMT, (INT8) ( 20 - AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod ), FALSE );
-				StatChange( pSoldier, WISDOMAMT, (INT8) ( 20 - AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod ), FALSE );
+				PerformAttachmentComboMerge( this, bAttachComboMerge );
+				if ( bAttachInfoIndex != -1 && AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod < 20 )
+				{
+					StatChange( pSoldier, MECHANAMT, (INT8) ( 20 - AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod ), FALSE );
+					StatChange( pSoldier, WISDOMAMT, (INT8) ( 20 - AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod ), FALSE );
+				}
 			}
 		}
 
@@ -3478,6 +3483,11 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 	// check for merges
 	else if (EvaluateValidMerge( pAttachment->usItem, this->usItem, &usResult, &usResult2, &ubType, &ubAPCost ))
 	{
+		//CHRISL: We don't want to do any merges if we're looking at a stack of items.
+		if ( this->ubNumberOfObjects > 1 )
+		{
+			return( FALSE );
+		}
 		if ( ubType != COMBINE_POINTS )
 		{
 			if ( pSoldier )
@@ -4138,9 +4148,23 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 			}
 		}
 
-		else if (IsSlotAnLBESlot(bPos) == true || ubSlotLimit < pObj->ubNumberOfObjects)
+		else if (IsSlotAnLBESlot(bPos) == true && Item[pObj->usItem].usItemClass == IC_LBEGEAR)
 		{
-			//it could be an LBE, or not enough room, so we free up some space
+			/*CHRISL: If we're trying to swap LBE items between IC pockets, we have to be careful that items are moved
+			into active pockets or that an LBENODE is properly created.*/
+			if(pObj->HasAnyActiveLBEs(pSoldier) == false && !(_KeyDown(SHIFT))){
+				std::vector<INT8> LBESlots;
+				GetLBESlots(bPos, LBESlots);
+				MoveItemsToActivePockets(pSoldier, LBESlots, bPos, pObj);
+			}
+			pInSlot->MoveThisObjectTo(gTempObject, -1, pSoldier, bPos);
+			pObj->MoveThisObjectTo(*pInSlot, -1, pSoldier, bPos);
+			gTempObject.MoveThisObjectTo(*pObj, -1);
+		}
+
+		else if (ubSlotLimit < pObj->ubNumberOfObjects)
+		{
+			//not enough room, so we free up some space
 			return( FreeUpSlotIfPossibleThenPlaceObject( pSoldier, bPos, pObj ) );
 		}
 
@@ -5323,7 +5347,7 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 	return( TRUE );
 }
 
-BOOLEAN OBJECTTYPE::RemoveAttachment( OBJECTTYPE* pAttachment, OBJECTTYPE * pNewObj )
+BOOLEAN OBJECTTYPE::RemoveAttachment( OBJECTTYPE* pAttachment, OBJECTTYPE * pNewObj, UINT8 subObject )
 {
 	if ( pAttachment == 0 )
 	{
@@ -5341,7 +5365,7 @@ BOOLEAN OBJECTTYPE::RemoveAttachment( OBJECTTYPE* pAttachment, OBJECTTYPE * pNew
 		*pNewObj = *pAttachment;
 	}
 
-	(*this)[0]->attachments.remove(*pAttachment);
+	(*this)[subObject]->attachments.remove(*pAttachment);
 
 	if (pNewObj && Item[pNewObj->usItem].grenadelauncher )//UNDER_GLAUNCHER)
 	{
@@ -5350,7 +5374,7 @@ BOOLEAN OBJECTTYPE::RemoveAttachment( OBJECTTYPE* pAttachment, OBJECTTYPE * pNew
 		OBJECTTYPE* pGrenade = FindAttachmentByClass( this, IC_GRENADE );
 		if (pGrenade)
 		{
-			(*pNewObj)[0]->attachments.push_back(*pGrenade);
+			(*pNewObj)[subObject]->attachments.push_back(*pGrenade);
 			pNewObj->ubWeight = CalculateObjectWeight( pNewObj );
 			this->RemoveAttachment(pGrenade);
 		}

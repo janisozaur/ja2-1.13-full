@@ -3289,9 +3289,10 @@ void ItemDescAmmoCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void DoAttachment( void )
+//CHRISL: We need to know which item in the stack we're working with.
+void DoAttachment( UINT8 subObject )
 {
-	if ( gpItemDescObject->AttachObject( gpItemDescSoldier, gpItemPointer ) )
+	if ( gpItemDescObject->AttachObject( gpItemDescSoldier, gpItemPointer, TRUE, subObject ) )
 	{
 		if (gpItemPointer->exists() == false)
 		{
@@ -3341,7 +3342,7 @@ void PermanantAttachmentMessageBoxCallBack( UINT8 ubExitValue )
 {
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
-		DoAttachment();
+		DoAttachment(0);
 	}
 	// else do nothing
 }
@@ -3383,7 +3384,7 @@ void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					return;
 				}
 
-				DoAttachment();
+				DoAttachment((UINT8)ubStatusIndex);
 			}
 		}
 		else
@@ -3393,7 +3394,7 @@ void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			{
 				// Get attachment if there is one
 				// The follwing function will handle if no attachment is here
-				if ( gpItemDescObject->RemoveAttachment( pAttachment, &gItemPointer ) )
+				if ( gpItemDescObject->RemoveAttachment( pAttachment, &gItemPointer, ubStatusIndex ) )
 				{
 					gpItemPointer = &gItemPointer;
 					gpItemPointerSoldier = gpItemDescSoldier;
@@ -4567,6 +4568,10 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				offSetX = 83;
 				offSetY = -1;
 			}
+			else if(iResolution == 2){
+				offSetX = 185;
+				offSetY = -79;
+			}
 			else{
 				offSetX = 203;
 				offSetY = -79;
@@ -4589,6 +4594,10 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				offSetX = -82;
 				offSetY = -1;
 			}
+			else if(iResolution == 2){
+				offSetX = -171;
+				offSetY = -87;
+			}
 			else{
 				offSetX = -8;
 				offSetY = -87;
@@ -4610,6 +4619,10 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 			if(stratScreen){
 				offSetX = 1;
 				offSetY = -1;
+			}
+			else if(iResolution == 2){
+				offSetX = 71;
+				offSetY = -79;
 			}
 			else{
 				offSetX = 117;
@@ -8042,6 +8055,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 	UINT16	usItem = pObject->usItem;
 	INT32	iNumAttachments = 0;
 	INT16	sValue;
+	FLOAT	fWeight;
 
 	if( pSoldier != NULL )
 	{
@@ -8057,6 +8071,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 	{
 		// Retrieve the status of the items
 		//CHRISL: If looking at an item in stack popup, show just that item
+		//CHRISL: Also, determine weight differently if we're looking at a single item in a stack
 		if(subObject == -1){
 			// Find the minimum status value - not just the first one
 			sValue = (*pObject)[0]->data.objectStatus;
@@ -8067,13 +8082,13 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 					sValue = (*pObject)[ i ]->data.objectStatus;
 				}
 			}
+			//get item weight
+			fWeight = (float)(CalculateObjectWeight( pObject )) / 10;
 		}
 		else {
 			sValue = (*pObject)[subObject]->data.objectStatus;
+			fWeight = (float)(pObject->GetWeightOfObjectInStack(subObject)) / 10;
 		}
-
-		//get item weight
-		FLOAT fWeight = (float)(CalculateObjectWeight( pObject )) / 10;
 
 		if ( !gGameSettings.fOptions[ TOPTION_USE_METRIC_SYSTEM ] ) // metric units not enabled
 		{
@@ -8087,9 +8102,10 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 
 
 		if(subObject == -1){
-			if ( Item[usItem].usItemClass != IC_AMMO || !gGameExternalOptions.fAmmoDynamicWeight ){ //Madd: quick fix to display total stack weight
-				fWeight *= pObject->ubNumberOfObjects;
-			}
+			//ChrisL: This is no longer needed since the OBJECTTYPE of a stack already lists the total stack weight
+			//if ( Item[usItem].usItemClass != IC_AMMO || !gGameExternalOptions.fAmmoDynamicWeight ){ //Madd: quick fix to display total stack weight
+			//	fWeight *= pObject->ubNumberOfObjects;
+			//}
 			subObject = 0;
 		}
 
