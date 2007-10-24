@@ -171,7 +171,7 @@ FONT_MCOLOR_WHITE,
 FONT10ARIAL,
 
 FONT14ARIAL,
-FONT_MCOLOR_WHITE,
+FONT_MCOLOR_WHITE,//5
 FONT_MCOLOR_DKWHITE,
 
 FONT_MCOLOR_DKWHITE,
@@ -179,21 +179,21 @@ FONT_MCOLOR_DKWHITE,
 LAPTOP_SCREEN_UL_X + 92,
 LAPTOP_SCREEN_WEB_UL_Y + 0,
 
-LAPTOP_SCREEN_UL_X + 58,
+LAPTOP_SCREEN_UL_X + 58,//10
 LAPTOP_SCREEN_WEB_UL_Y + 43,
 
 LAPTOP_SCREEN_UL_X + 0,
 LAPTOP_SCREEN_WEB_UL_Y + 43,
 
 LAPTOP_SCREEN_UL_X + 442,
-LAPTOP_SCREEN_WEB_UL_Y + 43,
+LAPTOP_SCREEN_WEB_UL_Y + 43,//15
 
 LAPTOP_SCREEN_UL_X + 37,
 LAPTOP_SCREEN_WEB_UL_Y + 329,
 85,
 60,
 
-85,
+85,//20
 5,
 
 4,
@@ -246,7 +246,11 @@ UINT32		guiRightColumn;
 
 
 //Clicking on Funeral link
-MOUSE_REGION    gSelectedFuneralLinkRegion[ FUNERAL_NUMBER_OF_LINKS ];
+
+//BAH.  Can't initialize an array with a non-constant value.  So this will have to be hardcoded for now... damn.  Gotthard 10/24/07
+MOUSE_REGION    gSelectedFuneralLinkRegion[5];//This is what FUNERAL_NUMBER_OF_LINKS was defined as above.
+
+//MOUSE_REGION    gSelectedFuneralLinkRegion[ iFuneralConstants[FUNERAL_NUMBER_OF_LINKS ]];
 void SelectFuneralLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Clicking on rip sign to make it disappear
@@ -324,7 +328,7 @@ BOOLEAN EnterFuneral()
   MSYS_DisableRegion(&gSelectedRipSignRegion); 
 
 
-	SetBookMark( iFuneralConstants[FUNERAL_BOOKMARK] );
+	SetBookMark( FUNERAL_BOOKMARK );
 
 	return( TRUE );
 
