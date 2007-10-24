@@ -110,6 +110,7 @@
 #include "Strategic Status.h"
 #include "PreBattle Interface.h"
 #include "Militia Control.h"
+#include "Lua Interpreter.h"
 #endif
 
 
@@ -711,12 +712,16 @@ BOOLEAN InitOverhead( )
 
 	ZeroAnimSurfaceCounts( );
 
+	InitializeLua();
+
 	return( TRUE );
 }
 
 BOOLEAN ShutdownOverhead( )
 {
 	UINT32 cnt;
+
+	ShutdownLua( );
 
 	// Delete any soldiers which have been created!
 	for( cnt = 0; cnt < TOTAL_SOLDIERS; cnt++ )
@@ -1579,7 +1584,7 @@ BOOLEAN ExecuteOverhead( )
 										{
 											// Change desired direction
 											// Just change direction
-											pSoldier->EVENT_InternalSetSoldierDestination( pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], FALSE, pSoldier->usAnimState );
+											pSoldier->EVENT_InternalSetSoldierDestination( (UINT8) pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], FALSE, pSoldier->usAnimState );
 										}
 
 										if ( gTacticalStatus.bBoxingState != NOT_BOXING && (gTacticalStatus.bBoxingState == BOXING_WAITING_FOR_PLAYER || gTacticalStatus.bBoxingState == PRE_BOXING || gTacticalStatus.bBoxingState == BOXING) )
@@ -2288,7 +2293,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 		if ( !fDontContinue )
 		{
 			// Don't apply the first deduction in points...
-			if ( usAnimState == CRAWLING && pSoldier->flags.fTurningFromPronePosition > 1 )
+			if ( usAnimState == CRAWLING && pSoldier->flags.bTurningFromPronePosition > TURNING_FROM_PRONE_ON )
 			{
 			}
 			else
@@ -2340,7 +2345,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 			}
 
 			// Change desired direction
-			pSoldier->EVENT_InternalSetSoldierDestination( pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], fInitialMove, usAnimState );
+			pSoldier->EVENT_InternalSetSoldierDestination( (UINT8) pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], fInitialMove, usAnimState );		
 
 			// CONTINUE
 			// IT'S SAVE TO GO AGAIN, REFRESH flag
@@ -4601,7 +4606,7 @@ INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirect
 	// fDoor determines whether special door-handling code should be used (for interacting with doors)
 
 	INT16 sFourGrids[4], sDistance=0;
-	INT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
+	static const UINT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
 	//INT32 cnt;
 	INT16 sClosest=NOWHERE, sSpot, sOkTest;
 	INT16 sCloseGridNo=NOWHERE;
@@ -4745,7 +4750,7 @@ INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirect
 		// MOVE OUT TWO DIRECTIONS
 		sFourGrids[cnt] = sSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );
 
-		ubTestDirection = (UINT8)sDirs[ cnt ];
+		ubTestDirection = sDirs[ cnt ];
 
 		// For switches, ALLOW them to walk through walls to reach it....
 		if ( pDoor && pDoor->fFlags & STRUCTURE_SWITCH )
@@ -4889,7 +4894,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 	// fDoor determines whether special door-handling code should be used (for interacting with doors)
 
 	INT16 sFourGrids[4], sDistance=0;
-	INT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
+	static const UINT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
 	//INT32 cnt;
 	INT16 sClosest=WORLD_MAX, sSpot, sSpot2, sOkTest;
 	INT16 sCloseGridNo=NOWHERE;
@@ -4972,7 +4977,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 		// MOVE OUT TWO DIRECTIONS
 		sFourGrids[cnt] = sSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );
 
-		ubTestDirection = (UINT8)sDirs[ cnt ];
+		ubTestDirection = sDirs[ cnt ];
 
 		if ( pDoor && pDoor->fFlags & STRUCTURE_SWITCH )
 		{
@@ -5288,8 +5293,7 @@ void HandleTeamServices( UINT8 ubTeamNum )
 							}
 							if ( bSlot != NO_SLOT )
 							{
-								//SwapObjs( &(pTeamSoldier->inv[HANDPOS]), &(pTeamSoldier->inv[bSlot] ) );
-								SwapObjs( pTeamSoldier, HANDPOS, bSlot );
+								SwapObjs( pTeamSoldier, HANDPOS, bSlot, TRUE );
 							}
 							else
 							{
@@ -5376,8 +5380,7 @@ void HandlePlayerServices( SOLDIERTYPE *pTeamSoldier )
 
 						if ( bSlot != NO_SLOT )
 						{
-							//SwapObjs( &(pTeamSoldier->inv[HANDPOS]), &(pTeamSoldier->inv[bSlot] ) );
-							SwapObjs( pTeamSoldier, HANDPOS, bSlot );
+							SwapObjs( pTeamSoldier, HANDPOS, bSlot, TRUE );
 						}
 						else
 						{
@@ -7735,7 +7738,12 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 		if ( pSoldier )
 		{
 			pSoldier->bNumPelletsHitBy = 0;
-			pSoldier->flags.fGettingHit = FALSE;
+			if ( !( pSoldier->flags.uiStatusFlags & SOLDIER_TURNINGFROMHIT ) )
+			{
+				// 0verhaul:  This is an ugly hack.  I don't like it, but until I figure out a better solution
+				// for turning from a hit, it's the only way to not stop a soldier in mid-turn.
+				pSoldier->flags.fGettingHit = FALSE;
+			}
 
 			if (pSoldier->ubAttackerID != NOBODY )
 			{

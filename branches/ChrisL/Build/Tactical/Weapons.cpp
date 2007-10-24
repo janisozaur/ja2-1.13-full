@@ -1304,7 +1304,7 @@ BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	// SET ATTACKER TO NOBODY, WILL GET SET EVENTUALLY
 	pSoldier->ubOppNum = NOBODY ;
 
-	UINT16 usItemClass = Item[ pSoldier->usAttackingWeapon ].usItemClass;
+	UINT32 usItemClass = Item[ pSoldier->usAttackingWeapon ].usItemClass;
 	if ( pSoldier->bWeaponMode == WM_ATTACHED_GL || pSoldier->bWeaponMode == WM_ATTACHED_GL_BURST || pSoldier->bWeaponMode == WM_ATTACHED_GL_AUTO )
 		usItemClass = IC_LAUNCHER;
 
@@ -1320,15 +1320,19 @@ BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				// ATE: PAtch up - bookkeeping for spreading done out of whak
 				if ( pSoldier->flags.fDoSpread)
 				{
-					if (pSoldier->bDoBurst )
-					{
-						pSoldier->flags.fDoSpread = FALSE;
-					}
+
+					// 0verhaul:  This check does not work!  All auto-fire has bDoBurst turned on.  And only allowing a spread
+					// for a single-shot mode is useless.
+					//if (pSoldier->flags.fDoBurst )
+					//{
+					//	pSoldier->flags.fDoSpread = FALSE;
+					//}
+					//else 
 					// 0verhaul:  The original code seemed brain damaged:  If the current spread target was 0 it would shoot at the
 					// non-spread target grid # instead.  Also fDoSpread is used as a counter from 1 to MAX_BURST_SPREAD_TARGETS,
 					// but was actually reset before it got there.  So the final spread target would never be shot at.  Hopefully this
 					// will work better.
-					else if (pSoldier->flags.fDoSpread > MAX_BURST_SPREAD_TARGETS ||
+					if (pSoldier->flags.fDoSpread > MAX_BURST_SPREAD_TARGETS ||
 						pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] == 0)
 					{
 						if (pSoldier->flags.fDoSpread == 1)
@@ -1578,7 +1582,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 					sprintf( zBurstString, gzBurstSndStrings[ Weapon[ usItemNum ].sBurstSound ], bShotsToFire );
 
 					INT8 volume = HIGHVOLUME;
-					if ( noisefactor < 100 ) volume = (volume * noisefactor) / 100;
+					if ( noisefactor < 100 ) volume = (INT8) ((volume * noisefactor) / 100);
 					// Try playing sound...
 					pSoldier->iBurstSoundID = PlayJA2SampleFromFile(  zBurstString, RATE_11025, SoundVolume( (INT8) volume, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
 				}

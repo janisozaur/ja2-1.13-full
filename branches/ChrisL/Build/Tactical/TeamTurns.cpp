@@ -560,7 +560,7 @@ void DisplayHiddenInterrupt( SOLDIERTYPE * pSoldier )
 	// Stop our guy....
 	MercPtrs[ LATEST_INTERRUPT_GUY ]->AdjustNoAPToFinishMove( TRUE );
 	// Stop him from going to prone position if doing a turn while prone
-	MercPtrs[ LATEST_INTERRUPT_GUY ]->flags.fTurningFromPronePosition = FALSE;
+	MercPtrs[ LATEST_INTERRUPT_GUY ]->flags.bTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"about to call AddTopMessage");
 	// get rid of any old overlay message
@@ -866,7 +866,7 @@ void StartInterrupt( void )
 	{
 		// Stop this guy....
 		MercPtrs[ LATEST_INTERRUPT_GUY ]->AdjustNoAPToFinishMove( TRUE );
-		MercPtrs[ LATEST_INTERRUPT_GUY ]->flags.fTurningFromPronePosition = FALSE;
+		MercPtrs[ LATEST_INTERRUPT_GUY ]->flags.bTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 	}
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"StartInterrupt done");
 
@@ -1774,7 +1774,7 @@ void VerifyOutOfTurnOrderArray()
 							MercPtrs[ gubOutOfTurnOrder[ ubNextIndex ] ]->AdjustNoAPToFinishMove( TRUE );
 
 							// If they were turning from prone, stop them
-							MercPtrs[ gubOutOfTurnOrder[ ubNextIndex ] ]->flags.fTurningFromPronePosition = FALSE;
+							MercPtrs[ gubOutOfTurnOrder[ ubNextIndex ] ]->flags.bTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 
 							DeleteFromIntList( ubNextIndex, FALSE );
 						}
@@ -1830,7 +1830,7 @@ void VerifyOutOfTurnOrderArray()
 				MercPtrs[ gubOutOfTurnOrder[ ubLoop ] ]->AdjustNoAPToFinishMove( TRUE );
 
 				// If they were turning from prone, stop them
-				MercPtrs[ gubOutOfTurnOrder[ ubLoop ] ]->flags.fTurningFromPronePosition = FALSE;
+				MercPtrs[ gubOutOfTurnOrder[ ubLoop ] ]->flags.bTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 
 				DeleteFromIntList( ubLoop, FALSE );
 

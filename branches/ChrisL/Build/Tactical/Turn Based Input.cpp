@@ -5364,8 +5364,7 @@ void SwapGoggles()
 					}
 					if ( pGoggles )
 					{
-						//SwapObjs( pGoggles, &(pTeamSoldier->inv[bSlot1] ) );
-						SwapObjs( pTeamSoldier, bSlot1, pGoggles );
+						SwapObjs( pTeamSoldier, bSlot1, pGoggles, TRUE );
 						break;
 					}
 				}
@@ -5388,8 +5387,7 @@ void SwapGoggles()
 					}
 					if ( pGoggles )
 					{
-						//SwapObjs( pGoggles, &(pTeamSoldier->inv[bSlot1] ) );
-						SwapObjs( pTeamSoldier, bSlot1, pGoggles );
+						SwapObjs( pTeamSoldier, bSlot1, pGoggles, TRUE );
 						break;
 					}
 				}

@@ -94,6 +94,7 @@
 #include "Campaign Types.h"
 #include "Strategic Status.h"
 #include "civ quotes.h"
+#include "Strategic Pathing.h"
 #endif
 
 
@@ -119,11 +120,6 @@ extern INT16 DirIncrementer[8];
 
 #define		LOW_MORALE_BATTLE_SND_THREASHOLD	35
 
-
-#define		TURNING_FROM_PRONE_OFF										0
-#define		TURNING_FROM_PRONE_ON											1
-#define		TURNING_FROM_PRONE_START_UP_FROM_MOVE			2
-#define		TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE		3
 
 #define		MIN_SUBSEQUENT_SNDS_DELAY									2000
 
@@ -434,7 +430,7 @@ void STRUCT_Flags::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 	this->fForceShade = src.fForceShade;
 	this->fForceRenderColor = src.fForceRenderColor;
 	this->fForceNoRenderPaletteCycle = src.fForceNoRenderPaletteCycle;
-	this->fTurningFromPronePosition = src.fTurningFromPronePosition;
+	this->bTurningFromPronePosition = src.bTurningFromPronePosition;
 	this->fFlashPortrait = src.fFlashPortrait;
 	this->fBeginFade = src.fBeginFade;
 	this->fDontChargeReadyAPs = src.fDontChargeReadyAPs;
@@ -2508,7 +2504,7 @@ BOOLEAN ReevaluateEnemyStance( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 	// make the chosen one not turn to face us
 	if ( OK_ENEMY_MERC( pSoldier ) && pSoldier->ubID != gTacticalStatus.ubTheChosenOne && gAnimControl[ usAnimState ].ubEndHeight == ANIM_STAND && !( pSoldier->flags.uiStatusFlags & SOLDIER_UNDERAICONTROL) )
 	{
-		if ( pSoldier->flags.fTurningFromPronePosition == TURNING_FROM_PRONE_OFF )
+		if ( pSoldier->flags.bTurningFromPronePosition == TURNING_FROM_PRONE_OFF )
 		{
 			// If we are a queen and see enemies, goto ready
 			if ( pSoldier->ubBodyType == QUEENMONSTER )
@@ -2752,7 +2748,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 				thisSoldier->EVENT_SetSoldierDesiredDirection( thisSoldier->ubPendingDirection );
 				thisSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
 				thisSoldier->usPendingAnimation = CLIMBDOWNROOF;
-				thisSoldier->flags.fTurningFromPronePosition = FALSE;
+				thisSoldier->flags.bTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 				thisSoldier->flags.fTurningUntilDone	 = TRUE;
 				thisSoldier->SoldierGotoStationaryStance( );
 				return( TRUE );
@@ -2986,20 +2982,29 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 		// Unset paused for no APs.....
 		thisSoldier->AdjustNoAPToFinishMove( FALSE );
 
+#if 0
+		// 0verhaul:  This is a test.  The only time I have been able to make this code hit is when
+		// the player goes prone while moving.  And that is not what this part is intended for.  I 
+		// have seen the soldier in the middle of crawling, get up, turn, and then go prone again to
+		// continue along his path.  But this code was not hit for that part.  And this code seems
+		// to be made for that part.  So apparently they found another way to deal with it.  So
+		// I disabled the "locked" code for usDontUpdateNewGridNoOnMoveAnimChange since it can cause
+		// problems of its own.  Now we see if we can do without this part too.
 		if ( usNewState == CRAWLING && thisSoldier->usDontUpdateNewGridNoOnMoveAnimChange == 1 )
 		{
-			if ( thisSoldier->flags.fTurningFromPronePosition != TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE )
+			if ( thisSoldier->flags.bTurningFromPronePosition != TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE )
 			{
-				thisSoldier->flags.fTurningFromPronePosition = TURNING_FROM_PRONE_START_UP_FROM_MOVE;
+				thisSoldier->flags.bTurningFromPronePosition = TURNING_FROM_PRONE_START_UP_FROM_MOVE;
 			}
 
 			// ATE: IF we are starting to crawl, but have to getup to turn first......
-			if ( thisSoldier->flags.fTurningFromPronePosition == TURNING_FROM_PRONE_START_UP_FROM_MOVE )
+			if ( thisSoldier->flags.bTurningFromPronePosition == TURNING_FROM_PRONE_START_UP_FROM_MOVE )
 			{
 				usNewState = PRONE_UP;
-				thisSoldier->flags.fTurningFromPronePosition = TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE;
+				thisSoldier->flags.bTurningFromPronePosition = TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE;
 			}
 		}
+#endif
 
 		// We are about to start moving
 		// Handle buddy beginning to move...
@@ -3053,7 +3058,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 					{
 						// Change desired direction
 						// Just change direction
-						thisSoldier->EVENT_InternalSetSoldierDestination( thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathIndex ], FALSE, thisSoldier->usAnimState );
+						thisSoldier->EVENT_InternalSetSoldierDestination( (UINT8) thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathIndex ], FALSE, thisSoldier->usAnimState );
 					}
 
 					//check for services
@@ -3086,7 +3091,14 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 		// ( Unless locked )
 		if ( gAnimControl[ usNewState ].uiFlags & ANIM_MOVING )
 		{
-			if ( thisSoldier->usDontUpdateNewGridNoOnMoveAnimChange != LOCKED_NO_NEWGRIDNO )
+			// 0verhaul:  **** Special hack!!!!
+			//   If a merc begins to go prone while moving, the LOCKED_NO_NEWGRIDNO is set.  If the merc never finishes
+			// going prone, either due to interrupting the stance change with a different stance change, or other possible
+			// factors such as maybe getting shot (this is realtime so an enemy could see him), it stays on locked.  Once
+			// it stays on locked, the soldier will be unable to navigate around obstacles but will simply stay put
+			// twitching.  Since the LOCKED is only set when going prone, this unsets it.
+			if ( thisSoldier->usDontUpdateNewGridNoOnMoveAnimChange != LOCKED_NO_NEWGRIDNO || 
+				(thisSoldier->usDontUpdateNewGridNoOnMoveAnimChange == LOCKED_NO_NEWGRIDNO && thisSoldier->usAnimState != PRONE_DOWN))
 			{
 				thisSoldier->usDontUpdateNewGridNoOnMoveAnimChange = FALSE;
 			}
@@ -3117,7 +3129,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 	uiOldAnimFlags = gAnimControl[ thisSoldier->usAnimState ].uiFlags;
 	uiNewAnimFlags = gAnimControl[ usNewState ].uiFlags;
 
-	sNewGridNo = NewGridNo( thisSoldier->sGridNo, DirectionInc( thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathIndex ] ) );
+	sNewGridNo = NewGridNo( thisSoldier->sGridNo, DirectionInc( (UINT8) thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathIndex ] ) );
 
 
 	// CHECKING IF WE HAVE A HIT FINISH BUT NO DEATH IS DONE WITH A SPECIAL ANI CODE
@@ -3230,7 +3242,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 		case CRAWLING:
 
 			// Turn off flag...
-			thisSoldier->flags.fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
+			thisSoldier->flags.bTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 			thisSoldier->aiData.ubPendingActionAnimCount = 0;
 			thisSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 			break;
@@ -3303,7 +3315,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 		case PRONE_DOWN:
 
 			// ATE: If we are NOT waiting for prone down...
-			if ( thisSoldier->flags.fTurningFromPronePosition < TURNING_FROM_PRONE_START_UP_FROM_MOVE && !thisSoldier->flags.fDontChargeAPsForStanceChange )
+			if ( thisSoldier->flags.bTurningFromPronePosition < TURNING_FROM_PRONE_START_UP_FROM_MOVE && !thisSoldier->flags.fDontChargeAPsForStanceChange )
 			{
 				// ATE: Don't do this if we are still 'moving'....
 				if ( thisSoldier->sGridNo == thisSoldier->pathing.sFinalDestination || thisSoldier->pathing.usPathIndex == 0 )
@@ -3454,7 +3466,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 				thisSoldier->pathing.usPathDataSize++;
 				thisSoldier->pathing.sFinalDestination = sNewGridNo;
 				// Set direction
-				thisSoldier->EVENT_InternalSetSoldierDestination( thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathIndex ], FALSE, JUMP_OVER_BLOCKING_PERSON );
+				thisSoldier->EVENT_InternalSetSoldierDestination( (UINT8) thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathIndex ], FALSE, JUMP_OVER_BLOCKING_PERSON );
 			}
 			break;
 
@@ -4061,7 +4073,7 @@ void SOLDIERTYPE::SetSoldierGridNo( INT16 sNewGridNo, BOOLEAN fForceRemove )
 					// Make transition from low to deep
 					thisSoldier->EVENT_InitNewSoldierAnim( LOW_TO_DEEP_WATER, 0 , FALSE );
 					thisSoldier->usPendingAnimation = DEEP_WATER_SWIM;
-
+					thisSoldier->usDontUpdateNewGridNoOnMoveAnimChange = 1;
 					PlayJA2Sample( ENTER_DEEP_WATER_1, RATE_11025, SoundVolume( MIDVOLUME, thisSoldier->sGridNo ), 1, SoundDir( thisSoldier->sGridNo ) );
 
 				}
@@ -4078,6 +4090,7 @@ void SOLDIERTYPE::SetSoldierGridNo( INT16 sNewGridNo, BOOLEAN fForceRemove )
 			{
 				// Make transition from low to deep
 				thisSoldier->EVENT_InitNewSoldierAnim( DEEP_TO_LOW_WATER, 0 , FALSE );
+				thisSoldier->usDontUpdateNewGridNoOnMoveAnimChange = 1;
 				thisSoldier->usPendingAnimation = thisSoldier->usUIMovementMode;
 			}
 		}
@@ -4294,7 +4307,7 @@ void SOLDIERTYPE::EVENT_FireSoldierWeapon( INT16 sTargetGridNo )
 					thisSoldier->flags.fDontUnsetLastTargetFromTurn = TRUE;
 
 					// Make sure we don't try and do fancy prone turning.....
-					thisSoldier->flags.fTurningFromPronePosition = FALSE;
+					thisSoldier->flags.bTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 
 					// Force our direction!
 					thisSoldier->EVENT_SetSoldierDirection( thisSoldier->pathing.bDesiredDirection );
@@ -5834,7 +5847,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InternalGetNewSoldierPath( INT16 sDestGridNo, UINT16 
 		thisSoldier->sGridNo = thisSoldier->pathing.sDestination;
 
 		// Check if path is good before copying it into guy's path...
-		if ( FindBestPath( thisSoldier, sDestGridNo, thisSoldier->pathing.bLevel, thisSoldier->usUIMovementMode, NO_COPYROUTE, fFlags ) == 0 )
+		if ( !(uiDist = FindBestPath( thisSoldier, sDestGridNo, thisSoldier->pathing.bLevel, thisSoldier->usUIMovementMode, COPYROUTE, fFlags ) ) )
 		{
 			// Set to old....
 			thisSoldier->sGridNo = sMercGridNo;
@@ -5842,7 +5855,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InternalGetNewSoldierPath( INT16 sDestGridNo, UINT16 
 			return( FALSE );
 		}
 
-		uiDist =  FindBestPath( thisSoldier, sDestGridNo, thisSoldier->pathing.bLevel, thisSoldier->usUIMovementMode, COPYROUTE, fFlags );
+		//uiDist =  FindBestPath( thisSoldier, sDestGridNo, thisSoldier->pathing.bLevel, thisSoldier->usUIMovementMode, COPYROUTE, fFlags );
 
 		thisSoldier->sGridNo = sMercGridNo;
 		thisSoldier->pathing.sFinalDestination = sDestGridNo;
@@ -5923,6 +5936,11 @@ BOOLEAN SOLDIERTYPE::EVENT_InternalGetNewSoldierPath( INT16 sDestGridNo, UINT16 
 		if ( thisSoldier->MercInDeepWater( ) )
 		{
 			usMoveAnimState = DEEP_WATER_SWIM;
+		}
+		// Can't forget shallow water!  AI will sometimes attempt to swat through it, which is not legal either
+		else if ( thisSoldier->MercInWater( ) )
+		{
+			usMoveAnimState = WALKING;
 		}
 
 		// If we were aiming, end aim!
@@ -6134,9 +6152,9 @@ void SOLDIERTYPE::EVENT_InternalSetSoldierDestination( UINT16	usNewDirection, BO
 	}
 }
 
-void SOLDIERTYPE::EVENT_SetSoldierDestination( UINT16	usNewDirection )
+void SOLDIERTYPE::EVENT_SetSoldierDestination( UINT8	ubNewDirection )
 {
-	thisSoldier->EVENT_InternalSetSoldierDestination( usNewDirection, FALSE, thisSoldier->usAnimState );
+	thisSoldier->EVENT_InternalSetSoldierDestination( ubNewDirection, FALSE, thisSoldier->usAnimState );
 }
 
 
@@ -6206,7 +6224,7 @@ INT8 MultiTiledTurnDirection( SOLDIERTYPE * pSoldier, INT8 bStartDirection, INT8
 		}
 
 		bLoop++;
-		if ( bLoop < 2 )
+		//if ( bLoop < 2 )
 		{
 			// change direction of loop etc
 			bCurrentDirection = bStartDirection;
@@ -6273,9 +6291,9 @@ void EVENT_InternalSetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT8	ubNe
 		{
 			if ( gAnimControl[ usAnimState ].ubHeight == ANIM_PRONE  )
 			{
-				if ( pSoldier->flags.fTurningFromPronePosition != TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE )
+				if ( pSoldier->flags.bTurningFromPronePosition != TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE )
 				{
-					pSoldier->flags.fTurningFromPronePosition = TURNING_FROM_PRONE_START_UP_FROM_MOVE;
+					pSoldier->flags.bTurningFromPronePosition = TURNING_FROM_PRONE_START_UP_FROM_MOVE;
 				}
 			}
 		}
@@ -6289,7 +6307,7 @@ void EVENT_InternalSetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT8	ubNe
 				//if ( pSoldier->pathing.sDestination == pSoldier->sGridNo )
 				if ( !fInitalMove )
 				{
-					pSoldier->flags.fTurningFromPronePosition = TURNING_FROM_PRONE_ON;
+					pSoldier->flags.bTurningFromPronePosition = TURNING_FROM_PRONE_ON;
 
 					// Set a pending animation to change stance first...
 					SendChangeSoldierStanceEvent( pSoldier, ANIM_CROUCH );
@@ -6726,7 +6744,11 @@ void SOLDIERTYPE::TurnSoldier( void )
 	{
 		if ( thisSoldier->ubDirection == thisSoldier->pathing.bDesiredDirection )
 		{
-			if ( ( (gAnimControl[ thisSoldier->usAnimState ].uiFlags & ANIM_FIREREADY ) && !thisSoldier->flags.fTurningFromPronePosition ) || thisSoldier->ubBodyType == ROBOTNOWEAPON || thisSoldier->ubBodyType == TANK_NW || thisSoldier->ubBodyType == TANK_NE  )
+			if ( ( (gAnimControl[ thisSoldier->usAnimState ].uiFlags & ANIM_FIREREADY ) && 
+				thisSoldier->flags.bTurningFromPronePosition == TURNING_FROM_PRONE_OFF) || 
+				thisSoldier->ubBodyType == ROBOTNOWEAPON || 
+				thisSoldier->ubBodyType == TANK_NW || 
+				thisSoldier->ubBodyType == TANK_NE  )
 			{
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("TurnSoldier: EVENT_InitNewSoldierAnim") );
 				thisSoldier->EVENT_InitNewSoldierAnim( SelectFireAnimation( thisSoldier, gAnimControl[ thisSoldier->usAnimState ].ubEndHeight ), 0, FALSE );
@@ -6737,7 +6759,7 @@ void SOLDIERTYPE::TurnSoldier( void )
 
 			}
 			// Else check if we are trying to shoot and once was prone, but am now crouched because we needed to turn...
-			else if ( thisSoldier->flags.fTurningFromPronePosition )
+			else if ( thisSoldier->flags.bTurningFromPronePosition )
 			{
 				if ( IsValidStance( thisSoldier, ANIM_PRONE ) )
 				{
@@ -6749,7 +6771,7 @@ void SOLDIERTYPE::TurnSoldier( void )
 					thisSoldier->EVENT_InitNewSoldierAnim( SelectFireAnimation( thisSoldier, ANIM_CROUCH ), 0, FALSE );
 				}
 				thisSoldier->flags.fTurningToShoot = FALSE;
-				thisSoldier->flags.fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
+				thisSoldier->flags.bTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 			}
 		}
 	}
@@ -6806,7 +6828,9 @@ void SOLDIERTYPE::TurnSoldier( void )
 		thisSoldier->flags.fDontUnsetLastTargetFromTurn = FALSE;
 
 		// Unset ui busy if from ui
-		if ( thisSoldier->bTurningFromUI && ( thisSoldier->flags.fTurningFromPronePosition != 3 ) && ( thisSoldier->flags.fTurningFromPronePosition != 1 ) )
+		if ( thisSoldier->bTurningFromUI && 
+			( thisSoldier->flags.bTurningFromPronePosition != TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE ) && 
+			( thisSoldier->flags.bTurningFromPronePosition != TURNING_FROM_PRONE_ON ) )
 		{
 			UnSetUIBusy( thisSoldier->ubID );
 			thisSoldier->bTurningFromUI = FALSE;
@@ -6821,22 +6845,29 @@ void SOLDIERTYPE::TurnSoldier( void )
 
 		// Undo our flag for prone turning...
 		// Else check if we are trying to shoot and once was prone, but am now crouched because we needed to turn...
-		if ( thisSoldier->flags.fTurningFromPronePosition == TURNING_FROM_PRONE_ON )
+		if ( thisSoldier->flags.bTurningFromPronePosition == TURNING_FROM_PRONE_ON )
 		{
 			// ATE: Don't do this if we have something in our hands we are going to throw!
 			if ( IsValidStance( thisSoldier, ANIM_PRONE ) && thisSoldier->pTempObject == NULL )
 			{
 				SendChangeSoldierStanceEvent( thisSoldier, ANIM_PRONE );
 			}
-			thisSoldier->flags.fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
+			thisSoldier->flags.bTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 		}
 
 		// If a special code, make guy crawl after stance change!
-		if ( thisSoldier->flags.fTurningFromPronePosition == TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE && thisSoldier->usAnimState != PRONE_UP && thisSoldier->usAnimState != PRONE_DOWN )
+		if ( thisSoldier->flags.bTurningFromPronePosition == TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE && 
+			thisSoldier->usAnimState != PRONE_UP && 
+			thisSoldier->usAnimState != PRONE_DOWN )
 		{
 			if ( IsValidStance( thisSoldier, ANIM_PRONE ) )
 			{
 				thisSoldier->EVENT_InitNewSoldierAnim( CRAWLING, 0, FALSE );
+			}
+			// Else swat for a tile so that there's room to resume prone
+			else
+			{
+				thisSoldier->EVENT_InitNewSoldierAnim( thisSoldier->usUIMovementMode, 0 , FALSE );
 			}
 		}
 
@@ -6868,8 +6899,9 @@ void SOLDIERTYPE::TurnSoldier( void )
 				// Release attacker
 				// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker, turning from hit animation ended") );
 				// ReleaseSoldiersAttacker( thisSoldier );
-				DebugAttackBusy( "Finished turning from hit.  Reducing attack busy.\n");
-				ReduceAttackBusyCount( );
+				// 0verhaul:  Since I disabled the turn from hit ABC increase, I need to disable the turn from hit decrease too.
+				DebugAttackBusy( "Finished turning from hit.  Not Reducing attack busy.\n");
+				//ReduceAttackBusyCount( );
 
 				//FREEUP GETTING HIT FLAG
 				// thisSoldier->flags.fGettingHit = FALSE;
@@ -6985,7 +7017,7 @@ void SOLDIERTYPE::TurnSoldier( void )
 		{
 			// OK, we want to getup, turn and go prone again....
 			SendChangeSoldierStanceEvent( thisSoldier, ANIM_CROUCH );
-			thisSoldier->flags.fTurningFromPronePosition = TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE;
+			thisSoldier->flags.bTurningFromPronePosition = TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE;
 		}
 		// If we are a creature, or multi-tiled, cancel AI action.....?
 		else if ( thisSoldier->flags.uiStatusFlags & SOLDIER_MULTITILE )
@@ -7898,7 +7930,7 @@ void SOLDIERTYPE::BeginSoldierClimbFence( void )
 		EVENT_InternalSetSoldierDesiredDirection( thisSoldier, bDirection, FALSE, thisSoldier->usAnimState );
 		thisSoldier->flags.fTurningUntilDone = TRUE;
 		// ATE: Reset flag to go back to prone...
-		thisSoldier->flags.fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
+		thisSoldier->flags.bTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 		thisSoldier->usPendingAnimation = HOPFENCE;
 	}
 
@@ -10414,7 +10446,7 @@ void SOLDIERTYPE::EVENT_SoldierBeginKnifeThrowAttack( INT16 sGridNo, UINT8 ubDir
 	// SET TARGET GRIDNO
 	thisSoldier->sTargetGridNo = sGridNo;
 	thisSoldier->sLastTarget		= sGridNo;
-	thisSoldier->flags.fTurningFromPronePosition	= 0;
+	thisSoldier->flags.bTurningFromPronePosition	= 0;
 	// NB target level must be set by functions outside of here... but I think it
 	// is already set in HandleItem or in the AI code - CJC
 	thisSoldier->ubTargetID = WhoIsThere2( sGridNo, thisSoldier->bTargetLevel );
@@ -10969,7 +11001,7 @@ void SOLDIERTYPE::HaultSoldierFromSighting( BOOLEAN fFromSightingEnemy )
 
 		if ( !thisSoldier->flags.fTurningToShoot )
 		{
-			thisSoldier->flags.fTurningFromPronePosition = FALSE;
+			thisSoldier->flags.bTurningFromPronePosition = FALSE;
 		}
 	}
 
@@ -11006,7 +11038,7 @@ void SOLDIERTYPE::EVENT_StopMerc( INT16 sGridNo, INT8 bDirection )
 	}
 
 	thisSoldier->bEndDoorOpenCode				 = 0;
-	thisSoldier->flags.fTurningFromPronePosition	= 0;
+	thisSoldier->flags.bTurningFromPronePosition	= 0;
 
 	// Cancel path data!
 	thisSoldier->pathing.usPathIndex = thisSoldier->pathing.usPathDataSize = 0;
@@ -11799,15 +11831,17 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 		// Crouched or prone, only for mercs!
 		pSoldier->BeginTyingToFall( );
 
-		if ( fMerc )
-		{
+		// 0verhaul:  No special case here!  First the FALLFORWARD_FROMHIT_CROUCH can be filled in to use the FALLFORWARD_FROMHIT_STAND anim
+		// then when real anims come, use them instead.
+		//if ( fMerc )
+		//{
 			pSoldier->EVENT_InitNewSoldierAnim( FALLFORWARD_FROMHIT_CROUCH, 0 , FALSE);
-		}
-		else
-		{
-			// For civs... use fall from stand...
-			pSoldier->EVENT_InitNewSoldierAnim( FALLFORWARD_FROMHIT_STAND, 0 , FALSE);
-		}
+		//}
+		//else
+		//{
+		//	// For civs... use fall from stand...
+		//	pSoldier->EVENT_InitNewSoldierAnim( FALLFORWARD_FROMHIT_STAND, 0 , FALSE);
+		//}
 		break;
 
 	case ANIM_PRONE:
@@ -12389,7 +12423,7 @@ void SOLDIERTYPE::ChangeToFlybackAnimation( UINT8 flyBackDirection )
 	thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathDataSize ] = gOppositeDirection[ thisSoldier->ubDirection ];
 	thisSoldier->pathing.usPathDataSize++;
 	thisSoldier->pathing.sFinalDestination = sNewGridNo;
-	thisSoldier->EVENT_InternalSetSoldierDestination( thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathIndex ], FALSE, FLYBACK_HIT );
+	thisSoldier->EVENT_InternalSetSoldierDestination( (UINT8) thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathIndex ], FALSE, FLYBACK_HIT );
 
 	// Get a new direction based on direction
 	thisSoldier->EVENT_InitNewSoldierAnim( FLYBACK_HIT, 0 , FALSE );
@@ -12865,14 +12899,20 @@ void SOLDIERTYPE::HandleSoldierTakeDamageFeedback( void )
 void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC )
 {
 	// Are we an AI guy?
-	if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum && pSoldier->bTeam != gbPlayerNum )
+	// 0verhaul:
+	// This code will only stop a soldier if it is not the player's turn.  The problem here is that the soldier's
+	// actions may have triggered an interrupt.  This code is called in order to cancel the soldier's movement 
+	// after the interrupt is triggered, so if the AI causes an interrupt and it's the player's turn, he will
+	// continue doing what he was going to do.  We need this function to work even when it's the player's turn,
+	// at least in this case.
+	//if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum && pSoldier->bTeam != gbPlayerNum )
 	{
 		if ( pSoldier->aiData.bNewSituation == IS_NEW_SITUATION )
 		{
 			// Cancel what they were doing....
 			pSoldier->usPendingAnimation	= NO_PENDING_ANIMATION;
 			pSoldier->usPendingAnimation2 = NO_PENDING_ANIMATION;
-			pSoldier->flags.fTurningFromPronePosition = FALSE;
+			pSoldier->flags.bTurningFromPronePosition = FALSE;
 			pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
 			pSoldier->aiData.ubPendingAction		 = NO_PENDING_ACTION;
 			pSoldier->bEndDoorOpenCode	 = 0;

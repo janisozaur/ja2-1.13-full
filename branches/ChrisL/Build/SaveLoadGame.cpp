@@ -5512,7 +5512,11 @@ BOOLEAN LoadMercPathToSoldierStruct( HWFILE hFile, UINT8	ubID )
 		//Allocate memory for the new node
 		pTemp = (PathStPtr) MemAlloc( sizeof( PathSt ) );
 		if( pTemp == NULL )
-			return( FALSE );
+		{
+			pTempPath = MoveToBeginningOfPathList( pTempPath );
+			ClearStrategicPathList( pTempPath, -1 );
+ 			return( FALSE );
+		}
 		memset( pTemp, 0 , sizeof( PathSt ) );
 
 
@@ -5520,6 +5524,9 @@ BOOLEAN LoadMercPathToSoldierStruct( HWFILE hFile, UINT8	ubID )
 		FileRead( hFile, pTemp, sizeof( PathSt ), &uiNumBytesRead );
 		if( uiNumBytesRead != sizeof( PathSt ) )
 		{
+			MemFree( pTemp);
+			pTempPath = MoveToBeginningOfPathList( pTempPath );
+			ClearStrategicPathList( pTempPath, -1 );
 			return(FALSE);
 		}
 

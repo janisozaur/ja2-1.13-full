@@ -173,6 +173,11 @@ extern UINT16 CivLastNames[MAXCIVLASTNAMES][10];
 //so that we can increase it if we can stand breaking the saves
 #define MAX_BURST_SPREAD_TARGETS 6
 
+#define		TURNING_FROM_PRONE_OFF						0
+#define		TURNING_FROM_PRONE_ON						1	
+#define		TURNING_FROM_PRONE_START_UP_FROM_MOVE		2
+#define		TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE		3
+
 //ENUMERATIONS FOR ACTIONS
 enum
 {
@@ -438,7 +443,7 @@ public:
 	BOOLEAN											fDelayedMovement;
 	BOOLEAN											fTurnInProgress;
 	BOOLEAN											fBeginFade;
-	BOOLEAN											fTurningFromPronePosition;
+	INT8											bTurningFromPronePosition;
 	BOOLEAN											fDontChargeReadyAPs;
 	BOOLEAN											fPrevInWater;
 	BOOLEAN											fGoBackToAimAfterHit;
@@ -1079,7 +1084,7 @@ public:
 
 	BOOLEAN ChangeSoldierState( UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce );
 	void EVENT_SetSoldierPosition( FLOAT dNewXPos, FLOAT dNewYPos );
-	void EVENT_SetSoldierDestination( UINT16	usNewDirection );
+	void EVENT_SetSoldierDestination( UINT8	ubNewDirection );
 	void EVENT_GetNewSoldierPath( INT16 sDestGridNo, UINT16 usMovementAnim );
 
 	void EVENT_SetSoldierDirection( UINT16	usNewDirection );
@@ -1574,7 +1579,7 @@ public:
 	INT8												bMarksmanship;
 	INT8												bExplosive;
 	THROW_PARAMS								*pThrowParams;
-	BOOLEAN											fTurningFromPronePosition;
+	INT8											bTurningFromPronePosition;
 	INT8												bReverse;
 	LEVELNODE				*pLevelNode;
 	LEVELNODE				*pExternShadowLevelNode;

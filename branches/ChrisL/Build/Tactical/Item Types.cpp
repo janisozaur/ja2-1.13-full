@@ -466,9 +466,14 @@ bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
 			//currently flags are stored on a per-stack basis - the problem with them
 			//being on a per-object-in-stack basis is a check on the flags only ever checks the top object in the stack
 			//continue on because you might find something else with the same flags
+			//CHRISL: I'm temporarily remarking the results of this condition out.  We're encountering problems where
+			//	items that should be stackable aren't because they're somehow getting erroneous flags.  We ultimately
+			//	need to figure out how these flags are being incorrectly set, but for the time being this should resolve
+			//	the issue.  The problem here is, I'm pretty sure we'll actually lose (or even duplicate) these bad flags
+			//	depending on which objects get stacked into which.
 			if (sourceObject.fFlags != this->fFlags) {
 				DebugBreakpoint();
-				numToStack = 0;
+				//numToStack = 0;
 			}
 
 			//nor allow trapped items to stack

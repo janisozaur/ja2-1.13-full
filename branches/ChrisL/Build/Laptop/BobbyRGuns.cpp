@@ -1554,6 +1554,7 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass, INT32 iFilter)
 			case IC_MEDKIT:
 			case IC_KIT:
 			case IC_FACE:
+			case IC_LBEGEAR:
 				// USED
 				if (uiItemClass == BOBBYR_USED_ITEMS)
 				{

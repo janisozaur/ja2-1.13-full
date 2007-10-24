@@ -46,9 +46,9 @@
 #define BUTTON_INIT						1
 #define BUTTON_WAS_CLICKED		2
 
-//effects how the button is rendered.
+//affects how the button is rendered.
 #define BUTTON_TYPES						( BUTTON_QUICK | BUTTON_GENERIC | BUTTON_HOT_SPOT | BUTTON_CHECKBOX )
-//effects how the button is processed
+//affects how the button is processed
 #define BUTTON_TYPE_MASK				(BUTTON_NO_TOGGLE| BUTTON_ALLOW_DISABLED_CALLBACK | BUTTON_CHECKBOX | BUTTON_IGNORE_CLICKS )
 
 //button flags
@@ -137,7 +137,7 @@ typedef struct _GUI_BUTTON {
 	INT16					usIconIndex;
 	INT8					bIconXOffset; //-1 means horizontally centered
 	INT8					bIconYOffset; //-1 means vertically centered
-	BOOLEAN				fShiftImage;	//if true, icon is shifted +1,+1 when button state is down.
+	BOOLEAN				fShiftImage;  //if true, icon is shifted +1,+1 when button state is down.
 
 	UINT8					ubToggleButtonOldState;		// Varibles for new toggle buttons that work
 	UINT8					ubToggleButtonActivated;
@@ -237,13 +237,13 @@ extern BOOLEAN gfRenderHilights;
 //Providing you have allocated your own image, this is a somewhat simplified function.
 INT32 QuickCreateButton(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type,INT16 Priority,GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback);
 
-//A hybrid of QuickCreateButton.	Takes a lot less parameters, but makes more assumptions.	It self manages the 
-//loading, and deleting of the image.	The size of the image determines the size of the button.	It also uses
-//the default move callback which emulates Win95.	Finally, it sets the priority to normal.	The function you
+//A hybrid of QuickCreateButton.  Takes a lot less parameters, but makes more assumptions.  It self manages the 
+//loading, and deleting of the image.  The size of the image determines the size of the button.  It also uses
+//the default move callback which emulates Win95.  Finally, it sets the priority to normal.  The function you
 //choose also determines the type of button (toggle, notoggle, or newtoggle)
 INT32 CreateEasyNoToggleButton ( INT32 x, INT32 y, STR8 filename, GUI_CALLBACK ClickCallback );
 
-INT32 CreateEasyToggleButton	( INT32 x, INT32 y, STR8 filename, GUI_CALLBACK ClickCallback );
+INT32 CreateEasyToggleButton   ( INT32 x, INT32 y, STR8 filename, GUI_CALLBACK ClickCallback );
 
 INT32 CreateEasyNewToggleButton( INT32 x, INT32 y, STR8 filename, GUI_CALLBACK ClickCallback );
 //Same as above, but accepts specify toggle type
@@ -259,11 +259,11 @@ INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height,INT16 Prio
 
 INT32 CreateTextButton(STR16 string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority,GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback);
 INT32 CreateIconAndTextButton( INT32 Image, const STR16 string, UINT32 uiFont, 
-															INT16 sForeColor, INT16 sShadowColor, 
-															INT16 sForeColorDown, INT16 sShadowColorDown, 
-															INT8 bJustification, 
-															INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority,
-															GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback);
+															 INT16 sForeColor, INT16 sShadowColor, 
+															 INT16 sForeColorDown, INT16 sShadowColorDown, 
+															 INT8 bJustification, 
+															 INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority,
+															 GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback);
 
 //New functions
 void SpecifyButtonText( INT32 iButtonID, STR16 string );
@@ -276,7 +276,7 @@ void SpecifyButtonTextJustification( INT32 iButtonID, INT8 bJustification );
 void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, STR16 string, INT32 uiFont,
 																			INT16 sForeColor, INT16 sShadowColor );
 void SpecifyFullButtonTextAttributes( INT32 iButtonID, STR16 string, INT32 uiFont,
-																		INT16 sForeColor, INT16 sShadowColor,
+																		  INT16 sForeColor, INT16 sShadowColor,
 																			INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification );
 void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, STR16 string, INT32 uiFont,
 																			INT16 sForeColor, INT16 sShadowColor );
@@ -300,7 +300,7 @@ void RemoveButtonDefaultStatus( INT32 iButtonID );
 
 enum //for use with SpecifyDisabledButtonStyle
 {
-	DISABLED_STYLE_NONE,		//for dummy buttons, panels, etc.	Always displays normal state.
+	DISABLED_STYLE_NONE,		//for dummy buttons, panels, etc.  Always displays normal state.
 	DISABLED_STYLE_DEFAULT,	//if button has text then shade, else hatch
 	DISABLED_STYLE_HATCHED,	//always hatches the disabled button
 	DISABLED_STYLE_SHADED		//always shades the disabled button 25% darker
@@ -311,11 +311,11 @@ void SpecifyDisabledButtonStyle( INT32 iButtonID, INT8 bStyle );
 void RemoveTextFromButton( INT32 iButtonID );
 void RemoveIconFromButton( INT32 iButtonID );
 
-//Note:	Text is always on top
+//Note:  Text is always on top
 //If fShiftImage is true, then the image will shift down one pixel and right one pixel
 //just like the text does.
 BOOLEAN SpecifyButtonIcon( INT32 iButtonID, INT32 iVideoObjectID, UINT16 usVideoObjectIndex, 
-													INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage );
+													 INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage );
 
 
 
@@ -332,7 +332,7 @@ INT32 MSYS_GetBtnUserData(GUI_BUTTON *b,INT32 index);
 void MarkAButtonDirty( INT32 iButtonNum ); // will mark only selected button dirty
 void MarkButtonsDirty(void);// Function to mark buttons dirty ( all will redraw at next RenderButtons )
 void PausedMarkButtonsDirty( void ); // mark buttons dirty for button render the frame after the next
-void UnMarkButtonDirty( INT32 iButtonIndex );	// unmark button
+void UnMarkButtonDirty( INT32 iButtonIndex );  // unmark button
 void UnmarkButtonsDirty( void ); // unmark ALL the buttoms on the screen dirty
 void ForceButtonUnDirty( INT32 iButtonIndex ); // forces button undirty no matter the reason, only lasts one frame
 

@@ -1249,7 +1249,7 @@ BOOLEAN ItemIsLegal( UINT16 usItemIndex )
 	}
 	else
 	{
-		if(Item[usItemIndex].usItemClass == IC_LBEGEAR)
+		if(Item[usItemIndex].usItemClass == IC_LBEGEAR || Item[usItemIndex].newinv)
 			return FALSE;
 	}
 
@@ -2623,20 +2623,26 @@ void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 )
 
 //ADB these 2 functions were created because the code calls SwapObjs all over the place
 //but never handles the effects of that swap!
-void SwapObjs(SOLDIERTYPE* pSoldier, int leftSlot, int rightSlot)
+void SwapObjs(SOLDIERTYPE* pSoldier, int leftSlot, int rightSlot, BOOLEAN fPermanent)
 {
 	SwapObjs(&pSoldier->inv[ leftSlot ], &pSoldier->inv[ rightSlot ]);
 
-	//old usItem for the left slot is now stored in the right slot, and vice versa
-	HandleTacticalEffectsOfEquipmentChange(pSoldier, leftSlot, pSoldier->inv[ rightSlot ].usItem, pSoldier->inv[ leftSlot ].usItem);
-	HandleTacticalEffectsOfEquipmentChange(pSoldier, rightSlot, pSoldier->inv[ leftSlot ].usItem, pSoldier->inv[ rightSlot ].usItem);
+	if (fPermanent)
+	{
+		//old usItem for the left slot is now stored in the right slot, and vice versa
+		HandleTacticalEffectsOfEquipmentChange(pSoldier, leftSlot, pSoldier->inv[ rightSlot ].usItem, pSoldier->inv[ leftSlot ].usItem);
+		HandleTacticalEffectsOfEquipmentChange(pSoldier, rightSlot, pSoldier->inv[ leftSlot ].usItem, pSoldier->inv[ rightSlot ].usItem);
+	}
 }
 
-void SwapObjs(SOLDIERTYPE* pSoldier, int slot, OBJECTTYPE* pObject)
+void SwapObjs(SOLDIERTYPE* pSoldier, int slot, OBJECTTYPE* pObject, BOOLEAN fPermanent)
 {
 	SwapObjs(&pSoldier->inv[ slot ], pObject);
 
-	HandleTacticalEffectsOfEquipmentChange(pSoldier, slot, pObject->usItem, pSoldier->inv[ slot ].usItem);
+	if (fPermanent)
+	{
+		HandleTacticalEffectsOfEquipmentChange(pSoldier, slot, pObject->usItem, pSoldier->inv[ slot ].usItem);
+	}
 }
 
 void DamageObj( OBJECTTYPE * pObj, INT8 bAmount, UINT8 subObject )
@@ -4455,8 +4461,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 					functions.*/
 					if(Item[pSoldier->inv[LEGPOS].usItem].attachment)
 					{
-						//SwapObjs(pObj, &pSoldier->inv[LEGPOS]);
-						SwapObjs(pSoldier, LEGPOS, pObj);
+						SwapObjs(pSoldier, LEGPOS, pObj, TRUE);
 						pSoldier->inv[LEGPOS].AttachObject(pSoldier, pObj, FALSE);
 					}
 					if (pSoldier->inv[LEGPOS].exists() == false)
@@ -5846,8 +5851,7 @@ void SwapHandItems( SOLDIERTYPE * pSoldier )
 	if (pSoldier->inv[HANDPOS].exists() == false || pSoldier->inv[SECONDHANDPOS].exists() == false)
 	{
 		// whatever is in the second hand can be swapped to the main hand!
-		//SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[SECONDHANDPOS]) );
-		SwapObjs( pSoldier, HANDPOS, SECONDHANDPOS );
+		SwapObjs( pSoldier, HANDPOS, SECONDHANDPOS, TRUE );
 		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 	}
 	else
@@ -5862,8 +5866,7 @@ void SwapHandItems( SOLDIERTYPE * pSoldier )
 			}
 			// the main hand is now empty so a swap is going to work...
 		}
-		//SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[SECONDHANDPOS]) );
-		SwapObjs( pSoldier, HANDPOS, SECONDHANDPOS );
+		SwapObjs( pSoldier, HANDPOS, SECONDHANDPOS, TRUE );
 		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 	}
 }
@@ -5880,8 +5883,7 @@ void SwapOutHandItem( SOLDIERTYPE * pSoldier )
 		if (pSoldier->inv[SECONDHANDPOS].exists() == false)
 		{
 			// just swap the hand item to the second hand
-			//SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[SECONDHANDPOS]) );
-			SwapObjs( pSoldier, HANDPOS, SECONDHANDPOS );
+			SwapObjs( pSoldier, HANDPOS, SECONDHANDPOS, TRUE );
 			DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 			return;
 		}

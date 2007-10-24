@@ -107,7 +107,11 @@ INT8 OKToAttack(SOLDIERTYPE * pSoldier, int target)
 				return(NOSHOOT_NOLOAD);
 			}
 		}
-		else if (pSoldier->inv[HANDPOS][0]->data.gun.ubGunShotsLeft == 0 /*SB*/ || !(pSoldier->inv[HANDPOS][0]->data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER))
+		else if (pSoldier->inv[HANDPOS][0]->data.gun.ubGunShotsLeft == 0 /*SB*/ || 
+			!(pSoldier->inv[HANDPOS][0]->data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) ||
+			(pSoldier->IsValidSecondHandShotForReloadingPurposes( ) && 
+			(pSoldier->inv[SECONDHANDPOS][0]->data.gun.ubGunShotsLeft == 0 || 
+			!(pSoldier->inv[SECONDHANDPOS][0]->data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER))))
 		{
 			return(NOSHOOT_NOAMMO);
 		}
@@ -454,7 +458,7 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 {
 	INT8	bMinPointsNeeded = 0;
 	INT8 bAPForStandUp = 0;
-	INT8 bAPToLookAtWall = ( FindDirectionForClimbing( pSoldier->sGridNo ) == pSoldier->ubDirection ) ? 0 : 1;
+	INT8 bAPToLookAtWall = ( FindDirectionForClimbing( pSoldier->sGridNo, pSoldier->pathing.bLevel ) == pSoldier->ubDirection ) ? 0 : 1;
 
 	//NumMessage("AffordableAction - Guy#",pSoldier->ubID);
 
@@ -2316,9 +2320,14 @@ INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT16 * pusFromGridNo)
 
 void RearrangePocket(SOLDIERTYPE *pSoldier, INT8 bPocket1, INT8 bPocket2, UINT8 bPermanent)
 {
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"RearrangePocket");
 	// NB there's no such thing as a temporary swap for now...
+	// 0verhaul:  There is now!  If not permanent, don't lose weapon ready status because the
+	// weapon will be restored after the trial situation is finished.
 	//SwapObjs( &(pSoldier->inv[bPocket1]), &(pSoldier->inv[bPocket2]) );
-	SwapObjs( pSoldier, bPocket1, bPocket2 );
+	SwapObjs( pSoldier, bPocket1, bPocket2, bPermanent );
+
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"RearrangePocket done");
 }
 
 void Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 bPocketIndex, UINT8 bPermanent, INT32 lineNumber, STR8 szFunctionName, STR8 szFilename)
@@ -2341,8 +2350,7 @@ void Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 bPocke
 		}
 #endif
 
-		//SwapObjs( &(pSoldier->inv[bPocketIndex]), &(pSoldier->inv[HANDPOS]) );
-		SwapObjs( pSoldier, bPocketIndex, HANDPOS );
+		SwapObjs( pSoldier, bPocketIndex, HANDPOS, TRUE );
 	}
 	return;
 }
@@ -2360,8 +2368,7 @@ void Undo_Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 b
 		}
 #endif
 
-		//SwapObjs( &(pSoldier->inv[bPocketIndex]), &(pSoldier->inv[HANDPOS]) );
-		SwapObjs( pSoldier, bPocketIndex, HANDPOS );
+		SwapObjs( pSoldier, bPocketIndex, HANDPOS, TRUE );
 	}
 	return;
 }

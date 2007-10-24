@@ -97,7 +97,7 @@ INT32 giCurrentViewLevel = ALL_LEVELS_MASK;
 BOOLEAN gbSectorLevels[16][16];
 BOOLEAN gfGlobalSummaryLoaded = FALSE;
 
-SUMMARYFILE *gpSectorSummary[16][16][8];
+SUMMARYFILE *gpSectorSummary[16][16][8] = {};
 SUMMARYFILE *gpCurrentSectorSummary;
 
 MOUSE_REGION MapRegion;
@@ -2506,13 +2506,11 @@ void WriteSectorSummaryUpdate( STR8 puiFilename, UINT8 ubLevel, SUMMARYFILE *pSu
 	else
 		x = (puiFilename[ 1 ] - '0') * 10 + puiFilename[ 2 ] - '0' - 1;
 
-	// Added by ADB, rev 1513
-	if (gpSectorSummary[x][y][ubLevel]) {
-		//ADB this is what we want to free, since we are about to memalloc again
+	if( gpSectorSummary[x][y][ubLevel] )
+	{
 		MemFree( gpSectorSummary[x][y][ubLevel] );
 		gpSectorSummary[x][y][ubLevel] = NULL;
 	}
-
 	gpSectorSummary[x][y][ubLevel] = pSummaryFileInfo;
 
 	// Snap: Restore the data directory once we are finished.
@@ -2744,18 +2742,23 @@ void SummaryUpdateCallback( GUI_BUTTON *btn, INT32 reason )
 		SetProgressBarTitle( 0, L"Generating map summary", BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
 		SetProgressBarMsgAttributes( 0, SMALLCOMPFONT, FONT_BLACK, FONT_BLACK );
 
+#if 0
+		// 0verhaul:  This should NOT be freed.  An array index can be freed when it is recalculated,
+		// as this function is about to do.  And then it SHOULD be freed first, which it wasn't doing.
+		// Either way, using this pointer is not a safe way to free the current sector's summary data.
 		if( gpCurrentSectorSummary )
 		{
-			//ADB we shouldn't be freeing this, there's still a pointer to it in the array and we don't know where!!!
-			//MemFree( gpCurrentSectorSummary );
+			MemFree( gpCurrentSectorSummary );
 			gpCurrentSectorSummary = NULL;
 		}
+#endif
 
 		sprintf( str, "%c%d", gsSelSectorY + 'A' - 1, gsSelSectorX );
 		EvaluateWorld( str, (UINT8)giCurrLevel );
 
-		//gpSectorSummary[ gsSelSectorX ][ gsSelSectorY ][ giCurrLevel ] = gpCurrentSectorSummary;//ADB this original code is totally wrong
-		gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ giCurrLevel ];//ADB it should be this
+		// ADB: The current sector summary should be set to the array value, not the other way around.
+		// Also the sector X and Y values are 1-based and the array is 0-based.  So subtract 1 from X and Y
+		gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1][ gsSelSectorY - 1][ giCurrLevel ];
 	
 		gfRenderSummary = TRUE;
 
@@ -2780,8 +2783,7 @@ void ExtractTempFilename()
 void ApologizeOverrideAndForceUpdateEverything()
 {
 	INT32 x, y;
-	//CHAR16 str[ 50 ];//char overflow if set to 50
-	CHAR16 str[ 512 ];//char overflow if set to 50
+	CHAR16 str[ 128 ];
 	CHAR8 name[50];
 	SUMMARYFILE *pSF;
 	//Create one huge assed button
@@ -2899,8 +2901,8 @@ void ApologizeOverrideAndForceUpdateEverything()
 		}
 	}
 
+	// ADB: The call to EvaluateWorld does not use the .dat extension
 	EvaluateWorld( "p3_m", 0 );
-	//EvaluateWorld( "p3_m.dat", 0 );
 
 	RemoveProgressBar( 2 );
 	gfUpdatingNow = FALSE;
@@ -2961,10 +2963,11 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 	{ //The file couldn't be found!
 		return;
 	}
-
-	//ADB warning, numItems might be 0 !!!!
+	// ADB:  The uiNumItemsPosition may be 0 here due to the recursion further down.
+	// If so, skip the read
 	uiNumItems = 0;
-	if (gpCurrentSectorSummary->uiNumItemsPosition != 0) {
+	if (gpCurrentSectorSummary->uiNumItemsPosition)
+	{
 		//Now fileseek directly to the file position where the number of world items are stored
 		if( !FileSeek( hfile, gpCurrentSectorSummary->uiNumItemsPosition, FILE_SEEK_FROM_START ) )
 		{ //Position couldn't be found!
@@ -2979,11 +2982,9 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 			return;
 		}
 	}
-	else {
-		Assert(gpCurrentSectorSummary->usNumItems == 0);
-	}
+
 	//Now compare this number with the number the summary thinks we should have.  If they are different,
-	//the the summary doesn't match the map.  What we will do is force regenerate the map so that they do
+	//then the summary doesn't match the map.  What we will do is force regenerate the map so that they do
 	//match
 	if( uiNumItems != gpCurrentSectorSummary->usNumItems && fAllowRecursion )
 	{
@@ -3130,6 +3131,24 @@ UINT8 GetCurrentSummaryVersion()
 		return gpCurrentSectorSummary->MapInfo.ubMapVersion;
 	}
 	return 0;
+}
+
+void ClearSummaryInfo()
+{
+	for (int x = 0; x < 16; x++)
+	{
+		for (int y=0; y < 16; y++)
+		{
+			for (int z=0; z < 8; z++)
+			{
+				if (gpSectorSummary[x][y][z])
+				{
+					MemFree( gpSectorSummary[x][y][z]);
+					gpSectorSummary[x][y][z] = NULL;
+				}
+			}
+		}
+	}
 }
 
 #endif

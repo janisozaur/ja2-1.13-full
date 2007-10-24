@@ -547,6 +547,8 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 
 			if ( Item[ usHandItem ].usItemClass != IC_THROWING_KNIFE )
 			{
+				pSoldier->ubAttackingHand = HANDPOS;
+				pSoldier->usAttackingWeapon = usHandItem;
 				// If doing spread, set down the first gridno.....
 				if ( pSoldier->flags.fDoSpread )
 				{
@@ -2137,7 +2139,11 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 
 		(*psGridNo) = sNewGridNo = gMapInformation.sCenterGridNo;
 
-		//return( NULL );
+		// If no center grid number exists, shrug it off
+		if (sNewGridNo == -1)
+		{
+			return( NULL );
+		}
 	}
 
 	// CHECK IF THIS ITEM IS IN DEEP WATER....

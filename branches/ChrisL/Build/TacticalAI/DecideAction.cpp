@@ -2709,7 +2709,12 @@ INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 							if (!fUp)
 								DebugMsg ( TOPIC_JA2AI , DBG_LEVEL_3 , String("Soldier %d is climbing down",pSoldier->ubID) );
 
-							if ( CanClimbFromHere ( pSoldier, fUp ) )
+							// As mentioned in the next part, the sClosestDisturbance IS the climb point desired.  So the
+							// check here should be "Am I aready there?"  If so, THEN possibly climb.  This previous check
+							// would have a soldier climbing any building, even if it was not the desired building.  So
+							// WRONG WRONG WRONG
+							//if ( CanClimbFromHere ( pSoldier, fUp ) )
+							if (pSoldier->sGridNo == sClosestDisturbance)
 							{
 								if (IsActionAffordable(pSoldier) && pSoldier->bActionPoints >= ( AP_CLIMBROOF + MinAPsToAttack( pSoldier, sClosestDisturbance, ADDTURNCOST)))
 								{
@@ -2718,14 +2723,17 @@ INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 							}
 							else
 							{
-								pSoldier->aiData.usActionData = FindClosestClimbPoint(pSoldier, pSoldier->sGridNo , sClosestDisturbance , fUp );
-								if ( pSoldier->aiData.usActionData != NOWHERE )
+								// Do not overwrite the usActionData here.  If there's no nearby climb point, the action data
+								// would become NOWHERE, and then the SEEK_ENEMY fallback would also fail.
+								// In fact, sClosestDisturbance has ALREADY calculated the closest climb point when climbing is
+								// necessary.  The returned grid # in sClosestDisturbance is that climb point.  So if climb is 
+								// set, then use sClosestDisturbance as is.
+								//INT16 usClimbPoint = FindClosestClimbPoint(pSoldier, pSoldier->sGridNo , sClosestDisturbance , fUp );
+								INT16 usClimbPoint = sClosestDisturbance;
+								if ( usClimbPoint != NOWHERE )
 								{
-									pSoldier->aiData.usActionData = FindClosestClimbPoint(pSoldier, pSoldier->sGridNo , sClosestDisturbance , fUp );
-									if ( pSoldier->aiData.usActionData != NOWHERE )
-									{
-										return( AI_ACTION_MOVE_TO_CLIMB  );
-									}
+									pSoldier->aiData.usActionData = usClimbPoint;
+									return( AI_ACTION_MOVE_TO_CLIMB  );
 								}
 							}
 						}
@@ -2935,14 +2943,11 @@ INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 							}
 							else
 							{
-								pSoldier->aiData.usActionData = FindClosestClimbPoint(pSoldier, pSoldier->sGridNo , sClosestFriend , fUp );
-								if ( pSoldier->aiData.usActionData != NOWHERE )
+								INT16 sClimbPoint = FindClosestClimbPoint(pSoldier, pSoldier->sGridNo , sClosestFriend , fUp );
+								if ( sClimbPoint != NOWHERE )
 								{
-									pSoldier->aiData.usActionData = FindClosestClimbPoint(pSoldier, pSoldier->sGridNo , sClosestFriend , fUp );
-									if ( pSoldier->aiData.usActionData != NOWHERE )
-									{
-										return( AI_ACTION_MOVE_TO_CLIMB  );
-									}
+									pSoldier->aiData.usActionData = sClimbPoint;
+									return( AI_ACTION_MOVE_TO_CLIMB  );
 								}
 							}
 						}

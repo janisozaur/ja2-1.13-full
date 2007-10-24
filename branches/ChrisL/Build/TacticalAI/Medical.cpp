@@ -434,8 +434,7 @@ INT8 DecideAutoBandage( SOLDIERTYPE * pSoldier )
 		{
 			pSoldier->bSlotItemTakenFrom = bSlot;
 
-			//SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[bSlot]) );
-			SwapObjs( pSoldier, HANDPOS, bSlot );
+			SwapObjs( pSoldier, HANDPOS, bSlot, TRUE );
 		}
 		return( AI_ACTION_GIVE_AID );
 	}
@@ -449,8 +448,7 @@ INT8 DecideAutoBandage( SOLDIERTYPE * pSoldier )
 		{
 			pSoldier->bSlotItemTakenFrom = bSlot;
 
-			//SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[bSlot]) );
-			SwapObjs( pSoldier, HANDPOS, bSlot );
+			SwapObjs( pSoldier, HANDPOS, bSlot, TRUE );
 		}
 		return( pSoldier->aiData.bAction );
 	}

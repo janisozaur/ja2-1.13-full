@@ -730,6 +730,7 @@ typedef struct
 	INT16 snowCamobonus;
 
 	BOOLEAN scifi; // item only available in scifi mode
+	BOOLEAN newinv;	// item only available in new inventory mode
 
 	UINT16 defaultattachment;
 } INVTYPE;

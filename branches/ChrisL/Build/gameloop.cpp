@@ -92,7 +92,7 @@ BOOLEAN InitializeGame(void)
 
 	giStartingMemValue = MemGetFree( );
 
-	InitializeLua();
+	//InitializeLua();
 
 	ClearAllDebugTopics();
 	RegisterJA2DebugTopic( TOPIC_JA2OPPLIST, "Reg" );
@@ -167,7 +167,7 @@ void ShutdownGame(void)
 	//Deletes all the Temp files in the Maps\Temp directory
 	InitTacticalSave( FALSE );
 
-	ShutdownLua( );
+	//ShutdownLua( );
 
 	FreeGameExternalOptions();
 }

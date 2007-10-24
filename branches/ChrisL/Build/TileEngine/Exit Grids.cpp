@@ -246,9 +246,6 @@ INT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwee
 	EXITGRID	ExitGrid;
 	UINT8	ubGotoSectorX, ubGotoSectorY, ubGotoSectorZ;
 
-	// Turn off at end of function...
-	gfPlotPathToExitGrid = TRUE;
-
 	//Save AI pathing vars.	changing the distlimit restricts how
 	//far away the pathing will consider.
 	ubSaveNPCAPBudget = gubNPCAPBudget;
@@ -293,9 +290,13 @@ INT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwee
 		}
 	}
 
+	gfPlotPathToExitGrid = TRUE;
+
 	//Now, find out which of these gridnos are reachable
 	//(use the fake soldier and the pathing settings)
 	FindBestPath( &soldier, NOWHERE, 0, WALKING, COPYREACHABLE, PATH_THROUGH_PEOPLE );
+
+	gfPlotPathToExitGrid = FALSE;
 
 	uiLowestRange = 999999;
 
@@ -335,8 +336,6 @@ INT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwee
 	}
 	gubNPCAPBudget = ubSaveNPCAPBudget;
 	gubNPCDistLimit = ubSaveNPCDistLimit;
-
-	gfPlotPathToExitGrid = FALSE;
 
 	if ( fFound )
 	{

@@ -102,7 +102,7 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 				ConvertGridNoToCenterCellXY( sGridNo, &sXPos, &sYPos );
 
 				pPlanSoldier->EVENT_SetSoldierPosition( sXPos, sYPos );
-				pPlanSoldier->EVENT_SetSoldierDestination( sGridNo );
+				pPlanSoldier->EVENT_SetSoldierDestination( (UINT8) sGridNo ); // Hopefully this code is never used anymore because the second param is now direction, not grid
 				pPlanSoldier->bVisible = 1;
 				pPlanSoldier->usUIMovementMode = gpUIPlannedSoldier->usUIMovementMode;
 
@@ -181,7 +181,7 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 					}
 
 					pPlanSoldier->EVENT_SetSoldierPosition( gpUIPlannedSoldier->dXPos, gpUIPlannedSoldier->dYPos );
-					pPlanSoldier->EVENT_SetSoldierDestination( gpUIPlannedSoldier->sGridNo );
+					pPlanSoldier->EVENT_SetSoldierDestination( (UINT8) gpUIPlannedSoldier->sGridNo );
 					pPlanSoldier->bVisible = 1;
 					pPlanSoldier->usUIMovementMode = gpUIPlannedSoldier->usUIMovementMode;
 

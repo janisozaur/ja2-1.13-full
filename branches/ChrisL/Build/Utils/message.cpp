@@ -360,7 +360,7 @@ void ScrollString( )
 	INT32 iMaxAge = 0;
 	BOOLEAN fDitchLastMessage = FALSE;
 
-	INT32 iMsgYStart = ((UsingNewInventorySystem() == false)) ? SCREEN_HEIGHT - 150 : SCREEN_HEIGHT - 210;
+	INT16 iMsgYStart = ((UsingNewInventorySystem() == false)) ? SCREEN_HEIGHT - 150 : SCREEN_HEIGHT - 210;
 
 
 	// UPDATE TIMER
@@ -1114,7 +1114,7 @@ void DisplayStringsInMapScreenMessageList( void )
 		// CHRISL: Use this line if we want to display from the left edge
 		mprintf_coded( 20, sY, gMapScreenMessageList[ ubCurrentStringIndex ]->pString16 );
 
-		sY += usSpacing;
+		sY = sY + usSpacing;
 
 		// next message index to print (may wrap around)
 		ubCurrentStringIndex = ( ubCurrentStringIndex + 1 ) % 256;

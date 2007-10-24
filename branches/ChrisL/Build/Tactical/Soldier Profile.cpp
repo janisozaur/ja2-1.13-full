@@ -53,6 +53,7 @@
 	#include "personnel.h"
 	#include "environment.h"
 	#include "Player Command.h"
+	#include "strategic.h"
 #endif
 
 #ifdef JA2EDITOR
@@ -1126,8 +1127,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 				}
 			}
 			// swap item to hand
-			//SwapObjs( &(pNewSoldier->inv[ bSlot ]), &(pNewSoldier->inv[ HANDPOS ]) );
-			SwapObjs( pNewSoldier, bSlot, HANDPOS );
+			SwapObjs( pNewSoldier, bSlot, HANDPOS, TRUE );
 		}
 	}
 
@@ -1255,8 +1255,10 @@ BOOLEAN UnRecruitEPC( UINT8 ubCharNum )
 	}
 
 	// how do we decide whether or not to set this?
-	gMercProfiles[ ubCharNum ].fUseProfileInsertionInfo = TRUE;
 	gMercProfiles[ ubCharNum ].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
+	gMercProfiles[ ubCharNum ].usStrategicInsertionData = pSoldier->sGridNo;
+	gMercProfiles[ ubCharNum ].fUseProfileInsertionInfo = TRUE;
+	gMercProfiles[ ubCharNum ].ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 
 	// Add this guy to CIV team!
 	pNewSoldier = ChangeSoldierTeam( pSoldier, CIV_TEAM );

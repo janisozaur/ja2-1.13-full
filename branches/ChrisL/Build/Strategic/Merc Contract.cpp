@@ -982,6 +982,10 @@ BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
 
 	// ATE: update team panels....
 	UpdateTeamPanelAssignments( );
+ 
+	// And unpause the @#$@#$ interface
+	UnLockPauseState();
+	UnPauseGame();
 
 	return( TRUE );
 }

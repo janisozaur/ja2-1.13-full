@@ -25,12 +25,22 @@
 	#include "Animated ProgressBar.h"
 #endif
 
+//Don't mess with this value, unless you want to force update all maps in the game!
+// Lesh: fix the sad situation with the different major map versions
+//#ifdef RUSSIAN
+	//#define MAJOR_MAP_VERSION		6.00
+//#else
+	#define MAJOR_MAP_VERSION		5.00
+//#endif
+
 FLOAT gdMajorMapVersion = MAJOR_MAP_VERSION;
 
 BOOLEAN gfWorldLoaded;
 
 MAPCREATE_STRUCT gMapInformation;
 
+//Current minor map version updater.
+#define MINOR_MAP_VERSION		25
 UINT8 gubMinorMapVersion = MINOR_MAP_VERSION;
 
 /*

@@ -84,7 +84,16 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 	}
 	else if (IS_TRAVELCOST_DOOR( sSwitchValue ))
 	{
+		// Can't travel diagonally through a door
+		if (bDir & 1)
+		{
+			return -1;
+		}
 		sSwitchValue = DoorTravelCost( pSoldier, sGridno, (UINT8) sSwitchValue, (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), NULL );
+	}
+	else if (gfPlotPathToExitGrid && sSwitchValue == TRAVELCOST_EXITGRID)
+	{
+		sSwitchValue = gTileTypeMovementCost[ gpWorldLevelData[ sGridno ].ubTerrainID ];
 	}
 
 	if (sSwitchValue >= TRAVELCOST_BLOCKED && sSwitchValue != TRAVELCOST_DOOR )
@@ -116,7 +125,7 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 	case TRAVELCOST_VEINMID	: sAPCost += AP_MOVEMENT_FLAT;
 															break;
 */
-	case TRAVELCOST_DOOR			: sAPCost += AP_MOVEMENT_FLAT;
+	case TRAVELCOST_DOOR			: sAPCost += AP_MOVEMENT_FLAT + AP_OPEN_DOOR + AP_OPEN_DOOR; // Include open and close costs!
 															break;
 
 		// cost for jumping a fence REPLACES all other AP costs!
@@ -271,6 +280,10 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 
 	// get the tile cost for that tile based on WALKING
 	sTileCost = TerrainActionPoints( pSoldier, sGridNo, bDir, pSoldier->pathing.bLevel );
+	if (sTileCost == -1)
+	{
+		return 100;
+	}
 
 	// Get switch value...
 	sSwitchValue = gubWorldMovementCosts[ sGridNo ][ bDir ][ pSoldier->pathing.bLevel ];
@@ -372,6 +385,10 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 
 	// get the tile cost for that tile based on WALKING
 	sTileCost = TerrainActionPoints( pSoldier, sGridNo, bDir, pSoldier->pathing.bLevel );
+	if (sTileCost == -1)
+	{
+		return 100;
+	}
 
 	// so, then we must modify it for other movement styles and accumulate
 	// CHRISL: Adjusted system to use different move costs while wearing a backpack
@@ -1543,7 +1560,7 @@ UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost
 INT8 MinPtsToMove(SOLDIERTYPE *pSoldier)
 {
 	// look around all 8 directions and return lowest terrain cost
-	INT8	cnt;
+	UINT8	cnt;
 	INT16	sLowest=127;
 	INT16	sGridno,sCost;
 
@@ -1552,12 +1569,12 @@ INT8 MinPtsToMove(SOLDIERTYPE *pSoldier)
 		return( (INT8)sLowest);
 	}
 
-	for (cnt=0; cnt <= 7; cnt++)
+	for (cnt=0; cnt <= 8; cnt++)
 	{
-	sGridno = NewGridNo(pSoldier->sGridNo,DirectionInc(cnt));
-	if (sGridno != pSoldier->sGridNo)
-		{
-		if ( (sCost=ActionPointCost( pSoldier, sGridno, cnt , pSoldier->usUIMovementMode ) ) < sLowest )
+		sGridno = NewGridNo(pSoldier->sGridNo,DirectionInc(cnt));
+		if (sGridno != pSoldier->sGridNo)
+			{
+			if ( (sCost=ActionPointCost( pSoldier, sGridno, cnt , pSoldier->usUIMovementMode ) ) < sLowest )
 			{
 					sLowest = sCost;
 			}

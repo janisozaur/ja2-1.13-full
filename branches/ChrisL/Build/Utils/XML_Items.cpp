@@ -211,6 +211,7 @@ itemStartElementHandle(void *userData, const XML_Char *name, const XML_Char **at
 				strcmp(name, "SnowCamoBonus") == 0 ||
 				strcmp(name, "StealthBonus") == 0 ||
 				strcmp(name, "SciFi") == 0 ||
+				strcmp(name, "NewInv") == 0 ||
 
 	strcmp(name, "fFlags") == 0 ))
 		{
@@ -730,6 +731,11 @@ itemEndElementHandle(void *userData, const XML_Char *name)
 		{
 			pData->curElement = ELEMENT;
 			pData->curItem.scifi   = (BOOLEAN) atol(pData->szCharData);
+		}
+		else if(strcmp(name, "NewInv")	 == 0)
+		{
+			pData->curElement = ELEMENT;
+			pData->curItem.newinv   = (BOOLEAN) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "HideMuzzleFlash")	 == 0)
 		{
@@ -1420,6 +1426,7 @@ BOOLEAN WriteItemStats()
 			FilePrintf(hFile,"\t\t<Attachment>%d</Attachment>\r\n",						Item[cnt].attachment  );
 			FilePrintf(hFile,"\t\t<BigGunList>%d</BigGunList>\r\n",						Item[cnt].biggunlist   );
 			FilePrintf(hFile,"\t\t<SciFi>%d</SciFi>\r\n",						Item[cnt].scifi   );
+			FilePrintf(hFile,"\t\t<NewInv>%d</NewInv>\r\n",						Item[cnt].newinv   );
 			FilePrintf(hFile,"\t\t<NotInEditor>%d</NotInEditor>\r\n",						Item[cnt].notineditor  );
 			FilePrintf(hFile,"\t\t<DefaultUndroppable>%d</DefaultUndroppable>\r\n",						Item[cnt].defaultundroppable );
 			FilePrintf(hFile,"\t\t<Unaerodynamic>%d</Unaerodynamic>\r\n",						Item[cnt].unaerodynamic );

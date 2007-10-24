@@ -1399,8 +1399,14 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 									// OK, pick a larger direction to goto....
 									pSoldier->flags.uiStatusFlags |= SOLDIER_TURNINGFROMHIT;
 									// This becomes an attack busy situation
-									gTacticalStatus.ubAttackBusyCount++;
-									DebugAttackBusy( String( "Soldier turning from a hit.	Increasing attack busy.	Now %d\n", gTacticalStatus.ubAttackBusyCount ) );
+									// 0verhaul:  There is an attack busy problem with this.  The soldier could be in mid-turn
+									// when another bullet is fired (auto-fire or dual-wield, for instance), and the soldier is
+									// knocked down in the middle of the turn.  In such a case, the attack busy does not get
+									// cancelled.  So if we indeed need to keep the attack busy (which may not be the case),
+									// we will need to find a more reliable method.  For now, I'm going to cancel out the
+									// ABC adjustment here and we'll see if there needs to be something in its place.
+									//gTacticalStatus.ubAttackBusyCount++;
+									DebugAttackBusy( String( "Soldier turning from a hit.  Not Increasing attack busy.  Now %d\n", gTacticalStatus.ubAttackBusyCount ) );
 
 									// Pick evenly between both
 									if ( Random( 50 ) < 25 )
@@ -2023,7 +2029,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					//	ReduceAttackBusyCount( pSoldier->ubSuppressorID, FALSE );
 					// }
 
-					if ( pSoldier->usPendingAnimation == NO_PENDING_ANIMATION && ( pSoldier->flags.fTurningFromPronePosition != 3 ) && ( pSoldier->flags.fTurningFromPronePosition != 1 ) )
+					if ( pSoldier->usPendingAnimation == NO_PENDING_ANIMATION && 
+						( pSoldier->flags.bTurningFromPronePosition != TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE ) && 
+						( pSoldier->flags.bTurningFromPronePosition != TURNING_FROM_PRONE_ON ) )
 					{
 						if ( gTacticalStatus.ubAttackBusyCount == 0 )
 						{
@@ -2036,7 +2044,10 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// Check to see if we have changed stance and need to update visibility
 					if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_STANCECHANGEANIM)
 					{
-						if ( pSoldier->usPendingAnimation == NO_PENDING_ANIMATION && gTacticalStatus.ubAttackBusyCount == 0 && pSoldier->flags.fTurningFromPronePosition != 3 && pSoldier->flags.fTurningFromPronePosition != 1 )
+						if ( pSoldier->usPendingAnimation == NO_PENDING_ANIMATION && 
+							gTacticalStatus.ubAttackBusyCount == 0 && 
+							pSoldier->flags.bTurningFromPronePosition != TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE && 
+							pSoldier->flags.bTurningFromPronePosition != TURNING_FROM_PRONE_ON )
 						{
 							HandleSight(pSoldier,SIGHT_LOOK | SIGHT_RADIO | SIGHT_INTERRUPT );
 						}
@@ -2060,7 +2071,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					}
 
 					// Have we finished opening doors?
-					if ( pSoldier->usAnimState == END_OPEN_DOOR || pSoldier->usAnimState == END_OPEN_DOOR_CROUCHED || pSoldier->usAnimState == CRIPPLE_CLOSE_DOOR || pSoldier->usAnimState == CRIPPLE_END_OPEN_DOOR )
+					// 0verhaul:  Added additional check:  Are we told to stop at this point, maybe due to being interrupted?
+					if ( !pSoldier->flags.fNoAPToFinishMove &&
+						(pSoldier->usAnimState == END_OPEN_DOOR || 
+						pSoldier->usAnimState == END_OPEN_DOOR_CROUCHED || 
+						pSoldier->usAnimState == CRIPPLE_CLOSE_DOOR || 
+						pSoldier->usAnimState == CRIPPLE_END_OPEN_DOOR ) )
 					{
 						// Are we told to continue movement...?
 						if ( pSoldier->bEndDoorOpenCode == 1 )
@@ -3564,7 +3580,7 @@ void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier )
 				return;
 			}
 		}
-		else if ( pSoldier->usAnimState == GENERIC_HIT_CROUCH )
+		else if ( pSoldier->usAnimState == GENERIC_HIT_CROUCH || pSoldier->usAnimState == CIV_COWER_HIT)
 		{
 			pSoldier->ChangeSoldierState( FALLFORWARD_FROMHIT_CROUCH, 0 , FALSE);
 			pSoldier->BeginTyingToFall( );

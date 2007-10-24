@@ -183,6 +183,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BinaryHeap.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Boxing.h"
 				>
 			</File>

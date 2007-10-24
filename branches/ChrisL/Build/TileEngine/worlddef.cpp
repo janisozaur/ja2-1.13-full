@@ -3024,18 +3024,12 @@ BOOLEAN LoadWorld( const STR8	puiFilename, float* pMajorMapVersion, UINT8* pMino
 	offset = 0;
 
 	// Lesh: read additional bytes for map major version 6.00
-
-	//ADB Russian version of the game has some maps at version 6.0 while all others are 5.0
-	//so let's update!
-	//if we are loading a 5.26 map (6.26 Russian) AND we are currently at 6.27
-	//( what would be 7.27 Russian except that we are about to fix this)
-	//then read the data.
-	if( dMajorMapVersion == 6.00 && ubMinorMapVersion < 27 && MAJOR_MAP_VERSION == 6.00)
+	if( dMajorMapVersion == 6.00 )
 	{
 		UINT32 uiNums[37];
-		LOADDATA( uiNums, pBuffer, 37 * sizeof( UINT32 ) );
+		LOADDATA( uiNums, pBuffer, 37 * sizeof( INT32 ) );
+		dMajorMapVersion = 5.00;
 	}
-	//now the data is discarded and when saved, as 6.27, you won't have this problem!
 
 	SetRelativeStartAndEndPercentage( 0, 58, 59, L"Loading room information..." );
 	RenderProgressBar( 0, 100 );

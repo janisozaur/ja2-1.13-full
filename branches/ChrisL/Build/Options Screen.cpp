@@ -470,7 +470,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 		if( usTextWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
 		{
 			//Get how many lines will be used to display the string, without displaying the string
-			UINT8	ubNumLines = DisplayWrappedString( 0, 0, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[ cnt ], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED | DONT_DISPLAY_TEXT ) / GetFontHeight( OPT_MAIN_FONT );
+			UINT8	ubNumLines = (UINT8) ( DisplayWrappedString( 0, 0, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[ cnt ], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED | DONT_DISPLAY_TEXT ) / GetFontHeight( OPT_MAIN_FONT ) );
 
 			usTextWidth = OPT_TOGGLE_BOX_TEXT_WIDTH;
 
@@ -518,7 +518,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 		if( usTextWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
 		{
 			//Get how many lines will be used to display the string, without displaying the string
-			UINT8	ubNumLines = DisplayWrappedString( 0, 0, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[ cnt ], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED | DONT_DISPLAY_TEXT ) / GetFontHeight( OPT_MAIN_FONT );
+			UINT8	ubNumLines = (UINT8) ( DisplayWrappedString( 0, 0, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[ cnt ], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED | DONT_DISPLAY_TEXT ) / GetFontHeight( OPT_MAIN_FONT ) );
 
 			usTextWidth = OPT_TOGGLE_BOX_TEXT_WIDTH;
 

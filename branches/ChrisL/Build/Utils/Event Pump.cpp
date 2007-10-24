@@ -976,7 +976,7 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 
 				// Call soldier function
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Change Dest");
-				pSoldier->EVENT_SetSoldierDestination( SChangeDest.usNewDestination );
+				pSoldier->EVENT_SetSoldierDestination( (UINT8) SChangeDest.usNewDestination );
 				break;
 
 			case S_SETPOSITION:
@@ -1112,7 +1112,7 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 
 				// Call soldier function
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Event Pump: SetDesiredDirection: Dir( %d )", SSetDesiredDirection.usDesiredDirection)	);
-				pSoldier->EVENT_SetSoldierDesiredDirection( SSetDesiredDirection.usDesiredDirection );
+				pSoldier->EVENT_SetSoldierDesiredDirection( (UINT8) SSetDesiredDirection.usDesiredDirection );
 				break;
 
 

@@ -35,8 +35,8 @@ extern INT8 FindUsableObj( SOLDIERTYPE * pSoldier, UINT16 usItem );
 
 void DeleteObj(OBJECTTYPE * pObj );
 void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 );
-void SwapObjs(SOLDIERTYPE* pSoldier, int leftSlot, int rightSlot);
-void SwapObjs(SOLDIERTYPE* pSoldier, int slot, OBJECTTYPE* pObject);
+void SwapObjs(SOLDIERTYPE* pSoldier, int leftSlot, int rightSlot, BOOLEAN fPermanent);
+void SwapObjs(SOLDIERTYPE* pSoldier, int slot, OBJECTTYPE* pObject, BOOLEAN fPermanent);
 
 //Returns true if swapped, false if added to end of stack
 extern BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex, UINT32 ubCap );

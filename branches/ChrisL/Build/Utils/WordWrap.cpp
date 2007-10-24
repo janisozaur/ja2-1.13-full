@@ -73,7 +73,7 @@ WRAPPED_STRING *LineWrapForSingleCharWords(UINT32 ulFont, UINT16 usLineWidthPixe
 		//Get the next char
 		OneChar[0] = TempString[ usCurIndex ];
 
-		usCurrentWidthPixels += WFStringPixLength( OneChar, ulFont);
+		usCurrentWidthPixels = usCurrentWidthPixels + WFStringPixLength( OneChar, ulFont);
 
 		//If we are at the end of the string
 		if(TempString[ usCurIndex	] == 0)
@@ -200,7 +200,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 		}
 		OneChar[0] = TempString[ usCurIndex ];
 
-		usCurrentWidthPixels += WFStringPixLength( OneChar, ulFont);
+		usCurrentWidthPixels = usCurrentWidthPixels + WFStringPixLength( OneChar, ulFont);
 
 		//If we are at the end of the string
 		if(TempString[ usCurIndex	] == 0)
@@ -241,7 +241,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 			{
 				OneChar[0] = DestString[ usDestIndex ];
 
-				usCurrentWidthPixels -= WFStringPixLength( OneChar, ulFont);
+				usCurrentWidthPixels = usCurrentWidthPixels - WFStringPixLength( OneChar, ulFont);
 
 				usCurIndex--;
 				usDestIndex--;
@@ -711,10 +711,10 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 							usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 
 							// calculate new x position for next time
-							usLocalPosX += usPhraseLengthPixels;
+							usLocalPosX = usLocalPosX + usPhraseLengthPixels;
 
 							// shorten width for next time
-							usLocalWidth -= usLineLengthPixels;
+							usLocalWidth = usLocalWidth - usLineLengthPixels;
 
 							// erase line string
 							memset(zLineString,0,sizeof(zLineString));
@@ -755,10 +755,10 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 							usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 
 							// calculate new x position for next time
-							usLocalPosX += usPhraseLengthPixels;
+							usLocalPosX = usLocalPosX + usPhraseLengthPixels;
 
 							// shorten width for next time
-							usLocalWidth -= usLineLengthPixels;
+							usLocalWidth = usLocalWidth - usLineLengthPixels;
 
 							// erase line string
 							memset(zLineString,0,sizeof(zLineString));
@@ -824,10 +824,10 @@ DEF: commented out for Beta.	Nov 30
 						usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 
 						// calculate new x position for next time
-						usLocalPosX += usPhraseLengthPixels;
+						usLocalPosX = usLocalPosX + usPhraseLengthPixels;
 
 						// shorten width for next time
-						usLocalWidth -= usLineLengthPixels;
+						usLocalWidth = usLocalWidth - usLineLengthPixels;
 
 						// erase line string
 						memset(zLineString,0,sizeof(zLineString));
@@ -864,10 +864,10 @@ DEF: commented out for Beta.	Nov 30
 						usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 
 						// calculate new x position for next time
-						usLocalPosX += usPhraseLengthPixels;
+						usLocalPosX = usLocalPosX + usPhraseLengthPixels;
 
 						// shorten width for next time
-						usLocalWidth -= usLineLengthPixels;
+						usLocalWidth = usLocalWidth - usLineLengthPixels;
 
 						// erase line string
 						memset(zLineString,0,sizeof(zLineString));
@@ -906,10 +906,10 @@ DEF: commented out for Beta.	Nov 30
 					// yes we can fit this word.
 
 					// get the length AGAIN (in pixels with the SPACE) for this word
-				usWordLengthPixels = WFStringPixLength(zWordString,uiLocalFont);
+					usWordLengthPixels = WFStringPixLength(zWordString,uiLocalFont);
 
 					// calc new pixel length for the line
-					usLineLengthPixels += usWordLengthPixels;
+					usLineLengthPixels = usLineLengthPixels + usWordLengthPixels;
 
 					// reset dest char counter
 					usDestCounter = 0;
@@ -1225,10 +1225,10 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 							usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 
 							// calculate new x position for next time
-							usLocalPosX += usPhraseLengthPixels;
+							usLocalPosX = usLocalPosX + usPhraseLengthPixels;
 
 							// shorten width for next time
-							usLocalWidth -= usLineLengthPixels;
+							usLocalWidth = usLocalWidth - usLineLengthPixels;
 
 							// erase line string
 							memset(zLineString,0,sizeof(zLineString));
@@ -1255,10 +1255,10 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 							usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 
 							// calculate new x position for next time
-							usLocalPosX += usPhraseLengthPixels;
+							usLocalPosX = usLocalPosX + usPhraseLengthPixels;
 
 							// shorten width for next time
-							usLocalWidth -= usLineLengthPixels;
+							usLocalWidth = usLocalWidth - usLineLengthPixels;
 
 							// erase line string
 							memset(zLineString,0,sizeof(zLineString));
@@ -1297,10 +1297,10 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 						usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 
 						// calculate new x position for next time
-						usLocalPosX += usPhraseLengthPixels;
+						usLocalPosX = usLocalPosX + usPhraseLengthPixels;
 
 						// shorten width for next time
-						usLocalWidth -= usLineLengthPixels;
+						usLocalWidth = usLocalWidth - usLineLengthPixels;
 
 						// erase line string
 						memset(zLineString,0,sizeof(zLineString));
@@ -1324,10 +1324,10 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 						usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 
 						// calculate new x position for next time
-						usLocalPosX += usPhraseLengthPixels;
+						usLocalPosX = usLocalPosX + usPhraseLengthPixels;
 
 						// shorten width for next time
-						usLocalWidth -= usLineLengthPixels;
+						usLocalWidth = usLocalWidth - usLineLengthPixels;
 
 						// erase line string
 						memset(zLineString,0,sizeof(zLineString));
@@ -1369,7 +1369,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 					usWordLengthPixels = WFStringPixLength(zWordString,uiLocalFont);
 
 					// calc new pixel length for the line
-					usLineLengthPixels += usWordLengthPixels;
+					usLineLengthPixels = usLineLengthPixels + usWordLengthPixels;
 
 					// reset dest char counter
 					usDestCounter = 0;
@@ -1549,10 +1549,10 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 							// calc length of what we just wrote
 							usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 							// calculate new x position for next time
-							usLocalPosX += usPhraseLengthPixels;
+							usLocalPosX = usLocalPosX + usPhraseLengthPixels;
 
 							// shorten width for next time
-							usLocalWidth -= usLineLengthPixels;
+							usLocalWidth = usLocalWidth - usLineLengthPixels;
 
 							// erase line string
 							memset(zLineString,0,sizeof(zLineString));
@@ -1575,10 +1575,10 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 							usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 
 							// calculate new x position for next time
-							usLocalPosX += usPhraseLengthPixels;
+							usLocalPosX = usLocalPosX + usPhraseLengthPixels;
 
 							// shorten width for next time
-							usLocalWidth -= usLineLengthPixels;
+							usLocalWidth = usLocalWidth - usLineLengthPixels;
 
 							// erase line string
 							memset(zLineString,0,sizeof(zLineString));
@@ -1611,10 +1611,10 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 						usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 
 						// calculate new x position for next time
-						usLocalPosX += usPhraseLengthPixels;
+						usLocalPosX = usLocalPosX + usPhraseLengthPixels;
 
 						// shorten width for next time
-						usLocalWidth -= usLineLengthPixels;
+						usLocalWidth = usLocalWidth - usLineLengthPixels;
 
 						// erase line string
 						memset(zLineString,0,sizeof(zLineString));
@@ -1635,10 +1635,10 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 						usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
 
 						// calculate new x position for next time
-						usLocalPosX += usPhraseLengthPixels;
+						usLocalPosX = usLocalPosX + usPhraseLengthPixels;
 
 						// shorten width for next time
-						usLocalWidth -= usLineLengthPixels;
+						usLocalWidth = usLocalWidth - usLineLengthPixels;
 
 						// erase line string
 						memset(zLineString,0,sizeof(zLineString));
@@ -1680,7 +1680,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 					usWordLengthPixels = WFStringPixLength(zWordString,uiLocalFont);
 
 					// calc new pixel length for the line
-					usLineLengthPixels += usWordLengthPixels;
+					usLineLengthPixels = usLineLengthPixels + usWordLengthPixels;
 
 					// reset dest char counter
 					usDestCounter = 0;
