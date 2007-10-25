@@ -2020,8 +2020,8 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 		//if we are NOT a regular civilian that intends to climb
 		//similar to true #2 - but flags.fClimb == true is a new condition,
 		//we do not want them to seek if they need to climb, but we want them to do everything else
-		if ( ! (onCivTeam == true && isNamedCiv == false && flags.fClimb == TRUE) ) {
-
+		if ( ! (onCivTeam == true && isNamedCiv == false && flags.fClimb == TRUE) )
+		{
 			////////////////////////////////////////////////////////////////////////////
 			// SEEK NOISE
 			////////////////////////////////////////////////////////////////////////////
@@ -2040,8 +2040,8 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 			//if we are NOT a regular civilian that intends to climb
 			//similar to true #2 - but flags.fClimb == true is a new condition,
 			//we do not want them to seek if they need to climb, but we want them to do everything else
-			if ( ! (onCivTeam == true && isNamedCiv == false && flags.fClimb == TRUE) ) {
-
+			if ( ! (onCivTeam == true && isNamedCiv == false && flags.fClimb == TRUE) )
+			{
 				////////////////////////////////////////////////////////////////////////////
 				// SEEK FRIEND WHO LAST RADIOED IN TO REPORT NOISE
 				////////////////////////////////////////////////////////////////////////////

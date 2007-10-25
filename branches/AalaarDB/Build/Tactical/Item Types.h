@@ -395,7 +395,7 @@ public:
 	//ADB ubWeight has been removed because it is always recalculated at every object change but only used in 1 place!!!
 	//much better to recalculate it only where it is used once!!!
 	//UINT16		ubWeight;		//used to be UINT8
-	INT8		fFlags;
+	UINT8		fFlags;//used to be INT8, but that makes anything with OBJECT_NO_OVERWRITE negative
 
 	char		endOfPOD;
 #define SIZEOF_OBJECTTYPE_POD	(offsetof(OBJECTTYPE, endOfPOD))

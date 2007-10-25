@@ -7416,7 +7416,7 @@ UINT8 AllowedAimingLevels(SOLDIERTYPE * pSoldier)
 
 	if ( allowed && IsScoped( &pSoldier->inv[pSoldier->ubAttackingHand] ) )
 	{
-		iScopeBonus = ( (float)gGameExternalOptions.ubStraightSightRange * GetMinRangeForAimBonus(&gTempObject) / 100 );
+		iScopeBonus = ( (float)gGameExternalOptions.ubStraightSightRange * GetMinRangeForAimBonus(&pSoldier->inv[pSoldier->ubAttackingHand]) / 100 );
 
 		if ( iScopeBonus >= ( (float)gGameExternalOptions.ubStraightSightRange * 0.3) ) // >= 30% of sight range (~4 tiles by default)
 		{
