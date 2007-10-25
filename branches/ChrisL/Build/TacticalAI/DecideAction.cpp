@@ -1976,30 +1976,22 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 	if (bActionReturned != AI_ACTION_NOT_AN_ACTION)
 		return(bActionReturned);
 
-
-#ifdef ORIGINAL_CODE
-	//if ( !( pSoldier->bTeam == CIV_TEAM && pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != ELDIN ) )
-#endif
-#ifdef BUGGY_CODE
 	// Hmmm, I don't think this check is doing what is intended.  But then I see no comment about what is intended.
 	// However, civilians with no profile (and likely no weapons) do not need to be seeking out noises.  Most don't
 	// even have the body type for it (can't climb or jump).
-	if ( pSoldier->bTeam != CIV_TEAM || ( pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != ELDIN ) )
-#endif
-
-	//original code says if not (((on civ team and named someone other than Eldin)))
-	//so the condition is true if any 1 of the 3 is false
-	//false#1 civ team but named (all 3 true)
-	//true #1 military //duh, military needs to investigate noises
-	//true #2 civ team but no name //makes regular civilians wander around to make them look like they are doing something
-	//true #3 civ team and named Eldin //Eldin is probably a special case because he will fight you?
+	//if ( !( pSoldier->bTeam == CIV_TEAM && pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != ELDIN ) )
+	//if ( pSoldier->bTeam != CIV_TEAM || ( !pSoldier->bNeutral && pSoldier->ubProfile != ELDIN ) )
+	// ADB: Eldin is the only neutral civilian who should be seeking out noises.  As the museum curator, he can be
+	// available to talk to.  As the night watchman, he needs to look for thieves.
 	bool onCivTeam = (pSoldier->bTeam == CIV_TEAM);
 	bool isNamedCiv = (pSoldier->ubProfile != NO_PROFILE);
 	bool isEldin = (pSoldier->ubProfile == ELDIN);//logically flipped from the original, isNotEldin == false is confusing
+	// For purpose of seeking noise, cowardly civs are neutral, even if attacked by your thugs
+	bool isNeutral = pSoldier->aiData.bNeutral || pSoldier->flags.uiStatusFlags & SOLDIER_COWERING; 
 	if (
 		(onCivTeam == false) || //true #1
-		(onCivTeam == true && isNamedCiv == false) || //true #2
-		(onCivTeam == true && isNamedCiv == true && isEldin == true)//true #3
+		(onCivTeam == true && isNamedCiv == true && isNeutral == false) || //true #2
+		(onCivTeam == true && isEldin == true)//true #3
 		)
 	{
 		// IF WE ARE MILITIA/CIV IN REALTIME, CLOSE TO NOISE, AND CAN SEE THE SPOT WHERE THE NOISE CAME FROM, FORGET IT
@@ -2020,8 +2012,8 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 		//if we are NOT a regular civilian that intends to climb
 		//similar to true #2 - but flags.fClimb == true is a new condition,
 		//we do not want them to seek if they need to climb, but we want them to do everything else
-		if ( ! (onCivTeam == true && isNamedCiv == false && flags.fClimb == TRUE) ) {
-
+		if ( ! (onCivTeam == true && isNamedCiv == false && flags.fClimb == TRUE) )
+		{
 			////////////////////////////////////////////////////////////////////////////
 			// SEEK NOISE
 			////////////////////////////////////////////////////////////////////////////
@@ -2040,7 +2032,8 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 			//if we are NOT a regular civilian that intends to climb
 			//similar to true #2 - but flags.fClimb == true is a new condition,
 			//we do not want them to seek if they need to climb, but we want them to do everything else
-			if ( ! (onCivTeam == true && isNamedCiv == false && flags.fClimb == TRUE) ) {
+			if ( ! (onCivTeam == true && isNamedCiv == false && flags.fClimb == TRUE) )
+			{
 				////////////////////////////////////////////////////////////////////////////
 				// SEEK FRIEND WHO LAST RADIOED IN TO REPORT NOISE
 				////////////////////////////////////////////////////////////////////////////

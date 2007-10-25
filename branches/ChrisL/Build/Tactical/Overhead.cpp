@@ -3131,7 +3131,7 @@ void RebuildAllSoldierShadeTables( )
 void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier )
 {
 	INT32					cnt;
-	INT32					iNewSelectedSoldier = 0;
+	INT32					iNewSelectedSoldier = -1;
 	SOLDIERTYPE			 *pTeamSoldier;
 	BOOLEAN				 fMissionFailed = TRUE;
 	INT8										bBuddyIndex;
@@ -3229,7 +3229,7 @@ void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier )
 	{
 		if ( !fMissionFailed )
 		{
-			Assert(iNewSelectedSoldier);
+			Assert(iNewSelectedSoldier != -1);
 			SelectSoldier( (INT16)iNewSelectedSoldier, FALSE, FALSE );
 		}
 		else

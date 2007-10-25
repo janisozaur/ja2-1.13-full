@@ -509,6 +509,8 @@ public:
 	UINT8		ubMission;		//EDIT THIS OUT WHEN THERE ARE NO ASSERTS!
 	UINT16		ubWeight;		//used to be UINT8
 	INT8		fFlags;
+// CHRISL: Include this in place of the above when I incorporate ADBs ubWeight changes
+//	UINT8		fFlags;//used to be INT8, but that makes anything with OBJECT_NO_OVERWRITE negative
 
 	char		endOfPOD;
 #define SIZEOF_OBJECTTYPE_POD	(offsetof(OBJECTTYPE, endOfPOD))

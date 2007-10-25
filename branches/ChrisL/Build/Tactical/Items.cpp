@@ -5364,6 +5364,23 @@ BOOLEAN OBJECTTYPE::RemoveAttachment( OBJECTTYPE* pAttachment, OBJECTTYPE * pNew
 		return( FALSE );
 	}
 
+	//CHRISL: I know this FOR loop is basically redundant to what the remove() function already does, but
+	//	this setup includes a failsafe.  Now we'll only copy the attachment to our cursor (pNewObj) if
+	//	iter and pAttachment are the same.  This should stop attachment duplication though it doesn't resolve
+	//	the initial cause of the attachment duplication issue.
+	for (std::list<OBJECTTYPE>::iterator iter = (*this)[subObject]->attachments.begin();
+		iter != (*this)[subObject]->attachments.end(); ++iter){
+			if(*iter == *pAttachment)
+			{
+				if(pNewObj != NULL)
+				{
+					*pNewObj = *pAttachment;
+				}
+				iter = (*this)[subObject]->attachments.erase(iter);
+				break;
+			}
+	}
+/*
 	// if pNewObj is passed in NULL, then we just delete the attachment
 	if (pNewObj != NULL)
 	{
@@ -5371,7 +5388,7 @@ BOOLEAN OBJECTTYPE::RemoveAttachment( OBJECTTYPE* pAttachment, OBJECTTYPE * pNew
 	}
 
 	(*this)[subObject]->attachments.remove(*pAttachment);
-
+*/
 	if (pNewObj && Item[pNewObj->usItem].grenadelauncher )//UNDER_GLAUNCHER)
 	{
 		// look for any grenade; if it exists, we must make it an
@@ -7925,7 +7942,7 @@ UINT8 AllowedAimingLevels(SOLDIERTYPE * pSoldier)
 
 	if ( allowed && IsScoped( &pSoldier->inv[pSoldier->ubAttackingHand] ) )
 	{
-		iScopeBonus = ( (float)gGameExternalOptions.ubStraightSightRange * GetMinRangeForAimBonus(&gTempObject) / 100 );
+		iScopeBonus = ( (float)gGameExternalOptions.ubStraightSightRange * GetMinRangeForAimBonus(&pSoldier->inv[pSoldier->ubAttackingHand]) / 100 );
 
 		if ( iScopeBonus >= ( (float)gGameExternalOptions.ubStraightSightRange * 0.3) ) // >= 30% of sight range (~4 tiles by default)
 		{

@@ -466,14 +466,15 @@ bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
 			//currently flags are stored on a per-stack basis - the problem with them
 			//being on a per-object-in-stack basis is a check on the flags only ever checks the top object in the stack
 			//continue on because you might find something else with the same flags
-			//CHRISL: I'm temporarily remarking the results of this condition out.  We're encountering problems where
-			//	items that should be stackable aren't because they're somehow getting erroneous flags.  We ultimately
-			//	need to figure out how these flags are being incorrectly set, but for the time being this should resolve
-			//	the issue.  The problem here is, I'm pretty sure we'll actually lose (or even duplicate) these bad flags
-			//	depending on which objects get stacked into which.
-			if (sourceObject.fFlags != this->fFlags) {
+			//ADB added the following as of revision 1548
+			//disallow stacking for objects with dissimilar UNDROPPABLE flags
+			//objects can stack if they are both droppable or both undroppable, but not one droppable and the other not
+			//they can also stack regardless of the other flags that are set, like OBJECT_NO_OVERWRITE
+			//in the old code objects with OBJECT_NO_OVERWRITE not only are dropped, but also can stack with others without the same flag
+			//I don't care to find out if this is a bug or not, I'm just going to mimic the original code.
+			if ((sourceObject.fFlags & OBJECT_UNDROPPABLE) != (this->fFlags & OBJECT_UNDROPPABLE)) {
 				DebugBreakpoint();
-				//numToStack = 0;
+				numToStack = 0;
 			}
 
 			//nor allow trapped items to stack
