@@ -21,6 +21,16 @@
 class OBJECTTYPE;
 class SOLDIERTYPE;
 
+//Don't mess with this value, unless you want to force update all maps in the game!
+// Lesh: fix the sad situation with the different major map versions
+//#ifdef RUSSIAN
+	//#define MAJOR_MAP_VERSION		6.00
+//#else
+	#define MAJOR_MAP_VERSION		6.00
+//#endif
+//Current minor map version updater.
+#define MINOR_MAP_VERSION		27
+
 #define WORLD_BASE_HEIGHT			0
 #define WORLD_CLIFF_HEIGHT		80
  
