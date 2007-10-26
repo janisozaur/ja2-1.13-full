@@ -2404,6 +2404,7 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 {
 	UINT16		iSize, newSize, testSize, maxSize;
 	UINT32		cisIndex;
+	UINT8		cnt=0;
 	// Determine default ItemSize based on item and attachments
 	cisIndex = pObject->usItem;
 	iSize = Item[cisIndex].ItemSize;
@@ -2434,9 +2435,24 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 					if(pLBE->inv[x].exists() == true)
 					{
 						testSize = CalculateItemSize(&(pLBE->inv[x]));
+						//Now that we have the size of one item, we want to factor in the number of items since two
+						//	items take up more space then one.
+						testSize = testSize + pLBE->inv[x].ubNumberOfObjects - 1;
+						testSize = min(testSize,34);
+						//We also need to increase the size of guns so they'll fit with the rest of our calculations.
+						if(testSize < 5)
+							testSize += 10;
+						if(testSize < 10)
+							testSize += 20;
+						//Finally, we want to factor in multiple pockets.  We'll do this by counting the number of filled
+						//	pockets, then add this count total to our newSize when everything is finished.
+						cnt++;
 						newSize = max(testSize, newSize);
 					}
 				}
+				//Add the total number of filled pockets to our NewSize to account for multiple pockets being used
+				newSize += cnt;
+				newSize = min(newSize,34);
 				// If largest item is smaller then LBE, don't change ItemSize
 				if(newSize > 0 && newSize < iSize) {
 					iSize = iSize;
