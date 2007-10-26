@@ -533,7 +533,8 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany, SOLDIER
 		freeObjectsInStack = max(0, (cap - ubNumberOfObjects));
 	}
 	else{
-		freeObjectsInStack = max(0, (ItemSlotLimit( this, slot, pSoldier ) - ubNumberOfObjects));
+		//freeObjectsInStack = max(0, (ItemSlotLimit( this, slot, pSoldier ) - ubNumberOfObjects));
+		freeObjectsInStack = max(0, (ItemSlotLimit( &sourceObject, slot, pSoldier ) - ubNumberOfObjects));
 	}
 	int numToAdd = min (freeObjectsInStack, sourceObject.ubNumberOfObjects);
 	//if howMany is ALL_OBJECTS the stack will become full if sourceObject has enough
