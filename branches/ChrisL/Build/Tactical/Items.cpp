@@ -2443,7 +2443,7 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 						if(testSize < 5)
 							testSize += 10;
 						if(testSize < 10)
-							testSize += 20;
+							testSize += 18;
 						//Finally, we want to factor in multiple pockets.  We'll do this by counting the number of filled
 						//	pockets, then add this count total to our newSize when everything is finished.
 						cnt++;
