@@ -754,7 +754,8 @@ void GenerateConsString( STR16 zItemCons, OBJECTTYPE * pObject, UINT32 uiPixLimi
 	ubWeight = Item[ usItem ].ubWeight;
 	if (Item[ usItem ].usItemClass == IC_GUN)
 	{
-		ubWeight = ubWeight + Item[ (*pObject)[0]->data.gun.usGunAmmoItem ].ubWeight;
+		ubWeight = ubWeight + CalculateAmmoWeight((*pObject)[0]->data.gun.usGunAmmoItem, (*pObject)[0]->data.gun.ubGunShotsLeft);
+		//ubWeight = ubWeight + Item[ (*pObject)[0]->data.gun.usGunAmmoItem ].ubWeight;
 	}
 
 	if (ubWeight >= BAD_WEIGHT)
@@ -8148,6 +8149,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 			}
 			//get item weight
 			fWeight = (float)(CalculateObjectWeight( pObject )) / 10;
+			subObject = 0;
 		}
 		else {
 			sValue = (*pObject)[subObject]->data.objectStatus;
@@ -8162,15 +8164,6 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 		if ( fWeight < 0.1 )
 		{
 			fWeight = 0.1f;
-		}
-
-
-		if(subObject == -1){
-			//ChrisL: This is no longer needed since the OBJECTTYPE of a stack already lists the total stack weight
-			//if ( Item[usItem].usItemClass != IC_AMMO || !gGameExternalOptions.fAmmoDynamicWeight ){ //Madd: quick fix to display total stack weight
-			//	fWeight *= pObject->ubNumberOfObjects;
-			//}
-			subObject = 0;
 		}
 
 		switch( Item[ usItem ].usItemClass )

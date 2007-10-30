@@ -1865,7 +1865,8 @@ void ReduceAmmoDroppedByNonPlayerSoldiers( SOLDIERTYPE *pSoldier, INT32 iInvSlot
 			//don't drop all the clips, just a random # of them between 1 and how many there are
 			pObj->ubNumberOfObjects = ( UINT8 ) ( 1 + Random( pObj->ubNumberOfObjects ) );
 			// recalculate the weight
-			pObj->ubWeight = CalculateObjectWeight( pObj );
+			//ADB ubWeight has been removed, see comments in OBJECTTYPE
+			//pObj->ubWeight = CalculateObjectWeight( pObj );
 		}
 	}
 }

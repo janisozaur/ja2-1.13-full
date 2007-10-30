@@ -1684,7 +1684,8 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				// since barrel extenders are not removable we cannot call RemoveAttachment here
 				// and must create the item by hand
 				(*pInHand)[0]->attachments.remove(*pAttachment);
-				pInHand->ubWeight = CalculateObjectWeight( pInHand );
+				//ADB ubWeight has been removed, see comments in OBJECTTYPE
+				//pInHand->ubWeight = CalculateObjectWeight( pInHand );
 
 				// big penalty to hit
 				if(uiHitChance < 30)
@@ -5889,4 +5890,5 @@ INT8 GetAPsToReload( OBJECTTYPE *pObj )
 		( 100 - GetPercentReloadTimeAPReduction(pObj) ) ) / 100;
 
 }
+
 

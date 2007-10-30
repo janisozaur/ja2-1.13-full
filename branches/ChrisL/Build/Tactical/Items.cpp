@@ -2519,12 +2519,10 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 	if ( pItem->usItemClass == IC_AMMO)//Pulmu: added weight allowance for ammo not being full
 	{
 		if ( gGameExternalOptions.fAmmoDynamicWeight == TRUE ) {
-			int ammoLeft = 0;
 			for( int cnt = 0; cnt < pObject->ubNumberOfObjects; cnt++ )
 			{
-				ammoLeft += (*pObject)[cnt]->data.ubShotsLeft;
+				weight += CalculateAmmoWeight(pObject->usItem, (*pObject)[cnt]->data.ubShotsLeft);
 			}
-			weight = CalculateAmmoWeight(pObject->usItem, ammoLeft);
 		}
 		else {
 			// Start with base weight
@@ -2609,7 +2607,7 @@ UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier )
 	for( ubLoop = 0; ubLoop < pSoldier->inv.size(); ubLoop++)
 	{
 		//ADB the weight of the object is already counting stacked objects, attachments, et al
-		uiTotalWeight += pSoldier->inv[ubLoop].ubWeight;
+		uiTotalWeight += CalculateObjectWeight(&pSoldier->inv[ubLoop]);
 	}
 	// for now, assume soldiers can carry 1/2 their strength in KGs without penalty.
 	// instead of multiplying by 100 for percent, and then dividing by 10 to account
@@ -2738,7 +2736,8 @@ void DistributeStatus(OBJECTTYPE* pSourceObject, OBJECTTYPE* pTargetObject, INT8
 						}
 						pSourceObject->objectStack.erase(iter);
 						pSourceObject->ubNumberOfObjects--;
-						pSourceObject->ubWeight = CalculateObjectWeight(pSourceObject);
+						//ADB ubWeight has been removed, see comments in OBJECTTYPE
+						//pSourceObject->ubWeight = CalculateObjectWeight(pSourceObject);
 						// done!
 						break;
 					}
@@ -2761,10 +2760,12 @@ BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetO
 		StackedObjectData data = *((*pSourceObj)[0]);
 
 		*((*pSourceObj)[0]) = *((*pTargetObj)[ubIndex]);
-		pSourceObj->ubWeight = CalculateObjectWeight(pSourceObj);
+		//ADB ubWeight has been removed, see comments in OBJECTTYPE
+		//pSourceObj->ubWeight = CalculateObjectWeight(pSourceObj);
 
 		*((*pTargetObj)[ubIndex]) = data;
-		pTargetObj->ubWeight = CalculateObjectWeight(pTargetObj);
+		//ADB ubWeight has been removed, see comments in OBJECTTYPE
+		//pTargetObj->ubWeight = CalculateObjectWeight(pTargetObj);
 		return( TRUE );
 	}
 	else
@@ -2811,7 +2812,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 
 	if ( Item[ pGun->usItem ].usItemClass == IC_LAUNCHER || Item[pGun->usItem].cannon )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ReloadGun: Loading launcher - new ammo type = %d, weight = %d", pAmmo->usItem,pAmmo->ubWeight  ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ReloadGun: Loading launcher - new ammo type = %d, weight = %d", pAmmo->usItem, CalculateObjectWeight(pAmmo) ) );
 		(*pGun)[0]->data.gun.usGunAmmoItem = pAmmo->usItem;
 		if ( pGun->AttachObject( pSoldier, pAmmo ) == FALSE )
 		{
@@ -3015,7 +3016,8 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	}
 
 	DeductPoints( pSoldier, bAPs, 0 );
-	pGun->ubWeight = CalculateObjectWeight( pGun );
+	//ADB ubWeight has been removed, see comments in OBJECTTYPE
+	//pGun->ubWeight = CalculateObjectWeight( pGun );
 
 	if ( (*pGun)[0]->data.gun.bGunAmmoStatus >= 0 )
 	{
@@ -3050,9 +3052,11 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 			PlayJA2Sample( usReloadSound, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
 		}
 
-		pWeapon->ubWeight = CalculateObjectWeight( pWeapon );
+		//ADB ubWeight has been removed, see comments in OBJECTTYPE
+		//pWeapon->ubWeight = CalculateObjectWeight( pWeapon );
 		// Pulmu bugfix:
-		pAmmo->ubWeight = CalculateObjectWeight( pAmmo );
+		//ADB ubWeight has been removed, see comments in OBJECTTYPE
+		//pAmmo->ubWeight = CalculateObjectWeight( pAmmo );
 		// Pulmu end:
 		return( TRUE );
 	}
@@ -3494,8 +3498,10 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 			}
 		}
 
-		this->ubWeight = CalculateObjectWeight( this );
-		pAttachment->ubWeight = CalculateObjectWeight(pAttachment);
+		//ADB ubWeight has been removed, see comments in OBJECTTYPE
+		//this->ubWeight = CalculateObjectWeight( this );
+		//ADB ubWeight has been removed, see comments in OBJECTTYPE
+		//pAttachment->ubWeight = CalculateObjectWeight(pAttachment);
 
 		if ( pSoldier != NULL )
 			ApplyEquipmentBonuses(pSoldier);
@@ -3567,7 +3573,8 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 
 					this->usItem = usResult;
 					//AutoPlaceObject( pAttachment );
-					this->ubWeight = CalculateObjectWeight( this );
+					//ADB ubWeight has been removed, see comments in OBJECTTYPE
+					//this->ubWeight = CalculateObjectWeight( this );
 					if (pSoldier->bTeam == gbPlayerNum)
 					{
 						pSoldier->DoMercBattleSound( BATTLE_SOUND_COOL1 );
@@ -3674,7 +3681,8 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 					(*this)[0]->data.objectStatus = ((*this)[0]->data.objectStatus + (*pAttachment)[0]->data.objectStatus) / 2;
 				}
 
-				this->ubWeight = CalculateObjectWeight( this );
+				//ADB ubWeight has been removed, see comments in OBJECTTYPE
+				//this->ubWeight = CalculateObjectWeight( this );
 
 				if ( usResult2 != NOTHING )
 				{
@@ -3696,7 +3704,8 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 					{
 						(*pAttachment)[0]->data.objectStatus = ((*pAttachment)[0]->data.objectStatus + (*this)[0]->data.objectStatus) / 2;
 					}
-					pAttachment->ubWeight = CalculateObjectWeight( pAttachment );
+					//ADB ubWeight has been removed, see comments in OBJECTTYPE
+					//pAttachment->ubWeight = CalculateObjectWeight( pAttachment );
 				}
 				else
 					pAttachment->RemoveObjectsFromStack(1);
@@ -4205,7 +4214,8 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 
 	ApplyEquipmentBonuses(pSoldier);
 	//Pulmu bugfix
-	pInSlot->ubWeight = CalculateObjectWeight(pInSlot);
+	//ADB ubWeight has been removed, see comments in OBJECTTYPE
+	//pInSlot->ubWeight = CalculateObjectWeight(pInSlot);
 	//Pulmu end
 	return( TRUE );
 }
@@ -4405,7 +4415,8 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 	//Assert( pObj->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT);
 
 	//Pulmu bugfix		
-	pObj->ubWeight = CalculateObjectWeight( pObj);
+	//ADB ubWeight has been removed, see comments in OBJECTTYPE
+	//pObj->ubWeight = CalculateObjectWeight( pObj);
 	pItem = &(Item[pObj->usItem]);
 	int lbeClass;
 
@@ -5160,7 +5171,8 @@ BOOLEAN CreateGun( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 		}
 	}
 
-	pObj->ubWeight = CalculateObjectWeight( pObj );
+	//ADB ubWeight has been removed, see comments in OBJECTTYPE
+	//pObj->ubWeight = CalculateObjectWeight( pObj );
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateGun: Done"));
 	// succesful
 	return( TRUE );
@@ -5182,7 +5194,8 @@ BOOLEAN CreateAmmo( UINT16 usItem, OBJECTTYPE * pObj, INT16 ubShotsLeft )
 	else {
 		(*pObj)[0]->data.ubShotsLeft = (UINT8)ubShotsLeft;
 	}
-	pObj->ubWeight = CalculateObjectWeight( pObj );
+	//ADB ubWeight has been removed, see comments in OBJECTTYPE
+	//pObj->ubWeight = CalculateObjectWeight( pObj );
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateAmmo: done"));
 
 	return( TRUE );
@@ -5223,7 +5236,8 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 		{
 			(*pObj)[0]->data.objectStatus = bStatus;
 		}
-		pObj->ubWeight = CalculateObjectWeight( pObj );
+		//ADB ubWeight has been removed, see comments in OBJECTTYPE
+		//pObj->ubWeight = CalculateObjectWeight( pObj );
 		fRet = TRUE;
 	}
 	if (fRet)
@@ -5259,7 +5273,8 @@ BOOLEAN CreateItems( UINT16 usItem, INT8 bStatus, UINT8 ubNumber, OBJECTTYPE * p
 				pObj->objectStack.push_back(pObj->objectStack.front());
 			}
 			pObj->ubNumberOfObjects = ubNumber;
-			pObj->ubWeight = CalculateObjectWeight(pObj);
+			//ADB ubWeight has been removed, see comments in OBJECTTYPE
+			//pObj->ubWeight = CalculateObjectWeight(pObj);
 		}
 		return( TRUE );
 	}
@@ -5413,12 +5428,14 @@ BOOLEAN OBJECTTYPE::RemoveAttachment( OBJECTTYPE* pAttachment, OBJECTTYPE * pNew
 		if (pGrenade)
 		{
 			(*pNewObj)[subObject]->attachments.push_back(*pGrenade);
-			pNewObj->ubWeight = CalculateObjectWeight( pNewObj );
+			//ADB ubWeight has been removed, see comments in OBJECTTYPE
+			//pNewObj->ubWeight = CalculateObjectWeight( pNewObj );
 			this->RemoveAttachment(pGrenade);
 		}
 	}
 
-	this->ubWeight = CalculateObjectWeight( this );
+	//ADB ubWeight has been removed, see comments in OBJECTTYPE
+	//this->ubWeight = CalculateObjectWeight( this );
 	return( TRUE );
 }
 

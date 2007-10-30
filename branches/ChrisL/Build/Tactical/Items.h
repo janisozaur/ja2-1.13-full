@@ -41,6 +41,7 @@ void SwapObjs(SOLDIERTYPE* pSoldier, int slot, OBJECTTYPE* pObject, BOOLEAN fPer
 //Returns true if swapped, false if added to end of stack
 extern BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex, UINT32 ubCap );
 
+UINT16 CalculateAmmoWeight( UINT16 usGunAmmoItem, UINT8 ubShotsLeft );
 UINT16	CalculateObjectWeight( OBJECTTYPE *pObject );
 UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier );
 // CHRISL:
@@ -317,4 +318,5 @@ INT16 GetSnowCamoBonus( OBJECTTYPE * pObj );
 
 
 #endif
+
 

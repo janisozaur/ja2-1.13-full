@@ -1762,7 +1762,8 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 					//Pulmu: Update weight after firing gun to account for bullets fired
 					if( gGameExternalOptions.fAmmoDynamicWeight == TRUE)
 					{
-						pSoldier->inv[HANDPOS].ubWeight = CalculateObjectWeight( &(pSoldier->inv[HANDPOS]));
+						//ADB ubWeight has been removed, see comments in OBJECTTYPE
+						//pSoldier->inv[HANDPOS].ubWeight = CalculateObjectWeight( &(pSoldier->inv[HANDPOS]));
 					}
 				}
 			}
