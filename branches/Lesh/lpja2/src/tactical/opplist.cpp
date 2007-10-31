@@ -468,6 +468,12 @@ void HandleBestSightingPositionInRealtime( void )
 		return;
 	}
 
+	// Also delay until attack busy returns
+//	if (gTacticalStatus.ubAttackBusyCount > 0)
+//	{
+//		return;
+//	}
+
 	if (gubBestToMakeSighting[ 0 ] != NOBODY)
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "HBSPIR called and there is someone in the list" );
@@ -606,6 +612,20 @@ void InitSightArrays( void )
 		gubBestToMakeSighting[ uiLoop ] = NOBODY;
 	}
 	//gfHumanSawSomeoneInRealtime = FALSE;
+
+	// It is assumed that once the sight arrays are (re)initialized, the enemies should all have no
+	// interrupt points.  At least a paranoia check in the HandleSightingInRealtime and HandleSightingInTurnBased
+	// both make sure no interrupt points remain after they drain the sighting list.
+	// I do not fully grok the interrupt system, but it IS possible for this function to be called when there are
+	// still soldiers on the sighting list, which gives them lingering interrupt points.  So the best course of 
+	// action is to reset their points.  However, I think I'll just do a clean sweep here to make sure I get them all.
+	for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++ )
+	{
+		if (MercSlots[ uiLoop ] )
+		{
+			MercSlots[ uiLoop ]->bInterruptDuelPts = NO_INTERRUPT;
+		}
+	}
 }
 
 void AddToShouldBecomeHostileOrSayQuoteList( UINT8 ubID )
@@ -3725,7 +3745,7 @@ void DebugSoldierPage1( )
 		gprintf( 400, LINE_HEIGHT * ubLine, L"%d", pSoldier->bHasKeys );
 		ubLine++;
 	}
-	else if ( GetMouseMapPos( (INT16 *)&usMapPos ) )
+	else if ( GetMouseMapPos( &usMapPos ) )
 	{
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG LAND PAGE ONE" );
@@ -3884,7 +3904,7 @@ void DebugSoldierPage2( )
 		gprintf( 150, LINE_HEIGHT * ubLine, L"%ls", ShortItemNames[pSoldier->inv[SECONDHANDPOS].usItem] );
 		ubLine++;
 
-		if ( GetMouseMapPos( (INT16 *)&usMapPos ) )
+		if ( GetMouseMapPos( &usMapPos ) )
 		{
 			SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
 			gprintf( 0, LINE_HEIGHT * ubLine, L"CurrGridNo:");
@@ -3894,7 +3914,7 @@ void DebugSoldierPage2( )
 		}
 
 	}
-	else if ( GetMouseMapPos( (INT16 *)&usMapPos ) )
+	else if ( GetMouseMapPos( &usMapPos ) )
 	{
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG LAND PAGE TWO" );
@@ -4225,7 +4245,7 @@ void DebugSoldierPage3( )
 		}
 
 	}
-	else if ( GetMouseMapPos( (INT16 *)&usMapPos ) )
+	else if ( GetMouseMapPos( &usMapPos ) )
 	{
 		DOOR_STATUS	*pDoorStatus;
 		STRUCTURE *pStructure;
