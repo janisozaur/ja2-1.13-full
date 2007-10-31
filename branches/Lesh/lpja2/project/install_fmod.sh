@@ -7,7 +7,11 @@
 # It will check that it was started with sudo, and if not,
 # it will exit with instructions to run under sudo.
 
-if [ $USERNAME = "root" ]
+if [ $USER = "root" ]
+then 
+    echo "Running as root ..."
+    echo "That's dangerous, but I'll assume you know what you're doing."
+elif [ $USERNAME = "root" ]
 then 
     echo "Running as root ..."
     echo "That's dangerous, but I'll assume you know what you're doing."
@@ -30,3 +34,5 @@ cp ../lib/libfmod-3.75.so /usr/lib
 chmod 0644 /usr/lib/libfmod-3.75.so
 ln -s /usr/lib/libfmod-3.75.so /usr/lib/libfmod.so
 ldconfig
+
+echo "All done!"
