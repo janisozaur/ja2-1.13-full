@@ -37,6 +37,7 @@
 	#include "io_layer.h"
 	#include "sgp_str.h"
 	#include "wcheck.h"
+	#include "app_env.h"
 	
 #endif
 //**************************************************************************
@@ -110,27 +111,21 @@ HANDLE	GetHandleToRealFile( HWFILE hFile, BOOLEAN *pfDatabaseFile );
 //**************************************************************************
 BOOLEAN	InitializeFileManager(  STR strIndexFilename )
 {
+	STRING512	user_home_dir;
+	
 	printf("Initializing File Manager...\n");
-#ifdef JA2_LINUX
-// ----------------------- Linux-specific stuff ----------------------------
-
-	char DataPath[512];
-	const char* Home;
-	const struct passwd* passwd = getpwuid(getuid());
-
-	if (passwd == NULL || passwd->pw_dir == NULL)
+	
+	if ( !ENV_GetUserDirectory( user_home_dir ) )
 	{
 		fprintf(stderr, "Unable to locate user home directory\n");
 		return FALSE;
 	}
-
-	Home = passwd->pw_dir;
-
+	
 	// assign home dir for game
 	// data dir will be read from INI/CFG file, located in home dir
-	printf("User home is %s\n", Home);
+	printf("User home is %s\n", user_home_dir);
 
-	STR_SPrintf( gzHomePath, sizeof(gzHomePath), "%s%c%s%c", Home, SLASH, GAME_DIR_PREFIX, SLASH );
+	STR_SPrintf( gzHomePath, STRLEN(gzHomePath), "%s%c%s%c", user_home_dir, SLASH, GAME_DIR_PREFIX, SLASH );
 	printf("Using game home dir: %s\n", gzHomePath);
 
 	if ( !IO_Dir_DirectoryExists( gzHomePath ) )
@@ -140,7 +135,10 @@ BOOLEAN	InitializeFileManager(  STR strIndexFilename )
 			return FALSE;
 		}
 
-	STR_SPrintf( gzTempPath, sizeof(gzTempPath), "/tmp/%s.%s%c", GAME_DIR_PREFIX, passwd->pw_name, SLASH );
+#ifdef JA2_LINUX
+// ----------------------- Linux-specific stuff ----------------------------
+
+	STR_SPrintf( gzTempPath, STRLEN(gzTempPath), "/tmp/%s.%s%c", GAME_DIR_PREFIX, "tmp", SLASH );
 	printf("Using game temp dir: %s\n", gzTempPath);
 
 	if ( !IO_Dir_DirectoryExists( gzTempPath ) )
