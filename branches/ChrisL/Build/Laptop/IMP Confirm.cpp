@@ -439,25 +439,41 @@ void DistributeInitialGear(MERCPROFILESTRUCT *pProfile)
 	INT32			iSlot;
 	BOOLEAN			iSet = FALSE;
 
-	if((UsingNewInventorySystem() == false))
-		return;
-
 	// First move profile information to temporary storage
 	for(i=INV_START_POS; i<NUM_INV_SLOTS; i++)
 	{
 		if(pProfile->inv[i] != NOTHING)
 		{
-			tInv[count].inv = pProfile->inv[i];
-			tInv[count].iSize = Item[pProfile->inv[i]].ItemSize;
-			tInv[count].iClass = Item[pProfile->inv[i]].usItemClass;
-			tInv[count].iStatus = (pProfile->bInvStatus[i] > 0) ? pProfile->bInvStatus[i] : 100;
-			tInv[count].iNumber = (pProfile->bInvNumber[i] == 0) ? 1 :pProfile->bInvNumber[i];
-			pProfile->inv[i] = 0;
-			pProfile->bInvStatus[i] = 0;
-			pProfile->bInvNumber[i] = 0;
-			count++;
+			if((UsingNewInventorySystem() == true))
+			{
+				if(Item[pProfile->inv[i]].ItemSize != 99)
+				{
+					tInv[count].inv = pProfile->inv[i];
+					tInv[count].iSize = Item[pProfile->inv[i]].ItemSize;
+					tInv[count].iClass = Item[pProfile->inv[i]].usItemClass;
+					tInv[count].iStatus = (pProfile->bInvStatus[i] > 0) ? pProfile->bInvStatus[i] : 100;
+					tInv[count].iNumber = (pProfile->bInvNumber[i] == 0) ? 1 :pProfile->bInvNumber[i];
+					count++;
+				}
+				pProfile->inv[i] = 0;
+				pProfile->bInvStatus[i] = 0;
+				pProfile->bInvNumber[i] = 0;
+			}
+			else
+			{
+				if(Item[pProfile->inv[i]].usItemClass == IC_LBEGEAR)
+				{
+					pProfile->inv[i] = 0;
+					pProfile->bInvStatus[i] = 0;
+					pProfile->bInvNumber[i] = 0;
+				}
+			}
 		}
 	}
+
+	//Now that we've weeded out illegal items, skip the rest if we're in OldInv
+	if((UsingNewInventorySystem() == false))
+		return;
 
 	length = count;
 	count = 0;
@@ -1306,6 +1322,9 @@ BOOLEAN LoadImpCharacter( STR nickName )
 
 		// close file
 		FileClose(hFile);
+
+		//CHRISL: At this point, we need to resort profile inventory so that NewInv items don't accidentally appear in OldInv
+		DistributeInitialGear(&gMercProfiles[iProfileId]);
 
 		if( LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE )
 		{
