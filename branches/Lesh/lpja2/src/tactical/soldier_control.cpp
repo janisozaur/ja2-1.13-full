@@ -2815,10 +2815,18 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	//		break;
 	//}
 
+#if 0
+	// 0verhaul:  This does not go here!  In spite of this function's name, it is not the actual "fire" function.
+	// In fact this sets the muzzle flash even while the soldier may be turning to shoot, which can cause
+	// problems for real-time shooting.
+
+	// The correct place for this is UseGun, which already has code to set or reset the flash.
+
 	if ( IsFlashSuppressor (&pSoldier->inv[ pSoldier->ubAttackingHand ], pSoldier ) )
 		pSoldier->fMuzzleFlash = FALSE;
 	else	
 		pSoldier->fMuzzleFlash = TRUE;
+#endif
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EVENT_FireSoldierWeapon: Muzzle flash = %d",pSoldier->fMuzzleFlash));
 
