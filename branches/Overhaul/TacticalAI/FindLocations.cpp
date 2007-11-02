@@ -195,7 +195,6 @@ INT8 CalcBestCTGT( SOLDIERTYPE *pSoldier, UINT8 ubOppID, INT16 sOppGridNo, INT8 
 	// using only ints for maximum execution speed here
 	// CJC: Well, so much for THAT idea!
 	INT16 sCentralGridNo, sAdjSpot, sNorthGridNo, sSouthGridNo, sCheckSpot, sOKTest;
-	UINT8 sDir;
 
 	INT8 bThisCTGT, bBestCTGT = 0;
 
@@ -210,7 +209,8 @@ INT8 CalcBestCTGT( SOLDIERTYPE *pSoldier, UINT8 ubOppID, INT16 sOppGridNo, INT8 
 	sSouthGridNo = NewGridNo( sCentralGridNo, DirectionInc(SOUTH) );
 
 	// look into all 8 adjacent tiles & determine where the cover is the worst
-	for (sDir = 0; sDir < 8; sDir++)
+	// Lalien: shouldn't this start at 0 than?
+	for (UINT8 sDir = 0; sDir < NUM_WORLD_DIRECTIONS; sDir++)
 	{
 		// get the gridno of the adjacent spot lying in that direction
 		sAdjSpot = NewGridNo( sCentralGridNo, DirectionInc( sDir ) );
@@ -2663,7 +2663,7 @@ INT16 FindClosestClimbPoint (SOLDIERTYPE *pSoldier, BOOLEAN fClimbUp )
 BOOLEAN CanClimbFromHere (SOLDIERTYPE * pSoldier, BOOLEAN fUp )
 {
 #if 1
-	return FindDirectionForClimbing( pSoldier->sGridNo) != DIRECTION_IRRELEVANT;
+	return FindDirectionForClimbing( pSoldier->sGridNo, pSoldier->bLevel) != DIRECTION_IRRELEVANT;
 #else
 	BUILDING * pBuilding;
 	INT16 i;
@@ -2804,36 +2804,41 @@ INT16 FindBestCoverNearTheGridNo(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubS
 
 }
 
-INT8 FindDirectionForClimbing( INT16 sGridNo )
+INT8 FindDirectionForClimbing( INT16 sGridNo, INT8 bLevel )
 {
 	UINT8 ubClimbDir;
 	INT16 sClimbSpot;
 
-	if (gpWorldLevelData[ sGridNo].ubExtFlags[0] & MAPELEMENT_EXT_CLIMBPOINT)
+	if (bLevel == 0)
 	{
-		for (ubClimbDir=0; ubClimbDir<8; ubClimbDir+=2)
+		if (gpWorldLevelData[ sGridNo].ubExtFlags[0] & MAPELEMENT_EXT_CLIMBPOINT)
 		{
-			sClimbSpot = NewGridNo( sGridNo, DirectionInc( ubClimbDir));
-			if (gpWorldLevelData[ sClimbSpot].ubExtFlags[1] & MAPELEMENT_EXT_CLIMBPOINT &&
-				WhoIsThere2( sClimbSpot, 1 ) == NOBODY )
+			for (ubClimbDir=0; ubClimbDir<8; ubClimbDir+=2)
 			{
-				return ubClimbDir;
+				sClimbSpot = NewGridNo( sGridNo, DirectionInc( ubClimbDir));
+				if (gpWorldLevelData[ sClimbSpot].ubExtFlags[1] & MAPELEMENT_EXT_CLIMBPOINT &&
+					WhoIsThere2( sClimbSpot, 1 ) == NOBODY )
+				{
+					return ubClimbDir;
+				}
 			}
 		}
 	}
-	else if (gpWorldLevelData[ sGridNo].ubExtFlags[1] & MAPELEMENT_EXT_CLIMBPOINT)
+	else if (bLevel == 1)
 	{
-		for (ubClimbDir=0; ubClimbDir<8; ubClimbDir+=2)
+		if (gpWorldLevelData[ sGridNo].ubExtFlags[1] & MAPELEMENT_EXT_CLIMBPOINT)
 		{
-			sClimbSpot = NewGridNo( sGridNo, DirectionInc( ubClimbDir));
-			if (gpWorldLevelData[ sClimbSpot].ubExtFlags[0] & MAPELEMENT_EXT_CLIMBPOINT &&
-				WhoIsThere2( sClimbSpot, 0 ) == NOBODY )
+			for (ubClimbDir=0; ubClimbDir<8; ubClimbDir+=2)
 			{
-				return ubClimbDir;
+				sClimbSpot = NewGridNo( sGridNo, DirectionInc( ubClimbDir));
+				if (gpWorldLevelData[ sClimbSpot].ubExtFlags[0] & MAPELEMENT_EXT_CLIMBPOINT &&
+					WhoIsThere2( sClimbSpot, 0 ) == NOBODY )
+				{
+					return ubClimbDir;
+				}
 			}
 		}
 	}
-
 	return DIRECTION_IRRELEVANT;
 }
 

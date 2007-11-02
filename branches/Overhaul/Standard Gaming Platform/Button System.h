@@ -356,13 +356,5 @@ void DrawCheckBoxButtonOff( INT32 iButtonID );
 
 extern UINT16 GetWidthOfButtonPic( UINT16 usButtonPicID, INT32 iSlot );
 
-
-
-// Experimental button class based on the GDI
-
-class GDIButton {
-	
-};
-
 #endif
 

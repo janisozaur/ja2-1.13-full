@@ -4626,6 +4626,18 @@ BOOLEAN MakeSoldierTurn( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos )
 	INT16							sFacingDir, sAPCost, sAPCostToReady;
 	UINT16							usAnimState;
 
+	// Make sure the merc is not collapsed!
+	if (!IsValidStance(pSoldier, ANIM_CROUCH) )
+	{
+		if ( pSoldier->bCollapsed && pSoldier->bBreath < OKBREATH )
+		{
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[ 4 ], pSoldier->name );
+		}
+
+		return FALSE;
+	}
+
+
 	// Get direction from mouse pos
 	sFacingDir = GetDirectionFromXY( sXPos, sYPos, pSoldier );
 
@@ -4730,7 +4742,8 @@ UINT32 UIHandleLCLook( UI_EVENT *pUIEvent )
 
 		if ( MakeSoldierTurn( pSoldier, sXPos, sYPos ) )
 		{
-			SetUIBusy( pSoldier->ubID );		
+			// 0verhaul:  Why do we set UI busy for a single soldier but not for a group of selected soldiers?
+			//SetUIBusy( pSoldier->ubID );		
 		}
 	}
 	return( GAME_SCREEN );
@@ -6323,7 +6336,7 @@ BOOLEAN IsValidJumpLocation( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fChec
 {
 	INT16 sFourGrids[4], sDistance=0, sSpot, sIntSpot;
 	static const UINT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
-	INT32 cnt;
+	//INT32 cnt;
 	UINT8	ubGuyThere;
 	UINT8 ubMovementCost;
 	INT32 iDoorGridNo;
@@ -6336,7 +6349,7 @@ BOOLEAN IsValidJumpLocation( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fChec
 	}
 
 	// Loop through positions...
-	for (cnt = 0; cnt < 4; cnt++)
+	for (INT8 cnt = 0; cnt < 4; cnt++)
 	{
 		// MOVE OUT TWO DIRECTIONS
 		sIntSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );

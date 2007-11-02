@@ -252,8 +252,11 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				// CODE: SPECIAL MOVE CLIMB UP ROOF EVENT
 
-				// re-enable sight
-				gTacticalStatus.uiFlags &= (~DISALLOW_SIGHT);
+				// Moved here because this represents "already on the roof", so breath collapses and interrupts should
+				// keep the soldier on the roof where he belongs
+				// Move merc up specific height
+				SetSoldierHeight( pSoldier, (FLOAT)50 );
+
 				{
 					INT16		sXPos, sYPos;
 
@@ -261,6 +264,10 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					ConvertMapPosToWorldTileCenter( pSoldier->sTempNewGridNo, &sXPos, &sYPos );
 					EVENT_SetSoldierPosition( pSoldier, (FLOAT)sXPos, (FLOAT)sYPos );
 				}
+
+				// re-enable sight
+				gTacticalStatus.uiFlags &= (~DISALLOW_SIGHT);
+
 				// Move two CC directions
 				EVENT_SetSoldierDirection( pSoldier, gTwoCCDirection[ pSoldier->ubDirection ] );
 
@@ -272,9 +279,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				// Madd
 				usUIMovementMode = GetMoveStateBasedOnStance( pSoldier, gAnimControl[ pSoldier->usAnimState ].ubEndHeight );
 				pSoldier->usUIMovementMode = usUIMovementMode;
-
-				// Move merc up specific height
-				SetSoldierHeight( pSoldier, (FLOAT)50 );
 
 				// ATE: Change interface level.....
 				// CJC: only if we are a player merc
@@ -325,6 +329,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				// CODE: SPECIALMOVE CLIMB DOWN EVENT
 				// Move two C directions
 				EVENT_SetSoldierDirection( pSoldier, gTwoCDirection[ pSoldier->ubDirection ] );
+
+				// Remove the roof marker
+				HandlePlacingRoofMarker( pSoldier, pSoldier->sGridNo, FALSE, TRUE );
 
 				EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->ubDirection );
 				// Adjust height
@@ -1396,8 +1403,14 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 									// OK, pick a larger direction to goto....
 									pSoldier->uiStatusFlags |= SOLDIER_TURNINGFROMHIT;
 									// This becomes an attack busy situation
-									gTacticalStatus.ubAttackBusyCount++;
-									DebugAttackBusy( String( "Soldier turning from a hit.  Increasing attack busy.  Now %d\n", gTacticalStatus.ubAttackBusyCount ) );
+									// 0verhaul:  There is an attack busy problem with this.  The soldier could be in mid-turn
+									// when another bullet is fired (auto-fire or dual-wield, for instance), and the soldier is
+									// knocked down in the middle of the turn.  In such a case, the attack busy does not get
+									// cancelled.  So if we indeed need to keep the attack busy (which may not be the case),
+									// we will need to find a more reliable method.  For now, I'm going to cancel out the
+									// ABC adjustment here and we'll see if there needs to be something in its place.
+									//gTacticalStatus.ubAttackBusyCount++;
+									DebugAttackBusy( String( "Soldier turning from a hit.  Not Increasing attack busy.  Now %d\n", gTacticalStatus.ubAttackBusyCount ) );
 
 									// Pick evenly between both
 									if ( Random( 50 ) < 25 )
@@ -3575,7 +3588,7 @@ void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier )
 				return;
 			}
 		}
-		else if ( pSoldier->usAnimState == GENERIC_HIT_CROUCH )
+		else if ( pSoldier->usAnimState == GENERIC_HIT_CROUCH || pSoldier->usAnimState == CIV_COWER_HIT)
 		{
 			ChangeSoldierState( pSoldier, FALLFORWARD_FROMHIT_CROUCH, 0 , FALSE);
 			BeginTyingToFall( pSoldier );

@@ -32,6 +32,7 @@
 #endif
 
 //#include "Console.h"
+#include "Lua Interpreter.h"
 
 // rain
 #include "Rain.h" 
@@ -91,6 +92,8 @@ BOOLEAN InitializeGame(void)
 	UINT32				uiIndex;
 
 	giStartingMemValue = MemGetFree( );
+
+	//InitializeLua();
 
 	ClearAllDebugTopics();
 	RegisterJA2DebugTopic( TOPIC_JA2OPPLIST, "Reg" );
@@ -152,10 +155,7 @@ void ShutdownGame(void)
 	// handle shutdown of game with respect to preloaded mapscreen graphics
 	HandleRemovalOfPreLoadedMapGraphics( );
 
-	ShutdownJA2( );
-
-	// Don't know where else to put this, but seems as good a place as any.
-	ResetRain( );
+	 ShutdownJA2( );
 
 	//Save the general save game settings to disk
 	SaveGameSettings();
@@ -167,6 +167,8 @@ void ShutdownGame(void)
 
 	//Deletes all the Temp files in the Maps\Temp directory
 	InitTacticalSave( FALSE );
+
+	//ShutdownLua( );
 
 	FreeGameExternalOptions();
 }

@@ -143,7 +143,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Winmm.lib"
-				OutputFile="$(OutDir)\ja2_rel_b21vt.exe"
+				OutputFile="$(OutDir)\ja2_rel_b22.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				GenerateMapFile="true"
@@ -152,8 +152,6 @@
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
-				KeyFile=""
-				KeyContainer=""
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -257,6 +255,10 @@
 			</File>
 			<File
 				RelativePath=".\Options Screen.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\profiler.cpp"
 				>
 			</File>
 			<File
@@ -379,6 +381,10 @@
 			</File>
 			<File
 				RelativePath=".\Options Screen.h"
+				>
+			</File>
+			<File
+				RelativePath=".\profiler.h"
 				>
 			</File>
 			<File

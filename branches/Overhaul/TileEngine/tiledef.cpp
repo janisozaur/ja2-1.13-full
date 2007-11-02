@@ -604,7 +604,7 @@ UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
     },  
 };
 
-#if 1
+#if 0
 // These values coorespond to TerrainTypeDefines order
 UINT8		gTileTypeMovementCost[ NUM_TERRAIN_TYPES ] =
 {

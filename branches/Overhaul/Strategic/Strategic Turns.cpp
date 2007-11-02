@@ -62,8 +62,6 @@ void HandleStrategicTurn( )
 			return;
 		}
 
-		
-
 		//Kris -- What to do?
 		if( giTimeCompressMode == NOT_USING_TIME_COMPRESSION )
 		{

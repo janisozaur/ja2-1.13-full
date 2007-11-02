@@ -4592,7 +4592,7 @@ INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirect
 
 	INT16 sFourGrids[4], sDistance=0;
 	static const UINT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
-	INT32 cnt;
+	//INT32 cnt;
 	INT16 sClosest=NOWHERE, sSpot, sOkTest;
 	INT16 sCloseGridNo=NOWHERE;
 	UINT32                                         uiMercFlags;
@@ -4722,15 +4722,15 @@ INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirect
 
 			 if ( sDistance < sClosest )
 			 {
-				 sClosest                        = sDistance;
-				 sCloseGridNo  = (INT16)sGridNo;
+				 sClosest      = sDistance;
+				 sCloseGridNo  = sGridNo;
 			 }
 		 }
 		}
 	}
 
 
-	for (cnt = 0; cnt < 4; cnt++)
+	for (INT8 cnt = 0; cnt < 4; cnt++)
 	{
 		// MOVE OUT TWO DIRECTIONS
 		sFourGrids[cnt] = sSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );
@@ -4880,7 +4880,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 
 	INT16 sFourGrids[4], sDistance=0;
 	static const UINT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
-	INT32 cnt;
+	//INT32 cnt;
 	INT16 sClosest=WORLD_MAX, sSpot, sSpot2, sOkTest;
 	INT16 sCloseGridNo=NOWHERE;
 	UINT32                                         uiMercFlags;
@@ -4957,7 +4957,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 	}
 
 
-	for (cnt = 0; cnt < 4; cnt++)
+	for (INT8 cnt = 0; cnt < 4; cnt++)
 	{
 		// MOVE OUT TWO DIRECTIONS
 		sFourGrids[cnt] = sSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );
@@ -5136,11 +5136,11 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 
 INT16 FindAdjacentPunchTarget( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier, INT16 * psAdjustedTargetGridNo, UINT8 * pubDirection )
 {
-	UINT8	cnt;
+	//INT16	cnt;
 	INT16	sSpot;	
 	UINT8	ubGuyThere;
 
-	for ( cnt = 0; cnt < NUM_WORLD_DIRECTIONS; cnt++ )
+	for ( INT8 cnt = 0; cnt < NUM_WORLD_DIRECTIONS; cnt++ )
 	{
 		sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( cnt ) );
 
@@ -5279,7 +5279,7 @@ void HandleTeamServices( UINT8 ubTeamNum )
 							}
 							if ( bSlot != NO_SLOT )
 							{
-								SwapObjs( &(pTeamSoldier->inv[HANDPOS]), &(pTeamSoldier->inv[bSlot] ) );
+								SwapObjs( pTeamSoldier, HANDPOS, bSlot, TRUE );
 							}
 							else
 							{
@@ -5366,7 +5366,7 @@ void HandlePlayerServices( SOLDIERTYPE *pTeamSoldier )
 
 						if ( bSlot != NO_SLOT )
 						{
-							SwapObjs( &(pTeamSoldier->inv[HANDPOS]), &(pTeamSoldier->inv[bSlot] ) );
+							SwapObjs( pTeamSoldier, HANDPOS, bSlot, TRUE );
 						}
 						else
 						{
@@ -7724,7 +7724,12 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 		if ( pSoldier )
 		{
 			pSoldier->bNumPelletsHitBy = 0;
-			pSoldier->fGettingHit = FALSE;
+			if ( !( pSoldier->uiStatusFlags & SOLDIER_TURNINGFROMHIT ) )
+			{
+				// 0verhaul:  This is an ugly hack.  I don't like it, but until I figure out a better solution
+				// for turning from a hit, it's the only way to not stop a soldier in mid-turn.
+				pSoldier->fGettingHit = FALSE;
+			}
 
 			if (pSoldier->ubAttackerID != NOBODY )
 			{

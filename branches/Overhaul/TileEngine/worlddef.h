@@ -20,7 +20,6 @@
 #define WORLD_BASE_HEIGHT			0
 #define WORLD_CLIFF_HEIGHT		80
 
-
 //A macro that actually memcpy's over data and increments the pointer automatically
 //based on the size.  Works like a FileRead except with a buffer instead of a file pointer.
 //Used by LoadWorld() and child functions.

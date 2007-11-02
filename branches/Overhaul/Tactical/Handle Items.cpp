@@ -284,6 +284,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 	// Check HAND ITEM
 	if ( Item[ usHandItem ].usItemClass == IC_GUN || Item[ usHandItem ].usItemClass == IC_THROWING_KNIFE )
 	{
+
 		// WEAPONS
 		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleItem: checking for fingerprintID, item id = %d,id required = %d, imprint id = %d, soldier id = %d",usHandItem,Item[usHandItem].fingerprintid,pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID,pSoldier->ubProfile));
 		if ( Item[usHandItem].fingerprintid )
@@ -545,6 +546,8 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 
 			if ( Item[ usHandItem ].usItemClass != IC_THROWING_KNIFE )
 			{
+				pSoldier->ubAttackingHand = HANDPOS;
+				pSoldier->usAttackingWeapon = usHandItem;
 				// If doing spread, set down the first gridno.....
 				if ( pSoldier->fDoSpread )
 				{
@@ -623,7 +626,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 	//TRY PUNCHING
 	if ( Item[ usHandItem ].usItemClass == IC_PUNCH )
 	{
-		UINT8	sCnt;
+		//INT16	sCnt;
 		INT16	sSpot;	
 		UINT8		ubGuyThere;
 		INT16		sGotLocation = NOWHERE;
@@ -631,7 +634,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 		sAdjustedGridNo = NOWHERE;
 		ubDirection = 0xff;
 
-		for ( sCnt = 0; sCnt < NUM_WORLD_DIRECTIONS; sCnt++ )
+		for ( INT8 sCnt = 0; sCnt < NUM_WORLD_DIRECTIONS; sCnt++ )
 		{
 			sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( sCnt ) );
 

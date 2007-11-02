@@ -5286,6 +5286,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 					#endif
 					break;
 
+/*
 				case F11:
 					#ifdef JA2TESTVERSION
 						if( fAlt )
@@ -5296,6 +5297,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 						}
 					#endif
 					break;
+*/
 
 				case F12:
 					#ifdef JA2BETAVERSION

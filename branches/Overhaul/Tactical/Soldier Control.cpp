@@ -1519,9 +1519,6 @@ BOOLEAN DeleteSoldier( SOLDIERTYPE *pSoldier )
 			}
 		}
 
-		// Clear the soldier's strategic path
-		//ClearPathForSoldier( pSoldier );
-
 		// Delete key ring
 		if (pSoldier->pKeyRing)
 		{
@@ -3003,7 +3000,10 @@ void InternalSetSoldierHeight( SOLDIERTYPE *pSoldier, FLOAT dNewHeight, BOOLEAN 
 		return;
 	}
 
-	if ( pSoldier->sHeightAdjustment > 0 )
+	// 0verhaul:  Changed this to half the wall height.  During a climb up, a soldier's height increases to about 8, then falls
+	// to near 0 before being set to 50 at the end.  The animation offsets should probably be changed to make this unnecessary
+	// but this is good enough to keep him from bouncing between level 1 and level 0 (and also triggering weird sight bugs).
+	if ( pSoldier->sHeightAdjustment > 25 )
 	{
 		pSoldier->bLevel = SECOND_LEVEL;
 
@@ -5046,7 +5046,6 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 
 		sMercGridNo = pSoldier->sGridNo;
 		pSoldier->sGridNo = pSoldier->sDestination;
-		//Assert( pSoldier->usPathIndex == 0 || pSoldier->usPathIndex >= pSoldier->usPathDataSize);
 
 		// Check if path is good before copying it into guy's path...
 		if ( !(uiDist = FindBestPath( pSoldier, sDestGridNo, pSoldier->bLevel, pSoldier->usUIMovementMode, COPYROUTE, fFlags ) ) )
@@ -5140,6 +5139,11 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 		if ( MercInDeepWater( pSoldier) )
 		{
 			usMoveAnimState = DEEP_WATER_SWIM;
+		}
+		// Can't forget shallow water!  AI will sometimes attempt to swat through it, which is not legal either
+		else if ( MercInWater( pSoldier) )
+		{
+			usMoveAnimState = WALKING;
 		}
 
 		// If we were aiming, end aim!
@@ -6083,6 +6087,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 				else
 				{
 					pSoldier->uiStatusFlags &= (~SOLDIER_TURNINGFROMHIT );
+					pSoldier->fGettingHit = FALSE;
 				}
 			}
 			else if ( pSoldier->fGettingHit == 2 )
@@ -6094,11 +6099,12 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 				// Release attacker
 				// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker, turning from hit animation ended") );
 				// ReleaseSoldiersAttacker( pSoldier );
-				DebugAttackBusy( "Finished turning from hit.  Reducing attack busy.\n");
-				ReduceAttackBusyCount( );
+				// 0verhaul:  Since I disabled the turn from hit ABC increase, I need to disable the turn from hit decrease too.
+				DebugAttackBusy( "Finished turning from hit.  Not Reducing attack busy.\n");
+				//ReduceAttackBusyCount( );
 
 				//FREEUP GETTING HIT FLAG
-				// pSoldier->fGettingHit = FALSE;
+				pSoldier->fGettingHit = FALSE;
 			}
 		}
 
@@ -11012,15 +11018,17 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 		// Crouched or prone, only for mercs!
 		BeginTyingToFall( pSoldier );
 
-		if ( fMerc )
-		{
+		// 0verhaul:  No special case here!  First the FALLFORWARD_FROMHIT_CROUCH can be filled in to use the FALLFORWARD_FROMHIT_STAND anim
+		// then when real anims come, use them instead.
+		//if ( fMerc )
+		//{
 			EVENT_InitNewSoldierAnim( pSoldier, FALLFORWARD_FROMHIT_CROUCH, 0 , FALSE);
-		}
-		else
-		{
-			// For civs... use fall from stand...
-			EVENT_InitNewSoldierAnim( pSoldier, FALLFORWARD_FROMHIT_STAND, 0 , FALSE);
-		}
+		//}
+		//else
+		//{
+		//	// For civs... use fall from stand...
+		//	EVENT_InitNewSoldierAnim( pSoldier, FALLFORWARD_FROMHIT_STAND, 0 , FALSE);
+		//}
 		break;
 
 	case ANIM_PRONE:
