@@ -2122,8 +2122,17 @@ void DoneFadeOutForSaveLoadScreen( void )
 		}
 		else
 		{
-			DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_LOAD_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack );
-			NextLoopCheckForEnoughFreeHardDriveSpace();
+			//CHRISL: New fail message if we failed because of screen res
+			if(UsingNewInventorySystem() == true && iResolution == 0)
+			{
+				DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_INV_RES_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack );
+				NextLoopCheckForEnoughFreeHardDriveSpace();
+			}
+			else
+			{
+				DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_LOAD_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack );
+				NextLoopCheckForEnoughFreeHardDriveSpace();
+			}
 		}
 	}
 	else

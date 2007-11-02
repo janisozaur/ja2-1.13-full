@@ -2345,6 +2345,17 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						BOOLEAN	fNearLowerLevel;
 						INT8	bDirection;
 
+						// Make sure the merc is not collapsed!
+						if (!IsValidStance(pjSoldier, ANIM_CROUCH) )
+						{
+							if ( pjSoldier->bCollapsed && pjSoldier->bBreath < OKBREATH )
+							{
+								ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[ 4 ], pjSoldier->name );
+							}
+
+							break;
+						}
+
 						GetMercClimbDirection( pjSoldier->ubID, &fNearLowerLevel, &fNearHeigherLevel );
 
 						if ( fNearLowerLevel )

@@ -257,8 +257,11 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				// CODE: SPECIAL MOVE CLIMB UP ROOF EVENT
 
-				// re-enable sight
-				gTacticalStatus.uiFlags &= (~DISALLOW_SIGHT);
+				// Moved here because this represents "already on the roof", so breath collapses and interrupts should
+				// keep the soldier on the roof where he belongs
+				// Move merc up specific height
+				pSoldier->SetSoldierHeight( (FLOAT)50 );
+
 				{
 					INT16		sXPos, sYPos;
 
@@ -266,6 +269,10 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					ConvertMapPosToWorldTileCenter( pSoldier->sTempNewGridNo, &sXPos, &sYPos );
 					pSoldier->EVENT_SetSoldierPosition( (FLOAT)sXPos, (FLOAT)sYPos );
 				}
+
+				// re-enable sight
+				gTacticalStatus.uiFlags &= (~DISALLOW_SIGHT);
+
 				// Move two CC directions
 				pSoldier->EVENT_SetSoldierDirection( gTwoCCDirection[ pSoldier->ubDirection ] );
 
@@ -277,9 +284,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				// Madd
 				usUIMovementMode = pSoldier->GetMoveStateBasedOnStance( gAnimControl[ pSoldier->usAnimState ].ubEndHeight );
 				pSoldier->usUIMovementMode = usUIMovementMode;
-
-				// Move merc up specific height
-				pSoldier->SetSoldierHeight( (FLOAT)50 );
 
 				// ATE: Change interface level.....
 				// CJC: only if we are a player merc
@@ -330,6 +334,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				// CODE: SPECIALMOVE CLIMB DOWN EVENT
 				// Move two C directions
 				pSoldier->EVENT_SetSoldierDirection( gTwoCDirection[ pSoldier->ubDirection ] );
+
+				// Remove the roof marker
+				HandlePlacingRoofMarker( pSoldier, pSoldier->sGridNo, FALSE, TRUE );
 
 				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->ubDirection );
 				// Adjust height

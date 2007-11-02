@@ -3366,6 +3366,8 @@ STR16			zSaveLoadText[] =
 	L"Great Selection",
 	L"Excellent Selection",
 	L"Awesome Selection",
+
+	L"New Inventory does not work in 640x480 screen size.  Please resize and try again.",
 };
 
 

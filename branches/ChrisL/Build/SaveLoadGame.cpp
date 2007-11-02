@@ -2867,6 +2867,11 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	gGameOptions.ubInventorySystem = SaveGameHeader.ubInventorySystem;
 	if((UsingNewInventorySystem() == true))
 	{
+		if(iResolution == 0){
+			// Only load NewInv in higher screen res
+			FileClose( hFile );
+			return(FALSE);
+		}
 		InitInventoryNew();
 		InitNewInventorySystem();
 		InitializeSMPanelCoordsNew();

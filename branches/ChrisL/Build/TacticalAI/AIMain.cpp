@@ -52,6 +52,7 @@
 #include "Campaign Types.h"
 #include "Queen Command.h"
 #include "DecideAction.h"
+#include "cheats.h"
 #endif
 
 extern void PauseAITemporarily( void );
@@ -1953,6 +1954,11 @@ void TurnBasedHandleNPCAI(SOLDIERTYPE *pSoldier)
 		*/
 
 		// to get here, we MUST have an action selected, but not in progress...
+
+		if ( CHEATER_CHEAT_LEVEL( ) )
+		{
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Soldier %d decides action %d with data %d", pSoldier->ubID, pSoldier->aiData.bAction, pSoldier->aiData.usActionData );
+		}
 
 		// see if we can afford to do this action
 		if (IsActionAffordable(pSoldier))

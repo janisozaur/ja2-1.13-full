@@ -1037,6 +1037,8 @@ void ResetMapInvRegions(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCall
 {
 	for(int cnt=INV_START_POS; cnt<NUM_INV_SLOTS; cnt++)
 	{
+		gSMInvData[ cnt ].sX = pRegionDesc[cnt].sX;
+		gSMInvData[ cnt ].sY = pRegionDesc[cnt].sY;
 		MSYS_RemoveRegion( &gSMInvRegion[ cnt ]);
 		MSYS_DefineRegion( &gSMInvRegion[ cnt ], gSMInvData[ cnt ].sX, gSMInvData[ cnt ].sY, (INT16)(gSMInvData[ cnt ].sX + gSMInvData[ cnt ].sWidth), (INT16)(gSMInvData[ cnt ].sY + gSMInvData[ cnt ].sHeight), ( INT8 )( fSetHighestPrioity ? MSYS_PRIORITY_HIGHEST : MSYS_PRIORITY_HIGH ),
 							 MSYS_NO_CURSOR, INVMoveCallback, INVClickCallback ); 

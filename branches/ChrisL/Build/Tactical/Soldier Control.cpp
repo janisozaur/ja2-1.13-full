@@ -3805,7 +3805,10 @@ void SOLDIERTYPE::InternalSetSoldierHeight( FLOAT dNewHeight, BOOLEAN fUpdateLev
 		return;
 	}
 
-	if ( thisSoldier->sHeightAdjustment > 0 )
+	// 0verhaul:  Changed this to half the wall height.  During a climb up, a soldier's height increases to about 8, then falls
+	// to near 0 before being set to 50 at the end.  The animation offsets should probably be changed to make this unnecessary
+	// but this is good enough to keep him from bouncing between level 1 and level 0 (and also triggering weird sight bugs).
+	if ( thisSoldier->sHeightAdjustment > 25 )
 	{
 		thisSoldier->pathing.bLevel = SECOND_LEVEL;
 
@@ -6888,6 +6891,7 @@ void SOLDIERTYPE::TurnSoldier( void )
 				else
 				{
 					thisSoldier->flags.uiStatusFlags &= (~SOLDIER_TURNINGFROMHIT );
+					thisSoldier->flags.fGettingHit = FALSE;
 				}
 			}
 			else if ( thisSoldier->flags.fGettingHit == 2 )

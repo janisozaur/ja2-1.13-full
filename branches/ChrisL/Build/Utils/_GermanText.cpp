@@ -3188,6 +3188,8 @@ STR16 zSaveLoadText[] =
 	L"Groﬂe Auswahl",
 	L"Ausgezeichnete Auswahl",
 	L"Fantastische Auswahl",
+
+	L"New Inventory does not work in 640x480 screen size.  Please resize and try again.",
 };
 
 //MapScreen

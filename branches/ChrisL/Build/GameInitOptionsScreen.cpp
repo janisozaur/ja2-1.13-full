@@ -474,24 +474,26 @@ BOOLEAN		EnterGIOScreen()
 	}
 
 	// CHRISL: New inventory options
-	usPosY = GIO_INV_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
-	for( cnt=0; cnt<NUM_INV_OPTIONS; cnt++)
-	{
-		guiINVOptionToggles[ cnt ] = CreateCheckBoxButton(	GIO_INV_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 
-																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10, 
-																		BtnINVOptionTogglesCallback );
-		MSYS_SetBtnUserData( guiINVOptionToggles[ cnt ], 0, cnt );
+	if(iResolution != 0){
+		usPosY = GIO_INV_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
+		for( cnt=0; cnt<NUM_INV_OPTIONS; cnt++)
+		{
+			guiINVOptionToggles[ cnt ] = CreateCheckBoxButton(	GIO_INV_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 
+																			"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10, 
+																			BtnINVOptionTogglesCallback );
+			MSYS_SetBtnUserData( guiINVOptionToggles[ cnt ], 0, cnt );
 
-		usPosY += GIO_GAP_BN_SETTINGS-5;
-	}
-	switch( gGameOptions.ubInventorySystem )
-	{
-		case INVENTORY_OLD:
-			ButtonList[ guiINVOptionToggles[ GIO_INV_OLD ] ]->uiFlags |= BUTTON_CLICKED_ON;
-			break;
-		case INVENTORY_NEW:
-			ButtonList[ guiINVOptionToggles[ GIO_INV_NEW ] ]->uiFlags |= BUTTON_CLICKED_ON;
-			break;
+			usPosY += GIO_GAP_BN_SETTINGS-5;
+		}
+		switch( gGameOptions.ubInventorySystem )
+		{
+			case INVENTORY_OLD:
+				ButtonList[ guiINVOptionToggles[ GIO_INV_OLD ] ]->uiFlags |= BUTTON_CLICKED_ON;
+				break;
+			case INVENTORY_NEW:
+				ButtonList[ guiINVOptionToggles[ GIO_INV_NEW ] ]->uiFlags |= BUTTON_CLICKED_ON;
+				break;
+		}
 	}
 
 	// JA2Gold: iron man buttons
@@ -610,8 +612,10 @@ BOOLEAN		ExitGIOScreen()
 		RemoveButton( guiBROptionToggles[ cnt ] );
 
 // CHRISL
-	for( cnt=0; cnt<NUM_INV_OPTIONS; cnt++)
-		RemoveButton( guiINVOptionToggles[ cnt ] );
+	if(iResolution != 0){
+		for( cnt=0; cnt<NUM_INV_OPTIONS; cnt++)
+			RemoveButton( guiINVOptionToggles[ cnt ] );
+	}
 
 	// JA2Gold: remove iron man buttons
 	for( cnt=0; cnt<NUM_SAVE_OPTIONS; cnt++)
@@ -771,13 +775,15 @@ BOOLEAN		RenderGIOScreen()
 	DisplayWrappedString( (UINT16)(GIO_BR_SETTING_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_BR_AWESOME_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 // CHRISL
-	DisplayWrappedString( GIO_INV_SETTING_X, (UINT16)(GIO_INV_SETTING_Y-GIO_GAP_BN_SETTINGS), GIO_DIF_SETTINGS_WIDTH + 20, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_INV_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
-	usPosY = GIO_INV_SETTING_Y+2;
+	if(iResolution != 0){
+		DisplayWrappedString( GIO_INV_SETTING_X, (UINT16)(GIO_INV_SETTING_Y-GIO_GAP_BN_SETTINGS), GIO_DIF_SETTINGS_WIDTH + 20, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_INV_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
+		usPosY = GIO_INV_SETTING_Y+2;
 
-	DisplayWrappedString( (UINT16)(GIO_INV_SETTING_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_INV_OLD_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
-	usPosY += GIO_GAP_BN_SETTINGS-5;
+		DisplayWrappedString( (UINT16)(GIO_INV_SETTING_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_INV_OLD_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
+		usPosY += GIO_GAP_BN_SETTINGS-5;
 
-	DisplayWrappedString( (UINT16)(GIO_INV_SETTING_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_INV_NEW_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
+		DisplayWrappedString( (UINT16)(GIO_INV_SETTING_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_INV_NEW_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
+	}
 
 // JA2Gold: Display the iron man Settings Title Text
 
@@ -1323,11 +1329,13 @@ void RestoreGIOButtonBackGrounds()
 	}
 // CHRISL
 
-	usPosY = GIO_INV_SETTING_Y-GIO_OFFSET_TO_TOGGLE_BOX_Y;
-	for( cnt=0; cnt<NUM_INV_OPTIONS; cnt++)
-	{
-		RestoreExternBackgroundRect( GIO_INV_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 ); 
-		usPosY += GIO_GAP_BN_SETTINGS-5;
+	if(iResolution != 0){
+		usPosY = GIO_INV_SETTING_Y-GIO_OFFSET_TO_TOGGLE_BOX_Y;
+		for( cnt=0; cnt<NUM_INV_OPTIONS; cnt++)
+		{
+			RestoreExternBackgroundRect( GIO_INV_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 ); 
+			usPosY += GIO_GAP_BN_SETTINGS-5;
+		}
 	}
 }
 
@@ -1361,14 +1369,16 @@ void DoneFadeOutForExitGameInitOptionScreen( void )
 	}
 
 	// CHRISL:
-	switch ( GetCurrentINVOptionButtonSetting() )
-	{
-		case GIO_INV_OLD:
-			gGameOptions.ubInventorySystem = INVENTORY_OLD;
-			break;
-		case GIO_INV_NEW:
-			gGameOptions.ubInventorySystem = INVENTORY_NEW;
-			break;
+	if(iResolution != 0){
+		switch ( GetCurrentINVOptionButtonSetting() )
+		{
+			case GIO_INV_OLD:
+				gGameOptions.ubInventorySystem = INVENTORY_OLD;
+				break;
+			case GIO_INV_NEW:
+				gGameOptions.ubInventorySystem = INVENTORY_NEW;
+				break;
+		}
 	}
 
 	//	gubGIOExitScreen = INIT_SCREEN;

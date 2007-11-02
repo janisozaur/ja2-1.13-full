@@ -1285,6 +1285,8 @@ BOOLEAN InitializeInvPanelCoordsNew()
 	PLAYER_INFO_X					= 0;
 	PLAYER_INFO_Y					= 107;
 
+	InitInventoryNew();
+
 	// Inventory slots
 	if(iResolution == 0){
 		gMapScreenInvPocketXY[0].sX = PLAYER_INFO_X + 131;	gMapScreenInvPocketXY[0].sY = PLAYER_INFO_Y + 9;		// HELMETPOS
@@ -7396,6 +7398,7 @@ void BltCharInvPanel()
 	else if((UsingNewInventorySystem() == true))
 	{
 		InitializeInvPanelCoordsNew();
+		ResetMapInvRegions(gMapScreenInvPocketXY, MAPInvMoveCallback, MAPInvClickCallback, FALSE);
 		disOpt = 1;
 	}
 	else

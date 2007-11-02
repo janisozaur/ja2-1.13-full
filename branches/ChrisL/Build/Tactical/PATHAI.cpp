@@ -1094,7 +1094,16 @@ void AStarPathfinder::ExecuteAStarLogic()
 		//movementG = (INT16) CalcG( &prevCost);
 		//movementG = CalcAP( movementG, direction);
 		
-		movementG = terrainCost * 100;
+		//movementG = terrainCost * 100;
+		movementG = terrainCost;
+		// Favor continuing in the same direction by increasing the cost for changing direction
+		int ParentParentNode = GetAStarParent( ParentNode);
+		if ((ParentParentNode != -1 &&
+			 ParentNode - ParentParentNode != CurrentNode - ParentNode) ||
+			 (ParentParentNode == -1 && (direction & 1) ) )
+		{
+			movementG++;
+		}
 
 		INT16 AStarG = baseGCost + movementG;
 		//if the node is more costly in this path than in another open path, continue
@@ -1626,7 +1635,7 @@ int AStarPathfinder::CalcH()
 
 	int x = abs(n1->x - n2->x);
 	int y = abs(n1->y - n2->y);
-#if 0
+#if 1
 	if (x >= y) 
 	{
 		return this->travelcostDiag * y + this->travelcostOrth * (x-y);
