@@ -7769,7 +7769,9 @@ INT16 GetWornCamo( SOLDIERTYPE * pSoldier )
 	for (bLoop = HELMETPOS; bLoop <= LEGPOS; bLoop++)
 	{
 		if ( pSoldier->inv[bLoop].exists() == true )
+		{
 			ttl += GetCamoBonus(&pSoldier->inv[bLoop]);
+		}
 	}
 
 	// CHRISL: Add additional loop for LBE items while using new inventory system
@@ -7779,6 +7781,11 @@ INT16 GetWornCamo( SOLDIERTYPE * pSoldier )
 		{
 			if ( pSoldier->inv[bLoop].exists() == true )
 				ttl += GetCamoBonus(&pSoldier->inv[bLoop]);
+			//CHRISL: to prevent camo overlap, don't count armor vest camo if we're weaing an LBE vest that grants a bonus
+			if(bLoop == VESTPOCKPOS && pSoldier->inv[VESTPOS].exists() == true && Item[pSoldier->inv[bLoop].usItem].camobonus > 0)
+			{
+				ttl -= Item[pSoldier->inv[VESTPOS].usItem].camobonus;
+			}
 		}
 	}
 
