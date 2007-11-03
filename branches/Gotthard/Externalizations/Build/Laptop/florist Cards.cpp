@@ -13,8 +13,8 @@
 	#include "Text.h"
 #endif
 
-
-
+//Commented out to help externalization to XML files.  Gotthard 10/31/07
+/*
 #define		FLORIST_CARDS_SENTENCE_FONT			FONT12ARIAL
 #define		FLORIST_CARDS_SENTENCE_COLOR		FONT_MCOLOR_WHITE
 
@@ -39,6 +39,56 @@
 //#define		FLORIST_CARD_
 //#define		FLORIST_CARD_
 //#define		FLORIST_CARD_
+*/
+//New enum to reference the constants we just commented out above.  Gotthard 10/31/07
+enum {
+FLORIST_CARDS_SENTENCE_FONT,
+FLORIST_CARDS_SENTENCE_COLOR,
+
+FLORIST_CARD_FIRST_POS_X,
+FLORIST_CARD_FIRST_POS_Y,
+FLORIST_CARD_FIRST_OFFSET_X,
+FLORIST_CARD_FIRST_OFFSET_Y,
+
+FLORIST_CARD_CARD_WIDTH,
+FLORIST_CARD_CARD_HEIGHT,
+
+FLORIST_CARD_TEXT_WIDTH,
+FLORIST_CARD_TEXT_HEIGHT,
+
+FLORIST_CARD_TITLE_SENTENCE_X,
+FLORIST_CARD_TITLE_SENTENCE_Y,
+FLORIST_CARD_TITLE_SENTENCE_WIDTH,
+
+FLORIST_CARD_BACK_BUTTON_X,
+FLORIST_CARD_BACK_BUTTON_Y,
+};
+
+
+//This array holds all the original constants, and they are referenced using the enumeration defined above.  Gotthard 10/31/07
+UINT16 iFloristCardsConstants[] =
+{
+FONT12ARIAL,
+FONT_MCOLOR_WHITE,
+
+LAPTOP_SCREEN_UL_X + 7,	
+LAPTOP_SCREEN_WEB_UL_Y + 72,
+174,
+109,
+
+135,
+100,
+
+121,
+90,
+
+LAPTOP_SCREEN_UL_X,
+LAPTOP_SCREEN_WEB_UL_Y + 53,
+613 - 111,
+
+LAPTOP_SCREEN_UL_X + 8,
+LAPTOP_SCREEN_WEB_UL_Y + 12,
+};
 
 UINT32		guiCardBackground;
 
@@ -80,14 +130,14 @@ BOOLEAN EnterFloristCards()
 		usPosX = FLORIST_CARD_FIRST_POS_X;
 		for(i=0; i<3; i++)
 		{
-			MSYS_DefineRegion( &gSelectedFloristCardsRegion[ubCount], usPosX, usPosY, (UINT16)(usPosX + FLORIST_CARD_CARD_WIDTH), (UINT16)(usPosY + FLORIST_CARD_CARD_HEIGHT), MSYS_PRIORITY_HIGH,
+			MSYS_DefineRegion( &gSelectedFloristCardsRegion[ubCount], usPosX, usPosY, (UINT16)(usPosX + iFloristCardsConstants[FLORIST_CARD_CARD_WIDTH]), (UINT16)(usPosY + iFloristCardsConstants[FLORIST_CARD_CARD_HEIGHT]), MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectFloristCardsRegionCallBack ); 
 			MSYS_AddRegion(&gSelectedFloristCardsRegion[ubCount]); 
 			MSYS_SetRegionUserData( &gSelectedFloristCardsRegion[ubCount], 0, ubCount );	
 			ubCount++;
-			usPosX += FLORIST_CARD_FIRST_OFFSET_X;
+			usPosX += iFloristCardsConstants[FLORIST_CARD_FIRST_OFFSET_X];
 		}
-		usPosY += FLORIST_CARD_FIRST_OFFSET_Y;
+		usPosY += iFloristCardsConstants[FLORIST_CARD_FIRST_OFFSET_Y];
 	}
 
 
@@ -97,7 +147,7 @@ BOOLEAN EnterFloristCards()
 													 iFloristConstants[FLORIST_BUTTON_TEXT_UP_COLOR], iFloristConstants[FLORIST_BUTTON_TEXT_SHADOW_COLOR], 
 													 iFloristConstants[FLORIST_BUTTON_TEXT_DOWN_COLOR], iFloristConstants[FLORIST_BUTTON_TEXT_SHADOW_COLOR], 
 													 TEXT_CJUSTIFIED, 
-													 FLORIST_CARD_BACK_BUTTON_X, FLORIST_CARD_BACK_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 iFloristCardsConstants[FLORIST_CARD_BACK_BUTTON_X], iFloristCardsConstants[FLORIST_CARD_BACK_BUTTON_Y], BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													 DEFAULT_MOVE_CALLBACK, BtnFlowerCardsBackButtonCallback);
 	SetButtonCursor(guiFlowerCardsBackButton, CURSOR_WWW );
 
@@ -140,14 +190,14 @@ void RenderFloristCards()
 
 	DisplayFloristDefaults();
 
-	DrawTextToScreen( sFloristCards[FLORIST_CARDS_CLICK_SELECTION], FLORIST_CARD_TITLE_SENTENCE_X, FLORIST_CARD_TITLE_SENTENCE_Y, FLORIST_CARD_TITLE_SENTENCE_WIDTH, FONT10ARIAL, FLORIST_CARDS_SENTENCE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
+	DrawTextToScreen( sFloristCards[FLORIST_CARDS_CLICK_SELECTION], iFloristCardsConstants[FLORIST_CARD_TITLE_SENTENCE_X], iFloristCardsConstants[FLORIST_CARD_TITLE_SENTENCE_Y], iFloristCardsConstants[FLORIST_CARD_TITLE_SENTENCE_WIDTH], FONT10ARIAL, (UINT8)iFloristCardsConstants[FLORIST_CARDS_SENTENCE_COLOR], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 
 	GetVideoObject(&hPixHandle, guiCardBackground);
 	usPosY = FLORIST_CARD_FIRST_POS_Y;
 	ubCount = 0;
 	for(j=0; j<3; j++)
 	{
-		usPosX = FLORIST_CARD_FIRST_POS_X;
+		usPosX = iFloristCardsConstants[FLORIST_CARD_FIRST_POS_X];
 		for(i=0; i<3; i++)
 		{
 			//The flowe account box
@@ -158,21 +208,21 @@ void RenderFloristCards()
 			LoadEncryptedDataFromFile(FLOR_CARD_TEXT_FILE, sTemp, uiStartLoc, FLOR_CARD_TEXT_TITLE_SIZE);
 
 //			DisplayWrappedString((UINT16)(usPosX+7), (UINT16)(usPosY+15), FLORIST_CARD_TEXT_WIDTH, 2, FLORIST_CARDS_SENTENCE_FONT, FLORIST_CARDS_SENTENCE_COLOR,  sTemp, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
-				usHeightOffset = IanWrappedStringHeight( (UINT16)(usPosX+7), (UINT16)(usPosY), FLORIST_CARD_TEXT_WIDTH, 2, 
-															 FLORIST_CARDS_SENTENCE_FONT, FLORIST_CARDS_SENTENCE_COLOR, sTemp, 
+				usHeightOffset = IanWrappedStringHeight( (UINT16)(usPosX+7), (UINT16)(usPosY), iFloristCardsConstants[FLORIST_CARD_TEXT_WIDTH], 2, 
+															 iFloristCardsConstants[FLORIST_CARDS_SENTENCE_FONT], (UINT8)iFloristCardsConstants[FLORIST_CARDS_SENTENCE_COLOR], sTemp, 
 															 0, FALSE, 0);
 
-				usHeightOffset = ( FLORIST_CARD_TEXT_HEIGHT - usHeightOffset ) / 2;
+				usHeightOffset = ( iFloristCardsConstants[FLORIST_CARD_TEXT_HEIGHT] - usHeightOffset ) / 2;
 
 
-				IanDisplayWrappedString( (UINT16)(usPosX+7), (UINT16)(usPosY+10+usHeightOffset), FLORIST_CARD_TEXT_WIDTH, 2, 
-															 FLORIST_CARDS_SENTENCE_FONT, FLORIST_CARDS_SENTENCE_COLOR, sTemp, 
+				IanDisplayWrappedString( (UINT16)(usPosX+7), (UINT16)(usPosY+10+usHeightOffset), iFloristCardsConstants[FLORIST_CARD_TEXT_WIDTH], 2, 
+															 iFloristCardsConstants[FLORIST_CARDS_SENTENCE_FONT], (UINT8)iFloristCardsConstants[FLORIST_CARDS_SENTENCE_COLOR], sTemp, 
 															 0, FALSE, 0);
 
 			ubCount++;
-			usPosX += FLORIST_CARD_FIRST_OFFSET_X;
+			usPosX += iFloristCardsConstants[FLORIST_CARD_FIRST_OFFSET_X];
 		}
-		usPosY += FLORIST_CARD_FIRST_OFFSET_Y;
+		usPosY += iFloristCardsConstants[FLORIST_CARD_FIRST_OFFSET_Y];
 	}
 
   MarkButtonsDirty( );

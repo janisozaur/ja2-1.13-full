@@ -12,10 +12,8 @@
 	#include "Encrypted File.h"
 	#include "Text.h"
 #endif
-
-
-
-
+//Commented out so they could be placed inside an array for eventual migration to an XML file.  Gotthard 11/2/07
+/*
 #define	FLOR_GALLERY_TITLE_FONT								FONT10ARIAL
 #define	FLOR_GALLERY_TITLE_COLOR							FONT_MCOLOR_WHITE
 
@@ -56,7 +54,95 @@
 #define FLOR_GALLERY_FLOWER_TITLE_OFFSET_Y		9
 #define FLOR_GALLERY_FLOWER_PRICE_OFFSET_Y		FLOR_GALLERY_FLOWER_TITLE_OFFSET_Y + 17
 #define FLOR_GALLERY_FLOWER_DESC_OFFSET_Y			FLOR_GALLERY_FLOWER_PRICE_OFFSET_Y + 15
+*/
+//This is an enum to reference the constants inside the new arraw that is defined below.  This is for eventual externalization into XML files.  Gotthard 11/2/07
+enum{
+FLOR_GALLERY_TITLE_FONT,
+FLOR_GALLERY_TITLE_COLOR,
 
+FLOR_GALLERY_FLOWER_TITLE_FONT,
+FLOR_GALLERY_FLOWER_TITLE_COLOR,
+
+FLOR_GALLERY_FLOWER_PRICE_FONT,
+FLOR_GALLERY_FLOWER_PRICE_COLOR,
+
+FLOR_GALLERY_FLOWER_DESC_FONT,
+FLOR_GALLERY_FLOWER_DESC_COLOR,
+
+FLOR_GALLERY_NUMBER_FLORAL_BUTTONS,
+FLOR_GALLERY_NUMBER_FLORAL_IMAGES,
+
+FLOR_GALLERY_FLOWER_DESC_TEXT_FONT,
+FLOR_GALLERY_FLOWER_DESC_TEXT_COLOR,
+
+FLOR_GALLERY_BACK_BUTTON_X,
+FLOR_GALLERY_BACK_BUTTON_Y,
+
+FLOR_GALLERY_NEXT_BUTTON_X,
+FLOR_GALLERY_NEXT_BUTTON_Y,
+	
+FLOR_GALLERY_FLOWER_BUTTON_X,
+FLOR_GALLERY_FLOWER_BUTTON_Y,
+
+FLOR_GALLERY_FLOWER_BUTTON_OFFSET_Y,
+
+FLOR_GALLERY_TITLE_TEXT_X,
+FLOR_GALLERY_TITLE_TEXT_Y,
+FLOR_GALLERY_TITLE_TEXT_WIDTH,
+
+FLOR_GALLERY_FLOWER_TITLE_X,
+
+FLOR_GALLERY_DESC_WIDTH,
+	
+FLOR_GALLERY_FLOWER_TITLE_OFFSET_Y,
+FLOR_GALLERY_FLOWER_PRICE_OFFSET_Y,
+FLOR_GALLERY_FLOWER_DESC_OFFSET_Y,
+};
+
+
+UINT16 iFloristGalleryConstants[] =
+{
+FONT10ARIAL,
+FONT_MCOLOR_WHITE,
+
+FONT14ARIAL,
+FONT_MCOLOR_WHITE,
+
+FONT12ARIAL,
+FONT_MCOLOR_WHITE,
+
+FONT12ARIAL,
+FONT_MCOLOR_WHITE,
+
+3,
+10,
+
+FONT12ARIAL,
+FONT_MCOLOR_WHITE,
+
+(LAPTOP_SCREEN_UL_X + 8),
+LAPTOP_SCREEN_WEB_UL_Y + 12,
+
+LAPTOP_SCREEN_UL_X + 420,
+LAPTOP_SCREEN_WEB_UL_Y + 12,//Previously FLOR_GALLERY_BACK_BUTTON_Y
+	
+(LAPTOP_SCREEN_UL_X + 7),
+LAPTOP_SCREEN_WEB_UL_Y + 74,
+
+112,
+
+(LAPTOP_SCREEN_UL_X + 0),
+LAPTOP_SCREEN_WEB_UL_Y + 48,
+(613 - 111)	,
+
+(LAPTOP_SCREEN_UL_X + 7) + 88,//Previously FLOR_GALLERY_FLOWER_BUTTON_X
+
+390,
+	
+9,
+(9) + 17,//Previously FLOR_GALLERY_FLOWER_TITLE_OFFSET_Y
+((9) + 17) + 15,//Previously FLOR_GALLERY_FLOWER_PRICE_OFFSET_Y
+};
 
 UINT32	guiFlowerImages[ 3 ];
 
@@ -109,7 +195,7 @@ BOOLEAN EnterFloristGallery()
 													 iFloristConstants[FLORIST_BUTTON_TEXT_UP_COLOR], iFloristConstants[FLORIST_BUTTON_TEXT_SHADOW_COLOR], 
 													 iFloristConstants[FLORIST_BUTTON_TEXT_DOWN_COLOR], iFloristConstants[FLORIST_BUTTON_TEXT_SHADOW_COLOR], 
 													 TEXT_CJUSTIFIED, 
-													 FLOR_GALLERY_BACK_BUTTON_X, FLOR_GALLERY_BACK_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 iFloristGalleryConstants[FLOR_GALLERY_BACK_BUTTON_X], iFloristGalleryConstants[FLOR_GALLERY_BACK_BUTTON_Y], BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													 DEFAULT_MOVE_CALLBACK, BtnFloralGalleryBackButtonCallback);
 	SetButtonCursor(guiFloralGalleryButton[0], CURSOR_WWW );
 
@@ -117,7 +203,7 @@ BOOLEAN EnterFloristGallery()
 													 iFloristConstants[FLORIST_BUTTON_TEXT_UP_COLOR], iFloristConstants[FLORIST_BUTTON_TEXT_SHADOW_COLOR], 
 													 iFloristConstants[FLORIST_BUTTON_TEXT_DOWN_COLOR], iFloristConstants[FLORIST_BUTTON_TEXT_SHADOW_COLOR], 
 													 TEXT_CJUSTIFIED, 
-													 FLOR_GALLERY_NEXT_BUTTON_X, FLOR_GALLERY_NEXT_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 iFloristGalleryConstants[FLOR_GALLERY_NEXT_BUTTON_X], iFloristGalleryConstants[FLOR_GALLERY_NEXT_BUTTON_Y], BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													 DEFAULT_MOVE_CALLBACK, BtnFloralGalleryNextButtonCallback);
 	SetButtonCursor(guiFloralGalleryButton[1], CURSOR_WWW );
 
@@ -162,8 +248,8 @@ void RenderFloristGallery()
 {
 	DisplayFloristDefaults();
 
-	DrawTextToScreen(sFloristGalleryText[FLORIST_GALLERY_CLICK_TO_ORDER], FLOR_GALLERY_TITLE_TEXT_X, FLOR_GALLERY_TITLE_TEXT_Y, FLOR_GALLERY_TITLE_TEXT_WIDTH, FLOR_GALLERY_TITLE_FONT, FLOR_GALLERY_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
-	DrawTextToScreen(sFloristGalleryText[FLORIST_GALLERY_ADDIFTIONAL_FEE], FLOR_GALLERY_TITLE_TEXT_X, FLOR_GALLERY_TITLE_TEXT_Y+11, FLOR_GALLERY_TITLE_TEXT_WIDTH, FLOR_GALLERY_TITLE_FONT, FLOR_GALLERY_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
+	DrawTextToScreen(sFloristGalleryText[FLORIST_GALLERY_CLICK_TO_ORDER], iFloristGalleryConstants[FLOR_GALLERY_TITLE_TEXT_X], iFloristGalleryConstants[FLOR_GALLERY_TITLE_TEXT_Y], iFloristGalleryConstants[FLOR_GALLERY_TITLE_TEXT_WIDTH], iFloristGalleryConstants[FLOR_GALLERY_TITLE_FONT], (UINT8)iFloristGalleryConstants[FLOR_GALLERY_TITLE_COLOR], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
+	DrawTextToScreen(sFloristGalleryText[FLORIST_GALLERY_ADDIFTIONAL_FEE], iFloristGalleryConstants[FLOR_GALLERY_TITLE_TEXT_X], iFloristGalleryConstants[FLOR_GALLERY_TITLE_TEXT_Y]+11, iFloristGalleryConstants[FLOR_GALLERY_TITLE_TEXT_WIDTH], iFloristGalleryConstants[FLOR_GALLERY_TITLE_FONT], (UINT8)iFloristGalleryConstants[FLOR_GALLERY_TITLE_COLOR], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 
 	DisplayFloralDescriptions();
 
@@ -187,7 +273,7 @@ void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 			btn->uiFlags &= (~BUTTON_CLICKED_ON );
 
 
-			if( (gubCurFlowerIndex + 3 ) <= FLOR_GALLERY_NUMBER_FLORAL_IMAGES )
+			if( (gubCurFlowerIndex + 3 ) <= iFloristGalleryConstants[FLOR_GALLERY_NUMBER_FLORAL_IMAGES] )
 				gubCurFlowerIndex += 3;
 
 			ChangingFloristGallerySubPage( gubCurFlowerIndex );
@@ -304,20 +390,20 @@ BOOLEAN InitFlowerButtons()
 	}
 
 	//the buttons with the flower pictures on them
-	usPosY = FLOR_GALLERY_FLOWER_BUTTON_Y;
-//	usPosX = FLOR_GALLERY_FLOWER_BUTTON_X;
+	usPosY = iFloristGalleryConstants[FLOR_GALLERY_FLOWER_BUTTON_Y];
+
 	count = gubCurFlowerIndex;
 	guiGalleryButtonImage	= LoadButtonImage("LAPTOP\\GalleryButtons.sti", -1,0,-1,1,-1 );
 	for(j=0; j<gubCurNumberOfFlowers; j++)
 	{
-		guiGalleryButton[j] = QuickCreateButton( guiGalleryButtonImage, FLOR_GALLERY_FLOWER_BUTTON_X, usPosY,
+		guiGalleryButton[j] = QuickCreateButton( guiGalleryButtonImage, iFloristGalleryConstants[FLOR_GALLERY_FLOWER_BUTTON_X], usPosY,
 																	BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 																	DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnGalleryFlowerButtonCallback);
 		SetButtonCursor( guiGalleryButton[j], CURSOR_WWW);
 		MSYS_SetBtnUserData( guiGalleryButton[j], 0, count);
 
 		SpecifyButtonIcon( guiGalleryButton[j], guiFlowerImages[ j ], 0, 5, 5, FALSE );
-		usPosY += FLOR_GALLERY_FLOWER_BUTTON_OFFSET_Y;
+		usPosY += iFloristGalleryConstants[FLOR_GALLERY_FLOWER_BUTTON_OFFSET_Y];
 		count ++;
 	}
 
@@ -328,7 +414,7 @@ BOOLEAN InitFlowerButtons()
 		SpecifyButtonText( guiFloralGalleryButton[0], sFloristGalleryText[FLORIST_GALLERY_PREV] );
 
 	//if it is the last page disable the next button
-	if( gubCurFlowerIndex == FLOR_GALLERY_NUMBER_FLORAL_IMAGES-1 )
+	if( gubCurFlowerIndex == iFloristGalleryConstants[FLOR_GALLERY_NUMBER_FLORAL_IMAGES]-1 )
 		DisableButton( guiFloralGalleryButton[1] );
 	else
 		EnableButton( guiFloralGalleryButton[1] );
@@ -363,32 +449,32 @@ BOOLEAN DisplayFloralDescriptions()
 	UINT32	uiStartLoc=0, i;
 	UINT16	usPosY, usPrice;
 
-	if( (FLOR_GALLERY_NUMBER_FLORAL_IMAGES - gubCurFlowerIndex) >= 3 )
+	if( (iFloristGalleryConstants[FLOR_GALLERY_NUMBER_FLORAL_IMAGES] - gubCurFlowerIndex) >= 3 )
 		gubCurNumberOfFlowers = 3;
 	else
-		gubCurNumberOfFlowers = FLOR_GALLERY_NUMBER_FLORAL_IMAGES - gubCurFlowerIndex;
+		gubCurNumberOfFlowers = iFloristGalleryConstants[FLOR_GALLERY_NUMBER_FLORAL_IMAGES] - gubCurFlowerIndex;
 
-	usPosY = FLOR_GALLERY_FLOWER_BUTTON_Y;
+	usPosY = iFloristGalleryConstants[FLOR_GALLERY_FLOWER_BUTTON_Y];
 	for(i=0; i<gubCurNumberOfFlowers; i++)
 	{
 		//Display Flower title
 		uiStartLoc = FLOR_GALLERY_TEXT_TOTAL_SIZE * (i + gubCurFlowerIndex);
 		LoadEncryptedDataFromFile(FLOR_GALLERY_TEXT_FILE, sTemp, uiStartLoc, FLOR_GALLERY_TEXT_TITLE_SIZE);
-		DrawTextToScreen(sTemp, FLOR_GALLERY_FLOWER_TITLE_X, (UINT16)(usPosY+FLOR_GALLERY_FLOWER_TITLE_OFFSET_Y), 0, FLOR_GALLERY_FLOWER_TITLE_FONT, FLOR_GALLERY_FLOWER_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen(sTemp, iFloristGalleryConstants[FLOR_GALLERY_FLOWER_TITLE_X], (UINT16)(usPosY+iFloristGalleryConstants[FLOR_GALLERY_FLOWER_TITLE_OFFSET_Y]), 0, iFloristGalleryConstants[FLOR_GALLERY_FLOWER_TITLE_FONT], (UINT8)iFloristGalleryConstants[FLOR_GALLERY_FLOWER_TITLE_COLOR], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
 		//Display Flower Price
 		uiStartLoc = FLOR_GALLERY_TEXT_TOTAL_SIZE * (i + gubCurFlowerIndex) + FLOR_GALLERY_TEXT_TITLE_SIZE;
 		LoadEncryptedDataFromFile(FLOR_GALLERY_TEXT_FILE, sTemp, uiStartLoc, FLOR_GALLERY_TEXT_PRICE_SIZE);
 		swscanf( sTemp, L"%hu", &usPrice);
 		swprintf( sTemp, L"$%d.00 %s", usPrice, pMessageStrings[ MSG_USDOLLAR_ABBREVIATION ] );
-		DrawTextToScreen(sTemp, FLOR_GALLERY_FLOWER_TITLE_X, (UINT16)(usPosY+FLOR_GALLERY_FLOWER_PRICE_OFFSET_Y), 0, FLOR_GALLERY_FLOWER_PRICE_FONT, FLOR_GALLERY_FLOWER_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen(sTemp, iFloristGalleryConstants[FLOR_GALLERY_FLOWER_TITLE_X], (UINT16)(usPosY+iFloristGalleryConstants[FLOR_GALLERY_FLOWER_PRICE_OFFSET_Y]), 0, iFloristGalleryConstants[FLOR_GALLERY_FLOWER_PRICE_FONT], (UINT8)iFloristGalleryConstants[FLOR_GALLERY_FLOWER_PRICE_COLOR], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
 		//Display Flower Desc
 		uiStartLoc = FLOR_GALLERY_TEXT_TOTAL_SIZE * (i + gubCurFlowerIndex) + FLOR_GALLERY_TEXT_TITLE_SIZE + FLOR_GALLERY_TEXT_PRICE_SIZE;
 		LoadEncryptedDataFromFile(FLOR_GALLERY_TEXT_FILE, sTemp, uiStartLoc, FLOR_GALLERY_TEXT_DESC_SIZE);
-		DisplayWrappedString(FLOR_GALLERY_FLOWER_TITLE_X, (UINT16)(usPosY+FLOR_GALLERY_FLOWER_DESC_OFFSET_Y), FLOR_GALLERY_DESC_WIDTH, 2, FLOR_GALLERY_FLOWER_DESC_FONT, FLOR_GALLERY_FLOWER_DESC_COLOR,  sTemp, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
+		DisplayWrappedString(iFloristGalleryConstants[FLOR_GALLERY_FLOWER_TITLE_X], (UINT16)(usPosY+iFloristGalleryConstants[FLOR_GALLERY_FLOWER_DESC_OFFSET_Y]), iFloristGalleryConstants[FLOR_GALLERY_DESC_WIDTH], 2, iFloristGalleryConstants[FLOR_GALLERY_FLOWER_DESC_FONT], (UINT8)iFloristGalleryConstants[FLOR_GALLERY_FLOWER_DESC_COLOR],  sTemp, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
-		usPosY += FLOR_GALLERY_FLOWER_BUTTON_OFFSET_Y;
+		usPosY += iFloristGalleryConstants[FLOR_GALLERY_FLOWER_BUTTON_OFFSET_Y];
 	}
 
 	return(TRUE);
@@ -400,7 +486,7 @@ void ChangingFloristGallerySubPage( UINT8 ubSubPageNumber )
 	fLoadPendingFlag = TRUE;
 
 	//there are 3 flowers per page
-	if( ubSubPageNumber == FLOR_GALLERY_NUMBER_FLORAL_IMAGES )
+	if( ubSubPageNumber == iFloristGalleryConstants[FLOR_GALLERY_NUMBER_FLORAL_IMAGES] )
 		ubSubPageNumber = 4;
 	else
 		ubSubPageNumber = ubSubPageNumber / 3;
