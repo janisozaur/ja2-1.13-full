@@ -1396,6 +1396,7 @@ wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Gezondheid: %d/%d\nBrandstof: %d/%d",				//L"Health: %d/%d\nFuel: %d/%d",
 	L"%ls kan %ls niet zien.",					// Cannot see person trying to talk to
 	L"Attachment removed",
+	L"BROKEN",                                      //Item is broken
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.

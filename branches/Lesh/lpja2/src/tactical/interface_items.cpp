@@ -2126,6 +2126,17 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 					mprintf( sNewX, sNewY, pStr );
 					gprintfinvalidate( sNewX, sNewY, pStr );
 				}
+
+                                if ( pObject->bStatus[0] < USABLE)
+                                {
+                                  SetFontForeground( FONT_MCOLOR_RED );
+                                  WSTR_SPrintf( pStr, 100, TacticalStr[ BROKEN_ITEM_STR ] );
+                                  VarFindFontCenterCoordinates( sX, sY, sWidth, sHeight , ITEM_FONT, &sNewX, &sNewY, pStr );
+
+                                  mprintf( sNewX, sNewY, pStr );
+                                  gprintfinvalidate( sNewX, sNewY, pStr );
+                                }
+
 			}
 			else
 			{

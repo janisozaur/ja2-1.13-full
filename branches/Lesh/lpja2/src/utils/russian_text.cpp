@@ -1388,6 +1388,7 @@ wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Здоровье: %d/%d\nБенз: %d/%d",
 	L"%ls не видит %ls.",  // Cannot see person trying to talk to
 	L"Attachment removed",
+	L"BROKEN",                                      //Item is broken
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.
