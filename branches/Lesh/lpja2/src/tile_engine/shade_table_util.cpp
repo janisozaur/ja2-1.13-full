@@ -14,6 +14,7 @@
 
 #define		SHADE_TABLE_DIR				"ShadeTables"
 
+STRING512	zShadeTableDir;
 
 
 extern CHAR8 TileSurfaceFilenames[NUMBEROFTILETYPES][32]; // symbol already declared globally in worlddef.cpp (jonathanl)
@@ -27,8 +28,8 @@ BOOLEAN gfForceBuildShadeTables = FALSE;
 void DetermineRGBDistributionSettings()
 {
 	STRING512			DataDir;
-	STRING512			ExecDir;
-	STRING512			ShadeTableDir;
+	STRING512			TempDir;
+	STRING512			file1, file2;
 	UINT32				uiRBitMask, uiGBitMask, uiBBitMask;
 	UINT32				uiPrevRBitMask, uiPrevGBitMask, uiPrevBBitMask;
 	UINT32				uiNumBytesRead;
@@ -37,33 +38,30 @@ void DetermineRGBDistributionSettings()
 	BOOLEAN				fCleanShadeTable = FALSE;
 	BOOLEAN				fLoadedPrevRGBDist = FALSE;
 
-	// Snap: save current directory
-	GetFileManCurrentDirectory( DataDir );
-
 	//First, determine if we have a file saved.  If not, then this is the first time, and
 	//all shade tables will have to be built and saved to disk.  This can be time consuming, adding up to
 	//3-4 seconds to the time of a map load.
-	GetExecutableDirectory( ExecDir );
-	sprintf( ShadeTableDir, "%s\\%s", DataDir, SHADE_TABLE_DIR );
+	GetTempDirectory( TempDir );
+	sprintf( zShadeTableDir, "%s%s%c", TempDir, SHADE_TABLE_DIR, SLASH );
 
 	
 	//Check to make sure we have a ShadeTable directory.  If we don't create one!
-	if( !SetFileManCurrentDirectory( ShadeTableDir ) )
+	if( !DirectoryExists( zShadeTableDir ) )
 	{
-		if( !MakeFileManDirectory( ShadeTableDir ) )
+		if( !MakeFileManDirectory( zShadeTableDir ) )
 		{
 			AssertMsg( 0, "ShadeTable directory doesn't exist, and couldn't create one!" );
-		}
-		if( !SetFileManCurrentDirectory( ShadeTableDir ) )
-		{
-			AssertMsg( 0, "Couldn't access the newly created ShadeTable directory." );
 		}
 		fSaveRGBDist = TRUE;
 	}
 	
+	sprintf( file1, "%s%s", zShadeTableDir, "RGBDist.dat" );
+	sprintf( file2, "%s%s", zShadeTableDir, "ResetShadeTables.txt" );
+
 	if( !fSaveRGBDist )
-	{ //Load the previous RGBDist and determine if it is the same one
-		if( !FileExists( "RGBDist.dat" ) || FileExists( "ResetShadeTables.txt" ) )
+	{
+		//Load the previous RGBDist and determine if it is the same one
+		if( !FileExists( file1 ) || FileExists( file2 ) )
 		{ //Can't find the RGBDist.dat file.  The directory exists, but the file doesn't, which
 			//means the user deleted the file manually.  Now, set it up to create a new one.
 			fSaveRGBDist = TRUE;
@@ -71,7 +69,7 @@ void DetermineRGBDistributionSettings()
 		}
 		else
 		{
-			hfile = FileOpen( "RGBDist.dat", FILE_ACCESS_READ, FALSE );
+			hfile = FileOpen( file1, FILE_ACCESS_READ, FALSE );
 			if( !hfile )
 			{
 				AssertMsg( 0, "Couldn't open RGBDist.dat, even though it exists!" );
@@ -103,13 +101,13 @@ void DetermineRGBDistributionSettings()
 	if( fCleanShadeTable )
 	{ //This means that we are going to remove all of the current shade tables, if any exist, and
 		//start fresh.  
-		EraseDirectory( ShadeTableDir );
+		EraseDirectory( zShadeTableDir );
 	}
 	if( fSaveRGBDist )
 	{ //The RGB distribution is going to be saved in a tiny file for future reference.  As long as the
 		//RGB distribution never changes, the shade table will grow until eventually, all tilesets are loaded,
 		//shadetables generated and saved in this directory.  
-		hfile = FileOpen( "RGBDist.dat", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
+		hfile = FileOpen( file2, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 		if( !hfile )
 		{
 			AssertMsg( 0, "Couldn't create RGBDist.dat for writing!" );
@@ -119,12 +117,6 @@ void DetermineRGBDistributionSettings()
 		FileWrite( hfile, &uiBBitMask, sizeof( UINT32 ), &uiNumBytesRead );
 		FileClose( hfile );
 	}
-
-	// Snap: Restore the data directory once we are finished.
-	SetFileManCurrentDirectory( DataDir );
-	//We're done, so restore the executable directory to JA2\Data.
-	//sprintf( DataDir, "%s\\Data", ExecDir );
-	//SetFileManCurrentDirectory( DataDir );
 }
 
 BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
@@ -133,6 +125,7 @@ BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 	INT32 i;
 	UINT32 uiNumBytesRead;
 	CHAR8 ShadeFileName[ 100 ];
+	STRING512	zFullName;
 	CHAR8 *ptr;
 	//ASSUMPTIONS:
 	//We are assuming that the uiTileTypeIndex is referring to the correct file
@@ -147,7 +140,12 @@ BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 	ptr++;
 	sprintf( ptr, "sha" );
 
-	hfile = FileOpen( ShadeFileName, FILE_ACCESS_READ, FALSE );
+	sprintf( zFullName, "%s%s", zShadeTableDir, ShadeFileName );
+
+	if ( !FileExists( zFullName ) )
+		return FALSE;
+	
+	hfile = FileOpen( zFullName, FILE_ACCESS_READ, FALSE );
 	if( !hfile )
 	{ //File doesn't exist, so generate it
 		FileClose( hfile );
@@ -177,6 +175,7 @@ BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 	INT32 i;
 	UINT32 uiNumBytesWritten;
 	CHAR8 ShadeFileName[ 100 ];
+	STRING512	zFullName;
 	CHAR8 *ptr;
 	#ifdef JA2TESTVERSION
 		uiNumTablesSaved++;
@@ -194,7 +193,9 @@ BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 	ptr++;
 	sprintf( ptr, "sha" );
 
-	hfile = FileOpen( ShadeFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
+	sprintf( zFullName, "%s%s", zShadeTableDir, ShadeFileName );
+
+	hfile = FileOpen( zFullName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if( !hfile )
 	{ 
 		FileClose( hfile );
@@ -214,5 +215,5 @@ BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 
 BOOLEAN DeleteShadeTableDir( )
 {	
-	return( RemoveFileManDirectory( SHADE_TABLE_DIR, TRUE ) );
+	return( RemoveFileManDirectory( zShadeTableDir, TRUE ) );
 }
