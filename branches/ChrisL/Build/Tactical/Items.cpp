@@ -2418,6 +2418,11 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 			for (attachmentList::iterator iter = (*pObject)[numStacked]->attachments.begin(); iter != (*pObject)[numStacked]->attachments.end(); ++iter) {
 				if (iter->exists() == true) {
 					iSize += Item[iter->usItem].itemsizebonus;
+					// CHRISL: This is to catch things if we try and reduce ItemSize when we're already at 0
+					if(iSize > 34 || iSize < 0)
+						iSize = 0;
+					if(iSize > 9)
+						iSize = 9;
 				}
 			}
 		}
@@ -3030,19 +3035,19 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	return( TRUE );
 }
 
-BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
+BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo, UINT32 subObject )
 {
 	UINT16 usReloadSound;
 
 	CHECKF( pAmmo != NULL );
 
-	if ( (*pWeapon)[0]->data.gun.ubGunShotsLeft > 0 )
+	if ( (*pWeapon)[subObject]->data.gun.ubGunShotsLeft > 0 )
 	{
-		CreateAmmo((*pWeapon)[0]->data.gun.usGunAmmoItem, pAmmo, (*pWeapon)[0]->data.gun.ubGunShotsLeft);
+		CreateAmmo((*pWeapon)[subObject]->data.gun.usGunAmmoItem, pAmmo, (*pWeapon)[subObject]->data.gun.ubGunShotsLeft);
 
-		(*pWeapon)[0]->data.gun.ubGunShotsLeft		= 0;
-		(*pWeapon)[0]->data.gun.ubGunAmmoType	  = 0;
-		//(*pWeapon)[0]->data.gun.usGunAmmoItem		= 0; // leaving the ammo item the same for auto-reloading purposes
+		(*pWeapon)[subObject]->data.gun.ubGunShotsLeft		= 0;
+		(*pWeapon)[subObject]->data.gun.ubGunAmmoType	  = 0;
+		//(*pWeapon)[subObject]->data.gun.usGunAmmoItem		= 0; // leaving the ammo item the same for auto-reloading purposes
 
 		// Play some effects!
 		usReloadSound	= Weapon[ pWeapon->usItem ].sReloadSound;

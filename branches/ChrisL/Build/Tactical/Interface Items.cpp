@@ -2508,7 +2508,33 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 
 			SetFontBackground( FONT_MCOLOR_BLACK );
 			SetFontForeground( FONT_MCOLOR_DKGRAY );
+#if 1
+			//CHRISL: Moved this condition to the start so that stacked guns will show number in stack
+			if ( ubStatusIndex != RENDER_ITEM_NOSTATUS )
+			{
+				// Now display # of items
+				if ( pObject->ubNumberOfObjects > 1 )
+				{
+					SetFontForeground( FONT_GRAY4 );
 
+					sNewY = sY + sHeight - 10;
+					swprintf( pStr, L"%d", pObject->ubNumberOfObjects );
+
+					// Get length of string
+					uiStringLength=StringPixLength(pStr, ITEM_FONT );
+
+					sNewX = sX + sWidth - uiStringLength - 4;
+
+					if ( uiBuffer == guiSAVEBUFFER )
+					{
+						RestoreExternBackgroundRect( sNewX, sNewY, 15, 15 );
+					}
+					mprintf( sNewX, sNewY, pStr );
+					gprintfinvalidate( sNewX, sNewY, pStr );
+				}
+
+			}
+#endif
 			// FIRST DISPLAY FREE ROUNDS REMIANING
 			if ( pItem->usItemClass == IC_GUN && !Item[pObject->usItem].rocketlauncher )
 			{
@@ -2570,6 +2596,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 					gprintfinvalidate( sNewX, sNewY, pStr );
 				}
 			}
+#if 0
 			else
 			{
 				if ( ubStatusIndex != RENDER_ITEM_NOSTATUS )
@@ -2597,7 +2624,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 
 				}
 			}
-
+#endif
 			if ( ItemHasAttachments( pObject, pSoldier, iter ) )
 			{
 				if ( !IsGrenadeLauncherAttached( pObject ) )
@@ -2906,16 +2933,16 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 //    if( guiCurrentScreen != MAP_SCREEN )
 		//if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 		if ( GetMagSize(gpItemDescObject) <= 99 )
-			swprintf( pStr, L"%d/%d", (*gpItemDescObject)[0]->data.gun.ubGunShotsLeft, GetMagSize(gpItemDescObject));
+			swprintf( pStr, L"%d/%d", (*gpItemDescObject)[ubStatusIndex]->data.gun.ubGunShotsLeft, GetMagSize(gpItemDescObject));
 		else
-			swprintf( pStr, L"%d", (*gpItemDescObject)[0]->data.gun.ubGunShotsLeft );
+			swprintf( pStr, L"%d", (*gpItemDescObject)[ubStatusIndex]->data.gun.ubGunShotsLeft );
 
 		FilenameForBPP("INTERFACE\\infobox.sti", ubString);
 		 sForeColour = ITEMDESC_AMMO_FORE;
 
-		giItemDescAmmoButtonImages	= LoadButtonImage(ubString,AmmoTypes[(*pObject)[0]->data.gun.ubGunAmmoType].grayed,AmmoTypes[(*pObject)[0]->data.gun.ubGunAmmoType].offNormal,-1,AmmoTypes[(*pObject)[0]->data.gun.ubGunAmmoType].onNormal,-1 );
+		giItemDescAmmoButtonImages	= LoadButtonImage(ubString,AmmoTypes[(*pObject)[ubStatusIndex]->data.gun.ubGunAmmoType].grayed,AmmoTypes[(*pObject)[ubStatusIndex]->data.gun.ubGunAmmoType].offNormal,-1,AmmoTypes[(*pObject)[ubStatusIndex]->data.gun.ubGunAmmoType].onNormal,-1 );
 
-		//switch( (*pObject)[0]->data.gun.ubGunAmmoType )
+		//switch( (*pObject)[ubStatusIndex]->data.gun.ubGunAmmoType )
 		//{
 		//	case AMMO_AP:
 		//	case AMMO_SUPER_AP:
@@ -2967,8 +2994,11 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 			DisableButton( giItemDescAmmoButton );
 			SetButtonFastHelpText( giItemDescAmmoButton, L"\0" );
 		}
-		else
+		else{
 			SetButtonFastHelpText( giItemDescAmmoButton, Message[ STR_EJECT_AMMO ] );
+			//CHRISL: Include the ubStatusIndex in the region information so we know which object in a stack we're looking at
+			MSYS_SetBtnUserData( giItemDescAmmoButton, 1, ubStatusIndex );
+		}
 
 		FindFontCenterCoordinates( (INT16)ITEMDESC_AMMO_TEXT_X, (INT16)ITEMDESC_AMMO_TEXT_Y, ITEMDESC_AMMO_TEXT_WIDTH, GetFontHeight( TINYFONT1 ), pStr, TINYFONT1, &usX, &usY);
 
@@ -3289,6 +3319,7 @@ void ItemDescAmmoCallback(GUI_BUTTON *btn,INT32 reason)
 {
 	static BOOLEAN fRightDown = FALSE;
 	CHAR16		pStr[10];
+	UINT32		ubStatusIndex = MSYS_GetBtnUserData( btn, 1 );
 
 /*	region gets disabled in SKI for shopkeeper boxes.  It now works normally for merc's inventory boxes!
 	//if we are currently in the shopkeeper interface, return;
@@ -3312,7 +3343,7 @@ void ItemDescAmmoCallback(GUI_BUTTON *btn,INT32 reason)
 
 		if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 		{
-			if ( gpItemPointer == NULL && EmptyWeaponMagazine( gpItemDescObject, &gItemPointer ) )
+			if ( gpItemPointer == NULL && EmptyWeaponMagazine( gpItemDescObject, &gItemPointer, ubStatusIndex ) )
 			{
 				// OK, END the description box
 				//fItemDescDelete = TRUE;
@@ -3336,7 +3367,7 @@ void ItemDescAmmoCallback(GUI_BUTTON *btn,INT32 reason)
 		else
 		{
 			// Set pointer to item
-			if ( gpItemPointer == NULL && EmptyWeaponMagazine( gpItemDescObject, &gItemPointer ) )
+			if ( gpItemPointer == NULL && EmptyWeaponMagazine( gpItemDescObject, &gItemPointer, ubStatusIndex ) )
 			{
 				gpItemPointer = &gItemPointer;
 				gpItemPointerSoldier = gpItemDescSoldier;
