@@ -2286,7 +2286,8 @@ INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT16 * pusFromGridNo)
 									else
 									{
 										return( 5 );
-									}		case ONGUARD:					return( 5 );
+									}		
+		case ONGUARD:				return( 5 );
 		case CLOSEPATROL:			return( 15 );
 		case RNDPTPATROL:
 		case POINTPATROL:			return(10 );	 // from nextPatrolGrid, not whereIWas
@@ -2308,6 +2309,7 @@ INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT16 * pusFromGridNo)
 													}
 		case SEEKENEMY:				*pusFromGridNo = pSoldier->sGridNo; // from current position!
 													return(MAX_ROAMING_RANGE);
+		case SNIPER:				return ( 5 );
 		default:
 #ifdef BETAVERSION
 			tempstr = String("%s has invalid orders = %d",pSoldier->name,pSoldier->aiData.bOrders);

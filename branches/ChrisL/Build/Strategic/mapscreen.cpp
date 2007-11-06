@@ -9436,16 +9436,16 @@ void RenderTeamRegionBackground( void )
 	MarkAllBoxesAsAltered( );
 
 	// restore background for area
-	if(UsingNewInventorySystem() == false){
+	if(fShowInventoryFlag == TRUE && UsingNewInventorySystem() == false){
 		RestoreExternBackgroundRect( 0, 107, 261, SCREEN_HEIGHT - 106 - 121 );
 	}
-	else if(iResolution == 0){
+	else if(fShowInventoryFlag == TRUE && iResolution == 0){
 		RestoreExternBackgroundRect( 0, 107, 261, SCREEN_HEIGHT - 107 );
 	}
-	else if(iResolution == 1){
+	else if(fShowInventoryFlag == TRUE && iResolution == 1){
 		RestoreExternBackgroundRect( 0, 107, 261, SCREEN_HEIGHT - 107 );
 	}
-	else if(iResolution == 2){
+	else if(fShowInventoryFlag == FALSE || iResolution == 2){
 		RestoreExternBackgroundRect( 0, 107, 261, SCREEN_HEIGHT - 107 - 121 );
 	}
 	MapscreenMarkButtonsDirty();

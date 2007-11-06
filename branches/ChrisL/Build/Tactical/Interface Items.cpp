@@ -1523,7 +1523,7 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 	{
 		int itemSlotLimit = ItemSlotLimit(gpItemPointer, sPocket, pSoldier);
 		RenderPocketItemCapacity( itemSlotLimit, sPocket, pSoldier);
-		if(itemSlotLimit == 0 || !CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)sPocket, FALSE)) {
+		if(itemSlotLimit == 0 && !CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)sPocket, FALSE)) {
 			fHatchItOut = TRUE;
 		}
 	}
@@ -2354,14 +2354,22 @@ void RenderPocketItemCapacity( INT8 pCapacity, INT16 bPos, SOLDIERTYPE *pSoldier
 	static CHAR16		pStr[ 100 ];
 
 	// Can pocket hold the item in the cursor?
-	if(!CanItemFitInPosition( pSoldier, gpItemPointer, (INT8)bPos, FALSE ) || (pCapacity == 0 && !CompatibleAmmoForGun(gpItemPointer, &pSoldier->inv[bPos])) || InItemDescriptionBox( ))
+	if(InItemDescriptionBox( ))
 		return;
+	if(!CanItemFitInPosition( pSoldier, gpItemPointer, (INT8)bPos, FALSE ))
+	{
+		// Further check to see if the cursor item is valid ammo or a valid attachment
+		if(!CompatibleAmmoForGun(gpItemPointer, &pSoldier->inv[bPos]) && !ValidAttachment(gpItemPointer->usItem, pSoldier->inv[bPos].usItem))
+		{
+			return;
+		}
+	}
 
 	// Setup display parameters
 	SetFont( ITEM_FONT );
 	SetFontBackground( FONT_MCOLOR_BLACK );
 	SetFontForeground( FONT_RED );
-	if(CompatibleAmmoForGun(gpItemPointer, &pSoldier->inv[bPos]))
+	if(CompatibleAmmoForGun(gpItemPointer, &pSoldier->inv[bPos]) || ValidLaunchable(gpItemPointer->usItem, pSoldier->inv[bPos].usItem))
 		swprintf( pStr, L"L" );
 	else if(pCapacity != 0 && CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)bPos, FALSE))
 	{
@@ -2377,6 +2385,8 @@ void RenderPocketItemCapacity( INT8 pCapacity, INT16 bPos, SOLDIERTYPE *pSoldier
 		else
 			swprintf( pStr, L"%d", pCapacity );
 	}
+	else if(ValidAttachment(gpItemPointer->usItem, pSoldier->inv[bPos].usItem))
+		swprintf( pStr, L"A" );
 	sX = gSMInvData[ bPos ].sX + 1;
 	sY = gSMInvData[ bPos ].sY;
 	UINT32 uiWhichBuffer = ( guiCurrentItemDescriptionScreen == MAP_SCREEN ) ? guiSAVEBUFFER : guiRENDERBUFFER;

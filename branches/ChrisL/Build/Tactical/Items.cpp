@@ -3920,7 +3920,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 			if(pObj->usItem == MONEY)
 				return( FALSE );
 			if(Item[pObj->usItem].usItemClass == IC_AMMO || Item[pObj->usItem].usItemClass == IC_GRENADE)
-				return(CompatibleAmmoForGun(pObj, &pSoldier->inv[GUNSLINGPOCKPOS]));
+				return(CompatibleAmmoForGun(pObj, &pSoldier->inv[GUNSLINGPOCKPOS]) || ValidAttachment(pObj->usItem, pSoldier->inv[GUNSLINGPOCKPOS].usItem) || ValidLaunchable(pObj->usItem, pSoldier->inv[GUNSLINGPOCKPOS].usItem));
 			// Removed backpack/gunsling restrictions
 			//if(pSoldier->inv[BPACKPOCKPOS].exists() == true)
 			//	return(CompatibleAmmoForGun(pObj, &pSoldier->inv[GUNSLINGPOCKPOS]));
@@ -3929,7 +3929,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 			if(pObj->usItem == MONEY)
 				return( FALSE );
 			if (Item[pObj->usItem].usItemClass != IC_BLADE && Item[pObj->usItem].usItemClass != IC_THROWING_KNIFE )
-				return(CompatibleAmmoForGun(pObj, &pSoldier->inv[KNIFEPOCKPOS]));
+				return(CompatibleAmmoForGun(pObj, &pSoldier->inv[KNIFEPOCKPOS]) || ValidAttachment(pObj->usItem, pSoldier->inv[KNIFEPOCKPOS].usItem) || ValidLaunchable(pObj->usItem, pSoldier->inv[KNIFEPOCKPOS].usItem));
 			break;
 		// IC Pockets
 		case BIGPOCK1POS:
@@ -3999,11 +3999,11 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 	{
 		// CHRISL: lbePocket==0 means pocket disabled.  ubSlotLimit==0 means pocket can't hold item
 		if ( lbePocket == 0 || ubSlotLimit == 0 )
-			return ( CompatibleAmmoForGun(pObj, &pSoldier->inv[bPos]) );
+			return ( CompatibleAmmoForGun(pObj, &pSoldier->inv[bPos]) || ValidAttachment(pObj->usItem, pSoldier->inv[bPos].usItem) || ValidLaunchable(pObj->usItem, pSoldier->inv[bPos].usItem) );
 
 		// CHRISL: Adjust parameters to include the new inventory system
 		if (ubSlotLimit == 0 && bPos >= BIGPOCKFINAL )
-			return( CompatibleAmmoForGun(pObj, &pSoldier->inv[bPos]) );
+			return( CompatibleAmmoForGun(pObj, &pSoldier->inv[bPos]) || ValidAttachment(pObj->usItem, pSoldier->inv[bPos].usItem) || ValidLaunchable(pObj->usItem, pSoldier->inv[bPos].usItem) );
 	}
 
 	return( TRUE );

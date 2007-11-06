@@ -4493,6 +4493,7 @@ void DebugSoldierPage4( )
 				case FARPATROL:		swprintf( szOrders, L"FAR PATROL" );			break;
 				case POINTPATROL:	swprintf( szOrders, L"POINT PATROL" );		break;
 				case RNDPTPATROL:	swprintf( szOrders, L"RND PT PATROL" );		break;
+				case SNIPER:		swprintf( szOrders, L"SNIPER" );		break;
 				default:					swprintf( szOrders, L"UNKNOWN" );					break;
 			}
 			switch( pSoldier->aiData.bAttitude )
