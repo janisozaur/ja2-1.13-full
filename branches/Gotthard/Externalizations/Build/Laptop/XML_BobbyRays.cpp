@@ -107,7 +107,6 @@ BobbyRaysCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 BobbyRaysEndElementHandle(void *userData, const XML_Char *name)
 {	
-	char temp;
 	BobbyRaysParseData * pData = (BobbyRaysParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -128,11 +127,12 @@ BobbyRaysEndElementHandle(void *userData, const XML_Char *name)
 			pData->curElement = ELEMENT;
 			if(pData->curIndex < pData->maxArraySize)
 			{
-				for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
+				/*for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
 				{
 					temp = pData->szCharData[i];
 					pDeliveryLocationStrings[pData->curIndex][i] = temp;
-				}
+				}*/
+				pDeliveryLocationStrings[pData->curIndex] = (STR16)pData->szCharData;
 			}
 		}
 		pData->maxReadDepth--;

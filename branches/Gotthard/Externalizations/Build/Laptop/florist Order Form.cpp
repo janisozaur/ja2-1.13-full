@@ -450,7 +450,7 @@ UINT8	gubCurrentlySelectedFlowerLocation;
 CHAR16		gsSentimentTextField[ iFloristOrderFormConstants[FLOWER_ORDER_PERSONEL_SENTIMENT_NUM_CHARS] ] = {0} ; 
 CHAR16		gsNameTextField[ iFloristOrderFormConstants[FLOWER_ORDER_NAME_FIELD_NUM_CHARS] ] = {0};
 *///Commented out until I can figure out how to get a non-const variable to declare the array size.  Gotthard 11/3/07
-
+//These will hopefully be replaced with the lines above when I work everything out.  Gotthard 11/3/07
 CHAR16		gsSentimentTextField[ 79 ] = {0} ; 
 CHAR16		gsNameTextField[ 80 ] = {0};
 

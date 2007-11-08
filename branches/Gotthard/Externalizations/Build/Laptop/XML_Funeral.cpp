@@ -129,12 +129,12 @@ FuneralEndElementHandle(void *userData, const XML_Char *name)
 			pData->curElement = ELEMENT;
 			if(pData->curIndex < pData->maxArraySize)
 			{
-				for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
+				/*for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
 				{
 					//temp = pData->szCharData[i];
-				}
+				}*/
 				sFuneralString[pData->curIndex] = (STR16)pData->szCharData;
-				strcpy((char*)sFuneralString[pData->curIndex], pData->szCharData);
+				//strcpy((char*)sFuneralString[pData->curIndex], pData->szCharData);
 			}
 		}
 		pData->maxReadDepth--;

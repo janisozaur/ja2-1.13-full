@@ -639,6 +639,10 @@
 				RelativePath=".\XML_Funeral.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\XML_FuneralLocations.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

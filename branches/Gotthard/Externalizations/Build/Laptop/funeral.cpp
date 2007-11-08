@@ -10,8 +10,11 @@
 	#include "Text.h"
 	#include "Multi Language Graphic Utils.h"
 #endif
+//Just a note as to what some of the constants will be eventually defined as... Gotthard 11/4/07
+//iScreenWidthOffset = (SCREEN_WIDTH - 640) / 2;
+//iScreenHeightOffset = (SCREEN_HEIGHT - 480) / 2;
 
-/*
+/*0,3,4 are font changes, don't read them and copy over them for now.
 #define		FUNERAL_SENTENCE_FONT							FONT12ARIAL
 #define		FUNERAL_SENTENCE_COLOR						2//FONT_MCOLOR_WHITE
 #define		FUNERAL_SENTENCE_SHADOW_COLOR			FONT_MCOLOR_WHITE//FONT_MCOLOR_DKWHITE
