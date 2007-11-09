@@ -6908,7 +6908,7 @@ void SOLDIERTYPE::TurnSoldier( void )
 				//ReduceAttackBusyCount( );
 
 				//FREEUP GETTING HIT FLAG
-				// thisSoldier->flags.fGettingHit = FALSE;
+				thisSoldier->flags.fGettingHit = FALSE;
 			}
 		}
 
@@ -12419,6 +12419,11 @@ void SOLDIERTYPE::ChangeToFlybackAnimation( UINT8 flyBackDirection )
 	// Remove any previous actions
 	thisSoldier->aiData.ubPendingAction		 = NO_PENDING_ACTION;
 
+	// Since we're manually setting our path, we have to reset these @#$@# flags too.  Otherwise we don't reach the
+	// destination a lot of the time
+	thisSoldier->flags.fPastXDest = 0;
+	thisSoldier->flags.fPastYDest = 0;
+
 	// Set path....
 	thisSoldier->pathing.usPathDataSize = 0;
 	thisSoldier->pathing.usPathIndex    = 0;
@@ -12458,6 +12463,11 @@ void SOLDIERTYPE::ChangeToFallbackAnimation( UINT8 fallBackDirection )
 
 	// Remove any previous actions
 	thisSoldier->aiData.ubPendingAction		 = NO_PENDING_ACTION;
+
+	// Since we're manually setting our path, we have to reset these @#$@# flags too.  Otherwise we don't reach the
+	// destination a lot of the time
+	thisSoldier->flags.fPastXDest = 0;
+	thisSoldier->flags.fPastYDest = 0;
 
 	// Set path....
 	thisSoldier->pathing.usPathDataSize = 0;

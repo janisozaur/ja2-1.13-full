@@ -6087,6 +6087,8 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 		//CHRISL: Include the pockets capacity as UserData 1
 		int cap = ItemSlotLimit( &pSoldier->inv[ubPosition], ubPosition, pSoldier );
 		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 1, cap );
+		//CHRISL: Let's also include the ubID for this merc as UserData so we can find the merc again if needed
+		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 2, pSoldier->ubID);
 		
 		//OK, for each item, set dirty text if applicable!
 		//CHRISL:
@@ -6686,9 +6688,11 @@ void ItemPopupRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
 	UINT32					uiItemPos;
 	UINT32					iItemCap;
+	UINT32					ubID;
 
 	uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
 	iItemCap = MSYS_GetRegionUserData( pRegion, 1 );
+	ubID = MSYS_GetRegionUserData( pRegion, 2 );
 
 	// TO ALLOW ME TO DELETE REGIONS IN CALLBACKS!
 	if ( gfItemPopupRegionCallbackEndFix )
@@ -6698,6 +6702,29 @@ void ItemPopupRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
+		//If something in our hand, see if it's ammo and if we are trying to reload a gun
+		if ( gpItemPointer != NULL )
+		{
+			//CHRISL: Since we can now stack guns, let's make it so we can reload guns in a stack
+			if(CompatibleAmmoForGun(gpItemPointer, gpItemPopupObject) || ValidLaunchable(gpItemPointer->usItem, gpItemPopupObject->usItem))
+			{
+				switch (Item[gpItemPopupObject->usItem].usItemClass)
+				{
+					case IC_GUN:
+						if (Item[gpItemPointer->usItem].usItemClass == IC_AMMO) {
+							if (Weapon[gpItemPopupObject->usItem].ubCalibre == Magazine[Item[gpItemPointer->usItem].ubClassIndex].ubCalibre) {
+								ReloadGun( MercPtrs[ubID], gpItemPopupObject, gpItemPointer, uiItemPos );
+							}
+						}
+						break;
+					case IC_LAUNCHER:
+						if ( ValidLaunchable( gpItemPointer->usItem, gpItemPopupObject->usItem ) ) {
+							ReloadGun( MercPtrs[ubID], gpItemPopupObject, gpItemPointer, uiItemPos );
+						}
+						break;
+				}
+			}
+		}
 		//If one in our hand, place it
 		if ( gpItemPointer != NULL )
 		{

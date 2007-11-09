@@ -580,7 +580,7 @@ UINT32	MainGameScreenHandle(void)
 		// Check timer that could have been set to do anything
 		CheckCustomizableTimer();
 
-		// HAndle physics engine
+		// Handle physics engine
 		SimulateWorld( );
 
 		// Handle strategic engine

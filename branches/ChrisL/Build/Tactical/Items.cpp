@@ -2792,7 +2792,7 @@ BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetO
 #define RELOAD_TOPOFF 3
 #define RELOAD_AUTOPLACE_OLD 4
 
-BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo )
+BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo, UINT32 subObject )
 {
 	UINT8			ubBulletsToMove;
 	INT8			bAPs;
@@ -2818,19 +2818,19 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	if ( Item[ pGun->usItem ].usItemClass == IC_LAUNCHER || Item[pGun->usItem].cannon )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ReloadGun: Loading launcher - new ammo type = %d, weight = %d", pAmmo->usItem, CalculateObjectWeight(pAmmo) ) );
-		(*pGun)[0]->data.gun.usGunAmmoItem = pAmmo->usItem;
+		(*pGun)[subObject]->data.gun.usGunAmmoItem = pAmmo->usItem;
 		if ( pGun->AttachObject( pSoldier, pAmmo ) == FALSE )
 		{
-			(*pGun)[0]->data.gun.usGunAmmoItem = NONE;
+			(*pGun)[subObject]->data.gun.usGunAmmoItem = NONE;
 			// abort
 			return( FALSE );
 		}
 	}
 	else
 	{
-		fEmptyGun = ((*pGun)[0]->data.gun.ubGunShotsLeft == 0);
+		fEmptyGun = ((*pGun)[subObject]->data.gun.ubGunShotsLeft == 0);
 		fReloadingWithStack = (pAmmo->ubNumberOfObjects > 1);
-		fSameAmmoType = ( (*pGun)[0]->data.gun.ubGunAmmoType == Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType );
+		fSameAmmoType = ( (*pGun)[subObject]->data.gun.ubGunAmmoType == Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType );
 		fSameMagazineSize = ( Magazine[ Item[ pAmmo->usItem ].ubClassIndex ].ubMagSize == GetMagSize( pGun));
 
 		if (fEmptyGun)
@@ -2840,7 +2840,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		else
 		{
 			// record old ammo
-			CreateAmmo((*pGun)[0]->data.gun.usGunAmmoItem, &gTempObject, (*pGun)[0]->data.gun.ubGunShotsLeft);
+			CreateAmmo((*pGun)[subObject]->data.gun.usGunAmmoItem, &gTempObject, (*pGun)[subObject]->data.gun.ubGunShotsLeft);
 
 			if (fSameMagazineSize)
 			{
@@ -2887,11 +2887,11 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 
 			if (bReloadType == RELOAD_TOPOFF)
 			{
-				ubBulletsToMove = __min( (*pAmmo)[0]->data.ubShotsLeft, GetMagSize(pGun) - (*pGun)[0]->data.gun.ubGunShotsLeft );
+				ubBulletsToMove = __min( (*pAmmo)[subObject]->data.ubShotsLeft, GetMagSize(pGun) - (*pGun)[subObject]->data.gun.ubGunShotsLeft );
 			}
 			else
 			{
-				ubBulletsToMove = (*pAmmo)[0]->data.ubShotsLeft;
+				ubBulletsToMove = (*pAmmo)[subObject]->data.ubShotsLeft;
 			}
 
 		}
@@ -2902,11 +2902,11 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 			usNewAmmoItem = FindReplacementMagazine(Weapon[pGun->usItem].ubCalibre ,GetMagSize(pGun),Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType);
 			if (bReloadType == RELOAD_TOPOFF)
 			{
-				ubBulletsToMove = __min( (*pAmmo)[0]->data.ubShotsLeft, GetMagSize(pGun) - (*pGun)[0]->data.gun.ubGunShotsLeft );
+				ubBulletsToMove = __min( (*pAmmo)[subObject]->data.ubShotsLeft, GetMagSize(pGun) - (*pGun)[subObject]->data.gun.ubGunShotsLeft );
 			}
 			else
 			{
-				ubBulletsToMove = __min( (*pAmmo)[0]->data.ubShotsLeft, GetMagSize(pGun) );
+				ubBulletsToMove = __min( (*pAmmo)[subObject]->data.ubShotsLeft, GetMagSize(pGun) );
 			}
 		}
 		else // mag is smaller than weapon mag
@@ -2916,11 +2916,11 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 			usNewAmmoItem = FindReplacementMagazine(Weapon[pGun->usItem].ubCalibre ,GetMagSize(pGun),Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType);
 			if (bReloadType == RELOAD_TOPOFF)
 			{
-				ubBulletsToMove = __min( (*pAmmo)[0]->data.ubShotsLeft, GetMagSize(pGun) - (*pGun)[0]->data.gun.ubGunShotsLeft );
+				ubBulletsToMove = __min( (*pAmmo)[subObject]->data.ubShotsLeft, GetMagSize(pGun) - (*pGun)[subObject]->data.gun.ubGunShotsLeft );
 			}
 			else
 			{
-				ubBulletsToMove = __min( (*pAmmo)[0]->data.ubShotsLeft, GetMagSize(pGun));
+				ubBulletsToMove = __min( (*pAmmo)[subObject]->data.ubShotsLeft, GetMagSize(pGun));
 			}
 		}
 
@@ -2929,15 +2929,15 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		{
 
 			case RELOAD_PLACE:
-				(*pGun)[0]->data.gun.ubGunShotsLeft = ubBulletsToMove;
-				(*pGun)[0]->data.gun.ubGunAmmoType = Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType;
-				(*pGun)[0]->data.gun.usGunAmmoItem = usNewAmmoItem;
+				(*pGun)[subObject]->data.gun.ubGunShotsLeft = ubBulletsToMove;
+				(*pGun)[subObject]->data.gun.ubGunAmmoType = Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType;
+				(*pGun)[subObject]->data.gun.usGunAmmoItem = usNewAmmoItem;
 				break;
 
 			case RELOAD_SWAP:
-				(*pGun)[0]->data.gun.ubGunShotsLeft = ubBulletsToMove;
-				(*pGun)[0]->data.gun.ubGunAmmoType = Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType;
-				(*pGun)[0]->data.gun.usGunAmmoItem = usNewAmmoItem;
+				(*pGun)[subObject]->data.gun.ubGunShotsLeft = ubBulletsToMove;
+				(*pGun)[subObject]->data.gun.ubGunAmmoType = Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType;
+				(*pGun)[subObject]->data.gun.usGunAmmoItem = usNewAmmoItem;
 				if (fReloadingWithStack)
 				{
 					// add to end of stack
@@ -2975,15 +2975,15 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 					return( FALSE );
 				}
 				// place first ammo in gun
-				(*pGun)[0]->data.gun.ubGunShotsLeft = ubBulletsToMove;
-				(*pGun)[0]->data.gun.ubGunAmmoType = Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType;
-				(*pGun)[0]->data.gun.usGunAmmoItem = usNewAmmoItem;
+				(*pGun)[subObject]->data.gun.ubGunShotsLeft = ubBulletsToMove;
+				(*pGun)[subObject]->data.gun.ubGunAmmoType = Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType;
+				(*pGun)[subObject]->data.gun.usGunAmmoItem = usNewAmmoItem;
 
 				break;
 
 			case RELOAD_TOPOFF:
 				// ADD that many bullets to gun
-				(*pGun)[0]->data.gun.ubGunShotsLeft += ubBulletsToMove;
+				(*pGun)[subObject]->data.gun.ubGunShotsLeft += ubBulletsToMove;
 				break;
 
 		}
@@ -2992,8 +2992,8 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		{
 			// remove # of bullets, delete 1 object if necessary
 
-			(*pAmmo)[0]->data.ubShotsLeft -= ubBulletsToMove;
-			if ((*pAmmo)[0]->data.ubShotsLeft == 0)
+			(*pAmmo)[subObject]->data.ubShotsLeft -= ubBulletsToMove;
+			if ((*pAmmo)[subObject]->data.ubShotsLeft == 0)
 			{
 				pAmmo->RemoveObjectsFromStack(1);
 			}
@@ -3024,13 +3024,13 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	//ADB ubWeight has been removed, see comments in OBJECTTYPE
 	//pGun->ubWeight = CalculateObjectWeight( pGun );
 
-	if ( (*pGun)[0]->data.gun.bGunAmmoStatus >= 0 )
+	if ( (*pGun)[subObject]->data.gun.bGunAmmoStatus >= 0 )
 	{
 		// make sure gun ammo status is 100, if gun isn't jammed
-		(*pGun)[0]->data.gun.bGunAmmoStatus = 100;
+		(*pGun)[subObject]->data.gun.bGunAmmoStatus = 100;
 	}
 
-	(*pGun)[0]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER; // Madd: reloading should automatically put cartridge in chamber
+	(*pGun)[subObject]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER; // Madd: reloading should automatically put cartridge in chamber
 
 	return( TRUE );
 }
@@ -3457,8 +3457,8 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 		if (Item[pAttachment->usItem].grenadelauncher )
 		{
 			// transfer any attachments from the grenade launcher to the gun
-			(*this)[subObject]->attachments.splice((*this)[subObject]->attachments.begin(), (*pAttachment)[subObject]->attachments,
-				(*pAttachment)[subObject]->attachments.begin(), (*pAttachment)[subObject]->attachments.end());
+			(*this)[subObject]->attachments.splice((*this)[subObject]->attachments.begin(), (*pAttachment)[0]->attachments,
+				(*pAttachment)[0]->attachments.begin(), (*pAttachment)[0]->attachments.end());
 		}
 
 		if (pAttachmentPosition) {
@@ -3600,23 +3600,24 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 					ubLimit = 100;
 				}
 
+				// CHRISL: compare ubShotsLeft instead of objectStatus when trying to merge ammo
 				// count down through # of attaching items and add to status of item in position 0
 				for (bLoop = 0; bLoop < pAttachment->ubNumberOfObjects; ++bLoop)
 				{
-					if ((*this)[0]->data.objectStatus + (*pAttachment)[0]->data.objectStatus <= ubLimit)
+					if ((*this)[subObject]->data.ubShotsLeft + (*pAttachment)[0]->data.ubShotsLeft <= ubLimit)
 					{
 						// consume this one totally and continue
-						(*this)[0]->data.objectStatus += (*pAttachment)[0]->data.objectStatus;
+						(*this)[subObject]->data.ubShotsLeft += (*pAttachment)[0]->data.ubShotsLeft;
 						pAttachment->RemoveObjectsFromStack(1);
 					}
 					else
 					{
 						// add part of this one and then we're done
-						(*pAttachment)[0]->data.objectStatus -= (ubLimit - (*this)[0]->data.objectStatus);
-						if ((*pAttachment)[0]->data.objectStatus == 0) {
+						(*pAttachment)[0]->data.ubShotsLeft -= (ubLimit - (*this)[subObject]->data.ubShotsLeft);
+						if ((*pAttachment)[0]->data.ubShotsLeft == 0) {
 							pAttachment->RemoveObjectsFromStack(1);
 						}
-						(*this)[0]->data.objectStatus = ubLimit;
+						(*this)[subObject]->data.ubShotsLeft = ubLimit;
 						break;
 					}
 				}
@@ -3670,9 +3671,9 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 				//Madd: usResult2 only works for standard merges->item1 + item2 = item3 + item4
 
 				//Madd: unload guns after merge if ammo caliber or mag size don't match
-				if ( Item[this->usItem].usItemClass == IC_GUN && (*this)[0]->data.gun.usGunAmmoItem != NONE && (*this)[0]->data.gun.ubGunShotsLeft > 0 )
+				if ( Item[this->usItem].usItemClass == IC_GUN && (*this)[subObject]->data.gun.usGunAmmoItem != NONE && (*this)[subObject]->data.gun.ubGunShotsLeft > 0 )
 				{
-					if ( Item[usResult].usItemClass != IC_GUN || Weapon[Item[usResult].ubClassIndex].ubCalibre != Weapon[Item[this->usItem].ubClassIndex].ubCalibre || (*this)[0]->data.gun.ubGunShotsLeft > Weapon[Item[usResult].ubClassIndex].ubMagSize )
+					if ( Item[usResult].usItemClass != IC_GUN || Weapon[Item[usResult].ubClassIndex].ubCalibre != Weapon[Item[this->usItem].ubClassIndex].ubCalibre || (*this)[subObject]->data.gun.ubGunShotsLeft > Weapon[Item[usResult].ubClassIndex].ubMagSize )
 					{ // item types/calibers/magazines don't match, spit out old ammo
 						EjectAmmoAndPlace(pSoldier, this);
 					}
@@ -3683,7 +3684,7 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 				this->usItem = usResult;
 				if ( ubType != TREAT_ARMOUR )
 				{
-					(*this)[0]->data.objectStatus = ((*this)[0]->data.objectStatus + (*pAttachment)[0]->data.objectStatus) / 2;
+					(*this)[subObject]->data.objectStatus = ((*this)[subObject]->data.objectStatus + (*pAttachment)[0]->data.objectStatus) / 2;
 				}
 
 				//ADB ubWeight has been removed, see comments in OBJECTTYPE
@@ -3707,7 +3708,7 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 					pAttachment->usItem = usResult2;
 					if ( ubType != TREAT_ARMOUR )
 					{
-						(*pAttachment)[0]->data.objectStatus = ((*pAttachment)[0]->data.objectStatus + (*this)[0]->data.objectStatus) / 2;
+						(*pAttachment)[0]->data.objectStatus = ((*pAttachment)[0]->data.objectStatus + (*this)[subObject]->data.objectStatus) / 2;
 					}
 					//ADB ubWeight has been removed, see comments in OBJECTTYPE
 					//pAttachment->ubWeight = CalculateObjectWeight( pAttachment );
