@@ -5035,7 +5035,7 @@ void CheckForPickedOwnership( void )
 		{
 			if ( gWorldItems[ pItemPool->iItemIndex ].object[0]->data.owner.ubOwnerProfile != NO_PROFILE )
 			{
-				ubProfile = gWorldItems[ pItemPool->iItemIndex ].object[0]->data.owner.ubOwnerProfile;
+				ubProfile = (UINT8) gWorldItems[ pItemPool->iItemIndex ].object[0]->data.owner.ubOwnerProfile;
 				pSoldier = FindSoldierByProfileID( ubProfile, FALSE );
 				if ( pSoldier )
 				{

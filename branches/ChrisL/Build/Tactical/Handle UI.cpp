@@ -229,8 +229,8 @@ INT16		gsTreeRevealYPos;
 // taken out of header to remove multiple symbol definitions (jonathanl)
 BOOLEAN		gfUICtHBar;
 UINT8		gbCtH;
-UINT8		gsTotalBulletCount;
-UINT8		gsBulletCount;
+UINT16		gsTotalBulletCount;
+UINT16		gsBulletCount;
 BOOLEAN		gTintBulletCounts;
 BOOLEAN		gfUIAutofireBulletCount;
 BOOLEAN		gfUIBodyHitLocation;

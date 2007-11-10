@@ -308,7 +308,7 @@ UINT8 GetMinHealingSkillNeeded( SOLDIERTYPE *pPatient );
 UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundredthsHealed );
 
 // can item be repaired?
-BOOLEAN IsItemRepairable( UINT16 usItem, INT8 bStatus );
+BOOLEAN IsItemRepairable( UINT16 usItem, INT16 bStatus );
 
 // does another merc have a repairable item on them?
 OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPassType );
@@ -3009,7 +3009,7 @@ OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPa
 
 
 
-void DoActualRepair( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 * pbStatus, UINT8 * pubRepairPtsLeft )
+void DoActualRepair( SOLDIERTYPE * pSoldier, UINT16 usItem, INT16 * pbStatus, UINT8 * pubRepairPtsLeft )
 {
 	INT16		sRepairCostAdj;
 	UINT16	usDamagePts, usPtsFixed;
@@ -3277,7 +3277,7 @@ void HandleRepairBySoldier( SOLDIERTYPE *pSoldier )
 
 
 
-BOOLEAN IsItemRepairable( UINT16 usItem, INT8 bStatus )
+BOOLEAN IsItemRepairable( UINT16 usItem, INT16 bStatus )
 {
 	// check to see if item can/needs to be repaired
 //	if ( ( bStatus < 100) && ( Item[ usItem ].fFlags & ITEM_REPAIRABLE ) )

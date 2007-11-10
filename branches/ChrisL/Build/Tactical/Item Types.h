@@ -345,21 +345,21 @@ public:
 namespace ObjectDataStructs {
 	struct OBJECT_GUN
 	{
-		INT8		bGunStatus;		// status % of gun
+		INT16		bGunStatus;		// status % of gun
 		UINT8		ubGunAmmoType;	// ammo type, as per weapons.h
-		UINT8		ubGunShotsLeft;	// duh, amount of ammo left
+		UINT16		ubGunShotsLeft;	// duh, amount of ammo left
 		UINT16		usGunAmmoItem;	// the item # for the item table
-		INT8		bGunAmmoStatus; // only for "attached ammo" - grenades, mortar shells
+		INT16		bGunAmmoStatus; // only for "attached ammo" - grenades, mortar shells
 		UINT8		ubGunState;		// SB manual recharge
 	};
 	struct OBJECT_MONEY
 	{
-		INT8		bMoneyStatus;
+		INT16		bMoneyStatus;
 		UINT32		uiMoneyAmount;
 	};
 	struct OBJECT_BOMBS_AND_OTHER
 	{ // this is used by placed bombs, switches, and the action item
-		INT8		bBombStatus;		// % status
+		INT16		bBombStatus;		// % status
 		INT8		bDetonatorType;		// timed, remote, or pressure-activated
 		UINT16		usBombItem;			// the usItem of the bomb.
 		union
@@ -377,17 +377,17 @@ namespace ObjectDataStructs {
 	};
 	struct OBJECT_KEY
 	{
-		INT8 bKeyStatus[ 6 ];
+		INT16 bKeyStatus;
 		UINT8 ubKeyID;
 	};
 	struct OBJECT_OWNER
 	{
-		UINT8 ubOwnerProfile;
+		UINT16 ubOwnerProfile;
 		UINT8 ubOwnerCivGroup;
 	};
 	struct OBJECT_LBE
 	{
-		INT8	bLBEStatus;
+		INT16	bLBEStatus;
 		INT8	bLBE;				// Marks item as LBENODE
 		int		uniqueID;			// how the LBENODE is accessed
 	};
@@ -413,8 +413,8 @@ public:
 
 
 	union {
-		INT8										objectStatus;//holds the same value as bStatus[0]
-		UINT8										ubShotsLeft;//holds the same value as ubShotsLeft[0]
+		INT16										objectStatus;//holds the same value as bStatus[0]
+		UINT16										ubShotsLeft;//holds the same value as ubShotsLeft[0]
 		ObjectDataStructs::OBJECT_GUN				gun;
 		ObjectDataStructs::OBJECT_MONEY				money;
 		ObjectDataStructs::OBJECT_BOMBS_AND_OTHER	misc;

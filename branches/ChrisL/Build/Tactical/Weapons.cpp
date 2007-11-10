@@ -3009,7 +3009,7 @@ void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 s
 }
 
 
-void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT8 ubAttackerID, UINT16 sXPos, INT16 sYPos, INT16 sZPos, UINT16 usStructureID, INT32 iImpact, BOOLEAN fStopped )
+void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT16 bWeaponStatus, UINT8 ubAttackerID, UINT16 sXPos, INT16 sYPos, INT16 sZPos, UINT16 usStructureID, INT32 iImpact, BOOLEAN fStopped )
 {
 	BOOLEAN						fDoMissForGun = FALSE;
 	ANITILE						*pNode;
@@ -4171,7 +4171,7 @@ INT32 CalcBodyImpactReduction( UINT8 ubAmmoType, UINT8 ubHitLocation )
 	return( iReduction );
 }
 
-INT32 ArmourProtection( SOLDIERTYPE * pTarget, UINT16 ubArmourType, INT8 * pbStatus, INT32 iImpact, UINT8 ubAmmoType, BOOLEAN *plateHit )
+INT32 ArmourProtection( SOLDIERTYPE * pTarget, UINT16 ubArmourType, INT16 * pbStatus, INT32 iImpact, UINT8 ubAmmoType, BOOLEAN *plateHit )
 {
 	INT32		iProtection, iAppliedProtection, iFailure, iCoverage;
 
@@ -4273,10 +4273,10 @@ INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 u
 
 	if (pTarget->flags.uiStatusFlags & SOLDIER_VEHICLE)
 	{
-		INT8 bDummyStatus = 100;
+		INT16 bDummyStatus = 100;
 		BOOLEAN dummyCoverage = true;
 
-		//bDummyStatus = (INT8) pVehicleList[ pTarget->bVehicleID ].sExternalArmorLocationsStatus[ ubHitLocation ];
+		//bDummyStatus = pVehicleList[ pTarget->bVehicleID ].sExternalArmorLocationsStatus[ ubHitLocation ];
 
 		iTotalProtection += ArmourProtection( pTarget, (UINT8) pVehicleList[ pTarget->bVehicleID ].sArmourType, &bDummyStatus, iImpact, ubAmmoType, &dummyCoverage );
 

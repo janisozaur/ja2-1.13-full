@@ -262,7 +262,7 @@ public:
 
 	//data from OLD_SPECIAL_ITEM_INFO_101
 	//UINT8		ubImprintID;				// imprint ID for imprinted items (during repair!)
-	INT8		bItemCondition;				// if 0, no item is stored
+	INT16		bItemCondition;				// if 0, no item is stored
 											// from 1 to 100 indicates an item with that status
 											// -1 to -100 means the item is in for repairs, flip sign for the actual status
 
@@ -339,10 +339,10 @@ void		GiveItemToArmsDealerforRepair( UINT8 ubArmsDealer, OBJECTTYPE* pObject, UI
 UINT32	WhenWillRepairmanBeAllDoneRepairing( UINT8 ubArmsDealer );
 
 UINT32 CalculateObjectItemRepairTime( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject );
-UINT32 CalculateSimpleItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 bItemCondition );
+UINT32 CalculateSimpleItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, INT16 bItemCondition );
 
 UINT32 CalculateObjectItemRepairCost( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject );
-UINT32 CalculateSimpleItemRepairCost( UINT8 ubArmsDealer, UINT16	usItemIndex, INT8 bItemCondition );
+UINT32 CalculateSimpleItemRepairCost( UINT8 ubArmsDealer, UINT16	usItemIndex, INT16 bItemCondition );
 
 
 UINT16	CalcValueOfItemToDealer( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerSelling );

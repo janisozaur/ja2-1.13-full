@@ -173,7 +173,7 @@ typedef struct
 	INT16		sYPos;
 	INT16		sZPos;
 	UINT16	usWeaponIndex;
-	INT8		bWeaponStatus;
+	INT16		bWeaponStatus;
 	UINT8		ubAttackerID;
 	UINT16	usStructureID;
 	INT32		iImpact;

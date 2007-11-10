@@ -1236,7 +1236,7 @@ int BobbyRayItemQsortCompare(const void *pArg1, const void *pArg2)
 }
 
 
-int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT8 ubItem1Quality, UINT8 ubItem2Quality )
+int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT16 ubItem1Quality, UINT16 ubItem2Quality )
 {
 	UINT8		ubItem1Category;
 	UINT8		ubItem2Category;

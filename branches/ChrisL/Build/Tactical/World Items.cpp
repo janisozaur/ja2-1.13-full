@@ -626,7 +626,7 @@ void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere( void )
 			if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].object.usItem == OWNERSHIP )
 			{
 				// if owner is a terrorist
-				if ( IsProfileATerrorist( gWorldItems[ uiLoop ].object[0]->data.owner.ubOwnerProfile ) )
+				if ( IsProfileATerrorist( (UINT8) gWorldItems[ uiLoop ].object[0]->data.owner.ubOwnerProfile ) )
 				{
 					// and they were not set in the current sector
 					if ( gMercProfiles[ gWorldItems[ uiLoop ].object[0]->data.owner.ubOwnerProfile ].sSectorX != gWorldSectorX ||

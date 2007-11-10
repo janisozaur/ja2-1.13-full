@@ -2476,7 +2476,7 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 	return(iSize);
 }
 
-UINT16 CalculateAmmoWeight( UINT16 usGunAmmoItem, UINT8 ubShotsLeft )
+UINT16 CalculateAmmoWeight( UINT16 usGunAmmoItem, UINT16 ubShotsLeft )
 {
 	if( 0 == usGunAmmoItem ) /* Sergeant_Kolja: 2007-06-11, Fix for Creature Spit. This has no Ammo, so the old code calculated accidentally -1.6 resulting in 0xFFFF */
 	{
@@ -2794,7 +2794,7 @@ BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetO
 
 BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo, UINT32 subObject )
 {
-	UINT8			ubBulletsToMove;
+	UINT16			ubBulletsToMove;
 	INT8			bAPs;
 	UINT16			usReloadSound;
 	BOOLEAN			fSameAmmoType;
@@ -5118,7 +5118,7 @@ UINT16 RandomMagazine( OBJECTTYPE * pGun, UINT8 ubPercentStandard )
 	}
 }
 
-BOOLEAN CreateGun( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
+BOOLEAN CreateGun( UINT16 usItem, INT16 bStatus, OBJECTTYPE * pObj )
 {
 	UINT16 usAmmo;
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateGun: usItem = %d",usItem));
@@ -5207,7 +5207,7 @@ BOOLEAN CreateAmmo( UINT16 usItem, OBJECTTYPE * pObj, INT16 ubShotsLeft )
 	return( TRUE );
 }
 
-BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
+BOOLEAN CreateItem( UINT16 usItem, INT16 bStatus, OBJECTTYPE * pObj )
 {
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateItem: usItem = %d",usItem));
 	BOOLEAN fRet;
@@ -5461,7 +5461,7 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 	INT8				bLoop;
 	SOLDIERTYPE *pSoldier;
 	UINT16			usItem;
-	INT8				bStatus;
+	INT16				bStatus;
 	BOOLEAN			fReturnVal = FALSE;
 
 	usItem	= pObject->usItem;
@@ -5665,7 +5665,7 @@ INT8 CheckItemForDamage( UINT16 usItem, INT32 iMaxDamage )
 	return( bDamage );
 }
 
-BOOLEAN CheckForChainReaction( UINT16 usItem, INT8 bStatus, INT8 bDamage, BOOLEAN fOnGround )
+BOOLEAN CheckForChainReaction( UINT16 usItem, INT16 bStatus, INT16 bDamage, BOOLEAN fOnGround )
 {
 	INT32 iChance;
 
@@ -5694,7 +5694,7 @@ BOOLEAN CheckForChainReaction( UINT16 usItem, INT8 bStatus, INT8 bDamage, BOOLEA
 BOOLEAN DamageItem( OBJECTTYPE * pObject, INT32 iDamage, BOOLEAN fOnGround )
 {
 	INT8		bLoop;
-	INT8		bDamage;
+	INT16		bDamage;
 
 	if ( (Item[pObject->usItem].damageable  || Item[ pObject->usItem ].usItemClass == IC_AMMO) && pObject->exists() == true)
 	{
@@ -6394,7 +6394,7 @@ void DumpItemsList( void )
 const INT8 STANDARD_STATUS_CUTOFF = 85;
 
 // Scale bonus with item status
-INT16 BonusReduce( INT16 bonus, INT8 status, INT8 statusCutoff = STANDARD_STATUS_CUTOFF )
+INT16 BonusReduce( INT16 bonus, INT16 status, INT8 statusCutoff = STANDARD_STATUS_CUTOFF )
 {
 	if ( bonus > 0 && status < statusCutoff && statusCutoff > 0 && statusCutoff <= 100 )
 		return ( ( status * 100 ) / statusCutoff * bonus ) / 100;
@@ -6403,7 +6403,7 @@ INT16 BonusReduce( INT16 bonus, INT8 status, INT8 statusCutoff = STANDARD_STATUS
 }
 
 // Scale bonus with item status. Status < 50% creates a penalty!
-INT16 BonusReduceMore( INT16 bonus, INT8 status, INT8 statusCutoff = 100 )
+INT16 BonusReduceMore( INT16 bonus, INT16 status, INT8 statusCutoff = 100 )
 {
 	if ( bonus > 0 && status < statusCutoff && statusCutoff > 0 && statusCutoff <= 100 )
 		return ( ( ( status * 100 ) / statusCutoff - 50 ) * bonus ) / 50;
@@ -6412,7 +6412,7 @@ INT16 BonusReduceMore( INT16 bonus, INT8 status, INT8 statusCutoff = 100 )
 }
 
 // Some items either work or they don't...
-INT16 BonusOnOff( INT16 bonus, INT8 status )
+INT16 BonusOnOff( INT16 bonus, INT16 status )
 {
 	if ( bonus > 0 )
 		return (status >= 50) ? bonus : 0;
@@ -7389,7 +7389,7 @@ OBJECTTYPE* FindAttachment_GrenadeLauncher( OBJECTTYPE * pObj )
 	}
 	return( 0 );
 }
-INT8 GetGrenadeLauncherStatus( OBJECTTYPE * pObj )
+INT16 GetGrenadeLauncherStatus( OBJECTTYPE * pObj )
 {
 	if (pObj->exists() == true) {
 		if (Item[pObj->usItem].grenadelauncher  )

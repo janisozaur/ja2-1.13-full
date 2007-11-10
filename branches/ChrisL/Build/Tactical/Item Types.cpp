@@ -971,7 +971,14 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 		//and now the big change, the union
 		//copy the old data, making sure not to write over, since the old size is actually 9 bytes
 		if (ubNumberOfObjects == 1) {
-			memcpy(&((*this)[0]->data.gun), &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,sizeof(ObjectData)));
+			//CHRISL: Instead of a memcpy, copy values individually so we can account for the larger union size
+			//memcpy(&((*this)[0]->data.gun), &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,sizeof(ObjectData)));
+			(*this)[0]->data.gun.bGunStatus = src.ugYucky.bGunStatus;
+			(*this)[0]->data.gun.ubGunAmmoType = src.ugYucky.ubGunAmmoType;
+			(*this)[0]->data.gun.ubGunShotsLeft = src.ugYucky.ubGunShotsLeft;
+			(*this)[0]->data.gun.usGunAmmoItem = src.ugYucky.usGunAmmoItem;
+			(*this)[0]->data.gun.bGunAmmoStatus = src.ugYucky.bGunAmmoStatus;
+			(*this)[0]->data.gun.ubGunState = src.ugYucky.ubGunState;
 
 			(*this)[0]->data.bTrap = src.bTrap;		// 1-10 exp_lvl to detect
 			(*this)[0]->data.ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on

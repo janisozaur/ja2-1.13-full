@@ -41,7 +41,7 @@ void SwapObjs(SOLDIERTYPE* pSoldier, int slot, OBJECTTYPE* pObject, BOOLEAN fPer
 //Returns true if swapped, false if added to end of stack
 extern BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex, UINT32 ubCap );
 
-UINT16 CalculateAmmoWeight( UINT16 usGunAmmoItem, UINT8 ubShotsLeft );
+UINT16 CalculateAmmoWeight( UINT16 usGunAmmoItem, UINT16 ubShotsLeft );
 UINT16	CalculateObjectWeight( OBJECTTYPE *pObject );
 UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier );
 // CHRISL:
@@ -52,7 +52,7 @@ extern UINT16 TotalPoints( OBJECTTYPE * pObj );
 extern UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier );
 
 extern BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo, UINT32 subObject = 0 );
-BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj );
+BOOLEAN CreateItem( UINT16 usItem, INT16 bStatus, OBJECTTYPE * pObj );
 BOOLEAN CreateAmmo( UINT16 usItem, OBJECTTYPE * pObj, INT16 ubShotsLeft = -1);
 BOOLEAN CreateItems( UINT16 usItem, INT8 bStatus, UINT8 ubNumber, OBJECTTYPE * pObj );
 BOOLEAN CreateMoney( UINT32 uiMoney, OBJECTTYPE * pObj );
@@ -174,7 +174,7 @@ BOOLEAN ApplyCammo( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAP
 UINT32 ConvertProfileMoneyValueToObjectTypeMoneyValue( UINT8 ubStatus );
 UINT8 ConvertObjectTypeMoneyValueToProfileMoneyValue( UINT32 uiMoneyAmount );
 
-BOOLEAN CheckForChainReaction( UINT16 usItem, INT8 bStatus, INT8 bDamage, BOOLEAN fOnGround );
+BOOLEAN CheckForChainReaction( UINT16 usItem, INT16 bStatus, INT16 bDamage, BOOLEAN fOnGround );
 
 BOOLEAN ItemIsLegal( UINT16 usItemIndex );
 BOOLEAN ExtendedGunListGun( UINT16 usGun );
@@ -251,7 +251,7 @@ INT8 FindHearingAid( SOLDIERTYPE * pSoldier );
 INT16 GetHearingRangeBonus( SOLDIERTYPE * pSoldier );
 
 INT8 IsGrenadeLauncher( OBJECTTYPE * pObj );
-INT8 GetGrenadeLauncherStatus( OBJECTTYPE * pObj );
+INT16 GetGrenadeLauncherStatus( OBJECTTYPE * pObj );
 BOOLEAN IsGrenadeLauncherAttached( OBJECTTYPE * pObj );
 OBJECTTYPE* FindAttachment_GrenadeLauncher( OBJECTTYPE * pObj );
 UINT16 GetAttachedGrenadeLauncher( OBJECTTYPE * pObj );

@@ -1659,7 +1659,7 @@ void CreateObjectForDealer( int usItem, int status, int numObjects, OBJECTTYPE *
 
 void MakeObjectOutOfDealerItems( DEALER_SPECIAL_ITEM *pSpclItemInfo, OBJECTTYPE *pObject )
 {
-	INT8 bItemCondition;
+	INT16 bItemCondition;
 	if (pSpclItemInfo != NULL) {
 		bItemCondition = pSpclItemInfo->bItemCondition;
 		//we might be just calling this to setup the object the dealer has
@@ -1822,7 +1822,7 @@ UINT32 CalculateObjectItemRepairTime( UINT8 ubArmsDealer, OBJECTTYPE *pItemObjec
 }
 
 
-UINT32 CalculateSimpleItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 bItemCondition )
+UINT32 CalculateSimpleItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, INT16 bItemCondition )
 {
 	UINT32	uiTimeToRepair = 0;
 	UINT32	uiRepairCost = 0;
@@ -1879,7 +1879,7 @@ UINT32 CalculateObjectItemRepairCost( UINT8 ubArmsDealer, OBJECTTYPE *pItemObjec
 }
 
 
-UINT32 CalculateSimpleItemRepairCost( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 bItemCondition )
+UINT32 CalculateSimpleItemRepairCost( UINT8 ubArmsDealer, UINT16 usItemIndex, INT16 bItemCondition )
 {
 	UINT32	uiItemCost = 0;
 	UINT32	uiRepairCost = 0;

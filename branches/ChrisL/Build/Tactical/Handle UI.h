@@ -214,8 +214,8 @@ extern INT16		gsUITargetShotGridNo;
 extern CHAR16		gzLocation[ 20 ];
 extern BOOLEAN		gfUIBodyHitLocation;
 
-extern UINT8		gsBulletCount;
-extern UINT8		gsTotalBulletCount;
+extern UINT16		gsBulletCount;
+extern UINT16		gsTotalBulletCount;
 extern BOOLEAN		gTintBulletCounts;
 extern BOOLEAN		gfUIAutofireBulletCount;
 

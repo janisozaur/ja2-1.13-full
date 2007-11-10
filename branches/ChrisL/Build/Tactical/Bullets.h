@@ -59,7 +59,7 @@ typedef struct
 	UINT16	usFlags;
 	ANITILE			*pAniTile;
 	ANITILE			*pShadowAniTile;
-	UINT8		ubItemStatus;
+	UINT16		ubItemStatus;
 	UINT16	fromItem;
 	INT32 flash;
 } BULLET;

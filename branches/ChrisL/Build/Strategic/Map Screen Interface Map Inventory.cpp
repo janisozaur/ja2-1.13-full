@@ -2140,8 +2140,8 @@ INT32 MapScreenSectorInventoryCompare( const void *pNum1, const void *pNum2)
 	WORLDITEM *pSecond = (WORLDITEM *)pNum2;
 	UINT16	usItem1Index;
 	UINT16	usItem2Index;
-	UINT8		ubItem1Quality;
-	UINT8		ubItem2Quality;
+	UINT16		ubItem1Quality;
+	UINT16		ubItem2Quality;
 
 	usItem1Index = pFirst->object.usItem;
 	usItem2Index = pSecond->object.usItem;
