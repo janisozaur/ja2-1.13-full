@@ -16,6 +16,7 @@
 		<ubWeight>0</ubWeight>
 		<ubPerPocket>0</ubPerPocket>
 		<ItemSize>0</ItemSize>
+		<ItemSizeBonus>0</ItemSizeBonus>
 		<NewInv>0</NewInv>
 		<usPrice>0</usPrice>
 		<ubCoolness>0</ubCoolness>
@@ -100,7 +101,6 @@
 		<DayVisionRangeBonus>0</DayVisionRangeBonus>
 		<CaveVisionRangeBonus>0</CaveVisionRangeBonus>
 		<BrightLightVisionRangeBonus>0</BrightLightVisionRangeBonus>
-		<ItemSizeBonus>0</ItemSizeBonus>
 		<PercentTunnelVision>0</PercentTunnelVision>
 		<ThermalOptics>0</ThermalOptics>
 		<GasMask>0</GasMask>
@@ -4849,6 +4849,7 @@
 		<ubWeight>3</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>12</ItemSize>
+		<ItemSizeBonus>1</ItemSizeBonus>
 		<usPrice>750</usPrice>
 		<ubCoolness>4</ubCoolness>
 		<Damageable>1</Damageable>
@@ -4860,7 +4861,6 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<PercentNoiseReduction>75</PercentNoiseReduction>
 		<HideMuzzleFlash>1</HideMuzzleFlash>
-		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>208</uiIndex>
@@ -6944,6 +6944,7 @@
 		<ubWeight>5</ubWeight>
 		<ubPerPocket>2</ubPerPocket>
 		<ItemSize>16</ItemSize>
+		<ItemSizeBonus>1</ItemSizeBonus>
 		<usPrice>75</usPrice>
 		<ubCoolness>4</ubCoolness>
 		<Damageable>1</Damageable>
@@ -6955,7 +6956,6 @@
 		<Attachment>1</Attachment>
 		<Inseparable>1</Inseparable>
 		<RangeBonus>100</RangeBonus>
-		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>311</uiIndex>
@@ -13079,6 +13079,7 @@
 		<ubWeight>8</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>16</ItemSize>
+		<ItemSizeBonus>1</ItemSizeBonus>
 		<usPrice>1200</usPrice>
 		<ubCoolness>6</ubCoolness>
 		<bReliability>-1</bReliability>
@@ -13093,7 +13094,6 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<PercentNoiseReduction>57</PercentNoiseReduction>
 		<HideMuzzleFlash>1</HideMuzzleFlash>
-		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>593</uiIndex>
@@ -23144,6 +23144,7 @@
 		<ubGraphicNum>150</ubGraphicNum>
 		<ubWeight>21</ubWeight>
 		<ItemSize>32</ItemSize>
+		<ItemSizeBonus>1</ItemSizeBonus>
 		<usPrice>1000</usPrice>
 		<ubCoolness>8</ubCoolness>
 		<bRepairEase>-6</bRepairEase>
@@ -23155,7 +23156,6 @@
 		<Electronic>1</Electronic>
 		<BR_NewInventory>2</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
-		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>977</uiIndex>
@@ -23170,6 +23170,7 @@
 		<ubGraphicNum>224</ubGraphicNum>
 		<ubWeight>21</ubWeight>
 		<ItemSize>32</ItemSize>
+		<ItemSizeBonus>1</ItemSizeBonus>
 		<usPrice>1500</usPrice>
 		<ubCoolness>9</ubCoolness>
 		<bRepairEase>-6</bRepairEase>
@@ -23181,7 +23182,6 @@
 		<Electronic>1</Electronic>
 		<BR_NewInventory>1</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
-		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>978</uiIndex>
@@ -23196,6 +23196,7 @@
 		<ubGraphicNum>225</ubGraphicNum>
 		<ubWeight>21</ubWeight>
 		<ItemSize>32</ItemSize>
+		<ItemSizeBonus>1</ItemSizeBonus>
 		<usPrice>2000</usPrice>
 		<ubCoolness>10</ubCoolness>
 		<bRepairEase>-8</bRepairEase>
@@ -23207,7 +23208,6 @@
 		<Electronic>1</Electronic>
 		<BR_NewInventory>1</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
-		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>979</uiIndex>
@@ -23924,6 +23924,7 @@
 		<ubWeight>3</ubWeight>
 		<ubPerPocket>2</ubPerPocket>
 		<ItemSize>25</ItemSize>
+		<ItemSizeBonus>-1</ItemSizeBonus>
 		<usPrice>400</usPrice>
 		<ubCoolness>5</ubCoolness>
 		<bRepairEase>3</bRepairEase>
@@ -23937,7 +23938,6 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<ToHitBonus>-1</ToHitBonus>
 		<PercentReadyTimeAPReduction>30</PercentReadyTimeAPReduction>
-		<ItemSizeBonus>-1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1009</uiIndex>
@@ -23952,6 +23952,7 @@
 		<ubWeight>2</ubWeight>
 		<ubPerPocket>2</ubPerPocket>
 		<ItemSize>22</ItemSize>
+		<ItemSizeBonus>-1</ItemSizeBonus>
 		<usPrice>400</usPrice>
 		<ubCoolness>5</ubCoolness>
 		<bRepairEase>3</bRepairEase>
@@ -23965,7 +23966,6 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<ToHitBonus>-1</ToHitBonus>
 		<PercentReadyTimeAPReduction>30</PercentReadyTimeAPReduction>
-		<ItemSizeBonus>-1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1010</uiIndex>
@@ -24029,6 +24029,7 @@
 		<ubWeight>6</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>16</ItemSize>
+		<ItemSizeBonus>1</ItemSizeBonus>
 		<usPrice>1000</usPrice>
 		<ubCoolness>6</ubCoolness>
 		<bReliability>-1</bReliability>
@@ -24043,7 +24044,6 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<PercentNoiseReduction>55</PercentNoiseReduction>
 		<HideMuzzleFlash>1</HideMuzzleFlash>
-		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1013</uiIndex>
@@ -25627,7 +25627,7 @@
 		<szLongItemName>TT Assault Vest</szLongItemName>
 		<szItemDesc>A vest designed for carrying quite some of the most important consumables on a battlefield: ammo.</szItemDesc>
 		<szBRName>TT Assault Vest</szBRName>
-		<szBRDesc>The Tactical Tailor Assault Vest is for primary combat soldiers, and can carry 12 AR magazines, or whatever you need .</szBRDesc>
+		<szBRDesc>The Tactical Tailor Assault Vest is for primary combat soldiers, and can carry 12 AR magazines, or whatever you need.</szBRDesc>
 		<usItemClass>131072</usItemClass>
 		<ubClassIndex>18</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
@@ -28360,15 +28360,27 @@
 	</ITEM>
 	<ITEM>
 		<uiIndex>1189</uiIndex>
-		<szItemName>Nada</szItemName>
-		<szLongItemName>Nothing</szLongItemName>
-		<szItemDesc>Index 1189</szItemDesc>
-		<szBRName>Nothing</szBRName>
-		<szBRDesc>Nothing</szBRDesc>
-		<usItemClass>1</usItemClass>
-		<ItemSize>34</ItemSize>
-		<NotBuyable>1</NotBuyable>
-		<BigGunList>1</BigGunList>
+		<szItemName>Flare</szItemName>
+		<szLongItemName>Emergency Flare</szLongItemName>
+		<szItemDesc>A flare normally used for emergency purposes.</szItemDesc>
+		<szBRName>Emergency Flare</szBRName>
+		<szBRDesc>Brighter than chemical lightsticks, but also comparatively short-lived, these flares can light up the night for you.</szBRDesc>
+		<usItemClass>256</usItemClass>
+		<ubClassIndex>74</ubClassIndex>
+		<ubCursor>6</ubCursor>
+		<ubGraphicType>2</ubGraphicType>
+		<ubGraphicNum>71</ubGraphicNum>
+		<ubWeight>2</ubWeight>
+		<ubPerPocket>4</ubPerPocket>
+		<ItemSize>20</ItemSize>
+		<usPrice>50</usPrice>
+		<ubCoolness>2</ubCoolness>
+		<Damageable>1</Damageable>
+		<Repairable>1</Repairable>
+		<Attachment>1</Attachment>
+		<BR_NewInventory>3</BR_NewInventory>
+		<BR_UsedInventory>0</BR_UsedInventory>
+		<Flare>1</Flare>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1190</uiIndex>
@@ -28484,5 +28496,87 @@
 		<BR_NewInventory>3</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<BR_ROF>60</BR_ROF>
+	</ITEM>
+	<ITEM>
+		<uiIndex>1194</uiIndex>
+		<szItemName>Python</szItemName>
+		<szLongItemName>Colt Python</szLongItemName>
+		<szItemDesc>A very sturdy revolver, the Python has a reputation for accuracy.</szItemDesc>
+		<szBRName>Colt Python</szBRName>
+		<szBRDesc>The first 'modern' revolver after WW-II, it was made in several versions.</szBRDesc>
+		<usItemClass>2</usItemClass>
+		<ubClassIndex>1194</ubClassIndex>
+		<ubCursor>3</ubCursor>
+		<ubGraphicNum>332</ubGraphicNum>
+		<ubWeight>12</ubWeight>
+		<ubPerPocket>1</ubPerPocket>
+		<ItemSize>1</ItemSize>
+		<usPrice>700</usPrice>
+		<ubCoolness>2</ubCoolness>
+		<bReliability>3</bReliability>
+		<bRepairEase>2</bRepairEase>
+		<Damageable>1</Damageable>
+		<Repairable>1</Repairable>
+		<WaterDamages>1</WaterDamages>
+		<Metal>1</Metal>
+		<Sinks>1</Sinks>
+		<ShowStatus>1</ShowStatus>
+		<BR_NewInventory>5</BR_NewInventory>
+		<BR_UsedInventory>1</BR_UsedInventory>
+		<BR_ROF>26</BR_ROF>
+	</ITEM>
+	<ITEM>
+		<uiIndex>1195</uiIndex>
+		<szItemName>MC51</szItemName>
+		<szLongItemName>FR Ordnance MC51</szLongItemName>
+		<szItemDesc>Despite having stopping power in a small package, this was a not so popular gun, due to high maintenace requirements and low controllability in fullauto fire.</szItemDesc>
+		<szBRName>FR Ordnance MC51</szBRName>
+		<szBRDesc>An even shorter version of the G3KA4 battle rifle, this was made in Great Britain for the SAS.</szBRDesc>
+		<usItemClass>2</usItemClass>
+		<ubClassIndex>1195</ubClassIndex>
+		<ubCursor>3</ubCursor>
+		<ubGraphicNum>342</ubGraphicNum>
+		<ubWeight>37</ubWeight>
+		<ItemSize>5</ItemSize>
+		<usPrice>2230</usPrice>
+		<ubCoolness>5</ubCoolness>
+		<bReliability>-2</bReliability>
+		<Damageable>1</Damageable>
+		<Repairable>1</Repairable>
+		<WaterDamages>1</WaterDamages>
+		<Metal>1</Metal>
+		<Sinks>1</Sinks>
+		<ShowStatus>1</ShowStatus>
+		<TwoHanded>1</TwoHanded>
+		<BigGunList>1</BigGunList>
+		<BR_NewInventory>3</BR_NewInventory>
+		<BR_UsedInventory>1</BR_UsedInventory>
+		<BR_ROF>600</BR_ROF>
+		<ToHitBonus>-1</ToHitBonus>
+		<PercentReadyTimeAPReduction>30</PercentReadyTimeAPReduction>
+	</ITEM>
+	<ITEM>
+		<uiIndex>1196</uiIndex>
+		<szItemName>TAC-1E Vest</szItemName>
+		<szLongItemName>TT Pistol Vest</szLongItemName>
+		<szItemDesc>This vest has a pistol holster incorporated.</szItemDesc>
+		<szBRName>TT Pistol Vest</szBRName>
+		<szBRDesc>The Tactical Tailor 1E Vest is useful if your legs already carry some rigs, but you still want to pack a pistol. The holster on this vest will fit most standard pistols.</szBRDesc>
+		<usItemClass>131072</usItemClass>
+		<ubClassIndex>33</ubClassIndex>
+		<ubGraphicType>1</ubGraphicType>
+		<ubGraphicNum>725</ubGraphicNum>
+		<ubWeight>12</ubWeight>
+		<ItemSize>23</ItemSize>
+		<usPrice>146</usPrice>
+		<ubCoolness>4</ubCoolness>
+		<bRepairEase>2</bRepairEase>
+		<Damageable>1</Damageable>
+		<Repairable>1</Repairable>
+		<ShowStatus>1</ShowStatus>
+		<BigGunList>1</BigGunList>
+		<BR_NewInventory>1</BR_NewInventory>
+		<BR_UsedInventory>1</BR_UsedInventory>
+		<CamoBonus>10</CamoBonus>
 	</ITEM>
 </ITEMLIST>
