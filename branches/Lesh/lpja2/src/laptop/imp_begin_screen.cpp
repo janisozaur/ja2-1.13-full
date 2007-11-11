@@ -633,7 +633,7 @@ void HandleBeginScreenTextEvent( UINT32 uiKey )
 						       uiFullNameCharacterPosition = 0;
 								 }
 								 // make sure we haven't moved too far
-								 if( ( uiFullNameCursorPosition + StringPixLength( ( CHAR16 *)&(uiKey ), FONT14ARIAL ) ) > (UINT32)FULL_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X)
+								 if( ( uiFullNameCursorPosition + CharPixLength( (CHAR16)uiKey, FONT14ARIAL ) ) > (UINT32)FULL_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X)
 								 {
 									 // do nothing for now, when pop up is in place, display
 									 break;

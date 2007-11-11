@@ -544,6 +544,17 @@ INT16 StringPixLength(STR16 string, INT32 UseFont)
 	return(Cur);
 }
 
+//*****************************************************************************
+//
+// CharPixLength
+//
+//	Returns the length of a char in pixels, depending on the font given.
+//
+//*****************************************************************************
+INT16 CharPixLength(CHAR16 symbol,INT32 UseFont)
+{
+	return( GetWidth(FontObjs[UseFont], GetIndex(symbol) ) );
+}
 
 //*****************************************************************************
 //
