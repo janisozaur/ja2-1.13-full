@@ -124,7 +124,12 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 		case TRAVELCOST_VEINMID	: sAPCost += AP_MOVEMENT_FLAT;
 		break;
 		*/
-	case TRAVELCOST_DOOR			: sAPCost += AP_MOVEMENT_FLAT + AP_OPEN_DOOR + AP_OPEN_DOOR; // Include open and close costs!
+	case TRAVELCOST_DOOR			: 
+		if (pSoldier->bTeam == gbPlayerNum)
+		{
+			return -1;
+		}
+		sAPCost += AP_MOVEMENT_FLAT + AP_OPEN_DOOR + AP_OPEN_DOOR; // Include open and close costs!
 		break;
 
 		// cost for jumping a fence REPLACES all other AP costs!
@@ -399,6 +404,12 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 	// ATE: If we have a 'special cost, like jump fence... 
 	if ( sSwitchValue == TRAVELCOST_FENCE )
 	{
+		// Only mercs are capable of scaling fences
+		if (!IS_MERC_BODY_TYPE( pSoldier ))
+		{
+			return 100;
+		}
+
 		// If we are changeing stance ( either before or after getting there....
 		// We need to reflect that...
 		switch(usMovementMode)

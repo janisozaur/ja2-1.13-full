@@ -11602,6 +11602,11 @@ void ChangeToFlybackAnimation( SOLDIERTYPE *pSoldier, UINT8 ubDirection )
 	// Remove any previous actions
 	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
 
+	// Since we're manually setting our path, we have to reset these @#$@# flags too.  Otherwise we don't reach the
+	// destination a lot of the time
+	pSoldier->fPastXDest = 0;
+	pSoldier->fPastYDest = 0;
+
 	// Set path....
 	pSoldier->usPathDataSize = 0;
 	pSoldier->usPathIndex    = 0;
@@ -11641,6 +11646,11 @@ void ChangeToFallbackAnimation( SOLDIERTYPE *pSoldier, UINT8 ubDirection )
 
 	// Remove any previous actions
 	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+
+	// Since we're manually setting our path, we have to reset these @#$@# flags too.  Otherwise we don't reach the
+	// destination a lot of the time
+	pSoldier->fPastXDest = 0;
+	pSoldier->fPastYDest = 0;
 
 	// Set path....
 	pSoldier->usPathDataSize = 0;

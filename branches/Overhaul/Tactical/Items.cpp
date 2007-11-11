@@ -3551,7 +3551,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				// count down through # of attaching items and add to status of item in position 0
 				for (bLoop = pAttachment->ubNumberOfObjects - 1; bLoop >= 0; bLoop--)
 				{
-					if (pTargetObj->ItemData.Generic.bStatus[0] + pAttachment->ItemData.Generic.bStatus[bLoop] <= ubLimit)
+					if (((UINT32)pTargetObj->ItemData.Generic.bStatus[0]) + pAttachment->ItemData.Generic.bStatus[bLoop] <= ubLimit)
 					{
 						// consume this one totally and continue
 						pTargetObj->ItemData.Generic.bStatus[0] += pAttachment->ItemData.Generic.bStatus[bLoop];
