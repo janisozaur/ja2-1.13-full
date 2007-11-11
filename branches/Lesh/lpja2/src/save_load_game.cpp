@@ -5357,6 +5357,13 @@ void UpdateMercMercContractInfo()
 
 INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 {
+	static INT8 lastAutoSaveSlot = 1;
+	
+	// bounce between 0 and 1 each call
+	lastAutoSaveSlot = 1 - lastAutoSaveSlot;
+	
+	return (lastAutoSaveSlot);
+/*
 	CHAR8	zFileName1[MAX_PATH];
 	CHAR8	zFileName2[MAX_PATH];
 	HWFILE	hFile;
@@ -5417,6 +5424,7 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 		else
 			return( 1 );
 	}
+*/
 }
 
 void HandleOldBobbyRMailOrders()
