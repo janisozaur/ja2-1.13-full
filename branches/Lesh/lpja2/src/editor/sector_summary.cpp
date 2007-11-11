@@ -2194,17 +2194,13 @@ void CalculateOverrideStatus()
 	else
 		sprintf( szFilename, "MAPS\\%ls", gszFilename );
 	WSTR_SPrintf( gszDisplayName, WSTRLEN(gszDisplayName), L"%hs", &(szFilename[5]) );
-	if( GetFileFirst( szFilename, &FileInfo) )
+	if( FileExists( szFilename ) )
 	{
 		if( gfWorldLoaded )
 		{
-//			if( FileInfo.uiFileAttribs & ( FILE_IS_READONLY | FILE_IS_SYSTEM ) )
-//				gubOverrideStatus = READONLY;
-//			else
-				gubOverrideStatus = OVERWRITE;
+			gubOverrideStatus = OVERWRITE;
 			ShowButton( iSummaryButton[ SUMMARY_OVERRIDE ] );
 			ButtonList[ iSummaryButton[ SUMMARY_OVERRIDE ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-			GetFileClose(&FileInfo);
 			DisableButton( iSummaryButton[ SUMMARY_SAVE ] );
 		}
 		if( gfTempFile )
