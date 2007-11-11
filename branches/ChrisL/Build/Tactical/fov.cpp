@@ -370,6 +370,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 
 
 	BuildSightDir(dir,(UINT32 *)&Dir[0],(UINT32 *)&Dir[1],(UINT32 *)&Dir[2],(UINT32 *)&Dir[3],(UINT32 *)&Dir[4]);
+
 	for (cnt = 0; cnt < 5; cnt++)
 		Inc[cnt] = DirectionInc( (UINT8) Dir[cnt]);
 
@@ -484,6 +485,11 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 		}
 
 	 marker = NewGridNo((INT16)marker,(INT16)Inc[markerDir]);
+
+     if ( marker == 12426 )
+     {
+      int i = 0;
+     }
 
 		// End if this is a no view...
 		if ( markerDir == NOVIEW && markercnt != 0 )
@@ -830,7 +836,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 						// 2 ) we are not in a room
 						if ( gubWorldRoomInfo[ marker ] == NO_ROOM && TypeRangeExistsInRoofLayer( marker, FIRSTROOF, FOURTHROOF, &usIndex ) )
 						{
-							//int breakpoint = 0;
+							int i = 0;
 						}
 						else
 						{

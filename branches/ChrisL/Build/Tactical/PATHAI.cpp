@@ -43,6 +43,7 @@
 	#include "Buildings.h"
 #endif
 
+#include "PathAIDebug.h"
 //forward declarations of common classes to eliminate includes
 class OBJECTTYPE;
 class SOLDIERTYPE;
@@ -61,11 +62,12 @@ extern UINT16 gubAnimSurfaceIndex[ TOTALBODYTYPES ][ NUMANIMATIONSTATES ];
 // skiplist has extra level of pointers every 4 elements, so a level 5is optimized for
 // 4 to the power of 5 elements, or 2 to the power of 10, 1024
 
+//#define PATHAI_VISIBLE_DEBUG
+
 //#define PATHAI_SKIPLIST_DEBUG
 
 #ifdef PATHAI_VISIBLE_DEBUG
 	#include "video.h"
-	extern void RenderCoverDebug( void );
 
 	extern INT16 gsCoverValue[WORLD_MAX];
 	BOOLEAN gfDisplayCoverValues = TRUE;
@@ -169,6 +171,11 @@ static INT32	iSkipListLevelLimit[8] = {0, 4, 16, 64, 256, 1024, 4192, 16384 };
 #define LEGDISTANCE( x1, y1, x2, y2 ) ( abs( x2 - x1 ) + abs( y2 - y1 ) )
 //#define FARTHER(ndx,NDX) ( LEGDISTANCE( ndx->sLocation,sDestination) > LEGDISTANCE(NDX->sLocation,sDestination) )
 #define FARTHER(ndx,NDX) ( ndx->ubLegDistance > NDX->ubLegDistance )
+
+#define SETLOC( str, loc ) \
+{\
+	(str).iLocation = loc;\
+}
 
 static TRAILCELLTYPE * trailCost;
 static UINT8 * trailCostUsed;
@@ -436,8 +443,6 @@ UINT32 guiFailedPathChecks = 0;
 UINT32 guiUnsuccessfulPathChecks = 0;
 #endif
 
-
-
 #ifdef USE_ASTAR_PATHS
 
 
@@ -461,7 +466,8 @@ AStarPathfinder* AStarPathfinder::pThis = &AStarThis;
 
 AStarPathfinder& AStarPathfinder::GetInstance()
 {
-	//if (pThis) {
+	//if (pThis)
+	//{
 	//	return *pThis;
 	//}
 	//pThis = new AStarPathfinder;
@@ -860,7 +866,6 @@ int AStarPathfinder::GetPath(SOLDIERTYPE *s ,
 	//		this is fixed?
 	if( gfGeneratingMapEdgepoints )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "ASTAR: generating edgepoints, path size %d", sizePath ) );
 		return 1;
 	}
 
@@ -901,7 +906,7 @@ INT16 AStarPathfinder::AStar()
 			//the best path to date leads to the dest
 			//this node is neither in the open heap or the closed list, make sure it gets reset ok.
 			//ClosedList.push_back(ParentNode);
-			//return TopHeap;
+			//We just clear the entire array before starting, so no prob.
 			break;
 		}
 
@@ -1277,7 +1282,7 @@ INT16 AStarPathfinder::CalcAP(int const terrainCost, UINT8 const direction)
 
 		//case TRAVELCOST_DOOR:		movementAPCost = AP_MOVEMENT_FLAT; break;
 
-		case TRAVELCOST_FENCE		: movementAPCost = AP_JUMPFENCE; break;
+		case TRAVELCOST_FENCE:		movementAPCost = AP_JUMPFENCE; break;
 
 		case TRAVELCOST_OBSTACLE:
 		default:					return -1;	// Cost too much to be considered!
@@ -1584,7 +1589,8 @@ int AStarPathfinder::CalcG(int* pPrevCost)
 				}
 			}
 		}
-		else if ( fNonSwimmer && (nextCost == TRAVELCOST_SHORE || nextCost == TRAVELCOST_KNEEDEEP || nextCost == TRAVELCOST_DEEPWATER ) ) {
+		else if ( fNonSwimmer && ISWATER( gpWorldLevelData[ CurrentNode ].ubTerrainID))
+		{
 			// creatures and animals can't go in water
 			nextCost = TRAVELCOST_OBSTACLE;
 		}
@@ -2148,7 +2154,7 @@ bool AStarPathfinder::WantToTraverse()
 	}
 
 	//checks distance, mines, cliffs
-	if (gubNPCDistLimit)
+	if (gubNPCDistLimitSq) 
 	{
 		if ( gfNPCCircularDistLimit )
 		{
@@ -2265,9 +2271,7 @@ void ShutDownPathAI( void )
 {
 	MemFree( pathQ );
 	MemFree( trailCostUsed );
-	if (trailCost) {
-		MemFree( trailCost );
-	}
+	MemFree( trailCost );
 	MemFree( trailTree );
 }
 
@@ -2303,14 +2307,10 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 {
 #ifdef USE_ASTAR_PATHS
 	int retVal = ASTAR::AStarPathfinder::GetInstance().GetPath(s, sDestination, ubLevel, usMovementMode, bCopy, fFlags);
-	//if the dest is nowhere, you won't find a path but you'll search everywhere.
-	//in this case return 0, don't search everywhere again under a different method, you still won't find the path
 	if (retVal) {
 		return retVal;
 	}
 	else {
-		//if we didn't find a path maybe the old code will find it, so don't return 0
-		//but, check that the old code doesn't find the path either, if it does then there is a bug in the AStar code!
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "ASTAR path failed!" ) );
 	}
 
@@ -2319,7 +2319,6 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 		return 0;
 	}
 #else
-
 	//__try
 	//{
 	INT32 iDestination = sDestination, iOrigination;
@@ -2386,7 +2385,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 	BOOLEAN		fContinuousTurnNeeded;
 	BOOLEAN		fCloseGoodEnough;
 	UINT16	usMovementModeToUseForAPs;
-	INT16			sClosePathLimit;
+	INT16			sClosePathLimit = 0;
 
 #ifdef PATHAI_SKIPLIST_DEBUG
 	CHAR8				zTempString[1000], zTS[50];
@@ -2638,7 +2637,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 
 	//setup Q and first path record
 
-	pQueueHead->iLocation = iOrigination;
+	SETLOC( *pQueueHead, iOrigination );
 	pQueueHead->usCostSoFar	= MAXCOST;
 	pQueueHead->bLevel			= (INT8) (iMaxSkipListLevel - 1);
 
@@ -2649,7 +2648,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 	iLocY = iOrigination / MAPWIDTH;
 	iLocX = iOrigination % MAPWIDTH;
 
-	pathQ[1].iLocation = iOrigination;
+	SETLOC( pathQ[1], iOrigination );
 	pathQ[1].sPathNdx						= 0;
 	pathQ[1].usCostSoFar				= 0;
 	if ( fCopyReachable )
@@ -2865,12 +2864,6 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 #endif
 
 			newLoc = curLoc + dirDelta[iCnt];
-			if ( newLoc > GRIDSIZE  || newLoc < 0)
-			{
-				//ADB: moved here for optimization, I don't think it being later on can cause any array out of bounds though
-				// WHAT THE??? hack.
-				goto NEXTDIR;
-			}
 
 
 			if ( fVisitSpotsOnlyOnce && trailCostUsed[newLoc] == gubGlobalPathCount )
@@ -3166,6 +3159,12 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 			else
 			{
 				nextCost = TRAVELCOST_FLAT;
+			}
+
+			if ( newLoc > GRIDSIZE )
+			{
+				// WHAT THE??? hack.
+				goto NEXTDIR;
 			}
 
 			// if contemplated tile is NOT final dest and someone there, disqualify route
@@ -3599,7 +3598,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 
 				iLocY = newLoc / MAPWIDTH;
 				iLocX = newLoc % MAPWIDTH;
-				pNewPtr->iLocation = newLoc;
+				SETLOC( *pNewPtr, newLoc );
 				pNewPtr->usCostSoFar		= (UINT16) newTotCost;
 				pNewPtr->usCostToGo			= (UINT16) REMAININGCOST(pNewPtr);
 				if ( fCopyReachable )
@@ -3864,14 +3863,6 @@ ENDOFLOOP:
 		gubNPCAPBudget = 0;
 		gubNPCDistLimit = 0;
 
-#ifdef USE_ASTAR_PATHS
-		//ok we searched using the AStar path and didn't find one
-		//but we searched with the old method and if we found one then there is an error!!!
-		if (iCnt != 0) {
-			DebugBreakpoint();
-		}
-#endif
-
 		//TEMP:	This is returning zero when I am generating edgepoints, so I am force returning 1 until
 		//		this is fixed?
 		if( gfGeneratingMapEdgepoints )
@@ -3880,6 +3871,7 @@ ENDOFLOOP:
 		}
 
 
+		//Assert(!iCnt);
 		return(iCnt);
 	}
 
@@ -3912,6 +3904,9 @@ void GlobalReachableTest( INT16 sStartGridNo )
 	SOLDIERTYPE s;
 	INT32 iCurrentGridNo =0;
 
+	// WDS - Clean up inventory handling
+	//memset( &s, 0, SIZEOF_SOLDIERTYPE );
+	s.initialize();
 	s.sGridNo = sStartGridNo;
 	s.pathing.bLevel = 0;
 	s.bTeam = 1;
@@ -3933,6 +3928,9 @@ void LocalReachableTest( INT16 sStartGridNo, INT8 bRadius )
 	INT32 iCurrentGridNo = 0;
 	INT32	iX, iY;
 
+	// WDS - Clean up inventory handling
+	//memset( &s, 0, SIZEOF_SOLDIERTYPE );
+	s.initialize();
 	s.sGridNo = sStartGridNo;
 
 	//if we are moving on the gorund level
@@ -3973,6 +3971,9 @@ void GlobalItemsReachableTest( INT16 sStartGridNo1, INT16 sStartGridNo2 )
 	SOLDIERTYPE s;
 	INT32 iCurrentGridNo =0;
 
+	// WDS - Clean up inventory handling
+	//memset( &s, 0, SIZEOF_SOLDIERTYPE );
+	s.initialize();
 	s.sGridNo = sStartGridNo1;
 	s.pathing.bLevel = 0;
 	s.bTeam = 1;
@@ -3998,6 +3999,9 @@ void RoofReachableTest( INT16 sStartGridNo, UINT8 ubBuildingID )
 	SOLDIERTYPE s;
 	INT16 sGridNo;
 
+	// WDS - Clean up inventory handling
+	//memset( &s, 0, SIZEOF_SOLDIERTYPE );
+	s.initialize();
 	s.sGridNo = sStartGridNo;
 	s.pathing.bLevel = 1;
 	s.bTeam = 1;
@@ -4094,7 +4098,8 @@ INT16 PlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPl
 	INT16 sOldGrid=0;
 	INT16 sFootOrderIndex;
 	INT16 sSwitchValue;
-	INT16 sFootOrder[5] = {	GREENSTEPSTART, PURPLESTEPSTART, BLUESTEPSTART, ORANGESTEPSTART, REDSTEPSTART };
+	INT16 sFootOrder[5] = {	GREENSTEPSTART, PURPLESTEPSTART, BLUESTEPSTART, 
+		ORANGESTEPSTART, REDSTEPSTART };
 	UINT16	usTileIndex;
 	UINT16	usTileNum;
 	LEVELNODE	*pNode;
@@ -4424,12 +4429,12 @@ INT16 PlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPl
 					if ( sPoints <= sAPBudget)
 					{
 						// find out which color we're using
-						usTileIndex = usTileIndex + sFootOrder[ 4 ];
+					usTileIndex += sFootOrder[sFootOrderIndex];
 					}
 					else
 					{
 						// use red footprints ( offset by 16 )
-						usTileIndex = usTileIndex + sFootOrder[sFootOrderIndex];
+					usTileIndex += REDSTEPSTART;
 					}
 					*/
 
@@ -4467,12 +4472,12 @@ INT16 PlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPl
 					if ( (gTacticalStatus.uiFlags & REALTIME ) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
 					{
 						// find out which color we're using
-						usTileIndex += sFootOrder[ 4 ];
+						usTileIndex = usTileIndex + sFootOrder[ 4 ];
 					}
 					else // turnbased
 					{
 						// find out which color we're using
-						usTileIndex += sFootOrder[sFootOrderIndex];
+						usTileIndex = usTileIndex + sFootOrder[sFootOrderIndex];
 					}
 
 
@@ -4765,4 +4770,5 @@ UINT8 DoorTravelCost( SOLDIERTYPE * pSoldier, INT32 iGridNo, UINT8 ubMovementCos
 {
 	return( InternalDoorTravelCost( pSoldier, iGridNo, ubMovementCost, fReturnPerceivedValue, piDoorGridNo, FALSE ) );
 }
+
 

@@ -3744,6 +3744,11 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 	{
 		if ( gpWorldLevelData[ cnt ].uiFlags & MAPELEMENT_RECALCULATE_WIREFRAMES || fForce )
 		{
+      if ( cnt == 8377 )
+      {
+        int i = 0;
+      }
+
 			// Turn off flag
 			gpWorldLevelData[ cnt ].uiFlags &= (~MAPELEMENT_RECALCULATE_WIREFRAMES );
 

@@ -3359,9 +3359,9 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 
 	static OBJECTTYPE attachmentObject;
 
-	UINT16		usResult, usResult2;
+	UINT16		usResult, usResult2, ubLimit;
 	INT8		bLoop;
-	UINT8		ubType, ubLimit, ubAPCost;
+	UINT8		ubType, ubAPCost;
 	INT32		iCheckResult;
 	INT8		bAttachInfoIndex = -1, bAttachComboMerge;
 	BOOLEAN		fValidLaunchable = FALSE;
@@ -3600,20 +3600,23 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 					ubLimit = 100;
 				}
 
-				// CHRISL: compare ubShotsLeft instead of objectStatus when trying to merge ammo
 				// count down through # of attaching items and add to status of item in position 0
-				for (bLoop = 0; bLoop < pAttachment->ubNumberOfObjects; ++bLoop)
+				for (bLoop = 0; bLoop < pAttachment->ubNumberOfObjects; )
 				{
-					if ((*this)[subObject]->data.ubShotsLeft + (*pAttachment)[0]->data.ubShotsLeft <= ubLimit)
+					//ADB need to watch for overflow here (thus UINT32), and need to cast to UINT8 before adding
+					UINT32 combinedAmount = (UINT16)(*this)[subObject]->data.objectStatus + (UINT16)(*pAttachment)[0]->data.objectStatus;
+					if (combinedAmount <= ubLimit)
 					{
 						// consume this one totally and continue
-						(*this)[subObject]->data.ubShotsLeft += (*pAttachment)[0]->data.ubShotsLeft;
+						(*this)[subObject]->data.objectStatus = combinedAmount;
 						pAttachment->RemoveObjectsFromStack(1);
 					}
 					else
 					{
 						// add part of this one and then we're done
-						(*pAttachment)[0]->data.ubShotsLeft -= (ubLimit - (*this)[subObject]->data.ubShotsLeft);
+						UINT32 attachmentAmount = (UINT16)(*pAttachment)[0]->data.objectStatus;
+						attachmentAmount -= (ubLimit - (UINT16)(*this)[subObject]->data.objectStatus);
+						(*pAttachment)[0]->data.objectStatus = attachmentAmount;
 						if ((*pAttachment)[0]->data.ubShotsLeft == 0) {
 							pAttachment->RemoveObjectsFromStack(1);
 						}

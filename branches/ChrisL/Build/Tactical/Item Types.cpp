@@ -346,7 +346,7 @@ POCKETTYPE::~POCKETTYPE(){
 
 bool OBJECTTYPE::IsActiveLBE(unsigned int index)
 {
-	if (exists() == true) {
+	if (exists() == true && Item[this->usItem].usItemClass == IC_LBEGEAR) {
 		return ((*this)[index]->data.lbe.bLBE == -1);
 	}
 	return false;
@@ -973,12 +973,43 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 		if (ubNumberOfObjects == 1) {
 			//CHRISL: Instead of a memcpy, copy values individually so we can account for the larger union size
 			//memcpy(&((*this)[0]->data.gun), &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,sizeof(ObjectData)));
+			//Start by setting status as this is the same for every structure in the union
 			(*this)[0]->data.gun.bGunStatus = src.ugYucky.bGunStatus;
-			(*this)[0]->data.gun.ubGunAmmoType = src.ugYucky.ubGunAmmoType;
-			(*this)[0]->data.gun.ubGunShotsLeft = src.ugYucky.ubGunShotsLeft;
-			(*this)[0]->data.gun.usGunAmmoItem = src.ugYucky.usGunAmmoItem;
-			(*this)[0]->data.gun.bGunAmmoStatus = src.ugYucky.bGunAmmoStatus;
-			(*this)[0]->data.gun.ubGunState = src.ugYucky.ubGunState;
+			//Next, clear the rest of the union so we are working with a clean setup.  I'm clearing gun simply because it's
+			//	the largest structure and should therefore clear all values.  There may be a better way to do this.
+			(*this)[0]->data.gun.ubGunAmmoType = 0;
+			(*this)[0]->data.gun.ubGunShotsLeft = 0;
+			(*this)[0]->data.gun.usGunAmmoItem = 0;
+			(*this)[0]->data.gun.bGunAmmoStatus = 0;
+			(*this)[0]->data.gun.ubGunState = 0;
+			//Lastly, convert values from the old format to the new based on the type of object
+			switch(Item[src.usItem].usItemClass)
+			{
+			case IC_MONEY:
+				(*this)[0]->data.money.uiMoneyAmount = src.ugYucky.uiMoneyAmount;
+				break;
+			case IC_KEY:
+				(*this)[0]->data.key.ubKeyID = src.ugYucky.ubKeyID;
+				break;
+			case IC_GRENADE:
+			case IC_BOMB:
+				(*this)[0]->data.misc.bDetonatorType = src.ugYucky.bDetonatorType;
+				(*this)[0]->data.misc.usBombItem = src.ugYucky.usBombItem;
+				(*this)[0]->data.misc.bDelay = src.ugYucky.bDelay;	// includes bFrequency
+				(*this)[0]->data.misc.ubBombOwner = src.ugYucky.ubBombOwner;
+				(*this)[0]->data.misc.bActionValue = src.ugYucky.bActionValue;
+				(*this)[0]->data.misc.ubTolerance = src.ugYucky.ubTolerance;	// includes ubLocationID
+				break;
+			default:
+				//This should cover all other possibilities since only Money, Key and "Bomb/Misc" have layouts that don't
+				//	exactly line up with gun
+				(*this)[0]->data.gun.ubGunAmmoType = src.ugYucky.ubGunAmmoType;
+				(*this)[0]->data.gun.ubGunShotsLeft = src.ugYucky.ubGunShotsLeft;
+				(*this)[0]->data.gun.usGunAmmoItem = src.ugYucky.usGunAmmoItem;
+				(*this)[0]->data.gun.bGunAmmoStatus = src.ugYucky.bGunAmmoStatus;
+				(*this)[0]->data.gun.ubGunState = src.ugYucky.ubGunState;
+				break;
+			}
 
 			(*this)[0]->data.bTrap = src.bTrap;		// 1-10 exp_lvl to detect
 			(*this)[0]->data.ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on

@@ -48,13 +48,12 @@
 	#include "Map Screen Interface Map Inventory.h"
 #endif
 
+BOOLEAN gfWasInMeanwhile = FALSE;
+
+
 //forward declarations of common classes to eliminate includes
 class OBJECTTYPE;
 class SOLDIERTYPE;
-
-
-BOOLEAN gfWasInMeanwhile = FALSE;
-
 
 ///////////////////////////////////////////////////////////////
 //
@@ -113,7 +112,7 @@ INT32 giErrorMessageBox = 0;
 
 void TempFileLoadErrorMessageReturnCallback( UINT8 ubRetVal );
 
-BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM* pData );
+BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM *pData );
 BOOLEAN RetrieveTempFileFromSavedGame( HWFILE hFile, UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ );
 
 BOOLEAN AddTempFileToSavedGame( HWFILE hFile, UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ );
@@ -635,7 +634,7 @@ BOOLEAN UpdateCIVTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 }
 */
 
-BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM* pData )
+BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM *pData )
 {
 	HWFILE	hFile;
 	UINT32	uiNumBytesWritten=0;

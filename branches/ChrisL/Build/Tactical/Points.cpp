@@ -32,7 +32,6 @@
 	#include "worldman.h"
 	#include "math.h"
 #include "Map Information.h"
-#include "Map Information.h"
 #include "Interface Items.h"
 #endif
 
@@ -98,7 +97,7 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 
 	if (sSwitchValue >= TRAVELCOST_BLOCKED && sSwitchValue != TRAVELCOST_DOOR )
 	{
-	return(100);	// Cost too much to be considered!
+		return(-1);	// Cost too much to be considered!
 	}
 
 	switch( sSwitchValue )
@@ -1016,19 +1015,19 @@ UINT8 CalcAPsToAutofire( INT8 bBaseActionPoints, OBJECTTYPE * pObj, UINT8 bDoAut
 		//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: base aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//check for spring and bolt
 		//bAttachPos = FindAttachment( &(pSoldier->inv[HANDPOS]), SPRING_AND_BOLT_UPGRADE );
-		//if ( bAttachPos != pSoldier->inv[HANDPOS].objectStack[0]->attachments.end()objectStack[0]->attachments.end() )
+		//if ( bAttachPos != -1 )
 		//{
 		//	aps = (aps * 100) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found rod and spring, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//}
 		//bAttachPos = FindAttachment( &(pSoldier->inv[HANDPOS]), REFLEX_SCOPED );
-		//if ( bAttachPos != pSoldier->inv[HANDPOS].objectStack[0]->attachments.end()objectStack[0]->attachments.end() )
+		//if ( bAttachPos != -1 )
 		//{
 		//	aps = (aps * 100) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found reflex scope, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//}
 		//bAttachPos = FindAttachment( &(pSoldier->inv[HANDPOS]), REFLEX_UNSCOPED );
-		//if ( bAttachPos != pSoldier->inv[HANDPOS].objectStack[0]->attachments.end() )
+		//if ( bAttachPos != -1 )
 		//{
 		//	aps = ( aps * 100 ) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found reflex sight, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
@@ -1094,6 +1093,8 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 		// IF we are at this gridno, calc min APs but if not, calc cost to goto this lication
 		if ( pSoldier->sGridNo != sGridNo )
 		{
+			sAdjustedGridNo = NOWHERE;
+
 			// OK, in order to avoid path calculations here all the time... save and check if it's changed!
 			if ( pSoldier->sWalkToAttackGridNo == sGridNo )
 			{
@@ -1275,7 +1276,6 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 	rof = Weapon[ pObj->usItem ].ubShotsPer4Turns;
 	if (ItemSlotLimit(pObj, STACK_SIZE_LIMIT) == 1)//NOT STACKABLE!
 	{
-		//ADB TODO this check should be changed so that if guns ever stack (not yet, but later) they still get the bonus!
 		rof += GetRateOfFireBonus(pObj);
 	}
 
@@ -1494,44 +1494,36 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurni
 
 UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost)
 {
- UINT8	bAPCost = 0;
- UINT16 usTargID;
- UINT8	ubDirection;
+	UINT8	bAPCost = 0;
+	UINT16 usTargID;
+	UINT8	ubDirection;
 
- //	bAimSkill = ( pSoldier->stats.bDexterity + pSoldier->stats.bAgility) / 2;
- if ( sGridNo != NOWHERE )
- {
-	usTargID = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
-
-	// Given a gridno here, check if we are on a guy - if so - get his gridno
-	if ( usTargID != NOBODY	)
+	//	bAimSkill = ( pSoldier->stats.bDexterity + pSoldier->stats.bAgility) / 2;
+	if ( sGridNo != NOWHERE )
 	{
+		usTargID = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
+
+		// Given a gridno here, check if we are on a guy - if so - get his gridno
+		if ( usTargID != NOBODY  )
+		{
 			sGridNo = MercPtrs[ usTargID ]->sGridNo;
 
-		// Check if target is prone, if so, calc cost...
-		if ( gAnimControl[ MercPtrs[ usTargID ]->usAnimState ].ubEndHeight == ANIM_PRONE )
-		{
-			bAPCost += GetAPsToChangeStance( pSoldier, ANIM_CROUCH );
-		}
-		else
-		{
-		if ( pSoldier->sGridNo == sGridNo )
-		{
-			 bAPCost += GetAPsToChangeStance( pSoldier, ANIM_STAND );
-		}
+			// Check if target is prone, if so, calc cost...
+			if ( gAnimControl[ MercPtrs[ usTargID ]->usAnimState ].ubEndHeight == ANIM_PRONE )
+		 {
+			 bAPCost += GetAPsToChangeStance( pSoldier, ANIM_CROUCH );
+		 }
+			else
+		 {
+			 if ( pSoldier->sGridNo == sGridNo )
+			 {
+				 bAPCost += GetAPsToChangeStance( pSoldier, ANIM_STAND );
+			 }
+		 }
+
 		}
 
-	}
-
-	if (ubAddTurningCost)
-	{
-	 if ( pSoldier->sGridNo == sGridNo )
-	 {
-		// ATE: Use standing turn cost....
-		ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
-
-		// Is it the same as he's facing?
-		if ( ubDirection != pSoldier->ubDirection )
+		if (ubAddTurningCost)
 		{
 			if ( pSoldier->sGridNo == sGridNo )
 			{
@@ -1545,14 +1537,12 @@ UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost
 				}
 			}
 		}
-	 }
+
 	}
 
- }
+	bAPCost += 4;
 
- bAPCost += 4;
-
- return ( bAPCost );
+	return ( bAPCost );
 }
 
 

@@ -1064,7 +1064,7 @@ BOOLEAN ExecuteOverhead( )
 						}
 						else
 						{
-							//int breakpoint = 0;
+							int i = 0;
 						}
 						pSoldier->flags.fBeginFade	= TRUE;
 						pSoldier->sLocationOfFadeStart = pSoldier->sGridNo;
@@ -2899,7 +2899,7 @@ void InternalSelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fF
 	gusSelectedSoldier = (UINT16)usSoldierID;
 
 	// find which squad this guy is, then set selected squad to this guy
-	SetCurrentSquad( pSoldier->bAssignment, FALSE );
+	SetCurrentSquad( pSoldier -> bAssignment, FALSE );
 
 	if ( pSoldier->pathing.bLevel == 0 )
 	{
@@ -3229,7 +3229,6 @@ void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier )
 	{
 		if ( !fMissionFailed )
 		{
-			Assert(iNewSelectedSoldier != -1);
 			SelectSoldier( (INT16)iNewSelectedSoldier, FALSE, FALSE );
 		}
 		else
@@ -8363,6 +8362,9 @@ void DoCreatureTensionQuote( SOLDIERTYPE *pSoldier )
 			fCanDoQuote = FALSE;
 		}
 		break;
+	default:
+		AssertMsg(0, "Invalid quote");
+		return;
 	}
 
 	if ( fCanDoQuote )
