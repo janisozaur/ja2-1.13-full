@@ -31,13 +31,8 @@
 
 // HEY WIZARDRY DUDES, JA2 ISN'T THE ONLY PROGRAM WE COMPILE! :-)
 
-#if defined( JA2 ) || defined( UTILS )
 typedef unsigned int   	UINT32;
 typedef signed int     	INT32;
-#else
-typedef unsigned int   	UINT32;
-typedef int				INT32;
-#endif
 
 // integers
 typedef unsigned char   UINT8;
@@ -63,7 +58,7 @@ typedef void *			PTR;
 typedef unsigned short	HNDL;
 typedef UINT8			BYTE;
 typedef CHAR8			STRING512[512];
-typedef UINT32			HWFILE;
+typedef INT32			HWFILE;
 
 #define SGPFILENAME_LEN 100
 typedef CHAR8 SGPFILENAME[SGPFILENAME_LEN];	
