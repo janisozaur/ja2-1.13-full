@@ -418,6 +418,9 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 //
 //************************************************************************
 
+// Lesh: unused function
+
+/*
 BOOLEAN CheckIfFileExistInLibrary( const CHAR8 *pFileName )
 {
 	INT16 sLibraryID;
@@ -436,7 +439,7 @@ BOOLEAN CheckIfFileExistInLibrary( const CHAR8 *pFileName )
 	else
 		return( FALSE );
 }
-
+*/
 
 //************************************************************************
 //
@@ -544,8 +547,9 @@ INT32 CompareFileNames( CHAR8 *arg1[], FileHeaderStruct **arg2 )
 }
 
 
+// Lesh: unused function
 
-
+/*
 void AddSlashToPath( STR pName )
 {
 	UINT32	uiLoop, uiCounter;
@@ -573,7 +577,7 @@ void AddSlashToPath( STR pName )
 
 	strcpy( pName, sNewName );
 }
-
+*/
 
 
 //************************************************************************

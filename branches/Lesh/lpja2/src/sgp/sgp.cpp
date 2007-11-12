@@ -4,7 +4,6 @@
 	#include "ja2_sgp_all.h"
 	#include "ja2_splash.h"
 	#include "utilities.h"
-	#include "SDL.h"
 #else
 	#include "platform.h"
 	#include "SDL.h"
@@ -28,6 +27,7 @@
 	#include "io_layer.h"
 	#include "game.h"
 	#include "container.h"
+	#include "respak.hpp"
 	
 #endif
 
@@ -421,4 +421,18 @@ void ShutdownWithErrorBox(CHAR8 *pcMessage)
 
 void TestIO( void )
 {
+/*
+	sgpPak				libs;
+	pakFile				file;
+	
+	libs.push_back( new sgpDirResourcePak() );
+	libs[0]->open_pak("/home/lesh/ja2-1.13/MyMod");
+	printf("pakNo=%d\n", libs.size());
+	libs[0]->print_pak();
+	file = libs[0]->file_open("Ja2_Options.INI");
+	printf("file=%d\n", file);
+	printf("size=%d\n", libs[0]->file_size(file));
+	libs[0]->file_close(file);
+	delete libs[0];
+*/
 }

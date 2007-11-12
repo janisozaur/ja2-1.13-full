@@ -261,10 +261,10 @@ BOOLEAN	FileExists( STR strFilename )
 //**************************************************************************
 BOOLEAN	FileExistsNoDB( STR strFilename )
 {
-	vfsEntry	entry;
+//	vfsEntry	entry;
 
-	if ( VFS.FindResource( strFilename, entry ) )
-		return (entry.LibraryID == LIB_REAL_FILE);
+//	if ( VFS.FindResource( strFilename, entry ) )
+//		return (entry.LibIndex == LIB_REAL_FILE);
 
 	if ( IO_IsRootPath( strFilename ) )
 		return IO_IsRegularFile( strFilename );
@@ -292,7 +292,7 @@ BOOLEAN	FileExistsNoDB( STR strFilename )
 //		24sep96:HJH		-> creation
 //
 //**************************************************************************	
-BOOLEAN	FileDelete( STR strFilename )
+BOOLEAN	FileDelete( const CHAR8 *strFilename )
 {
 	if ( IO_IsRootPath( strFilename ) )
 		return( IO_File_Delete( strFilename ) );
@@ -351,14 +351,14 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 //	printf("Request to open %s...\n", strFilename);
 	if ( !VFS.FindResource( strFilename, entry ) )
 	{
-		entry.LibraryID = LIB_REAL_FILE;
+		entry.LibIndex = LIB_REAL_FILE;
 		entry.IsWriteable = TRUE;
 		entry.IsDirectory = FALSE;
 		entry.RealName = strFilename;
 	}
 
 	// where is resource ?
-	if ( entry.LibraryID != LIB_REAL_FILE )
+	if ( entry.LibIndex != LIB_REAL_FILE )
 	{
 		// resource is in container
 		if ( gFileDataBase.fInitialized ) 
@@ -479,7 +479,7 @@ void FileClose( HWFILE hFile )
 #endif
 
 
-BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead )
+BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 iBytesToRead, UINT32 *piBytesRead )
 {
 	HANDLE	hRealFile;
 	UINT32		dwNumBytesToRead, dwNumBytesRead;
@@ -496,7 +496,7 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 
 	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
 
-	dwNumBytesToRead	= uiBytesToRead;
+	dwNumBytesToRead	= iBytesToRead;
 
 	//if its a real file, read the data from the file
 	if( sLibraryID == REAL_FILE_LIBRARY_ID )
@@ -507,16 +507,16 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 			hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 			dwNumBytesRead = IO_File_Read( hRealFile, pDest, dwNumBytesToRead);
 			
-			if ( puiBytesRead )
-				*puiBytesRead = (UINT32)dwNumBytesRead;
-
+			if ( piBytesRead )
+				*piBytesRead = (UINT32)dwNumBytesRead;
+/*
 			if ( dwNumBytesToRead != dwNumBytesRead )
 			{
 				fprintf(stderr, "Error reading file %d: errno=%d\n",
 					hRealFile, errno);
 				return FALSE;
 			}
-
+*/
 			fRet = TRUE;
 		}
 	}
@@ -533,9 +533,9 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 				{
 					//read the data from the library
 					fRet = LoadDataFromLibrary( sLibraryID, uiFileNum, pDest, dwNumBytesToRead, (UINT32 *) &dwNumBytesRead );
-					if ( puiBytesRead )
+					if ( piBytesRead )
 					{
-						*puiBytesRead = (UINT32)dwNumBytesRead;
+						*piBytesRead = (UINT32)dwNumBytesRead;
 					}
 				}
 			}
@@ -577,7 +577,7 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 //
 //**************************************************************************
 
-BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten )
+BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 iBytesToWrite, UINT32 *piBytesWritten )
 {
 	HANDLE	hRealFile;
 	UINT32		dwNumBytesToWrite, dwNumBytesWritten;
@@ -590,14 +590,14 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 	//if its a real file, read the data from the file
 	if( sLibraryID == REAL_FILE_LIBRARY_ID )
 	{
-		dwNumBytesToWrite = (UINT32)uiBytesToWrite;
+		dwNumBytesToWrite = (UINT32)iBytesToWrite;
 
 		//get the real file handle to the file
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 		dwNumBytesWritten = IO_File_Write( hRealFile, pDest, dwNumBytesToWrite );
 
-		if ( puiBytesWritten )
-			*puiBytesWritten = (UINT32)dwNumBytesWritten;
+		if ( piBytesWritten )
+			*piBytesWritten = (UINT32)dwNumBytesWritten;
 
 		if ( dwNumBytesWritten != dwNumBytesToWrite )
 		{
@@ -610,8 +610,8 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 	else
 	{
 		//we cannot write to a library file
-		if ( puiBytesWritten )
-			*puiBytesWritten = 0;
+		if ( piBytesWritten )
+			*piBytesWritten = 0;
 		return(FALSE);
 	}
 
@@ -697,11 +697,10 @@ BOOLEAN FilePrintf( HWFILE hFile, char * strFormatted, ... )
 //
 //**************************************************************************
 
-BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
+BOOLEAN FileSeek( HWFILE hFile, INT32 iDistance, UINT8 uiHow )
 {
 	HANDLE	hRealFile;
 	UINT32		dwMoveMethod;
-	INT32		iDistance=0;
 
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
@@ -714,7 +713,6 @@ BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 		//Get the handle to the real file
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
-		iDistance = (INT32) uiDistance;
 		if ( uiHow == FILE_SEEK_FROM_START )
 			dwMoveMethod = IO_SEEK_FROM_START;
 		else if ( uiHow == FILE_SEEK_FROM_END )
@@ -735,7 +733,7 @@ BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 	{
 		//if the database is initialized
 		if( gFileDataBase.fInitialized )
-			LibraryFileSeek( sLibraryID, uiFileNum, uiDistance, uiHow );
+			LibraryFileSeek( sLibraryID, uiFileNum, iDistance, uiHow );
 	}
 
 	return(TRUE);
@@ -828,10 +826,10 @@ INT32 FileGetPos( HWFILE hFile )
 //
 //**************************************************************************
 
-UINT32 FileGetSize( HWFILE hFile )
+INT32 FileGetSize( HWFILE hFile )
 {
 	HANDLE  hRealHandle;
-	UINT32	uiFileSize = 0xFFFFFFFF;
+	INT32	iFileSize = -1;
 
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
@@ -843,27 +841,27 @@ UINT32 FileGetSize( HWFILE hFile )
 	{
 		//Get the handle to a real file
 		hRealHandle = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
-		uiFileSize = IO_File_GetSize( hRealHandle );
+		iFileSize = IO_File_GetSize( hRealHandle );
 	}
 	else
 	{
 		//if the library is open
 		if( IsLibraryOpened( sLibraryID ) )
 		{
-			if( (uiFileNum >= (UINT32)gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray ) )
-				uiFileSize = 0xFFFFFFFF;
+			if( (uiFileNum >= gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray ) )
+				iFileSize = -1;
 			else if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFileID != 0 )
-				uiFileSize = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileLength;
+				iFileSize = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileLength;
 			else
-				uiFileSize = 0xFFFFFFFF;
+				iFileSize = -1;
 		}
 	}
 
 
-	if ( uiFileSize == 0xFFFFFFFF )
+	if ( iFileSize == -1 )
 		return(0);
 	else
-		return( uiFileSize );
+		return( iFileSize );
 }
 
 //**************************************************************************
@@ -927,7 +925,7 @@ HANDLE GetHandleToRealFile( HWFILE hFile, BOOLEAN *pfDatabaseFile )
 
 BOOLEAN SetFileManCurrentDirectory( STR pcDirectory )
 {
-	BACKSLASH(pcDirectory);
+//	BACKSLASH(pcDirectory);
 	return( IO_Dir_SetCurrentDirectory( pcDirectory ) );
 }
 
@@ -955,7 +953,7 @@ BOOLEAN DirectoryExists( STRING512 pcDirectory )
 
 BOOLEAN MakeFileManDirectory( STRING512 pcDirectory )
 {
-	BACKSLASH(pcDirectory);
+//	BACKSLASH(pcDirectory);
 	if ( !IO_Dir_DirectoryExists(pcDirectory) )
 		if ( !IO_Dir_MakeDirectory(pcDirectory) )
 		{
@@ -974,94 +972,60 @@ BOOLEAN MakeFileManDirectory( STRING512 pcDirectory )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 {
-	HANDLE		SearchHandle;
-	const CHAR8	*pFileSpec = "*.*";
-	BOOLEAN	fDone = FALSE;
+	const CHAR8	*pFileSpec = "*";
 	BOOLEAN fRetval=FALSE;
 	CHAR8		zOldDir[512];
 	CHAR8		zSubdirectory[512];
+	sgpStringArray	ToBeDeleted;
+	STRING512		entry;
+	INT32			i;
 
-	BACKSLASH(pcDirectory);
+//	BACKSLASH(pcDirectory);
 
 	GetFileManCurrentDirectory( zOldDir );
 
 	if( !SetFileManCurrentDirectory( pcDirectory ) )
 	{
-		FastDebugMsg(String("RemoveFileManDirectory: ERROR - SetFileManCurrentDirectory on %s failed, error %d", pcDirectory, GetLastError()));
 		return( FALSE );		//Error going into directory
 	}
 
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	WIN32_FIND_DATA sFindData;
-
-	//If there are files in the directory, DELETE THEM
-	SearchHandle = FindFirstFile( pFileSpec, &sFindData);
-	if( SearchHandle !=  INVALID_HANDLE_VALUE )
+	// get directory listing
+	if ( !IO_File_GetFirst( pFileSpec, entry, 512 ) )
 	{
-
-		fDone = FALSE;
-		do
+		ToBeDeleted.push_back( entry );
+		while ( IO_File_GetNext( entry, 512 ) )
 		{
-			// if the object is a directory
-			if( GetFileAttributes( sFindData.cFileName ) == FILE_ATTRIBUTE_DIRECTORY )
-			{
-				// only go in if the fRecursive flag is TRUE (like Deltree)
-				if (fRecursive)
-				{
-					sprintf(zSubdirectory, "%s\\%s", pcDirectory, sFindData.cFileName);
-
-					if ((strcmp(sFindData.cFileName, ".") != 0) && (strcmp(sFindData.cFileName, "..") != 0))
-					{
-						if (!RemoveFileManDirectory(zSubdirectory, TRUE))
-						{
-				   		FastDebugMsg(String("RemoveFileManDirectory: ERROR - Recursive call on %s failed", zSubdirectory));
-							break;
-						}
-					}
-				}
-				// otherwise, all the individual files will be deleted, but the subdirectories remain, causing
-				// RemoveDirectory() at the end to fail, thus this function will return FALSE in that event (failure)
-			}
-			else
-			{
-				FileDelete( sFindData.cFileName );
-			}
-
-			//find the next file in the directory
-			fRetval = FindNextFile( SearchHandle, &sFindData );
-			if( fRetval == 0 )
-			{
-				fDone = TRUE;
-			}
-		}	while(!fDone);
-
-		// very important: close the find handle, or subsequent RemoveDirectory() calls will fail
-		FindClose( SearchHandle );
+			ToBeDeleted.push_back( entry );
+		}
+		IO_File_GetClose();
 	}
 
+	// now parse list - delete files and recurse for directories
+	for ( i = 0; i < ToBeDeleted.size(); i++ )
+	{
+		if ( IO_IsRegularFile( ToBeDeleted[i].c_str() ) )
+		{
+			IO_File_Delete( ToBeDeleted[i].c_str() );
+		}
+		else if ( IO_IsDirectory( ToBeDeleted[i].c_str() ) )
+		{
+			// only go in if the fRecursive flag is TRUE (like Deltree)
+			if (fRecursive)
+			{
+				sprintf(zSubdirectory, "%s%c%s", pcDirectory, SLASH, ToBeDeleted[i].c_str() );
+				RemoveFileManDirectory(zSubdirectory, TRUE);
+			}
+		}
+	}
+	
+	// after wiping files in dir, remove dir itself
 	if( !SetFileManCurrentDirectory( zOldDir ) )
 	{
-		FastDebugMsg(String("RemoveFileManDirectory: ERROR - SetFileManCurrentDirectory on %s failed, error %d", zOldDir, GetLastError()));
 		return( FALSE );		//Error returning from subdirectory
 	}
 
+	fRetval = IO_Dir_Delete( pcDirectory );
 	
-	// The directory MUST be empty
-	fRetval = RemoveDirectory( pcDirectory );
-	if (!fRetval)
-	{
-		FastDebugMsg(String("RemoveFileManDirectory: ERROR - RemoveDirectory on %s failed, error %d", pcDirectory, GetLastError()));
-	}
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-	fprintf(stderr, "RemoveFileManDirectory(): %s, %d\n", pcDirectory, fRecursive);
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-
 	return fRetval;
 }
 
@@ -1072,13 +1036,16 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOLEAN EraseDirectory( STRING512 pcDirectory)
 {
-	HANDLE		SearchHandle;
-	const CHAR8	*pFileSpec = "*.*";
-	BOOLEAN	fDone = FALSE;
+	const CHAR8	*pFileSpec = "*";
 	CHAR8		zOldDir[512];
+	sgpStringArray	ToBeDeleted;
+	STRING512		entry;
+	INT32			i;
 
-	BACKSLASH(pcDirectory);
+//	BACKSLASH(pcDirectory);
 
+//	printf("EraseDirectory\n");
+	
 	GetFileManCurrentDirectory( zOldDir );
 
 	if( !SetFileManCurrentDirectory( pcDirectory ) )
@@ -1087,52 +1054,31 @@ BOOLEAN EraseDirectory( STRING512 pcDirectory)
 		return( FALSE );		//Error going into directory
 	}
 
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	WIN32_FIND_DATA sFindData;
-
-	//If there are files in the directory, DELETE THEM
-	SearchHandle = FindFirstFile( pFileSpec, &sFindData);
-	if( SearchHandle !=  INVALID_HANDLE_VALUE )
+	// get directory listing
+	if ( !IO_File_GetFirst( pFileSpec, entry, 512 ) )
 	{
-
-		fDone = FALSE;
-		do
+		ToBeDeleted.push_back( entry );
+		while ( IO_File_GetNext( entry, 512 ) )
 		{
-			// if it's a file, not a directory
-			if( GetFileAttributes( sFindData.cFileName ) != FILE_ATTRIBUTES_DIRECTORY )
-			{
-				FileDelete( sFindData.cFileName );
-			}
-
-			//find the next file in the directory
-			if ( !FindNextFile( SearchHandle, &sFindData ))
-			{
-				fDone = TRUE;
-			}
-		} while(!fDone);
-
-		// very important: close the find handle, or subsequent RemoveDirectory() calls will fail
-		FindClose( SearchHandle );
+			ToBeDeleted.push_back( entry );
+		}
+		IO_File_GetClose();
 	}
 
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-	fprintf(stderr, "EraseDirectory(): %s\n", pcDirectory);
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-
-	// Snap: Delete the directory from the default Data catalogue (if it is there)
-	// Since the path can be either relative or absolute, try both methods
-//	gDefaultDataCat.RemoveDir(pcDirectory, true);
-//	gDefaultDataCat.RemoveDir(pcDirectory, false);
-
+	// now parse list - delete files and leave directories alone
+	for ( i = 0; i < ToBeDeleted.size(); i++ )
+	{
+		if ( IO_IsRegularFile( ToBeDeleted[i].c_str() ) )
+		{
+//			printf("deleting %s...\n", ToBeDeleted[i].c_str());
+			IO_File_Delete( ToBeDeleted[i].c_str() );
+		}
+	}
+	
+	// after wiping files in dir, remove dir itself
 	if( !SetFileManCurrentDirectory( zOldDir ) )
 	{
-		FastDebugMsg(String("EraseDirectory: ERROR - SetFileManCurrentDirectory on %s failed, error %d", zOldDir, GetLastError()));
-		return( FALSE );		//Error returning from directory
+		return( FALSE );		//Error returning from subdirectory
 	}
 
 	return( TRUE );
@@ -1255,12 +1201,22 @@ BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct )
 		return(FALSE);
 
 	pGFStruct->iFindHandle = iWhich;
+	pGFStruct->fUseVFS = !IO_IsRootPath(pSpec);
 
 //	printf("Searching resources using %s pattern\n", pSpec);
-	uiQuantity = VFS.StartFilePatternMatch( pSpec );
-//	printf("Found %d matches\n", uiQuantity);
-	if ( !VFS.GetNextMatch( pGFStruct->zFileName, 260 ) )
-		return FALSE;
+
+	if ( pGFStruct->fUseVFS )
+	{
+		uiQuantity = VFS.StartFilePatternMatch( pSpec );
+//		printf("Found %d matches\n", uiQuantity);
+		if ( !VFS.GetNextMatch( pGFStruct->zFileName, 260 ) )
+			return FALSE;
+	}
+	else
+	{
+		if ( !IO_File_GetFirst( pSpec, pGFStruct->zFileName, 260 ) )
+			return FALSE;
+	}
 
 	fFindInfoInUse[iWhich] = TRUE;
 
@@ -1280,8 +1236,17 @@ BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct )
 BOOLEAN GetFileNext( GETFILESTRUCT *pGFStruct )
 {
 	CHECKF( pGFStruct != NULL );
-	if ( VFS.GetNextMatch( pGFStruct->zFileName, 260 ) )
-		return TRUE;
+
+	if ( pGFStruct->fUseVFS )
+	{
+		if ( VFS.GetNextMatch( pGFStruct->zFileName, 260 ) )
+			return TRUE;
+	}
+	else
+	{
+		if ( IO_File_GetNext( pGFStruct->zFileName, 260 ) )
+			return TRUE;
+	}
 
 	return(FALSE);
 }
@@ -1299,10 +1264,16 @@ void GetFileClose( GETFILESTRUCT *pGFStruct )
 {
 	if ( pGFStruct == NULL )
 		return;
-	VFS.FinishFilePatternMatch();
-	fFindInfoInUse[pGFStruct->iFindHandle] = FALSE;
 
-	return;
+	if ( pGFStruct->fUseVFS )
+	{
+		VFS.FinishFilePatternMatch();
+	}
+	else
+	{
+		IO_File_GetClose();
+	}
+	fFindInfoInUse[pGFStruct->iFindHandle] = FALSE;
 }
 
 
@@ -1457,7 +1428,7 @@ INT32	CompareSGPFileTimes( SGP_FILETIME	*pFirstFileTime, SGP_FILETIME *pSecondFi
 //		UINT32 - file size in bytes
 //
 //**************************************************************************
-UINT32 FileSize(STR strFilename)
+INT32 FileSize(STR strFilename)
 {
 	vfsEntry	entry;
 
@@ -1467,7 +1438,7 @@ UINT32 FileSize(STR strFilename)
 	if ( !VFS.FindResource( strFilename, entry ) )
 		return 0;
 
-	if ( entry.LibraryID == LIB_REAL_FILE )
+	if ( entry.LibIndex == LIB_REAL_FILE )
 		return IO_File_GetSize( entry.RealName.c_str() );
 
 	return 0;
@@ -1500,16 +1471,4 @@ HANDLE	GetRealFileHandleFromFileManFileHandle( HWFILE hFile )
 		}
 	}
 	return( 0 );
-}
-
-BOOLEAN	FileCreateEmptyFile( STR strFilename )
-{
-	HANDLE	NullFile;
-
-	NullFile = IO_File_Open( strFilename, IO_CREATE_ALWAYS | IO_ACCESS_WRITE );
-	if ( NullFile == -1 )
-		return FALSE;
-	IO_File_Close( NullFile );
-
-	return TRUE;
 }

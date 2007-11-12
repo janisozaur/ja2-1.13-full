@@ -75,21 +75,20 @@ extern BOOLEAN 	PathBackslash(STR path);
 
 BOOLEAN	FileExists( STR strFilename );
 extern BOOLEAN	FileExistsNoDB( STR strFilename );
-extern BOOLEAN	FileDelete( STR strFilename );
+extern BOOLEAN	FileDelete( const CHAR8 *strFilename );
 extern HWFILE	FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose );
 extern void		FileClose( HWFILE );
-extern BOOLEAN	FileCreateEmptyFile( STR strFilename );
 
-extern BOOLEAN	FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
-extern BOOLEAN	FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten );
+extern BOOLEAN	FileRead( HWFILE hFile, PTR pDest, UINT32 iBytesToRead, UINT32 *piBytesRead );
+extern BOOLEAN	FileWrite( HWFILE hFile, PTR pDest, UINT32 iBytesToWrite, UINT32 *piBytesWritten );
 
 extern BOOLEAN  FilePrintf( HWFILE hFile, char * strFormatted, ... );
 
-extern BOOLEAN	FileSeek( HWFILE, UINT32 uiDistance, UINT8 uiHow );
+extern BOOLEAN	FileSeek( HWFILE, INT32 iDistance, UINT8 uiHow );
 extern INT32	FileGetPos( HWFILE );
 
-extern UINT32	FileGetSize( HWFILE );
-extern UINT32 FileSize(STR strFilename);
+extern INT32	FileGetSize( HWFILE );
+extern INT32	FileSize(STR strFilename);
 
 #ifdef JA2_WIN
 #	define BACKSLASH(x)
@@ -114,8 +113,9 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive);
 BOOLEAN EraseDirectory( STRING512 pcDirectory);
 
 typedef struct _GETFILESTRUCT_TAG {
-	INT32 iFindHandle;
-	CHAR8 zFileName[ 260 ];			// changed from UINT16, Alex Meduna, Mar-20'98
+	INT32	iFindHandle;
+	CHAR8	zFileName[ 260 ];			// changed from UINT16, Alex Meduna, Mar-20'98
+	BOOLEAN	fUseVFS;
 //	UINT32 uiFileSize;
 //	UINT32 uiFileAttribs;
 } GETFILESTRUCT;
@@ -142,21 +142,10 @@ BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILET
 // +1 First file time is greater than second file time ( first file is newer ).
 INT32	CompareSGPFileTimes( SGP_FILETIME	*pFirstFileTime, SGP_FILETIME *pSecondFileTime );
 
-// One call comparison of file times, allowing for a certain leeway in cases where
-// files times may be slightly different due to SourceSafe of copying
-BOOLEAN FileIsOlderThanFile(CHAR8 *pcFileName1, CHAR8 *pcFileName2, UINT32 ulNumSeconds);
-
 //	Pass in the Fileman file handle of an OPEN file and it will return..
 //		if its a Real File, the return will be the handle of the REAL file
 //		if its a LIBRARY file, the return will be the handle of the LIBRARY
 HANDLE	GetRealFileHandleFromFileManFileHandle( HWFILE hFile );
-
-
-//Gets the amount of free space on the hard drive that the main executeablt is runnning from
-//UINT32		GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( );
-
-//Gets the free hard drive space from the drive letter passed in.  It has to be the root dir.  ( eg. c:\ )
-//UINT32		GetFreeSpaceOnHardDrive( STR pzDriveLetter );
 
 /*
 #ifdef __cplusplus

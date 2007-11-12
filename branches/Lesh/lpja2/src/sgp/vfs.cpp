@@ -96,6 +96,8 @@ sgpVFS::sgpVFS()
 {
 	ResourceMap.clear();
 	FileMatchResults.clear();
+	OpenedFiles.clear();
+	ResourceLib.clear();
 	FileMatchIndex = 0;
 }
 
@@ -108,6 +110,9 @@ sgpVFS::~sgpVFS()
 {
 	ResourceMap.clear();
 	FileMatchResults.clear();
+	OpenedFiles.clear();
+	FreeAllContainers();
+	ResourceLib.clear();
 }
 
 //===================================================================
@@ -163,7 +168,8 @@ BOOLEAN	sgpVFS::AddResourceEntry( const vfsString& ResourceName, const vfsString
 	Entry.RealName    = RealName;
 	Entry.IsDirectory = IsDirectory;
 	Entry.IsWriteable = Writeable;
-	Entry.LibraryID   = LibraryID;
+	Entry.LibIndex    = LibraryID;
+	Entry.FileIndex   = 0;
 
 	ResourceMap[ ConvertToApplicationName( ResourceName ) ] = Entry;
 
@@ -334,11 +340,12 @@ void sgpVFS::DebugDumpResources( const CHAR8 *pDumpFileName )
 		return;
 	fprintf(file, "Resources in map: %d\n", ResourceMap.size() );
 	for ( FilesIterator = ResourceMap.begin(); FilesIterator != ResourceMap.end(); FilesIterator++ )
-		fprintf(file, "%-32s ==>> %s, %c, %s, %s\n",
+		fprintf(file, "%-32s ==>> %s, %c, ( %d, %d), %s\n",
 			FilesIterator->first.c_str(),
 			FilesIterator->second.IsDirectory ? "Dir " : "File",
 			FilesIterator->second.IsWriteable ? 'W' : 'R',
-			FilesIterator->second.LibraryID == LIB_REAL_FILE ? "FS " : "SLF",
+			FilesIterator->second.LibIndex,
+			FilesIterator->second.FileIndex,
 			FilesIterator->second.RealName.c_str() );
 	fclose( file );
 }
@@ -544,5 +551,450 @@ BOOLEAN	sgpVFS::GetResourceFilename( const CHAR8 *pResourceName, CHAR8 *pFilenam
 		return FALSE;
 
 	strncpy( pFilename, entry.RealName.c_str(), uiMaxLen );
+	return TRUE;
+}
+
+//===================================================================
+//
+//	GetFreeOpenedSlot - obtain a free slot of opened files array
+//
+//	return:	(>=0), if free slot was found, (-1), if no free slot
+//
+//===================================================================
+INT32 sgpVFS::GetFreeOpenedSlot( void )
+{
+	INT32	cnt;
+	
+	for ( cnt = 0; cnt < OpenedFiles.size(); cnt++ )
+	{
+		if ( OpenedFiles[cnt].IsFree )
+			return cnt;
+	}
+	
+	return -1;	// failed to find
+}
+
+//===================================================================
+//
+//	LoadContainer - load resource container into resource library
+//
+//	in	pPath: container name
+//
+//	return:	(TRUE), if successful, (FALSE), if not
+//
+//===================================================================
+BOOLEAN sgpVFS::LoadContainer( const CHAR8 *pPath )
+{
+	STRING512	ContainerName;
+	INT32		Len;
+	
+	strcpy( ContainerName, pPath);
+	
+	// check for directory container
+	if ( IO_IsDirectory(ContainerName) )
+	{
+		Len = strlen(ContainerName);
+		
+		// if there is no slash at end, add it
+		if (ContainerName[ Len - 1 ] != SLASH)
+		{
+			ContainerName[ Len     ] = SLASH;
+			ContainerName[ Len + 1 ] = 0;
+		}
+		
+		// load directory container
+		return LoadContainerDirectory( ContainerName );
+	}
+	
+	if ( !IO_IsRegularFile(ContainerName) )
+		return FALSE;
+
+	return LoadContainerSLF( ContainerName );
+}
+
+//===================================================================
+//
+//	FreeAllContainers - close resources and release memory, allocated
+//	for containers
+//
+//===================================================================
+void sgpVFS::FreeAllContainers( void )
+{
+	INT32	i;
+	
+	for ( i = 0; i < ResourceLib.size(); i++ )
+	{
+		ResourceLib[i]->close_pak();
+		delete ResourceLib[i];
+	}
+}
+
+//===================================================================
+//
+//	InitContainer - load and place resource container into
+//	resource library
+//
+//	in	lib: pointer to created resource library
+//
+//	return:	(TRUE), if successful, (FALSE), if not
+//
+//===================================================================
+BOOLEAN sgpVFS::InitContainer( sgpResourcePak* lib, const CHAR8 *pPath )
+{
+	if ( !lib )
+		return FALSE;
+	
+	if ( !lib->open_pak( pPath ) )
+	{
+		delete lib;
+		return FALSE;
+	}
+
+	ResourceLib.push_back( lib );
+	return TRUE;		
+}
+
+//===================================================================
+//
+//	LoadContainerDirectory - load directory resource container into
+//	resource library
+//
+//	in	pPath: container name
+//
+//	return:	(TRUE), if successful, (FALSE), if not
+//
+//===================================================================
+BOOLEAN sgpVFS::LoadContainerDirectory( const CHAR8 *pPath )
+{
+	sgpResourcePak*	lib;
+	
+	lib = new sgpDirResourcePak;
+	return InitContainer( lib, pPath );
+}
+
+//===================================================================
+//
+//	LoadContainer - load slf resource container into resource library
+//
+//	in	pPath: container name
+//
+//	return:	(TRUE), if successful, (FALSE), if not
+//
+//===================================================================
+BOOLEAN sgpVFS::LoadContainerSLF( const CHAR8 *pPath )
+{
+	sgpResourcePak*	lib;
+	
+	lib = new sgpSLFResourcePak;
+	return InitContainer( lib, pPath );
+}
+
+//===================================================================
+//
+//	BuildResourceMap - construct resource map from sources in SrcList
+//
+//	in	SrcList: array of resource sources names (slf-files, directories, ...)
+//
+//===================================================================
+void sgpVFS::BuildResourceMap( sgpStringArray& SrcList )
+{
+	INT32	i;
+	BOOLEAN	result;
+	
+	// load all containers
+	for ( i = 0; i < SrcList.size(); i++ )
+	{
+		// get source type
+		if ( IO_IsDirectory( SrcList[i].c_str() ) )
+		{
+			result = LoadContainerDirectory( SrcList[i].c_str() );
+		}
+		else
+		{
+			result = LoadContainerSLF( SrcList[i].c_str() );
+		}
+		
+		// report error, if any
+		if ( !result )
+			fprintf(stderr, "Failed to load container %s\n", SrcList[i].c_str() );
+	}
+	
+	//browse through all containers
+	for ( i = 0; i < ResourceLib.size(); i++ )
+	{
+		AddContainer( i );
+	}
+}
+
+//===================================================================
+//
+//	AddContainer - adds contents of container to resource
+//	map using it's index.
+//
+//	in	uiContainerID: container's index
+//
+//	return: TRUE, if contents were added, otherwise FALSE
+//
+//===================================================================
+BOOLEAN	sgpVFS::AddContainer( UINT32 uiContainerID )
+{
+	UINT32			i;
+	sgpStringArray	FileList;
+
+	if ( uiContainerID >= ResourceLib.size() )
+		return FALSE;
+
+	// get resource names list
+	ResourceLib[ uiContainerID ]->get_resource_names( FileList );
+
+	for ( i = 0; i < FileList.size(); i++ )
+	{
+		AddResource( FileList[ i ], uiContainerID, i );
+	}
+
+	return TRUE;
+}
+
+//===================================================================
+//
+//	AddResource - adds entry to resource map
+//
+//	in	RealName: real filename of this resource
+//	in	LibIndex: holds container index
+//	in	FileIndex: holds file index in container
+//
+//	return:	TRUE always
+//
+//===================================================================
+BOOLEAN	sgpVFS::AddResource( const vfsString& RealName, INT32 LibIndex, INT32 FileIndex )
+{
+	vfsEntry	Entry;
+	vfsString	ResourceName;
+
+	ResourceName      = ConvertToApplicationName( RealName );
+	Entry.RealName    = RealName;
+	Entry.IsDirectory = FALSE;
+	Entry.IsWriteable = FALSE;
+	Entry.LibIndex    = LibIndex;
+	Entry.FileIndex   = FileIndex;
+
+	ResourceMap[ ResourceName ] = Entry;
+
+	return TRUE;
+}
+
+//===================================================================
+//
+//	Open - open resource file
+//
+//	in	pResourceName: filename of resource
+//
+//	return:	(-1) if error, (>=0) if successful
+//
+//===================================================================
+INT32 sgpVFS::Open( const STR8 pResourceName )
+{
+	INT32			SlotNumber;
+	vfsEntry		Resource;
+	vfsFileHandler	Descriptor;
+	
+	if ( !FindResource( pResourceName, Resource ) )
+		return -1;
+
+	Descriptor.IsFree = FALSE;
+	Descriptor.LibIndex = Resource.LibIndex;
+	Descriptor.Handler = ResourceLib[ Resource.LibIndex ]->file_open( Resource.FileIndex );
+
+	if ( Descriptor.Handler == NO_PAK_FILE )
+		return -1;
+	
+	SlotNumber = GetFreeOpenedSlot();
+	if ( SlotNumber != -1 )
+		OpenedFiles[ SlotNumber ] = Descriptor;
+	else
+	{
+		SlotNumber = OpenedFiles.size();
+		OpenedFiles.push_back( Descriptor );
+	}
+	
+	return SlotNumber;
+}
+
+//===================================================================
+//
+//	Close - close resource file
+//
+//	in	iFileHandle: handler of resource
+//
+//===================================================================
+void sgpVFS::Close( INT32 iFileHandle )
+{
+	INT32	LibIndex, Handler;
+
+	if ( iFileHandle < 0 || iFileHandle >= OpenedFiles.size() )
+		return;
+	
+	LibIndex = OpenedFiles[ iFileHandle ].LibIndex;
+	Handler  = OpenedFiles[ iFileHandle ].Handler;
+	
+	ResourceLib[ LibIndex ]->file_close( Handler );
+	OpenedFiles[ iFileHandle ].IsFree = TRUE;
+}
+
+//===================================================================
+//
+//	Read - read data from resource file
+//
+//	in	iFileHandle: handler of resource
+//	in	pReadBuffer: buffer for read operation
+//	in	iSize: number of bytes to read
+//
+//	return:	(-1) if error, (==0) if end-of-file (>0) if successful read
+//
+//===================================================================
+INT32 sgpVFS::Read( INT32 iFileHandle, void *pReadBuffer, INT32 iSize )
+{
+	INT32	LibIndex, Handler;
+
+	if ( iFileHandle < 0 || iFileHandle >= OpenedFiles.size() )
+		return -1;
+	
+	LibIndex = OpenedFiles[ iFileHandle ].LibIndex;
+	Handler  = OpenedFiles[ iFileHandle ].Handler;
+	
+	return ResourceLib[ LibIndex ]->file_read( Handler, pReadBuffer, iSize );
+}
+
+//===================================================================
+//
+//	Write - write data to resource file. Unused
+//
+//	in	iFileHandle: handler of resource
+//	in	pReadBuffer: buffer for write operation
+//	in	iSize: number of bytes to write
+//
+//	return:	(-1) always
+//
+//===================================================================
+INT32 sgpVFS::Write( INT32 iFileHandle, void *pWriteBuffer, INT32 iSize )
+{
+	INT32	LibIndex, Handler;
+
+	if ( iFileHandle < 0 || iFileHandle >= OpenedFiles.size() )
+		return -1;
+	
+	LibIndex = OpenedFiles[ iFileHandle ].LibIndex;
+	Handler  = OpenedFiles[ iFileHandle ].Handler;
+	
+	return -1;
+}
+
+//===================================================================
+//
+//	Seek - set position in resource file
+//
+//	in	iFileHandle: handler of resource
+//	in	iPosition: new position
+//	in	iMethod: method of positioning. Possible values:
+//			IO_SEEK_FROM_START	 - offset from start of file 
+//			IO_SEEK_FROM_END	 - offset from end of file
+//			IO_SEEK_FROM_CURRENT - offset from current position in file
+//
+//	return:	(FALSE) if error, (TRUE) if successful
+//
+//===================================================================
+BOOLEAN sgpVFS::Seek( INT32 iFileHandle, INT32 iPosition, INT32 iMethod )
+{
+	INT32	LibIndex, Handler;
+
+	if ( iFileHandle < 0 || iFileHandle >= OpenedFiles.size() )
+		return FALSE;
+	
+	LibIndex = OpenedFiles[ iFileHandle ].LibIndex;
+	Handler  = OpenedFiles[ iFileHandle ].Handler;
+	
+	return ResourceLib[ LibIndex ]->file_seek( Handler, iPosition, iMethod );
+}
+
+//===================================================================
+//
+//	Tell - get position in resource file
+//
+//	in	iFileHandle: handler of resource
+//
+//	return:	(-1) if error, ( current position ) if successful
+//
+//===================================================================
+INT32 sgpVFS::Tell( INT32 iFileHandle )
+{
+	INT32	LibIndex, Handler;
+
+	if ( iFileHandle < 0 || iFileHandle >= OpenedFiles.size() )
+		return -1;
+	
+	LibIndex = OpenedFiles[ iFileHandle ].LibIndex;
+	Handler  = OpenedFiles[ iFileHandle ].Handler;
+	
+	return ResourceLib[ LibIndex ]->file_pos( Handler );
+}
+
+//===================================================================
+//
+//	GetSize - get length of the file using its handle
+//
+//	in	iFileHandle: handler of resource
+//
+//	return:	(-1) if error, (>=0) if successful
+//
+//===================================================================
+INT32 sgpVFS::GetSize( INT32 iFileHandle )
+{
+	INT32	LibIndex, Handler;
+
+	if ( iFileHandle < 0 || iFileHandle >= OpenedFiles.size() )
+		return -1;
+	
+	LibIndex = OpenedFiles[ iFileHandle ].LibIndex;
+	Handler  = OpenedFiles[ iFileHandle ].Handler;
+	
+	return ResourceLib[ LibIndex ]->file_size_by_handler( Handler );
+}
+
+//===================================================================
+//
+//	GetSize - get length of the file using its name
+//
+//	in	iFileHandle: handler of resource
+//
+//	return:	(-1) if error, (>=0) if successful
+//
+//===================================================================
+INT32 sgpVFS::GetSize( const CHAR8 *pResourceName )
+{
+	vfsEntry		Resource;
+	
+	if ( !FindResource( pResourceName, Resource ) )
+		return -1;
+	
+	return ResourceLib[ Resource.LibIndex ]->file_size_by_index( Resource.FileIndex );
+}
+
+//===================================================================
+//
+//	IsEOF - check for end of file
+//
+//	in	iFileHandle: handler of resource
+//
+//	return:	(TRUE) if end of file, (FALSE) if not
+//
+//===================================================================
+BOOLEAN sgpVFS::IsEOF  ( INT32 iFileHandle )
+{
+	if ( iFileHandle < 0 || iFileHandle >= OpenedFiles.size() )
+		return TRUE;
+
+	if ( Tell(iFileHandle) < GetSize(iFileHandle) )
+		return FALSE;
+	
 	return TRUE;
 }

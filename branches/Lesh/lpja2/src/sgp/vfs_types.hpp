@@ -22,6 +22,8 @@
 #include "types.h"
 #include "platform.h"
 #include <map>
+#include "respak.hpp"
+
 
 typedef sgpString				vfsString;
 typedef sgpStringPos			vfsStringPos;
@@ -32,13 +34,22 @@ typedef sgpStringArrayIterator	vfsStringArrayIterator;
 
 typedef struct
 {
+	BOOLEAN		IsFree;			// used or not?
+	INT32		LibIndex;		// library index
+	pakFile		Handler;		// file handler
+} vfsFileHandler;
+
+typedef struct
+{
 	vfsString	RealName;
 	BOOLEAN		IsDirectory;
 	BOOLEAN		IsWriteable;
-	UINT32		LibraryID;
+	INT32		LibIndex;
+	INT32		FileIndex;
 } vfsEntry;
 
 typedef std::map <vfsString, vfsEntry>				vfsFileMap;
 typedef std::map <vfsString, vfsEntry>::iterator	vfsFileMapIterator;
+typedef std::vector <vfsFileHandler>				vfsOpenFiles;
 
 #endif
