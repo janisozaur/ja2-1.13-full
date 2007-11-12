@@ -80,6 +80,24 @@ STRING512	gzDataPath;
 STRING512	gzHomePath;
 STRING512	gzTempPath;
 
+// Lesh: this struct contains info about opened files
+typedef struct
+{
+	BOOLEAN		isFree;
+	BOOLEAN		isVFS;
+	union
+	{
+		IOFILE	file;
+		INT32	vfsIndex;
+	} handle;
+} FilemanEntry;
+
+typedef std::vector<FilemanEntry>	FilemanOpenedFiles;
+
+// declare opened files array
+FilemanOpenedFiles		OpenedFiles;
+
+INT32	FindFreeOpenedFilesSlot( void );
 
 //**************************************************************************
 //
@@ -95,6 +113,27 @@ HANDLE	GetHandleToRealFile( HWFILE hFile, BOOLEAN *pfDatabaseFile );
 //				Functions
 //
 //**************************************************************************
+
+//===================================================================
+//
+//	FindFreeOpenedFilesSlot - obtain a free slot of opened files array
+//
+//	return:	(>=0), if free slot was found, (-1), if no free slot
+//
+//===================================================================
+INT32	FindFreeOpenedFilesSlot( void )
+{
+	INT32	cnt;
+	
+	// Lesh: index starts from 1 because index 0 is reserved for error reporting
+	for ( cnt = 1; cnt < OpenedFiles.size(); cnt++ )
+	{
+		if ( OpenedFiles[cnt].isFree )
+			return cnt;
+	}
+	
+	return -1;	// failed to find
+}
 
 //**************************************************************************
 //
@@ -151,7 +190,12 @@ BOOLEAN	InitializeFileManager(  STR strIndexFilename )
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 
-
+	OpenedFiles.clear();
+	
+	// index 0 of file handlers, returned by fileman, is reserved for error reporting
+	OpenedFiles.resize(1);
+	OpenedFiles[0].isFree = FALSE;
+	
 	RegisterDebugTopic( TOPIC_FILE_MANAGER, "File Manager" );
 	return( TRUE );
 }
@@ -176,6 +220,7 @@ BOOLEAN	InitializeFileManager(  STR strIndexFilename )
 
 void ShutdownFileManager( void )
 {
+	OpenedFiles.clear();
 	// todo: $$$ - clean temp dir
 	UnRegisterDebugTopic( TOPIC_FILE_MANAGER, "File Manager" );
 }
@@ -326,6 +371,70 @@ BOOLEAN	FileDelete( const CHAR8 *strFilename )
 //**************************************************************************
 HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 {
+#ifdef VFS2
+	INT32			access;
+	INT32			freeSlot;
+	FilemanEntry	fileObject;
+	BOOLEAN			isRootPath;
+	BOOLEAN			openSuccess;
+	
+//	printf("Request to open %s...\n", strFilename);
+	isRootPath = IO_IsRootPath( strFilename );
+	
+	if ( !isRootPath && (uiOptions & FILE_ACCESS_WRITE) )
+	{
+		fprintf(stderr, "FileOpen: non-root path with write access detected (%s)\n", strFilename);
+		return 0;
+	}
+
+	// parse access option
+	if ( (uiOptions & FILE_ACCESS_READ) && (uiOptions & FILE_ACCESS_WRITE) )
+		access = IO_ACCESS_READWRITE;
+	else if ( uiOptions & FILE_ACCESS_READ )
+		access = IO_ACCESS_READ;
+	else if ( uiOptions & FILE_ACCESS_WRITE )
+		access = IO_ACCESS_WRITE;
+
+	if ( uiOptions & FILE_CREATE_NEW )
+		access |= IO_CREATE_NEW;
+	if ( uiOptions & FILE_CREATE_ALWAYS )
+		access |= IO_CREATE_ALWAYS;
+
+	fileObject.isFree = FALSE;
+	fileObject.isVFS  = !isRootPath;
+	
+	// open files
+	if ( fileObject.isVFS )
+	{
+		fileObject.handle.vfsIndex = VFS.Open( strFilename );
+		openSuccess = (fileObject.handle.vfsIndex != -1);
+	}
+	else
+	{
+		fileObject.handle.file = IO_File_Open( strFilename, access );
+		openSuccess = (fileObject.handle.file != -1);
+	}
+	
+	// if there was an error
+	if ( !openSuccess )
+	{
+		return 0;
+	}
+	
+	// add file object to opened files array
+	freeSlot = FindFreeOpenedFilesSlot();
+	if ( freeSlot == -1 )
+	{
+		freeSlot = OpenedFiles.size();
+		OpenedFiles.push_back( fileObject );
+	}
+	else
+	{
+		OpenedFiles[ freeSlot ] = fileObject;
+	}
+	
+	return freeSlot;
+#else
 	HWFILE	hFile;
 	HANDLE	hRealFile;
 	UINT32	dwAccess;
@@ -386,6 +495,7 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 		return(0);
 	
 	return(hFile);
+#endif
 }
 
 
@@ -410,6 +520,24 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 
 void FileClose( HWFILE hFile )
 {
+#ifdef VFS2
+	if ( hFile < 0 || hFile >= OpenedFiles.size() )
+	{
+		fprintf(stderr, "FileClose: file descriptor out of bounds\n");
+		return;
+	}
+	
+	if ( OpenedFiles[ hFile ].isVFS )
+	{
+		VFS.Close( OpenedFiles[ hFile ].handle.vfsIndex );
+	}
+	else
+	{
+		IO_File_Close( OpenedFiles[ hFile ].handle.file );
+	}
+	
+	OpenedFiles[ hFile ].isFree = TRUE;
+#else
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
 
@@ -443,6 +571,7 @@ void FileClose( HWFILE hFile )
 		if( gFileDataBase.fInitialized )
 			CloseLibraryFile( sLibraryID, uiFileNum );
 	}
+#endif
 }
 
 //**************************************************************************
@@ -481,6 +610,29 @@ void FileClose( HWFILE hFile )
 
 BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 iBytesToRead, UINT32 *piBytesRead )
 {
+#ifdef VFS2
+	INT32	bytesHasBeenRead;
+	
+	if ( hFile < 0 || hFile >= OpenedFiles.size() )
+	{
+		fprintf(stderr, "FileRead: file descriptor out of bounds\n");
+		return FALSE;
+	}
+	
+	if ( OpenedFiles[ hFile ].isVFS )
+	{
+		bytesHasBeenRead = VFS.Read( OpenedFiles[ hFile ].handle.vfsIndex, pDest, iBytesToRead );
+	}
+	else
+	{
+		bytesHasBeenRead = IO_File_Read( OpenedFiles[ hFile ].handle.file, pDest, iBytesToRead );
+	}
+	
+	if ( piBytesRead )
+		*piBytesRead = bytesHasBeenRead;
+		
+	return iBytesToRead == bytesHasBeenRead;
+#else
 	HANDLE	hRealFile;
 	UINT32		dwNumBytesToRead, dwNumBytesRead;
 	BOOLEAN	fRet = FALSE;
@@ -548,6 +700,7 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 iBytesToRead, UINT32 *piBytesR
 	#endif
 
 	return(fRet);
+#endif
 }
 
 //**************************************************************************
@@ -579,6 +732,29 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 iBytesToRead, UINT32 *piBytesR
 
 BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 iBytesToWrite, UINT32 *piBytesWritten )
 {
+#ifdef VFS2
+	INT32	bytesHasBeenWritten;
+	
+	if ( hFile < 0 || hFile >= OpenedFiles.size() )
+	{
+		fprintf(stderr, "FileWrite: file descriptor out of bounds\n");
+		return FALSE;
+	}
+	
+	if ( OpenedFiles[ hFile ].isVFS )
+	{
+		bytesHasBeenWritten = VFS.Write( OpenedFiles[ hFile ].handle.vfsIndex, pDest, iBytesToWrite );
+	}
+	else
+	{
+		bytesHasBeenWritten = IO_File_Write( OpenedFiles[ hFile ].handle.file, pDest, iBytesToWrite );
+	}
+	
+	if ( piBytesWritten )
+		*piBytesWritten = bytesHasBeenWritten;
+	
+	return iBytesToWrite == bytesHasBeenWritten;
+#else
 	HANDLE	hRealFile;
 	UINT32		dwNumBytesToWrite, dwNumBytesWritten;
 	INT16 sLibraryID;
@@ -616,6 +792,7 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 iBytesToWrite, UINT32 *piByte
 	}
 
 	return TRUE;
+#endif
 }
 
 
@@ -642,8 +819,37 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 iBytesToWrite, UINT32 *piByte
 //		9 Feb 98	DEF - modified to work with the library system
 //
 //**************************************************************************
-BOOLEAN FilePrintf( HWFILE hFile, char * strFormatted, ... )
+BOOLEAN FilePrintf( HWFILE hFile, CHAR8 * strFormatted, ... )
 {
+#ifdef VFS2
+	STRING512	strToSend;
+	va_list		argptr;
+
+	if ( hFile < 0 || hFile >= OpenedFiles.size() )
+	{
+		fprintf(stderr, "FilePrintf: file descriptor out of bounds\n");
+		return FALSE;
+	}
+
+	va_start(argptr, strFormatted);
+	vsprintf( strToSend, strFormatted, argptr );
+	va_end(argptr);
+
+	FileWrite( hFile, strToSend, strlen(strToSend) + 1, NULL );
+/*
+	if ( OpenedFiles[ hFile ].isVFS )
+	{
+		*piBytesWritten = VFS.Write( OpenedFiles[ hFile ].handle.vfsIndex, pDest, iBytesToWrite );
+	}
+	else
+	{
+		*piBytesWritten = IO_File_Write( OpenedFiles[ hFile ].handle.file, pDest, iBytesToWrite );
+	}
+	
+	return iBytesToWrite == *piBytesWritten;
+*/
+	return TRUE;
+#else
 	CHAR8		strToSend[80];
 	va_list	argptr;
 	BOOLEAN fRetVal = FALSE;
@@ -670,6 +876,7 @@ BOOLEAN FilePrintf( HWFILE hFile, char * strFormatted, ... )
 	}
 
 	return( fRetVal );
+#endif
 }
 
 //**************************************************************************
@@ -699,6 +906,34 @@ BOOLEAN FilePrintf( HWFILE hFile, char * strFormatted, ... )
 
 BOOLEAN FileSeek( HWFILE hFile, INT32 iDistance, UINT8 uiHow )
 {
+#ifdef VFS2
+	INT32	moveMethod;
+	BOOLEAN	seekResult;
+	
+	if ( hFile < 0 || hFile >= OpenedFiles.size() )
+	{
+		fprintf(stderr, "FileSeek: file descriptor out of bounds\n");
+		return FALSE;
+	}
+
+	if ( uiHow == FILE_SEEK_FROM_START )
+		moveMethod = IO_SEEK_FROM_START;
+	else if ( uiHow == FILE_SEEK_FROM_END )
+		moveMethod = IO_SEEK_FROM_END;
+	else
+		moveMethod = IO_SEEK_FROM_CURRENT;
+	
+	if ( OpenedFiles[ hFile ].isVFS )
+	{
+		seekResult = VFS.Seek( OpenedFiles[ hFile ].handle.vfsIndex, iDistance, moveMethod );
+	}
+	else
+	{
+		seekResult = IO_File_Seek( OpenedFiles[ hFile ].handle.file, iDistance, moveMethod );
+	}
+	
+	return seekResult;
+#else
 	HANDLE	hRealFile;
 	UINT32		dwMoveMethod;
 
@@ -737,6 +972,7 @@ BOOLEAN FileSeek( HWFILE hFile, INT32 iDistance, UINT8 uiHow )
 	}
 
 	return(TRUE);
+#endif
 }
 
 //**************************************************************************
@@ -764,6 +1000,26 @@ BOOLEAN FileSeek( HWFILE hFile, INT32 iDistance, UINT8 uiHow )
 
 INT32 FileGetPos( HWFILE hFile )
 {
+#ifdef VFS2
+	INT32	filePos = -1;
+	
+	if ( hFile < 0 || hFile >= OpenedFiles.size() )
+	{
+		fprintf(stderr, "FileGetPos: file descriptor out of bounds\n");
+		return 0;
+	}
+	
+	if ( OpenedFiles[ hFile ].isVFS )
+	{
+		filePos = VFS.Tell( OpenedFiles[ hFile ].handle.vfsIndex );
+	}
+	else
+	{
+		filePos = IO_File_GetPosition( OpenedFiles[ hFile ].handle.file );
+	}
+	
+	return filePos;
+#else
 	HANDLE	hRealFile;
 	UINT32	uiPositionInFile=0;
 
@@ -801,6 +1057,7 @@ INT32 FileGetPos( HWFILE hFile )
 	}
 
 	return(BAD_INDEX);
+#endif
 }
 
 //**************************************************************************
@@ -828,6 +1085,26 @@ INT32 FileGetPos( HWFILE hFile )
 
 INT32 FileGetSize( HWFILE hFile )
 {
+#ifdef VFS2
+	INT32	fileSize = 0;
+	
+	if ( hFile < 0 || hFile >= OpenedFiles.size() )
+	{
+		fprintf(stderr, "FileGetSize: file descriptor out of bounds\n");
+		return 0;
+	}
+	
+	if ( OpenedFiles[ hFile ].isVFS )
+	{
+		fileSize = VFS.GetSize( OpenedFiles[ hFile ].handle.vfsIndex );
+	}
+	else
+	{
+		fileSize = IO_File_GetSize( OpenedFiles[ hFile ].handle.file );
+	}
+	
+	return fileSize;
+#else
 	HANDLE  hRealHandle;
 	INT32	iFileSize = -1;
 
@@ -862,7 +1139,118 @@ INT32 FileGetSize( HWFILE hFile )
 		return(0);
 	else
 		return( iFileSize );
+#endif
 }
+
+//**************************************************************************
+//
+// FileSize()
+//		Get a filesize by filename.
+// Parameter List :
+//		strFilename - filename
+// Return Value :
+//		UINT32 - file size in bytes
+//
+//**************************************************************************
+INT32 FileSize(STR strFilename)
+{
+	vfsEntry	entry;
+
+	if ( IO_IsRootPath( strFilename ) )
+		return IO_File_GetSize( strFilename );
+
+	if ( !VFS.FindResource( strFilename, entry ) )
+		return 0;
+
+	if ( entry.LibIndex == LIB_REAL_FILE )
+		return IO_File_GetSize( entry.RealName.c_str() );
+
+	return 0;
+}
+
+
+//**************************************************************************
+//
+// FileCheckEndOfFile()
+//		Returns true if file pointer is at end of file, else false
+// Parameter List :
+//		hFile - file handler
+// Return Value :
+//		BOOLEAN - TRUE if end of file, FALSE if not
+//
+//**************************************************************************
+BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
+{
+#ifdef VFS2
+	BOOLEAN	isEOF;
+	IOFILE	file;
+	
+	if ( hFile < 0 || hFile >= OpenedFiles.size() )
+	{
+		fprintf(stderr, "FileCheckEndOfFile: file descriptor out of bounds\n");
+		return TRUE; // return true to avoid dead loops
+	}
+	
+	if ( OpenedFiles[ hFile ].isVFS )
+	{
+		isEOF = VFS.IsEOF( OpenedFiles[ hFile ].handle.vfsIndex );
+	}
+	else
+	{
+		file  = OpenedFiles[ hFile ].handle.file;
+		isEOF = ( IO_File_GetPosition(file) >= IO_File_GetSize(file) );
+	}
+	
+	return( isEOF );
+#else
+	INT16 sLibraryID;
+	UINT32 uiFileNum;
+	HANDLE	hRealFile;
+
+	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
+
+	//if its a real file, read the data from the file
+	if( sLibraryID == REAL_FILE_LIBRARY_ID )
+	{
+		UINT32 uiFileSize = FileGetSize( hFile );
+		UINT32 uiFilePtr  = FileGetPos( hFile );
+
+		return ( uiFilePtr >= uiFileSize );
+	}
+
+	//else it is a library file
+	else
+	{
+		//if the database is initialized
+		if( gFileDataBase.fInitialized )
+		{
+			//if the library is open
+			if( IsLibraryOpened( sLibraryID ) )
+			{
+				//if the file is opened
+				if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFileID != 0 )
+				{
+					UINT32	uiLength;
+					UINT32	uiCurPos;
+
+					uiLength = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileLength;
+					uiCurPos = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile;
+
+					//if we are trying to read more data then the size of the file, return an error
+					if( uiCurPos >= uiLength )
+					{
+						return( TRUE );
+					}
+				}
+			}
+		}
+	}
+
+	//we are not and the end of a file
+	return( 0 );
+#endif
+}
+
 
 //**************************************************************************
 //
@@ -1277,65 +1665,6 @@ void GetFileClose( GETFILESTRUCT *pGFStruct )
 }
 
 
-//**************************************************************************
-//
-// FileCheckEndOfFile()
-//		Returns true if file pointer is at end of file, else false
-// Parameter List :
-//		hFile - file handler
-// Return Value :
-//		BOOLEAN - TRUE if end of file, FALSE if not
-//
-//**************************************************************************
-BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
-{
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-	HANDLE	hRealFile;
-
-	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
-
-	//if its a real file, read the data from the file
-	if( sLibraryID == REAL_FILE_LIBRARY_ID )
-	{
-		UINT32 uiFileSize = FileGetSize( hFile );
-		UINT32 uiFilePtr  = FileGetPos( hFile );
-
-		return ( uiFilePtr >= uiFileSize );
-	}
-
-	//else it is a library file
-	else
-	{
-		//if the database is initialized
-		if( gFileDataBase.fInitialized )
-		{
-			//if the library is open
-			if( IsLibraryOpened( sLibraryID ) )
-			{
-				//if the file is opened
-				if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFileID != 0 )
-				{
-					UINT32	uiLength;
-					UINT32	uiCurPos;
-
-					uiLength = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileLength;
-					uiCurPos = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile;
-
-					//if we are trying to read more data then the size of the file, return an error
-					if( uiCurPos >= uiLength )
-					{
-						return( TRUE );
-					}
-				}
-			}
-		}
-	}
-
-	//we are not and the end of a file
-	return( 0 );
-}
-
 
 //**************************************************************************
 //
@@ -1417,33 +1746,6 @@ INT32	CompareSGPFileTimes( SGP_FILETIME	*pFirstFileTime, SGP_FILETIME *pSecondFi
 {
 	return( IO_CompareTime( pFirstFileTime, pSecondFileTime ) );
 }
-
-//**************************************************************************
-//
-// FileSize()
-//		Get a filesize by filename.
-// Parameter List :
-//		strFilename - filename
-// Return Value :
-//		UINT32 - file size in bytes
-//
-//**************************************************************************
-INT32 FileSize(STR strFilename)
-{
-	vfsEntry	entry;
-
-	if ( IO_IsRootPath( strFilename ) )
-		return IO_File_GetSize( strFilename );
-
-	if ( !VFS.FindResource( strFilename, entry ) )
-		return 0;
-
-	if ( entry.LibIndex == LIB_REAL_FILE )
-		return IO_File_GetSize( entry.RealName.c_str() );
-
-	return 0;
-}
-
 
 
 HANDLE	GetRealFileHandleFromFileManFileHandle( HWFILE hFile )

@@ -187,6 +187,12 @@ BOOLEAN	sgpSLFResourcePak::load_pak( void )
 		return( FALSE );
 	}
 
+	// add directory contained in slf
+	slfResource.file_name   = sgpString(LibFileHeader.sPathToLibrary);
+	slfResource.file_length = 0;
+	slfResource.file_offset = 0;
+	catalog.push_back( slfResource );
+
 	// seek the table of contents
 	if ( !IO_File_Seek( pak_handler, -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) ), IO_SEEK_FROM_END ) )
 	{
@@ -317,6 +323,8 @@ INT32 sgpSLFResourcePak::file_read ( pakFile file, PTR data, INT32 bytes_to_read
 	INT32	file_index;
 	INT32	cur_pos;
 	INT32	has_been_read;
+	INT32	file_length;
+	INT32	file_offset;
 	
 	if ( !is_opened )
 		return -1;
@@ -324,17 +332,19 @@ INT32 sgpSLFResourcePak::file_read ( pakFile file, PTR data, INT32 bytes_to_read
 	if ( file < 0 || file >= opened_file.size() )
 		return -1;
 	
-	file_index = opened_file[ file ].file_id;
-	cur_pos    = opened_file[ file ].file_pos;
+	file_index  = opened_file[ file ].file_id;
+	cur_pos     = opened_file[ file ].file_pos;
+	file_length = catalog[ file_index ].file_length;
+	file_offset = catalog[ file_index ].file_offset;
 
 	//if we are trying to read more data then the size of the file, correct read size
-	if( bytes_to_read + cur_pos > catalog[ file_index ].file_length )
+	if( bytes_to_read + cur_pos > file_length + file_offset )
 	{
-		bytes_to_read = catalog[ file_index ].file_length - cur_pos;
+		bytes_to_read = file_length + file_offset - cur_pos;
 	}
 
 	// seek file position within pak-file
-	if ( !IO_File_Seek( pak_handler, catalog[ file_index ].file_offset + cur_pos, IO_SEEK_FROM_START ) )
+	if ( !IO_File_Seek( pak_handler, file_offset + cur_pos, IO_SEEK_FROM_START ) )
 	{
 		fprintf(stderr, "Error seeking library (load) %d: errno=%d\n",
 			pak_handler, errno);
@@ -583,8 +593,8 @@ BOOLEAN	sgpDirResourcePak::load_pak( void )
 			fIsDirectory = IO_IsDirectory( foundFilesIterator->c_str() );
 			if ( fIsDirectory )
 				dirToLook.push_back( *foundFilesIterator );
-			else
-				catalog.push_back( *foundFilesIterator );
+
+			catalog.push_back( *foundFilesIterator );
 		}
 	}
 

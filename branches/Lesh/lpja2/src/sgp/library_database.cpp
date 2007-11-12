@@ -79,6 +79,10 @@ BOOLEAN InitializeFileDatabase( )
 	if ( !ReadGameSources( zConfigName ) )
 		return FALSE;
 
+#ifdef VFS2
+	VFS.BuildResourceMap( GameSource );
+	VFS.DebugDumpResources( "map_dump.txt" );
+#else
 	//if all the libraries exist, set them up
 	gFileDataBase.usNumberOfLibraries = NumberOfContainers;
 
@@ -136,6 +140,8 @@ BOOLEAN InitializeFileDatabase( )
 	gFileDataBase.RealFiles.iSizeOfOpenFileArray = INITIAL_NUM_HANDLES;
 
 	printf("----------> main libraries... done!\n\n");
+#endif
+
 	return(TRUE);
 }
 
@@ -149,6 +155,9 @@ BOOLEAN InitializeFileDatabase( )
 
 BOOLEAN ShutDownFileDatabase( )
 {
+#ifdef VFS2
+	// vfs related stuff
+#else
 	UINT16 sLoop1;
 
 	// Free up the memory used for each library
@@ -179,6 +188,7 @@ BOOLEAN ShutDownFileDatabase( )
 		MemFree( gFileDataBase.RealFiles.pRealFilesOpen );
 		gFileDataBase.RealFiles.pRealFilesOpen = NULL;
 	}
+#endif
 
 	GameSource.clear();
 

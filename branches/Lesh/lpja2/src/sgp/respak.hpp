@@ -66,7 +66,7 @@ typedef struct
 {
 	sgpString	file_name;				// file name
 	UINT32		file_length;			// file lenght
-	UINT32		file_offset;			// file offset
+	UINT32		file_offset;			// file offset inside slf-file
 } slfEntry;
 
 typedef std::vector<slfEntry>	slfResourceArray;

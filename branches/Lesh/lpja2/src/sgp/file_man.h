@@ -27,6 +27,9 @@
 //
 //**************************************************************************
 
+// Lesh: define this to test new revision of vfs
+#define VFS2
+
 #define MAX_FILENAME_LEN        48
 
 #define FILE_ACCESS_READ	    0x01
