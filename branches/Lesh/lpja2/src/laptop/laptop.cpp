@@ -6210,27 +6210,21 @@ void ClearOutTempLaptopFiles( void )
 	// clear out all temp files from laptop
 	
 	// file file
-	if (  (FileExists( "files.dat" ) == TRUE ) )
+	if (  (FileExists( gzFilesDataFile ) == TRUE ) )
 	{
-		 FileDelete( "files.dat" );
+		 FileDelete( gzFilesDataFile );
 	}
 
 	// finances
-	if (  (FileExists( "finances.dat" ) == TRUE ) )
+	if (  (FileExists( gzFinancesDataFile ) == TRUE ) )
 	{
-		 FileDelete( "finances.dat" );
-	}
-
-	// email
-	if (  (FileExists( "email.dat" ) == TRUE ) )
-	{
-		 FileDelete( "email.dat" );
+		 FileDelete( gzFinancesDataFile );
 	}
 
 	// history
-	if (  (FileExists( "history.dat" ) == TRUE ) )
+	if (  (FileExists( gzHistoryDataFile ) == TRUE ) )
 	{
-		 FileDelete( "history.dat" );
+		 FileDelete( gzHistoryDataFile );
 	}
 
 }
