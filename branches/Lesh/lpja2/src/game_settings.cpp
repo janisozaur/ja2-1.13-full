@@ -35,6 +35,8 @@
 
 #define				GAME_SETTINGS_FILE		"Ja2.set"
 
+STRING512			gameSettingsFilePath;
+
 #define				GAME_INI_FILE					"..\\Ja2.ini"
 
 #define				GAME_EXTERNAL_OPTIONS_FILE	"Ja2_Options.INI"
@@ -70,9 +72,12 @@ BOOLEAN LoadGameSettings()
 {
 	HWFILE	hFile;
 	UINT32	uiNumBytesRead;
-	char gameSettingsFilePath[MAX_PATH];
+	STRING512	profileDir;
 
-	strcpy(gameSettingsFilePath, GAME_SETTINGS_FILE);
+	// $TODO$
+	GetExecutableDirectory(profileDir);
+	
+	sprintf( gameSettingsFilePath, "%s%s", profileDir, GAME_SETTINGS_FILE );
 
 	//if the game settings file does NOT exist, or if it is smaller then what it should be
 	if( !FileExists( gameSettingsFilePath ) || FileSize( gameSettingsFilePath ) != sizeof( GAME_SETTINGS ) )
@@ -173,9 +178,12 @@ BOOLEAN	SaveGameSettings()
 {
 	HWFILE		hFile;
 	UINT32	uiNumBytesWritten;
-	char gameSettingsFilePath[MAX_PATH];
+//	STRING512	profileDir;
 
-	strcpy(gameSettingsFilePath, GAME_SETTINGS_FILE);
+	// $TODO$ - i hope, it will be already defined
+//	GetExecutableDirectory(profileDir);
+	
+//	sprintf( gameSettingsFilePath, "%s%s", profileDir, GAME_SETTINGS_FILE );
 
 	//create the file
 	hFile = FileOpen( gameSettingsFilePath, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
