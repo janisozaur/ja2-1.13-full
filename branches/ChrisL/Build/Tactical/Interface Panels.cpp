@@ -3513,7 +3513,7 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	{
 		// If we're standing over the backpack that we're trying to pick up, reset the ap cost to 0
 		if(!newStatus) {
-			for (int x = 0; x < gWorldItems[pSoldier->DropPackKey].object.ubNumberOfObjects; ++x) {
+			for (unsigned int x = 0; x < gWorldItems[pSoldier->DropPackKey].object.ubNumberOfObjects; ++x) {
 				// Failsafe in case our LBEArray data ever goes missing.
 				if(x >= LBEArray.size()){
 					break;
