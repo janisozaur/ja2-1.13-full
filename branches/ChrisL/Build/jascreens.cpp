@@ -375,9 +375,11 @@ UINT32 InitScreenHandle(void)
 		strcpy( vs_desc.ImageFile, "ja2_logo.STI" );
 
 		hVSurface = CreateVideoSurface( &vs_desc );
+//SB: JA2 Gold Rus doesn't contain such file!
+#ifndef RUSSIAN
 		if( !hVSurface )
 			AssertMsg( 0, "Failed to load ja2_logo.sti!" );
-
+#endif
 		//BltVideoSurfaceToVideoSurface( ghFrameBuffer, hVSurface, 0, 0, 0, VS_BLT_FAST, NULL );
 		ubCurrentScreen = 1;
 
@@ -422,6 +424,10 @@ UINT32 InitScreenHandle(void)
 		InvalidateScreen( );
 
 		// Delete video Surface
+//SB: JA2 Gold Rus doesn't contain such file!
+#ifdef RUSSIAN
+		if( hVSurface )
+#endif
 		DeleteVideoSurface( hVSurface );
 		//ATE: Set to true to reset before going into main screen!
 
