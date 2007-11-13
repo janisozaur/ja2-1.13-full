@@ -2304,7 +2304,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 {
 #ifdef USE_ASTAR_PATHS
 	int retVal = ASTAR::AStarPathfinder::GetInstance().GetPath(s, sDestination, ubLevel, usMovementMode, bCopy, fFlags);
-	if (retVal) {
+	if (retVal || sDestination == NOWHERE) {
 		return retVal;
 	}
 	else {
