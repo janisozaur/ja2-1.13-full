@@ -2296,15 +2296,19 @@ UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier )
 {
 	UINT32	uiTotalWeight = 0;
 	UINT32	uiPercent;
-	UINT8		ubLoop;
+	UINT8	ubLoop;
 	UINT16  usWeight;
-	UINT8		ubStrengthForCarrying;
+	UINT8	ubStrengthForCarrying;
+	UINT32	usItemIndex;
 
 	//Pulmu: Changes for dynamic ammo weight
 	for( ubLoop = 0; ubLoop < NUM_INV_SLOTS; ubLoop++)
 	{
+		usItemIndex = pSoldier->inv[ubLoop].usItem;
 		usWeight = pSoldier->inv[ubLoop].ubWeight;
-		if (Item[ pSoldier->inv[ubLoop].usItem ].ubPerPocket > 1 && (Item[ pSoldier->inv[ubLoop].usItem].usItemClass != IC_AMMO || gGameExternalOptions.fAmmoDynamicWeight == FALSE))
+		if ( Item[ usItemIndex ].ubPerPocket > 1 &&
+			Item[ usItemIndex ].usItemClass != IC_AMMO &&
+			!gGameExternalOptions.fAmmoDynamicWeight )
 		{
 			// account for # of items
 			usWeight *= pSoldier->inv[ubLoop].ubNumberOfObjects;
