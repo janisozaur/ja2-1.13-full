@@ -66,6 +66,8 @@ void ExitBoxing( void )
 						}
 						// put guy under AI control temporarily
 						pSoldier->flags.uiStatusFlags |= SOLDIER_PCUNDERAICONTROL;
+						//SB: this flag don't allow merc leave the ring
+						pSoldier->flags.uiStatusFlags &= ~SOLDIER_ENGAGEDINACTION;
 					}
 					else
 					{
