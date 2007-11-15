@@ -495,6 +495,16 @@ INT32 sgpSLFResourcePak::get_free_opened_slot( void )
 	return -1;	// failed to find
 }
 
+//*****************************************************************************
+// full_name - return full filename of the resource
+//	ret	filename of resource
+//*****************************************************************************
+sgpString	sgpSLFResourcePak::full_name( INT32 file_index )
+{
+	return catalog[file_index].file_name;
+}
+
+
 
 
 
@@ -871,4 +881,13 @@ BOOLEAN	sgpDirResourcePak::get_directory_listing( const sgpString& DirToLook, sg
 	}
 
 	return TRUE;
+}
+
+//*****************************************************************************
+// full_name - return full filename of the resource
+//	ret	filename of resource
+//*****************************************************************************
+sgpString	sgpDirResourcePak::full_name( INT32 file_index )
+{
+	return( pak_path + catalog[file_index] );
 }

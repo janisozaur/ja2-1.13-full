@@ -550,7 +550,7 @@ BOOLEAN	sgpVFS::GetResourceFilename( const CHAR8 *pResourceName, CHAR8 *pFilenam
 	if ( !FindResource( pResourceName, entry ) )
 		return FALSE;
 
-	strncpy( pFilename, entry.RealName.c_str(), uiMaxLen );
+	strncpy( pFilename, ResourceLib[ entry.LibIndex ]->full_name(entry.FileIndex).c_str(), uiMaxLen );
 	return TRUE;
 }
 

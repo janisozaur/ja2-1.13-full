@@ -51,6 +51,7 @@ public:
 	virtual INT32		file_pos  ( pakFile file ) = 0;
 	virtual INT32		file_size_by_handler ( pakFile file ) = 0;
 	virtual INT32		file_size_by_index   ( INT32 index  ) = 0;
+	virtual sgpString	full_name( INT32 file_index ) = 0;
 };
 
 typedef std::vector<sgpResourcePak*>	sgpPakArray;
@@ -115,6 +116,7 @@ public:
 	virtual INT32		file_pos  ( pakFile file );
 	virtual INT32		file_size_by_handler ( pakFile file );
 	virtual INT32		file_size_by_index   ( INT32 index  );
+	virtual sgpString	full_name( INT32 file_index );
 };
 
 
@@ -160,6 +162,7 @@ public:
 	virtual INT32		file_pos  ( pakFile file );
 	virtual INT32		file_size_by_handler ( pakFile file );
 	virtual INT32		file_size_by_index   ( INT32 index  );
+	virtual sgpString	full_name( INT32 file_index );
 };
 
 #endif
