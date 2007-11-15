@@ -3656,7 +3656,7 @@ void ScrollWorld( )
 			}
 			 
 
-			if ( gusMouseYPos >= SCREEN_HEIGHT - 21 )
+			if ( gusMouseYPos >= SCREEN_HEIGHT - 11 )
 			{
 				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_DOWN;
