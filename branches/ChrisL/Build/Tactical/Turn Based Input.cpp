@@ -2610,6 +2610,37 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 								//remove attachments
 								if ( gGameExternalOptions.gfShiftFRemoveAttachments == TRUE )
 								{
+									//CHRISL: We run into a problem here because GetFreeWorldItemIndex, which gets called 
+									//	from AddItemToPool, resets gWorldItems when it increases it's size.  This means
+									//	iter loses it's relationship which causes a CTD if we use this hotkey and there aren't
+									//	enough open WorldItems to accomodate all the attachments we're seperating.
+									while(1)
+									{
+										UINT8 cnt = 0;
+										attachmentList::iterator iter = gWorldItems[ uiLoop ].object[x]->attachments.begin();
+										if (iter == gWorldItems[ uiLoop ].object[x]->attachments.end())
+										{
+											break;
+										}
+										gTempObject = *gWorldItems[uiLoop].object[x]->GetAttachmentAtIndex(cnt);
+										if ( !Item[ gTempObject.usItem ].inseparable )
+										{
+											AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
+											if (gWorldItems[ uiLoop ].object.RemoveAttachment(&gTempObject))
+											{
+												ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
+											}
+										}
+										else
+										{
+											iter++;
+											if(iter == gWorldItems[ uiLoop ].object[x]->attachments.end())
+												break;
+											else
+												cnt++;
+										}
+									}
+#if 0
 									for (attachmentList::iterator iter = gWorldItems[ uiLoop ].object[x]->attachments.begin();
 										iter != gWorldItems[ uiLoop ].object[x]->attachments.end(); ++iter) {
 										if ( !Item[ iter->usItem ].inseparable )
@@ -2627,6 +2658,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 											}
 										}
 									}
+#endif
 								}
 							}
 						}
