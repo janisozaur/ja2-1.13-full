@@ -2217,7 +2217,7 @@ INT32 SellItem( OBJECTTYPE& object )
 	if( Item[ usItemType ].usItemClass == IC_AMMO )
 	{
 		//we are selling ammo
-		UINT8 magSize = Magazine[ Item[ usItemType ].ubClassIndex ].ubMagSize;
+		UINT16 magSize = Magazine[ Item[ usItemType ].ubClassIndex ].ubMagSize;
 		for (INT8 bLoop = 0; bLoop < object.ubNumberOfObjects; bLoop++)
 		{
 			iPrice += (INT32)( itemPrice * (float) object[bLoop]->data.ubShotsLeft / magSize );

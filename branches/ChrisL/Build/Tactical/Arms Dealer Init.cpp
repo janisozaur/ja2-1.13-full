@@ -78,7 +78,7 @@ std::vector<DealerItemList>	gArmsDealersInventory;
 
 
 
-void		AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubShotsLeft );
+void		AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT16 ubShotsLeft );
 void		AddItemToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE& object );
 
 void		RemoveRandomItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany );
@@ -1437,7 +1437,7 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 }
 
 
-void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubShotsLeft )
+void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT16 ubShotsLeft )
 {
 	// Ammo only, please!!!
 	if (Item [ usItemIndex ].usItemClass != IC_AMMO )
@@ -1452,7 +1452,7 @@ void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8
 	}
 
 
-	UINT8 ubMagCapacity = Magazine[ Item[ usItemIndex ].ubClassIndex ].ubMagSize;
+	UINT16 ubMagCapacity = Magazine[ Item[ usItemIndex ].ubClassIndex ].ubMagSize;
 	int numFullMags = 0;
 	if ( ubShotsLeft >= ubMagCapacity )
 	{
@@ -1466,7 +1466,7 @@ void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8
 	{
 		// handle "stray" ammo - add it to the dealer's stray pile
 
-		UINT8 *pubStrayAmmo = &(gArmsDealerStatus[ubArmsDealer].ubStrayAmmo[ usItemIndex ]);
+		UINT16 *pubStrayAmmo = &(gArmsDealerStatus[ubArmsDealer].ubStrayAmmo[ usItemIndex ]);
 		*pubStrayAmmo += ubShotsLeft;
 
 		// if dealer has accumulated enough stray ammo to make another full magazine, convert it!

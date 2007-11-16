@@ -5862,7 +5862,7 @@ UINT8 GetAutofireShotsPerFiveAPs( OBJECTTYPE *pObj )
 	return Weapon[ pObj->usItem ].bAutofireShotsPerFiveAP;
 
 }
-UINT8 GetMagSize( OBJECTTYPE *pObj )
+UINT16 GetMagSize( OBJECTTYPE *pObj )
 {
 //	 DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("GetMagSize"));
 

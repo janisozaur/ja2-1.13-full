@@ -999,7 +999,7 @@ void ExtractAndUpdateExplosivesGUI()
 		else
 			i = max( 1, min( i, ItemSlotLimit(gpItem, STACK_SIZE_LIMIT) ) );
 		SetInputFieldStringWithNumericStrictValue( 2, i );
-		CreateItems( gpItem->usItem, (*gpItem)[0]->data.objectStatus, i, gpItem );
+		CreateItems( gpItem->usItem, (INT8)(*gpItem)[0]->data.objectStatus, i, gpItem );
 	}
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 3 );

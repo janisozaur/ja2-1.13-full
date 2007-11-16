@@ -292,7 +292,7 @@ typedef struct
 typedef struct
 {
 	UINT8	ubCalibre;
-	UINT8 ubMagSize;
+	UINT16	ubMagSize;
 	UINT8	ubAmmoType;
 
 	UINT32 uiIndex;
@@ -383,7 +383,7 @@ UINT8 GetBaseAutoFireCost( OBJECTTYPE *pObj );
 UINT8 GetBurstPenalty( OBJECTTYPE *pObj, BOOLEAN fProneStance = FALSE );
 UINT8 GetAutoPenalty( OBJECTTYPE *pObj, BOOLEAN fProneStance = FALSE );
 UINT8 GetShotsPerBurst( OBJECTTYPE *pObj );
-UINT8 GetMagSize( OBJECTTYPE *pObj );
+UINT16 GetMagSize( OBJECTTYPE *pObj );
 bool WeaponReady(SOLDIERTYPE * pSoldier);
 INT8 GetAPsToReload( OBJECTTYPE *pObj );
 

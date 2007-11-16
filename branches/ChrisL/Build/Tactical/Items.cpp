@@ -59,7 +59,7 @@ class OBJECTTYPE;
 class SOLDIERTYPE;
 
 
-#define ANY_MAGSIZE 255
+#define ANY_MAGSIZE 65535
 
 void SetNewItem( SOLDIERTYPE *pSoldier, UINT8 ubInvPos, BOOLEAN fNewItem );
 
@@ -2680,7 +2680,7 @@ void DamageObj( OBJECTTYPE * pObj, INT8 bAmount, UINT8 subObject )
 
 void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj )
 {
-	INT8	bMaxPoints;
+	INT16	bMaxPoints;
 
 	if ( !(Item[ pObj->usItem ].usItemClass & IC_AMMO || Item[ pObj->usItem ].usItemClass & IC_KIT || Item[ pObj->usItem ].usItemClass & IC_MEDKIT  || Item[pObj->usItem].canteen ) )
 	{
@@ -2703,9 +2703,9 @@ void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj )
 	DistributeStatus(pObj, pObj, bMaxPoints);
 }
 
-void DistributeStatus(OBJECTTYPE* pSourceObject, OBJECTTYPE* pTargetObject, INT8 bMaxPoints)
+void DistributeStatus(OBJECTTYPE* pSourceObject, OBJECTTYPE* pTargetObject, INT16 bMaxPoints)
 {
-	INT8 bPointsToMove;
+	INT16 bPointsToMove;
 	for ( int bLoop = pSourceObject->ubNumberOfObjects - 1; bLoop >= 0; bLoop-- )
 	{
 		StackedObjectData* pSource = (*pSourceObject)[ bLoop ];
@@ -3071,7 +3071,7 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo, UINT32 sub
 	}
 }
 
-INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT8 ubMagSize, INT8 bExcludeSlot )
+INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT16 ubMagSize, INT8 bExcludeSlot )
 {
 	INT8				bLoop;
 	INVTYPE *		pItem;
@@ -4017,6 +4017,32 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 
 	return( TRUE );
 }
+
+//CHRISL: Wrote this function to try and clean up possible problems relating to the 16bit change for ammo capacity
+void CleanUpItemStats( OBJECTTYPE * pObj )
+{
+	UINT16		magSize;
+
+	if(Item[pObj->usItem].usItemClass == IC_GUN)
+	{
+		magSize = GetMagSize(pObj);
+		if((*pObj)[0]->data.gun.ubGunShotsLeft > magSize)
+		{
+			(*pObj)[0]->data.gun.ubGunShotsLeft = magSize;
+		}
+		return;
+	}
+	if(Item[pObj->usItem].usItemClass == IC_AMMO)
+	{
+		magSize = Magazine[Item[pObj->usItem].ubClassIndex].ubMagSize;
+		if((*pObj)[0]->data.ubShotsLeft > magSize)
+		{
+			(*pObj)[0]->data.ubShotsLeft = magSize;
+		}
+		return;
+	}
+}
+
 BOOLEAN FreeUpSlotIfPossibleThenPlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 {
 	//this gets called if something doesn't fit in bPos, which can happen if something is there
@@ -4053,6 +4079,9 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	{
 		fObjectWasRobotRemote = TRUE;
 	}
+
+	//CHRISL: Failsafe to try and clean up ammo capacity problems
+	CleanUpItemStats(pObj);
 
 	if ( !CanItemFitInPosition( pSoldier, pObj, bPos, TRUE ) )
 	{
@@ -4240,7 +4269,7 @@ bool TryToStackInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, int bSlot)
 			// will disappear in their entirety if sold/moved, causing anything added through here to vanish also!
 			if( !( ( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE ) && ShouldSoldierDisplayHatchOnItem( pSoldier->ubProfile, bSlot ) ) )
 			{
-				pSoldier->inv[bSlot].AddObjectsToStack(*pObj);
+				pSoldier->inv[bSlot].AddObjectsToStack(*pObj, -1, pSoldier, bSlot);
 				if (pObj->exists() == false) {
 					return true;
 				}
@@ -4254,7 +4283,7 @@ bool TryToPlaceInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, in
 {
 	bSlot = FindEmptySlotWithin( pSoldier, bSlot, endSlot );
 	if (CanItemFitInPosition(pSoldier, pObj, bSlot, false) == false) {
-		bSlot = endSlot;
+		//bSlot = endSlot;
 		return false;
 	}
 
@@ -4905,7 +4934,7 @@ UINT16 DefaultMagazine( UINT16 usItem )
 	return( 0 );
 }
 
-UINT16 FindReplacementMagazine( UINT8 ubCalibre, UINT8 ubMagSize, UINT8 ubAmmoType )
+UINT16 FindReplacementMagazine( UINT8 ubCalibre, UINT16 ubMagSize, UINT8 ubAmmoType )
 {
 	UINT16 usLoop;
 	UINT16 usDefault;
