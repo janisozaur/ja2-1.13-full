@@ -11,7 +11,6 @@
 	#include "video.h"
 	#include "game_settings.h"
 	#include "io_layer.h"
-	#include "ini_reader.h"
 	
 	// need string and string array types
 	#include "vfs_types.hpp"
@@ -81,7 +80,6 @@ BOOLEAN InitializeFileDatabase( )
 
 #ifdef VFS2
 	VFS.BuildResourceMap( GameSource );
-	VFS.DebugDumpResources( "map_dump.txt" );
 #else
 	//if all the libraries exist, set them up
 	gFileDataBase.usNumberOfLibraries = NumberOfContainers;
