@@ -7651,7 +7651,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZPixelateObscured( UINT16 *pBuffer, UINT32 
 UINT32 usHeight, usWidth, uiOffset, LineSkip;
 INT32	 iTempX, iTempY;
 UINT16 *p16BPPPalette;
-UINT8	 *SrcPtr, *DestPtr, *ZPtr;
+UINT8	 *SrcPtr, *DestPtr, *ZPtr, *DestPtrStart;
 UINT32 uiLineFlag;
 ETRLEObject *pTrav;
 
@@ -7676,7 +7676,7 @@ ETRLEObject *pTrav;
 
 
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
+	DestPtrStart = DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
@@ -7706,7 +7706,7 @@ ETRLEObject *pTrav;
 					}
 					else
 					{
-						if (uiLineFlag != (((UINT32)DestPtr & 2) != 0)) continue;
+						if (uiLineFlag != (((DestPtr - DestPtrStart) & 2) != 0)) continue;
 					}
 					*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
 				}
@@ -9409,7 +9409,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBObscured( UINT16 *pBuffer, UINT32 
 {
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth;
-	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
+	UINT8	 *SrcPtr, *DestPtr, *ZPtr, *DestPtrStart;
 	UINT32 LineSkip;
 	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
@@ -9437,7 +9437,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBObscured( UINT16 *pBuffer, UINT32 
 
 
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
+	DestPtrStart = DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	uiLineFlag=(iTempY&1);
@@ -9473,7 +9473,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBObscured( UINT16 *pBuffer, UINT32 
 					else
 					{
 						if (*(UINT16*)ZPtr <= usZValue ||
-								uiLineFlag == (((UINT32)DestPtr & 2) != 0)) // XXX ugly, can be done better by just examining every other pixel
+								uiLineFlag == (((DestPtr - DestPtrStart) & 2) != 0)) // XXX ugly, can be done better by just examining every other pixel
 						{
 							*(UINT16*)DestPtr = p16BPPPalette[px];
 						}
@@ -10497,7 +10497,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip( UINT16 *pBuffer, UIN
 {
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth, Unblitted, uiLineFlag;
-	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
+	UINT8	 *SrcPtr, *DestPtr, *ZPtr, *DestPtrStart;
 	UINT32 LineSkip;
   ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
@@ -10551,7 +10551,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip( UINT16 *pBuffer, UIN
 		return(TRUE);
 
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
+	DestPtrStart = DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
@@ -10641,7 +10641,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 					else
 					{
 						if (*(UINT16*)ZPtr <= usZValue ||
-								uiLineFlag == (((UINT32)DestPtr & 2) != 0)) // XXX ugly, can be done better by just examining every other pixel
+								uiLineFlag == (((DestPtr - DestPtrStart) & 2) != 0)) // XXX ugly, can be done better by just examining every other pixel
 						{
 							*(UINT16*)DestPtr = p16BPPPalette[px];
 						}
@@ -16592,7 +16592,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip( UINT16 *pBuffer, U
 {
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth, Unblitted;
-	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
+	UINT8	 *SrcPtr, *DestPtr, *ZPtr, *DestPtrStart;
 	UINT32 LineSkip;
   ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
@@ -16649,7 +16649,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip( UINT16 *pBuffer, U
 		return(TRUE);
 
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
+	DestPtrStart = DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
@@ -16738,7 +16738,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 					else
 					{
 						// XXX original code updates Z value in one of two cases on this path, seems wrong
-						if (uiLineFlag != (((UINT32)DestPtr & 2) != 0)) continue;
+						if (uiLineFlag != (((DestPtr - DestPtrStart) & 2) != 0)) continue;
 					}
 
 					UINT8 px = *SrcPtr;
@@ -17581,7 +17581,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured( UINT16 *pBuffer, UINT3
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth;
-	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
+	UINT8	 *SrcPtr, *DestPtr, *ZPtr, *DestPtrStart;
 	UINT32 LineSkip;
 	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
@@ -17608,7 +17608,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured( UINT16 *pBuffer, UINT3
 
 
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
+	DestPtrStart = DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
@@ -17639,7 +17639,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured( UINT16 *pBuffer, UINT3
 					else
 					{
 						// XXX original code updates Z value in one of two cases on this path, seems wrong
-						if (uiLineFlag != (((UINT32)DestPtr & 2) != 0)) continue;
+						if (uiLineFlag != (((DestPtr - DestPtrStart) & 2) != 0)) continue;
 					}
 
 					UINT8 px = *SrcPtr;
@@ -19139,7 +19139,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZClipPixelateObscured( UINT16 *pBuffer, UIN
 UINT16 *p16BPPPalette;
 UINT32 uiOffset, uiLineFlag;
 UINT32 usHeight, usWidth, Unblitted;
-UINT8	 *SrcPtr, *DestPtr, *ZPtr;
+UINT8	 *SrcPtr, *DestPtr, *ZPtr, *DestPtrStart;
 UINT32 LineSkip;
 ETRLEObject *pTrav;
 INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
@@ -19193,7 +19193,7 @@ INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 		return(TRUE);
 
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
+	DestPtrStart = DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
@@ -19279,7 +19279,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 					}
 					else
 					{
-						if (uiLineFlag != (((UINT32)DestPtr & 2) != 0)) continue;
+						if (uiLineFlag != (((DestPtr - DestPtrStart) & 2) != 0)) continue;
 					}
 					*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
 				}

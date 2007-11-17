@@ -5394,7 +5394,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip( UINT16 *pBuffer, UINT32 ui
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset, uiLineFlag;
 	UINT32 usHeight, usWidth, Unblitted;
-	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
+	UINT8	 *SrcPtr, *DestPtr, *ZPtr, *DestPtrStart;
 	UINT32 LineSkip;
   ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
@@ -5454,7 +5454,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip( UINT16 *pBuffer, UINT32 ui
 		return(TRUE);
 	
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
+	DestPtrStart = DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
@@ -5617,7 +5617,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 				do
 				{
 					if (*(UINT16*)ZPtr < usZLevel ||
-							uiLineFlag == (((uintptr_t)DestPtr & 2) != 0)) // XXX update Z when pixelating?
+							uiLineFlag == (((DestPtr - DestPtrStart) & 2) != 0)) // XXX update Z when pixelating?
 					{
 						*(UINT16*)ZPtr = usZLevel;
 						*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
@@ -5946,7 +5946,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip( UINT16 *pBuffer
 {
 	UINT32 uiOffset, uiLineFlag;
 	UINT32 usHeight, usWidth, Unblitted;
-	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
+	UINT8	 *SrcPtr, *DestPtr, *ZPtr, *DestPtrStart;
 	UINT32 LineSkip;
   ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
@@ -6005,7 +6005,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip( UINT16 *pBuffer
 		return(TRUE);
 	
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
+	DestPtrStart = DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
@@ -6166,7 +6166,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 				do
 				{
 					if (*(UINT16*)ZPtr < usZLevel ||
-							uiLineFlag == (((uintptr_t)DestPtr & 2) != 0)) // XXX update Z when pixelating?
+							uiLineFlag == (((DestPtr - DestPtrStart) & 2) != 0)) // XXX update Z when pixelating?
 					{
 						*(UINT16*)ZPtr = usZLevel;
 						UINT8 Px = *SrcPtr;
