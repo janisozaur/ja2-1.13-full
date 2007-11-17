@@ -774,21 +774,20 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 		UINT32 uiSoundID;
 		SOUNDPARMS		spParms;
 		INT32		iFaceIndex;
-
-		// Play sound!
-		memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-		spParms.uiSpeed = RATE_11025;
-		spParms.uiVolume = (INT8)CalculateSpeechVolume( HIGHVOLUME );
+		INT16		volume;
 
 		// If we are an enemy.....reduce due to volume
 		if ( pSoldier->bTeam != gbPlayerNum )
 		{
-			spParms.uiVolume = SoundVolume( (UINT8)spParms.uiVolume, pSoldier->sGridNo );
+			volume = SoundVolume( (UINT8)spParms.sVolume, pSoldier->sGridNo );
 		}
-		spParms.uiLoop = 1;
-		spParms.uiPan = SoundDir( pSoldier->sGridNo );
-		spParms.uiPriority=GROUP_PLAYER;
+
+		spParms.iPriority     = GROUP_PLAYER;
+		spParms.sVolume       = volume;
+		spParms.iLoop         = 1;
+		spParms.sPan          = SoundDir( pSoldier->sGridNo );
+		spParms.EOSCallback   = NULL;
+		spParms.pCallbackData = NULL;
 
 		if ( pSoldier->usAnimState == NINJA_SPINKICK )
 		{
@@ -7152,6 +7151,7 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 	BOOLEAN				fDoSub = FALSE;
 	INT32					uiSubSoundID = 0;
 	BOOLEAN				fSpeechSound = FALSE;
+	INT16			volume;
 
 	// DOUBLECHECK RANGE
 	CHECKF ( ubBattleSoundID < NUM_MERC_BATTLE_SOUNDS );
@@ -7486,29 +7486,27 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 	}
 
 	// Play sound!
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-	spParms.uiSpeed = RATE_11025;
-	//spParms.uiVolume = CalculateSpeechVolume( pSoldier->bVocalVolume );
-
-	spParms.uiVolume = (INT8)CalculateSpeechVolume( HIGHVOLUME );
+	volume = (INT8)CalculateSpeechVolume( HIGHVOLUME );
 
 	// ATE: Reduce volume for OK sounds...
 	// ( Only for all-moves or multi-selection cases... )
 	if ( bSpecialCode == BATTLE_SND_LOWER_VOLUME )
 	{
-		spParms.uiVolume = (INT8)CalculateSpeechVolume( MIDVOLUME );
+		volume = (INT8)CalculateSpeechVolume( MIDVOLUME );
 	}
 
 	// If we are an enemy.....reduce due to volume
 	if ( pSoldier->bTeam != gbPlayerNum )
 	{
-		spParms.uiVolume = SoundVolume( (UINT8)spParms.uiVolume, pSoldier->sGridNo );
+		volume = SoundVolume( (UINT8)spParms.sVolume, pSoldier->sGridNo );
 	}
 
-	spParms.uiLoop = 1;
-	spParms.uiPan = SoundDir( pSoldier->sGridNo );
-	spParms.uiPriority=GROUP_PLAYER;
+	spParms.iPriority     = GROUP_PLAYER;
+	spParms.sVolume       = volume;
+	spParms.iLoop         = 1;
+	spParms.sPan          = SoundDir( pSoldier->sGridNo );
+	spParms.EOSCallback   = NULL;
+	spParms.pCallbackData = NULL;
 
 	if ( ( uiSoundID = SoundPlay( zFilename, &spParms ) ) == SOUND_ERROR )
 	{

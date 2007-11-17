@@ -105,12 +105,12 @@ BOOLEAN MusicPlay(UINT32 uiNum)
 	if(fMusicPlaying)
 		MusicStop();
 	
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-	spParms.uiPriority=PRIORITY_MAX;
-	spParms.uiVolume=0;
-	spParms.uiLoop=1;   // Lesh: only 1 line added
-
-	spParms.EOSCallback = MusicStopCallback;
+	spParms.iPriority     = PRIORITY_MAX;
+	spParms.sVolume       = 0;
+	spParms.iLoop         = 1;
+	spParms.sPan          = SOUND_PARAMS_DEFAULT_PAN;
+	spParms.EOSCallback   = MusicStopCallback;
+	spParms.pCallbackData = NULL;
 
 	//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "About to call SoundPlayStreamedFile" );
 

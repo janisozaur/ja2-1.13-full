@@ -444,24 +444,23 @@ UINT32 PlayJA2Sample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoo
 	//SoundLog((CHAR8 *)String(" Play sound %s on volume %d", szSoundEffects[usNum], ubVolume));
 
 	SOUNDPARMS spParms;
+	INT16		volume;
 
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-	spParms.uiSpeed = usRate;
-	
 	if ( strstr( szSoundEffects[usNum], "WEAPONS" ) == NULL )
 	{
-		spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );		
+		volume = CalculateSoundEffectsVolume( ubVolume );		
 	}
 	else
 	{
-		spParms.uiVolume = (UINT32)( ( ubVolume / (FLOAT) HIGHVOLUME ) * guiSoundEffectsVolume +.5 ) * (1 + gGameExternalOptions.guiWeaponSoundEffectsVolume / 100);
+		volume = (INT16)( ( ubVolume / (FLOAT) HIGHVOLUME ) * guiSoundEffectsVolume +.5 ) * (1 + gGameExternalOptions.guiWeaponSoundEffectsVolume / 100);
 	}
 
-	spParms.uiVolume &= 0xFFL;
-	spParms.uiLoop = ubLoops;
-	spParms.uiPan = uiPan & 0xFFL;
-	spParms.uiPriority=GROUP_PLAYER;
+	spParms.iPriority     = GROUP_PLAYER;
+	spParms.sVolume       = volume & 0x00FF;
+	spParms.iLoop         = ubLoops;
+	spParms.sPan          = uiPan & 0x00FF;
+	spParms.EOSCallback   = NULL;
+	spParms.pCallbackData = NULL;
 
 	//SoundLog((CHAR8 *)String(" Play sound %s on volume %d", szSoundEffects[usNum], spParms.uiVolume));
 
@@ -473,14 +472,12 @@ UINT32 PlayJA2StreamingSample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UIN
 {
   SOUNDPARMS spParms;
 
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-	spParms.uiSpeed = usRate;
-
-	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
-	spParms.uiLoop = ubLoops;
-	spParms.uiPan = uiPan;
-	spParms.uiPriority=GROUP_PLAYER;
+	spParms.iPriority     = GROUP_PLAYER;
+	spParms.sVolume       = CalculateSoundEffectsVolume( ubVolume );
+	spParms.iLoop         = ubLoops;
+	spParms.sPan          = uiPan;
+	spParms.EOSCallback   = NULL;
+	spParms.pCallbackData = NULL;
 
 	return(SoundPlayStreamedFile(szSoundEffects[usNum], &spParms));
 }
@@ -492,44 +489,40 @@ UINT32 PlayJA2SampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, U
 	// does the same thing as PlayJA2Sound, but one only has to pass the filename, not the index of the sound array
 
 	SOUNDPARMS spParms;
-
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-	spParms.uiSpeed = usRate;
+	INT16		volume;
 
 	if ( strstr( szFileName, "WEAPONS" ) == NULL )
 	{
-		spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
+		volume = CalculateSoundEffectsVolume( ubVolume );
 	}
 	else
 	{
-		spParms.uiVolume = (UINT32)( ( ubVolume / (FLOAT) HIGHVOLUME ) * guiSoundEffectsVolume +.5 ) * (1 + gGameExternalOptions.guiWeaponSoundEffectsVolume / 100);
+		volume = (INT16)( ( ubVolume / (FLOAT) HIGHVOLUME ) * guiSoundEffectsVolume +.5 ) * (1 + gGameExternalOptions.guiWeaponSoundEffectsVolume / 100);
 	}
-	
-	spParms.uiLoop = ubLoops;
-	spParms.uiPan = uiPan;
-	spParms.uiPriority=GROUP_PLAYER;
+
+	spParms.iPriority     = GROUP_PLAYER;
+	spParms.sVolume       = CalculateSoundEffectsVolume( ubVolume );
+	spParms.iLoop         = ubLoops;
+	spParms.sPan          = uiPan;
+	spParms.EOSCallback   = NULL;
+	spParms.pCallbackData = NULL;
 
 	//SoundLog((CHAR8 *)String(" Play sound %s on volume %d", szFileName, spParms.uiVolume));
 
-	return(SoundPlay((STR) szFileName, &spParms));
+	return(SoundPlay(szFileName, &spParms));
 }
 
 UINT32 PlayJA2StreamingSampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, SOUND_STOP_CALLBACK EndsCallback )
 {
-
 	// does the same thing as PlayJA2Sound, but one only has to pass the filename, not the index of the sound array
+	SOUNDPARMS spParms;
 
-  SOUNDPARMS spParms;
-
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-	spParms.uiSpeed = usRate;
-	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
-	spParms.uiLoop = ubLoops;
-	spParms.uiPan = uiPan;
-	spParms.uiPriority=GROUP_PLAYER;
-    spParms.EOSCallback=EndsCallback;
+	spParms.iPriority     = GROUP_PLAYER;
+	spParms.sVolume       = CalculateSoundEffectsVolume( ubVolume );
+	spParms.iLoop         = ubLoops;
+	spParms.sPan          = uiPan;
+	spParms.EOSCallback   = EndsCallback;
+	spParms.pCallbackData = NULL;
 
 	return( SoundPlayStreamedFile(szFileName, &spParms) );
 }
@@ -539,11 +532,12 @@ UINT32 PlayJA2Ambient( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops)
 {
 	SOUNDPARMS spParms;
 
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
-	spParms.uiLoop = ubLoops;
-	spParms.uiPriority=GROUP_AMBIENT;
+	spParms.iPriority     = GROUP_AMBIENT;
+	spParms.sVolume       = CalculateSoundEffectsVolume( ubVolume );
+	spParms.iLoop         = ubLoops;
+	spParms.sPan          = SOUND_PARAMS_DEFAULT_PAN;
+	spParms.EOSCallback   = NULL;
+	spParms.pCallbackData = NULL;
 
 	return(SoundPlay(szAmbientEffects[usNum], &spParms));
 }
@@ -552,13 +546,14 @@ UINT32 PlayJA2AmbientRandom( UINT32 usNum, UINT32 uiTimeMin, UINT32 uiTimeMax)
 {
 	RANDOMPARMS rpParms;
 
-	memset(&rpParms, 0xff, sizeof(RANDOMPARMS));
-
-	rpParms.uiTimeMin=uiTimeMin;
-	rpParms.uiTimeMax=uiTimeMax;
-	rpParms.uiVolMin = CalculateSoundEffectsVolume( AmbientVols[usNum] );
-	rpParms.uiVolMax = CalculateSoundEffectsVolume( AmbientVols[usNum] );
-	rpParms.uiPriority=GROUP_AMBIENT;
+	rpParms.iTimeMin      = uiTimeMin;
+	rpParms.iTimeMax      = uiTimeMax;
+	rpParms.sVolMin       = CalculateSoundEffectsVolume( AmbientVols[usNum] );
+	rpParms.sVolMax       = CalculateSoundEffectsVolume( AmbientVols[usNum] );
+	rpParms.sPanMin       = SOUND_PARAMS_DEFAULT_PAN;
+	rpParms.sPanMax       = SOUND_PARAMS_DEFAULT_PAN;
+	rpParms.iPriority     = GROUP_AMBIENT;
+	rpParms.iMaxInstances = SOUND_PARAMS_DEFAULT_INSTANCES;
 
 	return(SoundPlayRandom(szAmbientEffects[usNum], &rpParms));
 }
@@ -754,18 +749,14 @@ INT32 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 
 void PlayDelayedJA2Sample( UINT32 uiDelay, UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
 {
-
-	memset(&gDelayedSoundParms, 0xff, sizeof(SOUNDPARMS));
-
-	gDelayedSoundParms.uiSpeed = usRate;
-	gDelayedSoundParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
-	gDelayedSoundParms.uiLoop = ubLoops;
-	gDelayedSoundParms.uiPan = uiPan;
-	gDelayedSoundParms.uiPriority=GROUP_PLAYER;
+	gDelayedSoundParms.iPriority     = GROUP_PLAYER;
+	gDelayedSoundParms.sVolume       = CalculateSoundEffectsVolume( ubVolume );
+	gDelayedSoundParms.iLoop         = ubLoops;
+	gDelayedSoundParms.sPan          = uiPan;
+	gDelayedSoundParms.EOSCallback   = NULL;
+	gDelayedSoundParms.pCallbackData = NULL;
 
 	guiDelayedSoundNum = usNum;
-
-	//return(SoundPlay(szSoundEffects[usNum], &spParms));
 
 	// Setup multipurpose timer....
 	SetCustomizableTimerCallbackAndDelay( uiDelay, DelayedSoundTimerCallback, FALSE );

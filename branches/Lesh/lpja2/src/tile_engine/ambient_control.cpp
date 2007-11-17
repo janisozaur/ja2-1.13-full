@@ -232,14 +232,15 @@ UINT32 SetupNewAmbientSound( UINT32 uiAmbientID )
 	RANDOMPARMS rpParms;
 
 	//SoundLog((CHAR8 *)String("  SetupNewAmbientSound()1:  uiAmbientID: '%d'", uiAmbientID ) );
-	
-	memset(&rpParms, 0xff, sizeof(RANDOMPARMS));
 
-	rpParms.uiTimeMin		=	gAmbData[ uiAmbientID ].uiMinTime;
-	rpParms.uiTimeMax		=	gAmbData[ uiAmbientID ].uiMaxTime;
-	rpParms.uiVolMin		= CalculateSoundEffectsVolume( gAmbData[ uiAmbientID ].uiVol );
-	rpParms.uiVolMax		= CalculateSoundEffectsVolume( gAmbData[ uiAmbientID ].uiVol );
-	rpParms.uiPriority	=	GROUP_AMBIENT;
+	rpParms.iTimeMin      = gAmbData[ uiAmbientID ].uiMinTime;;
+	rpParms.iTimeMax      = gAmbData[ uiAmbientID ].uiMaxTime;
+	rpParms.sVolMin       = CalculateSoundEffectsVolume( gAmbData[ uiAmbientID ].uiVol );
+	rpParms.sVolMax       = CalculateSoundEffectsVolume( gAmbData[ uiAmbientID ].uiVol );
+	rpParms.sPanMin       = SOUND_PARAMS_DEFAULT_PAN;
+	rpParms.sPanMax       = SOUND_PARAMS_DEFAULT_PAN;
+	rpParms.iPriority     = GROUP_AMBIENT;
+	rpParms.iMaxInstances = SOUND_PARAMS_DEFAULT_INSTANCES;
 
 	//SoundLog((CHAR8 *)String("  SetupNewAmbientSound()2:  gAmbData[ uiAmbientID ].zFilename: '%s',  Params: '%s'", gAmbData[ uiAmbientID ].zFilename, &rpParms ) );
 	
@@ -251,11 +252,12 @@ UINT32 StartSteadyStateAmbient( UINT32 ubVolume, UINT32 ubLoops)
 {
 SOUNDPARMS spParms;
 
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
-	spParms.uiLoop = ubLoops;
-	spParms.uiPriority=GROUP_AMBIENT;
+	spParms.iPriority     = GROUP_AMBIENT;
+	spParms.sVolume       = CalculateSoundEffectsVolume( ubVolume );
+	spParms.iLoop         = ubLoops;
+	spParms.sPan          = SOUND_PARAMS_DEFAULT_PAN;
+	spParms.EOSCallback   = NULL;
+	spParms.pCallbackData = NULL;
 
 	return(SoundPlay( gSteadyStateAmbientTable[ gubCurrentSteadyStateAmbience ].zSoundNames[ gubCurrentSteadyStateSound ], &spParms ) );
 }

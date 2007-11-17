@@ -396,50 +396,50 @@ UINT32 SoundPlayRandom(STR pFilename, RANDOMPARMS *pParms)
 			pSampleList[uiSample].uiFlags|=(SAMPLE_RANDOM|SAMPLE_LOCKED);
 			
 			// Setup time intervals
-			if(pParms->uiTimeMin==SOUND_PARMS_DEFAULT)
+			if( pParms->iTimeMin==SOUND_PARAMS_DEFAULT_TIME ) 
 				return(SOUND_ERROR);
 			else
-				pSampleList[uiSample].uiTimeMin=pParms->uiTimeMin;
+				pSampleList[uiSample].uiTimeMin=pParms->iTimeMin;
 
-			if(pParms->uiTimeMax==SOUND_PARMS_DEFAULT)
-				pSampleList[uiSample].uiTimeMax=pParms->uiTimeMin;
+			if( pParms->iTimeMax==SOUND_PARAMS_DEFAULT_TIME )
+				pSampleList[uiSample].uiTimeMax=pParms->iTimeMin;
 			else
-				pSampleList[uiSample].uiTimeMax=pParms->uiTimeMax;
+				pSampleList[uiSample].uiTimeMax=pParms->iTimeMax;
 
 			// Volume
-			if(pParms->uiVolMin==SOUND_PARMS_DEFAULT)
+			if( pParms->sVolMin==SOUND_PARAMS_DEFAULT_VOLUME )
 				pSampleList[uiSample].uiVolMin=guiSoundDefaultVolume;
 			else
-				pSampleList[uiSample].uiVolMin=pParms->uiVolMin;
+				pSampleList[uiSample].uiVolMin=pParms->sVolMin;
 
-			if(pParms->uiVolMax==SOUND_PARMS_DEFAULT)
+			if( pParms->sVolMax==SOUND_PARAMS_DEFAULT_VOLUME )
 				pSampleList[uiSample].uiVolMax=guiSoundDefaultVolume;
 			else
-				pSampleList[uiSample].uiVolMax=pParms->uiVolMax;
+				pSampleList[uiSample].uiVolMax=pParms->sVolMax;
 
 			// Panning
-			if(pParms->uiPanMin==SOUND_PARMS_DEFAULT)
+			if( pParms->sPanMin==SOUND_PARAMS_DEFAULT_PAN )
             {
 				pSampleList[uiSample].uiPanMin=128;
                 pSampleList[uiSample].uiPanMax=128;
             }
 			else
             {
-				pSampleList[uiSample].uiPanMin=pParms->uiPanMin;
-                pSampleList[uiSample].uiPanMax=pParms->uiPanMax;
+				pSampleList[uiSample].uiPanMin=pParms->sPanMin;
+                pSampleList[uiSample].uiPanMax=pParms->sPanMax;
             }
 
 			// Max instances
-			if(pParms->uiMaxInstances==SOUND_PARMS_DEFAULT)
+			if( pParms->iMaxInstances==SOUND_PARAMS_DEFAULT_INSTANCES )
 				pSampleList[uiSample].uiMaxInstances=1;
 			else
-				pSampleList[uiSample].uiMaxInstances=pParms->uiMaxInstances;
+				pSampleList[uiSample].uiMaxInstances=pParms->iMaxInstances;
 
 			// Priority
-			if(pParms->uiPriority==SOUND_PARMS_DEFAULT)
+			if( pParms->iPriority==SOUND_PARAMS_DEFAULT_PRIORITY )
 				pSampleList[uiSample].uiPriority=PRIORITY_RANDOM;
 			else
-				pSampleList[uiSample].uiPriority=pParms->uiPriority;
+				pSampleList[uiSample].uiPriority=pParms->iPriority;
 
 			pSampleList[uiSample].uiInstances=0;
 
@@ -813,12 +813,12 @@ SOUNDPARMS spParms;
 
     if((uiChannel=SoundGetFreeChannel())!=SOUND_ERROR)
 	{
-		memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-		spParms.uiVolume=pSampleList[uiSample].uiVolMin+Random(pSampleList[uiSample].uiVolMax-pSampleList[uiSample].uiVolMin);
-		spParms.uiPan=pSampleList[uiSample].uiPanMin+Random(pSampleList[uiSample].uiPanMax-pSampleList[uiSample].uiPanMin);
-		spParms.uiLoop=1;
-		spParms.uiPriority=pSampleList[uiSample].uiPriority;
+		spParms.sVolume       = pSampleList[uiSample].uiVolMin+Random(pSampleList[uiSample].uiVolMax-pSampleList[uiSample].uiVolMin);
+		spParms.sPan          = pSampleList[uiSample].uiPanMin+Random(pSampleList[uiSample].uiPanMax-pSampleList[uiSample].uiPanMin);
+		spParms.iLoop         = 1;
+		spParms.iPriority     = pSampleList[uiSample].uiPriority;
+		spParms.EOSCallback   = NULL;
+		spParms.pCallbackData = NULL;
 
 		if((uiSoundID=SoundStartSample(uiSample, uiChannel, &spParms))!=SOUND_ERROR)
 		{
@@ -1493,17 +1493,17 @@ UINT32 uiSoundID;
 
     // Setup sample params
     // Loop
-	if((pParms!=NULL) && (pParms->uiLoop!=SOUND_PARMS_DEFAULT))
+	if( pParms && (pParms->iLoop!=SOUND_PARAMS_DEFAULT_LOOP) )
 	{
 		// If looping infinately, lock the sample so it can't be unloaded
 		// and mark it as a looping sound
-		if(pParms->uiLoop==0)
+		if(pParms->iLoop==0)
 		{
 			pSampleList[uiSample].uiFlags|=SAMPLE_LOCKED;
 			pSoundList[uiChannel].fLooping=TRUE;
 		}
         else
-            FSOUND_Stream_SetLoopCount(pSoundList[uiChannel].hStream, pParms->uiLoop-1);
+            FSOUND_Stream_SetLoopCount(pSoundList[uiChannel].hStream, pParms->iLoop-1);
 	}
 
     // Starting stream in pause
@@ -1518,14 +1518,14 @@ UINT32 uiSoundID;
 	// Speed and pitchbend don't use
 
     // Volume
-	if((pParms!=NULL) && (pParms->uiVolume!=SOUND_PARMS_DEFAULT))
-		FSOUND_SetVolume(pSoundList[uiChannel].uiFMODChannel, pParms->uiVolume * 2);
+	if( pParms && (pParms->sVolume!=SOUND_PARAMS_DEFAULT_VOLUME) )
+		FSOUND_SetVolume(pSoundList[uiChannel].uiFMODChannel, pParms->sVolume * 2);
 	else
 		FSOUND_SetVolume(pSoundList[uiChannel].uiFMODChannel, guiSoundDefaultVolume);
 
     // Panning
-	if((pParms!=NULL) && (pParms->uiPan!=SOUND_PARMS_DEFAULT))
-		FSOUND_SetPan(pSoundList[uiChannel].uiFMODChannel, pParms->uiPan);
+	if( pParms && (pParms->sPan!=SOUND_PARAMS_DEFAULT_PAN) )
+		FSOUND_SetPan(pSoundList[uiChannel].uiFMODChannel, pParms->sPan);
     else
         FSOUND_SetPan(pSoundList[uiChannel].uiFMODChannel, 128);
 
@@ -1533,13 +1533,13 @@ UINT32 uiSoundID;
     FSOUND_SetPaused(pSoundList[uiChannel].uiFMODChannel, FALSE);
 
     // Priority
-	if((pParms!=NULL) && (pParms->uiPriority!=SOUND_PARMS_DEFAULT))
-		pSoundList[uiChannel].uiPriority=pParms->uiPriority;
+	if( pParms && (pParms->iPriority!=SOUND_PARAMS_DEFAULT_PRIORITY) )
+		pSoundList[uiChannel].uiPriority=pParms->iPriority;
 	else
 		pSoundList[uiChannel].uiPriority=PRIORITY_MAX;
 
     // Callback at end of playback
-	if((pParms!=NULL) && ((UINT32)pParms->EOSCallback!=SOUND_PARMS_DEFAULT))
+	if( pParms && pParms->EOSCallback )
 	{
 		pSoundList[uiChannel].EOSCallback=pParms->EOSCallback;
 		pSoundList[uiChannel].pCallbackData=pParms->pCallbackData;
@@ -1592,10 +1592,10 @@ UINT32 uiSoundID;
 	
     // Setup params
     // Loop
-	if( (pParms!=NULL) && (pParms->uiLoop!=SOUND_PARMS_DEFAULT ) )
+	if( pParms && (pParms->iLoop!=SOUND_PARAMS_DEFAULT_LOOP) )
 	{
-		if(pParms->uiLoop>0)
-            FSOUND_Stream_SetLoopCount(pSoundList[uiChannel].hStream, pParms->uiLoop-1);
+		if(pParms->iLoop>0)
+            FSOUND_Stream_SetLoopCount(pSoundList[uiChannel].hStream, pParms->iLoop-1);
     }
 
     // Starting stream in pause
@@ -1610,14 +1610,14 @@ UINT32 uiSoundID;
     // Speed and pitchbend don't use
 
     // Volume
-	if((pParms!=NULL) && (pParms->uiVolume!=SOUND_PARMS_DEFAULT))
-		FSOUND_SetVolume(pSoundList[uiChannel].uiFMODChannel, pParms->uiVolume * 2);
+	if( pParms && (pParms->sVolume!=SOUND_PARAMS_DEFAULT_VOLUME) )
+		FSOUND_SetVolume(pSoundList[uiChannel].uiFMODChannel, pParms->sVolume * 2);
 	else
 		FSOUND_SetVolume(pSoundList[uiChannel].uiFMODChannel, guiSoundDefaultVolume);
 
     // Panning
-	if((pParms!=NULL) && (pParms->uiPan!=SOUND_PARMS_DEFAULT))
-		FSOUND_SetPan(pSoundList[uiChannel].uiFMODChannel, pParms->uiPan);
+	if( pParms && (pParms->sPan!=SOUND_PARAMS_DEFAULT_PAN) )
+		FSOUND_SetPan(pSoundList[uiChannel].uiFMODChannel, pParms->sPan);
 
     // Start sound!
 	FSOUND_SetPaused(pSoundList[uiChannel].uiFMODChannel, FALSE);
@@ -1627,13 +1627,13 @@ UINT32 uiSoundID;
 	pSoundList[uiChannel].uiSoundID=uiSoundID;
 
     // Priority
-	if(pParms)
-		pSoundList[uiChannel].uiPriority=pParms->uiPriority;
+	if( pParms && (pParms->iPriority!=SOUND_PARAMS_DEFAULT_PRIORITY) )
+		pSoundList[uiChannel].uiPriority=pParms->iPriority;
 	else
 		pSoundList[uiChannel].uiPriority=SOUND_PARMS_DEFAULT;
 
     // Callback at end of playback
-	if((pParms!=NULL) && ((UINT32)pParms->EOSCallback!=SOUND_PARMS_DEFAULT))
+	if( pParms && pParms->EOSCallback )
 	{
 		pSoundList[uiChannel].EOSCallback=pParms->EOSCallback;
 		pSoundList[uiChannel].pCallbackData=pParms->pCallbackData;
@@ -1657,19 +1657,31 @@ UINT32 uiSoundID;
 // ========================
 static void * F_CALLBACKAPI SoundFileOpen(const CHAR8 *pName)
 {
-    return((void*)FileOpen((STR)pName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE));
+	HWFILE	*handle;
+	
+	handle = new HWFILE;
+	if ( !handle )
+		return NULL;
+	
+	*handle = FileOpen((STR)pName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE);
+	
+	if ( !(*handle) )
+		return NULL;
+		
+    return((void*)handle);
 }
 
 static void F_CALLBACKAPI SoundFileClose(void *uiHandle)
 {
-    FileClose((HWFILE)uiHandle);
+    FileClose(*(HWFILE*)uiHandle);
+    delete (HWFILE*)uiHandle;
 }
 
 static int F_CALLBACKAPI SoundFileRead(void *pBuffer, int iSize, void *uiHandle)
 {
     UINT32 iActuallyRead;
 
-    FileRead((HWFILE)uiHandle, pBuffer, iSize, &iActuallyRead);
+    FileRead(*(HWFILE*)uiHandle, pBuffer, iSize, &iActuallyRead);
     return(iActuallyRead);
 }
 
@@ -1689,12 +1701,12 @@ static int F_CALLBACKAPI SoundFileSeek(void *uiHandle, int iPos, signed char cMo
         uiHow = FILE_SEEK_FROM_START;
     }
 
-    return(!FileSeek((HWFILE)uiHandle, iPos, uiHow));
+    return(!FileSeek(*(HWFILE*)uiHandle, iPos, uiHow));
 }
 
 static int F_CALLBACKAPI SoundFileTell(void *uiHandle)
 {
-    return(FileGetPos((HWFILE)uiHandle));
+    return(FileGetPos(*(HWFILE*)uiHandle));
 }
 
 //*******************************************************************************

@@ -27,27 +27,36 @@ extern "C" {
 
 // Structure definition for sound parameters being passed down to the sample playing function
 typedef struct {
-				UINT32			uiSpeed;
-				UINT32			uiPitchBend;					// Random pitch bend range +/-
-				UINT32			uiVolume;
-				UINT32			uiPan;
-				UINT32			uiLoop;
-				UINT32			uiPriority;
+//				INT32			iSpeed;
+//				UINT32			uiPitchBend;					// Random pitch bend range +/-
+				INT16			sVolume;
+				INT16			sPan;
+				INT32			iLoop;
+				INT32			iPriority;
 				void			(*EOSCallback)(void *);
 				void			*pCallbackData;
 				} SOUNDPARMS;
 
 
+const INT32		SOUND_PARAMS_DEFAULT_SPEED		= -1;
+const INT16		SOUND_PARAMS_DEFAULT_VOLUME		= -1;
+const INT16		SOUND_PARAMS_DEFAULT_PAN		= -1;
+const INT32		SOUND_PARAMS_DEFAULT_LOOP		= -1;
+const INT32		SOUND_PARAMS_DEFAULT_PRIORITY	= -1;
+
+
 // Structure definition for parameters to the random sample playing function
 typedef struct {
-				UINT32			uiTimeMin, uiTimeMax;
-				UINT32			uiSpeedMin, uiSpeedMax;
-				UINT32			uiVolMin, uiVolMax;
-				UINT32			uiPanMin, uiPanMax;
-				UINT32			uiPriority;
-				UINT32			uiMaxInstances;
+				INT32			iTimeMin, iTimeMax;
+//				UINT32			uiSpeedMin, uiSpeedMax;
+				INT16			sVolMin, sVolMax;
+				INT16			sPanMin, sPanMax;
+				INT32			iPriority;
+				INT32			iMaxInstances;
 				} RANDOMPARMS;
 
+const INT32		SOUND_PARAMS_DEFAULT_TIME		= -1;
+const INT32		SOUND_PARAMS_DEFAULT_INSTANCES	= -1;
 
 // Global startup/shutdown functions
 extern BOOLEAN	InitializeSoundManager(void);
