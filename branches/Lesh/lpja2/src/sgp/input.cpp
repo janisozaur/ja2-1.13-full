@@ -567,6 +567,7 @@ void KeyChange(SDL_keysym *KeySym, UINT8 ufKeyState)
 		// 8 low bits is the code, 3 next is a shift, ctrl or alt mod
 		// we will be using only 8 lowest bits
 		// if the alt tab key was pressed
+#if 0
 		if( ubChar == TAB && gfAltState )
 		{
 			// therefore minimize the application
@@ -574,6 +575,7 @@ void KeyChange(SDL_keysym *KeySym, UINT8 ufKeyState)
 			gfKeyState[ ALT ] = FALSE;
 			gfAltState = FALSE;
 		}
+#endif
 		// check for alt+enter
 		else if ( ubChar == ENTER && gfAltState )
 		{
