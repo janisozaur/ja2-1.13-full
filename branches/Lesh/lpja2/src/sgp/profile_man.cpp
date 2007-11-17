@@ -7,7 +7,7 @@
 
 #define GAME_DIR_PREFIX			"ja2-1.13"
 #define GAME_PROFILE_PREFIX		"profiles"
-#define GAME_LAST_PROFILE		".last_profile"
+#define GAME_PROFILE			"profile.ini"
 #define GAME_DEFAULT_PROFILE	"default"
 #define GAME_CONFIG_FILENAME	"ja2-1.13.conf"
 #define GAME_MODS_PREFIX		"mods"
@@ -22,6 +22,7 @@ STRING512	zSharedModsDirectory;
 STRING512	zUserModsDirectory;
 
 BOOLEAN ParseConfigFile( STRING512 config_file );
+BOOLEAN	ReadCurrentProfile( void );
 
 BOOLEAN InitializeProfileManager( void )
 {
@@ -100,5 +101,44 @@ BOOLEAN ParseConfigFile( STRING512 config_file )
 	
 	CFG_CloseFile( &cfg );
 	
+	return TRUE;
+}
+
+BOOLEAN	ReadCurrentProfile( void )
+{
+	CFG_File		cfg;
+	STRING512		zFilename;
+	STRING512		zProfileName;
+	const CHAR8		*profileName;
+
+	STR_SPrintf( zFilename, STRLEN(zFilename), "%s%s", zGameProfilesDirectory, GAME_PROFILE );
+
+	if ( CFG_OpenFile( zFilename, &cfg ) != CFG_OK )
+	{
+		CFG_OpenFile( NULL, &cfg );
+
+		if ( CFG_SelectGroup( CFG_GLOBAL, TRUE ) == CFG_ERROR )
+		{
+			fprintf(stderr, "Unable to create new profile ini\n");
+			return FALSE;
+		}
+		
+		CFG_WriteText( "profile", GAME_DEFAULT_PROFILE );
+		profileName = GAME_DEFAULT_PROFILE;
+		
+		if ( CFG_SaveFile( zFilename ) != CFG_OK )
+		{
+			fprintf(stderr, "Unable to save new profile ini\n");
+			return FALSE;
+		}
+	}
+	else
+	{
+		profileName = CFG_ReadText( "profile", GAME_DEFAULT_PROFILE );
+	}
+
+	STR_SPrintf( zCurrentGameProfileDirectory, STRLEN(zCurrentGameProfileDirectory), "%s%s%c",
+		zGameProfilesDirectory, profileName, SLASH );
+
 	return TRUE;
 }

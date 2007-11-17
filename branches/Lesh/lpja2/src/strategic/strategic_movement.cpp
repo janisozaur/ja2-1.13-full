@@ -3232,8 +3232,11 @@ void HandleArrivalOfReinforcements( GROUP *pGroup )
 	}
 	else
 	{
+		ENEMYGROUP *pEnemyGroup = pGroup->pEnemyGroup;
+		
 		gfPendingEnemies = TRUE;
 		ResetMortarsOnTeamCount();
+		CalculateNumberOfSnipers( pEnemyGroup->ubNumElites + pEnemyGroup->ubNumTroops + pEnemyGroup->ubNumAdmins );
 		AddPossiblePendingEnemiesToBattle();
 	}
 	//Update the known number of enemies in the sector.

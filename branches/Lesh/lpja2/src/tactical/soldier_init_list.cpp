@@ -860,8 +860,6 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("AddSoldierInitListEnemyDefenceSoldiers"));
 
-	ResetMortarsOnTeamCount();
-
 	//Specs call for only one profiled enemy can be in a sector at a time due to flavor reasons.
 	gfProfiledEnemyAdded = FALSE;
 	
@@ -870,6 +868,9 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 	//administrators.
 
 	ubMaxNum = ubTotalAdmin + ubTotalTroops + ubTotalElite;
+
+	ResetMortarsOnTeamCount();
+	CalculateNumberOfSnipers( ubMaxNum );
 	
 	//Sort the list in the following manner:
 	//-Priority placements first
@@ -1276,6 +1277,9 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("AddSoldierInitListMilitia"));
 
 	ubMaxNum = ubNumGreen + ubNumRegs + ubNumElites;
+
+	ResetMortarsOnTeamCount();
+	CalculateNumberOfSnipers( ubMaxNum );
 	
 	//Sort the list in the following manner:
 	//-Priority placements first

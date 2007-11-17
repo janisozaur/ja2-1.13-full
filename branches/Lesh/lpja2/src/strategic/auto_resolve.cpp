@@ -2061,7 +2061,8 @@ void CreateAutoResolveInterface()
 	{
 		// reset counter of how many mortars this team has rolled
 		ResetMortarsOnTeamCount();
-
+		CalculateNumberOfSnipers( gpAR->ubCivs );
+		
 		if( i < ubEliteMilitia )
 		{
 			gpCivs[i].pSoldier = TacticalCreateMilitia( SOLDIER_CLASS_ELITE_MILITIA );
@@ -2113,6 +2114,8 @@ void CreateAutoResolveInterface()
 	}
 	if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 	{
+		ResetMortarsOnTeamCount();
+		CalculateNumberOfSnipers( gpAR->ubElites + gpAR->ubTroops + gpAR->ubAdmins );
 		for( i = 0, index = 0; i < gpAR->ubElites; i++, index++ )
 		{
 			gpEnemies[index].pSoldier = TacticalCreateEliteEnemy();

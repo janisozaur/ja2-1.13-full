@@ -46,6 +46,10 @@ UINT16 itemRPG;
 
 #define MAX_MORTARS_PER_TEAM			1			// one team can't randomly roll more than this many mortars per sector
 
+#define MAX_PERCENT_OF_SNIPERS_IN_GROUP	10
+
+UINT32	guiAvailSnipersInGroup = 0;
+UINT32	guiSniperRiflesCount = 0;
 
 UINT32 guiMortarsRolledByTeam = 0;
 
@@ -227,6 +231,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 	BOOLEAN fGrenadeLauncher = FALSE;
 	BOOLEAN fLAW = FALSE;
 	BOOLEAN fRPG = FALSE;
+	BOOLEAN fSniperRifle = FALSE;
 	INT32 i;
 	INT8 bEquipmentModifier;
 	UINT8 ubMaxSpecialWeaponRoll;
@@ -312,7 +317,11 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			if( bRating >= GREAT_ADMINISTRATOR_EQUIPMENT_RATING )
 			{
 				bGrenades = 1, bGrenadeClass = bRating;
+				fSniperRifle = TRUE;
 			}
+
+			if ( bSoldierClass == SOLDIER_CLASS_GREEN_MILITIA && bRating >= AVERAGE_ADMINISTRATOR_EQUIPMENT_RATING )
+				fSniperRifle = TRUE;
 
 			if( ( bRating > MIN_EQUIPMENT_CLASS ) && bRating < MAX_EQUIPMENT_CLASS )
 			{ //Randomly decide if there is to be an upgrade of guns vs armour (one goes up, the other down)
@@ -338,6 +347,9 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			bHelmetClass = bRating;
 			bGrenadeClass = bRating;
 
+			if( bRating >= AVERAGE_ARMY_EQUIPMENT_RATING && Chance( 50 ) )
+				fSniperRifle = TRUE;
+			
 			if( ( bRating >= GOOD_ARMY_EQUIPMENT_RATING ) && ( Random( 100 ) < 33 ) )
 			{
 				fAttachment = TRUE;
@@ -453,6 +465,9 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			bGrenadeClass = bRating;
 			bKitClass = bRating;
 			bMiscClass = bRating;
+
+			if ( ( Chance( 75 ) )
+				fSniperRifle = TRUE;
 
 			if ( Chance( 25 ) )
 			{
@@ -603,7 +618,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 
 	//Now actually choose the equipment!
-	ChooseWeaponForSoldierCreateStruct( pp, bWeaponClass, bAmmoClips, bAttachClass, fAttachment );
+	ChooseWeaponForSoldierCreateStruct( pp, bWeaponClass, bAmmoClips, bAttachClass, fAttachment, fSniperRifle );
 	ChooseSpecialWeaponsForSoldierCreateStruct( pp, bKnifeClass, fGrenadeLauncher, fLAW, fMortar, fRPG );
 	ChooseGrenadesForSoldierCreateStruct( pp, bGrenades, bGrenadeClass, fGrenadeLauncher );
 	ChooseArmourForSoldierCreateStruct( pp, bHelmetClass, bVestClass, bLeggingClass );
@@ -623,7 +638,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 //the worst class of item, while 11 is the best.
 
 void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponClass, 
-																				 INT8 bAmmoClips, INT8 bAttachClass, BOOLEAN fAttachment )
+										 INT8 bAmmoClips, INT8 bAttachClass, BOOLEAN fAttachment, BOOLEAN fAllowSniperRifle )
 {
 	//INVTYPE *pItem;
 	OBJECTTYPE Object;
@@ -637,6 +652,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 	UINT16 usScopeIndex = 0;
 	UINT8 ubChanceStandardAmmo;
 	INT8 bStatus;
+	BOOLEAN	fGunIsSelected;
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ChooseWeaponForSoldierCreateStruct");
 
@@ -685,13 +701,25 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 		bWeaponClass = ARMY_GUN_LEVELS;
 	}
 
-
-	// the weapon class here ranges from 1 to 11, so subtract 1 to get a gun level
-	usGunIndex = SelectStandardArmyGun( (UINT8) (bWeaponClass - 1));
-
+	fGunIsSelected = FALSE;
+	while( !fGunIsSelected )
+	{
+		// the weapon class here ranges from 1 to 11, so subtract 1 to get a gun level
+		usGunIndex = SelectStandardArmyGun( (UINT8) (bWeaponClass - 1));
+		
+		// if sniper rifle is selected AND ( sniper rifles disallowed OR there are already too many of them)
+		// then reject sniper rifle and try to select other weapon
+		if ( Weapon[usGunIndex].ubWeaponType == GUN_SN_RIFLE &&
+				( !fAllowSniperRifle || (guiSniperRiflesCount >= guiAvailSnipersInGroup) ) )
+			continue;
+		else
+			fGunIsSelected = TRUE;
+	}
+	
 	//sniper rifles get sniper scopes
 	if ( Weapon[usGunIndex].ubWeaponType == GUN_SN_RIFLE )
 	{
+		guiSniperRiflesCount++;
 		usScopeIndex = PickARandomAttachment(SCOPE,usGunIndex,bAttachClass,TRUE);
 		if ( usScopeIndex == 0 )
 		{
@@ -3130,4 +3158,9 @@ UINT16 PickARandomAttachment(UINT8 typeIndex, UINT16 usBaseItem, UINT8 maxCoolne
 		return defaultItem;
 	else
 		return 0;
+}
+
+void CalculateNumberOfSnipers( UINT32 uiSoldiersCount )
+{
+	guiAvailSnipersInGroup = Random( uiSoldiersCount * 100 / MAX_PERCENT_OF_SNIPERS_IN_GROUP ) + 1;
 }
