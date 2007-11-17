@@ -456,9 +456,9 @@ UINT32 PlayJA2Sample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoo
 	}
 
 	spParms.iPriority     = GROUP_PLAYER;
-	spParms.sVolume       = volume & 0x00FF;
+	spParms.sVolume       = volume;
 	spParms.iLoop         = ubLoops;
-	spParms.sPan          = uiPan & 0x00FF;
+	spParms.sPan          = uiPan;
 	spParms.EOSCallback   = NULL;
 	spParms.pCallbackData = NULL;
 
@@ -501,7 +501,7 @@ UINT32 PlayJA2SampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, U
 	}
 
 	spParms.iPriority     = GROUP_PLAYER;
-	spParms.sVolume       = CalculateSoundEffectsVolume( ubVolume );
+	spParms.sVolume       = volume;
 	spParms.iLoop         = ubLoops;
 	spParms.sPan          = uiPan;
 	spParms.EOSCallback   = NULL;
