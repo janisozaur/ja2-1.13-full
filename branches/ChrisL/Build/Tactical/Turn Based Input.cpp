@@ -2625,9 +2625,9 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 										gTempObject = *gWorldItems[uiLoop].object[x]->GetAttachmentAtIndex(cnt);
 										if ( !Item[ gTempObject.usItem ].inseparable )
 										{
-											AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
 											if (gWorldItems[ uiLoop ].object.RemoveAttachment(&gTempObject))
 											{
+												AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
 												ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
 											}
 										}
@@ -3396,7 +3396,13 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 									INT8 bPointsToMove = __min( ubObjCount, gWorldItems[ uiLoop + i ].object.ubNumberOfObjects );
 
 									gWorldItems[ uiLoop ].object.AddObjectsToStack( (gWorldItems[ uiLoop + i ].object), bPointsToMove);
-
+									//CHRISL: After adding the object to the stack, we need to delete the old object from
+									//	both gWorldItems and the ItemPool otherwise we cause a CTD.
+									if(gWorldItems[uiLoop+i].object.exists() == false && gWorldItems[ uiLoop ].fExists)
+									{
+										RemoveItemFromPool(gWorldItems[uiLoop+i].sGridNo,(uiLoop+i),gWorldItems[uiLoop+i].ubLevel);
+										RemoveItemFromWorld(uiLoop+i);
+									}
 								}
 								else
 								{
