@@ -466,7 +466,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			bKitClass = bRating;
 			bMiscClass = bRating;
 
-			if ( ( Chance( 75 ) )
+			if ( Chance( 75 ) )
 				fSniperRifle = TRUE;
 
 			if ( Chance( 25 ) )
