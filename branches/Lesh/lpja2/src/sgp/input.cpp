@@ -577,7 +577,7 @@ void KeyChange(SDL_keysym *KeySym, UINT8 ufKeyState)
 		}
 #endif
 		// check for alt+enter
-		else if ( ubChar == ENTER && gfAltState )
+		if ( ubChar == ENTER && gfAltState )
 		{
 			SDL_WM_ToggleFullScreen( SDL_GetVideoSurface() );
 			gfKeyState[ ALT ] = FALSE;
