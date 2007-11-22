@@ -380,7 +380,7 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	if ( FileExists(fileName) )
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
-		if(!ReadInMapStructure(fileName,TRUE))
+		if(!ReadInMapStructure(fileName))
 			return FALSE;
 	}
 #endif
