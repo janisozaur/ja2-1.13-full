@@ -2391,6 +2391,10 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 
 	// CHECK IF THIS NEW STATE IS NON-INTERRUPTABLE
 	// IF SO - SET NON-INT FLAG
+	// 0verhaul:  Okay, here is a question:  Is the "non-interrupt" supposed to be transferrable to other anims?
+	// That is, if one anim is not interruptable but it chains to another anim, should the "not interruptable" flag
+	// remain?  I'm going to try out the theory that new animations should reset the "don't interrupt" flag.
+#if 0
 	if ( uiNewAnimFlags & ANIM_NONINTERRUPT )
 	{
 		pSoldier->fInNonintAnim = TRUE;
@@ -2400,6 +2404,10 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 	{
 		pSoldier->fRTInNonintAnim = TRUE;
 	}
+#else
+	pSoldier->fInNonintAnim = (uiNewAnimFlags & ANIM_NONINTERRUPT) != 0;
+	pSoldier->fRTInNonintAnim = (uiNewAnimFlags & ANIM_RT_NONINTERRUPT) != 0;
+#endif
 
 	// CHECK IF WE ARE NOT AIMING, IF NOT, RESET LAST TAGRET!
 	if ( !(gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_FIREREADY ) && !(gAnimControl[ usNewState ].uiFlags & ANIM_FIREREADY ) )

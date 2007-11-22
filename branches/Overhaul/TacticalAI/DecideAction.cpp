@@ -34,6 +34,8 @@
 #include "Dialogue Control.h"
 #endif
 
+#include "Text.h"
+
 extern BOOLEAN gfHiddenInterrupt;
 extern BOOLEAN gfUseAlternateQueenPosition;
 
@@ -2344,7 +2346,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				pSoldier->bAimTime			= 0;
 				pSoldier->bDoBurst			= 1;
 
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Suppression Fire!" );
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, New113Message[ MSG113_SUPPRESSIONFIRE ] );
 				Menptr[BestShot.ubOpponent].ubSuppressionPoints += pSoldier->bDoAutofire;
 				Menptr[BestShot.ubOpponent].ubSuppressorID = pSoldier->ubID;
 				return( AI_ACTION_FIRE_GUN );
@@ -4990,7 +4992,7 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 	{
 		if ( !sniperwarning && pSoldier->bOrders == SNIPER )
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Watch out for snipers..." );
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, New113Message[MSG113_WATHCHOUTFORSNIPERS] );
 			sniperwarning = TRUE;
 		}
 

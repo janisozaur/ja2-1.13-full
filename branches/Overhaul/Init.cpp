@@ -373,6 +373,18 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	if(!ReadInMapStructure(fileName))
 		return FALSE;
 		
+#ifdef RUSSIAN 
+	strcpy(fileName, directoryName);
+	strcat(fileName, RUSSIAN_PREFIX);
+	strcat(fileName, CITYTABLEFILENAME);
+	if ( FileExists(fileName) )
+	{
+		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
+		if(!ReadInMapStructure(fileName,TRUE))
+			return FALSE;
+	}
+#endif
+
 	// Lesh: Strategic movement costs will be read in Strategic\Strategic Movement Costs.cpp,
 	//       function BOOLEAN InitStrategicMovementCosts();
 	//       It is called several times from various places and acts after clearing SectorInfo array
