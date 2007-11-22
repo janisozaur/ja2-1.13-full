@@ -48,7 +48,7 @@ BOOLEAN InitializeProfileManager( void )
 	if ( !IO_Dir_DirectoryExists( zGameHomeDirectory ) )
 		if ( !IO_Dir_MakeDirectory( zGameHomeDirectory ) )
 		{
-			fprintf(stderr, "Unable to create game home directory \"%s\"\n", zGameHomeDirectory);
+			fprintf(stderr, "Unable to create game home directory '%s'\n", zGameHomeDirectory);
 			return FALSE;
 		}
 
@@ -58,10 +58,10 @@ BOOLEAN InitializeProfileManager( void )
 	if ( !IO_Dir_DirectoryExists( zGameProfilesDirectory ) )
 		if ( !IO_Dir_MakeDirectory( zGameProfilesDirectory ) )
 		{
-			fprintf(stderr, "Unable to create game profiles directory \"%s\"\n", zGameProfilesDirectory);
+			fprintf(stderr, "Unable to create game profiles directory '%s'\n", zGameProfilesDirectory);
 			return FALSE;
 		}
-
+#if 0
 	// get config filename
 	ENV_GetConfigDirectory( config_file );
 	strcat( config_file, GAME_CONFIG_FILENAME );
@@ -70,6 +70,9 @@ BOOLEAN InitializeProfileManager( void )
 		fprintf(stderr, "Failed to open config \"%s\"\n", config_file);
 		//return FALSE;
 	}
+#endif
+
+	ReadCurrentProfile();
 	
 	// get user mods directory
 	STR_SPrintf( zUserModsDirectory, STRLEN(zUserModsDirectory), "%s%s%c", zGameHomeDirectory, GAME_MODS_PREFIX, SLASH );
@@ -140,5 +143,25 @@ BOOLEAN	ReadCurrentProfile( void )
 	STR_SPrintf( zCurrentGameProfileDirectory, STRLEN(zCurrentGameProfileDirectory), "%s%s%c",
 		zGameProfilesDirectory, profileName, SLASH );
 
+	if ( !IO_Dir_DirectoryExists( zCurrentGameProfileDirectory ) )
+	{
+		if ( !IO_Dir_MakeDirectory( zCurrentGameProfileDirectory ) )
+		{
+			fprintf(stderr, "Unable to create game profile directory '%s'\n", zCurrentGameProfileDirectory);
+			return FALSE;
+		}
+		printf("Profile subdirectory '%s' was created\n", zCurrentGameProfileDirectory);
+	}
+
 	return TRUE;
+}
+
+void	Profile_GetGameHomeDirectory( STRING512 directory )
+{
+	strcpy( directory, zGameHomeDirectory );
+}
+
+void	Profile_GetGameProfileDirectory( STRING512 directory )
+{
+	strcpy( directory, zCurrentGameProfileDirectory );
 }

@@ -38,6 +38,7 @@
 	#include "sgp_str.h"
 	#include "wcheck.h"
 	#include "app_env.h"
+	#include "profile_man.h"
 	
 #endif
 //**************************************************************************
@@ -63,6 +64,7 @@
 //**************************************************************************
 
 #define GAME_DIR_PREFIX			"ja2-1.13"
+#define TEMP_DIR_PREFIX			".temp"
 
 //The FileDatabaseHeader
 DatabaseManagerHeaderStruct gFileDataBase;
@@ -150,46 +152,25 @@ INT32	FindFreeOpenedFilesSlot( void )
 //**************************************************************************
 BOOLEAN	InitializeFileManager(  STR strIndexFilename )
 {
-	STRING512	user_home_dir;
+	STRING512	profile_dir;
 	
 	printf("Initializing File Manager...\n");
 	
-	if ( !ENV_GetUserDirectory( user_home_dir ) )
-	{
-		fprintf(stderr, "Unable to locate user home directory\n");
-		return FALSE;
-	}
+	InitializeProfileManager();
 	
-	// assign home dir for game
-	// data dir will be read from INI/CFG file, located in home dir
-	printf("User home is %s\n", user_home_dir);
+	Profile_GetGameHomeDirectory( gzHomePath );
 
-	STR_SPrintf( gzHomePath, STRLEN(gzHomePath), "%s%c%s%c", user_home_dir, SLASH, GAME_DIR_PREFIX, SLASH );
-	printf("Using game home dir: %s\n", gzHomePath);
-
-	if ( !IO_Dir_DirectoryExists( gzHomePath ) )
-		if ( !IO_Dir_MakeDirectory( gzHomePath ) )
-		{
-			fprintf(stderr, "Unable to create game home directory \"%s\"\n", gzHomePath);
-			return FALSE;
-		}
-
-#ifdef JA2_LINUX
-// ----------------------- Linux-specific stuff ----------------------------
-
-	STR_SPrintf( gzTempPath, STRLEN(gzTempPath), "/tmp/%s.%s%c", GAME_DIR_PREFIX, "tmp", SLASH );
+	Profile_GetGameProfileDirectory( profile_dir );
+	STR_SPrintf( gzTempPath, STRLEN(gzTempPath), "%s%s%c", profile_dir, TEMP_DIR_PREFIX, SLASH );
 	printf("Using game temp dir: %s\n", gzTempPath);
 
 	if ( !IO_Dir_DirectoryExists( gzTempPath ) )
 		if ( !IO_Dir_MakeDirectory( gzTempPath ) )
 		{
-			fprintf(stderr, "Unable to create game temp directory \"%s\"\n", gzTempPath);
+			fprintf(stderr, "Unable to create game temp directory '%s'\n", gzTempPath);
 			return FALSE;
 		}
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-
+	
 	OpenedFiles.clear();
 	
 	// index 0 of file handlers, returned by fileman, is reserved for error reporting
