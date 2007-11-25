@@ -32,6 +32,7 @@
 	#include "strategic.h"
 	#include "random.h"
 	#include "weapons.h"
+	#include "sgp_str.h"
 	
 #endif
 
@@ -738,11 +739,12 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId, STR fileName )
 
 BOOLEAN ImpExists ( STR nickName )
 {
-	char zFileName[13];
+	STRING512 zFileName;
+	STRING512 workDir;
 
-	strcpy(zFileName,nickName);
-	strcat(zFileName,IMP_FILENAME_SUFFIX);
-
+	GetWorkDirectory( workDir );
+	STR_SPrintf(zFileName, STRLEN(zFileName), "%s%s%s", workDir, nickName, IMP_FILENAME_SUFFIX);
+	
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ImpExists: %s", (STR) zFileName));
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ImpExists: %d", FileExistsNoDB(zFileName) ));
 
@@ -754,11 +756,11 @@ BOOLEAN LoadImpCharacter( STR nickName )
 	INT32 iProfileId = 0;
 	HWFILE hFile;
 	UINT32 uiBytesRead = 0;
+	STRING512 zFileName;
+	STRING512 workDir;
 
-	char zFileName[13];
-
-	strcpy(zFileName,nickName);
-	strcat(zFileName,IMP_FILENAME_SUFFIX);
+	GetWorkDirectory( workDir );
+	STR_SPrintf(zFileName, STRLEN(zFileName), "%s%s%s", workDir, nickName, IMP_FILENAME_SUFFIX);
 
 	// open the file for writing
 	hFile = FileOpen(zFileName, FILE_ACCESS_READ, FALSE);
