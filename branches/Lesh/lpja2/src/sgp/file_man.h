@@ -107,6 +107,7 @@ BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory );
 BOOLEAN GetExecutableDirectory( STRING512 pcDirectory );
 BOOLEAN GetHomeDirectory( STRING512 pcDirectory );
 BOOLEAN GetTempDirectory( STRING512 pcDirectory );
+BOOLEAN GetWorkDirectory( STRING512 pcDirectory );
 
 BOOLEAN DirectoryExists( STRING512 pcDirectory );	// not used in sources
 BOOLEAN MakeFileManDirectory( STRING512 pcDirectory );

@@ -1284,15 +1284,11 @@ void RefreshScreen(void *DummyVariable)
 
 	if (gfPrintFrameBuffer == TRUE)
 	{
-		CHAR8					FileName[64];
 		STRING512				DataDir;
-		STRING512			    HomeDir;
+		STRING512			    WorkDir;
+		STRING512				pictureName;
 
-		// Snap: save current directory
-		GetFileManCurrentDirectory( DataDir );
-		GetHomeDirectory( HomeDir );
-		SetFileManCurrentDirectory( HomeDir );
-
+		GetWorkDirectory( WorkDir );
 
 		//
 		// Ok now that temp surface has contents of backbuffer, copy temp surface to disk
@@ -1300,16 +1296,13 @@ void RefreshScreen(void *DummyVariable)
 
 		do
 		{
-			sprintf(FileName, "SCREEN%03d.BMP", guiPrintFrameBufferIndex++);
+			sprintf(pictureName, "%sSCREEN%03d.BMP", WorkDir, guiPrintFrameBufferIndex++);
 		}
-		while( (_access( FileName, 0 )) != -1 );
+		while( FileExistsNoDB( pictureName ) );
 
-		SDL_SaveBMP(gpSDLPrimaryBuffer, FileName);
+		SDL_SaveBMP(gpSDLPrimaryBuffer, pictureName);
 
 		gfPrintFrameBuffer = FALSE;          
-
-		// Snap: Restore the data directory once we are finished.
-		SetFileManCurrentDirectory( DataDir );
 	}
 	
 	//

@@ -1883,14 +1883,14 @@ void CreateGlobalSummary()
 {
 	FILE *fp;
 	STRING512			Dir;
-	STRING512			ExecDir;
+	STRING512			WorkDir;
 
 //	OutputDebugString( "Generating GlobalSummary Information...\n" );
 
 	gfGlobalSummaryExists = FALSE;
 	//Set current directory to JA2\DevInfo which contains all of the summary data
-	GetExecutableDirectory( ExecDir );
-	sprintf( Dir, "%hs\\DevInfo", ExecDir );
+	GetWorkDirectory( WorkDir );
+	sprintf( Dir, "%hs\\DevInfo", WorkDir );
 
 	// Snap: save current directory
 	//GetFileManCurrentDirectory( DataDir );

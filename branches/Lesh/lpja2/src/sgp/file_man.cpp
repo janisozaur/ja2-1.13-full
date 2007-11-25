@@ -81,6 +81,7 @@ BOOLEAN fFindInfoInUse[20] = {FALSE,FALSE,FALSE,FALSE,FALSE,
 STRING512	gzDataPath;
 STRING512	gzHomePath;
 STRING512	gzTempPath;
+STRING512	gzWorkPath;
 
 // Lesh: this struct contains info about opened files
 typedef struct
@@ -152,16 +153,14 @@ INT32	FindFreeOpenedFilesSlot( void )
 //**************************************************************************
 BOOLEAN	InitializeFileManager(  STR strIndexFilename )
 {
-	STRING512	profile_dir;
-	
 	printf("Initializing File Manager...\n");
 	
 	InitializeProfileManager();
 	
 	Profile_GetGameHomeDirectory( gzHomePath );
 
-	Profile_GetGameProfileDirectory( profile_dir );
-	STR_SPrintf( gzTempPath, STRLEN(gzTempPath), "%s%s%c", profile_dir, TEMP_DIR_PREFIX, SLASH );
+	Profile_GetGameProfileDirectory( gzWorkPath );
+	STR_SPrintf( gzTempPath, STRLEN(gzTempPath), "%s%s%c", gzWorkPath, TEMP_DIR_PREFIX, SLASH );
 	printf("Using game temp dir: %s\n", gzTempPath);
 
 	if ( !IO_Dir_DirectoryExists( gzTempPath ) )
@@ -1294,7 +1293,6 @@ HANDLE GetHandleToRealFile( HWFILE hFile, BOOLEAN *pfDatabaseFile )
 
 BOOLEAN SetFileManCurrentDirectory( STR pcDirectory )
 {
-//	BACKSLASH(pcDirectory);
 	return( IO_Dir_SetCurrentDirectory( pcDirectory ) );
 }
 
@@ -1322,7 +1320,6 @@ BOOLEAN DirectoryExists( STRING512 pcDirectory )
 
 BOOLEAN MakeFileManDirectory( STRING512 pcDirectory )
 {
-//	BACKSLASH(pcDirectory);
 	if ( !IO_Dir_DirectoryExists(pcDirectory) )
 		if ( !IO_Dir_MakeDirectory(pcDirectory) )
 		{
@@ -1348,8 +1345,6 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 	sgpStringArray	ToBeDeleted;
 	STRING512		entry;
 	INT32			i;
-
-//	BACKSLASH(pcDirectory);
 
 	GetFileManCurrentDirectory( zOldDir );
 
@@ -1410,8 +1405,6 @@ BOOLEAN EraseDirectory( STRING512 pcDirectory)
 	sgpStringArray	ToBeDeleted;
 	STRING512		entry;
 	INT32			i;
-
-//	BACKSLASH(pcDirectory);
 
 //	printf("EraseDirectory\n");
 	
@@ -1519,7 +1512,7 @@ BOOLEAN GetHomeDirectory( STRING512 pcDirectory )
 // ------------------- End of Windows-specific stuff -----------------------
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
-	strncpy( pcDirectory, gzHomePath, 511);
+	strncpy( pcDirectory, gzHomePath, 512);
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 
@@ -1528,7 +1521,13 @@ BOOLEAN GetHomeDirectory( STRING512 pcDirectory )
 
 BOOLEAN GetTempDirectory( STRING512 pcDirectory )
 {
-	strncpy( pcDirectory, gzTempPath, 511);
+	strncpy( pcDirectory, gzTempPath, 512);
+	return TRUE;
+}
+
+BOOLEAN GetWorkDirectory( STRING512 pcDirectory )
+{
+	strncpy( pcDirectory, gzWorkPath, 512);
 	return TRUE;
 }
 

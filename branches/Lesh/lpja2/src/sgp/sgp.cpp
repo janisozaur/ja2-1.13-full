@@ -165,7 +165,7 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 
 	// Snap: moved the following from InitJA2SplashScreen for clarity
 	STRING512			CurrentDir;
-	STRING512			DataDir;
+	STRING512			WorkDir;
 
 	InitializeJA2Clock();
 
@@ -182,9 +182,9 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	sprintf( IniName, "%s%s", CurrentDir, "Ja2.ini");
 
 	// Adjust Current Dir
-	sprintf( DataDir, "%sData%c", CurrentDir, SLASH );
-	printf("Data directory is %s\n", DataDir);
-	if ( !SetFileManCurrentDirectory( DataDir ) )
+	GetWorkDirectory( WorkDir );
+	printf("Work directory is %s\n", WorkDir);
+	if ( !SetFileManCurrentDirectory( WorkDir ) )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not find data directory, shutting down");
 		return FALSE;

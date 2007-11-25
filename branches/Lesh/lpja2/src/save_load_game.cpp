@@ -480,10 +480,10 @@ void	HandleOldBobbyRMailOrders();
 // The save directory now resides in the data directory (default or custom)
 BOOLEAN InitSaveDir()
 {
-	STRING512	zGameHomeDir;
+	STRING512	zGameWorkDir;
 
-	GetHomeDirectory( zGameHomeDir );
-	STR_SPrintf(gzRootSaveDirectory, 512, "%s%S%c", zGameHomeDir, pMessageStrings[ MSG_SAVEDIRECTORY ], SLASH );
+	GetWorkDirectory( zGameWorkDir );
+	STR_SPrintf(gzRootSaveDirectory, 512, "%s%S%c", zGameWorkDir, pMessageStrings[ MSG_SAVEDIRECTORY ], SLASH );
 
 	// todo: $$$ - more work needed for mod saves, i.e. mod can assign it's own subdir to save
 	strcpy( gSaveDir, gzRootSaveDirectory );

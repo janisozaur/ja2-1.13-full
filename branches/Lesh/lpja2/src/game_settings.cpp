@@ -37,11 +37,7 @@
 
 STRING512			gameSettingsFilePath;
 
-#define				GAME_INI_FILE					"..\\Ja2.ini"
-
 #define				GAME_EXTERNAL_OPTIONS_FILE	"Ja2_Options.INI"
-
-#define				CD_ROOT_DIR						"DATA\\"
 
 GAME_SETTINGS		gGameSettings;
 GAME_OPTIONS		gGameOptions;
@@ -75,7 +71,7 @@ BOOLEAN LoadGameSettings()
 	STRING512	profileDir;
 
 	// $TODO$
-	GetExecutableDirectory(profileDir);
+	GetWorkDirectory(profileDir);
 	
 	sprintf( gameSettingsFilePath, "%s%s", profileDir, GAME_SETTINGS_FILE );
 
