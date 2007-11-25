@@ -463,6 +463,7 @@ UINT32 PlayJA2Sample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoo
 	spParms.pCallbackData = NULL;
 
 	//SoundLog((CHAR8 *)String(" Play sound %s on volume %d", szSoundEffects[usNum], spParms.uiVolume));
+//	printf("Play sound %s on volume %d, pan %d\n", szSoundEffects[usNum], spParms.sVolume, spParms.sPan);
 
 	return(SoundPlay(szSoundEffects[usNum], &spParms));
 }
@@ -605,14 +606,14 @@ UINT32 GetSoundEffectsVolume( )
 }
 
 
-UINT32 CalculateSpeechVolume( UINT32 uiVolume )
+INT16 CalculateSpeechVolume( INT16 sVolume )
 {
-	return( (UINT32) ( ( uiVolume / (FLOAT) HIGHVOLUME ) * guiSpeechVolume +.5 ) );
+	return( (INT16) ( ( sVolume / (FLOAT) HIGHVOLUME ) * guiSpeechVolume +.5 ) );
 }
 
-UINT32 CalculateSoundEffectsVolume( UINT32 uiVolume )
+INT16 CalculateSoundEffectsVolume( INT16 sVolume )
 {
-	return( (UINT32) ( ( uiVolume / (FLOAT) HIGHVOLUME ) * guiSoundEffectsVolume +.5 ) );
+	return( (INT16) ( ( sVolume / (FLOAT) HIGHVOLUME ) * guiSoundEffectsVolume +.5 ) );
 }
 
 

@@ -7486,19 +7486,19 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 	}
 
 	// Play sound!
-	volume = (INT8)CalculateSpeechVolume( HIGHVOLUME );
+	volume = CalculateSpeechVolume( HIGHVOLUME );
 
 	// ATE: Reduce volume for OK sounds...
 	// ( Only for all-moves or multi-selection cases... )
 	if ( bSpecialCode == BATTLE_SND_LOWER_VOLUME )
 	{
-		volume = (INT8)CalculateSpeechVolume( MIDVOLUME );
+		volume = CalculateSpeechVolume( MIDVOLUME );
 	}
 
 	// If we are an enemy.....reduce due to volume
 	if ( pSoldier->bTeam != gbPlayerNum )
 	{
-		volume = SoundVolume( (UINT8)spParms.sVolume, pSoldier->sGridNo );
+		volume = SoundVolume( MIDVOLUME, pSoldier->sGridNo );
 	}
 
 	spParms.iPriority     = GROUP_PLAYER;

@@ -433,11 +433,11 @@ void	SetSpeechVolume( UINT32 uiNewVolume );
 
 
 //Calculates a volume based on the current Speech Volume level 
-UINT32 CalculateSpeechVolume( UINT32 uiVolume );
+INT16 CalculateSpeechVolume( INT16 sVolume );
 
 
 //Calculates a volume based on the current Sound Effects Volume level
-UINT32 CalculateSoundEffectsVolume( UINT32 uiVolume );
+INT16 CalculateSoundEffectsVolume( INT16 sVolume );
 
 INT32 SoundDir( INT16 sGridNo );
 INT32 SoundVolume( INT8 bInitialVolume, INT16 sGridNo );
