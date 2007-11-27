@@ -565,8 +565,7 @@ void LimitArmsDealersInventory( UINT8 ubArmsDealer, UINT32 uiDealerItemType, UIN
 	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
 	//Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
 	int numTotalItems[MAXITEMS] = { 0 };
-	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
-		iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
+	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin(); iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
 		if (iter->ItemIsInInventory() == true && iter->IsUnderRepair() == false) {
 			numTotalItems[iter->object.usItem] += iter->object.ubNumberOfObjects;
 		}
@@ -1558,11 +1557,8 @@ void RemoveRandomItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemI
 	{
 		int numItems = 0;
 		foundObjects.clear();
-		for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
-			iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
-			if (iter->ItemIsInInventory() == true
-				&& iter->object.usItem == usItemIndex
-				&& iter->IsUnderRepair() == false) {
+		for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin(); iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
+			if (iter->ItemIsInInventory() == true && iter->object.usItem == usItemIndex && iter->IsUnderRepair() == false) {
 				foundObjects.push_back(iter);
 				numItems += iter->object.ubNumberOfObjects;
 			}
@@ -1576,7 +1572,8 @@ void RemoveRandomItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemI
 		std::vector<DealerItemList::iterator>::iterator iterToRemove = foundObjects.begin();
 		for (int x = (*iterToRemove)->object.ubNumberOfObjects - 1; x < ubWhichOne;) {
 			x += (*iterToRemove)->object.ubNumberOfObjects;
-			++iterToRemove;
+			if(x < ubWhichOne)
+				++iterToRemove;
 		}
 		if ((*iterToRemove)->object.ubNumberOfObjects == 1) {
 			gArmsDealersInventory[ubArmsDealer].erase(*iterToRemove);

@@ -1082,7 +1082,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 	gMercProfiles[ ubCharNum ].ubMiscFlags |= PROFILE_MISC_FLAG_RECRUITED;
 
 	// Add this guy to our team!
-	pNewSoldier = ChangeSoldierTeam( pSoldier, gbPlayerNum, false );
+	pNewSoldier = ChangeSoldierTeam( pSoldier, gbPlayerNum, true );
 
 	// handle set up any RPC's that will leave us in time
 	if ( ubCharNum == SLAY )

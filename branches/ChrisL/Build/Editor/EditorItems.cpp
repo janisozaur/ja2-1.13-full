@@ -181,6 +181,9 @@ void EntryInitEditorItemsInfo()
 				case IC_ARMOUR:
 					eInfo.sNumArmour++;
 					break;
+				case IC_LBEGEAR:
+					eInfo.sLBEGear++;
+					break;
 				case IC_GRENADE:
 				case IC_BOMB:
 					eInfo.sNumExplosives++;
@@ -188,12 +191,11 @@ void EntryInitEditorItemsInfo()
 				case IC_MEDKIT:
 				case IC_KIT:
 				case IC_FACE:
-				case IC_LBEGEAR:
 				case IC_MISC:
 				case IC_MONEY:
-					if( eInfo.sNumEquipment1 < 30 )
+					if( eInfo.sNumEquipment1 < 50 )
 						eInfo.sNumEquipment1++;
-					else if( eInfo.sNumEquipment2 < 30 )
+					else if( eInfo.sNumEquipment2 < 50 )
 						eInfo.sNumEquipment2++;
 					else
 						eInfo.sNumEquipment3++;
@@ -265,6 +267,11 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			eInfo.sNumItems = eInfo.sNumArmour;
 			eInfo.sScrollIndex = eInfo.sSaveArmourScrollIndex;
 			eInfo.sSelItemIndex = eInfo.sSaveSelArmourIndex;
+			break;
+		case TBAR_MODE_ITEM_LBEGEAR:
+			eInfo.sNumItems = eInfo.sLBEGear;
+			eInfo.sScrollIndex = eInfo.sSaveLBEScrollIndex;
+			eInfo.sSelItemIndex = eInfo.sSaveSelLBEIndex;
 			break;
 		case TBAR_MODE_ITEM_EXPLOSIVES:
 			eInfo.sNumItems = eInfo.sNumExplosives;
@@ -434,6 +441,9 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 				case IC_ARMOUR:
 					fTypeMatch = eInfo.uiItemType == TBAR_MODE_ITEM_ARMOUR;
 					break;
+				case IC_LBEGEAR:
+					fTypeMatch = eInfo.uiItemType == TBAR_MODE_ITEM_LBEGEAR;
+					break;
 				case IC_GRENADE:
 				case IC_BOMB:
 					fTypeMatch = eInfo.uiItemType == TBAR_MODE_ITEM_EXPLOSIVES;
@@ -441,14 +451,13 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 				case IC_MEDKIT:
 				case IC_KIT:
 				case IC_FACE:
-				case IC_LBEGEAR:
-				case IC_MISC:
 				case IC_MONEY:
+					fTypeMatch = eInfo.uiItemType == TBAR_MODE_ITEM_EQUIPMENT1;
+					break;
+				case IC_MISC:
 					if( usCounter == ACTION_ITEM || usCounter == SWITCH )
 						break;
-					if( iEquipCount < 30 )
-						fTypeMatch = eInfo.uiItemType == TBAR_MODE_ITEM_EQUIPMENT1;
-					else if( iEquipCount < 60 )
+					if( iEquipCount < 50 )
 						fTypeMatch = eInfo.uiItemType == TBAR_MODE_ITEM_EQUIPMENT2;
 					else
 						fTypeMatch = eInfo.uiItemType == TBAR_MODE_ITEM_EQUIPMENT3;
@@ -684,6 +693,10 @@ void ClearEditorItemsInfo()
 		case TBAR_MODE_ITEM_ARMOUR:
 			eInfo.sSaveSelArmourIndex = eInfo.sSelItemIndex;
 			eInfo.sSaveArmourScrollIndex = eInfo.sScrollIndex;
+			break;
+		case TBAR_MODE_ITEM_LBEGEAR:
+			eInfo.sSaveSelLBEIndex = eInfo.sSelItemIndex;
+			eInfo.sSaveLBEScrollIndex = eInfo.sScrollIndex;
 			break;
 		case TBAR_MODE_ITEM_EXPLOSIVES:
 			eInfo.sSaveSelExplosivesIndex = eInfo.sSelItemIndex;
@@ -1640,6 +1653,8 @@ void DisplayItemStatistics()
 
 
 #endif
+
+
 
 
 

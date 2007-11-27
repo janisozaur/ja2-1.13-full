@@ -112,10 +112,11 @@ void MoveItemsInSlotsToLBE( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, 
 			// Pocket is active, can default item fit in this pocket?
 			if(LBEPocketType[LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbePocketIndex[j]].ItemCapacityPerSize[dSize] == NONE)	// Pocket can't hold this item size
 				continue;
+			UINT16 dCap = LBEPocketType[LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbePocketIndex[j]].ItemCapacityPerSize[dSize];
 			// Default item will fit in this pocket.  Setup the LBENODE if necessary
 
 			//ADB the object is already in the LBE, we are just moving it from soldier inv to LBE inv
-			pSoldier->inv[LBESlots[i]].MoveThisObjectTo(pLBE->inv[j]);
+			pSoldier->inv[LBESlots[i]].MoveThisObjectTo(pLBE->inv[j], ALL_OBJECTS, NULL, STACK_SIZE_LIMIT, dCap);
 			if (pSoldier->inv[LBESlots[i]].exists() == false) {
 				break;
 			}
@@ -150,8 +151,6 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBES
 			continue;
 		for(int i=INV_START_POS; i<NUM_INV_SLOTS; i++)
 		{
-			if(pSoldier->inv[i].exists() == true)	// Item already in that location
-				continue;
 			for(unsigned int j=0; j<LBESlots.size(); j++)
 			{
 				flag = FALSE;
@@ -163,9 +162,17 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBES
 			}
 			if(flag)
 				continue;
-			if(CanItemFitInPosition(pSoldier, &(pSoldier->inv[LBESlots[x]]), i, FALSE))
+			if(pSoldier->inv[i].exists() == false)	// No item in this pocket.  Place the item.
 			{
-				pSoldier->inv[LBESlots[x]].MoveThisObjectTo(pSoldier->inv[i], ALL_OBJECTS, pSoldier, i);
+				if(CanItemFitInPosition(pSoldier, &(pSoldier->inv[LBESlots[x]]), i, FALSE))
+				{
+					pSoldier->inv[LBESlots[x]].MoveThisObjectTo(pSoldier->inv[i], ALL_OBJECTS, pSoldier, i);
+					break;
+				}
+			}
+			else if(pSoldier->inv[i].usItem == pSoldier->inv[LBESlots[x]].usItem)	// Item is identical so maybe it can stack
+			{
+				pSoldier->inv[i].AddObjectsToStack(pSoldier->inv[LBESlots[x]], ALL_OBJECTS, pSoldier, i);
 				break;
 			}
 		}
@@ -575,11 +582,11 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany, SOLDIER
 	}
 }
 
-int OBJECTTYPE::MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove, SOLDIERTYPE* pSoldier, int slot)
+int OBJECTTYPE::MoveThisObjectTo(OBJECTTYPE& destObject, int numToMove, SOLDIERTYPE* pSoldier, int slot, int cap)
 {
 	//ADB yes I said I normally remove functions like this, but this is different
 	//this exists to make reading easier and to be more descriptive.
-	return (PrivateRemoveObjectsFromStack(numToMove, &destObject, pSoldier, slot));
+	return (PrivateRemoveObjectsFromStack(numToMove, &destObject, pSoldier, slot, cap));
 }
 
 int OBJECTTYPE::RemoveObjectsFromStack(int howMany)
@@ -587,7 +594,7 @@ int OBJECTTYPE::RemoveObjectsFromStack(int howMany)
 	return (PrivateRemoveObjectsFromStack(howMany, NULL, NULL, STACK_SIZE_LIMIT));
 }
 
-int OBJECTTYPE::PrivateRemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject, SOLDIERTYPE* pSoldier, int slot)
+int OBJECTTYPE::PrivateRemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject, SOLDIERTYPE* pSoldier, int slot, int cap)
 {
 	//ADB this function only needs to know soldier and slot
 	//if there is a dest object we are putting the removed objects into
@@ -631,7 +638,7 @@ int OBJECTTYPE::PrivateRemoveObjectsFromStack(int howMany, OBJECTTYPE* destObjec
 		}
 		if (numToRemove > 0) {
 			//this handles the removal too
-			return destObject->AddObjectsToStack(*this, numToRemove, pSoldier, slot, 0, allowLBETransfer);
+			return destObject->AddObjectsToStack(*this, numToRemove, pSoldier, slot, cap, allowLBETransfer);
 		}
 	}
 	else if (numToRemove > 0) {

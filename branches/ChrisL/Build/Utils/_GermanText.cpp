@@ -2702,6 +2702,7 @@ STR16			BobbyRFilter[] =
 	// Used
 	L"Feuerwfn.",
 	L"Rüstungen",
+	L"LBE Gear",
 	L"Sonstiges",
 
 	// Armour

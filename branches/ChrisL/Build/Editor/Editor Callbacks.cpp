@@ -701,6 +701,12 @@ void ItemsArmourCallback(GUI_BUTTON *btn,INT32 reason)
 		SetEditorItemsTaskbarMode( ITEMS_ARMOUR );
 }
 
+void ItemsLBECallback(GUI_BUTTON *btn,INT32 reason)
+{
+	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		SetEditorItemsTaskbarMode( ITEMS_LBEGEAR );
+}
+
 void ItemsExplosivesCallback(GUI_BUTTON *btn,INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)

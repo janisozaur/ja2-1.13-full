@@ -1576,7 +1576,8 @@ INT8 FindObj( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower, INT8 bUpper )
 
 	for (bLoop = bLower; bLoop < bUpper; bLoop++)
 	{
-		if (pSoldier->inv[bLoop].usItem == usItem && pSoldier->inv[bLoop].exists() == true)
+		//CHRISL: If we check exists() then we can't search for an empty pocket with this function, which is done.
+		if (pSoldier->inv[bLoop].usItem == usItem/* && pSoldier->inv[bLoop].exists() == true*/)
 		{
 			return( bLoop );
 		}
@@ -3356,6 +3357,9 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 	if (pAttachment->exists() == false) {
 		return FALSE;
 	}
+	if ((*this)[subObject]->attachments.size() >= MAX_ATTACHMENTS) {
+		return FALSE;
+	}
 
 	static OBJECTTYPE attachmentObject;
 
@@ -4281,8 +4285,9 @@ bool TryToStackInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, int bSlot)
 
 bool TryToPlaceInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int& bSlot, int endSlot)
 {
-	bSlot = FindEmptySlotWithin( pSoldier, bSlot, endSlot );
-	if (CanItemFitInPosition(pSoldier, pObj, bSlot, false) == false) {
+	//bSlot = FindEmptySlotWithin( pSoldier, bSlot, endSlot );
+	//CHRISL: If something already exists, we want to fail since we can't place an object in this slot
+	if (CanItemFitInPosition(pSoldier, pObj, bSlot, false) == false || pSoldier->inv[bSlot].exists() == true) {
 		//bSlot = endSlot;
 		return false;
 	}
@@ -4309,7 +4314,7 @@ bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int 
 {
 	//first, try to STACK the item
 	//try to STACK in any slot
-	for(int bSlot = BODYPOSSTART; bSlot < BODYPOSFINAL; bSlot++) {
+	for(int bSlot = BODYPOSSTART; bSlot < BIGPOCKSTART; bSlot++) {
 		if (bSlot != bExcludeSlot && TryToStackInSlot(pSoldier, pObj, bSlot) == true) {
 			return true;
 		}
@@ -4335,7 +4340,7 @@ bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int 
 
 	//now try to PLACE
 	//try to PLACE in any slot
-	for(int bSlot = BODYPOSSTART; bSlot < BODYPOSFINAL; bSlot++) {
+	for(int bSlot = BODYPOSSTART; bSlot < BIGPOCKSTART; bSlot++) {
 		if (bSlot != bExcludeSlot && TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, BODYPOSFINAL) == true) {
 			return true;
 		}
@@ -4469,6 +4474,8 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 				if (pObj->exists() == false)
 					return( TRUE );
 			}
+			break;
+		case IC_THROWING_KNIFE:
 		case IC_BLADE:
 			// CHRISL:
 			if((UsingNewInventorySystem() == true) && pSoldier->inv[KNIFEPOCKPOS].exists() == false)	// Knife
@@ -4477,6 +4484,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 				if (pObj->exists() == false)
 					return( TRUE );
 			}
+			break;
 		case IC_LAUNCHER:
 		case IC_BOMB:
 		case IC_GRENADE:

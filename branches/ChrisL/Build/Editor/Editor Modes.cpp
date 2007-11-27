@@ -44,6 +44,10 @@ void SetEditorItemsTaskbarMode( UINT16 usNewMode )
 			ClickEditorButton( ITEMS_ARMOUR );
 			iEditorToolbarState = TBAR_MODE_ITEM_ARMOUR;
 			break;
+		case ITEMS_LBEGEAR:
+			ClickEditorButton( ITEMS_LBEGEAR );
+			iEditorToolbarState = TBAR_MODE_ITEM_LBEGEAR;
+			break;
 		case ITEMS_EXPLOSIVES:
 			ClickEditorButton( ITEMS_EXPLOSIVES );
 			iEditorToolbarState = TBAR_MODE_ITEM_EXPLOSIVES;

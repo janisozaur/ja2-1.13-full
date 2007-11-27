@@ -123,7 +123,7 @@ void InitInvData(INT8 num, BOOLEAN fBigPocket, INT16 sBarDx, INT16 sBarDy, INT16
 void InitInventoryOld();
 void InitInventoryNew();
 void InitInventoryVehicle(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, BOOLEAN fSetHighestPrioity);
-void ResetMapInvRegions(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, BOOLEAN fSetHighestPrioity);
+void InitInventorySoldier(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, BOOLEAN fSetHighestPrioity);
 
 
 

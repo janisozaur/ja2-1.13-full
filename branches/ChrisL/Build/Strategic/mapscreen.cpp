@@ -518,6 +518,7 @@ BOOLEAN fFirstTimeInMapScreen = TRUE;
 BOOLEAN fShowInventoryFlag = FALSE;
 BOOLEAN fMapInventoryItem=FALSE;
 BOOLEAN fShowDescriptionFlag=FALSE;
+BOOLEAN fResetMapCoords = FALSE;
 
 // are the graphics for mapscreen preloaded?
 BOOLEAN fPreLoadedMapGraphics = FALSE;
@@ -1285,7 +1286,7 @@ BOOLEAN InitializeInvPanelCoordsNew()
 	PLAYER_INFO_X					= 0;
 	PLAYER_INFO_Y					= 107;
 
-	InitInventoryNew();
+	//InitInventoryNew();
 
 	// Inventory slots
 	if(iResolution == 0){
@@ -1681,8 +1682,6 @@ BOOLEAN InitializeInvPanelCoordsVehicle( )
 		gMapScreenInvPocketXY[51].sX = PLAYER_INFO_X + 104;	gMapScreenInvPocketXY[51].sY = PLAYER_INFO_Y + 444;
 		gMapScreenInvPocketXY[52].sX = PLAYER_INFO_X + 171;	gMapScreenInvPocketXY[52].sY = PLAYER_INFO_Y + 444;
 	}
-
-	InitInventoryVehicle(gMapScreenInvPocketXY, MAPInvMoveCallback, MAPInvClickCallback, FALSE);
 
 	return ( TRUE );
 }
@@ -7349,6 +7348,7 @@ void CreateDestroyMapInvButton()
 
 	// dirty character info panel	( Why? ARM )
 	fCharacterInfoPanelDirty=TRUE;
+	fResetMapCoords=TRUE;
  }
  else if( !fShowInventoryFlag && fOldShowInventoryFlag )
  {
@@ -7392,18 +7392,29 @@ void BltCharInvPanel()
 	// CHRISL: Changed last parameter so we can display graphic based on inventory system used
 	if((UsingNewInventorySystem() == true) && gGameExternalOptions.fVehicleInventory && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 	{
-		InitializeInvPanelCoordsVehicle();
+		if(fResetMapCoords)
+		{
+			InitializeInvPanelCoordsVehicle();
+			// This function sets the mouse regions for the vehicle inventory
+			InitInventoryVehicle(gMapScreenInvPocketXY, MAPInvMoveCallback, MAPInvClickCallback, FALSE);
+			fResetMapCoords=FALSE;
+		}
 		disOpt = 2;
 	}
 	else if((UsingNewInventorySystem() == true))
 	{
-		InitializeInvPanelCoordsNew();
-		ResetMapInvRegions(gMapScreenInvPocketXY, MAPInvMoveCallback, MAPInvClickCallback, FALSE);
+		if(fResetMapCoords)
+		{
+			InitializeInvPanelCoordsNew();
+			// This function sets the mouse regions for the soldier inventory
+			InitInventorySoldier(gMapScreenInvPocketXY, MAPInvMoveCallback, MAPInvClickCallback, FALSE);
+			fResetMapCoords=FALSE;
+		}
 		disOpt = 1;
 	}
 	else
 	{
-		InitializeInvPanelCoordsOld();
+		//InitializeInvPanelCoordsOld();
 	}
 	Blt8BPPDataTo16BPPBufferTransparent( pDestBuf, uiDestPitchBYTES, hCharListHandle, PLAYER_INFO_X, PLAYER_INFO_Y, disOpt);
 	UnLockVideoSurface( guiSAVEBUFFER ); 
@@ -11379,7 +11390,7 @@ void PrevInventoryMapBtnCallback( GUI_BUTTON *btn, INT32 reason )
 	if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
 			btn->uiFlags&= ~(BUTTON_CLICKED_ON);
-
+			fResetMapCoords = TRUE;
 			GoToPrevCharacterInList( );
 		}
 	}
@@ -11396,8 +11407,8 @@ void NextInventoryMapBtnCallback( GUI_BUTTON *btn, INT32 reason )
 	{
 	if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-		btn->uiFlags&= ~(BUTTON_CLICKED_ON);
-
+			btn->uiFlags&= ~(BUTTON_CLICKED_ON);
+			fResetMapCoords = TRUE;
 			GoToNextCharacterInList( );
 		}
 	}

@@ -2612,12 +2612,12 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 								{
 									//CHRISL: We run into a problem here because GetFreeWorldItemIndex, which gets called 
 									//	from AddItemToPool, resets gWorldItems when it increases it's size.  This means
-									//	iter loses it's relationship which causes a CTD if we use this hotkey and there aren't
-									//	enough open WorldItems to accomodate all the attachments we're seperating.
+									//	iter loses it's relationship which causes a CTD if we use this hotkey and there
+									//	aren't enough open WorldItems to accomodate all the attachments we're seperating.
+									UINT8 cnt = 0;
+									attachmentList::iterator iter = gWorldItems[ uiLoop ].object[x]->attachments.begin();
 									while(1)
 									{
-										UINT8 cnt = 0;
-										attachmentList::iterator iter = gWorldItems[ uiLoop ].object[x]->attachments.begin();
 										if (iter == gWorldItems[ uiLoop ].object[x]->attachments.end())
 										{
 											break;
@@ -2629,15 +2629,14 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 											{
 												AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
 												ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
+												iter = gWorldItems[ uiLoop ].object[x]->attachments.begin();
+												cnt = 0;
 											}
 										}
 										else
 										{
 											iter++;
-											if(iter == gWorldItems[ uiLoop ].object[x]->attachments.end())
-												break;
-											else
-												cnt++;
+											cnt++;
 										}
 									}
 #if 0

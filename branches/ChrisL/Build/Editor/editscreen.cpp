@@ -1298,6 +1298,7 @@ void HandleJA2ToolbarSelection( void )
 		case TBAR_MODE_ITEM_WEAPONS:
 		case TBAR_MODE_ITEM_AMMO:
 		case TBAR_MODE_ITEM_ARMOUR:
+		case TBAR_MODE_ITEM_LBEGEAR:
 		case TBAR_MODE_ITEM_EXPLOSIVES:
 		case TBAR_MODE_ITEM_EQUIPMENT1:
 		case TBAR_MODE_ITEM_EQUIPMENT2:
@@ -3846,6 +3847,7 @@ UINT32 EditScreenShutdown( )
 }
 
 #endif
+
 
 
 

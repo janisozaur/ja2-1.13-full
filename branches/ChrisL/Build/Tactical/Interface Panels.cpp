@@ -2036,6 +2036,12 @@ BOOLEAN InitializeSMPanel(	)
 	MSYS_AddRegion( &gSM_SELMERCBarsRegion );
 
 
+	// CHRISL: Setup default coords
+	if((UsingNewInventorySystem() == true))
+		InitInventoryNew();
+	else
+		InitInventoryOld();
+	
 	InitInvSlotInterface( gSMInvPocketXY, &gSMCamoXY, SMInvMoveCallback, SMInvClickCallback, SMInvMoveCammoCallback, SMInvClickCamoCallback, FALSE );
 
 	InitKeyRingInterface( KeyRingItemPanelButtonCallback );
@@ -3552,16 +3558,19 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 		// Item successfully added to world
 		if(worldKey != ITEM_NOT_FOUND)
 		{
-			pSoldier->DropPackKey = worldKey;
+			//CHRISL: Because of some random CTDs, we're going to disable the link between a soldier and a dropped pack
+			//pSoldier->DropPackKey = worldKey;
 			NotifySoldiersToLookforItems( );
 			DeleteObj(&pSoldier->inv[BPACKPOCKPOS]);
-			pSoldier->flags.DropPackFlag = newStatus;
+			//pSoldier->flags.DropPackFlag = newStatus;
 			gfUIStanceDifferent = TRUE;
 		}
 	}
 	// Picking up a pack?
 	else
 	{
+		//CHRISL: Because of some random CTDs, we're going to disable the link between a soldier and a dropped pack
+		return TRUE;
 		for (int x = 0; x < gWorldItems[pSoldier->DropPackKey].object.ubNumberOfObjects; ++x) {
 			// Is the item we dropped in this sector and does it have an active LBENODE flag?
 			if(gWorldItems[pSoldier->DropPackKey].object.IsActiveLBE(x)) {
@@ -3730,7 +3739,9 @@ void SelectedMercButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			}
 		}
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
+	//CHRISL: Change this to UP so that we don't inadvertantly switch to action mode when closing Inv panel
+	//else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
+	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		// ATE: Cannot get out by right clicking...
 		//if ( gpItemPointer == NULL )
@@ -6926,5 +6937,7 @@ void GoToMapScreenFromTactical( void )
 		}
 	}
 }*/
+
+
 
 

@@ -3141,6 +3141,10 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 
 	// CHECK IF THIS NEW STATE IS NON-INTERRUPTABLE
 	// IF SO - SET NON-INT FLAG
+	// 0verhaul:  Okay, here is a question:  Is the "non-interrupt" supposed to be transferrable to other anims?
+	// That is, if one anim is not interruptable but it chains to another anim, should the "not interruptable" flag
+	// remain?  I'm going to try out the theory that new animations should reset the "don't interrupt" flag.
+#if 0
 	if ( uiNewAnimFlags & ANIM_NONINTERRUPT )
 	{
 		thisSoldier->flags.fInNonintAnim = TRUE;
@@ -3150,6 +3154,10 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 	{
 		thisSoldier->flags.fRTInNonintAnim = TRUE;
 	}
+#else
+	thisSoldier->flags.fInNonintAnim = (uiNewAnimFlags & ANIM_NONINTERRUPT) != 0;
+	thisSoldier->flags.fRTInNonintAnim = (uiNewAnimFlags & ANIM_RT_NONINTERRUPT) != 0;
+#endif
 
 	// CHECK IF WE ARE NOT AIMING, IF NOT, RESET LAST TAGRET!
 	if ( !(gAnimControl[ thisSoldier->usAnimState ].uiFlags & ANIM_FIREREADY ) && !(gAnimControl[ usNewState ].uiFlags & ANIM_FIREREADY ) )
@@ -5518,7 +5526,7 @@ void SoldierGotHitGunFire( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sD
 		// Only for mercs...
 		if ( pSoldier->ubBodyType < 4 )
 		{
-			pSoldier->ChangeToFlybackAnimation( bDirection );
+			pSoldier->ChangeToFlybackAnimation( (UINT8)bDirection );
 			return;
 		}
 	}
@@ -5643,7 +5651,7 @@ void SoldierGotHitExplosion( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 
 				{
 					pSoldier->EVENT_SetSoldierDirection( (INT8)bDirection );
 					pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->ubDirection );
-					pSoldier->ChangeToFallbackAnimation( bDirection );
+					pSoldier->ChangeToFallbackAnimation( (UINT8)bDirection );
 				}
 				else
 				{
@@ -5680,7 +5688,7 @@ void SoldierGotHitExplosion( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 
 
 		if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->pathing.bLevel, gOppositeDirection[ bDirection ], FLYBACK_HIT ) )
 		{
-			pSoldier->ChangeToFallbackAnimation( bDirection );
+			pSoldier->ChangeToFallbackAnimation( (UINT8)bDirection );
 		}
 		else
 		{
@@ -6122,7 +6130,7 @@ void SOLDIERTYPE::EVENT_InternalSetSoldierDestination( UINT16	usNewDirection, BO
 	INT16		sXPos, sYPos;
 
 	// Get dest gridno, convert to center coords
-	sNewGridNo = NewGridNo( (INT16)thisSoldier->sGridNo, DirectionInc( usNewDirection ) );
+	sNewGridNo = NewGridNo( (INT16)thisSoldier->sGridNo, DirectionInc( (UINT8)usNewDirection ) );
 
 	ConvertMapPosToWorldTileCenter( sNewGridNo, &sXPos, &sYPos );
 
@@ -6150,7 +6158,7 @@ void SOLDIERTYPE::EVENT_InternalSetSoldierDestination( UINT16	usNewDirection, BO
 	{
 		if ( !( gAnimControl[ usAnimState ].uiFlags & ANIM_SPECIALMOVE ) )
 		{
-			EVENT_InternalSetSoldierDesiredDirection( thisSoldier, usNewDirection, fFromMove, usAnimState );
+			EVENT_InternalSetSoldierDesiredDirection( thisSoldier, (UINT8)usNewDirection, fFromMove, usAnimState );
 		}
 	}
 }
@@ -6353,7 +6361,7 @@ void EVENT_InternalSetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT8	ubNe
 
 void SOLDIERTYPE::EVENT_SetSoldierDesiredDirection( UINT16	usNewDirection )
 {
-	EVENT_InternalSetSoldierDesiredDirection( thisSoldier, usNewDirection, FALSE, thisSoldier->usAnimState );
+	EVENT_InternalSetSoldierDesiredDirection( thisSoldier, (UINT8)usNewDirection, FALSE, thisSoldier->usAnimState );
 }
 
 

@@ -148,7 +148,7 @@ BobbyRayPurchaseStruct BobbyRayPurchases[ MAX_PURCHASE_AMOUNT ];
 #define		NUMBER_AMMO_FILTER_BUTTONS			8
 #define		NUMBER_ARMOUR_FILTER_BUTTONS		4
 #define		NUMBER_MISC_FILTER_BUTTONS			10
-#define		NUMBER_USED_FILTER_BUTTONS			3
+#define		NUMBER_USED_FILTER_BUTTONS			4
 
 #define		BOBBYR_GUNS_FILTER_BUTTON_GAP			BOBBYR_CATALOGUE_BUTTON_GAP - 1
 #define		BOBBYR_AMMO_FILTER_BUTTON_GAP			BOBBYR_CATALOGUE_BUTTON_GAP - 1
@@ -196,6 +196,7 @@ INT8			ubFilterAmmoButtonValues[] = {
 INT8			ubFilterUsedButtonValues[] = {
 							BOBBYR_FILTER_USED_GUNS,
 							BOBBYR_FILTER_USED_ARMOR,
+							BOBBYR_FILTER_USED_LBEGEAR,
 							BOBBYR_FILTER_USED_MISC};
 
 INT8			ubFilterArmourButtonValues[] = {
@@ -632,6 +633,10 @@ BOOLEAN InitBobbyRUsedFilterBar()
 	// Loop through the filter buttons
 	for(i=0; i<NUMBER_USED_FILTER_BUTTONS; i++)
 	{
+		//CHRISL: Don't display the LBEGEAR button if we're using the old inventory system
+		if((UsingNewInventorySystem() == false) && ubFilterUsedButtonValues[bCurMode] == BOBBYR_FILTER_USED_LBEGEAR)
+			continue;
+
 		// Filter buttons
 		guiBobbyRFilterUsed[i] = CreateIconAndTextButton( guiBobbyRFilterImage, BobbyRFilter[BOBBYR_FILTER_USED_GUNS+i], BOBBYR_GUNS_BUTTON_FONT,
 													BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
@@ -1106,6 +1111,9 @@ void BtnBobbyRFilterUsedCallback(GUI_BUTTON *btn,INT32 reason)
 				break;
 			case BOBBYR_FILTER_USED_ARMOR:
 				guiCurrentUsedFilterMode = IC_ARMOUR;
+				break;
+			case BOBBYR_FILTER_USED_LBEGEAR:
+				guiCurrentUsedFilterMode = IC_LBEGEAR;
 				break;
 			case BOBBYR_FILTER_USED_MISC:
 				guiCurrentUsedFilterMode = IC_BOBBY_MISC;
@@ -2238,6 +2246,7 @@ void SetFirstLastPagesForUsed(INT32 iFilter)
 			}
 			else
 			{
+				bCntNumItems = FALSE;
 				// Get the weapon from the item
 				usItemIndex = LaptopSaveInfo.BobbyRayUsedInventory[ i ].usItemIndex;
 
@@ -2262,6 +2271,12 @@ void SetFirstLastPagesForUsed(INT32 iFilter)
 							bCntNumItems = TRUE;
 						}
 						break;
+					case IC_LBEGEAR:
+						if (Item[usItemIndex].usItemClass == IC_LBEGEAR)
+						{
+							bCntNumItems = TRUE;
+						}
+						break;
 					case IC_BOBBY_MISC:
 						if (Item[usItemIndex].usItemClass == IC_BLADE ||
 							Item[usItemIndex].usItemClass == IC_THROWING_KNIFE ||
@@ -2271,6 +2286,7 @@ void SetFirstLastPagesForUsed(INT32 iFilter)
 							Item[usItemIndex].usItemClass == IC_MISC ||
 							Item[usItemIndex].usItemClass == IC_MEDKIT ||
 							Item[usItemIndex].usItemClass == IC_KIT ||
+							/*Item[usItemIndex].usItemClass == IC_LBEGEAR ||*/
 							Item[usItemIndex].usItemClass == IC_FACE)
 						{
 							bCntNumItems = TRUE;
@@ -2933,7 +2949,9 @@ void UpdateUsedFilterButtons()
 {
 	EnableButton(guiBobbyRFilterUsed[0]);
 	EnableButton(guiBobbyRFilterUsed[1]);
-	EnableButton(guiBobbyRFilterUsed[2]);
+	if(guiBobbyRFilterUsed[2])
+		EnableButton(guiBobbyRFilterUsed[2]);
+	EnableButton(guiBobbyRFilterUsed[3]);
 
 	switch (guiCurrentUsedFilterMode)
 	{
@@ -2943,8 +2961,11 @@ void UpdateUsedFilterButtons()
 		case IC_ARMOUR:
 			DisableButton(guiBobbyRFilterUsed[1]);
 			break;
-		case IC_BOBBY_MISC:
+		case IC_LBEGEAR:
 			DisableButton(guiBobbyRFilterUsed[2]);
+			break;
+		case IC_BOBBY_MISC:
+			DisableButton(guiBobbyRFilterUsed[3]);
 			break;
 	}
 }
@@ -3143,6 +3164,12 @@ void CalcFirstIndexForPage( STORE_INVENTORY *pInv, UINT32	uiItemClass )
 							bCntItem = TRUE;
 						}
 						break;
+					case IC_LBEGEAR:
+						if (Item[usItemIndex].usItemClass == IC_LBEGEAR)
+						{
+							bCntItem = TRUE;
+						}
+						break;
 					case IC_BOBBY_MISC:
 						if (Item[usItemIndex].usItemClass == IC_BLADE ||
 							Item[usItemIndex].usItemClass == IC_THROWING_KNIFE ||
@@ -3152,7 +3179,7 @@ void CalcFirstIndexForPage( STORE_INVENTORY *pInv, UINT32	uiItemClass )
 							Item[usItemIndex].usItemClass == IC_MISC ||
 							Item[usItemIndex].usItemClass == IC_MEDKIT ||
 							Item[usItemIndex].usItemClass == IC_KIT ||
-							Item[usItemIndex].usItemClass == IC_LBEGEAR ||
+							/*Item[usItemIndex].usItemClass == IC_LBEGEAR ||*/
 							Item[usItemIndex].usItemClass == IC_FACE)
 						{
 							bCntItem = TRUE;
@@ -3370,6 +3397,8 @@ void ReportBobbyROrderError( UINT16 usItemNumber, UINT8 ubPurchaseNum, UINT8 ubQ
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ubNumPurchasing = %d", ubNumPurchasing ) );
 }
 #endif
+
+
 
 
 

@@ -1677,15 +1677,28 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 
 			if ( (*pAttachment)[0]->data.objectStatus - Random( 35 ) - Random( 35 ) < USABLE )
 			{
+				//CHRISL: This setup assumes that remove() will work successfully, but if it doesn't we'll duplicate the item.
 				// barrel extender falls off!
 				// drop it to ground
-				AddItemToPool( pSoldier->sGridNo, pAttachment, 1, pSoldier->pathing.bLevel, 0, -1 );
+				//AddItemToPool( pSoldier->sGridNo, pAttachment, 1, pSoldier->pathing.bLevel, 0, -1 );
 
 				// since barrel extenders are not removable we cannot call RemoveAttachment here
 				// and must create the item by hand
-				(*pInHand)[0]->attachments.remove(*pAttachment);
+				//(*pInHand)[0]->attachments.remove(*pAttachment);
 				//ADB ubWeight has been removed, see comments in OBJECTTYPE
 				//pInHand->ubWeight = CalculateObjectWeight( pInHand );
+
+				//CHRISL: Instead of the above, use this function which is basially redundant to what remove() does, but includes
+				//	a failsafe so we don't cause an item duplication.
+				for(std::list<OBJECTTYPE>::iterator iter = (*pInHand)[0]->attachments.begin();
+					iter != (*pInHand)[0]->attachments.end(); ++iter){
+						if(*iter == *pAttachment)
+						{
+							AddItemToPool( pSoldier->sGridNo, pAttachment, 1, pSoldier->pathing.bLevel, 0, -1 );
+							iter = (*pInHand)[0]->attachments.erase(iter);
+							break;
+						}
+				}
 
 				// big penalty to hit
 				if(uiHitChance < 30)
@@ -5890,5 +5903,7 @@ INT8 GetAPsToReload( OBJECTTYPE *pObj )
 		( 100 - GetPercentReloadTimeAPReduction(pObj) ) ) / 100;
 
 }
+
+
 
 

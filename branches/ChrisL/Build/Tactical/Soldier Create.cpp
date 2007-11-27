@@ -2727,6 +2727,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 {
 	UINT32								cnt, cnt2;
 	MERCPROFILESTRUCT *		pProfile;
+	BOOLEAN					success, fRet;
 
 	pProfile = &(gMercProfiles[pCreateStruct->ubProfile]);
 
@@ -2745,17 +2746,19 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 				if ( pProfile->inv[ cnt ] == NOTHING || Item[pProfile->inv[cnt]].attachment) {
 					continue;
 				}
-				CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &gTempObject );
-				BOOLEAN success;
+				fRet = CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &gTempObject );
 				//CHRISL: Place items by slots chosen in profile if using new inventory system
-				if((UsingNewInventorySystem() == false)) {
-					success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
-				}
-				else {
-					success = PlaceObject( pSoldier, cnt, &gTempObject );
-				}
-				if (success == FALSE && pSoldier->inv[cnt].exists() == false) {
-					pSoldier->inv[cnt] = gTempObject;
+				if(fRet)
+				{
+					if((UsingNewInventorySystem() == false)) {
+						success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
+					}
+					else {
+						success = PlaceObject( pSoldier, cnt, &gTempObject );
+					}
+					if (success == FALSE && pSoldier->inv[cnt].exists() == false) {
+						pSoldier->inv[cnt] = gTempObject;
+					}
 				}
 			}
 			//done placing all non attachments, now place all attachments on objects!
@@ -2767,39 +2770,41 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 				if (!Item[pProfile->inv[cnt]].attachment) {
 					continue;
 				}
-				CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &gTempObject );
+				fRet = CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &gTempObject );
 				// try to find the appropriate item to attach to!
-				for ( cnt2 = INV_START_POS; cnt2 < NUM_INV_SLOTS; cnt2++ )
+				if(fRet)
 				{
-					if ( pSoldier->inv[ cnt2 ].exists() == true && ValidAttachment( gTempObject.usItem, pSoldier->inv[ cnt2 ].usItem ) )
+					for ( cnt2 = INV_START_POS; cnt2 < NUM_INV_SLOTS; cnt2++ )
 					{
-						pSoldier->inv[ cnt2 ].AttachObject( NULL, &gTempObject, FALSE );
-						break;
-					}
-				}
-				if (cnt2 == NUM_INV_SLOTS)
-				{
-					// oh well, couldn't find anything to attach to!
-					BOOLEAN success;
-					//CHRISL: Place items by slots chosen in profile if using new inventory system
-					if((UsingNewInventorySystem() == false)) {
-						success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
-					}
-					else {
-						// CHRISL: If we're placing a "body" item, then just place it.  Otherwise, first
-						// try to autoplace the item.  Only use "PlaceObject" as a last resort.
-						if(cnt < BIGPOCKSTART) {
-							success = PlaceObject( pSoldier, cnt, &gTempObject );
+						if ( pSoldier->inv[ cnt2 ].exists() == true && ValidAttachment( gTempObject.usItem, pSoldier->inv[ cnt2 ].usItem ) )
+						{
+							pSoldier->inv[ cnt2 ].AttachObject( NULL, &gTempObject, FALSE );
+							break;
 						}
-						else{
+					}
+					if (cnt2 == NUM_INV_SLOTS)
+					{
+						// oh well, couldn't find anything to attach to!
+						//CHRISL: Place items by slots chosen in profile if using new inventory system
+						if((UsingNewInventorySystem() == false)) {
 							success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
-							if(success == FALSE) {
+						}
+						else {
+							// CHRISL: If we're placing a "body" item, then just place it.  Otherwise, first
+							// try to autoplace the item.  Only use "PlaceObject" as a last resort.
+							if(cnt < BIGPOCKSTART) {
 								success = PlaceObject( pSoldier, cnt, &gTempObject );
 							}
+							else{
+								success = AutoPlaceObject( pSoldier, &gTempObject, FALSE );
+								if(success == FALSE) {
+									success = PlaceObject( pSoldier, cnt, &gTempObject );
+								}
+							}
 						}
-					}
-					if (success == FALSE && pSoldier->inv[cnt].exists() == false) {
-						pSoldier->inv[cnt] = gTempObject;
+						if (success == FALSE && pSoldier->inv[cnt].exists() == false) {
+							pSoldier->inv[cnt] = gTempObject;
+						}
 					}
 				}
 			}
@@ -2819,36 +2824,39 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 						{
 							case BREWSTER:
 								if ( pProfile->inv[ cnt ] >= KEY_1 && pProfile->inv[ cnt ] <= KEY_32){
-									CreateKeyObject( &gTempObject , pProfile->bInvNumber[ cnt ], 19 );
+									fRet = CreateKeyObject( &gTempObject , pProfile->bInvNumber[ cnt ], 19 );
 								}
 								break;
 							case SKIPPER:
 								if ( pProfile->inv[ cnt ] >= KEY_1 && pProfile->inv[ cnt ] <= KEY_32){
-									CreateKeyObject( &gTempObject, pProfile->bInvNumber[ cnt ], 11 );
+									fRet = CreateKeyObject( &gTempObject, pProfile->bInvNumber[ cnt ], 11 );
 								}
 								break;
 							case DOREEN:
 								if ( pProfile->inv[ cnt ] >= KEY_1 && pProfile->inv[ cnt ] <= KEY_32){
-									CreateKeyObject( &gTempObject, pProfile->bInvNumber[ cnt ], 32 );
+									fRet = CreateKeyObject( &gTempObject, pProfile->bInvNumber[ cnt ], 32 );
 								}
 						}
 					}
 					else
 					{
-						CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &gTempObject );
+						fRet = CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &gTempObject );
+					}
+					if(fRet)
+					{
 						pSoldier->inv[cnt] = gTempObject;
-					}
-					if ( Item[gTempObject.usItem].fingerprintid )
-					{
-						for (int x = 0; x < pProfile->bInvNumber[ cnt ]; ++x) {
-							gTempObject[x]->data.ubImprintID = pSoldier->ubProfile;
-						}
-					}
-					if (gubItemDroppableFlag[cnt])
-					{
-						if (pProfile->ubInvUndroppable & gubItemDroppableFlag[cnt])
+						if ( Item[gTempObject.usItem].fingerprintid )
 						{
-							gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+							for (int x = 0; x < pProfile->bInvNumber[ cnt ]; ++x) {
+								gTempObject[x]->data.ubImprintID = pSoldier->ubProfile;
+							}
+						}
+						if (gubItemDroppableFlag[cnt])
+						{
+							if (pProfile->ubInvUndroppable & gubItemDroppableFlag[cnt])
+							{
+								gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+							}
 						}
 					}
 				}
@@ -2856,8 +2864,9 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 			if (pProfile->uiMoney > 0)
 			{
 				//only npcs can have money
-				CreateMoney(pProfile->uiMoney, &gTempObject );
-				PlaceInAnySlot(pSoldier, &gTempObject, true);
+				fRet = CreateMoney(pProfile->uiMoney, &gTempObject );
+				if(fRet)
+					PlaceInAnySlot(pSoldier, &gTempObject, true);
 			}
 		}
 	}

@@ -1447,7 +1447,9 @@ void GiveIMPItems( MERCPROFILESTRUCT *pProfile, INT8 abilityValue, UINT8 typeInd
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("GiveIMPItems: 2 iChoice = %d",iChoice));
 		usItem = gIMPItemChoices[ typeIndex ].bItemNo[ iChoice ];
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("GiveIMPItems: typeIndex = %d, usItem = %d, iChoice = %d, abilityValue = %d",typeIndex, usItem,iChoice, abilityValue ));
-		if ( usItem > 0 && ItemIsLegal(usItem))
+		//CHRISL: Let "illegal" guns be allowed so we don't have to worry about an IMP failing to start with a weapon simply
+		//	because Tons of Guns was not selected.
+		if ( usItem > 0 && (ItemIsLegal(usItem) || Item[usItem].usItemClass == IC_GUN))
 		{
 			MakeProfileInvItemAnySlot(pProfile,usItem,100,1);
 
@@ -1475,4 +1477,5 @@ void GiveIMPItems( MERCPROFILESTRUCT *pProfile, INT8 abilityValue, UINT8 typeInd
 
 
 }
+
 

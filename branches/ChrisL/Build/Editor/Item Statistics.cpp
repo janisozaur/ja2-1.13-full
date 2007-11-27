@@ -164,6 +164,7 @@ enum
 	EDITING_GUNS,
 	EDITING_AMMO,
 	EDITING_ARMOUR,
+	EDITING_LBEGEAR,
 	EDITING_EQUIPMENT,
 	EDITING_EXPLOSIVES,
 	EDITING_MONEY,
@@ -196,6 +197,10 @@ void RemoveAmmoGUI();
 void SetupArmourGUI();
 void ExtractAndUpdateArmourGUI();
 void RemoveArmourGUI();
+
+void SetupLBEGUI();
+void ExtractAndUpdateLBEGUI();
+void RemoveLBEGUI();
 
 void SetupEquipGUI();
 void ExtractAndUpdateEquipGUI();
@@ -276,6 +281,7 @@ void ExecuteItemStatsCmd( UINT8 ubAction )
 				case EDITING_GUNS:				ExtractAndUpdateGunGUI();					break;
 				case EDITING_AMMO:				ExtractAndUpdateAmmoGUI();				break;
 				case EDITING_ARMOUR:			ExtractAndUpdateArmourGUI();			break;
+				case EDITING_LBEGEAR:			ExtractAndUpdateLBEGUI();			break;
 				case EDITING_EQUIPMENT:		ExtractAndUpdateEquipGUI();				break;
 				case EDITING_EXPLOSIVES:	ExtractAndUpdateExplosivesGUI();	break;
 				case EDITING_MONEY:				ExtractAndUpdateMoneyGUI();				break;
@@ -327,6 +333,7 @@ void RemoveItemGUI()
 		case EDITING_GUNS:				RemoveGunGUI();					break;
 		case EDITING_AMMO:				RemoveAmmoGUI();				break;
 		case EDITING_ARMOUR:			RemoveArmourGUI();			break;
+		case EDITING_LBEGEAR:			RemoveLBEGUI();			break;
 		case EDITING_EQUIPMENT:		RemoveEquipGUI();				break;
 		case EDITING_EXPLOSIVES:	RemoveExplosivesGUI();	break;
 		case EDITING_MONEY:				RemoveMoneyGUI();				break;
@@ -411,11 +418,14 @@ void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex )
 			gbEditingMode = EDITING_ARMOUR;
 			SetupArmourGUI();
 			break;
+		case IC_LBEGEAR:
+			gbEditingMode = EDITING_LBEGEAR;
+			SetupLBEGUI();
+			break;
 		case IC_MEDKIT:
 		case IC_KIT:
 		case IC_MISC:
 		case IC_FACE:
-		case IC_LBEGEAR:
 		case IC_BLADE:
 		case IC_LAUNCHER:
 		case IC_THROWING_KNIFE:
@@ -516,6 +526,7 @@ void UpdateItemStatsPanel()
 			mprintf( iScreenWidthOffset + 512, 2 * iScreenHeightOffset + 404, L"Trap Level" );
 			break;
 		case EDITING_ARMOUR:
+		case EDITING_LBEGEAR:
 		case EDITING_EQUIPMENT:
 			mprintf( iScreenWidthOffset + 512, 2 * iScreenHeightOffset + 384, L"Status" );
 			mprintf( iScreenWidthOffset + 512, 2 * iScreenHeightOffset + 404, L"Trap Level" );
@@ -869,6 +880,50 @@ void ExtractAndUpdateArmourGUI()
 {
 	INT32 i;
 	//Update the armour status
+	i = GetNumericStrictValueFromField( 1 );
+	if( i == -1 )
+		i = 20 + Random( 81 );
+	else
+		i = min( i, 100 );
+	(*gpItem)[0]->data.objectStatus = (INT8)i;
+	SetInputFieldStringWithNumericStrictValue( 1, i );
+	//Update the trap level
+	i = GetNumericStrictValueFromField( 2 );
+	i = ( i == -1 ) ? 0 : min( i, 20 );
+	(*gpItem)[0]->data.bTrap = (INT8)i;
+	SetInputFieldStringWithNumericStrictValue( 2, i );
+	if( gpEditingItemPool )
+	{
+		giDefaultExistChance = GetNumericStrictValueFromField( 3 );
+		giDefaultExistChance = ( giDefaultExistChance == -1 ) ? 100 : max( 1, min( giDefaultExistChance, 100 ) );
+		gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance = (UINT8)(100 - giDefaultExistChance );
+		SetInputFieldStringWithNumericStrictValue( 3, giDefaultExistChance );
+	}
+}
+
+void SetupLBEGUI()
+{
+	CHAR16 str[20];
+	swprintf( str, L"%d", (*gpItem)[0]->data.objectStatus );
+	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bTrap );
+	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
+	if( gpEditingItemPool )
+	{
+		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	}
+}
+
+void RemoveLBEGUI()
+{
+	//nothing to remove
+}
+
+void ExtractAndUpdateLBEGUI()
+{
+	INT32 i;
+	//Update the equipment status
 	i = GetNumericStrictValueFromField( 1 );
 	if( i == -1 )
 		i = 20 + Random( 81 );

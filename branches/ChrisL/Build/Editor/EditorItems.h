@@ -17,13 +17,13 @@ typedef struct{
 	INT16		sSelItemIndex;	//currently selected item index.
 	INT16	sHilitedItemIndex;
 	INT16	sScrollIndex;	//current scroll index (0 is far left, 1 is next tile to the right, ...)
-	INT16	sSaveSelWeaponsIndex, sSaveSelAmmoIndex, sSaveSelArmourIndex, sSaveSelExplosivesIndex,
+	INT16	sSaveSelWeaponsIndex, sSaveSelAmmoIndex, sSaveSelArmourIndex, sSaveSelLBEIndex, sSaveSelExplosivesIndex,
 					sSaveSelEquipment1Index, sSaveSelEquipment2Index, sSaveSelEquipment3Index,
 					sSaveSelTriggersIndex, sSaveSelKeysIndex;
-	INT16	sSaveWeaponsScrollIndex, sSaveAmmoScrollIndex, sSaveArmourScrollIndex, sSaveExplosivesScrollIndex, 
-					sSaveEquipment1ScrollIndex, sSaveEquipment2ScrollIndex, sSaveEquipment3ScrollIndex,
-					sSaveTriggersScrollIndex, sSaveKeysScrollIndex;
-	INT16	sNumWeapons, sNumAmmo, sNumArmour, sNumExplosives, sNumEquipment1, sNumEquipment2, sNumEquipment3, 
+	INT16	sSaveWeaponsScrollIndex, sSaveAmmoScrollIndex, sSaveArmourScrollIndex, sSaveLBEScrollIndex,
+					sSaveExplosivesScrollIndex, sSaveEquipment1ScrollIndex, sSaveEquipment2ScrollIndex,
+					sSaveEquipment3ScrollIndex, sSaveTriggersScrollIndex, sSaveKeysScrollIndex;
+	INT16	sNumWeapons, sNumAmmo, sNumArmour, sLBEGear, sNumExplosives, sNumEquipment1, sNumEquipment2, sNumEquipment3, 
 					sNumTriggers, sNumKeys;
 }EditorItemsInfo;
 
@@ -65,5 +65,7 @@ extern INT32 giDefaultExistChance;
 
 
  
+
+
 
 

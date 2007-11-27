@@ -1016,9 +1016,7 @@ void InitInventoryNew()
 }
 void InitInventoryVehicle(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, BOOLEAN fSetHighestPrioity)
 {
-	int cnt;
-
-	for(cnt=INV_START_POS; cnt<NUM_INV_SLOTS; cnt++)
+	for(int cnt=INV_START_POS; cnt<NUM_INV_SLOTS; cnt++)
 	{
 		MSYS_RemoveRegion( &gSMInvRegion[ cnt ]);
 		if(vehicleInv[cnt])
@@ -1033,8 +1031,9 @@ void InitInventoryVehicle(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCa
 	}
 }
 // CHRISL: Function to recreate inventory mouse regions
-void ResetMapInvRegions(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, BOOLEAN fSetHighestPrioity)
+void InitInventorySoldier(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, BOOLEAN fSetHighestPrioity)
 {
+	InitInventoryNew();
 	for(int cnt=INV_START_POS; cnt<NUM_INV_SLOTS; cnt++)
 	{
 		gSMInvData[ cnt ].sX = pRegionDesc[cnt].sX;
@@ -1061,12 +1060,6 @@ BOOLEAN InitInvSlotInterface( INV_REGION_DESC *pRegionDesc , INV_REGION_DESC *pC
  *  any questions? joker
  */
 
-	// CHRISL: Initialize gSMInvData based on inventory system
-	if((UsingNewInventorySystem() == true))
-		InitInventoryNew();
-	else
-		InitInventoryOld();
-	
 	// CHRISL: Adjusted location of the Money button on the tactical inventory screen
 	gMoneyButtonLoc.x = ((UsingNewInventorySystem() == false)) ? (343 + INTERFACE_START_X) : (244 + INTERFACE_START_X);
 	gMoneyButtonLoc.y = ( 11 + INV_INTERFACE_START_Y );

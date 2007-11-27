@@ -1949,6 +1949,10 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 						bOldSlot = FindObjectInSoldierProfile( ubTargetNPC, usGun );
 						if ( bOldSlot != NO_SLOT	)
 						{
+							// CHRISL: Need to rearrange status as well
+							gMercProfiles[ ubTargetNPC ].bInvStatus[ bNewSlot ] = gMercProfiles[ ubTargetNPC ].bInvStatus[ bOldSlot ];
+							gMercProfiles[ ubTargetNPC ].bInvStatus[ bOldSlot ] = 0;
+
 							// rearrange profile... NB # of guns can only be 1 so this is easy
 							gMercProfiles[ ubTargetNPC ].inv[ bOldSlot ] = NOTHING;
 							gMercProfiles[ ubTargetNPC ].bInvNumber[ bOldSlot ] = 0;

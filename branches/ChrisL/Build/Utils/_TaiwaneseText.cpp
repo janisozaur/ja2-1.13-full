@@ -2737,6 +2737,54 @@ STR16			BobbyROrderFormText[] =
 };
 
 
+STR16			BobbyRFilter[] =
+{
+	// Guns
+	L"Heavy W.",
+	L"Pistol",
+	L"M. Pistol",
+	L"SMG",
+	L"Rifle",
+	L"SN Rifle",
+	L"AS Rifle",
+	L"MG",
+	L"Shotgun",
+
+	// Ammo
+	L"Pistol",
+	L"M. Pistol",
+	L"SMG",
+	L"Rifle",
+	L"SN Rifle",
+	L"AS Rifle",
+	L"MG",
+	L"Shotgun",
+
+	// Used
+	L"Guns",
+	L"Armor",
+	L"LBE Gear",
+	L"Misc",
+
+	// Armour
+	L"Helmets",
+	L"Vests",
+	L"Leggings",
+	L"Plates",
+
+	// Misc
+	L"Blades",
+	L"Th. Knives",
+	L"Punch. W.",
+	L"Grenades",
+	L"Bombs",
+	L"Med. Kits",
+	L"Kits",
+	L"Face Items",
+	L"LBE Gear",
+	L"Misc.",
+};
+
 // This text is used when on the various Bobby Ray Web site pages that sell items
 
 STR16			BobbyRText[] = 
