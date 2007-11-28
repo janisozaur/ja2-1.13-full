@@ -9,7 +9,7 @@ Module Main
             AddHandler ErrorHandler.FatalError, AddressOf ExitDueToError
 
 #If DEBUG Then
-            IO.Directory.SetCurrentDirectory("C:\Documents and Settings\mbech\My Documents\Visual Studio Projects\JA2\Data\GameDir")
+            IO.Directory.SetCurrentDirectory("C:\games\jagged alliance 2")
 #End If
             Splash = New SplashForm()
             Splash.Show()

@@ -49,12 +49,14 @@ Public Class ItemTable
         'this includes: magazines, weapons, armour, explosives
         Dim mags As DataTable = db.DataSet.Tables(Tables.Magazines.Name)
         Dim weapons As DataTable = db.DataSet.Tables(Tables.Weapons.Name)
+        Dim lbes As DataTable = db.DataSet.Tables(Tables.LoadBearingEquipment.Name)
         Dim armours As DataTable = db.DataSet.Tables(Tables.Armours)
         Dim explosives As DataTable = db.DataSet.Tables(Tables.Explosives)
         Dim germanItems As DataTable = db.DataSet.Tables(Tables.GermanItems)
         Dim russianItems As DataTable = db.DataSet.Tables(Tables.RussianItems)
 
         CopyFromExtendedTable(weapons, Tables.Items.Fields.ItemClass & ">" & ItemClass.None & " AND " & Tables.Items.Fields.ItemClass & "<=" & ItemClass.Punch)
+        CopyFromExtendedTable(lbes, Tables.Items.Fields.ItemClass & "=" & ItemClass.LBEGear)
         CopyFromExtendedTable(mags, Tables.Items.Fields.ItemClass & "=" & ItemClass.Ammo)
         CopyFromExtendedTable(armours, Tables.Items.Fields.ItemClass & "=" & ItemClass.Armour)
         CopyFromExtendedTable(explosives, Tables.Items.Fields.ItemClass & "=" & ItemClass.Grenade & " OR " & Tables.Items.Fields.ItemClass & "=" & ItemClass.Bomb)
@@ -71,6 +73,7 @@ Public Class ItemTable
 
         Dim mags As DataTable = db.DataSet.Tables(Tables.Magazines.Name)
         Dim weapons As DataTable = db.DataSet.Tables(Tables.Weapons.Name)
+        Dim lbes As DataTable = db.DataSet.Tables(Tables.LoadBearingEquipment.Name)
         Dim armours As DataTable = db.DataSet.Tables(Tables.Armours)
         Dim explosives As DataTable = db.DataSet.Tables(Tables.Explosives)
         Dim germanItems As DataTable = db.DataSet.Tables(Tables.GermanItems)
@@ -82,6 +85,7 @@ Public Class ItemTable
         CopyToExtendedTable(explosives, Tables.Items.Fields.ItemClass & "=" & ItemClass.Grenade & " OR " & Tables.Items.Fields.ItemClass & "=" & ItemClass.Bomb, Tables.Items.Fields.ID)
         CopyToExtendedTable(armours, Tables.Items.Fields.ItemClass & "=" & ItemClass.Armour, Tables.Items.Fields.ID)
         CopyToExtendedTable(mags, Tables.Items.Fields.ItemClass & "=" & ItemClass.Ammo, mags.TableName & Tables.Magazines.Fields.Caliber & "," & mags.TableName & Tables.Magazines.Fields.MagSize & "," & mags.TableName & Tables.Magazines.Fields.AmmoType)
+        CopyFromExtendedTable(lbes, Tables.Items.Fields.ItemClass & "=" & ItemClass.LBEGear)
         CopyToExtendedTable(weapons, Tables.Items.Fields.ItemClass & ">" & ItemClass.None & " AND " & Tables.Items.Fields.ItemClass & "<=" & ItemClass.Punch, Tables.Items.Fields.ID, True)
 
     End Sub
@@ -90,6 +94,7 @@ Public Class ItemTable
         With db.DataSet
             .Tables(Tables.Magazines.Name).Clear()
             .Tables(Tables.Weapons.Name).Clear()
+            .Tables(Tables.LoadBearingEquipment.Name).Clear()
             .Tables(Tables.Armours).Clear()
             .Tables(Tables.Explosives).Clear()
             .Tables(Tables.GermanItems).Clear()

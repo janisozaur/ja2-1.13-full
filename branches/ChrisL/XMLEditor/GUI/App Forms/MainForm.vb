@@ -480,4 +480,8 @@ Public Class MainForm
             client.BackgroundImage = Nothing
         End If
     End Sub
+
+    Private Sub LBEGearToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles LBEGearToolStripMenuItem.Click
+        ShowItemGridForm("Items - LBEGear", Tables.Items.Fields.ItemClass & "=" & ItemClass.LBEGear, Nothing)
+    End Sub
 End Class

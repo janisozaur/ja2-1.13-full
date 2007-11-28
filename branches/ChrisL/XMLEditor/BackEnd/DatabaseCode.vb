@@ -10,6 +10,7 @@ Public Module DatabaseCode
         'standard tables
         Dim items As DataTable = MakeItemsTable()
         Dim weapons As DataTable = MakeWeaponsTable()
+        Dim lbes As DataTable = MakeLBETable()
         Dim merges As DataTable = MakeMergeTable()
         Dim magazines As DataTable = MakeMagazineTable()
         Dim launchables As DataTable = MakeLaunchableTable()
@@ -61,6 +62,7 @@ Public Module DatabaseCode
 
         ds.Tables.Add(items)
         ds.Tables.Add(weapons)
+        ds.Tables.Add(lbes)
         ds.Tables.Add(merges)
         ds.Tables.Add(magazines)
         ds.Tables.Add(launchables)
@@ -117,6 +119,7 @@ Public Module DatabaseCode
         Dim armourClasses As DataTable = MakeLookupTable("ArmourClass")
         Dim weaponTypes As DataTable = MakeLookupTable("WeaponType")
         Dim weaponClasses As DataTable = MakeLookupTable("WeaponClass")
+        Dim lbeClasses As DataTable = MakeLookupTable("LBEClass")
         Dim cursors As DataTable = MakeLookupTable("Cursor")
 
         ds.Tables.Add(mergeTypes)
@@ -126,6 +129,7 @@ Public Module DatabaseCode
         ds.Tables.Add(armourClasses)
         ds.Tables.Add(weaponTypes)
         ds.Tables.Add(weaponClasses)
+        ds.Tables.Add(lbeClasses)
         ds.Tables.Add(cursors)
 
         'relations
@@ -165,6 +169,8 @@ Public Module DatabaseCode
         ds.Relations.Add(MakeRelation(items, attachments, "uiIndex", "itemIndex"))
 
         ds.Relations.Add(MakeRelation(armourClasses, armours, "id", "ubArmourClass"))
+
+        ds.Relations.Add(MakeRelation(lbeClasses, lbes, "id", "lbeClass"))
 
         ds.Relations.Add(MakeRelation(weaponTypes, weapons, "id", "ubWeaponType"))
         ds.Relations.Add(MakeRelation(weaponClasses, weapons, "id", "ubWeaponClass"))
@@ -286,6 +292,11 @@ Public Module DatabaseCode
         AddLookupData(weaponTypes, 7, "Light Machinegun")
         AddLookupData(weaponTypes, 8, "Shotgun")
 
+        AddLookupData(lbeClasses, 0, "Thigh")
+        AddLookupData(lbeClasses, 1, "Vest")
+        AddLookupData(lbeClasses, 2, "Combat Pack")
+        AddLookupData(lbeClasses, 3, "Backpack")
+
         AddLookupData(cursors, 0, "Invalid")
         AddLookupData(cursors, 1, "Quest")
         AddLookupData(cursors, 2, "Punch")
@@ -327,6 +338,7 @@ Public Module DatabaseCode
         'AddLookupData(itemClasses, 16384, "(Unused)")
         AddLookupData(itemClasses, 32768, "Face Item")
         AddLookupData(itemClasses, 65536, "Key")
+        AddLookupData(itemClasses, 131072, "LBEgear")
         AddLookupData(itemClasses, 268435456, "Misc")
         AddLookupData(itemClasses, 536870912, "Money")
 
@@ -654,6 +666,36 @@ Public Module DatabaseCode
         Return t
     End Function
 
+    Private Function MakeLBETable() As DataTable
+        Dim t As New DataTable("LOADBEARINGEQUIPMENT")
+        t.ExtendedProperties.Add(TableProperty.DataSetName, t.TableName & "LIST")
+        t.ExtendedProperties.Add(TableProperty.FileName, "LoadBearingEquipment.xml")
+        t.ExtendedProperties.Add(TableProperty.Trim, True)
+
+        t.Columns.Add(MakeColumn("lbeIndex", "ID", GetType(Integer), , , , , , , True))
+        t.Columns.Add(MakeColumn("lbeClass", "Class", GetType(Integer), , "LBEClass", "id", "name"))
+        t.Columns.Add(MakeColumn("lbeCombo", "lbeCombo", GetType(Integer), , , , True))
+        t.Columns.Add(MakeColumn("lbeFilledSize", "Max Size", GetType(Integer), , , , True))
+        t.Columns.Add(MakeColumn("lbePocketIndex.1", "Pocket Index 1", GetType(Integer), , , , True))
+        t.Columns.Add(MakeColumn("lbePocketIndex.2", "Pocket Index 2", GetType(Integer), , , , True))
+        t.Columns.Add(MakeColumn("lbePocketIndex.3", "Pocket Index 3", GetType(Integer), , , , True))
+        t.Columns.Add(MakeColumn("lbePocketIndex.4", "Pocket Index 4", GetType(Integer), , , , True))
+        t.Columns.Add(MakeColumn("lbePocketIndex.5", "Pocket Index 5", GetType(Integer), , , , True))
+        t.Columns.Add(MakeColumn("lbePocketIndex.6", "Pocket Index 6", GetType(Integer), , , , True))
+        t.Columns.Add(MakeColumn("lbePocketIndex.7", "Pocket Index 7", GetType(Integer), , , , True))
+        t.Columns.Add(MakeColumn("lbePocketIndex.8", "Pocket Index 8", GetType(Integer), , , , True))
+        t.Columns.Add(MakeColumn("lbePocketIndex.9", "Pocket Index 9", GetType(Integer), , , , True))
+        t.Columns.Add(MakeColumn("lbePocketIndex.10", "Pocket Index 10", GetType(Integer), , , , True))
+        t.Columns.Add(MakeColumn("lbePocketIndex.11", "Pocket Index 11", GetType(Integer), , , , True))
+        t.Columns.Add(MakeColumn("lbePocketIndex.12", "Pocket Index 12", GetType(Integer), , , , True))
+
+        Dim pk(0) As DataColumn
+        pk(0) = t.Columns("lbeIndex")
+        t.PrimaryKey = pk
+
+        Return t
+    End Function
+
     Private Function MakeWeaponsTable() As DataTable
         Dim t As New DataTable("WEAPON")
         t.ExtendedProperties.Add(TableProperty.DataSetName, t.TableName & "LIST")
@@ -724,6 +766,9 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("ubGraphicNum", "Graphic #", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("ubWeight", "Weight", GetType(Integer)))
         t.Columns.Add(MakeColumn("ubPerPocket", "# per Pocket", GetType(Integer)))
+        t.Columns.Add(MakeColumn("ItemSize", "Item Size", GetType(Integer)))
+        t.Columns.Add(MakeColumn("ItemSizeBonus", "Item Size Bonus", GetType(Integer), , , , , , , True))
+        t.Columns.Add(MakeColumn("NewInv", "NewInv Only", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("usPrice", "Price", GetType(Integer)))
         t.Columns.Add(MakeColumn("ubCoolness", "Coolness", GetType(Integer)))
         t.Columns.Add(MakeColumn("bReliability", "Reliability", GetType(Integer), , , , , , , True))

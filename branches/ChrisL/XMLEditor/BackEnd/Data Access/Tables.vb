@@ -29,6 +29,15 @@ Public Class Tables
             Public Const MagSize As String = "ubMagSize"
         End Class
     End Class
+    Public Class LoadBearingEquipment
+        Public Const Name As String = "LOADBEARINGEQUIPMENT"
+        Public Class Fields
+            Public Const ID As String = "lbeIndex"
+            Public Const lbeClass As String = "lbeClass"
+            Public Const Combo As String = "lbeCombo"
+            Public Const MaxSize As String = "lbeFilledSize"
+        End Class
+    End Class
     Public Const Merges As String = "MERGE"
     Public Class Magazines
         Public Const Name As String = "MAGAZINE"
@@ -132,4 +141,5 @@ Public Class Tables
         Public Const Quantity As String = "ubOptimalNumber"
     End Class
 End Class
+
 

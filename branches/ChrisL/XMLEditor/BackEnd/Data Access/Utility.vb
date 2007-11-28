@@ -64,6 +64,7 @@ Public Module Utility
         'Unused = 16384
         Face = 32768
         Key = 65536
+        LBEGear = 131072
         Misc = 268435456
         Money = 536870912
     End Enum
