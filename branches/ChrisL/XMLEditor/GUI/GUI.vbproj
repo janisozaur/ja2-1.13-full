@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A8C0478C-F836-47ED-A841-AE27468FF85B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>Sub Main</StartupObject>
+    <RootNamespace>GUI</RootNamespace>
+    <AssemblyName>XML Editor</AssemblyName>
+    <MyType>WindowsFormsWithCustomSubMain</MyType>
+    <ApplicationIcon>jagged3.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>XML Editor.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>XML Editor.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="BackEnd" />
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App Forms\AboutForm.Designer.vb">
+      <DependentUpon>AboutForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="App Forms\AboutForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IniFile.vb" />
+    <Compile Include="Forms\CustomFilterForm.Designer.vb">
+      <DependentUpon>CustomFilterForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CustomFilterForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LoadingForm.Designer.vb">
+      <DependentUpon>LoadingForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LoadingForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Grid Forms\ChildDataGridForm.Designer.vb">
+      <DependentUpon>ChildDataGridForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Grid Forms\ChildDataGridForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChangeClassForm.Designer.vb">
+      <DependentUpon>ChangeClassForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ChangeClassForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ColumnSelectForm.Designer.vb">
+      <DependentUpon>ColumnSelectForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ColumnSelectForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Grid Forms\DataGridForm.Designer.vb">
+      <DependentUpon>DataGridForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Grid Forms\DataGridForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EnterItemIDForm.Designer.vb">
+      <DependentUpon>EnterItemIDForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EnterItemIDForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NewItemForm.Designer.vb">
+      <DependentUpon>NewItemForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NewItemForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SimpleFormBase.Designer.vb">
+      <DependentUpon>SimpleFormBase.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SimpleFormBase.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Grid Forms\GridForm.Designer.vb">
+      <DependentUpon>GridForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Grid Forms\GridForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Data Forms\ItemDataForm.Designer.vb">
+      <DependentUpon>ItemDataForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Data Forms\ItemDataForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Grid Forms\ItemGridForm.Designer.vb">
+      <DependentUpon>ItemGridForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Grid Forms\ItemGridForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Grid Forms\LookupGridForm.Designer.vb">
+      <DependentUpon>LookupGridForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Grid Forms\LookupGridForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main.vb" />
+    <Compile Include="App Forms\MainForm.Designer.vb">
+      <DependentUpon>MainForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="App Forms\MainForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="App Forms\SplashForm.Designer.vb">
+      <DependentUpon>SplashForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="App Forms\SplashForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Grid Forms\GridUtility.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="App Forms\AboutForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>AboutForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChangeClassForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ChangeClassForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ColumnSelectForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ColumnSelectForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CustomFilterForm.resx">
+      <DependentUpon>CustomFilterForm.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LoadingForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>LoadingForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Grid Forms\DataGridForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DataGridForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EnterItemIDForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EnterItemIDForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NewItemForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>NewItemForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SimpleFormBase.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SimpleFormBase.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Grid Forms\GridForm.resx">
+      <DependentUpon>GridForm.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data Forms\ItemDataForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ItemDataForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Grid Forms\ItemGridForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ItemGridForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App Forms\MainForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MainForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Grid Forms\LookupGridForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>LookupGridForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App Forms\SplashForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SplashForm.vb</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BackEnd\BackEnd.vbproj">
+      <Project>{4E764E0D-2D81-471C-AFEB-D34D059151B1}</Project>
+      <Name>BackEnd</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ja2-aim.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\camo02.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="jagged3.ico" />
+    <None Include="app.config" />
+    <None Include="Resources\bigitem slot.JPG" />
+    <None Include="Resources\med item slot.JPG" />
+    <None Include="Resources\DESKTOP1.JPG" />
+    <Content Include="XMLEditorInit.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
