@@ -3467,14 +3467,21 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 
 		if (pAttachmentPosition) {
 			//we are swapping the attachments, and we know we do NOT need to worry about attachment stack size
+			//CHRISL: Actually, we do need to worry about attachment stack size since we might have a stack in our cursor.
+			//	Rather then doing a simple swap, try moving the existing attachment to our cursor stack, then attach one item
+			//	from the cursor stack.
+
+			pAttachment->AddObjectsToStack(*pAttachmentPosition,-1,pSoldier,NUM_INV_SLOTS,MAX_OBJECTS_PER_SLOT);
+			pAttachment->MoveThisObjectTo(attachmentObject,1,pSoldier,NUM_INV_SLOTS,1);
+			*pAttachmentPosition = attachmentObject;
 			//backup the original attachment
-			attachmentObject = *pAttachmentPosition;
+			//attachmentObject = *pAttachmentPosition;
 
 			//place the new one
-			*pAttachmentPosition = *pAttachment;
+			//*pAttachmentPosition = *pAttachment;
 
 			//whatever pAttachment pointed to is now the original attachment
-			*pAttachment = attachmentObject;
+			//*pAttachment = attachmentObject;
 		}
 		else {
 			//it's a new attachment
@@ -7931,7 +7938,9 @@ void ApplyEquipmentBonuses(SOLDIERTYPE * pSoldier)
 
 	if ( (newCamo > oldCamo || newUrbanCamo > oldUrbanCamo || newDesertCamo > oldDesertCamo || newSnowCamo > oldSnowCamo )&& pSoldier->bTeam == OUR_TEAM )
 	{
-		pSoldier->DoMercBattleSound( BATTLE_SOUND_COOL1 );
+		//CHRISL: This sound interferes with some RPC hiring in NewInv because of the camo bonus some LBE Vests give
+		if(UsingNewInventorySystem() == false)
+			pSoldier->DoMercBattleSound( BATTLE_SOUND_COOL1 );
 
 		// WANNE: Only call the method if oldCame != newCamo
 		if ( pSoldier->bInSector)

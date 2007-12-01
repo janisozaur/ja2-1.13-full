@@ -4525,10 +4525,10 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 			// Fix neutral flags
 			if ( guiCurrentSaveGameVersion < 94 )
 			{
-				if ( Menptr[ cnt].bTeam == OUR_TEAM && Menptr[ cnt ].bNeutral && Menptr[ cnt ].bAssignment != ASSIGNMENT_POW )
+				if ( Menptr[ cnt].bTeam == OUR_TEAM && Menptr[ cnt ].aiData.bNeutral && Menptr[ cnt ].bAssignment != ASSIGNMENT_POW )
 				{
 					// turn off neutral flag
-					Menptr[ cnt].bNeutral = FALSE;
+					Menptr[ cnt].aiData.bNeutral = FALSE;
 				}
 			}
 #endif

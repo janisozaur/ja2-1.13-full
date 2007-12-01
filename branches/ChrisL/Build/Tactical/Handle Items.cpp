@@ -1467,18 +1467,8 @@ void SoldierHandleDropItem( SOLDIERTYPE *pSoldier )
 			PlayJA2Sample( THROW_IMPACT_2, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
 		}
 
-		/*CHRISL: Sector inventory uses OldInv stack limits regardless of the inventory system we're using.  Because of this
-			we need to adjust stack sizes and possibly create additional world items if a NewInv stack is larger then OldInv
-			can support.*/
-		// work with a temporary object rather then the primary
-		OBJECTTYPE pObject = OBJECTTYPE(*pSoldier->pTempObject);
-		UINT8 ubSlotLimit = ItemSlotLimit(&pObject, STACK_SIZE_LIMIT);
-		while(pObject.ubNumberOfObjects>0){
-			pObject.MoveThisObjectTo(gTempObject,ubSlotLimit);
-
-			AddItemToPool( pSoldier->sGridNo, &gTempObject, 1, pSoldier->pathing.bLevel, 0 , -1 );
-			NotifySoldiersToLookforItems( );
-		}
+		AddItemToPool( pSoldier->sGridNo, pSoldier->pTempObject, 1, pSoldier->pathing.bLevel, 0 , -1 );
+		NotifySoldiersToLookforItems( );
 
 		OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 	}
@@ -2177,230 +2167,239 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 		bRenderZHeightAboveLevel = 0;
 	}
 
-	// Check structure database
-	if ( gpWorldLevelData[ *psGridNo ].pStructureHead && (pObject->usItem != OWNERSHIP) && (pObject->usItem != ACTION_ITEM) )
+	//CHRISL: We need to make sure that item stacks follow the OldInv stacking limits
+	// Copy the object we're working with the gTempObject so that we can use pObject later in this function
+	gTempObject = OBJECTTYPE(*pObject);
+	//pObject->MoveThisObjectTo(gTempObject);
+	UINT8 ubSlotLimit = ItemSlotLimit(&gTempObject, STACK_SIZE_LIMIT);
+	while(gTempObject.ubNumberOfObjects>0)
 	{
-		// Something is here, check obstruction in future
-		sDesiredLevel = ubLevel ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
-		pStructure = FindStructure( *psGridNo , STRUCTURE_BLOCKSMOVES );
-		while( pStructure )
+		gTempObject.MoveThisObjectTo(*pObject,ubSlotLimit);
+
+		// Check structure database
+		if ( gpWorldLevelData[ *psGridNo ].pStructureHead && (pObject->usItem != OWNERSHIP) && (pObject->usItem != ACTION_ITEM) )
 		{
-			if( !(pStructure->fFlags &( STRUCTURE_PERSON | STRUCTURE_CORPSE ) ) && pStructure->sCubeOffset == sDesiredLevel )
+			// Something is here, check obstruction in future
+			sDesiredLevel = ubLevel ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
+			pStructure = FindStructure( *psGridNo , STRUCTURE_BLOCKSMOVES );
+			while( pStructure )
 			{
-				// If we are going into a raised struct AND we have above level set to -1
-				if ( StructureBottomLevel( pStructure ) != 1 && fForceOnGround )
+				if( !(pStructure->fFlags &( STRUCTURE_PERSON | STRUCTURE_CORPSE ) ) && pStructure->sCubeOffset == sDesiredLevel )
 				{
-					break;
-				}
-
-				// Adjust the item's gridno to the base of struct.....
-				pBase = FindBaseStructure( pStructure );
-
-				// Get LEVELNODE for struct and remove!
-				sNewGridNo = pBase->sGridNo;
-
-				// Check for openable flag....
-				if ( pStructure->fFlags & STRUCTURE_OPENABLE )
-				{
-					// ATE: Set a flag here - we need to know later that we're in an openable...
-					fObjectInOpenable = TRUE;
-
-					// Something of note is here....
-					// SOME sort of structure is here.... set render flag to off
-					usFlags |= WORLD_ITEM_DONTRENDER;
-
-					// Openable.. check if it's closed, if so, set visiblity...
-					if ( !( pStructure->fFlags & STRUCTURE_OPEN ) )
-					{
-						// -2 means - don't reveal!
-						bVisible = -2;
-					}
-
-					bRenderZHeightAboveLevel = CONVERT_INDEX_TO_PIXELS( StructureHeight( pStructure ) );
-					break;
-
-				}
-				// Else can we place an item on top?
-				else if ( pStructure->fFlags & ( STRUCTURE_GENERIC ) )
-				{
-					UINT8 ubLevel0, ubLevel1, ubLevel2, ubLevel3;
-
 					// If we are going into a raised struct AND we have above level set to -1
 					if ( StructureBottomLevel( pStructure ) != 1 && fForceOnGround )
 					{
 						break;
 					}
 
-					// Find most dence area...
-					if ( StructureDensity( pStructure, &ubLevel0, &ubLevel1, &ubLevel2, &ubLevel3 ) )
+					// Adjust the item's gridno to the base of struct.....
+					pBase = FindBaseStructure( pStructure );
+
+					// Get LEVELNODE for struct and remove!
+					sNewGridNo = pBase->sGridNo;
+
+					// Check for openable flag....
+					if ( pStructure->fFlags & STRUCTURE_OPENABLE )
 					{
-						if ( ubLevel3 == 0 && ubLevel2 == 0 && ubLevel1 == 0 && ubLevel0 == 0 )
+						// ATE: Set a flag here - we need to know later that we're in an openable...
+						fObjectInOpenable = TRUE;
+
+						// Something of note is here....
+						// SOME sort of structure is here.... set render flag to off
+						usFlags |= WORLD_ITEM_DONTRENDER;
+
+						// Openable.. check if it's closed, if so, set visiblity...
+						if ( !( pStructure->fFlags & STRUCTURE_OPEN ) )
 						{
-							bRenderZHeightAboveLevel = 0;
+							// -2 means - don't reveal!
+							bVisible = -2;
 						}
-						else if ( ubLevel3 >= ubLevel0 && ubLevel3 >= ubLevel2 && ubLevel3 >= ubLevel1 )
+
+						bRenderZHeightAboveLevel = CONVERT_INDEX_TO_PIXELS( StructureHeight( pStructure ) );
+						break;
+
+					}
+					// Else can we place an item on top?
+					else if ( pStructure->fFlags & ( STRUCTURE_GENERIC ) )
+					{
+						UINT8 ubLevel0, ubLevel1, ubLevel2, ubLevel3;
+
+						// If we are going into a raised struct AND we have above level set to -1
+						if ( StructureBottomLevel( pStructure ) != 1 && fForceOnGround )
 						{
-							bRenderZHeightAboveLevel = CONVERT_INDEX_TO_PIXELS( 4 );
+							break;
 						}
-						else if ( ubLevel2 >= ubLevel0 && ubLevel2 >= ubLevel1 && ubLevel2 >= ubLevel3 )
+
+						// Find most dence area...
+						if ( StructureDensity( pStructure, &ubLevel0, &ubLevel1, &ubLevel2, &ubLevel3 ) )
 						{
-							bRenderZHeightAboveLevel = CONVERT_INDEX_TO_PIXELS( 3 );
+							if ( ubLevel3 == 0 && ubLevel2 == 0 && ubLevel1 == 0 && ubLevel0 == 0 )
+							{
+								bRenderZHeightAboveLevel = 0;
+							}
+							else if ( ubLevel3 >= ubLevel0 && ubLevel3 >= ubLevel2 && ubLevel3 >= ubLevel1 )
+							{
+								bRenderZHeightAboveLevel = CONVERT_INDEX_TO_PIXELS( 4 );
+							}
+							else if ( ubLevel2 >= ubLevel0 && ubLevel2 >= ubLevel1 && ubLevel2 >= ubLevel3 )
+							{
+								bRenderZHeightAboveLevel = CONVERT_INDEX_TO_PIXELS( 3 );
+							}
+							else if ( ubLevel1 >= ubLevel0 && ubLevel1 >= ubLevel2 && ubLevel1 >= ubLevel3 )
+							{
+								bRenderZHeightAboveLevel = CONVERT_INDEX_TO_PIXELS( 2 );
+							}
+							else if ( ubLevel0 >= ubLevel1 && ubLevel0 >= ubLevel2 && ubLevel0 >= ubLevel3 )
+							{
+								bRenderZHeightAboveLevel = CONVERT_INDEX_TO_PIXELS( 1 );
+							}
 						}
-						else if ( ubLevel1 >= ubLevel0 && ubLevel1 >= ubLevel2 && ubLevel1 >= ubLevel3 )
-						{
-							bRenderZHeightAboveLevel = CONVERT_INDEX_TO_PIXELS( 2 );
-						}
-						else if ( ubLevel0 >= ubLevel1 && ubLevel0 >= ubLevel2 && ubLevel0 >= ubLevel3 )
-						{
-							bRenderZHeightAboveLevel = CONVERT_INDEX_TO_PIXELS( 1 );
-						}
+
+						// Set flag indicating it has an item on top!
+						pStructure->fFlags |= STRUCTURE_HASITEMONTOP;
+						break;
 					}
 
-					// Set flag indicating it has an item on top!
-					pStructure->fFlags |= STRUCTURE_HASITEMONTOP;
-					break;
 				}
 
+				pStructure = FindNextStructure( pStructure, STRUCTURE_BLOCKSMOVES );
 			}
-
-			pStructure = FindNextStructure( pStructure, STRUCTURE_BLOCKSMOVES );
 		}
-	}
 
-	if (pObject->usItem == SWITCH && !fObjectInOpenable )
-	{
-		if (bVisible != -2)
+		if (pObject->usItem == SWITCH && !fObjectInOpenable )
 		{
-			// switch items which are not hidden inside objects should be considered buried
-			bVisible = BURIED;
-			// and they are pressure-triggered unless there is a switch structure there
-			if (FindStructure( *psGridNo, STRUCTURE_SWITCH ) != NULL)
+			if (bVisible != -2)
 			{
-				(*pObject)[0]->data.misc.bDetonatorType = BOMB_SWITCH;
+				// switch items which are not hidden inside objects should be considered buried
+				bVisible = BURIED;
+				// and they are pressure-triggered unless there is a switch structure there
+				if (FindStructure( *psGridNo, STRUCTURE_SWITCH ) != NULL)
+				{
+					(*pObject)[0]->data.misc.bDetonatorType = BOMB_SWITCH;
+				}
+				else
+				{
+					(*pObject)[0]->data.misc.bDetonatorType = BOMB_PRESSURE;
+				}
 			}
 			else
 			{
-				(*pObject)[0]->data.misc.bDetonatorType = BOMB_PRESSURE;
+				// else they are manually controlled
+				(*pObject)[0]->data.misc.bDetonatorType = BOMB_SWITCH;
 			}
+		}
+		else if ( pObject->usItem == ACTION_ITEM )
+		{
+			switch( (*pObject)[0]->data.misc.bActionValue )
+			{
+			case ACTION_ITEM_SMALL_PIT:
+			case ACTION_ITEM_LARGE_PIT:
+				// mark as known about by civs and creatures
+				gpWorldLevelData[ sNewGridNo ].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
+				break;
+			default:
+				break;
+			}
+		}
+
+		if ( *psGridNo != sNewGridNo )
+		{
+			*psGridNo = sNewGridNo;
+		}
+
+
+		//First add the item to the global list.	This is so the game can keep track
+		//of where the items are, for file i/o, etc.
+		iWorldItem = AddItemToWorld( *psGridNo,	pObject, ubLevel, usFlags, bRenderZHeightAboveLevel, bVisible );
+
+		// Check for and existing pool on the object layer
+		if ( GetItemPool( *psGridNo, &pItemPool, ubLevel ) )
+		{
+
+			// Add to exitsing pool
+			// Add graphic
+			pNode = AddItemGraphicToWorld( &(Item[ pObject->usItem ] ), *psGridNo, ubLevel );
+
+			// Set pool head value in levelnode
+			pNode->pItemPool = pItemPool;
+
+			// Add New Node
+			pItemPoolTemp = pItemPool;
+			// Create new pool
+			pItemPool = (ITEM_POOL *)MemAlloc( sizeof( ITEM_POOL ) );
+
+			// Set Next to NULL
+			pItemPool->pNext = NULL;
+			// Set Item index
+			pItemPool->iItemIndex = iWorldItem;
+			// Get a link back!
+			pItemPool->pLevelNode = pNode;
+
+			if( pItemPoolTemp )
+			{
+				// Get last item in list
+				while( pItemPoolTemp->pNext != NULL )
+					pItemPoolTemp = pItemPoolTemp->pNext;
+
+				// Set Next of previous
+				pItemPoolTemp->pNext = pItemPool;
+			}
+			// Set Previous of new one
+			pItemPool->pPrev = pItemPoolTemp;
+
 		}
 		else
 		{
-			// else they are manually controlled
-			(*pObject)[0]->data.misc.bDetonatorType = BOMB_SWITCH;
+			pNode = AddItemGraphicToWorld( &(Item[ pObject->usItem ] ), *psGridNo, ubLevel );
+
+			// Create new pool
+			pItemPool = (ITEM_POOL *)MemAlloc( sizeof( ITEM_POOL ) );
+
+			pNode->pItemPool = pItemPool;
+
+			// Set prev to NULL
+			pItemPool->pPrev = NULL;
+			// Set next to NULL
+			pItemPool->pNext = NULL;
+			// Set Item index
+			pItemPool->iItemIndex = iWorldItem;
+			// Get a link back!
+			pItemPool->pLevelNode = pNode;
+
+			// Set flag to indicate item pool presence
+			gpWorldLevelData[*psGridNo].uiFlags |= MAPELEMENT_ITEMPOOL_PRESENT;
 		}
-	}
-	else if ( pObject->usItem == ACTION_ITEM )
-	{
-		switch( (*pObject)[0]->data.misc.bActionValue )
+
+		// Set visible!
+		pItemPool->bVisible = bVisible;
+
+		// If bbisible is true, render makered world
+		if ( bVisible == 1 && GridNoOnScreen( (*psGridNo ) ) )
 		{
-		case ACTION_ITEM_SMALL_PIT:
-		case ACTION_ITEM_LARGE_PIT:
-			// mark as known about by civs and creatures
-			gpWorldLevelData[ sNewGridNo ].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
-			break;
-		default:
-			break;
+			//gpWorldLevelData[*psGridNo].uiFlags|=MAPELEMENT_REDRAW;
+			//SetRenderFlags(RENDER_FLAG_MARKED);
+			SetRenderFlags(RENDER_FLAG_FULL);
 		}
-	}
 
-	if ( *psGridNo != sNewGridNo )
-	{
-		*psGridNo = sNewGridNo;
-	}
+		// Set flahs timer
+		pItemPool->bFlashColor							= FALSE;
+		pItemPool->sGridNo									= *psGridNo;
+		pItemPool->ubLevel									= ubLevel;
+		pItemPool->usFlags									= usFlags;
+		pItemPool->bVisible									= bVisible;
+		pItemPool->bRenderZHeightAboveLevel	= bRenderZHeightAboveLevel;
 
-
-	//First add the item to the global list.	This is so the game can keep track
-	//of where the items are, for file i/o, etc.
-	iWorldItem = AddItemToWorld( *psGridNo,	pObject, ubLevel, usFlags, bRenderZHeightAboveLevel, bVisible );
-
-	// Check for and existing pool on the object layer
-	if ( GetItemPool( *psGridNo, &pItemPool, ubLevel ) )
-	{
-
-		// Add to exitsing pool
-		// Add graphic
-		pNode = AddItemGraphicToWorld( &(Item[ pObject->usItem ] ), *psGridNo, ubLevel );
-
-		// Set pool head value in levelnode
-		pNode->pItemPool = pItemPool;
-
-		// Add New Node
-		pItemPoolTemp = pItemPool;
-		// Create new pool
-		pItemPool = (ITEM_POOL *)MemAlloc( sizeof( ITEM_POOL ) );
-
-		// Set Next to NULL
-		pItemPool->pNext = NULL;
-		// Set Item index
-		pItemPool->iItemIndex = iWorldItem;
-		// Get a link back!
-		pItemPool->pLevelNode = pNode;
-
-		if( pItemPoolTemp )
+		// ATE: Get head of pool again....
+		if ( GetItemPool( *psGridNo, &pItemPool, ubLevel ) )
 		{
-			// Get last item in list
-			while( pItemPoolTemp->pNext != NULL )
-				pItemPoolTemp = pItemPoolTemp->pNext;
-
-			// Set Next of previous
-			pItemPoolTemp->pNext = pItemPool;
+			AdjustItemPoolVisibility( pItemPool );
 		}
-		// Set Previous of new one
-		pItemPool->pPrev = pItemPoolTemp;
 
+		if (piItemIndex)
+		{
+			*piItemIndex = iWorldItem;
+		}
 	}
-	else
-	{
-		pNode = AddItemGraphicToWorld( &(Item[ pObject->usItem ] ), *psGridNo, ubLevel );
-
-		// Create new pool
-		pItemPool = (ITEM_POOL *)MemAlloc( sizeof( ITEM_POOL ) );
-
-		pNode->pItemPool = pItemPool;
-
-		// Set prev to NULL
-		pItemPool->pPrev = NULL;
-		// Set next to NULL
-		pItemPool->pNext = NULL;
-		// Set Item index
-		pItemPool->iItemIndex = iWorldItem;
-		// Get a link back!
-		pItemPool->pLevelNode = pNode;
-
-		// Set flag to indicate item pool presence
-		gpWorldLevelData[*psGridNo].uiFlags |= MAPELEMENT_ITEMPOOL_PRESENT;
-	}
-
-	// Set visible!
-	pItemPool->bVisible = bVisible;
-
-	// If bbisible is true, render makered world
-	if ( bVisible == 1 && GridNoOnScreen( (*psGridNo ) ) )
-	{
-		//gpWorldLevelData[*psGridNo].uiFlags|=MAPELEMENT_REDRAW;
-		//SetRenderFlags(RENDER_FLAG_MARKED);
-		SetRenderFlags(RENDER_FLAG_FULL);
-	}
-
-	// Set flahs timer
-	pItemPool->bFlashColor							= FALSE;
-	pItemPool->sGridNo									= *psGridNo;
-	pItemPool->ubLevel									= ubLevel;
-	pItemPool->usFlags									= usFlags;
-	pItemPool->bVisible									= bVisible;
-	pItemPool->bRenderZHeightAboveLevel	= bRenderZHeightAboveLevel;
-
-	// ATE: Get head of pool again....
-	if ( GetItemPool( *psGridNo, &pItemPool, ubLevel ) )
-	{
-		AdjustItemPoolVisibility( pItemPool );
-	}
-
-	if (piItemIndex)
-	{
-		*piItemIndex = iWorldItem;
-	}
-
 	return( &(gWorldItems[ iWorldItem ].object ) );
 }
 

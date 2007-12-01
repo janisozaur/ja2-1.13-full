@@ -97,7 +97,6 @@ typedef enum
 	AI_ACTION_TRAVERSE_DOWN,			// move down a level
 	AI_ACTION_OFFER_SURRENDER,		// offer surrender to the player
 	AI_ACTION_RAISE_GUN,
-	AI_ACTION_NOT_AN_ACTION,//error code, like returning -1
 } ActionType;
 
 
@@ -160,7 +159,6 @@ INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance );
 BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck );
 
 void DebugAI( STR szOutput );
-void DebugAI( std::string& szOutput );
 INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier );
 
 void EndAIDeadlock(void);

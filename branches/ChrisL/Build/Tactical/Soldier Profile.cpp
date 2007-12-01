@@ -911,7 +911,7 @@ SOLDIERTYPE * FindSoldierByProfileID( UINT8 ubProfileID, BOOLEAN fPlayerMercsOnl
 
 
 
-SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam, bool resortItems )
+SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 {
 	UINT8										ubID;
 	SOLDIERTYPE							*pNewSoldier = NULL;
@@ -924,6 +924,8 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam, bool resort
 
 	UINT32									uiSlot;
 	SOLDIERTYPE							*pGroupMember;
+
+	BOOLEAN								success;
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("ChangeSoldierTeam"));
 
@@ -965,11 +967,6 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam, bool resort
 		MercCreateStruct.fPlayerMerc = TRUE;
 	}
 
-	//CHRISL:
-	if((UsingNewInventorySystem() == true) && resortItems == true) {
-		MercCreateStruct.fCopyProfileItemsOver = TRUE;
-	}
-
 	if ( TacticalCreateSoldier( &MercCreateStruct, &ubID ) )
 	{
 		pNewSoldier = MercPtrs[ ubID ];
@@ -996,12 +993,26 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam, bool resort
 			pNewSoldier->bVisible											= 1;
 		}
 
-		//CHRISL:
-		if((UsingNewInventorySystem() == true) && resortItems == false) {
-			// Copy over any items....
-			for ( cnt = 0; cnt < pNewSoldier->inv.size(); cnt++ )
+		//CHRISL: Rather then resorting the profile, which recreates all the items, what if we simply try and sort the
+		//	objects that are already attached to the RPC we're hiring?
+		if(UsingNewInventorySystem() == true)
+		{
+			// Start by direct copy of all BODYPOS items (armor, hands, head and LBE)
+			for(cnt = 0; cnt < (UINT32)BODYPOSFINAL; cnt++)
 			{
-				pNewSoldier->inv[ cnt ] = pSoldier->inv[ cnt ];
+				pNewSoldier->inv[cnt] = pSoldier->inv[cnt];
+			}
+			// Next, try to autoplace everything else
+			for(cnt = BIGPOCKSTART; cnt < pNewSoldier->inv.size(); cnt++ )
+			{
+				if(pSoldier->inv[cnt].exists() == true)
+				{
+					success = PlaceInAnyPocket(pNewSoldier, &pSoldier->inv[cnt], FALSE);
+					if(!success)
+					{
+						PlaceObject( pNewSoldier, cnt, &pSoldier->inv[cnt] );
+					}
+				}
 			}
 		}
 
@@ -1082,7 +1093,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 	gMercProfiles[ ubCharNum ].ubMiscFlags |= PROFILE_MISC_FLAG_RECRUITED;
 
 	// Add this guy to our team!
-	pNewSoldier = ChangeSoldierTeam( pSoldier, gbPlayerNum, true );
+	pNewSoldier = ChangeSoldierTeam( pSoldier, gbPlayerNum );
 
 	// handle set up any RPC's that will leave us in time
 	if ( ubCharNum == SLAY )

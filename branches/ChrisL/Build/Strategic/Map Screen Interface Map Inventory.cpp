@@ -1359,7 +1359,7 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 	if (_KeyDown( SHIFT ))
 	{
 		// Remove all from soldier's slot
-		fOk = (0 == pInventorySlot->MoveThisObjectTo(gItemPointer));
+		fOk = (0 == pInventorySlot->MoveThisObjectTo(gItemPointer,-1,0,NUM_INV_SLOTS,MAX_OBJECTS_PER_SLOT));
 	}
 	else
 	{
@@ -1458,7 +1458,6 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 	}
 	else
 	{
-		// replacement/reloading/merging/stacking
 		if (pItemPtr->usItem == pInventorySlot->usItem && ItemSlotLimit(pItemPtr, STACK_SIZE_LIMIT) >= 2)
 		{
 			// stacking

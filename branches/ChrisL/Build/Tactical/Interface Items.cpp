@@ -4670,7 +4670,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				offSetY = -1;
 			}
 			else if(iResolution == 2){
-				offSetX = 185;
+				offSetX = 178;
 				offSetY = -79;
 			}
 			else{
@@ -4722,7 +4722,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				offSetY = -1;
 			}
 			else if(iResolution == 2){
-				offSetX = 71;
+				offSetX = 20;
 				offSetY = -79;
 			}
 			else{

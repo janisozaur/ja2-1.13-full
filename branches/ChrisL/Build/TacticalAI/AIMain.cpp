@@ -122,22 +122,6 @@ void DebugAI( STR szOutput )
 #endif
 }
 
-void DebugAI( std::string& szOutput )
-{
-#ifdef DEBUGDECISIONS
-	// Send regular debug msg AND AI debug message
-	FILE *		DebugFile;
-
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, (STR8)szOutput.c_str() );
-	if ((DebugFile = fopen( "aidebug.txt", "a+t" )) != NULL)
-	{
-		fputs( szOutput.c_str(), DebugFile );
-		fputs( "\n", DebugFile );
-		fclose( DebugFile );
-	}
-#endif
-}
-
 
 BOOLEAN InitAI( void )
 {
@@ -178,21 +162,76 @@ BOOLEAN AimingGun(SOLDIERTYPE *pSoldier)
 	return(FALSE);
 }
 
-bool HandleSoldierAI_LookForEarlyExit( SOLDIERTYPE *pSoldier )
+void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 {
+	UINT32 uiCurrTime = GetJA2Clock();
+
+	// ATE
+	// Bail if we are engaged in a NPC conversation/ and/or sequence ... or we have a pause because 
+	// we just saw someone... or if there are bombs on the bomb queue
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_ENGAGEDINACTION || gTacticalStatus.fEnemySightingOnTheirTurn || (gubElementsOnExplosionQueue != 0) )
+	{
+		return;
+	}
+
+	if ( gfExplosionQueueActive )
+	{
+		return;
+	}
+
+	if (pSoldier->flags.uiStatusFlags & SOLDIER_PC)
+	{
+		// if we're in autobandage, or the AI control flag is set and the player has a quote record to perform, or is a boxer,
+		// let AI process this merc; otherwise abort
+		if ( !(gTacticalStatus.fAutoBandageMode) && !(pSoldier->flags.uiStatusFlags & SOLDIER_PCUNDERAICONTROL && (pSoldier->ubQuoteRecord != 0 || pSoldier->flags.uiStatusFlags & SOLDIER_BOXER) ) )
+		{
+			// patch...
+			if ( pSoldier->aiData.fAIFlags & AI_HANDLE_EVERY_FRAME )
+			{
+				pSoldier->aiData.fAIFlags &= ~AI_HANDLE_EVERY_FRAME;
+			}
+			return;
+		}
+
+	}
+	/*
+	else
+	{		
+	// AI is run on all PCs except the one who is selected
+	if (pSoldier->flags.uiStatusFlags & SOLDIER_PC )
+	{
+	// if this soldier is "selected" then only let user give orders!
+	if ((pSoldier->ubID == gusSelectedSoldier) && !(gTacticalStatus.uiFlags & DEMOMODE))
+	{
+	return;
+	}
+	}
+	}
+	*/
+
+	// determine what sort of AI to use
+	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
+	{
+		gfTurnBasedAI = TRUE;
+	}
+	else
+	{
+		gfTurnBasedAI = FALSE;
+	}
+
 	// If TURN BASED and NOT NPC's turn, or realtime and not our chance to think, bail...
 	if (gfTurnBasedAI)
 	{
 		if ( (pSoldier->bTeam != OUR_TEAM) && gTacticalStatus.ubCurrentTeam == gbPlayerNum )
 		{
-			return true;
+			return;
 		}
 		// why do we let the quote record thing be in here?  we're in turnbased the quote record doesn't matter,
 		// we can't act out of turn!
 		if ( !(pSoldier->flags.uiStatusFlags & SOLDIER_UNDERAICONTROL) )
 			//if ( !(pSoldier->flags.uiStatusFlags & SOLDIER_UNDERAICONTROL) && (pSoldier->ubQuoteRecord == 0))
 		{
-			return true;
+			return;
 		}
 
 		if ( pSoldier->bTeam != gTacticalStatus.ubCurrentTeam )
@@ -201,7 +240,7 @@ bool HandleSoldierAI_LookForEarlyExit( SOLDIERTYPE *pSoldier )
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_ERROR, L"Turning off AI flag for %d because trying to act out of turn", pSoldier->ubID );
 #endif
 			pSoldier->flags.uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
-			return true;
+			return;
 		}
 		if ( pSoldier->aiData.bMoved )
 		{
@@ -213,7 +252,7 @@ bool HandleSoldierAI_LookForEarlyExit( SOLDIERTYPE *pSoldier )
 #endif
 			// this guy doesn't get to act!
 			EndAIGuysTurn( pSoldier );
-			return true;
+			return;
 		}
 
 	}
@@ -224,7 +263,7 @@ bool HandleSoldierAI_LookForEarlyExit( SOLDIERTYPE *pSoldier )
 		if ( !TIMECOUNTERDONE( pSoldier->timeCounters.AICounter, pSoldier->uiAIDelay ) )
 		{
 			// CAMFIELD, LOOK HERE!
-			return true;
+			return;
 		}
 		else
 		{
@@ -247,7 +286,7 @@ bool HandleSoldierAI_LookForEarlyExit( SOLDIERTYPE *pSoldier )
 	// if this NPC is getting hit, abort
 	if (pSoldier->flags.fGettingHit)
 	{
-		return true;
+		return;
 	}
 
 	if ( gTacticalStatus.bBoxingState == PRE_BOXING || gTacticalStatus.bBoxingState == BOXING || gTacticalStatus.bBoxingState == WON_ROUND || gTacticalStatus.bBoxingState == LOST_ROUND )
@@ -262,7 +301,7 @@ bool HandleSoldierAI_LookForEarlyExit( SOLDIERTYPE *pSoldier )
 			}
 #endif
 			EndAIGuysTurn( pSoldier );
-			return true;
+			return;
 		}
 	}
 
@@ -281,7 +320,7 @@ bool HandleSoldierAI_LookForEarlyExit( SOLDIERTYPE *pSoldier )
 #endif
 
 		EndAIGuysTurn( pSoldier );
-		return true;
+		return;
 	}
 
 	if ( pSoldier->aiData.fAIFlags & AI_ASLEEP )
@@ -303,7 +342,7 @@ bool HandleSoldierAI_LookForEarlyExit( SOLDIERTYPE *pSoldier )
 #endif
 
 			EndAIGuysTurn( pSoldier );
-			return true;
+			return;
 		}
 	}
 
@@ -318,7 +357,7 @@ bool HandleSoldierAI_LookForEarlyExit( SOLDIERTYPE *pSoldier )
 #endif
 
 		EndAIGuysTurn( pSoldier );
-		return true;
+		return;
 	}
 
 	if ( ( (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) && !TANK( pSoldier ) ) || AM_A_ROBOT( pSoldier ) )
@@ -332,7 +371,7 @@ bool HandleSoldierAI_LookForEarlyExit( SOLDIERTYPE *pSoldier )
 #endif
 
 		EndAIGuysTurn( pSoldier );
-		return true;
+		return;
 	}
 
 	if (pSoldier->bCollapsed)
@@ -353,21 +392,16 @@ bool HandleSoldierAI_LookForEarlyExit( SOLDIERTYPE *pSoldier )
 		// stunned/collapsed!
 		CancelAIAction( pSoldier, FORCE );
 		EndAIGuysTurn( pSoldier );
-		return true;
+		return;
 	}
 
 	// in the unlikely situation (Sgt Krott et al) that we have a quote trigger going on
 	// during turnbased, don't do any AI
 	if ( pSoldier->ubProfile != NO_PROFILE && (pSoldier->ubProfile == SERGEANT || pSoldier->ubProfile == MIKE || pSoldier->ubProfile == JOE) && (gTacticalStatus.uiFlags & INCOMBAT) && (gfInTalkPanel || gfWaitingForTriggerTimer || !DialogueQueueIsEmpty() ) )
 	{
-		return true;
+		return;
 	}
 
-	return false;
-}
-
-void HandleSoldierAI_ProcessNewSituation (SOLDIERTYPE *pSoldier)
-{
 	// ATE: Did some changes here
 	// DON'T rethink if we are determined to get somewhere....
 	if ( pSoldier->aiData.bNewSituation == IS_NEW_SITUATION )
@@ -442,73 +476,6 @@ void HandleSoldierAI_ProcessNewSituation (SOLDIERTYPE *pSoldier)
 		// might have been in 'was' state; no longer so...
 		pSoldier->aiData.bNewSituation = NOT_NEW_SITUATION;
 	}
-	return;
-}
-
-void HandleSoldierAI( SOLDIERTYPE *pSoldier )
-{
-	// ATE
-	// Bail if we are engaged in a NPC conversation/ and/or sequence ... or we have a pause because
-	// we just saw someone... or if there are bombs on the bomb queue
-	if ( pSoldier->flags.uiStatusFlags & SOLDIER_ENGAGEDINACTION || gTacticalStatus.fEnemySightingOnTheirTurn || (gubElementsOnExplosionQueue != 0) )
-	{
-		return;
-	}
-
-	if ( gfExplosionQueueActive )
-	{
-		return;
-	}
-
-	if (pSoldier->flags.uiStatusFlags & SOLDIER_PC)
-	{
-		// if we're in autobandage, or the AI control flag is set and the player has a quote record to perform, or is a boxer,
-		// let AI process this merc; otherwise abort
-		if ( !(gTacticalStatus.fAutoBandageMode) && !(pSoldier->flags.uiStatusFlags & SOLDIER_PCUNDERAICONTROL && (pSoldier->ubQuoteRecord != 0 || pSoldier->flags.uiStatusFlags & SOLDIER_BOXER) ) )
-		{
-			// patch...
-			if ( pSoldier->aiData.fAIFlags & AI_HANDLE_EVERY_FRAME )
-			{
-				pSoldier->aiData.fAIFlags &= ~AI_HANDLE_EVERY_FRAME;
-			}
-			return;
-		}
-
-	}
-	/*
-	else
-	{
-	// AI is run on all PCs except the one who is selected
-	if (pSoldier->flags.uiStatusFlags & SOLDIER_PC )
-	{
-	// if this soldier is "selected" then only let user give orders!
-	if ((pSoldier->ubID == gusSelectedSoldier) && !(gTacticalStatus.uiFlags & DEMOMODE))
-	{
-	return;
-	}
-	}
-	}
-	*/
-
-	// determine what sort of AI to use
-	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
-	{
-		gfTurnBasedAI = TRUE;
-	}
-	else
-	{
-		gfTurnBasedAI = FALSE;
-	}
-
-
-	if ( HandleSoldierAI_LookForEarlyExit( pSoldier ) == true )
-	{
-		return;
-	}
-
-	HandleSoldierAI_ProcessNewSituation(pSoldier);
-
-
 
 #ifdef TESTAI
 	DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3,String( ".... HANDLING AI FOR %d",pSoldier->ubID));
@@ -1348,7 +1315,8 @@ void CancelAIAction(SOLDIERTYPE *pSoldier, UINT8 ubForce)
 #ifdef DEBUGDECISIONS
 	if (SkipCoverCheck)
 	{
-		std::string tempstr = String ("CancelAIAction: SkipCoverCheck turned OFF\n");
+		STR tempstr;
+		sprintf( tempstr, "CancelAIAction: SkipCoverCheck turned OFF\n",0 );
 		DebugAI (tempstr);
 	}
 #endif
@@ -1813,7 +1781,8 @@ void TurnBasedHandleNPCAI(SOLDIERTYPE *pSoldier)
 
 
 #ifdef DEBUGDECISIONS
-	std::string tempstr = String ("HandleManAI - DECIDING for guynum %d(%s) at gridno %d, APs %d\n",
+	STR tempstr;
+	sprintf( tempstr, "HandleManAI - DECIDING for guynum %d(%s) at gridno %d, APs %d\n",
 		pSoldier->ubID,pSoldier->name,pSoldier->sGridNo,pSoldier->bActionPoints );
 	DebugAI ( tempstr );
 #endif
@@ -2065,7 +2034,6 @@ void AIDecideRadioAnimation( SOLDIERTYPE *pSoldier )
 
 INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 {
-	std::string tempstr;
 	INT32 iRetCode;
 	//NumMessage("ExecuteAction - Guy#",pSoldier->ubID);
 
@@ -2122,7 +2090,8 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 		SkipCoverCheck = TRUE;
 
 #ifdef DEBUGDECISIONS
-		tempstr = String ("ExecuteAction: SkipCoverCheck ON\n" );
+		STR tempstr;
+		sprintf( tempstr, "ExecuteAction: SkipCoverCheck ON\n" );
 		DebugAI (tempstr);
 #endif
 
@@ -2134,7 +2103,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 		if (!StartTurn(pSoldier,pSoldier->aiData.usActionData,FASTTURN))
 		{
 		#ifdef BETAVERSION
-		tempstr = String("ERROR: %s tried TURN to direction %d, StartTurn failed, action %d CANCELED",
+		sprintf(tempstr,"ERROR: %s tried TURN to direction %d, StartTurn failed, action %d CANCELED",
 		pSoldier->name,pSoldier->aiData.usActionData,pSoldier->aiData.bAction);
 		PopMessage(tempstr);
 		#endif
@@ -2350,7 +2319,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 		{
 #ifdef BETAVERSION
 			// this should NEVER happen, indicates AI picked an illegal spot!
-			tempstr = String("ExecuteAction: ERROR - %s tried MOVE to gridno %d, NewDest failed, action %d CANCELED",
+			sprintf(tempstr,"ExecuteAction: ERROR - %s tried MOVE to gridno %d, NewDest failed, action %d CANCELED",
 				pSoldier->name,pSoldier->aiData.usActionData,pSoldier->aiData.bAction);
 
 #ifdef RECORDNET
@@ -2359,7 +2328,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 
 			PopMessage(tempstr);
 
-			tempstr = String("BLACK-LISTING gridno %d for %s",pSoldier->aiData.usActionData,pSoldier->name);
+			sprintf(tempstr,"BLACK-LISTING gridno %d for %s",pSoldier->aiData.usActionData,pSoldier->name);
 			PopMessage(tempstr);
 
 			SaveGame(ERROR_SAVE);
@@ -2425,7 +2394,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 #ifdef TESTVERSION
 		if (pSoldier->aiData.bAction == AI_ACTION_KNIFE_MOVE)
 		{
-			tempstr = String("TEST MSG: %s is about to go stab %s. MAKE SURE HE DOES!",
+			sprintf(tempstr,"TEST MSG: %s is about to go stab %s. MAKE SURE HE DOES!",
 				pSoldier->name,
 				ExtMen[WhoIsThere(pSoldier->aiData.usActionData)].name);
 
@@ -2535,7 +2504,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 		SkipCoverCheck = TRUE;
 
 #ifdef DEBUGDECISIONS
-		tempstr = String("ExecuteAction: SkipCoverCheck ON\n" );
+		sprintf( tempstr, "ExecuteAction: SkipCoverCheck ON\n" );
 		DebugAI (tempstr);
 #endif
 		SendChangeSoldierStanceEvent( pSoldier, (UINT8) pSoldier->aiData.usActionData );
@@ -2598,7 +2567,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			UINT8					ubDirection;
 			INT16					sDoorGridNo;
 
-			ubDirection = GetDirectionFromGridNo( pSoldier->aiData.usActionData, pSoldier );
+			ubDirection = GetDirectionFromGridNo( (INT16)pSoldier->aiData.usActionData, pSoldier );
 			if (ubDirection == EAST || ubDirection == SOUTH)
 			{
 				sDoorGridNo = pSoldier->sGridNo;
@@ -2852,8 +2821,9 @@ void ManChecksOnFriends(SOLDIERTYPE *pSoldier)
 			if ((pFriend->aiData.bAlertStatus >= STATUS_RED) || pFriend->aiData.bUnderFire || (pFriend->stats.bLife < OKLIFE))
 			{
 #ifdef DEBUGDECISIONS
-					std::string tempstr = String ("%s sees %s on alert, goes to RED ALERT!",pSoldier->name,pFriend->name );
-					DebugAI(tempstr);
+				STR16 tempstr;
+				sprintf(tempstr,"%s sees %s on alert, goes to RED ALERT!",pSoldier->name,pFriend->name );
+				AIPopMessage(tempstr);
 #endif
 
 				pSoldier->aiData.bAlertStatus = STATUS_RED;
@@ -2869,8 +2839,8 @@ void ManChecksOnFriends(SOLDIERTYPE *pSoldier)
 					(pSoldier->aiData.bAlertStatus < STATUS_YELLOW))
 				{
 #ifdef TESTVERSION
-						tempstr = String("TEST MSG: %s sees %s listening, goes to YELLOW ALERT!",pSoldier->name,ExtMen[pFriend->ubID].name);
-						PopMessage(tempstr);
+					sprintf(tempstr,"TEST MSG: %s sees %s listening, goes to YELLOW ALERT!",pSoldier->name,ExtMen[pFriend->ubID].name);
+					PopMessage(tempstr);
 #endif
 					pSoldier->aiData.bAlertStatus = STATUS_YELLOW;    // also get suspicious
 					SetNewSituation( pSoldier );
