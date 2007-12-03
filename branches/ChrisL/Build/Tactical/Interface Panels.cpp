@@ -3554,7 +3554,7 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	{
 		if(!MoveItemToLBEItem( pSoldier, BPACKPOCKPOS ))
 			newStatus = FALSE;
-		InternalAddItemToPool(&pSoldier->sGridNo, &pSoldier->inv[BPACKPOCKPOS], 1, pSoldier->pathing.bLevel, 0 , -1, &worldKey );
+		AddItemToPoolAndGetIndex(pSoldier->sGridNo, &pSoldier->inv[BPACKPOCKPOS], 1, pSoldier->pathing.bLevel, 0 , -1, &worldKey );
 		// Item successfully added to world
 		if(worldKey != ITEM_NOT_FOUND)
 		{

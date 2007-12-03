@@ -2169,12 +2169,11 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 
 	//CHRISL: We need to make sure that item stacks follow the OldInv stacking limits
 	// Copy the object we're working with the gTempObject so that we can use pObject later in this function
-	gTempObject = OBJECTTYPE(*pObject);
-	//pObject->MoveThisObjectTo(gTempObject);
-	UINT8 ubSlotLimit = ItemSlotLimit(&gTempObject, STACK_SIZE_LIMIT);
-	while(gTempObject.ubNumberOfObjects>0)
+	OBJECTTYPE poolObject = OBJECTTYPE(*pObject);
+	UINT8 ubSlotLimit = ItemSlotLimit(&poolObject, STACK_SIZE_LIMIT);
+	while(poolObject.ubNumberOfObjects>0)
 	{
-		gTempObject.MoveThisObjectTo(*pObject,ubSlotLimit);
+		poolObject.MoveThisObjectTo(*pObject,ubSlotLimit);
 
 		// Check structure database
 		if ( gpWorldLevelData[ *psGridNo ].pStructureHead && (pObject->usItem != OWNERSHIP) && (pObject->usItem != ACTION_ITEM) )

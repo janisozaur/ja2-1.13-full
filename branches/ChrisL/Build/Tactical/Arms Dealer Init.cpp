@@ -1476,8 +1476,10 @@ void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT1
 		}
 		// I know, I know, this is getting pretty anal...	But what the hell, it was easy enough to do.	ARM.
 	}
-	if (numFullMags) {
-		CreateObjectForDealer(usItemIndex, 100, numFullMags, &gTempObject);
+	for(int i=0; i<numFullMags; i++)
+	{
+		CreateAmmo(usItemIndex, &gTempObject, ubMagCapacity);
+		MakeObjectOutOfDealerItems(NULL, &gTempObject);
 		AddItemToArmsDealerInventory( ubArmsDealer, gTempObject );
 	}
 }

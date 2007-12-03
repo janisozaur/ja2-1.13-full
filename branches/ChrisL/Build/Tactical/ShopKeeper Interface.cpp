@@ -316,6 +316,9 @@ OBJECTTYPE					*gpHighLightedItemObject=NULL;
 BOOLEAN gfResetShopKeepIdleQuote = FALSE;
 BOOLEAN gfDoEvaluationAfterOpening = FALSE;
 
+//CHRISL:
+extern INT16	gsInvDescX;
+
 typedef struct
 {
 	UINT8		ubCurrentPage;
@@ -6416,7 +6419,8 @@ void StartSKIDescriptionBox( void )
 //	if( giItemDescAmmoButton >= 0 && ButtonList[ giItemDescAmmoButton ].
 //	DisableButton( giItemDescAmmoButton );
 
-
+	//CHRISL: Need to alter the default gsInvDesc values
+	gsInvDescX = 214;
 	RenderItemDescriptionBox( );
 }
 
