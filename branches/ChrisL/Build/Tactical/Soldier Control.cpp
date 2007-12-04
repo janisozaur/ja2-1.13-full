@@ -3466,7 +3466,6 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 				sNewGridNo = NewGridNo( (INT16)thisSoldier->sGridNo, DirectionInc( thisSoldier->ubDirection ) );
 				sNewGridNo = NewGridNo( (INT16)sNewGridNo, DirectionInc( thisSoldier->ubDirection ) );
 
-				thisSoldier->pathing.sPlotSrcGrid = thisSoldier->sGridNo;
 				thisSoldier->flags.fPastXDest = FALSE;
 				thisSoldier->flags.fPastYDest = FALSE;
 				thisSoldier->pathing.usPathDataSize = 0;
@@ -12430,8 +12429,6 @@ void SOLDIERTYPE::ChangeToFlybackAnimation( UINT8 flyBackDirection )
 	// Remove any previous actions
 	thisSoldier->aiData.ubPendingAction		 = NO_PENDING_ACTION;
 
-	thisSoldier->pathing.sPlotSrcGrid = thisSoldier->sGridNo;
-
 	// Since we're manually setting our path, we have to reset these @#$@# flags too.  Otherwise we don't reach the
 	// destination a lot of the time
 	thisSoldier->flags.fPastXDest = 0;
@@ -12476,8 +12473,6 @@ void SOLDIERTYPE::ChangeToFallbackAnimation( UINT8 fallBackDirection )
 
 	// Remove any previous actions
 	thisSoldier->aiData.ubPendingAction		 = NO_PENDING_ACTION;
-
-	thisSoldier->pathing.sPlotSrcGrid = thisSoldier->sGridNo;
 
 	// Since we're manually setting our path, we have to reset these @#$@# flags too.  Otherwise we don't reach the
 	// destination a lot of the time

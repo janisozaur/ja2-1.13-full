@@ -651,6 +651,23 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 				if (! iter->Load(hFile) ) {
 					return FALSE;
 				}
+				//CHRISL: Because of the "100rnd" bug that Tony is experiencing, lets look at each item as we create it.  If the
+				//	item is ammo, reset the bItemCondition value to equal the number of rounds.  Hopefully this will be unneccessary
+				//	but for the time being, it may help to alleviate the "100rnd" bug.
+				if(Item[iter->object.usItem].usItemClass == IC_AMMO)
+				{
+					//This condition should catch any dealer ammo items that have both invalid bItemCondition and ubShotsLeft values.
+					//	We'll only make bItemCondition valid at this point.  Let the next condition correct ubShotsLeft.
+					if(iter->bItemCondition > Magazine[Item[iter->object.usItem].ubClassIndex].ubMagSize)
+					{
+						iter->bItemCondition = Magazine[Item[iter->object.usItem].ubClassIndex].ubMagSize;
+					}
+					//This condition should catch any dealer ammo items that have an invalid bItemCondition assuming ubShotsLeft is valid
+					if(iter->bItemCondition != iter->object[0]->data.ubShotsLeft)
+					{
+						iter->bItemCondition = iter->object[0]->data.ubShotsLeft;
+					}
+				}
 			}
 		}
 	}

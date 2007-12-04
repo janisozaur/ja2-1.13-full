@@ -491,7 +491,14 @@ void OrderDealerItems(int armsDealer, int usItem, int numItems, int arrivalDay)
 
 		pOrder->ubQtyOnOrder = perfectItems;
 		pOrder->uiOrderArrivalTime = arrivalDay;
-		pOrder->bItemCondition = 100;
+		/*CHRISL: I can't say for absolute, but I think this is where we are causing the "100rnd" bug.  We're setting
+			a bItemConditon 100 regardless of what the item is.  But if we're working with ammo, we don't want
+			bItemCondition to be 100 even if the item is "perfect" (i.e., a fully loaded mag).  We need a condition
+			so we set this value to magSize when dealing with ammo*/
+		if(Item[usItem].usItemClass == IC_AMMO)
+			pOrder->bItemCondition = Magazine[Item[usItem].ubClassIndex].ubMagSize;
+		else
+			pOrder->bItemCondition = 100;
 		CreateObjectForDealer(usItem, 100, perfectItems, &(pOrder->object));
 	}
 }
@@ -1476,10 +1483,8 @@ void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT1
 		}
 		// I know, I know, this is getting pretty anal...	But what the hell, it was easy enough to do.	ARM.
 	}
-	for(int i=0; i<numFullMags; i++)
-	{
-		CreateAmmo(usItemIndex, &gTempObject, ubMagCapacity);
-		MakeObjectOutOfDealerItems(NULL, &gTempObject);
+	if (numFullMags) {
+		CreateObjectForDealer(usItemIndex, 100, numFullMags, &gTempObject);
 		AddItemToArmsDealerInventory( ubArmsDealer, gTempObject );
 	}
 }

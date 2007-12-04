@@ -2614,7 +2614,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 									//	from AddItemToPool, resets gWorldItems when it increases it's size.  This means
 									//	iter loses it's relationship which causes a CTD if we use this hotkey and there
 									//	aren't enough open WorldItems to accomodate all the attachments we're seperating.
-									UINT8 cnt = 0;
+									UINT8 cnt = 0, uiLoopCnt = 0;
+									// uiLoopCnt is an extra failsafe.  I think I've already managed to eliminate the
+									//	infinite loop, but just in case, we'll use uiLoopCnt to force a break after a
+									//	certain point.
 									while(gWorldItems[uiLoop].object[x]->attachments.size() != cnt)
 									{
 										gTempObject = *gWorldItems[uiLoop].object[x]->GetAttachmentAtIndex(cnt);
@@ -2627,6 +2630,9 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 										{
 											cnt++;
 										}
+										uiLoopCnt ++;
+										if(uiLoopCnt > 100)
+											break;
 									}
 								}
 							}
