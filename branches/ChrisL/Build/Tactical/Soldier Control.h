@@ -615,6 +615,8 @@ public:
 	UINT16											usPathIndex;	
 	INT16												sBlackList;
 	INT8												bPathStored;	// good for AI to reduct redundancy
+
+	INT16												sPlotSrcGrid;
 };
 
 class SOLDIERTYPE//last edited at version 102
@@ -2014,6 +2016,8 @@ public:
 
 	std::vector<int>	bNewItemCount;
 	std::vector<int> bNewItemCycleCount;
+
+	INT16 sPlotSrcGrid;
 }; // OLDSOLDIERTYPE_101;	
 
 #endif

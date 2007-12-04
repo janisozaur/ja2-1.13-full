@@ -103,42 +103,58 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 	switch( sSwitchValue )
 	{
 	case TRAVELCOST_DIRTROAD :
-	case TRAVELCOST_FLAT			: sAPCost += AP_MOVEMENT_FLAT;
-															break;
-	//case TRAVELCOST_BUMPY		:
+	case TRAVELCOST_FLAT			: sAPCost += AP_MOVEMENT_FLAT; 
+		break;
+		//case TRAVELCOST_BUMPY		:		
 	case TRAVELCOST_GRASS		: sAPCost += AP_MOVEMENT_GRASS;
-															break;
+		break;
 	case TRAVELCOST_THICK		:	sAPCost += AP_MOVEMENT_BUSH;
-															break;
+		break;
 	case TRAVELCOST_DEBRIS		: sAPCost += AP_MOVEMENT_RUBBLE;
-															break;
+		break;
 	case TRAVELCOST_SHORE		: sAPCost += AP_MOVEMENT_SHORE; // wading shallow water
-															break;
+		if (!IS_MERC_BODY_TYPE( pSoldier ))
+		{
+			return -1;
+		}
+		break;
 	case TRAVELCOST_KNEEDEEP	:	sAPCost += AP_MOVEMENT_LAKE; // wading waist/chest deep - very slow
-															break;
+		if (!IS_MERC_BODY_TYPE( pSoldier ))
+		{
+			return -1;
+		}
+		break;
 
 	case TRAVELCOST_DEEPWATER: sAPCost += AP_MOVEMENT_OCEAN; // can swim, so it's faster than wading
-															break;
-/*
-	case TRAVELCOST_VEINEND	:
-	case TRAVELCOST_VEINMID	: sAPCost += AP_MOVEMENT_FLAT;
-															break;
-*/
+		if (!IS_MERC_BODY_TYPE( pSoldier ))
+		{
+			return -1;
+		}
+		break;
+		/*
+		case TRAVELCOST_VEINEND	:
+		case TRAVELCOST_VEINMID	: sAPCost += AP_MOVEMENT_FLAT;
+		break;
+		*/
 	case TRAVELCOST_DOOR			: 
 		if (pSoldier->bTeam == gbPlayerNum)
 		{
 			return -1;
 		}
 		sAPCost += AP_MOVEMENT_FLAT + AP_OPEN_DOOR + AP_OPEN_DOOR; // Include open and close costs!
-															break;
+		break;
 
 		// cost for jumping a fence REPLACES all other AP costs!
-	// CHRISL: 
 	case TRAVELCOST_FENCE		: 
-		 if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
-			 return( AP_JUMPFENCEBPACK );
-		 else
-			  return( AP_JUMPFENCE );
+		if (!IS_MERC_BODY_TYPE( pSoldier ))
+		{
+			return -1;
+		}
+		// CHRISL: 
+		if((UsingNewInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].exists() == true)
+			return( AP_JUMPFENCEBPACK );
+		else
+			return( AP_JUMPFENCE );
 
 	case TRAVELCOST_NONE			: return( 0 );
 
@@ -455,12 +471,6 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 	// ATE: If we have a 'special cost, like jump fence...
 	if ( sSwitchValue == TRAVELCOST_FENCE )
 	{
-		// Only mercs are capable of scaling fences
-		if (!IS_MERC_BODY_TYPE( pSoldier ))
-		{
-			return 100;
-		}
-
 		// If we are changeing stance ( either before or after getting there....
 		// We need to reflect that...
 		switch(usMovementMode)

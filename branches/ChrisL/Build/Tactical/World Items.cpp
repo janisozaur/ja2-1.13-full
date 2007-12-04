@@ -66,7 +66,7 @@ bool WORLDITEM::operator<(WORLDITEM& compare)
 
 	// the same category
 	//Madd: sort by name (for now at least):
-	int retVal = _stricmp(Item[this->object.usItem].szBRName,Item[compare.object.usItem].szBRName);
+	int retVal = _wcsicmp(Item[this->object.usItem].szBRName,Item[compare.object.usItem].szBRName);
 	if ( retVal < 0 ) {
 		return true;
 	}

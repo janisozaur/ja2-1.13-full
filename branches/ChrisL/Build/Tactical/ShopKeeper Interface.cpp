@@ -316,9 +316,6 @@ OBJECTTYPE					*gpHighLightedItemObject=NULL;
 BOOLEAN gfResetShopKeepIdleQuote = FALSE;
 BOOLEAN gfDoEvaluationAfterOpening = FALSE;
 
-//CHRISL:
-extern INT16	gsInvDescX;
-
 typedef struct
 {
 	UINT8		ubCurrentPage;
@@ -2045,6 +2042,9 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 
 		//if the selected slot is above any inventory we have, return
 		if( ubSelectedInvSlot >= gpTempDealersInventory.size() )
+			return;
+
+		if(gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.exists() == false)
 			return;
 
 		//DEF:
@@ -6301,9 +6301,9 @@ void InitShopKeeperItemDescBox( OBJECTTYPE *pObject, UINT8 ubPocket, UINT8 ubFro
 		{
 			UINT8	ubSelectedInvSlot = ubPocket - gSelectArmsDealerInfo.ubFirstItemIndexOnPage;
 
-			sPosX = SKI_ARMS_DEALERS_INV_START_X + ( SKI_INV_OFFSET_X * ( ubSelectedInvSlot % SKI_NUM_ARMS_DEALERS_INV_COLS ) - ( 358 / 2 ) ) + SKI_INV_SLOT_WIDTH / 2;
+			sPosX = SKI_ARMS_DEALERS_INV_START_X; // + ( SKI_INV_OFFSET_X * ( ubSelectedInvSlot % SKI_NUM_ARMS_DEALERS_INV_COLS ) - ( 358 / 2 ) ) + SKI_INV_SLOT_WIDTH / 2;
 
-			sPosY = SKI_ARMS_DEALERS_INV_START_Y + ( ( SKI_INV_OFFSET_Y * ubSelectedInvSlot / SKI_NUM_ARMS_DEALERS_INV_COLS ) + 1 ) - ( 128 / 2 ) + SKI_INV_SLOT_HEIGHT / 2;
+			sPosY = SKI_ARMS_DEALERS_INV_START_Y; // + ( ( SKI_INV_OFFSET_Y * ubSelectedInvSlot / SKI_NUM_ARMS_DEALERS_INV_COLS ) + 1 ) - ( 128 / 2 ) + SKI_INV_SLOT_HEIGHT / 2;
 
 			//if the start position + the height of the box is off the screen, reposition
 			if( sPosY < (0 + SCREEN_Y_OFFSET) )
@@ -6328,9 +6328,9 @@ void InitShopKeeperItemDescBox( OBJECTTYPE *pObject, UINT8 ubPocket, UINT8 ubFro
 
 		case ARMS_DEALER_OFFER_AREA:
 		{
-			sPosX = SKI_ARMS_DEALERS_TRADING_INV_X + ( SKI_INV_OFFSET_X * ( ubPocket % ( SKI_NUM_TRADING_INV_SLOTS/2) ) - ( 358 / 2 ) ) + SKI_INV_SLOT_WIDTH / 2;
+			sPosX = SKI_ARMS_DEALERS_TRADING_INV_X; // + ( SKI_INV_OFFSET_X * ( ubPocket % ( SKI_NUM_TRADING_INV_SLOTS/2) ) - ( 358 / 2 ) ) + SKI_INV_SLOT_WIDTH / 2;
 
-			sPosY = SKI_ARMS_DEALERS_TRADING_INV_Y + ( ( SKI_INV_OFFSET_Y * ubPocket / ( SKI_NUM_TRADING_INV_SLOTS/2) ) + 1 ) - ( 128 / 2 ) + SKI_INV_SLOT_HEIGHT / 2;
+			sPosY = SKI_ARMS_DEALERS_TRADING_INV_Y; // + ( ( SKI_INV_OFFSET_Y * ubPocket / ( SKI_NUM_TRADING_INV_SLOTS/2) ) + 1 ) - ( 128 / 2 ) + SKI_INV_SLOT_HEIGHT / 2;
 
 			//if the start position + the height of the box is off the screen, reposition
 			if( sPosY < (SCREEN_Y_OFFSET + 0) )
@@ -6419,8 +6419,6 @@ void StartSKIDescriptionBox( void )
 //	if( giItemDescAmmoButton >= 0 && ButtonList[ giItemDescAmmoButton ].
 //	DisableButton( giItemDescAmmoButton );
 
-	//CHRISL: Need to alter the default gsInvDesc values
-	gsInvDescX = 214;
 	RenderItemDescriptionBox( );
 }
 

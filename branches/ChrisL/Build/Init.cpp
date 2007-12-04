@@ -97,6 +97,26 @@ extern	HINSTANCE					ghInstance;
 
 extern OBJECTTYPE GLOCK_17_ForUseWithLOS;
 
+// Prepends the language prefix to the file name in a proposed path.
+static void AddLanguagePrefix(STR fileName, const STR language)
+{
+	char *fileComponent;
+
+	fileComponent = strrchr( fileName, '\\');
+	if (fileComponent)
+	{
+		fileComponent++;
+	}
+	else
+	{
+		fileComponent = fileName;
+	}
+
+	// Make sure to use the overlap-safe version of memory copy
+	memmove( fileComponent + strlen( language), fileComponent, strlen( fileComponent) + 1);
+	memmove( fileComponent, language, strlen( language) );
+}
+
 
 BOOLEAN LoadExternalGameplayData(STR directoryName)
 {
@@ -407,9 +427,7 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 		return FALSE;
 
 #ifdef RUSSIAN 
-	strcpy(fileName, directoryName);
-	strcat(fileName, RUSSIAN_PREFIX);
-	strcat(fileName, CITYTABLEFILENAME);
+	AddLanguagePrefix( fileName, RUSSIAN_PREFIX);
 	if ( FileExists(fileName) )
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));

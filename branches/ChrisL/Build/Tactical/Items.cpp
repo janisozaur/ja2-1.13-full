@@ -4317,6 +4317,41 @@ bool TryToPlaceInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, in
 	return false;
 }
 
+// CHRISL: Use to find best pocket to store item in.  Could probably be merged with FitsInSmallPocket
+INT32 PickPocket(SOLDIERTYPE *pSoldier, UINT8 ppStart, UINT8 ppStop, UINT16 usItem, UINT8 iNumber, UINT8 * cap, int bExcludeSlot)
+{
+	UINT16	pIndex=0;
+	INT32	pocket=0;
+	UINT8	capacity=254;
+
+	for(UINT32 uiPos=ppStart; uiPos<ppStop; uiPos++){
+		if(pSoldier->inv[icLBE[uiPos]].exists() == false){
+			pIndex=LoadBearingEquipment[icClass[uiPos]].lbePocketIndex[icPocket[uiPos]];
+		}
+		else {
+			pIndex=LoadBearingEquipment[Item[pSoldier->inv[icLBE[uiPos]].usItem].ubClassIndex].lbePocketIndex[icPocket[uiPos]];
+		}
+		// Here's were we get complicated.  We should look for the smallest pocket all items can fit in
+		if(LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize] >= iNumber &&
+			LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize] < capacity &&
+			pSoldier->inv[uiPos].exists() == false && uiPos != bExcludeSlot) {
+				if((LBEPocketType[pIndex].pRestriction != 0 && LBEPocketType[pIndex].pRestriction == Item[usItem].usItemClass) ||
+					LBEPocketType[pIndex].pRestriction == 0) {
+						capacity = LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize];
+						pocket = uiPos;
+				}
+		}
+	}
+	if(pocket!=0){
+		*cap=capacity;
+		return pocket;
+	}
+	else{
+		*cap=254;
+		return -1;
+	}
+}
+
 bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int bExcludeSlot)
 {
 	//first, try to STACK the item
@@ -4344,15 +4379,46 @@ bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int 
 		}
 	}
 
-
 	//now try to PLACE
-	//try to PLACE in any slot
+	//try to PLACE in any body slot
 	for(int bSlot = BODYPOSSTART; bSlot < BIGPOCKSTART; bSlot++) {
 		if (bSlot != bExcludeSlot && TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, BODYPOSFINAL) == true) {
 			return true;
 		}
 	}
 
+	//CHRISL: Rather then a simple slot search, use PickPocket to find the most appropriate pocket to use
+	INT32	sPocket=-1, mPocket=-1, lPocket=-1;
+	UINT8	sCapacity=0;
+	UINT8	mCapacity=0;
+	UINT8	lCapacity=0;
+	UINT8	capacity=0;
+	int		bSlot;
+	//Start with active big pockets
+	sPocket=PickPocket(pSoldier, SMALLPOCKSTART, SMALLPOCKFINAL, pObj->usItem, pObj->ubNumberOfObjects, &sCapacity, bExcludeSlot);
+	//Next search active medium pockets
+	mPocket=PickPocket(pSoldier, MEDPOCKSTART, MEDPOCKFINAL, pObj->usItem, pObj->ubNumberOfObjects, &mCapacity, bExcludeSlot);
+	//Lastly search active small pockets
+	lPocket=PickPocket(pSoldier, BIGPOCKSTART, BIGPOCKFINAL, pObj->usItem, pObj->ubNumberOfObjects, &lCapacity, bExcludeSlot);
+	//Finally, compare the three pockets we've found and return the pocket that is most logical to use
+	capacity = min(sCapacity, mCapacity);
+	capacity = min(lCapacity, capacity);
+	if(capacity == 254) {	//no pocket found
+		return false;
+	}
+	else if(capacity == sCapacity) {
+		bSlot = sPocket;
+	}
+	else if(capacity == mCapacity) {
+		bSlot = mPocket;
+	}
+	else if(capacity == lCapacity) {
+		bSlot = lPocket;
+	}
+	if(TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, NUM_INV_SLOTS) == true)
+		return true;
+
+#if 0
 	if (FitsInSmallPocket(pObj) == true) {
 		//try to PLACE in small pockets
 		for(int bSlot = SMALLPOCKSTART; bSlot < SMALLPOCKFINAL; bSlot++) {
@@ -4368,7 +4434,7 @@ bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int 
 			return true;
 		}
 	}
-
+#endif
 	return false;
 }
 
@@ -4474,52 +4540,57 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 	switch (pItem->usItemClass)
 	{
 		case IC_GUN:
-			// CHRISL: 
-			if((UsingNewInventorySystem() == true) && (pItem->twohanded) && pSoldier->inv[GUNSLINGPOCKPOS].exists() == false)	// Long Gun use Gun Sling
-			{
-				PlaceObject( pSoldier, GUNSLINGPOCKPOS, pObj, fNewItem );
-				if (pObj->exists() == false)
-					return( TRUE );
-			}
-			break;
 		case IC_THROWING_KNIFE:
 		case IC_BLADE:
-			// CHRISL:
-			if((UsingNewInventorySystem() == true) && pSoldier->inv[KNIFEPOCKPOS].exists() == false)	// Knife
-			{
-				PlaceObject( pSoldier, KNIFEPOCKPOS, pObj, fNewItem );
-				if (pObj->exists() == false)
-					return( TRUE );
-			}
-			break;
 		case IC_LAUNCHER:
 		case IC_BOMB:
 		case IC_GRENADE:
-			if (!(pItem->twohanded))
+			if (pSoldier->inv[HANDPOS].exists() == false)
 			{
-				if (pSoldier->inv[HANDPOS].exists() == false)
+				// put the one-handed weapon in the guy's hand...
+				PlaceObject( pSoldier, HANDPOS, pObj, fNewItem );
+				if ( pObj->exists() == false )
 				{
-					// put the one-handed weapon in the guy's hand...
-					PlaceObject( pSoldier, HANDPOS, pObj, fNewItem );
-					if ( pObj->exists() == false )
-					{
-						return( TRUE );
-					}
+					return( TRUE );
 				}
-				else if ( !(Item[pSoldier->inv[HANDPOS].usItem].twohanded ) && pSoldier->inv[SECONDHANDPOS].exists() == false)
+			}
+			else if ( !(Item[pSoldier->inv[HANDPOS].usItem].twohanded ) && pSoldier->inv[SECONDHANDPOS].exists() == false)
+			{
+				// put the one-handed weapon in the guy's 2nd hand...
+				PlaceObject( pSoldier, SECONDHANDPOS, pObj, fNewItem );
+				if ( pObj->exists() == false )
 				{
-					// put the one-handed weapon in the guy's 2nd hand...
-					PlaceObject( pSoldier, SECONDHANDPOS, pObj, fNewItem );
-					if ( pObj->exists() == false )
-					{
-						return( TRUE );
-					}
+					return( TRUE );
 				}
 			}
 			// two-handed objects are best handled in the main loop for large objects,
 			// which checks the hands first anyhow
+			//CHRISL: New switch.  Place items into Gunsling or Knife pocket is using NewInv, item is appropriate, and we
+			//	didn't manage to place in hands.
+			if(UsingNewInventorySystem() == true)
+			{
+				switch (pItem->usItemClass)
+				{
+					case IC_GUN:
+						if(pSoldier->inv[GUNSLINGPOCKPOS].exists() == false)	// Long Gun use Gun Sling
+						{
+							PlaceObject( pSoldier, GUNSLINGPOCKPOS, pObj, fNewItem );
+							if (pObj->exists() == false)
+								return( TRUE );
+						}
+						break;
+					case IC_THROWING_KNIFE:
+					case IC_BLADE:
+						if(pSoldier->inv[KNIFEPOCKPOS].exists() == false)	// Knife
+						{
+							PlaceObject( pSoldier, KNIFEPOCKPOS, pObj, fNewItem );
+							if (pObj->exists() == false)
+								return( TRUE );
+						}
+						break;
+				}
+			}
 			break;
-
 		case IC_ARMOUR:
 			switch (Armour[Item[pObj->usItem].ubClassIndex].ubArmourClass)
 			{
@@ -5438,6 +5509,8 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 
 BOOLEAN OBJECTTYPE::RemoveAttachment( OBJECTTYPE* pAttachment, OBJECTTYPE * pNewObj, UINT8 subObject )
 {
+	BOOLEAN		objDeleted = FALSE;
+
 	if ( pAttachment == 0 )
 	{
 		return( FALSE );
@@ -5461,18 +5534,13 @@ BOOLEAN OBJECTTYPE::RemoveAttachment( OBJECTTYPE* pAttachment, OBJECTTYPE * pNew
 					*pNewObj = *pAttachment;
 				}
 				iter = (*this)[subObject]->attachments.erase(iter);
+				objDeleted = TRUE;
 				break;
 			}
 	}
-/*
-	// if pNewObj is passed in NULL, then we just delete the attachment
-	if (pNewObj != NULL)
-	{
-		*pNewObj = *pAttachment;
-	}
+	if(!objDeleted)
+		return( FALSE );
 
-	(*this)[subObject]->attachments.remove(*pAttachment);
-*/
 	if (pNewObj && Item[pNewObj->usItem].grenadelauncher )//UNDER_GLAUNCHER)
 	{
 		// look for any grenade; if it exists, we must make it an

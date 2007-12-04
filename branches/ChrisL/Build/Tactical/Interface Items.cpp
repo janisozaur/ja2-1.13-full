@@ -121,6 +121,8 @@ INT16	ITEMDESC_HEIGHT;
 INT16	ITEMDESC_WIDTH;
 INT16   MAP_ITEMDESC_HEIGHT;
 INT16	MAP_ITEMDESC_WIDTH;
+extern int SM_ITEMDESC_START_X;
+extern int SM_ITEMDESC_START_Y;
 
 //#define		ITEMDESC_START_X					214
 //#define		ITEMDESC_START_Y					1 + INV_INTERFACE_START_Y
@@ -276,6 +278,7 @@ BOOLEAN				gbItemPointerLocateGood = FALSE;
 
 // ITEM DESCRIPTION BOX STUFF
 UINT32			guiItemDescBox;
+UINT32			guiItemDescBoxBackground;
 UINT32      guiMapItemDescBox;
 UINT32			guiItemGraphic;
 UINT32			guiMoneyGraphicsForDescBox;
@@ -1278,6 +1281,16 @@ void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel )
 		{
 			if ( fDirtyLevel == DIRTYLEVEL2 )
 			{
+#       if defined( _DEBUG ) /* Sergeant_Kolja, to be removed later again */
+			if( pSoldier->inv[ cnt ][0]->data.gun.ubGunAmmoType >= MAXITEMS )
+        {
+         	DebugMsg(TOPIC_JA2, DBG_LEVEL_1, String("pObject (%S) corrupted! GetHelpTextForItem() can crash.", (pSoldier->inv[ cnt ].usItem<MAXITEMS) ? Item[pSoldier->inv[ cnt ].usItem].szItemName : L"???" ));
+    	    ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"pObject (%s) corrupted! GetHelpTextForItem() can crash.",    (pSoldier->inv[ cnt ].usItem<MAXITEMS) ? Item[pSoldier->inv[ cnt ].usItem].szItemName : L"???" );
+          DebugBreak();
+          AssertMsg( 0, "pObject corrupted! GetHelpTextForItem() can crash." );
+        }
+#       endif
+
 				GetHelpTextForItem( pStr, &( pSoldier->inv[ cnt ] ), pSoldier );
 
 				SetRegionFastHelpText( &(gSMInvRegion[ cnt ]), pStr );
@@ -2841,7 +2854,7 @@ BOOLEAN InitItemDescriptionBox( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 s
 		pObject = &(pSoldier->inv[ ubPosition ] );
 	}
 
-	return( InternalInitItemDescriptionBox( pObject, sX, sY, ubStatusIndex, pSoldier ) );
+	return( InternalInitItemDescriptionBox( pObject, sX, sY, ubStatusIndex, pSoldier, ubPosition ) );
 }
 
 BOOLEAN InitKeyItemDescriptionBox( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sX, INT16 sY, UINT8 ubStatusIndex )
@@ -2854,7 +2867,7 @@ BOOLEAN InitKeyItemDescriptionBox( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT1
 	return( InternalInitItemDescriptionBox( pObject, sX, sY, ubStatusIndex, pSoldier ) );
 }
 
-BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier )
+BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier, UINT8 ubPosition )
 {
 	VOBJECT_DESC    VObjectDesc;
 	CHAR8 ubString[48];
@@ -2865,10 +2878,20 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	INT16 sProsConsIndent;
 
 	// CHRISL: Set some initial coords
-	ITEMDESC_START_X	= ((UsingNewInventorySystem() == true && iResolution != 0)) ? 115 : 214;
+	ITEMDESC_START_X	= ((UsingNewInventorySystem() == true && iResolution != 0)) ? 259 : 214;	//115:214
 	ITEMDESC_START_Y	= ((UsingNewInventorySystem() == true && iResolution != 0)) ? (1 + INV_INTERFACE_START_Y) : (1 + INV_INTERFACE_START_Y);
-	ITEMDESC_HEIGHT		= ((UsingNewInventorySystem() == true && iResolution != 0)) ? 195 : 133;
-	ITEMDESC_WIDTH		= ((UsingNewInventorySystem() == true && iResolution != 0)) ? 678 : 320;
+	ITEMDESC_HEIGHT		= ((UsingNewInventorySystem() == true && iResolution != 0)) ? 195 : 133;	//195:133
+	ITEMDESC_WIDTH = 320;
+	if(UsingNewInventorySystem() == true)
+	{
+		if(iResolution == 0)
+			ITEMDESC_WIDTH = 526;
+		else if(iResolution == 1)
+			ITEMDESC_WIDTH = 686;
+		else if(iResolution == 2)
+			ITEMDESC_WIDTH = 910;
+	}
+	//ITEMDESC_WIDTH		= ((UsingNewInventorySystem() == true && iResolution != 0)) ? 320 : 320;	//678:320
 	MAP_ITEMDESC_HEIGHT	= ((UsingNewInventorySystem() == true && iResolution != 0)) ? 490 : 268;
 	MAP_ITEMDESC_WIDTH	= ((UsingNewInventorySystem() == true && iResolution != 0)) ? 272 : 272;
 
@@ -2884,8 +2907,16 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	guiCurrentItemDescriptionScreen = guiCurrentScreen;
 
 	// Set X, Y
-	gsInvDescX = sX;
-	gsInvDescY = sY;
+	if(sX == 0 && sY == 0)
+	{
+		gsInvDescX = ITEMDESC_START_X;	//sX;
+		gsInvDescY = ITEMDESC_START_Y;	//sY;
+	}
+	else
+	{
+		gsInvDescX = sX;
+		gsInvDescY = sY;
+	}
 
 	gpItemDescObject = pObject;
 	gubItemDescStatusIndex = ubStatusIndex;
@@ -2898,8 +2929,8 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 
 		//return( FALSE );
 
-    MSYS_DefineRegion( &gInvDesc, (UINT16)gsInvDescX, (UINT16)gsInvDescY ,(UINT16)(gsInvDescX + MAP_ITEMDESC_WIDTH), (UINT16)(gsInvDescY + MAP_ITEMDESC_HEIGHT), MSYS_PRIORITY_HIGHEST - 2,
-	 					 CURSOR_NORMAL, MSYS_NO_CALLBACK, ItemDescCallback );
+			MSYS_DefineRegion( &gInvDesc, (UINT16)gsInvDescX, (UINT16)gsInvDescY ,(UINT16)(gsInvDescX + MAP_ITEMDESC_WIDTH), (UINT16)(gsInvDescY + MAP_ITEMDESC_HEIGHT), MSYS_PRIORITY_HIGHEST - 2,
+				CURSOR_NORMAL, MSYS_NO_CALLBACK, ItemDescCallback );
 		 	MSYS_AddRegion( &gInvDesc);
 
 			giMapInvDescButtonImage=  LoadButtonImage( "INTERFACE\\itemdescdonebutton.sti" ,-1,0,-1,1,-1 );
@@ -2911,15 +2942,20 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 
 			fShowDescriptionFlag = TRUE;
 	}
+	else if(guiCurrentItemDescriptionScreen == SHOPKEEPER_SCREEN)
+	{
+		MSYS_DefineRegion( &gInvDesc, (UINT16)gsInvDescX, (UINT16)gsInvDescY ,(UINT16)(gsInvDescX + ITEMDESC_WIDTH), (UINT16)(gsInvDescY + ITEMDESC_HEIGHT), MSYS_PRIORITY_HIGHEST,
+			MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback );
+		MSYS_AddRegion( &gInvDesc);
+	}
 	else
 	{
-	 MSYS_DefineRegion( &gInvDesc, (UINT16)gsInvDescX, (UINT16)gsInvDescY ,(UINT16)(gsInvDescX + ITEMDESC_WIDTH), (UINT16)(gsInvDescY + ITEMDESC_HEIGHT), MSYS_PRIORITY_HIGHEST,
-	 					 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback );
-	 MSYS_AddRegion( &gInvDesc);
-
-
+		MSYS_DefineRegion( &gInvDesc, (UINT16)SM_ITEMDESC_START_X, (UINT16)SM_ITEMDESC_START_Y ,(UINT16)(SM_ITEMDESC_START_X + ITEMDESC_WIDTH), (UINT16)(SM_ITEMDESC_START_Y + ITEMDESC_HEIGHT), MSYS_PRIORITY_HIGHEST,
+			MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback );
+		MSYS_AddRegion( &gInvDesc);
 	}
-  // Add region
+
+	// Add region
 	if ( (Item[ pObject->usItem ].usItemClass & IC_GUN) && !Item[pObject->usItem].rocketlauncher )
 	{
 		// Add button
@@ -3083,6 +3119,14 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	strcpy( VObjectDesc.ImageFile, "INTERFACE\\infobox_interface.sti" );
 	CHECKF( AddVideoObject( &VObjectDesc, &guiItemDescBox) );
 
+	if(ubPosition != 255)
+	{
+		VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
+		strcpy( VObjectDesc.ImageFile, "INTERFACE\\infobox_background.sti" );
+		CHECKF( AddVideoObject( &VObjectDesc, &guiItemDescBoxBackground) );
+	}
+	else
+		guiItemDescBoxBackground = 0;
 
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 	strcpy( VObjectDesc.ImageFile, "INTERFACE\\iteminfoc.STI" );
@@ -4121,6 +4165,8 @@ void RenderItemDescriptionBox( )
 				showBox = gpItemDescObject->GetLBEPointer(gubItemDescStatusIndex)->lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
+			if(guiItemDescBoxBackground != 0)
+				BltVideoObjectFromIndex( guiSAVEBUFFER, guiItemDescBoxBackground, iResolution, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, VO_BLT_SRCTRANSPARENCY, NULL );
 		}
 		// CHRISL: Setup default coords if we haven't initialized them yet
 		if(gsInvDescX == NONE && gsInvDescY == NONE)
@@ -4222,7 +4268,10 @@ void RenderItemDescriptionBox( )
 
 		}
 
-		RestoreExternBackgroundRect( gsInvDescX, gsInvDescY, ITEMDESC_WIDTH, ITEMDESC_HEIGHT );
+		if(guiCurrentItemDescriptionScreen == SHOPKEEPER_SCREEN)
+			RestoreExternBackgroundRect( gsInvDescX, gsInvDescY, 320, 135 );
+		else
+			RestoreExternBackgroundRect( SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, ITEMDESC_WIDTH, ITEMDESC_HEIGHT );
 
 		// CHRISL: This block will display misc information for items stored in LBE Pockets
 		// Display LBENODE attached items
@@ -4670,12 +4719,12 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				offSetY = -1;
 			}
 			else if(iResolution == 2){
-				offSetX = 178;
-				offSetY = -79;
+				offSetX = 239;	//178
+				offSetY = -106;	//-79
 			}
 			else{
-				offSetX = 203;
-				offSetY = -79;
+				offSetX = 264;	//203
+				offSetY = -106;	//-79
 			}
 			break;
 		case VEST_PACK:
@@ -4685,8 +4734,8 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				offSetY = 111;
 			}
 			else{
-				offSetX = 94;
-				offSetY = 30;
+				offSetX = -78;	//94
+				offSetY = 130;	//30
 			}
 			break;
 		case COMBAT_PACK:
@@ -4696,12 +4745,12 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				offSetY = -1;
 			}
 			else if(iResolution == 2){
-				offSetX = -171;
-				offSetY = -87;
+				offSetX = -72;	//-171
+				offSetY = -105;	//-87
 			}
 			else{
-				offSetX = -8;
-				offSetY = -87;
+				offSetX = 91;	//-8
+				offSetY = -105;	//-87
 			}
 			break;
 		case BACKPACK:
@@ -4711,8 +4760,8 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				offSetY = -104;
 			}
 			else{
-				offSetX = -170;
-				offSetY = 12;
+				offSetX = -72;	//-170
+				offSetY = 0;	//12
 			}
 			break;
 		case LBE_POCKET:
@@ -4722,12 +4771,12 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 				offSetY = -1;
 			}
 			else if(iResolution == 2){
-				offSetX = 20;
-				offSetY = -79;
+				offSetX = 81;	//20
+				offSetY = -106;	//-79
 			}
 			else{
-				offSetX = 117;
-				offSetY = -79;
+				offSetX = 178;	//117
+				offSetY = -106;	//-79
 			}
 			break;
 		default:
@@ -4866,6 +4915,8 @@ void DeleteItemDescriptionBox( )
 
 	//Remove
 	DeleteVideoObjectFromIndex( guiItemDescBox );
+	if(UsingNewInventorySystem() == true && guiItemDescBoxBackground != 0)
+		DeleteVideoObjectFromIndex( guiItemDescBoxBackground );
 	DeleteVideoObjectFromIndex( guiMapItemDescBox );
 	RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 	DeleteVideoObjectFromIndex( guiBullet );
@@ -8195,6 +8246,20 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 		}
 	}
 
+/* 2007-05-27, Sergeant_Kolja: code temporarily added for tracking the 
+   SKI Tony inventory crash.
+   Remove when fixed!
+ */
+# if defined( _DEBUG )
+	if ( ((*pObject)[0]->data.gun.ubGunAmmoType >= MAXITEMS) )
+  {
+    DebugMsg(TOPIC_JA2, DBG_LEVEL_1, String( "corrupted pObject (%S) found in GetHelpTextForItem()", (usItem<MAXITEMS) ? Item[usItem].szItemName : L"???" ));
+  	ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"corrupted pObject (%s) found in GetHelpTextForItem()"    , (usItem<MAXITEMS) ? Item[usItem].szItemName : L"???" );
+    DebugBreak();
+    AssertMsg( 0, "GetHelpTextForItem() would crash" );
+  }
+#endif
+    
 	if ( pObject->exists() == true )
 	{
 		// Retrieve the status of the items

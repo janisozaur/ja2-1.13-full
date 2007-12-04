@@ -4,4 +4,8 @@
 	Version="8.00" 
 	Name="German"
 	>
+	<Tool
+		Name="VCCLCompilerTool"
+		PreprocessorDefinitions="GERMAN"
+	/>
 </VisualStudioPropertySheet>

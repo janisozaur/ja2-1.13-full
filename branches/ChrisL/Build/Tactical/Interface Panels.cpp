@@ -113,6 +113,8 @@ int SM_ITEMDESC_START_X;
 int SM_ITEMDESC_START_Y;
 int SM_ITEMDESC_HEIGHT;
 int SM_ITEMDESC_WIDTH;
+extern INT16 ITEMDESC_START_X;
+extern INT16 ITEMDESC_START_Y;
 
 int SM_SELMERC_AP_X;
 int SM_SELMERC_AP_Y;
@@ -416,7 +418,7 @@ extern	BOOLEAN		gfInItemPickupMenu;
 extern	void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject, BOOLEAN fReset );
 extern	void SetNewItem( SOLDIERTYPE *pSoldier, UINT8 ubInvPos, BOOLEAN fNewItem );
 extern	void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj );
-extern	BOOLEAN	InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier );
+extern	BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier, UINT8 ubPosition );
 extern	BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTestObject, BOOLEAN fOn	);
 
 BOOLEAN IsMouseInRegion( MOUSE_REGION *pRegion );
@@ -1741,7 +1743,7 @@ BOOLEAN InitializeSMPanelCoordsNew()
 		gSMInvPocketXY[54].sX = INTERFACE_START_X + 693;	gSMInvPocketXY[54].sY = INV_INTERFACE_START_Y + 82;		// SMALLPOCK30
 	}
 
-	SM_ITEMDESC_START_X		= ( 115 + INTERFACE_START_X );
+	SM_ITEMDESC_START_X		= ( 114 + INTERFACE_START_X );	//115
 	SM_ITEMDESC_START_Y		= ( 1 +   INV_INTERFACE_START_Y );
 	SM_ITEMDESC_HEIGHT		= 128;
 	SM_ITEMDESC_WIDTH		= 358;
@@ -3268,7 +3270,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						// it's an attempt to attach; bring up the inventory panel
 						if ( !InItemDescriptionBox( ) )
 						{
-							InitItemDescriptionBox( gpSMCurrentMerc, (UINT8)uiHandPos, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, 0 );
+							InitItemDescriptionBox( gpSMCurrentMerc, (UINT8)uiHandPos, ITEMDESC_START_X, ITEMDESC_START_Y, 0 );
 						}
 						return;
 					}
@@ -3444,7 +3446,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		{
 			if ( !InItemDescriptionBox( ) )
 			{
-				InitItemDescriptionBox( gpSMCurrentMerc, (UINT8)uiHandPos, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, 0 );
+				InitItemDescriptionBox( gpSMCurrentMerc, (UINT8)uiHandPos, ITEMDESC_START_X, ITEMDESC_START_Y, 0 );
 			}
 		}
 	}
@@ -3569,8 +3571,9 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	// Picking up a pack?
 	else
 	{
-		//CHRISL: Because of some random CTDs, we're going to disable the link between a soldier and a dropped pack
-		return TRUE;
+//CHRISL: Because of some random CTDs, we're going to disable the link between a soldier and a dropped pack
+//	This means we won't be able to pickup a back using the droppack button so skip all of this.
+#if 0
 		for (int x = 0; x < gWorldItems[pSoldier->DropPackKey].object.ubNumberOfObjects; ++x) {
 			// Is the item we dropped in this sector and does it have an active LBENODE flag?
 			if(gWorldItems[pSoldier->DropPackKey].object.IsActiveLBE(x)) {
@@ -3597,6 +3600,7 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 		}
 		CHAR16 dropMSG[] = L"Backpack not found";
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, dropMSG );
+#endif
 	}
 
 	return TRUE;
@@ -3853,17 +3857,40 @@ void BtnDropPackCallback(GUI_BUTTON *btn,INT32 reason)
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		/* Is DropPackFlag currently false and is there something in the backpack pocket?  If so, we haven't
-		dropped a pack yet and apparently want to*/
-		if(gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == true && !gpSMCurrentMerc->flags.DropPackFlag)
+		//CHRISL: Added "SHIFT-LMB" option to drop packs for all members of current squad
+		if ( _KeyDown( SHIFT ) )
 		{
-			ChangeDropPackStatus(gpSMCurrentMerc, TRUE);
+			INT8 bAssignment = gpSMCurrentMerc->bAssignment;
+			for(int x=0; x<18; x++)
+			{
+				/* Is DropPackFlag currently false and is there something in the backpack pocket?  If so, we haven't
+				dropped a pack yet and apparently want to*/
+				if(MercPtrs[x]->bAssignment == bAssignment && MercPtrs[x]->inv[BPACKPOCKPOS].exists() == true && !MercPtrs[x]->flags.DropPackFlag)
+				{
+					ChangeDropPackStatus(MercPtrs[x], TRUE);
+				}
+				/* Is DropPackFlag currently true, is nothing in the backpack pocket and have we dropped a pack?  If so, we
+				must want to retreive a backpack we previously dropped.*/
+				else if(MercPtrs[x]->bAssignment == bAssignment && MercPtrs[x]->inv[BPACKPOCKPOS].exists() == false && MercPtrs[x]->flags.DropPackFlag && MercPtrs[x]->DropPackKey != ITEM_NOT_FOUND)
+				{
+					ChangeDropPackStatus(MercPtrs[x], FALSE);
+				}
+			}
 		}
-		/* Is DropPackFlag currently true, is nothing in the backpack pocket and have we dropped a pack?  If so, we
-		must want to retreive a backpack we previously dropped.*/
-		else if(gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == false && gpSMCurrentMerc->flags.DropPackFlag && gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
+		else
 		{
-			ChangeDropPackStatus(gpSMCurrentMerc, FALSE);
+			/* Is DropPackFlag currently false and is there something in the backpack pocket?  If so, we haven't
+			dropped a pack yet and apparently want to*/
+			if(gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == true && !gpSMCurrentMerc->flags.DropPackFlag)
+			{
+				ChangeDropPackStatus(gpSMCurrentMerc, TRUE);
+			}
+			/* Is DropPackFlag currently true, is nothing in the backpack pocket and have we dropped a pack?  If so, we
+			must want to retreive a backpack we previously dropped.*/
+			else if(gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == false && gpSMCurrentMerc->flags.DropPackFlag && gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
+			{
+				ChangeDropPackStatus(gpSMCurrentMerc, FALSE);
+			}
 		}
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
@@ -6937,6 +6964,7 @@ void GoToMapScreenFromTactical( void )
 		}
 	}
 }*/
+
 
 
 

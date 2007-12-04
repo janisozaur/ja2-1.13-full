@@ -4,4 +4,8 @@
 	Version="8.00" 
 	Name="Russian"
 	>
+	<Tool
+		Name="VCCLCompilerTool"
+		PreprocessorDefinitions="RUSSIAN"
+	/>
 </VisualStudioPropertySheet>

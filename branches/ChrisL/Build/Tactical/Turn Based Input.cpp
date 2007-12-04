@@ -2615,49 +2615,19 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 									//	iter loses it's relationship which causes a CTD if we use this hotkey and there
 									//	aren't enough open WorldItems to accomodate all the attachments we're seperating.
 									UINT8 cnt = 0;
-									attachmentList::iterator iter = gWorldItems[ uiLoop ].object[x]->attachments.begin();
-									while(1)
+									while(gWorldItems[uiLoop].object[x]->attachments.size() != cnt)
 									{
-										if (iter == gWorldItems[ uiLoop ].object[x]->attachments.end())
-										{
-											break;
-										}
 										gTempObject = *gWorldItems[uiLoop].object[x]->GetAttachmentAtIndex(cnt);
-										if ( !Item[ gTempObject.usItem ].inseparable )
+										if (gWorldItems[ uiLoop ].object.RemoveAttachment(&gTempObject,0,x))
 										{
-											if (gWorldItems[ uiLoop ].object.RemoveAttachment(&gTempObject))
-											{
-												AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
-												ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
-												iter = gWorldItems[ uiLoop ].object[x]->attachments.begin();
-												cnt = 0;
-											}
+											AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
+											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
 										}
 										else
 										{
-											iter++;
 											cnt++;
 										}
 									}
-#if 0
-									for (attachmentList::iterator iter = gWorldItems[ uiLoop ].object[x]->attachments.begin();
-										iter != gWorldItems[ uiLoop ].object[x]->attachments.end(); ++iter) {
-										if ( !Item[ iter->usItem ].inseparable )
-										{
-											// put it on the ground
-											AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &(*iter), 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
-											if (gWorldItems[ uiLoop ].object.RemoveAttachment(&(*iter)))
-											{
-												ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
-											}
-											//restart, I don't feel like manipulating iters
-											iter = gWorldItems[ uiLoop ].object[x]->attachments.begin();
-											if (iter == gWorldItems[ uiLoop ].object[x]->attachments.end()) {
-												break;
-											}
-										}
-									}
-#endif
 								}
 							}
 						}
