@@ -113,11 +113,23 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 	case TRAVELCOST_DEBRIS		: sAPCost += AP_MOVEMENT_RUBBLE;
 		break;
 	case TRAVELCOST_SHORE		: sAPCost += AP_MOVEMENT_SHORE; // wading shallow water
+		if (!IS_MERC_BODY_TYPE( pSoldier ))
+		{
+			return -1;
+		}
 		break;
 	case TRAVELCOST_KNEEDEEP	:	sAPCost += AP_MOVEMENT_LAKE; // wading waist/chest deep - very slow
+		if (!IS_MERC_BODY_TYPE( pSoldier ))
+		{
+			return -1;
+		}
 		break;
 
 	case TRAVELCOST_DEEPWATER: sAPCost += AP_MOVEMENT_OCEAN; // can swim, so it's faster than wading
+		if (!IS_MERC_BODY_TYPE( pSoldier ))
+		{
+			return -1;
+		}
 		break;
 		/*
 		case TRAVELCOST_VEINEND	:
@@ -133,7 +145,13 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 		break;
 
 		// cost for jumping a fence REPLACES all other AP costs!
-	case TRAVELCOST_FENCE		: return( AP_JUMPFENCE );
+	case TRAVELCOST_FENCE		: 
+		if (!IS_MERC_BODY_TYPE( pSoldier ))
+		{
+			return -1;
+		}
+
+		return( AP_JUMPFENCE );
 
 	case TRAVELCOST_NONE			: return( 0 );
 
@@ -404,12 +422,6 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 	// ATE: If we have a 'special cost, like jump fence... 
 	if ( sSwitchValue == TRAVELCOST_FENCE )
 	{
-		// Only mercs are capable of scaling fences
-		if (!IS_MERC_BODY_TYPE( pSoldier ))
-		{
-			return 100;
-		}
-
 		// If we are changeing stance ( either before or after getting there....
 		// We need to reflect that...
 		switch(usMovementMode)

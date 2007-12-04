@@ -2661,6 +2661,9 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 				usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->ubDirection ) );
 				usNewGridNo = NewGridNo( (UINT16)usNewGridNo, DirectionInc( pSoldier->ubDirection ) );
 
+				pSoldier->sPlotSrcGrid = pSoldier->sGridNo;
+				pSoldier->fPastXDest = FALSE;
+				pSoldier->fPastYDest = FALSE;
 				pSoldier->usPathDataSize = 0;
 				pSoldier->usPathIndex    = 0;
 				pSoldier->usPathingData[ pSoldier->usPathDataSize ] = pSoldier->ubDirection;
@@ -8417,13 +8420,13 @@ InternalGivingSoldierCancelServices( pSoldier, FALSE );
 
 void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLEAN fCheckRange )
 {
-	INT16					dDegAngle;
+	//INT16					dDegAngle;
 	FLOAT					dDeltaPos;
 	FLOAT					dXPos , dYPos;
 	BOOLEAN				fStop = FALSE;
 
 
-	dDegAngle = (INT16)( dAngle * 180 / PI );			
+	//dDegAngle = (INT16)( dAngle * 180 / PI );			
 	//sprintf( gDebugStr, "Move Angle: %d", (int)dDegAngle );
 
 	// Find delta Movement for X pos
@@ -8596,7 +8599,7 @@ UINT8 atan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 )
 	DOUBLE  test_x =  sXPos2 - sXPos;
 	DOUBLE  test_y =  sYPos2 - sYPos;
 	UINT8	  mFacing = WEST;
-	INT16					dDegAngle;
+	//INT16					dDegAngle;
 	DOUBLE angle;
 
 	if ( test_x == 0 )
@@ -8607,7 +8610,7 @@ UINT8 atan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 )
 	angle = atan2( test_x, test_y );
 
 
-	dDegAngle = (INT16)( angle * 180 / PI );			
+	//dDegAngle = (INT16)( angle * 180 / PI );			
 	//sprintf( gDebugStr, "Move Angle: %d", (int)dDegAngle );
 
 	do
@@ -11610,6 +11613,8 @@ void ChangeToFlybackAnimation( SOLDIERTYPE *pSoldier, UINT8 ubDirection )
 	// Remove any previous actions
 	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
 
+	pSoldier->sPlotSrcGrid = pSoldier->sGridNo;
+
 	// Since we're manually setting our path, we have to reset these @#$@# flags too.  Otherwise we don't reach the
 	// destination a lot of the time
 	pSoldier->fPastXDest = 0;
@@ -11654,6 +11659,8 @@ void ChangeToFallbackAnimation( SOLDIERTYPE *pSoldier, UINT8 ubDirection )
 
 	// Remove any previous actions
 	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+
+	pSoldier->sPlotSrcGrid = pSoldier->sGridNo;
 
 	// Since we're manually setting our path, we have to reset these @#$@# flags too.  Otherwise we don't reach the
 	// destination a lot of the time
