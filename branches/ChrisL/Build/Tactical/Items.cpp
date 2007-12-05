@@ -3258,7 +3258,7 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 	return( FALSE );
 }
 
-INT8 GetAttachmentComboMerge( OBJECTTYPE * pObj )
+INT8 GetAttachmentComboMerge( OBJECTTYPE * pObj, UINT8 subObject )
 {
 	INT8		bIndex = 0;
 	INT8		bAttachLoop;
@@ -3289,7 +3289,7 @@ INT8 GetAttachmentComboMerge( OBJECTTYPE * pObj )
 			 * steel tube /or/ a Gun Barrel Extender, the old code wouldn't work for
 			 * the Gun Barel Extender, since it would never been tested.
 			 */
-				pAttachment = FindAttachment( pObj, AttachmentComboMerge[ bIndex ].usAttachment[ bAttachLoop ] );
+				pAttachment = FindAttachment( pObj, AttachmentComboMerge[ bIndex ].usAttachment[ bAttachLoop ], subObject );
 				if ( pAttachment == 0 )
 				{
 					// didn't find something required
@@ -3487,23 +3487,29 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 			//it's a new attachment
 			if (canOnlyAttach1 == true) {
 				//we only placed one of the stack, pAttachment could have any number of objects
-				if (pAttachment->MoveThisObjectTo(attachmentObject, 1) == 0) {
+				if (pAttachment->MoveThisObjectTo(attachmentObject,1,pSoldier,NUM_INV_SLOTS,1) == 0) {
 					(*this)[subObject]->attachments.push_back(attachmentObject);
 				}
 			}
 			else {
 				//pAttachment could have any number of objects, they have all been moved over
-				(*this)[subObject]->attachments.push_back(*pAttachment);
-				DeleteObj(pAttachment);
+				//CHRISL: This doesn't work.  What if we have a stack of objects in the cursor?  We don't want the whole
+				//	stack to be attached
+				//(*this)[subObject]->attachments.push_back(*pAttachment);
+				//DeleteObj(pAttachment);
+				if (pAttachment->MoveThisObjectTo(attachmentObject,1,pSoldier,NUM_INV_SLOTS,1) == 0) {
+					(*this)[subObject]->attachments.push_back(attachmentObject);
+				}
 			}
 		}
 
 
 		// Check for attachment merge combos here
 		//CHRISL: Only do this if we're looking at a single item.  Don't try a combo merge when dealing with a stack
-		if(this->ubNumberOfObjects == 1){
-			bAttachComboMerge = GetAttachmentComboMerge( this );
-			if ( bAttachComboMerge != -1 )
+		bAttachComboMerge = GetAttachmentComboMerge( this, subObject );
+		if ( bAttachComboMerge != -1 )
+		{
+			if(this->ubNumberOfObjects == 1)
 			{
 				PerformAttachmentComboMerge( this, bAttachComboMerge );
 				if ( bAttachInfoIndex != -1 && AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod < 20 )
@@ -3511,6 +3517,11 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 					StatChange( pSoldier, MECHANAMT, (INT8) ( 20 - AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod ), FALSE );
 					StatChange( pSoldier, WISDOMAMT, (INT8) ( 20 - AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod ), FALSE );
 				}
+			}
+			//CHRISL: If we're looking at a stack, we need to unattach the object we just attached
+			else if(this->RemoveAttachment(&attachmentObject, pAttachmentPosition, subObject))
+			{
+				pAttachment->AddObjectsToStack(attachmentObject, -1, pSoldier, NUM_INV_SLOTS, MAX_OBJECTS_PER_SLOT);
 			}
 		}
 
@@ -3527,8 +3538,8 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 	// check for merges
 	else if (EvaluateValidMerge( pAttachment->usItem, this->usItem, &usResult, &usResult2, &ubType, &ubAPCost ))
 	{
-		//CHRISL: We don't want to do any merges if we're looking at a stack of items.
-		if ( this->ubNumberOfObjects > 1 )
+		//CHRISL: We don't want to do any merges if we're looking at a stack of items, with the exception of combines.
+		if ( this->ubNumberOfObjects > 1 && ubType != COMBINE_POINTS )
 		{
 			return( FALSE );
 		}
