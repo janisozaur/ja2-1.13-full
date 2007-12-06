@@ -245,7 +245,9 @@ static void XMLCALL
 itemEndElementHandle(void *userData, const XML_Char *name)
 {
 	itemParseData * pData = (itemParseData *)userData;
+#if 0
 	char temp;
+#endif
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
 	{

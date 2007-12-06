@@ -3041,13 +3041,8 @@ BOOLEAN	GetItemPool( INT16 sMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
 	{
 		pObject = gpWorldLevelData[ sMapPos ].pOnRoofHead;
 	}
-	//ADB: let's not make 51200 calls to FileWrite ok?
-#ifdef JA2BETAVERSION
-	if ( pObject )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("gpWorldLevelData, %d %d %d", pObject, sMapPos, (&gpWorldLevelData[25600-1]) + sizeof(MAP_ELEMENT) ) );
-	}
-#endif
+
+	(*ppItemPool) = NULL;
 
 	// LOOP THORUGH OBJECT LAYER
 	while( pObject != NULL )
@@ -3065,8 +3060,6 @@ BOOLEAN	GetItemPool( INT16 sMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
 
 		pObject = pObject->pNext;
 	}
-
-	(*ppItemPool) = NULL;
 
 	return( FALSE );
 }

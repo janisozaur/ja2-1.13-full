@@ -1068,6 +1068,8 @@ public:
 	STRUCT_Statistics								stats;
 	STRUCT_Pathing									pathing;
 
+	// Debugging data - not saved
+	INT16 sPlotSrcGrid;
 
 
 public:
@@ -2014,6 +2016,9 @@ public:
 
 	std::vector<int>	bNewItemCount;
 	std::vector<int> bNewItemCycleCount;
+
+	// Debugging data - not saved
+	INT16 sPlotSrcGrid;
 }; // OLDSOLDIERTYPE_101;	
 
 #endif

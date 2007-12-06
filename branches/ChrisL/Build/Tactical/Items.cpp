@@ -5830,7 +5830,7 @@ BOOLEAN DamageItem( OBJECTTYPE * pObject, INT32 iDamage, BOOLEAN fOnGround )
 			bool removed = false;
 			// if the status of the item is negative then it's trapped/jammed;
 			// leave it alone
-			if (pObject->exists() == false && (*pObject)[bLoop]->data.objectStatus > 0)
+			if (pObject->exists() == true && (*pObject)[bLoop]->data.objectStatus > 0)
 			{
 				bDamage = CheckItemForDamage( pObject->usItem, iDamage );
 				switch( pObject->usItem )
