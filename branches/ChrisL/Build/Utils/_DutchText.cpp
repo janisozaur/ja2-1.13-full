@@ -4001,6 +4001,8 @@ STR16 sRepairsDoneString[] =
 	L"%s is klaar met reparatie van ieders wapens en bepantering",
 	L"%s is klaar met reparatie van ieders uitrusting",
 	L"%s is klaar met reparatie van ieders vervoerde items",
+	L"%s is klaar met reparatie van ieders vervoerde items",
+	L"%s is klaar met reparatie van ieders vervoerde items",
 };
 
 /*STR16 zGioDifConfirmText[]=

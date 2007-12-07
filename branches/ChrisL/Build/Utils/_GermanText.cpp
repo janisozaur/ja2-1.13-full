@@ -3803,6 +3803,8 @@ STR16 sRepairsDoneString[] =
 	L"%s hat die Waffen und Rüstungen aller Teammitglieder repariert",
 	L"%s hat die aktivierten Gegenstände aller Teammitglieder repariert",
 	L"%s hat die mitgeführten Gegenstände aller Teammitglieder repariert",
+	L"%s hat die mitgeführten Gegenstände aller Teammitglieder repariert",
+	L"%s hat die mitgeführten Gegenstände aller Teammitglieder repariert",
 };
 
 STR16 zGioDifConfirmText[]=

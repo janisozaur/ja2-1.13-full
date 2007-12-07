@@ -3991,6 +3991,8 @@ STR16 sRepairsDoneString[] =
 	L"%s a terminé la réparation des armes & armures",
 	L"%s a terminé la réparation des objets portés",
 	L"%s a terminé la réparation des objets transportés",
+	L"%s a terminé la réparation des objets transportés",
+	L"%s a terminé la réparation des objets transportés",
 };
 
 STR16 zGioDifConfirmText[]=

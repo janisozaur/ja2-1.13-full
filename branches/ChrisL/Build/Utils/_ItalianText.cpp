@@ -3982,6 +3982,8 @@ STR16 sRepairsDoneString[] =
 	L"%s ha finito di riparare le armi e i giubbotti antiproiettile di tutti",
 	L"%s ha finito di riparare gli oggetti dell'equipaggiamento di tutti",
 	L"%s ha finito di riparare gli oggetti trasportati di tutti",
+	L"%s ha finito di riparare gli oggetti trasportati di tutti",
+	L"%s ha finito di riparare gli oggetti trasportati di tutti",
 };
 
 STR16 zGioDifConfirmText[]=

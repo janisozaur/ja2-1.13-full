@@ -1472,18 +1472,56 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 }
 
 
-BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
+BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr, INT16 sGridNo )
 {
 	OBJECTTYPE *pInventorySlot;
+	INT32		cnt = 0;
+
+	//CHRISL: I'm not sure why this never fails.  Maybe it just isn't used often.  But if we try and look for index
+	//	pInventoryPoolList.size() we're going to crash since "size()" returns the total number of indecies in human terms (1-xxx)
+	//	but we have to start with 0.  In other words, size() might return a value of 10 but those are numbers 0-9.
+
+	while(1)
+	{
+		//if we run out of indecies before running out of items to place, make new indecies
+		if(cnt == pInventoryPoolList.size())
+		{
+			ResizeInventoryList();
+		}
+		pInventorySlot = &pInventoryPoolList[cnt].object;
+		if(pInventorySlot->usItem == pItemPtr->usItem)
+		{
+			pInventorySlot->AddObjectsToStack(*pItemPtr);
+		}
+		else if(pInventorySlot->exists() == false)
+		{
+			pItemPtr->MoveThisObjectTo(*pInventorySlot);
+			if(sGridNo != 0)
+			{
+				pInventoryPoolList[cnt].sGridNo = sGridNo;
+				pInventoryPoolList[cnt].usFlags = 512;
+				pInventoryPoolList[cnt].bVisible = 1;
+			}
+		}
+		else
+		{
+			cnt++;
+			continue;
+		}
+		if(pItemPtr->exists() == false)
+		{
+			break;
+		}
+	}
 
 
 	// if there is something there, swap it, if they are of the same type and stackable then add to the count
-	pInventorySlot =  &( pInventoryPoolList[ pInventoryPoolList.size() ].object );
+//	pInventorySlot =  &( pInventoryPoolList[ pInventoryPoolList.size() ].object );
 
 	// placement in an empty slot
 	// could be wrong type of object for slot... need to check...
 	// but assuming it isn't
-	pItemPtr->MoveThisObjectTo(*pInventorySlot);
+//	pItemPtr->MoveThisObjectTo(*pInventorySlot);
 
 	return( TRUE );
 }

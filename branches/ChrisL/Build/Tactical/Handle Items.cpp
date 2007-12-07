@@ -1721,7 +1721,11 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 
 				if ( iItemIndex == ITEM_PICKUP_SELECTION )
 				{
-					if ( !pfSelectionList[ cnt ] )
+					//CHRISL: This can pose a problem.  If the next value in pfSelectionList didn't exist (which can happen if
+					//	we've added an item to the world during this process), it'll pull whatever is in memory which is most
+					//	likely a value larger then 0.
+					//if ( !pfSelectionList[ cnt ] )
+					if(pfSelectionList[cnt] != 1)
 					{
 						fPickup = FALSE;
 					}

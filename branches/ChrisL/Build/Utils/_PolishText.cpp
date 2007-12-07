@@ -3982,6 +3982,8 @@ STR16 sRepairsDoneString[] =
 	L"%s skoñczy³(a) naprawiaæ broñ i ochraniacze wszystkich cz³onków oddzia³u",
 	L"%s skoñczy³(a) naprawiaæ wyposa¿enie wszystkich cz³onków oddzia³u",
 	L"%s skoñczy³(a) naprawiaæ ekwipunek wszystkich cz³onków oddzia³u",
+	L"%s skoñczy³(a) naprawiaæ ekwipunek wszystkich cz³onków oddzia³u",
+	L"%s skoñczy³(a) naprawiaæ ekwipunek wszystkich cz³onków oddzia³u",
 };
 
 

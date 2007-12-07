@@ -43,7 +43,7 @@ void HandleFlashForHighLightedItem( void );
 extern std::vector<WORLDITEM> pInventoryPoolList;
 
 // autoplace down object
-BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr );
+BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr, INT16 sGridNo=0 );
 
 // the current inventory item
 extern INT32 iCurrentlyHighLightedItem;

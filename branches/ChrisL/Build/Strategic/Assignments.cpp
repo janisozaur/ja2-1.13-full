@@ -3197,12 +3197,18 @@ void HandleRepairBySoldier( SOLDIERTYPE *pSoldier )
 			else
 			{
 				bLoopStart = HELMETPOS;
-				bLoopEnd = HEAD2POS;
+				bLoopEnd = UsingNewInventorySystem() == false ? HEAD2POS : BPACKPOCKPOS;
 			}
 
 			// now repair objects running from left hand to small pocket
 			for( bPocket = bLoopStart; bPocket <= bLoopEnd; bPocket++ )
 			{
+				//CHRISL: These two conditions allow us to repair LBE pocket items at the same time as worn armor, while
+				//	still letting us repair the item in our offhand first.
+				if(UsingNewInventorySystem() == true && bLoop == 0 && bPocket>SECONDHANDPOS && bPocket<GUNSLINGPOCKPOS)
+					continue;
+				if(UsingNewInventorySystem() == true && bLoop == 1 && bPocket==SECONDHANDPOS)
+					continue;
 				pObj = &(pSoldier->inv[ bPocket ]);
 
 				if ( RepairObject( pSoldier, pSoldier, pObj, &ubRepairPtsLeft ) )

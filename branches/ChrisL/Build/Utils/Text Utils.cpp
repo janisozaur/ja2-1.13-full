@@ -576,7 +576,7 @@ BOOLEAN LoadBRName(UINT16 ubIndex, STR16 pNameString )
 			}
 		}
 #else
-		wcsncpy( pNameString, Item[ubIndex].szItemDesc, 80);
+		wcsncpy( pNameString, Item[ubIndex].szBRName, 80);
 		pNameString[79] ='\0';
 #endif
 	}
@@ -766,7 +766,7 @@ BOOLEAN LoadBRDesc(UINT16 ubIndex, STR16 pDescString )
 			}
 		}
 #else
-		wcsncpy( pDescString, Item[ubIndex].szItemDesc, 400);
+		wcsncpy( pDescString, Item[ubIndex].szBRDesc, 400);
 		pDescString[399] ='\0';
 #endif
 	}

@@ -3,6 +3,7 @@
 #include "Debug.h"
 #include "Items.h"
 #include "GameSettings.h"
+#include "screenids.h"
 
 
 int		BODYPOSFINAL		= GUNSLINGPOCKPOS;//RESET in initInventory
@@ -16,6 +17,10 @@ OBJECTTYPE gTempObject;
 OBJECTTYPE gStackTempObject;
 std::list<LBENODE>	LBEArray;
 int gLastLBEUniqueID = 0;
+
+extern UINT32			guiCurrentItemDescriptionScreen;
+extern BOOLEAN			fShowMapInventoryPool;
+extern BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr, INT16 sGridNo );
 
 bool IsSlotAnLBESlot(int slot)
 {
@@ -184,8 +189,15 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBES
 	{
 		if(pSoldier->inv[LBESlots[i]].exists() == false)	// No item in pocket
 			continue;
-		AddItemToPool( pSoldier->sGridNo, &pSoldier->inv[LBESlots[i]], 1, pSoldier->stats.bExpLevel, 0 , -1 );
-		NotifySoldiersToLookforItems( );
+		if(guiCurrentItemDescriptionScreen == MAP_SCREEN && fShowMapInventoryPool)
+		{
+			AutoPlaceObjectInInventoryStash(&pSoldier->inv[LBESlots[i]], pSoldier->sGridNo);
+		}
+		else
+		{
+			AddItemToPool( pSoldier->sGridNo, &pSoldier->inv[LBESlots[i]], 1, pSoldier->pathing.bLevel, 0 , -1 );
+			NotifySoldiersToLookforItems( );
+		}
 		DeleteObj(&pSoldier->inv[LBESlots[i]]);
 	}
 

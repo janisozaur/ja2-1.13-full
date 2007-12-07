@@ -3874,6 +3874,8 @@ STR16 sRepairsDoneString[] =
 	L"%s finished repairing everyone's guns & armor",
 	L"%s finished repairing everyone's equipped items",
 	L"%s finished repairing everyone's carried items",
+	L"%s finished repairing everyone's carried items",
+	L"%s finished repairing everyone's carried items",
 };
 
 STR16 gzLateLocalizedString[] =
