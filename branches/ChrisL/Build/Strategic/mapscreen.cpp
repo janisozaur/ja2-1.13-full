@@ -5763,10 +5763,12 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 
 				case LEFTARROW:
 					// previous character
+					fResetMapCoords = TRUE;
 					GoToPrevCharacterInList( );
 					break;
 				case RIGHTARROW:
 					// next character
+					fResetMapCoords = TRUE;
 					GoToNextCharacterInList( );
 					break;
 

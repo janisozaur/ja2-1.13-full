@@ -1185,6 +1185,11 @@ void RenderBackpackButtons(int bpAction)
 			break;
 		case 2:
 			// Enable buttons
+			if(giSMDropPackButton == -1 || giSMZipperButton == -1)
+			{
+				RenderBackpackButtons(4);
+				RenderBackpackButtons(0);
+			}
 			if(giSMDropPackButton != -1)
 				EnableButton( giSMDropPackButton );
 			if(giSMZipperButton != -1)
