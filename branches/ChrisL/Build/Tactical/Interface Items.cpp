@@ -1064,7 +1064,7 @@ BOOLEAN InitInvSlotInterface( INV_REGION_DESC *pRegionDesc , INV_REGION_DESC *pC
  */
 
 	// CHRISL: Adjusted location of the Money button on the tactical inventory screen
-	gMoneyButtonLoc.x = ((UsingNewInventorySystem() == false)) ? (343 + INTERFACE_START_X) : (244 + INTERFACE_START_X);
+	gMoneyButtonLoc.x = ((UsingNewInventorySystem() == false)) ? (343 + INTERFACE_START_X) : (388 + INTERFACE_START_X);
 	gMoneyButtonLoc.y = ( 11 + INV_INTERFACE_START_Y );
 	// Load all four body type images
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
@@ -4158,7 +4158,7 @@ void RenderItemDescriptionBox( )
 		sCenY = ITEMDESC_ITEM_Y + (INT16)( abs( ITEMDESC_ITEM_HEIGHT - (double)usHeight ) / 2 ) - pTrav->sOffsetY;
 
 		// CHRISL: Determine if we're looking at an LBENODE and display alternate box graphic
-		RenderBackpackButtons(1);
+		RenderBackpackButtons(1);	/* CHRISL: Needed for new inventory backpack buttons */
 		if((UsingNewInventorySystem() == true) && iResolution != 0)
 		{
 			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
@@ -6311,6 +6311,7 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 	INT16				sKeyRingItemWidth = 0;
 	INT16				sOffSetY = 0, sOffSetX = 0;
 
+	RenderBackpackButtons(1);	/* CHRISL: Needed for new inventory backpack buttons */
 	if( guiCurrentScreen == MAP_SCREEN )
 	{
 		gsKeyRingPopupInvX				= 0;

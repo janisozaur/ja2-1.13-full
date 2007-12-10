@@ -1074,7 +1074,8 @@ void UpdateSMPanel( )
 		{
 				EnableButton( giSMStealthButton );
 		}
-		RenderBackpackButtons(2);	/* CHRISL: Needed for new inventory backpack buttons */
+		if(!gfInItemDescBox)
+			RenderBackpackButtons(2);	/* CHRISL: Needed for new inventory backpack buttons */
 	}
 
 	// CJC Dec 4 2002: or if item pickup menu is up
@@ -1187,7 +1188,7 @@ void RenderBackpackButtons(int bpAction)
 			// Enable buttons
 			if(giSMDropPackButton == -1 || giSMZipperButton == -1)
 			{
-				RenderBackpackButtons(4);
+				RenderBackpackButtons(1);
 				RenderBackpackButtons(0);
 			}
 			if(giSMDropPackButton != -1)
@@ -6804,9 +6805,9 @@ void SMInvMoneyButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				CHAR16	zText[512];
 				CHAR16	zMoney[64];
 
-		// Make sure we go back to movement mode...
-		 guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-		 HandleTacticalUI( );
+				// Make sure we go back to movement mode...
+				guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+				HandleTacticalUI( );
 
 				swprintf( zMoney, L"%d", (*gpItemPointer)[0]->data.money.uiMoneyAmount );
 
@@ -6843,7 +6844,7 @@ void SMInvMoneyButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 //			else
 				CreateMoney( LaptopSaveInfo.iCurrentBalance, &gItemPointer );
 
-			InternalInitItemDescriptionBox( &gItemPointer, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, 0, gpSMCurrentMerc );
+			InternalInitItemDescriptionBox( &gItemPointer, ITEMDESC_START_X, ITEMDESC_START_Y, 0, gpSMCurrentMerc );
 		}
 	}
 }

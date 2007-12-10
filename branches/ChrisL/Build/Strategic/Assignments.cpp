@@ -5460,7 +5460,7 @@ void RepairMenuMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-
+extern BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement );
 
 void MakeSureToolKitIsInHand( SOLDIERTYPE *pSoldier )
 {
@@ -5475,6 +5475,8 @@ void MakeSureToolKitIsInHand( SOLDIERTYPE *pSoldier )
 		{
 			if( Item[pSoldier->inv[ bPocket ].usItem].toolkit )
 			{
+				if(!CanItemFitInPosition(pSoldier, &pSoldier->inv[HANDPOS], bPocket, FALSE))
+					SwapObjs(pSoldier, HANDPOS, SECONDHANDPOS, TRUE);
 				SwapObjs( pSoldier, HANDPOS, bPocket, TRUE );
 				break;
 			}
@@ -5503,6 +5505,8 @@ BOOLEAN MakeSureMedKitIsInHand( SOLDIERTYPE *pSoldier )
 		if ( Item[pSoldier->inv[ bPocket ].usItem].medicalkit )
 		{
 			fCharacterInfoPanelDirty = TRUE;
+			if(!CanItemFitInPosition(pSoldier, &pSoldier->inv[HANDPOS], bPocket, FALSE))
+				SwapObjs(pSoldier, HANDPOS, SECONDHANDPOS, TRUE);
 			SwapObjs( pSoldier, HANDPOS, bPocket, TRUE );
 			return(TRUE);
 		}

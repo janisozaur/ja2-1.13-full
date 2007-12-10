@@ -3393,13 +3393,6 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 			pAttachmentPosition = FindAttachment( this, pAttachment->usItem, subObject );
 		}
 
-		if (pAttachmentPosition) {
-			if (canOnlyAttach1 == true) {
-				//we have requested to swap the attachment on the cursor with the current attachment
-				//the problem is, the attachment object is a stack, and can only attach 1, so exit!
-			}
-		}
-
 		if ( pSoldier )
 		{
 			//did the soldier damage it?
@@ -3439,6 +3432,19 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 				{
 					PlayJA2Sample( ATTACH_DETONATOR, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
 				}
+			}
+		}
+
+		if (pAttachmentPosition) {
+			if (canOnlyAttach1 == true) {
+				if(pAttachment->ubNumberOfObjects > 1)
+				{
+					//We don't want to inadvertantly load two rounds during a swap so don't allow a swap if we're holding a stack
+					return(FALSE);
+				}
+				//we have requested to swap the attachment on the cursor with the current attachment
+				SwapObjs(pAttachmentPosition,pAttachment);
+				return(TRUE);
 			}
 		}
 
@@ -4718,7 +4724,7 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 						PlaceObject( pSoldier, BPACKPOCKPOS, pObj, fNewItem );
 						pSoldier->flags.DropPackFlag = FALSE;
 						pSoldier->flags.ZipperFlag = FALSE;
-						RenderBackpackButtons(0);
+						RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 						if(pObj->exists() == false)
 							return( TRUE );
 					}
