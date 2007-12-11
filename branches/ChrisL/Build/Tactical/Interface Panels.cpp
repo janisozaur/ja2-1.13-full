@@ -5376,7 +5376,7 @@ void MercFacePanelCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			}
 		}
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
+	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		if ( !InOverheadMap( ) )
 		{

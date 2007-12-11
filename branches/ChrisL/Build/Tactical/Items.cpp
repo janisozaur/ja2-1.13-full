@@ -2313,7 +2313,8 @@ BOOLEAN EvaluateValidMerge( UINT16 usMerge, UINT16 usItem, UINT16 * pusResult, U
 	// "usItem" is the item being merged "onto" (e.g. kevlar vest)
 	INT32 iLoop = 0;
 
-	if (usMerge == usItem && Item[ usItem ].usItemClass == IC_AMMO)
+	//CHRISL: Update this so we can also merge IC_MONEY like wallets and nuggets.
+	if (usMerge == usItem && (Item[ usItem ].usItemClass == IC_AMMO || Item[ usItem ].usItemClass == IC_MONEY))
 	{
 		*pusResult = usItem;
 		*pubType = COMBINE_POINTS;
@@ -3619,36 +3620,64 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 					return FALSE;
 			case COMBINE_POINTS:
 				// transfer points...
-				if ( Item[ this->usItem ].usItemClass == IC_AMMO )
+				UINT32 combinedAmount;
+				UINT32 attachmentAmount;
+				//CHRISL: Treat differently if we're combining money items (other then MONEY)
+				if(Item[this->usItem].usItemClass != IC_MONEY)
 				{
-					ubLimit = Magazine[ Item[ this->usItem ].ubClassIndex ].ubMagSize;
+					if ( Item[ this->usItem ].usItemClass == IC_AMMO )
+					{
+						ubLimit = Magazine[ Item[ this->usItem ].ubClassIndex ].ubMagSize;
+					}
+					else
+					{
+						ubLimit = 100;
+					}
+
+					// count down through # of attaching items and add to status of item in position 0
+					for (bLoop = 0; bLoop < pAttachment->ubNumberOfObjects; )
+					{
+						//ADB need to watch for overflow here (thus UINT32), and need to cast to UINT8 before adding
+						combinedAmount = (UINT16)(*this)[subObject]->data.objectStatus + (UINT16)(*pAttachment)[0]->data.objectStatus;
+						if (combinedAmount <= ubLimit)
+						{
+							// consume this one totally and continue
+							(*this)[subObject]->data.objectStatus = combinedAmount;
+							pAttachment->RemoveObjectsFromStack(1);
+						}
+						else
+						{
+							// add part of this one and then we're done
+							attachmentAmount = (UINT16)(*pAttachment)[0]->data.objectStatus;
+							attachmentAmount -= (ubLimit - (UINT16)(*this)[subObject]->data.objectStatus);
+							(*pAttachment)[0]->data.objectStatus = attachmentAmount;
+							if ((*pAttachment)[0]->data.ubShotsLeft == 0) {
+								pAttachment->RemoveObjectsFromStack(1);
+							}
+							(*this)[subObject]->data.ubShotsLeft = ubLimit;
+							break;
+						}
+					}
 				}
 				else
 				{
-					ubLimit = 100;
-				}
-
-				// count down through # of attaching items and add to status of item in position 0
-				for (bLoop = 0; bLoop < pAttachment->ubNumberOfObjects; )
-				{
-					//ADB need to watch for overflow here (thus UINT32), and need to cast to UINT8 before adding
-					UINT32 combinedAmount = (UINT16)(*this)[subObject]->data.objectStatus + (UINT16)(*pAttachment)[0]->data.objectStatus;
+					ubLimit = MAX_MONEY_PER_SLOT;
+					combinedAmount = (*this)[subObject]->data.money.uiMoneyAmount + (*pAttachment)[0]->data.money.uiMoneyAmount;
 					if (combinedAmount <= ubLimit)
 					{
-						// consume this one totally and continue
-						(*this)[subObject]->data.objectStatus = combinedAmount;
+						(*this)[subObject]->data.money.uiMoneyAmount = combinedAmount;
 						pAttachment->RemoveObjectsFromStack(1);
 					}
 					else
 					{
-						// add part of this one and then we're done
-						UINT32 attachmentAmount = (UINT16)(*pAttachment)[0]->data.objectStatus;
-						attachmentAmount -= (ubLimit - (UINT16)(*this)[subObject]->data.objectStatus);
-						(*pAttachment)[0]->data.objectStatus = attachmentAmount;
-						if ((*pAttachment)[0]->data.ubShotsLeft == 0) {
+						attachmentAmount = (*pAttachment)[0]->data.money.uiMoneyAmount;
+						attachmentAmount -= (ubLimit - (*this)[subObject]->data.money.uiMoneyAmount);
+						(*pAttachment)[0]->data.money.uiMoneyAmount = attachmentAmount;
+						if((*pAttachment)[0]->data.money.uiMoneyAmount == 0)
+						{
 							pAttachment->RemoveObjectsFromStack(1);
 						}
-						(*this)[subObject]->data.ubShotsLeft = ubLimit;
+						(*this)[subObject]->data.money.uiMoneyAmount = ubLimit;
 						break;
 					}
 				}
@@ -4404,54 +4433,58 @@ bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int 
 		}
 	}
 
-	//CHRISL: Rather then a simple slot search, use PickPocket to find the most appropriate pocket to use
-	INT32	sPocket=-1, mPocket=-1, lPocket=-1;
-	UINT8	sCapacity=0;
-	UINT8	mCapacity=0;
-	UINT8	lCapacity=0;
-	UINT8	capacity=0;
-	int		bSlot;
-	//Start with active big pockets
-	sPocket=PickPocket(pSoldier, SMALLPOCKSTART, SMALLPOCKFINAL, pObj->usItem, pObj->ubNumberOfObjects, &sCapacity, bExcludeSlot);
-	//Next search active medium pockets
-	mPocket=PickPocket(pSoldier, MEDPOCKSTART, MEDPOCKFINAL, pObj->usItem, pObj->ubNumberOfObjects, &mCapacity, bExcludeSlot);
-	//Lastly search active small pockets
-	lPocket=PickPocket(pSoldier, BIGPOCKSTART, BIGPOCKFINAL, pObj->usItem, pObj->ubNumberOfObjects, &lCapacity, bExcludeSlot);
-	//Finally, compare the three pockets we've found and return the pocket that is most logical to use
-	capacity = min(sCapacity, mCapacity);
-	capacity = min(lCapacity, capacity);
-	if(capacity == 254) {	//no pocket found
-		return false;
+	if(UsingNewInventorySystem() == true)
+	{
+		//CHRISL: Rather then a simple slot search, use PickPocket to find the most appropriate pocket to use
+		INT32	sPocket=-1, mPocket=-1, lPocket=-1;
+		UINT8	sCapacity=0;
+		UINT8	mCapacity=0;
+		UINT8	lCapacity=0;
+		UINT8	capacity=0;
+		int		bSlot;
+		//Start with active big pockets
+		sPocket=PickPocket(pSoldier, SMALLPOCKSTART, SMALLPOCKFINAL, pObj->usItem, pObj->ubNumberOfObjects, &sCapacity, bExcludeSlot);
+		//Next search active medium pockets
+		mPocket=PickPocket(pSoldier, MEDPOCKSTART, MEDPOCKFINAL, pObj->usItem, pObj->ubNumberOfObjects, &mCapacity, bExcludeSlot);
+		//Lastly search active small pockets
+		lPocket=PickPocket(pSoldier, BIGPOCKSTART, BIGPOCKFINAL, pObj->usItem, pObj->ubNumberOfObjects, &lCapacity, bExcludeSlot);
+		//Finally, compare the three pockets we've found and return the pocket that is most logical to use
+		capacity = min(sCapacity, mCapacity);
+		capacity = min(lCapacity, capacity);
+		if(capacity == 254) {	//no pocket found
+			return false;
+		}
+		else if(capacity == sCapacity) {
+			bSlot = sPocket;
+		}
+		else if(capacity == mCapacity) {
+			bSlot = mPocket;
+		}
+		else if(capacity == lCapacity) {
+			bSlot = lPocket;
+		}
+		if(TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, NUM_INV_SLOTS) == true)
+			return true;
 	}
-	else if(capacity == sCapacity) {
-		bSlot = sPocket;
-	}
-	else if(capacity == mCapacity) {
-		bSlot = mPocket;
-	}
-	else if(capacity == lCapacity) {
-		bSlot = lPocket;
-	}
-	if(TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, NUM_INV_SLOTS) == true)
-		return true;
+	else
+	{
+		if (FitsInSmallPocket(pObj) == true) {
+			//try to PLACE in small pockets
+			for(int bSlot = SMALLPOCKSTART; bSlot < SMALLPOCKFINAL; bSlot++) {
+				if (bSlot != bExcludeSlot && TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, NUM_INV_SLOTS) == true) {
+					return true;
+				}
+			}
+		}
 
-#if 0
-	if (FitsInSmallPocket(pObj) == true) {
-		//try to PLACE in small pockets
-		for(int bSlot = SMALLPOCKSTART; bSlot < SMALLPOCKFINAL; bSlot++) {
-			if (bSlot != bExcludeSlot && TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, NUM_INV_SLOTS) == true) {
+		//try to PLACE in big pockets, and possibly medium pockets
+		for(int bSlot = BIGPOCKSTART; bSlot < bigPocketEnd; bSlot++) {
+			if (bSlot != bExcludeSlot && TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, bigPocketEnd) == true) {
 				return true;
 			}
 		}
 	}
 
-	//try to PLACE in big pockets, and possibly medium pockets
-	for(int bSlot = BIGPOCKSTART; bSlot < bigPocketEnd; bSlot++) {
-		if (bSlot != bExcludeSlot && TryToPlaceInSlot(pSoldier, pObj, fNewItem, bSlot, bigPocketEnd) == true) {
-			return true;
-		}
-	}
-#endif
 	return false;
 }
 

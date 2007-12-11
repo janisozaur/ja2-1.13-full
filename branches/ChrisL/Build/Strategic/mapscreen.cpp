@@ -3874,7 +3874,7 @@ UINT32 MapScreenHandle(void)
 		CHECKF(AddVideoObject(&VObjectDesc, &guiCROSS));
 
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-		if (iResolution == 0)
+		if (iResolution == 0 || UsingNewInventorySystem() == false)
 		{
 			FilenameForBPP("INTERFACE\\mapinv.sti", VObjectDesc.ImageFile);
 		}
@@ -7854,10 +7854,13 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 		{
 			if ( !InItemDescriptionBox( ) )
 			{
-				InitItemDescriptionBox( pSoldier, (UINT8)uiHandPos, MAP_ITEMDESC_START_X, MAP_ITEMDESC_START_Y, 0 );
-			fShowDescriptionFlag=TRUE;
-				fTeamPanelDirty=TRUE;
-			fInterfacePanelDirty = DIRTYLEVEL2;
+				//CHRISL: This could return a false in which case we don't want to activate the infobox.
+				if(InitItemDescriptionBox( pSoldier, (UINT8)uiHandPos, MAP_ITEMDESC_START_X, MAP_ITEMDESC_START_Y, 0 ))
+				{
+					fShowDescriptionFlag=TRUE;
+					fTeamPanelDirty=TRUE;
+					fInterfacePanelDirty = DIRTYLEVEL2;
+				}
 			}
 		}
 	}
@@ -11128,7 +11131,7 @@ BOOLEAN HandlePreloadOfMapGraphics( void )
 	CHECKF(AddVideoObject(&VObjectDesc, &guiCROSS));
 
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	if (iResolution == 0)
+	if (iResolution == 0 || UsingNewInventorySystem() == false)
 	{
 		FilenameForBPP("INTERFACE\\mapinv.sti", VObjectDesc.ImageFile);
 	}

@@ -405,6 +405,8 @@ LBENODE* OBJECTTYPE::GetLBEPointer(unsigned int index)
 
 bool OBJECTTYPE::exists()
 {
+	if(this == NULL)
+		return(FALSE);
 	return (ubNumberOfObjects > 0 && usItem != NOTHING);
 }
 
@@ -493,10 +495,17 @@ bool OBJECTTYPE::CanStack(OBJECTTYPE& sourceObject, int& numToStack)
 			//they can also stack regardless of the other flags that are set, like OBJECT_NO_OVERWRITE
 			//in the old code objects with OBJECT_NO_OVERWRITE not only are dropped, but also can stack with others without the same flag
 			//I don't care to find out if this is a bug or not, I'm just going to mimic the original code.
-			if ((sourceObject.fFlags & OBJECT_UNDROPPABLE) != (this->fFlags & OBJECT_UNDROPPABLE)) {
-				DebugBreakpoint();
-				numToStack = 0;
-			}
+			/*CHRISL: This is just stupid.  OBJECT_UNDROPPABLE is only a valid flag for NPCs so a player should never get an item
+			with this flag set.  For some reason, however, player items can come with this flag set.  But this flag doesn't effect
+			players in any way, so lets just clear the flag when we find it.*/
+			//if ((sourceObject.fFlags & OBJECT_UNDROPPABLE) != (this->fFlags & OBJECT_UNDROPPABLE)) {
+			//	DebugBreakpoint();
+			//	numToStack = 0;
+			//}
+			if(sourceObject.fFlags & OBJECT_UNDROPPABLE)
+				sourceObject.fFlags &= ~OBJECT_UNDROPPABLE;
+			if(this->fFlags & OBJECT_UNDROPPABLE)
+				this->fFlags &= ~OBJECT_UNDROPPABLE;
 
 			//nor allow trapped items to stack
 			if (sourceObject[0]->data.bTrap > 0

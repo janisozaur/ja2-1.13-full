@@ -2895,8 +2895,11 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	MAP_ITEMDESC_HEIGHT	= ((UsingNewInventorySystem() == true && iResolution != 0)) ? 490 : 268;
 	MAP_ITEMDESC_WIDTH	= ((UsingNewInventorySystem() == true && iResolution != 0)) ? 272 : 272;
 
+	//CHRISL: We only want this condition to be true when looking at MONEY.  Not IC_MONEY since we can't actually split
+	//	things like gold nuggets or wallets.
 	// ADB: Make sure the current object isn't money if there's something in hand
-	if (Item[ pObject->usItem].usItemClass & IC_MONEY && gpItemPointer != NULL && gpItemPointer->usItem != 0) {
+	//if (Item[ pObject->usItem].usItemClass & IC_MONEY && gpItemPointer != NULL && gpItemPointer->usItem != 0) {
+	if(pObject->usItem == MONEY && gpItemPointer != NULL && gpItemPointer->usItem != 0 && gpItemPointer->usItem != MONEY) {
 		//ADB oops, money splits and puts a new item on the cursor, which would replace what's already on the cursor!
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Unable to split money due to having an item on your cursor." );
 		return FALSE;
@@ -3119,7 +3122,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	strcpy( VObjectDesc.ImageFile, "INTERFACE\\infobox_interface.sti" );
 	CHECKF( AddVideoObject( &VObjectDesc, &guiItemDescBox) );
 
-	if(ubPosition != 255)
+	if(ubPosition != 255 && UsingNewInventorySystem() == true)
 	{
 		VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 		strcpy( VObjectDesc.ImageFile, "INTERFACE\\infobox_background.sti" );
@@ -8137,7 +8140,8 @@ void RemoveMoney()
 {
 	if( gRemoveMoney.uiMoneyRemoving != 0 )
 	{
-		if (gpItemPointer != NULL && gpItemPointer->exists() == true) {
+		//CHRISL: If what we have in the cursor is more money, just add to what we have in the cursor.
+		if (gpItemPointer != NULL && gpItemPointer->exists() == true && gpItemPointer->usItem != MONEY) {
 			//ADB oops, let's not overwrite what's on the cursor!
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Unable to split money due to having an item on your cursor." );
 
@@ -8190,8 +8194,17 @@ void RemoveMoney()
 		}
 		else
 		{
-			CreateMoney( gRemoveMoney.uiMoneyRemoving, &gItemPointer );
-			gpItemPointer = &gItemPointer;
+			if(gpItemPointer->exists() == true)
+			{
+				CreateMoney( gRemoveMoney.uiMoneyRemoving, &gTempObject );
+				gItemPointer.AddObjectsToStack(gTempObject, -1, 0, NUM_INV_SLOTS, MAX_OBJECTS_PER_SLOT);
+				gpItemPointer = &gItemPointer;
+			}
+			else
+			{
+				CreateMoney( gRemoveMoney.uiMoneyRemoving, &gItemPointer );
+				gpItemPointer = &gItemPointer;
+			}
 			//Asign the soldier to be the currently selected soldier
 			gpItemPointerSoldier = gpItemDescSoldier;
 
