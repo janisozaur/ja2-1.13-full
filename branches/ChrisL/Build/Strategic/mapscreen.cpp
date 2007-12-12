@@ -3874,7 +3874,7 @@ UINT32 MapScreenHandle(void)
 		CHECKF(AddVideoObject(&VObjectDesc, &guiCROSS));
 
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-		if (iResolution == 0 || UsingNewInventorySystem() == false)
+		if (iResolution == 0)
 		{
 			FilenameForBPP("INTERFACE\\mapinv.sti", VObjectDesc.ImageFile);
 		}
@@ -3885,6 +3885,10 @@ UINT32 MapScreenHandle(void)
 		else if (iResolution == 2)
 		{
 			FilenameForBPP("INTERFACE\\mapinv_1024x768.sti", VObjectDesc.ImageFile);
+		}
+		if(!AddVideoObject(&VObjectDesc, &guiMAPINV))
+		{
+			FilenameForBPP("INTERFACE\\mapinv.sti", VObjectDesc.ImageFile);
 		}
 		CHECKF(AddVideoObject(&VObjectDesc, &guiMAPINV));
 
@@ -11131,7 +11135,7 @@ BOOLEAN HandlePreloadOfMapGraphics( void )
 	CHECKF(AddVideoObject(&VObjectDesc, &guiCROSS));
 
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	if (iResolution == 0 || UsingNewInventorySystem() == false)
+	if (iResolution == 0)
 	{
 		FilenameForBPP("INTERFACE\\mapinv.sti", VObjectDesc.ImageFile);
 	}
@@ -11142,6 +11146,10 @@ BOOLEAN HandlePreloadOfMapGraphics( void )
 	else if (iResolution == 2)
 	{
 		FilenameForBPP("INTERFACE\\mapinv_1024x768.sti", VObjectDesc.ImageFile);
+	}
+	if(!AddVideoObject(&VObjectDesc, &guiMAPINV))
+	{
+		FilenameForBPP("INTERFACE\\mapinv.sti", VObjectDesc.ImageFile);
 	}
 	CHECKF(AddVideoObject(&VObjectDesc, &guiMAPINV));
 
