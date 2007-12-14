@@ -3542,8 +3542,7 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 						// If not, we can't pick up the item
 						else
 						{
-							CHAR16 dropMSG[] = L"Cannot pickup backpack at this time";
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, dropMSG );
+							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, NewInvMessage[NIV_CAN_NOT_PICKUP] );
 							return FALSE;
 						}
 					}

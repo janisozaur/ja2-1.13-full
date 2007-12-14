@@ -2901,7 +2901,8 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	//if (Item[ pObject->usItem].usItemClass & IC_MONEY && gpItemPointer != NULL && gpItemPointer->usItem != 0) {
 	if(pObject->usItem == MONEY && gpItemPointer != NULL && gpItemPointer->usItem != 0 && gpItemPointer->usItem != MONEY) {
 		//ADB oops, money splits and puts a new item on the cursor, which would replace what's already on the cursor!
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Unable to split money due to having an item on your cursor." );
+//		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Unable to split money due to having an item on your cursor." );
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, New113Message[MSG113_UNABLETOSPLITMONEY] );
 		return FALSE;
 	}
 

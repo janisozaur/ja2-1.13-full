@@ -435,6 +435,9 @@ typedef struct
 	// Lesh: slow enemy items choice progress
 	BOOLEAN fSlowProgressForEnemyItemsChoice;
 
+	// CHRISL: option to allow Slay to remain as a hired PC
+	BOOLEAN fEnableSlayForever;
+
 } GAME_EXTERNAL_OPTIONS;
 
 //This structure will contain general Ja2 settings	NOT individual game settings.

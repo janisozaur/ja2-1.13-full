@@ -2270,7 +2270,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
 			pSoldier->aiData.usActionData = BestShot.sTarget;
 			pSoldier->aiData.bAimTime			= BestShot.ubAimTime;
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Sniper!" );
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, New113Message[ MSG113_SNIPER ] );
 			return(AI_ACTION_FIRE_GUN );
 		}
 		else		// snipe not possible

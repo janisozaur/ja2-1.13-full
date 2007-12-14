@@ -4016,6 +4016,16 @@ STR16 New113Message[] =
 	L"GL",
 	L"GL BRST",
 	L"GL AUTO",
+	L"Sniper!",
+	L"Unable to split money due to having an item on your cursor.",
+	L"Arrival of new recruits is being rerouted to sector %s, as scheduled drop-off point of sector %s is enemy occupied.",
+};
+
+STR16 NewInvMessage[] = 
+{
+	L"Nicht kann Aufnahme Rucksack diesmal",
+	L"Kein Platz, zum des Rucksacks zu setzen",
+	L"Rucksack nicht gefunden",
 };
 
 #endif //GERMAN

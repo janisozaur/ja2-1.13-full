@@ -710,6 +710,8 @@ void LoadGameExternalOptions()
 	// Kaiden: Vehicle Inventory change - Added INI file Option VEHICLE_INVENTORY
 	gGameExternalOptions.fVehicleInventory					= iniReader.ReadBoolean("JA2 Gameplay Settings", "VEHICLE_INVENTORY", TRUE);
 
+	// CHRISL: New setting to allow Slay to remain as a hired PC
+	gGameExternalOptions.fEnableSlayForever					= iniReader.ReadBoolean("JA2 Gameplay Settings", "SLAY_FOREVER", FALSE);
 }
 
 

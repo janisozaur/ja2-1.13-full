@@ -1095,8 +1095,9 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 	// Add this guy to our team!
 	pNewSoldier = ChangeSoldierTeam( pSoldier, gbPlayerNum );
 
+	//CHRISL: Updated to allow Slay to be permanently hired based on an INI flag
 	// handle set up any RPC's that will leave us in time
-	if ( ubCharNum == SLAY )
+	if ( ubCharNum == SLAY && gGameExternalOptions.fEnableSlayForever == FALSE )
 	{
 		// slay will leave in a week
 		pNewSoldier->iEndofContractTime = GetWorldTotalMin() + ( 7 * 24 * 60 );
