@@ -1,7 +1,7 @@
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "ja2_sgp_all.h"
 #else
-#	include "platform.h"
+#	include "types.h"
 #	include "random.h"
 #	include "debug.h"
 #endif
@@ -46,7 +46,7 @@ UINT32 Random(UINT32 uiRange)
 		}
 	#endif
 
-	long long	rnd = rand();
+	INT64	rnd = rand();
  	if (uiRange == 0)	
 		return(0);
 	return rnd * uiRange / RAND_MAX % uiRange;
@@ -61,7 +61,7 @@ BOOLEAN Chance( UINT32 uiChance )
 
 UINT32 PreRandom( UINT32 uiRange )
 {
-	long long uiNum;
+	INT64 uiNum;
 	#ifdef JA2BETAVERSION
 		if( gfCountRandoms )
 		{
@@ -71,7 +71,7 @@ UINT32 PreRandom( UINT32 uiRange )
 	if( !uiRange )
 		return 0;
 	//Extract the current pregenerated number
-	uiNum = (long long)guiPreRandomNums[ guiPreRandomIndex ] * uiRange / RAND_MAX % uiRange;
+	uiNum = (INT64)guiPreRandomNums[ guiPreRandomIndex ] * uiRange / RAND_MAX % uiRange;
 	//Replace the current pregenerated number with a new one.
 
 	//This was removed in the name of optimization.  Uncomment if you hate recycling.

@@ -22,19 +22,18 @@
 
 // *** SIR-TECH TYPE DEFINITIONS ***
 
-// These two types are defined by VC6 and were causing redefinition
-// problems, but JA2 is compiled with VC5
+// Let's use SDL types to define ingame types
 
-// HEY WIZARDRY DUDES, JA2 ISN'T THE ONLY PROGRAM WE COMPILE! :-)
-
-typedef unsigned int   	UINT32;
-typedef signed int     	INT32;
+typedef Uint32			UINT32;
+typedef Sint32			INT32;
+typedef Uint64			UINT64;
+typedef Sint64			INT64;
 
 // integers
-typedef unsigned char   UINT8;
-typedef signed char     INT8;
-typedef unsigned short  UINT16;
-typedef signed short    INT16;
+typedef Uint8   		UINT8;
+typedef Sint8			INT8;
+typedef Uint16			UINT16;
+typedef Sint16			INT16;
 // floats
 typedef float           FLOAT;
 typedef double          DOUBLE;
@@ -49,9 +48,9 @@ typedef unsigned char	FLAGS8;
 typedef unsigned short	FLAGS16;
 typedef unsigned long	FLAGS32;
 // other
-typedef unsigned char	BOOLEAN;
+typedef Uint8			BOOLEAN;
 typedef void *			PTR;
-typedef unsigned short	HNDL;
+//typedef unsigned short	HNDL;
 typedef UINT8			BYTE;
 typedef CHAR8			STRING512[512];
 typedef UINT32			HWFILE;
@@ -132,7 +131,7 @@ typedef UINT32 TIMER;			// timer definition
 #ifdef JA2_LINUX
 
 #define INVALID_HANDLE_VALUE 0xFFFFFFFF
-typedef long long		SGP_FILETIME;
+typedef INT64		SGP_FILETIME;
 
 #elif defined( JA2_WIN )
 

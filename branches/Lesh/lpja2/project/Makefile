@@ -13,8 +13,6 @@ sdl_lib   := $(shell sdl-config --libs)
 
 
 source_dirso := . sgp utils tile_engine tactical_ai tactical strategic laptop editor SDL_Config
-#include_dirs := ../../src ../../src/SDL ../../src/SDL_Config ../../src/sgp ../../src/utils ../../src/editor \
-#	../../src/laptop ../../src/strategic ../../src/tactical ../../src/tactical_ai ../../src/tile_engine
 link_flags   := -pthread
 include_libs :=
 link_libs    := 

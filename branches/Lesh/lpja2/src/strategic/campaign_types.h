@@ -264,7 +264,10 @@ typedef struct UNDERGROUND_SECTORINFO
 
 //The sector information required for the strategic AI.  Contains the number of enemy troops,
 //as well as intentions, etc.
-extern SECTORINFO SectorInfo[256];
+
+#define	TOTAL_SECTORS		256
+
+extern SECTORINFO SectorInfo[ TOTAL_SECTORS ];
 extern UNDERGROUND_SECTORINFO *gpUndergroundSectorInfoHead;
 
 #endif
