@@ -3649,7 +3649,7 @@ void ScrollWorld( )
 
 			}
 
-			if ( gusMouseYPos < 20 )
+			if ( gusMouseYPos < 10 )
 			{
 				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_UP;
@@ -3663,14 +3663,14 @@ void ScrollWorld( )
 			}
 
 
-			if ( gusMouseXPos >= SCREEN_WIDTH - 21 )
+			if ( gusMouseXPos >= SCREEN_WIDTH - 11 )
 			{
 				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_RIGHT;
 			}
 
 
-			if ( gusMouseXPos < 20 )
+			if ( gusMouseXPos < 10 )
 			{
 				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_LEFT;
