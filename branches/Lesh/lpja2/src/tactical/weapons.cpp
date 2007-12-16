@@ -810,7 +810,7 @@ BOOLEAN WriteWeaponStats()
 		FilePrintf(hFile,"<WEAPONLIST>\r\n");
 		for(cnt = 0;cnt < MAXITEMS;cnt++)
 		{
-			INT8 * szRemainder = Weapon[cnt].szWeaponName; //the remaining string to be output (for making valid XML)
+			CHAR8 * szRemainder = Weapon[cnt].szWeaponName; //the remaining string to be output (for making valid XML)
 
 			FilePrintf(hFile,"\t<WEAPON>\r\n");
 			FilePrintf(hFile,"\t\t<uiIndex>%d</uiIndex>\r\n",									cnt);//Weapon[cnt].uiIndex);
@@ -819,7 +819,7 @@ BOOLEAN WriteWeaponStats()
 			while(szRemainder[0] != '\0')
 			{
 				UINT32 uiCharLoc = strcspn(szRemainder,"&<>\'\"\0");
-				INT8 invChar = szRemainder[uiCharLoc];
+				CHAR8 invChar = szRemainder[uiCharLoc];
 				
 				if(uiCharLoc)
 				{

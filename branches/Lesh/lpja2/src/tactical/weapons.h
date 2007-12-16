@@ -259,7 +259,7 @@ typedef struct
  UINT8	bBurstAP;										// Snap: Burst AP cost replaces bBaseAutofireCost
  UINT8	bAutofireShotsPerFiveAP;
 
- INT8	szWeaponName[MAX_WEAPON_NAME_LENGTH+1]; //+1 for the null terminator
+ CHAR8	szWeaponName[MAX_WEAPON_NAME_LENGTH+1]; //+1 for the null terminator
  UINT32	uiIndex;
 
  BOOLEAN swapClips;

@@ -44,6 +44,7 @@
 	#include "scheduling.h"
 	#include "sgp_str.h"
 	#include "message_box_screen.h"
+	#include "platform.h"
 	
 #endif
 

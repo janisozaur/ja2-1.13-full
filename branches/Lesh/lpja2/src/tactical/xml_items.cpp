@@ -1092,7 +1092,7 @@ BOOLEAN WriteItemStats()
 			FilePrintf(hFile,"\t\t<szItemName>");
 			while(szRemainder[0] != '\0')
 			{
-				UINT32 uiCharLoc = strcspn(szRemainder,"&<>\'\"\0");
+				UINT32 uiCharLoc = wcscspn(szRemainder,L"&<>\'\"\0");
 				wchar_t invChar = szRemainder[uiCharLoc];
 				
 				if(uiCharLoc)
@@ -1144,7 +1144,7 @@ BOOLEAN WriteItemStats()
 			FilePrintf(hFile,"\t\t<szLongItemName>");
 			while(szRemainder[0] != '\0')
 			{
-				UINT32 uiCharLoc = strcspn(szRemainder,"&<>\'\"\0");
+				UINT32 uiCharLoc = wcscspn(szRemainder,L"&<>\'\"\0");
 				wchar_t invChar = szRemainder[uiCharLoc];
 				
 				if(uiCharLoc)
@@ -1195,7 +1195,7 @@ BOOLEAN WriteItemStats()
 			FilePrintf(hFile,"\t\t<szItemDesc>");
 			while(szRemainder[0] != '\0')
 			{
-				UINT32 uiCharLoc = strcspn(szRemainder,"&<>\'\"\0");
+				UINT32 uiCharLoc = wcscspn(szRemainder,L"&<>\'\"\0");
 				wchar_t invChar = szRemainder[uiCharLoc];
 				
 				//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeitemstats: characters set");
@@ -1266,7 +1266,7 @@ BOOLEAN WriteItemStats()
 			FilePrintf(hFile,"\t\t<szBRName>");
 			while(szRemainder[0] != '\0')
 			{
-				UINT32 uiCharLoc = strcspn(szRemainder,"&<>\'\"\0");
+				UINT32 uiCharLoc = wcscspn(szRemainder,L"&<>\'\"\0");
 				wchar_t invChar = szRemainder[uiCharLoc];
 				
 				if(uiCharLoc)
@@ -1322,7 +1322,7 @@ BOOLEAN WriteItemStats()
 			FilePrintf(hFile,"\t\t<szBRDesc>");
 			while(szRemainder[0] != '\0')
 			{
-				UINT32 uiCharLoc = strcspn(szRemainder,"&<>\'\"\0");
+				UINT32 uiCharLoc = wcscspn(szRemainder,L"&<>\'\"\0");
 				wchar_t invChar = szRemainder[uiCharLoc];
 				
 				if(uiCharLoc)

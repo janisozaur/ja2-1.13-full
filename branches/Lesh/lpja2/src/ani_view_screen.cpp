@@ -31,6 +31,7 @@
 	#include "file_man.h"
 	#include "message_box_screen.h"
 	#include "sgp_str.h"
+	#include "platform.h"
 	
 #endif
 
@@ -322,7 +323,7 @@ UINT32  AniEditScreenHandle(void)
 }
 
 
-UINT16 GetAnimStateFromName( INT8 *zName )
+UINT16 GetAnimStateFromName( CHAR8 *zName )
 {
 	INT32 cnt;
 
@@ -379,7 +380,7 @@ void BuildListFile( )
 		currFilename[ strlen( currFilename ) -1 ] = '\0';
 		currFilename[ strlen( currFilename ) -1 ] = '\0';
 
-		usState = GetAnimStateFromName( (INT8 *)currFilename );
+		usState = GetAnimStateFromName( currFilename );
 
 		if ( usState != 5555 )
 		{

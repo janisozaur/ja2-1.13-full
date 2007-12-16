@@ -162,7 +162,7 @@ void SetRaisedObjectFlag( char *cFilename, TILE_IMAGERY *pTileSurf )
 {
 	INT32 cnt = 0;
 	CHAR8	cRootFile[ 128 ];
-	UINT8 ubRaisedObjectFiles[][80] =
+	CHAR8 ubRaisedObjectFiles[][80] =
 	{
 		"bones",
 		"bones2",
