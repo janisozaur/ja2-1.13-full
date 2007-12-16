@@ -88,7 +88,7 @@ soundEndElementHandle(void *userData, const char *name)
 			if(pData->curIndex < pData->maxArraySize)
 			{
 				char temp;
-				for(int i=0;i<min((int)strlen(pData->szCharData),255);i++)
+				for(int i=0;i<SGP_min((int)strlen(pData->szCharData),255);i++)
 				{
 					temp = pData->szCharData[i];
 					szSoundEffects[pData->curIndex][i] = temp;

@@ -3700,13 +3700,13 @@ void CreatePopUpBoxForMovementBox( void )
 	// adjust position to try to keep it in the map area as best as possible
 	if ( Position.iX + Dimensions.iRight >= ( MAP_VIEW_START_X + MAP_VIEW_WIDTH ) )
 	{
-		Position.iX = max( MAP_VIEW_START_X, ( MAP_VIEW_START_X + MAP_VIEW_WIDTH ) - Dimensions.iRight );
+		Position.iX = SGP_max( MAP_VIEW_START_X, ( MAP_VIEW_START_X + MAP_VIEW_WIDTH ) - Dimensions.iRight );
 		SetBoxPosition( ghMoveBox, Position );
 	}
 
 	if ( Position.iY + Dimensions.iBottom >= ( MAP_VIEW_START_Y + MAP_VIEW_HEIGHT ) )
 	{
-		Position.iY = max( MAP_VIEW_START_Y, ( MAP_VIEW_START_Y + MAP_VIEW_HEIGHT ) - Dimensions.iBottom );
+		Position.iY = SGP_max( MAP_VIEW_START_Y, ( MAP_VIEW_START_Y + MAP_VIEW_HEIGHT ) - Dimensions.iBottom );
 		SetBoxPosition( ghMoveBox, Position );
 	}
 }

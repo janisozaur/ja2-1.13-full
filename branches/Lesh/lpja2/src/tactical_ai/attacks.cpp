@@ -275,7 +275,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN shootUns
 	 }
 	 else
 	 {
-	   ubMaxPossibleAimTime = min(AllowedAimingLevels(pSoldier),pSoldier->bActionPoints - ubMinAPcost);
+	   ubMaxPossibleAimTime = SGP_min(AllowedAimingLevels(pSoldier),pSoldier->bActionPoints - ubMinAPcost);
 	 }
 
    // consider the various aiming times
@@ -1065,7 +1065,7 @@ void CalcBestThrow(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
 				}
 
 				// calculate the maximum possible aiming time
-				ubMaxPossibleAimTime = min(AllowedAimingLevels(pSoldier),pSoldier->bActionPoints - ubMinAPcost);
+				ubMaxPossibleAimTime = SGP_min(AllowedAimingLevels(pSoldier),pSoldier->bActionPoints - ubMinAPcost);
 				DebugMsg(TOPIC_JA2 , DBG_LEVEL_3 , String("Max Possible Aim Time = %d",ubMaxPossibleAimTime ));
 
 				// calc next attack's minimum AP cost (excludes readying & turning)
@@ -1280,7 +1280,7 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
    iBestHitRate = 0;                     // reset best hit rate to minimum
 
    // calculate the maximum possible aiming time
-   ubMaxPossibleAimTime = min(AllowedAimingLevels(pSoldier),pSoldier->bActionPoints - ubMinAPCost);
+   ubMaxPossibleAimTime = SGP_min(AllowedAimingLevels(pSoldier),pSoldier->bActionPoints - ubMinAPCost);
    //NumMessage("Max Possible Aim Time = ",ubMaxPossibleAimTime);
 
    // consider the various aiming times
@@ -1650,7 +1650,7 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 	// NB: make AI guys shoot at head 15% of time, 5% of time at legs
 
 	iTotalProt = ((15 * iHeadProt) + (75 * iTorsoProt) + 5 * iLegProt) / 100;
-	iTotalProt = (INT32) (iTotalProt * AmmoTypes[ubAmmoType].armourImpactReductionMultiplier / max(1,AmmoTypes[ubAmmoType].armourImpactReductionDivisor) );
+	iTotalProt = (INT32) (iTotalProt * AmmoTypes[ubAmmoType].armourImpactReductionMultiplier / SGP_max(1,AmmoTypes[ubAmmoType].armourImpactReductionDivisor) );
 	//switch (ubAmmoType)
 	//{
 	//	case AMMO_HP:
@@ -1674,7 +1674,7 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 	//	// increase after-armour damage
 	//	iDamage = AMMO_DAMAGE_ADJUSTMENT_HP( iDamage );
 	//}
-	iDamage = (INT32)(iDamage * AmmoTypes[ubAmmoType].afterArmourDamageMultiplier / max(1,AmmoTypes[ubAmmoType].afterArmourDamageDivisor) ) ;
+	iDamage = (INT32)(iDamage * AmmoTypes[ubAmmoType].afterArmourDamageMultiplier / SGP_max(1,AmmoTypes[ubAmmoType].afterArmourDamageDivisor) ) ;
 
 	if (AmmoTypes[ubAmmoType].monsterSpit )
 	{

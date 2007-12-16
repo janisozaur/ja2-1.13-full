@@ -1823,7 +1823,7 @@ void MapScreenMsgScrollDown( UINT8 ubLinesDown )
 	// check if we can go that far, only go as far as we can
 	if ( ( gubFirstMapscreenMessageIndex + MAX_MESSAGES_ON_MAP_BOTTOM + ubLinesDown ) > ubNumMessages )
 	{
-		ubLinesDown = ubNumMessages - gubFirstMapscreenMessageIndex - min( ubNumMessages, MAX_MESSAGES_ON_MAP_BOTTOM );
+		ubLinesDown = ubNumMessages - gubFirstMapscreenMessageIndex - SGP_min( ubNumMessages, MAX_MESSAGES_ON_MAP_BOTTOM );
 	}
 
 	if ( ubLinesDown > 0 )
@@ -1860,7 +1860,7 @@ void MoveToEndOfMapScreenMessageList( void )
 
   ubNumMessages = GetRangeOfMapScreenMessages();
 
-	ubDesiredMessageIndex = ubNumMessages - min( ubNumMessages, MAX_MESSAGES_ON_MAP_BOTTOM );
+	ubDesiredMessageIndex = ubNumMessages - SGP_min( ubNumMessages, MAX_MESSAGES_ON_MAP_BOTTOM );
 	ChangeCurrentMapscreenMessageIndex( ubDesiredMessageIndex );
 }
 

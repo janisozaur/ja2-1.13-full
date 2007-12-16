@@ -2237,7 +2237,7 @@ void PayOffSkyriderDebtIfAny( )
 	// if we owe him anything, and have any money
 	if ( ( iAmountOwed > 0 ) && ( LaptopSaveInfo.iCurrentBalance > 0 ) )
 	{
-		iPayAmount = min( iAmountOwed, LaptopSaveInfo.iCurrentBalance );
+		iPayAmount = SGP_min( iAmountOwed, LaptopSaveInfo.iCurrentBalance );
 
 		// pay the man what we can
 		gMercProfiles[ SKYRIDER ].iBalance += iPayAmount;

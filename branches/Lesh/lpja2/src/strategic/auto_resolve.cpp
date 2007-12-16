@@ -548,7 +548,7 @@ void DoTransitionFromPreBattleInterfaceToAutoResolve()
 	{
 		uiCurrTime = GetJA2Clock();
 		iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
-		iPercentage = min( iPercentage, 100 );
+		iPercentage = SGP_min( iPercentage, 100 );
 
 		//Factor the percentage so that it is modified by a gravity falling acceleration effect.
 		iFactor = (iPercentage - 50) * 2;
@@ -562,9 +562,9 @@ void DoTransitionFromPreBattleInterfaceToAutoResolve()
 		iTop = sStartTop + (sEndTop-sStartTop+1) * iPercentage / 100;
 
 		DstRect.iLeft = iLeft - iWidth * iPercentage / 200;
-		DstRect.iRight = DstRect.iLeft + max( iWidth * iPercentage / 100, 1 );
+		DstRect.iRight = DstRect.iLeft + SGP_max( iWidth * iPercentage / 100, 1 );
 		DstRect.iTop = iTop - iHeight * iPercentage / 200;
-		DstRect.iBottom = DstRect.iTop + max( iHeight * iPercentage / 100, 1 );
+		DstRect.iBottom = DstRect.iTop + SGP_max( iHeight * iPercentage / 100, 1 );
 
 		BltStretchVideoSurface( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 0, &SrcRect, &DstRect );
 		InvalidateScreen();
@@ -944,7 +944,7 @@ void CalculateSoldierCells( BOOLEAN fReset )
 	gpAR->ubAliveEnemies = gpAR->ubEnemies;
 
 	//iMaxTeamSize = max( gpAR->ubMercs + gpAR->ubCivs, gpAR->ubEnemies );
-	iMaxTeamSize = max( min( 40,  gpAR->ubMercs + gpAR->ubCivs ), min( 40,  gpAR->ubEnemies ) );
+	iMaxTeamSize = SGP_max( SGP_min( 40,  gpAR->ubMercs + gpAR->ubCivs ), SGP_min( 40,  gpAR->ubEnemies ) );
 
 	
 	if( iMaxTeamSize > 12 )
@@ -964,7 +964,7 @@ void CalculateSoldierCells( BOOLEAN fReset )
 
 	if( gpAR->ubMercs )
 	{
-		iStartY = iTop + (gpAR->sHeight - (min(10,gpAR->ubMercRows+gpAR->ubCivRows)*47+7))/2 + 6;
+		iStartY = iTop + (gpAR->sHeight - (SGP_min(10,gpAR->ubMercRows+gpAR->ubCivRows)*47+7))/2 + 6;
 		//iStartY = iTop + (gpAR->sHeight - ((gpAR->ubMercRows+gpAR->ubCivRows)*47+7))/2 + 6;
 		y = gpAR->ubMercRows;
 		x = gpAR->ubMercCols;
@@ -1005,7 +1005,7 @@ void CalculateSoldierCells( BOOLEAN fReset )
 	}
 	if( gpAR->ubCivs )
 	{
-		iStartY = iTop + (gpAR->sHeight - (min(10,gpAR->ubMercRows+gpAR->ubCivRows)*47+7))/2 + gpAR->ubMercRows*47 + 5;
+		iStartY = iTop + (gpAR->sHeight - (SGP_min(10,gpAR->ubMercRows+gpAR->ubCivRows)*47+7))/2 + gpAR->ubMercRows*47 + 5;
 		y = gpAR->ubCivRows;
 		x = gpAR->ubCivCols;
 		i = gpAR->ubCivs;
@@ -1022,7 +1022,7 @@ void CalculateSoldierCells( BOOLEAN fReset )
 	}
 	if( gpAR->ubEnemies )
 	{
-		iStartY = iTop + (gpAR->sHeight - (min(10,gpAR->ubEnemyRows)*47+7))/2 + 5;
+		iStartY = iTop + (gpAR->sHeight - (SGP_min(10,gpAR->ubEnemyRows)*47+7))/2 + 5;
 		y = gpAR->ubEnemyRows;
 		x = gpAR->ubEnemyCols;
 		i = gpAR->ubEnemies;
@@ -2790,7 +2790,7 @@ void CalculateAutoResolveInfo()
 //		GetNumberOfEnemiesInSector( gpAR->ubSectorX, gpAR->ubSectorY, 
 		GetNumberOfEnemiesInFiveSectors( gpAR->ubSectorX, gpAR->ubSectorY, 
 																&gpAR->ubAdmins, &gpAR->ubTroops, &gpAR->ubElites );
-		gpAR->ubEnemies = (UINT8)min( gpAR->ubAdmins + gpAR->ubTroops + gpAR->ubElites, MAX_AR_TEAM_SIZE );
+		gpAR->ubEnemies = (UINT8)SGP_min( gpAR->ubAdmins + gpAR->ubTroops + gpAR->ubElites, MAX_AR_TEAM_SIZE );
 //		printf("Admins  = %d\n", gpAR->ubAdmins);
 //		printf("Troops  = %d\n", gpAR->ubTroops);
 //		printf("Elites  = %d\n", gpAR->ubElites);
@@ -2810,7 +2810,7 @@ void CalculateAutoResolveInfo()
 																				&gpAR->ubYMCreatures, &gpAR->ubYFCreatures,
 																				&gpAR->ubAMCreatures, &gpAR->ubAFCreatures );
 		}
-		gpAR->ubEnemies = (UINT8)min( gpAR->ubYMCreatures + gpAR->ubYFCreatures + gpAR->ubAMCreatures + gpAR->ubAFCreatures, MAX_AR_TEAM_SIZE );
+		gpAR->ubEnemies = (UINT8)SGP_min( gpAR->ubYMCreatures + gpAR->ubYFCreatures + gpAR->ubAMCreatures + gpAR->ubAFCreatures, MAX_AR_TEAM_SIZE );
 //		printf("Creatures aren't tracked\n");
 	}
 	gfTransferTacticalOppositionToAutoResolve = FALSE;
@@ -3053,16 +3053,16 @@ void CalculateRowsAndColumns()
 	if( gpAR->ubMercCols + gpAR->ubEnemyCols == 9 )
 		gpAR->sWidth = SCREEN_WIDTH;
 	else
-		gpAR->sWidth = 146 + 55 * (max( max( gpAR->ubMercCols, gpAR->ubCivCols ), 2 ) + max( gpAR->ubEnemyCols, 2 ));
+		gpAR->sWidth = 146 + 55 * (SGP_max( SGP_max( gpAR->ubMercCols, gpAR->ubCivCols ), 2 ) + SGP_max( gpAR->ubEnemyCols, 2 ));
 
 	// WANNE 2
 	//gpAR->sCenterStartX = 323 - gpAR->sWidth/2 + max( max( gpAR->ubMercCols, 2), max( gpAR->ubCivCols, 2 ) ) *55;
-	gpAR->sCenterStartX = iScreenWidthOffset + (323 - gpAR->sWidth/2 + max( max( gpAR->ubMercCols, 2), max( gpAR->ubCivCols, 2 ) ) *55);
+	gpAR->sCenterStartX = iScreenWidthOffset + (323 - gpAR->sWidth/2 + SGP_max( SGP_max( gpAR->ubMercCols, 2), SGP_max( gpAR->ubCivCols, 2 ) ) *55);
 	
 
 	//Anywhere from 48*3 to 48*10
 	//gpAR->sHeight = 48 * max( 3, max( gpAR->ubMercRows + gpAR->ubCivRows, gpAR->ubEnemyRows ) );
-	gpAR->sHeight = 48 * max( 3, max( min( 10, gpAR->ubMercRows + gpAR->ubCivRows ), min( 10, gpAR->ubEnemyRows ) ) );
+	gpAR->sHeight = 48 * SGP_max( 3, SGP_max( SGP_min( 10, gpAR->ubMercRows + gpAR->ubCivRows ), SGP_min( 10, gpAR->ubEnemyRows ) ) );
 	//Make it an even multiple of 40 (rounding up).
 	gpAR->sHeight += 39;
 	gpAR->sHeight /= 40;
@@ -3528,7 +3528,7 @@ void DetermineTeamLeader( BOOLEAN fFriendlyTeam )
 
 void ResetNextAttackCounter( SOLDIERCELL *pCell )
 {
-	pCell->usNextAttack = min( 1000 - pCell->usAttack, 800 );
+	pCell->usNextAttack = SGP_min( 1000 - pCell->usAttack, 800 );
 	pCell->usNextAttack = (UINT16)(1000 + pCell->usNextAttack * 5 + PreRandom( 2000 - pCell->usAttack ) );
 	if( pCell->uiFlags & CELL_CREATURE )
 	{
@@ -3617,10 +3617,10 @@ void CalculateAttackValues()
 			pCell->usDefence = 1000;
 		}
 
-		pCell->usAttack = min( pCell->usAttack, 1000 );
-		pCell->usDefence = min( pCell->usDefence, 1000 );
+		pCell->usAttack  = SGP_min( pCell->usAttack, 1000 );
+		pCell->usDefence = SGP_min( pCell->usDefence, 1000 );
 	
-		gpAR->usPlayerAttack += pCell->usAttack;
+		gpAR->usPlayerAttack  += pCell->usAttack;
 		gpAR->usPlayerDefence += pCell->usDefence;
 		ResetNextAttackCounter( pCell );
 		if( i > 8 )
@@ -3658,10 +3658,10 @@ void CalculateAttackValues()
 		pCell->usAttack = (UINT16)( pCell->usAttack * CalcClassBonusOrPenalty( pCell->pSoldier ) );
 		pCell->usDefence =(UINT16)( pCell->usDefence * CalcClassBonusOrPenalty( pCell->pSoldier ) );
 
-		pCell->usAttack = min( pCell->usAttack, 1000 );
-		pCell->usDefence = min( pCell->usDefence, 1000 );
+		pCell->usAttack  = SGP_min( pCell->usAttack, 1000 );
+		pCell->usDefence = SGP_min( pCell->usDefence, 1000 );
 		
-		gpAR->usPlayerAttack += pCell->usAttack;
+		gpAR->usPlayerAttack  += pCell->usAttack;
 		gpAR->usPlayerDefence += pCell->usDefence;
 		ResetNextAttackCounter( pCell );
 		if( i > 6 )
@@ -3716,10 +3716,10 @@ void CalculateAttackValues()
 		pCell->usAttack  = (UINT16)( pCell->usAttack * CalcClassBonusOrPenalty( pCell->pSoldier ) );
 		pCell->usDefence = (UINT16)( pCell->usDefence * CalcClassBonusOrPenalty( pCell->pSoldier ) );
 
-		pCell->usAttack = min( pCell->usAttack, 1000 );
-		pCell->usDefence = min( pCell->usDefence, 1000 );
+		pCell->usAttack  = SGP_min( pCell->usAttack, 1000 );
+		pCell->usDefence = SGP_min( pCell->usDefence, 1000 );
 		
-		gpAR->usEnemyAttack += pCell->usAttack;
+		gpAR->usEnemyAttack  += pCell->usAttack;
 		gpAR->usEnemyDefence += pCell->usDefence;
 		ResetNextAttackCounter( pCell );
 
@@ -4154,7 +4154,7 @@ void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 			}
 		}
 		//Adjust the soldiers stats based on the damage.
-		pTarget->pSoldier->bLife = (INT8)max( iNewLife, 0 );
+		pTarget->pSoldier->bLife = (INT8)SGP_max( iNewLife, 0 );
 		if( pTarget->uiFlags & CELL_MERC && gpAR->pRobotCell)
 		{
 			UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );
@@ -4347,7 +4347,7 @@ void TargetHitCallback( SOLDIERCELL *pTarget, INT32 index )
 		#endif
 	}
 	//Adjust the soldiers stats based on the damage.
-	pTarget->pSoldier->bLife = (INT8)max( iNewLife, 0 );
+	pTarget->pSoldier->bLife = (INT8)SGP_max( iNewLife, 0 );
 	if( pTarget->uiFlags & CELL_MERC && gpAR->pRobotCell)
 	{
 		UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );
@@ -4717,7 +4717,7 @@ void ProcessBattleFrame()
 
 	while( iTimeSlice > 0 )
 	{
-		uiSlice = min( iTimeSlice, 1000 );
+		uiSlice = SGP_min( iTimeSlice, 1000 );
 		if( gpAR->ubBattleStatus == BATTLE_IN_PROGRESS )
 			gpAR->uiTotalElapsedBattleTimeInMilliseconds += uiSlice;
 

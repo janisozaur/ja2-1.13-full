@@ -1095,8 +1095,8 @@ void ViewerMapMoveCallback( MOUSE_REGION *reg, INT32 reason )
 		gfRenderViewer = TRUE;
 		return;
 	}
-	gsHiSectorX = min( (reg->RelativeXPos / 26) + 1, 16 );
-	gsHiSectorY = min( (reg->RelativeYPos / 22) + 1, 16 );
+	gsHiSectorX = SGP_min( (reg->RelativeXPos / 26) + 1, 16 );
+	gsHiSectorY = SGP_min( (reg->RelativeYPos / 22) + 1, 16 );
 	if( gsPrevX != gsHiSectorX || gsPrevY != gsHiSectorY )
 	{
 		gsPrevX = gsHiSectorX;
@@ -1111,8 +1111,8 @@ void ViewerMapClickCallback( MOUSE_REGION *reg, INT32 reason )
 	//calc current sector selected.
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		gsSelSectorX = min( (reg->RelativeXPos / 26) + 1, 16 );
-		gsSelSectorY = min( (reg->RelativeYPos / 22) + 1, 16 );
+		gsSelSectorX = SGP_min( (reg->RelativeXPos / 26) + 1, 16 );
+		gsSelSectorY = SGP_min( (reg->RelativeYPos / 22) + 1, 16 );
 		if( gsSelSectorX != sLastX || gsSelSectorY != sLastY )
 		{ //clicked in a new sector
 			sLastX = gsSelSectorX;
@@ -1450,16 +1450,16 @@ void ExtractAndUpdatePopulations()
 	//CIniReader iniReader("..\\Ja2_Options.ini");
 	//INT32 iMaxEnemyGroupSize = iniReader.ReadInteger("Options","MAX_STRATEGIC_TEAM_SIZE",20);
 
-	gsAINumAdmins = min( GetNumericStrictValueFromField( 0 ), gGameExternalOptions.iMaxEnemyGroupSize );
+	gsAINumAdmins = SGP_min( GetNumericStrictValueFromField( 0 ), gGameExternalOptions.iMaxEnemyGroupSize );
 	SetInputFieldStringWithNumericStrictValue( 0, gsAINumAdmins );
 
-	gsAINumTroops = min( GetNumericStrictValueFromField( 1 ), gGameExternalOptions.iMaxEnemyGroupSize );
+	gsAINumTroops = SGP_min( GetNumericStrictValueFromField( 1 ), gGameExternalOptions.iMaxEnemyGroupSize );
 	SetInputFieldStringWithNumericStrictValue( 1, gsAINumTroops );
 
-	gsAINumElites = min( GetNumericStrictValueFromField( 2 ), gGameExternalOptions.iMaxEnemyGroupSize );
+	gsAINumElites = SGP_min( GetNumericStrictValueFromField( 2 ), gGameExternalOptions.iMaxEnemyGroupSize );
 	SetInputFieldStringWithNumericStrictValue( 2, gsAINumElites );
 
-	gsAINumCreatures = min( GetNumericStrictValueFromField( 3 ), gGameExternalOptions.iMaxEnemyGroupSize );
+	gsAINumCreatures = SGP_min( GetNumericStrictValueFromField( 3 ), gGameExternalOptions.iMaxEnemyGroupSize );
 	SetInputFieldStringWithNumericStrictValue( 3, gsAINumCreatures );
 }
 

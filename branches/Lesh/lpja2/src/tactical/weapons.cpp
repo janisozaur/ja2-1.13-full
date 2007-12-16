@@ -975,7 +975,7 @@ INT32 EffectiveArmour( OBJECTTYPE * pObj )
 
 		iValue += iValue2;
 	}
-	return( max(iValue,1) );
+	return( SGP_max(iValue,1) );
 }
 
 INT32 ArmourPercent( SOLDIERTYPE * pSoldier )
@@ -1075,7 +1075,7 @@ INT32 ExplosiveEffectiveArmour( OBJECTTYPE * pObj )
 
 		iValue += iValue2;
 	}
-	return( max(iValue,1) );
+	return( SGP_max(iValue,1) );
 }
 
 INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
@@ -4102,7 +4102,7 @@ INT32 CalcBodyImpactReduction( UINT8 ubAmmoType, UINT8 ubHitLocation )
 	// calculate how much bullets are slowed by passing through someone
 	INT32 iReduction = BodyImpactReduction[ubHitLocation];
 	
-	iReduction = (INT32)(iReduction * AmmoTypes[ubAmmoType].armourImpactReductionMultiplier / max(1,AmmoTypes[ubAmmoType].armourImpactReductionDivisor));
+	iReduction = (INT32)(iReduction * AmmoTypes[ubAmmoType].armourImpactReductionMultiplier / SGP_max(1,AmmoTypes[ubAmmoType].armourImpactReductionDivisor));
 	//switch (ubAmmoType)
 	//{
 	//	case AMMO_HP:
@@ -4155,7 +4155,7 @@ INT32 ArmourProtection( SOLDIERTYPE * pTarget, UINT16 ubArmourType, INT8 * pbSta
 	}
 
 	// adjust protection of armour due to different ammo types
-	iProtection = (INT32)(iProtection * AmmoTypes[ubAmmoType].armourImpactReductionMultiplier / max(1,AmmoTypes[ubAmmoType].armourImpactReductionDivisor) );
+	iProtection = (INT32)(iProtection * AmmoTypes[ubAmmoType].armourImpactReductionMultiplier / SGP_max(1,AmmoTypes[ubAmmoType].armourImpactReductionDivisor) );
 
 	//switch (ubAmmoType)
 	//{
@@ -4359,7 +4359,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 	if ( AmmoTypes[ubAmmoType].highExplosive )
 	{
 //		iOrigImpact = AMMO_DAMAGE_ADJUSTMENT_HE( iOrigImpact );
-		iOrigImpact = (INT32)(iOrigImpact * AmmoTypes[ubAmmoType].beforeArmourDamageMultiplier / max(1,AmmoTypes[ubAmmoType].beforeArmourDamageDivisor) );
+		iOrigImpact = (INT32)(iOrigImpact * AmmoTypes[ubAmmoType].beforeArmourDamageMultiplier / SGP_max(1,AmmoTypes[ubAmmoType].beforeArmourDamageDivisor) );
 
 		if ( TANK( pTarget ) ) 
 		{
@@ -4418,7 +4418,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 			return( iImpact );
 		}
 		
-		iImpact = (INT32)(iImpact * AmmoTypes[ubAmmoType].afterArmourDamageMultiplier / max(1,AmmoTypes[ubAmmoType].afterArmourDamageDivisor) ) ;
+		iImpact = (INT32)(iImpact * AmmoTypes[ubAmmoType].afterArmourDamageMultiplier / SGP_max(1,AmmoTypes[ubAmmoType].afterArmourDamageDivisor) ) ;
 		//if (ubAmmoType == AMMO_HP)
 		//{ // good solid hit with a hollow-point bullet, which got through armour!
 		//	iImpact = AMMO_DAMAGE_ADJUSTMENT_HP( iImpact );

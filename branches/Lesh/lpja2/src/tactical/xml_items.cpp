@@ -297,7 +297,7 @@ itemEndElementHandle(void *userData, const char *name)
 				pData->curItem.szItemName[MAX_CHAR_DATA_LENGTH] = '\0';
 			}
 
-			for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
+			for(int i=0;i<SGP_min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
 			{
 				temp = pData->szCharData[i];
 				pData->curItem.szItemName[i] = temp;
@@ -320,7 +320,7 @@ itemEndElementHandle(void *userData, const char *name)
 				pData->curItem.szLongItemName[MAX_CHAR_DATA_LENGTH] = '\0';
 			}
 
-			for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
+			for(int i=0;i<SGP_min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
 			{
 				temp = pData->szCharData[i];
 				pData->curItem.szLongItemName[i] = temp;
@@ -350,7 +350,7 @@ itemEndElementHandle(void *userData, const char *name)
 				pData->curItem.szItemDesc[MAX_CHAR_DATA_LENGTH] = '\0';
 			}
 
-			for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
+			for(int i=0;i<SGP_min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
 			{
 				temp = pData->szCharData[i];
 				pData->curItem.szItemDesc[i] = temp;
@@ -371,7 +371,7 @@ itemEndElementHandle(void *userData, const char *name)
 				pData->curItem.szBRName[MAX_CHAR_DATA_LENGTH] = '\0';
 			}
 
-			for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
+			for(int i=0;i<SGP_min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
 			{
 				temp = pData->szCharData[i];
 				pData->curItem.szBRName[i] = temp;
@@ -392,7 +392,7 @@ itemEndElementHandle(void *userData, const char *name)
 				pData->curItem.szBRDesc[MAX_CHAR_DATA_LENGTH] = '\0';
 			}
 
-			for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
+			for(int i=0;i<SGP_min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
 			{
 				temp = pData->szCharData[i];
 				pData->curItem.szBRDesc[i] = temp;

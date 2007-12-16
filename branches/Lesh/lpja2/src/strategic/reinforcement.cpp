@@ -320,7 +320,7 @@ UINT8 NumFreeMilitiaSlots()
 		if( !pSoldier->bActive )
 			ubNumFreeSlots++;
 	}
-	return max( 0 , ubNumFreeSlots - ( 32 - gGameExternalOptions.guiMaxMilitiaSquadSize ) );
+	return SGP_max( 0 , ubNumFreeSlots - ( 32 - gGameExternalOptions.guiMaxMilitiaSquadSize ) );
 }
 
 UINT8 DoReinforcementAsPendingMilitia( INT16 sMapX, INT16 sMapY, UINT8 *pubRank )

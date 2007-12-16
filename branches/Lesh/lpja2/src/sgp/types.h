@@ -18,11 +18,7 @@
 
 // build defines header....
 #include "build_defines.h"
-	
-
-
-
-#include <wchar.h>			// for wide-character strings
+#include "platform.h"
 
 // *** SIR-TECH TYPE DEFINITIONS ***
 

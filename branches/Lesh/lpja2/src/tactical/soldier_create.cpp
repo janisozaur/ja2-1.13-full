@@ -1669,21 +1669,21 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateDetailedPlacementGivenBasicPlacementInfo: set exp. level"));
-	pp->bExpLevel = max( gGameOptions.ubDifficultyLevel, pp->bExpLevel ); //minimum exp. level of 1 -- madd -> = dif level
+	pp->bExpLevel = SGP_max( gGameOptions.ubDifficultyLevel, pp->bExpLevel ); //minimum exp. level of 1 -- madd -> = dif level
 
 	if ( gGameOptions.ubDifficultyLevel == DIF_LEVEL_INSANE )
-		pp->bExpLevel = max( 6, pp->bExpLevel ); //minimum exp. level of 6 in insane - madd
+		pp->bExpLevel = SGP_max( 6, pp->bExpLevel ); //minimum exp. level of 6 in insane - madd
 
-	pp->bExpLevel = min( 10, pp->bExpLevel ); //maximum exp. level of 9 // 10 - Madd
+	pp->bExpLevel = SGP_min( 10, pp->bExpLevel ); //maximum exp. level of 9 // 10 - Madd
 
 	ubStatsLevel = pp->bExpLevel + bStatsModifier;
 
-	ubStatsLevel = max( gGameOptions.ubDifficultyLevel, ubStatsLevel );	//minimum stats level of 0 -- madd -> = dif level
+	ubStatsLevel = SGP_max( gGameOptions.ubDifficultyLevel, ubStatsLevel );	//minimum stats level of 0 -- madd -> = dif level
 
 	if ( gGameOptions.ubDifficultyLevel == DIF_LEVEL_INSANE )
-		ubStatsLevel = max( 6, ubStatsLevel );	//minimum stats level of 6 in insane
+		ubStatsLevel = SGP_max( 6, ubStatsLevel );	//minimum stats level of 6 in insane
 
-	ubStatsLevel = min( 10, ubStatsLevel );	//maximum stats level of 9 // 10 - Madd - this will probably apply to all dif levels though
+	ubStatsLevel = SGP_min( 10, ubStatsLevel );	//maximum stats level of 9 // 10 - Madd - this will probably apply to all dif levels though
 
 	//Set the minimum base attribute
 	bBaseAttribute = 49 + ( 4 * ubStatsLevel );
@@ -2025,8 +2025,8 @@ void ModifySoldierAttributesWithNewRelativeLevel( SOLDIERTYPE *s, INT8 bRelative
 	// Rel level 0: Lvl 1, 1: Lvl 2-3, 2: Lvl 4-5, 3: Lvl 6-7, 4: Lvl 8-9
 	s->bExpLevel = (INT8)(2 * bRelativeAttributeLevel + Random(2));
 
-	s->bExpLevel = max( 1, s->bExpLevel ); //minimum level of 1
-	s->bExpLevel = min( 9, s->bExpLevel ); //maximum level of 9
+	s->bExpLevel = SGP_max( 1, s->bExpLevel ); //minimum level of 1
+	s->bExpLevel = SGP_min( 9, s->bExpLevel ); //maximum level of 9
 
 	//Set the minimum base attribute
 	bBaseAttribute = 49 + ( 4 * s->bExpLevel );

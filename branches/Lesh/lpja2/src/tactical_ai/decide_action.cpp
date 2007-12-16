@@ -4307,7 +4307,7 @@ bCanAttack = FALSE;
 					}
 					else
 					{
-						iChance = (25 / max((BestAttack.ubAimTime + 1),1));
+						iChance = (25 / SGP_max((BestAttack.ubAimTime + 1),1));
 						switch (pSoldier->bAttitude)
 						{
 							case DEFENSIVE:		iChance += -5; break;
@@ -4384,7 +4384,7 @@ bCanAttack = FALSE;
 					}
 					else
 					{
-						iChance = (100 / max((BestAttack.ubAimTime + 1),1));
+						iChance = (100 / SGP_max((BestAttack.ubAimTime + 1),1));
 						switch (pSoldier->bAttitude)
 						{
 							case DEFENSIVE:		iChance += -5; break;

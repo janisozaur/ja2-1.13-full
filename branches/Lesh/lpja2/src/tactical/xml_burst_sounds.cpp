@@ -88,7 +88,7 @@ burstSoundEndElementHandle(void *userData, const char *name)
 			if(pData->curIndex < pData->maxArraySize)
 			{
 				char temp;
-				for(int i=0;i<min((int)strlen(pData->szCharData),128);i++)
+				for(int i=0;i<SGP_min((int)strlen(pData->szCharData),128);i++)
 				{
 					temp = pData->szCharData[i];
 					gzBurstSndStrings[pData->curIndex][i] = temp;

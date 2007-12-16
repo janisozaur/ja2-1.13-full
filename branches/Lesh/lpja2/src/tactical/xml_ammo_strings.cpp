@@ -97,7 +97,7 @@ ammoEndElementHandle(void *userData, const char *name)
 			pData->curElement = ELEMENT;
 			if(pData->curIndex < pData->maxArraySize)
 			{
-				for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
+				for(int i=0;i<SGP_min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
 				{
 					temp = pData->szCharData[i];
 					AmmoCaliber[pData->curIndex][i] = temp;
@@ -110,7 +110,7 @@ ammoEndElementHandle(void *userData, const char *name)
 			pData->curElement = ELEMENT;
 			if(pData->curIndex < pData->maxArraySize)
 			{
-				for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
+				for(int i=0;i<SGP_min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
 				{
 					temp = pData->szCharData[i];
 					BobbyRayAmmoCaliber[pData->curIndex][i] = temp;

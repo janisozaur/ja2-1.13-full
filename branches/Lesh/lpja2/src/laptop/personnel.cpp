@@ -1876,7 +1876,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 						if( sX <= iMinimumX )
 						{
 							FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20 +TEXT_DELTA_OFFSET),0,30,0,sString, PERS_FONT,  &sX, &sY);
-							sX = (INT16)max( sX, iMinimumX );
+							sX = (INT16)SGP_max( sX, iMinimumX );
 						}
 						
 						mprintf(sX,pPersonnelScreenPoints[bScreenLocIndex].y,sString);
@@ -1892,7 +1892,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 
 							//KM: April 16, 1999
 							//Perform the potential overrun check
-							sX = (INT16)max( sX, iMinimumX );
+							sX = (INT16)SGP_max( sX, iMinimumX );
 							
 							mprintf(sX,pPersonnelScreenPoints[bScreenLocIndex].y,sString);
 
@@ -1908,7 +1908,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 
 							//KM: April 16, 1999
 							//Perform the potential overrun check
-							sX = (INT16)max( sX, iMinimumX );
+							sX = (INT16)SGP_max( sX, iMinimumX );
 
 							mprintf(sX,pPersonnelScreenPoints[bScreenLocIndex].y,sString);
 

@@ -78,12 +78,12 @@ void AccumulateBurstLocation( INT16 sGridNo )
 		// stay away from the edges
 
 		// determine maximum horizontal limits
-		sMaxLeft  = min( iSearchRange, (sGridNo % MAXCOL));
-		sMaxRight = min( iSearchRange, MAXCOL - ((sGridNo % MAXCOL) + 1));
+		sMaxLeft  = SGP_min( iSearchRange, (sGridNo % MAXCOL));
+		sMaxRight = SGP_min( iSearchRange, MAXCOL - ((sGridNo % MAXCOL) + 1));
 
 		// determine maximum vertical limits
-		sMaxUp   = min( iSearchRange, (sGridNo / MAXROW));
-		sMaxDown = min( iSearchRange, MAXROW - ((sGridNo / MAXROW) + 1));
+		sMaxUp   = SGP_min( iSearchRange, (sGridNo / MAXROW));
+		sMaxDown = SGP_min( iSearchRange, MAXROW - ((sGridNo / MAXROW) + 1));
 
 		// reset the "reachable" flags in the region we're looking at
 		for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)

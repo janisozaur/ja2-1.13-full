@@ -759,7 +759,7 @@ void ItemsRightScrollCallback(GUI_BUTTON *btn, INT32 reason)
 		gfRenderTaskbar = TRUE;
 		eInfo.sScrollIndex++;
 		EnableButton( iEditorButton[ITEMS_LEFTSCROLL] );
-		if( eInfo.sScrollIndex == max( ((eInfo.sNumItems+1)/2)-6, 0) )
+		if( eInfo.sScrollIndex == SGP_max( ((eInfo.sNumItems+1)/2)-6, 0) )
 			DisableButton( iEditorButton[ITEMS_RIGHTSCROLL] );
 	}
 }

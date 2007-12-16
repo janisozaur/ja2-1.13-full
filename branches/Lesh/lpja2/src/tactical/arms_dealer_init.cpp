@@ -1701,7 +1701,7 @@ void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECI
 			if (!fFoundOne)
 			{
 				// then we're going to have to allocate some more space...
-				ubElementsToAdd = max( SPECIAL_ITEMS_ALLOCED_AT_ONCE, ubHowMany);
+				ubElementsToAdd = SGP_max( SPECIAL_ITEMS_ALLOCED_AT_ONCE, ubHowMany);
 
 				// if there aren't any allocated at all right now
 				if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced == 0 )
@@ -1965,7 +1965,7 @@ BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
         // function is called, there are times when we're not guarenteed that sGridNo is good
 				while ( ubLeftToDrop > 0)
 				{
-					ubNowDropping = min( ubLeftToDrop, ubHowManyMaxAtATime );
+					ubNowDropping = SGP_min( ubLeftToDrop, ubHowManyMaxAtATime );
 
 					MakeObjectOutOfDealerItems( usItemIndex, &SpclItemInfo, &TempObject, ubNowDropping );
 					AddItemToPool( pSoldier->sInitialGridNo, &TempObject, INVISIBLE, 0, 0, 0 );
@@ -2845,13 +2845,13 @@ UINT32 CalculateMinutesClosedBetween( UINT8 ubArmsDealer, UINT32 uiStartTime, UI
 		if ( uiStartTime < uiOpeningTime )
 		{
 			// add how many minutes in the time range BEFORE the store opened that day
-			uiMinutesClosed += ( min( uiOpeningTime, uiEndTime ) - uiStartTime );
+			uiMinutesClosed += ( SGP_min( uiOpeningTime, uiEndTime ) - uiStartTime );
 		}
 
 		if ( uiEndTime > uiClosingTime )
 		{
 			// add how many minutes in the time range AFTER the store closed that day
-			uiMinutesClosed += ( uiEndTime - max( uiClosingTime, uiStartTime ) );
+			uiMinutesClosed += ( uiEndTime - SGP_max( uiClosingTime, uiStartTime ) );
 		}
 	}
 	else

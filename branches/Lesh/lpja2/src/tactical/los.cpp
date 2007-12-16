@@ -1620,11 +1620,11 @@ INT32 SoldierToSoldierLineOfSightTest( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE 
 	}
 
 	//get the total camouflage
-	int jungle = max(1,min(100,pEndSoldier->bCamo + pEndSoldier->wornCamo));
-	int urban = max(1,min(100,pEndSoldier->urbanCamo + pEndSoldier->wornUrbanCamo));
-	int desert = max(1,min(100,pEndSoldier->desertCamo + pEndSoldier->wornDesertCamo));
-	int snow = max(1,min(100,pEndSoldier->snowCamo + pEndSoldier->wornSnowCamo));
-	int totalCamo = max(1,min(100,jungle + urban + desert + snow));
+	int jungle    = SGP_max(1, SGP_min(100, pEndSoldier->bCamo      + pEndSoldier->wornCamo));
+	int urban     = SGP_max(1, SGP_min(100, pEndSoldier->urbanCamo  + pEndSoldier->wornUrbanCamo));
+	int desert    = SGP_max(1, SGP_min(100, pEndSoldier->desertCamo + pEndSoldier->wornDesertCamo));
+	int snow      = SGP_max(1, SGP_min(100, pEndSoldier->snowCamo   + pEndSoldier->wornSnowCamo));
+	int totalCamo = SGP_max(1, SGP_min(100, jungle + urban + desert + snow));
 
 	if ( ( totalCamo ) > 0 && !bAware )
 	{
@@ -1636,9 +1636,9 @@ INT32 SoldierToSoldierLineOfSightTest( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE 
 		}
 		else
 		{
-			bEffectiveCamo = max(0,min(100,(totalCamo))) * (100 - pEndSoldier->bTilesMoved * 5) / 100;
+			bEffectiveCamo = SGP_max(0, SGP_min(100,(totalCamo))) * (100 - pEndSoldier->bTilesMoved * 5) / 100;
 		}
-		bEffectiveCamo = __max( bEffectiveCamo, 0 );
+		bEffectiveCamo = SGP_max( bEffectiveCamo, 0 );
 
 		if ( gAnimControl[ pEndSoldier->usAnimState ].ubEndHeight < ANIM_STAND )
 		{
@@ -1682,9 +1682,9 @@ INT32 SoldierToSoldierLineOfSightTest( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE 
 	{
 
 		// reduce effects of stealth by 5% per tile moved last turn
-		bEffectiveStealth = max(0,min(100,(GetWornStealth(pEndSoldier)))) * (100 - pEndSoldier->bTilesMoved * 5) / 100;
+		bEffectiveStealth = SGP_max(0, SGP_min(100, (GetWornStealth(pEndSoldier)))) * (100 - pEndSoldier->bTilesMoved * 5) / 100;
 
-		bEffectiveStealth = __max( bEffectiveStealth, 0 );
+		bEffectiveStealth = SGP_max( bEffectiveStealth, 0 );
 
 		// reduce visibility by up to a third for Stealth!
 		// stance and terrain don't matter
@@ -2493,7 +2493,7 @@ INT32 HandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStructure
 					sLockDamage += (INT16) PreRandom( sLockDamage );
 					sLockDamage += lockBustingPower;
 
-					sLockDamage = min(sLockDamage,127);
+					sLockDamage = SGP_min(sLockDamage,127);
 
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ LOCK_HAS_BEEN_HIT ] );
 
@@ -2537,7 +2537,7 @@ INT32 HandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStructure
 		iImpactReduction = gubMaterialArmour[ pStructure->pDBStructureRef->pDBStructure->ubArmour ];
 		iImpactReduction = StructureResistanceIncreasedByRange( iImpactReduction, pBullet->iRange, pBullet->iLoop );
 
-		iImpactReduction = (INT32) (iImpactReduction * AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].structureImpactReductionMultiplier / max(1,AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].structureImpactReductionDivisor));
+		iImpactReduction = (INT32) (iImpactReduction * AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].structureImpactReductionMultiplier / SGP_max(1,AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].structureImpactReductionDivisor));
 
 		//switch (pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType)
 		//{
@@ -2618,7 +2618,7 @@ INT32 CTGTHandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStruc
 	iImpactReduction = gubMaterialArmour[ pStructure->pDBStructureRef->pDBStructure->ubArmour ] * pStructure->pDBStructureRef->pDBStructure->ubDensity / 100;
 	iImpactReduction = StructureResistanceIncreasedByRange( iImpactReduction, pBullet->iRange, pBullet->iLoop );
 
-	iImpactReduction = (INT32)(iImpactReduction * AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].structureImpactReductionMultiplier / max(1,AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].structureImpactReductionDivisor));
+	iImpactReduction = (INT32)(iImpactReduction * AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].structureImpactReductionMultiplier / SGP_max(1,AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].structureImpactReductionDivisor));
 
 	//switch (pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType)
 	//{
@@ -3108,7 +3108,7 @@ UINT8 CalcChanceToGetThrough( BULLET * pBullet )
 
 	//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcChanceToGetThrough simple calc, %d * (%d - %d) / %d"));
 	// try simple chance to get through, ignoring range effects
-	iChanceToGetThrough = iChanceToGetThrough * (pBullet->iImpact - pBullet->iImpactReduction) / (max(pBullet->iImpact,1));
+	iChanceToGetThrough = iChanceToGetThrough * (pBullet->iImpact - pBullet->iImpactReduction) / (SGP_max(pBullet->iImpact,1));
 
 	if (iChanceToGetThrough < 0)
 	{
@@ -3630,7 +3630,7 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 
 			}
 //			ubImpact = AMMO_DAMAGE_ADJUSTMENT_BUCKSHOT( ubImpact );
-			ubImpact = (UINT8) (ubImpact * AmmoTypes[pFirer->inv[pFirer->ubAttackingHand].ubGunAmmoType].multipleBulletDamageMultiplier / max(1,AmmoTypes[pFirer->inv[pFirer->ubAttackingHand].ubGunAmmoType].multipleBulletDamageDivisor) );
+			ubImpact = (UINT8) (ubImpact * AmmoTypes[pFirer->inv[pFirer->ubAttackingHand].ubGunAmmoType].multipleBulletDamageMultiplier / SGP_max(1,AmmoTypes[pFirer->inv[pFirer->ubAttackingHand].ubGunAmmoType].multipleBulletDamageDivisor) );
 		}
 	}
 

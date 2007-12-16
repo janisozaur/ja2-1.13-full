@@ -551,10 +551,10 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"CreatureSpreading1");
 			//Calculate the desired max population percentage based purely on current distant to creature range.
 			//The closer we are to the lair, the closer this value will be to 100.
 			iMaxPopulation = 100 - iDistance * 100 / giHabitatedDistance;
-			iMaxPopulation = max( iMaxPopulation, 25 );
+			iMaxPopulation = SGP_max( iMaxPopulation, 25 );
 			//Now, convert the previous value into a numeric population.
 			iMaxPopulation = iAbsoluteMaxPopulation * iMaxPopulation / 100;
-			iMaxPopulation = max( iMaxPopulation, 4 );
+			iMaxPopulation = SGP_max( iMaxPopulation, 4 );
 			
 
 			//The chance to populate a sector is higher for lower populations.  This is calculated on

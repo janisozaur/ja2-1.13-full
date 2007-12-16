@@ -1797,23 +1797,23 @@ void ExtractAndUpdateMercAttributes()
 	//-1 values in the detailed placement work nicely, because that signifies that specific
 	//field isn't static.  Any other value becomes static, and static values override any
 	//generated values.
-	gpSelected->pDetailedPlacement->bExpLevel			= (INT8)min( GetNumericStrictValueFromField( 0 ), 100 );
-	gpSelected->pDetailedPlacement->bLife					= (INT8)min( GetNumericStrictValueFromField( 1 ), 100 );
-	gpSelected->pDetailedPlacement->bLifeMax			= (INT8)min( GetNumericStrictValueFromField( 2 ), 100 );
-	gpSelected->pDetailedPlacement->bMarksmanship	= (INT8)min( GetNumericStrictValueFromField( 3 ), 100 );
-	gpSelected->pDetailedPlacement->bStrength			= (INT8)min( GetNumericStrictValueFromField( 4 ), 100 );
-	gpSelected->pDetailedPlacement->bAgility			= (INT8)min( GetNumericStrictValueFromField( 5 ), 100 );
-	gpSelected->pDetailedPlacement->bDexterity		= (INT8)min( GetNumericStrictValueFromField( 6 ), 100 );
-	gpSelected->pDetailedPlacement->bWisdom				= (INT8)min( GetNumericStrictValueFromField( 7 ), 100 );
-	gpSelected->pDetailedPlacement->bLeadership		= (INT8)min( GetNumericStrictValueFromField( 8 ), 100 );
-	gpSelected->pDetailedPlacement->bExplosive		= (INT8)min( GetNumericStrictValueFromField( 9 ), 100 );
-	gpSelected->pDetailedPlacement->bMedical			= (INT8)min( GetNumericStrictValueFromField( 10 ), 100 );
-	gpSelected->pDetailedPlacement->bMechanical		= (INT8)min( GetNumericStrictValueFromField( 11 ), 100 );
-	gpSelected->pDetailedPlacement->bMorale				= (INT8)min( GetNumericStrictValueFromField( 11 ), 100 );
+	gpSelected->pDetailedPlacement->bExpLevel		= (INT8)SGP_min( GetNumericStrictValueFromField( 0 ), 100 );
+	gpSelected->pDetailedPlacement->bLife			= (INT8)SGP_min( GetNumericStrictValueFromField( 1 ), 100 );
+	gpSelected->pDetailedPlacement->bLifeMax		= (INT8)SGP_min( GetNumericStrictValueFromField( 2 ), 100 );
+	gpSelected->pDetailedPlacement->bMarksmanship	= (INT8)SGP_min( GetNumericStrictValueFromField( 3 ), 100 );
+	gpSelected->pDetailedPlacement->bStrength		= (INT8)SGP_min( GetNumericStrictValueFromField( 4 ), 100 );
+	gpSelected->pDetailedPlacement->bAgility		= (INT8)SGP_min( GetNumericStrictValueFromField( 5 ), 100 );
+	gpSelected->pDetailedPlacement->bDexterity		= (INT8)SGP_min( GetNumericStrictValueFromField( 6 ), 100 );
+	gpSelected->pDetailedPlacement->bWisdom			= (INT8)SGP_min( GetNumericStrictValueFromField( 7 ), 100 );
+	gpSelected->pDetailedPlacement->bLeadership		= (INT8)SGP_min( GetNumericStrictValueFromField( 8 ), 100 );
+	gpSelected->pDetailedPlacement->bExplosive		= (INT8)SGP_min( GetNumericStrictValueFromField( 9 ), 100 );
+	gpSelected->pDetailedPlacement->bMedical		= (INT8)SGP_min( GetNumericStrictValueFromField( 10 ), 100 );
+	gpSelected->pDetailedPlacement->bMechanical		= (INT8)SGP_min( GetNumericStrictValueFromField( 11 ), 100 );
+	gpSelected->pDetailedPlacement->bMorale			= (INT8)SGP_min( GetNumericStrictValueFromField( 11 ), 100 );
 
 	//make sure that experience level ranges between 1 and 9
 	if( gpSelected->pDetailedPlacement->bExpLevel != -1 )
-		gpSelected->pDetailedPlacement->bExpLevel = max( min( gpSelected->pDetailedPlacement->bExpLevel , 9 ), 1 );
+		gpSelected->pDetailedPlacement->bExpLevel = SGP_max( SGP_min( gpSelected->pDetailedPlacement->bExpLevel , 9 ), 1 );
 
 	//no such thing as a life max of 0
 	if( !gpSelected->pDetailedPlacement->bLifeMax )
@@ -1840,7 +1840,7 @@ void ExtractAndUpdateMercProfile()
 
 	//if the string is blank, returning -1, then set the value to NO_PROFILE
 	//because ubProfile is unsigned.
-	sNum = (INT16)min( GetNumericStrictValueFromField( 0 ), NUM_PROFILES );
+	sNum = (INT16)SGP_min( GetNumericStrictValueFromField( 0 ), NUM_PROFILES );
 	if( sNum == -1 )
 	{
 		gpSelected->pDetailedPlacement->ubProfile = NO_PROFILE;
@@ -2855,7 +2855,7 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 	else if( rHeightScalar == 1.0 )
 		rScalar = rWidthScalar ;
 	else
-		rScalar = max( rWidthScalar, rHeightScalar );
+		rScalar = SGP_max( rWidthScalar, rHeightScalar );
 	
 	//apply the scalar to the destination width and height
 	iDstWidth = (INT32)( iSrcWidth * rScalar );

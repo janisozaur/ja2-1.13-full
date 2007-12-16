@@ -1724,7 +1724,7 @@ void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime )
 		SetInputFieldStringWith16BitString( ubField, L"" );
 		return;
 	}
-	usTime = min( 1439, usTime );
+	usTime = SGP_min( 1439, usTime );
 	curr = gpTextInputHead;
 	while( curr )
 	{

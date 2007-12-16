@@ -276,7 +276,7 @@ SKIRGBCOLOR SkiGlowColorsA[]={
 #define		DELAY_FOR_SHOPKEEPER_IDLE_QUOTE 20000
 #define		CHANCE_FOR_SHOPKEEPER_IDLE_QUOTE 40
 
-#define		MAX_SUBOBJECTS_PER_OBJECT					max( MAX_OBJECTS_PER_SLOT, ( 2 + MAX_ATTACHMENTS ) )	// (2nd part is main item, ammo/payload, and 4 attachments)
+#define		MAX_SUBOBJECTS_PER_OBJECT					SGP_max( MAX_OBJECTS_PER_SLOT, ( 2 + MAX_ATTACHMENTS ) )	// (2nd part is main item, ammo/payload, and 4 attachments)
 
 #define		REALLY_BADLY_DAMAGED_THRESHOLD		30
 
@@ -2973,7 +2973,7 @@ void StoreObjectsInNextFreeDealerInvSlot( UINT16 usItemIndex, SPECIAL_ITEM_INFO 
 
 	// Create the item object ( with no more than MAX_OBJECTS_PER_SLOT )
 	// can't use the real #, because CreateItems() will blindly set the bStatus for however many we tell it, beyond 8
-	MakeObjectOutOfDealerItems( usItemIndex, pSpclItemInfo, &(pDealerInvSlot->ItemObject), ( UINT8 ) min( ubHowMany, MAX_OBJECTS_PER_SLOT ) );
+	MakeObjectOutOfDealerItems( usItemIndex, pSpclItemInfo, &(pDealerInvSlot->ItemObject), ( UINT8 ) SGP_min( ubHowMany, MAX_OBJECTS_PER_SLOT ) );
 
 	if ( ubHowMany > MAX_OBJECTS_PER_SLOT )
 	{
@@ -6884,7 +6884,7 @@ BOOLEAN ShopkeeperAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObject,
 	while ( ubObjectsLeftToPlace > 0 )
 	{
 		// figure out how many to place during this loop iteration.  Can't do more than MAX_OBJECTS_PER_SLOT at a time
-		pObject->ubNumberOfObjects = min( MAX_OBJECTS_PER_SLOT, ubObjectsLeftToPlace);
+		pObject->ubNumberOfObjects = SGP_min( MAX_OBJECTS_PER_SLOT, ubObjectsLeftToPlace);
 		ubObjectsLeftToPlace -= pObject->ubNumberOfObjects;
 
 		if (!AutoPlaceObject( pSoldier, pObject, fNewItem ))
@@ -6919,7 +6919,7 @@ void ShopkeeperAddItemToPool( INT16 sGridNo, OBJECTTYPE *pObject, INT8 bVisible,
 	while ( ubObjectsLeftToPlace > 0 )
 	{
 		// figure out how many to place during this loop iteration.  Can't do more than MAX_OBJECTS_PER_SLOT at a time
-		pObject->ubNumberOfObjects = min( MAX_OBJECTS_PER_SLOT, ubObjectsLeftToPlace);
+		pObject->ubNumberOfObjects = SGP_min( MAX_OBJECTS_PER_SLOT, ubObjectsLeftToPlace);
 		ubObjectsLeftToPlace -= pObject->ubNumberOfObjects;
 
 		AddItemToPool( sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel );

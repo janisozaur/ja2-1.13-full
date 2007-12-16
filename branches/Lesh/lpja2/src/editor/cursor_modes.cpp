@@ -344,10 +344,10 @@ BOOLEAN HandleAreaSelection()
 void ValidateSelectionRegionBoundaries()
 {
 	// WANNE: EDITOR?
-	gSelectRegion.iLeft		= max( min( 159, gSelectRegion.iLeft )	, 0 );
-	gSelectRegion.iRight	= max( min( 159, gSelectRegion.iRight  ), 0 );
-	gSelectRegion.iTop		= max( min( 159, gSelectRegion.iTop	 )	, 0 );
-	gSelectRegion.iBottom	= max( min( 159, gSelectRegion.iBottom ), 0 );
+	gSelectRegion.iLeft		= SGP_max( SGP_min( 159, gSelectRegion.iLeft )	, 0 );
+	gSelectRegion.iRight	= SGP_max( SGP_min( 159, gSelectRegion.iRight  ), 0 );
+	gSelectRegion.iTop		= SGP_max( SGP_min( 159, gSelectRegion.iTop	 )	, 0 );
+	gSelectRegion.iBottom	= SGP_max( SGP_min( 159, gSelectRegion.iBottom ), 0 );
 }
 
 void EnsureSelectionType()

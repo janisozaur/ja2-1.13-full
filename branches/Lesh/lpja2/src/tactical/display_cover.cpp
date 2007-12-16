@@ -326,12 +326,12 @@ void CalculateCoverInRadiusAroundGridno( INT16 sTargetGridNo, INT8	bSearchRange 
 		bSearchRange = ( DC_MAX_COVER_RANGE / 2 );
 
 	// determine maximum horizontal limits
-	sMaxLeft  = min( bSearchRange,( sTargetGridNo % MAXCOL ));
-	sMaxRight = min( bSearchRange,MAXCOL - (( sTargetGridNo % MAXCOL ) + 1));
+	sMaxLeft  = SGP_min( bSearchRange,( sTargetGridNo % MAXCOL ));
+	sMaxRight = SGP_min( bSearchRange,MAXCOL - (( sTargetGridNo % MAXCOL ) + 1));
 
 	// determine maximum vertical limits
-	sMaxUp   = min( bSearchRange,( sTargetGridNo / MAXROW ));
-	sMaxDown = min( bSearchRange,MAXROW - (( sTargetGridNo / MAXROW ) + 1));
+	sMaxUp   = SGP_min( bSearchRange,( sTargetGridNo / MAXROW ));
+	sMaxDown = SGP_min( bSearchRange,MAXROW - (( sTargetGridNo / MAXROW ) + 1));
 
 
 	//Find out which tiles around the location are reachable
@@ -739,12 +739,12 @@ void CalculateVisibleToSoldierAroundGridno( INT16 sTargetGridNo, INT8 bSearchRan
 
 
 	// determine maximum horizontal limits
-	sMaxLeft  = min( bSearchRange,( sTargetGridNo % MAXCOL ));
-	sMaxRight = min( bSearchRange,MAXCOL - (( sTargetGridNo % MAXCOL ) + 1));
+	sMaxLeft  = SGP_min( bSearchRange,( sTargetGridNo % MAXCOL ));
+	sMaxRight = SGP_min( bSearchRange,MAXCOL - (( sTargetGridNo % MAXCOL ) + 1));
 
 	// determine maximum vertical limits
-	sMaxUp   = min( bSearchRange,( sTargetGridNo / MAXROW ));
-	sMaxDown = min( bSearchRange,MAXROW - (( sTargetGridNo / MAXROW ) + 1));
+	sMaxUp   = SGP_min( bSearchRange,( sTargetGridNo / MAXROW ));
+	sMaxDown = SGP_min( bSearchRange,MAXROW - (( sTargetGridNo / MAXROW ) + 1));
 
 	pSoldier = GetCurrentMercForDisplayCover();
 

@@ -467,9 +467,9 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 			
 				//Kaiden: Had to change the minimum value to 10 instead of 1, 
 				//Rounding down resulted in division by zero and caused a crash.
-				UINT32 diceSides = RAND_MAX / ( max(10,pSoldier->bMarksmanship) / 10) ;
+				UINT32 diceSides = RAND_MAX / ( SGP_max(10,pSoldier->bMarksmanship) / 10) ;
 				
-				DOUBLE avgAPadded = max(((400.0f-2.0f*pSoldier->bAgility))*(63.0f-5.0f*(pSoldier->bExpLevel+2.0f*NUM_SKILL_TRAITS( pSoldier, AUTO_WEAPS )))/2700.0f,1); //Important! don't make this zero, the formulae don't like it.
+				DOUBLE avgAPadded = SGP_max(((400.0f-2.0f*pSoldier->bAgility))*(63.0f-5.0f*(pSoldier->bExpLevel+2.0f*NUM_SKILL_TRAITS( pSoldier, AUTO_WEAPS )))/2700.0f,1); //Important! don't make this zero, the formulae don't like it.
 				UINT32 chanceToMisfire = (UINT32)(((DOUBLE)diceSides*(2.0f*avgAPadded+1.0f-sqrt(4.0f*avgAPadded+1.0f)))/(2.0f*avgAPadded)); //derive the chace to misfire from the desired average AP overspent, derived suing
 				UINT32 chanceToMisfireDry = (UINT32)(((DOUBLE)diceSides*(avgAPadded+1.0f-sqrt(2.0f*avgAPadded+1.0f)))/(avgAPadded)); //chance to misfire if weapon is dry.  Designed to waste avgAPadded/2 APs
 				//soldiers get better at controlling bursts with levels, and reflex time (agility)

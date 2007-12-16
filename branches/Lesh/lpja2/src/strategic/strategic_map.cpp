@@ -1255,7 +1255,7 @@ void BeginLoadScreen( void )
 		{
 			uiCurrTime = GetJA2Clock();
 			iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
-			iPercentage = min( iPercentage, 100 );
+			iPercentage = SGP_min( iPercentage, 100 );
 
 			//Factor the percentage so that it is modified by a gravity falling acceleration effect.
 			iFactor = (iPercentage - 50) * 2;

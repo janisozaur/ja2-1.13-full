@@ -969,8 +969,8 @@ UINT8 GetCurrentSuitabilityForItem( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEA
 	}
 
 
-	ubMinCoolness = max( 1, min( 9, ubMinCoolness ) );
-	ubMaxCoolness = max( 2, min( 10, ubMaxCoolness ) );
+	ubMinCoolness = SGP_max( 1, SGP_min( 9, ubMinCoolness ) );
+	ubMaxCoolness = SGP_max( 2, SGP_min( 10, ubMaxCoolness ) );
 
 	if ( bArmsDealer == -1 )
 	{
@@ -1072,7 +1072,7 @@ UINT8 ChanceOfItemTransaction( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDe
 
 	// Madd
 	if ( !fDealerIsSelling && fBobbyRay )
-	    ubChance = min(100,gGameOptions.ubBobbyRay * ubChance);
+	    ubChance = SGP_min(100,gGameOptions.ubBobbyRay * ubChance);
 
 	// if there's any uncertainty
 	if ((ubChance > 0) && (ubChance < 100))

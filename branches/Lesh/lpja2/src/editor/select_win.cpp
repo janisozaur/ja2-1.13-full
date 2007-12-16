@@ -888,10 +888,10 @@ void RenderSelectionWindow( void )
 				iEY ^= iSY;
 			}
 
-			iEX = min( iEX, 600 );
-			iSY = max( SelWinStartPoint.iY, iSY );
-			iEY = min( 359, iEY );
-			iEY = max( SelWinStartPoint.iY, iEY );
+			iEX = SGP_min( iEX, 600 );
+			iSY = SGP_max( SelWinStartPoint.iY, iSY );
+			iEY = SGP_min( 359, iEY );
+			iEY = SGP_max( SelWinStartPoint.iY, iEY );
 
 			usFillColor = Get16BPPColor(FROMRGB(255, usFillGreen, 0));
 			usFillGreen += usDir;

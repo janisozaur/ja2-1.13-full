@@ -568,7 +568,7 @@ BOOLEAN LoadMercProfiles(void)
 				// If it's armour
 				if ( Item[ usItem ].usItemClass & IC_ARMOUR )
 				{
-					gMercProfiles[uiLoop].bArmourAttractiveness = min(128,Armour[ Item[ usItem ].ubClassIndex ].ubProtection);
+					gMercProfiles[uiLoop].bArmourAttractiveness = SGP_min(128,Armour[ Item[ usItem ].ubClassIndex ].ubProtection);
 				}
 			}
 		}

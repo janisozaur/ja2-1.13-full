@@ -392,8 +392,8 @@ UINT16 GetDropColor()
 {
 	UINT32 uiRGBPart = 32 + ( 15 - GetTimeOfDayAmbientLightLevel() ) * 8;
 
-	uiRGBPart = max( 0, uiRGBPart );
-	uiRGBPart = min( 255, uiRGBPart );
+	uiRGBPart = SGP_max( 0, uiRGBPart );
+	uiRGBPart = SGP_min( 255, uiRGBPart );
 
 	return Get16BPPColor( FROMRGB( uiRGBPart, uiRGBPart, uiRGBPart ) );
 }
@@ -454,20 +454,20 @@ void UpdateRainDropsProperities()
 {
 	fpCurrDropAngleOfFalling += Random( (UINT32)(1000 * DROP_ANGLE_CHANGE_RATE * gbCurrentRainIntensity * 2 )) / 1000.0f - DROP_ANGLE_CHANGE_RATE * gbCurrentRainIntensity;
 
-	fpCurrDropAngleOfFalling = max( fpMinDropAngleOfFalling, fpCurrDropAngleOfFalling );
-	fpCurrDropAngleOfFalling = min( fpMaxDropAngleOfFalling, fpCurrDropAngleOfFalling );
+	fpCurrDropAngleOfFalling = SGP_max( fpMinDropAngleOfFalling, fpCurrDropAngleOfFalling );
+	fpCurrDropAngleOfFalling = SGP_min( fpMaxDropAngleOfFalling, fpCurrDropAngleOfFalling );
 
 
 	fpCurrDropLength += Random( (UINT32)(1000 * DROP_LENGTH_CHANGE_RATE * 2 )) / 1000.0f - DROP_LENGTH_CHANGE_RATE;
 
-	fpCurrDropLength = max( fpMinDropLength, fpCurrDropLength );
-	fpCurrDropLength = min( fpMaxDropLength, fpCurrDropLength );
+	fpCurrDropLength = SGP_max( fpMinDropLength, fpCurrDropLength );
+	fpCurrDropLength = SGP_min( fpMaxDropLength, fpCurrDropLength );
 
 
 	fpCurrDropSpeed += Random( (UINT32)(1000 * DROP_SPEED_CHANGE_RATE * 2 )) / 1000.0f - DROP_SPEED_CHANGE_RATE;
 
-	fpCurrDropSpeed = max( fpMinDropSpeed, fpCurrDropSpeed );
-	fpCurrDropSpeed = min( fpMaxDropSpeed, fpCurrDropSpeed );
+	fpCurrDropSpeed = SGP_max( fpMinDropSpeed, fpCurrDropSpeed );
+	fpCurrDropSpeed = SGP_min( fpMaxDropSpeed, fpCurrDropSpeed );
 
 
 }

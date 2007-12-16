@@ -3439,7 +3439,7 @@ void FatigueCharacter( SOLDIERTYPE *pSoldier )
 		if( iPercentEncumbrance > 100 )
 		{
 			iBreathLoss = (bMaxBreathLoss * iPercentEncumbrance / 100);
-			bMaxBreathLoss = (INT8)min( 127, iBreathLoss );
+			bMaxBreathLoss = (INT8)SGP_min( 127, iBreathLoss );
 		}
 	}
 

@@ -7104,7 +7104,7 @@ INT16 GetFlashSuppressorStatus( OBJECTTYPE * pObj )
 			p =p+ pObj->bAttachStatus[bLoop];
 		}
 	}
-	p = min(p,100);
+	p = SGP_min(p,100);
 	return p;
 }
 
@@ -7433,7 +7433,7 @@ UINT16 PickARandomLaunchable(UINT16 itemIndex)
 			if ( Item[i].usItemClass  == 0 )
 				break;
 			//Madd: quickfix: make it not choose best grenades right away. 
-			if( ValidLaunchable( i, itemIndex ) && ItemIsLegal(i) && Item[i].ubCoolness <= max(HighestPlayerProgressPercentage()/10,lowestCoolness) )
+			if( ValidLaunchable( i, itemIndex ) && ItemIsLegal(i) && Item[i].ubCoolness <= SGP_max(HighestPlayerProgressPercentage()/10,lowestCoolness) )
 				usNumMatches++;
 		}
 	}
@@ -7445,7 +7445,7 @@ UINT16 PickARandomLaunchable(UINT16 itemIndex)
 			if ( Item[i].usItemClass  == 0 )
 				break;
 
-			if( ValidLaunchable( i, itemIndex ) && ItemIsLegal(i) && Item[i].ubCoolness <= max(HighestPlayerProgressPercentage()/10,lowestCoolness) )
+			if( ValidLaunchable( i, itemIndex ) && ItemIsLegal(i) && Item[i].ubCoolness <= SGP_max(HighestPlayerProgressPercentage()/10,lowestCoolness) )
 			{	
 				if( usRandom )
 					usRandom--;

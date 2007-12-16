@@ -12,6 +12,7 @@
 #include <time.h>
 #include <wchar.h>
 #include <stdarg.h>
+#include <SDL.h>
 
 // Include linux-specific headers
 #ifdef JA2_LINUX
@@ -29,8 +30,6 @@
 #	define SLASH '/'
 #	define __min(a, b)	( ((a) < (b)) ? (a) : (b) )
 #	define __max(a, b)	( ((a) > (b)) ? (a) : (b) )
-#	define min(a, b)	( ((a) < (b)) ? (a) : (b) )
-#	define max(a, b)	( ((a) > (b)) ? (a) : (b) )
 #	define _stricmp	strcasecmp
 #	define _strnicmp strncasecmp
 #	define _access access
@@ -43,5 +42,8 @@
 #	include <direct.h>
 #	define SLASH '\\'
 #endif
+
+#define SGP_min(a, b)	( ((a) < (b)) ? (a) : (b) )
+#define SGP_max(a, b)	( ((a) > (b)) ? (a) : (b) )
 
 #endif
