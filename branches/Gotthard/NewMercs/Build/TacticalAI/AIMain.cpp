@@ -931,12 +931,12 @@ INT32 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT32 sGridNo)
 	return(sCheapestDest);
 }
 
-UINT16 GetMostThreateningOpponent( SOLDIERTYPE *pSoldier )
+INT16 GetMostThreateningOpponent( SOLDIERTYPE *pSoldier )
 {
 	UINT32				uiLoop;
 	INT32					iThreatVal,iMinThreat = 30000;
 	SOLDIERTYPE		*pTargetSoldier;
-	UINT16					ubTargetSoldier = NOBODY;
+	INT16					ubTargetSoldier = NOBODY;
 
 	// Loop through all mercs 
 

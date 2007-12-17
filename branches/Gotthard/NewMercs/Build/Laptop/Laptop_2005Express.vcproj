@@ -46,7 +46,7 @@
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4100"
 			/>
@@ -103,7 +103,9 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
+				TreatWChar_tAsBuiltInType="false"
+				ForceConformanceInForLoopScope="false"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -626,6 +628,10 @@
 			</File>
 			<File
 				RelativePath=".\Store Inventory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\XML_FloristText.cpp"
 				>
 			</File>
 		</Filter>

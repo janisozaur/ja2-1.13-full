@@ -128,7 +128,7 @@ void SaveNPCInformationToProfileStruct( );
 BOOLEAN DoesTempFileExistsForMap( UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ );
 
 
-INT16 GetSoldierIDFromAnyMercID(UINT16 ubMercID);
+INT16 GetSoldierIDFromAnyMercID(INT16 ubMercID);
 
 
 BOOLEAN SetUnderGroundSectorFlag( INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ, UINT32 uiFlagToSet );

@@ -136,7 +136,7 @@ enum
 } ExtendedWorldDirections;
 
 // LUT for conversion from 8-direction to extended direction
-UINT8 ubExtDirection[] = 
+INT8 ubExtDirection[] = 
 {
 	EX_NORTH,
 	EX_NORTHEAST,
@@ -149,7 +149,7 @@ UINT8 ubExtDirection[] =
 };
 
 
-UINT8 gExtOneCDirection[ EX_NUM_WORLD_DIRECTIONS ] = 
+INT8 gExtOneCDirection[ EX_NUM_WORLD_DIRECTIONS ] = 
 {
 	4,
 	5,

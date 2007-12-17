@@ -203,7 +203,7 @@ void FreeUpNPCFromLoweringGun( SOLDIERTYPE *pSoldier );
 void FreeUpNPCFromRoofClimb(SOLDIERTYPE *pSoldier );
 
 UINT8 GetClosestOpponent( SOLDIERTYPE *pSoldier );
-UINT16 GetMostThreateningOpponent( SOLDIERTYPE *pSoldier );
+INT16 GetMostThreateningOpponent( SOLDIERTYPE *pSoldier );
 
 void HandleSoldierAI( SOLDIERTYPE *pSoldier );
 void HandleInitialRedAlert( INT8 bTeam, UINT8 ubCommunicate);
