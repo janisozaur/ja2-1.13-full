@@ -1355,7 +1355,7 @@ bool FitsInSmallPocket(OBJECTTYPE* pObj)
 }
 
 // CHRISL: New definition for this function so that we can look at soldiers LBE pockets.
-UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
+UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier, BOOLEAN cntAttach )
 {
 	UINT8	ubSlotLimit;
 	UINT8	pIndex;
@@ -1415,7 +1415,10 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 		}
 	}
 
-	iSize = CalculateItemSize(pObject);
+	if(cntAttach == TRUE)
+		iSize = CalculateItemSize(pObject);
+	else
+		iSize = Item[pObject->usItem].ItemSize;
 	ubSlotLimit = LBEPocketType[pIndex].ItemCapacityPerSize[iSize];
 
 	//this could be changed, we know guns are physically able to stack
@@ -3987,6 +3990,8 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 				return( FALSE );
 			if(Item[pObj->usItem].usItemClass == IC_AMMO || Item[pObj->usItem].usItemClass == IC_GRENADE)
 				return(CompatibleAmmoForGun(pObj, &pSoldier->inv[GUNSLINGPOCKPOS]) || ValidAttachment(pObj->usItem, pSoldier->inv[GUNSLINGPOCKPOS].usItem) || ValidLaunchable(pObj->usItem, pSoldier->inv[GUNSLINGPOCKPOS].usItem));
+			//recalc slot limit to exclude ItemSize attachment modifiers
+			ubSlotLimit = ItemSlotLimit( pObj, bPos, pSoldier, FALSE );
 			// Removed backpack/gunsling restrictions
 			//if(pSoldier->inv[BPACKPOCKPOS].exists() == true)
 			//	return(CompatibleAmmoForGun(pObj, &pSoldier->inv[GUNSLINGPOCKPOS]));

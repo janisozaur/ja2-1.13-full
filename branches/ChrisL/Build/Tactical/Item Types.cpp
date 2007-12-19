@@ -98,6 +98,34 @@ bool DestroyLBEIfEmpty(OBJECTTYPE* pObj)
 	return false;
 }
 
+void DestroyLBE(OBJECTTYPE* pObj)
+{
+	if(pObj->IsActiveLBE(0) == true)
+	{
+		LBENODE* pLBE = pObj->GetLBEPointer(0);
+		if(pLBE)
+		{
+			for(unsigned int x = 0; x < pLBE->inv.size(); x++)
+			{
+				if(pLBE->inv[x].exists() == true)
+				{
+					pLBE->inv[x].initialize();
+				}
+			}
+			for (std::list<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+				if (iter->uniqueID == pLBE->uniqueID) {
+					LBEArray.erase(iter);
+					break;
+				}
+			}
+			(*pObj)[0]->data.lbe.uniqueID = 0;
+			(*pObj)[0]->data.lbe.bLBE = 0;
+			return;
+		}
+	}
+	return;
+}
+
 void MoveItemsInSlotsToLBE( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, LBENODE* pLBE, OBJECTTYPE* pObj)
 {
 	for(unsigned int i=0; i<LBESlots.size(); i++)	// Go through default pockets one by one
@@ -315,12 +343,43 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 		if(pLBE->inv[i].exists() == true)
 		{
 			pLBE->inv[i].MoveThisObjectTo(pSoldier->inv[LBESlots[i]], ALL_OBJECTS, pSoldier, LBESlots[i]);
+			//check to make sure item was moved.  If not, try placing item in an active pocket
+			if(pLBE->inv[i].exists() == true)
+			{
+				if(!AutoPlaceObject(pSoldier, &pLBE->inv[i], FALSE) && pSoldier->inv[LBESlots[i]].exists() == false)
+				{
+					//still can't place the item?  Force move to the pocket associated with the LBE if empty
+					pSoldier->inv[LBESlots[i]].ForceAddObjectsToStack(pLBE->inv[i]);
+				}
+			}
 		}
 	}
 	if (DestroyLBEIfEmpty(pObj) == false) {
 		//we should have copied all the items from the LBE to the soldier
-		//which means the LBE should be empty and destroyed
-		//DebugBreak();
+		//which means the LBE should be empty and destroyed.  However, if it's not empty, we need to force place
+		//some items so that we can empty the LBE without losing anything.
+		for(unsigned int i = 0; i < LBESlots.size(); i++)
+		{
+			if(pLBE->inv[i].exists() == true)
+			{
+				for(unsigned int j = BIGPOCKSTART; j < pSoldier->inv.size(); j++)
+				{
+					if(pSoldier->inv[j].exists() == false)
+					{
+						pSoldier->inv[j].ForceAddObjectsToStack(pLBE->inv[i]);
+						break;
+					}
+				}
+			}
+			//Now, check one last time and if we still have an object, drop it to the ground
+			if(pLBE->inv[i].exists() == true)
+			{
+				AddItemToPool(pSoldier->sGridNo, &pLBE->inv[i], 1, pSoldier->pathing.bLevel, 0, -1);
+				//at this point, if we still haven't removed the item, the only thing left to do is delete it.
+				pLBE->inv[i].initialize();
+			}
+		}
+		DestroyLBE(pObj);
 	}
 
 	return (TRUE);
@@ -550,13 +609,6 @@ int OBJECTTYPE::ForceAddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany, SOLDIERTYPE* pSoldier, int slot, int cap, bool allowLBETransfer)
 {
 	int freeObjectsInStack;
-	if (exists() == false) {
-		//we are adding to an empty object, it can happen
-		Assert(sourceObject.exists() == true);
-		usItem = sourceObject.usItem;
-		this->fFlags = sourceObject.fFlags;
-	}
-	Assert(sourceObject.usItem == usItem);
 
 	//can't add too much, can't take too many
 	if(cap > 0){
@@ -578,6 +630,15 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany, SOLDIER
 	if (this->CanStack(sourceObject, numToAdd) == false) {
 		return 0;
 	}
+
+	//CHRISL: Moved to here so that we verify that the object can be created before starting the creation
+	if (exists() == false) {
+		//we are adding to an empty object, it can happen
+		Assert(sourceObject.exists() == true);
+		usItem = sourceObject.usItem;
+		this->fFlags = sourceObject.fFlags;
+	}
+	Assert(sourceObject.usItem == usItem);
 
 	//this recalcs weight too!
 	SpliceData(sourceObject, numToAdd, sourceObject.objectStack.begin());

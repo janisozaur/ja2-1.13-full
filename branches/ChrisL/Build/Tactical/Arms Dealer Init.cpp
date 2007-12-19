@@ -1527,18 +1527,19 @@ void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE& object )
 }
 
 // removes ubHowMany items of usItemIndex with the matching Info from dealer ubArmsDealer
-void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany )
+void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany, OBJECTTYPE *pObj )
 {
+	INT32 cnt;
 	if ( ubHowMany == 0)
 	{
 		return;
 	}
-	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
-		iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
-		if (iter->ItemIsInInventory() == true && iter->object.usItem == usItemIndex) {
+	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin(); iter != gArmsDealersInventory[ ubArmsDealer ].end(); iter++){
+		if (iter->ItemIsInInventory() == true && iter->object.usItem == usItemIndex && iter->object.operator == (*pObj)) {
 			if (ubHowMany >= iter->object.ubNumberOfObjects) {
 				ubHowMany -= iter->object.ubNumberOfObjects;
 				iter = gArmsDealersInventory[ ubArmsDealer ].erase(iter);
+				DealerItemList::iterator iterEnd = gArmsDealersInventory[ ubArmsDealer ].end();
 				if (ubHowMany > 0 || iter == gArmsDealersInventory[ ubArmsDealer ].end()) {
 					return;
 				}

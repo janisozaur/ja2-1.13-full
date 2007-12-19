@@ -63,7 +63,7 @@ UINT16 RandomMagazine( OBJECTTYPE * pGun, UINT8 ubPercentStandard );
 extern BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo, UINT32 subObject = 0 );
 
 // CHRISL: Add new inventory version of ItemSlotLimit function
-UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier = NULL);
+UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier = NULL, BOOLEAN cntAttach = TRUE);
 
 // Function to put an item in a soldier profile
 // It's very primitive, just finds an empty place!

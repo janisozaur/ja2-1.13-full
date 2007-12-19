@@ -2376,12 +2376,16 @@ void RenderPocketItemCapacity( INT8 pCapacity, INT16 bPos, SOLDIERTYPE *pSoldier
 	SetFontBackground( FONT_MCOLOR_BLACK );
 	SetFontForeground( FONT_RED );
 	if(CompatibleAmmoForGun(gpItemPointer, &pSoldier->inv[bPos]) || ValidLaunchable(gpItemPointer->usItem, pSoldier->inv[bPos].usItem))
+	{
+		SetFontForeground( FONT_YELLOW );
 		swprintf( pStr, L"L" );
+	}
 	else if(pCapacity != 0 && CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)bPos, FALSE))
 	{
 		// Adjust capacity to account for current items
 		if(gpItemPointer->usItem == pSoldier->inv[bPos].usItem)
 		{
+			SetFontForeground( FONT_GREEN );
 			pCapacity = pCapacity - pSoldier->inv[bPos].ubNumberOfObjects;
 			if(pCapacity > 0)
 				swprintf( pStr, L"+%d", pCapacity );
@@ -2392,7 +2396,10 @@ void RenderPocketItemCapacity( INT8 pCapacity, INT16 bPos, SOLDIERTYPE *pSoldier
 			swprintf( pStr, L"%d", pCapacity );
 	}
 	else if(ValidAttachment(gpItemPointer->usItem, pSoldier->inv[bPos].usItem))
+	{
+		SetFontForeground( FONT_YELLOW );
 		swprintf( pStr, L"A" );
+	}
 	sX = gSMInvData[ bPos ].sX + 1;
 	sY = gSMInvData[ bPos ].sY;
 	UINT32 uiWhichBuffer = ( guiCurrentItemDescriptionScreen == MAP_SCREEN ) ? guiSAVEBUFFER : guiRENDERBUFFER;

@@ -2361,7 +2361,7 @@ void SelectPlayersOfferSlotsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason
 				{
 					//Since money is always evaluated
 					PlayersOfferArea[ ubSelectedInvSlot ].uiFlags |= ARMS_INV_PLAYERS_ITEM_HAS_VALUE;
-					PlayersOfferArea[ ubSelectedInvSlot ].uiItemPrice = PlayersOfferArea[ ubSelectedInvSlot ].ItemObject[0]->data.money.bMoneyStatus;
+					PlayersOfferArea[ ubSelectedInvSlot ].uiItemPrice = PlayersOfferArea[ ubSelectedInvSlot ].ItemObject[0]->data.money.uiMoneyAmount;
 				}
 			}
 			else	// slot is empty
@@ -3974,7 +3974,7 @@ BOOLEAN RemoveItemFromDealersInventory( INVENTORY_IN_SLOT* pInvSlot, UINT8 ubSlo
 
 	//Remove all of this item out of the specified inventory slot
 	sItemID = gpTempDealersInventory[ sInvSlot ].sItemIndex;
-	RemoveItemFromArmsDealerInventory( gbSelectedArmsDealerID, sItemID, pInvSlot->ItemObject.ubNumberOfObjects );
+	RemoveItemFromArmsDealerInventory( gbSelectedArmsDealerID, sItemID, pInvSlot->ItemObject.ubNumberOfObjects, &pInvSlot->ItemObject );
 
 	gfResetShopKeepIdleQuote = TRUE;
 	return( TRUE );
