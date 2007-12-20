@@ -1529,14 +1529,25 @@ void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE& object )
 // removes ubHowMany items of usItemIndex with the matching Info from dealer ubArmsDealer
 void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany, OBJECTTYPE *pObj )
 {
-	//INT32 cnt;
+	BOOLEAN		match = TRUE;
+
 	if ( ubHowMany == 0)
 	{
 		return;
 	}
 	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin(); iter != gArmsDealersInventory[ ubArmsDealer ].end(); iter++){
 		if (iter->ItemIsInInventory() == true && iter->object.usItem == usItemIndex) {
-			if(pObj != 0 && iter->object.operator == (*pObj))
+			if(pObj != 0)
+			{
+				for(unsigned int i = 0; i < ubHowMany; i++)
+				{
+					if((*pObj)[i]->operator == (*iter->object[i]))
+						match = TRUE;
+					else
+						match = FALSE;
+				}
+			}
+			if(match == TRUE)
 			{
 				if (ubHowMany >= iter->object.ubNumberOfObjects) {
 					ubHowMany -= iter->object.ubNumberOfObjects;
