@@ -1535,18 +1535,21 @@ void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, 
 		return;
 	}
 	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin(); iter != gArmsDealersInventory[ ubArmsDealer ].end(); iter++){
-		if (iter->ItemIsInInventory() == true && iter->object.usItem == usItemIndex && iter->object.operator == (*pObj)) {
-			if (ubHowMany >= iter->object.ubNumberOfObjects) {
-				ubHowMany -= iter->object.ubNumberOfObjects;
-				iter = gArmsDealersInventory[ ubArmsDealer ].erase(iter);
-				DealerItemList::iterator iterEnd = gArmsDealersInventory[ ubArmsDealer ].end();
-				if (ubHowMany > 0 || iter == gArmsDealersInventory[ ubArmsDealer ].end()) {
+		if (iter->ItemIsInInventory() == true && iter->object.usItem == usItemIndex) {
+			if(pObj != 0 && iter->object.operator == (*pObj))
+			{
+				if (ubHowMany >= iter->object.ubNumberOfObjects) {
+					ubHowMany -= iter->object.ubNumberOfObjects;
+					iter = gArmsDealersInventory[ ubArmsDealer ].erase(iter);
+					DealerItemList::iterator iterEnd = gArmsDealersInventory[ ubArmsDealer ].end();
+					if (ubHowMany > 0 || iter == gArmsDealersInventory[ ubArmsDealer ].end()) {
+						return;
+					}
+				}
+				else {
+					iter->object.RemoveObjectsFromStack(ubHowMany);
 					return;
 				}
-			}
-			else {
-				iter->object.RemoveObjectsFromStack(ubHowMany);
-				return;
 			}
 		}
 	}

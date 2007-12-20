@@ -862,14 +862,48 @@ OBJECTTYPE* StackedObjectData::GetAttachmentAtIndex(UINT8 index)
 
 bool StackedObjectData::operator==(StackedObjectData& compare)
 {
-	return (this->data == compare.data
-		&& this->attachments == compare.attachments);
+	BOOLEAN pass = FALSE;
+	if(this->data.objectStatus == compare.data.objectStatus){
+		if(this->data.gun.bGunAmmoStatus == compare.data.gun.bGunAmmoStatus){
+			if(this->data.gun.bGunStatus == compare.data.gun.bGunStatus){
+				if(this->data.gun.ubGunAmmoType == compare.data.gun.ubGunAmmoType){
+					if(this->data.gun.ubGunShotsLeft == compare.data.gun.ubGunShotsLeft){
+						if(this->data.gun.ubGunState == compare.data.gun.ubGunState){
+							if(this->data.gun.usGunAmmoItem == compare.data.gun.usGunAmmoItem){
+								pass = TRUE;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return(pass && this->attachments == compare.attachments);
+	//return (this->data == compare.data
+	//	&& this->attachments == compare.attachments);
 }
 
 bool StackedObjectData::operator==(const StackedObjectData& compare)const
 {
-	return (this->data == compare.data
-		&& this->attachments == compare.attachments);
+	BOOLEAN pass = FALSE;
+	if(this->data.objectStatus == compare.data.objectStatus){
+		if(this->data.gun.bGunAmmoStatus == compare.data.gun.bGunAmmoStatus){
+			if(this->data.gun.bGunStatus == compare.data.gun.bGunStatus){
+				if(this->data.gun.ubGunAmmoType == compare.data.gun.ubGunAmmoType){
+					if(this->data.gun.ubGunShotsLeft == compare.data.gun.ubGunShotsLeft){
+						if(this->data.gun.ubGunState == compare.data.gun.ubGunState){
+							if(this->data.gun.usGunAmmoItem == compare.data.gun.usGunAmmoItem){
+								pass = TRUE;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return(pass && this->attachments == compare.attachments);
+	//return (this->data == compare.data
+	//	&& this->attachments == compare.attachments);
 }
 
 bool ObjectData::operator==(ObjectData& compare)
@@ -1001,6 +1035,8 @@ bool OBJECTTYPE::operator==(OBJECTTYPE& compare)
 		if (this->objectStack == compare.objectStack) {
 			return true;
 		}
+		if((*this)[0]->operator == (*compare.operator[](0)))
+			return true;
 	}
 	return false;
 }
