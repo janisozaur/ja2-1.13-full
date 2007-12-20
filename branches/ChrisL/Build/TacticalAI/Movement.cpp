@@ -145,8 +145,8 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 	if (LegalNPCDestination(pSoldier,sGridno,ENSURE_PATH,WATEROK,0))
 	{
 #ifdef DEBUGDECISIONS
-		std::string tempstr;
-		tempstr = String( "%d CONTINUES MOVEMENT to gridno %d...\n", pSoldier->ubID,sGridno );
+		STR tempstr;
+		sprintf(tempstr, "%d CONTINUES MOVEMENT to gridno %d...\n", pSoldier->ubID,sGridno );
 		DebugAI( tempstr );
 #endif
 
@@ -165,7 +165,7 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 		else
 		{
 #ifdef BETAVERSION
-			tempstr = String("TryToResumeMovement: ERROR - NewDest failed for %s, action CANCELED",pSoldier->name);
+			sprintf(tempstr,"TryToResumeMovement: ERROR - NewDest failed for %s, action CANCELED",pSoldier->name);
 
 #ifdef RECORDNET
 			fprintf(NetDebugFile,"\n\t%s\n",tempstr);
@@ -186,14 +186,14 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 		// legally if another soldier gets in the way between turns
 
 #ifdef BETAVERSION
-		tempstr = String("TryToResumeMovement: %d can't continue to gridno %d, no longer legal!",pSoldier->ubID,gridno);
+		sprintf(tempstr,"TryToResumeMovement: %d can't continue to gridno %d, no longer legal!",pSoldier->ubID,gridno);
 
 #ifdef RECORDNET
 		fprintf(NetDebugFile,"\n\t%s\n",tempstr);
 #endif
 
 #ifdef DEBUGDECISIONS
-		DebugAI(tempstr);
+		AIPopMessage(tempstr);
 #endif
 
 #endif
@@ -279,7 +279,7 @@ INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
  INT16 sPatrolPoint;
  INT8	bOldOrders;
 #ifdef DEBUGDECISIONS
- std::string tempstr;
+ STR16 tempstr;
 #endif
 
  sPatrolPoint = pSoldier->aiData.sPatrolGrid[pSoldier->aiData.bNextPatrolPnt];
@@ -344,8 +344,8 @@ INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
 
  // passed all tests - start moving towards next patrol point
 #ifdef DEBUGDECISIONS
- tempstr = String("%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->aiData.usActionData);
- DebugAI(tempstr);
+ sprintf(tempstr,"%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->aiData.usActionData);
+ AIPopMessage(tempstr);
 #endif
 
  return(TRUE);
@@ -354,7 +354,7 @@ INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
 INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 {
 #ifdef DEBUGDECISIONS
- std::string tempstr;
+ STR16 tempstr;
 #endif
 	INT16 sPatrolPoint;
 	INT8	bOldOrders, bPatrolIndex;
@@ -434,8 +434,8 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 
 	// passed all tests - start moving towards next patrol point
 #ifdef DEBUGDECISIONS
-	tempstr = String("%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->aiData.usActionData);
-	DebugAI(tempstr);
+	sprintf(tempstr,"%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->aiData.usActionData);
+	AIPopMessage(tempstr);
 #endif
 
 	return(TRUE);
@@ -446,7 +446,7 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bReserveAPs, INT8 bAction, INT8 fFlags )
 {
 #ifdef DEBUGDECISIONS
- std::string tempstr;
+ STR16 tempstr;
 #endif
 	INT16 sLoop,sAPCost;
 	INT16 sTempDest,sGoToGrid;
@@ -498,8 +498,8 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	}
 
 #ifdef DEBUGDECISIONS
-	tempstr = String("%s wants to go towards %d (has range %d)",pSoldier->name,sDesGrid,usMaxDist);
-	DebugAI(tempstr);
+	sprintf(tempstr,"%s wants to go towards %d (has range %d)",pSoldier->name,sDesGrid,usMaxDist);
+	AIPopMessage(tempstr);
 #endif
 
 	// if soldier is ALREADY at the desired destination, quit right away
@@ -755,17 +755,17 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
  if (sGoToGrid == pSoldier->sGridNo)
 	{
 #ifdef DEBUGDECISIONS
-	tempstr = String("%s will go NOWHERE, path doesn't meet criteria",pSoldier->name);
-	DebugAI(tempstr);
+   sprintf(tempstr,"%s will go NOWHERE, path doesn't meet criteria",pSoldier->name);
+   AIPopMessage(tempstr);
 #endif
 
 	pSoldier->pathing.usPathIndex = pSoldier->pathing.usPathDataSize = 0;
 	return(NOWHERE);			 // then go nowhere
 	}
  else
-	{
-	// possible optimization - stored path IS good if we're going all the way
-	if (sGoToGrid == sDesGrid)
+  {
+   // possible optimization - stored path IS good if we're going all the way
+   if (sGoToGrid == sDesGrid)
 	{
 	 pSoldier->pathing.bPathStored = TRUE;
 		pSoldier->pathing.sFinalDestination = sGoToGrid;
@@ -1196,9 +1196,9 @@ UINT16 RunAway( SOLDIERTYPE * pSoldier )
 				break;
 		}
 		iRunGridNo = iRunX + iRunY * WORLD_COLS;
-		if (LegalNPCDestination( pSoldier, (INT16) iRunGridNo, ENSURE_PATH, TRUE,0))
+		if (LegalNPCDestination( pSoldier, (UINT16) iRunGridNo, ENSURE_PATH, TRUE,0))
 		{
-			return( (INT16) iRunGridNo );
+			return( (UINT16) iRunGridNo );
 		}
 		// otherwise we'll try again another time
 	}

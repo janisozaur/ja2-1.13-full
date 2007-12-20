@@ -2378,7 +2378,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					if (pSoldier)
 					{
 						CreateMoney(10000, &gTempObject );
-						AddItemToPoolAndGetIndex( sGridNo, &gTempObject, -1, pSoldier->pathing.bLevel, 0, 0, &iWorldItem );
+						AddItemToPoolAndGetIndex( sGridNo, &gTempObject, -1, pSoldier->pathing.bLevel, 0, 0, -1, &iWorldItem );
 
 						// shouldn't have any current action but make sure everything
 						// is clear... and set pending action so the guy won't move

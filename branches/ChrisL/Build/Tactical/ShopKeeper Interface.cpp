@@ -6728,8 +6728,9 @@ BOOLEAN ShopkeeperAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObject,
 		if (!AutoPlaceObject( pSoldier, &movingObject, fNewItem ))
 		//if (!AutoPlaceObject( pSoldier, pObject, fNewItem ))
 		{
+			//CHRISL: When we call this, we don't care about cap limits so stack up to max
 			// no more room, didn't all fit - add back in any that we didn't even get to yet
-			pObject->AddObjectsToStack(movingObject);
+			pObject->AddObjectsToStack(movingObject, -1, 0, NUM_INV_SLOTS, MAX_OBJECTS_PER_SLOT);
 			return( FALSE );
 		}
 	}

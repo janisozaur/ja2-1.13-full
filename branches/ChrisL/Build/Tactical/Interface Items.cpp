@@ -7715,7 +7715,7 @@ void RemoveItemPickupMenu( )
 
 		// Turn off Ignore scrolling
 		gfIgnoreScrolling = FALSE;
-			DisableTacticalTeamPanelButtons( FALSE );
+		DisableTacticalTeamPanelButtons( FALSE );
 		gubSelectSMPanelToMerc = gpSMCurrentMerc->ubID;
 
 	}

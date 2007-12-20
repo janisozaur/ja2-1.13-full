@@ -111,6 +111,7 @@ void WORLDITEM::initialize()
 	this->bRenderZHeightAboveLevel = 0;
 	this->bVisible = 0;
 	this->ubNonExistChance = 0;
+	this->soldierID = -1;
 	this->object.initialize();
 }
 
@@ -124,6 +125,7 @@ WORLDITEM& WORLDITEM::operator=(OLD_WORLDITEM_101& src)
 	this->bRenderZHeightAboveLevel = src.bRenderZHeightAboveLevel;
 	this->bVisible = src.bVisible;
 	this->ubNonExistChance = src.ubNonExistChance;
+	this->soldierID = -1;
 
 	//convert the OBJECTTYPE
 	this->object = src.oldObject;
@@ -139,6 +141,7 @@ WORLDITEM& WORLDITEM::operator=(const WORLDITEM& src)
 	this->bRenderZHeightAboveLevel = src.bRenderZHeightAboveLevel;
 	this->bVisible = src.bVisible;
 	this->ubNonExistChance = src.ubNonExistChance;
+	this->soldierID = src.soldierID;
 	this->object = src.object;
 	return *this;
 }
@@ -380,7 +383,7 @@ UINT32 GetNumUsedWorldItems( void )
 
 
 
-INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible )
+INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible, INT8 soldierID )
 {
 	UINT32	iItemIndex;
 	INT32		iReturn;
@@ -404,6 +407,7 @@ INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 
 	gWorldItems[ iItemIndex ].usFlags										= usFlags;
 	gWorldItems[ iItemIndex ].bVisible									= bVisible;
 	gWorldItems[ iItemIndex ].bRenderZHeightAboveLevel	= bRenderZHeightAboveLevel;
+	gWorldItems[ iItemIndex ].soldierID										= soldierID;
 
 	gWorldItems[ iItemIndex ].object = *pObject;
 
@@ -594,7 +598,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 			{ //all armed bombs are buried
 				dummyItem.bVisible = BURIED;
 			}
-			AddItemToPoolAndGetIndex( dummyItem.sGridNo, &dummyItem.object, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel, &iItemIndex );
+			AddItemToPoolAndGetIndex( dummyItem.sGridNo, &dummyItem.object, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel, dummyItem.soldierID, &iItemIndex );
 			gWorldItems[ iItemIndex ].ubNonExistChance = dummyItem.ubNonExistChance;
 		}
 	}
@@ -724,7 +728,7 @@ void RefreshWorldItemsIntoItemPools( WORLDITEM * pItemList, INT32 iNumberOfItems
 		{
 			WORLDITEM& dummyItem = pItemList[ i ];
 
-			AddItemToPool( dummyItem.sGridNo, &dummyItem.object, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel );
+			AddItemToPool( dummyItem.sGridNo, &dummyItem.object, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel, dummyItem.soldierID );
 		}
 	}
 

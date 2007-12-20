@@ -7669,9 +7669,12 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 						if(!ChangeZipperStatus(pSoldier, FALSE))
 							return;
 					// Do we still have a linked backpack?  If so, reset droppackflag
-					if(pSoldier->DropPackKey != ITEM_NOT_FOUND)
+					for(unsigned int wi = 0; wi < guiNumWorldItems; wi++)
 					{
-						pSoldier->flags.DropPackFlag = TRUE;
+						if(gWorldItems[wi].soldierID == pSoldier->ubID && gWorldItems[wi].object.exists() == true)
+						{
+							pSoldier->flags.DropPackFlag = TRUE;
+						}
 					}
 				}
 			}

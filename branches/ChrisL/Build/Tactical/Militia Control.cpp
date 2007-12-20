@@ -30,7 +30,6 @@
 	#include "Campaign.h"
 	#include "ai.h"
 	#include "Isometric Utils.h"
-	#include "FindLocations.h"
 #endif
 
 #include "MilitiaSquads.h"

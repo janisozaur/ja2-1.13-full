@@ -68,7 +68,7 @@ typedef struct
 	UINT8		ubFiller;				//										20 bytes
 	UINT16	usSetFactTrue;
 	UINT16	usGiftItem;			// item NPC gives to merc after saying quote
-	INT16	sGoToGridno;
+	UINT16	usGoToGridno;
 	INT16		sActionData;		// special action value	
 
 //SB: unify structure for all versions

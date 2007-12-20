@@ -1161,8 +1161,21 @@ void RenderBackpackButtons(int bpAction)
 				RemoveButton( giSMDropPackButton );
 			if(giSMDropPackImages != -1)
 				UnloadButtonImage( giSMDropPackImages );
+			gpSMCurrentMerc->flags.DropPackFlag = FALSE;
+			if(gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == FALSE)
+			{
+				for(unsigned int wi = 0; wi < guiNumWorldItems; wi++)
+				{
+					if(gWorldItems[wi].soldierID == gpSMCurrentMerc->ubID && gWorldItems[wi].object.exists() == true)
+					{
+						gpSMCurrentMerc->flags.DropPackFlag = TRUE;
+						break;
+					}
+				}
+			}
 			giSMZipperImages	= UseLoadedButtonImage( iSMPanelImages[ BACKPACK_IMAGES  ] ,gbZipperButPos[ gpSMCurrentMerc->flags.ZipperFlag ][0] ,gbZipperButPos[ gpSMCurrentMerc->flags.ZipperFlag ][0],-1,gbZipperButPos[ gpSMCurrentMerc->flags.ZipperFlag ][1],-1 );
 			giSMDropPackImages	= UseLoadedButtonImage( iSMPanelImages[ BACKPACK_IMAGES  ] ,gbDropPackButPos[ gpSMCurrentMerc->flags.DropPackFlag ][0] ,gbDropPackButPos[ gpSMCurrentMerc->flags.DropPackFlag ][0],-1,gbDropPackButPos[ gpSMCurrentMerc->flags.DropPackFlag ][1],-1 );
+			//giSMDropPackImages	= UseLoadedButtonImage( iSMPanelImages[ BACKPACK_IMAGES  ] ,gbDropPackButPos[ gpSMCurrentMerc->flags.DropPackFlag ][0] ,gbDropPackButPos[ gpSMCurrentMerc->flags.DropPackFlag ][0],-1,gbDropPackButPos[ gpSMCurrentMerc->flags.DropPackFlag ][1],-1 );
 
 			giSMZipperButton	= QuickCreateButton( giSMZipperImages, SM_ZIPPER_X, SM_ZIPPER_Y,
 													BUTTON_TOGGLE, MSYS_PRIORITY_HIGH - 1,
@@ -2373,6 +2386,9 @@ BOOLEAN ShutdownSMPanel( )
 
 	RemoveSMPanelButtons( );
 
+	//CHRISL: Following line is to make sure that team panel buttons activate
+	DisableTacticalTeamPanelButtons( FALSE );
+
 	return( TRUE );
 }
 
@@ -3180,11 +3196,15 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						if(!ChangeZipperStatus(gpSMCurrentMerc, FALSE))
 							return;
 					// Do we still have a linked backpack?  If so, reset droppackflag
-					if(gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
+					for(unsigned int wi = 0; wi < guiNumWorldItems; wi++)
 					{
-						gpSMCurrentMerc->flags.DropPackFlag = TRUE;
-						RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
+						if(gWorldItems[wi].soldierID == gpSMCurrentMerc->ubID && gWorldItems[wi].object.exists() == true)
+						{
+							gpSMCurrentMerc->flags.DropPackFlag = TRUE;
+							break;
+						}
 					}
+					RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 				}
 			}
 
@@ -3338,6 +3358,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				// try to place the item in the cursor into this inventory slot
 				if ( UIHandleItemPlacement( (UINT8) uiHandPos, usOldItemIndex, usNewItemIndex, fDeductPoints ) )
 				{
+					RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 					// it worked!	if we're in the SKI...
 					if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
 					{
@@ -3527,25 +3548,32 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	{
 		// If we're standing over the backpack that we're trying to pick up, reset the ap cost to 0
 		if(!newStatus) {
-			for (unsigned int x = 0; x < gWorldItems[pSoldier->DropPackKey].object.ubNumberOfObjects; ++x) {
-				// Failsafe in case our LBEArray data ever goes missing.
-				if(x >= LBEArray.size()){
-					break;
-				}
-				if(gWorldItems[pSoldier->DropPackKey].object.IsActiveLBE(x)) {
-					if(gWorldItems[pSoldier->DropPackKey].object.GetLBEPointer(x)->lbeIndex != NONE) {
-						if(gWorldItems[pSoldier->DropPackKey].sGridNo == pSoldier->sGridNo)
-						{
-							sAPCost = 0;
+			for(unsigned int wi = 0; wi < guiNumWorldItems; wi++)
+			{
+				if(gWorldItems[wi].soldierID == pSoldier->ubID && gWorldItems[wi].object.exists() == true)
+				{
+					for (unsigned int x = 0; x < gWorldItems[wi].object.ubNumberOfObjects; ++x) {
+						// Failsafe in case our LBEArray data ever goes missing.
+						if(x >= LBEArray.size()){
 							break;
 						}
-						// If not, we can't pick up the item
-						else
-						{
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, NewInvMessage[NIV_CAN_NOT_PICKUP] );
-							return FALSE;
+						if(gWorldItems[wi].object.IsActiveLBE(x)) {
+							if(gWorldItems[wi].object.GetLBEPointer(x)->lbeIndex != NONE) {
+								if(gWorldItems[wi].sGridNo == pSoldier->sGridNo)
+								{
+									sAPCost = 0;
+									break;
+								}
+								// If not, we can't pick up the item
+								else
+								{
+									ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, NewInvMessage[NIV_CAN_NOT_PICKUP] );
+									return FALSE;
+								}
+							}
 						}
 					}
+					break;
 				}
 			}
 		}
@@ -3559,53 +3587,60 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	// Dropping a pack?
 	if(newStatus)
 	{
-		if(!MoveItemToLBEItem( pSoldier, BPACKPOCKPOS ))
-			newStatus = FALSE;
-		AddItemToPoolAndGetIndex(pSoldier->sGridNo, &pSoldier->inv[BPACKPOCKPOS], 1, pSoldier->pathing.bLevel, 0 , -1, &worldKey );
+		MoveItemToLBEItem( pSoldier, BPACKPOCKPOS );
+		AddItemToPoolAndGetIndex(pSoldier->sGridNo, &pSoldier->inv[BPACKPOCKPOS], 1, pSoldier->pathing.bLevel, 0 , -1, -1, &worldKey );
 		// Item successfully added to world
 		if(worldKey != ITEM_NOT_FOUND)
 		{
-			//CHRISL: Because of some random CTDs, we're going to disable the link between a soldier and a dropped pack
-			//pSoldier->DropPackKey = worldKey;
+			// We need to clear any existing WorldItems that are linked with this soldier
+			for(unsigned int wi = 0; wi < guiNumWorldItems; wi++)
+			{
+				if(gWorldItems[wi].soldierID == pSoldier->ubID)
+				{
+					gWorldItems[wi].soldierID = -1;
+				}
+			}
+			gWorldItems[worldKey].soldierID = pSoldier->ubID;
 			NotifySoldiersToLookforItems( );
 			DeleteObj(&pSoldier->inv[BPACKPOCKPOS]);
-			//pSoldier->flags.DropPackFlag = newStatus;
+			pSoldier->flags.DropPackFlag = newStatus;
 			gfUIStanceDifferent = TRUE;
 		}
 	}
 	// Picking up a pack?
 	else
 	{
-//CHRISL: Because of some random CTDs, we're going to disable the link between a soldier and a dropped pack
-//	This means we won't be able to pickup a back using the droppack button so skip all of this.
-#if 0
-		for (int x = 0; x < gWorldItems[pSoldier->DropPackKey].object.ubNumberOfObjects; ++x) {
-			// Is the item we dropped in this sector and does it have an active LBENODE flag?
-			if(gWorldItems[pSoldier->DropPackKey].object.IsActiveLBE(x)) {
-				// Is the LBENODE we're trying to pick up actually in use?
-				if(gWorldItems[pSoldier->DropPackKey].object.GetLBEPointer(x)->lbeIndex != NONE)
-				{
-					// Try to pickup the LBENODE
-					if(AutoPlaceObject(pSoldier, &(gWorldItems[ pSoldier->DropPackKey ].object ), TRUE ))
-					{
-						RemoveItemFromPool(gWorldItems[pSoldier->DropPackKey].sGridNo, pSoldier->DropPackKey, gWorldItems[pSoldier->DropPackKey].ubLevel);
-						pSoldier->DropPackKey = -1;
-						pSoldier->flags.DropPackFlag = newStatus;
-						gfUIStanceDifferent = TRUE;
-						return TRUE;
-					}
-					else
-					{
-						CHAR16 dropMSG[] = L"No place to put backpack";
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, dropMSG );
-						return TRUE;
-					}
+		for(unsigned int wi = 0; wi < guiNumWorldItems; wi++)
+		{
+			if(gWorldItems[wi].soldierID == pSoldier->ubID && gWorldItems[wi].object.exists() == true)
+			{
+				for (int x = 0; x < gWorldItems[wi].object.ubNumberOfObjects; ++x) {
+					// Is the item we dropped in this sector and does it have an active LBENODE flag?
+					//if(gWorldItems[wi].object.IsActiveLBE(x)) {
+						// Is the LBENODE we're trying to pick up actually in use?
+						//if(gWorldItems[wi].object.GetLBEPointer(x)->lbeIndex != NONE)
+						{
+							// Try to pickup the LBENODE
+							if(AutoPlaceObject(pSoldier, &(gWorldItems[wi].object ), TRUE ))
+							{
+								RemoveItemFromPool(gWorldItems[wi].sGridNo, wi, gWorldItems[wi].ubLevel);
+								pSoldier->flags.DropPackFlag = newStatus;
+								gfUIStanceDifferent = TRUE;
+								return TRUE;
+							}
+							else
+							{
+								ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, NewInvMessage[NIV_NO_DROP] );
+								return TRUE;
+							}
+						}
+					//}
 				}
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, NewInvMessage[NIV_NO_PACK] );
+				break;
 			}
 		}
-		CHAR16 dropMSG[] = L"Backpack not found";
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, dropMSG );
-#endif
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, NewInvMessage[NIV_NO_PACK] );
 	}
 
 	return TRUE;
@@ -3876,7 +3911,7 @@ void BtnDropPackCallback(GUI_BUTTON *btn,INT32 reason)
 				}
 				/* Is DropPackFlag currently true, is nothing in the backpack pocket and have we dropped a pack?  If so, we
 				must want to retreive a backpack we previously dropped.*/
-				else if(MercPtrs[x]->bAssignment == bAssignment && MercPtrs[x]->inv[BPACKPOCKPOS].exists() == false && MercPtrs[x]->flags.DropPackFlag && MercPtrs[x]->DropPackKey != ITEM_NOT_FOUND)
+				else if(MercPtrs[x]->bAssignment == bAssignment && MercPtrs[x]->inv[BPACKPOCKPOS].exists() == false && MercPtrs[x]->flags.DropPackFlag)
 				{
 					ChangeDropPackStatus(MercPtrs[x], FALSE);
 				}
@@ -3892,7 +3927,7 @@ void BtnDropPackCallback(GUI_BUTTON *btn,INT32 reason)
 			}
 			/* Is DropPackFlag currently true, is nothing in the backpack pocket and have we dropped a pack?  If so, we
 			must want to retreive a backpack we previously dropped.*/
-			else if(gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == false && gpSMCurrentMerc->flags.DropPackFlag && gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
+			else if(gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == false && gpSMCurrentMerc->flags.DropPackFlag)
 			{
 				ChangeDropPackStatus(gpSMCurrentMerc, FALSE);
 			}
@@ -3960,7 +3995,7 @@ void BtnMapDropPackCallback( GUI_BUTTON *btn, INT32 reason )
 		}
 		/* Is DropPackFlag currently true, is nothing in the backpack pocket and have we dropped a pack?  If so, we
 		must want to retreive a backpack we previously dropped.*/
-		else if(gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == false && gpSMCurrentMerc->flags.DropPackFlag && gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
+		else if(gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == false && gpSMCurrentMerc->flags.DropPackFlag)
 		{
 			// Pickup pack from sector inventory
 		}

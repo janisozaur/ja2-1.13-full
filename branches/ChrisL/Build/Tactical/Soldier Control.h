@@ -1048,7 +1048,7 @@ public:
 	INT8	snowCamo;	
 	INT8	wornSnowCamo;
 
-	INT16	DropPackKey;
+	INT16	filler;
 
 	char endOfPOD;	// marker for end of POD (plain old data)
 

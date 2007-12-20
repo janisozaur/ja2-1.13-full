@@ -17,7 +17,6 @@
 	#include "strategicmap.h"
 	#include "environment.h"
 	#include "worldman.h"
-	#include "FindLocations.h"
 #endif
 
 //forward declarations of common classes to eliminate includes

@@ -88,9 +88,7 @@ INT16	gsCivQuoteSector[NUM_CIVQUOTE_SECTORS][2] =
 #define QUEST_DONE_NUM					200
 #define NO_QUOTE								255
 #define IRRELEVANT							255
-//#define NO_MOVE									65535
-//these are now signed shorts, so 65535 is not possible!!
-#define NO_MOVE									-1
+#define NO_MOVE									65535
 
 NPCQuoteInfo *	gpNPCQuoteInfoArray[NUM_PROFILES] = { NULL };
 NPCQuoteInfo *	gpBackupNPCQuoteInfoArray[NUM_PROFILES] = { NULL };
@@ -791,7 +789,8 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 	// that the NPC is willing to say to the merc.  It can also provide the quote #.
 	MERCPROFILESTRUCT *		pNPCProfile;
 	NPCQuoteInfo *				pNPCQuoteInfo;
-	UINT8									ubTalkDesire, ubLoop;
+	UINT8									ubTalkDesire, ubLoop, ubHighestOpinionRequired = 0;
+	BOOLEAN								fQuoteFound = FALSE;
 	UINT8									ubFirstQuoteRecord, ubLastQuoteRecord;
 	UINT16								usItemToConsider;
 
@@ -896,6 +895,19 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 							}
 							else
 							{
+								// accept - record 17
+								/*
+								{
+
+									SOLDIERTYPE *					pSoldier;
+									INT8									bMoney;
+									INT8									bEmptySlot;
+
+									pSoldier = FindSoldierByProfileID( DARREN, FALSE );
+									bMoney = FindObjWithin( pSoldier, MONEY, BIGPOCK1POS, SMALLPOCK8POS );
+									bEmptySlot = FindObjWithin( pSoldier, NOTHING, BIGPOCK1POS, SMALLPOCK8POS );
+								}
+								*/
 
 								// record amount of bet
 								gMercProfiles[ DARREN ].iBalance = (*pObj)[0]->data.money.uiMoneyAmount;
@@ -1461,9 +1473,9 @@ void ReplaceLocationInNPCData( NPCQuoteInfo * pNPCQuoteInfoArray, INT16 sOldGrid
 		{
 			pNPCQuoteInfo->sRequiredGridno = -sNewGridNo;
 		}
-		if (sOldGridNo == pNPCQuoteInfo->sGoToGridno)
+		if (sOldGridNo == pNPCQuoteInfo->usGoToGridno)
 		{
-			pNPCQuoteInfo->sGoToGridno = sNewGridNo;
+			pNPCQuoteInfo->usGoToGridno = sNewGridNo;
 		}
 	}
 }
@@ -2051,7 +2063,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 					}
 					NPCDoAction( ubNPC, (UINT16) -(pQuotePtr->sActionData), ubRecordNum );
 				}
-				else if ( pQuotePtr->sGoToGridno == NO_MOVE && pQuotePtr->sActionData > 0 )
+				else if ( pQuotePtr->usGoToGridno == NO_MOVE && pQuotePtr->sActionData > 0 )
 				{
 					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
 					ZEROTIMECOUNTER( pSoldier->timeCounters.AICounter );
@@ -2064,7 +2076,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 				}
 
 				// Movement?
-				if ( pQuotePtr->sGoToGridno != NO_MOVE )
+				if ( pQuotePtr->usGoToGridno != NO_MOVE )
 				{
 					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
 
@@ -2074,7 +2086,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 						// make sure he has keys
 						pSoldier->flags.bHasKeys = TRUE;
 					}
-					if (pSoldier && pSoldier->sGridNo == pQuotePtr->sGoToGridno )
+					if (pSoldier && pSoldier->sGridNo == pQuotePtr->usGoToGridno )
 					{
 						// search for quotes to trigger immediately!
 						pSoldier->ubQuoteRecord = ubRecordNum + 1; // add 1 so that the value is guaranteed nonzero
@@ -2093,14 +2105,14 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 
 						if (pQuotePtr->sActionData == NPC_ACTION_TELEPORT_NPC)
 						{
-							BumpAnyExistingMerc( pQuotePtr->sGoToGridno );
-							TeleportSoldier( pSoldier, pQuotePtr->sGoToGridno, FALSE );
+							BumpAnyExistingMerc( pQuotePtr->usGoToGridno );
+							TeleportSoldier( pSoldier, pQuotePtr->usGoToGridno, FALSE );
 							// search for quotes to trigger immediately!
 							NPCReachedDestination( pSoldier, FALSE );
 						}
 						else
 						{
-							NPCGotoGridNo( ubNPC, pQuotePtr->sGoToGridno, ubRecordNum );
+							NPCGotoGridNo( ubNPC, pQuotePtr->usGoToGridno, ubRecordNum );
 						}
 					}
 				}
@@ -2246,8 +2258,7 @@ INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 }
 
 UINT8 NPCTryToInitiateConv( SOLDIERTYPE * pNPC )
-{
-	// assumes current action is ACTION_APPROACH_MERC
+{ // assumes current action is ACTION_APPROACH_MERC
 	if (pNPC->aiData.bAction != AI_ACTION_APPROACH_MERC)
 	{
 		return( AI_ACTION_NONE );
@@ -2338,7 +2349,7 @@ void NPCReachedDestination( SOLDIERTYPE * pNPC, BOOLEAN fAlreadyThere )
 	// (indicated by a negative gridno in the has-item field)
 	// or an action to perform once we reached this gridno
 
-	if ( pNPC->sGridNo == pQuotePtr->sGoToGridno )
+	if ( pNPC->sGridNo == pQuotePtr->usGoToGridno )
 	{
 		// check for an after-move action
 		if ( pQuotePtr->sActionData > 0)
@@ -2561,6 +2572,7 @@ BOOLEAN TriggerNPCWithIHateYouQuote( UINT8 ubTriggerNPC )
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
+	BOOLEAN				fDisplayDialogue = TRUE;
 	UINT8					ubLoop;
 
 	if (EnsureQuoteFileLoaded( ubTriggerNPC ) == FALSE)
@@ -2712,6 +2724,7 @@ BOOLEAN TriggerNPCWithGivenApproach( UINT8 ubTriggerNPC, UINT8 ubApproach, BOOLE
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
+	BOOLEAN				fDisplayDialogue = TRUE;
 	UINT8					ubLoop;
 
 	if (EnsureQuoteFileLoaded( ubTriggerNPC ) == FALSE)
@@ -3155,6 +3168,7 @@ UINT8 ActionIDForMovementRecord( UINT8 ubNPC, UINT8 ubRecord )
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
+	BOOLEAN				fDisplayDialogue = TRUE;
 
 	if ( EnsureQuoteFileLoaded( ubNPC ) == FALSE )
 	{
@@ -3344,7 +3358,7 @@ void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier )
 	}
 
 	EnsureQuoteFileLoaded( DARREL );
-	gpNPCQuoteInfoArray[ DARREL ][ 10 ].sGoToGridno = sAdjustedGridNo;
+	gpNPCQuoteInfoArray[ DARREL ][ 10 ].usGoToGridno = sAdjustedGridNo;
 	gpNPCQuoteInfoArray[ DARREL ][ 11 ].sRequiredGridno = -(sAdjustedGridNo);
 	gpNPCQuoteInfoArray[ DARREL ][ 11 ].ubTriggerNPC = pSoldier->ubProfile;
 }

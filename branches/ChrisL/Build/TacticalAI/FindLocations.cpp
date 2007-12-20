@@ -33,7 +33,6 @@
 #include "PathAIDebug.h"
 
 #ifdef _DEBUG
-#define DEBUGCOVER
 	INT16 gsCoverValue[WORLD_MAX];
 	INT16	gsBestCover;
 	#ifndef PATHAI_VISIBLE_DEBUG
@@ -162,10 +161,6 @@ INT8 CalcAverageCTGTForPosition( SOLDIERTYPE * pSoldier, UINT8 ubOppID, INT16 sO
 	INT8		bCubeLevel;
 	INT32		iTotalCTGT = 0, bValidCubeLevels = 0;
 
-	//UINT16 sWantedRange = 0;
-	//INT8 bBestWeaponIndex = FindBestWeaponIfCurrentIsOutOfRange(pSoldier, HANDPOS, sWantedRange);
-	//AssureItemIsInHandPos(pSoldier, bBestWeaponIndex, TEMPORARILY);
-
 	for (bCubeLevel = 1; bCubeLevel <= 3; bCubeLevel++)
 	{
 			switch (bCubeLevel)
@@ -188,7 +183,6 @@ INT8 CalcAverageCTGTForPosition( SOLDIERTYPE * pSoldier, UINT8 ubOppID, INT16 sO
 		iTotalCTGT += SoldierToLocationChanceToGetThrough( pSoldier, sOppGridNo, bLevel, bCubeLevel, ubOppID );
 		bValidCubeLevels++;
 	}
-	//UndoAssureItemIsInHandPos(pSoldier, bBestWeaponIndex, TEMPORARILY);
 	iTotalCTGT /= bValidCubeLevels;
 	return( (INT8) iTotalCTGT );
 }
@@ -334,9 +328,7 @@ INT32 CalcCoverValue(SOLDIERTYPE *pMe, INT16 sMyGridNo, INT32 iMyThreat, INT32 i
 		// optimistically assume we'll be behind the best cover available at this spot
 
 		//bHisActualCTGT = ChanceToGetThrough(pHim,sMyGridNo,FAKE,ACTUAL,TESTWALLS,9999,M9PISTOL,NOT_FOR_LOS); // assume a gunshot
-		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("LOS: start bHisActualCTGT = CalcWorstCTGTForPosition"));
 		bHisActualCTGT = CalcWorstCTGTForPosition( pHim, pMe->ubID, sMyGridNo, pMe->pathing.bLevel, iMyAPsLeft );
-		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("LOS: end bHisActualCTGT = CalcWorstCTGTForPosition"));
 	}
 
 	// normally, that will be the cover I'll use, unless worst case over-rides it
@@ -386,9 +378,7 @@ INT32 CalcCoverValue(SOLDIERTYPE *pMe, INT16 sMyGridNo, INT32 iMyThreat, INT32 i
 
 		// let's not assume anything about the stance the enemy might take, so take an average
 		// value... no cover give a higher value than partial cover
-		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("LOS: start bMyCTGT = CalcAverageCTGTForPosition"));
 		bMyCTGT = CalcAverageCTGTForPosition( pMe, pHim->ubID, sHisGridNo, pHim->pathing.bLevel, iMyAPsLeft );
-		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("LOS: end bMyCTGT = CalcAverageCTGTForPosition, %d %s", bMyCTGT, pHim->name));
 
 		// since NPCs are too dumb to shoot "blind", ie. at opponents that they
 		// themselves can't see (mercs can, using another as a spotter!), if the
@@ -537,12 +527,6 @@ UINT8 NumberOfTeamMatesAdjacent( SOLDIERTYPE * pSoldier, INT16 sGridNo )
 	}
 
 	return( ubCount );
-}
-
-INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier)
-{
-	INT32 dummy;
-	return FindBestNearbyCover(pSoldier, pSoldier->aiData.bAIMorale, &dummy);
 }
 
 INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentBetter)
@@ -845,7 +829,8 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	iBestCoverValue = iCurrentCoverValue;
 
 #ifdef DEBUGDECISIONS
-	std::string tempstr = String("FBNC: CURRENT iCoverValue = %d\n",iCurrentCoverValue );
+	STR tempstr="";
+	sprintf( tempstr, "FBNC: CURRENT iCoverValue = %d\n",iCurrentCoverValue );
 	DebugAI( tempstr );
 #endif
 
@@ -1049,7 +1034,8 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 				*/
 
 #ifdef DEBUGDECISIONS
-				std::string tempstr = String("FBNC: NEW BEST iCoverValue at gridno %d is %d\n",sGridNo,iCoverValue );
+				STR tempstr;
+				sprintf( tempstr,"FBNC: NEW BEST iCoverValue at gridno %d is %d\n",sGridNo,iCoverValue );
 				DebugAI( tempstr );
 #endif
 				// remember it instead
@@ -1100,7 +1086,8 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		if (*piPercentBetter >= MIN_PERCENT_BETTER)
 		{
 #ifdef DEBUGDECISIONS
-			std::string tempstr = String("Found Cover: current %ld, best %ld, %%%%Better %ld\n", iCurrentCoverValue,iBestCoverValue,*piPercentBetter	);
+			STR tempstr;
+			sprintf( tempstr,"Found Cover: current %ld, best %ld, %%%%Better %ld\n", iCurrentCoverValue,iBestCoverValue,*piPercentBetter  );
 			DebugAI( tempstr );
 #endif
 
@@ -1644,6 +1631,8 @@ INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 	return(sClosestSpot);
 }
 
+#define MINIMUM_REQUIRED_STATUS 70
+
 INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 {
 	DebugMsg(TOPIC_JA2AI,DBG_LEVEL_3,String("SearchForItems"));
@@ -1957,7 +1946,9 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 		DebugAI( String( "%d decides to pick up %S", pSoldier->ubID, ItemNames[ gWorldItems[ iBestItemIndex ].object.usItem ] ) );
 		if (Item[gWorldItems[ iBestItemIndex ].object.usItem].usItemClass == IC_GUN)
 		{
-			if (pSoldier->inv[HANDPOS].exists() == true && PlaceInAnyPocket(pSoldier, &pSoldier->inv[HANDPOS], false) == false)
+			//CHRISL: This is the line from ADB's code but I removed it, for now, to match what 0verhaul has been working on
+			//if (pSoldier->inv[HANDPOS].exists() == true && PlaceInAnyPocket(pSoldier, &pSoldier->inv[HANDPOS], false) == false)
+			if (FindBetterSpotForItem( pSoldier, HANDPOS ) == FALSE)
 			{
 				if (pSoldier->bActionPoints < AP_PICKUP_ITEM + AP_PICKUP_ITEM)
 				{
@@ -2473,7 +2464,7 @@ INT16 FindFlankingSpot(SOLDIERTYPE *pSoldier, INT16 sPos, INT8 bAction )
 
 
 	// get direction of position to flank from soldier's position
-	INT16 sDir = (UINT8)GetDirectionFromGridNo ( sPos, pSoldier) ;
+	INT16 sDir = GetDirectionFromGridNo ( sPos, pSoldier) ;
 	INT16 sDesiredDir;
 	INT16 sTempDir;
 	INT16 sTempDist, sBestDist=0;

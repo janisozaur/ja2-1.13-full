@@ -1,7 +1,6 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "AI All.h"
 #else
-	#include "builddefines.h"
 	#include "ai.h"
 	#include "Weapons.h"
 	#include "opplist.h"
@@ -34,49 +33,44 @@
 // InWaterOrGas - gas stuff
 // RoamingRange - point patrol stuff
 
-#ifdef JA2TESTVERSION
-	UINT16 gAssertCorrectItem = 0;
-	INT8 gAssertCorrectInvSlot = 0;
-#endif
-
 extern UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady );
 
 UINT8 Urgency[NUM_STATUS_STATES][NUM_MORALE_STATES] =
 {
-	{URGENCY_LOW,	URGENCY_LOW,	URGENCY_LOW,	URGENCY_LOW,	URGENCY_LOW}, // green
-	{URGENCY_HIGH, URGENCY_MED,	URGENCY_MED,	URGENCY_LOW,	URGENCY_LOW}, // yellow
-	{URGENCY_HIGH, URGENCY_MED,	URGENCY_MED,	URGENCY_MED,	URGENCY_MED}, // red
-	{URGENCY_HIGH, URGENCY_HIGH, URGENCY_HIGH, URGENCY_MED,	URGENCY_MED}	// black
+	{URGENCY_LOW,  URGENCY_LOW,  URGENCY_LOW,  URGENCY_LOW,  URGENCY_LOW}, // green
+	{URGENCY_HIGH, URGENCY_MED,  URGENCY_MED,  URGENCY_LOW,  URGENCY_LOW}, // yellow
+	{URGENCY_HIGH, URGENCY_MED,  URGENCY_MED,  URGENCY_MED,  URGENCY_MED}, // red
+	{URGENCY_HIGH, URGENCY_HIGH, URGENCY_HIGH, URGENCY_MED,  URGENCY_MED}  // black
 };
 
 UINT16 MovementMode[LAST_MOVEMENT_ACTION + 1][NUM_URGENCY_STATES] =
 {
-	{WALKING,	WALKING,	WALKING }, // AI_ACTION_NONE
+	{WALKING,	 WALKING,  WALKING }, // AI_ACTION_NONE
 
-	{WALKING,	WALKING,	WALKING }, // AI_ACTION_RANDOM_PATROL
-	{WALKING,	RUNNING,	RUNNING }, // AI_ACTION_SEEK_FRIEND
-	{WALKING,	RUNNING,	RUNNING }, // AI_ACTION_SEEK_OPPONENT
-	{RUNNING,	RUNNING,	RUNNING }, // AI_ACTION_TAKE_COVER
-	{WALKING,	RUNNING,	RUNNING }, // AI_ACTION_GET_CLOSER
+	{WALKING,  WALKING,  WALKING }, // AI_ACTION_RANDOM_PATROL
+	{WALKING,  RUNNING,  RUNNING }, // AI_ACTION_SEEK_FRIEND
+	{WALKING,  RUNNING,  RUNNING }, // AI_ACTION_SEEK_OPPONENT
+	{RUNNING,  RUNNING,  RUNNING }, // AI_ACTION_TAKE_COVER
+	{WALKING,  RUNNING,  RUNNING }, // AI_ACTION_GET_CLOSER
 
-	{WALKING,	WALKING,	WALKING }, // AI_ACTION_POINT_PATROL,
-	{WALKING,	RUNNING,	RUNNING }, // AI_ACTION_LEAVE_WATER_GAS,
-	{WALKING,	SWATTING,	RUNNING }, // AI_ACTION_SEEK_NOISE,
-	{RUNNING,	RUNNING,	RUNNING }, // AI_ACTION_ESCORTED_MOVE,
-	{WALKING,	RUNNING,	RUNNING }, // AI_ACTION_RUN_AWAY,
+	{WALKING,  WALKING,  WALKING }, // AI_ACTION_POINT_PATROL,
+	{WALKING,  RUNNING,  RUNNING }, // AI_ACTION_LEAVE_WATER_GAS,
+	{WALKING,  SWATTING,  RUNNING }, // AI_ACTION_SEEK_NOISE,
+	{RUNNING,  RUNNING,  RUNNING }, // AI_ACTION_ESCORTED_MOVE,
+	{WALKING,  RUNNING,  RUNNING }, // AI_ACTION_RUN_AWAY,
 
-	{RUNNING,	RUNNING,	RUNNING }, // AI_ACTION_KNIFE_MOVE
-	{WALKING,	WALKING,	WALKING }, // AI_ACTION_APPROACH_MERC
-	{RUNNING,	RUNNING,	RUNNING }, // AI_ACTION_TRACK
-	{RUNNING,	RUNNING,	RUNNING },	// AI_ACTION_EAT
-	{WALKING,	RUNNING,	RUNNING},	// AI_ACTION_PICKUP_ITEM
+	{RUNNING,  RUNNING,  RUNNING }, // AI_ACTION_KNIFE_MOVE
+	{WALKING,  WALKING,  WALKING }, // AI_ACTION_APPROACH_MERC
+	{RUNNING,  RUNNING,  RUNNING }, // AI_ACTION_TRACK
+	{RUNNING,	 RUNNING,  RUNNING },	// AI_ACTION_EAT 
+	{WALKING,	 RUNNING,  RUNNING},	// AI_ACTION_PICKUP_ITEM
 
-	{WALKING,	WALKING,	WALKING},	// AI_ACTION_SCHEDULE_MOVE
-	{WALKING,	WALKING,	WALKING},	// AI_ACTION_WALK
-	{WALKING,	RUNNING,	RUNNING},	// withdraw
-	{WALKING,	SWATTING,	SWATTING},	// flank left
-	{WALKING,	SWATTING,	SWATTING},	// flank right
-	{RUNNING,	RUNNING,	RUNNING},	// AI_ACTION_MOVE_TO_CLIMB
+	{WALKING,	 WALKING,  WALKING},	// AI_ACTION_SCHEDULE_MOVE
+	{WALKING,	 WALKING,  WALKING},	// AI_ACTION_WALK
+	{WALKING,	 RUNNING,  RUNNING},	// withdraw
+	{WALKING,	 SWATTING,  SWATTING},	// flank left
+	{WALKING,	 SWATTING,  SWATTING},	// flank right
+	{RUNNING,	 RUNNING,  RUNNING},	// AI_ACTION_MOVE_TO_CLIMB
 };
 
 INT8 OKToAttack(SOLDIERTYPE * pSoldier, int target)
@@ -235,21 +229,21 @@ UINT8 ShootingStanceChange( SOLDIERTYPE * pSoldier, ATTACKTYPE * pAttack, INT8 b
 		switch( bLoop )
 		{
 			case 0:
-				if ( !pSoldier->InternalSoldierReadyWeapon( bDesiredDirection, ANIM_STAND ) )
+				if ( !pSoldier->InternalIsValidStance( bDesiredDirection, ANIM_STAND ) )
 				{
 					continue;
 				}
 				pSoldier->usAnimState = STANDING;
 				break;
 			case 1:
-				if ( !pSoldier->InternalSoldierReadyWeapon( bDesiredDirection, ANIM_CROUCH ) )
+				if ( !pSoldier->InternalIsValidStance( bDesiredDirection, ANIM_CROUCH ) )
 				{
 					continue;
 				}
 				pSoldier->usAnimState = CROUCHING;
 				break;
 			default:
-				if ( !pSoldier->InternalSoldierReadyWeapon( bDesiredDirection, ANIM_PRONE ) )
+				if ( !pSoldier->InternalIsValidStance( bDesiredDirection, ANIM_PRONE ) )
 				{
 					continue;
 				}
@@ -372,10 +366,10 @@ UINT16 DetermineMovementMode( SOLDIERTYPE * pSoldier, INT8 bAction )
 	}
 }
 
-void NewDest(SOLDIERTYPE *pSoldier, INT16 sGridNo)
+void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
 {
 	// ATE: Setting sDestination? Tis does not make sense...
-	//pSoldier->pathing.sDestination = sGridNo;
+	//pSoldier->pathing.sDestination = usGridNo;
 	BOOLEAN fSet = FALSE;
 
 	if ( IS_MERC_BODY_TYPE( pSoldier ) && pSoldier->aiData.bAction == AI_ACTION_TAKE_COVER && (pSoldier->aiData.bOrders == DEFENSIVE || pSoldier->aiData.bOrders == CUNNINGSOLO || pSoldier->aiData.bOrders == CUNNINGAID ) && (SoldierDifficultyLevel( pSoldier ) >= 2) )
@@ -449,7 +443,7 @@ void NewDest(SOLDIERTYPE *pSoldier, INT16 sGridNo)
 	// ATE: Using this more versitile version
 	// Last paramater says whether to re-start the soldier's animation
 	// This should be done if buddy was paused for fNoApstofinishMove...
-	pSoldier->EVENT_InternalGetNewSoldierPath( sGridNo, pSoldier->usUIMovementMode , FALSE, pSoldier->flags.fNoAPToFinishMove );
+	pSoldier->EVENT_InternalGetNewSoldierPath( usGridNo, pSoldier->usUIMovementMode , FALSE, pSoldier->flags.fNoAPToFinishMove );
 
 }
 
@@ -464,24 +458,24 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 
 	switch (pSoldier->aiData.bAction)
 	{
-		case AI_ACTION_NONE:					// maintain current position & facing
+		case AI_ACTION_NONE:                  // maintain current position & facing
 			// no cost for doing nothing!
 			break;
 
-		case AI_ACTION_CHANGE_FACING:		 // turn to face another direction
+		case AI_ACTION_CHANGE_FACING:         // turn to face another direction
 			bMinPointsNeeded = (INT8) GetAPsToLook( pSoldier );
 			break;
 
-		case AI_ACTION_RANDOM_PATROL:		 // move towards a particular location
-		case AI_ACTION_SEEK_FRIEND:			// move towards friend in trouble
-		case AI_ACTION_SEEK_OPPONENT:		 // move towards a reported opponent
-		case AI_ACTION_TAKE_COVER:			// run for nearest cover from threat
-		case AI_ACTION_GET_CLOSER:			// move closer to a strategic location
-		case AI_ACTION_POINT_PATROL:			// move towards next patrol point
-		case AI_ACTION_LEAVE_WATER_GAS:		// seek nearest spot of ungassed land
-		case AI_ACTION_SEEK_NOISE:			// seek most important noise heard
-		case AI_ACTION_ESCORTED_MOVE:		 // go where told to by escortPlayer
-		case AI_ACTION_RUN_AWAY:				// run away from nearby opponent(s)
+		case AI_ACTION_RANDOM_PATROL:         // move towards a particular location
+		case AI_ACTION_SEEK_FRIEND:           // move towards friend in trouble
+		case AI_ACTION_SEEK_OPPONENT:         // move towards a reported opponent
+		case AI_ACTION_TAKE_COVER:            // run for nearest cover from threat
+		case AI_ACTION_GET_CLOSER:            // move closer to a strategic location
+		case AI_ACTION_POINT_PATROL:          // move towards next patrol point
+		case AI_ACTION_LEAVE_WATER_GAS:       // seek nearest spot of ungassed land
+		case AI_ACTION_SEEK_NOISE:            // seek most important noise heard
+		case AI_ACTION_ESCORTED_MOVE:         // go where told to by escortPlayer
+		case AI_ACTION_RUN_AWAY:              // run away from nearby opponent(s)
 		case AI_ACTION_APPROACH_MERC:
 		case AI_ACTION_TRACK:
 		case AI_ACTION_EAT:
@@ -492,7 +486,7 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 			bMinPointsNeeded = MinPtsToMove(pSoldier);
 			break;
 
-		case AI_ACTION_PICKUP_ITEM:			// grab things lying on the ground
+		case AI_ACTION_PICKUP_ITEM:           // grab things lying on the ground
 			bMinPointsNeeded = __max( MinPtsToMove( pSoldier ), AP_PICKUP_ITEM );
 			break;
 
@@ -506,9 +500,9 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 			bMinPointsNeeded = AP_PICKUP_ITEM;
 			break;
 
-		case AI_ACTION_FIRE_GUN:				// shoot at nearby opponent
-		case AI_ACTION_TOSS_PROJECTILE:		// throw grenade at/near opponent(s)
-		case AI_ACTION_KNIFE_MOVE:			// preparing to stab adjacent opponent
+		case AI_ACTION_FIRE_GUN:              // shoot at nearby opponent
+		case AI_ACTION_TOSS_PROJECTILE:       // throw grenade at/near opponent(s)
+		case AI_ACTION_KNIFE_MOVE:            // preparing to stab adjacent opponent
 		case AI_ACTION_THROW_KNIFE:
 			// only FIRE_GUN currently actually pays extra turning costs!
 			bMinPointsNeeded = MinAPsToAttack(pSoldier,pSoldier->aiData.usActionData,ADDTURNCOST);
@@ -517,7 +511,7 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 			if (ptsNeeded > pSoldier->bActionPoints)
 			{
 			/*
-				tempstr = String("AI ERROR: %s has insufficient points for attack action %d at grid %d",
+				sprintf(tempstr,"AI ERROR: %s has insufficient points for attack action %d at grid %d",
 							pSoldier->name,pSoldier->aiData.bAction,pSoldier->aiData.usActionData);
 				PopMessage(tempstr);
 				*/
@@ -525,25 +519,25 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 #endif
 			break;
 
-		case AI_ACTION_PULL_TRIGGER:			// activate an adjacent panic trigger
+		case AI_ACTION_PULL_TRIGGER:          // activate an adjacent panic trigger
 			bMinPointsNeeded = AP_PULL_TRIGGER;
 			break;
 
-		case AI_ACTION_USE_DETONATOR:		 // grab detonator and set off bomb(s)
+		case AI_ACTION_USE_DETONATOR:         // grab detonator and set off bomb(s)
 			bMinPointsNeeded = AP_USE_REMOTE;
 			break;
 
-		case AI_ACTION_YELLOW_ALERT:			// tell friends opponent(s) heard
-		case AI_ACTION_RED_ALERT:			 // tell friends opponent(s) seen
-		case AI_ACTION_CREATURE_CALL:				// for now
+		case AI_ACTION_YELLOW_ALERT:          // tell friends opponent(s) heard
+		case AI_ACTION_RED_ALERT:             // tell friends opponent(s) seen
+		case AI_ACTION_CREATURE_CALL:				 // for now
 			bMinPointsNeeded = AP_RADIO;
 			break;
 
-		case AI_ACTION_CHANGE_STANCE:				// crouch
+		case AI_ACTION_CHANGE_STANCE:                // crouch
 			bMinPointsNeeded = AP_CROUCH;
 			break;
 
-		case AI_ACTION_GIVE_AID:				// help injured/dying friend
+		case AI_ACTION_GIVE_AID:              // help injured/dying friend
 			bMinPointsNeeded = 0;
 			break;
 
@@ -884,7 +878,9 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 	INT32		iPathCost;
 	INT16		sClosestDisturbance = NOWHERE;
 	UINT32	uiLoop;
+	UINT16	closestConscious = NOWHERE,closestUnconscious = NOWHERE;
 	INT32		iShortestPath = 1000;
+	INT32		iShortestPathConscious = 1000,iShortestPathUnconscious = 1000;
 	UINT8		*pubNoiseVolume;
 	INT8		*pbNoiseLevel;
 	INT8		*pbPersOL,*pbPublOL;
@@ -2108,7 +2104,8 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
 
 
 #ifdef DEBUGDECISIONS
-		std::string tempstr = String ("Morale = %d (category %d)\n",
+		STR tempstr;
+		 sprintf( tempstr, "Morale = %d (category %d)\n",
 		pSoldier->aiData.bMorale,bMoraleCategory);
 	DebugAI (tempstr);
 #endif
@@ -2238,7 +2235,7 @@ INT32 CalcManThreatValue( SOLDIERTYPE *pEnemy, INT16 sMyGrid, UINT8 ubReduceForC
 	// NOTE: maximum is about 200 for a healthy Mike type with a mortar!
 	if (iThreatValue > 250)
 	{
-		tempstr = String("CalcManThreatValue: WARNING - %d has a very high threat value of %d",pEnemy->ubID,iThreatValue);
+		sprintf(tempstr,"CalcManThreatValue: WARNING - %d has a very high threat value of %d",pEnemy->ubID,iThreatValue);
 
 #ifdef RECORDNET
 		fprintf(NetDebugFile,"\t%s\n",tempstr);
@@ -2312,7 +2309,7 @@ INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT16 * pusFromGridNo)
 		case SNIPER:				return ( 5 );
 		default:
 #ifdef BETAVERSION
-			tempstr = String("%s has invalid orders = %d",pSoldier->name,pSoldier->aiData.bOrders);
+			sprintf(tempstr,"%s has invalid orders = %d",pSoldier->name,pSoldier->aiData.bOrders);
 			PopMessage(tempstr);
 #endif
 			return(0);
@@ -2332,47 +2329,42 @@ void RearrangePocket(SOLDIERTYPE *pSoldier, INT8 bPocket1, INT8 bPocket2, UINT8 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"RearrangePocket done");
 }
 
-void Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 bPocketIndex, UINT8 bPermanent, INT32 lineNumber, STR8 szFunctionName, STR8 szFilename)
+BOOLEAN FindBetterSpotForItem( SOLDIERTYPE * pSoldier, INT8 bSlot )
 {
-	if (bPermanent == false) {
-		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("RearrangePocket: Making sure item is temporarily swapped into hand, called at line %d in %s in %s", lineNumber, szFunctionName, szFilename));
+	// looks for a place in the slots to put an item in a hand or armour
+	// position, and moves it there.
+	if (bSlot >= BIGPOCKSTART)
+	{
+		return( FALSE );
 	}
-	else {
-		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("RearrangePocket: Making sure item is in my hand, change is permanent, called at line %d in %s in %s", lineNumber, szFunctionName, szFilename));
+	if (pSoldier->inv[bSlot].exists() == false)
+	{
+		// well that's just fine then!
+		return( TRUE );
 	}
 
-	if (bPocketIndex != HANDPOS) {
-		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("RearrangePocket: Moving item %d from inv slot %d to hand",
-			pSoldier->inv[bPocketIndex].usItem, bPocketIndex));
-
-#ifdef JA2TESTVERSION
-		if (bPermanent == false) {
-			gAssertCorrectItem = pSoldier->inv[bPocketIndex].usItem;
-			gAssertCorrectInvSlot = bPocketIndex;
+	//CHRISL: TODO
+	if(FitsInSmallPocket(&pSoldier->inv[bSlot]) == false)
+	{
+		// then we're looking for a big pocket
+		bSlot = FindEmptySlotWithin( pSoldier, BIGPOCKSTART, MEDPOCKFINAL );
+	}
+	else
+	{
+		// try a small pocket first
+		bSlot = FindEmptySlotWithin( pSoldier, SMALLPOCKSTART, NUM_INV_SLOTS );
+		if (bSlot == NO_SLOT)
+		{
+			bSlot = FindEmptySlotWithin( pSoldier, BIGPOCKSTART, MEDPOCKFINAL );
 		}
-#endif
-
-		SwapObjs( pSoldier, bPocketIndex, HANDPOS, TRUE );
 	}
-	return;
-}
-
-void Undo_Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 bPocketIndex, UINT8 bPermanent, INT32 lineNumber, STR8 szFunctionName, STR8 szFilename)
-{
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("RearrangePocket: Making sure item is swapped back to its original inv slot, called at line %d in %s in %s", lineNumber, szFunctionName, szFilename));
-	if (bPocketIndex != HANDPOS) {
-		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("RearrangePocket: Moving item %d from hand back to inv slot %d",
-			pSoldier->inv[HANDPOS].usItem, bPocketIndex));
-
-#ifdef JA2TESTVERSION
-		if (gAssertCorrectInvSlot != bPocketIndex || gAssertCorrectItem != pSoldier->inv[HANDPOS].usItem) {
-			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ERROR! function call inv slot and current item at POS do not match stored inv slot and stored item" );
-		}
-#endif
-
-		SwapObjs( pSoldier, bPocketIndex, HANDPOS, TRUE );
+	if (bSlot == NO_SLOT)
+	{
+		return( FALSE );
 	}
-	return;
+    DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"findbetterspotforitem: swapping items");
+	RearrangePocket(pSoldier, HANDPOS, bSlot, FOREVER );		
+	return( TRUE );
 }
 
 UINT8 GetTraversalQuoteActionID( INT8 bDirection )
@@ -2550,25 +2542,27 @@ BOOLEAN ArmySeesOpponents( void )
 #ifdef DEBUGDECISIONS
 void AIPopMessage ( STR16 str )
 {
-	std::string tempstr = String ("%s", str);
-	DebugAI(tempstr);
+	DebugAI(str);
 }
 
 void AIPopMessage ( const STR8	str )
 {
-	std::string tempstr = String ("%s", str);
+	STR tempstr;
+	sprintf( tempstr,"%s", str);
 	DebugAI(tempstr);
 }
 
 void AINumMessage(const STR8	str, INT32 num)
 {
-	std::string tempstr = String ("%s %d", str, num);
+	STR tempstr;
+	sprintf( tempstr,"%s %d", str, num);
 	DebugAI(tempstr);
 }
 
 void AINameMessage(SOLDIERTYPE * pSoldier,const STR8	str,INT32 num)
 {
-	std::string tempstr = String ("%d %s %d",pSoldier->name , str, num);
+	STR tempstr;
+	sprintf( tempstr,"%d %s %d",pSoldier->name , str, num);
 	DebugAI( tempstr );
 }
 #endif

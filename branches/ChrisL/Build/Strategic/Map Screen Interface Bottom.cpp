@@ -166,6 +166,7 @@ extern BOOLEAN fShowDescriptionFlag;
 
 extern MOUSE_REGION gMPanelRegion;
 
+extern BOOLEAN gfDisableTacticalPanelButtons;
 
 // PROTOTYPES
 
@@ -1665,6 +1666,9 @@ void RequestTriggerExitFromMapscreen( INT8 bExitToWhere )
 
 		// delay until mapscreen has had a chance to render at least one full frame
 		gfOneFramePauseOnExit = TRUE;
+
+		//CHRISL: To force activation of tactical team panel buttons when switching to tactical
+		gfDisableTacticalPanelButtons = FALSE;
 	}
 }
 

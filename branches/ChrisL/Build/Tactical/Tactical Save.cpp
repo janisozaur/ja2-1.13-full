@@ -75,7 +75,7 @@ typedef struct
 		INT16		sRequiredGridno;		// location for NPC req'd to say quote
 	};
 
-	INT16	sGoToGridno;
+	UINT16	usGoToGridno;
 
 } TempNPCQuoteInfoSave;
 
@@ -1500,7 +1500,7 @@ BOOLEAN LoadAndAddWorldItemsFromTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 			}
 
 			//add the item to the world
-			AddItemToPool( pWorldItems[cnt].sGridNo, &pWorldItems[cnt].object, pWorldItems[cnt].bVisible, pWorldItems[cnt].ubLevel, pWorldItems[cnt].usFlags, pWorldItems[cnt].bRenderZHeightAboveLevel );
+			AddItemToPool( pWorldItems[cnt].sGridNo, &pWorldItems[cnt].object, pWorldItems[cnt].bVisible, pWorldItems[cnt].ubLevel, pWorldItems[cnt].usFlags, pWorldItems[cnt].bRenderZHeightAboveLevel, pWorldItems[cnt].soldierID );
 		}
 	}
 
@@ -2316,7 +2316,7 @@ BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile()
 			{
 				TempNpcQuote[ ubCnt ].usFlags		= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].fFlags;
 				TempNpcQuote[ ubCnt ].sRequiredItem = gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].sRequiredItem;
-				TempNpcQuote[ ubCnt ].sGoToGridno	= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].sGoToGridno;
+				TempNpcQuote[ ubCnt ].usGoToGridno	= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].usGoToGridno;
 			}
 		}
 
@@ -2362,7 +2362,7 @@ BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId )
 		{
 			TempNpcQuote[ ubCnt ].usFlags		= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags;
 			TempNpcQuote[ ubCnt ].sRequiredItem = gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sRequiredItem;
-			TempNpcQuote[ ubCnt ].sGoToGridno	= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sGoToGridno;
+			TempNpcQuote[ ubCnt ].usGoToGridno	= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridno;
 		}
 
 		//Seek to the correct spot in the file
@@ -2437,7 +2437,7 @@ BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile( UINT8 ubNpcId )
 	{
 		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags				= TempNpcQuote[ ubCnt ].usFlags;
 		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sRequiredItem		= TempNpcQuote[ ubCnt ].sRequiredItem;
-		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sGoToGridno		= TempNpcQuote[ ubCnt ].sGoToGridno;
+		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridno		= TempNpcQuote[ ubCnt ].usGoToGridno;
 	}
 
 	FileClose( hFile );

@@ -21,7 +21,6 @@
 	#include "opplist.h"
 	#include "Interface.h"
 	#include "Tactical Save.h"
-	#include "DecideAction.h"
 #endif
 
 #define AI_LIST_SIZE TOTAL_SOLDIERS

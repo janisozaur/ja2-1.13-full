@@ -293,14 +293,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DecideAction.h"
-				>
-			</File>
-			<File
-				RelativePath=".\FindLocations.h"
-				>
-			</File>
-			<File
 				RelativePath=".\NPC.h"
 				>
 			</File>

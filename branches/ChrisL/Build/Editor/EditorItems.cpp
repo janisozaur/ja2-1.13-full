@@ -914,7 +914,7 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 			break;
 	}
 
-	pObject = InternalAddItemToPool( &sGridNo, &gTempObject, bVisibility, 0, usFlags, 0, &iItemIndex );
+	pObject = InternalAddItemToPool( &sGridNo, &gTempObject, bVisibility, 0, usFlags, 0, -1, &iItemIndex );
 	if( gTempObject.usItem != OWNERSHIP )
 	{
 		gWorldItems[ iItemIndex ].ubNonExistChance = (UINT8)(100 - giDefaultExistChance);

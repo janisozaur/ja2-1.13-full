@@ -108,10 +108,10 @@ void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier)
 		if (gTempObject.ubNumberOfObjects > 1) {
 			gTempObject.RemoveObjectsFromStack(gTempObject.ubNumberOfObjects - 1);
 		}
-		pSoldier->inv[HANDPOS].AttachObject ( pSoldier,&gTempObject,FALSE);
+		pSoldier->inv[HANDPOS].AttachObject(pSoldier,&gTempObject,FALSE);
 	}
 	else if (pSoldier->inv[bPayloadPocket].MoveThisObjectTo(gTempObject, 1) == 0) {
-		pSoldier->inv[HANDPOS].AttachObject ( pSoldier,&gTempObject,FALSE);
+		pSoldier->inv[HANDPOS].AttachObject( pSoldier,&gTempObject,FALSE);
 	}
 }
 
@@ -239,7 +239,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN shootUns
 		// calc next attack's minimum shooting cost (excludes readying & turning)
 		ubRawAPCost = MinAPsToShootOrStab(pSoldier,pOpponent->sGridNo,FALSE);
 
-		if (pOpponent->sGridNo != pSoldier->sLastTarget)
+		if (pOpponent->sGridNo == pSoldier->sLastTarget)
 		{
 			// raw AP cost calculation included cost of changing target!
 			// Not unless we really needed to change targets!
@@ -1259,8 +1259,6 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 		// if opponent doesn't see the attacker
 		if (pOpponent->aiData.bOppList[pSoldier->ubID] != SEEN_CURRENTLY)
 		{
-			//fSurpriseStab = TRUE;
-
 			// and he's only one space away from attacker
 			if (SpacesAway(pSoldier->sGridNo,pOpponent->sGridNo) == 1)
 			{
@@ -1566,6 +1564,7 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 	UINT8 ubBonus;
 	INT32 iHeadProt = 0, iTorsoProt = 0, iLegProt = 0;
 	INT32 iTotalProt;
+	//INT8 bPlatePos;
 	UINT8	ubAmmoType;
 	UINT16 usItem;
 	OBJECTTYPE *pObj;
@@ -1587,7 +1586,7 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 	}
 	else
 	{
-		ubAmmoType = pSoldier->inv[pSoldier->ubAttackingHand][0]->data.gun.ubGunAmmoType;
+		ubAmmoType = (*pObj)[0]->data.gun.ubGunAmmoType;
 	}
 
 	// calculate distance to target, obtain his gun's maximum range rating
@@ -1994,7 +1993,8 @@ INT8 CanNPCAttack(SOLDIERTYPE *pSoldier)
 		bWeaponIn = FindAIUsableObjClass( pSoldier, IC_WEAPON );
 		if (bWeaponIn != NO_SLOT)
 		{
-			AssureItemIsInHandPos(pSoldier, bWeaponIn, FOREVER);
+			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"cannpcattack: swapping weapon into hand");
+			RearrangePocket( pSoldier, HANDPOS, bWeaponIn, FOREVER );
 			// look for another weapon if this one is 1-handed
 			//			if ( (Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_GUN) && !(Item[ pSoldier->inv[ HANDPOS ].usItem ].fFlags & ITEM_TWO_HANDED ) )
 			if ( (Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_GUN) && !(Item[ pSoldier->inv[ HANDPOS ].usItem ].twohanded ) )
@@ -2018,8 +2018,9 @@ INT8 CanNPCAttack(SOLDIERTYPE *pSoldier)
 	if (bCanAttack != TRUE) // if for any reason we can't attack right now
 	{
 		//LocateMember(pSoldier->ubID,SETLOCATOR); // locate to this NPC, don't center
-		std::string tempstr = String ("%s can't attack! (not OKToAttack, Reason code = %d)",pSoldier->name,bCanAttack);
-		DebugAI(tempstr);
+		STR16 tempstr;
+		sprintf(tempstr,"%s can't attack! (not OKToAttack, Reason code = %d)",pSoldier->name,bCanAttack);
+		AIPopMessage(tempstr);
 	}
 #endif
 
@@ -2080,7 +2081,12 @@ void CheckIfTossPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
 	if (pBestThrow->bWeaponIn != NO_SLOT)
 	{
 		// if it's in his holster, swap it into his hand temporarily
-		AssureItemIsInHandPos(pSoldier, pBestThrow->bWeaponIn, TEMPORARILY);
+		if (pBestThrow->bWeaponIn != HANDPOS)
+		{
+			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"checkiftosspossible: swapping item into hand");
+			RearrangePocket(pSoldier, HANDPOS, pBestThrow->bWeaponIn, TEMPORARILY);
+		}
+
 
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"checkiftosspossible: get minapstoattack");
 		// get the minimum cost to attack with this tossable item
@@ -2094,7 +2100,11 @@ void CheckIfTossPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
 		}
 
 		// if it was in his holster, swap it back into his holster for now
-		UndoAssureItemIsInHandPos(pSoldier, pBestThrow->bWeaponIn, TEMPORARILY);
+		if (pBestThrow->bWeaponIn != HANDPOS)
+		{
+			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"checkiftosspossible: swapping item into holster");
+			RearrangePocket( pSoldier, HANDPOS, pBestThrow->bWeaponIn, TEMPORARILY );
+		}
 	}
 }
 
@@ -2450,12 +2460,14 @@ void CheckIfShotPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN s
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("CheckIfShotPossible: weapon type %d",Weapon [pObj->usItem ].ubWeaponType ));
 
 		// if it's in his holster, swap it into his hand temporarily
-		AssureItemIsInHandPos(pSoldier, pBestShot->bWeaponIn, TEMPORARILY);
+		if (pBestShot->bWeaponIn != HANDPOS)
+		{
+			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"CheckIfShotPossible: Rearranging pocket");
+			RearrangePocket(pSoldier, HANDPOS, pBestShot->bWeaponIn, TEMPORARILY);
+		}
 
 		//if ( (!suppressionFire && ( (IsScoped(pObj) && GunRange(pObj) > pSoldier->MaxDistanceVisible(pBestShot->sTarget, pBestShot->bTargetLevel) ) || pSoldier->bOrders == SNIPER ) ) ||
-		// Changed by ADB, rev 1513
 		if ( (!suppressionFire && ( (IsScoped(pObj) && GunRange(pObj) > MaxNormalDistanceVisible() ) || pSoldier->aiData.bOrders == SNIPER ) ) ||
-//			(suppressionFire  && IsGunAutofireCapable(pSoldier,pBestShot->bWeaponIn ) && GetMagSize(pObj) > 30 && (*pObj)[0]->data.gun.ubGunShotsLeft > 20 ))
 			(suppressionFire  && IsGunAutofireCapable(&pSoldier->inv[pBestShot->bWeaponIn] ) && GetMagSize(pObj) > 30 && (*pObj)[0]->data.gun.ubGunShotsLeft > 20 ))
 		{
 			// get the minimum cost to attack with this item
@@ -2473,6 +2485,10 @@ void CheckIfShotPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN s
 			}
 		}
 		// if it was in his holster, swap it back into his holster for now
-		UndoAssureItemIsInHandPos(pSoldier, pBestShot->bWeaponIn, TEMPORARILY);
+		if (pBestShot->bWeaponIn != HANDPOS)
+		{
+			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"CheckIfShotPossible: Rearranging pocket");
+			RearrangePocket( pSoldier, HANDPOS, pBestShot->bWeaponIn, TEMPORARILY );
+		}
 	}
 }

@@ -9,7 +9,6 @@
 	#include "Items.h"
 	#include "Rotting Corpses.h"
 	#include "soldier add.h"
-	#include "DecideAction.h"
 #endif
 
 //forward declarations of common classes to eliminate includes
@@ -221,8 +220,9 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 			if (pSoldier->aiData.usActionData != NOWHERE)
 			{
 	#ifdef DEBUGDECISIONS
-				std::string tempstr = String ("%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->aiData.usActionData);
-				DebugAI(tempstr);
+				STR16 tempstr;
+				sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->aiData.usActionData);
+				AIPopMessage(tempstr);
 	#endif
 
 				return(AI_ACTION_LEAVE_WATER_GAS);
@@ -289,8 +289,9 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 			if (pSoldier->aiData.usActionData != NOWHERE)
 			{
 	#ifdef DEBUGDECISIONS
-			std::string tempstr = String("%s - RANDOM PATROL to grid %d",pSoldier->name,pSoldier->aiData.usActionData);
-			DebugAI(tempstr);
+			STR16 tempstr;
+			sprintf(tempstr,"%s - RANDOM PATROL to grid %d",pSoldier->name,pSoldier->aiData.usActionData);
+			 AIPopMessage(tempstr);
 	#endif
 
 				if (!gfTurnBasedAI)
@@ -352,7 +353,7 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 				{
 		#ifdef DEBUGDECISIONS
 				sprintf(tempstr,"%s - SEEK FRIEND at grid %d",pSoldier->name,pSoldier->aiData.usActionData);
-				DebugAI(tempstr);
+				 AIPopMessage(tempstr);
 		#endif
 
 					if (!gfTurnBasedAI)
@@ -406,13 +407,14 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 				} while (pSoldier->aiData.usActionData == pSoldier->ubDirection);
 
 	#ifdef DEBUGDECISIONS
-				std::string tempstr = String("%s - TURNS to face direction %d",pSoldier->name,pSoldier->aiData.usActionData);
-				DebugAI(tempstr);
+				STR16 tempstr;
+				sprintf(tempstr,"%s - TURNS to face direction %d",pSoldier->name,pSoldier->aiData.usActionData);
+				AIPopMessage(tempstr);
 	#endif
 
 				if ( ValidCreatureTurn( pSoldier, (INT8) pSoldier->aiData.usActionData ) )
 
-				//pSoldier->InternalSoldierReadyWeapon( (INT8) pSoldier->aiData.usActionData, ANIM_STAND ) )
+				//pSoldier->InternalIsValidStance( (INT8) pSoldier->usActionData, ANIM_STAND ) )
 				{
 					if (!gfTurnBasedAI)
 					{
@@ -497,10 +499,11 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 			{
 				pSoldier->aiData.usActionData = ubNoiseDir;
 	#ifdef DEBUGDECISIONS
-				std::string tempstr = String("%s - TURNS TOWARDS NOISE to face direction %d",pSoldier->name,pSoldier->aiData.usActionData);
-				DebugAI(tempstr);
+				STR16 tempstr;
+				sprintf(tempstr,"%s - TURNS TOWARDS NOISE to face direction %d",pSoldier->name,pSoldier->aiData.usActionData);
+				AIPopMessage(tempstr);
 	#endif
-				//if ( pSoldier->InternalSoldierReadyWeapon( (INT8) pSoldier->aiData.usActionData, ANIM_STAND ) )
+				//if ( pSoldier->InternalIsValidStance( (INT8) pSoldier->usActionData, ANIM_STAND ) )
 				if ( ValidCreatureTurn( pSoldier, (INT8) pSoldier->aiData.usActionData ) )
 				{
 					return(AI_ACTION_CHANGE_FACING);
@@ -565,9 +568,10 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 			if (pSoldier->aiData.usActionData != NOWHERE)
 			{
 	#ifdef DEBUGDECISIONS
-				std::string tempstr = String("%s - INVESTIGATING NOISE at grid %d, moving to %d",
+				STR16 tempstr;
+				sprintf(tempstr,"%s - INVESTIGATING NOISE at grid %d, moving to %d",
 					pSoldier->name,sNoiseGridNo,pSoldier->aiData.usActionData);
-				DebugAI(tempstr);
+				AIPopMessage(tempstr);
 	#endif
 
 				return(AI_ACTION_SEEK_NOISE);
@@ -605,6 +609,7 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  UINT8 ubCanMove,ubOpponentDir;
  //INT8 bInWater;
  INT8 bInGas;
+ INT8 bSeekPts = 0, bHelpPts = 0, bHidePts = 0;
  INT16 sAdjustedGridNo;
  BOOLEAN fChangeLevel;
 
@@ -642,8 +647,9 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 	if (pSoldier->aiData.usActionData != NOWHERE)
 	{
 #ifdef DEBUGDECISIONS
-	std::string tempstr = String("%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->aiData.usActionData);
-	 DebugAI(tempstr);
+	STR16 tempstr;
+		sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->aiData.usActionData);
+     AIPopMessage(tempstr);
 #endif
 
 	 return(AI_ACTION_LEAVE_WATER_GAS);
@@ -687,8 +693,9 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  if ((pSoldier->bBreath < 25) /*&& !bInWater*/ && !pSoldier->aiData.bUnderFire)
 	{
 #ifdef DEBUGDECISIONS
-	std::string tempstr = String("%s RESTS (STATUS RED), breath = %d",pSoldier->name,pSoldier->bBreath);
-	DebugAI(tempstr);
+	STR16 tempstr;
+	  sprintf(tempstr,"%s RESTS (STATUS RED), breath = %d",pSoldier->name,pSoldier->bBreath);
+   AIPopMessage(tempstr);
 #endif
 
 	pSoldier->aiData.usActionData = NOWHERE;
@@ -761,15 +768,12 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
 				if (pSoldier->aiData.usActionData != NOWHERE)
 				{
-					//sClosestFriend not declared
-					/*
 					#ifdef DEBUGDECISIONS
-					std::string tempstr;
-					tempstr = String("%s - SEEKING FRIEND at %d, MOVING to %d",
+					STR16 tempstr;
+					sprintf(tempstr,"%s - SEEKING FRIEND at %d, MOVING to %d",
 						pSoldier->name,sClosestFriend,pSoldier->aiData.usActionData);
-						DebugAI(tempstr);
+						AIPopMessage(tempstr);
 					#endif
-					*/
 					return(AI_ACTION_SEEK_FRIEND);
 				}
 			}
@@ -792,9 +796,10 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			{
 				#ifdef DEBUGDECISIONS
 					// do it!
-					std::string tempstr = String("%s - SEEKING OPPONENT at grid %d, MOVING to %d",
+					STR16 tempstr;
+					sprintf(tempstr,"%s - SEEKING OPPONENT at grid %d, MOVING to %d",
 					pSoldier->name,sClosestDisturbance,pSoldier->aiData.usActionData);
-					DebugAI(tempstr);
+					AIPopMessage(tempstr);
 				#endif
 
 				return(AI_ACTION_SEEK_OPPONENT);
@@ -861,14 +866,15 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				if (pSoldier->aiData.bAttitude == DEFENSIVE)
 					iChance += 25;
 
-				//if ( (INT16)PreRandom(100) < iChance && pSoldier->InternalSoldierReadyWeapon( ubOpponentDir, ANIM_STAND ) )
+				 //if ( (INT16)PreRandom(100) < iChance && pSoldier->InternalIsValidStance( ubOpponentDir, ANIM_STAND ) )
 				if ( (INT16)PreRandom(100) < iChance && ValidCreatureTurn( pSoldier, ubOpponentDir ) )
 				{
 					pSoldier->aiData.usActionData = ubOpponentDir;
 
 		#ifdef DEBUGDECISIONS
-					std::string tempstr = String("%s - TURNS TOWARDS CLOSEST ENEMY to face direction %d",pSoldier->name,pSoldier->aiData.usActionData);
-					DebugAI(tempstr);
+					STR16 tempstr;
+					 sprintf(tempstr,"%s - TURNS TOWARDS CLOSEST ENEMY to face direction %d",pSoldier->name,pSoldier->aiData.usActionData);
+					 AIPopMessage(tempstr);
 		#endif
 
 					return(AI_ACTION_CHANGE_FACING);
@@ -901,7 +907,7 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 {
 	// monster AI - hostile mammals in sense range
- INT16		sClosestOpponent;
+ INT16		sClosestOpponent,sBestCover = NOWHERE;
  INT16		sClosestDisturbance;
  UINT8		ubMinAPCost,ubCanMove/*,bInWater*/,bInGas;
  INT8			bDirection;
@@ -1011,8 +1017,9 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 	 if (pSoldier->aiData.usActionData != NOWHERE)
 		{
 #ifdef DEBUGDECISIONS
-		std::string tempstr = String("%s - GASSED or LOW ON BREATH (%d), RUNNING AWAY to grid %d",pSoldier->name,pSoldier->bBreath,pSoldier->aiData.usActionData);
-		DebugAI(tempstr);
+		STR16 tempstr;
+		  sprintf(tempstr,"%s - GASSED or LOW ON BREATH (%d), RUNNING AWAY to grid %d",pSoldier->name,pSoldier->bBreath,pSoldier->aiData.usActionData);
+       AIPopMessage(tempstr);
 #endif
 
 		return(AI_ACTION_RUN_AWAY);
@@ -1034,8 +1041,9 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 	if (pSoldier->aiData.usActionData != NOWHERE)
 	{
 #ifdef DEBUGDECISIONS
-		std::string tempstr = String("%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->aiData.usActionData);
-	 DebugAI(tempstr);
+		STR16 tempstr;
+		sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->aiData.usActionData);
+     AIPopMessage(tempstr);
 #endif
 
 	 return(AI_ACTION_LEAVE_WATER_GAS);
@@ -1072,7 +1080,8 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 
 				if ( bWeaponIn != NO_SLOT )
 				{
-					AssureItemIsInHandPos(pSoldier, bWeaponIn, FOREVER);
+					DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"creaturedecideactionblack: swapping item into hand");
+					RearrangePocket(pSoldier,HANDPOS,bWeaponIn,FOREVER);
 					bCanAttack = TRUE;
 				}
 				else
@@ -1119,7 +1128,11 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 			{
 				bSpitIn = bWeaponIn;
 				// if it's in another pocket, swap it into his hand temporarily
-				AssureItemIsInHandPos(pSoldier, bWeaponIn, TEMPORARILY);
+				if (bWeaponIn != HANDPOS)
+				{
+					DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"creaturedecideactionblack: swapping gun into hand");
+					RearrangePocket(pSoldier,HANDPOS,bWeaponIn,TEMPORARILY);
+				}
 
 				// now it better be a gun, or the guy can't shoot (but has other attack(s))
 
@@ -1170,7 +1183,11 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 					}
 				}
 				// if it was in his holster, swap it back into his holster for now
-				UndoAssureItemIsInHandPos(pSoldier, bWeaponIn, TEMPORARILY);
+				if (bWeaponIn != HANDPOS)
+				{
+					DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"creaturedecideactionblack: swapping gun into holster");
+					RearrangePocket(pSoldier,HANDPOS,bWeaponIn,TEMPORARILY);
+				}
 			}
 			else
 			{
@@ -1225,7 +1242,11 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 	if ( bWeaponIn != NO_SLOT )
 	{
 		// if it's in his holster, swap it into his hand temporarily
-		AssureItemIsInHandPos(pSoldier, bWeaponIn, TEMPORARILY);
+		if (bWeaponIn != HANDPOS)
+		{
+			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"creaturedecideactionblack: swapping knife into hand");
+			RearrangePocket(pSoldier,HANDPOS,bWeaponIn,TEMPORARILY);
+		}
 
 		// get the minimum cost to attack with this knife
 		ubMinAPCost = MinAPsToAttack(pSoldier,pSoldier->sLastTarget,DONTADDTURNCOST);
@@ -1254,7 +1275,11 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 		}
 
 			// if it was in his holster, swap it back into his holster for now
-			UndoAssureItemIsInHandPos(pSoldier, bWeaponIn, TEMPORARILY);
+			if (bWeaponIn != HANDPOS)
+			{
+				DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"creaturedecideactionblack: swapping knife into holster");
+				RearrangePocket(pSoldier,HANDPOS,bWeaponIn,TEMPORARILY);
+			}
 
 			if (CurrStab.iAttackValue > BestStab.iAttackValue)
 			{
@@ -1302,8 +1327,12 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 		}
 
 		// if necessary, swap the weapon into the hand position
+		 if (BestAttack.bWeaponIn != HANDPOS)
+		 {
 		// IS THIS NOT BEING SET RIGHT?????
-		AssureItemIsInHandPos(pSoldier, BestAttack.bWeaponIn, FOREVER);
+				DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"creaturedecideactionblack: swapping best weapon into hand");
+				RearrangePocket(pSoldier,HANDPOS,BestAttack.bWeaponIn,FOREVER);
+		 }
 
 		//////////////////////////////////////////////////////////////////////////
 		// GO AHEAD & ATTACK!
@@ -1320,10 +1349,9 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 		{
 			pSoldier->bAimShotLocation = AIM_SHOT_RANDOM;
 		}
-		//ExtMen is not declared
-/*
+
 #ifdef DEBUGDECISIONS
-		std::string tempstr;
+		STR tempstr;
 		sprintf( tempstr, "%d(%s) %s %d(%s) at gridno %d (%d APs aim)\n",
 			pSoldier->ubID,pSoldier->name,
 			(ubBestAttackAction == AI_ACTION_FIRE_GUN)?"SHOOTS":((ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE)?"TOSSES AT":"STABS"),
@@ -1331,7 +1359,6 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 			BestAttack.sTarget,BestAttack.ubAimTime) ;
 		DebugAI( tempstr );
 #endif
-		*/
 
 		return(ubBestAttackAction);
 
@@ -1388,8 +1415,9 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 					pSoldier->aiData.usActionData = bDirection;
 
 					#ifdef DEBUGDECISIONS
-					std::string tempstr = String("%s - TURNS to face CLOSEST OPPONENT in direction %d",pSoldier->name,pSoldier->aiData.usActionData);
-					DebugAI(tempstr);
+					STR16 tempstr;
+					 sprintf(tempstr,"%s - TURNS to face CLOSEST OPPONENT in direction %d",pSoldier->name,pSoldier->aiData.usActionData);
+					 AIPopMessage(tempstr);
 					#endif
 
 					return(AI_ACTION_CHANGE_FACING);
@@ -1467,7 +1495,8 @@ INT8 CreatureDecideAction( SOLDIERTYPE *pSoldier )
 	}
 
 #ifdef DEBUGDECISIONS
-	std::string tempstr = String("DecideAction: selected action %d, actionData %d\n\n",bAction,pSoldier->aiData.usActionData );
+	STR tempstr;
+	sprintf( tempstr, "DecideAction: selected action %d, actionData %d\n\n",bAction,pSoldier->aiData.usActionData );
 	DebugAI(tempstr);
 #endif
 
@@ -1606,9 +1635,10 @@ void CreatureDecideAlertStatus( SOLDIERTYPE *pSoldier )
 		// don't report status changes for human-controlled mercs
 //		if (!pSoldier->human)
 //		{
-			std::string tempstr = String("%s's Alert Status changed from %d to %d",
+			STR16 tempstr;
+			sprintf(tempstr,"%s's Alert Status changed from %d to %d",
 				pSoldier->name ,bOldStatus,pSoldier->aiData.bAlertStatus);
-			DebugAI(tempstr);
+			AIPopMessage(tempstr);
 //		}
 #endif
 
@@ -1672,7 +1702,7 @@ INT8 CrowDecideActionGreen( SOLDIERTYPE * pSoldier )
 		if ( SpacesAway( pSoldier->sGridNo, sCorpseGridNo ) < 2 )
 		{
 			// Change facing
-			sFacingDir = (UINT8)GetDirectionFromGridNo( sCorpseGridNo, pSoldier );
+			sFacingDir = GetDirectionFromGridNo( sCorpseGridNo, pSoldier );
 
 				if ( sFacingDir != pSoldier->ubDirection )
 				{

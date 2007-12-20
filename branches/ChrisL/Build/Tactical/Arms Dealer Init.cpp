@@ -1529,7 +1529,7 @@ void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE& object )
 // removes ubHowMany items of usItemIndex with the matching Info from dealer ubArmsDealer
 void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany, OBJECTTYPE *pObj )
 {
-	INT32 cnt;
+	//INT32 cnt;
 	if ( ubHowMany == 0)
 	{
 		return;

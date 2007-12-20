@@ -51,7 +51,6 @@
 #include "Quests.h"
 #include "Campaign Types.h"
 #include "Queen Command.h"
-#include "DecideAction.h"
 #include "cheats.h"
 #endif
 
@@ -1690,7 +1689,7 @@ void TurnBasedHandleNPCAI(SOLDIERTYPE *pSoldier)
 	// pSoldier->flags.fNoAPToFinishMove = FALSE;
 
 	// unless in mid-move, get an up-to-date alert status for this guy
-	if (pSoldier->pathing.bLevel)
+	if (pSoldier->pathing.bStopped)
 	{
 		// if active team is waiting for oppChanceToDecide, that means we have NOT
 		// had a chance to go through NewSelectedNPC(), so do the refresh here

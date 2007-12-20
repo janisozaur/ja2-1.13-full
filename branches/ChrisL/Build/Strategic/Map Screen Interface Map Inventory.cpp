@@ -122,6 +122,7 @@ INT32 iCurrentInventoryPoolPage = 0;
 INT32 iLastInventoryPoolPage = 0;
 
 INT16 sObjectSourceGridNo = 0;
+INT8  sObjectSourseSoldierID = -1;
 
 // number of unseen items in sector
 UINT32 uiNumberOfUnSeenItems = 0;
@@ -891,6 +892,7 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 			}
 
 			sObjectSourceGridNo = pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].sGridNo;
+			sObjectSourseSoldierID = pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].soldierID;
 
 			// check if this is the loaded sector, if so, then notify player, can't do anything
 			if( ( sSelMapX == gWorldSectorX )&&( gWorldSectorY == sSelMapY ) &&(gbWorldSectorZ == iCurrentMapSectorZ ) )
@@ -950,6 +952,8 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 						{
 							pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].sGridNo = sObjectSourceGridNo;
 						}
+						if( sObjectSourseSoldierID != -1 )
+							pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].soldierID = sObjectSourseSoldierID;
 					}
 				//}
 

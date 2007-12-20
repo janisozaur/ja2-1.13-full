@@ -53,6 +53,7 @@ public:
 	//Because this value is zero in the saved maps, we can't change it to 100, hence the reversal method.
 	//This check is only performed the first time a map is loaded.	Later, it is entirely skipped.
 	UINT8					ubNonExistChance;	
+	INT8					soldierID;
 
 	char					endOfPod;
 	OBJECTTYPE				object;
@@ -62,7 +63,7 @@ public:
 extern WORLDITEM		*gWorldItems;
 extern UINT32				guiNumWorldItems;
 
-INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible );
+INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible, INT8 soldierID );
 void RemoveItemFromWorld( INT32 iItemIndex );
 INT32 FindWorldItem( UINT16 usItem );
 

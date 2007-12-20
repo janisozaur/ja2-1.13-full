@@ -581,8 +581,6 @@ void STRUCT_Pathing::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 SOLDIERTYPE& SOLDIERTYPE::operator=(const OLDSOLDIERTYPE_101& src)
 {
     if ((void*)this != (void*)&src) {
-		this->DropPackKey = 0;
-
 		//member classes
 		aiData.ConvertFrom_101_To_102(src);
 		flags.ConvertFrom_101_To_102(src);
