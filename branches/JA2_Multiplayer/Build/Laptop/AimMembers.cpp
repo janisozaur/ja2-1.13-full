@@ -47,7 +47,7 @@
 #endif
 
 #include "Strategic Town Loyalty.h"
-
+#include "connect.h"
 
 //
 //******  Defines  ******
@@ -4367,6 +4367,9 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime( )
 
 	//if the pop up has already been displayed, dont display it again for this occurence of laptop
 	if( LaptopSaveInfo.sLastHiredMerc.fHaveDisplayedPopUpInLaptop )
+		return;
+
+	if(is_client)
 		return;
 
 	pSoldier = FindSoldierByProfileID( (UINT8)LaptopSaveInfo.sLastHiredMerc.iIdOfMerc, TRUE );

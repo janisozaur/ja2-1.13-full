@@ -58,6 +58,8 @@
 	#include "qarray.h"
 #endif
 
+#include "connect.h"
+
 #define		DIALOGUESIZE					480
 #define   QUOTE_MESSAGE_SIZE		520
 
@@ -1283,6 +1285,10 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEventEx( SOLDIERTYPE *pSoldier, UINT
 
 BOOLEAN TacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 {
+	if(is_client)
+	{
+		return(FALSE); //somewhere amongst all this it causes a puase of merc movement while making the quote which throws out the movement sync between  clients... : hayden.
+	}
 	if ( pSoldier->ubProfile == NO_PROFILE )
 	{
 		return( FALSE );

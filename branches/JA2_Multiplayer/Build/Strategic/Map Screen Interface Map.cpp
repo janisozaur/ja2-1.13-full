@@ -761,7 +761,8 @@ UINT32 DrawMap( void )
 			for ( cnt2 = 1; cnt2 < MAP_WORLD_Y - 1; cnt2++ )
 			{
 				// LATE DESIGN CHANGE: darken sectors not yet visited, instead of those under known enemy control
-				if( GetSectorFlagStatus( cnt, cnt2, ( UINT8 ) iCurrentMapSectorZ, SF_ALREADY_VISITED ) == FALSE )
+				if(0) //hayden - dont darken anything
+				//hayden//if( GetSectorFlagStatus( cnt, cnt2, ( UINT8 ) iCurrentMapSectorZ, SF_ALREADY_VISITED ) == FALSE )
 //				if ( IsTheSectorPerceivedToBeUnderEnemyControl( cnt, cnt2, ( INT8 )( iCurrentMapSectorZ ) ) )
 				{
 					if( fShowAircraftFlag && !iCurrentMapSectorZ )
@@ -7073,19 +7074,21 @@ void HideExistenceOfUndergroundMapSector( UINT8 ubSectorX, UINT8 ubSectorY )
 
 void InitMapSecrets( void )
 {
-	//UINT8 ubSamIndex;
 
-	//fFoundTixa = FALSE;
+
+	//fFoundTixa = FALSE; //hayden
 	//fFoundOrta = FALSE;
 
 	fFoundTixa = TRUE;
 	fFoundOrta = TRUE;
 
-	//for( ubSamIndex = 0; ubSamIndex < NUMBER_OF_SAMS; ubSamIndex++ )
-	//{
-	//	fSamSiteFound[ ubSamIndex ] = fSamSiteFoundOrig[ ubSamIndex ];
-	//}
-	memcpy(fSamSiteFound, fSamSiteFoundOrig, sizeof(fSamSiteFound));
+	UINT8 ubSamIndex;
+
+	// ALT-F9: Reveal all SAM sites
+	for( ubSamIndex = 0; ubSamIndex < NUMBER_OF_SAMS; ubSamIndex++ )
+	{
+		SetSAMSiteAsFound( ubSamIndex );
+	}
 }
 
 

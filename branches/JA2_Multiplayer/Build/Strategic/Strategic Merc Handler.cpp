@@ -793,10 +793,10 @@ void MercComplainAboutEquipment( UINT8 ubProfile )
 
 void UpdateBuddyAndHatedCounters( void )
 {
-	INT8									bMercID;
+	UINT8									bMercID; //
 	INT32									iLoop;
-	INT8									bOtherID;
-	INT8									bLastTeamID;
+	UINT8									bOtherID; //hayden : added U
+	UINT8									bLastTeamID; //
 	UINT8									ubOtherProfileID;
 	SOLDIERTYPE						*pSoldier;
 	SOLDIERTYPE						*pOtherSoldier;

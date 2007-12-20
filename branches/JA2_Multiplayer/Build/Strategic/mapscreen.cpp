@@ -5412,10 +5412,32 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 
 
 				case '1':
+					{
+					start_server ();
+					break; //hayden
+					}
 				case '2':
+					{
+					connect_client();
+					break;
+					}
 				case '3':
-				case '4':
+					{
+					start_battle();
+					break;
+					}
+
+                case '4':
+					{				
+					server_disconnect(); //haydent
+					client_disconnect();
+					break;
+					}
 				case '5':
+					{
+						test_func2();
+						break;
+					}
 				case '6':
 				case '7':
 				case '8':
@@ -5507,8 +5529,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 								if ( !fShowMapInventoryPool )
 								{
 									ToggleAirspaceMode();
-									test_function();
-									//hayden
+									
 								}
 							}
 						}
@@ -5528,7 +5549,10 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 								}
 							}
 						}
+
 */
+					
+									//hayden
 					break;
 
 				case 'c':
@@ -5548,7 +5572,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 				case 'e':
 					if( fAlt )
 					{
-					start_server ();
+					
 					}
 					if( gfPreBattleInterfaceActive )
 					{ //activate enter sector in prebattle interface.
@@ -5646,8 +5670,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 				case 'k':
 					if( fAlt )
 					{
-					server_disconnect(); //haydent
-					client_disconnect();
+
 					}
 					break;
 
@@ -5676,7 +5699,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 				case 'm':
 					if( fAlt )
 					{
-						connect_client(); // connect client
+						 // connect client
 					}
 					// only handle border button keyboard equivalents if the button is visible!
 					if ( !fShowMapInventoryPool )

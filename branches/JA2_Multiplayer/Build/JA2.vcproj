@@ -2402,7 +2402,13 @@
 					RelativePath=".\Multiplayer\client.cpp">
 				</File>
 				<File
+					RelativePath="..\..\Ja2_mp.ini">
+				</File>
+				<File
 					RelativePath=".\Multiplayer\server.cpp">
+				</File>
+				<File
+					RelativePath=".\test_space.cpp">
 				</File>
 			</Filter>
 			<Filter

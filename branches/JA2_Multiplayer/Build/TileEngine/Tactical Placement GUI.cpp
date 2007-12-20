@@ -44,6 +44,7 @@
 	#include "WordWrap.h"
 	#include "Game Clock.h"
 #endif
+#include "connect.h"
 
 typedef struct MERCPLACEMENT
 {
@@ -1184,6 +1185,11 @@ void PutDownMercPiece( INT32 iPlacement )
 		pSoldier->ubInsertionDirection = pSoldier->bDirection;
 		gMercPlacement[ iPlacement ].fPlaced = TRUE;
 		gMercPlacement[ iPlacement ].pSoldier->bInSector = TRUE;
+
+//hayden
+		if(is_client)send_gui_pos(pSoldier, (FLOAT)sCellX, (FLOAT)sCellY);
+		if(is_client)send_gui_dir(pSoldier, ubDirection);
+
 	}
 }
 

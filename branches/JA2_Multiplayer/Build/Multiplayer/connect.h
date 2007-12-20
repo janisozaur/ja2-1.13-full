@@ -4,14 +4,30 @@
 #include "Soldier Init List.h"
 #include "Merc Hiring.h"
 
-static bool is_connected;
-static bool is_connecting;
-static bool is_client;
-static bool is_server;
-static bool is_networked;
+extern bool is_connected;
+extern bool is_connecting;
+extern bool is_client;
+extern bool is_server;
+extern bool is_networked;
 
-void test_function ( void );
+extern char CLIENT_NUM[30];
 
+extern int ENEMY_ENABLED;
+extern int CREATURE_ENABLED;
+extern int MILITIA_ENABLED;
+extern int CIV_ENABLED;
+
+extern int SAME_MERC;
+
+extern UINT8 netbTeam;
+extern UINT8 ubID_prefix;
+
+extern bool net_turn;
+
+void start_battle ( void );
+void test_func2 ( void );
+
+UINT8 numenemyLAN( UINT8 ubSectorX, UINT8 ubSectorY );
 
 void connect_client ( void );
 void start_server (void);
@@ -27,7 +43,13 @@ void send_dir ( SOLDIERTYPE *pSoldier, UINT16 usDesiredDirection );
 void send_fire( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo );
 void send_hit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 usDirection, INT16 sXPos, INT16 sYPos, INT16 sZPos, INT16 sRange , UINT8 ubAttackerID, BOOLEAN fHit, UINT8 ubSpecial, UINT8 ubHitLocation );
 
-void send_hire( UINT8 ubCurrentSoldier, INT16 iTotalContractLength, BOOLEAN fCopyProfileItemsOver);
+void send_hire( UINT8 iNewIndex, UINT8 ubCurrentSoldier, INT16 iTotalContractLength, BOOLEAN fCopyProfileItemsOver);
 
-static bool repo;
+void send_gui_pos(SOLDIERTYPE *pSoldier,  FLOAT dNewXPos, FLOAT dNewYPos);
+void send_gui_dir(SOLDIERTYPE *pSoldier, UINT16	usNewDirection);
 
+void send_EndTurn( UINT8 ubNextTeam );
+
+void send_AI( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *pubID );
+
+BOOLEAN CheckConditionsForBattle( GROUP *pGroup ); // this comes from strategic movement.cpp

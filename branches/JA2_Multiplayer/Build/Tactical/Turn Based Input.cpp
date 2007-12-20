@@ -2312,9 +2312,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				}
 				else
 				{
-					//BeginAutoBandage( );
-					test_function();
-					//hayden
+					BeginAutoBandage( );
+					
 					
 				}
 				break;
@@ -4802,7 +4801,7 @@ INT8 CheckForAndHandleHandleVehicleInteractiveClick( SOLDIERTYPE *pSoldier, UINT
 							// WALK UP TO DEST FIRST
 							EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, 3 , pSoldier->fNoAPToFinishMove );
 								//*** send new path via RPC call to the network if original call
-								send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode , 3, pSoldier->fNoAPToFinishMove );
+								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode , 3, pSoldier->fNoAPToFinishMove );
 						}
 						else
 						{

@@ -112,6 +112,8 @@
 #include "Militia Control.h"
 #endif
 
+#include "connect.h"
+
 extern void HandleBestSightingPositionInRealtime();
 
 extern UINT8	gubAICounter;
@@ -225,7 +227,7 @@ SOLDIERTYPE      *AwaySlots[ TOTAL_SOLDIERS ];
 UINT32                   guiNumAwaySlots = 0;
 
 // DEF: changed to have client wait for gPlayerNum assigned from host
-UINT8                            gbPlayerNum = 0;
+UINT8                            gbPlayerNum = 0; //hmm
 
 // Global for current selected soldier
 UINT16                                                                  gusSelectedSoldier = NO_SOLDIER;
@@ -323,11 +325,26 @@ UINT8 bDefaultTeamRanges[ MAXTEAMS ][ 2 ] =
 {
 	0,              19,                                                                                             //20  US
 	20,             51,                                                                                             //32  ENEMY
-	52,             83,                                                                                             //32    CREATURE
-	84,             115,                                                                                    //32    REBELS ( OUR GUYS )
-	116,    MAX_NUM_SOLDIERS - 1,                   //32  CIVILIANS
-	MAX_NUM_SOLDIERS, TOTAL_SOLDIERS - 1            // PLANNING SOLDIERS
+	52,             58,      //kulled off to make room      ;)                                                                                  //32    CREATURE
+	59,             91,                                                                                    //32    REBELS ( OUR GUYS )
+	92,             122,                   //32  CIVILIANS
+	123,             124,            // PLANNING SOLDIERS
+	125,             129,			//1 //new sides //hayden // 5 each
+	130,             144,			//2
+	145,             149,			//3
+	150,             155		//4
+
+
 };
+
+//{
+//	0,              19,                                                                                             //20  US
+//	20,             51,                                                                                             //32  ENEMY
+//	52,             83,                                                                                             //32    CREATURE
+//	84,             115,                                                                                    //32    REBELS ( OUR GUYS )
+//	116,    MAX_NUM_SOLDIERS - 1,                   //32  CIVILIANS
+//	MAX_NUM_SOLDIERS, TOTAL_SOLDIERS - 1            // PLANNING SOLDIERS
+//};
 
 COLORVAL bDefaultTeamColors[ MAXTEAMS ] = 
 {
@@ -336,7 +353,11 @@ COLORVAL bDefaultTeamColors[ MAXTEAMS ] =
 	FROMRGB( 255, 0, 255 ),
 	FROMRGB( 0, 255, 0 ),
 	FROMRGB( 255, 255, 255 ),
-	FROMRGB( 0, 0, 255 )
+	FROMRGB( 0, 0, 255 ),
+	FROMRGB( 255, 156, 49 ), //hayden //team 1 (radar colours)
+	FROMRGB( 49, 255, 207 ), //2
+	FROMRGB( 193, 85, 255 ), //3
+	FROMRGB( 0, 255, 115 ) //4
 
 };
 
@@ -680,7 +701,7 @@ BOOLEAN InitOverhead( )
 	gTacticalStatus.uiCountdownToRestart = GetJA2Clock();
 	gTacticalStatus.fGoingToEnterDemo               = FALSE;
 	gTacticalStatus.fNOTDOLASTDEMO                  = FALSE;
-	gTacticalStatus.fDidGameJustStart               = TRUE;
+	gTacticalStatus.fDidGameJustStart               = 0; //hayden
 	gTacticalStatus.ubLastRequesterTargetID					= NO_PROFILE;
 
 	for ( cnt = 0; cnt < NUM_PANIC_TRIGGERS; cnt++ )
@@ -5503,6 +5524,7 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 		return;
 	}
 
+
 	// Alrighty, don't do this if no enemies in sector
 	if ( NumCapableEnemyInSector( ) == 0 )
 	{
@@ -5548,13 +5570,21 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 		}
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"EnterCombatMode continuing... calling startplayerteamturn");
 
-		StartPlayerTeamTurn( FALSE, TRUE );
+		if (!is_client || is_server) //hayden
+		{
+			StartPlayerTeamTurn( FALSE, TRUE );
+			if(is_client)send_EndTurn( ubStartingTeam ); //hayden
+		}
 	}
 	else
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"EnterCombatMode continuing... end turn");
 		// have to call EndTurn so that we freeze the interface etc
 		EndTurn( ubStartingTeam );
+		if(is_server)
+		{
+			//if(is_client)send_EndTurn( ubStartingTeam ); //hayden
+		}
 	}
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"EnterCombatMode done");
@@ -5839,6 +5869,10 @@ BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 	if ( ! ( gTacticalStatus.uiFlags & INCOMBAT ) )
 	{
 		return( FALSE );
+	}
+	if (is_server || is_client)
+	{
+		return(FALSE); // cheap band-aid to prevent return from turn based action in multiplayer, atleast until further dev... : hayden.
 	}
 
 	// if we're boxing NEVER end combat mode

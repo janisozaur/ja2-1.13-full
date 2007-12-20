@@ -208,10 +208,13 @@ CHAR16 TeamTurnString[][STRING_LENGTH] =
 	L"Creatures' Turn",
 	L"Militia's Turn",
 	L"Civilians' Turn",
-	L"LAN TEAM ONE",
-	L"LAN TEAM TWO",
-	L"LAN TEAM THREE",
-	// planning turn
+	L"Player_Plan",// planning turn
+	L"Network Client One",//hayden
+	L"Network Client Two",//hayden
+	L"Network Client Three",//hayden
+	L"Network Client Four",//hayden
+	
+	
 };
 
 CHAR16 Message[][STRING_LENGTH] =

@@ -555,21 +555,21 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 					if ( pSoldier->sSpreadLocations[ 0 ] != 0 )
 					{
 						SendBeginFireWeaponEvent( pSoldier, pSoldier->sSpreadLocations[ 0 ] );
-						send_fire( pSoldier, pSoldier->sSpreadLocations[ 0 ] );
+						if(is_server || (is_client && pSoldier->ubID <20) ) send_fire( pSoldier, pSoldier->sSpreadLocations[ 0 ] );
 
 						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Handle Items.cpp: SendBeginFireWeaponEvent" );
 					}
 					else
 					{
 						SendBeginFireWeaponEvent( pSoldier, sTargetGridNo );
-						send_fire( pSoldier, sTargetGridNo );
+						if(is_server || (is_client && pSoldier->ubID <20) ) send_fire( pSoldier, sTargetGridNo );
 						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Handle Items.cpp: SendBeginFireWeaponEvent" );
 					}
 				}
 				else
 				{
 					SendBeginFireWeaponEvent( pSoldier, sTargetGridNo );
-					send_fire( pSoldier, sTargetGridNo );
+					if(is_server || (is_client && pSoldier->ubID <20) ) send_fire( pSoldier, sTargetGridNo );
 					
 					//send fire weapon to network via RPC call
 				
@@ -699,7 +699,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 				// WALK UP TO DEST FIRST
 				EVENT_InternalGetNewSoldierPath( pSoldier, sGotLocation, pSoldier->usUIMovementMode, FALSE, TRUE );
 				//*** send new path via RPC call to the network if original call
-								send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 			}
 			else
 			{	
@@ -790,7 +790,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 				// WALK UP TO DEST FIRST
 				EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 				//*** send new path via RPC call to the network if original call
-								send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 			}
 			else
 			{
@@ -837,7 +837,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 					// WALK UP TO DEST FIRST
 					EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode , FALSE, TRUE );
 					//*** send new path via RPC call to the network if original call
-								send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 				}
 				else
 				{
@@ -916,7 +916,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 					// WALK UP TO DEST FIRST
 					EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 					//*** send new path via RPC call to the network if original call
-								send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 				}
 				else
 				{
@@ -991,7 +991,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 					// WALK UP TO DEST FIRST
 					EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 					//*** send new path via RPC call to the network if original call
-								send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 				}
 				else
 				{
@@ -1044,7 +1044,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 					// WALK UP TO DEST FIRST
 					EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 					//*** send new path via RPC call to the network if original call
-								send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 				}
 				else
 				{
@@ -1105,7 +1105,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 						// WALK UP TO DEST FIRST
 						EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 						//*** send new path via RPC call to the network if original call
-								send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 					}
 					else
 					{
@@ -1206,7 +1206,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath( pSoldier, usGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 			//*** send new path via RPC call to the network if original call
-								send_path( pSoldier, usGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, usGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 		}
 		else
 		{
@@ -1261,7 +1261,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 				// WALK UP TO DEST FIRST
 				EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 				//*** send new path via RPC call to the network if original call
-								send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 			}
 			else
 			{
@@ -1396,7 +1396,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 			{
 
 				SendBeginFireWeaponEvent( pSoldier, sTargetGridNo );
-				send_fire( pSoldier, sTargetGridNo );
+				if(is_server || (is_client && pSoldier->ubID <20) ) send_fire( pSoldier, sTargetGridNo );
 				
 
 			}
@@ -1633,7 +1633,7 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 			//*** send new path via RPC call to the network if original call
-								send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 		}
 		else
 		{
@@ -1695,7 +1695,7 @@ void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, 
 		{
 			EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, TRUE, TRUE );
 			//*** send new path via RPC call to the network if original call
-								send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, TRUE, TRUE );
+								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, TRUE, TRUE );
 
 			// Say it only if we don;t have to go too far!
 			if ( pSoldier->usPathDataSize > 5 )
@@ -1707,7 +1707,7 @@ void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, 
 		{
 			EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 				//*** send new path via RPC call to the network if original call
-								send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 		}
 	}		
 	else

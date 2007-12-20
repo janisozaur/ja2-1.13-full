@@ -51,6 +51,8 @@
 
 #include "Reinforcement.h"
 
+#include "connect.h"
+
 //The sector information required for the strategic AI.  Contains the number of enemy troops,
 //as well as intentions, etc.
 SECTORINFO SectorInfo[256];
@@ -199,6 +201,7 @@ UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 
 	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
 	ubNumTroops = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
+	ubNumTroops += numenemyLAN((UINT8)sSectorX,(UINT8)sSectorY ); //hayden
 
 	pGroup = gpGroupList;
 	while( pGroup )

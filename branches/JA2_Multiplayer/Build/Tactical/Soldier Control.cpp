@@ -1728,7 +1728,7 @@ BOOLEAN ReevaluateEnemyStance( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 	INT16		sDist, sClosestDist = 10000;
 
 	// make the chosen one not turn to face us
-	if ( OK_ENEMY_MERC( pSoldier ) && pSoldier->ubID != gTacticalStatus.ubTheChosenOne && gAnimControl[ usAnimState ].ubEndHeight == ANIM_STAND && !( pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL) )	
+	if ( OK_ENEMY_MERC( pSoldier ) && pSoldier->ubID != gTacticalStatus.ubTheChosenOne && gAnimControl[ usAnimState ].ubEndHeight == ANIM_STAND && !( pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL))
 	{
 		if ( pSoldier->fTurningFromPronePosition == TURNING_FROM_PRONE_OFF )
 		{
@@ -8871,7 +8871,7 @@ void SendSoldierSetDesiredDirectionEvent( SOLDIERTYPE *pSoldier, UINT16 usDesire
 	SSetDesiredDirection.uiUniqueId = pSoldier -> uiUniqueSoldierIdValue;
 
 	AddGameEvent( S_SETDESIREDDIRECTION, 0, &SSetDesiredDirection );
-	send_dir( pSoldier, usDesiredDirection );
+	if(is_server || (is_client && pSoldier->ubID <20) ) send_dir( pSoldier, usDesiredDirection );
 
 
 }
@@ -8910,7 +8910,7 @@ void SendChangeSoldierStanceEvent( SOLDIERTYPE *pSoldier, UINT8 ubNewStance )
 #endif
 
 	ChangeSoldierStance( pSoldier, ubNewStance );
-	send_stance( pSoldier, ubNewStance );
+	if(is_server || (is_client && pSoldier->ubID <20) ) send_stance( pSoldier, ubNewStance );
 }
 
 
@@ -10434,7 +10434,7 @@ void ContinueMercMovement( SOLDIERTYPE *pSoldier )
 			// OK, try and get a path to out dest!
 			EVENT_InternalGetNewSoldierPath( pSoldier, sGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 				//*** send new path via RPC call to the network if original call
-				send_path( pSoldier, sGridNo, pSoldier->usUIMovementMode , FALSE, TRUE );
+				if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sGridNo, pSoldier->usUIMovementMode , FALSE, TRUE );
 		}
 	}
 }

@@ -55,6 +55,8 @@
 	#include "Player Command.h"
 #endif
 
+#include "connect.h"
+
 #ifdef JA2EDITOR
 	extern BOOLEAN gfProfileDataLoaded;
 #endif
@@ -402,7 +404,7 @@ BOOLEAN LoadMercProfiles(void)
 	DecideActiveTerrorists();
 
 	// initialize mercs' status
-	StartSomeMercsOnAssignment( );
+	if(!is_networked)StartSomeMercsOnAssignment( );
 
 	// initial recruitable mercs' reputation in each town
 	InitializeProfilesForTownReputation( );

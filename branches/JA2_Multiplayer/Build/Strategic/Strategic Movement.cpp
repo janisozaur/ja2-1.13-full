@@ -50,6 +50,7 @@
 #endif
 
 #include "MilitiaSquads.h"
+#include "connect.h"
 
 extern UINT32		guiLastTacticalRealTime;
 
@@ -901,7 +902,7 @@ void PrepareForPreBattleInterface( GROUP *pPlayerDialogGroup, GROUP *pInitiating
 		pSoldier = pPlayer->pSoldier;
 
 		if ( pSoldier->bLife >= OKLIFE && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
-					!AM_A_ROBOT( pSoldier ) && !AM_AN_EPC( pSoldier ) )
+					!AM_A_ROBOT( pSoldier ) && !AM_AN_EPC( pSoldier ) && !is_client )
 		{
 			ubMercsInGroup[ ubNumMercs ] = pSoldier->ubID;
 			ubNumMercs++;
@@ -978,6 +979,8 @@ void PrepareForPreBattleInterface( GROUP *pPlayerDialogGroup, GROUP *pInitiating
 #ifdef JA2BETAVERSION
 	extern void ValidatePlayersAreInOneGroupOnly();
 #endif
+
+
 
 
 BOOLEAN CheckConditionsForBattle( GROUP *pGroup )

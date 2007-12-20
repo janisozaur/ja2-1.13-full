@@ -23,7 +23,8 @@ unsigned char SpacketIdentifier;
 
 RakPeerInterface *server;
 
-
+// use UNASSIGNED_SYSTEM_ADDRESS instead of rpcParameters->sender to send it back to yourself (the sender)
+// there is very little in here dependant on the game engine and originally started out as an independant dedicated server .exe, and could if go ther again ... hayden.
 //********* RPC SECTION ************
 
 void sendPATH(RPCParameters *rpcParameters)
@@ -56,7 +57,25 @@ void sendHIRE(RPCParameters *rpcParameters)
 	server->RPC("recieveHIRE",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, rpcParameters->sender, true, 0, UNASSIGNED_NETWORK_ID,0);
 }
 
+void sendguiPOS(RPCParameters *rpcParameters)
+{
+	server->RPC("recieveguiPOS",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, rpcParameters->sender, true, 0, UNASSIGNED_NETWORK_ID,0);
+}
 
+void sendguiDIR(RPCParameters *rpcParameters)
+{
+	server->RPC("recieveguiDIR",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, rpcParameters->sender, true, 0, UNASSIGNED_NETWORK_ID,0);
+}
+
+void sendEndTurn(RPCParameters *rpcParameters)
+{
+	server->RPC("recieveEndTurn",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, rpcParameters->sender, true, 0, UNASSIGNED_NETWORK_ID,0);
+}
+
+void sendAI(RPCParameters *rpcParameters)
+{
+	server->RPC("recieveAI",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, rpcParameters->sender, true, 0, UNASSIGNED_NETWORK_ID,0);
+}
 //*************************
 //START INTERNAL SERVER
 //*************************
@@ -64,7 +83,7 @@ void sendHIRE(RPCParameters *rpcParameters)
 
 void start_server (void)
 {
-	if(!is_server && !is_client)
+	if(!is_server)
 	{	
 
 
@@ -98,6 +117,11 @@ void start_server (void)
 		REGISTER_STATIC_RPC(server, sendFIRE);
 		REGISTER_STATIC_RPC(server, sendHIT);
 		REGISTER_STATIC_RPC(server, sendHIRE);
+		REGISTER_STATIC_RPC(server, sendguiPOS);
+		REGISTER_STATIC_RPC(server, sendguiDIR);
+		REGISTER_STATIC_RPC(server, sendEndTurn);
+		REGISTER_STATIC_RPC(server, sendAI);
+		
 	//
 
 

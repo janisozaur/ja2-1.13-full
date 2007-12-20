@@ -1993,6 +1993,7 @@ void ManSeesMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, INT16 sOppGridno,
    return;
   }
 
+
  // if we're seeing a guy we didn't see on our last chance to look for him
  if (pSoldier->bOppList[pOpponent->ubID] != SEEN_CURRENTLY)
   {
@@ -2464,8 +2465,8 @@ else
 
 
   }
-	else if (!PTR_OURTEAM)
-	{
+	else if (!PTR_OURTEAM ) //hayden added the || as temp fix , more of this need doing...
+ 	{
 	 // ATE: Check stance, change to threatending
 	 ReevaluateEnemyStance( pSoldier, pSoldier->usAnimState );
 	}

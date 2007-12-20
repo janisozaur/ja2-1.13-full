@@ -584,7 +584,7 @@ void InitNewCampaign()
 	BuildUndergroundSectorInfoList();
 	
 	// allow overhead view of omerta A9 on game onset
-	SetSectorFlag( 9, 1, 0, SF_ALREADY_VISITED );
+	//SetSectorFlag( 9, 1, 0, SF_ALREADY_VISITED ); //hayden
 
 	//Generates the initial forces in a new campaign.  The idea is to randomize numbers and sectors
 	//so that no two games are the same.

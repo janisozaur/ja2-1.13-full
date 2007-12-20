@@ -107,6 +107,8 @@
 	#include "cursors.h"
 #endif
 
+#include "connect.h" //hayden added alot ""'s to get around client spawing random/different placed AI
+
 #include "SaveLoadGame.h"
 
 //Used by PickGridNoToWalkIn

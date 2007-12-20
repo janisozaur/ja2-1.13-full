@@ -352,7 +352,8 @@ typedef struct
 	INT16		sMercArriveSectorY;
 
 	BOOLEAN fCreatureMeanwhileScenePlayed;
-	UINT8		ubPlayerNum;
+	UINT8		ubPlayerNum; //hmmm
+
 	//New stuff for the Prebattle interface / autoresolve
 	BOOLEAN fPersistantPBI;
 	UINT8 ubEnemyEncounterCode;
@@ -4555,7 +4556,8 @@ BOOLEAN SaveGeneralInfo( HWFILE hFile )
 	sGeneralInfo.fCreatureMeanwhileScenePlayed = gfCreatureMeanwhileScenePlayed;
 
 	//save the global player num
-	sGeneralInfo.ubPlayerNum = gbPlayerNum;
+	sGeneralInfo.ubPlayerNum = gbPlayerNum; //hmm
+	//sGeneralInfo.ubPlayerNum = 6;
 
 	//New stuff for the Prebattle interface / autoresolve
 	sGeneralInfo.fPersistantPBI									= gfPersistantPBI;
@@ -4827,7 +4829,8 @@ BOOLEAN LoadGeneralInfo( HWFILE hFile )
 	gfCreatureMeanwhileScenePlayed = sGeneralInfo.fCreatureMeanwhileScenePlayed;
 
 	//load the global player num
-	gbPlayerNum = sGeneralInfo.ubPlayerNum;
+	gbPlayerNum = sGeneralInfo.ubPlayerNum; //hmmm
+	//gbPlayerNum = 6;
 
 	//New stuff for the Prebattle interface / autoresolve
 	gfPersistantPBI									= sGeneralInfo.fPersistantPBI;

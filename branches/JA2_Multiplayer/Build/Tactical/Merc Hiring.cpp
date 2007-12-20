@@ -100,7 +100,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	if( ( pMerc->bMercStatus != 0 ) && (pMerc->bMercStatus != MERC_ANNOYED_BUT_CAN_STILL_CONTACT ) && ( pMerc->bMercStatus != MERC_HIRED_BUT_NOT_ARRIVED_YET ) )
 		return( MERC_HIRE_FAILED );
 
-	if( NumberOfMercsOnPlayerTeam() >= 18 )
+	if( NumberOfMercsOnPlayerTeam() >= 18 || (is_client && NumberOfMercsOnPlayerTeam() >= 5)) //hayden, 5 member team limit
 		return( MERC_HIRE_OVER_18_MERCS_HIRED );
 
 	// ATE: if we are to use landing zone, update to latest value
@@ -127,7 +127,6 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "TacticalCreateSoldier in HireMerc():  Failed to Add Merc");
 		return( MERC_HIRE_FAILED );
 	}
-	send_hire( ubCurrentSoldier, pHireMerc->iTotalContractLength, pHireMerc->fCopyProfileItemsOver  );
 
 	if( DidGameJustStart() )
 	{
@@ -174,6 +173,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	}
 	ChangeSoldiersAssignment( pSoldier, IN_TRANSIT );
 
+
 	//set the contract length
 	pSoldier->iTotalContractLength = pHireMerc->iTotalContractLength;
 
@@ -211,15 +211,22 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	LaptopSaveInfo.sLastHiredMerc.iIdOfMerc = pHireMerc->ubProfileID;
 	LaptopSaveInfo.sLastHiredMerc.uiArrivalTime = pHireMerc->uiTimeTillMercArrives;
 
-
-	//if we are trying to hire a merc that should arrive later, put the merc in the queue
-	if( pHireMerc->uiTimeTillMercArrives  != 0 )
+	if (!is_client)
 	{
-		AddStrategicEvent( EVENT_DELAYED_HIRING_OF_MERC, pHireMerc->uiTimeTillMercArrives,  pSoldier->ubID );
+			//if we are trying to hire a merc that should arrive later, put the merc in the queue
+			if( pHireMerc->uiTimeTillMercArrives  != 0 )
+			{
+				AddStrategicEvent( EVENT_DELAYED_HIRING_OF_MERC, pHireMerc->uiTimeTillMercArrives,  pSoldier->ubID );
+				
+				//specify that the merc is hired but hasnt arrived yet
+				pMerc->bMercStatus = MERC_HIRED_BUT_NOT_ARRIVED_YET;
 
-		//specify that the merc is hired but hasnt arrived yet
-		pMerc->bMercStatus = MERC_HIRED_BUT_NOT_ARRIVED_YET;
-
+			}
+	}
+	else
+	{
+			if(is_client)send_hire( iNewIndex, ubCurrentSoldier, pHireMerc->iTotalContractLength, pHireMerc->fCopyProfileItemsOver  );
+			//send off hire info to network, also avail possibility for net-game exclusive hired pSoldier changes...
 	}
 
 
@@ -292,15 +299,17 @@ void MercArrivesCallback(	UINT8	ubSoldierID )
 	SOLDIERTYPE							*pSoldier;
 	UINT32									uiTimeOfPost;
 
-	if( !DidGameJustStart() && gsMercArriveSectorX == 9 && gsMercArriveSectorY == 1 )
-	{ //Mercs arriving in A9.  This sector has been deemed as the always safe sector.
-		//Seeing we don't support entry into a hostile sector (except for the beginning),
-		//we will nuke any enemies in this sector first.
-		if( gWorldSectorX != 9 || gWorldSectorY != 1 || gbWorldSectorZ )
-		{
-			EliminateAllEnemies( (UINT8)gsMercArriveSectorX, (UINT8)gsMercArriveSectorY );
-		}
-	}
+
+		// hayden - maybe you want to duke it out in omerta ;)
+	//if( !DidGameJustStart() && gsMercArriveSectorX == 9 && gsMercArriveSectorY == 1 )
+	//{ //Mercs arriving in A9.  This sector has been deemed as the always safe sector.
+	//	//Seeing we don't support entry into a hostile sector (except for the beginning),
+	//	//we will nuke any enemies in this sector first.
+	//	if( gWorldSectorX != 9 || gWorldSectorY != 1 || gbWorldSectorZ )
+	//	{
+	//		EliminateAllEnemies( (UINT8)gsMercArriveSectorX, (UINT8)gsMercArriveSectorY );
+	//	}
+	//}
 
 	// This will update ANY soldiers currently schedules to arrive too
 	CheckForValidArrivalSector( );
@@ -314,6 +323,8 @@ void MercArrivesCallback(	UINT8	ubSoldierID )
 
 	// add the guy to a squad
 	AddCharacterToAnySquad( pSoldier );
+
+
 
 	// ATE: Make sure we use global.....
 	if ( pSoldier->fUseLandingZoneForArrival )
@@ -446,7 +457,8 @@ BOOLEAN IsTheSoldierAliveAndConcious( SOLDIERTYPE		*pSoldier )
 
 UINT8	NumberOfMercsOnPlayerTeam()
 {
-	INT8					cnt;
+	/*INT8					cnt;*/
+	INT16 cnt; //hayden: support for 6+ teams
 	SOLDIERTYPE		*pSoldier;
 	INT16					bLastTeamID;
 	UINT8					ubCount=0;
@@ -470,7 +482,8 @@ UINT8	NumberOfMercsOnPlayerTeam()
 
 void HandleMercArrivesQuotes( SOLDIERTYPE *pSoldier )
 {
-	INT8										cnt, bHated, bLastTeamID;
+	//INT8										cnt, bHated, bLastTeamID; 
+	UINT8										cnt, bHated, bLastTeamID; //hayden
 	SOLDIERTYPE							*pTeamSoldier;
  
 	// If we are approaching with helicopter, don't say any ( yet )

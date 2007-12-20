@@ -51,6 +51,7 @@
 
 #include "Reinforcement.h"
 
+#include "connect.h"
 
 extern INT8 STRAIGHT;
 //extern UINT8 gubSpeedUpAnimationFactor;
@@ -101,6 +102,8 @@ UINT8		gubLastInterruptedGuy = 0;
 
 extern UINT16 gsWhoThrewRock;
 extern UINT8 gubSightFlags;
+
+
 
 typedef struct
 {
@@ -278,6 +281,8 @@ void EndTurn( UINT8 ubNextTeam )
 	SOLDIERTYPE * pSoldier;
 	INT32 cnt;
 
+	
+
 	//Check for enemy pooling (add enemies if there happens to be more than the max in the
 	//current battle.  If one or more slots have freed up, we can add them now.
 
@@ -317,6 +322,7 @@ void EndTurn( UINT8 ubNextTeam )
 		gTacticalStatus.ubCurrentTeam  = ubNextTeam;
 
 		BeginTeamTurn( gTacticalStatus.ubCurrentTeam );
+		
 
 		BetweenTurnsVisibilityAdjustments();
 	}
@@ -350,6 +356,9 @@ void EndAITurn( void )
 
 		gTacticalStatus.ubCurrentTeam++;
 		BeginTeamTurn( gTacticalStatus.ubCurrentTeam );
+		//if(is_server)
+			//if(is_client)send_EndTurn(  gTacticalStatus.ubCurrentTeam ); //hayden
+		
 	}
 }
 
@@ -431,6 +440,10 @@ void BeginTeamTurn( UINT8 ubTeam )
 				ubTeam = gbPlayerNum;
 				gTacticalStatus.ubCurrentTeam = gbPlayerNum;
 				EndTurnEvents();
+				if(is_server)
+				{
+					//if(is_client)send_EndTurn( netbTeam ); // "reset cycle" :hayden //needs looking at
+				}
 			}
 			else
 			{
@@ -445,6 +458,11 @@ void BeginTeamTurn( UINT8 ubTeam )
 			// skip back to the top, as we are processing another team now.
 			continue;			
 		}
+
+		//if ( !(gTacticalStatus.uiFlags & INCOMBAT) )
+		//{
+		//	EnterCombatMode(ubTeam); //hayden
+		//}
 
 		if ( gTacticalStatus.uiFlags & TURNBASED )
 		{
@@ -482,15 +500,23 @@ void BeginTeamTurn( UINT8 ubTeam )
 			if ( ( gTacticalStatus.uiFlags & INCOMBAT ) )
 			{
 				StartPlayerTeamTurn( TRUE, FALSE );
+			/*	if(is_server && !net_turn) send_EndTurn(ubTeam);
+				if(net_turn == true) net_turn = false;*/
+				if(is_server) send_EndTurn(netbTeam);
+				
 			}
 			break;
 		}
 		else
-		if (ubTeam > 4 )
+		if (ubTeam > 4 || (is_client && !is_server )) //hayden
 		{
-			//ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"LAN TEAM");
+			
 			InitEnemyUIBar( 0, 0 );
 			AddTopMessage( COMPUTER_TURN_MESSAGE, TeamTurnString[ ubTeam ] );
+			/*if(is_server && !net_turn) send_EndTurn(ubTeam);
+			if(net_turn == true) net_turn = false;*/
+			if(is_server) send_EndTurn(ubTeam);
+			
 			
 			
 			//return;
@@ -503,6 +529,8 @@ void BeginTeamTurn( UINT8 ubTeam )
 			if(!gfAmIHost)
 				break;
 #endif
+			if( is_client && !is_server ) //hayden //disable independant client AI
+				break;
 
 
 			// Set First enemy merc to AI control	
@@ -523,6 +551,10 @@ void BeginTeamTurn( UINT8 ubTeam )
 						AddTopMessage( COMPUTER_TURN_MESSAGE, TeamTurnString[ ubTeam ] );
 					}
 					StartNPCAI( MercPtrs[ ubID ] );
+					/*if(is_server && !net_turn) send_EndTurn(ubTeam);
+					if(net_turn == true) net_turn = false;*/
+					if(is_server) send_EndTurn(ubTeam);
+					
 					return;
 				}
 			}

@@ -1200,7 +1200,19 @@ UINT32 UIHandleEndTurn( UI_EVENT *pUIEvent )
 		}
 
 		// End our turn!
-		EndTurn( gbPlayerNum + 1 );
+		if (is_server || !is_client)
+		{
+			EndTurn( gbPlayerNum + 1 );
+		}
+		
+		if(is_server)
+		{
+			//if(is_client)send_EndTurn( gbPlayerNum + 1 ); //hayden 
+		}
+		else
+		{		
+			if(is_client)send_EndTurn( netbTeam+1 );//for sending next netbteam rather than next local team
+		}
 	}
 
 	return( GAME_SCREEN );
@@ -1997,7 +2009,7 @@ UINT32 UIHandleCMoveMerc( UI_EVENT *pUIEvent )
 						
 						EVENT_InternalGetNewSoldierPath( pSoldier, sDestGridNo, pSoldier->usUIMovementMode , TRUE, pSoldier->fNoAPToFinishMove );
 						//*** send new path via RPC call to the network if original call
-								send_path( pSoldier, sDestGridNo, pSoldier->usUIMovementMode , TRUE, pSoldier->fNoAPToFinishMove );
+								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sDestGridNo, pSoldier->usUIMovementMode , TRUE, pSoldier->fNoAPToFinishMove );
 
 	
 					}
@@ -5782,7 +5794,7 @@ BOOLEAN HandleTalkInit(  )
 					// WALK UP TO DEST FIRST
 					EVENT_InternalGetNewSoldierPath( pSoldier, sGoodGridNo, pSoldier->usUIMovementMode , TRUE , pSoldier->fNoAPToFinishMove );	
 					//*** send new path via RPC call to the network if original call
-								send_path( pSoldier, sGoodGridNo, pSoldier->usUIMovementMode , TRUE , pSoldier->fNoAPToFinishMove );
+								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sGoodGridNo, pSoldier->usUIMovementMode , TRUE , pSoldier->fNoAPToFinishMove );
 
 					return( FALSE );
 				}
