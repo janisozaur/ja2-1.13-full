@@ -34,6 +34,8 @@
 #endif
 #include "BobbyRMailOrder.h"
 
+#include "connect.h"
+
 #define		MEDUNA_ITEM_DROP_OFF_GRIDNO			10959
 #define		MEDUNA_ITEM_DROP_OFF_SECTOR_X		3
 #define		MEDUNA_ITEM_DROP_OFF_SECTOR_Y		14
@@ -72,6 +74,12 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	UINT8		ubItemsPurchased;
 
 	usStandardMapPos = BOBBYR_SHIPPING_DEST_GRIDNO;
+
+	if(gpNewBobbyrShipments[ ubOrderID ].fActive && is_client)
+	{
+		DropOffItemsInSector( ubOrderID );//hayden
+		return;
+	}
 
 	// if the delivery is for meduna, drop the items off there instead
 	if( gpNewBobbyrShipments[ ubOrderID ].fActive && gpNewBobbyrShipments[ ubOrderID ].ubDeliveryLoc == BR_MEDUNA )

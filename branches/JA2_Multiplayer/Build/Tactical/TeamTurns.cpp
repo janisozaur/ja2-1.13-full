@@ -321,7 +321,7 @@ void EndTurn( UINT8 ubNextTeam )
 
 		gTacticalStatus.ubCurrentTeam  = ubNextTeam;
 
-		BeginTeamTurn( gTacticalStatus.ubCurrentTeam );
+		if(is_server || !is_client) BeginTeamTurn( gTacticalStatus.ubCurrentTeam );
 		
 
 		BetweenTurnsVisibilityAdjustments();

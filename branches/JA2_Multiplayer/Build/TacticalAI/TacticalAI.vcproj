@@ -393,7 +393,7 @@
 				FavorSizeOrSpeed="1"
 				OptimizeForProcessor="3"
 				OptimizeForWindowsApplication="TRUE"
-				AdditionalIncludeDirectories="&quot;..\Standard Gaming Platform&quot;;..\TileEngine;..\;..\Tactical;..\Utils;..\Editor;..\strategic;..\Laptop;.\"
+				AdditionalIncludeDirectories="..\Multiplayer;&quot;..\Standard Gaming Platform&quot;;..\TileEngine;..\;..\Tactical;..\Utils;..\Editor;..\strategic;..\Laptop;.\"
 				PreprocessorDefinitions="PRECOMPILEDHEADERS;NDEBUG;WIN32;_WINDOWS;JA2;XML_STATIC;CINTERFACE"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"

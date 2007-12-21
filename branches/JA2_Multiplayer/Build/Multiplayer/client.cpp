@@ -92,7 +92,8 @@ unsigned char packetIdentifier;
 #include "Merc Hiring.h"
 #include "soldier profile.h"
 
-#include"laptop.h"
+#include "laptop.h"
+
 
 extern INT8 SquadMovementGroups[ ];
 RakPeerInterface *client;
@@ -157,7 +158,12 @@ UINT8	ubID_prefix;
  int SAME_MERC;
  int PLAYER_BSIDE;
 
- bool net_turn;
+INT16 NET_DIVISOR;
+
+UINT16 crate_usMapPos;	
+
+INT16	crate_sGridX, crate_sGridY;
+
 
 //*****************
 //RPC sends and recieves:
@@ -172,8 +178,7 @@ void send_path (  SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAn
 		EV_S_GETNEWPATH	SGetNewPath;
 
 
-			//netbTeam = (atoi(CLIENT_NUM))+5;
-			//ubID_prefix = gTacticalStatus.Team[ netbTeam ].bFirstID;
+		
 
 			SGetNewPath.usSoldierID = (pSoldier->ubID)+ubID_prefix;
 		//SGetNewPath.usSoldierID				= pSoldier->ubID;
@@ -212,8 +217,7 @@ void send_stance ( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance )
 
 		SChangeStance.ubNewStance   = ubDesiredStance;
 		//SChangeStance.usSoldierID  = pSoldier->ubID;
-			//netbTeam = (atoi(CLIENT_NUM))+5;
-			//ubID_prefix = gTacticalStatus.Team[ netbTeam ].bFirstID;
+		
 
 			SChangeStance.usSoldierID = (pSoldier->ubID)+ubID_prefix;
 
@@ -253,8 +257,7 @@ void send_dir ( SOLDIERTYPE *pSoldier, UINT16 usDesiredDirection )
 		EV_S_SETDESIREDDIRECTION	SSetDesiredDirection;
 
 		//SSetDesiredDirection.usSoldierID = pSoldier->ubID;
-			//netbTeam = (atoi(CLIENT_NUM))+5;
-			//ubID_prefix = gTacticalStatus.Team[ netbTeam ].bFirstID;
+			
 
 		if(pSoldier->ubID < 20)
 			SSetDesiredDirection.usSoldierID = (pSoldier->ubID)+ubID_prefix;
@@ -293,8 +296,7 @@ void send_fire( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	EV_S_BEGINFIREWEAPON SBeginFireWeapon;
 
 
-		//netbTeam = (atoi(CLIENT_NUM))+5;
-		//ubID_prefix = gTacticalStatus.Team[ netbTeam ].bFirstID;
+		
 
 		SBeginFireWeapon.usSoldierID = (pSoldier->ubID)+ubID_prefix;
 
@@ -342,8 +344,7 @@ void send_hit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 sB
 
 					
 		
-		//netbTeam = (atoi(CLIENT_NUM))+5;
-		//ubID_prefix = gTacticalStatus.Team[ netbTeam ].bFirstID;
+	
 		
 		if(usSoldierID < 20)
 			SWeaponHit.usSoldierID = usSoldierID+ubID_prefix;
@@ -416,12 +417,24 @@ void send_hire( UINT8 iNewIndex, UINT8 ubCurrentSoldier, INT16 iTotalContractLen
 			sHireMerc.iTotalContractLength=iTotalContractLength;
 			sHireMerc.fCopyProfileItemsOver=fCopyProfileItemsOver;
 
-			//netbTeam = (atoi(CLIENT_NUM))+5;
+			
 			sHireMerc.bTeam=netbTeam;
 
 			SOLDIERTYPE *pSoldier = MercPtrs[ iNewIndex ];
 			pSoldier->ubStrategicInsertionCode=(atoi(SECT_EDGE)); // this sets the param read from the ini for your starting sector edge...
-		
+			
+
+			
+				if (pSoldier->ubID==0)
+				{
+							///create crate apon first hire
+				crate_usMapPos = MAPROWCOLTOPOS( crate_sGridY, crate_sGridX );
+				AddStructToUnLoadedMapTempFile( crate_usMapPos, SECONDOSTRUCT3, gsMercArriveSectorX, gsMercArriveSectorY, 0 );
+				}
+				
+	
+
+	
 
 			client->RPC("sendHIRE",(const char*)&sHireMerc, (int)sizeof(send_hire_struct)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
 		}
@@ -463,8 +476,7 @@ void recieveHIRE(RPCParameters *rpcParameters)
 	pSoldier->bSide=PLAYER_BSIDE;
 
 
-	//ChangeSoldiersAssignment( pSoldier, 0 );*/
-	//AddPlayerToGroup( SquadMovementGroups[ 0 ], pSoldier  );
+
 	AddSoldierToSector( iNewIndex );
 	
 
@@ -480,8 +492,7 @@ void send_gui_pos(SOLDIERTYPE *pSoldier,  FLOAT dNewXPos, FLOAT dNewYPos)
 			gui_pos gnPOS;
 
 		
-			//netbTeam = (atoi(CLIENT_NUM))+5;
-			//ubID_prefix = gTacticalStatus.Team[ netbTeam ].bFirstID;
+	
 
 			gnPOS.usSoldierID = (pSoldier->ubID)+ubID_prefix;
 			
@@ -512,8 +523,7 @@ void send_gui_dir(SOLDIERTYPE *pSoldier, UINT16	usNewDirection)
 			
 			gui_dir gnDIR;
 
-			//netbTeam = (atoi(CLIENT_NUM))+5;
-			//ubID_prefix = gTacticalStatus.Team[ netbTeam ].bFirstID;
+		
 
 			gnDIR.usSoldierID = (pSoldier->ubID)+ubID_prefix;
 			gnDIR.usNewDirection = usNewDirection;
@@ -536,95 +546,13 @@ void recieveguiDIR(RPCParameters *rpcParameters)
 }
 
 
-//void send_EndTurn( UINT8 ubNextTeam )
-//{
-//		
-//		{
-//			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"sendEndTurn" );
-//			//netbTeam = (atoi(CLIENT_NUM))+5;
-//			if(ubNextTeam==0)
-//			{
-//				ubNextTeam=netbTeam;
-//			}
-//					
-//			
-//			if(is_server && ubNextTeam >0  && ubNextTeam <6)
-//			{
-//				if(!(gTacticalStatus.Team[ ubNextTeam ].bTeamActive) && ubNextTeam <7)
-//				{
-//					ubNextTeam++;
-//				}
-//				if(!(gTacticalStatus.Team[ ubNextTeam ].bTeamActive) && ubNextTeam <7)
-//				{
-//					ubNextTeam++;
-//				}
-//				if(!(gTacticalStatus.Team[ ubNextTeam ].bTeamActive) && ubNextTeam <7)
-//				{
-//					ubNextTeam++;
-//				}
-//				if(!(gTacticalStatus.Team[ ubNextTeam ].bTeamActive) && ubNextTeam <7)
-//				{
-//					ubNextTeam++;
-//				}
-//				if(!(gTacticalStatus.Team[ ubNextTeam ].bTeamActive) && ubNextTeam <7)
-//				{
-//					ubNextTeam++;
-//				}
-//				if(!(gTacticalStatus.Team[ ubNextTeam ].bTeamActive) && ubNextTeam <7)
-//				{
-//					ubNextTeam++;
-//				}
-//			}
-//			
-//
-//
-//			//if(ubNextTeam >0 && ubNextTeam <6) // written if not more efficiently, effectively above...  //hayden :)
-//			//{
-//			//		while (!(gTacticalStatus.Team[ ubNextTeam ].bTeamActive))
-//			//		{
-//			//			if(ubNextTeam <6)
-//			//			{
-//			//				ubNextTeam++;
-//			//				continue;
-//			//			}
-//			//			else
-//			//			{
-//			//				ubNextTeam=netbTeam+1;
-//			//				break;
-//			//			}
-//			//		}
-//			//}
-//		
-//		turn_struct tStruct;
-//
-//		tStruct.tsnetbTeam = netbTeam;
-//		tStruct.tsubNextTeam = ubNextTeam;
-//
-//		client->RPC("sendEndTurn",(const char*)&tStruct, (int)sizeof(turn_struct)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
-//		}
-//
-//
-//}
-//
-//void recieveEndTurn(RPCParameters *rpcParameters)
-//{
-//		turn_struct* tStruct = (turn_struct*)rpcParameters->input;
-//		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"recieveEndTurn" );
-//		UINT8 ttt;
-//		UINT8 ubNextTeam;
-//		ttt=tStruct->tsnetbTeam;
-//		ubNextTeam=tStruct->tsubNextTeam;
-//	
-//		//?bring back enter combat mode
-//	
-//		EndTurn( ubNextTeam );
-//}
+
 
 void send_EndTurn( UINT8 ubNextTeam )
 {
 		
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"sendEndTurn" );
+			//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"sendEndTurn" );
 		
 			if(ubNextTeam==0)
 			{
@@ -646,7 +574,7 @@ void send_EndTurn( UINT8 ubNextTeam )
 void recieveEndTurn(RPCParameters *rpcParameters)
 {
 		turn_struct* tStruct = (turn_struct*)rpcParameters->input;
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"recieveEndTurn" );
+		//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"recieveEndTurn" );
 		UINT8 sender_bTeam;
 		UINT8 ubTeam;
 		sender_bTeam=tStruct->tsnetbTeam;
@@ -658,9 +586,15 @@ void recieveEndTurn(RPCParameters *rpcParameters)
 			EnterCombatMode(0); 
 		}
 
-		//net_turn = true;
+	
 		if(ubTeam==netbTeam)ubTeam=0;
+		{
+			if(!is_server && is_client)EndTurnEvents();
+		}
+		if(!is_server && is_client)EndTurn( ubTeam );
+		
 		BeginTeamTurn( ubTeam );
+
 }
 
 
@@ -740,12 +674,134 @@ void start_battle ( void )
 			AddSoldierToSector( i );
 		}
 	}
-
+		
+				
 
 	GROUP *pGroup;
 	pGroup = GetGroup( 30 ); // hmmm 30 ?
 
 	CheckConditionsForBattle( pGroup );
+}
+
+void DropOffItemsInSector( UINT8 ubOrderNum )
+{
+	BOOLEAN	fSectorLoaded = FALSE;
+	OBJECTTYPE		Object;
+	UINT32	uiCount = 0;
+	OBJECTTYPE	*pObject=NULL;
+	UINT16	usNumberOfItems=0, usItem;
+	UINT8		ubItemsDelivered, ubTempNumItems;
+	UINT32	i;
+
+	
+
+	// determine if the sector is loaded
+	if( ( gWorldSectorX == gsMercArriveSectorX ) && ( gWorldSectorY == gsMercArriveSectorY ) && ( gbWorldSectorZ == 0 ) )
+		fSectorLoaded = TRUE;
+	else
+		fSectorLoaded = FALSE;
+
+	// set crate to closed!
+	if ( fSectorLoaded )
+	{
+		SetOpenableStructureToClosed( crate_usMapPos, 0 );
+	}
+	else
+	{
+		ChangeStatusOfOpenableStructInUnloadedSector( gsMercArriveSectorX, gsMercArriveSectorY, 0, crate_usMapPos, FALSE );
+	}
+
+	
+	for(i=0; i<gpNewBobbyrShipments[ ubOrderNum ].ubNumberPurchases; i++)
+	{
+		// Count how many items were purchased
+		usNumberOfItems += gpNewBobbyrShipments[ ubOrderNum ].BobbyRayPurchase[i].ubNumberPurchased;
+	}
+
+	//if we are NOT currently in the right sector
+	if( !fSectorLoaded )
+	{
+		//build an array of objects to be added
+		pObject = (OBJECTTYPE *) MemAlloc( sizeof( OBJECTTYPE ) * usNumberOfItems );
+		if( pObject == NULL )
+			return;
+		memset( pObject, 0, sizeof( OBJECTTYPE ) * usNumberOfItems );
+	}
+
+
+	uiCount = 0;
+
+	//loop through the number of purchases
+	for( i=0; i< gpNewBobbyrShipments->ubNumberPurchases; i++)
+	{
+		ubItemsDelivered = gpNewBobbyrShipments[ ubOrderNum ].BobbyRayPurchase[i].ubNumberPurchased;
+		usItem = gpNewBobbyrShipments[ ubOrderNum ].BobbyRayPurchase[i].usItemIndex;
+
+		while ( ubItemsDelivered )
+		{
+			// treat 0s as 1s :-)
+			ubTempNumItems = __min( ubItemsDelivered, __max( 1, Item[ usItem ].ubPerPocket ) );
+			CreateItems( usItem, gpNewBobbyrShipments[ ubOrderNum ].BobbyRayPurchase[i].bItemQuality, ubTempNumItems, &Object );
+
+			// stack as many as possible
+			if( fSectorLoaded )
+			{
+				AddItemToPool( crate_usMapPos, &Object, -1, 0, 0, 0 );
+			}
+			else
+			{
+				memcpy( &pObject[ uiCount ], &Object, sizeof( OBJECTTYPE ) );
+				uiCount++;
+			}
+
+			ubItemsDelivered -= ubTempNumItems;
+		}
+	}
+
+	//if the sector WASNT loaded
+	if( !fSectorLoaded )
+	{
+		//add all the items from the array that was built above
+
+		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
+		if( !AddItemsToUnLoadedSector( gsMercArriveSectorX, gsMercArriveSectorY, 0, crate_usMapPos, uiCount, pObject, 0, 0, 0, -1, FALSE ) )
+		{
+			//error
+			Assert( 0 );
+		}
+		MemFree( pObject );
+		pObject = NULL;
+	}
+
+	//mark that the shipment has arrived
+	gpNewBobbyrShipments[ ubOrderNum ].fActive = FALSE;
+}
+
+
+void send_stop (EV_S_STOP_MERC *SStopMerc) // used to stop a merc when he spots new enemies...
+{
+	EV_S_STOP_MERC stop_struct;
+	if(SStopMerc->usSoldierID < 124)
+	{
+		//ScreenMsg( FONT_LTGREEN, MSG_INTERFACE, L"send_stop" );
+		if(SStopMerc->usSoldierID < 20)
+		{
+			stop_struct.usSoldierID = (SStopMerc->usSoldierID)+ubID_prefix;
+		}
+		stop_struct.sGridNo=SStopMerc->sGridNo;
+		stop_struct.bDirection=SStopMerc->bDirection;
+		client->RPC("sendSTOP",(const char*)&stop_struct, (int)sizeof(EV_S_STOP_MERC)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
+	}
+}
+
+void recieveSTOP (RPCParameters *rpcParameters)
+{
+	//ScreenMsg( FONT_LTGREEN, MSG_INTERFACE, L"recieve_stop" );
+	
+	EV_S_STOP_MERC* SStopMerc =(EV_S_STOP_MERC*)rpcParameters->input;
+	
+	SOLDIERTYPE *pSoldier = MercPtrs[ SStopMerc->usSoldierID ];
+	EVENT_StopMerc( pSoldier, SStopMerc->sGridNo, SStopMerc->bDirection );
 }
 
 
@@ -777,6 +833,7 @@ void connect_client ( void )
 			REGISTER_STATIC_RPC(client, recieveguiDIR);
 			REGISTER_STATIC_RPC(client, recieveEndTurn);
 			REGISTER_STATIC_RPC(client, recieveAI);
+			REGISTER_STATIC_RPC(client, recieveSTOP);
 
 			
 		
@@ -821,6 +878,10 @@ void connect_client ( void )
 
 			char hire_same_merc[30];
 			char player_bside[30];
+			char net_div[30];
+
+			char c_x[30];
+			char c_y[30];
 
 			GetPrivateProfileString( "Ja2_mp Settings","SERVER_IP", "", ip, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","SERVER_PORT", "", port, MAX_PATH, "..\\Ja2_mp.ini" );
@@ -834,6 +895,11 @@ void connect_client ( void )
 
 			GetPrivateProfileString( "Ja2_mp Settings","SAME_MERC", "", hire_same_merc, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","PLAYER_BSIDE", "", player_bside, MAX_PATH, "..\\Ja2_mp.ini" );
+
+			GetPrivateProfileString( "Ja2_mp Settings","NET_DIVISOR", "", net_div, MAX_PATH, "..\\Ja2_mp.ini" );
+
+			GetPrivateProfileString( "Ja2_mp Settings","CRATE_X", "", c_x, MAX_PATH, "..\\Ja2_mp.ini" );
+			GetPrivateProfileString( "Ja2_mp Settings","CRATE_Y", "", c_y, MAX_PATH, "..\\Ja2_mp.ini" );
 
 
 			strcpy( SERVER_IP , ip );
@@ -849,6 +915,11 @@ void connect_client ( void )
 			SAME_MERC = atoi(hire_same_merc);
 			PLAYER_BSIDE = atoi(player_bside);
 
+			NET_DIVISOR = atoi(net_div);
+
+			crate_sGridX = atoi(c_x);
+			crate_sGridY = atoi(c_y);
+
 			netbTeam = (atoi(CLIENT_NUM))+5;
 			ubID_prefix = gTacticalStatus.Team[ netbTeam ].bFirstID;
 
@@ -862,9 +933,10 @@ void connect_client ( void )
 				gfTemporaryDisablingOfLoadPendingFlag = TRUE;
 				SetBookMark( AIM_BOOKMARK );
 				SetBookMark( BOBBYR_BOOKMARK );
-				SetBookMark( IMP_BOOKMARK );
+				//SetBookMark( IMP_BOOKMARK );
 				SetBookMark( MERC_BOOKMARK );
-				
+
+							
 			//**********************
 			
 			

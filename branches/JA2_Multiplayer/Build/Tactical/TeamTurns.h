@@ -18,12 +18,14 @@ extern void AddToIntList( UINT8 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate
 extern void DoneAddingToIntList( SOLDIERTYPE * pSoldier, BOOLEAN fChange, UINT8 ubInterruptType);
 
 void ClearIntList( void );
+void FreezeInterfaceForEnemyTurn( void );
 
 BOOLEAN	SaveTeamTurnsToTheSaveGameFile( HWFILE hFile );
 
 BOOLEAN	LoadTeamTurnsFromTheSavedGameFile( HWFILE hFile );
 
 void EndAllAITurns( void );
+void EndTurnEvents( void );
 
 BOOLEAN NPCFirstDraw( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier );
 

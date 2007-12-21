@@ -89,7 +89,7 @@
 	#include "Map Information.h"
 #endif
 
-
+#include "teamturns.h"
 
 //extern BOOLEAN gfDisplayFullCountRingBurst;
 extern UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady );
@@ -1211,7 +1211,10 @@ UINT32 UIHandleEndTurn( UI_EVENT *pUIEvent )
 		}
 		else
 		{		
-			if(is_client)send_EndTurn( netbTeam+1 );//for sending next netbteam rather than next local team
+			if(is_client)
+			{
+				send_EndTurn( netbTeam+1 );//for sending next netbteam rather than next local team
+			}
 		}
 	}
 

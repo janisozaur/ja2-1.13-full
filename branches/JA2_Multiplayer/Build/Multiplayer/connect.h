@@ -3,6 +3,7 @@
 
 #include "Soldier Init List.h"
 #include "Merc Hiring.h"
+#include "event pump.h"
 
 extern bool is_connected;
 extern bool is_connecting;
@@ -21,10 +22,13 @@ extern int SAME_MERC;
 
 extern UINT8 netbTeam;
 extern UINT8 ubID_prefix;
+extern INT16 NET_DIVISOR;
 
-extern bool net_turn;
+extern UINT16 crate_usMapPos;
 
 void start_battle ( void );
+void DropOffItemsInSector( UINT8 ubOrderNum );
+
 void test_func2 ( void );
 
 UINT8 numenemyLAN( UINT8 ubSectorX, UINT8 ubSectorY );
@@ -51,5 +55,7 @@ void send_gui_dir(SOLDIERTYPE *pSoldier, UINT16	usNewDirection);
 void send_EndTurn( UINT8 ubNextTeam );
 
 void send_AI( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *pubID );
+
+void send_stop (EV_S_STOP_MERC *SStopMerc);
 
 BOOLEAN CheckConditionsForBattle( GROUP *pGroup ); // this comes from strategic movement.cpp

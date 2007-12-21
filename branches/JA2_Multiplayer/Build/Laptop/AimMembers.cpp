@@ -3203,7 +3203,7 @@ BOOLEAN InitDeleteVideoConferencePopUp( )
 	{
 		gubVideoConferencingPreviousMode = gubVideoConferencingMode;
  		gubMercAttitudeLevel = 0;
-		gubContractLength = AIM_CONTRACT_LENGTH_ONE_WEEK;
+		gubContractLength = 0; //hayden
 
 		if( gMercProfiles[gbCurrentSoldier].usOptionalGearCost == 0 )
 			gfBuyEquipment = FALSE;

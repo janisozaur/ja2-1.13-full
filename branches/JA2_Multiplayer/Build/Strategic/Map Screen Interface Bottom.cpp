@@ -52,6 +52,8 @@
 	#include "SaveLoadScreen.h"
 #endif
 
+#include "connect.h"
+
 
 // WANNE 2
 #define MAP_BOTTOM_X							0
@@ -1728,6 +1730,10 @@ BOOLEAN AllowedToExitFromMapscreenTo( INT8 bExitToWhere )
 		if( !CanGoToTacticalInSector( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ ) )
 		{
 			return( FALSE );
+		}
+		if ( (( sSelMapX != gWorldSectorX ) || ( sSelMapY != gWorldSectorY ) || (( UINT8 )iCurrentMapSectorZ ) != gbWorldSectorZ  ) && is_client) //hayden (PBI only)
+		{
+			return (FALSE);
 		}
 	}
 

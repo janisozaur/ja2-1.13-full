@@ -76,6 +76,11 @@ void sendAI(RPCParameters *rpcParameters)
 {
 	server->RPC("recieveAI",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, rpcParameters->sender, true, 0, UNASSIGNED_NETWORK_ID,0);
 }
+
+void sendSTOP(RPCParameters *rpcParameters)
+{
+	server->RPC("recieveSTOP",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, rpcParameters->sender, true, 0, UNASSIGNED_NETWORK_ID,0);
+}
 //*************************
 //START INTERNAL SERVER
 //*************************
@@ -121,6 +126,7 @@ void start_server (void)
 		REGISTER_STATIC_RPC(server, sendguiDIR);
 		REGISTER_STATIC_RPC(server, sendEndTurn);
 		REGISTER_STATIC_RPC(server, sendAI);
+		REGISTER_STATIC_RPC(server, sendSTOP);
 		
 	//
 

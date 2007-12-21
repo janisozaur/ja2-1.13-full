@@ -614,7 +614,8 @@ void			HandleGIOScreen()
 			}
 
 			case GIO_IRON_MAN_MODE:
-				DisplayMessageToUserAboutGameDifficulty();
+				//DisplayMessageToUserAboutGameDifficulty();
+				gubGameOptionScreenHandler = GIO_EXIT; //hayden
 				break;
 		}
 
@@ -1034,7 +1035,8 @@ void BtnGIODoneCallback(GUI_BUTTON *btn,INT32 reason)
 		if( !DisplayMessageToUserAboutIronManMode() )
 		{
 			//Confirm the difficulty setting
-			DisplayMessageToUserAboutGameDifficulty();
+			//DisplayMessageToUserAboutGameDifficulty(); //hayden
+			gubGameOptionScreenHandler = GIO_EXIT;
 		}
 
 

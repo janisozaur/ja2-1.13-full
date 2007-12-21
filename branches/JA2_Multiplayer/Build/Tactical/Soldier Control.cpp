@@ -9994,12 +9994,13 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 {
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("HaultSoldierFromSighting") );
 	// SEND HUALT EVENT!
-	//EV_S_STOP_MERC				SStopMerc;
+	EV_S_STOP_MERC				SStopMerc;
 
-	//SStopMerc.sGridNo					= pSoldier->sGridNo;
-	//SStopMerc.bDirection			= pSoldier->bDirection;
-	//SStopMerc.usSoldierID			= pSoldier->ubID;
-	//AddGameEvent( S_STOP_MERC, 0, &SStopMerc );
+	SStopMerc.sGridNo					= pSoldier->sGridNo;
+	SStopMerc.bDirection			= pSoldier->bDirection;
+	SStopMerc.usSoldierID			= pSoldier->ubID;
+	//AddGameEvent( S_STOP_MERC, 0, &SStopMerc ); //hayden.
+	if(is_client)send_stop(&SStopMerc);
 
 	// If we are a 'specialmove... ignore...
 	if ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_SPECIALMOVE ) )

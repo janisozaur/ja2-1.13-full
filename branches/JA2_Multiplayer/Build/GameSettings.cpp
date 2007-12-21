@@ -291,11 +291,11 @@ void InitGameOptions()
 	memset( &gGameOptions, 0, sizeof( GAME_OPTIONS ) );
 
 	//Init the game options
-	gGameOptions.ubBobbyRay			= BR_GOOD;
+	gGameOptions.ubBobbyRay			= BR_AWESOME;// hayden, was BR_GOOD;
 	gGameOptions.fGunNut			= TRUE;
 	gGameOptions.fAirStrikes		= FALSE;
-	gGameOptions.ubGameStyle		= STYLE_SCIFI;
-	gGameOptions.ubDifficultyLevel	= DIF_LEVEL_MEDIUM;
+	gGameOptions.ubGameStyle		= STYLE_REALISTIC;//hayden, was STYLE_SCIFI;
+	gGameOptions.ubDifficultyLevel	= DIF_LEVEL_MEDIUM; //hayden , was DIF_LEVEL_MEDIUM;
 	//gGameOptions.fTurnTimeLimit	= FALSE;
 	
 	gGameOptions.fIronManMode		= FALSE;

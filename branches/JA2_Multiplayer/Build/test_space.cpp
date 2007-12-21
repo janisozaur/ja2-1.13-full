@@ -113,9 +113,17 @@ extern INT8 SquadMovementGroups[ ];
 //
 //}
 
-void test_func2 (void)//now bound to "5"
+void test_func2 (void)//now bound to "5" //currently displays coordinates of the mouse
 {
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"test_func2" );
+	INT16	sGridX, sGridY;
+	UINT16 usMapPos;
+
+	GetMouseXY( &sGridX, &sGridY );
+	usMapPos = MAPROWCOLTOPOS( sGridY, sGridX );
+	
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Mouse Grid Coordinates:" );
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"X: %d, Y: %d", sGridY, sGridX );
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Grid Number: %d", usMapPos );
 }
 
 

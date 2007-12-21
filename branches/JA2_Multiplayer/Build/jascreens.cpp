@@ -420,7 +420,7 @@ UINT32 InitScreenHandle(void)
 			#endif
 		}
 
-		mprintf( 10, 40, L"> Four Player Multiplayer Support Enabled" );  //hayden
+		mprintf( 10, 40, L">Pre-Beta, Four Player Multiplayer Support Enabled" );  //hayden
 
 		InvalidateScreen( );
 

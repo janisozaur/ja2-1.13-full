@@ -2132,6 +2132,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				}
 				else
 					ChangeCurrentSquad( 1 );
+					
 				break;
 
 			case '3':
@@ -2179,6 +2180,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				}
 				else
 					ChangeCurrentSquad( 4 );
+					test_func2();
 				break;
 
 			case '6':
