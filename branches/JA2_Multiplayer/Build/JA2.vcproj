@@ -43,7 +43,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libexpatMT.lib mss32.lib winmm.lib smackw32.lib fmodvc.lib lua51.lib .\Multiplayer\RakNetLibStaticDebug.lib ws2_32.lib"
-				OutputFile="C:\Program Files\TalonSoft\Ja2\ja2_mp_debug_1080_en.exe"
+				OutputFile="C:\Program Files\TalonSoft\Ja2\ja2_mp_debug_prebeta.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				IgnoreDefaultLibraryNames="libcmt;LIBCD"
