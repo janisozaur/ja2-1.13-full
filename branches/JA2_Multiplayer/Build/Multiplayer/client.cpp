@@ -172,7 +172,7 @@ INT16	crate_sGridX, crate_sGridY;
 
 void send_path (  SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim, BOOLEAN fFromUI, BOOLEAN fForceRestartAnim  )
 {
-	if(pSoldier->ubID < 124)
+	if(pSoldier->ubID < 120)
 	{
 		//ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"Sending RPC..." );
 		EV_S_GETNEWPATH	SGetNewPath;
@@ -211,7 +211,7 @@ void recievePATH(RPCParameters *rpcParameters)
 void send_stance ( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance )
 
 {
-	if(pSoldier->ubID < 124)
+	if(pSoldier->ubID < 120)
 	{
 		EV_S_CHANGESTANCE			SChangeStance;
 
@@ -290,7 +290,7 @@ void recieveDIR(RPCParameters *rpcParameters)
 
 void send_fire( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 {
-	if(pSoldier->ubID < 124)
+	if(pSoldier->ubID < 120)
 	{
 	
 	EV_S_BEGINFIREWEAPON SBeginFireWeapon;
@@ -781,7 +781,7 @@ void DropOffItemsInSector( UINT8 ubOrderNum )
 void send_stop (EV_S_STOP_MERC *SStopMerc) // used to stop a merc when he spots new enemies...
 {
 	EV_S_STOP_MERC stop_struct;
-	if(SStopMerc->usSoldierID < 124)
+	if(SStopMerc->usSoldierID < 120)
 	{
 		//ScreenMsg( FONT_LTGREEN, MSG_INTERFACE, L"send_stop" );
 		if(SStopMerc->usSoldierID < 20)

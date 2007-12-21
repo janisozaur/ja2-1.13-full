@@ -323,18 +323,17 @@ CHAR8                   gzDirectionStr[][ 30 ] =
 UINT8 bDefaultTeamRanges[ MAXTEAMS ][ 2 ] = 
 
 {
-	0,              19,                                                                                             //20  US
-	20,             51,                                                                                             //32  ENEMY
-	52,             58,      //kulled off to make room      ;)                                                                                  //32    CREATURE
-	59,             91,                                                                                    //32    REBELS ( OUR GUYS )
-	92,             122,                   //32  CIVILIANS
-	123,             124,            // PLANNING SOLDIERS
-	125,             129,			//1 //new sides //hayden // 5 each
-	130,             144,			//2
-	145,             149,			//3
-	150,             155		//4
-
-
+	0,              19,                     //20  US
+	20,             51,                      //32  ENEMY
+	52,             52,      //kulled off to make room      ;) //32    CREATURE
+	53,             84,                        //32    REBELS ( OUR GUYS )
+	85,             116,                   //32  CIVILIANS
+	117,             119,			  // PLANNING SOLDIERS (reduced)
+	120,             126,				//1 //new sides //hayden // 7 each
+	127,             133,				//2
+	134,             140,				//3
+	141,             MAX_NUM_SOLDIERS - 1, 			//4
+	MAX_NUM_SOLDIERS, TOTAL_SOLDIERS - 1		        // PLANNING SOLDIERS
 };
 
 //{
@@ -343,7 +342,7 @@ UINT8 bDefaultTeamRanges[ MAXTEAMS ][ 2 ] =
 //	52,             83,                                                                                             //32    CREATURE
 //	84,             115,                                                                                    //32    REBELS ( OUR GUYS )
 //	116,    MAX_NUM_SOLDIERS - 1,                   //32  CIVILIANS
-//	MAX_NUM_SOLDIERS, TOTAL_SOLDIERS - 1            // PLANNING SOLDIERS
+//MAX_NUM_SOLDIERS, TOTAL_SOLDIERS - 1            // PLANNING SOLDIERS
 //};
 
 COLORVAL bDefaultTeamColors[ MAXTEAMS ] = 

@@ -23,7 +23,7 @@
 #define MIN_AMB_LEVEL_FOR_MERC_LIGHTS		9
 
 
-#define     MAXTEAMS				10
+#define     MAXTEAMS				11 //hayden
 
 #define			MAXMERCS				MAX_NUM_SOLDIERS
 

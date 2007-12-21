@@ -100,7 +100,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	if( ( pMerc->bMercStatus != 0 ) && (pMerc->bMercStatus != MERC_ANNOYED_BUT_CAN_STILL_CONTACT ) && ( pMerc->bMercStatus != MERC_HIRED_BUT_NOT_ARRIVED_YET ) )
 		return( MERC_HIRE_FAILED );
 
-	if( NumberOfMercsOnPlayerTeam() >= 18 || (is_client && NumberOfMercsOnPlayerTeam() >= 5)) //hayden, 5 member team limit
+	if( NumberOfMercsOnPlayerTeam() >= 18 || (is_client && NumberOfMercsOnPlayerTeam() >= 7)) //hayden, 7 member team limit
 		return( MERC_HIRE_OVER_18_MERCS_HIRED );
 
 	// ATE: if we are to use landing zone, update to latest value
