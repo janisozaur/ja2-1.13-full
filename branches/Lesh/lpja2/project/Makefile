@@ -12,7 +12,7 @@ sdl_flags := $(shell sdl-config --cflags)
 sdl_lib   := $(shell sdl-config --libs)
 
 
-source_dirso := . sgp utils tile_engine tactical_ai tactical strategic laptop editor SDL_Config
+source_dirso := . sgp utils xml tile_engine tactical_ai tactical strategic laptop editor SDL_Config
 link_flags   := -pthread
 include_libs :=
 link_libs    := 
