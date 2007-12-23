@@ -262,12 +262,24 @@ typedef struct UNDERGROUND_SECTORINFO
 	//no padding left!
 }UNDERGROUND_SECTORINFO;
 
+// for movement costs xml
+typedef struct
+{
+	UINT32		travRating;
+	UINT32		travNorth;
+	UINT32		travEast;
+	UINT32		travSouth;
+	UINT32		travWest;
+	UINT32		travHere;
+} MOVEMENT_INFO;
+
 //The sector information required for the strategic AI.  Contains the number of enemy troops,
 //as well as intentions, etc.
 
 #define	TOTAL_SECTORS		256
 
-extern SECTORINFO SectorInfo[ TOTAL_SECTORS ];
+extern SECTORINFO		SectorInfo[ TOTAL_SECTORS ];
+extern MOVEMENT_INFO	MovementInfo[ TOTAL_SECTORS ];
 extern UNDERGROUND_SECTORINFO *gpUndergroundSectorInfoHead;
 
 #endif

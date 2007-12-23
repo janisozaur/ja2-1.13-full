@@ -1426,6 +1426,13 @@ BOOLEAN InitStrategicEngine( )
 	// this runs every time we start the application, so don't put anything in here that's only supposed to run when a new
 	// *game* is started!  Those belong in InitStrategicLayer() instead.
 
+	//needs to be called here to init the SectorInfo struct
+	printf("Initializing strategic movement costs\n");
+	if ( !InitStrategicMovementCosts( ) )
+	{
+		return( ERROR_SCREEN );
+	}
+
 	// set up town stuff
 	BuildListOfTownSectors( );
 

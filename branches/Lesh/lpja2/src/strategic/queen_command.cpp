@@ -55,7 +55,7 @@
 
 //The sector information required for the strategic AI.  Contains the number of enemy troops,
 //as well as intentions, etc.
-SECTORINFO SectorInfo[256];
+SECTORINFO SectorInfo[ TOTAL_SECTORS ];
 UNDERGROUND_SECTORINFO *gpUndergroundSectorInfoHead = NULL;
 extern UNDERGROUND_SECTORINFO* gpUndergroundSectorInfoTail;
 BOOLEAN gfPendingEnemies = FALSE;
