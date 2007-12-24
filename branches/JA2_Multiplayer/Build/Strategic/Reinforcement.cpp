@@ -25,6 +25,8 @@
 	#include "Soldier Init List.h"
 #endif
 
+#include "connect.h"
+
 #include "Reinforcement.h"
 #include "MilitiaSquads.h"
 
@@ -388,6 +390,8 @@ void AddPossiblePendingMilitiaToBattle()
 	{ //no available slots to add militia  to.  Try again later...
 		return;
 	}
+	if(!MILITIA_ENABLED)
+		return; //hayden
 	
 	if( ubPredefinedInsertionCode != 255 && ubPredefinedRank != 255 &&
 		CountAllMilitiaInSector( gWorldSectorX, gWorldSectorY ) )

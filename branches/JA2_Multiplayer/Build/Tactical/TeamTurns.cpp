@@ -1188,7 +1188,8 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 	UINT8						ubMinPtsNeeded;
 	INT8						bDir;
 	SOLDIERTYPE *		pOpponent;
-
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"interrupt disabled" ); //hayden
+	return FALSE; //quick disable //hayden
 	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && !(gubSightFlags & SIGHT_INTERRUPT) )
 	{
 		return( FALSE );

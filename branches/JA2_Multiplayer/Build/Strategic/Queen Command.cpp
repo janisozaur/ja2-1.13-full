@@ -1149,6 +1149,9 @@ void AddPossiblePendingEnemiesToBattle()
 	SECTORINFO *pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
 	static UINT8 ubPredefinedInsertionCode = 255;
 	
+	if(!ENEMY_ENABLED)
+		return; //hayden crash fix
+
 	// check if no world is loaded
 	if ( !gWorldSectorX && !gWorldSectorY && (gbWorldSectorZ == -1) )
 		return;

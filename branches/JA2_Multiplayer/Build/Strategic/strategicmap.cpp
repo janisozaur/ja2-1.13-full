@@ -2037,13 +2037,13 @@ void PrepareLoadedSector()
 				}
 			}
 		}
-		if( fAddCivs )
+		if( fAddCivs && CIV_ENABLED)//hayden
 		{
 			AddSoldierInitListTeamToWorld( CIV_TEAM, 255 );
 		}
 
-		AddSoldierInitListTeamToWorld( MILITIA_TEAM, 255 );
-		AddSoldierInitListBloodcats();
+		if(MILITIA_ENABLED)AddSoldierInitListTeamToWorld( MILITIA_TEAM, 255 );
+		if(CREATURE_ENABLED)AddSoldierInitListBloodcats();
 		//Creatures are only added if there are actually some of them.  It has to go through some
 		//additional checking.
 
@@ -2072,9 +2072,9 @@ void PrepareLoadedSector()
 		}
 		#endif
 
-		PrepareCreaturesForBattle();
+		if(CREATURE_ENABLED)PrepareCreaturesForBattle();
 
-		PrepareMilitiaForTactical();
+		if(MILITIA_ENABLED)PrepareMilitiaForTactical();
 
 		// OK, set varibles for entring this new sector...
 		gTacticalStatus.fVirginSector = TRUE;
@@ -2087,11 +2087,11 @@ void PrepareLoadedSector()
 			//AddSoldierInitListTeamToWorld( CIV_TEAM, 255 );
 //			fEnemyPresenceInThisSector = PrepareEnemyForSectorBattle();
 		}
-		AddProfilesNotUsingProfileInsertionData();
+		AddProfilesNotUsingProfileInsertionData(); //hmm
 		
 		if( !AreInMeanwhile() || GetMeanwhileID() == INTERROGATION )
 		{
-			fEnemyPresenceInThisSector = PrepareEnemyForSectorBattle();
+			if(ENEMY_ENABLED)fEnemyPresenceInThisSector = PrepareEnemyForSectorBattle();
 		}
 
 
