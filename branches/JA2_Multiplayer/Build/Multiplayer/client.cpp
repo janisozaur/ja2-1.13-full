@@ -134,6 +134,31 @@ typedef struct
 		BOOLEAN bbb;
 		} temp;
 
+typedef struct
+	{
+
+		SOLDIERCREATE_STRUCT standard_data;
+
+		OBJECTTYPE slot0;
+		OBJECTTYPE slot1;
+		OBJECTTYPE slot2;
+		OBJECTTYPE slot3;
+		OBJECTTYPE slot4;
+		OBJECTTYPE slot5;
+		OBJECTTYPE slot6;
+		OBJECTTYPE slot7;
+		OBJECTTYPE slot8;
+		OBJECTTYPE slot9;
+		OBJECTTYPE slot10;
+		OBJECTTYPE slot11;
+		OBJECTTYPE slot12;
+		OBJECTTYPE slot13;
+		OBJECTTYPE slot14;
+		OBJECTTYPE slot15;
+		OBJECTTYPE slot16;
+		OBJECTTYPE slot17;
+		OBJECTTYPE slot18;
+	} AI_STRUCT;
 
 UINT8 netbTeam;
 UINT8	ubID_prefix;
@@ -180,7 +205,11 @@ void send_path (  SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAn
 
 		
 
+		if(pSoldier->ubID < 20)
 			SGetNewPath.usSoldierID = (pSoldier->ubID)+ubID_prefix;
+		else
+			SGetNewPath.usSoldierID = pSoldier->ubID;
+
 		//SGetNewPath.usSoldierID				= pSoldier->ubID;
 		SGetNewPath.sDestGridNo				= sDestGridNo;
 		SGetNewPath.usMovementAnim		= usMovementAnim;
@@ -219,7 +248,11 @@ void send_stance ( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance )
 		//SChangeStance.usSoldierID  = pSoldier->ubID;
 		
 
+		if(pSoldier->ubID < 20)
 			SChangeStance.usSoldierID = (pSoldier->ubID)+ubID_prefix;
+		else
+			SChangeStance.usSoldierID = pSoldier->ubID;
+
 
 		SChangeStance.sXPos				= pSoldier->sX;
 		SChangeStance.sYPos				= pSoldier->sY;
@@ -298,7 +331,11 @@ void send_fire( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 
 		
 
+	if(pSoldier->ubID < 20)
 		SBeginFireWeapon.usSoldierID = (pSoldier->ubID)+ubID_prefix;
+	else
+		SBeginFireWeapon.usSoldierID = pSoldier->ubID;
+
 
 	SBeginFireWeapon.sTargetGridNo = sTargetGridNo;
 	SBeginFireWeapon.bTargetLevel = pSoldier->bTargetLevel;
@@ -627,9 +664,35 @@ void send_AI( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *pubID )
 {
 		//ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"send_AI" );
 
-		SOLDIERCREATE_STRUCT aaa = *pCreateStruct;
+		//SOLDIERCREATE_STRUCT aaa = *pCreateStruct;
+	
+		AI_STRUCT send_inv;
+
+		send_inv.standard_data = *pCreateStruct;
+
+		send_inv.slot0 = pCreateStruct->Inv[ 0 ];
+		send_inv.slot1 = pCreateStruct->Inv[ 1 ];
+		send_inv.slot2 = pCreateStruct->Inv[ 2];
+		send_inv.slot3 = pCreateStruct->Inv[ 3 ];
+		send_inv.slot4 = pCreateStruct->Inv[ 4 ];
+		send_inv.slot5 = pCreateStruct->Inv[ 5 ];
+		send_inv.slot6 = pCreateStruct->Inv[ 6 ];
+		send_inv.slot7 = pCreateStruct->Inv[ 7 ];
+		send_inv.slot8 = pCreateStruct->Inv[ 8 ];
+		send_inv.slot9 = pCreateStruct->Inv[ 9 ];
+		send_inv.slot10 = pCreateStruct->Inv[ 10 ];
+		send_inv.slot11 = pCreateStruct->Inv[ 11 ];
+		send_inv.slot12 = pCreateStruct->Inv[ 12 ];
+		send_inv.slot13 = pCreateStruct->Inv[ 13 ];
+		send_inv.slot14 = pCreateStruct->Inv[ 14 ];
+		send_inv.slot15 = pCreateStruct->Inv[ 15 ];
+		send_inv.slot16 = pCreateStruct->Inv[ 16 ];
+		send_inv.slot17 = pCreateStruct->Inv[ 17 ];
+		send_inv.slot18 = pCreateStruct->Inv[ 18 ];
+
 		
-		client->RPC("sendAI",(const char*)&aaa, (int)sizeof(SOLDIERCREATE_STRUCT)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
+		
+		client->RPC("sendAI",(const char*)&send_inv, (int)sizeof(AI_STRUCT)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
 
 }
 
@@ -638,24 +701,95 @@ void recieveAI (RPCParameters *rpcParameters)
 		UINT8 iNewIndex;
 		SOLDIERTYPE *pSoldier;
 
-		SOLDIERCREATE_STRUCT* aaa = (SOLDIERCREATE_STRUCT*)rpcParameters->input;
-		
-		SOLDIERCREATE_STRUCT bbb = *aaa;
 
-		bbb.fPlayerPlan=1;
+		AI_STRUCT* send_inv = (AI_STRUCT*)rpcParameters->input;
 
-		TacticalCreateSoldier( &bbb, &iNewIndex );
+		SOLDIERCREATE_STRUCT new_standard_data;
+	
+
+		new_standard_data.bAgility = send_inv->standard_data.bAgility;
+		new_standard_data.bAIMorale = send_inv->standard_data.bAIMorale;
+		new_standard_data.bAttitude = send_inv->standard_data.bAttitude;
+		new_standard_data.bBodyType = send_inv->standard_data.bBodyType;
+		new_standard_data.bDexterity = send_inv->standard_data.bDexterity;
+		new_standard_data.bDirection = send_inv->standard_data.bDirection;
+		new_standard_data.bExpLevel = send_inv->standard_data.bExpLevel;
+		new_standard_data.bExplosive = send_inv->standard_data.bExplosive;
+		new_standard_data.bLeadership = send_inv->standard_data.bLeadership;
+		new_standard_data.bLife = send_inv->standard_data.bLife;
+		new_standard_data.bLifeMax = send_inv->standard_data.bLifeMax;
+		new_standard_data.bMarksmanship = send_inv->standard_data.bMarksmanship;
+		new_standard_data.bMechanical = send_inv->standard_data.bMechanical;
+		new_standard_data.bMedical = send_inv->standard_data.bMedical;
+		new_standard_data.bMorale = send_inv->standard_data.bMorale;
+		new_standard_data.bOrders = send_inv->standard_data.bOrders;
+		memcpy( new_standard_data.bPadding, send_inv->standard_data.bPadding, sizeof( INT8 ) * 115 );
+		new_standard_data.bPatrolCnt = send_inv->standard_data.bPatrolCnt;
+		new_standard_data.bSectorZ = send_inv->standard_data.bSectorZ;
+		new_standard_data.bStrength = send_inv->standard_data.bStrength;
+		new_standard_data.bTeam = send_inv->standard_data.bTeam;
+		new_standard_data.bUseGivenVehicleID = send_inv->standard_data.bUseGivenVehicleID;
+		new_standard_data.bWisdom = send_inv->standard_data.bWisdom;
+		new_standard_data.ef1 = send_inv->standard_data.ef1;
+		new_standard_data.ef2 = send_inv->standard_data.ef2;
+		new_standard_data.endOfPOD = send_inv->standard_data.endOfPOD;
+		new_standard_data.fCopyProfileItemsOver = send_inv->standard_data.fCopyProfileItemsOver;
+		new_standard_data.fHasKeys = send_inv->standard_data.fHasKeys;
+		new_standard_data.fKillSlotIfOwnerDies = send_inv->standard_data.fKillSlotIfOwnerDies;
+		new_standard_data.fOnRoof = send_inv->standard_data.fOnRoof;
+		new_standard_data.fPlayerMerc = send_inv->standard_data.fPlayerMerc;
+		new_standard_data.fPlayerPlan = send_inv->standard_data.fPlayerPlan;
+		new_standard_data.fStatic = send_inv->standard_data.fStatic;
+		new_standard_data.fUseExistingSoldier = send_inv->standard_data.fUseExistingSoldier;
+		new_standard_data.fUseGivenVehicle = send_inv->standard_data.fUseGivenVehicle;
+		new_standard_data.fVisible = send_inv->standard_data.fVisible;
+		memcpy( new_standard_data.HeadPal , send_inv->standard_data.HeadPal, sizeof( PaletteRepID ));
+		memcpy( new_standard_data.MiscPal , send_inv->standard_data.MiscPal, sizeof( PaletteRepID ));
+		memcpy( new_standard_data.name , send_inv->standard_data.name, sizeof( CHAR16 ) * 10 );
+		memcpy( new_standard_data.PantsPal , send_inv->standard_data.PantsPal, sizeof( PaletteRepID ));
+		new_standard_data.pExistingSoldier = send_inv->standard_data.pExistingSoldier;
+		new_standard_data.sInsertionGridNo = send_inv->standard_data.sInsertionGridNo;
+		memcpy( new_standard_data.SkinPal , send_inv->standard_data.SkinPal, sizeof( PaletteRepID ));
+		memcpy( new_standard_data.sPatrolGrid, send_inv->standard_data.sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+		new_standard_data.sSectorX = send_inv->standard_data.sSectorX;
+		new_standard_data.sSectorY = send_inv->standard_data.sSectorY;
+		new_standard_data.ubCivilianGroup = send_inv->standard_data.ubCivilianGroup;
+		new_standard_data.ubProfile = send_inv->standard_data.ubProfile;
+		new_standard_data.ubScheduleID = send_inv->standard_data.ubScheduleID;
+		new_standard_data.ubSoldierClass = send_inv->standard_data.ubSoldierClass;
+		memcpy( new_standard_data.VestPal , send_inv->standard_data.VestPal, sizeof( PaletteRepID ));
+				
+
+		new_standard_data.Inv[0] = send_inv->slot0;
+		new_standard_data.Inv[1] = send_inv->slot1;
+		new_standard_data.Inv[2] = send_inv->slot2;
+		new_standard_data.Inv[3] = send_inv->slot3;
+		new_standard_data.Inv[4] = send_inv->slot4;
+		new_standard_data.Inv[5] = send_inv->slot5;
+		new_standard_data.Inv[6] = send_inv->slot6;
+		new_standard_data.Inv[7] = send_inv->slot7;
+		new_standard_data.Inv[8] = send_inv->slot8;
+		new_standard_data.Inv[9] = send_inv->slot9;
+		new_standard_data.Inv[10] = send_inv->slot10;
+		new_standard_data.Inv[11] = send_inv->slot11;
+		new_standard_data.Inv[12] = send_inv->slot12;
+		new_standard_data.Inv[13] = send_inv->slot13;
+		new_standard_data.Inv[14] = send_inv->slot14;
+		new_standard_data.Inv[15] = send_inv->slot15;
+		new_standard_data.Inv[16] = send_inv->slot16;
+		new_standard_data.Inv[17] = send_inv->slot17;
+		new_standard_data.Inv[18] = send_inv->slot18;
+
+		new_standard_data.fPlayerPlan=1;
+
+	
+    	TacticalCreateSoldier( &new_standard_data, &iNewIndex );
 		pSoldier = &Menptr[iNewIndex];
 		pSoldier->uiStatusFlags |= SOLDIER_PC;
-		if(!pSoldier->bActive)
-		{
-			ScreenMsg( FONT_LTGREEN, MSG_INTERFACE, L"dud AI" );
-		}
-		else
-		{
+
 		AddSoldierToSector( iNewIndex );
-		ScreenMsg( FONT_LTGREEN, MSG_INTERFACE, L"recieveAI" );
-		}
+		//ScreenMsg( FONT_LTGREEN, MSG_INTERFACE, L"recieveAI" );
+	
 
 	
 }
@@ -788,6 +922,8 @@ void send_stop (EV_S_STOP_MERC *SStopMerc) // used to stop a merc when he spots 
 		{
 			stop_struct.usSoldierID = (SStopMerc->usSoldierID)+ubID_prefix;
 		}
+		else
+			stop_struct.usSoldierID = SStopMerc->usSoldierID;
 		stop_struct.sGridNo=SStopMerc->sGridNo;
 		stop_struct.bDirection=SStopMerc->bDirection;
 		client->RPC("sendSTOP",(const char*)&stop_struct, (int)sizeof(EV_S_STOP_MERC)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);

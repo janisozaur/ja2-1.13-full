@@ -1814,7 +1814,7 @@ INT8 AimMemberHireMerc()
 	}
 
 	//add an entry in the history page for the hiring of the merc
-	AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, ubCurrentSoldier, GetWorldTotalMin(), -1, -1 );
+	if(!is_client)AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, ubCurrentSoldier, GetWorldTotalMin(), -1, -1 );
 	return(TRUE);
 }
 

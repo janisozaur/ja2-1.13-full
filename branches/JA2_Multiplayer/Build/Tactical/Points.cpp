@@ -526,7 +526,7 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost,BOOLEAN f
 		// Adjust breath changes due to spending or regaining of energy
 		if(!pSoldier->bActive)
 		{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"test_func2" );
+		//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"test_func2" );
 		}
 		else
 		iBPCost = AdjustBreathPts(pSoldier, iBPCost);

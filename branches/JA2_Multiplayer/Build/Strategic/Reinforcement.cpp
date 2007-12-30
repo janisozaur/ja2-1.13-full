@@ -382,6 +382,10 @@ void AddPossiblePendingMilitiaToBattle()
 	static UINT8 ubPredefinedInsertionCode = 255;
 	static UINT8 ubPredefinedRank = 255;
 
+	
+	if((is_client && !is_server) || !MILITIA_ENABLED)
+		return; //crash fx : hayden
+
 	if( !PlayerMercsInSector( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY, 0 ) || !CountAllMilitiaInSector( gWorldSectorX, gWorldSectorY ) 
 		|| !NumEnemiesInSector( gWorldSectorX, gWorldSectorY ) ) return;
 //gGameExternalOptions.guiMaxMilitiaSquadSize - CountAllMilitiaInSector( gWorldSectorX, gWorldSectorY );
@@ -390,8 +394,6 @@ void AddPossiblePendingMilitiaToBattle()
 	{ //no available slots to add militia  to.  Try again later...
 		return;
 	}
-	if(!MILITIA_ENABLED)
-		return; //hayden
 	
 	if( ubPredefinedInsertionCode != 255 && ubPredefinedRank != 255 &&
 		CountAllMilitiaInSector( gWorldSectorX, gWorldSectorY ) )

@@ -943,7 +943,8 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 									!pSector->ubNumTroops || !pSector->ubTroopsInBattle ||
 									pSector->ubNumTroops > 100 || pSector->ubTroopsInBattle > 32 )
 							{
-								DoScreenIndependantMessageBox( L"Sector troop counters are bad.  What were the last 2-3 things to die, and how?  Save game and send to KM with info!!!", MSG_BOX_FLAG_OK, NULL );
+								if(!is_client)DoScreenIndependantMessageBox( L"Sector troop counters are bad.  What were the last 2-3 things to die, and how?  Save game and send to KM with info!!!", MSG_BOX_FLAG_OK, NULL );
+								//disabled: hayden.
 							}
 						}
 					#endif
@@ -1148,10 +1149,10 @@ void AddPossiblePendingEnemiesToBattle()
 	GROUP *pGroup;
 	SECTORINFO *pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
 	static UINT8 ubPredefinedInsertionCode = 255;
-	
-	if(!ENEMY_ENABLED)
-		return; //hayden crash fix
 
+	if((is_client && !is_server) || !ENEMY_ENABLED) //hayden
+		return; //crash fx : hayden
+	
 	// check if no world is loaded
 	if ( !gWorldSectorX && !gWorldSectorY && (gbWorldSectorZ == -1) )
 		return;

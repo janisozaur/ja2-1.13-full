@@ -38,6 +38,8 @@
 	extern UINT32 uiMeanWhileFlags;
 #endif
 
+#include "connect.h" //hayden
+
 //GAME BALANCING DEFINITIONS FOR CREATURE SPREADING
 //Hopefully, adjusting these following definitions will ease the balancing of the
 //creature spreading.
@@ -931,7 +933,7 @@ void CreatureAttackTown( UINT8 ubSectorID, BOOLEAN fOverrideTest )
 			InitPreBattleInterface( NULL, TRUE );
 			break;
 		case CREATURE_BATTLE_CODE_TACTICALLYADD:
-			PrepareCreaturesForBattle();
+			if(is_server && CREATURE_ENABLED)PrepareCreaturesForBattle();
 			break;
 	}
 	InterruptTime();

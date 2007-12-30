@@ -871,7 +871,15 @@ void StartInterrupt( void )
 				ubFirstInterrupter = ubInterrupter;
 			}
 		}
-
+			
+		if(is_client && bTeam > 5)
+		{
+			if(is_server)EndTurn(bTeam); //hayden
+			if(!is_server)send_EndTurn(bTeam);
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"interupt" );
+		}
+		else
+		{
 
 		// here we have to rebuilt the AI list!
 		BuildAIListForTeam( bTeam );
@@ -895,11 +903,12 @@ void StartInterrupt( void )
 
 		gTacticalStatus.ubCurrentTeam  = pSoldier->bTeam;
 		
-		#ifdef JA2BETAVERSION
+		//#ifdef JA2BETAVERSION
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Interrupt ( could be hidden )" );
-		#endif
+		//#endif
 
 		StartNPCAI( pSoldier );
+		}
 	}
 
 	if ( !gfHiddenInterrupt )
@@ -1188,8 +1197,10 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 	UINT8						ubMinPtsNeeded;
 	INT8						bDir;
 	SOLDIERTYPE *		pOpponent;
+
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"interrupt disabled" ); //hayden
 	return FALSE; //quick disable //hayden
+
 	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && !(gubSightFlags & SIGHT_INTERRUPT) )
 	{
 		return( FALSE );

@@ -30,6 +30,8 @@
 #include "MilitiaSquads.h"
 #include "Reinforcement.h"
 
+#include "connect.h"
+
 // Debug defines
 
 //#define DEBUG_SHOW_RATINGS
@@ -737,7 +739,7 @@ void DoMilitiaHelpFromAdjacentSectors( INT16 sMapX, INT16 sMapY )
 	if (gfStrategicMilitiaChangesMade)
 	{
 		RemoveMilitiaFromTactical();
-		PrepareMilitiaForTactical();
+		if(is_server && MILITIA_ENABLED)PrepareMilitiaForTactical();
 		gfStrategicMilitiaChangesMade = FALSE;
 	}
 }

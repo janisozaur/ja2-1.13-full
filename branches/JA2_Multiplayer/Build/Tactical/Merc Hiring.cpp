@@ -270,7 +270,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 		//Set starting conditions for the merc
 		pSoldier->iStartContractTime = GetWorldDay( );
 
-		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_MERC, ubCurrentSoldier, GetWorldTotalMin(), -1, -1 );
+		if(!is_client)AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_MERC, ubCurrentSoldier, GetWorldTotalMin(), -1, -1 );
 	}
 	//If the merc is from IMP, (ie a player character)
 	else if( ( ubCurrentSoldier >= 51 ) && ( ubCurrentSoldier < 57 ) ) 

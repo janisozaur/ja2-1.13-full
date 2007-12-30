@@ -122,7 +122,7 @@ void test_func2 (void)//now bound to "5" //currently displays coordinates of the
 	usMapPos = MAPROWCOLTOPOS( sGridY, sGridX );
 	
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Mouse Grid Coordinates:" );
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"X: %d, Y: %d", sGridY, sGridX );
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"X: %d, Y: %d", sGridX, sGridY );
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Grid Number: %d", usMapPos );
 }
 

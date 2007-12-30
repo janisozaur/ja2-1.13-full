@@ -1739,12 +1739,12 @@ BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 			SetPendingNewScreen(GAME_SCREEN);
 			if( !NumEnemyInSector( ) )
 			{
-				PrepareEnemyForSectorBattle();
+				if(is_server && ENEMY_ENABLED)PrepareEnemyForSectorBattle();
 			}
 			if( gubNumCreaturesAttackingTown && !gbWorldSectorZ && 
 				gubSectorIDOfCreatureAttack == SECTOR( gWorldSectorX, gWorldSectorY ) )
 			{
-				PrepareCreaturesForBattle();
+				if(is_server && CREATURE_ENABLED)PrepareCreaturesForBattle();
 			}
 			if( gfGotoSectorTransition )
 			{
@@ -2037,13 +2037,13 @@ void PrepareLoadedSector()
 				}
 			}
 		}
-		if( fAddCivs && CIV_ENABLED)//hayden
+		if( is_server && fAddCivs && CIV_ENABLED)//hayden its around here we apply .ini choices for Ai
 		{
 			AddSoldierInitListTeamToWorld( CIV_TEAM, 255 );
 		}
 
-		if(MILITIA_ENABLED)AddSoldierInitListTeamToWorld( MILITIA_TEAM, 255 );
-		if(CREATURE_ENABLED)AddSoldierInitListBloodcats();
+		if(is_server && MILITIA_ENABLED)AddSoldierInitListTeamToWorld( MILITIA_TEAM, 255 );
+		if(is_server && CREATURE_ENABLED)AddSoldierInitListBloodcats();
 		//Creatures are only added if there are actually some of them.  It has to go through some
 		//additional checking.
 
@@ -2072,9 +2072,9 @@ void PrepareLoadedSector()
 		}
 		#endif
 
-		if(CREATURE_ENABLED)PrepareCreaturesForBattle();
+		if(is_server && CREATURE_ENABLED)PrepareCreaturesForBattle();
 
-		if(MILITIA_ENABLED)PrepareMilitiaForTactical();
+		if(is_server && MILITIA_ENABLED)PrepareMilitiaForTactical();
 
 		// OK, set varibles for entring this new sector...
 		gTacticalStatus.fVirginSector = TRUE;
@@ -2087,11 +2087,11 @@ void PrepareLoadedSector()
 			//AddSoldierInitListTeamToWorld( CIV_TEAM, 255 );
 //			fEnemyPresenceInThisSector = PrepareEnemyForSectorBattle();
 		}
-		AddProfilesNotUsingProfileInsertionData(); //hmm
+		if(is_server && CIV_ENABLED)AddProfilesNotUsingProfileInsertionData(); //hayden: is just for civ's
 		
 		if( !AreInMeanwhile() || GetMeanwhileID() == INTERROGATION )
 		{
-			if(ENEMY_ENABLED)fEnemyPresenceInThisSector = PrepareEnemyForSectorBattle();
+			if(is_server && ENEMY_ENABLED)fEnemyPresenceInThisSector = PrepareEnemyForSectorBattle();
 		}
 
 
