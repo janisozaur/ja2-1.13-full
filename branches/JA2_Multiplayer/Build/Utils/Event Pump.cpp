@@ -1188,7 +1188,7 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 		
 				if(SWeaponHit.ubAttackerID < 20 ||(is_server && SWeaponHit.ubAttackerID < 120)|| !is_client ) // 124 last possible ai 
 				{
-					if(is_client) SWeaponHit.sDamage=(SWeaponHit.sDamage / NET_DIVISOR); // adjust damage from external variable //hayden
+					if(is_client) SWeaponHit.sDamage=(INT16)(SWeaponHit.sDamage * DAMAGE_MULTIPLIER); // adjust damage from external variable //hayden
 					WeaponHit( SWeaponHit.usSoldierID, SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection, SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, SWeaponHit.ubAttackerID, SWeaponHit.fHit, SWeaponHit.ubSpecial, SWeaponHit.ubLocation );
 					if(is_server || (is_client && SWeaponHit.ubAttackerID <20) ) send_hit( SWeaponHit.usSoldierID, SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection, SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, SWeaponHit.ubAttackerID, SWeaponHit.fHit, SWeaponHit.ubSpecial, SWeaponHit.ubLocation );
 				}

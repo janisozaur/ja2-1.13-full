@@ -1205,17 +1205,19 @@ UINT32 UIHandleEndTurn( UI_EVENT *pUIEvent )
 			EndTurn( gbPlayerNum + 1 );
 		}
 		
-		if(is_server)
-		{
-			//if(is_client)send_EndTurn( gbPlayerNum + 1 ); //hayden 
-		}
-		else
-		{		
-			if(is_client)
+		
+			if(!is_server && is_client)
 			{
-				send_EndTurn( netbTeam+1 );//for sending next netbteam rather than next local team
+				
+					if (INTERRUPT_QUEUED)
+					{
+						EndTurn( gbPlayerNum + 1 );//is ending interrupt instead
+					}
+					else
+					{
+						send_EndTurn( netbTeam+1 );//for sending next netbteam rather than next local team
+					}
 			}
-		}
 	}
 
 	return( GAME_SCREEN );

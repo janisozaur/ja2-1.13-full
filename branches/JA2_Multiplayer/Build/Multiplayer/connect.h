@@ -22,14 +22,20 @@ extern int SAME_MERC;
 
 extern UINT8 netbTeam;
 extern UINT8 ubID_prefix;
-extern INT16 NET_DIVISOR;
+extern FLOAT DAMAGE_MULTIPLIER;
 
 extern UINT16 crate_usMapPos;
+
+extern int INTERRUPTS;
 
 void start_battle ( void );
 void DropOffItemsInSector( UINT8 ubOrderNum );
 
 void test_func2 ( void );
+
+void mp_help (void);
+void mp_help2 (void);
+void grid_display ( void);
 
 UINT8 numenemyLAN( UINT8 ubSectorX, UINT8 ubSectorY );
 
@@ -57,5 +63,7 @@ void send_EndTurn( UINT8 ubNextTeam );
 void send_AI( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *pubID );
 
 void send_stop (EV_S_STOP_MERC *SStopMerc);
+
+void send_interrupt(SOLDIERTYPE *pSoldier);
 
 BOOLEAN CheckConditionsForBattle( GROUP *pGroup ); // this comes from strategic movement.cpp

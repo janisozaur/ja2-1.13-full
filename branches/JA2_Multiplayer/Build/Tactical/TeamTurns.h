@@ -4,6 +4,7 @@
 #include "Soldier Control.h"
 
 extern UINT8 gubOutOfTurnPersons;
+extern UINT8 gubOutOfTurnOrder[MAXMERCS] ;
 extern BOOLEAN gfHiddenInterrupt;
 extern BOOLEAN gfHiddenTurnbased;
 

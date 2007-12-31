@@ -714,6 +714,14 @@ void StartInterrupt( void )
 
 	//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: %d is now on top of the interrupt queue", ubFirstInterrupter ) );
 
+	//hayden
+	/*if ((bTeam > 5) || (bTeam > 0 && !is_server))
+	{
+		send_interrupt( pSoldier );
+
+	}
+	else
+	{*/
 	gTacticalStatus.fInterruptOccurred = TRUE;
 
 	cnt = 0;
@@ -810,6 +818,8 @@ void StartInterrupt( void )
 		InitPlayerUIBar( TRUE );
 		//AddTopMessage( PLAYER_INTERRUPT_MESSAGE, Message[STR_INTERRUPT] );
 
+		//send_interrupt( pSoldier ); //hayden
+
 		PlayJA2Sample( ENDTURN_1, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
 
 		// report any close call quotes for us here
@@ -872,13 +882,13 @@ void StartInterrupt( void )
 			}
 		}
 			
-		if(is_client && bTeam > 5)
-		{
-			if(is_server)EndTurn(bTeam); //hayden
-			if(!is_server)send_EndTurn(bTeam);
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"interupt" );
-		}
-		else
+		//if(is_client && bTeam > 5)
+		//{
+		//	if(is_server)EndTurn(bTeam); //hayden
+		//	if(!is_server)send_EndTurn(bTeam);
+		//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"interupt" );
+		//}
+		//else
 		{
 
 		// here we have to rebuilt the AI list!
@@ -906,8 +916,9 @@ void StartInterrupt( void )
 		//#ifdef JA2BETAVERSION
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Interrupt ( could be hidden )" );
 		//#endif
-
+		//send_interrupt( pSoldier );//hayden
 		StartNPCAI( pSoldier );
+		
 		}
 	}
 
@@ -917,6 +928,7 @@ void StartInterrupt( void )
 		AdjustNoAPToFinishMove( MercPtrs[ LATEST_INTERRUPT_GUY ], TRUE );	
 		MercPtrs[ LATEST_INTERRUPT_GUY ]->fTurningFromPronePosition = FALSE;
 	}
+	//}
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"StartInterrupt done");
 
 }
@@ -968,7 +980,36 @@ void EndInterrupt( BOOLEAN fMarkInterruptOccurred )
 		gfHiddenInterrupt = FALSE;
 
 		// resume interrupted interrupt
-		StartInterrupt();
+			
+		//hayden
+		UINT8						nubFirstInterrupter;
+		INT8						nbTeam;
+		SOLDIERTYPE *				npSoldier;
+				
+		nubFirstInterrupter = LATEST_INTERRUPT_GUY;
+		npSoldier = MercPtrs[nubFirstInterrupter];
+		nbTeam = npSoldier->bTeam;
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"unchecked interrupt call area:(resume interrupted interrupt)...");
+		
+			if ((nbTeam > 0) && (nbTeam <6 ) && is_server) //is AI and are server
+			{
+				send_interrupt( npSoldier );
+				StartInterrupt();
+
+			}
+			else if(nbTeam == 0) //its an interrupt for own merc team
+			{
+
+				//hayden
+				StartInterrupt();
+				send_interrupt( npSoldier ); //
+			}
+			else
+			{
+				//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"skipped lan interrupt");
+				ClearIntList();
+
+			}
 	}
 	else
 	{
@@ -1093,7 +1134,7 @@ void EndInterrupt( BOOLEAN fMarkInterruptOccurred )
 			}
 
 		}
-		else
+		else if(pSoldier->bTeam < 6)//hayden : is Ai or LAN ?
 		{
 			// this could be set to true for AI-vs-AI interrupts
 			gfHiddenInterrupt = FALSE;
@@ -1183,6 +1224,18 @@ void EndInterrupt( BOOLEAN fMarkInterruptOccurred )
 			}
 		}
 
+		else //its going to another Lan client..//hayden
+		{
+	
+			gTacticalStatus.ubCurrentTeam = pSoldier->bTeam;
+			AddTopMessage( COMPUTER_TURN_MESSAGE, TeamTurnString[ gTacticalStatus.ubCurrentTeam ] );
+			guiPendingOverrideEvent = LU_BEGINUILOCK;
+
+			// must clear int list before ending turn
+			ClearIntList();
+			send_interrupt (pSoldier);//this tells other client to go on from where he was
+
+		}
 		// Reset our interface!
 		fInterfacePanelDirty = DIRTYLEVEL2;
 
@@ -1198,8 +1251,25 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 	INT8						bDir;
 	SOLDIERTYPE *		pOpponent;
 
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"interrupt disabled" ); //hayden
-	return FALSE; //quick disable //hayden
+	if(INTERRUPTS==0) //disable interrupts
+	{
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"interrupt disabled" ); //hayden
+		return (FALSE);
+	}
+	else if(INTERRUPTS==2)//quick enable all ints //hayden
+	{
+			ubMinPtsNeeded = AP_CHANGE_FACING;
+			if (!PTR_CROUCHED)
+			{
+				ubMinPtsNeeded = AP_CROUCH;
+			}
+			else
+			{
+				ubMinPtsNeeded = MinPtsToMove(pSoldier);
+			}
+			return (TRUE); 
+	}
+	else if(INTERRUPTS==1)//standard int process
 
 	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && !(gubSightFlags & SIGHT_INTERRUPT) )
 	{
@@ -1910,7 +1980,35 @@ void DoneAddingToIntList( SOLDIERTYPE * pSoldier, BOOLEAN fChange, UINT8 ubInter
 		}
 		else
 		{
-			StartInterrupt();
+			
+		UINT8						nubFirstInterrupter;
+		INT8						nbTeam;
+		SOLDIERTYPE *				npSoldier;
+				
+		nubFirstInterrupter = LATEST_INTERRUPT_GUY;
+		npSoldier = MercPtrs[nubFirstInterrupter];
+		nbTeam = npSoldier->bTeam;
+		
+		
+		if ((nbTeam > 0) && (nbTeam <6 ) && is_server) //is AI and are server
+			{
+				send_interrupt( npSoldier );
+				StartInterrupt();
+
+			}
+		else if(nbTeam == 0) //its an interrupt for own merc team
+			{
+
+				//hayden
+				StartInterrupt();
+				send_interrupt( npSoldier ); //
+			}
+		else
+		{
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"skipped lan interrupt");
+			ClearIntList();
+
+		}
 		}
 	}
 }

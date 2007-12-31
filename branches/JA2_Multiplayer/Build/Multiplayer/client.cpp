@@ -128,11 +128,6 @@ typedef struct
 	UINT8 tsubNextTeam;
 } turn_struct;
 
-typedef struct
-		{	
-		UINT8 aaa;
-		BOOLEAN bbb;
-		} temp;
 
 typedef struct
 	{
@@ -160,6 +155,14 @@ typedef struct
 		OBJECTTYPE slot18;
 	} AI_STRUCT;
 
+typedef struct
+{
+	INT8 ubID;
+	INT8 bTeam;
+	UINT8 gubOutOfTurnPersons;
+	UINT8 gubOutOfTurnOrder[MAXMERCS];
+} INT_STRUCT;
+
 UINT8 netbTeam;
 UINT8	ubID_prefix;
 
@@ -183,7 +186,9 @@ UINT8	ubID_prefix;
  int SAME_MERC;
  int PLAYER_BSIDE;
 
-INT16 NET_DIVISOR;
+FLOAT DAMAGE_MULTIPLIER;
+
+int INTERRUPTS;
 
 UINT16 crate_usMapPos;	
 
@@ -940,6 +945,131 @@ void recieveSTOP (RPCParameters *rpcParameters)
 	EVENT_StopMerc( pSoldier, SStopMerc->sGridNo, SStopMerc->bDirection );
 }
 
+void send_interrupt (SOLDIERTYPE *pSoldier)
+{
+
+	
+	INT_STRUCT INT;
+
+	INT.ubID = pSoldier->ubID;
+	INT.bTeam = pSoldier->bTeam;
+	if(INT.bTeam==0)
+	{
+		INT.bTeam=netbTeam;
+		INT.ubID=INT.ubID+ubID_prefix;
+	}
+
+	memcpy(INT.gubOutOfTurnOrder, gubOutOfTurnOrder, sizeof(UINT8) * MAXMERCS);
+	INT.gubOutOfTurnPersons = gubOutOfTurnPersons;
+	
+	//if(gubOutOfTurnPersons>0)ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Sent Int: bTeam-%d ubID-%d", INT.bTeam,INT.ubID );
+	
+	
+	client->RPC("sendINTERRUPT",(const char*)&INT, (int)sizeof(INT_STRUCT)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
+
+
+}
+
+void recieveINTERRUPT (RPCParameters *rpcParameters)
+{
+	INT_STRUCT* INT = (INT_STRUCT*)rpcParameters->input;
+	
+
+		if(INT->bTeam==netbTeam)
+		{
+			INT->bTeam=0;
+			INT->ubID=INT->ubID - ubID_prefix;
+		}
+
+			if(	INT->bTeam !=0)
+			{
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Interrupted" );
+			//stop moving merc who was interrupted and init UI bar
+			SOLDIERTYPE* pMerc = MercPtrs[ gusSelectedSoldier ];
+			AdjustNoAPToFinishMove( pMerc, TRUE );	
+			pMerc->fTurningFromPronePosition = FALSE;
+			FreezeInterfaceForEnemyTurn();
+			InitEnemyUIBar( 0, 0 );
+			fInterfacePanelDirty = DIRTYLEVEL2;
+			AddTopMessage( COMPUTER_TURN_MESSAGE, TeamTurnString[ INT->bTeam ] );
+			gTacticalStatus.fInterruptOccurred = TRUE;
+			
+			}
+			else
+			{
+				//it for us ! :)
+				if(INT->gubOutOfTurnPersons==0)//indicates finished interrupt maybe can just call end interrupt
+				{
+					//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"finish from interrupt" );
+					ClearIntList();
+					guiPendingOverrideEvent = LU_ENDUILOCK;
+					HandleTacticalUI( );
+					if ( gusSelectedSoldier != NO_SOLDIER )
+					{
+					SlideTo( NOWHERE, gusSelectedSoldier, NOBODY ,SETLOCATOR);
+					DoMercBattleSound( MercPtrs[ gusSelectedSoldier ], BATTLE_SOUND_ATTN1 );
+					}
+					InitPlayerUIBar( 2 );
+				}
+				else //start our interrupt
+				{
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Interruptor" );
+					//StartInterrupt();
+				}
+			}
+	
+		//if(INT->gubOutOfTurnPersons > 0)ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Recieved Int: bTeam-%d ubID-%d", INT->bTeam,INT->ubID );
+}
+
+void grid_display ( void ) //print mouse coordinates, helpfull for crate placement.
+{
+	INT16	sGridX, sGridY;
+	UINT16 usMapPos;
+
+	GetMouseXY( &sGridX, &sGridY );
+	usMapPos = MAPROWCOLTOPOS( sGridY, sGridX );
+	
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Mouse Grid Coordinates:" );
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"X: %d, Y: %d", sGridX, sGridY );
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Grid Number: %d", usMapPos );
+}
+
+void mp_help(void)
+{
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L" ");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"MP controls: (from map screen)");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"** first set up Ja2_mp.ini **");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L" ");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"'1' - start server, '2' - connect to server");
+	//ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"'2' - connect to server");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"'3' - begin battle, '4' - quit server and client");
+	//ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"'4' - quit server and client");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"'5' - display mouse co-ords (from tactical view)");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"'F2' - display secondary help");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L" ");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"see readme.html for further details");
+	
+
+
+}
+
+void mp_help2(void)
+{
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L" ");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"Tips: (assuming ja2_mp.ini is set up");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L" ");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"* set dropzone same on all clients, ");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"* hire mercs after all clients connected,");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"* game save doesn't record bobby rays order ,");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"* begin battle when all clients mercs hired,");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"* place when all clients in placement GUI,");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"* avoid placing opposed mercs in immediate sight,");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"* begin match when all clients mercs placed, ");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L" ");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"'F1' - display primary help");
+	ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"see readme.html for further details");
+
+}
 
 //***************************
 //*** client connection*****
@@ -970,6 +1100,8 @@ void connect_client ( void )
 			REGISTER_STATIC_RPC(client, recieveEndTurn);
 			REGISTER_STATIC_RPC(client, recieveAI);
 			REGISTER_STATIC_RPC(client, recieveSTOP);
+			REGISTER_STATIC_RPC(client, recieveINTERRUPT);
+			
 
 			
 		
@@ -1019,6 +1151,8 @@ void connect_client ( void )
 			char c_x[30];
 			char c_y[30];
 
+			char ints[30];
+
 			GetPrivateProfileString( "Ja2_mp Settings","SERVER_IP", "", ip, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","SERVER_PORT", "", port, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","CLIENT_NUM", "", client_number, MAX_PATH, "..\\Ja2_mp.ini" );
@@ -1032,10 +1166,12 @@ void connect_client ( void )
 			GetPrivateProfileString( "Ja2_mp Settings","SAME_MERC", "", hire_same_merc, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","PLAYER_BSIDE", "", player_bside, MAX_PATH, "..\\Ja2_mp.ini" );
 
-			GetPrivateProfileString( "Ja2_mp Settings","NET_DIVISOR", "", net_div, MAX_PATH, "..\\Ja2_mp.ini" );
+			GetPrivateProfileString( "Ja2_mp Settings","DAMAGE_MULTIPLIER", "", net_div, MAX_PATH, "..\\Ja2_mp.ini" );
 
 			GetPrivateProfileString( "Ja2_mp Settings","CRATE_X", "", c_x, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","CRATE_Y", "", c_y, MAX_PATH, "..\\Ja2_mp.ini" );
+
+			GetPrivateProfileString( "Ja2_mp Settings","INTERRUPTS", "", ints, MAX_PATH, "..\\Ja2_mp.ini" );
 
 
 			strcpy( SERVER_IP , ip );
@@ -1051,7 +1187,9 @@ void connect_client ( void )
 			SAME_MERC = atoi(hire_same_merc);
 			PLAYER_BSIDE = atoi(player_bside);
 
-			NET_DIVISOR = atoi(net_div);
+			DAMAGE_MULTIPLIER =(FLOAT)atof(net_div);
+
+			INTERRUPTS = atoi(ints);
 
 			crate_sGridX = atoi(c_x);
 			crate_sGridY = atoi(c_y);

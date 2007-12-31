@@ -495,8 +495,10 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 			SetLaptopExitScreen( MAP_SCREEN ); //hayden
 			SetPendingNewScreen( MAP_SCREEN );
 			ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"------------------------------------------------------");
-			ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L" Welcome to Jagged Alliance 2 v1.13 Multiplayer");
+			ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L" Welcome to JAGGED ALLIANCE 2 v1.13 Multiplayer");
 			ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"------------------------------------------------------");
+			ScreenMsg( MSG_FONT_WHITE, MSG_CHAT, L"press 'F1' for help");
+			
 		}
 		else
 		{

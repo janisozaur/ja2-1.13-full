@@ -2180,11 +2180,12 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				}
 				else
 					ChangeCurrentSquad( 4 );
-					test_func2();
+					grid_display();//hayden
 				break;
 
 			case '6':
 				ChangeCurrentSquad( 5 );
+				test_func2();
 				break;
 
 			case '7':

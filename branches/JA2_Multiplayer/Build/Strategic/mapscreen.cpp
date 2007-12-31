@@ -5239,7 +5239,11 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 					break;
 
 				case F1:
+					mp_help();
+					break;
 				case F2:
+					mp_help2();
+					break;
 				case F3:
 				case F4:
 				case F5:
@@ -5366,6 +5370,12 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 							}
 						}
 					#endif
+						if (fAlt)
+						{
+							
+							break;
+						}
+						
 					break;
 
 				case '\\':
@@ -5434,11 +5444,11 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 					break;
 					}
 				case '5':
+				case '6':
 					{
 						test_func2();
 						break;
 					}
-				case '6':
 				case '7':
 				case '8':
 				case '9':
