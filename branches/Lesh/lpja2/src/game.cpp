@@ -69,13 +69,18 @@ void	GameCycle( void )
 				break;
 
 			case SDL_ACTIVEEVENT:
+				// events, when application gains input access
 				if ( event.active.state & SDL_APPINPUTFOCUS )
 				{
 					gfApplicationActive = event.active.gain;
+					if ( !event.active.gain )
+						ForgetAllPressedKeys();
+
 //					if ( event.active.gain )
 //						GameNeedUpdate();
 				}
 
+				// events, when application was iconified (gain=0) or restored(gain=1)
 				if ( event.active.state & SDL_APPACTIVE )
 				{
 					if (event.active.gain)
@@ -94,9 +99,11 @@ void	GameCycle( void )
 						//// pause the JA2 Global clock
 						PauseTime( TRUE );
 						gfApplicationActive = FALSE;
+						ForgetAllPressedKeys();
 					}
 				}
 
+				// events, when mouse enters or exits application screen
 				if ( event.active.state & SDL_APPMOUSEFOCUS )
 				{
 //					if ( gfApplicationActive )

@@ -309,6 +309,27 @@ void ShutdownInputManager(void)
 }
 
 // *************************************************************
+// Unpress all pressed keys
+// *************************************************************
+void ForgetAllPressedKeys( void )
+{
+	INT32	cnt;
+
+	DequeueAllKeyBoardEvents();
+	
+	for ( cnt = 0; cnt < 256; cnt++ )
+		gfKeyState[cnt] = FALSE;
+	
+	gfShiftState = FALSE;
+	gfAltState   = FALSE;
+	gfCtrlState  = FALSE;
+
+	gfLeftButtonState   = FALSE;
+	gfRightButtonState  = FALSE;
+	gfMiddleButtonState = FALSE;
+}
+
+// *************************************************************
 // Put an event into event queue
 //  [in]  ubInputEvent - event type
 //  [in]  usParam - mostly it is key code

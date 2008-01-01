@@ -79,7 +79,7 @@ extern void			FreeMouseCursor(void);
 extern BOOLEAN		IsCursorRestricted( void );
 extern void			GetRestrictedClipCursor( SGPRect *pRectangle );
 extern void         RestoreCursorClipRect( void );
-
+extern void			ForgetAllPressedKeys( void );
 
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos );
 BOOLEAN InputEventInside(InputAtom *Event, UINT32 uiX1, UINT32 uiY1, UINT32 uiX2, UINT32 uiY2);
