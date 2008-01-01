@@ -480,54 +480,6 @@ BOOLEAN IO_IsRootPath(const CHAR8 *path)
 
 //===================================================================
 //
-//	IO_CompareTime - compare two file times.
-//
-//	in	firstTime: first time
-//	in	secondTime: second time
-//
-//	return:	== 0, if times are equal,
-//			 > 0, if firstTime > secondTime,
-//			 < 0, if firstTime < secondTime.
-//	  
-//===================================================================
-INT32	IO_CompareTime( SGP_FILETIME *firstTime, SGP_FILETIME *secondTime )
-{
-	return( *firstTime - *secondTime );
-}
-
-//===================================================================
-//
-//	IO_File_GetTime - get creation, last access and last write time
-//	of the file.
-//
-//	in	file: file handler
-//	out	creationTime: time of file creation
-//	out	lastAccessedTime: time of last access to file
-//	out	lastWriteTime: time of last write to file
-//
-//	return:	TRUE, if times are successfully obtained
-//			FALSE, if not
-//	  
-//===================================================================
-BOOLEAN IO_File_GetTime( IOFILE file, SGP_FILETIME	*creationTime, SGP_FILETIME *lastAccessedTime, SGP_FILETIME *lastWriteTime )
-{
-	struct stat file_stat;
-
-	if ( fstat( file, &file_stat) == -1 )
-		return FALSE;
-
-	if ( creationTime )
-		*creationTime     = file_stat.st_ctime;
-	if ( lastAccessedTime )
-		*lastAccessedTime = file_stat.st_atime;
-	if ( lastWriteTime )
-		*lastWriteTime    = file_stat.st_mtime;
-
-	return TRUE;
-}
-
-//===================================================================
-//
 //	IO_IsHiddenEntry - check, if file or directory has hidden-attribute
 //
 //	in	path: filesystem entry path

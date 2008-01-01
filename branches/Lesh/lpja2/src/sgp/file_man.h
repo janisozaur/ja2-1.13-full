@@ -133,19 +133,6 @@ void GetFileClose( GETFILESTRUCT *pGFStruct );
 BOOLEAN	FileCheckEndOfFile( HWFILE hFile );
 
 
-
-BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILETIME *pLastAccessedTime, SGP_FILETIME *pLastWriteTime );
-
-
-
-
-
-// CompareSGPFileTimes() returns...
-// -1 if the First file time is less than second file time. ( first file is older )
-// 0 First file time is equal to second file time.
-// +1 First file time is greater than second file time ( first file is newer ).
-INT32	CompareSGPFileTimes( SGP_FILETIME	*pFirstFileTime, SGP_FILETIME *pSecondFileTime );
-
 //	Pass in the Fileman file handle of an OPEN file and it will return..
 //		if its a Real File, the return will be the handle of the REAL file
 //		if its a LIBRARY file, the return will be the handle of the LIBRARY
