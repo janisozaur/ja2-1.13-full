@@ -11704,7 +11704,7 @@ void SetSoldierCowerState( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 	}
 	else
 	{
-		if ( (pSoldier->uiStatusFlags & SOLDIER_COWERING) )
+		if ( (pSoldier->uiStatusFlags & SOLDIER_COWERING) || (gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND) )
 		{
 			EVENT_InitNewSoldierAnim( pSoldier, END_COWER, 0, FALSE );
 
