@@ -554,8 +554,8 @@ BOOLEAN		RepairIsDone(DEALER_SPECIAL_ITEM* pSpecial);
 
 UINT32		DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT16 usPosY, OBJECTTYPE	*ItemObject, BOOLEAN fHatchedOut, UINT8	ubItemArea );
 void			DisplayArmsDealerOfferArea();
-INT8			AddItemToArmsDealerOfferArea( INVENTORY_IN_SLOT* pInvSlot, INT8	bSlotIdInOtherLocation );
-BOOLEAN		RemoveItemFromArmsDealerOfferArea( INT8	bSlotId, BOOLEAN fKeepItem );
+INT8			AddItemToArmsDealerOfferArea( INVENTORY_IN_SLOT* pInvSlot, UINT16	bSlotIdInOtherLocation );
+BOOLEAN		RemoveItemFromArmsDealerOfferArea( UINT16	bSlotId, BOOLEAN fKeepItem );
 void			SetSkiRegionHelpText( INVENTORY_IN_SLOT *pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea );
 void			SetSkiFaceRegionHelpText( INVENTORY_IN_SLOT *pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea );
 void			RestoreTacticalBackGround();
@@ -628,12 +628,12 @@ void			ShopkeeperAddItemToPool( INT16 sGridNo, OBJECTTYPE *pObject, INT8 bVisibl
 
 void			IfMercOwnedCopyItemToMercInv( INVENTORY_IN_SLOT *pInv );
 void			IfMercOwnedRemoveItemFromMercInv( INVENTORY_IN_SLOT *pInv );
-void			IfMercOwnedRemoveItemFromMercInv2( UINT8 ubOwnerProfileId, INT8 bOwnerSlotId );
+void			IfMercOwnedRemoveItemFromMercInv2( UINT8 ubOwnerProfileId, UINT16 bOwnerSlotId );
 
 void			SplitComplexObjectIntoSubObjects( OBJECTTYPE *pComplexObject );
 void			CountSubObjectsInObject( OBJECTTYPE *pComplexObject, UINT8 *pubRepairableSubObjects, UINT8 *pubNonRepairableSubObjects );
-BOOLEAN		AddObjectForEvaluation(OBJECTTYPE *pObject, UINT8 ubOwnerProfileId, INT8 bOwnerSlotId, BOOLEAN fFirstOne );
-BOOLEAN		OfferObjectToDealer( OBJECTTYPE *pComplexObject, UINT8 ubOwnerProfileId, INT8 bOwnerSlotId );
+BOOLEAN		AddObjectForEvaluation(OBJECTTYPE *pObject, UINT8 ubOwnerProfileId, UINT16 bOwnerSlotId, BOOLEAN fFirstOne );
+BOOLEAN		OfferObjectToDealer( OBJECTTYPE *pComplexObject, UINT8 ubOwnerProfileId, UINT16 bOwnerSlotId );
 
 BOOLEAN		SKITryToReturnInvToOwnerOrCurrentMerc( INVENTORY_IN_SLOT *pInv );
 BOOLEAN		SKITryToAddInvToMercsInventory( INVENTORY_IN_SLOT *pInv, SOLDIERTYPE *pSoldier );
@@ -642,7 +642,7 @@ void			ExitSKIRequested();
 void			EvaluateItemAddedToPlayersOfferArea( INT8 bSlotID, BOOLEAN fFirstOne );
 void			ResetAllQuoteSaidFlags();
 
-INVENTORY_IN_SLOT	*GetPtrToOfferSlotWhereThisItemIs( UINT8 ubProfileID, INT8 bInvPocket );
+INVENTORY_IN_SLOT	*GetPtrToOfferSlotWhereThisItemIs( UINT8 ubProfileID, UINT16 bInvPocket );
 
 void			DealWithItemsStillOnTheTable();
 void			ReturnItemToPlayerSomehow( INVENTORY_IN_SLOT *pInvSlot, SOLDIERTYPE *pDropSoldier );
@@ -3322,7 +3322,7 @@ void DisplayArmsDealerOfferArea()
 }
 
 
-INT8 AddItemToArmsDealerOfferArea( INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIdInOtherLocation )
+INT8 AddItemToArmsDealerOfferArea( INVENTORY_IN_SLOT* pInvSlot, UINT16 bSlotIdInOtherLocation )
 {
 	INT8	bCnt;
 
@@ -3359,7 +3359,7 @@ INT8 AddItemToArmsDealerOfferArea( INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIdInOt
 	return( -1 );
 }
 
-BOOLEAN RemoveItemFromArmsDealerOfferArea( INT8	bSlotId, BOOLEAN fKeepItem )
+BOOLEAN RemoveItemFromArmsDealerOfferArea( UINT16	bSlotId, BOOLEAN fKeepItem )
 {
 //	UINT16	usCnt;
 
@@ -3433,7 +3433,7 @@ void SkiHelpTextDoneCallBack( void )
 
 
 
-INT8 AddItemToPlayersOfferArea( UINT8 ubProfileID, INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIdInOtherLocation )
+INT8 AddItemToPlayersOfferArea( UINT8 ubProfileID, INVENTORY_IN_SLOT* pInvSlot, UINT16 bSlotIdInOtherLocation )
 {
 	INT8	bCnt;
 
@@ -3608,7 +3608,7 @@ void DisplayPlayersOfferArea()
 }
 
 
-INVENTORY_IN_SLOT	*GetPtrToOfferSlotWhereThisItemIs( UINT8 ubProfileID, INT8 bInvPocket )
+INVENTORY_IN_SLOT	*GetPtrToOfferSlotWhereThisItemIs( UINT8 ubProfileID, UINT16 bInvPocket )
 {
 	UINT8 ubCnt = 0;
 
@@ -6478,7 +6478,7 @@ void DeleteShopKeeperItemDescBox()
 
 
 
-BOOLEAN OfferObjectToDealer( OBJECTTYPE *pComplexObject, UINT8 ubOwnerProfileId, INT8 bOwnerSlotId )
+BOOLEAN OfferObjectToDealer( OBJECTTYPE *pComplexObject, UINT8 ubOwnerProfileId, UINT16 bOwnerSlotId )
 {
 	UINT8		ubRepairableSubObjects;
 	UINT8		ubNonRepairableSubObjects;
@@ -6680,7 +6680,7 @@ void CountSubObjectsInObject( OBJECTTYPE *pComplexObject, UINT8 *pubRepairableSu
 }
 
 
-BOOLEAN AddObjectForEvaluation(OBJECTTYPE *pObject, UINT8 ubOwnerProfileId, INT8 bOwnerSlotId, BOOLEAN fFirstOne )
+BOOLEAN AddObjectForEvaluation(OBJECTTYPE *pObject, UINT8 ubOwnerProfileId, UINT16 bOwnerSlotId, BOOLEAN fFirstOne )
 {
 	INVENTORY_IN_SLOT InvSlot;
 	INT8	bAddedToSlotID;
@@ -6790,7 +6790,7 @@ void IfMercOwnedRemoveItemFromMercInv( INVENTORY_IN_SLOT *pInv )
 }
 
 
-void IfMercOwnedRemoveItemFromMercInv2( UINT8 ubOwnerProfileId, INT8 bOwnerSlotId )
+void IfMercOwnedRemoveItemFromMercInv2( UINT8 ubOwnerProfileId, UINT16 bOwnerSlotId )
 {
 	//if this item was in a previous location, and that location is on a merc's inventory
 	if ( ( bOwnerSlotId != -1 ) && ( ubOwnerProfileId != NO_PROFILE ) )

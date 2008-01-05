@@ -987,6 +987,8 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 		pNewSoldier->stats.bScientific										= pSoldier->stats.bScientific;
 		pNewSoldier->bLastRenderVisibleValue				= pSoldier->bLastRenderVisibleValue;
 		pNewSoldier->bVisible												= pSoldier->bVisible;
+		// 0verhaul:  Need to pass certain flags over.  COWERING is one of them.  Others to be determined.
+		pNewSoldier->flags.uiStatusFlags										|= pSoldier->flags.uiStatusFlags & (SOLDIER_COWERING | SOLDIER_MUTE | SOLDIER_GASSED);
 
 		if ( ubTeam == gbPlayerNum )
 		{

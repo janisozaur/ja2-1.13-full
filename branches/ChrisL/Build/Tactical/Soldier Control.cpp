@@ -3291,12 +3291,12 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 				// CHRISL
 				if((UsingNewInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].exists() == true && !thisSoldier->flags.ZipperFlag)
 				{
-					if(usNewState == KNEEL_UP)
+					if(usNewState == KNEEL_UP || usNewState == BIGMERC_CROUCH_TRANS_OUTOF)
 					{
 						sAPCost=AP_CROUCH+2;
 						sBPCost=BP_CROUCH+2;
 					}
-					else if(usNewState == KNEEL_DOWN)
+					else if(usNewState == KNEEL_DOWN || usNewState == BIGMERC_CROUCH_TRANS_INTO)
 					{
 						sAPCost=AP_CROUCH+1;
 						sBPCost=BP_CROUCH+1;
@@ -12518,7 +12518,7 @@ void SOLDIERTYPE::SetSoldierCowerState( BOOLEAN fOn )
 	}
 	else
 	{
-		if ( (thisSoldier->flags.uiStatusFlags & SOLDIER_COWERING) )
+		if ( (thisSoldier->flags.uiStatusFlags & SOLDIER_COWERING) || (gAnimControl[ thisSoldier->usAnimState ].ubEndHeight != ANIM_STAND) )
 		{
 			thisSoldier->EVENT_InitNewSoldierAnim( END_COWER, 0, FALSE );
 

@@ -635,7 +635,10 @@ void GenerateProsString( STR16 zItemPros, OBJECTTYPE * pObject, UINT32 uiPixLimi
 		}
 	}
 
-	if (FitsInSmallPocket(pObject) == true) // fits in a small pocket
+	//CHRISL: Using "FitsInSmallPocket" in NewInv will result in every item appearing to be "small".  We don't want that so
+	// so in this case, even in NewInv, we should look at the items ubPerPocket value.
+	//if (FitsInSmallPocket(pObject) == true) // fits in a small pocket
+	if (Item[usItem].ubPerPocket >= 1) // fits in a small pocket
 	{
 		zTemp = Message[STR_SMALL];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )

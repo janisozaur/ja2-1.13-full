@@ -3378,7 +3378,8 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 
 	//if this is an attachment or ammo for a launchable item
 	fValidLaunchable = ValidLaunchable( pAttachment->usItem, this->usItem );
-	if ( fValidLaunchable || ValidItemAttachment( this, pAttachment->usItem, TRUE ) )
+	//CHRISL: If we don't want to play the sound, it's a good bet we don't want to display any messages either
+	if ( fValidLaunchable || ValidItemAttachment( this, pAttachment->usItem, TRUE, playSound ) )
 	{
 		//if there is already an attachment of the same type, we want to try swapping / replacing it
 		OBJECTTYPE* pAttachmentPosition = 0;
@@ -5334,7 +5335,8 @@ BOOLEAN CreateGun( UINT16 usItem, INT16 bStatus, OBJECTTYPE * pObj )
 	else
 	{
 		usAmmo = DefaultMagazine( usItem );
-		Assert( usAmmo != 0 );
+		//CHRISL: Why do we have an assert here when the very next condition says to return a FALSE if usAmmo is 0?
+		//Assert( usAmmo != 0 );
 		if (usAmmo == 0)
 		{
 			// item's calibre & mag size not found in magazine list!

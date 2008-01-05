@@ -4569,14 +4569,33 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 			}
 			else
 			{
-				// make sure the item in the world is untrapped
-				gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].object[0]->data.bTrap = 0;
-				gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].object.fFlags &= ~( OBJECT_KNOWN_TO_BE_TRAPPED );
+				//CHRISL: because the above AutoPlaceObject may fail due to an item swap, we need a few more checks
+				//	before we assume it's an actual failure.  First, compare our tempObject with the pool item and
+				//	see if they're the same object.  If the above AutoPlaceObject is a complete fail, they should be
+				//	the same.
+				if(gWorldItems[gpBoobyTrapItemPool->iItemIndex].object.operator == (gTempObject))
+				{
+					// make sure the item in the world is untrapped
+					gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].object[0]->data.bTrap = 0;
+					gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].object.fFlags &= ~( OBJECT_KNOWN_TO_BE_TRAPPED );
 
-				// ATE; If we failed to add to inventory, put failed one in our cursor...
-				gfDontChargeAPsToPickup = TRUE;
-				HandleAutoPlaceFail( gpBoobyTrapSoldier, gpBoobyTrapItemPool->iItemIndex, gsBoobyTrapGridNo );
-				RemoveItemFromPool( gsBoobyTrapGridNo, gpBoobyTrapItemPool->iItemIndex, gbBoobyTrapLevel );
+					// ATE; If we failed to add to inventory, put failed one in our cursor...
+					gfDontChargeAPsToPickup = TRUE;
+					HandleAutoPlaceFail( gpBoobyTrapSoldier, gpBoobyTrapItemPool->iItemIndex, gsBoobyTrapGridNo );
+					RemoveItemFromPool( gsBoobyTrapGridNo, gpBoobyTrapItemPool->iItemIndex, gbBoobyTrapLevel );
+				}
+				else
+				{
+					//We've done an item swap which caused the above AutoPlaceObject failure.  Try to place autoplace
+					//	the object again.  If we fail, move the temp object to the cursor.
+					if(!(AutoPlaceObject(gpBoobyTrapSoldier, &gTempObject, TRUE)))
+					{
+						gpItemPointer = new OBJECTTYPE;
+						gTempObject.MoveThisObjectTo(*gpItemPointer,-1,gpBoobyTrapSoldier,NUM_INV_SLOTS,MAX_OBJECTS_PER_SLOT);
+					}
+					// remove it from the ground
+					RemoveItemFromPool( gsBoobyTrapGridNo, gpBoobyTrapItemPool->iItemIndex, gbBoobyTrapLevel );
+				}
 			}
 		}
 		else

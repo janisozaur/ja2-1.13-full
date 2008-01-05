@@ -4981,20 +4981,23 @@ void ModifyInsuranceEmails( UINT16 usMessageId, INT32 *iResults, EmailPtr pMail,
 	// increment height for size of one line
 	iHeight+=GetFontHeight( MESSAGE_FONT );
 
-	for( ubCnt=0; ubCnt<ubNumberOfRecords; ubCnt++)
+	// list doesn't exist, reload
+	if( !pTempRecord )
 	{
-		// read one record from email file
-		LoadEncryptedDataFromFile( "BINARYDATA\\Email.edt", pString, MAIL_STRING_SIZE * usMessageId, MAIL_STRING_SIZE );
+		for( ubCnt=0; ubCnt<ubNumberOfRecords; ubCnt++)
+		{
+			// read one record from email file
+			LoadEncryptedDataFromFile( "BINARYDATA\\Email.edt", pString, MAIL_STRING_SIZE * usMessageId, MAIL_STRING_SIZE );
 
-		//Replace the $MERCNAME$ and $AMOUNT$ with the mercs name and the amountm if the string contains the keywords.
-		ReplaceMercNameAndAmountWithProperData( pString, pMail );
+			//Replace the $MERCNAME$ and $AMOUNT$ with the mercs name and the amountm if the string contains the keywords.
+			ReplaceMercNameAndAmountWithProperData( pString, pMail );
 
-		// add to list
-		AddEmailRecordToList( pString );
+			// add to list
+			AddEmailRecordToList( pString );
 
-		usMessageId++;
+			usMessageId++;
+		}
 	}
-
 
 //
 	giPrevMessageId = giMessageId;

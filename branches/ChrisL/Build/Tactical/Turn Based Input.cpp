@@ -3379,7 +3379,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 										RemoveItemFromWorld(uiLoop+i);
 									}
 								}
-								else
+								//CHRISL: by changing this to a condition, we can use this hotkey immediately after the
+								//	SHITFT+F hotkey.  Otherwise, if a stackable item ends up at the end of the inventory
+								//	list, we won't be able to add it to the initial stack.
+								else if(uiLoop+i == guiNumWorldItems)
 								{
 									break;
 								}
@@ -3630,7 +3633,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					// Create object and set
 					CreateItem( (UINT16) G41, 100, &Object );
 
-					pSoldier = FindSoldierByProfileID( ROBOT, FALSE );
+					pSoldier = FindSoldierByProfileID( MARIA, FALSE );
 
 					AutoPlaceObject( pSoldier, &Object, FALSE );
 
@@ -3771,15 +3774,24 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				break;
 			case '`':
 
+				if( fAlt )
+				{
+					if ( CHEATER_CHEAT_LEVEL( ) )
+					{
+						EnvBeginRainStorm( 1 );
+					}
+				}
+				else if( fCtrl )
+				{
+					if ( CHEATER_CHEAT_LEVEL( ) )
+					{
+						EnvEndRainStorm( );
+					}
+				}
+				else
 				// Switch panels...
 				{
 					ToggleTacticalPanels();
-
-					if ( CHEATER_CHEAT_LEVEL( ) )
-					{
-						//EnvBeginRainStorm( 1 );
-					}
-
 				}
 				break;
 
@@ -4179,7 +4191,33 @@ void CycleSelectedMercsItem()
 
 		usOldItem = pSoldier->inv[ HANDPOS ].usItem;
 
-		usOldItem++;
+		//CHRISL: Why not make this work like CycleItemDescriptionItem in that holding the SHIFT key reverses the cycle?
+		if ( _KeyDown( SHIFT ) )
+		{
+			usOldItem--;
+			while ( usOldItem > 0 && ( Item[usOldItem].usItemClass == IC_NONE || Item[usOldItem].usItemClass == 0 ))
+			{
+				usOldItem--;
+			}
+
+			if ( usOldItem < 0 )
+			{
+				usOldItem = MAXITEMS-1;
+			}
+		}
+		else
+		{
+			usOldItem++;
+			if ( usOldItem > MAXITEMS )
+			{
+				usOldItem = 0;
+			}
+
+			while (usOldItem < MAXITEMS && (Item[usOldItem].usItemClass == IC_NONE || Item[usOldItem].usItemClass == 0 ))
+			{
+				usOldItem++;
+			}
+		}
 
 		if ( usOldItem > MAXITEMS )
 		{
