@@ -23,7 +23,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Multiplayer;.\Res;&quot;.\Standard Gaming Platform&quot;;.\TileEngine;.\Tactical;.\Utils;.\TacticalAI;.\Editor;.\Strategic;.\laptop;.\lua;.\"
+				AdditionalIncludeDirectories=".\Multiplayer\raknet;.\Multiplayer;.\Res;&quot;.\Standard Gaming Platform&quot;;.\TileEngine;.\Tactical;.\Utils;.\TacticalAI;.\Editor;.\Strategic;.\laptop;.\lua;.\"
 				PreprocessorDefinitions="CALLBACKTIMER;PRECOMPILEDHEADERS;_DEBUG;WIN32;_WINDOWS;JA2;_VTUNE_PROFILING;XML_STATIC;CINTERFACE"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
@@ -42,7 +42,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libexpatMT.lib mss32.lib winmm.lib smackw32.lib fmodvc.lib lua51.lib .\Multiplayer\RakNetLibStaticDebug.lib ws2_32.lib"
+				AdditionalDependencies="libexpatMT.lib mss32.lib winmm.lib smackw32.lib fmodvc.lib lua51.lib .\Multiplayer\raknet\RakNetLibStaticDebug.lib ws2_32.lib"
 				OutputFile="C:\Program Files\TalonSoft\Ja2\ja2_mp_debug_prebeta.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -2419,40 +2419,6 @@
 				<File
 					RelativePath=".\Multiplayer\test_space.h">
 				</File>
-				<Filter
-					Name="raknet_headers"
-					Filter="">
-					<File
-						RelativePath=".\Multiplayer\BitStream.h">
-					</File>
-					<File
-						RelativePath=".\Multiplayer\Export.h">
-					</File>
-					<File
-						RelativePath=".\Multiplayer\MessageIdentifiers.h">
-					</File>
-					<File
-						RelativePath=".\Multiplayer\PacketPriority.h">
-					</File>
-					<File
-						RelativePath=".\Multiplayer\RakNetDefines.h">
-					</File>
-					<File
-						RelativePath=".\Multiplayer\RakNetStatistics.h">
-					</File>
-					<File
-						RelativePath=".\Multiplayer\RakNetTypes.h">
-					</File>
-					<File
-						RelativePath=".\Multiplayer\RakNetworkFactory.h">
-					</File>
-					<File
-						RelativePath=".\Multiplayer\RakPeerInterface.h">
-					</File>
-					<File
-						RelativePath=".\Multiplayer\RakSleep.h">
-					</File>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="ini"
