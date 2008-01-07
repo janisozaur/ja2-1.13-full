@@ -1716,7 +1716,7 @@ void recieveSTATE(RPCParameters *rpcParameters)
 	EV_S_CHANGESTATE*	new_state = (EV_S_CHANGESTATE*)rpcParameters->input;
 
 
-	ScreenMsg( FONT_YELLOW, MSG_CHAT, L"recieved state");	
+	//ScreenMsg( FONT_YELLOW, MSG_CHAT, L"recieved state");	
 	
 
 	SOLDIERTYPE * pSoldier=MercPtrs[ new_state->usSoldierID ];
@@ -1810,7 +1810,7 @@ void recievehitSTRUCT  (RPCParameters *rpcParameters)
 
 	StructureHit( iBullet, struct_hit->usWeaponIndex, struct_hit->bWeaponStatus, struct_hit->ubAttackerID, struct_hit->sXPos, struct_hit->sYPos, struct_hit->sZPos, struct_hit->usStructureID, struct_hit->iImpact, struct_hit->fStopped );
 
-	ScreenMsg( FONT_YELLOW, MSG_CHAT, L"recieved structure hit");
+	//ScreenMsg( FONT_YELLOW, MSG_CHAT, L"recieved structure hit");
 }
 void recievehitWINDOW  (RPCParameters *rpcParameters)
 {
@@ -1820,7 +1820,7 @@ void recievehitWINDOW  (RPCParameters *rpcParameters)
 
 	WindowHit( window_hit->sGridNo, window_hit->usStructureID, window_hit->fBlowWindowSouth, window_hit->fLargeForce );
 
-	ScreenMsg( FONT_YELLOW, MSG_CHAT, L"recieved window hit");
+	//ScreenMsg( FONT_YELLOW, MSG_CHAT, L"recieved window hit");
 }
 void recieveMISS  (RPCParameters *rpcParameters)
 {
@@ -1832,7 +1832,7 @@ void recieveMISS  (RPCParameters *rpcParameters)
 
 
 	ShotMiss( shot_miss->ubAttackerID, iBullet );
-	ScreenMsg( FONT_YELLOW, MSG_CHAT, L"recieved shot miss");	
+	//ScreenMsg( FONT_YELLOW, MSG_CHAT, L"recieved shot miss");	
 }
 
 

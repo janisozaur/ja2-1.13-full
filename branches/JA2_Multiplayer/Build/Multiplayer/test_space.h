@@ -6,3 +6,4 @@ void send_bullet(  BULLET * pBullet, UINT16 usHandItem);
 
 INT8 FireBullet( SOLDIERTYPE * pFirer, BULLET * pBullet, BOOLEAN fFake );
 
+#define NOCDCHECK
