@@ -2402,49 +2402,63 @@
 					RelativePath=".\Multiplayer\client.cpp">
 				</File>
 				<File
-					RelativePath="..\..\Ja2_mp.ini">
-				</File>
-				<File
 					RelativePath=".\Multiplayer\server.cpp">
 				</File>
 				<File
-					RelativePath=".\test_space.cpp">
+					RelativePath=".\Multiplayer\test_space.cpp">
 				</File>
 			</Filter>
 			<Filter
 				Name="Header Files">
 				<File
-					RelativePath=".\Multiplayer\BitStream.h">
-				</File>
-				<File
 					RelativePath=".\Multiplayer\connect.h">
 				</File>
 				<File
-					RelativePath=".\Multiplayer\Export.h">
+					RelativePath=".\Multiplayer\fresh_header.h">
 				</File>
 				<File
-					RelativePath=".\Multiplayer\MessageIdentifiers.h">
+					RelativePath=".\Multiplayer\test_space.h">
 				</File>
+				<Filter
+					Name="raknet_headers"
+					Filter="">
+					<File
+						RelativePath=".\Multiplayer\BitStream.h">
+					</File>
+					<File
+						RelativePath=".\Multiplayer\Export.h">
+					</File>
+					<File
+						RelativePath=".\Multiplayer\MessageIdentifiers.h">
+					</File>
+					<File
+						RelativePath=".\Multiplayer\PacketPriority.h">
+					</File>
+					<File
+						RelativePath=".\Multiplayer\RakNetDefines.h">
+					</File>
+					<File
+						RelativePath=".\Multiplayer\RakNetStatistics.h">
+					</File>
+					<File
+						RelativePath=".\Multiplayer\RakNetTypes.h">
+					</File>
+					<File
+						RelativePath=".\Multiplayer\RakNetworkFactory.h">
+					</File>
+					<File
+						RelativePath=".\Multiplayer\RakPeerInterface.h">
+					</File>
+					<File
+						RelativePath=".\Multiplayer\RakSleep.h">
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="ini"
+				Filter="">
 				<File
-					RelativePath=".\Multiplayer\PacketPriority.h">
-				</File>
-				<File
-					RelativePath=".\Multiplayer\RakNetDefines.h">
-				</File>
-				<File
-					RelativePath=".\Multiplayer\RakNetStatistics.h">
-				</File>
-				<File
-					RelativePath=".\Multiplayer\RakNetTypes.h">
-				</File>
-				<File
-					RelativePath=".\Multiplayer\RakNetworkFactory.h">
-				</File>
-				<File
-					RelativePath=".\Multiplayer\RakPeerInterface.h">
-				</File>
-				<File
-					RelativePath=".\Multiplayer\RakSleep.h">
+					RelativePath="..\..\Ja2_mp.ini">
 				</File>
 			</Filter>
 		</Filter>

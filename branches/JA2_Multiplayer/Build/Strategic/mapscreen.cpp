@@ -5445,11 +5445,9 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 					}
 				case '5':
 				case '6':
-					{
-						test_func2();
-						break;
-					}
 				case '7':
+					//manual overide
+					   manual_overide();
 				case '8':
 				case '9':
 					// multi-selects all characters in that squad.  SHIFT key and 1-0 for squads 11-20
@@ -5459,6 +5457,8 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 
 				case '0':
 					SelectAllCharactersInSquad( 9 ); // internal squad #s start at 0
+					test_func2();
+					
 					break;
 
 				case '!':
@@ -12582,8 +12582,8 @@ BOOLEAN CanMoveBullseyeAndClickedOnIt( INT16 sMapX, INT16 sMapY )
 	if( ( fShowAircraftFlag == TRUE ) && ( bSelectedDestChar == -1 ) && ( fPlotForHelicopter == FALSE ) )
 	{
 		// don't allow moving bullseye until after initial arrival
-		//if ( gTacticalStatus.fDidGameJustStart == FALSE ) //line to enable merc drop off in any location right from start (ie quick battle
-		if ( true )
+		//if ( gTacticalStatus.fDidGameJustStart == FALSE ) //line to enable merc drop off in any location right from start (ie quick battle //hayden
+		if ( !is_server && !is_client )//hayden
 		{
 			// if he clicked on the bullseye, and we're on the surface level
 			if ( ( sMapX == gsMercArriveSectorX ) && ( sMapY == gsMercArriveSectorY ) && ( iCurrentMapSectorZ == 0 ) )
@@ -12591,8 +12591,13 @@ BOOLEAN CanMoveBullseyeAndClickedOnIt( INT16 sMapX, INT16 sMapY )
 				return( TRUE );
 			}
 		}
+		else if(is_server)
+		{
+			ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"you cannot change dropzone after server start" );
+		}
+		else if(is_client)ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"you cannot change dropzone when client only" );
 	}
-
+		
 	return( FALSE );
 }
 

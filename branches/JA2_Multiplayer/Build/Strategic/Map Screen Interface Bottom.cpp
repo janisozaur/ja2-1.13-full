@@ -296,7 +296,7 @@ void RenderMapScreenInterfaceBottom( void )
 	  GetVideoObject(&hHandle, guiMAPBOTTOMPANEL ); 
 	  BltVideoObject( guiSAVEBUFFER , hHandle, 0, MAP_BOTTOM_X, MAP_BOTTOM_Y, VO_BLT_SRCTRANSPARENCY,NULL );
 
-		if( GetSectorFlagStatus( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ, SF_ALREADY_VISITED ) == TRUE )
+		if( GetSectorFlagStatus( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ, SF_ALREADY_VISITED ) == TRUE || is_networked)//hayden
 		{
 			GetMapFileName( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ, bFilename, TRUE, TRUE ); 
 			LoadRadarScreenBitmap( bFilename );
@@ -1739,6 +1739,13 @@ BOOLEAN AllowedToExitFromMapscreenTo( INT8 bExitToWhere )
 
 	//if we are map screen sector inventory
 	if( fShowMapInventoryPool )
+	{
+		//dont allow it
+		return( FALSE );
+	}
+
+	//hayden
+	if( bExitToWhere == MAP_EXIT_TO_LAPTOP && !allowlaptop && (is_client || is_server))
 	{
 		//dont allow it
 		return( FALSE );

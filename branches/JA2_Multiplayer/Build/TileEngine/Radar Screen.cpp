@@ -34,6 +34,8 @@
 	#include "Animation Data.h"
 #endif
 
+#include "connect.h"
+
 extern INT32 iCurrentMapSectorZ;
 
 void AdjustWorldCenterFromRadarCoords( INT16 sRadarX, INT16 sRadarY );
@@ -342,7 +344,7 @@ void RenderRadarScreen( )
 		SetObjectHandleShade( gusRadarImage, 0 );
 
 		//If night time and on surface, darken the radarmap.
-		if( NightTime() )
+		if( NightTime() && !is_networked )//hayden
 		{
 			if( guiCurrentScreen == MAP_SCREEN && !iCurrentMapSectorZ ||
 					guiCurrentScreen == GAME_SCREEN && !gbWorldSectorZ )

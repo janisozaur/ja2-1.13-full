@@ -425,6 +425,9 @@ typedef struct
 	// Lesh: slow enemy items choice progress
 	BOOLEAN fSlowProgressForEnemyItemsChoice;
 
+	//afp - use bullet tracers
+	BOOLEAN gbBulletTracer;
+
 } GAME_EXTERNAL_OPTIONS;
 
 //This structure will contain general Ja2 settings  NOT individual game settings.

@@ -2430,7 +2430,8 @@ BOOLEAN EnterSector( INT16 sSectorX, INT16 sSectorY , INT8 bSectorZ )
 	if( gfEnterTacticalPlacementGUI )
 	{
 		SetPendingNewScreen(GAME_SCREEN);
-		InitTacticalPlacementGUI();
+		InitTacticalPlacementGUI(); //hayden
+		//SetPendingNewScreen( MAP_SCREEN );
 	}
 	else
 	{

@@ -65,11 +65,11 @@
 #define		GIO_GUN_SETTINGS_Y						iScreenHeightOffset + 242
 #define		GIO_GUN_SETTINGS_WIDTH							GIO_DIF_SETTINGS_WIDTH
 
-/*
-#define		GIO_TIMED_TURN_SETTING_X						GIO_DIF_SETTINGS_X
-#define		GIO_TIMED_TURN_SETTING_Y						GIO_GAME_SETTINGS_Y
+
+#define		GIO_TIMED_TURN_SETTING_X						GIO_GUN_SETTINGS_X
+#define		GIO_TIMED_TURN_SETTING_Y						GIO_IRON_MAN_SETTING_Y//hayden
 #define		GIO_TIMED_TURN_SETTING_WIDTH					GIO_DIF_SETTINGS_WIDTH
-*/
+
 
 // Madd
 #define		GIO_BR_SETTING_X						iScreenWidthOffset + 340
@@ -122,7 +122,7 @@ enum
 
 // JA2Gold: no more timed turns setting
 
-/*
+
 //enum for the timed turns setting
 enum
 {
@@ -130,8 +130,8 @@ enum
 	GIO_TIMED_TURNS,
 
 	GIO_NUM_TIMED_TURN_OPTIONS,
-};
-*/
+};//hayden : re-enabled
+
 
 // Iron man mode
 
@@ -205,11 +205,11 @@ UINT32	guiGunOptionToggles[ NUM_GUN_OPTIONS ];
 void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn,INT32 reason);
 
 // JA2Gold: no more timed turns setting
-/*
+//hayden : re-enabled
 //checkbox to toggle Timed turn option on or off
 UINT32	guiTimedTurnToggles[ GIO_NUM_TIMED_TURN_OPTIONS ];
 void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn,INT32 reason);
-*/
+
 
 //checkbox to toggle Save style
 UINT32	guiGameSaveToggles[ NUM_SAVE_OPTIONS ];
@@ -242,7 +242,7 @@ void			RestoreGIOButtonBackGrounds();
 void			DoneFadeOutForExitGameInitOptionScreen( void );
 void			DoneFadeInForExitGameInitOptionScreen( void );
 // JA2Gold: no more timed turns setting
-//UINT8			GetCurrentTimedTurnsButtonSetting();
+UINT8			GetCurrentTimedTurnsButtonSetting();//hayden : re-enabled
 BOOLEAN		DoGioMessageBox( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
 void			DisplayMessageToUserAboutGameDifficulty();
 void			ConfirmGioDifSettingMessageBoxCallBack( UINT8 bExitValue );
@@ -497,7 +497,7 @@ BOOLEAN		EnterGIOScreen()
 	//
 	// Check box to toggle the timed turn option
 	//
-/*
+
 	usPosY = GIO_TIMED_TURN_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
 	for( cnt=0; cnt<GIO_NUM_TIMED_TURN_OPTIONS; cnt++)
 	{
@@ -512,7 +512,7 @@ BOOLEAN		EnterGIOScreen()
 		ButtonList[ guiTimedTurnToggles[ GIO_TIMED_TURNS ] ]->uiFlags |= BUTTON_CLICKED_ON;
 	else
 		ButtonList[ guiTimedTurnToggles[ GIO_NO_TIMED_TURNS ] ]->uiFlags |= BUTTON_CLICKED_ON;
-*/
+//hayden : re-enabled
 
 
 
@@ -561,11 +561,11 @@ BOOLEAN		ExitGIOScreen()
 
 
 	// JA2Gold: no more timed turns setting
-	/*
+	
 	//remove the timed turns toggle
 	for( cnt=0; cnt<GIO_NUM_TIMED_TURN_OPTIONS; cnt++ )
-		RemoveButton( guiTimedTurnToggles[ cnt ] );
-	*/
+		RemoveButton( guiTimedTurnToggles[ cnt ] );//hayden : re-enabled
+	
 // Madd
 	for( cnt=0; cnt<NUM_BR_OPTIONS; cnt++)
 		RemoveButton( guiBROptionToggles[ cnt ] );
@@ -701,8 +701,8 @@ BOOLEAN		RenderGIOScreen()
 	DisplayWrappedString( (UINT16)(GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_GUN_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_GUN_NUT_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 
-// JA2Gold: no more timed turns setting
-	/*
+// JA2Gold: no more timed turns setting//hayden : re-enabled
+	
 	//Display the Timed turns Settings Title Text
 	DisplayWrappedString( GIO_TIMED_TURN_SETTING_X, (UINT16)(GIO_TIMED_TURN_SETTING_Y-GIO_GAP_BN_SETTINGS), GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_TIMED_TURN_TITLE_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	usPosY = GIO_TIMED_TURN_SETTING_Y+2;
@@ -711,7 +711,7 @@ BOOLEAN		RenderGIOScreen()
 	usPosY += GIO_GAP_BN_SETTINGS;
 
 	DisplayWrappedString( (UINT16)(GIO_TIMED_TURN_SETTING_X+GIO_OFFSET_TO_TEXT), usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_TIMED_TURNS_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
-	*/
+	
 
 //Madd
 	DisplayWrappedString( GIO_BR_SETTING_X, (UINT16)(GIO_BR_SETTING_Y-GIO_GAP_BN_SETTINGS), GIO_DIF_SETTINGS_WIDTH + 20, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[ GIO_BR_QUALITY_TEXT ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
@@ -977,8 +977,8 @@ void BtnGunOptionsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 }
 
 // JA2Gold: no more timed turns setting
-/*
-void BtnTimedTurnsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
+
+void BtnTimedTurnsTogglesCallback( GUI_BUTTON *btn, INT32 reason )//hayden : re-enabled
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1015,7 +1015,7 @@ void BtnTimedTurnsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 		}
 	}
 }
-*/
+
 
 
 
@@ -1126,7 +1126,7 @@ UINT8	GetCurrentGunButtonSetting()
 }
 
 // JA2 Gold: no timed turns
-/*
+
 UINT8	GetCurrentTimedTurnsButtonSetting()
 {
 	UINT8	cnt;
@@ -1140,7 +1140,7 @@ UINT8	GetCurrentTimedTurnsButtonSetting()
 	}
 	return( 0 );
 }
-*/
+//hayden : re-enabled
 
 UINT8	GetCurrentGameSaveButtonSetting()
 {
@@ -1191,7 +1191,7 @@ void RestoreGIOButtonBackGrounds()
 	}
 
 // JA2Gold: no more timed turns setting
-	/*
+	
 	//Check box to toggle timed turns options
 	usPosY = GIO_TIMED_TURN_SETTING_Y-GIO_OFFSET_TO_TOGGLE_BOX_Y;
 	for( cnt=0; cnt<GIO_NUM_TIMED_TURN_OPTIONS; cnt++)
@@ -1199,7 +1199,7 @@ void RestoreGIOButtonBackGrounds()
 		RestoreExternBackgroundRect( GIO_TIMED_TURN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29 ); 
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
-	*/
+	//hayden : re-enabled
 
 	//Check box to toggle iron man options
 	usPosY = GIO_IRON_MAN_SETTING_Y-GIO_OFFSET_TO_TOGGLE_BOX_Y;
@@ -1228,7 +1228,7 @@ void DoneFadeOutForExitGameInitOptionScreen( void )
 	gGameOptions.ubGameStyle = GetCurrentGameStyleButtonSetting();
 	gGameOptions.ubDifficultyLevel = GetCurrentDifficultyButtonSetting() + 1; 
 	// JA2Gold: no more timed turns setting
-	//gGameOptions.fTurnTimeLimit = GetCurrentTimedTurnsButtonSetting();
+	gGameOptions.fTurnTimeLimit = GetCurrentTimedTurnsButtonSetting();//hayden : re-enabled
 	// JA2Gold: iron man
 	gGameOptions.fIronManMode = GetCurrentGameSaveButtonSetting();
 	

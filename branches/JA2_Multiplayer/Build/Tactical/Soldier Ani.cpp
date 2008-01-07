@@ -63,6 +63,8 @@
 #include "Strategic Status.h"
 #endif
 
+#include "connect.h"
+#include "fresh_header.h"
 #define		NO_JUMP											0
 #define		MAX_ANIFRAMES_PER_FLASH			2
 //#define		TIME_FOR_RANDOM_ANIM_CHECK	10
@@ -3193,6 +3195,19 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 
 	if ( pSoldier->bLife == 0 && !( pSoldier->uiStatusFlags & SOLDIER_DEAD )  )
 	{
+
+		////send death
+		//	if(is_server && pSoldier->ubID < 120)
+		//	{
+		//		send_death(pSoldier);
+		//	}
+		//	else if(is_client && !is_server && pSoldier->ubID < 20)
+		//	{
+		//		send_death(pSoldier);
+		//	}
+		//	else if(is_client)return (NULL);
+		//		//hayden
+
 		// Cancel services here...
 		ReceivingSoldierCancelServices( pSoldier );
 		GivingSoldierCancelServices( pSoldier );

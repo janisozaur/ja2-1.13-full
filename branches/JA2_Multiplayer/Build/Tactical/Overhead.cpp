@@ -6119,7 +6119,8 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 
 		// Play death music
 		SetMusicMode( MUSIC_TACTICAL_DEATH );
-		SetCustomizableTimerCallbackAndDelay( 10000, DeathNoMessageTimerCallback, FALSE );
+		if(!is_client)SetCustomizableTimerCallbackAndDelay( 10000, DeathNoMessageTimerCallback, FALSE );//hayden
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"you have been defeated..." );
 
 		if ( CheckFact( FACT_FIRST_BATTLE_BEING_FOUGHT, 0 ) )
 		{
@@ -7467,6 +7468,7 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 	// would work quite well.  If only I could close all the holes that the UI opens so that one routine could handle everything.
 	if (!pSoldier)
 	{
+		if(gusSelectedSoldier==156)return( NULL );
 		pSoldier = MercPtrs[ gusSelectedSoldier ];
 	}
 
@@ -8054,7 +8056,9 @@ void	DoneFadeOutDueToDeath( void )
 void EndBattleWithUnconsciousGuysCallback( UINT8 bExitValue )
 {
 	// Enter mapscreen.....
-	CheckAndHandleUnloadingOfCurrentWorld();
+	if(!is_client)CheckAndHandleUnloadingOfCurrentWorld();
+	else			ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"All your mercs are wiped dead !" );
+
 }
 
 

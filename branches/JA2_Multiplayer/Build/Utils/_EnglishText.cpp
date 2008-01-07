@@ -3590,7 +3590,7 @@ STR16	zOptionsScreenHelpText[] =
 
 STR16	gzGIOScreenText[] =
 {
-	L"INITIAL GAME SETTINGS",
+	L"INITIAL GAME SETTINGS (only applicable if server)",
 	L"Game Style",
 	L"Realistic",
 	L"Sci Fi",
@@ -3615,6 +3615,10 @@ STR16	gzGIOScreenText[] =
 	L"Great",
 	L"Excellent",
 	L"Awesome",
+
+	L"Timed Turns",//hayden
+	L"Not Timed",
+	L"Timed Player Turns",
 };
 
 STR16 pDeliveryLocationStrings[] =

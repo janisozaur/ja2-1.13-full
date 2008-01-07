@@ -48,6 +48,8 @@
 	#include "Auto Resolve.h"
 #endif
 
+#include "connect.h"
+
 //rain
 //#define WEAPON_RELIABILITY_REDUCTION_PER_RAIN_INTENSITY 0
 extern INT8 gbCurrentRainIntensity;
@@ -1897,9 +1899,17 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
       return( FALSE );
     }
   }
-
-
-	FireBulletGivenTarget( pSoldier, dTargetX, dTargetY, dTargetZ, pSoldier->usAttackingWeapon, (UINT16) (uiHitChance - uiDiceRoll), fBuckshot, FALSE );
+	//hayden
+	if((is_server && pSoldier->ubID<120) || (!is_server && is_client && pSoldier->ubID<20) || (!is_server && !is_client) )
+	{
+		FireBulletGivenTarget( pSoldier, dTargetX, dTargetY, dTargetZ, pSoldier->usAttackingWeapon, (UINT16) (uiHitChance - uiDiceRoll), fBuckshot, FALSE );
+	}
+	else
+	{
+		FireBulletGivenTarget( pSoldier, dTargetX, dTargetY, dTargetZ, pSoldier->usAttackingWeapon, (UINT16) (uiHitChance - uiDiceRoll), fBuckshot, TRUE );
+	}
+	//bottom one is fake (ie not in my control)
+	
 
 	ubVolume = Weapon[ pSoldier->usAttackingWeapon ].ubAttackVolume;
 

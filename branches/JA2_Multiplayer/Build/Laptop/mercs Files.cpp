@@ -667,7 +667,10 @@ BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 	}
 	else
 	{
-		//if we succesfully hired the merc
+	
+		//take off nominal fee: hayden,
+			AddTransactionToPlayersBook( HIRED_MERC, ubMercID, GetWorldTotalMin(), gMercProfiles[ ubMercID ].sSalary * (-1) );
+	//if we succesfully hired the merc
 		return(TRUE);
 	}
 }

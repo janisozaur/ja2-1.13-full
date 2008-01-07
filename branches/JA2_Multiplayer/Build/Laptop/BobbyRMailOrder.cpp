@@ -2350,8 +2350,8 @@ BOOLEAN AddNewBobbyRShipment( BobbyRayPurchaseStruct *pPurchaseStruct, UINT8 ubD
 	//AddStrategicEvent( EVENT_BOBBYRAY_PURCHASE, uiResetTimeSec, cnt);
 	if(is_client)
 	{
-	//BobbyRayPurchaseEventCallback( iFoundSpot); //haydenGetWorldDayInSeconds() + uiOnceEveryXSeconds
-	AddStrategicEventUsingSeconds( EVENT_BOBBYRAY_PURCHASE, GetWorldDayInSeconds() + 10, iFoundSpot );
+	BobbyRayPurchaseEventCallback( iFoundSpot); //hayden - instant delivery ?
+	//AddStrategicEventUsingSeconds( EVENT_BOBBYRAY_PURCHASE, GetWorldDayInSeconds() + 10, iFoundSpot );
 	}
 	else
 	{

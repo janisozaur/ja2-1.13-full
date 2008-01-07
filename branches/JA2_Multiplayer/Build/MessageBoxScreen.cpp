@@ -35,6 +35,8 @@
 #define		MSGBOX_SMALL_BUTTON_WIDTH					31
 #define		MSGBOX_SMALL_BUTTON_X_SEP					8
 
+
+
 typedef void (*MSGBOX_CALLBACK)( UINT8 bExitValue );	
 
 // old mouse x and y positions

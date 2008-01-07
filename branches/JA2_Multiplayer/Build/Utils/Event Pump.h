@@ -164,6 +164,8 @@ typedef struct
 	BOOLEAN fHit;
 	UINT8		ubSpecial;
 	UINT8		ubLocation;
+	INT32 iBullet;
+	BOOLEAN fStopped;
 
 } EV_S_WEAPONHIT;
 
@@ -178,6 +180,7 @@ typedef struct
 	UINT16	usStructureID;
 	INT32		iImpact;
 	INT32		iBullet;
+	BOOLEAN fStopped;//hayden
 
 } EV_S_STRUCTUREHIT;
 
@@ -187,12 +190,15 @@ typedef struct
 	UINT16	usStructureID;
 	BOOLEAN	fBlowWindowSouth;
 	BOOLEAN	fLargeForce;
-} EV_S_WINDOWHIT;
+	INT8 ubAttackerID;
+	INT32 iBullet;
+} EV_S_WINDOWHIT;//hayden
 
 typedef struct
 {
 	UINT8		ubAttackerID;
-} EV_S_MISS;
+	INT32 iBullet;
+} EV_S_MISS;//hayden.
 
 typedef struct
 {

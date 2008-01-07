@@ -99,6 +99,7 @@
 #include "civ quotes.h"
 #endif
 
+#include "fresh_header.h"
 //turnspeed
 //UINT8 gubPlayerTurnSpeedUpFactor = 1;
 
@@ -1711,10 +1712,21 @@ BOOLEAN ChangeSoldierState( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT16 usS
 	SChangeState.fForce						 = fForce;
 	SChangeState.uiUniqueId				 = pSoldier -> uiUniqueSoldierIdValue;
 
-	//AddGameEvent( S_CHANGESTATE, 0, &SChangeState );
-	EVENT_InitNewSoldierAnim( pSoldier, SChangeState.usNewState, SChangeState.usStartingAniCode, SChangeState.fForce );
-
-
+	//AddGameEvent( S_CHANGESTATE, 0, &SChangeState );//hayden
+	if(is_server && pSoldier->ubID < 120)
+	{
+		EVENT_InitNewSoldierAnim( pSoldier, SChangeState.usNewState, SChangeState.usStartingAniCode, SChangeState.fForce );
+		send_changestate(&SChangeState);
+	}
+	else if(is_client && !is_server && pSoldier->ubID < 20)
+	{
+		EVENT_InitNewSoldierAnim( pSoldier, SChangeState.usNewState, SChangeState.usStartingAniCode, SChangeState.fForce );
+		send_changestate(&SChangeState);
+	}
+	else if (!is_client)
+	{
+		EVENT_InitNewSoldierAnim( pSoldier, SChangeState.usNewState, SChangeState.usStartingAniCode, SChangeState.fForce );
+	}
 	return( TRUE );
 }
 

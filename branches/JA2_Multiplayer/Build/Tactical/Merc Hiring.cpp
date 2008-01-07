@@ -100,7 +100,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	if( ( pMerc->bMercStatus != 0 ) && (pMerc->bMercStatus != MERC_ANNOYED_BUT_CAN_STILL_CONTACT ) && ( pMerc->bMercStatus != MERC_HIRED_BUT_NOT_ARRIVED_YET ) )
 		return( MERC_HIRE_FAILED );
 
-	if( NumberOfMercsOnPlayerTeam() >= 18 || (is_client && NumberOfMercsOnPlayerTeam() >= 7)) //hayden, 7 member team limit
+	if( NumberOfMercsOnPlayerTeam() >= 18 || (is_client && NumberOfMercsOnPlayerTeam() >= MAX_MERCS)) //hayden, 7 member team limit setable in ini
 		return( MERC_HIRE_OVER_18_MERCS_HIRED );
 
 	// ATE: if we are to use landing zone, update to latest value
@@ -121,6 +121,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	MercCreateStruct.bSectorZ							= pHireMerc->bSectorZ;
 	MercCreateStruct.bTeam								= SOLDIER_CREATE_AUTO_TEAM;
 	MercCreateStruct.fCopyProfileItemsOver= pHireMerc->fCopyProfileItemsOver;
+	if(!ALLOW_EQUIP)MercCreateStruct.fCopyProfileItemsOver=0;//hayden : server overide
 
 	if ( !TacticalCreateSoldier( &MercCreateStruct, &iNewIndex ) )
 	{
@@ -225,7 +226,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	}
 	else
 	{
-			if(is_client)send_hire( iNewIndex, ubCurrentSoldier, pHireMerc->iTotalContractLength, pHireMerc->fCopyProfileItemsOver  );
+			if(is_client)send_hire( iNewIndex, ubCurrentSoldier, pHireMerc->iTotalContractLength, MercCreateStruct.fCopyProfileItemsOver  );
 			//send off hire info to network, also avail possibility for net-game exclusive hired pSoldier changes...
 	}
 

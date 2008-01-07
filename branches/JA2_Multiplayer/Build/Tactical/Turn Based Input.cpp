@@ -2185,7 +2185,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 			case '6':
 				ChangeCurrentSquad( 5 );
-				test_func2();
+				
 				break;
 
 			case '7':
@@ -2202,6 +2202,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 			case '0':
 				ChangeCurrentSquad( 9 );
+				test_func2();
 				break;
 
 			case 'x':

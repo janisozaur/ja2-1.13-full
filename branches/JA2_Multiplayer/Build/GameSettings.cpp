@@ -296,7 +296,7 @@ void InitGameOptions()
 	gGameOptions.fAirStrikes		= FALSE;
 	gGameOptions.ubGameStyle		= STYLE_REALISTIC;//hayden, was STYLE_SCIFI;
 	gGameOptions.ubDifficultyLevel	= DIF_LEVEL_MEDIUM; //hayden , was DIF_LEVEL_MEDIUM;
-	//gGameOptions.fTurnTimeLimit	= FALSE;
+	gGameOptions.fTurnTimeLimit	= TRUE;//hayden
 	
 	gGameOptions.fIronManMode		= FALSE;
 }
@@ -683,6 +683,9 @@ void LoadGameExternalOptions()
 
 	gGameExternalOptions.fEnableArmorCoverage				= iniReader.ReadBoolean("JA2 Tactical Settings", "ENABLE_ARMOR_COVERAGE", FALSE); // ShadoWarrior for Captain J's armor coverage
 
+	//afp - make it true by default for the moment
+	gGameExternalOptions.gbBulletTracer = true;
+
 	// ShadoWarrior: Tooltip changes (start)
 	gGameExternalOptions.ubSoldierTooltipDetailLevel		= iniReader.ReadInteger("JA2 Tactical Settings", "SOLDIER_TOOLTIP_DETAIL_LEVEL", 1);
 
@@ -1040,8 +1043,8 @@ void DisplayGameSettings( )
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%s: %s", gzGIOScreenText[ GIO_GAME_STYLE_TEXT ], gzGIOScreenText[ GIO_REALISTIC_TEXT + gGameOptions.ubGameStyle ] );
 
 	//Timed Turns option
-	// JA2Gold: no timed turns
-	//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%s: %s", gzGIOScreenText[ GIO_TIMED_TURN_TITLE_TEXT ], gzGIOScreenText[ GIO_NO_TIMED_TURNS_TEXT + gGameOptions.fTurnTimeLimit ] );
+	// JA2Gold: no timed turns//hayden : re-enabled
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%s: %s", gzGIOScreenText[ GIO_TIMED_TURN_TITLE_TEXT ], gzGIOScreenText[ GIO_NO_TIMED_TURNS_TEXT + gGameOptions.fTurnTimeLimit ] );
 
 	//if( CHEATER_CHEAT_LEVEL() )
 	{

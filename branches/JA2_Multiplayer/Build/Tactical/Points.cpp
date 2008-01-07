@@ -483,6 +483,8 @@ BOOLEAN EnoughPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost, BOOLE
 
 void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost,BOOLEAN fProactive )
 {
+	if(0)
+	{
 	INT16 sNewAP = 0, sNewBP = 0;
 	INT8	bNewBreath;
 
@@ -587,7 +589,7 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost,BOOLEAN f
 
 	// UPDATE BAR
 	DirtyMercPanelInterface( pSoldier, DIRTYLEVEL1 );
-
+}
 }
 
 

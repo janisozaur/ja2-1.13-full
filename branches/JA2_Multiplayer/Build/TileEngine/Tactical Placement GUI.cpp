@@ -45,6 +45,8 @@
 	#include "Game Clock.h"
 #endif
 #include "connect.h"
+#include "saveloadscreen.h"
+
 
 typedef struct MERCPLACEMENT
 {
@@ -120,6 +122,8 @@ void SelectNextUnplacedUnit();
 
 BOOLEAN gfNorthValid, gfEastValid, gfSouthValid, gfWestValid;
 BOOLEAN gfChangedEntrySide = FALSE;
+
+int islocked;
 
 void FindValidInsertionCode( UINT8 *pubStrategicInsertionCode )
 {
@@ -218,6 +222,7 @@ void CheckForValidMapEdge( UINT8 *pubStrategicInsertionCode )
 
 void InitTacticalPlacementGUI()
 {
+	islocked=0;//hayden
 	VOBJECT_DESC VObjectDesc;
 	INT32 i, xp, yp;
 	UINT8 ubFaceIndex;
@@ -416,7 +421,9 @@ void InitTacticalPlacementGUI()
 		MSYS_DefineRegion( &gMercPlacement[ i ].region, (UINT16)xp, (UINT16)yp, (UINT16)(xp + 54), (UINT16)(yp + 62), MSYS_PRIORITY_HIGH, 0, MercMoveCallback, MercClickCallback );
 	}
 	
-	PlaceMercs();
+
+
+	if(!is_client)PlaceMercs();//hayden
 
 	if( gubDefaultButton == GROUP_BUTTON )
 	{
@@ -666,6 +673,36 @@ void EnsureDoneButtonStatus()
 	}
 }
 
+void lockui (bool unlock) //lock onluck ui for lan //hayden
+{
+		if(unlock==0 && islocked==0 && is_client)
+		{
+			islocked=1;
+			DisableButton( iTPButtons[ DONE_BUTTON ] );
+					DisableButton( iTPButtons[ SPREAD_BUTTON ] );
+						DisableButton( iTPButtons[ GROUP_BUTTON ] );
+							DisableButton( iTPButtons[ CLEAR_BUTTON ] );
+
+			SGPRect CenterRect = { 100, 100, SCREEN_WIDTH - 100, 300 };
+			DoMessageBox( MSG_BOX_BASIC_STYLE, L"Clients are still loading, please wait...",  guiCurrentScreen, MSG_BOX_FLAG_OK | MSG_BOX_FLAG_USE_CENTERING_RECT, DialogRemoved,  &CenterRect );
+
+			//send loaded
+			send_loaded();
+		}
+
+		if(unlock) //oh yeah ! :)
+		{
+					islocked=3;
+					EnableButton( iTPButtons[ SPREAD_BUTTON ] );
+					EnableButton( iTPButtons[ GROUP_BUTTON ] );
+					EnableButton( iTPButtons[ CLEAR_BUTTON ] );
+					PlaceMercs();
+					gMsgBox.bHandled = MSG_BOX_RETURN_OK; //close if still open
+					
+		}
+}
+
+
 void TacticalPlacementHandle()
 {
   InputAtom InputEvent;
@@ -673,6 +710,9 @@ void TacticalPlacementHandle()
 	EnsureDoneButtonStatus();
 
 	RenderTacticalPlacementGUI();
+	
+	
+	lockui(0);//lockui before placement while clients loading //hayden
 
 	if( gfRightButtonState )
 	{
@@ -692,26 +732,38 @@ void TacticalPlacementHandle()
 					KillTacticalPlacementGUI();
 					break;
 				#endif
-				case ENTER:
-					if( ButtonList[ iTPButtons[ DONE_BUTTON ] ]->uiFlags & BUTTON_ENABLED )
-					{
-						KillTacticalPlacementGUI();
-					}
-					break;
-				case 'c':
-					ClearPlacementsCallback( ButtonList[ iTPButtons[ CLEAR_BUTTON ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
-					break;
-				case 'g':
-					GroupPlacementsCallback( ButtonList[ iTPButtons[ GROUP_BUTTON ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
-					break;
-				case 's':
-					SpreadPlacementsCallback( ButtonList[ iTPButtons[ SPREAD_BUTTON ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
-					break;
+					
+							case ENTER:
+								if( ButtonList[ iTPButtons[ DONE_BUTTON ] ]->uiFlags & BUTTON_ENABLED )
+								{
+									if(!is_client)KillTacticalPlacementGUI();
+									//if(is_client)send_donegui(0); only by mouse //hayden
+								}
+								break;
+							case 'c':
+								if(islocked!=1)ClearPlacementsCallback( ButtonList[ iTPButtons[ CLEAR_BUTTON ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+								break;
+							case 'g':
+								if(islocked!=1)GroupPlacementsCallback( ButtonList[ iTPButtons[ GROUP_BUTTON ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+								break;
+							case 's':
+								if(islocked!=1)SpreadPlacementsCallback( ButtonList[ iTPButtons[ SPREAD_BUTTON ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+								break;
 				case 'x':
 					if( InputEvent.usKeyState & ALT_DOWN )
 					{
 						HandleShortCutExitState();
 					}
+					break;
+				case 'l'://hayden
+				if( InputEvent.usKeyState & ALT_DOWN )
+				{
+					KillTacticalPlacementGUI();
+					DoQuickLoad();
+				}
+				break;
+				case '7':
+					if(is_server)manual_overide();
 					break;
 			}
 		}
@@ -769,7 +821,12 @@ void TacticalPlacementHandle()
 	}
 	if( gfKillTacticalGUI == 1 )
 	{
-		KillTacticalPlacementGUI();
+		if(is_client)
+		{
+			gfKillTacticalGUI = FALSE;
+			send_donegui(0);
+		}
+		if(!is_client)KillTacticalPlacementGUI();
 	}
 	else if( gfKillTacticalGUI == 2 )
 	{
@@ -968,6 +1025,8 @@ void MercMoveCallback( MOUSE_REGION *reg, INT32 reason )
 
 void MercClickCallback( MOUSE_REGION *reg, INT32 reason )
 {
+	if(islocked != 1)//hayden
+	{
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		INT8 i;
@@ -987,6 +1046,7 @@ void MercClickCallback( MOUSE_REGION *reg, INT32 reason )
 				return;
 			}
 		}
+	}
 	}
 }
 

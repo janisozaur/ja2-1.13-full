@@ -3287,6 +3287,12 @@ BOOLEAN InitDeleteVideoConferencePopUp( )
 			usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
 		}
 
+		if(is_client)//hayden : only needed for 1 day...
+		{
+						DisableButton( giContractLengthButton[1] );
+						DisableButton( giContractLengthButton[2] );
+		}
+
 		// BuyEquipment button
 		usPosY = AIM_MEMBER_BUY_CONTRACT_LENGTH_Y;
 		for(i=0; i<2; i++)
@@ -3307,6 +3313,13 @@ BOOLEAN InitDeleteVideoConferencePopUp( )
 		if( gMercProfiles[gbCurrentSoldier].usOptionalGearCost == 0 )
 			DisableButton( giBuyEquipmentButton[1] );
 
+		//hayden
+		if(!ALLOW_EQUIP)
+		{
+			gfBuyEquipment = FALSE;
+			DisableButton( giBuyEquipmentButton[0] );
+			DisableButton( giBuyEquipmentButton[1] );
+		}
 
 		// Authorize button
 		usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;

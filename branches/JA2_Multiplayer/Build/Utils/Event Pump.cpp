@@ -1190,7 +1190,7 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 				{
 					if(is_client) SWeaponHit.sDamage=(INT16)(SWeaponHit.sDamage * DAMAGE_MULTIPLIER); // adjust damage from external variable //hayden
 					WeaponHit( SWeaponHit.usSoldierID, SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection, SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, SWeaponHit.ubAttackerID, SWeaponHit.fHit, SWeaponHit.ubSpecial, SWeaponHit.ubLocation );
-					if(is_server || (is_client && SWeaponHit.ubAttackerID <20) ) send_hit( SWeaponHit.usSoldierID, SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection, SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, SWeaponHit.ubAttackerID, SWeaponHit.fHit, SWeaponHit.ubSpecial, SWeaponHit.ubLocation );
+					if(is_server || (is_client && SWeaponHit.ubAttackerID <20) ) send_hit( &SWeaponHit  );
 				}
 				break;
 

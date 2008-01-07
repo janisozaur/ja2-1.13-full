@@ -383,7 +383,7 @@ void GameLoop(void)
 			Sleep(sleeptime);
 	}
 #endif
-// network code
+// network code //hayden
 if ( is_networked )
 	{
 	client_packet();
