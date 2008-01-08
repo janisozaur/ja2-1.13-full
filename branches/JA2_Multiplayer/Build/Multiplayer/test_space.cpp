@@ -94,7 +94,7 @@
 extern INT8 SquadMovementGroups[ ];
 
 #include "test_space.h"
-
+#include "soldier control.h"
 // if(is_server
 
 
@@ -106,8 +106,40 @@ void test_func2 (void)//now bound to "0" //currently displays coordinates of the
 {
 
 
+//SOLDIERTYPE * pSoldier=MercPtrs[ 0 ];
+//pSoldier->bLife=0;
+//SoldierCollapse( pSoldier );
+//SoldierTakeDamage( pFirer, ANIM_CROUCH, 1, 100, TAKE_DAMAGE_BLOODLOSS, NOBODY, NOWHERE, 0, TRUE );
+//TurnSoldierIntoCorpse( pFirer, FALSE, FALSE );
+ScreenMsg( FONT_YELLOW, MSG_CHAT, L"test_func2");	
+//BOOLEAN       fMadeCorpse;
+//	 SOLDIERTYPE * pSoldier=MercPtrs[ 0 ];
+//pSoldier->bLife = 0;
+//    HandleSoldierDeath( pSoldier, &fMadeCorpse );
+
+//guiPendingOverrideEvent = LA_BEGINUIOURTURNLOCK;
+//
+//guiPendingOverrideEvent = CA_MERC_SHOOT;
+//
+//guiPendingOverrideEvent = G_GETTINGITEM;
+//
+//guiPendingOverrideEvent = LU_ON_TERRAIN;
+//
+//guiPendingOverrideEvent = ET_ON_TERRAIN;
+//
+//guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
 
 
+}
+
+
+
+
+
+
+
+
+//HandleTacticalUI( );
 
 
 
@@ -179,6 +211,6 @@ void test_func2 (void)//now bound to "0" //currently displays coordinates of the
 
 
 
-}
+
 
 

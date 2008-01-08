@@ -2417,6 +2417,9 @@
 					RelativePath=".\Multiplayer\fresh_header.h">
 				</File>
 				<File
+					RelativePath=".\Multiplayer\network.h">
+				</File>
+				<File
 					RelativePath=".\Multiplayer\test_space.h">
 				</File>
 			</Filter>

@@ -18,48 +18,12 @@
 //#include "test_space.h"
 
 char net_div[30];
-
-typedef struct
-{
-	int	max_clients;
-	int	same_merc;
-	float damage_multiplier;
-	int interrupts;
-	INT16 gsMercArriveSectorX;
-	INT16 gsMercArriveSectorY;
-	int ENEMY_ENABLED;
-	int	CREATURE_ENABLED;
-	int	MILITIA_ENABLED;
-	int	CIV_ENABLED;
-	int gsPLAYER_BSIDE;
-	INT32 secs_per_tick;
-	INT32 starting_balance;
-	bool soDis_Bobby;
-	bool soDis_Equip;
-	BOOLEAN sofGunNut;	
-	UINT8	soubGameStyle;
-	UINT8	soubDifficultyLevel;
-	BOOLEAN	sofTurnTimeLimit;
-	BOOLEAN	sofIronManMode;
-	UINT8	soubBobbyRay;	
-	INT32 gsMAX_MERCS;
-	UINT8 client_num;
-	char client_name[30];
-	char client_names[4][30];
-} settings_struct;
-
-typedef struct
-{
-	UINT8 client_num;
-	char client_name[30];
-}client_info;
-
-
 INT32 gsMAX_MERCS;
 
 
 #include "connect.h"
 #include "message.h"
+#include "network.h"
 
 bool gsDis_Bobby;
 bool gsDis_Equip;
@@ -223,7 +187,11 @@ void requestSETTINGS(RPCParameters *rpcParameters)
 				lan.gsMAX_MERCS=gsMAX_MERCS;
 				
 				memcpy( lan.client_names , client_names, sizeof( char ) * 4 * 30 );
-			
+				lan.cl_ops[0]=clinf->cl_ops[0];
+				lan.cl_ops[1]=clinf->cl_ops[1];
+				lan.cl_ops[2]=clinf->cl_ops[2];
+				lan.cl_ops[3]=clinf->cl_ops[3];
+				//memcpy(lan.cl_ops,clinf->cl_ops,sizeof(int)*4);
 ////
 
 
@@ -278,7 +246,7 @@ void start_server (void)
 			GetPrivateProfileString( "Ja2_mp Settings","MILITIA_ENABLED", "", bteam3_enabled, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","CIV_ENABLED", "", bteam4_enabled, MAX_PATH, "..\\Ja2_mp.ini" );
 
-			GetPrivateProfileString( "Ja2_mp Settings","PLAYER_BSIDE", "", player_bside, MAX_PATH, "..\\Ja2_mp.ini" );
+			GetPrivateProfileString( "Ja2_mp Settings","Co_Op", "", player_bside, MAX_PATH, "..\\Ja2_mp.ini" );
 
 
 //something new

@@ -247,6 +247,8 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 	}
 	// Signal UI done enemy's turn
 	guiPendingOverrideEvent = LU_ENDUILOCK;
+	guiPendingOverrideEvent = LA_ENDUIOUTURNLOCK;
+	
 
   // ATE: Reset killed on attack variable.. this is because sometimes timing is such
   /// that a baddie can die and still maintain it's attacker ID
@@ -265,7 +267,14 @@ void FreezeInterfaceForEnemyTurn( void )
 	ErasePath( TRUE );
 
 	// Setup locked UI
-	guiPendingOverrideEvent = LU_BEGINUILOCK;
+	if(is_client)
+	{
+		guiPendingOverrideEvent = LA_BEGINUIOURTURNLOCK;
+	}
+	else 
+	{
+		guiPendingOverrideEvent = LU_BEGINUILOCK;
+	}
 
 	// Remove any UI messages!
 	if ( giUIMessageOverlay != -1 )
@@ -584,7 +593,14 @@ void DisplayHiddenInterrupt( SOLDIERTYPE * pSoldier )
 		SlideTo( NOWHERE, pSoldier->ubID, NOBODY ,SETLOCATOR);
 	}
 
-	guiPendingOverrideEvent = LU_BEGINUILOCK;
+		if(is_client)
+	{
+		guiPendingOverrideEvent = LA_BEGINUIOURTURNLOCK;
+	}
+	else 
+	{
+		guiPendingOverrideEvent = LU_BEGINUILOCK;
+	}
 
 	// Dirty panel interface!
 	fInterfacePanelDirty = DIRTYLEVEL2;
@@ -1199,7 +1215,14 @@ void EndInterrupt( BOOLEAN fMarkInterruptOccurred )
 				}
 
 				// Signal UI done enemy's turn
-				guiPendingOverrideEvent = LU_BEGINUILOCK;
+					if(is_client)
+	{
+		guiPendingOverrideEvent = LA_BEGINUIOURTURNLOCK;
+	}
+	else 
+	{
+		guiPendingOverrideEvent = LU_BEGINUILOCK;
+	}
 
 				ClearIntList();
 			}
@@ -1216,7 +1239,14 @@ void EndInterrupt( BOOLEAN fMarkInterruptOccurred )
 				}
 
 				// Signal UI done enemy's turn
-				guiPendingOverrideEvent = LU_BEGINUILOCK;
+					if(is_client)
+	{
+		guiPendingOverrideEvent = LA_BEGINUIOURTURNLOCK;
+	}
+	else 
+	{
+		guiPendingOverrideEvent = LU_BEGINUILOCK;
+	}
 
 				// must clear int list before ending turn
 				ClearIntList();
@@ -1229,7 +1259,14 @@ void EndInterrupt( BOOLEAN fMarkInterruptOccurred )
 	
 			gTacticalStatus.ubCurrentTeam = pSoldier->bTeam;
 			AddTopMessage( COMPUTER_TURN_MESSAGE, TeamTurnString[ gTacticalStatus.ubCurrentTeam ] );
-			guiPendingOverrideEvent = LU_BEGINUILOCK;
+				if(is_client)
+	{
+		guiPendingOverrideEvent = LA_BEGINUIOURTURNLOCK;
+	}
+	else 
+	{
+		guiPendingOverrideEvent = LU_BEGINUILOCK;
+	}
 
 			// must clear int list before ending turn
 			ClearIntList();
