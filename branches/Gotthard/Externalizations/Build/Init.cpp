@@ -171,11 +171,11 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	// Gotthard: Laptop Florist Locations - End
 
 	// Gotthard: Laptop Funeral Locations [2007-11-03]
-	strcpy(fileName, directoryName);
-	strcat(fileName, LAPTOPFUNERALLOCATIONFILENAME);
-	DebugMsg( TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
-	if(!ReadInFuneralLocations(fileName))
-		return FALSE;
+//	strcpy(fileName, directoryName);
+//	strcat(fileName, LAPTOPFUNERALLOCATIONFILENAME);
+//	DebugMsg( TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
+//	if(!ReadInFuneralLocations(fileName))
+//		return FALSE;
 	// Gotthard: Laptop Funeral Locations - End
 
 	// WANNE: Sector Loadscreens [2007-05-18]

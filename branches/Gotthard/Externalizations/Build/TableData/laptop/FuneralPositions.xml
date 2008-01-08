@@ -1,8 +1,9 @@
-<!-- The values between <TEXT></TEXT> can be changed, but there CANNOT BE ADDITIONS OR SUBTRACTIONS! -->
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The values between <TEXT></TEXT> can be changed, but there CANNOT BE ADDITIONS OR SUBTRACTIONS. -->
 <!-- NO WAY OR NO HOW DON'T EVEN THINK ABOUT IT.  -->
 <!-- The comments are just the name the constant has in the original source.  I might document them later if I figure out what they all do. -->
 <!-- Also, the font reading aren't working, so don't be surprised when a change there results in no in game changes. -->
-<?xml version="1.0" encoding="utf-8" ?>
+
 
 <FuneralLocations>
 

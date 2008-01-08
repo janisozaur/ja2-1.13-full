@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(JA2GAMEPATH)"
+			OutputDirectory="Z:\Alex Data\Wason.Data\JA2"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets=".\ja2_2005Express.vsprops;.\ja2_2005ExpressDebug.vsprops"
@@ -49,9 +49,9 @@
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
+				WarningLevel="0"
 				DebugInformationFormat="4"
-				DisableSpecificWarnings="4100"
+				DisableSpecificWarnings="4100;4201"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -98,7 +98,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(JA2GAMEPATH)"
+			OutputDirectory="Z:\Alex Data\Wason.Data\JA2"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets=".\ja2_2005Express.vsprops"

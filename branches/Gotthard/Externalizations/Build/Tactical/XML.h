@@ -95,7 +95,7 @@ typedef PARSE_STAGE;
 #define LAPTOPBOBBYRAYSTEXTFILENAME				"Laptop\\BobbyRays.xml"
 
 // Gotthard: Website Picture/Text Locations [2007-11-04]
-#define LAPTOPFLORISTLOCATIONFILENAME			"Laptop\\FloristLocation.xml"
+#define LAPTOPFLORISTLOCATIONFILENAME			"Laptop\\FloristLocations.xml"
 #define LAPTOPFUNERALLOCATIONFILENAME			"Laptop\\FuneralPositions.xml"
 
 extern BOOLEAN ReadInItemStats(STR fileName, BOOLEAN localizedVersion);

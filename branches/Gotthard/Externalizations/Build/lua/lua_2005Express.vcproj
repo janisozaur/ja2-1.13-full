@@ -46,7 +46,7 @@
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
+				WarningLevel="3"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4100"
 			/>

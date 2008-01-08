@@ -1,8 +1,9 @@
-<!-- The values between <TEXT></TEXT> can be changed, but there CANNOT BE ADDITIONS OR SUBTRACTIONS! -->
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The values between <TEXT></TEXT> can be changed, but there CANNOT BE ADDITIONS OR SUBTRACTIONS. -->
 <!-- NO WAY OR NO HOW DON'T EVEN THINK ABOUT IT.  -->
 <!-- Also, until the laptop drawing values are in here, if a text line is longer than the original, it might not draw correctly. -->
 
-<?xml version="1.0" encoding="utf-8" ?
+
 
 <FuneralData>
 
@@ -53,7 +54,7 @@
 </FuneralText>
 
 <FuneralText>
-<TEXT>Our sympathies do, however, go out to you at this trying time.  Please come again.</TEXT>
+<TEXT>Our sympathies do, however, go out to Alex at this trying time.  Please come again.</TEXT>
 </FuneralText>
 
 </FuneralData>
