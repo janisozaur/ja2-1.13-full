@@ -5460,8 +5460,6 @@ void RepairMenuMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-extern BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement );
-
 void MakeSureToolKitIsInHand( SOLDIERTYPE *pSoldier )
 {
 	INT8 bPocket = 0;

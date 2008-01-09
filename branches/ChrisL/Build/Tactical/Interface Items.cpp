@@ -1353,10 +1353,6 @@ BOOLEAN CheckActivationStatus(SOLDIERTYPE *pSoldier, INT16 cSlot, INT16 bSlot, I
 	return(FALSE);
 }
 
-/* CHRISL: This function needed to be reworked so that inactive pockets would be properly "hatched" and so
-that active, empty pockets will display the appropriate background silhouette. */
-extern BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement );
-
 void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLevel )
 {
 	// CHRISL: Only run if we're looking at a legitimate pocket

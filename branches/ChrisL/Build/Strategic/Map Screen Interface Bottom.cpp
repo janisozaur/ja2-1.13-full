@@ -282,7 +282,6 @@ void DeleteMapScreenInterfaceBottom( void )
 
 // Headrock: this function used to accept no arguments. It now accepts a Boolean so it can be forced to run
 // the whole process when we call it from other files. See also .h file!!!
-extern void BltCharInvPanel();
 void RenderMapScreenInterfaceBottom( BOOLEAN fForceMapscreenFullRender )
 {
 	// will render the map screen bottom interface
@@ -354,10 +353,6 @@ void RenderMapScreenInterfaceBottom( BOOLEAN fForceMapscreenFullRender )
 	EnableDisableMessageScrollButtonsAndRegions( );
 
 	EnableDisableBottomButtonsAndRegions( );
-
-	//CHRISL: Force a render of the inventory panel if it's already open
-	//if(fShowInventoryFlag)
-	//	BltCharInvPanel();
 
 	fMapBottomDirtied = FALSE;
 	return;

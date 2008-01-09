@@ -2530,6 +2530,25 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				}
 				break;
 
+			case 'E':
+				//CHRISL: drop all items
+				if ( gusSelectedSoldier != NOBODY )
+				{
+					SOLDIERTYPE *pSoldier = MercPtrs[ gusSelectedSoldier ];
+					for(int i = BODYPOSFINAL; i<NUM_INV_SLOTS; i++)
+					{
+						if(pSoldier->inv[i].exists() == true)
+						{
+							AddItemToPool(pSoldier->sGridNo, &pSoldier->inv[i], 1, pSoldier->pathing.bLevel, 0, -1);
+							//pSoldier->inv[i].initialize();
+							DeleteObj(&pSoldier->inv[i]);
+						}
+					}
+					fCharacterInfoPanelDirty = TRUE;
+					fInterfacePanelDirty = DIRTYLEVEL2;
+				}
+				break;
+
 			case 'f':
 				if( fCtrl )
 				{
@@ -2839,6 +2858,23 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				else
 				{
 					BeginKeyPanelFromKeyShortcut( );
+				}
+				break;
+
+			case 'K':
+				//CHRISL: Swap gunsling
+				if ( gusSelectedSoldier != NOBODY )
+				{
+					SOLDIERTYPE *pSoldier = MercPtrs[ gusSelectedSoldier ];
+					BOOLEAN handFit = (CanItemFitInPosition(pSoldier, &pSoldier->inv[HANDPOS], GUNSLINGPOCKPOS, FALSE) || (pSoldier->inv[HANDPOS].exists() == false && pSoldier->inv[SECONDHANDPOS].exists() == false));
+					BOOLEAN slingFit = (CanItemFitInPosition(pSoldier, &pSoldier->inv[GUNSLINGPOCKPOS], HANDPOS, FALSE) || pSoldier->inv[GUNSLINGPOCKPOS].exists() == false);
+					if( handFit == TRUE && slingFit == TRUE)
+					{
+						SwapObjs(&pSoldier->inv[HANDPOS], &pSoldier->inv[GUNSLINGPOCKPOS]);
+						HandleTacticalEffectsOfEquipmentChange(pSoldier, HANDPOS, pSoldier->inv[GUNSLINGPOCKPOS].usItem, pSoldier->inv[HANDPOS].usItem);
+					}
+					fCharacterInfoPanelDirty = TRUE;
+					fInterfacePanelDirty = DIRTYLEVEL2;
 				}
 				break;
 

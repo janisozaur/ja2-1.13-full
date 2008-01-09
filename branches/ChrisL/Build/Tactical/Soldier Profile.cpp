@@ -1097,10 +1097,18 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 	// Add this guy to our team!
 	pNewSoldier = ChangeSoldierTeam( pSoldier, gbPlayerNum );
 
-	//CHRISL: Updated to allow Slay to be permanently hired based on an INI flag
-	// handle set up any RPC's that will leave us in time
-	if ( ubCharNum == SLAY && gGameExternalOptions.fEnableSlayForever == FALSE )
+	if ( ubCharNum == SLAY )
 	{
+		if(gGameExternalOptions.fEnableSlayForever == TRUE)
+		{
+			if(gMercProfiles[ ubCharNum ].sSalary == 0)
+				gMercProfiles[ ubCharNum ].sSalary = gMercProfiles[ 7 ].sSalary;
+			if(gMercProfiles[ ubCharNum ].uiWeeklySalary == 0)
+				gMercProfiles[ ubCharNum ].uiWeeklySalary = gMercProfiles[ 7 ].uiWeeklySalary;
+			if(gMercProfiles[ ubCharNum ].uiBiWeeklySalary == 0)
+				gMercProfiles[ ubCharNum ].uiBiWeeklySalary = gMercProfiles[ 7 ].uiBiWeeklySalary;
+			pNewSoldier->iTotalContractLength = 7;
+		}
 		// slay will leave in a week
 		pNewSoldier->iEndofContractTime = GetWorldTotalMin() + ( 7 * 24 * 60 );
 
@@ -1154,6 +1162,10 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 	// Set whatkind of merc am i
 	pNewSoldier->ubWhatKindOfMercAmI = MERC_TYPE__NPC;
 
+	if ( ubCharNum == SLAY && gGameExternalOptions.fEnableSlayForever == TRUE )
+	{
+		pNewSoldier->ubWhatKindOfMercAmI = MERC_TYPE__AIM_MERC;
+	}
 
 	//
 	//add a history log that tells the user that a npc has joined the team

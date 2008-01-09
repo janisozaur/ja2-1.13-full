@@ -5,7 +5,6 @@
 	#include "Action Items.h"
 	#include "weapons.h"
 	#include "Interface Cursors.h"
-
 	#include "Soldier Control.h"
 	#include "overhead.h"
 	#include "Handle UI.h"
@@ -1996,7 +1995,7 @@ UINT8 AttachmentAPCost( UINT16 usAttachment, UINT16 usItem )
 //Determine if this item can receive this attachment.  This is different, in that it may
 //be possible to have this attachment on this item, but may already have an attachment on
 //it which doesn't work simultaneously with the new attachment (like a silencer and duckbill).
-BOOLEAN ValidItemAttachment( OBJECTTYPE * pObj, UINT16 usAttachment, BOOLEAN fAttemptingAttachment, BOOLEAN fDisplayMessage )
+BOOLEAN ValidItemAttachment( OBJECTTYPE * pObj, UINT16 usAttachment, BOOLEAN fAttemptingAttachment, BOOLEAN fDisplayMessage, UINT8 subObject )
 {
 	BOOLEAN		fSameItem = FALSE, fSimilarItems = FALSE;
 	UINT16		usSimilarItem = NOTHING;
@@ -2055,7 +2054,7 @@ BOOLEAN ValidItemAttachment( OBJECTTYPE * pObj, UINT16 usAttachment, BOOLEAN fAt
 		if ( IncompatibleAttachments[i][0] == NONE )
 			break;
 
-		if ( IncompatibleAttachments[i][0] == usAttachment && FindAttachment (pObj,IncompatibleAttachments[i][1]) != 0 )
+		if ( IncompatibleAttachments[i][0] == usAttachment && FindAttachment (pObj,IncompatibleAttachments[i][1],subObject) != 0 )
 		{
 			fSimilarItems = TRUE;
 			usSimilarItem = IncompatibleAttachments[i][1];
@@ -2727,9 +2726,10 @@ void DistributeStatus(OBJECTTYPE* pSourceObject, OBJECTTYPE* pTargetObject, INT1
 				bLoop2 = pTargetObject->ubNumberOfObjects - 1;
 			}
 
-			for (; bLoop2 >= 0; bLoop2-- )
+			//for (; bLoop2 >= 0; bLoop2-- )
+			for(int i = 0; i<=bLoop2; i++)
 			{
-				StackedObjectData* pDest = (*pTargetObject)[ bLoop ];
+				StackedObjectData* pDest = (*pTargetObject)[ i ];
 				if ( pDest->data.objectStatus < bMaxPoints )
 				{
 					bPointsToMove = bMaxPoints - pDest->data.objectStatus;
@@ -3379,7 +3379,7 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 	//if this is an attachment or ammo for a launchable item
 	fValidLaunchable = ValidLaunchable( pAttachment->usItem, this->usItem );
 	//CHRISL: If we don't want to play the sound, it's a good bet we don't want to display any messages either
-	if ( fValidLaunchable || ValidItemAttachment( this, pAttachment->usItem, TRUE, playSound ) )
+	if ( fValidLaunchable || ValidItemAttachment( this, pAttachment->usItem, TRUE, playSound, subObject ) )
 	{
 		//if there is already an attachment of the same type, we want to try swapping / replacing it
 		OBJECTTYPE* pAttachmentPosition = 0;
@@ -3422,7 +3422,7 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 				}
 			}
 
-			if ( ValidItemAttachment( this, pAttachment->usItem, TRUE ) && playSound ) // not launchable
+			if ( ValidItemAttachment( this, pAttachment->usItem, TRUE, TRUE, subObject  ) && playSound ) // not launchable
 			{
 				// attachment sounds
 				if ( Item[ this->usItem ].usItemClass & IC_WEAPON )

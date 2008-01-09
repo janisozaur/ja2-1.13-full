@@ -1516,6 +1516,10 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr, INT16 sGridNo )
 		{
 			break;
 		}
+		else
+		{
+			cnt++;
+		}
 	}
 
 

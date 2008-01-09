@@ -1090,7 +1090,6 @@ void UpdateSMPanel( )
 
 }
 
-extern BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement );
 extern INT8		gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
 
 
@@ -3587,20 +3586,19 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	// Dropping a pack?
 	if(newStatus)
 	{
+		// We need to clear any existing WorldItems that are linked with this soldier
+		for(unsigned int wi = 0; wi < guiNumWorldItems; wi++)
+		{
+			if(gWorldItems[wi].soldierID == pSoldier->ubID)
+			{
+				gWorldItems[wi].soldierID = -1;
+			}
+		}
 		MoveItemToLBEItem( pSoldier, BPACKPOCKPOS );
-		AddItemToPoolAndGetIndex(pSoldier->sGridNo, &pSoldier->inv[BPACKPOCKPOS], 1, pSoldier->pathing.bLevel, 0 , -1, -1, &worldKey );
+		AddItemToPoolAndGetIndex(pSoldier->sGridNo, &pSoldier->inv[BPACKPOCKPOS], 1, pSoldier->pathing.bLevel, 0 , -1, pSoldier->ubID, &worldKey );
 		// Item successfully added to world
 		if(worldKey != ITEM_NOT_FOUND)
 		{
-			// We need to clear any existing WorldItems that are linked with this soldier
-			for(unsigned int wi = 0; wi < guiNumWorldItems; wi++)
-			{
-				if(gWorldItems[wi].soldierID == pSoldier->ubID)
-				{
-					gWorldItems[wi].soldierID = -1;
-				}
-			}
-			gWorldItems[worldKey].soldierID = pSoldier->ubID;
 			NotifySoldiersToLookforItems( );
 			DeleteObj(&pSoldier->inv[BPACKPOCKPOS]);
 			pSoldier->flags.DropPackFlag = newStatus;
@@ -3612,7 +3610,7 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	{
 		for(unsigned int wi = 0; wi < guiNumWorldItems; wi++)
 		{
-			if(gWorldItems[wi].soldierID == pSoldier->ubID && gWorldItems[wi].object.exists() == true)
+			if(gWorldItems[wi].soldierID == pSoldier->ubID && gWorldItems[wi].object.exists() == true && LoadBearingEquipment[Item[gWorldItems[wi].object.usItem].ubClassIndex].lbeClass == BACKPACK)
 			{
 				for (int x = 0; x < gWorldItems[wi].object.ubNumberOfObjects; ++x) {
 					// Is the item we dropped in this sector and does it have an active LBENODE flag?
@@ -3640,7 +3638,7 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 				break;
 			}
 		}
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, NewInvMessage[NIV_NO_PACK] );
+		//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, NewInvMessage[NIV_NO_PACK] );
 	}
 
 	return TRUE;

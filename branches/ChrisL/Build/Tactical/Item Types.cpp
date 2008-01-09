@@ -162,8 +162,6 @@ void MoveItemsInSlotsToLBE( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, 
 	return;
 }
 
-extern BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement );
-
 // CHRISL: New function to move items from default pockets to usable pockets
 BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBESlots, UINT32 uiHandPos, OBJECTTYPE *pObj )
 {
@@ -195,8 +193,17 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBES
 			}
 			if(flag)
 				continue;
+			//CHRISL: If we're putting on a BackPack or Combat Pack, we need to make sure we don't accidently break the
+			//	pack rules since, at this stage, our new pack actually hasn't been placed.
 			if(pSoldier->inv[i].exists() == false)	// No item in this pocket.  Place the item.
 			{
+				if((i == CPACKPOCKPOS && uiHandPos == BPACKPOCKPOS) || (i == BPACKPOCKPOS && uiHandPos == CPACKPOCKPOS))
+				{
+					UINT8 newPack = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeCombo;
+					UINT8 chkPack = LoadBearingEquipment[Item[pSoldier->inv[LBESlots[x]].usItem].ubClassIndex].lbeCombo;
+					if(newPack == 0 || newPack != chkPack)
+						continue;
+				}
 				if(CanItemFitInPosition(pSoldier, &(pSoldier->inv[LBESlots[x]]), i, FALSE))
 				{
 					pSoldier->inv[LBESlots[x]].MoveThisObjectTo(pSoldier->inv[i], ALL_OBJECTS, pSoldier, i);

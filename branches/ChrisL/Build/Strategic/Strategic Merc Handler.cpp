@@ -231,13 +231,13 @@ void MercDailyUpdate()
 			// ATE; Reset found something nice flag...
 			pSoldier->usQuoteSaidFlags &= ( ~SOLDIER_QUOTE_SAID_FOUND_SOMETHING_NICE );
 
-		// ATE: Decrement tolerance value...
-		pSoldier->bCorpseQuoteTolerance--;
+			// ATE: Decrement tolerance value...
+			pSoldier->bCorpseQuoteTolerance--;
 
-		if ( pSoldier->bCorpseQuoteTolerance < 0 )
-		{
-		pSoldier->bCorpseQuoteTolerance = 0;
-		}
+			if ( pSoldier->bCorpseQuoteTolerance < 0 )
+			{
+			pSoldier->bCorpseQuoteTolerance = 0;
+			}
 
 			// CJC: For some personalities, reset personality quote said flag
 			if ( pSoldier->ubProfile != NO_PROFILE )
@@ -271,8 +271,12 @@ void MercDailyUpdate()
 			gMercProfiles[pSoldier->ubProfile].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
 
 
+			//handle Slay differently if SlayForever is enabled
+			if( pSoldier->ubProfile == SLAY && gGameExternalOptions.fEnableSlayForever == TRUE)
+			{
+			}
 			//if the character is an RPC
-			if( pSoldier->ubProfile >= FIRST_RPC && pSoldier->ubProfile < FIRST_NPC )
+			else if( pSoldier->ubProfile >= FIRST_RPC && pSoldier->ubProfile < FIRST_NPC )
 			{
 				INT16	sSalary = gMercProfiles[ pSoldier->ubProfile ].sSalary;
 				INT32	iMoneyOwedToMerc = 0;

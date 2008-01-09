@@ -6140,6 +6140,31 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 						gfHotKeyEnterSector = TRUE;
 					}
 					break;
+				case 'E':
+					//CHRISL: drop all items
+					if ( bSelectedInfoChar != -1 && fShowInventoryFlag )
+					{
+						SOLDIERTYPE *pSoldier = MercPtrs[ gCharactersList[ bSelectedInfoChar ].usSolID ];
+						for(int i = BODYPOSFINAL; i<NUM_INV_SLOTS; i++)
+						{
+							if(pSoldier->inv[i].exists() == true)
+							{
+								if(fShowMapInventoryPool)
+								{
+									AutoPlaceObjectInInventoryStash(&pSoldier->inv[i], pSoldier->sGridNo);
+								}
+								else
+								{
+									AddItemToPool(pSoldier->sGridNo, &pSoldier->inv[i], 1, pSoldier->pathing.bLevel, 0, -1);
+								}
+								DeleteObj(&pSoldier->inv[i]);
+							}
+							fTeamPanelDirty = TRUE;
+							fMapPanelDirty = TRUE;
+							fInterfacePanelDirty = DIRTYLEVEL2;
+						}
+					}
+					break;
 				case 'f':
 					#ifdef JA2TESTVERSION
 					// CTRL-F: Refuel vehicle
@@ -6227,6 +6252,24 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 					#endif
 
 					break;
+
+				case 'K':
+					//CHRISL: Swap gunsling
+					if ( bSelectedInfoChar != -1 && fShowInventoryFlag )
+					{
+						SOLDIERTYPE *pSoldier = MercPtrs[ gCharactersList[ bSelectedInfoChar ].usSolID ];
+						BOOLEAN handFit = (CanItemFitInPosition(pSoldier, &pSoldier->inv[HANDPOS], GUNSLINGPOCKPOS, FALSE) || (pSoldier->inv[HANDPOS].exists() == false && pSoldier->inv[SECONDHANDPOS].exists() == false));
+						BOOLEAN slingFit = (CanItemFitInPosition(pSoldier, &pSoldier->inv[GUNSLINGPOCKPOS], HANDPOS, FALSE) || pSoldier->inv[GUNSLINGPOCKPOS].exists() == false);
+						if( handFit == TRUE && slingFit == TRUE)
+						{
+							SwapObjs(&pSoldier->inv[HANDPOS], &pSoldier->inv[GUNSLINGPOCKPOS]);
+						}
+						fTeamPanelDirty = TRUE;
+						fMapPanelDirty = TRUE;
+						fInterfacePanelDirty = DIRTYLEVEL2;
+					}
+					break;
+
 				case 'l':
 					if( fAlt )
 					{
@@ -7609,7 +7652,6 @@ BOOLEAN MAPInternalInitItemDescriptionBox( OBJECTTYPE *pObject, UINT8 ubStatusIn
 
 //CHRISL: functons for LBENODE system
 extern BOOLEAN ChangeZipperStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus);
-extern BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement );
 
 // this is Map Screen's version of SMInvClickCallback()
 void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
