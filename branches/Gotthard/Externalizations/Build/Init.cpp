@@ -126,7 +126,7 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	// WANNE: Enemy drops - end
 	
 	// Gotthard: Loading external Florist Data Text [2007-10-16]
-
+/*
 	strcpy(fileName, directoryName);
 	strcat(fileName, LAPTOPFLORISTTEXTFILENAME);
 	DebugMsg( TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));

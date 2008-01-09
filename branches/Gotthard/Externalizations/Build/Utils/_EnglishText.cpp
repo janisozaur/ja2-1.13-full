@@ -878,7 +878,7 @@ STR16 pDirectionStr[] =
 // These are the different terrain types. 
 //Commented out to allow it to read in from the SectorNames.xml for externalization.  Gotthard 10-20-07
 //Although I just realized, wouldn't it just overwrite everything from the .xml?  Could cut out some code though and decrease size of exucutable maybe... 
-STR16 pLandTypeStrings[40] /*=
+STR16 pLandTypeStrings[40] =
 {
 	L"Urban",
 	L"Road",
@@ -924,7 +924,7 @@ STR16 pLandTypeStrings[40] /*=
 										//leading to the secret shelter underneath the palace
 	L"Shelter",				//The shelter underneath the queen's palace
 	L"",							//Unused
-}*/;
+};
 
 STR16 gpStrategicString[] =
 {
@@ -2672,7 +2672,7 @@ STR16			MercHomePageText[] =
 
 // For use at MiGillicutty's Web Page.
 //Commented out so the new data in the Funeral.xml file is used.  Gotthard 10/18/07
-STR16			sFuneralString[12]/* =
+STR16			sFuneralString[12] =
 {
 	L"McGillicutty's Mortuary: Helping families grieve since 1983.",
 	L"Funeral Director and former A.I.M. mercenary Murray \"Pops\" McGillicutty is a highly skilled and experienced mortician.",
@@ -2690,7 +2690,7 @@ STR16			sFuneralString[12]/* =
 	// The text that comes up when you click on any of the links ( except for send flowers ).
 	L"Regretably, the remainder of this site has not been completed due to a death in the family. Pending reading of the will and disbursement of assets, the site will be completed as soon as possible.",
 	L"Our sympathies do, however, go out to you at this trying time.  Please come again.",
-}*/;
+};
 
 // Text for the florist Home page
 //Commented out so the new data in the Florist.xml file is used.  Gotthard 10/18/07
