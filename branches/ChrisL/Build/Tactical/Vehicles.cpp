@@ -2369,7 +2369,7 @@ BOOLEAN SoldierMustDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId, BOOLEA
 	if ( CanSoldierDriveVehicle( pSoldier, iVehicleId, TRUE ) )
 	{
 		// and he's the ONLY one aboard who can do so
-		if ( OnlyThisSoldierCanDriveVehicle( pSoldier, iVehicleId ) )
+		if ( OnlythisCanDriveVehicle( pSoldier, iVehicleId ) )
 		{
 			return( TRUE );
 		}
@@ -2381,7 +2381,7 @@ BOOLEAN SoldierMustDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId, BOOLEA
 
 
 
-BOOLEAN OnlyThisSoldierCanDriveVehicle( SOLDIERTYPE *pThisSoldier, INT32 iVehicleId )
+BOOLEAN OnlythisCanDriveVehicle( SOLDIERTYPE *pthis, INT32 iVehicleId )
 {
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
@@ -2393,7 +2393,7 @@ BOOLEAN OnlyThisSoldierCanDriveVehicle( SOLDIERTYPE *pThisSoldier, INT32 iVehicl
 		pSoldier = &Menptr[ iCounter ];
 
 		// skip checking THIS soldier, we wanna know about everyone else
-		if ( pSoldier == pThisSoldier )
+		if ( pSoldier == pthis )
 		{
 			continue;
 		}

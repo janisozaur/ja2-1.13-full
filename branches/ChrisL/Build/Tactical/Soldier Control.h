@@ -324,7 +324,8 @@ enum
 struct LEVELNODE;
 
 //ADB makes the code clearer, used like "thisSoldier->foo();"
-#define thisSoldier this
+//CHRISL: Not sure if it make the code easier to read or not, but it does make it harder to debug
+//#define thisSoldier this
 
 //forward declarations for versioning, it's so long I want it at the end
 class OLDSOLDIERTYPE_101;

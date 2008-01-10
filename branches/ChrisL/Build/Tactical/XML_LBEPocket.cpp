@@ -53,41 +53,41 @@ lbepocketStartElementHandle(void *userData, const XML_Char *name, const XML_Char
 				strcmp(name, "pSilhouette") == 0 ||
 				strcmp(name, "pType") == 0 ||
 				strcmp(name, "pRestriction") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.0") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.1") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.2") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.3") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.4") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.5") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.6") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.7") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.8") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.9") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.10") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.11") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.12") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.13") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.14") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.15") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.16") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.17") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.18") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.19") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.20") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.21") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.22") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.23") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.24") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.25") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.26") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.27") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.28") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.29") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.30") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.31") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.32") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.33") == 0 ||
-				strcmp(name, "ItemCapacityPerSize.34") == 0 ))
+				strcmp(name, "ItemCapacityPerSize.0") == 0 || strcmp(name, "ItemCapacityPerSize0") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.1") == 0 || strcmp(name, "ItemCapacityPerSize1") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.2") == 0 || strcmp(name, "ItemCapacityPerSize2") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.3") == 0 || strcmp(name, "ItemCapacityPerSize3") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.4") == 0 || strcmp(name, "ItemCapacityPerSize4") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.5") == 0 || strcmp(name, "ItemCapacityPerSize5") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.6") == 0 || strcmp(name, "ItemCapacityPerSize6") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.7") == 0 || strcmp(name, "ItemCapacityPerSize7") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.8") == 0 || strcmp(name, "ItemCapacityPerSize8") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.9") == 0 || strcmp(name, "ItemCapacityPerSize9") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.10") == 0 || strcmp(name, "ItemCapacityPerSize10") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.11") == 0 || strcmp(name, "ItemCapacityPerSize11") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.12") == 0 || strcmp(name, "ItemCapacityPerSize12") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.13") == 0 || strcmp(name, "ItemCapacityPerSize13") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.14") == 0 || strcmp(name, "ItemCapacityPerSize14") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.15") == 0 || strcmp(name, "ItemCapacityPerSize15") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.16") == 0 || strcmp(name, "ItemCapacityPerSize16") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.17") == 0 || strcmp(name, "ItemCapacityPerSize17") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.18") == 0 || strcmp(name, "ItemCapacityPerSize18") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.19") == 0 || strcmp(name, "ItemCapacityPerSize19") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.20") == 0 || strcmp(name, "ItemCapacityPerSize20") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.21") == 0 || strcmp(name, "ItemCapacityPerSize21") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.22") == 0 || strcmp(name, "ItemCapacityPerSize22") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.23") == 0 || strcmp(name, "ItemCapacityPerSize23") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.24") == 0 || strcmp(name, "ItemCapacityPerSize24") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.25") == 0 || strcmp(name, "ItemCapacityPerSize25") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.26") == 0 || strcmp(name, "ItemCapacityPerSize26") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.27") == 0 || strcmp(name, "ItemCapacityPerSize27") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.28") == 0 || strcmp(name, "ItemCapacityPerSize28") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.29") == 0 || strcmp(name, "ItemCapacityPerSize29") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.30") == 0 || strcmp(name, "ItemCapacityPerSize30") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.31") == 0 || strcmp(name, "ItemCapacityPerSize31") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.32") == 0 || strcmp(name, "ItemCapacityPerSize32") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.33") == 0 || strcmp(name, "ItemCapacityPerSize33") == 0 ||
+				strcmp(name, "ItemCapacityPerSize.34") == 0 || strcmp(name, "ItemCapacityPerSize34") == 0 ))
 		{
 			pData->curElement = ELEMENT_PROPERTY;
 
@@ -161,177 +161,177 @@ lbepocketEndElementHandle(void *userData, const XML_Char *name)
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.pRestriction = (UINT32) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.0") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.0") == 0 || strcmp(name, "ItemCapacityPerSize0") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[0] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.1") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.1") == 0 || strcmp(name, "ItemCapacityPerSize1") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[1] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.2") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.2") == 0 || strcmp(name, "ItemCapacityPerSize2") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[2] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.3") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.3") == 0 || strcmp(name, "ItemCapacityPerSize3") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[3] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.4") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.4") == 0 || strcmp(name, "ItemCapacityPerSize4") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[4] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.5") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.5") == 0 || strcmp(name, "ItemCapacityPerSize5") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[5] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.6") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.6") == 0 || strcmp(name, "ItemCapacityPerSize6") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[6] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.7") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.7") == 0 || strcmp(name, "ItemCapacityPerSize7") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[7] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.8") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.8") == 0 || strcmp(name, "ItemCapacityPerSize8") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[8] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.9") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.9") == 0 || strcmp(name, "ItemCapacityPerSize9") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[9] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.10") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.10") == 0 || strcmp(name, "ItemCapacityPerSize10") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[10] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.11") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.11") == 0 || strcmp(name, "ItemCapacityPerSize11") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[11] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.12") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.12") == 0 || strcmp(name, "ItemCapacityPerSize12") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[12] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.13") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.13") == 0 || strcmp(name, "ItemCapacityPerSize13") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[13] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.14") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.14") == 0 || strcmp(name, "ItemCapacityPerSize14") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[14] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.15") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.15") == 0 || strcmp(name, "ItemCapacityPerSize15") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[15] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.16") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.16") == 0 || strcmp(name, "ItemCapacityPerSize16") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[16] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.17") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.17") == 0 || strcmp(name, "ItemCapacityPerSize17") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[17] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.18") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.18") == 0 || strcmp(name, "ItemCapacityPerSize18") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[18] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.19") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.19") == 0 || strcmp(name, "ItemCapacityPerSize19") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[19] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.20") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.20") == 0 || strcmp(name, "ItemCapacityPerSize20") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[20] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.21") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.21") == 0 || strcmp(name, "ItemCapacityPerSize21") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[21] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.22") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.22") == 0 || strcmp(name, "ItemCapacityPerSize22") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[22] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.23") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.23") == 0 || strcmp(name, "ItemCapacityPerSize23") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[23] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.24") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.24") == 0 || strcmp(name, "ItemCapacityPerSize24") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[24] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.25") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.25") == 0 || strcmp(name, "ItemCapacityPerSize25") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[25] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.26") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.26") == 0 || strcmp(name, "ItemCapacityPerSize26") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[26] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.27") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.27") == 0 || strcmp(name, "ItemCapacityPerSize27") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[27] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.28") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.28") == 0 || strcmp(name, "ItemCapacityPerSize28") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[28] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.29") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.29") == 0 || strcmp(name, "ItemCapacityPerSize29") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[29] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.30") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.30") == 0 || strcmp(name, "ItemCapacityPerSize30") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[30] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.31") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.31") == 0 || strcmp(name, "ItemCapacityPerSize31") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[31] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.32") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.32") == 0 || strcmp(name, "ItemCapacityPerSize32") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[32] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.33") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.33") == 0 || strcmp(name, "ItemCapacityPerSize33") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[33] = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "ItemCapacityPerSize.34") == 0)
+		else if(strcmp(name, "ItemCapacityPerSize.34") == 0 || strcmp(name, "ItemCapacityPerSize34") == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curLBEPocket.ItemCapacityPerSize[34] = (UINT8) atol(pData->szCharData);
@@ -432,41 +432,41 @@ BOOLEAN WriteLBEPocketEquipmentStats()
 			FilePrintf(hFile,"\t\t<pSilhouette>%d</pSilhouette>\r\n",								LBEPocketType[cnt].pSilhouette  );
 			FilePrintf(hFile,"\t\t<pType>%d</pType>\r\n",								LBEPocketType[cnt].pType   );
 			FilePrintf(hFile,"\t\t<pRestriction>%d</pRestriction>\r\n",						LBEPocketType[cnt].pRestriction	);
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.0>%d</ItemCapacityPerSize.0>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[0]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.1>%d</ItemCapacityPerSize.1>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[1]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.2>%d</ItemCapacityPerSize.2>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[2]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.3>%d</ItemCapacityPerSize.3>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[3]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.4>%d</ItemCapacityPerSize.4>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[4]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.5>%d</ItemCapacityPerSize.5>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[5]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.6>%d</ItemCapacityPerSize.6>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[6]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.7>%d</ItemCapacityPerSize.7>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[7]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.8>%d</ItemCapacityPerSize.8>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[8]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.9>%d</ItemCapacityPerSize.9>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[9]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.10>%d</ItemCapacityPerSize.10>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[10]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.11>%d</ItemCapacityPerSize.11>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[11]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.12>%d</ItemCapacityPerSize.12>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[12]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.13>%d</ItemCapacityPerSize.13>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[13]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.14>%d</ItemCapacityPerSize.14>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[14]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.15>%d</ItemCapacityPerSize.15>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[15]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.16>%d</ItemCapacityPerSize.16>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[16]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.17>%d</ItemCapacityPerSize.17>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[17]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.18>%d</ItemCapacityPerSize.18>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[18]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.19>%d</ItemCapacityPerSize.19>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[19]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.20>%d</ItemCapacityPerSize.20>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[20]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.21>%d</ItemCapacityPerSize.21>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[21]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.22>%d</ItemCapacityPerSize.22>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[22]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.23>%d</ItemCapacityPerSize.23>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[23]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.24>%d</ItemCapacityPerSize.24>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[24]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.25>%d</ItemCapacityPerSize.25>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[25]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.26>%d</ItemCapacityPerSize.26>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[26]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.27>%d</ItemCapacityPerSize.27>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[27]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.28>%d</ItemCapacityPerSize.28>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[28]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.29>%d</ItemCapacityPerSize.29>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[29]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.30>%d</ItemCapacityPerSize.30>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[30]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.31>%d</ItemCapacityPerSize.31>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[31]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.32>%d</ItemCapacityPerSize.32>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[32]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.33>%d</ItemCapacityPerSize.33>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[33]   );
-			FilePrintf(hFile,"\t\t<ItemCapacityPerSize.34>%d</ItemCapacityPerSize.34>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[34]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize0>%d</ItemCapacityPerSize0>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[0]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize1>%d</ItemCapacityPerSize1>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[1]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize2>%d</ItemCapacityPerSize2>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[2]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize3>%d</ItemCapacityPerSize3>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[3]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize4>%d</ItemCapacityPerSize4>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[4]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize5>%d</ItemCapacityPerSize5>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[5]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize6>%d</ItemCapacityPerSize6>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[6]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize7>%d</ItemCapacityPerSize7>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[7]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize8>%d</ItemCapacityPerSize8>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[8]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize9>%d</ItemCapacityPerSize9>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[9]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize10>%d</ItemCapacityPerSize10>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[10]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize11>%d</ItemCapacityPerSize11>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[11]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize12>%d</ItemCapacityPerSize12>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[12]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize13>%d</ItemCapacityPerSize13>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[13]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize14>%d</ItemCapacityPerSize14>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[14]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize15>%d</ItemCapacityPerSize15>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[15]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize16>%d</ItemCapacityPerSize16>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[16]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize17>%d</ItemCapacityPerSize17>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[17]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize18>%d</ItemCapacityPerSize18>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[18]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize19>%d</ItemCapacityPerSize19>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[19]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize20>%d</ItemCapacityPerSize20>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[20]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize21>%d</ItemCapacityPerSize21>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[21]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize22>%d</ItemCapacityPerSize22>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[22]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize23>%d</ItemCapacityPerSize23>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[23]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize24>%d</ItemCapacityPerSize24>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[24]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize25>%d</ItemCapacityPerSize25>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[25]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize26>%d</ItemCapacityPerSize26>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[26]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize27>%d</ItemCapacityPerSize27>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[27]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize28>%d</ItemCapacityPerSize28>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[28]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize29>%d</ItemCapacityPerSize29>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[29]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize30>%d</ItemCapacityPerSize30>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[30]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize31>%d</ItemCapacityPerSize31>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[31]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize32>%d</ItemCapacityPerSize32>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[32]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize33>%d</ItemCapacityPerSize33>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[33]   );
+			FilePrintf(hFile,"\t\t<ItemCapacityPerSize34>%d</ItemCapacityPerSize34>\r\n",								LBEPocketType[cnt].ItemCapacityPerSize[34]   );
 
 			FilePrintf(hFile,"\t</POCKET>\r\n");
 		}

@@ -92,7 +92,7 @@ UINT32 GetEtaGivenRoute( PathStPtr pPath );
 void RebuildWayPointsForGroupPath( PathStPtr pHeadOfPath, INT16 sMvtGroup );
 
 // clear strategic movement (mercpaths and waypoints) for this soldier, and his group (including its vehicles)
-void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier );
+void ClearMvtForthisAndGang( SOLDIERTYPE *pSoldier );
 
 // start movement of this group to this sector...not to be used by the player merc groups.
 BOOLEAN MoveGroupFromSectorToSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY );

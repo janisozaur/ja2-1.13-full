@@ -1088,14 +1088,14 @@ INT16 SOLDIERTYPE::GetMaxDistanceVisible(INT16 sGridNo, INT8 bLevel, int calcAsT
 		return MaxNormalDistanceVisible();
 	}
 	if (bLevel == -1) {
-		bLevel = thisSoldier->pathing.bLevel;
+		bLevel = this->pathing.bLevel;
 	}
 
 	if (calcAsType == CALC_FROM_ALL_DIRS) {
-		return DistanceVisible( thisSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel );
+		return DistanceVisible( this, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel );
 	}
 	else {
-		return DistanceVisible( thisSoldier, (SoldierHasLimitedVision(thisSoldier) ? thisSoldier->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sGridNo, bLevel );
+		return DistanceVisible( this, (SoldierHasLimitedVision(this) ? this->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sGridNo, bLevel );
 	}
 }
 

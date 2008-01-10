@@ -974,7 +974,7 @@ void DisplayCharacterInfo( void );
 void UpDateStatusOfContractBox( void );
 
 // get which index in the mapscreen character list is this guy
-INT32 GetIndexForThisSoldier( SOLDIERTYPE *pSoldier );
+INT32 GetIndexForthis( SOLDIERTYPE *pSoldier );
 
 void CheckForAndRenderNewMailOverlay();
 
@@ -6440,7 +6440,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 							CancelMapUIMessage( );
 
 							// clear their strategic movement (mercpaths and waypoints)
-							ClearMvtForThisSoldierAndGang( pSoldier );
+							ClearMvtForthisAndGang( pSoldier );
 
 							// select this sector
 							ChangeSelectedMapSector( sMapX, sMapY, 0 );
@@ -9234,7 +9234,7 @@ void TeamListContractRegionMvtCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 
 
 
-INT32 GetIndexForThisSoldier( SOLDIERTYPE *pSoldier )
+INT32 GetIndexForthis( SOLDIERTYPE *pSoldier )
 {
 	INT32 iLastGuy;
 	INT32 iIndex = 0;

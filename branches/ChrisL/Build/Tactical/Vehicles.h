@@ -220,7 +220,7 @@ void AddVehicleFuelToSave( );
 
 BOOLEAN CanSoldierDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId, BOOLEAN fIgnoreAsleep ); 
 BOOLEAN SoldierMustDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId, BOOLEAN fTryingToTravel );
-BOOLEAN OnlyThisSoldierCanDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId );
+BOOLEAN OnlythisCanDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId );
 
 BOOLEAN IsEnoughSpaceInVehicle( INT32 iID );
 
