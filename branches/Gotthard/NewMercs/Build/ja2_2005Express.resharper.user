@@ -1,0 +1,54 @@
+<Configuration>
+  <SharedSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </SharedSolutionDisabledTemplatesManager>
+  <UserSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </UserSolutionDisabledTemplatesManager>
+  <FileStructureView>
+    <AutoScrollToSource>False</AutoScrollToSource>
+    <TrackCaretLocation>False</TrackCaretLocation>
+  </FileStructureView>
+  <ReFormatCode>
+    <ReorderMembers>False</ReorderMembers>
+    <OptimizeUsings>False</OptimizeUsings>
+    <RemoveRedundantThis>False</RemoveRedundantThis>
+    <ShortenReferences>False</ShortenReferences>
+  </ReFormatCode>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <EditorManager>
+    <RecentFiles>
+      <File id="AB8837DB-0435-40C7-916A-0AACF5CFF1C4/f:strategicmap.cpp" caret="141312" scrollPosition="0|4463" />
+      <File id="D4BDA6AD-9B61-4953-892D-DA3F8CC7E096/f:PATHAI.cpp" caret="23983" scrollPosition="0|861" />
+      <File id="6283CE93-2960-4596-8E74-7A6FBA8716FF/f:himage.h" caret="1539" scrollPosition="0|36" />
+      <File id="D4BDA6AD-9B61-4953-892D-DA3F8CC7E096/f:PATHAI.H" caret="233" scrollPosition="0|3" />
+      <File id="D4BDA6AD-9B61-4953-892D-DA3F8CC7E096/f:Interface Items.cpp" caret="109610" scrollPosition="0|3499" />
+      <File id="262A5F80-0B99-4E8E-A6C7-74CB1FD0A67C/f:_EnglishText.cpp" caret="5776" scrollPosition="0|96" />
+      <File id="F44669E7-74AC-444B-B75F-F16F4B9F0265/f:Credits.cpp" caret="29034" scrollPosition="0|1177" />
+      <File id="6283CE93-2960-4596-8E74-7A6FBA8716FF/f:DEBUG.cpp" caret="11344" scrollPosition="0|489" />
+      <File id="D4BDA6AD-9B61-4953-892D-DA3F8CC7E096/f:Items.cpp" caret="180876" scrollPosition="0|4850" />
+      <File id="5234CD2E-97F1-42FF-828D-CE0A1B46805E/f:finances.h" caret="265" scrollPosition="0|0" />
+      <File id="5234CD2E-97F1-42FF-828D-CE0A1B46805E/f:finances.cpp" caret="44872" scrollPosition="0|1621" />
+      <File id="262A5F80-0B99-4E8E-A6C7-74CB1FD0A67C/f:XML_Items.cpp" caret="33195" scrollPosition="0|992" />
+      <File id="F44669E7-74AC-444B-B75F-F16F4B9F0265/f:Init.cpp" caret="5188" scrollPosition="0|160" />
+      <File id="D4BDA6AD-9B61-4953-892D-DA3F8CC7E096/f:XML.h" caret="531" scrollPosition="0|0" />
+      <File id="6283CE93-2960-4596-8E74-7A6FBA8716FF/f:Random.cpp" caret="1291" scrollPosition="0|41" />
+      <File id="D4BDA6AD-9B61-4953-892D-DA3F8CC7E096/f:EnemyItemDrops.h" caret="86" scrollPosition="0|0" />
+      <File id="D4BDA6AD-9B61-4953-892D-DA3F8CC7E096/f:Inventory Choosing.cpp" caret="56429" scrollPosition="0|1716" />
+      <File id="F44669E7-74AC-444B-B75F-F16F4B9F0265/f:GameSettings.cpp" caret="34782" scrollPosition="0|626" />
+      <File id="D4BDA6AD-9B61-4953-892D-DA3F8CC7E096/f:Inventory Choosing.h" caret="2483" scrollPosition="0|59" />
+      <File id="D4BDA6AD-9B61-4953-892D-DA3F8CC7E096/f:Turn Based Input.cpp" caret="68161" scrollPosition="0|2823" />
+      <File id="D4BDA6AD-9B61-4953-892D-DA3F8CC7E096/f:Handle UI.cpp" caret="25157" scrollPosition="0|644" />
+      <File id="AB8837DB-0435-40C7-916A-0AACF5CFF1C4/f:Queen Command.cpp" caret="5706" scrollPosition="0|199" />
+      <File id="D4BDA6AD-9B61-4953-892D-DA3F8CC7E096/f:Map Information.h" caret="1576" scrollPosition="0|7" />
+      <File id="FC1938E8-9253-49A8-AA99-4639BBB46C1B/f:worlddef.cpp" caret="96020" scrollPosition="0|3168" />
+      <File id="D4BDA6AD-9B61-4953-892D-DA3F8CC7E096/f:Map Information.cpp" caret="957" scrollPosition="0|25" />
+      <File id="D4BDA6AD-9B61-4953-892D-DA3F8CC7E096/f:Points.cpp" caret="458" scrollPosition="0|18" />
+      <File id="F44669E7-74AC-444B-B75F-F16F4B9F0265/f:GameVersion.cpp" caret="191" scrollPosition="0|6" />
+      <File id="F44669E7-74AC-444B-B75F-F16F4B9F0265/f:Language Defines.h" caret="1093" scrollPosition="0|0" />
+    </RecentFiles>
+  </EditorManager>
+  <CompletionStatisticsManager />
+</Configuration>
