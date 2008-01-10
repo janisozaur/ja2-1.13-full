@@ -133,7 +133,7 @@ LAPTOP_SCREEN_WEB_UL_Y + 74,
 
 (LAPTOP_SCREEN_UL_X + 0),
 LAPTOP_SCREEN_WEB_UL_Y + 48,
-(613 - 111)	,
+(613 - 111),
 
 (LAPTOP_SCREEN_UL_X + 7) + 88,//Previously FLOR_GALLERY_FLOWER_BUTTON_X
 
@@ -370,10 +370,10 @@ BOOLEAN InitFlowerButtons()
   VOBJECT_DESC    VObjectDesc;
 
 	
-	if( (FLOR_GALLERY_NUMBER_FLORAL_IMAGES - gubCurFlowerIndex) >= 3 )
+	if( (iFloristGalleryConstants[FLOR_GALLERY_NUMBER_FLORAL_IMAGES] - gubCurFlowerIndex) >= 3 )
 		gubCurNumberOfFlowers = 3;
 	else
-		gubCurNumberOfFlowers = FLOR_GALLERY_NUMBER_FLORAL_IMAGES - gubCurFlowerIndex;
+		gubCurNumberOfFlowers = iFloristGalleryConstants[FLOR_GALLERY_NUMBER_FLORAL_IMAGES] - gubCurFlowerIndex;
 
 	gubPrevNumberOfFlowers = gubCurNumberOfFlowers;
 

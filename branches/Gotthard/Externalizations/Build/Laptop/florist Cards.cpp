@@ -124,10 +124,10 @@ BOOLEAN EnterFloristCards()
 	CHECKF(AddVideoObject(&VObjectDesc, &guiCardBackground));
 
 	ubCount = 0;
-	usPosY = FLORIST_CARD_FIRST_POS_Y;
+	usPosY = iFloristCardsConstants[FLORIST_CARD_FIRST_POS_Y];
 	for(j=0; j<3; j++)
 	{
-		usPosX = FLORIST_CARD_FIRST_POS_X;
+		usPosX = iFloristCardsConstants[FLORIST_CARD_FIRST_POS_X];
 		for(i=0; i<3; i++)
 		{
 			MSYS_DefineRegion( &gSelectedFloristCardsRegion[ubCount], usPosX, usPosY, (UINT16)(usPosX + iFloristCardsConstants[FLORIST_CARD_CARD_WIDTH]), (UINT16)(usPosY + iFloristCardsConstants[FLORIST_CARD_CARD_HEIGHT]), MSYS_PRIORITY_HIGH,
@@ -193,7 +193,7 @@ void RenderFloristCards()
 	DrawTextToScreen( sFloristCards[FLORIST_CARDS_CLICK_SELECTION], iFloristCardsConstants[FLORIST_CARD_TITLE_SENTENCE_X], iFloristCardsConstants[FLORIST_CARD_TITLE_SENTENCE_Y], iFloristCardsConstants[FLORIST_CARD_TITLE_SENTENCE_WIDTH], FONT10ARIAL, (UINT8)iFloristCardsConstants[FLORIST_CARDS_SENTENCE_COLOR], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 
 	GetVideoObject(&hPixHandle, guiCardBackground);
-	usPosY = FLORIST_CARD_FIRST_POS_Y;
+	usPosY = iFloristCardsConstants[FLORIST_CARD_FIRST_POS_Y];
 	ubCount = 0;
 	for(j=0; j<3; j++)
 	{

@@ -781,7 +781,7 @@ void RenderFloristOrderForm()
 	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,iFloristOrderFormConstants[FLOWER_ORDER_NAME_BOX_X], iFloristOrderFormConstants[FLOWER_ORDER_NAME_BOX_Y], VO_BLT_SRCTRANSPARENCY,NULL);
 
 
-	//The flowe Personel sentiments
+	//The flower Personel sentiments
 	GetVideoObject(&hPixHandle, guiPersonalSentiments);
 	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,iFloristOrderFormConstants[FLOWER_ORDER_SENTIMENT_BOX_X], iFloristOrderFormConstants[FLOWER_ORDER_SENTIMENT_BOX_Y], VO_BLT_SRCTRANSPARENCY,NULL);
 
@@ -836,7 +836,7 @@ void RenderFloristOrderForm()
 	DrawTextToScreen(sOrderFormText[FLORIST_ORDER_BILLING_INFO], iFloristOrderFormConstants[FLOWER_ORDER_BILLING_INFO_X], iFloristOrderFormConstants[FLOWER_ORDER_BILLING_INFO_Y], 0, iFloristOrderFormConstants[FLOWER_ORDEER_BIG_FONT], (UINT8)iFloristOrderFormConstants[FLOWER_ORDER_STATIC_TEXT_COLOR], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 	//Billing Name
-	DrawTextToScreen(sOrderFormText[FLORIST_ORDER_NAME], FLOWER_ORDER_NAME_TEXT_X, iFloristOrderFormConstants[FLOWER_ORDER_NAME_TEXT_Y], iFloristOrderFormConstants[FLOWER_ORDER_NAME_TEXT_WIDTH], iFloristOrderFormConstants[FLOWER_ORDEER_BIG_FONT], (UINT8)iFloristOrderFormConstants[FLOWER_ORDER_STATIC_TEXT_COLOR], FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED );
+	DrawTextToScreen(sOrderFormText[FLORIST_ORDER_NAME], iFloristOrderFormConstants[FLOWER_ORDER_NAME_TEXT_X], iFloristOrderFormConstants[FLOWER_ORDER_NAME_TEXT_Y], iFloristOrderFormConstants[FLOWER_ORDER_NAME_TEXT_WIDTH], iFloristOrderFormConstants[FLOWER_ORDEER_BIG_FONT], (UINT8)iFloristOrderFormConstants[FLOWER_ORDER_STATIC_TEXT_COLOR], FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED );
 
 	//the text to link to the card gallery
 	DrawTextToScreen(sOrderFormText[FLORIST_ORDER_SELECT_FROM_OURS], iFloristOrderFormConstants[FLOWER_ORDER_LINK_TO_CARD_GALLERY_X], iFloristOrderFormConstants[FLOWER_ORDER_LINK_TO_CARD_GALLERY_Y], 0, iFloristOrderFormConstants[FLOWER_ORDEER_BIG_FONT], (UINT8)iFloristOrderFormConstants[FLOWER_ORDER_STATIC_TEXT_COLOR], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );

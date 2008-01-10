@@ -2694,7 +2694,7 @@ STR16			sFuneralString[12] =
 
 // Text for the florist Home page
 //Commented out so the new data in the Florist.xml file is used.  Gotthard 10/18/07
-STR16			sFloristText[14]/* = 
+STR16			sFloristText[14] = 
 {
 	//Text on the button on the bottom of the page
 
@@ -2718,13 +2718,13 @@ STR16			sFloristText[14]/* =
 	L"Let us satisfy your floral fantasy.",
 	L"Let Bruce, our world-renowned floral designer, hand-pick the freshest, highest quality flowers from our very own greenhouse.",
 	L"And remember, if we don't have it, we can grow it - Fast!",
-}*/;
+};
 
 
 
 //Florist OrderForm
 //Commented out so the new data in the Florist.xml file is used.  Gotthard 10/18/07
-STR16			sOrderFormText[21]/* = 
+STR16			sOrderFormText[22] = 
 {
 	//Text on the buttons
 
@@ -2755,14 +2755,14 @@ STR16			sOrderFormText[21]/* =
 	//The text that goes beside the area where the user can enter their name
 
 	L"Name:",
-}*/;
+};
 
 
 
 
 //Florist Gallery.c
 //Commented out so the new data in the Florist.xml file is used.  Gotthard 10/18/07
-STR16		sFloristGalleryText[5]/* =
+STR16		sFloristGalleryText[5] =
 {
 	//text on the buttons
 
@@ -2775,15 +2775,15 @@ STR16		sFloristGalleryText[5]/* =
 	//text on the button
 
 	L"Home",
-}*/;
+};
 
 //Florist Cards
 
-STR16			sFloristCards[2]/* =
+STR16			sFloristCards[2] =
 {
 	L"Click on your selection",
 	L"Back",
-}*/;
+};
 
 
 
