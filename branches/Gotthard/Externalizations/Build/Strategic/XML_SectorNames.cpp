@@ -49,7 +49,6 @@ struct
 	PARSE_STAGE	curElement;
 
 	CHAR8		szCharData[MAX_CHAR_DATA_LENGTH+1];
-
 	UINT32			maxArraySize;
 	UINT32			curIndex;	
 	UINT32			currentDepth;
@@ -121,18 +120,32 @@ SectorNamesEndElementHandle(void *userData, const XML_Char *name)
 		}
 		else if(strcmp(name, "TEXT") == 0)
 		{
-			//YES, I realize this is not done that well, but give me a break I'm not that great of a coder.
-			//Maybe later we can have additional text in the SectorNames area, but until then at least it can be changed.
-			//Gotthard, 10/18/07
+
 			pData->curElement = ELEMENT;
 			if(pData->curIndex < pData->maxArraySize)
 			{
-				/*for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
+				
+				size_t origsize = strlen(pData->szCharData) + 1;
+				const size_t newsize = MAX_CHAR_DATA_LENGTH;
+				size_t convertedChars = 0;
+				wchar_t wcstring[newsize];
+				//mbstowcs_s(&convertedChars, wcstring, origsize, pData->szCharData, _TRUNCATE);
+				//mbstowcs(wcstring, pData->szCharData, origsize);
+				mbstowcs(pLandTypeStrings[pData->curIndex],pData->szCharData, origsize);
+				//pLandTypeStrings[pData->curIndex] = wcstring;
+				//wcsncpy(pLandTypeStrings[pData->curIndex], wcstring,origsize);
+				/*
+				for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
 				{
 					temp = pData->szCharData[i];
 					pLandTypeStrings[pData->curIndex][i] = temp;
-				}*/
-				pLandTypeStrings[pData->curIndex] = (STR16)pData->szCharData;
+				}
+				*/
+				//temp2[strlen(pData->szCharData)] = '\0';
+				//STR16 buffer = pLandTypeStrings[pData->curIndex];
+				//MultiByteToWideChar(1200,0, temp2, -1,buffer, sizeof(buffer)/sizeof(buffer[0]));
+				//pLandTypeStrings[pData->curIndex] = buffer;
+				//memcpy(pLandTypeStrings[pData->curIndex], &temp2, strlen(pData->szCharData));
 			}
 		}
 		pData->maxReadDepth--;

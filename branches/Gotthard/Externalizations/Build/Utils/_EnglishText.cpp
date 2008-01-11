@@ -878,7 +878,7 @@ STR16 pDirectionStr[] =
 // These are the different terrain types. 
 //Commented out to allow it to read in from the SectorNames.xml for externalization.  Gotthard 10-20-07
 //Although I just realized, wouldn't it just overwrite everything from the .xml?  Could cut out some code though and decrease size of exucutable maybe... 
-STR16 pLandTypeStrings[40] =
+CHAR16 pLandTypeStrings[40][20] =
 {
 	L"Urban",
 	L"Road",

@@ -44,7 +44,7 @@ extern STR16 pNoiseTypeStr[];
 extern STR16 pDirectionStr[];
 extern STR16 pRemoveMercStrings[];
 extern STR16 sTimeStrings[];
-extern STR16 pLandTypeStrings[];
+extern CHAR16 pLandTypeStrings[][20];
 extern STR16 pGuardMenuStrings[];
 extern STR16 pOtherGuardMenuStrings[];
 extern STR16 pInvPanelTitleStrings[];
