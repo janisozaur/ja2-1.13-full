@@ -1550,6 +1550,18 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			}
 		}
 
+		if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == 'p') )
+		{
+			if( InputEvent.usKeyState & ALT_DOWN )
+			{
+				if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
+				{
+					unlock();
+				}
+			}
+		
+		}
+
 
 		// Break of out IN CONV...
 		if ( CHEATER_CHEAT_LEVEL( ) )
@@ -5272,6 +5284,7 @@ void EscapeUILock( )
 #endif
 
 	guiPendingOverrideEvent = LU_ENDUILOCK;
+
 	UIHandleLUIEndLock( NULL );
 }
 

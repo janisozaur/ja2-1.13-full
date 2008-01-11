@@ -2926,7 +2926,7 @@ void EndUIMessage( )
 int PLAYER_TEAM_TIMER_SEC_PER_TICKS = 100;//hayden
 #define PLAYER_TEAM_TIMER_TICKS_PER_OK_MERC								( 15000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
 #define PLAYER_TEAM_TIMER_TICKS_PER_NOTOK_MERC						( 5000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
-#define PLAYER_TEAM_TIMER_TICKS_FROM_END_TO_START_BEEP		( (5000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS)*1.5 )
+#define PLAYER_TEAM_TIMER_TICKS_FROM_END_TO_START_BEEP		( (5000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS)*1.15 )
 #define PLAYER_TEAM_TIMER_TIME_BETWEEN_BEEPS							( 500 )
 #define PLAYER_TEAM_TIMER_TICKS_PER_ENEMY									( 2000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
 
@@ -3538,7 +3538,7 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 		}
 		return;
 	}
-
+	gTacticalStatus.usTactialTurnLimitMax = 0;//hayden , cheap hack, always calc time...
 	// OK, calculate time....
 	if ( !fInterrupt || gTacticalStatus.usTactialTurnLimitMax == 0 )
 	{

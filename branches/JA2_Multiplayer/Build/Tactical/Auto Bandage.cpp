@@ -494,6 +494,7 @@ void AutoBandage( BOOLEAN fStart )
 
 		// UnLock UI!
 		guiPendingOverrideEvent = LU_ENDUILOCK;
+
 		HandleTacticalUI( );
 
 		UnPauseGame();

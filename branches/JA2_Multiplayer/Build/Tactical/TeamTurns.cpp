@@ -740,6 +740,7 @@ void StartInterrupt( void )
 	else
 	{*/
 	gTacticalStatus.fInterruptOccurred = TRUE;
+	 
 
 	cnt = 0;
 	for ( pTempSoldier = MercPtrs[ cnt ]; cnt <= MAX_NUM_SOLDIERS; cnt++,pTempSoldier++)
@@ -830,6 +831,7 @@ void StartInterrupt( void )
 
 		// Signal UI done enemy's turn
 		guiPendingOverrideEvent = LU_ENDUILOCK;
+		guiPendingOverrideEvent = LA_ENDUIOUTURNLOCK;
 		HandleTacticalUI( );
 
 		InitPlayerUIBar( TRUE );
@@ -1127,6 +1129,7 @@ void EndInterrupt( BOOLEAN fMarkInterruptOccurred )
 				// both hidden interrupts as well - NOT good because
 				// hidden interrupts should leave it locked if it was already...
 				guiPendingOverrideEvent = LU_ENDUILOCK;
+				guiPendingOverrideEvent = LA_ENDUIOUTURNLOCK;
 				HandleTacticalUI( );
 
 				if ( gusSelectedSoldier != NO_SOLDIER )

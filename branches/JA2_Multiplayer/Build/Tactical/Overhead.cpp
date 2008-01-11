@@ -5576,7 +5576,7 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 		}
 		else
 		{
-			ScreenMsg( FONT_YELLOW, MSG_CHAT, L"client skipped EnterCombatMode");	
+			//ScreenMsg( FONT_YELLOW, MSG_CHAT, L"client skipped EnterCombatMode");	
 		}
 	}
 	else
@@ -5584,6 +5584,7 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"EnterCombatMode continuing... end turn");
 		// have to call EndTurn so that we freeze the interface etc
 		EndTurn( ubStartingTeam );
+		//ScreenMsg( FONT_YELLOW, MSG_CHAT, L"endturn team: %d",ubStartingTeam);	
 
 	}
 
@@ -6189,6 +6190,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		// If we ended battle in any team other than the player's
 		// we need to end the UI lock using this method....
 		guiPendingOverrideEvent = LU_ENDUILOCK;
+
 		HandleTacticalUI( );
 
 		if ( gTacticalStatus.uiFlags & INCOMBAT )

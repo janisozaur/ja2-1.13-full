@@ -1278,6 +1278,7 @@ void send_stop (EV_S_STOP_MERC *SStopMerc) // used to stop a merc when he spots 
 		}
 		else
 			stop_struct.usSoldierID = SStopMerc->usSoldierID;
+
 		stop_struct.sGridNo=SStopMerc->sGridNo;
 		stop_struct.bDirection=SStopMerc->bDirection;
 		client->RPC("sendSTOP",(const char*)&stop_struct, (int)sizeof(EV_S_STOP_MERC)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
@@ -1866,6 +1867,16 @@ void start_tt(void)
 		EndTurn (START_TEAM_TURN);
 	}
     
+}
+
+void unlock (void)
+{
+
+	ScreenMsg( FONT_YELLOW, MSG_CHAT, L"unlocking ui...");	
+		guiPendingOverrideEvent = LU_ENDUILOCK;
+					guiPendingOverrideEvent = LA_ENDUIOUTURNLOCK;
+	
+
 }
 
 //***************************

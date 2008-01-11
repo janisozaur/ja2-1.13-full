@@ -20,3 +20,6 @@ void send_miss(EV_S_MISS * SMiss);
 					
 void cheat_func(void);
 void start_tt(void);
+void unlock (void);
+
+extern BOOLEAN gfUIInterfaceSetBusy;

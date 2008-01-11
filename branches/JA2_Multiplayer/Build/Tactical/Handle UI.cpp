@@ -480,6 +480,7 @@ void PreventFromTheFreezingBug(SOLDIERTYPE* pSoldier)
 	UnSetUIBusy( pSoldier->ubID );
 //	gTacticalStatus.ubAttackBusyCount = 0; // 0verhaul:  I know commenting this may not be a good idea, but then neither is this kludgy routine.
 	guiPendingOverrideEvent = LU_ENDUILOCK;
+
 	UIHandleLUIEndLock( NULL );
 }
 
@@ -534,6 +535,7 @@ UINT32  HandleTacticalUI( void )
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Setting attack busy count to 0 due to ending AI lock" ) );
 
 				guiPendingOverrideEvent = LU_ENDUILOCK;
+
 				UIHandleLUIEndLock( NULL );
 			}
 		}

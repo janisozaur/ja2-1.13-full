@@ -96,11 +96,8 @@ extern INT8 SquadMovementGroups[ ];
 
 #include "test_space.h"
 #include "soldier control.h"
-// if(is_server
 
 
-bool allow_bullet;
-bool stage=0;
 
 
 void test_func2 (void)//now bound to "0" //currently displays coordinates of the mouse
@@ -133,8 +130,8 @@ void test_func2 (void)//now bound to "0" //currently displays coordinates of the
 //BeginTeamTurn (0);
 
 
-
-
+RESETTIMECOUNTER( giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS );
+ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"test_func2" );
 
 
 //

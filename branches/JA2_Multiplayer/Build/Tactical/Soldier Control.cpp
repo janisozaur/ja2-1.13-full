@@ -10018,8 +10018,9 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 	SStopMerc.bDirection			= pSoldier->bDirection;
 	SStopMerc.usSoldierID			= pSoldier->ubID;
 	//AddGameEvent( S_STOP_MERC, 0, &SStopMerc ); //hayden.
-	if(is_client)send_stop(&SStopMerc);
 	if(pSoldier->ubID>=120) return;//hayden
+	if(is_client)send_stop(&SStopMerc);
+	
 
 	// If we are a 'specialmove... ignore...
 	if ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_SPECIALMOVE ) )
