@@ -20,6 +20,8 @@
 	#include "Dialogue Control.h"
 #endif
 
+#include "connect.h"
+
 void HourlyQuestUpdate( void );
 void HourlyLarryUpdate( void );
 
@@ -41,6 +43,8 @@ void HandleHourlyUpdate()
 {
 	//if the game hasnt even started yet ( we havent arrived in the sector ) dont process this
 	if ( DidGameJustStart() )
+		return;
+	if(is_networked)
 		return;
 
 	// hourly update of town loyalty	

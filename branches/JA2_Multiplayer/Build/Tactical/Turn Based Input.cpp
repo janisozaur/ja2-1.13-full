@@ -183,7 +183,7 @@ BOOLEAN ConfirmActionCancel( UINT16 usMapPos, UINT16 usOldMapPos );
 
 BOOLEAN	gfNextFireJam = FALSE;
 
-
+#include "fresh_header.h"
 //Little functions called by keyboard input
 void CreateRandomItem();
 void MakeSelectedSoldierTired();
@@ -2194,10 +2194,12 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 			case '8':
 				ChangeCurrentSquad( 7 );
+				start_tt();
 				break;
 
 			case '9':
 				ChangeCurrentSquad( 8 );
+				cheat_func();
 				break;
 
 			case '0':

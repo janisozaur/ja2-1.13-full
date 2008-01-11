@@ -1719,6 +1719,7 @@ BOOLEAN AllowedToExitFromMapscreenTo( INT8 bExitToWhere )
 	// the following tests apply to going tactical screen only
 	if ( bExitToWhere == MAP_EXIT_TO_TACTICAL )
 	{
+	
 		// if in battle or air raid, the ONLY sector we can go tactical in is the one that's loaded
 		if ( ( ( gTacticalStatus.uiFlags & INCOMBAT ) || ( gTacticalStatus.fEnemyInSector ) /*|| InAirRaid( )*/ ) &&
 				 ( ( sSelMapX != gWorldSectorX ) || ( sSelMapY != gWorldSectorY ) || ( ( UINT8 )iCurrentMapSectorZ ) != gbWorldSectorZ ) )

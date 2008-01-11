@@ -521,6 +521,7 @@ void BeginTeamTurn( UINT8 ubTeam )
 		{
 			
 			InitEnemyUIBar( 0, 0 );
+			fInterfacePanelDirty = DIRTYLEVEL2;
 			AddTopMessage( COMPUTER_TURN_MESSAGE, TeamTurnString[ ubTeam ] );
 			/*if(is_server && !net_turn) send_EndTurn(ubTeam);
 			if(net_turn == true) net_turn = false;*/

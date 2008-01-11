@@ -871,11 +871,13 @@ void AdjustNoAPToFinishMove( SOLDIERTYPE *pSoldier, BOOLEAN fSet )
 	if ( fSet )
 	{
 		// Position light....
+		//ScreenMsg( FONT_LTGREEN, MSG_INTERFACE, L"stop:%d",pSoldier->ubID );
 		// SetCheckSoldierLightFlag( pSoldier );		
 	}
 	else
 	{
-		// DeleteSoldierLight( pSoldier );
+			
+			// DeleteSoldierLight( pSoldier );
 	}
 
 	pSoldier->fNoAPToFinishMove = fSet;
@@ -6678,6 +6680,8 @@ void SetSoldierAniSpeed( SOLDIERTYPE *pSoldier )
 
 	// ATE: If we are an enemy and are not visible......
 	// Set speed to 0
+	if(!is_client)
+	{
 	if ( ( gTacticalStatus.uiFlags & TURNBASED && ( gTacticalStatus.uiFlags & INCOMBAT ) ) || gTacticalStatus.fAutoBandageMode )
 	{
 		if ( ( ( pSoldier->bVisible == -1 && pSoldier->bVisible == pSoldier->bLastRenderVisibleValue ) || gTacticalStatus.fAutoBandageMode ) && pSoldier->usAnimState != MONSTER_UP )
@@ -6693,6 +6697,7 @@ void SetSoldierAniSpeed( SOLDIERTYPE *pSoldier )
 			RESETTIMECOUNTER( pSoldier->UpdateCounter, pSoldier->sAniDelay );
 			return;
 		}
+	}
 	}
 
 	// Default stats soldier to same as normal soldier.....
@@ -6721,6 +6726,7 @@ void SetSoldierAniSpeed( SOLDIERTYPE *pSoldier )
 			pSoldier->sAniDelay /= GetSpeedUpFactor();	
 		else 
 			pSoldier->sAniDelay = 0;
+	//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"sAniDelay: %d", pSoldier->sAniDelay );
 }
 
 
@@ -10013,6 +10019,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 	SStopMerc.usSoldierID			= pSoldier->ubID;
 	//AddGameEvent( S_STOP_MERC, 0, &SStopMerc ); //hayden.
 	if(is_client)send_stop(&SStopMerc);
+	if(pSoldier->ubID>=120) return;//hayden
 
 	// If we are a 'specialmove... ignore...
 	if ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_SPECIALMOVE ) )

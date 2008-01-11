@@ -18,3 +18,5 @@ void send_hitstruct(EV_S_STRUCTUREHIT	*	SStructureHit);
 void send_hitwindow(EV_S_WINDOWHIT * SWindowHit);
 void send_miss(EV_S_MISS * SMiss);
 					
+void cheat_func(void);
+void start_tt(void);

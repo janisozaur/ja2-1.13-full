@@ -5574,16 +5574,17 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 			StartPlayerTeamTurn( FALSE, TRUE );
 			if(is_client)send_EndTurn( ubStartingTeam ); //hayden
 		}
+		else
+		{
+			ScreenMsg( FONT_YELLOW, MSG_CHAT, L"client skipped EnterCombatMode");	
+		}
 	}
 	else
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"EnterCombatMode continuing... end turn");
 		// have to call EndTurn so that we freeze the interface etc
 		EndTurn( ubStartingTeam );
-		if(is_server)
-		{
-			//if(is_client)send_EndTurn( ubStartingTeam ); //hayden
-		}
+
 	}
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"EnterCombatMode done");
@@ -6010,7 +6011,14 @@ BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 
 void DeathNoMessageTimerCallback( void )
 {
-	CheckAndHandleUnloadingOfCurrentWorld();
+	//CheckAndHandleUnloadingOfCurrentWorld();
+	if(!is_client)CheckAndHandleUnloadingOfCurrentWorld();
+	else	
+	{
+		ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"All your mercs are wiped dead !" );
+		gTacticalStatus.uiFlags |= SHOW_ALL_MERCS;//hayden
+		ScreenMsg( FONT_YELLOW, MSG_CHAT, L"Spectator mode enabled !" );
+	}
 }
 
 void RemoveStaticEnemiesFromSectorInfo( INT16 sMapX, INT16 sMapY )
@@ -6119,7 +6127,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 
 		// Play death music
 		SetMusicMode( MUSIC_TACTICAL_DEATH );
-		if(!is_client)SetCustomizableTimerCallbackAndDelay( 10000, DeathNoMessageTimerCallback, FALSE );//hayden
+		SetCustomizableTimerCallbackAndDelay( 10000, DeathNoMessageTimerCallback, FALSE );//hayden
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"you have been defeated..." );
 
 		if ( CheckFact( FACT_FIRST_BATTLE_BEING_FOUGHT, 0 ) )
@@ -7418,7 +7426,7 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! &&&&&&& Problem with attacker busy count decrementing past 0.... preventing wrap-around." ) );
 #ifdef JA2BETAVERSION
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Attack busy problem. Save, exit and send debug.txt + save file to Sir-Tech." );
+			//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Attack busy problem. Save, exit and send debug.txt + save file to Sir-Tech." );//hayden
 			DebugAttackBusy( "Attack Busy Problem\n");
 #endif
 		}
@@ -8057,7 +8065,13 @@ void EndBattleWithUnconsciousGuysCallback( UINT8 bExitValue )
 {
 	// Enter mapscreen.....
 	if(!is_client)CheckAndHandleUnloadingOfCurrentWorld();
-	else			ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"All your mercs are wiped dead !" );
+	else	
+	{
+		ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"All your mercs are wiped dead !" );
+		gTacticalStatus.uiFlags |= SHOW_ALL_MERCS;//hayden
+		ScreenMsg( FONT_YELLOW, MSG_CHAT, L"Spectator mode enabled !" );
+	}
+
 
 }
 

@@ -2,6 +2,8 @@
 
 //this one just for structs, variables and functions used between the client and server scripts...
 
+extern  char CLIENT_NAME[30];
+
 typedef struct
 {
 	UINT8 client_num;
@@ -37,4 +39,5 @@ typedef struct
 	char client_name[30];
 	char client_names[4][30];
 	int cl_ops[4];
+	int TESTING;
 } settings_struct;

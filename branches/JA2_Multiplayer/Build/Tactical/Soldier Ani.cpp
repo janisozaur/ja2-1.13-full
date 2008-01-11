@@ -3190,28 +3190,18 @@ void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier
 BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 {
 	BOOLEAN fBuddyJustDead = FALSE;
-	bool knowsabout=0;
-if(pfMadeCorpse) knowsabout=1;
+
+
 	*pfMadeCorpse = FALSE;
 
 	if ( pSoldier->bLife == 0 && !( pSoldier->uiStatusFlags & SOLDIER_DEAD )  )
 	{
 
 		//send death info
-	if(!knowsabout)send_death(pSoldier);//quickfix
+	send_death(pSoldier);//quickfix
 		
 
-		/*
-			if(is_server && pSoldier->ubID < 120)
-			{
-				send_death(pSoldier);
-			}
-			else if(is_client && !is_server && pSoldier->ubID < 20)
-			{
-				send_death(pSoldier);
-			}
-			*/
-				//hayden
+
 
 		// Cancel services here...
 		ReceivingSoldierCancelServices( pSoldier );

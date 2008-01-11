@@ -4,6 +4,7 @@
 #include "RakPeerInterface.h"
 #include "RakNetStatistics.h"
 #include "RakNetTypes.h"
+
 #include "BitStream.h"
 #include "RakSleep.h"
 #include <assert.h>
@@ -33,6 +34,7 @@ float gsDAMAGE_MULTIPLIER;
 int gsINTERRUPTS ;
 int gsMAX_CLIENTS ;
 int gsPLAYER_BSIDE;
+int gsTESTING;
 
 INT32 gssecs_per_tick;
 INT32 gsstarting_balance;
@@ -193,7 +195,7 @@ void requestSETTINGS(RPCParameters *rpcParameters)
 				lan.cl_ops[3]=clinf->cl_ops[3];
 				//memcpy(lan.cl_ops,clinf->cl_ops,sizeof(int)*4);
 ////
-
+				lan.TESTING=gsTESTING;
 
 		server->RPC("recieveSETTINGS",(const char*)&lan, (int)sizeof(settings_struct)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
 
@@ -258,10 +260,11 @@ void start_server (void)
 			char dis_bob[30];
 			char dis_equip[30];
 			char max_merc[30];
+			char test[30];
 			GetPrivateProfileString( "Ja2_mp Settings","DISABLE_BOBBY_RAYS", "", dis_bob, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","DISABLE_AIM_AND_MERC_EQUIP", "", dis_equip, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","MAX_MERCS", "", max_merc, MAX_PATH, "..\\Ja2_mp.ini" );
-
+			GetPrivateProfileString( "Ja2_mp Settings","TESTING", "", test, MAX_PATH, "..\\Ja2_mp.ini" );
 			gsDis_Bobby=false;
 			gsDis_Equip=false;
 
@@ -269,7 +272,7 @@ void start_server (void)
 			 if(atoi(dis_equip)==1)gsDis_Equip=true;
 
 			 gsMAX_MERCS=atoi(max_merc);
-
+			gsTESTING = atoi(test);
 ////
 			ENEMY_ENABLED =atoi(bteam1_enabled);
 			CREATURE_ENABLED =atoi(bteam2_enabled);

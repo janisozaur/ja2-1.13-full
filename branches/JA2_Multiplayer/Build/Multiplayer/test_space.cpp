@@ -72,11 +72,12 @@
 #include <stdlib.h>
 
 #include "tactical placement gui.h"
-
+#include "connect.h"
+#include "network.h"
 
 #pragma pack(1)
 
-
+#include "text.h"
 #include "Types.h"
 #include "connect.h"
 #include "message.h"
@@ -111,7 +112,50 @@ void test_func2 (void)//now bound to "0" //currently displays coordinates of the
 //SoldierCollapse( pSoldier );
 //SoldierTakeDamage( pFirer, ANIM_CROUCH, 1, 100, TAKE_DAMAGE_BLOODLOSS, NOBODY, NOWHERE, 0, TRUE );
 //TurnSoldierIntoCorpse( pFirer, FALSE, FALSE );
-ScreenMsg( FONT_YELLOW, MSG_CHAT, L"test_func2");	
+
+//SOLDIERTYPE * pSoldier=MercPtrs[ 0 ];
+////
+//pSoldier->fNoAPToFinishMove = TRUE;
+//
+//
+//fInterfacePanelDirty = DIRTYLEVEL2;
+
+
+
+////EVENT_InitNewSoldierAnim(pSoldier,3,0,0); 
+//pSoldier->ubDesiredHeight		 = ANIM_CROUCH;
+
+//SOLDIERTYPE * pSoldier=MercPtrs[ 0 ];
+//pSoldier->usAnimState=50;
+//TurnSoldierIntoCorpse( pSoldier, TRUE, TRUE );
+
+//gTacticalStatus.uiFlags |= SHOW_ALL_MERCS;
+//BeginTeamTurn (0);
+
+
+
+
+
+
+//
+//
+//	CHAR16 string[255];
+//	memcpy(string,TeamTurnString[ 7 ], sizeof( CHAR16) * 255 );
+//
+//	CHAR16 name[255];
+//    mbstowcs( name, CLIENT_NAME, sizeof (char)*30 );
+//
+//	CHAR16 full[255];
+//	swprintf(full, L"%s - '%s'",string,name);
+////
+////
+//	memcpy( TeamTurnString[ 7 ] , full, sizeof( CHAR16) * 255 );
+
+
+}
+
+
+
 //BOOLEAN       fMadeCorpse;
 //	 SOLDIERTYPE * pSoldier=MercPtrs[ 0 ];
 //pSoldier->bLife = 0;
@@ -130,7 +174,7 @@ ScreenMsg( FONT_YELLOW, MSG_CHAT, L"test_func2");
 //guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
 
 
-}
+
 
 
 

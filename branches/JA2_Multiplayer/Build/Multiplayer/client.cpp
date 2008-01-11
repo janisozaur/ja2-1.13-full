@@ -65,6 +65,7 @@
 #include "RakPeerInterface.h"
 #include "RakNetStatistics.h"
 #include "RakNetTypes.h"
+
 #include "BitStream.h"
 #include <assert.h>
 #include <cstdio>
@@ -210,6 +211,8 @@ UINT8	ubID_prefix;
  bool is_server=false;
  bool is_networked=false;
 
+
+ int TESTING;
  bool allowlaptop=false;
 
  bool recieved_settings=false;
@@ -231,6 +234,8 @@ UINT8	ubID_prefix;
 
  int SAME_MERC;
  int PLAYER_BSIDE;
+
+int START_TEAM_TURN;
 
  bool goahead = 0;
  int numready = 0;
@@ -1132,8 +1137,25 @@ else if(allowlaptop)
 
 	gfEnterTacticalPlacementGUI = 1;
 
+	UINT32	i;
+	for(i=0; i<4;i++)
+	{	
+		CHAR16 name[255];
+		int nm = mbstowcs( name, client_names[i], sizeof (char)*30 );
+		//copy in client specified name for the player turn bar :)
+		if(nm)
+		{
+			CHAR16 string[255];
+			memcpy(string,TeamTurnString[ (i+6) ], sizeof( CHAR16) * 255 );
+		
 
-	
+			CHAR16 full[255];
+			swprintf(full, L"%s - '%s'",string,name);
+
+			memcpy( TeamTurnString[ (i+6) ] , full, sizeof( CHAR16) * 255 );
+		}
+	}
+
 	SetCurrentWorldSector( gubPBSectorX, gubPBSectorY, gubPBSectorZ );
 	}
 	else
@@ -1590,10 +1612,10 @@ void recieveSETTINGS (RPCParameters *rpcParameters) //recive settings from serve
 			if(!cl_lan->soDis_Equip)ALLOW_EQUIP=TRUE;
 
 			MAX_MERCS=cl_lan->gsMAX_MERCS;
-			
+			TESTING=cl_lan->TESTING;
 
-			ScreenMsg( FONT_YELLOW, MSG_CHAT, L"Sector= %s, Max Clients= %d, Max Mercs= %d, Co-Op= %d Interrupts= %d, Same Merc= %d, Damage Multiplier= %f,  Enemy= %d, Creature= %d, Militia= %d, Civilian= %d, Timed Turns= %d, Secs/Tic= %d, Starting Cash= $%d, Tons of Guns= %d, Sci-Fi= %d, Difficulty= %d, Iron-Man= %d, BobbyRays Range= %d, Disable BobbyRays= %d, Disable Aim/Merc Equip= %d.",str,MAX_CLIENTS,MAX_MERCS,PLAYER_BSIDE,INTERRUPTS,SAME_MERC,DAMAGE_MULTIPLIER,cl_lan->ENEMY_ENABLED,cl_lan->CREATURE_ENABLED,cl_lan->MILITIA_ENABLED,cl_lan->CIV_ENABLED,gGameOptions.fTurnTimeLimit,secs_per_tick,clstarting_balance,gGameOptions.fGunNut,gGameOptions.ubGameStyle,gGameOptions.ubDifficultyLevel,gGameOptions.fIronManMode,gGameOptions.ubBobbyRay,cl_lan->soDis_Bobby,cl_lan->soDis_Equip);
-
+			ScreenMsg( FONT_YELLOW, MSG_CHAT, L"Sector= %s, Max Clients= %d, Max Mercs= %d, Co-Op= %d Interrupts= %d, Same Merc= %d, Damage Multiplier= %f,  Enemy= %d, Creature= %d, Militia= %d, Civilian= %d, Timed Turns= %d, Secs/Tic= %d, Starting Cash= $%d, Tons of Guns= %d, Sci-Fi= %d, Difficulty= %d, Iron-Man= %d, BobbyRays Range= %d, Disable BobbyRays= %d, Disable Aim/Merc Equip= %d, Testing= %d.",str,MAX_CLIENTS,MAX_MERCS,PLAYER_BSIDE,INTERRUPTS,SAME_MERC,DAMAGE_MULTIPLIER,cl_lan->ENEMY_ENABLED,cl_lan->CREATURE_ENABLED,cl_lan->MILITIA_ENABLED,cl_lan->CIV_ENABLED,gGameOptions.fTurnTimeLimit,secs_per_tick,clstarting_balance,gGameOptions.fGunNut,gGameOptions.ubGameStyle,gGameOptions.ubDifficultyLevel,gGameOptions.fIronManMode,gGameOptions.ubBobbyRay,cl_lan->soDis_Bobby,cl_lan->soDis_Equip,TESTING);
+			if(TESTING)	ScreenMsg( FONT_WHITE, MSG_CHAT, L"TESTING AND CHEAT FUNCTION '9' IS ENABLED" );
 		}
 		else 
 		{
@@ -1749,14 +1771,12 @@ void recieveDEATH (RPCParameters *rpcParameters)
 
 	if(pSoldier->bLife!=0)
 	{
+		pSoldier->usAnimState=50;
 		ScreenMsg( FONT_YELLOW, MSG_CHAT, L"made corpse/dead from remote client");	
-		pSoldier->usAnimState=43;
-		pSoldier->bLife = 0;
-	//one indicates to function it is replication (quickfix for now)
-		BOOLEAN knowsabout=TRUE;
-		HandleSoldierDeath( pSoldier, &knowsabout );
+		TurnSoldierIntoCorpse( pSoldier, TRUE, TRUE );
+		ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"'%s' #%d: '%S' was killed by '%s' #%d: '%S' ! ",pSoldier->name,(pS_bTeam-5),client_names[(pS_bTeam-6)],pAttacker->name,(pA_bTeam),client_names[(pA_bTeam-1)] );
+
 	}
-	ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"'%s' #%d: '%S' was killed by '%s' #%d: '%S' ! ",pSoldier->name,(pS_bTeam-5),client_names[(pS_bTeam-6)],pAttacker->name,(pA_bTeam),client_names[(pA_bTeam-1)] );
 
 }
 
@@ -1827,6 +1847,26 @@ void recieveMISS  (RPCParameters *rpcParameters)
 	//ScreenMsg( FONT_YELLOW, MSG_CHAT, L"recieved shot miss");	
 }
 
+void cheat_func(void)
+{
+	if(TESTING)
+	{
+	ScreenMsg( FONT_YELLOW, MSG_CHAT, L"gTacticalStatus.uiFlags |= SHOW_ALL_MERCS");	
+	gTacticalStatus.uiFlags |= SHOW_ALL_MERCS;
+	}
+}
+
+void start_tt(void)
+{
+	if(is_server)
+	{
+		ScreenMsg( FONT_YELLOW, MSG_CHAT, L"manually starting turnbased mode...");	
+
+		gTacticalStatus.uiFlags |= INCOMBAT;
+		EndTurn (START_TEAM_TURN);
+	}
+    
+}
 
 //***************************
 //*** client connection*****
@@ -1903,6 +1943,7 @@ void connect_client ( void )
 			numready = 0;
 			readystage = 0;
 			status = 0;
+			gTacticalStatus.uiFlags&= (~SHOW_ALL_MERCS );
 
 			//retrieve settings from Ja2_mp.ini
 			char ip[30];
@@ -1934,17 +1975,24 @@ void connect_client ( void )
 			GetPrivateProfileString( "Ja2_mp Settings","CRATE_X", "", c_x, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","CRATE_Y", "", c_y, MAX_PATH, "..\\Ja2_mp.ini" );
 
-		
 			GetPrivateProfileString( "Ja2_mp Settings","CLIENT_NAME", "", clname, MAX_PATH, "..\\Ja2_mp.ini" );
+
+		
+
+	
 
 			char op1[30];
 			char op2[30];
 			char op3[30];
 			char op4[30];
+
 			GetPrivateProfileString( "Ja2_mp Settings","OP_TEAM_1", "", op1, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","OP_TEAM_2", "", op2, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","OP_TEAM_3", "", op3, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","OP_TEAM_4", "", op4, MAX_PATH, "..\\Ja2_mp.ini" );
+char stt[30];
+			GetPrivateProfileString( "Ja2_mp Settings","START_TEAM_TURN", "", stt, MAX_PATH, "..\\Ja2_mp.ini" );
+
 
 			OP_TEAM_1=atoi(op1);
 				OP_TEAM_2=atoi(op2);
@@ -1958,7 +2006,7 @@ void connect_client ( void )
 			strcpy( CLIENT_NUM, client_number );
 			strcpy( SECT_EDGE, sector_edge);
 			
-
+			START_TEAM_TURN=atoi(stt);
 			crate_sGridX = atoi(c_x);
 			crate_sGridY = atoi(c_y);
 
