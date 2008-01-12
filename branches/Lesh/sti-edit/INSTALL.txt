@@ -1,0 +1,10 @@
+STI Editor Gimp plugin installation
+
+Just be sure, you have installed libgimp2.0-dev and everything it will pull from repository
+for this (warning! this may take up to 50mb to download).
+
+Go to console, change to dir, where you downloaded plugin sources. Run make.
+
+user@host:~/sti-editor$ make
+
+It will compile and install plugin for current user (not system-wide).
