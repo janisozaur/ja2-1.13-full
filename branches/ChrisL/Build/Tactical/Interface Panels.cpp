@@ -3523,6 +3523,8 @@ BOOLEAN  ChangeZipperStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 		pSoldier->flags.ZipperFlag = newStatus;
 		gfUIStanceDifferent = TRUE;
 	}
+	fCharacterInfoPanelDirty = TRUE;
+	fInterfacePanelDirty = DIRTYLEVEL2;
 
 	return TRUE;
 }

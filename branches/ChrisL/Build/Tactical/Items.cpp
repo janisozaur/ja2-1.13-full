@@ -2806,6 +2806,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	BOOLEAN			fSameMagazineSize;
 	BOOLEAN			fReloadingWithStack;
 	BOOLEAN			fEmptyGun;
+	BOOLEAN			fEnoughAPs;
 	INT8			bReloadType;
 	UINT16			usNewAmmoItem;
 
@@ -2813,7 +2814,17 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 
 	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
 	{
-		bAPs = GetAPsToReloadGunWithAmmo( pGun, pAmmo );
+		//CHRISL: Alter this so we treat clip fed weapons differently from weapons that load with loose rounds
+		if(Weapon[pSoldier->inv[HANDPOS].usItem].swapClips == 1)
+			bAPs = GetAPsToReloadGunWithAmmo( pGun, pAmmo );
+		else
+		{
+			if(Weapon[pSoldier->inv[HANDPOS].usItem].APsToReload > 10)
+				bAPs = 4;
+			else
+				bAPs = Weapon[pSoldier->inv[HANDPOS].usItem].APsToReload;
+			bAPs += gGameExternalOptions.ubAPCostPerRound;
+		}
 		if ( !EnoughPoints( pSoldier, bAPs, 0,TRUE ) )
 		{
 			return( FALSE );
@@ -2837,6 +2848,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		fReloadingWithStack = (pAmmo->ubNumberOfObjects > 1);
 		fSameAmmoType = ( (*pGun)[subObject]->data.gun.ubGunAmmoType == Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType );
 		fSameMagazineSize = ( Magazine[ Item[ pAmmo->usItem ].ubClassIndex ].ubMagSize == GetMagSize( pGun));
+		fEnoughAPs = EnoughPoints( pSoldier, GetAPsToReloadGunWithAmmo( pGun, pAmmo ), 0,FALSE );
 
 		if (fEmptyGun)
 		{
@@ -2926,6 +2938,29 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 			else
 			{
 				ubBulletsToMove = __min( (*pAmmo)[subObject]->data.ubShotsLeft, GetMagSize(pGun));
+			}
+		}
+
+		//CHRIS: This should reset the number of bullest moved to what we can actually afford when loading loose rounds
+		if (!fEnoughAPs)
+		{
+			for(int i = 0; i<GetMagSize(pGun); i++)
+			{
+				if(EnoughPoints( pSoldier, (bAPs+(2*i)), 0,FALSE ) == FALSE)
+				{
+					ubBulletsToMove = __min(ubBulletsToMove, i);
+					if(Weapon[pSoldier->inv[HANDPOS].usItem].swapClips == 1)
+						bAPs = GetAPsToReloadGunWithAmmo( pGun, pAmmo );
+					else
+					{
+						if(Weapon[pSoldier->inv[HANDPOS].usItem].APsToReload > 10)
+							bAPs = 4;
+						else
+							bAPs = Weapon[pSoldier->inv[HANDPOS].usItem].APsToReload;
+					}
+					bAPs = bAPs + (i*gGameExternalOptions.ubAPCostPerRound);
+					break;
+				}
 			}
 		}
 
@@ -3079,7 +3114,12 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo, UINT32 sub
 INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT16 ubMagSize, INT8 bExcludeSlot )
 {
 	INT8				bLoop;
+	INT8				capLoop = 0;
+	UINT16				curCap = 0;
+	BOOLEAN				found = FALSE;
 	INVTYPE *		pItem;
+
+	//CHRISL: Update this to search for the largest appropriate mag if ubMagSize = ANY_MAGSIZE
 
 	for (bLoop = HANDPOS; bLoop < (INT8)pSoldier->inv.size(); bLoop++)
 	{
@@ -3091,13 +3131,29 @@ INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT16 ubMagSize, INT8 b
 			pItem = &(Item[pSoldier->inv[bLoop].usItem]);
 			if (pItem->usItemClass == IC_AMMO)
 			{
-				if (Magazine[pItem->ubClassIndex].ubCalibre == ubCalibre && (Magazine[pItem->ubClassIndex].ubMagSize == ubMagSize || ubMagSize == ANY_MAGSIZE))
+				if (Magazine[pItem->ubClassIndex].ubCalibre == ubCalibre)
 				{
-					return( bLoop );
+					if(ubMagSize != ANY_MAGSIZE && Magazine[pItem->ubClassIndex].ubMagSize == ubMagSize)
+					{
+						// looking for specific size.  return if found
+						return( bLoop );
+					}
+					else if(ubMagSize == ANY_MAGSIZE)
+					{
+						// looking for any mag size.  find the largest
+						found = TRUE;
+						if(Magazine[pItem->ubClassIndex].ubMagSize > curCap)
+						{
+							curCap = Magazine[pItem->ubClassIndex].ubMagSize;
+							capLoop = bLoop;
+						}
+					}
 				}
 			}
 		}
 	}
+	if(found == TRUE)
+		return( capLoop );
 	return( NO_SLOT );
 }
 

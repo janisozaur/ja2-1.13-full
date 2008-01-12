@@ -438,6 +438,9 @@ typedef struct
 	// CHRISL: option to allow Slay to remain as a hired PC
 	BOOLEAN fEnableSlayForever;
 
+	// CHRISL: New setting to determine the AP cost to reload 1 loose round of ammo
+	INT32 ubAPCostPerRound;
+
 } GAME_EXTERNAL_OPTIONS;
 
 //This structure will contain general Ja2 settings	NOT individual game settings.

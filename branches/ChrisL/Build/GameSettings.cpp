@@ -712,6 +712,9 @@ void LoadGameExternalOptions()
 
 	// CHRISL: New setting to allow Slay to remain as a hired PC
 	gGameExternalOptions.fEnableSlayForever					= iniReader.ReadBoolean("JA2 Gameplay Settings", "SLAY_FOREVER", FALSE);
+
+	// CHRISL: New setting to determine the AP cost to reload 1 loose round of ammo
+	gGameExternalOptions.ubAPCostPerRound			= iniReader.ReadInteger("JA2 Gameplay Settings","AP_COST_PER_ROUND",2);
 }
 
 

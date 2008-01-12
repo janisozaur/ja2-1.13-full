@@ -1896,8 +1896,20 @@ INT8 GetAPsToReloadGunWithAmmo( OBJECTTYPE * pGun, OBJECTTYPE * pAmmo )
 	}
 	else
 	{
-		// trying to reload with wrong size of magazine
-		return (GetAPsToReload(pGun) * 2);
+		if( Weapon[pGun->usItem].swapClips == 0 )
+		{
+			// reload individual rounds
+			int reload = GetAPsToReload(pGun);
+			int rounds = min((GetMagSize(pGun)-(*pGun)[0]->data.gun.ubGunShotsLeft), Magazine[Item[pAmmo->usItem].ubClassIndex].ubMagSize);
+			if(reload > 10)
+				reload = 4;
+			return (reload + (rounds*gGameExternalOptions.ubAPCostPerRound));
+		}
+		else
+		{
+			// trying to reload with wrong size of magazine
+			return (GetAPsToReload(pGun) * 2);
+		}
 //		return( AP_RELOAD_GUN + AP_RELOAD_GUN );
 	}
 }
