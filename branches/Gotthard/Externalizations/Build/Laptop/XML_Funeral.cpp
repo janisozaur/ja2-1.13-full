@@ -123,19 +123,11 @@ FuneralEndElementHandle(void *userData, const XML_Char *name)
 		}
 		else if(strcmp(name, "TEXT") == 0)
 		{
-			//YES, I realize this is not done that well, but give me a break I'm not that great of a coder.
-			//Maybe later we can have additional text in the Funeral area, but until then at least it can be changed.
-			//Gotthard, 10/18/07
 			pData->curElement = ELEMENT;
 			if(pData->curIndex < pData->maxArraySize)
 			{
-				//for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
-				//{
-				//	sFuneralString[pData->curIndex][i] = pData->szCharData[i];
-				//}
-				//memcpy(&sFuneralString[pData->curIndex], pData->szCharData, strlen(pData->szCharData));
-				sFuneralString[pData->curIndex] = (CHAR16*)pData->szCharData;
-				//strcpy((CHAR*)sFuneralString[pData->curIndex], pData->szCharData);
+				size_t origsize = strlen(pData->szCharData) + 5;
+				mbstowcs(sFuneralString[pData->curIndex], pData->szCharData, origsize);
 			}
 		}
 		pData->maxReadDepth--;

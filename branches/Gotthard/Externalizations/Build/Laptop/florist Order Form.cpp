@@ -389,7 +389,7 @@ LAPTOP_SCREEN_WEB_UL_Y + 284 - (27),//Previously FLOWER_ORDER_SMALLER_PS_OFFSET_
 
 typedef struct
 {
-	STR16 *psCityLoc;
+	CHAR16 psCityLoc[20];
 	UINT8	ubNextDayDeliveryCost;
 	UINT8	ubWhenItGetsThereCost;
 } FlowerOrderLocationStruct;
@@ -397,23 +397,23 @@ typedef struct
 
 
 FlowerOrderLocationStruct FlowerOrderLocations[FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS]={
-	{	&pDeliveryLocationStrings[0],	20, 15},
-	{	&pDeliveryLocationStrings[1],	95, 70},
-	{	&pDeliveryLocationStrings[2],	100, 75},
-	{	&pDeliveryLocationStrings[3],	50, 35},
-	{	&pDeliveryLocationStrings[4],	70, 50},
-	{	&pDeliveryLocationStrings[5],	45, 35},
-	{	&pDeliveryLocationStrings[6],	30, 25},
-	{	&pDeliveryLocationStrings[7],	100, 75},
-	{	&pDeliveryLocationStrings[8],	100, 75},
-	{	&pDeliveryLocationStrings[9],	30, 25},
-	{	&pDeliveryLocationStrings[10],	95, 70},
-	{	&pDeliveryLocationStrings[11],	30, 25},
-	{	&pDeliveryLocationStrings[12],	40, 30},
-	{	&pDeliveryLocationStrings[13],	45, 35},
-	{	&pDeliveryLocationStrings[14],	95, 70},
-	{	&pDeliveryLocationStrings[15],	50, 40},
-	{	&pDeliveryLocationStrings[16],	40, 30}
+	{	*pDeliveryLocationStrings[0],	20, 15},
+	{	*pDeliveryLocationStrings[1],	95, 70},
+	{	*pDeliveryLocationStrings[2],	100, 75},
+	{	*pDeliveryLocationStrings[3],	50, 35},
+	{	*pDeliveryLocationStrings[4],	70, 50},
+	{	*pDeliveryLocationStrings[5],	45, 35},
+	{	*pDeliveryLocationStrings[6],	30, 25},
+	{	*pDeliveryLocationStrings[7],	100, 75},
+	{	*pDeliveryLocationStrings[8],	100, 75},
+	{	*pDeliveryLocationStrings[9],	30, 25},
+	{	*pDeliveryLocationStrings[10],	95, 70},
+	{	*pDeliveryLocationStrings[11],	30, 25},
+	{	*pDeliveryLocationStrings[12],	40, 30},
+	{	*pDeliveryLocationStrings[13],	45, 35},
+	{	*pDeliveryLocationStrings[14],	95, 70},
+	{	*pDeliveryLocationStrings[15],	50, 40},
+	{	*pDeliveryLocationStrings[16],	40, 30}
 };
 
 UINT32		guiDeliveryLocation;
@@ -1342,7 +1342,7 @@ BOOLEAN CreateDestroyFlowerOrderDestDropDown( UINT8 ubDropDownMode )
 
 			//display the name on the title bar
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_LOCATION_X]+3, iFloristOrderFormConstants[FLOWER_ORDER_DELIVERY_LOCATION_Y]+3, iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_LOCATION_X]+iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_LOCATION_WIDTH],	iFloristOrderFormConstants[FLOWER_ORDER_DELIVERY_LOCATION_Y]+iFloristOrderFormConstants[FLOWER_ORDER_DELIVERY_LOCATION_HEIGHT]-2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
-			DrawTextToScreen( *(FlowerOrderLocations[ gubCurrentlySelectedFlowerLocation ].psCityLoc), iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_CITY_START_X]+6, iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_CITY_START_Y]+3, 0, iFloristOrderFormConstants[FLOWER_ORDEER_DROP_DOWN_FONT], (UINT8)iFloristOrderFormConstants[FLOWER_ORDEER_DROP_DOWN_COLOR], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+			DrawTextToScreen( (STR16)(FlowerOrderLocations[ gubCurrentlySelectedFlowerLocation ].psCityLoc), iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_CITY_START_X]+6, iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_CITY_START_Y]+3, 0, iFloristOrderFormConstants[FLOWER_ORDEER_DROP_DOWN_FONT], (UINT8)iFloristOrderFormConstants[FLOWER_ORDEER_DROP_DOWN_COLOR], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
 			//enable the drop down region
 		  MSYS_DisableRegion(&gSelectedFloristDisableDropDownRegion); 
@@ -1406,7 +1406,7 @@ BOOLEAN CreateDestroyFlowerOrderDestDropDown( UINT8 ubDropDownMode )
 			usPosY = iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_CITY_START_Y] + 3;
 			for( i=0; i< iFloristOrderFormConstants[FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS]; i++)
 			{
-				DrawTextToScreen( *(FlowerOrderLocations[i].psCityLoc), iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_CITY_START_X]+6, usPosY, 0, iFloristOrderFormConstants[FLOWER_ORDEER_DROP_DOWN_FONT], (UINT8)iFloristOrderFormConstants[FLOWER_ORDEER_DROP_DOWN_COLOR], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+				DrawTextToScreen( (STR16)(FlowerOrderLocations[i].psCityLoc), iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_CITY_START_X]+6, usPosY, 0, iFloristOrderFormConstants[FLOWER_ORDEER_DROP_DOWN_FONT], (UINT8)iFloristOrderFormConstants[FLOWER_ORDEER_DROP_DOWN_COLOR], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 				usPosY += usFontHeight + 2;
 			}
 
@@ -1431,7 +1431,7 @@ void FlowerOrderDrawSelectedCity( UINT8 ubNumber )
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_CITY_START_X], usPosY+2, iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_CITY_START_X]+iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_LOCATION_WIDTH]-9,	usPosY+usFontHeight+4, Get16BPPColor( FROMRGB( 255, 255, 255 ) ) );
 
 	SetFontShadow(NO_SHADOW);	
-	DrawTextToScreen( *(FlowerOrderLocations[ubNumber].psCityLoc), iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_CITY_START_X]+6, (UINT16)(usPosY+3), 0, iFloristOrderFormConstants[FLOWER_ORDEER_DROP_DOWN_FONT], 2, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+	DrawTextToScreen( (STR16)(FlowerOrderLocations[ubNumber].psCityLoc), iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_CITY_START_X]+6, (UINT16)(usPosY+3), 0, iFloristOrderFormConstants[FLOWER_ORDEER_DROP_DOWN_FONT], 2, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 	SetFontShadow(DEFAULT_SHADOW);
 
 	FlowerOrderDisplayShippingLocationCity();
@@ -1444,7 +1444,7 @@ void FlowerOrderDisplayShippingLocationCity()
 {
 	//display the name on the title bar
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_LOCATION_X]+3, iFloristOrderFormConstants[FLOWER_ORDER_DELIVERY_LOCATION_Y]+3, iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_LOCATION_X]+iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_LOCATION_WIDTH],	iFloristOrderFormConstants[FLOWER_ORDER_DELIVERY_LOCATION_Y]+iFloristOrderFormConstants[FLOWER_ORDER_DELIVERY_LOCATION_HEIGHT]-2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
-	DrawTextToScreen( *(FlowerOrderLocations[ gubCurrentlySelectedFlowerLocation ].psCityLoc), iFloristOrderFormConstants[FLOWER_ORDER_DELIVERY_LOCATION_X]+5, iFloristOrderFormConstants[FLOWER_ORDER_DELIVERY_LOCATION_Y]+5, 0, iFloristOrderFormConstants[FLOWER_ORDEER_SMALL_FONT], (UINT8)iFloristOrderFormConstants[FLOWER_ORDEER_SMALL_COLOR], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+	DrawTextToScreen( (STR16)(FlowerOrderLocations[ gubCurrentlySelectedFlowerLocation ].psCityLoc), iFloristOrderFormConstants[FLOWER_ORDER_DELIVERY_LOCATION_X]+5, iFloristOrderFormConstants[FLOWER_ORDER_DELIVERY_LOCATION_Y]+5, 0, iFloristOrderFormConstants[FLOWER_ORDEER_SMALL_FONT], (UINT8)iFloristOrderFormConstants[FLOWER_ORDEER_SMALL_COLOR], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 }
 
 

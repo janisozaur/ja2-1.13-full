@@ -137,7 +137,7 @@ extern STR16 pLaptopTitles[];
 extern STR16 pDayStrings[];
 extern STR16 pMercContractOverStrings[];
 extern STR16 pMilitiaConfirmStrings[];
-extern STR16 pDeliveryLocationStrings[];
+extern CHAR16 pDeliveryLocationStrings[17][20];
 extern STR16 pSkillAtZeroWarning[];
 extern STR16 pIMPBeginScreenStrings[];
 extern STR16 pIMPFinishButtonText[1];
@@ -674,7 +674,7 @@ enum
 extern		STR16			MercHomePageText[];
 
 
-//Funerl.c
+//Funeral.c
 enum
 {
 	FUNERAL_INTRO_1,
@@ -690,7 +690,7 @@ enum
 	FUNERAL_OUR_CONDOLENCES,	//10
 	FUNERAL_OUR_SYMPATHIES,
 };
-extern		STR16			sFuneralString[];
+extern CHAR16 sFuneralString[12][200];
 
 
 //Florist.c
@@ -712,7 +712,7 @@ enum
 	//There are actually 9 advertisements, but the 5-8 were not explicitly used.  Gotthard 10/16/07
 	FLORIST_ADVERTISEMENT_9,
 };
-extern		STR16			sFloristText[];
+extern CHAR16 sFloristText[14][150];
 
 
 //Florist Order Form
@@ -741,7 +741,7 @@ enum
 	FLORIST_ORDER_BILLING_INFO,							//20
 	FLORIST_ORDER_NAME,
 };
-extern		STR16			sOrderFormText[];
+extern CHAR16 sOrderFormText[22][85];
 
 
 
@@ -754,7 +754,7 @@ enum
 	FLORIST_GALLERY_ADDIFTIONAL_FEE,
 	FLORIST_GALLERY_HOME,
 };
-extern		STR16		sFloristGalleryText[];
+extern CHAR16 sFloristGalleryText[5][85];
 
 
 //Florist Cards
@@ -763,7 +763,7 @@ enum
 	FLORIST_CARDS_CLICK_SELECTION,
 	FLORIST_CARDS_BACK,
 };
-extern		STR16			sFloristCards[];
+extern		CHAR16 sFloristCards[2][30];
 
 // Bobbyr Mail Order.c
 enum

@@ -2672,7 +2672,7 @@ STR16			MercHomePageText[] =
 
 // For use at MiGillicutty's Web Page.
 //Commented out so the new data in the Funeral.xml file is used.  Gotthard 10/18/07
-STR16			sFuneralString[12] =
+CHAR16 sFuneralString[12][200] =
 {
 	L"McGillicutty's Mortuary: Helping families grieve since 1983.",
 	L"Funeral Director and former A.I.M. mercenary Murray \"Pops\" McGillicutty is a highly skilled and experienced mortician.",
@@ -2694,7 +2694,7 @@ STR16			sFuneralString[12] =
 
 // Text for the florist Home page
 //Commented out so the new data in the Florist.xml file is used.  Gotthard 10/18/07
-STR16			sFloristText[14] = 
+CHAR16 sFloristText[14][150] = 
 {
 	//Text on the button on the bottom of the page
 
@@ -2724,7 +2724,7 @@ STR16			sFloristText[14] =
 
 //Florist OrderForm
 //Commented out so the new data in the Florist.xml file is used.  Gotthard 10/18/07
-STR16			sOrderFormText[22] = 
+CHAR16 sOrderFormText[22][85] = 
 {
 	//Text on the buttons
 
@@ -2762,7 +2762,7 @@ STR16			sOrderFormText[22] =
 
 //Florist Gallery.c
 //Commented out so the new data in the Florist.xml file is used.  Gotthard 10/18/07
-STR16		sFloristGalleryText[5] =
+CHAR16 sFloristGalleryText[5][85] =
 {
 	//text on the buttons
 
@@ -2779,7 +2779,7 @@ STR16		sFloristGalleryText[5] =
 
 //Florist Cards
 
-STR16			sFloristCards[2] =
+CHAR16 sFloristCards[2][30] =
 {
 	L"Click on your selection",
 	L"Back",
@@ -3608,7 +3608,7 @@ STR16	gzGIOScreenText[] =
 	L"Awesome",
 };
 //Commented out so the new data in the BobbyRays.xml file is used.  Gotthard 10/18/07
-STR16 pDeliveryLocationStrings[17]/* =
+CHAR16 pDeliveryLocationStrings[17][20] =
 {
 	L"Austin",			//Austin, Texas, USA	
 	L"Baghdad",			//Baghdad, Iraq (Suddam Hussein's home)
@@ -3627,7 +3627,7 @@ STR16 pDeliveryLocationStrings[17]/* =
 	L"Tripoli",			//Tripoli, Libya (eastern Mediterranean)
 	L"Tokyo",				//Tokyo, Japan
 	L"Vancouver",		//Vancouver, British Columbia, Canada (west coast near US border)
-}*/;
+};
 
 STR16 pSkillAtZeroWarning[] =
 { //This string is used in the IMP character generation.  It is possible to select 0 ability

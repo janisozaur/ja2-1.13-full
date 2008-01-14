@@ -5,5 +5,6 @@ UINT32 InitializeJA2( );
 void ShutdownJA2( );
 
 BOOLEAN LoadExternalGameplayData(STR directoryName);
+void SetupFuneralPositionArray();
 
 #endif

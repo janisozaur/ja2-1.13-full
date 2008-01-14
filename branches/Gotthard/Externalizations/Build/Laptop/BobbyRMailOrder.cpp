@@ -28,7 +28,7 @@
 
 typedef struct
 {
-	STR16  *psCityLoc;
+	CHAR16  psCityLoc[20];
 	UINT16	usOverNightExpress;
 	UINT16	us2DaysService;
 	UINT16	usStandardService;
@@ -37,23 +37,23 @@ typedef struct
 
 BobbyROrderLocationStruct BobbyROrderLocations[]=
 {
-	{	&pDeliveryLocationStrings[0],		20,		15,		10 },
-	{	&pDeliveryLocationStrings[1],    295,	150,	85 },
-	{	&pDeliveryLocationStrings[2],    200,	100,	50 },	// the only one that really matters
-	{	&pDeliveryLocationStrings[3],		100,	55,		30 },
-	{	&pDeliveryLocationStrings[4],    95,		65,		40 },
-	{	&pDeliveryLocationStrings[5],    55,		40,		25 },
-	{	&pDeliveryLocationStrings[6],		35,		25,		15 },
-	{	&pDeliveryLocationStrings[7],    200,	100,	50 },
-	{	&pDeliveryLocationStrings[8],		190,	90,		45 },
-	{	&pDeliveryLocationStrings[9],    35,		25,		15 },
-	{	&pDeliveryLocationStrings[10],   100,	55,		30 },
-	{	&pDeliveryLocationStrings[11],   35,		25,		15 },
-	{	&pDeliveryLocationStrings[12],   45,		30,		20 },
-	{	&pDeliveryLocationStrings[13],   55,		40,		25 },
-	{	&pDeliveryLocationStrings[14],   100,	55,		30 },
-	{	&pDeliveryLocationStrings[15],   100,	55,		30 },
-	{	&pDeliveryLocationStrings[16],   45,		30,		20 },
+	{	*pDeliveryLocationStrings[0],		20,		15,		10 },
+	{	*pDeliveryLocationStrings[1],    295,	150,	85 },
+	{	*pDeliveryLocationStrings[2],    200,	100,	50 },	// the only one that really matters
+	{	*pDeliveryLocationStrings[3],		100,	55,		30 },
+	{	*pDeliveryLocationStrings[4],    95,		65,		40 },
+	{	*pDeliveryLocationStrings[5],    55,		40,		25 },
+	{	*pDeliveryLocationStrings[6],		35,		25,		15 },
+	{	*pDeliveryLocationStrings[7],    200,	100,	50 },
+	{	*pDeliveryLocationStrings[8],		190,	90,		45 },
+	{	*pDeliveryLocationStrings[9],    35,		25,		15 },
+	{	*pDeliveryLocationStrings[10],   100,	55,		30 },
+	{	*pDeliveryLocationStrings[11],   35,		25,		15 },
+	{	*pDeliveryLocationStrings[12],   45,		30,		20 },
+	{	*pDeliveryLocationStrings[13],   55,		40,		25 },
+	{	*pDeliveryLocationStrings[14],   100,	55,		30 },
+	{	*pDeliveryLocationStrings[15],   100,	55,		30 },
+	{	*pDeliveryLocationStrings[16],   45,		30,		20 },
  };
 
 //drop down menu
@@ -1369,7 +1369,7 @@ BOOLEAN CreateDestroyBobbyRDropDown( UINT8 ubDropDownAction )
 			if( gbSelectedCity == -1 )
 				DrawTextToScreen( BobbyROrderFormText[BOBBYR_SELECT_DEST], BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y+3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 			else
-				DrawTextToScreen( *(BobbyROrderLocations[gbSelectedCity].psCityLoc), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y+3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+				DrawTextToScreen( (STR16)(BobbyROrderLocations[gbSelectedCity].psCityLoc), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y+3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
 			//disable the r\close regiuon
 		  MSYS_DisableRegion(&gSelectedCloseDropDownRegion); 
@@ -1552,7 +1552,7 @@ void DrawSelectedCity( UINT8 ubCityNumber )
 	usPosY = BOBBYR_CITY_START_LOCATION_Y + 5;
 	for( i=gubCityAtTopOfList; i< gubCityAtTopOfList+BOBBYR_NUM_DISPLAYED_CITIES; i++)
 	{
-		DrawTextToScreen( *(BobbyROrderLocations[i].psCityLoc), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, usPosY, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen( (STR16)(BobbyROrderLocations[i].psCityLoc), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, usPosY, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 		usPosY += usFontHeight + 2;
 	}
 
@@ -1567,9 +1567,9 @@ void DrawSelectedCity( UINT8 ubCityNumber )
 
 	SetFontShadow(NO_SHADOW);	
 	if( ubCityNumber == 255 )
-		DrawTextToScreen( *(BobbyROrderLocations[ 0 ].psCityLoc), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, (UINT16)(usPosY+5), 0, BOBBYR_DROPDOWN_FONT, BOBBYR_FONT_BLACK, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen( (STR16)(BobbyROrderLocations[ 0 ].psCityLoc), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, (UINT16)(usPosY+5), 0, BOBBYR_DROPDOWN_FONT, BOBBYR_FONT_BLACK, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 	else
-		DrawTextToScreen( *(BobbyROrderLocations[ubCityNumber].psCityLoc), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, (UINT16)(usPosY+5), 0, BOBBYR_DROPDOWN_FONT, BOBBYR_FONT_BLACK, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen( (STR16)(BobbyROrderLocations[ubCityNumber].psCityLoc), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, (UINT16)(usPosY+5), 0, BOBBYR_DROPDOWN_FONT, BOBBYR_FONT_BLACK, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
 	SetFontShadow(DEFAULT_SHADOW);
 
@@ -1595,7 +1595,7 @@ void DisplayShippingLocationCity()
 	if( gbSelectedCity == -1 )
 		DrawTextToScreen( BobbyROrderFormText[BOBBYR_SELECT_DEST], BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y+3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 	else
-		DrawTextToScreen( *(BobbyROrderLocations[gbSelectedCity].psCityLoc), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y+3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen( (STR16)(BobbyROrderLocations[gbSelectedCity].psCityLoc), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y+3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
 
 	DisplayShippingCosts( TRUE, 0, BOBBYR_ORDERGRID_X, BOBBYR_ORDERGRID_Y, -1 );

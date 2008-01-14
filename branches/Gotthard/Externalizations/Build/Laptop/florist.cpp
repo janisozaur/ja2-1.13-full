@@ -13,6 +13,9 @@
 	#include "Text.h"
 	#include "Multi Language Graphic Utils.h"
 #endif
+//Just a note as to what some of the constants will be eventually defined as... Gotthard 11/4/07
+//iScreenWidthOffset = ((SCREEN_WIDTH - 640) / 2) + 111 + ;
+//iScreenHeightOffset = ((SCREEN_HEIGHT - 480) / 2) + 19;
 //Commented out to enable moving them into an array for eventual externalization.  Gotthard 10/24/07
 /*
 #define		FLORIST_SENTENCE_FONT							FONT12ARIAL
@@ -70,37 +73,37 @@ FONT_MCOLOR_WHITE,
 125,
 100,
 
-LAPTOP_SCREEN_UL_X + 113,
-LAPTOP_SCREEN_WEB_UL_Y + 0,
+((SCREEN_WIDTH - 640) / 2) + 111 + 113,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 0,
 
-LAPTOP_SCREEN_UL_X + 195,
-LAPTOP_SCREEN_WEB_UL_Y + 0,
+((SCREEN_WIDTH - 640) / 2) + 111 + 195,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 0,
 100,
 49,
 
-LAPTOP_SCREEN_UL_X + 5,
-LAPTOP_SCREEN_WEB_UL_Y + 135,
+((SCREEN_WIDTH - 640) / 2) + 111 + 5,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 135,
 
 54,
 
 4,
 
-LAPTOP_SCREEN_UL_X + 210,
-LAPTOP_SCREEN_WEB_UL_Y + 360,
+((SCREEN_WIDTH - 640) / 2) + 111 + 210,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 360,
 
-LAPTOP_SCREEN_UL_X + 53,
+((SCREEN_WIDTH - 640) / 2) + 111 + 53,
 136,
 
-LAPTOP_SCREEN_UL_X + 200,
+((SCREEN_WIDTH - 640) / 2) + 111 + 200,
 300,
 
-LAPTOP_SCREEN_UL_X + 117,
+((SCREEN_WIDTH - 640) / 2) + 111 + 117,
 290,
 
-LAPTOP_SCREEN_WEB_UL_Y + 79,
-LAPTOP_SCREEN_WEB_UL_Y + 94,
-LAPTOP_SCREEN_WEB_UL_Y + 107,
-LAPTOP_SCREEN_WEB_UL_Y + 119,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 79,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 94,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 107,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 119,
 //From the Florist.h file
 FONT14ARIAL,
 2,

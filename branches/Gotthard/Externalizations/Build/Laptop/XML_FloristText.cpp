@@ -127,26 +127,23 @@ FloristEndElementHandle(void *userData, const XML_Char *name)
 			pData->curElement = ELEMENT;
 			if(pData->curIndex < pData->maxArraySize)
 			{
-				//for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
-				//{
-					//temp = pData->szCharData[i];
-					if(pData->curIndex < 14)
-					{
-						sFloristText[pData->curIndex] = (STR16)pData->szCharData;
-					}
-					else if(pData->curIndex < 36)
-					{
-						sOrderFormText[pData->curIndex - 14] = (STR16)pData->szCharData;
-					}
-					else if(pData->curIndex < 41)
-					{
-						sFloristGalleryText[pData->curIndex - 36] = (STR16)pData->szCharData;
-					}
-					else if(pData->curIndex < 43)
-					{
-						sFloristCards[pData->curIndex - 41] = (STR16)pData->szCharData;
-					}
-				//}
+				size_t origsize = strlen(pData->szCharData) + 5;
+				if(pData->curIndex < 14)
+				{
+					mbstowcs(sFloristText[pData->curIndex],pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 36)
+				{
+					mbstowcs(sOrderFormText[pData->curIndex - 14] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 41)
+				{
+					mbstowcs(sFloristGalleryText[pData->curIndex - 36] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 43)
+				{
+					mbstowcs(sFloristCards[pData->curIndex - 41] ,pData->szCharData, origsize);
+				}
 			}
 		}
 		pData->maxReadDepth--;

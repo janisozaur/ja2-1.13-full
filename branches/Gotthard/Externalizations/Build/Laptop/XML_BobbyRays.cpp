@@ -121,18 +121,11 @@ BobbyRaysEndElementHandle(void *userData, const XML_Char *name)
 		}
 		else if(strcmp(name, "TEXT") == 0)
 		{
-			//YES, I realize this is not done that well, but give me a break I'm not that great of a coder.
-			//Maybe later we can have additional text in the BobbyRays area, but until then at least it can be changed.
-			//Gotthard, 10/18/07
 			pData->curElement = ELEMENT;
 			if(pData->curIndex < pData->maxArraySize)
 			{
-				/*for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
-				{
-					temp = pData->szCharData[i];
-					pDeliveryLocationStrings[pData->curIndex][i] = temp;
-				}*/
-				pDeliveryLocationStrings[pData->curIndex] = (STR16)pData->szCharData;
+				size_t origsize = 20;
+				mbstowcs(pDeliveryLocationStrings[pData->curIndex],pData->szCharData, origsize);
 			}
 		}
 		pData->maxReadDepth--;

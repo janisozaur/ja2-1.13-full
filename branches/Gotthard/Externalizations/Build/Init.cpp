@@ -61,7 +61,7 @@
 	#include "Multilingual Text Code Generator.h"
 	#include "editscreen.h"
 #endif
-
+extern UINT16 iFuneralConstants[];
 extern BOOLEAN GetCDromDriveLetter( STR8	pString );
 
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
@@ -126,7 +126,7 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	// WANNE: Enemy drops - end
 	
 	// Gotthard: Loading external Florist Data Text [2007-10-16]
-/*
+
 	strcpy(fileName, directoryName);
 	strcat(fileName, LAPTOPFLORISTTEXTFILENAME);
 	DebugMsg( TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
@@ -150,9 +150,10 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	DebugMsg( TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
 	if(!ReadInBobbyRaysText(fileName))
 		return FALSE;
+	SetupFuneralPositionArray();
 
 	// Gotthard: External Delivery Locations Text - End
-*/
+
 	// Gotthard: External Sector Names [2007-10-19]
 	strcpy(fileName, directoryName);
 	strcat(fileName, STRATEGICSECTORNAMETEXTFILENAME);
@@ -771,3 +772,77 @@ void HandleLaserLockResult( BOOLEAN fSuccess )
 }
 
 #endif
+
+void SetupFuneralPositionArray()
+{
+iFuneralConstants[0] = FONT12ARIAL;
+iFuneralConstants[1] = 2;
+iFuneralConstants[2] = FONT_MCOLOR_WHITE;
+
+iFuneralConstants[3] = FONT10ARIAL;
+
+iFuneralConstants[4] = FONT14ARIAL;
+iFuneralConstants[5] = FONT_MCOLOR_WHITE;//5
+iFuneralConstants[6] = FONT_MCOLOR_DKWHITE;
+
+iFuneralConstants[7] = FONT_MCOLOR_DKWHITE;
+
+iFuneralConstants[8] = ((SCREEN_WIDTH - 640) / 2) + 111 + 92;
+iFuneralConstants[9] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 0;
+
+iFuneralConstants[10] = ((SCREEN_WIDTH - 640) / 2) + 111 + 58;//10
+iFuneralConstants[11] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 43;
+
+iFuneralConstants[12] = ((SCREEN_WIDTH - 640) / 2) + 111 + 0;
+iFuneralConstants[13] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 43;
+
+iFuneralConstants[14] = ((SCREEN_WIDTH - 640) / 2) + 111 + 442;
+iFuneralConstants[15] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 43;//15
+
+iFuneralConstants[16] = ((SCREEN_WIDTH - 640) / 2) + 111 + 37;
+iFuneralConstants[17] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 329;
+iFuneralConstants[18] = 85;
+iFuneralConstants[19] = 60;
+
+iFuneralConstants[20] = 85;//20
+iFuneralConstants[21] = 5;
+
+iFuneralConstants[22] = 4;
+iFuneralConstants[23] = 17;
+iFuneralConstants[24] = 76;
+
+iFuneralConstants[25] = 125;//25
+iFuneralConstants[26] = 100;
+
+iFuneralConstants[27] = 380;
+
+iFuneralConstants[28] = ((SCREEN_WIDTH - 640) / 2) + 111 + 60;
+iFuneralConstants[29] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 164;
+
+iFuneralConstants[30] = ((SCREEN_WIDTH - 640) / 2) + 111 + 60;//30
+iFuneralConstants[31] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 198;
+
+iFuneralConstants[32] = ((SCREEN_WIDTH - 640) / 2) + 111 + 60;
+iFuneralConstants[33] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 227;
+
+iFuneralConstants[34] = ((SCREEN_WIDTH - 640) / 2) + 111 + 60;
+iFuneralConstants[35] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 261;//35
+
+iFuneralConstants[36] = ((SCREEN_WIDTH - 640) / 2) + 111 + 60;
+iFuneralConstants[37] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 303;
+
+iFuneralConstants[38] = ((SCREEN_WIDTH - 640) / 2) + 111 + 72;
+iFuneralConstants[39] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 151;
+iFuneralConstants[40] = 364;//40
+iFuneralConstants[41] = 204;
+
+iFuneralConstants[42] = 260;
+
+iFuneralConstants[43] = ((SCREEN_WIDTH - 640) / 2) + 111 + 72 + 55;//FUNERAL_CLOSED_RIP_SIGN_X + 55 originally
+iFuneralConstants[44] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 151 + 98;//FUNERAL_CLOSED_RIP_SIGN_Y + 98 originally
+
+iFuneralConstants[45] = ((SCREEN_WIDTH - 640) / 2) + 111 + 72 + 55;//FUNERAL_RIP_SENTENCE_1_X Originally	//45
+iFuneralConstants[46] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 151 + 162;//FUNERAL_CLOSED_RIP_SIGN_Y Originally
+
+return;
+}

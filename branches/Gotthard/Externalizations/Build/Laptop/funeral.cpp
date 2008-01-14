@@ -11,8 +11,8 @@
 	#include "Multi Language Graphic Utils.h"
 #endif
 //Just a note as to what some of the constants will be eventually defined as... Gotthard 11/4/07
-//iScreenWidthOffset = (SCREEN_WIDTH - 640) / 2;
-//iScreenHeightOffset = (SCREEN_HEIGHT - 480) / 2;
+//iScreenWidthOffset = ((SCREEN_WIDTH - 640) / 2) + 111 + ;
+//iScreenHeightOffset = ((SCREEN_HEIGHT - 480) / 2) + 19;
 
 /*0,3,4 are font changes, don't read them and copy over them for now.
 #define		FUNERAL_SENTENCE_FONT							FONT12ARIAL
@@ -165,7 +165,7 @@ FUNERAL_RIP_SENTENCE_2_Y,
 
 //This is the array for all the funeral constants.  They are referenced with the enum above, to hopefully make code transition less difficult.  Gotthard 10/22/07
 //I'd love to have it be INT16 to allow for larger modifiers and negative values, but for now that's just not possible without changing how the game displays text.  ( I *think*, I will look into it when I know it's working.)
-UINT16 iFuneralConstants[] =
+extern UINT16 iFuneralConstants[] =
 {
 FONT12ARIAL,
 2,
@@ -179,20 +179,20 @@ FONT_MCOLOR_DKWHITE,
 
 FONT_MCOLOR_DKWHITE,
 
-LAPTOP_SCREEN_UL_X + 92,
-LAPTOP_SCREEN_WEB_UL_Y + 0,
+((SCREEN_WIDTH - 640) / 2) + 111 + 92,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 0,
 
-LAPTOP_SCREEN_UL_X + 58,//10
-LAPTOP_SCREEN_WEB_UL_Y + 43,
+((SCREEN_WIDTH - 640) / 2) + 111 + 58,//10
+((SCREEN_HEIGHT - 480) / 2) + 19 + 43,
 
-LAPTOP_SCREEN_UL_X + 0,
-LAPTOP_SCREEN_WEB_UL_Y + 43,
+((SCREEN_WIDTH - 640) / 2) + 111 + 0,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 43,
 
-LAPTOP_SCREEN_UL_X + 442,
-LAPTOP_SCREEN_WEB_UL_Y + 43,//15
+((SCREEN_WIDTH - 640) / 2) + 111 + 442,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 43,//15
 
-LAPTOP_SCREEN_UL_X + 37,
-LAPTOP_SCREEN_WEB_UL_Y + 329,
+((SCREEN_WIDTH - 640) / 2) + 111 + 37,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 329,
 85,
 60,
 
@@ -203,38 +203,38 @@ LAPTOP_SCREEN_WEB_UL_Y + 329,
 17,
 76,
 
-125,
+125,//25
 100,
 
 380,
 
-LAPTOP_SCREEN_UL_X + 60,
-LAPTOP_SCREEN_WEB_UL_Y + 164,
+((SCREEN_WIDTH - 640) / 2) + 111 + 60,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 164,
 
-LAPTOP_SCREEN_UL_X + 60,
-LAPTOP_SCREEN_WEB_UL_Y + 198,
+((SCREEN_WIDTH - 640) / 2) + 111 + 60,//30
+((SCREEN_HEIGHT - 480) / 2) + 19 + 198,
 
-LAPTOP_SCREEN_UL_X + 60,
-LAPTOP_SCREEN_WEB_UL_Y + 227,
+((SCREEN_WIDTH - 640) / 2) + 111 + 60,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 227,
 
-LAPTOP_SCREEN_UL_X + 60,
-LAPTOP_SCREEN_WEB_UL_Y + 261,
+((SCREEN_WIDTH - 640) / 2) + 111 + 60,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 261,//35
 
-LAPTOP_SCREEN_UL_X + 60,
-LAPTOP_SCREEN_WEB_UL_Y + 303,
+((SCREEN_WIDTH - 640) / 2) + 111 + 60,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 303,
 
-LAPTOP_SCREEN_UL_X + 72,
-LAPTOP_SCREEN_WEB_UL_Y + 151,
-364,
+((SCREEN_WIDTH - 640) / 2) + 111 + 72,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 151,
+364,//40
 204,
 
 260,
 
-LAPTOP_SCREEN_UL_X + 72 + 55,//FUNERAL_CLOSED_RIP_SIGN_X + 55 originally
-LAPTOP_SCREEN_WEB_UL_Y + 151 + 98,//FUNERAL_CLOSED_RIP_SIGN_Y + 98 originally
+((SCREEN_WIDTH - 640) / 2) + 111 + 72 + 55,//FUNERAL_CLOSED_RIP_SIGN_X + 55 originally
+((SCREEN_HEIGHT - 480) / 2) + 19 + 151 + 98,//FUNERAL_CLOSED_RIP_SIGN_Y + 98 originally
 
-LAPTOP_SCREEN_UL_X + 72 + 55,//FUNERAL_RIP_SENTENCE_1_X Originally
-LAPTOP_SCREEN_WEB_UL_Y + 151 + 162,//FUNERAL_CLOSED_RIP_SIGN_Y Originally
+((SCREEN_WIDTH - 640) / 2) + 111 + 72 + 55,//FUNERAL_RIP_SENTENCE_1_X Originally	//45
+((SCREEN_HEIGHT - 480) / 2) + 19 + 151 + 162,//FUNERAL_CLOSED_RIP_SIGN_Y Originally
 };
 
 //Image Identifiers
@@ -393,12 +393,13 @@ void RenderFuneral()
 	for(i=0; i<iFuneralConstants[FUNERAL_NUMBER_OF_LINKS]; i++)
 	{
 		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,usPosX, iFuneralConstants[FUNERAL_LINK_1_Y], VO_BLT_SRCTRANSPARENCY,NULL);
-
+		STR16 temp = sFuneralString[i+FUNERAL_SEND_FLOWERS];
 		//Calculate the height of the string, as it needs to be vertically centered.
 		usStringHeight = IanWrappedStringHeight( 0, 0, iFuneralConstants[FUNERAL_LINK_TEXT_WIDTH], 2, 
-															 iFuneralConstants[FUNERAL_SENTENCE_FONT], 0, sFuneralString[i+FUNERAL_SEND_FLOWERS], 
+															 iFuneralConstants[FUNERAL_SENTENCE_FONT], 0, temp, 
 															 0, 0, 0 );
-		DisplayWrappedString( (UINT16)(usPosX+iFuneralConstants[FUNERAL_LINK_TEXT_OFFSET_X]), (UINT16)(iFuneralConstants[FUNERAL_LINK_1_Y] + (iFuneralConstants[FUNERAL_LINK_1_HEIGHT] - usStringHeight) / 2), iFuneralConstants[FUNERAL_LINK_TEXT_WIDTH], 2, iFuneralConstants[FUNERAL_SENTENCE_FONT], (UINT8)iFuneralConstants[FUNERAL_TITLE_COLOR], sFuneralString[i+FUNERAL_SEND_FLOWERS], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
+		
+		IanDisplayWrappedString( (UINT16)(usPosX+iFuneralConstants[FUNERAL_LINK_TEXT_OFFSET_X]), (UINT16)(iFuneralConstants[FUNERAL_LINK_1_Y] + (iFuneralConstants[FUNERAL_LINK_1_HEIGHT] - usStringHeight) / 2), iFuneralConstants[FUNERAL_LINK_TEXT_WIDTH], 2, iFuneralConstants[FUNERAL_SENTENCE_FONT], (UINT8)iFuneralConstants[FUNERAL_TITLE_COLOR], temp, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
 
 		usPosX += iFuneralConstants[FUNERAL_LINK_OFFSET_X];
@@ -407,21 +408,21 @@ void RenderFuneral()
 	//display all the sentences
 
 	// sentence 1
-	DisplayWrappedString(iFuneralConstants[FUNERAL_SENTENCE_1_X], iFuneralConstants[FUNERAL_SENTENCE_1_Y], iFuneralConstants[FUNERAL_SENTENCE_WIDTH], 2, iFuneralConstants[FUNERAL_TITLE_FONT], (UINT8)iFuneralConstants[FUNERAL_TITLE_COLOR], sFuneralString[FUNERAL_INTRO_1], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
+	DisplayWrappedString(iFuneralConstants[FUNERAL_SENTENCE_1_X], iFuneralConstants[FUNERAL_SENTENCE_1_Y], iFuneralConstants[FUNERAL_SENTENCE_WIDTH], 2, iFuneralConstants[FUNERAL_TITLE_FONT], (UINT8)iFuneralConstants[FUNERAL_TITLE_COLOR], (STR16)sFuneralString[FUNERAL_INTRO_1], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
 	SetFontShadow( (UINT8)iFuneralConstants[FUNERAL_SENTENCE_SHADOW_COLOR] );
 
 	// sentence 2
-	DisplayWrappedString(iFuneralConstants[FUNERAL_SENTENCE_2_X], iFuneralConstants[FUNERAL_SENTENCE_2_Y], iFuneralConstants[FUNERAL_SENTENCE_WIDTH], 2, iFuneralConstants[FUNERAL_SENTENCE_FONT], (UINT8)iFuneralConstants[FUNERAL_SENTENCE_COLOR], sFuneralString[FUNERAL_INTRO_2], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
+	DisplayWrappedString(iFuneralConstants[FUNERAL_SENTENCE_2_X], iFuneralConstants[FUNERAL_SENTENCE_2_Y], iFuneralConstants[FUNERAL_SENTENCE_WIDTH], 2, iFuneralConstants[FUNERAL_SENTENCE_FONT], (UINT8)iFuneralConstants[FUNERAL_SENTENCE_COLOR], (STR16)sFuneralString[FUNERAL_INTRO_2], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
 	// sentence 3
-	DisplayWrappedString(iFuneralConstants[FUNERAL_SENTENCE_3_X], iFuneralConstants[FUNERAL_SENTENCE_3_Y], iFuneralConstants[FUNERAL_SENTENCE_WIDTH], 2, iFuneralConstants[FUNERAL_SENTENCE_FONT], (UINT8)iFuneralConstants[FUNERAL_SENTENCE_COLOR], sFuneralString[FUNERAL_INTRO_3], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
+	DisplayWrappedString(iFuneralConstants[FUNERAL_SENTENCE_3_X], iFuneralConstants[FUNERAL_SENTENCE_3_Y], iFuneralConstants[FUNERAL_SENTENCE_WIDTH], 2, iFuneralConstants[FUNERAL_SENTENCE_FONT], (UINT8)iFuneralConstants[FUNERAL_SENTENCE_COLOR], (STR16)sFuneralString[FUNERAL_INTRO_3], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
 	// sentence 4
-	DisplayWrappedString(iFuneralConstants[FUNERAL_SENTENCE_4_X], iFuneralConstants[FUNERAL_SENTENCE_4_Y], iFuneralConstants[FUNERAL_SENTENCE_WIDTH], 2, iFuneralConstants[FUNERAL_SENTENCE_FONT], (UINT8)iFuneralConstants[FUNERAL_SENTENCE_COLOR], sFuneralString[FUNERAL_INTRO_4], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
+	DisplayWrappedString(iFuneralConstants[FUNERAL_SENTENCE_4_X], iFuneralConstants[FUNERAL_SENTENCE_4_Y], iFuneralConstants[FUNERAL_SENTENCE_WIDTH], 2, iFuneralConstants[FUNERAL_SENTENCE_FONT], (UINT8)iFuneralConstants[FUNERAL_SENTENCE_COLOR], (STR16)sFuneralString[FUNERAL_INTRO_4], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
 	// sentence 5
-	DisplayWrappedString(iFuneralConstants[FUNERAL_SENTENCE_5_X], iFuneralConstants[FUNERAL_SENTENCE_5_Y], iFuneralConstants[FUNERAL_SENTENCE_WIDTH], 2, iFuneralConstants[FUNERAL_SENTENCE_FONT], (UINT8)iFuneralConstants[FUNERAL_SENTENCE_COLOR], sFuneralString[FUNERAL_INTRO_5], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
+	DisplayWrappedString(iFuneralConstants[FUNERAL_SENTENCE_5_X], iFuneralConstants[FUNERAL_SENTENCE_5_Y], iFuneralConstants[FUNERAL_SENTENCE_WIDTH], 2, iFuneralConstants[FUNERAL_SENTENCE_FONT], (UINT8)iFuneralConstants[FUNERAL_SENTENCE_COLOR], (STR16)sFuneralString[FUNERAL_INTRO_5], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
 	SetFontShadow(DEFAULT_SHADOW);
 
@@ -444,10 +445,10 @@ void DisplayFuneralRipTombStone()
 	SetFontShadow( (UINT8)iFuneralConstants[FUNERAL_RIP_SHADOW_COLOR] );
 
 	// sentence 10
-	DisplayWrappedString(iFuneralConstants[FUNERAL_RIP_SENTENCE_1_X], iFuneralConstants[FUNERAL_RIP_SENTENCE_1_Y], iFuneralConstants[FUNERAL_RIP_SENTENCE_WIDTH], 2, iFuneralConstants[FUNERAL_SMALL_FONT], (UINT8)iFuneralConstants[FUNERAL_SENTENCE_COLOR], sFuneralString[FUNERAL_OUR_CONDOLENCES], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);//FUNERAL_TITLE_FONT
+	DisplayWrappedString(iFuneralConstants[FUNERAL_RIP_SENTENCE_1_X], iFuneralConstants[FUNERAL_RIP_SENTENCE_1_Y], iFuneralConstants[FUNERAL_RIP_SENTENCE_WIDTH], 2, iFuneralConstants[FUNERAL_SMALL_FONT], (UINT8)iFuneralConstants[FUNERAL_SENTENCE_COLOR], (STR16)sFuneralString[FUNERAL_OUR_CONDOLENCES], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);//FUNERAL_TITLE_FONT
 
 	// sentence 11
-	DisplayWrappedString(iFuneralConstants[FUNERAL_RIP_SENTENCE_2_X], iFuneralConstants[FUNERAL_RIP_SENTENCE_2_Y], iFuneralConstants[FUNERAL_RIP_SENTENCE_WIDTH], 2, iFuneralConstants[FUNERAL_SMALL_FONT], (UINT8)iFuneralConstants[FUNERAL_SENTENCE_COLOR], sFuneralString[FUNERAL_OUR_SYMPATHIES], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
+	DisplayWrappedString(iFuneralConstants[FUNERAL_RIP_SENTENCE_2_X], iFuneralConstants[FUNERAL_RIP_SENTENCE_2_Y], iFuneralConstants[FUNERAL_RIP_SENTENCE_WIDTH], 2, iFuneralConstants[FUNERAL_SMALL_FONT], (UINT8)iFuneralConstants[FUNERAL_SENTENCE_COLOR], (STR16)sFuneralString[FUNERAL_OUR_SYMPATHIES], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
 	SetFontShadow(DEFAULT_SHADOW);
 
