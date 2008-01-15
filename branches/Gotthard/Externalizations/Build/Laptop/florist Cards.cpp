@@ -12,7 +12,9 @@
 	#include "Florist Gallery.h"
 	#include "Text.h"
 #endif
-
+//Just a note as to what some of the constants will be eventually defined as... Gotthard 11/4/07
+//iScreenWidthOffset = ((SCREEN_WIDTH - 640) / 2) + 111 + ;
+//iScreenHeightOffset = ((SCREEN_HEIGHT - 480) / 2) + 19;
 //Commented out to help externalization to XML files.  Gotthard 10/31/07
 /*
 #define		FLORIST_CARDS_SENTENCE_FONT			FONT12ARIAL
@@ -66,13 +68,13 @@ FLORIST_CARD_BACK_BUTTON_Y,
 
 
 //This array holds all the original constants, and they are referenced using the enumeration defined above.  Gotthard 10/31/07
-UINT16 iFloristCardsConstants[] =
+INT16 iFloristCardsConstants[] =
 {
 FONT12ARIAL,
 FONT_MCOLOR_WHITE,
 
-LAPTOP_SCREEN_UL_X + 7,	
-LAPTOP_SCREEN_WEB_UL_Y + 72,
+((SCREEN_WIDTH - 640) / 2) + 111 + 7,	
+((SCREEN_HEIGHT - 480) / 2) + 27 + 19 + 72,
 174,
 109,
 
@@ -82,12 +84,12 @@ LAPTOP_SCREEN_WEB_UL_Y + 72,
 121,
 90,
 
-LAPTOP_SCREEN_UL_X,
-LAPTOP_SCREEN_WEB_UL_Y + 53,
+((SCREEN_WIDTH - 640) / 2) + 111,
+((SCREEN_HEIGHT - 480) / 2) + 27 + 19 + 53,
 613 - 111,
 
-LAPTOP_SCREEN_UL_X + 8,
-LAPTOP_SCREEN_WEB_UL_Y + 12,
+((SCREEN_WIDTH - 640) / 2) + 111 + 8,
+((SCREEN_HEIGHT - 480) / 2) + 27 + 19 + 12,
 };
 
 UINT32		guiCardBackground;

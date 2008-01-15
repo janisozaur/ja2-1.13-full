@@ -45,7 +45,7 @@
 	#include "funeral.h"
 #endif
 
-extern UINT16 iFuneralConstants[];
+extern INT16 iFuneralConstants[];
 
 struct
 {
@@ -130,7 +130,7 @@ FuneralLocationsEndElementHandle(void *userData, const XML_Char *name)
 			pData->curElement = ELEMENT;
 			if(pData->curIndex < pData->maxArraySize)//Yeah probably not needed, but I have no idea what I am doing.
 			{
-				iFuneralConstants[pData->curIndex] = (UINT16) atol(pData->szCharData);//Theoretically should copy a UINT into the extern array, but we'll see...
+				iFuneralConstants[pData->curIndex] += (INT16) atol(pData->szCharData);//Theoretically should copy a UINT into the extern array, but we'll see...
 			}
 		}
 		pData->maxReadDepth--;

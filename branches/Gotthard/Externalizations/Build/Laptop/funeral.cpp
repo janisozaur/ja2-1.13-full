@@ -165,7 +165,7 @@ FUNERAL_RIP_SENTENCE_2_Y,
 
 //This is the array for all the funeral constants.  They are referenced with the enum above, to hopefully make code transition less difficult.  Gotthard 10/22/07
 //I'd love to have it be INT16 to allow for larger modifiers and negative values, but for now that's just not possible without changing how the game displays text.  ( I *think*, I will look into it when I know it's working.)
-extern UINT16 iFuneralConstants[] =
+extern INT16 iFuneralConstants[] =
 {
 FONT12ARIAL,
 2,
@@ -180,19 +180,19 @@ FONT_MCOLOR_DKWHITE,
 FONT_MCOLOR_DKWHITE,
 
 ((SCREEN_WIDTH - 640) / 2) + 111 + 92,
-((SCREEN_HEIGHT - 480) / 2) + 19 + 0,
+((SCREEN_HEIGHT - 480) / 2) + 27 + 19 + 0,
 
 ((SCREEN_WIDTH - 640) / 2) + 111 + 58,//10
-((SCREEN_HEIGHT - 480) / 2) + 19 + 43,
+((SCREEN_HEIGHT - 480) / 2) + 27 + 19 + 43,
 
 ((SCREEN_WIDTH - 640) / 2) + 111 + 0,
-((SCREEN_HEIGHT - 480) / 2) + 19 + 43,
+((SCREEN_HEIGHT - 480) / 2) + 27 + 19 + 43,
 
 ((SCREEN_WIDTH - 640) / 2) + 111 + 442,
-((SCREEN_HEIGHT - 480) / 2) + 19 + 43,//15
+((SCREEN_HEIGHT - 480) / 2) + 27 + 19 + 43,//15
 
 ((SCREEN_WIDTH - 640) / 2) + 111 + 37,
-((SCREEN_HEIGHT - 480) / 2) + 19 + 329,
+((SCREEN_HEIGHT - 480) / 2) + 27 + 19 + 329,
 85,
 60,
 
@@ -209,32 +209,32 @@ FONT_MCOLOR_DKWHITE,
 380,
 
 ((SCREEN_WIDTH - 640) / 2) + 111 + 60,
-((SCREEN_HEIGHT - 480) / 2) + 19 + 164,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 27 + 164,
 
 ((SCREEN_WIDTH - 640) / 2) + 111 + 60,//30
-((SCREEN_HEIGHT - 480) / 2) + 19 + 198,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 27 + 198,
 
 ((SCREEN_WIDTH - 640) / 2) + 111 + 60,
-((SCREEN_HEIGHT - 480) / 2) + 19 + 227,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 27 + 227,
 
 ((SCREEN_WIDTH - 640) / 2) + 111 + 60,
-((SCREEN_HEIGHT - 480) / 2) + 19 + 261,//35
+((SCREEN_HEIGHT - 480) / 2) + 19 + 27 + 261,//35
 
 ((SCREEN_WIDTH - 640) / 2) + 111 + 60,
-((SCREEN_HEIGHT - 480) / 2) + 19 + 303,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 27 + 303,
 
 ((SCREEN_WIDTH - 640) / 2) + 111 + 72,
-((SCREEN_HEIGHT - 480) / 2) + 19 + 151,
+((SCREEN_HEIGHT - 480) / 2) + 19 + 27 + 151,
 364,//40
 204,
 
 260,
 
 ((SCREEN_WIDTH - 640) / 2) + 111 + 72 + 55,//FUNERAL_CLOSED_RIP_SIGN_X + 55 originally
-((SCREEN_HEIGHT - 480) / 2) + 19 + 151 + 98,//FUNERAL_CLOSED_RIP_SIGN_Y + 98 originally
+((SCREEN_HEIGHT - 480) / 2) + 19 + 27 + 151 + 98,//FUNERAL_CLOSED_RIP_SIGN_Y + 98 originally
 
 ((SCREEN_WIDTH - 640) / 2) + 111 + 72 + 55,//FUNERAL_RIP_SENTENCE_1_X Originally	//45
-((SCREEN_HEIGHT - 480) / 2) + 19 + 151 + 162,//FUNERAL_CLOSED_RIP_SIGN_Y Originally
+((SCREEN_HEIGHT - 480) / 2) + 19 + 27 + 151 + 162,//FUNERAL_CLOSED_RIP_SIGN_Y Originally
 };
 
 //Image Identifiers

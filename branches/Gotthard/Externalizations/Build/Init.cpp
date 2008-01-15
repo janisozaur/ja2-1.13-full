@@ -61,7 +61,11 @@
 	#include "Multilingual Text Code Generator.h"
 	#include "editscreen.h"
 #endif
-extern UINT16 iFuneralConstants[];
+extern INT16 iFuneralConstants[];
+extern INT16 iFloristConstants[];
+extern INT16 iFloristGalleryConstants[];
+extern INT16 iFloristCardsConstants[];
+extern INT16 iFloristOrderFormConstants[];
 extern BOOLEAN GetCDromDriveLetter( STR8	pString );
 
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
@@ -150,7 +154,6 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	DebugMsg( TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
 	if(!ReadInBobbyRaysText(fileName))
 		return FALSE;
-	SetupFuneralPositionArray();
 
 	// Gotthard: External Delivery Locations Text - End
 
@@ -162,8 +165,9 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 		return FALSE;
 
 	// Gotthard: External Sector Names - End
-/*
+
 	// Gotthard: Laptop Florist Locations [2007-11-03]
+	SetupFloristPositionArrays();//This initializes the arrays so we don't have to use #defines anymore. Gotthard 1/15/08
 	strcpy(fileName, directoryName);
 	strcat(fileName, LAPTOPFLORISTLOCATIONFILENAME);
 	DebugMsg( TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
@@ -172,13 +176,14 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	// Gotthard: Laptop Florist Locations - End
 
 	// Gotthard: Laptop Funeral Locations [2007-11-03]
+	SetupFuneralPositionArray();//This initializes the array so we don't have to use #defines anymore. Gotthard 1/15/08
 	strcpy(fileName, directoryName);
 	strcat(fileName, LAPTOPFUNERALLOCATIONFILENAME);
 	DebugMsg( TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
 	if(!ReadInFuneralLocations(fileName))
 		return FALSE;
 	// Gotthard: Laptop Funeral Locations - End
-*/
+
 	// WANNE: Sector Loadscreens [2007-05-18]
 	strcpy(fileName, directoryName);
 	strcat(fileName, SECTORLOADSCREENSFILENAME);
@@ -773,76 +778,224 @@ void HandleLaserLockResult( BOOLEAN fSuccess )
 
 #endif
 
+//Not sure if this is in the right spot, but it initializes arrays of constants used by Florist.cpp, Florist Cards.cpp, Florist Order Form.cpp, and Florist Gallery.cpp so we don't have to use #defines anymore. Gotthard 1/14/08
+void SetupFloristPositionArrays()
+{
+//These are from florist.cpp
+iFloristConstants[0] = FONT12ARIAL;
+iFloristConstants[1] = FONT_MCOLOR_WHITE;
+iFloristConstants[2] = FONT14ARIAL;
+iFloristConstants[3] = FONT_MCOLOR_WHITE;
+iFloristConstants[4] = 125;
+iFloristConstants[5] = 100;
+iFloristConstants[6] = ((SCREEN_WIDTH - 640) / 2) + 224;
+iFloristConstants[7] = ((SCREEN_HEIGHT - 480) / 2) + 46;
+iFloristConstants[8] = ((SCREEN_WIDTH - 640) / 2) + 306;
+iFloristConstants[9] = ((SCREEN_HEIGHT - 480) / 2) + 46;
+iFloristConstants[10] = 100;
+iFloristConstants[11] = 49;
+iFloristConstants[12] = ((SCREEN_WIDTH - 640) / 2) + 116;
+iFloristConstants[13] = ((SCREEN_HEIGHT - 480) / 2) + 181;
+iFloristConstants[14] = 54;
+iFloristConstants[15] = 4;
+iFloristConstants[16] = ((SCREEN_WIDTH - 640) / 2) + 321;
+iFloristConstants[17] = ((SCREEN_HEIGHT - 480) / 2) + 406;
+iFloristConstants[18] = ((SCREEN_WIDTH - 640) / 2) + 164;
+iFloristConstants[19] = 136;
+iFloristConstants[20] = ((SCREEN_WIDTH - 640) / 2) + 311;
+iFloristConstants[21] = 300;
+iFloristConstants[22] = ((SCREEN_WIDTH - 640) / 2) + 228;
+iFloristConstants[23] = 290;
+iFloristConstants[24] = ((SCREEN_HEIGHT - 480) / 2) + 125;
+iFloristConstants[25] = ((SCREEN_HEIGHT - 480) / 2) + 140;
+iFloristConstants[26] = ((SCREEN_HEIGHT - 480) / 2) + 153;
+iFloristConstants[27] = ((SCREEN_HEIGHT - 480) / 2) + 165;
+//From the Florist.h file
+iFloristConstants[28] = FONT14ARIAL;
+iFloristConstants[29] = 2;
+iFloristConstants[30] = 2;
+iFloristConstants[31] = 128;
+
+//These are from florist order form.cpp
+iFloristOrderFormConstants[0] = FONT10ARIAL;
+iFloristOrderFormConstants[1] = FONT12ARIAL;
+iFloristOrderFormConstants[2] = FONT12ARIAL;
+iFloristOrderFormConstants[3] = FONT_MCOLOR_WHITE;
+iFloristOrderFormConstants[4] = FONT_MCOLOR_LTYELLOW;
+iFloristOrderFormConstants[5] = FONT12ARIAL;
+iFloristOrderFormConstants[6] = FONT_MCOLOR_WHITE;
+iFloristOrderFormConstants[7] = 76;
+iFloristOrderFormConstants[8] = ((SCREEN_WIDTH - 640) / 2) + 118;
+iFloristOrderFormConstants[9] = ((SCREEN_HEIGHT - 480) / 2) + 109;
+iFloristOrderFormConstants[10] = 75;
+iFloristOrderFormConstants[11] = 100;
+iFloristOrderFormConstants[12] = ((SCREEN_WIDTH - 640) / 2) + 125;
+iFloristOrderFormConstants[13] = ((SCREEN_HEIGHT - 480) / 2) + 272;
+iFloristOrderFormConstants[14] = 468;		
+iFloristOrderFormConstants[15] = 27;
+iFloristOrderFormConstants[16] = ((SCREEN_WIDTH - 640) / 2) + 171;
+iFloristOrderFormConstants[17] = ((SCREEN_HEIGHT - 480) / 2) + 333;
+iFloristOrderFormConstants[18] = 27;
+iFloristOrderFormConstants[19] = ((SCREEN_WIDTH - 640) / 2) + 306;
+iFloristOrderFormConstants[20] = ((SCREEN_HEIGHT - 480) / 2) + 189;
+iFloristOrderFormConstants[21] = 252;
+iFloristOrderFormConstants[22] = 20;
+iFloristOrderFormConstants[23] = ((SCREEN_WIDTH - 640) / 2) + 119;
+iFloristOrderFormConstants[24] = ((SCREEN_HEIGHT - 480) / 2) + 58;
+iFloristOrderFormConstants[25] = ((SCREEN_WIDTH - 640) / 2) + 235;
+iFloristOrderFormConstants[26] = ((SCREEN_HEIGHT - 480) / 2) + 410;
+iFloristOrderFormConstants[27] = ((SCREEN_WIDTH - 640) / 2) + 326;
+iFloristOrderFormConstants[28] = ((SCREEN_HEIGHT - 480) / 2) + 410;
+iFloristOrderFormConstants[29] = ((SCREEN_WIDTH - 640) / 2) + 416;
+iFloristOrderFormConstants[30] = ((SCREEN_HEIGHT - 480) / 2) + 410;
+iFloristOrderFormConstants[31] = ((SCREEN_WIDTH - 640) / 2) + 205;
+iFloristOrderFormConstants[32] = ((SCREEN_HEIGHT - 480) / 2) + 114;
+iFloristOrderFormConstants[33] = ((SCREEN_WIDTH - 640) / 2) + 205;
+iFloristOrderFormConstants[34] = ((SCREEN_HEIGHT - 480) / 2) + 129;
+iFloristOrderFormConstants[35] = ((SCREEN_WIDTH - 640) / 2) + 205;
+iFloristOrderFormConstants[36] = ((SCREEN_HEIGHT - 480) / 2) + 129;
+iFloristOrderFormConstants[37] = ((SCREEN_WIDTH - 640) / 2) + 205;
+iFloristOrderFormConstants[38] = ((SCREEN_HEIGHT - 480) / 2) + 172;
+iFloristOrderFormConstants[39] = ((SCREEN_WIDTH - 640) / 2) + 205;
+iFloristOrderFormConstants[40] = ((SCREEN_HEIGHT - 480) / 2) + 193;
+iFloristOrderFormConstants[41] = ((SCREEN_WIDTH - 640) / 2) + 118;
+iFloristOrderFormConstants[42] = ((SCREEN_HEIGHT - 480) / 2) + 213;
+iFloristOrderFormConstants[43] = ((SCREEN_WIDTH - 640) / 2) + 118;
+iFloristOrderFormConstants[44] = ((SCREEN_HEIGHT - 480) / 2) + 258;
+iFloristOrderFormConstants[45] = ((SCREEN_WIDTH - 640) / 2) + 130;
+iFloristOrderFormConstants[46] = ((SCREEN_HEIGHT - 480) / 2) + 277;
+iFloristOrderFormConstants[47] = 457;
+iFloristOrderFormConstants[48] = 17;
+iFloristOrderFormConstants[49] = ((SCREEN_WIDTH - 640) / 2) + 118;
+iFloristOrderFormConstants[50] = ((SCREEN_HEIGHT - 480) / 2) + 315;
+iFloristOrderFormConstants[51] = ((SCREEN_WIDTH - 640) / 2) + 118;
+iFloristOrderFormConstants[52] = ((SCREEN_HEIGHT - 480) / 2) + 337;
+iFloristOrderFormConstants[53] = 50;
+iFloristOrderFormConstants[54] = ((SCREEN_WIDTH - 640) / 2) + 174;
+iFloristOrderFormConstants[55] = ((SCREEN_HEIGHT - 480) / 2) + 336;
+iFloristOrderFormConstants[56] = 257;
+iFloristOrderFormConstants[57] = 15;
+iFloristOrderFormConstants[58] = 20;
+iFloristOrderFormConstants[59] = 17;
+iFloristOrderFormConstants[60] = ((SCREEN_WIDTH - 640) / 2) + 297;
+iFloristOrderFormConstants[61] = ((SCREEN_HEIGHT - 480) / 2) + 169;
+iFloristOrderFormConstants[62] = ((SCREEN_WIDTH - 640) / 2) + 381;
+iFloristOrderFormConstants[63] = ((SCREEN_HEIGHT - 480) / 2) + 172;
+iFloristOrderFormConstants[64] = ((SCREEN_WIDTH - 640) / 2) + 234;
+iFloristOrderFormConstants[65] = ((SCREEN_HEIGHT - 480) / 2) + 213;
+iFloristOrderFormConstants[66] = ((SCREEN_WIDTH - 640) / 2) + 380;
+iFloristOrderFormConstants[67] = ((SCREEN_HEIGHT - 480) / 2) + 213;
+iFloristOrderFormConstants[68] = ((SCREEN_WIDTH - 640) / 2) + 234;
+iFloristOrderFormConstants[69] = ((SCREEN_HEIGHT - 480) / 2) + 238;
+iFloristOrderFormConstants[70] = ((SCREEN_WIDTH - 640) / 2) + 234;
+iFloristOrderFormConstants[71] = ((SCREEN_HEIGHT - 480) / 2) + 238;
+iFloristOrderFormConstants[72] = ((SCREEN_WIDTH - 640) / 2) + 301;
+iFloristOrderFormConstants[73] = ((SCREEN_HEIGHT - 480) / 2) + 303;
+iFloristOrderFormConstants[74] = ((SCREEN_WIDTH - 640) / 2) + 316;
+iFloristOrderFormConstants[75] = ((SCREEN_HEIGHT - 480) / 2) + 208;
+iFloristOrderFormConstants[76] = 230;
+iFloristOrderFormConstants[77] = ((SCREEN_WIDTH - 640) / 2) + 316;
+iFloristOrderFormConstants[78] = ((SCREEN_HEIGHT - 480) / 2) + 192;
+iFloristOrderFormConstants[79] = 75;
+iFloristOrderFormConstants[80] = 35;
+iFloristOrderFormConstants[81] = 17;
+
+//These are from Florist Cards.cpp
+iFloristCardsConstants[0] = FONT12ARIAL;
+iFloristCardsConstants[1] = FONT_MCOLOR_WHITE;
+iFloristCardsConstants[2] = ((SCREEN_WIDTH - 640) / 2) + 118;	
+iFloristCardsConstants[3] = ((SCREEN_HEIGHT - 480) / 2) + 118;
+iFloristCardsConstants[4] = 174;
+iFloristCardsConstants[5] = 109;
+iFloristCardsConstants[6] = 135;
+iFloristCardsConstants[7] = 100;
+iFloristCardsConstants[8] = 121;
+iFloristCardsConstants[9] = 90;
+iFloristCardsConstants[10] = ((SCREEN_WIDTH - 640) / 2) + 111;
+iFloristCardsConstants[11] = ((SCREEN_HEIGHT - 480) / 2) + 99;
+iFloristCardsConstants[12] = 502;
+iFloristCardsConstants[13] = ((SCREEN_WIDTH - 640) / 2) + 119;
+iFloristCardsConstants[14] = ((SCREEN_HEIGHT - 480) / 2) + 58;
+
+//These are From Florist Gallery.cpp
+iFloristGalleryConstants[0] = FONT10ARIAL;
+iFloristGalleryConstants[1] = FONT_MCOLOR_WHITE;
+iFloristGalleryConstants[2] = FONT14ARIAL;
+iFloristGalleryConstants[3] = FONT_MCOLOR_WHITE;
+iFloristGalleryConstants[4] = FONT12ARIAL;
+iFloristGalleryConstants[5] = FONT_MCOLOR_WHITE;
+iFloristGalleryConstants[6] = FONT12ARIAL;
+iFloristGalleryConstants[7] = FONT_MCOLOR_WHITE;
+iFloristGalleryConstants[8] = 3;
+iFloristGalleryConstants[9] = 10;
+iFloristGalleryConstants[10] = FONT12ARIAL;
+iFloristGalleryConstants[11] = FONT_MCOLOR_WHITE;
+iFloristGalleryConstants[12] = ((SCREEN_WIDTH - 640) / 2) + 119;
+iFloristGalleryConstants[13] = ((SCREEN_HEIGHT - 480) / 2) + 58;
+iFloristGalleryConstants[14] = ((SCREEN_WIDTH - 640) / 2) + 531;
+iFloristGalleryConstants[15] = ((SCREEN_HEIGHT - 480) / 2) + 58;
+iFloristGalleryConstants[16] = ((SCREEN_WIDTH - 640) / 2) + 118;
+iFloristGalleryConstants[17] = ((SCREEN_HEIGHT - 480) / 2) + 120;
+iFloristGalleryConstants[18] = 112;
+iFloristGalleryConstants[19] = ((SCREEN_WIDTH - 640) / 2) + 111;
+iFloristGalleryConstants[20] = ((SCREEN_HEIGHT - 480) / 2) + 94;
+iFloristGalleryConstants[21] = 502;
+iFloristGalleryConstants[22] = ((SCREEN_WIDTH - 640) / 2)+232;
+iFloristGalleryConstants[23] = 390;
+iFloristGalleryConstants[24] = 9;
+iFloristGalleryConstants[25] = 26;
+iFloristGalleryConstants[26] = 41;
+}
+
+//Not sure if this is in the right spot, but it initializes an array of constants used by funeral.cpp to place icons and text on screen. Gotthard 1/13/08
 void SetupFuneralPositionArray()
 {
 iFuneralConstants[0] = FONT12ARIAL;
 iFuneralConstants[1] = 2;
 iFuneralConstants[2] = FONT_MCOLOR_WHITE;
-
 iFuneralConstants[3] = FONT10ARIAL;
-
 iFuneralConstants[4] = FONT14ARIAL;
 iFuneralConstants[5] = FONT_MCOLOR_WHITE;//5
 iFuneralConstants[6] = FONT_MCOLOR_DKWHITE;
-
 iFuneralConstants[7] = FONT_MCOLOR_DKWHITE;
-
-iFuneralConstants[8] = ((SCREEN_WIDTH - 640) / 2) + 111 + 92;
-iFuneralConstants[9] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 0;
-
-iFuneralConstants[10] = ((SCREEN_WIDTH - 640) / 2) + 111 + 58;//10
-iFuneralConstants[11] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 43;
-
+iFuneralConstants[8] = ((SCREEN_WIDTH - 640) / 2) + 203;
+iFuneralConstants[9] = ((SCREEN_HEIGHT - 480) / 2) + 46;
+iFuneralConstants[10] = ((SCREEN_WIDTH - 640) / 2) + 169;//10
+iFuneralConstants[11] = ((SCREEN_HEIGHT - 480) / 2) + 89;
 iFuneralConstants[12] = ((SCREEN_WIDTH - 640) / 2) + 111 + 0;
-iFuneralConstants[13] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 43;
-
+iFuneralConstants[13] = ((SCREEN_HEIGHT - 480) / 2) + 89;
 iFuneralConstants[14] = ((SCREEN_WIDTH - 640) / 2) + 111 + 442;
-iFuneralConstants[15] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 43;//15
-
-iFuneralConstants[16] = ((SCREEN_WIDTH - 640) / 2) + 111 + 37;
-iFuneralConstants[17] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 329;
+iFuneralConstants[15] = ((SCREEN_HEIGHT - 480) / 2) + 89;//15
+iFuneralConstants[16] = ((SCREEN_WIDTH - 640) / 2) + 148;
+iFuneralConstants[17] = ((SCREEN_HEIGHT - 480) / 2) + 375;
 iFuneralConstants[18] = 85;
 iFuneralConstants[19] = 60;
-
 iFuneralConstants[20] = 85;//20
 iFuneralConstants[21] = 5;
-
 iFuneralConstants[22] = 4;
 iFuneralConstants[23] = 17;
 iFuneralConstants[24] = 76;
-
 iFuneralConstants[25] = 125;//25
 iFuneralConstants[26] = 100;
-
 iFuneralConstants[27] = 380;
-
-iFuneralConstants[28] = ((SCREEN_WIDTH - 640) / 2) + 111 + 60;
-iFuneralConstants[29] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 164;
-
-iFuneralConstants[30] = ((SCREEN_WIDTH - 640) / 2) + 111 + 60;//30
-iFuneralConstants[31] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 198;
-
-iFuneralConstants[32] = ((SCREEN_WIDTH - 640) / 2) + 111 + 60;
-iFuneralConstants[33] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 227;
-
-iFuneralConstants[34] = ((SCREEN_WIDTH - 640) / 2) + 111 + 60;
-iFuneralConstants[35] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 261;//35
-
-iFuneralConstants[36] = ((SCREEN_WIDTH - 640) / 2) + 111 + 60;
-iFuneralConstants[37] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 303;
-
-iFuneralConstants[38] = ((SCREEN_WIDTH - 640) / 2) + 111 + 72;
-iFuneralConstants[39] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 151;
+iFuneralConstants[28] = ((SCREEN_WIDTH - 640) / 2) + 171;
+iFuneralConstants[29] = ((SCREEN_HEIGHT - 480) / 2) + 210;
+iFuneralConstants[30] = ((SCREEN_WIDTH - 640) / 2) + 171;//30
+iFuneralConstants[31] = ((SCREEN_HEIGHT - 480) / 2) + 244;
+iFuneralConstants[32] = ((SCREEN_WIDTH - 640) / 2) + 171;
+iFuneralConstants[33] = ((SCREEN_HEIGHT - 480) / 2) + 273;
+iFuneralConstants[34] = ((SCREEN_WIDTH - 640) / 2) + 171;
+iFuneralConstants[35] = ((SCREEN_HEIGHT - 480) / 2) + 307;//35
+iFuneralConstants[36] = ((SCREEN_WIDTH - 640) / 2) + 171;
+iFuneralConstants[37] = ((SCREEN_HEIGHT - 480) / 2) + 349;
+iFuneralConstants[38] = ((SCREEN_WIDTH - 640) / 2) + 183;
+iFuneralConstants[39] = ((SCREEN_HEIGHT - 480) / 2) + 197;
 iFuneralConstants[40] = 364;//40
 iFuneralConstants[41] = 204;
-
 iFuneralConstants[42] = 260;
-
-iFuneralConstants[43] = ((SCREEN_WIDTH - 640) / 2) + 111 + 72 + 55;//FUNERAL_CLOSED_RIP_SIGN_X + 55 originally
-iFuneralConstants[44] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 151 + 98;//FUNERAL_CLOSED_RIP_SIGN_Y + 98 originally
-
-iFuneralConstants[45] = ((SCREEN_WIDTH - 640) / 2) + 111 + 72 + 55;//FUNERAL_RIP_SENTENCE_1_X Originally	//45
-iFuneralConstants[46] = ((SCREEN_HEIGHT - 480) / 2) + 19 + 151 + 162;//FUNERAL_CLOSED_RIP_SIGN_Y Originally
-
+iFuneralConstants[43] = ((SCREEN_WIDTH - 640) / 2) + 238;
+iFuneralConstants[44] = ((SCREEN_HEIGHT - 480) / 2) + 295;
+iFuneralConstants[45] = ((SCREEN_WIDTH - 640) / 2) + 238;//45
+iFuneralConstants[46] = ((SCREEN_HEIGHT - 480) / 2) + 359;
 return;
 }

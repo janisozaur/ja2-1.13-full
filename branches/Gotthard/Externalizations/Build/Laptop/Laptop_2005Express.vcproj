@@ -632,6 +632,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\XML_FloristLocations.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\XML_FloristText.cpp"
 				>
 			</File>

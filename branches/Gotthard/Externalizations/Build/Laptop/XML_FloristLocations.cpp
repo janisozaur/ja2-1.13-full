@@ -42,41 +42,49 @@
 	#include "Debug Control.h"
 	#include "expat.h"
 	#include "XML.h"
+	#include "florist.h"
 #endif
+
+extern INT16 iFloristConstants[];
+extern INT16 iFloristOrderFormConstants[];
+extern INT16 iFloristCardsConstants[];
+extern INT16 iFloristGalleryConstants[];
+
 
 struct
 {
 	PARSE_STAGE	curElement;
 
 	CHAR8		szCharData[MAX_CHAR_DATA_LENGTH+1];
+
 	UINT32			maxArraySize;
 	UINT32			curIndex;	
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }
-typedef SectorNamesParseData;
+typedef FloristLocationsParseData;
 
 static void XMLCALL 
-SectorNamesStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
+FloristLocationsStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	SectorNamesParseData * pData = (SectorNamesParseData *)userData;
+	FloristLocationsParseData * pData = (FloristLocationsParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
 	{
-		if(strcmp(name, "SectorNames") == 0 && pData->curElement == ELEMENT_NONE)
+		if(strcmp(name, "FloristLocations") == 0 && pData->curElement == ELEMENT_NONE)
 		{
 			pData->curElement = ELEMENT_LIST;
 
 			pData->maxReadDepth++; //we are not skipping this element
 		}
-		else if(strstr(name, "SectorName") != NULL && pData->curElement == ELEMENT_LIST)
+		else if(strstr(name, "LOCATION") != NULL && pData->curElement == ELEMENT_LIST)
 		{
 			pData->curElement = ELEMENT;
 
 			pData->maxReadDepth++; //we are not skipping this element
 			pData->curIndex++;
 		}
-		else if(pData->curElement == ELEMENT && strcmp(name, "TEXT") == 0 )
+		else if(pData->curElement == ELEMENT && strcmp(name, "VALUE") == 0 )
 		{
 			pData->curElement = ELEMENT_PROPERTY;
 
@@ -91,9 +99,9 @@ SectorNamesStartElementHandle(void *userData, const XML_Char *name, const XML_Ch
 }
 
 static void XMLCALL
-SectorNamesCharacterDataHandle(void *userData, const XML_Char *str, int len)
+FloristLocationsCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	SectorNamesParseData * pData = (SectorNamesParseData *)userData;
+	FloristLocationsParseData * pData = (FloristLocationsParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
@@ -104,55 +112,51 @@ SectorNamesCharacterDataHandle(void *userData, const XML_Char *str, int len)
 
 
 static void XMLCALL
-SectorNamesEndElementHandle(void *userData, const XML_Char *name)
+FloristLocationsEndElementHandle(void *userData, const XML_Char *name)
 {	
-	SectorNamesParseData * pData = (SectorNamesParseData *)userData;
+	//char temp;
+
+	FloristLocationsParseData * pData = (FloristLocationsParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
 	{
-		if(strcmp(name, "SectorNames") == 0)
+		if(strcmp(name, "FloristLocations") == 0)
 		{
 			pData->curElement = ELEMENT_NONE;
 		}
-		else if(strcmp(name, "SectorName") == 0)
+		else if(strcmp(name, "LOCATION") == 0)
 		{
 			pData->curElement = ELEMENT_LIST;
 		}
-		else if(strcmp(name, "TEXT") == 0)
+		else if(strcmp(name, "VALUE") == 0)
 		{
-
+			//Hopefully should read in an integer and replace the one found in the Florist.cpp file.
 			pData->curElement = ELEMENT;
-			if(pData->curIndex < pData->maxArraySize)
+			if(pData->curIndex < pData->maxArraySize)//Yeah probably not needed, but I have no idea what I am doing.
 			{
-				
-				size_t origsize = min(strlen(pData->szCharData) + 1,20);
-				//const size_t newsize = MAX_CHAR_DATA_LENGTH;
-				//size_t convertedChars = 0;
-				//wchar_t wcstring[newsize];
-				//mbstowcs_s(&convertedChars, wcstring, origsize, pData->szCharData, _TRUNCATE);
-				//mbstowcs(wcstring, pData->szCharData, origsize);
-				mbstowcs(pLandTypeStrings[pData->curIndex],pData->szCharData, origsize);
-				//pLandTypeStrings[pData->curIndex] = wcstring;
-				//wcsncpy(pLandTypeStrings[pData->curIndex], wcstring,origsize);
-				/*
-				for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
+				if(pData->curIndex < 32)
 				{
-					temp = pData->szCharData[i];
-					pLandTypeStrings[pData->curIndex][i] = temp;
+					iFloristConstants[pData->curIndex] += (INT16) atol(pData->szCharData);
 				}
-				*/
-				//temp2[strlen(pData->szCharData)] = '\0';
-				//STR16 buffer = pLandTypeStrings[pData->curIndex];
-				//MultiByteToWideChar(1200,0, temp2, -1,buffer, sizeof(buffer)/sizeof(buffer[0]));
-				//pLandTypeStrings[pData->curIndex] = buffer;
-				//memcpy(pLandTypeStrings[pData->curIndex], &temp2, strlen(pData->szCharData));
+				if(pData->curIndex < 59)
+				{
+					iFloristGalleryConstants[pData->curIndex - 32] += (INT16) atol(pData->szCharData);
+				}
+				if(pData->curIndex < 141)
+				{
+					iFloristOrderFormConstants[pData->curIndex - 59] += (INT16) atol(pData->szCharData);
+				}
+				if(pData->curIndex > 141)
+				{
+					iFloristCardsConstants[pData->curIndex - 141] += (INT16) atol(pData->szCharData);
+				}
 			}
 		}
 		pData->maxReadDepth--;
 	}
 	pData->currentDepth--;
 }
-BOOLEAN ReadInSectorNamesText(STR fileName)
+BOOLEAN ReadInFloristLocations(STR fileName)
 {
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
@@ -160,9 +164,9 @@ BOOLEAN ReadInSectorNamesText(STR fileName)
 	CHAR8 *		lpcBuffer;
 	XML_Parser	parser = XML_ParserCreate(NULL);
 	
-	SectorNamesParseData pData;
+	FloristLocationsParseData pData;
 
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading SectorNames.xml" );
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading FloristLocations.xml" );
 
 	// Open ammos file
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
@@ -184,8 +188,8 @@ BOOLEAN ReadInSectorNamesText(STR fileName)
 	FileClose( hFile );
 
 	
-	XML_SetElementHandler(parser, SectorNamesStartElementHandle, SectorNamesEndElementHandle);
-	XML_SetCharacterDataHandler(parser, SectorNamesCharacterDataHandle);
+	XML_SetElementHandler(parser, FloristLocationsStartElementHandle, FloristLocationsEndElementHandle);
+	XML_SetCharacterDataHandler(parser, FloristLocationsCharacterDataHandle);
 
 	
 	memset(&pData,0,sizeof(pData));
@@ -199,7 +203,7 @@ BOOLEAN ReadInSectorNamesText(STR fileName)
 	{
 		CHAR8 errorBuf[511];
 
-		sprintf(errorBuf, "XML Parser Error in SectorNames.xml: %s at line %d", XML_ErrorString(XML_GetErrorCode(parser)), XML_GetCurrentLineNumber(parser));
+		sprintf(errorBuf, "XML Parser Error in FloristLocations.xml: %s at line %d", XML_ErrorString(XML_GetErrorCode(parser)), XML_GetCurrentLineNumber(parser));
 		LiveMessage(errorBuf);
 
 		MemFree(lpcBuffer);

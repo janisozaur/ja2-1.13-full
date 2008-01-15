@@ -6,5 +6,6 @@ void ShutdownJA2( );
 
 BOOLEAN LoadExternalGameplayData(STR directoryName);
 void SetupFuneralPositionArray();
+void SetupFloristPositionArrays();
 
 #endif
