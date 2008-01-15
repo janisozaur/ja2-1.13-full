@@ -186,6 +186,9 @@ BOOLEAN ConfirmActionCancel( INT16 sMapPos, UINT16 usOldMapPos );
 
 BOOLEAN	gfNextFireJam = FALSE;
 
+extern INT16 ITEMDESC_START_X;
+extern INT16 ITEMDESC_START_Y;
+
 
 //Little functions called by keyboard input
 void SwapGoggles();
@@ -3629,7 +3632,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						if ( InItemDescriptionBox( ) )
 						{
 							// Swap item in description panel...
-							CycleItemDescriptionItem( );
+							CycleItemDescriptionItem( ITEMDESC_START_X, ITEMDESC_START_Y);
 
 						}
 						else

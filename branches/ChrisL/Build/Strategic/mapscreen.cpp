@@ -6539,12 +6539,29 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 						DisplayGameSettings( );
 					}
 					break;
+				case 'W':
 				case 'w':
-					// only handle border button keyboard equivalents if the button is visible!
-					if ( !fShowMapInventoryPool )
+					if( fAlt )
 					{
-						// toggle show towns filter
-						ToggleShowTownsMode();
+						if ( CHEATER_CHEAT_LEVEL( ) )
+						{
+							if ( InItemDescriptionBox( ) )
+							{
+								CycleItemDescriptionItem( MAP_ITEMDESC_START_X, MAP_ITEMDESC_START_Y );
+							}
+						}
+					}
+					else if( fCtrl )
+					{
+					}
+					else
+					{
+						// only handle border button keyboard equivalents if the button is visible!
+						if ( !fShowMapInventoryPool )
+						{
+							// toggle show towns filter
+							ToggleShowTownsMode();
+						}
 					}
 					break;
 				case 'x':

@@ -2799,7 +2799,7 @@ BOOLEAN InItemDescriptionBox( )
 	return( gfInItemDescBox );
 }
 
-void CycleItemDescriptionItem( )
+void CycleItemDescriptionItem( INT16 sX, INT16 sY )
 {
 	INT16 usOldItem;
 
@@ -2840,7 +2840,7 @@ void CycleItemDescriptionItem( )
 
 	CreateItem( (UINT16)usOldItem, 100, &( gpItemDescSoldier->inv[ HANDPOS ] ) );
 
-	InternalInitItemDescriptionBox( &( gpItemDescSoldier->inv[ HANDPOS ] ), 214, (INT16)(INV_INTERFACE_START_Y + 1 ), gubItemDescStatusIndex, gpItemDescSoldier );
+	InternalInitItemDescriptionBox( &( gpItemDescSoldier->inv[ HANDPOS ] ), sX, sY, gubItemDescStatusIndex, gpItemDescSoldier );
 }
 
 BOOLEAN InitItemDescriptionBox( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sX, INT16 sY, UINT8 ubStatusIndex )

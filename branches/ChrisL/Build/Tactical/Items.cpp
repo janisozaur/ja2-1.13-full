@@ -1359,6 +1359,7 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier, B
 	UINT8	ubSlotLimit;
 	UINT8	pIndex;
 	UINT16	usItem, iSize;
+	UINT16	sSize = 0;
 
 	//doesn't matter what inventory method we are using
 	usItem = pObject->usItem;
@@ -1414,8 +1415,17 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier, B
 		}
 	}
 
+	//We need to actually check the size of the largest stored item as well as the size of the current item
 	if(cntAttach == TRUE)
+	{
 		iSize = CalculateItemSize(pObject);
+		if(pSoldier != NULL && pSoldier->inv[bSlot].usItem == pObject->usItem)
+		{
+			sSize = CalculateItemSize(&pSoldier->inv[bSlot]);
+			if(LBEPocketType[pIndex].ItemCapacityPerSize[sSize] < LBEPocketType[pIndex].ItemCapacityPerSize[iSize])
+				iSize = sSize;
+		}
+	}
 	else
 		iSize = Item[pObject->usItem].ItemSize;
 	ubSlotLimit = LBEPocketType[pIndex].ItemCapacityPerSize[iSize];
