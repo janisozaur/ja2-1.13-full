@@ -3433,7 +3433,7 @@ void SkiHelpTextDoneCallBack( void )
 
 
 
-INT8 AddItemToPlayersOfferArea( UINT8 ubProfileID, INVENTORY_IN_SLOT* pInvSlot, UINT16 bSlotIdInOtherLocation )
+INT8 AddItemToPlayersOfferArea( UINT8 ubProfileID, INVENTORY_IN_SLOT* pInvSlot, INT16 bSlotIdInOtherLocation )
 {
 	INT8	bCnt;
 

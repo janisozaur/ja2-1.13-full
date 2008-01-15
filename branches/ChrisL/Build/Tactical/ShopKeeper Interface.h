@@ -70,7 +70,7 @@ public:
 	INT16			sItemIndex;
 	UINT32			uiFlags;
 	UINT8			ubLocationOfObject;		//An enum value for the location of the item ( either in the arms dealers inventory, one of the offer areas or in the users inventory)
-	UINT16			bSlotIdInOtherLocation;
+	INT16			bSlotIdInOtherLocation;
 
 	UINT8			ubIdOfMercWhoOwnsTheItem;
 	UINT32			uiItemPrice;			//Only used for the players item that have been evaluated
@@ -122,7 +122,7 @@ void			EnterShopKeeperInterfaceScreen( UINT8	ubArmsDealer );
 
 void			DrawHatchOnInventory( UINT32 uiSurface, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight, UINT16 usColor = 0 );
 BOOLEAN		ShouldSoldierDisplayHatchOnItem( UINT8	ubProfileID, INT16 sSlotNum );
-INT8			AddItemToPlayersOfferArea( UINT8 ubProfileID, INVENTORY_IN_SLOT* pInvSlot, UINT16	bSlotIdInOtherLocation );
+INT8			AddItemToPlayersOfferArea( UINT8 ubProfileID, INVENTORY_IN_SLOT* pInvSlot, INT16	bSlotIdInOtherLocation );
 void			ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack( UINT8 bExitValue );
 void			ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack( UINT8 bExitValue );
 
