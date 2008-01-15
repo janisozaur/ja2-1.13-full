@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DELIVERYMETHODTABLE>
+	<DELIVERYMETHOD>
+		<uiIndex>0</uiIndex>
+		<description>Overnight express</description>
+		<DESTINATIONDELIVERYINFOTABLE>
+			<DESTINATIONDELIVERYINFO>	
+				<uiDestinationIndex>0</uiDestinationIndex>
+				<usDestinationFee>390</usDestinationFee>
+				<bDaysAhead>1</bDaysAhead>
+			</DESTINATIONDELIVERYINFO>
+			<DESTINATIONDELIVERYINFO>	
+				<uiDestinationIndex>2</uiDestinationIndex>
+				<usDestinationFee>320</usDestinationFee>
+				<bDaysAhead>1</bDaysAhead>
+			</DESTINATIONDELIVERYINFO>
+		</DESTINATIONDELIVERYINFOTABLE>
+	</DELIVERYMETHOD>
+	<DELIVERYMETHOD>
+		<uiIndex>1</uiIndex>
+		<description>2 Business Days</description>
+		<DESTINATIONDELIVERYINFOTABLE>
+			<DESTINATIONDELIVERYINFO>	
+				<uiDestinationIndex>0</uiDestinationIndex>
+				<usDestinationFee>300</usDestinationFee>
+				<bDaysAhead>1</bDaysAhead>
+			</DESTINATIONDELIVERYINFO>
+			<DESTINATIONDELIVERYINFO>	
+				<uiDestinationIndex>2</uiDestinationIndex>
+				<usDestinationFee>240</usDestinationFee>
+				<bDaysAhead>2</bDaysAhead>
+			</DESTINATIONDELIVERYINFO>
+		</DESTINATIONDELIVERYINFOTABLE>
+	</DELIVERYMETHOD>
+	<DELIVERYMETHOD>
+		<uiIndex>2</uiIndex>
+		<description>Standard Service</description>
+		<DESTINATIONDELIVERYINFOTABLE>
+			<DESTINATIONDELIVERYINFO>
+				<uiDestinationIndex>0</uiDestinationIndex>
+				<usDestinationFee>240</usDestinationFee>
+				<bDaysAhead>1</bDaysAhead>
+			</DESTINATIONDELIVERYINFO>	
+			<DESTINATIONDELIVERYINFO>	
+				<uiDestinationIndex>2</uiDestinationIndex>
+				<usDestinationFee>160</usDestinationFee>
+				<bDaysAhead>3</bDaysAhead>
+			</DESTINATIONDELIVERYINFO>
+		</DESTINATIONDELIVERYINFOTABLE>
+	</DELIVERYMETHOD>
+</DELIVERYMETHODTABLE>
