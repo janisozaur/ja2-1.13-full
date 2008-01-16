@@ -3,6 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="ja2_2005ExpressDebug"
+	InheritedPropertySheets=".\Dealtar.vsprops"
 	>
 	<Tool
 		Name="VCCLCompilerTool"
