@@ -460,15 +460,6 @@ void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason
 	}
 }
 
-INT32	CountNumberValidShipmentForTheShipmentsPage()
-{
-	if( giNumberOfNewBobbyRShipment > BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS )
-		return( BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS );
-	else
-		return( giNumberOfNewBobbyRShipment );
-}
-
-
 
 
  

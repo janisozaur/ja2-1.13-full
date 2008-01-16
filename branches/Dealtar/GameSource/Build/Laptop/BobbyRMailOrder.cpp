@@ -967,6 +967,8 @@ void DisplayShippingCosts( BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, UINT16
 			spi++;
 		}
 
+		uiPackageWeight = uiPackageWeight > 20 ? uiPackageWeight : 20;
+
 		iShippingCost = (INT32)( ( uiPackageWeight / (FLOAT)10 ) * gShipmentTable[iOrderNum]->pDestinationDeliveryInfo->usDestinationFee + .5 );
 	}
 
