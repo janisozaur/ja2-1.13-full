@@ -66,8 +66,8 @@ extern	STR8		String(const STR8 String, ...);
 //with it.
 extern void _FailMessage(STR8 pString, UINT32 uiLineNum, STR8 pSourceFile );
 
-#define Assert(a)										(a) ? _Null() : _FailMessage( NULL, __LINE__, __FILE__ )
-#define AssertMsg(a,b)							(a) ? _Null() : _FailMessage(    b, __LINE__, __FILE__ )
+#define Assert(a)								//		(a) ? _Null() : _FailMessage( NULL, __LINE__, __FILE__ )
+#define AssertMsg(a,b)							//(a) ? _Null() : _FailMessage(    b, __LINE__, __FILE__ )
 
 extern CHAR8			gubAssertString[128];
 

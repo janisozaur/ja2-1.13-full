@@ -473,7 +473,7 @@ UINT32 InitializeJA2(void)
 	HandleLaserLockResult( PrepareLaserLockSystem() );
 #endif
 
-  HandleJA2CDCheck( );
+	HandleJA2CDCheck( );
 
 	gfWorldLoaded = FALSE;
 
@@ -638,7 +638,7 @@ UINT32 InitializeJA2(void)
 
 void ShutdownJA2(void)
 { 
-  UINT32 uiIndex;
+	UINT32 uiIndex;
 
 	// Clear screen....
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
@@ -656,11 +656,11 @@ void ShutdownJA2(void)
 	// Shutdown queue system
 	ShutdownDialogueControl();
 
-  // Shutdown Screens
-  for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
-  { 
-    (*(GameScreens[uiIndex].ShutdownScreen))();
-  }
+	// Shutdown Screens
+	for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
+	{ 
+		(*(GameScreens[uiIndex].ShutdownScreen))();
+	}
 
 
 	// Shutdown animation system
