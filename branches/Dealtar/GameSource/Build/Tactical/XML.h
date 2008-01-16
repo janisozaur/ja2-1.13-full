@@ -88,6 +88,10 @@ typedef PARSE_STAGE;
 // WANNE: Sector loadscreens [2007-05-18]
 #define SECTORLOADSCREENSFILENAME				"Map\\SectorLoadscreens.xml"
 
+// Dealtar: Shipping destinations and delivery methods
+#define SHIPPINGDESTINATIONSFILENAME			"Map\\ShippingDestinations.xml"
+#define DELIVERYMETHODSFILENAME					"Map\\DeliveryMethods.xml"
+
 
 extern BOOLEAN ReadInItemStats(STR fileName, BOOLEAN localizedVersion);
 extern BOOLEAN WriteItemStats();
@@ -188,4 +192,9 @@ extern BOOLEAN WriteInArmyCompositionInfo(STR fileName);
 
 //Kaiden: Roaming Militia Restricted Sectors List
 extern BOOLEAN ReadInRoamingInfo(STR filename);
+
+// Dealtar: New shipping system XMLs
+extern BOOLEAN ReadInShippingDestinations(STR fileName);
+extern BOOLEAN ReadInDeliveryMethods(STR fileName);
+
 #endif

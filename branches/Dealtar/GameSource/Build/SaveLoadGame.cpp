@@ -115,6 +115,7 @@
 #include "BobbyRMailOrder.h"
 #include "Mercs.h"
 #include "INIReader.h"
+#include "PostalService.h"
 
 //rain
 #include "Rain.h"
@@ -157,6 +158,7 @@ extern		HELP_SCREEN_STRUCT gHelpScreen;
 extern		UINT8					gubDesertTemperature;
 extern		UINT8					gubGlobalTemperature;
 extern		BOOLEAN				gfCreatureMeanwhileScenePlayed;
+extern		CPostalService		gPostalService;
 #ifdef JA2BETAVERSION
 	extern		UINT8					gubReportMapscreenLock;
 #endif
@@ -1343,7 +1345,12 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	SaveGameFilePosition( FileGetPos( hFile ), "New way of saving Bobby R mailorders" );
 	#endif
 
-	
+	// Dealtar: New shipment system data
+	if(!gPostalService.SaveShipmentListToSaveGameFile(hFile))
+	{
+		ScreenMsg( FONT_MCOLOR_WHITE, MSG_ERROR, L"ERROR writing mail orders");
+		goto FAILED_TO_SAVE;
+	}
 	//sss
 
 	//Close the saved game file
@@ -2631,7 +2638,15 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		HandleOldBobbyRMailOrders();
 	}
 
-
+	if( SaveGameHeader.uiSavedGameVersion >= 104 )
+	{
+		if ( !gPostalService.LoadShipmentListFromSaveGameFile(hFile) )
+		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("gPostalService.LoadShipmentListFromSaveGameFile failed" ) );
+			FileClose( hFile );
+			return( FALSE );
+		}
+	}
 	///lll
 
 

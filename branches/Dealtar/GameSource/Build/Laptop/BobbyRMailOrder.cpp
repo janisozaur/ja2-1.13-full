@@ -23,6 +23,10 @@
 	#include "Multi Language Graphic Utils.h"
 	#include "strategic.h"
 	#include "strategicmap.h"
+	#include "isometric utils.h"
+	#include "postalservice.h"
+	#include "message.h"
+	#include <list>
 #endif
 
 
@@ -213,7 +217,8 @@ enum
 #define		BOBBYR_PACKAXGE_WEIGHT_X					BOBBYR_LOCATION_BOX_X
 #define		BOBBYR_PACKAXGE_WEIGHT_Y					LAPTOP_SCREEN_WEB_UL_Y + 249
 #define		BOBBYR_PACKAXGE_WEIGHT_WIDTH			188
-
+#define		BOBBYR_SENDER_ID						0
+#define		JOHN_KULBA_SENDER_ID					1
 
 UINT16 gShippingSpeedAreas[] = {585, 218 + LAPTOP_SCREEN_WEB_DELTA_Y,
 																585, 238 + LAPTOP_SCREEN_WEB_DELTA_Y, 
@@ -238,7 +243,7 @@ INT32			giGrandTotal;
 UINT32		guiShippingCost;
 UINT32		guiSubTotal;
 
-UINT8			gubSelectedLight;
+UINT8			gubSelectedLight=0;
 
 BOOLEAN		gfDrawConfirmOrderGrpahic;
 BOOLEAN		gfDestroyConfirmGrphiArea;
@@ -294,12 +299,12 @@ MOUSE_REGION    gSelectedConfirmOrderRegion;
 void SelectConfirmOrderRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //mouse region for the drop down city location area
-MOUSE_REGION    gSelectedDropDownRegion[ BOBBYR_ORDER_NUM_SHIPPING_CITIES ];
+MOUSE_REGION	*gpSelectedDropDownRegion;
 void SelectDropDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 void SelectDropDownMovementCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //mouse region for scroll area for the drop down city location area
-MOUSE_REGION    gSelectedScrollAreaDropDownRegion[BOBBYR_ORDER_NUM_SHIPPING_CITIES];
+MOUSE_REGION	*gpSelectedScrollAreaDropDownRegion;
 void SelectScrollAreaDropDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 void SelectScrollAreaDropDownMovementCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
@@ -320,7 +325,11 @@ void SelectTitleLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 MOUSE_REGION    gSelectedUpDownArrowOnScrollAreaRegion[2];
 void SelectUpDownArrowOnScrollAreaRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
-
+UINT16 gusCurShipmentDestinationID;
+extern CPostalService gPostalService;
+UINT8 guiNumOfDisplayedCities=0;
+vector<PDestinationStruct> gDestinationTable;
+vector<PShipmentStruct> gShipmentTable;
 
 BOOLEAN DrawShippingSpeedLights(UINT8 ubSelectedLight);
 BOOLEAN CreateDestroyBobbyRDropDown( UINT8 ubDropDownAction );
@@ -338,6 +347,12 @@ void DisplayPackageWeight( );
 void ShutDownBobbyRNewMailOrders();
 //ppp
 
+void BobbyRDeliveryCallback(RefToCShipmentManipulator ShipmentManipulator)
+{
+	// ScreenMsg(FONT_MCOLOR_RED, MSG_DEBUG, L"Shipment from Bobby Ray has arrived at %s!", ShipmentManipulator.GetDestination().wstrName.c_str());
+	gusCurShipmentDestinationID = ShipmentManipulator.GetDestination().usID;
+	AddEmail( BOBBYR_SHIPMENT_ARRIVED, BOBBYR_SHIPMENT_ARRIVED_LENGTH, BOBBY_R, GetWorldTotalMin(), -1 );
+}
 
 void GameInitBobbyRMailOrder()
 {
@@ -778,7 +793,10 @@ void BtnBobbyRAcceptOrderCallback(GUI_BUTTON *btn,INT32 reason)
 				CHAR16	zTemp[ 128 ];
 
 				//if the city is Drassen, and the airport sector is player controlled
-				if( gbSelectedCity == BR_DRASSEN && !StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( SEC_B13 ) ].fEnemyControlled )
+				if( (gDestinationTable[gbSelectedCity]->ubMapX >= 0 ||
+					 gDestinationTable[gbSelectedCity]->ubMapY >= 0 ||
+					 gDestinationTable[gbSelectedCity]->sGridNo >= 0) &&				
+					 !StrategicMap[ CALCULATE_STRATEGIC_INDEX(gDestinationTable[gbSelectedCity]->ubMapX, gDestinationTable[gbSelectedCity]->ubMapY) ].fEnemyControlled )
 				{
 					//Quick hack to bypass the confirmation box
 					ConfirmBobbyRPurchaseMessageBoxCallBack( MSG_BOX_RETURN_YES );
@@ -786,7 +804,7 @@ void BtnBobbyRAcceptOrderCallback(GUI_BUTTON *btn,INT32 reason)
 				else
 				{
 					//else pop up a confirmation box
-					swprintf( zTemp, BobbyROrderFormText[BOBBYR_CONFIRM_DEST],  *BobbyROrderLocations[gbSelectedCity].psCityLoc );
+					swprintf( zTemp, BobbyROrderFormText[BOBBYR_CONFIRM_DEST],	gDestinationTable[gbSelectedCity]->wstrName.c_str() );
 					DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, zTemp, LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmBobbyRPurchaseMessageBoxCallBack );
 				}
 
@@ -1078,7 +1096,7 @@ void DisplayShippingCosts( BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, UINT16
 	}
 	else
 	{
-		UINT16	usStandardCost;
+		/*UINT16	usStandardCost;
 
 		switch( gpNewBobbyrShipments[ iOrderNum ].ubDeliveryMethod )
 		{
@@ -1094,9 +1112,19 @@ void DisplayShippingCosts( BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, UINT16
 
 			default:
 				usStandardCost = 0;
+		}*/
+
+		UINT32 uiPackageWeight=0;
+
+		ShipmentPackageList::iterator spi = gShipmentTable[iOrderNum]->ShipmentPackages.begin();
+
+		while(spi != gShipmentTable[iOrderNum]->ShipmentPackages.end())
+		{
+			uiPackageWeight += Item[((ShipmentPackageStruct&)*spi).usItemIndex].ubWeight;
+			spi++;
 		}
 
-		iShippingCost = (INT32)( ( gpNewBobbyrShipments[ iOrderNum ].uiPackageWeight / (FLOAT)10 ) * usStandardCost + .5 );
+		iShippingCost = (INT32)( ( uiPackageWeight / (FLOAT)10 ) * gShipmentTable[iOrderNum]->pDestinationDeliveryInfo->usDestinationFee + .5 );
 	}
 
 
@@ -1284,12 +1312,13 @@ BOOLEAN CreateDestroyBobbyRDropDown( UINT8 ubDropDownAction )
 
 			usPosX = BOBBYR_CITY_START_LOCATION_X;
 			usPosY = BOBBYR_CITY_START_LOCATION_Y;
-			for( i=0; i< BOBBYR_NUM_DISPLAYED_CITIES; i++)
+			
+			for( i=0; i< guiNumOfDisplayedCities; i++)
 			{
-				MSYS_DefineRegion( &gSelectedDropDownRegion[i], usPosX, (UINT16)(usPosY+4), (UINT16)(usPosX+BOBBYR_DROP_DOWN_WIDTH-6), (UINT16)(usPosY+usFontHeight+7), MSYS_PRIORITY_HIGH,
-										 CURSOR_WWW, SelectDropDownMovementCallBack, SelectDropDownRegionCallBack); 
-				MSYS_AddRegion(&gSelectedDropDownRegion[i]); 
-				MSYS_SetRegionUserData( &gSelectedDropDownRegion[ i ], 0, i);
+				MSYS_DefineRegion( &gpSelectedDropDownRegion[i], usPosX, (UINT16)(usPosY+4), (UINT16)(usPosX+BOBBYR_DROP_DOWN_WIDTH-6), (UINT16)(usPosY+usFontHeight+7), MSYS_PRIORITY_HIGH,
+										CURSOR_WWW, SelectDropDownMovementCallBack, SelectDropDownRegionCallBack);
+				MSYS_AddRegion(&gpSelectedDropDownRegion[i]);
+				MSYS_SetRegionUserData( &gpSelectedDropDownRegion[ i ], 0, i);
 
 				usPosY += usFontHeight + 2;
 			}
@@ -1314,20 +1343,20 @@ BOOLEAN CreateDestroyBobbyRDropDown( UINT8 ubDropDownAction )
 			//the scroll area itself
 			usPosX = BOBBYR_SCROLL_AREA_X;
 			usPosY = BOBBYR_SCROLL_UP_ARROW_Y + BOBBYR_SCROLL_ARROW_HEIGHT;
-			usHeight = BOBBYR_SCROLL_AREA_HEIGHT_MINUS_ARROWS / BOBBYR_ORDER_NUM_SHIPPING_CITIES;
-			for(i=0; i<BOBBYR_ORDER_NUM_SHIPPING_CITIES-1; i++)
+			usHeight = BOBBYR_SCROLL_AREA_HEIGHT_MINUS_ARROWS / gPostalService.LookupDestinationList().size();
+			for(i=0; i<gPostalService.LookupDestinationList().size()-1; i++)
 			{
-				MSYS_DefineRegion( &gSelectedScrollAreaDropDownRegion[i], usPosX, usPosY, (UINT16)(usPosX+BOBBYR_SCROLL_ARROW_WIDTH), (UINT16)(usPosY+usHeight), MSYS_PRIORITY_HIGH+1,
-										 CURSOR_LAPTOP_SCREEN, SelectScrollAreaDropDownMovementCallBack, SelectScrollAreaDropDownRegionCallBack); 
-				MSYS_AddRegion(&gSelectedScrollAreaDropDownRegion[i]); 
-				MSYS_SetRegionUserData( &gSelectedScrollAreaDropDownRegion[ i ], 0, i);
+				MSYS_DefineRegion( &gpSelectedScrollAreaDropDownRegion[i], usPosX, usPosY, (UINT16)(usPosX+BOBBYR_SCROLL_ARROW_WIDTH), (UINT16)(usPosY+usHeight), MSYS_PRIORITY_HIGH+1,
+										CURSOR_LAPTOP_SCREEN, SelectScrollAreaDropDownMovementCallBack, SelectScrollAreaDropDownRegionCallBack);
+				MSYS_AddRegion(&gpSelectedScrollAreaDropDownRegion[i]);
+				MSYS_SetRegionUserData( &gpSelectedScrollAreaDropDownRegion[ i ], 0, i);
 				usPosY += usHeight;
 			}
-			//put the last one down to cover the remaining area 
-			MSYS_DefineRegion( &gSelectedScrollAreaDropDownRegion[i], usPosX, usPosY, (UINT16)(usPosX+BOBBYR_SCROLL_ARROW_WIDTH), BOBBYR_SCROLL_DOWN_ARROW_Y, MSYS_PRIORITY_HIGH+1,
-									 CURSOR_LAPTOP_SCREEN, SelectScrollAreaDropDownMovementCallBack, SelectScrollAreaDropDownRegionCallBack); 
-			MSYS_AddRegion(&gSelectedScrollAreaDropDownRegion[i]); 
-			MSYS_SetRegionUserData( &gSelectedScrollAreaDropDownRegion[ i ], 0, i);
+			//put the last one down to cover the remaining area
+			MSYS_DefineRegion( &gpSelectedScrollAreaDropDownRegion[i], usPosX, usPosY, (UINT16)(usPosX+BOBBYR_SCROLL_ARROW_WIDTH), BOBBYR_SCROLL_DOWN_ARROW_Y, MSYS_PRIORITY_HIGH+1,
+									CURSOR_LAPTOP_SCREEN, SelectScrollAreaDropDownMovementCallBack, SelectScrollAreaDropDownRegionCallBack);
+			MSYS_AddRegion(&gpSelectedScrollAreaDropDownRegion[i]);
+			MSYS_SetRegionUserData( &gpSelectedScrollAreaDropDownRegion[ i ], 0, i);
 
 
 		  MSYS_EnableRegion(&gSelectedCloseDropDownRegion); 
@@ -1351,8 +1380,8 @@ BOOLEAN CreateDestroyBobbyRDropDown( UINT8 ubDropDownAction )
 			if( !fMouseRegionsCreated )
 				break;
 
-			for( i=0; i< BOBBYR_NUM_DISPLAYED_CITIES; i++)
-			  MSYS_RemoveRegion( &gSelectedDropDownRegion[i]);
+			for( i=0; i< guiNumOfDisplayedCities; i++)
+			MSYS_RemoveRegion( &gpSelectedDropDownRegion[i]);
 
 
 			//destroy the scroll bars arrow regions
@@ -1360,8 +1389,8 @@ BOOLEAN CreateDestroyBobbyRDropDown( UINT8 ubDropDownAction )
 			  MSYS_RemoveRegion( &gSelectedUpDownArrowOnScrollAreaRegion[i]);
 
 			//destroy the scroll bars regions
-			for( i=0; i<BOBBYR_ORDER_NUM_SHIPPING_CITIES; i++)
-			  MSYS_RemoveRegion( &gSelectedScrollAreaDropDownRegion[i]);
+			for( i=0; i<gPostalService.LookupDestinationList().size(); i++)
+			MSYS_RemoveRegion( &gpSelectedScrollAreaDropDownRegion[i]);
 
 			//display the name on the title bar
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_SHIPPING_LOC_AREA_L_X, BOBBYR_SHIPPING_LOC_AREA_T_Y, BOBBYR_SHIPPING_LOC_AREA_L_X+175,	BOBBYR_SHIPPING_LOC_AREA_T_Y+BOBBYR_DROP_DOWN_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
@@ -1541,18 +1570,19 @@ void DrawSelectedCity( UINT8 ubCityNumber )
 {
 	UINT16 usPosY;
 	UINT16 usFontHeight = GetFontHeight( BOBBYR_DROPDOWN_FONT );
-	UINT8 i;
-
+	UINT8 i=0;
+	
 	//DEBUG: make sure it wont go over array bounds
-	if( gubCityAtTopOfList+BOBBYR_NUM_DISPLAYED_CITIES > BOBBYR_ORDER_NUM_SHIPPING_CITIES )
-		gubCityAtTopOfList = BOBBYR_ORDER_NUM_SHIPPING_CITIES - BOBBYR_NUM_DISPLAYED_CITIES - 1;
+	if( gubCityAtTopOfList+guiNumOfDisplayedCities > (UINT8)gPostalService.LookupDestinationList().size() )
+		gubCityAtTopOfList = gPostalService.LookupDestinationList().size() - guiNumOfDisplayedCities - 1;
 
 
 	//Display the list of cities
 	usPosY = BOBBYR_CITY_START_LOCATION_Y + 5;
-	for( i=gubCityAtTopOfList; i< gubCityAtTopOfList+BOBBYR_NUM_DISPLAYED_CITIES; i++)
+
+	for( i=gubCityAtTopOfList; i< gubCityAtTopOfList+guiNumOfDisplayedCities; i++)
 	{
-		DrawTextToScreen( *(BobbyROrderLocations[i].psCityLoc), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, usPosY, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen( (STR16)gDestinationTable[i]->wstrName.c_str() , BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, usPosY, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 		usPosY += usFontHeight + 2;
 	}
 
@@ -1567,9 +1597,9 @@ void DrawSelectedCity( UINT8 ubCityNumber )
 
 	SetFontShadow(NO_SHADOW);	
 	if( ubCityNumber == 255 )
-		DrawTextToScreen( *(BobbyROrderLocations[ 0 ].psCityLoc), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, (UINT16)(usPosY+5), 0, BOBBYR_DROPDOWN_FONT, BOBBYR_FONT_BLACK, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen( (STR16)gDestinationTable[0]->wstrName.c_str(), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, (UINT16)(usPosY+5), 0, BOBBYR_DROPDOWN_FONT, BOBBYR_FONT_BLACK, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 	else
-		DrawTextToScreen( *(BobbyROrderLocations[ubCityNumber].psCityLoc), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, (UINT16)(usPosY+5), 0, BOBBYR_DROPDOWN_FONT, BOBBYR_FONT_BLACK, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen( (STR16)gDestinationTable[ubCityNumber]->wstrName.c_str(), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, (UINT16)(usPosY+5), 0, BOBBYR_DROPDOWN_FONT, BOBBYR_FONT_BLACK, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
 	SetFontShadow(DEFAULT_SHADOW);
 
@@ -1595,7 +1625,7 @@ void DisplayShippingLocationCity()
 	if( gbSelectedCity == -1 )
 		DrawTextToScreen( BobbyROrderFormText[BOBBYR_SELECT_DEST], BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y+3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 	else
-		DrawTextToScreen( *(BobbyROrderLocations[gbSelectedCity].psCityLoc), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y+3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen( (STR16)gDestinationTable[gbSelectedCity]->wstrName.c_str(), BOBBYR_CITY_START_LOCATION_X+BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y+3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
 
 	DisplayShippingCosts( TRUE, 0, BOBBYR_ORDERGRID_X, BOBBYR_ORDERGRID_Y, -1 );
@@ -1611,7 +1641,7 @@ void DisplayShippingLocationCity()
 
 	if( gbSelectedCity != -1 )
 	{
-		swprintf( sTemp, L"%d", ( INT32 )(BobbyROrderLocations[gbSelectedCity].usOverNightExpress/GetWeightBasedOnMetricOption( 1 ) )  );
+		swprintf( sTemp, L"%d", ( INT32 )(gPostalService.GetDestinationFee(0, gDestinationTable[gbSelectedCity]->usID) / GetWeightBasedOnMetricOption( 1 ) )	);
 		InsertCommasForDollarFigure( sTemp );
 		InsertDollarSignInToString( sTemp );
 	}
@@ -1621,7 +1651,7 @@ void DisplayShippingLocationCity()
 
 	if( gbSelectedCity != -1 )
 	{
-		swprintf( sTemp, L"%d", ( INT32 )( BobbyROrderLocations[gbSelectedCity].us2DaysService / GetWeightBasedOnMetricOption( 1 ) ) );
+		swprintf( sTemp, L"%d", ( INT32 )(gPostalService.GetDestinationFee(1, gDestinationTable[gbSelectedCity]->usID) / GetWeightBasedOnMetricOption( 1 ) ) );
 		InsertCommasForDollarFigure( sTemp );
 		InsertDollarSignInToString( sTemp );
 	}
@@ -1631,7 +1661,7 @@ void DisplayShippingLocationCity()
 
 	if( gbSelectedCity != -1 )
 	{
-		swprintf( sTemp, L"%d", (INT32 )( BobbyROrderLocations[gbSelectedCity].usStandardService / GetWeightBasedOnMetricOption( 1 ) ) );
+		swprintf( sTemp, L"%d", ( INT32 )(gPostalService.GetDestinationFee(2, gDestinationTable[gbSelectedCity]->usID) / GetWeightBasedOnMetricOption( 1 ) ) );
 		InsertCommasForDollarFigure( sTemp );
 		InsertDollarSignInToString( sTemp );
 	}
@@ -1732,7 +1762,7 @@ void SelectScrollAreaDropDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReaso
 		if( ubCityNum > gbSelectedCity )
 		{
 			gbSelectedCity++;
-			if( ( gbSelectedCity - gubCityAtTopOfList ) >= BOBBYR_NUM_DISPLAYED_CITIES )
+			if( ( gbSelectedCity - gubCityAtTopOfList ) >= guiNumOfDisplayedCities )
 				gubCityAtTopOfList++;
 		}
 
@@ -1754,7 +1784,7 @@ void SelectScrollAreaDropDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReaso
 		if( ubCityNum > gbSelectedCity )
 		{
 			gbSelectedCity++;
-			if( ( gbSelectedCity - gubCityAtTopOfList ) >= BOBBYR_NUM_DISPLAYED_CITIES )
+			if( ( gbSelectedCity - gubCityAtTopOfList ) >= guiNumOfDisplayedCities )
 				gubCityAtTopOfList++;
 		}
 
@@ -1790,8 +1820,8 @@ void SelectScrollAreaDropDownMovementCallBack(MOUSE_REGION * pRegion, INT32 reas
 			if( ubCityNum > gbSelectedCity )
 			{
 				gbSelectedCity = ubCityNum;
-				if( ( gbSelectedCity - gubCityAtTopOfList ) >= BOBBYR_NUM_DISPLAYED_CITIES )
-					gubCityAtTopOfList = gbSelectedCity - BOBBYR_NUM_DISPLAYED_CITIES + 1;
+				if( ( gbSelectedCity - gubCityAtTopOfList ) >= guiNumOfDisplayedCities )
+					gubCityAtTopOfList = gbSelectedCity - guiNumOfDisplayedCities + 1;
 			}
 
 			gubDropDownAction = BR_DROP_DOWN_DISPLAY;
@@ -1813,12 +1843,12 @@ void SelectUpDownArrowOnScrollAreaRegionCallBack(MOUSE_REGION * pRegion, INT32 i
 
 		if( ubUpArrow )
 		{
-			if( gbSelectedCity < BOBBYR_ORDER_NUM_SHIPPING_CITIES-1 )
+			if( gbSelectedCity < (INT8)gPostalService.LookupDestinationList().size()-1 )
 			{
 				gbSelectedCity++;
 			}
 
-			if( ( gbSelectedCity - gubCityAtTopOfList ) >= BOBBYR_NUM_DISPLAYED_CITIES )
+			if( ( gbSelectedCity - gubCityAtTopOfList ) >= guiNumOfDisplayedCities )
 			{
 				gubCityAtTopOfList++;
 			}
@@ -1857,10 +1887,10 @@ void DrawGoldRectangle( INT8 bCityNum )
 	usPosX = BOBBYR_SCROLL_AREA_X;
 	usWidth = BOBBYR_SCROLL_AREA_WIDTH - 5;
 	usTempHeight = ( BOBBYR_SCROLL_AREA_HEIGHT - 2 * BOBBYR_SCROLL_ARROW_HEIGHT ) - 8;
-	
-	usHeight = usTempHeight / (BOBBYR_ORDER_NUM_SHIPPING_CITIES+1);
 
-	usPosY = usTempPosY + (UINT16)( ( ( BOBBYR_SCROLL_AREA_HEIGHT - 2 * BOBBYR_SCROLL_ARROW_HEIGHT ) /  (FLOAT)(BOBBYR_ORDER_NUM_SHIPPING_CITIES +1) ) * bCityNum );
+	usHeight = usTempHeight / (gPostalService.LookupDestinationList().size()+1);
+
+	usPosY = usTempPosY + (UINT16)( ( ( BOBBYR_SCROLL_AREA_HEIGHT - 2 * BOBBYR_SCROLL_ARROW_HEIGHT ) /	(FLOAT)(gPostalService.LookupDestinationList().size() +1) ) * bCityNum );
 
 	temp = BOBBYR_SCROLL_AREA_Y + BOBBYR_SCROLL_AREA_HEIGHT - BOBBYR_SCROLL_ARROW_HEIGHT - usHeight - 1;
 
@@ -1913,7 +1943,7 @@ UINT32	CalcCostFromWeightOfPackage( UINT8	ubTypeOfService )
 */
 	Assert ( ubTypeOfService < 3);
 
-	switch( ubTypeOfService )
+	/*switch( ubTypeOfService )
 	{
 		case 0:
 			usStandardCost = BobbyROrderLocations[gbSelectedCity].usOverNightExpress;
@@ -1927,7 +1957,9 @@ UINT32	CalcCostFromWeightOfPackage( UINT8	ubTypeOfService )
 
 		default:
 			usStandardCost = 0;
-	}
+	}*/
+
+	usStandardCost = gPostalService.GetDestinationFee(ubTypeOfService, gDestinationTable[gbSelectedCity]->usID);
 
 	//Get the actual weight ( either in lbs or metric )
 ///	usStandardCost = (UINT16) GetWeightBasedOnMetricOption( usStandardCost );
@@ -2002,71 +2034,13 @@ INT8 CalculateOrderDelay( UINT8 ubSelectedService )
 void PurchaseBobbyOrder()
 {
 	//if the shipment is going to Drassen, add the inventory
-	if( gbSelectedCity == BR_DRASSEN || gbSelectedCity == BR_MEDUNA )
+
+	if(gbSelectedCity >= 0) // == BR_DRASSEN || gbSelectedCity == BR_MEDUNA )
 	{
-	//					BobbyRayOrderStruct *pBobbyRayPurchase;
-	//					UINT32	uiResetTimeSec;
-//		UINT8	i, ubCount;
-//		UINT8	cnt;
-//		INT8		bDaysAhead;
-
-/*
-		//if we need to add more array elements for the Order Array
-		if( LaptopSaveInfo.usNumberOfBobbyRayOrderItems <= LaptopSaveInfo.usNumberOfBobbyRayOrderUsed )
-		{
-			LaptopSaveInfo.usNumberOfBobbyRayOrderItems++;
-			LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = MemRealloc( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, sizeof( BobbyRayOrderStruct ) * LaptopSaveInfo.usNumberOfBobbyRayOrderItems );
-			if( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray == NULL )
-				return;
-
-			memset( &LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ LaptopSaveInfo.usNumberOfBobbyRayOrderItems - 1 ], 0, sizeof( BobbyRayOrderStruct ) );
-		}
-
-		for( cnt =0; cnt< LaptopSaveInfo.usNumberOfBobbyRayOrderItems; cnt++ )
-		{
-			//get an empty element in the array
-			if( !LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].fActive )
-				break;
-		}
-*/
-
 		//gets reset when the confirm order graphic disappears
 		gfCanAcceptOrder = FALSE;
 
-	//					pBobbyRayPurchase = MemAlloc( sizeof( BobbyRayOrderStruct ) );
-	//					memset(pBobbyRayPurchase, 0, sizeof( BobbyRayOrderStruct ) );
-
-
-
-/*
-		ubCount = 0;
-		for(i=0; i<MAX_PURCHASE_AMOUNT; i++)
-		{
-			//if the item was purchased
-			if( BobbyRayPurchases[ i ].ubNumberPurchased )
-			{
-				//copy the purchases into the struct that will be added to the queue
-				memcpy(&LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].BobbyRayPurchase[ ubCount ] , &BobbyRayPurchases[i],  sizeof(BobbyRayPurchaseStruct));
-				ubCount ++;
-			}
-		}
-
-		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].ubNumberPurchases = ubCount;
-		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].fActive = TRUE;
-		LaptopSaveInfo.usNumberOfBobbyRayOrderUsed++;
-*/
-
-	//add the delivery
-	AddNewBobbyRShipment( BobbyRayPurchases, gbSelectedCity, gubSelectedLight, TRUE, CalcPackageTotalWeight() );
-
-/*
-		//get the length of time to receive the shipment			
-		bDaysAhead = CalculateOrderDelay( gubSelectedLight );
-
-		//AddStrategicEvent( EVENT_BOBBYRAY_PURCHASE, uiResetTimeSec, cnt);
-		AddFutureDayStrategicEvent( EVENT_BOBBYRAY_PURCHASE, (8 + Random(4) ) * 60, cnt, bDaysAhead );
-*/
-
+		AddNewBobbyRShipment( BobbyRayPurchases, gDestinationTable[gbSelectedCity]->usID, gubSelectedLight, TRUE, CalcPackageTotalWeight() );
 	}
 
 	//Add the transaction to the finance page
@@ -2143,7 +2117,7 @@ void AddJohnsGunShipment()
 //	AddFutureDayStrategicEvent( EVENT_BOBBYRAY_PURCHASE, (8 + Random(4) ) * 60, cnt, bDaysAhead );
 
 	//add the delivery	( weight is not needed as it will not be displayed )
-	AddNewBobbyRShipment( Temp, BR_DRASSEN, bDaysAhead, FALSE, 0 );
+	AddNewBobbyRShipment( Temp, 3, bDaysAhead, FALSE, 1 );
 }
 
 
@@ -2263,18 +2237,32 @@ void DrawBobbyROrderTitle()
 }
 
 
-BOOLEAN AddNewBobbyRShipment( BobbyRayPurchaseStruct *pPurchaseStruct, UINT8 ubDeliveryLoc, UINT8 ubDeliveryMethod, BOOLEAN fPruchasedFromBobbyR, UINT32 uiPackageWeight )
+BOOLEAN AddNewBobbyRShipment( BobbyRayPurchaseStruct *pPurchaseStruct, UINT16 usDeliveryLoc, UINT8 ubDeliveryMethod, BOOLEAN fPurchasedFromBobbyR, UINT32 uiPackageWeight )
 {
-	INT32	iCnt;
+	/*INT32	iCnt;
 	INT32	iFoundSpot = -1;
 	UINT8	ubItemCount=0;
 	UINT8	i;
 	INT8	bDaysAhead=0;
 //	UINT32	uiPackageWeight;
 //	gpNewBobbyrShipments = NULL;
-//	giNumberOfNewBobbyRShipment = 0;
+//	giNumberOfNewBobbyRShipment = 0;*/
+	UINT16 usID;
 
-	//loop through and see if there is a free spot to insert the new order
+	if(fPurchasedFromBobbyR)
+		usID = gPostalService.CreateNewShipment(usDeliveryLoc, ubDeliveryMethod, 0);
+	else
+		usID = gPostalService.CreateNewShipment(usDeliveryLoc, 2, 1);
+
+	for(int i=0; i < MAX_PURCHASE_AMOUNT && pPurchaseStruct[i].usItemIndex > 0; i++)
+	{
+		gPostalService.AddPackageToShipment(usID, pPurchaseStruct[i].usItemIndex, pPurchaseStruct[i].ubNumberPurchased, pPurchaseStruct[i].bItemQuality);
+	}
+
+	gPostalService.SendShipment(usID);
+
+	return TRUE;
+/*	//loop through and see if there is a free spot to insert the new order
 	for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
 	{
 		if( !gpNewBobbyrShipments->fActive )
@@ -2348,7 +2336,7 @@ BOOLEAN AddNewBobbyRShipment( BobbyRayPurchaseStruct *pPurchaseStruct, UINT8 ubD
 	//AddStrategicEvent( EVENT_BOBBYRAY_PURCHASE, uiResetTimeSec, cnt);
 	AddFutureDayStrategicEvent( EVENT_BOBBYRAY_PURCHASE, (8 + Random(4) ) * 60, iFoundSpot, bDaysAhead );
 
-	return( TRUE );
+	return( TRUE );*/
 }
 
 UINT16	CountNumberOfBobbyPurchasesThatAreInTransit()

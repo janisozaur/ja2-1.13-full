@@ -14,6 +14,7 @@
 	#include "wordwrap.h"
 	#include "strategic.h"
 	#include "strategicmap.h"
+	#include "PostalService.h"
 #endif
 
 
@@ -102,6 +103,8 @@ void DisplayShipmentTitles();
 void RemovePreviousShipmentsMouseRegions();
 void CreatePreviousShipmentsMouseRegions();
 INT32	CountNumberValidShipmentForTheShipmentsPage();
+extern CPostalService gPostalService;
+extern vector<PShipmentStruct> gShipmentTable;
 //ppp
 
 
@@ -151,16 +154,27 @@ BOOLEAN EnterBobbyRShipments()
 	giBobbyRShipmentSelectedShipment = -1;
 
 	//if there are shipments
-	if( giNumberOfNewBobbyRShipment != 0 )
+	if( gShipmentTable.size() != 0 )
 	{
-		INT32 iCnt;
+		INT32 iCnt=0;
 
 		//get the first shipment #
-		for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
+		vector<PShipmentStruct>::iterator& psi = gShipmentTable.begin();
+
+		while(psi != gShipmentTable.end())
 		{
-			if( gpNewBobbyrShipments[iCnt].fActive )
+			if(((PShipmentStruct)*psi)->ShipmentStatus == SHIPMENT_INTRANSIT)
+			{
 				giBobbyRShipmentSelectedShipment = iCnt;
+			}
+			psi++;
+			iCnt++;
 		}
+		//for( iCnt=0; iCnt<gShipmentTable.size(); iCnt++ )
+		//{
+		//	if( gpNewBobbyrShipments[iCnt].fActive )
+		//		giBobbyRShipmentSelectedShipment = iCnt;
+		//}
 	}
 
 	CreatePreviousShipmentsMouseRegions();
@@ -195,7 +209,13 @@ void HandleBobbyRShipments()
 
 void RenderBobbyRShipments()
 {
-//  HVOBJECT hPixHandle;
+//	HVOBJECT hPixHandle;
+	static BobbyRayPurchaseStruct brps[MAX_PURCHASE_AMOUNT];
+
+	for(int i = 0; i < MAX_PURCHASE_AMOUNT; i++)
+	{
+		memset(&brps[i], 0, sizeof(BobbyRayPurchaseStruct));
+	}
 
 	DrawBobbyRWoodBackground();
 
@@ -206,12 +226,52 @@ void RenderBobbyRShipments()
 
 	DisplayShipmentGrid();
 
-	if( giBobbyRShipmentSelectedShipment != -1 && 
-			gpNewBobbyrShipments[ giBobbyRShipmentSelectedShipment ].fActive &&
-			gpNewBobbyrShipments[ giBobbyRShipmentSelectedShipment ].fDisplayedInShipmentPage )
+	
+
+	if(giBobbyRShipmentSelectedShipment != -1) 
+	{
+
+		RefToShipmentPackageListIterator spli = gShipmentTable[giBobbyRShipmentSelectedShipment]->ShipmentPackages.begin();
+
+		int j;
+		for(int i = 0; i < gShipmentTable[giBobbyRShipmentSelectedShipment]->ShipmentPackages.size(); i++, spli++)
+		{
+			brps[i].bItemQuality = ((ShipmentPackageStruct)*spli).bItemQuality;
+			brps[i].ubNumberPurchased = ((ShipmentPackageStruct)*spli).ubNumber;
+			brps[i].usItemIndex = ((ShipmentPackageStruct)*spli).usItemIndex;
+			brps[i].fUsed = (((ShipmentPackageStruct)*spli).bItemQuality < 100);
+
+			if(brps[i].fUsed)
+			{
+				for(j=0; j < MAXITEMS; j++)
+				{
+					if(LaptopSaveInfo.BobbyRayUsedInventory[j].usItemIndex == brps[i].usItemIndex)
+					{
+						break;
+					}
+				}
+				brps[i].usBobbyItemIndex = j;
+			}
+			else
+			{
+				for(j=0; j < MAXITEMS; j++)
+				{
+					if(LaptopSaveInfo.BobbyRayInventory[j].usItemIndex == brps[i].usItemIndex)
+					{
+						break;
+					}
+				}
+				brps[i].usBobbyItemIndex = j;
+			}
+		}
+	}
+
+	if( giBobbyRShipmentSelectedShipment != -1 &&
+		gShipmentTable[ giBobbyRShipmentSelectedShipment ]->ShipmentStatus == SHIPMENT_INTRANSIT) // &&
+			//gpNewBobbyrShipments[ giBobbyRShipmentSelectedShipment ].fDisplayedInShipmentPage )
 	{
 //		DisplayPurchasedItems( FALSE, BOBBYR_SHIPMENT_ORDER_GRID_X, BOBBYR_SHIPMENT_ORDER_GRID_Y, &LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[giBobbyRShipmentSelectedShipment].BobbyRayPurchase[0], FALSE );
-		DisplayPurchasedItems( FALSE, BOBBYR_SHIPMENT_ORDER_GRID_X, BOBBYR_SHIPMENT_ORDER_GRID_Y, &gpNewBobbyrShipments[giBobbyRShipmentSelectedShipment].BobbyRayPurchase[0], FALSE, giBobbyRShipmentSelectedShipment );
+		DisplayPurchasedItems( FALSE, BOBBYR_SHIPMENT_ORDER_GRID_X, BOBBYR_SHIPMENT_ORDER_GRID_Y,&brps[0], FALSE, giBobbyRShipmentSelectedShipment );
 	}
 	else
 	{
@@ -302,17 +362,23 @@ void DisplayPreviousShipments()
 	UINT32 uiCnt;
 	CHAR16	zText[512];
 	UINT16	usPosY = BOBBYR_SHIPMENT_ORDER_NUM_START_Y;
-	UINT32	uiNumItems = CountNumberValidShipmentForTheShipmentsPage();
+	UINT32	uiNumItems;
 	UINT32	uiNumberItemsInShipments = 0;
 	UINT32	uiItemCnt;
 	UINT8		ubFontColor = BOBBYR_SHIPMENT_STATIC_TEXT_COLOR;
+	RefToShipmentListIterator sli = gPostalService.LookupShipmentList().begin();
+	
 
-	//loop through all the shipments
+	uiNumItems = (UINT32)gPostalService.LookupShipmentList().size();
+
+	if(uiNumItems > BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS)
+		uiNumItems = BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS;
+
 	for( uiCnt=0; uiCnt<uiNumItems; uiCnt++ )
 	{
 		//if it is a valid shipment, and can be displayed at bobby r
-		if( gpNewBobbyrShipments[ uiCnt ].fActive &&
-				gpNewBobbyrShipments[ giBobbyRShipmentSelectedShipment ].fDisplayedInShipmentPage )
+		if( gShipmentTable[ uiCnt ]->ShipmentStatus == SHIPMENT_INTRANSIT) // &&
+				//gpNewBobbyrShipments[ giBobbyRShipmentSelectedShipment ].fDisplayedInShipmentPage )
 		{
 			if( uiCnt == (UINT32)giBobbyRShipmentSelectedShipment )
 			{
@@ -324,16 +390,16 @@ void DisplayPreviousShipments()
 			}
 
 			//Display the "ordered on day num"
-			swprintf( zText, L"%s %d", gpGameClockString[0], gpNewBobbyrShipments[ uiCnt ].uiOrderedOnDayNum );
+			swprintf( zText, L"%s %d", gpGameClockString[0], gShipmentTable[ uiCnt ]->uiOrderDate );
 			DrawTextToScreen( zText, BOBBYR_SHIPMENT_ORDER_NUM_X, usPosY, BOBBYR_SHIPMENT_ORDER_NUM_WIDTH, BOBBYR_SHIPMENT_STATIC_TEXT_FONT, ubFontColor, 0, FALSE, CENTER_JUSTIFIED );
 
 			uiNumberItemsInShipments = 0;
 
 	//		for( uiItemCnt=0; uiItemCnt<LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ uiCnt ].ubNumberPurchases; uiItemCnt++ )
-			for( uiItemCnt=0; uiItemCnt<gpNewBobbyrShipments[ uiCnt ].ubNumberPurchases; uiItemCnt++ )
+			for( uiItemCnt=0; uiItemCnt<gShipmentTable[ uiCnt ]->ShipmentPackages.size(); uiItemCnt++ )
 			{
 	//			uiNumberItemsInShipments += LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ uiCnt ].BobbyRayPurchase[uiItemCnt].ubNumberPurchased;
-				uiNumberItemsInShipments += gpNewBobbyrShipments[ uiCnt ].BobbyRayPurchase[uiItemCnt].ubNumberPurchased;
+				uiNumberItemsInShipments += gShipmentTable[ uiCnt ]->ShipmentPackages[uiItemCnt].ubNumber;
 			}
 
 			//Display the # of items
@@ -350,7 +416,7 @@ void CreatePreviousShipmentsMouseRegions()
 	UINT16	usPosY = BOBBYR_SHIPMENT_ORDER_NUM_START_Y;
 	UINT16	usWidth = BOBBYR_SHIPMENT_DELIVERY_GRID_WIDTH;
 	UINT16	usHeight = GetFontHeight( BOBBYR_SHIPMENT_STATIC_TEXT_FONT );
-	UINT32	uiNumItems = CountNumberOfBobbyPurchasesThatAreInTransit();
+	UINT32	uiNumItems = gPostalService.GetShipmentCount(SHIPMENT_INTRANSIT);
 
 	for( uiCnt=0; uiCnt<uiNumItems; uiCnt++ )
 	{
@@ -385,7 +451,7 @@ void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason
 		INT32 iSlotID = MSYS_GetRegionUserData( pRegion, 0 );
 
 
-		if( CountNumberOfBobbyPurchasesThatAreInTransit() > iSlotID )
+		if( gPostalService.GetShipmentCount(SHIPMENT_INTRANSIT) > iSlotID )
 		{
 			INT32 iCnt;
 			INT32	iValidShipmentCounter=0;
@@ -393,9 +459,9 @@ void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason
 			giBobbyRShipmentSelectedShipment = -1;
 
 			//loop through and get the "x" iSlotID shipment
-			for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
+			for( iCnt=0; iCnt<gPostalService.GetShipmentCount(SHIPMENT_INTRANSIT); iCnt++ )
 			{
-				if( gpNewBobbyrShipments[iCnt].fActive )
+				if( gShipmentTable[iCnt]->ShipmentStatus == SHIPMENT_INTRANSIT )
 				{
 					if( iValidShipmentCounter == iSlotID )
 					{

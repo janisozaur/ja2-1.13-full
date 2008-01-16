@@ -21,11 +21,14 @@
 	#include "Text.h"
 	#include "LaptopSave.h"
 	#include "finances.h"
+	#include "PostalService.h"
+	#include <string>
 #endif
 
-//static EmailPtr pEmailList; 
-EmailPtr pEmailList; 
-static PagePtr  pPageList;
+using namespace std;
+//static EmailPtr pEmailList;
+EmailPtr pEmailList;
+static PagePtr	pPageList;
 static INT32 iLastPage=-1;
 static INT32 iCurrentPage=0;
 INT32 iDeleteId=0;
@@ -240,7 +243,8 @@ UINT32 guiEmailMessage;
 UINT32 guiMAILDIVIDER;
 
 INT16 giCurrentIMPSlot = PLAYER_GENERATED_CHARACTER_ID;
-
+extern UINT16 gusCurShipmentDestinationID;
+extern CPostalService gPostalService;
 
 
 // the enumeration of headers
@@ -498,7 +502,7 @@ void HandleEmail( void )
 
 	// does email list need to be draw, or can be drawn 
 	if( ( (!fDisplayMessageFlag)&&(!fNewMailFlag) && ( !fDeleteMailFlag ) )&&( fEmailListBeenDrawAlready == FALSE ) )
-  { 
+	{
 		DisplayEmailList();
 		fEmailListBeenDrawAlready = TRUE;
 	}
@@ -603,8 +607,7 @@ void DisplayEmailHeaders( void )
 
 void RenderEmail( void )
 {
-  HVOBJECT hHandle;
-  INT32 iCounter=0;
+	HVOBJECT hHandle;
 
 	// get and blt the email list background
   GetVideoObject( &hHandle, guiEmailBackground );
@@ -3192,6 +3195,35 @@ BOOLEAN HandleMailSpecialMessages( UINT16 usMessageId, INT32 *iResults, EmailPtr
 		case AIM_MEDICAL_DEPOSIT_NO_REFUND:
 		case AIM_MEDICAL_DEPOSIT_PARTIAL_REFUND:
 			ModifyInsuranceEmails( usMessageId, iResults, pMail, AIM_MEDICAL_DEPOSIT_REFUND_LENGTH );
+			break;
+		case BOBBYR_SHIPMENT_ARRIVED:
+			wstring wstrMail;
+			wstring::size_type index;
+			CHAR16 szMail[MAIL_STRING_SIZE];
+			
+			if(!pMessageRecordList)
+			{
+				for(int i = 0; i < BOBBYR_SHIPMENT_ARRIVED_LENGTH; i++)
+				{
+					wstrMail.clear();
+					LoadEncryptedDataFromFile( "BINARYDATA\\Email.edt", szMail, MAIL_STRING_SIZE * usMessageId, MAIL_STRING_SIZE);			
+					wstrMail = szMail;
+
+					index = wstrMail.find(L"$DESTINATIONNAME$");
+
+					if(index != wstring::npos)
+					{
+						wstrMail.erase(index, strlen("$DESTINATIONNAME$"));
+						RefToDestinationStruct ds = gPostalService.GetDestination(gusCurShipmentDestinationID);
+						wstrMail.insert(index, ds.wstrName.c_str());
+					}
+
+					AddEmailRecordToList( (STR16)wstrMail.c_str() );
+
+					usMessageId++;
+				}
+			}
+			giPrevMessageId = giMessageId;
 			break;
 	}
 

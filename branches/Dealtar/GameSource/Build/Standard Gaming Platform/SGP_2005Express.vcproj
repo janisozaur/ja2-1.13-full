@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="SGP_2005Express"
 	ProjectGUID="{6283CE93-2960-4596-8E74-7A6FBA8716FF}"
 	RootNamespace="SGP_2005Express"
@@ -46,7 +46,7 @@
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
+				WarningLevel="3"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4100"
 			/>

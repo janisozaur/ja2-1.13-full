@@ -39,6 +39,7 @@
 #endif
 
 #include "Campaign Init.h"
+#include "PostalService.h"
 
 BOOLEAN gfSchedulesHosed = FALSE;
 extern UINT32 guiBrokenSaveGameVersion;
@@ -200,8 +201,7 @@ BOOLEAN		gfGettingNameFromSaveLoadScreen = FALSE;
 extern	BOOLEAN		gfDisplaySaveGamesNowInvalidatedMsg;
 #endif
 
-//
-//Buttons
+extern		CPostalService gPostalService;
 //
 INT32		guiSlgButtonImage;
 
