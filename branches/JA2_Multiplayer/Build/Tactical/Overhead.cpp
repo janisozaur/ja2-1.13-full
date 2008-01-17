@@ -113,12 +113,13 @@
 #endif
 
 #include "connect.h"
+#include "test_space.h"
 
 extern void HandleBestSightingPositionInRealtime();
 
 extern UINT8	gubAICounter;
 
-
+#include "fresh_header.h"
 #define RT_DELAY_BETWEEN_AI_HANDLING 50
 #define RT_AI_TIMESLICE 10
 
@@ -908,8 +909,10 @@ BOOLEAN ExecuteOverhead( )
 	}
 
 
+
 	if ( COUNTERDONE( TOVERHEAD ) )
 	{
+
 		// Reset counter
 		RESETCOUNTER( TOVERHEAD );
 
@@ -1136,6 +1139,8 @@ BOOLEAN ExecuteOverhead( )
 
 				// Handle animation update counters
 				// ATE: Added additional check here for special value of anispeed that pauses all updates
+			//if (pSoldier->fIsSoldierDelayed == false)
+				{
 #ifndef BOUNDS_CHECKER
 				if ( TIMECOUNTERDONE( pSoldier->UpdateCounter, pSoldier->sAniDelay ) && pSoldier->sAniDelay != 10000 )
 #endif
@@ -1174,13 +1179,25 @@ BOOLEAN ExecuteOverhead( )
 						UpdateSoldierFromNetwork(pSoldier);
 #endif
 
+					
+
 					// Check if we are moving and we deduct points and we have no points
 					if ( !( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ( ANIM_MOVING | ANIM_SPECIALMOVE ) ) && pSoldier->fNoAPToFinishMove  ) && !pSoldier->fPauseAllAnimation  )
 					{
+					
+
+
 						if ( !AdjustToNextAnimationFrame( pSoldier ) )
 						{
 							continue;
+
 						}
+						//hayden - holt at scheduled grid
+							if(pSoldier->sGridNo==pSoldier->sScheduledStop)
+								{
+									HaultSoldierFromSighting( pSoldier, 1 );
+									pSoldier->sScheduledStop=NULL;
+								}
 
 						if ( !( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_SPECIALMOVE ) )
 						{
@@ -1199,10 +1216,14 @@ BOOLEAN ExecuteOverhead( )
 							// CHECK TO SEE IF WE'RE ON A MIDDLE TILE
 							if ( pSoldier->fPastXDest && pSoldier->fPastYDest )
 							{
+
+							
+
 								pSoldier->fPastXDest = pSoldier->fPastYDest = FALSE;
 								// assign X/Y values back to make sure we are at the center of the tile
 								// (to prevent mercs from going through corners of tiles and producing
 								// structure data complaints)
+		
 
 								//pSoldier->dXPos = pSoldier->sDestXPos;
 								//pSoldier->dYPos = pSoldier->sDestYPos;
@@ -1218,6 +1239,8 @@ BOOLEAN ExecuteOverhead( )
 									//OK, we're at the MIDDLE of a new tile...
 									HandleAtNewGridNo( pSoldier, &fKeepMoving );
 								}
+
+						
 
 								if ( gTacticalStatus.bBoxingState != NOT_BOXING && (gTacticalStatus.bBoxingState == BOXING_WAITING_FOR_PLAYER || gTacticalStatus.bBoxingState == PRE_BOXING || gTacticalStatus.bBoxingState == BOXING) )
 								{
@@ -1513,6 +1536,10 @@ BOOLEAN ExecuteOverhead( )
 								}
 								else if ( !pSoldier->fNoAPToFinishMove )
 								{
+
+									
+
+
 									// Increment path....
 									pSoldier->usPathIndex++;
 
@@ -1606,6 +1633,20 @@ BOOLEAN ExecuteOverhead( )
 										}
 									}
 								}
+												
+								if(is_client)//hayden
+								{
+									if(pSoldier->fIsSoldierDelayed==TRUE)
+									{
+										continue;//in position but waiting on other clients
+									}
+									else
+									{
+										//ovh_advance=false;
+										pSoldier->fIsSoldierDelayed=TRUE;
+										request_ovh(pSoldier->ubID);
+									}
+								}
 							}
 
 							if ( ( pSoldier->uiStatusFlags & SOLDIER_PAUSEANIMOVE ) )
@@ -1613,8 +1654,13 @@ BOOLEAN ExecuteOverhead( )
 								fKeepMoving = FALSE;
 							}
 
+							//if(pSoldier->fIsSoldierDelayed==TRUE)
+							//{
+							//	continue;//in position but waiting on other clients
+							//}
+
 							// DO WALKING 
-							if ( !pSoldier->fPausedMove && fKeepMoving )
+							if ( !pSoldier->fPausedMove && fKeepMoving && !pSoldier->fNoAPToFinishMove )
 							{
 								// Determine deltas
 								//	dDeltaX = pSoldier->sDestXPos - pSoldier->dXPos;
@@ -1654,8 +1700,12 @@ BOOLEAN ExecuteOverhead( )
 					if (pSoldier->fSoldierUpdatedFromNetwork)
 						UpdateSoldierFromNetwork(pSoldier);
 #endif
+//haydens network soldier update ->>
+					if(is_client)UpdateSoldierToNetwork ( pSoldier );
+//
 				}
 
+				}
 				if ( !gfPauseAllAI && 
 					( ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT)) || (fHandleAI && guiAISlotToHandle == cnt) || (pSoldier->fAIFlags & AI_HANDLE_EVERY_FRAME) || gTacticalStatus.fAutoBandageMode ) )
 				{
@@ -1778,6 +1828,7 @@ BOOLEAN ExecuteOverhead( )
 
 			gubWaitingForAllMercsToExitCode = 0;
 		}
+		
 	}
 
 

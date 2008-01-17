@@ -22,4 +22,6 @@ void cheat_func(void);
 void start_tt(void);
 void unlock (void);
 
+void UpdateSoldierToNetwork ( SOLDIERTYPE *pSoldier );
+
 extern BOOLEAN gfUIInterfaceSetBusy;

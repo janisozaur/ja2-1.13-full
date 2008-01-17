@@ -4963,8 +4963,6 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 								// WALK UP TO DEST FIRST
 								EVENT_InternalGetNewSoldierPath( gpItemPointerSoldier, sActionGridNo, gpItemPointerSoldier->usUIMovementMode, FALSE, FALSE );
-								//*** send new path via RPC call to the network if original call
-								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( gpItemPointerSoldier, sActionGridNo, gpItemPointerSoldier->usUIMovementMode , FALSE, FALSE );
 							}
 							else
 							{

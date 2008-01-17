@@ -17,7 +17,7 @@
 	#include "Soldier macros.h"
 	#include "Render Fun.h"
 #endif
-
+#include "connect.h"
 // from strategic
 extern INT16 DirXIncrementer[8];
 extern INT16 DirYIncrementer[8];
@@ -863,6 +863,18 @@ void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier)
 	{
 		return;
 	}
+
+
+
+		EV_S_STOP_MERC				SStopMerc;
+
+	SStopMerc.sGridNo					= pSoldier->sGridNo;
+	SStopMerc.bDirection			= pSoldier->bDirection;
+	SStopMerc.usSoldierID			= pSoldier->ubID;
+	//AddGameEvent( S_STOP_MERC, 0, &SStopMerc ); //hayden.
+	if(pSoldier->ubID>=120) return;//hayden
+	if(is_client)send_stop(&SStopMerc);
+
 
 	// record that this merc can no longer animate and why...
 	AdjustNoAPToFinishMove( pSoldier, TRUE );

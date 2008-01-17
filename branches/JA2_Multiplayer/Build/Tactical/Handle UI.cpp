@@ -2015,8 +2015,6 @@ UINT32 UIHandleCMoveMerc( UI_EVENT *pUIEvent )
 											
 						
 						EVENT_InternalGetNewSoldierPath( pSoldier, sDestGridNo, pSoldier->usUIMovementMode , TRUE, pSoldier->fNoAPToFinishMove );
-						//*** send new path via RPC call to the network if original call
-								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sDestGridNo, pSoldier->usUIMovementMode , TRUE, pSoldier->fNoAPToFinishMove );
 
 	
 					}
@@ -5800,8 +5798,6 @@ BOOLEAN HandleTalkInit(  )
 
 					// WALK UP TO DEST FIRST
 					EVENT_InternalGetNewSoldierPath( pSoldier, sGoodGridNo, pSoldier->usUIMovementMode , TRUE , pSoldier->fNoAPToFinishMove );	
-					//*** send new path via RPC call to the network if original call
-								if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sGoodGridNo, pSoldier->usUIMovementMode , TRUE , pSoldier->fNoAPToFinishMove );
 
 					return( FALSE );
 				}

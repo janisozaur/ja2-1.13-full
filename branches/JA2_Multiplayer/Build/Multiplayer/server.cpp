@@ -16,7 +16,7 @@
 
 #include "types.h"
 #include "gamesettings.h"
-//#include "test_space.h"
+
 
 char net_div[30];
 INT32 gsMAX_MERCS;
@@ -25,6 +25,11 @@ INT32 gsMAX_MERCS;
 #include "connect.h"
 #include "message.h"
 #include "network.h"
+
+UINT16 nc; //number of open connection
+UINT16 ncr; //number of ready confirmed connections
+//something keep record of ready connections ..
+int mercs_ready[255];
 
 bool gsDis_Bobby;
 bool gsDis_Equip;
@@ -141,7 +146,10 @@ void sendMISS(RPCParameters *rpcParameters)
 {
 	server->RPC("recieveMISS",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, rpcParameters->sender, true, 0, UNASSIGNED_NETWORK_ID,0);
 }
-		
+void updatenetworksoldier(RPCParameters *rpcParameters)
+{
+	server->RPC("UpdateSoldierFromNetwork",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, rpcParameters->sender, true, 0, UNASSIGNED_NETWORK_ID,0);
+}	
 
 //************************* //UNASSIGNED_SYSTEM_ADDRESS
 //START INTERNAL SERVER
@@ -198,6 +206,30 @@ void requestSETTINGS(RPCParameters *rpcParameters)
 				lan.TESTING=gsTESTING;
 
 		server->RPC("recieveSETTINGS",(const char*)&lan, (int)sizeof(settings_struct)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
+
+}
+
+void rOVH (RPCParameters *rpcParameters)
+{
+			ovh_struct* rovhs = (ovh_struct*)rpcParameters->input;
+			
+			
+
+			++mercs_ready[rovhs->ubid];
+			//ncr++;
+			nc = server->NumberOfConnections();
+
+			if(mercs_ready[rovhs->ubid] >= nc)
+			{
+				mercs_ready[rovhs->ubid]=0;
+				//ScreenMsg( FONT_LTBLUE, MSG_CHAT, L"advance %d",rovhs->ubid );
+
+				adv aoh;
+				aoh.ubid=rovhs->ubid;
+			
+				server->RPC("advance_ovh_frame",(const char*)&aoh, (int)sizeof(adv)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
+
+			}
 
 }
 
@@ -326,7 +358,9 @@ void start_server (void)
 		REGISTER_STATIC_RPC(server, sendhitSTRUCT);
 		REGISTER_STATIC_RPC(server, sendhitWINDOW);
 		REGISTER_STATIC_RPC(server, sendMISS);
-		
+		REGISTER_STATIC_RPC(server, rOVH);
+
+			REGISTER_STATIC_RPC(server, updatenetworksoldier);
 	//
 
 

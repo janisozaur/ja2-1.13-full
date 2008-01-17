@@ -97,6 +97,9 @@ extern INT8 SquadMovementGroups[ ];
 #include "test_space.h"
 #include "soldier control.h"
 
+bool ovh_advance;
+bool ovh_ready;
+
 
 
 
@@ -130,10 +133,78 @@ void test_func2 (void)//now bound to "0" //currently displays coordinates of the
 //BeginTeamTurn (0);
 
 
-RESETTIMECOUNTER( giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS );
+
 ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"test_func2" );
 
+SOLDIERTYPE * pSoldier=MercPtrs[ 0 ];
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//INT16 sCellX, sCellY;
+////ConvertGridNoToCellXY( 13576, &sCellX, &sCellY );
+//
+//	sCellX = CenterX( 13576 );
+//	sCellY = CenterY( 13576 );
+//
+//	//pSoldier->dXPos = sCellX;
+//	//pSoldier->dYPos = sCellY;
+//
+//	//pSoldier->sX = (INT16)sCellX;
+//	//pSoldier->sY = (INT16)sCellY;
+//	EVENT_InitNewSoldierAnim( pSoldier, 6, 0, FALSE );
+
+	//EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+
+//HaultSoldierFromSighting( pSoldier, 1 );
+//pSoldier->sScheduledStop=7961;
+////
+////EVENT_SetSoldierPosition( pSoldier, 1140, 1170 );
+//AdjustNoAPToFinishMove( pSoldier, TRUE );
+//pSoldier->fTurningFromPronePosition = FALSE;
+//
+////HaultSoldierFromSighting( pSoldier, 1 );
+
+
+
+
+//UINT16 usPathData[30];
+//usPathData[0]=3;
+//usPathData[1]=5;
+//usPathData[2]=7;
+//
+//pSoldier->sFinalDestination = 8446;
+//
+//pSoldier->usPathDataSize=3;
+//pSoldier->usPathIndex=0;
+//
+//memcpy(pSoldier->usPathingData,usPathData,sizeof(UINT16)*30);
+
+
+//INT16 sNewGridNo;
+
+//sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathDataSize ] ) );
+
+//pSoldier->sFinalDestination = sNewGridNo;
+
+//EVENT_InitNewSoldierAnim( pSoldier, 0, 0, FALSE );
+
+
+
+//ovh_advance=true;
 //
 //
 //	CHAR16 string[255];

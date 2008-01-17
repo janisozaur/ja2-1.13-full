@@ -41,3 +41,14 @@ typedef struct
 	int cl_ops[4];
 	int TESTING;
 } settings_struct;
+
+typedef struct
+{
+	int clnum;
+	UINT8 ubid;
+}ovh_struct;
+
+typedef struct
+{
+	UINT8 ubid;
+}adv;

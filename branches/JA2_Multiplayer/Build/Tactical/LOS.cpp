@@ -2395,7 +2395,7 @@ void BulletHitStructure( BULLET * pBullet, UINT16 usStructureID, INT32 iImpact, 
 	SStructureHit.iBullet				= pBullet->iBullet;
 	SStructureHit.fStopped = fStopped;
 //hayden
-	send_hitstruct(&SStructureHit);
+	if(is_client)send_hitstruct(&SStructureHit);
 	StructureHit( SStructureHit.iBullet, SStructureHit.usWeaponIndex, SStructureHit.bWeaponStatus, SStructureHit.ubAttackerID, SStructureHit.sXPos, SStructureHit.sYPos, SStructureHit.sZPos, SStructureHit.usStructureID, SStructureHit.iImpact, SStructureHit.fStopped );
 }
 
@@ -2410,7 +2410,7 @@ void BulletHitWindow( BULLET *pBullet, INT16 sGridNo, UINT16 usStructureID, BOOL
 	SWindowHit.iBullet = pBullet->iBullet;
 	SWindowHit.ubAttackerID=pBullet->pFirer->ubID;
 //hayden
-	send_hitwindow(&SWindowHit);
+	if(is_client)send_hitwindow(&SWindowHit);
 	WindowHit( SWindowHit.sGridNo, SWindowHit.usStructureID, SWindowHit.fBlowWindowSouth, SWindowHit.fLargeForce );
 }
 
@@ -2420,7 +2420,7 @@ void BulletMissed( BULLET *pBullet, SOLDIERTYPE * pFirer )
 	SMiss.iBullet=pBullet->iBullet;
 	SMiss.ubAttackerID=pFirer->ubID;
 //hayden
-	send_miss(&SMiss);
+	if(is_client)send_miss(&SMiss);
 	ShotMiss( pFirer->ubID, pBullet->iBullet );
 }
 

@@ -5076,8 +5076,14 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 				//
 				pSoldier->usDontUpdateNewGridNoOnMoveAnimChange = TRUE;
 
-				EVENT_InitNewSoldierAnim( pSoldier, usMoveAnimState, 0, FALSE );	
+				EVENT_InitNewSoldierAnim( pSoldier, usMoveAnimState, 0, FALSE );
+				if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sDestGridNo, usMoveAnimState , 0 , FALSE );
+
+				return( TRUE );
+
+
 			}
+			if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sDestGridNo, pSoldier->usAnimState , 255 , FALSE );
 
 			return( TRUE );
 		}
@@ -5127,11 +5133,15 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 		{
 			EVENT_InitNewSoldierAnim( pSoldier, usAnimState, 0, FALSE );	
 			pSoldier->usPendingAnimation = usMoveAnimState;
+			if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sDestGridNo, usAnimState , 0 , FALSE );
+
 		}
 		else
 		{
 			// Call local copy for change soldier state!
+
 			EVENT_InitNewSoldierAnim( pSoldier, usMoveAnimState, 0, fForceRestartAnim );	
+			if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sDestGridNo, usMovementAnim , 0 , fForceRestartAnim );
 
 		}
 
@@ -5139,6 +5149,10 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 		// ATE: Here we have a situation where in RT, we may have
 		// gotten a new path, but we are alreayd moving.. so
 		// at leasty change new dest. This will be redundent if the ANI is a totaly new one
+
+		//ok, new path, lets send it off: - hayden
+		//if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sDestGridNo, usMovementAnim , fFromUI , fForceRestartAnim );
+
 
 		return( TRUE );
 	}
@@ -10454,8 +10468,6 @@ void ContinueMercMovement( SOLDIERTYPE *pSoldier )
 
 			// OK, try and get a path to out dest!
 			EVENT_InternalGetNewSoldierPath( pSoldier, sGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
-				//*** send new path via RPC call to the network if original call
-				if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, sGridNo, pSoldier->usUIMovementMode , FALSE, TRUE );
 		}
 	}
 }

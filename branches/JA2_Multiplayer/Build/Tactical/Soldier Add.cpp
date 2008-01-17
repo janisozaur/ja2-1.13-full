@@ -23,6 +23,8 @@
 	#include "Exit Grids.h"
 #endif
 
+#include "connect.h"
+
 // Adds a soldier to a world gridno and set's direction
 void AddSoldierToSectorGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode );
 
@@ -1175,8 +1177,13 @@ BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOO
 			}
 			else
 			{
-				sGridNo = FindGridNoFromSweetSpot( pSoldier, pSoldier->sInsertionGridNo, 7, &ubCalculatedDirection );
-
+				if(is_client && (pSoldier->ubStrategicInsertionCode == INSERTION_CODE_GRIDNO)) 
+				{
+					sGridNo = pSoldier->sInsertionGridNo;
+					ubCalculatedDirection = pSoldier->bDirection;
+				}
+				else sGridNo = FindGridNoFromSweetSpot( pSoldier, pSoldier->sInsertionGridNo, 7, &ubCalculatedDirection );
+				//hayden
         // ATE: Error condition - if nowhere use insertion gridno!
         if ( sGridNo == NOWHERE )
         {

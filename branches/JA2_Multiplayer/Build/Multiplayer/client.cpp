@@ -211,6 +211,7 @@ UINT8	ubID_prefix;
  bool is_server=false;
  bool is_networked=false;
 
+int tcount;
 
  int TESTING;
  bool allowlaptop=false;
@@ -258,29 +259,50 @@ void overide_callback( UINT8 ubResult );
 //RPC sends and recieves:
 //********************
 
+void send_dest ( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim)
+{
+
+}
+
+void recieve_dest(RPCParameters *rpcParameters)
+{
+
+}
 
 void send_path (  SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim, BOOLEAN fFromUI, BOOLEAN fForceRestartAnim  )
 {
 	if(pSoldier->ubID < 120)
 	{
-		//ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"Sending RPC..." );
-		EV_S_GETNEWPATH	SGetNewPath;
+		//ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"Sending new path" );
 
 
-		
+		EV_S_SENDPATHTONETWORK SNetPath;
 
 		if(pSoldier->ubID < 20)
-			SGetNewPath.usSoldierID = (pSoldier->ubID)+ubID_prefix;
+			SNetPath.usSoldierID = (pSoldier->ubID)+ubID_prefix;
 		else
-			SGetNewPath.usSoldierID = pSoldier->ubID;
+			SNetPath.usSoldierID = pSoldier->ubID;
+	
+		SNetPath.sAtGridNo=pSoldier->sGridNo;
+		
+		
+			SNetPath.ubNewState=usMovementAnim;
+			//if(fFromUI==255)SNetPath.ubNewState=255;
 
-		//SGetNewPath.usSoldierID				= pSoldier->ubID;
-		SGetNewPath.sDestGridNo				= sDestGridNo;
-		SGetNewPath.usMovementAnim		= usMovementAnim;
-		SGetNewPath.uiUniqueId = pSoldier -> uiUniqueSoldierIdValue;
+			SNetPath.usCurrentPathIndex=pSoldier->usPathIndex;
+			memcpy(SNetPath.usPathData, pSoldier->usPathingData, sizeof(UINT16)*30);
+			SNetPath.usPathDataSize=pSoldier->usPathDataSize;
+			SNetPath.sDestGridNo=sDestGridNo;
+			
+//this stops soldier from advancing further than one square,and requests "clearance" for another after that... :)
+		if(pSoldier->fIsSoldierDelayed==FALSE)
+		{
+			pSoldier->fIsSoldierDelayed=TRUE;
+			request_ovh(pSoldier->ubID);
+		}
 
 		
-		client->RPC("sendPATH",(const char*)&SGetNewPath, (int)sizeof(EV_S_GETNEWPATH)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
+		client->RPC("sendPATH",(const char*)&SNetPath, (int)sizeof(EV_S_SENDPATHTONETWORK)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
 	}
 
 }
@@ -288,16 +310,53 @@ void send_path (  SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAn
 void recievePATH(RPCParameters *rpcParameters)
 {
 
-		//ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"Recieving RPC..." );
+		//ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"Recieving new path," );
 					
-		EV_S_GETNEWPATH* SGetNewPath = (EV_S_GETNEWPATH*)rpcParameters->input;
+		EV_S_SENDPATHTONETWORK* SNetPath = (EV_S_SENDPATHTONETWORK*)rpcParameters->input;
 
-		SOLDIERTYPE *pSoldier = MercPtrs[ SGetNewPath->usSoldierID ];
+		SOLDIERTYPE *pSoldier = MercPtrs[ SNetPath->usSoldierID ];
 	
-		SendGetNewSoldierPathEvent( pSoldier, SGetNewPath->sDestGridNo, SGetNewPath->usMovementAnim );	
 
+		memcpy(pSoldier->usPathingData, SNetPath->usPathData,sizeof(UINT16)*30);
 
-		//********* implemented using event pump system ... :)
+		pSoldier->sDestination = SNetPath->sDestGridNo;
+		pSoldier->sFinalDestination = SNetPath->sDestGridNo;
+		pSoldier->usPathIndex=SNetPath->usCurrentPathIndex;
+		pSoldier->usPathDataSize=SNetPath->usPathDataSize;
+
+		SendGetNewSoldierPathEvent( pSoldier, SNetPath->sDestGridNo, SNetPath->ubNewState );	
+
+		INT16 sCellX, sCellY;
+		
+		
+		sCellX = CenterX( SNetPath->sAtGridNo );
+		sCellY = CenterY( SNetPath->sAtGridNo );
+
+		//if ( !( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ( ANIM_MOVING | ANIM_SPECIALMOVE ) ) && pSoldier->fNoAPToFinishMove  ) && !pSoldier->fPauseAllAnimation  )
+		if (( gAnimControl[ pSoldier->usAnimState ].uiFlags & ( ANIM_MOVING | ANIM_SPECIALMOVE ) ) && !(pSoldier->fNoAPToFinishMove ) )
+		{
+		}
+		else
+		{
+			EVENT_InternalSetSoldierPosition( pSoldier, sCellX, sCellY ,FALSE, FALSE, FALSE );
+			
+		}
+	
+		EVENT_InitNewSoldierAnim( pSoldier, SNetPath->ubNewState, 0, FALSE );	
+	/*	if(SNetPath->ubNewState !=255 ) 
+		{
+			EVENT_InitNewSoldierAnim( pSoldier, SNetPath->ubNewState, 0, FALSE );	
+			
+		}*/
+		//ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"state: %d",SNetPath->ubNewState );
+
+		if(pSoldier->fIsSoldierDelayed==FALSE)
+		{
+			pSoldier->fIsSoldierDelayed=TRUE;
+			request_ovh(pSoldier->ubID);
+		}
+
+		
 }
 
 
@@ -321,7 +380,7 @@ void send_stance ( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance )
 		SChangeStance.sXPos				= pSoldier->sX;
 		SChangeStance.sYPos				= pSoldier->sY;
 		SChangeStance.uiUniqueId = pSoldier -> uiUniqueSoldierIdValue;
-
+		//ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"change stance: %d",ubDesiredStance );
 	
 		client->RPC("sendSTANCE",(const char*)&SChangeStance, (int)sizeof(EV_S_CHANGESTANCE)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
 	}
@@ -592,7 +651,7 @@ void send_gui_pos(SOLDIERTYPE *pSoldier,  FLOAT dNewXPos, FLOAT dNewYPos)
 			
 			gnPOS.dNewXPos = dNewXPos;
 			gnPOS.dNewYPos = dNewYPos;
-
+			//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"guiPOS: %f , %f", dNewXPos,dNewYPos);
 		
 
 			client->RPC("sendguiPOS",(const char*)&gnPOS, (int)sizeof(gui_pos)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
@@ -606,7 +665,17 @@ void recieveguiPOS(RPCParameters *rpcParameters)
 
 		SOLDIERTYPE *pSoldier = MercPtrs[ gnPOS->usSoldierID ];
 
-		EVENT_SetSoldierPosition( pSoldier, (FLOAT)gnPOS->dNewXPos, (FLOAT)gnPOS->dNewYPos );
+		//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"guiPOS: %f , %f", gnPOS->dNewXPos,gnPOS->dNewYPos);
+	
+		INT16 sNewGridNo;
+
+    	sNewGridNo = GETWORLDINDEXFROMWORLDCOORDS(gnPOS->dNewXPos, gnPOS->dNewYPos );
+		pSoldier->usStrategicInsertionData=sNewGridNo;
+		pSoldier->ubStrategicInsertionCode=INSERTION_CODE_GRIDNO;
+		pSoldier->sInsertionGridNo = pSoldier->usStrategicInsertionData;
+
+
+		EVENT_SetSoldierPosition( pSoldier, gnPOS->dNewXPos, gnPOS->dNewYPos );
 		
 }
 
@@ -635,8 +704,9 @@ void recieveguiDIR(RPCParameters *rpcParameters)
 		gui_dir* gnDIR = (gui_dir*)rpcParameters->input;
 
 		SOLDIERTYPE *pSoldier = MercPtrs[ gnDIR->usSoldierID ];
-
+		
 		EVENT_SetSoldierDirection( pSoldier, gnDIR->usNewDirection );
+		//pSoldier->ubInsertionDirection = pSoldier->bDirection;
 }
 
 
@@ -1292,14 +1362,25 @@ void recieveSTOP (RPCParameters *rpcParameters)
 	EV_S_STOP_MERC* SStopMerc =(EV_S_STOP_MERC*)rpcParameters->input;
 	
 	SOLDIERTYPE *pSoldier = MercPtrs[ SStopMerc->usSoldierID ];
+
+		INT16  sCellX, sCellY;
+		sCellX = CenterX( SStopMerc->sGridNo );
+		sCellY = CenterY( SStopMerc->sGridNo );	
+
+		
+		EVENT_InternalSetSoldierPosition( pSoldier, sCellX, sCellY ,FALSE, FALSE, FALSE );
+		EVENT_SetSoldierDirection( pSoldier, SStopMerc->bDirection );
+
 	//EVENT_StopMerc( pSoldier, SStopMerc->sGridNo, SStopMerc->bDirection );
-	AdjustNoAPToFinishMove( pSoldier, TRUE );
+		AdjustNoAPToFinishMove( pSoldier, TRUE );
 	//pSoldier->ubReasonCantFinishMove = REASON_STOPPED_SIGHT;
 	//	pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 	//	pSoldier->usPendingAnimation2 = NO_PENDING_ANIMATION;		
 	//	pSoldier->fContinueMoveAfterStanceChange = FALSE;
 	//	pSoldier->bTurningFromUI = FALSE;
 		pSoldier->fTurningFromPronePosition = FALSE;
+
+	//pSoldier->sScheduledStop=SStopMerc->sGridNo;
 		
 }
 
@@ -1879,6 +1960,84 @@ void unlock (void)
 
 }
 
+void request_ovh(UINT8 ubID)
+{
+	ovh_struct rOvh;
+	rOvh.clnum=atoi (CLIENT_NUM);
+	rOvh.ubid=ubID;
+	if(ubID < 20)rOvh.ubid=ubID+ubID_prefix;
+	++tcount;
+
+	SOLDIERTYPE *pSoldier = MercPtrs[ ubID ];
+	//ScreenMsg( FONT_LTBLUE, MSG_CHAT, L"requesting: %d",pSoldier->sGridNo );
+
+	//ScreenMsg( FONT_YELLOW, MSG_CHAT, L"center: %d",tcount);	
+	if(tcount==10)tcount=0;
+
+	client->RPC("rOVH",(const char*)&rOvh, (int)sizeof(ovh_struct)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
+
+}
+
+void UpdateSoldierToNetwork ( SOLDIERTYPE *pSoldier )
+{
+		//this send stats to other clients at intervals
+		UINT8 id = pSoldier->ubID;
+		UINT32 time = GetJA2Clock();
+
+	if(id < 20 || (is_server && id <120))
+	{
+		if(pSoldier->usLastUpdateTime==0)
+		{
+			pSoldier->usLastUpdateTime = time;
+		}
+		if((time - (pSoldier->usLastUpdateTime)) > 2000)
+		{
+			pSoldier->usLastUpdateTime = time;
+			//ScreenMsg( FONT_LTBLUE, MSG_CHAT, L"update: %d ",time );
+			
+
+			EV_S_UPDATENETWORKSOLDIER SUpdateNetworkSoldier;
+
+			SUpdateNetworkSoldier.usSoldierID=pSoldier->ubID;
+			if(pSoldier->ubID < 20)SUpdateNetworkSoldier.usSoldierID=pSoldier->ubID+ubID_prefix;
+
+			SUpdateNetworkSoldier.sAtGridNo=pSoldier->sGridNo;
+			SUpdateNetworkSoldier.bBreath=pSoldier->bBreath;
+			SUpdateNetworkSoldier.bActionPoints=pSoldier->bLife;
+			
+
+			client->RPC("updatenetworksoldier",(const char*)&SUpdateNetworkSoldier, (int)sizeof(EV_S_UPDATENETWORKSOLDIER)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
+
+		}
+	}
+}
+
+void UpdateSoldierFromNetwork  (RPCParameters *rpcParameters)
+{
+	EV_S_UPDATENETWORKSOLDIER* SUpdateNetworkSoldier = (EV_S_UPDATENETWORKSOLDIER*)rpcParameters->input;
+
+	SOLDIERTYPE *pSoldier = MercPtrs[ SUpdateNetworkSoldier->usSoldierID ];
+	pSoldier->bBreath=SUpdateNetworkSoldier->bBreath;
+	pSoldier->bLife=SUpdateNetworkSoldier->bActionPoints;
+}
+
+void advance_ovh_frame  (RPCParameters *rpcParameters)
+{
+	
+	adv* aoh = (adv*)rpcParameters->input;
+	UINT8 ryubid = aoh->ubid;
+	
+	if((ryubid >= ubID_prefix) && (ryubid < (ubID_prefix+7))) // within our netbTeam range...
+	{
+		ryubid = (ryubid - ubID_prefix);
+	}
+	SOLDIERTYPE *pSoldier = MercPtrs[ ryubid ];
+	//ScreenMsg( FONT_LTBLUE, MSG_CHAT, L"advancing: %d",pSoldier->sGridNo );
+	pSoldier->fIsSoldierDelayed = false;
+    //ovh_advance=true;
+
+}
+
 //***************************
 //*** client connection*****
 //*************************
@@ -1918,7 +2077,8 @@ void connect_client ( void )
 			REGISTER_STATIC_RPC(client, recievehitSTRUCT);
 			REGISTER_STATIC_RPC(client, recievehitWINDOW);
 			REGISTER_STATIC_RPC(client, recieveMISS);
-			
+			REGISTER_STATIC_RPC(client, advance_ovh_frame);
+				REGISTER_STATIC_RPC(client, UpdateSoldierFromNetwork);
 
 			
 		

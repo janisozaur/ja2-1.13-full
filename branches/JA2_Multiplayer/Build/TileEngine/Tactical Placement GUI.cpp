@@ -696,6 +696,10 @@ void lockui (bool unlock) //lock onluck ui for lan //hayden
 					EnableButton( iTPButtons[ SPREAD_BUTTON ] );
 					EnableButton( iTPButtons[ GROUP_BUTTON ] );
 					EnableButton( iTPButtons[ CLEAR_BUTTON ] );
+
+					ButtonList[ iTPButtons[ GROUP_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
+					ButtonList[ iTPButtons[ GROUP_BUTTON ] ]->uiFlags |= BUTTON_DIRTY;
+					gubDefaultButton = CLEAR_BUTTON;
 					PlaceMercs();
 					gMsgBox.bHandled = MSG_BOX_RETURN_OK; //close if still open
 					
@@ -1240,14 +1244,17 @@ void PutDownMercPiece( INT32 iPlacement )
 	if( sGridNo != NOWHERE )
 	{
 		ConvertGridNoToCellXY( sGridNo, &sCellX, &sCellY );
-		EVENT_SetSoldierPosition( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+		FLOAT scX = (FLOAT)sCellX;
+		FLOAT scY = (FLOAT)sCellY;//hayden
+
+		EVENT_SetSoldierPosition( pSoldier, scX, scY );
 		EVENT_SetSoldierDirection( pSoldier, ubDirection );
 		pSoldier->ubInsertionDirection = pSoldier->bDirection;
 		gMercPlacement[ iPlacement ].fPlaced = TRUE;
 		gMercPlacement[ iPlacement ].pSoldier->bInSector = TRUE;
 
 //hayden
-		if(is_client)send_gui_pos(pSoldier, (FLOAT)sCellX, (FLOAT)sCellY);
+		if(is_client)send_gui_pos(pSoldier, scX, scY);
 		if(is_client)send_gui_dir(pSoldier, ubDirection);
 
 	}

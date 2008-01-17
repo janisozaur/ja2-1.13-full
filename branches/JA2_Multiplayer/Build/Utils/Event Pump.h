@@ -227,18 +227,19 @@ typedef struct
 typedef struct
 {
 	UINT8		usSoldierID;
-	UINT32  uiUniqueId;
-	UINT8		usPathDataSize;			// Size of Path
+//	UINT32  uiUniqueId;
+	UINT16		usPathDataSize;			// Size of Path
 	INT16		sAtGridNo;					// Owner merc is at this tile when sending packet
-	UINT8		usCurrentPathIndex;	// Index the owner of the merc is at when sending packet
-	UINT8		usPathData[ NETWORK_PATH_DATA_SIZE ];		// make define  // Next X tile to go to
-	UINT8		ubNewState;			// new movment Anim
+	UINT16		usCurrentPathIndex;	// Index the owner of the merc is at when sending packet
+	UINT16		usPathData[ MAX_PATH_LIST_SIZE ];		// make define  // Next X tile to go to
+	UINT16		ubNewState;			// new movment Anim
+	INT16		 sDestGridNo;
 //	INT8		bActionPoints;
 //	INT8		bBreath;			// current breath value
 //	INT8		bDesiredDirection;
 
 	// maybe send current action & breath points
-} EV_S_SENDPATHTONETWORK;
+} EV_S_SENDPATHTONETWORK; //edited by hayden
 
 typedef struct
 {

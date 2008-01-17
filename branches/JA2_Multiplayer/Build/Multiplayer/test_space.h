@@ -8,3 +8,7 @@ INT8 FireBullet( SOLDIERTYPE * pFirer, BULLET * pBullet, BOOLEAN fFake );
 
 #define NOCDCHECK
 
+extern bool ovh_advance;
+extern bool ovh_ready;
+void request_ovh(UINT8 ubID);
+

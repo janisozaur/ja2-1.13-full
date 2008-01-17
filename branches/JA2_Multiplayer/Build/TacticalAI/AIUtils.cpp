@@ -442,8 +442,6 @@ void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
 	// Last paramater says whether to re-start the soldier's animation
 	// This should be done if buddy was paused for fNoApstofinishMove...
 	EVENT_InternalGetNewSoldierPath( pSoldier, usGridNo, pSoldier->usUIMovementMode , FALSE, pSoldier->fNoAPToFinishMove );
-		//*** send new path via RPC call to the network if original call
-		if(is_server || (is_client && pSoldier->ubID <20) ) send_path( pSoldier, usGridNo, pSoldier->usUIMovementMode , FALSE, pSoldier->fNoAPToFinishMove );
 
 }
 

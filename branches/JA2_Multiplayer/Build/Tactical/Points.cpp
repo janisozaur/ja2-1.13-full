@@ -33,7 +33,7 @@
 	#include "math.h"
 	#include "Interface Items.h"
 #endif
-
+#include "connect.h"
 //rain
 //#define BREATH_GAIN_REDUCTION_PER_RAIN_INTENSITY 25
 //end rain
@@ -462,6 +462,11 @@ BOOLEAN EnoughPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost, BOOLE
 		return( TRUE );
 	}
 	#endif
+
+	if(pSoldier->ubID > 119 || (!is_server && pSoldier->ubID > 20))
+	{
+		return(TRUE);
+	}//hayden , if soldier replication, allow.
 
 	// Get New points
 	sNewAP = pSoldier->bActionPoints - sAPCost;
