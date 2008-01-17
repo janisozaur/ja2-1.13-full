@@ -181,7 +181,6 @@
 		<Configuration
 			Name="Release_Dbg|Win32"
 			OutputDirectory="$(JA2GAMEPATH)"
-			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets=".\ja2_2005Express.vsprops"
 			UseOfMFC="0"

@@ -139,8 +139,6 @@
 		</Configuration>
 		<Configuration
 			Name="Release_Dbg|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="..\ja2_2005Express.vsprops"
 			>

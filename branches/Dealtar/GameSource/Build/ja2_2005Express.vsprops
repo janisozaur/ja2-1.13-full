@@ -3,12 +3,18 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="ja2_2005Express"
-	InheritedPropertySheets=".\Dealtar.vsprops"
+	OutputDirectory="$(SolutionDir)$(ConfigurationName)\$(ProjectName)"
+	IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\$(ProjectName)"
 	>
 	<Tool
 		Name="VCCLCompilerTool"
 		AdditionalIncludeDirectories="..\Utils;..\TileEngine;..\TacticalAI;..\Tactical;..\Strategic;&quot;..\Standard Gaming Platform&quot;;..\Res;..\lua;..\Laptop;..\Editor;..\;..\Console;$(NOINHERIT)"
 		PreprocessorDefinitions="JA2;CINTERFACE;XML_STATIC"
 		Detect64BitPortabilityProblems="false"
+		DisableSpecificWarnings="4390"
+	/>
+	<UserMacro
+		Name="JA2GAMEPATH"
+		Value="D:\Spiele\JA2"
 	/>
 </VisualStudioPropertySheet>
