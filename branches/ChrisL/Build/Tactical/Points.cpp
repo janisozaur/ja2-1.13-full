@@ -1880,7 +1880,7 @@ UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 }
 
 
-INT8 GetAPsToReloadGunWithAmmo( OBJECTTYPE * pGun, OBJECTTYPE * pAmmo )
+INT8 GetAPsToReloadGunWithAmmo( SOLDIERTYPE *pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo, BOOLEAN usAllAPs )
 {
 	if (Item[ pGun->usItem ].usItemClass == IC_LAUNCHER)
 	{
@@ -1888,29 +1888,39 @@ INT8 GetAPsToReloadGunWithAmmo( OBJECTTYPE * pGun, OBJECTTYPE * pAmmo )
 		//return( AP_RELOAD_GUN );
 		return GetAPsToReload(pGun);
 	}
-	if ( GetMagSize(pGun) == Magazine[Item[pAmmo->usItem].ubClassIndex].ubMagSize )
+	if(Weapon[pGun->usItem].swapClips == 1 && GetMagSize(pGun) == Magazine[Item[pAmmo->usItem].ubClassIndex].ubMagSize)
 	{
 		// normal situation
-//		return( AP_RELOAD_GUN );
 		return GetAPsToReload(pGun) ;
+	}
+	else if(Weapon[pGun->usItem].swapClips == 1)
+	{
+		// wrong size ammo item
+		return (GetAPsToReload(pGun) * gGameExternalOptions.ubWrongMagMult);
 	}
 	else
 	{
-		if( Weapon[pGun->usItem].swapClips == 0 )
+		// individually loaded guns
+		int reload = 0;
+		int rounds = __min((GetMagSize(pGun)-(*pGun)[0]->data.gun.ubGunShotsLeft), Magazine[Item[pAmmo->usItem].ubClassIndex].ubMagSize);
+		if(!((*pGun)[0]->data.gun.ubGunState & GS_WEAPON_BEING_RELOADED))
+			reload = GetAPsToReload(pGun);
+		if(reload > 10)
+			reload = 4;
+		if(usAllAPs == 1)
 		{
-			// reload individual rounds
-			int reload = GetAPsToReload(pGun);
-			int rounds = min((GetMagSize(pGun)-(*pGun)[0]->data.gun.ubGunShotsLeft), Magazine[Item[pAmmo->usItem].ubClassIndex].ubMagSize);
-			if(reload > 10)
-				reload = 4;
-			return (reload + (rounds*gGameExternalOptions.ubAPCostPerRound));
+			for(int i = 1; i <= rounds; i++)
+			{
+				if(EnoughPoints(pSoldier,(reload + (i * gGameExternalOptions.ubAPCostPerRound)),0,FALSE) == FALSE)
+				{
+					rounds = i-1;
+					break;
+				}
+			}
 		}
-		else
-		{
-			// trying to reload with wrong size of magazine
-			return (GetAPsToReload(pGun) * 2);
-		}
-//		return( AP_RELOAD_GUN + AP_RELOAD_GUN );
+		else if (usAllAPs == 2)
+			rounds = 1;
+		return (reload + (rounds * gGameExternalOptions.ubAPCostPerRound));
 	}
 }
 
@@ -1936,7 +1946,7 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 		if (bSlot != NO_SLOT)
 		{
 			// we would reload using this ammo!
-			bAPCost += GetAPsToReloadGunWithAmmo( pObj, &(pSoldier->inv[bSlot] ) );
+			bAPCost += GetAPsToReloadGunWithAmmo( pSoldier, pObj, &(pSoldier->inv[bSlot] ) );
 		}
 
 		if ( pSoldier->IsValidSecondHandShotForReloadingPurposes( ) )
@@ -1968,7 +1978,7 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 			if (bSlot2 != NO_SLOT)
 			{
 				// we would reload using this ammo!
-				bAPCost2 = GetAPsToReloadGunWithAmmo( pObj, &(pSoldier->inv[bSlot2] ) );
+				bAPCost2 = GetAPsToReloadGunWithAmmo( pSoldier, pObj, &(pSoldier->inv[bSlot2] ) );
 				if ( EnoughPoints( pSoldier, (INT16) (bAPCost + bAPCost2), 0, FALSE ) )
 				{
 					// we can afford to reload both guns; otherwise display just for 1 gun

@@ -5810,14 +5810,7 @@ UINT8 GetDamage ( OBJECTTYPE *pObj )
 	if ( Item[pObj->usItem].usItemClass == IC_BLADE || Item[pObj->usItem].usItemClass == IC_PUNCH || Item[pObj->usItem].usItemClass == IC_TENTACLES )
 	{
 		UINT8 ubDamage = Weapon[ pObj->usItem ].ubImpact + GetMeleeDamageBonus(pObj);
-		if (gGameExternalOptions.ubMeleeDamageMultiplier == 100)
-		{
-			return ubDamage;
-		}
-		else
-		{
-			return min(255, (UINT8)( (ubDamage) + ( (double)ubDamage / 100) * gGameExternalOptions.ubMeleeDamageMultiplier ) );
-		}
+		return min(255, (UINT8)( (ubDamage) + ( (double)ubDamage / 100) * gGameExternalOptions.ubMeleeDamageMultiplier ) );
 	}
 	else
 	{
@@ -5826,14 +5819,7 @@ UINT8 GetDamage ( OBJECTTYPE *pObj )
 		{
 			ubDamage += GetDamageBonus(pObj);
 		}
-		if (gGameExternalOptions.ubGunDamageMultiplier == 100)
-		{
-			return ubDamage;
-		}
-		else
-		{
-			return min(255, (UINT8)( (ubDamage) + ( (double)ubDamage / 100) * gGameExternalOptions.ubGunDamageMultiplier ) );
-		}
+		return min(255, (UINT8)( (ubDamage) + ( (double)ubDamage / 100) * gGameExternalOptions.ubGunDamageMultiplier ) );
 	}
 }
 

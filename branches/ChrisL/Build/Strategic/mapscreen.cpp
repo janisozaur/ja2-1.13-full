@@ -6142,7 +6142,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 					break;
 				case 'E':
 					//CHRISL: drop all items
-					if ( bSelectedInfoChar != -1 && fShowInventoryFlag )
+					if ( bSelectedInfoChar != -1 && fShowInventoryFlag && !(gTacticalStatus.fEnemyInSector) )
 					{
 						SOLDIERTYPE *pSoldier = MercPtrs[ gCharactersList[ bSelectedInfoChar ].usSolID ];
 						for(int i = BODYPOSFINAL; i<NUM_INV_SLOTS; i++)

@@ -4026,6 +4026,8 @@ STR16 NewInvMessage[] =
 	L"Nicht kann Aufnahme Rucksack diesmal",
 	L"Kein Platz, zum des Rucksacks zu setzen",
 	L"Rucksack nicht gefunden",
+	L"Reiﬂverschluﬂ arbeitet nur im Kampf",
+	L"_ kˆnnen nicht verschieben w‰hrend Rucksack Reiﬂverschluss aktiv",
 };
 
 #endif //GERMAN

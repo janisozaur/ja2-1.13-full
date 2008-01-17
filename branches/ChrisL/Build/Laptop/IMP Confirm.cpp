@@ -1004,7 +1004,7 @@ INT32 PickPocket(MERCPROFILESTRUCT *pProfile, UINT8 ppStart, UINT8 ppStop, UINT1
 
 	for(UINT32 uiPos=ppStart; uiPos<ppStop; uiPos++){
 		if(pProfile->inv[icLBE[uiPos]]==0){
-			pIndex=LoadBearingEquipment[icClass[uiPos]].lbePocketIndex[icPocket[uiPos]];
+			pIndex=LoadBearingEquipment[Item[icDefault[uiPos]].ubClassIndex].lbePocketIndex[icPocket[uiPos]];
 		}
 		else {
 			pIndex=LoadBearingEquipment[Item[pProfile->inv[icLBE[uiPos]]].ubClassIndex].lbePocketIndex[icPocket[uiPos]];

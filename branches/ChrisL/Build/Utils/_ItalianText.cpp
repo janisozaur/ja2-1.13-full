@@ -4218,6 +4218,8 @@ STR16 NewInvMessage[] =
 	L"Non può il fagotto della raccolta attualmente",
 	L"Nessun posto per mettere fagotto",
 	L"Fagotto non trovato",
+	L"La chiusura lampo funziona soltanto nel combattimento",
+	L"Non può muoversi mentre la chiusura lampo del fagotto attiva",
 };
 
 #endif //ITALIAN

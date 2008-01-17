@@ -2839,7 +2839,7 @@ STR16			BobbyRFilter[] =
 	// Used
 	L"Оружие",
 	L"Броня",
-	L"LBE Gear",
+	L"Разгр.с-мы",
 	L"Разное",
 
 	// Armour
@@ -2857,7 +2857,7 @@ STR16			BobbyRFilter[] =
 	L"Аптечки",
 	L"Наборы",
 	L"Головные",
-	L"LBE Gear",
+	L"Разгр.с-мы",
 	L"Разное",
 };
 
@@ -3382,7 +3382,7 @@ STR16			zSaveLoadText[] =
 	L"Огромный",
 	L"Все, включая эксклюзив",
 
-	L"New Inventory does not work in 640x480 screen size.  Please resize and try again.",
+	L"Новый инвентарь, используемый в этом релизе, не работает при разрешении экрана 640х480. Измените разрешение и запустит игру заново.",
 };
 
 
@@ -3602,9 +3602,9 @@ STR16	gzGIOScreenText[] =
 	L"Большой",
 	L"Огромный",
 	L"Все, включая эксклюзив",
-	L"Inventory System",
-	L"Old",
-	L"New",
+	L"Режим инвентаря",
+	L"Классический",
+	L"Новый вариант",
 };
 
 STR16 pDeliveryLocationStrings[] =
@@ -4224,9 +4224,11 @@ STR16 New113Message[] =
 
 STR16 NewInvMessage[] = 
 {
-	L"Cannot pickup backpack at this time",
-	L"No place to put backpack",
-	L"Backpack not found",
+	L"В данный момент поднять рюкзак нельзя.",
+	L"Вы не можете одновременно носить 2 рюкзака.",
+	L"Вы потеряли свой рюкзак...",
+	L"Замок рюкзака работает лишь во время битвы.",
+	L"Вы не можете передвигаться с открытым рюкзаком.",
 };
 
 #endif //RUSSIAN

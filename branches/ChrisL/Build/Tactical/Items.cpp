@@ -1405,10 +1405,10 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier, B
 		pIndex = KNIFE_POCKET_TYPE;
 	}
 	else {
-		Assert(icLBE[bSlot] != -1 && icClass[bSlot] != -1 && icPocket[bSlot] != -1);
+		Assert(icLBE[bSlot] != -1 && icDefault[bSlot] != -1 && icPocket[bSlot] != -1);
 		//find the class of the LBE, then find what size the pocket of the slot in the LBE is
 		if (pSoldier == NULL || pSoldier->inv[icLBE[bSlot]].exists() == false) {
-			pIndex = LoadBearingEquipment[icClass[bSlot]].lbePocketIndex[icPocket[bSlot]];
+			pIndex = LoadBearingEquipment[Item[icDefault[bSlot]].ubClassIndex].lbePocketIndex[icPocket[bSlot]];
 		}
 		else {
 			pIndex = LoadBearingEquipment[Item[pSoldier->inv[icLBE[bSlot]].usItem].ubClassIndex].lbePocketIndex[icPocket[bSlot]];
@@ -2819,22 +2819,15 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	BOOLEAN			fEnoughAPs;
 	INT8			bReloadType;
 	UINT16			usNewAmmoItem;
+	UINT16			usLargestMag;
+	UINT32			ammoObject = subObject;
 
 	bAPs = 0;
 
 	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
 	{
 		//CHRISL: Alter this so we treat clip fed weapons differently from weapons that load with loose rounds
-		if(Weapon[pSoldier->inv[HANDPOS].usItem].swapClips == 1)
-			bAPs = GetAPsToReloadGunWithAmmo( pGun, pAmmo );
-		else
-		{
-			if(Weapon[pSoldier->inv[HANDPOS].usItem].APsToReload > 10)
-				bAPs = 4;
-			else
-				bAPs = Weapon[pSoldier->inv[HANDPOS].usItem].APsToReload;
-			bAPs += gGameExternalOptions.ubAPCostPerRound;
-		}
+		bAPs = GetAPsToReloadGunWithAmmo( pSoldier, pGun, pAmmo );
 		if ( !EnoughPoints( pSoldier, bAPs, 0,TRUE ) )
 		{
 			return( FALSE );
@@ -2858,7 +2851,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		fReloadingWithStack = (pAmmo->ubNumberOfObjects > 1);
 		fSameAmmoType = ( (*pGun)[subObject]->data.gun.ubGunAmmoType == Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType );
 		fSameMagazineSize = ( Magazine[ Item[ pAmmo->usItem ].ubClassIndex ].ubMagSize == GetMagSize( pGun));
-		fEnoughAPs = EnoughPoints( pSoldier, GetAPsToReloadGunWithAmmo( pGun, pAmmo ), 0,FALSE );
+		fEnoughAPs = EnoughPoints( pSoldier, GetAPsToReloadGunWithAmmo( pSoldier, pGun, pAmmo, FALSE ), 0,FALSE );
 
 		if (fEmptyGun)
 		{
@@ -2907,6 +2900,24 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 			}
 		}
 
+		//CHRISL: If reloading with a stack, we probably want the item with the most ammo still in it
+		if (fReloadingWithStack)
+		{
+			usLargestMag = (*pAmmo)[ammoObject]->data.ubShotsLeft;
+			for(int i = 0; i<pAmmo->ubNumberOfObjects; i++)
+			{
+				if((*pAmmo)[i]->data.ubShotsLeft == Magazine[Item[pAmmo->usItem].ubClassIndex].ubMagSize)
+				{
+					ammoObject = i;
+					break;
+				}
+				else if((*pAmmo)[i]->data.ubShotsLeft > usLargestMag)
+				{
+					ammoObject = i;
+				}
+			}
+		}
+
 		if (fSameMagazineSize)
 		{
 			// record new ammo item for gun
@@ -2914,11 +2925,11 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 
 			if (bReloadType == RELOAD_TOPOFF)
 			{
-				ubBulletsToMove = __min( (*pAmmo)[subObject]->data.ubShotsLeft, GetMagSize(pGun) - (*pGun)[subObject]->data.gun.ubGunShotsLeft );
+				ubBulletsToMove = __min( (*pAmmo)[ammoObject]->data.ubShotsLeft, GetMagSize(pGun) - (*pGun)[subObject]->data.gun.ubGunShotsLeft );
 			}
 			else
 			{
-				ubBulletsToMove = (*pAmmo)[subObject]->data.ubShotsLeft;
+				ubBulletsToMove = (*pAmmo)[ammoObject]->data.ubShotsLeft;
 			}
 
 		}
@@ -2929,11 +2940,11 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 			usNewAmmoItem = FindReplacementMagazine(Weapon[pGun->usItem].ubCalibre ,GetMagSize(pGun),Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType);
 			if (bReloadType == RELOAD_TOPOFF)
 			{
-				ubBulletsToMove = __min( (*pAmmo)[subObject]->data.ubShotsLeft, GetMagSize(pGun) - (*pGun)[subObject]->data.gun.ubGunShotsLeft );
+				ubBulletsToMove = __min( (*pAmmo)[ammoObject]->data.ubShotsLeft, GetMagSize(pGun) - (*pGun)[subObject]->data.gun.ubGunShotsLeft );
 			}
 			else
 			{
-				ubBulletsToMove = __min( (*pAmmo)[subObject]->data.ubShotsLeft, GetMagSize(pGun) );
+				ubBulletsToMove = __min( (*pAmmo)[ammoObject]->data.ubShotsLeft, GetMagSize(pGun) );
 			}
 		}
 		else // mag is smaller than weapon mag
@@ -2943,37 +2954,36 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 			usNewAmmoItem = FindReplacementMagazine(Weapon[pGun->usItem].ubCalibre ,GetMagSize(pGun),Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType);
 			if (bReloadType == RELOAD_TOPOFF)
 			{
-				ubBulletsToMove = __min( (*pAmmo)[subObject]->data.ubShotsLeft, GetMagSize(pGun) - (*pGun)[subObject]->data.gun.ubGunShotsLeft );
+				ubBulletsToMove = __min( (*pAmmo)[ammoObject]->data.ubShotsLeft, GetMagSize(pGun) - (*pGun)[subObject]->data.gun.ubGunShotsLeft );
 			}
 			else
 			{
-				ubBulletsToMove = __min( (*pAmmo)[subObject]->data.ubShotsLeft, GetMagSize(pGun));
+				ubBulletsToMove = __min( (*pAmmo)[ammoObject]->data.ubShotsLeft, GetMagSize(pGun));
 			}
 		}
 
 		//CHRIS: This should reset the number of bullest moved to what we can actually afford when loading loose rounds
-		if (!fEnoughAPs)
+		if(Weapon[pGun->usItem].swapClips == 0 && (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT))
 		{
-			for(int i = 0; i<GetMagSize(pGun); i++)
+			if(fEnoughAPs)
 			{
-				if(EnoughPoints( pSoldier, (bAPs+(2*i)), 0,FALSE ) == FALSE)
+				bAPs = GetAPsToReloadGunWithAmmo( pSoldier, pGun, pAmmo, FALSE );
+			}
+			else
+			{
+				//how many can we reload?  remember, bAPs assumes 1 round at this stage
+				bAPs = GetAPsToReloadGunWithAmmo( pSoldier, pGun, pAmmo, 2 );
+				for(int i = 0; i<ubBulletsToMove; i++)
 				{
-					ubBulletsToMove = __min(ubBulletsToMove, i);
-					if(Weapon[pSoldier->inv[HANDPOS].usItem].swapClips == 1)
-						bAPs = GetAPsToReloadGunWithAmmo( pGun, pAmmo );
-					else
+					if(EnoughPoints(pSoldier, (bAPs+(i*gGameExternalOptions.ubAPCostPerRound)), 0, FALSE) == FALSE)
 					{
-						if(Weapon[pSoldier->inv[HANDPOS].usItem].APsToReload > 10)
-							bAPs = 4;
-						else
-							bAPs = Weapon[pSoldier->inv[HANDPOS].usItem].APsToReload;
+						ubBulletsToMove = i+1;
+						break;
 					}
-					bAPs = bAPs + (i*gGameExternalOptions.ubAPCostPerRound);
-					break;
 				}
+				bAPs = GetAPsToReloadGunWithAmmo( pSoldier, pGun, pAmmo );
 			}
 		}
-
 
 		switch( bReloadType )
 		{
@@ -3038,14 +3048,27 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 
 		}
 
+		// CHRISL: If we don't completely reload a SwapClips==0 weapon, set the "reload" flag
+		if(Weapon[pGun->usItem].swapClips == 0 && GetMagSize(pGun) != (*pGun)[0]->data.gun.ubGunShotsLeft)
+		{
+			(*pGun)[subObject]->data.gun.ubGunState |= GS_WEAPON_BEING_RELOADED;
+			(*pGun)[subObject]->data.gun.ubGunState &= ~GS_CARTRIDGE_IN_CHAMBER;
+		}
+		else
+		{
+			(*pGun)[subObject]->data.gun.ubGunState &= ~GS_WEAPON_BEING_RELOADED;
+			(*pGun)[subObject]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
+		}
+
 		if ( ! ( bReloadType == RELOAD_SWAP && !fReloadingWithStack ) )
 		{
 			// remove # of bullets, delete 1 object if necessary
 
-			(*pAmmo)[subObject]->data.ubShotsLeft -= ubBulletsToMove;
-			if ((*pAmmo)[subObject]->data.ubShotsLeft == 0)
+			(*pAmmo)[ammoObject]->data.ubShotsLeft -= ubBulletsToMove;
+			if ((*pAmmo)[ammoObject]->data.ubShotsLeft == 0)
 			{
-				pAmmo->RemoveObjectsFromStack(1);
+				pAmmo->RemoveObjectAtIndex(ammoObject);
+				//pAmmo->RemoveObjectsFromStack(1);
 			}
 
 		}
@@ -3080,7 +3103,8 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		(*pGun)[subObject]->data.gun.bGunAmmoStatus = 100;
 	}
 
-	(*pGun)[subObject]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER; // Madd: reloading should automatically put cartridge in chamber
+	//CHRISL: Move this towards the top so that we can leave this flag off if we're in the middle of reloading
+	//(*pGun)[subObject]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER; // Madd: reloading should automatically put cartridge in chamber
 
 	return( TRUE );
 }
@@ -3125,7 +3149,7 @@ INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT16 ubMagSize, INT8 b
 {
 	INT8				bLoop;
 	INT8				capLoop = 0;
-	UINT16				curCap = 0;
+	UINT16				curCap = 0, stackCap = 0;
 	BOOLEAN				found = FALSE;
 	INVTYPE *		pItem;
 
@@ -3145,13 +3169,24 @@ INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT16 ubMagSize, INT8 b
 				{
 					if(ubMagSize != ANY_MAGSIZE && Magazine[pItem->ubClassIndex].ubMagSize == ubMagSize)
 					{
+						found = TRUE;
 						// looking for specific size.  return if found
-						return( bLoop );
+						// Find fullest mag
+						for(int i = 0; i<pSoldier->inv[bLoop].ubNumberOfObjects; i++)
+						{
+							stackCap = __max(stackCap, pSoldier->inv[bLoop][i]->data.ubShotsLeft);
+						}
+						if(stackCap > curCap)
+						{
+							curCap = stackCap;
+							capLoop = bLoop;
+						}
+						//return( bLoop );
 					}
 					else if(ubMagSize == ANY_MAGSIZE)
 					{
-						// looking for any mag size.  find the largest
 						found = TRUE;
+						// looking for any mag size.  find the largest
 						if(Magazine[pItem->ubClassIndex].ubMagSize > curCap)
 						{
 							curCap = Magazine[pItem->ubClassIndex].ubMagSize;
@@ -3187,12 +3222,12 @@ INT8 FindAmmoToReload( SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExcludeSlot
 	if ( Item[pObj->usItem].usItemClass == IC_GUN && !Item[pObj->usItem].cannon )
 	{
 		// look for same ammo as before
-		bSlot = FindObjExcludingSlot( pSoldier, (*pObj)[0]->data.gun.usGunAmmoItem, bExcludeSlot );
-		if (bSlot != NO_SLOT)
-		{
+		//bSlot = FindObjExcludingSlot( pSoldier, (*pObj)[0]->data.gun.usGunAmmoItem, bExcludeSlot );
+		//if (bSlot != NO_SLOT)
+		//{
 			// reload using this ammo!
-			return( bSlot );
-		}
+		//	return( bSlot );
+		//}
 		// look for any ammo that matches which is of the same calibre and magazine size
 		bSlot = FindAmmo( pSoldier, Weapon[pObj->usItem].ubCalibre, GetMagSize(pObj), bExcludeSlot );
 		if (bSlot != NO_SLOT)
@@ -3252,6 +3287,7 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 	if ((*pObj)[0]->data.gun.ubGunShotsLeft && !((*pObj)[0]->data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
 	{
 		(*pObj)[0]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
+		(*pObj)[0]->data.gun.ubGunState &= ~GS_WEAPON_BEING_RELOADED;
 
 		DeductPoints(pSoldier, Weapon[Item[(pObj)->usItem].ubClassIndex].APsToReloadManually, 0);
 
@@ -3306,7 +3342,7 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 				if (bSlot != NO_SLOT)
 				{
 					// ce would reload using this ammo!
-					bAPCost = GetAPsToReloadGunWithAmmo( pObj, &(pSoldier->inv[bSlot] ) );
+					bAPCost = GetAPsToReloadGunWithAmmo( pSoldier, pObj, &(pSoldier->inv[bSlot] ) );
 					if ( EnoughPoints( pSoldier, (INT16) bAPCost, 0, FALSE ) )
 					{
 						// reload the 2nd gun too
@@ -3522,7 +3558,8 @@ BOOLEAN OBJECTTYPE::AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pAttachme
 		//ADB moved after skill check!
 		//lalien: added to make a GL/RL work when reloaded manually
 		// the AP costs for reloading GL/RL will be taken from weapons.xml ( wrong place!!! the AP's are deducted in DeleteItemDescriptionBox() )
-		if (pAttachmentPosition) {
+		//if (pAttachmentPosition) {
+		if(pAttachmentPosition || (pAttachmentPosition == NULL && (*this)[subObject]->attachments.size() < MAX_ATTACHMENTS)){
 			//we know we are replacing this attachment
 			if ( Item[ this->usItem ].usItemClass == IC_LAUNCHER || Item[this->usItem].cannon )
 			{
@@ -4114,7 +4151,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 			{
 				if(icLBE[bPos] == BPACKPOCKPOS && (!(pSoldier->flags.ZipperFlag) || (pSoldier->flags.ZipperFlag && gAnimControl[pSoldier->usAnimState].ubEndHeight == ANIM_STAND)) && (gTacticalStatus.uiFlags & INCOMBAT))
 					return( FALSE );
-				lbePocket = (pSoldier->inv[icLBE[bPos]].exists() == false) ? LoadBearingEquipment[icClass[bPos]].lbePocketIndex[icPocket[bPos]] : LoadBearingEquipment[Item[pSoldier->inv[icLBE[bPos]].usItem].ubClassIndex].lbePocketIndex[icPocket[bPos]];
+				lbePocket = (pSoldier->inv[icLBE[bPos]].exists() == false) ? LoadBearingEquipment[Item[icDefault[bPos]].ubClassIndex].lbePocketIndex[icPocket[bPos]] : LoadBearingEquipment[Item[pSoldier->inv[icLBE[bPos]].usItem].ubClassIndex].lbePocketIndex[icPocket[bPos]];
 				pRestrict = LBEPocketType[lbePocket].pRestriction;
 				if(pRestrict != 0)
 					if(pRestrict != Item[pObj->usItem].usItemClass)
@@ -4444,7 +4481,7 @@ INT32 PickPocket(SOLDIERTYPE *pSoldier, UINT8 ppStart, UINT8 ppStop, UINT16 usIt
 
 	for(UINT32 uiPos=ppStart; uiPos<ppStop; uiPos++){
 		if(pSoldier->inv[icLBE[uiPos]].exists() == false){
-			pIndex=LoadBearingEquipment[icClass[uiPos]].lbePocketIndex[icPocket[uiPos]];
+			pIndex=LoadBearingEquipment[Item[icDefault[uiPos]].ubClassIndex].lbePocketIndex[icPocket[uiPos]];
 		}
 		else {
 			pIndex=LoadBearingEquipment[Item[pSoldier->inv[icLBE[uiPos]].usItem].ubClassIndex].lbePocketIndex[icPocket[uiPos]];

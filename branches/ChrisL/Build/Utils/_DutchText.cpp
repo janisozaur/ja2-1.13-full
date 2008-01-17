@@ -4239,6 +4239,8 @@ STR16 NewInvMessage[] =
 	L"Kan op dit moment niet bestelwagenrugzak",
 	L"Geen plaats om rugzak te zetten",
 	L"Gevonden niet rugzak",
+	L"De ritssluiting werkt slechts in gevecht",
+	L"Kan niet me bewegen terwijl actieve rugzakritssluiting",
 };
 
 #endif //DUTCH

@@ -715,6 +715,9 @@ void LoadGameExternalOptions()
 
 	// CHRISL: New setting to determine the AP cost to reload 1 loose round of ammo
 	gGameExternalOptions.ubAPCostPerRound			= iniReader.ReadInteger("JA2 Gameplay Settings","AP_COST_PER_ROUND",2);
+
+	// CHRISL: New setting to determine AP multiplier when reloading with wrong sized clip
+	gGameExternalOptions.ubWrongMagMult			= iniReader.ReadInteger("JA2 Gameplay Settings","WRONG_MAG_MULT",2);
 }
 
 

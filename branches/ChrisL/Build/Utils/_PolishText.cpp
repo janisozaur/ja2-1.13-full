@@ -4209,6 +4209,8 @@ STR16 NewInvMessage[] =
 	L"Cannot pickup backpack at this time",
 	L"No place to put backpack",
 	L"Backpack not found",
+	L"Zipper only works in combat",
+	L"Can not move while backpack zipper active",
 };
 
 #endif //POLISH

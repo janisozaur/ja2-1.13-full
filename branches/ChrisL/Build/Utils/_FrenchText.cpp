@@ -4221,6 +4221,8 @@ STR16 NewInvMessage[] =
 	L"Ne peut pas le baluchon de collecte actuellement",
 	L"Aucun endroit pour mettre le baluchon",
 	L"Baluchon non trouvé",
+	L"La tirette fonctionne seulement dans le combat",
+	L"Ne peut pas se déplacer alors que la tirette de baluchon active",
 };
 
 #endif //FRENCH

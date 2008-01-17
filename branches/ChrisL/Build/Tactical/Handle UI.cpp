@@ -1913,8 +1913,7 @@ UINT32 UIHandleCMoveMerc( UI_EVENT *pUIEvent )
 					// CHRISL: If we're in combat and zipper is active, don't allow movement
 					if((gTacticalStatus.uiFlags & INCOMBAT) && pSoldier->flags.ZipperFlag)
 					{
-						CHAR16 noPackText[STRING_LENGTH] = L"Can not move while backpack zipper active";
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, noPackText );
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, NewInvMessage[NIV_ZIPPER_NO_MOVE] );
 						return( GAME_SCREEN );
 					}
 					// CHRISL: If we're not in combat but the zipper is active and we're moving, deactivate the zipper

@@ -2343,7 +2343,6 @@ BOOLEAN FindBetterSpotForItem( SOLDIERTYPE * pSoldier, INT8 bSlot )
 		return( TRUE );
 	}
 
-	//CHRISL: TODO
 	if(FitsInSmallPocket(&pSoldier->inv[bSlot]) == false)
 	{
 		// then we're looking for a big pocket

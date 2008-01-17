@@ -3964,8 +3964,7 @@ void BtnZipperCallback(GUI_BUTTON *btn,INT32 reason)
 		//Are we not in combat?
 		else if(!(gTacticalStatus.uiFlags & INCOMBAT))
 		{
-			CHAR16 zipperMSG[] = L"Zipper only works in combat";
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zipperMSG );
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, NewInvMessage[NIV_ZIPPER_COMBAT] );
 		}
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )

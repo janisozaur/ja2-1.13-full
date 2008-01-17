@@ -2535,7 +2535,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 			case 'E':
 				//CHRISL: drop all items
-				if ( gusSelectedSoldier != NOBODY )
+				if ( gusSelectedSoldier != NOBODY && !(gTacticalStatus.fEnemyInSector) )
 				{
 					SOLDIERTYPE *pSoldier = MercPtrs[ gusSelectedSoldier ];
 					for(int i = BODYPOSFINAL; i<NUM_INV_SLOTS; i++)
@@ -5103,18 +5103,8 @@ BOOLEAN HandleUIReloading( SOLDIERTYPE *pSoldier )
 	// Do we have the ammo to reload?
 	if ( guiCurrentUICursor == GOOD_RELOAD_UICURSOR )
 	{
-		//CHRISL: Alter this so we treat clip fed weapons differently from weapons that load with loose rounds
 		// Check APs to reload...
-		if(Weapon[pSoldier->inv[HANDPOS].usItem].swapClips == 1)
-			bAPs = GetAPsToAutoReload( pSoldier );
-		else
-		{
-			if(Weapon[pSoldier->inv[HANDPOS].usItem].APsToReload > 10)
-				bAPs = 4;
-			else
-				bAPs = Weapon[pSoldier->inv[HANDPOS].usItem].APsToReload;
-			bAPs += gGameExternalOptions.ubAPCostPerRound;
-		}
+		bAPs = GetAPsToAutoReload( pSoldier );
 
 		if ( EnoughPoints( pSoldier, bAPs, 0,TRUE ) )
 		{
