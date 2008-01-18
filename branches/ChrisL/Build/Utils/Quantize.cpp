@@ -5,6 +5,7 @@
 #include "types.h"
 #include <windows.h>
 #include "Quantize.h"
+#include "types.h"
 #include "himage.h"
 
 CQuantizer::CQuantizer (UINT nMaxColors, UINT nColorBits)
@@ -203,6 +204,5 @@ void CQuantizer::GetColorTable (RGBQUAD* prgb)
 	UINT nIndex = 0;
 	GetPaletteColors (m_pTree, prgb, &nIndex);
 }
-
 
 

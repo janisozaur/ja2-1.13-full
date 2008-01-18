@@ -1658,7 +1658,7 @@ void RebuildWayPointsForGroupPath( PathStPtr pHeadOfPath, INT16 sMvtGroup )
 
 
 // clear strategic movement (mercpaths and waypoints) for this soldier, and his group (including its vehicles)
-void ClearMvtForthisAndGang( SOLDIERTYPE *pSoldier )
+void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier )
 {
 	GROUP *pGroup = NULL;
 

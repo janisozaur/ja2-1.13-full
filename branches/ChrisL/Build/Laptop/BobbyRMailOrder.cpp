@@ -2423,12 +2423,13 @@ BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 	{
 		//Allocate memory for the list
 		gpNewBobbyrShipments = (NewBobbyRayOrderStruct *) MemAlloc( sizeof( NewBobbyRayOrderStruct ) * giNumberOfNewBobbyRShipment );
+		memset(gpNewBobbyrShipments, 0, (sizeof( NewBobbyRayOrderStruct ) * giNumberOfNewBobbyRShipment) );
+
 		if( gpNewBobbyrShipments == NULL )
 		{
 			Assert(0);
 			return(FALSE );
 		}
-		memset(gpNewBobbyrShipments, 0, (sizeof( NewBobbyRayOrderStruct ) * giNumberOfNewBobbyRShipment) );
 
 		//loop through and load all the mail order slots
 		for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
@@ -2445,7 +2446,6 @@ BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 
 	return( TRUE );
 }
-
 
 
 

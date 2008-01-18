@@ -38,13 +38,13 @@
 	#include "zmouse.h"
 
 
+#include <iostream>
+
 #include "ExceptionHandling.h"
 
-#include <iostream>
-#include <fstream>
 #include "dbt.h"
 #include "INIReader.h"
-#include ".\Console\Console.h"
+#include "Console.h"
 #include "Lua Interpreter.h"
 
 #ifdef JA2
@@ -484,6 +484,7 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 				cout << "> ";
 			}
 			break;
+
 		case WM_INPUTREADY:
 			{
 				wstring *tstr = (wstring*) lParam;
@@ -880,6 +881,8 @@ int PASCAL HandledWinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR pC
 
 	// At this point the SGP is set up, which means all I/O, Memory, tools, etc... are available. All we need to do is 
 	// attend to the gaming mechanics themselves
+	Message.wParam = 0;
+
 	while (gfProgramIsRunning)
 	{
 //	if (PeekMessage(&Message, NULL, 0, 0, PM_NOREMOVE))

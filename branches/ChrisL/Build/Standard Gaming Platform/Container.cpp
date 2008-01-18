@@ -1438,6 +1438,16 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 //*****************************************************************************
 BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 {
+	ListHeader *pTemp_cont;
+	UINT32 uiMax_size;
+	UINT32 uiSize_of_each;
+	UINT32 uiTotal;
+	UINT32 uiHead;
+	UINT32 uiTail;
+	UINT32 uiOffsetSrc;
+	UINT32 uiOffsetDst;
+	UINT32 uiFinalLoc = 0;
+
 	// check for invalid handle = 0
 	if (hList == NULL)
 	{
@@ -1458,15 +1468,6 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 		return FALSE;
 	}
 
-	ListHeader *pTemp_cont;
-	UINT32 uiMax_size;
-	UINT32 uiSize_of_each;
-	UINT32 uiTotal;
-	UINT32 uiHead;
-	UINT32 uiTail;
-	UINT32 uiOffsetSrc;
-	UINT32 uiOffsetDst;
-	UINT32 uiFinalLoc = 0;
 	// assign some temporary variables
 	pTemp_cont = (ListHeader *)hList;
 

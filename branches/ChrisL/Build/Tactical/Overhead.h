@@ -212,6 +212,7 @@ extern BOOLEAN		gfMovingAnimation;
 
 
 extern TacticalStatusType	gTacticalStatus;
+extern INT32				TEST_iFaceIndex;
 
 
 

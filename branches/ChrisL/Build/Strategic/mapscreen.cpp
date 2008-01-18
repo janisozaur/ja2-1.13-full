@@ -6440,7 +6440,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 							CancelMapUIMessage( );
 
 							// clear their strategic movement (mercpaths and waypoints)
-							ClearMvtForthisAndGang( pSoldier );
+							ClearMvtForThisSoldierAndGang( pSoldier );
 
 							// select this sector
 							ChangeSelectedMapSector( sMapX, sMapY, 0 );

@@ -5,7 +5,6 @@
 #ifndef SOUND_CONTROL_H
 #define SOUND_CONTROL_H
 
-#include "types.h"
 // == Lesh modifications ======
 #define FARLEFT		 0
 #define LEFTSIDE		96

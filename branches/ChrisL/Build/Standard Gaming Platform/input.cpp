@@ -385,17 +385,17 @@ void ShutdownInputManager(void)
 
 void QueuePureEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam)
 {
-	// Can we queue up one more event, if not, the event is lost forever
-	if (gusQueueCount == 256)
-	{ // No more queue space
-	return;
-	}
-
 	UINT32 uiTimer;
 	UINT16 usKeyState;
 
 	uiTimer = GetTickCount();
 	usKeyState = gfShiftState | gfCtrlState | gfAltState;
+
+	// Can we queue up one more event, if not, the event is lost forever
+	if (gusQueueCount == 256)
+	{ // No more queue space
+	return;
+	}
 
 	// Okey Dokey, we can queue up the event, so we do it
 	gEventQueue[gusTailIndex].uiTimeStamp = uiTimer;
@@ -903,8 +903,7 @@ void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
 
 	// Find ucChar by translating ubKey using the gsKeyTranslationTable. If the SHIFT, ALT or CTRL key are down, then
 	// the index into the translation table us changed from ubKey to ubKey+256, ubKey+512 and ubKey+768 respectively
-//	if (gfShiftState == TRUE)
-	if (gfShiftState == SHIFT_DOWN)
+  if (gfShiftState == TRUE)
 	{ // SHIFT is pressed, hence we add 256 to ubKey before translation to ubChar
 	ubChar = gsKeyTranslationTable[ubKey+256];
 	}
@@ -918,14 +917,12 @@ void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
 		//
 
 	if( gfAltState == TRUE )
-//	if( gfAltState == ALT_DOWN)
 	{ // ALT is pressed, hence ubKey is multiplied by 3 before translation to ubChar
 		ubChar = gsKeyTranslationTable[ubKey+512];
 	}
 	else
 	{
 		if (gfCtrlState == TRUE)
- //	 if (gfCtrlState == CTRL_DOWN)
 		{ // CTRL is pressed, hence ubKey is multiplied by 4 before translation to ubChar
 		ubChar = gsKeyTranslationTable[ubKey+768];
 		}
@@ -979,12 +976,12 @@ void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
 		QueueEvent(KEY_UP, ubChar, uiTmpLParam);
 	}
 		//else if the alt tab key was pressed
-		else if( ubChar == TAB && gfAltState == ALT_DOWN)
+		else if( ubChar == TAB && gfAltState )
 		{
-		gfKeyState[ ALT ] = FALSE;
-			gfAltState = FALSE;
 			// therefore minimize the application
 			ShowWindow( ghWindow, SW_MINIMIZE );
+		gfKeyState[ ALT ] = FALSE;
+			gfAltState = FALSE;
 		}
 	}
 }

@@ -474,6 +474,7 @@ void HandleDialogue( )
 	}
 
 	iQSize = QueueSize( ghDialogueQ );
+	TEST_iFaceIndex = iQSize;
 
 
 	if ( iQSize == 0 && gpCurrentTalkingFace == NULL )
@@ -644,6 +645,7 @@ void HandleDialogue( )
 		UnPauseGame();
 
 	}
+	TEST_iFaceIndex = iQSize;
 
 	if ( iQSize == 0 )
 	{
@@ -784,8 +786,10 @@ void HandleDialogue( )
 		gTacticalStatus.ubLastQuoteSaid = (UINT8)QItem->usQuoteNum;
 		gTacticalStatus.ubLastQuoteProfileNUm = (UINT8)QItem->ubCharacterNum;
 
+		TEST_iFaceIndex = QItem->iFaceIndex;
+
 		// Setup face pointer
-		gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
+		gpCurrentTalkingFace = &gFacesData[ TEST_iFaceIndex ];
 		gubCurrentTalkingID	= QItem->ubCharacterNum;
 
 		ExecuteCharacterDialogue( QItem->ubCharacterNum, QItem->usQuoteNum, QItem->iFaceIndex, QItem->bUIHandlerID, QItem->fFromSoldier );
