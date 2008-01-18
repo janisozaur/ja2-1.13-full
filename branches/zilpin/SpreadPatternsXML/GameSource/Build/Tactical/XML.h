@@ -89,6 +89,11 @@ typedef PARSE_STAGE;
 #define SECTORLOADSCREENSFILENAME				"Map\\SectorLoadscreens.xml"
 
 
+//zilpin: pellet spread patterns externalized in XML
+#define SPREADPATTERNSFILENAME            "SpreadPatterns.xml"
+
+
+
 extern BOOLEAN ReadInItemStats(STR fileName, BOOLEAN localizedVersion);
 extern BOOLEAN WriteItemStats();
 
@@ -188,4 +193,11 @@ extern BOOLEAN WriteInArmyCompositionInfo(STR fileName);
 
 //Kaiden: Roaming Militia Restricted Sectors List
 extern BOOLEAN ReadInRoamingInfo(STR filename);
+
+
+//zilpin: pellet spread patterns externalized in XML
+extern BOOLEAN ReadInSpreadPatterns(STR fileName);
+extern BOOLEAN WriteSpreadPatterns();
+extern int FindSpreadPatternIndex( const STR strName );
+
 #endif

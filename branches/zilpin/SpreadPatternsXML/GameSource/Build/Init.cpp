@@ -114,6 +114,15 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 {
 	char fileName[MAX_PATH];
 
+	//zilpin: pellet spread patterns externalized in XML
+	//If file not found, or error, then the old hard-coded defaults are used by LOS.cpp
+	//This needs to be loaded before AmmoTypes and Items because SpreadPatterns can be referenced by name or index.
+	strcpy(fileName, directoryName);
+	strcat(fileName, SPREADPATTERNSFILENAME);
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
+	ReadInSpreadPatterns(fileName);
+
+
 	// WANNE: Enemy drops - begin
 	strcpy(fileName, directoryName);
 	strcat(fileName, ENEMYMISCDROPSFILENAME);
@@ -447,6 +456,7 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
     if(!ReadInRoamingInfo(fileName))
 		return FALSE;
+
 
 	return TRUE;
 }

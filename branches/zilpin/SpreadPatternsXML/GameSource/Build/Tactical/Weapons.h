@@ -168,6 +168,9 @@ typedef struct
 	INT16	lockBustingPower;
 	BOOLEAN tracerEffect;
 
+	//zilpin: pellet spread patterns externalized in XML
+	INT32 spreadPattern;
+
 } AMMOTYPE;
 
 enum

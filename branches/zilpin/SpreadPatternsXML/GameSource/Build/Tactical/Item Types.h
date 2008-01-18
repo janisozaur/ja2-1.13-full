@@ -392,6 +392,10 @@ typedef struct
 	BOOLEAN scifi; // item only available in scifi mode
 
 	UINT16 defaultattachment;
+
+	//zilpin: pellet spread patterns externalized in XML
+	INT32 spreadPattern;
+
 } INVTYPE;
 
 #define FIRST_WEAPON 1
