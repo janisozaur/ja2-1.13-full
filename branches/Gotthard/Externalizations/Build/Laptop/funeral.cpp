@@ -165,7 +165,7 @@ FUNERAL_RIP_SENTENCE_2_Y,
 
 //This is the array for all the funeral constants.  They are referenced with the enum above, to hopefully make code transition less difficult.  Gotthard 10/22/07
 //I'd love to have it be INT16 to allow for larger modifiers and negative values, but for now that's just not possible without changing how the game displays text.  ( I *think*, I will look into it when I know it's working.)
-extern INT16 iFuneralConstants[] =
+extern INT16 iFuneralConstants[47] = {0};/* =
 {
 FONT12ARIAL,
 2,
@@ -235,7 +235,7 @@ FONT_MCOLOR_DKWHITE,
 
 ((SCREEN_WIDTH - 640) / 2) + 111 + 72 + 55,//FUNERAL_RIP_SENTENCE_1_X Originally	//45
 ((SCREEN_HEIGHT - 480) / 2) + 19 + 27 + 151 + 162,//FUNERAL_CLOSED_RIP_SIGN_Y Originally
-};
+};*/
 
 //Image Identifiers
 UINT32		guiClosedSign;

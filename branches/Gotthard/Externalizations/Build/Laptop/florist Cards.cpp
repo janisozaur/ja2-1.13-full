@@ -68,7 +68,7 @@ FLORIST_CARD_BACK_BUTTON_Y,
 
 
 //This array holds all the original constants, and they are referenced using the enumeration defined above.  Gotthard 10/31/07
-INT16 iFloristCardsConstants[] =
+extern INT16 iFloristCardsConstants[15] = {0};/*
 {
 FONT12ARIAL,
 FONT_MCOLOR_WHITE,
@@ -90,7 +90,7 @@ FONT_MCOLOR_WHITE,
 
 ((SCREEN_WIDTH - 640) / 2) + 111 + 8,
 ((SCREEN_HEIGHT - 480) / 2) + 27 + 19 + 12,
-};
+};*/
 
 UINT32		guiCardBackground;
 

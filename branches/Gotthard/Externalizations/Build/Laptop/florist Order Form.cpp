@@ -69,7 +69,7 @@
 
 #define		FLOWER_ORDER_GALLERY_BUTTON_X			LAPTOP_SCREEN_UL_X + 305
 #define		FLOWER_ORDER_GALLERY_BUTTON_Y			FLOWER_ORDER_SEND_BUTTON_Y
-
+//31 below
 #define		FLOWER_ORDER_FLOWER_NAME_X				LAPTOP_SCREEN_UL_X + 94
 #define		FLOWER_ORDER_FLOWER_NAME_Y				LAPTOP_SCREEN_WEB_UL_Y + 68
 
@@ -267,7 +267,7 @@ FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS,
 
 //This is an array to hold the original #defines now commented out above.  It is referenced using the new enumeration with the same comstant names.  Gotthard 11/3/07
 
-INT16 iFloristOrderFormConstants[] =
+extern INT16 iFloristOrderFormConstants[82] = {0};/*
 {
 FONT10ARIAL,
 FONT12ARIAL,
@@ -385,35 +385,36 @@ FONT_MCOLOR_WHITE,
 35,
 
 17,
-};
+};*/
 
 typedef struct
 {
-	CHAR16 psCityLoc[20];
+	CHAR16* psCityLoc;
 	UINT8	ubNextDayDeliveryCost;
 	UINT8	ubWhenItGetsThereCost;
 } FlowerOrderLocationStruct;
 
 
 
-FlowerOrderLocationStruct FlowerOrderLocations[FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS]={
-	{	*pDeliveryLocationStrings[0],	20, 15},
-	{	*pDeliveryLocationStrings[1],	95, 70},
-	{	*pDeliveryLocationStrings[2],	100, 75},
-	{	*pDeliveryLocationStrings[3],	50, 35},
-	{	*pDeliveryLocationStrings[4],	70, 50},
-	{	*pDeliveryLocationStrings[5],	45, 35},
-	{	*pDeliveryLocationStrings[6],	30, 25},
-	{	*pDeliveryLocationStrings[7],	100, 75},
-	{	*pDeliveryLocationStrings[8],	100, 75},
-	{	*pDeliveryLocationStrings[9],	30, 25},
-	{	*pDeliveryLocationStrings[10],	95, 70},
-	{	*pDeliveryLocationStrings[11],	30, 25},
-	{	*pDeliveryLocationStrings[12],	40, 30},
-	{	*pDeliveryLocationStrings[13],	45, 35},
-	{	*pDeliveryLocationStrings[14],	95, 70},
-	{	*pDeliveryLocationStrings[15],	50, 40},
-	{	*pDeliveryLocationStrings[16],	40, 30}
+//FlowerOrderLocationStruct FlowerOrderLocations[FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS]={ Commented out becuase I externalized this define!
+FlowerOrderLocationStruct FlowerOrderLocations[17]={	
+	{	pDeliveryLocationStrings[0],	20, 15},
+	{	pDeliveryLocationStrings[1],	95, 70},
+	{	pDeliveryLocationStrings[2],	100, 75},
+	{	pDeliveryLocationStrings[3],	50, 35},
+	{	pDeliveryLocationStrings[4],	70, 50},
+	{	pDeliveryLocationStrings[5],	45, 35},
+	{	pDeliveryLocationStrings[6],	30, 25},
+	{	pDeliveryLocationStrings[7],	100, 75},
+	{	pDeliveryLocationStrings[8],	100, 75},
+	{	pDeliveryLocationStrings[9],	30, 25},
+	{	pDeliveryLocationStrings[10],	95, 70},
+	{	pDeliveryLocationStrings[11],	30, 25},
+	{	pDeliveryLocationStrings[12],	40, 30},
+	{	pDeliveryLocationStrings[13],	45, 35},
+	{	pDeliveryLocationStrings[14],	95, 70},
+	{	pDeliveryLocationStrings[15],	50, 40},
+	{	pDeliveryLocationStrings[16],	40, 30}
 };
 
 UINT32		guiDeliveryLocation;
@@ -746,7 +747,7 @@ void ExitFloristOrderForm()
 
 void HandleFloristOrderForm()
 {
-	if( gubFlowerDestDropDownMode != iFloristOrderFormConstants[FLOWER_ORDER_DROP_DOWN_NO_ACTION] )
+	if( gubFlowerDestDropDownMode != FLOWER_ORDER_DROP_DOWN_NO_ACTION )
 	{
 		CreateDestroyFlowerOrderDestDropDown( gubFlowerDestDropDownMode );
 	}

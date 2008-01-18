@@ -100,7 +100,7 @@ FLOR_GALLERY_FLOWER_DESC_OFFSET_Y,
 };
 
 
-INT16 iFloristGalleryConstants[] =
+extern INT16 iFloristGalleryConstants[27] = {0};/*
 {
 FONT10ARIAL,
 FONT_MCOLOR_WHITE,
@@ -142,7 +142,7 @@ FONT_MCOLOR_WHITE,
 9,
 (9) + 17,//Previously FLOR_GALLERY_FLOWER_TITLE_OFFSET_Y
 ((9) + 17) + 15,//Previously FLOR_GALLERY_FLOWER_PRICE_OFFSET_Y
-};
+};*/
 
 UINT32	guiFlowerImages[ 3 ];
 

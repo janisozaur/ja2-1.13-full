@@ -61,11 +61,11 @@
 	#include "Multilingual Text Code Generator.h"
 	#include "editscreen.h"
 #endif
-extern INT16 iFuneralConstants[];
-extern INT16 iFloristConstants[];
-extern INT16 iFloristGalleryConstants[];
-extern INT16 iFloristCardsConstants[];
-extern INT16 iFloristOrderFormConstants[];
+extern INT16 iFuneralConstants[47];
+extern INT16 iFloristConstants[32];
+extern INT16 iFloristGalleryConstants[27];
+extern INT16 iFloristCardsConstants[15];
+extern INT16 iFloristOrderFormConstants[82];
 extern BOOLEAN GetCDromDriveLetter( STR8	pString );
 
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
@@ -851,7 +851,7 @@ iFloristOrderFormConstants[30] = ((SCREEN_HEIGHT - 480) / 2) + 410;
 iFloristOrderFormConstants[31] = ((SCREEN_WIDTH - 640) / 2) + 205;
 iFloristOrderFormConstants[32] = ((SCREEN_HEIGHT - 480) / 2) + 114;
 iFloristOrderFormConstants[33] = ((SCREEN_WIDTH - 640) / 2) + 205;
-iFloristOrderFormConstants[34] = ((SCREEN_HEIGHT - 480) / 2) + 129;
+iFloristOrderFormConstants[34] = ((SCREEN_HEIGHT - 480) / 2) + 144;
 iFloristOrderFormConstants[35] = ((SCREEN_WIDTH - 640) / 2) + 205;
 iFloristOrderFormConstants[36] = ((SCREEN_HEIGHT - 480) / 2) + 129;
 iFloristOrderFormConstants[37] = ((SCREEN_WIDTH - 640) / 2) + 205;
@@ -886,7 +886,7 @@ iFloristOrderFormConstants[65] = ((SCREEN_HEIGHT - 480) / 2) + 213;
 iFloristOrderFormConstants[66] = ((SCREEN_WIDTH - 640) / 2) + 380;
 iFloristOrderFormConstants[67] = ((SCREEN_HEIGHT - 480) / 2) + 213;
 iFloristOrderFormConstants[68] = ((SCREEN_WIDTH - 640) / 2) + 234;
-iFloristOrderFormConstants[69] = ((SCREEN_HEIGHT - 480) / 2) + 238;
+iFloristOrderFormConstants[69] = ((SCREEN_HEIGHT - 480) / 2) + 225;
 iFloristOrderFormConstants[70] = ((SCREEN_WIDTH - 640) / 2) + 234;
 iFloristOrderFormConstants[71] = ((SCREEN_HEIGHT - 480) / 2) + 238;
 iFloristOrderFormConstants[72] = ((SCREEN_WIDTH - 640) / 2) + 301;

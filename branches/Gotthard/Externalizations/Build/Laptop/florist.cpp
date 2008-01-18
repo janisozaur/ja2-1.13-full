@@ -62,7 +62,7 @@
 */
 
 //Here is the array for all the Florist Constants and their values.
-INT16 iFloristConstants[] =
+extern INT16 iFloristConstants[32] = {0};/*=
 {
 FONT12ARIAL,
 FONT_MCOLOR_WHITE,
@@ -109,7 +109,7 @@ FONT14ARIAL,
 2,
 2,
 128,
-};
+};*/
 
 UINT32		guiFloristBackground;
 UINT32		guiHandBullet;
@@ -199,32 +199,33 @@ void RenderFlorist()
 {
   HVOBJECT hPixHandle;
 	UINT16 i, usPosY;
-	UINT8 ubTextCounter;
+	//UINT8 ubTextCounter;
 
 	GetVideoObject(&hPixHandle, guiHandBullet);
 
 	DisplayFloristDefaults();
 
 	//compnay info
-	DisplayWrappedString(iFloristConstants[FLORIST_COMPANY_INFO_TEXT_X], iFloristConstants[FLORIST_COMPANY_INFO_LINE_1_Y], iFloristConstants[FLORIST_COMPANY_INFO_TEXT_WIDTH], 2, iFloristConstants[FLORIST_SENTENCE_FONT], (UINT8)iFloristConstants[FLORIST_SENTENCE_COLOR],  sFloristText[ FLORIST_DROP_ANYWHERE ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
-	DisplayWrappedString(iFloristConstants[FLORIST_COMPANY_INFO_TEXT_X], iFloristConstants[FLORIST_COMPANY_INFO_LINE_2_Y], iFloristConstants[FLORIST_COMPANY_INFO_TEXT_WIDTH], 2, iFloristConstants[FLORIST_SENTENCE_FONT], (UINT8)iFloristConstants[FLORIST_SENTENCE_COLOR],  sFloristText[ FLORIST_PHONE_NUMBER ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
-	DisplayWrappedString(iFloristConstants[FLORIST_COMPANY_INFO_TEXT_X], iFloristConstants[FLORIST_COMPANY_INFO_LINE_3_Y], iFloristConstants[FLORIST_COMPANY_INFO_TEXT_WIDTH], 2, iFloristConstants[FLORIST_SENTENCE_FONT], (UINT8)iFloristConstants[FLORIST_SENTENCE_COLOR],  sFloristText[ FLORIST_STREET_ADDRESS ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
-	DisplayWrappedString(iFloristConstants[FLORIST_COMPANY_INFO_TEXT_X], iFloristConstants[FLORIST_COMPANY_INFO_LINE_4_Y], iFloristConstants[FLORIST_COMPANY_INFO_TEXT_WIDTH], 2, iFloristConstants[FLORIST_SENTENCE_FONT], (UINT8)iFloristConstants[FLORIST_SENTENCE_COLOR],  sFloristText[ FLORIST_WWW_ADDRESS ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
+	IanDisplayWrappedString(iFloristConstants[FLORIST_COMPANY_INFO_TEXT_X], iFloristConstants[FLORIST_COMPANY_INFO_LINE_1_Y], iFloristConstants[FLORIST_COMPANY_INFO_TEXT_WIDTH], 2, iFloristConstants[FLORIST_SENTENCE_FONT], (UINT8)iFloristConstants[FLORIST_SENTENCE_COLOR],  (STR16)sFloristText[ FLORIST_DROP_ANYWHERE ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
+	IanDisplayWrappedString(iFloristConstants[FLORIST_COMPANY_INFO_TEXT_X], iFloristConstants[FLORIST_COMPANY_INFO_LINE_2_Y], iFloristConstants[FLORIST_COMPANY_INFO_TEXT_WIDTH], 2, iFloristConstants[FLORIST_SENTENCE_FONT], (UINT8)iFloristConstants[FLORIST_SENTENCE_COLOR],  (STR16)sFloristText[ FLORIST_PHONE_NUMBER ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
+	IanDisplayWrappedString(iFloristConstants[FLORIST_COMPANY_INFO_TEXT_X], iFloristConstants[FLORIST_COMPANY_INFO_LINE_3_Y], iFloristConstants[FLORIST_COMPANY_INFO_TEXT_WIDTH], 2, iFloristConstants[FLORIST_SENTENCE_FONT], (UINT8)iFloristConstants[FLORIST_SENTENCE_COLOR],  (STR16)sFloristText[ FLORIST_STREET_ADDRESS ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
+	IanDisplayWrappedString(iFloristConstants[FLORIST_COMPANY_INFO_TEXT_X], iFloristConstants[FLORIST_COMPANY_INFO_LINE_4_Y], iFloristConstants[FLORIST_COMPANY_INFO_TEXT_WIDTH], 2, iFloristConstants[FLORIST_SENTENCE_FONT], (UINT8)iFloristConstants[FLORIST_SENTENCE_COLOR],  (STR16)sFloristText[ FLORIST_WWW_ADDRESS ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
 
 	usPosY = iFloristConstants[FLORIST_FIRST_BULLET_Y];
-	ubTextCounter = (UINT8)iFloristConstants[FLORIST_ADVERTISEMENT_1];
+	//ubTextCounter = (UINT8)iFloristConstants[FLORIST_ADVERTISEMENT_1];
+	int helper = 5;
 	for( i=0; i<iFloristConstants[FLORIST_NUMBER_OF_BULLETS]; i++)
 	{
 		BltVideoObject(FRAME_BUFFER, hPixHandle, 0, iFloristConstants[FLORIST_FIRST_BULLET_X], usPosY, VO_BLT_SRCTRANSPARENCY,NULL);
 
-		DisplayWrappedString(iFloristConstants[FLORIST_FIRST_SENTENCE_COLUMN_TEXT_X], (UINT16)(usPosY+20), iFloristConstants[FLORIST_FIRST_SENTENCE_COLUMN_TEXT_WIDTH], 2, iFloristConstants[FLORIST_SENTENCE_FONT], (UINT8)iFloristConstants[FLORIST_SENTENCE_COLOR],  sFloristText[ubTextCounter], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
-		ubTextCounter++;
+		DisplayWrappedString(iFloristConstants[FLORIST_FIRST_SENTENCE_COLUMN_TEXT_X], (UINT16)(usPosY+20), iFloristConstants[FLORIST_FIRST_SENTENCE_COLUMN_TEXT_WIDTH], 2, iFloristConstants[FLORIST_SENTENCE_FONT], (UINT8)iFloristConstants[FLORIST_SENTENCE_COLOR],  (STR16)sFloristText[i+helper], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
+		//ubTextCounter++;
 
-		DisplayWrappedString(iFloristConstants[FLORIST_SECOND_SENTENCE_COLUMN_TEXT_X], (UINT16)(usPosY+15), iFloristConstants[FLORIST_SECOND_SENTENCE_COLUMN_TEXT_WIDTH], 2, iFloristConstants[FLORIST_SENTENCE_FONT], (UINT8)iFloristConstants[FLORIST_SENTENCE_COLOR],  sFloristText[ubTextCounter], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
-		ubTextCounter++;
-
+		DisplayWrappedString(iFloristConstants[FLORIST_SECOND_SENTENCE_COLUMN_TEXT_X], (UINT16)(usPosY+15), iFloristConstants[FLORIST_SECOND_SENTENCE_COLUMN_TEXT_WIDTH], 2, iFloristConstants[FLORIST_SENTENCE_FONT], (UINT8)iFloristConstants[FLORIST_SENTENCE_COLOR],  (STR16)sFloristText[i+helper+1], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
+		//ubTextCounter++;
 		usPosY += iFloristConstants[FLORIST_BULLET_OFFSET_Y];
+		helper++;
 	}
 
   MarkButtonsDirty( );

@@ -45,10 +45,10 @@
 	#include "florist.h"
 #endif
 
-extern INT16 iFloristConstants[];
-extern INT16 iFloristOrderFormConstants[];
-extern INT16 iFloristCardsConstants[];
-extern INT16 iFloristGalleryConstants[];
+extern INT16 iFloristConstants[32];
+extern INT16 iFloristOrderFormConstants[82];
+extern INT16 iFloristCardsConstants[15];
+extern INT16 iFloristGalleryConstants[27];
 
 
 struct

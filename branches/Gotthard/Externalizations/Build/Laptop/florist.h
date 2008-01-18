@@ -59,7 +59,7 @@ FLORIST_BUTTON_TEXT_DOWN_COLOR,
 FLORIST_BUTTON_TEXT_SHADOW_COLOR,
 };
 
-extern INT16 iFloristConstants[];
+extern INT16 iFloristConstants[32];
 
 void GameInitFlorist();
 BOOLEAN EnterFlorist();

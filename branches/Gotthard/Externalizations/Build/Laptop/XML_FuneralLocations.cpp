@@ -45,7 +45,7 @@
 	#include "funeral.h"
 #endif
 
-extern INT16 iFuneralConstants[];
+extern INT16 iFuneralConstants[47];
 
 struct
 {
