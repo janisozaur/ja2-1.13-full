@@ -1,0 +1,875 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<BPAPConstants>
+
+<!-- AP_MINIMUM -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- AP_MAXIMUM -->
+<BPAPConstant>
+<VALUE>25</VALUE>
+</BPAPConstant>
+
+<!-- AP_MONSTER_MAXIMUM -->
+<BPAPConstant>
+<VALUE>40</VALUE>
+</BPAPConstant>
+
+<!-- AP_VEHICLE_MAXIMUM -->
+<BPAPConstant>
+<VALUE>50</VALUE>
+</BPAPConstant>
+
+<!-- AP_INCREASE -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- MAX_AP_CARRIED -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_YOUNG_MONST_FACTOR -->
+<BPAPConstant>
+<VALUE>15</VALUE>
+</BPAPConstant>
+
+<!-- AP_ADULT_MONST_FACTOR -->
+<BPAPConstant>
+<VALUE>12</VALUE>
+</BPAPConstant>
+
+<!-- AP_MONST_FRENZY_FACTOR -->
+<BPAPConstant>
+<VALUE>13</VALUE>
+</BPAPConstant>
+
+<!-- AP_CLAUSTROPHOBE -->
+<BPAPConstant>
+<VALUE>9</VALUE>
+</BPAPConstant>
+
+<!-- AP_AFRAID_OF_INSECTS -->
+<BPAPConstant>
+<VALUE>8</VALUE>
+</BPAPConstant>
+
+<!-- AP_EXCHANGE_PLACES -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_REVERSE_MODIFIER -->
+<BPAPConstant>
+<VALUE>1</VALUE>
+</BPAPConstant>
+
+<!-- AP_STEALTH_MODIFIER -->
+<BPAPConstant>
+<VALUE>2</VALUE>
+</BPAPConstant>
+
+<!-- AP_STEAL_ITEM -->
+<BPAPConstant>
+<VALUE>14</VALUE>
+</BPAPConstant>
+
+<!-- AP_TAKE_BLOOD -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- AP_TALK -->
+<BPAPConstant>
+<VALUE>6</VALUE>
+</BPAPConstant>
+
+<!-- AP_MOVEMENT_FLAT -->
+<BPAPConstant>
+<VALUE>3</VALUE>
+</BPAPConstant>
+
+<!-- AP_MOVEMENT_GRASS -->
+<BPAPConstant>
+<VALUE>4</VALUE>
+</BPAPConstant>
+
+<!-- AP_MOVEMENT_BUSH -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_MOVEMENT_RUBBLE -->
+<BPAPConstant>
+<VALUE>6</VALUE>
+</BPAPConstant>
+
+<!-- AP_MOVEMENT_SHORE -->
+<BPAPConstant>
+<VALUE>7</VALUE>
+</BPAPConstant>
+
+<!-- AP_MOVEMENT_LAKE -->
+<BPAPConstant>
+<VALUE>9</VALUE>
+</BPAPConstant>
+
+<!-- AP_MOVEMENT_OCEAN -->
+<BPAPConstant>
+<VALUE>8</VALUE>
+</BPAPConstant>
+
+<!-- AP_CHANGE_FACING -->
+<BPAPConstant>
+<VALUE>1</VALUE>
+</BPAPConstant>
+
+<!-- AP_CHANGE_TARGET -->
+<BPAPConstant>
+<VALUE>1</VALUE>
+</BPAPConstant>
+
+<!-- AP_CATCH_ITEM -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_TOSS_ITEM -->
+<BPAPConstant>
+<VALUE>8</VALUE>
+</BPAPConstant>
+
+<!-- AP_REFUEL_VEHICLE -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- AP_MOVE_ITEM_FREE -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- AP_MOVE_ITEM_FAST -->
+<BPAPConstant>
+<VALUE>2</VALUE>
+</BPAPConstant>
+
+<!-- AP_MOVE_ITEM_AVG -->
+<BPAPConstant>
+<VALUE>4</VALUE>
+</BPAPConstant>
+
+<!-- AP_MOVE_ITEM_SLOW -->
+<BPAPConstant>
+<VALUE>6</VALUE>
+</BPAPConstant>
+
+<!-- AP_MOVE_ITEM_FAST -->
+<BPAPConstant>
+<VALUE>4</VALUE>
+</BPAPConstant>
+
+<!-- AP_MOVE_ITEM_SLOW -->
+<BPAPConstant>
+<VALUE>6</VALUE>
+</BPAPConstant>
+
+<!-- AP_RADIO -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_CROUCH -->
+<BPAPConstant>
+<VALUE>2</VALUE>
+</BPAPConstant>
+
+<!-- AP_PRONE -->
+<BPAPConstant>
+<VALUE>2</VALUE>
+</BPAPConstant>
+
+<!-- AP_LOOK_STANDING -->
+<BPAPConstant>
+<VALUE>1</VALUE>
+</BPAPConstant>
+
+<!-- AP_LOOK_CROUCHED -->
+<BPAPConstant>
+<VALUE>2</VALUE>
+</BPAPConstant>
+
+<!-- AP_LOOK_PRONE -->
+<BPAPConstant>
+<VALUE>2</VALUE>
+</BPAPConstant>
+
+<!-- AP_READY_KNIFE -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- AP_READY_PISTOL -->
+<BPAPConstant>
+<VALUE>1</VALUE>
+</BPAPConstant>
+
+<!-- AP_READY_RIFLE -->
+<BPAPConstant>
+<VALUE>2</VALUE>
+</BPAPConstant>
+
+<!-- AP_READY_SAW -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- AP_READY_DUAL -->
+<BPAPConstant>
+<VALUE>1</VALUE>
+</BPAPConstant>
+
+<!-- AP_MIN_AIM_ATTACK -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- AP_MAX_AIM_ATTACK -->
+<BPAPConstant>
+<VALUE>4</VALUE>
+</BPAPConstant>
+
+<!-- AP_BURST -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_DROP_BOMB -->
+<BPAPConstant>
+<VALUE>3</VALUE>
+</BPAPConstant>
+
+<!-- AP_RELOAD_GUN -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_START_FIRST_AID -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_PER_HP_FIRST_AID -->
+<BPAPConstant>
+<VALUE>1</VALUE>
+</BPAPConstant>
+
+<!-- AP_STOP_FIRST_AID -->
+<BPAPConstant>
+<VALUE>3</VALUE>
+</BPAPConstant>
+
+<!-- AP_START_REPAIR -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_GET_HIT -->
+<BPAPConstant>
+<VALUE>2</VALUE>
+</BPAPConstant>
+
+<!-- AP_GET_WOUNDED_DIVISOR -->
+<BPAPConstant>
+<VALUE>4</VALUE>
+</BPAPConstant>
+
+<!-- AP_FALL_DOWN -->
+<BPAPConstant>
+<VALUE>4</VALUE>
+</BPAPConstant>
+
+<!-- AP_GET_THROWN -->
+<BPAPConstant>
+<VALUE>2</VALUE>
+</BPAPConstant>
+
+<!-- AP_GET_UP -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_ROLL_OVER -->
+<BPAPConstant>
+<VALUE>2</VALUE>
+</BPAPConstant>
+
+<!-- AP_OPEN_DOOR -->
+<BPAPConstant>
+<VALUE>3</VALUE>
+</BPAPConstant>
+
+<!-- AP_PICKLOCK -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- AP_EXAMINE_DOOR -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_BOOT_DOOR -->
+<BPAPConstant>
+<VALUE>8</VALUE>
+</BPAPConstant>
+
+<!-- AP_USE_CROWBAR -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- AP_UNLOCK_DOOR -->
+<BPAPConstant>
+<VALUE>6</VALUE>
+</BPAPConstant>
+
+<!-- AP_LOCK_DOOR -->
+<BPAPConstant>
+<VALUE>6</VALUE>
+</BPAPConstant>
+
+<!-- AP_EXPLODE_DOOR -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- AP_UNTRAP_DOOR -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- AP_USEWIRECUTTERS -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- AP_CLIMBROOF -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- AP_CLIMBOFFROOF -->
+<BPAPConstant>
+<VALUE>6</VALUE>
+</BPAPConstant>
+
+<!-- AP_JUMPFENCE -->
+<BPAPConstant>
+<VALUE>6</VALUE>
+</BPAPConstant>
+
+<!-- AP_OPEN_SAFE -->
+<BPAPConstant>
+<VALUE>8</VALUE>
+</BPAPConstant>
+
+<!-- AP_USE_REMOTE -->
+<BPAPConstant>
+<VALUE>2</VALUE>
+</BPAPConstant>
+
+<!-- AP_PULL_TRIGGER -->
+<BPAPConstant>
+<VALUE>2</VALUE>
+</BPAPConstant>
+
+<!-- AP_FORCE_LID_OPEN -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- AP_SEARCH_CONTAINER -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_READ_NOTE -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- AP_SNAKE_BATTLE -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- AP_KILL_SNAKE -->
+<BPAPConstant>
+<VALUE>7</VALUE>
+</BPAPConstant>
+
+<!-- AP_USE_SURV_CAM -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_PICKUP_ITEM -->
+<BPAPConstant>
+<VALUE>3</VALUE>
+</BPAPConstant>
+
+<!-- AP_GIVE_ITEM -->
+<BPAPConstant>
+<VALUE>1</VALUE>
+</BPAPConstant>
+
+<!-- AP_BURY_MINE -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- AP_DISARM_MINE -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- AP_DRINK -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_CAMOFLAGE -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- AP_TAKE_PHOTOGRAPH -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_MERGE -->
+<BPAPConstant>
+<VALUE>8</VALUE>
+</BPAPConstant>
+
+<!-- AP_OTHER_COST -->
+<BPAPConstant>
+<VALUE>99</VALUE>
+</BPAPConstant>
+
+<!-- AP_START_RUN_COST -->
+<BPAPConstant>
+<VALUE>1</VALUE>
+</BPAPConstant>
+
+<!-- AP_ATTACH_CAN -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- AP_JUMP_OVER -->
+<BPAPConstant>
+<VALUE>6</VALUE>
+</BPAPConstant>
+
+<!-- BP_RATIO_RED_PTS_TO_NORMAL -->
+<BPAPConstant>
+<VALUE>100</VALUE>
+</BPAPConstant>
+
+<!-- BP_RUN_ENERGYCOSTFACTOR -->
+<BPAPConstant>
+<VALUE>3</VALUE>
+</BPAPConstant>
+
+<!-- BP_WALK_ENERGYCOSTFACTOR -->
+<BPAPConstant>
+<VALUE>1</VALUE>
+</BPAPConstant>
+
+<!-- BP_SWAT_ENERGYCOSTFACTOR -->
+<BPAPConstant>
+<VALUE>2</VALUE>
+</BPAPConstant>
+
+<!-- BP_CRAWL_ENERGYCOSTFACTOR -->
+<BPAPConstant>
+<VALUE>4</VALUE>
+</BPAPConstant>
+
+<!-- BP_RADIO -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- BP_USE_DETONATOR -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- BP_REVERSE_MODIFIER -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- BP_STEALTH_MODIFIER -->
+<BPAPConstant>
+<VALUE>-20</VALUE>
+</BPAPConstant>
+
+<!-- BP_MINING_MODIFIER -->
+<BPAPConstant>
+<VALUE>-30</VALUE>
+</BPAPConstant>
+
+<!-- BP_PER_AP_NO_EFFORT -->
+<BPAPConstant>
+<VALUE>-200</VALUE>
+</BPAPConstant>
+
+<!-- BP_PER_AP_MIN_EFFORT -->
+<BPAPConstant>
+<VALUE>-100</VALUE>
+</BPAPConstant>
+
+<!-- BP_PER_AP_LT_EFFORT -->
+<BPAPConstant>
+<VALUE>-50</VALUE>
+</BPAPConstant>
+
+<!-- BP_PER_AP_MOD_EFFORT -->
+<BPAPConstant>
+<VALUE>25</VALUE>
+</BPAPConstant>
+
+<!-- BP_PER_AP_HVY_EFFORT -->
+<BPAPConstant>
+<VALUE>50</VALUE>
+</BPAPConstant>
+
+<!-- BP_PER_AP_MAX_EFFORT -->
+<BPAPConstant>
+<VALUE>100</VALUE>
+</BPAPConstant>
+
+<!-- BP_MOVEMENT_FLAT -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- BP_MOVEMENT_GRASS -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- BP_MOVEMENT_BUSH -->
+<BPAPConstant>
+<VALUE>20</VALUE>
+</BPAPConstant>
+
+<!-- BP_MOVEMENT_RUBBLE -->
+<BPAPConstant>
+<VALUE>35</VALUE>
+</BPAPConstant>
+
+<!-- BP_MOVEMENT_SHORE -->
+<BPAPConstant>
+<VALUE>50</VALUE>
+</BPAPConstant>
+
+<!-- BP_MOVEMENT_LAKE -->
+<BPAPConstant>
+<VALUE>75</VALUE>
+</BPAPConstant>
+
+<!-- BP_MOVEMENT_OCEAN -->
+<BPAPConstant>
+<VALUE>100</VALUE>
+</BPAPConstant>
+
+<!-- BP_CHANGE_FACING -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- BP_CROUCH -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- BP_PRONE -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- BP_CLIMBROOF -->
+<BPAPConstant>
+<VALUE>500</VALUE>
+</BPAPConstant>
+
+<!-- BP_CLIMBOFFROOF -->
+<BPAPConstant>
+<VALUE>250</VALUE>
+</BPAPConstant>
+
+<!-- BP_JUMPFENCE -->
+<BPAPConstant>
+<VALUE>200</VALUE>
+</BPAPConstant>
+
+<!-- BP_MOVE_ITEM_FREE -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- BP_MOVE_ITEM_FAST -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- BP_MOVE_ITEM_AVG -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- BP_MOVE_ITEM_SLOW -->
+<BPAPConstant>
+<VALUE>20</VALUE>
+</BPAPConstant>
+
+<!-- BP_MOVE_ITEM_FAST -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- BP_MOVE_ITEM_SLOW -->
+<BPAPConstant>
+<VALUE>20</VALUE>
+</BPAPConstant>
+
+<!-- BP_READY_KNIFE -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- BP_READY_PISTOL -->
+<BPAPConstant>
+<VALUE>10</VALUE>
+</BPAPConstant>
+
+<!-- BP_READY_RIFLE -->
+<BPAPConstant>
+<VALUE>20</VALUE>
+</BPAPConstant>
+
+<!-- BP_READY_SAW -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- BP_STEAL_ITEM -->
+<BPAPConstant>
+<VALUE>50</VALUE>
+</BPAPConstant>
+
+<!-- BP_PER_AP_AIMING -->
+<BPAPConstant>
+<VALUE>5</VALUE>
+</BPAPConstant>
+
+<!-- BP_RELOAD_GUN -->
+<BPAPConstant>
+<VALUE>20</VALUE>
+</BPAPConstant>
+
+<!-- BP_THROW_ITEM -->
+<BPAPConstant>
+<VALUE>50</VALUE>
+</BPAPConstant>
+
+<!-- BP_START_FIRST_AID -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- BP_PER_HP_FIRST_AID -->
+<BPAPConstant>
+<VALUE>-25</VALUE>
+</BPAPConstant>
+
+<!-- BP_STOP_FIRST_AID -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- BP_GET_HIT -->
+<BPAPConstant>
+<VALUE>200</VALUE>
+</BPAPConstant>
+
+<!-- BP_GET_WOUNDED -->
+<BPAPConstant>
+<VALUE>50</VALUE>
+</BPAPConstant>
+
+<!-- BP_FALL_DOWN -->
+<BPAPConstant>
+<VALUE>250</VALUE>
+</BPAPConstant>
+
+<!-- BP_GET_UP -->
+<BPAPConstant>
+<VALUE>50</VALUE>
+</BPAPConstant>
+
+<!-- BP_ROLL_OVER -->
+<BPAPConstant>
+<VALUE>20</VALUE>
+</BPAPConstant>
+
+<!-- BP_OPEN_DOOR -->
+<BPAPConstant>
+<VALUE>30</VALUE>
+</BPAPConstant>
+
+<!-- BP_PICKLOCK -->
+<BPAPConstant>
+<VALUE>-250</VALUE>
+</BPAPConstant>
+
+<!-- BP_EXAMINE_DOOR -->
+<BPAPConstant>
+<VALUE>-250</VALUE>
+</BPAPConstant>
+
+<!-- BP_BOOT_DOOR -->
+<BPAPConstant>
+<VALUE>200</VALUE>
+</BPAPConstant>
+
+<!-- BP_USE_CROWBAR -->
+<BPAPConstant>
+<VALUE>350</VALUE>
+</BPAPConstant>
+
+<!-- BP_UNLOCK_DOOR -->
+<BPAPConstant>
+<VALUE>50</VALUE>
+</BPAPConstant>
+
+<!-- BP_EXPLODE_DOOR -->
+<BPAPConstant>
+<VALUE>-250</VALUE>
+</BPAPConstant>
+
+<!-- BP_UNTRAP_DOOR -->
+<BPAPConstant>
+<VALUE>150</VALUE>
+</BPAPConstant>
+
+<!-- BP_LOCK_DOOR -->
+<BPAPConstant>
+<VALUE>50</VALUE>
+</BPAPConstant>
+
+<!-- BP_USEWIRECUTTERS -->
+<BPAPConstant>
+<VALUE>200</VALUE>
+</BPAPConstant>
+
+<!-- BP_PULL_TRIGGER -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- BP_FORCE_LID_OPEN -->
+<BPAPConstant>
+<VALUE>50</VALUE>
+</BPAPConstant>
+
+<!-- BP_SEARCH_CONTAINER -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- BP_OPEN_SAFE -->
+<BPAPConstant>
+<VALUE>-50</VALUE>
+</BPAPConstant>
+
+<!-- BP_READ_NOTE -->
+<BPAPConstant>
+<VALUE>-250</VALUE>
+</BPAPConstant>
+
+<!-- BP_SNAKE_BATTLE -->
+<BPAPConstant>
+<VALUE>500</VALUE>
+</BPAPConstant>
+
+<!-- BP_KILL_SNAKE -->
+<BPAPConstant>
+<VALUE>350</VALUE>
+</BPAPConstant>
+
+<!-- BP_USE_SURV_CAM -->
+<BPAPConstant>
+<VALUE>-100</VALUE>
+</BPAPConstant>
+
+<!-- BP_BURY_MINE -->
+<BPAPConstant>
+<VALUE>250</VALUE>
+</BPAPConstant>
+
+<!-- BP_DISARM_MINE -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- BP_FIRE_HANDGUN -->
+<BPAPConstant>
+<VALUE>25</VALUE>
+</BPAPConstant>
+
+<!-- BP_FIRE_RIFLE -->
+<BPAPConstant>
+<VALUE>50</VALUE>
+</BPAPConstant>
+
+<!-- BP_FIRE_SHOTGUN -->
+<BPAPConstant>
+<VALUE>100</VALUE>
+</BPAPConstant>
+
+<!-- BP_STAB_KNIFE -->
+<BPAPConstant>
+<VALUE>200</VALUE>
+</BPAPConstant>
+
+<!-- BP_TAKE_PHOTOGRAPH -->
+<BPAPConstant>
+<VALUE>0</VALUE>
+</BPAPConstant>
+
+<!-- BP_MERGE -->
+<BPAPConstant>
+<VALUE>50</VALUE>
+</BPAPConstant>
+
+<!-- BP_FALLFROMROOF -->
+<BPAPConstant>
+<VALUE>1000</VALUE>
+</BPAPConstant>
+
+<!-- BP_JUMP_OVER -->
+<BPAPConstant>
+<VALUE>250</VALUE>
+</BPAPConstant>
+
+</BPAPConstants>
