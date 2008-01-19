@@ -1398,6 +1398,7 @@ CHAR16 TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Etat : %d/%d\nCarburant : %d/%d",
 	L"%s ne peut pas voir %s.",  // Cannot see person trying to talk to
 	L"Attachment removed",
+	L"Ne peut pas gagner un autre véhicule car vous avez déjà 2",
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.

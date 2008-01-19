@@ -442,7 +442,7 @@ typedef struct
 	INT32 ubAPCostPerRound;
 
 	// CHRISL: New setting to determine AP multiplier when reloading with wrong sized clip
-	INT32 ubWrongMagMult;
+	FLOAT ubWrongMagMult;
 } GAME_EXTERNAL_OPTIONS;
 
 //This structure will contain general Ja2 settings	NOT individual game settings.

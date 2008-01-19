@@ -419,7 +419,6 @@ void DbgFailedAssertion( BOOLEAN fExpression, STR8 szFile, int nLine )
 
 	if ( fExpression == FALSE )
 	{
-		DebugBreakpoint();
 		if ((OutFile = fopen(gpcDebugLogFileName, "a+t")) != NULL)
 		{ 
 		  fprintf(OutFile, "Assertion Failed at:\n    line %i\n    %s\n", nLine, szFile);
@@ -505,7 +504,6 @@ extern HVOBJECT FontObjs[25];
 #ifdef JA2 //JAGGED ALLIANCE 2 VERSION ONLY
 void _FailMessage( STR8 pString, UINT32 uiLineNum, STR8 pSourceFile )
 {
-	DebugBreakpoint();
 	CHAR8 ubOutputString[512];
 #ifndef _NO_DEBUG_TXT
 	MSG Message;

@@ -79,6 +79,12 @@ class SOLDIERTYPE;
 #define		DIALOGUE_DEFAULT_SUBTITLE_WIDTH		200
 #define		TEXT_DELAY_MODIFIER			60
 
+//CHRISL: I added this definition to resolve a CTD that seems to be occuring when "named" NPCs fall forward while
+//	still alive.  I haven't yet determined what actually caused the CTD but this define, along with the conditions
+//	that use it, seem to be keeping the crash from occuring.  I'm just not sure if these conditions will produce
+//	other problems or not.
+#define		NAMED_NPC_CTD_FIX			26850000
+
 
 typedef struct
 {
@@ -392,15 +398,20 @@ BOOLEAN	DialogueQueueIsEmptyOrSomebodyTalkingNow( )
 
 void DialogueAdvanceSpeech( )
 {
+	//CHRISL: Named NPC problem.  See the explanation near the define of NAMED_NPC_CTD_FIX
 	// Shut them up!
-	InternalShutupaYoFace( gpCurrentTalkingFace->iID, FALSE );
+	if ( gpCurrentTalkingFace != NULL && gpCurrentTalkingFace->iID < NAMED_NPC_CTD_FIX )
+	{
+		InternalShutupaYoFace( gpCurrentTalkingFace->iID, FALSE );
+	}
 }
 
 
 void StopAnyCurrentlyTalkingSpeech( )
 {
+	//CHRISL: Named NPC problem.  See the explanation near the define of NAMED_NPC_CTD_FIX
 	// ATE; Make sure guys stop talking....
-	if ( gpCurrentTalkingFace != NULL )
+	if ( gpCurrentTalkingFace != NULL && gpCurrentTalkingFace->iID < NAMED_NPC_CTD_FIX )
 	{
 		InternalShutupaYoFace( gpCurrentTalkingFace->iID, TRUE );
 	}
@@ -474,7 +485,6 @@ void HandleDialogue( )
 	}
 
 	iQSize = QueueSize( ghDialogueQ );
-	TEST_iFaceIndex = iQSize;
 
 
 	if ( iQSize == 0 && gpCurrentTalkingFace == NULL )
@@ -645,7 +655,6 @@ void HandleDialogue( )
 		UnPauseGame();
 
 	}
-	TEST_iFaceIndex = iQSize;
 
 	if ( iQSize == 0 )
 	{
@@ -786,10 +795,8 @@ void HandleDialogue( )
 		gTacticalStatus.ubLastQuoteSaid = (UINT8)QItem->usQuoteNum;
 		gTacticalStatus.ubLastQuoteProfileNUm = (UINT8)QItem->ubCharacterNum;
 
-		TEST_iFaceIndex = QItem->iFaceIndex;
-
 		// Setup face pointer
-		gpCurrentTalkingFace = &gFacesData[ TEST_iFaceIndex ];
+		gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
 		gubCurrentTalkingID	= QItem->ubCharacterNum;
 
 		ExecuteCharacterDialogue( QItem->ubCharacterNum, QItem->usQuoteNum, QItem->iFaceIndex, QItem->bUIHandlerID, QItem->fFromSoldier );
@@ -2662,7 +2669,8 @@ void TextOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP && fLButtonDown )
 	{
-		if(	gpCurrentTalkingFace != NULL )
+		//CHRISL: Named NPC problem.  See the explanation near the define of NAMED_NPC_CTD_FIX
+		if(	gpCurrentTalkingFace != NULL && gpCurrentTalkingFace->iID < NAMED_NPC_CTD_FIX )
 		{
 			InternalShutupaYoFace( gpCurrentTalkingFace->iID, FALSE );
 
@@ -2692,7 +2700,8 @@ void FaceOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP && fLButtonDown )
 	{
-		if(	gpCurrentTalkingFace != NULL )
+		//CHRISL: Named NPC problem.  See the explanation near the define of NAMED_NPC_CTD_FIX
+		if(	gpCurrentTalkingFace != NULL && gpCurrentTalkingFace->iID < NAMED_NPC_CTD_FIX )
 		{
 			InternalShutupaYoFace( gpCurrentTalkingFace->iID, FALSE );
 		}

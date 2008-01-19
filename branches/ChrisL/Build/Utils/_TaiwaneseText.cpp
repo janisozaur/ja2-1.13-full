@@ -1340,7 +1340,9 @@ UINT16 TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Lock destroyed",
 	L"Somebody else is trying to use this door.",
 	L"Health: %d/%d\nFuel: %d/%d",
-  L"%s cannot see %s.",  // Cannot see person trying to talk to
+	L"%s cannot see %s.",  // Cannot see person trying to talk to
+	L"Attachment removed",
+	L"Can not gain another vehicle as you already have 2",
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.

@@ -431,6 +431,7 @@ BOOLEAN IsThisVehicleAccessibleToSoldier( SOLDIERTYPE *pSoldier, INT32 iId )
 BOOLEAN AddSoldierToVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 {
 	INT32 iCounter = 0;
+	INT8	vCount = 0;
 	SOLDIERTYPE *pVehicleSoldier = NULL;
 
 
@@ -450,6 +451,19 @@ BOOLEAN AddSoldierToVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 
 	// get the vehicle soldiertype
 	pVehicleSoldier = GetSoldierStructureForVehicle( iId );
+
+	//CHRISL: Get number of vehicles currently in player team
+	for(int x = 0; x < 20; x++)
+	{
+		if(MercPtrs[x]->bTeam == OUR_TEAM && (MercPtrs[x]->flags.uiStatusFlags & SOLDIER_VEHICLE))
+			vCount ++;
+	}
+
+	if( vCount > 1 )
+	{
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[VEHICLE_CAN_NOT_BE_ADDED] );
+		return( FALSE );
+	}
 
 	if( pVehicleSoldier )
 	{

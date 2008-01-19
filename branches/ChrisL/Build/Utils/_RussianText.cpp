@@ -1053,7 +1053,7 @@ STR16 gpStrategicString[] =
 	L"Твари атаковали ваших ополченцев в секторе %c%d.",
 	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
 	//Note:  the minimum number of civilians eaten will be two.
-	L"Твари атаковали сектор %s и убили %d гражданских.",
+	L"Твари убили %d гражданских во время атаки сектора %s.",
 	//%s is the sector location -- ex:  A9: Omerta
 	L"Враги атаковали ваших наемников в секторе %s. Ни один из ваших бойцов не в состоянии сражаться!",
 	//%s is the sector location -- ex:  A9: Omerta
@@ -1404,6 +1404,7 @@ CHAR16 TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Состояние: %d/%d\nТопливо: %d/%d",
 	L"%s не видит %s.",  // Cannot see person trying to talk to
 	L"Принадлежность отсоединена",	//пр
+	L"Can not gain another vehicle as you already have 2",
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.

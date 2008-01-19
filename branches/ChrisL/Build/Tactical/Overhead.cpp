@@ -141,7 +141,6 @@ BOOLEAN biggunwarning;
 //BOOLEAN airstrikeavailable;
 
 TacticalStatusType	gTacticalStatus;
-INT32	TEST_iFaceIndex;
 
 extern void RecalculateOppCntsDueToNoLongerNeutral( SOLDIERTYPE * pSoldier );
 extern void SetSoldierAniSpeed( SOLDIERTYPE *pSoldier );

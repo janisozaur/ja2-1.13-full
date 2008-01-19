@@ -622,10 +622,7 @@ BOOLEAN InitBobbyRUsedFilterBar()
 {
 	UINT8	i;
 	UINT16	usPosX;
-	UINT8		bCurMode;
 
-
-	bCurMode = 0;
 	usPosX = FILTER_BUTTONS_USED_START_X;
 
 	guiBobbyRFilterImage =	LoadButtonImage("LAPTOP\\CatalogueButton1.sti", -1,0,-1,1,-1 );
@@ -634,8 +631,10 @@ BOOLEAN InitBobbyRUsedFilterBar()
 	for(i=0; i<NUMBER_USED_FILTER_BUTTONS; i++)
 	{
 		//CHRISL: Don't display the LBEGEAR button if we're using the old inventory system
-		if((UsingNewInventorySystem() == false) && ubFilterUsedButtonValues[bCurMode] == BOBBYR_FILTER_USED_LBEGEAR)
+		if((UsingNewInventorySystem() == false) && ubFilterUsedButtonValues[i] == BOBBYR_FILTER_USED_LBEGEAR)
+		{
 			continue;
+		}
 
 		// Filter buttons
 		guiBobbyRFilterUsed[i] = CreateIconAndTextButton( guiBobbyRFilterImage, BobbyRFilter[BOBBYR_FILTER_USED_GUNS+i], BOBBYR_GUNS_BUTTON_FONT,
@@ -647,10 +646,9 @@ BOOLEAN InitBobbyRUsedFilterBar()
 
 		SetButtonCursor(guiBobbyRFilterUsed[i], CURSOR_LAPTOP_SCREEN);
 
-		MSYS_SetBtnUserData( guiBobbyRFilterUsed[i], 0, ubFilterUsedButtonValues[bCurMode]);
+		MSYS_SetBtnUserData( guiBobbyRFilterUsed[i], 0, ubFilterUsedButtonValues[i]);
 
 		usPosX += BOBBYR_USED_FILTER_BUTTON_GAP;
-		bCurMode++;
 	}
 
 
@@ -674,11 +672,13 @@ BOOLEAN InitBobbyRMiscFilterBar()
 	for(i=0; i<NUMBER_MISC_FILTER_BUTTONS; i++)
 	{
 		//CHRISL: Don't display the LBEGEAR button if we're using the old inventory system
-		if((UsingNewInventorySystem() == false) && ubFilterMiscButtonValues[bCurMode] == BOBBYR_FILTER_MISC_LBEGEAR)
+		if((UsingNewInventorySystem() == false) && ubFilterMiscButtonValues[i] == BOBBYR_FILTER_MISC_LBEGEAR)
+		{
 			continue;
+		}
 
-		usPosX = FILTER_BUTTONS_MISC_START_X + ( (i % sItemWidth) * usXOffset);
-		usPosY = FILTER_BUTTONS_Y + ( (i / sItemWidth) * usYOffset);
+		usPosX = FILTER_BUTTONS_MISC_START_X + ( (bCurMode % sItemWidth) * usXOffset);
+		usPosY = FILTER_BUTTONS_Y + ( (bCurMode / sItemWidth) * usYOffset);
 
 		// Filter buttons
 		guiBobbyRFilterMisc[i] = CreateIconAndTextButton( guiBobbyRFilterImage, BobbyRFilter[BOBBYR_FILTER_MISC_BLADE+i], BOBBYR_GUNS_BUTTON_FONT, 
@@ -690,7 +690,7 @@ BOOLEAN InitBobbyRMiscFilterBar()
 
 		SetButtonCursor(guiBobbyRFilterMisc[i], CURSOR_LAPTOP_SCREEN);
 
-		MSYS_SetBtnUserData( guiBobbyRFilterMisc[i], 0, ubFilterMiscButtonValues[bCurMode]);
+		MSYS_SetBtnUserData( guiBobbyRFilterMisc[i], 0, ubFilterMiscButtonValues[i]);
 		bCurMode++;
 	}
 
@@ -786,7 +786,8 @@ BOOLEAN DeleteBobbyRGunsFilter()
 
 	for (i=0; i<NUMBER_GUNS_FILTER_BUTTONS; i++)
 	{
-		RemoveButton (guiBobbyRFilterGuns[i]);
+		if(guiBobbyRFilterGuns[i])
+			RemoveButton (guiBobbyRFilterGuns[i]);
 	}
 
 	return (TRUE);
@@ -800,7 +801,8 @@ BOOLEAN DeleteBobbyRAmmoFilter()
 
 	for (i=0; i<NUMBER_AMMO_FILTER_BUTTONS; i++)
 	{
-		RemoveButton (guiBobbyRFilterAmmo[i]);
+		if(guiBobbyRFilterAmmo[i])
+			RemoveButton (guiBobbyRFilterAmmo[i]);
 	}
 
 	return (TRUE);
@@ -814,7 +816,8 @@ BOOLEAN DeleteBobbyRUsedFilter()
 
 	for (i=0; i<NUMBER_USED_FILTER_BUTTONS; i++)
 	{
-		RemoveButton (guiBobbyRFilterUsed[i]);
+		if(guiBobbyRFilterUsed[i])
+			RemoveButton (guiBobbyRFilterUsed[i]);
 	}
 
 	return (TRUE);
@@ -828,7 +831,8 @@ BOOLEAN DeleteBobbyRArmourFilter()
 
 	for (i=0; i<NUMBER_ARMOUR_FILTER_BUTTONS; i++)
 	{
-		RemoveButton (guiBobbyRFilterArmor[i]);
+		if(guiBobbyRFilterArmor[i])
+			RemoveButton (guiBobbyRFilterArmor[i]);
 	}
 
 	return (TRUE);
@@ -842,7 +846,8 @@ BOOLEAN DeleteBobbyRMiscFilter()
 
 	for (i=0; i<NUMBER_MISC_FILTER_BUTTONS; i++)
 	{
-		RemoveButton (guiBobbyRFilterMisc[i]);
+		if(guiBobbyRFilterMisc[i])
+			RemoveButton (guiBobbyRFilterMisc[i]);
 	}
 
 	return (TRUE);
@@ -866,7 +871,8 @@ BOOLEAN DeleteBobbyMenuBar()
 
 	for(i=0; i<NUM_CATALOGUE_BUTTONS; i++)
 	{
-		RemoveButton( guiBobbyRPageMenu[i] );
+		if(guiBobbyRPageMenu[i])
+			RemoveButton( guiBobbyRPageMenu[i] );
 	}
 
 	return(TRUE);
@@ -2286,7 +2292,6 @@ void SetFirstLastPagesForUsed(INT32 iFilter)
 							Item[usItemIndex].usItemClass == IC_MISC ||
 							Item[usItemIndex].usItemClass == IC_MEDKIT ||
 							Item[usItemIndex].usItemClass == IC_KIT ||
-							/*Item[usItemIndex].usItemClass == IC_LBEGEAR ||*/
 							Item[usItemIndex].usItemClass == IC_FACE)
 						{
 							bCntNumItems = TRUE;
@@ -3179,7 +3184,6 @@ void CalcFirstIndexForPage( STORE_INVENTORY *pInv, UINT32	uiItemClass )
 							Item[usItemIndex].usItemClass == IC_MISC ||
 							Item[usItemIndex].usItemClass == IC_MEDKIT ||
 							Item[usItemIndex].usItemClass == IC_KIT ||
-							/*Item[usItemIndex].usItemClass == IC_LBEGEAR ||*/
 							Item[usItemIndex].usItemClass == IC_FACE)
 						{
 							bCntItem = TRUE;
