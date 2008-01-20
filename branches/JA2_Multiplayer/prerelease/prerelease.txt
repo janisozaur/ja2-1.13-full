@@ -6,17 +6,26 @@ released primarily for testing and keen enthusiasts...
 
 you will still need a current release .ini file atleast.
 
+nothing in here necessarily works, but most likely does...
+
 Changes over current releases:
 ------------------------------
+
+* enabled the rest of the MERC bios
+
+* added begining kit bag loadout, an array in the ini for free stuff !
+
+* disabled medical deposit costs
+
+* enabled the disabling of morale events
+
+-------------------- past changes:
 
 * server can now manually end a clients turn or start a clients turn in realtime or turnbased (bound to 'Alt+E'), making the previous ini setting and command 'START_TEAM_TURN' obsolete .
 
 * removed the ini setting for testing interrupts now they are happening.
 
 * there is no more bobby rays crate (for now), items are dumped in the middle of the sector.
-
--------------------- past changes:
-
 
 
 * fixed crash from death animation being tried to apply to allready dead soldier

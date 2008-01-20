@@ -28,3 +28,5 @@ extern BOOLEAN gfUIInterfaceSetBusy;
 
 void kick_player (void);
 void overide_turn (void);
+
+extern bool DISABLE_MORALE;

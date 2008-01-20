@@ -217,7 +217,8 @@ UINT8	ubID_prefix;
  bool is_networked=false;
 
 int tcount;
-
+int kit[20];
+bool DISABLE_MORALE;
  int TESTING;
  bool allowlaptop=false;
 
@@ -225,7 +226,7 @@ int tcount;
 
  char CLIENT_NUM[30];
  char SECT_EDGE[30];
-
+char ckbag[100];
  char CLIENT_NAME[30];
 
  char SERVER_IP[30] ;
@@ -565,7 +566,23 @@ void send_hire( UINT8 iNewIndex, UINT8 ubCurrentSoldier, INT16 iTotalContractLen
 			
 			AddCharacterToAnySquad( pSoldier );
 			AddSoldierToSector( pSoldier->ubID ); //add g\hired merc to sector so can access sector inv.
-			//pSoldier->bSide=3;
+	
+
+			OBJECTTYPE		Object;
+			int cnt;
+			for (cnt=0; cnt<20;cnt++)
+			{
+			int item=kit[cnt];
+
+				if(item != 0)
+				{
+					CreateItem( item, 100, &Object );
+					AutoPlaceObject( pSoldier, &Object, TRUE );
+				}
+			}
+
+
+
 			
 				//if (pSoldier->ubID==0)
 				//{
@@ -1645,7 +1662,50 @@ void recieveSETTINGS (RPCParameters *rpcParameters) //recive settings from serve
 			
 
 			MAX_CLIENTS=cl_lan->max_clients;
-			INTERRUPTS=cl_lan->interrupts;
+			memcpy( ckbag, cl_lan->kitbag, sizeof(char)*100);
+			
+			int cnt;
+			int numnum = 0;
+			int kitnum = 0;
+			char tempstring[4];
+			memset( &kit, 0, sizeof( int )*20 );
+		
+			for(cnt=0;  cnt < 100; cnt++)
+			{
+				char tempc = ckbag[cnt];
+				
+				if( strnicmp(&tempc, "[",1) == 0)
+				{
+					
+					continue;
+				}
+				
+				else if( strnicmp(&tempc, ",",1) == 0)
+				{
+					numnum=0;
+
+					kit[kitnum]=atoi(tempstring);
+
+					memset( &tempstring, 0, sizeof( char )*4 );
+
+					kitnum++;
+					continue;
+				}
+			
+				else if( strnicmp(&tempc, "]",1) == 0)
+				{
+					kit[kitnum]=atoi(tempstring);
+					break;
+				}
+				else
+				{
+				strncpy(&tempstring[numnum],&tempc,1);
+				numnum++;
+				//temp = atoi(tempstring);
+				}
+			}
+
+
 			DAMAGE_MULTIPLIER=cl_lan->damage_multiplier;
 			SAME_MERC=cl_lan->same_merc;
 			
@@ -1654,7 +1714,7 @@ void recieveSETTINGS (RPCParameters *rpcParameters) //recive settings from serve
 			gsMercArriveSectorY=cl_lan->gsMercArriveSectorY;
 
 			PLAYER_BSIDE=cl_lan->gsPLAYER_BSIDE;
-
+			DISABLE_MORALE=cl_lan->emorale;
 			ChangeSelectedMapSector( gsMercArriveSectorX, gsMercArriveSectorY, 0 );
 			CHAR16 str[128];
 			GetSectorIDString( gsMercArriveSectorX, gsMercArriveSectorY, 0, str, TRUE );
@@ -1688,7 +1748,7 @@ void recieveSETTINGS (RPCParameters *rpcParameters) //recive settings from serve
 			MAX_MERCS=cl_lan->gsMAX_MERCS;
 			TESTING=cl_lan->TESTING;
 
-			ScreenMsg( FONT_YELLOW, MSG_CHAT, L"Sector= %s, Max Clients= %d, Max Mercs= %d, Co-Op= %d Interrupts= %d, Same Merc= %d, Damage Multiplier= %f,  Enemy= %d, Creature= %d, Militia= %d, Civilian= %d, Timed Turns= %d, Secs/Tic= %d, Starting Cash= $%d, Tons of Guns= %d, Sci-Fi= %d, Difficulty= %d, Iron-Man= %d, BobbyRays Range= %d, Disable BobbyRays= %d, Disable Aim/Merc Equip= %d, Testing= %d.",str,MAX_CLIENTS,MAX_MERCS,PLAYER_BSIDE,INTERRUPTS,SAME_MERC,DAMAGE_MULTIPLIER,cl_lan->ENEMY_ENABLED,cl_lan->CREATURE_ENABLED,cl_lan->MILITIA_ENABLED,cl_lan->CIV_ENABLED,gGameOptions.fTurnTimeLimit,secs_per_tick,clstarting_balance,gGameOptions.fGunNut,gGameOptions.ubGameStyle,gGameOptions.ubDifficultyLevel,gGameOptions.fIronManMode,gGameOptions.ubBobbyRay,cl_lan->soDis_Bobby,cl_lan->soDis_Equip,TESTING);
+			ScreenMsg( FONT_YELLOW, MSG_CHAT, L"Sector= %s, Max Clients= %d, Max Mercs= %d, Co-Op= %d Same Merc= %d, Dmge Multiplier= %f,  Enemy= %d, Creature= %d, Militia= %d, Civilian= %d, Timed Turns= %d, Secs/Tic= %d, Starting Cash= $%d, Tons of Guns= %d, Sci-Fi= %d, Difficulty= %d, Iron-Man= %d, BobbyRays Range= %d, Dis BobbyRays= %d, Dis Aim/Merc Equip= %d, Dis Morale= %d, Testing= %d.",str,MAX_CLIENTS,MAX_MERCS,PLAYER_BSIDE,SAME_MERC,DAMAGE_MULTIPLIER,cl_lan->ENEMY_ENABLED,cl_lan->CREATURE_ENABLED,cl_lan->MILITIA_ENABLED,cl_lan->CIV_ENABLED,gGameOptions.fTurnTimeLimit,secs_per_tick,clstarting_balance,gGameOptions.fGunNut,gGameOptions.ubGameStyle,gGameOptions.ubDifficultyLevel,gGameOptions.fIronManMode,gGameOptions.ubBobbyRay,cl_lan->soDis_Bobby,cl_lan->soDis_Equip,DISABLE_MORALE,TESTING);
 			if(TESTING)	ScreenMsg( FONT_WHITE, MSG_CHAT, L"TESTING AND CHEAT FUNCTION '9' IS ENABLED" );
 		}
 		else 
@@ -2255,7 +2315,8 @@ void connect_client ( void )
 			//here some nifty little tweaks
 
 				LaptopSaveInfo.guiNumberOfMercPaymentsInDays += 20;
-				LaptopSaveInfo.gubLastMercIndex = NUMBER_MERCS_AFTER_FOURTH_MERC_ARRIVES;
+				LaptopSaveInfo.gubLastMercIndex = LAST_MERC_ID;
+				LaptopSaveInfo.ubLastMercAvailableId = 7;
 				
 				extern BOOLEAN gfTemporaryDisablingOfLoadPendingFlag;
 				gfTemporaryDisablingOfLoadPendingFlag = TRUE;

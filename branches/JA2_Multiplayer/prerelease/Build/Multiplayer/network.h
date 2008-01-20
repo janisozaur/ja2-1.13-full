@@ -16,7 +16,6 @@ typedef struct
 	int	max_clients;
 	int	same_merc;
 	float damage_multiplier;
-	int interrupts;
 	INT16 gsMercArriveSectorX;
 	INT16 gsMercArriveSectorY;
 	int ENEMY_ENABLED;
@@ -40,6 +39,8 @@ typedef struct
 	char client_names[4][30];
 	int cl_ops[4];
 	int TESTING;
+	char kitbag[100];
+	bool emorale;
 } settings_struct;
 
 typedef struct

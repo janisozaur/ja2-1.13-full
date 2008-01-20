@@ -1991,7 +1991,7 @@ UINT32 DisplayMercChargeAmount()
 		// if there is a medical deposit, add it in
 		if( gMercProfiles[ gbCurrentSoldier ].bMedicalDeposit )
 		{
-			giContractAmount += gMercProfiles[gbCurrentSoldier].sMedicalDepositAmount;
+			if(!is_client)giContractAmount += gMercProfiles[gbCurrentSoldier].sMedicalDepositAmount;//hayden
 		}
 
 		//If hired with the equipment, add it in aswell

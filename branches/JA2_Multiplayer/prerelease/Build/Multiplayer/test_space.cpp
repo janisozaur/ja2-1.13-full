@@ -138,18 +138,14 @@ ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"test_func2" );
 
 SOLDIERTYPE * pSoldier=MercPtrs[ 0 ];
 
-
-
-
-
-
-
-
-
-
-
-
-
+//OBJECTTYPE		Object;
+//for (cnt=0; cnt<20;cnt++)
+//{
+//CreateItem( 201, 100, &Object );
+//
+//AutoPlaceObject( pSoldier, &Object, TRUE );
+//
+//
 
 
 

@@ -17,10 +17,10 @@
 #include "types.h"
 #include "gamesettings.h"
 
-
+char kbag[100];
 char net_div[30];
 INT32 gsMAX_MERCS;
-
+bool gsMORALE;
 
 #include "connect.h"
 #include "message.h"
@@ -170,7 +170,7 @@ void requestSETTINGS(RPCParameters *rpcParameters)
 		strcpy(lan.client_name , clinf->client_name);
 
 		lan.max_clients = gsMAX_CLIENTS;
-		lan.interrupts = gsINTERRUPTS;
+		memcpy(lan.kitbag , kbag,sizeof (char)*100);
 		lan.damage_multiplier = gsDAMAGE_MULTIPLIER;
 		
 		lan.same_merc = gsSAME_MERC;
@@ -184,7 +184,7 @@ void requestSETTINGS(RPCParameters *rpcParameters)
 
 		lan.gsPLAYER_BSIDE=gsPLAYER_BSIDE;
 
-		
+		lan.emorale=gsMORALE;
 //something new
 				lan.secs_per_tick=gssecs_per_tick;
 				lan.soubBobbyRay=gGameOptions.ubBobbyRay;
@@ -272,10 +272,10 @@ void start_server (void)
 
 			char sBalance[30];
 			char time_div[30];
-
+			char mor[30];
 
 			GetPrivateProfileString( "Ja2_mp Settings","SAME_MERC", "", hire_same_merc, MAX_PATH, "..\\Ja2_mp.ini" );
-		//	GetPrivateProfileString( "Ja2_mp Settings","INTERRUPTS", "", ints, MAX_PATH, "..\\Ja2_mp.ini" );
+			GetPrivateProfileString( "Ja2_mp Settings","DISABLE_MORALE", "", mor, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","MAX_CLIENTS", "", maxclients, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","DAMAGE_MULTIPLIER", "", net_div, MAX_PATH, "..\\Ja2_mp.ini" );
 			
@@ -288,6 +288,10 @@ void start_server (void)
 
 
 //something new
+			gsMORALE=atoi(mor);
+			
+			GetPrivateProfileString( "Ja2_mp Settings","KIT_BAG", "", kbag, MAX_PATH, "..\\Ja2_mp.ini" );
+			
 
 			
 			GetPrivateProfileString( "Ja2_mp Settings","STARTING_BALANCE", "", sBalance, MAX_PATH, "..\\Ja2_mp.ini" );
