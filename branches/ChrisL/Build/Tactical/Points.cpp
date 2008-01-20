@@ -100,6 +100,12 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 		return(-1);	// Cost too much to be considered!
 	}
 
+	//CHRISL: We can't jump a fence while wearing a backpack, to consider fences as impassible
+	if(sSwitchValue == TRAVELCOST_FENCE && UsingNewInventorySystem() == true && pSoldier->inv[BPACKPOCKPOS].exists() == true)
+	{
+		return(-1);
+	}
+
 	switch( sSwitchValue )
 	{
 	case TRAVELCOST_DIRTROAD :
@@ -1896,7 +1902,7 @@ INT8 GetAPsToReloadGunWithAmmo( SOLDIERTYPE *pSoldier, OBJECTTYPE * pGun, OBJECT
 	else if(Weapon[pGun->usItem].swapClips == 1)
 	{
 		// wrong size ammo item
-		return (GetAPsToReload(pGun) * gGameExternalOptions.ubWrongMagMult);
+		return (INT8)(GetAPsToReload(pGun) * gGameExternalOptions.ubWrongMagMult);
 	}
 	else
 	{

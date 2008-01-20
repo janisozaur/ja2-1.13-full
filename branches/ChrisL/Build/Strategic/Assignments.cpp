@@ -313,6 +313,9 @@ BOOLEAN IsItemRepairable( UINT16 usItem, INT16 bStatus );
 // does another merc have a repairable item on them?
 OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPassType );
 
+//CHRISL: This function will handle the actual searching for repairable items
+OBJECTTYPE* FindRepairableItemInSpecificPocket( OBJECTTYPE * pObj, UINT8 subObject);
+
 // repair stuff
 void HandleRepairBySoldier( SOLDIERTYPE *pSoldier );
 
@@ -788,30 +791,35 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 	// CHRISL: Changed to dynamically determine max inventory locations.
 	for( bPocket = HELMETPOS; bPocket < NUM_INV_SLOTS; bPocket++ )
 	{
-		pObj = &(pSoldier->inv[ bPocket ]);
-
-		ubItemsInPocket = pObj->ubNumberOfObjects;
-
 		// run through pocket
-		for( ubObjectInPocketCounter = 0; ubObjectInPocketCounter < ubItemsInPocket; ubObjectInPocketCounter++ )
+		for( ubObjectInPocketCounter = 0; ubObjectInPocketCounter < pSoldier->inv[ bPocket ].ubNumberOfObjects; ubObjectInPocketCounter++ )
 		{
+			pObj = FindRepairableItemInSpecificPocket(&(pSoldier->inv[ bPocket ]), ubObjectInPocketCounter);
 			// if it's repairable and NEEDS repairing
-			if ( IsItemRepairable( pObj->usItem, (*pObj)[ubObjectInPocketCounter]->data.objectStatus ) )
+			if(pObj != 0)
 			{
 				return( TRUE );
 			}
-
-			// have to check for attachments...
-			for (attachmentList::iterator iter = (*pObj)[ubObjectInPocketCounter]->attachments.begin(); iter != (*pObj)[ubObjectInPocketCounter]->attachments.end(); ++iter) {
-				// if it's repairable and NEEDS repairing
-				if ( IsItemRepairable( iter->usItem, (*iter)[ubObjectInPocketCounter]->data.objectStatus ) )
+			if(UsingNewInventorySystem() == true && Item[pSoldier->inv[ bPocket ].usItem].usItemClass == IC_LBEGEAR)
+			{
+				if(pSoldier->inv[ bPocket ].IsActiveLBE(ubObjectInPocketCounter) == true)
 				{
-					return( TRUE );
+					LBENODE* pLBE = pSoldier->inv[bPocket].GetLBEPointer(ubObjectInPocketCounter);
+					for(UINT8 lbePocket = 0; lbePocket < pLBE->inv.size(); lbePocket++)
+					{
+						for(ubItemsInPocket = 0; ubItemsInPocket < pLBE->inv[lbePocket].ubNumberOfObjects; ubItemsInPocket++)
+						{
+							pObj = FindRepairableItemInSpecificPocket(&pLBE->inv[lbePocket], ubItemsInPocket);
+							if(pObj != 0)
+							{
+								return( TRUE );
+							}
+						}
+					}
 				}
 			}
 		}
 	}
-
 
 	// if we wanna check for the items belonging to others in the sector
 	if ( bHighestPass != - 1 )
@@ -2967,7 +2975,7 @@ INT8 HandleRepairOfSAMSite( SOLDIERTYPE *pSoldier, INT8 bPointsAvailable, BOOLEA
 
 OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPassType )
 {
-	INT8 bLoop, bLoop2;
+	INT8 bLoop, bLoop2, bLoop3;
 	REPAIR_PASS_SLOTS_TYPE *pPassList;
 	INT8 bSlotToCheck;
 	OBJECTTYPE * pObj;
@@ -2983,22 +2991,35 @@ OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPa
 		bSlotToCheck = pPassList->bSlot[ bLoop ];
 		Assert( bSlotToCheck != -1 );
 
-		pObj = &( pSoldier->inv[ bSlotToCheck ] );
 		for ( bLoop2 = 0; bLoop2 < pSoldier->inv[ bSlotToCheck ].ubNumberOfObjects; bLoop2++ )
 		{
-			if ( IsItemRepairable( pObj->usItem, (*pObj)[bLoop2]->data.objectStatus ) )
+			pObj = FindRepairableItemInSpecificPocket(&( pSoldier->inv[ bSlotToCheck ] ), bLoop2);
+			if(pObj != 0)
 			{
-				return( &(pSoldier->inv[ bSlotToCheck ]) );
+				return( pObj );
 			}
 		}
 
-		for ( bLoop2 = 0; bLoop2 < pSoldier->inv[ bSlotToCheck ].ubNumberOfObjects; bLoop2++ )
+		//CHRISL: In NewInv, we should also repair items stored in LBENODE items
+		pObj = &( pSoldier->inv[ bSlotToCheck ] );
+		if(UsingNewInventorySystem() == true && Item[pObj->usItem].ubClassIndex == IC_LBEGEAR)
 		{
-			// have to check for attachments after...
-			for (attachmentList::iterator iter = (*pObj)[bLoop2]->attachments.begin(); iter != (*pObj)[bLoop2]->attachments.end(); ++iter) {
-				// if it's repairable and NEEDS repairing
-				if ( IsItemRepairable( iter->usItem, (*iter)[bLoop2]->data.objectStatus ) ) {
-					return( &(*iter) );
+			for ( bLoop2 = 0; bLoop2 < pSoldier->inv[ bSlotToCheck ].ubNumberOfObjects; bLoop2++ )
+			{
+				if(pObj->IsActiveLBE(bLoop2) == true)
+				{
+					LBENODE* pLBE = pSoldier->inv[bSlotToCheck].GetLBEPointer(bLoop2);
+					for(UINT8 lbePocket = 0; lbePocket < pLBE->inv.size(); lbePocket++)
+					{
+						for(bLoop3 = 0; bLoop3 < pLBE->inv[lbePocket].ubNumberOfObjects; bLoop3++)
+						{
+							pObj = FindRepairableItemInSpecificPocket(&pLBE->inv[lbePocket], bLoop3);
+							if(pObj != 0)
+							{
+								return( pObj );
+							}
+						}
+					}
 				}
 			}
 		}
@@ -3007,6 +3028,23 @@ OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPa
 	return( 0 );
 }
 
+OBJECTTYPE* FindRepairableItemInSpecificPocket( OBJECTTYPE * pObj, UINT8 subObject)
+{
+	if ( IsItemRepairable( pObj->usItem, (*pObj)[subObject]->data.objectStatus ) )
+	{
+		return( pObj );
+	}
+
+	// have to check for attachments after...
+	for (attachmentList::iterator iter = (*pObj)[subObject]->attachments.begin(); iter != (*pObj)[subObject]->attachments.end(); ++iter) {
+		// if it's repairable and NEEDS repairing
+		if ( IsItemRepairable( iter->usItem, (*iter)[subObject]->data.objectStatus ) ) {
+			return( &(*iter) );
+		}
+	}
+
+	return( 0 );
+}
 
 
 void DoActualRepair( SOLDIERTYPE * pSoldier, UINT16 usItem, INT16 * pbStatus, UINT8 * pubRepairPtsLeft )
@@ -3069,7 +3107,7 @@ void DoActualRepair( SOLDIERTYPE * pSoldier, UINT16 usItem, INT16 * pbStatus, UI
 
 BOOLEAN RepairObject( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOwner, OBJECTTYPE * pObj, UINT8 * pubRepairPtsLeft )
 {
-	UINT8	ubLoop, ubItemsInPocket;
+	UINT8	ubLoop, ubItemsInPocket, lbeLoop;
 	BOOLEAN fSomethingWasRepaired = FALSE;
 
 
@@ -3081,8 +3119,6 @@ BOOLEAN RepairObject( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOwner, OBJECTTYPE *
 		if ( IsItemRepairable( pObj->usItem, (*pObj)[ubLoop]->data.objectStatus ) )
 		{
 			// repairable, try to repair it
-
-			//void DoActualRepair( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 * pbStatus, UINT8 * pubRepairPtsLeft )
 			DoActualRepair( pSoldier, pObj->usItem, &((*pObj)[ubLoop]->data.objectStatus), pubRepairPtsLeft );
 
 			fSomethingWasRepaired = true;
@@ -3100,17 +3136,13 @@ BOOLEAN RepairObject( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOwner, OBJECTTYPE *
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 35 ], pSoldier->name, pOwner->name, ItemNames[ pObj->usItem ] );
 				}
 			}
-
 			if ( *pubRepairPtsLeft == 0 )
 			{
 				// we're out of points!
 				return true;
 			}
-		}
-	}
 
-	for ( ubLoop = 0; ubLoop < ubItemsInPocket; ubLoop++ )
-	{
+		}
 		// now check for attachments after
 		for (attachmentList::iterator iter = (*pObj)[ubLoop]->attachments.begin(); iter != (*pObj)[ubLoop]->attachments.end(); ++iter) {
 			if (RepairObject(pSoldier, pOwner, &(*iter), pubRepairPtsLeft)) {
@@ -3122,7 +3154,25 @@ BOOLEAN RepairObject( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOwner, OBJECTTYPE *
 				}
 			}
 		}
+		//CHRISL: Now check and see if this is an LBENODE with items that need repairing
+		if(UsingNewInventorySystem() == true && Item[pObj->usItem].usItemClass == IC_LBEGEAR && pObj->IsActiveLBE(ubLoop) == true)
+		{
+			LBENODE* pLBE = pObj->GetLBEPointer(ubLoop);
+			for(lbeLoop = 0; lbeLoop < pLBE->inv.size(); lbeLoop++)
+			{
+				if(RepairObject(pSoldier, pOwner, &pLBE->inv[lbeLoop], pubRepairPtsLeft))
+				{
+					fSomethingWasRepaired = true;
+					if ( *pubRepairPtsLeft == 0 )
+					{
+						// we're out of points!
+						return true;
+					}
+				}
+			}
+		}
 	}
+
 	return( fSomethingWasRepaired );
 }
 
