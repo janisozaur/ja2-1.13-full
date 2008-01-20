@@ -151,6 +151,10 @@ void updatenetworksoldier(RPCParameters *rpcParameters)
 	server->RPC("UpdateSoldierFromNetwork",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, rpcParameters->sender, true, 0, UNASSIGNED_NETWORK_ID,0);
 }	
 
+void Snull_team(RPCParameters *rpcParameters)
+{
+	server->RPC("null_team",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
+}	
 //************************* //UNASSIGNED_SYSTEM_ADDRESS
 //START INTERNAL SERVER
 //*************************
@@ -361,6 +365,7 @@ void start_server (void)
 		REGISTER_STATIC_RPC(server, rOVH);
 
 			REGISTER_STATIC_RPC(server, updatenetworksoldier);
+			REGISTER_STATIC_RPC(server, Snull_team);
 	//
 
 

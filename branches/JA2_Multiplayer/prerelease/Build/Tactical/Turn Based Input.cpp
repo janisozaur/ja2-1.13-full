@@ -2813,6 +2813,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				{
 					//server_disconnect();
 					//client_disconnect();
+					kick_player();
 					if ( fCtrl )
 					{
 						if ( CHEATER_CHEAT_LEVEL( ) )

@@ -25,3 +25,5 @@ void unlock (void);
 void UpdateSoldierToNetwork ( SOLDIERTYPE *pSoldier );
 
 extern BOOLEAN gfUIInterfaceSetBusy;
+
+void kick_player (void);

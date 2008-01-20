@@ -1,0 +1,23 @@
+this is for prerelease exe's
+
+includes latests fixes and modifications
+
+released primarily for testing and keen enthusiasts...
+
+you will still need a current release .ini file atleast.
+
+Changes over current release:
+------------------------------
+
+--------------------
+
+* fixed crash from death animation being tried to apply to allready dead soldier
+
+---------------
+
+* disabled death messaging
+
+---------------
+* Interrrupt syncronisation of interupted merc's location apon being interrupted
+
+* Kicking/Removal of a Clients team of Mercs, bound to 'Alt+K' (this doesnt disconnect the client, allowing them to spectate)

@@ -191,6 +191,11 @@ typedef struct
 
 }bullets_table;
 
+typedef struct
+	{
+		UINT8 ubResult;
+	}kickR;
+
 bullets_table bTable[11][50];
 
 char client_names[4][30];
@@ -255,6 +260,7 @@ UINT16 crate_usMapPos;
 INT16	crate_sGridX, crate_sGridY;
 
 void overide_callback( UINT8 ubResult );
+void kick_callback( UINT8 ubResult );
 //*****************
 //RPC sends and recieves:
 //********************
@@ -1425,8 +1431,9 @@ void recieveINTERRUPT (RPCParameters *rpcParameters)
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Interrupted" );
 			//stop moving merc who was interrupted and init UI bar
 			SOLDIERTYPE* pMerc = MercPtrs[ gusSelectedSoldier ];
-			AdjustNoAPToFinishMove( pMerc, TRUE );	
-			pMerc->fTurningFromPronePosition = FALSE;// hmmm ??
+			//AdjustNoAPToFinishMove( pMerc, TRUE );	
+			HaultSoldierFromSighting(pMerc,TRUE);
+			//pMerc->fTurningFromPronePosition = FALSE;// hmmm ??
 			FreezeInterfaceForEnemyTurn();
 			InitEnemyUIBar( 0, 0 );
 			fInterfacePanelDirty = DIRTYLEVEL2;
@@ -1805,7 +1812,7 @@ void recieveSTATE(RPCParameters *rpcParameters)
 
 	SOLDIERTYPE * pSoldier=MercPtrs[ new_state->usSoldierID ];
 
-	if(pSoldier)EVENT_InitNewSoldierAnim( pSoldier, new_state->usNewState, new_state->usStartingAniCode, new_state->fForce );
+	if(pSoldier->bActive)EVENT_InitNewSoldierAnim( pSoldier, new_state->usNewState, new_state->usStartingAniCode, new_state->fForce );
 //AddGameEvent( S_CHANGESTATE, 0, &SChangeState );
 	//someday ;)
 }
@@ -1820,14 +1827,14 @@ void send_death( SOLDIERTYPE *pSoldier )
 		
 	client->RPC("sendDEATH",(const char*)&nDeath, (int)sizeof(death_struct)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
 		
-	SOLDIERTYPE * pAttacker=MercPtrs[ nDeath.attacker_id ];
-	INT8 pA_bTeam=pAttacker->bTeam;
-	INT8 pS_bTeam=pSoldier->bTeam;
+	//SOLDIERTYPE * pAttacker=MercPtrs[ nDeath.attacker_id ];
+	//INT8 pA_bTeam=pAttacker->bTeam;
+	//INT8 pS_bTeam=pSoldier->bTeam;
 
 	
 
 	//ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"'%s' (Client #%d: '%S') was killed by '%s' (Client #%d: '%S') ! ",pSoldier->name,pS_bTeam-5,client_names[pS_bTeam-6],pAttacker->name,pS_bTeam-5,client_names[pS_bTeam-6] );
-	ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"'%s' #%d: '%S' was killed by '%s' #%d: '%S' ! ",pSoldier->name,(atoi(CLIENT_NUM)),client_names[(atoi(CLIENT_NUM)-1)],pAttacker->name,(pA_bTeam-5),client_names[(pA_bTeam-6)] );
+	//ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"'%s' #%d: '%S' was killed by '%s' #%d: '%S' ! ",pSoldier->name,(atoi(CLIENT_NUM)),client_names[(atoi(CLIENT_NUM)-1)],pAttacker->name,(pA_bTeam-5),client_names[(pA_bTeam-6)] );
 
 }
 
@@ -1837,18 +1844,18 @@ void recieveDEATH (RPCParameters *rpcParameters)
 	death_struct* nDeath = (death_struct*)rpcParameters->input;
 	SOLDIERTYPE * pSoldier=MercPtrs[ nDeath->soldier_id ];
 
-	UINT16 ubAttackerID;
+	/*UINT16 ubAttackerID;
 					if((nDeath->attacker_id >= ubID_prefix) && (nDeath->attacker_id < (ubID_prefix+5)))
 						ubAttackerID = (nDeath->attacker_id - ubID_prefix);
 					else
-						ubAttackerID = nDeath->attacker_id;
+						ubAttackerID = nDeath->attacker_id;*/
 
-	SOLDIERTYPE * pAttacker=MercPtrs[ ubAttackerID ];
+	//SOLDIERTYPE * pAttacker=MercPtrs[ ubAttackerID ];
 
-	INT8 pA_bTeam=pAttacker->bTeam;
-	INT8 pS_bTeam=pSoldier->bTeam;
-	if(pA_bTeam>5)pA_bTeam=pA_bTeam-5;
-	if(pA_bTeam==0)pA_bTeam=atoi(CLIENT_NUM);
+	//INT8 pA_bTeam=pAttacker->bTeam;
+	//INT8 pS_bTeam=pSoldier->bTeam;
+	//if(pA_bTeam>5)pA_bTeam=pA_bTeam-5;
+	//if(pA_bTeam==0)pA_bTeam=atoi(CLIENT_NUM);
 		
 
 	if(pSoldier->bLife!=0)
@@ -1856,7 +1863,7 @@ void recieveDEATH (RPCParameters *rpcParameters)
 		pSoldier->usAnimState=50;
 		ScreenMsg( FONT_YELLOW, MSG_CHAT, L"made corpse/dead from remote client");	
 		TurnSoldierIntoCorpse( pSoldier, TRUE, TRUE );
-		ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"'%s' #%d: '%S' was killed by '%s' #%d: '%S' ! ",pSoldier->name,(pS_bTeam-5),client_names[(pS_bTeam-6)],pAttacker->name,(pA_bTeam),client_names[(pA_bTeam-1)] );
+		//ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"'%s' #%d: '%S' was killed by '%s' #%d: '%S' ! ",pSoldier->name,(pS_bTeam-5),client_names[(pS_bTeam-6)],pAttacker->name,(pA_bTeam),client_names[(pA_bTeam-1)] );
 
 	}
 
@@ -2038,6 +2045,47 @@ void advance_ovh_frame  (RPCParameters *rpcParameters)
 
 }
 
+void kick_player (void)
+{
+	if(is_server)
+	{
+	//manual overide command for server
+		const STR16 msg = L"Choose Client Number to Kick:";
+
+			SGPRect CenterRect = { 100, 100, SCREEN_WIDTH - 100, 300 };
+			DoMessageBox( MSG_BOX_BASIC_STYLE, msg,  guiCurrentScreen, MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS | MSG_BOX_FLAG_USE_CENTERING_RECT, kick_callback,  &CenterRect );
+
+	}
+	else	ScreenMsg( FONT_LTGREEN, MSG_INTERFACE, L"server only feature" );
+	
+}
+void kick_callback (UINT8 ubResult)
+{
+	
+	kickR kick;
+	kick.ubResult=ubResult+5;
+	
+	//ScreenMsg( FONT_LTGREEN, MSG_INTERFACE, L"kicking client " );
+	client->RPC("Snull_team",(const char*)&kick, (int)sizeof(kickR)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
+
+}
+
+void null_team (RPCParameters *rpcParameters)
+{
+	kickR* kick = (kickR*)rpcParameters->input;
+	ScreenMsg( FONT_LTGREEN, MSG_INTERFACE, L"kicking client #%d",(kick->ubResult-5) );
+	int fID = gTacticalStatus.Team[ kick->ubResult ].bFirstID;
+	int lID = gTacticalStatus.Team[ kick->ubResult ].bLastID;
+
+	if(kick->ubResult==netbTeam)fID=0,lID=19;
+	int cnt;
+	for ( cnt=fID ; cnt <= lID; cnt++ )
+	{
+		TacticalRemoveSoldier( cnt );
+	}
+	
+}
+
 //***************************
 //*** client connection*****
 //*************************
@@ -2078,10 +2126,10 @@ void connect_client ( void )
 			REGISTER_STATIC_RPC(client, recievehitWINDOW);
 			REGISTER_STATIC_RPC(client, recieveMISS);
 			REGISTER_STATIC_RPC(client, advance_ovh_frame);
-				REGISTER_STATIC_RPC(client, UpdateSoldierFromNetwork);
+			REGISTER_STATIC_RPC(client, UpdateSoldierFromNetwork);
 
 			
-		
+			REGISTER_STATIC_RPC(client, null_team);
 			//***
 			
 		if (b)
@@ -2161,7 +2209,7 @@ void connect_client ( void )
 			GetPrivateProfileString( "Ja2_mp Settings","OP_TEAM_2", "", op2, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","OP_TEAM_3", "", op3, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","OP_TEAM_4", "", op4, MAX_PATH, "..\\Ja2_mp.ini" );
-char stt[30];
+			char stt[30];
 			GetPrivateProfileString( "Ja2_mp Settings","START_TEAM_TURN", "", stt, MAX_PATH, "..\\Ja2_mp.ini" );
 
 
