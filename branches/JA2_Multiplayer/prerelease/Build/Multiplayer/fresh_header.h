@@ -19,7 +19,7 @@ void send_hitwindow(EV_S_WINDOWHIT * SWindowHit);
 void send_miss(EV_S_MISS * SMiss);
 					
 void cheat_func(void);
-void start_tt(void);
+//void start_tt(void);
 void unlock (void);
 
 void UpdateSoldierToNetwork ( SOLDIERTYPE *pSoldier );
@@ -27,3 +27,4 @@ void UpdateSoldierToNetwork ( SOLDIERTYPE *pSoldier );
 extern BOOLEAN gfUIInterfaceSetBusy;
 
 void kick_player (void);
+void overide_turn (void);

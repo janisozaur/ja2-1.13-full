@@ -261,19 +261,11 @@ INT16	crate_sGridX, crate_sGridY;
 
 void overide_callback( UINT8 ubResult );
 void kick_callback( UINT8 ubResult );
+void turn_callback (UINT8 ubResult);
 //*****************
 //RPC sends and recieves:
 //********************
 
-void send_dest ( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim)
-{
-
-}
-
-void recieve_dest(RPCParameters *rpcParameters)
-{
-
-}
 
 void send_path (  SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim, BOOLEAN fFromUI, BOOLEAN fForceRestartAnim  )
 {
@@ -575,14 +567,15 @@ void send_hire( UINT8 iNewIndex, UINT8 ubCurrentSoldier, INT16 iTotalContractLen
 			AddSoldierToSector( pSoldier->ubID ); //add g\hired merc to sector so can access sector inv.
 			//pSoldier->bSide=3;
 			
-				if (pSoldier->ubID==0)
-				{
-							///create crate apon first hire
-				crate_usMapPos = MAPROWCOLTOPOS( crate_sGridY, crate_sGridX );
+				//if (pSoldier->ubID==0)
+				//{
+				//			///create crate apon first hire
+				////crate_usMapPos = MAPROWCOLTOPOS( crate_sGridY, crate_sGridX );
+				//crate_usMapPos =  ChooseMapEdgepoint(pSoldier->ubStrategicInsertionCode);
 
-				//crate_usMapPos	= ChooseMapEdgepoint(atoi(SECT_EDGE));
-				AddStructToUnLoadedMapTempFile( crate_usMapPos, SECONDOSTRUCT3, gsMercArriveSectorX, gsMercArriveSectorY, 0 );
-				}
+				////crate_usMapPos	= ChooseMapEdgepoint(atoi(SECT_EDGE));
+				//AddStructToUnLoadedMapTempFile( crate_usMapPos, SECONDOSTRUCT3, gsMercArriveSectorX, gsMercArriveSectorY, 0 );
+				//}
 				
 	
 
@@ -1264,16 +1257,8 @@ void DropOffItemsInSector( UINT8 ubOrderNum )
 	else
 		fSectorLoaded = FALSE;
 
-	// set crate to closed!
-	if ( fSectorLoaded )
-	{
-		//SetOpenableStructureToClosed( crate_usMapPos, 0 );
-	}
-	else
-	{
-		//ChangeStatusOfOpenableStructInUnloadedSector( gsMercArriveSectorX, gsMercArriveSectorY, 0, crate_usMapPos, FALSE );
-		SetSectorFlag( gsMercArriveSectorX, gsMercArriveSectorY, 0, SF_ALREADY_VISITED);//allows update of item count
-	}
+	SetSectorFlag( gsMercArriveSectorX, gsMercArriveSectorY, 0, SF_ALREADY_VISITED);//allows update of item count
+
 
 	
 	for(i=0; i<gpNewBobbyrShipments[ ubOrderNum ].ubNumberPurchases; i++)
@@ -1310,7 +1295,7 @@ void DropOffItemsInSector( UINT8 ubOrderNum )
 			// stack as many as possible
 			if( fSectorLoaded )
 			{
-				AddItemToPool( crate_usMapPos, &Object, 1, 0, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0 );
+				AddItemToPool( 12880, &Object, 1, 0, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0 );
 			}
 			else
 			{
@@ -1328,7 +1313,7 @@ void DropOffItemsInSector( UINT8 ubOrderNum )
 		//add all the items from the array that was built above
 
 		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
-		if( !AddItemsToUnLoadedSector( gsMercArriveSectorX, gsMercArriveSectorY, 0, crate_usMapPos, uiCount, pObject, 0, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, 1, FALSE ) )
+		if( !AddItemsToUnLoadedSector( gsMercArriveSectorX, gsMercArriveSectorY, 0, 12880, uiCount, pObject, 0, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, 1, FALSE ) )
 		{
 			//error
 			Assert( 0 );
@@ -1945,17 +1930,17 @@ void cheat_func(void)
 	}
 }
 
-void start_tt(void)
-{
-	if(is_server)
-	{
-		ScreenMsg( FONT_YELLOW, MSG_CHAT, L"manually starting turnbased mode...");	
-
-		gTacticalStatus.uiFlags |= INCOMBAT;
-		EndTurn (START_TEAM_TURN);
-	}
-    
-}
+//void start_tt(void)
+//{
+//	if(is_server)
+//	{
+//		ScreenMsg( FONT_YELLOW, MSG_CHAT, L"manually starting turnbased mode...");	
+//
+//		gTacticalStatus.uiFlags |= INCOMBAT;
+//		EndTurn (START_TEAM_TURN);
+//	}
+//    
+//}
 
 void unlock (void)
 {
@@ -2086,6 +2071,37 @@ void null_team (RPCParameters *rpcParameters)
 	
 }
 
+void overide_turn (void)
+{
+	if(is_server)
+	{
+	//manual overide command for server
+		const STR16 msg = L"Start Turn for Client Number:";
+
+			SGPRect CenterRect = { 100, 100, SCREEN_WIDTH - 100, 300 };
+			DoMessageBox( MSG_BOX_BASIC_STYLE, msg,  guiCurrentScreen, MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS | MSG_BOX_FLAG_USE_CENTERING_RECT, turn_callback,  &CenterRect );
+
+	}
+	else	ScreenMsg( FONT_LTGREEN, MSG_INTERFACE, L"server only feature" );
+	
+}
+
+void turn_callback (UINT8 ubResult)
+{
+
+	if(is_server)
+	{
+		ScreenMsg( FONT_LTGREEN, MSG_INTERFACE, L"Starting Turn for Client #%d",ubResult );
+	
+	if(!( gTacticalStatus.uiFlags & INCOMBAT ))
+	{
+		gTacticalStatus.uiFlags |= INCOMBAT;
+	}
+	if(ubResult ==1)EndTurn( 0 );
+	else EndTurn( ubResult+5 );
+	}
+}
+
 //***************************
 //*** client connection*****
 //*************************
@@ -2191,8 +2207,8 @@ void connect_client ( void )
 			GetPrivateProfileString( "Ja2_mp Settings","SECTOR_EDGE", "", sector_edge, MAX_PATH, "..\\Ja2_mp.ini" );
 
 
-			GetPrivateProfileString( "Ja2_mp Settings","CRATE_X", "", c_x, MAX_PATH, "..\\Ja2_mp.ini" );
-			GetPrivateProfileString( "Ja2_mp Settings","CRATE_Y", "", c_y, MAX_PATH, "..\\Ja2_mp.ini" );
+			//GetPrivateProfileString( "Ja2_mp Settings","CRATE_X", "", c_x, MAX_PATH, "..\\Ja2_mp.ini" );
+			//GetPrivateProfileString( "Ja2_mp Settings","CRATE_Y", "", c_y, MAX_PATH, "..\\Ja2_mp.ini" );
 
 			GetPrivateProfileString( "Ja2_mp Settings","CLIENT_NAME", "", clname, MAX_PATH, "..\\Ja2_mp.ini" );
 

@@ -6,18 +6,23 @@ released primarily for testing and keen enthusiasts...
 
 you will still need a current release .ini file atleast.
 
-Changes over current release:
+Changes over current releases:
 ------------------------------
 
---------------------
+* server can now manually end a clients turn or start a clients turn in realtime or turnbased (bound to 'Alt+E'), making the previous ini setting and command 'START_TEAM_TURN' obsolete .
+
+* removed the ini setting for testing interrupts now they are happening.
+
+* there is no more bobby rays crate (for now), items are dumped in the middle of the sector.
+
+-------------------- past changes:
+
+
 
 * fixed crash from death animation being tried to apply to allready dead soldier
 
----------------
-
 * disabled death messaging
 
----------------
 * Interrrupt syncronisation of interupted merc's location apon being interrupted
 
 * Kicking/Removal of a Clients team of Mercs, bound to 'Alt+K' (this doesnt disconnect the client, allowing them to spectate)

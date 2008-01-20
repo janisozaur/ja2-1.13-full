@@ -1563,6 +1563,21 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 		}
 
 
+	
+
+		if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == 'e') )
+		{
+			if( InputEvent.usKeyState & ALT_DOWN )
+			{
+				if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
+				{
+					overide_turn();
+				}
+			}
+		
+		}
+
+
 		// Break of out IN CONV...
 		if ( CHEATER_CHEAT_LEVEL( ) )
 		{
@@ -2206,7 +2221,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 			case '8':
 				ChangeCurrentSquad( 7 );
-				start_tt();
+			
 				break;
 
 			case '9':
@@ -2505,6 +2520,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				if( fAlt )
 				{
 					//start_server ();
+					
 					if ( CHEATER_CHEAT_LEVEL( ) )
 					{
 						ToggleViewAllMercs();
