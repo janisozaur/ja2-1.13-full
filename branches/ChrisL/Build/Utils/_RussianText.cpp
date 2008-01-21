@@ -1404,7 +1404,7 @@ CHAR16 TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Состояние: %d/%d\nТопливо: %d/%d",
 	L"%s не видит %s.",  // Cannot see person trying to talk to
 	L"Принадлежность отсоединена",	//пр
-	L"Can not gain another vehicle as you already have 2",
+	L"Вы не можете содержать еще один автомобиль. Довольствуйтесь уже имеющимися двумя.",
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.
