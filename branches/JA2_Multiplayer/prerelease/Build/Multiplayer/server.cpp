@@ -156,6 +156,16 @@ void Snull_team(RPCParameters *rpcParameters)
 {
 	server->RPC("null_team",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
 }	
+
+void sendFIREW(RPCParameters *rpcParameters)
+{
+	server->RPC("recieve_fireweapon",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, rpcParameters->sender, true, 0, UNASSIGNED_NETWORK_ID,0);
+}
+
+void sendDOOR(RPCParameters *rpcParameters)
+{
+	server->RPC("recieve_door",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, rpcParameters->sender, true, 0, UNASSIGNED_NETWORK_ID,0);
+}
 //************************* //UNASSIGNED_SYSTEM_ADDRESS
 //START INTERNAL SERVER
 //*************************
@@ -376,6 +386,8 @@ void start_server (void)
 
 			REGISTER_STATIC_RPC(server, updatenetworksoldier);
 			REGISTER_STATIC_RPC(server, Snull_team);
+				REGISTER_STATIC_RPC(server, sendFIREW);
+					REGISTER_STATIC_RPC(server, sendDOOR);
 	//
 
 

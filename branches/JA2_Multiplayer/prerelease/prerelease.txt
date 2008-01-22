@@ -11,6 +11,16 @@ nothing in here necessarily works, but most likely does...
 Changes over current releases:
 ------------------------------
 
+* synced up bandage health levels
+
+* added ~15 new game mercs to MERC
+
+* synced up doors!
+
+* synced up burst fire sounds
+
+-------------------- past changes:
+
 * fixed death messaging
 
 * re-enabled intterupts
@@ -18,8 +28,6 @@ Changes over current releases:
 * allowed disabling of hired name display
 
 * started using a dvorak keyboard
-
--------------------- past changes:
 
 * enabled the rest of the MERC bios
 

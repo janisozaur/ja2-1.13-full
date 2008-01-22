@@ -2093,7 +2093,8 @@ void UpdateSoldierToNetwork ( SOLDIERTYPE *pSoldier )
 
 			SUpdateNetworkSoldier.sAtGridNo=pSoldier->sGridNo;
 			SUpdateNetworkSoldier.bBreath=pSoldier->bBreath;
-			SUpdateNetworkSoldier.bActionPoints=pSoldier->bLife;
+			SUpdateNetworkSoldier.bLife=pSoldier->bLife;
+			SUpdateNetworkSoldier.bBleeding=pSoldier->bBleeding;
 			
 
 			client->RPC("updatenetworksoldier",(const char*)&SUpdateNetworkSoldier, (int)sizeof(EV_S_UPDATENETWORKSOLDIER)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
@@ -2108,7 +2109,9 @@ void UpdateSoldierFromNetwork  (RPCParameters *rpcParameters)
 
 	SOLDIERTYPE *pSoldier = MercPtrs[ SUpdateNetworkSoldier->usSoldierID ];
 	pSoldier->bBreath=SUpdateNetworkSoldier->bBreath;
-	pSoldier->bLife=SUpdateNetworkSoldier->bActionPoints;
+	pSoldier->bLife=SUpdateNetworkSoldier->bLife;
+	pSoldier->bBleeding=SUpdateNetworkSoldier->bBleeding;
+
 }
 
 void advance_ovh_frame  (RPCParameters *rpcParameters)
@@ -2200,6 +2203,69 @@ void turn_callback (UINT8 ubResult)
 	}
 }
 
+void send_fireweapon (EV_S_FIREWEAPON  *SFireWeapon)
+{
+		EV_S_FIREWEAPON sFire;
+		//sFire.usSoldierID=SFireWeapon->usSoldierID;
+
+		if(SFireWeapon->usSoldierID < 20)
+			sFire.usSoldierID = (SFireWeapon->usSoldierID)+ubID_prefix;
+		else
+			sFire.usSoldierID = SFireWeapon->usSoldierID;
+
+		sFire.sTargetGridNo=SFireWeapon->sTargetGridNo;
+		sFire.bTargetCubeLevel=SFireWeapon->bTargetCubeLevel;
+		sFire.bTargetLevel=SFireWeapon->bTargetLevel;
+
+		client->RPC("sendFIREW",(const char*)&sFire, (int)sizeof(EV_S_FIREWEAPON)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
+
+}
+
+void recieve_fireweapon (RPCParameters *rpcParameters)
+{
+				EV_S_FIREWEAPON* SFireWeapon = (EV_S_FIREWEAPON*)rpcParameters->input;
+				//ScreenMsg( FONT_LTGREEN, MSG_INTERFACE, L"recieve_fireweapon" );
+				//SFireWeapon.usSoldierID			= pSoldier->ubID;
+				////SFireWeapon.uiUniqueId			= pSoldier->uiUniqueSoldierIdValue;
+				//SFireWeapon.sTargetGridNo		= pSoldier->sTargetGridNo;
+				//SFireWeapon.bTargetLevel		= pSoldier->bTargetLevel;
+				//SFireWeapon.bTargetCubeLevel= pSoldier->bTargetCubeLevel;
+				//AddGameEvent( S_FIREWEAPON, 0, &SFireWeapon );
+
+	SOLDIERTYPE *pSoldier = MercPtrs[ SFireWeapon->usSoldierID ];
+
+				pSoldier->sTargetGridNo = SFireWeapon->sTargetGridNo;
+				pSoldier->bTargetLevel = SFireWeapon->bTargetLevel;
+				pSoldier->bTargetCubeLevel = SFireWeapon->bTargetCubeLevel;
+				FireWeapon( pSoldier, SFireWeapon->sTargetGridNo  );
+
+}
+
+void send_door ( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fNoAnimations )
+{
+if((is_server && pSoldier->ubID<120) || (!is_server && is_client && pSoldier->ubID<20) || (!is_server && !is_client) )
+{
+		doors sDoor;
+		sDoor.ubID=pSoldier->ubID;
+		sDoor.sGridNo=sGridNo;
+		sDoor.fNoAnimations=fNoAnimations;
+	
+		client->RPC("sendDOOR",(const char*)&sDoor, (int)sizeof(doors)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
+}
+}
+
+void recieve_door (RPCParameters *rpcParameters)
+{
+
+	doors* sDoor = (doors*)rpcParameters->input;
+
+	SOLDIERTYPE *pSoldier = MercPtrs[ sDoor->ubID ];
+	HandleDoorChangeFromGridNo( pSoldier, sDoor->sGridNo, sDoor->fNoAnimations );
+
+}
+
+
+
 //***************************
 //*** client connection*****
 //*************************
@@ -2241,8 +2307,8 @@ void connect_client ( void )
 			REGISTER_STATIC_RPC(client, recieveMISS);
 			REGISTER_STATIC_RPC(client, advance_ovh_frame);
 			REGISTER_STATIC_RPC(client, UpdateSoldierFromNetwork);
-
-			
+			REGISTER_STATIC_RPC(client, recieve_fireweapon);
+			REGISTER_STATIC_RPC(client, recieve_door);
 			REGISTER_STATIC_RPC(client, null_team);
 			//***
 			
@@ -2354,6 +2420,7 @@ void connect_client ( void )
 
 				LaptopSaveInfo.guiNumberOfMercPaymentsInDays += 20;
 				LaptopSaveInfo.gubLastMercIndex = LAST_MERC_ID;
+				
 				LaptopSaveInfo.ubLastMercAvailableId = 7;
 				
 				extern BOOLEAN gfTemporaryDisablingOfLoadPendingFlag;
@@ -2363,7 +2430,13 @@ void connect_client ( void )
 				//SetBookMark( IMP_BOOKMARK );
 				SetBookMark( MERC_BOOKMARK );
 
-				
+				gMercProfiles[ 57 ].sSalary = 2000;
+				gMercProfiles[ 58 ].sSalary = 1500;
+				gMercProfiles[ 59 ].sSalary = 600;
+				gMercProfiles[ 60 ].sSalary = 500;
+				gMercProfiles[ 64 ].sSalary = 1500;
+				gMercProfiles[ 72 ].sSalary = 1000;
+				gMercProfiles[ 148 ].sSalary = 100;
 
 							
 			//**********************

@@ -244,10 +244,13 @@ typedef struct
 typedef struct
 {
 	UINT8		usSoldierID;	
-	UINT32  uiUniqueId;
+	//UINT32  uiUniqueId;
 	INT16		sAtGridNo;					// Owner merc is at this tile when sending packet
 	INT8		bActionPoints;			// current A.P. value
 	INT8		bBreath;						// current breath value
+	//hayden
+	INT8 bLife;
+	INT8 bBleeding;
 } EV_S_UPDATENETWORKSOLDIER;
 
 

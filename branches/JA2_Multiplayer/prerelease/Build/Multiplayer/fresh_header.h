@@ -9,6 +9,13 @@ typedef struct
 	UINT16 attacker_id;
 }death_struct;
 
+typedef struct
+{
+	UINT16 ubID;
+	INT16 sGridNo;
+	BOOLEAN fNoAnimations;
+}doors;
+void send_door ( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fNoAnimations );
 
 void send_changestate (EV_S_CHANGESTATE * SChangeState);
 
@@ -30,3 +37,5 @@ void kick_player (void);
 void overide_turn (void);
 
 extern bool DISABLE_MORALE;
+
+void send_fireweapon ( EV_S_FIREWEAPON * SFireWeapon);
