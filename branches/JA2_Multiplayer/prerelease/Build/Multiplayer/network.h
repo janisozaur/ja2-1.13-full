@@ -41,6 +41,7 @@ typedef struct
 	int TESTING;
 	char kitbag[100];
 	bool emorale;
+	int gsREPORT_NAME;
 } settings_struct;
 
 typedef struct

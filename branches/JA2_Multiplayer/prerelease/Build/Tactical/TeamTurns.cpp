@@ -1292,25 +1292,25 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 	INT8						bDir;
 	SOLDIERTYPE *		pOpponent;
 
-	if(INTERRUPTS==0) //disable interrupts
-	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"interrupt disabled" ); //hayden
-		return (FALSE);
-	}
-	else if(INTERRUPTS==2)//quick enable all ints //hayden
-	{
-			ubMinPtsNeeded = AP_CHANGE_FACING;
-			if (!PTR_CROUCHED)
-			{
-				ubMinPtsNeeded = AP_CROUCH;
-			}
-			else
-			{
-				ubMinPtsNeeded = MinPtsToMove(pSoldier);
-			}
-			return (TRUE); 
-	}
-	else if(INTERRUPTS==1)//standard int process
+	//if(INTERRUPTS==0) //disable interrupts
+	//{
+	//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"interrupt disabled" ); //hayden
+	//	return (FALSE);
+	//}
+	//else if(INTERRUPTS==2)//quick enable all ints //hayden
+	//{
+	//		ubMinPtsNeeded = AP_CHANGE_FACING;
+	//		if (!PTR_CROUCHED)
+	//		{
+	//			ubMinPtsNeeded = AP_CROUCH;
+	//		}
+	//		else
+	//		{
+	//			ubMinPtsNeeded = MinPtsToMove(pSoldier);
+	//		}
+	//		return (TRUE); 
+	//}
+	//else if(INTERRUPTS==1)//standard int process
 
 	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && !(gubSightFlags & SIGHT_INTERRUPT) )
 	{

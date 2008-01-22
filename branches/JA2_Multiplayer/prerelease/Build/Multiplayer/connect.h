@@ -31,7 +31,7 @@ extern FLOAT DAMAGE_MULTIPLIER;
 
 extern UINT16 crate_usMapPos;
 
-extern int INTERRUPTS;
+//extern int INTERRUPTS;
 
 extern int ALLOW_EQUIP;
 

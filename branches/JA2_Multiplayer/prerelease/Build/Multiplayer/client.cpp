@@ -232,6 +232,8 @@ char ckbag[100];
  char SERVER_IP[30] ;
  char SERVER_PORT[30];
 
+ int REPORT_NAME;
+
  int ENEMY_ENABLED;
  int CREATURE_ENABLED;
  int MILITIA_ENABLED;
@@ -253,7 +255,7 @@ int START_TEAM_TURN;
 
 FLOAT DAMAGE_MULTIPLIER;
 
-int INTERRUPTS;
+//int INTERRUPTS;
 int MAX_CLIENTS;
 
 UINT16 crate_usMapPos;	
@@ -647,9 +649,17 @@ void recieveHIRE(RPCParameters *rpcParameters)
 
 
 	AddSoldierToSector( iNewIndex );
-	
 
-	ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"Client #%d: '%S' has hired '%s'",MercCreateStruct.bTeam-5,client_names[MercCreateStruct.bTeam-6],pSoldier->name );
+	
+	if(REPORT_NAME==1)
+	{	
+		ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"Client #%d: '%S' has hired '%s'",MercCreateStruct.bTeam-5,client_names[MercCreateStruct.bTeam-6],pSoldier->name );
+	}
+	else 
+	{
+		ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"Client #%d: '%S' has hired another merc.",MercCreateStruct.bTeam-5,client_names[MercCreateStruct.bTeam-6] );
+	}
+
 
 }
 
@@ -1747,6 +1757,7 @@ void recieveSETTINGS (RPCParameters *rpcParameters) //recive settings from serve
 
 			MAX_MERCS=cl_lan->gsMAX_MERCS;
 			TESTING=cl_lan->TESTING;
+			REPORT_NAME=cl_lan->gsREPORT_NAME;
 
 			ScreenMsg( FONT_YELLOW, MSG_CHAT, L"Sector= %s, Max Clients= %d, Max Mercs= %d, Co-Op= %d Same Merc= %d, Dmge Multiplier= %f,  Enemy= %d, Creature= %d, Militia= %d, Civilian= %d, Timed Turns= %d, Secs/Tic= %d, Starting Cash= $%d, Tons of Guns= %d, Sci-Fi= %d, Difficulty= %d, Iron-Man= %d, BobbyRays Range= %d, Dis BobbyRays= %d, Dis Aim/Merc Equip= %d, Dis Morale= %d, Testing= %d.",str,MAX_CLIENTS,MAX_MERCS,PLAYER_BSIDE,SAME_MERC,DAMAGE_MULTIPLIER,cl_lan->ENEMY_ENABLED,cl_lan->CREATURE_ENABLED,cl_lan->MILITIA_ENABLED,cl_lan->CIV_ENABLED,gGameOptions.fTurnTimeLimit,secs_per_tick,clstarting_balance,gGameOptions.fGunNut,gGameOptions.ubGameStyle,gGameOptions.ubDifficultyLevel,gGameOptions.fIronManMode,gGameOptions.ubBobbyRay,cl_lan->soDis_Bobby,cl_lan->soDis_Equip,DISABLE_MORALE,TESTING);
 			if(TESTING)	ScreenMsg( FONT_WHITE, MSG_CHAT, L"TESTING AND CHEAT FUNCTION '9' IS ENABLED" );
@@ -1872,14 +1883,27 @@ void send_death( SOLDIERTYPE *pSoldier )
 		
 	client->RPC("sendDEATH",(const char*)&nDeath, (int)sizeof(death_struct)*8, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
 		
-	//SOLDIERTYPE * pAttacker=MercPtrs[ nDeath.attacker_id ];
-	//INT8 pA_bTeam=pAttacker->bTeam;
-	//INT8 pS_bTeam=pSoldier->bTeam;
+	SOLDIERTYPE * pAttacker=MercPtrs[ nDeath.attacker_id ];
+	INT8 pA_bTeam;
+	CHAR16	pA_name[ 10 ];
+	INT8 pS_bTeam;
+	CHAR16	pS_name[ 10 ];
+	if(pAttacker)
+	{
+	pA_bTeam=pAttacker->bTeam;
+	memcpy(pA_name,pAttacker->name,sizeof(CHAR16)*10);
+	if(pA_bTeam>5)pA_bTeam=pA_bTeam-5;
+	if(pA_bTeam==0)pA_bTeam=atoi(CLIENT_NUM);
+	}
+	if(pSoldier)
+	{
+	pS_bTeam=pSoldier->bTeam;
+	memcpy(pS_name,pSoldier->name,sizeof(CHAR16)*10);
+	if(pS_bTeam>5)pS_bTeam=pS_bTeam-5;
+	if(pS_bTeam==0)pS_bTeam=atoi(CLIENT_NUM);
+	}
 
-	
-
-	//ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"'%s' (Client #%d: '%S') was killed by '%s' (Client #%d: '%S') ! ",pSoldier->name,pS_bTeam-5,client_names[pS_bTeam-6],pAttacker->name,pS_bTeam-5,client_names[pS_bTeam-6] );
-	//ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"'%s' #%d: '%S' was killed by '%s' #%d: '%S' ! ",pSoldier->name,(atoi(CLIENT_NUM)),client_names[(atoi(CLIENT_NUM)-1)],pAttacker->name,(pA_bTeam-5),client_names[(pA_bTeam-6)] );
+	ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"'%s' #%d: '%S' was killed by '%s' #%d: '%S' ! ",pS_name,(pS_bTeam),client_names[(pS_bTeam-1)],pA_name,(pA_bTeam),client_names[(pA_bTeam-1)] );
 
 }
 
@@ -1889,26 +1913,40 @@ void recieveDEATH (RPCParameters *rpcParameters)
 	death_struct* nDeath = (death_struct*)rpcParameters->input;
 	SOLDIERTYPE * pSoldier=MercPtrs[ nDeath->soldier_id ];
 
-	/*UINT16 ubAttackerID;
+	UINT16 ubAttackerID;
 					if((nDeath->attacker_id >= ubID_prefix) && (nDeath->attacker_id < (ubID_prefix+5)))
 						ubAttackerID = (nDeath->attacker_id - ubID_prefix);
 					else
-						ubAttackerID = nDeath->attacker_id;*/
+						ubAttackerID = nDeath->attacker_id;
 
-	//SOLDIERTYPE * pAttacker=MercPtrs[ ubAttackerID ];
+	SOLDIERTYPE * pAttacker=MercPtrs[ ubAttackerID ];
+	INT8 pA_bTeam;
+	CHAR16	pA_name[ 10 ];
+	INT8 pS_bTeam;
+	CHAR16	pS_name[ 10 ];
 
-	//INT8 pA_bTeam=pAttacker->bTeam;
-	//INT8 pS_bTeam=pSoldier->bTeam;
-	//if(pA_bTeam>5)pA_bTeam=pA_bTeam-5;
-	//if(pA_bTeam==0)pA_bTeam=atoi(CLIENT_NUM);
-		
+	if(pAttacker)
+	{
+	pA_bTeam=pAttacker->bTeam;
+	memcpy(pA_name,pAttacker->name,sizeof(CHAR16)*10);
+	if(pA_bTeam>5)pA_bTeam=pA_bTeam-5;
+	if(pA_bTeam==0)pA_bTeam=atoi(CLIENT_NUM);
+	}
+	if(pSoldier)
+	{
+	pS_bTeam=pSoldier->bTeam;
+	memcpy(pS_name,pSoldier->name,sizeof(CHAR16)*10);
+	if(pS_bTeam>5)pS_bTeam=pS_bTeam-5;
+	if(pS_bTeam==0)pS_bTeam=atoi(CLIENT_NUM);
+	}
+			
 
 	if(pSoldier->bLife!=0)
 	{
 		pSoldier->usAnimState=50;
 		ScreenMsg( FONT_YELLOW, MSG_CHAT, L"made corpse/dead from remote client");	
 		TurnSoldierIntoCorpse( pSoldier, TRUE, TRUE );
-		//ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"'%s' #%d: '%S' was killed by '%s' #%d: '%S' ! ",pSoldier->name,(pS_bTeam-5),client_names[(pS_bTeam-6)],pAttacker->name,(pA_bTeam),client_names[(pA_bTeam-1)] );
+		ScreenMsg( FONT_LTGREEN, MSG_CHAT, L"'%s' #%d: '%S' was killed by '%s' #%d: '%S' ! ",pS_name,(pS_bTeam),client_names[(pS_bTeam-1)],pA_name,(pA_bTeam),client_names[(pA_bTeam-1)] );
 
 	}
 
@@ -2257,7 +2295,7 @@ void connect_client ( void )
 
 
 			MAX_CLIENTS=0;//reset server only set settings.
-			INTERRUPTS=0;
+			//INTERRUPTS=0;
 			DAMAGE_MULTIPLIER=0;
 			SAME_MERC=0;
 

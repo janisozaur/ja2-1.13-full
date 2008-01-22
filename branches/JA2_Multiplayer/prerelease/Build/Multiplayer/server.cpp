@@ -21,6 +21,7 @@ char kbag[100];
 char net_div[30];
 INT32 gsMAX_MERCS;
 bool gsMORALE;
+int gsREPORT_NAME;
 
 #include "connect.h"
 #include "message.h"
@@ -185,6 +186,7 @@ void requestSETTINGS(RPCParameters *rpcParameters)
 		lan.gsPLAYER_BSIDE=gsPLAYER_BSIDE;
 
 		lan.emorale=gsMORALE;
+		lan.gsREPORT_NAME=gsREPORT_NAME;
 //something new
 				lan.secs_per_tick=gssecs_per_tick;
 				lan.soubBobbyRay=gGameOptions.ubBobbyRay;
@@ -288,12 +290,16 @@ void start_server (void)
 
 
 //something new
-			gsMORALE=atoi(mor);
+			gsMORALE=0;
+			if(atoi(mor)==1)gsMORALE=1;
+			
 			
 			GetPrivateProfileString( "Ja2_mp Settings","KIT_BAG", "", kbag, MAX_PATH, "..\\Ja2_mp.ini" );
 			
+			char rpn[30];
+			GetPrivateProfileString( "Ja2_mp Settings","REPORT_NAME", "", rpn, MAX_PATH, "..\\Ja2_mp.ini" );
+			gsREPORT_NAME=atoi(rpn);
 
-			
 			GetPrivateProfileString( "Ja2_mp Settings","STARTING_BALANCE", "", sBalance, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","TIMED_TURN_SECS_PER_TICK", "", time_div, MAX_PATH, "..\\Ja2_mp.ini" );
 			
