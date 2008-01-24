@@ -106,13 +106,13 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 
 STR16 pCreditsJA2113[] =
 {
-	L"@T,{;JA2 v1.13 Development Team",
-	L"@T,C144,R134,{;Coding",
-	L"@T,C144,R134,{;Graphics and Sounds",
-	L"@};(Various other mods!)",
-	L"@T,C144,R134,{;Items",
-	L"@T,C144,R134,{;Other Contributors",
-	L"@};(All other community members who contributed input and feedback!)",
+	L"@T,{;Разработчики JA2 v1.13",
+	L"@T,C144,R134,{;Программирование",
+	L"@T,C144,R134,{;Графика и звук",
+	L"@};(Многое было взято из других модов!)",
+	L"@T,C144,R134,{;Предметы",
+	L"@T,C144,R134,{;Также помогали",
+	L"@};(И многие другие, предложившие хорошие идеи и высказавшие важные замечания!)",
 };
 
 CHAR16 ItemNames[MAXITEMS][80] =
@@ -1404,7 +1404,7 @@ CHAR16 TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Состояние: %d/%d\nТопливо: %d/%d",
 	L"%s не видит %s.",  // Cannot see person trying to talk to
 	L"Принадлежность отсоединена",	//пр
-	L"Вы не можете содержать еще один автомобиль. Довольствуйтесь уже имеющимися двумя.",
+	L"Вы не можете содержать еще одну машину, довольствуйтесь уже имеющимися двумя.",
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.
@@ -3339,7 +3339,7 @@ STR16			zSaveLoadText[] =
 	L"Игра успешно загружена",
 	L"ОШИБКА загрузки игры!",
 
-	L"Скорее всего, вы не сможете нормально продолжить игру. Все равно продолжить?",
+	L"Это сохранение было сделано иной версией игры. Скорее всего, вы не сможете загрузить его. Все равно продолжить?",
 	L"Версия файла сохранения отличается от текущей версии игры.",
 
 	//Translators, the next two strings are for the same thing.  The first one is for beta version releases and the second one
