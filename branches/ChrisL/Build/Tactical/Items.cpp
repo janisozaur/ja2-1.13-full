@@ -2416,9 +2416,10 @@ void GetPocketDimensionsBySize(int pocketSize, int& sizeX, int& sizeY)
 // CHRISL: New function to dynamically modify ItemSize based on attachments, stack size, etc
 UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 {
-	UINT16		iSize, newSize, testSize, maxSize;
+	UINT16		iSize;
+	UINT16		currentSize = 0;
 	UINT32		cisIndex;
-	UINT8		cnt=0;
+
 	// Determine default ItemSize based on item and attachments
 	cisIndex = pObject->usItem;
 	iSize = Item[cisIndex].ItemSize;
@@ -2446,6 +2447,47 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 			LBENODE* pLBE = pObject->GetLBEPointer(numStacked);
 			if(pLBE)
 			{
+				//start by determining the equivalent number of "small" pockets that this LBENODE has access to.  This
+				//	is based on the pType value in Pockets.xml with 1=Small, 2=Medium and 3=Large
+				UINT16	totalPocketValue = 0;
+				FLOAT	percentOfItemUsed = 0;
+				UINT16	pIndex, testSize, maxSize;
+				UINT8	pocketCapacity, numberOfSizeIncrements;
+				FLOAT	currentPocketPercent, currentPocketPartOfTotal;
+				for(unsigned int x = 0; x < pLBE->inv.size(); x++)
+				{
+					if(LoadBearingEquipment[Item[pObject->usItem].ubClassIndex].lbePocketIndex[x] != 0)
+					{
+						pIndex = LoadBearingEquipment[Item[pObject->usItem].ubClassIndex].lbePocketIndex[x];
+						totalPocketValue += LBEPocketType[pIndex].pType;
+					}
+				}
+				//Now, look through each active pocket
+				for(unsigned int x = 0; x < pLBE->inv.size(); x++)
+				{
+					if(pLBE->inv[x].exists() == true)
+					{
+						pIndex = LoadBearingEquipment[Item[pObject->usItem].ubClassIndex].lbePocketIndex[x];
+						testSize = CalculateItemSize(&pLBE->inv[x]);
+						pocketCapacity = LBEPocketType[pIndex].ItemCapacityPerSize[testSize];
+						currentPocketPercent = (FLOAT)pLBE->inv[x].ubNumberOfObjects / (FLOAT)pocketCapacity;
+						currentPocketPartOfTotal = (FLOAT)LBEPocketType[pIndex].pType / (FLOAT)totalPocketValue;
+						percentOfItemUsed += currentPocketPartOfTotal * currentPocketPercent;
+					}
+				}
+				maxSize = max(iSize, LoadBearingEquipment[Item[pObject->usItem].ubClassIndex].lbeFilledSize);
+				//Now, determine the increments between initial ItemSize and Filled Size, and adjust iSize by percentOfItemUsed
+				if(percentOfItemUsed != 0)
+				{
+					numberOfSizeIncrements = LoadBearingEquipment[Item[pObject->usItem].ubClassIndex].lbeFilledSize - Item[pObject->usItem].ItemSize;
+					testSize = (UINT16)((numberOfSizeIncrements * percentOfItemUsed) + .5);
+					currentSize = __max(iSize + testSize, currentSize);
+					currentSize = __min(currentSize, maxSize);
+				}
+#if 0
+//old method
+				UINT16	newSize, testSize, maxSize;
+				UINT8	cnt=0;
 				newSize = 0;
 				maxSize = max(iSize, LoadBearingEquipment[Item[pObject->usItem].ubClassIndex].lbeFilledSize);
 				// Look for the ItemSize of the largest item in this LBENODE
@@ -2484,9 +2526,13 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 				else if(newSize >= maxSize) {
 					iSize = maxSize;
 				}
+#endif
 			}
 		}
 	}
+	//Finally, set the new iSize value
+	iSize = __max(iSize, currentSize);
+
 	return(iSize);
 }
 

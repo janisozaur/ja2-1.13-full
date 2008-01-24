@@ -214,7 +214,7 @@ extern	BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle( INT16 *ps
 
 void DeleteAllItemsInInventoryPool();
 void DeleteItemsOfType( UINT16 usItemType );
-INT32 SellItem( OBJECTTYPE& object );
+INT32 SellItem( OBJECTTYPE& object, BOOLEAN useModifier = TRUE );
 
 // load the background panel graphics for inventory
 BOOLEAN LoadInventoryPoolGraphic( void )
@@ -2252,7 +2252,7 @@ void DeleteItemsOfType( UINT16 usItemType )
 }
 
 
-INT32 SellItem( OBJECTTYPE& object )
+INT32 SellItem( OBJECTTYPE& object, BOOLEAN useModifier )
 {
 	INT32 iPrice = 0;
 	INT16 iPriceModifier = gGameExternalOptions.iPriceModifier;
@@ -2268,6 +2268,32 @@ INT32 SellItem( OBJECTTYPE& object )
 			iPrice += (INT32)( itemPrice * (float) object[bLoop]->data.ubShotsLeft / magSize );
 		}
 	}
+	else if(Item[usItemType].usItemClass == IC_LBEGEAR && UsingNewInventorySystem() == true)
+	{
+		//CHRISL: If we're selling an LBE Item, we need to verify if it's an LBENODE, first.  If it is, we need to sell
+		//	everything stored in the LBENODE before we sell teh LBE Item itself.
+		for(INT8 bLoop = 0; bLoop < object.ubNumberOfObjects; bLoop++)
+		{
+			if(object.IsActiveLBE(bLoop) == true)
+			{
+				LBENODE* pLBE = object.GetLBEPointer(bLoop);
+				if(pLBE)
+				{
+					for(unsigned int x = 0; x < pLBE->inv.size(); x++)
+					{
+						if(pLBE->inv[x].exists() == true)
+						{
+							iPrice += SellItem(pLBE->inv[x], FALSE);
+						}
+					}
+				}
+			}
+			iPrice += ( itemPrice * object[bLoop]->data.objectStatus / 100 );
+			for (attachmentList::iterator iter = object[bLoop]->attachments.begin(); iter != object[bLoop]->attachments.end(); ++iter) {
+				iPrice += SellItem(*iter, FALSE);
+			}
+		}
+	}
 	else
 	{
 		//we are selling a gun or something - it could be stacked or single, and if single it could have attachments
@@ -2275,13 +2301,13 @@ INT32 SellItem( OBJECTTYPE& object )
 		{
 			iPrice += ( itemPrice * object[bLoop]->data.objectStatus / 100 );
 			for (attachmentList::iterator iter = object[bLoop]->attachments.begin(); iter != object[bLoop]->attachments.end(); ++iter) {
-				iPrice += SellItem(*iter);
+				iPrice += SellItem(*iter, FALSE);
 			}
 		}
 
 	}
 
-	if( iPriceModifier > 1) {
+	if( iPriceModifier > 1 && useModifier == TRUE) {
 		iPrice /= iPriceModifier;
 	}
 

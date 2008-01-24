@@ -27,7 +27,8 @@
 	#include "strategicmap.h"
 	#include "environment.h"
 	#include "lighting.h"
-		#include "Buildings.h"
+	#include "Buildings.h"
+	#include "GameSettings.h"
 #endif
 
 #include "PathAIDebug.h"
@@ -2664,7 +2665,7 @@ INT16 FindClosestClimbPoint (SOLDIERTYPE *pSoldier, BOOLEAN fClimbUp )
 BOOLEAN CanClimbFromHere (SOLDIERTYPE * pSoldier, BOOLEAN fUp )
 {
 #if 1
-	return FindDirectionForClimbing( pSoldier->sGridNo, pSoldier->pathing.bLevel) != DIRECTION_IRRELEVANT;
+	return FindDirectionForClimbing( pSoldier, pSoldier->sGridNo, pSoldier->pathing.bLevel) != DIRECTION_IRRELEVANT;
 #else
 	BUILDING * pBuilding;
 	INT16 i;
@@ -2805,7 +2806,7 @@ INT16 FindBestCoverNearTheGridNo(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubS
 
 }
 
-INT8 FindDirectionForClimbing( INT16 sGridNo, INT8 bLevel )
+INT8 FindDirectionForClimbing( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel )
 {
 	UINT8 ubClimbDir;
 	INT16 sClimbSpot;
@@ -2827,6 +2828,9 @@ INT8 FindDirectionForClimbing( INT16 sGridNo, INT8 bLevel )
 	}
 	else if (bLevel == 1)
 	{
+		//CHRISL: If NewInv and wearing a backpack, don't allow climbing
+		if(UsingNewInventorySystem() == true && pSoldier->inv[BPACKPOCKPOS].exists() == true)
+			return DIRECTION_IRRELEVANT;
 		if (gpWorldLevelData[ sGridNo].ubExtFlags[1] & MAPELEMENT_EXT_CLIMBPOINT)
 		{
 			for (ubClimbDir=0; ubClimbDir<8; ubClimbDir+=2)

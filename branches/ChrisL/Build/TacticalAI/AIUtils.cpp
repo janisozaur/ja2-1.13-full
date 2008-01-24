@@ -452,7 +452,7 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 {
 	INT8	bMinPointsNeeded = 0;
 	INT8 bAPForStandUp = 0;
-	INT8 bAPToLookAtWall = ( FindDirectionForClimbing( pSoldier->sGridNo, pSoldier->pathing.bLevel ) == pSoldier->ubDirection ) ? 0 : 1;
+	INT8 bAPToLookAtWall = ( FindDirectionForClimbing( pSoldier, pSoldier->sGridNo, pSoldier->pathing.bLevel ) == pSoldier->ubDirection ) ? 0 : 1;
 
 	//NumMessage("AffordableAction - Guy#",pSoldier->ubID);
 

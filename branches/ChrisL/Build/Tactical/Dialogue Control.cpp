@@ -79,11 +79,6 @@ class SOLDIERTYPE;
 #define		DIALOGUE_DEFAULT_SUBTITLE_WIDTH		200
 #define		TEXT_DELAY_MODIFIER			60
 
-//CHRISL: I added this definition to resolve a CTD that seems to be occuring when "named" NPCs fall forward while
-//	still alive.  I haven't yet determined what actually caused the CTD but this define, along with the conditions
-//	that use it, seem to be keeping the crash from occuring.  I'm just not sure if these conditions will produce
-//	other problems or not.
-#define		NAMED_NPC_CTD_FIX			26850000
 
 
 typedef struct
@@ -398,20 +393,15 @@ BOOLEAN	DialogueQueueIsEmptyOrSomebodyTalkingNow( )
 
 void DialogueAdvanceSpeech( )
 {
-	//CHRISL: Named NPC problem.  See the explanation near the define of NAMED_NPC_CTD_FIX
 	// Shut them up!
-	if ( gpCurrentTalkingFace != NULL && gpCurrentTalkingFace->iID < NAMED_NPC_CTD_FIX )
-	{
-		InternalShutupaYoFace( gpCurrentTalkingFace->iID, FALSE );
-	}
+	InternalShutupaYoFace( gpCurrentTalkingFace->iID, FALSE );
 }
 
 
 void StopAnyCurrentlyTalkingSpeech( )
 {
-	//CHRISL: Named NPC problem.  See the explanation near the define of NAMED_NPC_CTD_FIX
 	// ATE; Make sure guys stop talking....
-	if ( gpCurrentTalkingFace != NULL && gpCurrentTalkingFace->iID < NAMED_NPC_CTD_FIX )
+	if ( gpCurrentTalkingFace != NULL )
 	{
 		InternalShutupaYoFace( gpCurrentTalkingFace->iID, TRUE );
 	}
@@ -2669,8 +2659,7 @@ void TextOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP && fLButtonDown )
 	{
-		//CHRISL: Named NPC problem.  See the explanation near the define of NAMED_NPC_CTD_FIX
-		if(	gpCurrentTalkingFace != NULL && gpCurrentTalkingFace->iID < NAMED_NPC_CTD_FIX )
+		if(	gpCurrentTalkingFace != NULL )
 		{
 			InternalShutupaYoFace( gpCurrentTalkingFace->iID, FALSE );
 
@@ -2700,8 +2689,7 @@ void FaceOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP && fLButtonDown )
 	{
-		//CHRISL: Named NPC problem.  See the explanation near the define of NAMED_NPC_CTD_FIX
-		if(	gpCurrentTalkingFace != NULL && gpCurrentTalkingFace->iID < NAMED_NPC_CTD_FIX )
+		if(	gpCurrentTalkingFace != NULL )
 		{
 			InternalShutupaYoFace( gpCurrentTalkingFace->iID, FALSE );
 		}
