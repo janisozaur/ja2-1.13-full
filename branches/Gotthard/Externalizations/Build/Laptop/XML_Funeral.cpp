@@ -77,17 +77,84 @@ FuneralStartElementHandle(void *userData, const XML_Char *name, const XML_Char *
 			pData->maxReadDepth++; //we are not skipping this element
 			pData->curIndex++;
 		}
-		else if(pData->curElement == ELEMENT && strcmp(name, "TEXT") == 0 )
+
+#ifdef ENGLISH
+		else if(pData->curElement == ELEMENT && strstr(name, "_TEXT") != 0 )
 		{
 			pData->curElement = ELEMENT_PROPERTY;
 
 			pData->maxReadDepth++; //we are not skipping this element
 		}
+#endif
+
+#ifdef RUSSIAN
+		else if(pData->curElement == ELEMENT && strcmp(name, "RUSSIAN_TEXT") == 0 )
+		{
+			pData->curElement = ELEMENT_PROPERTY;
+
+			pData->maxReadDepth++; //we are not skipping this element
+		}
+#endif
+
+#ifdef ITALIAN
+		else if(pData->curElement == ELEMENT && strcmp(name, "ITALIAN_TEXT") == 0 )
+		{
+			pData->curElement = ELEMENT_PROPERTY;
+
+			pData->maxReadDepth++; //we are not skipping this element
+		}
+#endif
+
+#ifdef POLISH
+		else if(pData->curElement == ELEMENT && strcmp(name, "POLISH_TEXT") == 0 )
+		{
+			pData->curElement = ELEMENT_PROPERTY;
+
+			pData->maxReadDepth++; //we are not skipping this element
+		}
+#endif
+
+#ifdef GERMAN
+		else if(pData->curElement == ELEMENT && strcmp(name, "GERMAN_TEXT") == 0 )
+		{
+			pData->curElement = ELEMENT_PROPERTY;
+
+			pData->maxReadDepth++; //we are not skipping this element
+		}
+#endif
+
+#ifdef DUTCH
+		else if(pData->curElement == ELEMENT && strcmp(name, "DUTCH_TEXT") == 0 )
+		{
+			pData->curElement = ELEMENT_PROPERTY;
+
+			pData->maxReadDepth++; //we are not skipping this element
+		}
+#endif
+
+#ifdef FRENCH
+		else if(pData->curElement == ELEMENT && strcmp(name, "FRENCH_TEXT") == 0 )
+		{
+			pData->curElement = ELEMENT_PROPERTY;
+
+			pData->maxReadDepth++; //we are not skipping this element
+		}
+#endif
+
+#ifdef TAIWANESE
+		else if(pData->curElement == ELEMENT && strcmp(name, "TIAWANESE_TEXT") == 0 )
+		{
+			pData->curElement = ELEMENT_PROPERTY;
+
+			pData->maxReadDepth++; //we are not skipping this element
+		}
+#endif
 
 		pData->szCharData[0] = '\0';
 	}
 
 	pData->currentDepth++;
+
 
 }
 
@@ -121,15 +188,103 @@ FuneralEndElementHandle(void *userData, const XML_Char *name)
 		{
 			pData->curElement = ELEMENT_LIST;
 		}
-		else if(strcmp(name, "TEXT") == 0)
+
+		else if(strcmp(name, "ENGLISH_TEXT") == 0)
 		{
 			pData->curElement = ELEMENT;
+#ifdef ENGLISH
 			if(pData->curIndex < pData->maxArraySize)
 			{
 				size_t origsize = strlen(pData->szCharData) + 5;
 				mbstowcs(sFuneralString[pData->curIndex], pData->szCharData, origsize);
 			}
+#endif
 		}
+
+		else if(strcmp(name, "RUSSIAN_TEXT") == 0)
+		{
+			pData->curElement = ELEMENT;
+#ifdef RUSSIAN
+			if(pData->curIndex < pData->maxArraySize)
+			{
+				size_t origsize = strlen(pData->szCharData) + 5;
+				mbstowcs(sFuneralString[pData->curIndex], pData->szCharData, origsize);
+			}
+#endif
+		}
+
+		else if(strcmp(name, "DUTCH_TEXT") == 0)
+		{
+			pData->curElement = ELEMENT;
+#ifdef DUTCH
+			if(pData->curIndex < pData->maxArraySize)
+			{
+				size_t origsize = strlen(pData->szCharData) + 5;
+				mbstowcs(sFuneralString[pData->curIndex], pData->szCharData, origsize);
+			}
+#endif
+		}
+
+		else if(strcmp(name, "ITALIAN_TEXT") == 0)
+		{
+			pData->curElement = ELEMENT;
+#ifdef ITALIAN
+			if(pData->curIndex < pData->maxArraySize)
+			{
+				size_t origsize = strlen(pData->szCharData) + 5;
+				mbstowcs(sFuneralString[pData->curIndex], pData->szCharData, origsize);
+			}
+#endif
+		}
+
+		else if(strcmp(name, "POLISH_TEXT") == 0)
+		{
+			pData->curElement = ELEMENT;
+#ifdef POLISH
+			if(pData->curIndex < pData->maxArraySize)
+			{
+				size_t origsize = strlen(pData->szCharData) + 5;
+				mbstowcs(sFuneralString[pData->curIndex], pData->szCharData, origsize);
+			}
+#endif
+		}
+
+		else if(strcmp(name, "FRENCH_TEXT") == 0)
+		{
+			pData->curElement = ELEMENT;
+#ifdef FRENCH
+			if(pData->curIndex < pData->maxArraySize)
+			{
+				size_t origsize = strlen(pData->szCharData) + 5;
+				mbstowcs(sFuneralString[pData->curIndex], pData->szCharData, origsize);
+			}
+#endif
+		}
+
+		else if(strcmp(name, "GERMAN_TEXT") == 0)
+		{
+			pData->curElement = ELEMENT;
+#ifdef GERMAN
+			if(pData->curIndex < pData->maxArraySize)
+			{
+				size_t origsize = strlen(pData->szCharData) + 5;
+				mbstowcs(sFuneralString[pData->curIndex], pData->szCharData, origsize);
+			}
+#endif
+		}
+
+		else if(strcmp(name, "TAIWANESE_TEXT") == 0)
+		{
+			pData->curElement = ELEMENT;
+#ifdef TAIWANESE
+			if(pData->curIndex < pData->maxArraySize)
+			{
+				size_t origsize = strlen(pData->szCharData) + 5;
+				mbstowcs(sFuneralString[pData->curIndex], pData->szCharData, origsize);
+			}
+#endif
+		}
+
 		pData->maxReadDepth--;
 	}
 	pData->currentDepth--;

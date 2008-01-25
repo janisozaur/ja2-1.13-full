@@ -8,181 +8,482 @@
 <!-- This begins sFloristText -->
 
 <FloristText>
-<TEXT>Gallery</TEXT>
+<ENGLISH_TEXT>Gallery</ENGLISH_TEXT>
+<GERMAN_TEXT>Galerie</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>\"We air-drop anywhere\"</TEXT>
+<ENGLISH_TEXT>"We air-drop anywhere"</ENGLISH_TEXT>
+<GERMAN_TEXT>"Wir werfen überall per Fallschirm ab"</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>1-555-SCENT-ME</TEXT>
+<ENGLISH_TEXT>1-555-SCENT-ME</ENGLISH_TEXT>
+<GERMAN_TEXT>1-555-SCHNUPPER-MAL</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>333 NoseGay Dr, Seedy City, CA USA 90210</TEXT>
+<ENGLISH_TEXT>333 NoseGay Dr, Seedy City, CA USA 90210</ENGLISH_TEXT>
+<GERMAN_TEXT>333 Duftmarke Dr, Aroma City, CA USA 90210</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>http://www.scent-me.com</TEXT>
+<ENGLISH_TEXT>http://www.scent-me.com</ENGLISH_TEXT>
+<GERMAN_TEXT>http://www.schnupper-mal.com</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>We're fast and efficient!</TEXT>
+<ENGLISH_TEXT>We're fast and efficient!</ENGLISH_TEXT>
+<GERMAN_TEXT>Wir arbeiten schnell und effizient</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Next day delivery to most areas worldwide, guaranteed.  Some restrictions apply.</TEXT>
+<ENGLISH_TEXT>Next day delivery to most areas worldwide, guaranteed.  Some restrictions apply.</ENGLISH_TEXT>
+<GERMAN_TEXT>Lieferung am darauffolgenden Tag, in fast jedes Land der Welt. Ausnahmen sind möglich.</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Lowest prices in the world, guaranteed!</TEXT>
+<ENGLISH_TEXT>Lowest prices in the world, guaranteed!</ENGLISH_TEXT>
+<GERMAN_TEXT>Wir haben die garantiert niedrigsten Preise weltweit!</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Show us a lower advertised price for any arrangements, and receive a dozen roses, absolutely free.</TEXT>
+<ENGLISH_TEXT>Show us a lower advertised price for any arrangements, and receive a dozen roses, absolutely free.</ENGLISH_TEXT>
+<GERMAN_TEXT>Wenn Sie anderswo einen niedrigeren Preis für irgend ein Arrangement sehen, bekommen Sie von uns ein Dutzend Rosen umsonst!</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Flying Flora, Fauna &amp; Flowers Since 1981.</TEXT>
+<ENGLISH_TEXT>Flying Flora, Fauna &amp; Flowers Since 1981.</ENGLISH_TEXT>
+<GERMAN_TEXT>Fliegende Flora, Fauna &amp; Blumen seit 1981.</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Our decorated ex-bomber aviators will air-drop your bouquet within a ten mile radius of the requested location.  Anytime - Everytime!</TEXT>
+<ENGLISH_TEXT>Our decorated ex-bomber aviators will air-drop your bouquet within a ten mile radius of the requested location.  Anytime - Everytime!</ENGLISH_TEXT>
+<GERMAN_TEXT>Unsere hochdekorierten Ex-Bomber-Piloten werfen das Bouquet in einem Radius von zehn Meilen rund um den Bestimmungsort ab. Jederzeit!</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Let us satisfy your floral fantasy.</TEXT>
+<ENGLISH_TEXT>Let us satisfy your floral fantasy.</ENGLISH_TEXT>
+<GERMAN_TEXT>Mit uns werden Ihre blumigsten Fantasien wahr</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Let Bruce, our world-renowned floral designer, hand-pick the freshest, highest quality flowers from our very own greenhouse.</TEXT>
+<ENGLISH_TEXT>Let Bruce, our world-renowned floral designer, hand-pick the freshest, highest quality flowers from our very own greenhouse.</ENGLISH_TEXT>
+<GERMAN_TEXT>Bruce, unser weltberühmter Designer-Florist, verwendet nur die frischesten handverlesenen Blumen aus unserem eigenen Gewächshaus.</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>And remember, if we don't have it, we can grow it - Fast!</TEXT>
+<ENGLISH_TEXT>And remember, if we don't have it, we can grow it - Fast!</ENGLISH_TEXT>
+<GERMAN_TEXT>Und denken Sie daran: Was wir nicht haben, pflanzen wir für Sie - und zwar schnell!</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <!-- This begins sOrderFormText -->
 
 <FloristText>
-<TEXT>Back</TEXT>
+<ENGLISH_TEXT>Back</ENGLISH_TEXT>
+<GERMAN_TEXT>Zurück</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Send</TEXT>
+<ENGLISH_TEXT>Send</ENGLISH_TEXT>
+<GERMAN_TEXT>Senden</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Clear</TEXT>
+<ENGLISH_TEXT>Clear</ENGLISH_TEXT>
+<GERMAN_TEXT>Löschen</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Gallery</TEXT>
+<ENGLISH_TEXT>Gallery</ENGLISH_TEXT>
+<GERMAN_TEXT>Galerie</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Name of Bouquet:</TEXT>
+<ENGLISH_TEXT>Name of Bouquet:</ENGLISH_TEXT>
+<GERMAN_TEXT>Name des Gestecks:</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Price:</TEXT>
+<ENGLISH_TEXT>Price:</ENGLISH_TEXT>
+<GERMAN_TEXT>Preis:</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Order Number:</TEXT>
+<ENGLISH_TEXT>Order Number:</ENGLISH_TEXT>
+<GERMAN_TEXT>Bestellnr.:</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Delivery Date</TEXT>
+<ENGLISH_TEXT>Delivery Date</ENGLISH_TEXT>
+<GERMAN_TEXT>Liefertermin</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>next day</TEXT>
+<ENGLISH_TEXT>next day</ENGLISH_TEXT>
+<GERMAN_TEXT>Morgen</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>gets there when it gets there</TEXT>
+<ENGLISH_TEXT>gets there when it gets there</ENGLISH_TEXT>
+<GERMAN_TEXT>Egal</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Delivery Location</TEXT>
+<ENGLISH_TEXT>Delivery Location</ENGLISH_TEXT>
+<GERMAN_TEXT>Bestimmungsort</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Additional Services</TEXT>
+<ENGLISH_TEXT>Additional Services</ENGLISH_TEXT>
+<GERMAN_TEXT>Extraservice</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Crushed Bouquet($10)</TEXT>
+<ENGLISH_TEXT>Crushed Bouquet($10)</ENGLISH_TEXT>
+<GERMAN_TEXT>Kaputtes Gesteck($10)</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Black Roses($20)</TEXT>
+<ENGLISH_TEXT>Black Roses($20)</ENGLISH_TEXT>
+<GERMAN_TEXT>Schwarze Rosen($20)</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Wilted Bouquet($10)</TEXT>
+<ENGLISH_TEXT>Wilted Bouquet($10)</ENGLISH_TEXT>
+<GERMAN_TEXT>Welkes Gesteck($10)</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Fruit Cake (if available)($10)</TEXT>
+<ENGLISH_TEXT>Fruit Cake (if available)($10)</ENGLISH_TEXT>
+<GERMAN_TEXT>Früchtekuchen (falls vorrätig)($10)</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Personal Sentiments:</TEXT>
+<ENGLISH_TEXT>Personal Sentiments:</ENGLISH_TEXT>
+<GERMAN_TEXT>Persönliche Worte:</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Due to the size of gift cards, your message can be no longer than 75 characters.</TEXT>
+<ENGLISH_TEXT>Due to the size of gift cards, your message can be no longer than 75 characters.</ENGLISH_TEXT>
+<GERMAN_TEXT>Aufgrund der Kartengröße darf Ihre Botschaft nicht länger sein als 75 Zeichen.</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>...or select from one of our</TEXT>
+<ENGLISH_TEXT>...or select from one of our</ENGLISH_TEXT>
+<GERMAN_TEXT>...oder wählen Sie eine unserer</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>STANDARDIZED CARDS</TEXT>
+<ENGLISH_TEXT>STANDARDIZED CARDS</ENGLISH_TEXT>
+<GERMAN_TEXT>STANDARD-KARTEN</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Billing Information</TEXT>
+<ENGLISH_TEXT>Billing Information</ENGLISH_TEXT>
+<GERMAN_TEXT>Rechnung für</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Name:</TEXT>
+<ENGLISH_TEXT>Name:</ENGLISH_TEXT>
+<GERMAN_TEXT>Name:</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <!-- This begins sFloristGalleryText  -->
 
 <FloristText>
-<TEXT>Prev</TEXT>
+<ENGLISH_TEXT>Prev</ENGLISH_TEXT>
+<GERMAN_TEXT>Zurück</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Next</TEXT>
+<ENGLISH_TEXT>Next</ENGLISH_TEXT>
+<GERMAN_TEXT>Weiter</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Click on the selection you want to order.</TEXT>
+<ENGLISH_TEXT>Click on the selection you want to order.</ENGLISH_TEXT>
+<GERMAN_TEXT>Klicken Sie auf das Gesteck Ihrer Wahl</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Please Note: there is an additional $10 fee for all wilted or crushed bouquets.</TEXT>
+<ENGLISH_TEXT>Please Note: there is an additional $10 fee for all wilted or crushed bouquets.</ENGLISH_TEXT>
+<GERMAN_TEXT>Bitte beachten Sie, daß wir für jedes kaputte oder verwelkte Gesteck einen Aufpreis von $10 berechnen.</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Home</TEXT>
+<ENGLISH_TEXT>Home</ENGLISH_TEXT>
+<GERMAN_TEXT>Home</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <!-- This begins sFloristCards  -->
 
 <FloristText>
-<TEXT>Click on your selection</TEXT>
+<ENGLISH_TEXT>Click on your selection</ENGLISH_TEXT>
+<GERMAN_TEXT>Klicken Sie auf das Gesteck Ihrer Wahl</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 <FloristText>
-<TEXT>Back</TEXT>
+<ENGLISH_TEXT>Back</ENGLISH_TEXT>
+<GERMAN_TEXT>Zurück</GERMAN_TEXT>
+<RUSSIAN_TEXT></RUSSIAN_TEXT>
+<POLISH_TEXT></POLISH_TEXT>
+<DUTCH_TEXT></DUTCH_TEXT>
+<FRENCH_TEXT></FRENCH_TEXT>
+<ITALIAN_TEXT></ITALIAN_TEXT>
+<TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FloristText>
 
 </FloristData>

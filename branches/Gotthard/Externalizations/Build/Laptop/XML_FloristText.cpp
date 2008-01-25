@@ -119,11 +119,9 @@ FloristEndElementHandle(void *userData, const XML_Char *name)
 		{
 			pData->curElement = ELEMENT_LIST;
 		}
-		else if(strcmp(name, "TEXT") == 0)
+#ifdef ENGLISH		
+		else if(strcmp(name, "ENGLISH_TEXT") == 0)
 		{
-			//YES, I realize this is not done that well, but give me a break I'm not that great of a coder.
-			//Maybe later we can have additional text in the florist area, but until then at least it can be changed.
-			//Gotthard, 10/16/07
 			pData->curElement = ELEMENT;
 			if(pData->curIndex < pData->maxArraySize)
 			{
@@ -146,6 +144,195 @@ FloristEndElementHandle(void *userData, const XML_Char *name)
 				}
 			}
 		}
+#endif
+#ifdef RUSSIAN
+		else if(strcmp(name, "RUSSIAN_TEXT") == 0)
+		{
+			pData->curElement = ELEMENT;
+			if(pData->curIndex < pData->maxArraySize)
+			{
+				size_t origsize = strlen(pData->szCharData) + 5;
+				if(pData->curIndex < 14)
+				{
+					mbstowcs(sFloristText[pData->curIndex],pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 36)
+				{
+					mbstowcs(sOrderFormText[pData->curIndex - 14] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 41)
+				{
+					mbstowcs(sFloristGalleryText[pData->curIndex - 36] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 43)
+				{
+					mbstowcs(sFloristCards[pData->curIndex - 41] ,pData->szCharData, origsize);
+				}
+			}
+		}
+#endif
+
+#ifdef DUTCH
+		else if(strcmp(name, "DUTCH_TEXT") == 0)
+		{
+			pData->curElement = ELEMENT;
+			if(pData->curIndex < pData->maxArraySize)
+			{
+				size_t origsize = strlen(pData->szCharData) + 5;
+				if(pData->curIndex < 14)
+				{
+					mbstowcs(sFloristText[pData->curIndex],pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 36)
+				{
+					mbstowcs(sOrderFormText[pData->curIndex - 14] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 41)
+				{
+					mbstowcs(sFloristGalleryText[pData->curIndex - 36] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 43)
+				{
+					mbstowcs(sFloristCards[pData->curIndex - 41] ,pData->szCharData, origsize);
+				}
+			}
+		}
+#endif
+
+#ifdef ITALIAN
+		else if(strcmp(name, "ITALIAN_TEXT") == 0)
+		{
+			pData->curElement = ELEMENT;
+			if(pData->curIndex < pData->maxArraySize)
+			{
+				size_t origsize = strlen(pData->szCharData) + 5;
+				if(pData->curIndex < 14)
+				{
+					mbstowcs(sFloristText[pData->curIndex],pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 36)
+				{
+					mbstowcs(sOrderFormText[pData->curIndex - 14] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 41)
+				{
+					mbstowcs(sFloristGalleryText[pData->curIndex - 36] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 43)
+				{
+					mbstowcs(sFloristCards[pData->curIndex - 41] ,pData->szCharData, origsize);
+				}
+			}
+		}
+#endif
+
+#ifdef POLISH
+		else if(strcmp(name, "POLISH_TEXT") == 0)
+		{
+			pData->curElement = ELEMENT;
+			if(pData->curIndex < pData->maxArraySize)
+			{
+				size_t origsize = strlen(pData->szCharData) + 5;
+				if(pData->curIndex < 14)
+				{
+					mbstowcs(sFloristText[pData->curIndex],pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 36)
+				{
+					mbstowcs(sOrderFormText[pData->curIndex - 14] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 41)
+				{
+					mbstowcs(sFloristGalleryText[pData->curIndex - 36] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 43)
+				{
+					mbstowcs(sFloristCards[pData->curIndex - 41] ,pData->szCharData, origsize);
+				}
+			}
+		}
+#endif 
+
+#ifdef FRENCH
+		else if(strcmp(name, "FRENCH_TEXT") == 0)
+		{
+			pData->curElement = ELEMENT;
+			if(pData->curIndex < pData->maxArraySize)
+			{
+				size_t origsize = strlen(pData->szCharData) + 5;
+				if(pData->curIndex < 14)
+				{
+					mbstowcs(sFloristText[pData->curIndex],pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 36)
+				{
+					mbstowcs(sOrderFormText[pData->curIndex - 14] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 41)
+				{
+					mbstowcs(sFloristGalleryText[pData->curIndex - 36] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 43)
+				{
+					mbstowcs(sFloristCards[pData->curIndex - 41] ,pData->szCharData, origsize);
+				}
+			}
+		}
+#endif
+
+#ifdef GERMAN
+		else if(strcmp(name, "GERMAN_TEXT") == 0)
+		{
+			pData->curElement = ELEMENT;
+			if(pData->curIndex < pData->maxArraySize)
+			{
+				size_t origsize = strlen(pData->szCharData) + 5;
+				if(pData->curIndex < 14)
+				{
+					mbstowcs(sFloristText[pData->curIndex],pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 36)
+				{
+					mbstowcs(sOrderFormText[pData->curIndex - 14] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 41)
+				{
+					mbstowcs(sFloristGalleryText[pData->curIndex - 36] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 43)
+				{
+					mbstowcs(sFloristCards[pData->curIndex - 41] ,pData->szCharData, origsize);
+				}
+			}
+		}
+#endif
+
+#ifdef TAIWANESE
+		else if(strcmp(name, "TAIWANESE_TEXT") == 0)
+		{
+			pData->curElement = ELEMENT;
+			if(pData->curIndex < pData->maxArraySize)
+			{
+				size_t origsize = strlen(pData->szCharData) + 5;
+				if(pData->curIndex < 14)
+				{
+					mbstowcs(sFloristText[pData->curIndex],pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 36)
+				{
+					mbstowcs(sOrderFormText[pData->curIndex - 14] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 41)
+				{
+					mbstowcs(sFloristGalleryText[pData->curIndex - 36] ,pData->szCharData, origsize);
+				}
+				else if(pData->curIndex < 43)
+				{
+					mbstowcs(sFloristCards[pData->curIndex - 41] ,pData->szCharData, origsize);
+				}
+			}
+		}
+#endif
 		pData->maxReadDepth--;
 	}
 	pData->currentDepth--;

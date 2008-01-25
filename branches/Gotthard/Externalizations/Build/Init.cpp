@@ -999,7 +999,7 @@ iFuneralConstants[45] = ((SCREEN_WIDTH - 640) / 2) + 238;//45
 iFuneralConstants[46] = ((SCREEN_HEIGHT - 480) / 2) + 359;
 return;
 }
-
+/*
 void SetupAPBPConstantsArray()
 {
 iBPAPConstants[0] = 10;
@@ -1179,3 +1179,4 @@ iBPAPConstants[173] = 250;
 iBPAPConstants[174] = 20;
 iBPAPConstants[175] = 80;
 }
+*/
