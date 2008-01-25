@@ -4676,6 +4676,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, int subObject )
 	INT16		lbePocket = ITEM_NOT_FOUND;
 	UINT32		lClass;
 	bool		activeNode = pObj->IsActiveLBE(subObject);
+	bool		wornItem = false;
 
 	// Start by verifying that this item is an LBENODE
 	if(Item[pObj->usItem].usItemClass != IC_LBEGEAR || iResolution == 0)
@@ -4687,8 +4688,18 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, int subObject )
 	else
 		pSoldier = gpSMCurrentMerc;
 	
+	// Is the object we're looking at currently worn
+	for(unsigned int x = VESTPOCKPOS; x <= BPACKPOCKPOS; x++)
+	{
+		if(pObj == &pSoldier->inv[x])
+		{
+			wornItem = true;
+			break;
+		}
+	}
+
 	LBENODE* pLBE = NULL;
-	if(pObj->IsActiveLBE(subObject))
+	if(activeNode == true)
 	{
 		pLBE = pObj->GetLBEPointer(subObject);
 		lClass = pLBE->lbeClass;
@@ -4825,19 +4836,16 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, int subObject )
 		sX = LBEInvPocketXY[cnt].sX;
 		sY = LBEInvPocketXY[cnt].sY;
 		lbePocket = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbePocketIndex[icPocket[pocketKey[cnt]]];
-		if(activeNode == true)
-		{
-			if(pLBE->inv[cnt].exists() == true)
-				pObject = &pLBE->inv[cnt];
-			else
-				pObject = NULL;
-		}
-		else
+		pObject = NULL;
+		if(wornItem == true)
 		{
 			if(pSoldier->inv[pocketKey[cnt]].exists() == true)
 				pObject = &(pSoldier->inv[pocketKey[cnt]]);
-			else
-				pObject = NULL;
+		}
+		else if(activeNode == true)
+		{
+			if(pLBE->inv[cnt].exists() == true)
+				pObject = &pLBE->inv[cnt];
 		}
 		if(lbePocket == 0){	// Deactivate Pocket
 			DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, (UINT16)(LBEInvPocketXY[cnt].sWidth-1), (UINT16)(LBEInvPocketXY[cnt].sHeight-1), 0 );

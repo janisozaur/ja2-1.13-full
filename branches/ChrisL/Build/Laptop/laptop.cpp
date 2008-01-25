@@ -5718,7 +5718,7 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 	{
 		iIndex = guiCurrentLaptopMode - LAPTOP_MODE_WWW-1;
 
-		swprintf( sString, L"%s	-	%s", pWebTitle[0], pWebPagesTitles[ iIndex ] );
+		swprintf( sString, L"%s - %s", pWebTitle[0], pWebPagesTitles[ iIndex ] );
 		mprintf(iScreenWidthOffset + 140 ,iScreenHeightOffset + 33 ,sString);
 	}
 

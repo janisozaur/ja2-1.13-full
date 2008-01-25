@@ -2316,7 +2316,10 @@ void	RemoveSMPanelButtons( )
 
 	for ( cnt = 0; cnt < NUM_SM_BUTTON_IMAGES; cnt++ )
 	{
-		UnloadButtonImage( iSMPanelImages[ cnt ] );
+		if(iSMPanelImages[ cnt ] != -1)
+		{
+			UnloadButtonImage( iSMPanelImages[ cnt ] );
+		}
 	}
 
 	if ( giSMStealthButton != -1 )
