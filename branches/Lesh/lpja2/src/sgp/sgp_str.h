@@ -28,4 +28,6 @@ INT32	UTF16toUTF32(UINT16 *pUTF16, CHAR16 *pUTF32, UINT16 usMaxLen);
 
 INT32	STR_SPrintf(CHAR8 *pString, INT16 usMaxLen, const CHAR8 *pFormat, ...);
 
+CHAR8*	STR_Trim(CHAR8 *pString);
+
 #endif

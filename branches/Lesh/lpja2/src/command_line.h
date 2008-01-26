@@ -22,6 +22,7 @@ typedef struct
 } COMMAND_LINE_PARAMS;
 
 extern	COMMAND_LINE_PARAMS		gCmdLineParams;
+extern	STRING512				argv0;			// needed for PhysicsFS
 
 void	ProcessCommandLine( INT32 argc, CHAR8 *argv[] );
 void	PrintCommandLineHelp( void );

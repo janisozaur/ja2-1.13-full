@@ -26,6 +26,8 @@ private:
 	char 		m_szFileName[MAX_PATH];
 	CFG_File	cfg;
 	bool		fIsOpen;
+	void		*iniBuffer;
+	SDL_RWops	*stream;
 };
 
 #endif//INIREADER_H

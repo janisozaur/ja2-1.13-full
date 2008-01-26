@@ -3,6 +3,7 @@
 
 // command line parameters structure
 COMMAND_LINE_PARAMS		gCmdLineParams;
+STRING512				argv0;
 
 //**********************************************************
 //	ProcessCommandLine - parses the command line
@@ -15,6 +16,9 @@ void	ProcessCommandLine( INT32 argc, CHAR8 *argv[] )
 {
 	INT32	cnt = 1;
 
+	memset( argv0, 0, sizeof(STRING512) );
+	strncpy( argv0, argv[0], sizeof(STRING512) );
+	
 	// first - write default values to cmd line params
 	gCmdLineParams.fHelp		= FALSE;
 	gCmdLineParams.eScreenMode	= SCR_NOT_SPECIFIED;

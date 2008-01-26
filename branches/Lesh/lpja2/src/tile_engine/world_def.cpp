@@ -333,9 +333,6 @@ BOOLEAN LoadTileSurfaces( char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID )
 //	STRING512				ExeDir;
 //	STRING512				INIFile;
 
-	// Get Executable Directory
-//	GetExecutableDirectory( ExeDir );
-
 	// Adjust Current Dir
 	// CHECK IF DEFAULT INI OVERRIDE FILE EXISTS
 //	sprintf( INIFile, "%s\\engine.ini", ExeDir );

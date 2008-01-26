@@ -69,6 +69,19 @@ INT32	STR_SPrintf(CHAR8 *pString, INT16 usMaxLen, const CHAR8 *pFormat, ...)
 	return( iRet );
 }
 
+CHAR8*	STR_Trim(CHAR8 *pString)
+{
+	CHAR8	*ptr = pString;
+	INT32	iPos;
+	
+	// remove spaces and tabs at the beginning of string
+	ptr += strspn( ptr, " \t" );
+	// cut the string at first space, tab, newline or carriage return
+	ptr[ strcspn( ptr, " \t\n\r" ) ] = 0;
+	
+	return ptr;
+}
+
 #elif defined( JA2_WIN )
 
 // ---------------

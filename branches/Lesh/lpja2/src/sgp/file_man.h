@@ -27,8 +27,6 @@
 //
 //**************************************************************************
 
-// Lesh: define this to test new revision of vfs
-#define VFS2
 
 #define MAX_FILENAME_LEN        48
 
@@ -76,7 +74,7 @@ extern void		ShutdownFileManager( void );
 extern void		FileDebug( BOOLEAN f );
 extern BOOLEAN 	PathBackslash(STR path);
 
-BOOLEAN	FileExists( STR strFilename );
+extern BOOLEAN	FileExists( STR strFilename );
 extern BOOLEAN	FileExistsNoDB( STR strFilename );
 extern BOOLEAN	FileDelete( const CHAR8 *strFilename );
 extern HWFILE	FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose );
@@ -92,15 +90,8 @@ extern INT32	FileGetPos( HWFILE );
 
 extern INT32	FileGetSize( HWFILE );
 extern INT32	FileSize(STR strFilename);
+extern BOOLEAN  FileIsValidHandle( HWFILE hFile );
 
-#ifdef JA2_WIN
-#	define BACKSLASH(x)
-#elif defined(JA2_LINUX)
-#	define BACKSLASH(x)		PathBackslash(x)
-
-BOOLEAN PathBackslash(STR path);
-
-#endif
 
 BOOLEAN SetFileManCurrentDirectory( STR pcDirectory );
 BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory );
@@ -119,9 +110,11 @@ BOOLEAN EraseDirectory( STRING512 pcDirectory);
 typedef struct _GETFILESTRUCT_TAG {
 	INT32	iFindHandle;
 	CHAR8	zFileName[ 260 ];			// changed from UINT16, Alex Meduna, Mar-20'98
-	BOOLEAN	fUseVFS;
-//	UINT32 uiFileSize;
-//	UINT32 uiFileAttribs;
+//	BOOLEAN	fUseVFS;
+	CHAR8	**list;
+	CHAR8	**iterator;
+	CHAR8	*mask;
+	CHAR8	*directory;
 } GETFILESTRUCT;
 
 // File searching stuff

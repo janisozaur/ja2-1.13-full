@@ -16,7 +16,8 @@ source_dirso := . sgp utils xml tile_engine tactical_ai tactical strategic lapto
 link_flags   := -pthread
 include_libs :=
 link_libs    := 
-link_so      := /usr/lib/libexpat.so.0 /usr/lib/libfmod.so $(sdl_lib)
+#link_so      := /usr/lib/libphysfs.so /usr/lib/libexpat.so.0 /usr/lib/libfmod.so $(sdl_lib)
+link_so      := $(sdl_lib) -lphysfs -lexpat /usr/lib/libfmod.so
 
 source_dirs  := $(addprefix ../../src/, $(source_dirso) )
 source_files := $(wildcard $(addsuffix /*.cpp, $(source_dirs) ) )

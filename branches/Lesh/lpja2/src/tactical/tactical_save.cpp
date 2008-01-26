@@ -84,7 +84,7 @@ typedef struct
 
 
 #define		NPC_TEMP_QUOTE_FILE		"NpcQuote.tmp"
-#define		TACTICAL_SAVE_DIR		"Temp"	
+#define		TACTICAL_SAVE_DIR		"tactical"	
 
 STRING512	zNPCQuoteFile;
 STRING512	gzTacticalSaveDir;
@@ -1487,7 +1487,7 @@ BOOLEAN InitTacticalSave( BOOLEAN fCreateTempDir )
 	STRING512	zTempDir;
 
 	GetTempDirectory( zTempDir );
-	STR_SPrintf( gzTacticalSaveDir, 512, "%s%s%c", zTempDir, TACTICAL_SAVE_DIR, SLASH );
+	STR_SPrintf( gzTacticalSaveDir, STRLEN(gzTacticalSaveDir), "%s%s%c", zTempDir, TACTICAL_SAVE_DIR, SLASH );
 
 	//If the Map Temp directory exists, removes the temp files
 	uiRetVal = DirectoryExists( gzTacticalSaveDir );

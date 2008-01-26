@@ -390,11 +390,9 @@ UINT32	guiSaveGameVersion=0;
 //
 /////////////////////////////////////////////////////
 
-//CHAR8		gsSaveGameNameWithPath[ 512 ];
+#define		SAVE_GAME_DIR	"savedgames/"
 
-//CHAR8			gSaveDir[ MAX_PATH ];  // Snap: Initilized by InitSaveDir
 STRING512		gSaveDir;
-STRING512		gzRootSaveDirectory;
 
 UINT8			gubSaveGameLoc=0;
 
@@ -475,18 +473,11 @@ void	HandleOldBobbyRMailOrders();
 //
 /////////////////////////////////////////////////////
 
-
 // Snap: Initializes gSaveDir global, creating the save directory if necessary
 // The save directory now resides in the data directory (default or custom)
 BOOLEAN InitSaveDir()
 {
-	STRING512	zGameWorkDir;
-
-	GetWorkDirectory( zGameWorkDir );
-	STR_SPrintf(gzRootSaveDirectory, 512, "%s%S%c", zGameWorkDir, pMessageStrings[ MSG_SAVEDIRECTORY ], SLASH );
-
-	// todo: $$$ - more work needed for mod saves, i.e. mod can assign it's own subdir to save
-	strcpy( gSaveDir, gzRootSaveDirectory );
+	STR_SPrintf(gSaveDir, STRLEN(gSaveDir), "%s", SAVE_GAME_DIR );
 
 	// This was moved here from SaveGame
 	//Check to see if the save directory exists

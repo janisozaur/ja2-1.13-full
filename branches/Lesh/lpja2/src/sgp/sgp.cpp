@@ -22,7 +22,6 @@
 	#include "input.h"
 	#include "build_defines.h"
 	#include "intro.h"
-	#include "library_database.h"
 	#include "game.h"
 	#include "container.h"
 		
@@ -96,7 +95,7 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	TestIO();	// $$$
 
 	// Initialize the Debug Manager - success doesn't matter
-	InitializeDebugManager();
+//	InitializeDebugManager();
 
 	// Now start up everything else.
 	RegisterDebugTopic(TOPIC_SGP, "Standard Gaming Platform");
@@ -163,39 +162,7 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		return FALSE;
 	}
 
-	// Snap: moved the following from InitJA2SplashScreen for clarity
-	STRING512			CurrentDir;
-	STRING512			WorkDir;
-
 	InitializeJA2Clock();
-
-	// Get Executable Directory
-	GetHomeDirectory( CurrentDir );
-	STRING512	IniName;
-
-	if ( !SetFileManCurrentDirectory( CurrentDir ) )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not find exe directory, shutting down");
-		return FALSE;
-	}
-
-	sprintf( IniName, "%s%s", CurrentDir, "Ja2.ini");
-
-	// Adjust Current Dir
-	GetWorkDirectory( WorkDir );
-	printf("Work directory is %s\n", WorkDir);
-	if ( !SetFileManCurrentDirectory( WorkDir ) )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not find data directory, shutting down");
-		return FALSE;
-	}
-
-	//Initialize the file database
-	if ( !InitializeFileDatabase( ) )
-	{
-		fprintf(stderr, "Couldn't init library database\n");
-		return FALSE;
-	}
 
 	//InitJA2SplashScreen();
 
@@ -327,25 +294,31 @@ void GetRuntimeSettings( )
 {
 	// Runtime settings - for now use INI file - later use registry
 	STRING512		INIFile;		// Path to the ini file
-	CIniReader		rtIni;
+	CFG_File		cfg;
 	
 	// Get Executable Directory
 	GetHomeDirectory( INIFile );
 
-	strcat(INIFile, "Ja2.ini");
+	strcat(INIFile, "ja2.ini");
 
 	printf("Reading run-time settings from: %s\n", INIFile);
-	if ( !rtIni.Open( INIFile, TRUE ) )
+	if ( CFG_OpenFile( INIFile, &cfg ) != CFG_OK )
 	{
 		printf("Failed to open run-time ini\n");
 	}
 
+	if ( CFG_SelectGroup( "Ja2 Settings", CFG_False ) != CFG_OK )
+	{
+		printf("Failed to select Ja2 Settings group in ini\n");
+	}
+	
 	iResolution = -1;
 
+	
 #ifndef JA2EDITOR
-	iResolution = rtIni.ReadInteger("Ja2 Settings", "SCREEN_RESOLUTION", 1);
+	iResolution = CFG_ReadInt("SCREEN_RESOLUTION", 1);
 #else
-	iResolution = rtIni.ReadInteger("Ja2 Settings", "EDITOR_SCREEN_RESOLUTION", 1);
+	iResolution = CFG_ReadInt("EDITOR_SCREEN_RESOLUTION", 1);
 #endif
 
 	int	iResX;
@@ -384,10 +357,10 @@ void GetRuntimeSettings( )
 	SCREEN_HEIGHT = GetPrivateProfileInt( "SGP", "HEIGHT", iResY, INIFile );
 #endif
 
-	gfFullScreen = rtIni.ReadInteger("Ja2 Settings", "FULLSCREEN", 0);
+	gfFullScreen = CFG_ReadInt("FULLSCREEN", 0);
 
-	rtIni.Close();
-
+	CFG_CloseFile( &cfg );
+	
 	iScreenWidthOffset = (SCREEN_WIDTH - 640) / 2;
 	iScreenHeightOffset = (SCREEN_HEIGHT - 480) / 2;
 }

@@ -162,18 +162,18 @@ BOOLEAN DbgGetLogFileName( STRING512 pcName )
 	// use the provided buffer to get the directory name, then tack on
 	// "\debug.txt"
 #ifndef _NO_DEBUG_TXT
-	if ( ! GetExecutableDirectory( pcName ) )
-	{
-		return( FALSE );
-	}
+//	if ( ! GetExecutableDirectory( pcName ) )
+//	{
+//		return( FALSE );
+//	}
 
-	if ( strlen( pcName ) > (512 - strlen( "\\debug.txt" ) - 1 ) )
+	if ( strlen( pcName ) > (512 - strlen( "debug.txt" ) - 1 ) )
 	{
 		// no room!
 		return( FALSE );
 	}
 
-	strcat( pcName, "\\debug.txt" );
+	strcat( pcName, "debug.txt" );
 #endif
 
 	return( TRUE );

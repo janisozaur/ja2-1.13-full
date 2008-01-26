@@ -14,7 +14,6 @@
 	#include	"options_screen.h"
 	#include	"overhead.h"
 	#include	"game_version.h"
-	#include	"library_database.h"
 	#include	"debug.h"
 	#include	"language_defines.h"
 	#include "help_screen.h"
@@ -174,12 +173,6 @@ BOOLEAN	SaveGameSettings()
 {
 	HWFILE		hFile;
 	UINT32	uiNumBytesWritten;
-//	STRING512	profileDir;
-
-	// $TODO$ - i hope, it will be already defined
-//	GetExecutableDirectory(profileDir);
-	
-//	sprintf( gameSettingsFilePath, "%s%s", profileDir, GAME_SETTINGS_FILE );
 
 	//create the file
 	hFile = FileOpen( gameSettingsFilePath, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );

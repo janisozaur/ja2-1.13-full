@@ -16,7 +16,6 @@
 	#include "game_clock.h"
 	#include "timer_control.h"
 	#include "overhead.h"
-	#include "library_database.h"
 	#include "map_screen_interface.h"
 	#include "tactical_save.h"
 	#include "interface.h"
@@ -163,9 +162,6 @@ void    ShutdownGame(void)
 	//Save the general save game settings to disk
 	SaveGameSettings();
 
-
-	 //shutdown the file database manager
-	 ShutDownFileDatabase( );
 
 
 	//Deletes all the Temp files in the Maps\Temp directory

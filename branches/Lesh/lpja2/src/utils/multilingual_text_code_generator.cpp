@@ -92,7 +92,7 @@ BOOLEAN ProcessIfMultilingualCmdLineArgDetected( UINT8 *str )
 	}
 
 	//Record the exe directory
-	GetExecutableDirectory( ExecDir );
+//	GetExecutableDirectory( ExecDir );
 	//Record the curr directory used (we will restore before leaving)
 	GetFileManCurrentDirectory( CurrDir );
 

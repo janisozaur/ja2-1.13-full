@@ -2,7 +2,7 @@
 #include "platform.h"
 #include "SDL_config_lib.h"
 #include "file_man.h"
-#include "vfs.hpp"
+#include "mem_man.h"
 
 
 // Kaiden: INI reading function definitions:
@@ -10,7 +10,9 @@
 
 CIniReader::CIniReader()
 {
-	fIsOpen = false;
+	fIsOpen   = false;
+	iniBuffer = NULL;
+	stream    = NULL;
 }
 
 
@@ -94,29 +96,43 @@ const char* CIniReader::ReadString(const char* szSection, const char* szKey, con
 
 bool CIniReader::Open(const char* szFileName, bool bAbsolutePath)
 {
-	// Lesh: If absolute (direct) path is given, use it. Otherwise...
-	// Snap: Look for the INI file in the custom Data directory.
-	// If not there, leave at default location.
-	if ( bAbsolutePath )
+	INT32	iniSize;
+	HWFILE	ini;
+	
+	// check the file existance	
+	if ( !FileExistsNoDB((CHAR8*)szFileName) )
 	{
-		strcpy(m_szFileName, szFileName);
+		fprintf( stderr, "INI: file doesn't exist %s\n", szFileName );
+		return false;
 	}
-//	else if ( gCustomDataCat.FindFile(szFileName) )
-//	{
-//		sprintf(m_szFileName, "%s\\%s", gCustomDataCat.GetRootDir().c_str(), szFileName);
-//	}
-//	else
-//	{
-//		sprintf(m_szFileName, "%s\\%s", gDefaultDataCat.GetRootDir().c_str(), szFileName);
-//	}
-	else if ( !VFS.GetResourceFilename( szFileName, m_szFileName, MAX_PATH ) )
-		return FALSE;
-
-	printf("CIniReader::Open(): make proper opening\n");
-
-	if ( CFG_OpenFile( m_szFileName, &cfg ) != CFG_OK )
+	
+	// read it into memory
+	iniSize   = FileSize((CHAR8*)szFileName);
+	iniBuffer = MemAlloc(iniSize);
+	if ( !iniBuffer )
 	{
-		fprintf( stderr, "INI: can't open file %s\n", m_szFileName );
+		fprintf( stderr, "INI: can't allocate memory for ini file\n" );
+		return false;
+	}
+	
+	ini = FileOpen( (CHAR8*)szFileName, FILE_ACCESS_READ, FALSE);
+	if ( !FileIsValidHandle(ini) )
+	{
+		fprintf( stderr, "INI: can't open ini file\n" );
+		return false;
+	}
+	if ( !FileRead(ini, iniBuffer, iniSize, NULL) )
+	{
+		fprintf( stderr, "INI: failed to read ini file\n" );
+		return false;
+	}
+	FileClose(ini);
+		
+	// now open config file
+	stream = SDL_RWFromConstMem(iniBuffer, iniSize);
+	if ( CFG_OpenFile_RW( stream, &cfg ) != CFG_OK )
+	{
+		fprintf( stderr, "INI: can't open file %s\n", szFileName );
 		fIsOpen = FALSE;
 		return FALSE;
 	}
@@ -128,6 +144,16 @@ void CIniReader::Close()
 {
 	if ( fIsOpen && CFG_CloseFile( &cfg ) != CFG_OK )
 	{
-		fprintf( stderr, "INI: can't close file %s\n", m_szFileName );
+		fprintf( stderr, "INI: can't close file\n" );
+	}
+	if ( stream )
+	{
+		SDL_RWclose(stream);
+		stream = NULL;
+	}
+	if ( iniBuffer )
+	{
+		MemFree(iniBuffer);
+		iniBuffer = NULL;
 	}
 }

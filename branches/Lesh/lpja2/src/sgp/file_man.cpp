@@ -32,14 +32,19 @@
 	#include "file_man.h"
 	#include "mem_man.h"
 	#include "debug.h"
-	#include "library_database.h"
-	#include "vfs.hpp"
+	#include "slf.h"
 	#include "io_layer.h"
 	#include "sgp_str.h"
 	#include "wcheck.h"
 	#include "app_env.h"
 	#include "profile_man.h"
-	
+	#include "command_line.h"
+		
+#include <physfs.h>
+#include "path_utils.h"
+#include "source_list.h"
+#include "resource_db.h"
+
 #endif
 //**************************************************************************
 //
@@ -49,13 +54,20 @@
 
 #define FILENAME_LENGTH					600
 
-#define PRINT_DEBUG_INFO	FileDebugPrint();
+//**************************************************************************
+//
+//				Debugging
+//
+//**************************************************************************
 
-//**************************************************************************
-//
-//				Typedefs
-//
-//**************************************************************************
+// Uncomment this, if you want to see debug output
+//#define	DEBUG_FILEMAN
+
+#ifdef DEBUG_FILEMAN
+#define FDEBUG(fmt, args...)	printf(fmt, ## args)
+#else
+#define FDEBUG(fmt, args...)
+#endif
 
 //**************************************************************************
 //
@@ -64,10 +76,7 @@
 //**************************************************************************
 
 #define GAME_DIR_PREFIX			"ja2-1.13"
-#define TEMP_DIR_PREFIX			".temp"
-
-//The FileDatabaseHeader
-DatabaseManagerHeaderStruct gFileDataBase;
+#define TEMP_DIR_PREFIX			"temp"
 
 
 BOOLEAN fFindInfoInUse[20] = {FALSE,FALSE,FALSE,FALSE,FALSE,
@@ -87,11 +96,11 @@ STRING512	gzWorkPath;
 typedef struct
 {
 	BOOLEAN		isFree;
-	BOOLEAN		isVFS;
+	BOOLEAN		isSLF;
 	union
 	{
-		IOFILE	file;
-		INT32	vfsIndex;
+		fsFile		file;
+		slfHandler	slf;
 	} handle;
 } FilemanEntry;
 
@@ -108,7 +117,6 @@ INT32	FindFreeOpenedFilesSlot( void );
 //
 //**************************************************************************
 
-void	FileDebugPrint( void );
 HANDLE	GetHandleToRealFile( HWFILE hFile, BOOLEAN *pfDatabaseFile );
 
 //**************************************************************************
@@ -116,6 +124,81 @@ HANDLE	GetHandleToRealFile( HWFILE hFile, BOOLEAN *pfDatabaseFile );
 //				Functions
 //
 //**************************************************************************
+
+void SLF_Debug( void )
+{
+	slfHandler	file;
+	INT32		size, wasRead;
+	void		*buffer;
+	FILE		*dump;
+	CHAR8		test1[8], test2[4], test3[16];
+	INT32		i;
+	
+	file = SLF_OpenResource("ambient/bird4.wav");
+	if ( !SLF_IsValidHandle(file) )
+	{
+		printf("SLF_Debug: Invalid handle!\n");
+		return;
+	}
+	printf("SLF_Debug: handle = %d\n", file);
+	size = SLF_Size_Handler( file );
+	printf("SLF_Debug: size = %d\n", size);
+
+	SLF_Seek(file, 8, FILE_SEEK_FROM_START);
+	printf("SLF_Debug: pos = %d\n", SLF_Tell(file) );
+	wasRead = SLF_Read(file, test1, 8);
+	printf("SLF_Debug: was read = %d\n", wasRead);
+
+	SLF_Seek(file, 20, FILE_SEEK_FROM_CURRENT);
+	printf("SLF_Debug: pos = %d\n", SLF_Tell(file) );
+	wasRead = SLF_Read(file, test2, 4);
+	printf("SLF_Debug: was read = %d\n", wasRead);
+
+	SLF_Seek(file, 16, FILE_SEEK_FROM_END);
+	printf("SLF_Debug: pos = %d\n", SLF_Tell(file) );
+	wasRead = SLF_Read(file, test3, 16);
+	printf("SLF_Debug: was read = %d\n", wasRead);
+
+	printf("SLF_Debug: test1 = ");
+	for ( i=0; i<8; i++)
+		printf("%c", test1[i]);
+	printf("\n");
+
+	printf("SLF_Debug: test2 = ");
+	for ( i=0; i<4; i++)
+		printf("%c", test2[i]);
+	printf("\n");
+
+	printf("SLF_Debug: test3 = ");
+	for ( i=0; i<16; i++)
+		printf("%c", test3[i]);
+	printf("\n");
+/*
+	size = SLF_Size_Handler( file );
+	printf("SLF_Debug: size = %d\n", size);
+	buffer = MemAlloc( size );
+	if ( !buffer )
+	{
+		printf("SLF_Debug: No memory!\n");
+		SLF_CloseResource( file );
+		return;
+	}
+	wasRead = SLF_Read(file, buffer, size);
+	printf("SLF_Debug: was read = %d\n", wasRead);
+	
+	dump = fopen("dump1.dat", "w");
+	if ( !dump )
+	{
+		printf("SLF_Debug: Can't create dump!\n");
+		SLF_CloseResource( file );
+		return;
+	}
+	fwrite(buffer, 1, wasRead, dump);
+	fclose(dump);
+*/	
+//	MemFree( buffer );
+	SLF_CloseResource( file );
+}
 
 //===================================================================
 //
@@ -154,28 +237,27 @@ INT32	FindFreeOpenedFilesSlot( void )
 BOOLEAN	InitializeFileManager(  STR strIndexFilename )
 {
 	printf("Initializing File Manager...\n");
-	
-	InitializeProfileManager();
+
+	if ( !ResourceDB_Init() )
+		return FALSE;
+
+//	ResourceDB_Dump( );
+//	SLF_Dump("slf-dump.txt");
+//	SLF_Debug();
 	
 	Profile_GetGameHomeDirectory( gzHomePath );
-
-	Profile_GetGameProfileDirectory( gzWorkPath );
-	STR_SPrintf( gzTempPath, STRLEN(gzTempPath), "%s%s%c", gzWorkPath, TEMP_DIR_PREFIX, SLASH );
-	printf("Using game temp dir: %s\n", gzTempPath);
-
-	if ( !IO_Dir_DirectoryExists( gzTempPath ) )
-		if ( !IO_Dir_MakeDirectory( gzTempPath ) )
-		{
-			fprintf(stderr, "Unable to create game temp directory '%s'\n", gzTempPath);
-			return FALSE;
-		}
+	gzWorkPath[0] = 0;
 	
+	STR_SPrintf( gzTempPath, STRLEN(gzTempPath), "%s%c", TEMP_DIR_PREFIX, SLASH );
+	printf("Using game temp dir: %s\n", gzTempPath);
+	printf("Using game home dir: %s\n", gzHomePath);
+	printf("Using game profile dir: %s\n", gzWorkPath);
+
 	OpenedFiles.clear();
 	
 	// index 0 of file handlers, returned by fileman, is reserved for error reporting
 	OpenedFiles.resize(1);
 	OpenedFiles[0].isFree = FALSE;
-	
 	RegisterDebugTopic( TOPIC_FILE_MANAGER, "File Manager" );
 	return( TRUE );
 }
@@ -201,34 +283,11 @@ BOOLEAN	InitializeFileManager(  STR strIndexFilename )
 void ShutdownFileManager( void )
 {
 	OpenedFiles.clear();
+	ResourceDB_Shutdown();
 	// todo: $$$ - clean temp dir
 	UnRegisterDebugTopic( TOPIC_FILE_MANAGER, "File Manager" );
 }
 
-//**************************************************************************
-//
-// 	PathBackslash
-//
-//		Convert path to unix-style.
-//
-// Parameter List :	path - input string and output.
-// Return Value :	always TRUE.
-// Modification history :
-//
-//		22mar07:Lesh		-> creation
-//
-//**************************************************************************
-BOOLEAN PathBackslash(STR path)
-{
-	STR src = path;
-
-	while( (src = strchr(src, '\\')) )
-	{
-		*src = SLASH;
-	}
-
-	return TRUE;
-}
 
 //**************************************************************************
 //
@@ -256,10 +315,13 @@ BOOLEAN PathBackslash(STR path)
 //**************************************************************************
 BOOLEAN	FileExists( STR strFilename )
 {
-	if ( IO_IsRootPath( strFilename ) )
-		return IO_IsRegularFile( strFilename );
+	STRING512	name;
 
-	return VFS.IsFileExist( strFilename );
+	strncpy(name, strFilename, STRLEN(name));
+	LowercaseAndChangeSlash(name);
+//	FDEBUG("FileExists: %s\n", name);
+	if ( PHYSFS_exists(name) ) return TRUE;
+	return SLF_IsExist(name);
 }
 
 //**************************************************************************
@@ -286,15 +348,12 @@ BOOLEAN	FileExists( STR strFilename )
 //**************************************************************************
 BOOLEAN	FileExistsNoDB( STR strFilename )
 {
-//	vfsEntry	entry;
+	STRING512	name;
 
-//	if ( VFS.FindResource( strFilename, entry ) )
-//		return (entry.LibIndex == LIB_REAL_FILE);
-
-	if ( IO_IsRootPath( strFilename ) )
-		return IO_IsRegularFile( strFilename );
-
-	return FALSE;
+	strncpy(name, strFilename, STRLEN(name));
+	LowercaseAndChangeSlash(name);
+	FDEBUG("FileExistsNoDB: %s\n", name);
+	return PHYSFS_exists(name) != 0;
 }
 
 //**************************************************************************
@@ -319,9 +378,18 @@ BOOLEAN	FileExistsNoDB( STR strFilename )
 //**************************************************************************	
 BOOLEAN	FileDelete( const CHAR8 *strFilename )
 {
-	if ( IO_IsRootPath( strFilename ) )
-		return( IO_File_Delete( strFilename ) );
-	return FALSE;
+	STRING512	name;
+	BOOLEAN		result;
+
+	strncpy(name, strFilename, STRLEN(name));
+	LowercaseAndChangeSlash(name);
+	FDEBUG("FileDelete: %s\n", name);
+	result = PHYSFS_delete(name) != 0;
+	if ( !result )
+	{
+		fprintf(stderr, "Fileman: error in FileDelete('%s'). Reason: %s\n", name, PHYSFS_getLastError() );
+	}
+	return result;
 }
 
 //**************************************************************************
@@ -351,55 +419,58 @@ BOOLEAN	FileDelete( const CHAR8 *strFilename )
 //**************************************************************************
 HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 {
-#ifdef VFS2
-	INT32			access;
-	INT32			freeSlot;
+	STRING512		name;
+	fsFile			handler;
+	slfHandler		slfResource;
+	BOOLEAN			useSLF = FALSE;
+	BOOLEAN			result;
 	FilemanEntry	fileObject;
-	BOOLEAN			isRootPath;
-	BOOLEAN			openSuccess;
-	
-//	printf("Request to open %s...\n", strFilename);
-	isRootPath = IO_IsRootPath( strFilename );
-	
-	if ( !isRootPath && (uiOptions & FILE_ACCESS_WRITE) )
+	INT32			freeSlot;
+
+	strncpy(name, strFilename, STRLEN(name));
+	LowercaseAndChangeSlash(name);
+	FDEBUG("FileOpen: %s, %04X\n", name, uiOptions);
+
+	if (uiOptions & FILE_ACCESS_WRITE)
 	{
-		fprintf(stderr, "FileOpen: non-root path with write access detected (%s)\n", strFilename);
-		return 0;
-	}
-
-	// parse access option
-	if ( (uiOptions & FILE_ACCESS_READ) && (uiOptions & FILE_ACCESS_WRITE) )
-		access = IO_ACCESS_READWRITE;
-	else if ( uiOptions & FILE_ACCESS_READ )
-		access = IO_ACCESS_READ;
-	else if ( uiOptions & FILE_ACCESS_WRITE )
-		access = IO_ACCESS_WRITE;
-
-	if ( uiOptions & FILE_CREATE_NEW )
-		access |= IO_CREATE_NEW;
-	if ( uiOptions & FILE_CREATE_ALWAYS )
-		access |= IO_CREATE_ALWAYS;
-
-	fileObject.isFree = FALSE;
-	fileObject.isVFS  = !isRootPath;
-	
-	// open files
-	if ( fileObject.isVFS )
-	{
-		fileObject.handle.vfsIndex = VFS.Open( strFilename );
-		openSuccess = (fileObject.handle.vfsIndex != -1);
+		// open for write only through PhysFS
+		handler = PHYSFS_openWrite(name);
+		result = handler != NULL;
+		useSLF = FALSE;
 	}
 	else
 	{
-		fileObject.handle.file = IO_File_Open( strFilename, access );
-		openSuccess = (fileObject.handle.file != -1);
+		// open for read through PhysFS first, then try SLF
+		handler = PHYSFS_openRead(name);
+		if ( handler )
+		{
+			result = TRUE;
+			useSLF = FALSE;
+		}
+		else
+		{
+			slfResource = SLF_OpenResource(name);
+			result = SLF_IsValidHandle(slfResource);
+			useSLF = TRUE;
+		}
 	}
 	
-	// if there was an error
-	if ( !openSuccess )
+	// check, if we succeeded or not?
+	if ( !result )
 	{
+		// bad luck. let's report it
+		if ( useSLF ) fprintf(stderr, "Fileman: SLF error in FileOpen('%s').\n", name );
+		else fprintf(stderr, "Fileman: PhysFS error in FileOpen('%s'). Reason: %s\n", name, PHYSFS_getLastError() );
 		return 0;
 	}
+
+	// fill fileman entry struct
+	fileObject.isFree = FALSE;
+	fileObject.isSLF  = useSLF;
+	if ( fileObject.isSLF )
+		fileObject.handle.slf = slfResource;
+	else
+		fileObject.handle.file = handler;
 	
 	// add file object to opened files array
 	freeSlot = FindFreeOpenedFilesSlot();
@@ -414,68 +485,6 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 	}
 	
 	return freeSlot;
-#else
-	HWFILE	hFile;
-	HANDLE	hRealFile;
-	UINT32	dwAccess;
-	UINT32	dwFlagsAndAttributes;
-
-	hFile = 0;
-	dwAccess = 0;
-	
-	if ( (uiOptions & FILE_ACCESS_READ) && (uiOptions & FILE_ACCESS_WRITE) )
-		dwAccess = IO_ACCESS_READWRITE;
-	else if ( uiOptions & FILE_ACCESS_READ )
-		dwAccess = IO_ACCESS_READ;
-	else if ( uiOptions & FILE_ACCESS_WRITE )
-		dwAccess = IO_ACCESS_WRITE;
-
-	if ( uiOptions & FILE_CREATE_NEW )
-		dwAccess |= IO_CREATE_NEW;
-	if ( uiOptions & FILE_CREATE_ALWAYS )
-		dwAccess |= IO_CREATE_ALWAYS;
-
-	vfsEntry	entry;
-
-//	printf("Request to open %s...\n", strFilename);
-	if ( !VFS.FindResource( strFilename, entry ) )
-	{
-		entry.LibIndex = LIB_REAL_FILE;
-		entry.IsWriteable = TRUE;
-		entry.IsDirectory = FALSE;
-		entry.RealName = strFilename;
-	}
-
-	// where is resource ?
-	if ( entry.LibIndex != LIB_REAL_FILE )
-	{
-		// resource is in container
-		if ( gFileDataBase.fInitialized ) 
-		{
-//			printf("Opening file from container\n" );
-			hFile = OpenFileFromLibrary( entry.RealName.c_str() );
-		}
-	}
-	else
-	{
-		// resource is on file system
-//		printf("Opening non-mapped resource %s... (0x%04X)\n", entry.RealName.c_str(), dwAccess);
-		hRealFile = IO_File_Open( entry.RealName.c_str(), dwAccess );
-
-		if ( hRealFile == -1 )
-		{
-			fprintf(stderr, "Error opening/creating file %s: %s\n", entry.RealName.c_str(), strerror(errno) );
-			return(0);
-		}
-
-		hFile = CreateRealFileHandle( hRealFile );
-	}
-
-	if ( !hFile )
-		return(0);
-	
-	return(hFile);
-#endif
 }
 
 
@@ -500,58 +509,22 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 
 void FileClose( HWFILE hFile )
 {
-#ifdef VFS2
 	if ( hFile < 0 || hFile >= OpenedFiles.size() )
 	{
 		fprintf(stderr, "FileClose: file descriptor out of bounds\n");
 		return;
 	}
 	
-	if ( OpenedFiles[ hFile ].isVFS )
+	if ( OpenedFiles[ hFile ].isSLF )
 	{
-		VFS.Close( OpenedFiles[ hFile ].handle.vfsIndex );
+		SLF_CloseResource( OpenedFiles[ hFile ].handle.slf );
 	}
 	else
 	{
-		IO_File_Close( OpenedFiles[ hFile ].handle.file );
+		PHYSFS_close( OpenedFiles[ hFile ].handle.file );
 	}
 	
 	OpenedFiles[ hFile ].isFree = TRUE;
-#else
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-
-	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
-
-	//if its the 'real file' library
-	if( sLibraryID == REAL_FILE_LIBRARY_ID )
-	{
-		//if its not already closed
-		if( gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].uiFileID != 0 )
-		{
-			if ( !IO_File_Close( gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle ) )
-			{
-				fprintf(stderr, "Error closing file %d: errno=%d\n",
-					gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle, errno);
-			}
-
-			gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].uiFileID = 0;
-			gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle= 0;
-			gFileDataBase.RealFiles.iNumFilesOpen--;
-			if( gFileDataBase.RealFiles.iNumFilesOpen < 0 )
-			{
-				//if for some reason we are below 0, report an error ( should never be )
-				Assert( 0 );
-			}
-		}
-	}
-	else
-	{
-		//if the database is initialized
-		if( gFileDataBase.fInitialized )
-			CloseLibraryFile( sLibraryID, uiFileNum );
-	}
-#endif
 }
 
 //**************************************************************************
@@ -590,7 +563,6 @@ void FileClose( HWFILE hFile )
 
 BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 iBytesToRead, UINT32 *piBytesRead )
 {
-#ifdef VFS2
 	INT32	bytesHasBeenRead;
 	
 	if ( hFile < 0 || hFile >= OpenedFiles.size() )
@@ -599,88 +571,19 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 iBytesToRead, UINT32 *piBytesR
 		return FALSE;
 	}
 	
-	if ( OpenedFiles[ hFile ].isVFS )
+	if ( OpenedFiles[ hFile ].isSLF )
 	{
-		bytesHasBeenRead = VFS.Read( OpenedFiles[ hFile ].handle.vfsIndex, pDest, iBytesToRead );
+		bytesHasBeenRead = SLF_Read( OpenedFiles[ hFile ].handle.slf, pDest, iBytesToRead );
 	}
 	else
 	{
-		bytesHasBeenRead = IO_File_Read( OpenedFiles[ hFile ].handle.file, pDest, iBytesToRead );
+		bytesHasBeenRead = PHYSFS_read( OpenedFiles[ hFile ].handle.file, pDest, 1, iBytesToRead );
 	}
 	
 	if ( piBytesRead )
 		*piBytesRead = bytesHasBeenRead;
 		
 	return iBytesToRead == bytesHasBeenRead;
-#else
-	HANDLE	hRealFile;
-	UINT32		dwNumBytesToRead, dwNumBytesRead;
-	BOOLEAN	fRet = FALSE;
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-
-#ifdef JA2TESTVERSION
-	UINT32 uiStartTime = GetJA2Clock();
-#endif
-
-	//init the variables
-	dwNumBytesToRead = dwNumBytesRead = 0;
-
-	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
-
-	dwNumBytesToRead	= iBytesToRead;
-
-	//if its a real file, read the data from the file
-	if( sLibraryID == REAL_FILE_LIBRARY_ID )
-	{
-		//if the file is opened
-		if( uiFileNum != 0 )
-		{
-			hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
-			dwNumBytesRead = IO_File_Read( hRealFile, pDest, dwNumBytesToRead);
-			
-			if ( piBytesRead )
-				*piBytesRead = (UINT32)dwNumBytesRead;
-/*
-			if ( dwNumBytesToRead != dwNumBytesRead )
-			{
-				fprintf(stderr, "Error reading file %d: errno=%d\n",
-					hRealFile, errno);
-				return FALSE;
-			}
-*/
-			fRet = TRUE;
-		}
-	}
-	else
-	{
-		//if the database is initialized
-		if( gFileDataBase.fInitialized )
-		{
-			//if the library is open
-			if( IsLibraryOpened( sLibraryID ) )
-			{
-				//if the file is opened
-				if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFileID != 0 )
-				{
-					//read the data from the library
-					fRet = LoadDataFromLibrary( sLibraryID, uiFileNum, pDest, dwNumBytesToRead, (UINT32 *) &dwNumBytesRead );
-					if ( piBytesRead )
-					{
-						*piBytesRead = (UINT32)dwNumBytesRead;
-					}
-				}
-			}
-		}
-	}
-	#ifdef JA2TESTVERSION
-		//Add the time that we spent in this function to the total.
-		uiTotalFileReadTime += GetJA2Clock() - uiStartTime;
-		uiTotalFileReadCalls++;
-	#endif
-
-	return(fRet);
-#endif
 }
 
 //**************************************************************************
@@ -712,7 +615,6 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 iBytesToRead, UINT32 *piBytesR
 
 BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 iBytesToWrite, UINT32 *piBytesWritten )
 {
-#ifdef VFS2
 	INT32	bytesHasBeenWritten;
 	
 	if ( hFile < 0 || hFile >= OpenedFiles.size() )
@@ -721,58 +623,15 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 iBytesToWrite, UINT32 *piByte
 		return FALSE;
 	}
 	
-	if ( OpenedFiles[ hFile ].isVFS )
+	if ( !OpenedFiles[ hFile ].isSLF )
 	{
-		bytesHasBeenWritten = VFS.Write( OpenedFiles[ hFile ].handle.vfsIndex, pDest, iBytesToWrite );
-	}
-	else
-	{
-		bytesHasBeenWritten = IO_File_Write( OpenedFiles[ hFile ].handle.file, pDest, iBytesToWrite );
+		bytesHasBeenWritten = PHYSFS_write( OpenedFiles[ hFile ].handle.file, pDest, 1, iBytesToWrite );
 	}
 	
 	if ( piBytesWritten )
 		*piBytesWritten = bytesHasBeenWritten;
 	
 	return iBytesToWrite == bytesHasBeenWritten;
-#else
-	HANDLE	hRealFile;
-	UINT32		dwNumBytesToWrite, dwNumBytesWritten;
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-
-
-	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
-
-	//if its a real file, read the data from the file
-	if( sLibraryID == REAL_FILE_LIBRARY_ID )
-	{
-		dwNumBytesToWrite = (UINT32)iBytesToWrite;
-
-		//get the real file handle to the file
-		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
-		dwNumBytesWritten = IO_File_Write( hRealFile, pDest, dwNumBytesToWrite );
-
-		if ( piBytesWritten )
-			*piBytesWritten = (UINT32)dwNumBytesWritten;
-
-		if ( dwNumBytesWritten != dwNumBytesToWrite )
-		{
-				fprintf(stderr, "Error writing file %d: errno=%d\n",
-					hRealFile, errno);
-			return FALSE;
-		}
-	
-	}
-	else
-	{
-		//we cannot write to a library file
-		if ( piBytesWritten )
-			*piBytesWritten = 0;
-		return(FALSE);
-	}
-
-	return TRUE;
-#endif
 }
 
 
@@ -801,7 +660,6 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 iBytesToWrite, UINT32 *piByte
 //**************************************************************************
 BOOLEAN FilePrintf( HWFILE hFile, CHAR8 * strFormatted, ... )
 {
-#ifdef VFS2
 	STRING512	strToSend;
 	va_list		argptr;
 
@@ -816,47 +674,7 @@ BOOLEAN FilePrintf( HWFILE hFile, CHAR8 * strFormatted, ... )
 	va_end(argptr);
 
 	FileWrite( hFile, strToSend, strlen(strToSend) + 1, NULL );
-/*
-	if ( OpenedFiles[ hFile ].isVFS )
-	{
-		*piBytesWritten = VFS.Write( OpenedFiles[ hFile ].handle.vfsIndex, pDest, iBytesToWrite );
-	}
-	else
-	{
-		*piBytesWritten = IO_File_Write( OpenedFiles[ hFile ].handle.file, pDest, iBytesToWrite );
-	}
-	
-	return iBytesToWrite == *piBytesWritten;
-*/
 	return TRUE;
-#else
-	CHAR8		strToSend[80];
-	va_list	argptr;
-	BOOLEAN fRetVal = FALSE;
-	HANDLE	hRealFile;
-
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-
-	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
-
-	//if its a real file, read the data from the file
-	if( sLibraryID == REAL_FILE_LIBRARY_ID )
-	{
-		va_start(argptr, strFormatted);
-		vsprintf( strToSend, strFormatted, argptr );
-		va_end(argptr);
-		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
-		IO_File_Write( hRealFile, strToSend, strlen(strToSend) );
-	}
-	else
-	{
-		//its a library file, cant write to it so return an error
-		fRetVal = FALSE;
-	}
-
-	return( fRetVal );
-#endif
 }
 
 //**************************************************************************
@@ -886,8 +704,8 @@ BOOLEAN FilePrintf( HWFILE hFile, CHAR8 * strFormatted, ... )
 
 BOOLEAN FileSeek( HWFILE hFile, INT32 iDistance, UINT8 uiHow )
 {
-#ifdef VFS2
 	INT32	moveMethod;
+	INT32	position;
 	BOOLEAN	seekResult;
 	
 	if ( hFile < 0 || hFile >= OpenedFiles.size() )
@@ -896,63 +714,29 @@ BOOLEAN FileSeek( HWFILE hFile, INT32 iDistance, UINT8 uiHow )
 		return FALSE;
 	}
 
-	if ( uiHow == FILE_SEEK_FROM_START )
-		moveMethod = IO_SEEK_FROM_START;
-	else if ( uiHow == FILE_SEEK_FROM_END )
-		moveMethod = IO_SEEK_FROM_END;
-	else
-		moveMethod = IO_SEEK_FROM_CURRENT;
-	
-	if ( OpenedFiles[ hFile ].isVFS )
+	if ( OpenedFiles[ hFile ].isSLF )
 	{
-		seekResult = VFS.Seek( OpenedFiles[ hFile ].handle.vfsIndex, iDistance, moveMethod );
+		seekResult = SLF_Seek( OpenedFiles[ hFile ].handle.slf, iDistance, uiHow );
 	}
 	else
 	{
-		seekResult = IO_File_Seek( OpenedFiles[ hFile ].handle.file, iDistance, moveMethod );
+		switch( uiHow )
+		{
+		case FILE_SEEK_FROM_START:
+			position = iDistance;
+			break;
+		
+		case FILE_SEEK_FROM_END:
+			position = PHYSFS_fileLength(OpenedFiles[ hFile ].handle.file) - iDistance;
+			break;
+		
+		case FILE_SEEK_FROM_CURRENT:
+			position = PHYSFS_tell(OpenedFiles[ hFile ].handle.file) + iDistance;
+		}
+		seekResult = PHYSFS_seek( OpenedFiles[ hFile ].handle.file, position ) != 0;
 	}
 	
 	return seekResult;
-#else
-	HANDLE	hRealFile;
-	UINT32		dwMoveMethod;
-
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-
-	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
-
-	//if its a real file, read the data from the file
-	if( sLibraryID == REAL_FILE_LIBRARY_ID )
-	{
-		//Get the handle to the real file
-		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
-
-		if ( uiHow == FILE_SEEK_FROM_START )
-			dwMoveMethod = IO_SEEK_FROM_START;
-		else if ( uiHow == FILE_SEEK_FROM_END )
-			dwMoveMethod = IO_SEEK_FROM_END;
-		else
-			dwMoveMethod = IO_SEEK_FROM_CURRENT;
-
-		if ( !IO_File_Seek( hRealFile, iDistance, dwMoveMethod ) )
-		{
-			fprintf(stderr, "Error seeking file %d: errno=%d\n",
-				hRealFile, errno);
-
-			return(FALSE);
-		}
-
-	}
-	else
-	{
-		//if the database is initialized
-		if( gFileDataBase.fInitialized )
-			LibraryFileSeek( sLibraryID, uiFileNum, iDistance, uiHow );
-	}
-
-	return(TRUE);
-#endif
 }
 
 //**************************************************************************
@@ -980,7 +764,6 @@ BOOLEAN FileSeek( HWFILE hFile, INT32 iDistance, UINT8 uiHow )
 
 INT32 FileGetPos( HWFILE hFile )
 {
-#ifdef VFS2
 	INT32	filePos = -1;
 	
 	if ( hFile < 0 || hFile >= OpenedFiles.size() )
@@ -989,55 +772,16 @@ INT32 FileGetPos( HWFILE hFile )
 		return 0;
 	}
 	
-	if ( OpenedFiles[ hFile ].isVFS )
+	if ( OpenedFiles[ hFile ].isSLF )
 	{
-		filePos = VFS.Tell( OpenedFiles[ hFile ].handle.vfsIndex );
+		filePos = SLF_Tell( OpenedFiles[ hFile ].handle.slf );
 	}
 	else
 	{
-		filePos = IO_File_GetPosition( OpenedFiles[ hFile ].handle.file );
+		filePos = PHYSFS_tell( OpenedFiles[ hFile ].handle.file );
 	}
 	
 	return filePos;
-#else
-	HANDLE	hRealFile;
-	UINT32	uiPositionInFile=0;
-
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-
-	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
-
-	//if its a real file, read the data from the file
-	if( sLibraryID == REAL_FILE_LIBRARY_ID )
-	{
-		//Get the handle to the real file
-		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
-		uiPositionInFile = IO_File_GetPosition( hRealFile );
-		if( uiPositionInFile == -1 )
-		{
-			fprintf(stderr, "Error getting position in file %d: errno=%d\n",
-				hRealFile, errno);
-			uiPositionInFile = 0;
-		}
-		return( uiPositionInFile );
-	}
-	else
-	{
-		//if the library is open
-		if( IsLibraryOpened( sLibraryID ) )
-		{
-			//check if the file is open
-			if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFileID != 0 )
-			{
-				uiPositionInFile = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile;
-				return( uiPositionInFile );
-			}
-		}
-	}
-
-	return(BAD_INDEX);
-#endif
 }
 
 //**************************************************************************
@@ -1065,7 +809,6 @@ INT32 FileGetPos( HWFILE hFile )
 
 INT32 FileGetSize( HWFILE hFile )
 {
-#ifdef VFS2
 	INT32	fileSize = 0;
 	
 	if ( hFile < 0 || hFile >= OpenedFiles.size() )
@@ -1074,52 +817,16 @@ INT32 FileGetSize( HWFILE hFile )
 		return 0;
 	}
 	
-	if ( OpenedFiles[ hFile ].isVFS )
+	if ( OpenedFiles[ hFile ].isSLF )
 	{
-		fileSize = VFS.GetSize( OpenedFiles[ hFile ].handle.vfsIndex );
+		fileSize = SLF_Size_Handler( OpenedFiles[ hFile ].handle.slf );
 	}
 	else
 	{
-		fileSize = IO_File_GetSize( OpenedFiles[ hFile ].handle.file );
+		fileSize = PHYSFS_fileLength( OpenedFiles[ hFile ].handle.file );
 	}
 	
 	return fileSize;
-#else
-	HANDLE  hRealHandle;
-	INT32	iFileSize = -1;
-
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-
-	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
-
-	//if its a real file, read the data from the file
-	if( sLibraryID == REAL_FILE_LIBRARY_ID )
-	{
-		//Get the handle to a real file
-		hRealHandle = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
-		iFileSize = IO_File_GetSize( hRealHandle );
-	}
-	else
-	{
-		//if the library is open
-		if( IsLibraryOpened( sLibraryID ) )
-		{
-			if( (uiFileNum >= gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray ) )
-				iFileSize = -1;
-			else if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFileID != 0 )
-				iFileSize = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileLength;
-			else
-				iFileSize = -1;
-		}
-	}
-
-
-	if ( iFileSize == -1 )
-		return(0);
-	else
-		return( iFileSize );
-#endif
 }
 
 //**************************************************************************
@@ -1134,18 +841,27 @@ INT32 FileGetSize( HWFILE hFile )
 //**************************************************************************
 INT32 FileSize(STR strFilename)
 {
-	vfsEntry	entry;
+	INT32		fileSize = 0;
+	fsFile		file;
+	STRING512	name;
 
-	if ( IO_IsRootPath( strFilename ) )
-		return IO_File_GetSize( strFilename );
+	strncpy(name, strFilename, STRLEN(name));
+	LowercaseAndChangeSlash(name);
+	FDEBUG("FileSize: %s\n", name);
 
-	if ( !VFS.FindResource( strFilename, entry ) )
-		return 0;
-
-	if ( entry.LibIndex == LIB_REAL_FILE )
-		return IO_File_GetSize( entry.RealName.c_str() );
-
-	return 0;
+	// first, try to open it using PhysFS
+	// then try SLF	
+	file = PHYSFS_openRead(name);
+	if ( file )
+	{
+		fileSize = PHYSFS_fileLength(file);
+	}
+	else
+	{
+		fileSize = SLF_Size_Filename(name);
+	}
+	
+	return fileSize;
 }
 
 
@@ -1161,9 +877,7 @@ INT32 FileSize(STR strFilename)
 //**************************************************************************
 BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 {
-#ifdef VFS2
 	BOOLEAN	isEOF;
-	IOFILE	file;
 	
 	if ( hFile < 0 || hFile >= OpenedFiles.size() )
 	{
@@ -1171,125 +885,19 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 		return TRUE; // return true to avoid dead loops
 	}
 	
-	if ( OpenedFiles[ hFile ].isVFS )
+	if ( OpenedFiles[ hFile ].isSLF )
 	{
-		isEOF = VFS.IsEOF( OpenedFiles[ hFile ].handle.vfsIndex );
+		isEOF = SLF_IsEOF( OpenedFiles[ hFile ].handle.slf );
 	}
 	else
 	{
-		file  = OpenedFiles[ hFile ].handle.file;
-		isEOF = ( IO_File_GetPosition(file) >= IO_File_GetSize(file) );
+		isEOF = PHYSFS_eof(OpenedFiles[ hFile ].handle.file) != 0;
 	}
 	
 	return( isEOF );
-#else
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-	HANDLE	hRealFile;
-
-	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
-
-	//if its a real file, read the data from the file
-	if( sLibraryID == REAL_FILE_LIBRARY_ID )
-	{
-		UINT32 uiFileSize = FileGetSize( hFile );
-		UINT32 uiFilePtr  = FileGetPos( hFile );
-
-		return ( uiFilePtr >= uiFileSize );
-	}
-
-	//else it is a library file
-	else
-	{
-		//if the database is initialized
-		if( gFileDataBase.fInitialized )
-		{
-			//if the library is open
-			if( IsLibraryOpened( sLibraryID ) )
-			{
-				//if the file is opened
-				if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFileID != 0 )
-				{
-					UINT32	uiLength;
-					UINT32	uiCurPos;
-
-					uiLength = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileLength;
-					uiCurPos = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile;
-
-					//if we are trying to read more data then the size of the file, return an error
-					if( uiCurPos >= uiLength )
-					{
-						return( TRUE );
-					}
-				}
-			}
-		}
-	}
-
-	//we are not and the end of a file
-	return( 0 );
-#endif
 }
 
 
-//**************************************************************************
-//
-// FileDebugPrint
-//
-//		To print the state of memory to output.
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		24sep96:HJH		-> creation
-//
-//**************************************************************************
-
-void FileDebugPrint( void )
-{
-}
-
-//**************************************************************************
-//
-// GetHandleToRealFile
-//
-//		
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		24sep96:HJH		-> creation
-//
-//		9 Feb 98	DEF - modified to work with the library system
-//
-//**************************************************************************
-
-HANDLE GetHandleToRealFile( HWFILE hFile, BOOLEAN *pfDatabaseFile )
-{
-	HANDLE	hRealFile;
-
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-
-	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
-
-	//if its a real file, read the data from the file
-	if( sLibraryID == REAL_FILE_LIBRARY_ID )
-	{
-		//Get the handle to the real file
-		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
-		*pfDatabaseFile = FALSE;
-	}
-	else
-	{
-		*pfDatabaseFile = TRUE;
-		hRealFile = (HANDLE) hFile;
-	}
-
-	return(hRealFile);
-}
 
 BOOLEAN SetFileManCurrentDirectory( STR pcDirectory )
 {
@@ -1311,24 +919,38 @@ BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory )
 
 BOOLEAN DirectoryExists( STRING512 pcDirectory )
 {
-	if ( IO_IsRootPath( pcDirectory ) )
-		IO_Dir_DirectoryExists( pcDirectory );
+	STRING512	name;
 
-	return VFS.IsDirExist( pcDirectory );
+	strncpy(name, pcDirectory, STRLEN(name));
+	LowercaseAndChangeSlash(name);
+	FDEBUG("DirectoryExists: %s\n", name);
+	return PHYSFS_isDirectory(name) != 0;
 }
 
 
 BOOLEAN MakeFileManDirectory( STRING512 pcDirectory )
 {
-	if ( !IO_Dir_DirectoryExists(pcDirectory) )
-		if ( !IO_Dir_MakeDirectory(pcDirectory) )
-		{
-			fprintf(stderr, "Error creating dir %s: errno=%d\n",
-				pcDirectory, errno);
-			return FALSE;
-		}
-	return TRUE;
+	STRING512	name;
+	INT32		lastChar;
 
+	strncpy(name, pcDirectory, STRLEN(name));
+	LowercaseAndChangeSlash(name);
+	FDEBUG("MakeFileManDirectory: %s\n", name);
+
+	// PhysFS doesn't like creating dirs with the slash at end - so remove it
+	lastChar = strlen(name) - 1;
+	if ( name[lastChar] == '/' )
+		name[lastChar] = 0;
+	
+	if ( DirectoryExists(name) )
+		return TRUE;
+
+	if ( PHYSFS_mkdir(name) == 0 )
+	{
+		fprintf(stderr, "Fileman: PhysFS error in MakeFileManDirectory('%s'). Reason: %s\n", name, PHYSFS_getLastError() );
+		return FALSE;
+	}
+	return TRUE;
 }
 
 
@@ -1338,59 +960,42 @@ BOOLEAN MakeFileManDirectory( STRING512 pcDirectory )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 {
-	const CHAR8	*pFileSpec = "*";
-	BOOLEAN fRetval=FALSE;
-	CHAR8		zOldDir[512];
-	CHAR8		zSubdirectory[512];
-	sgpStringArray	ToBeDeleted;
-	STRING512		entry;
-	INT32			i;
+	CHAR8 **rc;
+	CHAR8 **i;
+	STRING512	name, entry;
+	INT32		lastChar;
 
-	GetFileManCurrentDirectory( zOldDir );
+	strncpy(name, pcDirectory, STRLEN(name));
+	LowercaseAndChangeSlash(name);
+	FDEBUG("RemoveFileManDirectory: %s\n", name);
 
-	if( !SetFileManCurrentDirectory( pcDirectory ) )
+	// PhysFS doesn't like handling dirs with the slash at end - so remove it
+	lastChar = strlen(name) - 1;
+	if ( name[lastChar] == '/' )
+		name[lastChar] = 0;
+
+	rc = PHYSFS_enumerateFiles(name);
+	for (i = rc; *i != NULL; i++)
 	{
-		return( FALSE );		//Error going into directory
-	}
-
-	// get directory listing
-	if ( !IO_File_GetFirst( pFileSpec, entry, 512 ) )
-	{
-		ToBeDeleted.push_back( entry );
-		while ( IO_File_GetNext( entry, 512 ) )
-		{
-			ToBeDeleted.push_back( entry );
-		}
-		IO_File_GetClose();
-	}
-
-	// now parse list - delete files and recurse for directories
-	for ( i = 0; i < ToBeDeleted.size(); i++ )
-	{
-		if ( IO_IsRegularFile( ToBeDeleted[i].c_str() ) )
-		{
-			IO_File_Delete( ToBeDeleted[i].c_str() );
-		}
-		else if ( IO_IsDirectory( ToBeDeleted[i].c_str() ) )
+		STR_SPrintf(entry, STRLEN(entry), "%s%s%s", name, GetDirSeparator(), *i);
+		if ( PHYSFS_isDirectory(entry) )
 		{
 			// only go in if the fRecursive flag is TRUE (like Deltree)
 			if (fRecursive)
 			{
-				sprintf(zSubdirectory, "%s%c%s", pcDirectory, SLASH, ToBeDeleted[i].c_str() );
-				RemoveFileManDirectory(zSubdirectory, TRUE);
+				RemoveFileManDirectory(entry, TRUE);
 			}
 		}
-	}
-	
-	// after wiping files in dir, remove dir itself
-	if( !SetFileManCurrentDirectory( zOldDir ) )
-	{
-		return( FALSE );		//Error returning from subdirectory
+		else
+		{
+			// delete a file
+			PHYSFS_delete(entry);
+		}
 	}
 
-	fRetval = IO_Dir_Delete( pcDirectory );
-	
-	return fRetval;
+	PHYSFS_freeList(rc);
+	PHYSFS_delete(name);
+	return TRUE;
 }
 
 
@@ -1400,53 +1005,36 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOLEAN EraseDirectory( STRING512 pcDirectory)
 {
-	const CHAR8	*pFileSpec = "*";
-	CHAR8		zOldDir[512];
-	sgpStringArray	ToBeDeleted;
-	STRING512		entry;
-	INT32			i;
+	CHAR8 **rc;
+	CHAR8 **i;
+	STRING512	name, entry;
+	INT32		lastChar;
 
-//	printf("EraseDirectory\n");
-	
-	GetFileManCurrentDirectory( zOldDir );
+	strncpy(name, pcDirectory, STRLEN(name));
+	LowercaseAndChangeSlash(name);
+	FDEBUG("EraseDirectory: %s\n", name);
 
-	if( !SetFileManCurrentDirectory( pcDirectory ) )
+	// PhysFS doesn't like handling dirs with the slash at end - so remove it
+	lastChar = strlen(name) - 1;
+	if ( name[lastChar] == '/' )
+		name[lastChar] = 0;
+
+	rc = PHYSFS_enumerateFiles(name);
+	for (i = rc; *i != NULL; i++)
 	{
-		FastDebugMsg(String("EraseDirectory: ERROR - SetFileManCurrentDirectory on %s failed, error %d", pcDirectory, GetLastError()));
-		return( FALSE );		//Error going into directory
-	}
-
-	// get directory listing
-	if ( !IO_File_GetFirst( pFileSpec, entry, 512 ) )
-	{
-		ToBeDeleted.push_back( entry );
-		while ( IO_File_GetNext( entry, 512 ) )
+		STR_SPrintf(entry, STRLEN(entry), "%s%s%s", name, GetDirSeparator(), *i);
+		if ( !PHYSFS_isDirectory(entry) )
 		{
-			ToBeDeleted.push_back( entry );
-		}
-		IO_File_GetClose();
-	}
-
-	// now parse list - delete files and leave directories alone
-	for ( i = 0; i < ToBeDeleted.size(); i++ )
-	{
-		if ( IO_IsRegularFile( ToBeDeleted[i].c_str() ) )
-		{
-//			printf("deleting %s...\n", ToBeDeleted[i].c_str());
-			IO_File_Delete( ToBeDeleted[i].c_str() );
+			// delete a file
+			PHYSFS_delete(entry);
 		}
 	}
-	
-	// after wiping files in dir, remove dir itself
-	if( !SetFileManCurrentDirectory( zOldDir ) )
-	{
-		return( FALSE );		//Error returning from subdirectory
-	}
 
-	return( TRUE );
+	PHYSFS_freeList(rc);
+	return TRUE;
 }
 
-
+#if 0
 BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
 {
 	SGPFILENAME	ModuleFilename;
@@ -1483,39 +1071,11 @@ BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
 
 	return( TRUE );
 }
+#endif
 
 BOOLEAN GetHomeDirectory( STRING512 pcDirectory )
 {
-	SGPFILENAME	ModuleFilename;
-	UINT32 cnt;
-
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	if ( GetModuleFileName( NULL, ModuleFilename, sizeof( ModuleFilename ) ) == 0 )
-	{
-		return( FALSE );
-	}
-
-	// Now get directory
-	strcpy( pcDirectory, ModuleFilename );
-
-	for ( cnt = strlen( pcDirectory ) - 1; cnt >= 0; cnt -- )
-	{
-		if ( pcDirectory[ cnt ] == '\\' )
-		{
-			 pcDirectory[ cnt ] = '\0';
-			 break;
-		}
-	}
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
 	strncpy( pcDirectory, gzHomePath, 512);
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-
 	return( TRUE );
 }
 
@@ -1544,17 +1104,34 @@ BOOLEAN GetWorkDirectory( STRING512 pcDirectory )
 //**************************************************************************
 BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct )
 {
-	INT32 x,iWhich=0;
+	STRING512	name, directory, mask, entry;
 	BOOLEAN fFound;
-	UINT32	uiQuantity = 0;
-	STRING512	pattern;
-
-	strncpy( pattern, pSpec, 511 );
-	BACKSLASH(pattern);
+	CHAR8	*lastSlash;
+	INT32	x, iWhich=0;
 
 	CHECKF( pSpec != NULL );
 	CHECKF( pGFStruct != NULL );
 
+	strncpy(name, pSpec, STRLEN(name));
+	LowercaseAndChangeSlash(name);
+	FDEBUG("GetFileFirst: %s\n", name);
+
+	// split pSpec into directories and mask
+	lastSlash = strrchr( name, '/' );
+	if ( !lastSlash )
+	{
+		// special case - pSpec goes without directories, only mask
+		directory[0] = 0;
+		strncpy(mask, name, STRLEN(mask));
+	}
+	else
+	{
+		strncpy(mask, (lastSlash + 1), STRLEN(mask));
+		*lastSlash = 0;
+		strncpy(directory, name, STRLEN(directory));
+	}
+	
+	// find free search slot
 	fFound = FALSE;
 	for( x = 0; x < 20 && !fFound; x++)
 	{
@@ -1569,26 +1146,26 @@ BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct )
 		return(FALSE);
 
 	pGFStruct->iFindHandle = iWhich;
-	pGFStruct->fUseVFS = !IO_IsRootPath(pSpec);
+//	pGFStruct->fUseVFS     = FALSE;
+	pGFStruct->list        = PHYSFS_enumerateFiles(directory);
+	pGFStruct->iterator    = pGFStruct->list;
+	pGFStruct->mask        = (CHAR8*) MemAlloc( strlen(mask)+1 );
+	pGFStruct->directory   = (CHAR8*) MemAlloc( strlen(directory)+1 );
 
-//	printf("Searching resources using %s pattern\n", pSpec);
+	if ( !pGFStruct->mask )
+		return FALSE;
+	if ( !pGFStruct->directory )
+		return FALSE;
 
-	if ( pGFStruct->fUseVFS )
-	{
-		uiQuantity = VFS.StartFilePatternMatch( pSpec );
-//		printf("Found %d matches\n", uiQuantity);
-		if ( !VFS.GetNextMatch( pGFStruct->zFileName, 260 ) )
-			return FALSE;
-	}
-	else
-	{
-		if ( !IO_File_GetFirst( pSpec, pGFStruct->zFileName, 260 ) )
-			return FALSE;
-	}
+	strcpy(pGFStruct->mask, mask);
+	strcpy(pGFStruct->directory, directory);
 
+	// get the first file, that matches the pattern
+	if ( !GetFileNext(pGFStruct) )
+		return FALSE;
+	
 	fFindInfoInUse[iWhich] = TRUE;
-
-	return(TRUE);
+	return TRUE;
 }
 
 //**************************************************************************
@@ -1603,20 +1180,18 @@ BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct )
 //**************************************************************************
 BOOLEAN GetFileNext( GETFILESTRUCT *pGFStruct )
 {
-	CHECKF( pGFStruct != NULL );
-
-	if ( pGFStruct->fUseVFS )
+	BOOLEAN	found = FALSE;
+	
+	while ( (*pGFStruct->iterator != NULL) && !found )
 	{
-		if ( VFS.GetNextMatch( pGFStruct->zFileName, 260 ) )
-			return TRUE;
+		if ( DoesFilenameMatchesPattern( pGFStruct->mask, *pGFStruct->iterator ) )
+		{
+			STR_SPrintf(pGFStruct->zFileName, 260, "%s%s%s", pGFStruct->directory, GetDirSeparator(), *pGFStruct->iterator );
+			found = TRUE;
+		}
+		pGFStruct->iterator++;
 	}
-	else
-	{
-		if ( IO_File_GetNext( pGFStruct->zFileName, 260 ) )
-			return TRUE;
-	}
-
-	return(FALSE);
+	return found;
 }
 
 
@@ -1632,43 +1207,14 @@ void GetFileClose( GETFILESTRUCT *pGFStruct )
 {
 	if ( pGFStruct == NULL )
 		return;
-
-	if ( pGFStruct->fUseVFS )
-	{
-		VFS.FinishFilePatternMatch();
-	}
-	else
-	{
-		IO_File_GetClose();
-	}
+	
+	PHYSFS_freeList(pGFStruct->list);
+	MemFree(pGFStruct->mask);
+	MemFree(pGFStruct->directory);
 	fFindInfoInUse[pGFStruct->iFindHandle] = FALSE;
 }
 
-
-
-HANDLE	GetRealFileHandleFromFileManFileHandle( HWFILE hFile )
+BOOLEAN  FileIsValidHandle( HWFILE hFile )
 {
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-
-	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
-
-	//if its the 'real file' library
-	if( sLibraryID == REAL_FILE_LIBRARY_ID )
-	{
-		//if its not already closed
-		if( gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].uiFileID != 0 )
-		{
-			return( gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle );
-		}
-	}
-	else
-	{
-		//if the file is not opened, dont close it
-		if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFileID != 0 )
-		{
-			return( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle );
-		}
-	}
-	return( 0 );
+	return hFile != 0;
 }
