@@ -17,10 +17,11 @@
 #include "types.h"
 #include "gamesettings.h"
 
-
+char kbag[100];
 char net_div[30];
 INT32 gsMAX_MERCS;
-
+bool gsMORALE;
+int gsREPORT_NAME;
 
 #include "connect.h"
 #include "message.h"
@@ -151,6 +152,20 @@ void updatenetworksoldier(RPCParameters *rpcParameters)
 	server->RPC("UpdateSoldierFromNetwork",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, rpcParameters->sender, true, 0, UNASSIGNED_NETWORK_ID,0);
 }	
 
+void Snull_team(RPCParameters *rpcParameters)
+{
+	server->RPC("null_team",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_SYSTEM_ADDRESS, true, 0, UNASSIGNED_NETWORK_ID,0);
+}	
+
+void sendFIREW(RPCParameters *rpcParameters)
+{
+	server->RPC("recieve_fireweapon",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, rpcParameters->sender, true, 0, UNASSIGNED_NETWORK_ID,0);
+}
+
+void sendDOOR(RPCParameters *rpcParameters)
+{
+	server->RPC("recieve_door",(const char*)rpcParameters->input, (*rpcParameters).numberOfBitsOfData, HIGH_PRIORITY, RELIABLE, 0, rpcParameters->sender, true, 0, UNASSIGNED_NETWORK_ID,0);
+}
 //************************* //UNASSIGNED_SYSTEM_ADDRESS
 //START INTERNAL SERVER
 //*************************
@@ -166,7 +181,7 @@ void requestSETTINGS(RPCParameters *rpcParameters)
 		strcpy(lan.client_name , clinf->client_name);
 
 		lan.max_clients = gsMAX_CLIENTS;
-		lan.interrupts = gsINTERRUPTS;
+		memcpy(lan.kitbag , kbag,sizeof (char)*100);
 		lan.damage_multiplier = gsDAMAGE_MULTIPLIER;
 		
 		lan.same_merc = gsSAME_MERC;
@@ -180,7 +195,8 @@ void requestSETTINGS(RPCParameters *rpcParameters)
 
 		lan.gsPLAYER_BSIDE=gsPLAYER_BSIDE;
 
-		
+		lan.emorale=gsMORALE;
+		lan.gsREPORT_NAME=gsREPORT_NAME;
 //something new
 				lan.secs_per_tick=gssecs_per_tick;
 				lan.soubBobbyRay=gGameOptions.ubBobbyRay;
@@ -268,10 +284,10 @@ void start_server (void)
 
 			char sBalance[30];
 			char time_div[30];
-
+			char mor[30];
 
 			GetPrivateProfileString( "Ja2_mp Settings","SAME_MERC", "", hire_same_merc, MAX_PATH, "..\\Ja2_mp.ini" );
-			GetPrivateProfileString( "Ja2_mp Settings","INTERRUPTS", "", ints, MAX_PATH, "..\\Ja2_mp.ini" );
+			GetPrivateProfileString( "Ja2_mp Settings","DISABLE_MORALE", "", mor, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","MAX_CLIENTS", "", maxclients, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","DAMAGE_MULTIPLIER", "", net_div, MAX_PATH, "..\\Ja2_mp.ini" );
 			
@@ -284,8 +300,16 @@ void start_server (void)
 
 
 //something new
-
+			gsMORALE=0;
+			if(atoi(mor)==1)gsMORALE=1;
 			
+			
+			GetPrivateProfileString( "Ja2_mp Settings","KIT_BAG", "", kbag, MAX_PATH, "..\\Ja2_mp.ini" );
+			
+			char rpn[30];
+			GetPrivateProfileString( "Ja2_mp Settings","REPORT_NAME", "", rpn, MAX_PATH, "..\\Ja2_mp.ini" );
+			gsREPORT_NAME=atoi(rpn);
+
 			GetPrivateProfileString( "Ja2_mp Settings","STARTING_BALANCE", "", sBalance, MAX_PATH, "..\\Ja2_mp.ini" );
 			GetPrivateProfileString( "Ja2_mp Settings","TIMED_TURN_SECS_PER_TICK", "", time_div, MAX_PATH, "..\\Ja2_mp.ini" );
 			
@@ -361,6 +385,9 @@ void start_server (void)
 		REGISTER_STATIC_RPC(server, rOVH);
 
 			REGISTER_STATIC_RPC(server, updatenetworksoldier);
+			REGISTER_STATIC_RPC(server, Snull_team);
+				REGISTER_STATIC_RPC(server, sendFIREW);
+					REGISTER_STATIC_RPC(server, sendDOOR);
 	//
 
 

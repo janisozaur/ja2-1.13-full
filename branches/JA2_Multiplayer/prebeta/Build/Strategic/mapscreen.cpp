@@ -113,7 +113,7 @@
 #endif
 
 #include "connect.h" //hayden
-
+#include "fresh_header.h"
 // DEFINES
 
 
@@ -5680,7 +5680,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 				case 'k':
 					if( fAlt )
 					{
-
+					kick_player();
 					}
 					break;
 

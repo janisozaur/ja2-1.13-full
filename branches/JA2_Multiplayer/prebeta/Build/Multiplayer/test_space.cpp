@@ -100,7 +100,7 @@ extern INT8 SquadMovementGroups[ ];
 bool ovh_advance;
 bool ovh_ready;
 
-
+//int cnt = 40;
 
 
 void test_func2 (void)//now bound to "0" //currently displays coordinates of the mouse
@@ -142,14 +142,30 @@ SOLDIERTYPE * pSoldier=MercPtrs[ 0 ];
 
 
 
+//int n = 0;
+//for(cnt=40+n ; cnt < 40+5+n ; cnt++)
+//{
+//
+//QuickCreateProfileMerc( CIV_TEAM, cnt );
+//
+//RecruitRPC( cnt );
+//Sleep(3000);
+//}
+//QuickCreateProfileMerc( CIV_TEAM, cnt );
+//RecruitRPC( cnt );
+//cnt++;
 
 
+//HandleDoorChangeFromGridNo( pSoldier, 18451, FALSE );
 
-
-
-
-
-
+//OBJECTTYPE		Object;
+//for (cnt=0; cnt<20;cnt++)
+//{
+//CreateItem( 201, 100, &Object );
+//
+//AutoPlaceObject( pSoldier, &Object, TRUE );
+//
+//
 
 
 
@@ -320,9 +336,3 @@ SOLDIERTYPE * pSoldier=MercPtrs[ 0 ];
 	//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"0" );
 	//	FireBulletGivenTarget( MercPtrs[0], 875, 995, 1, 11, -74, 0, 0 );
 	//}
-
-
-
-
-
-
