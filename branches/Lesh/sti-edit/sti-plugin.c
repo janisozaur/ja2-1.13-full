@@ -183,43 +183,43 @@ static gint32 load_image( const char *filename )
 
 	if ( !sti_load_image( filename, &image ) )
 	{
-		printf("failed to load file\n");
+		DEBUG("failed to load file\n");
 		return( -1 );
 	}
 
 	if ( image.is_8bit_image )
 	{
-		printf("Image %s is 8 bit rle compressed\n", filename);
-		printf("pages count is %d\n", image.pages_count);
-		printf("rle data size is %d\n", image.rle_data_size);
-		printf("aux data %s\n", (image.aux_data) ? ("yes"):("no") );
+		DEBUG("Image %s is 8 bit rle compressed\n", filename);
+		DEBUG("pages count is %d\n", image.pages_count);
+		DEBUG("rle data size is %d\n", image.rle_data_size);
+		DEBUG("aux data %s\n", (image.aux_data) ? ("yes"):("no") );
 
 		new_image = create_gimp_image_indexed( &image );
 		if ( new_image == -1 )
 		{
-			printf("can't allocate new image\n");
+			DEBUG("can't allocate new image\n");
 			sti_free_image( &image );
 			return( -1 );
 		}
 	}
 	else
 	{
-		printf("Image %s is 16 bit rgb\n", filename);
-		printf("width, height, depth: %d, %d, %d\n", image.header.width, image.header.height, image.header.depth );
-		printf("rgb data size is %d\n", image.rgb_data_size);
-		printf("mask red   : %08X\n", image.header.rgb.mask_red);
-		printf("mask green : %08X\n", image.header.rgb.mask_green);
-		printf("mask blue  : %08X\n", image.header.rgb.mask_blue);
-		printf("mask alpha : %08X\n", image.header.rgb.mask_alpha);
-		printf("depth red  : %d\n", image.header.rgb.depth_red);
-		printf("depth green: %d\n", image.header.rgb.depth_green);
-		printf("depth blue : %d\n", image.header.rgb.depth_blue);
-		printf("depth alpha: %d\n", image.header.rgb.depth_alpha);
+		DEBUG("Image %s is 16 bit rgb\n", filename);
+		DEBUG("width, height, depth: %d, %d, %d\n", image.header.width, image.header.height, image.header.depth );
+		DEBUG("rgb data size is %d\n", image.rgb_data_size);
+		DEBUG("mask red   : %08X\n", image.header.rgb.mask_red);
+		DEBUG("mask green : %08X\n", image.header.rgb.mask_green);
+		DEBUG("mask blue  : %08X\n", image.header.rgb.mask_blue);
+		DEBUG("mask alpha : %08X\n", image.header.rgb.mask_alpha);
+		DEBUG("depth red  : %d\n", image.header.rgb.depth_red);
+		DEBUG("depth green: %d\n", image.header.rgb.depth_green);
+		DEBUG("depth blue : %d\n", image.header.rgb.depth_blue);
+		DEBUG("depth alpha: %d\n", image.header.rgb.depth_alpha);
 
 		new_image = create_gimp_image_rgb( &image );
 		if ( new_image == -1 )
 		{
-			printf("can't allocate new image\n");
+			DEBUG("can't allocate new image\n");
 			sti_free_image( &image );
 			return( -1 );
 		}
