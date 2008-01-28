@@ -1065,7 +1065,7 @@ STR16 sKeyDescriptionStrings[2] =
 
 //The headers used to describe various weapon statistics.
 
-INT16		gWeaponStatsDesc[][ 14 ] =
+CHAR16		gWeaponStatsDesc[][ 14 ] =
 {
 	L"Waga (%s):", // change kg to another weight unit if your standard is not kilograms, and TELL SIR-TECH!
 	L"Stan:",
@@ -1086,7 +1086,7 @@ INT16		gWeaponStatsDesc[][ 14 ] =
 
 //The headers used for the merc's money.
 
-INT16 gMoneyStatsDesc[][ 13 ] =
+CHAR16 gMoneyStatsDesc[][ 13 ] =
 {
 	L"Kwota",
 	L"Pozosta³o:", //this is the overall balance
@@ -1124,12 +1124,12 @@ STR16	gzMoneyAmounts[6] =
 };
 
 // short words meaning "Advantages" for "Pros" and "Disadvantages" for "Cons." 
-INT16		gzProsLabel[10] = 
+CHAR16		gzProsLabel[10] = 
 {
 	L"Zalety:",
 };
 
-INT16		gzConsLabel[10] = 
+CHAR16		gzConsLabel[10] = 
 {
 	L"Wady:",
 };
@@ -4140,6 +4140,11 @@ STR16 gzLateLocalizedString[] =
   L"%s's armour attachment has been smashed!",
 	L"%s fires %d more rounds than intended!",
 	L"%s fires %d more round than intended!",
+};
+
+STR16 gzCWStrings[] = 
+{
+	L"Call reinforcements from adjacent sectors?",
 };
 
 // WANNE: Tooltips

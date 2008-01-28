@@ -44,7 +44,7 @@ LOGFONT gLogFont;
 HWINFONT	WinFonts[ MAX_WIN_FONTS ];
 
 
-void Convert16BitStringTo8BitChineseBig5String( UINT8 *dst, UINT16 *src )
+void Convert16BitStringTo8BitChineseBig5String( CHAR8 *dst, CHAR16 *src )
 {
 	INT32 i, j;
 	STR8 ptr;

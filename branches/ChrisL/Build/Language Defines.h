@@ -18,13 +18,16 @@
  *											 (2006-10-10, Sergeant_Kolja)
  */
 
-#if !defined(ENGLISH) && !defined(GERMAN) && !defined(RUSSIAN) && !defined(DUTCH) && !defined(POLISH)
+#if !defined(ENGLISH) && !defined(GERMAN) && !defined(RUSSIAN) && !defined(DUTCH) && !defined(POLISH) && !defined(FRENCH) && !defined(ITALIAN) && !defined(TAIWANESE)
 /* please set one manually here (by uncommenting) if not willingly to set Workspace wide */
 #define ENGLISH
 //#define GERMAN
 //#define RUSSIAN
 //#define DUTCH
 //#define POLISH
+//#define FRENCH
+//#define ITALIAN
+//#define TAIWANESE
 
 #endif
 
@@ -34,7 +37,7 @@
  * Regardless of if we did it Workspace wide or by uncommenting above,
  * HERE we must see, what language was selected. If one, we
  */
-#if !defined(ENGLISH) && !defined(GERMAN) && !defined(RUSSIAN) && !defined(DUTCH) && !defined(POLISH)
+#if !defined(ENGLISH) && !defined(GERMAN) && !defined(RUSSIAN) && !defined(DUTCH) && !defined(POLISH) && !defined(FRENCH) && !defined(ITALIAN) && !defined(TAIWANESE)
 #  error "At least You have to specify a Language somewhere. See comments above."
 #endif
 

@@ -200,65 +200,6 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
-		<Configuration
-			Name="Release_dbg|Win32"
-			OutputDirectory="Release_dbg"
-			IntermediateDirectory="Release_dbg"
-			ConfigurationType="4"
-			InheritedPropertySheets="..\ja2_2005Express.vsprops"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
-				RuntimeLibrary="0"
-				RuntimeTypeInfo="false"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -269,7 +210,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\_Ja25DutchText.h"
+				>
+			</File>
+			<File
 				RelativePath=".\_Ja25EnglishText.h"
+				>
+			</File>
+			<File
+				RelativePath=".\_Ja25FrenchText.h"
 				>
 			</File>
 			<File
@@ -277,7 +226,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\_Ja25ItalianText.h"
+				>
+			</File>
+			<File
+				RelativePath=".\_Ja25PolishText.h"
+				>
+			</File>
+			<File
 				RelativePath=".\_Ja25RussianText.h"
+				>
+			</File>
+			<File
+				RelativePath=".\_Ja25TaiwaneseText.h"
 				>
 			</File>
 			<File
@@ -423,7 +384,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\_Ja25DutchText.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\_Ja25EnglishText.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\_Ja25FrenchText.cpp"
 				>
 			</File>
 			<File
@@ -431,7 +400,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\_Ja25ItalianText.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\_Ja25PolishText.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\_Ja25RussianText.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\_Ja25TaiwaneseText.cpp"
 				>
 			</File>
 			<File

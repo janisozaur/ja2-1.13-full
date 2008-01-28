@@ -261,90 +261,6 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
-		<Configuration
-			Name="Release_dbg|Win32"
-			OutputDirectory="C:\games\jagged alliance 2"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
-			InheritedPropertySheets=".\ja2_2005Express.vsprops"
-			UseOfMFC="0"
-			CharacterSet="0"
-			WholeProgramOptimization="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".\Utils;.\TileEngine;.\TacticalAI;.\Tactical;.\Strategic;&quot;.\Standard Gaming Platform&quot;;.\Res;.\lua;.\Laptop;.\Editor;$(NOINHERIT)"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				RuntimeLibrary="0"
-				RuntimeTypeInfo="false"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="Winmm.lib"
-				OutputFile="$(OutDir)\ja2_rel_1719_NI_B10.1.exe"
-				LinkIncremental="1"
-				GenerateDebugInformation="true"
-				GenerateMapFile="true"
-				MapFileName="$(TargetDir)$(TargetName).map"
-				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				Description="Signing the code"
-				CommandLine="signtool sign /f &quot;c:\documents and settings\paul\ja2.spc&quot; /csp &quot;Microsoft Strong Cryptographic Provider&quot; /k JA2 /v &quot;$(TargetPath)&quot;"
-			/>
-		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -607,14 +523,6 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="MapEditor|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories=".\Res"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release_dbg|Win32"
 					>
 					<Tool
 						Name="VCResourceCompilerTool"

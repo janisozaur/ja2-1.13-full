@@ -2,13 +2,13 @@
 	#include "Utils All.h"
 #else
 	#include "Language Defines.h"
-	#if defined( ENGLISH ) || defined( TAIWANESE )
+	#if defined( ENGLISH )
 		#include "text.h"
 		#include "Fileman.h"
 	#endif
 #endif
 
-#if defined( ENGLISH ) || defined( TAIWANESE )
+#if defined( ENGLISH )
 
 /*
  
