@@ -2128,8 +2128,17 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 		break;
 
 	case AI_ACTION_DROP_ITEM:					 // drop item in hand
-		SoldierDropItem( pSoldier, &(pSoldier->inv[HANDPOS]) );
-		DeleteObj( &(pSoldier->inv[HANDPOS]) );
+		//CHRISL: If we have a weapon in both hands, we need to drop the weapon that isn't usable
+		if(pSoldier->inv[HANDPOS].fFlags & OBJECT_AI_UNUSABLE)
+		{
+			SoldierDropItem( pSoldier, &(pSoldier->inv[HANDPOS]) );
+			DeleteObj( &(pSoldier->inv[HANDPOS]) );
+		}
+		if(pSoldier->inv[SECONDHANDPOS].exists() == true && Item[pSoldier->inv[SECONDHANDPOS].usItem].usItemClass == IC_GUN && pSoldier->inv[SECONDHANDPOS].fFlags & OBJECT_AI_UNUSABLE)
+		{
+			SoldierDropItem( pSoldier, &(pSoldier->inv[SECONDHANDPOS]) );
+			DeleteObj( &(pSoldier->inv[SECONDHANDPOS]) );
+		}
 		// 0verhaul:  Moved into PickDropAnimation because when something is dropped while crouched there's nothing to wait for
 		// pSoldier->aiData.bAction = AI_ACTION_PENDING_ACTION;
 		break;

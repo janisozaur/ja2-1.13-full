@@ -455,20 +455,21 @@ BOOLEAN AddSoldierToVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 	//CHRISL: Get number of vehicles currently in player team
 	for(int x = 0; x < 20; x++)
 	{
-		if(MercPtrs[x]->bTeam == OUR_TEAM && (MercPtrs[x]->flags.uiStatusFlags & SOLDIER_VEHICLE))
+		if(MercPtrs[x]->bTeam == OUR_TEAM && (MercPtrs[x]->flags.uiStatusFlags & SOLDIER_VEHICLE) && MercPtrs[x]->bActive == TRUE)
 			vCount ++;
-	}
-
-	if( vCount > 1 )
-	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[VEHICLE_CAN_NOT_BE_ADDED] );
-		return( FALSE );
 	}
 
 	if( pVehicleSoldier )
 	{
 		if ( pVehicleSoldier->bTeam != gbPlayerNum )
 		{
+			// Can we add a new vehicle
+			if( vCount >= 2 )
+			{
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[VEHICLE_CAN_NOT_BE_ADDED] );
+				return( FALSE );
+			}
+
 			// Change sides...
 			pVehicleSoldier = ChangeSoldierTeam( pVehicleSoldier, gbPlayerNum );
 			// add it to mapscreen list

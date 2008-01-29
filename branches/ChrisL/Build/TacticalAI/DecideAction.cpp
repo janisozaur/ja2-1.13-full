@@ -3761,17 +3761,24 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 				}
 				else if (bCanAttack == NOSHOOT_NOAMMO && ubCanMove && !pSoldier->aiData.bNeutral)
 				{
+					int handPOS;
+					//CHRISL: We need to know which weapon has no ammo in case the soldier is holding a weapoin in SECONDHANDPOS
+					if(pSoldier->inv[SECONDHANDPOS].exists() == true && pSoldier->inv[SECONDHANDPOS][0]->data.gun.ubGunShotsLeft == 0)
+						handPOS = SECONDHANDPOS;
+					else
+						handPOS = HANDPOS;
+
 					// try to find more ammo
-					pSoldier->aiData.bAction = SearchForItems( pSoldier, SEARCH_AMMO, pSoldier->inv[HANDPOS].usItem );
+					pSoldier->aiData.bAction = SearchForItems( pSoldier, SEARCH_AMMO, pSoldier->inv[handPOS].usItem );
 
 					if (pSoldier->aiData.bAction == AI_ACTION_NONE)
 					{
 						// the current weapon appears is useless right now!
 						// (since we got a return code of noammo, we know the hand usItem
 						// is our gun)
-						pSoldier->inv[HANDPOS].fFlags |= OBJECT_AI_UNUSABLE;
+						pSoldier->inv[handPOS].fFlags |= OBJECT_AI_UNUSABLE;
 						// move the gun into another pocket...
-						if (!AutoPlaceObject( pSoldier, &(pSoldier->inv[HANDPOS]), FALSE ) )
+						if (!AutoPlaceObject( pSoldier, &(pSoldier->inv[handPOS]), FALSE ) )
 						{
 							// If there's no room in his pockets for the useless gun, just throw it away
 							return AI_ACTION_DROP_ITEM;
