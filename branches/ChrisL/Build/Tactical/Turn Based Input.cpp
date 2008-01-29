@@ -2432,6 +2432,24 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 				}
 				break;
+			case 'B':
+				//Drop pack for all mercs on current map
+				if(UsingNewInventorySystem() == true)
+				{
+					SOLDIERTYPE	*pTeamSoldier;
+					INT8		bLoop;
+					for (bLoop=gTacticalStatus.Team[gbPlayerNum].bFirstID, pTeamSoldier=MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[gbPlayerNum].bLastID; bLoop++, pTeamSoldier++)
+					{
+						//if ( OK_CONTROLLABLE_MERC( pTeamSoldier ) && pTeamSoldier->bAssignment == CurrentSquad( ) && !AM_A_ROBOT( pTeamSoldier ) && pTeamSoldier->inv[BPACKPOCKPOS].exists() == true )
+						if ( OK_CONTROLLABLE_MERC( pTeamSoldier ) && !AM_A_ROBOT( pTeamSoldier ) && pTeamSoldier->inv[BPACKPOCKPOS].exists() == true )
+						{
+							ChangeDropPackStatus(pTeamSoldier, TRUE);
+						}
+					}
+					fCharacterInfoPanelDirty = TRUE;
+					fInterfacePanelDirty = DIRTYLEVEL2;
+				}
+				break;
 			case 'c':
 
 				if( fAlt )

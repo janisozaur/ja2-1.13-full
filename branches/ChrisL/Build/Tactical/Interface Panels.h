@@ -146,4 +146,7 @@ void FinishAnySkullPanelAnimations( );
 
 UINT8 FindNextMercInTeamPanel( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs );
 
+// CHRISL: New callback functions for backpack buttons
+BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus);
+
 #endif

@@ -528,9 +528,7 @@ void BtnMapScreenCallback(GUI_BUTTON *btn,INT32 reason);
 // CHRISL: New callback functions for backpack buttons
 void BtnDropPackCallback(GUI_BUTTON *btn,INT32 reason);
 void BtnZipperCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnMapDropPackCallback( GUI_BUTTON *btn, INT32 reason );
 BOOLEAN ChangeZipperStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus);
-BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus);
 
 void BtnPrevMercCallback(GUI_BUTTON *btn,INT32 reason);
 void BtnNextMercCallback(GUI_BUTTON *btn,INT32 reason);
@@ -3975,39 +3973,6 @@ void BtnZipperCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
 }
-
-//CHRISL: Drop Backpack mouse callback function
-void BtnMapDropPackCallback( GUI_BUTTON *btn, INT32 reason )
-{
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		/* Is DropPackFlag currently false and is there something in the backpack pocket?  If so, we haven't
-		dropped a pack yet and apparently want to*/
-		if(gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == true && !gpSMCurrentMerc->flags.DropPackFlag)
-		{
-			// Drop the pack into sector inventory
-		}
-		/* Is DropPackFlag currently true, is nothing in the backpack pocket and have we dropped a pack?  If so, we
-		must want to retreive a backpack we previously dropped.*/
-		else if(gpSMCurrentMerc->inv[BPACKPOCKPOS].exists() == false && gpSMCurrentMerc->flags.DropPackFlag)
-		{
-			// Pickup pack from sector inventory
-		}
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-}
-
 
 void BtnUpdownCallback(GUI_BUTTON *btn,INT32 reason)
 {
