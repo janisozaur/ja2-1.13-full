@@ -4824,10 +4824,10 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 					{
 						// put on the armour!
 						PlaceObject( pSoldier, LEGPOS, pObj, fNewItem );
-						if ( pObj->exists() == false )
-						{
-							return( TRUE );
-						}
+					}
+					if ( pObj->exists() == false )
+					{
+						return( TRUE );
 					}
 					break;
 				case ARMOURCLASS_HELMET:
