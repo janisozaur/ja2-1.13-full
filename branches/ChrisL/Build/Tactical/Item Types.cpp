@@ -200,7 +200,7 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, std::vector<INT8>& LBES
 				if((i == CPACKPOCKPOS && uiHandPos == BPACKPOCKPOS) || (i == BPACKPOCKPOS && uiHandPos == CPACKPOCKPOS))
 				{
 					UINT8 newPack = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeCombo;
-					UINT8 chkPack = LoadBearingEquipment[Item[pSoldier->inv[LBESlots[x]].usItem].ubClassIndex].lbeCombo;
+					UINT8 chkPack = LoadBearingEquipment[Item[pSoldier->inv[i].usItem].ubClassIndex].lbeCombo;
 					if(newPack == 0 || newPack != chkPack)
 						continue;
 				}

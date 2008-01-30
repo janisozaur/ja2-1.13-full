@@ -2738,31 +2738,6 @@ void DamageObj( OBJECTTYPE * pObj, INT8 bAmount, UINT8 subObject )
 	}
 }
 
-void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj )
-{
-	INT16	bMaxPoints;
-
-	if ( !(Item[ pObj->usItem ].usItemClass & IC_AMMO || Item[ pObj->usItem ].usItemClass & IC_KIT || Item[ pObj->usItem ].usItemClass & IC_MEDKIT  || Item[pObj->usItem].canteen ) )
-	{
-		return;
-	}
-
-	if ( Item[ pObj->usItem ].usItemClass & IC_AMMO )
-	{
-		bMaxPoints = Magazine[ Item[ pObj->usItem ].ubClassIndex ].ubMagSize;
-	}
-	else
-	{
-		bMaxPoints = 100;
-	}
-
-	if ( pCursorObj && pCursorObj->usItem == pObj->usItem )
-	{
-		DistributeStatus(pCursorObj, pObj, bMaxPoints);
-	}
-	DistributeStatus(pObj, pObj, bMaxPoints);
-}
-
 void DistributeStatus(OBJECTTYPE* pSourceObject, OBJECTTYPE* pTargetObject, INT16 bMaxPoints)
 {
 	INT16 bPointsToMove;

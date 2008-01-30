@@ -11071,6 +11071,34 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 	// reset list
 //	ResetSelectedListForMapScreen( );
 
+	//CHRISL: When setting mercs to a squad, resort the Squad list so we're in ubID order so team panel appears the same
+	//	when switching between squads
+	switch( bAssignment )
+	{
+		case( SQUAD_1 ):
+		case( SQUAD_2 ):
+		case( SQUAD_3 ):
+		case( SQUAD_4 ):
+		case( SQUAD_5 ):
+		case( SQUAD_6 ):
+		case( SQUAD_7 ):
+		case( SQUAD_8 ):
+		case( SQUAD_9 ):
+		case( SQUAD_10 ):
+		case( SQUAD_11 ):
+		case( SQUAD_12 ):
+		case( SQUAD_13 ):
+		case( SQUAD_14 ):
+		case( SQUAD_15 ):
+		case( SQUAD_16 ):
+		case( SQUAD_17 ):
+		case( SQUAD_18 ):
+		case( SQUAD_19 ):
+		case( SQUAD_20 ):
+			SortSquadByID(bAssignment);
+			break;
+	}
+
 
 	// check if we should start/stop flashing any mercs' assignment strings after these changes
 	gfReEvaluateEveryonesNothingToDo = TRUE;

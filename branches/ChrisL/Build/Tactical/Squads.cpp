@@ -400,6 +400,26 @@ INT8 AddCharacterToUniqueSquad( SOLDIERTYPE *pCharacter )
 	return( -1 );
 }
 
+void SortSquadByID( INT8 bSquadValue )
+{
+	INT8		teamOrder[18] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+
+	for(int count = 0; count < NUMBER_OF_SOLDIERS_PER_SQUAD; count ++)
+	{
+		if(Squad[bSquadValue][0] != NULL)
+		{
+			teamOrder[Squad[bSquadValue][0]->ubID] = count;
+			RemoveCharacterFromSquads( Squad[bSquadValue][0] );
+		}
+	}
+	for(int count = 0; count < 18; count++)
+	{
+		if(teamOrder[count] != -1)
+		{
+			AddCharacterToSquad(MercPtrs[count], bSquadValue);
+		}
+	}
+}
 
 BOOLEAN SquadIsEmpty( INT8 bSquadValue )
 {

@@ -86,6 +86,7 @@ void RemoveAllPlayersFromSlot( );
 BOOLEAN PlayerExistsInSlot( UINT8 ubID );
 BOOLEAN RemovePlayerFromTeamSlotGivenMercID( UINT8 ubMercID );
 void CheckForAndAddMercToTeamPanel( SOLDIERTYPE *pSoldier );
+void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj );
 
 void DisableTacticalTeamPanelButtons( BOOLEAN fDisable );
 // CHRISL: Add X,Y coords as parameters so we can control the placement of TownID string on the team and inventory panels seperately

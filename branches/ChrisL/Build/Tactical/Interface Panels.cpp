@@ -417,7 +417,6 @@ extern	BOOLEAN		gfInItemPickupMenu;
 
 extern	void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject, BOOLEAN fReset );
 extern	void SetNewItem( SOLDIERTYPE *pSoldier, UINT8 ubInvPos, BOOLEAN fNewItem );
-extern	void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj );
 extern	BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier, UINT8 ubPosition );
 extern	BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTestObject, BOOLEAN fOn	);
 
@@ -4564,7 +4563,7 @@ BOOLEAN InitializeTEAMPanel(	)
 	// Add region
 	MSYS_AddRegion( &gTEAM_PanelRegion);
 
-	for ( posIndex = 0, cnt = 0; cnt < 6; cnt++, posIndex +=2 )
+	for ( posIndex = 0, cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++, posIndex +=2 )
 	{
 		MSYS_DefineRegion( &gTEAM_FaceRegions[ cnt ], sTEAMFacesXY[ posIndex ], sTEAMFacesXY[ posIndex + 1 ] ,(INT16)(sTEAMFacesXY[ posIndex ] + TM_FACE_WIDTH ), (INT16)(sTEAMFacesXY[ posIndex + 1 ] + TM_FACE_HEIGHT), MSYS_PRIORITY_NORMAL,
 							MSYS_NO_CURSOR, MercFacePanelMoveCallback, MercFacePanelCallback );
@@ -6179,6 +6178,30 @@ void CheckForAndAddMercToTeamPanel( SOLDIERTYPE *pSoldier )
 	}
 }
 
+void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj )
+{
+	INT16	bMaxPoints;
+
+	if ( !(Item[ pObj->usItem ].usItemClass & IC_AMMO || Item[ pObj->usItem ].usItemClass & IC_KIT || Item[ pObj->usItem ].usItemClass & IC_MEDKIT  || Item[pObj->usItem].canteen ) )
+	{
+		return;
+	}
+
+	if ( Item[ pObj->usItem ].usItemClass & IC_AMMO )
+	{
+		bMaxPoints = Magazine[ Item[ pObj->usItem ].ubClassIndex ].ubMagSize;
+	}
+	else
+	{
+		bMaxPoints = 100;
+	}
+
+	if ( pCursorObj && pCursorObj->usItem == pObj->usItem )
+	{
+		DistributeStatus(pCursorObj, pObj, bMaxPoints);
+	}
+	DistributeStatus(pObj, pObj, bMaxPoints);
+}
 
 UINT8 FindNextMercInTeamPanel( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs )
 {

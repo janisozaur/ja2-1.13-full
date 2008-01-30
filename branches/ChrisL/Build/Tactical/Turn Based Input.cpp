@@ -192,6 +192,8 @@ extern INT16 ITEMDESC_START_Y;
 
 //Little functions called by keyboard input
 void SwapGoggles();
+void SeperateItems();
+void StackAndSort();
 void CreateRandomItem();
 void MakeSelectedSoldierTired();
 void ToggleRealTime( UINT32 *puiNewEvent );
@@ -2622,69 +2624,11 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				}
 				break;
 
-
-
 			case 'F':
-				if ( !(gTacticalStatus.fEnemyInSector) )
-				{
-					HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-					for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ ) //for all items in sector
-					{
-						if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped
-						{
-							for (int x = 0; x < gWorldItems[ uiLoop ].object.ubNumberOfObjects; ++x) {
-								if (( Item[ gWorldItems[ uiLoop ].object.usItem ].usItemClass == IC_GUN ) && (gGameExternalOptions.gfShiftFUnloadWeapons == TRUE) )//item is a gun and unloading is allowed
-								{
-									//Remove magazine
-									if ( (gWorldItems[ uiLoop ].object[x]->data.gun.usGunAmmoItem != NONE) && (gWorldItems[ uiLoop ].object[x]->data.gun.ubGunShotsLeft > 0) )
-									{
-										CreateAmmo(gWorldItems[ uiLoop ].object[x]->data.gun.usGunAmmoItem, &gTempObject, gWorldItems[ uiLoop ].object[x]->data.gun.ubGunShotsLeft);
-										gWorldItems[ uiLoop ].object[x]->data.gun.ubGunShotsLeft = 0;
-										gWorldItems[ uiLoop ].object[x]->data.gun.usGunAmmoItem = NONE;
-
-										// put it on the ground
-										AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
-									}
-								}
-
-								//remove attachments
-								if ( gGameExternalOptions.gfShiftFRemoveAttachments == TRUE )
-								{
-									//CHRISL: We run into a problem here because GetFreeWorldItemIndex, which gets called 
-									//	from AddItemToPool, resets gWorldItems when it increases it's size.  This means
-									//	iter loses it's relationship which causes a CTD if we use this hotkey and there
-									//	aren't enough open WorldItems to accomodate all the attachments we're seperating.
-									UINT8 cnt = 0, uiLoopCnt = 0;
-									// uiLoopCnt is an extra failsafe.  I think I've already managed to eliminate the
-									//	infinite loop, but just in case, we'll use uiLoopCnt to force a break after a
-									//	certain point.
-									while(gWorldItems[uiLoop].object[x]->attachments.size() != cnt)
-									{
-										gTempObject = *gWorldItems[uiLoop].object[x]->GetAttachmentAtIndex(cnt);
-										if (gWorldItems[ uiLoop ].object.RemoveAttachment(&gTempObject,0,x))
-										{
-											AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
-											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
-										}
-										else
-										{
-											cnt++;
-										}
-										uiLoopCnt ++;
-										if(uiLoopCnt > 100)
-											break;
-									}
-								}
-							}
-						}
-					}
-				}
+				SeperateItems();
+				if( fCtrl )
+					StackAndSort();
 				break;
-
-
-
-
-
 
 			case 'D':
 				if ( gGameSettings.fOptions[TOPTION_DROP_ALL] )
@@ -3400,57 +3344,9 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				}
 				break;
 
-
-
-
-
 			case 'S':
-				if (! ( gTacticalStatus.fEnemyInSector ) )
-				{
-					HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-
-					for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )
-					{
-						if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped
-						{
-							//find out how many items can be put in a big slot
-							UINT8 ubSlotLimit = ItemSlotLimit( &gWorldItems[ uiLoop ].object, STACK_SIZE_LIMIT );
-
-							//if we still have some space
-							INT32 i = 0;
-							while ( gWorldItems[ uiLoop ].object.ubNumberOfObjects < ubSlotLimit )
-							{
-								i++;
-								//if the next item is the same
-								if ( gWorldItems[ uiLoop ].object.usItem == gWorldItems[ uiLoop + i ].object.usItem )
-								{
-									INT8 ubObjCount = ubSlotLimit - gWorldItems[ uiLoop ].object.ubNumberOfObjects;
-									INT8 bPointsToMove = __min( ubObjCount, gWorldItems[ uiLoop + i ].object.ubNumberOfObjects );
-
-									gWorldItems[ uiLoop ].object.AddObjectsToStack( (gWorldItems[ uiLoop + i ].object), bPointsToMove);
-									//CHRISL: After adding the object to the stack, we need to delete the old object from
-									//	both gWorldItems and the ItemPool otherwise we cause a CTD.
-									if(gWorldItems[uiLoop+i].object.exists() == false && gWorldItems[ uiLoop ].fExists)
-									{
-										RemoveItemFromPool(gWorldItems[uiLoop+i].sGridNo,(uiLoop+i),gWorldItems[uiLoop+i].ubLevel);
-										RemoveItemFromWorld(uiLoop+i);
-									}
-								}
-								//CHRISL: by changing this to a condition, we can use this hotkey immediately after the
-								//	SHITFT+F hotkey.  Otherwise, if a stackable item ends up at the end of the inventory
-								//	list, we won't be able to add it to the initial stack.
-								else if(uiLoop+i == guiNumWorldItems)
-								{
-									break;
-								}
-							}
-						}
-					}
-
-					//HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-				}
+				StackAndSort();
 				break;
-
 
 			case 's':
 
@@ -5186,6 +5082,8 @@ void ChangeCurrentSquad( INT32 iSquad )
 	{
 		if ( IsSquadOnCurrentTacticalMap( iSquad ) )
 		{
+			//resort the squad in case the order has, for any reason, changed
+			SortSquadByID((INT8)iSquad);
 			SetCurrentSquad( iSquad, FALSE );
 		}
 	}
@@ -5516,5 +5414,120 @@ void SwapGoggles()
 			pTeamSoldier->DeleteSoldierLight( );
 			pTeamSoldier->PositionSoldierLight( );
 		}
+	}
+}
+
+void SeperateItems()
+{
+	if ( !(gTacticalStatus.fEnemyInSector) )
+	{
+		HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+		for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ ) //for all items in sector
+		{
+			if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped
+			{
+				for (int x = 0; x < gWorldItems[ uiLoop ].object.ubNumberOfObjects; ++x) {
+					if (( Item[ gWorldItems[ uiLoop ].object.usItem ].usItemClass == IC_GUN ) && (gGameExternalOptions.gfShiftFUnloadWeapons == TRUE) )//item is a gun and unloading is allowed
+					{
+						//Remove magazine
+						if ( (gWorldItems[ uiLoop ].object[x]->data.gun.usGunAmmoItem != NONE) && (gWorldItems[ uiLoop ].object[x]->data.gun.ubGunShotsLeft > 0) )
+						{
+							CreateAmmo(gWorldItems[ uiLoop ].object[x]->data.gun.usGunAmmoItem, &gTempObject, gWorldItems[ uiLoop ].object[x]->data.gun.ubGunShotsLeft);
+							gWorldItems[ uiLoop ].object[x]->data.gun.ubGunShotsLeft = 0;
+							gWorldItems[ uiLoop ].object[x]->data.gun.usGunAmmoItem = NONE;
+
+							// put it on the ground
+							AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
+						}
+					}
+
+					//remove attachments
+					if ( gGameExternalOptions.gfShiftFRemoveAttachments == TRUE )
+					{
+						//CHRISL: We run into a problem here because GetFreeWorldItemIndex, which gets called 
+						//	from AddItemToPool, resets gWorldItems when it increases it's size.  This means
+						//	iter loses it's relationship which causes a CTD if we use this hotkey and there
+						//	aren't enough open WorldItems to accomodate all the attachments we're seperating.
+						UINT8 cnt = 0, uiLoopCnt = 0;
+						// uiLoopCnt is an extra failsafe.  I think I've already managed to eliminate the
+						//	infinite loop, but just in case, we'll use uiLoopCnt to force a break after a
+						//	certain point.
+						while(gWorldItems[uiLoop].object[x]->attachments.size() != cnt)
+						{
+							gTempObject = *gWorldItems[uiLoop].object[x]->GetAttachmentAtIndex(cnt);
+							if (gWorldItems[ uiLoop ].object.RemoveAttachment(&gTempObject,0,x))
+							{
+								AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
+								ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
+							}
+							else
+							{
+								cnt++;
+							}
+							uiLoopCnt ++;
+							if(uiLoopCnt > 100)
+								break;
+						}
+					}
+				}
+			}
+		}
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pImpButtonText[11] );
+	}
+}
+
+void StackAndSort()
+{
+	if (! ( gTacticalStatus.fEnemyInSector ) )
+	{
+		HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+
+		for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )
+		{
+			if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped
+			{
+				//find out how many items can be put in a big slot
+				UINT8 ubSlotLimit = ItemSlotLimit( &gWorldItems[ uiLoop ].object, STACK_SIZE_LIMIT );
+
+				//if we still have some space
+				INT32 i = 0;
+				while ( gWorldItems[ uiLoop ].object.ubNumberOfObjects < ubSlotLimit )
+				{
+					i++;
+					//if the next item is the same
+					if ( gWorldItems[ uiLoop ].object.usItem == gWorldItems[ uiLoop + i ].object.usItem )
+					{
+						// Clean up ammo stacks prior to trying to merge them
+						if(Item[gWorldItems[uiLoop].object.usItem].usItemClass == IC_AMMO)
+						{
+							CleanUpStack(&gWorldItems[uiLoop].object, NULL);
+							CleanUpStack(&gWorldItems[uiLoop+i].object, NULL);
+						}
+						INT8 ubObjCount = ubSlotLimit - gWorldItems[ uiLoop ].object.ubNumberOfObjects;
+						INT8 bPointsToMove = __min( ubObjCount, gWorldItems[ uiLoop + i ].object.ubNumberOfObjects );
+
+						gWorldItems[ uiLoop ].object.AddObjectsToStack( (gWorldItems[ uiLoop + i ].object), bPointsToMove);
+						if(Item[gWorldItems[uiLoop].object.usItem].usItemClass == IC_AMMO)
+							CleanUpStack(&gWorldItems[uiLoop].object, NULL);
+						//CHRISL: After adding the object to the stack, we need to delete the old object from
+						//	both gWorldItems and the ItemPool otherwise we cause a CTD.
+						if(gWorldItems[uiLoop+i].object.exists() == false && gWorldItems[ uiLoop ].fExists)
+						{
+							RemoveItemFromPool(gWorldItems[uiLoop+i].sGridNo,(uiLoop+i),gWorldItems[uiLoop+i].ubLevel);
+							RemoveItemFromWorld(uiLoop+i);
+						}
+					}
+					//CHRISL: by changing this to a condition, we can use this hotkey immediately after the
+					//	SHITFT+F hotkey.  Otherwise, if a stackable item ends up at the end of the inventory
+					//	list, we won't be able to add it to the initial stack.
+					else if(uiLoop+i == guiNumWorldItems)
+					{
+						break;
+					}
+				}
+			}
+		}
+		//HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pImpButtonText[11] );
 	}
 }

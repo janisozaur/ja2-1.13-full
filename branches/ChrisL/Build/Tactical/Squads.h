@@ -101,6 +101,9 @@ INT32 CurrentSquad( void );
 // add character to unique squad (returns the squad #, -1 if failed)
 INT8 AddCharacterToUniqueSquad( SOLDIERTYPE *pCharacter );
 
+// resort the squad by ubID
+void SortSquadByID( INT8 bSquadValue );
+
 // is this squad empty?
 BOOLEAN SquadIsEmpty( INT8 bSquadValue );
 
