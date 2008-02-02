@@ -5848,6 +5848,8 @@ void UnSetUIBusy( UINT8 ubID )
 {
 	if ( gfUserTurnRegionActive && (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) && ( gTacticalStatus.ubCurrentTeam == gbPlayerNum ) )
 	{
+		if(!gTacticalStatus.fInterruptOccurred)// disable 'auto' unlocking while locked from interrupt
+		{
 		if ( !gTacticalStatus.fUnLockUIAfterHiddenInterrupt )
 		{
 			if ( gusSelectedSoldier == ubID )
@@ -5860,6 +5862,7 @@ void UnSetUIBusy( UINT8 ubID )
 			}
 		}
 		// player getting control back so reset all muzzle flashes
+	}
 	}
 }
 

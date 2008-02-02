@@ -7035,7 +7035,7 @@ void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier )
 {
 	INT8							bNewDirection;
 	UINT8							ubWhoIsThere;
-
+	if(is_client)return;//hayden disable climbing roof
 
 	if ( FindHeigherLevel( pSoldier, pSoldier->sGridNo, pSoldier->bDirection, &bNewDirection ) && ( pSoldier->bLevel == 0 ) )
 	{

@@ -88,6 +88,8 @@
 	#include "Scheduling.h"
 #endif
 
+#include "connect.h"
+
 
 #define		ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
 
@@ -552,7 +554,7 @@ UINT32  MainGameScreenHandle(void)
 	{
 		if ( gTacticalStatus.fEnemySightingOnTheirTurn )
 		{
-			if ( ( GetJA2Clock( ) - gTacticalStatus.uiTimeSinceDemoOn ) > 3000 )
+			if ( (( GetJA2Clock( ) - gTacticalStatus.uiTimeSinceDemoOn ) > 3000) || is_client)//unpause straight away if in MP
 			{
 				if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum )
 				{

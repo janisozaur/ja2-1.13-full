@@ -348,15 +348,13 @@ void GameInitMercs()
 	gubMercArray[ 18 ] = 60;
 	gubMercArray[ 19 ] = 61;
 	gubMercArray[ 20 ] = 63;
-	gubMercArray[ 21 ] = 64;
-	gubMercArray[ 22 ] = 66;
-	gubMercArray[ 23 ] = 67;
-	gubMercArray[ 24 ] = 68;
-	gubMercArray[ 25 ] = 69;
-	gubMercArray[ 26 ] = 70;
-	gubMercArray[ 27 ] = 72;		
-	gubMercArray[ 28 ] = 81;	
-	gubMercArray[ 29 ] = 148;
+	gubMercArray[ 21 ] = 66;
+	gubMercArray[ 22 ] = 67;
+	gubMercArray[ 23 ] = 68;
+	gubMercArray[ 24 ] = 69;
+	gubMercArray[ 25 ] = 70;
+	gubMercArray[ 26 ] = 72;		
+
 	
 
 	LaptopSaveInfo.gubPlayersMercAccountStatus = MERC_NO_ACCOUNT;

@@ -568,7 +568,9 @@ void send_hire( UINT8 iNewIndex, UINT8 ubCurrentSoldier, INT16 iTotalContractLen
 			
 			AddCharacterToAnySquad( pSoldier );
 			AddSoldierToSector( pSoldier->ubID ); //add g\hired merc to sector so can access sector inv.
-	
+			
+			//add recruited flag
+			gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags |= PROFILE_MISC_FLAG_RECRUITED;
 
 			OBJECTTYPE		Object;
 			int cnt;
@@ -1458,7 +1460,7 @@ void recieveINTERRUPT (RPCParameters *rpcParameters)
 				//it for us ! :)
 				if(INT->gubOutOfTurnPersons==0)//indicates finished interrupt maybe can just call end interrupt
 				{
-					//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"finish from interrupt" );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"finish from interrupt" );
 					ClearIntList();
 					guiPendingOverrideEvent = LU_ENDUILOCK;
 					guiPendingOverrideEvent = LA_ENDUIOUTURNLOCK;
