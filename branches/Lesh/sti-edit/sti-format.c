@@ -1091,8 +1091,6 @@ UINT32 ETRLECompressSubImage( gint32 drawable_ID, UINT8 * pDest, UINT32 uiDestLe
 	GimpPixelRgn	rgn;
 	guchar			*row, *rle;
 	gboolean		alpha;
-	FILE			*debug;
-	char			name[32];
 	
 	DEBUG("  ETRLECompressSubImage()\n");
 	
@@ -1110,13 +1108,9 @@ UINT32 ETRLECompressSubImage( gint32 drawable_ID, UINT8 * pDest, UINT32 uiDestLe
 	row = g_new (guchar, width * channels);
 	rle = g_new (guchar, width * 2); // worst case - double width
 
-	sprintf(name, "layer%d.dat", drawable_ID);
-	debug = fopen( name, "w" );
-
 	for (usLoop = 0; usLoop < height; usLoop++)
 	{
 		gimp_pixel_rgn_get_row( &rgn, row, 0, usLoop, width );
-		fwrite(row, channels, width, debug);
 		
 		// compress row and check return code
 		DEBUG("Compressing image %d, scanline %d\n", drawable_ID, usLoop);
@@ -1141,8 +1135,6 @@ UINT32 ETRLECompressSubImage( gint32 drawable_ID, UINT8 * pDest, UINT32 uiDestLe
 	g_free(rle);
 	g_free(row);
 	
-	fclose( debug );
-
 	return( uiDestLen - uiSpaceLeft );
 }
 
