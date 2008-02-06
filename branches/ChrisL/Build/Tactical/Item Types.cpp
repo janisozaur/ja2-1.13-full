@@ -722,9 +722,10 @@ int OBJECTTYPE::PrivateRemoveObjectsFromStack(int howMany, OBJECTTYPE* destObjec
 
 	if (destObject) {
 		//destObject should be empty especially if numToRemove is 0
-		if (destObject->exists() == true) {
+		//CHRISL: since destObject should be empty, let's just force it to be empty by initializing it.
+		//if (destObject->exists() == true) {
 			destObject->initialize();
-		}
+		//}
 		if (numToRemove > 0) {
 			//this handles the removal too
 			return destObject->AddObjectsToStack(*this, numToRemove, pSoldier, slot, cap, allowLBETransfer);

@@ -193,7 +193,7 @@ extern INT16 ITEMDESC_START_Y;
 //Little functions called by keyboard input
 void SwapGoggles();
 void SeperateItems();
-void StackAndSort();
+void StackAndSort( BOOLEAN fRestrictToAmmo );
 void CreateRandomItem();
 void MakeSelectedSoldierTired();
 void ToggleRealTime( UINT32 *puiNewEvent );
@@ -2627,7 +2627,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			case 'F':
 				SeperateItems();
 				if( fCtrl )
-					StackAndSort();
+					StackAndSort( TRUE );
 				break;
 
 			case 'D':
@@ -2828,7 +2828,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 			case 'K':
 				//CHRISL: Swap gunsling
-				if ( gusSelectedSoldier != NOBODY )
+				if ( gusSelectedSoldier != NOBODY && UsingNewInventorySystem() == true)
 				{
 					SOLDIERTYPE *pSoldier = MercPtrs[ gusSelectedSoldier ];
 					BOOLEAN handFit = (CanItemFitInPosition(pSoldier, &pSoldier->inv[HANDPOS], GUNSLINGPOCKPOS, FALSE) || (pSoldier->inv[HANDPOS].exists() == false && pSoldier->inv[SECONDHANDPOS].exists() == false));
@@ -2982,10 +2982,12 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				}
 				else if( fCtrl )
 				{
-
+					// Merge all items
+					StackAndSort( FALSE );
 				}
 				else
 				{
+					// Move all sector items to current mercs feet
 					if ( !(gTacticalStatus.fEnemyInSector) )
 					{
 						HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
@@ -3345,7 +3347,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				break;
 
 			case 'S':
-				StackAndSort();
+				StackAndSort( TRUE );
 				break;
 
 			case 's':
@@ -5476,7 +5478,7 @@ void SeperateItems()
 	}
 }
 
-void StackAndSort()
+void StackAndSort( BOOLEAN fRestrictToAmmo )
 {
 	if (! ( gTacticalStatus.fEnemyInSector ) )
 	{
@@ -5486,10 +5488,34 @@ void StackAndSort()
 		{
 			if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped
 			{
+				//start by putting all identical items into one large pile regardless of stacking limits so we can merge them
+				WORLDITEM dummyItem = gWorldItems[uiLoop];
+				RemoveItemFromPool(gWorldItems[uiLoop].sGridNo,(uiLoop),gWorldItems[uiLoop].ubLevel);
+				RemoveItemFromWorld(uiLoop);
+				for(UINT32 i = uiLoop+1; i < guiNumWorldItems; i++)
+				{
+					if(dummyItem.object.usItem == gWorldItems[i].object.usItem && gWorldItems[i].bVisible == TRUE && gWorldItems[i].fExists && (gWorldItems[i].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[i].usFlags & WORLD_ITEM_ARMED_BOMB))
+					{
+						dummyItem.object.AddObjectsToStack(gWorldItems[i].object,-1,NULL,NUM_INV_SLOTS,MAX_OBJECTS_PER_SLOT,false);
+						if(gWorldItems[i].object.exists() == false && gWorldItems[i].fExists)
+						{
+							RemoveItemFromPool(gWorldItems[i].sGridNo,i,gWorldItems[i].ubLevel);
+							RemoveItemFromWorld(i);
+						}
+					}
+				}
+
+				//merge items in stack
+				if(fRestrictToAmmo == FALSE || Item[dummyItem.object.usItem].usItemClass == IC_AMMO)
+					CleanUpStack(&dummyItem.object, NULL);
+
+				//return item to world
+				AddItemToPool(dummyItem.sGridNo, &dummyItem.object, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel, dummyItem.soldierID);
+
 				//find out how many items can be put in a big slot
 				UINT8 ubSlotLimit = ItemSlotLimit( &gWorldItems[ uiLoop ].object, STACK_SIZE_LIMIT );
 
-				//if we still have some space
+/*				//if we still have some space
 				INT32 i = 0;
 				while ( gWorldItems[ uiLoop ].object.ubNumberOfObjects < ubSlotLimit )
 				{
@@ -5498,7 +5524,7 @@ void StackAndSort()
 					if ( gWorldItems[ uiLoop ].object.usItem == gWorldItems[ uiLoop + i ].object.usItem )
 					{
 						// Clean up ammo stacks prior to trying to merge them
-						if(Item[gWorldItems[uiLoop].object.usItem].usItemClass == IC_AMMO)
+						if(fRestrictToAmmo == FALSE || Item[gWorldItems[uiLoop].object.usItem].usItemClass == IC_AMMO)
 						{
 							CleanUpStack(&gWorldItems[uiLoop].object, NULL);
 							CleanUpStack(&gWorldItems[uiLoop+i].object, NULL);
@@ -5507,7 +5533,7 @@ void StackAndSort()
 						INT8 bPointsToMove = __min( ubObjCount, gWorldItems[ uiLoop + i ].object.ubNumberOfObjects );
 
 						gWorldItems[ uiLoop ].object.AddObjectsToStack( (gWorldItems[ uiLoop + i ].object), bPointsToMove);
-						if(Item[gWorldItems[uiLoop].object.usItem].usItemClass == IC_AMMO)
+						if(fRestrictToAmmo == FALSE || Item[gWorldItems[uiLoop].object.usItem].usItemClass == IC_AMMO)
 							CleanUpStack(&gWorldItems[uiLoop].object, NULL);
 						//CHRISL: After adding the object to the stack, we need to delete the old object from
 						//	both gWorldItems and the ItemPool otherwise we cause a CTD.
@@ -5524,9 +5550,10 @@ void StackAndSort()
 					{
 						break;
 					}
-				}
+				}*/
 			}
 		}
+		NotifySoldiersToLookforItems( );
 		//HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pImpButtonText[11] );
 	}

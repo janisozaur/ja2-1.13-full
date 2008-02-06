@@ -603,14 +603,7 @@ void RenderTopmostTacticalInterface( )
 
 	if ( InItemStackPopup( ) )
 	{
-		if ( fInterfacePanelDirty == DIRTYLEVEL2 )
-		{
-			RenderItemStackPopup( TRUE );
-		}
-		else
-		{
-			RenderItemStackPopup( FALSE );
-		}
+		RenderItemStackPopup( ( BOOLEAN )( fInterfacePanelDirty == DIRTYLEVEL2 ) );
 	}
 
 	if( ( InKeyRingPopup() ) && ( !InItemDescriptionBox( ) ) )

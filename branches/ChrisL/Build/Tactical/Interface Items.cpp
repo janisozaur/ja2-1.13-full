@@ -346,7 +346,7 @@ void DeletePool(ITEM_POOL *pItemPool);
 #define			KEY_RING_ROW_WIDTH 7
 #define			MAP_KEY_RING_ROW_WIDTH 4
 #define			INV_ITEM_ROW_WIDTH 7
-#define			MAP_INV_ITEM_ROW_WIDTH 6
+#define			MAP_INV_ITEM_ROW_WIDTH 4
 
 // ITEM STACK POPUP STUFF
 BOOLEAN			gfInItemStackPopup = FALSE;
@@ -6044,19 +6044,17 @@ BOOLEAN InKeyRingPopup( )
 BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight )
 {
 	VOBJECT_DESC    VObjectDesc;
-	INT16						sX, sY, sCenX, sCenY;
-	SGPRect					aRect;
-	UINT8						ubLimit;
-  ETRLEObject						*pTrav;
-	HVOBJECT							hVObject;
-	INT32						cnt;
-	UINT16				 usPopupWidth, usPopupHeight;
-	INT16					sItemSlotWidth, sItemSlotHeight;
-	INT16 sItemWidth = 0, sOffSetY = 0;
-	static CHAR16		pStr[ 512 ];
+	SGPRect			aRect;
+	ETRLEObject		*pTrav;
+	HVOBJECT		hVObject;
+	INT32			cnt;
+	UINT16			usPopupWidth, usPopupHeight;
+	INT16			sOffSetY = 0, sOffSetX = 0;
+	INT16			sItemWidth = 0;
+	static CHAR16	pStr[ 512 ];
 
 	
-	// CHRISL: Setup witdh and offset to layer inventory boxes if necessary
+	RenderBackpackButtons(1);	/* CHRISL: Needed for new inventory backpack buttons */
 	if( guiCurrentScreen == MAP_SCREEN )
 	{
 		sItemWidth						= MAP_INV_ITEM_ROW_WIDTH;
@@ -6070,37 +6068,35 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	// Set some globals
 	gsItemPopupInvX					= sInvX;
 	gsItemPopupInvY					= sInvY;
-	gsItemPopupInvWidth			= sInvWidth;
-	gsItemPopupInvHeight		= sInvHeight;
-
+	gsItemPopupInvWidth				= sInvWidth;
+	gsItemPopupInvHeight			= sInvHeight;
 
 	gpItemPopupSoldier = pSoldier;
-
 
 	// Determine # of items
 	gpItemPopupObject = &(pSoldier->inv[ ubPosition ] );
 	// CHRISL:
-	ubLimit = ItemSlotLimit( gpItemPopupObject, ubPosition, pSoldier );
+	gubNumItemPopups = ItemSlotLimit( gpItemPopupObject, ubPosition, pSoldier );
 
 	// Return false if #objects not >1
-	if ( ubLimit <1 )
+	if ( gubNumItemPopups <1 )
 	{
 		return( FALSE );
 	}
-
-	//CHRISL: No longer needed now that we're displaying multiple rows of inventory items.
-//	if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
-//	{
-//    if ( ubLimit > 6 )
-//    {
-//      ubLimit = 6;
-//    }
-//  }
 
 	// Load graphics
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 	strcpy( VObjectDesc.ImageFile, "INTERFACE\\extra_inventory.STI" );
 	CHECKF( AddVideoObject( &VObjectDesc, &guiItemPopupBoxes) );
+
+	if(UsingNewInventorySystem() == true)
+	{
+		VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
+		strcpy( VObjectDesc.ImageFile, "INTERFACE\\infobox_background.sti" );
+		CHECKF( AddVideoObject( &VObjectDesc, &guiItemDescBoxBackground) );
+	}
+	else
+		guiItemDescBoxBackground = 0;
 
 	// Get size
 	GetVideoObject( &hVObject, guiItemPopupBoxes );
@@ -6109,54 +6105,26 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	usPopupHeight = pTrav->usHeight;
 
 	// Determine position, height and width of mouse region, area
-	GetSlotInvXY( ubPosition, &sX, &sY );
-	GetSlotInvHeightWidth( ubPosition, &sItemSlotWidth, &sItemSlotHeight );
+	//GetSlotInvXY( ubPosition, &sX, &sY );
+	//GetSlotInvHeightWidth( ubPosition, &sItemSlotWidth, &sItemSlotHeight );
 
 	// Get Width, Height
-	gsItemPopupWidth	= ubLimit * usPopupWidth;
+	gsItemPopupWidth	= gubNumItemPopups * usPopupWidth;
 	gsItemPopupHeight = pTrav->usHeight;
-	gubNumItemPopups = ubLimit;
 
-	// CHRISL: Don't center.  Instead, put interface in upper left corner or mouse area
-	// Calculate X,Y, first center
-	//sCenX = sX - ( ( gsItemPopupWidth / 2 ) + ( sItemSlotWidth / 2 ) );
-	//sCenY	= sY;
-	sCenX	= gsItemPopupInvX;
-	sCenY	= gsItemPopupInvY;
-
-	// Limit it to window for item desc
-	if ( sCenX < gsItemPopupInvX )
-	{
-		sCenX = gsItemPopupInvX;
-	}
-	if ( ( sCenX + gsItemPopupWidth ) > ( gsItemPopupInvX + gsItemPopupInvWidth ) )
-	{
-		sCenX = gsItemPopupInvX;
-	}
-
-  // Cap it at 0....
-  if ( sCenX < 0 )
-  {
-    sCenX = 0;
-  }
-
-	// Set
-	gsItemPopupX	= sCenX;
-	gsItemPopupY	= sCenY;
+	gsItemPopupX	= gsItemPopupInvX;
+	gsItemPopupY	= gsItemPopupInvY;
 
 	for ( cnt = 0; cnt < gubNumItemPopups; cnt++ )
 	{
 		// Build a mouse region here that is over any others.....
-		// CHRISL: New region definition to handle multiple rows of items
-//		MSYS_DefineRegion( &gItemPopupRegions[cnt], (INT16)(sCenX + ( cnt * usPopupWidth ) ), sCenY , (INT16)(sCenX + ( (cnt+1) * usPopupWidth ) ),(INT16)( sCenY + gsItemPopupHeight ), MSYS_PRIORITY_HIGHEST,
-//							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupRegionCallback ); 
-		MSYS_DefineRegion( &gItemPopupRegions[cnt], 
-				(INT16)( gsItemPopupX + ( cnt % sItemWidth * usPopupWidth ) ), // top left
-				(INT16)( gsItemPopupY + sOffSetY + ( cnt / sItemWidth * usPopupHeight ) ), // top right
-				(INT16)( gsItemPopupX + ( ( cnt % sItemWidth ) + 1 ) * usPopupWidth ), // bottom left
-				(INT16)( gsItemPopupY + ( (cnt / sItemWidth + 1) * usPopupHeight ) + sOffSetY ), // bottom right
+		MSYS_DefineRegion( &gItemPopupRegions[cnt],
+				(INT16)( gsItemPopupInvX + ( cnt % gsItemPopupInvWidth * usPopupWidth ) + sOffSetX ), // top left
+				(INT16)( sInvY + sOffSetY +( cnt / gsItemPopupInvWidth * usPopupHeight ) ), // top right
+				(INT16)( gsItemPopupInvX + ( ( cnt % gsItemPopupInvWidth ) + 1 ) * usPopupWidth + sOffSetX ), // bottom left
+				(INT16)( sInvY + ( (cnt / gsItemPopupInvWidth + 1) * usPopupHeight ) + sOffSetY ), // bottom right
 				MSYS_PRIORITY_HIGHEST,
-				MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupRegionCallback ); 
+				MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupRegionCallback );
 		// Add region
 		MSYS_AddRegion( &gItemPopupRegions[cnt]);
 		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 0, cnt );
@@ -6181,7 +6149,7 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 
 
 	// Build a mouse region here that is over any others.....
-	MSYS_DefineRegion( &gItemPopupRegion, gsItemPopupInvX, gsItemPopupInvY ,(INT16)(gsItemPopupInvX + gsItemPopupInvWidth), (INT16)(gsItemPopupInvY + gsItemPopupInvHeight), MSYS_PRIORITY_HIGH,
+	MSYS_DefineRegion( &gItemPopupRegion, sInvX, sInvY ,(INT16)(sInvX + sInvWidth), (INT16)(sInvY + sInvHeight), MSYS_PRIORITY_HIGH,
 						 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupFullRegionCallback );
 	// Add region
 	MSYS_AddRegion( &gItemPopupRegion);
@@ -6196,13 +6164,13 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	//guiTacticalInterfaceFlags |= INTERFACE_NORENDERBUTTONS;
 
 
-	gfInItemStackPopup = TRUE;
-
 //	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 	{
 		EnableSMPanelButtons( FALSE, FALSE );
 	}
+
+	gfInItemStackPopup = TRUE;
 
 	//Reserict mouse cursor to panel
 	aRect.iTop = sInvY;
@@ -6252,7 +6220,10 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 		// Shadow Area
 		if ( fFullRender )
 		{
-			ShadowVideoSurfaceRect( FRAME_BUFFER, gsItemPopupInvX, gsItemPopupInvY, gsItemPopupInvX + gsItemPopupInvWidth , gsItemPopupInvY + gsItemPopupInvHeight  );
+			if(UsingNewInventorySystem() == false || guiCurrentScreen == MAP_SCREEN)
+				ShadowVideoSurfaceRect( FRAME_BUFFER, gsItemPopupInvX, gsItemPopupInvY, gsItemPopupInvX + gsItemPopupInvWidth , gsItemPopupInvY + gsItemPopupInvHeight  );
+			else if(UsingNewInventorySystem() == true && iResolution != 0 && guiItemDescBoxBackground != 0 && guiCurrentScreen != MAP_SCREEN)
+				BltVideoObjectFromIndex( FRAME_BUFFER, guiItemDescBoxBackground, iResolution, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, VO_BLT_SRCTRANSPARENCY, NULL );
 		}
 
 	}
@@ -6261,7 +6232,6 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 	pTrav = &(hVObject->pETRLEObject[ 0 ] );
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
-
 
 	for ( cnt = 0; cnt < gubNumItemPopups; cnt++ )
 	{
@@ -6336,12 +6306,12 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 {
 	VOBJECT_DESC    VObjectDesc;
 	SGPRect			aRect;
-  ETRLEObject	*pTrav;
+	ETRLEObject		*pTrav;
 	HVOBJECT		hVObject;
-	INT32				cnt;
+	INT32			cnt;
 	UINT16			usPopupWidth, usPopupHeight;
-	INT16				sKeyRingItemWidth = 0;
-	INT16				sOffSetY = 0, sOffSetX = 0;
+	INT16			sOffSetY = 0, sOffSetX = 0;
+	INT16			sKeyRingItemWidth = 0;
 
 	RenderBackpackButtons(1);	/* CHRISL: Needed for new inventory backpack buttons */
 	if( guiCurrentScreen == MAP_SCREEN )
@@ -6360,9 +6330,8 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 	}
 
 	gsKeyRingPopupInvY					= sInvY;
-	gsKeyRingPopupInvWidth			= sInvWidth;
-	gsKeyRingPopupInvHeight		= sInvHeight;
-
+	gsKeyRingPopupInvWidth				= sInvWidth;
+	gsKeyRingPopupInvHeight				= sInvHeight;
 
 	gpItemPopupSoldier = pSoldier;
 
@@ -6370,6 +6339,15 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 	strcpy( VObjectDesc.ImageFile, "INTERFACE\\extra_inventory.STI" );
 	CHECKF( AddVideoObject( &VObjectDesc, &guiItemPopupBoxes) );
+
+	if(UsingNewInventorySystem() == true)
+	{
+		VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
+		strcpy( VObjectDesc.ImageFile, "INTERFACE\\infobox_background.sti" );
+		CHECKF( AddVideoObject( &VObjectDesc, &guiItemDescBoxBackground) );
+	}
+	else
+		guiItemDescBoxBackground = 0;
 
 	// Get size
 	GetVideoObject( &hVObject, guiItemPopupBoxes );
@@ -6462,7 +6440,10 @@ void RenderKeyRingPopup( BOOLEAN fFullRender )
 		// Shadow Area
 		if ( fFullRender )
 		{
-			ShadowVideoSurfaceRect( FRAME_BUFFER, 0, gsKeyRingPopupInvY, gsKeyRingPopupInvX + gsKeyRingPopupInvWidth , gsKeyRingPopupInvY + gsKeyRingPopupInvHeight );
+			if(UsingNewInventorySystem() == false || guiCurrentScreen == MAP_SCREEN)
+				ShadowVideoSurfaceRect( FRAME_BUFFER, 0, gsKeyRingPopupInvY, gsKeyRingPopupInvX + gsKeyRingPopupInvWidth , gsKeyRingPopupInvY + gsKeyRingPopupInvHeight );
+			else if(UsingNewInventorySystem() == true && iResolution != 0 && guiItemDescBoxBackground != 0 && guiCurrentScreen != MAP_SCREEN)
+				BltVideoObjectFromIndex( FRAME_BUFFER, guiItemDescBoxBackground, iResolution, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, VO_BLT_SRCTRANSPARENCY, NULL );
 		}
 
 	}

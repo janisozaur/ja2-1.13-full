@@ -594,6 +594,7 @@ INT32 giMapContractButtonImage;
 //INT32 giMapInvButtonImage;
 
 INT32 giSortStateForMapScreenList = 0;
+BOOLEAN	giSortOrderAscending = TRUE;
 
 INT32 giCommonGlowBaseTime = 0;
 INT32 giFlashAssignBaseTime = 0;
@@ -818,7 +819,7 @@ void CreateDestroyMapCharacterScrollButtons( void );
 // sort buttons for team list
 void AddTeamPanelSortButtonsForMapScreen( void );
 void RemoveTeamPanelSortButtonsForMapScreen( void );
-void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs );
+void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs, BOOLEAN fReverse = FALSE );
 
 
 // Rendering
@@ -6255,7 +6256,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 
 				case 'K':
 					//CHRISL: Swap gunsling
-					if ( bSelectedInfoChar != -1 && fShowInventoryFlag )
+					if ( bSelectedInfoChar != -1 && fShowInventoryFlag && UsingNewInventorySystem() == true )
 					{
 						SOLDIERTYPE *pSoldier = MercPtrs[ gCharactersList[ bSelectedInfoChar ].usSolID ];
 						BOOLEAN handFit = (CanItemFitInPosition(pSoldier, &pSoldier->inv[HANDPOS], GUNSLINGPOCKPOS, FALSE) || (pSoldier->inv[HANDPOS].exists() == false && pSoldier->inv[SECONDHANDPOS].exists() == false));
@@ -7912,8 +7913,8 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 			{
 				// CHRISL: Changed final parameter so that we fill the inventory screen
 				InitItemStackPopup( pSoldier, (UINT8)uiHandPos, 0, INV_REGION_Y, 261, ( SCREEN_HEIGHT - PLAYER_INFO_Y ) );
-			fTeamPanelDirty=TRUE;
-			fInterfacePanelDirty = DIRTYLEVEL2;
+				fTeamPanelDirty=TRUE;
+				fInterfacePanelDirty = DIRTYLEVEL2;
 			}
 		}
 		else
@@ -11783,11 +11784,12 @@ void AddTeamPanelSortButtonsForMapScreen( void )
 
 
 
-void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs )
+void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs, BOOLEAN fReverse )
 {
 	INT32 iCounter = 0, iCounterA = 0;
 	INT16 sEndSectorA, sEndSectorB;
 	INT32 iExpiryTime, iExpiryTimeA;
+	UINT8 uiID, uiIDA;
 	SOLDIERTYPE *pSelectedSoldier[ MAX_CHARACTER_COUNT ];
 	SOLDIERTYPE *pCurrentSoldier = NULL;
 	SOLDIERTYPE *pPreviousSelectedInfoChar = NULL;
@@ -11853,8 +11855,11 @@ void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs )
 						break;
 					}
 
-					if( ( wcscmp( Menptr[ gCharactersList[ iCounterA ].usSolID ].name, Menptr[ gCharactersList[ iCounter ].usSolID ].name ) > 0 ) && ( iCounterA < iCounter ) )
+					//if( ( wcscmp( Menptr[ gCharactersList[ iCounterA ].usSolID ].name, Menptr[ gCharactersList[ iCounter ].usSolID ].name ) > 0 ) && ( iCounterA < iCounter ) )
+					if( iCounterA < iCounter )
 					{
+						if((fReverse && ( wcscmp( Menptr[ gCharactersList[ iCounterA ].usSolID ].name, Menptr[ gCharactersList[ iCounter ].usSolID ].name ) < 0 )) ||
+							(!fReverse && ( wcscmp( Menptr[ gCharactersList[ iCounterA ].usSolID ].name, Menptr[ gCharactersList[ iCounter ].usSolID ].name ) > 0 )))
 						SwapCharactersInList( iCounter, iCounterA );
 					}
 				}
@@ -11869,7 +11874,11 @@ void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs )
 						break;
 					}
 
-					if( ( Menptr[ gCharactersList[ iCounterA ].usSolID ].bAssignment > Menptr[ gCharactersList[ iCounter ].usSolID ].bAssignment ) && ( iCounterA < iCounter ) )
+					if( !fReverse && ( Menptr[ gCharactersList[ iCounterA ].usSolID ].bAssignment > Menptr[ gCharactersList[ iCounter ].usSolID ].bAssignment ) && ( iCounterA < iCounter ) )
+					{
+						SwapCharactersInList( iCounter, iCounterA );
+					}
+					else if( fReverse && ( Menptr[ gCharactersList[ iCounterA ].usSolID ].bAssignment < Menptr[ gCharactersList[ iCounter ].usSolID ].bAssignment ) && ( iCounterA < iCounter ) )
 					{
 						SwapCharactersInList( iCounter, iCounterA );
 					}
@@ -11899,7 +11908,11 @@ void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs )
 						break;
 					}
 
-					if( ( Menptr[ gCharactersList[ iCounterA ].usSolID ].flags.fMercAsleep == TRUE ) && ( Menptr[ gCharactersList[ iCounter ].usSolID ].flags.fMercAsleep == FALSE ) && ( iCounterA < iCounter ) )
+					if( !fReverse && ( Menptr[ gCharactersList[ iCounterA ].usSolID ].flags.fMercAsleep == TRUE ) && ( Menptr[ gCharactersList[ iCounter ].usSolID ].flags.fMercAsleep == FALSE ) && ( iCounterA < iCounter ) )
+					{
+						SwapCharactersInList( iCounter, iCounterA );
+					}
+					else if( fReverse && ( Menptr[ gCharactersList[ iCounterA ].usSolID ].flags.fMercAsleep == FALSE ) && ( Menptr[ gCharactersList[ iCounter ].usSolID ].flags.fMercAsleep == TRUE ) && ( iCounterA < iCounter ) )
 					{
 						SwapCharactersInList( iCounter, iCounterA );
 					}
@@ -11920,7 +11933,11 @@ void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs )
 
 					sEndSectorB = CalcLocationValueForChar( iCounterA );
 
-					if( ( sEndSectorB > sEndSectorA ) && ( iCounterA < iCounter ) )
+					if( !fReverse && ( sEndSectorB > sEndSectorA ) && ( iCounterA < iCounter ) )
+					{
+						SwapCharactersInList( iCounter, iCounterA );
+					}
+					else if( fReverse && ( sEndSectorB < sEndSectorA ) && ( iCounterA < iCounter ) )
 					{
 						SwapCharactersInList( iCounter, iCounterA );
 					}
@@ -11954,7 +11971,11 @@ void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs )
 						sEndSectorB = GetLastSectorIdInCharactersPath( &Menptr[ gCharactersList[ iCounterA ].usSolID ] );
 					}
 
-					if( ( sEndSectorB > sEndSectorA ) && ( iCounterA < iCounter ) )
+					if( !fReverse && ( sEndSectorB > sEndSectorA ) && ( iCounterA < iCounter ) )
+					{
+						SwapCharactersInList( iCounter, iCounterA );
+					}
+					else if( fReverse && ( sEndSectorB < sEndSectorA ) && ( iCounterA < iCounter ) )
 					{
 						SwapCharactersInList( iCounter, iCounterA );
 					}
@@ -11974,7 +11995,32 @@ void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs )
 
 					iExpiryTimeA = GetContractExpiryTime( &( Menptr[ gCharactersList[ iCounterA ].usSolID ] ) );
 
-					if( ( iExpiryTimeA > iExpiryTime ) && ( iCounterA < iCounter ) )
+					if( !fReverse && ( iExpiryTimeA > iExpiryTime ) && ( iCounterA < iCounter ) )
+					{
+						SwapCharactersInList( iCounter, iCounterA );
+					}
+					else if( fReverse && ( iExpiryTimeA < iExpiryTime ) && ( iCounterA < iCounter ) )
+					{
+						SwapCharactersInList( iCounter, iCounterA );
+					}
+				}
+				break;
+
+			case( 6 ):
+				uiID = Menptr[ gCharactersList[ iCounter ].usSolID ].ubID;
+				//by ubID
+				for( iCounterA = 0; iCounterA < FIRST_VEHICLE; iCounterA++ )
+				{
+					if( gCharactersList[ iCounterA ].fValid == FALSE)
+					{
+						break;
+					}
+					uiIDA = Menptr[ gCharactersList[ iCounterA ].usSolID ].ubID;
+					if( !fReverse && ( uiIDA > uiID ) && ( iCounterA < iCounter ) )
+					{
+						SwapCharactersInList( iCounter, iCounterA );
+					}
+					else if( fReverse && ( uiIDA < uiID ) && ( iCounterA < iCounter ) )
 					{
 						SwapCharactersInList( iCounter, iCounterA );
 					}
@@ -13970,9 +14016,15 @@ void ChangeCharacterListSortMethod( INT32 iValue )
 		AbortMovementPlottingMode( );
 	}
 
+	if(iValue == 0 && _KeyDown( ALT ) )
+		iValue = 6;
+	if(iValue == giSortStateForMapScreenList && giSortOrderAscending == TRUE)
+		giSortOrderAscending = FALSE;
+	else if(iValue == giSortStateForMapScreenList && giSortOrderAscending == FALSE)
+		giSortOrderAscending = TRUE;
 
 	giSortStateForMapScreenList = iValue;
-	SortListOfMercsInTeamPanel( TRUE );
+	SortListOfMercsInTeamPanel( TRUE, giSortOrderAscending );
 }
 
 
