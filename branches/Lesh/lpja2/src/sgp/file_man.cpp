@@ -249,9 +249,7 @@ BOOLEAN	InitializeFileManager(  STR strIndexFilename )
 	gzWorkPath[0] = 0;
 	
 	STR_SPrintf( gzTempPath, STRLEN(gzTempPath), "%s%c", TEMP_DIR_PREFIX, SLASH );
-	printf("Using game temp dir: %s\n", gzTempPath);
-	printf("Using game home dir: %s\n", gzHomePath);
-	printf("Using game profile dir: %s\n", gzWorkPath);
+//	printf("Using game temp dir: %s\n", gzTempPath);
 
 	OpenedFiles.clear();
 	
@@ -938,9 +936,7 @@ BOOLEAN MakeFileManDirectory( STRING512 pcDirectory )
 	FDEBUG("MakeFileManDirectory: %s\n", name);
 
 	// PhysFS doesn't like creating dirs with the slash at end - so remove it
-	lastChar = strlen(name) - 1;
-	if ( name[lastChar] == '/' )
-		name[lastChar] = 0;
+	RemoveEndingSlashIfPresent(name);
 	
 	if ( DirectoryExists(name) )
 		return TRUE;
@@ -970,9 +966,7 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 	FDEBUG("RemoveFileManDirectory: %s\n", name);
 
 	// PhysFS doesn't like handling dirs with the slash at end - so remove it
-	lastChar = strlen(name) - 1;
-	if ( name[lastChar] == '/' )
-		name[lastChar] = 0;
+	RemoveEndingSlashIfPresent(name);
 
 	rc = PHYSFS_enumerateFiles(name);
 	for (i = rc; *i != NULL; i++)
@@ -1015,9 +1009,7 @@ BOOLEAN EraseDirectory( STRING512 pcDirectory)
 	FDEBUG("EraseDirectory: %s\n", name);
 
 	// PhysFS doesn't like handling dirs with the slash at end - so remove it
-	lastChar = strlen(name) - 1;
-	if ( name[lastChar] == '/' )
-		name[lastChar] = 0;
+	RemoveEndingSlashIfPresent(name);
 
 	rc = PHYSFS_enumerateFiles(name);
 	for (i = rc; *i != NULL; i++)
@@ -1033,45 +1025,6 @@ BOOLEAN EraseDirectory( STRING512 pcDirectory)
 	PHYSFS_freeList(rc);
 	return TRUE;
 }
-
-#if 0
-BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
-{
-	SGPFILENAME	ModuleFilename;
-	UINT32 cnt;
-
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	if ( GetModuleFileName( NULL, ModuleFilename, sizeof( ModuleFilename ) ) == 0 )
-	{
-		return( FALSE );
-	}
-
-	// Now get directory
-	strcpy( pcDirectory, ModuleFilename );
-
-	for ( cnt = strlen( pcDirectory ) - 1; cnt >= 0; cnt -- )
-	{
-		if ( pcDirectory[ cnt ] == '\\' )
-		{
-			 pcDirectory[ cnt ] = '\0';
-			 break;
-		}
-	}
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-	fprintf(stderr, "GetExecutableDirectory()\n");
-//	strncpy( pcDirectory, gzDataPath, 512);
-	strncpy( pcDirectory, gzHomePath, 512);
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-
-	return( TRUE );
-}
-#endif
 
 BOOLEAN GetHomeDirectory( STRING512 pcDirectory )
 {
