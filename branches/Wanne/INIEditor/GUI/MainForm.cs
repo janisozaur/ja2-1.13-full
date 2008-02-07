@@ -21,6 +21,7 @@ namespace INIEditor.GUI
         private bool _changedValues = false;
         private string _previousSelectedIniFile = "";
         private SplashForm _splashForm = null;
+        private int _preSelectedIndex = 0;
         #endregion
 
         #region CTOR
@@ -102,6 +103,8 @@ namespace INIEditor.GUI
 
             DirectoryInfo[] dataDirs = ja2DirInfo.GetDirectories();
 
+            int cntINIFiles = -1;
+            
             foreach (DirectoryInfo di in dataDirs)
             {
                 // Only list the directory, if they include the "ja2_options.ini"
@@ -109,8 +112,16 @@ namespace INIEditor.GUI
 
                 if (files.Length > 0)
                 {
+                    cntINIFiles++;
+
                     string iniFile = Path.Combine(di.Name, files[0].Name);
                     cmbFiles.Items.Add(iniFile);
+
+                    // Preselect the Data-1.13\ja2_options.ini in the drop down list
+                    if (di.Name.ToLower().Equals("data-1.13"))
+                    {
+                       _preSelectedIndex = cntINIFiles;
+                    }
                 }
             }
 
@@ -1206,6 +1217,9 @@ namespace INIEditor.GUI
                 _splashForm.Close();
                 _splashForm = null;
                 BringToFront();
+
+                // Preselect the drop down list with Data-1.13\ja2_options.ini
+                cmbFiles.SelectedIndex = _preSelectedIndex;
             }
         }
         #endregion
