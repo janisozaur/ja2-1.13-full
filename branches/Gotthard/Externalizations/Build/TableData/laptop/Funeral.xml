@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+ï»¿<?xml version="1.0" encoding="utf-8"?>
 <!-- The values between <TEXT></TEXT> can be changed, but there CANNOT BE ADDITIONS OR SUBTRACTIONS. -->
 <!-- NO WAY OR NO HOW DON'T EVEN THINK ABOUT IT.  -->
 <!-- Also, until the laptop drawing values are in here, if a text line is longer than the original, it might not draw correctly. -->
@@ -11,11 +11,11 @@
 
 <FuneralText>
 <ENGLISH_TEXT>McGillicutty's Mortuary: Helping families grieve since 1983.</ENGLISH_TEXT>
-<GERMAN_TEXT>McGillicuttys Bestattungen: Wir trösten trauernde Familien seit 1983.</GERMAN_TEXT>
-<RUSSIAN_TEXT>Ìîğã Ìàêãèëëèêóòè:ñêîğáèì âìåñòå ñ ñåìüÿìè óñîïøèõ ñ 1983.</RUSSIAN_TEXT>
-<POLISH_TEXT>Zak³ad pogrzebowy McGillicutty, pomaga rodzinom pogr¹¿onym w smutku od 1983.</POLISH_TEXT>
+<GERMAN_TEXT>McGillicuttys Bestattungen: Wir trÃ¶sten trauernde Familien seit 1983.</GERMAN_TEXT>
+<RUSSIAN_TEXT>ÃŒÃ®Ã°Ã£ ÃŒÃ ÃªÃ£Ã¨Ã«Ã«Ã¨ÃªÃ³Ã²Ã¨:Ã±ÃªÃ®Ã°Ã¡Ã¨Ã¬ Ã¢Ã¬Ã¥Ã±Ã²Ã¥ Ã± Ã±Ã¥Ã¬Ã¼Ã¿Ã¬Ã¨ Ã³Ã±Ã®Ã¯Ã¸Ã¨Ãµ Ã± 1983.</RUSSIAN_TEXT>
+<POLISH_TEXT>ZakÂ³ad pogrzebowy McGillicutty, pomaga rodzinom pogrÂ¹Â¿onym w smutku od 1983.</POLISH_TEXT>
 <DUTCH_TEXT>McGillicutty's Mortuarium: Helpt families rouwen sinds 1983.</DUTCH_TEXT>
-<FRENCH_TEXT>Morgue McGillicutty : A votre écoute depuis 1983.</FRENCH_TEXT>
+<FRENCH_TEXT>Morgue McGillicutty : A votre Ã©coute depuis 1983.</FRENCH_TEXT>
 <ITALIAN_TEXT>Impresa di pompe funebri di McGillicutty: Il dolore delle famiglie che hanno fornito il loro aiuto dal 1983.</ITALIAN_TEXT>
 <TAIWANESE_TEXT></TAIWANESE_TEXT>
 
@@ -23,33 +23,33 @@
 
 <FuneralText>
 <ENGLISH_TEXT>Funeral Director and former A.I.M. mercenary Murray \"Pops\" McGillicutty is a highly skilled and experienced mortician.</ENGLISH_TEXT>
-<GERMAN_TEXT>Der Bestattungsunternehmer und frühere A.I.M.-Söldner Murray \"Pops\" McGillicutty ist ein ebenso versierter wie erfahrener Bestatter.</GERMAN_TEXT>
-<RUSSIAN_TEXT>Äèğåêòîğ ïî ïîõîğîíàì è áûâøèé íàåìíèê À.I.Ì Ìşğğıé \"Ïîïñ\" Ìàêãèëëèêàòè-ñïåöèàëèñò ïî ÷àñòè ïîõîğîí.</RUSSIAN_TEXT>
-<POLISH_TEXT>Kierownik, by³y najemnik A.I.M. Murray \'Pops\' McGillicutty jest doœwiadczonym pracownikiem zak³adu pogrzebowego.</POLISH_TEXT>
+<GERMAN_TEXT>Der Bestattungsunternehmer und frÃ¼here A.I.M.-SÃ¶ldner Murray \"Pops\" McGillicutty ist ein ebenso versierter wie erfahrener Bestatter.</GERMAN_TEXT>
+<RUSSIAN_TEXT>Ã„Ã¨Ã°Ã¥ÃªÃ²Ã®Ã° Ã¯Ã® Ã¯Ã®ÃµÃ®Ã°Ã®Ã­Ã Ã¬ Ã¨ Ã¡Ã»Ã¢Ã¸Ã¨Ã© Ã­Ã Ã¥Ã¬Ã­Ã¨Ãª Ã€.I.ÃŒ ÃŒÃ¾Ã°Ã°Ã½Ã© \"ÃÃ®Ã¯Ã±\" ÃŒÃ ÃªÃ£Ã¨Ã«Ã«Ã¨ÃªÃ Ã²Ã¨-Ã±Ã¯Ã¥Ã¶Ã¨Ã Ã«Ã¨Ã±Ã² Ã¯Ã® Ã·Ã Ã±Ã²Ã¨ Ã¯Ã®ÃµÃ®Ã°Ã®Ã­.</RUSSIAN_TEXT>
+<POLISH_TEXT>Kierownik, byÂ³y najemnik A.I.M. Murray \'Pops\' McGillicutty jest doÅ“wiadczonym pracownikiem zakÂ³adu pogrzebowego.</POLISH_TEXT>
 <DUTCH_TEXT>Begrafenisondernemer en voormalig A.I.M. huurling Murray \"Pops\" McGillicutty is een kundig en ervaren begrafenisondernemer.</DUTCH_TEXT>
-<FRENCH_TEXT>Murray \"Pops\" McGillicutty, notre directeur bien aimé, est un ancien mercenaire de l'AIM. Sa spécialité : la mort des autres.</FRENCH_TEXT>
-<ITALIAN_TEXT>Precedentemente mercenario dell'A.I.M. Murray \"Pops\" McGillicutty è un impresario di pompe funebri qualificato e con molta esperienza.</ITALIAN_TEXT>
+<FRENCH_TEXT>Murray \"Pops\" McGillicutty, notre directeur bien aimÃ©, est un ancien mercenaire de l'AIM. Sa spÃ©cialitÃ© : la mort des autres.</FRENCH_TEXT>
+<ITALIAN_TEXT>Precedentemente mercenario dell'A.I.M. Murray \"Pops\" McGillicutty Ã¨ un impresario di pompe funebri qualificato e con molta esperienza.</ITALIAN_TEXT>
 <TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FuneralText>
 
 <FuneralText>
 <ENGLISH_TEXT>Having been intimately involved in death and bereavement throughout his life, Pops knows how difficult it can be.</ENGLISH_TEXT>
-<GERMAN_TEXT>Pops hat sein ganzes Leben mit Todes- und Trauerfällen verbracht. Deshalb weiß er aus erster Hand, wie schwierig das sein kann.</GERMAN_TEXT>
-<RUSSIAN_TEXT>Âñş æèçíü Ïîïñà ñîïğîâîæäàëè ñìåğòü è óòğàòû,ïîıòîìó îí êàê íèêòî ïîçíàë èõ òÿæåñòü.</RUSSIAN_TEXT>
-<POLISH_TEXT>Przez ca³e ¿ycie obcowa³ ze œmierci¹, 'Pops' wie jak trudne s¹ te chwile.</POLISH_TEXT>
+<GERMAN_TEXT>Pops hat sein ganzes Leben mit Todes- und TrauerfÃ¤llen verbracht. Deshalb weiÃŸ er aus erster Hand, wie schwierig das sein kann.</GERMAN_TEXT>
+<RUSSIAN_TEXT>Ã‚Ã±Ã¾ Ã¦Ã¨Ã§Ã­Ã¼ ÃÃ®Ã¯Ã±Ã  Ã±Ã®Ã¯Ã°Ã®Ã¢Ã®Ã¦Ã¤Ã Ã«Ã¨ Ã±Ã¬Ã¥Ã°Ã²Ã¼ Ã¨ Ã³Ã²Ã°Ã Ã²Ã»,Ã¯Ã®Ã½Ã²Ã®Ã¬Ã³ Ã®Ã­ ÃªÃ Ãª Ã­Ã¨ÃªÃ²Ã® Ã¯Ã®Ã§Ã­Ã Ã« Ã¨Ãµ Ã²Ã¿Ã¦Ã¥Ã±Ã²Ã¼.</RUSSIAN_TEXT>
+<POLISH_TEXT>Przez caÂ³e Â¿ycie obcowaÂ³ ze Å“mierciÂ¹, 'Pops' wie jak trudne sÂ¹ te chwile.</POLISH_TEXT>
 <DUTCH_TEXT>Pops weet hoe moeilijk de dood kan zijn, in heel zijn leven heeft hij te maken gehad met de dood en sterfgevallen.</DUTCH_TEXT>
-<FRENCH_TEXT>Pops l'a côtoyée pendant si longtemps qu'il est un expert de la mort, à tous points de vue.</FRENCH_TEXT>
+<FRENCH_TEXT>Pops l'a cÃ´toyÃ©e pendant si longtemps qu'il est un expert de la mort, Ã  tous points de vue.</FRENCH_TEXT>
 <ITALIAN_TEXT>Essendo coinvolto profondamente nella morte e nel lutto per tutta la sua vita, Pops sa quanto sia difficile affrontarli.</ITALIAN_TEXT>
 <TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FuneralText>
 
 <FuneralText>
 <ENGLISH_TEXT>McGillicutty's Mortuary offers a wide range of bereavement services, from a shoulder to cry on to post-mortem reconstruction for badly disfigured remains.</ENGLISH_TEXT>
-<GERMAN_TEXT>Das Bestattungsunternehmen McGillicutty bietet Ihnen einen umfassenden Service, angefangen bei der Schulter zum Ausweinen bis hin zur kosmetischen Aufbereitung entstellter Körperteile.</GERMAN_TEXT>
-<RUSSIAN_TEXT>Ìîğã Ìàê Ãèëëèêóòè ïğåäëàãàåò øèğîêèé ñïåêòğ ïîõîğîííûõ óñëóã,îò æèëåòêè,â êîòîğóş ìîæíî ïîïëàêàòü,äî âîññòàíîâëåíèÿ ñèëüíî ïîâğåæäåííûõ îñòàíêîâ.</RUSSIAN_TEXT>
-<POLISH_TEXT>Zak³ad pogrzebowy McGillicutty oferuje szeroki zakres us³ug, od duchowego wsparcia po rekonstrukcjê silnie zniekszta³conych zw³ok.</POLISH_TEXT>
+<GERMAN_TEXT>Das Bestattungsunternehmen McGillicutty bietet Ihnen einen umfassenden Service, angefangen bei der Schulter zum Ausweinen bis hin zur kosmetischen Aufbereitung entstellter KÃ¶rperteile.</GERMAN_TEXT>
+<RUSSIAN_TEXT>ÃŒÃ®Ã°Ã£ ÃŒÃ Ãª ÃƒÃ¨Ã«Ã«Ã¨ÃªÃ³Ã²Ã¨ Ã¯Ã°Ã¥Ã¤Ã«Ã Ã£Ã Ã¥Ã² Ã¸Ã¨Ã°Ã®ÃªÃ¨Ã© Ã±Ã¯Ã¥ÃªÃ²Ã° Ã¯Ã®ÃµÃ®Ã°Ã®Ã­Ã­Ã»Ãµ Ã³Ã±Ã«Ã³Ã£,Ã®Ã² Ã¦Ã¨Ã«Ã¥Ã²ÃªÃ¨,Ã¢ ÃªÃ®Ã²Ã®Ã°Ã³Ã¾ Ã¬Ã®Ã¦Ã­Ã® Ã¯Ã®Ã¯Ã«Ã ÃªÃ Ã²Ã¼,Ã¤Ã® Ã¢Ã®Ã±Ã±Ã²Ã Ã­Ã®Ã¢Ã«Ã¥Ã­Ã¨Ã¿ Ã±Ã¨Ã«Ã¼Ã­Ã® Ã¯Ã®Ã¢Ã°Ã¥Ã¦Ã¤Ã¥Ã­Ã­Ã»Ãµ Ã®Ã±Ã²Ã Ã­ÃªÃ®Ã¢.</RUSSIAN_TEXT>
+<POLISH_TEXT>ZakÂ³ad pogrzebowy McGillicutty oferuje szeroki zakres usÂ³ug, od duchowego wsparcia po rekonstrukcjÃª silnie znieksztaÂ³conych zwÂ³ok.</POLISH_TEXT>
 <DUTCH_TEXT>McGillicutty's Mortuarium biedt een breed scala aan stervensbegeleiding, van een schouder om uit te huilen tot recontructie van misvormde overblijfselen.</DUTCH_TEXT>
-<FRENCH_TEXT>La morgue McGillicutty vous offre un large éventail de services funéraires, depuis une écoute compréhensive jusqu'à la reconstitution des corps... dispersés.</FRENCH_TEXT>
+<FRENCH_TEXT>La morgue McGillicutty vous offre un large Ã©ventail de services funÃ©raires, depuis une Ã©coute comprÃ©hensive jusqu'Ã  la reconstitution des corps... dispersÃ©s.</FRENCH_TEXT>
 <ITALIAN_TEXT>L'impresa di pompe funebri di McGillicutty offre una vasta gamma di servizi funebri, da una spalla su cui piangere a ricostruzioni post-mortem per corpi mutilati o sfigurati.</ITALIAN_TEXT>
 <TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FuneralText>
@@ -57,8 +57,8 @@
 <FuneralText>
 <ENGLISH_TEXT>Let McGillicutty's Mortuary help you and your loved one rest in peace.</ENGLISH_TEXT>
 <GERMAN_TEXT>McGillicuttys Bestattungen - und Ihre Lieben ruhen in Frieden.</GERMAN_TEXT>
-<RUSSIAN_TEXT>Äîâåğüòåñü ìîğãó Ìàê Ãèëëèêóòè, è âàøè ğîäñòâåííèêè ïî÷èşò â ìèğå.</RUSSIAN_TEXT>
-<POLISH_TEXT>Pozwól by McGillicutty ci pomóg³ a twój ukochany bêdzie spoczywa³ w pokoju.</POLISH_TEXT>
+<RUSSIAN_TEXT>Ã„Ã®Ã¢Ã¥Ã°Ã¼Ã²Ã¥Ã±Ã¼ Ã¬Ã®Ã°Ã£Ã³ ÃŒÃ Ãª ÃƒÃ¨Ã«Ã«Ã¨ÃªÃ³Ã²Ã¨, Ã¨ Ã¢Ã Ã¸Ã¨ Ã°Ã®Ã¤Ã±Ã²Ã¢Ã¥Ã­Ã­Ã¨ÃªÃ¨ Ã¯Ã®Ã·Ã¨Ã¾Ã² Ã¢ Ã¬Ã¨Ã°Ã¥.</RUSSIAN_TEXT>
+<POLISH_TEXT>PozwÃ³l by McGillicutty ci pomÃ³gÂ³ a twÃ³j ukochany bÃªdzie spoczywaÂ³ w pokoju.</POLISH_TEXT>
 <DUTCH_TEXT>Laat McGillicutty's Mortuarium u helpen en laat uw dierbaren zacht rusten.</DUTCH_TEXT>
 <FRENCH_TEXT>Laissez donc la morgue McGillicutty vous aider, pour que votre compagnon repose enfin en paix.</FRENCH_TEXT>
 <ITALIAN_TEXT>Lasciate che l'impresa di pompe funebri di McGillicutty vi aiuti e i vostri amati riposeranno in pace.</ITALIAN_TEXT>
@@ -68,8 +68,8 @@
 <FuneralText>
 <ENGLISH_TEXT>SEND FLOWERS</ENGLISH_TEXT>
 <GERMAN_TEXT>BLUMEN SENDEN</GERMAN_TEXT>
-<RUSSIAN_TEXT>ÏÎÑËÀÒÜ ÖÂÅÒÛ</RUSSIAN_TEXT>
-<POLISH_TEXT>WYŒLIJ KWIATY</POLISH_TEXT>
+<RUSSIAN_TEXT>ÃÃÃ‘Ã‹Ã€Ã’Ãœ Ã–Ã‚Ã…Ã’Ã›</RUSSIAN_TEXT>
+<POLISH_TEXT>WYÅ’LIJ KWIATY</POLISH_TEXT>
 <DUTCH_TEXT>STUUR BLOEMEN</DUTCH_TEXT>
 <FRENCH_TEXT>ENVOYER FLEURS</FRENCH_TEXT>
 <ITALIAN_TEXT>SPEDISCI FIORI</ITALIAN_TEXT>
@@ -78,8 +78,8 @@
 
 <FuneralText>
 <ENGLISH_TEXT>CASKET &amp; URN COLLECTION</ENGLISH_TEXT>
-<GERMAN_TEXT>SÄRGE UND URNEN</GERMAN_TEXT>
-<RUSSIAN_TEXT>ÊÎËËÅÊÖÈß ÓĞÍ È ÃĞÎÁÎÂ</RUSSIAN_TEXT>
+<GERMAN_TEXT>SÃ„RGE UND URNEN</GERMAN_TEXT>
+<RUSSIAN_TEXT>ÃŠÃÃ‹Ã‹Ã…ÃŠÃ–ÃˆÃŸ Ã“ÃÃ Ãˆ ÃƒÃÃÃÃÃ‚</RUSSIAN_TEXT>
 <POLISH_TEXT>KOLEKCJA TRUMIEN I URN</POLISH_TEXT>
 <DUTCH_TEXT>DOODSKIST &amp; URN COLLECTIE</DUTCH_TEXT>
 <FRENCH_TEXT>CERCUEILS &amp; URNES</FRENCH_TEXT>
@@ -90,8 +90,8 @@
 <FuneralText>
 <ENGLISH_TEXT>CREMATION SERVICES</ENGLISH_TEXT>
 <GERMAN_TEXT>FEUERBEST.</GERMAN_TEXT>
-<RUSSIAN_TEXT>ÓÑËÓÃÈ ÏÎ ÊĞÅÌÀÖÈÈ</RUSSIAN_TEXT>
-<POLISH_TEXT>US£UGI KREMA- CYJNE</POLISH_TEXT>
+<RUSSIAN_TEXT>Ã“Ã‘Ã‹Ã“ÃƒÃˆ ÃÃ ÃŠÃÃ…ÃŒÃ€Ã–ÃˆÃˆ</RUSSIAN_TEXT>
+<POLISH_TEXT>USÂ£UGI KREMA- CYJNE</POLISH_TEXT>
 <DUTCH_TEXT>CREMATIE SERVICE</DUTCH_TEXT>
 <FRENCH_TEXT>CREMATION</FRENCH_TEXT>
 <ITALIAN_TEXT>SERVIZI DI CREMAZIONE</ITALIAN_TEXT>
@@ -100,9 +100,9 @@
 
 <FuneralText>
 <ENGLISH_TEXT>PRE- FUNERAL PLANNING SERVICES</ENGLISH_TEXT>
-<GERMAN_TEXT>GRÄBER</GERMAN_TEXT>
-<RUSSIAN_TEXT>ÏÎÄÃÎÒÎÂÊÀ ÏÎÕÎĞÎÍ</RUSSIAN_TEXT>
-<POLISH_TEXT>US£UGI PLANOWANIA POGRZEBU</POLISH_TEXT>
+<GERMAN_TEXT>GRÃ„BER</GERMAN_TEXT>
+<RUSSIAN_TEXT>ÃÃÃ„ÃƒÃÃ’ÃÃ‚ÃŠÃ€ ÃÃÃ•ÃÃÃÃ</RUSSIAN_TEXT>
+<POLISH_TEXT>USÂ£UGI PLANOWANIA POGRZEBU</POLISH_TEXT>
 <DUTCH_TEXT>SERVICES</DUTCH_TEXT>
 <FRENCH_TEXT>SERVICES FUNERAIRES</FRENCH_TEXT>
 <ITALIAN_TEXT>SERVIZI PRE-FUNEBRI</ITALIAN_TEXT>
@@ -111,8 +111,8 @@
 
 <FuneralText>
 <ENGLISH_TEXT>FUNERAL ETIQUETTE</ENGLISH_TEXT>
-<GERMAN_TEXT>PIETÄT</GERMAN_TEXT>
-<RUSSIAN_TEXT>ÏÎÕÎĞÎÍÍÛÉ İÒÈÊÅÒ</RUSSIAN_TEXT>
+<GERMAN_TEXT>PIETÃ„T</GERMAN_TEXT>
+<RUSSIAN_TEXT>ÃÃÃ•ÃÃÃÃÃÃ›Ã‰ ÃÃ’ÃˆÃŠÃ…Ã’</RUSSIAN_TEXT>
 <POLISH_TEXT>KARTKI POGRZE- BOWE</POLISH_TEXT>
 <DUTCH_TEXT>ETIQUETTE</DUTCH_TEXT>
 <FRENCH_TEXT>NOTRE ETIQUETTE</FRENCH_TEXT>
@@ -122,22 +122,22 @@
 
 <FuneralText>
 <ENGLISH_TEXT>Regretably, the remainder of this site has not been completed due to a death in the family. Pending reading of the will and disbursement of assets, the site will be completed as soon as possible.</ENGLISH_TEXT>
-<GERMAN_TEXT>Leider ist diese Site aufgrund eines Todesfalles in der Familie noch nicht fertiggestellt. Sobald das Testament eröffnet worden und die Verteilung des Erbes geklärt ist, wird diese Site fertiggestellt.</GERMAN_TEXT>
-<RUSSIAN_TEXT>Ñåìüÿ ïîíåñëà òÿæåëóş óòğàòó.Ê ñîæàëåíèş, íå âñå ğàáîòû åùå çàâåğøåíû.Ïğèõîäèòå ïîñëå ïğî÷òåíèÿ çàâåùàíèÿ è âûïëàò äîëãîâ óìåğøåãî.</RUSSIAN_TEXT>
-<POLISH_TEXT>Niestety, z powodu œmierci w rodzinie, nie dzia³aj¹ jeszcze wszystkie elementy tej strony.</POLISH_TEXT>
+<GERMAN_TEXT>Leider ist diese Site aufgrund eines Todesfalles in der Familie noch nicht fertiggestellt. Sobald das Testament erÃ¶ffnet worden und die Verteilung des Erbes geklÃ¤rt ist, wird diese Site fertiggestellt.</GERMAN_TEXT>
+<RUSSIAN_TEXT>Ã‘Ã¥Ã¬Ã¼Ã¿ Ã¯Ã®Ã­Ã¥Ã±Ã«Ã  Ã²Ã¿Ã¦Ã¥Ã«Ã³Ã¾ Ã³Ã²Ã°Ã Ã²Ã³.ÃŠ Ã±Ã®Ã¦Ã Ã«Ã¥Ã­Ã¨Ã¾, Ã­Ã¥ Ã¢Ã±Ã¥ Ã°Ã Ã¡Ã®Ã²Ã» Ã¥Ã¹Ã¥ Ã§Ã Ã¢Ã¥Ã°Ã¸Ã¥Ã­Ã».ÃÃ°Ã¨ÃµÃ®Ã¤Ã¨Ã²Ã¥ Ã¯Ã®Ã±Ã«Ã¥ Ã¯Ã°Ã®Ã·Ã²Ã¥Ã­Ã¨Ã¿ Ã§Ã Ã¢Ã¥Ã¹Ã Ã­Ã¨Ã¿ Ã¨ Ã¢Ã»Ã¯Ã«Ã Ã² Ã¤Ã®Ã«Ã£Ã®Ã¢ Ã³Ã¬Ã¥Ã°Ã¸Ã¥Ã£Ã®.</RUSSIAN_TEXT>
+<POLISH_TEXT>Niestety, z powodu Å“mierci w rodzinie, nie dziaÂ³ajÂ¹ jeszcze wszystkie elementy tej strony.</POLISH_TEXT>
 <DUTCH_TEXT>Helaas is deze pagina nog niet voltooid door een sterfgeval in de familie. Afhankelijk van de laatste wil en uitbetaling van de beschikbare activa wordt de pagina zo snel mogelijk voltooid.</DUTCH_TEXT>
-<FRENCH_TEXT>Le concepteur de ce site s'est malheureusement absenté pour cause de décès familial. Il reviendra dès que possible pour rendre ce service encore plus efficace.</FRENCH_TEXT>
-<ITALIAN_TEXT>Purtroppo, il resto di questo sito non è stato completato a causa di una morte in famiglia. Aspettando la lettura del testamento e la riscossione dell'eredità, il sito verrà ultimato non appena possibile.</ITALIAN_TEXT>
+<FRENCH_TEXT>Le concepteur de ce site s'est malheureusement absentÃ© pour cause de dÃ©cÃ¨s familial. Il reviendra dÃ¨s que possible pour rendre ce service encore plus efficace.</FRENCH_TEXT>
+<ITALIAN_TEXT>Purtroppo, il resto di questo sito non Ã¨ stato completato a causa di una morte in famiglia. Aspettando la lettura del testamento e la riscossione dell'ereditÃ , il sito verrÃ  ultimato non appena possibile.</ITALIAN_TEXT>
 <TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FuneralText>
 
 <FuneralText>
 <ENGLISH_TEXT>Our sympathies do, however, go out to you at this trying time.  Please come again.</ENGLISH_TEXT>
-<GERMAN_TEXT>Unser Mitgefühl gilt trotzdem all jenen, die es diesmal versucht haben. Bis später.</GERMAN_TEXT>
-<RUSSIAN_TEXT>Íàäååìñÿ,÷òî âû îùóùàåòå íàøå ñî÷óâñòâèå â ıòî íåëåãêîå âğåìÿ.</RUSSIAN_TEXT>
-<POLISH_TEXT>Przepraszamy za powy¿sze uniedogodnienie.</POLISH_TEXT>
+<GERMAN_TEXT>Unser MitgefÃ¼hl gilt trotzdem all jenen, die es diesmal versucht haben. Bis spÃ¤ter.</GERMAN_TEXT>
+<RUSSIAN_TEXT>ÃÃ Ã¤Ã¥Ã¥Ã¬Ã±Ã¿,Ã·Ã²Ã® Ã¢Ã» Ã®Ã¹Ã³Ã¹Ã Ã¥Ã²Ã¥ Ã­Ã Ã¸Ã¥ Ã±Ã®Ã·Ã³Ã¢Ã±Ã²Ã¢Ã¨Ã¥ Ã¢ Ã½Ã²Ã® Ã­Ã¥Ã«Ã¥Ã£ÃªÃ®Ã¥ Ã¢Ã°Ã¥Ã¬Ã¿.</RUSSIAN_TEXT>
+<POLISH_TEXT>Przepraszamy za powyÂ¿sze uniedogodnienie.</POLISH_TEXT>
 <DUTCH_TEXT>Ons medeleven gaat uit naar jou, tijdens deze probeerperiode. Kom nog eens langs.</DUTCH_TEXT>
-<FRENCH_TEXT>Veuillez croire en nos sentiments les plus respectueux dans cette période qui doit vous être douloureuse.</FRENCH_TEXT>
+<FRENCH_TEXT>Veuillez croire en nos sentiments les plus respectueux dans cette pÃ©riode qui doit vous Ãªtre douloureuse.</FRENCH_TEXT>
 <ITALIAN_TEXT>Vi porgiamo, comunque, le nostre condolianze in questo momento di dolore. Contatteci ancora.</ITALIAN_TEXT>
 <TAIWANESE_TEXT></TAIWANESE_TEXT>
 </FuneralText>
