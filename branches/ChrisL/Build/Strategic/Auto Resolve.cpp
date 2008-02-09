@@ -4110,6 +4110,8 @@ void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 	else
 	{
 		OBJECTTYPE *pItem;
+		OBJECTTYPE tempItem;
+
 		PlayAutoResolveSample( (UINT8)(BULLET_IMPACT_1+PreRandom(3)), RATE_11025, 50, 1, MIDDLEPAN );
 		if( !pTarget->pSoldier->stats.bLife )
 		{ //Soldier already dead (can't kill him again!)
@@ -4127,18 +4129,20 @@ void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 				pAttacker->pSoldier->usAttackingWeapon = pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ].usItem;
 		}
 
-		//if( pAttacker->bWeaponSlot != HANDPOS )
-		//{ //switch items
-		//	tempItem = pAttacker->pSoldier->inv[ HANDPOS ];
-		//	pAttacker->pSoldier->inv[ HANDPOS ] = pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ]; //CTD
-		//	iImpact = HTHImpact( pAttacker->pSoldier, pTarget->pSoldier, ubAccuracy, (BOOLEAN)(fKnife | fClaw) );
-		//	pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ] = pAttacker->pSoldier->inv[ HANDPOS ];
-		//	pAttacker->pSoldier->inv[ HANDPOS ] = tempItem;
-		//}
-		//else
-		//{
-		//	iImpact = HTHImpact( pAttacker->pSoldier, pTarget->pSoldier, ubAccuracy, (BOOLEAN)(fKnife || fClaw) );
-		//}
+		// WANNE: Does this lead to a CTD -> no I did not get any CTD, so I reenabled it
+		if( pAttacker->bWeaponSlot != HANDPOS )
+		{
+			//switch items
+			tempItem = pAttacker->pSoldier->inv[ HANDPOS ];
+			pAttacker->pSoldier->inv[ HANDPOS ] = pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ]; //CTD
+			iImpact = HTHImpact( pAttacker->pSoldier, pTarget->pSoldier, ubAccuracy, (BOOLEAN)(fKnife | fClaw) );
+			pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ] = pAttacker->pSoldier->inv[ HANDPOS ];
+			pAttacker->pSoldier->inv[ HANDPOS ] = tempItem;
+		}
+		else
+		{
+			iImpact = HTHImpact( pAttacker->pSoldier, pTarget->pSoldier, ubAccuracy, (BOOLEAN)(fKnife || fClaw) );
+		}
 		iImpact = 0;
 		iNewLife = pTarget->pSoldier->stats.bLife - iImpact;
 

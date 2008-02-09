@@ -191,11 +191,11 @@ void EntryInitEditorItemsInfo()
 				case IC_MEDKIT:
 				case IC_KIT:
 				case IC_FACE:
-				case IC_MISC:
 				case IC_MONEY:
-					if( eInfo.sNumEquipment1 < 50 )
-						eInfo.sNumEquipment1++;
-					else if( eInfo.sNumEquipment2 < 50 )
+					eInfo.sNumEquipment1++;
+					break;
+				case IC_MISC:
+					if( eInfo.sNumEquipment2 < eInfo.sNumEquipment3 )
 						eInfo.sNumEquipment2++;
 					else
 						eInfo.sNumEquipment3++;
@@ -457,7 +457,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 				case IC_MISC:
 					if( usCounter == ACTION_ITEM || usCounter == SWITCH )
 						break;
-					if( iEquipCount < 50 )
+					if( iEquipCount < eInfo.sNumEquipment2 )
 						fTypeMatch = eInfo.uiItemType == TBAR_MODE_ITEM_EQUIPMENT2;
 					else
 						fTypeMatch = eInfo.uiItemType == TBAR_MODE_ITEM_EQUIPMENT3;
