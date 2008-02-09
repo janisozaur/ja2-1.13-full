@@ -3661,9 +3661,11 @@ void RenderItemDescriptionBox( )
 		if((UsingNewInventorySystem() == true) && iResolution != 0)
 		{
 			if(gpItemDescObject->IsActiveLBE(gubItemDescStatusIndex))
-				showBox = gpItemDescObject->GetLBEPointer(gubItemDescStatusIndex)->lbeClass;
+				showBox = gpItemDescObject->GetLBEPointer(gubItemDescStatusIndex)->lbeClass + 1;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
-				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
+				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass + 1;
+			else
+				showBox = 1;
 		}
 		BltVideoObjectFromIndex( guiSAVEBUFFER, guiMapItemDescBox, showBox, gsInvDescX, gsInvDescY, VO_BLT_SRCTRANSPARENCY, NULL );
 
@@ -3716,14 +3718,6 @@ void RenderItemDescriptionBox( )
 			sCenY = sCenY + gItemDescAttachmentsXY[cnt].sBarDy;
 			DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER, gubItemDescStatusIndex );
 			//this code was the same inside both branches of the if below!
-#if 0
-			if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
-			{
-			}
-			else
-			{
-			}
-#endif
 		}
 		for (cnt = 0; cnt < MAX_ATTACHMENTS; ++cnt)
 		{

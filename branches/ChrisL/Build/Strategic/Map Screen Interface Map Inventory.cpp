@@ -2251,13 +2251,23 @@ void DeleteItemsOfType( UINT16 usItemType )
 
 }
 
-
+extern UINT8 CurrentPlayerProgressPercentage(void);
 INT32 SellItem( OBJECTTYPE& object, BOOLEAN useModifier )
 {
 	INT32 iPrice = 0;
 	INT16 iPriceModifier = gGameExternalOptions.iPriceModifier;
 	UINT16 usItemType = object.usItem;
 	UINT16 itemPrice = Item[usItemType].usPrice;
+
+	//CHRISL: make price modifier based on current game progress
+	if(iPriceModifier == 0)
+	{
+		iPriceModifier = __max(1, (INT16)((CurrentPlayerProgressPercentage()/5)+.5));
+	}
+	else if(iPriceModifier == -1)
+	{
+		iPriceModifier = __max(1, (INT16)(((100-CurrentPlayerProgressPercentage())/5)+.5));
+	}
 
 	if( Item[ usItemType ].usItemClass == IC_AMMO )
 	{
