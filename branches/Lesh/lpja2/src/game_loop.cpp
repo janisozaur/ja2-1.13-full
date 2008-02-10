@@ -25,6 +25,8 @@
 	#include "text.h"
 	#include "help_screen.h"
 	#include "prebattle_interface.h"
+	#include "shade_table_util.h"
+	
 #endif
 
 // rain
@@ -116,6 +118,9 @@ BOOLEAN InitializeGame(void)
 
 	//Deletes all the Temp files in the Maps\Temp directory
 	InitTacticalSave( TRUE );
+	
+	// Init shadetables
+	InitializeShadeTable();
 
 	// Initialize Game Screens.
   for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)

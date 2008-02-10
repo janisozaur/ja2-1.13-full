@@ -25,6 +25,11 @@ BOOLEAN gfForceBuildShadeTables = FALSE;
 	extern UINT32 uiNumTablesLoaded;
 #endif
 
+void InitializeShadeTable( void )
+{
+	sprintf( zShadeTableDir, "%s%c", SHADE_TABLE_DIR, SLASH );
+}
+
 void DetermineRGBDistributionSettings()
 {
 	STRING512			DataDir;
@@ -41,8 +46,6 @@ void DetermineRGBDistributionSettings()
 	//First, determine if we have a file saved.  If not, then this is the first time, and
 	//all shade tables will have to be built and saved to disk.  This can be time consuming, adding up to
 	//3-4 seconds to the time of a map load.
-//	GetTempDirectory( TempDir );
-	sprintf( zShadeTableDir, "%s%c", SHADE_TABLE_DIR, SLASH );
 
 	
 	//Check to make sure we have a ShadeTable directory.  If we don't create one!

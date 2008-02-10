@@ -61,7 +61,7 @@
 //**************************************************************************
 
 // Uncomment this, if you want to see debug output
-//#define	DEBUG_FILEMAN
+#define	DEBUG_FILEMAN
 
 #ifdef DEBUG_FILEMAN
 #define FDEBUG(fmt, args...)	printf(fmt, ## args)
@@ -960,6 +960,9 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 	CHAR8 **i;
 	STRING512	name, entry;
 	INT32		lastChar;
+
+	if ( strlen(pcDirectory) == 0 )
+		return TRUE;	// we can't affort to delete entire profile
 
 	strncpy(name, pcDirectory, STRLEN(name));
 	LowercaseAndChangeSlash(name);

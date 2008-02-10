@@ -3,6 +3,7 @@
 
 #include "tile_dat.h"
 
+void InitializeShadeTable( void );
 void DetermineRGBDistributionSettings();
 BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex );
 BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex );
