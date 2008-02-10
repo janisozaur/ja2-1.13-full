@@ -154,6 +154,7 @@ void DrawSummaryText( void );
 INT32 GetCurrentBalance( void );
 void ClearFinanceList( void );
 void OpenAndReadFinancesFile( void );
+void OpenAndWriteFinancesFile( void );
 void DrawAPageOfRecords( void );
 void DrawRecordsBackGround( void );
 void DrawRecordsText( void );
@@ -227,10 +228,13 @@ UINT32 AddTransactionToPlayersBook (UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiD
 	uiId = ProcessAndEnterAFinacialRecord(ubCode, uiDate, iAmount, ubSecondCode, LaptopSaveInfo.iCurrentBalance);
 
 	// write balance to disk
-  WriteBalanceToDisk( );
+//	WriteBalanceToDisk( );
 
-  // append to end of file
-  AppendFinanceToEndOfFile( pFinance );
+  	// append to end of file
+//	AppendFinanceToEndOfFile( pFinance );
+
+	// Lesh: the two functions above are replaced by this one
+	OpenAndWriteFinancesFile();
 
 	// set number of pages
 	SetLastPageInRecords( );
@@ -440,7 +444,8 @@ void InitFinancesFilename()
 
 void GameInitFinances()
 {
-	WriteBalanceToDisk( );
+//	WriteBalanceToDisk( );
+	OpenAndWriteFinancesFile();
 	GetBalanceFromDisk( );
 }
 
@@ -1184,6 +1189,45 @@ void OpenAndReadFinancesFile( void )
 	return;
 }
 
+
+void OpenAndWriteFinancesFile( void )
+{
+	// this procedure will open and read in data to the finance list
+	HWFILE hFileHandle;
+	FinanceUnitPtr pFinanceList;
+
+	// open file
+ 	hFileHandle=FileOpen( gzFinancesDataFile,( FILE_ACCESS_WRITE ), FALSE );
+
+	// failed to get file, return
+	if(!hFileHandle)
+	{
+		// close file 
+		FileClose( hFileHandle );
+		return;
+	}
+
+	// write balance to disk first
+	FileWrite( hFileHandle, &(LaptopSaveInfo.iCurrentBalance),  sizeof ( INT32 ), NULL );
+
+	// continue until finances ends
+	pFinanceList=pFinanceListHead;
+	while( pFinanceList != NULL )
+	{
+		// write in other data
+		FileRead( hFileHandle, &pFinanceList->ubCode, sizeof(UINT8), NULL );
+		FileRead( hFileHandle, &pFinanceList->ubSecondCode, sizeof(UINT8), NULL );
+		FileRead( hFileHandle, &pFinanceList->uiDate, sizeof(UINT32), NULL );
+		FileRead( hFileHandle, &pFinanceList->iAmount, sizeof(INT32), NULL );
+		FileRead( hFileHandle, &pFinanceList->iBalanceToDate, sizeof(INT32), NULL );
+		pFinanceList = pFinanceList->Next;
+	} 
+	
+	// close file 
+	FileClose( hFileHandle );
+	
+	return;
+}
 
 void ClearFinanceList( void )
 {
