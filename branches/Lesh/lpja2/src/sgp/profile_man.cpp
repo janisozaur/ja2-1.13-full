@@ -13,6 +13,7 @@
 #define GAME_PROFILE			"profile.ini"
 #define GAME_DEFAULT_PROFILE	"default"
 #define GAME_CONFIG_FILENAME	"ja2-1.13.conf"
+#define GAME_CONFIG_LOCAL		".ja2-1.13rc"
 #define GAME_MODS_PREFIX		"mods"
 #define GAME_BASE_PREFIX		"base"
 #define DEFAULT_LANGUAGE		"en"
@@ -55,7 +56,7 @@ BOOLEAN Profile_Init( const CHAR8 *profile )
 	strncpy( zUserHome, PHYSFS_getUserDir(), STRLEN(zUserHome) );
 
 	// compose config filename inside user home and read it
-	STR_SPrintf( config_file, STRLEN(config_file), "%s.%s", zUserHome, GAME_CONFIG_FILENAME);
+	STR_SPrintf( config_file, STRLEN(config_file), "%s%s", zUserHome, GAME_CONFIG_LOCAL);
 	if ( !HandleGlobalConfig( config_file ) )
 	{
 		printf("No user config %s. Reading system config.\n", config_file);
