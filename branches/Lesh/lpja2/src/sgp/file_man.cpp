@@ -61,7 +61,7 @@
 //**************************************************************************
 
 // Uncomment this, if you want to see debug output
-#define	DEBUG_FILEMAN
+//#define	DEBUG_FILEMAN
 
 #ifdef DEBUG_FILEMAN
 #define FDEBUG(fmt, args...)	printf(fmt, ## args)
@@ -75,7 +75,6 @@
 //
 //**************************************************************************
 
-#define GAME_DIR_PREFIX			"ja2-1.13"
 #define TEMP_DIR_PREFIX			"temp"
 
 
