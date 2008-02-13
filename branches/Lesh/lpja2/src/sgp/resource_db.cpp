@@ -78,23 +78,24 @@ BOOLEAN	ResourceDB_Init( void )
 	STR_SPrintf( listName, STRLEN(listName), "%s%s", zWriteDir, MODS_LIST_NAME );
 	if ( !SourceList_Read(listName, mods) )
 	{
-		fprintf(stderr, "Failed to read mods list\n");
-		return FALSE;
+		printf("Mods list isn't found. Continue with base resources anyway...\n");
 	}
-	
-	// for each mod in mods list
-	for ( i=0; i<mods.size(); i++ )
+	else
 	{
-		// prepare mod sources list name, read it and parse
-		STR_SPrintf( currentModDir, STRLEN(currentModDir), "%s%s", zModsDir, mods[i].c_str() );
-		STR_SPrintf( listName, STRLEN(listName), "%s%s%s", currentModDir, GetDirSeparator(), SOURCES_LIST_NAME );
-		if ( SourceList_Read(listName, list) )
+		// for each mod in mods list
+		for ( i=0; i<mods.size(); i++ )
 		{
-			ResourceDB_HandleResourceList(currentModDir, list);
-		}
-		else
-		{
-			fprintf(stderr, "Failed to read mod source list for mod %s\n", mods[i].c_str() );
+			// prepare mod sources list name, read it and parse
+			STR_SPrintf( currentModDir, STRLEN(currentModDir), "%s%s", zModsDir, mods[i].c_str() );
+			STR_SPrintf( listName, STRLEN(listName), "%s%s%s", currentModDir, GetDirSeparator(), SOURCES_LIST_NAME );
+			if ( SourceList_Read(listName, list) )
+			{
+				ResourceDB_HandleResourceList(currentModDir, list);
+			}
+			else
+			{
+				fprintf(stderr, "Failed to read mod source list for mod %s\n", mods[i].c_str() );
+			}
 		}
 	}
 	
