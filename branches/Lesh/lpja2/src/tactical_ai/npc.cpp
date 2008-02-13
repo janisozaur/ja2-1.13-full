@@ -45,6 +45,9 @@
 	#include "scheduling.h"
 	#include "campaign_types.h"
 	#include "animation_control.h"
+	#include "profile_man.h"
+	#include "ja2_sdl.h"
+	#include <SDL.h>
 	
 #ifdef JA2TESTVERSION
 	#include	"quest_debug_system.h"
@@ -119,17 +122,129 @@ BOOLEAN gfDisplayScreenMsgOnRecordUsage = FALSE;
 
 extern void PauseAITemporarily( void );
 extern void PayOffSkyriderDebtIfAny( );
+
+//
+// Alternative NPC Quotes structure
+// Russian SLF resources holds slightly different npc quotes structure, than other language releases,
+// so it is needed to fix this.
+
+enum	QuoteStructType
+{
+	QUOTE_STRUCT_UNKNOWN     = -1,
+	QUOTE_STRUCT_ORDINARY    = 0,
+	QUOTE_STRUCT_ALTERNATIVE = 1
+};
+
+INT32	altQuoteStructure = QUOTE_STRUCT_UNKNOWN;
+
+QuoteStructType	DetermineQuoteStructType( void );
+NPCQuoteInfo*	LoadQuoteFileInternal( const void *pQuoteData, UINT32 dataSize );
+
 //
 // NPC QUOTE LOW LEVEL ROUTINES
 //
 
+QuoteStructType	DetermineQuoteStructType( void )
+{
+	if ( strncmp(Profile_GetLanguage(), "ru", 2) == 0 )
+		return QUOTE_STRUCT_ALTERNATIVE;
+
+	return QUOTE_STRUCT_ORDINARY;
+}
+
+
+
+NPCQuoteInfo * LoadQuoteFileInternal( const void *pQuoteData, UINT32 dataSize )
+{
+	NPCQuoteInfo	*pQuote = NULL;
+	SDL_RWops		*rw = NULL;
+	UINT8			skip;
+	INT32			i;
+	
+	// alloc quote info memory
+	pQuote = (NPCQuoteInfo*) MemAlloc( dataSize );
+	if (!pQuote)
+		return NULL;
+	memset(pQuote, 0, dataSize);
+	
+	// create rwops
+	rw = SDL_RWFromConstMem(pQuoteData, dataSize);
+	if ( !rw )
+		return NULL;
+
+	for ( i = 0; i < NUM_NPC_QUOTE_RECORDS; i++ )
+	{
+		// start read quote data
+		if ( altQuoteStructure == QUOTE_STRUCT_ALTERNATIVE ) 
+		{
+			// alt struct has unused 4 bytes at beginning of struct
+			// need to skip them
+			skip = SDL_Read8(rw);
+			skip = SDL_Read8(rw);
+			skip = SDL_Read8(rw);
+			skip = SDL_Read8(rw);
+		}
+
+		// continue reading other data
+		pQuote[i].fFlags            = SDL_ReadLE16(rw);
+		pQuote[i].sRequiredItem     = SDL_ReadLE16(rw);
+		pQuote[i].usFactMustBeTrue  = SDL_ReadLE16(rw);
+		pQuote[i].usFactMustBeFalse = SDL_ReadLE16(rw);
+
+		pQuote[i].ubQuest            = SDL_Read8(rw);
+		pQuote[i].ubFirstDay         = SDL_Read8(rw);
+		pQuote[i].ubLastDay          = SDL_Read8(rw);
+		pQuote[i].ubApproachRequired = SDL_Read8(rw);
+		pQuote[i].ubOpinionRequired  = SDL_Read8(rw);
+
+		pQuote[i].ubQuoteNum  = SDL_Read8(rw);
+		pQuote[i].ubNumQuotes = SDL_Read8(rw);
+
+		pQuote[i].ubStartQuest    = SDL_Read8(rw);
+		pQuote[i].ubEndQuest      = SDL_Read8(rw);
+		pQuote[i].ubTriggerNPC    = SDL_Read8(rw);
+		pQuote[i].ubTriggerNPCRec = SDL_Read8(rw);
+		pQuote[i].ubFiller        = SDL_Read8(rw);
+		
+		pQuote[i].usSetFactTrue = SDL_ReadLE16(rw);
+		pQuote[i].usGiftItem    = SDL_ReadLE16(rw);
+		pQuote[i].usGoToGridno  = SDL_ReadLE16(rw);
+		pQuote[i].sActionData   = SDL_ReadLE16(rw);
+		
+		if ( altQuoteStructure == QUOTE_STRUCT_ORDINARY ) 
+		{
+			// ordinary struct has unused 4 bytes at end of struct
+			// need to skip them
+			skip = SDL_Read8(rw);
+			skip = SDL_Read8(rw);
+			skip = SDL_Read8(rw);
+			skip = SDL_Read8(rw);
+		}
+	}
+	
+	SDL_RWclose(rw);	
+	return pQuote;
+}
+
+
+
 NPCQuoteInfo * LoadQuoteFile( UINT8 ubNPC )
 {
-	CHAR8						zFileName[255];
-	HWFILE					hFile;
-	NPCQuoteInfo	* pFileData;
-	UINT32					uiBytesRead;
-	UINT32					uiFileSize;
+	CHAR8			zFileName[255];
+	HWFILE			hFile;
+	NPCQuoteInfo	*pQuote = NULL;
+	void			*pFileData = NULL;
+	UINT32			uiBytesRead;
+	UINT32			uiFileSize;
+
+	printf("LoadQuoteFile(%d)\n", ubNPC);
+	
+	// at first call, determine quote structure type
+	if ( altQuoteStructure == QUOTE_STRUCT_UNKNOWN )
+	{
+		altQuoteStructure = DetermineQuoteStructType();
+		printf("altQuoteStructure is set to %d\n", altQuoteStructure);
+	}
 
 	if ( ubNPC == PETER || ubNPC == ALBERTO || ubNPC == CARLO )
 	{
@@ -163,12 +278,12 @@ NPCQuoteInfo * LoadQuoteFile( UINT8 ubNPC )
 	}
 
 	CHECKN( FileExists( zFileName ) );
-
+	printf("Load File %s\n", zFileName);
 	hFile = FileOpen( zFileName, FILE_ACCESS_READ, FALSE );
 	CHECKN( hFile );
 
 	uiFileSize = sizeof( NPCQuoteInfo ) * NUM_NPC_QUOTE_RECORDS;
-	pFileData = (NPCQuoteInfo *)MemAlloc( uiFileSize );
+	pFileData = MemAlloc( uiFileSize );
 	if (pFileData)
 	{
 		if (!FileRead( hFile, pFileData, uiFileSize, &uiBytesRead ) || uiBytesRead != uiFileSize )
@@ -180,7 +295,13 @@ NPCQuoteInfo * LoadQuoteFile( UINT8 ubNPC )
 	
 	FileClose( hFile );
 
-	return( pFileData );
+	pQuote = LoadQuoteFileInternal(pFileData, uiFileSize);
+	MemFree( pFileData );
+	pFileData = NULL;
+	printf("All ok!\n");
+
+	// 	LoadQuoteFileInternal will return NULL, if any error detected
+	return( pQuote );
 }
 
 void RevertToOriginalQuoteFile( UINT8 ubNPC ) 
