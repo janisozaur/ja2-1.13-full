@@ -65,7 +65,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Winmm.lib"
-				OutputFile="$(OutDir)\ja2_deb_1788_NI_B10.4.exe"
+				OutputFile="$(OutDir)\ja2_deb_1792_NI_B10.4.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -143,7 +143,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Winmm.lib"
-				OutputFile="$(OutDir)\ja2_rel_1788_NI_B10.4.exe"
+				OutputFile="$(OutDir)\ja2_rel_1792_NI_B10.4.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				GenerateMapFile="true"
@@ -176,8 +176,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Signing the code"
-				CommandLine="signtool sign /f &quot;c:\documents and settings\paul\ja2.spc&quot; /csp &quot;Microsoft Strong Cryptographic Provider&quot; /k JA2 /v &quot;$(TargetPath)&quot;"
+				Description=""
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration

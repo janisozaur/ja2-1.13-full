@@ -316,6 +316,9 @@ OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPa
 //CHRISL: This function will handle the actual searching for repairable items
 OBJECTTYPE* FindRepairableItemInSpecificPocket( OBJECTTYPE * pObj, UINT8 subObject);
 
+//CHRISL: This function will search through LBENODE items for repairable items
+OBJECTTYPE* FindRepairableItemInLBENODE( OBJECTTYPE * pObj, UINT8 subObject);
+
 // repair stuff
 void HandleRepairBySoldier( SOLDIERTYPE *pSoldier );
 
@@ -802,20 +805,10 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 			}
 			if(UsingNewInventorySystem() == true && Item[pSoldier->inv[ bPocket ].usItem].usItemClass == IC_LBEGEAR)
 			{
-				if(pSoldier->inv[ bPocket ].IsActiveLBE(ubObjectInPocketCounter) == true)
+				pObj = FindRepairableItemInLBENODE( &pSoldier->inv[ bPocket ], ubObjectInPocketCounter);
+				if(pObj != 0)
 				{
-					LBENODE* pLBE = pSoldier->inv[bPocket].GetLBEPointer(ubObjectInPocketCounter);
-					for(UINT8 lbePocket = 0; lbePocket < pLBE->inv.size(); lbePocket++)
-					{
-						for(ubItemsInPocket = 0; ubItemsInPocket < pLBE->inv[lbePocket].ubNumberOfObjects; ubItemsInPocket++)
-						{
-							pObj = FindRepairableItemInSpecificPocket(&pLBE->inv[lbePocket], ubItemsInPocket);
-							if(pObj != 0)
-							{
-								return( TRUE );
-							}
-						}
-					}
+					return( TRUE );
 				}
 			}
 		}
@@ -832,7 +825,6 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 			if ( CanCharacterRepairAnotherSoldiersStuff( pSoldier, pOtherSoldier ) )
 			{
 				// okay, seems like a candidate!	Check if he has anything that needs unjamming or repairs
-
 				// CHRISL: Changed to dynamically determine max inventory locations.
 				for ( bPocket = HANDPOS; bPocket < NUM_INV_SLOTS; bPocket++ )
 				{
@@ -842,7 +834,6 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 						return( TRUE );
 					}
 				}
-
 				// repair everyone's hands and armor slots first, then headgear, and pockets last
 				for ( ubPassType = REPAIR_HANDS_AND_ARMOR; ubPassType <= ( UINT8 ) bHighestPass; ubPassType++ )
 				{
@@ -2975,7 +2966,7 @@ INT8 HandleRepairOfSAMSite( SOLDIERTYPE *pSoldier, INT8 bPointsAvailable, BOOLEA
 
 OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPassType )
 {
-	INT8 bLoop, bLoop2, bLoop3;
+	INT8 bLoop, bLoop2;
 	REPAIR_PASS_SLOTS_TYPE *pPassList;
 	INT8 bSlotToCheck;
 	OBJECTTYPE * pObj;
@@ -2998,33 +2989,51 @@ OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPa
 			{
 				return( pObj );
 			}
-		}
-
-		//CHRISL: In NewInv, we should also repair items stored in LBENODE items
-		pObj = &( pSoldier->inv[ bSlotToCheck ] );
-		if(UsingNewInventorySystem() == true && Item[pObj->usItem].ubClassIndex == IC_LBEGEAR)
-		{
-			for ( bLoop2 = 0; bLoop2 < pSoldier->inv[ bSlotToCheck ].ubNumberOfObjects; bLoop2++ )
+			//CHRISL: In NewInv, we should also repair items stored in LBENODE items
+			if(UsingNewInventorySystem() == true && Item[pSoldier->inv[ bSlotToCheck ].usItem].usItemClass == IC_LBEGEAR)
 			{
-				if(pObj->IsActiveLBE(bLoop2) == true)
+				pObj = FindRepairableItemInLBENODE( &pSoldier->inv[ bSlotToCheck ], bLoop2);
+				if(pObj != 0)
 				{
-					LBENODE* pLBE = pSoldier->inv[bSlotToCheck].GetLBEPointer(bLoop2);
-					for(UINT8 lbePocket = 0; lbePocket < pLBE->inv.size(); lbePocket++)
-					{
-						for(bLoop3 = 0; bLoop3 < pLBE->inv[lbePocket].ubNumberOfObjects; bLoop3++)
-						{
-							pObj = FindRepairableItemInSpecificPocket(&pLBE->inv[lbePocket], bLoop3);
-							if(pObj != 0)
-							{
-								return( pObj );
-							}
-						}
-					}
+					return( pObj );
 				}
 			}
 		}
 	}
 
+	return( 0 );
+}
+
+OBJECTTYPE* FindRepairableItemInLBENODE( OBJECTTYPE * pObj, UINT8 subObject)
+{
+	OBJECTTYPE * pObject;
+
+	if(UsingNewInventorySystem() == false)
+		return( 0 );
+
+	if(pObj->IsActiveLBE(subObject) == true)
+	{
+		LBENODE* pLBE = pObj->GetLBEPointer(subObject);
+		for(UINT8 lbePocket = 0; lbePocket < pLBE->inv.size(); lbePocket++)
+		{
+			for(UINT8 ubItemsInPocket = 0; ubItemsInPocket < pLBE->inv[lbePocket].ubNumberOfObjects; ubItemsInPocket++)
+			{
+				pObject = FindRepairableItemInSpecificPocket(&pLBE->inv[lbePocket], ubItemsInPocket);
+				if(pObject != 0)
+				{
+					return( pObject );
+				}
+				if(Item[pLBE->inv[lbePocket].usItem].usItemClass == IC_LBEGEAR)
+				{
+					pObject = FindRepairableItemInLBENODE(&pLBE->inv[lbePocket], ubItemsInPocket);
+					if(pObject != 0)
+					{
+						return( pObject );
+					}
+				}
+			}
+		}
+	}
 	return( 0 );
 }
 
