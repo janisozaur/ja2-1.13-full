@@ -110,6 +110,7 @@
 	#include "email.h"
 	#include "Strategic Status.h"
 	#include "Soldier Create.h"
+	#include "Animation Control.h"
 #endif
 
 
@@ -7692,6 +7693,10 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 
 	uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
 
+	// CHRISL: Are we in combat, wearing a backpack with the zipper closed?  Don't allow access to backpack items
+	if((UsingNewInventorySystem() == true))
+		if(icLBE[uiHandPos] == BPACKPOCKPOS && (!(pSoldier->flags.ZipperFlag) || (pSoldier->flags.ZipperFlag && gAnimControl[pSoldier->usAnimState].ubEndHeight == ANIM_STAND)) && (gTacticalStatus.uiFlags & INCOMBAT) && (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP ))
+			iReason = MSYS_CALLBACK_REASON_NONE;
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// If we do not have an item in hand, start moving it

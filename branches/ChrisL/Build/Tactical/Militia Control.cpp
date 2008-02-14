@@ -227,7 +227,8 @@ void PrepareMilitiaForTactical( BOOLEAN fPrepareAll)
 
 	for (int i=0; i<TOTAL_SOLDIERS; i++)
 	{
-		Assert( !MercPtrs[i]->bActive || !MercPtrs[i]->bInSector || MercPtrs[i]->sGridNo != NOWHERE);
+		//CHRISL: What's this assert for?
+		//Assert( !MercPtrs[i]->bActive || !MercPtrs[i]->bInSector || MercPtrs[i]->sGridNo != NOWHERE);
 	}
 
 	pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
@@ -283,7 +284,8 @@ void PrepareMilitiaForTactical( BOOLEAN fPrepareAll)
 
 	for (int i=0; i<TOTAL_SOLDIERS; i++)
 	{
-		Assert( !MercPtrs[i]->bActive || !MercPtrs[i]->bInSector || MercPtrs[i]->sGridNo != NOWHERE);
+		//CHRISL: What's this assert for?
+		//Assert( !MercPtrs[i]->bActive || !MercPtrs[i]->bInSector || MercPtrs[i]->sGridNo != NOWHERE);
 	}
 }
 

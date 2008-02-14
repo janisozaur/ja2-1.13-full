@@ -1011,7 +1011,6 @@ UINT8 MoveAllInHelicopterToFootMovementGroup( void )
 			}
 			else
 			{
-				Assert(ubInsertionCode && usInsertionData);//potentially uninitialized local variables
 				pSoldier->ubStrategicInsertionCode = ubInsertionCode;
 				pSoldier->usStrategicInsertionData = usInsertionData;
 			}
