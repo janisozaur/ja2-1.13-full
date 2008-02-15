@@ -41,6 +41,7 @@ namespace INIEditor.GUI
             this.mnuViewDescLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewDescLanguageEnglish = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewDescLanguageGerman = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuViewDescLanguageRussian = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewSearch = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewClearSearchResults = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,9 +59,10 @@ namespace INIEditor.GUI
             this.tbrSearch = new System.Windows.Forms.ToolStripButton();
             this.tbrClearSearchResults = new System.Windows.Forms.ToolStripButton();
             this.stsMain = new System.Windows.Forms.StatusStrip();
-            this.tsbLanguage = new System.Windows.Forms.ToolStripSplitButton();
+            this.tsbLanguages = new System.Windows.Forms.ToolStripSplitButton();
             this.tsbLanguageGerman = new System.Windows.Forms.ToolStripMenuItem();
             this.tsbLanguageEnglish = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsbLanguageRussian = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlFiles = new System.Windows.Forms.Panel();
             this.cmbFiles = new System.Windows.Forms.ComboBox();
             this.lblFiles = new System.Windows.Forms.Label();
@@ -148,7 +150,7 @@ namespace INIEditor.GUI
             this.mnuFileSave.Image = ((System.Drawing.Image)(resources.GetObject("mnuFileSave.Image")));
             this.mnuFileSave.Name = "mnuFileSave";
             this.mnuFileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.mnuFileSave.Size = new System.Drawing.Size(152, 22);
+            this.mnuFileSave.Size = new System.Drawing.Size(150, 22);
             this.mnuFileSave.Text = "&Save";
             this.mnuFileSave.ToolTipText = "Save File";
             this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
@@ -156,12 +158,12 @@ namespace INIEditor.GUI
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(147, 6);
             // 
             // mnuFileExit
             // 
             this.mnuFileExit.Name = "mnuFileExit";
-            this.mnuFileExit.Size = new System.Drawing.Size(152, 22);
+            this.mnuFileExit.Size = new System.Drawing.Size(150, 22);
             this.mnuFileExit.Text = "E&xit";
             this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
             // 
@@ -179,7 +181,8 @@ namespace INIEditor.GUI
             // 
             this.mnuViewDescLanguage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuViewDescLanguageEnglish,
-            this.mnuViewDescLanguageGerman});
+            this.mnuViewDescLanguageGerman,
+            this.mnuViewDescLanguageRussian});
             this.mnuViewDescLanguage.Name = "mnuViewDescLanguage";
             this.mnuViewDescLanguage.Size = new System.Drawing.Size(188, 22);
             this.mnuViewDescLanguage.Text = "Description &Language";
@@ -188,7 +191,7 @@ namespace INIEditor.GUI
             // 
             this.mnuViewDescLanguageEnglish.Image = ((System.Drawing.Image)(resources.GetObject("mnuViewDescLanguageEnglish.Image")));
             this.mnuViewDescLanguageEnglish.Name = "mnuViewDescLanguageEnglish";
-            this.mnuViewDescLanguageEnglish.Size = new System.Drawing.Size(152, 22);
+            this.mnuViewDescLanguageEnglish.Size = new System.Drawing.Size(122, 22);
             this.mnuViewDescLanguageEnglish.Text = "&English";
             this.mnuViewDescLanguageEnglish.Click += new System.EventHandler(this.mnuViewDescLanguageEnglish_Click);
             // 
@@ -196,9 +199,17 @@ namespace INIEditor.GUI
             // 
             this.mnuViewDescLanguageGerman.Image = ((System.Drawing.Image)(resources.GetObject("mnuViewDescLanguageGerman.Image")));
             this.mnuViewDescLanguageGerman.Name = "mnuViewDescLanguageGerman";
-            this.mnuViewDescLanguageGerman.Size = new System.Drawing.Size(152, 22);
+            this.mnuViewDescLanguageGerman.Size = new System.Drawing.Size(122, 22);
             this.mnuViewDescLanguageGerman.Text = "&German";
             this.mnuViewDescLanguageGerman.Click += new System.EventHandler(this.mnuViewDescLanguageGerman_Click);
+            // 
+            // mnuViewDescLanguageRussian
+            // 
+            this.mnuViewDescLanguageRussian.Image = ((System.Drawing.Image)(resources.GetObject("mnuViewDescLanguageRussian.Image")));
+            this.mnuViewDescLanguageRussian.Name = "mnuViewDescLanguageRussian";
+            this.mnuViewDescLanguageRussian.Size = new System.Drawing.Size(122, 22);
+            this.mnuViewDescLanguageRussian.Text = "&Russian";
+            this.mnuViewDescLanguageRussian.Click += new System.EventHandler(this.mnuViewDescLanguageRussian_Click);
             // 
             // mnuViewSearch
             // 
@@ -245,7 +256,7 @@ namespace INIEditor.GUI
             // mnuHelpAbout
             // 
             this.mnuHelpAbout.Name = "mnuHelpAbout";
-            this.mnuHelpAbout.Size = new System.Drawing.Size(152, 22);
+            this.mnuHelpAbout.Size = new System.Drawing.Size(126, 22);
             this.mnuHelpAbout.Text = "&About...";
             this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
             // 
@@ -334,24 +345,25 @@ namespace INIEditor.GUI
             // stsMain
             // 
             this.stsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbLanguage});
+            this.tsbLanguages});
             this.stsMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.stsMain.Location = new System.Drawing.Point(0, 631);
             this.stsMain.Name = "stsMain";
             this.stsMain.Size = new System.Drawing.Size(883, 22);
             this.stsMain.TabIndex = 5;
             // 
-            // tsbLanguage
+            // tsbLanguages
             // 
-            this.tsbLanguage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbLanguage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsbLanguages.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbLanguages.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbLanguageGerman,
-            this.tsbLanguageEnglish});
-            this.tsbLanguage.Image = ((System.Drawing.Image)(resources.GetObject("tsbLanguage.Image")));
-            this.tsbLanguage.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbLanguage.Name = "tsbLanguage";
-            this.tsbLanguage.Size = new System.Drawing.Size(32, 20);
-            this.tsbLanguage.Text = "Language";
+            this.tsbLanguageEnglish,
+            this.tsbLanguageRussian});
+            this.tsbLanguages.Image = ((System.Drawing.Image)(resources.GetObject("tsbLanguages.Image")));
+            this.tsbLanguages.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbLanguages.Name = "tsbLanguages";
+            this.tsbLanguages.Size = new System.Drawing.Size(32, 20);
+            this.tsbLanguages.Text = "Language";
             // 
             // tsbLanguageGerman
             // 
@@ -368,6 +380,14 @@ namespace INIEditor.GUI
             this.tsbLanguageEnglish.Size = new System.Drawing.Size(122, 22);
             this.tsbLanguageEnglish.Text = "English";
             this.tsbLanguageEnglish.Click += new System.EventHandler(this.tsbLanguageEnglish_Click);
+            // 
+            // tsbLanguageRussian
+            // 
+            this.tsbLanguageRussian.Image = ((System.Drawing.Image)(resources.GetObject("tsbLanguageRussian.Image")));
+            this.tsbLanguageRussian.Name = "tsbLanguageRussian";
+            this.tsbLanguageRussian.Size = new System.Drawing.Size(122, 22);
+            this.tsbLanguageRussian.Text = "Russian";
+            this.tsbLanguageRussian.Click += new System.EventHandler(this.tsbLanguageRussian_Click);
             // 
             // pnlFiles
             // 
@@ -424,6 +444,7 @@ namespace INIEditor.GUI
             this.imageList.Images.SetKeyName(7, "Search.ico");
             this.imageList.Images.SetKeyName(8, "gb.ico");
             this.imageList.Images.SetKeyName(9, "de.ico");
+            this.imageList.Images.SetKeyName(10, "ru.ico");
             // 
             // splVertical
             // 
@@ -811,8 +832,8 @@ namespace INIEditor.GUI
             this.MainMenuStrip = this.mnuMain;
             this.Name = "MainForm";
             this.Text = "JA2 1.13 - INI Editor";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.mnuMain.ResumeLayout(false);
             this.mnuMain.PerformLayout();
             this.tbrMain.ResumeLayout(false);
@@ -894,7 +915,7 @@ namespace INIEditor.GUI
         private System.Windows.Forms.ToolStripButton tbrSave;
         private System.Windows.Forms.ToolStripMenuItem mnuViewSearch;
         private System.Windows.Forms.ToolStripButton tbrSearch;
-        private System.Windows.Forms.ToolStripSplitButton tsbLanguage;
+        private System.Windows.Forms.ToolStripSplitButton tsbLanguages;
         private System.Windows.Forms.ToolStripMenuItem tsbLanguageGerman;
         private System.Windows.Forms.ToolStripMenuItem tsbLanguageEnglish;
         private System.Windows.Forms.TabPage tpSearchResults;
@@ -914,6 +935,8 @@ namespace INIEditor.GUI
         private System.Windows.Forms.DataGridViewTextBoxColumn colSearchResultsPropertyNewValue;
         private System.Windows.Forms.ToolStripMenuItem mnuHelp;
         private System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewDescLanguageRussian;
+        private System.Windows.Forms.ToolStripMenuItem tsbLanguageRussian;
     }
 }
 

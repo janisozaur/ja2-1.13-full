@@ -39,9 +39,11 @@ namespace INIEditor.GUI
             this.btnSearch = new System.Windows.Forms.Button();
             this.picLanguage_GER = new System.Windows.Forms.PictureBox();
             this.picLanguage_ENG = new System.Windows.Forms.PictureBox();
+            this.picLanguage_RUS = new System.Windows.Forms.PictureBox();
             this.grpLookIn.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLanguage_GER)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picLanguage_ENG)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picLanguage_RUS)).BeginInit();
             this.SuspendLayout();
             // 
             // lblFindWhat
@@ -154,12 +156,22 @@ namespace INIEditor.GUI
             this.picLanguage_ENG.TabIndex = 6;
             this.picLanguage_ENG.TabStop = false;
             // 
+            // picLanguage_RUS
+            // 
+            this.picLanguage_RUS.Image = ((System.Drawing.Image)(resources.GetObject("picLanguage_RUS.Image")));
+            this.picLanguage_RUS.Location = new System.Drawing.Point(356, 29);
+            this.picLanguage_RUS.Name = "picLanguage_RUS";
+            this.picLanguage_RUS.Size = new System.Drawing.Size(16, 16);
+            this.picLanguage_RUS.TabIndex = 7;
+            this.picLanguage_RUS.TabStop = false;
+            // 
             // SearchForm
             // 
             this.AcceptButton = this.btnSearch;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(382, 203);
+            this.Controls.Add(this.picLanguage_RUS);
             this.Controls.Add(this.picLanguage_ENG);
             this.Controls.Add(this.picLanguage_GER);
             this.Controls.Add(this.btnSearch);
@@ -179,6 +191,7 @@ namespace INIEditor.GUI
             this.grpLookIn.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLanguage_GER)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picLanguage_ENG)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picLanguage_RUS)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -196,5 +209,6 @@ namespace INIEditor.GUI
         private System.Windows.Forms.CheckBox chkProperties;
         private System.Windows.Forms.PictureBox picLanguage_GER;
         private System.Windows.Forms.PictureBox picLanguage_ENG;
+        private System.Windows.Forms.PictureBox picLanguage_RUS;
     }
 }

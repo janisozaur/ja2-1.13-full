@@ -109,9 +109,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="GUI\Resources\SectionExpanded.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="GUI\Resources\Generate.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +133,12 @@
     <None Include="GUI\Resources\INIFile.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="GUI\Resources\ClearSearchResults.ico" />
+    <Content Include="GUI\Resources\de.ico" />
+    <Content Include="GUI\Resources\gb.ico" />
+    <Content Include="GUI\Resources\ja2.ico" />
+    <Content Include="GUI\Resources\JA2Logo.bmp" />
+    <Content Include="GUI\Resources\ru.ico" />
     <Content Include="ja2.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

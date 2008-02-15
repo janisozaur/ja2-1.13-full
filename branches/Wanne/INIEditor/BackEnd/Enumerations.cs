@@ -5,7 +5,8 @@ namespace INIEditor.BackEnd
         public enum Language
         {
             English,
-            German
+            German,
+            Russian
         }
 
         public enum Permission

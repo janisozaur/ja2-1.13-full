@@ -10,5 +10,8 @@ namespace INIEditor.BackEnd.XML
 
         [XmlElement("Description_GER")]
         public string Description_GER;
+
+        [XmlElement("Description_RUS")] 
+        public string Description_RUS;
     }
 }

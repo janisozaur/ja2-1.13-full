@@ -14,7 +14,7 @@ namespace INIEditor.GUI
         private INIFile _iniFile = null;
         private Hashtable _iniSettingsList = null;
         private Enumerations.Language _descriptionLanguage = Enumerations.Language.English;
-        private readonly Enumerations.Permission _permission = Enumerations.Permission.User;    // TODO: Change to "User" in Release version!
+        private readonly Enumerations.Permission _permission = Enumerations.Permission.Admin;    // TODO: Change to "User" in Release version!
         private Control _ctlPropertyNewValue = new Control();
         private readonly System.ComponentModel.ComponentResourceManager _resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
         private SearchParams _searchParams = new SearchParams();
@@ -84,7 +84,7 @@ namespace INIEditor.GUI
             Settings xmlIniSettings = Helper.LoadObjectFromXMLFile(path);
 
             // ------------
-            // Store the sections in an hashtable
+            // Store the sections in a hashtable
             // ------------
             // Root (INI File)
             _iniSettingsList = new Hashtable();
@@ -506,6 +506,7 @@ namespace INIEditor.GUI
                 xmlIniSettings = new Settings();
                 xmlIniSettings.Description_ENG = Constants.MISSING_INI_DESCRIPTION_ENG;
                 xmlIniSettings.Description_GER = Constants.MISSING_INI_DESCRIPTION_GER;
+                xmlIniSettings.Description_RUS = Constants.MISSING_INI_DESCRIPTION_RUS;
             }
             return xmlIniSettings;
         }
@@ -520,11 +521,15 @@ namespace INIEditor.GUI
 
                 if (language == Enumerations.Language.English)
                 {
-                    tsbLanguage.Image = ((System.Drawing.Image)(_resources.GetObject("tsbLanguageEnglish.Image")));
+                    tsbLanguages.Image = ((System.Drawing.Image)(_resources.GetObject("tsbLanguageEnglish.Image")));
                 }
                 else if (language == Enumerations.Language.German)
                 {
-                    tsbLanguage.Image = ((System.Drawing.Image)(_resources.GetObject("tsbLanguageGerman.Image")));
+                    tsbLanguages.Image = ((System.Drawing.Image)(_resources.GetObject("tsbLanguageGerman.Image")));
+                }
+                else if (language == Enumerations.Language.Russian)
+                {
+                    tsbLanguages.Image = ((System.Drawing.Image)(_resources.GetObject("tsbLanguageRussian.Image")));
                 }
             }
         }
@@ -544,6 +549,7 @@ namespace INIEditor.GUI
                 matchingXMLSection.Name = section.Name;
                 matchingXMLSection.Description_ENG = Constants.MISSING_SECTION_DESCRIPTION_ENG;
                 matchingXMLSection.Description_GER = Constants.MISSING_SECTION_DESCRIPTION_GER;
+                matchingXMLSection.Description_RUS = Constants.MISSING_SECTION_DESCRIPTION_RUS;
             }
 
             return matchingXMLSection;
@@ -572,11 +578,11 @@ namespace INIEditor.GUI
                 matchingXMLProperty.Name = property.Name;
                 matchingXMLProperty.Description_ENG = Constants.MISSING_PROPERTY_DESCRIPTION_ENG;
                 matchingXMLProperty.Description_GER = Constants.MISSING_PROPERTY_DESCRIPTION_GER;
+                matchingXMLProperty.Description_RUS = Constants.MISSING_PROPERTY_DESCRIPTION_RUS;
                 matchingXMLProperty.DataType = Constants.MISSING_DATA_TYPE;
                 matchingXMLProperty.MinValue = Constants.MISSING_MIN_VALUE;
                 matchingXMLProperty.MaxValue = Constants.MISSING_MAX_VALUE;
                 matchingXMLProperty.Interval = Constants.PROPERTY_INVERVAL;
-                
             }
 
             return matchingXMLProperty;
@@ -593,6 +599,9 @@ namespace INIEditor.GUI
                     break;
                 case Enumerations.Language.German:
                     description = baseElements.Description_GER;
+                    break;
+                case Enumerations.Language.Russian:
+                    description = baseElements.Description_RUS;
                     break;
             }
 
@@ -621,7 +630,6 @@ namespace INIEditor.GUI
             }
 
             trvSections.SelectedNode = treeNode;
-            //trvSections.SelectedNode.Expand();
         }
 
         private void SaveXMLFile()
@@ -631,6 +639,7 @@ namespace INIEditor.GUI
                 Settings generatedIniSettings = new Settings();
                 generatedIniSettings.Description_ENG = _iniFile.XMLSettings.Description_ENG;
                 generatedIniSettings.Description_GER = _iniFile.XMLSettings.Description_GER;
+                generatedIniSettings.Description_RUS = _iniFile.XMLSettings.Description_RUS;
 
                 foreach (INISection section in _iniFile.Sections)
                 {
@@ -748,6 +757,11 @@ namespace INIEditor.GUI
                 dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = property.Section.XMLSection.Description_GER;
                 dgvSearchResults[colSearchResultsPropertyDesc.Index, rowIndex].Value = property.XMLProperty.Description_GER;
             }
+            else if (_descriptionLanguage == Enumerations.Language.Russian)
+            {
+                dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = property.Section.XMLSection.Description_RUS;
+                dgvSearchResults[colSearchResultsPropertyDesc.Index, rowIndex].Value = property.XMLProperty.Description_RUS;
+            }
 
             // Color the results
             if (foundSectionDesc)
@@ -776,9 +790,13 @@ namespace INIEditor.GUI
             {
                 dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = section.XMLSection.Description_ENG;
             }
-            else
+            else if (_descriptionLanguage == Enumerations.Language.German)
             {
                 dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = section.XMLSection.Description_GER;
+            }
+            else if (_descriptionLanguage == Enumerations.Language.Russian)
+            {
+                dgvSearchResults[colSearchResultsSectionDesc.Index, rowIndex].Value = section.XMLSection.Description_RUS;
             }
 
             // Color the results
@@ -824,6 +842,7 @@ namespace INIEditor.GUI
                 {
                     string sectionDesc_ENG = section.XMLSection.Description_ENG.ToLower();
                     string sectionDesc_GER = section.XMLSection.Description_GER.ToLower();
+                    string sectionDesc_RUS = section.XMLSection.Description_RUS.ToLower();
 
                     #region Add search result to search grid
                     if (_descriptionLanguage == Enumerations.Language.English)
@@ -842,6 +861,15 @@ namespace INIEditor.GUI
                             AddSearchResultToSearchResults(section);
                         }
                     }
+                    else if (_descriptionLanguage == Enumerations.Language.Russian)
+                    {
+                        if (searchParams.LookInSectionDescriptions
+                            && sectionDesc_RUS.Contains(searchParams.FindWhat.ToLower()))
+                        {
+                            AddSearchResultToSearchResults(section);
+                        }
+                    }
+
                     #endregion
                 }
                 #endregion
@@ -852,17 +880,21 @@ namespace INIEditor.GUI
                     {
                         bool foundSectionDesc_ENG = false;
                         bool foundSectionDesc_GER = false;
+                        bool foundSectionDesc_RUS = false;
                         bool foundProperty = false;
                         bool foundPropertyNewValue = false;
                         bool foundPropertyCurrentValue = false;
                         bool foundPropertyDesc_ENG = false;
                         bool foundPropertyDesc_GER = false;
+                        bool foundPropertyDesc_RUS = false;
 
                         string sectionDesc_ENG = property.Section.XMLSection.Description_ENG.ToLower();
                         string sectionDesc_GER = property.Section.XMLSection.Description_GER.ToLower();
+                        string sectionDesc_RUS = property.Section.XMLSection.Description_RUS.ToLower();
                         string propertyName = property.Name.ToLower();
                         string propertyDesc_ENG = property.XMLProperty.Description_ENG.ToLower();
                         string propertyDesc_GER = property.XMLProperty.Description_GER.ToLower();
+                        string propertyDesc_RUS = property.XMLProperty.Description_RUS.ToLower();
                         string propertyCurrentValue = property.CurrentValue.ToLower();
                         string propertyNewValue = property.NewValue.ToLower();
 
@@ -890,6 +922,19 @@ namespace INIEditor.GUI
                                 && propertyDesc_GER.Contains(searchParams.FindWhat.ToLower()))
                             {
                                 foundPropertyDesc_GER = true;
+                            }
+                        }
+                        else if (_descriptionLanguage == Enumerations.Language.Russian)
+                        {
+                            if (searchParams.LookInSectionDescriptions
+                                && sectionDesc_RUS.Contains(searchParams.FindWhat.ToLower()))
+                            {
+                                foundSectionDesc_RUS = true;
+                            }
+                            if (searchParams.LookInPropertyDescriptions
+                                && propertyDesc_RUS.Contains(searchParams.FindWhat.ToLower()))
+                            {
+                                foundPropertyDesc_RUS = true;
                             }
                         }
 
@@ -930,6 +975,16 @@ namespace INIEditor.GUI
                                                                foundProperty);
                             }
                         }
+                        else if (_descriptionLanguage == Enumerations.Language.Russian)
+                        {
+                            if (foundSectionDesc_RUS || foundPropertyDesc_RUS ||
+                                foundProperty || foundPropertyCurrentValue || foundPropertyNewValue)
+                            {
+                                AddSearchResultToSearchResults(property, foundSectionDesc_RUS, foundPropertyDesc_RUS,
+                                                               foundPropertyCurrentValue, foundPropertyNewValue,
+                                                               foundProperty);
+                            }
+                        }
                         #endregion
                     }
                 }
@@ -949,6 +1004,7 @@ namespace INIEditor.GUI
             if (txtPropertyDescription.Tag != null)
             {
                 INIProperty property = txtPropertyDescription.Tag as INIProperty;
+
                 if (_descriptionLanguage == Enumerations.Language.English)
                 {
                     property.XMLProperty.Description_ENG = GetOutputDescriptionText(txtPropertyDescription.Text);
@@ -956,6 +1012,10 @@ namespace INIEditor.GUI
                 else if (_descriptionLanguage == Enumerations.Language.German)
                 {
                     property.XMLProperty.Description_GER = GetOutputDescriptionText(txtPropertyDescription.Text);
+                }
+                else if (_descriptionLanguage == Enumerations.Language.Russian)
+                {
+                    property.XMLProperty.Description_RUS = GetOutputDescriptionText(txtPropertyDescription.Text);
                 }
             }
         }
@@ -967,6 +1027,7 @@ namespace INIEditor.GUI
                 if (txtSectionDescription.Tag is INIFile)
                 {
                     INIFile file = txtSectionDescription.Tag as INIFile;
+
                     if (_descriptionLanguage == Enumerations.Language.English)
                     {
                         file.XMLSettings.Description_ENG = GetOutputDescriptionText(txtSectionDescription.Text);
@@ -975,10 +1036,15 @@ namespace INIEditor.GUI
                     {
                         file.XMLSettings.Description_GER = GetOutputDescriptionText(txtSectionDescription.Text);
                     }
+                    else if (_descriptionLanguage == Enumerations.Language.Russian)
+                    {
+                        file.XMLSettings.Description_RUS = GetOutputDescriptionText(txtSectionDescription.Text);
+                    }
                 }
                 else if (txtSectionDescription.Tag is INISection)
                 {
                     INISection section = txtSectionDescription.Tag as INISection;
+
                     if (_descriptionLanguage == Enumerations.Language.English)
                     {
                         section.XMLSection.Description_ENG = GetOutputDescriptionText(txtSectionDescription.Text);
@@ -986,6 +1052,10 @@ namespace INIEditor.GUI
                     else if (_descriptionLanguage == Enumerations.Language.German)
                     {
                         section.XMLSection.Description_GER = GetOutputDescriptionText(txtSectionDescription.Text);
+                    }
+                    else if (_descriptionLanguage == Enumerations.Language.Russian)
+                    {
+                        section.XMLSection.Description_RUS = GetOutputDescriptionText(txtSectionDescription.Text);
                     }
                 }
             }
@@ -1078,6 +1148,11 @@ namespace INIEditor.GUI
             SetDescriptionLanguage(Enumerations.Language.English);
         }
 
+        private void mnuViewDescLanguageRussian_Click(object sender, EventArgs e)
+        {
+            SetDescriptionLanguage(Enumerations.Language.Russian);
+        }
+
         /// <summary>
         /// This method creates a new "INIEditorInit_Output.xml" file,
         /// which contains all the INI-Settings. Missing settings in the
@@ -1136,6 +1211,11 @@ namespace INIEditor.GUI
         private void tsbLanguageEnglish_Click(object sender, EventArgs e)
         {
             SetDescriptionLanguage(Enumerations.Language.English);
+        }
+
+        private void tsbLanguageRussian_Click(object sender, EventArgs e)
+        {
+            SetDescriptionLanguage(Enumerations.Language.Russian);
         }
 
         private void dgvSearchResults_CellDoubleClick(object sender, DataGridViewCellEventArgs e)

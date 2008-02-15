@@ -26,11 +26,19 @@ namespace INIEditor.GUI
             {
                 picLanguage_ENG.Visible = true;
                 picLanguage_GER.Visible = false;
+                picLanguage_RUS.Visible = false;
             }
             else if (descLanguage == Enumerations.Language.German)
             {
                 picLanguage_GER.Visible = true;
                 picLanguage_ENG.Visible = false;
+                picLanguage_RUS.Visible = false;
+            }
+            else if (descLanguage == Enumerations.Language.Russian)
+            {
+                picLanguage_RUS.Visible = true;
+                picLanguage_ENG.Visible = false;
+                picLanguage_GER.Visible = false;
             }
 
             txtFindWhat.Text = searchParams.FindWhat;
