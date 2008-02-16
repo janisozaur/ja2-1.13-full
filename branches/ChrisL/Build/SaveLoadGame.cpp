@@ -1975,6 +1975,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 		else
 #endif
 			swprintf( pGameDesc, pMessageStrings[ MSG_QUICKSAVE_NAME ] );
+		wcscpy(SaveGameHeader.sSavedGameDesc, pGameDesc);
 	}
 
 	//If there was no string, add one

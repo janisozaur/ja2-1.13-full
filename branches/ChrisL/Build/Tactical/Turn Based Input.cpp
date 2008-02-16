@@ -2323,6 +2323,100 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				}
 				break;
 
+			case 'A':
+				//CHRISL: Ammo Crate
+				if ( fCtrl )
+				{
+					INT32		crateItem;
+					INT32		worldItem;
+					bool		mergeSuccessful;
+					OBJECTTYPE	newCrate;
+					//look through all sector items for ammo.
+					for(unsigned int wItem = 0; wItem < guiNumWorldItems; wItem++)
+					{
+						crateItem = 0;
+						mergeSuccessful = false;
+						if(Item[gWorldItems[wItem].object.usItem].usItemClass == IC_AMMO && gWorldItems[wItem].bVisible == TRUE && gWorldItems[wItem].fExists && (gWorldItems[wItem].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[wItem].usFlags & WORLD_ITEM_ARMED_BOMB))
+						{
+							worldItem = gWorldItems[wItem].object.usItem;
+							//we don't want to do anything if the world item is already an ammo crate
+							if(Item[worldItem].ammocrate == TRUE)
+								continue;
+							//we have a valid, ammo item.  Look through Items.xml and see if we have an ammo crate for
+							//	this ammo type
+							for(int iLoop = 0; iLoop < MAXITEMS; iLoop++)
+							{
+								//if ammocrate && calibers match && Ammo Types match
+								if(Item[iLoop].ammocrate == TRUE && Magazine[Item[iLoop].ubClassIndex].ubCalibre == Magazine[Item[worldItem].ubClassIndex].ubCalibre && Magazine[Item[iLoop].ubClassIndex].ubAmmoType == Magazine[Item[worldItem].ubClassIndex].ubAmmoType)
+								{
+									crateItem = iLoop;
+									break;
+								}
+							}
+							//if we found a crateItem in the list, we first want to see if we already have an item created
+							if(crateItem != 0)
+							{
+								//look through world items first
+								for(unsigned int loop=0; loop < guiNumWorldItems; loop++)
+								{
+									if(gWorldItems[loop].object.usItem == crateItem)
+									{
+										DistributeStatus(&gWorldItems[wItem].object, &gWorldItems[loop].object, Magazine[Item[crateItem].ubClassIndex].ubMagSize);
+										if(gWorldItems[wItem].object.ubNumberOfObjects < 1)
+										{
+											mergeSuccessful = true;
+											RemoveItemFromPool(gWorldItems[wItem].sGridNo,(wItem),gWorldItems[wItem].ubLevel);
+											RemoveItemFromWorld(wItem);
+											break;
+										}
+									}
+								}
+								//no crates in sector inventory.  search merc inventories
+								if(mergeSuccessful == false)
+								{
+									for(int loop=0; loop<18; loop++)
+									{
+										if(MercPtrs[loop]->bActive && MercPtrs[loop]->bInSector)
+										{
+											for(unsigned int pocket=0; pocket < MercPtrs[loop]->inv.size(); pocket++)
+											{
+												if(MercPtrs[loop]->inv[pocket].usItem == crateItem)
+												{
+													DistributeStatus(&gWorldItems[wItem].object, &MercPtrs[loop]->inv[pocket], Magazine[Item[crateItem].ubClassIndex].ubMagSize);
+													if(gWorldItems[wItem].object.ubNumberOfObjects < 1)
+													{
+														mergeSuccessful = true;
+														RemoveItemFromPool(gWorldItems[wItem].sGridNo,(wItem),gWorldItems[wItem].ubLevel);
+														RemoveItemFromWorld(wItem);
+														break;
+													}
+												}
+											}
+											if(mergeSuccessful == true)
+												break;
+										}
+									}
+								}
+								//no crates in merc inventory.  create a new sector item
+								if(mergeSuccessful == false)
+								{
+									CreateAmmo(crateItem, &newCrate, 0);
+									DistributeStatus(&gWorldItems[wItem].object, &newCrate, Magazine[Item[crateItem].ubClassIndex].ubMagSize);
+									AddItemToPool(gWorldItems[wItem].sGridNo, &newCrate, 1, gWorldItems[wItem].ubLevel, gWorldItems[wItem].usFlags, gWorldItems[wItem].bRenderZHeightAboveLevel);
+									if(gWorldItems[wItem].object.ubNumberOfObjects < 1)
+									{
+										mergeSuccessful = true;
+										RemoveItemFromPool(gWorldItems[wItem].sGridNo,(wItem),gWorldItems[wItem].ubLevel);
+										RemoveItemFromWorld(wItem);
+									}
+								}
+							}
+						}
+					}
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pImpButtonText[11] );
+				}
+				break;
+
 			case 'j':
 
 				if( fAlt )
@@ -5439,7 +5533,7 @@ void SeperateItems()
 							gWorldItems[ uiLoop ].object[x]->data.gun.usGunAmmoItem = NONE;
 
 							// put it on the ground
-							AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
+							AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, WORLD_ITEM_REACHABLE , -1 );
 						}
 					}
 
@@ -5459,7 +5553,7 @@ void SeperateItems()
 							gTempObject = *gWorldItems[uiLoop].object[x]->GetAttachmentAtIndex(cnt);
 							if (gWorldItems[ uiLoop ].object.RemoveAttachment(&gTempObject,0,x))
 							{
-								AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
+								AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &gTempObject, 1, gWorldItems[ uiLoop ].ubLevel, WORLD_ITEM_REACHABLE , -1 );
 								ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
 							}
 							else

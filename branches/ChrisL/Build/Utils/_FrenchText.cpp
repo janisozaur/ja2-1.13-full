@@ -1609,6 +1609,7 @@ STR16 pMapInventoryErrorString[] =
 	L"En combat, vous devez prendre les objets vous-même.",
 	L"En combat, vous devez abandonner les objets vous-même.",
 	L"%s n'est pas dans le bon secteur.",
+	L"Pendant le combat, vous ne pouvez pas recharger avec une caisse de munitions.",
 };
 
 STR16 pMapInventoryStrings[] =

@@ -63,6 +63,8 @@ class SOLDIERTYPE;
 void SetNewItem( SOLDIERTYPE *pSoldier, UINT8 ubInvPos, BOOLEAN fNewItem );
 
 extern	SOLDIERTYPE *gpItemDescSoldier;
+extern BOOLEAN			fShowMapInventoryPool;
+extern BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr, INT16 sGridNo );
 
 // weight units are 100g each
 
@@ -4358,18 +4360,91 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		switch (Item[pInSlot->usItem].usItemClass)
 		{
 			case IC_GUN:
-				if (Item[pObj->usItem].usItemClass == IC_AMMO) {
-					if (Weapon[pInSlot->usItem].ubCalibre == Magazine[Item[pObj->usItem].ubClassIndex].ubCalibre) {
-							return( ReloadGun( pSoldier, pInSlot, pObj ) );
+				if (Item[pObj->usItem].usItemClass == IC_AMMO)
+				{
+					if (Weapon[pInSlot->usItem].ubCalibre == Magazine[Item[pObj->usItem].ubClassIndex].ubCalibre)
+					{
+						//CHRISL: Work differently with ammo crates but only when not in combat
+						if(Item[pObj->usItem].ammocrate == TRUE)
+						{
+							if(!(gTacticalStatus.uiFlags & INCOMBAT))
+							{
+								INT16		magSize;
+								OBJECTTYPE	tempClip;
+								OBJECTTYPE	tempStack;
+								bool		clipCreated;
+								UINT32		newItem = 0;
+								//find the ammo item we want to try and create
+								for(int loop = 0; loop < MAXITEMS; loop++)
+								{
+									if(Item[loop].usItemClass == IC_AMMO)
+									{
+										if(Magazine[Item[loop].ubClassIndex].ubCalibre == Weapon[pInSlot->usItem].ubCalibre && Magazine[Item[loop].ubClassIndex].ubAmmoType == Magazine[Item[pObj->usItem].ubClassIndex].ubAmmoType && Magazine[Item[loop].ubClassIndex].ubMagSize == GetMagSize(pInSlot))
+											newItem = loop;
+									}
+								}
+								tempStack.initialize();
+								clipCreated = false;
+								for(UINT8 clip = 0; clip < 5; clip++)
+								{
+									magSize = GetMagSize(pInSlot);
+									if((*pObj)[0]->data.ubShotsLeft < magSize)
+										magSize = (*pObj)[0]->data.ubShotsLeft;
+									if(CreateAmmo(newItem, &tempClip, magSize))
+									{
+										tempStack.AddObjectsToStack(tempClip, -1, pSoldier, NUM_INV_SLOTS, MAX_OBJECTS_PER_SLOT);
+										clipCreated = true;
+									}
+								}
+								if(clipCreated == true)
+								{
+									clipCreated = false;
+									if(AutoPlaceObject(pSoldier, &tempStack, FALSE))
+									{
+										clipCreated = true;
+									}
+									else if(guiCurrentScreen == MAP_SCREEN && fShowMapInventoryPool == TRUE)
+									{
+										if(AutoPlaceObjectInInventoryStash(&tempStack, pSoldier->sGridNo))
+											clipCreated = true;
+									}
+									else
+									{
+										if(AddItemToPool(pSoldier->sGridNo, &tempStack, 1, pSoldier->pathing.bLevel, WORLD_ITEM_REACHABLE, -1))
+										{
+											NotifySoldiersToLookforItems( );
+											clipCreated = true;
+										}
+									}
+								}
+								if(clipCreated == true)
+								{
+									if(magSize == -1)
+										(*pObj)[0]->data.ubShotsLeft -= GetMagSize(pInSlot);
+									else
+										(*pObj)[0]->data.ubShotsLeft -= magSize;
+								}
+								if((*pObj)[0]->data.ubShotsLeft < 1)
+									pObj->RemoveObjectsFromStack(1);
+								return( TRUE );
+							}
+							else
+							{
+								ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMapInventoryErrorString[6] );
+								return( FALSE );
+							}
 						}
+						else
+							return( ReloadGun( pSoldier, pInSlot, pObj ) );
 					}
-					break;
-				case IC_LAUNCHER:
-					if ( ValidLaunchable( pObj->usItem, pInSlot->usItem ) ) {
-						return( ReloadGun( pSoldier, pInSlot, pObj ) );
-					}
-				break;
 				}
+				break;
+			case IC_LAUNCHER:
+				if ( ValidLaunchable( pObj->usItem, pInSlot->usItem ) ) {
+					return( ReloadGun( pSoldier, pInSlot, pObj ) );
+				}
+			break;
+			}
 		//if we didn't reload, then we know we are stacking or swapping!
 
 		if (IsSlotASmallPocket(bPos) == true && FitsInSmallPocket(pObj) == false) {

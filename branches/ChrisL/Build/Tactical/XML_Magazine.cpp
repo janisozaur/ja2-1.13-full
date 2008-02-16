@@ -110,7 +110,7 @@ magazineEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "ubMagSize") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMagazine.ubMagSize = (UINT8) atol(pData->szCharData);
+			pData->curMagazine.ubMagSize = (UINT16) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubAmmoType") == 0)
 		{

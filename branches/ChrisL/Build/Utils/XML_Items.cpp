@@ -187,6 +187,7 @@ itemStartElementHandle(void *userData, const XML_Char *name, const XML_Char **at
 				strcmp(name, "Flare") == 0 ||
 				strcmp(name, "MetalDetector") == 0 ||
 				strcmp(name, "FingerPrintID") == 0 ||
+				strcmp(name, "AmmoCrate") == 0 ||
 				strcmp(name, "Cannon") == 0 ||
 				strcmp(name, "RocketRifle") == 0 ||
 				strcmp(name, "MedicalKit") == 0 ||
@@ -984,6 +985,11 @@ itemEndElementHandle(void *userData, const XML_Char *name)
 			pData->curElement = ELEMENT;
 			pData->curItem.fingerprintid    = (BOOLEAN) atol(pData->szCharData);
 		}
+		else if(strcmp(name, "AmmoCrate")	 == 0)
+		{
+			pData->curElement = ELEMENT;
+			pData->curItem.ammocrate    = (BOOLEAN) atol(pData->szCharData);
+		}
 		else if(strcmp(name, "Rock")	 == 0)
 		{
 			pData->curElement = ELEMENT;
@@ -1556,6 +1562,7 @@ BOOLEAN WriteItemStats()
 			FilePrintf(hFile,"\t\t<ContainsLiquid>%d</ContainsLiquid>\r\n",						Item[cnt].containsliquid  );
 			FilePrintf(hFile,"\t\t<MetalDetector>%d</MetalDetector>\r\n",						Item[cnt].metaldetector   );
 			FilePrintf(hFile,"\t\t<FingerPrintID>%d</FingerPrintID>\r\n",						Item[cnt].fingerprintid    );
+			FilePrintf(hFile,"\t\t<AmmoCrate>%d</AmmoCrate>\r\n",						Item[cnt].ammocrate    );
 
 			FilePrintf(hFile,"\t</ITEM>\r\n");
 		}

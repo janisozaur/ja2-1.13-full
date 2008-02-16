@@ -1619,6 +1619,7 @@ STR16 pMapInventoryErrorString[] =
 	L"During combat, you'll have to pick up items manually.",
 	L"During combat, you'll have to drop items manually.",
 	L"%s isn't in the sector to drop that item.",
+	L"During combat, you can't reload with an ammo crate.",
 };
 
 STR16 pMapInventoryStrings[] =

@@ -635,6 +635,7 @@ typedef struct
 	BOOLEAN gasmask;
 	BOOLEAN lockbomb;
 	BOOLEAN flare;
+	BOOLEAN ammocrate;
 	INT16 percentnoisereduction;
 	INT16 bipod;
 	INT16 tohitbonus;

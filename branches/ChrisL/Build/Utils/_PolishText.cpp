@@ -1603,6 +1603,7 @@ STR16 pMapInventoryErrorString[] =
 	L"Podczas walki nie mo¿na korzystaæ z tego panelu.",
 	L"Podczas walki nie mo¿na korzystaæ z tego panelu.",
 	L"%s nie mo¿e tu zostawiæ tego przedmiotu, gdy¿ nie jest w tym sektorze.",
+	L"During combat, you can't reload with an ammo crate.",
 };
 
 STR16 pMapInventoryStrings[] =

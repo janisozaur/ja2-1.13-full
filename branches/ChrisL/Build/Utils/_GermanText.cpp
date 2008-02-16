@@ -1570,6 +1570,7 @@ STR16 pMapInventoryErrorString[] =
 	L"Während einer Schlacht müssen Sie Gegenstände manuell nehmen.",
 	L"Während einer Schlacht müssen Sie Gegenstände manuell fallenlassen.",
 	L"%s ist nicht im Sektor und kann Gegenstand nicht fallen lassen.",
+	L"Pendant le combat, vous ne pouvez pas recharger avec une caisse de munitions.",
 };
 
 STR16 pMapInventoryStrings[] =

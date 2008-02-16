@@ -1619,6 +1619,7 @@ STR16 pMapInventoryErrorString[] =
 	L"Tijdens gevechten moet je items handmatig oppakken.",
 	L"Tijdens gevechten moet je items handmatig neerleggen.",
 	L"%s is niet in de sector om dat item neer te leggen.",
+	L"Tijdens gevecht, kunt u met een munitiekrat herladen niet.",
 };
 
 STR16 pMapInventoryStrings[] =

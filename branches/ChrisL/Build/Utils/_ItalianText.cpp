@@ -1603,6 +1603,7 @@ STR16 pMapInventoryErrorString[] =
 	L"Durante il combattimento, dovrete raccogliere gli oggetti manualmente.",
 	L"Durante il combattimento, dovrete rilasciare gli oggetti manualmente.",
 	L"%s non si trova nel settore per rilasciare quell'oggetto.",
+	L"Durante il combattimento, non potete ricaricare con una cassa del ammo.",
 };
 
 STR16 pMapInventoryStrings[] =
