@@ -6052,7 +6052,7 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	if( guiCurrentScreen == MAP_SCREEN )
 	{
 		sItemWidth						= MAP_INV_ITEM_ROW_WIDTH;
-		sOffSetY						= 170;
+		sOffSetY						= 120;
 	}
 	else
 	{
@@ -6098,6 +6098,25 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	usPopupWidth = pTrav->usWidth;
 	usPopupHeight = pTrav->usHeight;
 
+	//CHRISL: resize usPopupWidth based on popup stack location
+	if(UsingNewInventorySystem() == true)
+	{
+		if(ubPosition >=BIGPOCKSTART && ubPosition < BIGPOCKFINAL)
+		{
+			usPopupWidth = 75;
+			if(guiCurrentScreen != MAP_SCREEN)
+				sItemWidth -= 2;
+			else if(guiCurrentScreen == MAP_SCREEN)
+				sItemWidth -= 1;
+		}
+		else if(ubPosition >=MEDPOCKSTART && ubPosition < MEDPOCKFINAL)
+		{
+			usPopupWidth = 58;
+			if(guiCurrentScreen != MAP_SCREEN)
+				sItemWidth -= 1;
+		}
+	}
+
 	// Determine position, height and width of mouse region, area
 	//GetSlotInvXY( ubPosition, &sX, &sY );
 	//GetSlotInvHeightWidth( ubPosition, &sItemSlotWidth, &sItemSlotHeight );
@@ -6111,12 +6130,18 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 
 	for ( cnt = 0; cnt < gubNumItemPopups; cnt++ )
 	{
+//				(INT16)( gsItemPopupInvX + ( cnt % gsItemPopupInvWidth * usPopupWidth ) + sOffSetX ), // top left
+//				(INT16)( sInvY + sOffSetY +( cnt / gsItemPopupInvWidth * usPopupHeight ) ), // top right
+//				(INT16)( gsItemPopupInvX + ( ( cnt % gsItemPopupInvWidth ) + 1 ) * usPopupWidth + sOffSetX ), // bottom left
+//				(INT16)( sInvY + ( (cnt / gsItemPopupInvWidth + 1) * usPopupHeight ) + sOffSetY ), // bottom right
+//		sX = (INT16)(gsItemPopupX + ( cnt % sItemWidth * usWidth ));
+//		sY = (INT16)(gsItemPopupY + sOffSetY + ( cnt / sItemWidth * usHeight ));
 		// Build a mouse region here that is over any others.....
 		MSYS_DefineRegion( &gItemPopupRegions[cnt],
-				(INT16)( gsItemPopupInvX + ( cnt % gsItemPopupInvWidth * usPopupWidth ) + sOffSetX ), // top left
-				(INT16)( sInvY + sOffSetY +( cnt / gsItemPopupInvWidth * usPopupHeight ) ), // top right
-				(INT16)( gsItemPopupInvX + ( ( cnt % gsItemPopupInvWidth ) + 1 ) * usPopupWidth + sOffSetX ), // bottom left
-				(INT16)( sInvY + ( (cnt / gsItemPopupInvWidth + 1) * usPopupHeight ) + sOffSetY ), // bottom right
+				(INT16)( gsItemPopupInvX + ( cnt % sItemWidth * usPopupWidth ) + sOffSetX ), // top left
+				(INT16)( sInvY + sOffSetY +( cnt / sItemWidth * usPopupHeight ) ), // top right
+				(INT16)( gsItemPopupInvX + ( ( cnt % sItemWidth ) + 1 ) * usPopupWidth + sOffSetX ), // bottom left
+				(INT16)( sInvY + ( (cnt / sItemWidth + 1) * usPopupHeight ) + sOffSetY ), // bottom right
 				MSYS_PRIORITY_HIGHEST,
 				MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupRegionCallback );
 		// Add region
@@ -6127,6 +6152,8 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 1, cap );
 		//CHRISL: Let's also include the ubID for this merc as UserData so we can find the merc again if needed
 		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 2, pSoldier->ubID);
+		//CHRISL: Also include the pocket we're looking at so we can display the right graphic
+		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 3, ubPosition);
 		
 		//OK, for each item, set dirty text if applicable!
 		//CHRISL:
@@ -6192,13 +6219,14 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 	HVOBJECT							hVObject;
 	UINT32								cnt;
 	INT16									sX, sY, sNewX, sNewY;
-	INT16			sItemWidth = 0, sOffSetY = 0;
+	INT16			sItemWidth = 0, sOffSetY = 0, sWidth = 29;
+	UINT8			ubPosition, image = 0;
 
 	// CHRISL: Setup witdh and offset to layer inventory boxes if necessary
 	if( guiCurrentScreen == MAP_SCREEN )
 	{
 		sItemWidth						= MAP_INV_ITEM_ROW_WIDTH;
-		sOffSetY						= 170;
+		sOffSetY						= 120;
 	}
 	else
 	{
@@ -6221,11 +6249,36 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 		}
 
 	}
+	//CHRISL: Get ubPosition from mouse region
+	ubPosition = MSYS_GetRegionUserData(&gItemPopupRegions[0], 3);
 	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
 	GetVideoObject( &hVObject, guiItemPopupBoxes );
 	pTrav = &(hVObject->pETRLEObject[ 0 ] );
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
+
+	//CHRISL: resize usPopupWidth based on popup stack location
+	if(UsingNewInventorySystem() == true)
+	{
+		if(ubPosition >=BIGPOCKSTART && ubPosition < BIGPOCKFINAL)
+		{
+			if(guiCurrentScreen != MAP_SCREEN)
+				sItemWidth -= 2;
+			else if(guiCurrentScreen == MAP_SCREEN)
+				sItemWidth -= 1;
+			usWidth = 75;
+			sWidth = 60;
+			image = 2;
+		}
+		else if(ubPosition >=MEDPOCKSTART && ubPosition < MEDPOCKFINAL)
+		{
+			if(guiCurrentScreen != MAP_SCREEN)
+				sItemWidth -= 1;
+			usWidth = 58;
+			sWidth = 43;
+			image = 1;
+		}
+	}
 
 	for ( cnt = 0; cnt < gubNumItemPopups; cnt++ )
 	{
@@ -6233,7 +6286,7 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 		//BltVideoObjectFromIndex( FRAME_BUFFER, guiItemPopupBoxes, 0, gsItemPopupX + ( cnt * usWidth ), gsItemPopupY, VO_BLT_SRCTRANSPARENCY, NULL );
 		sX = (INT16)(gsItemPopupX + ( cnt % sItemWidth * usWidth ));
 		sY = (INT16)(gsItemPopupY + sOffSetY + ( cnt / sItemWidth * usHeight ));
-		BltVideoObjectFromIndex( FRAME_BUFFER, guiItemPopupBoxes, 0, (INT16)sX, ( INT16 )sY, VO_BLT_SRCTRANSPARENCY, NULL );
+		BltVideoObjectFromIndex( FRAME_BUFFER, guiItemPopupBoxes, image, (INT16)sX, ( INT16 )sY, VO_BLT_SRCTRANSPARENCY, NULL );
 
 		if ( cnt < gpItemPopupObject->ubNumberOfObjects )
 		{
@@ -6241,7 +6294,7 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 			//sX = (INT16)(gsItemPopupX + ( cnt * usWidth ) + 11);
 			//sY = (INT16)( gsItemPopupY + 3 );
 
-			INVRenderItem( FRAME_BUFFER, NULL, gpItemPopupObject, sX+11, sY+3, 29, 23, DIRTYLEVEL2, NULL, (UINT8)RENDER_ITEM_NOSTATUS, FALSE, 0, cnt );
+			INVRenderItem( FRAME_BUFFER, NULL, gpItemPopupObject, sX+11, sY+3, sWidth, 23, DIRTYLEVEL2, NULL, (UINT8)RENDER_ITEM_NOSTATUS, FALSE, 0, cnt );
 
 			// CHRISL: Coord updates to work with mutliple rows
 			// Do status bar here...

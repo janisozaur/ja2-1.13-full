@@ -3462,9 +3462,17 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		{
 			if ( !InItemStackPopup( )	)
 			{
+				//CHRISL: Set popup width based on pocket size
+				INT16	invWidth;
+				if(uiHandPos >= (UINT32)BIGPOCKSTART && uiHandPos < (UINT32)BIGPOCKFINAL)
+					invWidth = 531;
+				else if(uiHandPos >= (UINT32)MEDPOCKSTART && uiHandPos < (UINT32)MEDPOCKFINAL)
+					invWidth = 412;
+				else
+					invWidth = 314;
 
 				//InitItemStackPopup( gpSMCurrentMerc, (UINT8)uiHandPos, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, SM_ITEMDESC_WIDTH, SM_ITEMDESC_HEIGHT );
-				InitItemStackPopup( gpSMCurrentMerc, (UINT8)uiHandPos, 216, INV_INTERFACE_START_Y, 314, ( SCREEN_HEIGHT - INV_INTERFACE_START_Y ) );
+				InitItemStackPopup( gpSMCurrentMerc, (UINT8)uiHandPos, 216, INV_INTERFACE_START_Y, invWidth, ( SCREEN_HEIGHT - INV_INTERFACE_START_Y ) );
 
 			}
 		}

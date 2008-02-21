@@ -4246,6 +4246,41 @@ BOOLEAN FreeUpSlotIfPossibleThenPlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, 
 	return( FALSE );
 }
 
+// CHRISL: Use to find best pocket to store item in.  Could probably be merged with FitsInSmallPocket
+INT32 PickPocket(SOLDIERTYPE *pSoldier, UINT8 ppStart, UINT8 ppStop, UINT16 usItem, UINT8 iNumber, UINT8 * cap, int bExcludeSlot)
+{
+	UINT16	pIndex=0;
+	INT32	pocket=0;
+	UINT8	capacity=254;
+
+	for(UINT32 uiPos=ppStart; uiPos<ppStop; uiPos++){
+		if(pSoldier->inv[icLBE[uiPos]].exists() == false){
+			pIndex=LoadBearingEquipment[Item[icDefault[uiPos]].ubClassIndex].lbePocketIndex[icPocket[uiPos]];
+		}
+		else {
+			pIndex=LoadBearingEquipment[Item[pSoldier->inv[icLBE[uiPos]].usItem].ubClassIndex].lbePocketIndex[icPocket[uiPos]];
+		}
+		// Here's were we get complicated.  We should look for the smallest pocket all items can fit in
+		if(LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize] >= iNumber &&
+			LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize] < capacity &&
+			pSoldier->inv[uiPos].exists() == false && uiPos != bExcludeSlot) {
+				if((LBEPocketType[pIndex].pRestriction != 0 && LBEPocketType[pIndex].pRestriction == Item[usItem].usItemClass) ||
+					LBEPocketType[pIndex].pRestriction == 0) {
+						capacity = LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize];
+						pocket = uiPos;
+				}
+		}
+	}
+	if(pocket!=0){
+		*cap=capacity;
+		return pocket;
+	}
+	else{
+		*cap=254;
+		return -1;
+	}
+}
+
 BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj, BOOLEAN fNewItem )
 {
 	if (PlaceObject(pSoldier, bPos, pObj) == TRUE) {
@@ -4369,11 +4404,14 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 						{
 							if(!(gTacticalStatus.uiFlags & INCOMBAT))
 							{
-								INT16		magSize;
+								INT16		magSize, ubShotsLeft;
 								OBJECTTYPE	tempClip;
 								OBJECTTYPE	tempStack;
 								bool		clipCreated;
 								UINT32		newItem = 0;
+								INT32		pocket=-1;
+								UINT8		capacity=0;
+								UINT8		bLoop;
 								//find the ammo item we want to try and create
 								for(int loop = 0; loop < MAXITEMS; loop++)
 								{
@@ -4383,46 +4421,64 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 											newItem = loop;
 									}
 								}
+								//Create a stack of up to 5 "newItem" clips 
 								tempStack.initialize();
 								clipCreated = false;
+								ubShotsLeft = (*pObj)[0]->data.ubShotsLeft;
 								for(UINT8 clip = 0; clip < 5; clip++)
 								{
 									magSize = GetMagSize(pInSlot);
-									if((*pObj)[0]->data.ubShotsLeft < magSize)
-										magSize = (*pObj)[0]->data.ubShotsLeft;
+									if(ubShotsLeft < magSize)
+										magSize = ubShotsLeft;
 									if(CreateAmmo(newItem, &tempClip, magSize))
 									{
 										tempStack.AddObjectsToStack(tempClip, -1, pSoldier, NUM_INV_SLOTS, MAX_OBJECTS_PER_SLOT);
+										ubShotsLeft -= magSize;
 										clipCreated = true;
 									}
 								}
+								//Try to place the stack somewhere on the active merc
 								if(clipCreated == true)
 								{
 									clipCreated = false;
-									if(AutoPlaceObject(pSoldier, &tempStack, FALSE))
+									bLoop = tempStack.ubNumberOfObjects;
+									while(tempStack.ubNumberOfObjects > 0)
 									{
+										pocket = PickPocket(pSoldier, BIGPOCKSTART, SMALLPOCKFINAL, tempStack.usItem, bLoop, &capacity, -1);
+										if(pocket != -1)
+										{
+											pSoldier->inv[pocket].AddObjectsToStack(tempStack, bLoop, pSoldier, pocket);
+										}
+										else
+										{
+											bLoop--;
+										}
+										if(bLoop < 1)
+											break;
+									}
+									if(tempStack.ubNumberOfObjects < 1)
 										clipCreated = true;
-									}
-									else if(guiCurrentScreen == MAP_SCREEN && fShowMapInventoryPool == TRUE)
-									{
-										if(AutoPlaceObjectInInventoryStash(&tempStack, pSoldier->sGridNo))
-											clipCreated = true;
-									}
 									else
 									{
-										if(AddItemToPool(pSoldier->sGridNo, &tempStack, 1, pSoldier->pathing.bLevel, WORLD_ITEM_REACHABLE, -1))
+										//Try to place stack on ground
+										if(guiCurrentScreen == MAP_SCREEN && fShowMapInventoryPool == TRUE)
 										{
-											NotifySoldiersToLookforItems( );
-											clipCreated = true;
+											if(AutoPlaceObjectInInventoryStash(&tempStack, pSoldier->sGridNo))
+												clipCreated = true;
+										}
+										else
+										{
+											if(AddItemToPool(pSoldier->sGridNo, &tempStack, 1, pSoldier->pathing.bLevel, WORLD_ITEM_REACHABLE, -1))
+											{
+												NotifySoldiersToLookforItems( );
+												clipCreated = true;
+											}
 										}
 									}
 								}
 								if(clipCreated == true)
 								{
-									if(magSize == -1)
-										(*pObj)[0]->data.ubShotsLeft -= GetMagSize(pInSlot);
-									else
-										(*pObj)[0]->data.ubShotsLeft -= magSize;
+									(*pObj)[0]->data.ubShotsLeft = ubShotsLeft;
 								}
 								if((*pObj)[0]->data.ubShotsLeft < 1)
 									pObj->RemoveObjectsFromStack(1);
@@ -4450,6 +4506,35 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		if (IsSlotASmallPocket(bPos) == true && FitsInSmallPocket(pObj) == false) {
 			//there is nothing we can do, just return
 			return FALSE;
+		}
+
+		// CHRISL: When holding ammo and clicking on an appropriate ammo crate, add ammo to crate
+		if(Item[pInSlot->usItem].ammocrate == TRUE && Item[pObj->usItem].usItemClass == IC_AMMO)
+		{
+			if(Magazine[Item[pInSlot->usItem].ubClassIndex].ubCalibre == Magazine[Item[pObj->usItem].ubClassIndex].ubCalibre &&
+				Magazine[Item[pInSlot->usItem].ubClassIndex].ubAmmoType == Magazine[Item[pObj->usItem].ubClassIndex].ubAmmoType)
+			{
+				UINT16	magSpace = Magazine[Item[pInSlot->usItem].ubClassIndex].ubMagSize-(*pInSlot)[0]->data.ubShotsLeft;
+				while(pObj->ubNumberOfObjects > 0)
+				{
+					if(magSpace >= (*pObj)[0]->data.ubShotsLeft)
+					{
+						magSpace -= (*pObj)[0]->data.ubShotsLeft;
+						(*pInSlot)[0]->data.ubShotsLeft += (*pObj)[0]->data.ubShotsLeft;
+						pObj->RemoveObjectsFromStack(1);
+					}
+					else
+					{
+						(*pObj)[0]->data.ubShotsLeft -= magSpace;
+						(*pInSlot)[0]->data.ubShotsLeft += magSpace;
+						break;
+					}
+				}
+				if(pObj->ubNumberOfObjects > 0)
+					return( FALSE );
+				else
+					return( TRUE );
+			}
 		}
 
 		// CHRISL:
@@ -4566,41 +4651,6 @@ bool TryToPlaceInSlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, in
 		return( true );
 	}
 	return false;
-}
-
-// CHRISL: Use to find best pocket to store item in.  Could probably be merged with FitsInSmallPocket
-INT32 PickPocket(SOLDIERTYPE *pSoldier, UINT8 ppStart, UINT8 ppStop, UINT16 usItem, UINT8 iNumber, UINT8 * cap, int bExcludeSlot)
-{
-	UINT16	pIndex=0;
-	INT32	pocket=0;
-	UINT8	capacity=254;
-
-	for(UINT32 uiPos=ppStart; uiPos<ppStop; uiPos++){
-		if(pSoldier->inv[icLBE[uiPos]].exists() == false){
-			pIndex=LoadBearingEquipment[Item[icDefault[uiPos]].ubClassIndex].lbePocketIndex[icPocket[uiPos]];
-		}
-		else {
-			pIndex=LoadBearingEquipment[Item[pSoldier->inv[icLBE[uiPos]].usItem].ubClassIndex].lbePocketIndex[icPocket[uiPos]];
-		}
-		// Here's were we get complicated.  We should look for the smallest pocket all items can fit in
-		if(LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize] >= iNumber &&
-			LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize] < capacity &&
-			pSoldier->inv[uiPos].exists() == false && uiPos != bExcludeSlot) {
-				if((LBEPocketType[pIndex].pRestriction != 0 && LBEPocketType[pIndex].pRestriction == Item[usItem].usItemClass) ||
-					LBEPocketType[pIndex].pRestriction == 0) {
-						capacity = LBEPocketType[pIndex].ItemCapacityPerSize[Item[usItem].ItemSize];
-						pocket = uiPos;
-				}
-		}
-	}
-	if(pocket!=0){
-		*cap=capacity;
-		return pocket;
-	}
-	else{
-		*cap=254;
-		return -1;
-	}
 }
 
 bool PlaceInAnySlot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, bool fNewItem, int bExcludeSlot)
